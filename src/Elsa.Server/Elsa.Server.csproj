@@ -17,4 +17,8 @@
     <Folder Include="wwwroot\" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\Elsa.CustomActivities\Elsa.CustomActivities.csproj" />
+  </ItemGroup>
+
 </Project>

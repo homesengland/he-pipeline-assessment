@@ -14,10 +14,59 @@
     <link rel="stylesheet" href="/_content/Elsa.Designer.Components.Web/elsa-workflows-studio/elsa-workflows-studio.css">
     <script src="/_content/Elsa.Designer.Components.Web/monaco-editor/min/vs/loader.js"></script>
     <script type="module" src="/_content/Elsa.Designer.Components.Web/elsa-workflows-studio/elsa-workflows-studio.esm.js"></script>
+    <script type="module" src="https://unpkg.com/benteststencil@0.0.15/dist/bentest/bentest.esm.js"></script>
 </head>
 <body>
 <elsa-studio-root server-url="@serverUrl" monaco-lib-path="_content/Elsa.Designer.Components.Web/monaco-editor/min">
     <elsa-studio-dashboard></elsa-studio-dashboard>
 </elsa-studio-root>
+<script>
+        var elsaStudioRoot = document.querySelector('elsa-studio-root');
+
+        function MyCustomPlugin(elsaStudio) {
+            var eventBus = elsaStudio.eventBus;
+
+            eventBus.on('activity-design-displaying',
+                e => {
+                    if(e.activityModel.type =="MultipleChoiceQuestion")
+                    e.outcomes = e.outcomes.filter(x => x !== 'Default' && x !== 'Done');
+                });
+            };
+
+        function getOrCreateProperty(activity, name, defaultExpression, defaultSyntax) {
+            var property = activity.properties.find(function(x) { return x.name == name; });
+            if (!property) {
+                var expressions = {};
+                var syntax = defaultSyntax ? defaultSyntax() : undefined;
+                if (!syntax)
+                    syntax = 'Literal';
+                expressions[syntax] = defaultExpression ? defaultExpression() : undefined;
+                property = { name: name, expressions: expressions, syntax: null };
+                activity.properties.push(property);
+            }
+
+            return property;
+}
+
+        function MyCustomInputDriver(elsaStudio) {
+            this.display = (activity, property) => {
+                var prop = (0, getOrCreateProperty)(activity, property.name);
+                var multichoice = document.createElement('elsa-multichoice-records-property');
+                multichoice.activityModel = activity;
+                multichoice.propertyDescriptor = property;
+                multichoice.propertyModel = prop;
+                console.log(activity);
+                console.log(property);
+                console.log(prop);
+                return multichoice;
+            }
+        }
+
+        elsaStudioRoot.addEventListener('initializing', e => {
+            var elsaStudio = e.detail;
+            elsaStudio.pluginManager.registerPlugin(MyCustomPlugin);
+            elsaStudio.propertyDisplayManager.addDriver('multiChoice-record-builder', () => new MyCustomInputDriver(elsaStudio));
+        });
+</script>
 </body>
 </html>

@@ -1,5 +1,10 @@
+using Elsa;
+using Elsa.CustomActivities.Activites.MultipleChoice;
 using Elsa.Persistence.EntityFramework.Core.Extensions;
 using Elsa.Persistence.EntityFramework.Sqlite;
+using MyActivityLibrary.Activities;
+using MyActivityLibrary.Bookmarks;
+using MyActivityLibrary.JavaScript;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -7,11 +12,17 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services
     .AddElsa(elsa => elsa
         .UseEntityFrameworkPersistence(ef => ef.UseSqlite())
-        .AddConsoleActivities()
+        .AddActivity<MultipleChoiceQuestion>()
     );
 
 // Elsa API endpoints.
 builder.Services.AddElsaApiEndpoints();
+
+builder.Services.AddNotificationHandlers(typeof(GetMultipleChoiceQuestionScriptHandler));
+
+builder.Services.AddBookmarkProvider<MultipleChoiceQuestionBookmarkProvider>();
+builder.Services.AddScoped<IMultipleChoiceQuestionInvoker, MultipleChoiceQuestionInvoker>();
+builder.Services.AddJavaScriptTypeDefinitionProvider<CustomTypeDefinitionProvider>();
 
 // Allow arbitrary client browser apps to access the API.
 // In a production environment, make sure to allow only origins you trust.
