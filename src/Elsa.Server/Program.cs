@@ -32,6 +32,7 @@ if (!app.Environment.IsDevelopment())
 }
 
 app
+    .UseCors()
     .UseHttpsRedirection()
     .UseStaticFiles() // For Dashboard.
     .UseRouting()
