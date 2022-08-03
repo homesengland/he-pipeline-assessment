@@ -12,7 +12,7 @@ namespace MyActivityLibrary.Activities
 {
     [Trigger(
         Category = "Homes England Activities",
-        Description = "Triggers when a question response is received",
+        Description = "Assessmenet screen multiple choice question",
         Outcomes = new[] { OutcomeNames.Done }
     )]
     public class MultipleChoiceQuestion : Activity
