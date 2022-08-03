@@ -1,15 +1,5 @@
 var builder = WebApplication.CreateBuilder(args);
 
-
-// Allow arbitrary client browser apps to access the API.
-// In a production environment, make sure to allow only origins you trust.
-builder.Services.AddCors(cors => cors.AddDefaultPolicy(policy => policy
-    .AllowAnyHeader()
-    .AllowAnyMethod()
-    .AllowAnyOrigin()
-    .WithExposedHeaders("Content-Disposition"))
-);
-
 // For Dashboard.
 builder.Services.AddRazorPages();
 
