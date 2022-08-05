@@ -1,0 +1,14 @@
+﻿@model He.PipelineAssessment.UI.Controllers.StartWorkflowModel
+@{
+    ViewData["Title"] = "Home Page";
+}
+
+<div class="text-center">
+   
+    @using (Html.BeginForm("StartWorkflow", "Home", FormMethod.Post))
+    {
+        <span>Enter workflow definition Id:</span> @Html.TextBoxFor(m => m.WorkflowDefinitionId)<br />
+        <input id = "Submit" type = "submit" value = "submit" />
+    }
+
+</div>
