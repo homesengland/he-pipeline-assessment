@@ -1,8 +1,10 @@
-﻿namespace He.PipelineAssessment.UI.HttpClients
+﻿using System.Text;
+
+namespace He.PipelineAssessment.UI.HttpClients
 {
     public interface IElsaServerHttpClient
     {
-        Task PostStartWorkflow(Guid workflowDefinitionId);
+        Task PostStartWorkflow(string workflowDefinitionId);
     }
 
     public class ElsaServerHttpClient : IElsaServerHttpClient
@@ -14,27 +16,39 @@
             _httpClient = httpClient;
         }
 
-        public async Task PostStartWorkflow(Guid workflowDefinitionId)
+        public async Task PostStartWorkflow(string workflowDefinitionId)
         {
+            var data = "";
+            var fullUri = "https://localhost:7227/workflow/startworkflow";
 
+            //var content = new StringContent(workflowDefinitionId, Encoding.UTF8, "application/json");
+
+            using (var response = await _httpClient.PostAsJsonAsync(fullUri.ToString(), workflowDefinitionId).ConfigureAwait(false))
+            {
+                data = await response.Content.ReadAsStringAsync().ConfigureAwait(false);
+                if (!response.IsSuccessStatusCode)
+                    throw new ApplicationException($"StatusCode='{response.StatusCode}'," +
+                                                   $"\n Message= '{data}'," +
+                                                   $"\n Url='{fullUri}'");
+            }
         }
 
-        //public async Task PostWorkflowStart<T>(string eventName, T eventBody) where T : class, new()
-        //{
-        //    //var data = "";
-        //    //var fullUri = _uriConfig.Value.BuildEventServiceUri(eventName);
+        private async Task Post<T>(string eventName, T eventBody) where T : class, new()
+        {
+            //var data = "";
+            //var fullUri = _uriConfig.Value.BuildEventServiceUri(eventName);
 
-        //    //var content = new StringContent(eventBody.ToJSONSerializedString(), Encoding.UTF8, "application/json");
+            //var content = new StringContent(eventBody.ToJSONSerializedString(), Encoding.UTF8, "application/json");
 
-        //    //using (var response = await _httpClient.PostAsync(fullUri.ToString(), content).ConfigureAwait(false))
-        //    //{
-        //    //    data = await response.Content.ReadAsStringAsync().ConfigureAwait(false);
-        //    //    if (!response.IsSuccessStatusCode)
-        //    //        throw new ApplicationException($"StatusCode='{response.StatusCode}'," +
-        //    //                                       $"\n Message= '{data}'," +
-        //    //                                       $"\n Url='{fullUri}'");
-        //    //}
-        //}
+            //using (var response = await _httpClient.PostAsync(fullUri.ToString(), content).ConfigureAwait(false))
+            //{
+            //    data = await response.Content.ReadAsStringAsync().ConfigureAwait(false);
+            //    if (!response.IsSuccessStatusCode)
+            //        throw new ApplicationException($"StatusCode='{response.StatusCode}'," +
+            //                                       $"\n Message= '{data}'," +
+            //                                       $"\n Url='{fullUri}'");
+            //}
+        }
     }
 
 

@@ -51,6 +51,10 @@ app
     {
         // Elsa API Endpoints are implemented as regular ASP.NET Core API controllers.
         endpoints.MapControllers();
+        endpoints.MapControllerRoute(
+            name: "default",
+            pattern: "{controller=Home}/{action=Index}");
     });
+
 
 app.Run();
