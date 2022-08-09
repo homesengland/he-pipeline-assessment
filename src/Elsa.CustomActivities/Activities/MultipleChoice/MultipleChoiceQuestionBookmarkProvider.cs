@@ -1,9 +1,7 @@
-﻿using Elsa.CustomActivities.Activites.MultipleChoice;
-using Elsa.Services;
-using MyActivityLibrary.Activities;
+﻿using Elsa.Services;
 using System.Runtime.CompilerServices;
 
-namespace MyActivityLibrary.Bookmarks
+namespace Elsa.CustomActivities.Activities.MultipleChoice
 {
     public class MultipleChoiceQuestionBookmarkProvider : BookmarkProvider<MultipleChoiceQuestionBookmark, MultipleChoiceQuestion>
     {

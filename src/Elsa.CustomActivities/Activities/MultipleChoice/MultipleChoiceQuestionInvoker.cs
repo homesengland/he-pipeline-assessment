@@ -1,9 +1,9 @@
-﻿using Elsa.Models;
+﻿using Elsa.CustomActivities.Activites.MultipleChoice;
+using Elsa.Models;
 using Elsa.Services;
 using Elsa.Services.Models;
-using MyActivityLibrary.Activities;
 
-namespace Elsa.CustomActivities.Activites.MultipleChoice
+namespace Elsa.CustomActivities.Activities.MultipleChoice
 {
     public class MultipleChoiceQuestionInvoker : IMultipleChoiceQuestionInvoker
     {

@@ -1,10 +1,13 @@
-﻿using System.Text;
+﻿using Elsa.CustomActivities.Activites.MultipleChoice;
+using He.PipelineAssessment.UI.Models;
+using System.Text.Json;
 
 namespace He.PipelineAssessment.UI.HttpClients
 {
     public interface IElsaServerHttpClient
     {
-        Task PostStartWorkflow(string workflowDefinitionId);
+        Task<WorkflowNavigationViewModel> PostStartWorkflow(string workflowDefinitionId);
+        Task<WorkflowNavigationViewModel> NavigateWorkflow(WorkflowNavigationViewModel model);
     }
 
     public class ElsaServerHttpClient : IElsaServerHttpClient
@@ -16,7 +19,7 @@ namespace He.PipelineAssessment.UI.HttpClients
             _httpClient = httpClient;
         }
 
-        public async Task PostStartWorkflow(string workflowDefinitionId)
+        public async Task<WorkflowNavigationViewModel> PostStartWorkflow(string workflowDefinitionId)
         {
             var data = "";
             var fullUri = "https://localhost:7227/workflow/startworkflow";
@@ -31,6 +34,47 @@ namespace He.PipelineAssessment.UI.HttpClients
                                                    $"\n Message= '{data}'," +
                                                    $"\n Url='{fullUri}'");
             }
+
+            var multipleChoiceQuestionDataModel = JsonSerializer.Deserialize<MultipleChoiceQuestionDataModel>(data);
+            var activityData =
+                JsonSerializer.Deserialize<Activitydata>(multipleChoiceQuestionDataModel.workflowInstance.activityData.First().Value.ToString());
+
+            return new WorkflowNavigationViewModel
+            {
+                ActivityData = activityData,
+                WorkflowInstanceId = multipleChoiceQuestionDataModel.workflowInstance.id
+            };
+        }
+
+        public async Task<WorkflowNavigationViewModel> NavigateWorkflow(WorkflowNavigationViewModel model)
+        {
+            var data = "";
+            var fullUri = "https://localhost:7227/multiple-choice";
+            var postModel = new MultipleChoiceQuestionModel
+            {
+                QuestionID = model.ActivityData.QuestionID,
+                Answer = "something...",
+                WorkflowInstanceID = model.WorkflowInstanceId
+            };
+
+            using (var response = await _httpClient.PostAsJsonAsync(fullUri.ToString(), postModel).ConfigureAwait(false))
+            {
+                data = await response.Content.ReadAsStringAsync().ConfigureAwait(false);
+                if (!response.IsSuccessStatusCode)
+                    throw new ApplicationException($"StatusCode='{response.StatusCode}'," +
+                                                   $"\n Message= '{data}'," +
+                                                   $"\n Url='{fullUri}'");
+            }
+
+            var multipleChoiceQuestionDataModel = JsonSerializer.Deserialize<MultipleChoiceQuestionDataModel>(data);
+            var activityData =
+                JsonSerializer.Deserialize<Activitydata>(multipleChoiceQuestionDataModel.workflowInstance.activityData.First().Value.ToString());
+
+            return new WorkflowNavigationViewModel
+            {
+                ActivityData = activityData,
+                WorkflowInstanceId = multipleChoiceQuestionDataModel.workflowInstance.id
+            };
         }
 
         private async Task Post<T>(string eventName, T eventBody) where T : class, new()

@@ -6,4 +6,8 @@
     <ImplicitUsings>enable</ImplicitUsings>
   </PropertyGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\Elsa.Models\Elsa.Models.csproj" />
+  </ItemGroup>
+
 </Project>

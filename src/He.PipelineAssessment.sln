@@ -12,7 +12,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Elsa.Dashboard", "Elsa.Dash
 		{C8F5AEB4-69A2-4C33-A7B4-DC23BB465CF4} = {C8F5AEB4-69A2-4C33-A7B4-DC23BB465CF4}
 	EndProjectSection
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "He.PipelineAssessment.UI", "He.PipelineAssessment.UI\He.PipelineAssessment.UI.csproj", "{56A1066D-5636-4CC6-938D-A417B037B87A}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "He.PipelineAssessment.UI", "He.PipelineAssessment.UI\He.PipelineAssessment.UI.csproj", "{56A1066D-5636-4CC6-938D-A417B037B87A}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Elsa.Models", "Elsa.Models\Elsa.Models.csproj", "{33630DA8-5BF4-4838-BA07-61EB0C77DA58}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -36,6 +38,10 @@ Global
 		{56A1066D-5636-4CC6-938D-A417B037B87A}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{56A1066D-5636-4CC6-938D-A417B037B87A}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{56A1066D-5636-4CC6-938D-A417B037B87A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{33630DA8-5BF4-4838-BA07-61EB0C77DA58}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{33630DA8-5BF4-4838-BA07-61EB0C77DA58}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{33630DA8-5BF4-4838-BA07-61EB0C77DA58}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{33630DA8-5BF4-4838-BA07-61EB0C77DA58}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

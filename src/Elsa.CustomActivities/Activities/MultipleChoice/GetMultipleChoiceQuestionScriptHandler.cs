@@ -1,8 +1,9 @@
-﻿using Elsa.Scripting.JavaScript.Events;
+﻿using Elsa.CustomActivities.Activites.MultipleChoice;
+using Elsa.Scripting.JavaScript.Events;
 using Elsa.Scripting.JavaScript.Messages;
 using MediatR;
 
-namespace Elsa.CustomActivities.Activites.MultipleChoice
+namespace Elsa.CustomActivities.Activities.MultipleChoice
 {
     public class GetMultipleChoiceQuestionScriptHandler : INotificationHandler<EvaluatingJavaScriptExpression>, INotificationHandler<RenderingTypeScriptDefinitions>
     {

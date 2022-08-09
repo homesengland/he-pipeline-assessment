@@ -1,0 +1,31 @@
+﻿@model WorkflowNavigationViewModel
+
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <title>@Model.ActivityData.Title</title>
+</head>
+<body>
+<div class="text-center">
+   
+    @using (Html.BeginForm("ProgressWorkflow", "Home", FormMethod.Post))
+    {
+        @Html.HiddenFor(m=>Model.WorkflowInstanceId)
+        @Html.HiddenFor(m=>Model.ActivityData.QuestionID)
+        @Html.DisplayTextFor(m => m.ActivityData.Question)
+        @foreach (var choice in Model.ActivityData.Choices)
+        {
+            @Html.Label(choice.answer)
+            @Html.CheckBoxFor(m => choice.isSelected)
+        }
+        <input id = "Next" type = "submit" value = "Next" />
+    }
+
+</div>
+</body>
+</html>

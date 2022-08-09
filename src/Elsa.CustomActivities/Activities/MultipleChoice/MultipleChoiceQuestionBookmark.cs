@@ -1,6 +1,6 @@
 ﻿using Elsa.Services;
 
-namespace Elsa.CustomActivities.Activites.MultipleChoice
+namespace Elsa.CustomActivities.Activities.MultipleChoice
 {
     public class MultipleChoiceQuestionBookmark : IBookmark
     {

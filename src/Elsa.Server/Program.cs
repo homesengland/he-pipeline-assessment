@@ -1,9 +1,7 @@
 using Elsa;
-using Elsa.CustomActivities.Activites.MultipleChoice;
+using Elsa.CustomActivities.Activities.MultipleChoice;
 using Elsa.Persistence.EntityFramework.Core.Extensions;
 using Elsa.Persistence.EntityFramework.Sqlite;
-using MyActivityLibrary.Activities;
-using MyActivityLibrary.Bookmarks;
 using MyActivityLibrary.JavaScript;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -13,6 +11,7 @@ builder.Services
     .AddElsa(elsa => elsa
         .UseEntityFrameworkPersistence(ef => ef.UseSqlite())
         .AddActivity<MultipleChoiceQuestion>()
+        .AddConsoleActivities()
     );
 
 // Elsa API endpoints.

@@ -16,12 +16,13 @@ namespace Elsa.Server.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> StartWorkflow([FromBody]string workflowDefinitionId)
+        public async Task<IActionResult> StartWorkflow([FromBody] string workflowDefinitionId)
         {
             var sampleWorkflow = await _workflowRegistry.GetWorkflowAsync(workflowDefinitionId, VersionOptions.Published);
             try
             {
                 var result = await _workflowRunner.StartWorkflowAsync(sampleWorkflow!);
+
                 return Ok(result);
             }
             catch (Exception e)

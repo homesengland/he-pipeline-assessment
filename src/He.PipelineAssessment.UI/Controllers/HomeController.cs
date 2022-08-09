@@ -1,7 +1,7 @@
-﻿using He.PipelineAssessment.UI.Models;
+﻿using He.PipelineAssessment.UI.HttpClients;
+using He.PipelineAssessment.UI.Models;
 using Microsoft.AspNetCore.Mvc;
 using System.Diagnostics;
-using He.PipelineAssessment.UI.HttpClients;
 
 namespace He.PipelineAssessment.UI.Controllers
 {
@@ -27,10 +27,10 @@ namespace He.PipelineAssessment.UI.Controllers
         }
 
         [HttpPost]
-        public async  Task<IActionResult> StartWorkflow([FromForm]StartWorkflowModel model)
+        public async Task<IActionResult> StartWorkflow([FromForm] StartWorkflowModel model)
         {
-            await _eslElsaServerHttpClient.PostStartWorkflow(model.WorkflowDefinitionId);
-            return Ok();
+            var response = await _eslElsaServerHttpClient.PostStartWorkflow(model.WorkflowDefinitionId);
+            return View(response);
         }
 
         public IActionResult Privacy()
@@ -42,6 +42,13 @@ namespace He.PipelineAssessment.UI.Controllers
         public IActionResult Error()
         {
             return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
+        }
+
+        public async Task<IActionResult> ProgressWorkflow([FromForm] WorkflowNavigationViewModel model)
+        {
+            var response = await _eslElsaServerHttpClient.NavigateWorkflow(model);
+            return View("StartWorkflow", response);
+
         }
     }
 }
