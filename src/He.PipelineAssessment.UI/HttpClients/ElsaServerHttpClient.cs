@@ -66,14 +66,12 @@ namespace He.PipelineAssessment.UI.HttpClients
                                                    $"\n Url='{fullUri}'");
             }
 
-            var multipleChoiceQuestionDataModel = JsonSerializer.Deserialize<MultipleChoiceQuestionDataModel>(data);
-            var activityData =
-                JsonSerializer.Deserialize<Activitydata>(multipleChoiceQuestionDataModel.workflowInstance.activityData.First().Value.ToString());
+            var activityData = JsonSerializer.Deserialize<Activitydata>(data);
 
             return new WorkflowNavigationViewModel
             {
                 ActivityData = activityData,
-                WorkflowInstanceId = multipleChoiceQuestionDataModel.workflowInstance.id
+                WorkflowInstanceId = model.WorkflowInstanceId
             };
         }
 

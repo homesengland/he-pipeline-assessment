@@ -63,7 +63,7 @@ namespace He.PipelineAssessment.UI.Models
         public string QuestionID { get; set; }
         public string Question { get; set; }
         public Case[] Cases { get; set; }
-        public int Mode { get; set; }
+        public object Mode { get; set; }
         public object Output { get; set; }
         public _Lifecycle _Lifecycle { get; set; }
     }

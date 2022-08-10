@@ -22,7 +22,7 @@ namespace Elsa.CustomActivities.Activities.MultipleChoice
 
         public async Task<IEnumerable<CollectedWorkflow>> ExecuteWorkflowsAsync(MultipleChoiceQuestionModel model, CancellationToken cancellationToken = default)
         {
-            var context = new WorkflowsQuery(nameof(MultipleChoiceQuestion), new MultipleChoiceQuestionBookmark() { QuestionID = model.QuestionID }, null, model.WorkflowInstanceID);
+            var context = new WorkflowsQuery(nameof(MultipleChoiceQuestion), new MultipleChoiceQuestionBookmark() { QuestionID = model.QuestionID.ToLowerInvariant() }, null, model.WorkflowInstanceID);
             return await _workflowLaunchpad.CollectAndExecuteWorkflowsAsync(context, new WorkflowInput(model), cancellationToken);
         }
 
