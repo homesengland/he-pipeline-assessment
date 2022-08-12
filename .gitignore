@@ -354,3 +354,4 @@ MigrationBackup/
 *.sqlite.db-shm
 *.sqlite.db-wal
 elsa.sqlite.db
+pipelineassessment.db

@@ -10,8 +10,4 @@
     <ProjectReference Include="..\Elsa.Models\Elsa.Models.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="Data\" />
-  </ItemGroup>
-
 </Project>

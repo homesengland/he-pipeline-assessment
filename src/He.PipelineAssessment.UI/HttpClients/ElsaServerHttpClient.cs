@@ -52,6 +52,7 @@ namespace He.PipelineAssessment.UI.HttpClients
             var fullUri = "https://localhost:7227/multiple-choice";
             var postModel = new MultipleChoiceQuestionModel
             {
+                Id = $"{model.WorkflowInstanceId}-{model.ActivityData.QuestionID}",
                 QuestionID = model.ActivityData.QuestionID,
                 Answer = "something...",
                 WorkflowInstanceID = model.WorkflowInstanceId,

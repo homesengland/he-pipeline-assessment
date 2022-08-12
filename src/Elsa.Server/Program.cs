@@ -2,17 +2,30 @@ using Elsa;
 using Elsa.CustomActivities.Activities.MultipleChoice;
 using Elsa.Persistence.EntityFramework.Core.Extensions;
 using Elsa.Persistence.EntityFramework.Sqlite;
+using Elsa.Runtime;
+using Elsa.Server.Data;
+using Elsa.Server.Data.StartupTasks;
+using Microsoft.EntityFrameworkCore;
 using MyActivityLibrary.JavaScript;
 
 var builder = WebApplication.CreateBuilder(args);
+var elsaConnectionString = builder.Configuration.GetConnectionString("Elsa");
+var pipelineAssessmentConnectionString = builder.Configuration.GetConnectionString("PipelineAssessment");
 
 // Elsa services.
 builder.Services
     .AddElsa(elsa => elsa
-        .UseEntityFrameworkPersistence(ef => ef.UseSqlite())
+        .UseEntityFrameworkPersistence(ef => ef.UseSqlite(elsaConnectionString))
         .AddActivity<MultipleChoiceQuestion>()
         .AddConsoleActivities()
     );
+
+
+builder.Services.AddDbContextFactory<PipelineAssessmentContext>(options =>
+    options.UseSqlite(pipelineAssessmentConnectionString, sql => sql.MigrationsAssembly(typeof(Program).Assembly.FullName)));
+//Commenting out for now, as I don't think this is the right approach
+//builder.Services.AddWorkflowContextProvider<PipelineAssessmentWorkflowContextProvider>();
+builder.Services.AddStartupTask<RunPipelineAssessmentMigrations>();
 
 // Elsa API endpoints.
 builder.Services.AddElsaApiEndpoints();
