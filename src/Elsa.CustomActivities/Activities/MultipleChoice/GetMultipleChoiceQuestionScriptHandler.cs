@@ -1,4 +1,4 @@
-﻿using Elsa.CustomActivities.Activites.MultipleChoice;
+﻿using Elsa.Models;
 using Elsa.Scripting.JavaScript.Events;
 using Elsa.Scripting.JavaScript.Messages;
 using MediatR;

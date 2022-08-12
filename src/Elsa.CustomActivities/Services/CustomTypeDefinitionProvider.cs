@@ -1,4 +1,4 @@
-﻿using Elsa.CustomActivities.Activites.MultipleChoice;
+﻿using Elsa.Models;
 using Elsa.Scripting.JavaScript.Services;
 
 namespace MyActivityLibrary.JavaScript

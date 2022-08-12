@@ -1,9 +1,9 @@
 ﻿using Elsa.Activities.ControlFlow;
 using Elsa.ActivityResults;
 using Elsa.Attributes;
-using Elsa.CustomActivities.Activites.MultipleChoice;
 using Elsa.Design;
 using Elsa.Expressions;
+using Elsa.Models;
 using Elsa.Services;
 using Elsa.Services.Models;
 
@@ -38,6 +38,7 @@ namespace Elsa.CustomActivities.Activities.MultipleChoice
            DefaultSyntax = SyntaxNames.Literal,
            SupportedSyntaxes = new[] { SyntaxNames.Literal })]
         public string Question { get; set; }
+        public DateTime LastUpdated => DateTime.Now;
 
         #endregion
 

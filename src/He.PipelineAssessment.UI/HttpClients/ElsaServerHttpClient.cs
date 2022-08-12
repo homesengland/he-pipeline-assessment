@@ -1,4 +1,4 @@
-﻿using Elsa.CustomActivities.Activites.MultipleChoice;
+﻿using Elsa.Models;
 using He.PipelineAssessment.UI.Models;
 using System.Text.Json;
 
@@ -7,7 +7,7 @@ namespace He.PipelineAssessment.UI.HttpClients
     public interface IElsaServerHttpClient
     {
         Task<WorkflowNavigationViewModel> PostStartWorkflow(string workflowDefinitionId);
-        Task<WorkflowNavigationViewModel> NavigateWorkflow(WorkflowNavigationViewModel model);
+        Task<WorkflowNavigationViewModel> NavigateWorkflow(WorkflowNavigationViewModel model, bool navigateBack = false);
     }
 
     public class ElsaServerHttpClient : IElsaServerHttpClient
@@ -46,7 +46,7 @@ namespace He.PipelineAssessment.UI.HttpClients
             };
         }
 
-        public async Task<WorkflowNavigationViewModel> NavigateWorkflow(WorkflowNavigationViewModel model)
+        public async Task<WorkflowNavigationViewModel> NavigateWorkflow(WorkflowNavigationViewModel model, bool navigateBack)
         {
             var data = "";
             var fullUri = "https://localhost:7227/multiple-choice";
@@ -54,7 +54,9 @@ namespace He.PipelineAssessment.UI.HttpClients
             {
                 QuestionID = model.ActivityData.QuestionID,
                 Answer = "something...",
-                WorkflowInstanceID = model.WorkflowInstanceId
+                WorkflowInstanceID = model.WorkflowInstanceId,
+                NavigateBack = navigateBack,
+                PreviousActivityId = ""
             };
 
             using (var response = await _httpClient.PostAsJsonAsync(fullUri.ToString(), postModel).ConfigureAwait(false))

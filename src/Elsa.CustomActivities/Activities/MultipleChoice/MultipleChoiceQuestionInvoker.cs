@@ -1,5 +1,4 @@
-﻿using Elsa.CustomActivities.Activites.MultipleChoice;
-using Elsa.Models;
+﻿using Elsa.Models;
 using Elsa.Services;
 using Elsa.Services.Models;
 
@@ -26,6 +25,11 @@ namespace Elsa.CustomActivities.Activities.MultipleChoice
             return await _workflowLaunchpad.CollectAndExecuteWorkflowsAsync(context, new WorkflowInput(model), cancellationToken);
         }
 
+        public async Task<IEnumerable<CollectedWorkflow>> FindWorkflowsAsync(MultipleChoiceQuestionModel model, CancellationToken cancellationToken = default)
+        {
+            var context = new WorkflowsQuery(nameof(MultipleChoiceQuestion), new MultipleChoiceQuestionBookmark() { QuestionID = model.QuestionID.ToLowerInvariant() }, null, model.WorkflowInstanceID);
+            return await _workflowLaunchpad.FindWorkflowsAsync(context, cancellationToken);
+        }
 
     }
 }

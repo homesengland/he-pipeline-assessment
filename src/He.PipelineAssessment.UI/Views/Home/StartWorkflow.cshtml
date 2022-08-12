@@ -12,20 +12,23 @@
 </head>
 <body>
 <div class="text-center">
-   
     @using (Html.BeginForm("ProgressWorkflow", "Home", FormMethod.Post))
     {
         @Html.HiddenFor(m=>Model.WorkflowInstanceId)
         @Html.HiddenFor(m=>Model.ActivityData.QuestionID)
+        @Html.DisplayTextFor(m=>Model.ActivityData.QuestionID)
+        <br />
         @Html.DisplayTextFor(m => m.ActivityData.Question)
+        <br />
         @foreach (var choice in Model.ActivityData.Choices)
         {
             @Html.Label(choice.answer)
             @Html.CheckBoxFor(m => choice.isSelected)
+            <br />
         }
-        <input id = "Next" type = "submit" value = "Next" />
+        <input id = "Back" type = "submit" value = "Back" name="Back"/>
+        <input id = "Next" type = "submit" value = "Next" name="Next" />
     }
-
 </div>
 </body>
 </html>

@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Elsa.CustomActivities.Activites.MultipleChoice
+﻿namespace Elsa.Models
 {
     public class MultipleChoiceQuestionModel
     {
@@ -15,5 +9,7 @@ namespace Elsa.CustomActivities.Activites.MultipleChoice
         public string Answer { get; set; }
 
         public bool FinishWorkflow { get; set; }
+        public bool NavigateBack { get; set; }
+        public string PreviousActivityId { get; set; }
     }
 }

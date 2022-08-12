@@ -46,9 +46,19 @@ namespace He.PipelineAssessment.UI.Controllers
 
         public async Task<IActionResult> ProgressWorkflow([FromForm] WorkflowNavigationViewModel model)
         {
-            var response = await _eslElsaServerHttpClient.NavigateWorkflow(model);
-            return View("StartWorkflow", response);
+            WorkflowNavigationViewModel response;
+            if (Request.Form.ContainsKey("Back")) // && model has changed
+            {
+                response = await _eslElsaServerHttpClient.NavigateWorkflow(model, true);
+            }
+            else
+            {
+                response = await _eslElsaServerHttpClient.NavigateWorkflow(model, false);
+            }
 
+            ModelState.Clear();
+
+            return View("StartWorkflow", response);
         }
     }
 }
