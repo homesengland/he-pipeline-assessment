@@ -1,4 +1,5 @@
 ﻿using Elsa.Models;
+using Elsa.Server.Data;
 using Elsa.Services;
 using Microsoft.AspNetCore.Mvc;
 
@@ -8,11 +9,13 @@ namespace Elsa.Server.Controllers
     {
         private readonly IWorkflowRegistry _workflowRegistry;
         private readonly IStartsWorkflow _workflowRunner;
+        private readonly IPipelineAssessmentRepository _pipelineAssessmentRepository;
 
-        public WorkflowController(IWorkflowRegistry workflowRegistry, IStartsWorkflow workflowRunner)
+        public WorkflowController(IWorkflowRegistry workflowRegistry, IStartsWorkflow workflowRunner, IPipelineAssessmentRepository pipelineAssessmentRepository)
         {
             _workflowRegistry = workflowRegistry;
             _workflowRunner = workflowRunner;
+            _pipelineAssessmentRepository = pipelineAssessmentRepository;
         }
 
         [HttpPost]
@@ -23,6 +26,16 @@ namespace Elsa.Server.Controllers
             {
                 var result = await _workflowRunner.StartWorkflowAsync(sampleWorkflow!);
 
+                var questionId = result.WorkflowInstance.ActivityData.First().Value["QuestionID"];
+                var multipleChoiceQuestion = new MultipleChoiceQuestionModel
+                {
+                    Id = $"{result.WorkflowInstance.Id}-{questionId}",
+                    ActivityID = result.ActivityId,
+                    QuestionID = questionId.ToString(),
+                    WorkflowInstanceID = result.WorkflowInstance.Id
+                };
+
+                await _pipelineAssessmentRepository.SaveMultipleChoiceQuestionAsync(multipleChoiceQuestion);
                 return Ok(result);
             }
             catch (Exception e)

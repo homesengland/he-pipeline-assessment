@@ -13,12 +13,13 @@ namespace Elsa.Server.Data.Migrations
                 columns: table => new
                 {
                     Id = table.Column<string>(type: "TEXT", nullable: false),
-                    QuestionID = table.Column<string>(type: "TEXT", nullable: false),
-                    WorkflowInstanceID = table.Column<string>(type: "TEXT", nullable: false),
-                    Answer = table.Column<string>(type: "TEXT", nullable: false),
-                    FinishWorkflow = table.Column<bool>(type: "INTEGER", nullable: false),
-                    NavigateBack = table.Column<bool>(type: "INTEGER", nullable: false),
-                    PreviousActivityId = table.Column<string>(type: "TEXT", nullable: false)
+                    QuestionID = table.Column<string>(type: "TEXT", nullable: true),
+                    ActivityID = table.Column<string>(type: "TEXT", nullable: true),
+                    WorkflowInstanceID = table.Column<string>(type: "TEXT", nullable: true),
+                    Answer = table.Column<string>(type: "TEXT", nullable: true),
+                    FinishWorkflow = table.Column<bool>(type: "INTEGER", nullable: true),
+                    NavigateBack = table.Column<bool>(type: "INTEGER", nullable: true),
+                    PreviousActivityId = table.Column<string>(type: "TEXT", nullable: true)
                 },
                 constraints: table =>
                 {

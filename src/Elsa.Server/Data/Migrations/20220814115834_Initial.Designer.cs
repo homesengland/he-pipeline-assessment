@@ -10,7 +10,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Elsa.Server.Data.Migrations
 {
     [DbContext(typeof(PipelineAssessmentContext))]
-    [Migration("20220812145825_Initial")]
+    [Migration("20220814115834_Initial")]
     partial class Initial
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -21,6 +21,10 @@ namespace Elsa.Server.Data.Migrations
             modelBuilder.Entity("Elsa.Models.MultipleChoiceQuestionModel", b =>
                 {
                     b.Property<string>("Id")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("ActivityID")
+                        .IsRequired()
                         .HasColumnType("TEXT");
 
                     b.Property<string>("Answer")

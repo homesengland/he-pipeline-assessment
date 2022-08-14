@@ -21,8 +21,10 @@ namespace Elsa.Server.Data.Migrations
                     b.Property<string>("Id")
                         .HasColumnType("TEXT");
 
+                    b.Property<string>("ActivityID")
+                        .HasColumnType("TEXT");
+
                     b.Property<string>("Answer")
-                        .IsRequired()
                         .HasColumnType("TEXT");
 
                     b.Property<bool>("FinishWorkflow")
@@ -32,15 +34,12 @@ namespace Elsa.Server.Data.Migrations
                         .HasColumnType("INTEGER");
 
                     b.Property<string>("PreviousActivityId")
-                        .IsRequired()
                         .HasColumnType("TEXT");
 
                     b.Property<string>("QuestionID")
-                        .IsRequired()
                         .HasColumnType("TEXT");
 
                     b.Property<string>("WorkflowInstanceID")
-                        .IsRequired()
                         .HasColumnType("TEXT");
 
                     b.HasKey("Id");

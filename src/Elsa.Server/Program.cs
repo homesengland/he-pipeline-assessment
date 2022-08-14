@@ -34,6 +34,7 @@ builder.Services.AddNotificationHandlers(typeof(GetMultipleChoiceQuestionScriptH
 
 builder.Services.AddBookmarkProvider<MultipleChoiceQuestionBookmarkProvider>();
 builder.Services.AddScoped<IMultipleChoiceQuestionInvoker, MultipleChoiceQuestionInvoker>();
+builder.Services.AddScoped<IPipelineAssessmentRepository, PipelineAssessmentRepository>();
 builder.Services.AddJavaScriptTypeDefinitionProvider<CustomTypeDefinitionProvider>();
 
 // Allow arbitrary client browser apps to access the API.

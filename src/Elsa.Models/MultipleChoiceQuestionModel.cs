@@ -4,6 +4,7 @@
     {
         public string Id { get; set; }
         public string QuestionID { get; set; }
+        public string ActivityID { get; set; }
 
         public string WorkflowInstanceID { get; set; }
 

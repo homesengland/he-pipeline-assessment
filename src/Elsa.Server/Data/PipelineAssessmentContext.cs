@@ -9,6 +9,6 @@ namespace Elsa.Server.Data
         {
         }
 
-        public DbSet<MultipleChoiceQuestionModel> MultipleChoiceQuestions { get; set; } = default!;
+        public DbSet<MultipleChoiceQuestionModel?> MultipleChoiceQuestions { get; set; } = default!;
     }
 }
