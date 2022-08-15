@@ -1,6 +1,7 @@
 ﻿using Elsa.Activities.ControlFlow;
 using Elsa.ActivityResults;
 using Elsa.Attributes;
+using Elsa.CustomModels;
 using Elsa.Design;
 using Elsa.Expressions;
 using Elsa.Models;
@@ -77,7 +78,7 @@ namespace Elsa.CustomActivities.Activities.MultipleChoice
             var outcomes = hasAnyMatches ? results : new[] { OutcomeNames.Default };
             context.JournalData.Add("Matches", matches);
 
-            if (response != null && response.FinishWorkflow)
+            if (response != null && response.FinishWorkflow.HasValue && response.FinishWorkflow.Value)
             {
                 return new CombinedResult(new List<IActivityExecutionResult>
                 {

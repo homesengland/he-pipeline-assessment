@@ -1,4 +1,5 @@
-﻿using Elsa.Models;
+﻿using Elsa.CustomModels;
+using Elsa.Models;
 using Elsa.Services.Models;
 
 namespace Elsa.CustomActivities.Activities.MultipleChoice

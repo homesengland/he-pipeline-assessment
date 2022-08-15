@@ -1,4 +1,5 @@
-﻿using Elsa.Models;
+﻿using Elsa.CustomModels;
+using Elsa.Models;
 using Elsa.Server.Data;
 using Elsa.Services;
 using Microsoft.AspNetCore.Mvc;
@@ -25,14 +26,14 @@ namespace Elsa.Server.Controllers
             try
             {
                 var result = await _workflowRunner.StartWorkflowAsync(sampleWorkflow!);
-
-                var questionId = result.WorkflowInstance.ActivityData.First().Value["QuestionID"];
+                var questionId = result.WorkflowInstance.ActivityData.First(x => x.Key == result.WorkflowInstance.LastExecutedActivityId).Value["QuestionID"];
                 var multipleChoiceQuestion = new MultipleChoiceQuestionModel
                 {
                     Id = $"{result.WorkflowInstance.Id}-{questionId}",
-                    ActivityID = result.ActivityId,
+                    ActivityID = result.WorkflowInstance.LastExecutedActivityId,
                     QuestionID = questionId.ToString(),
-                    WorkflowInstanceID = result.WorkflowInstance.Id
+                    WorkflowInstanceID = result.WorkflowInstance.Id,
+                    PreviousActivityId = result.WorkflowInstance.LastExecutedActivityId
                 };
 
                 await _pipelineAssessmentRepository.SaveMultipleChoiceQuestionAsync(multipleChoiceQuestion);

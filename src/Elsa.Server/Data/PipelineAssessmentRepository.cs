@@ -1,4 +1,5 @@
-﻿using Elsa.Models;
+﻿using Elsa.CustomModels;
+using Elsa.Models;
 using Microsoft.EntityFrameworkCore;
 
 namespace Elsa.Server.Data

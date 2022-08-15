@@ -1,4 +1,5 @@
-﻿using Elsa.Models;
+﻿using Elsa.CustomModels;
+using Elsa.Models;
 using Elsa.Scripting.JavaScript.Events;
 using Elsa.Scripting.JavaScript.Messages;
 using MediatR;

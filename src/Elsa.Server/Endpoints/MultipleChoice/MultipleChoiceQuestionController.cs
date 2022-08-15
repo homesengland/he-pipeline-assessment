@@ -1,9 +1,11 @@
 ﻿using Elsa.CustomActivities.Activities.MultipleChoice;
+using Elsa.CustomModels;
 using Elsa.Models;
 using Elsa.Persistence;
 using Elsa.Server.Data;
 using Elsa.Services.Models;
 using Microsoft.AspNetCore.Mvc;
+using Newtonsoft.Json;
 using Open.Linq.AsyncExtensions;
 
 namespace Elsa.Server.Endpoints.MultipleChoice
@@ -27,17 +29,19 @@ namespace Elsa.Server.Endpoints.MultipleChoice
         public async Task<IActionResult> Handle(MultipleChoiceQuestionModel model)
         {
             string nextActivityId = "";
-            var dbWorkflow = _pipelineAssessmentRepository.GetMultipleChoiceQuestions(model.Id);
+
+            var dbWorkflowActivityModel = await _pipelineAssessmentRepository.GetMultipleChoiceQuestions(model.Id);
+
             WorkflowInstance workflowInstance;
-            if (model.NavigateBack)
+
+            if (model.NavigateBack.HasValue && model.NavigateBack.Value)
             {
                 var workflow = await _invoker.FindWorkflowsAsync(model);
                 workflowInstance = await _workflowInstanceStore.FindByIdAsync(workflow.First().WorkflowInstanceId);
 
-                //var activityDataIrdered = workflowInstance.ActivityData.OrderByDescending(x => x);
-                //var previousBlockingActivity = workflowInstance.BlockingActivities.OrderByDescending(x => x)
-                //    .FirstOrDefault(y => y.ActivityId != workflow.First().ActivityId);
-                //nextActivityId = previousBlockingActivity.ActivityId;
+                var previousBlockingActivity = workflowInstance.BlockingActivities
+                    .FirstOrDefault(y => y.ActivityId == dbWorkflowActivityModel.PreviousActivityId);
+                nextActivityId = previousBlockingActivity.ActivityId;
             }
             else
             {
@@ -46,13 +50,30 @@ namespace Elsa.Server.Endpoints.MultipleChoice
                 collectedWorkflows = await _invoker.ExecuteWorkflowsAsync(model).ToList();
                 workflowInstance = await _workflowInstanceStore.FindByIdAsync(collectedWorkflows.First().WorkflowInstanceId);
                 nextActivityId = workflowInstance.Output.ActivityId;
+
                 //_workflowInstanceStore.SaveAsync(workflowInstance);
             }
 
-
             var nextActivity =
-                workflowInstance.ActivityData.FirstOrDefault(a => a.Key == nextActivityId);
-            return Ok(nextActivity.Value);
+                workflowInstance.ActivityData.FirstOrDefault(a => a.Key == nextActivityId).Value;
+
+            var multipleChoiceQuestion = new MultipleChoiceQuestionModel
+            {
+                Id = $"{model.WorkflowInstanceID}-{nextActivity["QuestionID"]}",
+                ActivityID = nextActivityId,
+                QuestionID = nextActivity["QuestionID"].ToString(),
+                WorkflowInstanceID = model.WorkflowInstanceID,
+                PreviousActivityId = model.ActivityID
+            };
+            await _pipelineAssessmentRepository.SaveMultipleChoiceQuestionAsync(multipleChoiceQuestion);
+
+            var json = JsonConvert.SerializeObject(nextActivity, Newtonsoft.Json.Formatting.Indented);
+            var activityData = JsonConvert.DeserializeObject<ActivityData>(json);
+            return Ok(new ActivityDataModel
+            {
+                activityData = activityData,
+                ActivityId = nextActivityId
+            });
         }
     }
 }

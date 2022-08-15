@@ -1,6 +1,8 @@
-﻿using Elsa.Models;
-using He.PipelineAssessment.UI.Models;
+﻿using He.PipelineAssessment.UI.Models;
 using System.Text.Json;
+using AutoMapper;
+using Elsa.CustomModels;
+using Activitydata = He.PipelineAssessment.UI.Models.Activitydata;
 
 namespace He.PipelineAssessment.UI.HttpClients
 {
@@ -13,10 +15,12 @@ namespace He.PipelineAssessment.UI.HttpClients
     public class ElsaServerHttpClient : IElsaServerHttpClient
     {
         private readonly HttpClient _httpClient;
+        private readonly IMapper _mapper;
 
-        public ElsaServerHttpClient(HttpClient httpClient)
+        public ElsaServerHttpClient(HttpClient httpClient, IMapper mapper)
         {
             _httpClient = httpClient;
+            _mapper = mapper;
         }
 
         public async Task<WorkflowNavigationViewModel> PostStartWorkflow(string workflowDefinitionId)
@@ -36,13 +40,15 @@ namespace He.PipelineAssessment.UI.HttpClients
             }
 
             var multipleChoiceQuestionDataModel = JsonSerializer.Deserialize<MultipleChoiceQuestionDataModel>(data);
+            var activityId = multipleChoiceQuestionDataModel.workflowInstance.lastExecutedActivityId;
             var activityData =
-                JsonSerializer.Deserialize<Activitydata>(multipleChoiceQuestionDataModel.workflowInstance.activityData.First().Value.ToString());
+                JsonSerializer.Deserialize<Activitydata>(multipleChoiceQuestionDataModel.workflowInstance.activityData.First(x => x.Key == activityId).Value.ToString());
 
             return new WorkflowNavigationViewModel
             {
                 ActivityData = activityData,
-                WorkflowInstanceId = multipleChoiceQuestionDataModel.workflowInstance.id
+                WorkflowInstanceId = multipleChoiceQuestionDataModel.workflowInstance.id,
+                ActivityId = activityId
             };
         }
 
@@ -57,7 +63,8 @@ namespace He.PipelineAssessment.UI.HttpClients
                 Answer = "something...",
                 WorkflowInstanceID = model.WorkflowInstanceId,
                 NavigateBack = navigateBack,
-                PreviousActivityId = ""
+                PreviousActivityId = "",
+                ActivityID = model.ActivityId
             };
 
             using (var response = await _httpClient.PostAsJsonAsync(fullUri.ToString(), postModel).ConfigureAwait(false))
@@ -68,13 +75,17 @@ namespace He.PipelineAssessment.UI.HttpClients
                                                    $"\n Message= '{data}'," +
                                                    $"\n Url='{fullUri}'");
             }
-
-            var activityData = JsonSerializer.Deserialize<Activitydata>(data);
+            var options = new JsonSerializerOptions
+            {
+                PropertyNameCaseInsensitive = true
+            };
+            var activityData = JsonSerializer.Deserialize<ActivityDataModel>(data, options);
 
             return new WorkflowNavigationViewModel
             {
-                ActivityData = activityData,
-                WorkflowInstanceId = model.WorkflowInstanceId
+                ActivityData = _mapper.Map<Activitydata>(activityData.activityData),
+                WorkflowInstanceId = model.WorkflowInstanceId,
+                ActivityId = activityData.ActivityId
             };
         }
 

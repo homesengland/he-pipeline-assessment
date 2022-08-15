@@ -14,7 +14,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Elsa.Dashboard", "Elsa.Dash
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "He.PipelineAssessment.UI", "He.PipelineAssessment.UI\He.PipelineAssessment.UI.csproj", "{56A1066D-5636-4CC6-938D-A417B037B87A}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Elsa.Models", "Elsa.Models\Elsa.Models.csproj", "{33630DA8-5BF4-4838-BA07-61EB0C77DA58}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Elsa.CustomModels", "Elsa.Models\Elsa.CustomModels.csproj", "{33630DA8-5BF4-4838-BA07-61EB0C77DA58}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
