@@ -60,7 +60,7 @@ namespace He.PipelineAssessment.UI.HttpClients
             {
                 Id = $"{model.WorkflowInstanceId}-{model.ActivityData.QuestionID}",
                 QuestionID = model.ActivityData.QuestionID,
-                Answer = "something...",
+                Answer = string.Join(',', model.ActivityData.Choices.Where(x => x is { isSelected: true }).Select(x => x.answer)),
                 WorkflowInstanceID = model.WorkflowInstanceId,
                 NavigateBack = navigateBack,
                 PreviousActivityId = "",
@@ -80,7 +80,15 @@ namespace He.PipelineAssessment.UI.HttpClients
                 PropertyNameCaseInsensitive = true
             };
             var activityData = JsonSerializer.Deserialize<ActivityDataModel>(data, options);
-
+            if (activityData.activityData.Output != null)
+            {
+                var output = JsonSerializer.Deserialize<MultipleChoiceQuestionModel>(activityData.activityData.Output.ToString(), options);
+                foreach (var activityDataChoice in activityData.activityData.Choices)
+                {
+                    activityDataChoice.isSelected = output.Answer.Contains(activityDataChoice.answer);
+                }
+            }
+            
             return new WorkflowNavigationViewModel
             {
                 ActivityData = _mapper.Map<Activitydata>(activityData.activityData),
