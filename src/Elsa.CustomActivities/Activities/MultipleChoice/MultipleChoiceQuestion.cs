@@ -1,31 +1,29 @@
-﻿using Elsa;
-using Elsa.Activities.ControlFlow;
+﻿using Elsa.Activities.ControlFlow;
 using Elsa.ActivityResults;
 using Elsa.Attributes;
-using Elsa.CustomActivities.Activites.MultipleChoice;
+using Elsa.CustomModels;
 using Elsa.Design;
 using Elsa.Expressions;
+using Elsa.Models;
 using Elsa.Services;
 using Elsa.Services.Models;
 
-namespace MyActivityLibrary.Activities
+namespace Elsa.CustomActivities.Activities.MultipleChoice
 {
     [Trigger(
         Category = "Homes England Activities",
-        Description = "Assessmenet screen multiple choice question",
+        Description = "Assessment screen multiple choice question",
         Outcomes = new[] { OutcomeNames.Done }
     )]
     public class MultipleChoiceQuestion : Activity
     {
-        public record MultiChoiceRecord(string Answer, bool IsSingle);
-
 
         [ActivityInput(Hint = "Section title")]
         public string Title { get; set; }
 
-        [ActivityInput(Label = "Multi-choice questions", Hint = "Possible assessment screen answers.", UIHint = "multiChoice-record-builder", IsDesignerCritical = true)]
+        [ActivityInput(Label = "Multi-choice questions", Hint = "Possible assessment screen answers.",
+            UIHint = "multiChoice-record-builder", DefaultSyntax = "Json", IsDesignerCritical = true)]
         public ICollection<MultiChoiceRecord> Choices { get; set; } = new List<MultiChoiceRecord>();
-
 
         #region Input
         [ActivityInput(
@@ -41,6 +39,7 @@ namespace MyActivityLibrary.Activities
            DefaultSyntax = SyntaxNames.Literal,
            SupportedSyntaxes = new[] { SyntaxNames.Literal })]
         public string Question { get; set; }
+        public DateTime LastUpdated => DateTime.Now;
 
         #endregion
 
@@ -79,7 +78,7 @@ namespace MyActivityLibrary.Activities
             var outcomes = hasAnyMatches ? results : new[] { OutcomeNames.Default };
             context.JournalData.Add("Matches", matches);
 
-            if (response != null && response.FinishWorkflow)
+            if (response != null && response.FinishWorkflow.HasValue && response.FinishWorkflow.Value)
             {
                 return new CombinedResult(new List<IActivityExecutionResult>
                 {
@@ -97,4 +96,6 @@ namespace MyActivityLibrary.Activities
         }
 
     }
+
+    public record MultiChoiceRecord(string Answer, bool IsSingle);
 }

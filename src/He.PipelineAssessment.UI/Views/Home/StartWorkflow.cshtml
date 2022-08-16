@@ -1,0 +1,39 @@
+﻿@model WorkflowNavigationViewModel
+@{
+    ViewData["Title"] = "Pipeline Assessment";
+    Layout = "_NewLayout";
+}
+<div class="text-center">
+    @using (Html.BeginForm("ProgressWorkflow", "Home", FormMethod.Post))
+    {
+        @Html.HiddenFor(m=>Model.WorkflowInstanceId)
+        @Html.HiddenFor(m=>Model.ActivityId)
+        @Html.HiddenFor(m=>Model.ActivityData.QuestionID)
+        <br />
+
+        <div class="govuk-form-group">
+            <fieldset class="govuk-fieldset" aria-describedby="waste-hint">
+                <legend class="govuk-fieldset__legend govuk-fieldset__legend--l">
+                    <h1 class="govuk-fieldset__heading">
+                        @Html.DisplayTextFor(m => m.ActivityData.Question)
+                    </h1>
+                </legend>
+                <div id="waste-hint" class="govuk-hint">
+                    Select all that apply.
+                </div>
+                <div class="govuk-checkboxes" data-module="govuk-checkboxes">
+                    @for (int i = 0; i < Model.ActivityData.Choices.Count(); i++) { 
+                        <div class="govuk-checkboxes__item">
+                            @Html.HiddenFor(m=>m.ActivityData.Choices[i].answer)
+                            @Html.CheckBoxFor(m => m.ActivityData.Choices[i].isSelected, new { @class = "govuk-checkboxes__input" })
+                            @Html.Label(Model.ActivityData.Choices[i].answer, Model.ActivityData.Choices[i].answer, new { @class = "govuk-label govuk-checkboxes__label" })
+                        </div>
+                    }
+                </div>
+            </fieldset>
+            <br />
+            <input id = "Back" type = "submit" value = "Back" name="Back" class="govuk-button" />
+            <input id = "Next" type = "submit" value = "Next" name="Next" class="govuk-button" />
+        </div>
+    }
+</div>
