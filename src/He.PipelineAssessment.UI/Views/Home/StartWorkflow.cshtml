@@ -22,11 +22,11 @@
                     Select all that apply.
                 </div>
                 <div class="govuk-checkboxes" data-module="govuk-checkboxes">
-                    @foreach (var choice in Model.ActivityData.Choices)
-                    {
+                    @for (int i = 0; i < Model.ActivityData.Choices.Count(); i++) { 
                         <div class="govuk-checkboxes__item">
-                            @Html.CheckBoxFor(m => choice.isSelected, new {@class="govuk-checkboxes__input"})
-                            @Html.Label(choice.answer, choice.answer, new {@class="govuk-label govuk-checkboxes__label"})
+                            @Html.HiddenFor(m=>m.ActivityData.Choices[i].answer)
+                            @Html.CheckBoxFor(m => m.ActivityData.Choices[i].isSelected, new { @class = "govuk-checkboxes__input" })
+                            @Html.Label(Model.ActivityData.Choices[i].answer, Model.ActivityData.Choices[i].answer, new { @class = "govuk-label govuk-checkboxes__label" })
                         </div>
                     }
                 </div>
