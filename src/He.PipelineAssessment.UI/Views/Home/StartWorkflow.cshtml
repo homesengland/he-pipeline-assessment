@@ -1,35 +1,39 @@
 ﻿@model WorkflowNavigationViewModel
-
 @{
-    Layout = null;
+    ViewData["Title"] = "Pipeline Assessment";
+    Layout = "_NewLayout";
 }
-
-<!DOCTYPE html>
-
-<html>
-<head>
-    <title>@Model.ActivityData.Title</title>
-</head>
-<body>
 <div class="text-center">
     @using (Html.BeginForm("ProgressWorkflow", "Home", FormMethod.Post))
     {
         @Html.HiddenFor(m=>Model.WorkflowInstanceId)
         @Html.HiddenFor(m=>Model.ActivityId)
         @Html.HiddenFor(m=>Model.ActivityData.QuestionID)
-        @Html.DisplayTextFor(m=>Model.ActivityData.QuestionID)
         <br />
-        @Html.DisplayTextFor(m => m.ActivityData.Question)
-        <br />
-        @foreach (var choice in Model.ActivityData.Choices)
-        {
-            @Html.Label(choice.answer)
-            @Html.CheckBoxFor(m => choice.isSelected)
+
+        <div class="govuk-form-group">
+            <fieldset class="govuk-fieldset" aria-describedby="waste-hint">
+                <legend class="govuk-fieldset__legend govuk-fieldset__legend--l">
+                    <h1 class="govuk-fieldset__heading">
+                        @Html.DisplayTextFor(m => m.ActivityData.Question)
+                    </h1>
+                </legend>
+                <div id="waste-hint" class="govuk-hint">
+                    Select all that apply.
+                </div>
+                <div class="govuk-checkboxes" data-module="govuk-checkboxes">
+                    @foreach (var choice in Model.ActivityData.Choices)
+                    {
+                        <div class="govuk-checkboxes__item">
+                            @Html.CheckBoxFor(m => choice.isSelected, new {@class="govuk-checkboxes__input"})
+                            @Html.Label(choice.answer, choice.answer, new {@class="govuk-label govuk-checkboxes__label"})
+                        </div>
+                    }
+                </div>
+            </fieldset>
             <br />
-        }
-        <input id = "Back" type = "submit" value = "Back" name="Back"/>
-        <input id = "Next" type = "submit" value = "Next" name="Next" />
+            <input id = "Back" type = "submit" value = "Back" name="Back" class="govuk-button" />
+            <input id = "Next" type = "submit" value = "Next" name="Next" class="govuk-button" />
+        </div>
     }
 </div>
-</body>
-</html>
