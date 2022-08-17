@@ -9,7 +9,7 @@ namespace Elsa.CustomActivities.Activities.MultipleChoice
 
         private async IAsyncEnumerable<BookmarkResult> GetBookmarksInternalAsync(BookmarkProviderContext<MultipleChoiceQuestion> context, [EnumeratorCancellation] CancellationToken cancellationToken)
         {
-            var activityID = context.ActivityExecutionContext.ActivityId;
+            var activityID = context.ActivityExecutionContext.ActivityId.ToLowerInvariant();
 
             if (string.IsNullOrEmpty(activityID))
                 yield break;

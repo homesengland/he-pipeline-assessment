@@ -16,7 +16,7 @@ namespace Elsa.CustomActivities.Activities.MultipleChoice
 
         public async Task<IEnumerable<CollectedWorkflow>> DispatchWorkflowsAsync(MultipleChoiceQuestionModel model, CancellationToken cancellationToken = default)
         {
-            var context = new WorkflowsQuery(nameof(MultipleChoiceQuestion), new MultipleChoiceQuestionBookmark() { ActivityID = model.ActivityID }, null, model.WorkflowInstanceID);
+            var context = new WorkflowsQuery(nameof(MultipleChoiceQuestion), new MultipleChoiceQuestionBookmark() { ActivityID = model.ActivityID.ToLowerInvariant() }, null, model.WorkflowInstanceID);
             return await _workflowLaunchpad.CollectAndDispatchWorkflowsAsync(context, new WorkflowInput(model), cancellationToken);
         }
 
