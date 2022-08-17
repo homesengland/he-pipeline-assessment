@@ -1,10 +1,11 @@
 ﻿using Elsa.CustomModels;
 using Elsa.Models;
 using Elsa.Server.Data;
+using Elsa.Server.Mappers;
 using Elsa.Services;
 using Microsoft.AspNetCore.Mvc;
 
-namespace Elsa.Server.Controllers
+namespace Elsa.Server.Endpoints
 {
     public class WorkflowController : Controller
     {
@@ -36,7 +37,9 @@ namespace Elsa.Server.Controllers
                 };
 
                 await _pipelineAssessmentRepository.SaveMultipleChoiceQuestionAsync(multipleChoiceQuestion);
-                return Ok(result);
+
+                var workflowExecutionResultDto = result.ToWorkflowExecutionResultDto();
+                return Ok(workflowExecutionResultDto);
             }
             catch (Exception e)
             {

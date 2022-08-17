@@ -1,8 +1,8 @@
-﻿namespace He.PipelineAssessment.UI.Models
+﻿namespace Elsa.Server.Models
 {
-    public class WorkflowNavigationViewModel
+    public class WorkflowExecutionResultDto
     {
-        public ActivityData ActivityData { get; set; }
+        public ActivityData? ActivityData { get; set; }
         public string WorkflowInstanceId { get; set; }
         public string ActivityId { get; set; }
     }

@@ -1,7 +1,9 @@
-﻿using He.PipelineAssessment.UI.HttpClients;
-using He.PipelineAssessment.UI.Models;
+﻿using He.PipelineAssessment.UI.Models;
 using Microsoft.AspNetCore.Mvc;
 using System.Diagnostics;
+using Elsa.CustomWorkflow.Sdk.HttpClients;
+using AutoMapper;
+using Elsa.CustomWorkflow.Sdk.Models;
 
 namespace He.PipelineAssessment.UI.Controllers
 {
@@ -14,11 +16,13 @@ namespace He.PipelineAssessment.UI.Controllers
     {
         private readonly ILogger<HomeController> _logger;
         private readonly IElsaServerHttpClient _eslElsaServerHttpClient;
+        private readonly IMapper _mapper;
 
-        public HomeController(ILogger<HomeController> logger, IElsaServerHttpClient eslElsaServerHttpClient)
+        public HomeController(ILogger<HomeController> logger, IElsaServerHttpClient eslElsaServerHttpClient, IMapper mapper)
         {
             _logger = logger;
             _eslElsaServerHttpClient = eslElsaServerHttpClient;
+            _mapper = mapper;
         }
 
         public IActionResult Index()
@@ -30,7 +34,8 @@ namespace He.PipelineAssessment.UI.Controllers
         public async Task<IActionResult> StartWorkflow([FromForm] StartWorkflowModel model)
         {
             var response = await _eslElsaServerHttpClient.PostStartWorkflow(model.WorkflowDefinitionId);
-            return View(response);
+            var workflowNavigationViewModel = _mapper.Map<WorkflowNavigationViewModel>(response);
+            return View(workflowNavigationViewModel);
         }
 
         public IActionResult Privacy()
@@ -46,19 +51,13 @@ namespace He.PipelineAssessment.UI.Controllers
 
         public async Task<IActionResult> ProgressWorkflow([FromForm] WorkflowNavigationViewModel model)
         {
-            WorkflowNavigationViewModel response;
-            if (Request.Form.ContainsKey("Back")) // && model has changed
-            {
-                response = await _eslElsaServerHttpClient.NavigateWorkflow(model, true);
-            }
-            else
-            {
-                response = await _eslElsaServerHttpClient.NavigateWorkflow(model, false);
-            }
+            var response = await _eslElsaServerHttpClient.NavigateWorkflow(_mapper.Map<WorkflowNavigationDto>(model),
+                Request.Form.ContainsKey("Back"));
 
             ModelState.Clear();
+            var workflowNavigationViewModel = _mapper.Map<WorkflowNavigationViewModel>(response);
 
-            return View("StartWorkflow", response);
+            return View("StartWorkflow", workflowNavigationViewModel);
         }
     }
 }

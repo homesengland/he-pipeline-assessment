@@ -67,13 +67,6 @@ namespace He.PipelineAssessment.UI.Models
         public object Output { get; set; }
     }
 
-    public class Choice
-    {
-        public string answer { get; set; }
-        public bool isSingle { get; set; }
-        public bool isSelected { get; set; }
-    }
-
     public class Case
     {
         public string name { get; set; }
