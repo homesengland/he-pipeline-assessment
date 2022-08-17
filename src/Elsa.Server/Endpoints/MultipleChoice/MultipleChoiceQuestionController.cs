@@ -59,9 +59,8 @@ namespace Elsa.Server.Endpoints.MultipleChoice
 
             var multipleChoiceQuestion = new MultipleChoiceQuestionModel
             {
-                Id = $"{model.WorkflowInstanceID}-{nextActivity["QuestionID"]}",
+                Id = $"{model.WorkflowInstanceID}-{nextActivityId}",
                 ActivityID = nextActivityId,
-                QuestionID = nextActivity["QuestionID"].ToString(),
                 WorkflowInstanceID = model.WorkflowInstanceID,
                 PreviousActivityId = model.ActivityID
             };

@@ -26,12 +26,6 @@ namespace Elsa.CustomActivities.Activities.MultipleChoice
         public ICollection<MultiChoiceRecord> Choices { get; set; } = new List<MultiChoiceRecord>();
 
         #region Input
-        [ActivityInput(
-          Hint = "Unique Identifier for Question",
-          UIHint = ActivityInputUIHints.SingleLine,
-          DefaultSyntax = SyntaxNames.Literal,
-          SupportedSyntaxes = new[] { SyntaxNames.Literal })]
-        public string QuestionID { get; set; }
 
         [ActivityInput(
            Hint = "Question to ask",

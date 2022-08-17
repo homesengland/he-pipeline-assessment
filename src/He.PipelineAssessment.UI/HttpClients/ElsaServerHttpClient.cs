@@ -1,7 +1,7 @@
-﻿using He.PipelineAssessment.UI.Models;
-using System.Text.Json;
-using AutoMapper;
+﻿using AutoMapper;
 using Elsa.CustomModels;
+using He.PipelineAssessment.UI.Models;
+using System.Text.Json;
 using Activitydata = He.PipelineAssessment.UI.Models.Activitydata;
 
 namespace He.PipelineAssessment.UI.HttpClients
@@ -58,8 +58,7 @@ namespace He.PipelineAssessment.UI.HttpClients
             var fullUri = "https://localhost:7227/multiple-choice";
             var postModel = new MultipleChoiceQuestionModel
             {
-                Id = $"{model.WorkflowInstanceId}-{model.ActivityData.QuestionID}",
-                QuestionID = model.ActivityData.QuestionID,
+                Id = $"{model.WorkflowInstanceId}-{model.ActivityId}",
                 Answer = string.Join(',', model.ActivityData.Choices.Where(x => x is { isSelected: true }).Select(x => x.answer)),
                 WorkflowInstanceID = model.WorkflowInstanceId,
                 NavigateBack = navigateBack,
@@ -88,7 +87,7 @@ namespace He.PipelineAssessment.UI.HttpClients
                     activityDataChoice.isSelected = output.Answer.Contains(activityDataChoice.answer);
                 }
             }
-            
+
             return new WorkflowNavigationViewModel
             {
                 ActivityData = _mapper.Map<Activitydata>(activityData.activityData),
