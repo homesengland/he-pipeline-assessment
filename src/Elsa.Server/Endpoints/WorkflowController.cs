@@ -1,5 +1,4 @@
-﻿using Elsa.CustomModels;
-using Elsa.Models;
+﻿using Elsa.Models;
 using Elsa.Server.Data;
 using Elsa.Server.Mappers;
 using Elsa.Services;
@@ -27,16 +26,11 @@ namespace Elsa.Server.Endpoints
             try
             {
                 var result = await _workflowRunner.StartWorkflowAsync(sampleWorkflow!);
-                //var questionId = result.WorkflowInstance.ActivityData.First(x => x.Key == result.WorkflowInstance.LastExecutedActivityId).Value["QuestionID"];
-                var multipleChoiceQuestion = new MultipleChoiceQuestionModel
-                {
-                    Id = $"{result.WorkflowInstance.Id}-{result.WorkflowInstance.LastExecutedActivityId}",
-                    ActivityID = result.WorkflowInstance.LastExecutedActivityId,
-                    WorkflowInstanceID = result.WorkflowInstance.Id,
-                    PreviousActivityId = result.WorkflowInstance.LastExecutedActivityId
-                };
 
-                await _pipelineAssessmentRepository.SaveMultipleChoiceQuestionAsync(multipleChoiceQuestion);
+                var multipleChoiceQuestion = result.ToMultipleChoiceQuestionModel();
+
+                if (multipleChoiceQuestion != null)
+                    await _pipelineAssessmentRepository.SaveMultipleChoiceQuestionAsync(multipleChoiceQuestion);
 
                 var workflowExecutionResultDto = result.ToWorkflowExecutionResultDto();
                 return Ok(workflowExecutionResultDto);
@@ -46,7 +40,6 @@ namespace Elsa.Server.Endpoints
                 Console.WriteLine(e);
                 return Ok();
             }
-
         }
     }
 }
