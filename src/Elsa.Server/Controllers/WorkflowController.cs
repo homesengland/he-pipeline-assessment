@@ -26,12 +26,11 @@ namespace Elsa.Server.Controllers
             try
             {
                 var result = await _workflowRunner.StartWorkflowAsync(sampleWorkflow!);
-                var questionId = result.WorkflowInstance.ActivityData.First(x => x.Key == result.WorkflowInstance.LastExecutedActivityId).Value["QuestionID"];
+                //var questionId = result.WorkflowInstance.ActivityData.First(x => x.Key == result.WorkflowInstance.LastExecutedActivityId).Value["QuestionID"];
                 var multipleChoiceQuestion = new MultipleChoiceQuestionModel
                 {
-                    Id = $"{result.WorkflowInstance.Id}-{questionId}",
+                    Id = $"{result.WorkflowInstance.Id}-{result.WorkflowInstance.LastExecutedActivityId}",
                     ActivityID = result.WorkflowInstance.LastExecutedActivityId,
-                    QuestionID = questionId.ToString(),
                     WorkflowInstanceID = result.WorkflowInstance.Id,
                     PreviousActivityId = result.WorkflowInstance.LastExecutedActivityId
                 };

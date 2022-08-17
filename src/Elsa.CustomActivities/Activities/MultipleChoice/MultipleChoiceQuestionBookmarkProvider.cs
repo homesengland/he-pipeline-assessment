@@ -9,15 +9,14 @@ namespace Elsa.CustomActivities.Activities.MultipleChoice
 
         private async IAsyncEnumerable<BookmarkResult> GetBookmarksInternalAsync(BookmarkProviderContext<MultipleChoiceQuestion> context, [EnumeratorCancellation] CancellationToken cancellationToken)
         {
-            var questionID = (await context.ReadActivityPropertyAsync(x => x.QuestionID, cancellationToken))?.ToLowerInvariant().Trim();
+            var activityID = context.ActivityExecutionContext.ActivityId;
 
-            // Can't do anything with an empty signal name.
-            if (string.IsNullOrEmpty(questionID))
+            if (string.IsNullOrEmpty(activityID))
                 yield break;
 
             yield return Result(new MultipleChoiceQuestionBookmark
             {
-                QuestionID = questionID
+                ActivityID = activityID
             });
         }
     }
