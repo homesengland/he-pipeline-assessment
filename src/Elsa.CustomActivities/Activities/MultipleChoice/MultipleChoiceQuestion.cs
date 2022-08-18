@@ -52,7 +52,7 @@ namespace Elsa.CustomActivities.Activities.MultipleChoice
         #endregion
 
         #region Output
-        [ActivityOutput] public MultipleChoiceQuestionModel Output { get; set; }
+        [ActivityOutput] public MultipleChoiceQuestionModel? Output { get; set; }
 
         #endregion
 
@@ -81,11 +81,11 @@ namespace Elsa.CustomActivities.Activities.MultipleChoice
                 });
             }
 
-            return new CombinedResult(new List<IActivityExecutionResult>
+            return await Task.FromResult(new CombinedResult(new List<IActivityExecutionResult>
             {
                 Outcomes(outcomes),
                 new SuspendResult()
-            });
+            }));
 
         }
 

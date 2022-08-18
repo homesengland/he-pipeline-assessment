@@ -14,10 +14,10 @@ namespace Elsa.CustomActivities.Activities.MultipleChoice
             if (string.IsNullOrEmpty(activityID))
                 yield break;
 
-            yield return Result(new MultipleChoiceQuestionBookmark
+            yield return await Task.FromResult(Result(new MultipleChoiceQuestionBookmark
             {
                 ActivityID = activityID
-            });
+            }));
         }
     }
 }

@@ -55,48 +55,8 @@ namespace Elsa.CustomWorkflow.Sdk.HttpClients
                                                    $"\n Message= '{data}'," +
                                                    $"\n Url='{fullUri}'");
             }
-            //var options = new JsonSerializerOptions
-            //{
-            //    PropertyNameCaseInsensitive = true
-            //};
-            //var activityData = JsonSerializer.Deserialize<ActivityDataModel>(data, options);
-            //if (activityData.activityData.Output != null)
-            //{
-            //    var output = JsonSerializer.Deserialize<MultipleChoiceQuestionModel>(activityData.activityData.Output.ToString(), options);
-            //    foreach (var activityDataChoice in activityData.activityData.Choices)
-            //    {
-            //        activityDataChoice.isSelected = output.Answer.Contains(activityDataChoice.answer);
-            //    }
 
-            //}
             return JsonSerializer.Deserialize<WorkflowNavigationDto>(data, new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
-
-            //return new WorkflowNavigationDto
-            //{
-            //    ActivityData = _mapper.Map<ActivityData>(activityData.activityData),
-            //    WorkflowInstanceId = model.WorkflowInstanceId,
-            //    ActivityId = activityData.ActivityId
-            //};
-        }
-
-        private async Task Post<T>(string eventName, T eventBody) where T : class, new()
-        {
-            //var data = "";
-            //var fullUri = _uriConfig.Value.BuildEventServiceUri(eventName);
-
-            //var content = new StringContent(eventBody.ToJSONSerializedString(), Encoding.UTF8, "application/json");
-
-            //using (var response = await _httpClient.PostAsync(fullUri.ToString(), content).ConfigureAwait(false))
-            //{
-            //    data = await response.Content.ReadAsStringAsync().ConfigureAwait(false);
-            //    if (!response.IsSuccessStatusCode)
-            //        throw new ApplicationException($"StatusCode='{response.StatusCode}'," +
-            //                                       $"\n Message= '{data}'," +
-            //                                       $"\n Url='{fullUri}'");
-            //}
         }
     }
-
-
-
 }
