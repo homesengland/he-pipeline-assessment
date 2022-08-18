@@ -14,21 +14,21 @@ namespace Elsa.CustomActivities.Activities.MultipleChoice
             _workflowLaunchpad = workflowLaunchpad;
         }
 
-        public async Task<IEnumerable<CollectedWorkflow>> DispatchWorkflowsAsync(MultipleChoiceQuestionModel model, CancellationToken cancellationToken = default)
+        public async Task<IEnumerable<CollectedWorkflow>> DispatchWorkflowsAsync(string ActivityId, string WorkflowInstanceId, MultipleChoiceQuestionModel model, CancellationToken cancellationToken = default)
         {
-            var context = new WorkflowsQuery(nameof(MultipleChoiceQuestion), new MultipleChoiceQuestionBookmark() { ActivityID = model.ActivityID.ToLowerInvariant() }, null, model.WorkflowInstanceID);
+            var context = new WorkflowsQuery(nameof(MultipleChoiceQuestion), new MultipleChoiceQuestionBookmark() { ActivityID = ActivityId.ToLowerInvariant() }, null, WorkflowInstanceId);
             return await _workflowLaunchpad.CollectAndDispatchWorkflowsAsync(context, new WorkflowInput(model), cancellationToken);
         }
 
-        public async Task<IEnumerable<CollectedWorkflow>> ExecuteWorkflowsAsync(MultipleChoiceQuestionModel model, CancellationToken cancellationToken = default)
+        public async Task<IEnumerable<CollectedWorkflow>> ExecuteWorkflowsAsync(string ActivityId, string WorkflowInstanceId, MultipleChoiceQuestionModel model, CancellationToken cancellationToken = default)
         {
-            var context = new WorkflowsQuery(nameof(MultipleChoiceQuestion), new MultipleChoiceQuestionBookmark() { ActivityID = model.ActivityID.ToLowerInvariant() }, null, model.WorkflowInstanceID);
+            var context = new WorkflowsQuery(nameof(MultipleChoiceQuestion), new MultipleChoiceQuestionBookmark() { ActivityID = ActivityId.ToLowerInvariant() }, null, WorkflowInstanceId);
             return await _workflowLaunchpad.CollectAndExecuteWorkflowsAsync(context, new WorkflowInput(model), cancellationToken);
         }
 
-        public async Task<IEnumerable<CollectedWorkflow>> FindWorkflowsAsync(MultipleChoiceQuestionModel model, CancellationToken cancellationToken = default)
+        public async Task<IEnumerable<CollectedWorkflow>> FindWorkflowsAsync(string ActivityId, string WorkflowInstanceId, MultipleChoiceQuestionModel model, CancellationToken cancellationToken = default)
         {
-            var context = new WorkflowsQuery(nameof(MultipleChoiceQuestion), new MultipleChoiceQuestionBookmark() { ActivityID = model.ActivityID.ToLowerInvariant() }, null, model.WorkflowInstanceID);
+            var context = new WorkflowsQuery(nameof(MultipleChoiceQuestion), new MultipleChoiceQuestionBookmark() { ActivityID = ActivityId.ToLowerInvariant() }, null, WorkflowInstanceId);
             return await _workflowLaunchpad.FindWorkflowsAsync(context, cancellationToken);
         }
 

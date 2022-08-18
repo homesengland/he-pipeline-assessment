@@ -1,7 +1,7 @@
-﻿using System.Text.Json;
-using Elsa.CustomModels;
+﻿using Elsa.CustomModels;
 using Elsa.Server.Models;
 using Elsa.Services.Models;
+using System.Text.Json;
 using ActivityData = Elsa.Server.Models.ActivityData;
 
 namespace Elsa.Server.Mappers
@@ -22,8 +22,8 @@ namespace Elsa.Server.Mappers
                     WorkflowInstanceId = result.WorkflowInstance.Id
                 };
             return null;
-        }  
-        
+        }
+
         public static MultipleChoiceQuestionModel? ToMultipleChoiceQuestionModel(
             this RunWorkflowResult result)
         {
@@ -45,6 +45,37 @@ namespace Elsa.Server.Mappers
             var jsonActivityData = JsonSerializer.Serialize(activityDataObject);
 
             return JsonSerializer.Deserialize<ActivityData>(jsonActivityData);
+        }
+
+        public static MultipleChoiceQuestionModel ToMultipleChoiceQuestionModel(this MultipleChoiceQuestionResponseDto multipleChoiceQuestionResponseDto, string nextActivityId)
+        {
+            return new MultipleChoiceQuestionModel
+            {
+                Id = $"{multipleChoiceQuestionResponseDto.WorkflowInstanceID}-{nextActivityId}",
+                ActivityID = nextActivityId,
+                Answer = multipleChoiceQuestionResponseDto.Answer,
+                FinishWorkflow = false,
+                NavigateBack = multipleChoiceQuestionResponseDto.NavigateBack,
+                WorkflowInstanceID = multipleChoiceQuestionResponseDto.WorkflowInstanceID,
+                PreviousActivityId = multipleChoiceQuestionResponseDto.ActivityID
+            };
+        }
+
+        public static ActivityData ToActivityData(this IDictionary<string, object?>? nextActivityData)
+        {
+            var json = JsonSerializer.Serialize(nextActivityData);
+            var activityData = JsonSerializer.Deserialize<ActivityData>(json);
+
+            if (activityData.Output != null)
+            {
+                var output = JsonSerializer.Deserialize<MultipleChoiceQuestionModel>(activityData.Output.ToString(), new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
+                foreach (var activityDataChoice in activityData.Choices)
+                {
+                    activityDataChoice.IsSelected = output.Answer.Contains(activityDataChoice.Answer);
+                }
+            }
+
+            return activityData;
         }
     }
 }

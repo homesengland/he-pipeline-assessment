@@ -1,7 +1,8 @@
-﻿using System.Net.Http.Json;
-using System.Text.Json;
-using AutoMapper;
+﻿using AutoMapper;
+using Elsa.CustomWorkflow.Sdk.Mappers;
 using Elsa.CustomWorkflow.Sdk.Models;
+using System.Net.Http.Json;
+using System.Text.Json;
 
 namespace Elsa.CustomWorkflow.Sdk.HttpClients
 {
@@ -37,32 +38,23 @@ namespace Elsa.CustomWorkflow.Sdk.HttpClients
                                                    $"\n Url='{fullUri}'");
             }
 
-            return JsonSerializer.Deserialize<WorkflowNavigationDto>(data, new JsonSerializerOptions{ PropertyNameCaseInsensitive = true });
+            return JsonSerializer.Deserialize<WorkflowNavigationDto>(data, new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
         }
 
         public async Task<WorkflowNavigationDto> NavigateWorkflow(WorkflowNavigationDto model, bool navigateBack)
         {
-            throw new NotImplementedException();
-            //var data = "";
-            //var fullUri = "https://localhost:7227/multiple-choice";
-            //var postModel = new MultipleChoiceQuestionModel
-            //{
-            //    Id = $"{model.WorkflowInstanceId}-{model.ActivityId}",
-            //    Answer = string.Join(',', model.ActivityData.Choices.Where(x => x is { isSelected: true }).Select(x => x.answer)),
-            //    WorkflowInstanceID = model.WorkflowInstanceId,
-            //    NavigateBack = navigateBack,
-            //    PreviousActivityId = "",
-            //    ActivityID = model.ActivityId
-            //};
+            var data = "";
+            var fullUri = "https://localhost:7227/multiple-choice";
+            var postModel = model.ToMultipleChoiceQuestionDto(navigateBack);
 
-            //using (var response = await _httpClient.PostAsJsonAsync(fullUri.ToString(), postModel).ConfigureAwait(false))
-            //{
-            //    data = await response.Content.ReadAsStringAsync().ConfigureAwait(false);
-            //    if (!response.IsSuccessStatusCode)
-            //        throw new ApplicationException($"StatusCode='{response.StatusCode}'," +
-            //                                       $"\n Message= '{data}'," +
-            //                                       $"\n Url='{fullUri}'");
-            //}
+            using (var response = await _httpClient.PostAsJsonAsync(fullUri.ToString(), postModel).ConfigureAwait(false))
+            {
+                data = await response.Content.ReadAsStringAsync().ConfigureAwait(false);
+                if (!response.IsSuccessStatusCode)
+                    throw new ApplicationException($"StatusCode='{response.StatusCode}'," +
+                                                   $"\n Message= '{data}'," +
+                                                   $"\n Url='{fullUri}'");
+            }
             //var options = new JsonSerializerOptions
             //{
             //    PropertyNameCaseInsensitive = true
@@ -75,11 +67,13 @@ namespace Elsa.CustomWorkflow.Sdk.HttpClients
             //    {
             //        activityDataChoice.isSelected = output.Answer.Contains(activityDataChoice.answer);
             //    }
-            //}
 
-            //return new WorkflowNavigationViewModel
+            //}
+            return JsonSerializer.Deserialize<WorkflowNavigationDto>(data, new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
+
+            //return new WorkflowNavigationDto
             //{
-            //    ActivityData = _mapper.Map<Activitydata>(activityData.activityData),
+            //    ActivityData = _mapper.Map<ActivityData>(activityData.activityData),
             //    WorkflowInstanceId = model.WorkflowInstanceId,
             //    ActivityId = activityData.ActivityId
             //};
