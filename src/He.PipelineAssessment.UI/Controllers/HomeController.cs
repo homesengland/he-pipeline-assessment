@@ -9,7 +9,7 @@ namespace He.PipelineAssessment.UI.Controllers
 {
     public class StartWorkflowModel
     {
-        public string WorkflowDefinitionId { get; set; }
+        public string WorkflowDefinitionId { get; set; } = null!;
     }
 
     public class HomeController : Controller

@@ -1,5 +1,4 @@
-﻿using AutoMapper;
-using Elsa.CustomWorkflow.Sdk.Mappers;
+﻿using Elsa.CustomWorkflow.Sdk.Mappers;
 using Elsa.CustomWorkflow.Sdk.Models;
 using System.Net.Http.Json;
 using System.Text.Json;
@@ -9,23 +8,21 @@ namespace Elsa.CustomWorkflow.Sdk.HttpClients
     public interface IElsaServerHttpClient
     {
         Task<WorkflowNavigationDto?> PostStartWorkflow(string workflowDefinitionId);
-        Task<WorkflowNavigationDto> NavigateWorkflow(WorkflowNavigationDto model, bool navigateBack = false);
+        Task<WorkflowNavigationDto?> NavigateWorkflow(WorkflowNavigationDto model, bool navigateBack = false);
     }
 
     public class ElsaServerHttpClient : IElsaServerHttpClient
     {
         private readonly HttpClient _httpClient;
-        private readonly IMapper _mapper;
 
-        public ElsaServerHttpClient(HttpClient httpClient, IMapper mapper)
+        public ElsaServerHttpClient(HttpClient httpClient)
         {
             _httpClient = httpClient;
-            _mapper = mapper;
         }
 
         public async Task<WorkflowNavigationDto?> PostStartWorkflow(string workflowDefinitionId)
         {
-            var data = "";
+            string data;
             //TODO: make this uri configurable
             var fullUri = "https://localhost:7227/workflow/startworkflow";
 
@@ -41,9 +38,9 @@ namespace Elsa.CustomWorkflow.Sdk.HttpClients
             return JsonSerializer.Deserialize<WorkflowNavigationDto>(data, new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
         }
 
-        public async Task<WorkflowNavigationDto> NavigateWorkflow(WorkflowNavigationDto model, bool navigateBack)
+        public async Task<WorkflowNavigationDto?> NavigateWorkflow(WorkflowNavigationDto model, bool navigateBack)
         {
-            var data = "";
+            string data;
             var fullUri = "https://localhost:7227/multiple-choice";
             var postModel = model.ToMultipleChoiceQuestionDto(navigateBack);
 

@@ -28,102 +28,120 @@ namespace Elsa.Server.Endpoints.MultipleChoice
         [HttpPost]
         public async Task<IActionResult> Handle(MultipleChoiceQuestionResponseDto model)
         {
-            string nextActivityId = "";
-
-            WorkflowInstance? workflowInstance;
-
-            var multipleChoiceQuestionModel = model.ToMultipleChoiceQuestionModel(nextActivityId);
-
-            if (model.NavigateBack)
+            try
             {
-                var workflows = await _invoker.FindWorkflowsAsync(model.ActivityID!, model.WorkflowInstanceID!, multipleChoiceQuestionModel);
-                var workflow = workflows.FirstOrDefault();
-                if (workflow != null)
+                string nextActivityId = "";
+
+                WorkflowInstance? workflowInstance;
+
+                var multipleChoiceQuestionModel = model.ToMultipleChoiceQuestionModel(nextActivityId);
+
+                if (model.NavigateBack)
                 {
-                    workflowInstance = await _workflowInstanceStore.FindByIdAsync(workflow.WorkflowInstanceId);
-                    if (workflowInstance != null)
+                    var workflows = await _invoker.FindWorkflowsAsync(model.ActivityId!, model.WorkflowInstanceId!,
+                        multipleChoiceQuestionModel);
+                    var workflow = workflows.FirstOrDefault();
+                    if (workflow != null)
                     {
-                        var dbMultipleChoiceQuestionModel = await _pipelineAssessmentRepository.GetMultipleChoiceQuestions(model.Id);
-                        if (dbMultipleChoiceQuestionModel != null)
+                        workflowInstance = await _workflowInstanceStore.FindByIdAsync(workflow.WorkflowInstanceId);
+                        if (workflowInstance != null)
                         {
-                            var previousBlockingActivity = workflowInstance.BlockingActivities
-                                .FirstOrDefault(y => y.ActivityId == dbMultipleChoiceQuestionModel.PreviousActivityId);
-                            if (previousBlockingActivity != null)
+                            var dbMultipleChoiceQuestionModel =
+                                await _pipelineAssessmentRepository.GetMultipleChoiceQuestions(model.Id);
+                            if (dbMultipleChoiceQuestionModel != null)
                             {
-                                nextActivityId = previousBlockingActivity.ActivityId;
+                                var previousBlockingActivity = workflowInstance.BlockingActivities
+                                    .FirstOrDefault(y =>
+                                        y.ActivityId == dbMultipleChoiceQuestionModel.PreviousActivityId);
+                                if (previousBlockingActivity != null)
+                                {
+                                    nextActivityId = previousBlockingActivity.ActivityId;
+                                }
+                                else
+                                {
+                                    return BadRequest(
+                                        $"Unable to find blocking activity with Id: {dbMultipleChoiceQuestionModel.PreviousActivityId}");
+                                }
                             }
                             else
                             {
                                 return BadRequest(
-                                    $"Unable to find blocking activity with ID: {dbMultipleChoiceQuestionModel.PreviousActivityId}");
+                                    $"Unable to find database entry for: {model.Id}");
                             }
                         }
                         else
                         {
                             return BadRequest(
-                                $"Unable to find database entry for: {model.Id}");
+                                $"Unable to find workflow instance with Id: {model.WorkflowInstanceId} in Elsa database");
                         }
                     }
                     else
                     {
                         return BadRequest(
-                            $"Unable to find workflow instance with ID: {model.WorkflowInstanceID} in Elsa database");
+                            $"Unable to find workflow instance with Id: {model.WorkflowInstanceId} and Activity Id: {model.ActivityId}");
                     }
                 }
                 else
                 {
-                    return BadRequest(
-                        $"Unable to find workflow instance with ID: {model.WorkflowInstanceID} and Activity ID: {model.ActivityID}");
-                }
-            }
-            else
-            {
-                //TODO: compare the model from the db with the dto, if no change, do not execute workflow
+                    //TODO: compare the model from the db with the dto, if no change, do not execute workflow
 
-                var collectedWorkflows = await _invoker.ExecuteWorkflowsAsync(model.ActivityID, model.WorkflowInstanceID, multipleChoiceQuestionModel).ToList();
-                var collectedWorkflow = collectedWorkflows.FirstOrDefault();
-                if (collectedWorkflow != null)
-                {
-                    workflowInstance = await _workflowInstanceStore.FindByIdAsync(collectedWorkflow.WorkflowInstanceId);
-                    if (workflowInstance != null)
+                    var collectedWorkflows = await _invoker.ExecuteWorkflowsAsync(model.ActivityId,
+                        model.WorkflowInstanceId, multipleChoiceQuestionModel).ToList();
+                    var collectedWorkflow = collectedWorkflows.FirstOrDefault();
+                    if (collectedWorkflow != null)
                     {
-                        if (workflowInstance.Output != null)
+                        workflowInstance =
+                            await _workflowInstanceStore.FindByIdAsync(collectedWorkflow.WorkflowInstanceId);
+                        if (workflowInstance != null)
                         {
-                            nextActivityId = workflowInstance.Output.ActivityId;
+                            if (workflowInstance.Output != null)
+                            {
+                                nextActivityId = workflowInstance.Output.ActivityId;
+                            }
+                            else
+                            {
+                                return BadRequest(
+                                    $"Unable to find workflow instance with Id: {model.WorkflowInstanceId} in Elsa database");
+
+                            }
                         }
                         else
                         {
                             return BadRequest(
-                                $"Unable to find workflow instance with ID: {model.WorkflowInstanceID} in Elsa database");
-
+                                $"Unable to find workflow instance with Id: {model.WorkflowInstanceId} in Elsa database");
                         }
                     }
                     else
                     {
                         return BadRequest(
-                            $"Unable to find workflow instance with ID: {model.WorkflowInstanceID} in Elsa database");
+                            $"Unable to progress workflow. Elsa Execute failed");
                     }
                 }
-                else
+
+                if (!workflowInstance.ActivityData.ContainsKey(nextActivityId))
                 {
                     return BadRequest(
-                        $"Unable to progress workflow. Elsa Execute failed");
+                        $"Cannot find activity Id {nextActivityId} in the workflow activity data dictionary");
                 }
+
+                var nextActivity =
+                    workflowInstance.ActivityData.FirstOrDefault(a => a.Key == nextActivityId).Value;
+
+                await SaveMultipleChoiceResponse(model, nextActivityId);
+
+                var activityData = nextActivity.ToActivityData();
+
+                return Ok(new WorkflowExecutionResultDto
+                {
+                    WorkflowInstanceId = model.WorkflowInstanceId,
+                    ActivityData = activityData,
+                    ActivityId = nextActivityId
+                });
             }
-
-            var nextActivity =
-                workflowInstance.ActivityData.FirstOrDefault(a => a.Key == nextActivityId).Value;
-
-            await SaveMultipleChoiceResponse(model, nextActivityId);
-
-            var activityData = nextActivity.ToActivityData();
-
-            return Ok(new WorkflowExecutionResultDto
+            catch (Exception e)
             {
-                WorkflowInstanceId = model.WorkflowInstanceID,
-                ActivityData = activityData,
-                ActivityId = nextActivityId
-            });
+                return StatusCode(StatusCodes.Status500InternalServerError, e.Message);
+            }
         }
 
         private async Task SaveMultipleChoiceResponse(MultipleChoiceQuestionResponseDto model, string nextActivityId)

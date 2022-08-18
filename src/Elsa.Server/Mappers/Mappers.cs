@@ -13,14 +13,20 @@ namespace Elsa.Server.Mappers
         {
             if (result.WorkflowInstance != null && result.WorkflowInstance
                     .LastExecutedActivityId != null)
-                return new WorkflowExecutionResultDto
+            {
+                var activityData = result.WorkflowInstance.ActivityData.ToActivityData(result.WorkflowInstance
+                    .LastExecutedActivityId);
+                if (activityData != null)
                 {
-                    ActivityData =
-                        result.WorkflowInstance.ActivityData.ElsaActivityDataToActivityData(result.WorkflowInstance
-                            .LastExecutedActivityId),
-                    ActivityId = result.WorkflowInstance.LastExecutedActivityId,
-                    WorkflowInstanceId = result.WorkflowInstance.Id
-                };
+                    return new WorkflowExecutionResultDto
+                    {
+                        ActivityData = activityData,
+                        ActivityId = result.WorkflowInstance.LastExecutedActivityId,
+                        WorkflowInstanceId = result.WorkflowInstance.Id
+                    };
+                }
+            }
+
             return null;
         }
 
@@ -32,14 +38,14 @@ namespace Elsa.Server.Mappers
                 return new MultipleChoiceQuestionModel
                 {
                     Id = $"{result.WorkflowInstance.Id}-{result.WorkflowInstance.LastExecutedActivityId}",
-                    ActivityID = result.WorkflowInstance.LastExecutedActivityId,
-                    WorkflowInstanceID = result.WorkflowInstance.Id,
-                    PreviousActivityId = result.WorkflowInstance.LastExecutedActivityId //this will need to change when progressing workflow
+                    ActivityId = result.WorkflowInstance.LastExecutedActivityId,
+                    WorkflowInstanceId = result.WorkflowInstance.Id,
+                    PreviousActivityId = result.WorkflowInstance.LastExecutedActivityId
                 };
             return null;
         }
 
-        public static ActivityData? ElsaActivityDataToActivityData(this IDictionary<string, IDictionary<string, object?>> activityDataDictionary, string activityId)
+        public static ActivityData? ToActivityData(this IDictionary<string, IDictionary<string, object?>> activityDataDictionary, string activityId)
         {
             var activityDataObject = activityDataDictionary[activityId];
             var jsonActivityData = JsonSerializer.Serialize(activityDataObject);
@@ -51,27 +57,34 @@ namespace Elsa.Server.Mappers
         {
             return new MultipleChoiceQuestionModel
             {
-                Id = $"{multipleChoiceQuestionResponseDto.WorkflowInstanceID}-{nextActivityId}",
-                ActivityID = nextActivityId,
+                Id = $"{multipleChoiceQuestionResponseDto.WorkflowInstanceId}-{nextActivityId}",
+                ActivityId = nextActivityId,
                 Answer = multipleChoiceQuestionResponseDto.Answer,
                 FinishWorkflow = false,
                 NavigateBack = multipleChoiceQuestionResponseDto.NavigateBack,
-                WorkflowInstanceID = multipleChoiceQuestionResponseDto.WorkflowInstanceID,
-                PreviousActivityId = multipleChoiceQuestionResponseDto.ActivityID
+                WorkflowInstanceId = multipleChoiceQuestionResponseDto.WorkflowInstanceId,
+                PreviousActivityId = multipleChoiceQuestionResponseDto.ActivityId
             };
         }
 
-        public static ActivityData ToActivityData(this IDictionary<string, object?>? nextActivityData)
+        public static ActivityData? ToActivityData(this IDictionary<string, object?>? nextActivityData)
         {
             var json = JsonSerializer.Serialize(nextActivityData);
             var activityData = JsonSerializer.Deserialize<ActivityData>(json);
 
-            if (activityData.Output != null)
+            if (activityData != null && activityData.Output != null)
             {
-                var output = JsonSerializer.Deserialize<MultipleChoiceQuestionModel>(activityData.Output.ToString(), new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
-                foreach (var activityDataChoice in activityData.Choices)
+                var activityJson = activityData.Output.ToString();
+                if (activityJson != null)
                 {
-                    activityDataChoice.IsSelected = output.Answer.Contains(activityDataChoice.Answer);
+                    var output = JsonSerializer.Deserialize<MultipleChoiceQuestionModel>(activityJson, new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
+                    if (output != null && output.Answer != null)
+                    {
+                        foreach (var activityDataChoice in activityData.Choices)
+                        {
+                            activityDataChoice.IsSelected = output.Answer.Contains(activityDataChoice.Answer);
+                        }
+                    }
                 }
             }
 

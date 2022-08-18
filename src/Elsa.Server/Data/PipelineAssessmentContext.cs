@@ -1,5 +1,4 @@
 ﻿using Elsa.CustomModels;
-using Elsa.Models;
 using Microsoft.EntityFrameworkCore;
 
 namespace Elsa.Server.Data
@@ -10,6 +9,6 @@ namespace Elsa.Server.Data
         {
         }
 
-        public DbSet<MultipleChoiceQuestionModel?> MultipleChoiceQuestions { get; set; } = default!;
+        public DbSet<MultipleChoiceQuestionModel> MultipleChoiceQuestions { get; set; } = default!;
     }
 }
