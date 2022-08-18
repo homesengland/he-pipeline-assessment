@@ -30,34 +30,91 @@ namespace Elsa.Server.Endpoints.MultipleChoice
         {
             string nextActivityId = "";
 
-            var dbWorkflowActivityModel = await _pipelineAssessmentRepository.GetMultipleChoiceQuestions(model.Id);
-
-            WorkflowInstance workflowInstance;
+            WorkflowInstance? workflowInstance;
 
             var multipleChoiceQuestionModel = model.ToMultipleChoiceQuestionModel(nextActivityId);
 
-            if (model.NavigateBack.HasValue && model.NavigateBack.Value)
+            if (model.NavigateBack)
             {
-                var workflow = await _invoker.FindWorkflowsAsync(model.ActivityID, model.WorkflowInstanceID, multipleChoiceQuestionModel);
-                workflowInstance = await _workflowInstanceStore.FindByIdAsync(workflow.First().WorkflowInstanceId);
-
-                var previousBlockingActivity = workflowInstance.BlockingActivities
-                    .FirstOrDefault(y => y.ActivityId == dbWorkflowActivityModel.PreviousActivityId);
-                nextActivityId = previousBlockingActivity.ActivityId;
+                var workflows = await _invoker.FindWorkflowsAsync(model.ActivityID!, model.WorkflowInstanceID!, multipleChoiceQuestionModel);
+                var workflow = workflows.FirstOrDefault();
+                if (workflow != null)
+                {
+                    workflowInstance = await _workflowInstanceStore.FindByIdAsync(workflow.WorkflowInstanceId);
+                    if (workflowInstance != null)
+                    {
+                        var dbMultipleChoiceQuestionModel = await _pipelineAssessmentRepository.GetMultipleChoiceQuestions(model.Id);
+                        if (dbMultipleChoiceQuestionModel != null)
+                        {
+                            var previousBlockingActivity = workflowInstance.BlockingActivities
+                                .FirstOrDefault(y => y.ActivityId == dbMultipleChoiceQuestionModel.PreviousActivityId);
+                            if (previousBlockingActivity != null)
+                            {
+                                nextActivityId = previousBlockingActivity.ActivityId;
+                            }
+                            else
+                            {
+                                return BadRequest(
+                                    $"Unable to find blocking activity with ID: {dbMultipleChoiceQuestionModel.PreviousActivityId}");
+                            }
+                        }
+                        else
+                        {
+                            return BadRequest(
+                                $"Unable to find database entry for: {model.Id}");
+                        }
+                    }
+                    else
+                    {
+                        return BadRequest(
+                            $"Unable to find workflow instance with ID: {model.WorkflowInstanceID} in Elsa database");
+                    }
+                }
+                else
+                {
+                    return BadRequest(
+                        $"Unable to find workflow instance with ID: {model.WorkflowInstanceID} and Activity ID: {model.ActivityID}");
+                }
             }
             else
             {
-                var collectedWorkflows = new List<CollectedWorkflow>();
+                //TODO: compare the model from the db with the dto, if no change, do not execute workflow
 
-                collectedWorkflows = await _invoker.ExecuteWorkflowsAsync(model.ActivityID, model.WorkflowInstanceID, multipleChoiceQuestionModel).ToList();
-                workflowInstance = await _workflowInstanceStore.FindByIdAsync(collectedWorkflows.First().WorkflowInstanceId);
-                nextActivityId = workflowInstance.Output.ActivityId;
+                var collectedWorkflows = await _invoker.ExecuteWorkflowsAsync(model.ActivityID, model.WorkflowInstanceID, multipleChoiceQuestionModel).ToList();
+                var collectedWorkflow = collectedWorkflows.FirstOrDefault();
+                if (collectedWorkflow != null)
+                {
+                    workflowInstance = await _workflowInstanceStore.FindByIdAsync(collectedWorkflow.WorkflowInstanceId);
+                    if (workflowInstance != null)
+                    {
+                        if (workflowInstance.Output != null)
+                        {
+                            nextActivityId = workflowInstance.Output.ActivityId;
+                        }
+                        else
+                        {
+                            return BadRequest(
+                                $"Unable to find workflow instance with ID: {model.WorkflowInstanceID} in Elsa database");
+
+                        }
+                    }
+                    else
+                    {
+                        return BadRequest(
+                            $"Unable to find workflow instance with ID: {model.WorkflowInstanceID} in Elsa database");
+                    }
+                }
+                else
+                {
+                    return BadRequest(
+                        $"Unable to progress workflow. Elsa Execute failed");
+                }
             }
 
             var nextActivity =
                 workflowInstance.ActivityData.FirstOrDefault(a => a.Key == nextActivityId).Value;
 
-            await SaveMultiplChoiceResponse(model, nextActivityId);
+            await SaveMultipleChoiceResponse(model, nextActivityId);
 
             var activityData = nextActivity.ToActivityData();
 
@@ -69,7 +126,7 @@ namespace Elsa.Server.Endpoints.MultipleChoice
             });
         }
 
-        private async Task SaveMultiplChoiceResponse(MultipleChoiceQuestionResponseDto model, string nextActivityId)
+        private async Task SaveMultipleChoiceResponse(MultipleChoiceQuestionResponseDto model, string nextActivityId)
         {
             var multipleChoiceQuestion = model.ToMultipleChoiceQuestionModel(nextActivityId);
             await _pipelineAssessmentRepository.SaveMultipleChoiceQuestionAsync(multipleChoiceQuestion);
