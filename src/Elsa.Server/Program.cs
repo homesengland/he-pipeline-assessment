@@ -5,6 +5,7 @@ using Elsa.Persistence.EntityFramework.Sqlite;
 using Elsa.Runtime;
 using Elsa.Server.Data;
 using Elsa.Server.Data.StartupTasks;
+using MediatR;
 using Microsoft.EntityFrameworkCore;
 using MyActivityLibrary.JavaScript;
 
@@ -36,6 +37,8 @@ builder.Services.AddBookmarkProvider<MultipleChoiceQuestionBookmarkProvider>();
 builder.Services.AddScoped<IMultipleChoiceQuestionInvoker, MultipleChoiceQuestionInvoker>();
 builder.Services.AddScoped<IPipelineAssessmentRepository, PipelineAssessmentRepository>();
 builder.Services.AddJavaScriptTypeDefinitionProvider<CustomTypeDefinitionProvider>();
+
+builder.Services.AddMediatR(typeof(Program).Assembly);
 
 // Allow arbitrary client browser apps to access the API.
 // In a production environment, make sure to allow only origins you trust.

@@ -2,8 +2,10 @@
 using Elsa.Models;
 using Elsa.Persistence;
 using Elsa.Server.Data;
+using Elsa.Server.Endpoints.MultipleChoice.NavigateForward;
 using Elsa.Server.Mappers;
 using Elsa.Server.Models;
+using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Open.Linq.AsyncExtensions;
 
@@ -13,87 +15,43 @@ namespace Elsa.Server.Endpoints.MultipleChoice
     [ApiController]
     public class MultipleChoiceQuestionController : ControllerBase
     {
+
+        private IMediator _mediator;
+
         private readonly IMultipleChoiceQuestionInvoker _invoker;
         private readonly IWorkflowInstanceStore _workflowInstanceStore;
         private readonly IPipelineAssessmentRepository _pipelineAssessmentRepository;
 
-        public MultipleChoiceQuestionController(IMultipleChoiceQuestionInvoker invoker, IWorkflowInstanceStore workflowInstanceStore, IPipelineAssessmentRepository pipelineAssessmentRepository)
+        public MultipleChoiceQuestionController(IMediator mediator, IMultipleChoiceQuestionInvoker invoker, IWorkflowInstanceStore workflowInstanceStore, IPipelineAssessmentRepository pipelineAssessmentRepository)
         {
+            _mediator = mediator;
+
             _invoker = invoker;
             _workflowInstanceStore = workflowInstanceStore;
             _pipelineAssessmentRepository = pipelineAssessmentRepository;
         }
 
         [HttpPost("NavigateForward")]
-        public async Task<IActionResult> NavigateForward(MultipleChoiceQuestionResponseDto model)
+        public async Task<IActionResult> NavigateForward(NavigateForwardCommand model)
         {
             try
             {
-                string nextActivityId = "";
+                var result = await this._mediator.Send(model);
 
-                WorkflowInstance? workflowInstance;
-
-                var multipleChoiceQuestionModel = model.ToMultipleChoiceQuestionModel(nextActivityId);
-
-                //TODO: compare the model from the db with the dto, if no change, do not execute workflow
-
-                var collectedWorkflows = await _invoker.ExecuteWorkflowsAsync(model.ActivityId,
-                    model.WorkflowInstanceId, multipleChoiceQuestionModel).ToList();
-                var collectedWorkflow = collectedWorkflows.FirstOrDefault();
-                if (collectedWorkflow != null)
+                if (result.Result.IsSuccess)
                 {
-                    workflowInstance =
-                        await _workflowInstanceStore.FindByIdAsync(collectedWorkflow.WorkflowInstanceId);
-                    if (workflowInstance != null)
-                    {
-                        if (workflowInstance.Output != null)
-                        {
-                            nextActivityId = workflowInstance.Output.ActivityId;
-                        }
-                        else
-                        {
-                            return BadRequest(
-                                $"Unable to find workflow instance with Id: {model.WorkflowInstanceId} in Elsa database");
-
-                        }
-                    }
-                    else
-                    {
-                        return BadRequest(
-                            $"Unable to find workflow instance with Id: {model.WorkflowInstanceId} in Elsa database");
-                    }
+                    return Ok(result);
                 }
                 else
                 {
-                    return BadRequest(
-                        $"Unable to progress workflow. Elsa Execute failed");
+                    return BadRequest(result.Result.ErrorMessage);
                 }
-
-
-                if (!workflowInstance.ActivityData.ContainsKey(nextActivityId))
-                {
-                    return BadRequest(
-                        $"Cannot find activity Id {nextActivityId} in the workflow activity data dictionary");
-                }
-
-                var nextActivity =
-                    workflowInstance.ActivityData.FirstOrDefault(a => a.Key == nextActivityId).Value;
-
-                await SaveMultipleChoiceResponse(model, nextActivityId);
-
-                var activityData = nextActivity.ToActivityData();
-
-                return Ok(new WorkflowExecutionResultDto
-                {
-                    WorkflowInstanceId = model.WorkflowInstanceId,
-                    ActivityData = activityData,
-                    ActivityId = nextActivityId
-                });
             }
             catch (Exception e)
             {
-                return StatusCode(StatusCodes.Status500InternalServerError, e.Message);
+                return StatusCode(StatusCodes.Status500InternalServerError, e);
             }
+
         }
 
         [HttpGet("NavigateBackward")]
