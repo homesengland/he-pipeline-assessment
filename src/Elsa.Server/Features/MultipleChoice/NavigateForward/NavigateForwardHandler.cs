@@ -24,94 +24,69 @@ namespace Elsa.Server.Features.MultipleChoice.NavigateForward
 
         public async Task<OperationResult<NavigateForwardResponse>> Handle(NavigateForwardCommand command, CancellationToken cancellationToken)
         {
+            var result = new OperationResult<NavigateForwardResponse>();
             try
             {
-                var result = new OperationResult<NavigateForwardResponse>();
-
-                string nextActivityId = "";
-
-                WorkflowInstance? workflowInstance = null;
-
-                var multipleChoiceQuestionModel = command.ToMultipleChoiceQuestionModel(nextActivityId);
+                var multipleChoiceQuestionModel = command.ToMultipleChoiceQuestionModel();
 
                 //TODO: compare the model from the db with the dto, if no change, do not execute workflow
 
                 var collectedWorkflows = await _invoker.ExecuteWorkflowsAsync(command.ActivityId,
-                    command.WorkflowInstanceId, multipleChoiceQuestionModel).ToList();
+                    command.WorkflowInstanceId, multipleChoiceQuestionModel, cancellationToken).ToList();
                 var collectedWorkflow = collectedWorkflows.FirstOrDefault();
                 if (collectedWorkflow != null)
                 {
-                    workflowInstance =
-                        await _workflowInstanceStore.FindByIdAsync(collectedWorkflow.WorkflowInstanceId);
+                    var workflowInstance = await _workflowInstanceStore.FindByIdAsync(collectedWorkflow.WorkflowInstanceId, cancellationToken);
                     if (workflowInstance != null)
                     {
                         if (workflowInstance.Output != null)
                         {
-                            nextActivityId = workflowInstance.Output.ActivityId;
+                            var nextActivityId = workflowInstance.Output.ActivityId;
+
+                            if (!workflowInstance.ActivityData.ContainsKey(nextActivityId))
+                            {
+                                result.ErrorMessages.Add(
+                                    $"Cannot find activity Id {nextActivityId} in the workflow activity data dictionary");
+                            }
+
+                            var nextActivity =
+                                workflowInstance.ActivityData.FirstOrDefault(a => a.Key == nextActivityId).Value;
+
+                            await SaveMultipleChoiceResponse(command, nextActivityId);
+
+                            var activityData = nextActivity.ToActivityData2();
+
+                            result.Data = new NavigateForwardResponse
+                            {
+                                WorkflowInstanceId = command.WorkflowInstanceId,
+                                ActivityData = activityData,
+                                ActivityId = nextActivityId
+                            };
                         }
                         else
                         {
                             result.ErrorMessages.Add(
-                                $"Unable to find workflow instance with Id: {command.WorkflowInstanceId} in Elsa database");
-
-                            return await Task.FromResult(result);
+                                $"Workflow instance output for workflow instance Id {collectedWorkflow.WorkflowInstanceId} is not set. Unable to determine next activity");
                         }
                     }
                     else
                     {
-                        return await Task.FromResult(new NavigateForwardResponse
-                        {
-                            Result = new Result { IsSuccess = false, ErrorMessage =  },
-                        });
+                        result.ErrorMessages.Add(
+                            $"Unable to find workflow instance with Id: {command.WorkflowInstanceId} in Elsa database");
                     }
                 }
                 else
                 {
-                    return await Task.FromResult(new NavigateForwardResponse
-                    {
-                        Result = new Result { IsSuccess = false, ErrorMessage = $"Unable to progress workflow. Elsa Execute failed" },
-                    });
+                    result.ErrorMessages.Add(
+                        $"Unable to progress workflow instance Id {command.WorkflowInstanceId}. No collected workflows");
                 }
-
-                if (workflowInstance != null)
-                {
-                    if (!workflowInstance.ActivityData.ContainsKey(nextActivityId))
-                    {
-                        return await Task.FromResult(new NavigateForwardResponse
-                        {
-                            Result = new Result { IsSuccess = false, ErrorMessage = $"Cannot find activity Id {nextActivityId} in the workflow activity data dictionary" },
-                        });
-                    }
-
-                    var nextActivity =
-                        workflowInstance.ActivityData.FirstOrDefault(a => a.Key == nextActivityId).Value;
-
-                    await SaveMultipleChoiceResponse(command, nextActivityId);
-
-                    var activityData = nextActivity.ToActivityData2();
-
-                    return await Task.FromResult(new NavigateForwardResponse
-                    {
-                        Result = new Result { IsSuccess = true },
-                        WorkflowInstanceId = command.WorkflowInstanceId,
-                        ActivityData = activityData,
-                        ActivityId = nextActivityId
-                    });
-                }
-
-                return await Task.FromResult(new NavigateForwardResponse
-                {
-                    Result = new Result { IsSuccess = false, ErrorMessage = $"Unable to find workflow instance with Id: {command.WorkflowInstanceId} in Elsa database" },
-                });
-
             }
             catch (Exception e)
             {
-                return await Task.FromResult(new NavigateForwardResponse
-                {
-                    Result = new Result { IsSuccess = false, ErrorMessage = e.Message },
-                });
+                result.ErrorMessages.Add(e.Message);
             }
+
+            return await Task.FromResult(result);
         }
 
         private async Task SaveMultipleChoiceResponse(NavigateForwardCommand command, string nextActivityId)

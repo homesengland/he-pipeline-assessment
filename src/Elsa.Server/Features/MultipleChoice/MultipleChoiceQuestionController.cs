@@ -7,7 +7,6 @@ using Elsa.Server.Mappers;
 using Elsa.Server.Models;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
-using Open.Linq.AsyncExtensions;
 
 namespace Elsa.Server.Features.MultipleChoice
 {
@@ -16,7 +15,7 @@ namespace Elsa.Server.Features.MultipleChoice
     public class MultipleChoiceQuestionController : ControllerBase
     {
 
-        private IMediator _mediator;
+        private readonly IMediator _mediator;
 
         private readonly IMultipleChoiceQuestionInvoker _invoker;
         private readonly IWorkflowInstanceStore _workflowInstanceStore;
@@ -38,13 +37,13 @@ namespace Elsa.Server.Features.MultipleChoice
             {
                 var result = await this._mediator.Send(model);
 
-                if (result.Result.IsSuccess)
+                if (result.IsSuccess)
                 {
                     return Ok(result);
                 }
                 else
                 {
-                    return BadRequest(result.Result.ErrorMessage);
+                    return BadRequest(string.Join(',', result.ErrorMessages));
                 }
             }
             catch (Exception e)
@@ -127,12 +126,6 @@ namespace Elsa.Server.Features.MultipleChoice
             {
                 return StatusCode(StatusCodes.Status500InternalServerError, e.Message);
             }
-        }
-
-        private async Task SaveMultipleChoiceResponse(MultipleChoiceQuestionResponseDto model, string nextActivityId)
-        {
-            var multipleChoiceQuestion = model.ToMultipleChoiceQuestionModel(nextActivityId);
-            await _pipelineAssessmentRepository.SaveMultipleChoiceQuestionAsync(multipleChoiceQuestion);
         }
     }
 }

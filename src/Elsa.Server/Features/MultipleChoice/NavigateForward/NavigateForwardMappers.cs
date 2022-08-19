@@ -19,6 +19,11 @@ namespace Elsa.Server.Features.MultipleChoice.NavigateForward
             };
         }
 
+        public static MultipleChoiceQuestionModel ToMultipleChoiceQuestionModel(this NavigateForwardCommand command)
+        {
+            return command.ToMultipleChoiceQuestionModel("");
+        }
+
         public static ActivityData? ToActivityData2(this IDictionary<string, object?>? nextActivityData)
         {
             var json = JsonSerializer.Serialize(nextActivityData);
