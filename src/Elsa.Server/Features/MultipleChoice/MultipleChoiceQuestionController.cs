@@ -2,14 +2,14 @@
 using Elsa.Models;
 using Elsa.Persistence;
 using Elsa.Server.Data;
-using Elsa.Server.Endpoints.MultipleChoice.NavigateForward;
+using Elsa.Server.Features.MultipleChoice.NavigateForward;
 using Elsa.Server.Mappers;
 using Elsa.Server.Models;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Open.Linq.AsyncExtensions;
 
-namespace Elsa.Server.Endpoints.MultipleChoice
+namespace Elsa.Server.Features.MultipleChoice
 {
     [Route("multiple-choice")]
     [ApiController]

@@ -4,7 +4,7 @@ using Elsa.Server.Mappers;
 using Elsa.Services;
 using Microsoft.AspNetCore.Mvc;
 
-namespace Elsa.Server.Endpoints
+namespace Elsa.Server.Features.Workflow
 {
     public class WorkflowController : Controller
     {

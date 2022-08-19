@@ -1,7 +1,7 @@
 ﻿using Elsa.CustomModels;
 using System.Text.Json;
 
-namespace Elsa.Server.Endpoints.MultipleChoice.NavigateForward
+namespace Elsa.Server.Features.MultipleChoice.NavigateForward
 {
     public static class NavigateForwardMappers
     {

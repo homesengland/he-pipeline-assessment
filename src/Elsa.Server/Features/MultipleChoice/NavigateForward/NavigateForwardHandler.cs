@@ -5,7 +5,7 @@ using Elsa.Server.Data;
 using MediatR;
 using Open.Linq.AsyncExtensions;
 
-namespace Elsa.Server.Endpoints.MultipleChoice.NavigateForward
+namespace Elsa.Server.Features.MultipleChoice.NavigateForward
 {
     public class NavigateForwardHandler : IRequestHandler<NavigateForwardCommand, NavigateForwardResponse>
     {

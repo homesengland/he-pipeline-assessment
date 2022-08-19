@@ -1,4 +1,4 @@
-﻿namespace Elsa.Server.Endpoints.MultipleChoice.NavigateForward
+﻿namespace Elsa.Server.Features.MultipleChoice.NavigateForward
 {
     public class NavigateForwardResponse
     {
