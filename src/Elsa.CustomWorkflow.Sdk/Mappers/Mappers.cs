@@ -12,6 +12,7 @@ namespace Elsa.CustomWorkflow.Sdk.Mappers
                 Answer = string.Join(',', workflowNavigationDto.ActivityData.Choices.Where(x => x is { IsSelected: true }).Select(x => x.Answer)),
                 WorkflowInstanceId = workflowNavigationDto.WorkflowInstanceId,
                 NavigateBack = navigateBack,
+                FinishWorkflow = false,
                 PreviousActivityId = "",
                 ActivityId = workflowNavigationDto.ActivityId
             };

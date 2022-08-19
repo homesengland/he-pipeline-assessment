@@ -1,9 +1,9 @@
-﻿using He.PipelineAssessment.UI.Models;
+﻿using AutoMapper;
+using Elsa.CustomWorkflow.Sdk.HttpClients;
+using Elsa.CustomWorkflow.Sdk.Models;
+using He.PipelineAssessment.UI.Models;
 using Microsoft.AspNetCore.Mvc;
 using System.Diagnostics;
-using Elsa.CustomWorkflow.Sdk.HttpClients;
-using AutoMapper;
-using Elsa.CustomWorkflow.Sdk.Models;
 
 namespace He.PipelineAssessment.UI.Controllers
 {
@@ -27,7 +27,7 @@ namespace He.PipelineAssessment.UI.Controllers
 
         public IActionResult Index()
         {
-            return View(new StartWorkflowModel(){WorkflowDefinitionId = "ef4c34589fa345d3be955dd6e0c2483f" });
+            return View(new StartWorkflowModel() { WorkflowDefinitionId = "ef4c34589fa345d3be955dd6e0c2483f" });
         }
 
         [HttpPost]
@@ -49,10 +49,19 @@ namespace He.PipelineAssessment.UI.Controllers
             return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
         }
 
-        public async Task<IActionResult> ProgressWorkflow([FromForm] WorkflowNavigationViewModel model)
+        public async Task<IActionResult> NavigateWorkflowForward([FromForm] WorkflowNavigationViewModel model)
         {
-            var response = await _eslElsaServerHttpClient.NavigateWorkflow(_mapper.Map<WorkflowNavigationDto>(model),
-                Request.Form.ContainsKey("Back"));
+            var response = await _eslElsaServerHttpClient.NavigateWorkflowForward(_mapper.Map<WorkflowNavigationDto>(model));
+
+            ModelState.Clear();
+            var workflowNavigationViewModel = _mapper.Map<WorkflowNavigationViewModel>(response);
+
+            return View("StartWorkflow", workflowNavigationViewModel);
+        }
+
+        public async Task<IActionResult> NavigateWorkflowBackward(string WorkflowInstanceId, string ActivityId)
+        {
+            var response = await _eslElsaServerHttpClient.NavigateWorkflowBackward(WorkflowInstanceId, ActivityId);
 
             ModelState.Clear();
             var workflowNavigationViewModel = _mapper.Map<WorkflowNavigationViewModel>(response);
