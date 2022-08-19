@@ -27,6 +27,8 @@
 
   <ItemGroup>
     <Folder Include="Data\Migrations\" />
+    <Folder Include="Features\Workflow\LoadWorkflow\" />
+    <Folder Include="Features\Workflow\StartWorkflow\" />
     <Folder Include="wwwroot\" />
   </ItemGroup>
 
