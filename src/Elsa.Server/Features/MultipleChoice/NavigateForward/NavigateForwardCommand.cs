@@ -1,8 +1,9 @@
-﻿using MediatR;
+﻿using Elsa.Server.Models;
+using MediatR;
 
 namespace Elsa.Server.Features.MultipleChoice.NavigateForward
 {
-    public class NavigateForwardCommand : IRequest<NavigateForwardResponse>
+    public class NavigateForwardCommand : IRequest<OperationResult<NavigateForwardResponse>>
     {
         public string Id { get; set; } = null!;
         public string ActivityId { get; set; } = null!;

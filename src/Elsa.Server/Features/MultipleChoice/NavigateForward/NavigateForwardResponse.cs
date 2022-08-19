@@ -2,7 +2,6 @@
 {
     public class NavigateForwardResponse
     {
-        public Result Result { get; set; } = null!;
         public ActivityData? ActivityData { get; set; } = null!;
         public string WorkflowInstanceId { get; set; } = null!;
         public string ActivityId { get; set; } = null!;
@@ -23,9 +22,5 @@
         public bool IsSelected { get; set; }
     }
 
-    public class Result
-    {
-        public bool IsSuccess { get; set; }
-        public string? ErrorMessage { get; set; }
-    }
+
 }

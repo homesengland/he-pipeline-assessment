@@ -2,12 +2,13 @@
 using Elsa.Models;
 using Elsa.Persistence;
 using Elsa.Server.Data;
+using Elsa.Server.Models;
 using MediatR;
 using Open.Linq.AsyncExtensions;
 
 namespace Elsa.Server.Features.MultipleChoice.NavigateForward
 {
-    public class NavigateForwardHandler : IRequestHandler<NavigateForwardCommand, NavigateForwardResponse>
+    public class NavigateForwardHandler : IRequestHandler<NavigateForwardCommand, OperationResult<NavigateForwardResponse>>
     {
 
         private readonly IMultipleChoiceQuestionInvoker _invoker;
@@ -21,10 +22,12 @@ namespace Elsa.Server.Features.MultipleChoice.NavigateForward
             _pipelineAssessmentRepository = pipelineAssessmentRepository;
         }
 
-        public async Task<NavigateForwardResponse> Handle(NavigateForwardCommand command, CancellationToken cancellationToken)
+        public async Task<OperationResult<NavigateForwardResponse>> Handle(NavigateForwardCommand command, CancellationToken cancellationToken)
         {
             try
             {
+                var result = new OperationResult<NavigateForwardResponse>();
+
                 string nextActivityId = "";
 
                 WorkflowInstance? workflowInstance = null;
@@ -48,17 +51,17 @@ namespace Elsa.Server.Features.MultipleChoice.NavigateForward
                         }
                         else
                         {
-                            return await Task.FromResult(new NavigateForwardResponse
-                            {
-                                Result = new Result { IsSuccess = false, ErrorMessage = $"Unable to find workflow instance with Id: {command.WorkflowInstanceId} in Elsa database" },
-                            });
+                            result.ErrorMessages.Add(
+                                $"Unable to find workflow instance with Id: {command.WorkflowInstanceId} in Elsa database");
+
+                            return await Task.FromResult(result);
                         }
                     }
                     else
                     {
                         return await Task.FromResult(new NavigateForwardResponse
                         {
-                            Result = new Result { IsSuccess = false, ErrorMessage = $"Unable to find workflow instance with Id: {command.WorkflowInstanceId} in Elsa database" },
+                            Result = new Result { IsSuccess = false, ErrorMessage =  },
                         });
                     }
                 }
