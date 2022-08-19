@@ -1,6 +1,6 @@
 using AutoMapper;
+using Elsa.CustomWorkflow.Sdk.HttpClients;
 using He.PipelineAssessment.UI;
-using He.PipelineAssessment.UI.HttpClients;
 
 var builder = WebApplication.CreateBuilder(args);
 

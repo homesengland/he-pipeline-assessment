@@ -9,15 +9,15 @@ namespace Elsa.CustomActivities.Activities.MultipleChoice
 
         private async IAsyncEnumerable<BookmarkResult> GetBookmarksInternalAsync(BookmarkProviderContext<MultipleChoiceQuestion> context, [EnumeratorCancellation] CancellationToken cancellationToken)
         {
-            var activityID = context.ActivityExecutionContext.ActivityId.ToLowerInvariant();
+            var activityId = context.ActivityExecutionContext.ActivityId.ToLowerInvariant();
 
-            if (string.IsNullOrEmpty(activityID))
+            if (string.IsNullOrEmpty(activityId))
                 yield break;
 
-            yield return Result(new MultipleChoiceQuestionBookmark
+            yield return await Task.FromResult(Result(new MultipleChoiceQuestionBookmark
             {
-                ActivityID = activityID
-            });
+                ActivityId = activityId
+            }));
         }
     }
 }

@@ -1,5 +1,8 @@
 ﻿using AutoMapper;
+using Elsa.CustomWorkflow.Sdk.Models;
 using He.PipelineAssessment.UI.Models;
+using ActivityData = Elsa.CustomWorkflow.Sdk.Models.ActivityData;
+using Choice = Elsa.CustomWorkflow.Sdk.Models.Choice;
 
 namespace He.PipelineAssessment.UI
 {
@@ -7,12 +10,12 @@ namespace He.PipelineAssessment.UI
     {
         public MappingProfile()
         {
-            CreateMap<Activitydata, Elsa.CustomModels.ActivityData>();
-            CreateMap<Choice, Elsa.CustomModels.Choice>();
-            CreateMap<Case, Elsa.CustomModels.Case>();
-            CreateMap<Elsa.CustomModels.ActivityData, Activitydata>();
-            CreateMap<Elsa.CustomModels.Choice, Choice>();
-            CreateMap<Elsa.CustomModels.Case, Case>();
+            CreateMap<WorkflowNavigationDto, WorkflowNavigationViewModel>();
+            CreateMap<WorkflowNavigationViewModel, WorkflowNavigationDto>();
+            CreateMap<ActivityData, Models.ActivityData>();
+            CreateMap<Models.ActivityData, ActivityData>();
+            CreateMap<Choice, Models.Choice>();
+            CreateMap<Models.Choice, Choice>();
         }
     }
 }

@@ -19,7 +19,7 @@ namespace Elsa.CustomActivities.Activities.MultipleChoice
     {
 
         [ActivityInput(Hint = "Section title")]
-        public string Title { get; set; }
+        public string Title { get; set; } = null!;
 
         [ActivityInput(Label = "Multi-choice questions", Hint = "Possible assessment screen answers.",
             UIHint = "multiChoice-record-builder", DefaultSyntax = "Json", IsDesignerCritical = true)]
@@ -28,11 +28,11 @@ namespace Elsa.CustomActivities.Activities.MultipleChoice
         #region Input
 
         [ActivityInput(
-           Hint = "Question to ask",
-           UIHint = ActivityInputUIHints.SingleLine,
-           DefaultSyntax = SyntaxNames.Literal,
-           SupportedSyntaxes = new[] { SyntaxNames.Literal })]
-        public string Question { get; set; }
+            Hint = "Question to ask",
+            UIHint = ActivityInputUIHints.SingleLine,
+            DefaultSyntax = SyntaxNames.Literal,
+            SupportedSyntaxes = new[] { SyntaxNames.Literal })]
+        public string Question { get; set; } = null!;
         public DateTime LastUpdated => DateTime.Now;
 
         #endregion
@@ -52,7 +52,7 @@ namespace Elsa.CustomActivities.Activities.MultipleChoice
         #endregion
 
         #region Output
-        [ActivityOutput] public MultipleChoiceQuestionModel Output { get; set; }
+        [ActivityOutput] public MultipleChoiceQuestionModel? Output { get; set; }
 
         #endregion
 
@@ -81,11 +81,11 @@ namespace Elsa.CustomActivities.Activities.MultipleChoice
                 });
             }
 
-            return new CombinedResult(new List<IActivityExecutionResult>
+            return await Task.FromResult(new CombinedResult(new List<IActivityExecutionResult>
             {
                 Outcomes(outcomes),
                 new SuspendResult()
-            });
+            }));
 
         }
 

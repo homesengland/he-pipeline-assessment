@@ -1,13 +1,13 @@
-﻿namespace Elsa.CustomModels
+﻿namespace Elsa.CustomWorkflow.Sdk.Models
 {
-    public class MultipleChoiceQuestionModel
+    public class MultipleChoiceQuestionDto
     {
         public string Id { get; set; } = null!;
         public string ActivityId { get; set; } = null!;
 
         public string WorkflowInstanceId { get; set; } = null!;
 
-        public string? Answer { get; set; }
+        public string Answer { get; set; } = null!;
 
         public bool? FinishWorkflow { get; set; }
         public bool? NavigateBack { get; set; }

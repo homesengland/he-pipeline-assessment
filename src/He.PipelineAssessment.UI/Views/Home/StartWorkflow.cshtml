@@ -4,12 +4,14 @@
     Layout = "_NewLayout";
 }
 <div class="text-center">
-    @using (Html.BeginForm("ProgressWorkflow", "Home", FormMethod.Post))
+    
+    @Html.ActionLink("Back","NavigateWorkflowBackward","Home", new {WorkflowInstanceId = Model.WorkflowInstanceId, ActivityId = Model.ActivityId},new{ @class="govuk-back-link"})
+
+    @using (Html.BeginForm("NavigateWorkflowForward", "Home", FormMethod.Post))
     {
-        @Html.HiddenFor(m=>Model.WorkflowInstanceId)
-        @Html.HiddenFor(m=>Model.ActivityId)
-        @Html.HiddenFor(m=>Model.ActivityData.QuestionID)
-        <br />
+        @Html.HiddenFor(m => Model.WorkflowInstanceId)
+        @Html.HiddenFor(m => Model.ActivityId)
+        <br/>
 
         <div class="govuk-form-group">
             <fieldset class="govuk-fieldset" aria-describedby="waste-hint">
@@ -22,18 +24,19 @@
                     Select all that apply.
                 </div>
                 <div class="govuk-checkboxes" data-module="govuk-checkboxes">
-                    @for (int i = 0; i < Model.ActivityData.Choices.Count(); i++) { 
+                    @for (int i = 0; i < Model.ActivityData.Choices.Count(); i++)
+                    {
                         <div class="govuk-checkboxes__item">
-                            @Html.HiddenFor(m=>m.ActivityData.Choices[i].answer)
-                            @Html.CheckBoxFor(m => m.ActivityData.Choices[i].isSelected, new { @class = "govuk-checkboxes__input" })
-                            @Html.Label(Model.ActivityData.Choices[i].answer, Model.ActivityData.Choices[i].answer, new { @class = "govuk-label govuk-checkboxes__label" })
+                            @Html.HiddenFor(m => m.ActivityData.Choices[i].Answer)
+                            @Html.CheckBoxFor(m => m.ActivityData.Choices[i].IsSelected, new {@class = "govuk-checkboxes__input"})
+                            @Html.Label(Model.ActivityData.Choices[i].Answer, Model.ActivityData.Choices[i].Answer, new {@class = "govuk-label govuk-checkboxes__label"})
                         </div>
                     }
                 </div>
             </fieldset>
-            <br />
-            <input id = "Back" type = "submit" value = "Back" name="Back" class="govuk-button" />
-            <input id = "Next" type = "submit" value = "Next" name="Next" class="govuk-button" />
+            <br/>
+
+            <input id="Next" type="submit" value="Save and continue" name="Next" class="govuk-button"/>
         </div>
     }
 </div>

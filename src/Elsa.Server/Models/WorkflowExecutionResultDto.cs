@@ -1,8 +1,8 @@
-﻿namespace He.PipelineAssessment.UI.Models
+﻿namespace Elsa.Server.Models
 {
-    public class WorkflowNavigationViewModel
+    public class WorkflowExecutionResultDto
     {
-        public ActivityData ActivityData { get; set; } = null!;
+        public ActivityData? ActivityData { get; set; } = null!;
         public string WorkflowInstanceId { get; set; } = null!;
         public string ActivityId { get; set; } = null!;
     }
@@ -12,7 +12,7 @@
         public string Title { get; set; } = null!;
         public Choice[] Choices { get; set; } = null!;
         public string Question { get; set; } = null!;
-        public object Output { get; set; } = null!;
+        public object? Output { get; set; }
     }
 
     public class Choice
