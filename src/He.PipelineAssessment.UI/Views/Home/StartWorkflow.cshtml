@@ -7,7 +7,7 @@
     
     @Html.ActionLink("Back","NavigateWorkflowBackward","Home", new {WorkflowInstanceId = Model.WorkflowInstanceId, ActivityId = Model.ActivityId},new{ @class="govuk-back-link"})
 
-    @using (Html.BeginForm("NavigateWorkflowForward", "Home", FormMethod.Post))
+    @using (Html.BeginForm("SaveAndContinue", "Home", FormMethod.Post))
     {
         @Html.HiddenFor(m => Model.WorkflowInstanceId)
         @Html.HiddenFor(m => Model.ActivityId)

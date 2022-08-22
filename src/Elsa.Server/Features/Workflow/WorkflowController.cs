@@ -1,6 +1,7 @@
 ﻿using Elsa.Models;
 using Elsa.Server.Data;
 using Elsa.Server.Mappers;
+using Elsa.Server.Models;
 using Elsa.Services;
 using Microsoft.AspNetCore.Mvc;
 
@@ -33,7 +34,11 @@ namespace Elsa.Server.Features.Workflow
                     await _pipelineAssessmentRepository.SaveMultipleChoiceQuestionAsync(multipleChoiceQuestion);
 
                 var workflowExecutionResultDto = result.ToWorkflowExecutionResultDto();
-                return Ok(workflowExecutionResultDto);
+                var opresult = new OperationResult<WorkflowExecutionResultDto>()
+                {
+                    Data = workflowExecutionResultDto
+                };
+                return Ok(opresult);
             }
             catch (Exception e)
             {

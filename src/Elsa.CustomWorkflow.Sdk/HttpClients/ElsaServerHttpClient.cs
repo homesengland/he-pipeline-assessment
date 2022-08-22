@@ -1,5 +1,4 @@
-﻿using Elsa.CustomWorkflow.Sdk.Mappers;
-using Elsa.CustomWorkflow.Sdk.Models;
+﻿using Elsa.CustomWorkflow.Sdk.Models;
 using System.Net.Http.Json;
 using System.Text.Json;
 
@@ -8,8 +7,8 @@ namespace Elsa.CustomWorkflow.Sdk.HttpClients
     public interface IElsaServerHttpClient
     {
         Task<WorkflowNavigationDto?> PostStartWorkflow(string workflowDefinitionId);
-        Task<WorkflowNavigationDto?> NavigateWorkflowForward(WorkflowNavigationDto model);
-        Task<WorkflowNavigationDto?> NavigateWorkflowBackward(string WorkflowInstanceId, string ActivityId);
+        Task<WorkflowNavigationDto?> SaveAndContinue(SaveAndContinueCommandDto model);
+        Task<WorkflowNavigationDto?> NavigateWorkflowBackward(string workflowInstanceId, string activityId);
     }
 
     public class ElsaServerHttpClient : IElsaServerHttpClient
@@ -39,13 +38,12 @@ namespace Elsa.CustomWorkflow.Sdk.HttpClients
             return JsonSerializer.Deserialize<WorkflowNavigationDto>(data, new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
         }
 
-        public async Task<WorkflowNavigationDto?> NavigateWorkflowForward(WorkflowNavigationDto model)
+        public async Task<WorkflowNavigationDto?> SaveAndContinue(SaveAndContinueCommandDto model)
         {
             string data;
-            var fullUri = "https://localhost:7227/multiple-choice/NavigateForward";
-            var postModel = model.ToMultipleChoiceQuestionDto(false);
+            var fullUri = "https://localhost:7227/multiple-choice/SaveAndContinue";
 
-            using (var response = await _httpClient.PostAsJsonAsync(fullUri.ToString(), postModel).ConfigureAwait(false))//forward
+            using (var response = await _httpClient.PostAsJsonAsync(fullUri.ToString(), model).ConfigureAwait(false))//forward
             {
                 data = await response.Content.ReadAsStringAsync().ConfigureAwait(false);
                 if (!response.IsSuccessStatusCode)

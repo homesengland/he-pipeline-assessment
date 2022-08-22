@@ -1,11 +1,11 @@
-﻿using Elsa.CustomModels;
-using System.Text.Json;
+﻿using System.Text.Json;
+using Elsa.CustomModels;
 
-namespace Elsa.Server.Features.MultipleChoice.NavigateForward
+namespace Elsa.Server.Features.MultipleChoice.SaveAndContinue
 {
-    public static class NavigateForwardMappers
+    public static class SaveAndContinueMappers
     {
-        public static MultipleChoiceQuestionModel ToMultipleChoiceQuestionModel(this NavigateForwardCommand command, string nextActivityId)
+        public static MultipleChoiceQuestionModel ToMultipleChoiceQuestionModel(this SaveAndContinueCommand command, string nextActivityId)
         {
             return new MultipleChoiceQuestionModel
             {
@@ -13,13 +13,13 @@ namespace Elsa.Server.Features.MultipleChoice.NavigateForward
                 ActivityId = nextActivityId,
                 Answer = command.Answer,
                 FinishWorkflow = false,
-                NavigateBack = command.NavigateBack,
+                NavigateBack = false,
                 WorkflowInstanceId = command.WorkflowInstanceId,
                 PreviousActivityId = command.ActivityId
             };
         }
 
-        public static MultipleChoiceQuestionModel ToMultipleChoiceQuestionModel(this NavigateForwardCommand command)
+        public static MultipleChoiceQuestionModel ToMultipleChoiceQuestionModel(this SaveAndContinueCommand command)
         {
             return command.ToMultipleChoiceQuestionModel("");
         }

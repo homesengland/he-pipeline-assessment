@@ -2,7 +2,7 @@
 using Elsa.Models;
 using Elsa.Persistence;
 using Elsa.Server.Data;
-using Elsa.Server.Features.MultipleChoice.NavigateForward;
+using Elsa.Server.Features.MultipleChoice.SaveAndContinue;
 using Elsa.Server.Mappers;
 using Elsa.Server.Models;
 using MediatR;
@@ -30,8 +30,8 @@ namespace Elsa.Server.Features.MultipleChoice
             _pipelineAssessmentRepository = pipelineAssessmentRepository;
         }
 
-        [HttpPost("NavigateForward")]
-        public async Task<IActionResult> NavigateForward(NavigateForwardCommand model)
+        [HttpPost("SaveAndContinue")]
+        public async Task<IActionResult> SaveAndContinue(SaveAndContinueCommand model)
         {
             try
             {

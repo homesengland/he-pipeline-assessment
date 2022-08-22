@@ -10,7 +10,7 @@ namespace He.PipelineAssessment.UI
     {
         public MappingProfile()
         {
-            CreateMap<WorkflowNavigationDto, WorkflowNavigationViewModel>();
+            CreateMap<WorkflowNavigationData, WorkflowNavigationViewModel>();
             CreateMap<WorkflowNavigationViewModel, WorkflowNavigationDto>();
             CreateMap<ActivityData, Models.ActivityData>();
             CreateMap<Models.ActivityData, ActivityData>();

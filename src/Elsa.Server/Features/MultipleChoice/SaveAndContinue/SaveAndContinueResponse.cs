@@ -1,6 +1,6 @@
-﻿namespace Elsa.Server.Features.MultipleChoice.NavigateForward
+﻿namespace Elsa.Server.Features.MultipleChoice.SaveAndContinue
 {
-    public class NavigateForwardResponse
+    public class SaveAndContinueResponse
     {
         public ActivityData? ActivityData { get; set; } = null!;
         public string WorkflowInstanceId { get; set; } = null!;

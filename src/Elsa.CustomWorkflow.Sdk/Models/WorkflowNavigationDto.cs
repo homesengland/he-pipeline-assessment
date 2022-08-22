@@ -2,6 +2,13 @@
 {
     public class WorkflowNavigationDto
     {
+        public WorkflowNavigationData Data { get; set; } = null!;
+        public bool IsValid { get; set; }
+        public IList<string> ValidationMessages { get; set; } = new List<string>();
+    }
+
+    public class WorkflowNavigationData
+    {
         public ActivityData ActivityData { get; set; } = null!;
         public string WorkflowInstanceId { get; set; } = null!;
         public string ActivityId { get; set; } = null!;

@@ -34,7 +34,7 @@ namespace He.PipelineAssessment.UI.Controllers
         public async Task<IActionResult> StartWorkflow([FromForm] StartWorkflowModel model)
         {
             var response = await _eslElsaServerHttpClient.PostStartWorkflow(model.WorkflowDefinitionId);
-            var workflowNavigationViewModel = _mapper.Map<WorkflowNavigationViewModel>(response);
+            var workflowNavigationViewModel = _mapper.Map<WorkflowNavigationViewModel>(response?.Data);
             return View(workflowNavigationViewModel);
         }
 
@@ -49,19 +49,19 @@ namespace He.PipelineAssessment.UI.Controllers
             return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
         }
 
-        public async Task<IActionResult> NavigateWorkflowForward([FromForm] WorkflowNavigationViewModel model)
+        public async Task<IActionResult> SaveAndContinue([FromForm] WorkflowNavigationViewModel model)
         {
-            var response = await _eslElsaServerHttpClient.NavigateWorkflowForward(_mapper.Map<WorkflowNavigationDto>(model));
+            var response = await _eslElsaServerHttpClient.SaveAndContinue(model.ToSaveAndContinueCommandDto());
 
             ModelState.Clear();
-            var workflowNavigationViewModel = _mapper.Map<WorkflowNavigationViewModel>(response);
+            var workflowNavigationViewModel = _mapper.Map<WorkflowNavigationViewModel>(response?.Data);
 
             return View("StartWorkflow", workflowNavigationViewModel);
         }
 
-        public async Task<IActionResult> NavigateWorkflowBackward(string WorkflowInstanceId, string ActivityId)
+        public async Task<IActionResult> NavigateWorkflowBackward(string workflowInstanceId, string activityId)
         {
-            var response = await _eslElsaServerHttpClient.NavigateWorkflowBackward(WorkflowInstanceId, ActivityId);
+            var response = await _eslElsaServerHttpClient.NavigateWorkflowBackward(workflowInstanceId, activityId);
 
             ModelState.Clear();
             var workflowNavigationViewModel = _mapper.Map<WorkflowNavigationViewModel>(response);

@@ -1,30 +1,29 @@
 ﻿using Elsa.CustomActivities.Activities.MultipleChoice;
-using Elsa.Models;
 using Elsa.Persistence;
 using Elsa.Server.Data;
 using Elsa.Server.Models;
 using MediatR;
 using Open.Linq.AsyncExtensions;
 
-namespace Elsa.Server.Features.MultipleChoice.NavigateForward
+namespace Elsa.Server.Features.MultipleChoice.SaveAndContinue
 {
-    public class NavigateForwardHandler : IRequestHandler<NavigateForwardCommand, OperationResult<NavigateForwardResponse>>
+    public class SaveAndContinueHandler : IRequestHandler<SaveAndContinueCommand, OperationResult<SaveAndContinueResponse>>
     {
 
         private readonly IMultipleChoiceQuestionInvoker _invoker;
         private readonly IWorkflowInstanceStore _workflowInstanceStore;
         private readonly IPipelineAssessmentRepository _pipelineAssessmentRepository;
 
-        public NavigateForwardHandler(IMultipleChoiceQuestionInvoker invoker, IWorkflowInstanceStore workflowInstanceStore, IPipelineAssessmentRepository pipelineAssessmentRepository)
+        public SaveAndContinueHandler(IMultipleChoiceQuestionInvoker invoker, IWorkflowInstanceStore workflowInstanceStore, IPipelineAssessmentRepository pipelineAssessmentRepository)
         {
             _invoker = invoker;
             _workflowInstanceStore = workflowInstanceStore;
             _pipelineAssessmentRepository = pipelineAssessmentRepository;
         }
 
-        public async Task<OperationResult<NavigateForwardResponse>> Handle(NavigateForwardCommand command, CancellationToken cancellationToken)
+        public async Task<OperationResult<SaveAndContinueResponse>> Handle(SaveAndContinueCommand command, CancellationToken cancellationToken)
         {
-            var result = new OperationResult<NavigateForwardResponse>();
+            var result = new OperationResult<SaveAndContinueResponse>();
             try
             {
                 var multipleChoiceQuestionModel = command.ToMultipleChoiceQuestionModel();
@@ -56,7 +55,7 @@ namespace Elsa.Server.Features.MultipleChoice.NavigateForward
 
                             var activityData = nextActivity.ToActivityData2();
 
-                            result.Data = new NavigateForwardResponse
+                            result.Data = new SaveAndContinueResponse
                             {
                                 WorkflowInstanceId = command.WorkflowInstanceId,
                                 ActivityData = activityData,
@@ -89,7 +88,7 @@ namespace Elsa.Server.Features.MultipleChoice.NavigateForward
             return await Task.FromResult(result);
         }
 
-        private async Task SaveMultipleChoiceResponse(NavigateForwardCommand command, string nextActivityId)
+        private async Task SaveMultipleChoiceResponse(SaveAndContinueCommand command, string nextActivityId)
         {
             var multipleChoiceQuestion = command.ToMultipleChoiceQuestionModel(nextActivityId);
             await _pipelineAssessmentRepository.SaveMultipleChoiceQuestionAsync(multipleChoiceQuestion);
