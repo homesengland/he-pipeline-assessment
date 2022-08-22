@@ -58,7 +58,7 @@ namespace Elsa.CustomWorkflow.Sdk.HttpClients
         public async Task<WorkflowNavigationDto?> NavigateWorkflowBackward(string workflowInstanceId, string activityId)
         {
             string data;
-            var fullUri = $"https://localhost:7227/multiple-choice/NavigateBackward?workflowInstanceId={workflowInstanceId}&activityId={activityId}";
+            var fullUri = $"https://localhost:7227/workflow/LoadWorkflow?workflowInstanceId={workflowInstanceId}&activityId={activityId}";
             var model = new BackwardNavigationDto
             {
                 ActivityId = activityId,
