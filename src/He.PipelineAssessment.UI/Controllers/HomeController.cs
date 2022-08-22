@@ -1,17 +1,13 @@
 ﻿using AutoMapper;
 using Elsa.CustomWorkflow.Sdk.HttpClients;
-using Elsa.CustomWorkflow.Sdk.Models;
 using He.PipelineAssessment.UI.Models;
 using Microsoft.AspNetCore.Mvc;
 using System.Diagnostics;
+using Elsa.CustomWorkflow.Sdk.Models.StartWorkflow;
+using Elsa.CustomWorkflow.Sdk.Models.Workflow.LoadWorkflowActivity;
 
 namespace He.PipelineAssessment.UI.Controllers
 {
-    public class StartWorkflowModel
-    {
-        public string WorkflowDefinitionId { get; set; } = null!;
-    }
-
     public class HomeController : Controller
     {
         private readonly ILogger<HomeController> _logger;
@@ -27,19 +23,19 @@ namespace He.PipelineAssessment.UI.Controllers
 
         public IActionResult Index()
         {
-            return View(new StartWorkflowModel() { WorkflowDefinitionId = "ef4c34589fa345d3be955dd6e0c2483f" });
+            return View(new StartWorkflowViewModel() { WorkflowDefinitionId = "ef4c34589fa345d3be955dd6e0c2483f" });
         }
 
         [HttpPost]
-        public async Task<IActionResult> StartWorkflow([FromForm] StartWorkflowModel model)
+        public async Task<IActionResult> StartWorkflow([FromForm] StartWorkflowViewModel model)
         {
             var dto = new StartWorkflowCommandDto()
             {
                 WorkflowDefinitionId = model.WorkflowDefinitionId
             };
             var response = await _eslElsaServerHttpClient.PostStartWorkflow(dto);
-            var workflowNavigationViewModel = _mapper.Map<WorkflowNavigationViewModel>(response?.Data);
-            return View(workflowNavigationViewModel);
+            var workflowNavigationViewModel = _mapper.Map<WorkflowActivityDataViewModel>(response?.Data);
+            return View("LoadWorkflowActivity", workflowNavigationViewModel);
         }
 
         public IActionResult Privacy()
@@ -53,24 +49,28 @@ namespace He.PipelineAssessment.UI.Controllers
             return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
         }
 
-        public async Task<IActionResult> SaveAndContinue([FromForm] WorkflowNavigationViewModel model)
+        public async Task<IActionResult> SaveAndContinue([FromForm] WorkflowActivityDataViewModel model)
         {
             var response = await _eslElsaServerHttpClient.SaveAndContinue(model.ToSaveAndContinueCommandDto());
 
             ModelState.Clear();
-            var workflowNavigationViewModel = _mapper.Map<WorkflowNavigationViewModel>(response?.Data);
+            var workflowNavigationViewModel = _mapper.Map<WorkflowActivityDataViewModel>(response?.Data);
 
-            return View("StartWorkflow", workflowNavigationViewModel);
+            return View("LoadWorkflowActivity", workflowNavigationViewModel);
         }
 
-        public async Task<IActionResult> NavigateWorkflowBackward(string workflowInstanceId, string activityId)
-        {
-            var response = await _eslElsaServerHttpClient.NavigateWorkflowBackward(workflowInstanceId, activityId);
+        public async Task<IActionResult> LoadWorkflowActivity(string workflowInstanceId, string activityId)
+{
+            var response = await _eslElsaServerHttpClient.LoadWorkflowActivity(new LoadWorkflowActivityDto
+            {
+                WorkflowInstanceId = workflowInstanceId,
+                ActivityId = activityId
+            });
 
             ModelState.Clear();
-            var workflowNavigationViewModel = _mapper.Map<WorkflowNavigationViewModel>(response);
+            var workflowNavigationViewModel = _mapper.Map<WorkflowActivityDataViewModel>(response?.Data);
 
-            return View("StartWorkflow", workflowNavigationViewModel);
+            return View("LoadWorkflowActivity", workflowNavigationViewModel);
         }
     }
 }

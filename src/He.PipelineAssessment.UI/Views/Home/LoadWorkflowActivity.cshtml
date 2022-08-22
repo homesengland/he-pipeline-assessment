@@ -1,11 +1,11 @@
-﻿@model WorkflowNavigationViewModel
+﻿@model WorkflowActivityDataViewModel
 @{
     ViewData["Title"] = "Pipeline Assessment";
     Layout = "_NewLayout";
 }
 <div class="text-center">
-    
-    @Html.ActionLink("Back","NavigateWorkflowBackward","Home", new {WorkflowInstanceId = Model.WorkflowInstanceId, ActivityId = Model.ActivityId},new{ @class="govuk-back-link"})
+
+    @Html.ActionLink("Back","LoadWorkflowActivity","Home", new {WorkflowInstanceId = Model.WorkflowInstanceId, ActivityId = Model.PreviousActivityId},new{ @class="govuk-back-link"})
 
     @using (Html.BeginForm("SaveAndContinue", "Home", FormMethod.Post))
     {

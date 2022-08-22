@@ -5,20 +5,19 @@ namespace Elsa.Server.Data.StartupTasks
 {
     public class RunPipelineAssessmentMigrations : IStartupTask
     {
-        private readonly IDbContextFactory<PipelineAssessmentContext> _dbContextFactory;
+        private readonly DbContext _dbContext;
 
-        public RunPipelineAssessmentMigrations(IDbContextFactory<PipelineAssessmentContext> dbContextFactoryFactory)
+        public RunPipelineAssessmentMigrations(DbContext dbContext)
         {
-            _dbContextFactory = dbContextFactoryFactory;
+            _dbContext = dbContext;
         }
 
         public int Order => 0;
 
         public async Task ExecuteAsync(CancellationToken cancellationToken = default)
         {
-            await using var dbContext = _dbContextFactory.CreateDbContext();
-            await dbContext.Database.MigrateAsync(cancellationToken);
-            await dbContext.DisposeAsync();
+            await _dbContext.Database.MigrateAsync(cancellationToken);
+            await _dbContext.DisposeAsync();
         }
     }
 }

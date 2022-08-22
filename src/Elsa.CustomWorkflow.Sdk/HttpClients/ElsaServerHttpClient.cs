@@ -1,14 +1,17 @@
-﻿using Elsa.CustomWorkflow.Sdk.Models;
+﻿using Elsa.CustomWorkflow.Sdk.Models.StartWorkflow;
+using Elsa.CustomWorkflow.Sdk.Models.Workflow;
 using System.Net.Http.Json;
 using System.Text.Json;
+using Elsa.CustomWorkflow.Sdk.Models.MultipleChoice.SaveAndContinue;
+using Elsa.CustomWorkflow.Sdk.Models.Workflow.LoadWorkflowActivity;
 
 namespace Elsa.CustomWorkflow.Sdk.HttpClients
 {
     public interface IElsaServerHttpClient
     {
-        Task<WorkflowNavigationDto?> PostStartWorkflow(StartWorkflowCommandDto model);
-        Task<WorkflowNavigationDto?> SaveAndContinue(SaveAndContinueCommandDto model);
-        Task<WorkflowNavigationDto?> NavigateWorkflowBackward(string workflowInstanceId, string activityId);
+        Task<WorkflowActivityDataDto?> PostStartWorkflow(StartWorkflowCommandDto model);
+        Task<WorkflowActivityDataDto?> SaveAndContinue(SaveAndContinueCommandDto model);
+        Task<WorkflowActivityDataDto?> LoadWorkflowActivity(LoadWorkflowActivityDto model);
     }
 
     public class ElsaServerHttpClient : IElsaServerHttpClient
@@ -20,7 +23,7 @@ namespace Elsa.CustomWorkflow.Sdk.HttpClients
             _httpClient = httpClient;
         }
 
-        public async Task<WorkflowNavigationDto?> PostStartWorkflow(StartWorkflowCommandDto model)
+        public async Task<WorkflowActivityDataDto?> PostStartWorkflow(StartWorkflowCommandDto model)
         {
             string data;
             //TODO: make this uri configurable
@@ -35,10 +38,10 @@ namespace Elsa.CustomWorkflow.Sdk.HttpClients
                                                    $"\n Url='{fullUri}'");
             }
 
-            return JsonSerializer.Deserialize<WorkflowNavigationDto>(data, new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
+            return JsonSerializer.Deserialize<WorkflowActivityDataDto>(data, new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
         }
 
-        public async Task<WorkflowNavigationDto?> SaveAndContinue(SaveAndContinueCommandDto model)
+        public async Task<WorkflowActivityDataDto?> SaveAndContinue(SaveAndContinueCommandDto model)
         {
             string data;
             var fullUri = "https://localhost:7227/multiple-choice/SaveAndContinue";
@@ -52,18 +55,13 @@ namespace Elsa.CustomWorkflow.Sdk.HttpClients
                                                    $"\n Url='{fullUri}'");
             }
 
-            return JsonSerializer.Deserialize<WorkflowNavigationDto>(data, new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
+            return JsonSerializer.Deserialize<WorkflowActivityDataDto>(data, new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
         }
 
-        public async Task<WorkflowNavigationDto?> NavigateWorkflowBackward(string workflowInstanceId, string activityId)
+        public async Task<WorkflowActivityDataDto?> LoadWorkflowActivity(LoadWorkflowActivityDto model)
         {
             string data;
-            var fullUri = $"https://localhost:7227/workflow/LoadWorkflow?workflowInstanceId={workflowInstanceId}&activityId={activityId}";
-            var model = new BackwardNavigationDto
-            {
-                ActivityId = activityId,
-                WorkflowInstanceId = workflowInstanceId
-            };
+            var fullUri = $"https://localhost:7227/workflow/LoadWorkflowActivity?workflowInstanceId={model.WorkflowInstanceId}&activityId={model.ActivityId}";
 
             using (var response = await _httpClient.GetAsync(fullUri.ToString()).ConfigureAwait(false))//backwards
             {
@@ -74,7 +72,7 @@ namespace Elsa.CustomWorkflow.Sdk.HttpClients
                                                    $"\n Url='{fullUri}'");
             }
 
-            return JsonSerializer.Deserialize<WorkflowNavigationDto>(data, new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
+            return JsonSerializer.Deserialize<WorkflowActivityDataDto>(data, new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
         }
     }
 }

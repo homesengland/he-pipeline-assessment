@@ -1,4 +1,4 @@
-﻿namespace Elsa.CustomWorkflow.Sdk.Models
+﻿namespace Elsa.CustomWorkflow.Sdk.Models.MultipleChoice.SaveAndContinue
 {
     public class SaveAndContinueCommandDto
     {
@@ -8,7 +8,5 @@
         public string WorkflowInstanceId { get; set; } = null!;
 
         public string Answer { get; set; } = null!;
-
-        public string PreviousActivityId { get; set; } = null!;
     }
 }

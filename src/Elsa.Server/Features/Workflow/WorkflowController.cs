@@ -1,10 +1,11 @@
-﻿using Elsa.Server.Features.Workflow.LoadWorkflow;
+﻿using Elsa.Server.Features.Workflow.LoadWorkflowActivity;
 using Elsa.Server.Features.Workflow.StartWorkflow;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Elsa.Server.Features.Workflow
 {
+    [Route("workflow")]
     public class WorkflowController : Controller
     {
         private readonly IMediator _mediator;
@@ -14,7 +15,7 @@ namespace Elsa.Server.Features.Workflow
             _mediator = mediator;
         }
 
-        [HttpPost]
+        [HttpPost("StartWorkflow")]
         public async Task<IActionResult> StartWorkflow([FromBody] StartWorkflowCommand command)
         {
             try
@@ -36,10 +37,10 @@ namespace Elsa.Server.Features.Workflow
             }
         }
 
-        [HttpGet("LoadWorkflow")]
-        public async Task<IActionResult> LoadWorkflow(string workflowInstanceId, string activityId)
+        [HttpGet("LoadWorkflowActivity")]
+        public async Task<IActionResult> LoadWorkflowActivity(string workflowInstanceId, string activityId)
         {
-            var request = new LoadWorkflowRequest
+            var request = new LoadWorkflowActivityRequest
             {
                 WorkflowInstanceId = workflowInstanceId,
                 ActivityId = activityId

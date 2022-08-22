@@ -1,6 +1,6 @@
-﻿namespace Elsa.CustomWorkflow.Sdk.Models
+﻿namespace Elsa.CustomWorkflow.Sdk.Models.Workflow.LoadWorkflowActivity
 {
-    public class BackwardNavigationDto
+    public class LoadWorkflowActivityDto
     {
         public string ActivityId { get; set; } = null!;
 

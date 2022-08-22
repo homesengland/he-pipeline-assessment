@@ -26,6 +26,18 @@ namespace Elsa.Server.Features.MultipleChoice.SaveAndContinue
             var result = new OperationResult<SaveAndContinueResponse>();
             try
             {
+                var dbMultipleChoiceQuestionModel =
+                    await _pipelineAssessmentRepository.GetMultipleChoiceQuestions(command.ActivityId, command.WorkflowInstanceId, cancellationToken);
+                if (dbMultipleChoiceQuestionModel != null)
+                {
+                    dbMultipleChoiceQuestionModel.Answer = command.Answer;
+                    await _pipelineAssessmentRepository.UpdateMultipleChoiceQuestion(dbMultipleChoiceQuestionModel, cancellationToken);
+                }
+                else
+                {
+                    result.ErrorMessages.Add(
+                        $"Unable to find workflow instance with Id: {command.WorkflowInstanceId} and Activity Id: {command.ActivityId} in custom database");
+                }
                 var multipleChoiceQuestionModel = command.ToMultipleChoiceQuestionModel();
 
                 //TODO: compare the model from the db with the dto, if no change, do not execute workflow
@@ -51,15 +63,22 @@ namespace Elsa.Server.Features.MultipleChoice.SaveAndContinue
                             var nextActivity =
                                 workflowInstance.ActivityData.FirstOrDefault(a => a.Key == nextActivityId).Value;
 
-                            await SaveMultipleChoiceResponse(command, nextActivityId);
+                            var nextActivityRecord =
+                                await _pipelineAssessmentRepository.GetMultipleChoiceQuestions(nextActivityId,
+                                    command.WorkflowInstanceId, cancellationToken);
+                            if (nextActivityRecord == null)
+                            {
+                                await CreateNextActivityRecord(command, nextActivityId);
+                            }
 
-                            var activityData = nextActivity.ToActivityData2();
+                            var activityData = nextActivity.ToActivityData();
 
                             result.Data = new SaveAndContinueResponse
                             {
                                 WorkflowInstanceId = command.WorkflowInstanceId,
                                 ActivityData = activityData,
-                                ActivityId = nextActivityId
+                                ActivityId = nextActivityId,
+                                PreviousActivityId = command.ActivityId
                             };
                         }
                         else
@@ -88,10 +107,11 @@ namespace Elsa.Server.Features.MultipleChoice.SaveAndContinue
             return await Task.FromResult(result);
         }
 
-        private async Task SaveMultipleChoiceResponse(SaveAndContinueCommand command, string nextActivityId)
+        private async Task CreateNextActivityRecord(SaveAndContinueCommand command, string nextActivityId)
         {
             var multipleChoiceQuestion = command.ToMultipleChoiceQuestionModel(nextActivityId);
-            await _pipelineAssessmentRepository.SaveMultipleChoiceQuestionAsync(multipleChoiceQuestion);
+            multipleChoiceQuestion.Answer = null;
+            await _pipelineAssessmentRepository.CreateMultipleChoiceQuestionAsync(multipleChoiceQuestion);
         }
     }
 }

@@ -1,17 +1,19 @@
-﻿namespace Elsa.Server.Features.Workflow.LoadWorkflow
-{ public class LoadWorkflowResponse
+﻿namespace He.PipelineAssessment.UI.Models
+{
+    public class WorkflowActivityDataViewModel
     {
-        public ActivityData? ActivityData { get; set; }
+        public ActivityData ActivityData { get; set; } = null!;
         public string WorkflowInstanceId { get; set; } = null!;
         public string ActivityId { get; set; } = null!;
-
+        public string PreviousActivityId { get; set; } = null!;
     }
+
     public class ActivityData
     {
         public string Title { get; set; } = null!;
         public Choice[] Choices { get; set; } = null!;
         public string Question { get; set; } = null!;
-        public object? Output { get; set; }
+        public object Output { get; set; } = null!;
     }
 
     public class Choice

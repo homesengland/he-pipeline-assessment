@@ -11,7 +11,5 @@ namespace Elsa.Server.Features.MultipleChoice.SaveAndContinue
         public string WorkflowInstanceId { get; set; } = null!;
 
         public string Answer { get; set; } = null!;
-
-        public string PreviousActivityId { get; set; } = null!;
     }
 }

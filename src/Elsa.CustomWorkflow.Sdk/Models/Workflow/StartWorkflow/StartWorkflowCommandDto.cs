@@ -1,4 +1,4 @@
-﻿namespace Elsa.CustomWorkflow.Sdk.Models
+﻿namespace Elsa.CustomWorkflow.Sdk.Models.StartWorkflow
 {
     public class StartWorkflowCommandDto
     {

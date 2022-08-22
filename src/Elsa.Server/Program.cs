@@ -21,9 +21,10 @@ builder.Services
         .AddConsoleActivities()
     );
 
+builder.Services.AddDbContext<PipelineAssessmentContext>(config =>
+    config.UseSqlite(pipelineAssessmentConnectionString));
+builder.Services.AddScoped<DbContext>(provider => provider.GetRequiredService<PipelineAssessmentContext>());
 
-builder.Services.AddDbContextFactory<PipelineAssessmentContext>(options =>
-    options.UseSqlite(pipelineAssessmentConnectionString, sql => sql.MigrationsAssembly(typeof(Program).Assembly.FullName)));
 //Commenting out for now, as I don't think this is the right approach
 //builder.Services.AddWorkflowContextProvider<PipelineAssessmentWorkflowContextProvider>();
 builder.Services.AddStartupTask<RunPipelineAssessmentMigrations>();

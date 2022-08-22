@@ -35,7 +35,8 @@ namespace Elsa.Server.Features.Workflow.StartWorkflow
                     {
                         ActivityData = activityData,
                         ActivityId = result.WorkflowInstance.LastExecutedActivityId,
-                        WorkflowInstanceId = result.WorkflowInstance.Id
+                        WorkflowInstanceId = result.WorkflowInstance.Id,
+                        PreviousActivityId = result.WorkflowInstance.LastExecutedActivityId,
                     };
                 }
             }

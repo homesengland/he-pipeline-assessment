@@ -24,7 +24,7 @@ namespace Elsa.Server.Features.MultipleChoice.SaveAndContinue
             return command.ToMultipleChoiceQuestionModel("");
         }
 
-        public static ActivityData? ToActivityData2(this IDictionary<string, object?>? nextActivityData)
+        public static ActivityData? ToActivityData(this IDictionary<string, object?>? nextActivityData)
         {
             var json = JsonSerializer.Serialize(nextActivityData);
             var activityData = JsonSerializer.Deserialize<ActivityData>(json);

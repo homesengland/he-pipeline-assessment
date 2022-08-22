@@ -32,7 +32,7 @@ namespace Elsa.Server.Features.Workflow.StartWorkflow
 
                 if (multipleChoiceQuestion != null)
                 {
-                    await _pipelineAssessmentRepository.SaveMultipleChoiceQuestionAsync(multipleChoiceQuestion, cancellationToken);
+                    await _pipelineAssessmentRepository.CreateMultipleChoiceQuestionAsync(multipleChoiceQuestion, cancellationToken);
                     result.Data = runWorkflowResult.ToStartWorkflowResponse();
                 }
                 else

@@ -12,48 +12,42 @@ namespace Elsa.Server.Data
             string workflowInstanceId,
             CancellationToken cancellationToken = default);
 
-        ValueTask<string?> SaveMultipleChoiceQuestionAsync(MultipleChoiceQuestionModel model,
+        ValueTask<string?> CreateMultipleChoiceQuestionAsync(MultipleChoiceQuestionModel model,
             CancellationToken cancellationToken = default);
+
+        Task<MultipleChoiceQuestionModel?> UpdateMultipleChoiceQuestion(MultipleChoiceQuestionModel model, CancellationToken cancellationToken= default);
     }
 
     public class PipelineAssessmentRepository : IPipelineAssessmentRepository
     {
-
-        private readonly IDbContextFactory<PipelineAssessmentContext> _dbContextFactory;
-
-        public PipelineAssessmentRepository(IDbContextFactory<PipelineAssessmentContext> dbContextFactoryFactory)
+        private readonly DbContext _dbContext;
+        public PipelineAssessmentRepository(DbContext dbContext)
         {
-            _dbContextFactory = dbContextFactoryFactory;
+            _dbContext = dbContext;
         }
 
         public async Task<MultipleChoiceQuestionModel?> GetMultipleChoiceQuestions(string id, CancellationToken cancellationToken = default)
         {
-            await using var dbContext = await _dbContextFactory.CreateDbContextAsync(cancellationToken);
-            return await dbContext.MultipleChoiceQuestions.AsQueryable().FirstOrDefaultAsync(x => x.Id == id, cancellationToken);
+            return await _dbContext.Set<MultipleChoiceQuestionModel>().FirstOrDefaultAsync(x => x.Id == id, cancellationToken: cancellationToken);
         }
 
         public async Task<MultipleChoiceQuestionModel?> GetMultipleChoiceQuestions(string activityId, string workflowInstanceId, CancellationToken cancellationToken = default)
         {
-
-            await using var dbContext = await _dbContextFactory.CreateDbContextAsync(cancellationToken);
-            return await dbContext.MultipleChoiceQuestions.AsQueryable().FirstOrDefaultAsync(x => x.ActivityId == activityId && x.WorkflowInstanceId == workflowInstanceId, cancellationToken);
+            return await _dbContext.Set<MultipleChoiceQuestionModel>().FirstOrDefaultAsync(x => x.ActivityId == activityId && x.WorkflowInstanceId == workflowInstanceId, cancellationToken);
         }
 
-        public async ValueTask<string?> SaveMultipleChoiceQuestionAsync(MultipleChoiceQuestionModel model, CancellationToken cancellationToken = default)
+        public async ValueTask<string?> CreateMultipleChoiceQuestionAsync(MultipleChoiceQuestionModel model, CancellationToken cancellationToken = default)
         {
-            var multipleChoiceQuestion = await GetMultipleChoiceQuestions(model.Id, cancellationToken);
-            await using var dbContext = await _dbContextFactory.CreateDbContextAsync(cancellationToken);
-            if (multipleChoiceQuestion == null)
-            {
-                await dbContext.AddAsync(model, cancellationToken);
-            }
-            else
-            {
-                dbContext.Entry(multipleChoiceQuestion).CurrentValues.SetValues(model);
-            }
-
-            await dbContext.SaveChangesAsync(cancellationToken);
+            await _dbContext.AddAsync(model, cancellationToken);
+            await _dbContext.SaveChangesAsync(cancellationToken);
             return model.Id;
+        }
+
+        public async Task<MultipleChoiceQuestionModel?> UpdateMultipleChoiceQuestion(MultipleChoiceQuestionModel model, CancellationToken cancellationToken = default)
+        {
+            _dbContext.Update(model);
+            await _dbContext.SaveChangesAsync(cancellationToken);
+            return model;
         }
     }
 }

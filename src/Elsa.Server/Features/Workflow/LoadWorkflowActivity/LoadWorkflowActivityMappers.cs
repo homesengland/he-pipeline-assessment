@@ -1,9 +1,9 @@
 ﻿using System.Text.Json;
 using Elsa.CustomModels;
 
-namespace Elsa.Server.Features.Workflow.LoadWorkflow
+namespace Elsa.Server.Features.Workflow.LoadWorkflowActivity
 {
-    public static class LoadWorkflowMappers
+    public static class LoadWorkflowActivityMappers
     {
         public static ActivityData? ToActivityData(this IDictionary<string, object?>? nextActivityData)
         {
