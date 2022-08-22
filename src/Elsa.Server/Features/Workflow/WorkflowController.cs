@@ -1,49 +1,37 @@
-﻿using Elsa.Models;
-using Elsa.Server.Data;
-using Elsa.Server.Mappers;
-using Elsa.Server.Models;
-using Elsa.Services;
+﻿using Elsa.Server.Features.Workflow.StartWorkflow;
+using MediatR;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Elsa.Server.Features.Workflow
 {
     public class WorkflowController : Controller
     {
-        private readonly IWorkflowRegistry _workflowRegistry;
-        private readonly IStartsWorkflow _workflowRunner;
-        private readonly IPipelineAssessmentRepository _pipelineAssessmentRepository;
+        private readonly IMediator _mediator;
 
-        public WorkflowController(IWorkflowRegistry workflowRegistry, IStartsWorkflow workflowRunner, IPipelineAssessmentRepository pipelineAssessmentRepository)
+        public WorkflowController(IMediator mediator)
         {
-            _workflowRegistry = workflowRegistry;
-            _workflowRunner = workflowRunner;
-            _pipelineAssessmentRepository = pipelineAssessmentRepository;
+            _mediator = mediator;
         }
 
         [HttpPost]
-        public async Task<IActionResult> StartWorkflow([FromBody] string workflowDefinitionId)
+        public async Task<IActionResult> StartWorkflow([FromBody] StartWorkflowCommand command)
         {
-            var sampleWorkflow = await _workflowRegistry.GetWorkflowAsync(workflowDefinitionId, VersionOptions.Published);
             try
             {
-                var result = await _workflowRunner.StartWorkflowAsync(sampleWorkflow!);
+                var result = await this._mediator.Send(command);
 
-                var multipleChoiceQuestion = result.ToMultipleChoiceQuestionModel();
-
-                if (multipleChoiceQuestion != null)
-                    await _pipelineAssessmentRepository.SaveMultipleChoiceQuestionAsync(multipleChoiceQuestion);
-
-                var workflowExecutionResultDto = result.ToWorkflowExecutionResultDto();
-                var opresult = new OperationResult<WorkflowExecutionResultDto>()
+                if (result.IsSuccess)
                 {
-                    Data = workflowExecutionResultDto
-                };
-                return Ok(opresult);
+                    return Ok(result);
+                }
+                else
+                {
+                    return BadRequest(string.Join(',', result.ErrorMessages));
+                }
             }
             catch (Exception e)
             {
-                Console.WriteLine(e);
-                return Ok();
+                return StatusCode(StatusCodes.Status500InternalServerError, e);
             }
         }
     }

@@ -33,7 +33,11 @@ namespace He.PipelineAssessment.UI.Controllers
         [HttpPost]
         public async Task<IActionResult> StartWorkflow([FromForm] StartWorkflowModel model)
         {
-            var response = await _eslElsaServerHttpClient.PostStartWorkflow(model.WorkflowDefinitionId);
+            var dto = new StartWorkflowCommandDto()
+            {
+                WorkflowDefinitionId = model.WorkflowDefinitionId
+            };
+            var response = await _eslElsaServerHttpClient.PostStartWorkflow(dto);
             var workflowNavigationViewModel = _mapper.Map<WorkflowNavigationViewModel>(response?.Data);
             return View(workflowNavigationViewModel);
         }

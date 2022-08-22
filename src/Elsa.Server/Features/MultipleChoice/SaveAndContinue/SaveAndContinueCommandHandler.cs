@@ -7,14 +7,14 @@ using Open.Linq.AsyncExtensions;
 
 namespace Elsa.Server.Features.MultipleChoice.SaveAndContinue
 {
-    public class SaveAndContinueHandler : IRequestHandler<SaveAndContinueCommand, OperationResult<SaveAndContinueResponse>>
+    public class SaveAndContinueCommandHandler : IRequestHandler<SaveAndContinueCommand, OperationResult<SaveAndContinueResponse>>
     {
 
         private readonly IMultipleChoiceQuestionInvoker _invoker;
         private readonly IWorkflowInstanceStore _workflowInstanceStore;
         private readonly IPipelineAssessmentRepository _pipelineAssessmentRepository;
 
-        public SaveAndContinueHandler(IMultipleChoiceQuestionInvoker invoker, IWorkflowInstanceStore workflowInstanceStore, IPipelineAssessmentRepository pipelineAssessmentRepository)
+        public SaveAndContinueCommandHandler(IMultipleChoiceQuestionInvoker invoker, IWorkflowInstanceStore workflowInstanceStore, IPipelineAssessmentRepository pipelineAssessmentRepository)
         {
             _invoker = invoker;
             _workflowInstanceStore = workflowInstanceStore;

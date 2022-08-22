@@ -6,7 +6,7 @@ namespace Elsa.CustomWorkflow.Sdk.HttpClients
 {
     public interface IElsaServerHttpClient
     {
-        Task<WorkflowNavigationDto?> PostStartWorkflow(string workflowDefinitionId);
+        Task<WorkflowNavigationDto?> PostStartWorkflow(StartWorkflowCommandDto model);
         Task<WorkflowNavigationDto?> SaveAndContinue(SaveAndContinueCommandDto model);
         Task<WorkflowNavigationDto?> NavigateWorkflowBackward(string workflowInstanceId, string activityId);
     }
@@ -20,13 +20,13 @@ namespace Elsa.CustomWorkflow.Sdk.HttpClients
             _httpClient = httpClient;
         }
 
-        public async Task<WorkflowNavigationDto?> PostStartWorkflow(string workflowDefinitionId)
+        public async Task<WorkflowNavigationDto?> PostStartWorkflow(StartWorkflowCommandDto model)
         {
             string data;
             //TODO: make this uri configurable
             var fullUri = "https://localhost:7227/workflow/startworkflow";
 
-            using (var response = await _httpClient.PostAsJsonAsync(fullUri, workflowDefinitionId).ConfigureAwait(false))
+            using (var response = await _httpClient.PostAsJsonAsync(fullUri, model).ConfigureAwait(false))
             {
                 data = await response.Content.ReadAsStringAsync().ConfigureAwait(false);
                 if (!response.IsSuccessStatusCode)

@@ -1,8 +1,8 @@
-﻿namespace Elsa.Server.Features.MultipleChoice.SaveAndContinue
+﻿namespace Elsa.Server.Features.Workflow.StartWorkflow
 {
-    public class SaveAndContinueResponse
+    public class StartWorkflowResponse
     {
-        public ActivityData? ActivityData { get; set; } = null!;
+        public ActivityData? ActivityData { get; set; }
         public string WorkflowInstanceId { get; set; } = null!;
         public string ActivityId { get; set; } = null!;
 

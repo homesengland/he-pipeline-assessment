@@ -3,8 +3,6 @@ using Elsa.Models;
 using Elsa.Persistence;
 using Elsa.Server.Data;
 using Elsa.Server.Features.MultipleChoice.SaveAndContinue;
-using Elsa.Server.Mappers;
-using Elsa.Server.Models;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 
@@ -54,7 +52,7 @@ namespace Elsa.Server.Features.MultipleChoice
         }
 
         [HttpGet("NavigateBackward")]
-        public async Task<IActionResult> NavigateBackward(string workflowInstanceId, string activityId)
+        public async Task<IActionResult?> NavigateBackward(string workflowInstanceId, string activityId)
         {
             try
             {
@@ -113,14 +111,15 @@ namespace Elsa.Server.Features.MultipleChoice
                 var nextActivity =
                     workflowInstance.ActivityData.FirstOrDefault(a => a.Key == nextActivityId).Value;
 
-                var activityData = nextActivity.ToActivityData();
+                //var activityData = nextActivity.ToActivityData();
 
-                return Ok(new WorkflowExecutionResultDto
-                {
-                    WorkflowInstanceId = workflowInstanceId,
-                    ActivityData = activityData,
-                    ActivityId = nextActivityId
-                });
+                //return Ok(new WorkflowExecutionResultDto
+                //{
+                //    WorkflowInstanceId = workflowInstanceId,
+                //    ActivityData = activityData,
+                //    ActivityId = nextActivityId
+                //});
+                return null;
             }
             catch (Exception e)
             {
