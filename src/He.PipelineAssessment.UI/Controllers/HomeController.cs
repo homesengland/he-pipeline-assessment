@@ -34,8 +34,12 @@ namespace He.PipelineAssessment.UI.Controllers
                 WorkflowDefinitionId = model.WorkflowDefinitionId
             };
             var response = await _eslElsaServerHttpClient.PostStartWorkflow(dto);
-            var workflowNavigationViewModel = _mapper.Map<WorkflowActivityDataViewModel>(response?.Data);
-            return View("LoadWorkflowActivity", workflowNavigationViewModel);
+            return RedirectToAction("LoadWorkflowActivity",
+                new
+                {
+                    WorkflowInstanceId = response?.Data.WorkflowInstanceId,
+                    ActivityId = response?.Data.NextActivityId
+                });
         }
 
         public IActionResult Privacy()
@@ -52,11 +56,11 @@ namespace He.PipelineAssessment.UI.Controllers
         public async Task<IActionResult> SaveAndContinue([FromForm] WorkflowActivityDataViewModel model)
         {
             var response = await _eslElsaServerHttpClient.SaveAndContinue(model.ToSaveAndContinueCommandDto());
-
-            ModelState.Clear();
-            var workflowNavigationViewModel = _mapper.Map<WorkflowActivityDataViewModel>(response?.Data);
-
-            return View("LoadWorkflowActivity", workflowNavigationViewModel);
+            return RedirectToAction("LoadWorkflowActivity",
+                new
+                {
+                    WorkflowInstanceId = response?.Data.WorkflowInstanceId, ActivityId = response?.Data.NextActivityId
+                });
         }
 
         public async Task<IActionResult> LoadWorkflowActivity(string workflowInstanceId, string activityId)

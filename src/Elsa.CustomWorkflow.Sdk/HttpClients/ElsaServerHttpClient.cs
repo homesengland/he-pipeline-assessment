@@ -9,8 +9,8 @@ namespace Elsa.CustomWorkflow.Sdk.HttpClients
 {
     public interface IElsaServerHttpClient
     {
-        Task<WorkflowActivityDataDto?> PostStartWorkflow(StartWorkflowCommandDto model);
-        Task<WorkflowActivityDataDto?> SaveAndContinue(SaveAndContinueCommandDto model);
+        Task<WorkflowNextActivityDataDto?> PostStartWorkflow(StartWorkflowCommandDto model);
+        Task<WorkflowNextActivityDataDto?> SaveAndContinue(SaveAndContinueCommandDto model);
         Task<WorkflowActivityDataDto?> LoadWorkflowActivity(LoadWorkflowActivityDto model);
     }
 
@@ -23,7 +23,7 @@ namespace Elsa.CustomWorkflow.Sdk.HttpClients
             _httpClient = httpClient;
         }
 
-        public async Task<WorkflowActivityDataDto?> PostStartWorkflow(StartWorkflowCommandDto model)
+        public async Task<WorkflowNextActivityDataDto?> PostStartWorkflow(StartWorkflowCommandDto model)
         {
             string data;
             //TODO: make this uri configurable
@@ -38,10 +38,10 @@ namespace Elsa.CustomWorkflow.Sdk.HttpClients
                                                    $"\n Url='{fullUri}'");
             }
 
-            return JsonSerializer.Deserialize<WorkflowActivityDataDto>(data, new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
+            return JsonSerializer.Deserialize<WorkflowNextActivityDataDto>(data, new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
         }
 
-        public async Task<WorkflowActivityDataDto?> SaveAndContinue(SaveAndContinueCommandDto model)
+        public async Task<WorkflowNextActivityDataDto?> SaveAndContinue(SaveAndContinueCommandDto model)
         {
             string data;
             var fullUri = "https://localhost:7227/multiple-choice/SaveAndContinue";
@@ -55,7 +55,7 @@ namespace Elsa.CustomWorkflow.Sdk.HttpClients
                                                    $"\n Url='{fullUri}'");
             }
 
-            return JsonSerializer.Deserialize<WorkflowActivityDataDto>(data, new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
+            return JsonSerializer.Deserialize<WorkflowNextActivityDataDto>(data, new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
         }
 
         public async Task<WorkflowActivityDataDto?> LoadWorkflowActivity(LoadWorkflowActivityDto model)

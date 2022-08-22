@@ -60,9 +60,6 @@ namespace Elsa.Server.Features.MultipleChoice.SaveAndContinue
                                     $"Cannot find activity Id {nextActivityId} in the workflow activity data dictionary");
                             }
 
-                            var nextActivity =
-                                workflowInstance.ActivityData.FirstOrDefault(a => a.Key == nextActivityId).Value;
-
                             var nextActivityRecord =
                                 await _pipelineAssessmentRepository.GetMultipleChoiceQuestions(nextActivityId,
                                     command.WorkflowInstanceId, cancellationToken);
@@ -71,14 +68,10 @@ namespace Elsa.Server.Features.MultipleChoice.SaveAndContinue
                                 await CreateNextActivityRecord(command, nextActivityId);
                             }
 
-                            var activityData = nextActivity.ToActivityData();
-
                             result.Data = new SaveAndContinueResponse
                             {
                                 WorkflowInstanceId = command.WorkflowInstanceId,
-                                ActivityData = activityData,
-                                ActivityId = nextActivityId,
-                                PreviousActivityId = command.ActivityId
+                                NextActivityId = nextActivityId
                             };
                         }
                         else

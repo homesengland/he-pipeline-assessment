@@ -1,5 +1,4 @@
-﻿using System.Text.Json;
-using Elsa.CustomModels;
+﻿using Elsa.CustomModels;
 using Elsa.Services.Models;
 
 namespace Elsa.Server.Features.Workflow.StartWorkflow
@@ -27,29 +26,14 @@ namespace Elsa.Server.Features.Workflow.StartWorkflow
             if (result.WorkflowInstance != null && result.WorkflowInstance
                     .LastExecutedActivityId != null)
             {
-                var activityData = result.WorkflowInstance.ActivityData.ToActivityData(result.WorkflowInstance
-                    .LastExecutedActivityId);
-                if (activityData != null)
-                {
-                    return new StartWorkflowResponse
+                return new StartWorkflowResponse
                     {
-                        ActivityData = activityData,
-                        ActivityId = result.WorkflowInstance.LastExecutedActivityId,
                         WorkflowInstanceId = result.WorkflowInstance.Id,
-                        PreviousActivityId = result.WorkflowInstance.LastExecutedActivityId,
+                        NextActivityId = result.WorkflowInstance.LastExecutedActivityId,
                     };
-                }
             }
 
             return null;
-        }
-
-        public static ActivityData? ToActivityData(this IDictionary<string, IDictionary<string, object?>> activityDataDictionary, string activityId)
-        {
-            var activityDataObject = activityDataDictionary[activityId];
-            var jsonActivityData = JsonSerializer.Serialize(activityDataObject);
-
-            return JsonSerializer.Deserialize<ActivityData>(jsonActivityData);
         }
     }
 }
