@@ -1,10 +1,12 @@
 using Elsa;
 using Elsa.CustomActivities.Activities.MultipleChoice;
+using Elsa.CustomInfrastructure.Data;
+using Elsa.CustomInfrastructure.Data.Repository;
 using Elsa.Persistence.EntityFramework.Core.Extensions;
 using Elsa.Persistence.EntityFramework.Sqlite;
 using Elsa.Runtime;
-using Elsa.Server.Data;
-using Elsa.Server.Data.StartupTasks;
+using Elsa.Server.StartupTasks;
+using MediatR;
 using Microsoft.EntityFrameworkCore;
 using MyActivityLibrary.JavaScript;
 
@@ -20,9 +22,11 @@ builder.Services
         .AddConsoleActivities()
     );
 
+builder.Services.AddDbContext<PipelineAssessmentContext>(config =>
+    config.UseSqlite(pipelineAssessmentConnectionString,
+        x => x.MigrationsAssembly("Elsa.CustomInfrastructure")));
+builder.Services.AddScoped<DbContext>(provider => provider.GetRequiredService<PipelineAssessmentContext>());
 
-builder.Services.AddDbContextFactory<PipelineAssessmentContext>(options =>
-    options.UseSqlite(pipelineAssessmentConnectionString, sql => sql.MigrationsAssembly(typeof(Program).Assembly.FullName)));
 //Commenting out for now, as I don't think this is the right approach
 //builder.Services.AddWorkflowContextProvider<PipelineAssessmentWorkflowContextProvider>();
 builder.Services.AddStartupTask<RunPipelineAssessmentMigrations>();
@@ -36,6 +40,8 @@ builder.Services.AddBookmarkProvider<MultipleChoiceQuestionBookmarkProvider>();
 builder.Services.AddScoped<IMultipleChoiceQuestionInvoker, MultipleChoiceQuestionInvoker>();
 builder.Services.AddScoped<IPipelineAssessmentRepository, PipelineAssessmentRepository>();
 builder.Services.AddJavaScriptTypeDefinitionProvider<CustomTypeDefinitionProvider>();
+
+builder.Services.AddMediatR(typeof(Program).Assembly);
 
 // Allow arbitrary client browser apps to access the API.
 // In a production environment, make sure to allow only origins you trust.

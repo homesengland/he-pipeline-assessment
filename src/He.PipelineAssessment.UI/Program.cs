@@ -1,21 +1,21 @@
-using AutoMapper;
 using Elsa.CustomWorkflow.Sdk.HttpClients;
-using He.PipelineAssessment.UI;
+using MediatR;
+using Microsoft.AspNetCore.Mvc.Razor;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();
-builder.Services.AddHttpClient<IElsaServerHttpClient, ElsaServerHttpClient>();
-builder.Services.AddAutoMapper(typeof(Program));
 
-var mapperConfig = new MapperConfiguration(mc =>
+builder.Services.Configure<RazorViewEngineOptions>(options =>
 {
-    mc.AddProfile(new MappingProfile());
+    options.ViewLocationFormats.Add($"/Features/{{1}}/Views/{{0}}{RazorViewEngine.ViewExtension}");
+    options.ViewLocationFormats.Add($"/Views/Shared/{{0}}{RazorViewEngine.ViewExtension}");
 });
 
-IMapper mapper = mapperConfig.CreateMapper();
-builder.Services.AddSingleton(mapper);
+builder.Services.AddHttpClient<IElsaServerHttpClient, ElsaServerHttpClient>();
+
+builder.Services.AddMediatR(typeof(Program).Assembly);
 
 var app = builder.Build();
 
@@ -36,6 +36,6 @@ app.UseAuthorization();
 
 app.MapControllerRoute(
     name: "default",
-    pattern: "{controller=Home}/{action=Index}/{id?}");
+    pattern: "{controller=Workflow}/{action=Index}/{id?}");
 
 app.Run();
