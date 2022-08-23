@@ -1,5 +1,5 @@
 ﻿using Elsa.CustomActivities.Activities.MultipleChoice;
-using Elsa.CustomInfrastructure.Data;
+using Elsa.CustomInfrastructure.Data.Repository;
 using Elsa.Persistence;
 using Elsa.Server.Models;
 using MediatR;

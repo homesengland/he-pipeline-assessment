@@ -1,6 +1,7 @@
 using Elsa;
 using Elsa.CustomActivities.Activities.MultipleChoice;
 using Elsa.CustomInfrastructure.Data;
+using Elsa.CustomInfrastructure.Data.Repository;
 using Elsa.Persistence.EntityFramework.Core.Extensions;
 using Elsa.Persistence.EntityFramework.Sqlite;
 using Elsa.Runtime;
