@@ -15,7 +15,8 @@ namespace Elsa.Server.Features.Workflow.StartWorkflow
                     Id = $"{result.WorkflowInstance.Id}-{result.WorkflowInstance.LastExecutedActivityId}",
                     ActivityId = result.WorkflowInstance.LastExecutedActivityId,
                     WorkflowInstanceId = result.WorkflowInstance.Id,
-                    PreviousActivityId = result.WorkflowInstance.LastExecutedActivityId
+                    PreviousActivityId = result.WorkflowInstance.LastExecutedActivityId,
+                    CreatedDateTime = DateTime.UtcNow
                 };
             return null;
         }
@@ -27,10 +28,10 @@ namespace Elsa.Server.Features.Workflow.StartWorkflow
                     .LastExecutedActivityId != null)
             {
                 return new StartWorkflowResponse
-                    {
-                        WorkflowInstanceId = result.WorkflowInstance.Id,
-                        NextActivityId = result.WorkflowInstance.LastExecutedActivityId,
-                    };
+                {
+                    WorkflowInstanceId = result.WorkflowInstance.Id,
+                    NextActivityId = result.WorkflowInstance.LastExecutedActivityId,
+                };
             }
 
             return null;

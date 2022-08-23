@@ -1,7 +1,7 @@
 ﻿using Elsa.CustomModels;
 using Microsoft.EntityFrameworkCore;
 
-namespace Elsa.Server.Data
+namespace Elsa.CustomInfrastructure.Data
 {
     public interface IPipelineAssessmentRepository
     {
@@ -15,7 +15,7 @@ namespace Elsa.Server.Data
         ValueTask<string?> CreateMultipleChoiceQuestionAsync(MultipleChoiceQuestionModel model,
             CancellationToken cancellationToken = default);
 
-        Task<MultipleChoiceQuestionModel?> UpdateMultipleChoiceQuestion(MultipleChoiceQuestionModel model, CancellationToken cancellationToken= default);
+        Task<MultipleChoiceQuestionModel?> UpdateMultipleChoiceQuestion(MultipleChoiceQuestionModel model, CancellationToken cancellationToken = default);
     }
 
     public class PipelineAssessmentRepository : IPipelineAssessmentRepository

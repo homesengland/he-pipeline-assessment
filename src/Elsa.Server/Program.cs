@@ -1,10 +1,10 @@
 using Elsa;
 using Elsa.CustomActivities.Activities.MultipleChoice;
+using Elsa.CustomInfrastructure.Data;
 using Elsa.Persistence.EntityFramework.Core.Extensions;
 using Elsa.Persistence.EntityFramework.Sqlite;
 using Elsa.Runtime;
-using Elsa.Server.Data;
-using Elsa.Server.Data.StartupTasks;
+using Elsa.Server.StartupTasks;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 using MyActivityLibrary.JavaScript;
@@ -22,7 +22,8 @@ builder.Services
     );
 
 builder.Services.AddDbContext<PipelineAssessmentContext>(config =>
-    config.UseSqlite(pipelineAssessmentConnectionString));
+    config.UseSqlite(pipelineAssessmentConnectionString,
+        x => x.MigrationsAssembly("Elsa.CustomInfrastructure")));
 builder.Services.AddScoped<DbContext>(provider => provider.GetRequiredService<PipelineAssessmentContext>());
 
 //Commenting out for now, as I don't think this is the right approach

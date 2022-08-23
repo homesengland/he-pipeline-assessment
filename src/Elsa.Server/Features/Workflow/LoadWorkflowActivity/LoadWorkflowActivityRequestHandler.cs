@@ -1,6 +1,6 @@
 ﻿using Elsa.CustomActivities.Activities.MultipleChoice;
+using Elsa.CustomInfrastructure.Data;
 using Elsa.Persistence;
-using Elsa.Server.Data;
 using Elsa.Server.Models;
 using MediatR;
 
@@ -47,27 +47,27 @@ namespace Elsa.Server.Features.Workflow.LoadWorkflowActivity
                             //        y.ActivityId == dbMultipleChoiceQuestionModel.PreviousActivityId);
                             //if (previousBlockingActivity != null)
                             //{
-                                //var previousActivityId = previousBlockingActivity.ActivityId;
-                                if (!workflowInstance.ActivityData.ContainsKey(activityRequest.ActivityId))
+                            //var previousActivityId = previousBlockingActivity.ActivityId;
+                            if (!workflowInstance.ActivityData.ContainsKey(activityRequest.ActivityId))
+                            {
+                                result.ErrorMessages.Add(
+                                    $"Cannot find activity Id {activityRequest.ActivityId} in the workflow activity data dictionary");
+                            }
+                            else
+                            {
+                                var nextActivity =
+                                    workflowInstance.ActivityData.FirstOrDefault(a => a.Key == activityRequest.ActivityId).Value;
+                                var activityData = nextActivity.ToActivityData();
+                                if (activityData != null)
                                 {
-                                    result.ErrorMessages.Add(
-                                        $"Cannot find activity Id {activityRequest.ActivityId} in the workflow activity data dictionary");
+                                    result.Data.ActivityData = activityData;
+                                    result.Data.PreviousActivityId = dbMultipleChoiceQuestionModel.PreviousActivityId;
                                 }
                                 else
                                 {
-                                    var nextActivity =
-                                        workflowInstance.ActivityData.FirstOrDefault(a => a.Key == activityRequest.ActivityId).Value;
-                                    var activityData = nextActivity.ToActivityData();
-                                    if (activityData != null)
-                                    {
-                                        result.Data.ActivityData = activityData;
-                                        result.Data.PreviousActivityId = dbMultipleChoiceQuestionModel.PreviousActivityId;
-                                    }
-                                    else
-                                    {
-                                        result.ErrorMessages.Add("Failed to map activity data");
-                                    }
+                                    result.ErrorMessages.Add("Failed to map activity data");
                                 }
+                            }
                             //}
                             //else
                             //{

@@ -12,5 +12,13 @@
         public bool? FinishWorkflow { get; set; }
         public bool? NavigateBack { get; set; }
         public string PreviousActivityId { get; set; } = null!;
+        public DateTime CreatedDateTime { get; set; }
+        public DateTime? LastModifiedDateTime { get; set; }
+
+        public void SetAnswer(string? answer)
+        {
+            this.Answer = answer;
+            this.LastModifiedDateTime = DateTime.UtcNow;
+        }
     }
 }

@@ -26,12 +26,12 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Data\Migrations\" />
     <Folder Include="wwwroot\" />
   </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\Elsa.CustomActivities\Elsa.CustomActivities.csproj" />
+    <ProjectReference Include="..\Elsa.CustomInfrastructure\Elsa.CustomInfrastructure.csproj" />
   </ItemGroup>
 
 </Project>

@@ -1,7 +1,7 @@
 ﻿using Elsa.Services;
 using Microsoft.EntityFrameworkCore;
 
-namespace Elsa.Server.Data.StartupTasks
+namespace Elsa.Server.StartupTasks
 {
     public class RunPipelineAssessmentMigrations : IStartupTask
     {

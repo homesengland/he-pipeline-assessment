@@ -1,7 +1,7 @@
 ﻿using Elsa.CustomModels;
 using Microsoft.EntityFrameworkCore;
 
-namespace Elsa.Server.Data
+namespace Elsa.CustomInfrastructure.Data
 {
     public class PipelineAssessmentContext : DbContext
     {

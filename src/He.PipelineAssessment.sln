@@ -16,7 +16,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "He.PipelineAssessment.UI", 
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Elsa.CustomModels", "Elsa.Models\Elsa.CustomModels.csproj", "{33630DA8-5BF4-4838-BA07-61EB0C77DA58}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Elsa.CustomWorkflow.Sdk", "Elsa.CustomWorkflow.Sdk\Elsa.CustomWorkflow.Sdk.csproj", "{2862784C-F4E4-4F92-9F23-16D5E51163EC}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Elsa.CustomWorkflow.Sdk", "Elsa.CustomWorkflow.Sdk\Elsa.CustomWorkflow.Sdk.csproj", "{2862784C-F4E4-4F92-9F23-16D5E51163EC}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Elsa.CustomInfrastructure", "Elsa.CustomInfrastructure\Elsa.CustomInfrastructure.csproj", "{A7A3022E-1A0A-4152-934A-29ECA2999259}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -48,6 +50,10 @@ Global
 		{2862784C-F4E4-4F92-9F23-16D5E51163EC}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{2862784C-F4E4-4F92-9F23-16D5E51163EC}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{2862784C-F4E4-4F92-9F23-16D5E51163EC}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A7A3022E-1A0A-4152-934A-29ECA2999259}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A7A3022E-1A0A-4152-934A-29ECA2999259}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A7A3022E-1A0A-4152-934A-29ECA2999259}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A7A3022E-1A0A-4152-934A-29ECA2999259}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

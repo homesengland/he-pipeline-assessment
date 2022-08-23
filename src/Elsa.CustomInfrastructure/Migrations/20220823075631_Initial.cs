@@ -1,8 +1,9 @@
-﻿using Microsoft.EntityFrameworkCore.Migrations;
+﻿using System;
+using Microsoft.EntityFrameworkCore.Migrations;
 
 #nullable disable
 
-namespace Elsa.Server.Data.Migrations
+namespace Elsa.CustomInfrastructure.Migrations
 {
     public partial class Initial : Migration
     {
@@ -13,13 +14,14 @@ namespace Elsa.Server.Data.Migrations
                 columns: table => new
                 {
                     Id = table.Column<string>(type: "TEXT", nullable: false),
-                    QuestionID = table.Column<string>(type: "TEXT", nullable: true),
-                    ActivityID = table.Column<string>(type: "TEXT", nullable: true),
-                    WorkflowInstanceID = table.Column<string>(type: "TEXT", nullable: true),
+                    ActivityId = table.Column<string>(type: "TEXT", nullable: false),
+                    WorkflowInstanceId = table.Column<string>(type: "TEXT", nullable: false),
                     Answer = table.Column<string>(type: "TEXT", nullable: true),
                     FinishWorkflow = table.Column<bool>(type: "INTEGER", nullable: true),
                     NavigateBack = table.Column<bool>(type: "INTEGER", nullable: true),
-                    PreviousActivityId = table.Column<string>(type: "TEXT", nullable: true)
+                    PreviousActivityId = table.Column<string>(type: "TEXT", nullable: false),
+                    CreatedDateTime = table.Column<DateTime>(type: "TEXT", nullable: false),
+                    LastModifiedDateTime = table.Column<DateTime>(type: "TEXT", nullable: true)
                 },
                 constraints: table =>
                 {

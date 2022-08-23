@@ -1,5 +1,4 @@
-﻿using System.Text.Json;
-using Elsa.CustomModels;
+﻿using Elsa.CustomModels;
 
 namespace Elsa.Server.Features.MultipleChoice.SaveAndContinue
 {
@@ -11,11 +10,11 @@ namespace Elsa.Server.Features.MultipleChoice.SaveAndContinue
             {
                 Id = $"{command.WorkflowInstanceId}-{nextActivityId}",
                 ActivityId = nextActivityId,
-                Answer = command.Answer,
                 FinishWorkflow = false,
                 NavigateBack = false,
                 WorkflowInstanceId = command.WorkflowInstanceId,
-                PreviousActivityId = command.ActivityId
+                PreviousActivityId = command.ActivityId,
+                CreatedDateTime = DateTime.UtcNow
             };
         }
 
