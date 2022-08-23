@@ -4,7 +4,7 @@ namespace Elsa.Server.Features.MultipleChoice.SaveAndContinue
 {
     public static class SaveAndContinueMappers
     {
-        public static MultipleChoiceQuestionModel ToMultipleChoiceQuestionModel(this SaveAndContinueCommand command, string nextActivityId)
+        public static MultipleChoiceQuestionModel ToNextMultipleChoiceQuestionModel(this SaveAndContinueCommand command, string nextActivityId)
         {
             return new MultipleChoiceQuestionModel
             {
@@ -12,15 +12,11 @@ namespace Elsa.Server.Features.MultipleChoice.SaveAndContinue
                 ActivityId = nextActivityId,
                 FinishWorkflow = false,
                 NavigateBack = false,
+                Answer = null,
                 WorkflowInstanceId = command.WorkflowInstanceId,
                 PreviousActivityId = command.ActivityId,
                 CreatedDateTime = DateTime.UtcNow
             };
-        }
-
-        public static MultipleChoiceQuestionModel ToMultipleChoiceQuestionModel(this SaveAndContinueCommand command)
-        {
-            return command.ToMultipleChoiceQuestionModel("");
         }
     }
 }

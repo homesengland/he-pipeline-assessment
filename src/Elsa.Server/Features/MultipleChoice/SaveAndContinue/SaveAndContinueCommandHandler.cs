@@ -102,9 +102,7 @@ namespace Elsa.Server.Features.MultipleChoice.SaveAndContinue
 
         private async Task CreateNextActivityRecord(SaveAndContinueCommand command, string nextActivityId)
         {
-            var multipleChoiceQuestion = command.ToMultipleChoiceQuestionModel(nextActivityId);
-            multipleChoiceQuestion.Answer = null;
-            multipleChoiceQuestion.CreatedDateTime = DateTime.UtcNow;
+            var multipleChoiceQuestion = command.ToNextMultipleChoiceQuestionModel(nextActivityId);
             await _pipelineAssessmentRepository.CreateMultipleChoiceQuestionAsync(multipleChoiceQuestion);
         }
     }
