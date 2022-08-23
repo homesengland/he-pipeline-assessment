@@ -9,6 +9,7 @@
 
     @using (Html.BeginForm("SaveAndContinue", "Workflow", FormMethod.Post))
     {
+        @Html.AntiForgeryToken()
         @Html.HiddenFor(m => Model.Data.WorkflowInstanceId)
         @Html.HiddenFor(m => Model.Data.ActivityId)
         <br/>
