@@ -11,12 +11,14 @@ namespace Elsa.Server.Features.Workflow.StartWorkflow
         private readonly IWorkflowRegistry _workflowRegistry;
         private readonly IStartsWorkflow _workflowRunner;
         private readonly IPipelineAssessmentRepository _pipelineAssessmentRepository;
+        private readonly IStartWorkflowMapper _startWorkflowMapper;
 
-        public StartWorkflowCommandHandler(IWorkflowRegistry workflowRegistry, IStartsWorkflow workflowRunner, IPipelineAssessmentRepository pipelineAssessmentRepository)
+        public StartWorkflowCommandHandler(IWorkflowRegistry workflowRegistry, IStartsWorkflow workflowRunner, IPipelineAssessmentRepository pipelineAssessmentRepository, IStartWorkflowMapper startWorkflowMapper)
         {
             _workflowRegistry = workflowRegistry;
             _workflowRunner = workflowRunner;
             _pipelineAssessmentRepository = pipelineAssessmentRepository;
+            _startWorkflowMapper = startWorkflowMapper;
         }
 
         public async Task<OperationResult<StartWorkflowResponse>> Handle(StartWorkflowCommand request, CancellationToken cancellationToken)
@@ -28,17 +30,19 @@ namespace Elsa.Server.Features.Workflow.StartWorkflow
                     await _workflowRegistry.GetWorkflowAsync(request.WorkflowDefinitionId, VersionOptions.Published, cancellationToken: cancellationToken);
                 var runWorkflowResult = await _workflowRunner.StartWorkflowAsync(sampleWorkflow!, cancellationToken: cancellationToken);
 
-                var multipleChoiceQuestion = runWorkflowResult.ToMultipleChoiceQuestionModel();
+                var multipleChoiceQuestion =
+                    _startWorkflowMapper.RunWorkflowResultToMultipleChoiceQuestionModel(runWorkflowResult);
 
                 if (multipleChoiceQuestion != null)
                 {
-                    await _pipelineAssessmentRepository.CreateMultipleChoiceQuestionAsync(multipleChoiceQuestion, cancellationToken);
-                    result.Data = runWorkflowResult.ToStartWorkflowResponse();
+                    await _pipelineAssessmentRepository.CreateMultipleChoiceQuestionAsync(multipleChoiceQuestion!, cancellationToken);
+                    result.Data = _startWorkflowMapper.RunWorkflowResultToStartWorkflowResponse(runWorkflowResult);
                 }
                 else
                 {
                     result.ErrorMessages.Add("Failed to deserialize RunWorkflowResult");
                 }
+
             }
             catch (Exception e)
             {

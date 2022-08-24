@@ -1,12 +1,23 @@
 ﻿using Elsa.CustomModels;
+using Elsa.Server.Providers;
 using Elsa.Services.Models;
 
 namespace Elsa.Server.Features.Workflow.StartWorkflow
 {
-    public static class StartWorkflowMappers
+    public interface IStartWorkflowMapper
     {
-        public static MultipleChoiceQuestionModel? ToMultipleChoiceQuestionModel(
-            this RunWorkflowResult result)
+        MultipleChoiceQuestionModel? RunWorkflowResultToMultipleChoiceQuestionModel(RunWorkflowResult result);
+        StartWorkflowResponse? RunWorkflowResultToStartWorkflowResponse(RunWorkflowResult result);
+    }
+    public class StartWorkflowMapper : IStartWorkflowMapper
+    {
+        private readonly IDateTimeProvider _dateTimeProvider;
+        public StartWorkflowMapper(IDateTimeProvider dateTimeProvider)
+        {
+            _dateTimeProvider = dateTimeProvider;
+        }
+
+        public MultipleChoiceQuestionModel? RunWorkflowResultToMultipleChoiceQuestionModel(RunWorkflowResult result)
         {
             if (result.WorkflowInstance != null && result.WorkflowInstance
                     .LastExecutedActivityId != null)
@@ -16,13 +27,12 @@ namespace Elsa.Server.Features.Workflow.StartWorkflow
                     ActivityId = result.WorkflowInstance.LastExecutedActivityId,
                     WorkflowInstanceId = result.WorkflowInstance.Id,
                     PreviousActivityId = result.WorkflowInstance.LastExecutedActivityId,
-                    CreatedDateTime = DateTime.UtcNow
+                    CreatedDateTime = _dateTimeProvider.UtcNow()
                 };
             return null;
         }
 
-        public static StartWorkflowResponse? ToStartWorkflowResponse(
-            this RunWorkflowResult result)
+        public StartWorkflowResponse? RunWorkflowResultToStartWorkflowResponse(RunWorkflowResult result)
         {
             if (result.WorkflowInstance != null && result.WorkflowInstance
                     .LastExecutedActivityId != null)
