@@ -62,8 +62,8 @@ namespace Elsa.Server.Tests.Features.Workflow.StartWorkflow
             //Arrange
             StartWorkflowMapper sut = new StartWorkflowMapper(mockDateTimeProvider.Object);
 
-            var workflowInstace = new Elsa.Models.WorkflowInstance();
-            var runWorkflowResult = new RunWorkflowResult(workflowInstace, null, null, false);
+            var workflowInstance = new Elsa.Models.WorkflowInstance();
+            var runWorkflowResult = new RunWorkflowResult(workflowInstance, null, null, false);
 
             //Act
             var result = sut.RunWorkflowResultToMultipleChoiceQuestionModel(runWorkflowResult);
@@ -72,6 +72,61 @@ namespace Elsa.Server.Tests.Features.Workflow.StartWorkflow
             Assert.Null(result);
         }
 
+        [Theory]
+        [AutoMoqData]
+        public void RunWorkflowResultToStartWorkflowResponse_ShouldReturnStartWorkflowResponse_WhenWorkflowInstanceIsNotNull(
+            [Frozen] Mock<IDateTimeProvider> mockDateTimeProvider,
+            RunWorkflowResult runWorkflowResult
+        )
+        {
+            //Arrange
+            var currentTimeUtc = DateTime.UtcNow;
+            mockDateTimeProvider.Setup(x => x.UtcNow()).Returns(currentTimeUtc);
+            StartWorkflowMapper sut = new StartWorkflowMapper(mockDateTimeProvider.Object);
 
+
+            //Act
+            var result = sut.RunWorkflowResultToStartWorkflowResponse(runWorkflowResult);
+
+            //Assert
+            Assert.IsType<StartWorkflowResponse>(result);
+            Assert.Equal(runWorkflowResult.WorkflowInstance!.LastExecutedActivityId, result!.NextActivityId);
+            Assert.Equal(runWorkflowResult.WorkflowInstance!.Id, result.WorkflowInstanceId);
+        }
+
+        [Theory]
+        [AutoData]
+        public void RunWorkflowResultToStartWorkflowResponse_ShouldReturnNull_WhenWorkflowInstanceNull(
+            [Frozen] Mock<IDateTimeProvider> mockDateTimeProvider
+        )
+        {
+            //Arrange
+            StartWorkflowMapper sut = new StartWorkflowMapper(mockDateTimeProvider.Object);
+            var runWorkflowResult = new RunWorkflowResult(null, null, null, false);
+
+            //Act
+            var result = sut.RunWorkflowResultToStartWorkflowResponse(runWorkflowResult);
+
+            //Assert
+            Assert.Null(result);
+        }
+
+        [Theory]
+        [AutoData]
+        public void RunWorkflowResultToStartWorkflowResponse_ShouldReturnNull_WhenWorkflowInstanceIdNull(
+            [Frozen] Mock<IDateTimeProvider> mockDateTimeProvider)
+        {
+            //Arrange
+            StartWorkflowMapper sut = new StartWorkflowMapper(mockDateTimeProvider.Object);
+
+            var workflowInstance = new Elsa.Models.WorkflowInstance();
+            var runWorkflowResult = new RunWorkflowResult(workflowInstance, null, null, false);
+
+            //Act
+            var result = sut.RunWorkflowResultToStartWorkflowResponse(runWorkflowResult);
+
+            //Assert
+            Assert.Null(result);
+        }
     }
 }
