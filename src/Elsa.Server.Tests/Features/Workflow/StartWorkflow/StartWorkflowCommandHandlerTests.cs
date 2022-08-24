@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using AutoFixture.Xunit2;
+﻿using AutoFixture.Xunit2;
 using Elsa.CustomInfrastructure.Data.Repository;
 using Elsa.CustomModels;
 using Elsa.Models;
@@ -11,7 +6,6 @@ using Elsa.Server.Features.Workflow.StartWorkflow;
 using Elsa.Server.Models;
 using Elsa.Services;
 using Elsa.Services.Models;
-using Elsa.Services.Workflows;
 using Moq;
 using Xunit;
 
@@ -59,7 +53,7 @@ namespace Elsa.Server.Tests.Features.Workflow.StartWorkflow
 
             //Assert
             pipelineAssessmentRepository.Verify(x => x.CreateMultipleChoiceQuestionAsync(multipleChoiceQuestionModel, CancellationToken.None), Times.Once);
-            Assert.Equal(opResult.Data.NextActivityId, result.Data.NextActivityId);
+            Assert.Equal(opResult.Data.NextActivityId, result.Data!.NextActivityId);
             Assert.Equal(opResult.Data.WorkflowInstanceId, result.Data.WorkflowInstanceId);
             Assert.Empty(result.ErrorMessages);
             Assert.Empty(result.ValidationMessages);
