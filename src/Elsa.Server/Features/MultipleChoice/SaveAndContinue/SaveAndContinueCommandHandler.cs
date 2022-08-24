@@ -72,7 +72,7 @@ namespace Elsa.Server.Features.MultipleChoice.SaveAndContinue
                         else
                         {
                             result.ErrorMessages.Add(
-                                $"Workflow instance output for workflow instance Id {collectedWorkflow.WorkflowInstanceId} is not set. Unable to determine next activity");
+                                $"Workflow instance output for workflow instance Id {command.WorkflowInstanceId} is not set. Unable to determine next activity");
                         }
                     }
                     else

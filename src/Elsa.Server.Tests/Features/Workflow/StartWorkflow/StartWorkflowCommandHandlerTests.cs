@@ -88,8 +88,7 @@ namespace Elsa.Server.Tests.Features.Workflow.StartWorkflow
             //Assert
             pipelineAssessmentRepository.Verify(x => x.CreateMultipleChoiceQuestionAsync(It.IsAny<MultipleChoiceQuestionModel>(), CancellationToken.None), Times.Never);
             Assert.Null(result.Data);
-            Assert.Single(result.ErrorMessages);
-            Assert.Equal("Failed to deserialize RunWorkflowResult", result.ErrorMessages.First());
+            Assert.Equal("Failed to deserialize RunWorkflowResult", result.ErrorMessages.Single());
         }
 
         [Theory]
@@ -112,8 +111,7 @@ namespace Elsa.Server.Tests.Features.Workflow.StartWorkflow
             //Assert
             pipelineAssessmentRepository.Verify(x => x.CreateMultipleChoiceQuestionAsync(It.IsAny<MultipleChoiceQuestionModel>(), CancellationToken.None), Times.Never);
             Assert.Null(result.Data);
-            Assert.Single(result.ErrorMessages);
-            Assert.Equal(exception.Message, result.ErrorMessages.First());
+            Assert.Equal(exception.Message, result.ErrorMessages.Single());
         }
     }
 }
