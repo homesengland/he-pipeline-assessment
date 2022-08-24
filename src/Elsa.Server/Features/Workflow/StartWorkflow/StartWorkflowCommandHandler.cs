@@ -9,14 +9,14 @@ namespace Elsa.Server.Features.Workflow.StartWorkflow
     public class StartWorkflowCommandHandler : IRequestHandler<StartWorkflowCommand, OperationResult<StartWorkflowResponse>>
     {
         private readonly IWorkflowRegistry _workflowRegistry;
-        private readonly IStartsWorkflow _workflowRunner;
+        private readonly IStartsWorkflow _startsWorkflow;
         private readonly IPipelineAssessmentRepository _pipelineAssessmentRepository;
         private readonly IStartWorkflowMapper _startWorkflowMapper;
 
-        public StartWorkflowCommandHandler(IWorkflowRegistry workflowRegistry, IStartsWorkflow workflowRunner, IPipelineAssessmentRepository pipelineAssessmentRepository, IStartWorkflowMapper startWorkflowMapper)
+        public StartWorkflowCommandHandler(IWorkflowRegistry workflowRegistry, IStartsWorkflow startsWorkflow, IPipelineAssessmentRepository pipelineAssessmentRepository, IStartWorkflowMapper startWorkflowMapper)
         {
             _workflowRegistry = workflowRegistry;
-            _workflowRunner = workflowRunner;
+            _startsWorkflow = startsWorkflow;
             _pipelineAssessmentRepository = pipelineAssessmentRepository;
             _startWorkflowMapper = startWorkflowMapper;
         }
@@ -27,8 +27,8 @@ namespace Elsa.Server.Features.Workflow.StartWorkflow
             try
             {
                 var sampleWorkflow =
-                    await _workflowRegistry.GetWorkflowAsync(request.WorkflowDefinitionId, VersionOptions.Published, cancellationToken: cancellationToken);
-                var runWorkflowResult = await _workflowRunner.StartWorkflowAsync(sampleWorkflow!, cancellationToken: cancellationToken);
+                    await _workflowRegistry.FindAsync(request.WorkflowDefinitionId, VersionOptions.Published, cancellationToken: cancellationToken);
+                var runWorkflowResult = await _startsWorkflow.StartWorkflowAsync(sampleWorkflow!, cancellationToken: cancellationToken);
 
                 var multipleChoiceQuestion =
                     _startWorkflowMapper.RunWorkflowResultToMultipleChoiceQuestionModel(runWorkflowResult);
