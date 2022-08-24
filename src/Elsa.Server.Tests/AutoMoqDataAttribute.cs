@@ -8,8 +8,19 @@ namespace Elsa.Server.Tests
     {
         public AutoMoqDataAttribute() :
             base(() => new Fixture()
-                .Customize(new AutoMoqCustomization()))
+                .Customize(new AutoMoqCustomization())
+                .Customize(new OmitOnRecursionFixtureCustomization()))
         {
+        }
+    }
+
+    public class OmitOnRecursionFixtureCustomization : ICustomization
+    {
+        public void Customize(IFixture fixture)
+        {
+            fixture.Behaviors.OfType<ThrowingRecursionBehavior>()
+                .ToList().ForEach(b => fixture.Behaviors.Remove(b));
+            fixture.Behaviors.Add(new OmitOnRecursionBehavior(1));
         }
     }
 

@@ -28,9 +28,9 @@ namespace Elsa.Server.Tests.Features.Workflow.StartWorkflow
 
             //Assert
             Assert.IsType<MultipleChoiceQuestionModel>(result);
-            Assert.Equal(runWorkflowResult.ActivityId, result!.ActivityId);
+            Assert.Equal(runWorkflowResult.WorkflowInstance!.LastExecutedActivityId, result!.ActivityId);
             Assert.Equal(runWorkflowResult.WorkflowInstance!.Id, result.WorkflowInstanceId);
-            Assert.Equal(runWorkflowResult.WorkflowInstance.LastExecutedActivityId, result.PreviousActivityId);
+            Assert.Equal(runWorkflowResult.WorkflowInstance!.LastExecutedActivityId, result.PreviousActivityId);
             Assert.Equal(
                 $"{runWorkflowResult.WorkflowInstance.Id}-{runWorkflowResult.WorkflowInstance.LastExecutedActivityId}",
                 result.Id);
