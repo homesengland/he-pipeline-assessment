@@ -51,7 +51,7 @@ namespace Elsa.Server.Tests.Features.Workflow.LoadWorkflowActivity
             //Assert
             Assert.NotNull(result);
             Assert.IsType<ActivityData>(result);
-            Assert.Equal(activityData.Question, result.Question);
+            Assert.Equal(activityData.Question, result!.Question);
 
             var expectedChoices = result.Choices.Where(x => answerList.Contains(x.Answer));
 
@@ -105,7 +105,7 @@ namespace Elsa.Server.Tests.Features.Workflow.LoadWorkflowActivity
 
             //Assert
             Assert.NotNull(result);
-            Assert.Null(result.Output);
+            Assert.Null(result!.Output);
             Assert.Empty(result.Choices.Where(x => x.IsSelected));
             jsonHelper.Verify(x => x.ActivityOutputJsonToMultipleChoiceQuestionModel(It.IsAny<string>()), Times.Never);
 
@@ -131,7 +131,7 @@ namespace Elsa.Server.Tests.Features.Workflow.LoadWorkflowActivity
 
             //Assert
             Assert.NotNull(result);
-            Assert.NotNull(result.Output);
+            Assert.NotNull(result!.Output);
             jsonHelper.Verify(x => x.ActivityOutputJsonToMultipleChoiceQuestionModel(It.IsAny<string>()), Times.Once);
             Assert.Empty(result.Choices.Where(x => x.IsSelected));
 
@@ -160,7 +160,7 @@ namespace Elsa.Server.Tests.Features.Workflow.LoadWorkflowActivity
 
             //Assert
             Assert.NotNull(result);
-            Assert.NotNull(result.Output);
+            Assert.NotNull(result!.Output);
             jsonHelper.Verify(x => x.ActivityOutputJsonToMultipleChoiceQuestionModel(It.IsAny<string>()), Times.Once);
             Assert.Empty(result.Choices.Where(x => x.IsSelected));
 
