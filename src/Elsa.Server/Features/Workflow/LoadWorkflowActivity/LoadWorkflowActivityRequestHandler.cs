@@ -1,6 +1,7 @@
 ﻿using Elsa.CustomActivities.Activities.MultipleChoice;
 using Elsa.CustomInfrastructure.Data.Repository;
 using Elsa.Persistence;
+using Elsa.Persistence.Specifications.WorkflowInstances;
 using Elsa.Server.Models;
 using MediatR;
 
@@ -37,7 +38,9 @@ namespace Elsa.Server.Features.Workflow.LoadWorkflowActivity
                 var collectedWorkflow = workflows.FirstOrDefault();
                 if (collectedWorkflow != null)
                 {
-                    var workflowInstance = await _workflowInstanceStore.FindByIdAsync(collectedWorkflow.WorkflowInstanceId, cancellationToken: cancellationToken);
+                    var workflowSpecification =
+                        new WorkflowInstanceIdSpecification(collectedWorkflow.WorkflowInstanceId);
+                    var workflowInstance = await _workflowInstanceStore.FindAsync(workflowSpecification, cancellationToken: cancellationToken);
                     if (workflowInstance != null)
                     {
                         var dbMultipleChoiceQuestionModel =
