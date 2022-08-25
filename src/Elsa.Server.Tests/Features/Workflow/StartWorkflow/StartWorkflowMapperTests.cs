@@ -14,14 +14,13 @@ namespace Elsa.Server.Tests.Features.Workflow.StartWorkflow
         [AutoMoqData]
         public void RunWorkflowResultToMultipleChoiceQuestionModel_ShouldReturnMultipleChoiceQuestionModel_WhenWorkflowInstanceIsNotNull(
             [Frozen] Mock<IDateTimeProvider> mockDateTimeProvider,
-            RunWorkflowResult runWorkflowResult
+            RunWorkflowResult runWorkflowResult,
+            StartWorkflowMapper sut
             )
         {
             //Arrange
             var currentTimeUtc = DateTime.UtcNow;
             mockDateTimeProvider.Setup(x => x.UtcNow()).Returns(currentTimeUtc);
-            StartWorkflowMapper sut = new StartWorkflowMapper(mockDateTimeProvider.Object);
-
 
             //Act
             var result = sut.RunWorkflowResultToMultipleChoiceQuestionModel(runWorkflowResult);

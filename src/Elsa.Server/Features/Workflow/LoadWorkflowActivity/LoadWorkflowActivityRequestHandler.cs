@@ -11,12 +11,14 @@ namespace Elsa.Server.Features.Workflow.LoadWorkflowActivity
         private readonly IMultipleChoiceQuestionInvoker _invoker;
         private readonly IWorkflowInstanceStore _workflowInstanceStore;
         private readonly IPipelineAssessmentRepository _pipelineAssessmentRepository;
+        private readonly ILoadWorkflowActivityMapper _loadWorkflowActivityMapper;
 
-        public LoadWorkflowActivityRequestHandler(IMultipleChoiceQuestionInvoker invoker, IWorkflowInstanceStore workflowInstanceStore, IPipelineAssessmentRepository pipelineAssessmentRepository)
+        public LoadWorkflowActivityRequestHandler(IMultipleChoiceQuestionInvoker invoker, IWorkflowInstanceStore workflowInstanceStore, IPipelineAssessmentRepository pipelineAssessmentRepository, ILoadWorkflowActivityMapper loadWorkflowActivityMapper)
         {
             _invoker = invoker;
             _workflowInstanceStore = workflowInstanceStore;
             _pipelineAssessmentRepository = pipelineAssessmentRepository;
+            _loadWorkflowActivityMapper = loadWorkflowActivityMapper;
         }
 
         public async Task<OperationResult<LoadWorkflowActivityResponse>> Handle(LoadWorkflowActivityRequest activityRequest, CancellationToken cancellationToken)
@@ -42,12 +44,7 @@ namespace Elsa.Server.Features.Workflow.LoadWorkflowActivity
                             await _pipelineAssessmentRepository.GetMultipleChoiceQuestions(activityRequest.ActivityId, activityRequest.WorkflowInstanceId, cancellationToken);
                         if (dbMultipleChoiceQuestionModel != null)
                         {
-                            //var previousBlockingActivity = workflowInstance.BlockingActivities
-                            //    .FirstOrDefault(y =>
-                            //        y.ActivityId == dbMultipleChoiceQuestionModel.PreviousActivityId);
-                            //if (previousBlockingActivity != null)
-                            //{
-                            //var previousActivityId = previousBlockingActivity.ActivityId;
+
                             if (!workflowInstance.ActivityData.ContainsKey(activityRequest.ActivityId))
                             {
                                 result.ErrorMessages.Add(
@@ -55,9 +52,10 @@ namespace Elsa.Server.Features.Workflow.LoadWorkflowActivity
                             }
                             else
                             {
-                                var nextActivity =
+                                var activityDataDictionary =
                                     workflowInstance.ActivityData.FirstOrDefault(a => a.Key == activityRequest.ActivityId).Value;
-                                var activityData = nextActivity.ToActivityData();
+
+                                var activityData = _loadWorkflowActivityMapper.ActivityDataDictionaryToActivityData(activityDataDictionary);
                                 if (activityData != null)
                                 {
                                     result.Data.ActivityData = activityData;
@@ -68,12 +66,7 @@ namespace Elsa.Server.Features.Workflow.LoadWorkflowActivity
                                     result.ErrorMessages.Add("Failed to map activity data");
                                 }
                             }
-                            //}
-                            //else
-                            //{
-                            //    result.ErrorMessages.Add(
-                            //        $"Unable to find blocking activity with Id: {dbMultipleChoiceQuestionModel.PreviousActivityId}");
-                            //}
+
                         }
                         else
                         {

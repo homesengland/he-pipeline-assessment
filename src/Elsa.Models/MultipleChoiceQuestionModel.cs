@@ -15,9 +15,9 @@
         public DateTime CreatedDateTime { get; set; }
         public DateTime? LastModifiedDateTime { get; set; }
 
-        public void SetAnswer(string? answer, DateTime lastModifiedDateTime)
+        public void SetAnswer(List<string> answersList, DateTime lastModifiedDateTime)
         {
-            this.Answer = answer;
+            this.Answer = string.Join(Constants.StringSeparator, answersList);
             this.LastModifiedDateTime = lastModifiedDateTime;
         }
     }

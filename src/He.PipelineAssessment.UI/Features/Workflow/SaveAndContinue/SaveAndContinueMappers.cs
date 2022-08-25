@@ -6,10 +6,12 @@ namespace He.PipelineAssessment.UI.Features.Workflow.SaveAndContinue
     {
         public static SaveAndContinueCommandDto ToSaveAndContinueCommandDto(this SaveAndContinueCommand workflowNavigationViewModel)
         {
+            var choiceList = workflowNavigationViewModel.Data.ActivityData.Choices.Where(x => x.IsSelected).Select(choice => choice.Answer).ToList();
+
             return new SaveAndContinueCommandDto
             {
                 Id = $"{workflowNavigationViewModel.Data.WorkflowInstanceId}-{workflowNavigationViewModel.Data.ActivityId}",
-                Answer = string.Join(',', workflowNavigationViewModel.Data.ActivityData.Choices.Where(x => x is { IsSelected: true }).Select(x => x.Answer)),
+                Answers = choiceList,
                 WorkflowInstanceId = workflowNavigationViewModel.Data.WorkflowInstanceId,
                 ActivityId = workflowNavigationViewModel.Data.ActivityId
             };

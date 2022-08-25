@@ -7,6 +7,7 @@
 
         public string WorkflowInstanceId { get; set; } = null!;
 
-        public string Answer { get; set; } = null!;
+        public List<string> Answers { get; set; } = null!;
     }
+
 }
