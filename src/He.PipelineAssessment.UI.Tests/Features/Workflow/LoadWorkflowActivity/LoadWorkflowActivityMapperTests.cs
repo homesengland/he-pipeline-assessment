@@ -14,6 +14,7 @@ namespace He.PipelineAssessment.UI.Tests.Features.Workflow.LoadWorkflowActivity
             LoadWorkflowActivityMapper sut)
         {
             //Arrange
+            workflowActivityDataDto.IsValid = false;
 
             //Act
             var result = sut.WorkflowActivityDataDtoToSaveAndContinueCommand(workflowActivityDataDto);
@@ -30,6 +31,9 @@ namespace He.PipelineAssessment.UI.Tests.Features.Workflow.LoadWorkflowActivity
             var expectedChoices = JsonSerializer.Serialize(workflowActivityDataDto.Data.ActivityData.Choices);
             var actualChoices = JsonSerializer.Serialize(result.Data.ActivityData.Choices);
             Assert.Equal(expectedChoices, actualChoices);
+
+
+            Assert.Equal(workflowActivityDataDto.ValidationMessages, result.ValidationMessages);
 
         }
     }

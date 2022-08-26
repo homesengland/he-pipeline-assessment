@@ -39,6 +39,7 @@ namespace Elsa.CustomWorkflow.Sdk.HttpClients
                 data = await response.Content.ReadAsStringAsync().ConfigureAwait(false);
                 if (!response.IsSuccessStatusCode)
                 {
+                    //TODO: Get this in logging
                     //throw new ApplicationException($"StatusCode='{response.StatusCode}'," +
                     //                                                  $"\n Message= '{data}'," +
                     //                                                  $"\n Url='{request.RequestUri}'");
@@ -66,6 +67,7 @@ namespace Elsa.CustomWorkflow.Sdk.HttpClients
                 data = await response.Content.ReadAsStringAsync().ConfigureAwait(false);
                 if (!response.IsSuccessStatusCode)
                 {
+                    //TODO: Get this in logging
                     //throw new ApplicationException($"StatusCode='{response.StatusCode}'," +
                     //                               $"\n Message= '{data}'," +
                     //                               $"\n Url='{request.RequestUri}'");
@@ -89,6 +91,7 @@ namespace Elsa.CustomWorkflow.Sdk.HttpClients
                 data = await response.Content.ReadAsStringAsync().ConfigureAwait(false);
                 if (!response.IsSuccessStatusCode)
                 {
+                    //TODO: Get this in logging
                     //throw new ApplicationException($"StatusCode='{response.StatusCode}'," +
                     //                               $"\n Message= '{data}'," +
                     //                               $"\n Url='{relativeUri}'"); //TODO: Get the full url here
