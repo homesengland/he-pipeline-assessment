@@ -1,5 +1,4 @@
-﻿using Elsa.CustomWorkflow.Sdk.HttpClients;
-using He.PipelineAssessment.UI.Features.Workflow.LoadWorkflowActivity;
+﻿using He.PipelineAssessment.UI.Features.Workflow.LoadWorkflowActivity;
 using He.PipelineAssessment.UI.Features.Workflow.SaveAndContinue;
 using He.PipelineAssessment.UI.Features.Workflow.StartWorkflow;
 using MediatR;
@@ -10,14 +9,12 @@ namespace He.PipelineAssessment.UI.Features.Workflow
     public class WorkflowController : Controller
     {
         private readonly ILogger<WorkflowController> _logger;
-        private readonly IElsaServerHttpClient _eslElsaServerHttpClient;
         private readonly IMediator _mediator;
 
 
-        public WorkflowController(ILogger<WorkflowController> logger, IElsaServerHttpClient eslElsaServerHttpClient, IMediator mediator)
+        public WorkflowController(ILogger<WorkflowController> logger, IMediator mediator)
         {
             _logger = logger;
-            _eslElsaServerHttpClient = eslElsaServerHttpClient;
             _mediator = mediator;
         }
 
@@ -42,7 +39,7 @@ namespace He.PipelineAssessment.UI.Features.Workflow
             }
             catch (Exception e)
             {
-                throw new Exception(e.Message);
+                return RedirectToAction("Index", "Error", new { message = e.Message });
             }
         }
 
@@ -56,7 +53,7 @@ namespace He.PipelineAssessment.UI.Features.Workflow
             }
             catch (Exception e)
             {
-                throw new Exception(e.Message);
+                return RedirectToAction("Index", "Error", new { message = e.Message });
             }
         }
 
@@ -78,7 +75,7 @@ namespace He.PipelineAssessment.UI.Features.Workflow
             }
             catch (Exception e)
             {
-                throw new Exception(e.Message);
+                return RedirectToAction("Index", "Error", new { message = e.Message });
             }
         }
 
