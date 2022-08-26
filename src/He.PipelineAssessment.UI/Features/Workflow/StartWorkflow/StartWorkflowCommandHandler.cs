@@ -5,7 +5,7 @@ using MediatR;
 
 namespace He.PipelineAssessment.UI.Features.Workflow.StartWorkflow
 {
-    public class StartWorkflowCommandHandler : IRequestHandler<StartWorkflowCommand, LoadWorkflowActivityRequest>
+    public class StartWorkflowCommandHandler : IRequestHandler<StartWorkflowCommand, LoadWorkflowActivityRequest?>
     {
         private readonly IElsaServerHttpClient _elsaServerHttpClient;
 
@@ -14,7 +14,7 @@ namespace He.PipelineAssessment.UI.Features.Workflow.StartWorkflow
             _elsaServerHttpClient = elsaServerHttpClient;
         }
 
-        public async Task<LoadWorkflowActivityRequest> Handle(StartWorkflowCommand request, CancellationToken cancellationToken)
+        public async Task<LoadWorkflowActivityRequest?> Handle(StartWorkflowCommand request, CancellationToken cancellationToken)
         {
             var dto = new StartWorkflowCommandDto()
             {
@@ -34,7 +34,7 @@ namespace He.PipelineAssessment.UI.Features.Workflow.StartWorkflow
             }
             else
             {
-                throw new Exception();
+                return null;
             }
 
         }

@@ -4,17 +4,21 @@ using MediatR;
 
 namespace He.PipelineAssessment.UI.Features.Workflow.SaveAndContinue
 {
-    public class SaveAndContinueCommandHandler : IRequestHandler<SaveAndContinueCommand, LoadWorkflowActivityRequest>
+    public class SaveAndContinueCommandHandler : IRequestHandler<SaveAndContinueCommand, LoadWorkflowActivityRequest?>
     {
         private readonly IElsaServerHttpClient _elsaServerHttpClient;
-        public SaveAndContinueCommandHandler(IElsaServerHttpClient elsaServerHttpClient)
+        private readonly ISaveAndContinueMapper _saveAndContinueMapper;
+        public SaveAndContinueCommandHandler(IElsaServerHttpClient elsaServerHttpClient, ISaveAndContinueMapper saveAndContinueMapper)
         {
             _elsaServerHttpClient = elsaServerHttpClient;
+            _saveAndContinueMapper = saveAndContinueMapper;
         }
 
-        public async Task<LoadWorkflowActivityRequest> Handle(SaveAndContinueCommand request, CancellationToken cancellationToken)
+        public async Task<LoadWorkflowActivityRequest?> Handle(SaveAndContinueCommand request, CancellationToken cancellationToken)
         {
-            var response = await _elsaServerHttpClient.SaveAndContinue(request.ToSaveAndContinueCommandDto());
+            var saveAndContinueCommandDto = _saveAndContinueMapper.SaveAndContinueCommandToSaveAndContinueCommandDto(request);
+
+            var response = await _elsaServerHttpClient.SaveAndContinue(saveAndContinueCommandDto);
 
             if (response != null)
             {
@@ -28,7 +32,7 @@ namespace He.PipelineAssessment.UI.Features.Workflow.SaveAndContinue
             }
             else
             {
-                throw new Exception();
+                return null;
             }
         }
     }

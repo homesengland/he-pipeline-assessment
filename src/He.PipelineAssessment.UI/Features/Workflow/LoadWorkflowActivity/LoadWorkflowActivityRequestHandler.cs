@@ -5,14 +5,16 @@ using MediatR;
 
 namespace He.PipelineAssessment.UI.Features.Workflow.LoadWorkflowActivity
 {
-    public class LoadWorkflowActivityRequestHandler : IRequestHandler<LoadWorkflowActivityRequest, SaveAndContinueCommand>
+    public class LoadWorkflowActivityRequestHandler : IRequestHandler<LoadWorkflowActivityRequest, SaveAndContinueCommand?>
     {
         private readonly IElsaServerHttpClient _elsaServerHttpClient;
-        public LoadWorkflowActivityRequestHandler(IElsaServerHttpClient elsaServerHttpClient)
+        private readonly ILoadWorkflowActivityMapper _loadWorkflowActivityMapper;
+        public LoadWorkflowActivityRequestHandler(IElsaServerHttpClient elsaServerHttpClient, ILoadWorkflowActivityMapper loadWorkflowActivityMapper)
         {
             _elsaServerHttpClient = elsaServerHttpClient;
+            _loadWorkflowActivityMapper = loadWorkflowActivityMapper;
         }
-        public async Task<SaveAndContinueCommand> Handle(LoadWorkflowActivityRequest request, CancellationToken cancellationToken)
+        public async Task<SaveAndContinueCommand?> Handle(LoadWorkflowActivityRequest request, CancellationToken cancellationToken)
         {
             var response = await _elsaServerHttpClient.LoadWorkflowActivity(new LoadWorkflowActivityDto
             {
@@ -22,13 +24,13 @@ namespace He.PipelineAssessment.UI.Features.Workflow.LoadWorkflowActivity
 
             if (response != null)
             {
-                var result = response.ToSaveAndContinueCommand();
+                var result = _loadWorkflowActivityMapper.WorkflowActivityDataDtoToSaveAndContinueCommand(response);
 
                 return await Task.FromResult(result);
             }
             else
             {
-                throw new Exception();
+                return null;
             }
         }
 

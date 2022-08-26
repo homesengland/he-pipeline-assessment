@@ -15,10 +15,10 @@
         public DateTime CreatedDateTime { get; set; }
         public DateTime? LastModifiedDateTime { get; set; }
 
-        public void SetAnswer(string? answer)
+        public void SetAnswer(List<string> answersList, DateTime lastModifiedDateTime)
         {
-            this.Answer = answer;
-            this.LastModifiedDateTime = DateTime.UtcNow;
+            this.Answer = string.Join(Constants.StringSeparator, answersList);
+            this.LastModifiedDateTime = lastModifiedDateTime;
         }
     }
 }

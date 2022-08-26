@@ -3,9 +3,14 @@ using He.PipelineAssessment.UI.Features.Workflow.SaveAndContinue;
 
 namespace He.PipelineAssessment.UI.Features.Workflow.LoadWorkflowActivity
 {
-    public static class LoadWorkflowActivityMappers
+    public interface ILoadWorkflowActivityMapper
     {
-        public static SaveAndContinueCommand ToSaveAndContinueCommand(this WorkflowActivityDataDto workflowActivityDataDto)
+        SaveAndContinueCommand WorkflowActivityDataDtoToSaveAndContinueCommand(WorkflowActivityDataDto workflowActivityDataDto);
+    }
+
+    public class LoadWorkflowActivityMapper : ILoadWorkflowActivityMapper
+    {
+        public SaveAndContinueCommand WorkflowActivityDataDtoToSaveAndContinueCommand(WorkflowActivityDataDto workflowActivityDataDto)
         {
             var result = new SaveAndContinueCommand();
 
