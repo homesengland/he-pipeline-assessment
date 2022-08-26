@@ -30,7 +30,7 @@ namespace He.PipelineAssessment.UI.Tests.Features.Workflow.StartWorkflow
 
         [Theory]
         [AutoMoqData]
-        public async Task Handle_ReturnsLoadWowkrlfowActivityRequest_GivenNoErrorsOccur(
+        public async Task Handle_ReturnsLoadWorkflowActivityRequest_GivenNoErrorsOccur(
             [Frozen] Mock<IElsaServerHttpClient> elsaServerHttpClient,
             StartWorkflowCommand command,
             WorkflowNextActivityDataDto workflowNextActivityDataDto,
