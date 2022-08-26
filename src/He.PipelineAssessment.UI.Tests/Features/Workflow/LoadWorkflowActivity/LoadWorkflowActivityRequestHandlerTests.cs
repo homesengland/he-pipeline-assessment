@@ -20,12 +20,8 @@ namespace He.PipelineAssessment.UI.Tests.Features.Workflow.LoadWorkflowActivity
            LoadWorkflowActivityRequestHandler sut)
         {
             //Arrange
-            var dto = new LoadWorkflowActivityDto()
-            {
-                ActivityId = loadWorkflowActivityRequest.ActivityId,
-                WorkflowInstanceId = loadWorkflowActivityRequest.WorkflowInstanceId
-            };
-            elsaServerHttpClient.Setup(x => x.LoadWorkflowActivity(dto))
+
+            elsaServerHttpClient.Setup(x => x.LoadWorkflowActivity(It.IsAny<LoadWorkflowActivityDto>()))
                 .ReturnsAsync((WorkflowActivityDataDto?)null);
 
             //Act
@@ -33,7 +29,7 @@ namespace He.PipelineAssessment.UI.Tests.Features.Workflow.LoadWorkflowActivity
 
             //Assert
             Assert.Null(result);
-            elsaServerHttpClient.Verify(x => x.LoadWorkflowActivity(dto), Times.Once);
+            elsaServerHttpClient.Verify(x => x.LoadWorkflowActivity(It.IsAny<LoadWorkflowActivityDto>()), Times.Once);
             loadWorkflowActivityMapper.Verify(x => x.WorkflowActivityDataDtoToSaveAndContinueCommand(It.IsAny<WorkflowActivityDataDto>()), Times.Never);
         }
 
