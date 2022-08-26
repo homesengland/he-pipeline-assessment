@@ -1,6 +1,5 @@
 ﻿using AutoFixture.Xunit2;
 using Elsa.Server.Models;
-using FluentAssertions;
 using Xunit;
 
 namespace Elsa.Server.Tests.Models
@@ -20,7 +19,7 @@ namespace Elsa.Server.Tests.Models
             //Act
 
             //Assert
-            sut.ErrorMessages.Should().HaveCount(3);
+            Assert.Equal(3, sut.ErrorMessages.Count);
             Assert.False(sut.IsSuccess);
         }
 
@@ -37,7 +36,7 @@ namespace Elsa.Server.Tests.Models
             //Act
 
             //Assert
-            sut.ValidationMessages.Should().HaveCount(3);
+            Assert.Equal(3, sut.ValidationMessages.Count);
             Assert.False(sut.IsValid);
         }
 
@@ -54,7 +53,7 @@ namespace Elsa.Server.Tests.Models
             //Act
 
             //Assert
-            sut.ValidationMessages.Should().HaveCount(0);
+            Assert.Equal(0, sut.ValidationMessages.Count);
             Assert.True(sut.IsValid);
         }
 
@@ -71,7 +70,7 @@ namespace Elsa.Server.Tests.Models
             //Act
 
             //Assert
-            sut.ErrorMessages.Should().HaveCount(0);
+            Assert.Equal(0, sut.ErrorMessages.Count);
             Assert.True(sut.IsSuccess);
         }
     }
