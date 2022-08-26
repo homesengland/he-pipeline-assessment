@@ -1,4 +1,5 @@
 using Elsa.CustomWorkflow.Sdk.HttpClients;
+using He.PipelineAssessment.UI.Features.Workflow.SaveAndContinue;
 using MediatR;
 using Microsoft.AspNetCore.Mvc.Razor;
 
@@ -16,6 +17,7 @@ builder.Services.Configure<RazorViewEngineOptions>(options =>
 builder.Services.AddHttpClient<IElsaServerHttpClient, ElsaServerHttpClient>();
 
 builder.Services.AddMediatR(typeof(Program).Assembly);
+builder.Services.AddScoped<ISaveAndContinueMapper, SaveAndContinueMapper>();
 
 var app = builder.Build();
 
