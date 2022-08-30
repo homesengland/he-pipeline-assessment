@@ -1,7 +1,7 @@
 ﻿using Elsa.CustomModels;
 using Elsa.Server.Providers;
 
-namespace Elsa.Server.Features.MultipleChoice.SaveAndContinue
+namespace Elsa.Server.Features.Currency
 {
     public interface ISaveAndContinueMapper
     {

@@ -42,7 +42,7 @@ namespace Elsa.Server.Tests.Features.Workflow.StartWorkflow
             startsWorkflow.Setup(x => x.StartWorkflowAsync(workflowBlueprint, null, null, null, null, null, CancellationToken.None))
                 .ReturnsAsync(runWorkflowResult);
 
-            startWorkflowMapper.Setup(x => x.RunWorkflowResultToMultipleChoiceQuestionModel(runWorkflowResult))
+            startWorkflowMapper.Setup(x => x.RunWorkflowResultToMultipleChoiceQuestionModel(runWorkflowResult, null))
                 .Returns(multipleChoiceQuestionModel);
 
             startWorkflowMapper.Setup(x => x.RunWorkflowResultToStartWorkflowResponse(runWorkflowResult))
@@ -79,7 +79,7 @@ namespace Elsa.Server.Tests.Features.Workflow.StartWorkflow
             startsWorkflow.Setup(x => x.StartWorkflowAsync(workflowBlueprint, null, null, null, null, null, CancellationToken.None))
                 .ReturnsAsync(runWorkflowResult);
 
-            startWorkflowMapper.Setup(x => x.RunWorkflowResultToMultipleChoiceQuestionModel(runWorkflowResult))
+            startWorkflowMapper.Setup(x => x.RunWorkflowResultToMultipleChoiceQuestionModel(runWorkflowResult, null))
                 .Returns((MultipleChoiceQuestionModel?)null);
 
             //Act

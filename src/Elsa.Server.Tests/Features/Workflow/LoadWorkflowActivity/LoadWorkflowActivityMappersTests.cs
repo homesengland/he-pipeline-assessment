@@ -21,7 +21,7 @@ namespace Elsa.Server.Tests.Features.Workflow.LoadWorkflowActivity
             string answers,
             [Frozen] Mock<ILoadWorkflowActivityJsonHelper> jsonHelper,
             WorkflowInstance workflowInstance,
-            ActivityData activityData,
+            MultipleChoiceQuestionActivityData multipleChoiceQuestionActivityData,
             MultipleChoiceQuestionModel multipleChoiceQuestionModel,
             LoadWorkflowActivityMapper sut
         )
@@ -33,16 +33,16 @@ namespace Elsa.Server.Tests.Features.Workflow.LoadWorkflowActivity
             choiceList.Add(new Choice() { Answer = "Yes And This", IsSelected = false, IsSingle = false });
             choiceList.Add(new Choice() { Answer = "Yes, but, yes and this", IsSelected = false, IsSingle = false });
 
-            activityData.Choices = choiceList.ToArray();
+            multipleChoiceQuestionActivityData.Choices = choiceList.ToArray();
 
             var activityDataDictionary = workflowInstance.ActivityData.FirstOrDefault().Value;
             multipleChoiceQuestionModel.Answer = answers;
             var answerList = answers.Split(Constants.StringSeparator);
 
 
-            activityData.Output = JsonSerializer.Serialize(multipleChoiceQuestionModel);
+            multipleChoiceQuestionActivityData.Output = JsonSerializer.Serialize(multipleChoiceQuestionModel);
 
-            jsonHelper.Setup(x => x.ActivityDataDictionaryToActivityData(activityDataDictionary)).Returns(activityData);
+            jsonHelper.Setup(x => x.ActivityDataDictionaryToActivityData(activityDataDictionary)).Returns(multipleChoiceQuestionActivityData);
             jsonHelper.Setup(x => x.ActivityOutputJsonToMultipleChoiceQuestionModel(It.IsAny<string>())).Returns(multipleChoiceQuestionModel);
 
             //Act
@@ -50,8 +50,8 @@ namespace Elsa.Server.Tests.Features.Workflow.LoadWorkflowActivity
 
             //Assert
             Assert.NotNull(result);
-            Assert.IsType<ActivityData>(result);
-            Assert.Equal(activityData.Question, result!.Question);
+            Assert.IsType<MultipleChoiceQuestionActivityData>(result);
+            Assert.Equal(multipleChoiceQuestionActivityData.Question, result!.Question);
 
             var expectedChoices = result.Choices.Where(x => answerList.Contains(x.Answer));
 
@@ -74,7 +74,7 @@ namespace Elsa.Server.Tests.Features.Workflow.LoadWorkflowActivity
             //Arrange
             var activityDataDictionary = workflowInstance.ActivityData.FirstOrDefault().Value;
 
-            jsonHelper.Setup(x => x.ActivityDataDictionaryToActivityData(activityDataDictionary)).Returns((ActivityData?)null);
+            jsonHelper.Setup(x => x.ActivityDataDictionaryToActivityData(activityDataDictionary)).Returns((MultipleChoiceQuestionActivityData?)null);
 
             //Act
             var result = sut.ActivityDataDictionaryToActivityData(activityDataDictionary);
@@ -90,15 +90,15 @@ namespace Elsa.Server.Tests.Features.Workflow.LoadWorkflowActivity
         public void ActivityDataDictionaryToActivityData_ShouldNotReturnSelectedChoices_GivenOutputIsNull(
            [Frozen] Mock<ILoadWorkflowActivityJsonHelper> jsonHelper,
            WorkflowInstance workflowInstance,
-           ActivityData activityData,
+           MultipleChoiceQuestionActivityData multipleChoiceQuestionActivityData,
            LoadWorkflowActivityMapper sut
        )
         {
             //Arrange
             var activityDataDictionary = workflowInstance.ActivityData.FirstOrDefault().Value;
-            activityData.Output = null;
+            multipleChoiceQuestionActivityData.Output = null;
 
-            jsonHelper.Setup(x => x.ActivityDataDictionaryToActivityData(activityDataDictionary)).Returns(activityData);
+            jsonHelper.Setup(x => x.ActivityDataDictionaryToActivityData(activityDataDictionary)).Returns(multipleChoiceQuestionActivityData);
 
             //Act
             var result = sut.ActivityDataDictionaryToActivityData(activityDataDictionary);
@@ -116,14 +116,14 @@ namespace Elsa.Server.Tests.Features.Workflow.LoadWorkflowActivity
         public void ActivityDataDictionaryToActivityData_ShouldNotReturnSelectedChoices_GivenMultipleChoiceModelFailsToDeserialise(
             [Frozen] Mock<ILoadWorkflowActivityJsonHelper> jsonHelper,
             WorkflowInstance workflowInstance,
-            ActivityData activityData,
+            MultipleChoiceQuestionActivityData multipleChoiceQuestionActivityData,
             LoadWorkflowActivityMapper sut
         )
         {
             //Arrange
             var activityDataDictionary = workflowInstance.ActivityData.FirstOrDefault().Value;
 
-            jsonHelper.Setup(x => x.ActivityDataDictionaryToActivityData(activityDataDictionary)).Returns(activityData);
+            jsonHelper.Setup(x => x.ActivityDataDictionaryToActivityData(activityDataDictionary)).Returns(multipleChoiceQuestionActivityData);
             jsonHelper.Setup(x => x.ActivityOutputJsonToMultipleChoiceQuestionModel(It.IsAny<string>())).Returns((MultipleChoiceQuestionModel?)null);
 
             //Act
@@ -142,7 +142,7 @@ namespace Elsa.Server.Tests.Features.Workflow.LoadWorkflowActivity
         public void ActivityDataDictionaryToActivityData_ShouldNotReturnSelectedChoices_GivenMultipleChoiceModelHasNoAnswer(
             [Frozen] Mock<ILoadWorkflowActivityJsonHelper> jsonHelper,
             WorkflowInstance workflowInstance,
-            ActivityData activityData,
+            MultipleChoiceQuestionActivityData multipleChoiceQuestionActivityData,
             MultipleChoiceQuestionModel multipleChoiceQuestionModel,
             LoadWorkflowActivityMapper sut
         )
@@ -152,7 +152,7 @@ namespace Elsa.Server.Tests.Features.Workflow.LoadWorkflowActivity
 
             multipleChoiceQuestionModel.Answer = null;
 
-            jsonHelper.Setup(x => x.ActivityDataDictionaryToActivityData(activityDataDictionary)).Returns(activityData);
+            jsonHelper.Setup(x => x.ActivityDataDictionaryToActivityData(activityDataDictionary)).Returns(multipleChoiceQuestionActivityData);
             jsonHelper.Setup(x => x.ActivityOutputJsonToMultipleChoiceQuestionModel(It.IsAny<string>())).Returns(multipleChoiceQuestionModel);
 
             //Act

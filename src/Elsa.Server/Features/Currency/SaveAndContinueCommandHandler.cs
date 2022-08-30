@@ -1,4 +1,4 @@
-﻿using Elsa.CustomActivities.Activities.MultipleChoice;
+﻿using Elsa.CustomActivities.Activities.Currency;
 using Elsa.CustomInfrastructure.Data.Repository;
 using Elsa.Models;
 using Elsa.Persistence;
@@ -9,24 +9,24 @@ using Elsa.Services;
 using MediatR;
 using Open.Linq.AsyncExtensions;
 
-namespace Elsa.Server.Features.MultipleChoice.SaveAndContinue
+namespace Elsa.Server.Features.Currency
 {
     public class SaveAndContinueCommandHandler : IRequestHandler<SaveAndContinueCommand, OperationResult<SaveAndContinueResponse>>
     {
         private readonly IWorkflowRegistry _workflowRegistry;
-        private readonly IMultipleChoiceQuestionInvoker _invoker;
-        private readonly IWorkflowInstanceStore _workflowInstanceStore;
+        private readonly ICurrencyQuestionInvoker _invoker;
         private readonly IPipelineAssessmentRepository _pipelineAssessmentRepository;
-        private readonly ISaveAndContinueMapper _saveAndContinueMapper;
+        private readonly IWorkflowInstanceStore _workflowInstanceStore;
         private readonly IDateTimeProvider _dateTimeProvider;
+        private readonly ISaveAndContinueMapper _saveAndContinueMapper;
 
-        public SaveAndContinueCommandHandler(IMultipleChoiceQuestionInvoker invoker, IWorkflowInstanceStore workflowInstanceStore, IPipelineAssessmentRepository pipelineAssessmentRepository, ISaveAndContinueMapper saveAndContinueMapper, IDateTimeProvider dateTimeProvider, IWorkflowRegistry workflowRegistry)
+        public SaveAndContinueCommandHandler(ISaveAndContinueMapper saveAndContinueMapper, IDateTimeProvider dateTimeProvider, IWorkflowInstanceStore workflowInstanceStore, IPipelineAssessmentRepository pipelineAssessmentRepository, ICurrencyQuestionInvoker invoker, IWorkflowRegistry workflowRegistry)
         {
-            _invoker = invoker;
-            _workflowInstanceStore = workflowInstanceStore;
-            _pipelineAssessmentRepository = pipelineAssessmentRepository;
             _saveAndContinueMapper = saveAndContinueMapper;
             _dateTimeProvider = dateTimeProvider;
+            _workflowInstanceStore = workflowInstanceStore;
+            _pipelineAssessmentRepository = pipelineAssessmentRepository;
+            _invoker = invoker;
             _workflowRegistry = workflowRegistry;
         }
 
@@ -39,7 +39,7 @@ namespace Elsa.Server.Features.MultipleChoice.SaveAndContinue
                     await _pipelineAssessmentRepository.GetMultipleChoiceQuestions(command.ActivityId, command.WorkflowInstanceId, cancellationToken);
                 if (dbMultipleChoiceQuestionModel != null)
                 {
-                    dbMultipleChoiceQuestionModel.SetAnswer(command.Answers, _dateTimeProvider.UtcNow());
+                    dbMultipleChoiceQuestionModel.SetAnswer(command.Answer, _dateTimeProvider.UtcNow());
                     await _pipelineAssessmentRepository.UpdateMultipleChoiceQuestion(dbMultipleChoiceQuestionModel, cancellationToken);
 
                     //TODO: compare the model from the db with the dto, if no change, do not execute workflow
@@ -73,19 +73,18 @@ namespace Elsa.Server.Features.MultipleChoice.SaveAndContinue
                                 {
                                     await CreateNextActivityRecord(command, nextActivityId, activity.Type);
                                 }
-
                                 result.Data = new SaveAndContinueResponse
                                 {
                                     WorkflowInstanceId = command.WorkflowInstanceId,
                                     NextActivityId = nextActivityId
                                 };
-
                             }
                             else
                             {
                                 result.ErrorMessages.Add(
                                     $"Unable to determine next activity ID");
                             }
+
                         }
                         else
                         {
@@ -113,9 +112,9 @@ namespace Elsa.Server.Features.MultipleChoice.SaveAndContinue
             return await Task.FromResult(result);
         }
 
-        private async Task CreateNextActivityRecord(SaveAndContinueCommand command, string nextActivityId, string activityType)
+        private async Task CreateNextActivityRecord(SaveAndContinueCommand command, string nextActivityId, string nextActivityType)
         {
-            var multipleChoiceQuestion = _saveAndContinueMapper.SaveAndContinueCommandToNextMultipleChoiceQuestionModel(command, nextActivityId, activityType);
+            var multipleChoiceQuestion = _saveAndContinueMapper.SaveAndContinueCommandToNextMultipleChoiceQuestionModel(command, nextActivityId, nextActivityType);
             await _pipelineAssessmentRepository.CreateMultipleChoiceQuestionAsync(multipleChoiceQuestion);
         }
     }

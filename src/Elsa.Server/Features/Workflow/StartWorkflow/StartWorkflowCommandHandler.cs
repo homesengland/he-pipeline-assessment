@@ -30,17 +30,30 @@ namespace Elsa.Server.Features.Workflow.StartWorkflow
                     await _workflowRegistry.FindAsync(request.WorkflowDefinitionId, VersionOptions.Published, cancellationToken: cancellationToken);
                 var runWorkflowResult = await _startsWorkflow.StartWorkflowAsync(sampleWorkflow!, cancellationToken: cancellationToken);
 
-                var multipleChoiceQuestion =
-                    _startWorkflowMapper.RunWorkflowResultToMultipleChoiceQuestionModel(runWorkflowResult);
+                if (runWorkflowResult.WorkflowInstance != null)
+                {
+                    var activity = sampleWorkflow!.Activities.FirstOrDefault(x =>
+                        x.Id == runWorkflowResult.WorkflowInstance.LastExecutedActivityId);
 
-                if (multipleChoiceQuestion != null)
-                {
-                    await _pipelineAssessmentRepository.CreateMultipleChoiceQuestionAsync(multipleChoiceQuestion!, cancellationToken);
-                    result.Data = _startWorkflowMapper.RunWorkflowResultToStartWorkflowResponse(runWorkflowResult);
-                }
-                else
-                {
-                    result.ErrorMessages.Add("Failed to deserialize RunWorkflowResult");
+                    if (activity != null)
+                    {
+                        var multipleChoiceQuestion =
+                            _startWorkflowMapper.RunWorkflowResultToMultipleChoiceQuestionModel(runWorkflowResult, activity);
+
+                        if (multipleChoiceQuestion != null)
+                        {
+                            await _pipelineAssessmentRepository.CreateMultipleChoiceQuestionAsync(multipleChoiceQuestion!, cancellationToken);
+                            result.Data = _startWorkflowMapper.RunWorkflowResultToStartWorkflowResponse(runWorkflowResult);
+                        }
+                        else
+                        {
+                            result.ErrorMessages.Add("Failed to deserialize RunWorkflowResult");
+                        }
+                    }
+                    else
+                    {
+                        result.ErrorMessages.Add("Failed to get activity");
+                    }
                 }
 
             }

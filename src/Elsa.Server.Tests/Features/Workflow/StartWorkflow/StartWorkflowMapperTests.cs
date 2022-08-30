@@ -23,7 +23,7 @@ namespace Elsa.Server.Tests.Features.Workflow.StartWorkflow
             mockDateTimeProvider.Setup(x => x.UtcNow()).Returns(currentTimeUtc);
 
             //Act
-            var result = sut.RunWorkflowResultToMultipleChoiceQuestionModel(runWorkflowResult);
+            var result = sut.RunWorkflowResultToMultipleChoiceQuestionModel(runWorkflowResult, null);
 
             //Assert
             Assert.IsType<MultipleChoiceQuestionModel>(result);
@@ -47,7 +47,7 @@ namespace Elsa.Server.Tests.Features.Workflow.StartWorkflow
             var runWorkflowResult = new RunWorkflowResult(null, null, null, false);
 
             //Act
-            var result = sut.RunWorkflowResultToMultipleChoiceQuestionModel(runWorkflowResult);
+            var result = sut.RunWorkflowResultToMultipleChoiceQuestionModel(runWorkflowResult, null);
 
             //Assert
             Assert.Null(result);
@@ -65,7 +65,7 @@ namespace Elsa.Server.Tests.Features.Workflow.StartWorkflow
             var runWorkflowResult = new RunWorkflowResult(workflowInstance, null, null, false);
 
             //Act
-            var result = sut.RunWorkflowResultToMultipleChoiceQuestionModel(runWorkflowResult);
+            var result = sut.RunWorkflowResultToMultipleChoiceQuestionModel(runWorkflowResult, null);
 
             //Assert
             Assert.Null(result);

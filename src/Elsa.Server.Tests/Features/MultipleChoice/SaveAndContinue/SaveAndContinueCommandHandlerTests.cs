@@ -1,15 +1,15 @@
 ﻿using AutoFixture.Xunit2;
+using Elsa.CustomActivities.Activities.MultipleChoice;
 using Elsa.CustomInfrastructure.Data.Repository;
 using Elsa.CustomModels;
-using Elsa.Server.Models;
-using Elsa.Services.Models;
-using Moq;
-using Xunit;
-using Elsa.CustomActivities.Activities.MultipleChoice;
 using Elsa.Models;
 using Elsa.Persistence;
 using Elsa.Persistence.Specifications.WorkflowInstances;
 using Elsa.Server.Features.MultipleChoice.SaveAndContinue;
+using Elsa.Server.Models;
+using Elsa.Services.Models;
+using Moq;
+using Xunit;
 
 namespace Elsa.Server.Tests.Features.MultipleChoice.SaveAndContinue
 {
@@ -114,7 +114,7 @@ namespace Elsa.Server.Tests.Features.MultipleChoice.SaveAndContinue
 
             saveAndContinueMapper
                 .Setup(x => x.SaveAndContinueCommandToNextMultipleChoiceQuestionModel(saveAndContinueCommand,
-                    workflowInstance.Output!.ActivityId)).Returns(nextMultipleChoiceQuestionModel);
+                    workflowInstance.Output!.ActivityId, null)).Returns(nextMultipleChoiceQuestionModel);
 
             //Act
             var result = await sut.Handle(saveAndContinueCommand, CancellationToken.None);

@@ -1,25 +1,29 @@
-﻿using Elsa.CustomActivities.Activities.MultipleChoice;
+﻿using Elsa.CustomActivities.Activities.Currency;
+using Elsa.CustomActivities.Activities.MultipleChoice;
 using Elsa.CustomInfrastructure.Data.Repository;
 using Elsa.Persistence;
 using Elsa.Persistence.Specifications.WorkflowInstances;
 using Elsa.Server.Models;
+using Elsa.Services.Models;
 using MediatR;
 
 namespace Elsa.Server.Features.Workflow.LoadWorkflowActivity
 {
     public class LoadWorkflowActivityRequestHandler : IRequestHandler<LoadWorkflowActivityRequest, OperationResult<LoadWorkflowActivityResponse>>
     {
-        private readonly IMultipleChoiceQuestionInvoker _invoker;
+        private readonly IMultipleChoiceQuestionInvoker _multipleChoiceQuestionInvoker;
+        private readonly ICurrencyQuestionInvoker _currencyQuestionInvoker;
         private readonly IWorkflowInstanceStore _workflowInstanceStore;
         private readonly IPipelineAssessmentRepository _pipelineAssessmentRepository;
         private readonly ILoadWorkflowActivityMapper _loadWorkflowActivityMapper;
 
-        public LoadWorkflowActivityRequestHandler(IMultipleChoiceQuestionInvoker invoker, IWorkflowInstanceStore workflowInstanceStore, IPipelineAssessmentRepository pipelineAssessmentRepository, ILoadWorkflowActivityMapper loadWorkflowActivityMapper)
+        public LoadWorkflowActivityRequestHandler(IMultipleChoiceQuestionInvoker multipleChoiceQuestionInvoker, IWorkflowInstanceStore workflowInstanceStore, IPipelineAssessmentRepository pipelineAssessmentRepository, ILoadWorkflowActivityMapper loadWorkflowActivityMapper, ICurrencyQuestionInvoker currencyQuestionInvoker)
         {
-            _invoker = invoker;
+            _multipleChoiceQuestionInvoker = multipleChoiceQuestionInvoker;
             _workflowInstanceStore = workflowInstanceStore;
             _pipelineAssessmentRepository = pipelineAssessmentRepository;
             _loadWorkflowActivityMapper = loadWorkflowActivityMapper;
+            _currencyQuestionInvoker = currencyQuestionInvoker;
         }
 
         public async Task<OperationResult<LoadWorkflowActivityResponse>> Handle(LoadWorkflowActivityRequest activityRequest, CancellationToken cancellationToken)
@@ -34,7 +38,21 @@ namespace Elsa.Server.Features.Workflow.LoadWorkflowActivity
             };
             try
             {
-                var workflows = await _invoker.FindWorkflowsAsync(activityRequest.ActivityId, activityRequest.WorkflowInstanceId, cancellationToken);
+                var dbMultipleChoiceQuestionModel =
+                    await _pipelineAssessmentRepository.GetMultipleChoiceQuestions(activityRequest.ActivityId, activityRequest.WorkflowInstanceId, cancellationToken);
+
+                IEnumerable<CollectedWorkflow> workflows = null;
+
+                if (dbMultipleChoiceQuestionModel.ActivityType == "MultipleChoiceQuestion")
+                {
+                    workflows = await _multipleChoiceQuestionInvoker.FindWorkflowsAsync(activityRequest.ActivityId, activityRequest.WorkflowInstanceId, cancellationToken);
+                }
+
+                if (dbMultipleChoiceQuestionModel.ActivityType == "CurrencyQuestion")
+                {
+                    workflows = await _currencyQuestionInvoker.FindWorkflowsAsync(activityRequest.ActivityId, activityRequest.WorkflowInstanceId, cancellationToken);
+                }
+
                 var collectedWorkflow = workflows.FirstOrDefault();
                 if (collectedWorkflow != null)
                 {
@@ -43,8 +61,7 @@ namespace Elsa.Server.Features.Workflow.LoadWorkflowActivity
                     var workflowInstance = await _workflowInstanceStore.FindAsync(workflowSpecification, cancellationToken: cancellationToken);
                     if (workflowInstance != null)
                     {
-                        var dbMultipleChoiceQuestionModel =
-                            await _pipelineAssessmentRepository.GetMultipleChoiceQuestions(activityRequest.ActivityId, activityRequest.WorkflowInstanceId, cancellationToken);
+
                         if (dbMultipleChoiceQuestionModel != null)
                         {
 
@@ -58,18 +75,32 @@ namespace Elsa.Server.Features.Workflow.LoadWorkflowActivity
                                 var activityDataDictionary =
                                     workflowInstance.ActivityData.FirstOrDefault(a => a.Key == activityRequest.ActivityId).Value;
 
-                                var activityData = _loadWorkflowActivityMapper.ActivityDataDictionaryToActivityData(activityDataDictionary);
-                                if (activityData != null)
-                                {
-                                    result.Data.ActivityData = activityData;
-                                    result.Data.PreviousActivityId = dbMultipleChoiceQuestionModel.PreviousActivityId;
-                                }
-                                else
-                                {
-                                    result.ErrorMessages.Add("Failed to map activity data");
-                                }
-                            }
+                                //TODO:update me based on the activityType to allow correct values to be shown in front end
 
+                                if (dbMultipleChoiceQuestionModel.ActivityType == "MultipleChoiceQuestion")
+                                {
+                                    var activityData =
+                                        _loadWorkflowActivityMapper.ActivityDataDictionaryToActivityData(
+                                            activityDataDictionary);
+                                    if (activityData != null)
+                                    {
+                                        result.Data.MultipleChoiceQuestionActivityData = activityData;
+                                    }
+                                }
+
+                                if (dbMultipleChoiceQuestionModel.ActivityType == "CurrencyQuestion")
+                                {
+                                    var activityData = _loadWorkflowActivityMapper.ActivityDataDictionaryToCurrencyActivityData(activityDataDictionary);
+                                    if (activityData != null)
+                                    {
+                                        result.Data.CurrencyQuestionActivityData = activityData;
+                                    }
+                                }
+
+                                result.Data.ActivityType = dbMultipleChoiceQuestionModel.ActivityType;
+                                result.Data.PreviousActivityId = dbMultipleChoiceQuestionModel.PreviousActivityId;
+
+                            }
                         }
                         else
                         {

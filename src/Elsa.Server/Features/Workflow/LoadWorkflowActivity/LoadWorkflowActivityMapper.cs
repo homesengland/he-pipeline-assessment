@@ -4,7 +4,10 @@ namespace Elsa.Server.Features.Workflow.LoadWorkflowActivity
 {
     public interface ILoadWorkflowActivityMapper
     {
-        ActivityData? ActivityDataDictionaryToActivityData(IDictionary<string, object?>? activityDataDictionary);
+        MultipleChoiceQuestionActivityData? ActivityDataDictionaryToActivityData(IDictionary<string, object?>? activityDataDictionary);
+
+        CurrencyQuestionActivityData? ActivityDataDictionaryToCurrencyActivityData(
+            IDictionary<string, object?>? activityDataDictionary);
     }
 
     public class LoadWorkflowActivityMapper : ILoadWorkflowActivityMapper
@@ -16,7 +19,7 @@ namespace Elsa.Server.Features.Workflow.LoadWorkflowActivity
             _loadWorkflowActivityJsonHelper = loadWorkflowActivityJsonHelper;
         }
 
-        public ActivityData? ActivityDataDictionaryToActivityData(IDictionary<string, object?>? activityDataDictionary)
+        public MultipleChoiceQuestionActivityData? ActivityDataDictionaryToActivityData(IDictionary<string, object?>? activityDataDictionary)
         {
             var activityData = _loadWorkflowActivityJsonHelper.ActivityDataDictionaryToActivityData(activityDataDictionary);
 
@@ -32,6 +35,24 @@ namespace Elsa.Server.Features.Workflow.LoadWorkflowActivity
                         var answerList = output.Answer.Split(Constants.StringSeparator).ToList();
                         activityDataChoice.IsSelected = answerList.Contains(activityDataChoice.Answer);
                     }
+                }
+            }
+
+            return activityData;
+        }
+
+        public CurrencyQuestionActivityData? ActivityDataDictionaryToCurrencyActivityData(IDictionary<string, object?>? activityDataDictionary)
+        {
+            var activityData = _loadWorkflowActivityJsonHelper.ActivityDataDictionaryToCurrencyQuestionActivityData(activityDataDictionary);
+
+            if (activityData != null && activityData.Output != null)
+            {
+                var activityJson = activityData.Output.ToString();
+
+                var output = _loadWorkflowActivityJsonHelper.ActivityOutputJsonToMultipleChoiceQuestionModel(activityJson!);
+                if (output != null && output.Answer != null)
+                {
+                    activityData.Answer = output.Answer;
                 }
             }
 

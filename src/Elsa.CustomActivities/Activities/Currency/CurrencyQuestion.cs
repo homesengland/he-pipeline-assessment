@@ -4,27 +4,22 @@ using Elsa.Attributes;
 using Elsa.CustomModels;
 using Elsa.Design;
 using Elsa.Expressions;
-using Elsa.Models;
 using Elsa.Services;
 using Elsa.Services.Models;
 
-namespace Elsa.CustomActivities.Activities.MultipleChoice
+namespace Elsa.CustomActivities.Activities.Currency
 {
+
     [Trigger(
-        Category = "Homes England Activities",
-        Description = "Assessment screen multiple choice question",
-        Outcomes = new[] { OutcomeNames.Done }
-    )]
-    public class MultipleChoiceQuestion : Activity
+       Category = "Homes England Activities",
+       Description = "Assessment screen currency question",
+       Outcomes = new[] { OutcomeNames.Done }
+   )]
+    public class CurrencyQuestion : Activity
     {
 
         [ActivityInput(Hint = "Section title")]
         public string Title { get; set; } = null!;
-
-
-        [ActivityInput(Label = "Multi-choice questions", Hint = "Possible assessment screen answers.",
-            UIHint = "multiChoice-record-builder", DefaultSyntax = "Json", IsDesignerCritical = true)]
-        public ICollection<MultiChoiceRecord> Choices { get; set; } = new List<MultiChoiceRecord>();
 
         #region Input
 
@@ -35,6 +30,15 @@ namespace Elsa.CustomActivities.Activities.MultipleChoice
             SupportedSyntaxes = new[] { SyntaxNames.Literal })]
         public string Question { get; set; } = null!;
         public DateTime LastUpdated => DateTime.Now;
+
+
+        [ActivityInput(
+            Hint = "Answer",
+            UIHint = ActivityInputUIHints.SingleLine,
+            DefaultSyntax = SyntaxNames.Literal,
+
+            SupportedSyntaxes = new[] { SyntaxNames.Literal })]
+        public string Answer { get; set; } = null!;
 
         #endregion
 
@@ -91,6 +95,5 @@ namespace Elsa.CustomActivities.Activities.MultipleChoice
         }
 
     }
-
-    public record MultiChoiceRecord(string Answer, bool IsSingle);
 }
+

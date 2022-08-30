@@ -29,27 +29,41 @@ namespace He.PipelineAssessment.UI.Features.Workflow.LoadWorkflowActivity
 
             result.Data.WorkflowInstanceId = workflowActivityDataDto.Data.WorkflowInstanceId;
             result.Data.ActivityId = workflowActivityDataDto.Data.ActivityId;
+            result.Data.ActivityType = workflowActivityDataDto.Data.ActivityType;
             result.Data.PreviousActivityId = workflowActivityDataDto.Data.PreviousActivityId;
 
-            result.Data.ActivityData = new SaveAndContinue.ActivityData();
+            result.Data.MultipleChoiceQuestionActivityData = new SaveAndContinue.MultipleChoiceQuestionActivityData();
 
-            result.Data.ActivityData.Title = workflowActivityDataDto.Data.ActivityData.Title;
-            result.Data.ActivityData.Question = workflowActivityDataDto.Data.ActivityData.Question;
-            result.Data.ActivityData.Output = workflowActivityDataDto.Data.ActivityData.Output;
-
-            var mappedChoiceList = new List<SaveAndContinue.Choice>();
-            foreach (var choice in workflowActivityDataDto.Data.ActivityData.Choices)
+            if (result.Data.ActivityType == "MultpleChoiceQuestion")
             {
-                var mappedChoice = new SaveAndContinue.Choice()
+                result.Data.MultipleChoiceQuestionActivityData.Title = workflowActivityDataDto.Data.MultipleChoiceQuestionActivityData.Title;
+                result.Data.MultipleChoiceQuestionActivityData.Question = workflowActivityDataDto.Data.MultipleChoiceQuestionActivityData.Question;
+                result.Data.MultipleChoiceQuestionActivityData.Output = workflowActivityDataDto.Data.MultipleChoiceQuestionActivityData.Output;
+
+                var mappedChoiceList = new List<SaveAndContinue.Choice>();
+                foreach (var choice in workflowActivityDataDto.Data.MultipleChoiceQuestionActivityData.Choices)
                 {
-                    Answer = choice.Answer,
-                    IsSelected = choice.IsSelected,
-                    IsSingle = choice.IsSingle
-                };
-                mappedChoiceList.Add(mappedChoice);
+                    var mappedChoice = new SaveAndContinue.Choice()
+                    {
+                        Answer = choice.Answer,
+                        IsSelected = choice.IsSelected,
+                        IsSingle = choice.IsSingle
+                    };
+                    mappedChoiceList.Add(mappedChoice);
+                }
+
+                result.Data.MultipleChoiceQuestionActivityData.Choices = mappedChoiceList.ToArray();
+            }
+            result.Data.CurrencyQuestionActivityData = new SaveAndContinue.CurrencyQuestionActivityData();
+
+            if (result.Data.ActivityType == "CurrencyQuestion")
+            {
+                result.Data.CurrencyQuestionActivityData.Title = workflowActivityDataDto.Data.CurrencyQuestionActivityData.Title;
+                result.Data.CurrencyQuestionActivityData.Question = workflowActivityDataDto.Data.CurrencyQuestionActivityData.Question;
+                result.Data.CurrencyQuestionActivityData.Output = workflowActivityDataDto.Data.CurrencyQuestionActivityData.Output;
+                result.Data.CurrencyQuestionActivityData.Answer = workflowActivityDataDto.Data.CurrencyQuestionActivityData.Answer;
             }
 
-            result.Data.ActivityData.Choices = mappedChoiceList.ToArray();
 
             return result;
         }

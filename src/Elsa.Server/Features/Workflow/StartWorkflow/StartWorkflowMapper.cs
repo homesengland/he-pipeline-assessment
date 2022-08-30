@@ -6,7 +6,7 @@ namespace Elsa.Server.Features.Workflow.StartWorkflow
 {
     public interface IStartWorkflowMapper
     {
-        MultipleChoiceQuestionModel? RunWorkflowResultToMultipleChoiceQuestionModel(RunWorkflowResult result);
+        MultipleChoiceQuestionModel? RunWorkflowResultToMultipleChoiceQuestionModel(RunWorkflowResult result, IActivityBlueprint activityBlueprint);
         StartWorkflowResponse? RunWorkflowResultToStartWorkflowResponse(RunWorkflowResult result);
     }
     public class StartWorkflowMapper : IStartWorkflowMapper
@@ -17,7 +17,7 @@ namespace Elsa.Server.Features.Workflow.StartWorkflow
             _dateTimeProvider = dateTimeProvider;
         }
 
-        public MultipleChoiceQuestionModel? RunWorkflowResultToMultipleChoiceQuestionModel(RunWorkflowResult result)
+        public MultipleChoiceQuestionModel? RunWorkflowResultToMultipleChoiceQuestionModel(RunWorkflowResult result, IActivityBlueprint activityBlueprint)
         {
             if (result.WorkflowInstance != null && result.WorkflowInstance
                     .LastExecutedActivityId != null)
@@ -25,6 +25,7 @@ namespace Elsa.Server.Features.Workflow.StartWorkflow
                 {
                     Id = $"{result.WorkflowInstance.Id}-{result.WorkflowInstance.LastExecutedActivityId}",
                     ActivityId = result.WorkflowInstance.LastExecutedActivityId,
+                    ActivityType = activityBlueprint.Type,
                     WorkflowInstanceId = result.WorkflowInstance.Id,
                     PreviousActivityId = result.WorkflowInstance.LastExecutedActivityId,
                     CreatedDateTime = _dateTimeProvider.UtcNow()

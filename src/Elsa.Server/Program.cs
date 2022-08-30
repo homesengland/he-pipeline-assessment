@@ -1,11 +1,11 @@
 using Elsa;
+using Elsa.CustomActivities.Activities.Currency;
 using Elsa.CustomActivities.Activities.MultipleChoice;
 using Elsa.CustomInfrastructure.Data;
 using Elsa.CustomInfrastructure.Data.Repository;
 using Elsa.Persistence.EntityFramework.Core.Extensions;
 using Elsa.Persistence.EntityFramework.Sqlite;
 using Elsa.Runtime;
-using Elsa.Server.Features.MultipleChoice.SaveAndContinue;
 using Elsa.Server.Features.Workflow.LoadWorkflowActivity;
 using Elsa.Server.Features.Workflow.StartWorkflow;
 using Elsa.Server.Providers;
@@ -23,6 +23,7 @@ builder.Services
     .AddElsa(elsa => elsa
         .UseEntityFrameworkPersistence(ef => ef.UseSqlite(elsaConnectionString))
         .AddActivity<MultipleChoiceQuestion>()
+        .AddActivity<CurrencyQuestion>()
         .AddConsoleActivities()
     );
 
@@ -39,16 +40,24 @@ builder.Services.AddStartupTask<RunPipelineAssessmentMigrations>();
 builder.Services.AddElsaApiEndpoints();
 
 builder.Services.AddNotificationHandlers(typeof(GetMultipleChoiceQuestionScriptHandler));
+builder.Services.AddNotificationHandlers(typeof(GetCurrencyQuestionScriptHandler));
 
 builder.Services.AddBookmarkProvider<MultipleChoiceQuestionBookmarkProvider>();
 builder.Services.AddScoped<IMultipleChoiceQuestionInvoker, MultipleChoiceQuestionInvoker>();
+
+builder.Services.AddBookmarkProvider<CurrencyQuestionBookmarkProvider>();
+builder.Services.AddScoped<ICurrencyQuestionInvoker, CurrencyQuestionInvoker>();
+
 builder.Services.AddScoped<IPipelineAssessmentRepository, PipelineAssessmentRepository>();
 builder.Services.AddJavaScriptTypeDefinitionProvider<CustomTypeDefinitionProvider>();
 
 builder.Services.AddMediatR(typeof(Program).Assembly);
 builder.Services.AddScoped<IDateTimeProvider, DateTimeProvider>();
+
 builder.Services.AddScoped<IStartWorkflowMapper, StartWorkflowMapper>();
-builder.Services.AddScoped<ISaveAndContinueMapper, SaveAndContinueMapper>();
+builder.Services.AddScoped<Elsa.Server.Features.MultipleChoice.SaveAndContinue.ISaveAndContinueMapper, Elsa.Server.Features.MultipleChoice.SaveAndContinue.SaveAndContinueMapper>();
+builder.Services.AddScoped<Elsa.Server.Features.Currency.ISaveAndContinueMapper, Elsa.Server.Features.Currency.SaveAndContinueMapper>();
+
 builder.Services.AddScoped<ILoadWorkflowActivityJsonHelper, LoadWorkflowActivityJsonHelper>();
 builder.Services.AddScoped<ILoadWorkflowActivityMapper, LoadWorkflowActivityMapper>();
 

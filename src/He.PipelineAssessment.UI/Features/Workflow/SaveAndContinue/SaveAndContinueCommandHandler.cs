@@ -16,24 +16,33 @@ namespace He.PipelineAssessment.UI.Features.Workflow.SaveAndContinue
 
         public async Task<LoadWorkflowActivityRequest?> Handle(SaveAndContinueCommand request, CancellationToken cancellationToken)
         {
-            var saveAndContinueCommandDto = _saveAndContinueMapper.SaveAndContinueCommandToSaveAndContinueCommandDto(request);
-
-            var response = await _elsaServerHttpClient.SaveAndContinue(saveAndContinueCommandDto);
-
-            if (response != null)
+            var result = new LoadWorkflowActivityRequest();
+            if (request.Data.ActivityType == "MultipleChoiceQuestion")
             {
-                var result = new LoadWorkflowActivityRequest()
+                var saveAndContinueCommandDto = _saveAndContinueMapper.SaveAndContinueCommandToMultipleChoiceSaveAndContinueCommandDto(request);
+                var response = await _elsaServerHttpClient.SaveAndContinue(saveAndContinueCommandDto);
+
+                result = new LoadWorkflowActivityRequest()
                 {
                     ActivityId = response.Data.NextActivityId,
                     WorkflowInstanceId = response.Data.WorkflowInstanceId
                 };
+            }
 
-                return await Task.FromResult(result);
-            }
-            else
+            if (request.Data.ActivityType == "CurrencyQuestion")
             {
-                return null;
+                var saveAndContinueCommandDto = _saveAndContinueMapper.SaveAndContinueCommandToCurrencySaveAndContinueCommandDto(request);
+                var response = await _elsaServerHttpClient.SaveAndContinue(saveAndContinueCommandDto);
+
+                result = new LoadWorkflowActivityRequest()
+                {
+                    ActivityId = response.Data.NextActivityId,
+                    WorkflowInstanceId = response.Data.WorkflowInstanceId
+                };
             }
+
+            return await Task.FromResult(result);
+
         }
     }
 }

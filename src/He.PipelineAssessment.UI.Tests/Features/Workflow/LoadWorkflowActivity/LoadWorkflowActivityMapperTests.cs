@@ -24,12 +24,12 @@ namespace He.PipelineAssessment.UI.Tests.Features.Workflow.LoadWorkflowActivity
             Assert.Equal(workflowActivityDataDto.Data.ActivityId, result.Data.ActivityId);
             Assert.Equal(workflowActivityDataDto.Data.WorkflowInstanceId, result.Data.WorkflowInstanceId);
             Assert.Equal(workflowActivityDataDto.Data.PreviousActivityId, result.Data.PreviousActivityId);
-            Assert.Equal(workflowActivityDataDto.Data.ActivityData.Title, result.Data.ActivityData.Title);
-            Assert.Equal(workflowActivityDataDto.Data.ActivityData.Question, result.Data.ActivityData.Question);
-            Assert.Equal(workflowActivityDataDto.Data.ActivityData.Output, result.Data.ActivityData.Output);
+            Assert.Equal(workflowActivityDataDto.Data.MultipleChoiceQuestionActivityData.Title, result.Data.MultipleChoiceQuestionActivityData.Title);
+            Assert.Equal(workflowActivityDataDto.Data.MultipleChoiceQuestionActivityData.Question, result.Data.MultipleChoiceQuestionActivityData.Question);
+            Assert.Equal(workflowActivityDataDto.Data.MultipleChoiceQuestionActivityData.Output, result.Data.MultipleChoiceQuestionActivityData.Output);
 
-            var expectedChoices = JsonSerializer.Serialize(workflowActivityDataDto.Data.ActivityData.Choices);
-            var actualChoices = JsonSerializer.Serialize(result.Data.ActivityData.Choices);
+            var expectedChoices = JsonSerializer.Serialize(workflowActivityDataDto.Data.MultipleChoiceQuestionActivityData.Choices);
+            var actualChoices = JsonSerializer.Serialize(result.Data.MultipleChoiceQuestionActivityData.Choices);
             Assert.Equal(expectedChoices, actualChoices);
 
 

@@ -23,7 +23,7 @@ namespace He.PipelineAssessment.UI.Tests.Features.Workflow.SaveAndContinue
         {
             //Arrange
             saveAndContinueMapper
-                .Setup(x => x.SaveAndContinueCommandToSaveAndContinueCommandDto(saveAndContinueCommand))
+                .Setup(x => x.SaveAndContinueCommandToMultipleChoiceSaveAndContinueCommandDto(saveAndContinueCommand))
                 .Returns(saveAndContinueCommandDto);
 
             elsaServerHttpClient.Setup(x => x.SaveAndContinue(saveAndContinueCommandDto))
@@ -49,7 +49,7 @@ namespace He.PipelineAssessment.UI.Tests.Features.Workflow.SaveAndContinue
         {
             //Arrange
             saveAndContinueMapper
-                .Setup(x => x.SaveAndContinueCommandToSaveAndContinueCommandDto(saveAndContinueCommand))
+                .Setup(x => x.SaveAndContinueCommandToMultipleChoiceSaveAndContinueCommandDto(saveAndContinueCommand))
                 .Returns(saveAndContinueCommandDto);
 
             elsaServerHttpClient.Setup(x => x.SaveAndContinue(saveAndContinueCommandDto))
