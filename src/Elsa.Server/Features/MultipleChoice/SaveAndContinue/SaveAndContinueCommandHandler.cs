@@ -40,11 +40,14 @@ namespace Elsa.Server.Features.MultipleChoice.SaveAndContinue
                     await _pipelineAssessmentRepository.GetMultipleChoiceQuestions(command.ActivityId, command.WorkflowInstanceId, cancellationToken);
                 if (dbMultipleChoiceQuestionModel != null)
                 {
+                    //TODO: this changes per ActvityType
                     dbMultipleChoiceQuestionModel.SetAnswer(command.Answers, _dateTimeProvider.UtcNow());
+
                     await _pipelineAssessmentRepository.UpdateMultipleChoiceQuestion(dbMultipleChoiceQuestionModel, cancellationToken);
 
                     //TODO: compare the model from the db with the dto, if no change, do not execute workflow
 
+                    //TODO: this changes per ActvityType
                     var collectedWorkflow = await _invoker.ExecuteWorkflowsAsync<MultipleChoiceQuestion>(command.ActivityId,
                         command.WorkflowInstanceId, dbMultipleChoiceQuestionModel, cancellationToken).FirstOrDefault();
 
