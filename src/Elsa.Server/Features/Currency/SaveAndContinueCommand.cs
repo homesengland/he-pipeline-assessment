@@ -12,6 +12,6 @@ namespace Elsa.Server.Features.Currency
 
         public string WorkflowInstanceId { get; set; } = null!;
 
-        public string Answer { get; set; } = null!;
+        public string? Answer { get; set; }
     }
 }
