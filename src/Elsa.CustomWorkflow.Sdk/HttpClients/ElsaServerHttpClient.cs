@@ -51,6 +51,8 @@ namespace Elsa.CustomWorkflow.Sdk.HttpClients
             return JsonSerializer.Deserialize<WorkflowNextActivityDataDto>(data, new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
         }
 
+
+
         public async Task<WorkflowNextActivityDataDto?> SaveAndContinue(Models.MultipleChoice.SaveAndContinue.SaveAndContinueCommandDto model)
         {
             string data;

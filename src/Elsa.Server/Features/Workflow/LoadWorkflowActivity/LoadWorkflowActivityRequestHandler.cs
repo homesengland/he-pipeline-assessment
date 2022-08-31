@@ -1,6 +1,4 @@
 ﻿using Elsa.CustomActivities.Activities;
-using Elsa.CustomActivities.Activities.Currency;
-using Elsa.CustomActivities.Activities.MultipleChoice;
 using Elsa.CustomActivities.Activities.Shared;
 using Elsa.CustomInfrastructure.Data.Repository;
 using Elsa.Persistence;
@@ -45,17 +43,7 @@ namespace Elsa.Server.Features.Workflow.LoadWorkflowActivity
                 var dbMultipleChoiceQuestionModel =
                     await _pipelineAssessmentRepository.GetMultipleChoiceQuestions(activityRequest.ActivityId, activityRequest.WorkflowInstanceId, cancellationToken);
 
-                IEnumerable<CollectedWorkflow> workflows = null;
-
-                if (dbMultipleChoiceQuestionModel.ActivityType == Constants.MultipleChoiceQuestion)
-                {
-                    workflows = await _QuestionInvoker.FindWorkflowsAsync<MultipleChoiceQuestion>(activityRequest.ActivityId, activityRequest.WorkflowInstanceId, cancellationToken);
-                }
-
-                if (dbMultipleChoiceQuestionModel.ActivityType == Constants.CurrencyQuestion)
-                {
-                    workflows = await _QuestionInvoker.FindWorkflowsAsync<CurrencyQuestion>(activityRequest.ActivityId, activityRequest.WorkflowInstanceId, cancellationToken);
-                }
+                IEnumerable<CollectedWorkflow> workflows = await _QuestionInvoker.FindWorkflowsAsync(activityRequest.ActivityId, dbMultipleChoiceQuestionModel.ActivityType, activityRequest.WorkflowInstanceId, cancellationToken);
 
                 var collectedWorkflow = workflows.FirstOrDefault();
                 if (collectedWorkflow != null)
