@@ -1,4 +1,5 @@
 ﻿using Elsa.CustomActivities.Activities.Currency;
+using Elsa.CustomActivities.Activities.Shared;
 using Elsa.CustomInfrastructure.Data.Repository;
 using Elsa.Models;
 using Elsa.Persistence;
@@ -14,13 +15,13 @@ namespace Elsa.Server.Features.Currency.SaveAndContinue
     public class SaveAndContinueCommandHandler : IRequestHandler<SaveAndContinueCommand, OperationResult<SaveAndContinueResponse>>
     {
         private readonly IWorkflowRegistry _workflowRegistry;
-        private readonly ICurrencyQuestionInvoker _invoker;
+        private readonly IQuestionInvoker _invoker;
         private readonly IPipelineAssessmentRepository _pipelineAssessmentRepository;
         private readonly IWorkflowInstanceStore _workflowInstanceStore;
         private readonly IDateTimeProvider _dateTimeProvider;
         private readonly ISaveAndContinueMapper _saveAndContinueMapper;
 
-        public SaveAndContinueCommandHandler(ISaveAndContinueMapper saveAndContinueMapper, IDateTimeProvider dateTimeProvider, IWorkflowInstanceStore workflowInstanceStore, IPipelineAssessmentRepository pipelineAssessmentRepository, ICurrencyQuestionInvoker invoker, IWorkflowRegistry workflowRegistry)
+        public SaveAndContinueCommandHandler(ISaveAndContinueMapper saveAndContinueMapper, IDateTimeProvider dateTimeProvider, IWorkflowInstanceStore workflowInstanceStore, IPipelineAssessmentRepository pipelineAssessmentRepository, IQuestionInvoker invoker, IWorkflowRegistry workflowRegistry)
         {
             _saveAndContinueMapper = saveAndContinueMapper;
             _dateTimeProvider = dateTimeProvider;
@@ -44,7 +45,7 @@ namespace Elsa.Server.Features.Currency.SaveAndContinue
 
                     //TODO: compare the model from the db with the dto, if no change, do not execute workflow
 
-                    var collectedWorkflow = await _invoker.ExecuteWorkflowsAsync(command.ActivityId,
+                    var collectedWorkflow = await _invoker.ExecuteWorkflowsAsync<CurrencyQuestion>(command.ActivityId,
                         command.WorkflowInstanceId, dbMultipleChoiceQuestionModel, cancellationToken).FirstOrDefault();
 
                     var workflowSpecification =

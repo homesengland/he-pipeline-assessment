@@ -1,5 +1,6 @@
 ﻿using AutoFixture.Xunit2;
 using Elsa.CustomActivities.Activities.MultipleChoice;
+using Elsa.CustomActivities.Activities.Shared;
 using Elsa.CustomInfrastructure.Data.Repository;
 using Elsa.CustomModels;
 using Elsa.Models;
@@ -18,7 +19,7 @@ namespace Elsa.Server.Tests.Features.MultipleChoice.SaveAndContinue
         [Theory]
         [AutoMoqData]
         public async Task Handle_ShouldReturnSuccessfulOperationResult_WhenSuccessful_AndDoesNotInsertNewQuestionIfAlreadyExists(
-            [Frozen] Mock<IMultipleChoiceQuestionInvoker> multipleChoiceQuestionInvoker,
+            [Frozen] Mock<IQuestionInvoker> multipleChoiceQuestionInvoker,
             [Frozen] Mock<IWorkflowInstanceStore> workflowInstanceStore,
             [Frozen] Mock<IPipelineAssessmentRepository> pipelineAssessmentRepository,
             MultipleChoiceQuestionModel currentMultipleChoiceQuestionModel,
@@ -44,7 +45,7 @@ namespace Elsa.Server.Tests.Features.MultipleChoice.SaveAndContinue
                     saveAndContinueCommand.WorkflowInstanceId, CancellationToken.None))
                 .ReturnsAsync(currentMultipleChoiceQuestionModel);
 
-            multipleChoiceQuestionInvoker.Setup(x => x.ExecuteWorkflowsAsync(saveAndContinueCommand.ActivityId,
+            multipleChoiceQuestionInvoker.Setup(x => x.ExecuteWorkflowsAsync<MultipleChoiceQuestion>(saveAndContinueCommand.ActivityId,
                     saveAndContinueCommand.WorkflowInstanceId, currentMultipleChoiceQuestionModel, CancellationToken.None))
                 .ReturnsAsync(collectedWorkflows);
 
@@ -72,7 +73,7 @@ namespace Elsa.Server.Tests.Features.MultipleChoice.SaveAndContinue
         [Theory]
         [AutoMoqData]
         public async Task Handle_ShouldReturnSuccessfulOperationResult_WhenSuccessful_AndInsertsNewQuestionIfDoesNotExist(
-            [Frozen] Mock<IMultipleChoiceQuestionInvoker> multipleChoiceQuestionInvoker,
+            [Frozen] Mock<IQuestionInvoker> multipleChoiceQuestionInvoker,
             [Frozen] Mock<IWorkflowInstanceStore> workflowInstanceStore,
             [Frozen] Mock<IPipelineAssessmentRepository> pipelineAssessmentRepository,
             [Frozen] Mock<ISaveAndContinueMapper> saveAndContinueMapper,
@@ -99,7 +100,7 @@ namespace Elsa.Server.Tests.Features.MultipleChoice.SaveAndContinue
                     saveAndContinueCommand.WorkflowInstanceId, CancellationToken.None))
                 .ReturnsAsync(currentMultipleChoiceQuestionModel);
 
-            multipleChoiceQuestionInvoker.Setup(x => x.ExecuteWorkflowsAsync(saveAndContinueCommand.ActivityId,
+            multipleChoiceQuestionInvoker.Setup(x => x.ExecuteWorkflowsAsync<MultipleChoiceQuestion>(saveAndContinueCommand.ActivityId,
                     saveAndContinueCommand.WorkflowInstanceId, currentMultipleChoiceQuestionModel, CancellationToken.None))
                 .ReturnsAsync(collectedWorkflows);
 
@@ -131,7 +132,7 @@ namespace Elsa.Server.Tests.Features.MultipleChoice.SaveAndContinue
         [Theory]
         [AutoMoqData]
         public async Task Handle_ShouldReturnErrors_WhenOutputIsNullOnWorkflowInstance(
-            [Frozen] Mock<IMultipleChoiceQuestionInvoker> multipleChoiceQuestionInvoker,
+            [Frozen] Mock<IQuestionInvoker> multipleChoiceQuestionInvoker,
             [Frozen] Mock<IWorkflowInstanceStore> workflowInstanceStore,
             [Frozen] Mock<IPipelineAssessmentRepository> pipelineAssessmentRepository,
             MultipleChoiceQuestionModel currentMultipleChoiceQuestionModel,
@@ -146,7 +147,7 @@ namespace Elsa.Server.Tests.Features.MultipleChoice.SaveAndContinue
                     saveAndContinueCommand.WorkflowInstanceId, CancellationToken.None))
                 .ReturnsAsync(currentMultipleChoiceQuestionModel);
 
-            multipleChoiceQuestionInvoker.Setup(x => x.ExecuteWorkflowsAsync(saveAndContinueCommand.ActivityId,
+            multipleChoiceQuestionInvoker.Setup(x => x.ExecuteWorkflowsAsync<MultipleChoiceQuestion>(saveAndContinueCommand.ActivityId,
                     saveAndContinueCommand.WorkflowInstanceId, currentMultipleChoiceQuestionModel, CancellationToken.None))
                 .ReturnsAsync(collectedWorkflows);
 
@@ -168,7 +169,7 @@ namespace Elsa.Server.Tests.Features.MultipleChoice.SaveAndContinue
         [Theory]
         [AutoMoqData]
         public async Task Handle_ShouldReturnErrors_WhenWorkflowInstanceIsNull(
-            [Frozen] Mock<IMultipleChoiceQuestionInvoker> multipleChoiceQuestionInvoker,
+            [Frozen] Mock<IQuestionInvoker> multipleChoiceQuestionInvoker,
             [Frozen] Mock<IWorkflowInstanceStore> workflowInstanceStore,
             [Frozen] Mock<IPipelineAssessmentRepository> pipelineAssessmentRepository,
             MultipleChoiceQuestionModel currentMultipleChoiceQuestionModel,
@@ -181,7 +182,7 @@ namespace Elsa.Server.Tests.Features.MultipleChoice.SaveAndContinue
                     saveAndContinueCommand.WorkflowInstanceId, CancellationToken.None))
                 .ReturnsAsync(currentMultipleChoiceQuestionModel);
 
-            multipleChoiceQuestionInvoker.Setup(x => x.ExecuteWorkflowsAsync(saveAndContinueCommand.ActivityId,
+            multipleChoiceQuestionInvoker.Setup(x => x.ExecuteWorkflowsAsync<MultipleChoiceQuestion>(saveAndContinueCommand.ActivityId,
                     saveAndContinueCommand.WorkflowInstanceId, currentMultipleChoiceQuestionModel, CancellationToken.None))
                 .ReturnsAsync(collectedWorkflows);
 

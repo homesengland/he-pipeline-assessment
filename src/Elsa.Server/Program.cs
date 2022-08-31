@@ -47,12 +47,6 @@ builder.Services.AddNotificationHandlers(typeof(GetCurrencyQuestionScriptHandler
 builder.Services.AddBookmarkProvider<QuestionBookmarkProvider>();
 builder.Services.AddScoped<IQuestionInvoker, QuestionInvoker>();
 
-builder.Services.AddBookmarkProvider<MultipleChoiceQuestionBookmarkProvider>();
-builder.Services.AddScoped<IMultipleChoiceQuestionInvoker, MultipleChoiceQuestionInvoker>();
-
-builder.Services.AddBookmarkProvider<CurrencyQuestionBookmarkProvider>();
-builder.Services.AddScoped<ICurrencyQuestionInvoker, CurrencyQuestionInvoker>();
-
 builder.Services.AddScoped<IPipelineAssessmentRepository, PipelineAssessmentRepository>();
 builder.Services.AddJavaScriptTypeDefinitionProvider<CustomTypeDefinitionProvider>();
 
