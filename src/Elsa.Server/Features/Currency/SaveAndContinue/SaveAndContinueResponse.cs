@@ -1,4 +1,4 @@
-﻿namespace Elsa.Server.Features.Currency
+﻿namespace Elsa.Server.Features.Currency.SaveAndContinue
 {
     public class SaveAndContinueResponse
     {

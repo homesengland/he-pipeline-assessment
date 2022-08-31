@@ -6,6 +6,7 @@ using Elsa.CustomInfrastructure.Data.Repository;
 using Elsa.Persistence.EntityFramework.Core.Extensions;
 using Elsa.Persistence.EntityFramework.Sqlite;
 using Elsa.Runtime;
+using Elsa.Server.Features.Currency.SaveAndContinue;
 using Elsa.Server.Features.Workflow.LoadWorkflowActivity;
 using Elsa.Server.Features.Workflow.StartWorkflow;
 using Elsa.Server.Providers;
@@ -56,7 +57,7 @@ builder.Services.AddScoped<IDateTimeProvider, DateTimeProvider>();
 
 builder.Services.AddScoped<IStartWorkflowMapper, StartWorkflowMapper>();
 builder.Services.AddScoped<Elsa.Server.Features.MultipleChoice.SaveAndContinue.ISaveAndContinueMapper, Elsa.Server.Features.MultipleChoice.SaveAndContinue.SaveAndContinueMapper>();
-builder.Services.AddScoped<Elsa.Server.Features.Currency.ISaveAndContinueMapper, Elsa.Server.Features.Currency.SaveAndContinueMapper>();
+builder.Services.AddScoped<ISaveAndContinueMapper, SaveAndContinueMapper>();
 
 builder.Services.AddScoped<ILoadWorkflowActivityJsonHelper, LoadWorkflowActivityJsonHelper>();
 builder.Services.AddScoped<ILoadWorkflowActivityMapper, LoadWorkflowActivityMapper>();

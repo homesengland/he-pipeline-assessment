@@ -17,7 +17,7 @@ namespace He.PipelineAssessment.UI.Features.Workflow.SaveAndContinue
         public async Task<LoadWorkflowActivityRequest?> Handle(SaveAndContinueCommand request, CancellationToken cancellationToken)
         {
             var result = new LoadWorkflowActivityRequest();
-            if (request.Data.ActivityType == "MultipleChoiceQuestion")
+            if (request.Data.ActivityType == Constants.MultipleChoiceQuestion)
             {
                 var saveAndContinueCommandDto = _saveAndContinueMapper.SaveAndContinueCommandToMultipleChoiceSaveAndContinueCommandDto(request);
                 var response = await _elsaServerHttpClient.SaveAndContinue(saveAndContinueCommandDto);
@@ -29,7 +29,7 @@ namespace He.PipelineAssessment.UI.Features.Workflow.SaveAndContinue
                 };
             }
 
-            if (request.Data.ActivityType == "CurrencyQuestion")
+            if (request.Data.ActivityType == Constants.CurrencyQuestion)
             {
                 var saveAndContinueCommandDto = _saveAndContinueMapper.SaveAndContinueCommandToCurrencySaveAndContinueCommandDto(request);
                 var response = await _elsaServerHttpClient.SaveAndContinue(saveAndContinueCommandDto);

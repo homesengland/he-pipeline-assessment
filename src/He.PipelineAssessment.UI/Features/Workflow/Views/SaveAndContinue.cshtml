@@ -1,4 +1,5 @@
-﻿@model He.PipelineAssessment.UI.Features.Workflow.SaveAndContinue.SaveAndContinueCommand
+﻿@using He.PipelineAssessment.UI
+@model He.PipelineAssessment.UI.Features.Workflow.SaveAndContinue.SaveAndContinueCommand
 @{
     ViewData["Title"] = "Pipeline Assessment";
     Layout = "_Layout";
@@ -14,11 +15,11 @@
         @Html.HiddenFor(m => Model.Data.ActivityId)
         @Html.HiddenFor(m => Model.Data.ActivityType)
         <br/>
-        if (Model.Data.ActivityType =="CurrencyQuestion")
+        if (Model.Data.ActivityType == Constants.CurrencyQuestion)
         {
            @await Html.PartialAsync("_CurrencyQuestion",Model)
         }
-        if (Model.Data.ActivityType == "MultipleChoiceQuestion")
+        if (Model.Data.ActivityType == Constants.MultipleChoiceQuestion)
         {
             @await Html.PartialAsync("_MultipleChoiceQuestion",Model)
         }

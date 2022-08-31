@@ -1,7 +1,7 @@
 ﻿using Elsa.CustomModels;
 using Elsa.Server.Providers;
 
-namespace Elsa.Server.Features.Currency
+namespace Elsa.Server.Features.Currency.SaveAndContinue
 {
     public interface ISaveAndContinueMapper
     {

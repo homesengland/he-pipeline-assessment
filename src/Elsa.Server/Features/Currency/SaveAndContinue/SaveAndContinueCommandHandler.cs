@@ -9,7 +9,7 @@ using Elsa.Services;
 using MediatR;
 using Open.Linq.AsyncExtensions;
 
-namespace Elsa.Server.Features.Currency
+namespace Elsa.Server.Features.Currency.SaveAndContinue
 {
     public class SaveAndContinueCommandHandler : IRequestHandler<SaveAndContinueCommand, OperationResult<SaveAndContinueResponse>>
     {

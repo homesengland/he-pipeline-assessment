@@ -1,4 +1,5 @@
-﻿using Elsa.CustomActivities.Activities.Currency;
+﻿using Elsa.CustomActivities.Activities;
+using Elsa.CustomActivities.Activities.Currency;
 using Elsa.CustomActivities.Activities.MultipleChoice;
 using Elsa.CustomInfrastructure.Data.Repository;
 using Elsa.Persistence;
@@ -43,12 +44,12 @@ namespace Elsa.Server.Features.Workflow.LoadWorkflowActivity
 
                 IEnumerable<CollectedWorkflow> workflows = null;
 
-                if (dbMultipleChoiceQuestionModel.ActivityType == "MultipleChoiceQuestion")
+                if (dbMultipleChoiceQuestionModel.ActivityType == Constants.MultipleChoiceQuestion)
                 {
                     workflows = await _multipleChoiceQuestionInvoker.FindWorkflowsAsync(activityRequest.ActivityId, activityRequest.WorkflowInstanceId, cancellationToken);
                 }
 
-                if (dbMultipleChoiceQuestionModel.ActivityType == "CurrencyQuestion")
+                if (dbMultipleChoiceQuestionModel.ActivityType == Constants.CurrencyQuestion)
                 {
                     workflows = await _currencyQuestionInvoker.FindWorkflowsAsync(activityRequest.ActivityId, activityRequest.WorkflowInstanceId, cancellationToken);
                 }
@@ -75,9 +76,7 @@ namespace Elsa.Server.Features.Workflow.LoadWorkflowActivity
                                 var activityDataDictionary =
                                     workflowInstance.ActivityData.FirstOrDefault(a => a.Key == activityRequest.ActivityId).Value;
 
-                                //TODO:update me based on the activityType to allow correct values to be shown in front end
-
-                                if (dbMultipleChoiceQuestionModel.ActivityType == "MultipleChoiceQuestion")
+                                if (dbMultipleChoiceQuestionModel.ActivityType == Constants.MultipleChoiceQuestion)
                                 {
                                     var activityData =
                                         _loadWorkflowActivityMapper.ActivityDataDictionaryToActivityData(
@@ -88,7 +87,7 @@ namespace Elsa.Server.Features.Workflow.LoadWorkflowActivity
                                     }
                                 }
 
-                                if (dbMultipleChoiceQuestionModel.ActivityType == "CurrencyQuestion")
+                                if (dbMultipleChoiceQuestionModel.ActivityType == Constants.CurrencyQuestion)
                                 {
                                     var activityData = _loadWorkflowActivityMapper.ActivityDataDictionaryToCurrencyActivityData(activityDataDictionary);
                                     if (activityData != null)

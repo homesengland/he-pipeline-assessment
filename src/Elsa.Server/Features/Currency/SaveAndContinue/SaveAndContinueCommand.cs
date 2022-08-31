@@ -1,7 +1,7 @@
 ﻿using Elsa.Server.Models;
 using MediatR;
 
-namespace Elsa.Server.Features.Currency
+namespace Elsa.Server.Features.Currency.SaveAndContinue
 {
 
 
