@@ -1,6 +1,7 @@
 ﻿using Elsa.CustomActivities.Activities;
 using Elsa.CustomActivities.Activities.Currency;
 using Elsa.CustomActivities.Activities.MultipleChoice;
+using Elsa.CustomActivities.Activities.Shared;
 using Elsa.CustomInfrastructure.Data.Repository;
 using Elsa.Persistence;
 using Elsa.Persistence.Specifications.WorkflowInstances;
@@ -12,19 +13,21 @@ namespace Elsa.Server.Features.Workflow.LoadWorkflowActivity
 {
     public class LoadWorkflowActivityRequestHandler : IRequestHandler<LoadWorkflowActivityRequest, OperationResult<LoadWorkflowActivityResponse>>
     {
-        private readonly IMultipleChoiceQuestionInvoker _multipleChoiceQuestionInvoker;
-        private readonly ICurrencyQuestionInvoker _currencyQuestionInvoker;
+        //private readonly IMultipleChoiceQuestionInvoker _multipleChoiceQuestionInvoker;
+        //private readonly ICurrencyQuestionInvoker _currencyQuestionInvoker;
+        private readonly IQuestionInvoker _QuestionInvoker;
         private readonly IWorkflowInstanceStore _workflowInstanceStore;
         private readonly IPipelineAssessmentRepository _pipelineAssessmentRepository;
         private readonly ILoadWorkflowActivityMapper _loadWorkflowActivityMapper;
 
-        public LoadWorkflowActivityRequestHandler(IMultipleChoiceQuestionInvoker multipleChoiceQuestionInvoker, IWorkflowInstanceStore workflowInstanceStore, IPipelineAssessmentRepository pipelineAssessmentRepository, ILoadWorkflowActivityMapper loadWorkflowActivityMapper, ICurrencyQuestionInvoker currencyQuestionInvoker)
+        public LoadWorkflowActivityRequestHandler(IWorkflowInstanceStore workflowInstanceStore, IPipelineAssessmentRepository pipelineAssessmentRepository, ILoadWorkflowActivityMapper loadWorkflowActivityMapper, IQuestionInvoker questionInvoker)
         {
-            _multipleChoiceQuestionInvoker = multipleChoiceQuestionInvoker;
+            //_multipleChoiceQuestionInvoker = multipleChoiceQuestionInvoker;
             _workflowInstanceStore = workflowInstanceStore;
             _pipelineAssessmentRepository = pipelineAssessmentRepository;
             _loadWorkflowActivityMapper = loadWorkflowActivityMapper;
-            _currencyQuestionInvoker = currencyQuestionInvoker;
+            _QuestionInvoker = questionInvoker;
+            //_currencyQuestionInvoker = currencyQuestionInvoker;
         }
 
         public async Task<OperationResult<LoadWorkflowActivityResponse>> Handle(LoadWorkflowActivityRequest activityRequest, CancellationToken cancellationToken)
@@ -46,12 +49,12 @@ namespace Elsa.Server.Features.Workflow.LoadWorkflowActivity
 
                 if (dbMultipleChoiceQuestionModel.ActivityType == Constants.MultipleChoiceQuestion)
                 {
-                    workflows = await _multipleChoiceQuestionInvoker.FindWorkflowsAsync(activityRequest.ActivityId, activityRequest.WorkflowInstanceId, cancellationToken);
+                    workflows = await _QuestionInvoker.FindWorkflowsAsync<MultipleChoiceQuestion>(activityRequest.ActivityId, activityRequest.WorkflowInstanceId, cancellationToken);
                 }
 
                 if (dbMultipleChoiceQuestionModel.ActivityType == Constants.CurrencyQuestion)
                 {
-                    workflows = await _currencyQuestionInvoker.FindWorkflowsAsync(activityRequest.ActivityId, activityRequest.WorkflowInstanceId, cancellationToken);
+                    workflows = await _QuestionInvoker.FindWorkflowsAsync<CurrencyQuestion>(activityRequest.ActivityId, activityRequest.WorkflowInstanceId, cancellationToken);
                 }
 
                 var collectedWorkflow = workflows.FirstOrDefault();

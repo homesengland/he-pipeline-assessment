@@ -1,6 +1,7 @@
 using Elsa;
 using Elsa.CustomActivities.Activities.Currency;
 using Elsa.CustomActivities.Activities.MultipleChoice;
+using Elsa.CustomActivities.Activities.Shared;
 using Elsa.CustomInfrastructure.Data;
 using Elsa.CustomInfrastructure.Data.Repository;
 using Elsa.Persistence.EntityFramework.Core.Extensions;
@@ -42,6 +43,9 @@ builder.Services.AddElsaApiEndpoints();
 
 builder.Services.AddNotificationHandlers(typeof(GetMultipleChoiceQuestionScriptHandler));
 builder.Services.AddNotificationHandlers(typeof(GetCurrencyQuestionScriptHandler));
+
+builder.Services.AddBookmarkProvider<QuestionBookmarkProvider>();
+builder.Services.AddScoped<IQuestionInvoker, QuestionInvoker>();
 
 builder.Services.AddBookmarkProvider<MultipleChoiceQuestionBookmarkProvider>();
 builder.Services.AddScoped<IMultipleChoiceQuestionInvoker, MultipleChoiceQuestionInvoker>();
