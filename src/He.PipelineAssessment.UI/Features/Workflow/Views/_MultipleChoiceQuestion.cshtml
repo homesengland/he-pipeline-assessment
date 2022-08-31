@@ -1,0 +1,41 @@
+﻿@model He.PipelineAssessment.UI.Features.Workflow.SaveAndContinue.SaveAndContinueCommand
+
+<div class="govuk-form-group">
+    <fieldset class="govuk-fieldset" aria-describedby="waste-hint">
+        <legend class="govuk-fieldset__legend govuk-fieldset__legend--l">
+            <h1 class="govuk-fieldset__heading">
+                @Html.DisplayTextFor(m => m.Data.MultipleChoiceQuestionActivityData.Question)
+            </h1>
+            <div id="event-name-hint" class="govuk-hint">
+                Hint for question ...
+            </div>
+        </legend>
+        <div id="waste-hint" class="govuk-hint">
+            Select all that apply
+        </div>
+        <div class="govuk-checkboxes" data-module="govuk-checkboxes">
+            @for (int i = 0; i < Model.Data.MultipleChoiceQuestionActivityData.Choices.Count(); i++)
+            {
+                <div class="govuk-checkboxes__item">
+                    @Html.HiddenFor(m => m.Data.MultipleChoiceQuestionActivityData.Choices[i].Answer)
+                    @Html.CheckBoxFor(m => m.Data.MultipleChoiceQuestionActivityData.Choices[i].IsSelected, new {@class = "govuk-checkboxes__input"})
+                    @Html.Label(Model.Data.MultipleChoiceQuestionActivityData.Choices[i].Answer, Model.Data.MultipleChoiceQuestionActivityData.Choices[i].Answer, new {@class = "govuk-label govuk-checkboxes__label"})
+                </div>
+            }
+        </div>
+    </fieldset>
+    <br />
+    <details class="govuk-details" data-module="govuk-details">
+        <summary class="govuk-details__summary">
+            <span class="govuk-details__summary-text">
+                Question guidance
+            </span>
+        </summary>
+        <div class="govuk-details__text">
+            Guidance for the question would go here.
+        </div>
+    </details>
+    <br/>
+
+    <input id="Next" type="submit" value="Save and continue" name="Next" class="govuk-button"/>
+</div>

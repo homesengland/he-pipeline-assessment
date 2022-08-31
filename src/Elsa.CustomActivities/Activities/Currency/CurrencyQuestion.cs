@@ -31,15 +31,6 @@ namespace Elsa.CustomActivities.Activities.Currency
         public string Question { get; set; } = null!;
         public DateTime LastUpdated => DateTime.Now;
 
-
-        //[ActivityInput(
-        //    Hint = "Answer",
-        //    UIHint = ActivityInputUIHints.SingleLine,
-        //    DefaultSyntax = SyntaxNames.Literal,
-
-        //    SupportedSyntaxes = new[] { SyntaxNames.Literal })]
-        //public string Answer { get; set; } = null!;
-
         #endregion
 
 

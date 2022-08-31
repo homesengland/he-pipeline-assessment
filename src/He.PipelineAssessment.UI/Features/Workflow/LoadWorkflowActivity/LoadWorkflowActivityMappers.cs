@@ -34,7 +34,7 @@ namespace He.PipelineAssessment.UI.Features.Workflow.LoadWorkflowActivity
 
             result.Data.MultipleChoiceQuestionActivityData = new SaveAndContinue.MultipleChoiceQuestionActivityData();
 
-            if (result.Data.ActivityType == "MultpleChoiceQuestion")
+            if (result.Data.ActivityType == "MultipleChoiceQuestion")
             {
                 result.Data.MultipleChoiceQuestionActivityData.Title = workflowActivityDataDto.Data.MultipleChoiceQuestionActivityData.Title;
                 result.Data.MultipleChoiceQuestionActivityData.Question = workflowActivityDataDto.Data.MultipleChoiceQuestionActivityData.Question;

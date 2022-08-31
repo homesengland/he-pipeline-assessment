@@ -16,47 +16,11 @@
         <br/>
         if (Model.Data.ActivityType =="CurrencyQuestion")
         {
-
-            <div class="govuk-form-group">
-                <h1 class="govuk-label-wrapper"><label class="govuk-label govuk-label--l" for="cost">
-                        @Html.DisplayTextFor(m => m.Data.CurrencyQuestionActivityData.Question)
-                    </label>
-                </h1>
-                <div class="govuk-input__wrapper">
-                    <div class="govuk-input__prefix" aria-hidden="true">£</div>
-                    @Html.TextBoxFor(m => Model.Data.CurrencyQuestionActivityData.Answer,new{@class="govuk-input govuk-input--width-5"})
-                </div>
-                <br/>
-                <input id="Next" type="submit" value="Save and continue" name="Next" class="govuk-button"/>
-            </div>
+           @await Html.PartialAsync("_CurrencyQuestion",Model)
         }
         if (Model.Data.ActivityType == "MultipleChoiceQuestion")
         {
-            <div class="govuk-form-group">
-                <fieldset class="govuk-fieldset" aria-describedby="waste-hint">
-                    <legend class="govuk-fieldset__legend govuk-fieldset__legend--l">
-                        <h1 class="govuk-fieldset__heading">
-                            @Html.DisplayTextFor(m => m.Data.MultipleChoiceQuestionActivityData.Question)
-                        </h1>
-                    </legend>
-                    <div id="waste-hint" class="govuk-hint">
-                        Select all that apply.
-                    </div>
-                    <div class="govuk-checkboxes" data-module="govuk-checkboxes">
-                        @for (int i = 0; i < Model.Data.MultipleChoiceQuestionActivityData.Choices.Count(); i++)
-                        {
-                            <div class="govuk-checkboxes__item">
-                                @Html.HiddenFor(m => m.Data.MultipleChoiceQuestionActivityData.Choices[i].Answer)
-                                @Html.CheckBoxFor(m => m.Data.MultipleChoiceQuestionActivityData.Choices[i].IsSelected, new {@class = "govuk-checkboxes__input"})
-                                @Html.Label(Model.Data.MultipleChoiceQuestionActivityData.Choices[i].Answer, Model.Data.MultipleChoiceQuestionActivityData.Choices[i].Answer, new {@class = "govuk-label govuk-checkboxes__label"})
-                            </div>
-                        }
-                    </div>
-                </fieldset>
-                <br/>
-
-                <input id="Next" type="submit" value="Save and continue" name="Next" class="govuk-button"/>
-            </div>
+            @await Html.PartialAsync("_MultipleChoiceQuestion",Model)
         }
     }
 </div>

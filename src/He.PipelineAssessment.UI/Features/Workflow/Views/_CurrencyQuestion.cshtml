@@ -1,0 +1,30 @@
+﻿@model He.PipelineAssessment.UI.Features.Workflow.SaveAndContinue.SaveAndContinueCommand
+
+<div class="govuk-form-group">
+    <h1 class="govuk-label-wrapper"><label class="govuk-label govuk-label--l">
+            @Html.DisplayTextFor(m => m.Data.CurrencyQuestionActivityData.Question)
+        </label>
+    </h1>
+    <div id="event-name-hint" class="govuk-hint">
+        Hint for question
+    </div>
+
+
+    <div class="govuk-input__wrapper">
+        <div class="govuk-input__prefix" aria-hidden="true">£</div>
+        @Html.TextBoxFor(m => Model.Data.CurrencyQuestionActivityData.Answer,new{@class="govuk-input govuk-input--width-5"})
+    </div>
+    <br/>
+    <details class="govuk-details" data-module="govuk-details">
+        <summary class="govuk-details__summary">
+            <span class="govuk-details__summary-text">
+                Question guidance
+            </span>
+        </summary>
+        <div class="govuk-details__text">
+            Guidance for the question would go here.
+        </div>
+    </details>
+    <br/>
+    <input id="Next" type="submit" value="Save and continue" name="Next" class="govuk-button"/>
+</div>
