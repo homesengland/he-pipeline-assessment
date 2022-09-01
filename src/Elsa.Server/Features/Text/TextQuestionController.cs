@@ -1,24 +1,24 @@
-﻿using Elsa.Server.Features.Date.SaveAndContinue;
+﻿using Elsa.Server.Features.Text.SaveAndContinue;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 
-namespace Elsa.Server.Features.Date
+namespace Elsa.Server.Features.Text
 {
 
-    [Route("date")]
+    [Route("text")]
     [ApiController]
-    public class DateQuestionController : ControllerBase
+    public class TextQuestionController : ControllerBase
     {
 
         private readonly IMediator _mediator;
 
-        public DateQuestionController(IMediator mediator)
+        public TextQuestionController(IMediator mediator)
         {
             _mediator = mediator;
         }
 
         [HttpPost("SaveAndContinue")]
-        public async Task<IActionResult> SaveAndContinue(DateSaveAndContinueCommand model)
+        public async Task<IActionResult> SaveAndContinue(TextSaveAndContinueCommand model)
         {
             try
             {

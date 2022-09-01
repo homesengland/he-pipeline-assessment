@@ -27,7 +27,7 @@ namespace He.PipelineAssessment.UI.Features.Workflow.SaveAndContinue
         public string Question { get; set; } = null!;
         public string? QuestionHint { get; set; }
         public string? QuestionGuidance { get; set; }
-        public string Answer { get; set; } = null!;
+        public decimal? Answer { get; set; }
         public object Output { get; set; } = null!;
     }
     public class MultipleChoiceQuestionActivityData

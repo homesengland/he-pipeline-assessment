@@ -3,6 +3,7 @@ using Elsa.CustomActivities.Activities.Currency;
 using Elsa.CustomActivities.Activities.Date;
 using Elsa.CustomActivities.Activities.MultipleChoice;
 using Elsa.CustomActivities.Activities.Shared;
+using Elsa.CustomActivities.Activities.Text;
 using Elsa.CustomInfrastructure.Data;
 using Elsa.CustomInfrastructure.Data.Repository;
 using Elsa.Persistence.EntityFramework.Core.Extensions;
@@ -46,6 +47,7 @@ builder.Services.AddElsaApiEndpoints();
 
 builder.Services.AddNotificationHandlers(typeof(GetMultipleChoiceQuestionScriptHandler));
 builder.Services.AddNotificationHandlers(typeof(GetCurrencyQuestionScriptHandler));
+builder.Services.AddNotificationHandlers(typeof(GetTextQuestionScriptHandler));
 builder.Services.AddNotificationHandlers(typeof(GetDateQuestionScriptHandler));
 
 builder.Services.AddBookmarkProvider<QuestionBookmarkProvider>();

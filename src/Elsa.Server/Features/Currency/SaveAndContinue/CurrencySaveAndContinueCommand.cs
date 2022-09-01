@@ -9,6 +9,6 @@ namespace Elsa.Server.Features.Currency.SaveAndContinue
 
     public class CurrencySaveAndContinueCommand : SaveAndContinueCommand, IRequest<OperationResult<SaveAndContinueResponse>>
     {
-        public string? Answer { get; set; }
+        public decimal? Answer { get; set; }
     }
 }

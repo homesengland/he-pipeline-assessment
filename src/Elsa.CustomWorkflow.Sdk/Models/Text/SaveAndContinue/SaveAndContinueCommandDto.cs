@@ -1,4 +1,4 @@
-﻿namespace Elsa.CustomWorkflow.Sdk.Models.Currency.SaveAndContinue
+﻿namespace Elsa.CustomWorkflow.Sdk.Models.Text.SaveAndContinue
 {
     public class SaveAndContinueCommandDto
     {
@@ -7,7 +7,7 @@
 
         public string WorkflowInstanceId { get; set; } = null!;
 
-        public decimal? Answer { get; set; }
+        public string Answer { get; set; } = null!;
     }
 
 }

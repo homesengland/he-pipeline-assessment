@@ -83,12 +83,21 @@ namespace Elsa.Server.Features.Workflow.LoadWorkflowActivity
                                     }
                                 }
 
-                                if(dbMultipleChoiceQuestionModel.ActivityType == Constants.DateQuestion)
+                                if (dbMultipleChoiceQuestionModel.ActivityType == Constants.DateQuestion)
                                 {
                                     var activityData = _loadWorkflowActivityMapper.ActivityDataDictionaryToDateActivityData(activityDataDictionary);
-                                    if(activityData != null)
+                                    if (activityData != null)
                                     {
                                         result.Data.DateQuestionActivityData = activityData;
+                                    }
+                                }
+
+                                if (dbMultipleChoiceQuestionModel.ActivityType == Constants.TextQuestion)
+                                {
+                                    var activityData = _loadWorkflowActivityMapper.ActivityDataDictionaryToTextActivityData(activityDataDictionary);
+                                    if (activityData != null)
+                                    {
+                                        result.Data.TextQuestionActivityData = activityData;
                                     }
                                 }
 

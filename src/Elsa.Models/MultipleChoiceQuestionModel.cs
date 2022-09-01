@@ -24,6 +24,12 @@
             this.LastModifiedDateTime = lastModifiedDateTime;
         }
 
+        public void SetAnswer(decimal? answer, DateTime lastModifiedDateTime)
+        {
+            this.Answer = answer.ToString();
+            this.LastModifiedDateTime = lastModifiedDateTime;
+        }
+
         public void SetAnswer(string answer, DateTime lastModifiedDateTime)
         {
             this.Answer = answer;

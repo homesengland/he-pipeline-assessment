@@ -12,6 +12,9 @@ namespace Elsa.Server.Features.Workflow.LoadWorkflowActivity
 
         DateQuestionActivityData? ActivityDataDictionaryToDateActivityData(
             IDictionary<string, object?>? activityDataDictionary);
+
+        TextQuestionActivityData? ActivityDataDictionaryToTextActivityData(
+            IDictionary<string, object?>? activityDataDictionary);
     }
 
     public class LoadWorkflowActivityMapper : ILoadWorkflowActivityMapper
@@ -56,7 +59,8 @@ namespace Elsa.Server.Features.Workflow.LoadWorkflowActivity
                 var output = _loadWorkflowActivityJsonHelper.ActivityOutputJsonToMultipleChoiceQuestionModel(activityJson!);
                 if (output != null && output.Answer != null)
                 {
-                    activityData.Answer = output.Answer;
+                    bool isValid = Decimal.TryParse(output.Answer, out decimal result);
+                    activityData.Answer = isValid ? result : null;
                 }
             }
 
@@ -83,5 +87,22 @@ namespace Elsa.Server.Features.Workflow.LoadWorkflowActivity
             return activityData;
         }
 
+        public TextQuestionActivityData? ActivityDataDictionaryToTextActivityData(IDictionary<string, object?>? activityDataDictionary)
+        {
+            var activityData = _loadWorkflowActivityJsonHelper.ActivityDataDictionaryToTextQuestionActivityData(activityDataDictionary);
+
+            if (activityData != null && activityData.Output != null)
+            {
+                var activityJson = activityData.Output.ToString();
+
+                var output = _loadWorkflowActivityJsonHelper.ActivityOutputJsonToMultipleChoiceQuestionModel(activityJson!);
+                if (output != null && output.Answer != null)
+                {
+                    activityData.Answer = output.Answer;
+                }
+            }
+
+            return activityData;
+        }
     }
 }
