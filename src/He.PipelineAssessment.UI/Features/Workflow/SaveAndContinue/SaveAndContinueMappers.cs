@@ -1,21 +1,31 @@
-﻿
+﻿using MultipleChoice = Elsa.CustomWorkflow.Sdk.Models.MultipleChoice.SaveAndContinue;
+using Currency = Elsa.CustomWorkflow.Sdk.Models.Currency.SaveAndContinue;
+using Date = Elsa.CustomWorkflow.Sdk.Models.Date.SaveAndContinue;
+using Text = Elsa.CustomWorkflow.Sdk.Models.Text.SaveAndContinue;
+
 namespace He.PipelineAssessment.UI.Features.Workflow.SaveAndContinue
 {
     public interface ISaveAndContinueMapper
     {
-        Elsa.CustomWorkflow.Sdk.Models.MultipleChoice.SaveAndContinue.SaveAndContinueCommandDto SaveAndContinueCommandToMultipleChoiceSaveAndContinueCommandDto(SaveAndContinueCommand saveAndContinueCommand);
+        MultipleChoice.SaveAndContinueCommandDto SaveAndContinueCommandToMultipleChoiceSaveAndContinueCommandDto(SaveAndContinueCommand saveAndContinueCommand);
 
-        Elsa.CustomWorkflow.Sdk.Models.Currency.SaveAndContinue.SaveAndContinueCommandDto
+        Currency.SaveAndContinueCommandDto
             SaveAndContinueCommandToCurrencySaveAndContinueCommandDto(SaveAndContinueCommand saveAndContinueCommand);
+
+        Date.SaveAndContinueCommandDto
+    SaveAndContinueCommandToDateSaveAndContinueCommandDto(SaveAndContinueCommand saveAndContinueCommand);
+
+        Text.SaveAndContinueCommandDto
+    SaveAndContinueCommandToTextSaveAndContinueCommandDto(SaveAndContinueCommand saveAndContinueCommand);
     }
 
     public class SaveAndContinueMapper : ISaveAndContinueMapper
     {
-        public Elsa.CustomWorkflow.Sdk.Models.MultipleChoice.SaveAndContinue.SaveAndContinueCommandDto SaveAndContinueCommandToMultipleChoiceSaveAndContinueCommandDto(SaveAndContinueCommand saveAndContinueCommand)
+        public MultipleChoice.SaveAndContinueCommandDto SaveAndContinueCommandToMultipleChoiceSaveAndContinueCommandDto(SaveAndContinueCommand saveAndContinueCommand)
         {
             var choiceList = saveAndContinueCommand.Data.MultipleChoiceQuestionActivityData.Choices.Where(x => x.IsSelected).Select(choice => choice.Answer).ToList();
 
-            return new Elsa.CustomWorkflow.Sdk.Models.MultipleChoice.SaveAndContinue.SaveAndContinueCommandDto
+            return new MultipleChoice.SaveAndContinueCommandDto
             {
                 Id = $"{saveAndContinueCommand.Data.WorkflowInstanceId}-{saveAndContinueCommand.Data.ActivityId}",
                 Answers = choiceList,
@@ -24,10 +34,10 @@ namespace He.PipelineAssessment.UI.Features.Workflow.SaveAndContinue
             };
         }
 
-        public Elsa.CustomWorkflow.Sdk.Models.Currency.SaveAndContinue.SaveAndContinueCommandDto SaveAndContinueCommandToCurrencySaveAndContinueCommandDto(SaveAndContinueCommand saveAndContinueCommand)
+        public Currency.SaveAndContinueCommandDto SaveAndContinueCommandToCurrencySaveAndContinueCommandDto(SaveAndContinueCommand saveAndContinueCommand)
         {
 
-            return new Elsa.CustomWorkflow.Sdk.Models.Currency.SaveAndContinue.SaveAndContinueCommandDto
+            return new Currency.SaveAndContinueCommandDto
             {
                 Id = $"{saveAndContinueCommand.Data.WorkflowInstanceId}-{saveAndContinueCommand.Data.ActivityId}",
                 Answer = saveAndContinueCommand.Data.CurrencyQuestionActivityData.Answer,
@@ -36,5 +46,26 @@ namespace He.PipelineAssessment.UI.Features.Workflow.SaveAndContinue
             };
         }
 
+        public Date.SaveAndContinueCommandDto SaveAndContinueCommandToDateSaveAndContinueCommandDto(SaveAndContinueCommand saveAndContinueCommand)
+        {
+            return new Date.SaveAndContinueCommandDto
+            {
+                Id = $"{saveAndContinueCommand.Data.WorkflowInstanceId}-{saveAndContinueCommand.Data.ActivityId}",
+                Answer = saveAndContinueCommand.Data.DateQuestionActivityData.GetAnswer(),
+                WorkflowInstanceId = saveAndContinueCommand.Data.WorkflowInstanceId,
+                ActivityId = saveAndContinueCommand.Data.ActivityId
+            };
+        }
+
+        public Text.SaveAndContinueCommandDto SaveAndContinueCommandToTextSaveAndContinueCommandDto(SaveAndContinueCommand saveAndContinueCommand)
+        {
+            return new Text.SaveAndContinueCommandDto
+            {
+                Id = $"{saveAndContinueCommand.Data.WorkflowInstanceId}-{saveAndContinueCommand.Data.ActivityId}",
+                Answer = saveAndContinueCommand.Data.TextQuestionActivityData.Answer,
+                WorkflowInstanceId = saveAndContinueCommand.Data.WorkflowInstanceId,
+                ActivityId = saveAndContinueCommand.Data.ActivityId
+            };
+        }
     }
 }

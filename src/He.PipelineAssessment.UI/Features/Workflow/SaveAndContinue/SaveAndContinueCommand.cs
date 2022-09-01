@@ -19,6 +19,8 @@ namespace He.PipelineAssessment.UI.Features.Workflow.SaveAndContinue
         public string PreviousActivityId { get; set; } = null!;
         public CurrencyQuestionActivityData CurrencyQuestionActivityData { get; set; } = null!;
         public MultipleChoiceQuestionActivityData MultipleChoiceQuestionActivityData { get; set; } = null!;
+        public TextQuestionActivityData TextQuestionActivityData { get; set; } = null!;
+        public DateQuestionActivityData DateQuestionActivityData { get; set; } = null!;
     }
 
     public class CurrencyQuestionActivityData
@@ -39,6 +41,38 @@ namespace He.PipelineAssessment.UI.Features.Workflow.SaveAndContinue
         public Choice[] Choices { get; set; } = null!;
         public object Output { get; set; } = null!;
     }
+
+    public class TextQuestionActivityData
+    {
+        public string Title { get; set; } = null!;
+        public string Question { get; set; } = null!;
+        public string? QuestionHint { get; set; }
+        public string? QuestionGuidance { get; set; }
+        public string Answer { get; set; } = null!;
+        public object Output { get; set; } = null!;
+    }
+
+    public class DateQuestionActivityData
+    {
+        public string Title { get; set; } = null!;
+        public string Question { get; set; } = null!;
+        public string? QuestionHint { get; set; }
+        public string? QuestionGuidance { get; set; }
+        public DateTime? Answer { get; set; }
+        public int? Day { get; set; }
+        public int? Month { get; set; }
+        public int? Year { get; set; }
+        public object Output { get; set; } = null!;
+
+        public DateTime? GetAnswer()
+        {
+            if(Day.HasValue && Month.HasValue && Year.HasValue)
+            {
+                return new DateTime(Year.Value, Month.Value, Day.Value);
+            }
+            return null;
+        }
+}
 
     public class Choice
     {

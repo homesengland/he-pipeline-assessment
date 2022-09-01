@@ -57,6 +57,31 @@
         public string? QuestionGuidance { get; set; }
         public DateTime? Answer { get; set; }
         public object Output { get; set; } = null!;
+
+        public int? DayFromDate()
+        {
+            if (Answer.HasValue)
+            {
+                return Answer.Value.Day;
+            }
+            return null;
+        }
+        public int? MonthFromDate()
+        {
+            if (Answer.HasValue)
+            {
+                return Answer.Value.Month;
+            }
+            return null;
+        }
+        public int? YearFromDate()
+        {
+            if (Answer.HasValue)
+            {
+                return Answer.Value.Year;
+            }
+            return null;
+        }
     }
 
     public class Choice

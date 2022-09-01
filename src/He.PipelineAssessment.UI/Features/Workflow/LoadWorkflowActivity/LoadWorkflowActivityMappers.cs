@@ -1,4 +1,5 @@
 ﻿using Elsa.CustomWorkflow.Sdk.Models.Workflow;
+using Elsa.CustomWorkflow.Sdk;
 using He.PipelineAssessment.UI.Features.Workflow.SaveAndContinue;
 
 namespace He.PipelineAssessment.UI.Features.Workflow.LoadWorkflowActivity
@@ -34,7 +35,7 @@ namespace He.PipelineAssessment.UI.Features.Workflow.LoadWorkflowActivity
 
             result.Data.MultipleChoiceQuestionActivityData = new SaveAndContinue.MultipleChoiceQuestionActivityData();
 
-            if (result.Data.ActivityType == "MultipleChoiceQuestion")
+            if (result.Data.ActivityType == ActivityTypeConstants.MultipleChoiceQuestion)
             {
                 result.Data.MultipleChoiceQuestionActivityData.Title = workflowActivityDataDto.Data.MultipleChoiceQuestionActivityData.Title;
                 result.Data.MultipleChoiceQuestionActivityData.Question = workflowActivityDataDto.Data.MultipleChoiceQuestionActivityData.Question;
@@ -58,7 +59,7 @@ namespace He.PipelineAssessment.UI.Features.Workflow.LoadWorkflowActivity
             }
             result.Data.CurrencyQuestionActivityData = new SaveAndContinue.CurrencyQuestionActivityData();
 
-            if (result.Data.ActivityType == "CurrencyQuestion")
+            if (result.Data.ActivityType == ActivityTypeConstants.CurrencyQuestion)
             {
                 result.Data.CurrencyQuestionActivityData.Title = workflowActivityDataDto.Data.CurrencyQuestionActivityData.Title;
                 result.Data.CurrencyQuestionActivityData.Question = workflowActivityDataDto.Data.CurrencyQuestionActivityData.Question;
@@ -66,6 +67,32 @@ namespace He.PipelineAssessment.UI.Features.Workflow.LoadWorkflowActivity
                 result.Data.CurrencyQuestionActivityData.QuestionGuidance = workflowActivityDataDto.Data.CurrencyQuestionActivityData.QuestionGuidance;
                 result.Data.CurrencyQuestionActivityData.Output = workflowActivityDataDto.Data.CurrencyQuestionActivityData.Output;
                 result.Data.CurrencyQuestionActivityData.Answer = workflowActivityDataDto.Data.CurrencyQuestionActivityData.Answer;
+            }
+            result.Data.TextQuestionActivityData = new SaveAndContinue.TextQuestionActivityData();
+
+            if (result.Data.ActivityType == ActivityTypeConstants.TextQuestion)
+            {
+                result.Data.TextQuestionActivityData.Title = workflowActivityDataDto.Data.TextQuestionActivityData.Title;
+                result.Data.TextQuestionActivityData.Question = workflowActivityDataDto.Data.TextQuestionActivityData.Question;
+                result.Data.TextQuestionActivityData.QuestionHint = workflowActivityDataDto.Data.TextQuestionActivityData.QuestionHint;
+                result.Data.TextQuestionActivityData.QuestionGuidance = workflowActivityDataDto.Data.TextQuestionActivityData.QuestionGuidance;
+                result.Data.TextQuestionActivityData.Output = workflowActivityDataDto.Data.TextQuestionActivityData.Output;
+                result.Data.TextQuestionActivityData.Answer = workflowActivityDataDto.Data.TextQuestionActivityData.Answer;
+            }
+            result.Data.DateQuestionActivityData = new SaveAndContinue.DateQuestionActivityData();
+
+            if (result.Data.ActivityType == ActivityTypeConstants.DateQuestion)
+            {
+                result.Data.DateQuestionActivityData.Title = workflowActivityDataDto.Data.DateQuestionActivityData.Title;
+                result.Data.DateQuestionActivityData.Question = workflowActivityDataDto.Data.DateQuestionActivityData.Question;
+                result.Data.DateQuestionActivityData.QuestionHint = workflowActivityDataDto.Data.DateQuestionActivityData.QuestionHint;
+                result.Data.DateQuestionActivityData.QuestionGuidance = workflowActivityDataDto.Data.DateQuestionActivityData.QuestionGuidance;
+                result.Data.DateQuestionActivityData.Output = workflowActivityDataDto.Data.DateQuestionActivityData.Output;
+                result.Data.DateQuestionActivityData.Answer = workflowActivityDataDto.Data.DateQuestionActivityData.Answer;
+                result.Data.DateQuestionActivityData.Day = workflowActivityDataDto.Data.DateQuestionActivityData.DayFromDate();
+                result.Data.DateQuestionActivityData.Month = workflowActivityDataDto.Data.DateQuestionActivityData.MonthFromDate();
+                result.Data.DateQuestionActivityData.Year = workflowActivityDataDto.Data.DateQuestionActivityData.YearFromDate();
+
             }
 
 

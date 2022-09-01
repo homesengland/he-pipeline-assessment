@@ -1,5 +1,7 @@
 ﻿@using He.PipelineAssessment.UI
+@using Elsa.CustomWorkflow.Sdk
 @model He.PipelineAssessment.UI.Features.Workflow.SaveAndContinue.SaveAndContinueCommand
+
 @{
     ViewData["Title"] = "Pipeline Assessment";
     Layout = "_Layout";
@@ -15,13 +17,21 @@
         @Html.HiddenFor(m => Model.Data.ActivityId)
         @Html.HiddenFor(m => Model.Data.ActivityType)
         <br/>
-        if (Model.Data.ActivityType == Constants.CurrencyQuestion)
+        if (Model.Data.ActivityType == ActivityTypeConstants.CurrencyQuestion)
         {
            @await Html.PartialAsync("_CurrencyQuestion",Model)
         }
-        if (Model.Data.ActivityType == Constants.MultipleChoiceQuestion)
+        if (Model.Data.ActivityType == ActivityTypeConstants.MultipleChoiceQuestion)
         {
             @await Html.PartialAsync("_MultipleChoiceQuestion",Model)
+        }
+        if (Model.Data.ActivityType == ActivityTypeConstants.DateQuestion)
+        {
+            @await Html.PartialAsync("_DateQuestion",Model)
+        }
+        if (Model.Data.ActivityType == ActivityTypeConstants.TextQuestion)
+        {
+            @await Html.PartialAsync("_TextQuestion",Model)
         }
     }
 </div>
