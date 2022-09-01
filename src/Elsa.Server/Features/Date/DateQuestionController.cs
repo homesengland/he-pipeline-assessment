@@ -2,17 +2,17 @@
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 
-namespace Elsa.Server.Features.Currency
+namespace Elsa.Server.Features.Date
 {
 
-    [Route("currency")]
+    [Route("date")]
     [ApiController]
-    public class CurrencyQuestionController : ControllerBase
+    public class DateQuestionController : ControllerBase
     {
 
         private readonly IMediator _mediator;
 
-        public CurrencyQuestionController(IMediator mediator)
+        public DateQuestionController(IMediator mediator)
         {
             _mediator = mediator;
         }

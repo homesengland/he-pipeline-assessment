@@ -11,8 +11,6 @@ namespace Elsa.Server.Features.Workflow.LoadWorkflowActivity
 {
     public class LoadWorkflowActivityRequestHandler : IRequestHandler<LoadWorkflowActivityRequest, OperationResult<LoadWorkflowActivityResponse>>
     {
-        //private readonly IMultipleChoiceQuestionInvoker _multipleChoiceQuestionInvoker;
-        //private readonly ICurrencyQuestionInvoker _currencyQuestionInvoker;
         private readonly IQuestionInvoker _QuestionInvoker;
         private readonly IWorkflowInstanceStore _workflowInstanceStore;
         private readonly IPipelineAssessmentRepository _pipelineAssessmentRepository;
@@ -20,12 +18,10 @@ namespace Elsa.Server.Features.Workflow.LoadWorkflowActivity
 
         public LoadWorkflowActivityRequestHandler(IWorkflowInstanceStore workflowInstanceStore, IPipelineAssessmentRepository pipelineAssessmentRepository, ILoadWorkflowActivityMapper loadWorkflowActivityMapper, IQuestionInvoker questionInvoker)
         {
-            //_multipleChoiceQuestionInvoker = multipleChoiceQuestionInvoker;
             _workflowInstanceStore = workflowInstanceStore;
             _pipelineAssessmentRepository = pipelineAssessmentRepository;
             _loadWorkflowActivityMapper = loadWorkflowActivityMapper;
             _QuestionInvoker = questionInvoker;
-            //_currencyQuestionInvoker = currencyQuestionInvoker;
         }
 
         public async Task<OperationResult<LoadWorkflowActivityResponse>> Handle(LoadWorkflowActivityRequest activityRequest, CancellationToken cancellationToken)
@@ -84,6 +80,15 @@ namespace Elsa.Server.Features.Workflow.LoadWorkflowActivity
                                     if (activityData != null)
                                     {
                                         result.Data.CurrencyQuestionActivityData = activityData;
+                                    }
+                                }
+
+                                if(dbMultipleChoiceQuestionModel.ActivityType == Constants.DateQuestion)
+                                {
+                                    var activityData = _loadWorkflowActivityMapper.ActivityDataDictionaryToDateActivityData(activityDataDictionary);
+                                    if(activityData != null)
+                                    {
+                                        result.Data.DateQuestionActivityData = activityData;
                                     }
                                 }
 

@@ -10,6 +10,9 @@ namespace Elsa.Server.Features.Workflow.LoadWorkflowActivity
 
         CurrencyQuestionActivityData? ActivityDataDictionaryToCurrencyQuestionActivityData(
             IDictionary<string, object?>? activityDataDictionary);
+
+        DateQuestionActivityData? ActivityDataDictionaryToDateQuestionActivityData(
+            IDictionary<string, object?>? activityDataDictionary);
     }
 
     public class LoadWorkflowActivityJsonHelper : ILoadWorkflowActivityJsonHelper
@@ -32,6 +35,12 @@ namespace Elsa.Server.Features.Workflow.LoadWorkflowActivity
         {
             var json = JsonSerializer.Serialize(activityDataDictionary);
             var activityData = JsonSerializer.Deserialize<CurrencyQuestionActivityData>(json);
+            return activityData;
+        }
+        public DateQuestionActivityData? ActivityDataDictionaryToDateQuestionActivityData(IDictionary<string, object?>? activityDataDictionary)
+        {
+            var json = JsonSerializer.Serialize(activityDataDictionary);
+            var activityData = JsonSerializer.Deserialize<DateQuestionActivityData>(json);
             return activityData;
         }
     }

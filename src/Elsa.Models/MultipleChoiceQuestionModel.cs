@@ -29,5 +29,11 @@
             this.Answer = answer;
             this.LastModifiedDateTime = lastModifiedDateTime;
         }
+
+        public void SetAnswer(DateTime? date, DateTime lastModifiedDateTime)
+        {
+            this.Answer = date.HasValue ? date.Value.ToString(Constants.DateFormat) : null;
+            this.LastModifiedDateTime = lastModifiedDateTime;
+        }
     }
 }

@@ -8,7 +8,7 @@ namespace Elsa.CustomActivities.Activities.Shared
     {
         public override bool SupportsActivity(BookmarkProviderContext<Activity> context)
         {
-            if (context.ActivityType.TypeName == Constants.CurrencyQuestion || context.ActivityType.TypeName == Constants.MultipleChoiceQuestion)
+            if (IsRegisteredActivity(context.ActivityType.TypeName))
             {
                 return true;
             }
@@ -29,6 +29,21 @@ namespace Elsa.CustomActivities.Activities.Shared
             {
                 ActivityId = activityId
             }));
+        }
+
+        private bool IsRegisteredActivity(string activityTypeName)
+        {
+            return RegisteredActivityTypes().Contains(activityTypeName);
+        }
+
+        private List<string> RegisteredActivityTypes()
+        {
+            return new List<string>()
+            {
+                Constants.CurrencyQuestion,
+                Constants.MultipleChoiceQuestion,
+                Constants.DateQuestion
+            };
         }
     }
 }

@@ -1,4 +1,5 @@
 ﻿using Elsa.CustomModels;
+using System.Globalization;
 
 namespace Elsa.Server.Features.Workflow.LoadWorkflowActivity
 {
@@ -7,6 +8,9 @@ namespace Elsa.Server.Features.Workflow.LoadWorkflowActivity
         MultipleChoiceQuestionActivityData? ActivityDataDictionaryToActivityData(IDictionary<string, object?>? activityDataDictionary);
 
         CurrencyQuestionActivityData? ActivityDataDictionaryToCurrencyActivityData(
+            IDictionary<string, object?>? activityDataDictionary);
+
+        DateQuestionActivityData? ActivityDataDictionaryToDateActivityData(
             IDictionary<string, object?>? activityDataDictionary);
     }
 
@@ -53,6 +57,26 @@ namespace Elsa.Server.Features.Workflow.LoadWorkflowActivity
                 if (output != null && output.Answer != null)
                 {
                     activityData.Answer = output.Answer;
+                }
+            }
+
+            return activityData;
+        }
+
+        public DateQuestionActivityData? ActivityDataDictionaryToDateActivityData(IDictionary<string, object?>? activityDataDictionary)
+        {
+            var activityData = _loadWorkflowActivityJsonHelper.ActivityDataDictionaryToDateQuestionActivityData(activityDataDictionary);
+
+            if (activityData != null && activityData.Output != null)
+            {
+                var activityJson = activityData.Output.ToString();
+
+                var output = _loadWorkflowActivityJsonHelper.ActivityOutputJsonToMultipleChoiceQuestionModel(activityJson!);
+                if (output != null && output.Answer != null)
+                {
+                    string dateString = output.Answer;
+                    bool isValidDate = DateTime.TryParseExact(output.Answer, Constants.DateFormat, CultureInfo.InvariantCulture, DateTimeStyles.AdjustToUniversal, out DateTime date);
+                    activityData.Answer = isValidDate ? date : null;
                 }
             }
 

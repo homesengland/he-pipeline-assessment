@@ -1,5 +1,6 @@
 using Elsa;
 using Elsa.CustomActivities.Activities.Currency;
+using Elsa.CustomActivities.Activities.Date;
 using Elsa.CustomActivities.Activities.MultipleChoice;
 using Elsa.CustomActivities.Activities.Shared;
 using Elsa.CustomInfrastructure.Data;
@@ -27,6 +28,7 @@ builder.Services
         .UseEntityFrameworkPersistence(ef => ef.UseSqlite(elsaConnectionString))
         .AddActivity<MultipleChoiceQuestion>()
         .AddActivity<CurrencyQuestion>()
+        .AddActivity<DateQuestion>()
         .AddConsoleActivities()
     );
 
@@ -44,6 +46,7 @@ builder.Services.AddElsaApiEndpoints();
 
 builder.Services.AddNotificationHandlers(typeof(GetMultipleChoiceQuestionScriptHandler));
 builder.Services.AddNotificationHandlers(typeof(GetCurrencyQuestionScriptHandler));
+builder.Services.AddNotificationHandlers(typeof(GetDateQuestionScriptHandler));
 
 builder.Services.AddBookmarkProvider<QuestionBookmarkProvider>();
 builder.Services.AddScoped<IQuestionInvoker, QuestionInvoker>();
