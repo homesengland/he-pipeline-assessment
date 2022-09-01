@@ -1,5 +1,4 @@
 ﻿using AutoFixture.Xunit2;
-using Elsa.CustomActivities.Activities.MultipleChoice;
 using Elsa.CustomActivities.Activities.Shared;
 using Elsa.CustomInfrastructure.Data.Repository;
 using Elsa.CustomModels;
@@ -7,6 +6,7 @@ using Elsa.Models;
 using Elsa.Persistence;
 using Elsa.Persistence.Specifications.WorkflowInstances;
 using Elsa.Server.Features.MultipleChoice.SaveAndContinue;
+using Elsa.Server.Features.Shared.SaveAndContinue;
 using Elsa.Server.Models;
 using Elsa.Services.Models;
 using Moq;
@@ -45,7 +45,7 @@ namespace Elsa.Server.Tests.Features.MultipleChoice.SaveAndContinue
                     saveAndContinueCommand.WorkflowInstanceId, CancellationToken.None))
                 .ReturnsAsync(currentMultipleChoiceQuestionModel);
 
-            multipleChoiceQuestionInvoker.Setup(x => x.ExecuteWorkflowsAsync<MultipleChoiceQuestion>(saveAndContinueCommand.ActivityId,
+            multipleChoiceQuestionInvoker.Setup(x => x.ExecuteWorkflowsAsync(saveAndContinueCommand.ActivityId, "MultipleChoiceQuestion",
                     saveAndContinueCommand.WorkflowInstanceId, currentMultipleChoiceQuestionModel, CancellationToken.None))
                 .ReturnsAsync(collectedWorkflows);
 
@@ -100,7 +100,7 @@ namespace Elsa.Server.Tests.Features.MultipleChoice.SaveAndContinue
                     saveAndContinueCommand.WorkflowInstanceId, CancellationToken.None))
                 .ReturnsAsync(currentMultipleChoiceQuestionModel);
 
-            multipleChoiceQuestionInvoker.Setup(x => x.ExecuteWorkflowsAsync<MultipleChoiceQuestion>(saveAndContinueCommand.ActivityId,
+            multipleChoiceQuestionInvoker.Setup(x => x.ExecuteWorkflowsAsync(saveAndContinueCommand.ActivityId, "MultipleChoiceQuestion",
                     saveAndContinueCommand.WorkflowInstanceId, currentMultipleChoiceQuestionModel, CancellationToken.None))
                 .ReturnsAsync(collectedWorkflows);
 
@@ -147,7 +147,7 @@ namespace Elsa.Server.Tests.Features.MultipleChoice.SaveAndContinue
                     saveAndContinueCommand.WorkflowInstanceId, CancellationToken.None))
                 .ReturnsAsync(currentMultipleChoiceQuestionModel);
 
-            multipleChoiceQuestionInvoker.Setup(x => x.ExecuteWorkflowsAsync<MultipleChoiceQuestion>(saveAndContinueCommand.ActivityId,
+            multipleChoiceQuestionInvoker.Setup(x => x.ExecuteWorkflowsAsync(saveAndContinueCommand.ActivityId, "MultipleChoiceQuestion",
                     saveAndContinueCommand.WorkflowInstanceId, currentMultipleChoiceQuestionModel, CancellationToken.None))
                 .ReturnsAsync(collectedWorkflows);
 
@@ -182,7 +182,7 @@ namespace Elsa.Server.Tests.Features.MultipleChoice.SaveAndContinue
                     saveAndContinueCommand.WorkflowInstanceId, CancellationToken.None))
                 .ReturnsAsync(currentMultipleChoiceQuestionModel);
 
-            multipleChoiceQuestionInvoker.Setup(x => x.ExecuteWorkflowsAsync<MultipleChoiceQuestion>(saveAndContinueCommand.ActivityId,
+            multipleChoiceQuestionInvoker.Setup(x => x.ExecuteWorkflowsAsync(saveAndContinueCommand.ActivityId, "MultipleChoiceQuestion",
                     saveAndContinueCommand.WorkflowInstanceId, currentMultipleChoiceQuestionModel, CancellationToken.None))
                 .ReturnsAsync(collectedWorkflows);
 
