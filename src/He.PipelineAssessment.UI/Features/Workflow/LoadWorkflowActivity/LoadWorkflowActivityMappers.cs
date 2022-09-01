@@ -38,6 +38,8 @@ namespace He.PipelineAssessment.UI.Features.Workflow.LoadWorkflowActivity
             {
                 result.Data.MultipleChoiceQuestionActivityData.Title = workflowActivityDataDto.Data.MultipleChoiceQuestionActivityData.Title;
                 result.Data.MultipleChoiceQuestionActivityData.Question = workflowActivityDataDto.Data.MultipleChoiceQuestionActivityData.Question;
+                result.Data.MultipleChoiceQuestionActivityData.QuestionHint = workflowActivityDataDto.Data.MultipleChoiceQuestionActivityData.QuestionHint;
+                result.Data.MultipleChoiceQuestionActivityData.QuestionGuidance = workflowActivityDataDto.Data.MultipleChoiceQuestionActivityData.QuestionGuidance;
                 result.Data.MultipleChoiceQuestionActivityData.Output = workflowActivityDataDto.Data.MultipleChoiceQuestionActivityData.Output;
 
                 var mappedChoiceList = new List<SaveAndContinue.Choice>();
@@ -60,6 +62,8 @@ namespace He.PipelineAssessment.UI.Features.Workflow.LoadWorkflowActivity
             {
                 result.Data.CurrencyQuestionActivityData.Title = workflowActivityDataDto.Data.CurrencyQuestionActivityData.Title;
                 result.Data.CurrencyQuestionActivityData.Question = workflowActivityDataDto.Data.CurrencyQuestionActivityData.Question;
+                result.Data.CurrencyQuestionActivityData.QuestionHint = workflowActivityDataDto.Data.CurrencyQuestionActivityData.QuestionHint;
+                result.Data.CurrencyQuestionActivityData.QuestionGuidance = workflowActivityDataDto.Data.CurrencyQuestionActivityData.QuestionGuidance;
                 result.Data.CurrencyQuestionActivityData.Output = workflowActivityDataDto.Data.CurrencyQuestionActivityData.Output;
                 result.Data.CurrencyQuestionActivityData.Answer = workflowActivityDataDto.Data.CurrencyQuestionActivityData.Answer;
             }

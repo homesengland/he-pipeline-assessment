@@ -1,5 +1,4 @@
-﻿using Elsa.CustomActivities.Activities.Currency;
-using Elsa.CustomActivities.Activities.Shared;
+﻿using Elsa.CustomActivities.Activities.Shared;
 using Elsa.CustomInfrastructure.Data.Repository;
 using Elsa.Models;
 using Elsa.Persistence;
@@ -45,7 +44,7 @@ namespace Elsa.Server.Features.Currency.SaveAndContinue
 
                     //TODO: compare the model from the db with the dto, if no change, do not execute workflow
 
-                    var collectedWorkflow = await _invoker.ExecuteWorkflowsAsync<CurrencyQuestion>(command.ActivityId,
+                    var collectedWorkflow = await _invoker.ExecuteWorkflowsAsync(command.ActivityId, dbMultipleChoiceQuestionModel.ActivityType,
                         command.WorkflowInstanceId, dbMultipleChoiceQuestionModel, cancellationToken).FirstOrDefault();
 
                     var workflowSpecification =

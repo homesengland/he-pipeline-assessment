@@ -25,14 +25,18 @@ namespace He.PipelineAssessment.UI.Features.Workflow.SaveAndContinue
     {
         public string Title { get; set; } = null!;
         public string Question { get; set; } = null!;
+        public string? QuestionHint { get; set; }
+        public string? QuestionGuidance { get; set; }
         public string Answer { get; set; } = null!;
         public object Output { get; set; } = null!;
     }
     public class MultipleChoiceQuestionActivityData
     {
         public string Title { get; set; } = null!;
-        public Choice[] Choices { get; set; } = null!;
         public string Question { get; set; } = null!;
+        public string? QuestionHint { get; set; }
+        public string? QuestionGuidance { get; set; }
+        public Choice[] Choices { get; set; } = null!;
         public object Output { get; set; } = null!;
     }
 
