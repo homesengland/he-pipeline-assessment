@@ -17,7 +17,7 @@ namespace Elsa.Server.Features.MultipleChoice
         }
 
         [HttpPost("SaveAndContinue")]
-        public async Task<IActionResult> SaveAndContinue(SaveAndContinueCommand model)
+        public async Task<IActionResult> SaveAndContinue(MultipleChoiceSaveAndContinueCommand model)
         {
             try
             {

@@ -7,7 +7,7 @@ using MediatR;
 
 namespace Elsa.Server.Features.Currency.SaveAndContinue
 {
-    public class SaveAndContinueCommandHandler : IRequestHandler<SaveAndContinueCommand, OperationResult<SaveAndContinueResponse>>
+    public class SaveAndContinueCommandHandler : IRequestHandler<CurrencySaveAndContinueCommand, OperationResult<SaveAndContinueResponse>>
     {
         private readonly ISaveAndContinueHandler _saveAndContinueHandler;
         private readonly IPipelineAssessmentRepository _pipelineAssessmentRepository;
@@ -21,7 +21,7 @@ namespace Elsa.Server.Features.Currency.SaveAndContinue
             _dateTimeProvider = dateTimeProvider;
         }
 
-        public async Task<OperationResult<SaveAndContinueResponse>> Handle(SaveAndContinueCommand command, CancellationToken cancellationToken)
+        public async Task<OperationResult<SaveAndContinueResponse>> Handle(CurrencySaveAndContinueCommand command, CancellationToken cancellationToken)
         {
             var result = new OperationResult<SaveAndContinueResponse>();
             try
@@ -36,6 +36,11 @@ namespace Elsa.Server.Features.Currency.SaveAndContinue
 
                     result = await _saveAndContinueHandler.Handle(dbMultipleChoiceQuestionModel, command, cancellationToken);
 
+                }
+                else
+                {
+                    result.ErrorMessages.Add(
+                    $"Unable to find workflow instance with Id: {command.WorkflowInstanceId} and Activity Id: {command.ActivityId} in custom database");
                 }
             }
             catch (Exception e)

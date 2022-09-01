@@ -5,7 +5,7 @@ using MediatR;
 
 namespace Elsa.Server.Features.MultipleChoice.SaveAndContinue
 {
-    public class SaveAndContinueCommand : SaveAndContinueCommandBase, IRequest<OperationResult<SaveAndContinueResponse>>
+    public class MultipleChoiceSaveAndContinueCommand : SaveAndContinueCommand, IRequest<OperationResult<SaveAndContinueResponse>>
     {
         public List<string> Answers { get; set; } = null!;
     }

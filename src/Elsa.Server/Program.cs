@@ -7,6 +7,7 @@ using Elsa.CustomInfrastructure.Data.Repository;
 using Elsa.Persistence.EntityFramework.Core.Extensions;
 using Elsa.Persistence.EntityFramework.Sqlite;
 using Elsa.Runtime;
+using Elsa.Server.Features.Shared;
 using Elsa.Server.Features.Shared.SaveAndContinue;
 using Elsa.Server.Features.Workflow.LoadWorkflowActivity;
 using Elsa.Server.Features.Workflow.StartWorkflow;
@@ -52,6 +53,8 @@ builder.Services.AddJavaScriptTypeDefinitionProvider<CustomTypeDefinitionProvide
 
 builder.Services.AddMediatR(typeof(Program).Assembly);
 builder.Services.AddScoped<IDateTimeProvider, DateTimeProvider>();
+
+builder.Services.AddScoped<ISaveAndContinueHandler, SaveAndContinueHandler>();
 
 builder.Services.AddScoped<IStartWorkflowMapper, StartWorkflowMapper>();
 builder.Services.AddScoped<ISaveAndContinueMapper, SaveAndContinueMapper>();

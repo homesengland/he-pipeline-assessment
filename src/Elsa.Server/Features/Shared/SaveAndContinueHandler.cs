@@ -14,7 +14,7 @@ namespace Elsa.Server.Features.Shared
 {
     public interface ISaveAndContinueHandler
     {
-        Task<OperationResult<SaveAndContinueResponse>> Handle(MultipleChoiceQuestionModel dbMultipleChoiceQuestionModel, SaveAndContinueCommandBase command, CancellationToken cancellationToken);
+        Task<OperationResult<SaveAndContinueResponse>> Handle(MultipleChoiceQuestionModel dbMultipleChoiceQuestionModel, SaveAndContinueCommand command, CancellationToken cancellationToken);
     }
 
     public class SaveAndContinueHandler : ISaveAndContinueHandler
@@ -24,19 +24,17 @@ namespace Elsa.Server.Features.Shared
         private readonly IWorkflowInstanceStore _workflowInstanceStore;
         private readonly IPipelineAssessmentRepository _pipelineAssessmentRepository;
         private readonly ISaveAndContinueMapper _saveAndContinueMapper;
-        private readonly IDateTimeProvider _dateTimeProvider;
 
-        public SaveAndContinueHandler(IQuestionInvoker invoker, IWorkflowInstanceStore workflowInstanceStore, IPipelineAssessmentRepository pipelineAssessmentRepository, ISaveAndContinueMapper saveAndContinueMapper, IDateTimeProvider dateTimeProvider, IWorkflowRegistry workflowRegistry)
+        public SaveAndContinueHandler(IQuestionInvoker invoker, IWorkflowInstanceStore workflowInstanceStore, IPipelineAssessmentRepository pipelineAssessmentRepository, ISaveAndContinueMapper saveAndContinueMapper, IWorkflowRegistry workflowRegistry)
         {
             _invoker = invoker;
             _workflowInstanceStore = workflowInstanceStore;
             _pipelineAssessmentRepository = pipelineAssessmentRepository;
             _saveAndContinueMapper = saveAndContinueMapper;
-            _dateTimeProvider = dateTimeProvider;
             _workflowRegistry = workflowRegistry;
         }
 
-        public async Task<OperationResult<SaveAndContinueResponse>> Handle(MultipleChoiceQuestionModel dbMultipleChoiceQuestionModel, SaveAndContinueCommandBase command, CancellationToken cancellationToken)
+        public async Task<OperationResult<SaveAndContinueResponse>> Handle(MultipleChoiceQuestionModel dbMultipleChoiceQuestionModel, SaveAndContinueCommand command, CancellationToken cancellationToken)
         {
             var result = new OperationResult<SaveAndContinueResponse>();
             try
@@ -105,7 +103,7 @@ namespace Elsa.Server.Features.Shared
             return await Task.FromResult(result);
         }
 
-        private async Task CreateNextActivityRecord(SaveAndContinueCommandBase command, string nextActivityId, string activityType)
+        private async Task CreateNextActivityRecord(SaveAndContinueCommand command, string nextActivityId, string activityType)
         {
             var multipleChoiceQuestion = _saveAndContinueMapper.SaveAndContinueCommandToNextMultipleChoiceQuestionModel(command, nextActivityId, activityType);
             await _pipelineAssessmentRepository.CreateMultipleChoiceQuestionAsync(multipleChoiceQuestion);

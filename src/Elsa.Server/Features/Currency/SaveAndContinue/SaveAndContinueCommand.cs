@@ -7,7 +7,7 @@ namespace Elsa.Server.Features.Currency.SaveAndContinue
 {
 
 
-    public class SaveAndContinueCommand : SaveAndContinueCommandBase, IRequest<OperationResult<SaveAndContinueResponse>>
+    public class CurrencySaveAndContinueCommand : SaveAndContinueCommand, IRequest<OperationResult<SaveAndContinueResponse>>
     {
         public string? Answer { get; set; }
     }

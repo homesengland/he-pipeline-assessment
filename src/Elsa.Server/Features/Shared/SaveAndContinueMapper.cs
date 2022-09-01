@@ -5,7 +5,7 @@ namespace Elsa.Server.Features.Shared.SaveAndContinue
 {
     public interface ISaveAndContinueMapper
     {
-        MultipleChoiceQuestionModel SaveAndContinueCommandToNextMultipleChoiceQuestionModel(SaveAndContinueCommandBase command, string nextActivityId, string nextActivityType);
+        MultipleChoiceQuestionModel SaveAndContinueCommandToNextMultipleChoiceQuestionModel(SaveAndContinueCommand command, string nextActivityId, string nextActivityType);
     }
 
     public class SaveAndContinueMapper : ISaveAndContinueMapper
@@ -17,7 +17,7 @@ namespace Elsa.Server.Features.Shared.SaveAndContinue
             _dateTimeProvider = dateTimeProvider;
         }
 
-        public MultipleChoiceQuestionModel SaveAndContinueCommandToNextMultipleChoiceQuestionModel(SaveAndContinueCommandBase command, string nextActivityId, string nextActivityType)
+        public MultipleChoiceQuestionModel SaveAndContinueCommandToNextMultipleChoiceQuestionModel(SaveAndContinueCommand command, string nextActivityId, string nextActivityType)
         {
             return new MultipleChoiceQuestionModel
             {

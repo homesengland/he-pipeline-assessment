@@ -1,4 +1,5 @@
 ﻿using AutoFixture.Xunit2;
+using Elsa.CustomActivities.Activities.MultipleChoice;
 using Elsa.CustomActivities.Activities.Shared;
 using Elsa.CustomInfrastructure.Data.Repository;
 using Elsa.CustomModels;
@@ -7,10 +8,12 @@ using Elsa.Persistence;
 using Elsa.Persistence.Specifications.WorkflowInstances;
 using Elsa.Server.Features.MultipleChoice.SaveAndContinue;
 using Elsa.Server.Features.Shared.SaveAndContinue;
+using Elsa.CustomActivities.Activities;
 using Elsa.Server.Models;
 using Elsa.Services.Models;
 using Moq;
 using Xunit;
+using Constants = Elsa.CustomActivities.Activities.Constants;
 
 namespace Elsa.Server.Tests.Features.MultipleChoice.SaveAndContinue
 {
@@ -26,7 +29,7 @@ namespace Elsa.Server.Tests.Features.MultipleChoice.SaveAndContinue
             List<CollectedWorkflow> collectedWorkflows,
             WorkflowInstance workflowInstance,
             MultipleChoiceQuestionModel nextMultipleChoiceQuestionModel,
-            SaveAndContinueCommand saveAndContinueCommand,
+            MultipleChoiceSaveAndContinueCommand saveAndContinueCommand,
             SaveAndContinueCommandHandler sut)
         {
             //Arrange
@@ -45,7 +48,7 @@ namespace Elsa.Server.Tests.Features.MultipleChoice.SaveAndContinue
                     saveAndContinueCommand.WorkflowInstanceId, CancellationToken.None))
                 .ReturnsAsync(currentMultipleChoiceQuestionModel);
 
-            multipleChoiceQuestionInvoker.Setup(x => x.ExecuteWorkflowsAsync(saveAndContinueCommand.ActivityId, "MultipleChoiceQuestion",
+            multipleChoiceQuestionInvoker.Setup(x => x.ExecuteWorkflowsAsync(saveAndContinueCommand.ActivityId, Constants.MultipleChoiceQuestion,
                     saveAndContinueCommand.WorkflowInstanceId, currentMultipleChoiceQuestionModel, CancellationToken.None))
                 .ReturnsAsync(collectedWorkflows);
 
@@ -81,7 +84,7 @@ namespace Elsa.Server.Tests.Features.MultipleChoice.SaveAndContinue
             List<CollectedWorkflow> collectedWorkflows,
             WorkflowInstance workflowInstance,
             MultipleChoiceQuestionModel nextMultipleChoiceQuestionModel,
-            SaveAndContinueCommand saveAndContinueCommand,
+            MultipleChoiceSaveAndContinueCommand saveAndContinueCommand,
             SaveAndContinueCommandHandler sut)
         {
             //Arrange
@@ -100,7 +103,7 @@ namespace Elsa.Server.Tests.Features.MultipleChoice.SaveAndContinue
                     saveAndContinueCommand.WorkflowInstanceId, CancellationToken.None))
                 .ReturnsAsync(currentMultipleChoiceQuestionModel);
 
-            multipleChoiceQuestionInvoker.Setup(x => x.ExecuteWorkflowsAsync(saveAndContinueCommand.ActivityId, "MultipleChoiceQuestion",
+            multipleChoiceQuestionInvoker.Setup(x => x.ExecuteWorkflowsAsync(saveAndContinueCommand.ActivityId,Constants.MultipleChoiceQuestion,
                     saveAndContinueCommand.WorkflowInstanceId, currentMultipleChoiceQuestionModel, CancellationToken.None))
                 .ReturnsAsync(collectedWorkflows);
 
@@ -138,7 +141,7 @@ namespace Elsa.Server.Tests.Features.MultipleChoice.SaveAndContinue
             MultipleChoiceQuestionModel currentMultipleChoiceQuestionModel,
             List<CollectedWorkflow> collectedWorkflows,
             WorkflowInstance workflowInstance,
-            SaveAndContinueCommand saveAndContinueCommand,
+            MultipleChoiceSaveAndContinueCommand saveAndContinueCommand,
             SaveAndContinueCommandHandler sut)
         {
             //Arrange
@@ -147,7 +150,7 @@ namespace Elsa.Server.Tests.Features.MultipleChoice.SaveAndContinue
                     saveAndContinueCommand.WorkflowInstanceId, CancellationToken.None))
                 .ReturnsAsync(currentMultipleChoiceQuestionModel);
 
-            multipleChoiceQuestionInvoker.Setup(x => x.ExecuteWorkflowsAsync(saveAndContinueCommand.ActivityId, "MultipleChoiceQuestion",
+            multipleChoiceQuestionInvoker.Setup(x => x.ExecuteWorkflowsAsync(saveAndContinueCommand.ActivityId, Constants.MultipleChoiceQuestion,
                     saveAndContinueCommand.WorkflowInstanceId, currentMultipleChoiceQuestionModel, CancellationToken.None))
                 .ReturnsAsync(collectedWorkflows);
 
@@ -174,7 +177,7 @@ namespace Elsa.Server.Tests.Features.MultipleChoice.SaveAndContinue
             [Frozen] Mock<IPipelineAssessmentRepository> pipelineAssessmentRepository,
             MultipleChoiceQuestionModel currentMultipleChoiceQuestionModel,
             List<CollectedWorkflow> collectedWorkflows,
-            SaveAndContinueCommand saveAndContinueCommand,
+            MultipleChoiceSaveAndContinueCommand saveAndContinueCommand,
             SaveAndContinueCommandHandler sut)
         {
             //Arrange
@@ -182,7 +185,7 @@ namespace Elsa.Server.Tests.Features.MultipleChoice.SaveAndContinue
                     saveAndContinueCommand.WorkflowInstanceId, CancellationToken.None))
                 .ReturnsAsync(currentMultipleChoiceQuestionModel);
 
-            multipleChoiceQuestionInvoker.Setup(x => x.ExecuteWorkflowsAsync(saveAndContinueCommand.ActivityId, "MultipleChoiceQuestion",
+            multipleChoiceQuestionInvoker.Setup(x => x.ExecuteWorkflowsAsync(saveAndContinueCommand.ActivityId, Constants.MultipleChoiceQuestion,
                     saveAndContinueCommand.WorkflowInstanceId, currentMultipleChoiceQuestionModel, CancellationToken.None))
                 .ReturnsAsync(collectedWorkflows);
 
@@ -205,7 +208,7 @@ namespace Elsa.Server.Tests.Features.MultipleChoice.SaveAndContinue
         [AutoMoqData]
         public async Task Handle_ShouldReturnErrors_WhenMultipleChoiceQuestionNotFoundInDatabase(
             [Frozen] Mock<IPipelineAssessmentRepository> pipelineAssessmentRepository,
-            SaveAndContinueCommand saveAndContinueCommand,
+            MultipleChoiceSaveAndContinueCommand saveAndContinueCommand,
             SaveAndContinueCommandHandler sut)
         {
             //Arrange
@@ -228,7 +231,7 @@ namespace Elsa.Server.Tests.Features.MultipleChoice.SaveAndContinue
         public async Task Handle_ShouldReturnErrors_WhenADependencyThrows(
             [Frozen] Mock<IPipelineAssessmentRepository> pipelineAssessmentRepository,
             Exception exception,
-            SaveAndContinueCommand saveAndContinueCommand,
+            MultipleChoiceSaveAndContinueCommand saveAndContinueCommand,
             SaveAndContinueCommandHandler sut)
         {
             //Arrange

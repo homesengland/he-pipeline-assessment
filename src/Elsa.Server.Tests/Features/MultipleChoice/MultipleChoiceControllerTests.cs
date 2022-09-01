@@ -1,6 +1,7 @@
 ﻿using AutoFixture.Xunit2;
 using Elsa.Server.Features.MultipleChoice;
 using Elsa.Server.Features.MultipleChoice.SaveAndContinue;
+using Elsa.Server.Features.Shared.SaveAndContinue;
 using Elsa.Server.Models;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
@@ -14,7 +15,7 @@ namespace Elsa.Server.Tests.Features.MultipleChoice
         [Theory]
         [AutoData]
         public async Task MultipleChoiceQuestionController_SaveAndContinue_ShouldReturnOK_WhenCommandHandlerIsSuccessful(
-           SaveAndContinueCommand command,
+           MultipleChoiceSaveAndContinueCommand command,
            SaveAndContinueResponse response,
            Mock<IMediator> mediatorMock)
         {
@@ -47,7 +48,7 @@ namespace Elsa.Server.Tests.Features.MultipleChoice
         [Theory]
         [AutoData]
         public async Task MultipleChoiceQuestionController_SaveAndContinue_ShouldReturnBadRequest_WhenCommandHandlerReturnsErrors(
-            SaveAndContinueCommand command,
+            MultipleChoiceSaveAndContinueCommand command,
             OperationResult<SaveAndContinueResponse> operationResult,
             Mock<IMediator> mediatorMock)
         {
@@ -74,7 +75,7 @@ namespace Elsa.Server.Tests.Features.MultipleChoice
         [Theory]
         [AutoData]
         public async Task MultipleChoiceQuestionController_SaveAndContinue_ShouldReturn500_WhenCommandHandlerThrowsException(
-            SaveAndContinueCommand command,
+            MultipleChoiceSaveAndContinueCommand command,
             Exception exception,
             Mock<IMediator> mediatorMock)
         {
@@ -104,7 +105,7 @@ namespace Elsa.Server.Tests.Features.MultipleChoice
         [Theory]
         [AutoData]
         public async Task MultipleChoiceQuestionController_SaveAndContinue_ShouldReturn500_WhenCommandHandlerReturnsNull(
-            SaveAndContinueCommand command,
+            MultipleChoiceSaveAndContinueCommand command,
             Mock<IMediator> mediatorMock)
         {
 

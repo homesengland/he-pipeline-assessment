@@ -18,7 +18,7 @@ namespace Elsa.Server.Features.Currency
         }
 
         [HttpPost("SaveAndContinue")]
-        public async Task<IActionResult> SaveAndContinue(SaveAndContinueCommand model)
+        public async Task<IActionResult> SaveAndContinue(CurrencySaveAndContinueCommand model)
         {
             try
             {
