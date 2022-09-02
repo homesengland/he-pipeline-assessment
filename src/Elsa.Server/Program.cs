@@ -29,6 +29,7 @@ builder.Services
         .UseEntityFrameworkPersistence(ef => ef.UseSqlite(elsaConnectionString))
         .AddActivity<MultipleChoiceQuestion>()
         .AddActivity<CurrencyQuestion>()
+        .AddActivity<TextQuestion>()
         .AddActivity<DateQuestion>()
         .AddConsoleActivities()
     );

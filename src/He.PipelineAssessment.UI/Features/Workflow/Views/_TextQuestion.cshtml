@@ -10,16 +10,16 @@
     @if (!string.IsNullOrEmpty(Model.Data.TextQuestionActivityData.QuestionHint))
     {
         <div id="event-name-hint" class="govuk-hint">
-            @Model.Data.CurrencyQuestionActivityData.QuestionHint
+            @Model.Data.TextQuestionActivityData.QuestionHint
         </div>
     }
 
 
 
     <div class="govuk-input__wrapper">
-        @Html.TextBoxFor(m => Model.Data.CurrencyQuestionActivityData.Answer, new {@class = "govuk-input govuk-input--width-5"})
+        @Html.TextBoxFor(m => Model.Data.TextQuestionActivityData.Answer, new {@class = "govuk-input govuk-input--width-6"})
     </div>
-    @if (!string.IsNullOrEmpty(Model.Data.CurrencyQuestionActivityData.QuestionGuidance))
+    @if (!string.IsNullOrEmpty(Model.Data.TextQuestionActivityData.QuestionGuidance))
     {
         <br/>
         <details class="govuk-details" data-module="govuk-details">
@@ -29,7 +29,7 @@
                 </span>
             </summary>
             <div class="govuk-details__text">
-                @Model.Data.CurrencyQuestionActivityData.QuestionGuidance
+                @Model.Data.TextQuestionActivityData.QuestionGuidance
             </div>
         </details>
     }

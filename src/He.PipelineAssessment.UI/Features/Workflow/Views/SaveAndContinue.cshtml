@@ -19,7 +19,7 @@
         <br/>
         if (Model.Data.ActivityType == ActivityTypeConstants.CurrencyQuestion)
         {
-           @await Html.PartialAsync("_CurrencyQuestion",Model)
+            @await Html.PartialAsync("_CurrencyQuestion",Model)
         }
         if (Model.Data.ActivityType == ActivityTypeConstants.MultipleChoiceQuestion)
         {
@@ -35,3 +35,5 @@
         }
     }
 </div>
+
+@await Html.PartialAsync("_ValidationScriptsPartial")

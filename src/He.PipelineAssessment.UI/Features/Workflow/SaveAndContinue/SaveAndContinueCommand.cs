@@ -1,5 +1,6 @@
 ﻿using He.PipelineAssessment.UI.Features.Workflow.LoadWorkflowActivity;
 using MediatR;
+using System.ComponentModel.DataAnnotations;
 
 namespace He.PipelineAssessment.UI.Features.Workflow.SaveAndContinue
 {
@@ -59,20 +60,23 @@ namespace He.PipelineAssessment.UI.Features.Workflow.SaveAndContinue
         public string? QuestionHint { get; set; }
         public string? QuestionGuidance { get; set; }
         public DateTime? Answer { get; set; }
+        [Range(1, 31)]
         public int? Day { get; set; }
+        [Range(1, 12)]
         public int? Month { get; set; }
+        [Range(1, 3000)]
         public int? Year { get; set; }
         public object Output { get; set; } = null!;
 
         public DateTime? GetAnswer()
         {
-            if(Day.HasValue && Month.HasValue && Year.HasValue)
+            if (Day.HasValue && Month.HasValue && Year.HasValue)
             {
                 return new DateTime(Year.Value, Month.Value, Day.Value);
             }
             return null;
         }
-}
+    }
 
     public class Choice
     {

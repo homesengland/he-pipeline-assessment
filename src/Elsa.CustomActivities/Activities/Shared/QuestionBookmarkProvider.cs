@@ -42,7 +42,8 @@ namespace Elsa.CustomActivities.Activities.Shared
             {
                 Constants.CurrencyQuestion,
                 Constants.MultipleChoiceQuestion,
-                Constants.DateQuestion
+                Constants.DateQuestion,
+                Constants.TextQuestion
             };
         }
     }
