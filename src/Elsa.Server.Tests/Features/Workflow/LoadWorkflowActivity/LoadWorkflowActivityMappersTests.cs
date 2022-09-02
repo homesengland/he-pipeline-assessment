@@ -42,11 +42,11 @@ namespace Elsa.Server.Tests.Features.Workflow.LoadWorkflowActivity
 
             multipleChoiceQuestionActivityData.Output = JsonSerializer.Serialize(multipleChoiceQuestionModel);
 
-            jsonHelper.Setup(x => x.ActivityDataDictionaryToActivityData(activityDataDictionary)).Returns(multipleChoiceQuestionActivityData);
+            jsonHelper.Setup(x => x.ActivityDataDictionaryToMultipleChoiceActivityData(activityDataDictionary)).Returns(multipleChoiceQuestionActivityData);
             jsonHelper.Setup(x => x.ActivityOutputJsonToMultipleChoiceQuestionModel(It.IsAny<string>())).Returns(multipleChoiceQuestionModel);
 
             //Act
-            var result = sut.ActivityDataDictionaryToActivityData(activityDataDictionary);
+            var result = sut.ActivityDataDictionaryToMultipleChoiceActivityData(activityDataDictionary);
 
             //Assert
             Assert.NotNull(result);
@@ -74,10 +74,10 @@ namespace Elsa.Server.Tests.Features.Workflow.LoadWorkflowActivity
             //Arrange
             var activityDataDictionary = workflowInstance.ActivityData.FirstOrDefault().Value;
 
-            jsonHelper.Setup(x => x.ActivityDataDictionaryToActivityData(activityDataDictionary)).Returns((MultipleChoiceQuestionActivityData?)null);
+            jsonHelper.Setup(x => x.ActivityDataDictionaryToMultipleChoiceActivityData(activityDataDictionary)).Returns((MultipleChoiceQuestionActivityData?)null);
 
             //Act
-            var result = sut.ActivityDataDictionaryToActivityData(activityDataDictionary);
+            var result = sut.ActivityDataDictionaryToMultipleChoiceActivityData(activityDataDictionary);
 
             //Assert
             Assert.Null(result);
@@ -98,10 +98,10 @@ namespace Elsa.Server.Tests.Features.Workflow.LoadWorkflowActivity
             var activityDataDictionary = workflowInstance.ActivityData.FirstOrDefault().Value;
             multipleChoiceQuestionActivityData.Output = null;
 
-            jsonHelper.Setup(x => x.ActivityDataDictionaryToActivityData(activityDataDictionary)).Returns(multipleChoiceQuestionActivityData);
+            jsonHelper.Setup(x => x.ActivityDataDictionaryToMultipleChoiceActivityData(activityDataDictionary)).Returns(multipleChoiceQuestionActivityData);
 
             //Act
-            var result = sut.ActivityDataDictionaryToActivityData(activityDataDictionary);
+            var result = sut.ActivityDataDictionaryToMultipleChoiceActivityData(activityDataDictionary);
 
             //Assert
             Assert.NotNull(result);
@@ -123,11 +123,11 @@ namespace Elsa.Server.Tests.Features.Workflow.LoadWorkflowActivity
             //Arrange
             var activityDataDictionary = workflowInstance.ActivityData.FirstOrDefault().Value;
 
-            jsonHelper.Setup(x => x.ActivityDataDictionaryToActivityData(activityDataDictionary)).Returns(multipleChoiceQuestionActivityData);
+            jsonHelper.Setup(x => x.ActivityDataDictionaryToMultipleChoiceActivityData(activityDataDictionary)).Returns(multipleChoiceQuestionActivityData);
             jsonHelper.Setup(x => x.ActivityOutputJsonToMultipleChoiceQuestionModel(It.IsAny<string>())).Returns((MultipleChoiceQuestionModel?)null);
 
             //Act
-            var result = sut.ActivityDataDictionaryToActivityData(activityDataDictionary);
+            var result = sut.ActivityDataDictionaryToMultipleChoiceActivityData(activityDataDictionary);
 
             //Assert
             Assert.NotNull(result);
@@ -152,11 +152,11 @@ namespace Elsa.Server.Tests.Features.Workflow.LoadWorkflowActivity
 
             multipleChoiceQuestionModel.Answer = null;
 
-            jsonHelper.Setup(x => x.ActivityDataDictionaryToActivityData(activityDataDictionary)).Returns(multipleChoiceQuestionActivityData);
+            jsonHelper.Setup(x => x.ActivityDataDictionaryToMultipleChoiceActivityData(activityDataDictionary)).Returns(multipleChoiceQuestionActivityData);
             jsonHelper.Setup(x => x.ActivityOutputJsonToMultipleChoiceQuestionModel(It.IsAny<string>())).Returns(multipleChoiceQuestionModel);
 
             //Act
-            var result = sut.ActivityDataDictionaryToActivityData(activityDataDictionary);
+            var result = sut.ActivityDataDictionaryToMultipleChoiceActivityData(activityDataDictionary);
 
             //Assert
             Assert.NotNull(result);

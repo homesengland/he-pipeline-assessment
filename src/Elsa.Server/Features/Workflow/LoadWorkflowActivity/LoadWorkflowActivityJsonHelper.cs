@@ -6,7 +6,7 @@ namespace Elsa.Server.Features.Workflow.LoadWorkflowActivity
     public interface ILoadWorkflowActivityJsonHelper
     {
         MultipleChoiceQuestionModel? ActivityOutputJsonToMultipleChoiceQuestionModel(string activityJson);
-        MultipleChoiceQuestionActivityData? ActivityDataDictionaryToActivityData(IDictionary<string, object?>? activityDataDictionary);
+        MultipleChoiceQuestionActivityData? ActivityDataDictionaryToMultipleChoiceActivityData(IDictionary<string, object?>? activityDataDictionary);
 
         CurrencyQuestionActivityData? ActivityDataDictionaryToCurrencyQuestionActivityData(
             IDictionary<string, object?>? activityDataDictionary);
@@ -27,7 +27,7 @@ namespace Elsa.Server.Features.Workflow.LoadWorkflowActivity
             return output;
         }
 
-        public MultipleChoiceQuestionActivityData? ActivityDataDictionaryToActivityData(IDictionary<string, object?>? activityDataDictionary)
+        public MultipleChoiceQuestionActivityData? ActivityDataDictionaryToMultipleChoiceActivityData(IDictionary<string, object?>? activityDataDictionary)
         {
             var json = JsonSerializer.Serialize(activityDataDictionary);
             var activityData = JsonSerializer.Deserialize<MultipleChoiceQuestionActivityData>(json);

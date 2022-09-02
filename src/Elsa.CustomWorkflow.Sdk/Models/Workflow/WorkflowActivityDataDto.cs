@@ -19,44 +19,33 @@
         public DateQuestionActivityData? DateQuestionActivityData { get; set; }
     }
 
-    public class CurrencyQuestionActivityData
+    public abstract class QuestionActivityData
     {
         public string Title { get; set; } = null!;
         public string Question { get; set; } = null!;
         public string? QuestionHint { get; set; }
         public string? QuestionGuidance { get; set; }
+        public object Output { get; set; } = null!;
+    }
+
+    public class CurrencyQuestionActivityData : QuestionActivityData
+    {
         public decimal? Answer { get; set; }
-        public object Output { get; set; } = null!;
     }
 
-    public class TextQuestionActivityData
+    public class TextQuestionActivityData : QuestionActivityData
     {
-        public string Title { get; set; } = null!;
-        public string Question { get; set; } = null!;
-        public string? QuestionHint { get; set; }
-        public string? QuestionGuidance { get; set; }
         public string Answer { get; set; } = null!;
-        public object Output { get; set; } = null!;
     }
 
-    public class MultipleChoiceQuestionActivityData
+    public class MultipleChoiceQuestionActivityData : QuestionActivityData
     {
-        public string Title { get; set; } = null!;
-        public string Question { get; set; } = null!;
-        public string? QuestionHint { get; set; }
-        public string? QuestionGuidance { get; set; }
         public Choice[] Choices { get; set; } = null!;
-        public object Output { get; set; } = null!;
     }
 
-    public class DateQuestionActivityData
+    public class DateQuestionActivityData : QuestionActivityData
     {
-        public string Title { get; set; } = null!;
-        public string Question { get; set; } = null!;
-        public string? QuestionHint { get; set; }
-        public string? QuestionGuidance { get; set; }
         public DateTime? Answer { get; set; }
-        public object Output { get; set; } = null!;
 
         public int? DayFromDate()
         {

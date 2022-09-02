@@ -5,7 +5,9 @@ namespace Elsa.Server.Features.Workflow.LoadWorkflowActivity
 {
     public interface ILoadWorkflowActivityMapper
     {
-        MultipleChoiceQuestionActivityData? ActivityDataDictionaryToActivityData(IDictionary<string, object?>? activityDataDictionary);
+        T ActivityDataDictionaryToActivityData<T>(string activityType, IDictionary<string, object?>? activityDataDictionary);
+
+        MultipleChoiceQuestionActivityData? ActivityDataDictionaryToMultipleChoiceActivityData(IDictionary<string, object?>? activityDataDictionary);
 
         CurrencyQuestionActivityData? ActivityDataDictionaryToCurrencyActivityData(
             IDictionary<string, object?>? activityDataDictionary);
@@ -21,14 +23,20 @@ namespace Elsa.Server.Features.Workflow.LoadWorkflowActivity
     {
         private readonly ILoadWorkflowActivityJsonHelper _loadWorkflowActivityJsonHelper;
 
+
+        public T ActivityDataDictionaryToActivityData<T>(string activityType, IDictionary<string, object?>? activityDataDictionary)
+        {
+            throw new NotImplementedException();
+        }
+
         public LoadWorkflowActivityMapper(ILoadWorkflowActivityJsonHelper loadWorkflowActivityJsonHelper)
         {
             _loadWorkflowActivityJsonHelper = loadWorkflowActivityJsonHelper;
         }
 
-        public MultipleChoiceQuestionActivityData? ActivityDataDictionaryToActivityData(IDictionary<string, object?>? activityDataDictionary)
+        public MultipleChoiceQuestionActivityData? ActivityDataDictionaryToMultipleChoiceActivityData(IDictionary<string, object?>? activityDataDictionary)
         {
-            var activityData = _loadWorkflowActivityJsonHelper.ActivityDataDictionaryToActivityData(activityDataDictionary);
+            var activityData = _loadWorkflowActivityJsonHelper.ActivityDataDictionaryToMultipleChoiceActivityData(activityDataDictionary);
 
             if (activityData != null && activityData.Output != null)
             {

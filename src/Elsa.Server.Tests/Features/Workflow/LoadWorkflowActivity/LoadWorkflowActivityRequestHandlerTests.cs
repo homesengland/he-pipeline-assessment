@@ -48,7 +48,7 @@ namespace Elsa.Server.Tests.Features.Workflow.LoadWorkflowActivity
                 .ReturnsAsync(multipleChoiceQuestionModel);
 
             loadWorkflowActivityMapper
-                .Setup(x => x.ActivityDataDictionaryToActivityData(It.IsAny<IDictionary<string, object?>>()))
+                .Setup(x => x.ActivityDataDictionaryToMultipleChoiceActivityData(It.IsAny<IDictionary<string, object?>>()))
                 .Returns(multipleChoiceQuestionActivityData);
 
             var existingDictionaryItem = workflowInstance.ActivityData.First();
@@ -67,7 +67,7 @@ namespace Elsa.Server.Tests.Features.Workflow.LoadWorkflowActivity
             Assert.NotNull(result.Data!.MultipleChoiceQuestionActivityData);
             workflowInstanceStore.Verify(x => x.FindAsync(It.IsAny<WorkflowInstanceIdSpecification>(), CancellationToken.None), Times.Once);
             pipelineAssessmentRepository.Verify(x => x.GetMultipleChoiceQuestions(loadWorkflowActivityRequest.ActivityId, loadWorkflowActivityRequest.WorkflowInstanceId, CancellationToken.None), Times.Once);
-            loadWorkflowActivityMapper.Verify(x => x.ActivityDataDictionaryToActivityData(It.IsAny<IDictionary<string, object?>>()), Times.Once);
+            loadWorkflowActivityMapper.Verify(x => x.ActivityDataDictionaryToMultipleChoiceActivityData(It.IsAny<IDictionary<string, object?>>()), Times.Once);
             Assert.Equal(loadWorkflowActivityRequest.WorkflowInstanceId, result.Data.WorkflowInstanceId);
             Assert.Equal(loadWorkflowActivityRequest.ActivityId, result.Data.ActivityId);
             Assert.Equal(multipleChoiceQuestionModel.PreviousActivityId, result.Data.PreviousActivityId);
@@ -102,7 +102,7 @@ namespace Elsa.Server.Tests.Features.Workflow.LoadWorkflowActivity
                 .ReturnsAsync(multipleChoiceQuestionModel);
 
             loadWorkflowActivityMapper
-                .Setup(x => x.ActivityDataDictionaryToActivityData(It.IsAny<IDictionary<string, object?>>()))
+                .Setup(x => x.ActivityDataDictionaryToMultipleChoiceActivityData(It.IsAny<IDictionary<string, object?>>()))
                 .Returns((MultipleChoiceQuestionActivityData?)null);
 
             var existingDictionaryItem = workflowInstance.ActivityData.First();
@@ -122,7 +122,7 @@ namespace Elsa.Server.Tests.Features.Workflow.LoadWorkflowActivity
             Assert.Equal($"Failed to map activity data", result.ErrorMessages.Single());
             workflowInstanceStore.Verify(x => x.FindAsync(It.IsAny<WorkflowInstanceIdSpecification>(), CancellationToken.None), Times.Once);
             pipelineAssessmentRepository.Verify(x => x.GetMultipleChoiceQuestions(loadWorkflowActivityRequest.ActivityId, loadWorkflowActivityRequest.WorkflowInstanceId, CancellationToken.None), Times.Once);
-            loadWorkflowActivityMapper.Verify(x => x.ActivityDataDictionaryToActivityData(It.IsAny<IDictionary<string, object?>>()), Times.Once);
+            loadWorkflowActivityMapper.Verify(x => x.ActivityDataDictionaryToMultipleChoiceActivityData(It.IsAny<IDictionary<string, object?>>()), Times.Once);
 
         }
 
@@ -161,7 +161,7 @@ namespace Elsa.Server.Tests.Features.Workflow.LoadWorkflowActivity
             Assert.Equal($"Cannot find activity Id {loadWorkflowActivityRequest.ActivityId} in the workflow activity data dictionary", result.ErrorMessages.Single());
             workflowInstanceStore.Verify(x => x.FindAsync(It.IsAny<WorkflowInstanceIdSpecification>(), CancellationToken.None), Times.Once);
             pipelineAssessmentRepository.Verify(x => x.GetMultipleChoiceQuestions(loadWorkflowActivityRequest.ActivityId, loadWorkflowActivityRequest.WorkflowInstanceId, CancellationToken.None), Times.Once);
-            loadWorkflowActivityMapper.Verify(x => x.ActivityDataDictionaryToActivityData(It.IsAny<IDictionary<string, object?>>()), Times.Never);
+            loadWorkflowActivityMapper.Verify(x => x.ActivityDataDictionaryToMultipleChoiceActivityData(It.IsAny<IDictionary<string, object?>>()), Times.Never);
 
         }
 
@@ -198,7 +198,7 @@ namespace Elsa.Server.Tests.Features.Workflow.LoadWorkflowActivity
             Assert.Equal($"Unable to find workflow instance with Id: {loadWorkflowActivityRequest.WorkflowInstanceId} and Activity Id: {loadWorkflowActivityRequest.ActivityId}", result.ErrorMessages.Single());
             workflowInstanceStore.Verify(x => x.FindAsync(It.IsAny<WorkflowInstanceIdSpecification>(), CancellationToken.None), Times.Once);
             pipelineAssessmentRepository.Verify(x => x.GetMultipleChoiceQuestions(loadWorkflowActivityRequest.ActivityId, loadWorkflowActivityRequest.WorkflowInstanceId, CancellationToken.None), Times.Once);
-            loadWorkflowActivityMapper.Verify(x => x.ActivityDataDictionaryToActivityData(It.IsAny<IDictionary<string, object?>>()), Times.Never);
+            loadWorkflowActivityMapper.Verify(x => x.ActivityDataDictionaryToMultipleChoiceActivityData(It.IsAny<IDictionary<string, object?>>()), Times.Never);
 
         }
 
@@ -230,7 +230,7 @@ namespace Elsa.Server.Tests.Features.Workflow.LoadWorkflowActivity
             Assert.Equal($"Unable to find workflow instance with Id: {loadWorkflowActivityRequest.WorkflowInstanceId} in Elsa database", result.ErrorMessages.Single());
             workflowInstanceStore.Verify(x => x.FindAsync(It.IsAny<WorkflowInstanceIdSpecification>(), CancellationToken.None), Times.Once);
             pipelineAssessmentRepository.Verify(x => x.GetMultipleChoiceQuestions(It.IsAny<string>(), It.IsAny<string>(), CancellationToken.None), Times.Never);
-            loadWorkflowActivityMapper.Verify(x => x.ActivityDataDictionaryToActivityData(It.IsAny<IDictionary<string, object?>>()), Times.Never);
+            loadWorkflowActivityMapper.Verify(x => x.ActivityDataDictionaryToMultipleChoiceActivityData(It.IsAny<IDictionary<string, object?>>()), Times.Never);
 
         }
 
@@ -257,7 +257,7 @@ namespace Elsa.Server.Tests.Features.Workflow.LoadWorkflowActivity
             Assert.Equal($"Unable to progress workflow instance Id {loadWorkflowActivityRequest.WorkflowInstanceId}. No collected workflows", result.ErrorMessages.Single());
             workflowInstanceStore.Verify(x => x.FindAsync(It.IsAny<WorkflowInstanceIdSpecification>(), CancellationToken.None), Times.Never);
             pipelineAssessmentRepository.Verify(x => x.GetMultipleChoiceQuestions(It.IsAny<string>(), It.IsAny<string>(), CancellationToken.None), Times.Never);
-            loadWorkflowActivityMapper.Verify(x => x.ActivityDataDictionaryToActivityData(It.IsAny<IDictionary<string, object?>>()), Times.Never);
+            loadWorkflowActivityMapper.Verify(x => x.ActivityDataDictionaryToMultipleChoiceActivityData(It.IsAny<IDictionary<string, object?>>()), Times.Never);
 
         }
 
@@ -285,7 +285,7 @@ namespace Elsa.Server.Tests.Features.Workflow.LoadWorkflowActivity
             Assert.Equal(exception.Message, result.ErrorMessages.Single());
             workflowInstanceStore.Verify(x => x.FindAsync(It.IsAny<WorkflowInstanceIdSpecification>(), CancellationToken.None), Times.Never);
             pipelineAssessmentRepository.Verify(x => x.GetMultipleChoiceQuestions(It.IsAny<string>(), It.IsAny<string>(), CancellationToken.None), Times.Never);
-            loadWorkflowActivityMapper.Verify(x => x.ActivityDataDictionaryToActivityData(It.IsAny<IDictionary<string, object?>>()), Times.Never);
+            loadWorkflowActivityMapper.Verify(x => x.ActivityDataDictionaryToMultipleChoiceActivityData(It.IsAny<IDictionary<string, object?>>()), Times.Never);
 
         }
     }

@@ -1,11 +1,12 @@
-﻿using Elsa.CustomActivities.Activities;
-using Elsa.CustomActivities.Activities.Shared;
+﻿using Elsa.CustomActivities.Activities.Shared;
 using Elsa.CustomInfrastructure.Data.Repository;
+using Elsa.CustomModels;
 using Elsa.Persistence;
 using Elsa.Persistence.Specifications.WorkflowInstances;
 using Elsa.Server.Models;
 using Elsa.Services.Models;
 using MediatR;
+using Constants = Elsa.CustomActivities.Activities.Constants;
 
 namespace Elsa.Server.Features.Workflow.LoadWorkflowActivity
 {
@@ -63,47 +64,10 @@ namespace Elsa.Server.Features.Workflow.LoadWorkflowActivity
                                 var activityDataDictionary =
                                     workflowInstance.ActivityData.FirstOrDefault(a => a.Key == activityRequest.ActivityId).Value;
 
-                                if (dbMultipleChoiceQuestionModel.ActivityType == Constants.MultipleChoiceQuestion)
-                                {
-                                    var activityData =
-                                        _loadWorkflowActivityMapper.ActivityDataDictionaryToActivityData(
-                                            activityDataDictionary);
-                                    if (activityData != null)
-                                    {
-                                        result.Data.MultipleChoiceQuestionActivityData = activityData;
-                                    }
-                                }
-
-                                if (dbMultipleChoiceQuestionModel.ActivityType == Constants.CurrencyQuestion)
-                                {
-                                    var activityData = _loadWorkflowActivityMapper.ActivityDataDictionaryToCurrencyActivityData(activityDataDictionary);
-                                    if (activityData != null)
-                                    {
-                                        result.Data.CurrencyQuestionActivityData = activityData;
-                                    }
-                                }
-
-                                if (dbMultipleChoiceQuestionModel.ActivityType == Constants.DateQuestion)
-                                {
-                                    var activityData = _loadWorkflowActivityMapper.ActivityDataDictionaryToDateActivityData(activityDataDictionary);
-                                    if (activityData != null)
-                                    {
-                                        result.Data.DateQuestionActivityData = activityData;
-                                    }
-                                }
-
-                                if (dbMultipleChoiceQuestionModel.ActivityType == Constants.TextQuestion)
-                                {
-                                    var activityData = _loadWorkflowActivityMapper.ActivityDataDictionaryToTextActivityData(activityDataDictionary);
-                                    if (activityData != null)
-                                    {
-                                        result.Data.TextQuestionActivityData = activityData;
-                                    }
-                                }
-
                                 result.Data.ActivityType = dbMultipleChoiceQuestionModel.ActivityType;
                                 result.Data.PreviousActivityId = dbMultipleChoiceQuestionModel.PreviousActivityId;
 
+                                AssignActivityData(dbMultipleChoiceQuestionModel, activityDataDictionary, result);
                             }
                         }
                         else
@@ -130,6 +94,49 @@ namespace Elsa.Server.Features.Workflow.LoadWorkflowActivity
             }
 
             return await Task.FromResult(result);
+        }
+
+        private void AssignActivityData(MultipleChoiceQuestionModel dbMultipleChoiceQuestionModel, IDictionary<string, object?> activityDataDictionary,
+            OperationResult<LoadWorkflowActivityResponse> result)
+        {
+            if (dbMultipleChoiceQuestionModel.ActivityType == Constants.MultipleChoiceQuestion)
+            {
+                var activityData =
+                    _loadWorkflowActivityMapper.ActivityDataDictionaryToMultipleChoiceActivityData(
+                        activityDataDictionary);
+                if (activityData != null)
+                {
+                    result.Data.MultipleChoiceQuestionActivityData = activityData;
+                }
+            }
+
+            if (dbMultipleChoiceQuestionModel.ActivityType == Constants.CurrencyQuestion)
+            {
+                var activityData =
+                    _loadWorkflowActivityMapper.ActivityDataDictionaryToCurrencyActivityData(activityDataDictionary);
+                if (activityData != null)
+                {
+                    result.Data.CurrencyQuestionActivityData = activityData;
+                }
+            }
+
+            if (dbMultipleChoiceQuestionModel.ActivityType == Constants.DateQuestion)
+            {
+                var activityData = _loadWorkflowActivityMapper.ActivityDataDictionaryToDateActivityData(activityDataDictionary);
+                if (activityData != null)
+                {
+                    result.Data.DateQuestionActivityData = activityData;
+                }
+            }
+
+            if (dbMultipleChoiceQuestionModel.ActivityType == Constants.TextQuestion)
+            {
+                var activityData = _loadWorkflowActivityMapper.ActivityDataDictionaryToTextActivityData(activityDataDictionary);
+                if (activityData != null)
+                {
+                    result.Data.TextQuestionActivityData = activityData;
+                }
+            }
         }
     }
 }
