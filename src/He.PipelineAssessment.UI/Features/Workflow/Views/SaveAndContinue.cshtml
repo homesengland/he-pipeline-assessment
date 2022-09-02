@@ -31,9 +31,10 @@
         }
         if (Model.Data.ActivityType == ActivityTypeConstants.TextQuestion)
         {
-            @await Html.PartialAsync("_TextQuestion",Model)
+            <partial name="_TextQuestion" model=@(Model)/>
         }
     }
 </div>
 
 @await Html.PartialAsync("_ValidationScriptsPartial")
+
