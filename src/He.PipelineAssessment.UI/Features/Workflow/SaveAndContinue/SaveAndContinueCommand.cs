@@ -18,10 +18,11 @@ namespace He.PipelineAssessment.UI.Features.Workflow.SaveAndContinue
         public string ActivityId { get; set; } = null!;
         public string ActivityType { get; set; } = null!;
         public string PreviousActivityId { get; set; } = null!;
-        public CurrencyQuestionActivityData CurrencyQuestionActivityData { get; set; } = null!;
-        public MultipleChoiceQuestionActivityData MultipleChoiceQuestionActivityData { get; set; } = null!;
-        public TextQuestionActivityData TextQuestionActivityData { get; set; } = null!;
-        public DateQuestionActivityData DateQuestionActivityData { get; set; } = null!;
+        public QuestionActivityData ActivityData { get; set; } = null!;
+        //public CurrencyQuestionActivityData CurrencyQuestionActivityData { get; set; } = null!;
+        //public MultipleChoiceQuestionActivityData MultipleChoiceQuestionActivityData { get; set; } = null!;
+        //public TextQuestionActivityData TextQuestionActivityData { get; set; } = null!;
+        //public DateQuestionActivityData DateQuestionActivityData { get; set; } = null!;
     }
 
     public abstract class QuestionActivityData

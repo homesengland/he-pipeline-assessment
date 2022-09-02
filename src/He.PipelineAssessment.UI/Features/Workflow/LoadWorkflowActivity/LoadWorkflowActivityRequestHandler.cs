@@ -14,9 +14,9 @@ namespace He.PipelineAssessment.UI.Features.Workflow.LoadWorkflowActivity
             _elsaServerHttpClient = elsaServerHttpClient;
             _loadWorkflowActivityMapper = loadWorkflowActivityMapper;
         }
-        public async Task<SaveAndContinueCommand?> Handle(LoadWorkflowActivityRequest request, CancellationToken cancellationToken)
+        public async Task<SaveAndContinueCommand> Handle(LoadWorkflowActivityRequest request, CancellationToken cancellationToken)
         {
-            var response = await _elsaServerHttpClient.LoadWorkflowActivity(new LoadWorkflowActivityDto
+            var response = await _elsaServerHttpClient.LoadWorkflowActivity<CurrencyQuestionActivityData>(new LoadWorkflowActivityDto
             {
                 WorkflowInstanceId = request.WorkflowInstanceId,
                 ActivityId = request.ActivityId

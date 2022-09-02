@@ -1,5 +1,4 @@
-﻿using Elsa.CustomWorkflow.Sdk.Models.Workflow;
-using He.PipelineAssessment.UI.Features.Workflow.LoadWorkflowActivity;
+﻿using He.PipelineAssessment.UI.Features.Workflow.LoadWorkflowActivity;
 using System.Text.Json;
 using Xunit;
 

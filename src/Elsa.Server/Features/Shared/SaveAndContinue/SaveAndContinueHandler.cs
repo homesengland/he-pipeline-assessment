@@ -4,13 +4,12 @@ using Elsa.CustomModels;
 using Elsa.Models;
 using Elsa.Persistence;
 using Elsa.Persistence.Specifications.WorkflowInstances;
-using Elsa.Server.Features.Shared.SaveAndContinue;
 using Elsa.Server.Models;
 using Elsa.Server.Providers;
 using Elsa.Services;
 using Open.Linq.AsyncExtensions;
 
-namespace Elsa.Server.Features.Shared
+namespace Elsa.Server.Features.Shared.SaveAndContinue
 {
     public interface ISaveAndContinueHandler
     {

@@ -1,4 +1,4 @@
-﻿namespace Elsa.Server.Features.Shared
+﻿namespace Elsa.Server.Features.Shared.SaveAndContinue
 {
     public abstract class SaveAndContinueCommand
     {
