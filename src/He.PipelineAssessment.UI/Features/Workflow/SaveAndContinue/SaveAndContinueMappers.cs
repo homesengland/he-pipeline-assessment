@@ -13,17 +13,17 @@ namespace He.PipelineAssessment.UI.Features.Workflow.SaveAndContinue
             SaveAndContinueCommandToCurrencySaveAndContinueCommandDto(SaveAndContinueCommand saveAndContinueCommand);
 
         Date.SaveAndContinueCommandDto
-    SaveAndContinueCommandToDateSaveAndContinueCommandDto(SaveAndContinueCommand saveAndContinueCommand);
+            SaveAndContinueCommandToDateSaveAndContinueCommandDto(SaveAndContinueCommand saveAndContinueCommand);
 
         Text.SaveAndContinueCommandDto
-    SaveAndContinueCommandToTextSaveAndContinueCommandDto(SaveAndContinueCommand saveAndContinueCommand);
+            SaveAndContinueCommandToTextSaveAndContinueCommandDto(SaveAndContinueCommand saveAndContinueCommand);
     }
 
     public class SaveAndContinueMapper : ISaveAndContinueMapper
     {
         public MultipleChoice.SaveAndContinueCommandDto SaveAndContinueCommandToMultipleChoiceSaveAndContinueCommandDto(SaveAndContinueCommand saveAndContinueCommand)
         {
-            var choiceList = saveAndContinueCommand.Data.MultipleChoiceQuestionActivityData.Choices.Where(x => x.IsSelected).Select(choice => choice.Answer).ToList();
+            var choiceList = saveAndContinueCommand.Data.MultipleChoiceQuestionActivityData!.Choices.Where(x => x.IsSelected).Select(choice => choice.Answer).ToList();
 
             return new MultipleChoice.SaveAndContinueCommandDto
             {
@@ -40,7 +40,7 @@ namespace He.PipelineAssessment.UI.Features.Workflow.SaveAndContinue
             return new Currency.SaveAndContinueCommandDto
             {
                 Id = $"{saveAndContinueCommand.Data.WorkflowInstanceId}-{saveAndContinueCommand.Data.ActivityId}",
-                Answer = saveAndContinueCommand.Data.CurrencyQuestionActivityData.Answer,
+                Answer = saveAndContinueCommand.Data.CurrencyQuestionActivityData!.Answer,
                 WorkflowInstanceId = saveAndContinueCommand.Data.WorkflowInstanceId,
                 ActivityId = saveAndContinueCommand.Data.ActivityId
             };
@@ -51,7 +51,7 @@ namespace He.PipelineAssessment.UI.Features.Workflow.SaveAndContinue
             return new Date.SaveAndContinueCommandDto
             {
                 Id = $"{saveAndContinueCommand.Data.WorkflowInstanceId}-{saveAndContinueCommand.Data.ActivityId}",
-                Answer = saveAndContinueCommand.Data.DateQuestionActivityData.GetAnswer(),
+                Answer = saveAndContinueCommand.Data.DateQuestionActivityData!.Answer,
                 WorkflowInstanceId = saveAndContinueCommand.Data.WorkflowInstanceId,
                 ActivityId = saveAndContinueCommand.Data.ActivityId
             };
@@ -62,7 +62,7 @@ namespace He.PipelineAssessment.UI.Features.Workflow.SaveAndContinue
             return new Text.SaveAndContinueCommandDto
             {
                 Id = $"{saveAndContinueCommand.Data.WorkflowInstanceId}-{saveAndContinueCommand.Data.ActivityId}",
-                Answer = saveAndContinueCommand.Data.TextQuestionActivityData.Answer,
+                Answer = saveAndContinueCommand.Data.TextQuestionActivityData!.Answer,
                 WorkflowInstanceId = saveAndContinueCommand.Data.WorkflowInstanceId,
                 ActivityId = saveAndContinueCommand.Data.ActivityId
             };

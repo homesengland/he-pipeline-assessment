@@ -6,8 +6,8 @@ namespace Elsa.Server.Features.Workflow.StartWorkflow
 {
     public interface IStartWorkflowMapper
     {
-        MultipleChoiceQuestionModel? RunWorkflowResultToMultipleChoiceQuestionModel(RunWorkflowResult result, IActivityBlueprint activityBlueprint);
-        StartWorkflowResponse? RunWorkflowResultToStartWorkflowResponse(RunWorkflowResult result);
+        MultipleChoiceQuestionModel? RunWorkflowResultToMultipleChoiceQuestionModel(RunWorkflowResult result, string activityType);
+        StartWorkflowResponse? RunWorkflowResultToStartWorkflowResponse(RunWorkflowResult result, string activityType);
     }
     public class StartWorkflowMapper : IStartWorkflowMapper
     {
@@ -17,7 +17,7 @@ namespace Elsa.Server.Features.Workflow.StartWorkflow
             _dateTimeProvider = dateTimeProvider;
         }
 
-        public MultipleChoiceQuestionModel? RunWorkflowResultToMultipleChoiceQuestionModel(RunWorkflowResult result, IActivityBlueprint activityBlueprint)
+        public MultipleChoiceQuestionModel? RunWorkflowResultToMultipleChoiceQuestionModel(RunWorkflowResult result, string activityType)
         {
             if (result.WorkflowInstance != null && result.WorkflowInstance
                     .LastExecutedActivityId != null)
@@ -25,7 +25,7 @@ namespace Elsa.Server.Features.Workflow.StartWorkflow
                 {
                     Id = $"{result.WorkflowInstance.Id}-{result.WorkflowInstance.LastExecutedActivityId}",
                     ActivityId = result.WorkflowInstance.LastExecutedActivityId,
-                    ActivityType = activityBlueprint.Type,
+                    ActivityType = activityType,
                     WorkflowInstanceId = result.WorkflowInstance.Id,
                     PreviousActivityId = result.WorkflowInstance.LastExecutedActivityId,
                     CreatedDateTime = _dateTimeProvider.UtcNow()
@@ -33,7 +33,7 @@ namespace Elsa.Server.Features.Workflow.StartWorkflow
             return null;
         }
 
-        public StartWorkflowResponse? RunWorkflowResultToStartWorkflowResponse(RunWorkflowResult result)
+        public StartWorkflowResponse? RunWorkflowResultToStartWorkflowResponse(RunWorkflowResult result, string activityType)
         {
             if (result.WorkflowInstance != null && result.WorkflowInstance
                     .LastExecutedActivityId != null)
@@ -41,7 +41,9 @@ namespace Elsa.Server.Features.Workflow.StartWorkflow
                 return new StartWorkflowResponse
                 {
                     WorkflowInstanceId = result.WorkflowInstance.Id,
-                    NextActivityId = result.WorkflowInstance.LastExecutedActivityId,
+                    NextActivityId = result.WorkflowInstance.LastExecutedActivityId,  
+                    ActivityType = activityType,
+                    
                 };
             }
 

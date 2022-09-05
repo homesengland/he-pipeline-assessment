@@ -71,7 +71,8 @@ namespace Elsa.Server.Features.Shared.SaveAndContinue
                             result.Data = new SaveAndContinueResponse
                             {
                                 WorkflowInstanceId = command.WorkflowInstanceId,
-                                NextActivityId = nextActivityId
+                                NextActivityId = nextActivityId,
+                                ActivityType = activity.Type
                             };
 
                         }

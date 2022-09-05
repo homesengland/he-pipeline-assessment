@@ -25,6 +25,7 @@ namespace Elsa.Server.Tests.Features.Workflow.StartWorkflow
             StartWorkflowCommand startWorkflowCommand,
             MultipleChoiceQuestionModel multipleChoiceQuestionModel,
             StartWorkflowResponse startWorkflowResponse,
+            string activityType,
             StartWorkflowCommandHandler sut)
         {
             var opResult = new OperationResult<StartWorkflowResponse>()
@@ -42,10 +43,10 @@ namespace Elsa.Server.Tests.Features.Workflow.StartWorkflow
             startsWorkflow.Setup(x => x.StartWorkflowAsync(workflowBlueprint, null, null, null, null, null, CancellationToken.None))
                 .ReturnsAsync(runWorkflowResult);
 
-            startWorkflowMapper.Setup(x => x.RunWorkflowResultToMultipleChoiceQuestionModel(runWorkflowResult, null))
+            startWorkflowMapper.Setup(x => x.RunWorkflowResultToMultipleChoiceQuestionModel(runWorkflowResult, activityType))
                 .Returns(multipleChoiceQuestionModel);
 
-            startWorkflowMapper.Setup(x => x.RunWorkflowResultToStartWorkflowResponse(runWorkflowResult))
+            startWorkflowMapper.Setup(x => x.RunWorkflowResultToStartWorkflowResponse(runWorkflowResult, opResult.Data.ActivityType))
                 .Returns(opResult.Data);
 
             //Act
@@ -69,6 +70,7 @@ namespace Elsa.Server.Tests.Features.Workflow.StartWorkflow
             WorkflowBlueprint workflowBlueprint,
             RunWorkflowResult runWorkflowResult,
             StartWorkflowCommand startWorkflowCommand,
+            string activityType,
             StartWorkflowCommandHandler sut)
         {
             //Arrange
@@ -79,7 +81,7 @@ namespace Elsa.Server.Tests.Features.Workflow.StartWorkflow
             startsWorkflow.Setup(x => x.StartWorkflowAsync(workflowBlueprint, null, null, null, null, null, CancellationToken.None))
                 .ReturnsAsync(runWorkflowResult);
 
-            startWorkflowMapper.Setup(x => x.RunWorkflowResultToMultipleChoiceQuestionModel(runWorkflowResult, null))
+            startWorkflowMapper.Setup(x => x.RunWorkflowResultToMultipleChoiceQuestionModel(runWorkflowResult, activityType))
                 .Returns((MultipleChoiceQuestionModel?)null);
 
             //Act

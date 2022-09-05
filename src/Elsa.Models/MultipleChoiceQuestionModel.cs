@@ -30,7 +30,7 @@
             this.LastModifiedDateTime = lastModifiedDateTime;
         }
 
-        public void SetAnswer(string answer, DateTime lastModifiedDateTime)
+        public void SetAnswer(string? answer, DateTime lastModifiedDateTime)
         {
             this.Answer = answer;
             this.LastModifiedDateTime = lastModifiedDateTime;

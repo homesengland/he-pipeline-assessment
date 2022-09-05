@@ -8,25 +8,24 @@ namespace He.PipelineAssessment.UI.Features.Workflow.LoadWorkflowActivity
     public class LoadWorkflowActivityRequestHandler : IRequestHandler<LoadWorkflowActivityRequest, SaveAndContinueCommand?>
     {
         private readonly IElsaServerHttpClient _elsaServerHttpClient;
-        private readonly ILoadWorkflowActivityMapper _loadWorkflowActivityMapper;
-        public LoadWorkflowActivityRequestHandler(IElsaServerHttpClient elsaServerHttpClient, ILoadWorkflowActivityMapper loadWorkflowActivityMapper)
+        public LoadWorkflowActivityRequestHandler(IElsaServerHttpClient elsaServerHttpClient)
         {
             _elsaServerHttpClient = elsaServerHttpClient;
-            _loadWorkflowActivityMapper = loadWorkflowActivityMapper;
         }
-        public async Task<SaveAndContinueCommand> Handle(LoadWorkflowActivityRequest request, CancellationToken cancellationToken)
+        public async Task<SaveAndContinueCommand?> Handle(LoadWorkflowActivityRequest request, CancellationToken cancellationToken)
         {
-            var response = await _elsaServerHttpClient.LoadWorkflowActivity<CurrencyQuestionActivityData>(new LoadWorkflowActivityDto
+            var response = await _elsaServerHttpClient.LoadWorkflowActivity(new LoadWorkflowActivityDto
             {
                 WorkflowInstanceId = request.WorkflowInstanceId,
-                ActivityId = request.ActivityId
+                ActivityId = request.ActivityId,
+                ActivityType = request.ActivityType
+
             });
 
             if (response != null)
             {
-                var result = _loadWorkflowActivityMapper.WorkflowActivityDataDtoToSaveAndContinueCommand(response);
 
-                return await Task.FromResult(result);
+                return await Task.FromResult((SaveAndContinueCommand)response);
             }
             else
             {

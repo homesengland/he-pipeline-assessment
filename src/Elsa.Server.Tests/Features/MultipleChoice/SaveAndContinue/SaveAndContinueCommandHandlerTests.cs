@@ -85,7 +85,8 @@ namespace Elsa.Server.Tests.Features.MultipleChoice.SaveAndContinue
             WorkflowInstance workflowInstance,
             MultipleChoiceQuestionModel nextMultipleChoiceQuestionModel,
             MultipleChoiceSaveAndContinueCommand saveAndContinueCommand,
-            SaveAndContinueCommandHandler sut)
+            SaveAndContinueCommandHandler sut,
+            string nextActivityType)
         {
             //Arrange
             var opResult = new OperationResult<SaveAndContinueResponse>()
@@ -118,7 +119,7 @@ namespace Elsa.Server.Tests.Features.MultipleChoice.SaveAndContinue
 
             saveAndContinueMapper
                 .Setup(x => x.SaveAndContinueCommandToNextMultipleChoiceQuestionModel(saveAndContinueCommand,
-                    workflowInstance.Output!.ActivityId, null)).Returns(nextMultipleChoiceQuestionModel);
+                    workflowInstance.Output!.ActivityId, nextActivityType)).Returns(nextMultipleChoiceQuestionModel);
 
             //Act
             var result = await sut.Handle(saveAndContinueCommand, CancellationToken.None);

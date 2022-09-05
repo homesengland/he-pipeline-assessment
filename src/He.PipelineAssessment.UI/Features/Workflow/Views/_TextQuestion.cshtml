@@ -2,12 +2,12 @@
 
 <div class="govuk-form-group">
     <h1 class="govuk-heading-l">
-            @Html.DisplayTextFor(m => m.Data.TextQuestionActivityData.Title)
+            @Html.DisplayTextFor(m => m.Data.TextQuestionActivityData!.Title)
     </h1>
         <label class="govuk-label govuk-label--m">
-            @Html.DisplayTextFor(m => m.Data.TextQuestionActivityData.Question)
+            @Html.DisplayTextFor(m => m.Data.TextQuestionActivityData!.Question)
         </label>
-    @if (!string.IsNullOrEmpty(Model.Data.TextQuestionActivityData.QuestionHint))
+    @if (!string.IsNullOrEmpty(Model.Data.TextQuestionActivityData!.QuestionHint))
     {
         <div id="event-name-hint" class="govuk-hint">
             @Model.Data.TextQuestionActivityData.QuestionHint

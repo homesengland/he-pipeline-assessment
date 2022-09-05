@@ -39,19 +39,17 @@ namespace Elsa.Server.Features.Currency.LoadWorkflowActivity
             {
                 var dbMultipleChoiceQuestionModel =
                     await _pipelineAssessmentRepository.GetMultipleChoiceQuestions(activityRequest.ActivityId, activityRequest.WorkflowInstanceId, cancellationToken);
-
-                IEnumerable<CollectedWorkflow> workflows = await _QuestionInvoker.FindWorkflowsAsync(activityRequest.ActivityId, dbMultipleChoiceQuestionModel.ActivityType, activityRequest.WorkflowInstanceId, cancellationToken);
-
-                var collectedWorkflow = workflows.FirstOrDefault();
-                if (collectedWorkflow != null)
+                if (dbMultipleChoiceQuestionModel != null)
                 {
-                    var workflowSpecification =
-                        new WorkflowInstanceIdSpecification(collectedWorkflow.WorkflowInstanceId);
-                    var workflowInstance = await _workflowInstanceStore.FindAsync(workflowSpecification, cancellationToken: cancellationToken);
-                    if (workflowInstance != null)
-                    {
+                    IEnumerable<CollectedWorkflow> workflows = await _QuestionInvoker.FindWorkflowsAsync(activityRequest.ActivityId, dbMultipleChoiceQuestionModel.ActivityType, activityRequest.WorkflowInstanceId, cancellationToken);
 
-                        if (dbMultipleChoiceQuestionModel != null)
+                    var collectedWorkflow = workflows.FirstOrDefault();
+                    if (collectedWorkflow != null)
+                    {
+                        var workflowSpecification =
+                            new WorkflowInstanceIdSpecification(collectedWorkflow.WorkflowInstanceId);
+                        var workflowInstance = await _workflowInstanceStore.FindAsync(workflowSpecification, cancellationToken: cancellationToken);
+                        if (workflowInstance != null)
                         {
 
                             if (!workflowInstance.ActivityData.ContainsKey(activityRequest.ActivityId))
@@ -66,7 +64,7 @@ namespace Elsa.Server.Features.Currency.LoadWorkflowActivity
 
                                 result.Data.ActivityType = dbMultipleChoiceQuestionModel.ActivityType;
                                 result.Data.PreviousActivityId = dbMultipleChoiceQuestionModel.PreviousActivityId;
-                                var activityData =_loadWorkflowActivityMapper.ActivityDataDictionaryToCurrencyActivityData(activityDataDictionary);
+                                var activityData = _loadWorkflowActivityMapper.ActivityDataDictionaryToCurrencyActivityData(activityDataDictionary);
                                 if (activityData != null)
                                 {
                                     result.Data.ActivityData = activityData;
@@ -76,19 +74,20 @@ namespace Elsa.Server.Features.Currency.LoadWorkflowActivity
                         else
                         {
                             result.ErrorMessages.Add(
-                                $"Unable to find workflow instance with Id: {activityRequest.WorkflowInstanceId} and Activity Id: {activityRequest.ActivityId}");
+                                $"Unable to find workflow instance with Id: {activityRequest.WorkflowInstanceId} in Elsa database");
                         }
                     }
                     else
                     {
                         result.ErrorMessages.Add(
-                            $"Unable to find workflow instance with Id: {activityRequest.WorkflowInstanceId} in Elsa database");
+                            $"Unable to progress workflow instance Id {activityRequest.WorkflowInstanceId}. No collected workflows");
                     }
+
                 }
                 else
                 {
                     result.ErrorMessages.Add(
-                        $"Unable to progress workflow instance Id {activityRequest.WorkflowInstanceId}. No collected workflows");
+                        $"Unable to find workflow instance with Id: {activityRequest.WorkflowInstanceId} and Activity Id: {activityRequest.ActivityId}");
                 }
             }
             catch (Exception e)

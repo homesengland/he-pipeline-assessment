@@ -20,7 +20,7 @@
         public string Question { get; set; } = null!;
         public string? QuestionHint { get; set; }
         public string? QuestionGuidance { get; set; }
-        public object Output { get; set; } = null!;
+        public object? Output { get; set; }
     }
 
     public class CurrencyQuestionActivityData : QuestionActivityData

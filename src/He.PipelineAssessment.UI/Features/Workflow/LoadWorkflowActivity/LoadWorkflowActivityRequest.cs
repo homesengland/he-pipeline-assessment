@@ -7,5 +7,7 @@ namespace He.PipelineAssessment.UI.Features.Workflow.LoadWorkflowActivity
     {
         public string WorkflowInstanceId { get; set; } = null!;
         public string ActivityId { get; set; } = null!;
+
+        public string ActivityType { get; set; } = null!;
     }
 }

@@ -16,6 +16,7 @@ namespace Elsa.Server.Tests.Features.MultipleChoice.SaveAndContinue
             [Frozen] Mock<IDateTimeProvider> mockDateTimeProvider,
             MultipleChoiceSaveAndContinueCommand saveAndContinueCommand,
             string nextActivityId,
+            string nextActivityType,
             SaveAndContinueMapper sut
         )
         {
@@ -24,7 +25,7 @@ namespace Elsa.Server.Tests.Features.MultipleChoice.SaveAndContinue
             mockDateTimeProvider.Setup(x => x.UtcNow()).Returns(currentTimeUtc);
 
             //Act
-            var result = sut.SaveAndContinueCommandToNextMultipleChoiceQuestionModel(saveAndContinueCommand, nextActivityId, null);
+            var result = sut.SaveAndContinueCommandToNextMultipleChoiceQuestionModel(saveAndContinueCommand, nextActivityId, nextActivityType);
 
             //Assert
             Assert.IsType<MultipleChoiceQuestionModel>(result);
@@ -32,6 +33,7 @@ namespace Elsa.Server.Tests.Features.MultipleChoice.SaveAndContinue
                 $"{saveAndContinueCommand.WorkflowInstanceId}-{nextActivityId}",
                 result.Id);
             Assert.Equal(nextActivityId, result!.ActivityId);
+            Assert.Equal(nextActivityType, result!.ActivityType);
             Assert.False(result.FinishWorkflow);
             Assert.False(result.NavigateBack);
             Assert.Null(result.Answer);

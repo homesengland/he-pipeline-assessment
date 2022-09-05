@@ -24,7 +24,6 @@ builder.Services.AddHttpClient("ElsaServerClient", client =>
 
 builder.Services.AddScoped<IElsaServerHttpClient, ElsaServerHttpClient>();
 builder.Services.AddScoped<ISaveAndContinueMapper, SaveAndContinueMapper>();
-builder.Services.AddScoped<ILoadWorkflowActivityMapper, LoadWorkflowActivityMapper>();
 
 
 builder.Services.AddMediatR(typeof(Program).Assembly);

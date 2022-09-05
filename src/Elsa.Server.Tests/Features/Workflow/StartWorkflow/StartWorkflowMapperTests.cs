@@ -15,6 +15,7 @@ namespace Elsa.Server.Tests.Features.Workflow.StartWorkflow
         public void RunWorkflowResultToMultipleChoiceQuestionModel_ShouldReturnMultipleChoiceQuestionModel_WhenWorkflowInstanceIsNotNull(
             [Frozen] Mock<IDateTimeProvider> mockDateTimeProvider,
             RunWorkflowResult runWorkflowResult,
+            string activityType,
             StartWorkflowMapper sut
             )
         {
@@ -23,12 +24,13 @@ namespace Elsa.Server.Tests.Features.Workflow.StartWorkflow
             mockDateTimeProvider.Setup(x => x.UtcNow()).Returns(currentTimeUtc);
 
             //Act
-            var result = sut.RunWorkflowResultToMultipleChoiceQuestionModel(runWorkflowResult, null);
+            var result = sut.RunWorkflowResultToMultipleChoiceQuestionModel(runWorkflowResult, activityType);
 
             //Assert
             Assert.IsType<MultipleChoiceQuestionModel>(result);
             Assert.Equal(runWorkflowResult.WorkflowInstance!.LastExecutedActivityId, result!.ActivityId);
             Assert.Equal(runWorkflowResult.WorkflowInstance!.Id, result.WorkflowInstanceId);
+            Assert.Equal(activityType, result.ActivityType);
             Assert.Equal(runWorkflowResult.WorkflowInstance!.LastExecutedActivityId, result.PreviousActivityId);
             Assert.Equal(
                 $"{runWorkflowResult.WorkflowInstance.Id}-{runWorkflowResult.WorkflowInstance.LastExecutedActivityId}",
@@ -39,7 +41,8 @@ namespace Elsa.Server.Tests.Features.Workflow.StartWorkflow
         [Theory]
         [AutoData]
         public void RunWorkflowResultToMultipleChoiceQuestionModel_ShouldReturnNull_WhenWorkflowInstanceNull(
-            [Frozen] Mock<IDateTimeProvider> mockDateTimeProvider
+            [Frozen] Mock<IDateTimeProvider> mockDateTimeProvider,
+            string activityType
             )
         {
             //Arrange
@@ -47,7 +50,7 @@ namespace Elsa.Server.Tests.Features.Workflow.StartWorkflow
             var runWorkflowResult = new RunWorkflowResult(null, null, null, false);
 
             //Act
-            var result = sut.RunWorkflowResultToMultipleChoiceQuestionModel(runWorkflowResult, null);
+            var result = sut.RunWorkflowResultToMultipleChoiceQuestionModel(runWorkflowResult, activityType);
 
             //Assert
             Assert.Null(result);
@@ -56,7 +59,7 @@ namespace Elsa.Server.Tests.Features.Workflow.StartWorkflow
         [Theory]
         [AutoData]
         public void RunWorkflowResultToMultipleChoiceQuestionModel_ShouldReturnNull_WhenWorkflowInstanceIdNull(
-            [Frozen] Mock<IDateTimeProvider> mockDateTimeProvider)
+            [Frozen] Mock<IDateTimeProvider> mockDateTimeProvider, string activityType)
         {
             //Arrange
             StartWorkflowMapper sut = new StartWorkflowMapper(mockDateTimeProvider.Object);
@@ -65,7 +68,7 @@ namespace Elsa.Server.Tests.Features.Workflow.StartWorkflow
             var runWorkflowResult = new RunWorkflowResult(workflowInstance, null, null, false);
 
             //Act
-            var result = sut.RunWorkflowResultToMultipleChoiceQuestionModel(runWorkflowResult, null);
+            var result = sut.RunWorkflowResultToMultipleChoiceQuestionModel(runWorkflowResult, activityType);
 
             //Assert
             Assert.Null(result);
@@ -85,7 +88,7 @@ namespace Elsa.Server.Tests.Features.Workflow.StartWorkflow
 
 
             //Act
-            var result = sut.RunWorkflowResultToStartWorkflowResponse(runWorkflowResult);
+            var result = sut.RunWorkflowResultToStartWorkflowResponse(runWorkflowResult, "");
 
             //Assert
             Assert.IsType<StartWorkflowResponse>(result);
@@ -104,7 +107,7 @@ namespace Elsa.Server.Tests.Features.Workflow.StartWorkflow
             var runWorkflowResult = new RunWorkflowResult(null, null, null, false);
 
             //Act
-            var result = sut.RunWorkflowResultToStartWorkflowResponse(runWorkflowResult);
+            var result = sut.RunWorkflowResultToStartWorkflowResponse(runWorkflowResult, "");
 
             //Assert
             Assert.Null(result);
@@ -122,7 +125,7 @@ namespace Elsa.Server.Tests.Features.Workflow.StartWorkflow
             var runWorkflowResult = new RunWorkflowResult(workflowInstance, null, null, false);
 
             //Act
-            var result = sut.RunWorkflowResultToStartWorkflowResponse(runWorkflowResult);
+            var result = sut.RunWorkflowResultToStartWorkflowResponse(runWorkflowResult, "");
 
             //Assert
             Assert.Null(result);
