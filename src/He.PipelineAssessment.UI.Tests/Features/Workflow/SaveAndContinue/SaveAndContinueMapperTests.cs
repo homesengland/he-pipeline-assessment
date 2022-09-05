@@ -13,7 +13,7 @@ namespace He.PipelineAssessment.UI.Tests.Features.Workflow.SaveAndContinue
             )
         {
             //Arrange
-            var choiceList = saveAndContinueCommand.Data.MultipleChoiceQuestionActivityData.Choices.Where(x => x.IsSelected).Select(choice => choice.Answer).ToList();
+            var choiceList = saveAndContinueCommand.Data.MultipleChoiceQuestionActivityData!.Choices.Where(x => x.IsSelected).Select(choice => choice.Answer).ToList();
 
             //Act
             var result = sut.SaveAndContinueCommandToMultipleChoiceSaveAndContinueCommandDto(saveAndContinueCommand);

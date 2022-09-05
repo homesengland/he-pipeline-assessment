@@ -9,7 +9,6 @@ using Elsa.CustomInfrastructure.Data.Repository;
 using Elsa.Persistence.EntityFramework.Core.Extensions;
 using Elsa.Persistence.EntityFramework.Sqlite;
 using Elsa.Runtime;
-using Elsa.Server.Features.Currency.LoadWorkflowActivity;
 using Elsa.Server.Features.Shared.SaveAndContinue;
 using Elsa.Server.Features.Workflow.LoadWorkflowActivity;
 using Elsa.Server.Features.Workflow.StartWorkflow;
@@ -66,9 +65,7 @@ builder.Services.AddScoped<IStartWorkflowMapper, StartWorkflowMapper>();
 builder.Services.AddScoped<ISaveAndContinueMapper, SaveAndContinueMapper>();
 
 builder.Services.AddScoped<ILoadWorkflowActivityJsonHelper, LoadWorkflowActivityJsonHelper>();
-builder.Services.AddScoped<Elsa.Server.Features.Shared.LoadWorkflowActivity.ILoadWorkflowActivityJsonHelper, Elsa.Server.Features.Shared.LoadWorkflowActivity.LoadWorkflowActivityJsonHelper>();
 builder.Services.AddScoped<ILoadWorkflowActivityMapper, LoadWorkflowActivityMapper>();
-builder.Services.AddScoped<ILoadCurrencyActivityMapper, LoadCurrencyActivityMapper>();
 
 // Allow arbitrary client browser apps to access the API.
 // In a production environment, make sure to allow only origins you trust.

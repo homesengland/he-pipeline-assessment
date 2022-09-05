@@ -6,16 +6,9 @@ namespace Elsa.Server.Features.Workflow.LoadWorkflowActivity
     public interface ILoadWorkflowActivityJsonHelper
     {
         MultipleChoiceQuestionModel? ActivityOutputJsonToMultipleChoiceQuestionModel(string activityJson);
-        MultipleChoiceQuestionActivityData? ActivityDataDictionaryToMultipleChoiceActivityData(IDictionary<string, object?>? activityDataDictionary);
 
-        CurrencyQuestionActivityData? ActivityDataDictionaryToCurrencyQuestionActivityData(
-            IDictionary<string, object?>? activityDataDictionary);
+        T? ActivityDataDictionaryToQuestionActivityData<T>(IDictionary<string, object?>? activityDataDictionary);
 
-        TextQuestionActivityData? ActivityDataDictionaryToTextQuestionActivityData(
-            IDictionary<string, object?>? activityDataDictionary);
-
-        DateQuestionActivityData? ActivityDataDictionaryToDateQuestionActivityData(
-            IDictionary<string, object?>? activityDataDictionary);
     }
 
     public class LoadWorkflowActivityJsonHelper : ILoadWorkflowActivityJsonHelper
@@ -27,31 +20,10 @@ namespace Elsa.Server.Features.Workflow.LoadWorkflowActivity
             return output;
         }
 
-        public MultipleChoiceQuestionActivityData? ActivityDataDictionaryToMultipleChoiceActivityData(IDictionary<string, object?>? activityDataDictionary)
+        public T? ActivityDataDictionaryToQuestionActivityData<T>(IDictionary<string, object?>? activityDataDictionary)
         {
             var json = JsonSerializer.Serialize(activityDataDictionary);
-            var activityData = JsonSerializer.Deserialize<MultipleChoiceQuestionActivityData>(json);
-            return activityData;
-        }
-
-        public CurrencyQuestionActivityData? ActivityDataDictionaryToCurrencyQuestionActivityData(IDictionary<string, object?>? activityDataDictionary)
-        {
-            var json = JsonSerializer.Serialize(activityDataDictionary);
-            var activityData = JsonSerializer.Deserialize<CurrencyQuestionActivityData>(json);
-            return activityData;
-        }
-
-        public TextQuestionActivityData? ActivityDataDictionaryToTextQuestionActivityData(IDictionary<string, object?>? activityDataDictionary)
-        {
-            var json = JsonSerializer.Serialize(activityDataDictionary);
-            var activityData = JsonSerializer.Deserialize<TextQuestionActivityData>(json);
-            return activityData;
-        }
-
-        public DateQuestionActivityData? ActivityDataDictionaryToDateQuestionActivityData(IDictionary<string, object?>? activityDataDictionary)
-        {
-            var json = JsonSerializer.Serialize(activityDataDictionary);
-            var activityData = JsonSerializer.Deserialize<DateQuestionActivityData>(json);
+            var activityData = JsonSerializer.Deserialize<T>(json);
             return activityData;
         }
     }

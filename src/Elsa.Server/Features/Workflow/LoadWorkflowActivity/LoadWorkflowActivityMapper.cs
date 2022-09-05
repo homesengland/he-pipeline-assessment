@@ -36,7 +36,7 @@ namespace Elsa.Server.Features.Workflow.LoadWorkflowActivity
 
         public MultipleChoiceQuestionActivityData? ActivityDataDictionaryToMultipleChoiceActivityData(IDictionary<string, object?>? activityDataDictionary)
         {
-            var activityData = _loadWorkflowActivityJsonHelper.ActivityDataDictionaryToMultipleChoiceActivityData(activityDataDictionary);
+            var activityData = _loadWorkflowActivityJsonHelper.ActivityDataDictionaryToQuestionActivityData<MultipleChoiceQuestionActivityData>(activityDataDictionary);
 
             if (activityData != null && activityData.Output != null)
             {
@@ -58,7 +58,7 @@ namespace Elsa.Server.Features.Workflow.LoadWorkflowActivity
 
         public CurrencyQuestionActivityData? ActivityDataDictionaryToCurrencyActivityData(IDictionary<string, object?>? activityDataDictionary)
         {
-            var activityData = _loadWorkflowActivityJsonHelper.ActivityDataDictionaryToCurrencyQuestionActivityData(activityDataDictionary);
+            var activityData = _loadWorkflowActivityJsonHelper.ActivityDataDictionaryToQuestionActivityData<CurrencyQuestionActivityData>(activityDataDictionary);
 
             if (activityData != null && activityData.Output != null)
             {
@@ -77,7 +77,7 @@ namespace Elsa.Server.Features.Workflow.LoadWorkflowActivity
 
         public DateQuestionActivityData? ActivityDataDictionaryToDateActivityData(IDictionary<string, object?>? activityDataDictionary)
         {
-            var activityData = _loadWorkflowActivityJsonHelper.ActivityDataDictionaryToDateQuestionActivityData(activityDataDictionary);
+            var activityData = _loadWorkflowActivityJsonHelper.ActivityDataDictionaryToQuestionActivityData<DateQuestionActivityData>(activityDataDictionary);
 
             if (activityData != null && activityData.Output != null)
             {
@@ -97,7 +97,7 @@ namespace Elsa.Server.Features.Workflow.LoadWorkflowActivity
 
         public TextQuestionActivityData? ActivityDataDictionaryToTextActivityData(IDictionary<string, object?>? activityDataDictionary)
         {
-            var activityData = _loadWorkflowActivityJsonHelper.ActivityDataDictionaryToTextQuestionActivityData(activityDataDictionary);
+            var activityData = _loadWorkflowActivityJsonHelper.ActivityDataDictionaryToQuestionActivityData<TextQuestionActivityData>(activityDataDictionary);
 
             if (activityData != null && activityData.Output != null)
             {

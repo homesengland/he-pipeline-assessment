@@ -27,8 +27,7 @@ namespace He.PipelineAssessment.UI.Features.Workflow.StartWorkflow
                 var result = new LoadWorkflowActivityRequest()
                 {
                     ActivityId = response.Data.NextActivityId,
-                    WorkflowInstanceId = response.Data.WorkflowInstanceId,
-                    ActivityType = response.Data.ActivityType
+                    WorkflowInstanceId = response.Data.WorkflowInstanceId
                 };
 
                 return await Task.FromResult(result);

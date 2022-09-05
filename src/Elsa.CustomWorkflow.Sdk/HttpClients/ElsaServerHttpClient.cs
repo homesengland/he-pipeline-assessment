@@ -174,7 +174,7 @@ namespace Elsa.CustomWorkflow.Sdk.HttpClients
         public async Task<WorkflowActivityDataDto?> LoadWorkflowActivity(LoadWorkflowActivityDto model)
         {
             string data;
-            var relativeUri = $"{model.ActivityType}/LoadWorkflowActivity?workflowInstanceId={model.WorkflowInstanceId}&activityId={model.ActivityId}";
+            var relativeUri = $"workflow/LoadWorkflowActivity?workflowInstanceId={model.WorkflowInstanceId}&activityId={model.ActivityId}";
 
             using (var response = await _httpClientFactory.CreateClient("ElsaServerClient")
                        .GetAsync(relativeUri)

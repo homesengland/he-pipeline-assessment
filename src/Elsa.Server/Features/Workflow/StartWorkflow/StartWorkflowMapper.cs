@@ -7,7 +7,7 @@ namespace Elsa.Server.Features.Workflow.StartWorkflow
     public interface IStartWorkflowMapper
     {
         MultipleChoiceQuestionModel? RunWorkflowResultToMultipleChoiceQuestionModel(RunWorkflowResult result, string activityType);
-        StartWorkflowResponse? RunWorkflowResultToStartWorkflowResponse(RunWorkflowResult result, string activityType);
+        StartWorkflowResponse? RunWorkflowResultToStartWorkflowResponse(RunWorkflowResult result);
     }
     public class StartWorkflowMapper : IStartWorkflowMapper
     {
@@ -33,7 +33,7 @@ namespace Elsa.Server.Features.Workflow.StartWorkflow
             return null;
         }
 
-        public StartWorkflowResponse? RunWorkflowResultToStartWorkflowResponse(RunWorkflowResult result, string activityType)
+        public StartWorkflowResponse? RunWorkflowResultToStartWorkflowResponse(RunWorkflowResult result)
         {
             if (result.WorkflowInstance != null && result.WorkflowInstance
                     .LastExecutedActivityId != null)
@@ -41,9 +41,7 @@ namespace Elsa.Server.Features.Workflow.StartWorkflow
                 return new StartWorkflowResponse
                 {
                     WorkflowInstanceId = result.WorkflowInstance.Id,
-                    NextActivityId = result.WorkflowInstance.LastExecutedActivityId,  
-                    ActivityType = activityType,
-                    
+                    NextActivityId = result.WorkflowInstance.LastExecutedActivityId                
                 };
             }
 

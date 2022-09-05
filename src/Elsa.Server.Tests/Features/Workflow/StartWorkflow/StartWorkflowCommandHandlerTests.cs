@@ -46,7 +46,7 @@ namespace Elsa.Server.Tests.Features.Workflow.StartWorkflow
             startWorkflowMapper.Setup(x => x.RunWorkflowResultToMultipleChoiceQuestionModel(runWorkflowResult, activityType))
                 .Returns(multipleChoiceQuestionModel);
 
-            startWorkflowMapper.Setup(x => x.RunWorkflowResultToStartWorkflowResponse(runWorkflowResult, opResult.Data.ActivityType))
+            startWorkflowMapper.Setup(x => x.RunWorkflowResultToStartWorkflowResponse(runWorkflowResult))
                 .Returns(opResult.Data);
 
             //Act

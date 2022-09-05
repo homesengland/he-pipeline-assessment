@@ -26,8 +26,7 @@ namespace He.PipelineAssessment.UI.Features.Workflow.SaveAndContinue
                 result = new LoadWorkflowActivityRequest()
                 {
                     ActivityId = response!.Data.NextActivityId,
-                    WorkflowInstanceId = response.Data.WorkflowInstanceId,
-                    ActivityType = response.Data.ActivityType
+                    WorkflowInstanceId = response.Data.WorkflowInstanceId
                 };
             }
 
@@ -39,8 +38,7 @@ namespace He.PipelineAssessment.UI.Features.Workflow.SaveAndContinue
                 result = new LoadWorkflowActivityRequest()
                 {
                     ActivityId = response!.Data.NextActivityId,
-                    WorkflowInstanceId = response.Data.WorkflowInstanceId,
-                    ActivityType = response.Data.ActivityType
+                    WorkflowInstanceId = response.Data.WorkflowInstanceId
                 };
             }
 
@@ -52,8 +50,7 @@ namespace He.PipelineAssessment.UI.Features.Workflow.SaveAndContinue
                 result = new LoadWorkflowActivityRequest()
                 {
                     ActivityId = response!.Data.NextActivityId,
-                    WorkflowInstanceId = response.Data.WorkflowInstanceId,
-                    ActivityType = response.Data.ActivityType
+                    WorkflowInstanceId = response.Data.WorkflowInstanceId
                 };
             }
 
@@ -65,8 +62,7 @@ namespace He.PipelineAssessment.UI.Features.Workflow.SaveAndContinue
                 result = new LoadWorkflowActivityRequest()
                 {
                     ActivityId = response!.Data.NextActivityId,
-                    WorkflowInstanceId = response.Data.WorkflowInstanceId,
-                    ActivityType = response.Data.ActivityType
+                    WorkflowInstanceId = response.Data.WorkflowInstanceId
                 };
             }
 

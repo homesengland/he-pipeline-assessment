@@ -34,8 +34,7 @@ namespace He.PipelineAssessment.UI.Features.Workflow
                     new
                     {
                         WorkflowInstanceId = result?.WorkflowInstanceId,
-                        ActivityId = result?.ActivityId,
-                        ActivityType = result?.ActivityType
+                        ActivityId = result?.ActivityId
                     });
             }
             catch (Exception e)
