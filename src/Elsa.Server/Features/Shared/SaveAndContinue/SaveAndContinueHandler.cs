@@ -13,7 +13,7 @@ namespace Elsa.Server.Features.Shared.SaveAndContinue
 {
     public interface ISaveAndContinueHandler
     {
-        Task<OperationResult<SaveAndContinueResponse>> Handle(AssessmentQuestion dbAssessmentQuestion, SaveAndContinueCommand command, CancellationToken cancellationToken);
+        Task<OperationResult<SaveAndContinueResponse>> Handle(SaveAndContinueCommand command, CancellationToken cancellationToken);
     }
 
     public class SaveAndContinueHandler : ISaveAndContinueHandler
@@ -33,67 +33,80 @@ namespace Elsa.Server.Features.Shared.SaveAndContinue
             _workflowRegistry = workflowRegistry;
         }
 
-        public async Task<OperationResult<SaveAndContinueResponse>> Handle(AssessmentQuestion dbAssessmentQuestion, SaveAndContinueCommand command, CancellationToken cancellationToken)
+        public async Task<OperationResult<SaveAndContinueResponse>> Handle(SaveAndContinueCommand command, CancellationToken cancellationToken)
         {
             var result = new OperationResult<SaveAndContinueResponse>();
             try
             {
-                var collectedWorkflow = await _invoker.ExecuteWorkflowsAsync(command.ActivityId, dbAssessmentQuestion.ActivityType,
+                var dbAssessmentQuestion =
+                    await _pipelineAssessmentRepository.GetAssessmentQuestion(command.ActivityId, command.WorkflowInstanceId, cancellationToken);
+                if (dbAssessmentQuestion != null)
+                {
+                    dbAssessmentQuestion.SetAnswer(command.Answer, DateTime.UtcNow); //use DateTimeProvider
+                    await _pipelineAssessmentRepository.UpdateAssessmentQuestion(dbAssessmentQuestion,
+                        cancellationToken);
+
+                    var collectedWorkflow = await _invoker.ExecuteWorkflowsAsync(command.ActivityId, dbAssessmentQuestion.ActivityType,
                     command.WorkflowInstanceId, dbAssessmentQuestion, cancellationToken).FirstOrDefault();
 
-                var workflowSpecification =
-                    new WorkflowInstanceIdSpecification(collectedWorkflow.WorkflowInstanceId);
-                var workflowInstance = await _workflowInstanceStore.FindAsync(workflowSpecification, cancellationToken);
+                    var workflowSpecification =
+                        new WorkflowInstanceIdSpecification(collectedWorkflow.WorkflowInstanceId);
+                    var workflowInstance = await _workflowInstanceStore.FindAsync(workflowSpecification, cancellationToken);
 
-                if (workflowInstance != null)
-                {
-                    if (workflowInstance.Output != null)
+                    if (workflowInstance != null)
                     {
-                        var nextActivityId = workflowInstance.Output.ActivityId;
-
-                        var sampleWorkflow =
-                            await _workflowRegistry.FindAsync(workflowInstance.DefinitionId, VersionOptions.Published, cancellationToken: cancellationToken);
-
-                        var activity = sampleWorkflow!.Activities.FirstOrDefault(x =>
-                            x.Id == nextActivityId);
-
-                        if (activity != null)
+                        if (workflowInstance.Output != null)
                         {
-                            var nextActivityRecord =
-                                await _pipelineAssessmentRepository.GetAssessmentQuestion(nextActivityId,
-                                    command.WorkflowInstanceId, cancellationToken);
+                            var nextActivityId = workflowInstance.Output.ActivityId;
 
-                            if (nextActivityRecord == null)
+                            var sampleWorkflow =
+                                await _workflowRegistry.FindAsync(workflowInstance.DefinitionId, VersionOptions.Published, cancellationToken: cancellationToken);
+
+                            var activity = sampleWorkflow!.Activities.FirstOrDefault(x =>
+                                x.Id == nextActivityId);
+
+                            if (activity != null)
                             {
-                                await CreateNextActivityRecord(command, nextActivityId, activity.Type);
+                                var nextActivityRecord =
+                                    await _pipelineAssessmentRepository.GetAssessmentQuestion(nextActivityId,
+                                        command.WorkflowInstanceId, cancellationToken);
+
+                                if (nextActivityRecord == null)
+                                {
+                                    await CreateNextActivityRecord(command, nextActivityId, activity.Type);
+                                }
+
+                                result.Data = new SaveAndContinueResponse
+                                {
+                                    WorkflowInstanceId = command.WorkflowInstanceId,
+                                    NextActivityId = nextActivityId,
+                                    ActivityType = activity.Type
+                                };
+
                             }
-
-                            result.Data = new SaveAndContinueResponse
+                            else
                             {
-                                WorkflowInstanceId = command.WorkflowInstanceId,
-                                NextActivityId = nextActivityId,
-                                ActivityType = activity.Type
-                            };
-
+                                result.ErrorMessages.Add(
+                                    $"Unable to determine next activity ID");
+                            }
                         }
                         else
                         {
                             result.ErrorMessages.Add(
-                                $"Unable to determine next activity ID");
+                                $"Workflow instance output for workflow instance Id {command.WorkflowInstanceId} is not set. Unable to determine next activity");
                         }
                     }
                     else
                     {
                         result.ErrorMessages.Add(
-                            $"Workflow instance output for workflow instance Id {command.WorkflowInstanceId} is not set. Unable to determine next activity");
+                            $"Unable to find workflow instance with Id: {command.WorkflowInstanceId} in Elsa database");
                     }
                 }
                 else
                 {
                     result.ErrorMessages.Add(
-                        $"Unable to find workflow instance with Id: {command.WorkflowInstanceId} in Elsa database");
+                        $"Unable to find workflow instance with Id: {command.WorkflowInstanceId} and Activity Id: {command.ActivityId} in custom database");
                 }
-
             }
             catch (Exception e)
             {

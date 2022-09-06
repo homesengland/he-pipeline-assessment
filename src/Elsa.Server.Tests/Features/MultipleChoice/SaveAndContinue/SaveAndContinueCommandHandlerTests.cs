@@ -133,6 +133,8 @@ namespace Elsa.Server.Tests.Features.MultipleChoice.SaveAndContinue
             Assert.Empty(result.ValidationMessages);
         }
 
+        //re-write to test SaveAndContinueCommandHandler Handle method
+        //extract this test to the shared SaveAndContinueHandler
         [Theory]
         [AutoMoqData]
         public async Task Handle_ShouldReturnErrors_WhenOutputIsNullOnWorkflowInstance(

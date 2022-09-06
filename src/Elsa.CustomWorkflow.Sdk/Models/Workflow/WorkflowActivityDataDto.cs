@@ -16,19 +16,22 @@ namespace Elsa.CustomWorkflow.Sdk.Models.Workflow
         public string ActivityType { get; set; } = null!;
         public string PreviousActivityId { get; set; } = null!;
 
-        public MultipleChoiceQuestionActivityData? MultipleChoiceQuestionActivityData { get; set; }
-        public CurrencyQuestionActivityData? CurrencyQuestionActivityData { get; set; }
-        public TextQuestionActivityData? TextQuestionActivityData { get; set; }
-        public DateQuestionActivityData? DateQuestionActivityData { get; set; }
+        public QuestionActivityData? QuestionActivityData { get; set; }
+
+        //public MultipleChoiceQuestionActivityData? MultipleChoiceQuestionActivityData { get; set; }
+        //public CurrencyQuestionActivityData? CurrencyQuestionActivityData { get; set; }
+        //public TextQuestionActivityData? TextQuestionActivityData { get; set; }
+        //public DateQuestionActivityData? DateQuestionActivityData { get; set; }
     }
 
-    public abstract class QuestionActivityData
+    public class QuestionActivityData
     {
         public string Title { get; set; } = null!;
         public string Question { get; set; } = null!;
         public string? QuestionHint { get; set; }
         public string? QuestionGuidance { get; set; }
         public object Output { get; set; } = null!;
+        public string? Answer { get; set; }
     }
 
     public class CurrencyQuestionActivityData : QuestionActivityData

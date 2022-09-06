@@ -28,7 +28,7 @@ namespace Elsa.Server.Tests.Features.MultipleChoice
             //Arrange
             mediatorMock.Setup(x => x.Send(command, CancellationToken.None)).ReturnsAsync(startWorkflowOperationResult);
 
-            MultipleChoiceQuestionController controller = new MultipleChoiceQuestionController(mediatorMock.Object);
+            SaveAndContinueController controller = new MultipleChoiceQuestionController(mediatorMock.Object);
 
             //Act
             var result = await controller.SaveAndContinue(command);
@@ -56,7 +56,7 @@ namespace Elsa.Server.Tests.Features.MultipleChoice
             //Arrange
             mediatorMock.Setup(x => x.Send(command, CancellationToken.None)).ReturnsAsync(operationResult);
 
-            MultipleChoiceQuestionController controller = new MultipleChoiceQuestionController(mediatorMock.Object);
+            SaveAndContinueController controller = new MultipleChoiceQuestionController(mediatorMock.Object);
 
             //Act
             var result = await controller.SaveAndContinue(command);
@@ -83,7 +83,7 @@ namespace Elsa.Server.Tests.Features.MultipleChoice
             //Arrange
             mediatorMock.Setup(x => x.Send(command, CancellationToken.None)).ThrowsAsync(exception);
 
-            MultipleChoiceQuestionController controller = new MultipleChoiceQuestionController(mediatorMock.Object);
+            SaveAndContinueController controller = new MultipleChoiceQuestionController(mediatorMock.Object);
 
             //Act
             var result = await controller.SaveAndContinue(command);
@@ -112,7 +112,7 @@ namespace Elsa.Server.Tests.Features.MultipleChoice
             //Arrange
             mediatorMock.Setup(x => x.Send(command, CancellationToken.None)).ReturnsAsync((OperationResult<SaveAndContinueResponse>)null!);
 
-            MultipleChoiceQuestionController controller = new MultipleChoiceQuestionController(mediatorMock.Object);
+            SaveAndContinueController controller = new MultipleChoiceQuestionController(mediatorMock.Object);
 
             //Act
             var result = await controller.SaveAndContinue(command);

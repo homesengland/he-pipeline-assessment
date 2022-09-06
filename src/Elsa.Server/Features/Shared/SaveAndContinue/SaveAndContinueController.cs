@@ -2,9 +2,9 @@
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 
-namespace Elsa.Server.Features.MultipleChoice
+namespace Elsa.Server.Features.Shared.SaveAndContinue
 {
-    [Route("multiple-choice")]
+    [Route("save-and-continue")]
     [ApiController]
     public class SaveAndContinueController : ControllerBase
     {
