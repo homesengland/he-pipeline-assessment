@@ -15,21 +15,21 @@
         @Html.AntiForgeryToken()
         @Html.HiddenFor(m => Model.Data.WorkflowInstanceId)
         @Html.HiddenFor(m => Model.Data.ActivityId)
-        @Html.HiddenFor(m => Model.Data.ActivityType)
+        @Html.HiddenFor(m => Model.Data.QuestionActivityData!.ActivityType)
         <br/>
-        if (Model.Data.ActivityType == ActivityTypeConstants.CurrencyQuestion)
+        if (Model.Data.QuestionActivityData!.ActivityType == ActivityTypeConstants.CurrencyQuestion)
         {
             @await Html.PartialAsync("_CurrencyQuestion",Model)
         }
-        if (Model.Data.ActivityType == ActivityTypeConstants.MultipleChoiceQuestion)
+        if (Model.Data.QuestionActivityData!.ActivityType == ActivityTypeConstants.MultipleChoiceQuestion)
         {
             @await Html.PartialAsync("_MultipleChoiceQuestion",Model)
         }
-        if (Model.Data.ActivityType == ActivityTypeConstants.DateQuestion)
+        if (Model.Data.QuestionActivityData!.ActivityType == ActivityTypeConstants.DateQuestion)
         {
             @await Html.PartialAsync("_DateQuestion",Model)
         }
-        if (Model.Data.ActivityType == ActivityTypeConstants.TextQuestion)
+        if (Model.Data.QuestionActivityData!.ActivityType == ActivityTypeConstants.TextQuestion)
         {
             <partial name="_TextQuestion" model=@(Model)/>
         }

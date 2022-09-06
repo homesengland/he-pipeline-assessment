@@ -1,7 +1,6 @@
 ﻿using AutoFixture.Xunit2;
-using Elsa.Server.Features.MultipleChoice;
-using Elsa.Server.Features.MultipleChoice.SaveAndContinue;
-using Elsa.Server.Features.Shared.SaveAndContinue;
+using Elsa.Server.Features.Workflow;
+using Elsa.Server.Features.Workflow.SaveAndContinue;
 using Elsa.Server.Models;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
@@ -15,7 +14,7 @@ namespace Elsa.Server.Tests.Features.MultipleChoice
         [Theory]
         [AutoData]
         public async Task MultipleChoiceQuestionController_SaveAndContinue_ShouldReturnOK_WhenCommandHandlerIsSuccessful(
-           MultipleChoiceSaveAndContinueCommand command,
+           SaveAndContinueCommand command,
            SaveAndContinueResponse response,
            Mock<IMediator> mediatorMock)
         {
@@ -28,7 +27,7 @@ namespace Elsa.Server.Tests.Features.MultipleChoice
             //Arrange
             mediatorMock.Setup(x => x.Send(command, CancellationToken.None)).ReturnsAsync(startWorkflowOperationResult);
 
-            SaveAndContinueController controller = new MultipleChoiceQuestionController(mediatorMock.Object);
+            WorkflowController controller = new WorkflowController(mediatorMock.Object);
 
             //Act
             var result = await controller.SaveAndContinue(command);
@@ -48,7 +47,7 @@ namespace Elsa.Server.Tests.Features.MultipleChoice
         [Theory]
         [AutoData]
         public async Task MultipleChoiceQuestionController_SaveAndContinue_ShouldReturnBadRequest_WhenCommandHandlerReturnsErrors(
-            MultipleChoiceSaveAndContinueCommand command,
+            SaveAndContinueCommand command,
             OperationResult<SaveAndContinueResponse> operationResult,
             Mock<IMediator> mediatorMock)
         {
@@ -56,7 +55,7 @@ namespace Elsa.Server.Tests.Features.MultipleChoice
             //Arrange
             mediatorMock.Setup(x => x.Send(command, CancellationToken.None)).ReturnsAsync(operationResult);
 
-            SaveAndContinueController controller = new MultipleChoiceQuestionController(mediatorMock.Object);
+            WorkflowController controller = new WorkflowController(mediatorMock.Object);
 
             //Act
             var result = await controller.SaveAndContinue(command);
@@ -75,7 +74,7 @@ namespace Elsa.Server.Tests.Features.MultipleChoice
         [Theory]
         [AutoData]
         public async Task MultipleChoiceQuestionController_SaveAndContinue_ShouldReturn500_WhenCommandHandlerThrowsException(
-            MultipleChoiceSaveAndContinueCommand command,
+            SaveAndContinueCommand command,
             Exception exception,
             Mock<IMediator> mediatorMock)
         {
@@ -83,7 +82,7 @@ namespace Elsa.Server.Tests.Features.MultipleChoice
             //Arrange
             mediatorMock.Setup(x => x.Send(command, CancellationToken.None)).ThrowsAsync(exception);
 
-            SaveAndContinueController controller = new MultipleChoiceQuestionController(mediatorMock.Object);
+            WorkflowController controller = new WorkflowController(mediatorMock.Object);
 
             //Act
             var result = await controller.SaveAndContinue(command);
@@ -105,14 +104,14 @@ namespace Elsa.Server.Tests.Features.MultipleChoice
         [Theory]
         [AutoData]
         public async Task MultipleChoiceQuestionController_SaveAndContinue_ShouldReturn500_WhenCommandHandlerReturnsNull(
-            MultipleChoiceSaveAndContinueCommand command,
+            SaveAndContinueCommand command,
             Mock<IMediator> mediatorMock)
         {
 
             //Arrange
             mediatorMock.Setup(x => x.Send(command, CancellationToken.None)).ReturnsAsync((OperationResult<SaveAndContinueResponse>)null!);
 
-            SaveAndContinueController controller = new MultipleChoiceQuestionController(mediatorMock.Object);
+            WorkflowController controller = new WorkflowController(mediatorMock.Object);
 
             //Act
             var result = await controller.SaveAndContinue(command);

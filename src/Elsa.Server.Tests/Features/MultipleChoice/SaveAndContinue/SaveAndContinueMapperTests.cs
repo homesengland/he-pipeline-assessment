@@ -1,7 +1,6 @@
 ﻿using AutoFixture.Xunit2;
 using Elsa.CustomModels;
-using Elsa.Server.Features.MultipleChoice.SaveAndContinue;
-using Elsa.Server.Features.Shared.SaveAndContinue;
+using Elsa.Server.Features.Workflow.SaveAndContinue;
 using Elsa.Server.Providers;
 using Moq;
 using Xunit;
@@ -14,7 +13,7 @@ namespace Elsa.Server.Tests.Features.MultipleChoice.SaveAndContinue
         [AutoMoqData]
         public void SaveAndContinueCommandToNextAssessmentQuestion_ShouldReturnAssessmentQuestion(
             [Frozen] Mock<IDateTimeProvider> mockDateTimeProvider,
-            MultipleChoiceSaveAndContinueCommand saveAndContinueCommand,
+            SaveAndContinueCommand saveAndContinueCommand,
             string nextActivityId,
             string nextActivityType,
             SaveAndContinueMapper sut

@@ -1,7 +1,7 @@
 ﻿using Elsa.CustomModels;
 using Elsa.Server.Providers;
 
-namespace Elsa.Server.Features.Shared.SaveAndContinue
+namespace Elsa.Server.Features.Workflow.SaveAndContinue
 {
     public interface ISaveAndContinueMapper
     {

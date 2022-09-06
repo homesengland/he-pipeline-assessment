@@ -1,6 +1,9 @@
-﻿namespace Elsa.Server.Features.Shared.SaveAndContinue
+﻿using Elsa.Server.Models;
+using MediatR;
+
+namespace Elsa.Server.Features.Workflow.SaveAndContinue
 {
-    public abstract class SaveAndContinueCommand
+    public class SaveAndContinueCommand : IRequest<OperationResult<SaveAndContinueResponse>>
     {
         public string Id { get; set; } = null!;
         public string ActivityId { get; set; } = null!;

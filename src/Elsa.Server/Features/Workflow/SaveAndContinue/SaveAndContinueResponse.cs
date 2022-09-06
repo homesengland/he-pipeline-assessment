@@ -1,4 +1,4 @@
-﻿namespace Elsa.Server.Features.Shared.SaveAndContinue
+﻿namespace Elsa.Server.Features.Workflow.SaveAndContinue
 {
     public class SaveAndContinueResponse
     {

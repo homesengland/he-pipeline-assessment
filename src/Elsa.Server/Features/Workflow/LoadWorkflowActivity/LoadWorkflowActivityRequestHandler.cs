@@ -15,13 +15,13 @@ namespace Elsa.Server.Features.Workflow.LoadWorkflowActivity
         private readonly IQuestionInvoker _QuestionInvoker;
         private readonly IWorkflowInstanceStore _workflowInstanceStore;
         private readonly IPipelineAssessmentRepository _pipelineAssessmentRepository;
-        private readonly ILoadWorkflowActivityMapper _loadWorkflowActivityMapper;
+        private readonly ILoadWorkflowActivityJsonHelper _loadWorkflowActivityJsonHelper;
 
-        public LoadWorkflowActivityRequestHandler(IWorkflowInstanceStore workflowInstanceStore, IPipelineAssessmentRepository pipelineAssessmentRepository, ILoadWorkflowActivityMapper loadWorkflowActivityMapper, IQuestionInvoker questionInvoker)
+        public LoadWorkflowActivityRequestHandler(IWorkflowInstanceStore workflowInstanceStore, IPipelineAssessmentRepository pipelineAssessmentRepository, IQuestionInvoker questionInvoker, ILoadWorkflowActivityJsonHelper loadWorkflowActivityJsonHelper)
         {
             _workflowInstanceStore = workflowInstanceStore;
             _pipelineAssessmentRepository = pipelineAssessmentRepository;
-            _loadWorkflowActivityMapper = loadWorkflowActivityMapper;
+            _loadWorkflowActivityJsonHelper = loadWorkflowActivityJsonHelper;
             _QuestionInvoker = questionInvoker;
         }
 
@@ -98,44 +98,14 @@ namespace Elsa.Server.Features.Workflow.LoadWorkflowActivity
         private void AssignActivityData(AssessmentQuestion dbAssessmentQuestion, IDictionary<string, object?> activityDataDictionary,
             OperationResult<LoadWorkflowActivityResponse> result)
         {
-            if (dbAssessmentQuestion.ActivityType == Constants.MultipleChoiceQuestion)
+            var activityData = _loadWorkflowActivityJsonHelper.ActivityDataDictionaryToQuestionActivityData<QuestionActivityData>(activityDataDictionary);
+            if (activityData != null)
             {
-                var activityData =
-                    _loadWorkflowActivityMapper.ActivityDataDictionaryToMultipleChoiceActivityData(
-                        activityDataDictionary);
-                if (activityData != null)
-                {
-                    result.Data!.MultipleChoiceQuestionActivityData = activityData;
-                }
+                result.Data!.QuestionActivityData = activityData;
+                result.Data.QuestionActivityData.ActivityType = dbAssessmentQuestion.ActivityType;
+                result.Data.QuestionActivityData.Answer = dbAssessmentQuestion.Answer;
             }
-
-            if (dbAssessmentQuestion.ActivityType == Constants.CurrencyQuestion)
-            {
-                var activityData =
-                    _loadWorkflowActivityMapper.ActivityDataDictionaryToCurrencyActivityData(activityDataDictionary);
-                if (activityData != null)
-                {
-                    result.Data!.CurrencyQuestionActivityData = activityData;
-                }
-            }
-
-            if (dbAssessmentQuestion.ActivityType == Constants.DateQuestion)
-            {
-                var activityData = _loadWorkflowActivityMapper.ActivityDataDictionaryToDateActivityData(activityDataDictionary);
-                if (activityData != null)
-                {
-                    result.Data!.DateQuestionActivityData = activityData;
-                }
-            }
-
-            if (dbAssessmentQuestion.ActivityType == Constants.TextQuestion)
-            {
-                var activityData = _loadWorkflowActivityMapper.ActivityDataDictionaryToTextActivityData(activityDataDictionary);
-                if (activityData != null)
-                {
-                    result.Data!.TextQuestionActivityData = activityData;
-                }
-            }
+           
         }
     }
 }

@@ -1,5 +1,5 @@
 ﻿using Elsa.CustomWorkflow.Sdk.HttpClients;
-using Elsa.CustomWorkflow.Sdk.Models.Workflow.LoadWorkflowActivity;
+using Elsa.CustomWorkflow.Sdk.Models.Workflow;
 using He.PipelineAssessment.UI.Features.Workflow.SaveAndContinue;
 using MediatR;
 using System.Text.Json;

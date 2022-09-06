@@ -1,6 +1,5 @@
 ﻿using AutoFixture.Xunit2;
 using Elsa.CustomWorkflow.Sdk.HttpClients;
-using Elsa.CustomWorkflow.Sdk.Models.Workflow.LoadWorkflowActivity;
 using He.PipelineAssessment.UI.Features.Workflow.LoadWorkflowActivity;
 using He.PipelineAssessment.UI.Features.Workflow.SaveAndContinue;
 using Moq;

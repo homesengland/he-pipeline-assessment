@@ -1,9 +1,7 @@
 ﻿using AutoFixture.Xunit2;
 using Elsa.CustomWorkflow.Sdk.HttpClients;
-using Elsa.CustomWorkflow.Sdk.Models.MultipleChoice.SaveAndContinue;
-using Elsa.CustomWorkflow.Sdk.Models.StartWorkflow;
+using Elsa.CustomWorkflow.Sdk.Models;
 using Elsa.CustomWorkflow.Sdk.Models.Workflow;
-using Elsa.CustomWorkflow.Sdk.Models.Workflow.LoadWorkflowActivity;
 using Moq;
 using System.Net;
 using Xunit;

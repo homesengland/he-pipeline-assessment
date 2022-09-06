@@ -15,15 +15,10 @@ namespace Elsa.CustomWorkflow.Sdk.Models.Workflow
     {
         public string WorkflowInstanceId { get; set; } = null!;
         public string ActivityId { get; set; } = null!;
-        public string ActivityType { get; set; } = null!;
         public string PreviousActivityId { get; set; } = null!;
 
         public QuestionActivityData? QuestionActivityData { get; set; }
 
-        //public MultipleChoiceQuestionActivityData? MultipleChoiceQuestionActivityData { get; set; }
-        //public CurrencyQuestionActivityData? CurrencyQuestionActivityData { get; set; }
-        //public TextQuestionActivityData? TextQuestionActivityData { get; set; }
-        //public DateQuestionActivityData? DateQuestionActivityData { get; set; }
     }
 
     public class QuestionActivityData
@@ -37,12 +32,15 @@ namespace Elsa.CustomWorkflow.Sdk.Models.Workflow
         public string? Answer { get; set; }
         public decimal? Decimal { get { return GetDecimalAnswer(); } set { SetDecimalAnswer(value); } }
 
-        public Choice[]? Choices { get; set { SetChoices(value); } }
-        //public Choice[]? MultipleChoiceAnswer { get { return GetMultipleChoiceAnswer(); } set { SetChoices(value); } }
+        private Choice[] _choices = new List<Choice>().ToArray();
 
-        public Date? Date { get { return GetDate(); } set { SetDate(value); } }
+        public Choice[] Choices { get { return _choices; } set { SetChoices(value); } }
 
-        public Date? GetDate()
+        public Date Date { get { return GetDate(); } set { SetDate(value); } }
+
+        #region Getters and Setters
+
+        public Date GetDate()
         {
             if (ActivityType == ActivityTypeConstants.DateQuestion && Answer != null)
             {
@@ -54,9 +52,8 @@ namespace Elsa.CustomWorkflow.Sdk.Models.Workflow
                     Year = date.Year
                 };
             }
-            return null;
+            return new Date();
         }
-
         public void SetDate(Date? value)
         {
             if (value != null)
@@ -73,78 +70,15 @@ namespace Elsa.CustomWorkflow.Sdk.Models.Workflow
                 }
             }
         }
-
-        [Range(1, 31)]
-        public int? Day { get { return GetDay(); } set { SetDay(value); } }
-        [Range(1, 12)]
-        public int? Month { get { return GetMonth(); } set { SetMonth(value); } }
-        [Range(1, 3000)]
-        public int? Year { get { return GetYear(); } set { SetYear(value); } }
-
-        #region Getters and Setters
-
-        private int? GetDay()
+        private void SetChoices(Choice[] value)
         {
-            if (ActivityType == ActivityTypeConstants.DateQuestion && Answer != null)
-            {
-                return JsonSerializer.Deserialize<DateTime>(Answer).Day;
-            }
-            return null;
-        }
-
-        private void SetDay(int? value)
-        {
-            Day = value;
-            SetDateAnswer();
-        }
-
-        private int? GetMonth()
-        {
-            if (ActivityType == ActivityTypeConstants.DateQuestion && Answer != null)
-            {
-                return JsonSerializer.Deserialize<DateTime>(Answer).Month;
-            }
-            return null;
-        }
-
-        private void SetMonth(int? value)
-        {
-            Month = value;
-            SetDateAnswer();
-        }
-
-        private int? GetYear()
-        {
-            if (ActivityType == ActivityTypeConstants.DateQuestion && Answer != null)
-            {
-                return JsonSerializer.Deserialize<DateTime>(Answer).Year;
-            }
-            return null;
-        }
-
-        private void SetYear(int? value)
-        {
-            Year = value;
-            SetDateAnswer();
-        }
-
-        private Choice[]? GetMultipleChoiceAnswer()
-        {
-            if (ActivityType == ActivityTypeConstants.MultipleChoiceQuestion && Answer != null)
-            {
-                return JsonSerializer.Deserialize<Choice[]?>(Answer);
-            }
-            return null;
-        }
-        private void SetChoices(Choice[]? value)
-        {
+            _choices = value;
             List<string> answerList = new List<string>();
             if(value != null)
             {
                 answerList = value.Where(c => c.IsSelected).Select(c => c.Answer).ToList();
             }
             SetAnswer(answerList);
-            Choices = value;
         }
         private decimal? GetDecimalAnswer()
         {
@@ -158,20 +92,6 @@ namespace Elsa.CustomWorkflow.Sdk.Models.Workflow
         {
             SetAnswer(value);
             //Decimal = value;
-        }
-
-        private void SetDateAnswer()
-        {
-            if (Day != null && Month != null && Year != null)
-            {
-                var dateString =
-                $"{Year.Value}-{Month.Value}-{Day.Value}";
-                bool isValidDate = DateTime.TryParseExact(dateString, Constants.DateFormat, CultureInfo.InvariantCulture, DateTimeStyles.AdjustToUniversal, out DateTime parsedDateTime);
-                if (isValidDate)
-                {
-                    SetAnswer(parsedDateTime);
-                }
-            }
         }
 
         private void SetAnswer(object? o)

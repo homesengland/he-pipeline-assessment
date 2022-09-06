@@ -2,24 +2,24 @@
 
 <div class="govuk-form-group">
     <h1 class="govuk-heading-l">
-            @Html.DisplayTextFor(m => m.Data.TextQuestionActivityData!.Title)
+            @Html.DisplayTextFor(m => m.Data.QuestionActivityData!.Title)
     </h1>
         <label class="govuk-label govuk-label--m">
-            @Html.DisplayTextFor(m => m.Data.TextQuestionActivityData!.Question)
+        @Html.DisplayTextFor(m => m.Data.QuestionActivityData!.Question)
         </label>
-    @if (!string.IsNullOrEmpty(Model.Data.TextQuestionActivityData!.QuestionHint))
+    @if (!string.IsNullOrEmpty(Model.Data.QuestionActivityData!.QuestionHint))
     {
         <div id="event-name-hint" class="govuk-hint">
-            @Model.Data.TextQuestionActivityData.QuestionHint
+            @Model.Data.QuestionActivityData.QuestionHint
         </div>
     }
 
 
 
     <div class="govuk-input__wrapper">
-        @Html.TextBoxFor(m => Model.Data.TextQuestionActivityData.Answer, new {@class = "govuk-input govuk-input--width-6"})
+        @Html.TextBoxFor(m => Model.Data.QuestionActivityData.Answer, new {@class = "govuk-input govuk-input--width-6"})
     </div>
-    @if (!string.IsNullOrEmpty(Model.Data.TextQuestionActivityData.QuestionGuidance))
+    @if (!string.IsNullOrEmpty(Model.Data.QuestionActivityData.QuestionGuidance))
     {
         <br/>
         <details class="govuk-details" data-module="govuk-details">
@@ -29,7 +29,7 @@
                 </span>
             </summary>
             <div class="govuk-details__text">
-                @Model.Data.TextQuestionActivityData.QuestionGuidance
+                @Model.Data.QuestionActivityData.QuestionGuidance
             </div>
         </details>
     }

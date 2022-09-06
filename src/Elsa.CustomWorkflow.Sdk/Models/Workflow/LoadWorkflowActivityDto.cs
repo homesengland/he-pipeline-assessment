@@ -1,4 +1,4 @@
-﻿namespace Elsa.CustomWorkflow.Sdk.Models.Workflow.LoadWorkflowActivity
+﻿namespace Elsa.CustomWorkflow.Sdk.Models.Workflow
 {
     public class LoadWorkflowActivityDto
     {

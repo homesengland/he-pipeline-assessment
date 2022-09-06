@@ -1,6 +1,6 @@
 ﻿using AutoFixture.Xunit2;
 using Elsa.CustomWorkflow.Sdk.HttpClients;
-using Elsa.CustomWorkflow.Sdk.Models.MultipleChoice.SaveAndContinue;
+using Elsa.CustomWorkflow.Sdk.Models;
 using Elsa.CustomWorkflow.Sdk.Models.Workflow;
 using He.PipelineAssessment.UI.Features.Workflow.SaveAndContinue;
 using Moq;
@@ -23,7 +23,7 @@ namespace He.PipelineAssessment.UI.Tests.Features.Workflow.SaveAndContinue
         {
             //Arrange
             saveAndContinueMapper
-                .Setup(x => x.SaveAndContinueCommandToMultipleChoiceSaveAndContinueCommandDto(saveAndContinueCommand))
+                .Setup(x => x.SaveAndContinueCommandToSaveAndContinueCommandDto(saveAndContinueCommand))
                 .Returns(saveAndContinueCommandDto);
 
             elsaServerHttpClient.Setup(x => x.SaveAndContinue(saveAndContinueCommandDto))
@@ -49,7 +49,7 @@ namespace He.PipelineAssessment.UI.Tests.Features.Workflow.SaveAndContinue
         {
             //Arrange
             saveAndContinueMapper
-                .Setup(x => x.SaveAndContinueCommandToMultipleChoiceSaveAndContinueCommandDto(saveAndContinueCommand))
+                .Setup(x => x.SaveAndContinueCommandToSaveAndContinueCommandDto(saveAndContinueCommand))
                 .Returns(saveAndContinueCommandDto);
 
             elsaServerHttpClient.Setup(x => x.SaveAndContinue(saveAndContinueCommandDto))

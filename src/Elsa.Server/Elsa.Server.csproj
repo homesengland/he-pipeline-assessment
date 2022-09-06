@@ -26,7 +26,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Features\Currency\LoadWorkflowActivity\" />
     <Folder Include="wwwroot\" />
   </ItemGroup>
 

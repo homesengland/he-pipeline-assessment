@@ -9,8 +9,8 @@ using Elsa.CustomInfrastructure.Data.Repository;
 using Elsa.Persistence.EntityFramework.Core.Extensions;
 using Elsa.Persistence.EntityFramework.Sqlite;
 using Elsa.Runtime;
-using Elsa.Server.Features.Shared.SaveAndContinue;
 using Elsa.Server.Features.Workflow.LoadWorkflowActivity;
+using Elsa.Server.Features.Workflow.SaveAndContinue;
 using Elsa.Server.Features.Workflow.StartWorkflow;
 using Elsa.Server.Providers;
 using Elsa.Server.StartupTasks;
@@ -59,13 +59,13 @@ builder.Services.AddJavaScriptTypeDefinitionProvider<CustomTypeDefinitionProvide
 builder.Services.AddMediatR(typeof(Program).Assembly);
 builder.Services.AddScoped<IDateTimeProvider, DateTimeProvider>();
 
-builder.Services.AddScoped<ISaveAndContinueHandler, SaveAndContinueHandler>();
+//builder.Services.AddScoped<ISaveAndContinueHandler, SaveAndContinueHandler>();
 
 builder.Services.AddScoped<IStartWorkflowMapper, StartWorkflowMapper>();
 builder.Services.AddScoped<ISaveAndContinueMapper, SaveAndContinueMapper>();
 
 builder.Services.AddScoped<ILoadWorkflowActivityJsonHelper, LoadWorkflowActivityJsonHelper>();
-builder.Services.AddScoped<ILoadWorkflowActivityMapper, LoadWorkflowActivityMapper>();
+//builder.Services.AddScoped<ILoadWorkflowActivityMapper, LoadWorkflowActivityMapper>();
 
 // Allow arbitrary client browser apps to access the API.
 // In a production environment, make sure to allow only origins you trust.
