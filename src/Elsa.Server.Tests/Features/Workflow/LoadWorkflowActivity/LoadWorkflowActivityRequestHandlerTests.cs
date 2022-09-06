@@ -14,15 +14,10 @@ namespace Elsa.Server.Tests.Features.Workflow.LoadWorkflowActivity
 {
     public class LoadWorkflowActivityRequestHandlerTests
     {
-        //[Frozen] Mock<IMultipleChoiceQuestionInvoker> multipleChoiceQuestionInvoker,
-        //[Frozen] Mock<IWorkflowInstanceStore> workflowInstanceStore,
-        //[Frozen] Mock<IPipelineAssessmentRepository> pipelineAssessmentRepository,
-        //[Frozen] Mock<ILoadWorkflowActivityMapper> loadWorkflowActivityMapper,
-
         [Theory]
         [AutoMoqData]
         public async Task Handle_ReturnsOperationWithoutErrors_NoErrorsAreEncountered(
-          [Frozen] Mock<IQuestionInvoker> multipleChoiceQuestionInvoker,
+          [Frozen] Mock<IQuestionInvoker> questionInvoker,
           [Frozen] Mock<IWorkflowInstanceStore> workflowInstanceStore,
           [Frozen] Mock<IPipelineAssessmentRepository> pipelineAssessmentRepository,
           [Frozen] Mock<ILoadWorkflowActivityMapper> loadWorkflowActivityMapper,
@@ -35,7 +30,7 @@ namespace Elsa.Server.Tests.Features.Workflow.LoadWorkflowActivity
         {
 
             //Arrange
-            multipleChoiceQuestionInvoker
+            questionInvoker
                 .Setup(x => x.FindWorkflowsAsync(loadWorkflowActivityRequest.ActivityId, "MultipleChoiceQuestion", loadWorkflowActivityRequest.WorkflowInstanceId, CancellationToken.None))
                 .ReturnsAsync(collectedWorkflows);
 
@@ -43,7 +38,7 @@ namespace Elsa.Server.Tests.Features.Workflow.LoadWorkflowActivity
                     x.FindAsync(It.IsAny<WorkflowInstanceIdSpecification>(), CancellationToken.None))
                 .ReturnsAsync(workflowInstance);
 
-            pipelineAssessmentRepository.Setup(x => x.GetMultipleChoiceQuestions(loadWorkflowActivityRequest.ActivityId,
+            pipelineAssessmentRepository.Setup(x => x.GetAssessmentQuestion(loadWorkflowActivityRequest.ActivityId,
                     loadWorkflowActivityRequest.WorkflowInstanceId, CancellationToken.None))
                 .ReturnsAsync(assessmentQuestion);
 
@@ -66,7 +61,7 @@ namespace Elsa.Server.Tests.Features.Workflow.LoadWorkflowActivity
             //Assert
             Assert.NotNull(result.Data!.MultipleChoiceQuestionActivityData);
             workflowInstanceStore.Verify(x => x.FindAsync(It.IsAny<WorkflowInstanceIdSpecification>(), CancellationToken.None), Times.Once);
-            pipelineAssessmentRepository.Verify(x => x.GetMultipleChoiceQuestions(loadWorkflowActivityRequest.ActivityId, loadWorkflowActivityRequest.WorkflowInstanceId, CancellationToken.None), Times.Once);
+            pipelineAssessmentRepository.Verify(x => x.GetAssessmentQuestion(loadWorkflowActivityRequest.ActivityId, loadWorkflowActivityRequest.WorkflowInstanceId, CancellationToken.None), Times.Once);
             loadWorkflowActivityMapper.Verify(x => x.ActivityDataDictionaryToMultipleChoiceActivityData(It.IsAny<IDictionary<string, object?>>()), Times.Once);
             Assert.Equal(loadWorkflowActivityRequest.WorkflowInstanceId, result.Data.WorkflowInstanceId);
             Assert.Equal(loadWorkflowActivityRequest.ActivityId, result.Data.ActivityId);
@@ -77,7 +72,7 @@ namespace Elsa.Server.Tests.Features.Workflow.LoadWorkflowActivity
         [Theory]
         [AutoMoqData]
         public async Task Handle_ReturnsOperationResultWithErrors_GivenActivityDataMappingReturnsNull(
-          [Frozen] Mock<IQuestionInvoker> multipleChoiceQuestionInvoker,
+          [Frozen] Mock<IQuestionInvoker> questionInvoker,
           [Frozen] Mock<IWorkflowInstanceStore> workflowInstanceStore,
           [Frozen] Mock<IPipelineAssessmentRepository> pipelineAssessmentRepository,
           [Frozen] Mock<ILoadWorkflowActivityMapper> loadWorkflowActivityMapper,
@@ -89,7 +84,7 @@ namespace Elsa.Server.Tests.Features.Workflow.LoadWorkflowActivity
         {
 
             //Arrange
-            multipleChoiceQuestionInvoker
+            questionInvoker
                 .Setup(x => x.FindWorkflowsAsync(loadWorkflowActivityRequest.ActivityId, "MultipleChoiceQuestion", loadWorkflowActivityRequest.WorkflowInstanceId, CancellationToken.None))
                 .ReturnsAsync(collectedWorkflows);
 
@@ -97,7 +92,7 @@ namespace Elsa.Server.Tests.Features.Workflow.LoadWorkflowActivity
                     x.FindAsync(It.IsAny<WorkflowInstanceIdSpecification>(), CancellationToken.None))
                 .ReturnsAsync(workflowInstance);
 
-            pipelineAssessmentRepository.Setup(x => x.GetMultipleChoiceQuestions(loadWorkflowActivityRequest.ActivityId,
+            pipelineAssessmentRepository.Setup(x => x.GetAssessmentQuestion(loadWorkflowActivityRequest.ActivityId,
                     loadWorkflowActivityRequest.WorkflowInstanceId, CancellationToken.None))
                 .ReturnsAsync(assessmentQuestion);
 
@@ -121,7 +116,7 @@ namespace Elsa.Server.Tests.Features.Workflow.LoadWorkflowActivity
             Assert.Null(result.Data!.MultipleChoiceQuestionActivityData);
             Assert.Equal($"Failed to map activity data", result.ErrorMessages.Single());
             workflowInstanceStore.Verify(x => x.FindAsync(It.IsAny<WorkflowInstanceIdSpecification>(), CancellationToken.None), Times.Once);
-            pipelineAssessmentRepository.Verify(x => x.GetMultipleChoiceQuestions(loadWorkflowActivityRequest.ActivityId, loadWorkflowActivityRequest.WorkflowInstanceId, CancellationToken.None), Times.Once);
+            pipelineAssessmentRepository.Verify(x => x.GetAssessmentQuestion(loadWorkflowActivityRequest.ActivityId, loadWorkflowActivityRequest.WorkflowInstanceId, CancellationToken.None), Times.Once);
             loadWorkflowActivityMapper.Verify(x => x.ActivityDataDictionaryToMultipleChoiceActivityData(It.IsAny<IDictionary<string, object?>>()), Times.Once);
 
         }
@@ -129,7 +124,7 @@ namespace Elsa.Server.Tests.Features.Workflow.LoadWorkflowActivity
         [Theory]
         [AutoMoqData]
         public async Task Handle_ReturnsOperationResultWithErrors_GivenActivityIdCannotBeFoundInActivityDictionary(
-           [Frozen] Mock<IQuestionInvoker> multipleChoiceQuestionInvoker,
+           [Frozen] Mock<IQuestionInvoker> questionInvoker,
            [Frozen] Mock<IWorkflowInstanceStore> workflowInstanceStore,
            [Frozen] Mock<IPipelineAssessmentRepository> pipelineAssessmentRepository,
            [Frozen] Mock<ILoadWorkflowActivityMapper> loadWorkflowActivityMapper,
@@ -141,7 +136,7 @@ namespace Elsa.Server.Tests.Features.Workflow.LoadWorkflowActivity
         {
 
             //Arrange
-            multipleChoiceQuestionInvoker
+            questionInvoker
                 .Setup(x => x.FindWorkflowsAsync(loadWorkflowActivityRequest.ActivityId, "MultipleChoiceQuestion", loadWorkflowActivityRequest.WorkflowInstanceId, CancellationToken.None))
                 .ReturnsAsync(collectedWorkflows);
 
@@ -149,7 +144,7 @@ namespace Elsa.Server.Tests.Features.Workflow.LoadWorkflowActivity
                     x.FindAsync(It.IsAny<WorkflowInstanceIdSpecification>(), CancellationToken.None))
                 .ReturnsAsync(workflowInstance);
 
-            pipelineAssessmentRepository.Setup(x => x.GetMultipleChoiceQuestions(loadWorkflowActivityRequest.ActivityId,
+            pipelineAssessmentRepository.Setup(x => x.GetAssessmentQuestion(loadWorkflowActivityRequest.ActivityId,
                     loadWorkflowActivityRequest.WorkflowInstanceId, CancellationToken.None))
                 .ReturnsAsync(assessmentQuestion);
 
@@ -160,7 +155,7 @@ namespace Elsa.Server.Tests.Features.Workflow.LoadWorkflowActivity
             Assert.Null(result.Data!.MultipleChoiceQuestionActivityData);
             Assert.Equal($"Cannot find activity Id {loadWorkflowActivityRequest.ActivityId} in the workflow activity data dictionary", result.ErrorMessages.Single());
             workflowInstanceStore.Verify(x => x.FindAsync(It.IsAny<WorkflowInstanceIdSpecification>(), CancellationToken.None), Times.Once);
-            pipelineAssessmentRepository.Verify(x => x.GetMultipleChoiceQuestions(loadWorkflowActivityRequest.ActivityId, loadWorkflowActivityRequest.WorkflowInstanceId, CancellationToken.None), Times.Once);
+            pipelineAssessmentRepository.Verify(x => x.GetAssessmentQuestion(loadWorkflowActivityRequest.ActivityId, loadWorkflowActivityRequest.WorkflowInstanceId, CancellationToken.None), Times.Once);
             loadWorkflowActivityMapper.Verify(x => x.ActivityDataDictionaryToMultipleChoiceActivityData(It.IsAny<IDictionary<string, object?>>()), Times.Never);
 
         }
@@ -168,7 +163,7 @@ namespace Elsa.Server.Tests.Features.Workflow.LoadWorkflowActivity
         [Theory]
         [AutoMoqData]
         public async Task Handle_ReturnsOperationResultWithErrors_GivenMultipleChoiceQuestioinResponseDoesNotExist(
-            [Frozen] Mock<IQuestionInvoker> multipleChoiceQuestionInvoker,
+            [Frozen] Mock<IQuestionInvoker> questionInvoker,
             [Frozen] Mock<IWorkflowInstanceStore> workflowInstanceStore,
             [Frozen] Mock<IPipelineAssessmentRepository> pipelineAssessmentRepository,
             [Frozen] Mock<ILoadWorkflowActivityMapper> loadWorkflowActivityMapper,
@@ -178,7 +173,7 @@ namespace Elsa.Server.Tests.Features.Workflow.LoadWorkflowActivity
             LoadWorkflowActivityRequestHandler sut)
         {
             //Arrange
-            multipleChoiceQuestionInvoker
+            questionInvoker
                 .Setup(x => x.FindWorkflowsAsync(loadWorkflowActivityRequest.ActivityId, "MultipleChoiceQuestion", loadWorkflowActivityRequest.WorkflowInstanceId, CancellationToken.None))
                 .ReturnsAsync(collectedWorkflows);
 
@@ -186,7 +181,7 @@ namespace Elsa.Server.Tests.Features.Workflow.LoadWorkflowActivity
                     x.FindAsync(It.IsAny<WorkflowInstanceIdSpecification>(), CancellationToken.None))
                 .ReturnsAsync(workflowInstance);
 
-            pipelineAssessmentRepository.Setup(x => x.GetMultipleChoiceQuestions(loadWorkflowActivityRequest.ActivityId,
+            pipelineAssessmentRepository.Setup(x => x.GetAssessmentQuestion(loadWorkflowActivityRequest.ActivityId,
                     loadWorkflowActivityRequest.WorkflowInstanceId, CancellationToken.None))
                 .ReturnsAsync((AssessmentQuestion?)null);
 
@@ -197,7 +192,7 @@ namespace Elsa.Server.Tests.Features.Workflow.LoadWorkflowActivity
             Assert.Null(result.Data!.MultipleChoiceQuestionActivityData);
             Assert.Equal($"Unable to find workflow instance with Id: {loadWorkflowActivityRequest.WorkflowInstanceId} and Activity Id: {loadWorkflowActivityRequest.ActivityId}", result.ErrorMessages.Single());
             workflowInstanceStore.Verify(x => x.FindAsync(It.IsAny<WorkflowInstanceIdSpecification>(), CancellationToken.None), Times.Once);
-            pipelineAssessmentRepository.Verify(x => x.GetMultipleChoiceQuestions(loadWorkflowActivityRequest.ActivityId, loadWorkflowActivityRequest.WorkflowInstanceId, CancellationToken.None), Times.Once);
+            pipelineAssessmentRepository.Verify(x => x.GetAssessmentQuestion(loadWorkflowActivityRequest.ActivityId, loadWorkflowActivityRequest.WorkflowInstanceId, CancellationToken.None), Times.Once);
             loadWorkflowActivityMapper.Verify(x => x.ActivityDataDictionaryToMultipleChoiceActivityData(It.IsAny<IDictionary<string, object?>>()), Times.Never);
 
         }
@@ -205,7 +200,7 @@ namespace Elsa.Server.Tests.Features.Workflow.LoadWorkflowActivity
         [Theory]
         [AutoMoqData]
         public async Task Handle_ReturnsOperationResultWithErrors_GivenCollectedWorkflowInstaceIsNull(
-            [Frozen] Mock<IQuestionInvoker> multipleChoiceQuestionInvoker,
+            [Frozen] Mock<IQuestionInvoker> questionInvoker,
             [Frozen] Mock<IWorkflowInstanceStore> workflowInstanceStore,
             [Frozen] Mock<IPipelineAssessmentRepository> pipelineAssessmentRepository,
             [Frozen] Mock<ILoadWorkflowActivityMapper> loadWorkflowActivityMapper,
@@ -214,7 +209,7 @@ namespace Elsa.Server.Tests.Features.Workflow.LoadWorkflowActivity
             LoadWorkflowActivityRequestHandler sut)
         {
             //Arrange
-            multipleChoiceQuestionInvoker
+            questionInvoker
                 .Setup(x => x.FindWorkflowsAsync(loadWorkflowActivityRequest.ActivityId, "MultipleChoiceQuestion", loadWorkflowActivityRequest.WorkflowInstanceId, CancellationToken.None))
                 .ReturnsAsync(collectedWorkflows);
 
@@ -229,7 +224,7 @@ namespace Elsa.Server.Tests.Features.Workflow.LoadWorkflowActivity
             Assert.Null(result.Data!.MultipleChoiceQuestionActivityData);
             Assert.Equal($"Unable to find workflow instance with Id: {loadWorkflowActivityRequest.WorkflowInstanceId} in Elsa database", result.ErrorMessages.Single());
             workflowInstanceStore.Verify(x => x.FindAsync(It.IsAny<WorkflowInstanceIdSpecification>(), CancellationToken.None), Times.Once);
-            pipelineAssessmentRepository.Verify(x => x.GetMultipleChoiceQuestions(It.IsAny<string>(), It.IsAny<string>(), CancellationToken.None), Times.Never);
+            pipelineAssessmentRepository.Verify(x => x.GetAssessmentQuestion(It.IsAny<string>(), It.IsAny<string>(), CancellationToken.None), Times.Never);
             loadWorkflowActivityMapper.Verify(x => x.ActivityDataDictionaryToMultipleChoiceActivityData(It.IsAny<IDictionary<string, object?>>()), Times.Never);
 
         }
@@ -237,7 +232,7 @@ namespace Elsa.Server.Tests.Features.Workflow.LoadWorkflowActivity
         [Theory]
         [AutoMoqData]
         public async Task Handle_ReturnsOperationResultWithErrors_GivenNoWorkflowsAreCollected(
-            [Frozen] Mock<IQuestionInvoker> multipleChoiceQuestionInvoker,
+            [Frozen] Mock<IQuestionInvoker> questionInvoker,
             [Frozen] Mock<IWorkflowInstanceStore> workflowInstanceStore,
             [Frozen] Mock<IPipelineAssessmentRepository> pipelineAssessmentRepository,
             [Frozen] Mock<ILoadWorkflowActivityMapper> loadWorkflowActivityMapper,
@@ -245,7 +240,7 @@ namespace Elsa.Server.Tests.Features.Workflow.LoadWorkflowActivity
             LoadWorkflowActivityRequestHandler sut)
         {
             //Arrange
-            multipleChoiceQuestionInvoker
+            questionInvoker
                 .Setup(x => x.FindWorkflowsAsync(loadWorkflowActivityRequest.ActivityId, "MultipleChoiceQuestion", loadWorkflowActivityRequest.WorkflowInstanceId, CancellationToken.None))
                 .ReturnsAsync(new List<CollectedWorkflow>());
 
@@ -256,7 +251,7 @@ namespace Elsa.Server.Tests.Features.Workflow.LoadWorkflowActivity
             Assert.Null(result.Data!.MultipleChoiceQuestionActivityData);
             Assert.Equal($"Unable to progress workflow instance Id {loadWorkflowActivityRequest.WorkflowInstanceId}. No collected workflows", result.ErrorMessages.Single());
             workflowInstanceStore.Verify(x => x.FindAsync(It.IsAny<WorkflowInstanceIdSpecification>(), CancellationToken.None), Times.Never);
-            pipelineAssessmentRepository.Verify(x => x.GetMultipleChoiceQuestions(It.IsAny<string>(), It.IsAny<string>(), CancellationToken.None), Times.Never);
+            pipelineAssessmentRepository.Verify(x => x.GetAssessmentQuestion(It.IsAny<string>(), It.IsAny<string>(), CancellationToken.None), Times.Never);
             loadWorkflowActivityMapper.Verify(x => x.ActivityDataDictionaryToMultipleChoiceActivityData(It.IsAny<IDictionary<string, object?>>()), Times.Never);
 
         }
@@ -264,7 +259,7 @@ namespace Elsa.Server.Tests.Features.Workflow.LoadWorkflowActivity
         [Theory]
         [AutoMoqData]
         public async Task Handle_ReturnsOperationResultWithErrors_ExceptionIsThrown(
-            [Frozen] Mock<IQuestionInvoker> multipleChoiceQuestionInvoker,
+            [Frozen] Mock<IQuestionInvoker> questionInvoker,
             [Frozen] Mock<IWorkflowInstanceStore> workflowInstanceStore,
             [Frozen] Mock<IPipelineAssessmentRepository> pipelineAssessmentRepository,
             [Frozen] Mock<ILoadWorkflowActivityMapper> loadWorkflowActivityMapper,
@@ -273,7 +268,7 @@ namespace Elsa.Server.Tests.Features.Workflow.LoadWorkflowActivity
             LoadWorkflowActivityRequestHandler sut)
         {
             //Arrange
-            multipleChoiceQuestionInvoker
+            questionInvoker
                 .Setup(x => x.FindWorkflowsAsync(It.IsAny<string>(), "MultipleChoiceQuestion", It.IsAny<string>(), CancellationToken.None))
                 .Throws(exception);
 
@@ -284,7 +279,7 @@ namespace Elsa.Server.Tests.Features.Workflow.LoadWorkflowActivity
             Assert.Null(result.Data!.MultipleChoiceQuestionActivityData);
             Assert.Equal(exception.Message, result.ErrorMessages.Single());
             workflowInstanceStore.Verify(x => x.FindAsync(It.IsAny<WorkflowInstanceIdSpecification>(), CancellationToken.None), Times.Never);
-            pipelineAssessmentRepository.Verify(x => x.GetMultipleChoiceQuestions(It.IsAny<string>(), It.IsAny<string>(), CancellationToken.None), Times.Never);
+            pipelineAssessmentRepository.Verify(x => x.GetAssessmentQuestion(It.IsAny<string>(), It.IsAny<string>(), CancellationToken.None), Times.Never);
             loadWorkflowActivityMapper.Verify(x => x.ActivityDataDictionaryToMultipleChoiceActivityData(It.IsAny<IDictionary<string, object?>>()), Times.Never);
 
         }

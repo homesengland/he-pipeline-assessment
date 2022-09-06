@@ -12,7 +12,7 @@ namespace Elsa.Server.Tests.Features.Workflow.StartWorkflow
     {
         [Theory]
         [AutoMoqData]
-        public void RunWorkflowResultToMultipleChoiceQuestionModel_ShouldReturnMultipleChoiceQuestionModel_WhenWorkflowInstanceIsNotNull(
+        public void RunWorkflowResultToAssessmentQuestion_ShouldReturnAssessmentQuestion_WhenWorkflowInstanceIsNotNull(
             [Frozen] Mock<IDateTimeProvider> mockDateTimeProvider,
             RunWorkflowResult runWorkflowResult,
             string activityType,
@@ -24,7 +24,7 @@ namespace Elsa.Server.Tests.Features.Workflow.StartWorkflow
             mockDateTimeProvider.Setup(x => x.UtcNow()).Returns(currentTimeUtc);
 
             //Act
-            var result = sut.RunWorkflowResultToMultipleChoiceQuestionModel(runWorkflowResult, activityType);
+            var result = sut.RunWorkflowResultToAssessmentQuestion(runWorkflowResult, activityType);
 
             //Assert
             Assert.IsType<AssessmentQuestion>(result);
@@ -40,7 +40,7 @@ namespace Elsa.Server.Tests.Features.Workflow.StartWorkflow
 
         [Theory]
         [AutoData]
-        public void RunWorkflowResultToMultipleChoiceQuestionModel_ShouldReturnNull_WhenWorkflowInstanceNull(
+        public void RunWorkflowResultToAssessmentQuestion_ShouldReturnNull_WhenWorkflowInstanceNull(
             [Frozen] Mock<IDateTimeProvider> mockDateTimeProvider,
             string activityType
             )
@@ -50,7 +50,7 @@ namespace Elsa.Server.Tests.Features.Workflow.StartWorkflow
             var runWorkflowResult = new RunWorkflowResult(null, null, null, false);
 
             //Act
-            var result = sut.RunWorkflowResultToMultipleChoiceQuestionModel(runWorkflowResult, activityType);
+            var result = sut.RunWorkflowResultToAssessmentQuestion(runWorkflowResult, activityType);
 
             //Assert
             Assert.Null(result);
@@ -58,7 +58,7 @@ namespace Elsa.Server.Tests.Features.Workflow.StartWorkflow
 
         [Theory]
         [AutoData]
-        public void RunWorkflowResultToMultipleChoiceQuestionModel_ShouldReturnNull_WhenWorkflowInstanceIdNull(
+        public void RunWorkflowResultToAssessmentQuestion_ShouldReturnNull_WhenWorkflowInstanceIdNull(
             [Frozen] Mock<IDateTimeProvider> mockDateTimeProvider, string activityType)
         {
             //Arrange
@@ -68,7 +68,7 @@ namespace Elsa.Server.Tests.Features.Workflow.StartWorkflow
             var runWorkflowResult = new RunWorkflowResult(workflowInstance, null, null, false);
 
             //Act
-            var result = sut.RunWorkflowResultToMultipleChoiceQuestionModel(runWorkflowResult, activityType);
+            var result = sut.RunWorkflowResultToAssessmentQuestion(runWorkflowResult, activityType);
 
             //Assert
             Assert.Null(result);

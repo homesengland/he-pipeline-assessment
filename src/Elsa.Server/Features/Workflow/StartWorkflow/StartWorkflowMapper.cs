@@ -6,7 +6,7 @@ namespace Elsa.Server.Features.Workflow.StartWorkflow
 {
     public interface IStartWorkflowMapper
     {
-        AssessmentQuestion? RunWorkflowResultToMultipleChoiceQuestionModel(RunWorkflowResult result, string activityType);
+        AssessmentQuestion? RunWorkflowResultToAssessmentQuestion(RunWorkflowResult result, string activityType);
         StartWorkflowResponse? RunWorkflowResultToStartWorkflowResponse(RunWorkflowResult result);
     }
     public class StartWorkflowMapper : IStartWorkflowMapper
@@ -17,7 +17,7 @@ namespace Elsa.Server.Features.Workflow.StartWorkflow
             _dateTimeProvider = dateTimeProvider;
         }
 
-        public AssessmentQuestion? RunWorkflowResultToMultipleChoiceQuestionModel(RunWorkflowResult result, string activityType)
+        public AssessmentQuestion? RunWorkflowResultToAssessmentQuestion(RunWorkflowResult result, string activityType)
         {
             if (result.WorkflowInstance != null && result.WorkflowInstance
                     .LastExecutedActivityId != null)

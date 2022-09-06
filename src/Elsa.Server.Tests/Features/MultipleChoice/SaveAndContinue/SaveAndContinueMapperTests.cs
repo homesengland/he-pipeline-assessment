@@ -12,7 +12,7 @@ namespace Elsa.Server.Tests.Features.MultipleChoice.SaveAndContinue
     {
         [Theory]
         [AutoMoqData]
-        public void SaveAndContinueCommandToNextMultipleChoiceQuestionModel_ShouldReturnMultipleChoiceQuestionModel(
+        public void SaveAndContinueCommandToNextAssessmentQuestion_ShouldReturnAssessmentQuestion(
             [Frozen] Mock<IDateTimeProvider> mockDateTimeProvider,
             MultipleChoiceSaveAndContinueCommand saveAndContinueCommand,
             string nextActivityId,
@@ -25,7 +25,7 @@ namespace Elsa.Server.Tests.Features.MultipleChoice.SaveAndContinue
             mockDateTimeProvider.Setup(x => x.UtcNow()).Returns(currentTimeUtc);
 
             //Act
-            var result = sut.SaveAndContinueCommandToNextMultipleChoiceQuestionModel(saveAndContinueCommand, nextActivityId, nextActivityType);
+            var result = sut.SaveAndContinueCommandToNextAssessmentQuestion(saveAndContinueCommand, nextActivityId, nextActivityType);
 
             //Assert
             Assert.IsType<AssessmentQuestion>(result);

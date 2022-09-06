@@ -3,6 +3,6 @@
     public class Constants
     {
         public const string StringSeparator = "@@@";
-        public const string DateFormat = "yyyy-MM-dd";
+        public const string DateFormat = "yyyy-M-d";
     }
 }

@@ -30,15 +30,15 @@ namespace Elsa.Server.Features.MultipleChoice.SaveAndContinue
             var result = new OperationResult<SaveAndContinueResponse>();
             try
             {
-                var dbMultipleChoiceQuestionModel =
-                    await _pipelineAssessmentRepository.GetMultipleChoiceQuestions(command.ActivityId, command.WorkflowInstanceId, cancellationToken);
-                if (dbMultipleChoiceQuestionModel != null)
+                var dbAssessmentQuestion =
+                    await _pipelineAssessmentRepository.GetAssessmentQuestion(command.ActivityId, command.WorkflowInstanceId, cancellationToken);
+                if (dbAssessmentQuestion != null)
                 {
-                    dbMultipleChoiceQuestionModel.SetAnswer(command.Answers, _dateTimeProvider.UtcNow());
-                    await _pipelineAssessmentRepository.UpdateMultipleChoiceQuestion(dbMultipleChoiceQuestionModel,
+                    dbAssessmentQuestion.SetAnswer(command.Answers, _dateTimeProvider.UtcNow());
+                    await _pipelineAssessmentRepository.UpdateAssessmentQuestion(dbAssessmentQuestion,
                         cancellationToken);
 
-                    result = await _saveAndContinueHandler.Handle(dbMultipleChoiceQuestionModel, command, cancellationToken);
+                    result = await _saveAndContinueHandler.Handle(dbAssessmentQuestion, command, cancellationToken);
 
                 }
                 else

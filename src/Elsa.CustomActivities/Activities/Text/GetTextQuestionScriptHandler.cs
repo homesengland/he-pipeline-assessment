@@ -21,7 +21,7 @@ namespace Elsa.CustomActivities.Activities.Text
         {
             var output = notification.Output;
 
-            output.AppendLine("declare const textQuestionResponse: MultipleChoiceQuestionModel;");
+            output.AppendLine("declare const textQuestionResponse: AssessmentQuestion;");
 
             return Task.CompletedTask;
         }

@@ -22,7 +22,7 @@ namespace Elsa.Server.Tests.Features.MultipleChoice.SaveAndContinue
         [Theory]
         [AutoMoqData]
         public async Task Handle_ShouldReturnSuccessfulOperationResult_WhenSuccessful_AndDoesNotInsertNewQuestionIfAlreadyExists(
-            [Frozen] Mock<IQuestionInvoker> multipleChoiceQuestionInvoker,
+            [Frozen] Mock<IQuestionInvoker> questionInvoker,
             [Frozen] Mock<IWorkflowInstanceStore> workflowInstanceStore,
             [Frozen] Mock<IPipelineAssessmentRepository> pipelineAssessmentRepository,
             AssessmentQuestion currentAssessmentQuestion,
@@ -44,11 +44,11 @@ namespace Elsa.Server.Tests.Features.MultipleChoice.SaveAndContinue
                 ValidationMessages = new List<string>()
             };
 
-            pipelineAssessmentRepository.Setup(x => x.GetMultipleChoiceQuestions(saveAndContinueCommand.ActivityId,
+            pipelineAssessmentRepository.Setup(x => x.GetAssessmentQuestion(saveAndContinueCommand.ActivityId,
                     saveAndContinueCommand.WorkflowInstanceId, CancellationToken.None))
                 .ReturnsAsync(currentAssessmentQuestion);
 
-            multipleChoiceQuestionInvoker.Setup(x => x.ExecuteWorkflowsAsync(saveAndContinueCommand.ActivityId, Constants.MultipleChoiceQuestion,
+            questionInvoker.Setup(x => x.ExecuteWorkflowsAsync(saveAndContinueCommand.ActivityId, Constants.MultipleChoiceQuestion,
                     saveAndContinueCommand.WorkflowInstanceId, currentAssessmentQuestion, CancellationToken.None))
                 .ReturnsAsync(collectedWorkflows);
 
@@ -57,7 +57,7 @@ namespace Elsa.Server.Tests.Features.MultipleChoice.SaveAndContinue
                     It.Is<WorkflowInstanceIdSpecification>(y => y.Id == collectedWorkflows.First().WorkflowInstanceId),
                     CancellationToken.None)).ReturnsAsync(workflowInstance);
 
-            pipelineAssessmentRepository.Setup(x => x.GetMultipleChoiceQuestions(workflowInstance.Output.ActivityId,
+            pipelineAssessmentRepository.Setup(x => x.GetAssessmentQuestion(workflowInstance.Output.ActivityId,
                     saveAndContinueCommand.WorkflowInstanceId, CancellationToken.None))
                 .ReturnsAsync(nextAssessmentQuestion);
 
@@ -65,8 +65,8 @@ namespace Elsa.Server.Tests.Features.MultipleChoice.SaveAndContinue
             var result = await sut.Handle(saveAndContinueCommand, CancellationToken.None);
 
             //Assert
-            pipelineAssessmentRepository.Verify(x => x.UpdateMultipleChoiceQuestion(currentAssessmentQuestion, CancellationToken.None), Times.Once);
-            pipelineAssessmentRepository.Verify(x => x.CreateMultipleChoiceQuestionAsync(nextAssessmentQuestion, CancellationToken.None), Times.Never);
+            pipelineAssessmentRepository.Verify(x => x.UpdateAssessmentQuestion(currentAssessmentQuestion, CancellationToken.None), Times.Once);
+            pipelineAssessmentRepository.Verify(x => x.CreateAssessmentQuestionAsync(nextAssessmentQuestion, CancellationToken.None), Times.Never);
             Assert.Equal(opResult.Data.NextActivityId, result.Data!.NextActivityId);
             Assert.Equal(opResult.Data.WorkflowInstanceId, result.Data.WorkflowInstanceId);
             Assert.Empty(result.ErrorMessages);
@@ -76,7 +76,7 @@ namespace Elsa.Server.Tests.Features.MultipleChoice.SaveAndContinue
         [Theory]
         [AutoMoqData]
         public async Task Handle_ShouldReturnSuccessfulOperationResult_WhenSuccessful_AndInsertsNewQuestionIfDoesNotExist(
-            [Frozen] Mock<IQuestionInvoker> multipleChoiceQuestionInvoker,
+            [Frozen] Mock<IQuestionInvoker> questionInvoker,
             [Frozen] Mock<IWorkflowInstanceStore> workflowInstanceStore,
             [Frozen] Mock<IPipelineAssessmentRepository> pipelineAssessmentRepository,
             [Frozen] Mock<ISaveAndContinueMapper> saveAndContinueMapper,
@@ -100,11 +100,11 @@ namespace Elsa.Server.Tests.Features.MultipleChoice.SaveAndContinue
                 ValidationMessages = new List<string>()
             };
 
-            pipelineAssessmentRepository.Setup(x => x.GetMultipleChoiceQuestions(saveAndContinueCommand.ActivityId,
+            pipelineAssessmentRepository.Setup(x => x.GetAssessmentQuestion(saveAndContinueCommand.ActivityId,
                     saveAndContinueCommand.WorkflowInstanceId, CancellationToken.None))
                 .ReturnsAsync(currentAssessmentQuestion);
 
-            multipleChoiceQuestionInvoker.Setup(x => x.ExecuteWorkflowsAsync(saveAndContinueCommand.ActivityId,Constants.MultipleChoiceQuestion,
+            questionInvoker.Setup(x => x.ExecuteWorkflowsAsync(saveAndContinueCommand.ActivityId,Constants.MultipleChoiceQuestion,
                     saveAndContinueCommand.WorkflowInstanceId, currentAssessmentQuestion, CancellationToken.None))
                 .ReturnsAsync(collectedWorkflows);
 
@@ -113,20 +113,20 @@ namespace Elsa.Server.Tests.Features.MultipleChoice.SaveAndContinue
                     It.Is<WorkflowInstanceIdSpecification>(y => y.Id == collectedWorkflows.First().WorkflowInstanceId),
                     CancellationToken.None)).ReturnsAsync(workflowInstance);
 
-            pipelineAssessmentRepository.Setup(x => x.GetMultipleChoiceQuestions(workflowInstance.Output.ActivityId,
+            pipelineAssessmentRepository.Setup(x => x.GetAssessmentQuestion(workflowInstance.Output.ActivityId,
                     saveAndContinueCommand.WorkflowInstanceId, CancellationToken.None))
                 .ReturnsAsync((AssessmentQuestion?)null);
 
             saveAndContinueMapper
-                .Setup(x => x.SaveAndContinueCommandToNextMultipleChoiceQuestionModel(saveAndContinueCommand,
+                .Setup(x => x.SaveAndContinueCommandToNextAssessmentQuestion(saveAndContinueCommand,
                     workflowInstance.Output!.ActivityId, nextActivityType)).Returns(nextAssessmentQuestion);
 
             //Act
             var result = await sut.Handle(saveAndContinueCommand, CancellationToken.None);
 
             //Assert
-            pipelineAssessmentRepository.Verify(x => x.UpdateMultipleChoiceQuestion(currentAssessmentQuestion, CancellationToken.None), Times.Once);
-            pipelineAssessmentRepository.Verify(x => x.CreateMultipleChoiceQuestionAsync(nextAssessmentQuestion, CancellationToken.None), Times.Once);
+            pipelineAssessmentRepository.Verify(x => x.UpdateAssessmentQuestion(currentAssessmentQuestion, CancellationToken.None), Times.Once);
+            pipelineAssessmentRepository.Verify(x => x.CreateAssessmentQuestionAsync(nextAssessmentQuestion, CancellationToken.None), Times.Once);
             Assert.Equal(opResult.Data.NextActivityId, result.Data!.NextActivityId);
             Assert.Equal(opResult.Data.WorkflowInstanceId, result.Data.WorkflowInstanceId);
             Assert.Empty(result.ErrorMessages);
@@ -136,7 +136,7 @@ namespace Elsa.Server.Tests.Features.MultipleChoice.SaveAndContinue
         [Theory]
         [AutoMoqData]
         public async Task Handle_ShouldReturnErrors_WhenOutputIsNullOnWorkflowInstance(
-            [Frozen] Mock<IQuestionInvoker> multipleChoiceQuestionInvoker,
+            [Frozen] Mock<IQuestionInvoker> questionInvoker,
             [Frozen] Mock<IWorkflowInstanceStore> workflowInstanceStore,
             [Frozen] Mock<IPipelineAssessmentRepository> pipelineAssessmentRepository,
             AssessmentQuestion currentAssessmentQuestion,
@@ -147,11 +147,11 @@ namespace Elsa.Server.Tests.Features.MultipleChoice.SaveAndContinue
         {
             //Arrange
             workflowInstance.Output = null;
-            pipelineAssessmentRepository.Setup(x => x.GetMultipleChoiceQuestions(saveAndContinueCommand.ActivityId,
+            pipelineAssessmentRepository.Setup(x => x.GetAssessmentQuestion(saveAndContinueCommand.ActivityId,
                     saveAndContinueCommand.WorkflowInstanceId, CancellationToken.None))
                 .ReturnsAsync(currentAssessmentQuestion);
 
-            multipleChoiceQuestionInvoker.Setup(x => x.ExecuteWorkflowsAsync(saveAndContinueCommand.ActivityId, Constants.MultipleChoiceQuestion,
+            questionInvoker.Setup(x => x.ExecuteWorkflowsAsync(saveAndContinueCommand.ActivityId, Constants.MultipleChoiceQuestion,
                     saveAndContinueCommand.WorkflowInstanceId, currentAssessmentQuestion, CancellationToken.None))
                 .ReturnsAsync(collectedWorkflows);
 
@@ -164,8 +164,8 @@ namespace Elsa.Server.Tests.Features.MultipleChoice.SaveAndContinue
             var result = await sut.Handle(saveAndContinueCommand, CancellationToken.None);
 
             //Assert
-            pipelineAssessmentRepository.Verify(x => x.UpdateMultipleChoiceQuestion(currentAssessmentQuestion, CancellationToken.None), Times.Once);
-            pipelineAssessmentRepository.Verify(x => x.CreateMultipleChoiceQuestionAsync(It.IsAny<AssessmentQuestion>(), CancellationToken.None), Times.Never);
+            pipelineAssessmentRepository.Verify(x => x.UpdateAssessmentQuestion(currentAssessmentQuestion, CancellationToken.None), Times.Once);
+            pipelineAssessmentRepository.Verify(x => x.CreateAssessmentQuestionAsync(It.IsAny<AssessmentQuestion>(), CancellationToken.None), Times.Never);
             Assert.Null(result.Data);
             Assert.Equal($"Workflow instance output for workflow instance Id {saveAndContinueCommand.WorkflowInstanceId} is not set. Unable to determine next activity", result.ErrorMessages.Single());
         }
@@ -173,7 +173,7 @@ namespace Elsa.Server.Tests.Features.MultipleChoice.SaveAndContinue
         [Theory]
         [AutoMoqData]
         public async Task Handle_ShouldReturnErrors_WhenWorkflowInstanceIsNull(
-            [Frozen] Mock<IQuestionInvoker> multipleChoiceQuestionInvoker,
+            [Frozen] Mock<IQuestionInvoker> questionInvoker,
             [Frozen] Mock<IWorkflowInstanceStore> workflowInstanceStore,
             [Frozen] Mock<IPipelineAssessmentRepository> pipelineAssessmentRepository,
             AssessmentQuestion currentAssessmentQuestion,
@@ -182,11 +182,11 @@ namespace Elsa.Server.Tests.Features.MultipleChoice.SaveAndContinue
             SaveAndContinueCommandHandler sut)
         {
             //Arrange
-            pipelineAssessmentRepository.Setup(x => x.GetMultipleChoiceQuestions(saveAndContinueCommand.ActivityId,
+            pipelineAssessmentRepository.Setup(x => x.GetAssessmentQuestion(saveAndContinueCommand.ActivityId,
                     saveAndContinueCommand.WorkflowInstanceId, CancellationToken.None))
                 .ReturnsAsync(currentAssessmentQuestion);
 
-            multipleChoiceQuestionInvoker.Setup(x => x.ExecuteWorkflowsAsync(saveAndContinueCommand.ActivityId, Constants.MultipleChoiceQuestion,
+            questionInvoker.Setup(x => x.ExecuteWorkflowsAsync(saveAndContinueCommand.ActivityId, Constants.MultipleChoiceQuestion,
                     saveAndContinueCommand.WorkflowInstanceId, currentAssessmentQuestion, CancellationToken.None))
                 .ReturnsAsync(collectedWorkflows);
 
@@ -199,21 +199,21 @@ namespace Elsa.Server.Tests.Features.MultipleChoice.SaveAndContinue
             var result = await sut.Handle(saveAndContinueCommand, CancellationToken.None);
 
             //Assert
-            pipelineAssessmentRepository.Verify(x => x.UpdateMultipleChoiceQuestion(currentAssessmentQuestion, CancellationToken.None), Times.Once);
-            pipelineAssessmentRepository.Verify(x => x.CreateMultipleChoiceQuestionAsync(It.IsAny<AssessmentQuestion>(), CancellationToken.None), Times.Never);
+            pipelineAssessmentRepository.Verify(x => x.UpdateAssessmentQuestion(currentAssessmentQuestion, CancellationToken.None), Times.Once);
+            pipelineAssessmentRepository.Verify(x => x.CreateAssessmentQuestionAsync(It.IsAny<AssessmentQuestion>(), CancellationToken.None), Times.Never);
             Assert.Null(result.Data);
             Assert.Equal($"Unable to find workflow instance with Id: {saveAndContinueCommand.WorkflowInstanceId} in Elsa database", result.ErrorMessages.Single());
         }
 
         [Theory]
         [AutoMoqData]
-        public async Task Handle_ShouldReturnErrors_WhenMultipleChoiceQuestionNotFoundInDatabase(
+        public async Task Handle_ShouldReturnErrors_WhenAssessmentQuestionNotFoundInDatabase(
             [Frozen] Mock<IPipelineAssessmentRepository> pipelineAssessmentRepository,
             MultipleChoiceSaveAndContinueCommand saveAndContinueCommand,
             SaveAndContinueCommandHandler sut)
         {
             //Arrange
-            pipelineAssessmentRepository.Setup(x => x.GetMultipleChoiceQuestions(saveAndContinueCommand.ActivityId,
+            pipelineAssessmentRepository.Setup(x => x.GetAssessmentQuestion(saveAndContinueCommand.ActivityId,
                     saveAndContinueCommand.WorkflowInstanceId, CancellationToken.None))
                 .ReturnsAsync((AssessmentQuestion?)null);
 
@@ -221,8 +221,8 @@ namespace Elsa.Server.Tests.Features.MultipleChoice.SaveAndContinue
             var result = await sut.Handle(saveAndContinueCommand, CancellationToken.None);
 
             //Assert
-            pipelineAssessmentRepository.Verify(x => x.UpdateMultipleChoiceQuestion(It.IsAny<AssessmentQuestion>(), CancellationToken.None), Times.Never);
-            pipelineAssessmentRepository.Verify(x => x.CreateMultipleChoiceQuestionAsync(It.IsAny<AssessmentQuestion>(), CancellationToken.None), Times.Never);
+            pipelineAssessmentRepository.Verify(x => x.UpdateAssessmentQuestion(It.IsAny<AssessmentQuestion>(), CancellationToken.None), Times.Never);
+            pipelineAssessmentRepository.Verify(x => x.CreateAssessmentQuestionAsync(It.IsAny<AssessmentQuestion>(), CancellationToken.None), Times.Never);
             Assert.Null(result.Data);
             Assert.Equal($"Unable to find workflow instance with Id: {saveAndContinueCommand.WorkflowInstanceId} and Activity Id: {saveAndContinueCommand.ActivityId} in custom database", result.ErrorMessages.Single());
         }
@@ -236,7 +236,7 @@ namespace Elsa.Server.Tests.Features.MultipleChoice.SaveAndContinue
             SaveAndContinueCommandHandler sut)
         {
             //Arrange
-            pipelineAssessmentRepository.Setup(x => x.GetMultipleChoiceQuestions(saveAndContinueCommand.ActivityId,
+            pipelineAssessmentRepository.Setup(x => x.GetAssessmentQuestion(saveAndContinueCommand.ActivityId,
                     saveAndContinueCommand.WorkflowInstanceId, CancellationToken.None))
                 .Throws(exception);
 
@@ -244,8 +244,8 @@ namespace Elsa.Server.Tests.Features.MultipleChoice.SaveAndContinue
             var result = await sut.Handle(saveAndContinueCommand, CancellationToken.None);
 
             //Assert
-            pipelineAssessmentRepository.Verify(x => x.UpdateMultipleChoiceQuestion(It.IsAny<AssessmentQuestion>(), CancellationToken.None), Times.Never);
-            pipelineAssessmentRepository.Verify(x => x.CreateMultipleChoiceQuestionAsync(It.IsAny<AssessmentQuestion>(), CancellationToken.None), Times.Never);
+            pipelineAssessmentRepository.Verify(x => x.UpdateAssessmentQuestion(It.IsAny<AssessmentQuestion>(), CancellationToken.None), Times.Never);
+            pipelineAssessmentRepository.Verify(x => x.CreateAssessmentQuestionAsync(It.IsAny<AssessmentQuestion>(), CancellationToken.None), Times.Never);
             Assert.Null(result.Data);
             Assert.Equal(exception.Message, result.ErrorMessages.Single());
         }

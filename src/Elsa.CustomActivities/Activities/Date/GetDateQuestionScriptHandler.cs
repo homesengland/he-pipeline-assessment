@@ -26,7 +26,7 @@ namespace Elsa.CustomActivities.Activities.Date
         {
             var output = notification.Output;
 
-            output.AppendLine("declare const dateQuestionResponse: MultipleChoiceQuestionModel;");
+            output.AppendLine("declare const dateQuestionResponse: AssessmentQuestion;");
 
             return Task.CompletedTask;
         }

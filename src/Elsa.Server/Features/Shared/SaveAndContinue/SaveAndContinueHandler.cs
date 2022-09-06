@@ -60,7 +60,7 @@ namespace Elsa.Server.Features.Shared.SaveAndContinue
                         if (activity != null)
                         {
                             var nextActivityRecord =
-                                await _pipelineAssessmentRepository.GetMultipleChoiceQuestions(nextActivityId,
+                                await _pipelineAssessmentRepository.GetAssessmentQuestion(nextActivityId,
                                     command.WorkflowInstanceId, cancellationToken);
 
                             if (nextActivityRecord == null)
@@ -105,8 +105,8 @@ namespace Elsa.Server.Features.Shared.SaveAndContinue
 
         private async Task CreateNextActivityRecord(SaveAndContinueCommand command, string nextActivityId, string activityType)
         {
-            var multipleChoiceQuestion = _saveAndContinueMapper.SaveAndContinueCommandToNextMultipleChoiceQuestionModel(command, nextActivityId, activityType);
-            await _pipelineAssessmentRepository.CreateMultipleChoiceQuestionAsync(multipleChoiceQuestion);
+            var assessmentQuestion = _saveAndContinueMapper.SaveAndContinueCommandToNextAssessmentQuestion(command, nextActivityId, activityType);
+            await _pipelineAssessmentRepository.CreateAssessmentQuestionAsync(assessmentQuestion);
         }
     }
 }

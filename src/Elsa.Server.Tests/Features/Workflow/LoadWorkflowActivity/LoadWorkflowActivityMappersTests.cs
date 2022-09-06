@@ -43,7 +43,7 @@ namespace Elsa.Server.Tests.Features.Workflow.LoadWorkflowActivity
             multipleChoiceQuestionActivityData.Output = JsonSerializer.Serialize(assessmentQuestion);
 
             jsonHelper.Setup(x => x.ActivityDataDictionaryToQuestionActivityData<MultipleChoiceQuestionActivityData>(activityDataDictionary)).Returns(multipleChoiceQuestionActivityData);
-            jsonHelper.Setup(x => x.ActivityOutputJsonToMultipleChoiceQuestionModel(It.IsAny<string>())).Returns(assessmentQuestion);
+            jsonHelper.Setup(x => x.ActivityOutputJsonToAssessmentQuestion(It.IsAny<string>())).Returns(assessmentQuestion);
 
             //Act
             var result = sut.ActivityDataDictionaryToMultipleChoiceActivityData(activityDataDictionary);
@@ -107,7 +107,7 @@ namespace Elsa.Server.Tests.Features.Workflow.LoadWorkflowActivity
             Assert.NotNull(result);
             Assert.Null(result!.Output);
             Assert.Empty(result.Choices.Where(x => x.IsSelected));
-            jsonHelper.Verify(x => x.ActivityOutputJsonToMultipleChoiceQuestionModel(It.IsAny<string>()), Times.Never);
+            jsonHelper.Verify(x => x.ActivityOutputJsonToAssessmentQuestion(It.IsAny<string>()), Times.Never);
 
         }
 
@@ -124,7 +124,7 @@ namespace Elsa.Server.Tests.Features.Workflow.LoadWorkflowActivity
             var activityDataDictionary = workflowInstance.ActivityData.FirstOrDefault().Value;
 
             jsonHelper.Setup(x => x.ActivityDataDictionaryToQuestionActivityData<MultipleChoiceQuestionActivityData>(activityDataDictionary)).Returns(multipleChoiceQuestionActivityData);
-            jsonHelper.Setup(x => x.ActivityOutputJsonToMultipleChoiceQuestionModel(It.IsAny<string>())).Returns((AssessmentQuestion?)null);
+            jsonHelper.Setup(x => x.ActivityOutputJsonToAssessmentQuestion(It.IsAny<string>())).Returns((AssessmentQuestion?)null);
 
             //Act
             var result = sut.ActivityDataDictionaryToMultipleChoiceActivityData(activityDataDictionary);
@@ -132,7 +132,7 @@ namespace Elsa.Server.Tests.Features.Workflow.LoadWorkflowActivity
             //Assert
             Assert.NotNull(result);
             Assert.NotNull(result!.Output);
-            jsonHelper.Verify(x => x.ActivityOutputJsonToMultipleChoiceQuestionModel(It.IsAny<string>()), Times.Once);
+            jsonHelper.Verify(x => x.ActivityOutputJsonToAssessmentQuestion(It.IsAny<string>()), Times.Once);
             Assert.Empty(result.Choices.Where(x => x.IsSelected));
 
         }
@@ -153,7 +153,7 @@ namespace Elsa.Server.Tests.Features.Workflow.LoadWorkflowActivity
             assessmentQuestion.Answer = null;
 
             jsonHelper.Setup(x => x.ActivityDataDictionaryToQuestionActivityData<MultipleChoiceQuestionActivityData>(activityDataDictionary)).Returns(multipleChoiceQuestionActivityData);
-            jsonHelper.Setup(x => x.ActivityOutputJsonToMultipleChoiceQuestionModel(It.IsAny<string>())).Returns(assessmentQuestion);
+            jsonHelper.Setup(x => x.ActivityOutputJsonToAssessmentQuestion(It.IsAny<string>())).Returns(assessmentQuestion);
 
             //Act
             var result = sut.ActivityDataDictionaryToMultipleChoiceActivityData(activityDataDictionary);
@@ -161,7 +161,7 @@ namespace Elsa.Server.Tests.Features.Workflow.LoadWorkflowActivity
             //Assert
             Assert.NotNull(result);
             Assert.NotNull(result!.Output);
-            jsonHelper.Verify(x => x.ActivityOutputJsonToMultipleChoiceQuestionModel(It.IsAny<string>()), Times.Once);
+            jsonHelper.Verify(x => x.ActivityOutputJsonToAssessmentQuestion(It.IsAny<string>()), Times.Once);
             Assert.Empty(result.Choices.Where(x => x.IsSelected));
 
         }

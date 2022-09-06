@@ -42,7 +42,7 @@ namespace Elsa.Server.Features.Workflow.LoadWorkflowActivity
             {
                 var activityJson = activityData.Output.ToString();
 
-                var output = _loadWorkflowActivityJsonHelper.ActivityOutputJsonToMultipleChoiceQuestionModel(activityJson!);
+                var output = _loadWorkflowActivityJsonHelper.ActivityOutputJsonToAssessmentQuestion(activityJson!);
                 if (output != null && output.Answer != null)
                 {
                     foreach (var activityDataChoice in activityData.Choices)
@@ -64,7 +64,7 @@ namespace Elsa.Server.Features.Workflow.LoadWorkflowActivity
             {
                 var activityJson = activityData.Output.ToString();
 
-                var output = _loadWorkflowActivityJsonHelper.ActivityOutputJsonToMultipleChoiceQuestionModel(activityJson!);
+                var output = _loadWorkflowActivityJsonHelper.ActivityOutputJsonToAssessmentQuestion(activityJson!);
                 if (output != null && output.Answer != null)
                 {
                     bool isValid = Decimal.TryParse(output.Answer, out decimal result);
@@ -83,7 +83,7 @@ namespace Elsa.Server.Features.Workflow.LoadWorkflowActivity
             {
                 var activityJson = activityData.Output.ToString();
 
-                var output = _loadWorkflowActivityJsonHelper.ActivityOutputJsonToMultipleChoiceQuestionModel(activityJson!);
+                var output = _loadWorkflowActivityJsonHelper.ActivityOutputJsonToAssessmentQuestion(activityJson!);
                 if (output != null && output.Answer != null)
                 {
                     string dateString = output.Answer;
@@ -106,7 +106,7 @@ namespace Elsa.Server.Features.Workflow.LoadWorkflowActivity
             {
                 var activityJson = activityData.Output.ToString();
 
-                var output = _loadWorkflowActivityJsonHelper.ActivityOutputJsonToMultipleChoiceQuestionModel(activityJson!);
+                var output = _loadWorkflowActivityJsonHelper.ActivityOutputJsonToAssessmentQuestion(activityJson!);
                 if (output != null && output.Answer != null)
                 {
                     activityData.Answer = output.Answer;

@@ -37,12 +37,12 @@ namespace Elsa.Server.Features.Workflow.StartWorkflow
 
                     if (activity != null)
                     {
-                        var multipleChoiceQuestion =
-                            _startWorkflowMapper.RunWorkflowResultToMultipleChoiceQuestionModel(runWorkflowResult, activity.Type);
+                        var assessmentQuestion =
+                            _startWorkflowMapper.RunWorkflowResultToAssessmentQuestion(runWorkflowResult, activity.Type);
 
-                        if (multipleChoiceQuestion != null)
+                        if (assessmentQuestion != null)
                         {
-                            await _pipelineAssessmentRepository.CreateMultipleChoiceQuestionAsync(multipleChoiceQuestion!, cancellationToken);
+                            await _pipelineAssessmentRepository.CreateAssessmentQuestionAsync(assessmentQuestion!, cancellationToken);
                             result.Data = _startWorkflowMapper.RunWorkflowResultToStartWorkflowResponse(runWorkflowResult);
                         }
                         else

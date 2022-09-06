@@ -21,7 +21,7 @@ namespace Elsa.CustomActivities.Activities.Currency
         {
             var output = notification.Output;
 
-            output.AppendLine("declare const currencyQuestionResponse: MultipleChoiceQuestionModel;");
+            output.AppendLine("declare const currencyQuestionResponse: AssessmentQuestion;");
 
             return Task.CompletedTask;
         }

@@ -4,16 +4,16 @@ namespace Elsa.CustomInfrastructure.Data.Repository
 {
     public interface IPipelineAssessmentRepository
     {
-        Task<AssessmentQuestion?> GetMultipleChoiceQuestions(string id,
+        Task<AssessmentQuestion?> GetAssessmentQuestion(string id,
             CancellationToken cancellationToken = default);
 
-        Task<AssessmentQuestion?> GetMultipleChoiceQuestions(string activityId,
+        Task<AssessmentQuestion?> GetAssessmentQuestion(string activityId,
             string workflowInstanceId,
             CancellationToken cancellationToken = default);
 
-        ValueTask<string?> CreateMultipleChoiceQuestionAsync(AssessmentQuestion model,
+        ValueTask<string?> CreateAssessmentQuestionAsync(AssessmentQuestion model,
             CancellationToken cancellationToken = default);
 
-        Task<AssessmentQuestion?> UpdateMultipleChoiceQuestion(AssessmentQuestion model, CancellationToken cancellationToken = default);
+        Task<AssessmentQuestion?> UpdateAssessmentQuestion(AssessmentQuestion model, CancellationToken cancellationToken = default);
     }
 }

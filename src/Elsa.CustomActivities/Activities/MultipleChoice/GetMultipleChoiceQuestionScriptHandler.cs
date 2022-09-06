@@ -23,7 +23,7 @@ namespace Elsa.CustomActivities.Activities.MultipleChoice
         {
             var output = notification.Output;
 
-            output.AppendLine("declare const multipleChoiceQuestionResponse: MultipleChoiceQuestionModel;");
+            output.AppendLine("declare const multipleChoiceQuestionResponse: AssessmentQuestion;");
 
             return Task.CompletedTask;
         }

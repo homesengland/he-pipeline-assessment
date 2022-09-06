@@ -37,12 +37,12 @@ namespace Elsa.Server.Features.Workflow.LoadWorkflowActivity
             };
             try
             {
-                var dbMultipleChoiceQuestionModel =
-                    await _pipelineAssessmentRepository.GetMultipleChoiceQuestions(activityRequest.ActivityId, activityRequest.WorkflowInstanceId, cancellationToken);
+                var dbAssessmentQuestion =
+                    await _pipelineAssessmentRepository.GetAssessmentQuestion(activityRequest.ActivityId, activityRequest.WorkflowInstanceId, cancellationToken);
 
-                if(dbMultipleChoiceQuestionModel != null)
+                if(dbAssessmentQuestion != null)
                 {
-                    IEnumerable<CollectedWorkflow> workflows = await _QuestionInvoker.FindWorkflowsAsync(activityRequest.ActivityId, dbMultipleChoiceQuestionModel.ActivityType, activityRequest.WorkflowInstanceId, cancellationToken);
+                    IEnumerable<CollectedWorkflow> workflows = await _QuestionInvoker.FindWorkflowsAsync(activityRequest.ActivityId, dbAssessmentQuestion.ActivityType, activityRequest.WorkflowInstanceId, cancellationToken);
 
                     var collectedWorkflow = workflows.FirstOrDefault();
                     if (collectedWorkflow != null)
@@ -63,10 +63,10 @@ namespace Elsa.Server.Features.Workflow.LoadWorkflowActivity
                                 var activityDataDictionary =
                                     workflowInstance.ActivityData.FirstOrDefault(a => a.Key == activityRequest.ActivityId).Value;
 
-                                result.Data.ActivityType = dbMultipleChoiceQuestionModel.ActivityType;
-                                result.Data.PreviousActivityId = dbMultipleChoiceQuestionModel.PreviousActivityId;
+                                result.Data.ActivityType = dbAssessmentQuestion.ActivityType;
+                                result.Data.PreviousActivityId = dbAssessmentQuestion.PreviousActivityId;
 
-                                AssignActivityData(dbMultipleChoiceQuestionModel, activityDataDictionary, result);
+                                AssignActivityData(dbAssessmentQuestion, activityDataDictionary, result);
                             }
                         }
                         else
