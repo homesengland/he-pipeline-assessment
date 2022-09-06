@@ -4,27 +4,27 @@
 
 <div class="govuk-form-group">
     <h1 class="govuk-heading-l">
-        @Html.DisplayTextFor(m => m.Data.DateQuestionActivityData!.Title)
+        @Html.DisplayTextFor(m => m.Data.QuestionActivityData!.Title)
     </h1>
     <label class="govuk-label govuk-label--m">
-        @Html.DisplayTextFor(m => m.Data.DateQuestionActivityData!.Question)
+        @Html.DisplayTextFor(m => m.Data.QuestionActivityData!.Question)
     </label>
-    @if (!string.IsNullOrEmpty(Model.Data.DateQuestionActivityData!.QuestionHint))
+    @if (!string.IsNullOrEmpty(Model.Data.QuestionActivityData!.QuestionHint))
     {
         <div id="event-name-hint" class="govuk-hint">
-            @Model.Data.DateQuestionActivityData.QuestionHint
+            @Model.Data.QuestionActivityData.QuestionHint
         </div>
     }
-    @Html.ValidationMessageFor(m=>Model.Data.DateQuestionActivityData.Day,"",new{@class="govuk-error-message"})
-    @Html.ValidationMessageFor(m=>Model.Data.DateQuestionActivityData.Month,"",new{@class="govuk-error-message"})
-    @Html.ValidationMessageFor(m=>Model.Data.DateQuestionActivityData.Year,"",new{@class="govuk-error-message"})
+    @Html.ValidationMessageFor(m=>Model.Data.QuestionActivityData.Date.Day,"",new{@class="govuk-error-message"})
+    @Html.ValidationMessageFor(m=>Model.Data.QuestionActivityData.Date.Month,"",new{@class="govuk-error-message"})
+    @Html.ValidationMessageFor(m=>Model.Data.QuestionActivityData.Date.Year,"",new{@class="govuk-error-message"})
 
     <div class="govuk-date-input__item">
         <div class="govuk-form-group">
             <label class="govuk-label govuk-date-input__label" for="date-day">
                 Day
             </label>
-            @Html.TextBoxFor(m => Model.Data.DateQuestionActivityData.Day, new {@class = "govuk-input govuk-date-input__input govuk-input--width-2", @name="date-day", @type = "number", @inputmode="numeric"})
+            @Html.TextBoxFor(m => Model.Data.QuestionActivityData.Date.Day, new {@class = "govuk-input govuk-date-input__input govuk-input--width-2", @name="date-day", @type = "number", @inputmode="numeric"})
             </div>
     </div>
     <div class="govuk-date-input__item">
@@ -32,7 +32,7 @@
             <label class="govuk-label govuk-date-input__label" for="date-month">
                 Month
             </label>
-            @Html.TextBoxFor(m => Model.Data.DateQuestionActivityData.Month, new {@class = "govuk-input govuk-date-input__input govuk-input--width-2", @name="date-month", @type = "number", @inputmode="numeric"})
+            @Html.TextBoxFor(m => Model.Data.QuestionActivityData.Date.Month, new {@class = "govuk-input govuk-date-input__input govuk-input--width-2", @name="date-month", @type = "number", @inputmode="numeric"})
             </div>
     </div>
     <div class="govuk-date-input__item">
@@ -40,14 +40,14 @@
             <label class="govuk-label govuk-date-input__label" for="date-year">
                 Year
             </label>
-            @Html.TextBoxFor(m => Model.Data.DateQuestionActivityData.Year, new {@class = "govuk-input govuk-date-input__input govuk-input--width-3", @name="date-year", @type = "number", @inputmode="numeric"})
+            @Html.TextBoxFor(m => Model.Data.QuestionActivityData.Date.Year, new {@class = "govuk-input govuk-date-input__input govuk-input--width-3", @name="date-year", @type = "number", @inputmode="numeric"})
         </div>
     </div>
 
 
 
 
-    @if (!string.IsNullOrEmpty(Model.Data.DateQuestionActivityData.QuestionGuidance))
+    @if (!string.IsNullOrEmpty(Model.Data.QuestionActivityData.QuestionGuidance))
     {
         <br />
         <details class="govuk-details" data-module="govuk-details">
@@ -57,7 +57,7 @@
                 </span>
             </summary>
             <div class="govuk-details__text">
-                @Model.Data.DateQuestionActivityData.QuestionGuidance
+                @Model.Data.QuestionActivityData.QuestionGuidance
             </div>
         </details>
     }

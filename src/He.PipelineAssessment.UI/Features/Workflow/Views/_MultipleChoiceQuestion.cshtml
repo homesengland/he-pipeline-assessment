@@ -4,16 +4,16 @@
     <fieldset class="govuk-fieldset" aria-describedby="waste-hint">
         <legend class="govuk-fieldset__legend govuk-fieldset__legend--l">
             <h1 class="govuk-heading-l">
-                @Html.DisplayTextFor(m => m.Data.MultipleChoiceQuestionActivityData!.Title)
+                @Html.DisplayTextFor(m => m.Data.QuestionActivityData!.Title)
             </h1>
             
             <label class="govuk-label govuk-label--m">
-                @Html.DisplayTextFor(m => m.Data.MultipleChoiceQuestionActivityData!.Question)
+                @Html.DisplayTextFor(m => m.Data.QuestionActivityData!.Question)
             </label>
-            @if (!string.IsNullOrEmpty(Model.Data.MultipleChoiceQuestionActivityData!.QuestionHint))
+            @if (!string.IsNullOrEmpty(Model.Data.QuestionActivityData!.QuestionHint))
             {
                 <div id="event-name-hint" class="govuk-hint">
-                    @Model.Data.MultipleChoiceQuestionActivityData.QuestionHint
+                    @Model.Data.QuestionActivityData.QuestionHint
                 </div>
             }
         </legend>
@@ -21,17 +21,17 @@
             Select all that apply
         </div>
         <div class="govuk-checkboxes" data-module="govuk-checkboxes">
-            @for (int i = 0; i < Model.Data.MultipleChoiceQuestionActivityData.Choices.Count(); i++)
+            @for (int i = 0; i < Model.Data.QuestionActivityData.Choices.Count(); i++)
             {
                 <div class="govuk-checkboxes__item">
-                    @Html.HiddenFor(m => m.Data.MultipleChoiceQuestionActivityData!.Choices[i].Answer)
-                    @Html.CheckBoxFor(m => m.Data.MultipleChoiceQuestionActivityData!.Choices[i].IsSelected, new {@class = "govuk-checkboxes__input"})
-                    @Html.Label(Model.Data.MultipleChoiceQuestionActivityData!.Choices[i].Answer, Model.Data.MultipleChoiceQuestionActivityData.Choices[i].Answer, new {@class = "govuk-label govuk-checkboxes__label"})
+                    @Html.HiddenFor(m => m.Data.QuestionActivityData!.Choices[i].Answer)
+                    @Html.CheckBoxFor(m => m.Data.QuestionActivityData!.Choices[i].IsSelected, new {@class = "govuk-checkboxes__input"})
+                    @Html.Label(Model.Data.QuestionActivityData!.Choices[i].Answer, Model.Data.QuestionActivityData.Choices[i].Answer, new {@class = "govuk-label govuk-checkboxes__label"})
                 </div>
             }
         </div>
     </fieldset>
-    @if (!string.IsNullOrEmpty(Model.Data.MultipleChoiceQuestionActivityData.QuestionGuidance))
+    @if (!string.IsNullOrEmpty(Model.Data.QuestionActivityData.QuestionGuidance))
     {
         <br />
         <details class="govuk-details" data-module="govuk-details">
@@ -41,7 +41,7 @@
                 </span>
             </summary>
             <div class="govuk-details__text">
-                @Model.Data.MultipleChoiceQuestionActivityData.QuestionGuidance
+                @Model.Data.QuestionActivityData.QuestionGuidance
             </div>
         </details>
     }
