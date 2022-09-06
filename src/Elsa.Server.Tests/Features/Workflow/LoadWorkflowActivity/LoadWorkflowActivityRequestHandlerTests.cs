@@ -29,7 +29,7 @@ namespace Elsa.Server.Tests.Features.Workflow.LoadWorkflowActivity
           LoadWorkflowActivityRequest loadWorkflowActivityRequest,
           List<CollectedWorkflow> collectedWorkflows,
           WorkflowInstance workflowInstance,
-          MultipleChoiceQuestionModel multipleChoiceQuestionModel,
+          AssessmentQuestion assessmentQuestion,
           MultipleChoiceQuestionActivityData multipleChoiceQuestionActivityData,
           LoadWorkflowActivityRequestHandler sut)
         {
@@ -45,7 +45,7 @@ namespace Elsa.Server.Tests.Features.Workflow.LoadWorkflowActivity
 
             pipelineAssessmentRepository.Setup(x => x.GetMultipleChoiceQuestions(loadWorkflowActivityRequest.ActivityId,
                     loadWorkflowActivityRequest.WorkflowInstanceId, CancellationToken.None))
-                .ReturnsAsync(multipleChoiceQuestionModel);
+                .ReturnsAsync(assessmentQuestion);
 
             loadWorkflowActivityMapper
                 .Setup(x => x.ActivityDataDictionaryToMultipleChoiceActivityData(It.IsAny<IDictionary<string, object?>>()))
@@ -70,7 +70,7 @@ namespace Elsa.Server.Tests.Features.Workflow.LoadWorkflowActivity
             loadWorkflowActivityMapper.Verify(x => x.ActivityDataDictionaryToMultipleChoiceActivityData(It.IsAny<IDictionary<string, object?>>()), Times.Once);
             Assert.Equal(loadWorkflowActivityRequest.WorkflowInstanceId, result.Data.WorkflowInstanceId);
             Assert.Equal(loadWorkflowActivityRequest.ActivityId, result.Data.ActivityId);
-            Assert.Equal(multipleChoiceQuestionModel.PreviousActivityId, result.Data.PreviousActivityId);
+            Assert.Equal(assessmentQuestion.PreviousActivityId, result.Data.PreviousActivityId);
         }
 
 
@@ -84,7 +84,7 @@ namespace Elsa.Server.Tests.Features.Workflow.LoadWorkflowActivity
           LoadWorkflowActivityRequest loadWorkflowActivityRequest,
           List<CollectedWorkflow> collectedWorkflows,
           WorkflowInstance workflowInstance,
-          MultipleChoiceQuestionModel multipleChoiceQuestionModel,
+          AssessmentQuestion assessmentQuestion,
           LoadWorkflowActivityRequestHandler sut)
         {
 
@@ -99,7 +99,7 @@ namespace Elsa.Server.Tests.Features.Workflow.LoadWorkflowActivity
 
             pipelineAssessmentRepository.Setup(x => x.GetMultipleChoiceQuestions(loadWorkflowActivityRequest.ActivityId,
                     loadWorkflowActivityRequest.WorkflowInstanceId, CancellationToken.None))
-                .ReturnsAsync(multipleChoiceQuestionModel);
+                .ReturnsAsync(assessmentQuestion);
 
             loadWorkflowActivityMapper
                 .Setup(x => x.ActivityDataDictionaryToMultipleChoiceActivityData(It.IsAny<IDictionary<string, object?>>()))
@@ -136,7 +136,7 @@ namespace Elsa.Server.Tests.Features.Workflow.LoadWorkflowActivity
            LoadWorkflowActivityRequest loadWorkflowActivityRequest,
            List<CollectedWorkflow> collectedWorkflows,
            WorkflowInstance workflowInstance,
-           MultipleChoiceQuestionModel multipleChoiceQuestionModel,
+           AssessmentQuestion assessmentQuestion,
            LoadWorkflowActivityRequestHandler sut)
         {
 
@@ -151,7 +151,7 @@ namespace Elsa.Server.Tests.Features.Workflow.LoadWorkflowActivity
 
             pipelineAssessmentRepository.Setup(x => x.GetMultipleChoiceQuestions(loadWorkflowActivityRequest.ActivityId,
                     loadWorkflowActivityRequest.WorkflowInstanceId, CancellationToken.None))
-                .ReturnsAsync(multipleChoiceQuestionModel);
+                .ReturnsAsync(assessmentQuestion);
 
             //Act
             var result = await sut.Handle(loadWorkflowActivityRequest, CancellationToken.None);
@@ -188,7 +188,7 @@ namespace Elsa.Server.Tests.Features.Workflow.LoadWorkflowActivity
 
             pipelineAssessmentRepository.Setup(x => x.GetMultipleChoiceQuestions(loadWorkflowActivityRequest.ActivityId,
                     loadWorkflowActivityRequest.WorkflowInstanceId, CancellationToken.None))
-                .ReturnsAsync((MultipleChoiceQuestionModel?)null);
+                .ReturnsAsync((AssessmentQuestion?)null);
 
             //Act
             var result = await sut.Handle(loadWorkflowActivityRequest, CancellationToken.None);

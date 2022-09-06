@@ -1,4 +1,6 @@
-﻿namespace Elsa.CustomWorkflow.Sdk.Models.Workflow
+﻿using System.ComponentModel.DataAnnotations;
+
+namespace Elsa.CustomWorkflow.Sdk.Models.Workflow
 {
     public class WorkflowActivityDataDto
     {
@@ -36,7 +38,7 @@
 
     public class TextQuestionActivityData : QuestionActivityData
     {
-        public string Answer { get; set; } = null!;
+        public string? Answer { get; set; } = null!;
     }
 
     public class MultipleChoiceQuestionActivityData : QuestionActivityData
@@ -48,30 +50,12 @@
     {
         public DateTime? Answer { get; set; }
 
-        public int? DayFromDate()
-        {
-            if (Answer.HasValue)
-            {
-                return Answer.Value.Day;
-            }
-            return null;
-        }
-        public int? MonthFromDate()
-        {
-            if (Answer.HasValue)
-            {
-                return Answer.Value.Month;
-            }
-            return null;
-        }
-        public int? YearFromDate()
-        {
-            if (Answer.HasValue)
-            {
-                return Answer.Value.Year;
-            }
-            return null;
-        }
+        [Range(1, 31)]
+        public int? Day { get; set; }
+        [Range(1, 12)]
+        public int? Month { get; set; }
+        [Range(1, 3000)]
+        public int? Year { get; set; }
     }
 
     public class Choice

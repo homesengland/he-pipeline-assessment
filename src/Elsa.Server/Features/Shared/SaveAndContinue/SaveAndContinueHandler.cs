@@ -13,7 +13,7 @@ namespace Elsa.Server.Features.Shared.SaveAndContinue
 {
     public interface ISaveAndContinueHandler
     {
-        Task<OperationResult<SaveAndContinueResponse>> Handle(MultipleChoiceQuestionModel dbMultipleChoiceQuestionModel, SaveAndContinueCommand command, CancellationToken cancellationToken);
+        Task<OperationResult<SaveAndContinueResponse>> Handle(AssessmentQuestion dbAssessmentQuestion, SaveAndContinueCommand command, CancellationToken cancellationToken);
     }
 
     public class SaveAndContinueHandler : ISaveAndContinueHandler
@@ -33,13 +33,13 @@ namespace Elsa.Server.Features.Shared.SaveAndContinue
             _workflowRegistry = workflowRegistry;
         }
 
-        public async Task<OperationResult<SaveAndContinueResponse>> Handle(MultipleChoiceQuestionModel dbMultipleChoiceQuestionModel, SaveAndContinueCommand command, CancellationToken cancellationToken)
+        public async Task<OperationResult<SaveAndContinueResponse>> Handle(AssessmentQuestion dbAssessmentQuestion, SaveAndContinueCommand command, CancellationToken cancellationToken)
         {
             var result = new OperationResult<SaveAndContinueResponse>();
             try
             {
-                var collectedWorkflow = await _invoker.ExecuteWorkflowsAsync(command.ActivityId, dbMultipleChoiceQuestionModel.ActivityType,
-                    command.WorkflowInstanceId, dbMultipleChoiceQuestionModel, cancellationToken).FirstOrDefault();
+                var collectedWorkflow = await _invoker.ExecuteWorkflowsAsync(command.ActivityId, dbAssessmentQuestion.ActivityType,
+                    command.WorkflowInstanceId, dbAssessmentQuestion, cancellationToken).FirstOrDefault();
 
                 var workflowSpecification =
                     new WorkflowInstanceIdSpecification(collectedWorkflow.WorkflowInstanceId);

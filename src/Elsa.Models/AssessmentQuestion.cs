@@ -1,6 +1,6 @@
 ﻿namespace Elsa.CustomModels
 {
-    public class MultipleChoiceQuestionModel
+    public class AssessmentQuestion
     {
         public string Id { get; set; } = null!;
 

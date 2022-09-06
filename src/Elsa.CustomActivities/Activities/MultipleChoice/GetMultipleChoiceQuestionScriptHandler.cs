@@ -11,10 +11,10 @@ namespace Elsa.CustomActivities.Activities.MultipleChoice
         public Task Handle(EvaluatingJavaScriptExpression notification, CancellationToken cancellationToken)
         {
             var activityExecutionContext = notification.ActivityExecutionContext;
-            if (activityExecutionContext.Input != null && activityExecutionContext.Input.GetType() == typeof(MultipleChoiceQuestionModel))
+            if (activityExecutionContext.Input != null && activityExecutionContext.Input.GetType() == typeof(AssessmentQuestion))
             {
                 var engine = notification.Engine;
-                engine.SetValue("multipleChoiceQuestionResponse", activityExecutionContext.GetInput<MultipleChoiceQuestionModel>() ?? new MultipleChoiceQuestionModel());
+                engine.SetValue("multipleChoiceQuestionResponse", activityExecutionContext.GetInput<AssessmentQuestion>() ?? new AssessmentQuestion());
             }
             return Task.CompletedTask;
         }

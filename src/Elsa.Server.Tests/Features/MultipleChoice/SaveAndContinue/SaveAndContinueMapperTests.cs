@@ -28,7 +28,7 @@ namespace Elsa.Server.Tests.Features.MultipleChoice.SaveAndContinue
             var result = sut.SaveAndContinueCommandToNextMultipleChoiceQuestionModel(saveAndContinueCommand, nextActivityId, nextActivityType);
 
             //Assert
-            Assert.IsType<MultipleChoiceQuestionModel>(result);
+            Assert.IsType<AssessmentQuestion>(result);
             Assert.Equal(
                 $"{saveAndContinueCommand.WorkflowInstanceId}-{nextActivityId}",
                 result.Id);

@@ -22,7 +22,7 @@ namespace Elsa.Server.Tests.Features.Workflow.LoadWorkflowActivity
             [Frozen] Mock<ILoadWorkflowActivityJsonHelper> jsonHelper,
             WorkflowInstance workflowInstance,
             MultipleChoiceQuestionActivityData multipleChoiceQuestionActivityData,
-            MultipleChoiceQuestionModel multipleChoiceQuestionModel,
+            AssessmentQuestion assessmentQuestion,
             LoadWorkflowActivityMapper sut
         )
         {
@@ -36,14 +36,14 @@ namespace Elsa.Server.Tests.Features.Workflow.LoadWorkflowActivity
             multipleChoiceQuestionActivityData.Choices = choiceList.ToArray();
 
             var activityDataDictionary = workflowInstance.ActivityData.FirstOrDefault().Value;
-            multipleChoiceQuestionModel.Answer = answers;
+            assessmentQuestion.Answer = answers;
             var answerList = answers.Split(Constants.StringSeparator);
 
 
-            multipleChoiceQuestionActivityData.Output = JsonSerializer.Serialize(multipleChoiceQuestionModel);
+            multipleChoiceQuestionActivityData.Output = JsonSerializer.Serialize(assessmentQuestion);
 
             jsonHelper.Setup(x => x.ActivityDataDictionaryToQuestionActivityData<MultipleChoiceQuestionActivityData>(activityDataDictionary)).Returns(multipleChoiceQuestionActivityData);
-            jsonHelper.Setup(x => x.ActivityOutputJsonToMultipleChoiceQuestionModel(It.IsAny<string>())).Returns(multipleChoiceQuestionModel);
+            jsonHelper.Setup(x => x.ActivityOutputJsonToMultipleChoiceQuestionModel(It.IsAny<string>())).Returns(assessmentQuestion);
 
             //Act
             var result = sut.ActivityDataDictionaryToMultipleChoiceActivityData(activityDataDictionary);
@@ -124,7 +124,7 @@ namespace Elsa.Server.Tests.Features.Workflow.LoadWorkflowActivity
             var activityDataDictionary = workflowInstance.ActivityData.FirstOrDefault().Value;
 
             jsonHelper.Setup(x => x.ActivityDataDictionaryToQuestionActivityData<MultipleChoiceQuestionActivityData>(activityDataDictionary)).Returns(multipleChoiceQuestionActivityData);
-            jsonHelper.Setup(x => x.ActivityOutputJsonToMultipleChoiceQuestionModel(It.IsAny<string>())).Returns((MultipleChoiceQuestionModel?)null);
+            jsonHelper.Setup(x => x.ActivityOutputJsonToMultipleChoiceQuestionModel(It.IsAny<string>())).Returns((AssessmentQuestion?)null);
 
             //Act
             var result = sut.ActivityDataDictionaryToMultipleChoiceActivityData(activityDataDictionary);
@@ -143,17 +143,17 @@ namespace Elsa.Server.Tests.Features.Workflow.LoadWorkflowActivity
             [Frozen] Mock<ILoadWorkflowActivityJsonHelper> jsonHelper,
             WorkflowInstance workflowInstance,
             MultipleChoiceQuestionActivityData multipleChoiceQuestionActivityData,
-            MultipleChoiceQuestionModel multipleChoiceQuestionModel,
+            AssessmentQuestion assessmentQuestion,
             LoadWorkflowActivityMapper sut
         )
         {
             //Arrange
             var activityDataDictionary = workflowInstance.ActivityData.FirstOrDefault().Value;
 
-            multipleChoiceQuestionModel.Answer = null;
+            assessmentQuestion.Answer = null;
 
             jsonHelper.Setup(x => x.ActivityDataDictionaryToQuestionActivityData<MultipleChoiceQuestionActivityData>(activityDataDictionary)).Returns(multipleChoiceQuestionActivityData);
-            jsonHelper.Setup(x => x.ActivityOutputJsonToMultipleChoiceQuestionModel(It.IsAny<string>())).Returns(multipleChoiceQuestionModel);
+            jsonHelper.Setup(x => x.ActivityOutputJsonToMultipleChoiceQuestionModel(It.IsAny<string>())).Returns(assessmentQuestion);
 
             //Act
             var result = sut.ActivityDataDictionaryToMultipleChoiceActivityData(activityDataDictionary);

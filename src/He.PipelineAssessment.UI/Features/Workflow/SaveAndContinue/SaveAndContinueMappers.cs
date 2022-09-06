@@ -1,6 +1,8 @@
-﻿using MultipleChoice = Elsa.CustomWorkflow.Sdk.Models.MultipleChoice.SaveAndContinue;
+﻿using Elsa.CustomModels;
+using System.Globalization;
 using Currency = Elsa.CustomWorkflow.Sdk.Models.Currency.SaveAndContinue;
 using Date = Elsa.CustomWorkflow.Sdk.Models.Date.SaveAndContinue;
+using MultipleChoice = Elsa.CustomWorkflow.Sdk.Models.MultipleChoice.SaveAndContinue;
 using Text = Elsa.CustomWorkflow.Sdk.Models.Text.SaveAndContinue;
 
 namespace He.PipelineAssessment.UI.Features.Workflow.SaveAndContinue
@@ -48,10 +50,22 @@ namespace He.PipelineAssessment.UI.Features.Workflow.SaveAndContinue
 
         public Date.SaveAndContinueCommandDto SaveAndContinueCommandToDateSaveAndContinueCommandDto(SaveAndContinueCommand saveAndContinueCommand)
         {
+            DateTime? dateTime = null;
+
+            if (saveAndContinueCommand.Data.DateQuestionActivityData!.Day.HasValue &&
+                saveAndContinueCommand.Data.DateQuestionActivityData.Month.HasValue &&
+            saveAndContinueCommand.Data.DateQuestionActivityData.Year.HasValue)
+            {
+                var dateString =
+                    $"{saveAndContinueCommand.Data.DateQuestionActivityData.Year.Value}-{saveAndContinueCommand.Data.DateQuestionActivityData.Month.Value}-{saveAndContinueCommand.Data.DateQuestionActivityData.Day.Value}";
+                bool isValidDate = DateTime.TryParseExact(dateString, Constants.DateFormat, CultureInfo.InvariantCulture, DateTimeStyles.AdjustToUniversal, out DateTime parsedDateTime);
+                dateTime = isValidDate ? parsedDateTime : null;
+            }
+
             return new Date.SaveAndContinueCommandDto
             {
                 Id = $"{saveAndContinueCommand.Data.WorkflowInstanceId}-{saveAndContinueCommand.Data.ActivityId}",
-                Answer = saveAndContinueCommand.Data.DateQuestionActivityData!.Answer,
+                Answer = dateTime,
                 WorkflowInstanceId = saveAndContinueCommand.Data.WorkflowInstanceId,
                 ActivityId = saveAndContinueCommand.Data.ActivityId
             };

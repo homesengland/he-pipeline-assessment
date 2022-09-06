@@ -23,7 +23,7 @@ namespace Elsa.Server.Tests.Features.Workflow.StartWorkflow
             WorkflowBlueprint workflowBlueprint,
             RunWorkflowResult runWorkflowResult,
             StartWorkflowCommand startWorkflowCommand,
-            MultipleChoiceQuestionModel multipleChoiceQuestionModel,
+            AssessmentQuestion assessmentQuestion,
             StartWorkflowResponse startWorkflowResponse,
             string activityType,
             StartWorkflowCommandHandler sut)
@@ -44,7 +44,7 @@ namespace Elsa.Server.Tests.Features.Workflow.StartWorkflow
                 .ReturnsAsync(runWorkflowResult);
 
             startWorkflowMapper.Setup(x => x.RunWorkflowResultToMultipleChoiceQuestionModel(runWorkflowResult, activityType))
-                .Returns(multipleChoiceQuestionModel);
+                .Returns(assessmentQuestion);
 
             startWorkflowMapper.Setup(x => x.RunWorkflowResultToStartWorkflowResponse(runWorkflowResult))
                 .Returns(opResult.Data);
@@ -53,7 +53,7 @@ namespace Elsa.Server.Tests.Features.Workflow.StartWorkflow
             var result = await sut.Handle(startWorkflowCommand, CancellationToken.None);
 
             //Assert
-            pipelineAssessmentRepository.Verify(x => x.CreateMultipleChoiceQuestionAsync(multipleChoiceQuestionModel, CancellationToken.None), Times.Once);
+            pipelineAssessmentRepository.Verify(x => x.CreateMultipleChoiceQuestionAsync(assessmentQuestion, CancellationToken.None), Times.Once);
             Assert.Equal(opResult.Data.NextActivityId, result.Data!.NextActivityId);
             Assert.Equal(opResult.Data.WorkflowInstanceId, result.Data.WorkflowInstanceId);
             Assert.Empty(result.ErrorMessages);
@@ -82,13 +82,13 @@ namespace Elsa.Server.Tests.Features.Workflow.StartWorkflow
                 .ReturnsAsync(runWorkflowResult);
 
             startWorkflowMapper.Setup(x => x.RunWorkflowResultToMultipleChoiceQuestionModel(runWorkflowResult, activityType))
-                .Returns((MultipleChoiceQuestionModel?)null);
+                .Returns((AssessmentQuestion?)null);
 
             //Act
             var result = await sut.Handle(startWorkflowCommand, CancellationToken.None);
 
             //Assert
-            pipelineAssessmentRepository.Verify(x => x.CreateMultipleChoiceQuestionAsync(It.IsAny<MultipleChoiceQuestionModel>(), CancellationToken.None), Times.Never);
+            pipelineAssessmentRepository.Verify(x => x.CreateMultipleChoiceQuestionAsync(It.IsAny<AssessmentQuestion>(), CancellationToken.None), Times.Never);
             Assert.Null(result.Data);
             Assert.Equal("Failed to deserialize RunWorkflowResult", result.ErrorMessages.Single());
         }
@@ -111,7 +111,7 @@ namespace Elsa.Server.Tests.Features.Workflow.StartWorkflow
             var result = await sut.Handle(startWorkflowCommand, CancellationToken.None);
 
             //Assert
-            pipelineAssessmentRepository.Verify(x => x.CreateMultipleChoiceQuestionAsync(It.IsAny<MultipleChoiceQuestionModel>(), CancellationToken.None), Times.Never);
+            pipelineAssessmentRepository.Verify(x => x.CreateMultipleChoiceQuestionAsync(It.IsAny<AssessmentQuestion>(), CancellationToken.None), Times.Never);
             Assert.Null(result.Data);
             Assert.Equal(exception.Message, result.ErrorMessages.Single());
         }

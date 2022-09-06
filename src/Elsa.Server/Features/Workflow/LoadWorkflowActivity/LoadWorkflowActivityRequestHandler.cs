@@ -95,10 +95,10 @@ namespace Elsa.Server.Features.Workflow.LoadWorkflowActivity
             return await Task.FromResult(result);
         }
 
-        private void AssignActivityData(MultipleChoiceQuestionModel dbMultipleChoiceQuestionModel, IDictionary<string, object?> activityDataDictionary,
+        private void AssignActivityData(AssessmentQuestion dbAssessmentQuestion, IDictionary<string, object?> activityDataDictionary,
             OperationResult<LoadWorkflowActivityResponse> result)
         {
-            if (dbMultipleChoiceQuestionModel.ActivityType == Constants.MultipleChoiceQuestion)
+            if (dbAssessmentQuestion.ActivityType == Constants.MultipleChoiceQuestion)
             {
                 var activityData =
                     _loadWorkflowActivityMapper.ActivityDataDictionaryToMultipleChoiceActivityData(
@@ -109,7 +109,7 @@ namespace Elsa.Server.Features.Workflow.LoadWorkflowActivity
                 }
             }
 
-            if (dbMultipleChoiceQuestionModel.ActivityType == Constants.CurrencyQuestion)
+            if (dbAssessmentQuestion.ActivityType == Constants.CurrencyQuestion)
             {
                 var activityData =
                     _loadWorkflowActivityMapper.ActivityDataDictionaryToCurrencyActivityData(activityDataDictionary);
@@ -119,7 +119,7 @@ namespace Elsa.Server.Features.Workflow.LoadWorkflowActivity
                 }
             }
 
-            if (dbMultipleChoiceQuestionModel.ActivityType == Constants.DateQuestion)
+            if (dbAssessmentQuestion.ActivityType == Constants.DateQuestion)
             {
                 var activityData = _loadWorkflowActivityMapper.ActivityDataDictionaryToDateActivityData(activityDataDictionary);
                 if (activityData != null)
@@ -128,7 +128,7 @@ namespace Elsa.Server.Features.Workflow.LoadWorkflowActivity
                 }
             }
 
-            if (dbMultipleChoiceQuestionModel.ActivityType == Constants.TextQuestion)
+            if (dbAssessmentQuestion.ActivityType == Constants.TextQuestion)
             {
                 var activityData = _loadWorkflowActivityMapper.ActivityDataDictionaryToTextActivityData(activityDataDictionary);
                 if (activityData != null)

@@ -27,7 +27,7 @@ namespace Elsa.Server.Tests.Features.Workflow.StartWorkflow
             var result = sut.RunWorkflowResultToMultipleChoiceQuestionModel(runWorkflowResult, activityType);
 
             //Assert
-            Assert.IsType<MultipleChoiceQuestionModel>(result);
+            Assert.IsType<AssessmentQuestion>(result);
             Assert.Equal(runWorkflowResult.WorkflowInstance!.LastExecutedActivityId, result!.ActivityId);
             Assert.Equal(runWorkflowResult.WorkflowInstance!.Id, result.WorkflowInstanceId);
             Assert.Equal(activityType, result.ActivityType);

@@ -41,6 +41,10 @@
     public class DateQuestionActivityData : QuestionActivityData
     {
         public DateTime? Answer { get; set; }
+        public int? Day { get; set; }
+        public int? Month { get; set; }
+        public int? Year { get; set; }
+
     }
 
     public class Choice

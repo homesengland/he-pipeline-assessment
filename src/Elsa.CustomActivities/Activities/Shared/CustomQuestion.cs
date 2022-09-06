@@ -38,7 +38,7 @@ namespace Elsa.CustomActivities.Activities.Shared
         )]
         public SwitchMode Mode { get; set; } = SwitchMode.MatchFirst;
 
-        [ActivityOutput] public MultipleChoiceQuestionModel? Output { get; set; }
+        [ActivityOutput] public AssessmentQuestion? Output { get; set; }
 
         protected override IActivityExecutionResult OnExecute(ActivityExecutionContext context)
         {
@@ -47,7 +47,7 @@ namespace Elsa.CustomActivities.Activities.Shared
 
         protected override async ValueTask<IActivityExecutionResult> OnResumeAsync(ActivityExecutionContext context)
         {
-            var response = context.GetInput<MultipleChoiceQuestionModel>();
+            var response = context.GetInput<AssessmentQuestion>();
             Output = response;
             var matches = Cases.Where(x => x.Condition).Select(x => x.Name).ToList();
             var hasAnyMatches = matches.Any();

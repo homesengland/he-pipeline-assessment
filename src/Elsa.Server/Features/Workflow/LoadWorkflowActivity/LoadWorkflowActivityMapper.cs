@@ -89,6 +89,9 @@ namespace Elsa.Server.Features.Workflow.LoadWorkflowActivity
                     string dateString = output.Answer;
                     bool isValidDate = DateTime.TryParseExact(output.Answer, Constants.DateFormat, CultureInfo.InvariantCulture, DateTimeStyles.AdjustToUniversal, out DateTime date);
                     activityData.Answer = isValidDate ? date : null;
+                    activityData.Day = isValidDate ? date.Day : null;
+                    activityData.Month = isValidDate ? date.Month : null;
+                    activityData.Year = isValidDate ? date.Year : null;
                 }
             }
 
