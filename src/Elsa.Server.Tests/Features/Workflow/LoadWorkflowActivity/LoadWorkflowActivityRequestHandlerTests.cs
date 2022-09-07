@@ -9,6 +9,7 @@ using Elsa.Server.Features.Workflow.LoadWorkflowActivity;
 using Elsa.Services.Models;
 using Moq;
 using Xunit;
+using Constants = Elsa.CustomActivities.Activities.Constants;
 
 namespace Elsa.Server.Tests.Features.Workflow.LoadWorkflowActivity
 {
@@ -66,6 +67,69 @@ namespace Elsa.Server.Tests.Features.Workflow.LoadWorkflowActivity
             Assert.Equal(loadWorkflowActivityRequest.WorkflowInstanceId, result.Data.WorkflowInstanceId);
             Assert.Equal(loadWorkflowActivityRequest.ActivityId, result.Data.ActivityId);
             Assert.Equal(assessmentQuestion.PreviousActivityId, result.Data.PreviousActivityId);
+        }
+
+        [Theory]
+        [AutoMoqData]
+        public async Task Handle_SelectedChoicesAreRestored_WhenActivityIsMultiChoice(
+                             [Frozen] Mock<IQuestionInvoker> questionInvoker,
+                             [Frozen] Mock<IWorkflowInstanceStore> workflowInstanceStore,
+                             [Frozen] Mock<IPipelineAssessmentRepository> pipelineAssessmentRepository,
+                             [Frozen] Mock<ILoadWorkflowActivityJsonHelper> loadWorkflowActivityJsonHelper,
+                             LoadWorkflowActivityRequest loadWorkflowActivityRequest,
+                             List<CollectedWorkflow> collectedWorkflows,
+                             WorkflowInstance workflowInstance,
+                             AssessmentQuestion assessmentQuestion,
+                             LoadWorkflowActivityRequestHandler sut)
+        {
+            //Arrange
+            assessmentQuestion.Answer = @"[""My choice""]";
+            assessmentQuestion.ActivityType = Constants.MultipleChoiceQuestion;
+
+            questionInvoker
+                .Setup(x => x.FindWorkflowsAsync(loadWorkflowActivityRequest.ActivityId,
+                    assessmentQuestion.ActivityType, loadWorkflowActivityRequest.WorkflowInstanceId,
+                    CancellationToken.None))
+                .ReturnsAsync(collectedWorkflows);
+
+            workflowInstanceStore.Setup(x =>
+                    x.FindAsync(It.IsAny<WorkflowInstanceIdSpecification>(), CancellationToken.None))
+                .ReturnsAsync(workflowInstance);
+
+            pipelineAssessmentRepository.Setup(x => x.GetAssessmentQuestion(loadWorkflowActivityRequest.ActivityId,
+                    loadWorkflowActivityRequest.WorkflowInstanceId, CancellationToken.None))
+                .ReturnsAsync(assessmentQuestion);
+
+
+            var data = new QuestionActivityData
+            {
+                Choices = new Choice[]
+                {
+                    new Choice
+                    {
+                        Answer = "My choice",
+                    }
+                }
+            };
+
+            loadWorkflowActivityJsonHelper
+                .Setup(x => x.ActivityDataDictionaryToQuestionActivityData<QuestionActivityData>(It.IsAny<IDictionary<string, object?>>()))
+                .Returns(data);
+
+            var existingDictionaryItem = workflowInstance.ActivityData.First();
+
+            var customDictionary = new Dictionary<string, object?>
+            {
+                { existingDictionaryItem.Key, existingDictionaryItem.Value }
+            };
+
+            workflowInstance.ActivityData.Add(loadWorkflowActivityRequest.ActivityId, customDictionary);
+
+            //Act
+            var result = await sut.Handle(loadWorkflowActivityRequest, CancellationToken.None);
+
+            //Assert
+            Assert.True(result.Data!.QuestionActivityData.Choices.Single().IsSelected);
         }
 
 
