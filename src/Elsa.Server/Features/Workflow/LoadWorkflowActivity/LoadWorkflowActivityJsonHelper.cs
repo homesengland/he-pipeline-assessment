@@ -1,4 +1,5 @@
-﻿using Elsa.CustomModels;
+﻿using System.Diagnostics.CodeAnalysis;
+using Elsa.CustomModels;
 using System.Text.Json;
 
 namespace Elsa.Server.Features.Workflow.LoadWorkflowActivity
@@ -8,9 +9,9 @@ namespace Elsa.Server.Features.Workflow.LoadWorkflowActivity
         AssessmentQuestion? ActivityOutputJsonToAssessmentQuestion(string activityJson);
 
         T? ActivityDataDictionaryToQuestionActivityData<T>(IDictionary<string, object?>? activityDataDictionary);
-
     }
 
+    [ExcludeFromCodeCoverage]
     public class LoadWorkflowActivityJsonHelper : ILoadWorkflowActivityJsonHelper
     {
         public AssessmentQuestion? ActivityOutputJsonToAssessmentQuestion(string activityJson)
