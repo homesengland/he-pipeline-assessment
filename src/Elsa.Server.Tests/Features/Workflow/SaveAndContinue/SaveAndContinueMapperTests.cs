@@ -5,7 +5,7 @@ using Elsa.Server.Providers;
 using Moq;
 using Xunit;
 
-namespace Elsa.Server.Tests.Features.MultipleChoice.SaveAndContinue
+namespace Elsa.Server.Tests.Features.Workflow.SaveAndContinue
 {
     public class SaveAndContinueMapperTests
     {

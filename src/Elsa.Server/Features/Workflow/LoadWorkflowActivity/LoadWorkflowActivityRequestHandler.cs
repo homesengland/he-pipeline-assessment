@@ -1,6 +1,5 @@
 ﻿using Elsa.CustomActivities.Activities.Shared;
 using Elsa.CustomInfrastructure.Data.Repository;
-using Elsa.CustomModels;
 using Elsa.Persistence;
 using Elsa.Persistence.Specifications.WorkflowInstances;
 using Elsa.Server.Models;
@@ -67,7 +66,28 @@ namespace Elsa.Server.Features.Workflow.LoadWorkflowActivity
                                 result.Data.ActivityType = dbAssessmentQuestion.ActivityType;
                                 result.Data.PreviousActivityId = dbAssessmentQuestion.PreviousActivityId;
 
-                                AssignActivityData(dbAssessmentQuestion, activityDataDictionary, result);
+                                var activityData = _loadWorkflowActivityJsonHelper.ActivityDataDictionaryToQuestionActivityData<QuestionActivityData>(activityDataDictionary);
+                                if (activityData != null)
+                                {
+                                    result.Data!.QuestionActivityData = activityData;
+                                    result.Data.QuestionActivityData.ActivityType = dbAssessmentQuestion.ActivityType;
+                                    result.Data.QuestionActivityData.Answer = dbAssessmentQuestion.Answer;
+
+                                    if (result.Data.ActivityType == Constants.MultipleChoiceQuestion && !string.IsNullOrEmpty(result.Data.QuestionActivityData.Answer))
+                                    {
+                                        var answerList = JsonSerializer.Deserialize<List<string>>(result.Data.QuestionActivityData.Answer);
+
+                                        foreach (var choice in result.Data.QuestionActivityData.Choices)
+                                        {
+                                            choice.IsSelected = answerList!.Contains(choice.Answer);
+                                        }
+                                    }
+                                }
+                                else
+                                {
+                                    result.ErrorMessages.Add(
+                                        $"Failed to map activity data");
+                                }
                             }
                         }
                         else
@@ -85,7 +105,7 @@ namespace Elsa.Server.Features.Workflow.LoadWorkflowActivity
                 else
                 {
                     result.ErrorMessages.Add(
-                        $"Unable to find workflow instance with Id: {activityRequest.WorkflowInstanceId} and Activity Id: {activityRequest.ActivityId}");
+                        $"Unable to find workflow instance with Id: {activityRequest.WorkflowInstanceId} and Activity Id: {activityRequest.ActivityId} in Pipeline Assessment database");
                 }
             }
             catch (Exception e)
@@ -94,30 +114,6 @@ namespace Elsa.Server.Features.Workflow.LoadWorkflowActivity
             }
 
             return await Task.FromResult(result);
-        }
-
-        private void AssignActivityData(AssessmentQuestion dbAssessmentQuestion, IDictionary<string, object?> activityDataDictionary,
-            OperationResult<LoadWorkflowActivityResponse> result)
-        {
-            var activityData = _loadWorkflowActivityJsonHelper.ActivityDataDictionaryToQuestionActivityData<QuestionActivityData>(activityDataDictionary);
-            if (activityData != null)
-            {
-                result.Data!.QuestionActivityData = activityData;
-                result.Data.QuestionActivityData.ActivityType = dbAssessmentQuestion.ActivityType;
-                result.Data.QuestionActivityData.Answer = dbAssessmentQuestion.Answer;
-
-                if (result.Data.ActivityType == Constants.MultipleChoiceQuestion && !string.IsNullOrEmpty(result.Data.QuestionActivityData.Answer))
-                {
-                    var answerList = JsonSerializer.Deserialize<List<string>>(result.Data.QuestionActivityData.Answer);
-
-                    foreach (var choice in result.Data.QuestionActivityData.Choices)
-                    {
-                        choice.IsSelected = answerList!.Contains(choice.Answer);
-                    }
-                }
-
-            }
-
         }
     }
 }

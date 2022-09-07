@@ -5,14 +5,14 @@ using Elsa.CustomModels;
 using Elsa.Models;
 using Elsa.Persistence;
 using Elsa.Persistence.Specifications.WorkflowInstances;
+using Elsa.Server.Features.Workflow.SaveAndContinue;
 using Elsa.Server.Models;
+using Elsa.Services;
 using Elsa.Services.Models;
 using Moq;
 using Xunit;
-using Constants = Elsa.CustomActivities.Activities.Constants;
-using Elsa.Server.Features.Workflow.SaveAndContinue;
 
-namespace Elsa.Server.Tests.Features.MultipleChoice.SaveAndContinue
+namespace Elsa.Server.Tests.Features.Workflow.SaveAndContinue
 {
     public class SaveAndContinueCommandHandlerTests
     {
@@ -22,6 +22,9 @@ namespace Elsa.Server.Tests.Features.MultipleChoice.SaveAndContinue
             [Frozen] Mock<IQuestionInvoker> questionInvoker,
             [Frozen] Mock<IWorkflowInstanceStore> workflowInstanceStore,
             [Frozen] Mock<IPipelineAssessmentRepository> pipelineAssessmentRepository,
+            [Frozen] Mock<IWorkflowRegistry> workflowRegistry,
+            WorkflowBlueprint workflowBlueprint,
+            ActivityBlueprint activityBlueprint,
             AssessmentQuestion currentAssessmentQuestion,
             List<CollectedWorkflow> collectedWorkflows,
             WorkflowInstance workflowInstance,
@@ -40,12 +43,18 @@ namespace Elsa.Server.Tests.Features.MultipleChoice.SaveAndContinue
                 ErrorMessages = new List<string>(),
                 ValidationMessages = new List<string>()
             };
+            activityBlueprint.Id = workflowInstance.Output.ActivityId;
+            workflowBlueprint.Activities.Add(activityBlueprint);
 
             pipelineAssessmentRepository.Setup(x => x.GetAssessmentQuestion(saveAndContinueCommand.ActivityId,
                     saveAndContinueCommand.WorkflowInstanceId, CancellationToken.None))
                 .ReturnsAsync(currentAssessmentQuestion);
 
-            questionInvoker.Setup(x => x.ExecuteWorkflowsAsync(saveAndContinueCommand.ActivityId, Constants.MultipleChoiceQuestion,
+            workflowRegistry.Setup(x =>
+                x.FindAsync(workflowInstance.DefinitionId, VersionOptions.Published, null, CancellationToken.None))
+                .ReturnsAsync(workflowBlueprint);
+
+            questionInvoker.Setup(x => x.ExecuteWorkflowsAsync(saveAndContinueCommand.ActivityId, currentAssessmentQuestion.ActivityType,
                     saveAndContinueCommand.WorkflowInstanceId, currentAssessmentQuestion, CancellationToken.None))
                 .ReturnsAsync(collectedWorkflows);
 
@@ -77,13 +86,17 @@ namespace Elsa.Server.Tests.Features.MultipleChoice.SaveAndContinue
             [Frozen] Mock<IWorkflowInstanceStore> workflowInstanceStore,
             [Frozen] Mock<IPipelineAssessmentRepository> pipelineAssessmentRepository,
             [Frozen] Mock<ISaveAndContinueMapper> saveAndContinueMapper,
+            [Frozen] Mock<IWorkflowRegistry> workflowRegistry,
+            WorkflowBlueprint workflowBlueprint,
+            ActivityBlueprint activityBlueprint,
             AssessmentQuestion currentAssessmentQuestion,
             List<CollectedWorkflow> collectedWorkflows,
             WorkflowInstance workflowInstance,
             AssessmentQuestion nextAssessmentQuestion,
             SaveAndContinueCommand saveAndContinueCommand,
-            SaveAndContinueCommandHandler sut,
-            string nextActivityType)
+            string nextActivityType,
+            SaveAndContinueCommandHandler sut
+            )
         {
             //Arrange
             var opResult = new OperationResult<SaveAndContinueResponse>()
@@ -97,11 +110,19 @@ namespace Elsa.Server.Tests.Features.MultipleChoice.SaveAndContinue
                 ValidationMessages = new List<string>()
             };
 
+            activityBlueprint.Id = workflowInstance.Output.ActivityId;
+            activityBlueprint.Type = nextActivityType;
+            workflowBlueprint.Activities.Add(activityBlueprint);
+
             pipelineAssessmentRepository.Setup(x => x.GetAssessmentQuestion(saveAndContinueCommand.ActivityId,
                     saveAndContinueCommand.WorkflowInstanceId, CancellationToken.None))
                 .ReturnsAsync(currentAssessmentQuestion);
 
-            questionInvoker.Setup(x => x.ExecuteWorkflowsAsync(saveAndContinueCommand.ActivityId,Constants.MultipleChoiceQuestion,
+            workflowRegistry.Setup(x =>
+                    x.FindAsync(workflowInstance.DefinitionId, VersionOptions.Published, null, CancellationToken.None))
+                .ReturnsAsync(workflowBlueprint);
+
+            questionInvoker.Setup(x => x.ExecuteWorkflowsAsync(saveAndContinueCommand.ActivityId, currentAssessmentQuestion.ActivityType,
                     saveAndContinueCommand.WorkflowInstanceId, currentAssessmentQuestion, CancellationToken.None))
                 .ReturnsAsync(collectedWorkflows);
 
@@ -150,7 +171,7 @@ namespace Elsa.Server.Tests.Features.MultipleChoice.SaveAndContinue
                     saveAndContinueCommand.WorkflowInstanceId, CancellationToken.None))
                 .ReturnsAsync(currentAssessmentQuestion);
 
-            questionInvoker.Setup(x => x.ExecuteWorkflowsAsync(saveAndContinueCommand.ActivityId, Constants.MultipleChoiceQuestion,
+            questionInvoker.Setup(x => x.ExecuteWorkflowsAsync(saveAndContinueCommand.ActivityId, currentAssessmentQuestion.ActivityType,
                     saveAndContinueCommand.WorkflowInstanceId, currentAssessmentQuestion, CancellationToken.None))
                 .ReturnsAsync(collectedWorkflows);
 
@@ -185,7 +206,7 @@ namespace Elsa.Server.Tests.Features.MultipleChoice.SaveAndContinue
                     saveAndContinueCommand.WorkflowInstanceId, CancellationToken.None))
                 .ReturnsAsync(currentAssessmentQuestion);
 
-            questionInvoker.Setup(x => x.ExecuteWorkflowsAsync(saveAndContinueCommand.ActivityId, Constants.MultipleChoiceQuestion,
+            questionInvoker.Setup(x => x.ExecuteWorkflowsAsync(saveAndContinueCommand.ActivityId, currentAssessmentQuestion.ActivityType,
                     saveAndContinueCommand.WorkflowInstanceId, currentAssessmentQuestion, CancellationToken.None))
                 .ReturnsAsync(collectedWorkflows);
 
