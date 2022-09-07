@@ -60,13 +60,13 @@ namespace Elsa.Server.Features.Workflow.SaveAndContinue
                         {
                             var nextActivityId = workflowInstance.Output.ActivityId;
 
-                            var sampleWorkflow =
+                            var workflow =
                                 await _workflowRegistry.FindAsync(workflowInstance.DefinitionId, VersionOptions.Published, cancellationToken: cancellationToken);
 
-                            var activity = sampleWorkflow!.Activities.FirstOrDefault(x =>
+                            var nextActivity = workflow!.Activities.FirstOrDefault(x =>
                                 x.Id == nextActivityId);
 
-                            if (activity != null)
+                            if (nextActivity != null)
                             {
                                 var nextActivityRecord =
                                     await _pipelineAssessmentRepository.GetAssessmentQuestion(nextActivityId,
@@ -74,14 +74,14 @@ namespace Elsa.Server.Features.Workflow.SaveAndContinue
 
                                 if (nextActivityRecord == null)
                                 {
-                                    await CreateNextActivityRecord(command, nextActivityId, activity.Type);
+                                    await CreateNextActivityRecord(command, nextActivityId, nextActivity.Type);
                                 }
 
                                 result.Data = new SaveAndContinueResponse
                                 {
                                     WorkflowInstanceId = command.WorkflowInstanceId,
                                     NextActivityId = nextActivityId,
-                                    ActivityType = activity.Type
+                                    ActivityType = nextActivity.Type
                                 };
 
                             }

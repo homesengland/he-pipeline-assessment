@@ -26,13 +26,13 @@ namespace Elsa.Server.Features.Workflow.StartWorkflow
             var result = new OperationResult<StartWorkflowResponse>();
             try
             {
-                var sampleWorkflow =
+                var workflow =
                     await _workflowRegistry.FindAsync(request.WorkflowDefinitionId, VersionOptions.Published, cancellationToken: cancellationToken);
-                var runWorkflowResult = await _startsWorkflow.StartWorkflowAsync(sampleWorkflow!, cancellationToken: cancellationToken);
+                var runWorkflowResult = await _startsWorkflow.StartWorkflowAsync(workflow!, cancellationToken: cancellationToken);
 
                 if (runWorkflowResult.WorkflowInstance != null)
                 {
-                    var activity = sampleWorkflow!.Activities.FirstOrDefault(x =>
+                    var activity = workflow!.Activities.FirstOrDefault(x =>
                         x.Id == runWorkflowResult.WorkflowInstance.LastExecutedActivityId);
 
                     if (activity != null)
