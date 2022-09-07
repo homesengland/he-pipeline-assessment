@@ -30,7 +30,7 @@ namespace Elsa.CustomWorkflow.Sdk.Models.Workflow
         public string? QuestionGuidance { get; set; }
         public object Output { get; set; } = null!;
         public string? Answer { get; set; }
-        public decimal? Decimal { get { return GetDecimalAnswer(); } set { SetDecimalAnswer(value); } }
+        public decimal? Decimal { get { return GetDecimal(); } set { SetDecimal(value); } }
 
         private Choice[] _choices = new List<Choice>().ToArray();
 
@@ -71,6 +71,7 @@ namespace Elsa.CustomWorkflow.Sdk.Models.Workflow
                         SetAnswer(parsedDateTime);
                     }
                 }
+                else SetAnswer(null);
             }
         }
         private void SetChoices(Choice[] value)
@@ -87,15 +88,23 @@ namespace Elsa.CustomWorkflow.Sdk.Models.Workflow
                 SetAnswer(answerList);
             }
         }
-        private decimal? GetDecimalAnswer()
+        private decimal? GetDecimal()
         {
             if (ActivityType == ActivityTypeConstants.CurrencyQuestion && Answer != null)
             {
-                return JsonSerializer.Deserialize<decimal?>(Answer);
+                try
+                {
+                    return JsonSerializer.Deserialize<decimal?>(Answer);
+                }
+                catch(System.Text.Json.JsonException e)
+                {
+                    return null;
+                }
+                
             }
             return null;
         }
-        private void SetDecimalAnswer(decimal? value)
+        private void SetDecimal(decimal? value)
         {
             if (ActivityType == ActivityTypeConstants.CurrencyQuestion)
             {
@@ -109,6 +118,10 @@ namespace Elsa.CustomWorkflow.Sdk.Models.Workflow
             {
                 string answer = JsonSerializer.Serialize(o);
                 Answer = answer;
+            }
+            else
+            {
+                Answer = null;
             }
         }
 

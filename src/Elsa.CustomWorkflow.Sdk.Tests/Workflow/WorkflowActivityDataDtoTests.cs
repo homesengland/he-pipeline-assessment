@@ -1,6 +1,8 @@
 ﻿using System.Globalization;
+using System.Security.Cryptography.X509Certificates;
 using System.Text.Json;
 using Elsa.CustomWorkflow.Sdk.Models.Workflow;
+using Newtonsoft.Json.Linq;
 using Xunit;
 
 namespace Elsa.CustomWorkflow.Sdk.Tests.Workflow
@@ -110,7 +112,6 @@ namespace Elsa.CustomWorkflow.Sdk.Tests.Workflow
                 Month = month,
                 Day = day
             };
-            sut.Answer = null;
 
             //Act
             sut.SetDate(date);
@@ -177,5 +178,216 @@ namespace Elsa.CustomWorkflow.Sdk.Tests.Workflow
             Assert.Null(sut.Date.Month);
             Assert.Null(sut.Date.Year);
         }
+
+
+        [Theory]
+        [InlineAutoMoqData(ActivityTypeConstants.MultipleChoiceQuestion)]
+        [InlineAutoMoqData(ActivityTypeConstants.DateQuestion)]
+        [InlineAutoMoqData(ActivityTypeConstants.TextQuestion)]
+        public void GetDecimalReturnsNull_GivenNonCurrencyActivityType(string activityType, QuestionActivityData sut)
+        {
+            //Arrange
+            sut.ActivityType = activityType;
+
+            //Act
+
+            //Assert
+            Assert.Null(sut.Decimal);
+        }
+
+        [Theory]
+        [AutoMoqData]
+        public void GetDecimalReturnsNull_GivenCurrencyActivityTypeWithNullAnswer(QuestionActivityData sut)
+        {
+            //Arrange
+            sut.ActivityType = ActivityTypeConstants.CurrencyQuestion;
+            sut.Answer = null;
+
+            //Act
+            
+
+            //Assert
+            Assert.Null(sut.Decimal);
+        }
+        [Theory]
+        [InlineAutoMoqData("10.2")]
+        [InlineAutoMoqData("123.0")]
+        [InlineAutoMoqData("99.5")]
+        public void GetDecimalReturnsDecimalValue_GivenCorrectActivityTypeAndAnswer(string answerString, QuestionActivityData sut)
+        {
+            //Arrange
+            sut.ActivityType = ActivityTypeConstants.CurrencyQuestion;
+            sut.Answer = answerString;
+            decimal numericAnswer = JsonSerializer.Deserialize<decimal>(answerString);
+
+            //Act
+
+            //Assert
+            Assert.NotNull(sut.Decimal);
+            Assert.Equal(numericAnswer, sut.Decimal);
+        }
+
+        [Theory]
+        [InlineAutoMoqData("Abc")]
+        [InlineAutoMoqData("12g")]
+        [InlineAutoMoqData("ab789")]
+        public void GetDecimalReturnsNull_GivenAnswerInIncorrectFormat(string answerString, QuestionActivityData sut)
+        {
+            //Arrange
+            sut.ActivityType = ActivityTypeConstants.CurrencyQuestion;
+            sut.Answer = answerString;
+
+            //Act
+
+            //Assert
+            Assert.Null(sut.Decimal);
+        }
+
+        [Theory]
+        [InlineAutoMoqData(ActivityTypeConstants.MultipleChoiceQuestion)]
+        [InlineAutoMoqData(ActivityTypeConstants.DateQuestion)]
+        [InlineAutoMoqData(ActivityTypeConstants.TextQuestion)]
+        public void SetDecimalDoesNotWriteValue_GivenNonDecimalActivityType(string activityType, QuestionActivityData sut)
+        {
+            //Arrange
+            sut.Answer = "12.0";
+            sut.ActivityType = activityType;
+
+            //Act
+            sut.Decimal = 123.0M;
+
+            //Assert
+            Assert.Equal("12.0", sut.Answer);
+        }
+
+        [Theory]
+        [AutoMoqData]
+        public void SetDecimalWritesNullAnswer_GivenNullValue(QuestionActivityData sut)
+        {
+            //Arrange
+            sut.ActivityType = ActivityTypeConstants.CurrencyQuestion;
+
+            //Act
+            sut.Decimal = null;
+
+            //Assert
+            Assert.Null(sut.Answer);
+            Assert.Null(sut.Decimal);
+        }
+
+        [Theory]
+        [InlineAutoMoqData("10.2")]
+        [InlineAutoMoqData("123.0")]
+        [InlineAutoMoqData("99.5")]
+        public void SetDecimalWritesExpectedAnswer_GivenCorrectValue(string decimalString, QuestionActivityData sut)
+        {
+            //Arrange
+            sut.ActivityType = ActivityTypeConstants.CurrencyQuestion;
+            decimal numericAnswer = JsonSerializer.Deserialize<decimal>(decimalString);
+
+            //Act
+            sut.Decimal = numericAnswer;
+
+            //Assert
+            Assert.Equal(sut.Answer, decimalString);
+            Assert.Equal(sut.Decimal, numericAnswer);
+        }
+        
+        [Theory]
+        [AutoMoqData]
+        public void GetChoicesReturnsEmptyListOfChoices_GivenNoChoicesSet(QuestionActivityData sut)
+        {
+            //Arrange
+
+            //Act
+            
+            //Assert
+            Assert.Empty(sut.Choices);
+        }
+
+        [Theory]
+        [InlineAutoMoqData(ActivityTypeConstants.CurrencyQuestion)]
+        [InlineAutoMoqData(ActivityTypeConstants.DateQuestion)]
+        [InlineAutoMoqData(ActivityTypeConstants.TextQuestion)]
+        public void SetChoicesDoesNotSetValue_GivenValidDataButActivityTypeIsIncorrect(string activityType, QuestionActivityData sut)
+        {
+            //Arrange
+            sut.Answer = null;
+            List<Choice> choices = new List<Choice>
+            {
+                new Choice
+                {
+                    Answer = "Test 1",
+                    IsSelected = true,
+                    IsSingle = false,
+                },
+                new Choice
+                {
+                    Answer = "Test 2",
+                    IsSelected = false,
+                    IsSingle = false,
+                },
+                new Choice
+                {
+                    Answer = "Test 3",
+                    IsSelected = false,
+                    IsSingle = false,
+                },
+            };
+            sut.ActivityType = activityType;
+
+            //Act
+            sut.Choices = choices.ToArray();
+            //Assert
+            Assert.Empty(sut.Choices);
+            Assert.Null(sut.Answer);
+        }
+
+
+        [Theory]
+        [AutoMoqData]
+        public void SetChoicesSetsCorrectValueAndAnswer_GivenValidDataAndActivityTypeIsCorrect(QuestionActivityData sut)
+        {
+            //Arrange
+            sut.Answer = null;
+            List<Choice> choices = new List<Choice>
+            {
+                new Choice
+                {
+                    Answer = "Test 1",
+                    IsSelected = true,
+                    IsSingle = false,
+                },
+                new Choice
+                {
+                    Answer = "Test 2",
+                    IsSelected = false,
+                    IsSingle = false,
+                },
+                new Choice
+                {
+                    Answer = "Test 3",
+                    IsSelected = false,
+                    IsSingle = true,
+                },
+            };
+            var answerList = choices.Where(c => c.IsSelected).Select(c => c.Answer).ToList();
+            sut.ActivityType = ActivityTypeConstants.MultipleChoiceQuestion;
+
+            //Act
+            sut.Choices = choices.ToArray();
+            //Assert
+            Assert.Equal(sut.Choices, choices.ToArray());
+            Assert.Equal(sut.Answer, JsonSerializer.Serialize(answerList));
+        }
+
+
+
+
+
+
+
+
+
     }
 }
