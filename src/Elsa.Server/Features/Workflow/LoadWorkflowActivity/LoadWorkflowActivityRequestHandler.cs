@@ -6,6 +6,7 @@ using Elsa.Persistence.Specifications.WorkflowInstances;
 using Elsa.Server.Models;
 using Elsa.Services.Models;
 using MediatR;
+using System.Text.Json;
 using Constants = Elsa.CustomActivities.Activities.Constants;
 
 namespace Elsa.Server.Features.Workflow.LoadWorkflowActivity
@@ -40,7 +41,7 @@ namespace Elsa.Server.Features.Workflow.LoadWorkflowActivity
                 var dbAssessmentQuestion =
                     await _pipelineAssessmentRepository.GetAssessmentQuestion(activityRequest.ActivityId, activityRequest.WorkflowInstanceId, cancellationToken);
 
-                if(dbAssessmentQuestion != null)
+                if (dbAssessmentQuestion != null)
                 {
                     IEnumerable<CollectedWorkflow> workflows = await _QuestionInvoker.FindWorkflowsAsync(activityRequest.ActivityId, dbAssessmentQuestion.ActivityType, activityRequest.WorkflowInstanceId, cancellationToken);
 
@@ -104,8 +105,19 @@ namespace Elsa.Server.Features.Workflow.LoadWorkflowActivity
                 result.Data!.QuestionActivityData = activityData;
                 result.Data.QuestionActivityData.ActivityType = dbAssessmentQuestion.ActivityType;
                 result.Data.QuestionActivityData.Answer = dbAssessmentQuestion.Answer;
+
+                if (result.Data.ActivityType == Constants.MultipleChoiceQuestion && !string.IsNullOrEmpty(result.Data.QuestionActivityData.Answer))
+                {
+                    var answerList = JsonSerializer.Deserialize<List<string>>(result.Data.QuestionActivityData.Answer);
+
+                    foreach (var choice in result.Data.QuestionActivityData.Choices)
+                    {
+                        choice.IsSelected = answerList!.Contains(choice.Answer);
+                    }
+                }
+
             }
-           
+
         }
     }
 }

@@ -67,7 +67,7 @@ namespace Elsa.Server.Features.Workflow
         }
 
         [HttpPost("SaveAndContinue")]
-        public async Task<IActionResult> SaveAndContinue(SaveAndContinueCommand model)
+        public async Task<IActionResult> SaveAndContinue([FromBody] SaveAndContinueCommand model)
         {
             try
             {

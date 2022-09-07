@@ -72,17 +72,21 @@ namespace Elsa.CustomWorkflow.Sdk.Models.Workflow
         }
         private void SetChoices(Choice[] value)
         {
-            _choices = value;
-            List<string> answerList = new List<string>();
-            if(value != null)
+            if (ActivityType == ActivityTypeConstants.MultipleChoiceQuestion)
             {
-                answerList = value.Where(c => c.IsSelected).Select(c => c.Answer).ToList();
+                _choices = value;
+                List<string> answerList = new List<string>();
+                if (value != null)
+                {
+                    answerList = value.Where(c => c.IsSelected).Select(c => c.Answer).ToList();
+                }
+
+                SetAnswer(answerList);
             }
-            SetAnswer(answerList);
         }
         private decimal? GetDecimalAnswer()
         {
-            if(ActivityType == ActivityTypeConstants.CurrencyQuestion && Answer != null)
+            if (ActivityType == ActivityTypeConstants.CurrencyQuestion && Answer != null)
             {
                 return JsonSerializer.Deserialize<decimal?>(Answer);
             }
@@ -90,13 +94,15 @@ namespace Elsa.CustomWorkflow.Sdk.Models.Workflow
         }
         private void SetDecimalAnswer(decimal? value)
         {
-            SetAnswer(value);
-            //Decimal = value;
+            if (ActivityType == ActivityTypeConstants.CurrencyQuestion)
+            {
+                SetAnswer(value);
+            }
         }
 
         private void SetAnswer(object? o)
         {
-            if(o != null)
+            if (o != null)
             {
                 string answer = JsonSerializer.Serialize(o);
                 Answer = answer;
