@@ -44,13 +44,16 @@ namespace Elsa.CustomWorkflow.Sdk.Models.Workflow
         {
             if (ActivityType == ActivityTypeConstants.DateQuestion && Answer != null)
             {
-                var date = JsonSerializer.Deserialize<DateTime>(Answer);
-                return new Date
+                bool isValidDate = DateTime.TryParseExact(Answer, Constants.DateFormat, CultureInfo.InvariantCulture, DateTimeStyles.AdjustToUniversal, out DateTime date);
+                if (isValidDate)
                 {
-                    Day = date.Day,
-                    Month = date.Month,
-                    Year = date.Year
-                };
+                    return new Date
+                    {
+                        Day = date.Day,
+                        Month = date.Month,
+                        Year = date.Year
+                    };
+                }
             }
             return new Date();
         }
