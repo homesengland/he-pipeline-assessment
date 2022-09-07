@@ -21,13 +21,16 @@ namespace Elsa.Server.Tests.Features.Workflow.StartWorkflow
             [Frozen] Mock<IStartWorkflowMapper> startWorkflowMapper,
             [Frozen] Mock<IPipelineAssessmentRepository> pipelineAssessmentRepository,
             WorkflowBlueprint workflowBlueprint,
+            ActivityBlueprint activityBlueprint,
             RunWorkflowResult runWorkflowResult,
             StartWorkflowCommand startWorkflowCommand,
             AssessmentQuestion assessmentQuestion,
             StartWorkflowResponse startWorkflowResponse,
-            string activityType,
             StartWorkflowCommandHandler sut)
         {
+
+            //Arrange
+
             var opResult = new OperationResult<StartWorkflowResponse>()
             {
                 Data = startWorkflowResponse,
@@ -35,7 +38,10 @@ namespace Elsa.Server.Tests.Features.Workflow.StartWorkflow
                 ValidationMessages = new List<string>()
             };
 
-            //Arrange
+            activityBlueprint.Id = runWorkflowResult.WorkflowInstance!.LastExecutedActivityId!;
+            workflowBlueprint.Activities.Add(activityBlueprint);
+
+
             workflowRegistry
                 .Setup(x => x.FindAsync(startWorkflowCommand.WorkflowDefinitionId, VersionOptions.Published, null, CancellationToken.None))
                 .ReturnsAsync(workflowBlueprint);
@@ -43,7 +49,7 @@ namespace Elsa.Server.Tests.Features.Workflow.StartWorkflow
             startsWorkflow.Setup(x => x.StartWorkflowAsync(workflowBlueprint, null, null, null, null, null, CancellationToken.None))
                 .ReturnsAsync(runWorkflowResult);
 
-            startWorkflowMapper.Setup(x => x.RunWorkflowResultToAssessmentQuestion(runWorkflowResult, activityType))
+            startWorkflowMapper.Setup(x => x.RunWorkflowResultToAssessmentQuestion(runWorkflowResult, activityBlueprint.Type))
                 .Returns(assessmentQuestion);
 
             startWorkflowMapper.Setup(x => x.RunWorkflowResultToStartWorkflowResponse(runWorkflowResult))
@@ -68,11 +74,14 @@ namespace Elsa.Server.Tests.Features.Workflow.StartWorkflow
             [Frozen] Mock<IStartWorkflowMapper> startWorkflowMapper,
             [Frozen] Mock<IPipelineAssessmentRepository> pipelineAssessmentRepository,
             WorkflowBlueprint workflowBlueprint,
+            ActivityBlueprint activityBlueprint,
             RunWorkflowResult runWorkflowResult,
             StartWorkflowCommand startWorkflowCommand,
-            string activityType,
             StartWorkflowCommandHandler sut)
         {
+            activityBlueprint.Id = runWorkflowResult.WorkflowInstance!.LastExecutedActivityId!;
+            workflowBlueprint.Activities.Add(activityBlueprint);
+
             //Arrange
             workflowRegistry
                 .Setup(x => x.FindAsync(startWorkflowCommand.WorkflowDefinitionId, VersionOptions.Published, null, CancellationToken.None))
@@ -81,7 +90,7 @@ namespace Elsa.Server.Tests.Features.Workflow.StartWorkflow
             startsWorkflow.Setup(x => x.StartWorkflowAsync(workflowBlueprint, null, null, null, null, null, CancellationToken.None))
                 .ReturnsAsync(runWorkflowResult);
 
-            startWorkflowMapper.Setup(x => x.RunWorkflowResultToAssessmentQuestion(runWorkflowResult, activityType))
+            startWorkflowMapper.Setup(x => x.RunWorkflowResultToAssessmentQuestion(runWorkflowResult, activityBlueprint.Type))
                 .Returns((AssessmentQuestion?)null);
 
             //Act

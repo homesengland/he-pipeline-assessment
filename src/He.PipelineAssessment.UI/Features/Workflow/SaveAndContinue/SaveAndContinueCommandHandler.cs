@@ -1,5 +1,4 @@
 ﻿using Elsa.CustomWorkflow.Sdk.HttpClients;
-using Elsa.CustomWorkflow.Sdk;
 using He.PipelineAssessment.UI.Features.Workflow.LoadWorkflowActivity;
 using MediatR;
 
@@ -20,13 +19,21 @@ namespace He.PipelineAssessment.UI.Features.Workflow.SaveAndContinue
             var saveAndContinueComandDto = _saveAndContinueMapper.SaveAndContinueCommandToSaveAndContinueCommandDto(request);
             var response = await _elsaServerHttpClient.SaveAndContinue(saveAndContinueComandDto);
 
-            LoadWorkflowActivityRequest result = new LoadWorkflowActivityRequest()
+            if (response != null)
             {
-                ActivityId = response!.Data.NextActivityId,
-                WorkflowInstanceId = response.Data.WorkflowInstanceId
-            };
+                LoadWorkflowActivityRequest result = new LoadWorkflowActivityRequest()
+                {
+                    ActivityId = response!.Data.NextActivityId,
+                    WorkflowInstanceId = response.Data.WorkflowInstanceId
+                };
 
-            return await Task.FromResult(result);
+                return await Task.FromResult(result);
+
+            }
+            else
+            {
+                return null;
+            }
 
         }
     }
