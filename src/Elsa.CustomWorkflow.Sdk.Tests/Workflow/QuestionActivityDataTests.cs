@@ -7,7 +7,7 @@ using Xunit;
 
 namespace Elsa.CustomWorkflow.Sdk.Tests.Workflow
 {
-    public class WorkflowActivityDataDtoTests
+    public class QuestionActivityDataTests
     {
         [Theory]
         [InlineAutoMoqData(ActivityTypeConstants.MultipleChoiceQuestion)]
@@ -380,14 +380,6 @@ namespace Elsa.CustomWorkflow.Sdk.Tests.Workflow
             Assert.Equal(sut.Choices, choices.ToArray());
             Assert.Equal(sut.Answer, JsonSerializer.Serialize(answerList));
         }
-
-
-
-
-
-
-
-
 
     }
 }
