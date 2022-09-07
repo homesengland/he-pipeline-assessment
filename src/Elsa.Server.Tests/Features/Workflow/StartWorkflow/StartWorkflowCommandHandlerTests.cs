@@ -124,5 +124,31 @@ namespace Elsa.Server.Tests.Features.Workflow.StartWorkflow
             Assert.Null(result.Data);
             Assert.Equal(exception.Message, result.ErrorMessages.Single());
         }
+
+        [Theory]
+        [AutoMoqData]
+        public async Task Handle_ShouldReturnErrorMessageResult_WhenActivityIsNull(
+        [Frozen] Mock<IWorkflowRegistry> workflowRegistry,
+        [Frozen] Mock<IStartsWorkflow> startsWorkflow,
+        WorkflowBlueprint workflowBlueprint,
+        RunWorkflowResult runWorkflowResult,
+        StartWorkflowCommand startWorkflowCommand,
+        StartWorkflowCommandHandler sut)
+        {
+            //Arrange
+            workflowRegistry
+                .Setup(x => x.FindAsync(startWorkflowCommand.WorkflowDefinitionId, VersionOptions.Published, null, CancellationToken.None))
+                .ReturnsAsync(workflowBlueprint);
+
+            startsWorkflow.Setup(x => x.StartWorkflowAsync(workflowBlueprint, null, null, null, null, null, CancellationToken.None))
+                .ReturnsAsync(runWorkflowResult);
+
+            //Act
+            var result = await sut.Handle(startWorkflowCommand, CancellationToken.None);
+
+            //Assert
+            Assert.Equal(1, result.ErrorMessages.Count);
+            Assert.Equal("Failed to get activity", result.ErrorMessages.Single());
+        }
     }
 }
