@@ -1,0 +1,39 @@
+﻿@model He.PipelineAssessment.UI.Features.Workflow.SaveAndContinue.SaveAndContinueCommand
+
+<div class="govuk-form-group">
+    <h1 class="govuk-heading-l">
+            @Html.DisplayTextFor(m => m.Data.QuestionActivityData!.Title)
+    </h1>
+        <label class="govuk-label govuk-label--m">
+        @Html.DisplayTextFor(m => m.Data.QuestionActivityData!.Question)
+        </label>
+    @if (!string.IsNullOrEmpty(Model.Data.QuestionActivityData!.QuestionHint))
+    {
+        <div id="event-name-hint" class="govuk-hint">
+            @Model.Data.QuestionActivityData.QuestionHint
+        </div>
+    }
+
+
+
+    <div class="govuk-input__wrapper">
+        <div class="govuk-input__prefix" aria-hidden="true">£</div>
+        @Html.TextBoxFor(m => Model.Data.QuestionActivityData.Decimal, new {@class = "govuk-input govuk-input--width-5"})
+    </div>
+    @if (!string.IsNullOrEmpty(Model.Data.QuestionActivityData.QuestionGuidance))
+    {
+        <br/>
+        <details class="govuk-details" data-module="govuk-details">
+            <summary class="govuk-details__summary">
+                <span class="govuk-details__summary-text">
+                    Question guidance
+                </span>
+            </summary>
+            <div class="govuk-details__text">
+                @Model.Data.QuestionActivityData.QuestionGuidance
+            </div>
+        </details>
+    }
+    <br/>
+    <input id="Next" type="submit" value="Save and continue" name="Next" class="govuk-button"/>
+</div>

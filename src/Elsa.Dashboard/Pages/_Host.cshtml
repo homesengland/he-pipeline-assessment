@@ -28,7 +28,7 @@
 
             eventBus.on('activity-design-displaying',
                 e => {
-                    if(e.activityModel.type =="MultipleChoiceQuestion")
+                    if (e.activityModel.type == "MultipleChoiceQuestion" || e.activityModel.type == "DateQuestion" || e.activityModel.type == "TextQuestion" || e.activityModel.type == "CurrencyQuestion")
                     e.outcomes = e.outcomes.filter(x => x !== 'Default' && x !== 'Done');
                 });
             };

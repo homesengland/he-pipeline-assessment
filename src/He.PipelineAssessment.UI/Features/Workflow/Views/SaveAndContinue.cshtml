@@ -1,0 +1,40 @@
+﻿@using He.PipelineAssessment.UI
+@using Elsa.CustomWorkflow.Sdk
+@model He.PipelineAssessment.UI.Features.Workflow.SaveAndContinue.SaveAndContinueCommand
+
+@{
+    ViewData["Title"] = "Pipeline Assessment";
+    Layout = "_Layout";
+}
+<div class="text-center">
+
+    @Html.ActionLink("Back","LoadWorkflowActivity","Workflow", new {WorkflowInstanceId = Model.Data.WorkflowInstanceId, ActivityId = Model.Data.PreviousActivityId},new{ @class="govuk-back-link"})
+
+    @using (Html.BeginForm("SaveAndContinue", "Workflow", FormMethod.Post))
+    {
+        @Html.AntiForgeryToken()
+        @Html.HiddenFor(m => Model.Data.WorkflowInstanceId)
+        @Html.HiddenFor(m => Model.Data.ActivityId)
+        @Html.HiddenFor(m => Model.Data.QuestionActivityData!.ActivityType)
+        <br/>
+        if (Model.Data.QuestionActivityData!.ActivityType == ActivityTypeConstants.CurrencyQuestion)
+        {
+            @await Html.PartialAsync("_CurrencyQuestion",Model)
+        }
+        if (Model.Data.QuestionActivityData!.ActivityType == ActivityTypeConstants.MultipleChoiceQuestion)
+        {
+            @await Html.PartialAsync("_MultipleChoiceQuestion",Model)
+        }
+        if (Model.Data.QuestionActivityData!.ActivityType == ActivityTypeConstants.DateQuestion)
+        {
+            @await Html.PartialAsync("_DateQuestion",Model)
+        }
+        if (Model.Data.QuestionActivityData!.ActivityType == ActivityTypeConstants.TextQuestion)
+        {
+            <partial name="_TextQuestion" model=@(Model)/>
+        }
+    }
+</div>
+
+@await Html.PartialAsync("_ValidationScriptsPartial")
+
