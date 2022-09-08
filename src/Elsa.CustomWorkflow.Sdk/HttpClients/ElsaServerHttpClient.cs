@@ -1,15 +1,14 @@
-﻿using Elsa.CustomWorkflow.Sdk.Models.MultipleChoice.SaveAndContinue;
-using Elsa.CustomWorkflow.Sdk.Models.StartWorkflow;
-using Elsa.CustomWorkflow.Sdk.Models.Workflow;
-using Elsa.CustomWorkflow.Sdk.Models.Workflow.LoadWorkflowActivity;
+﻿using Elsa.CustomWorkflow.Sdk.Models.Workflow;
 using System.Text;
 using System.Text.Json;
+using Elsa.CustomWorkflow.Sdk.Models;
 
 namespace Elsa.CustomWorkflow.Sdk.HttpClients
 {
     public interface IElsaServerHttpClient
     {
         Task<WorkflowNextActivityDataDto?> PostStartWorkflow(StartWorkflowCommandDto model);
+
         Task<WorkflowNextActivityDataDto?> SaveAndContinue(SaveAndContinueCommandDto model);
         Task<WorkflowActivityDataDto?> LoadWorkflowActivity(LoadWorkflowActivityDto model);
     }
@@ -54,7 +53,7 @@ namespace Elsa.CustomWorkflow.Sdk.HttpClients
         public async Task<WorkflowNextActivityDataDto?> SaveAndContinue(SaveAndContinueCommandDto model)
         {
             string data;
-            var relativeUri = "multiple-choice/SaveAndContinue";
+            var relativeUri = "workflow/SaveAndContinue";
 
             using var request = new HttpRequestMessage(HttpMethod.Post, relativeUri);
             var content = JsonSerializer.Serialize(model);
@@ -96,11 +95,13 @@ namespace Elsa.CustomWorkflow.Sdk.HttpClients
                     //                               $"\n Message= '{data}'," +
                     //                               $"\n Url='{relativeUri}'"); //TODO: Get the full url here
 
-                    return null;
+                    return default;
                 }
             }
 
             return JsonSerializer.Deserialize<WorkflowActivityDataDto>(data, new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
         }
+
+
     }
 }

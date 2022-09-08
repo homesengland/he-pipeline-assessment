@@ -9,6 +9,6 @@ namespace Elsa.CustomInfrastructure.Data
         {
         }
 
-        public DbSet<MultipleChoiceQuestionModel> MultipleChoiceQuestions { get; set; } = default!;
+        public DbSet<AssessmentQuestion> AssessmentQuestions { get; set; } = default!;
     }
 }

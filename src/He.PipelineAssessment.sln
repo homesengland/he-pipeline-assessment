@@ -24,9 +24,16 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tests", "Tests", "{D9C1B281
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Elsa.Server.Tests", "Elsa.Server.Tests\Elsa.Server.Tests.csproj", "{B87F7F4B-B61B-4EBD-8DF1-F2347CDCAA1B}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Elsa.CustomWorkflow.Sdk.Tests", "Elsa.CustomWorkflow.Sdk.Tests\Elsa.CustomWorkflow.Sdk.Tests.csproj", "{05EAC168-7178-49FD-8DA0-F2B76F824C19}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Elsa.CustomWorkflow.Sdk.Tests", "Elsa.CustomWorkflow.Sdk.Tests\Elsa.CustomWorkflow.Sdk.Tests.csproj", "{05EAC168-7178-49FD-8DA0-F2B76F824C19}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "He.PipelineAssessment.UI.Tests", "He.PipelineAssessment.UI.Tests\He.PipelineAssessment.UI.Tests.csproj", "{60B5792C-6C41-4BED-AF95-27078ED13405}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "He.PipelineAssessment.UI.Tests", "He.PipelineAssessment.UI.Tests\He.PipelineAssessment.UI.Tests.csproj", "{60B5792C-6C41-4BED-AF95-27078ED13405}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Elsa.CustomActivities.Tests", "Elsa.CustomActivities.Tests\Elsa.CustomActivities.Tests.csproj", "{FEFA3943-09A7-4201-A34D-4CC4B36243D9}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{60184F01-9213-4233-B604-A3F384050DB6}"
+	ProjectSection(SolutionItems) = preProject
+		CodeCoverage.runsettings = CodeCoverage.runsettings
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -74,6 +81,10 @@ Global
 		{60B5792C-6C41-4BED-AF95-27078ED13405}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{60B5792C-6C41-4BED-AF95-27078ED13405}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{60B5792C-6C41-4BED-AF95-27078ED13405}.Release|Any CPU.Build.0 = Release|Any CPU
+		{FEFA3943-09A7-4201-A34D-4CC4B36243D9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FEFA3943-09A7-4201-A34D-4CC4B36243D9}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FEFA3943-09A7-4201-A34D-4CC4B36243D9}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FEFA3943-09A7-4201-A34D-4CC4B36243D9}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -82,6 +93,7 @@ Global
 		{B87F7F4B-B61B-4EBD-8DF1-F2347CDCAA1B} = {D9C1B281-DBBB-46D1-AC59-2AF021AC8FAE}
 		{05EAC168-7178-49FD-8DA0-F2B76F824C19} = {D9C1B281-DBBB-46D1-AC59-2AF021AC8FAE}
 		{60B5792C-6C41-4BED-AF95-27078ED13405} = {D9C1B281-DBBB-46D1-AC59-2AF021AC8FAE}
+		{FEFA3943-09A7-4201-A34D-4CC4B36243D9} = {D9C1B281-DBBB-46D1-AC59-2AF021AC8FAE}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {8FBFE024-7094-4738-B42D-4214E6140235}

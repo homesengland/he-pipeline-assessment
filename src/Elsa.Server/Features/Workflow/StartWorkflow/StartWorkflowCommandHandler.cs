@@ -26,21 +26,34 @@ namespace Elsa.Server.Features.Workflow.StartWorkflow
             var result = new OperationResult<StartWorkflowResponse>();
             try
             {
-                var sampleWorkflow =
+                var workflow =
                     await _workflowRegistry.FindAsync(request.WorkflowDefinitionId, VersionOptions.Published, cancellationToken: cancellationToken);
-                var runWorkflowResult = await _startsWorkflow.StartWorkflowAsync(sampleWorkflow!, cancellationToken: cancellationToken);
+                var runWorkflowResult = await _startsWorkflow.StartWorkflowAsync(workflow!, cancellationToken: cancellationToken);
 
-                var multipleChoiceQuestion =
-                    _startWorkflowMapper.RunWorkflowResultToMultipleChoiceQuestionModel(runWorkflowResult);
+                if (runWorkflowResult.WorkflowInstance != null)
+                {
+                    var activity = workflow!.Activities.FirstOrDefault(x =>
+                        x.Id == runWorkflowResult.WorkflowInstance.LastExecutedActivityId);
 
-                if (multipleChoiceQuestion != null)
-                {
-                    await _pipelineAssessmentRepository.CreateMultipleChoiceQuestionAsync(multipleChoiceQuestion!, cancellationToken);
-                    result.Data = _startWorkflowMapper.RunWorkflowResultToStartWorkflowResponse(runWorkflowResult);
-                }
-                else
-                {
-                    result.ErrorMessages.Add("Failed to deserialize RunWorkflowResult");
+                    if (activity != null)
+                    {
+                        var assessmentQuestion =
+                            _startWorkflowMapper.RunWorkflowResultToAssessmentQuestion(runWorkflowResult, activity.Type);
+
+                        if (assessmentQuestion != null)
+                        {
+                            await _pipelineAssessmentRepository.CreateAssessmentQuestionAsync(assessmentQuestion!, cancellationToken);
+                            result.Data = _startWorkflowMapper.RunWorkflowResultToStartWorkflowResponse(runWorkflowResult);
+                        }
+                        else
+                        {
+                            result.ErrorMessages.Add("Failed to deserialize RunWorkflowResult");
+                        }
+                    }
+                    else
+                    {
+                        result.ErrorMessages.Add("Failed to get activity");
+                    }
                 }
 
             }

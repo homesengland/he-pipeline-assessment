@@ -13,7 +13,6 @@ namespace He.PipelineAssessment.UI.Tests.Features.Workflow.SaveAndContinue
             )
         {
             //Arrange
-            var choiceList = saveAndContinueCommand.Data.ActivityData.Choices.Where(x => x.IsSelected).Select(choice => choice.Answer).ToList();
 
             //Act
             var result = sut.SaveAndContinueCommandToSaveAndContinueCommandDto(saveAndContinueCommand);
@@ -23,7 +22,7 @@ namespace He.PipelineAssessment.UI.Tests.Features.Workflow.SaveAndContinue
             Assert.Equal(saveAndContinueCommand.Data.ActivityId, result.ActivityId);
             Assert.Equal(saveAndContinueCommand.Data.WorkflowInstanceId, result.WorkflowInstanceId);
             Assert.Equal($"{saveAndContinueCommand.Data.WorkflowInstanceId}-{saveAndContinueCommand.Data.ActivityId}", result.Id);
-            Assert.Equal(choiceList, result.Answers);
+            Assert.Equal(saveAndContinueCommand.Data.QuestionActivityData!.Answer, result.Answer);
         }
     }
 }

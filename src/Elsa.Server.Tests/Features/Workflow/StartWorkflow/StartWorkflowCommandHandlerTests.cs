@@ -21,12 +21,16 @@ namespace Elsa.Server.Tests.Features.Workflow.StartWorkflow
             [Frozen] Mock<IStartWorkflowMapper> startWorkflowMapper,
             [Frozen] Mock<IPipelineAssessmentRepository> pipelineAssessmentRepository,
             WorkflowBlueprint workflowBlueprint,
+            ActivityBlueprint activityBlueprint,
             RunWorkflowResult runWorkflowResult,
             StartWorkflowCommand startWorkflowCommand,
-            MultipleChoiceQuestionModel multipleChoiceQuestionModel,
+            AssessmentQuestion assessmentQuestion,
             StartWorkflowResponse startWorkflowResponse,
             StartWorkflowCommandHandler sut)
         {
+
+            //Arrange
+
             var opResult = new OperationResult<StartWorkflowResponse>()
             {
                 Data = startWorkflowResponse,
@@ -34,7 +38,10 @@ namespace Elsa.Server.Tests.Features.Workflow.StartWorkflow
                 ValidationMessages = new List<string>()
             };
 
-            //Arrange
+            activityBlueprint.Id = runWorkflowResult.WorkflowInstance!.LastExecutedActivityId!;
+            workflowBlueprint.Activities.Add(activityBlueprint);
+
+
             workflowRegistry
                 .Setup(x => x.FindAsync(startWorkflowCommand.WorkflowDefinitionId, VersionOptions.Published, null, CancellationToken.None))
                 .ReturnsAsync(workflowBlueprint);
@@ -42,8 +49,8 @@ namespace Elsa.Server.Tests.Features.Workflow.StartWorkflow
             startsWorkflow.Setup(x => x.StartWorkflowAsync(workflowBlueprint, null, null, null, null, null, CancellationToken.None))
                 .ReturnsAsync(runWorkflowResult);
 
-            startWorkflowMapper.Setup(x => x.RunWorkflowResultToMultipleChoiceQuestionModel(runWorkflowResult))
-                .Returns(multipleChoiceQuestionModel);
+            startWorkflowMapper.Setup(x => x.RunWorkflowResultToAssessmentQuestion(runWorkflowResult, activityBlueprint.Type))
+                .Returns(assessmentQuestion);
 
             startWorkflowMapper.Setup(x => x.RunWorkflowResultToStartWorkflowResponse(runWorkflowResult))
                 .Returns(opResult.Data);
@@ -52,7 +59,7 @@ namespace Elsa.Server.Tests.Features.Workflow.StartWorkflow
             var result = await sut.Handle(startWorkflowCommand, CancellationToken.None);
 
             //Assert
-            pipelineAssessmentRepository.Verify(x => x.CreateMultipleChoiceQuestionAsync(multipleChoiceQuestionModel, CancellationToken.None), Times.Once);
+            pipelineAssessmentRepository.Verify(x => x.CreateAssessmentQuestionAsync(assessmentQuestion, CancellationToken.None), Times.Once);
             Assert.Equal(opResult.Data.NextActivityId, result.Data!.NextActivityId);
             Assert.Equal(opResult.Data.WorkflowInstanceId, result.Data.WorkflowInstanceId);
             Assert.Empty(result.ErrorMessages);
@@ -67,10 +74,14 @@ namespace Elsa.Server.Tests.Features.Workflow.StartWorkflow
             [Frozen] Mock<IStartWorkflowMapper> startWorkflowMapper,
             [Frozen] Mock<IPipelineAssessmentRepository> pipelineAssessmentRepository,
             WorkflowBlueprint workflowBlueprint,
+            ActivityBlueprint activityBlueprint,
             RunWorkflowResult runWorkflowResult,
             StartWorkflowCommand startWorkflowCommand,
             StartWorkflowCommandHandler sut)
         {
+            activityBlueprint.Id = runWorkflowResult.WorkflowInstance!.LastExecutedActivityId!;
+            workflowBlueprint.Activities.Add(activityBlueprint);
+
             //Arrange
             workflowRegistry
                 .Setup(x => x.FindAsync(startWorkflowCommand.WorkflowDefinitionId, VersionOptions.Published, null, CancellationToken.None))
@@ -79,14 +90,14 @@ namespace Elsa.Server.Tests.Features.Workflow.StartWorkflow
             startsWorkflow.Setup(x => x.StartWorkflowAsync(workflowBlueprint, null, null, null, null, null, CancellationToken.None))
                 .ReturnsAsync(runWorkflowResult);
 
-            startWorkflowMapper.Setup(x => x.RunWorkflowResultToMultipleChoiceQuestionModel(runWorkflowResult))
-                .Returns((MultipleChoiceQuestionModel?)null);
+            startWorkflowMapper.Setup(x => x.RunWorkflowResultToAssessmentQuestion(runWorkflowResult, activityBlueprint.Type))
+                .Returns((AssessmentQuestion?)null);
 
             //Act
             var result = await sut.Handle(startWorkflowCommand, CancellationToken.None);
 
             //Assert
-            pipelineAssessmentRepository.Verify(x => x.CreateMultipleChoiceQuestionAsync(It.IsAny<MultipleChoiceQuestionModel>(), CancellationToken.None), Times.Never);
+            pipelineAssessmentRepository.Verify(x => x.CreateAssessmentQuestionAsync(It.IsAny<AssessmentQuestion>(), CancellationToken.None), Times.Never);
             Assert.Null(result.Data);
             Assert.Equal("Failed to deserialize RunWorkflowResult", result.ErrorMessages.Single());
         }
@@ -109,9 +120,35 @@ namespace Elsa.Server.Tests.Features.Workflow.StartWorkflow
             var result = await sut.Handle(startWorkflowCommand, CancellationToken.None);
 
             //Assert
-            pipelineAssessmentRepository.Verify(x => x.CreateMultipleChoiceQuestionAsync(It.IsAny<MultipleChoiceQuestionModel>(), CancellationToken.None), Times.Never);
+            pipelineAssessmentRepository.Verify(x => x.CreateAssessmentQuestionAsync(It.IsAny<AssessmentQuestion>(), CancellationToken.None), Times.Never);
             Assert.Null(result.Data);
             Assert.Equal(exception.Message, result.ErrorMessages.Single());
+        }
+
+        [Theory]
+        [AutoMoqData]
+        public async Task Handle_ShouldReturnErrorMessageResult_WhenActivityIsNull(
+        [Frozen] Mock<IWorkflowRegistry> workflowRegistry,
+        [Frozen] Mock<IStartsWorkflow> startsWorkflow,
+        WorkflowBlueprint workflowBlueprint,
+        RunWorkflowResult runWorkflowResult,
+        StartWorkflowCommand startWorkflowCommand,
+        StartWorkflowCommandHandler sut)
+        {
+            //Arrange
+            workflowRegistry
+                .Setup(x => x.FindAsync(startWorkflowCommand.WorkflowDefinitionId, VersionOptions.Published, null, CancellationToken.None))
+                .ReturnsAsync(workflowBlueprint);
+
+            startsWorkflow.Setup(x => x.StartWorkflowAsync(workflowBlueprint, null, null, null, null, null, CancellationToken.None))
+                .ReturnsAsync(runWorkflowResult);
+
+            //Act
+            var result = await sut.Handle(startWorkflowCommand, CancellationToken.None);
+
+            //Assert
+            Assert.Equal(1, result.ErrorMessages.Count);
+            Assert.Equal("Failed to get activity", result.ErrorMessages.Single());
         }
     }
 }

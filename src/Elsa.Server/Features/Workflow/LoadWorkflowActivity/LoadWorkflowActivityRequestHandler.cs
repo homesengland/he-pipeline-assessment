@@ -1,25 +1,28 @@
-﻿using Elsa.CustomActivities.Activities.MultipleChoice;
+﻿using Elsa.CustomActivities.Activities.Shared;
 using Elsa.CustomInfrastructure.Data.Repository;
 using Elsa.Persistence;
 using Elsa.Persistence.Specifications.WorkflowInstances;
 using Elsa.Server.Models;
+using Elsa.Services.Models;
 using MediatR;
+using System.Text.Json;
+using Constants = Elsa.CustomActivities.Activities.Constants;
 
 namespace Elsa.Server.Features.Workflow.LoadWorkflowActivity
 {
     public class LoadWorkflowActivityRequestHandler : IRequestHandler<LoadWorkflowActivityRequest, OperationResult<LoadWorkflowActivityResponse>>
     {
-        private readonly IMultipleChoiceQuestionInvoker _invoker;
+        private readonly IQuestionInvoker _QuestionInvoker;
         private readonly IWorkflowInstanceStore _workflowInstanceStore;
         private readonly IPipelineAssessmentRepository _pipelineAssessmentRepository;
-        private readonly ILoadWorkflowActivityMapper _loadWorkflowActivityMapper;
+        private readonly ILoadWorkflowActivityJsonHelper _loadWorkflowActivityJsonHelper;
 
-        public LoadWorkflowActivityRequestHandler(IMultipleChoiceQuestionInvoker invoker, IWorkflowInstanceStore workflowInstanceStore, IPipelineAssessmentRepository pipelineAssessmentRepository, ILoadWorkflowActivityMapper loadWorkflowActivityMapper)
+        public LoadWorkflowActivityRequestHandler(IWorkflowInstanceStore workflowInstanceStore, IPipelineAssessmentRepository pipelineAssessmentRepository, IQuestionInvoker questionInvoker, ILoadWorkflowActivityJsonHelper loadWorkflowActivityJsonHelper)
         {
-            _invoker = invoker;
             _workflowInstanceStore = workflowInstanceStore;
             _pipelineAssessmentRepository = pipelineAssessmentRepository;
-            _loadWorkflowActivityMapper = loadWorkflowActivityMapper;
+            _loadWorkflowActivityJsonHelper = loadWorkflowActivityJsonHelper;
+            _QuestionInvoker = questionInvoker;
         }
 
         public async Task<OperationResult<LoadWorkflowActivityResponse>> Handle(LoadWorkflowActivityRequest activityRequest, CancellationToken cancellationToken)
@@ -34,18 +37,20 @@ namespace Elsa.Server.Features.Workflow.LoadWorkflowActivity
             };
             try
             {
-                var workflows = await _invoker.FindWorkflowsAsync(activityRequest.ActivityId, activityRequest.WorkflowInstanceId, cancellationToken);
-                var collectedWorkflow = workflows.FirstOrDefault();
-                if (collectedWorkflow != null)
+                var dbAssessmentQuestion =
+                    await _pipelineAssessmentRepository.GetAssessmentQuestion(activityRequest.ActivityId, activityRequest.WorkflowInstanceId, cancellationToken);
+
+                if (dbAssessmentQuestion != null)
                 {
-                    var workflowSpecification =
-                        new WorkflowInstanceIdSpecification(collectedWorkflow.WorkflowInstanceId);
-                    var workflowInstance = await _workflowInstanceStore.FindAsync(workflowSpecification, cancellationToken: cancellationToken);
-                    if (workflowInstance != null)
+                    IEnumerable<CollectedWorkflow> workflows = await _QuestionInvoker.FindWorkflowsAsync(activityRequest.ActivityId, dbAssessmentQuestion.ActivityType, activityRequest.WorkflowInstanceId, cancellationToken);
+
+                    var collectedWorkflow = workflows.FirstOrDefault();
+                    if (collectedWorkflow != null)
                     {
-                        var dbMultipleChoiceQuestionModel =
-                            await _pipelineAssessmentRepository.GetMultipleChoiceQuestions(activityRequest.ActivityId, activityRequest.WorkflowInstanceId, cancellationToken);
-                        if (dbMultipleChoiceQuestionModel != null)
+                        var workflowSpecification =
+                            new WorkflowInstanceIdSpecification(collectedWorkflow.WorkflowInstanceId);
+                        var workflowInstance = await _workflowInstanceStore.FindAsync(workflowSpecification, cancellationToken: cancellationToken);
+                        if (workflowInstance != null)
                         {
 
                             if (!workflowInstance.ActivityData.ContainsKey(activityRequest.ActivityId))
@@ -58,35 +63,50 @@ namespace Elsa.Server.Features.Workflow.LoadWorkflowActivity
                                 var activityDataDictionary =
                                     workflowInstance.ActivityData.FirstOrDefault(a => a.Key == activityRequest.ActivityId).Value;
 
-                                var activityData = _loadWorkflowActivityMapper.ActivityDataDictionaryToActivityData(activityDataDictionary);
+                                result.Data.ActivityType = dbAssessmentQuestion.ActivityType;
+                                result.Data.PreviousActivityId = dbAssessmentQuestion.PreviousActivityId;
+
+                                var activityData = _loadWorkflowActivityJsonHelper.ActivityDataDictionaryToQuestionActivityData<QuestionActivityData>(activityDataDictionary);
                                 if (activityData != null)
                                 {
-                                    result.Data.ActivityData = activityData;
-                                    result.Data.PreviousActivityId = dbMultipleChoiceQuestionModel.PreviousActivityId;
+                                    result.Data!.QuestionActivityData = activityData;
+                                    result.Data.QuestionActivityData.ActivityType = dbAssessmentQuestion.ActivityType;
+                                    result.Data.QuestionActivityData.Answer = dbAssessmentQuestion.Answer;
+
+                                    // Restore preserved checkboxes from previous page load
+                                    if (result.Data.ActivityType == Constants.MultipleChoiceQuestion && !string.IsNullOrEmpty(result.Data.QuestionActivityData.Answer))
+                                    {
+                                        var answerList = JsonSerializer.Deserialize<List<string>>(result.Data.QuestionActivityData.Answer);
+
+                                        foreach (var choice in result.Data.QuestionActivityData.Choices)
+                                        {
+                                            choice.IsSelected = answerList!.Contains(choice.Answer);
+                                        }
+                                    }
                                 }
                                 else
                                 {
-                                    result.ErrorMessages.Add("Failed to map activity data");
+                                    result.ErrorMessages.Add(
+                                        $"Failed to map activity data");
                                 }
                             }
-
                         }
                         else
                         {
                             result.ErrorMessages.Add(
-                                $"Unable to find workflow instance with Id: {activityRequest.WorkflowInstanceId} and Activity Id: {activityRequest.ActivityId}");
+                                $"Unable to find workflow instance with Id: {activityRequest.WorkflowInstanceId} in Elsa database");
                         }
                     }
                     else
                     {
                         result.ErrorMessages.Add(
-                            $"Unable to find workflow instance with Id: {activityRequest.WorkflowInstanceId} in Elsa database");
+                            $"Unable to progress workflow instance Id {activityRequest.WorkflowInstanceId}. No collected workflows");
                     }
                 }
                 else
                 {
                     result.ErrorMessages.Add(
-                        $"Unable to progress workflow instance Id {activityRequest.WorkflowInstanceId}. No collected workflows");
+                        $"Unable to find workflow instance with Id: {activityRequest.WorkflowInstanceId} and Activity Id: {activityRequest.ActivityId} in Pipeline Assessment database");
                 }
             }
             catch (Exception e)

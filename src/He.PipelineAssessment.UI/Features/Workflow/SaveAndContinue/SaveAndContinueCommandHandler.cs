@@ -16,24 +16,25 @@ namespace He.PipelineAssessment.UI.Features.Workflow.SaveAndContinue
 
         public async Task<LoadWorkflowActivityRequest?> Handle(SaveAndContinueCommand request, CancellationToken cancellationToken)
         {
-            var saveAndContinueCommandDto = _saveAndContinueMapper.SaveAndContinueCommandToSaveAndContinueCommandDto(request);
-
-            var response = await _elsaServerHttpClient.SaveAndContinue(saveAndContinueCommandDto);
+            var saveAndContinueComandDto = _saveAndContinueMapper.SaveAndContinueCommandToSaveAndContinueCommandDto(request);
+            var response = await _elsaServerHttpClient.SaveAndContinue(saveAndContinueComandDto);
 
             if (response != null)
             {
-                var result = new LoadWorkflowActivityRequest()
+                LoadWorkflowActivityRequest result = new LoadWorkflowActivityRequest()
                 {
-                    ActivityId = response.Data.NextActivityId,
+                    ActivityId = response!.Data.NextActivityId,
                     WorkflowInstanceId = response.Data.WorkflowInstanceId
                 };
 
                 return await Task.FromResult(result);
+
             }
             else
             {
                 return null;
             }
+
         }
     }
 }

@@ -8,7 +8,7 @@ namespace MyActivityLibrary.JavaScript
     {
         public override ValueTask<IEnumerable<Type>> CollectTypesAsync(TypeDefinitionContext context, CancellationToken cancellationToken = default)
         {
-            var types = new[] { typeof(MultipleChoiceQuestionModel) };
+            var types = new[] { typeof(AssessmentQuestion) };
             return new ValueTask<IEnumerable<Type>>(types);
         }
     }
