@@ -96,11 +96,11 @@ namespace Elsa.CustomWorkflow.Sdk.Models.Workflow
                 {
                     return JsonSerializer.Deserialize<decimal?>(Answer);
                 }
-                catch(System.Text.Json.JsonException e)
+                catch (System.Text.Json.JsonException)
                 {
                     return null;
                 }
-                
+
             }
             return null;
         }
