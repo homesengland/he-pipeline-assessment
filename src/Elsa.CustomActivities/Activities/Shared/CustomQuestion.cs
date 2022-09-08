@@ -55,21 +55,11 @@ namespace Elsa.CustomActivities.Activities.Shared
             var outcomes = hasAnyMatches ? results : new[] { OutcomeNames.Default };
             context.JournalData.Add("Matches", matches);
 
-            if (response != null && response.FinishWorkflow.HasValue && response.FinishWorkflow.Value)
-            {
-                return new CombinedResult(new List<IActivityExecutionResult>
-                {
-                    Outcomes(outcomes),
-                    new DoneResult()
-                });
-            }
-
             return await Task.FromResult(new CombinedResult(new List<IActivityExecutionResult>
             {
                 Outcomes(outcomes),
                 new SuspendResult()
             }));
-
         }
 
     }

@@ -20,7 +20,7 @@ namespace He.PipelineAssessment.UI.Features.Workflow
 
         public IActionResult Index()
         {
-            return View("Index", new StartWorkflowCommand() { WorkflowDefinitionId = "ef4c34589fa345d3be955dd6e0c2483f" });
+            return View("Index", new StartWorkflowCommand() { WorkflowDefinitionId = "e1ded93b0b4a432ebeb2b8e10bc1175a" });
         }
 
         [HttpPost]
