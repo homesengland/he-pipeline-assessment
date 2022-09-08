@@ -28,7 +28,12 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Elsa.CustomWorkflow.Sdk.Tes
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "He.PipelineAssessment.UI.Tests", "He.PipelineAssessment.UI.Tests\He.PipelineAssessment.UI.Tests.csproj", "{60B5792C-6C41-4BED-AF95-27078ED13405}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Elsa.CustomActivities.Tests", "Elsa.CustomActivities.Tests\Elsa.CustomActivities.Tests.csproj", "{FEFA3943-09A7-4201-A34D-4CC4B36243D9}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Elsa.CustomActivities.Tests", "Elsa.CustomActivities.Tests\Elsa.CustomActivities.Tests.csproj", "{FEFA3943-09A7-4201-A34D-4CC4B36243D9}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{60184F01-9213-4233-B604-A3F384050DB6}"
+	ProjectSection(SolutionItems) = preProject
+		CodeCoverage.runsettings = CodeCoverage.runsettings
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
