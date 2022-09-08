@@ -1,0 +1,27 @@
+version: '3.4'
+name: pipelineassessment
+services:
+  he.pipelineassessment.ui:
+    container_name: hepipelineassessmentui
+    image: ${DOCKER_REGISTRY-}hepipelineassessmentui
+    ports:
+        - "54433:443"
+    build:
+      context: .
+      dockerfile: He.PipelineAssessment.UI/Dockerfile
+  elsa.server:
+    container_name: elsaserver
+    image: ${DOCKER_REGISTRY-}elsaserver
+    ports:
+        - "54434:443"
+    build:
+      context: .
+      dockerfile: Elsa.Server/Dockerfile
+  elsa.dashboard:
+    container_name: elsadashboard
+    image: ${DOCKER_REGISTRY-}elsadashboard
+    ports:
+        - "54435:443"
+    build:
+      context: .
+      dockerfile: Elsa.Dashboard/Dockerfile
