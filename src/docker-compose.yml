@@ -20,6 +20,8 @@ services:
       dockerfile: He.PipelineAssessment.UI/Dockerfile
     depends_on:
         - elsaserver
+    environment:
+        - Urls__ElsaServer=http://elsaserver:80/
   elsaserver:
     container_name: elsaserver
     image: ${DOCKER_REGISTRY-}elsaserver
@@ -31,6 +33,9 @@ services:
       dockerfile: Elsa.Server/Dockerfile
     depends_on:
         - elsadatabase
+    environment:
+        - ConnectionStrings__ElsaCustom=Server=elsadatabase;Database=ElsaCustom;User Id=sa;password=Pass@word;Encrypt=false
+        - ConnectionStrings__Elsa=Server=elsadatabase;Database=Elsa;User Id=sa;password=Pass@word;Encrypt=false
   elsadashboard:
     container_name: elsadashboard
     image: ${DOCKER_REGISTRY-}elsadashboard
@@ -41,3 +46,5 @@ services:
       dockerfile: Elsa.Dashboard/Dockerfile
     depends_on:
         - elsaserver
+    environment:
+        - Urls__ElsaServer=http://host.docker.internal:54437

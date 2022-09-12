@@ -15,10 +15,10 @@ COPY ["Elsa.CustomInfrastructure/Elsa.CustomInfrastructure.csproj", "Elsa.Custom
 RUN dotnet restore "Elsa.Server/Elsa.Server.csproj"
 COPY . .
 WORKDIR "/src/Elsa.Server"
-RUN dotnet build "Elsa.Server.csproj" -c Release -o /app/build
+RUN dotnet build "Elsa.Server.csproj" -c Debug -o /app/build
 
 FROM build AS publish
-RUN dotnet publish "Elsa.Server.csproj" -c Release -o /app/publish /p:UseAppHost=false
+RUN dotnet publish "Elsa.Server.csproj" -c Debug -o /app/publish /p:UseAppHost=false
 
 FROM base AS final
 WORKDIR /app

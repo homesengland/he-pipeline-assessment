@@ -14,10 +14,10 @@ COPY ["Elsa.Models/Elsa.CustomModels.csproj", "Elsa.Models/"]
 RUN dotnet restore "He.PipelineAssessment.UI/He.PipelineAssessment.UI.csproj"
 COPY . .
 WORKDIR "/src/He.PipelineAssessment.UI"
-RUN dotnet build "He.PipelineAssessment.UI.csproj" -c Release -o /app/build
+RUN dotnet build "He.PipelineAssessment.UI.csproj" -c Debug -o /app/build
 
 FROM build AS publish
-RUN dotnet publish "He.PipelineAssessment.UI.csproj" -c Release -o /app/publish /p:UseAppHost=false
+RUN dotnet publish "He.PipelineAssessment.UI.csproj" -c Debug -o /app/publish /p:UseAppHost=false
 
 FROM base AS final
 WORKDIR /app
