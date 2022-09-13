@@ -173,9 +173,9 @@ namespace Elsa.CustomWorkflow.Sdk.Tests.Workflow
             //Assert
 
             var dateString =$"{year}-{month}-{day}";
-            DateTime.TryParseExact(dateString, Constants.DateFormat, CultureInfo.InvariantCulture, DateTimeStyles.AdjustToUniversal, out DateTime parsedDateTime);
-            var formattedDateString = JsonSerializer.Serialize(parsedDateTime);
+            bool isParseableDateTime = DateTime.TryParseExact(dateString, Constants.DateFormat, CultureInfo.InvariantCulture, DateTimeStyles.AdjustToUniversal, out DateTime parsedDateTime);
             Assert.Equal(dateString, sut.Answer);
+            Assert.True(isParseableDateTime);
         }
 
         [Theory]
