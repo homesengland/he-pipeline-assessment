@@ -14,20 +14,19 @@ services:
     container_name: hepipelineassessmentui
     image: ${DOCKER_REGISTRY-}hepipelineassessmentui
     ports:
-        - "54433:443"
+        - "54433:4430"
     build:
       context: .
       dockerfile: He.PipelineAssessment.UI/Dockerfile
     depends_on:
         - elsaserver
     environment:
-        - Urls__ElsaServer=http://elsaserver:80/
+        - Urls__ElsaServer=http://elsaserver:8080/
   elsaserver:
     container_name: elsaserver
     image: ${DOCKER_REGISTRY-}elsaserver
     ports:
-        - "54434:443"
-        - "54437:80"
+        - "54437:8080"
     build:
       context: .
       dockerfile: Elsa.Server/Dockerfile
@@ -40,7 +39,7 @@ services:
     container_name: elsadashboard
     image: ${DOCKER_REGISTRY-}elsadashboard
     ports:
-        - "54435:443"
+        - "54435:4430"
     build:
       context: .
       dockerfile: Elsa.Dashboard/Dockerfile
