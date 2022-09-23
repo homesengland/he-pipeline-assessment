@@ -3,11 +3,11 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Elsa.Server.StartupTasks
 {
-    public class RunPipelineAssessmentMigrations : IStartupTask
+    public class RunElsaCustomMigrations : IStartupTask
     {
         private readonly DbContext _dbContext;
 
-        public RunPipelineAssessmentMigrations(DbContext dbContext)
+        public RunElsaCustomMigrations(DbContext dbContext)
         {
             _dbContext = dbContext;
         }

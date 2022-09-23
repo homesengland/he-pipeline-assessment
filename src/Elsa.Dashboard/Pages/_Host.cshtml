@@ -1,6 +1,8 @@
 ﻿@page "/"
+@using Microsoft.Extensions.Configuration
+@inject IConfiguration Configuration
 @{
-    var serverUrl = "https://localhost:7227";
+    string serverUrl = Configuration["Urls:ElsaServer"];
 }
 <!DOCTYPE html>
 <html lang="en">

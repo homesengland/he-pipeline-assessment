@@ -7,7 +7,7 @@ using Elsa.CustomActivities.Activities.Text;
 using Elsa.CustomInfrastructure.Data;
 using Elsa.CustomInfrastructure.Data.Repository;
 using Elsa.Persistence.EntityFramework.Core.Extensions;
-using Elsa.Persistence.EntityFramework.Sqlite;
+using Elsa.Persistence.EntityFramework.SqlServer;
 using Elsa.Runtime;
 using Elsa.Server.Features.Workflow.LoadWorkflowActivity;
 using Elsa.Server.Features.Workflow.SaveAndContinue;
@@ -20,12 +20,15 @@ using MyActivityLibrary.JavaScript;
 
 var builder = WebApplication.CreateBuilder(args);
 var elsaConnectionString = builder.Configuration.GetConnectionString("Elsa");
-var pipelineAssessmentConnectionString = builder.Configuration.GetConnectionString("PipelineAssessment");
+var elsaCustomConnectionString = builder.Configuration.GetConnectionString("ElsaCustom");
+
+
+
 
 // Elsa services.
 builder.Services
     .AddElsa(elsa => elsa
-        .UseEntityFrameworkPersistence(ef => ef.UseSqlite(elsaConnectionString))
+        .UseEntityFrameworkPersistence(ef => ef.UseSqlServer(elsaConnectionString, typeof(Elsa.Persistence.EntityFramework.SqlServer.Migrations.Initial)))
         .AddActivity<MultipleChoiceQuestion>()
         .AddActivity<CurrencyQuestion>()
         .AddActivity<TextQuestion>()
@@ -33,14 +36,15 @@ builder.Services
         .AddConsoleActivities()
     );
 
-builder.Services.AddDbContext<PipelineAssessmentContext>(config =>
-    config.UseSqlite(pipelineAssessmentConnectionString,
+builder.Services.AddDbContext<ElsaCustomContext>(config =>
+    config.UseSqlServer(elsaCustomConnectionString,
         x => x.MigrationsAssembly("Elsa.CustomInfrastructure")));
-builder.Services.AddScoped<DbContext>(provider => provider.GetRequiredService<PipelineAssessmentContext>());
+
+builder.Services.AddScoped<DbContext>(provider => provider.GetRequiredService<ElsaCustomContext>());
 
 //Commenting out for now, as I don't think this is the right approach
 //builder.Services.AddWorkflowContextProvider<PipelineAssessmentWorkflowContextProvider>();
-builder.Services.AddStartupTask<RunPipelineAssessmentMigrations>();
+builder.Services.AddStartupTask<RunElsaCustomMigrations>();
 
 // Elsa API endpoints.
 builder.Services.AddElsaApiEndpoints();
@@ -87,7 +91,7 @@ if (!app.Environment.IsDevelopment())
 
 app
     .UseCors()
-    .UseHttpsRedirection()
+    //.UseHttpsRedirection()
     .UseStaticFiles() // For Dashboard.
     .UseRouting()
     .UseEndpoints(endpoints =>
