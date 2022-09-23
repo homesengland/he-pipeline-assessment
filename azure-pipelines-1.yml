@@ -4,8 +4,10 @@
 # https://aka.ms/yaml
 
 pr:
-- develop
-- main
+ branches:
+   include:
+   - develop
+   - main
 
 pool:
   vmImage: ubuntu-latest
