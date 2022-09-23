@@ -24,6 +24,4 @@ resources:
     ref: 'master'
 
 stages:
-- stage: Run_Build_Template
-  jobs:
-    - template: azure-pipelines.yml@pipeline-assessment-deployment
+- template: azure-pipelines.yml@pipeline-assessment-deployment
