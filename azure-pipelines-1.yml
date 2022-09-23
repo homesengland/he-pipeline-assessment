@@ -3,14 +3,14 @@
 # Add steps that build, run tests, deploy, and more:
 # https://aka.ms/yaml
 
-pool:
-  vmImage: ubuntu-latest
+resources:
+  repositories:
+  - repository: pipeline-assessment-deployment
+    type: git
+    name: 'Pipeline Assessment/pipeline-assessment-deployment'   
+    ref: 'main'
 
-steps:
-- script: echo Hello, world!
-  displayName: 'Run a one-line script'
-
-- script: |
-    echo Add other tasks to build, test, and deploy your project.
-    echo See https://aka.ms/yaml
-  displayName: 'Run a multi-line script'
+stages:
+- stage: Run_Build_Template
+  jobs:
+    - template: azure-pipelines.yml@pipeline-assessment-deployment
