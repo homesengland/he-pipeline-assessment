@@ -8,12 +8,10 @@ using Elsa.CustomInfrastructure.Data;
 using Elsa.CustomInfrastructure.Data.Repository;
 using Elsa.Persistence.EntityFramework.Core.Extensions;
 using Elsa.Persistence.EntityFramework.SqlServer;
-using Elsa.Runtime;
 using Elsa.Server.Features.Workflow.LoadWorkflowActivity;
 using Elsa.Server.Features.Workflow.SaveAndContinue;
 using Elsa.Server.Features.Workflow.StartWorkflow;
 using Elsa.Server.Providers;
-using Elsa.Server.StartupTasks;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 using MyActivityLibrary.JavaScript;
@@ -44,7 +42,7 @@ builder.Services.AddScoped<DbContext>(provider => provider.GetRequiredService<El
 
 //Commenting out for now, as I don't think this is the right approach
 //builder.Services.AddWorkflowContextProvider<PipelineAssessmentWorkflowContextProvider>();
-builder.Services.AddStartupTask<RunElsaCustomMigrations>();
+//builder.Services.AddStartupTask<RunElsaCustomMigrations>();
 
 // Elsa API endpoints.
 builder.Services.AddElsaApiEndpoints();
