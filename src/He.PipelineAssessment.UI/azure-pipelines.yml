@@ -1,31 +1,22 @@
 trigger:
-  branches:
-    include:
-    - '*'
-
-variables:
-  tag: '$(Build.BuildId)'
-
-resources:
-  repositories:
+  - none
+  
+  variables:
+    tag: '$(Build.BuildId)'
+  
+  pool:
+    vmImage: 'ubuntu-18.04'
+  
+  resources:
+    repositories:
+    - repository: pipeline-assessment-deployment
+      type: git
+      name: 'Pipeline Assessment/pipeline-assessment-deployment'   
+      ref: 'main'
     - repository: templates
       type: git
-      name: 'Cloud Hosting Service/Templates'    
-
-pool:
-  vmImage: 'ubuntu-18.04'
-
-# Build
-stages:
-- stage: build
-  displayName: Build
-  jobs: 
-    - template: dotnet.yml@templates
-      parameters:
-        identifier: 'he_pipeline_assessment'
-        workingDirectory: 'src'
-        packageVersion: $(Build.BuildNumber)
-        publishOutputPath: '$(System.DefaultWorkingDirectory)/published'
-        dotnetVersion: '6.0.x'
-        unitTestProjects: '**/*.Tests.csproj'
-        coverageThreshold: 0
+      name: 'Pipeline Assessment/Templates'   
+      ref: 'master'
+  
+  stages:
+  - template: azure-pipelines.yml@pipeline-assessment-deployment
