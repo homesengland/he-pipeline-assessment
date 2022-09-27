@@ -1,4 +1,7 @@
-﻿namespace Elsa.CustomInfrastructure.Data
+﻿using Elsa.CustomModels;
+using Microsoft.EntityFrameworkCore;
+
+namespace Elsa.CustomInfrastructure.Data
 {
     public class ElsaCustomContext : DbContext
     {
