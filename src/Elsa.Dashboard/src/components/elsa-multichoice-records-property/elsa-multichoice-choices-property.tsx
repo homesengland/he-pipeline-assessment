@@ -8,7 +8,6 @@ import {
   SyntaxNames
 } from './models';
 // import {parseJson, mapSyntaxToLanguage} from "../../../../../Elsa-Core-HE/src/designer/elsa-workflows-studio/src/utils/utils";
-import {MultiChoiceRecord} from "./models";
 // import {IconName, iconProvider} from "../../../../../Elsa-Core-HE/src/designer/elsa-workflows-studio/src/services/icon-provider";
 
 // Temporary hacks until imports commented out above are sorted
