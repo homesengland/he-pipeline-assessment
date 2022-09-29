@@ -4,13 +4,14 @@
     "allowUnreachableCode": false,
     "declaration": false,
     "experimentalDecorators": true,
+    "skipLibCheck": true,
     "lib": [
       "dom",
       "es2017"
     ],
-    "typeRoots": [
-      "node_modules/@elsa-workflows"
-    ],
+    //"typeRoots": [
+    //  "node_modules/@elsa-workflows"
+    //],
     "moduleResolution": "node",
     "module": "esnext",
     "target": "es2017",

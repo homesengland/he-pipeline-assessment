@@ -1,4 +1,4 @@
-﻿@page "/"
+@page "/"
 @using Microsoft.Extensions.Configuration
 @inject IConfiguration Configuration
 @{
@@ -16,7 +16,8 @@
     <link rel="stylesheet" href="/_content/Elsa.Designer.Components.Web/elsa-workflows-studio/elsa-workflows-studio.css">
     <script src="/_content/Elsa.Designer.Components.Web/monaco-editor/min/vs/loader.js"></script>
     <script type="module" src="/_content/Elsa.Designer.Components.Web/elsa-workflows-studio/elsa-workflows-studio.esm.js"></script>
-    <script type="module" src="https://unpkg.com/benteststencil@0.0.16/dist/bentest/bentest.esm.js"></script>
+    <script type="module" src="/static/build/custom.esm.js"></script>
+    @*<script type="module" src="https://unpkg.com/benteststencil@0.0.16/dist/bentest/bentest.esm.js"></script>*@
 </head>
 <body>
 <elsa-studio-root server-url="@serverUrl" monaco-lib-path="_content/Elsa.Designer.Components.Web/monaco-editor/min">

@@ -1,11 +1,13 @@
 import { Config } from '@stencil/core';
 
 export const config: Config = {
-  namespace: 'bentest',
+  namespace: 'custom',
+  enableCache: true, //Added to try and improve performance
+  srcDir: 'src',
   outputTargets: [
     {
       type: 'dist',
-      esmLoaderPath: '../loader',
+      esmLoaderPath: 'loader',
     },
     {
       type: 'dist-custom-elements',
