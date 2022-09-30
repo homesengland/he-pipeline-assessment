@@ -1,7 +1,7 @@
 import { Config } from '@stencil/core';
 
 export const config: Config = {
-  namespace: 'custom',
+  namespace: 'custom-elsa',
   enableCache: true, //Added to try and improve performance
   srcDir: 'src',
   outputTargets: [

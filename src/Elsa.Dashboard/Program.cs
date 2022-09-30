@@ -15,12 +15,6 @@ if (!app.Environment.IsDevelopment())
 app
     //.UseHttpsRedirection()
     .UseStaticFiles()
-    .UseStaticFiles(new StaticFileOptions
-    {
-      FileProvider = new Microsoft.Extensions.FileProviders.PhysicalFileProvider(Path.Combine(Directory.GetCurrentDirectory(), @"dist")),
-      ServeUnknownFileTypes = true,
-      RequestPath = "/static"
-    })
         .UseStaticFiles(new StaticFileOptions
         {
           FileProvider = new Microsoft.Extensions.FileProviders.PhysicalFileProvider(Path.Combine(Directory.GetCurrentDirectory(), @"www")),
