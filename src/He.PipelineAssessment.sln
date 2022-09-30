@@ -20,7 +20,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Elsa.CustomWorkflow.Sdk", "
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Elsa.CustomInfrastructure", "Elsa.CustomInfrastructure\Elsa.CustomInfrastructure.csproj", "{A7A3022E-1A0A-4152-934A-29ECA2999259}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tests", "Tests", "{D9C1B281-DBBB-46D1-AC59-2AF021AC8FAE}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tests.Server", "Tests.Server", "{D9C1B281-DBBB-46D1-AC59-2AF021AC8FAE}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Elsa.Server.Tests", "Elsa.Server.Tests\Elsa.Server.Tests.csproj", "{B87F7F4B-B61B-4EBD-8DF1-F2347CDCAA1B}"
 EndProject
@@ -34,6 +34,12 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 	ProjectSection(SolutionItems) = preProject
 		CodeCoverage.runsettings = CodeCoverage.runsettings
 	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "docker-compose", "docker-compose", "{04B38B6E-B763-47BC-B3F2-7B963C183720}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tests.UI", "Tests.UI", "{215A0830-F4AB-44AB-BED3-AA170F692B51}"
+EndProject
+Project("{E53339B2-1760-4266-BCC7-CA923CBCF16C}") = "docker-compose", "docker-compose\docker-compose.dcproj", "{A1D45CCE-7090-4F14-ACD0-A3F5C7DFCBB7}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -85,15 +91,20 @@ Global
 		{FEFA3943-09A7-4201-A34D-4CC4B36243D9}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{FEFA3943-09A7-4201-A34D-4CC4B36243D9}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{FEFA3943-09A7-4201-A34D-4CC4B36243D9}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A1D45CCE-7090-4F14-ACD0-A3F5C7DFCBB7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A1D45CCE-7090-4F14-ACD0-A3F5C7DFCBB7}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A1D45CCE-7090-4F14-ACD0-A3F5C7DFCBB7}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A1D45CCE-7090-4F14-ACD0-A3F5C7DFCBB7}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 		{B87F7F4B-B61B-4EBD-8DF1-F2347CDCAA1B} = {D9C1B281-DBBB-46D1-AC59-2AF021AC8FAE}
-		{05EAC168-7178-49FD-8DA0-F2B76F824C19} = {D9C1B281-DBBB-46D1-AC59-2AF021AC8FAE}
-		{60B5792C-6C41-4BED-AF95-27078ED13405} = {D9C1B281-DBBB-46D1-AC59-2AF021AC8FAE}
+		{05EAC168-7178-49FD-8DA0-F2B76F824C19} = {215A0830-F4AB-44AB-BED3-AA170F692B51}
+		{60B5792C-6C41-4BED-AF95-27078ED13405} = {215A0830-F4AB-44AB-BED3-AA170F692B51}
 		{FEFA3943-09A7-4201-A34D-4CC4B36243D9} = {D9C1B281-DBBB-46D1-AC59-2AF021AC8FAE}
+		{A1D45CCE-7090-4F14-ACD0-A3F5C7DFCBB7} = {04B38B6E-B763-47BC-B3F2-7B963C183720}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {8FBFE024-7094-4738-B42D-4214E6140235}

@@ -59,7 +59,7 @@ namespace Elsa.CustomWorkflow.Sdk.Models.Workflow
         }
         public void SetDate(Date? value)
         {
-            if (value != null)
+            if(ActivityType == ActivityTypeConstants.DateQuestion && value != null)
             {
                 if (value.Day != null && value.Month != null && value.Year != null)
                 {
@@ -68,10 +68,13 @@ namespace Elsa.CustomWorkflow.Sdk.Models.Workflow
                     bool isValidDate = DateTime.TryParseExact(dateString, Constants.DateFormat, CultureInfo.InvariantCulture, DateTimeStyles.AdjustToUniversal, out DateTime parsedDateTime);
                     if (isValidDate)
                     {
-                        SetAnswer(parsedDateTime);
+                        Answer = dateString;
                     }
                 }
-                else SetAnswer(null);
+                else
+                {
+                    SetAnswer(null);
+                }
             }
         }
         private void SetChoices(Choice[] value)

@@ -112,6 +112,7 @@ namespace Elsa.CustomWorkflow.Sdk.Tests.Workflow
                 Month = month,
                 Day = day
             };
+            sut.ActivityType = ActivityTypeConstants.DateQuestion;
 
             //Act
             sut.SetDate(date);
@@ -164,6 +165,7 @@ namespace Elsa.CustomWorkflow.Sdk.Tests.Workflow
                 Day = day
             };
             sut.Answer = null;
+            sut.ActivityType = ActivityTypeConstants.DateQuestion;
 
             //Act
             sut.SetDate(date);
@@ -171,12 +173,32 @@ namespace Elsa.CustomWorkflow.Sdk.Tests.Workflow
             //Assert
 
             var dateString =$"{year}-{month}-{day}";
-            DateTime.TryParseExact(dateString, Constants.DateFormat, CultureInfo.InvariantCulture, DateTimeStyles.AdjustToUniversal, out DateTime parsedDateTime);
-            var formattedDateString = JsonSerializer.Serialize(parsedDateTime);
-            Assert.Equal(formattedDateString, sut.Answer);
-            Assert.Null(sut.Date.Day);
-            Assert.Null(sut.Date.Month);
-            Assert.Null(sut.Date.Year);
+            bool isParseableDateTime = DateTime.TryParseExact(dateString, Constants.DateFormat, CultureInfo.InvariantCulture, DateTimeStyles.AdjustToUniversal, out DateTime parsedDateTime);
+            Assert.Equal(dateString, sut.Answer);
+            Assert.True(isParseableDateTime);
+        }
+
+        [Theory]
+        [InlineAutoMoqData(1999, 2, 3, ActivityTypeConstants.CurrencyQuestion)]
+        [InlineAutoMoqData(2000, 12, 3, ActivityTypeConstants.TextQuestion)]
+        [InlineAutoMoqData(2000, 2, 29, ActivityTypeConstants.MultipleChoiceQuestion)]
+        public void SetDateDoesNotSetAnAnswer_GivenInvalidActivityType(int? year, int? month, int? day, string activityType, QuestionActivityData sut)
+        {
+            //Arrange
+            var date = new Date
+            {
+                Year = year,
+                Month = month,
+                Day = day
+            };
+            sut.Answer = null;
+            sut.ActivityType = activityType;
+
+            //Act
+            sut.SetDate(date);
+
+            //Assert
+            Assert.Null(sut.Answer);
         }
 
 

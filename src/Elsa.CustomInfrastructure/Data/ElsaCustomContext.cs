@@ -3,9 +3,9 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Elsa.CustomInfrastructure.Data
 {
-    public class PipelineAssessmentContext : DbContext
+    public class ElsaCustomContext : DbContext
     {
-        public PipelineAssessmentContext(DbContextOptions options) : base(options)
+        public ElsaCustomContext(DbContextOptions options) : base(options)
         {
         }
 
