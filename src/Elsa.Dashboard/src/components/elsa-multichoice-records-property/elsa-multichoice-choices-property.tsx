@@ -1,71 +1,22 @@
-import {Component, h, Prop, State} from '@stencil/core';
+import { Component, h, Prop, State } from '@stencil/core';
 import {
   ActivityDefinitionProperty,
   ActivityModel,
   ActivityPropertyDescriptor,
-  MultiChoiceRecord,
   HTMLElsaMultiExpressionEditorElement,
+  //IntellisenseContext,
   SyntaxNames
-} from './models';
-// import {parseJson, mapSyntaxToLanguage} from "../../../../../Elsa-Core-HE/src/designer/elsa-workflows-studio/src/utils/utils";
-// import {IconName, iconProvider} from "../../../../../Elsa-Core-HE/src/designer/elsa-workflows-studio/src/services/icon-provider";
+} from '../../models/elsa-interfaces';
 
-// Temporary hacks until imports commented out above are sorted
+import {
+  MultiChoiceRecord
+} from '../../models/custom-component-models';
 
-type Map<T> = {
-  [key: string]: T
-};
-enum IconName {
-  Plus = 'plus',
-  TrashBinOutline = 'trash-bin-outline'
-}
+import {
+  IconProvider,
+  IconName
+} from '../icon-provider/icon-provider'
 
-enum IconColor {
-  Blue = 'blue',
-  Gray = 'gray',
-  Green = 'green',
-  Red = 'red',
-  Default = 'currentColor'
-}
-interface IconProviderOptions {
-  color?: IconColor,
-  hoverColor?: IconColor
-}
-class IconProvider {
-  private map: Map<(options?: IconProviderOptions) => any> = {
-    'plus': (options?: IconProviderOptions) =>
-      <svg
-        class={`-elsa-ml-1 elsa-mr-2 elsa-h-5 elsa-w-5 ${options?.color ? `elsa-text-${options.color}-500` : ''} ${options?.hoverColor ? `hover:elsa-text-${options.hoverColor}-500` : ''}`}
-        width="24" height="24" viewBox="0 0 24 24"
-        stroke-width="2" stroke="currentColor" fill="transparent" stroke-linecap="round"
-        stroke-linejoin="round">
-        <path stroke="none" d="M0 0h24v24H0z"/>
-        <line x1="12" y1="5" x2="12" y2="19"/>
-        <line x1="5" y1="12" x2="19" y2="12"/>
-      </svg>,
-    'trash-bin-outline': (options?: IconProviderOptions) =>
-      <svg
-        class={`elsa-h-5 elsa-w-5 ${options?.color ? `elsa-text-${options.color}-500` : ''} ${options?.hoverColor ? `hover:elsa-text-${options.hoverColor}-500` : ''}`}
-        width="24" height="24" viewBox="0 0 24 24"
-        stroke-width="2" stroke="currentColor" fill="transparent" stroke-linecap="round"
-        stroke-linejoin="round">
-        <polyline points="3 6 5 6 21 6"/>
-        <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/>
-        <line x1="10" y1="11" x2="10" y2="17"/>
-        <line x1="14" y1="11" x2="14" y2="17"/>
-      </svg>
-  };
-  getIcon(name: IconName, options?: IconProviderOptions): any {
-    const provider = this.map[name];
-
-    if (!provider)
-      return undefined;
-
-    return provider(options);
-  }
-}
-
-const iconProvider = new IconProvider();
 
 function parseJson(json: string): any {
   if (!json)
@@ -90,6 +41,7 @@ export class ElsaMultiChoiceRecordsProperty {
   @Prop() propertyDescriptor: ActivityPropertyDescriptor;
   @Prop() propertyModel: ActivityDefinitionProperty;
   @State() choices: Array<MultiChoiceRecord> = [];
+  @State() iconProvider = new IconProvider();
 
   // singleLineProperty: Components.ElsaSingleLineProperty;
   supportedSyntaxes: Array<string> = [SyntaxNames.JavaScript, SyntaxNames.Liquid];
@@ -165,7 +117,7 @@ export class ElsaMultiChoiceRecordsProperty {
           <td class="elsa-pt-1 elsa-pr-2 elsa-text-right">
             <button type="button" onClick={() => this.onDeleteChoiceClick(multiChoice)}
                     class="elsa-h-5 elsa-w-5 elsa-mx-auto elsa-outline-none focus:elsa-outline-none">
-              { iconProvider.getIcon(IconName.TrashBinOutline) }
+              { this.iconProvider.getIcon(IconName.TrashBinOutline) }
             </button>
           </td>
         </tr>
@@ -212,7 +164,7 @@ export class ElsaMultiChoiceRecordsProperty {
           </table>
           <button type="button" onClick={() => this.onAddChoiceClick()}
                   class="elsa-inline-flex elsa-items-center elsa-px-4 elsa-py-2 elsa-border elsa-border-transparent elsa-shadow-sm elsa-text-sm elsa-font-medium elsa-rounded-md elsa-text-white elsa-bg-blue-600 hover:elsa-bg-blue-700 focus:elsa-outline-none focus:elsa-ring-2 focus:elsa-ring-offset-2 focus:elsa-ring-blue-500 elsa-mt-2">
-            { iconProvider.getIcon(IconName.Plus) }
+            { this.iconProvider.getIcon(IconName.Plus) }
             Add Choice
           </button>
         {/* </elsa-multi-expression-editor> */}

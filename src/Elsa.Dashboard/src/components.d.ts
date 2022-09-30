@@ -5,26 +5,12 @@
  * It contains typing information for all components that exist in this project.
  */
 import { HTMLStencilElement, JSXBase } from "@stencil/core/internal";
-import { ActivityDefinitionProperty, ActivityModel, ActivityPropertyDescriptor } from "./components/elsa-multichoice-records-property/models";
+import { ActivityDefinitionProperty, ActivityModel, ActivityPropertyDescriptor } from "./models/elsa-interfaces";
 export namespace Components {
     interface ElsaMultichoiceRecordsProperty {
         "activityModel": ActivityModel;
         "propertyDescriptor": ActivityPropertyDescriptor;
         "propertyModel": ActivityDefinitionProperty;
-    }
-    interface MyComponent {
-        /**
-          * The first name
-         */
-        "first": string;
-        /**
-          * The last name
-         */
-        "last": string;
-        /**
-          * The middle name
-         */
-        "middle": string;
     }
 }
 declare global {
@@ -34,15 +20,8 @@ declare global {
         prototype: HTMLElsaMultichoiceRecordsPropertyElement;
         new (): HTMLElsaMultichoiceRecordsPropertyElement;
     };
-    interface HTMLMyComponentElement extends Components.MyComponent, HTMLStencilElement {
-    }
-    var HTMLMyComponentElement: {
-        prototype: HTMLMyComponentElement;
-        new (): HTMLMyComponentElement;
-    };
     interface HTMLElementTagNameMap {
         "elsa-multichoice-records-property": HTMLElsaMultichoiceRecordsPropertyElement;
-        "my-component": HTMLMyComponentElement;
     }
 }
 declare namespace LocalJSX {
@@ -51,23 +30,8 @@ declare namespace LocalJSX {
         "propertyDescriptor"?: ActivityPropertyDescriptor;
         "propertyModel"?: ActivityDefinitionProperty;
     }
-    interface MyComponent {
-        /**
-          * The first name
-         */
-        "first"?: string;
-        /**
-          * The last name
-         */
-        "last"?: string;
-        /**
-          * The middle name
-         */
-        "middle"?: string;
-    }
     interface IntrinsicElements {
         "elsa-multichoice-records-property": ElsaMultichoiceRecordsProperty;
-        "my-component": MyComponent;
     }
 }
 export { LocalJSX as JSX };
@@ -75,7 +39,6 @@ declare module "@stencil/core" {
     export namespace JSX {
         interface IntrinsicElements {
             "elsa-multichoice-records-property": LocalJSX.ElsaMultichoiceRecordsProperty & JSXBase.HTMLAttributes<HTMLElsaMultichoiceRecordsPropertyElement>;
-            "my-component": LocalJSX.MyComponent & JSXBase.HTMLAttributes<HTMLMyComponentElement>;
         }
     }
 }

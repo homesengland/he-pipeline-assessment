@@ -19,4 +19,14 @@
     </Content>
   </ItemGroup>
 
+  <ItemGroup>
+    <None Remove="src\models\elsa-interfaces.ts" />
+    <None Remove="src\models\utils.ts" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <TypeScriptCompile Include="src\models\elsa-interfaces.ts" />
+    <TypeScriptCompile Include="src\models\utils.ts" />
+  </ItemGroup>
+
 </Project>

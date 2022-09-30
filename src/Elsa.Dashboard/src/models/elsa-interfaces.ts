@@ -1,18 +1,4 @@
- // import {Map} from "../../../../../Elsa-Core-HE/src/designer/elsa-workflows-studio/src/utils/utils";
- type Map<T> = {
-     [key: string]: T
-   };
-
-// export interface MultiChoiceRecord {
-//     name: string;
-//     expressions?: Map<string>;
-//     syntax?: string;
-// }
-
-export interface MultiChoiceRecord {
-    answer: string;
-    isSingle: boolean;
-}
+import { Map } from './utils'
 
 export interface ActivityPropertyDescriptor {
   name: string;
@@ -76,6 +62,11 @@ export interface ElsaMultiExpressionEditor {
   "singleLineMode": boolean;
   "supportedSyntaxes": Array<string>;
   "syntax"?: string;
+}
+
+export interface IntellisenseContext {
+  activityTypeName: string;
+  propertyName: string;
 }
 
 export interface IntellisenseContext {
