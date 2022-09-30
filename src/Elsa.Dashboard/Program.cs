@@ -13,7 +13,7 @@ if (!app.Environment.IsDevelopment())
 }
 
 app
-    //.UseHttpsRedirection()
+    .UseHttpsRedirection()
     .UseStaticFiles() // For Dashboard.
     .UseRouting()
     .UseEndpoints(endpoints =>

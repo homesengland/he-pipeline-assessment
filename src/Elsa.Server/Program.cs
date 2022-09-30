@@ -92,7 +92,7 @@ if (!app.Environment.IsDevelopment())
 
 app
     .UseCors()
-    //.UseHttpsRedirection()
+    .UseHttpsRedirection()
     .UseStaticFiles() // For Dashboard.
     .UseRouting()
     .UseEndpoints(endpoints =>
