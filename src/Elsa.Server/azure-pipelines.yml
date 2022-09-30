@@ -1,0 +1,39 @@
+# Starter pipeline
+# Start with a minimal pipeline that you can customize to build and deploy your code.
+# Add steps that build, run tests, deploy, and more:
+# https://aka.ms/yaml
+
+trigger:
+  - none
+  
+parameters:
+  - name: environment
+    displayName: The target environment
+    type: string
+    default: dev
+    values:
+    - dev
+    - qa
+    - uat
+
+variables:
+  tag: '$(Build.BuildId)'
+
+pool:
+  vmImage: 'ubuntu-18.04'
+
+resources:
+  repositories:
+  - repository: he-workflow
+    type: git
+    name: 'Common Components (Agile Board)/He.Workflow'   
+    ref: 'main'
+  - repository: templates
+    type: git
+    name: 'Pipeline Assessment/Templates'   
+    ref: 'master'
+
+stages:
+- template: azure-pipelines.yml@he-workflow
+  parameters:
+    environment: ${{parameters.environment}}
