@@ -42,7 +42,6 @@ builder.Services.AddScoped<DbContext>(provider => provider.GetRequiredService<El
 
 //Commenting out for now, as I don't think this is the right approach
 //builder.Services.AddWorkflowContextProvider<PipelineAssessmentWorkflowContextProvider>();
-//builder.Services.AddStartupTask<RunElsaCustomMigrations>();
 
 // Elsa API endpoints.
 builder.Services.AddElsaApiEndpoints();
