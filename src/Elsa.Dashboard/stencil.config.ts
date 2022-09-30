@@ -6,16 +6,6 @@ export const config: Config = {
   srcDir: 'src',
   outputTargets: [
     {
-      type: 'dist',
-      esmLoaderPath: 'loader',
-    },
-    {
-      type: 'dist-custom-elements',
-    },
-    {
-      type: 'docs-readme',
-    },
-    {
       type: 'www',
       serviceWorker: null, // disable service workers
     },
