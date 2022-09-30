@@ -6,6 +6,16 @@
 trigger:
   - none
   
+parameters:
+  - name: environment
+    displayName: The target environment
+    type: string
+    default: dev
+    values:
+    - dev
+    - qa
+    - uat
+
 variables:
   tag: '$(Build.BuildId)'
 
