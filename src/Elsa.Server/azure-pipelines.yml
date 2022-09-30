@@ -35,3 +35,5 @@ resources:
 
 stages:
 - template: azure-pipelines.yml@he-workflow
+  parameters:
+    environment: ${{parameters.environment}}
