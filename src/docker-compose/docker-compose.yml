@@ -1,0 +1,52 @@
+version: '3.4'
+
+name: pipelineassessment
+services:
+  elsadatabase:
+    container_name: elsadatabase
+    image: mcr.microsoft.com/mssql/server:2022-latest
+    environment:
+      - SA_PASSWORD=Pass@word
+      - ACCEPT_EULA=Y
+    ports:
+      - "5400:1433"
+  hepipelineassessmentui:
+    container_name: hepipelineassessmentui
+    image: ${DOCKER_REGISTRY-}hepipelineassessmentui
+    ports:
+        - "54433:5555"
+    build:
+      context: ../
+      dockerfile: He.PipelineAssessment.UI/Dockerfile
+    depends_on:
+        - elsaserver
+    environment:
+        - Urls__ElsaServer=http://elsaserver:5555/
+        - ASPNETCORE_ENVIRONMENT=Development
+  elsaserver:
+    container_name: elsaserver
+    image: ${DOCKER_REGISTRY-}elsaserver
+    ports:
+        - "54437:5555"
+    build:
+      context: ../
+      dockerfile: Elsa.Server/Dockerfile
+    depends_on:
+        - elsadatabase
+    environment:
+        - ConnectionStrings__ElsaCustom=Server=elsadatabase;Database=ElsaCustom;User Id=sa;password=Pass@word;Encrypt=false
+        - ConnectionStrings__Elsa=Server=elsadatabase;Database=Elsa;User Id=sa;password=Pass@word;Encrypt=false
+        - ASPNETCORE_ENVIRONMENT=Development
+  elsadashboard:
+    container_name: elsadashboard
+    image: ${DOCKER_REGISTRY-}elsadashboard
+    ports:
+        - "54435:5555"
+    build:
+      context: ../
+      dockerfile: Elsa.Dashboard/Dockerfile
+    depends_on:
+        - elsaserver
+    environment:
+        - Urls__ElsaServer=http://host.docker.internal:54437
+        - ASPNETCORE_ENVIRONMENT=Development
