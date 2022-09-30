@@ -8,10 +8,12 @@ using Elsa.CustomInfrastructure.Data;
 using Elsa.CustomInfrastructure.Data.Repository;
 using Elsa.Persistence.EntityFramework.Core.Extensions;
 using Elsa.Persistence.EntityFramework.SqlServer;
+using Elsa.Runtime;
 using Elsa.Server.Features.Workflow.LoadWorkflowActivity;
 using Elsa.Server.Features.Workflow.SaveAndContinue;
 using Elsa.Server.Features.Workflow.StartWorkflow;
 using Elsa.Server.Providers;
+using Elsa.Server.StartupTasks;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 using MyActivityLibrary.JavaScript;
@@ -39,9 +41,6 @@ builder.Services.AddDbContext<ElsaCustomContext>(config =>
         x => x.MigrationsAssembly("Elsa.CustomInfrastructure")));
 
 builder.Services.AddScoped<DbContext>(provider => provider.GetRequiredService<ElsaCustomContext>());
-
-//Commenting out for now, as I don't think this is the right approach
-//builder.Services.AddWorkflowContextProvider<PipelineAssessmentWorkflowContextProvider>();
 
 // Elsa API endpoints.
 builder.Services.AddElsaApiEndpoints();
@@ -76,6 +75,11 @@ builder.Services.AddCors(cors => cors.AddDefaultPolicy(policy => policy
     .AllowAnyOrigin()
     .WithExposedHeaders("Content-Disposition"))
 );
+
+if (builder.Environment.IsDevelopment())
+{
+    builder.Services.AddStartupTask<RunElsaCustomMigrations>();
+}
 
 var app = builder.Build();
 
