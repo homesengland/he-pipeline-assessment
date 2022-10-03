@@ -41,6 +41,8 @@ if (!app.Environment.IsDevelopment())
     app.UseHsts();
 }
 
+app.UseMiddleware<SecurityHeaderMiddleware>();
+
 app.UseHttpsRedirection();
 app.UseStaticFiles();
 
