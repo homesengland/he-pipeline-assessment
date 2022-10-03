@@ -1,4 +1,6 @@
 import { Component, h, Prop, State } from '@stencil/core';
+
+import Trash from '../../icons/trash-can';
 import {
   ActivityDefinitionProperty,
   ActivityModel,
@@ -7,6 +9,10 @@ import {
   //IntellisenseContext,
   SyntaxNames
 } from '../../models/elsa-interfaces';
+
+//import {
+//  SyntaxNames
+//} from '@elsa-workflows/elsa-workflows-studio'
 
 import {
   MultiChoiceRecord
@@ -117,7 +123,7 @@ export class ElsaMultiChoiceRecordsProperty {
           <td class="elsa-pt-1 elsa-pr-2 elsa-text-right">
             <button type="button" onClick={() => this.onDeleteChoiceClick(multiChoice)}
                     class="elsa-h-5 elsa-w-5 elsa-mx-auto elsa-outline-none focus:elsa-outline-none">
-              { this.iconProvider.getIcon(IconName.TrashBinOutline) }
+              <Trash/>
             </button>
           </td>
         </tr>
