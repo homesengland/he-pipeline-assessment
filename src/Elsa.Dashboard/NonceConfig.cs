@@ -9,7 +9,6 @@ namespace Elsa.Dashboard
     public class NonceConfig
     {
         private const string ElsaSetupKey = "ElsaSetup";
-        private const string ElsaStylesKey = "ElsaStyles";
 
         private static RandomNumberGenerator randomNumberGenerator = RandomNumberGenerator.Create();
         private Dictionary<string, string> nonces = new Dictionary<string, string>();
@@ -20,14 +19,12 @@ namespace Elsa.Dashboard
         public NonceConfig()
         {
             this.Add(ElsaSetupKey);
-            this.Add(ElsaStylesKey);
         }
 
         /// <summary>
         /// Gets the nonce for the js enabled script.
         /// </summary>
         public string ElsaSetup => this.Get(ElsaSetupKey);
-        public string ElsaStyles => this.Get(ElsaStylesKey);
 
         /// <summary>
         /// Adds a nonce.

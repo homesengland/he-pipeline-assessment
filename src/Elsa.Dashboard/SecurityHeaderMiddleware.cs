@@ -27,7 +27,6 @@ namespace Elsa.Dashboard
         public async Task Invoke([NotNull] HttpContext context, [NotNull] NonceConfig nonceConfig)
         {
             var elsaSetupNonce = $"nonce-{nonceConfig.ElsaSetup}";
-            var elsaStylesNonce = $"nonce-{nonceConfig.ElsaStyles}";
             var elsaServer = _configuration["Urls:ElsaServer"];
 
             var connectSrc = $"connect-src 'self' {elsaServer};";
