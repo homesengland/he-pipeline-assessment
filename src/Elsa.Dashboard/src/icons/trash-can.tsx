@@ -1,6 +1,6 @@
 import { h } from '@stencil/core';
 
-const TrashCan = (options?) => {
+const TrashCanIcon = (options?) => {
   return (
     <svg
       class={`elsa-h-5 elsa-w-5 ${options?.color ? `elsa-text-${options.color}-500` : ''} ${options?.hoverColor ? `hover:elsa-text-${options.hoverColor}-500` : ''}`}
@@ -15,4 +15,4 @@ const TrashCan = (options?) => {
     )
 }
 
-export default TrashCan;
+export default TrashCanIcon;

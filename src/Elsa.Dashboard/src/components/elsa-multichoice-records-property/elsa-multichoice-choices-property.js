@@ -5,11 +5,12 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
     return c > 3 && r && Object.defineProperty(target, key, r), r;
 };
 import { Component, h, Prop, State } from '@stencil/core';
-/*import Trash from '../../icons/trash-can';*/
+import TrashCanIcon from '../../icons/trash-can';
+import PlusIcon from '../../icons/plus_icon';
 import { 
 //IntellisenseContext,
 SyntaxNames } from '../../models/elsa-interfaces';
-import { IconProvider, IconName, } from '../icon-provider/icon-provider';
+import { IconProvider, } from '../icon-provider/icon-provider';
 function parseJson(json) {
     if (!json)
         return null;
@@ -82,7 +83,8 @@ let ElsaMultiChoiceRecordsProperty = class ElsaMultiChoiceRecordsProperty {
                 h("td", { class: "elsa-py-0" },
                     h("input", { id: fieldId, name: fieldName, type: "checkbox", checked: isChecked, value: 'true', onChange: e => this.onCheckChanged(e, multiChoice), class: "focus:elsa-ring-blue-500 elsa-h-8 elsa-w-8 elsa-text-blue-600 elsa-border-gray-300 elsa-rounded" })),
                 h("td", { class: "elsa-pt-1 elsa-pr-2 elsa-text-right" },
-                    h("button", { type: "button", onClick: () => this.onDeleteChoiceClick(multiChoice), class: "elsa-h-5 elsa-w-5 elsa-mx-auto elsa-outline-none focus:elsa-outline-none" }, this.iconProvider.getIcon(IconName.TrashBinOutline)))));
+                    h("button", { type: "button", onClick: () => this.onDeleteChoiceClick(multiChoice), class: "elsa-h-5 elsa-w-5 elsa-mx-auto elsa-outline-none focus:elsa-outline-none" },
+                        h(TrashCanIcon, { options: this.iconProvider.getOptions() })))));
         };
         // const context: IntellisenseContext = {
         //   activityTypeName: this.activityModel.type,
@@ -99,7 +101,7 @@ let ElsaMultiChoiceRecordsProperty = class ElsaMultiChoiceRecordsProperty {
                         h("th", { class: "elsa-py-3 elsa-text-left elsa-text-xs elsa-font-medium elsa-text-gray-500 elsa-tracking-wider elsa-w-1/12" }, "\u00A0"))),
                 h("tbody", null, choices.map(renderChoiceEditor))),
             h("button", { type: "button", onClick: () => this.onAddChoiceClick(), class: "elsa-inline-flex elsa-items-center elsa-px-4 elsa-py-2 elsa-border elsa-border-transparent elsa-shadow-sm elsa-text-sm elsa-font-medium elsa-rounded-md elsa-text-white elsa-bg-blue-600 hover:elsa-bg-blue-700 focus:elsa-outline-none focus:elsa-ring-2 focus:elsa-ring-offset-2 focus:elsa-ring-blue-500 elsa-mt-2" },
-                this.iconProvider.getIcon(IconName.Plus),
+                h(PlusIcon, { options: this.iconProvider.getOptions() }),
                 "Add Choice")));
     }
 };

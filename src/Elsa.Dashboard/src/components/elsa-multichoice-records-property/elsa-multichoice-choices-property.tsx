@@ -1,6 +1,7 @@
 import { Component, h, Prop, State } from '@stencil/core';
 
-/*import Trash from '../../icons/trash-can';*/
+import TrashCanIcon from '../../icons/trash-can';
+import PlusIcon from '../../icons/plus_icon';
 import {
   ActivityDefinitionProperty,
   ActivityModel,
@@ -20,7 +21,6 @@ import {
 
 import {
   IconProvider,
-  IconName,
 } from '../icon-provider/icon-provider'
 
 
@@ -123,7 +123,7 @@ export class ElsaMultiChoiceRecordsProperty {
           <td class="elsa-pt-1 elsa-pr-2 elsa-text-right">
             <button type="button" onClick={() => this.onDeleteChoiceClick(multiChoice)}
               class="elsa-h-5 elsa-w-5 elsa-mx-auto elsa-outline-none focus:elsa-outline-none">
-              {this.iconProvider.getIcon(IconName.TrashBinOutline)}
+              <TrashCanIcon options={this.iconProvider.getOptions()}/>
             </button>
           </td>
         </tr>
@@ -170,7 +170,7 @@ export class ElsaMultiChoiceRecordsProperty {
           </table>
           <button type="button" onClick={() => this.onAddChoiceClick()}
                   class="elsa-inline-flex elsa-items-center elsa-px-4 elsa-py-2 elsa-border elsa-border-transparent elsa-shadow-sm elsa-text-sm elsa-font-medium elsa-rounded-md elsa-text-white elsa-bg-blue-600 hover:elsa-bg-blue-700 focus:elsa-outline-none focus:elsa-ring-2 focus:elsa-ring-offset-2 focus:elsa-ring-blue-500 elsa-mt-2">
-            { this.iconProvider.getIcon(IconName.Plus) }
+          <PlusIcon options={this.iconProvider.getOptions()} />
             Add Choice
           </button>
         {/* </elsa-multi-expression-editor> */}
