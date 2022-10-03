@@ -30,7 +30,15 @@ namespace Elsa.Dashboard
             var elsaStylesNonce = $"nonce-{nonceConfig.ElsaStyles}";
             var elsaServer = _configuration["Urls:ElsaServer"];
 
-            SetHeader(context, "Content-Security-Policy", $"connect-src 'self' {elsaServer}; default-src 'self'; script-src 'self' 'strict-dynamic' '{elsaSetupNonce}' 'unsafe-eval'; style-src-elem 'self'; style-src 'self'; img-src 'self' data:; font-src 'self'");
+            var connectSrc = $"connect-src 'self' {elsaServer};";
+            var defaultSrc = $"default-src 'self';";
+            var scriptSrc = $"script-src 'self' 'strict-dynamic' '{elsaSetupNonce}' 'unsafe-eval';";
+            var styleSrcElem = $"style-src-elem 'self' 'unsafe-inline';";
+            var styleSrc = $"style-src 'self' 'unsafe-inline';";
+            var imgSrc = $"img-src 'self' data: https://unpkg.com/benteststencil@0.0.16/;";
+            var fontSrc = $"font-src 'self';";
+
+            SetHeader(context, "Content-Security-Policy", $"{connectSrc} {defaultSrc} {scriptSrc} {styleSrcElem} {styleSrc} {imgSrc} {fontSrc}");
             SetHeader(context, "X-Frame-Options", "DENY");
             SetHeader(context, "X-Content-Type-Options", "nosniff");
             SetHeader(context, "Referrer-Policy", "strict-origin-when-cross-origin");
