@@ -56,14 +56,14 @@ export class ElsaMultiChoiceRecordsProperty {
 
   async componentWillLoad() {
     const propertyModel = this.propertyModel;
-    const choicesJson = propertyModel.expressions['Json']
+    const choicesJson = propertyModel.expressions[SyntaxNames.Json]
     this.choices = parseJson(choicesJson) || [];
   }
 
   updatePropertyModel() {
     console.log(this.propertyModel);
     console.log(this.choices);
-    this.propertyModel.expressions['Json'] = JSON.stringify(this.choices);
+    this.propertyModel.expressions[SyntaxNames.Json] = JSON.stringify(this.choices);
     // this.multiExpressionEditor.expressions[SyntaxNames.Json] = JSON.stringify(this.choices, null, 2);
   }
 

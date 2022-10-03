@@ -20,9 +20,9 @@
         <!--Use npm install or npm ci depending on RestorePackagesWithLockFile value.
         Uncomment the following lines if you want to use this feature:-->
 
-        <PropertyGroup>
+        <!--<PropertyGroup>
           <RestorePackagesWithLockFile>true</RestorePackagesWithLockFile>
-        </PropertyGroup>
+        </PropertyGroup>-->
      
     <Exec Command="npm ci" Condition="'$(RestorePackagesWithLockFile)' == 'true'" />
     <Exec Command="npm install" Condition="'$(RestorePackagesWithLockFile)' != 'true'" />
@@ -41,14 +41,21 @@
 
   <ItemGroup>
     <PackageReference Include="Elsa.Designer.Components.Web" Version="2.8.2" />
+    <PackageReference Include="Microsoft.TypeScript.MSBuild" Version="4.8.4">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
     <PackageReference Include="Microsoft.VisualStudio.Azure.Containers.Tools.Targets" Version="1.17.0" />
   </ItemGroup>
 
+  <!--<ItemGroup>
+    <TypeScriptCompile Include="src\**\" />
+  </ItemGroup>-->
+
   <ItemGroup>
-    <Content Include="www\build\**">
+    <Content Include="www\*\**">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
   </ItemGroup>
-
 
 </Project>

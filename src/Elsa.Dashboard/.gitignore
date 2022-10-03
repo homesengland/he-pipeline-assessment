@@ -1,5 +1,5 @@
 dist/
-www/
+www/*
 loader/
 src/**/*.js
 
