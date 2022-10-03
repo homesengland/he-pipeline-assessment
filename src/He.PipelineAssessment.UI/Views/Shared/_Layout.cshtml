@@ -1,4 +1,5 @@
-﻿<!DOCTYPE html>
+﻿@inject NonceConfig nonceConfig
+<!DOCTYPE html>
 <html lang="en" class="govuk-template ">
 
 <head>
@@ -20,9 +21,8 @@
 </head>
 
 <body class="govuk-template__body ">
-  <script>
+  <script nonce="@nonceConfig.GovUkSetup">
     document.body.className = ((document.body.className) ? document.body.className + ' js-enabled' : 'js-enabled');
-
   </script>
 
   <a href="#main-content" class="govuk-skip-link" data-module="govuk-skip-link">Skip to main content</a>
@@ -76,10 +76,9 @@
   </footer>
 
 <script src="~/styles/govuk-frontend-4.3.0.min.js"></script>
-  <script>
+<script nonce="@nonceConfig.GovUkSetup">
     window.GOVUKFrontend.initAll()
-
-  </script>
+</script>
 </body>
 
 </html>
