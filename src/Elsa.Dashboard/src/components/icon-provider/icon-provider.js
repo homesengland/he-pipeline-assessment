@@ -32,4 +32,7 @@ export class IconProvider {
             return undefined;
         return provider(options);
     }
+    getOptions(options) {
+        return options;
+    }
 }

@@ -20,7 +20,7 @@ import {
 
 import {
   IconProvider,
-  IconName
+  IconName,
 } from '../icon-provider/icon-provider'
 
 
@@ -122,8 +122,8 @@ export class ElsaMultiChoiceRecordsProperty {
         
           <td class="elsa-pt-1 elsa-pr-2 elsa-text-right">
             <button type="button" onClick={() => this.onDeleteChoiceClick(multiChoice)}
-                    class="elsa-h-5 elsa-w-5 elsa-mx-auto elsa-outline-none focus:elsa-outline-none">
-              <Trash/>
+              class="elsa-h-5 elsa-w-5 elsa-mx-auto elsa-outline-none focus:elsa-outline-none">
+              <Trash options={this.iconProvider.getOptions()} />
             </button>
           </td>
         </tr>

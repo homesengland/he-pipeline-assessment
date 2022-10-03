@@ -9,7 +9,7 @@ import Trash from '../../icons/trash-can';
 import { 
 //IntellisenseContext,
 SyntaxNames } from '../../models/elsa-interfaces';
-import { IconProvider, IconName } from '../icon-provider/icon-provider';
+import { IconProvider, IconName, } from '../icon-provider/icon-provider';
 function parseJson(json) {
     if (!json)
         return null;
@@ -83,7 +83,7 @@ let ElsaMultiChoiceRecordsProperty = class ElsaMultiChoiceRecordsProperty {
                     h("input", { id: fieldId, name: fieldName, type: "checkbox", checked: isChecked, value: 'true', onChange: e => this.onCheckChanged(e, multiChoice), class: "focus:elsa-ring-blue-500 elsa-h-8 elsa-w-8 elsa-text-blue-600 elsa-border-gray-300 elsa-rounded" })),
                 h("td", { class: "elsa-pt-1 elsa-pr-2 elsa-text-right" },
                     h("button", { type: "button", onClick: () => this.onDeleteChoiceClick(multiChoice), class: "elsa-h-5 elsa-w-5 elsa-mx-auto elsa-outline-none focus:elsa-outline-none" },
-                        h(Trash, null)))));
+                        h(Trash, { options: this.iconProvider.getOptions() })))));
         };
         // const context: IntellisenseContext = {
         //   activityTypeName: this.activityModel.type,

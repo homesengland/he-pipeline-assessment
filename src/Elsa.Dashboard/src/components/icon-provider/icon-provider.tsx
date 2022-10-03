@@ -51,4 +51,9 @@ export class IconProvider {
 
     return provider(options);
   }
+
+  getOptions(options?: IconProviderOptions) {
+    return options;
+  }
+
 }
