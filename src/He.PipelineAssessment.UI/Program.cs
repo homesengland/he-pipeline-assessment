@@ -1,4 +1,5 @@
 using Elsa.CustomWorkflow.Sdk.HttpClients;
+using He.PipelineAssessment.UI;
 using He.PipelineAssessment.UI.Features.Workflow.SaveAndContinue;
 using MediatR;
 using Microsoft.AspNetCore.Mvc.Razor;
@@ -19,12 +20,13 @@ string serverURl = builder.Configuration["Urls:ElsaServer"];
 //TODO: make this an extension in the SDK
 builder.Services.AddHttpClient("ElsaServerClient", client =>
 {
-    client.BaseAddress = new Uri(serverURl); //TODO: make this uri configurable
+    client.BaseAddress = new Uri(serverURl);
 
 });
 
 builder.Services.AddScoped<IElsaServerHttpClient, ElsaServerHttpClient>();
 builder.Services.AddScoped<ISaveAndContinueMapper, SaveAndContinueMapper>();
+builder.Services.AddScoped<NonceConfig>();
 
 
 builder.Services.AddMediatR(typeof(Program).Assembly);

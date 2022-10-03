@@ -1,21 +1,18 @@
 ﻿using System.Diagnostics.CodeAnalysis;
 
-namespace Elsa.Dashboard
+namespace He.PipelineAssessment.UI
 {
     public class SecurityHeaderMiddleware
     {
         private readonly RequestDelegate _next;
-        private readonly IConfiguration _configuration;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="SecurityHeaderMiddleware"/> class.
         /// </summary>
         /// <param name="next">The next delegate.</param>
-        /// <param name="configuration"></param>
-        public SecurityHeaderMiddleware(RequestDelegate next, IConfiguration configuration)
+        public SecurityHeaderMiddleware(RequestDelegate next)
         {
             _next = next;
-            _configuration = configuration;
         }
 
         /// <summary>
@@ -26,15 +23,14 @@ namespace Elsa.Dashboard
         /// <returns>A task.</returns>
         public async Task Invoke([NotNull] HttpContext context, [NotNull] NonceConfig nonceConfig)
         {
-            var elsaSetupNonce = $"nonce-{nonceConfig.ElsaSetup}";
-            var elsaServer = _configuration["Urls:ElsaServer"];
+            var govUkSetupNonce = $"nonce-{nonceConfig.GovUkSetup}";
 
-            var connectSrc = $"connect-src 'self' {elsaServer};";
+            var connectSrc = $"connect-src 'self';";
             var defaultSrc = $"default-src 'self';";
-            var scriptSrc = $"script-src 'self' 'strict-dynamic' '{elsaSetupNonce}' 'unsafe-eval';";
-            var styleSrcElem = $"style-src-elem 'self' 'unsafe-inline';";
-            var styleSrc = $"style-src 'self' 'unsafe-inline';";
-            var imgSrc = $"img-src 'self' data: https://unpkg.com/benteststencil@0.0.16/;";
+            var scriptSrc = $"script-src 'self' '{govUkSetupNonce}' 'unsafe-eval';";
+            var styleSrcElem = $"style-src-elem 'self';";
+            var styleSrc = $"style-src 'self';";
+            var imgSrc = $"img-src 'self';";
             var fontSrc = $"font-src 'self';";
 
             SetHeader(context, "Content-Security-Policy", $"{connectSrc} {defaultSrc} {scriptSrc} {styleSrcElem} {styleSrc} {imgSrc} {fontSrc}");
