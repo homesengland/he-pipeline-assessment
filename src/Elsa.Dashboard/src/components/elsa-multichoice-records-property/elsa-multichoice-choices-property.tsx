@@ -65,13 +65,10 @@ export class ElsaMultiChoiceRecordsProperty {
   }
 
   defaultActivityModel() {
-    console.log('calling default option');
-    this.multiChoiceModel.choices = [];
-    console.log('choices set');
-    console.log(this.multiChoiceModel.choices);
-    this.multiChoiceModel.isMultiSelect = true;
-    console.log('multi choice select set')
-    console.log(this.multiChoiceModel.isMultiSelect);
+    var activity = new MultiChoiceActivity();
+    activity.choices = [];
+    activity.isMultiSelect = true;
+    return activity;
   }
 
   updatePropertyModel() {
@@ -114,7 +111,6 @@ export class ElsaMultiChoiceRecordsProperty {
   }
 
   render() {
-    console.log(this.multiChoiceModel.choices);
     const choices = this.multiChoiceModel.choices;
     const isMultiSelectChecked = this.multiChoiceModel.isMultiSelect;
     // const supportedSyntaxes = this.supportedSyntaxes;

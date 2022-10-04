@@ -41,6 +41,8 @@ let ElsaMultiChoiceRecordsProperty = class ElsaMultiChoiceRecordsProperty {
         const choicesJson = propertyModel.expressions[SyntaxNames.Json];
         //this.choices = parseJson(choicesJson) || [];
         this.multiChoiceModel = parseJson(choicesJson) || this.defaultActivityModel();
+        console.log('component will load');
+        console.log(this.multiChoiceModel);
     }
     defaultActivityModel() {
         console.log('calling default option');
@@ -49,7 +51,7 @@ let ElsaMultiChoiceRecordsProperty = class ElsaMultiChoiceRecordsProperty {
         console.log(this.multiChoiceModel.choices);
         this.multiChoiceModel.isMultiSelect = true;
         console.log('multi choice select set');
-        console.log(this.multiChoiceModel.isMultiSelect);
+        return this.multiChoiceModel;
     }
     updatePropertyModel() {
         console.log(this.propertyModel);
