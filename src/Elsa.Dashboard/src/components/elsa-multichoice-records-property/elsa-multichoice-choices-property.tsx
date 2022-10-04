@@ -81,12 +81,12 @@ export class ElsaMultiChoiceRecordsProperty {
   onAddChoiceClick() {
     const choiceName = `Choice ${this.multiChoiceModel.choices.length + 1}`;
     const newChoice = { answer: choiceName, isSingle: false };
-    this.multiChoiceModel.choices = [...this.multiChoiceModel.choices, newChoice];
+    this.multiChoiceModel = { ...this.multiChoiceModel, choices: [...this.multiChoiceModel.choices, newChoice] };
     this.updatePropertyModel();
   }
 
   onDeleteChoiceClick(multiChoice: MultiChoiceRecord) {
-    this.multiChoiceModel.choices = this.multiChoiceModel.choices.filter(x => x != multiChoice);
+    this.multiChoiceModel = { ...this.multiChoiceModel, choices: this.multiChoiceModel.choices.filter(x => x != multiChoice) };
     this.updatePropertyModel();
   }
 
@@ -106,7 +106,7 @@ export class ElsaMultiChoiceRecordsProperty {
   onToggleMultiSelect(e: Event) {
     console.log('updating multi select option');
     const checkbox = (e.target as HTMLInputElement);
-    this.multiChoiceModel.isMultiSelect = checkbox.checked;
+    this.multiChoiceModel = { ...this.multiChoiceModel, isMultiSelect: checkbox.checked };
     this.updatePropertyModel();
   }
 

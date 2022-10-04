@@ -41,17 +41,12 @@ let ElsaMultiChoiceRecordsProperty = class ElsaMultiChoiceRecordsProperty {
         const choicesJson = propertyModel.expressions[SyntaxNames.Json];
         //this.choices = parseJson(choicesJson) || [];
         this.multiChoiceModel = parseJson(choicesJson) || this.defaultActivityModel();
-        console.log('component will load');
-        console.log(this.multiChoiceModel);
     }
     defaultActivityModel() {
-        console.log('calling default option');
-        this.multiChoiceModel.choices = [];
-        console.log('choices set');
-        console.log(this.multiChoiceModel.choices);
-        this.multiChoiceModel.isMultiSelect = true;
-        console.log('multi choice select set');
-        return this.multiChoiceModel;
+        var activity = new MultiChoiceActivity();
+        activity.choices = [];
+        activity.isMultiSelect = true;
+        return activity;
     }
     updatePropertyModel() {
         console.log(this.propertyModel);
@@ -62,11 +57,11 @@ let ElsaMultiChoiceRecordsProperty = class ElsaMultiChoiceRecordsProperty {
     onAddChoiceClick() {
         const choiceName = `Choice ${this.multiChoiceModel.choices.length + 1}`;
         const newChoice = { answer: choiceName, isSingle: false };
-        this.multiChoiceModel.choices = [...this.multiChoiceModel.choices, newChoice];
+        this.multiChoiceModel = Object.assign(Object.assign({}, this.multiChoiceModel), { choices: [...this.multiChoiceModel.choices, newChoice] });
         this.updatePropertyModel();
     }
     onDeleteChoiceClick(multiChoice) {
-        this.multiChoiceModel.choices = this.multiChoiceModel.choices.filter(x => x != multiChoice);
+        this.multiChoiceModel = Object.assign(Object.assign({}, this.multiChoiceModel), { choices: this.multiChoiceModel.choices.filter(x => x != multiChoice) });
         this.updatePropertyModel();
     }
     onChoiceNameChanged(e, multiChoice) {
@@ -83,11 +78,10 @@ let ElsaMultiChoiceRecordsProperty = class ElsaMultiChoiceRecordsProperty {
     onToggleMultiSelect(e) {
         console.log('updating multi select option');
         const checkbox = e.target;
-        this.multiChoiceModel.isMultiSelect = checkbox.checked;
+        this.multiChoiceModel = Object.assign(Object.assign({}, this.multiChoiceModel), { isMultiSelect: checkbox.checked });
         this.updatePropertyModel();
     }
     render() {
-        console.log(this.multiChoiceModel.choices);
         const choices = this.multiChoiceModel.choices;
         const isMultiSelectChecked = this.multiChoiceModel.isMultiSelect;
         // const supportedSyntaxes = this.supportedSyntaxes;
