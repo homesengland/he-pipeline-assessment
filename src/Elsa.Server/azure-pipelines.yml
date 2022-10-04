@@ -17,7 +17,7 @@ parameters:
     - uat
 
 variables:
-  tag: '$(Build.BuildId)'
+  tag: '$(Build.BuildNumber)'
 
 pool:
   vmImage: 'ubuntu-18.04'
