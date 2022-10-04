@@ -10,6 +10,10 @@ import PlusIcon from '../../icons/plus_icon';
 import { 
 //IntellisenseContext,
 SyntaxNames } from '../../models/elsa-interfaces';
+//import {
+//  SyntaxNames
+//} from '@elsa-workflows/elsa-workflows-studio'
+import { MultiChoiceActivity } from '../../models/custom-component-models';
 import { IconProvider, } from '../icon-provider/icon-provider';
 function parseJson(json) {
     if (!json)
@@ -24,31 +28,43 @@ function parseJson(json) {
 }
 let ElsaMultiChoiceRecordsProperty = class ElsaMultiChoiceRecordsProperty {
     constructor() {
-        this.choices = [];
+        //@State() choices: Array<MultiChoiceRecord> = []; //TODO - Remove
+        this.multiChoiceModel = new MultiChoiceActivity();
         this.iconProvider = new IconProvider();
         // singleLineProperty: Components.ElsaSingleLineProperty;
         this.supportedSyntaxes = [SyntaxNames.JavaScript, SyntaxNames.Liquid];
         this.syntaxMultiChoiceCount = 0;
     }
     async componentWillLoad() {
+        console.log('component will load');
         const propertyModel = this.propertyModel;
         const choicesJson = propertyModel.expressions[SyntaxNames.Json];
-        this.choices = parseJson(choicesJson) || [];
+        //this.choices = parseJson(choicesJson) || [];
+        this.multiChoiceModel = parseJson(choicesJson) || this.defaultActivityModel();
+    }
+    defaultActivityModel() {
+        console.log('calling default option');
+        this.multiChoiceModel.choices = [];
+        console.log('choices set');
+        console.log(this.multiChoiceModel.choices);
+        this.multiChoiceModel.isMultiSelect = true;
+        console.log('multi choice select set');
+        console.log(this.multiChoiceModel.isMultiSelect);
     }
     updatePropertyModel() {
         console.log(this.propertyModel);
-        console.log(this.choices);
-        this.propertyModel.expressions[SyntaxNames.Json] = JSON.stringify(this.choices);
+        //console.log(this.choices);
+        this.propertyModel.expressions[SyntaxNames.Json] = JSON.stringify(this.multiChoiceModel);
         // this.multiExpressionEditor.expressions[SyntaxNames.Json] = JSON.stringify(this.choices, null, 2);
     }
     onAddChoiceClick() {
-        const choiceName = `Choice ${this.choices.length + 1}`;
+        const choiceName = `Choice ${this.multiChoiceModel.choices.length + 1}`;
         const newChoice = { answer: choiceName, isSingle: false };
-        this.choices = [...this.choices, newChoice];
+        this.multiChoiceModel.choices = [...this.multiChoiceModel.choices, newChoice];
         this.updatePropertyModel();
     }
     onDeleteChoiceClick(multiChoice) {
-        this.choices = this.choices.filter(x => x != multiChoice);
+        this.multiChoiceModel.choices = this.multiChoiceModel.choices.filter(x => x != multiChoice);
         this.updatePropertyModel();
     }
     onChoiceNameChanged(e, multiChoice) {
@@ -62,8 +78,16 @@ let ElsaMultiChoiceRecordsProperty = class ElsaMultiChoiceRecordsProperty {
         // this.propertyModel.expressions[defaultSyntax] = multiChoice.isSingle.toString();
         this.updatePropertyModel();
     }
+    onToggleMultiSelect(e) {
+        console.log('updating multi select option');
+        const checkbox = e.target;
+        this.multiChoiceModel.isMultiSelect = checkbox.checked;
+        this.updatePropertyModel();
+    }
     render() {
-        const choices = this.choices;
+        console.log(this.multiChoiceModel.choices);
+        const choices = this.multiChoiceModel.choices;
+        const isMultiSelectChecked = this.multiChoiceModel.isMultiSelect;
         // const supportedSyntaxes = this.supportedSyntaxes;
         // const json = JSON.stringify(choices, null, 2);
         const renderChoiceEditor = (multiChoice, index) => {
@@ -96,6 +120,11 @@ let ElsaMultiChoiceRecordsProperty = class ElsaMultiChoiceRecordsProperty {
             h("table", { class: "elsa-min-w-full elsa-divide-y elsa-divide-gray-200" },
                 h("thead", { class: "elsa-bg-gray-50" },
                     h("tr", null,
+                        h("th", { class: "elsa-py-3 elsa-text-left elsa-text-xs elsa-font-medium elsa-text-gray-500 elsa-tracking-wider elsa-w-10/12" }, "Allow multiple answers"),
+                        h("th", null),
+                        h("th", null,
+                            h("input", { id: "multiChoiceSelect", name: "multi-choice-select", type: "checkbox", checked: isMultiSelectChecked, value: 'true', onChange: e => this.onToggleMultiSelect(e), class: "focus:elsa-ring-blue-500 elsa-h-8 elsa-w-8 elsa-text-blue-600 elsa-border-gray-300 elsa-rounded" }))),
+                    h("tr", null,
                         h("th", { class: "elsa-py-3 elsa-text-left elsa-text-xs elsa-font-medium elsa-text-gray-500 elsa-tracking-wider elsa-w-10/12" }, "Answer"),
                         h("th", { class: "elsa-py-3 elsa-text-left elsa-text-xs elsa-font-medium elsa-text-gray-500 elsa-tracking-wider elsa-w-1/12" }, "IsSingle"),
                         h("th", { class: "elsa-py-3 elsa-text-left elsa-text-xs elsa-font-medium elsa-text-gray-500 elsa-tracking-wider elsa-w-1/12" }, "\u00A0"))),
@@ -116,7 +145,7 @@ __decorate([
 ], ElsaMultiChoiceRecordsProperty.prototype, "propertyModel", void 0);
 __decorate([
     State()
-], ElsaMultiChoiceRecordsProperty.prototype, "choices", void 0);
+], ElsaMultiChoiceRecordsProperty.prototype, "multiChoiceModel", void 0);
 __decorate([
     State()
 ], ElsaMultiChoiceRecordsProperty.prototype, "iconProvider", void 0);

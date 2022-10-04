@@ -6,6 +6,11 @@ export interface MultiChoiceRecord {
     isSingle: boolean;
 }
 
+export class MultiChoiceActivity {
+  isMultiSelect: boolean = true;
+  choices: Array<MultiChoiceRecord> = [];
+}
+
 
 
 

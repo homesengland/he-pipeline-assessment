@@ -16,7 +16,8 @@ import {
 //} from '@elsa-workflows/elsa-workflows-studio'
 
 import {
-  MultiChoiceRecord
+  MultiChoiceRecord,
+  MultiChoiceActivity
 } from '../../models/custom-component-models';
 
 import {
@@ -46,7 +47,8 @@ export class ElsaMultiChoiceRecordsProperty {
   @Prop() activityModel: ActivityModel;
   @Prop() propertyDescriptor: ActivityPropertyDescriptor;
   @Prop() propertyModel: ActivityDefinitionProperty;
-  @State() choices: Array<MultiChoiceRecord> = [];
+  //@State() choices: Array<MultiChoiceRecord> = []; //TODO - Remove
+  @State() multiChoiceModel: MultiChoiceActivity = new MultiChoiceActivity();
   @State() iconProvider = new IconProvider();
 
   // singleLineProperty: Components.ElsaSingleLineProperty;
@@ -55,27 +57,39 @@ export class ElsaMultiChoiceRecordsProperty {
   syntaxMultiChoiceCount: number = 0;
 
   async componentWillLoad() {
+    console.log('component will load');
     const propertyModel = this.propertyModel;
     const choicesJson = propertyModel.expressions[SyntaxNames.Json]
-    this.choices = parseJson(choicesJson) || [];
+    //this.choices = parseJson(choicesJson) || [];
+    this.multiChoiceModel = parseJson(choicesJson) || this.defaultActivityModel();
+  }
+
+  defaultActivityModel() {
+    console.log('calling default option');
+    this.multiChoiceModel.choices = [];
+    console.log('choices set');
+    console.log(this.multiChoiceModel.choices);
+    this.multiChoiceModel.isMultiSelect = true;
+    console.log('multi choice select set')
+    console.log(this.multiChoiceModel.isMultiSelect);
   }
 
   updatePropertyModel() {
     console.log(this.propertyModel);
-    console.log(this.choices);
-    this.propertyModel.expressions[SyntaxNames.Json] = JSON.stringify(this.choices);
+    //console.log(this.choices);
+    this.propertyModel.expressions[SyntaxNames.Json] = JSON.stringify(this.multiChoiceModel);
     // this.multiExpressionEditor.expressions[SyntaxNames.Json] = JSON.stringify(this.choices, null, 2);
   }
 
   onAddChoiceClick() {
-    const choiceName = `Choice ${this.choices.length + 1}`;
-    const newChoice = {answer: choiceName, isSingle: false};
-    this.choices = [...this.choices, newChoice];
+    const choiceName = `Choice ${this.multiChoiceModel.choices.length + 1}`;
+    const newChoice = { answer: choiceName, isSingle: false };
+    this.multiChoiceModel.choices = [...this.multiChoiceModel.choices, newChoice];
     this.updatePropertyModel();
   }
 
   onDeleteChoiceClick(multiChoice: MultiChoiceRecord) {
-    this.choices = this.choices.filter(x => x != multiChoice);
+    this.multiChoiceModel.choices = this.multiChoiceModel.choices.filter(x => x != multiChoice);
     this.updatePropertyModel();
   }
 
@@ -92,8 +106,17 @@ export class ElsaMultiChoiceRecordsProperty {
     this.updatePropertyModel();
   }
 
+  onToggleMultiSelect(e: Event) {
+    console.log('updating multi select option');
+    const checkbox = (e.target as HTMLInputElement);
+    this.multiChoiceModel.isMultiSelect = checkbox.checked;
+    this.updatePropertyModel();
+  }
+
   render() {
-    const choices = this.choices;
+    console.log(this.multiChoiceModel.choices);
+    const choices = this.multiChoiceModel.choices;
+    const isMultiSelectChecked = this.multiChoiceModel.isMultiSelect;
     // const supportedSyntaxes = this.supportedSyntaxes;
     // const json = JSON.stringify(choices, null, 2);
 
@@ -152,7 +175,14 @@ export class ElsaMultiChoiceRecordsProperty {
         > */}
 
           <table class="elsa-min-w-full elsa-divide-y elsa-divide-gray-200">
-            <thead class="elsa-bg-gray-50">
+          <thead class="elsa-bg-gray-50">
+            <tr>
+              <th class="elsa-py-3 elsa-text-left elsa-text-xs elsa-font-medium elsa-text-gray-500 elsa-tracking-wider elsa-w-10/12">Allow multiple answers</th>
+              <th></th>
+              <th><input id="multiChoiceSelect" name="multi-choice-select" type="checkbox" checked={isMultiSelectChecked} value={'true'}
+                onChange={e => this.onToggleMultiSelect(e)}
+                class="focus:elsa-ring-blue-500 elsa-h-8 elsa-w-8 elsa-text-blue-600 elsa-border-gray-300 elsa-rounded" /></th>
+            </tr>
             <tr>
               <th
                 class="elsa-py-3 elsa-text-left elsa-text-xs elsa-font-medium elsa-text-gray-500 elsa-tracking-wider elsa-w-10/12">Answer
