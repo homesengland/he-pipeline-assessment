@@ -78,7 +78,7 @@ namespace Elsa.Server.Features.Workflow.LoadWorkflowActivity
                                     {
                                         var answerList = JsonSerializer.Deserialize<List<string>>(result.Data.QuestionActivityData.Answer);
 
-                                        foreach (var choice in result.Data.QuestionActivityData.Choices)
+                                        foreach (var choice in result.Data.QuestionActivityData.MultipleChoice.Choices)
                                         {
                                             choice.IsSelected = answerList!.Contains(choice.Answer);
                                         }

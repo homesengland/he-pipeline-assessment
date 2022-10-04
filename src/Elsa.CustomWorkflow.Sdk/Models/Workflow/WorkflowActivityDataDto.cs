@@ -32,9 +32,11 @@ namespace Elsa.CustomWorkflow.Sdk.Models.Workflow
         public string? Answer { get; set; }
         public decimal? Decimal { get { return GetDecimal(); } set { SetDecimal(value); } }
 
-        private Choice[] _choices = new List<Choice>().ToArray();
+        private MultipleChoiceModel _multipleChoice = new MultipleChoiceModel();
+        public MultipleChoiceModel MultipleChoice { get { return _multipleChoice; } set { SetMultiSelectModel(value);  } }
+       // private Choice[] _choices = new List<Choice>().ToArray();
 
-        public Choice[] Choices { get { return _choices; } set { SetChoices(value); } }
+        //public Choice[] Choices { get { return _choices; } set { SetChoices(value); } }
 
         public Date Date { get { return GetDate(); } set { SetDate(value); } }
 
@@ -57,6 +59,20 @@ namespace Elsa.CustomWorkflow.Sdk.Models.Workflow
             }
             return new Date();
         }
+        public void SetMultiSelectModel(MultipleChoiceModel value)
+        {
+            if (ActivityType == ActivityTypeConstants.MultipleChoiceQuestion)
+            {
+                _multipleChoice = value;
+                List<string> answerList = new List<string>();
+                if (value != null)
+                {
+                    answerList = value.Choices.Where(c => c.IsSelected).Select(c => c.Answer).ToList();
+                }
+
+                SetAnswer(answerList);
+            }
+        }
         public void SetDate(Date? value)
         {
             if(ActivityType == ActivityTypeConstants.DateQuestion && value != null)
@@ -77,20 +93,20 @@ namespace Elsa.CustomWorkflow.Sdk.Models.Workflow
                 }
             }
         }
-        private void SetChoices(Choice[] value)
-        {
-            if (ActivityType == ActivityTypeConstants.MultipleChoiceQuestion)
-            {
-                _choices = value;
-                List<string> answerList = new List<string>();
-                if (value != null)
-                {
-                    answerList = value.Where(c => c.IsSelected).Select(c => c.Answer).ToList();
-                }
+        //private void SetChoices(Choice[] value)
+        //{
+        //    if (ActivityType == ActivityTypeConstants.MultipleChoiceQuestion)
+        //    {
+        //        _choices = value;
+        //        List<string> answerList = new List<string>();
+        //        if (value != null)
+        //        {
+        //            answerList = value.Where(c => c.IsSelected).Select(c => c.Answer).ToList();
+        //        }
 
-                SetAnswer(answerList);
-            }
-        }
+        //        SetAnswer(answerList);
+        //    }
+        //}
         private decimal? GetDecimal()
         {
             if (ActivityType == ActivityTypeConstants.CurrencyQuestion && Answer != null)
@@ -130,6 +146,13 @@ namespace Elsa.CustomWorkflow.Sdk.Models.Workflow
 
         #endregion
     }
+
+    public class MultipleChoiceModel
+    { 
+        public Choice[] Choices { get; set; } = new List<Choice>().ToArray();
+        public bool IsMultiSelect { get; set; }
+    }
+
 
     public class Choice
     {
