@@ -34,6 +34,6 @@ resources:
     ref: 'master'
 
 stages:
-- template: azure-pipelines.yml@he-workflow
+- template: azure-pipelines-build-and-deploy.yml@he-workflow
   parameters:
     environment: ${{parameters.environment}}
