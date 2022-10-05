@@ -32,11 +32,8 @@ namespace Elsa.CustomWorkflow.Sdk.Models.Workflow
         public string? Answer { get; set; }
         public decimal? Decimal { get { return GetDecimal(); } set { SetDecimal(value); } }
 
-        private MultipleChoiceModel _multipleChoice = new MultipleChoiceModel();
+        private MultipleChoiceModel _multipleChoice = new MultipleChoiceModel(Array.Empty<Choice>());
         public MultipleChoiceModel MultipleChoice { get { return _multipleChoice; } set { SetMultiSelectModel(value);  } }
-       // private Choice[] _choices = new List<Choice>().ToArray();
-
-        //public Choice[] Choices { get { return _choices; } set { SetChoices(value); } }
 
         public Date Date { get { return GetDate(); } set { SetDate(value); } }
 
@@ -93,20 +90,7 @@ namespace Elsa.CustomWorkflow.Sdk.Models.Workflow
                 }
             }
         }
-        //private void SetChoices(Choice[] value)
-        //{
-        //    if (ActivityType == ActivityTypeConstants.MultipleChoiceQuestion)
-        //    {
-        //        _choices = value;
-        //        List<string> answerList = new List<string>();
-        //        if (value != null)
-        //        {
-        //            answerList = value.Where(c => c.IsSelected).Select(c => c.Answer).ToList();
-        //        }
 
-        //        SetAnswer(answerList);
-        //    }
-        //}
         private decimal? GetDecimal()
         {
             if (ActivityType == ActivityTypeConstants.CurrencyQuestion && Answer != null)
@@ -148,9 +132,16 @@ namespace Elsa.CustomWorkflow.Sdk.Models.Workflow
     }
 
     public class MultipleChoiceModel
-    { 
-        public Choice[] Choices { get; set; } = new List<Choice>().ToArray();
-        public bool IsMultiSelect { get; set; }
+    {
+        public MultipleChoiceModel(Choice[] choices, bool isMultiSelect = true)
+        {
+            Choices = choices;
+            IsMultiSelect = isMultiSelect;
+        }
+
+
+        public Choice[] Choices { get; } = new List<Choice>().ToArray();
+        public bool IsMultiSelect { get; }
     }
 
 

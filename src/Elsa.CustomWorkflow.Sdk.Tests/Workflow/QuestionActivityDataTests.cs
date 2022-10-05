@@ -324,7 +324,7 @@ namespace Elsa.CustomWorkflow.Sdk.Tests.Workflow
             //Act
             
             //Assert
-            Assert.Empty(sut.Choices);
+            Assert.Empty(sut.MultipleChoice.Choices);
         }
 
         [Theory]
@@ -359,9 +359,10 @@ namespace Elsa.CustomWorkflow.Sdk.Tests.Workflow
             sut.ActivityType = activityType;
 
             //Act
-            sut.Choices = choices.ToArray();
+            sut.MultipleChoice = new MultipleChoiceModel(choices.ToArray());
+  
             //Assert
-            Assert.Empty(sut.Choices);
+            Assert.Empty(sut.MultipleChoice.Choices);
             Assert.Null(sut.Answer);
         }
 
@@ -397,9 +398,9 @@ namespace Elsa.CustomWorkflow.Sdk.Tests.Workflow
             sut.ActivityType = ActivityTypeConstants.MultipleChoiceQuestion;
 
             //Act
-            sut.Choices = choices.ToArray();
+            sut.MultipleChoice = new MultipleChoiceModel(choices.ToArray());
             //Assert
-            Assert.Equal(sut.Choices, choices.ToArray());
+            Assert.Equal(sut.MultipleChoice.Choices, choices.ToArray());
             Assert.Equal(sut.Answer, JsonSerializer.Serialize(answerList));
         }
 
