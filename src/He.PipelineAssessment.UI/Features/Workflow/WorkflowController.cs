@@ -39,6 +39,7 @@ namespace He.PipelineAssessment.UI.Features.Workflow
             }
             catch (Exception e)
             {
+                _logger.LogError(e.Message);
                 return RedirectToAction("Index", "Error", new { message = e.Message });
             }
         }
@@ -53,6 +54,7 @@ namespace He.PipelineAssessment.UI.Features.Workflow
             }
             catch (Exception e)
             {
+                _logger.LogError(e.Message);
                 return RedirectToAction("Index", "Error", new { message = e.Message });
             }
         }
@@ -75,6 +77,7 @@ namespace He.PipelineAssessment.UI.Features.Workflow
             }
             catch (Exception e)
             {
+                _logger.LogError(e.Message);
                 return RedirectToAction("Index", "Error", new { message = e.Message });
             }
         }

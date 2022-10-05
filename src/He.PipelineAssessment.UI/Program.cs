@@ -30,6 +30,7 @@ builder.Services.AddScoped<NonceConfig>();
 
 
 builder.Services.AddMediatR(typeof(Program).Assembly);
+builder.Services.AddApplicationInsightsTelemetry();
 
 var app = builder.Build();
 

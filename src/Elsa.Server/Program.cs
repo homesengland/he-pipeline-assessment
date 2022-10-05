@@ -57,6 +57,7 @@ builder.Services.AddScoped<IPipelineAssessmentRepository, PipelineAssessmentRepo
 builder.Services.AddJavaScriptTypeDefinitionProvider<CustomTypeDefinitionProvider>();
 
 builder.Services.AddMediatR(typeof(Program).Assembly);
+builder.Services.AddApplicationInsightsTelemetry();
 builder.Services.AddScoped<IDateTimeProvider, DateTimeProvider>();
 
 //builder.Services.AddScoped<ISaveAndContinueHandler, SaveAndContinueHandler>();
