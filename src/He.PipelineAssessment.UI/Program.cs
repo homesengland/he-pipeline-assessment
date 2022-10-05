@@ -1,8 +1,11 @@
 using Elsa.CustomWorkflow.Sdk.HttpClients;
+using He.PipelineAssessment.Infrastructure.Data;
 using He.PipelineAssessment.UI;
 using He.PipelineAssessment.UI.Features.Workflow.SaveAndContinue;
 using MediatR;
+using Microsoft.AspNetCore.DataProtection;
 using Microsoft.AspNetCore.Mvc.Razor;
+using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -31,6 +34,9 @@ builder.Services.AddScoped<NonceConfig>();
 
 builder.Services.AddMediatR(typeof(Program).Assembly);
 builder.Services.AddApplicationInsightsTelemetry();
+
+builder.Services.AddScoped<DbContext>(provider => provider.GetRequiredService<PipelineAssessmentContext>());
+builder.Services.AddDataProtection().PersistKeysToDbContext<PipelineAssessmentContext>();
 
 var app = builder.Build();
 
