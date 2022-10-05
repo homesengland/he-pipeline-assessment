@@ -1,0 +1,51 @@
+﻿@model He.PipelineAssessment.UI.Features.Workflow.SaveAndContinue.SaveAndContinueCommand
+
+<div class="govuk-form-group">
+    <fieldset class="govuk-fieldset" aria-describedby="waste-hint">
+        <legend class="govuk-fieldset__legend govuk-fieldset__legend--l">
+            <h1 class="govuk-heading-l">
+                @Html.DisplayTextFor(m => m.Data.QuestionActivityData!.Title)
+            </h1>
+
+            <label class="govuk-label govuk-label--m">
+                @Html.DisplayTextFor(m => m.Data.QuestionActivityData!.Question)
+            </label>
+            @if (!string.IsNullOrEmpty(Model.Data.QuestionActivityData!.QuestionHint))
+            {
+                <div id="event-name-hint" class="govuk-hint">
+                    @Model.Data.QuestionActivityData.QuestionHint
+                </div>
+            }
+        </legend>
+        <div id="waste-hint" class="govuk-hint">
+            Select all that apply
+        </div>
+        <div class="govuk-radios" data-module="govuk-radios">
+            @for (int i = 0; i < Model.Data.QuestionActivityData.MultipleChoice.Choices.Count(); i++)
+            {
+                <div class="govuk-radios__item">
+                    @Html.HiddenFor(m => m.Data.QuestionActivityData!.MultipleChoice.Choices[i].Answer)
+                    <input type="radio" class="govuk-radios__input"  asp-for="Data.QuestionActivityData!.MultipleChoice.Choices[i]" value="Model.Data.QuestionActivityData!.MultipleChoice.Choices[i].IsSelected" />
+                    @Html.Label(Model.Data.QuestionActivityData!.MultipleChoice.Choices[i].Answer, Model.Data.QuestionActivityData.MultipleChoice.Choices[i].Answer, new {@class = "govuk-label govuk-radios__label"})
+                </div>
+            }
+        </div>
+    </fieldset>
+    @if (!string.IsNullOrEmpty(Model.Data.QuestionActivityData.QuestionGuidance))
+    {
+        <br />
+        <details class="govuk-details" data-module="govuk-details">
+            <summary class="govuk-details__summary">
+                <span class="govuk-details__summary-text">
+                    Question guidance
+                </span>
+            </summary>
+            <div class="govuk-details__text">
+                @Model.Data.QuestionActivityData.QuestionGuidance
+            </div>
+        </details>
+    }
+    <br />
+
+    <input id="Next" type="submit" value="Save and continue" name="Next" class="govuk-button" />
+</div>

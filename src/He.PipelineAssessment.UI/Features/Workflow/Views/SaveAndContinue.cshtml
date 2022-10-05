@@ -21,9 +21,13 @@
         {
             @await Html.PartialAsync("_CurrencyQuestion",Model)
         }
-        if (Model.Data.QuestionActivityData!.ActivityType == ActivityTypeConstants.MultipleChoiceQuestion)
+        if (Model.Data.QuestionActivityData!.ActivityType == ActivityTypeConstants.MultipleChoiceQuestion && Model.Data.QuestionActivityData!.MultipleChoice.IsMultiSelect)
         {
-            @await Html.PartialAsync("_MultipleChoiceQuestion",Model)
+            @await Html.PartialAsync("_MultipleChoiceCheckBoxQuestion",Model)
+        }
+        if (Model.Data.QuestionActivityData!.ActivityType == ActivityTypeConstants.MultipleChoiceQuestion && !Model.Data.QuestionActivityData!.MultipleChoice.IsMultiSelect)
+        {
+            @await Html.PartialAsync("_MultipleChoiceRadioQuestion",Model)
         }
         if (Model.Data.QuestionActivityData!.ActivityType == ActivityTypeConstants.DateQuestion)
         {

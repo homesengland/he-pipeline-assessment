@@ -33,7 +33,7 @@ namespace Elsa.CustomWorkflow.Sdk.Models.Workflow
         public decimal? Decimal { get { return GetDecimal(); } set { SetDecimal(value); } }
 
         private MultipleChoiceModel _multipleChoice = new MultipleChoiceModel(Array.Empty<Choice>());
-        public MultipleChoiceModel MultipleChoice { get { return _multipleChoice; } set { SetMultiSelectModel(value);  } }
+        public MultipleChoiceModel MultipleChoice { get { return _multipleChoice; } set { SetMultipleChoiceModel(value);  } }
 
         public Date Date { get { return GetDate(); } set { SetDate(value); } }
 
@@ -56,7 +56,7 @@ namespace Elsa.CustomWorkflow.Sdk.Models.Workflow
             }
             return new Date();
         }
-        public void SetMultiSelectModel(MultipleChoiceModel value)
+        public void SetMultipleChoiceModel(MultipleChoiceModel value)
         {
             if (ActivityType == ActivityTypeConstants.MultipleChoiceQuestion)
             {
@@ -70,6 +70,7 @@ namespace Elsa.CustomWorkflow.Sdk.Models.Workflow
                 SetAnswer(answerList);
             }
         }
+
         public void SetDate(Date? value)
         {
             if(ActivityType == ActivityTypeConstants.DateQuestion && value != null)
