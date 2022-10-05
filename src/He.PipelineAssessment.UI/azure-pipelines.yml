@@ -5,9 +5,6 @@
 
 trigger:
   - none
-  
-variables:
-  tag: '$(Build.BuildId)'
 
 pool:
   vmImage: 'ubuntu-18.04'
