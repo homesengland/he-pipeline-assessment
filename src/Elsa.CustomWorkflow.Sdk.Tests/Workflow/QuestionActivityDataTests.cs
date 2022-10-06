@@ -317,13 +317,13 @@ namespace Elsa.CustomWorkflow.Sdk.Tests.Workflow
         
         [Theory]
         [AutoMoqData]
-        public void GetChoicesReturnsEmptyListOfChoices_GivenNoChoicesSet(QuestionActivityData sut)
+        public void GetMultipleChoiceReturnsDefault_GivenNoValueSet(QuestionActivityData sut)
         {
             //Arrange
 
             //Act
-            
-            //Assert
+
+            //Assert            
             Assert.Empty(sut.MultipleChoice.Choices);
         }
 
@@ -359,7 +359,7 @@ namespace Elsa.CustomWorkflow.Sdk.Tests.Workflow
             sut.ActivityType = activityType;
 
             //Act
-            sut.MultipleChoice = new MultipleChoiceModel(choices.ToArray());
+            sut.MultipleChoice = new MultipleChoiceModel { Choices = choices };
   
             //Assert
             Assert.Empty(sut.MultipleChoice.Choices);
@@ -398,7 +398,7 @@ namespace Elsa.CustomWorkflow.Sdk.Tests.Workflow
             sut.ActivityType = ActivityTypeConstants.MultipleChoiceQuestion;
 
             //Act
-            sut.MultipleChoice = new MultipleChoiceModel(choices.ToArray());
+            sut.MultipleChoice = new MultipleChoiceModel() { Choices = choices };
             //Assert
             Assert.Equal(sut.MultipleChoice.Choices, choices.ToArray());
             Assert.Equal(sut.Answer, JsonSerializer.Serialize(answerList));

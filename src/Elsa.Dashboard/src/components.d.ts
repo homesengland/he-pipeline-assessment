@@ -12,6 +12,11 @@ export namespace Components {
         "propertyDescriptor": ActivityPropertyDescriptor;
         "propertyModel": ActivityDefinitionProperty;
     }
+    interface ElsaSinglechoiceRecordsProperty {
+        "activityModel": ActivityModel;
+        "propertyDescriptor": ActivityPropertyDescriptor;
+        "propertyModel": ActivityDefinitionProperty;
+    }
 }
 declare global {
     interface HTMLElsaMultichoiceRecordsPropertyElement extends Components.ElsaMultichoiceRecordsProperty, HTMLStencilElement {
@@ -20,8 +25,15 @@ declare global {
         prototype: HTMLElsaMultichoiceRecordsPropertyElement;
         new (): HTMLElsaMultichoiceRecordsPropertyElement;
     };
+    interface HTMLElsaSinglechoiceRecordsPropertyElement extends Components.ElsaSinglechoiceRecordsProperty, HTMLStencilElement {
+    }
+    var HTMLElsaSinglechoiceRecordsPropertyElement: {
+        prototype: HTMLElsaSinglechoiceRecordsPropertyElement;
+        new (): HTMLElsaSinglechoiceRecordsPropertyElement;
+    };
     interface HTMLElementTagNameMap {
         "elsa-multichoice-records-property": HTMLElsaMultichoiceRecordsPropertyElement;
+        "elsa-singlechoice-records-property": HTMLElsaSinglechoiceRecordsPropertyElement;
     }
 }
 declare namespace LocalJSX {
@@ -30,8 +42,14 @@ declare namespace LocalJSX {
         "propertyDescriptor"?: ActivityPropertyDescriptor;
         "propertyModel"?: ActivityDefinitionProperty;
     }
+    interface ElsaSinglechoiceRecordsProperty {
+        "activityModel"?: ActivityModel;
+        "propertyDescriptor"?: ActivityPropertyDescriptor;
+        "propertyModel"?: ActivityDefinitionProperty;
+    }
     interface IntrinsicElements {
         "elsa-multichoice-records-property": ElsaMultichoiceRecordsProperty;
+        "elsa-singlechoice-records-property": ElsaSinglechoiceRecordsProperty;
     }
 }
 export { LocalJSX as JSX };
@@ -39,6 +57,7 @@ declare module "@stencil/core" {
     export namespace JSX {
         interface IntrinsicElements {
             "elsa-multichoice-records-property": LocalJSX.ElsaMultichoiceRecordsProperty & JSXBase.HTMLAttributes<HTMLElsaMultichoiceRecordsPropertyElement>;
+            "elsa-singlechoice-records-property": LocalJSX.ElsaSinglechoiceRecordsProperty & JSXBase.HTMLAttributes<HTMLElsaSinglechoiceRecordsPropertyElement>;
         }
     }
 }

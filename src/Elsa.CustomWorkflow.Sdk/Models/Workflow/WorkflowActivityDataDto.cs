@@ -32,8 +32,11 @@ namespace Elsa.CustomWorkflow.Sdk.Models.Workflow
         public string? Answer { get; set; }
         public decimal? Decimal { get { return GetDecimal(); } set { SetDecimal(value); } }
 
-        private MultipleChoiceModel _multipleChoice = new MultipleChoiceModel(Array.Empty<Choice>());
+        private MultipleChoiceModel _multipleChoice = new MultipleChoiceModel();
         public MultipleChoiceModel MultipleChoice { get { return _multipleChoice; } set { SetMultipleChoiceModel(value);  } }
+
+        private SingleChoiceModel _singleChoice = new SingleChoiceModel();
+        public SingleChoiceModel SingleChoice { get { return _singleChoice; } set { SetSingleChoiceModel(value); } }
 
         public Date Date { get { return GetDate(); } set { SetDate(value); } }
 
@@ -68,6 +71,19 @@ namespace Elsa.CustomWorkflow.Sdk.Models.Workflow
                 }
 
                 SetAnswer(answerList);
+            }
+        }
+
+        public void SetSingleChoiceModel(SingleChoiceModel value)
+        {
+            if (ActivityType == ActivityTypeConstants.SingleChoiceQuestion)
+            {
+                _singleChoice = value;
+                Answer = null;
+                if (value != null)
+                {
+                    Answer = value.SelectedAnswer;
+                }
             }
         }
 
@@ -134,15 +150,13 @@ namespace Elsa.CustomWorkflow.Sdk.Models.Workflow
 
     public class MultipleChoiceModel
     {
-        public MultipleChoiceModel(Choice[] choices, bool isMultiSelect = true)
-        {
-            Choices = choices;
-            IsMultiSelect = isMultiSelect;
-        }
+        public List<Choice> Choices { get; set; } = new List<Choice>();
+    }
 
-
-        public Choice[] Choices { get; } = new List<Choice>().ToArray();
-        public bool IsMultiSelect { get; }
+    public class SingleChoiceModel
+    {
+        public List<Choice> Choices { get; set; } = new List<Choice>();
+        public string SelectedAnswer { get; set; } = null!;
     }
 
 

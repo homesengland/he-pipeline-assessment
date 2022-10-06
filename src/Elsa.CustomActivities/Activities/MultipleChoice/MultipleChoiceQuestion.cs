@@ -21,7 +21,6 @@ namespace Elsa.CustomActivities.Activities.MultipleChoice
     public class MultipleChoiceModel
     {
         public ICollection<MultiChoiceRecord> Choices { get; set; } = new List<MultiChoiceRecord>();
-        public bool IsMultiSelect { get; set; } = true;
     }
 
     public record MultiChoiceRecord(string Answer, bool IsSingle);
