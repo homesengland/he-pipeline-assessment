@@ -23,6 +23,7 @@ services:
     environment:
         - Urls__ElsaServer=http://elsaserver:5555/
         - ASPNETCORE_ENVIRONMENT=Development
+        - ConnectionStrings__SqlDatabase=Server=elsadatabase;Database=PipelineAssessment;User Id=sa;password=Pass@word;Encrypt=false
   elsaserver:
     container_name: elsaserver
     image: ${DOCKER_REGISTRY-}elsaserver
