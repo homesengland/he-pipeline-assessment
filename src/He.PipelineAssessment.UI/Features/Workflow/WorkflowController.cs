@@ -24,6 +24,7 @@ namespace He.PipelineAssessment.UI.Features.Workflow
         }
 
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public async Task<IActionResult> StartWorkflow([FromForm] StartWorkflowCommand command)
         {
             try
