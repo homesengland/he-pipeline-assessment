@@ -1,7 +1,7 @@
 ﻿using Elsa.CustomWorkflow.Sdk.Models.Workflow;
 using System.Text;
 using System.Text.Json;
-using Elsa.CustomWorkflow.Sdk.Models;
+using Microsoft.Extensions.Logging;
 
 namespace Elsa.CustomWorkflow.Sdk.HttpClients
 {
@@ -16,10 +16,12 @@ namespace Elsa.CustomWorkflow.Sdk.HttpClients
     public class ElsaServerHttpClient : IElsaServerHttpClient
     {
         private readonly IHttpClientFactory _httpClientFactory;
+        private readonly ILogger<ElsaServerHttpClient> _logger;
 
-        public ElsaServerHttpClient(IHttpClientFactory httpClientFactoryFactory)
+        public ElsaServerHttpClient(IHttpClientFactory httpClientFactoryFactory, ILogger<ElsaServerHttpClient> logger)
         {
             _httpClientFactory = httpClientFactoryFactory;
+            _logger = logger;
         }
 
         public async Task<WorkflowNextActivityDataDto?> PostStartWorkflow(StartWorkflowCommandDto model)
@@ -38,12 +40,11 @@ namespace Elsa.CustomWorkflow.Sdk.HttpClients
                 data = await response.Content.ReadAsStringAsync().ConfigureAwait(false);
                 if (!response.IsSuccessStatusCode)
                 {
-                    //TODO: Get this in logging
-                    //throw new ApplicationException($"StatusCode='{response.StatusCode}'," +
-                    //                                                  $"\n Message= '{data}'," +
-                    //                                                  $"\n Url='{request.RequestUri}'");
+                    _logger.LogError($"StatusCode='{response.StatusCode}'," +
+                                                                      $"\n Message= '{data}'," +
+                                                                      $"\n Url='{request.RequestUri}'");
 
-                    return null;
+                    throw new ApplicationException("Failed to start workflow");
                 }
             }
 
@@ -66,10 +67,9 @@ namespace Elsa.CustomWorkflow.Sdk.HttpClients
                 data = await response.Content.ReadAsStringAsync().ConfigureAwait(false);
                 if (!response.IsSuccessStatusCode)
                 {
-                    //TODO: Get this in logging
-                    //throw new ApplicationException($"StatusCode='{response.StatusCode}'," +
-                    //                               $"\n Message= '{data}'," +
-                    //                               $"\n Url='{request.RequestUri}'");
+                    _logger.LogError($"StatusCode='{response.StatusCode}'," +
+                                     $"\n Message= '{data}'," +
+                                     $"\n Url='{request.RequestUri}'");
 
                     return null;
                 }
@@ -90,10 +90,9 @@ namespace Elsa.CustomWorkflow.Sdk.HttpClients
                 data = await response.Content.ReadAsStringAsync().ConfigureAwait(false);
                 if (!response.IsSuccessStatusCode)
                 {
-                    //TODO: Get this in logging
-                    //throw new ApplicationException($"StatusCode='{response.StatusCode}'," +
-                    //                               $"\n Message= '{data}'," +
-                    //                               $"\n Url='{relativeUri}'"); //TODO: Get the full url here
+                    _logger.LogError($"StatusCode='{response.StatusCode}'," +
+                                     $"\n Message= '{data}'," +
+                                     $"\n Url='{relativeUri}'");
 
                     return default;
                 }

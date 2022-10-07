@@ -1,10 +1,16 @@
 using Elsa.CustomWorkflow.Sdk.HttpClients;
+using He.PipelineAssessment.Infrastructure.Data;
 using He.PipelineAssessment.UI;
 using He.PipelineAssessment.UI.Features.Workflow.SaveAndContinue;
 using MediatR;
+using Microsoft.AspNetCore.DataProtection;
 using Microsoft.AspNetCore.Mvc.Razor;
+using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
+
+
+var pipelineAssessmentConnectionString = builder.Configuration.GetConnectionString("SqlDatabase");
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();
@@ -30,8 +36,23 @@ builder.Services.AddScoped<NonceConfig>();
 
 
 builder.Services.AddMediatR(typeof(Program).Assembly);
+builder.Services.AddApplicationInsightsTelemetry();
+
+builder.Services.AddDbContext<PipelineAssessmentContext>(config =>
+    config.UseSqlServer(pipelineAssessmentConnectionString,
+        x => x.MigrationsAssembly("He.PipelineAssessment.Infrastructure")));
+
+builder.Services.AddScoped<DbContext>(provider => provider.GetRequiredService<PipelineAssessmentContext>());
+builder.Services.AddDataProtection().PersistKeysToDbContext<PipelineAssessmentContext>();
 
 var app = builder.Build();
+
+if (app.Environment.IsDevelopment())
+{
+    using var scope = app.Services.CreateScope();
+    var context = scope.ServiceProvider.GetRequiredService<PipelineAssessmentContext>();
+    context.Database.Migrate();
+}
 
 // Configure the HTTP request pipeline.
 if (!app.Environment.IsDevelopment())
