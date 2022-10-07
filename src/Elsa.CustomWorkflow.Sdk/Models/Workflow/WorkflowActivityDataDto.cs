@@ -36,7 +36,7 @@ namespace Elsa.CustomWorkflow.Sdk.Models.Workflow
         public MultipleChoiceModel MultipleChoice { get { return _multipleChoice; } set { SetMultipleChoiceModel(value);  } }
 
         private SingleChoiceModel _singleChoice = new SingleChoiceModel();
-        public SingleChoiceModel SingleChoice { get { return _singleChoice; } set { SetSingleChoiceModel(value); } }
+        public SingleChoiceModel SingleChoice { get { return GetSingleChoiceModel(); } set { SetSingleChoiceModel(value); } }
 
         public Date Date { get { return GetDate(); } set { SetDate(value); } }
 

@@ -84,16 +84,11 @@ namespace Elsa.Server.Features.Workflow.LoadWorkflowActivity
                                         }
                                     }
 
-                                    //// Restore preserved checkboxes from previous page load
-                                    //if (result.Data.ActivityType == Constants.SingleChoiceQuestion && !string.IsNullOrEmpty(result.Data.QuestionActivityData.Answer))
-                                    //{
-                                    //    var answerList = JsonSerializer.Deserialize<List<string>>(result.Data.QuestionActivityData.Answer);
-
-                                    //    foreach (var choice in result.Data.QuestionActivityData.SingleChoice.Choices)
-                                    //    {
-                                    //        choice.IsSelected = answerList!.Contains(choice.Answer);
-                                    //    }
-                                    //}
+                                    // Restore preserved checkboxes from previous page load
+                                    if (result.Data.ActivityType == Constants.SingleChoiceQuestion && !string.IsNullOrEmpty(result.Data.QuestionActivityData.Answer))
+                                    {
+                                        result.Data.QuestionActivityData.SingleChoice.SelectedAnswer = result.Data.QuestionActivityData.Answer;
+                                    }
                                 }
                                 else
                                 {
