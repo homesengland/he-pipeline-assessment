@@ -79,18 +79,18 @@ export class ElsaSingleChoiceRecordsProperty {
 
   onAddChoiceClick() {
     const choiceName = `Choice ${this.singleChoiceModel.choices.length + 1}`;
-    const newChoice = { answer: choiceName, isSingle: false };
+    const newChoice = { answer: choiceName};
     this.singleChoiceModel = { ...this.singleChoiceModel, choices: [...this.singleChoiceModel.choices, newChoice] };
     this.updatePropertyModel();
   }
 
-  onDeleteChoiceClick(multiChoice: SingleChoiceRecord) {
-    this.singleChoiceModel = { ...this.singleChoiceModel, choices: this.singleChoiceModel.choices.filter(x => x != multiChoice) };
+  onDeleteChoiceClick(singleChoice: SingleChoiceRecord) {
+    this.singleChoiceModel = { ...this.singleChoiceModel, choices: this.singleChoiceModel.choices.filter(x => x != singleChoice) };
     this.updatePropertyModel();
   }
 
-  onChoiceNameChanged(e: Event, multiChoice: SingleChoiceRecord) {
-    multiChoice.answer = (e.currentTarget as HTMLInputElement).value.trim();
+  onChoiceNameChanged(e: Event, singleChoice: SingleChoiceRecord) {
+    singleChoice.answer = (e.currentTarget as HTMLInputElement).value.trim();
     this.updatePropertyModel();
   }
 
@@ -99,20 +99,20 @@ export class ElsaSingleChoiceRecordsProperty {
     // const supportedSyntaxes = this.supportedSyntaxes;
     // const json = JSON.stringify(choices, null, 2);
 
-    const renderChoiceEditor = (multiChoice: SingleChoiceRecord, index: number) => {
+    const renderChoiceEditor = (singleChoice: SingleChoiceRecord, index: number) => {
       // const expression = multiChoice.answer;
       // const monacoLanguage = mapSyntaxToLanguage(syntax);
       // let expressionEditor = null;
       console.log("moo render");
-      console.log(multiChoice);
+      console.log(singleChoice);
       return (
         <tr key={`choice-${index}`}>
           <td class="elsa-py-2 elsa-pr-5">
-            <input type="text" value={multiChoice.answer} onChange={e => this.onChoiceNameChanged(e, multiChoice)}
+            <input type="text" value={singleChoice.answer} onChange={e => this.onChoiceNameChanged(e, singleChoice)}
               class="focus:elsa-ring-blue-500 focus:elsa-border-blue-500 elsa-block elsa-w-full elsa-min-w-0 elsa-rounded-md sm:elsa-text-sm elsa-border-gray-300" />
           </td>
           <td class="elsa-pt-1 elsa-pr-2 elsa-text-right">
-            <button type="button" onClick={() => this.onDeleteChoiceClick(multiChoice)}
+            <button type="button" onClick={() => this.onDeleteChoiceClick(singleChoice)}
               class="elsa-h-5 elsa-w-5 elsa-mx-auto elsa-outline-none focus:elsa-outline-none">
               <TrashCanIcon options={this.iconProvider.getOptions()} />
             </button>

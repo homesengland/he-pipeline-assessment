@@ -56,7 +56,10 @@
 }
 
         function MyCustomInputDriver(elsaStudio, elementName) {
+          console.log("creating input driver for " + elementName)
             this.display = (activity, property) => {
+              console.log('Logging Display');
+              console.log(this.display);
                 var prop = (0, getOrCreateProperty)(activity, property.name);
                 var multichoice = document.createElement(elementName);
                 multichoice.activityModel = activity;

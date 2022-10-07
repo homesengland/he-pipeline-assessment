@@ -108,6 +108,15 @@ namespace Elsa.CustomWorkflow.Sdk.Models.Workflow
             }
         }
 
+        private SingleChoiceModel GetSingleChoiceModel()
+        {
+            if(_singleChoice.SelectedAnswer != Answer && Answer != null)
+            {
+                _singleChoice.SelectedAnswer = Answer;
+            }
+            return _singleChoice;
+        }
+
         private decimal? GetDecimal()
         {
             if (ActivityType == ActivityTypeConstants.CurrencyQuestion && Answer != null)

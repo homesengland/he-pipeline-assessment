@@ -32,6 +32,7 @@ builder.Services
     .AddElsa(elsa => elsa
         .UseEntityFrameworkPersistence(ef => ef.UseSqlServer(elsaConnectionString, typeof(Elsa.Persistence.EntityFramework.SqlServer.Migrations.Initial)))
         .AddActivity<MultipleChoiceQuestion>()
+        .AddActivity<SingleChoiceQuestion>()
         .AddActivity<CurrencyQuestion>()
         .AddActivity<TextQuestion>()
         .AddActivity<DateQuestion>()

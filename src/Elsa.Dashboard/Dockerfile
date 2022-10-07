@@ -18,6 +18,8 @@ COPY ["Elsa.CustomInfrastructure/Elsa.CustomInfrastructure.csproj", "Elsa.Custom
 RUN dotnet restore "Elsa.Dashboard/Elsa.Dashboard.csproj"
 COPY . .
 WORKDIR "/src/Elsa.Dashboard"
+RUN npm install
+RUN npm run build
 RUN dotnet build "Elsa.Dashboard.csproj" -c Debug -o /app/build
 
 FROM build AS publish
