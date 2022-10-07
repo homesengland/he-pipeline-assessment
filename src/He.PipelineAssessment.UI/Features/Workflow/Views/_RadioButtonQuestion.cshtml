@@ -27,8 +27,6 @@
                 int iterrator = 1;
                 string isChecked = choice.IsSelected ? "checked" : "";
                 <div class="govuk-radios__item">
-@*                    @Html.HiddenFor(m => m.Data.QuestionActivityData!.MultipleChoice.Choices[i].IsSelected)
-                    @Html.HiddenFor(m => m.Data.QuestionActivityData!.MultipleChoice.Choices[i].IsSingle)*@
                     @Html.HiddenFor(m => choice.Answer)
                     @Html.RadioButtonFor(m => m.Data.QuestionActivityData!.SingleChoice.SelectedAnswer, choice.Answer, new {@class="govuk-radios__input", @id="radio_multi_select_"+iterrator, @checked = isChecked})
 @*                   <input type="radio" 

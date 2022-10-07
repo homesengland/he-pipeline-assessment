@@ -23,13 +23,25 @@
         <div class="govuk-checkboxes" data-module="govuk-checkboxes">
             @for (int i = 0; i < Model.Data.QuestionActivityData.MultipleChoice.Choices.Count(); i++)
             {
-                
+                var checkedBehaviour = Model.Data.QuestionActivityData.MultipleChoice.Choices[i].IsSingle ? "exclusive" : "";
                 <div class="govuk-checkboxes__item">
                     @Html.HiddenFor(m => m.Data.QuestionActivityData!.MultipleChoice!.Choices[i].Answer)
                     @Html.CheckBoxFor(m => m.Data.QuestionActivityData!.MultipleChoice.Choices[i].IsSelected, new {@class = "govuk-checkboxes__input"})
-                    @Html.Label(Model.Data.QuestionActivityData!.MultipleChoice.Choices[i].Answer, Model.Data.QuestionActivityData.MultipleChoice.Choices[i].Answer, new {@class = "govuk-label govuk-checkboxes__label"})
+                    @Html.Label(Model.Data.QuestionActivityData!.MultipleChoice.Choices[i].Answer, Model.Data.QuestionActivityData.MultipleChoice.Choices[i].Answer, new {@class = "govuk-label govuk-checkboxes__label", data_behaviour=checkedBehaviour})
                 </div>
             }
+@*            @foreach (var checkbox in Model.Data.QuestionActivityData.MultipleChoice.Choices)
+                {
+                int i = 1;
+                var checkedBehaviour = checkbox.IsSingle ? "exclusive" : "";
+                <div class="govuk-checkboxes__item">
+                    <input type="hidden" asp-for="@checkbox.Answer"/>
+                    <input asp-for="@checkbox.IsSelected" name="checkboxes_+@i" type="checkbox" class="govuk-checkboxes__input" data-behaviour="@checkedBehaviour">
+                    <label class="govuk-label govuk-checkboxes__label" for="checkbox">@checkbox.Answer</label>
+
+                </div>
+                i++;
+                }*@
         </div>
     </fieldset>
     @if (!string.IsNullOrEmpty(Model.Data.QuestionActivityData.QuestionGuidance))
