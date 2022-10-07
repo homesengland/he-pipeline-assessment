@@ -5,19 +5,6 @@
 
 trigger:
   - none
-  
-parameters:
-  - name: environment
-    displayName: The target environment
-    type: string
-    default: dev
-    values:
-    - dev
-    - qa
-    - uat
-
-variables:
-  tag: '$(Build.BuildId)'
 
 pool:
   vmImage: 'ubuntu-18.04'
@@ -34,6 +21,4 @@ resources:
     ref: 'master'
 
 stages:
-- template: azure-pipelines.yml@he-workflow
-  parameters:
-    environment: ${{parameters.environment}}
+- template: azure-pipelines-build.yml@he-workflow
