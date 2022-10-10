@@ -6,6 +6,9 @@
 trigger:
   - none
 
+variables:
+  tag: '$(Build.BuildNumber)'
+
 pool:
   vmImage: 'ubuntu-18.04'
 
@@ -21,4 +24,4 @@ resources:
     ref: 'master'
 
 stages:
-- template: azure-pipelines.yml@pipeline-assessment-deployment
+- template: azure-pipelines-build-and-deploy.yml@pipeline-assessment-deployment
