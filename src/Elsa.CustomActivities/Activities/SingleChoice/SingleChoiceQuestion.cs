@@ -14,8 +14,7 @@ namespace Elsa.CustomActivities.Activities.SingleChoice
         [ActivityInput(Label = "Single-choice questions", Hint = "Possible assessment screen answers.",
             UIHint = "singleChoice-record-builder", DefaultSyntax = "Json", IsDesignerCritical = true)]
         public SingleChoiceModel SingleChoice { get; set; } = new SingleChoiceModel();
-        //public ICollection<MultiChoiceRecord> Choices { get; set; } = new List<MultiChoiceRecord>();
-        //public bool IsMultiSelect { get; set; } = true;
+
     }
 
     public class SingleChoiceModel
