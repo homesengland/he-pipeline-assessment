@@ -8,13 +8,12 @@ namespace Elsa.CustomActivities.Activities.MultipleChoice
         Category = "Homes England Activities",
         Description = "Assessment screen checkbox question",
         Outcomes = new[] { OutcomeNames.Done },
-        DisplayName = "Checkbox Question",
-        Type = @"Checkbox Question"
+        DisplayName = "Checkbox Question"
     )]
     public class MultipleChoiceQuestion : CustomQuestion
     {
         [ActivityInput(Label = "Checkbox questions", Hint = "Possible assessment screen answers.",
-            UIHint = "multiChoice-record-builder", DefaultSyntax = "Json", IsDesignerCritical = true, Name ="Checkbox Question")]
+            UIHint = "multiChoice-record-builder", DefaultSyntax = "Json", IsDesignerCritical = true)]
         public MultipleChoiceModel MultipleChoice { get; set; } = new MultipleChoiceModel();
         //public ICollection<MultiChoiceRecord> Choices { get; set; } = new List<MultiChoiceRecord>();
         //public bool IsMultiSelect { get; set; } = true;

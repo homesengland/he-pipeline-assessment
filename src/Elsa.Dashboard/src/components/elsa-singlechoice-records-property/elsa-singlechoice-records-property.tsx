@@ -11,10 +11,6 @@ import {
   SyntaxNames
 } from '../../models/elsa-interfaces';
 
-//import {
-//  SyntaxNames
-//} from '@elsa-workflows/elsa-workflows-studio'
-
 import {
   SingleChoiceRecord,
   SingleChoiceActivity
@@ -47,20 +43,16 @@ export class ElsaSingleChoiceRecordsProperty {
   @Prop() activityModel: ActivityModel;
   @Prop() propertyDescriptor: ActivityPropertyDescriptor;
   @Prop() propertyModel: ActivityDefinitionProperty;
-  //@State() choices: Array<MultiChoiceRecord> = []; //TODO - Remove
   @State() singleChoiceModel: SingleChoiceActivity = new SingleChoiceActivity();
   @State() iconProvider = new IconProvider();
 
-  // singleLineProperty: Components.ElsaSingleLineProperty;
   supportedSyntaxes: Array<string> = [SyntaxNames.JavaScript, SyntaxNames.Liquid];
   multiExpressionEditor: HTMLElsaMultiExpressionEditorElement;
   syntaxMultiChoiceCount: number = 0;
 
   async componentWillLoad() {
-    console.log('component will load');
     const propertyModel = this.propertyModel;
     const choicesJson = propertyModel.expressions[SyntaxNames.Json]
-    //this.choices = parseJson(choicesJson) || [];
     this.singleChoiceModel = parseJson(choicesJson) || this.defaultActivityModel();
   }
 
@@ -71,10 +63,7 @@ export class ElsaSingleChoiceRecordsProperty {
   }
 
   updatePropertyModel() {
-    console.log(this.propertyModel);
-    //console.log(this.choices);
     this.propertyModel.expressions[SyntaxNames.Json] = JSON.stringify(this.singleChoiceModel);
-    // this.multiExpressionEditor.expressions[SyntaxNames.Json] = JSON.stringify(this.choices, null, 2);
   }
 
   onAddChoiceClick() {
@@ -96,15 +85,9 @@ export class ElsaSingleChoiceRecordsProperty {
 
   render() {
     const choices = this.singleChoiceModel.choices;
-    // const supportedSyntaxes = this.supportedSyntaxes;
-    // const json = JSON.stringify(choices, null, 2);
 
     const renderChoiceEditor = (singleChoice: SingleChoiceRecord, index: number) => {
-      // const expression = multiChoice.answer;
-      // const monacoLanguage = mapSyntaxToLanguage(syntax);
-      // let expressionEditor = null;
-      console.log("moo render");
-      console.log(singleChoice);
+
       return (
         <tr key={`choice-${index}`}>
           <td class="elsa-py-2 elsa-pr-5">
@@ -121,27 +104,8 @@ export class ElsaSingleChoiceRecordsProperty {
       );
     };
 
-    // const context: IntellisenseContext = {
-    //   activityTypeName: this.activityModel.type,
-    //   propertyName: this.propertyDescriptor.name
-    // };
-    console.log("moo");
-    console.log(choices);
     return (
       <div>
-        {/* 
-        <elsa-multi-expression-editor
-          ref={el => this.multiExpressionEditor = el}
-          label={this.propertyDescriptor.label}
-          defaultSyntax={SyntaxNames.Literal}
-          supportedSyntaxes={[SyntaxNames.Literal]}
-          context={context}
-          expressions={{'Json': json}}
-          editor-height="20rem"
-          onExpressionChanged={e => this.onMultiExpressionEditorValueChanged(e)}
-          onSyntaxChanged={e => this.onMultiExpressionEditorSyntaxChanged(e)}
-        > */}
-
         <table class="elsa-min-w-full elsa-divide-y elsa-divide-gray-200">
           <thead class="elsa-bg-gray-50">
             <tr>

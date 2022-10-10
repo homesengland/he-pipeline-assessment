@@ -84,7 +84,7 @@ namespace Elsa.Server.Features.Workflow.LoadWorkflowActivity
                                         }
                                     }
 
-                                    // Restore preserved checkboxes from previous page load
+                                    // Restore preserved selected answer from previous page load
                                     if (result.Data.ActivityType == Constants.SingleChoiceQuestion && !string.IsNullOrEmpty(result.Data.QuestionActivityData.Answer))
                                     {
                                         result.Data.QuestionActivityData.SingleChoice.SelectedAnswer = result.Data.QuestionActivityData.Answer;

@@ -13,7 +13,7 @@ namespace Elsa.CustomActivities.Activities.SingleChoice
     public class SingleChoiceQuestion : CustomQuestion
     {
         [ActivityInput(Label = "Radio-button questions", Hint = "Possible assessment screen answers.",
-            UIHint = "singleChoice-record-builder", DefaultSyntax = "Json", IsDesignerCritical = true, Name = "Radio Button Question")]
+            UIHint = "singleChoice-record-builder", DefaultSyntax = "Json", IsDesignerCritical = true)]
         public SingleChoiceModel SingleChoice { get; set; } = new SingleChoiceModel();
 
     }

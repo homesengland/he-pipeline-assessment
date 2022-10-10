@@ -21,7 +21,6 @@
             Select all that apply
         </div>
         <div class="govuk-radios" data-module="govuk-radios">
-           @* @for (int i = 0; i < Model.Data.QuestionActivityData.MultipleChoice.Choices.Count(); i++)*@
            @foreach(var choice in Model.Data.QuestionActivityData!.SingleChoice.Choices)
             {
                 int iterrator = 1;
@@ -29,11 +28,6 @@
                 <div class="govuk-radios__item">
                     @Html.HiddenFor(m => choice.Answer)
                     @Html.RadioButtonFor(m => m.Data.QuestionActivityData!.SingleChoice.SelectedAnswer, choice.Answer, new {@class="govuk-radios__input", @id="radio_multi_select_"+iterrator, @checked = isChecked})
-@*                   <input type="radio" 
-                       class="govuk-radios__input" 
-                       name="radio_multiple_choice"  
-                       asp-for="@Model.Data.QuestionActivityData!.MultipleChoice.Choices[i].IsSelected" 
-                       value="@true" />*@
                     @Html.Label(choice.Answer, choice.Answer, new {@class = "govuk-label govuk-radios__label"})
                 </div>
                 iterrator++;

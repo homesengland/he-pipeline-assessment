@@ -20,28 +20,26 @@
         <div id="waste-hint" class="govuk-hint">
             Select all that apply
         </div>
+        @if(Model.Data.QuestionActivityData.MultipleChoice.Choices.Any(c => c.IsSingle)){
+            <p id="checkbox-error" class="govuk-error-message">
+                <span class="govuk-visually-hidden">Error:</span>Items marked with a '*' are exclusive, and may not be combined with other answers.’
+            </p>
+        }
         <div class="govuk-checkboxes" data-module="govuk-checkboxes">
             @for (int i = 0; i < Model.Data.QuestionActivityData.MultipleChoice.Choices.Count(); i++)
             {
-                var checkedBehaviour = Model.Data.QuestionActivityData.MultipleChoice.Choices[i].IsSingle ? "exclusive" : "";
+                bool isSingle = Model.Data.QuestionActivityData.MultipleChoice.Choices[i].IsSingle;
+                string answerText = Model.Data.QuestionActivityData.MultipleChoice.Choices[i].Answer;
+                string labelAnswer = isSingle ? answerText + " *" : answerText;
+                string checkedBehaviour = isSingle ? "exclusive" : "";
+
                 <div class="govuk-checkboxes__item">
                     @Html.HiddenFor(m => m.Data.QuestionActivityData!.MultipleChoice!.Choices[i].Answer)
-                    @Html.CheckBoxFor(m => m.Data.QuestionActivityData!.MultipleChoice.Choices[i].IsSelected, new {@class = "govuk-checkboxes__input"})
-                    @Html.Label(Model.Data.QuestionActivityData!.MultipleChoice.Choices[i].Answer, Model.Data.QuestionActivityData.MultipleChoice.Choices[i].Answer, new {@class = "govuk-label govuk-checkboxes__label", data_behaviour=checkedBehaviour})
+                    @*Must use the input tag helper as opposed to htmlcheckbox, as all checkboxes need the same name property, which cannot be overridden easily in HtmlCheckboxFor*@
+                    <input asp-for="@Model.Data.QuestionActivityData!.MultipleChoice.Choices[i].IsSelected" name="checkboxes" type="checkbox" class="govuk-checkboxes__input" data-behaviour="@checkedBehaviour">
+                    @Html.Label(Model.Data.QuestionActivityData!.MultipleChoice.Choices[i].Answer, labelAnswer, new {@class = "govuk-label govuk-checkboxes__label"})
                 </div>
             }
-@*            @foreach (var checkbox in Model.Data.QuestionActivityData.MultipleChoice.Choices)
-                {
-                int i = 1;
-                var checkedBehaviour = checkbox.IsSingle ? "exclusive" : "";
-                <div class="govuk-checkboxes__item">
-                    <input type="hidden" asp-for="@checkbox.Answer"/>
-                    <input asp-for="@checkbox.IsSelected" name="checkboxes_+@i" type="checkbox" class="govuk-checkboxes__input" data-behaviour="@checkedBehaviour">
-                    <label class="govuk-label govuk-checkboxes__label" for="checkbox">@checkbox.Answer</label>
-
-                </div>
-                i++;
-                }*@
         </div>
     </fieldset>
     @if (!string.IsNullOrEmpty(Model.Data.QuestionActivityData.QuestionGuidance))
