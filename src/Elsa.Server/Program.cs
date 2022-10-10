@@ -17,6 +17,7 @@ using Elsa.Server.Features.Workflow.StartWorkflow;
 using Elsa.Server.Providers;
 using Elsa.Server.StartupTasks;
 using MediatR;
+using Microsoft.AspNetCore.DataProtection;
 using Microsoft.EntityFrameworkCore;
 using MyActivityLibrary.JavaScript;
 
@@ -44,6 +45,7 @@ builder.Services.AddDbContext<ElsaCustomContext>(config =>
         x => x.MigrationsAssembly("Elsa.CustomInfrastructure")));
 
 builder.Services.AddScoped<DbContext>(provider => provider.GetRequiredService<ElsaCustomContext>());
+builder.Services.AddDataProtection().PersistKeysToDbContext<ElsaCustomContext>();
 
 // Elsa API endpoints.
 builder.Services.AddElsaApiEndpoints();
@@ -58,6 +60,7 @@ builder.Services.AddScoped<IPipelineAssessmentRepository, PipelineAssessmentRepo
 builder.Services.AddJavaScriptTypeDefinitionProvider<CustomTypeDefinitionProvider>();
 
 builder.Services.AddMediatR(typeof(Program).Assembly);
+builder.Services.AddApplicationInsightsTelemetry();
 builder.Services.AddScoped<IDateTimeProvider, DateTimeProvider>();
 
 //builder.Services.AddScoped<ISaveAndContinueHandler, SaveAndContinueHandler>();
@@ -93,7 +96,7 @@ if (!app.Environment.IsDevelopment())
 
 app
     .UseCors()
-    //.UseHttpsRedirection()
+    .UseHttpsRedirection()
     .UseStaticFiles() // For Dashboard.
     .UseRouting()
     .UseEndpoints(endpoints =>

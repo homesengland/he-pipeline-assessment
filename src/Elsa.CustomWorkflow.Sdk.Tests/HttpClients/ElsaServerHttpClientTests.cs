@@ -1,6 +1,5 @@
 ﻿using AutoFixture.Xunit2;
 using Elsa.CustomWorkflow.Sdk.HttpClients;
-using Elsa.CustomWorkflow.Sdk.Models;
 using Elsa.CustomWorkflow.Sdk.Models.Workflow;
 using Moq;
 using System.Net;
@@ -25,12 +24,11 @@ namespace Elsa.CustomWorkflow.Sdk.Tests.HttpClients
                 httpClientFactoryMock,
                 httpMessageHandlerMock);
 
-
             //Act
-            var result = await sut.PostStartWorkflow(startWorkflowCommandDto);
+            var exception = await Assert.ThrowsAsync<ApplicationException>(() => sut.PostStartWorkflow(startWorkflowCommandDto));
 
             //Assert
-            Assert.Null(result);
+            Assert.Equal("Failed to start workflow", exception.Message);
         }
 
         [Theory]

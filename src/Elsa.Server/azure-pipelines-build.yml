@@ -11,9 +11,9 @@ pool:
 
 resources:
   repositories:
-  - repository: pipeline-assessment-deployment
+  - repository: he-workflow
     type: git
-    name: 'Pipeline Assessment/pipeline-assessment-deployment'   
+    name: 'Common Components (Agile Board)/He.Workflow'   
     ref: 'main'
   - repository: templates
     type: git
@@ -21,4 +21,4 @@ resources:
     ref: 'master'
 
 stages:
-- template: azure-pipelines.yml@pipeline-assessment-deployment
+- template: azure-pipelines-build.yml@he-workflow
