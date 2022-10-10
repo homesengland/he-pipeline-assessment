@@ -13,9 +13,6 @@ pool:
   vmImage: 'ubuntu-18.04'
 
 resources:
-  pipelines:
-    - pipeline: pipeline-assessment-build
-      source: pipeline-assessment-build
   repositories:
   - repository: pipeline-assessment-deployment
     type: git
