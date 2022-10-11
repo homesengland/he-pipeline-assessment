@@ -2,6 +2,7 @@
 using He.PipelineAssessment.UI.Features.Workflow.SaveAndContinue;
 using He.PipelineAssessment.UI.Features.Workflow.StartWorkflow;
 using MediatR;
+using Microsoft.AspNetCore.Components.Forms;
 using Microsoft.AspNetCore.Mvc;
 
 namespace He.PipelineAssessment.UI.Features.Workflow
@@ -50,7 +51,7 @@ namespace He.PipelineAssessment.UI.Features.Workflow
             try
             {
                 var result = await this._mediator.Send(request);
-
+                result.ValidationMessages = new List<string>() { "test error 1", "test error 2" };
                 return View("SaveAndContinue", result);
             }
             catch (Exception e)

@@ -20,6 +20,16 @@
         <div id="waste-hint" class="govuk-hint">
             Select all that apply
         </div>
+        @if(Model.ValidationMessages.Any())
+        {
+            <p id="multiplechoice-error" class="govuk-error-message">
+                <span class="govuk-visually-hidden">Error:</span> 
+                @foreach(var message in Model.ValidationMessages)
+                {
+                    <br />@message
+                }
+            </p>
+        }
         @if(Model.Data.QuestionActivityData.MultipleChoice.Choices.Any(c => c.IsSingle)){
             <p id="checkbox-error" class="govuk-error-message">
                 <span class="govuk-visually-hidden">Error:</span>Items marked with a '*' are exclusive, and may not be combined with other answers.’
