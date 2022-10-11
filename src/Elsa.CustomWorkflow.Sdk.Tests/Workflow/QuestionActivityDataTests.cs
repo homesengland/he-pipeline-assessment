@@ -403,7 +403,7 @@ namespace Elsa.CustomWorkflow.Sdk.Tests.Workflow
             sut.ActivityType = ActivityTypeConstants.MultipleChoiceQuestion;
 
             //Act
-            sut.MultipleChoice = new MultipleChoiceModel() { Choices = choices };
+            sut.MultipleChoice = new MultipleChoiceModel() { Choices = choices, SelectedChoices = answerList };
             //Assert
             Assert.Equal(choices.ToArray(), sut.MultipleChoice.Choices);
             Assert.Equal(JsonSerializer.Serialize(answerList), sut.Answer);
