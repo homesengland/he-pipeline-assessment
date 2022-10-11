@@ -32,11 +32,15 @@
                 string answerText = Model.Data.QuestionActivityData.MultipleChoice.Choices[i].Answer;
                 string labelAnswer = isSingle ? answerText + " *" : answerText;
                 string checkedBehaviour = isSingle ? "exclusive" : "";
+                
 
                 <div class="govuk-checkboxes__item">
                     @Html.HiddenFor(m => m.Data.QuestionActivityData!.MultipleChoice!.Choices[i].Answer)
                     @*Must use the input tag helper as opposed to htmlcheckbox, as all checkboxes need the same name property, which cannot be overridden easily in HtmlCheckboxFor*@
-                    <input asp-for="@Model.Data.QuestionActivityData!.MultipleChoice.Choices[i].IsSelected" name="checkboxes" type="checkbox" class="govuk-checkboxes__input" data-behaviour="@checkedBehaviour">
+                    <input asp-for="@Model.Data.QuestionActivityData!.MultipleChoice.Choices[i].IsSelected"
+                    value="@Model.Data.QuestionActivityData!.MultipleChoice.Choices[i].Answer"
+                    name="Data.QuestionActivityData.MultipleChoice.SelectedChoices" 
+                    type="checkbox" class="govuk-checkboxes__input" data-behaviour="@checkedBehaviour">
                     @Html.Label(Model.Data.QuestionActivityData!.MultipleChoice.Choices[i].Answer, labelAnswer, new {@class = "govuk-label govuk-checkboxes__label"})
                 </div>
             }

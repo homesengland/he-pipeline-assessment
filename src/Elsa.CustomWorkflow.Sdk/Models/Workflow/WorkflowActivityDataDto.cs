@@ -67,7 +67,7 @@ namespace Elsa.CustomWorkflow.Sdk.Models.Workflow
                 List<string> answerList = new List<string>();
                 if (value != null)
                 {
-                    answerList = value.Choices.Where(c => c.IsSelected).Select(c => c.Answer).ToList();
+                    answerList = value.SelectedChoices;
                 }
 
                 SetAnswer(answerList);
@@ -159,6 +159,7 @@ namespace Elsa.CustomWorkflow.Sdk.Models.Workflow
 
     public class MultipleChoiceModel
     {
+        public List<string> SelectedChoices { get; set; } = null!;
         public List<Choice> Choices { get; set; } = new List<Choice>();
     }
 
