@@ -10,10 +10,6 @@
 
   <ItemGroup>
     <PackageReference Include="Elsa.Designer.Components.Web" Version="2.8.2" />
-    <PackageReference Include="Microsoft.TypeScript.MSBuild" Version="4.8.4">
-      <PrivateAssets>all</PrivateAssets>
-      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
-    </PackageReference>
     <PackageReference Include="Microsoft.AspNetCore.DataProtection" Version="6.0.9" />
     <PackageReference Include="Microsoft.AspNetCore.DataProtection.EntityFrameworkCore" Version="6.0.9" />
     <PackageReference Include="Microsoft.VisualStudio.Azure.Containers.Tools.Targets" Version="1.17.0" />
