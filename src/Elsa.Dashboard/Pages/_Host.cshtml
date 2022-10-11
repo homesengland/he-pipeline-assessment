@@ -1,5 +1,6 @@
 @page "/"
 @using Microsoft.Extensions.Configuration
+@inject NonceConfig nonceConfig
 @inject IConfiguration Configuration
 @{
     string serverUrl = Configuration["Urls:ElsaServer"];
@@ -14,15 +15,15 @@
     <link rel="icon" type="image/png" sizes="16x16" href="/_content/Elsa.Designer.Components.Web/elsa-workflows-studio/assets/images/favicon-16x16.png">
     <link rel="stylesheet" href="/_content/Elsa.Designer.Components.Web/elsa-workflows-studio/assets/fonts/inter/inter.css">
     <link rel="stylesheet" href="/_content/Elsa.Designer.Components.Web/elsa-workflows-studio/elsa-workflows-studio.css">
-    <script src="/_content/Elsa.Designer.Components.Web/monaco-editor/min/vs/loader.js"></script>
-    <script type="module" src="/_content/Elsa.Designer.Components.Web/elsa-workflows-studio/elsa-workflows-studio.esm.js"></script>
-    <script type="module" src="/static/build/custom-elsa.esm.js"></script>
+    <script nonce ="@nonceConfig.ElsaSetup"  src="/_content/Elsa.Designer.Components.Web/monaco-editor/min/vs/loader.js"></script>
+    <script nonce ="@nonceConfig.ElsaSetup"  type="module" src="/_content/Elsa.Designer.Components.Web/elsa-workflows-studio/elsa-workflows-studio.esm.js"></script>
+    <script nonce ="@nonceConfig.ElsaSetup"  type="module" src="/static/build/custom-elsa.esm.js"></script>
 </head>
 <body>
 <elsa-studio-root server-url="@serverUrl" monaco-lib-path="_content/Elsa.Designer.Components.Web/monaco-editor/min">
     <elsa-studio-dashboard></elsa-studio-dashboard>
 </elsa-studio-root>
-<script>
+<script nonce="@nonceConfig.ElsaSetup">
         var elsaStudioRoot = document.querySelector('elsa-studio-root');
 
         function MyCustomPlugin(elsaStudio) {

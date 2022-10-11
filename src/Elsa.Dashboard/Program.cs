@@ -1,7 +1,15 @@
+using Elsa.CustomInfrastructure.Data;
+using Elsa.Dashboard;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.DataProtection;
+
 var builder = WebApplication.CreateBuilder(args);
 
 // For Dashboard.
 builder.Services.AddRazorPages();
+builder.Services.AddScoped<NonceConfig>();
+builder.Services.AddScoped<DbContext>(provider => provider.GetRequiredService<ElsaCustomContext>());
+builder.Services.AddDataProtection().PersistKeysToDbContext<ElsaCustomContext>();
 
 var app = builder.Build();
 
@@ -12,8 +20,9 @@ if (!app.Environment.IsDevelopment())
     app.UseHsts();
 }
 
+app.UseMiddleware<SecurityHeaderMiddleware>();
+
 app
-    //.UseHttpsRedirection()
     .UseStaticFiles()
         .UseStaticFiles(new StaticFileOptions
         {
@@ -21,6 +30,7 @@ app
           ServeUnknownFileTypes = true,
           RequestPath = "/static"
         })// For Dashboard.
+
     .UseRouting()
     .UseDirectoryBrowser()
     .UseEndpoints(endpoints =>

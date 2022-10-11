@@ -8,6 +8,7 @@
    
     @using (Html.BeginForm("StartWorkflow", "Workflow", FormMethod.Post))
     {
+        @Html.AntiForgeryToken()
         <h1 class="govuk-label-wrapper"><label class="govuk-label govuk-label--l" for="event-name">Enter workflow definition ID</label></h1> 
         @Html.TextBoxFor(m => m.WorkflowDefinitionId, new { @class = "govuk-input"})<br />
         <br />
