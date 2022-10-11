@@ -21,7 +21,14 @@
 
         public string ActivityType { get; set; } = null!;
         public string? Answer { get; set; }
-        public Choice[] Choices { get; set; } = null!;
+        public MultipleChoiceModel MultipleChoice { get; set; } = null!;
+        public SingleChoiceModel SingleChoice { get; set; } = null!;
+    }
+
+
+    public class MultipleChoiceModel
+    {
+        public Choice[] Choices { get; set; } = new List<Choice>().ToArray();
     }
 
     public class Choice
@@ -30,4 +37,16 @@
         public bool IsSingle { get; set; }
         public bool IsSelected { get; set; }
     }
+
+    public class SingleChoiceModel
+    {
+        public SingleChoice[] Choices { get; set; } = new List<SingleChoice>().ToArray();
+        public string SelectedAnswer { get; set; } = null!;
+    }
+
+    public class SingleChoice
+    {
+        public string Answer { get; set; } = null!;
+    }
+
 }

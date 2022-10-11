@@ -3,12 +3,14 @@ using Elsa.CustomActivities.Activities.Currency;
 using Elsa.CustomActivities.Activities.Date;
 using Elsa.CustomActivities.Activities.MultipleChoice;
 using Elsa.CustomActivities.Activities.Shared;
+using Elsa.CustomActivities.Activities.SingleChoice;
 using Elsa.CustomActivities.Activities.Text;
 using Elsa.CustomInfrastructure.Data;
 using Elsa.CustomInfrastructure.Data.Repository;
 using Elsa.Persistence.EntityFramework.Core.Extensions;
 using Elsa.Persistence.EntityFramework.SqlServer;
 using Elsa.Runtime;
+using Elsa.Server.Extensions;
 using Elsa.Server.Features.Workflow.LoadWorkflowActivity;
 using Elsa.Server.Features.Workflow.SaveAndContinue;
 using Elsa.Server.Features.Workflow.StartWorkflow;
@@ -31,6 +33,7 @@ builder.Services
     .AddElsa(elsa => elsa
         .UseEntityFrameworkPersistence(ef => ef.UseSqlServer(elsaConnectionString, typeof(Elsa.Persistence.EntityFramework.SqlServer.Migrations.Initial)))
         .AddActivity<MultipleChoiceQuestion>()
+        .AddActivity<SingleChoiceQuestion>()
         .AddActivity<CurrencyQuestion>()
         .AddActivity<TextQuestion>()
         .AddActivity<DateQuestion>()
@@ -47,10 +50,8 @@ builder.Services.AddDataProtection().PersistKeysToDbContext<ElsaCustomContext>()
 // Elsa API endpoints.
 builder.Services.AddElsaApiEndpoints();
 
-builder.Services.AddNotificationHandlers(typeof(GetMultipleChoiceQuestionScriptHandler));
-builder.Services.AddNotificationHandlers(typeof(GetCurrencyQuestionScriptHandler));
-builder.Services.AddNotificationHandlers(typeof(GetTextQuestionScriptHandler));
-builder.Services.AddNotificationHandlers(typeof(GetDateQuestionScriptHandler));
+//Custom method.  Register new Script Handlers here.
+builder.Services.AddCustomElsaScriptHandlers();
 
 builder.Services.AddBookmarkProvider<QuestionBookmarkProvider>();
 builder.Services.AddScoped<IQuestionInvoker, QuestionInvoker>();

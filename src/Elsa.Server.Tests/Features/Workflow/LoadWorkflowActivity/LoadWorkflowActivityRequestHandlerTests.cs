@@ -103,11 +103,14 @@ namespace Elsa.Server.Tests.Features.Workflow.LoadWorkflowActivity
 
             var data = new QuestionActivityData
             {
-                Choices = new Choice[]
+                MultipleChoice = new MultipleChoiceModel
                 {
-                    new Choice
+                    Choices = new Choice[]
                     {
-                        Answer = "My choice",
+                        new Choice
+                        {
+                            Answer = "My choice",
+                        }
                     }
                 }
             };
@@ -129,7 +132,7 @@ namespace Elsa.Server.Tests.Features.Workflow.LoadWorkflowActivity
             var result = await sut.Handle(loadWorkflowActivityRequest, CancellationToken.None);
 
             //Assert
-            Assert.True(result.Data!.QuestionActivityData.Choices.Single().IsSelected);
+            Assert.True(result.Data!.QuestionActivityData.MultipleChoice.Choices.Single().IsSelected);
         }
 
 

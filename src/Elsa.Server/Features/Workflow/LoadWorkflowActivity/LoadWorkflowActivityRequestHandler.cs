@@ -78,10 +78,16 @@ namespace Elsa.Server.Features.Workflow.LoadWorkflowActivity
                                     {
                                         var answerList = JsonSerializer.Deserialize<List<string>>(result.Data.QuestionActivityData.Answer);
 
-                                        foreach (var choice in result.Data.QuestionActivityData.Choices)
+                                        foreach (var choice in result.Data.QuestionActivityData.MultipleChoice.Choices)
                                         {
                                             choice.IsSelected = answerList!.Contains(choice.Answer);
                                         }
+                                    }
+
+                                    // Restore preserved selected answer from previous page load
+                                    if (result.Data.ActivityType == Constants.SingleChoiceQuestion && !string.IsNullOrEmpty(result.Data.QuestionActivityData.Answer))
+                                    {
+                                        result.Data.QuestionActivityData.SingleChoice.SelectedAnswer = result.Data.QuestionActivityData.Answer;
                                     }
                                 }
                                 else

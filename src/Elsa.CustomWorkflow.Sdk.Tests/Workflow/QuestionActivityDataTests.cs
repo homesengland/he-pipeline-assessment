@@ -13,6 +13,7 @@ namespace Elsa.CustomWorkflow.Sdk.Tests.Workflow
         [InlineAutoMoqData(ActivityTypeConstants.MultipleChoiceQuestion)]
         [InlineAutoMoqData(ActivityTypeConstants.CurrencyQuestion)]
         [InlineAutoMoqData(ActivityTypeConstants.TextQuestion)]
+        [InlineAutoMoqData(ActivityTypeConstants.SingleChoiceQuestion)]
         public void GetDateReturnsEmptyDateObject_GivenNonDateActivityType(string activityType, QuestionActivityData sut)
         {
             //Arrange
@@ -182,6 +183,7 @@ namespace Elsa.CustomWorkflow.Sdk.Tests.Workflow
         [InlineAutoMoqData(1999, 2, 3, ActivityTypeConstants.CurrencyQuestion)]
         [InlineAutoMoqData(2000, 12, 3, ActivityTypeConstants.TextQuestion)]
         [InlineAutoMoqData(2000, 2, 29, ActivityTypeConstants.MultipleChoiceQuestion)]
+        [InlineAutoMoqData(1998, 3, 5, ActivityTypeConstants.SingleChoiceQuestion)]
         public void SetDateDoesNotSetAnAnswer_GivenInvalidActivityType(int? year, int? month, int? day, string activityType, QuestionActivityData sut)
         {
             //Arrange
@@ -206,6 +208,7 @@ namespace Elsa.CustomWorkflow.Sdk.Tests.Workflow
         [InlineAutoMoqData(ActivityTypeConstants.MultipleChoiceQuestion)]
         [InlineAutoMoqData(ActivityTypeConstants.DateQuestion)]
         [InlineAutoMoqData(ActivityTypeConstants.TextQuestion)]
+        [InlineAutoMoqData(ActivityTypeConstants.SingleChoiceQuestion)]
         public void GetDecimalReturnsNull_GivenNonCurrencyActivityType(string activityType, QuestionActivityData sut)
         {
             //Arrange
@@ -269,6 +272,7 @@ namespace Elsa.CustomWorkflow.Sdk.Tests.Workflow
         [InlineAutoMoqData(ActivityTypeConstants.MultipleChoiceQuestion)]
         [InlineAutoMoqData(ActivityTypeConstants.DateQuestion)]
         [InlineAutoMoqData(ActivityTypeConstants.TextQuestion)]
+        [InlineAutoMoqData(ActivityTypeConstants.SingleChoiceQuestion)]
         public void SetDecimalDoesNotWriteValue_GivenNonDecimalActivityType(string activityType, QuestionActivityData sut)
         {
             //Arrange
@@ -311,27 +315,28 @@ namespace Elsa.CustomWorkflow.Sdk.Tests.Workflow
             sut.Decimal = numericAnswer;
 
             //Assert
-            Assert.Equal(sut.Answer, decimalString);
-            Assert.Equal(sut.Decimal, numericAnswer);
+            Assert.Equal(decimalString, sut.Answer);
+            Assert.Equal(numericAnswer, sut.Decimal);
         }
         
         [Theory]
         [AutoMoqData]
-        public void GetChoicesReturnsEmptyListOfChoices_GivenNoChoicesSet(QuestionActivityData sut)
+        public void GetMultipleChoiceReturnsDefault_GivenNoValueSet(QuestionActivityData sut)
         {
             //Arrange
 
             //Act
-            
-            //Assert
-            Assert.Empty(sut.Choices);
+
+            //Assert            
+            Assert.Empty(sut.MultipleChoice.Choices);
         }
 
         [Theory]
         [InlineAutoMoqData(ActivityTypeConstants.CurrencyQuestion)]
         [InlineAutoMoqData(ActivityTypeConstants.DateQuestion)]
         [InlineAutoMoqData(ActivityTypeConstants.TextQuestion)]
-        public void SetChoicesDoesNotSetValue_GivenValidDataButActivityTypeIsIncorrect(string activityType, QuestionActivityData sut)
+        [InlineAutoMoqData(ActivityTypeConstants.SingleChoiceQuestion)]
+        public void SetChoicesForMultichoiceDoesNotSetValue_GivenValidDataButActivityTypeIsIncorrect(string activityType, QuestionActivityData sut)
         {
             //Arrange
             sut.Answer = null;
@@ -359,16 +364,17 @@ namespace Elsa.CustomWorkflow.Sdk.Tests.Workflow
             sut.ActivityType = activityType;
 
             //Act
-            sut.Choices = choices.ToArray();
+            sut.MultipleChoice = new MultipleChoiceModel { Choices = choices };
+  
             //Assert
-            Assert.Empty(sut.Choices);
+            Assert.Empty(sut.MultipleChoice.Choices);
             Assert.Null(sut.Answer);
         }
 
 
         [Theory]
         [AutoMoqData]
-        public void SetChoicesSetsCorrectValueAndAnswer_GivenValidDataAndActivityTypeIsCorrect(QuestionActivityData sut)
+        public void SetChoicesForMultichoiceSetsCorrectValueAndAnswer_GivenValidDataAndActivityTypeIsCorrect(QuestionActivityData sut)
         {
             //Arrange
             sut.Answer = null;
@@ -397,10 +403,87 @@ namespace Elsa.CustomWorkflow.Sdk.Tests.Workflow
             sut.ActivityType = ActivityTypeConstants.MultipleChoiceQuestion;
 
             //Act
-            sut.Choices = choices.ToArray();
+            sut.MultipleChoice = new MultipleChoiceModel() { Choices = choices, SelectedChoices = answerList };
             //Assert
-            Assert.Equal(sut.Choices, choices.ToArray());
-            Assert.Equal(sut.Answer, JsonSerializer.Serialize(answerList));
+            Assert.Equal(choices.ToArray(), sut.MultipleChoice.Choices);
+            Assert.Equal(JsonSerializer.Serialize(answerList), sut.Answer);
+        }
+
+        [Theory]
+        [AutoMoqData]
+        public void GetSingleChoiceReturnsDefault_GivenNoValueSet(QuestionActivityData sut)
+        {
+            //Arrange
+
+            //Act
+
+            //Assert            
+            Assert.Empty(sut.SingleChoice.Choices);
+        }
+
+        [Theory]
+        [InlineAutoMoqData(ActivityTypeConstants.CurrencyQuestion)]
+        [InlineAutoMoqData(ActivityTypeConstants.DateQuestion)]
+        [InlineAutoMoqData(ActivityTypeConstants.TextQuestion)]
+        [InlineAutoMoqData(ActivityTypeConstants.MultipleChoiceQuestion)]
+        public void SetChoicesForSingleChoiceDoesNotSetValue_GivenValidDataButActivityTypeIsIncorrect(string activityType, QuestionActivityData sut)
+        {
+            //Arrange
+            sut.Answer = null;
+            List<Choice> choices = new List<Choice>
+            {
+                new Choice
+                {
+                    Answer = "Test 1",
+                },
+                new Choice
+                {
+                    Answer = "Test 2",
+                },
+                new Choice
+                {
+                    Answer = "Test 3",
+                   },
+            };
+            sut.ActivityType = activityType;
+
+            //Act
+            sut.SingleChoice = new SingleChoiceModel { Choices = choices };
+
+            //Assert
+            Assert.Empty(sut.SingleChoice.Choices);
+            Assert.Null(sut.Answer);
+        }
+
+        [Theory]
+        [AutoMoqData]
+        public void SetChoicesForSinglechoiceSetsCorrectValueAndAnswer_GivenValidDataAndActivityTypeIsCorrect(QuestionActivityData sut)
+        {
+            //Arrange
+            sut.Answer = null;
+            List<Choice> choices = new List<Choice>
+            {
+                new Choice
+                {
+                    Answer = "Test 1"
+                },
+                new Choice
+                {
+                    Answer = "Test 2",
+                },
+                new Choice
+                {
+                    Answer = "Test 3",
+                },
+            };
+
+            sut.ActivityType = ActivityTypeConstants.SingleChoiceQuestion;
+
+            //Act
+            sut.SingleChoice = new SingleChoiceModel() { Choices = choices, SelectedAnswer = choices[0].Answer };
+            //Assert
+            Assert.Equal(choices.ToArray(), sut.SingleChoice.Choices);
+            Assert.Equal("Test 1", sut.Answer);
         }
 
     }
