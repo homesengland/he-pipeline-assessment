@@ -48,7 +48,6 @@ builder.Services.AddDbContext<PipelineAssessmentContext>(config =>
 builder.Services.AddScoped<DbContext>(provider => provider.GetRequiredService<PipelineAssessmentContext>());
 builder.Services.AddScoped<IValidator<SaveAndContinueCommand>, SaveAndContinueCommandValidator>();
 builder.Services.AddDataProtection().PersistKeysToDbContext<PipelineAssessmentContext>();
-builder.Services.AddScoped<IValidator<SaveAndContinueCommand>, SaveAndContinueCommandValidator>();
 
 var app = builder.Build();
 
