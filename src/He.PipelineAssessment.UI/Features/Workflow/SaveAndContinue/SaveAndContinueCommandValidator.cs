@@ -1,9 +1,4 @@
 ﻿using FluentValidation;
-using FluentValidation.Results;
-using Microsoft.AspNetCore.Components.Forms;
-using Microsoft.EntityFrameworkCore.Metadata.Internal;
-using System.Linq;
-using System.Text;
 
 namespace He.PipelineAssessment.UI.Features.Workflow.SaveAndContinue
 {
@@ -14,33 +9,28 @@ namespace He.PipelineAssessment.UI.Features.Workflow.SaveAndContinue
         {
             RuleFor(x => x.Data.QuestionActivityData!.MultipleChoice).Must(multipleChoice =>
             {
-                if (multipleChoice.SelectedChoices!= null && multipleChoice.SelectedChoices.Count() >1)
+                if (multipleChoice.SelectedChoices.Count() <= 1) return true;
+                foreach (var choice in multipleChoice.Choices)
                 {
-                    foreach (var choice in multipleChoice.Choices)
+                    if (choice.IsSingle && multipleChoice.SelectedChoices.Contains(choice.Answer))
                     {
-                        if (choice.IsSingle && multipleChoice.SelectedChoices.Contains(choice.Answer))
-                        {
-                            return false;
-                        }
+                        return false;
                     }
                 }
                 return true;
             }).WithMessage(x =>
             {
-                var selectedAnswers = x.Data.QuestionActivityData!.MultipleChoice.SelectedChoices != null ? x.Data.QuestionActivityData.MultipleChoice.SelectedChoices : new List<string>();
-                var exclusiveAnswers = x.Data.QuestionActivityData.MultipleChoice.Choices.Where(c => c.IsSingle && selectedAnswers.Contains(c.Answer)).Select(c => c.Answer);
+                var selectedAnswers = x.Data.QuestionActivityData!.MultipleChoice.SelectedChoices;
+                var exclusiveAnswers = x.Data.QuestionActivityData.MultipleChoice.Choices
+                    .Where(c => c.IsSingle && selectedAnswers.Contains(c.Answer)).Select(c => c.Answer).ToList();
                 
                 if (exclusiveAnswers.Any())
                 {
                     if (exclusiveAnswers.Count() > 1)
                     {
                         var finalInvalidAnswer = exclusiveAnswers.Last();
-                        var invalidAnswerListBuilder = new StringBuilder();
-                        foreach(var invalidAnswer in exclusiveAnswers.Take(exclusiveAnswers.Count() - 1))
-                        {
-                            invalidAnswerListBuilder.Append(invalidAnswer).Append(", ");
-                        }
-                        var invalidAnswers = invalidAnswerListBuilder.ToString().Remove(invalidAnswerListBuilder.Length - 2);
+
+                        var invalidAnswers = string.Join(", ", exclusiveAnswers.Take(exclusiveAnswers.Count() - 1));
                         return $"{invalidAnswers} and {finalInvalidAnswer} cannot be selected with any other answer. ";
                     }
                     return $"{exclusiveAnswers.First()} cannot be selected with any other answer.";

@@ -14,6 +14,8 @@ namespace He.PipelineAssessment.UI.Tests.Features.Workflow.SaveAndContinue
             this.validator = new SaveAndContinueCommandValidator();
         }
 
+        [Theory]
+        [AutoMoqData]
         public void Should_Have_Error_When_Multiple_Exclusive_Choices_Selected(SaveAndContinueCommand saveAndContinueCommand)
         {
             saveAndContinueCommand.Data.QuestionActivityData!.MultipleChoice.Choices =  new List<Choice>
