@@ -2,7 +2,7 @@
 
 namespace He.PipelineAssessment.UI.Features.Workflow.SaveAndContinue
 {
-    public class SaveAndContinueCommandValidator :AbstractValidator<SaveAndContinueCommand>
+    public class SaveAndContinueCommandValidator : AbstractValidator<SaveAndContinueCommand>
     {
 
         public SaveAndContinueCommandValidator()
@@ -31,7 +31,7 @@ namespace He.PipelineAssessment.UI.Features.Workflow.SaveAndContinue
                         var finalInvalidAnswer = exclusiveAnswers.Last();
 
                         var invalidAnswers = string.Join(", ", exclusiveAnswers.Take(exclusiveAnswers.Count() - 1));
-                        return $"{invalidAnswers} and {finalInvalidAnswer} cannot be selected with any other answer. ";
+                        return $"{invalidAnswers} and {finalInvalidAnswer} cannot be selected with any other answer.";
                     }
                     return $"{exclusiveAnswers.First()} cannot be selected with any other answer.";
                 }

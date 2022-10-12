@@ -7,11 +7,11 @@ namespace He.PipelineAssessment.UI.Tests.Features.Workflow.SaveAndContinue
 {
     public class SaveAndContinueCommandValidatorTests
     {
-        private SaveAndContinueCommandValidator validator;
+        private readonly SaveAndContinueCommandValidator _validator;
 
         public SaveAndContinueCommandValidatorTests()
         {
-            this.validator = new SaveAndContinueCommandValidator();
+            this._validator = new SaveAndContinueCommandValidator();
         }
 
         [Theory]
@@ -34,12 +34,18 @@ namespace He.PipelineAssessment.UI.Tests.Features.Workflow.SaveAndContinue
                 {
                     Answer = "Test 3",
                     IsSingle = false
+                   },                
+                new Choice
+                {
+                    Answer = "Test 4",
+                    IsSingle = true
                    },
             };
-            saveAndContinueCommand.Data.QuestionActivityData!.MultipleChoice.SelectedChoices = new List<string>() { "Test 1", "Test 2" };
+            saveAndContinueCommand.Data.QuestionActivityData!.MultipleChoice.SelectedChoices = new List<string>() { "Test 1", "Test 2", "Test 4" };
 
-            var result = this.validator.TestValidate(saveAndContinueCommand);
-            result.ShouldHaveValidationErrorFor(c=> c.Data.QuestionActivityData!.MultipleChoice);
+            var result = this._validator.TestValidate(saveAndContinueCommand);
+            result.ShouldHaveValidationErrorFor(c=> c.Data.QuestionActivityData!.MultipleChoice)
+                .WithErrorMessage("Test 1, Test 2 and Test 4 cannot be selected with any other answer.");
         }
 
         [Theory]
@@ -66,8 +72,9 @@ namespace He.PipelineAssessment.UI.Tests.Features.Workflow.SaveAndContinue
             };
             saveAndContinueCommand.Data.QuestionActivityData!.MultipleChoice.SelectedChoices = new List<string>() { "Test 1", "Test 2" };
 
-            var result = this.validator.TestValidate(saveAndContinueCommand);
-            result.ShouldHaveValidationErrorFor(c => c.Data.QuestionActivityData!.MultipleChoice);
+            var result = this._validator.TestValidate(saveAndContinueCommand);
+            result.ShouldHaveValidationErrorFor(c => c.Data.QuestionActivityData!.MultipleChoice)
+                .WithErrorMessage("Test 1 cannot be selected with any other answer.");
         }
 
         [Theory]
@@ -94,7 +101,7 @@ namespace He.PipelineAssessment.UI.Tests.Features.Workflow.SaveAndContinue
             };
             saveAndContinueCommand.Data.QuestionActivityData!.MultipleChoice.SelectedChoices = new List<string>() { "Test 1" };
 
-            var result = this.validator.TestValidate(saveAndContinueCommand);
+            var result = this._validator.TestValidate(saveAndContinueCommand);
             result.ShouldNotHaveValidationErrorFor(c => c.Data.QuestionActivityData!.MultipleChoice);
         }
 
@@ -122,7 +129,7 @@ namespace He.PipelineAssessment.UI.Tests.Features.Workflow.SaveAndContinue
             };
             saveAndContinueCommand.Data.QuestionActivityData!.MultipleChoice.SelectedChoices = new List<string>() { "Test 2", "Test 3" };
 
-            var result = this.validator.TestValidate(saveAndContinueCommand);
+            var result = this._validator.TestValidate(saveAndContinueCommand);
             result.ShouldNotHaveValidationErrorFor(c => c.Data.QuestionActivityData!.MultipleChoice);
         }
     }
