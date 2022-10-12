@@ -132,7 +132,8 @@ namespace Elsa.Server.Tests.Features.Workflow.LoadWorkflowActivity
             var result = await sut.Handle(loadWorkflowActivityRequest, CancellationToken.None);
 
             //Assert
-            Assert.True(result.Data!.QuestionActivityData.MultipleChoice.Choices.Single().IsSelected);
+            Assert.Equal(result.Data!.QuestionActivityData.MultipleChoice.SelectedChoices.Count(), 1);
+            Assert.Equal(result.Data!.QuestionActivityData.MultipleChoice.SelectedChoices.First(), "My choice");
         }
 
 
