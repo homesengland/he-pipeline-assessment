@@ -25,7 +25,8 @@
                 <span class="govuk-visually-hidden">Error:</span> 
                 @foreach(var message in Model.ValidationMessages)
                 {
-                    <br />@message
+                    @message
+                    <br />
                 }
             </p>
         }

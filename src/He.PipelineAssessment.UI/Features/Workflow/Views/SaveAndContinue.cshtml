@@ -15,7 +15,12 @@
         @Html.AntiForgeryToken()
         @Html.HiddenFor(m => Model.Data.WorkflowInstanceId)
         @Html.HiddenFor(m => Model.Data.ActivityId)
+        @Html.HiddenFor(m => Model.Data.PreviousActivityId)
+        @Html.HiddenFor(m => Model.Data.QuestionActivityData!.QuestionGuidance)
         @Html.HiddenFor(m => Model.Data.QuestionActivityData!.ActivityType)
+        @Html.HiddenFor(m => Model.Data.QuestionActivityData!.Title)
+        @Html.HiddenFor(m => Model.Data.QuestionActivityData!.Question)
+        @Html.HiddenFor(m => Model.Data.QuestionActivityData!.QuestionHint)
         <br/>
         if (Model.Data.QuestionActivityData!.ActivityType == ActivityTypeConstants.CurrencyQuestion)
         {

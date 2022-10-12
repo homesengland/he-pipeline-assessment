@@ -2,6 +2,8 @@
 using FluentValidation.Results;
 using Microsoft.AspNetCore.Components.Forms;
 using Microsoft.EntityFrameworkCore.Metadata.Internal;
+using System.Linq;
+using System.Text;
 
 namespace He.PipelineAssessment.UI.Features.Workflow.SaveAndContinue
 {
@@ -26,17 +28,22 @@ namespace He.PipelineAssessment.UI.Features.Workflow.SaveAndContinue
             }).WithMessage(x =>
             {
                 var selectedAnswers = x.Data.QuestionActivityData!.MultipleChoice.SelectedChoices != null ? x.Data.QuestionActivityData.MultipleChoice.SelectedChoices : new List<string>();
-                var invalidExclusiveAnswers = x.Data.QuestionActivityData.MultipleChoice.Choices.Where(c => c.IsSingle && selectedAnswers.Contains(c.Answer)).Select(c => c.Answer);
+                var exclusiveAnswers = x.Data.QuestionActivityData.MultipleChoice.Choices.Where(c => c.IsSingle && selectedAnswers.Contains(c.Answer)).Select(c => c.Answer);
                 
-                if (invalidExclusiveAnswers.Any())
+                if (exclusiveAnswers.Any())
                 {
-                    if (invalidExclusiveAnswers.Count() > 1)
+                    if (exclusiveAnswers.Count() > 1)
                     {
-                        var finalInvalidAnswer = invalidExclusiveAnswers.Last();
-                        var invalidAnswersList = string.Join(',', invalidExclusiveAnswers.Take(invalidExclusiveAnswers.Count() - 1));
-                        return $"{invalidAnswersList} and {finalInvalidAnswer} cannot be selected with any other answer. ";
+                        var finalInvalidAnswer = exclusiveAnswers.Last();
+                        var invalidAnswerListBuilder = new StringBuilder();
+                        foreach(var invalidAnswer in exclusiveAnswers.Take(exclusiveAnswers.Count() - 1))
+                        {
+                            invalidAnswerListBuilder.Append(invalidAnswer).Append(", ");
+                        }
+                        var invalidAnswers = invalidAnswerListBuilder.ToString().Remove(invalidAnswerListBuilder.Length - 2);
+                        return $"{invalidAnswers} and {finalInvalidAnswer} cannot be selected with any other answer. ";
                     }
-                    return $"{invalidExclusiveAnswers.First()} cannot be selected with any other answer.";
+                    return $"{exclusiveAnswers.First()} cannot be selected with any other answer.";
                 }
                 return string.Empty;
             });
