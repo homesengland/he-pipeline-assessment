@@ -20,13 +20,11 @@ namespace Elsa.CustomWorkflow.Sdk.Tests.Workflow
 
             //Act
             choice.Answer = answer;
-            choice.IsSelected = isSelected;
+
             choice.IsSingle = isSingle;
             //Assert
             Assert.NotNull(choice);
-            Assert.Equal(answer, choice.Answer);
-            Assert.Equal(isSelected, choice.IsSelected);
-            Assert.Equal(isSingle, choice.IsSingle);
+             Assert.Equal(isSingle, choice.IsSingle);
         }
     }
 }

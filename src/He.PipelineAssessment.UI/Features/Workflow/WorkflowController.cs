@@ -1,9 +1,11 @@
-﻿using He.PipelineAssessment.UI.Features.Workflow.LoadWorkflowActivity;
+﻿using FluentValidation;
+using He.PipelineAssessment.UI.Features.Workflow.LoadWorkflowActivity;
 using He.PipelineAssessment.UI.Features.Workflow.SaveAndContinue;
 using He.PipelineAssessment.UI.Features.Workflow.StartWorkflow;
 using MediatR;
 using Microsoft.AspNetCore.Components.Forms;
 using Microsoft.AspNetCore.Mvc;
+using System;
 
 namespace He.PipelineAssessment.UI.Features.Workflow
 {
@@ -11,12 +13,14 @@ namespace He.PipelineAssessment.UI.Features.Workflow
     {
         private readonly ILogger<WorkflowController> _logger;
         private readonly IMediator _mediator;
+        private readonly IValidator<SaveAndContinueCommand> _validator;
 
 
-        public WorkflowController(ILogger<WorkflowController> logger, IMediator mediator)
+        public WorkflowController(IValidator<SaveAndContinueCommand> validator, ILogger<WorkflowController> logger, IMediator mediator)
         {
             _logger = logger;
             _mediator = mediator;
+            _validator = validator;
         }
 
         public IActionResult Index()
@@ -30,14 +34,14 @@ namespace He.PipelineAssessment.UI.Features.Workflow
         {
             try
             {
-                var result = await this._mediator.Send(command);
+                    var result = await this._mediator.Send(command);
 
-                return RedirectToAction("LoadWorkflowActivity",
-                    new
-                    {
-                        WorkflowInstanceId = result?.WorkflowInstanceId,
-                        ActivityId = result?.ActivityId
-                    });
+                    return RedirectToAction("LoadWorkflowActivity",
+                        new
+                        {
+                            WorkflowInstanceId = result?.WorkflowInstanceId,
+                            ActivityId = result?.ActivityId
+                        });
             }
             catch (Exception e)
             {
@@ -51,7 +55,6 @@ namespace He.PipelineAssessment.UI.Features.Workflow
             try
             {
                 var result = await this._mediator.Send(request);
-                result.ValidationMessages = new List<string>() { "test error 1", "test error 2" };
                 return View("SaveAndContinue", result);
             }
             catch (Exception e)
@@ -68,14 +71,24 @@ namespace He.PipelineAssessment.UI.Features.Workflow
 
             try
             {
-                var result = await this._mediator.Send(command);
+                var validationResult = _validator.Validate(command);
+                if (validationResult.IsValid)
+                {
+                    var result = await this._mediator.Send(command);
 
-                return RedirectToAction("LoadWorkflowActivity",
+                    return RedirectToAction("LoadWorkflowActivity",
                     new
                     {
                         WorkflowInstanceId = result?.WorkflowInstanceId,
                         ActivityId = result?.ActivityId
                     });
+                }
+                else
+                {
+                    command.ValidationMessages = validationResult.Errors.Select(x=>x.ErrorMessage).ToList();
+              
+                    return View("SaveAndContinue", command);
+                }
             }
             catch (Exception e)
             {

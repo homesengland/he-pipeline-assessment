@@ -77,11 +77,8 @@ namespace Elsa.Server.Features.Workflow.LoadWorkflowActivity
                                     if (result.Data.ActivityType == Constants.MultipleChoiceQuestion && !string.IsNullOrEmpty(result.Data.QuestionActivityData.Answer))
                                     {
                                         var answerList = JsonSerializer.Deserialize<List<string>>(result.Data.QuestionActivityData.Answer);
+                                        result.Data.QuestionActivityData.MultipleChoice.SelectedChoices = answerList;
 
-                                        foreach (var choice in result.Data.QuestionActivityData.MultipleChoice.Choices)
-                                        {
-                                            choice.IsSelected = answerList!.Contains(choice.Answer);
-                                        }
                                     }
 
                                     // Restore preserved selected answer from previous page load

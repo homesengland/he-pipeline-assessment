@@ -1,11 +1,14 @@
 using Elsa.CustomWorkflow.Sdk.HttpClients;
+using FluentValidation;
 using He.PipelineAssessment.Infrastructure.Data;
 using He.PipelineAssessment.UI;
 using He.PipelineAssessment.UI.Features.Workflow.SaveAndContinue;
 using MediatR;
 using Microsoft.AspNetCore.DataProtection;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc.Razor;
 using Microsoft.EntityFrameworkCore;
+using static Microsoft.ApplicationInsights.MetricDimensionNames.TelemetryContext;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -43,7 +46,9 @@ builder.Services.AddDbContext<PipelineAssessmentContext>(config =>
         x => x.MigrationsAssembly("He.PipelineAssessment.Infrastructure")));
 
 builder.Services.AddScoped<DbContext>(provider => provider.GetRequiredService<PipelineAssessmentContext>());
+builder.Services.AddScoped<IValidator<SaveAndContinueCommand>, SaveAndContinueCommandValidator>();
 builder.Services.AddDataProtection().PersistKeysToDbContext<PipelineAssessmentContext>();
+builder.Services.AddScoped<IValidator<SaveAndContinueCommand>, SaveAndContinueCommandValidator>();
 
 var app = builder.Build();
 
