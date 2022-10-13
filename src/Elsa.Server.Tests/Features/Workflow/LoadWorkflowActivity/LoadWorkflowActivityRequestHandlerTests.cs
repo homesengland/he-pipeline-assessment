@@ -132,8 +132,78 @@ namespace Elsa.Server.Tests.Features.Workflow.LoadWorkflowActivity
             var result = await sut.Handle(loadWorkflowActivityRequest, CancellationToken.None);
 
             //Assert
-            Assert.Equal(result.Data!.QuestionActivityData.MultipleChoice.SelectedChoices.Count(), 1);
-            Assert.Equal(result.Data!.QuestionActivityData.MultipleChoice.SelectedChoices.First(), "My choice");
+            Assert.Single(result.Data!.QuestionActivityData.MultipleChoice.SelectedChoices);
+            Assert.Equal("My choice", result.Data!.QuestionActivityData.MultipleChoice.SelectedChoices.First());
+        }
+
+        [Theory]
+        [AutoMoqData]
+        public async Task Handle_SelectedChoicesAreRestored_WhenActivityIsSingleChoice(
+                             [Frozen] Mock<IQuestionInvoker> questionInvoker,
+                             [Frozen] Mock<IWorkflowInstanceStore> workflowInstanceStore,
+                             [Frozen] Mock<IPipelineAssessmentRepository> pipelineAssessmentRepository,
+                             [Frozen] Mock<ILoadWorkflowActivityJsonHelper> loadWorkflowActivityJsonHelper,
+                             LoadWorkflowActivityRequest loadWorkflowActivityRequest,
+                             List<CollectedWorkflow> collectedWorkflows,
+                             WorkflowInstance workflowInstance,
+                             AssessmentQuestion assessmentQuestion,
+                             LoadWorkflowActivityRequestHandler sut)
+        {
+            //Arrange
+            assessmentQuestion.Answer = "My choice";
+            assessmentQuestion.ActivityType = Constants.SingleChoiceQuestion;
+
+            questionInvoker
+                .Setup(x => x.FindWorkflowsAsync(loadWorkflowActivityRequest.ActivityId,
+                    assessmentQuestion.ActivityType, loadWorkflowActivityRequest.WorkflowInstanceId,
+                    CancellationToken.None))
+                .ReturnsAsync(collectedWorkflows);
+
+            workflowInstanceStore.Setup(x =>
+                    x.FindAsync(It.IsAny<WorkflowInstanceIdSpecification>(), CancellationToken.None))
+                .ReturnsAsync(workflowInstance);
+
+            pipelineAssessmentRepository.Setup(x => x.GetAssessmentQuestion(loadWorkflowActivityRequest.ActivityId,
+                    loadWorkflowActivityRequest.WorkflowInstanceId, CancellationToken.None))
+                .ReturnsAsync(assessmentQuestion);
+
+
+            var data = new QuestionActivityData
+            {
+                SingleChoice = new SingleChoiceModel()
+                {
+                    Choices = new SingleChoice[]
+                    {
+                        new SingleChoice
+                        {
+                            Answer = "My choice",
+                        },
+                        new SingleChoice
+                        {
+                            Answer = "My choice 2",
+                        }
+                    }
+                }
+            };
+
+            loadWorkflowActivityJsonHelper
+                .Setup(x => x.ActivityDataDictionaryToQuestionActivityData<QuestionActivityData>(It.IsAny<IDictionary<string, object?>>()))
+                .Returns(data);
+
+            var existingDictionaryItem = workflowInstance.ActivityData.First();
+
+            var customDictionary = new Dictionary<string, object?>
+            {
+                { existingDictionaryItem.Key, existingDictionaryItem.Value }
+            };
+
+            workflowInstance.ActivityData.Add(loadWorkflowActivityRequest.ActivityId, customDictionary);
+
+            //Act
+            var result = await sut.Handle(loadWorkflowActivityRequest, CancellationToken.None);
+
+            //Assert
+            Assert.Equal(assessmentQuestion.Answer, result.Data!.QuestionActivityData.SingleChoice.SelectedAnswer);
         }
 
 
@@ -268,7 +338,7 @@ namespace Elsa.Server.Tests.Features.Workflow.LoadWorkflowActivity
 
         [Theory]
         [AutoMoqData]
-        public async Task Handle_ReturnsOperationResultWithErrors_GivenCollectedWorkflowInstaceIsNull(
+        public async Task Handle_ReturnsOperationResultWithErrors_GivenCollectedWorkflowInstanceIsNull(
             [Frozen] Mock<IQuestionInvoker> questionInvoker,
             [Frozen] Mock<IWorkflowInstanceStore> workflowInstanceStore,
             [Frozen] Mock<IPipelineAssessmentRepository> pipelineAssessmentRepository,
