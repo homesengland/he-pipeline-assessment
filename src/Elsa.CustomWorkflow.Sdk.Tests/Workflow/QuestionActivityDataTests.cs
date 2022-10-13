@@ -345,19 +345,16 @@ namespace Elsa.CustomWorkflow.Sdk.Tests.Workflow
                 new Choice
                 {
                     Answer = "Test 1",
-                    IsSelected = true,
                     IsSingle = false,
                 },
                 new Choice
                 {
                     Answer = "Test 2",
-                    IsSelected = false,
                     IsSingle = false,
                 },
                 new Choice
                 {
                     Answer = "Test 3",
-                    IsSelected = false,
                     IsSingle = false,
                 },
             };
@@ -383,23 +380,20 @@ namespace Elsa.CustomWorkflow.Sdk.Tests.Workflow
                 new Choice
                 {
                     Answer = "Test 1",
-                    IsSelected = true,
                     IsSingle = false,
                 },
                 new Choice
                 {
                     Answer = "Test 2",
-                    IsSelected = false,
-                    IsSingle = false,
+                     IsSingle = false,
                 },
                 new Choice
                 {
                     Answer = "Test 3",
-                    IsSelected = false,
-                    IsSingle = true,
+                     IsSingle = true,
                 },
             };
-            var answerList = choices.Where(c => c.IsSelected).Select(c => c.Answer).ToList();
+            var answerList = new List<string>() { "Test 1" };
             sut.ActivityType = ActivityTypeConstants.MultipleChoiceQuestion;
 
             //Act

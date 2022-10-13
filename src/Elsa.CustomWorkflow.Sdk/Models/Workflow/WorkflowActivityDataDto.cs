@@ -174,7 +174,6 @@ namespace Elsa.CustomWorkflow.Sdk.Models.Workflow
     {
         public string Answer { get; set; } = null!;
         public bool IsSingle { get; set; }
-        public bool IsSelected { get; set; }
     }
 
     public class Date

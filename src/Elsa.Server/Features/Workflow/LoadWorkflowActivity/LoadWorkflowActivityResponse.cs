@@ -29,13 +29,14 @@
     public class MultipleChoiceModel
     {
         public Choice[] Choices { get; set; } = new List<Choice>().ToArray();
+
+        public List<string> SelectedChoices { get; set; } = null!;
     }
 
     public class Choice
     {
         public string Answer { get; set; } = null!;
         public bool IsSingle { get; set; }
-        public bool IsSelected { get; set; }
     }
 
     public class SingleChoiceModel

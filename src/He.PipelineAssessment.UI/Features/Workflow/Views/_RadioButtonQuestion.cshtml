@@ -24,7 +24,7 @@
            @foreach(var choice in Model.Data.QuestionActivityData!.SingleChoice.Choices)
             {
                 int iterrator = 1;
-                string isChecked = choice.IsSelected ? "checked" : "";
+                string isChecked = choice.Answer == Model.Data.QuestionActivityData.SingleChoice.SelectedAnswer? "checked" : "";
                 <div class="govuk-radios__item">
                     @Html.HiddenFor(m => choice.Answer)
                     @Html.RadioButtonFor(m => m.Data.QuestionActivityData!.SingleChoice.SelectedAnswer, choice.Answer, new {@class="govuk-radios__input", @id="radio_multi_select_"+iterrator, @checked = isChecked})
