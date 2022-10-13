@@ -42,9 +42,7 @@
             }
             @for (int i = 0; i < nonExclusiveChoices.Count(); i++)
             {
-                bool isSingle = nonExclusiveChoices[i].IsSingle;
                 string answerText = nonExclusiveChoices[i].Answer;
-                string checkedBehaviour = isSingle ? "exclusive" : "";
                 List<string> selectedChoices = Model.Data.QuestionActivityData.MultipleChoice.SelectedChoices;
                 bool isSelected = selectedChoices != null ? selectedChoices.Contains(answerText) : false;
                 
@@ -53,15 +51,13 @@
                     <input asp-for="@isSelected"
                        value="@nonExclusiveChoices[i].Answer"
                     name="Data.QuestionActivityData.MultipleChoice.SelectedChoices"
-                    type="checkbox" class="govuk-checkboxes__input" data-behaviour="@checkedBehaviour">
+                    type="checkbox" class="govuk-checkboxes__input">
                     @Html.Label(nonExclusiveChoices[i].Answer, answerText, new {@class = "govuk-label govuk-checkboxes__label"})
                 </div>
             }
             @for (int i = 0; i < exclusiveChoices.Count(); i++)
             {
-                bool isSingle = exclusiveChoices[i].IsSingle;
                 string answerText = exclusiveChoices[i].Answer;
-                string checkedBehaviour = isSingle ? "exclusive" : "";
                 List<string> selectedChoices = Model.Data.QuestionActivityData.MultipleChoice.SelectedChoices;
                 bool isSelected = selectedChoices != null ? selectedChoices.Contains(answerText) : false;
 
@@ -71,7 +67,7 @@
                     <input asp-for="@isSelected"
                        value="@exclusiveChoices[i].Answer"
                        name="Data.QuestionActivityData.MultipleChoice.SelectedChoices"
-                     type="checkbox" class="govuk-checkboxes__input" data-behaviour="@checkedBehaviour">
+                     type="checkbox" class="govuk-checkboxes__input" data-behaviour="exclusive">
                    @Html.Label(exclusiveChoices[i].Answer, answerText, new {@class = "govuk-label govuk-checkboxes__label"})
                 </div>
             }    
