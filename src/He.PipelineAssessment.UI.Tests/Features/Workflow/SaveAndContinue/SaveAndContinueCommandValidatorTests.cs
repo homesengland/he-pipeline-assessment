@@ -152,5 +152,23 @@ namespace He.PipelineAssessment.UI.Tests.Features.Workflow.SaveAndContinue
             //Assert
             result.ShouldNotHaveValidationErrorFor(c => c.Data.QuestionActivityData!.MultipleChoice);
         }
+
+        [Theory]
+        [AutoMoqData]
+        [InlineAutoMoqData(ActivityTypeConstants.CurrencyQuestion)]
+        [InlineAutoMoqData(ActivityTypeConstants.SingleChoiceQuestion)]
+        [InlineAutoMoqData(ActivityTypeConstants.DateQuestion)]
+        [InlineAutoMoqData(ActivityTypeConstants.TextQuestion)]
+        public void Should_not_check_for_multiple_choice_validation_when_not_multiple_choice_activity(string activityType, SaveAndContinueCommand saveAndContinueCommand)
+        {
+            //Arrange
+            saveAndContinueCommand.Data.QuestionActivityData!.ActivityType = activityType;
+
+            //Act
+            var result = this._validator.TestValidate(saveAndContinueCommand);
+
+            //Assert
+            result.ShouldNotHaveValidationErrorFor(c => c.Data.QuestionActivityData!.MultipleChoice);
+        }
     }
 }
