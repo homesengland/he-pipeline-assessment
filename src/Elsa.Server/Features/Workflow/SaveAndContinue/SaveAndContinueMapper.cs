@@ -5,7 +5,9 @@ namespace Elsa.Server.Features.Workflow.SaveAndContinue
 {
     public interface ISaveAndContinueMapper
     {
-        AssessmentQuestion SaveAndContinueCommandToNextAssessmentQuestion(SaveAndContinueCommand command, string nextActivityId, string nextActivityType);
+        AssessmentQuestion SaveAndContinueCommandToNextAssessmentQuestion(string workflowInstanceId,
+            string previousActivityId, string previousActivityInstanceId, string nextActivityId,
+            string nextActivityType);
     }
 
     public class SaveAndContinueMapper : ISaveAndContinueMapper
@@ -17,18 +19,21 @@ namespace Elsa.Server.Features.Workflow.SaveAndContinue
             _dateTimeProvider = dateTimeProvider;
         }
 
-        public AssessmentQuestion SaveAndContinueCommandToNextAssessmentQuestion(SaveAndContinueCommand command, string nextActivityId, string nextActivityType)
+        public AssessmentQuestion SaveAndContinueCommandToNextAssessmentQuestion(string workflowInstanceId,
+            string previousActivityId, string previousActivityInstanceId, string nextActivityId,
+            string nextActivityType)
         {
             return new AssessmentQuestion
             {
-                Id = $"{command.WorkflowInstanceId}-{nextActivityId}",
+                Id = $"{workflowInstanceId}-{nextActivityId}",
                 ActivityId = nextActivityId,
                 ActivityType = nextActivityType,
                 FinishWorkflow = false,
                 NavigateBack = false,
                 Answer = null,
-                WorkflowInstanceId = command.WorkflowInstanceId,
-                PreviousActivityId = command.ActivityId,
+                WorkflowInstanceId = workflowInstanceId,
+                PreviousActivityId = previousActivityId,
+                PreviousActivityInstanceId = previousActivityInstanceId,
                 CreatedDateTime = _dateTimeProvider.UtcNow()
             };
         }

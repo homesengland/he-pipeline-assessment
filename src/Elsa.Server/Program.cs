@@ -37,6 +37,7 @@ builder.Services
         .AddActivity<CurrencyQuestion>()
         .AddActivity<TextQuestion>()
         .AddActivity<DateQuestion>()
+        .AddHttpActivities()
         .AddConsoleActivities()
     );
 

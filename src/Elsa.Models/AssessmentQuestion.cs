@@ -13,6 +13,7 @@
 
         public bool? FinishWorkflow { get; set; }
         public bool? NavigateBack { get; set; }
+        public string PreviousActivityInstanceId { get; set; } = null!;
         public string PreviousActivityId { get; set; } = null!;
 
         public DateTime CreatedDateTime { get; set; }

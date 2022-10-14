@@ -47,8 +47,9 @@ namespace Elsa.Server.Features.Workflow.SaveAndContinue
                     await _pipelineAssessmentRepository.UpdateAssessmentQuestion(dbAssessmentQuestion,
                         cancellationToken);
 
-                    var collectedWorkflow = await _invoker.ExecuteWorkflowsAsync(command.ActivityId, dbAssessmentQuestion.ActivityType,
-                    command.WorkflowInstanceId, dbAssessmentQuestion, cancellationToken).FirstOrDefault();
+                    var collectedWorkflow = await _invoker.FindWorkflowsAsync(command.ActivityId, dbAssessmentQuestion.ActivityType, command.WorkflowInstanceId, cancellationToken).FirstOrDefault();
+                    //var collectedWorkflow = await _invoker.ExecuteWorkflowsAsync(command.ActivityId, dbAssessmentQuestion.ActivityType,
+                    //command.WorkflowInstanceId, dbAssessmentQuestion, cancellationToken).FirstOrDefault();
 
                     var workflowSpecification =
                         new WorkflowInstanceIdSpecification(collectedWorkflow.WorkflowInstanceId);
@@ -59,9 +60,28 @@ namespace Elsa.Server.Features.Workflow.SaveAndContinue
                         if (workflowInstance.Output != null)
                         {
                             var nextActivityId = workflowInstance.Output.ActivityId;
+                            var workflowDefinitionId = workflowInstance.DefinitionId;
+                            var workflowInstanceId = command.WorkflowInstanceId;
+
+                            if (workflowInstance.LastExecutedActivityId != null) 
+                            {
+                                var lastExecutedActivity =
+                                    workflowInstance.ActivityData[workflowInstance.LastExecutedActivityId];
+                                if (lastExecutedActivity.HasKey("ChildWorkflowInstanceId"))
+                                {
+                                    workflowInstanceId = lastExecutedActivity["ChildWorkflowInstanceId"]!.ToString();
+                                }
+
+                                workflowSpecification =
+                                    new WorkflowInstanceIdSpecification(workflowInstanceId);
+
+                                workflowInstance = await _workflowInstanceStore.FindAsync(workflowSpecification, cancellationToken);
+                                nextActivityId = workflowInstance.LastExecutedActivityId;
+                                workflowDefinitionId = workflowInstance.DefinitionId;
+                            }
 
                             var workflow =
-                                await _workflowRegistry.FindAsync(workflowInstance.DefinitionId, VersionOptions.Published, cancellationToken: cancellationToken);
+                                await _workflowRegistry.FindAsync(workflowDefinitionId, VersionOptions.Published, cancellationToken: cancellationToken);
 
                             var nextActivity = workflow!.Activities.FirstOrDefault(x =>
                                 x.Id == nextActivityId);
@@ -70,16 +90,16 @@ namespace Elsa.Server.Features.Workflow.SaveAndContinue
                             {
                                 var nextActivityRecord =
                                     await _pipelineAssessmentRepository.GetAssessmentQuestion(nextActivityId,
-                                        command.WorkflowInstanceId, cancellationToken);
+                                        workflowInstanceId, cancellationToken);
 
                                 if (nextActivityRecord == null)
                                 {
-                                    await CreateNextActivityRecord(command, nextActivityId, nextActivity.Type);
+                                    await CreateNextActivityRecord(workflowInstanceId, command.ActivityId, command.WorkflowInstanceId, nextActivityId, nextActivity.Type);
                                 }
 
                                 result.Data = new SaveAndContinueResponse
                                 {
-                                    WorkflowInstanceId = command.WorkflowInstanceId,
+                                    WorkflowInstanceId = workflowInstanceId,
                                     NextActivityId = nextActivityId,
                                     ActivityType = nextActivity.Type
                                 };
@@ -118,9 +138,10 @@ namespace Elsa.Server.Features.Workflow.SaveAndContinue
 
 
         }
-        private async Task CreateNextActivityRecord(SaveAndContinueCommand command, string nextActivityId, string activityType)
+        private async Task CreateNextActivityRecord(string workflowInstanceId,
+            string previousActivityId, string previousActivityInstanceId, string nextActivityId, string activityType)
         {
-            var assessmentQuestion = _saveAndContinueMapper.SaveAndContinueCommandToNextAssessmentQuestion(command, nextActivityId, activityType);
+            var assessmentQuestion = _saveAndContinueMapper.SaveAndContinueCommandToNextAssessmentQuestion(workflowInstanceId, previousActivityId, previousActivityInstanceId, nextActivityId, activityType);
             await _pipelineAssessmentRepository.CreateAssessmentQuestionAsync(assessmentQuestion);
         }
     }

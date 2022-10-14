@@ -24,7 +24,7 @@ namespace Elsa.Server.Tests.Features.Workflow.SaveAndContinue
             mockDateTimeProvider.Setup(x => x.UtcNow()).Returns(currentTimeUtc);
 
             //Act
-            var result = sut.SaveAndContinueCommandToNextAssessmentQuestion(saveAndContinueCommand, nextActivityId, nextActivityType);
+            var result = sut.SaveAndContinueCommandToNextAssessmentQuestion(saveAndContinueCommand.WorkflowInstanceId, saveAndContinueCommand.ActivityId, saveAndContinueCommand.WorkflowInstanceId, nextActivityId, nextActivityType);
 
             //Assert
             Assert.IsType<AssessmentQuestion>(result);

@@ -16,6 +16,7 @@ namespace Elsa.CustomWorkflow.Sdk.Models.Workflow
         public string WorkflowInstanceId { get; set; } = null!;
         public string ActivityId { get; set; } = null!;
         public string PreviousActivityId { get; set; } = null!;
+        public string PreviousActivityInstanceId { get; set; } = null!;
 
         public QuestionActivityData? QuestionActivityData { get; set; }
 

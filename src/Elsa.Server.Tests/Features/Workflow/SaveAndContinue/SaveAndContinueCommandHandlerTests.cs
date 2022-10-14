@@ -142,7 +142,7 @@ namespace Elsa.Server.Tests.Features.Workflow.SaveAndContinue
                 .ReturnsAsync((AssessmentQuestion?)null);
 
             saveAndContinueMapper
-                .Setup(x => x.SaveAndContinueCommandToNextAssessmentQuestion(saveAndContinueCommand,
+                .Setup(x => x.SaveAndContinueCommandToNextAssessmentQuestion(saveAndContinueCommand.WorkflowInstanceId, saveAndContinueCommand.ActivityId, saveAndContinueCommand.WorkflowInstanceId,
                     workflowInstance.Output!.ActivityId, nextActivityType)).Returns(nextAssessmentQuestion);
 
             //Act
