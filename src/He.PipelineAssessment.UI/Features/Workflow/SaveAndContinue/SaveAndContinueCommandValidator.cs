@@ -1,4 +1,5 @@
-﻿using FluentValidation;
+﻿using Elsa.CustomWorkflow.Sdk;
+using FluentValidation;
 
 namespace He.PipelineAssessment.UI.Features.Workflow.SaveAndContinue
 {
@@ -18,7 +19,7 @@ namespace He.PipelineAssessment.UI.Features.Workflow.SaveAndContinue
                     }
                 }
                 return true;
-            }).WithMessage(x =>
+            }).When(x=>x.Data.QuestionActivityData!.ActivityType==ActivityTypeConstants.MultipleChoiceQuestion).WithMessage(x =>
             {
                 var selectedAnswers = x.Data.QuestionActivityData!.MultipleChoice.SelectedChoices;
                 var exclusiveAnswers = x.Data.QuestionActivityData.MultipleChoice.Choices
