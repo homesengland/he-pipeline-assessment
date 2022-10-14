@@ -27,6 +27,7 @@ namespace Elsa.Server.Features.Workflow.SaveAndContinue
                 FinishWorkflow = false,
                 NavigateBack = false,
                 Answer = null,
+                Comments = null,
                 WorkflowInstanceId = command.WorkflowInstanceId,
                 PreviousActivityId = command.ActivityId,
                 CreatedDateTime = _dateTimeProvider.UtcNow()

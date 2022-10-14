@@ -28,6 +28,8 @@ namespace Elsa.CustomWorkflow.Sdk.Models.Workflow
         public string Question { get; set; } = null!;
         public string? QuestionHint { get; set; }
         public string? QuestionGuidance { get; set; }
+        public bool DisplayComments { get; set; }
+        public string? Comments { get; set; }
         public object Output { get; set; } = null!;
         public string? Answer { get; set; }
         public decimal? Decimal { get { return GetDecimal(); } set { SetDecimal(value); } }
@@ -39,6 +41,8 @@ namespace Elsa.CustomWorkflow.Sdk.Models.Workflow
         public SingleChoiceModel SingleChoice { get { return GetSingleChoiceModel(); } set { SetSingleChoiceModel(value); } }
 
         public Date Date { get { return GetDate(); } set { SetDate(value); } }
+
+
 
         #region Getters and Setters
 
