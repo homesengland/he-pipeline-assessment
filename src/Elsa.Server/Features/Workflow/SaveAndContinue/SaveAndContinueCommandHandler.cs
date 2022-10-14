@@ -47,9 +47,8 @@ namespace Elsa.Server.Features.Workflow.SaveAndContinue
                     await _pipelineAssessmentRepository.UpdateAssessmentQuestion(dbAssessmentQuestion,
                         cancellationToken);
 
-                    var collectedWorkflow = await _invoker.FindWorkflowsAsync(command.ActivityId, dbAssessmentQuestion.ActivityType, command.WorkflowInstanceId, cancellationToken).FirstOrDefault();
-                    //var collectedWorkflow = await _invoker.ExecuteWorkflowsAsync(command.ActivityId, dbAssessmentQuestion.ActivityType,
-                    //command.WorkflowInstanceId, dbAssessmentQuestion, cancellationToken).FirstOrDefault();
+                    var collectedWorkflow = await _invoker.ExecuteWorkflowsAsync(command.ActivityId, dbAssessmentQuestion.ActivityType,
+                    command.WorkflowInstanceId, dbAssessmentQuestion, cancellationToken).FirstOrDefault();
 
                     var workflowSpecification =
                         new WorkflowInstanceIdSpecification(collectedWorkflow.WorkflowInstanceId);
