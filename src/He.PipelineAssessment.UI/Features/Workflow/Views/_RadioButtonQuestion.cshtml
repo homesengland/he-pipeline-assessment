@@ -6,7 +6,7 @@
             <h1 class="govuk-heading-l">
                 @Html.DisplayTextFor(m => m.Data.QuestionActivityData!.Title)
             </h1>
-            
+
             <label class="govuk-label govuk-label--m">
                 @Html.DisplayTextFor(m => m.Data.QuestionActivityData!.Question)
             </label>
@@ -20,14 +20,17 @@
         <div id="waste-hint" class="govuk-hint">
             Select all that apply
         </div>
-        <div class="govuk-checkboxes" data-module="govuk-checkboxes">
-            @for (int i = 0; i < Model.Data.QuestionActivityData.Choices.Count(); i++)
+        <div class="govuk-radios" data-module="govuk-radios">
+           @foreach(var choice in Model.Data.QuestionActivityData!.SingleChoice.Choices)
             {
-                <div class="govuk-checkboxes__item">
-                    @Html.HiddenFor(m => m.Data.QuestionActivityData!.Choices[i].Answer)
-                    @Html.CheckBoxFor(m => m.Data.QuestionActivityData!.Choices[i].IsSelected, new {@class = "govuk-checkboxes__input"})
-                    @Html.Label(Model.Data.QuestionActivityData!.Choices[i].Answer, Model.Data.QuestionActivityData.Choices[i].Answer, new {@class = "govuk-label govuk-checkboxes__label"})
+                int iterrator = 1;
+                string isChecked = choice.Answer == Model.Data.QuestionActivityData.SingleChoice.SelectedAnswer? "checked" : "";
+                <div class="govuk-radios__item">
+                    @Html.HiddenFor(m => choice.Answer)
+                    @Html.RadioButtonFor(m => m.Data.QuestionActivityData!.SingleChoice.SelectedAnswer, choice.Answer, new {@class="govuk-radios__input", @id="radio_multi_select_"+iterrator, @checked = isChecked})
+                    @Html.Label(choice.Answer, choice.Answer, new {@class = "govuk-label govuk-radios__label"})
                 </div>
+                iterrator++;
             }
         </div>
     </fieldset>
@@ -45,7 +48,17 @@
             </div>
         </details>
     }
-    <br/>
+    @if (Model.Data.QuestionActivityData.DisplayComments)
+    {
+        <br />
+        <div class="govuk-form-group">
+            <label class="govuk-label" for="more-detail">
+                Comments
+            </label>            
+            @Html.TextAreaFor(m => m.Data.QuestionActivityData!.Comments,  new {id="more-detail",@class = "govuk-textarea"})
+        </div>
+    }
+    <br />
 
-    <input id="Next" type="submit" value="Save and continue" name="Next" class="govuk-button"/>
+    <input id="Next" type="submit" value="Save and continue" name="Next" class="govuk-button" />
 </div>

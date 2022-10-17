@@ -17,6 +17,7 @@ namespace He.PipelineAssessment.UI.Features.Workflow.SaveAndContinue
             {
                 Id = $"{saveAndContinueCommand.Data.WorkflowInstanceId}-{saveAndContinueCommand.Data.ActivityId}",
                 Answer = saveAndContinueCommand.Data.QuestionActivityData!.Answer,
+                Comments = saveAndContinueCommand.Data.QuestionActivityData!.Comments,
                 WorkflowInstanceId = saveAndContinueCommand.Data.WorkflowInstanceId,
                 ActivityId = saveAndContinueCommand.Data.ActivityId
             };

@@ -61,6 +61,16 @@
             </div>
         </details>
     }
+    @if (Model.Data.QuestionActivityData.DisplayComments)
+    {
+        <br />
+        <div class="govuk-form-group">
+            <label class="govuk-label" for="more-detail">
+                Comments
+            </label>
+            @Html.TextAreaFor(m => m.Data.QuestionActivityData!.Comments,  new {id="more-detail",@class = "govuk-textarea"})
+        </div>
+    }
     <br />
 
         <input id="Next" type="submit" value="Save and continue" name="Next" class="govuk-button" />

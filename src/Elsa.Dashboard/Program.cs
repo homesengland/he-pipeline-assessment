@@ -23,9 +23,16 @@ if (!app.Environment.IsDevelopment())
 app.UseMiddleware<SecurityHeaderMiddleware>();
 
 app
-    .UseHttpsRedirection()
-    .UseStaticFiles() // For Dashboard.
+    .UseStaticFiles()
+        .UseStaticFiles(new StaticFileOptions
+        {
+          FileProvider = new Microsoft.Extensions.FileProviders.PhysicalFileProvider(Path.Combine(Directory.GetCurrentDirectory(), @"www")),
+          ServeUnknownFileTypes = true,
+          RequestPath = "/static"
+        })// For Dashboard.
+
     .UseRouting()
+    .UseDirectoryBrowser()
     .UseEndpoints(endpoints =>
     {
         // Elsa API Endpoints are implemented as regular ASP.NET Core API controllers.

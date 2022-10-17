@@ -12,7 +12,7 @@ namespace Elsa.Server.Features.Workflow.LoadWorkflowActivity
 {
     public class LoadWorkflowActivityRequestHandler : IRequestHandler<LoadWorkflowActivityRequest, OperationResult<LoadWorkflowActivityResponse>>
     {
-        private readonly IQuestionInvoker _QuestionInvoker;
+        private readonly IQuestionInvoker _questionInvoker;
         private readonly IWorkflowInstanceStore _workflowInstanceStore;
         private readonly IPipelineAssessmentRepository _pipelineAssessmentRepository;
         private readonly ILoadWorkflowActivityJsonHelper _loadWorkflowActivityJsonHelper;
@@ -22,7 +22,7 @@ namespace Elsa.Server.Features.Workflow.LoadWorkflowActivity
             _workflowInstanceStore = workflowInstanceStore;
             _pipelineAssessmentRepository = pipelineAssessmentRepository;
             _loadWorkflowActivityJsonHelper = loadWorkflowActivityJsonHelper;
-            _QuestionInvoker = questionInvoker;
+            _questionInvoker = questionInvoker;
         }
 
         public async Task<OperationResult<LoadWorkflowActivityResponse>> Handle(LoadWorkflowActivityRequest activityRequest, CancellationToken cancellationToken)
@@ -42,7 +42,7 @@ namespace Elsa.Server.Features.Workflow.LoadWorkflowActivity
 
                 if (dbAssessmentQuestion != null)
                 {
-                    IEnumerable<CollectedWorkflow> workflows = await _QuestionInvoker.FindWorkflowsAsync(activityRequest.ActivityId, dbAssessmentQuestion.ActivityType, activityRequest.WorkflowInstanceId, cancellationToken);
+                    IEnumerable<CollectedWorkflow> workflows = await _questionInvoker.FindWorkflowsAsync(activityRequest.ActivityId, dbAssessmentQuestion.ActivityType, activityRequest.WorkflowInstanceId, cancellationToken);
 
                     var collectedWorkflow = workflows.FirstOrDefault();
                     if (collectedWorkflow != null)
@@ -72,16 +72,19 @@ namespace Elsa.Server.Features.Workflow.LoadWorkflowActivity
                                     result.Data!.QuestionActivityData = activityData;
                                     result.Data.QuestionActivityData.ActivityType = dbAssessmentQuestion.ActivityType;
                                     result.Data.QuestionActivityData.Answer = dbAssessmentQuestion.Answer;
+                                    result.Data.QuestionActivityData.Comments = dbAssessmentQuestion.Comments;
 
                                     // Restore preserved checkboxes from previous page load
                                     if (result.Data.ActivityType == Constants.MultipleChoiceQuestion && !string.IsNullOrEmpty(result.Data.QuestionActivityData.Answer))
                                     {
                                         var answerList = JsonSerializer.Deserialize<List<string>>(result.Data.QuestionActivityData.Answer);
+                                        result.Data.QuestionActivityData.MultipleChoice.SelectedChoices = answerList!;
+                                    }
 
-                                        foreach (var choice in result.Data.QuestionActivityData.Choices)
-                                        {
-                                            choice.IsSelected = answerList!.Contains(choice.Answer);
-                                        }
+                                    // Restore preserved selected answer from previous page load
+                                    if (result.Data.ActivityType == Constants.SingleChoiceQuestion && !string.IsNullOrEmpty(result.Data.QuestionActivityData.Answer))
+                                    {
+                                        result.Data.QuestionActivityData.SingleChoice.SelectedAnswer = result.Data.QuestionActivityData.Answer;
                                     }
                                 }
                                 else
