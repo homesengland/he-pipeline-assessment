@@ -1,5 +1,6 @@
 ﻿using Elsa.Server.Features.Workflow.GetSinglePipelineData;
 using Elsa.Server.Models;
+using He.PipelineAssessment.Data.SinglePipeline;
 using MediatR;
 
 namespace Elsa.Server.Features.Datasources.GetSinglePipelineData

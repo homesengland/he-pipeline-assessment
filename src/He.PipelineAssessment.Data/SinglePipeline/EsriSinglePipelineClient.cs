@@ -1,4 +1,6 @@
-﻿namespace Elsa.Server.Features.Datasources.GetSinglePipelineData
+﻿using Microsoft.Extensions.Logging;
+
+namespace He.PipelineAssessment.Data.SinglePipeline
 {
     public interface IEsriSinglePipelineClient
     {
@@ -9,9 +11,9 @@
     {
 
         private readonly IHttpClientFactory _httpClientFactory;
-        private readonly ILogger<GetSinglePipelineDataRequestHandler> _logger;
+        private readonly ILogger<EsriSinglePipelineClient> _logger;
 
-        public EsriSinglePipelineClient(IHttpClientFactory httpClientFactory, ILogger<GetSinglePipelineDataRequestHandler> logger)
+        public EsriSinglePipelineClient(IHttpClientFactory httpClientFactory, ILogger<EsriSinglePipelineClient> logger)
         {
             _httpClientFactory = httpClientFactory;
             _logger = logger;

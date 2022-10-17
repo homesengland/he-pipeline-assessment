@@ -1,4 +1,4 @@
-﻿namespace Elsa.Server.Features.Datasources.GetSinglePipelineData
+﻿namespace He.PipelineAssessment.Data.SinglePipeline
 {
     public class SinglePipelineData
     {
