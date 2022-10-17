@@ -1,4 +1,3 @@
-using Elsa;
 using Elsa.CustomActivities.Activities.Currency;
 using Elsa.CustomActivities.Activities.Date;
 using Elsa.CustomActivities.Activities.MultipleChoice;
@@ -11,6 +10,7 @@ using Elsa.Persistence.EntityFramework.Core.Extensions;
 using Elsa.Persistence.EntityFramework.SqlServer;
 using Elsa.Runtime;
 using Elsa.Server.Extensions;
+using Elsa.Server.Features.Datasources.GetSinglePipelineData;
 using Elsa.Server.Features.Workflow.LoadWorkflowActivity;
 using Elsa.Server.Features.Workflow.SaveAndContinue;
 using Elsa.Server.Features.Workflow.StartWorkflow;
@@ -71,6 +71,10 @@ builder.Services.AddScoped<ISaveAndContinueMapper, SaveAndContinueMapper>();
 builder.Services.AddScoped<ILoadWorkflowActivityJsonHelper, LoadWorkflowActivityJsonHelper>();
 //builder.Services.AddScoped<ILoadWorkflowActivityMapper, LoadWorkflowActivityMapper>();
 
+builder.Services.AddScoped<IEsriSinglePipelineClient, EsriSinglePipelineClient>();
+builder.Services.AddScoped<IGetSinglePipelineDataJsonHelper, GetSinglePipelineDataJsonHelper>();
+
+
 // Allow arbitrary client browser apps to access the API.
 // In a production environment, make sure to allow only origins you trust.
 builder.Services.AddCors(cors => cors.AddDefaultPolicy(policy => policy
@@ -84,6 +88,14 @@ if (builder.Environment.IsDevelopment())
 {
     builder.Services.AddStartupTask<RunElsaCustomMigrations>();
 }
+
+string singlePipelineURL = builder.Configuration["Datasources:SinglePipeline"];
+
+//TODO: make this an extension in the SDK
+builder.Services.AddHttpClient("SinglePipelineClient", client =>
+{
+    client.BaseAddress = new Uri(singlePipelineURL);
+});
 
 var app = builder.Build();
 
