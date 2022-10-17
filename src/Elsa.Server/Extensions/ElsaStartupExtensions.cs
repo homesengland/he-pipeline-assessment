@@ -10,7 +10,7 @@ namespace Elsa.Server.Extensions
     {
         public static void AddCustomElsaScriptHandlers(this IServiceCollection services)
         {
-            services.AddNotificationHandlers(typeof(GetMultipleChoiceQuestionScriptHandler));
+            services.AddNotificationHandlers(typeof(LoadAssessmentStageScriptHandler));
             services.AddNotificationHandlers(typeof(GetSingleChoiceQuestionScriptHandler));
             services.AddNotificationHandlers(typeof(GetCurrencyQuestionScriptHandler));
             services.AddNotificationHandlers(typeof(GetTextQuestionScriptHandler));

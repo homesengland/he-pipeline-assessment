@@ -1,10 +1,12 @@
 using Elsa;
 using Elsa.CustomActivities.Activities.Currency;
 using Elsa.CustomActivities.Activities.Date;
+using Elsa.CustomActivities.Activities.LoadAssessmentStage;
 using Elsa.CustomActivities.Activities.MultipleChoice;
 using Elsa.CustomActivities.Activities.Shared;
 using Elsa.CustomActivities.Activities.SingleChoice;
 using Elsa.CustomActivities.Activities.Text;
+using Elsa.CustomActivities.Services;
 using Elsa.CustomInfrastructure.Data;
 using Elsa.CustomInfrastructure.Data.Repository;
 using Elsa.Persistence.EntityFramework.Core.Extensions;
@@ -19,7 +21,6 @@ using Elsa.Server.StartupTasks;
 using MediatR;
 using Microsoft.AspNetCore.DataProtection;
 using Microsoft.EntityFrameworkCore;
-using MyActivityLibrary.JavaScript;
 
 var builder = WebApplication.CreateBuilder(args);
 var elsaConnectionString = builder.Configuration.GetConnectionString("Elsa");
@@ -37,6 +38,7 @@ builder.Services
         .AddActivity<CurrencyQuestion>()
         .AddActivity<TextQuestion>()
         .AddActivity<DateQuestion>()
+        .AddActivity<LoadAssessmentStage>()
         .AddHttpActivities()
         .AddConsoleActivities()
     );
