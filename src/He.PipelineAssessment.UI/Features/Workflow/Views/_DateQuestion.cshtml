@@ -1,6 +1,8 @@
 ﻿@model He.PipelineAssessment.UI.Features.Workflow.SaveAndContinue.SaveAndContinueCommand
 
-@Html.ValidationSummary(false,"",new{@class="govuk-list govuk-error-summary__list"})
+@if(!Model.IsValid){
+    @Html.ValidationSummary(false,"",new{@class="govuk-list govuk-error-summary__list"})
+}
 
 <div class="govuk-form-group">
     <h1 class="govuk-heading-l">
