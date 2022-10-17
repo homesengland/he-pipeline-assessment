@@ -357,3 +357,5 @@ elsa.sqlite.db
 pipelineassessment.db
 pipelineassessment.db-shm
 pipelineassessment.db-wal
+
+appsettings.Development.json
