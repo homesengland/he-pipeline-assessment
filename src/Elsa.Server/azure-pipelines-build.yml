@@ -7,7 +7,7 @@ trigger:
   - none
 
 pool:
-  vmImage: 'ubuntu-18.04'
+  vmImage: 'ubuntu-22.04'
 
 resources:
   repositories:
