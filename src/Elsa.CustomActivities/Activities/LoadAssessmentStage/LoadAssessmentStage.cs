@@ -4,6 +4,9 @@ using Elsa.Attributes;
 using Elsa.Design;
 using Elsa.Expressions;
 using Elsa.Models;
+using Elsa.Persistence;
+using Elsa.Persistence.Specifications;
+using Elsa.Persistence.Specifications.Bookmarks;
 using Elsa.Providers.WorkflowStorage;
 using Elsa.Services;
 using Elsa.Services.Models;
@@ -21,12 +24,14 @@ namespace Elsa.CustomActivities.Activities.LoadAssessmentStage
         private readonly IStartsWorkflow _startsWorkflow;
         private readonly IWorkflowRegistry _workflowRegistry;
         private readonly IWorkflowStorageService _workflowStorageService;
+        private readonly IWorkflowInstanceStore _workflowInstanceStore;
 
-        public LoadAssessmentStage(IStartsWorkflow startsWorkflow, IWorkflowRegistry workflowRegistry, IWorkflowStorageService workflowStorageService)
+        public LoadAssessmentStage(IStartsWorkflow startsWorkflow, IWorkflowRegistry workflowRegistry, IWorkflowStorageService workflowStorageService, IWorkflowInstanceStore workflowInstanceStore)
         {
             _startsWorkflow = startsWorkflow;
             _workflowRegistry = workflowRegistry;
             _workflowStorageService = workflowStorageService;
+            _workflowInstanceStore = workflowInstanceStore;
         }
 
         [ActivityInput(
@@ -76,12 +81,6 @@ namespace Elsa.CustomActivities.Activities.LoadAssessmentStage
             set => SetState(value);
         }
 
-        public Dictionary<string, string> AlreadyExecutedChildren
-        {
-            get => GetState<Dictionary<string, string>>()!;
-            set => SetState(value);
-        }
-
         protected override async ValueTask<IActivityExecutionResult> OnExecuteAsync(ActivityExecutionContext context)
         {
             var cancellationToken = context.CancellationToken;
@@ -95,19 +94,28 @@ namespace Elsa.CustomActivities.Activities.LoadAssessmentStage
             //ChildWorkflowInstanceId will have the id of the subworkflow but, if it has failed in a loop, as ChildWorkflowInstanceId is metadata, it will always
             //have stored just the last workflowinstance executed, but not the rest, so we need to discover what is the real workflowinstace using hashed input
 
-
             if (workflowBlueprint == null || workflowBlueprint.Id == context.WorkflowInstance.DefinitionId)
                 return Outcome("Not Found");
 
-            var result = await _startsWorkflow.StartWorkflowAsync(workflowBlueprint!, TenantId, new WorkflowInput(Input), CorrelationId, ContextId, cancellationToken: cancellationToken);
-            childWorkflowInstance = result.WorkflowInstance!;
-            childWorkflowStatus = childWorkflowInstance.WorkflowStatus;
-            ChildWorkflowInstanceId = childWorkflowInstance.Id;
+            var test = new CorrelationIdSpecification<WorkflowInstance>(CorrelationId);
+            var workflowInstances = await _workflowInstanceStore.FindManyAsync(test, cancellationToken: cancellationToken);
+
+            var existingWorkflow = workflowInstances.FirstOrDefault(x => x.DefinitionId == WorkflowDefinitionId);
+            if (existingWorkflow != null)
+            {
+                childWorkflowInstance = existingWorkflow;
+                ChildWorkflowInstanceId = existingWorkflow.Id;
+            }
+            else
+            {
+                var result = await _startsWorkflow.StartWorkflowAsync(workflowBlueprint!, TenantId, new WorkflowInput(Input), CorrelationId, ContextId, cancellationToken: cancellationToken);
+                childWorkflowInstance = result.WorkflowInstance!;
+                ChildWorkflowInstanceId = childWorkflowInstance.Id;
+            }
 
             context.JournalData.Add("Workflow Blueprint ID", workflowBlueprint.Id);
             context.JournalData.Add("Workflow Instance ID", childWorkflowInstance.Id);
             context.JournalData.Add("Workflow Instance Status", childWorkflowInstance.WorkflowStatus);
-
 
             return Suspend();
         }

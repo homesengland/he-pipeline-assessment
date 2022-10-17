@@ -23,11 +23,6 @@ namespace Elsa.CustomActivities.Activities.Shared
                 engine.SetValue(JavascriptElementName, activityExecutionContext.GetInput<AssessmentQuestion>() ?? new AssessmentQuestion());
             }
 
-            if (activityExecutionContext.Input != null && activityExecutionContext.Input.GetType() == typeof(FinishedWorkflowModel))
-            {
-                var engine = notification.Engine;
-                engine.SetValue(JavascriptElementName, activityExecutionContext.GetInput<FinishedWorkflowModel>() ?? new FinishedWorkflowModel());
-            }
             return Task.CompletedTask;
         }
 
