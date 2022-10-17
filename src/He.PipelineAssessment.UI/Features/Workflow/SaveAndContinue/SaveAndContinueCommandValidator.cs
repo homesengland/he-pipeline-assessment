@@ -1,4 +1,7 @@
-﻿namespace He.PipelineAssessment.UI.Features.Workflow.SaveAndContinue
+﻿using Elsa.CustomWorkflow.Sdk;
+using FluentValidation;
+
+namespace He.PipelineAssessment.UI.Features.Workflow.SaveAndContinue
 {
     public class SaveAndContinueCommandValidator : AbstractValidator<SaveAndContinueCommand>
     {
