@@ -2,6 +2,6 @@
 {
     public class GetSinglePipelineDataResponse
     {
-        public object Data { get; set; }
+        public SinglePipelineData? Data { get; set; }
     }
 }
