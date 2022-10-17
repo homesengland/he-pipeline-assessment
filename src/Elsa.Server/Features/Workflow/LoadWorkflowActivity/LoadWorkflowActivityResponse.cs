@@ -17,6 +17,8 @@
         public string Question { get; set; } = null!;
         public string? QuestionHint { get; set; }
         public string? QuestionGuidance { get; set; }
+        public bool DisplayComments { get; set; }
+        public string? Comments { get; set; }
         public object? Output { get; set; }
 
         public string ActivityType { get; set; } = null!;

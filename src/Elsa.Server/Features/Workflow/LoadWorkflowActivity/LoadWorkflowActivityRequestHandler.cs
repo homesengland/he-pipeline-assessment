@@ -72,6 +72,7 @@ namespace Elsa.Server.Features.Workflow.LoadWorkflowActivity
                                     result.Data!.QuestionActivityData = activityData;
                                     result.Data.QuestionActivityData.ActivityType = dbAssessmentQuestion.ActivityType;
                                     result.Data.QuestionActivityData.Answer = dbAssessmentQuestion.Answer;
+                                    result.Data.QuestionActivityData.Comments = dbAssessmentQuestion.Comments;
 
                                     // Restore preserved checkboxes from previous page load
                                     if (result.Data.ActivityType == Constants.MultipleChoiceQuestion && !string.IsNullOrEmpty(result.Data.QuestionActivityData.Answer))

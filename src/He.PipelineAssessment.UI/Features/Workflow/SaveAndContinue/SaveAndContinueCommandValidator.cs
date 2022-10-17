@@ -25,7 +25,7 @@ namespace He.PipelineAssessment.UI.Features.Workflow.SaveAndContinue
                 var selectedAnswers = x.Data.QuestionActivityData!.MultipleChoice.SelectedChoices;
                 var exclusiveAnswers = x.Data.QuestionActivityData.MultipleChoice.Choices
                     .Where(c => c.IsSingle && selectedAnswers.Contains(c.Answer)).Select(c => c.Answer).ToList();
-                
+
                 if (exclusiveAnswers.Any())
                 {
                     if (exclusiveAnswers.Count() > 1)
