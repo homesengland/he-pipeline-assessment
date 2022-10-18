@@ -2,6 +2,7 @@
 using System.Security.Cryptography.X509Certificates;
 using System.Text.Json;
 using Elsa.CustomWorkflow.Sdk.Models.Workflow;
+using He.PipelineAssessment.Common.Tests;
 using Newtonsoft.Json.Linq;
 using Xunit;
 

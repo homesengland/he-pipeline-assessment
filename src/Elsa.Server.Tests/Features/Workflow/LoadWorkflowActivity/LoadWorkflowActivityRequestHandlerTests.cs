@@ -7,6 +7,7 @@ using Elsa.Persistence;
 using Elsa.Persistence.Specifications.WorkflowInstances;
 using Elsa.Server.Features.Workflow.LoadWorkflowActivity;
 using Elsa.Services.Models;
+using He.PipelineAssessment.Common.Tests;
 using Moq;
 using Xunit;
 using Constants = Elsa.CustomActivities.Activities.Constants;

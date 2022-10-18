@@ -3,7 +3,7 @@ using Moq.Protected;
 using Newtonsoft.Json;
 using System.Net;
 
-namespace Elsa.CustomWorkflow.Sdk.Tests.HttpClients;
+namespace He.PipelineAssessment.Common.Tests;
 
 public class HttpClientTestHelpers
 {

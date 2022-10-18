@@ -5,6 +5,7 @@ using He.PipelineAssessment.UI.Features.Workflow.SaveAndContinue;
 using Moq;
 using Xunit;
 using Elsa.CustomWorkflow.Sdk.Models.Workflow;
+using He.PipelineAssessment.Common.Tests;
 
 namespace He.PipelineAssessment.UI.Tests.Features.Workflow.LoadWorkflowActivity
 {
