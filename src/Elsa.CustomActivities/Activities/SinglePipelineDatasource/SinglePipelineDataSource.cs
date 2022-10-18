@@ -23,7 +23,7 @@ namespace Elsa.CustomActivities.Activities.SinglePipelineDatasource
             _jsonHelper = jsonHelper;
         }
 
-        [ActivityInput(Hint = "Id of the record to get", SupportedSyntaxes = new[] { SyntaxNames.Literal })]
+        [ActivityInput(Hint = "Id of the record to get", SupportedSyntaxes = new[] { SyntaxNames.Literal, SyntaxNames.Json, SyntaxNames.JavaScript })]
         public string SpId { get; set; } = null!;
 
         [ActivityOutput] public SinglePipelineData? Output { get; set; }
