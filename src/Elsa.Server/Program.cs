@@ -46,7 +46,7 @@ builder.Services
         .AddConsoleActivities()
     );
 
-builder.Services.TryAddProvider<IExpressionHandler, CustomSwitchHandler>(ServiceLifetime.Singleton)
+builder.Services.TryAddProvider<IExpressionHandler, CustomSwitchHandler>(ServiceLifetime.Scoped)
     .AddScoped<IExpressionEvaluator, CustomExpressionEvaluator>(); ;
 
 builder.Services.AddDbContext<ElsaCustomContext>(config =>

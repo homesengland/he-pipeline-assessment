@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Cryptography.X509Certificates;
 using System.Threading;
 using System.Threading.Tasks;
 using Elsa.Exceptions;
@@ -18,7 +19,10 @@ namespace Elsa.CustomActivities.Activities.Shared
 
         public CustomExpressionEvaluator(IEnumerable<IExpressionHandler> evaluators, ILogger<ExpressionEvaluator> logger)
         {
+            evaluators = evaluators.ToList().Where(x => x.Syntax != "Switch");
+            var customEvaluator = evaluators.Where(x => x.Syntax == "CustomSwitch").FirstOrDefault();
             _evaluators = evaluators.ToDictionary(x => x.Syntax);
+            _evaluators.Add("Switch", customEvaluator!);
             _logger = logger;
         }
 
