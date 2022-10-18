@@ -1,4 +1,5 @@
-﻿using Elsa.Scripting.JavaScript.Services;
+﻿using Elsa.CustomModels;
+using Elsa.Scripting.JavaScript.Services;
 using He.PipelineAssessment.Data.SinglePipeline;
 
 namespace Elsa.Server.Extensions
@@ -7,7 +8,8 @@ namespace Elsa.Server.Extensions
     {
         public override IEnumerable<Type> CollectTypes(TypeDefinitionContext context) => new[]
         {
-            typeof(SinglePipelineData)
+            typeof(SinglePipelineData),
+            typeof(AssessmentQuestion)
 
         };
     }
