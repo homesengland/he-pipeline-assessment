@@ -12,11 +12,19 @@ namespace Elsa.Server.Features.Datasources.GetSinglePipelineData
     {
         public SinglePipelineData? JsonToSinglePipelineData(string data)
         {
-            var result = JsonSerializer.Deserialize<EsriSinglePipelineResponse>(data);
-            if (result != null && result.features.FirstOrDefault() != null)
+            try
             {
-                var dataResult = result.features.FirstOrDefault()!.attributes;
-                return dataResult;
+                var result = JsonSerializer.Deserialize<EsriSinglePipelineResponse>(data);
+                if (result != null && result.features.FirstOrDefault() != null)
+                {
+                    var dataResult = result.features.FirstOrDefault()!.attributes;
+                    return dataResult;
+                }
+            }
+            catch (Exception)
+            {
+                
+                return null;
             }
 
             return null;
