@@ -8,9 +8,9 @@ namespace Elsa.Server.Features.Datasources.GetSinglePipelineData
     public class GetSinglePipelineDataRequestHandler : IRequestHandler<GetSinglePipelineDataRequest, OperationResult<GetSinglePipelineDataResponse>>
     {
         private readonly IEsriSinglePipelineClient _singlePipelineClient;
-        private readonly IGetSinglePipelineDataJsonHelper _jsonHelper;
+        private readonly IEsriSinglePipelineDataJsonHelper _jsonHelper;
 
-        public GetSinglePipelineDataRequestHandler(IEsriSinglePipelineClient singlePipelineClient, IGetSinglePipelineDataJsonHelper jsonHelper)
+        public GetSinglePipelineDataRequestHandler(IEsriSinglePipelineClient singlePipelineClient, IEsriSinglePipelineDataJsonHelper jsonHelper)
         {
             _singlePipelineClient = singlePipelineClient;
             _jsonHelper = jsonHelper;
@@ -20,15 +20,28 @@ namespace Elsa.Server.Features.Datasources.GetSinglePipelineData
         {
             var data = await _singlePipelineClient.GetSinglePipelineData(request.SpId);
 
-            var dataResult = _jsonHelper.JsonToSinglePipelineData(data);
+            SinglePipelineData? dataResult = null;
 
-            return new OperationResult<GetSinglePipelineDataResponse>()
+            var result = new OperationResult<GetSinglePipelineDataResponse>()
             {
                 Data = new GetSinglePipelineDataResponse()
                 {
                     Data = dataResult
                 }
+
             };
+
+            if (data != null)
+            {
+                dataResult = _jsonHelper.JsonToSinglePipelineData(data);
+            }
+            else
+            {
+                result.ErrorMessages.Add("Call to GetSinglePipelineData returned null");
+            }
+
+            return result;
+
         }
 
 

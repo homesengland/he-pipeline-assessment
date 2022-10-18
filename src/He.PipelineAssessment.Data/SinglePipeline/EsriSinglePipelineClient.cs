@@ -4,7 +4,7 @@ namespace He.PipelineAssessment.Data.SinglePipeline
 {
     public interface IEsriSinglePipelineClient
     {
-        Task<string> GetSinglePipelineData(string spid);
+        Task<string?> GetSinglePipelineData(string spid);
     }
 
     public class EsriSinglePipelineClient : IEsriSinglePipelineClient
@@ -19,9 +19,9 @@ namespace He.PipelineAssessment.Data.SinglePipeline
             _logger = logger;
         }
 
-        public async Task<string> GetSinglePipelineData(string spid)
+        public async Task<string?> GetSinglePipelineData(string spid)
         {
-            string data = null;
+            string? data = null;
             string whereClause = $"sp_id={spid}";
             string outFields = "*";
 
@@ -38,7 +38,7 @@ namespace He.PipelineAssessment.Data.SinglePipeline
                                      $"\n Message= '{data}'," +
                                      $"\n Url='{relativeUri}'");
 
-                    throw new Exception();
+                    return null;
                 }
             }
 

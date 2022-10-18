@@ -15,6 +15,7 @@ namespace Elsa.Server.Extensions
             services.AddNotificationHandlers(typeof(GetCurrencyQuestionScriptHandler));
             services.AddNotificationHandlers(typeof(GetTextQuestionScriptHandler));
             services.AddNotificationHandlers(typeof(GetDateQuestionScriptHandler));
+            services.AddJavaScriptTypeDefinitionProvider<CustomTypeDefinitionProvider>();
         }
     }
 }

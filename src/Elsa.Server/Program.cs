@@ -3,7 +3,7 @@ using Elsa.CustomActivities.Activities.Date;
 using Elsa.CustomActivities.Activities.MultipleChoice;
 using Elsa.CustomActivities.Activities.Shared;
 using Elsa.CustomActivities.Activities.SingleChoice;
-using Elsa.CustomActivities.Activities.SinglePipelineDataActivity;
+using Elsa.CustomActivities.Activities.SinglePipelineDatasource;
 using Elsa.CustomActivities.Activities.Text;
 using Elsa.CustomInfrastructure.Data;
 using Elsa.CustomInfrastructure.Data.Repository;
@@ -21,7 +21,6 @@ using He.PipelineAssessment.Data.SinglePipeline;
 using MediatR;
 using Microsoft.AspNetCore.DataProtection;
 using Microsoft.EntityFrameworkCore;
-using MyActivityLibrary.JavaScript;
 
 var builder = WebApplication.CreateBuilder(args);
 var elsaConnectionString = builder.Configuration.GetConnectionString("Elsa");
@@ -60,7 +59,7 @@ builder.Services.AddBookmarkProvider<QuestionBookmarkProvider>();
 builder.Services.AddScoped<IQuestionInvoker, QuestionInvoker>();
 
 builder.Services.AddScoped<IPipelineAssessmentRepository, PipelineAssessmentRepository>();
-builder.Services.AddJavaScriptTypeDefinitionProvider<CustomTypeDefinitionProvider>();
+
 
 builder.Services.AddMediatR(typeof(Program).Assembly);
 builder.Services.AddApplicationInsightsTelemetry();
@@ -75,7 +74,7 @@ builder.Services.AddScoped<ILoadWorkflowActivityJsonHelper, LoadWorkflowActivity
 //builder.Services.AddScoped<ILoadWorkflowActivityMapper, LoadWorkflowActivityMapper>();
 
 builder.Services.AddScoped<IEsriSinglePipelineClient, EsriSinglePipelineClient>();
-builder.Services.AddScoped<IGetSinglePipelineDataJsonHelper, GetSinglePipelineDataJsonHelper>();
+builder.Services.AddScoped<IEsriSinglePipelineDataJsonHelper, EsriSinglePipelineDataJsonHelper>();
 
 
 // Allow arbitrary client browser apps to access the API.
