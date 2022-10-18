@@ -6,7 +6,7 @@ using Elsa.Services;
 using Elsa.Services.Models;
 using He.PipelineAssessment.Data.SinglePipeline;
 
-namespace Elsa.CustomActivities.Activities.SinglePipelineDatasource
+namespace Elsa.CustomActivities.Activities.SinglePipelineDataSource
 {
     [Action(
         Category = "Homes England Data",

@@ -3,7 +3,7 @@ using Elsa.CustomActivities.Activities.Date;
 using Elsa.CustomActivities.Activities.MultipleChoice;
 using Elsa.CustomActivities.Activities.Shared;
 using Elsa.CustomActivities.Activities.SingleChoice;
-using Elsa.CustomActivities.Activities.SinglePipelineDatasource;
+using Elsa.CustomActivities.Activities.SinglePipelineDataSource;
 using Elsa.CustomActivities.Activities.Text;
 using Elsa.CustomInfrastructure.Data;
 using Elsa.CustomInfrastructure.Data.Repository;
