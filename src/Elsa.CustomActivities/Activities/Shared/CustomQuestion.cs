@@ -28,7 +28,7 @@ namespace Elsa.CustomActivities.Activities.Shared
         [ActivityInput(Hint = "Question guidance", UIHint = ActivityInputUIHints.MultiLine)]
         public string QuestionGuidance { get; set; } = null!;
 
-        [ActivityInput(Label = "Assessment outcome conditions", Hint = "The conditions to evaluate.", UIHint = "switch-case-builder", DefaultSyntax = "Switch", IsDesignerCritical = true)]
+        [ActivityInput(Label = "Assessment outcome conditions", Hint = "The conditions to evaluate.", UIHint = "switch-case-builder", DefaultSyntax = "AssessmentSwitch", IsDesignerCritical = true)]
         public ICollection<SwitchCase> Cases { get; set; } = new List<SwitchCase>();
 
         [ActivityInput(

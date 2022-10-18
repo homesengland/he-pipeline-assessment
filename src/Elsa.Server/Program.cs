@@ -9,9 +9,11 @@ using Elsa.CustomActivities.Activities.Text;
 using Elsa.CustomActivities.Services;
 using Elsa.CustomInfrastructure.Data;
 using Elsa.CustomInfrastructure.Data.Repository;
+using Elsa.Expressions;
 using Elsa.Persistence.EntityFramework.Core.Extensions;
 using Elsa.Persistence.EntityFramework.SqlServer;
 using Elsa.Runtime;
+using Elsa.Scripting.JavaScript.Services;
 using Elsa.Server.Extensions;
 using Elsa.Server.Features.Workflow.LoadWorkflowActivity;
 using Elsa.Server.Features.Workflow.SaveAndContinue;
@@ -42,6 +44,8 @@ builder.Services
         .AddHttpActivities()
         .AddConsoleActivities()
     );
+
+builder.Services.TryAddProvider<IExpressionHandler, CustomSwitchHandler>(ServiceLifetime.Singleton);
 
 builder.Services.AddDbContext<ElsaCustomContext>(config =>
     config.UseSqlServer(elsaCustomConnectionString,
