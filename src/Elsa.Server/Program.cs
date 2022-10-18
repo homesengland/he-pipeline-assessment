@@ -4,6 +4,7 @@ using Elsa.CustomActivities.Activities.Date;
 using Elsa.CustomActivities.Activities.LoadAssessmentStage;
 using Elsa.CustomActivities.Activities.MultipleChoice;
 using Elsa.CustomActivities.Activities.Shared;
+using Elsa.CustomActivities.Activities.Shared.CustomSwitch;
 using Elsa.CustomActivities.Activities.SingleChoice;
 using Elsa.CustomActivities.Activities.Text;
 using Elsa.CustomActivities.Services;
@@ -45,7 +46,8 @@ builder.Services
         .AddConsoleActivities()
     );
 
-builder.Services.TryAddProvider<IExpressionHandler, CustomSwitchHandler>(ServiceLifetime.Singleton);
+builder.Services.TryAddProvider<IExpressionHandler, CustomSwitchHandler>(ServiceLifetime.Singleton)
+    .AddScoped<IExpressionEvaluator, CustomExpressionEvaluator>(); ;
 
 builder.Services.AddDbContext<ElsaCustomContext>(config =>
     config.UseSqlServer(elsaCustomConnectionString,

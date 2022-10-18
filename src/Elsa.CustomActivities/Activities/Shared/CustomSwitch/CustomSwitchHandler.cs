@@ -9,12 +9,12 @@ using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Elsa.CustomActivities.Activities.Shared
+namespace Elsa.CustomActivities.Activities.Shared.CustomSwitch
 {
-    public  class CustomSwitchHandler : IExpressionHandler
+    public class CustomSwitchHandler : IExpressionHandler
     {
         private readonly IContentSerializer _contentSerializer;
-        public string Syntax => "AssessmentSwitch";
+        public string Syntax => "CustomSwitch";
 
         public CustomSwitchHandler(IContentSerializer contentSerializer)
         {
