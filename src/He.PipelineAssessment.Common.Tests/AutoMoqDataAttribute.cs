@@ -1,15 +1,18 @@
 using AutoFixture;
 using AutoFixture.AutoMoq;
+using AutoFixture.Kernel;
 using AutoFixture.Xunit2;
+using Microsoft.AspNetCore.Mvc;
 
-namespace Elsa.Server.Tests
+namespace He.PipelineAssessment.Common.Tests
 {
     public class AutoMoqDataAttribute : AutoDataAttribute
     {
         public AutoMoqDataAttribute() :
             base(() => new Fixture()
                 .Customize(new AutoMoqCustomization())
-                .Customize(new OmitOnRecursionFixtureCustomization()))
+                .Customize(new OmitOnRecursionFixtureCustomization())
+                .Customize(new AspNetCustomization()))
         {
         }
     }
@@ -24,9 +27,31 @@ namespace Elsa.Server.Tests
         }
     }
 
+    public class AspNetCustomization : ICustomization
+    {
+        public void Customize(IFixture fixture)
+        {
+            fixture.Customizations.Add(new ControllerBasePropertyOmitter());
+        }
+    }
+
+    public class ControllerBasePropertyOmitter : Omitter
+    {
+        public ControllerBasePropertyOmitter()
+            : base(new OrRequestSpecification(GetPropertySpecifications()))
+        {
+        }
+
+        private static IEnumerable<IRequestSpecification> GetPropertySpecifications()
+        {
+            return typeof(Controller).GetProperties().Where(x => x.CanWrite)
+                .Select(x => new PropertySpecification(x.PropertyType, x.Name));
+        }
+    }
+
     public class InlineAutoMoqDataAttribute : InlineAutoDataAttribute
     {
-        public InlineAutoMoqDataAttribute(params object[] objects) : base(new AutoMoqDataAttribute(), objects) { }
+        public InlineAutoMoqDataAttribute(params object?[] objects) : base(new AutoMoqDataAttribute(), objects) { }
 
         //Example usage
         //[Theory]

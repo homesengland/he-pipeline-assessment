@@ -31,6 +31,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Elsa.CustomWorkflow.Sdk\Elsa.CustomWorkflow.Sdk.csproj" />
+    <ProjectReference Include="..\He.PipelineAssessment.Common.Tests\He.PipelineAssessment.Common.Tests.csproj" />
   </ItemGroup>
 
 </Project>

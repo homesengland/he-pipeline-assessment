@@ -1,4 +1,5 @@
-﻿using He.PipelineAssessment.UI.Features.Workflow.SaveAndContinue;
+﻿using He.PipelineAssessment.Common.Tests;
+using He.PipelineAssessment.UI.Features.Workflow.SaveAndContinue;
 using Xunit;
 
 namespace He.PipelineAssessment.UI.Tests.Features.Workflow.SaveAndContinue

@@ -16,6 +16,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Elsa.Models\Elsa.CustomModels.csproj" />
+    <ProjectReference Include="..\He.PipelineAssessment.Data\He.PipelineAssessment.Data.csproj" />
   </ItemGroup>
 
 </Project>
