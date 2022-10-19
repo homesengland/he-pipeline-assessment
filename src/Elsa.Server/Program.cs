@@ -46,9 +46,6 @@ builder.Services
         .AddConsoleActivities()
     );
 
-builder.Services.TryAddProvider<IExpressionHandler, CustomSwitchHandler>(ServiceLifetime.Scoped)
-    .AddScoped<IExpressionEvaluator, CustomExpressionEvaluator>(); ;
-
 builder.Services.AddDbContext<ElsaCustomContext>(config =>
     config.UseSqlServer(elsaCustomConnectionString,
         x => x.MigrationsAssembly("Elsa.CustomInfrastructure")));

@@ -20,6 +20,13 @@ namespace Elsa.CustomActivities.Activities.Shared
             if (activityExecutionContext.Input != null && activityExecutionContext.Input.GetType() == typeof(AssessmentQuestion))
             {
                 var engine = notification.Engine;
+                var input = activityExecutionContext.GetInput<AssessmentQuestion>();
+
+                if (input != null)
+                {
+                    engine.SetValue("answer", input.Answer);
+                }
+
                 engine.SetValue(JavascriptElementName, activityExecutionContext.GetInput<AssessmentQuestion>() ?? new AssessmentQuestion());
             }
 
