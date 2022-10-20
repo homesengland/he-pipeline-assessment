@@ -28,13 +28,10 @@ namespace Elsa.Server.Tests.Features.Workflow.StartWorkflow
 
             //Assert
             Assert.IsType<AssessmentQuestion>(result);
-            Assert.Equal(runWorkflowResult.WorkflowInstance!.LastExecutedActivityId, result!.ActivityId);
-            Assert.Equal(runWorkflowResult.WorkflowInstance!.Id, result.WorkflowInstanceId);
+            Assert.Equal(runWorkflowResult.WorkflowInstance!.LastExecutedActivityId, result!.ActivityId.ToString());
+            Assert.Equal(runWorkflowResult.WorkflowInstance!.Id, result.WorkflowInstanceId.ToString());
             Assert.Equal(activityType, result.ActivityType);
-            Assert.Equal(runWorkflowResult.WorkflowInstance!.LastExecutedActivityId, result.PreviousActivityId);
-            Assert.Equal(
-                $"{runWorkflowResult.WorkflowInstance.Id}-{runWorkflowResult.WorkflowInstance.LastExecutedActivityId}",
-                result.Id);
+            Assert.Equal(runWorkflowResult.WorkflowInstance!.LastExecutedActivityId, result.PreviousActivityId.ToString());
             Assert.Equal(currentTimeUtc, result.CreatedDateTime);
         }
 

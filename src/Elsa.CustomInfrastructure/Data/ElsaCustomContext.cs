@@ -1,4 +1,5 @@
-﻿using Elsa.CustomModels;
+﻿using Elsa.CustomInfrastructure.Data.Configuration;
+using Elsa.CustomModels;
 using Microsoft.AspNetCore.DataProtection.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 
@@ -12,5 +13,11 @@ namespace Elsa.CustomInfrastructure.Data
 
         public DbSet<AssessmentQuestion> AssessmentQuestions { get; set; } = default!;
         public DbSet<DataProtectionKey> DataProtectionKeys { get; set; } = default!;
+
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            base.OnModelCreating(modelBuilder);
+            modelBuilder.ApplyConfigurationsFromAssembly(typeof(AssessmentQuestionConfig).Assembly);
+        }
     }
 }

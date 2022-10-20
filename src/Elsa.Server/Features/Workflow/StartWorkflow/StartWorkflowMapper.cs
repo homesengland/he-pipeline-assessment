@@ -23,12 +23,10 @@ namespace Elsa.Server.Features.Workflow.StartWorkflow
                     .LastExecutedActivityId != null)
                 return new AssessmentQuestion
                 {
-                    Id = $"{result.WorkflowInstance.Id}-{result.WorkflowInstance.LastExecutedActivityId}",
                     ActivityId = result.WorkflowInstance.LastExecutedActivityId,
                     ActivityType = activityType,
                     WorkflowInstanceId = result.WorkflowInstance.Id,
                     PreviousActivityId = result.WorkflowInstance.LastExecutedActivityId,
-                    PreviousActivityInstanceId = result.WorkflowInstance.Id,
                     CreatedDateTime = _dateTimeProvider.UtcNow()
                 };
             return null;

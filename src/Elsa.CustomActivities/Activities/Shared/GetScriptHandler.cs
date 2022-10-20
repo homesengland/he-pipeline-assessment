@@ -11,9 +11,8 @@ using System.Threading.Tasks;
 
 namespace Elsa.CustomActivities.Activities.Shared
 {
-    public abstract class GetScriptHandler : INotificationHandler<EvaluatingJavaScriptExpression>, INotificationHandler<RenderingTypeScriptDefinitions>
+    public class GetScriptHandler : INotificationHandler<EvaluatingJavaScriptExpression>, INotificationHandler<RenderingTypeScriptDefinitions>
     {
-        public abstract string JavascriptElementName { get; set; }
         public Task Handle(EvaluatingJavaScriptExpression notification, CancellationToken cancellationToken)
         {
             var activityExecutionContext = notification.ActivityExecutionContext;
@@ -24,7 +23,7 @@ namespace Elsa.CustomActivities.Activities.Shared
 
                 if (input != null)
                 {
-                    engine.SetValue("answer", input.Answer);
+                    engine.SetValue("question", input);
                 }
             }
 
@@ -35,7 +34,7 @@ namespace Elsa.CustomActivities.Activities.Shared
         {
             var output = notification.Output;
 
-            output.AppendLine(string.Format("declare const {0}: AssessmentQuestion;", JavascriptElementName));
+            output.AppendLine(string.Format("declare const {0}: AssessmentQuestion;", "question"));
 
             return Task.CompletedTask;
         }

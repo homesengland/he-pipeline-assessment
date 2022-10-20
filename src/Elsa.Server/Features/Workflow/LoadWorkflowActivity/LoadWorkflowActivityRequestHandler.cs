@@ -65,7 +65,6 @@ namespace Elsa.Server.Features.Workflow.LoadWorkflowActivity
 
                                 result.Data.ActivityType = dbAssessmentQuestion.ActivityType;
                                 result.Data.PreviousActivityId = dbAssessmentQuestion.PreviousActivityId;
-                                result.Data.PreviousActivityInstanceId = dbAssessmentQuestion.PreviousActivityInstanceId;
 
                                 var activityData = _loadWorkflowActivityJsonHelper.ActivityDataDictionaryToQuestionActivityData<QuestionActivityData>(activityDataDictionary);
                                 if (activityData != null)

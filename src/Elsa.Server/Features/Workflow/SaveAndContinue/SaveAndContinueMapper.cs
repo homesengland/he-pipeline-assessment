@@ -25,15 +25,11 @@ namespace Elsa.Server.Features.Workflow.SaveAndContinue
         {
             return new AssessmentQuestion
             {
-                Id = $"{workflowInstanceId}-{nextActivityId}",
                 ActivityId = nextActivityId,
                 ActivityType = nextActivityType,
-                FinishWorkflow = false,
-                NavigateBack = false,
                 Answer = null,
                 WorkflowInstanceId = workflowInstanceId,
                 PreviousActivityId = previousActivityId,
-                PreviousActivityInstanceId = previousActivityInstanceId,
                 CreatedDateTime = _dateTimeProvider.UtcNow()
             };
         }

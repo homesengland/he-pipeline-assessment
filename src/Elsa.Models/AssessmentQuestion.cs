@@ -2,19 +2,21 @@
 {
     public class AssessmentQuestion
     {
-        public string Id { get; set; } = null!;
+        public int Id { get; set; }
+        public string? CorrelationId { get; set; }
+        public int? Version { get; set; }
 
-        public string ActivityId { get; set; } = null!;
+        public string ActivityId { get; set; }
+        public string? ActivityName { get; set; }
         public string ActivityType { get; set; } = null!;
 
-        public string WorkflowInstanceId { get; set; } = null!;
+        public string? WorkflowName { get; set; }
+        public string WorkflowDefinitionId { get; set; }
+        public string WorkflowInstanceId { get; set; }
 
         public string? Answer { get; set; }
 
-        public bool? FinishWorkflow { get; set; }
-        public bool? NavigateBack { get; set; }
-        public string PreviousActivityInstanceId { get; set; } = null!;
-        public string PreviousActivityId { get; set; } = null!;
+        public string PreviousActivityId { get; set; }
 
         public DateTime CreatedDateTime { get; set; }
         public DateTime? LastModifiedDateTime { get; set; }
