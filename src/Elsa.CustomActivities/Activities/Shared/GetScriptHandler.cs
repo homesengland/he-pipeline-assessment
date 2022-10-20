@@ -26,8 +26,6 @@ namespace Elsa.CustomActivities.Activities.Shared
                 {
                     engine.SetValue("answer", input.Answer);
                 }
-
-                engine.SetValue(JavascriptElementName, activityExecutionContext.GetInput<AssessmentQuestion>() ?? new AssessmentQuestion());
             }
 
             return Task.CompletedTask;
