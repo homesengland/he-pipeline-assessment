@@ -2,7 +2,7 @@
 
 namespace Elsa.CustomInfrastructure.Data.Repository
 {
-    public interface IPipelineAssessmentRepository
+    public interface IElsaCustomRepository
     {
         Task<AssessmentQuestion?> GetAssessmentQuestion(string activityId,
             string workflowInstanceId,
@@ -12,5 +12,7 @@ namespace Elsa.CustomInfrastructure.Data.Repository
             CancellationToken cancellationToken = default);
 
         Task<AssessmentQuestion?> UpdateAssessmentQuestion(AssessmentQuestion model, CancellationToken cancellationToken = default);
+        Task<IEnumerable<AssessmentQuestion>?> GetAssessmentQuestions(string workflowDefinitionId,
+            string correlationId);
     }
 }

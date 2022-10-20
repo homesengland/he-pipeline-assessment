@@ -20,7 +20,7 @@ namespace Elsa.Server.Tests.Features.Workflow.StartWorkflow
             [Frozen] Mock<IWorkflowRegistry> workflowRegistry,
             [Frozen] Mock<IStartsWorkflow> startsWorkflow,
             [Frozen] Mock<IStartWorkflowMapper> startWorkflowMapper,
-            [Frozen] Mock<IPipelineAssessmentRepository> pipelineAssessmentRepository,
+            [Frozen] Mock<IElsaCustomRepository> pipelineAssessmentRepository,
             WorkflowBlueprint workflowBlueprint,
             ActivityBlueprint activityBlueprint,
             RunWorkflowResult runWorkflowResult,
@@ -50,7 +50,7 @@ namespace Elsa.Server.Tests.Features.Workflow.StartWorkflow
             startsWorkflow.Setup(x => x.StartWorkflowAsync(workflowBlueprint, null, null, null, null, null, CancellationToken.None))
                 .ReturnsAsync(runWorkflowResult);
 
-            startWorkflowMapper.Setup(x => x.RunWorkflowResultToAssessmentQuestion(runWorkflowResult, activityBlueprint.Type))
+            startWorkflowMapper.Setup(x => x.RunWorkflowResultToAssessmentQuestion(runWorkflowResult, activityBlueprint))
                 .Returns(assessmentQuestion);
 
             startWorkflowMapper.Setup(x => x.RunWorkflowResultToStartWorkflowResponse(runWorkflowResult))
@@ -73,7 +73,7 @@ namespace Elsa.Server.Tests.Features.Workflow.StartWorkflow
             [Frozen] Mock<IWorkflowRegistry> workflowRegistry,
             [Frozen] Mock<IStartsWorkflow> startsWorkflow,
             [Frozen] Mock<IStartWorkflowMapper> startWorkflowMapper,
-            [Frozen] Mock<IPipelineAssessmentRepository> pipelineAssessmentRepository,
+            [Frozen] Mock<IElsaCustomRepository> pipelineAssessmentRepository,
             WorkflowBlueprint workflowBlueprint,
             ActivityBlueprint activityBlueprint,
             RunWorkflowResult runWorkflowResult,
@@ -91,7 +91,7 @@ namespace Elsa.Server.Tests.Features.Workflow.StartWorkflow
             startsWorkflow.Setup(x => x.StartWorkflowAsync(workflowBlueprint, null, null, null, null, null, CancellationToken.None))
                 .ReturnsAsync(runWorkflowResult);
 
-            startWorkflowMapper.Setup(x => x.RunWorkflowResultToAssessmentQuestion(runWorkflowResult, activityBlueprint.Type))
+            startWorkflowMapper.Setup(x => x.RunWorkflowResultToAssessmentQuestion(runWorkflowResult, activityBlueprint))
                 .Returns((AssessmentQuestion?)null);
 
             //Act
@@ -107,7 +107,7 @@ namespace Elsa.Server.Tests.Features.Workflow.StartWorkflow
         [AutoMoqData]
         public async Task Handle_ShouldReturnErrorOperationResult_WhenADependencyThrows(
             [Frozen] Mock<IWorkflowRegistry> workflowRegistry,
-            [Frozen] Mock<IPipelineAssessmentRepository> pipelineAssessmentRepository,
+            [Frozen] Mock<IElsaCustomRepository> pipelineAssessmentRepository,
             StartWorkflowCommand startWorkflowCommand,
             Exception exception,
             StartWorkflowCommandHandler sut)

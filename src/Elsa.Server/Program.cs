@@ -1,12 +1,11 @@
 using Elsa.CustomActivities.Activities.Currency;
 using Elsa.CustomActivities.Activities.Date;
-using Elsa.CustomActivities.Activities.LoadAssessmentStage;
 using Elsa.CustomActivities.Activities.MultipleChoice;
 using Elsa.CustomActivities.Activities.Shared;
 using Elsa.CustomActivities.Activities.SingleChoice;
 using Elsa.CustomActivities.Activities.SinglePipelineDataSource;
 using Elsa.CustomActivities.Activities.Text;
-using Elsa.CustomActivities.Services;
+using Elsa.CustomActivities.Activities.WorkflowDataSource;
 using Elsa.CustomInfrastructure.Data;
 using Elsa.CustomInfrastructure.Data.Repository;
 using Elsa.Persistence.EntityFramework.Core.Extensions;
@@ -41,6 +40,7 @@ builder.Services
         .AddActivity<TextQuestion>()
         .AddActivity<DateQuestion>()
         .AddActivity<SinglePipelineDataSource>()
+        .AddActivity<WorkflowDataSource>()
         .AddConsoleActivities()
     );
 
@@ -60,7 +60,7 @@ builder.Services.AddCustomElsaScriptHandlers();
 builder.Services.AddBookmarkProvider<QuestionBookmarkProvider>();
 builder.Services.AddScoped<IQuestionInvoker, QuestionInvoker>();
 
-builder.Services.AddScoped<IPipelineAssessmentRepository, PipelineAssessmentRepository>();
+builder.Services.AddScoped<IElsaCustomRepository, ElsaCustomRepository>();
 
 
 builder.Services.AddMediatR(typeof(Program).Assembly);

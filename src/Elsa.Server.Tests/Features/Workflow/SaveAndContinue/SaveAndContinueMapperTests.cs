@@ -1,7 +1,9 @@
 ﻿using AutoFixture.Xunit2;
 using Elsa.CustomModels;
+using Elsa.Models;
 using Elsa.Server.Features.Workflow.SaveAndContinue;
 using Elsa.Server.Providers;
+using Elsa.Services.Models;
 using He.PipelineAssessment.Common.Tests;
 using Moq;
 using Xunit;
@@ -15,8 +17,8 @@ namespace Elsa.Server.Tests.Features.Workflow.SaveAndContinue
         public void SaveAndContinueCommandToNextAssessmentQuestion_ShouldReturnAssessmentQuestion(
             [Frozen] Mock<IDateTimeProvider> mockDateTimeProvider,
             SaveAndContinueCommand saveAndContinueCommand,
-            string nextActivityId,
-            string nextActivityType,
+            WorkflowInstance workflowInstance,
+            ActivityBlueprint activityBlueprint,
             SaveAndContinueMapper sut
         )
         {
@@ -25,14 +27,19 @@ namespace Elsa.Server.Tests.Features.Workflow.SaveAndContinue
             mockDateTimeProvider.Setup(x => x.UtcNow()).Returns(currentTimeUtc);
 
             //Act
-            var result = sut.SaveAndContinueCommandToNextAssessmentQuestion(saveAndContinueCommand.WorkflowInstanceId, saveAndContinueCommand.ActivityId, saveAndContinueCommand.WorkflowInstanceId, nextActivityId, nextActivityType);
+            var result = sut.SaveAndContinueCommandToNextAssessmentQuestion(saveAndContinueCommand.ActivityId, workflowInstance, activityBlueprint);
 
             //Assert
             Assert.IsType<AssessmentQuestion>(result);
-            Assert.Equal(nextActivityId, result!.ActivityId);
-            Assert.Equal(nextActivityType, result!.ActivityType);
+            Assert.Equal(activityBlueprint.Id, result!.ActivityId);
+            Assert.Equal(activityBlueprint.Type, result!.ActivityType);
+            Assert.Equal(activityBlueprint.Name, result!.ActivityName);
             Assert.Null(result.Answer);
-            Assert.Equal(saveAndContinueCommand.WorkflowInstanceId, result.WorkflowInstanceId);
+            Assert.Equal(workflowInstance.Id, result.WorkflowInstanceId);
+            Assert.Equal(workflowInstance.DefinitionId, result.WorkflowDefinitionId);
+            Assert.Equal(workflowInstance.Name, result.WorkflowName);
+            Assert.Equal(workflowInstance.Version, result.Version);
+            Assert.Equal(workflowInstance.CorrelationId, result.CorrelationId);
             Assert.Equal(saveAndContinueCommand.ActivityId, result.PreviousActivityId);
             Assert.Equal(currentTimeUtc, result.CreatedDateTime);
         }

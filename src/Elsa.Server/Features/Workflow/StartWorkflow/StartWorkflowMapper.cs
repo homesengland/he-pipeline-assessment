@@ -6,7 +6,8 @@ namespace Elsa.Server.Features.Workflow.StartWorkflow
 {
     public interface IStartWorkflowMapper
     {
-        AssessmentQuestion? RunWorkflowResultToAssessmentQuestion(RunWorkflowResult result, string activityType);
+        AssessmentQuestion? RunWorkflowResultToAssessmentQuestion(RunWorkflowResult result,
+            IActivityBlueprint activity, string? workflowName);
         StartWorkflowResponse? RunWorkflowResultToStartWorkflowResponse(RunWorkflowResult result);
     }
     public class StartWorkflowMapper : IStartWorkflowMapper
@@ -17,17 +18,23 @@ namespace Elsa.Server.Features.Workflow.StartWorkflow
             _dateTimeProvider = dateTimeProvider;
         }
 
-        public AssessmentQuestion? RunWorkflowResultToAssessmentQuestion(RunWorkflowResult result, string activityType)
+        public AssessmentQuestion? RunWorkflowResultToAssessmentQuestion(RunWorkflowResult result,
+            IActivityBlueprint activity, string? workflowName)
         {
             if (result.WorkflowInstance != null && result.WorkflowInstance
                     .LastExecutedActivityId != null)
                 return new AssessmentQuestion
                 {
                     ActivityId = result.WorkflowInstance.LastExecutedActivityId,
-                    ActivityType = activityType,
+                    ActivityType = activity.Type,
+                    ActivityName = activity.Name,
                     WorkflowInstanceId = result.WorkflowInstance.Id,
+                    WorkflowDefinitionId = result.WorkflowInstance.DefinitionId,
+                    WorkflowName = workflowName,
                     PreviousActivityId = result.WorkflowInstance.LastExecutedActivityId,
-                    CreatedDateTime = _dateTimeProvider.UtcNow()
+                    CreatedDateTime = _dateTimeProvider.UtcNow(),
+                    CorrelationId = result.WorkflowInstance.CorrelationId,
+                    Version = result.WorkflowInstance.Version
                 };
             return null;
         }

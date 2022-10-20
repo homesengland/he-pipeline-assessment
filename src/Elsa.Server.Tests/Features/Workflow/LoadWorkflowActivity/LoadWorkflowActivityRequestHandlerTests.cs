@@ -21,7 +21,7 @@ namespace Elsa.Server.Tests.Features.Workflow.LoadWorkflowActivity
         public async Task Handle_ReturnsOperationWithoutErrors_NoErrorsAreEncountered(
           [Frozen] Mock<IQuestionInvoker> questionInvoker,
           [Frozen] Mock<IWorkflowInstanceStore> workflowInstanceStore,
-          [Frozen] Mock<IPipelineAssessmentRepository> pipelineAssessmentRepository,
+          [Frozen] Mock<IElsaCustomRepository> pipelineAssessmentRepository,
           [Frozen] Mock<ILoadWorkflowActivityJsonHelper> loadWorkflowActivityJsonHelper,
           LoadWorkflowActivityRequest loadWorkflowActivityRequest,
           List<CollectedWorkflow> collectedWorkflows,
@@ -75,7 +75,7 @@ namespace Elsa.Server.Tests.Features.Workflow.LoadWorkflowActivity
         public async Task Handle_SelectedChoicesAreRestored_WhenActivityIsMultiChoice(
                              [Frozen] Mock<IQuestionInvoker> questionInvoker,
                              [Frozen] Mock<IWorkflowInstanceStore> workflowInstanceStore,
-                             [Frozen] Mock<IPipelineAssessmentRepository> pipelineAssessmentRepository,
+                             [Frozen] Mock<IElsaCustomRepository> pipelineAssessmentRepository,
                              [Frozen] Mock<ILoadWorkflowActivityJsonHelper> loadWorkflowActivityJsonHelper,
                              LoadWorkflowActivityRequest loadWorkflowActivityRequest,
                              List<CollectedWorkflow> collectedWorkflows,
@@ -142,7 +142,7 @@ namespace Elsa.Server.Tests.Features.Workflow.LoadWorkflowActivity
         public async Task Handle_SelectedChoicesAreRestored_WhenActivityIsSingleChoice(
                              [Frozen] Mock<IQuestionInvoker> questionInvoker,
                              [Frozen] Mock<IWorkflowInstanceStore> workflowInstanceStore,
-                             [Frozen] Mock<IPipelineAssessmentRepository> pipelineAssessmentRepository,
+                             [Frozen] Mock<IElsaCustomRepository> pipelineAssessmentRepository,
                              [Frozen] Mock<ILoadWorkflowActivityJsonHelper> loadWorkflowActivityJsonHelper,
                              LoadWorkflowActivityRequest loadWorkflowActivityRequest,
                              List<CollectedWorkflow> collectedWorkflows,
@@ -213,7 +213,7 @@ namespace Elsa.Server.Tests.Features.Workflow.LoadWorkflowActivity
         public async Task Handle_ReturnsOperationResultWithErrors_GivenActivityDataMappingReturnsNull(
           [Frozen] Mock<IQuestionInvoker> questionInvoker,
           [Frozen] Mock<IWorkflowInstanceStore> workflowInstanceStore,
-          [Frozen] Mock<IPipelineAssessmentRepository> pipelineAssessmentRepository,
+          [Frozen] Mock<IElsaCustomRepository> pipelineAssessmentRepository,
           [Frozen] Mock<ILoadWorkflowActivityJsonHelper> loadWorkflowActivityJsonHelper,
           LoadWorkflowActivityRequest loadWorkflowActivityRequest,
           List<CollectedWorkflow> collectedWorkflows,
@@ -266,7 +266,7 @@ namespace Elsa.Server.Tests.Features.Workflow.LoadWorkflowActivity
         public async Task Handle_ReturnsOperationResultWithErrors_GivenActivityIdCannotBeFoundInActivityDictionary(
            [Frozen] Mock<IQuestionInvoker> questionInvoker,
            [Frozen] Mock<IWorkflowInstanceStore> workflowInstanceStore,
-           [Frozen] Mock<IPipelineAssessmentRepository> pipelineAssessmentRepository,
+           [Frozen] Mock<IElsaCustomRepository> pipelineAssessmentRepository,
            [Frozen] Mock<ILoadWorkflowActivityJsonHelper> loadWorkflowActivityJsonHelper,
            LoadWorkflowActivityRequest loadWorkflowActivityRequest,
            List<CollectedWorkflow> collectedWorkflows,
@@ -305,7 +305,7 @@ namespace Elsa.Server.Tests.Features.Workflow.LoadWorkflowActivity
         public async Task Handle_ReturnsOperationResultWithErrors_GivenAssessmentQuestionDoesNotExist(
             [Frozen] Mock<IQuestionInvoker> questionInvoker,
             [Frozen] Mock<IWorkflowInstanceStore> workflowInstanceStore,
-            [Frozen] Mock<IPipelineAssessmentRepository> pipelineAssessmentRepository,
+            [Frozen] Mock<IElsaCustomRepository> pipelineAssessmentRepository,
             [Frozen] Mock<ILoadWorkflowActivityJsonHelper> loadWorkflowActivityJsonHelper,
             LoadWorkflowActivityRequest loadWorkflowActivityRequest,
             List<CollectedWorkflow> collectedWorkflows,
@@ -342,7 +342,7 @@ namespace Elsa.Server.Tests.Features.Workflow.LoadWorkflowActivity
         public async Task Handle_ReturnsOperationResultWithErrors_GivenCollectedWorkflowInstanceIsNull(
             [Frozen] Mock<IQuestionInvoker> questionInvoker,
             [Frozen] Mock<IWorkflowInstanceStore> workflowInstanceStore,
-            [Frozen] Mock<IPipelineAssessmentRepository> pipelineAssessmentRepository,
+            [Frozen] Mock<IElsaCustomRepository> pipelineAssessmentRepository,
             [Frozen] Mock<ILoadWorkflowActivityJsonHelper> loadWorkflowActivityJsonHelper,
             LoadWorkflowActivityRequest loadWorkflowActivityRequest,
             AssessmentQuestion assessmentQuestion,
@@ -378,7 +378,7 @@ namespace Elsa.Server.Tests.Features.Workflow.LoadWorkflowActivity
         public async Task Handle_ReturnsOperationResultWithErrors_GivenNoWorkflowsAreCollected(
             [Frozen] Mock<IQuestionInvoker> questionInvoker,
             [Frozen] Mock<IWorkflowInstanceStore> workflowInstanceStore,
-            [Frozen] Mock<IPipelineAssessmentRepository> pipelineAssessmentRepository,
+            [Frozen] Mock<IElsaCustomRepository> pipelineAssessmentRepository,
             [Frozen] Mock<ILoadWorkflowActivityJsonHelper> loadWorkflowActivityJsonHelper,
             LoadWorkflowActivityRequest loadWorkflowActivityRequest,
             AssessmentQuestion assessmentQuestion,
@@ -409,7 +409,7 @@ namespace Elsa.Server.Tests.Features.Workflow.LoadWorkflowActivity
         public async Task Handle_ReturnsOperationResultWithErrors_GivenExceptionIsThrown(
             [Frozen] Mock<IQuestionInvoker> questionInvoker,
             [Frozen] Mock<IWorkflowInstanceStore> workflowInstanceStore,
-            [Frozen] Mock<IPipelineAssessmentRepository> pipelineAssessmentRepository,
+            [Frozen] Mock<IElsaCustomRepository> pipelineAssessmentRepository,
             [Frozen] Mock<ILoadWorkflowActivityJsonHelper> loadWorkflowActivityJsonHelper,
             LoadWorkflowActivityRequest loadWorkflowActivityRequest,
             AssessmentQuestion assessmentQuestion,
