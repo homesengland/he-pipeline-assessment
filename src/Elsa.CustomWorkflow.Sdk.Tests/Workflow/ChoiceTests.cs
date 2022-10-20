@@ -1,8 +1,5 @@
-﻿using System.Globalization;
-using System.Security.Cryptography.X509Certificates;
-using System.Text.Json;
-using Elsa.CustomWorkflow.Sdk.Models.Workflow;
-using Newtonsoft.Json.Linq;
+﻿using Elsa.CustomWorkflow.Sdk.Models.Workflow;
+using He.PipelineAssessment.Common.Tests;
 using Xunit;
 
 namespace Elsa.CustomWorkflow.Sdk.Tests.Workflow
@@ -24,7 +21,7 @@ namespace Elsa.CustomWorkflow.Sdk.Tests.Workflow
             choice.IsSingle = isSingle;
             //Assert
             Assert.NotNull(choice);
-             Assert.Equal(isSingle, choice.IsSingle);
+            Assert.Equal(isSingle, choice.IsSingle);
         }
     }
 }

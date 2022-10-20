@@ -2,6 +2,7 @@
 using Elsa.CustomActivities.Activities.Shared;
 using Elsa.Services;
 using Elsa.Services.Models;
+using He.PipelineAssessment.Common.Tests;
 using Xunit;
 
 namespace Elsa.CustomActivities.Tests.Activities.Shared

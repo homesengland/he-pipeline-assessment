@@ -4,6 +4,7 @@ using Elsa.CustomActivities.Activities.LoadAssessmentStage;
 using Elsa.CustomActivities.Activities.MultipleChoice;
 using Elsa.CustomActivities.Activities.Shared;
 using Elsa.CustomActivities.Activities.SingleChoice;
+using Elsa.CustomActivities.Activities.SinglePipelineDataSource;
 using Elsa.CustomActivities.Activities.Text;
 using Elsa.CustomActivities.Services;
 using Elsa.CustomInfrastructure.Data;
@@ -12,11 +13,13 @@ using Elsa.Persistence.EntityFramework.Core.Extensions;
 using Elsa.Persistence.EntityFramework.SqlServer;
 using Elsa.Runtime;
 using Elsa.Server.Extensions;
+using Elsa.Server.Features.Datasources.GetSinglePipelineData;
 using Elsa.Server.Features.Workflow.LoadWorkflowActivity;
 using Elsa.Server.Features.Workflow.SaveAndContinue;
 using Elsa.Server.Features.Workflow.StartWorkflow;
 using Elsa.Server.Providers;
 using Elsa.Server.StartupTasks;
+using He.PipelineAssessment.Data.SinglePipeline;
 using MediatR;
 using Microsoft.AspNetCore.DataProtection;
 using Microsoft.EntityFrameworkCore;
@@ -37,8 +40,7 @@ builder.Services
         .AddActivity<CurrencyQuestion>()
         .AddActivity<TextQuestion>()
         .AddActivity<DateQuestion>()
-        .AddActivity<LoadAssessmentStage>()
-        .AddHttpActivities()
+        .AddActivity<SinglePipelineDataSource>()
         .AddConsoleActivities()
     );
 
@@ -59,7 +61,7 @@ builder.Services.AddBookmarkProvider<QuestionBookmarkProvider>();
 builder.Services.AddScoped<IQuestionInvoker, QuestionInvoker>();
 
 builder.Services.AddScoped<IPipelineAssessmentRepository, PipelineAssessmentRepository>();
-builder.Services.AddJavaScriptTypeDefinitionProvider<CustomTypeDefinitionProvider>();
+
 
 builder.Services.AddMediatR(typeof(Program).Assembly);
 builder.Services.AddApplicationInsightsTelemetry();
@@ -72,6 +74,10 @@ builder.Services.AddScoped<ISaveAndContinueMapper, SaveAndContinueMapper>();
 
 builder.Services.AddScoped<ILoadWorkflowActivityJsonHelper, LoadWorkflowActivityJsonHelper>();
 //builder.Services.AddScoped<ILoadWorkflowActivityMapper, LoadWorkflowActivityMapper>();
+
+builder.Services.AddScoped<IEsriSinglePipelineClient, EsriSinglePipelineClient>();
+builder.Services.AddScoped<IEsriSinglePipelineDataJsonHelper, EsriSinglePipelineDataJsonHelper>();
+
 
 // Allow arbitrary client browser apps to access the API.
 // In a production environment, make sure to allow only origins you trust.
@@ -86,6 +92,14 @@ if (builder.Environment.IsDevelopment())
 {
     builder.Services.AddStartupTask<RunElsaCustomMigrations>();
 }
+
+string singlePipelineURL = builder.Configuration["Datasources:SinglePipeline"];
+
+//TODO: make this an extension in the SDK
+builder.Services.AddHttpClient("SinglePipelineClient", client =>
+{
+    client.BaseAddress = new Uri(singlePipelineURL);
+});
 
 var app = builder.Build();
 

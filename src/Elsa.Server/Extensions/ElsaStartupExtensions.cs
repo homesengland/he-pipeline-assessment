@@ -6,6 +6,7 @@ namespace Elsa.Server.Extensions
     {
         public static void AddCustomElsaScriptHandlers(this IServiceCollection services)
         {
+            services.AddJavaScriptTypeDefinitionProvider<CustomTypeDefinitionProvider>();
             services.AddNotificationHandlers(typeof(GetScriptHandler));
         }
     }
