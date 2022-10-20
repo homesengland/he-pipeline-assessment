@@ -28,8 +28,9 @@ namespace Elsa.Server.Features.Workflow.SaveAndContinue
                 ActivityId = nextActivityId,
                 ActivityType = nextActivityType,
                 Answer = null,
-                WorkflowInstanceId = workflowInstanceId,
-                PreviousActivityId = previousActivityId,
+                Comments = null,
+                WorkflowInstanceId = command.WorkflowInstanceId,
+                PreviousActivityId = command.ActivityId,
                 CreatedDateTime = _dateTimeProvider.UtcNow()
             };
         }

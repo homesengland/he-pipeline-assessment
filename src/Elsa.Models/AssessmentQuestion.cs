@@ -15,8 +15,8 @@
         public string WorkflowInstanceId { get; set; }
 
         public string? Answer { get; set; }
-
-        public string PreviousActivityId { get; set; }
+        public string? Comments { get; set; }
+        public string PreviousActivityId { get; set; } = null!;
 
         public DateTime CreatedDateTime { get; set; }
         public DateTime? LastModifiedDateTime { get; set; }

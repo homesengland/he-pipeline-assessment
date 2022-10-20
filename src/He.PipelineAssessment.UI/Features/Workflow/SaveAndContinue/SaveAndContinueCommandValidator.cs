@@ -19,12 +19,13 @@ namespace He.PipelineAssessment.UI.Features.Workflow.SaveAndContinue
                     }
                 }
                 return true;
-            }).When(x => x.Data.QuestionActivityData!.ActivityType == ActivityTypeConstants.MultipleChoiceQuestion).WithMessage(x =>
+            }).When(x => x.Data.QuestionActivityData!.ActivityType == ActivityTypeConstants.MultipleChoiceQuestion)
+                .WithMessage(x =>
             {
                 var selectedAnswers = x.Data.QuestionActivityData!.MultipleChoice.SelectedChoices;
                 var exclusiveAnswers = x.Data.QuestionActivityData.MultipleChoice.Choices
                     .Where(c => c.IsSingle && selectedAnswers.Contains(c.Answer)).Select(c => c.Answer).ToList();
-                
+
                 if (exclusiveAnswers.Any())
                 {
                     if (exclusiveAnswers.Count() > 1)

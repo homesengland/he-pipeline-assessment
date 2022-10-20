@@ -11,6 +11,7 @@ namespace Elsa.CustomActivities.Tests.Activities.Shared
         [Theory]
         [InlineAutoMoqData(Constants.CurrencyQuestion)]
         [InlineAutoMoqData(Constants.MultipleChoiceQuestion)]
+        [InlineAutoMoqData(Constants.SingleChoiceQuestion)]
         [InlineAutoMoqData(Constants.DateQuestion)]
         [InlineAutoMoqData(Constants.TextQuestion)]
         public void SupportsActivityReturnsTrue_GivenRegisteredActivities(string registeredActivity, QuestionBookmarkProvider sut)
