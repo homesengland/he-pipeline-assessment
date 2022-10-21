@@ -4,6 +4,7 @@ using Elsa.CustomActivities.Activities.MultipleChoice;
 using Elsa.CustomActivities.Activities.Shared;
 using Elsa.CustomActivities.Activities.SingleChoice;
 using Elsa.CustomActivities.Activities.SinglePipelineDataSource;
+using Elsa.CustomActivities.Activities.SummaryScreen;
 using Elsa.CustomActivities.Activities.Text;
 using Elsa.CustomActivities.Activities.WorkflowDataSource;
 using Elsa.CustomInfrastructure.Data;
@@ -41,6 +42,7 @@ builder.Services
         .AddActivity<DateQuestion>()
         .AddActivity<SinglePipelineDataSource>()
         .AddActivity<WorkflowDataSource>()
+        .AddActivity<SummaryScreen>()
         .AddConsoleActivities()
     );
 

@@ -1,0 +1,33 @@
+﻿@model He.PipelineAssessment.UI.Features.Workflow.SaveAndContinue.SaveAndContinueCommand
+
+<div class="govuk-form-group">
+    <h1 class="govuk-heading-l">
+        @Html.DisplayTextFor(m => m.Data.QuestionActivityData!.Title)
+    </h1>
+    
+    <div class="govuk-grid-row">
+    @foreach (var question in Model.Data.AssessmentQuestions)
+    {
+        <div class="govuk-grid-column-two-thirds-from-desktop">
+                <dl class="govuk-summary-list govuk-!-margin-bottom-9">
+                    <div class="govuk-summary-list__row">
+                        <dt class="govuk-summary-list__key">
+                            @question.ActivityName
+                        </dt>
+                        <dd class="govuk-summary-list__value">
+                            @question.Answer
+                        </dd>
+                        <dd class="govuk-summary-list__actions">
+                            <a class="govuk-link" href="#">
+                                Change
+                            </a>
+                        </dd>
+                    </div>
+            </dl>
+        </div>
+    }
+    </div>
+
+    <br/>
+    <input id="Next" type="submit" value="Save and continue" name="Next" class="govuk-button"/>
+</div>

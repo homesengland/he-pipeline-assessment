@@ -74,17 +74,25 @@ namespace Elsa.Server.Features.Workflow.LoadWorkflowActivity
                                     result.Data.QuestionActivityData.Answer = dbAssessmentQuestion.Answer;
                                     result.Data.QuestionActivityData.Comments = dbAssessmentQuestion.Comments;
 
-                                    // Restore preserved checkboxes from previous page load
-                                    if (result.Data.ActivityType == Constants.MultipleChoiceQuestion && !string.IsNullOrEmpty(result.Data.QuestionActivityData.Answer))
+                                    if (result.Data.ActivityType == Constants.SummaryScreen)
                                     {
-                                        var answerList = JsonSerializer.Deserialize<List<string>>(result.Data.QuestionActivityData.Answer);
-                                        result.Data.QuestionActivityData.MultipleChoice.SelectedChoices = answerList!;
+                                        var assessmentQuestions = await _elsaCustomRepository.GetAssessmentQuestions(workflowInstance.DefinitionId, workflowInstance.CorrelationId);
+                                        result.Data.AssessmentQuestions = assessmentQuestions.ToList();
                                     }
-
-                                    // Restore preserved selected answer from previous page load
-                                    if (result.Data.ActivityType == Constants.SingleChoiceQuestion && !string.IsNullOrEmpty(result.Data.QuestionActivityData.Answer))
+                                    else
                                     {
-                                        result.Data.QuestionActivityData.SingleChoice.SelectedAnswer = result.Data.QuestionActivityData.Answer;
+                                        // Restore preserved checkboxes from previous page load
+                                        if (result.Data.ActivityType == Constants.MultipleChoiceQuestion && !string.IsNullOrEmpty(result.Data.QuestionActivityData.Answer))
+                                        {
+                                            var answerList = JsonSerializer.Deserialize<List<string>>(result.Data.QuestionActivityData.Answer);
+                                            result.Data.QuestionActivityData.MultipleChoice.SelectedChoices = answerList!;
+                                        }
+
+                                        // Restore preserved selected answer from previous page load
+                                        if (result.Data.ActivityType == Constants.SingleChoiceQuestion && !string.IsNullOrEmpty(result.Data.QuestionActivityData.Answer))
+                                        {
+                                            result.Data.QuestionActivityData.SingleChoice.SelectedAnswer = result.Data.QuestionActivityData.Answer;
+                                        }
                                     }
                                 }
                                 else

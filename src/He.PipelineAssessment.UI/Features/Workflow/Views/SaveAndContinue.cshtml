@@ -42,6 +42,10 @@
         {
             <partial name="_TextQuestion" model=@(Model)/>
         }
+        if (Model.Data.QuestionActivityData!.ActivityType == ActivityTypeConstants.SummaryScreen)
+        {
+            @await Html.PartialAsync("_SummaryScreen",Model)
+        }
     }
 </div>
 

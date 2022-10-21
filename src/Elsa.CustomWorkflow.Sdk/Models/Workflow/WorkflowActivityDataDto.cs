@@ -1,6 +1,7 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.Globalization;
 using System.Text.Json;
+using Elsa.CustomModels;
 
 namespace Elsa.CustomWorkflow.Sdk.Models.Workflow
 {
@@ -19,7 +20,7 @@ namespace Elsa.CustomWorkflow.Sdk.Models.Workflow
         public string PreviousActivityInstanceId { get; set; } = null!;
 
         public QuestionActivityData? QuestionActivityData { get; set; }
-
+        public List<AssessmentQuestion?> AssessmentQuestions { get; set; } = null!;
     }
 
     public class QuestionActivityData
@@ -33,6 +34,8 @@ namespace Elsa.CustomWorkflow.Sdk.Models.Workflow
         public string? Comments { get; set; }
         public object Output { get; set; } = null!;
         public string? Answer { get; set; }
+        public string? FooterTitle { get; set; }
+        public string? FooterText { get; set; }
         public decimal? Decimal { get { return GetDecimal(); } set { SetDecimal(value); } }
 
         private MultipleChoiceModel _multipleChoice = new MultipleChoiceModel();

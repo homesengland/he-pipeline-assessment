@@ -8,5 +8,6 @@
         public const string DateQuestion = "DateQuestion";
         public const string TextQuestion = "TextQuestion";
         public const string LoadAssessmentStage = "LoadAssessmentStage";
+        public const string SummaryScreen = "SummaryScreen";
     }
 }

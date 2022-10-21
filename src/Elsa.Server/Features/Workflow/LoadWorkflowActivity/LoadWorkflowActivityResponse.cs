@@ -1,4 +1,6 @@
-﻿namespace Elsa.Server.Features.Workflow.LoadWorkflowActivity
+﻿using Elsa.CustomModels;
+
+namespace Elsa.Server.Features.Workflow.LoadWorkflowActivity
 {
     public class LoadWorkflowActivityResponse
     {
@@ -9,7 +11,9 @@
         public string PreviousActivityInstanceId { get; set; } = null!;
 
         public QuestionActivityData QuestionActivityData { get; set; } = null!;
-
+        public List<AssessmentQuestion> AssessmentQuestions { get; set; } = null!;
+        public string FooterTitle { get; set; }
+        public string FooterText { get; set; }
     }
 
     public class QuestionActivityData
