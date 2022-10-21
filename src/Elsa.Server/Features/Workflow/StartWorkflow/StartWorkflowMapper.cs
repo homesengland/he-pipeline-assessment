@@ -1,4 +1,5 @@
 ﻿using Elsa.CustomModels;
+using Elsa.Models;
 using Elsa.Server.Providers;
 using Elsa.Services.Models;
 
@@ -9,6 +10,8 @@ namespace Elsa.Server.Features.Workflow.StartWorkflow
         AssessmentQuestion? RunWorkflowResultToAssessmentQuestion(RunWorkflowResult result,
             IActivityBlueprint activity, string? workflowName);
         StartWorkflowResponse? RunWorkflowResultToStartWorkflowResponse(RunWorkflowResult result);
+        AssessmentQuestion? RunWorkflowResultToAssessmentQuestion(WorkflowInstance workflowInstance, IActivityBlueprint nextActivity, string? workflowName);
+        StartWorkflowResponse RunWorkflowResultToStartWorkflowResponse(string workflowInstanceId, string? nextActivityId);
     }
     public class StartWorkflowMapper : IStartWorkflowMapper
     {
@@ -37,6 +40,33 @@ namespace Elsa.Server.Features.Workflow.StartWorkflow
                     Version = result.WorkflowInstance.Version
                 };
             return null;
+        }
+
+        public AssessmentQuestion? RunWorkflowResultToAssessmentQuestion(WorkflowInstance workflowInstance,
+            IActivityBlueprint nextActivity, string? workflowName)
+        {
+            return new AssessmentQuestion
+            {
+                ActivityId = workflowInstance.LastExecutedActivityId,
+                ActivityType = nextActivity.Type,
+                ActivityName = nextActivity.Name,
+                WorkflowInstanceId = workflowInstance.Id,
+                WorkflowDefinitionId = workflowInstance.DefinitionId,
+                WorkflowName = workflowName,
+                PreviousActivityId = workflowInstance.LastExecutedActivityId,
+                CreatedDateTime = _dateTimeProvider.UtcNow(),
+                CorrelationId = workflowInstance.CorrelationId,
+                Version = workflowInstance.Version
+            };
+        }
+
+        public StartWorkflowResponse RunWorkflowResultToStartWorkflowResponse(string workflowInstanceId, string? nextActivityId)
+        {
+            return new StartWorkflowResponse
+            {
+                WorkflowInstanceId = workflowInstanceId,
+                NextActivityId = nextActivityId
+            };
         }
 
         public StartWorkflowResponse? RunWorkflowResultToStartWorkflowResponse(RunWorkflowResult result)
