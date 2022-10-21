@@ -8,6 +8,7 @@ namespace Elsa.Server.Extensions
         {
             services.AddJavaScriptTypeDefinitionProvider<CustomTypeDefinitionProvider>();
             services.AddNotificationHandlers(typeof(GetScriptHandler));
+            services.AddNotificationHandlers(typeof(WorkflowAssessmentQuestionQuery));
         }
     }
 }

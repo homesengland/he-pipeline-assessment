@@ -1,4 +1,3 @@
-using Elsa;
 using Elsa.CustomActivities.Activities.Currency;
 using Elsa.CustomActivities.Activities.Date;
 using Elsa.CustomActivities.Activities.MultipleChoice;
@@ -57,7 +56,7 @@ builder.Services.AddElsaApiEndpoints();
 
 //Custom method.  Register new Script Handlers here.
 builder.Services.AddCustomElsaScriptHandlers();
-builder.Services.AddNotificationHandlers(typeof(WorkflowAssessmentQuestionQuery));
+
 
 builder.Services.AddBookmarkProvider<QuestionBookmarkProvider>();
 builder.Services.AddScoped<IQuestionInvoker, QuestionInvoker>();
