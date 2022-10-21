@@ -1,13 +1,13 @@
 ﻿using Elsa.CustomActivities.Activities.Shared;
 using Elsa.CustomInfrastructure.Data.Repository;
+using Elsa.Models;
 using Elsa.Persistence;
+using Elsa.Persistence.Specifications.WorkflowInstances;
 using Elsa.Server.Models;
 using Elsa.Server.Providers;
 using Elsa.Services;
-using MediatR;
-using Elsa.Persistence.Specifications.WorkflowInstances;
-using Elsa.Models;
 using Elsa.Services.Models;
+using MediatR;
 using Open.Linq.AsyncExtensions;
 
 namespace Elsa.Server.Features.Workflow.SaveAndContinue
@@ -45,7 +45,7 @@ namespace Elsa.Server.Features.Workflow.SaveAndContinue
 
                     dbAssessmentQuestion.SetAnswer(command.Answer, _dateTimeProvider.UtcNow()); //use DateTimeProvider
                     await _elsaCustomRepository.UpdateAssessmentQuestion(dbAssessmentQuestion,
-                        cancellationToken);                                       
+                        cancellationToken);
 
                     var collectedWorkflow = await _invoker.ExecuteWorkflowsAsync(command.ActivityId, dbAssessmentQuestion.ActivityType,
                     command.WorkflowInstanceId, dbAssessmentQuestion, cancellationToken).FirstOrDefault();
@@ -62,7 +62,7 @@ namespace Elsa.Server.Features.Workflow.SaveAndContinue
                             var workflowDefinitionId = workflowInstance.DefinitionId;
                             var workflowInstanceId = command.WorkflowInstanceId;
 
-                            if (workflowInstance.LastExecutedActivityId != null) 
+                            if (workflowInstance.LastExecutedActivityId != null)
                             {
                                 var lastExecutedActivity =
                                     workflowInstance.ActivityData[workflowInstance.LastExecutedActivityId];

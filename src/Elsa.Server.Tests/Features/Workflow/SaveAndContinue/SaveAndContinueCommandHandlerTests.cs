@@ -101,6 +101,7 @@ namespace Elsa.Server.Tests.Features.Workflow.SaveAndContinue
                 AssessmentQuestion nextAssessmentQuestion,
                 SaveAndContinueCommand saveAndContinueCommand,
                 string nextActivityType,
+                string workflowName,
                 SaveAndContinueCommandHandler sut
             )
         {
@@ -143,7 +144,7 @@ namespace Elsa.Server.Tests.Features.Workflow.SaveAndContinue
                 .ReturnsAsync((AssessmentQuestion?)null);
 
             saveAndContinueMapper
-                .Setup(x => x.SaveAndContinueCommandToNextAssessmentQuestion(saveAndContinueCommand.ActivityId, workflowInstance, activityBlueprint)).Returns(nextAssessmentQuestion);
+                .Setup(x => x.SaveAndContinueCommandToNextAssessmentQuestion(saveAndContinueCommand.ActivityId, workflowInstance, activityBlueprint, workflowName)).Returns(nextAssessmentQuestion);
 
             //Act
             var result = await sut.Handle(saveAndContinueCommand, CancellationToken.None);

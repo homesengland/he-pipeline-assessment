@@ -27,6 +27,7 @@ namespace Elsa.Server.Tests.Features.Workflow.StartWorkflow
             StartWorkflowCommand startWorkflowCommand,
             AssessmentQuestion assessmentQuestion,
             StartWorkflowResponse startWorkflowResponse,
+            string workflowName,
             StartWorkflowCommandHandler sut)
         {
 
@@ -50,7 +51,7 @@ namespace Elsa.Server.Tests.Features.Workflow.StartWorkflow
             startsWorkflow.Setup(x => x.StartWorkflowAsync(workflowBlueprint, null, null, null, null, null, CancellationToken.None))
                 .ReturnsAsync(runWorkflowResult);
 
-            startWorkflowMapper.Setup(x => x.RunWorkflowResultToAssessmentQuestion(runWorkflowResult, activityBlueprint))
+            startWorkflowMapper.Setup(x => x.RunWorkflowResultToAssessmentQuestion(runWorkflowResult, activityBlueprint, workflowName))
                 .Returns(assessmentQuestion);
 
             startWorkflowMapper.Setup(x => x.RunWorkflowResultToStartWorkflowResponse(runWorkflowResult))
@@ -78,6 +79,7 @@ namespace Elsa.Server.Tests.Features.Workflow.StartWorkflow
             ActivityBlueprint activityBlueprint,
             RunWorkflowResult runWorkflowResult,
             StartWorkflowCommand startWorkflowCommand,
+            string workflowName,
             StartWorkflowCommandHandler sut)
         {
             activityBlueprint.Id = runWorkflowResult.WorkflowInstance!.LastExecutedActivityId!;
@@ -91,7 +93,7 @@ namespace Elsa.Server.Tests.Features.Workflow.StartWorkflow
             startsWorkflow.Setup(x => x.StartWorkflowAsync(workflowBlueprint, null, null, null, null, null, CancellationToken.None))
                 .ReturnsAsync(runWorkflowResult);
 
-            startWorkflowMapper.Setup(x => x.RunWorkflowResultToAssessmentQuestion(runWorkflowResult, activityBlueprint))
+            startWorkflowMapper.Setup(x => x.RunWorkflowResultToAssessmentQuestion(runWorkflowResult, activityBlueprint, workflowName))
                 .Returns((AssessmentQuestion?)null);
 
             //Act

@@ -19,6 +19,7 @@ namespace Elsa.Server.Tests.Features.Workflow.SaveAndContinue
             SaveAndContinueCommand saveAndContinueCommand,
             WorkflowInstance workflowInstance,
             ActivityBlueprint activityBlueprint,
+            string workflowName,
             SaveAndContinueMapper sut
         )
         {
@@ -27,7 +28,7 @@ namespace Elsa.Server.Tests.Features.Workflow.SaveAndContinue
             mockDateTimeProvider.Setup(x => x.UtcNow()).Returns(currentTimeUtc);
 
             //Act
-            var result = sut.SaveAndContinueCommandToNextAssessmentQuestion(saveAndContinueCommand.ActivityId, workflowInstance, activityBlueprint);
+            var result = sut.SaveAndContinueCommandToNextAssessmentQuestion(saveAndContinueCommand.ActivityId, workflowInstance, activityBlueprint, workflowName);
 
             //Assert
             Assert.IsType<AssessmentQuestion>(result);
@@ -37,7 +38,7 @@ namespace Elsa.Server.Tests.Features.Workflow.SaveAndContinue
             Assert.Null(result.Answer);
             Assert.Equal(workflowInstance.Id, result.WorkflowInstanceId);
             Assert.Equal(workflowInstance.DefinitionId, result.WorkflowDefinitionId);
-            Assert.Equal(workflowInstance.Name, result.WorkflowName);
+            Assert.Equal(workflowName, result.WorkflowName);
             Assert.Equal(workflowInstance.Version, result.Version);
             Assert.Equal(workflowInstance.CorrelationId, result.CorrelationId);
             Assert.Equal(saveAndContinueCommand.ActivityId, result.PreviousActivityId);

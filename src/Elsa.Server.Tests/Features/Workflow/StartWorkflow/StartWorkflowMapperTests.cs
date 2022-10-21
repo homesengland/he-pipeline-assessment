@@ -17,6 +17,7 @@ namespace Elsa.Server.Tests.Features.Workflow.StartWorkflow
             [Frozen] Mock<IDateTimeProvider> mockDateTimeProvider,
             RunWorkflowResult runWorkflowResult,
             ActivityBlueprint activity,
+            string workflowName,
             StartWorkflowMapper sut
             )
         {
@@ -25,7 +26,7 @@ namespace Elsa.Server.Tests.Features.Workflow.StartWorkflow
             mockDateTimeProvider.Setup(x => x.UtcNow()).Returns(currentTimeUtc);
 
             //Act
-            var result = sut.RunWorkflowResultToAssessmentQuestion(runWorkflowResult, activity);
+            var result = sut.RunWorkflowResultToAssessmentQuestion(runWorkflowResult, activity, workflowName);
 
             //Assert
             Assert.IsType<AssessmentQuestion>(result);
@@ -40,7 +41,8 @@ namespace Elsa.Server.Tests.Features.Workflow.StartWorkflow
         [AutoData]
         public void RunWorkflowResultToAssessmentQuestion_ShouldReturnNull_WhenWorkflowInstanceNull(
             [Frozen] Mock<IDateTimeProvider> mockDateTimeProvider,
-            ActivityBlueprint activity
+            ActivityBlueprint activity,
+            string workflowName
             )
         {
             //Arrange
@@ -48,7 +50,7 @@ namespace Elsa.Server.Tests.Features.Workflow.StartWorkflow
             var runWorkflowResult = new RunWorkflowResult(null, null, null, false);
 
             //Act
-            var result = sut.RunWorkflowResultToAssessmentQuestion(runWorkflowResult, activity);
+            var result = sut.RunWorkflowResultToAssessmentQuestion(runWorkflowResult, activity, workflowName);
 
             //Assert
             Assert.Null(result);
@@ -57,7 +59,9 @@ namespace Elsa.Server.Tests.Features.Workflow.StartWorkflow
         [Theory]
         [AutoData]
         public void RunWorkflowResultToAssessmentQuestion_ShouldReturnNull_WhenWorkflowInstanceIdNull(
-            [Frozen] Mock<IDateTimeProvider> mockDateTimeProvider, ActivityBlueprint activity)
+            [Frozen] Mock<IDateTimeProvider> mockDateTimeProvider,
+            ActivityBlueprint activity,
+            string workflowName)
         {
             //Arrange
             StartWorkflowMapper sut = new StartWorkflowMapper(mockDateTimeProvider.Object);
@@ -66,7 +70,7 @@ namespace Elsa.Server.Tests.Features.Workflow.StartWorkflow
             var runWorkflowResult = new RunWorkflowResult(workflowInstance, null, null, false);
 
             //Act
-            var result = sut.RunWorkflowResultToAssessmentQuestion(runWorkflowResult, activity);
+            var result = sut.RunWorkflowResultToAssessmentQuestion(runWorkflowResult, activity, workflowName);
 
             //Assert
             Assert.Null(result);
