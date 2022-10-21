@@ -19,7 +19,7 @@ namespace Elsa.CustomActivities.Activities.Shared
             Hint = "Question to ask",
             UIHint = ActivityInputUIHints.SingleLine,
             DefaultSyntax = SyntaxNames.Literal,
-            SupportedSyntaxes = new[] { SyntaxNames.Literal })]
+            SupportedSyntaxes = new[] { SyntaxNames.Literal, SyntaxNames.JavaScript })]
         public string Question { get; set; } = null!;
 
         [ActivityInput(Hint = "Question hint", UIHint = ActivityInputUIHints.SingleLine)]
