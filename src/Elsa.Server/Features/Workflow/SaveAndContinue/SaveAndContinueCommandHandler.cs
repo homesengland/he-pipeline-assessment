@@ -42,7 +42,7 @@ namespace Elsa.Server.Features.Workflow.SaveAndContinue
                 if (dbAssessmentQuestion != null)
                 {
                     dbAssessmentQuestion.Comments = command.Comments;
-
+                    dbAssessmentQuestion.Question = command.Question;
                     dbAssessmentQuestion.SetAnswer(command.Answer, _dateTimeProvider.UtcNow()); //use DateTimeProvider
                     await _elsaCustomRepository.UpdateAssessmentQuestion(dbAssessmentQuestion,
                         cancellationToken);

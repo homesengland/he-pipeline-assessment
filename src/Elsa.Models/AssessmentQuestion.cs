@@ -14,6 +14,7 @@
         public string WorkflowDefinitionId { get; set; }
         public string WorkflowInstanceId { get; set; }
 
+        public string? Question { get; set; }
         public string? Answer { get; set; }
         public string? Comments { get; set; }
         public string PreviousActivityId { get; set; } = null!;

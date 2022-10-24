@@ -12,5 +12,6 @@ namespace Elsa.Server.Features.Workflow.SaveAndContinue
         public string? Answer { get; set; }
 
         public string? Comments { get; set; }
+        public string? Question { get; set; }
     }
 }

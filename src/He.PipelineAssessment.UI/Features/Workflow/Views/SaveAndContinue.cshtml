@@ -8,7 +8,7 @@
 }
 <div class="text-center">
 
-    @Html.ActionLink("Back","LoadWorkflowActivity","Workflow", new {WorkflowInstanceId = Model.Data.PreviousActivityInstanceId, ActivityId = Model.Data.PreviousActivityId},new{ @class="govuk-back-link"})
+    @Html.ActionLink("Back","LoadWorkflowActivity","Workflow", new {WorkflowInstanceId = Model.Data.WorkflowInstanceId, ActivityId = Model.Data.PreviousActivityId},new{ @class="govuk-back-link"})
 
     @using (Html.BeginForm("SaveAndContinue", "Workflow", FormMethod.Post))
     {

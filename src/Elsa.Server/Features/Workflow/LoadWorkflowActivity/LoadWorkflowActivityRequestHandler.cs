@@ -6,7 +6,9 @@ using Elsa.Server.Models;
 using Elsa.Services.Models;
 using MediatR;
 using System.Text.Json;
+using Open.Linq.AsyncExtensions;
 using Constants = Elsa.CustomActivities.Activities.Constants;
+using Elsa.CustomModels;
 
 namespace Elsa.Server.Features.Workflow.LoadWorkflowActivity
 {
@@ -76,8 +78,18 @@ namespace Elsa.Server.Features.Workflow.LoadWorkflowActivity
 
                                     if (result.Data.ActivityType == Constants.SummaryScreen)
                                     {
-                                        var assessmentQuestions = await _elsaCustomRepository.GetAssessmentQuestions(workflowInstance.DefinitionId, workflowInstance.CorrelationId);
-                                        result.Data.AssessmentQuestions = assessmentQuestions.ToList();
+                                        var assessmentQuestions = await _elsaCustomRepository
+                                            .GetAssessmentQuestions(workflowInstance.DefinitionId,
+                                                workflowInstance.CorrelationId)!
+                                            .Where(x => x.ActivityType != "SummaryScreen");
+
+                                        var model = new SummaryScreenModel
+                                        {
+                                            AssessmentQuestions = assessmentQuestions.ToList(),
+                                            FooterText = activityDataDictionary["FooterText"]?.ToString(),
+                                            FooterTitle = activityDataDictionary["FooterTitle"]?.ToString()
+                                        };
+                                        result.Data.QuestionActivityData.SummaryScreen = model;
                                     }
                                     else
                                     {

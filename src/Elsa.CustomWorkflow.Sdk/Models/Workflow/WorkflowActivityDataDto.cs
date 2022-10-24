@@ -17,8 +17,6 @@ namespace Elsa.CustomWorkflow.Sdk.Models.Workflow
         public string WorkflowInstanceId { get; set; } = null!;
         public string ActivityId { get; set; } = null!;
         public string PreviousActivityId { get; set; } = null!;
-        public string PreviousActivityInstanceId { get; set; } = null!;
-
         public QuestionActivityData? QuestionActivityData { get; set; }
         public List<AssessmentQuestion?> AssessmentQuestions { get; set; } = null!;
     }
@@ -45,7 +43,7 @@ namespace Elsa.CustomWorkflow.Sdk.Models.Workflow
         public SingleChoiceModel SingleChoice { get { return GetSingleChoiceModel(); } set { SetSingleChoiceModel(value); } }
 
         public Date Date { get { return GetDate(); } set { SetDate(value); } }
-
+        public SummaryScreenModel SummaryScreen { get; set; } = null!;
 
 
         #region Getters and Setters
@@ -192,6 +190,13 @@ namespace Elsa.CustomWorkflow.Sdk.Models.Workflow
         public int? Month { get; set; }
         [Range(1, 3000)]
         public int? Year { get; set; }
+    }
+
+    public class SummaryScreenModel
+    {
+        public string? FooterTitle { get; set; } = null!;
+        public string? FooterText { get; set; } = null!;
+        public List<AssessmentQuestion>? AssessmentQuestions { get; set; }
     }
 }
 

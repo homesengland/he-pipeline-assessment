@@ -8,12 +8,7 @@ namespace Elsa.Server.Features.Workflow.LoadWorkflowActivity
         public string ActivityId { get; set; } = null!;
         public string ActivityType { get; set; } = null!;
         public string PreviousActivityId { get; set; } = null!;
-        public string PreviousActivityInstanceId { get; set; } = null!;
-
         public QuestionActivityData QuestionActivityData { get; set; } = null!;
-        public List<AssessmentQuestion> AssessmentQuestions { get; set; } = null!;
-        public string FooterTitle { get; set; }
-        public string FooterText { get; set; }
     }
 
     public class QuestionActivityData
@@ -30,6 +25,7 @@ namespace Elsa.Server.Features.Workflow.LoadWorkflowActivity
         public string? Answer { get; set; }
         public MultipleChoiceModel MultipleChoice { get; set; } = null!;
         public SingleChoiceModel SingleChoice { get; set; } = null!;
+        public SummaryScreenModel SummaryScreen { get; set; } = null!;
     }
 
 
@@ -57,4 +53,10 @@ namespace Elsa.Server.Features.Workflow.LoadWorkflowActivity
         public string Answer { get; set; } = null!;
     }
 
+    public class SummaryScreenModel
+    {
+        public string? FooterTitle { get; set; } = null!;
+        public string? FooterText { get; set; } = null!;
+        public List<AssessmentQuestion>? AssessmentQuestions { get; set; }
+    }
 }
