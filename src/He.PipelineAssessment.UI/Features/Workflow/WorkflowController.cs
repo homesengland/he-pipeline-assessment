@@ -6,6 +6,7 @@ using MediatR;
 using Microsoft.AspNetCore.Components.Forms;
 using Microsoft.AspNetCore.Mvc;
 using System;
+using He.PipelineAssessment.UI.Features.Workflow.SubmitAssessmentStage;
 
 namespace He.PipelineAssessment.UI.Features.Workflow
 {
@@ -97,5 +98,26 @@ namespace He.PipelineAssessment.UI.Features.Workflow
             }
         }
 
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> SubmitAssessmentStage([FromForm] SubmitAssessmentStageCommand command)
+        {
+            try
+            {
+                var result = await this._mediator.Send(command);
+
+                return RedirectToAction("LoadWorkflowActivity",
+                    new
+                    {
+                        WorkflowInstanceId = result?.WorkflowInstanceId,
+                        ActivityId = result?.ActivityId
+                    });
+            }
+            catch (Exception e)
+            {
+                _logger.LogError(e.Message);
+                return RedirectToAction("Index", "Error", new { message = e.Message });
+            }
+        }
     }
 }

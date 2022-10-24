@@ -6,6 +6,7 @@ using Elsa.Models;
 using Elsa.Persistence;
 using Elsa.Persistence.Specifications.WorkflowInstances;
 using Elsa.Server.Features.Workflow.SaveAndContinue;
+using Elsa.Server.Features.Workflow.SubmitAssessmentStage;
 using Elsa.Server.Models;
 using Elsa.Services;
 using Elsa.Services.Models;
@@ -31,7 +32,7 @@ namespace Elsa.Server.Tests.Features.Workflow.SaveAndContinue
                 List<CollectedWorkflow> collectedWorkflows,
                 WorkflowInstance workflowInstance,
                 AssessmentQuestion nextAssessmentQuestion,
-                SaveAndContinueCommand saveAndContinueCommand,
+                SubmitAssessmentStageCommand saveAndContinueCommand,
                 SaveAndContinueCommandHandler sut)
         {
             //Arrange
@@ -99,7 +100,7 @@ namespace Elsa.Server.Tests.Features.Workflow.SaveAndContinue
                 List<CollectedWorkflow> collectedWorkflows,
                 WorkflowInstance workflowInstance,
                 AssessmentQuestion nextAssessmentQuestion,
-                SaveAndContinueCommand saveAndContinueCommand,
+                SubmitAssessmentStageCommand saveAndContinueCommand,
                 string nextActivityType,
                 string workflowName,
                 SaveAndContinueCommandHandler sut
@@ -171,7 +172,7 @@ namespace Elsa.Server.Tests.Features.Workflow.SaveAndContinue
             AssessmentQuestion currentAssessmentQuestion,
             List<CollectedWorkflow> collectedWorkflows,
             WorkflowInstance workflowInstance,
-            SaveAndContinueCommand saveAndContinueCommand,
+            SubmitAssessmentStageCommand saveAndContinueCommand,
             SaveAndContinueCommandHandler sut)
         {
             //Arrange
@@ -213,7 +214,7 @@ namespace Elsa.Server.Tests.Features.Workflow.SaveAndContinue
             [Frozen] Mock<IElsaCustomRepository> pipelineAssessmentRepository,
             AssessmentQuestion currentAssessmentQuestion,
             List<CollectedWorkflow> collectedWorkflows,
-            SaveAndContinueCommand saveAndContinueCommand,
+            SubmitAssessmentStageCommand saveAndContinueCommand,
             SaveAndContinueCommandHandler sut)
         {
             //Arrange
@@ -250,7 +251,7 @@ namespace Elsa.Server.Tests.Features.Workflow.SaveAndContinue
         [AutoMoqData]
         public async Task Handle_ShouldReturnErrors_WhenAssessmentQuestionNotFoundInDatabase(
             [Frozen] Mock<IElsaCustomRepository> pipelineAssessmentRepository,
-            SaveAndContinueCommand saveAndContinueCommand,
+            SubmitAssessmentStageCommand saveAndContinueCommand,
             SaveAndContinueCommandHandler sut)
         {
             //Arrange
@@ -278,7 +279,7 @@ namespace Elsa.Server.Tests.Features.Workflow.SaveAndContinue
         public async Task Handle_ShouldReturnErrors_WhenADependencyThrows(
             [Frozen] Mock<IElsaCustomRepository> pipelineAssessmentRepository,
             Exception exception,
-            SaveAndContinueCommand saveAndContinueCommand,
+            SubmitAssessmentStageCommand saveAndContinueCommand,
             SaveAndContinueCommandHandler sut)
         {
             //Arrange
@@ -311,7 +312,7 @@ namespace Elsa.Server.Tests.Features.Workflow.SaveAndContinue
             AssessmentQuestion currentAssessmentQuestion,
             List<CollectedWorkflow> collectedWorkflows,
             WorkflowInstance workflowInstance,
-            SaveAndContinueCommand saveAndContinueCommand,
+            SubmitAssessmentStageCommand saveAndContinueCommand,
             SaveAndContinueCommandHandler sut)
         {
             //Arrange

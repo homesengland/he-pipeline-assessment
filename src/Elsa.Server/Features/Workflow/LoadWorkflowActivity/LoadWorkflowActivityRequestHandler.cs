@@ -52,6 +52,7 @@ namespace Elsa.Server.Features.Workflow.LoadWorkflowActivity
                         var workflowSpecification =
                             new WorkflowInstanceIdSpecification(collectedWorkflow.WorkflowInstanceId);
                         var workflowInstance = await _workflowInstanceStore.FindAsync(workflowSpecification, cancellationToken: cancellationToken);
+
                         if (workflowInstance != null)
                         {
 

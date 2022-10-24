@@ -1,35 +1,38 @@
 ﻿@model He.PipelineAssessment.UI.Features.Workflow.SaveAndContinue.SaveAndContinueCommand
 
-<div class="govuk-form-group">
-    <h1 class="govuk-heading-l">
-        @Html.DisplayTextFor(m => m.Data.QuestionActivityData!.Title)
-    </h1>
-    
-    <div class="govuk-grid-row">
-        @foreach (var question in Model.Data.QuestionActivityData!.SummaryScreen.AssessmentQuestions!)
-    {
-        <div class="govuk-grid-column-two-thirds-from-desktop">
-                <dl class="govuk-summary-list govuk-!-margin-bottom-9">
-                    <div class="govuk-summary-list__row">
-                        <dt class="govuk-summary-list__key">
-                            @question.Question
-                        </dt>
-                        <dd class="govuk-summary-list__value">
-                            @question.Answer
-                        </dd>
-                        <dd class="govuk-summary-list__actions">
-                            @Html.ActionLink("Change","LoadWorkflowActivity","Workflow", new {WorkflowInstanceId = Model.Data.WorkflowInstanceId, ActivityId = @question.ActivityId},new{ @class="govuk-link"})
-                        </dd>
-                    </div>
-            </dl>
-        </div>
-    }
-    </div>
+@using (Html.BeginForm("SubmitAssessmentStage", "Workflow", FormMethod.Post))
+{
+    <div class="govuk-form-group">
+        <h1 class="govuk-heading-l">
+            @Html.DisplayTextFor(m => m.Data.QuestionActivityData!.Title)
+        </h1>
 
-    <br/>
-    <div>
-        <h2 class="govuk-heading-m">@Html.DisplayTextFor(m => m.Data.QuestionActivityData!.SummaryScreen.FooterTitle)</h2>
-        <p class="govuk-body">@Html.DisplayTextFor(m => m.Data.QuestionActivityData!.SummaryScreen.FooterText).</p>
+        <div class="govuk-grid-row">
+            @foreach (var question in Model.Data.QuestionActivityData!.SummaryScreen.AssessmentQuestions!)
+            {
+                <div class="govuk-grid-column-two-thirds-from-desktop">
+                    <dl class="govuk-summary-list govuk-!-margin-bottom-9">
+                        <div class="govuk-summary-list__row">
+                            <dt class="govuk-summary-list__key">
+                                @question.Question
+                            </dt>
+                            <dd class="govuk-summary-list__value">
+                                @question.Answer
+                            </dd>
+                            <dd class="govuk-summary-list__actions">
+                                @Html.ActionLink("Change", "LoadWorkflowActivity", "Workflow", new { WorkflowInstanceId = Model.Data.WorkflowInstanceId, ActivityId = @question.ActivityId }, new { @class = "govuk-link" })
+                            </dd>
+                        </div>
+                    </dl>
+                </div>
+            }
+        </div>
+
+        <br/>
+        <div>
+            <h2 class="govuk-heading-m">@Html.DisplayTextFor(m => m.Data.QuestionActivityData!.SummaryScreen.FooterTitle)</h2>
+            <p class="govuk-body">@Html.DisplayTextFor(m => m.Data.QuestionActivityData!.SummaryScreen.FooterText).</p>
+        </div>
+        <input id="Next" type="submit" value="Submit" name="Submit" class="govuk-button"/>
     </div>
-    <input id="Next" type="submit" value="Save and continue" name="Next" class="govuk-button"/>
-</div>
+}

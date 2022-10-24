@@ -17,6 +17,7 @@ using Elsa.Server.Features.Datasources.GetSinglePipelineData;
 using Elsa.Server.Features.Workflow.LoadWorkflowActivity;
 using Elsa.Server.Features.Workflow.SaveAndContinue;
 using Elsa.Server.Features.Workflow.StartWorkflow;
+using Elsa.Server.Features.Workflow.SubmitAssessmentStage;
 using Elsa.Server.Providers;
 using Elsa.Server.StartupTasks;
 using He.PipelineAssessment.Data.SinglePipeline;
@@ -74,6 +75,7 @@ builder.Services.AddScoped<IDateTimeProvider, DateTimeProvider>();
 
 builder.Services.AddScoped<IStartWorkflowMapper, StartWorkflowMapper>();
 builder.Services.AddScoped<ISaveAndContinueMapper, SaveAndContinueMapper>();
+builder.Services.AddScoped<ISubmitAssessmentStageCommandMapper, SubmitAssessmentStageCommandMapper>();
 
 builder.Services.AddScoped<ILoadWorkflowActivityJsonHelper, LoadWorkflowActivityJsonHelper>();
 //builder.Services.AddScoped<ILoadWorkflowActivityMapper, LoadWorkflowActivityMapper>();

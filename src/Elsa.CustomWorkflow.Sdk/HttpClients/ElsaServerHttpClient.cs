@@ -11,6 +11,7 @@ namespace Elsa.CustomWorkflow.Sdk.HttpClients
 
         Task<WorkflowNextActivityDataDto?> SaveAndContinue(SaveAndContinueCommandDto model);
         Task<WorkflowActivityDataDto?> LoadWorkflowActivity(LoadWorkflowActivityDto model);
+        Task<WorkflowNextActivityDataDto?> PostSubmitAssessmentStage(SubmitAssessmentStageCommandDto dto);
     }
 
     public class ElsaServerHttpClient : IElsaServerHttpClient
@@ -101,6 +102,31 @@ namespace Elsa.CustomWorkflow.Sdk.HttpClients
             return JsonSerializer.Deserialize<WorkflowActivityDataDto>(data, new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
         }
 
+        public async Task<WorkflowNextActivityDataDto?> PostSubmitAssessmentStage(SubmitAssessmentStageCommandDto dto)
+        {
+            string data;
+            var relativeUri = "workflow/SubmitAssessmentStage";
 
+            using var request = new HttpRequestMessage(HttpMethod.Post, relativeUri);
+            var content = JsonSerializer.Serialize(dto);
+            request.Content = new StringContent(content, Encoding.UTF8, "application/json");
+
+            using (var response = await _httpClientFactory.CreateClient("ElsaServerClient")
+                       .SendAsync(request)
+                       .ConfigureAwait(false))
+            {
+                data = await response.Content.ReadAsStringAsync().ConfigureAwait(false);
+                if (!response.IsSuccessStatusCode)
+                {
+                    _logger.LogError($"StatusCode='{response.StatusCode}'," +
+                                     $"\n Message= '{data}'," +
+                                     $"\n Url='{request.RequestUri}'");
+
+                    return null;
+                }
+            }
+
+            return JsonSerializer.Deserialize<WorkflowNextActivityDataDto>(data, new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
+        }
     }
 }

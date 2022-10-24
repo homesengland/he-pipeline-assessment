@@ -2,6 +2,7 @@
 using Elsa.CustomModels;
 using Elsa.Models;
 using Elsa.Server.Features.Workflow.SaveAndContinue;
+using Elsa.Server.Features.Workflow.SubmitAssessmentStage;
 using Elsa.Server.Providers;
 using Elsa.Services.Models;
 using He.PipelineAssessment.Common.Tests;
@@ -16,7 +17,7 @@ namespace Elsa.Server.Tests.Features.Workflow.SaveAndContinue
         [AutoMoqData]
         public void SaveAndContinueCommandToNextAssessmentQuestion_ShouldReturnAssessmentQuestion(
             [Frozen] Mock<IDateTimeProvider> mockDateTimeProvider,
-            SaveAndContinueCommand saveAndContinueCommand,
+            SubmitAssessmentStageCommand saveAndContinueCommand,
             WorkflowInstance workflowInstance,
             ActivityBlueprint activityBlueprint,
             string workflowName,

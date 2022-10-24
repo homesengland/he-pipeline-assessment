@@ -3,6 +3,7 @@ using Elsa.CustomInfrastructure.Data.Repository;
 using Elsa.CustomModels;
 using Elsa.Models;
 using Elsa.Server.Features.Workflow.StartWorkflow;
+using Elsa.Server.Features.Workflow.SubmitAssessmentStage;
 using Elsa.Server.Models;
 using Elsa.Services;
 using Elsa.Services.Models;
@@ -26,14 +27,14 @@ namespace Elsa.Server.Tests.Features.Workflow.StartWorkflow
             RunWorkflowResult runWorkflowResult,
             StartWorkflowCommand startWorkflowCommand,
             AssessmentQuestion assessmentQuestion,
-            StartWorkflowResponse startWorkflowResponse,
+            SubmitAssessmentStageResponse startWorkflowResponse,
             string workflowName,
             StartWorkflowCommandHandler sut)
         {
 
             //Arrange
 
-            var opResult = new OperationResult<StartWorkflowResponse>()
+            var opResult = new OperationResult<SubmitAssessmentStageResponse>()
             {
                 Data = startWorkflowResponse,
                 ErrorMessages = new List<string>(),

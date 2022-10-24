@@ -1,6 +1,7 @@
 ﻿using AutoFixture.Xunit2;
 using Elsa.CustomModels;
 using Elsa.Server.Features.Workflow.StartWorkflow;
+using Elsa.Server.Features.Workflow.SubmitAssessmentStage;
 using Elsa.Server.Providers;
 using Elsa.Services.Models;
 using He.PipelineAssessment.Common.Tests;
@@ -93,7 +94,7 @@ namespace Elsa.Server.Tests.Features.Workflow.StartWorkflow
             var result = sut.RunWorkflowResultToStartWorkflowResponse(runWorkflowResult);
 
             //Assert
-            Assert.IsType<StartWorkflowResponse>(result);
+            Assert.IsType<SubmitAssessmentStageResponse>(result);
             Assert.Equal(runWorkflowResult.WorkflowInstance!.LastExecutedActivityId, result!.NextActivityId);
             Assert.Equal(runWorkflowResult.WorkflowInstance!.Id, result.WorkflowInstanceId);
         }
