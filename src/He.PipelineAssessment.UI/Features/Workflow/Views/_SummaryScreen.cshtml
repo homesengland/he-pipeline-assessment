@@ -38,9 +38,13 @@
             <h2 class="govuk-heading-m">@Html.DisplayTextFor(m => m.Data.QuestionActivityData!.SummaryScreen.FooterTitle)</h2>
             <p class="govuk-body">@Html.DisplayTextFor(m => m.Data.QuestionActivityData!.SummaryScreen.FooterText).</p>
         </div>
-        @*@if (Model.Data.WorkflowStatus != "Finished")*@
+        @if (Model.Data.WorkflowStatus != "Finished")
         {
             <input id="Next" type="submit" value="Submit" name="Submit" class="govuk-button"/>
-       @* }*@
+        }
+        else
+        {
+            <input id="Next" type="submit" value="Submit" name="Continue" class="govuk-button" />
+        }
     </div>
 }

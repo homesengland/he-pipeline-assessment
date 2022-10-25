@@ -64,6 +64,7 @@ namespace Elsa.Server.Features.Workflow.LoadWorkflowActivity
                                         workflowInstance.CorrelationId, "SummaryScreen", cancellationToken);
                                 dbAssessmentQuestion = summaryScreenActivity;
                                 activityId = summaryScreenActivity!.ActivityId;
+                                result.Data.ActivityId = activityId;
                             }
 
                             if (!workflowInstance.ActivityData.ContainsKey(activityId))

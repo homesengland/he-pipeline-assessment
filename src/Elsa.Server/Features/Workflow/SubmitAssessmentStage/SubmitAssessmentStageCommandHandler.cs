@@ -74,6 +74,15 @@ namespace Elsa.Server.Features.Workflow.SubmitAssessmentStage
                                 workflowInstance = await _workflowInstanceStore.FindAsync(workflowSpecification, cancellationToken);
                                 nextActivityId = workflowInstance.LastExecutedActivityId;
                                 workflowDefinitionId = workflowInstance.DefinitionId;
+
+                                var nextInstanceLastExecutedActivity =
+                                    workflowInstance.ActivityData[workflowInstance.LastExecutedActivityId];
+
+                                if (nextInstanceLastExecutedActivity.HasKey("ChildWorkflowInstanceId"))
+                                {
+                                    //update the next activity id to the first activity of the stage
+                                    nextActivityId = workflowInstance.ActivityData.First(x => x.Value.Any(y => y.Key == "Question")).Key;
+                                }
                             }
 
                             var workflow =
