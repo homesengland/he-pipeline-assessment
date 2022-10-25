@@ -8,6 +8,7 @@ namespace Elsa.Server.Features.Workflow.LoadWorkflowActivity
         public string ActivityId { get; set; } = null!;
         public string ActivityType { get; set; } = null!;
         public string PreviousActivityId { get; set; } = null!;
+        public string WorkflowStatus { get; set; } = null!;
         public QuestionActivityData QuestionActivityData { get; set; } = null!;
     }
 

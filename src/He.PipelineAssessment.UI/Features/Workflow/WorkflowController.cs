@@ -100,11 +100,16 @@ namespace He.PipelineAssessment.UI.Features.Workflow
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> SubmitAssessmentStage([FromForm] SubmitAssessmentStageCommand command)
+        public async Task<IActionResult> SubmitAssessmentStage([FromForm] SaveAndContinueCommand command)
         {
             try
             {
-                var result = await this._mediator.Send(command);
+                var submitAssessmentStageCommand = new SubmitAssessmentStageCommand
+                {
+                    ActivityId = command.Data.ActivityId,
+                    WorkflowInstanceId = command.Data.WorkflowInstanceId
+                };
+                var result = await this._mediator.Send(submitAssessmentStageCommand);
 
                 return RedirectToAction("LoadWorkflowActivity",
                     new

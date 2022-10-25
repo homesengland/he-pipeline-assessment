@@ -9,6 +9,7 @@ using System.Text.Json;
 using Open.Linq.AsyncExtensions;
 using Constants = Elsa.CustomActivities.Activities.Constants;
 using Elsa.CustomModels;
+using Elsa.Models;
 
 namespace Elsa.Server.Features.Workflow.LoadWorkflowActivity
 {
@@ -55,17 +56,27 @@ namespace Elsa.Server.Features.Workflow.LoadWorkflowActivity
 
                         if (workflowInstance != null)
                         {
+                            var activityId = activityRequest.ActivityId;
+                            if (workflowInstance.WorkflowStatus == WorkflowStatus.Finished)
+                            {
+                                var summaryScreenActivity =
+                                    await _elsaCustomRepository.GetLatestAssessmentQuestionByType(workflowInstance.DefinitionId,
+                                        workflowInstance.CorrelationId, "SummaryScreen", cancellationToken);
+                                dbAssessmentQuestion = summaryScreenActivity;
+                                activityId = summaryScreenActivity!.ActivityId;
+                            }
 
-                            if (!workflowInstance.ActivityData.ContainsKey(activityRequest.ActivityId))
+                            if (!workflowInstance.ActivityData.ContainsKey(activityId))
                             {
                                 result.ErrorMessages.Add(
-                                    $"Cannot find activity Id {activityRequest.ActivityId} in the workflow activity data dictionary");
+                                    $"Cannot find activity Id {activityId} in the workflow activity data dictionary");
                             }
                             else
                             {
                                 var activityDataDictionary =
-                                    workflowInstance.ActivityData.FirstOrDefault(a => a.Key == activityRequest.ActivityId).Value;
+                                    workflowInstance.ActivityData.FirstOrDefault(a => a.Key == activityId).Value;
 
+                                result.Data.WorkflowStatus = workflowInstance.WorkflowStatus.ToString();
                                 result.Data.ActivityType = dbAssessmentQuestion.ActivityType;
                                 result.Data.PreviousActivityId = dbAssessmentQuestion.PreviousActivityId;
 
@@ -114,6 +125,8 @@ namespace Elsa.Server.Features.Workflow.LoadWorkflowActivity
                                         $"Failed to map activity data");
                                 }
                             }
+                            
+                            
                         }
                         else
                         {

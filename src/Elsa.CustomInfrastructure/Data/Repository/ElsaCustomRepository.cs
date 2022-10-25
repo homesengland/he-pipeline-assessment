@@ -52,5 +52,16 @@ namespace Elsa.CustomInfrastructure.Data.Repository
                 await _dbContext.Set<AssessmentQuestion>().Where(x => x.WorkflowInstanceId == latestInstance && x.ActivityName == activityName).FirstOrDefaultAsync();
             return assessmentQuestion;
         }
+
+        public async Task<AssessmentQuestion?> GetLatestAssessmentQuestionByType(string workflowDefinitionId, string correlationId, string activityType, CancellationToken cancellationToken = default)
+        {
+            var latestInstance = await _dbContext.Set<AssessmentQuestion>().Where(x =>
+                    x.CorrelationId == correlationId && x.WorkflowDefinitionId == workflowDefinitionId)
+                .OrderByDescending(x => x.CreatedDateTime).Select(x => x.WorkflowInstanceId).FirstOrDefaultAsync();
+
+            var assessmentQuestion =
+                await _dbContext.Set<AssessmentQuestion>().Where(x => x.WorkflowInstanceId == latestInstance && x.ActivityType == activityType).FirstOrDefaultAsync();
+            return assessmentQuestion;
+        }
     }
 }

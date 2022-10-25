@@ -100,8 +100,14 @@ namespace Elsa.Server.Features.Workflow.SubmitAssessmentStage
                                     ActivityType = nextActivity.Type
                                 };
 
-                                workflowInstance.WorkflowStatus = WorkflowStatus.Finished;
-                                await _workflowInstanceStore.SaveAsync(workflowInstance, cancellationToken);
+                                //workflowInstance.WorkflowStatus = WorkflowStatus.Finished;
+                                var previousWorkflowSpecification = new WorkflowInstanceIdSpecification(command.WorkflowInstanceId);
+                                var previousWorkflowInstance = await _workflowInstanceStore.FindAsync(previousWorkflowSpecification, cancellationToken);
+                                if (previousWorkflowInstance != null)
+                                {
+                                    previousWorkflowInstance.WorkflowStatus = WorkflowStatus.Finished;
+                                    await _workflowInstanceStore.SaveAsync(previousWorkflowInstance, cancellationToken);
+                                }
                             }
                             else
                             {

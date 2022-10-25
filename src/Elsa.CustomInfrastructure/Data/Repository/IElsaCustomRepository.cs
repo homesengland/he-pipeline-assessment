@@ -17,5 +17,9 @@ namespace Elsa.CustomInfrastructure.Data.Repository
 
         Task<AssessmentQuestion?> GetAssessmentQuestion(string workflowDefinitionId,
             string correlationId, string activityName, CancellationToken cancellationToken = default);
+
+        Task<AssessmentQuestion?> GetLatestAssessmentQuestionByType(string workflowDefinitionId, string correlationId,
+            string activityType, CancellationToken cancellationToken = default);
+
     }
 }
