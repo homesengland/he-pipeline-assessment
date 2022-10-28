@@ -1,0 +1,45 @@
+﻿@using He.PipelineAssessment.UI
+@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+@model He.PipelineAssessment.UI.Features.Assessments.AssessmentList.AssessmentListData
+
+@{
+    ViewData["Title"] = "Pipeline Assessment";
+    Layout = "_Layout";
+}
+
+<h1 class="govuk-label-wrapper"><label class="govuk-label govuk-label--l" for="event-name">Assessment Search</label></h1>
+<br/>
+
+<div class="text-center">
+    <table class="govuk-table">
+        @*<caption class="govuk-table__caption govuk-table__caption--m">Assessment Search</caption>*@
+        <thead class="govuk-table__head">
+            <tr class="govuk-table__row">
+                <th scope="col" class="govuk-table__header">Opportunity ID</th>
+                <th scope="col" class="govuk-table__header govuk-table__header--numeric">Project</th>
+                <th scope="col" class="govuk-table__header govuk-table__header--numeric">Project Manager</th>
+                <th scope="col" class="govuk-table__header govuk-table__header--numeric">Partner</th>
+                <th scope="col" class="govuk-table__header govuk-table__header--numeric">Team</th>
+                <th scope="col" class="govuk-table__header govuk-table__header--numeric">Local Authority</th>
+                <th scope="col" class="govuk-table__header govuk-table__header--numeric">Date created</th>
+                <th scope="col" class="govuk-table__header govuk-table__header--numeric">Status</th>
+            </tr>
+        </thead>
+        <tbody class="govuk-table__body">
+            @foreach (var assessment in Model.ListOfAssessments)
+            {
+                <tr class="govuk-table__row">
+                    <th scope="row" class="govuk-table__header"><a asp-controller="Assessment" asp-action="Summary" asp-route-assessmentId="@assessment.AssessmentWorkflowId">@assessment.Id</a> </th>
+                    <td class="govuk-table__cell govuk-table__cell--numeric">@assessment.ProjectName</td>
+                    <td class="govuk-table__cell govuk-table__cell--numeric">@assessment.ProjectManager</td>
+                    <td class="govuk-table__cell govuk-table__cell--numeric">@assessment.Partner</td>
+                    <td class="govuk-table__cell govuk-table__cell--numeric">@assessment.Team</td>
+                    <td class="govuk-table__cell govuk-table__cell--numeric">@assessment.LocalAuthority</td>
+                    <td class="govuk-table__cell govuk-table__cell--numeric">@assessment.DateCreated.ToString("d - MM - yy HH:mm:ss")</td>
+                    <td class="govuk-table__cell govuk-table__cell--numeric">@assessment.StatusDisplay()</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
+

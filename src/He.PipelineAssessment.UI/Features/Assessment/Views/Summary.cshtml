@@ -1,0 +1,38 @@
+﻿@using He.PipelineAssessment.UI
+@model He.PipelineAssessment.UI.Features.Assessments.AssessmentSummary.AssessmentSummaryData;
+
+@{
+    ViewData["Title"] = "Assessment Summary";
+    Layout = "_Layout";
+}
+<div class="text-center">
+    <div class="text-center">
+        <table class="govuk-table">
+            <caption class="govuk-table__caption govuk-table__caption--m">Assessment Summary</caption>
+            <thead class="govuk-table__head">
+                <tr class="govuk-table__row">
+                    <th scope="col" class="govuk-table__header">Opportunity ID</th>
+                    <th scope="col" class="govuk-table__header">Status</th>
+                    <th scope="col" class="govuk-table__header">Started</th>
+                    <th scope="col" class="govuk-table__header">Submitted By</th>
+                    <th scope="col" class="govuk-table__header">Date created</th>
+                    <th scope="col" class="govuk-table__header">Status</th>
+                </tr>
+            </thead>
+            <tbody class="govuk-table__body">
+                @foreach (var assessmentStage in Model.Stages)
+                {
+                    <tr class="govuk-table__row">
+                        <th scope="row" class="govuk-table__header"><a href="">@assessmentStage.StageName</a> </th>
+                        <td class="govuk-table__cell">@assessmentStage.Status</td>
+                        <td class="govuk-table__cell">@assessmentStage.StartedDateString()</td>
+                        <td class="govuk-table__cell">@assessmentStage.SubmittedBy</td>
+                        <td class="govuk-table__cell">@assessmentStage.SubmittedDateString()</td>
+                        <td class="govuk-table__cell">@assessmentStage.Result</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>
+
