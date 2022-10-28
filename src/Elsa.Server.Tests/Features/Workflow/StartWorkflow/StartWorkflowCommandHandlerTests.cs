@@ -27,14 +27,14 @@ namespace Elsa.Server.Tests.Features.Workflow.StartWorkflow
             RunWorkflowResult runWorkflowResult,
             StartWorkflowCommand startWorkflowCommand,
             AssessmentQuestion assessmentQuestion,
-            SubmitAssessmentStageResponse startWorkflowResponse,
+            StartWorkflowResponse startWorkflowResponse,
             string workflowName,
             StartWorkflowCommandHandler sut)
         {
 
             //Arrange
 
-            var opResult = new OperationResult<SubmitAssessmentStageResponse>()
+            var opResult = new OperationResult<StartWorkflowResponse>()
             {
                 Data = startWorkflowResponse,
                 ErrorMessages = new List<string>(),

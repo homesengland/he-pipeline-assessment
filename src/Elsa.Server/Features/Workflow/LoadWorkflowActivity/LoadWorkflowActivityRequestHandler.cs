@@ -10,6 +10,7 @@ using Open.Linq.AsyncExtensions;
 using Constants = Elsa.CustomActivities.Activities.Constants;
 using Elsa.CustomModels;
 using Elsa.Models;
+using Elsa.Services;
 
 namespace Elsa.Server.Features.Workflow.LoadWorkflowActivity
 {
@@ -19,12 +20,14 @@ namespace Elsa.Server.Features.Workflow.LoadWorkflowActivity
         private readonly IWorkflowInstanceStore _workflowInstanceStore;
         private readonly IElsaCustomRepository _elsaCustomRepository;
         private readonly ILoadWorkflowActivityJsonHelper _loadWorkflowActivityJsonHelper;
+        private readonly IWorkflowRegistry _workflowRegistry;
 
-        public LoadWorkflowActivityRequestHandler(IWorkflowInstanceStore workflowInstanceStore, IElsaCustomRepository elsaCustomRepository, IQuestionInvoker questionInvoker, ILoadWorkflowActivityJsonHelper loadWorkflowActivityJsonHelper)
+        public LoadWorkflowActivityRequestHandler(IWorkflowInstanceStore workflowInstanceStore, IElsaCustomRepository elsaCustomRepository, IQuestionInvoker questionInvoker, ILoadWorkflowActivityJsonHelper loadWorkflowActivityJsonHelper, IWorkflowRegistry workflowRegistry)
         {
             _workflowInstanceStore = workflowInstanceStore;
             _elsaCustomRepository = elsaCustomRepository;
             _loadWorkflowActivityJsonHelper = loadWorkflowActivityJsonHelper;
+            _workflowRegistry = workflowRegistry;
             _questionInvoker = questionInvoker;
         }
 
@@ -56,6 +59,9 @@ namespace Elsa.Server.Features.Workflow.LoadWorkflowActivity
 
                         if (workflowInstance != null)
                         {
+                            // we can check iSLatest on the workflow blueprint below
+                            var workflow =
+                                await _workflowRegistry.FindAsync(workflowInstance.DefinitionId, VersionOptions.SpecificVersion(workflowInstance.Version), cancellationToken: cancellationToken);
                             var activityId = activityRequest.ActivityId;
                             if (workflowInstance.WorkflowStatus == WorkflowStatus.Finished)
                             {

@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.DataProtection.EntityFrameworkCore;
+﻿using He.PipelineAssessment.Infrastructure.Models;
+using Microsoft.AspNetCore.DataProtection.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 
 namespace He.PipelineAssessment.Infrastructure.Data
@@ -10,5 +11,7 @@ namespace He.PipelineAssessment.Infrastructure.Data
         }
 
         public DbSet<DataProtectionKey> DataProtectionKeys { get; set; } = default!;
+        public DbSet<AssessmentStageVersion> AssessmentStageVersions { get; set; } = default!;
+
     }
 }

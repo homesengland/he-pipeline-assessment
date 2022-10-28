@@ -33,6 +33,8 @@ namespace Elsa.Server.Features.Workflow.SubmitAssessmentStage
 
         public async Task<OperationResult<SubmitAssessmentStageResponse>> Handle(SubmitAssessmentStageCommand command, CancellationToken cancellationToken)
         {
+            var version = VersionOptions.SpecificVersion(4);
+            //var version = VersionOptions.Published;
             var result = new OperationResult<SubmitAssessmentStageResponse>();
             try
             {
@@ -86,7 +88,7 @@ namespace Elsa.Server.Features.Workflow.SubmitAssessmentStage
                             }
 
                             var workflow =
-                                await _workflowRegistry.FindAsync(workflowDefinitionId, VersionOptions.Published, cancellationToken: cancellationToken);
+                                await _workflowRegistry.FindAsync(workflowDefinitionId, version, cancellationToken: cancellationToken);
 
                             var nextActivity = workflow!.Activities.FirstOrDefault(x =>
                                 x.Id == nextActivityId);

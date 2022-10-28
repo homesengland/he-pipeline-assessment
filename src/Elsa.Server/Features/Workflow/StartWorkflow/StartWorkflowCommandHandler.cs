@@ -33,11 +33,13 @@ namespace Elsa.Server.Features.Workflow.StartWorkflow
 
         public async Task<OperationResult<StartWorkflowResponse>> Handle(StartWorkflowCommand request, CancellationToken cancellationToken)
         {
+            var version = VersionOptions.SpecificVersion(7);
+            //var version = VersionOptions.Published;
             var result = new OperationResult<StartWorkflowResponse>();
             try
             {
                 var workflow =
-                    await _workflowRegistry.FindAsync(request.WorkflowDefinitionId, VersionOptions.Published, cancellationToken: cancellationToken);
+                    await _workflowRegistry.FindAsync(request.WorkflowDefinitionId, version, cancellationToken: cancellationToken);
                 var runWorkflowResult = await _startsWorkflow.StartWorkflowAsync(workflow!, cancellationToken: cancellationToken);
 
                 if (runWorkflowResult.WorkflowInstance != null)
@@ -63,7 +65,7 @@ namespace Elsa.Server.Features.Workflow.StartWorkflow
                             workflowInstance = await _workflowInstanceStore.FindAsync(workflowSpecification, cancellationToken);
                             nextActivityId = workflowInstance.LastExecutedActivityId;
                             workflow =
-                                await _workflowRegistry.FindAsync(workflowInstance.DefinitionId, VersionOptions.Published, cancellationToken: cancellationToken);
+                                await _workflowRegistry.FindAsync(workflowInstance.DefinitionId, version, cancellationToken: cancellationToken);
                         }
 
                         var nextActivity = workflow!.Activities.FirstOrDefault(x =>
