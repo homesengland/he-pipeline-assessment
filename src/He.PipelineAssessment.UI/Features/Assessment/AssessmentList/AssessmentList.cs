@@ -9,14 +9,14 @@
     {
         public string Id { get; set; } = null!;
         public string ProjectName { get; set; } = null!;
- 
-        public string ProjectManager { get; set; } = null!; 
+
+        public string ProjectManager { get; set; } = null!;
 
         public string Partner { get; set; } = null!;
 
         public string Team { get; set; } = null!;
 
-        public string LocalAuthority {get;set;} = null!;
+        public string LocalAuthority { get; set; } = null!;
 
         public DateTime DateCreated { get; set; }
 
@@ -29,7 +29,7 @@
             switch (Status)
             {
                 case AssessmentStatus.New:
-                        return "New";
+                    return "New";
                 case AssessmentStatus.In_Progress:
                     return "In Progress";
                 case AssessmentStatus.Complete:
@@ -39,6 +39,22 @@
             }
             return "Unknown";
         }
+
+        public string StatusDisplayTag()
+        {
+            switch (Status)
+            {
+                case AssessmentStatus.New:
+                    return "blue";
+                case AssessmentStatus.In_Progress:
+                    return "yellow";
+                case AssessmentStatus.Complete:
+                    return "green";
+                case AssessmentStatus.Stopped:
+                    return "red";
+            }
+            return "grey";
+        }
     }
 
     public enum AssessmentStatus
@@ -47,5 +63,5 @@
         In_Progress,
         Stopped,
         Complete
-    } 
+    }
 }

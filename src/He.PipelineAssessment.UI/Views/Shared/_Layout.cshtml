@@ -16,9 +16,9 @@
   <link rel="apple-touch-icon" sizes="167x167" href="styles/assets/images/govuk-apple-touch-icon-167x167.png">
   <link rel="apple-touch-icon" sizes="152x152" href="styles/assets/images/govuk-apple-touch-icon-152x152.png">
   <link rel="apple-touch-icon" href="styles/assets/images/govuk-apple-touch-icon.png">
-  <link href="cdn.datatables.net/1.12.1/css/jquery.dataTables.min.css" rel="stylesheet" />
   <link href="~/styles/govuk-frontend-4.3.0.min.css" rel="stylesheet">
-
+  <link rel="stylesheet" type="text/css" href="DataTables/datatablesgovuk.css">
+  @RenderSection("Styles", required: false)
 </head>
 
 <body class="govuk-template__body ">
@@ -76,11 +76,16 @@
     </div>
   </footer>
 
+<script src="jquery/dist/jquery.min.js" nonce="@nonceConfig.JQuerySetup"></script>
 <script src="~/styles/govuk-frontend-4.3.0.min.js"></script>
+<script type="text/javascript" charset="utf8" src="DataTables/datatables.min.js" nonce="@nonceConfig.DataTablesSetup"></script>
+
 <script nonce="@nonceConfig.GovUkSetup">
     window.GOVUKFrontend.initAll()
 </script>
-    <script nonce="@nonceConfig.GovUkSetup" type="text/javascript" src="cdn.datatables.net/1.12.1/js/jquery.dataTables.min.js"></script>
+
+@RenderSection("Scripts", required: false)
+
 </body>
 
 </html>
