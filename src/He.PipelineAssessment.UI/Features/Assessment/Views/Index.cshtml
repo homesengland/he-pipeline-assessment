@@ -78,10 +78,11 @@
                         .every(function () {
                             var column = this;
 
-                            var label = $('<label class="govuk-label">' + column.header().textContent + ' </label>').appendTo('#search-div');
+                            var label = $('<div class="govuk-date-input__item"><div id="' + column.header().textContent.replaceAll(/\s/g, '') + '" class="govuk-form-group"><label class="govuk-label govuk-date-input__label">' + column.header().textContent + ' </label></div></div>')
+                            .appendTo('#search-div');
 
                             var select = $('<select class="govuk-select"><option value=""></option></select>')
-                                .appendTo('#search-div')
+                                .appendTo('#' + column.header().textContent.replaceAll(/\s/g, ''))
                                 .on('change', function () {
                                     var val = $.fn.dataTable.util.escapeRegex($(this).val());
 

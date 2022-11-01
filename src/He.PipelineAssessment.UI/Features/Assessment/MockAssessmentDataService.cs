@@ -51,7 +51,7 @@ namespace He.PipelineAssessment.UI.Features.Assessments
             {
                 ListOfAssessments = new List<Assessment>()
             };
-            for(int i = 0; i < 50; i++)
+            for (int i = 0; i < 150; i++)
             {
                 assessments.ListOfAssessments.Add(new Assessment
                 {
@@ -64,7 +64,7 @@ namespace He.PipelineAssessment.UI.Features.Assessments
                     DateCreated = GetDateCreated(),
                     Status = GetRandomStatus(),
                     AssessmentWorkflowId = Guid.NewGuid().ToString()
-                });    
+                });
             }
             return assessments;
         }
