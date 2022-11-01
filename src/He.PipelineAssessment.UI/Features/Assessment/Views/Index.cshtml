@@ -38,7 +38,7 @@
         @foreach (var assessment in Model.ListOfAssessments)
         {
             <tr class="govuk-table__row">
-                <th scope="row" class="govuk-table__header"><a asp-controller="Assessment" asp-action="Summary" asp-route-assessmentId="@assessment.AssessmentWorkflowId">@assessment.Id</a> </th>
+                    <th scope="row" class="govuk-table__header"><a asp-controller="Assessment" asp-action="Summary" asp-route-assessmentId="@assessment.AssessmentWorkflowId" class="govuk-link">@assessment.Id</a> </th>
                 <td class="govuk-table__cell govuk-table__cell--numeric">@assessment.ProjectName</td>
                 <td class="govuk-table__cell govuk-table__cell--numeric">@assessment.ProjectManager</td>
                 <td class="govuk-table__cell govuk-table__cell--numeric">@assessment.Partner</td>
@@ -70,7 +70,7 @@
 
         $(document).ready(function () {
             $('#table_id').DataTable({
-                order:[[5,'desc']],
+                order:[[6,'desc']],
 
                 initComplete: function () {
                     this.api()
@@ -94,9 +94,16 @@
                                 .sort()
                                 .each(function (d, j) {
 
-                                    //var dom_nodes = $($.parseHTML(d));
+                                    var dom_nodes = $($.parseHTML(d));
+                                    var node = dom_nodes[0];
+                                    if (node.innerText != null) {
+                                        select.append('<option value="' + node.innerText + '">' + node.innerText + '</option>');
+                                    }
+                                    else
+                                    {
+                                        select.append('<option value="' + d + '">' + d + '</option>');
+                                    }
 
-                                    select.append('<option value="' + d + '">' + d + '</option>');
                                 });
                         });
                 },
