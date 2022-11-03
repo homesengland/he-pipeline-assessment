@@ -12,16 +12,11 @@ namespace He.PipelineAssessment.UI.Features.Assessments
         private List<string> _partners = null!;
         private List<string> _teams = null!;
         private List<string> _authorities = null!;
-        private List<AssessmentStatus> _statuses = null!;
+        private List<string> _statuses = null!;
 
         public MockAssessmentDataService()
         {
             InitStubData();
-        }
-
-        public AssessmentListData GetData(AssessmentListCommand command)
-        {
-            return GetAssessmentListDummyData();
         }
 
         public AssessmentSummaryData GetData(AssessmentSummaryCommand command)
@@ -42,33 +37,6 @@ namespace He.PipelineAssessment.UI.Features.Assessments
 
             };
         }
-
-
-
-        private AssessmentListData GetAssessmentListDummyData()
-        {
-            var assessments = new AssessmentListData
-            {
-                ListOfAssessments = new List<Assessment>()
-            };
-            for (int i = 0; i < 150; i++)
-            {
-                assessments.ListOfAssessments.Add(new Assessment
-                {
-                    Id = "12345_" + i,
-                    ProjectName = GetRandomProjectName(),
-                    ProjectManager = GetRandomProjectManager(),
-                    Partner = GetRandomPartner(),
-                    Team = GetRandomTeam(),
-                    LocalAuthority = GetRandomLocalAuthority(),
-                    DateCreated = GetDateCreated(),
-                    Status = GetRandomStatus(),
-                    AssessmentWorkflowId = Guid.NewGuid().ToString()
-                });
-            }
-            return assessments;
-        }
-
 
         #region Mock Data Generators
 
@@ -125,12 +93,11 @@ namespace He.PipelineAssessment.UI.Features.Assessments
                 "Slacken Lane, Talke",
                 "Woodland View"
             };
-            _statuses = new List<AssessmentStatus>()
+            _statuses = new List<string>()
             {
-                AssessmentStatus.Complete,
-                AssessmentStatus.Stopped,
-                AssessmentStatus.In_Progress,
-                AssessmentStatus.New
+                "New",
+                "In Progress",
+                "Complete"
             };
         }
 
@@ -161,7 +128,7 @@ namespace He.PipelineAssessment.UI.Features.Assessments
             return DateTime.Now.AddMonths(-randomMonth).AddHours(-randomHour);
         }
 
-        private AssessmentStatus GetRandomStatus()
+        private string GetRandomStatus()
         {
             var randomIndex = _randomSelector.Next(_statuses.Count);
             return _statuses[randomIndex];

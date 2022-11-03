@@ -3,6 +3,7 @@ using FluentValidation;
 using He.PipelineAssessment.Infrastructure.Data;
 using He.PipelineAssessment.Infrastructure.Repository;
 using He.PipelineAssessment.UI;
+using He.PipelineAssessment.UI.Features.Assessments;
 using He.PipelineAssessment.UI.Features.Workflow.SaveAndContinue;
 using MediatR;
 using Microsoft.AspNetCore.DataProtection;
@@ -47,9 +48,21 @@ builder.Services.AddDbContext<PipelineAssessmentContext>(config =>
 builder.Services.AddScoped<DbContext>(provider => provider.GetRequiredService<PipelineAssessmentContext>());
 builder.Services.AddScoped<IValidator<SaveAndContinueCommand>, SaveAndContinueCommandValidator>();
 builder.Services.AddDataProtection().PersistKeysToDbContext<PipelineAssessmentContext>();
-builder.Services.AddScoped<IAssessmentRepository, AssessmentRepository>();
+
+bool enableLiveData = builder.Configuration["Data:EnableLiveData"] == "true";
+if (enableLiveData)
+{
+    builder.Services.AddScoped<IAssessmentRepository, AssessmentRepository>();
+}
+else
+{
+    builder.Services.AddScoped<IAssessmentRepository, MockAssessmentRepository>();
+}
+
 
 var app = builder.Build();
+
+
 
 if (app.Environment.IsDevelopment())
 {

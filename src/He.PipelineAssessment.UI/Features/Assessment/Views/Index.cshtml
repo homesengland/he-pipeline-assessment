@@ -2,6 +2,7 @@
 @addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
 @model He.PipelineAssessment.UI.Features.Assessments.AssessmentList.AssessmentListData
 @inject NonceConfig nonceConfig
+
 @{
     ViewData["Title"] = "Pipeline Assessment";
     Layout = "_Layout";
@@ -12,34 +13,30 @@
 
 <div class="text-center">
     
-    <div id="search-div"></div><br/>
+    <div id="search-div" class="header-select"></div><br />
 
-    <table class="govuk-table" id="table_id">
+    <table class="govuk-table" id="assessmentListTable">
 
         <thead class="govuk-table__head">
         <tr class="govuk-table__row">
             <th scope="col" class="govuk-table__header">Opportunity ID</th>
-            <th scope="col" class="govuk-table__header govuk-table__header--numeric">Project</th>
-                <th scope="col" class="govuk-table__header govuk-table__header--numeric" data-searchable="true">Project Manager</th>
-                <th scope="col" class="govuk-table__header govuk-table__header--numeric" data-searchable="true">Partner</th>
-                <th scope="col" class="govuk-table__header govuk-table__header--numeric" data-searchable="true">Team</th>
-                <th scope="col" class="govuk-table__header govuk-table__header--numeric" data-searchable="true">Local Authority</th>
-            <th scope="col" class="govuk-table__header govuk-table__header--numeric">Date created</th>
-                <th scope="col" class="govuk-table__header govuk-table__header--numeric" data-searchable="true">Status</th>
+            <th scope="col" class="govuk-table__header">Project</th>
+            <th scope="col" class="govuk-table__header" data-searchable="true">Project Manager</th>
+            <th scope="col" class="govuk-table__header" data-searchable="true">Partner</th>
+            <th scope="col" class="govuk-table__header">Date created</th>
+            <th scope="col" class="govuk-table__header" data-searchable="true">Status</th>
         </tr>
         </thead>
         <tbody class="govuk-table__body">
         @foreach (var assessment in Model.ListOfAssessments)
         {
             <tr class="govuk-table__row">
-                    <th scope="row" class="govuk-table__header"><a asp-controller="Assessment" asp-action="Summary" asp-route-assessmentId="@assessment.AssessmentWorkflowId" class="govuk-link">@assessment.Id</a> </th>
-                <td class="govuk-table__cell govuk-table__cell--numeric">@assessment.ProjectName</td>
-                <td class="govuk-table__cell govuk-table__cell--numeric">@assessment.ProjectManager</td>
-                <td class="govuk-table__cell govuk-table__cell--numeric">@assessment.Partner</td>
-                <td class="govuk-table__cell govuk-table__cell--numeric">@assessment.Team</td>
-                <td class="govuk-table__cell govuk-table__cell--numeric">@assessment.LocalAuthority</td>
-                <td class="govuk-table__cell govuk-table__cell--numeric">@assessment.DateCreated.ToString("d - MM - yy HH:mm:ss")</td>
-                <td class="govuk-table__cell govuk-table__cell--numeric"><strong class="govuk-tag govuk-tag--@assessment.StatusDisplayTag()">@assessment.StatusDisplay()</strong></td>
+                <th scope="row" class="govuk-table__header"><a asp-controller="Assessment" asp-action="Summary" asp-route-assessmentId="@assessment.AssessmentWorkflowId" class="govuk-link">@assessment.Id</a> </th>
+                <td class="govuk-table__cell">@assessment.SiteName</td>
+                <td class="govuk-table__cell">@assessment.ProjectManager</td>
+                <td class="govuk-table__cell">@assessment.Counterparty</td>
+                <td class="govuk-table__cell">@assessment.DateCreated.ToString("d - MM - yy HH:mm:ss")</td>
+                <td class="govuk-table__cell"><strong class="govuk-tag govuk-tag--@assessment.StatusDisplayTag()">@assessment.Status</strong></td>
             </tr>
         }
         </tbody>
@@ -52,7 +49,7 @@
     <script nonce="@nonceConfig.DataTablesSetup" src="~/js/gov_dataTable.js"></script>
     <script nonce="@nonceConfig.DataTablesSetup">
         $(document).ready(function () {
-            initDataTable('table_id')
+            initDataTable('assessmentListTable', 4, "search-div")
         });
     </script>
 }

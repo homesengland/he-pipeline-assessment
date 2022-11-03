@@ -16,3 +16,8 @@ html {
 body {
   margin-bottom: 60px;
 }
+
+.header-select {
+    display: flex;
+    justify-content: space-around;
+}

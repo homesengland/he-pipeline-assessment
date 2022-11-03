@@ -1,67 +1,57 @@
-﻿namespace He.PipelineAssessment.UI.Features.Assessments.AssessmentList
+﻿using He.PipelineAssessment.Models;
+
+namespace He.PipelineAssessment.UI.Features.Assessments.AssessmentList
 {
     public class AssessmentListData
     {
-        public List<Assessment> ListOfAssessments { get; set; } = null!;
+        public List<AssessmentDisplay> ListOfAssessments { get; set; } = new List<AssessmentDisplay>();
     }
 
-    public class Assessment
+    public class AssessmentDisplay
     {
+
+        public AssessmentDisplay()
+        {
+
+        }
+        public AssessmentDisplay(Assessment assessment)
+        {
+            Id = assessment.Id.ToString();
+            SpId = assessment.SpId.ToString();
+            SiteName = assessment.SiteName;
+            ProjectManager = assessment.ProjectManager;
+            Counterparty = assessment.Counterparty;
+            Status = assessment.Status;
+            AssessmentWorkflowId = assessment.WorkflowInstanceId;
+            
+        }
+
         public string Id { get; set; } = null!;
-        public string ProjectName { get; set; } = null!;
+        public string SpId { get; set; } = null!;
+        public string SiteName { get; set; } = null!;
 
         public string ProjectManager { get; set; } = null!;
 
-        public string Partner { get; set; } = null!;
-
-        public string Team { get; set; } = null!;
-
-        public string LocalAuthority { get; set; } = null!;
+        public string Counterparty { get; set; } = null!;
 
         public DateTime DateCreated { get; set; }
 
-        public AssessmentStatus Status { get; set; }
+        public string Status { get; set; }
 
-        public string AssessmentWorkflowId { get; set; } = null!;
-
-        public string StatusDisplay()
-        {
-            switch (Status)
-            {
-                case AssessmentStatus.New:
-                    return "New";
-                case AssessmentStatus.In_Progress:
-                    return "In Progress";
-                case AssessmentStatus.Complete:
-                    return "Complete";
-                case AssessmentStatus.Stopped:
-                    return "Stopped";
-            }
-            return "Unknown";
-        }
+        public string? AssessmentWorkflowId { get; set; } = null!;
 
         public string StatusDisplayTag()
         {
             switch (Status)
             {
-                case AssessmentStatus.New:
+                case "New":
                     return "blue";
-                case AssessmentStatus.In_Progress:
+                case "In Progress":
                     return "yellow";
-                case AssessmentStatus.Complete:
+                case "Complete":
                     return "green";
-                case AssessmentStatus.Stopped:
-                    return "red";
             }
             return "grey";
         }
-    }
-
-    public enum AssessmentStatus
-    {
-        New,
-        In_Progress,
-        Stopped,
-        Complete
     }
 }

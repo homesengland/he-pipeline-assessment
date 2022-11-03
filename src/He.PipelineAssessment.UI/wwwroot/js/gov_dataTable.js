@@ -1,6 +1,6 @@
-﻿function initDataTable (tableId) {
-    $('#'+tableId).DataTable({
-        order: [[6, 'desc']],
+﻿function initDataTable (tableId, columnNumberToSort, searchElementId) {
+    $('#' + tableId).DataTable({
+        order: [[columnNumberToSort, 'desc']],
 
         initComplete: function () {
             this.api()
@@ -9,7 +9,7 @@
                     var column = this;
 
                     var label = $('<div class="govuk-date-input__item"><div id="' + column.header().textContent.replaceAll(/\s/g, '') + '" class="govuk-form-group"><label class="govuk-label govuk-date-input__label">' + column.header().textContent + ' </label></div></div>')
-                        .appendTo('#search-div');
+                        .appendTo('#'+searchElementId);
 
                     var select = $('<select class="govuk-select"><option value=""></option></select>')
                         .appendTo('#' + column.header().textContent.replaceAll(/\s/g, ''))
