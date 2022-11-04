@@ -35,7 +35,7 @@ namespace He.PipelineAssessment.Data.SinglePipeline
             try
             {
                 var result = JsonSerializer.Deserialize<EsriSinglePipelineResponse>(data);
-                if (result != null)
+                if (result != null && result.features.Any())
                 {
                     List<SinglePipelineData> dataResult = result.features.Select(x => x.attributes).ToList();
                     return dataResult;

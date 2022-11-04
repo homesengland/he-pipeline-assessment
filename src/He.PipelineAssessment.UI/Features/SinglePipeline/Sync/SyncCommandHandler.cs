@@ -29,25 +29,7 @@ namespace He.PipelineAssessment.UI.Features.SinglePipeline.Sync
                 var destinationAssessments = await _assessmentRepository.GetAssessments();
                 var destinationAssessmentSpIds = destinationAssessments.Select(x => x.SpId).ToList();
 
-                //items in one list not in the other
-                var assessmentSpIdsToAdd = sourceAssessmentSpIds.Where(s => !destinationAssessmentSpIds.Any(d => d == s)).ToList();
-                var sourceAssessmentsToAdd = dataResult!.Where(x => assessmentSpIdsToAdd.Contains(x.sp_id!.Value));
-
-                var assessmentsToBeAdded = new List<Assessment>();
-                foreach (var item in sourceAssessmentsToAdd)
-                {
-                    //Add to database
-                    var assessment = new Assessment()
-                    {
-                        Counterparty = string.IsNullOrEmpty(item.applicant_1) ? "-" : item.applicant_1,
-                        Reference = string.IsNullOrEmpty(item.internal_reference) ? "-" : item.internal_reference,
-                        SiteName = string.IsNullOrEmpty(item.pipeline_opportunity_site_name) ? "-" : item.pipeline_opportunity_site_name,
-                        SpId = item.sp_id.HasValue ? item.sp_id.Value : 999,
-                        Status = "New"
-                    };
-                    assessmentsToBeAdded.Add(assessment);
-                }
-
+                var assessmentsToBeAdded = AssessmentsToBeAdded(sourceAssessmentSpIds, destinationAssessmentSpIds, dataResult);
                 await _assessmentRepository.CreateAssessments(assessmentsToBeAdded);
             }
 
@@ -55,6 +37,32 @@ namespace He.PipelineAssessment.UI.Features.SinglePipeline.Sync
             {
                 ErrorMessages = new List<string>()
             };
+        }
+
+        private static List<Assessment> AssessmentsToBeAdded(List<int> sourceAssessmentSpIds, List<int> destinationAssessmentSpIds, List<SinglePipelineData>? dataResult)
+        {
+            //items in one list not in the other
+            var assessmentSpIdsToAdd = sourceAssessmentSpIds.Where(s => !destinationAssessmentSpIds.Any(d => d == s)).ToList();
+            var sourceAssessmentsToAdd = dataResult!.Where(x => assessmentSpIdsToAdd.Contains(x.sp_id!.Value));
+
+            var assessmentsToBeAdded = new List<Assessment>();
+            foreach (var item in sourceAssessmentsToAdd)
+            {
+                //Add to database
+                var assessment = new Assessment()
+                {
+                    Counterparty = string.IsNullOrEmpty(item.applicant_1) ? "-" : item.applicant_1,
+                    Reference = string.IsNullOrEmpty(item.internal_reference) ? "-" : item.internal_reference,
+                    SiteName = string.IsNullOrEmpty(item.pipeline_opportunity_site_name)
+                        ? "-"
+                        : item.pipeline_opportunity_site_name,
+                    SpId = item.sp_id.HasValue ? item.sp_id.Value : 999,
+                    Status = "New"
+                };
+                assessmentsToBeAdded.Add(assessment);
+            }
+
+            return assessmentsToBeAdded;
         }
     }
 }
