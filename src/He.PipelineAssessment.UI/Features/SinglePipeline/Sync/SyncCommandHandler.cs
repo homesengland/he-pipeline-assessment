@@ -20,30 +20,50 @@ namespace He.PipelineAssessment.UI.Features.SinglePipeline.Sync
 
         public async Task<SyncResponse> Handle(SyncCommand request, CancellationToken cancellationToken)
         {
-            var data = await _esriSinglePipelineClient.GetSinglePipelineData();
-            if (data != null)
+            var errorMessages = new List<string>();
+            try
             {
-                var dataResult = _jsonHelper.JsonToSinglePipelineDataList(data);
-                List<int> sourceAssessmentSpIds = dataResult!.Select(x => x.sp_id!.Value).ToList();
+                var data = await _esriSinglePipelineClient.GetSinglePipelineData();
+                if (data != null)
+                {
+                    var dataResult = _jsonHelper.JsonToSinglePipelineDataList(data);
+                    if (dataResult != null)
+                    {
+                        List<int> sourceAssessmentSpIds = dataResult.Select(x => x.sp_id!.Value).ToList();
 
-                var destinationAssessments = await _assessmentRepository.GetAssessments();
-                var destinationAssessmentSpIds = destinationAssessments.Select(x => x.SpId).ToList();
+                        var destinationAssessments = await _assessmentRepository.GetAssessments();
+                        var destinationAssessmentSpIds = destinationAssessments.Select(x => x.SpId).ToList();
 
-                var assessmentsToBeAdded = AssessmentsToBeAdded(sourceAssessmentSpIds, destinationAssessmentSpIds, dataResult);
-                await _assessmentRepository.CreateAssessments(assessmentsToBeAdded);
+                        var assessmentsToBeAdded = AssessmentsToBeAdded(sourceAssessmentSpIds, destinationAssessmentSpIds, dataResult);
+                        await _assessmentRepository.CreateAssessments(assessmentsToBeAdded);
+                    }
+                    else
+                    {
+                        errorMessages.Add("Single Pipeline Response data failed to deserialize");
+                    }
+
+                }
+                else
+                {
+                    errorMessages.Add("Single Pipeline Response data returned null");
+                }
+            }
+            catch (Exception e)
+            {
+                errorMessages.Add(e.Message);
             }
 
             return new SyncResponse()
             {
-                ErrorMessages = new List<string>()
+                ErrorMessages = errorMessages
             };
         }
 
-        private static List<Assessment> AssessmentsToBeAdded(List<int> sourceAssessmentSpIds, List<int> destinationAssessmentSpIds, List<SinglePipelineData>? dataResult)
+        private static List<Assessment> AssessmentsToBeAdded(List<int> sourceAssessmentSpIds, List<int> destinationAssessmentSpIds, List<SinglePipelineData> dataResult)
         {
             //items in one list not in the other
             var assessmentSpIdsToAdd = sourceAssessmentSpIds.Where(s => !destinationAssessmentSpIds.Any(d => d == s)).ToList();
-            var sourceAssessmentsToAdd = dataResult!.Where(x => assessmentSpIdsToAdd.Contains(x.sp_id!.Value));
+            var sourceAssessmentsToAdd = dataResult.Where(x => assessmentSpIdsToAdd.Contains(x.sp_id!.Value));
 
             var assessmentsToBeAdded = new List<Assessment>();
             foreach (var item in sourceAssessmentsToAdd)
