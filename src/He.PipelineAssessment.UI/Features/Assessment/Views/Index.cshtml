@@ -8,8 +8,11 @@
     Layout = "_Layout";
 }
 
-@Html.ActionLink("Sync", "Sync", "SinglePipeline",null,new{@class="govuk-button"})
-<h1 class="govuk-label-wrapper"><label class="govuk-label govuk-label--l" for="event-name">Assessment Search</label></h1>
+
+<h1 class="govuk-label-wrapper govuk-grid-row">
+    <label class="govuk-label govuk-label--l govuk-grid-row-three-quarters pull-left" for="event-name">Assessment Search</label>
+    @Html.ActionLink("Sync", "Sync", "SinglePipeline",null,new{@class="govuk-button pull-right govuk-grid-row-one-quarter"})
+    </h1>
 <br/>
 
 <div class="text-center">

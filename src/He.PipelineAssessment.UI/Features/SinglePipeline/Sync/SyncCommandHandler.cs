@@ -1,6 +1,7 @@
 ﻿using He.PipelineAssessment.Data.SinglePipeline;
 using He.PipelineAssessment.Infrastructure.Repository;
 using He.PipelineAssessment.Models;
+using He.PipelineAssessment.UI.Features.Assessments;
 using MediatR;
 
 namespace He.PipelineAssessment.UI.Features.SinglePipeline.Sync
@@ -10,12 +11,16 @@ namespace He.PipelineAssessment.UI.Features.SinglePipeline.Sync
         private readonly IEsriSinglePipelineClient _esriSinglePipelineClient;
         private readonly IEsriSinglePipelineDataJsonHelper _jsonHelper;
         private readonly IAssessmentRepository _assessmentRepository;
+        private readonly IConfiguration _config;
+        private readonly IAssessmentRepository _repo;
 
-        public SyncCommandHandler(IEsriSinglePipelineClient esriSinglePipelineClient, IEsriSinglePipelineDataJsonHelper jsonHelper, IAssessmentRepository assessmentRepository)
+        public SyncCommandHandler(IEsriSinglePipelineClient esriSinglePipelineClient, IEsriSinglePipelineDataJsonHelper jsonHelper, IAssessmentRepository assessmentRepository, IConfiguration config, IAssessmentRepository repo)
         {
             _esriSinglePipelineClient = esriSinglePipelineClient;
             _jsonHelper = jsonHelper;
             _assessmentRepository = assessmentRepository;
+            _config = config;
+            _repo = repo;
         }
 
         public async Task<SyncResponse> Handle(SyncCommand request, CancellationToken cancellationToken)
@@ -23,30 +28,39 @@ namespace He.PipelineAssessment.UI.Features.SinglePipeline.Sync
             var errorMessages = new List<string>();
             try
             {
-                var data = await _esriSinglePipelineClient.GetSinglePipelineData();
-                if (data != null)
+                if (_config["Data:UseSeedData"].ToLower() == "true")
                 {
-                    var dataResult = _jsonHelper.JsonToSinglePipelineDataList(data);
-                    if (dataResult != null)
-                    {
-                        List<int> sourceAssessmentSpIds = dataResult.Select(x => x.sp_id!.Value).ToList();
-
-                        var destinationAssessments = await _assessmentRepository.GetAssessments();
-                        var destinationAssessmentSpIds = destinationAssessments.Select(x => x.SpId).ToList();
-
-                        var assessmentsToBeAdded = AssessmentsToBeAdded(sourceAssessmentSpIds, destinationAssessmentSpIds, dataResult);
-                        await _assessmentRepository.CreateAssessments(assessmentsToBeAdded);
-                    }
-                    else
-                    {
-                        errorMessages.Add("Single Pipeline Response data failed to deserialize");
-                    }
-
+                    var dataGenerator = new AssessmentStubData();
+                    await _repo.CreateAssessments(dataGenerator.GetAssessments());
                 }
                 else
                 {
-                    errorMessages.Add("Single Pipeline Response data returned null");
+                    var data = await _esriSinglePipelineClient.GetSinglePipelineData();
+                    if (data != null)
+                    {
+                        var dataResult = _jsonHelper.JsonToSinglePipelineDataList(data);
+                        if (dataResult != null)
+                        {
+                            List<int> sourceAssessmentSpIds = dataResult.Select(x => x.sp_id!.Value).ToList();
+
+                            var destinationAssessments = await _assessmentRepository.GetAssessments();
+                            var destinationAssessmentSpIds = destinationAssessments.Select(x => x.SpId).ToList();
+
+                            var assessmentsToBeAdded = AssessmentsToBeAdded(sourceAssessmentSpIds, destinationAssessmentSpIds, dataResult);
+                            await _assessmentRepository.CreateAssessments(assessmentsToBeAdded);
+                        }
+                        else
+                        {
+                            errorMessages.Add("Single Pipeline Response data failed to deserialize");
+                        }
+
+                    }
+                    else
+                    {
+                        errorMessages.Add("Single Pipeline Response data returned null");
+                    }
                 }
+
             }
             catch (Exception e)
             {
@@ -59,6 +73,8 @@ namespace He.PipelineAssessment.UI.Features.SinglePipeline.Sync
             };
         }
 
+
+
         private static List<Assessment> AssessmentsToBeAdded(List<int> sourceAssessmentSpIds, List<int> destinationAssessmentSpIds, List<SinglePipelineData> dataResult)
         {
             //items in one list not in the other
@@ -68,6 +84,7 @@ namespace He.PipelineAssessment.UI.Features.SinglePipeline.Sync
             var assessmentsToBeAdded = new List<Assessment>();
             foreach (var item in sourceAssessmentsToAdd)
             {
+                var fullName = item.he_advocate_f_name + " " + item.he_advocate_s_name;
                 //Add to database
                 var assessment = new Assessment()
                 {
@@ -77,7 +94,11 @@ namespace He.PipelineAssessment.UI.Features.SinglePipeline.Sync
                         ? "-"
                         : item.pipeline_opportunity_site_name,
                     SpId = item.sp_id.HasValue ? item.sp_id.Value : 999,
-                    Status = "New"
+                    Status = "New",
+                    ProjectManager = string.IsNullOrEmpty(item.he_advocate_f_name)
+                        ? "-" : fullName,
+                    ProjectManagerEmail = string.IsNullOrEmpty(item.he_advocate_email)
+                        ? "-" : item.he_advocate_email,
                 };
                 assessmentsToBeAdded.Add(assessment);
             }

@@ -22,7 +22,6 @@ namespace He.PipelineAssessment.UI.Features.Assessments.AssessmentList
             ProjectManager = assessment.ProjectManager;
             Counterparty = assessment.Counterparty;
             Status = assessment.Status;
-            AssessmentWorkflowId = assessment.WorkflowInstanceId;
             Reference = assessment.Reference;
             
         }

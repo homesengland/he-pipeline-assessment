@@ -101,11 +101,6 @@ namespace He.PipelineAssessment.UI.Features.Assessments
             };
         }
 
-        private string GetRandomLocalAuthority()
-        {
-            return GetRandomResult(_authorities);
-        }
-
         private string GetRandomProjectName()
         {
             return GetRandomResult(_projectNames);
@@ -132,11 +127,6 @@ namespace He.PipelineAssessment.UI.Features.Assessments
         {
             var randomIndex = _randomSelector.Next(_statuses.Count);
             return _statuses[randomIndex];
-        }
-
-        private string GetRandomTeam()
-        {
-            return GetRandomResult(_teams);
         }
 
         private IEnumerable<AssessmentStage> GetStages()

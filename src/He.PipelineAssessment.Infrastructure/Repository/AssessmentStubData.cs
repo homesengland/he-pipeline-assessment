@@ -19,7 +19,7 @@ namespace He.PipelineAssessment.UI.Features.Assessments
             InitStubData();
         }
 
-        public Task<List<Assessment>> GetAssessments()
+        public List<Assessment> GetAssessments()
         {
             List<Assessment> listOfAssessments = new List<Assessment>();
             for(int i = 0; i < numberOfAssessments; i++)
@@ -27,7 +27,6 @@ namespace He.PipelineAssessment.UI.Features.Assessments
                 string projectManager = GetRandomProjectManager();
                 Assessment assessment = new Assessment
                 {
-                    Id = _randomSelector.Next(i, 20000),
                     SpId = _randomSelector.Next(i, 20000),
                     SiteName = GetRandomSiteName(),
                     ProjectManager = projectManager,
@@ -35,15 +34,10 @@ namespace He.PipelineAssessment.UI.Features.Assessments
                     Counterparty = GetRandomCounterParty(),
                     Reference = GetRandomReference(),
                     Status = GetRandomStatus(),
-
                 };
-                if(assessment.Status.ToLower() != "new")
-                {
-                    assessment.WorkflowInstanceId = Guid.NewGuid().ToString();
-                }
                 listOfAssessments.Add(assessment); 
             }
-            return Task.FromResult(listOfAssessments);
+            return listOfAssessments;
         }
 
 
