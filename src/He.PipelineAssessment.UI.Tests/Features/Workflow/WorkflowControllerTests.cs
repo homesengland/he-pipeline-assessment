@@ -1,4 +1,5 @@
 ﻿using AutoFixture.Xunit2;
+using He.PipelineAssessment.Common.Tests;
 using He.PipelineAssessment.UI.Features.Workflow;
 using He.PipelineAssessment.UI.Features.Workflow.LoadWorkflowActivity;
 using He.PipelineAssessment.UI.Features.Workflow.SaveAndContinue;
