@@ -1,5 +1,6 @@
 using Elsa.CustomWorkflow.Sdk.HttpClients;
 using FluentValidation;
+using He.PipelineAssessment.Data.SinglePipeline;
 using He.PipelineAssessment.Infrastructure.Data;
 using He.PipelineAssessment.Infrastructure.Repository;
 using He.PipelineAssessment.UI;
@@ -48,6 +49,15 @@ builder.Services.AddScoped<DbContext>(provider => provider.GetRequiredService<Pi
 builder.Services.AddScoped<IValidator<SaveAndContinueCommand>, SaveAndContinueCommandValidator>();
 builder.Services.AddDataProtection().PersistKeysToDbContext<PipelineAssessmentContext>();
 builder.Services.AddScoped<IAssessmentRepository, AssessmentRepository>();
+builder.Services.AddScoped<IEsriSinglePipelineClient, EsriSinglePipelineClient>();
+builder.Services.AddScoped<IEsriSinglePipelineDataJsonHelper, EsriSinglePipelineDataJsonHelper>();
+
+string singlePipelineURL = builder.Configuration["Datasources:SinglePipeline"];
+
+builder.Services.AddHttpClient("SinglePipelineClient", client =>
+{
+    client.BaseAddress = new Uri(singlePipelineURL);
+});
 
 var app = builder.Build();
 
