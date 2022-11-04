@@ -3,10 +3,10 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Elsa.CustomInfrastructure.Data.Repository
 {
-    public class PipelineAssessmentRepository : IPipelineAssessmentRepository
+    public class ElsaCustomRepository : IElsaCustomRepository
     {
         private readonly DbContext _dbContext;
-        public PipelineAssessmentRepository(DbContext dbContext)
+        public ElsaCustomRepository(DbContext dbContext)
         {
             _dbContext = dbContext;
         }

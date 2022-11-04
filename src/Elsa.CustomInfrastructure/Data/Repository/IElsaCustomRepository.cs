@@ -2,7 +2,7 @@
 
 namespace Elsa.CustomInfrastructure.Data.Repository
 {
-    public interface IPipelineAssessmentRepository
+    public interface IElsaCustomRepository
     {
         Task<AssessmentQuestion?> GetAssessmentQuestion(string activityId,
             string workflowInstanceId,

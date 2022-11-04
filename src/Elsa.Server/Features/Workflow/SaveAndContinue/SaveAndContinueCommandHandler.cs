@@ -1,22 +1,19 @@
 ﻿using Elsa.CustomActivities.Activities.Shared;
 using Elsa.CustomInfrastructure.Data.Repository;
+using Elsa.Models;
 using Elsa.Persistence;
-using Elsa.Server.Features.Workflow.StartWorkflow;
+using Elsa.Persistence.Specifications.WorkflowInstances;
 using Elsa.Server.Models;
 using Elsa.Server.Providers;
 using Elsa.Services;
-using Elsa.Services.Workflows;
 using MediatR;
-using NetTopologySuite.Noding;
-using Elsa.Persistence.Specifications.WorkflowInstances;
-using Elsa.Models;
 using Open.Linq.AsyncExtensions;
 
 namespace Elsa.Server.Features.Workflow.SaveAndContinue
 {
     public class SaveAndContinueCommandHandler : IRequestHandler<SaveAndContinueCommand, OperationResult<SaveAndContinueResponse>>
     {
-        private readonly IPipelineAssessmentRepository _pipelineAssessmentRepository;
+        private readonly IElsaCustomRepository _elsaCustomRepository;
         private readonly IDateTimeProvider _dateTimeProvider;
         private readonly IQuestionInvoker _invoker;
         private readonly IWorkflowInstanceStore _workflowInstanceStore;
@@ -24,9 +21,9 @@ namespace Elsa.Server.Features.Workflow.SaveAndContinue
         private readonly ISaveAndContinueMapper _saveAndContinueMapper;
 
 
-        public SaveAndContinueCommandHandler(IQuestionInvoker invoker, IWorkflowInstanceStore workflowInstanceStore, IPipelineAssessmentRepository pipelineAssessmentRepository, IDateTimeProvider dateTimeProvider, IWorkflowRegistry workflowRegistry, ISaveAndContinueMapper saveAndContinueMapper)
+        public SaveAndContinueCommandHandler(IQuestionInvoker invoker, IWorkflowInstanceStore workflowInstanceStore, IElsaCustomRepository elsaCustomRepository, IDateTimeProvider dateTimeProvider, IWorkflowRegistry workflowRegistry, ISaveAndContinueMapper saveAndContinueMapper)
         {
-            _pipelineAssessmentRepository = pipelineAssessmentRepository;
+            _elsaCustomRepository = elsaCustomRepository;
             _dateTimeProvider = dateTimeProvider;
             _invoker = invoker;
             _workflowInstanceStore = workflowInstanceStore;
@@ -40,14 +37,14 @@ namespace Elsa.Server.Features.Workflow.SaveAndContinue
             try
             {
                 var dbAssessmentQuestion =
-                    await _pipelineAssessmentRepository.GetAssessmentQuestion(command.ActivityId, command.WorkflowInstanceId, cancellationToken);
+                    await _elsaCustomRepository.GetAssessmentQuestion(command.ActivityId, command.WorkflowInstanceId, cancellationToken);
                 if (dbAssessmentQuestion != null)
                 {
                     dbAssessmentQuestion.Comments = command.Comments;
 
                     dbAssessmentQuestion.SetAnswer(command.Answer, _dateTimeProvider.UtcNow()); //use DateTimeProvider
-                    await _pipelineAssessmentRepository.UpdateAssessmentQuestion(dbAssessmentQuestion,
-                        cancellationToken);                                       
+                    await _elsaCustomRepository.UpdateAssessmentQuestion(dbAssessmentQuestion,
+                        cancellationToken);
 
                     var collectedWorkflow = await _invoker.ExecuteWorkflowsAsync(command.ActivityId, dbAssessmentQuestion.ActivityType,
                     command.WorkflowInstanceId, dbAssessmentQuestion, cancellationToken).FirstOrDefault();
@@ -71,7 +68,7 @@ namespace Elsa.Server.Features.Workflow.SaveAndContinue
                             if (nextActivity != null)
                             {
                                 var nextActivityRecord =
-                                    await _pipelineAssessmentRepository.GetAssessmentQuestion(nextActivityId,
+                                    await _elsaCustomRepository.GetAssessmentQuestion(nextActivityId,
                                         command.WorkflowInstanceId, cancellationToken);
 
                                 if (nextActivityRecord == null)
@@ -123,7 +120,7 @@ namespace Elsa.Server.Features.Workflow.SaveAndContinue
         private async Task CreateNextActivityRecord(SaveAndContinueCommand command, string nextActivityId, string activityType)
         {
             var assessmentQuestion = _saveAndContinueMapper.SaveAndContinueCommandToNextAssessmentQuestion(command, nextActivityId, activityType);
-            await _pipelineAssessmentRepository.CreateAssessmentQuestionAsync(assessmentQuestion);
+            await _elsaCustomRepository.CreateAssessmentQuestionAsync(assessmentQuestion);
         }
     }
 }

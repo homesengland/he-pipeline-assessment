@@ -14,13 +14,13 @@ namespace Elsa.Server.Features.Workflow.LoadWorkflowActivity
     {
         private readonly IQuestionInvoker _questionInvoker;
         private readonly IWorkflowInstanceStore _workflowInstanceStore;
-        private readonly IPipelineAssessmentRepository _pipelineAssessmentRepository;
+        private readonly IElsaCustomRepository _elsaCustomRepository;
         private readonly ILoadWorkflowActivityJsonHelper _loadWorkflowActivityJsonHelper;
 
-        public LoadWorkflowActivityRequestHandler(IWorkflowInstanceStore workflowInstanceStore, IPipelineAssessmentRepository pipelineAssessmentRepository, IQuestionInvoker questionInvoker, ILoadWorkflowActivityJsonHelper loadWorkflowActivityJsonHelper)
+        public LoadWorkflowActivityRequestHandler(IWorkflowInstanceStore workflowInstanceStore, IElsaCustomRepository elsaCustomRepository, IQuestionInvoker questionInvoker, ILoadWorkflowActivityJsonHelper loadWorkflowActivityJsonHelper)
         {
             _workflowInstanceStore = workflowInstanceStore;
-            _pipelineAssessmentRepository = pipelineAssessmentRepository;
+            _elsaCustomRepository = elsaCustomRepository;
             _loadWorkflowActivityJsonHelper = loadWorkflowActivityJsonHelper;
             _questionInvoker = questionInvoker;
         }
@@ -38,7 +38,7 @@ namespace Elsa.Server.Features.Workflow.LoadWorkflowActivity
             try
             {
                 var dbAssessmentQuestion =
-                    await _pipelineAssessmentRepository.GetAssessmentQuestion(activityRequest.ActivityId, activityRequest.WorkflowInstanceId, cancellationToken);
+                    await _elsaCustomRepository.GetAssessmentQuestion(activityRequest.ActivityId, activityRequest.WorkflowInstanceId, cancellationToken);
 
                 if (dbAssessmentQuestion != null)
                 {

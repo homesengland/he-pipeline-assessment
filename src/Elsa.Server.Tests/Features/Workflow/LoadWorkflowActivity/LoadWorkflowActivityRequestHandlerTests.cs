@@ -21,7 +21,7 @@ namespace Elsa.Server.Tests.Features.Workflow.LoadWorkflowActivity
         public async Task Handle_ReturnsOperationWithoutErrors_NoErrorsAreEncountered(
           [Frozen] Mock<IQuestionInvoker> questionInvoker,
           [Frozen] Mock<IWorkflowInstanceStore> workflowInstanceStore,
-          [Frozen] Mock<IPipelineAssessmentRepository> pipelineAssessmentRepository,
+          [Frozen] Mock<IElsaCustomRepository> elsaCustomRepository,
           [Frozen] Mock<ILoadWorkflowActivityJsonHelper> loadWorkflowActivityJsonHelper,
           LoadWorkflowActivityRequest loadWorkflowActivityRequest,
           List<CollectedWorkflow> collectedWorkflows,
@@ -40,7 +40,7 @@ namespace Elsa.Server.Tests.Features.Workflow.LoadWorkflowActivity
                     x.FindAsync(It.IsAny<WorkflowInstanceIdSpecification>(), CancellationToken.None))
                 .ReturnsAsync(workflowInstance);
 
-            pipelineAssessmentRepository.Setup(x => x.GetAssessmentQuestion(loadWorkflowActivityRequest.ActivityId,
+            elsaCustomRepository.Setup(x => x.GetAssessmentQuestion(loadWorkflowActivityRequest.ActivityId,
                     loadWorkflowActivityRequest.WorkflowInstanceId, CancellationToken.None))
                 .ReturnsAsync(assessmentQuestion);
 
@@ -63,7 +63,7 @@ namespace Elsa.Server.Tests.Features.Workflow.LoadWorkflowActivity
             //Assert
             Assert.NotNull(result.Data!.QuestionActivityData);
             workflowInstanceStore.Verify(x => x.FindAsync(It.IsAny<WorkflowInstanceIdSpecification>(), CancellationToken.None), Times.Once);
-            pipelineAssessmentRepository.Verify(x => x.GetAssessmentQuestion(loadWorkflowActivityRequest.ActivityId, loadWorkflowActivityRequest.WorkflowInstanceId, CancellationToken.None), Times.Once);
+            elsaCustomRepository.Verify(x => x.GetAssessmentQuestion(loadWorkflowActivityRequest.ActivityId, loadWorkflowActivityRequest.WorkflowInstanceId, CancellationToken.None), Times.Once);
             loadWorkflowActivityJsonHelper.Verify(x => x.ActivityDataDictionaryToQuestionActivityData<QuestionActivityData>(It.IsAny<IDictionary<string, object?>>()), Times.Once);
             Assert.Equal(loadWorkflowActivityRequest.WorkflowInstanceId, result.Data.WorkflowInstanceId);
             Assert.Equal(loadWorkflowActivityRequest.ActivityId, result.Data.ActivityId);
@@ -75,7 +75,7 @@ namespace Elsa.Server.Tests.Features.Workflow.LoadWorkflowActivity
         public async Task Handle_SelectedChoicesAreRestored_WhenActivityIsMultiChoice(
                              [Frozen] Mock<IQuestionInvoker> questionInvoker,
                              [Frozen] Mock<IWorkflowInstanceStore> workflowInstanceStore,
-                             [Frozen] Mock<IPipelineAssessmentRepository> pipelineAssessmentRepository,
+                             [Frozen] Mock<IElsaCustomRepository> elsaCustomRepository,
                              [Frozen] Mock<ILoadWorkflowActivityJsonHelper> loadWorkflowActivityJsonHelper,
                              LoadWorkflowActivityRequest loadWorkflowActivityRequest,
                              List<CollectedWorkflow> collectedWorkflows,
@@ -97,7 +97,7 @@ namespace Elsa.Server.Tests.Features.Workflow.LoadWorkflowActivity
                     x.FindAsync(It.IsAny<WorkflowInstanceIdSpecification>(), CancellationToken.None))
                 .ReturnsAsync(workflowInstance);
 
-            pipelineAssessmentRepository.Setup(x => x.GetAssessmentQuestion(loadWorkflowActivityRequest.ActivityId,
+            elsaCustomRepository.Setup(x => x.GetAssessmentQuestion(loadWorkflowActivityRequest.ActivityId,
                     loadWorkflowActivityRequest.WorkflowInstanceId, CancellationToken.None))
                 .ReturnsAsync(assessmentQuestion);
 
@@ -142,7 +142,7 @@ namespace Elsa.Server.Tests.Features.Workflow.LoadWorkflowActivity
         public async Task Handle_SelectedChoicesAreRestored_WhenActivityIsSingleChoice(
                              [Frozen] Mock<IQuestionInvoker> questionInvoker,
                              [Frozen] Mock<IWorkflowInstanceStore> workflowInstanceStore,
-                             [Frozen] Mock<IPipelineAssessmentRepository> pipelineAssessmentRepository,
+                             [Frozen] Mock<IElsaCustomRepository> elsaCustomRepository,
                              [Frozen] Mock<ILoadWorkflowActivityJsonHelper> loadWorkflowActivityJsonHelper,
                              LoadWorkflowActivityRequest loadWorkflowActivityRequest,
                              List<CollectedWorkflow> collectedWorkflows,
@@ -164,7 +164,7 @@ namespace Elsa.Server.Tests.Features.Workflow.LoadWorkflowActivity
                     x.FindAsync(It.IsAny<WorkflowInstanceIdSpecification>(), CancellationToken.None))
                 .ReturnsAsync(workflowInstance);
 
-            pipelineAssessmentRepository.Setup(x => x.GetAssessmentQuestion(loadWorkflowActivityRequest.ActivityId,
+            elsaCustomRepository.Setup(x => x.GetAssessmentQuestion(loadWorkflowActivityRequest.ActivityId,
                     loadWorkflowActivityRequest.WorkflowInstanceId, CancellationToken.None))
                 .ReturnsAsync(assessmentQuestion);
 
@@ -213,7 +213,7 @@ namespace Elsa.Server.Tests.Features.Workflow.LoadWorkflowActivity
         public async Task Handle_ReturnsOperationResultWithErrors_GivenActivityDataMappingReturnsNull(
           [Frozen] Mock<IQuestionInvoker> questionInvoker,
           [Frozen] Mock<IWorkflowInstanceStore> workflowInstanceStore,
-          [Frozen] Mock<IPipelineAssessmentRepository> pipelineAssessmentRepository,
+          [Frozen] Mock<IElsaCustomRepository> elsaCustomRepository,
           [Frozen] Mock<ILoadWorkflowActivityJsonHelper> loadWorkflowActivityJsonHelper,
           LoadWorkflowActivityRequest loadWorkflowActivityRequest,
           List<CollectedWorkflow> collectedWorkflows,
@@ -232,7 +232,7 @@ namespace Elsa.Server.Tests.Features.Workflow.LoadWorkflowActivity
                     x.FindAsync(It.IsAny<WorkflowInstanceIdSpecification>(), CancellationToken.None))
                 .ReturnsAsync(workflowInstance);
 
-            pipelineAssessmentRepository.Setup(x => x.GetAssessmentQuestion(loadWorkflowActivityRequest.ActivityId,
+            elsaCustomRepository.Setup(x => x.GetAssessmentQuestion(loadWorkflowActivityRequest.ActivityId,
                     loadWorkflowActivityRequest.WorkflowInstanceId, CancellationToken.None))
                 .ReturnsAsync(assessmentQuestion);
 
@@ -256,7 +256,7 @@ namespace Elsa.Server.Tests.Features.Workflow.LoadWorkflowActivity
             Assert.Null(result.Data!.QuestionActivityData);
             Assert.Equal($"Failed to map activity data", result.ErrorMessages.Single());
             workflowInstanceStore.Verify(x => x.FindAsync(It.IsAny<WorkflowInstanceIdSpecification>(), CancellationToken.None), Times.Once);
-            pipelineAssessmentRepository.Verify(x => x.GetAssessmentQuestion(loadWorkflowActivityRequest.ActivityId, loadWorkflowActivityRequest.WorkflowInstanceId, CancellationToken.None), Times.Once);
+            elsaCustomRepository.Verify(x => x.GetAssessmentQuestion(loadWorkflowActivityRequest.ActivityId, loadWorkflowActivityRequest.WorkflowInstanceId, CancellationToken.None), Times.Once);
             loadWorkflowActivityJsonHelper.Verify(x => x.ActivityDataDictionaryToQuestionActivityData<QuestionActivityData>(It.IsAny<IDictionary<string, object?>>()), Times.Once);
 
         }
@@ -266,7 +266,7 @@ namespace Elsa.Server.Tests.Features.Workflow.LoadWorkflowActivity
         public async Task Handle_ReturnsOperationResultWithErrors_GivenActivityIdCannotBeFoundInActivityDictionary(
            [Frozen] Mock<IQuestionInvoker> questionInvoker,
            [Frozen] Mock<IWorkflowInstanceStore> workflowInstanceStore,
-           [Frozen] Mock<IPipelineAssessmentRepository> pipelineAssessmentRepository,
+           [Frozen] Mock<IElsaCustomRepository> elsaCustomRepository,
            [Frozen] Mock<ILoadWorkflowActivityJsonHelper> loadWorkflowActivityJsonHelper,
            LoadWorkflowActivityRequest loadWorkflowActivityRequest,
            List<CollectedWorkflow> collectedWorkflows,
@@ -284,7 +284,7 @@ namespace Elsa.Server.Tests.Features.Workflow.LoadWorkflowActivity
                     x.FindAsync(It.IsAny<WorkflowInstanceIdSpecification>(), CancellationToken.None))
                 .ReturnsAsync(workflowInstance);
 
-            pipelineAssessmentRepository.Setup(x => x.GetAssessmentQuestion(loadWorkflowActivityRequest.ActivityId,
+            elsaCustomRepository.Setup(x => x.GetAssessmentQuestion(loadWorkflowActivityRequest.ActivityId,
                     loadWorkflowActivityRequest.WorkflowInstanceId, CancellationToken.None))
                 .ReturnsAsync(assessmentQuestion);
 
@@ -295,7 +295,7 @@ namespace Elsa.Server.Tests.Features.Workflow.LoadWorkflowActivity
             Assert.Null(result.Data!.QuestionActivityData);
             Assert.Equal($"Cannot find activity Id {loadWorkflowActivityRequest.ActivityId} in the workflow activity data dictionary", result.ErrorMessages.Single());
             workflowInstanceStore.Verify(x => x.FindAsync(It.IsAny<WorkflowInstanceIdSpecification>(), CancellationToken.None), Times.Once);
-            pipelineAssessmentRepository.Verify(x => x.GetAssessmentQuestion(loadWorkflowActivityRequest.ActivityId, loadWorkflowActivityRequest.WorkflowInstanceId, CancellationToken.None), Times.Once);
+            elsaCustomRepository.Verify(x => x.GetAssessmentQuestion(loadWorkflowActivityRequest.ActivityId, loadWorkflowActivityRequest.WorkflowInstanceId, CancellationToken.None), Times.Once);
             loadWorkflowActivityJsonHelper.Verify(x => x.ActivityDataDictionaryToQuestionActivityData<QuestionActivityData>(It.IsAny<IDictionary<string, object?>>()), Times.Never);
 
         }
@@ -305,7 +305,7 @@ namespace Elsa.Server.Tests.Features.Workflow.LoadWorkflowActivity
         public async Task Handle_ReturnsOperationResultWithErrors_GivenAssessmentQuestionDoesNotExist(
             [Frozen] Mock<IQuestionInvoker> questionInvoker,
             [Frozen] Mock<IWorkflowInstanceStore> workflowInstanceStore,
-            [Frozen] Mock<IPipelineAssessmentRepository> pipelineAssessmentRepository,
+            [Frozen] Mock<IElsaCustomRepository> elsaCustomRepository,
             [Frozen] Mock<ILoadWorkflowActivityJsonHelper> loadWorkflowActivityJsonHelper,
             LoadWorkflowActivityRequest loadWorkflowActivityRequest,
             List<CollectedWorkflow> collectedWorkflows,
@@ -322,7 +322,7 @@ namespace Elsa.Server.Tests.Features.Workflow.LoadWorkflowActivity
                     x.FindAsync(It.IsAny<WorkflowInstanceIdSpecification>(), CancellationToken.None))
                 .ReturnsAsync(workflowInstance);
 
-            pipelineAssessmentRepository.Setup(x => x.GetAssessmentQuestion(loadWorkflowActivityRequest.ActivityId,
+            elsaCustomRepository.Setup(x => x.GetAssessmentQuestion(loadWorkflowActivityRequest.ActivityId,
                     loadWorkflowActivityRequest.WorkflowInstanceId, CancellationToken.None))
                 .ReturnsAsync((AssessmentQuestion?)null);
 
@@ -342,7 +342,7 @@ namespace Elsa.Server.Tests.Features.Workflow.LoadWorkflowActivity
         public async Task Handle_ReturnsOperationResultWithErrors_GivenCollectedWorkflowInstanceIsNull(
             [Frozen] Mock<IQuestionInvoker> questionInvoker,
             [Frozen] Mock<IWorkflowInstanceStore> workflowInstanceStore,
-            [Frozen] Mock<IPipelineAssessmentRepository> pipelineAssessmentRepository,
+            [Frozen] Mock<IElsaCustomRepository> elsaCustomRepository,
             [Frozen] Mock<ILoadWorkflowActivityJsonHelper> loadWorkflowActivityJsonHelper,
             LoadWorkflowActivityRequest loadWorkflowActivityRequest,
             AssessmentQuestion assessmentQuestion,
@@ -358,7 +358,7 @@ namespace Elsa.Server.Tests.Features.Workflow.LoadWorkflowActivity
                     x.FindAsync(It.IsAny<WorkflowInstanceIdSpecification>(), CancellationToken.None))
                 .ReturnsAsync((WorkflowInstance?)null);
 
-            pipelineAssessmentRepository.Setup(x => x.GetAssessmentQuestion(loadWorkflowActivityRequest.ActivityId,
+            elsaCustomRepository.Setup(x => x.GetAssessmentQuestion(loadWorkflowActivityRequest.ActivityId,
                     loadWorkflowActivityRequest.WorkflowInstanceId, CancellationToken.None))
                 .ReturnsAsync(assessmentQuestion);
 
@@ -378,7 +378,7 @@ namespace Elsa.Server.Tests.Features.Workflow.LoadWorkflowActivity
         public async Task Handle_ReturnsOperationResultWithErrors_GivenNoWorkflowsAreCollected(
             [Frozen] Mock<IQuestionInvoker> questionInvoker,
             [Frozen] Mock<IWorkflowInstanceStore> workflowInstanceStore,
-            [Frozen] Mock<IPipelineAssessmentRepository> pipelineAssessmentRepository,
+            [Frozen] Mock<IElsaCustomRepository> elsaCustomRepository,
             [Frozen] Mock<ILoadWorkflowActivityJsonHelper> loadWorkflowActivityJsonHelper,
             LoadWorkflowActivityRequest loadWorkflowActivityRequest,
             AssessmentQuestion assessmentQuestion,
@@ -389,7 +389,7 @@ namespace Elsa.Server.Tests.Features.Workflow.LoadWorkflowActivity
                 .Setup(x => x.FindWorkflowsAsync(loadWorkflowActivityRequest.ActivityId, assessmentQuestion.ActivityType, loadWorkflowActivityRequest.WorkflowInstanceId, CancellationToken.None))
                 .ReturnsAsync(new List<CollectedWorkflow>());
 
-            pipelineAssessmentRepository.Setup(x => x.GetAssessmentQuestion(loadWorkflowActivityRequest.ActivityId,
+            elsaCustomRepository.Setup(x => x.GetAssessmentQuestion(loadWorkflowActivityRequest.ActivityId,
                     loadWorkflowActivityRequest.WorkflowInstanceId, CancellationToken.None))
                 .ReturnsAsync(assessmentQuestion);
 
@@ -409,7 +409,7 @@ namespace Elsa.Server.Tests.Features.Workflow.LoadWorkflowActivity
         public async Task Handle_ReturnsOperationResultWithErrors_GivenExceptionIsThrown(
             [Frozen] Mock<IQuestionInvoker> questionInvoker,
             [Frozen] Mock<IWorkflowInstanceStore> workflowInstanceStore,
-            [Frozen] Mock<IPipelineAssessmentRepository> pipelineAssessmentRepository,
+            [Frozen] Mock<IElsaCustomRepository> elsaCustomRepository,
             [Frozen] Mock<ILoadWorkflowActivityJsonHelper> loadWorkflowActivityJsonHelper,
             LoadWorkflowActivityRequest loadWorkflowActivityRequest,
             AssessmentQuestion assessmentQuestion,
@@ -421,7 +421,7 @@ namespace Elsa.Server.Tests.Features.Workflow.LoadWorkflowActivity
                 .Setup(x => x.FindWorkflowsAsync(It.IsAny<string>(), assessmentQuestion.ActivityType, It.IsAny<string>(), CancellationToken.None))
                 .Throws(exception);
 
-            pipelineAssessmentRepository.Setup(x => x.GetAssessmentQuestion(loadWorkflowActivityRequest.ActivityId,
+            elsaCustomRepository.Setup(x => x.GetAssessmentQuestion(loadWorkflowActivityRequest.ActivityId,
                     loadWorkflowActivityRequest.WorkflowInstanceId, CancellationToken.None))
                 .ReturnsAsync(assessmentQuestion);
 
