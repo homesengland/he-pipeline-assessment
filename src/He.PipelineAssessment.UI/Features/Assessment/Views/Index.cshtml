@@ -19,7 +19,7 @@
 
         <thead class="govuk-table__head">
         <tr class="govuk-table__row">
-            <th scope="col" class="govuk-table__header">Opportunity ID</th>
+            <th scope="col" class="govuk-table__header">Reference</th>
             <th scope="col" class="govuk-table__header">Project</th>
             <th scope="col" class="govuk-table__header" data-searchable="true">Project Manager</th>
             <th scope="col" class="govuk-table__header" data-searchable="true">Partner</th>
@@ -31,7 +31,7 @@
         @foreach (var assessment in Model.ListOfAssessments)
         {
             <tr class="govuk-table__row">
-                <th scope="row" class="govuk-table__header"><a asp-controller="Assessment" asp-action="Summary" asp-route-assessmentId="@assessment.AssessmentWorkflowId" class="govuk-link">@assessment.Id</a> </th>
+                <td class="govuk-table__cell"><a asp-controller="Assessment" asp-action="Summary" asp-route-assessmentId="@assessment.AssessmentWorkflowId" class="govuk-link">@assessment.Reference</a> </td>
                 <td class="govuk-table__cell">@assessment.SiteName</td>
                 <td class="govuk-table__cell">@assessment.ProjectManager</td>
                 <td class="govuk-table__cell">@assessment.Counterparty</td>

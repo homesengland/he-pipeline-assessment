@@ -8,7 +8,7 @@
                 .every(function () {
                     var column = this;
 
-                    var label = $('<div class="govuk-date-input__item"><div id="' + column.header().textContent.replaceAll(/\s/g, '') + '" class="govuk-form-group"><label class="govuk-label govuk-date-input__label">' + column.header().textContent + ' </label></div></div>')
+                    var label = $('<div class="govuk-input__item"><div id="' + column.header().textContent.replaceAll(/\s/g, '') + '" class="govuk-form-group"><label class="govuk-label govuk-date-input__label">' + column.header().textContent + ' </label></div></div>')
                         .appendTo('#'+searchElementId);
 
                     var select = $('<select class="govuk-select"><option value=""></option></select>')

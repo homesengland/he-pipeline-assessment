@@ -16,7 +16,7 @@ namespace He.PipelineAssessment.Infrastructure.Data
         {
             base.OnModelCreating(modelBuilder);
 
-            modelBuilder.ApplyConfigurationsFromAssembly(typeof(AssessmentConfiguration).Assembly);
+            modelBuilder.ApplyConfigurationsFromAssembly(typeof(MockAssessmentConfiguration).Assembly);
         }
     }
 }

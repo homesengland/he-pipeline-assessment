@@ -48,16 +48,8 @@ builder.Services.AddDbContext<PipelineAssessmentContext>(config =>
 builder.Services.AddScoped<DbContext>(provider => provider.GetRequiredService<PipelineAssessmentContext>());
 builder.Services.AddScoped<IValidator<SaveAndContinueCommand>, SaveAndContinueCommandValidator>();
 builder.Services.AddDataProtection().PersistKeysToDbContext<PipelineAssessmentContext>();
+builder.Services.AddScoped<IAssessmentRepository, AssessmentRepository>();
 
-bool enableLiveData = builder.Configuration["Data:EnableLiveData"] == "true";
-if (enableLiveData)
-{
-    builder.Services.AddScoped<IAssessmentRepository, AssessmentRepository>();
-}
-else
-{
-    builder.Services.AddScoped<IAssessmentRepository, MockAssessmentRepository>();
-}
 
 
 var app = builder.Build();

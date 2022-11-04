@@ -12,7 +12,7 @@ namespace He.PipelineAssessment.UI.Features.Assessments.AssessmentList
 
         public AssessmentDisplay()
         {
-
+            Status = "New";
         }
         public AssessmentDisplay(Assessment assessment)
         {
@@ -23,6 +23,7 @@ namespace He.PipelineAssessment.UI.Features.Assessments.AssessmentList
             Counterparty = assessment.Counterparty;
             Status = assessment.Status;
             AssessmentWorkflowId = assessment.WorkflowInstanceId;
+            Reference = assessment.Reference;
             
         }
 
@@ -36,6 +37,7 @@ namespace He.PipelineAssessment.UI.Features.Assessments.AssessmentList
 
         public DateTime DateCreated { get; set; }
 
+        public string Reference { get; set; } = null!;
         public string Status { get; set; }
 
         public string? AssessmentWorkflowId { get; set; } = null!;
