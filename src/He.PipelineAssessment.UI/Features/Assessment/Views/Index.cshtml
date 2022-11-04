@@ -35,7 +35,7 @@
         @foreach (var assessment in Model.ListOfAssessments)
         {
             <tr class="govuk-table__row">
-                <td class="govuk-table__cell"><a asp-controller="Assessment" asp-action="Summary" asp-route-assessmentId="@assessment.AssessmentWorkflowId" class="govuk-link">@assessment.Reference</a> </td>
+                <td class="govuk-table__cell"><a asp-controller="Assessment" asp-action="Summary" asp-route-id="@assessment.Id" asp-route-correlationId="@assessment.SpId" class="govuk-link">@assessment.Reference</a> </td>
                 <td class="govuk-table__cell">@assessment.SiteName</td>
                 <td class="govuk-table__cell">@assessment.ProjectManager</td>
                 <td class="govuk-table__cell">@assessment.Counterparty</td>

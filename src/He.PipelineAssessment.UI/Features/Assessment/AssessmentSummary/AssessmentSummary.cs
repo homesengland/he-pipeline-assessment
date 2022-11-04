@@ -2,7 +2,8 @@
 {
     public class AssessmentSummaryData
     {
-        public string Id { get; set; } = null!;
+        public int AssessmentId { get; set; }
+        public int CorrelationId { get; set; } = null!;
         public string SiteName { get; set; } = null!;
         public string Project { get; set; } = null!;
         public string Partner { get; set; } = null!;

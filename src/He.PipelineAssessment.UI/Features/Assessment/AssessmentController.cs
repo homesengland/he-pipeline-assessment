@@ -23,9 +23,9 @@ namespace He.PipelineAssessment.UI.Features.Assessments
             return View("Index", listModel);
         }
 
-        public async Task<IActionResult> Summary(string assessmentId)
+        public async Task<IActionResult> Summary(int id, int correlationId)
         {
-            var overviewModel = await _mediator.Send(new AssessmentSummaryCommand(assessmentId));
+            var overviewModel = await _mediator.Send(new AssessmentSummaryCommand(id, correlationId));
             return View("Summary", overviewModel);
         }
     }

@@ -10,8 +10,6 @@ namespace He.PipelineAssessment.UI.Features.Assessments
         private List<string> _projectNames = null!;
         private List<string> _projectManagers = null!;
         private List<string> _partners = null!;
-        private List<string> _teams = null!;
-        private List<string> _authorities = null!;
         private List<string> _statuses = null!;
 
         public MockAssessmentDataService()
@@ -21,14 +19,15 @@ namespace He.PipelineAssessment.UI.Features.Assessments
 
         public AssessmentSummaryData GetData(AssessmentSummaryCommand command)
         {
-            return GetSummaryDummyData(command.AssessmentId);
+            return GetSummaryDummyData(command.AssessmentId, command.CorrelationId);
         }
 
-        private AssessmentSummaryData GetSummaryDummyData(string id)
+        private AssessmentSummaryData GetSummaryDummyData(int id, int correlationId)
         {
             return new AssessmentSummaryData()
             {
-                Id = id,
+                AssessmentId = id,
+                CorrelationId = correlationId,
                 SiteName = GetRandomProjectName(),
                 Project = GetRandomProjectName(),
                 Partner = GetRandomPartner(),
