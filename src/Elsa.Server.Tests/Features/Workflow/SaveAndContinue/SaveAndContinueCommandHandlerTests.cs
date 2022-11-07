@@ -23,7 +23,7 @@ namespace Elsa.Server.Tests.Features.Workflow.SaveAndContinue
             Handle_ShouldReturnSuccessfulOperationResult_WhenSuccessful_AndDoesNotInsertNewQuestionIfAlreadyExists(
                 [Frozen] Mock<IQuestionInvoker> questionInvoker,
                 [Frozen] Mock<IWorkflowInstanceStore> workflowInstanceStore,
-                [Frozen] Mock<IPipelineAssessmentRepository> pipelineAssessmentRepository,
+                [Frozen] Mock<IElsaCustomRepository> elsaCustomRepository,
                 [Frozen] Mock<IWorkflowRegistry> workflowRegistry,
                 WorkflowBlueprint workflowBlueprint,
                 ActivityBlueprint activityBlueprint,
@@ -48,7 +48,7 @@ namespace Elsa.Server.Tests.Features.Workflow.SaveAndContinue
             activityBlueprint.Id = workflowInstance.Output.ActivityId;
             workflowBlueprint.Activities.Add(activityBlueprint);
 
-            pipelineAssessmentRepository.Setup(x => x.GetAssessmentQuestion(saveAndContinueCommand.ActivityId,
+            elsaCustomRepository.Setup(x => x.GetAssessmentQuestion(saveAndContinueCommand.ActivityId,
                     saveAndContinueCommand.WorkflowInstanceId, CancellationToken.None))
                 .ReturnsAsync(currentAssessmentQuestion);
 
@@ -66,7 +66,7 @@ namespace Elsa.Server.Tests.Features.Workflow.SaveAndContinue
                     It.Is<WorkflowInstanceIdSpecification>(y => y.Id == collectedWorkflows.First().WorkflowInstanceId),
                     CancellationToken.None)).ReturnsAsync(workflowInstance);
 
-            pipelineAssessmentRepository.Setup(x => x.GetAssessmentQuestion(workflowInstance.Output.ActivityId,
+            elsaCustomRepository.Setup(x => x.GetAssessmentQuestion(workflowInstance.Output.ActivityId,
                     saveAndContinueCommand.WorkflowInstanceId, CancellationToken.None))
                 .ReturnsAsync(nextAssessmentQuestion);
 
@@ -74,9 +74,9 @@ namespace Elsa.Server.Tests.Features.Workflow.SaveAndContinue
             var result = await sut.Handle(saveAndContinueCommand, CancellationToken.None);
 
             //Assert
-            pipelineAssessmentRepository.Verify(
+            elsaCustomRepository.Verify(
                 x => x.UpdateAssessmentQuestion(currentAssessmentQuestion, CancellationToken.None), Times.Once);
-            pipelineAssessmentRepository.Verify(
+            elsaCustomRepository.Verify(
                 x => x.CreateAssessmentQuestionAsync(nextAssessmentQuestion, CancellationToken.None), Times.Never);
             Assert.Equal(opResult.Data.NextActivityId, result.Data!.NextActivityId);
             Assert.Equal(opResult.Data.WorkflowInstanceId, result.Data.WorkflowInstanceId);
@@ -90,7 +90,7 @@ namespace Elsa.Server.Tests.Features.Workflow.SaveAndContinue
             Handle_ShouldReturnSuccessfulOperationResult_WhenSuccessful_AndInsertsNewQuestionIfDoesNotExist(
                 [Frozen] Mock<IQuestionInvoker> questionInvoker,
                 [Frozen] Mock<IWorkflowInstanceStore> workflowInstanceStore,
-                [Frozen] Mock<IPipelineAssessmentRepository> pipelineAssessmentRepository,
+                [Frozen] Mock<IElsaCustomRepository> elsaCustomRepository,
                 [Frozen] Mock<ISaveAndContinueMapper> saveAndContinueMapper,
                 [Frozen] Mock<IWorkflowRegistry> workflowRegistry,
                 WorkflowBlueprint workflowBlueprint,
@@ -120,7 +120,7 @@ namespace Elsa.Server.Tests.Features.Workflow.SaveAndContinue
             activityBlueprint.Type = nextActivityType;
             workflowBlueprint.Activities.Add(activityBlueprint);
 
-            pipelineAssessmentRepository.Setup(x => x.GetAssessmentQuestion(saveAndContinueCommand.ActivityId,
+            elsaCustomRepository.Setup(x => x.GetAssessmentQuestion(saveAndContinueCommand.ActivityId,
                     saveAndContinueCommand.WorkflowInstanceId, CancellationToken.None))
                 .ReturnsAsync(currentAssessmentQuestion);
 
@@ -138,7 +138,7 @@ namespace Elsa.Server.Tests.Features.Workflow.SaveAndContinue
                     It.Is<WorkflowInstanceIdSpecification>(y => y.Id == collectedWorkflows.First().WorkflowInstanceId),
                     CancellationToken.None)).ReturnsAsync(workflowInstance);
 
-            pipelineAssessmentRepository.Setup(x => x.GetAssessmentQuestion(workflowInstance.Output.ActivityId,
+            elsaCustomRepository.Setup(x => x.GetAssessmentQuestion(workflowInstance.Output.ActivityId,
                     saveAndContinueCommand.WorkflowInstanceId, CancellationToken.None))
                 .ReturnsAsync((AssessmentQuestion?)null);
 
@@ -150,9 +150,9 @@ namespace Elsa.Server.Tests.Features.Workflow.SaveAndContinue
             var result = await sut.Handle(saveAndContinueCommand, CancellationToken.None);
 
             //Assert
-            pipelineAssessmentRepository.Verify(
+            elsaCustomRepository.Verify(
                 x => x.UpdateAssessmentQuestion(currentAssessmentQuestion, CancellationToken.None), Times.Once);
-            pipelineAssessmentRepository.Verify(
+            elsaCustomRepository.Verify(
                 x => x.CreateAssessmentQuestionAsync(nextAssessmentQuestion, CancellationToken.None), Times.Once);
             Assert.Equal(opResult.Data.NextActivityId, result.Data!.NextActivityId);
             Assert.Equal(opResult.Data.WorkflowInstanceId, result.Data.WorkflowInstanceId);
@@ -167,7 +167,7 @@ namespace Elsa.Server.Tests.Features.Workflow.SaveAndContinue
         public async Task Handle_ShouldReturnErrors_WhenOutputIsNullOnWorkflowInstance(
             [Frozen] Mock<IQuestionInvoker> questionInvoker,
             [Frozen] Mock<IWorkflowInstanceStore> workflowInstanceStore,
-            [Frozen] Mock<IPipelineAssessmentRepository> pipelineAssessmentRepository,
+            [Frozen] Mock<IElsaCustomRepository> elsaCustomRepository,
             AssessmentQuestion currentAssessmentQuestion,
             List<CollectedWorkflow> collectedWorkflows,
             WorkflowInstance workflowInstance,
@@ -176,7 +176,7 @@ namespace Elsa.Server.Tests.Features.Workflow.SaveAndContinue
         {
             //Arrange
             workflowInstance.Output = null;
-            pipelineAssessmentRepository.Setup(x => x.GetAssessmentQuestion(saveAndContinueCommand.ActivityId,
+            elsaCustomRepository.Setup(x => x.GetAssessmentQuestion(saveAndContinueCommand.ActivityId,
                     saveAndContinueCommand.WorkflowInstanceId, CancellationToken.None))
                 .ReturnsAsync(currentAssessmentQuestion);
 
@@ -194,9 +194,9 @@ namespace Elsa.Server.Tests.Features.Workflow.SaveAndContinue
             var result = await sut.Handle(saveAndContinueCommand, CancellationToken.None);
 
             //Assert
-            pipelineAssessmentRepository.Verify(
+            elsaCustomRepository.Verify(
                 x => x.UpdateAssessmentQuestion(currentAssessmentQuestion, CancellationToken.None), Times.Once);
-            pipelineAssessmentRepository.Verify(
+            elsaCustomRepository.Verify(
                 x => x.CreateAssessmentQuestionAsync(It.IsAny<AssessmentQuestion>(), CancellationToken.None),
                 Times.Never);
             Assert.Null(result.Data);
@@ -210,14 +210,14 @@ namespace Elsa.Server.Tests.Features.Workflow.SaveAndContinue
         public async Task Handle_ShouldReturnErrors_WhenWorkflowInstanceIsNull(
             [Frozen] Mock<IQuestionInvoker> questionInvoker,
             [Frozen] Mock<IWorkflowInstanceStore> workflowInstanceStore,
-            [Frozen] Mock<IPipelineAssessmentRepository> pipelineAssessmentRepository,
+            [Frozen] Mock<IElsaCustomRepository> elsaCustomRepository,
             AssessmentQuestion currentAssessmentQuestion,
             List<CollectedWorkflow> collectedWorkflows,
             SaveAndContinueCommand saveAndContinueCommand,
             SaveAndContinueCommandHandler sut)
         {
             //Arrange
-            pipelineAssessmentRepository.Setup(x => x.GetAssessmentQuestion(saveAndContinueCommand.ActivityId,
+            elsaCustomRepository.Setup(x => x.GetAssessmentQuestion(saveAndContinueCommand.ActivityId,
                     saveAndContinueCommand.WorkflowInstanceId, CancellationToken.None))
                 .ReturnsAsync(currentAssessmentQuestion);
 
@@ -235,9 +235,9 @@ namespace Elsa.Server.Tests.Features.Workflow.SaveAndContinue
             var result = await sut.Handle(saveAndContinueCommand, CancellationToken.None);
 
             //Assert
-            pipelineAssessmentRepository.Verify(
+            elsaCustomRepository.Verify(
                 x => x.UpdateAssessmentQuestion(currentAssessmentQuestion, CancellationToken.None), Times.Once);
-            pipelineAssessmentRepository.Verify(
+            elsaCustomRepository.Verify(
                 x => x.CreateAssessmentQuestionAsync(It.IsAny<AssessmentQuestion>(), CancellationToken.None),
                 Times.Never);
             Assert.Null(result.Data);
@@ -249,12 +249,12 @@ namespace Elsa.Server.Tests.Features.Workflow.SaveAndContinue
         [Theory]
         [AutoMoqData]
         public async Task Handle_ShouldReturnErrors_WhenAssessmentQuestionNotFoundInDatabase(
-            [Frozen] Mock<IPipelineAssessmentRepository> pipelineAssessmentRepository,
+            [Frozen] Mock<IElsaCustomRepository> elsaCustomRepository,
             SaveAndContinueCommand saveAndContinueCommand,
             SaveAndContinueCommandHandler sut)
         {
             //Arrange
-            pipelineAssessmentRepository.Setup(x => x.GetAssessmentQuestion(saveAndContinueCommand.ActivityId,
+            elsaCustomRepository.Setup(x => x.GetAssessmentQuestion(saveAndContinueCommand.ActivityId,
                     saveAndContinueCommand.WorkflowInstanceId, CancellationToken.None))
                 .ReturnsAsync((AssessmentQuestion?)null);
 
@@ -262,9 +262,9 @@ namespace Elsa.Server.Tests.Features.Workflow.SaveAndContinue
             var result = await sut.Handle(saveAndContinueCommand, CancellationToken.None);
 
             //Assert
-            pipelineAssessmentRepository.Verify(
+            elsaCustomRepository.Verify(
                 x => x.UpdateAssessmentQuestion(It.IsAny<AssessmentQuestion>(), CancellationToken.None), Times.Never);
-            pipelineAssessmentRepository.Verify(
+            elsaCustomRepository.Verify(
                 x => x.CreateAssessmentQuestionAsync(It.IsAny<AssessmentQuestion>(), CancellationToken.None),
                 Times.Never);
             Assert.Null(result.Data);
@@ -276,13 +276,13 @@ namespace Elsa.Server.Tests.Features.Workflow.SaveAndContinue
         [Theory]
         [AutoMoqData]
         public async Task Handle_ShouldReturnErrors_WhenADependencyThrows(
-            [Frozen] Mock<IPipelineAssessmentRepository> pipelineAssessmentRepository,
+            [Frozen] Mock<IElsaCustomRepository> elsaCustomRepository,
             Exception exception,
             SaveAndContinueCommand saveAndContinueCommand,
             SaveAndContinueCommandHandler sut)
         {
             //Arrange
-            pipelineAssessmentRepository.Setup(x => x.GetAssessmentQuestion(saveAndContinueCommand.ActivityId,
+            elsaCustomRepository.Setup(x => x.GetAssessmentQuestion(saveAndContinueCommand.ActivityId,
                     saveAndContinueCommand.WorkflowInstanceId, CancellationToken.None))
                 .Throws(exception);
 
@@ -290,9 +290,9 @@ namespace Elsa.Server.Tests.Features.Workflow.SaveAndContinue
             var result = await sut.Handle(saveAndContinueCommand, CancellationToken.None);
 
             //Assert
-            pipelineAssessmentRepository.Verify(
+            elsaCustomRepository.Verify(
                 x => x.UpdateAssessmentQuestion(It.IsAny<AssessmentQuestion>(), CancellationToken.None), Times.Never);
-            pipelineAssessmentRepository.Verify(
+            elsaCustomRepository.Verify(
                 x => x.CreateAssessmentQuestionAsync(It.IsAny<AssessmentQuestion>(), CancellationToken.None),
                 Times.Never);
             Assert.Null(result.Data);
@@ -305,7 +305,7 @@ namespace Elsa.Server.Tests.Features.Workflow.SaveAndContinue
         public async Task Handle_ShouldReturnErrorMessageResult_WhenNextActivityIsNull(
             [Frozen] Mock<IQuestionInvoker> questionInvoker,
             [Frozen] Mock<IWorkflowInstanceStore> workflowInstanceStore,
-            [Frozen] Mock<IPipelineAssessmentRepository> pipelineAssessmentRepository,
+            [Frozen] Mock<IElsaCustomRepository> elsaCustomRepository,
             [Frozen] Mock<IWorkflowRegistry> workflowRegistry,
             WorkflowBlueprint workflowBlueprint,
             AssessmentQuestion currentAssessmentQuestion,
@@ -315,7 +315,7 @@ namespace Elsa.Server.Tests.Features.Workflow.SaveAndContinue
             SaveAndContinueCommandHandler sut)
         {
             //Arrange
-            pipelineAssessmentRepository.Setup(x => x.GetAssessmentQuestion(saveAndContinueCommand.ActivityId,
+            elsaCustomRepository.Setup(x => x.GetAssessmentQuestion(saveAndContinueCommand.ActivityId,
                     saveAndContinueCommand.WorkflowInstanceId, CancellationToken.None))
                 .ReturnsAsync(currentAssessmentQuestion);
 

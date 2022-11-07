@@ -58,7 +58,7 @@ builder.Services.AddCustomElsaScriptHandlers();
 builder.Services.AddBookmarkProvider<QuestionBookmarkProvider>();
 builder.Services.AddScoped<IQuestionInvoker, QuestionInvoker>();
 
-builder.Services.AddScoped<IPipelineAssessmentRepository, PipelineAssessmentRepository>();
+builder.Services.AddScoped<IElsaCustomRepository, ElsaCustomRepository>();
 
 
 builder.Services.AddMediatR(typeof(Program).Assembly);

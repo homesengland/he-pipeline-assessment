@@ -4,6 +4,7 @@ using Elsa.CustomInfrastructure.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,10 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Elsa.CustomInfrastructure.Migrations
 {
     [DbContext(typeof(ElsaCustomContext))]
-    partial class ElsaCustomContextModelSnapshot : ModelSnapshot
+    [Migration("20221104161424_UpdatePrimaryKey")]
+    partial class UpdatePrimaryKey
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -24,12 +26,11 @@ namespace Elsa.CustomInfrastructure.Migrations
 
             modelBuilder.Entity("Elsa.CustomModels.AssessmentQuestion", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<int>("TemporaryId")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasColumnOrder(0);
+                        .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("TemporaryId"), 1L, 1);
 
                     b.Property<string>("ActivityId")
                         .IsRequired()
@@ -69,7 +70,7 @@ namespace Elsa.CustomInfrastructure.Migrations
                         .HasMaxLength(450)
                         .HasColumnType("nvarchar(450)");
 
-                    b.HasKey("Id");
+                    b.HasKey("TemporaryId");
 
                     b.ToTable("AssessmentQuestions");
                 });

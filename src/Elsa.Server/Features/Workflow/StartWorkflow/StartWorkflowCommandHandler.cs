@@ -10,14 +10,14 @@ namespace Elsa.Server.Features.Workflow.StartWorkflow
     {
         private readonly IWorkflowRegistry _workflowRegistry;
         private readonly IStartsWorkflow _startsWorkflow;
-        private readonly IPipelineAssessmentRepository _pipelineAssessmentRepository;
+        private readonly IElsaCustomRepository _elsaCustomRepository;
         private readonly IStartWorkflowMapper _startWorkflowMapper;
 
-        public StartWorkflowCommandHandler(IWorkflowRegistry workflowRegistry, IStartsWorkflow startsWorkflow, IPipelineAssessmentRepository pipelineAssessmentRepository, IStartWorkflowMapper startWorkflowMapper)
+        public StartWorkflowCommandHandler(IWorkflowRegistry workflowRegistry, IStartsWorkflow startsWorkflow, IElsaCustomRepository elsaCustomRepository, IStartWorkflowMapper startWorkflowMapper)
         {
             _workflowRegistry = workflowRegistry;
             _startsWorkflow = startsWorkflow;
-            _pipelineAssessmentRepository = pipelineAssessmentRepository;
+            _elsaCustomRepository = elsaCustomRepository;
             _startWorkflowMapper = startWorkflowMapper;
         }
 
@@ -42,7 +42,7 @@ namespace Elsa.Server.Features.Workflow.StartWorkflow
 
                         if (assessmentQuestion != null)
                         {
-                            await _pipelineAssessmentRepository.CreateAssessmentQuestionAsync(assessmentQuestion!, cancellationToken);
+                            await _elsaCustomRepository.CreateAssessmentQuestionAsync(assessmentQuestion!, cancellationToken);
                             result.Data = _startWorkflowMapper.RunWorkflowResultToStartWorkflowResponse(runWorkflowResult);
                         }
                         else
