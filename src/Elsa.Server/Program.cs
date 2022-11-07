@@ -1,10 +1,8 @@
-using Elsa.CustomActivities.Activities.Currency;
-using Elsa.CustomActivities.Activities.Date;
 using Elsa.CustomActivities.Activities.MultipleChoice;
+using Elsa.CustomActivities.Activities.MultipleQuestionActivity;
 using Elsa.CustomActivities.Activities.Shared;
 using Elsa.CustomActivities.Activities.SingleChoice;
 using Elsa.CustomActivities.Activities.SinglePipelineDataSource;
-using Elsa.CustomActivities.Activities.Text;
 using Elsa.CustomInfrastructure.Data;
 using Elsa.CustomInfrastructure.Data.Repository;
 using Elsa.Persistence.EntityFramework.Core.Extensions;
@@ -21,6 +19,9 @@ using He.PipelineAssessment.Data.SinglePipeline;
 using MediatR;
 using Microsoft.AspNetCore.DataProtection;
 using Microsoft.EntityFrameworkCore;
+using CurrencyQuestion = Elsa.CustomActivities.Activities.Currency.CurrencyQuestion;
+using DateQuestion = Elsa.CustomActivities.Activities.Date.DateQuestion;
+using TextQuestion = Elsa.CustomActivities.Activities.Text.TextQuestion;
 
 var builder = WebApplication.CreateBuilder(args);
 var elsaConnectionString = builder.Configuration.GetConnectionString("Elsa");
@@ -39,6 +40,7 @@ builder.Services
         .AddActivity<TextQuestion>()
         .AddActivity<DateQuestion>()
         .AddActivity<SinglePipelineDataSource>()
+        .AddActivity<MultipleQuestionActivity>()
         .AddConsoleActivities()
     );
 

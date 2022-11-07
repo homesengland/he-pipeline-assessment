@@ -1,7 +1,7 @@
 ﻿using Elsa.CustomWorkflow.Sdk.Models.Workflow;
+using Microsoft.Extensions.Logging;
 using System.Text;
 using System.Text.Json;
-using Microsoft.Extensions.Logging;
 
 namespace Elsa.CustomWorkflow.Sdk.HttpClients
 {
@@ -10,6 +10,7 @@ namespace Elsa.CustomWorkflow.Sdk.HttpClients
         Task<WorkflowNextActivityDataDto?> PostStartWorkflow(StartWorkflowCommandDto model);
 
         Task<WorkflowNextActivityDataDto?> SaveAndContinue(SaveAndContinueCommandDto model);
+        Task<WorkflowNextActivityDataDto?> SaveAndContinue(MultiSaveAndContinueCommandDto model);
         Task<WorkflowActivityDataDto?> LoadWorkflowActivity(LoadWorkflowActivityDto model);
     }
 
@@ -55,6 +56,33 @@ namespace Elsa.CustomWorkflow.Sdk.HttpClients
         {
             string data;
             var relativeUri = "workflow/SaveAndContinue";
+
+            using var request = new HttpRequestMessage(HttpMethod.Post, relativeUri);
+            var content = JsonSerializer.Serialize(model);
+            request.Content = new StringContent(content, Encoding.UTF8, "application/json");
+
+            using (var response = await _httpClientFactory.CreateClient("ElsaServerClient")
+                       .SendAsync(request)
+                       .ConfigureAwait(false))
+            {
+                data = await response.Content.ReadAsStringAsync().ConfigureAwait(false);
+                if (!response.IsSuccessStatusCode)
+                {
+                    _logger.LogError($"StatusCode='{response.StatusCode}'," +
+                                     $"\n Message= '{data}'," +
+                                     $"\n Url='{request.RequestUri}'");
+
+                    return null;
+                }
+            }
+
+            return JsonSerializer.Deserialize<WorkflowNextActivityDataDto>(data, new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
+        }
+
+        public async Task<WorkflowNextActivityDataDto?> SaveAndContinue(MultiSaveAndContinueCommandDto model)
+        {
+            string data;
+            var relativeUri = "workflow/MultiSaveAndContinue";
 
             using var request = new HttpRequestMessage(HttpMethod.Post, relativeUri);
             var content = JsonSerializer.Serialize(model);

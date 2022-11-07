@@ -5,6 +5,7 @@ using Elsa.CustomModels;
 using Elsa.Models;
 using Elsa.Persistence;
 using Elsa.Persistence.Specifications.WorkflowInstances;
+using Elsa.Server.Features.Workflow.MultiSaveAndContinue;
 using Elsa.Server.Features.Workflow.SaveAndContinue;
 using Elsa.Server.Models;
 using Elsa.Services;
