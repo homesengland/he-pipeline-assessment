@@ -54,31 +54,10 @@ namespace He.PipelineAssessment.UI.Features.Assessments
                 "Dartford Warbler Ltd",
                 "Foxglove Investment Homes Ltd"
             };
-            _authorities = new List<string>()
- {
-                "Manchester",
-                "Winchester",
-                "Multi-Site",
-                "Newcastle",
-                "Liverpool",
-                "Durham",
-                "Hull"
-            };
             _projectManagers = new List<string>()
             {
                 "Joe Bloggs",
                 "Jane Doe"
-            };
-            _teams = new List<string>()
-            {
-                "Team A",
-                "Team B",
-                "Team C",
-                "Team D",
-                "Team E",
-                "Team F",
-                "Team G",
-                "Team H",
             };
             _projectNames = new List<string>()
             {

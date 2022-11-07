@@ -19,14 +19,30 @@ namespace He.PipelineAssessment.UI.Features.Assessments
 
         public async Task<IActionResult> Index()
         {
-            var listModel = await _mediator.Send(new AssessmentListCommand());
-            return View("Index", listModel);
+            try 
+            { 
+                var listModel = await _mediator.Send(new AssessmentListCommand());
+                return View("Index", listModel);
+            }
+            catch (Exception e)
+            {
+                _logger.LogError(e.Message);
+                return RedirectToAction("Index", "Error", new { message = e.Message });
+            }
         }
 
         public async Task<IActionResult> Summary(int id, int correlationId)
         {
-            var overviewModel = await _mediator.Send(new AssessmentSummaryCommand(id, correlationId));
-            return View("Summary", overviewModel);
+            try
+            {
+                var overviewModel = await _mediator.Send(new AssessmentSummaryCommand(id, correlationId));
+                return View("Summary", overviewModel);
+            }
+            catch (Exception e)
+            {
+                _logger.LogError(e.Message);
+                return RedirectToAction("Index", "Error", new { message = e.Message });
+            }
         }
     }
 }

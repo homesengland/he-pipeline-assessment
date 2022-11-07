@@ -1,11 +1,15 @@
 ﻿using AutoFixture.Xunit2;
+using Castle.Core.Configuration;
 using He.PipelineAssessment.Common.Tests;
 using He.PipelineAssessment.Data.SinglePipeline;
 using He.PipelineAssessment.Infrastructure.Repository;
 using He.PipelineAssessment.Models;
 using He.PipelineAssessment.UI.Features.SinglePipeline.Sync;
+using Microsoft.Extensions.Configuration;
 using Moq;
 using Xunit;
+using IConfiguration = Microsoft.Extensions.Configuration.IConfiguration;
+using Repo = He.PipelineAssessment.Models;
 
 namespace He.PipelineAssessment.UI.Tests.Features.SinglePipeline.Sync
 {
@@ -29,19 +33,24 @@ namespace He.PipelineAssessment.UI.Tests.Features.SinglePipeline.Sync
             Assert.Equal(1, result.ErrorMessages.Count);
         }
 
-
-        private readonly IEsriSinglePipelineClient _esriSinglePipelineClient;
-        private readonly IEsriSinglePipelineDataJsonHelper _jsonHelper;
-        private readonly IAssessmentRepository _assessmentRepository;
-
         [Theory]
         [AutoMoqData]
         public async Task Handle_ReturnsErrors_GivenResponseDataIsNull(
             [Frozen] Mock<IEsriSinglePipelineClient> esriSinglePipelineClient,
+            [Frozen] Mock<IEsriSinglePipelineDataJsonHelper> esriSinglePipelineDataJsonHelper,
+            [Frozen] Mock<IAssessmentRepository> assessmentRepository,
+            IConfiguration configuration,
             SyncCommandHandler sut)
         {
             //Arrange
             esriSinglePipelineClient.Setup(x => x.GetSinglePipelineData()).ReturnsAsync((string?)null);
+
+            var inMemorySettings = new Dictionary<string, string> {
+                {"Data:UseSeedData", "false"}};
+            configuration = new ConfigurationBuilder()
+                .AddInMemoryCollection(inMemorySettings)
+                .Build();
+            sut = new SyncCommandHandler(esriSinglePipelineClient.Object, esriSinglePipelineDataJsonHelper.Object, assessmentRepository.Object, configuration, assessmentRepository.Object);
 
             //Act
             var result = await sut.Handle(It.IsAny<SyncCommand>(), CancellationToken.None);
@@ -58,14 +67,23 @@ namespace He.PipelineAssessment.UI.Tests.Features.SinglePipeline.Sync
             [Frozen] Mock<IEsriSinglePipelineClient> esriSinglePipelineClient,
             [Frozen] Mock<IEsriSinglePipelineDataJsonHelper> esriSinglePipelineDataJsonHelper,
             [Frozen] Mock<IAssessmentRepository> assessmentRepository,
+            IConfiguration configuration,
             string stringResponse,
-            List<Assessment> assessments,
+            List<Repo.Assessment> assessments,
             SinglePipelineData singlePipelineDataResponse,
             SyncCommandHandler sut)
         {
             //Arrange
             esriSinglePipelineClient.Setup(x => x.GetSinglePipelineData()).ReturnsAsync(stringResponse);
             esriSinglePipelineDataJsonHelper.Setup(x => x.JsonToSinglePipelineDataList(stringResponse)).Returns((List<SinglePipelineData>?)null);
+
+            var inMemorySettings = new Dictionary<string, string> {
+                {"Data:UseSeedData", "false"}};
+            configuration = new ConfigurationBuilder()
+                .AddInMemoryCollection(inMemorySettings)
+                .Build();
+            sut = new SyncCommandHandler(esriSinglePipelineClient.Object, esriSinglePipelineDataJsonHelper.Object, assessmentRepository.Object, configuration, assessmentRepository.Object);
+
             //Act
             var result = await sut.Handle(It.IsAny<SyncCommand>(), CancellationToken.None);
 
@@ -81,8 +99,9 @@ namespace He.PipelineAssessment.UI.Tests.Features.SinglePipeline.Sync
             [Frozen] Mock<IEsriSinglePipelineClient> esriSinglePipelineClient,
             [Frozen] Mock<IEsriSinglePipelineDataJsonHelper> esriSinglePipelineDataJsonHelper,
             [Frozen] Mock<IAssessmentRepository> assessmentRepository,
+            IConfiguration configuration,
             string stringResponse,
-            List<Assessment> assessments,
+            List<Repo.Assessment> assessments,
             List<SinglePipelineData> singlePipelineDataResponse,
             SyncCommandHandler sut)
         {
@@ -91,6 +110,12 @@ namespace He.PipelineAssessment.UI.Tests.Features.SinglePipeline.Sync
             esriSinglePipelineDataJsonHelper.Setup(x => x.JsonToSinglePipelineDataList(stringResponse)).Returns(singlePipelineDataResponse);
             assessmentRepository.Setup(x => x.GetAssessments()).ReturnsAsync(assessments);
             assessmentRepository.Setup(x => x.CreateAssessments(assessments)).ReturnsAsync(It.IsAny<int>());
+            var inMemorySettings = new Dictionary<string, string> {
+                {"Data:UseSeedData", "false"}};
+            configuration = new ConfigurationBuilder()
+                .AddInMemoryCollection(inMemorySettings)
+                .Build();
+            sut = new SyncCommandHandler(esriSinglePipelineClient.Object, esriSinglePipelineDataJsonHelper.Object, assessmentRepository.Object, configuration, assessmentRepository.Object);
 
             //Act
             var result = await sut.Handle(It.IsAny<SyncCommand>(), CancellationToken.None);

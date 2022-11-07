@@ -4,6 +4,8 @@ namespace He.PipelineAssessment.UI.Features.Assessments.AssessmentList
 {
     public class AssessmentListData
     {
+        public List<string> ValidationMessages { get; set; } = new List<string>();
+        public bool IsValid { get { return ValidationMessages != null && ValidationMessages.Count == 0; } }
         public List<AssessmentDisplay> ListOfAssessments { get; set; } = new List<AssessmentDisplay>();
     }
 

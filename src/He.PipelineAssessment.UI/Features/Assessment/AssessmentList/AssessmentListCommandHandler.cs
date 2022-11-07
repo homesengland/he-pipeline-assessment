@@ -16,10 +16,21 @@ namespace He.PipelineAssessment.UI.Features.Assessments.AssessmentList
         }
         public async Task<AssessmentListData> Handle(AssessmentListCommand request, CancellationToken cancellationToken)
         {
-            var listOfAssessments = await _assessmentRepository.GetAssessments();
-            var assessmentListData = GetAssessmentListFromResults(listOfAssessments);
+            try
+            {
+                var listOfAssessments = await _assessmentRepository.GetAssessments();
+                var assessmentListData = GetAssessmentListFromResults(listOfAssessments);
 
-            return assessmentListData;
+                return assessmentListData;
+            }
+            catch (Exception e)
+            {
+                List<string> errors = new List<string> { "An error occured whilst accessing our data." };
+                return new AssessmentListData
+                {
+                    ValidationMessages = errors
+                };
+            }
         }
 
         private AssessmentListData GetAssessmentListFromResults(List<Assessment> listOfAssessments)
