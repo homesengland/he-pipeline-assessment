@@ -20,7 +20,7 @@ namespace Elsa.Server.Tests.Features.Workflow.StartWorkflow
             [Frozen] Mock<IWorkflowRegistry> workflowRegistry,
             [Frozen] Mock<IStartsWorkflow> startsWorkflow,
             [Frozen] Mock<IStartWorkflowMapper> startWorkflowMapper,
-            [Frozen] Mock<IPipelineAssessmentRepository> pipelineAssessmentRepository,
+            [Frozen] Mock<IElsaCustomRepository> elsaCustomRepository,
             WorkflowBlueprint workflowBlueprint,
             ActivityBlueprint activityBlueprint,
             RunWorkflowResult runWorkflowResult,
@@ -60,7 +60,7 @@ namespace Elsa.Server.Tests.Features.Workflow.StartWorkflow
             var result = await sut.Handle(startWorkflowCommand, CancellationToken.None);
 
             //Assert
-            pipelineAssessmentRepository.Verify(x => x.CreateAssessmentQuestionAsync(assessmentQuestion, CancellationToken.None), Times.Once);
+            elsaCustomRepository.Verify(x => x.CreateAssessmentQuestionAsync(assessmentQuestion, CancellationToken.None), Times.Once);
             Assert.Equal(opResult.Data.NextActivityId, result.Data!.NextActivityId);
             Assert.Equal(opResult.Data.WorkflowInstanceId, result.Data.WorkflowInstanceId);
             Assert.Empty(result.ErrorMessages);
@@ -73,7 +73,7 @@ namespace Elsa.Server.Tests.Features.Workflow.StartWorkflow
             [Frozen] Mock<IWorkflowRegistry> workflowRegistry,
             [Frozen] Mock<IStartsWorkflow> startsWorkflow,
             [Frozen] Mock<IStartWorkflowMapper> startWorkflowMapper,
-            [Frozen] Mock<IPipelineAssessmentRepository> pipelineAssessmentRepository,
+            [Frozen] Mock<IElsaCustomRepository> elsaCustomRepository,
             WorkflowBlueprint workflowBlueprint,
             ActivityBlueprint activityBlueprint,
             RunWorkflowResult runWorkflowResult,
@@ -98,7 +98,7 @@ namespace Elsa.Server.Tests.Features.Workflow.StartWorkflow
             var result = await sut.Handle(startWorkflowCommand, CancellationToken.None);
 
             //Assert
-            pipelineAssessmentRepository.Verify(x => x.CreateAssessmentQuestionAsync(It.IsAny<AssessmentQuestion>(), CancellationToken.None), Times.Never);
+            elsaCustomRepository.Verify(x => x.CreateAssessmentQuestionAsync(It.IsAny<AssessmentQuestion>(), CancellationToken.None), Times.Never);
             Assert.Null(result.Data);
             Assert.Equal("Failed to deserialize RunWorkflowResult", result.ErrorMessages.Single());
         }
@@ -107,7 +107,7 @@ namespace Elsa.Server.Tests.Features.Workflow.StartWorkflow
         [AutoMoqData]
         public async Task Handle_ShouldReturnErrorOperationResult_WhenADependencyThrows(
             [Frozen] Mock<IWorkflowRegistry> workflowRegistry,
-            [Frozen] Mock<IPipelineAssessmentRepository> pipelineAssessmentRepository,
+            [Frozen] Mock<IElsaCustomRepository> elsaCustomRepository,
             StartWorkflowCommand startWorkflowCommand,
             Exception exception,
             StartWorkflowCommandHandler sut)
@@ -121,7 +121,7 @@ namespace Elsa.Server.Tests.Features.Workflow.StartWorkflow
             var result = await sut.Handle(startWorkflowCommand, CancellationToken.None);
 
             //Assert
-            pipelineAssessmentRepository.Verify(x => x.CreateAssessmentQuestionAsync(It.IsAny<AssessmentQuestion>(), CancellationToken.None), Times.Never);
+            elsaCustomRepository.Verify(x => x.CreateAssessmentQuestionAsync(It.IsAny<AssessmentQuestion>(), CancellationToken.None), Times.Never);
             Assert.Null(result.Data);
             Assert.Equal(exception.Message, result.ErrorMessages.Single());
         }

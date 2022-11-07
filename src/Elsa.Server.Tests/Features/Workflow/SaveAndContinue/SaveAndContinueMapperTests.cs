@@ -29,9 +29,6 @@ namespace Elsa.Server.Tests.Features.Workflow.SaveAndContinue
 
             //Assert
             Assert.IsType<AssessmentQuestion>(result);
-            Assert.Equal(
-                $"{saveAndContinueCommand.WorkflowInstanceId}-{nextActivityId}",
-                result.Id);
             Assert.Equal(nextActivityId, result!.ActivityId);
             Assert.Equal(nextActivityType, result!.ActivityType);
             Assert.False(result.FinishWorkflow);

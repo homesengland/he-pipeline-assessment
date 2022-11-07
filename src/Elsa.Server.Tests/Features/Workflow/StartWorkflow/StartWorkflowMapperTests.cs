@@ -33,9 +33,6 @@ namespace Elsa.Server.Tests.Features.Workflow.StartWorkflow
             Assert.Equal(runWorkflowResult.WorkflowInstance!.Id, result.WorkflowInstanceId);
             Assert.Equal(activityType, result.ActivityType);
             Assert.Equal(runWorkflowResult.WorkflowInstance!.LastExecutedActivityId, result.PreviousActivityId);
-            Assert.Equal(
-                $"{runWorkflowResult.WorkflowInstance.Id}-{runWorkflowResult.WorkflowInstance.LastExecutedActivityId}",
-                result.Id);
             Assert.Equal(currentTimeUtc, result.CreatedDateTime);
         }
 

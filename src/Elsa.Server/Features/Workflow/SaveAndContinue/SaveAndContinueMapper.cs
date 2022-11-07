@@ -21,7 +21,6 @@ namespace Elsa.Server.Features.Workflow.SaveAndContinue
         {
             return new AssessmentQuestion
             {
-                Id = $"{command.WorkflowInstanceId}-{nextActivityId}",
                 ActivityId = nextActivityId,
                 ActivityType = nextActivityType,
                 FinishWorkflow = false,

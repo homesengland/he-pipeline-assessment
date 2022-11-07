@@ -2,16 +2,13 @@
 
 namespace Elsa.CustomInfrastructure.Data.Repository
 {
-    public interface IPipelineAssessmentRepository
+    public interface IElsaCustomRepository
     {
-        Task<AssessmentQuestion?> GetAssessmentQuestion(string id,
-            CancellationToken cancellationToken = default);
-
         Task<AssessmentQuestion?> GetAssessmentQuestion(string activityId,
             string workflowInstanceId,
             CancellationToken cancellationToken = default);
 
-        ValueTask<string?> CreateAssessmentQuestionAsync(AssessmentQuestion model,
+        ValueTask<int?> CreateAssessmentQuestionAsync(AssessmentQuestion model,
             CancellationToken cancellationToken = default);
 
         Task<AssessmentQuestion?> UpdateAssessmentQuestion(AssessmentQuestion model, CancellationToken cancellationToken = default);
