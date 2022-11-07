@@ -1,5 +1,5 @@
 using Elsa.CustomActivities.Activities.MultipleChoice;
-using Elsa.CustomActivities.Activities.MultipleQuestionActivity;
+using Elsa.CustomActivities.Activities.QuestionScreen;
 using Elsa.CustomActivities.Activities.Shared;
 using Elsa.CustomActivities.Activities.SingleChoice;
 using Elsa.CustomActivities.Activities.SinglePipelineDataSource;
@@ -40,7 +40,7 @@ builder.Services
         .AddActivity<TextQuestion>()
         .AddActivity<DateQuestion>()
         .AddActivity<SinglePipelineDataSource>()
-        .AddActivity<MultipleQuestionActivity>()
+        .AddActivity<QuestionScreen>()
         .AddConsoleActivities()
     );
 

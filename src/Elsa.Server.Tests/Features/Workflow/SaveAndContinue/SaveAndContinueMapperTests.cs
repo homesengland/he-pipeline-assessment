@@ -1,6 +1,5 @@
 ﻿using AutoFixture.Xunit2;
 using Elsa.CustomModels;
-using Elsa.Server.Features.Workflow.MultiSaveAndContinue;
 using Elsa.Server.Features.Workflow.SaveAndContinue;
 using Elsa.Server.Providers;
 using He.PipelineAssessment.Common.Tests;
@@ -30,9 +29,6 @@ namespace Elsa.Server.Tests.Features.Workflow.SaveAndContinue
 
             //Assert
             Assert.IsType<AssessmentQuestion>(result);
-            Assert.Equal(
-                $"{saveAndContinueCommand.WorkflowInstanceId}-{nextActivityId}",
-                result.Id);
             Assert.Equal(nextActivityId, result!.ActivityId);
             Assert.Equal(nextActivityType, result!.ActivityType);
             Assert.False(result.FinishWorkflow);

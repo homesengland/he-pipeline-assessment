@@ -19,10 +19,14 @@ namespace Elsa.CustomWorkflow.Sdk.Models.Workflow
 
         public QuestionActivityData? QuestionActivityData { get; set; }
 
+        public List<QuestionActivityData>? MultiQuestionActivityData { get; set; }
+
     }
 
     public class QuestionActivityData
     {
+        public string QuestionId { get; set; } = null!;
+        public string QuestionType { get; set; } = null!;
         public string ActivityType { get; set; } = null!;
         public string Title { get; set; } = null!;
         public string Question { get; set; } = null!;
@@ -35,7 +39,7 @@ namespace Elsa.CustomWorkflow.Sdk.Models.Workflow
         public decimal? Decimal { get { return GetDecimal(); } set { SetDecimal(value); } }
 
         private MultipleChoiceModel _multipleChoice = new MultipleChoiceModel();
-        public MultipleChoiceModel MultipleChoice { get { return _multipleChoice; } set { SetMultipleChoiceModel(value);  } }
+        public MultipleChoiceModel MultipleChoice { get { return _multipleChoice; } set { SetMultipleChoiceModel(value); } }
 
         private SingleChoiceModel _singleChoice = new SingleChoiceModel();
         public SingleChoiceModel SingleChoice { get { return GetSingleChoiceModel(); } set { SetSingleChoiceModel(value); } }
@@ -93,7 +97,7 @@ namespace Elsa.CustomWorkflow.Sdk.Models.Workflow
 
         public void SetDate(Date? value)
         {
-            if(ActivityType == ActivityTypeConstants.DateQuestion && value != null)
+            if (ActivityType == ActivityTypeConstants.DateQuestion && value != null)
             {
                 if (value.Day != null && value.Month != null && value.Year != null)
                 {
@@ -114,7 +118,7 @@ namespace Elsa.CustomWorkflow.Sdk.Models.Workflow
 
         private SingleChoiceModel GetSingleChoiceModel()
         {
-            if(_singleChoice.SelectedAnswer != Answer && Answer != null)
+            if (_singleChoice.SelectedAnswer != Answer && Answer != null)
             {
                 _singleChoice.SelectedAnswer = Answer;
             }

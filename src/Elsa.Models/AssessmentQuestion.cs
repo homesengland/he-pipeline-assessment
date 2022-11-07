@@ -9,6 +9,8 @@
 
         public string WorkflowInstanceId { get; set; } = null!;
 
+        public string? QuestionId { get; set; }
+        public string? QuestionType { get; set; }
         public string? Answer { get; set; }
         public string? Comments { get; set; }
         public bool? FinishWorkflow { get; set; }

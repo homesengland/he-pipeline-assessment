@@ -35,7 +35,8 @@ namespace Elsa.Server.Features.Workflow.MultiSaveAndContinue
             //try
             //{
             //    var dbAssessmentQuestion =
-            //        await _elsaCustomRepository.GetAssessmentQuestion(command.ActivityId, command.WorkflowInstanceId, cancellationToken);
+            //        await _elsaCustomRepository.GetAssessmentQuestion(command.ActivityId, command.WorkflowInstanceId, "QuestionID",cancellationToken);
+
             //    if (dbAssessmentQuestion != null)
             //    {
             //        dbAssessmentQuestion.Comments = command.Comments;

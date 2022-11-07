@@ -1,4 +1,6 @@
-﻿using Elsa.CustomInfrastructure.Data.Repository;
+﻿using Elsa.CustomActivities.Activities.QuestionScreen;
+using Elsa.CustomInfrastructure.Data.Repository;
+using Elsa.CustomModels;
 using Elsa.Models;
 using Elsa.Server.Models;
 using Elsa.Services;
@@ -37,6 +39,8 @@ namespace Elsa.Server.Features.Workflow.StartWorkflow
 
                     if (activity != null)
                     {
+
+
                         var assessmentQuestion =
                             _startWorkflowMapper.RunWorkflowResultToAssessmentQuestion(runWorkflowResult, activity.Type);
 
@@ -48,6 +52,27 @@ namespace Elsa.Server.Features.Workflow.StartWorkflow
                         else
                         {
                             result.ErrorMessages.Add("Failed to deserialize RunWorkflowResult");
+                        }
+
+                        if (activity.Type == "QuestionScreen")
+                        {
+                            //create one for each question
+                            var dictionList = runWorkflowResult.WorkflowInstance.ActivityData
+                                .FirstOrDefault(x => x.Key == activity.Id).Value;
+
+                            var dictionaryQuestions = dictionList.FirstOrDefault(x => x.Key == "Questions").Value;
+
+                            var questionList = (List<Question>)dictionaryQuestions;
+                            if (questionList!.Any())
+                            {
+                                var assessments = new List<AssessmentQuestion>();
+
+                                foreach (var item in questionList!)
+                                {
+                                    assessments.Add(_startWorkflowMapper.RunWorkflowResultToAssessmentQuestion(runWorkflowResult, activity.Type, item));
+                                }
+                                await _elsaCustomRepository.CreateAssessmentQuestionAsync(assessments, cancellationToken);
+                            }
                         }
                     }
                     else

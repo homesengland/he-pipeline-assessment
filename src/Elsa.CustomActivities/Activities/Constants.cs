@@ -7,5 +7,10 @@
         public const string SingleChoiceQuestion = "SingleChoiceQuestion";
         public const string DateQuestion = "DateQuestion";
         public const string TextQuestion = "TextQuestion";
+
+
+        public const string MultipleQuestionActivity = "QuestionScreen";
+        public const string CheckboxQuestion = "CheckboxQuestion";
+        public const string RadioQuestion = "RadioQuestion";
     }
 }

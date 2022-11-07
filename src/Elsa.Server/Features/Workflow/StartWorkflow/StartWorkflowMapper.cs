@@ -1,4 +1,5 @@
-﻿using Elsa.CustomModels;
+﻿using Elsa.CustomActivities.Activities.QuestionScreen;
+using Elsa.CustomModels;
 using Elsa.Server.Providers;
 using Elsa.Services.Models;
 
@@ -7,6 +8,7 @@ namespace Elsa.Server.Features.Workflow.StartWorkflow
     public interface IStartWorkflowMapper
     {
         AssessmentQuestion? RunWorkflowResultToAssessmentQuestion(RunWorkflowResult result, string activityType);
+        AssessmentQuestion RunWorkflowResultToAssessmentQuestion(RunWorkflowResult result, string activityType, Question question);
         StartWorkflowResponse? RunWorkflowResultToStartWorkflowResponse(RunWorkflowResult result);
     }
     public class StartWorkflowMapper : IStartWorkflowMapper
@@ -28,6 +30,24 @@ namespace Elsa.Server.Features.Workflow.StartWorkflow
                     WorkflowInstanceId = result.WorkflowInstance.Id,
                     PreviousActivityId = result.WorkflowInstance.LastExecutedActivityId,
                     CreatedDateTime = _dateTimeProvider.UtcNow()
+                };
+            return null;
+        }
+
+        public AssessmentQuestion RunWorkflowResultToAssessmentQuestion(RunWorkflowResult result, string activityType,
+            Question question)
+        {
+            if (result.WorkflowInstance != null && result.WorkflowInstance
+                    .LastExecutedActivityId != null)
+                return new AssessmentQuestion
+                {
+                    ActivityId = result.WorkflowInstance.LastExecutedActivityId,
+                    ActivityType = activityType,
+                    WorkflowInstanceId = result.WorkflowInstance.Id,
+                    PreviousActivityId = result.WorkflowInstance.LastExecutedActivityId,
+                    CreatedDateTime = _dateTimeProvider.UtcNow(),
+                    QuestionId = question.Id,
+                    QuestionType = question.QuestionType
                 };
             return null;
         }

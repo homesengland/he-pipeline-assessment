@@ -2,15 +2,18 @@
 using Elsa.Design;
 using Elsa.Expressions;
 
-namespace Elsa.CustomActivities.Activities.MultipleQuestionActivity
+namespace Elsa.CustomActivities.Activities.QuestionScreen
 {
-    public class Question
+    public abstract class Question
     {
         [ActivityInput(Hint = "Question Identifier")]
         public string Id { get; set; } = null!;
 
         [ActivityInput(Hint = "Section title")]
         public string Title { get; set; } = null!;
+
+        [ActivityInput(Hint = "Question Identifier")]
+        public virtual string QuestionType { get; } = null!;
 
         [ActivityInput(
             Hint = "Question to ask",

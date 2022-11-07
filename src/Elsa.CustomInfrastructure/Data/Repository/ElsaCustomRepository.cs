@@ -29,5 +29,11 @@ namespace Elsa.CustomInfrastructure.Data.Repository
             await _dbContext.SaveChangesAsync(cancellationToken);
             return model;
         }
+
+        public async Task CreateAssessmentQuestionAsync(List<AssessmentQuestion> assessments, CancellationToken cancellationToken)
+        {
+            await _dbContext.AddRangeAsync(assessments, cancellationToken);
+            await _dbContext.SaveChangesAsync(cancellationToken);
+        }
     }
 }

@@ -6,15 +6,15 @@ using Elsa.Expressions;
 using Elsa.Services;
 using Elsa.Services.Models;
 
-namespace Elsa.CustomActivities.Activities.MultipleQuestionActivity
+namespace Elsa.CustomActivities.Activities.QuestionScreen
 {
-    public class MultipleQuestionActivity : Activity
+    public class QuestionScreen : Activity
     {
         [ActivityInput(Hint = "Page title")]
         public string PageTitle { get; set; } = null!;
 
         [ActivityInput(Label = "List of questions", Hint = "Questions to be displayed on this page.", UIHint = "question-builder", DefaultSyntax = "Json", IsDesignerCritical = true)]
-        public List<Question>? Questions { get; set; }
+        public List<Question> Questions { get; set; } = new List<Question>();
 
         [ActivityInput(Label = "Assessment outcome conditions", Hint = "The conditions to evaluate.", UIHint = "switch-case-builder", DefaultSyntax = "Switch", IsDesignerCritical = true)]
         public ICollection<SwitchCase> Cases { get; set; } = new List<SwitchCase>();

@@ -12,5 +12,6 @@ namespace Elsa.CustomInfrastructure.Data.Repository
             CancellationToken cancellationToken = default);
 
         Task<AssessmentQuestion?> UpdateAssessmentQuestion(AssessmentQuestion model, CancellationToken cancellationToken = default);
+        Task CreateAssessmentQuestionAsync(List<AssessmentQuestion> assessments, CancellationToken cancellationToken);
     }
 }
