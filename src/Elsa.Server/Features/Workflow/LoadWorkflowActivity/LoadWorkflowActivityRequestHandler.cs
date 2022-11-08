@@ -1,4 +1,5 @@
-﻿using Elsa.CustomActivities.Activities.Shared;
+﻿using Elsa.CustomActivities.Activities.QuestionScreen;
+using Elsa.CustomActivities.Activities.Shared;
 using Elsa.CustomInfrastructure.Data.Repository;
 using Elsa.Persistence;
 using Elsa.Persistence.Specifications.WorkflowInstances;
@@ -66,31 +67,82 @@ namespace Elsa.Server.Features.Workflow.LoadWorkflowActivity
                                 result.Data.ActivityType = dbAssessmentQuestion.ActivityType;
                                 result.Data.PreviousActivityId = dbAssessmentQuestion.PreviousActivityId;
 
-                                var activityData = _loadWorkflowActivityJsonHelper.ActivityDataDictionaryToQuestionActivityData<QuestionActivityData>(activityDataDictionary);
-                                if (activityData != null)
+                                if (dbAssessmentQuestion.ActivityType == "QuestionScreen")
                                 {
-                                    result.Data!.QuestionActivityData = activityData;
-                                    result.Data.QuestionActivityData.ActivityType = dbAssessmentQuestion.ActivityType;
-                                    result.Data.QuestionActivityData.Answer = dbAssessmentQuestion.Answer;
-                                    result.Data.QuestionActivityData.Comments = dbAssessmentQuestion.Comments;
+                                    var questions = await _elsaCustomRepository.GetAssessmentQuestions(
+                                        activityRequest.ActivityId, activityRequest.WorkflowInstanceId,
+                                        cancellationToken);
 
-                                    // Restore preserved checkboxes from previous page load
-                                    if (result.Data.ActivityType == Constants.MultipleChoiceQuestion && !string.IsNullOrEmpty(result.Data.QuestionActivityData.Answer))
+
+                                    var assessmentQuestions = (AssessmentQuestions?)activityDataDictionary.FirstOrDefault(x => x.Key == "Questions").Value;
+
+                                    //List<QuestionActivityData> activityData = _loadWorkflowActivityJsonHelper.ActivityDataDictionaryToQuestionActivityData<List<QuestionActivityData>>(assessmentQuestions.Questions);
+                                    if (assessmentQuestions != null)
                                     {
-                                        var answerList = JsonSerializer.Deserialize<List<string>>(result.Data.QuestionActivityData.Answer);
-                                        result.Data.QuestionActivityData.MultipleChoice.SelectedChoices = answerList!;
+                                        //result.Data.MultiQuestionActivityData = activityData;
+
+                                        foreach (var item in assessmentQuestions.Questions)
+                                        {
+                                            //get me the item
+                                            var question = questions.FirstOrDefault(x => x.QuestionId == item.Id);
+
+                                            //assign the values
+                                            var questionActivityData = new QuestionActivityData();
+
+                                            questionActivityData.ActivityType = question.ActivityType;
+                                            questionActivityData.QuestionType = question.QuestionType;
+                                            questionActivityData.Answer = question.Answer;
+                                            questionActivityData.Comments = question.Comments;
+
+                                            if (item.QuestionType == Constants.MultipleChoiceQuestion && !string.IsNullOrEmpty(questionActivityData.Answer))
+                                            {
+                                                var answerList = JsonSerializer.Deserialize<List<string>>(questionActivityData.Answer);
+                                                questionActivityData.MultipleChoice.SelectedChoices = answerList!;
+                                            }
+
+                                            // Restore preserved selected answer from previous page load
+                                            if (item.QuestionType == Constants.SingleChoiceQuestion && !string.IsNullOrEmpty(questionActivityData.Answer))
+                                            {
+                                                questionActivityData.SingleChoice.SelectedAnswer = questionActivityData.Answer;
+                                            }
+
+                                            result.Data.MultiQuestionActivityData.Add(questionActivityData);
+                                        }
                                     }
-
-                                    // Restore preserved selected answer from previous page load
-                                    if (result.Data.ActivityType == Constants.SingleChoiceQuestion && !string.IsNullOrEmpty(result.Data.QuestionActivityData.Answer))
+                                    else
                                     {
-                                        result.Data.QuestionActivityData.SingleChoice.SelectedAnswer = result.Data.QuestionActivityData.Answer;
+                                        result.ErrorMessages.Add(
+                                            $"Failed to map activity data to MultiQuestionActivityData");
                                     }
                                 }
                                 else
                                 {
-                                    result.ErrorMessages.Add(
-                                        $"Failed to map activity data");
+                                    var activityData = _loadWorkflowActivityJsonHelper.ActivityDataDictionaryToQuestionActivityData<QuestionActivityData>(activityDataDictionary);
+                                    if (activityData != null)
+                                    {
+                                        result.Data!.QuestionActivityData = activityData;
+                                        result.Data.QuestionActivityData.ActivityType = dbAssessmentQuestion.ActivityType;
+                                        result.Data.QuestionActivityData.Answer = dbAssessmentQuestion.Answer;
+                                        result.Data.QuestionActivityData.Comments = dbAssessmentQuestion.Comments;
+
+                                        // Restore preserved checkboxes from previous page load
+                                        if (result.Data.ActivityType == Constants.MultipleChoiceQuestion && !string.IsNullOrEmpty(result.Data.QuestionActivityData.Answer))
+                                        {
+                                            var answerList = JsonSerializer.Deserialize<List<string>>(result.Data.QuestionActivityData.Answer);
+                                            result.Data.QuestionActivityData.MultipleChoice.SelectedChoices = answerList!;
+                                        }
+
+                                        // Restore preserved selected answer from previous page load
+                                        if (result.Data.ActivityType == Constants.SingleChoiceQuestion && !string.IsNullOrEmpty(result.Data.QuestionActivityData.Answer))
+                                        {
+                                            result.Data.QuestionActivityData.SingleChoice.SelectedAnswer = result.Data.QuestionActivityData.Answer;
+                                        }
+                                    }
+                                    else
+                                    {
+                                        result.ErrorMessages.Add(
+                                            $"Failed to map activity data");
+                                    }
                                 }
                             }
                         }

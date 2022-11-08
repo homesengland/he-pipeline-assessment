@@ -15,6 +15,7 @@
 
     public class QuestionActivityData
     {
+        public string Id { get; set; } = null!;
         public string Title { get; set; } = null!;
         public string Question { get; set; } = null!;
         public string? QuestionHint { get; set; }
@@ -24,6 +25,7 @@
         public object? Output { get; set; }
 
         public string ActivityType { get; set; } = null!;
+        public string QuestionType { get; set; } = null!;
         public string? Answer { get; set; }
         public MultipleChoiceModel MultipleChoice { get; set; } = null!;
         public SingleChoiceModel SingleChoice { get; set; } = null!;
