@@ -80,7 +80,7 @@ namespace Elsa.Server.Features.Workflow.LoadWorkflowActivity
                                     if (assessmentQuestions != null)
                                     {
                                         result.Data.MultiQuestionActivityData = new List<QuestionActivityData>();
-
+                                        result.Data.QuestionActivityData = new QuestionActivityData();
                                         foreach (var item in assessmentQuestions.Questions)
                                         {
                                             //get me the item
@@ -88,11 +88,18 @@ namespace Elsa.Server.Features.Workflow.LoadWorkflowActivity
 
                                             //assign the values
                                             var questionActivityData = new QuestionActivityData();
-
+                                            questionActivityData.Id = question.QuestionId;
                                             questionActivityData.ActivityType = question.ActivityType;
                                             questionActivityData.QuestionType = question.QuestionType;
                                             questionActivityData.Answer = question.Answer;
                                             questionActivityData.Comments = question.Comments;
+                                            questionActivityData.Question = item.QuestionText;
+                                            questionActivityData.DisplayComments = item.DisplayComments;
+                                            questionActivityData.QuestionGuidance = item.QuestionGuidance;
+                                            questionActivityData.QuestionHint = item.QuestionHint;
+                                            //questionActivityData.MultipleChoice = //TODO: add the multiple choice options
+                                            //questionActivityData.SingleChoice = //TODO: add the single choice options
+
 
                                             if (item.QuestionType == Constants.MultipleChoiceQuestion && !string.IsNullOrEmpty(questionActivityData.Answer))
                                             {

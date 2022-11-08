@@ -16,6 +16,8 @@
         @Html.HiddenFor(m => Model.Data.WorkflowInstanceId)
         @Html.HiddenFor(m => Model.Data.ActivityId)
         @Html.HiddenFor(m => Model.Data.PreviousActivityId)
+
+        //TODO:Modify this to accomodate the Model.Data.MultipleQuestionActivityData
         @Html.HiddenFor(m => Model.Data.QuestionActivityData!.QuestionGuidance)
         @Html.HiddenFor(m => Model.Data.QuestionActivityData!.ActivityType)
         @Html.HiddenFor(m => Model.Data.QuestionActivityData!.Title)
