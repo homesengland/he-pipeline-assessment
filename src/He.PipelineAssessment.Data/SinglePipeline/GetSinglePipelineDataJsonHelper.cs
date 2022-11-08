@@ -1,11 +1,11 @@
-﻿using He.PipelineAssessment.Data.SinglePipeline;
-using System.Text.Json;
+﻿using System.Text.Json;
 
-namespace Elsa.Server.Features.Datasources.GetSinglePipelineData
+namespace He.PipelineAssessment.Data.SinglePipeline
 {
     public interface IEsriSinglePipelineDataJsonHelper
     {
         SinglePipelineData? JsonToSinglePipelineData(string data);
+        List<SinglePipelineData>? JsonToSinglePipelineDataList(string data);
     }
 
     public class EsriSinglePipelineDataJsonHelper : IEsriSinglePipelineDataJsonHelper
@@ -23,7 +23,27 @@ namespace Elsa.Server.Features.Datasources.GetSinglePipelineData
             }
             catch (Exception)
             {
-                
+
+                return null;
+            }
+
+            return null;
+        }
+
+        public List<SinglePipelineData>? JsonToSinglePipelineDataList(string data)
+        {
+            try
+            {
+                var result = JsonSerializer.Deserialize<EsriSinglePipelineResponse>(data);
+                if (result != null && result.features.Any())
+                {
+                    List<SinglePipelineData> dataResult = result.features.Select(x => x.attributes).ToList();
+                    return dataResult;
+                }
+            }
+            catch (Exception)
+            {
+
                 return null;
             }
 
