@@ -60,9 +60,9 @@ namespace Elsa.Server.Features.Workflow.StartWorkflow
                             var dictionList = runWorkflowResult.WorkflowInstance.ActivityData
                                 .FirstOrDefault(x => x.Key == activity.Id).Value;
 
-                            var dictionaryQuestions = dictionList.FirstOrDefault(x => x.Key == "Questions").Value;
+                            AssessmentQuestions? dictionaryQuestions = (AssessmentQuestions?)dictionList.FirstOrDefault(x => x.Key == "Questions").Value;
 
-                            var questionList = (List<Question>)dictionaryQuestions;
+                            var questionList = (List<Question>)dictionaryQuestions!.Questions;
                             if (questionList!.Any())
                             {
                                 var assessments = new List<AssessmentQuestion>();

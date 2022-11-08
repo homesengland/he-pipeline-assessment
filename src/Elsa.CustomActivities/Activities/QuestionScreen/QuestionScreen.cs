@@ -8,13 +8,22 @@ using Elsa.Services.Models;
 
 namespace Elsa.CustomActivities.Activities.QuestionScreen
 {
+    [Trigger(
+    Category = "Homes England Activities",
+    Description = "Multi question assessment screen",
+    Outcomes = new[] { OutcomeNames.Done },
+    DisplayName = "Multi Question screen"
+)]
     public class QuestionScreen : Activity
     {
         [ActivityInput(Hint = "Page title")]
         public string PageTitle { get; set; } = null!;
 
+        //[ActivityInput(Label = "List of questions", Hint = "Questions to be displayed on this page.", UIHint = "question-builder", DefaultSyntax = "Json", IsDesignerCritical = true)]
+        //public List<Question> Questions { get; set; } = new List<Question>();
+
         [ActivityInput(Label = "List of questions", Hint = "Questions to be displayed on this page.", UIHint = "question-builder", DefaultSyntax = "Json", IsDesignerCritical = true)]
-        public List<Question> Questions { get; set; } = new List<Question>();
+        public AssessmentQuestions Questions { get; set; } = new AssessmentQuestions();
 
         [ActivityInput(Label = "Assessment outcome conditions", Hint = "The conditions to evaluate.", UIHint = "switch-case-builder", DefaultSyntax = "Switch", IsDesignerCritical = true)]
         public ICollection<SwitchCase> Cases { get; set; } = new List<SwitchCase>();
@@ -49,5 +58,10 @@ namespace Elsa.CustomActivities.Activities.QuestionScreen
                 new SuspendResult()
             }));
         }
+    }
+
+    public class AssessmentQuestions
+    {
+        public List<Question> Questions { get; set; } = new List<Question>();
     }
 }

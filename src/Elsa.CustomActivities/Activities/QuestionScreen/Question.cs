@@ -4,7 +4,7 @@ using Elsa.Expressions;
 
 namespace Elsa.CustomActivities.Activities.QuestionScreen
 {
-    public abstract class Question
+    public class Question
     {
         [ActivityInput(Hint = "Question Identifier")]
         public string Id { get; set; } = null!;

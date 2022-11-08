@@ -12,6 +12,11 @@ export namespace Components {
         "propertyDescriptor": ActivityPropertyDescriptor;
         "propertyModel": ActivityDefinitionProperty;
     }
+    interface ElsaMultiquestionProperty {
+        "activityModel": ActivityModel;
+        "propertyDescriptor": ActivityPropertyDescriptor;
+        "propertyModel": ActivityDefinitionProperty;
+    }
     interface ElsaSinglechoiceRecordsProperty {
         "activityModel": ActivityModel;
         "propertyDescriptor": ActivityPropertyDescriptor;
@@ -25,6 +30,12 @@ declare global {
         prototype: HTMLElsaMultichoiceRecordsPropertyElement;
         new (): HTMLElsaMultichoiceRecordsPropertyElement;
     };
+    interface HTMLElsaMultiquestionPropertyElement extends Components.ElsaMultiquestionProperty, HTMLStencilElement {
+    }
+    var HTMLElsaMultiquestionPropertyElement: {
+        prototype: HTMLElsaMultiquestionPropertyElement;
+        new (): HTMLElsaMultiquestionPropertyElement;
+    };
     interface HTMLElsaSinglechoiceRecordsPropertyElement extends Components.ElsaSinglechoiceRecordsProperty, HTMLStencilElement {
     }
     var HTMLElsaSinglechoiceRecordsPropertyElement: {
@@ -33,11 +44,17 @@ declare global {
     };
     interface HTMLElementTagNameMap {
         "elsa-multichoice-records-property": HTMLElsaMultichoiceRecordsPropertyElement;
+        "elsa-multiquestion-property": HTMLElsaMultiquestionPropertyElement;
         "elsa-singlechoice-records-property": HTMLElsaSinglechoiceRecordsPropertyElement;
     }
 }
 declare namespace LocalJSX {
     interface ElsaMultichoiceRecordsProperty {
+        "activityModel"?: ActivityModel;
+        "propertyDescriptor"?: ActivityPropertyDescriptor;
+        "propertyModel"?: ActivityDefinitionProperty;
+    }
+    interface ElsaMultiquestionProperty {
         "activityModel"?: ActivityModel;
         "propertyDescriptor"?: ActivityPropertyDescriptor;
         "propertyModel"?: ActivityDefinitionProperty;
@@ -49,6 +66,7 @@ declare namespace LocalJSX {
     }
     interface IntrinsicElements {
         "elsa-multichoice-records-property": ElsaMultichoiceRecordsProperty;
+        "elsa-multiquestion-property": ElsaMultiquestionProperty;
         "elsa-singlechoice-records-property": ElsaSinglechoiceRecordsProperty;
     }
 }
@@ -57,6 +75,7 @@ declare module "@stencil/core" {
     export namespace JSX {
         interface IntrinsicElements {
             "elsa-multichoice-records-property": LocalJSX.ElsaMultichoiceRecordsProperty & JSXBase.HTMLAttributes<HTMLElsaMultichoiceRecordsPropertyElement>;
+            "elsa-multiquestion-property": LocalJSX.ElsaMultiquestionProperty & JSXBase.HTMLAttributes<HTMLElsaMultiquestionPropertyElement>;
             "elsa-singlechoice-records-property": LocalJSX.ElsaSinglechoiceRecordsProperty & JSXBase.HTMLAttributes<HTMLElsaSinglechoiceRecordsPropertyElement>;
         }
     }
