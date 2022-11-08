@@ -52,7 +52,6 @@ builder.Services.AddDataProtection().PersistKeysToDbContext<PipelineAssessmentCo
 builder.Services.AddScoped<IAssessmentRepository, AssessmentRepository>();
 builder.Services.AddScoped<IEsriSinglePipelineClient, EsriSinglePipelineClient>();
 builder.Services.AddScoped<IEsriSinglePipelineDataJsonHelper, EsriSinglePipelineDataJsonHelper>();
-builder.Services.AddScoped<StubDataSeeder>();
 
 string singlePipelineURL = builder.Configuration["Datasources:SinglePipeline"];
 

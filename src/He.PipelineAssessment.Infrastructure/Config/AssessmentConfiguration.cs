@@ -8,13 +8,6 @@ namespace He.PipelineAssessment.Infrastructure.Config
 {
     public class AssessmentConfiguration : IEntityTypeConfiguration<Assessment>
     {
-        private bool _useSeedData = false;
-        private AssessmentStubData _dataGenerator;
-        public AssessmentConfiguration(IConfiguration config, AssessmentStubData dataGenerator)
-        {
-            _useSeedData = config["Data:UseSeedData"] == "true";
-            _dataGenerator = dataGenerator;
-        }
         public void Configure(EntityTypeBuilder<Assessment> builder)
         {
             builder.HasKey(x => x.Id);
@@ -38,12 +31,6 @@ namespace He.PipelineAssessment.Infrastructure.Config
 
             builder.Property(x => x.Status)
                 .HasMaxLength(50);
-
-            if (_useSeedData)
-            {
-                //Do Stuff here.
-                builder.HasData(_dataGenerator.GetAssessments());
-            }
         }
     }
 }
