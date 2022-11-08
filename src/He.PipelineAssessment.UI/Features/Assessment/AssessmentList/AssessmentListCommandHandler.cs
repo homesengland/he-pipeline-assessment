@@ -1,7 +1,5 @@
-﻿using Azure.Identity;
-using He.PipelineAssessment.Infrastructure.Repository;
+﻿using He.PipelineAssessment.Infrastructure.Repository;
 using He.PipelineAssessment.Models;
-using He.PipelineAssessment.UI.Features.Assessments.AssessmentSummary;
 using MediatR;
 
 namespace He.PipelineAssessment.UI.Features.Assessments.AssessmentList
@@ -25,7 +23,7 @@ namespace He.PipelineAssessment.UI.Features.Assessments.AssessmentList
             }
             catch (Exception e)
             {
-                List<string> errors = new List<string> { "An error occured whilst accessing our data." };
+                List<string> errors = new List<string> { $"An error occured whilst accessing our data. Exception: {e.Message}" };
                 return new AssessmentListData
                 {
                     ValidationMessages = errors
@@ -37,7 +35,7 @@ namespace He.PipelineAssessment.UI.Features.Assessments.AssessmentList
         {
             AssessmentListData assessmentLandingPageData = new AssessmentListData();
             Random random = new Random(); //Not needed in anything but the dummy data.  TODO:  Remove when no longer needed;
-            foreach(var assessment in listOfAssessments)
+            foreach (var assessment in listOfAssessments)
             {
                 var assessmentDisplay = new AssessmentDisplay(assessment);
                 assessmentDisplay.DateCreated = GetDateCreated(random);

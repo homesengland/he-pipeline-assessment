@@ -1,9 +1,7 @@
 ﻿using AutoFixture.Xunit2;
-using Castle.Core.Configuration;
 using He.PipelineAssessment.Common.Tests;
 using He.PipelineAssessment.Data.SinglePipeline;
 using He.PipelineAssessment.Infrastructure.Repository;
-using He.PipelineAssessment.Models;
 using He.PipelineAssessment.UI.Features.SinglePipeline.Sync;
 using Microsoft.Extensions.Configuration;
 using Moq;
@@ -69,8 +67,6 @@ namespace He.PipelineAssessment.UI.Tests.Features.SinglePipeline.Sync
             [Frozen] Mock<IAssessmentRepository> assessmentRepository,
             IConfiguration configuration,
             string stringResponse,
-            List<Repo.Assessment> assessments,
-            SinglePipelineData singlePipelineDataResponse,
             SyncCommandHandler sut)
         {
             //Arrange
