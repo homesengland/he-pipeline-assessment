@@ -1,0 +1,17 @@
+﻿@model List<string>
+
+<div class="govuk-error-summary" aria-labelledby="error-summary-title" role="alert" data-disable-auto-focus="true" data-module="govuk-error-summary">
+    <h2 class="govuk-error-summary__title" id="error-summary-title">
+        There is a problem
+    </h2>
+    <div class="govuk-error-summary__body">
+        <ul class="govuk-list govuk-error-summary__list">
+        @foreach (var msg in Model)
+        {
+            <li>
+                <p style="color:red">@msg</p>
+            </li>
+        }  
+        </ul>
+    </div>
+</div>

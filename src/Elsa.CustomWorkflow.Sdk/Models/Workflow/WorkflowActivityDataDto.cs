@@ -51,7 +51,7 @@ namespace Elsa.CustomWorkflow.Sdk.Models.Workflow
             if (ActivityType == ActivityTypeConstants.DateQuestion && Answer != null)
             {
                 bool isValidDate = DateTime.TryParseExact(Answer, Constants.DateFormat, CultureInfo.InvariantCulture, DateTimeStyles.AdjustToUniversal, out DateTime date);
-                if (isValidDate)
+                if (isValidDate && !String.IsNullOrEmpty(Answer)==true)
                 {
                     return new Date
                     {
@@ -60,6 +60,17 @@ namespace Elsa.CustomWorkflow.Sdk.Models.Workflow
                         Year = date.Year
                     };
                 }
+                else if (!String.IsNullOrEmpty(Answer) == true)
+                {
+                    Date workFlowDate= JsonSerializer.Deserialize<Date?>(Answer);
+                    return new Date
+                    {
+                        Day = workFlowDate.Day,
+                        Month = workFlowDate.Month,
+                        Year = workFlowDate.Year
+                    };
+                }
+
             }
             return new Date();
         }
@@ -105,9 +116,14 @@ namespace Elsa.CustomWorkflow.Sdk.Models.Workflow
                         Answer = dateString;
                     }
                 }
+                else if (value.Day == null && value.Month == null && value.Year == null)
+                {
+                    
+                    SetAnswer(null);
+                }
                 else
                 {
-                    SetAnswer(null);
+                    SetAnswer(value);
                 }
             }
         }
