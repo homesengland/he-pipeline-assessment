@@ -61,17 +61,25 @@ namespace Elsa.Server.Features.Workflow.StartWorkflow
                                 .FirstOrDefault(x => x.Key == activity.Id).Value;
 
                             var dictionaryQuestions = dictionList.FirstOrDefault(x => x.Key == "Questions").Value;
-
-                            var questionList = (List<Question>)dictionaryQuestions;
-                            if (questionList!.Any())
+                            if (dictionaryQuestions != null)
                             {
-                                var assessments = new List<AssessmentQuestion>();
-
-                                foreach (var item in questionList!)
+                                var questionList = (List<Question>)dictionaryQuestions;
+                                if (questionList!.Any())
                                 {
-                                    assessments.Add(_startWorkflowMapper.RunWorkflowResultToAssessmentQuestion(runWorkflowResult, activity.Type, item));
+                                    var assessments = new List<AssessmentQuestion>();
+
+                                    foreach (var item in questionList!)
+                                    {
+                                        var assessment =
+                                            _startWorkflowMapper.RunWorkflowResultToAssessmentQuestion(runWorkflowResult,
+                                                activity.Type, item);
+                                        if (assessment != null)
+                                        {
+                                            assessments.Add(assessment);
+                                        }
+                                    }
+                                    await _elsaCustomRepository.CreateAssessmentQuestionAsync(assessments, cancellationToken);
                                 }
-                                await _elsaCustomRepository.CreateAssessmentQuestionAsync(assessments, cancellationToken);
                             }
                         }
                     }

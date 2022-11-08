@@ -1,11 +1,14 @@
-﻿using Elsa.CustomActivities.Activities.Shared;
+﻿using Elsa.CustomActivities.Activities.QuestionScreen;
+using Elsa.CustomActivities.Activities.Shared;
 using Elsa.CustomInfrastructure.Data.Repository;
+using Elsa.CustomModels;
 using Elsa.Models;
 using Elsa.Persistence;
 using Elsa.Persistence.Specifications.WorkflowInstances;
 using Elsa.Server.Models;
 using Elsa.Server.Providers;
 using Elsa.Services;
+using Elsa.Services.Models;
 using MediatR;
 using Open.Linq.AsyncExtensions;
 
@@ -73,7 +76,7 @@ namespace Elsa.Server.Features.Workflow.SaveAndContinue
 
                                 if (nextActivityRecord == null)
                                 {
-                                    await CreateNextActivityRecord(command, nextActivityId, nextActivity.Type);
+                                    await CreateNextActivityRecord(command, nextActivityId, nextActivity, workflowInstance);
                                 }
 
                                 result.Data = new SaveAndContinueResponse
@@ -117,10 +120,34 @@ namespace Elsa.Server.Features.Workflow.SaveAndContinue
 
 
         }
-        private async Task CreateNextActivityRecord(SaveAndContinueCommand command, string nextActivityId, string activityType)
+        private async Task CreateNextActivityRecord(SaveAndContinueCommand command, string nextActivityId, IActivityBlueprint nextActivityBlueprint, WorkflowInstance workflowInstance)
         {
-            var assessmentQuestion = _saveAndContinueMapper.SaveAndContinueCommandToNextAssessmentQuestion(command, nextActivityId, activityType);
+            var assessmentQuestion = _saveAndContinueMapper.SaveAndContinueCommandToNextAssessmentQuestion(command, nextActivityId, nextActivityBlueprint.Type);
             await _elsaCustomRepository.CreateAssessmentQuestionAsync(assessmentQuestion);
+
+            if (nextActivityBlueprint.Type == "QuestionScreen")
+            {
+                //create one for each question
+                var dictionList = workflowInstance.ActivityData
+                    .FirstOrDefault(x => x.Key == nextActivityId).Value;
+
+                var dictionaryQuestions = dictionList.FirstOrDefault(x => x.Key == "Questions").Value;
+
+                if (dictionaryQuestions != null)
+                {
+                    var questionList = (List<Question>)dictionaryQuestions;
+                    if (questionList!.Any())
+                    {
+                        var assessments = new List<AssessmentQuestion>();
+
+                        foreach (var item in questionList!)
+                        {
+                            assessments.Add(_saveAndContinueMapper.SaveAndContinueCommandToNextAssessmentQuestion(command, nextActivityId, nextActivityBlueprint.Type, item));
+                        }
+                        await _elsaCustomRepository.CreateAssessmentQuestionAsync(assessments, CancellationToken.None);
+                    }
+                }
+            }
         }
     }
 }

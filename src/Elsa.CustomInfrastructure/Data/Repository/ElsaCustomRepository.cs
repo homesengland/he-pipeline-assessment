@@ -35,5 +35,17 @@ namespace Elsa.CustomInfrastructure.Data.Repository
             await _dbContext.AddRangeAsync(assessments, cancellationToken);
             await _dbContext.SaveChangesAsync(cancellationToken);
         }
+
+        public async Task<List<AssessmentQuestion>> GetAssessmentQuestions(string activityId, string workflowInstanceId,
+            CancellationToken cancellationToken)
+        {
+            var list = await _dbContext.Set<AssessmentQuestion>().Where(x => x.ActivityId == activityId && x.WorkflowInstanceId == workflowInstanceId && x.QuestionId != null).ToListAsync();
+            return list;
+        }
+
+        public async Task SaveChanges(CancellationToken cancellationToken)
+        {
+            await _dbContext.SaveChangesAsync(cancellationToken);
+        }
     }
 }

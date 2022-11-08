@@ -11,6 +11,7 @@ using Elsa.Runtime;
 using Elsa.Server.Extensions;
 using Elsa.Server.Features.Datasources.GetSinglePipelineData;
 using Elsa.Server.Features.Workflow.LoadWorkflowActivity;
+using Elsa.Server.Features.Workflow.MultiSaveAndContinue;
 using Elsa.Server.Features.Workflow.SaveAndContinue;
 using Elsa.Server.Features.Workflow.StartWorkflow;
 using Elsa.Server.Providers;
@@ -71,6 +72,8 @@ builder.Services.AddScoped<IDateTimeProvider, DateTimeProvider>();
 
 builder.Services.AddScoped<IStartWorkflowMapper, StartWorkflowMapper>();
 builder.Services.AddScoped<ISaveAndContinueMapper, SaveAndContinueMapper>();
+builder.Services.AddScoped<IMultiSaveAndContinueMapper, MultiSaveAndContinueMapper>();
+
 
 builder.Services.AddScoped<ILoadWorkflowActivityJsonHelper, LoadWorkflowActivityJsonHelper>();
 //builder.Services.AddScoped<ILoadWorkflowActivityMapper, LoadWorkflowActivityMapper>();
