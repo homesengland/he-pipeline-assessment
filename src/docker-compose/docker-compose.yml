@@ -10,14 +10,14 @@ services:
       - ACCEPT_EULA=Y
     ports:
       - "5400:1433"
-    volumes:
-      - mssqlsystem:/var/opt/mssql
-      - mssqluser:/var/opt/sqlserver
-volumes:
-  mssqlsystem:
-    external: false
-  mssqluser:
-    external: false
+#    volumes:
+#      - mssqlsystem:/var/opt/mssql
+#      - mssqluser:/var/opt/sqlserver
+#volumes:
+#  mssqlsystem:
+#    external: false
+#  mssqluser:
+#    external: false
   #hepipelineassessmentui:
   #  container_name: hepipelineassessmentui
   #  image: ${DOCKER_REGISTRY-}hepipelineassessmentui
