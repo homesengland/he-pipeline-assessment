@@ -87,8 +87,6 @@ namespace Elsa.Server.Features.Workflow.StartWorkflow
                         result.ErrorMessages.Add("Failed to get activity");
                     }
                 }
-
-            }
             catch (Exception e)
             {
                 result.ErrorMessages.Add(e.Message);
