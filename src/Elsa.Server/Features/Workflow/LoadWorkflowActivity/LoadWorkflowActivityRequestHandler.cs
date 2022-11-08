@@ -79,7 +79,7 @@ namespace Elsa.Server.Features.Workflow.LoadWorkflowActivity
                                     //List<QuestionActivityData> activityData = _loadWorkflowActivityJsonHelper.ActivityDataDictionaryToQuestionActivityData<List<QuestionActivityData>>(assessmentQuestions.Questions);
                                     if (assessmentQuestions != null)
                                     {
-                                        //result.Data.MultiQuestionActivityData = activityData;
+                                        result.Data.MultiQuestionActivityData = new List<QuestionActivityData>();
 
                                         foreach (var item in assessmentQuestions.Questions)
                                         {
