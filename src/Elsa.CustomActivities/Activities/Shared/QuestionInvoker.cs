@@ -9,6 +9,7 @@ namespace Elsa.CustomActivities.Activities.Shared
     {
         Task<IEnumerable<CollectedWorkflow>> DispatchWorkflowsAsync(string activityId, string activityType, string workflowInstanceId, AssessmentQuestion model, CancellationToken cancellationToken = default);
         Task<IEnumerable<CollectedWorkflow>> ExecuteWorkflowsAsync(string activityId, string activityType, string workflowInstanceId, AssessmentQuestion model, CancellationToken cancellationToken = default);
+        Task<IEnumerable<CollectedWorkflow>> ExecuteWorkflowsAsync(string activityId, string activityType, string workflowInstanceId, List<AssessmentQuestion> model, CancellationToken cancellationToken = default);
         Task<IEnumerable<CollectedWorkflow>> FindWorkflowsAsync(string activityId, string activityType, string workflowInstanceId, CancellationToken cancellationToken = default);
     }
 
@@ -28,6 +29,11 @@ namespace Elsa.CustomActivities.Activities.Shared
         }
 
         public async Task<IEnumerable<CollectedWorkflow>> ExecuteWorkflowsAsync(string activityId, string activityType, string workflowInstanceId, AssessmentQuestion model, CancellationToken cancellationToken = default)
+        {
+            var context = new WorkflowsQuery(activityType, new QuestionBookmark() { ActivityId = activityId.ToLowerInvariant() }, null, workflowInstanceId);
+            return await _workflowLaunchpad.CollectAndExecuteWorkflowsAsync(context, new WorkflowInput(model), cancellationToken);
+        }
+        public async Task<IEnumerable<CollectedWorkflow>> ExecuteWorkflowsAsync(string activityId, string activityType, string workflowInstanceId, List<AssessmentQuestion> model, CancellationToken cancellationToken = default)
         {
             var context = new WorkflowsQuery(activityType, new QuestionBookmark() { ActivityId = activityId.ToLowerInvariant() }, null, workflowInstanceId);
             return await _workflowLaunchpad.CollectAndExecuteWorkflowsAsync(context, new WorkflowInput(model), cancellationToken);

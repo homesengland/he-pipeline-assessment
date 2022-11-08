@@ -67,11 +67,18 @@ namespace Elsa.Server.Features.Workflow.StartWorkflow
                             {
                                 var assessments = new List<AssessmentQuestion>();
 
-                                foreach (var item in questionList!)
-                                {
-                                    assessments.Add(_startWorkflowMapper.RunWorkflowResultToAssessmentQuestion(runWorkflowResult, activity.Type, item));
+                                    foreach (var item in questionList!)
+                                    {
+                                        var assessment =
+                                            _startWorkflowMapper.RunWorkflowResultToAssessmentQuestion(runWorkflowResult,
+                                                activity.Type, item);
+                                        if (assessment != null)
+                                        {
+                                            assessments.Add(assessment);
+                                        }
+                                    }
+                                    await _elsaCustomRepository.CreateAssessmentQuestionAsync(assessments, cancellationToken);
                                 }
-                                await _elsaCustomRepository.CreateAssessmentQuestionAsync(assessments, cancellationToken);
                             }
                         }
                     }

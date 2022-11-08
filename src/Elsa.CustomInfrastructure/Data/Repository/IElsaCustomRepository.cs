@@ -13,5 +13,7 @@ namespace Elsa.CustomInfrastructure.Data.Repository
 
         Task<AssessmentQuestion?> UpdateAssessmentQuestion(AssessmentQuestion model, CancellationToken cancellationToken = default);
         Task CreateAssessmentQuestionAsync(List<AssessmentQuestion> assessments, CancellationToken cancellationToken);
+        Task<List<AssessmentQuestion>> GetAssessmentQuestions(string commandActivityId, string commandWorkflowInstanceId, CancellationToken cancellationToken);
+        Task SaveChanges(CancellationToken cancellationToken);
     }
 }

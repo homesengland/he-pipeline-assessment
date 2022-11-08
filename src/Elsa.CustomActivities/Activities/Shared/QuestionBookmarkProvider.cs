@@ -44,7 +44,8 @@ namespace Elsa.CustomActivities.Activities.Shared
                 Constants.MultipleChoiceQuestion,
                 Constants.DateQuestion,
                 Constants.TextQuestion,
-                Constants.SingleChoiceQuestion
+                Constants.SingleChoiceQuestion,
+                Constants.QuestionScreen
             };
         }
     }

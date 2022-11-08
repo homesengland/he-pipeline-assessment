@@ -8,7 +8,7 @@ namespace Elsa.Server.Features.Workflow.StartWorkflow
     public interface IStartWorkflowMapper
     {
         AssessmentQuestion? RunWorkflowResultToAssessmentQuestion(RunWorkflowResult result, string activityType);
-        AssessmentQuestion RunWorkflowResultToAssessmentQuestion(RunWorkflowResult result, string activityType, Question question);
+        AssessmentQuestion? RunWorkflowResultToAssessmentQuestion(RunWorkflowResult result, string activityType, Question question);
         StartWorkflowResponse? RunWorkflowResultToStartWorkflowResponse(RunWorkflowResult result);
     }
     public class StartWorkflowMapper : IStartWorkflowMapper
@@ -34,7 +34,7 @@ namespace Elsa.Server.Features.Workflow.StartWorkflow
             return null;
         }
 
-        public AssessmentQuestion RunWorkflowResultToAssessmentQuestion(RunWorkflowResult result, string activityType,
+        public AssessmentQuestion? RunWorkflowResultToAssessmentQuestion(RunWorkflowResult result, string activityType,
             Question question)
         {
             if (result.WorkflowInstance != null && result.WorkflowInstance
