@@ -13,5 +13,6 @@ namespace Elsa.CustomWorkflow.Sdk
         public const string SingleChoiceQuestion = "SingleChoiceQuestion";
         public const string DateQuestion = "DateQuestion";
         public const string TextQuestion = "TextQuestion";
+        public const string QuestionScreen = "QuestionScreen";
     }
 }

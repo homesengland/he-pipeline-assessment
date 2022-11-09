@@ -24,29 +24,9 @@
         @Html.HiddenFor(m => Model.Data.QuestionActivityData!.Question)
         @Html.HiddenFor(m => Model.Data.QuestionActivityData!.QuestionHint)
         <br/>
-        if (Model.Data.QuestionActivityData!.ActivityType == ActivityTypeConstants.CurrencyQuestion)
-        {
-            @await Html.PartialAsync("_CurrencyQuestion",Model)
-        }
-        if (Model.Data.QuestionActivityData!.ActivityType == ActivityTypeConstants.MultipleChoiceQuestion)
-        {
-            @await Html.PartialAsync("_CheckBoxQuestion",Model)
-        }
-        if (Model.Data.QuestionActivityData!.ActivityType == ActivityTypeConstants.SingleChoiceQuestion)
-        {
-            @await Html.PartialAsync("_RadioButtonQuestion",Model)
-        }
-        if (Model.Data.QuestionActivityData!.ActivityType == ActivityTypeConstants.DateQuestion)
-        {
-            @await Html.PartialAsync("_DateQuestion",Model)
-        }
         if (Model.Data.QuestionActivityData!.ActivityType == ActivityTypeConstants.QuestionScreen)
         {
             @await Html.PartialAsync("_QuestionScreen",Model)
-        }
-        if (Model.Data.QuestionActivityData!.ActivityType == ActivityTypeConstants.TextQuestion)
-        {
-            <partial name="_TextQuestion" model=@(Model)/>
         }
     }
 </div>

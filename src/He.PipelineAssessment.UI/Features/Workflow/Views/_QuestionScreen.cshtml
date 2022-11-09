@@ -1,0 +1,52 @@
+﻿@model He.PipelineAssessment.UI.Features.Workflow.SaveAndContinue.SaveAndContinueCommand
+<div class="govuk-form-group">
+    <fieldset class="govuk-fieldset" aria-describedby="waste-hint">
+        <legend class="govuk-fieldset__legend govuk-fieldset__legend--l">
+            <h1 class="govuk-heading-l">
+                @Html.DisplayTextFor(m => m.Data.QuestionActivityData!.Title)
+            </h1>
+        </legend>
+        @if (Model.Data.MultiQuestionActivityData != null)
+        {
+            @for (int i=0; i< Model.Data.MultiQuestionActivityData.Count; i++)
+            {
+                @Html.HiddenFor(m => m.Data.MultiQuestionActivityData![i].QuestionId);
+                <h1 class="govuk-heading-l">
+                    @Html.DisplayTextFor(m => m.Data.MultiQuestionActivityData![i].Title)
+                </h1>
+                <label class="govuk-label govuk-label--m">
+                    @Html.DisplayTextFor(m => m.Data.MultiQuestionActivityData![i].Question)
+                </label>
+                @if (!string.IsNullOrEmpty(Model.Data.MultiQuestionActivityData![i].QuestionHint))
+                {
+                    <div id="event-name-hint" class="govuk-hint">
+                        @Model.Data.MultiQuestionActivityData![i].QuestionHint
+                    </div>
+                }
+                <div class="govuk-input__wrapper">
+                    @Html.TextBoxFor(m => m.Data.MultiQuestionActivityData![i].Answer, new {@class = "govuk-input govuk-input--width-6"})
+                </div>
+                @if (!string.IsNullOrEmpty(Model.Data.MultiQuestionActivityData![i].QuestionGuidance))
+                {
+                    <br />
+                    <details class="govuk-details" data-module="govuk-details">
+                        <summary class="govuk-details__summary">
+                            <span class="govuk-details__summary-text">
+                                Question guidance
+                            </span>
+                        </summary>
+                        <div class="govuk-details__text">
+                            @Model.Data.MultiQuestionActivityData![i].QuestionGuidance
+                        </div>
+                    </details>
+                }
+                @if (Model.Data.MultiQuestionActivityData![i].DisplayComments)
+                {
+                    @await Html.PartialAsync("_Comments", Model.Data.MultiQuestionActivityData![i].Comments)
+                }
+            }
+        }
+    </fieldset>
+
+    <input id="Next" type="submit" value="Save and continue" name="Next" class="govuk-button"/>
+</div>

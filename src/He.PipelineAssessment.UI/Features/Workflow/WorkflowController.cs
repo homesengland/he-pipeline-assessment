@@ -1,4 +1,5 @@
-﻿using FluentValidation;
+﻿using Elsa.CustomWorkflow.Sdk;
+using FluentValidation;
 using He.PipelineAssessment.UI.Features.Workflow.LoadWorkflowActivity;
 using He.PipelineAssessment.UI.Features.Workflow.SaveAndContinue;
 using He.PipelineAssessment.UI.Features.Workflow.StartWorkflow;
@@ -55,6 +56,10 @@ namespace He.PipelineAssessment.UI.Features.Workflow
             try
             {
                 var result = await this._mediator.Send(request);
+                if (result.Data.QuestionActivityData!.ActivityType == ActivityTypeConstants.QuestionScreen)
+                {
+                    return View("MultiSaveAndContinue", result);
+                }
                 return View("SaveAndContinue", result);
             }
             catch (Exception e)

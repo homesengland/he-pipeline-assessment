@@ -81,6 +81,8 @@ namespace Elsa.Server.Features.Workflow.LoadWorkflowActivity
                                     {
                                         result.Data.MultiQuestionActivityData = new List<QuestionActivityData>();
                                         result.Data.QuestionActivityData = new QuestionActivityData();
+                                        result.Data.QuestionActivityData.ActivityType = dbAssessmentQuestion.ActivityType;
+               
                                         foreach (var item in assessmentQuestions.Questions)
                                         {
                                             //get me the item
@@ -88,7 +90,7 @@ namespace Elsa.Server.Features.Workflow.LoadWorkflowActivity
 
                                             //assign the values
                                             var questionActivityData = new QuestionActivityData();
-                                            questionActivityData.Id = question.QuestionId;
+                                            questionActivityData.QuestionId = question.QuestionId;
                                             questionActivityData.ActivityType = question.ActivityType;
                                             questionActivityData.QuestionType = question.QuestionType;
                                             questionActivityData.Answer = question.Answer;
