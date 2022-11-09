@@ -1,0 +1,64 @@
+﻿@using He.PipelineAssessment.UI.Features.Workflow.ViewModels
+@model He.PipelineAssessment.UI.Features.Workflow.ViewModels.MultiQuestion
+@{
+    var itemDayName = "Data.MultiQuestionActivityData[" + Model.Index + "].Date.Day";
+    var itemMonthName = "Data.MultiQuestionActivityData[" + Model.Index + "].Date.Month";
+    var itemYearName = "Data.MultiQuestionActivityData[" + Model.Index + "].Date.Year";
+}
+
+<div class="govuk-form-group">
+    <h1 class="govuk-heading-l">
+        @Html.DisplayTextFor(m => m.Title)
+    </h1>
+    <label class="govuk-label govuk-label--m">
+        @Html.DisplayTextFor(m => m.Question)
+    </label>
+    @if (!string.IsNullOrEmpty(Model.QuestionHint))
+    {
+        <div id="event-name-hint" class="govuk-hint">
+            @Model.QuestionHint
+        </div>
+    }
+    <div class="govuk-date-input__item">
+        <div class="govuk-form-group">
+            <label class="govuk-label govuk-date-input__label" for="date-day">
+                Day
+            </label>
+            <input type="text" name="@itemDayName" class="govuk-input govuk-date-input__input govuk-input--width-2"  type="number"  inputmode="numeric"  value="@Model.Date.Day" />
+        </div>
+    </div>
+    <div class="govuk-date-input__item">
+        <div class="govuk-form-group">
+            <label class="govuk-label govuk-date-input__label" for="date-month">
+                Month
+            </label>
+            <input type="text" name="@itemMonthName" class="govuk-input govuk-date-input__input govuk-input--width-2" type="number" inputmode="numeric" value="@Model.Date.Month"  />
+        </div>
+    </div>
+    <div class="govuk-date-input__item">
+        <div class="govuk-form-group">
+            <label class="govuk-label govuk-date-input__label" for="date-year">
+                Year
+            </label>
+            <input type="text" name="@itemYearName" class="govuk-input govuk-date-input__input govuk-input--width-2" type="number" inputmode="numeric" value="@Model.Date.Year" />
+        </div>
+    </div>
+    @if (!string.IsNullOrEmpty(Model.QuestionGuidance))
+    {
+        <br />
+        <details class="govuk-details" data-module="govuk-details">
+            <summary class="govuk-details__summary">
+                <span class="govuk-details__summary-text">
+                    Question guidance
+                </span>
+            </summary>
+            <div class="govuk-details__text">
+                @Model.QuestionGuidance
+            </div>
+        </details>
+    }
+    @if (Model.DisplayComments)
+    {
+        @await Html.PartialAsync("_MultiComments", new MultiComment(){Index = Model.Index, Comment = Model.Comments})
+    }
+</div>

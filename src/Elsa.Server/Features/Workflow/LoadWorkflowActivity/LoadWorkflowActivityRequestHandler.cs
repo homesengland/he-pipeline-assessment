@@ -99,6 +99,7 @@ namespace Elsa.Server.Features.Workflow.LoadWorkflowActivity
                                             questionActivityData.DisplayComments = item.DisplayComments;
                                             questionActivityData.QuestionGuidance = item.QuestionGuidance;
                                             questionActivityData.QuestionHint = item.QuestionHint;
+                                            
                                             //questionActivityData.MultipleChoice = //TODO: add the multiple choice options
                                             //questionActivityData.SingleChoice = //TODO: add the single choice options
 

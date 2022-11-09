@@ -14,11 +14,11 @@
             @for (int i = 0; i < Model.Data.MultiQuestionActivityData.Count; i++)
             {
                 @Html.HiddenFor(m => m.Data.MultiQuestionActivityData![i].QuestionId)
+                @Html.HiddenFor(m => m.Data.MultiQuestionActivityData![i].QuestionType)
 
-
-               @* if (Model.Data.QuestionActivityData!.QuestionType == QuestionTypeConstants.TextQuestion)
-                {*@
-                    @await Html.PartialAsync("_MultiTextQuestion",new MultiText()
+                @if (Model.Data.MultiQuestionActivityData![i].QuestionType == QuestionTypeConstants.TextQuestion)
+                {
+                    @await Html.PartialAsync("_MultiTextQuestion",new MultiQuestion()
                     {
                         Index = i,
                         ActivityType = Model.Data.MultiQuestionActivityData[i].ActivityType,
@@ -32,8 +32,29 @@
                         QuestionType = Model.Data.MultiQuestionActivityData[i].QuestionType,
                         Title = Model.Data.MultiQuestionActivityData[i].Title
                     })
-
-                @*}*@
+                }
+                @if (Model.Data.MultiQuestionActivityData![i].QuestionType == QuestionTypeConstants.DateQuestion)
+                {
+                    var dateModel = new Date();
+                    dateModel.Day = Model.Data.MultiQuestionActivityData[i].Date.Day;
+                    dateModel.Month = Model.Data.MultiQuestionActivityData[i].Date.Month;
+                    dateModel.Year = Model.Data.MultiQuestionActivityData[i].Date.Year;
+                    @await Html.PartialAsync("_MultiDateQuestion",new MultiQuestion()
+                    {
+                        Index = i,
+                        ActivityType = Model.Data.MultiQuestionActivityData[i].ActivityType,
+                        Answer = Model.Data.MultiQuestionActivityData[i].Answer,
+                        Comments = Model.Data.MultiQuestionActivityData[i].Comments,
+                        DisplayComments = Model.Data.MultiQuestionActivityData[i].DisplayComments,
+                        Question = Model.Data.MultiQuestionActivityData[i].Question,
+                        QuestionGuidance = Model.Data.MultiQuestionActivityData[i].QuestionGuidance,
+                        QuestionHint = Model.Data.MultiQuestionActivityData[i].QuestionHint,
+                        QuestionId = Model.Data.MultiQuestionActivityData[i].QuestionId,
+                        QuestionType = Model.Data.MultiQuestionActivityData[i].QuestionType,
+                        Title = Model.Data.MultiQuestionActivityData[i].Title, 
+                        Date = dateModel
+                    })
+                }
 
 
             }

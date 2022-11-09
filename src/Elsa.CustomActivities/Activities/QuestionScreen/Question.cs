@@ -13,7 +13,7 @@ namespace Elsa.CustomActivities.Activities.QuestionScreen
         public string Title { get; set; } = null!;
 
         [ActivityInput(Hint = "Question Identifier")]
-        public string QuestionType { get; } = null!;
+        public string QuestionType { get; set; } = null!;
 
         [ActivityInput(
             Hint = "Question to ask",
