@@ -13,7 +13,7 @@ import {
 
 import {
   QuestionComponent,
-  MultiQuestionActivity
+  MultiQuestionActivity,
 } from '../../models/custom-component-models';
 
 import {
@@ -66,6 +66,14 @@ export class ElsaMultiQuestionRecordsProperty {
     this.propertyModel.expressions[SyntaxNames.Json] = JSON.stringify(this.multiQuestionModel);
   }
 
+  updateQuestion(updatedQuestion: QuestionComponent) {
+    console.log("update Question");
+    console.log(this.multiQuestionModel);
+    let questionToUpdate = this.multiQuestionModel.questions.findIndex((obj) => obj.id === updatedQuestion.id);
+    this.multiQuestionModel.questions[questionToUpdate] = updatedQuestion;
+    this.updatePropertyModel();
+  }
+
   onAddQuestionClick(questionType: string) {
     const questionName = `Question ${this.multiQuestionModel.questions.length + 1}`;
     let sampleId = `${this.multiQuestionModel.questions.length + 1}`
@@ -79,50 +87,46 @@ export class ElsaMultiQuestionRecordsProperty {
     this.updatePropertyModel();
   }
 
-  onChoiceTitleChanged(e: Event, question: QuestionComponent) {
-    question.title = (e.currentTarget as HTMLInputElement).value.trim();
-    this.updatePropertyModel();
-  }
+  //onChoiceTitleChanged(e: Event, question: QuestionComponent) {
+  //  question.title = (e.currentTarget as HTMLInputElement).value.trim();
+  //  this.updatePropertyModel();
+  //}
 
-  onChoiceIdentifierChanged(e: Event, question: QuestionComponent) {
-    question.id = (e.currentTarget as HTMLInputElement).value.trim();
-    this.updatePropertyModel();
-  }
+  //onChoiceIdentifierChanged(e: Event, question: QuestionComponent) {
+  //  question.id = (e.currentTarget as HTMLInputElement).value.trim();
+  //  this.updatePropertyModel();
+  //}
 
-  onChoiceQuestionChanged(e: Event, question: QuestionComponent) {
-    question.questionText = (e.currentTarget as HTMLInputElement).value.trim();
-    this.updatePropertyModel();
-  }
+  //onChoiceQuestionChanged(e: Event, question: QuestionComponent) {
+  //  question.questionText = (e.currentTarget as HTMLInputElement).value.trim();
+  //  this.updatePropertyModel();
+  //}
 
-  onChoiceGuidanceChanged(e: Event, question: QuestionComponent) {
-    question.questionGuidance = (e.currentTarget as HTMLInputElement).value.trim();
-    this.updatePropertyModel();
-  }
+  //onChoiceGuidanceChanged(e: Event, question: QuestionComponent) {
+  //  question.questionGuidance = (e.currentTarget as HTMLInputElement).value.trim();
+  //  this.updatePropertyModel();
+  //}
 
-  onChoiceHintChanged(e: Event, question: QuestionComponent) {
-    question.questionHint = (e.currentTarget as HTMLInputElement).value.trim();
-    this.updatePropertyModel();
-  }
+  //onChoiceHintChanged(e: Event, question: QuestionComponent) {
+  //  question.questionHint = (e.currentTarget as HTMLInputElement).value.trim();
+  //  this.updatePropertyModel();
+  //}
 
-  onDisplayCommentsBox(e: Event, question: QuestionComponent) {
-    const checkbox = (e.target as HTMLInputElement);
-    question.displayComments = checkbox.checked;
-    this.updatePropertyModel();
-  }
+  //onDisplayCommentsBox(e: Event, question: QuestionComponent) {
+  //  const checkbox = (e.target as HTMLInputElement);
+  //  question.displayComments = checkbox.checked;
+  //  this.updatePropertyModel();
+  //}
 
   render() {
     const questions = this.multiQuestionModel.questions;
 
-    const renderChoiceEditor = (multiChoice: QuestionComponent, index: number) => {
-      const propertyDescriptor = this.propertyDescriptor;
-      const propertyName = propertyDescriptor.name;
-      const fieldId = propertyName;
-      const fieldName = propertyName;
+    const renderChoiceEditor = (question: QuestionComponent, index: number) => {
       return (<div class="tab">
                 <input type="radio" id="rd2" name="rd" />
                 <label class="tab-label" htmlFor="rd2">Item 2</label>
-                <div class="tab-content">
-          {fieldId} {fieldName} {multiChoice} {index}
+        <div class="tab-content">
+          <elsa-question updateParentCallback={this.updateQuestion} questionSeed={ question } questionType={"TextQuestion"} id={index.toString() }></elsa-question>
                 </div>
               </div>
       );

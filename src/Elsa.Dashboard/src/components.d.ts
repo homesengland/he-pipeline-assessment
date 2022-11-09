@@ -6,6 +6,7 @@
  */
 import { HTMLStencilElement, JSXBase } from "@stencil/core/internal";
 import { ActivityDefinitionProperty, ActivityModel, ActivityPropertyDescriptor } from "./models/elsa-interfaces";
+import { QuestionComponent } from "./models/custom-component-models";
 export namespace Components {
     interface ElsaMultichoiceRecordsProperty {
         "activityModel": ActivityModel;
@@ -16,6 +17,12 @@ export namespace Components {
         "activityModel": ActivityModel;
         "propertyDescriptor": ActivityPropertyDescriptor;
         "propertyModel": ActivityDefinitionProperty;
+    }
+    interface ElsaQuestion {
+        "id": string;
+        "questionSeed": QuestionComponent;
+        "questionType": string;
+        "updateParentCallback": Function;
     }
     interface ElsaSinglechoiceRecordsProperty {
         "activityModel": ActivityModel;
@@ -36,6 +43,12 @@ declare global {
         prototype: HTMLElsaMultiquestionPropertyElement;
         new (): HTMLElsaMultiquestionPropertyElement;
     };
+    interface HTMLElsaQuestionElement extends Components.ElsaQuestion, HTMLStencilElement {
+    }
+    var HTMLElsaQuestionElement: {
+        prototype: HTMLElsaQuestionElement;
+        new (): HTMLElsaQuestionElement;
+    };
     interface HTMLElsaSinglechoiceRecordsPropertyElement extends Components.ElsaSinglechoiceRecordsProperty, HTMLStencilElement {
     }
     var HTMLElsaSinglechoiceRecordsPropertyElement: {
@@ -45,6 +58,7 @@ declare global {
     interface HTMLElementTagNameMap {
         "elsa-multichoice-records-property": HTMLElsaMultichoiceRecordsPropertyElement;
         "elsa-multiquestion-property": HTMLElsaMultiquestionPropertyElement;
+        "elsa-question": HTMLElsaQuestionElement;
         "elsa-singlechoice-records-property": HTMLElsaSinglechoiceRecordsPropertyElement;
     }
 }
@@ -59,6 +73,12 @@ declare namespace LocalJSX {
         "propertyDescriptor"?: ActivityPropertyDescriptor;
         "propertyModel"?: ActivityDefinitionProperty;
     }
+    interface ElsaQuestion {
+        "id"?: string;
+        "questionSeed"?: QuestionComponent;
+        "questionType"?: string;
+        "updateParentCallback"?: Function;
+    }
     interface ElsaSinglechoiceRecordsProperty {
         "activityModel"?: ActivityModel;
         "propertyDescriptor"?: ActivityPropertyDescriptor;
@@ -67,6 +87,7 @@ declare namespace LocalJSX {
     interface IntrinsicElements {
         "elsa-multichoice-records-property": ElsaMultichoiceRecordsProperty;
         "elsa-multiquestion-property": ElsaMultiquestionProperty;
+        "elsa-question": ElsaQuestion;
         "elsa-singlechoice-records-property": ElsaSinglechoiceRecordsProperty;
     }
 }
@@ -76,6 +97,7 @@ declare module "@stencil/core" {
         interface IntrinsicElements {
             "elsa-multichoice-records-property": LocalJSX.ElsaMultichoiceRecordsProperty & JSXBase.HTMLAttributes<HTMLElsaMultichoiceRecordsPropertyElement>;
             "elsa-multiquestion-property": LocalJSX.ElsaMultiquestionProperty & JSXBase.HTMLAttributes<HTMLElsaMultiquestionPropertyElement>;
+            "elsa-question": LocalJSX.ElsaQuestion & JSXBase.HTMLAttributes<HTMLElsaQuestionElement>;
             "elsa-singlechoice-records-property": LocalJSX.ElsaSinglechoiceRecordsProperty & JSXBase.HTMLAttributes<HTMLElsaSinglechoiceRecordsPropertyElement>;
         }
     }

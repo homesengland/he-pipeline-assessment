@@ -17,6 +17,39 @@ export interface QuestionComponent {
   questionType: string;
 }
 
+export class Question implements QuestionComponent {
+    id: string;
+    title: string;
+    questionGuidance: string;
+    questionText: string;
+    displayComments: boolean;
+    questionHint: string;
+    questionType: string;
+}
+
+export class MultiChoiceQuestion implements QuestionComponent {
+    id: string;
+    title: string;
+    questionGuidance: string;
+    questionText: string;
+    displayComments: boolean;
+    questionHint: string;
+    questionType: string;
+    choices: Array<MultiChoiceRecord> = []
+
+}
+
+export class SingleChoiceQuestion implements QuestionComponent {
+    id: string;
+    title: string;
+    questionGuidance: string;
+    questionText: string;
+    displayComments: boolean;
+    questionHint: string;
+    questionType: string;
+    choices: Array<SingleChoiceRecord> = []
+}
+
 export class MultiChoiceActivity {
   choices: Array<MultiChoiceRecord> = [];
 }
