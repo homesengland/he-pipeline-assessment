@@ -1,0 +1,15 @@
+﻿@using Microsoft.ApplicationInsights.Extensibility.Implementation
+@model He.PipelineAssessment.UI.Features.Workflow.ViewModels.MultiComment
+@{
+    var itemName = "Data.MultiQuestionActivityData[" + Model.Index + "].Comments";
+}
+<br />
+<div class="govuk-form-group">
+    <label class="govuk-label" for="more-detail">
+        Comments
+    </label>
+    @*@Html.TextAreaFor(m => m.Comment,  new {id="more-detail", name="Data.MultiQuestionActivityData["+Model.Index+"].Comments", @class = "govuk-textarea", maxlength=2000 })*@
+
+    <textarea id="more-detail" name="@itemName" class="govuk-textarea" maxlength=2000 > @Model.Comment </textarea>
+    
+</div>

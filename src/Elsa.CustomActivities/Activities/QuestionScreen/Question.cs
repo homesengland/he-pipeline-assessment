@@ -13,7 +13,7 @@ namespace Elsa.CustomActivities.Activities.QuestionScreen
         public string Title { get; set; } = null!;
 
         [ActivityInput(Hint = "Question Identifier")]
-        public virtual string QuestionType { get; } = null!;
+        public string QuestionType { get; } = null!;
 
         [ActivityInput(
             Hint = "Question to ask",
@@ -31,5 +31,23 @@ namespace Elsa.CustomActivities.Activities.QuestionScreen
         [ActivityInput(Hint = "Include comments box", UIHint = ActivityInputUIHints.Checkbox)]
         public bool DisplayComments { get; set; }
         public string Comments { get; set; } = null!;
+
+        public CheckboxModel Checkbox { get; set; } = new CheckboxModel();
+        public RadioModel Radio { get; set; } = new RadioModel();
+
     }
+
+    public class CheckboxModel
+    {
+        public ICollection<CheckboxRecord> Choices { get; set; } = new List<CheckboxRecord>();
+    }
+
+    public record CheckboxRecord(string Answer, bool IsSingle);
+
+    public class RadioModel
+    {
+        public ICollection<RadioRecord> Choices { get; set; } = new List<RadioRecord>();
+    }
+
+    public record RadioRecord(string Answer);
 }
