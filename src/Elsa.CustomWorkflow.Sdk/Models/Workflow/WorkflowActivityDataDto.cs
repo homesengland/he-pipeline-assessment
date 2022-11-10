@@ -40,6 +40,7 @@ namespace Elsa.CustomWorkflow.Sdk.Models.Workflow
         private SingleChoiceModel _singleChoice = new SingleChoiceModel();
         public SingleChoiceModel SingleChoice { get { return GetSingleChoiceModel(); } set { SetSingleChoiceModel(value); } }
 
+        private Date _date = new Date();
         public Date Date { get { return GetDate(); } set { SetDate(value); } }
 
 
@@ -60,19 +61,9 @@ namespace Elsa.CustomWorkflow.Sdk.Models.Workflow
                         Year = date.Year
                     };
                 }
-                else if (!String.IsNullOrEmpty(Answer) == true)
-                {
-                    Date? workFlowDate = JsonSerializer.Deserialize<Date?>(Answer);
-                    return new Date
-                    {
-                        Day = workFlowDate!.Day,
-                        Month = workFlowDate!.Month,
-                        Year = workFlowDate!.Year
-                    };
-                }
 
             }
-            return new Date();
+            return _date;
         }
         public void SetMultipleChoiceModel(MultipleChoiceModel value)
         {
@@ -106,6 +97,7 @@ namespace Elsa.CustomWorkflow.Sdk.Models.Workflow
         {
             if (ActivityType == ActivityTypeConstants.DateQuestion && value != null)
             {
+                _date = value;
                 if (value.Day != null && value.Month != null && value.Year != null)
                 {
                     var dateString =
@@ -116,14 +108,10 @@ namespace Elsa.CustomWorkflow.Sdk.Models.Workflow
                         Answer = dateString;
                     }
                 }
-                else if (value.Day == null && value.Month == null && value.Year == null)
+                else
                 {
 
                     SetAnswer(null);
-                }
-                else
-                {
-                    SetAnswer(value);
                 }
             }
         }
