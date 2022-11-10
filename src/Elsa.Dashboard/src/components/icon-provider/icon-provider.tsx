@@ -11,7 +11,7 @@ export interface IconProviderOptions {
   hoverColor?: IconColor
 }
 
-enum IconColor {
+export enum IconColor {
   Blue = 'blue',
   Gray = 'gray',
   Green = 'green',
