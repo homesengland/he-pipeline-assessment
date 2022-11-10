@@ -170,7 +170,7 @@ export class ElsaMultiQuestionRecordsProperty {
                   class="elsa-h-5 elsa-w-5 elsa-mx-auto elsa-outline-none focus:elsa-outline-none trashcan-icon" style={{ float: "right" }}>
             <TrashCanIcon options={this.iconProvider.getOptions()} />
           </button>
-          <div class="panel elsa-rounded">
+          <div class="panel elsa-rounded" onClick={event => event.stopPropagation()}>
             {this.renderQuestionField(`${field}-questionid`, `Question Id`, `${multiQuestion.id}`, multiQuestion, this.onChoiceIdentifierChanged)}
             {this.renderQuestionField(`${field}-title`, `Question Title`, `${multiQuestion.title}`, multiQuestion, this.onChoiceTitleChanged)}
             {this.renderQuestionField(`${field}-questionText`, `Question Text`, `${multiQuestion.questionText}`, multiQuestion, this.onChoiceQuestionChanged)}
