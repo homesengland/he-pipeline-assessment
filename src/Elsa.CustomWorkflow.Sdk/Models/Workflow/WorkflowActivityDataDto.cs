@@ -35,7 +35,7 @@ namespace Elsa.CustomWorkflow.Sdk.Models.Workflow
         public decimal? Decimal { get { return GetDecimal(); } set { SetDecimal(value); } }
 
         private MultipleChoiceModel _multipleChoice = new MultipleChoiceModel();
-        public MultipleChoiceModel MultipleChoice { get { return _multipleChoice; } set { SetMultipleChoiceModel(value);  } }
+        public MultipleChoiceModel MultipleChoice { get { return _multipleChoice; } set { SetMultipleChoiceModel(value); } }
 
         private SingleChoiceModel _singleChoice = new SingleChoiceModel();
         public SingleChoiceModel SingleChoice { get { return GetSingleChoiceModel(); } set { SetSingleChoiceModel(value); } }
@@ -51,7 +51,7 @@ namespace Elsa.CustomWorkflow.Sdk.Models.Workflow
             if (ActivityType == ActivityTypeConstants.DateQuestion && Answer != null)
             {
                 bool isValidDate = DateTime.TryParseExact(Answer, Constants.DateFormat, CultureInfo.InvariantCulture, DateTimeStyles.AdjustToUniversal, out DateTime date);
-                if (isValidDate && !String.IsNullOrEmpty(Answer)==true)
+                if (isValidDate && !String.IsNullOrEmpty(Answer) == true)
                 {
                     return new Date
                     {
@@ -62,12 +62,12 @@ namespace Elsa.CustomWorkflow.Sdk.Models.Workflow
                 }
                 else if (!String.IsNullOrEmpty(Answer) == true)
                 {
-                    Date workFlowDate= JsonSerializer.Deserialize<Date?>(Answer);
+                    Date? workFlowDate = JsonSerializer.Deserialize<Date?>(Answer);
                     return new Date
                     {
-                        Day = workFlowDate.Day,
-                        Month = workFlowDate.Month,
-                        Year = workFlowDate.Year
+                        Day = workFlowDate!.Day,
+                        Month = workFlowDate!.Month,
+                        Year = workFlowDate!.Year
                     };
                 }
 
@@ -104,7 +104,7 @@ namespace Elsa.CustomWorkflow.Sdk.Models.Workflow
 
         public void SetDate(Date? value)
         {
-            if(ActivityType == ActivityTypeConstants.DateQuestion && value != null)
+            if (ActivityType == ActivityTypeConstants.DateQuestion && value != null)
             {
                 if (value.Day != null && value.Month != null && value.Year != null)
                 {
@@ -118,7 +118,7 @@ namespace Elsa.CustomWorkflow.Sdk.Models.Workflow
                 }
                 else if (value.Day == null && value.Month == null && value.Year == null)
                 {
-                    
+
                     SetAnswer(null);
                 }
                 else
@@ -130,7 +130,7 @@ namespace Elsa.CustomWorkflow.Sdk.Models.Workflow
 
         private SingleChoiceModel GetSingleChoiceModel()
         {
-            if(_singleChoice.SelectedAnswer != Answer && Answer != null)
+            if (_singleChoice.SelectedAnswer != Answer && Answer != null)
             {
                 _singleChoice.SelectedAnswer = Answer;
             }
