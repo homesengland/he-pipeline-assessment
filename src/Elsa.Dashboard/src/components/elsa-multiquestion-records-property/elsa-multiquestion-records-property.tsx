@@ -1,6 +1,6 @@
 import { Component, h, Prop, State } from '@stencil/core';
 
-//import TrashCanIcon from '../../icons/trash-can';
+import TrashCanIcon from '../../icons/trash-can';
 import PlusIcon from '../../icons/plus_icon';
 import {
   ActivityDefinitionProperty,
@@ -118,9 +118,58 @@ export class ElsaMultiQuestionRecordsProperty {
   //  this.updatePropertyModel();
   //}
 
+  onAccordionQuestionClick(e: Event) {
+    let element = e.currentTarget as HTMLElement;
+    element.classList.toggle("active");
+    let panel = element.nextElementSibling as HTMLElement;
+    if (panel.style.display === "block") {
+      panel.style.display = "none";
+    } else {
+      panel.style.display = "block";
+    }
+  }
+
+  renderQuestionField(fieldId, fieldName, fieldValue, multiQuestion, onChangedFunction) {
+    return <div>
+             <div class="elsa-mb-1">
+               <div class="elsa-flex">
+                 <div class="elsa-flex-1">
+                   <label htmlFor={fieldId} class="elsa-block elsa-text-sm elsa-font-medium elsa-text-gray-700">
+                     Question Id
+                   </label>
+                 </div>
+               </div>
+             </div>
+      <input type="text" id={fieldId} name={fieldName} value={fieldValue} onChange={e => 
+        onChangedFunction(e, multiQuestion)}
+                    class="disabled:elsa-opacity-50 disabled:elsa-cursor-not-allowed focus:elsa-ring-blue-500 focus:elsa-border-blue-500 elsa-block elsa-w-full elsa-min-w-0 elsa-rounded-md sm:elsa-text-sm elsa-border-gray-300"/>
+           </div>;
+  }
+
   render() {
     const questions = this.multiQuestionModel.questions;
 
+    const renderChoiceEditor = (multiQuestion: QuestionComponent, index: number) => {
+      const field = `question-${index}`;
+      return (
+        <div id={`${field}-id`}><button type="button" class="accordion" onClick={this.onAccordionQuestionClick}>Section 1</button>
+          <div class="panel">
+            
+            {this.renderQuestionField(`${field}-questionid`, `${field}-questionid`, `${multiQuestion.id}`, multiQuestion, this.onChoiceIdentifierChanged)}
+            {this.renderQuestionField(`${field}-title`, `${field}-title`, `${multiQuestion.title}`, multiQuestion, this.onChoiceTitleChanged)}
+            {this.renderQuestionField(`${field}-questionText`, `${field}-questionText`, `${multiQuestion.questionText}`, multiQuestion, this.onChoiceQuestionChanged)}
+            {this.renderQuestionField(`${field}-questionHint`, `${field}-questionHint`, `${multiQuestion.questionHint}`, multiQuestion, this.onChoiceHintChanged)}
+            {this.renderQuestionField(`${field}-questionGuidance`, `${field}-questionGuidance`, `${multiQuestion.questionGuidance}`, multiQuestion, this.onChoiceGuidanceChanged)}
+            <input id={`${field}-displayComments`} name={`${field}-displayComments`} type="checkbox" checked={multiQuestion.displayComments} value={'true'}
+                   onChange={e => this.onDisplayCommentsBox(e, multiQuestion)}
+                   class="focus:elsa-ring-blue-500 elsa-h-8 elsa-w-8 elsa-text-blue-600 elsa-border-gray-300 elsa-rounded" />
+
+          </div>
+          <button type="button" onClick={() => this.onDeleteChoiceClick(multiQuestion)}
+                  class="elsa-h-5 elsa-w-5 elsa-mx-auto elsa-outline-none focus:elsa-outline-none" style={{ float: "right" }}>
+            <TrashCanIcon options={this.iconProvider.getOptions()} />
+          </button>
+        </div>
     const renderChoiceEditor = (question: QuestionComponent, index: number) => {
       return (<div class="tab">
                 <input type="radio" id="rd2" name="rd" />
@@ -134,40 +183,7 @@ export class ElsaMultiQuestionRecordsProperty {
  
     return (
       <div>
-        <div class="col">
-          <div class="tabs">
-            {questions.map(renderChoiceEditor)}
-          </div>
-        </div>
-
-        {/*  <table class="elsa-min-w-full elsa-divide-y elsa-divide-gray-200">*/}
-        {/*  <thead class="elsa-bg-gray-50">*/}
-        {/*    <tr>*/}
-        {/*      <th*/}
-        {/*        class="elsa-py-3 elsa-text-left elsa-text-xs elsa-font-medium elsa-text-gray-500 elsa-tracking-wider elsa-w-10/12">Identifier*/}
-        {/*      </th>*/}
-        {/*      <th*/}
-        {/*        class="elsa-py-3 elsa-text-left elsa-text-xs elsa-font-medium elsa-text-gray-500 elsa-tracking-wider elsa-w-10/12">Title*/}
-        {/*      </th>*/}
-        {/*      <th*/}
-        {/*        class="elsa-py-3 elsa-text-left elsa-text-xs elsa-font-medium elsa-text-gray-500 elsa-tracking-wider elsa-w-10/12">Question*/}
-        {/*      </th>*/}
-        {/*      <th*/}
-        {/*        class="elsa-py-3 elsa-text-left elsa-text-xs elsa-font-medium elsa-text-gray-500 elsa-tracking-wider elsa-w-10/12">Hint*/}
-        {/*      </th>*/}
-        {/*      <th*/}
-        {/*        class="elsa-py-3 elsa-text-left elsa-text-xs elsa-font-medium elsa-text-gray-500 elsa-tracking-wider elsa-w-10/12">Guidance*/}
-        {/*      </th>*/}
-        {/*      <th*/}
-        {/*        class="elsa-py-3 elsa-text-left elsa-text-xs elsa-font-medium elsa-text-gray-500 elsa-tracking-wider elsa-w-1/12">Display Comments*/}
-        {/*      </th>*/}
-        {/*      <th*/}
-        {/*        class="elsa-py-3 elsa-text-left elsa-text-xs elsa-font-medium elsa-text-gray-500 elsa-tracking-wider elsa-w-1/12">&nbsp;</th>*/}
-        {/*    </tr>*/}
-        {/*    </thead>*/}
-        {/*    <tbody>*/}
-        {/*    </tbody>*/}
-        {/*</table>*/}
+        {questions.map(renderChoiceEditor)}
         <button type="button" onClick={() => this.onAddQuestionClick("TextQuestion")}
                   class="elsa-inline-flex elsa-items-center elsa-px-4 elsa-py-2 elsa-border elsa-border-transparent elsa-shadow-sm elsa-text-sm elsa-font-medium elsa-rounded-md elsa-text-white elsa-bg-blue-600 hover:elsa-bg-blue-700 focus:elsa-outline-none focus:elsa-ring-2 focus:elsa-ring-offset-2 focus:elsa-ring-blue-500 elsa-mt-2">
           <PlusIcon options={this.iconProvider.getOptions()} />

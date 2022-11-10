@@ -19,98 +19,28 @@
     <script nonce ="@nonceConfig.ElsaSetup"  type="module" src="/_content/Elsa.Designer.Components.Web/elsa-workflows-studio/elsa-workflows-studio.esm.js"></script>
     <script nonce ="@nonceConfig.ElsaSetup"  type="module" src="/static/build/custom-elsa.esm.js"></script>
     <style>
-      body {
-        color: #2c3e50;
-        background: #ecf0f1;
-        padding: 0 1em 1em;
-      }
-
-      h1 {
-        margin: 0;
-        line-height: 2;
-        text-align: center;
-      }
-
-      h2 {
-        margin: 0 0 0.5em;
-        font-weight: normal;
-      }
-
-      input {
-        position: absolute;
-        opacity: 0;
-        z-index: -1;
-      }
-
-      .row {
-        display: flex;
-      }
-      .row .col {
-        flex: 1;
-      }
-      .row .col:last-child {
-        margin-left: 1em;
-      }
-
-      /* Accordion styles */
-      .tabs {
-        border-radius: 8px;
-        overflow: hidden;
-        box-shadow: 0 4px 4px -2px rgba(0, 0, 0, 0.5);
-      }
-
-      .tab {
+      .accordion {
+        background-color: #eee;
+        color: #444;
+        cursor: pointer;
+        padding: 18px;
         width: 100%;
-        color: white;
-        overflow: hidden;
-      }
-      .tab-label {
-        display: flex;
-        justify-content: space-between;
-        padding: 1em;
-        background: #2c3e50;
-        font-weight: bold;
-        cursor: pointer;
-        /* Icon */
-      }
-      .tab-label:hover {
-        background: #1a252f;
-      }
-      .tab-label::after {
-        content: "❯";
-        width: 1em;
-        height: 1em;
-        text-align: center;
-        transition: all 0.35s;
-      }
-      .tab-content {
-        max-height: 0;
-        padding: 0 1em;
-        color: #2c3e50;
-        background: white;
-        transition: all 0.35s;
-      }
-      .tab-close {
-        display: flex;
-        justify-content: flex-end;
-        padding: 1em;
-        font-size: 0.75em;
-        background: #2c3e50;
-        cursor: pointer;
-      }
-      .tab-close:hover {
-        background: #1a252f;
+        border: none;
+        text-align: left;
+        outline: none;
+        font-size: 15px;
+        transition: 0.4s;
       }
 
-      input:checked + .tab-label {
-        background: #1a252f;
+      .active, .accordion:hover {
+        background-color: #ccc; 
       }
-      input:checked + .tab-label::after {
-        transform: rotate(90deg);
-      }
-      input:checked ~ .tab-content {
-        max-height: 100vh;
-        padding: 1em;
+
+      .panel {
+        padding: 0 18px;
+        display: none;
+        background-color: white;
+        overflow: hidden;
       }
     </style>
 </head>
@@ -119,63 +49,63 @@
     <elsa-studio-dashboard></elsa-studio-dashboard>
 </elsa-studio-root>
 <script nonce="@nonceConfig.ElsaSetup">
-        var elsaStudioRoot = document.querySelector('elsa-studio-root');
+  var elsaStudioRoot = document.querySelector('elsa-studio-root');
 
-        function MyCustomPlugin(elsaStudio) {
-            var eventBus = elsaStudio.eventBus;
+  function MyCustomPlugin(elsaStudio) {
+    var eventBus = elsaStudio.eventBus;
 
-            eventBus.on('activity-design-displaying',
-                e => {
-                    if (e.activityModel.type == "MultipleChoiceQuestion" ||
-                        e.activityModel.type == "SingleChoiceQuestion" ||
-                        e.activityModel.type == "DateQuestion" ||
-                    e.activityModel.type == "TextQuestion" ||
-                    e.activityModel.type == "CurrencyQuestion" ||
-                    e.activityModel.type == "QuestionScreen")
-                    e.outcomes = e.outcomes.filter(x => x !== 'Default' && x !== 'Done');
-                });
-            };
+    eventBus.on('activity-design-displaying',
+      e => {
+        if (e.activityModel.type == "MultipleChoiceQuestion" ||
+          e.activityModel.type == "SingleChoiceQuestion" ||
+          e.activityModel.type == "DateQuestion" ||
+          e.activityModel.type == "TextQuestion" ||
+          e.activityModel.type == "CurrencyQuestion" ||
+          e.activityModel.type == "QuestionScreen")
+          e.outcomes = e.outcomes.filter(x => x !== 'Default' && x !== 'Done');
+      });
+  };
 
-        function getOrCreateProperty(activity, name, defaultExpression, defaultSyntax) {
-            var property = activity.properties.find(function(x) { return x.name == name; });
-            if (!property) {
-                var expressions = {};
-                var syntax = defaultSyntax ? defaultSyntax() : undefined;
-                if (!syntax)
-                    syntax = 'Literal';
-                expressions[syntax] = defaultExpression ? defaultExpression() : undefined;
-                property = { name: name, expressions: expressions, syntax: null };
-                activity.properties.push(property);
-            }
+  function getOrCreateProperty(activity, name, defaultExpression, defaultSyntax) {
+    var property = activity.properties.find(function(x) { return x.name == name; });
+    if (!property) {
+      var expressions = {};
+      var syntax = defaultSyntax ? defaultSyntax() : undefined;
+      if (!syntax)
+        syntax = 'Literal';
+      expressions[syntax] = defaultExpression ? defaultExpression() : undefined;
+      property = { name: name, expressions: expressions, syntax: null };
+      activity.properties.push(property);
+    }
 
-            return property;
-}
+    return property;
+  }
 
-        function MyCustomInputDriver(elsaStudio, elementName) {
-          console.log("creating input driver for " + elementName)
-            this.display = (activity, property) => {
-              console.log('Logging Display');
-              console.log(this.display);
-                var prop = (0, getOrCreateProperty)(activity, property.name);
-                var multichoice = document.createElement(elementName);
-                multichoice.activityModel = activity;
-                multichoice.propertyDescriptor = property;
-                multichoice.propertyModel = prop;
-                console.log(activity);
-                console.log(property);
-                console.log(prop);
-                return multichoice;
-            }
-        }
+  function MyCustomInputDriver(elsaStudio, elementName) {
+    console.log("creating input driver for " + elementName)
+    this.display = (activity, property) => {
+      console.log('Logging Display');
+      console.log(this.display);
+      var prop = (0, getOrCreateProperty)(activity, property.name);
+      var multichoice = document.createElement(elementName);
+      multichoice.activityModel = activity;
+      multichoice.propertyDescriptor = property;
+      multichoice.propertyModel = prop;
+      console.log(activity);
+      console.log(property);
+      console.log(prop);
+      return multichoice;
+    }
+  }
 
-        elsaStudioRoot.addEventListener('initializing', e => {
-            var elsaStudio = e.detail;
-            elsaStudio.pluginManager.registerPlugin(MyCustomPlugin);
-            elsaStudio.propertyDisplayManager.addDriver('multiChoice-record-builder', () => new MyCustomInputDriver(elsaStudio, 'elsa-multichoice-records-property'));
-            elsaStudio.propertyDisplayManager.addDriver('singleChoice-record-builder', () => new MyCustomInputDriver(elsaStudio, 'elsa-singlechoice-records-property'));
-            elsaStudio.propertyDisplayManager.addDriver('question-builder', () => new MyCustomInputDriver(elsaStudio, 'elsa-multiquestion-property'));
+  elsaStudioRoot.addEventListener('initializing', e => {
+    var elsaStudio = e.detail;
+    elsaStudio.pluginManager.registerPlugin(MyCustomPlugin);
+    elsaStudio.propertyDisplayManager.addDriver('multiChoice-record-builder', () => new MyCustomInputDriver(elsaStudio, 'elsa-multichoice-records-property'));
+    elsaStudio.propertyDisplayManager.addDriver('singleChoice-record-builder', () => new MyCustomInputDriver(elsaStudio, 'elsa-singlechoice-records-property'));
+    elsaStudio.propertyDisplayManager.addDriver('question-builder', () => new MyCustomInputDriver(elsaStudio, 'elsa-multiquestion-property'));
 
-        });
+  });
 </script>
 </body>
 </html>
