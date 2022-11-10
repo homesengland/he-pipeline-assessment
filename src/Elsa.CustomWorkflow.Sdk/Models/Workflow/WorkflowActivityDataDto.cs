@@ -1,6 +1,4 @@
-﻿using System.ComponentModel.DataAnnotations;
-using System.Globalization;
-using System.Text.Json;
+﻿using System.Globalization;
 
 namespace Elsa.CustomWorkflow.Sdk.Models.Workflow
 {
@@ -44,6 +42,7 @@ namespace Elsa.CustomWorkflow.Sdk.Models.Workflow
         private SingleChoiceModel _singleChoice = new SingleChoiceModel();
         public SingleChoiceModel SingleChoice { get { return GetSingleChoiceModel(); } set { SetSingleChoiceModel(value); } }
 
+        private Date _date = new Date();
         public Date Date { get { return GetDate(); } set { SetDate(value); } }
 
 
@@ -55,7 +54,7 @@ namespace Elsa.CustomWorkflow.Sdk.Models.Workflow
             if ((ActivityType == ActivityTypeConstants.DateQuestion || QuestionType == QuestionTypeConstants.DateQuestion) && Answer != null)
             {
                 bool isValidDate = DateTime.TryParseExact(Answer, Constants.DateFormat, CultureInfo.InvariantCulture, DateTimeStyles.AdjustToUniversal, out DateTime date);
-                if (isValidDate)
+                if (isValidDate && !String.IsNullOrEmpty(Answer) == true)
                 {
                     return new Date
                     {
@@ -64,8 +63,9 @@ namespace Elsa.CustomWorkflow.Sdk.Models.Workflow
                         Year = date.Year
                     };
                 }
+
             }
-            return new Date();
+            return _date;
         }
         public void SetMultipleChoiceModel(MultipleChoiceModel value)
         {
@@ -99,6 +99,7 @@ namespace Elsa.CustomWorkflow.Sdk.Models.Workflow
         {
             if ((ActivityType == ActivityTypeConstants.DateQuestion || QuestionType == QuestionTypeConstants.DateQuestion) && value != null)
             {
+                _date = value;
                 if (value.Day != null && value.Month != null && value.Year != null)
                 {
                     var dateString =
@@ -111,6 +112,7 @@ namespace Elsa.CustomWorkflow.Sdk.Models.Workflow
                 }
                 else
                 {
+
                     SetAnswer(null);
                 }
             }
