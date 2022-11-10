@@ -52,7 +52,7 @@ namespace Elsa.CustomWorkflow.Sdk.Models.Workflow
 
         public Date GetDate()
         {
-            if ((ActivityType == ActivityTypeConstants.DateQuestion || QuestionType == ActivityTypeConstants.DateQuestion) && Answer != null)
+            if ((ActivityType == ActivityTypeConstants.DateQuestion || QuestionType == QuestionTypeConstants.DateQuestion) && Answer != null)
             {
                 bool isValidDate = DateTime.TryParseExact(Answer, Constants.DateFormat, CultureInfo.InvariantCulture, DateTimeStyles.AdjustToUniversal, out DateTime date);
                 if (isValidDate)
@@ -69,7 +69,7 @@ namespace Elsa.CustomWorkflow.Sdk.Models.Workflow
         }
         public void SetMultipleChoiceModel(MultipleChoiceModel value)
         {
-            if (ActivityType == ActivityTypeConstants.MultipleChoiceQuestion)
+            if (ActivityType == ActivityTypeConstants.MultipleChoiceQuestion || QuestionType == QuestionTypeConstants.MultipleChoiceQuestion)
             {
                 _multipleChoice = value;
                 List<string> answerList = new List<string>();
@@ -84,7 +84,7 @@ namespace Elsa.CustomWorkflow.Sdk.Models.Workflow
 
         public void SetSingleChoiceModel(SingleChoiceModel value)
         {
-            if (ActivityType == ActivityTypeConstants.SingleChoiceQuestion)
+            if (ActivityType == ActivityTypeConstants.SingleChoiceQuestion || QuestionType == QuestionTypeConstants.SingleChoiceQuestion)
             {
                 _singleChoice = value;
                 Answer = null;
@@ -97,7 +97,7 @@ namespace Elsa.CustomWorkflow.Sdk.Models.Workflow
 
         public void SetDate(Date? value)
         {
-            if ((ActivityType == ActivityTypeConstants.DateQuestion || QuestionType == ActivityTypeConstants.DateQuestion) && value != null)
+            if ((ActivityType == ActivityTypeConstants.DateQuestion || QuestionType == QuestionTypeConstants.DateQuestion) && value != null)
             {
                 if (value.Day != null && value.Month != null && value.Year != null)
                 {
@@ -127,7 +127,7 @@ namespace Elsa.CustomWorkflow.Sdk.Models.Workflow
 
         private decimal? GetDecimal()
         {
-            if (ActivityType == ActivityTypeConstants.CurrencyQuestion && Answer != null)
+            if ((ActivityType == ActivityTypeConstants.CurrencyQuestion || QuestionType == QuestionTypeConstants.CurrencyQuestion) && Answer != null)
             {
                 try
                 {
@@ -143,7 +143,7 @@ namespace Elsa.CustomWorkflow.Sdk.Models.Workflow
         }
         private void SetDecimal(decimal? value)
         {
-            if (ActivityType == ActivityTypeConstants.CurrencyQuestion)
+            if (ActivityType == ActivityTypeConstants.CurrencyQuestion || QuestionType == QuestionTypeConstants.CurrencyQuestion)
             {
                 SetAnswer(value);
             }

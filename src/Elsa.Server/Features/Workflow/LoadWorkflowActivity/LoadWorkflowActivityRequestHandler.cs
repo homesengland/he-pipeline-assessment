@@ -69,48 +69,54 @@ namespace Elsa.Server.Features.Workflow.LoadWorkflowActivity
 
                                 if (dbAssessmentQuestion.ActivityType == "QuestionScreen")
                                 {
-                                    var questions = await _elsaCustomRepository.GetAssessmentQuestions(
+                                    var dbQuestions = await _elsaCustomRepository.GetAssessmentQuestions(
                                         activityRequest.ActivityId, activityRequest.WorkflowInstanceId,
                                         cancellationToken);
 
 
-                                    var assessmentQuestions = (AssessmentQuestions?)activityDataDictionary.FirstOrDefault(x => x.Key == "Questions").Value;
+                                    var elsaActivityAssessmentQuestions = (AssessmentQuestions?)activityDataDictionary.FirstOrDefault(x => x.Key == "Questions").Value;
 
-                                    //List<QuestionActivityData> activityData = _loadWorkflowActivityJsonHelper.ActivityDataDictionaryToQuestionActivityData<List<QuestionActivityData>>(assessmentQuestions.Questions);
-                                    if (assessmentQuestions != null)
+                                    if (elsaActivityAssessmentQuestions != null)
                                     {
                                         result.Data.MultiQuestionActivityData = new List<QuestionActivityData>();
                                         result.Data.QuestionActivityData = new QuestionActivityData();
                                         result.Data.QuestionActivityData.ActivityType = dbAssessmentQuestion.ActivityType;
-               
-                                        foreach (var item in assessmentQuestions.Questions)
+
+                                        foreach (var item in elsaActivityAssessmentQuestions.Questions)
                                         {
                                             //get me the item
-                                            var question = questions.FirstOrDefault(x => x.QuestionId == item.Id);
+                                            var dbQuestion = dbQuestions.FirstOrDefault(x => x.QuestionId == item.Id);
 
                                             //assign the values
                                             var questionActivityData = new QuestionActivityData();
-                                            questionActivityData.QuestionId = question.QuestionId;
-                                            questionActivityData.ActivityType = question.ActivityType;
-                                            questionActivityData.QuestionType = question.QuestionType;
-                                            questionActivityData.Answer = question.Answer;
-                                            questionActivityData.Comments = question.Comments;
+                                            questionActivityData.ActivityType = dbQuestion.ActivityType;
+                                            questionActivityData.Answer = dbQuestion.Answer;
+                                            questionActivityData.Comments = dbQuestion.Comments;
+                                            questionActivityData.QuestionId = dbQuestion.QuestionId;
+                                            questionActivityData.QuestionType = dbQuestion.QuestionType;
+
                                             questionActivityData.Question = item.QuestionText;
                                             questionActivityData.DisplayComments = item.DisplayComments;
                                             questionActivityData.QuestionGuidance = item.QuestionGuidance;
                                             questionActivityData.QuestionHint = item.QuestionHint;
-                                            
-                                            //questionActivityData.MultipleChoice = //TODO: add the multiple choice options
-                                            //questionActivityData.SingleChoice = //TODO: add the single choice options
 
-
+                                            if (item.QuestionType == Constants.MultipleChoiceQuestion)
+                                            {
+                                                questionActivityData.MultipleChoice = new MultipleChoiceModel();
+                                                questionActivityData.MultipleChoice.Choices = item.Checkbox.Choices.Select(x => new Choice() { Answer = x.Answer, IsSingle = x.IsSingle }).ToArray();
+                                            }
                                             if (item.QuestionType == Constants.MultipleChoiceQuestion && !string.IsNullOrEmpty(questionActivityData.Answer))
                                             {
                                                 var answerList = JsonSerializer.Deserialize<List<string>>(questionActivityData.Answer);
                                                 questionActivityData.MultipleChoice.SelectedChoices = answerList!;
                                             }
 
-                                            // Restore preserved selected answer from previous page load
+                                            if (item.QuestionType == Constants.SingleChoiceQuestion)
+                                            {
+                                                questionActivityData.SingleChoice = new SingleChoiceModel();
+                                                questionActivityData.SingleChoice.Choices = item.Radio.Choices.Select(x => new SingleChoice() { Answer = x.Answer }).ToArray();
+
+                                            }
                                             if (item.QuestionType == Constants.SingleChoiceQuestion && !string.IsNullOrEmpty(questionActivityData.Answer))
                                             {
                                                 questionActivityData.SingleChoice.SelectedAnswer = questionActivityData.Answer;

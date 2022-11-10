@@ -1,0 +1,57 @@
+﻿@using He.PipelineAssessment.UI.Features.Workflow.ViewModels
+@model He.PipelineAssessment.UI.Features.Workflow.ViewModels.MultiQuestion
+@{
+    var itemName = "Data.MultiQuestionActivityData[" + Model.Index + "].SingleChoice.SelectedAnswer";
+    var itemId = Model.Index + "radio_multi_select_";
+}
+
+<div class="govuk-form-group">
+    <h1 class="govuk-heading-l">
+        @Html.DisplayTextFor(m => m.Title)
+    </h1>
+    <label class="govuk-label govuk-label--m">
+        @Html.DisplayTextFor(m => m.Question)
+    </label>
+    @if (!string.IsNullOrEmpty(Model.QuestionHint))
+    {
+        <div id="event-name-hint" class="govuk-hint">
+            @Model.QuestionHint
+        </div>
+    }
+    
+    <div id="waste-hint" class="govuk-hint">
+        Select all that apply
+    </div>
+    <div class="govuk-radios" data-module="govuk-radios">
+        @foreach(var choice in Model.SingleChoice.Choices)
+        {
+            int iterrator = 1;
+            string isChecked = choice.Answer == Model.SingleChoice.SelectedAnswer? "checked" : "";
+            <div class="govuk-radios__item">
+                <input class="govuk-radios__input" name="@itemName" type="radio" value="@choice" id="@itemId@iterrator" checked="@isChecked">
+                <label class="govuk-label govuk-radios__label" for="@choice">@choice.Answer</label>
+            </div>
+            iterrator++;
+        }
+    </div>
+
+ 
+    @if (!string.IsNullOrEmpty(Model.QuestionGuidance))
+    {
+        <br />
+        <details class="govuk-details" data-module="govuk-details">
+            <summary class="govuk-details__summary">
+                <span class="govuk-details__summary-text">
+                    Question guidance
+                </span>
+            </summary>
+            <div class="govuk-details__text">
+                @Model.QuestionGuidance
+            </div>
+        </details>
+    }
+    @if (Model.DisplayComments)
+    {
+        @await Html.PartialAsync("_MultiComments", new MultiComment(){Index = Model.Index, Comment = Model.Comments})
+    }
+</div>

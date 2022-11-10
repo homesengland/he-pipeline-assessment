@@ -16,6 +16,29 @@ namespace He.PipelineAssessment.UI.Features.Workflow.ViewModels
         public string? Comments { get; set; }
         public string? Answer { get; set; }
         public Date Date { get; set; }
+        public decimal? Decimal { get; set; }
+        public SingleChoiceModel SingleChoice { get; set; } = new SingleChoiceModel();
+        public MultipleChoiceModel MultipleChoice { get; set; } = new MultipleChoiceModel();
+
+    }
+
+    public class MultipleChoiceModel
+    {
+        public List<string> SelectedChoices { get; set; } = null!;
+        public List<Choice> Choices { get; set; } = new List<Choice>();
+    }
+
+    public class SingleChoiceModel
+    {
+        public List<Choice> Choices { get; set; } = new List<Choice>();
+        public string SelectedAnswer { get; set; } = null!;
+    }
+
+
+    public class Choice
+    {
+        public string Answer { get; set; } = null!;
+        public bool IsSingle { get; set; }
     }
 
     public class Date

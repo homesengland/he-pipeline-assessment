@@ -55,6 +55,30 @@
                         Date = dateModel
                     })
                 }
+                @if (Model.Data.MultiQuestionActivityData![i].QuestionType == QuestionTypeConstants.CurrencyQuestion)
+                {
+                    @await Html.PartialAsync("_MultiCurrencyQuestion",new MultiQuestion()
+                    {
+                        Index = i,
+                        ActivityType = Model.Data.MultiQuestionActivityData[i].ActivityType,
+                        Answer = Model.Data.MultiQuestionActivityData[i].Answer,
+                        Comments = Model.Data.MultiQuestionActivityData[i].Comments,
+                        DisplayComments = Model.Data.MultiQuestionActivityData[i].DisplayComments,
+                        Question = Model.Data.MultiQuestionActivityData[i].Question,
+                        QuestionGuidance = Model.Data.MultiQuestionActivityData[i].QuestionGuidance,
+                        QuestionHint = Model.Data.MultiQuestionActivityData[i].QuestionHint,
+                        QuestionId = Model.Data.MultiQuestionActivityData[i].QuestionId,
+                        QuestionType = Model.Data.MultiQuestionActivityData[i].QuestionType,
+                        Title = Model.Data.MultiQuestionActivityData[i].Title,
+                        Decimal = Model.Data.MultiQuestionActivityData[i].Decimal
+                    })
+                }
+                @if (Model.Data.MultiQuestionActivityData![i].QuestionType == QuestionTypeConstants.MultipleChoiceQuestion)
+                {
+                }
+                @if (Model.Data.MultiQuestionActivityData![i].QuestionType == QuestionTypeConstants.SingleChoiceQuestion)
+                {
+                }
 
 
             }
