@@ -26,10 +26,14 @@
         @foreach(var choice in Model.SingleChoice.Choices)
         {
             int iterrator = 1;
-            string isChecked = choice.Answer == Model.SingleChoice.SelectedAnswer? "checked" : "";
+            string isChecked = "";
+            if (!String.IsNullOrEmpty(Model.SingleChoice.SelectedAnswer) && choice.Answer == Model.SingleChoice.SelectedAnswer)
+            {
+                isChecked = "checked";
+            }
             <div class="govuk-radios__item">
-                <input class="govuk-radios__input" name="@itemName" type="radio" value="@choice" id="@itemId@iterrator" checked="@isChecked">
-                <label class="govuk-label govuk-radios__label" for="@choice">@choice.Answer</label>
+                <input class="govuk-radios__input" name="@itemName" type="radio" value="@choice.Answer" id="@itemId@iterrator" @isChecked>
+                <label class="govuk-label govuk-radios__label" for="@choice.Answer">@choice.Answer</label>
             </div>
             iterrator++;
         }

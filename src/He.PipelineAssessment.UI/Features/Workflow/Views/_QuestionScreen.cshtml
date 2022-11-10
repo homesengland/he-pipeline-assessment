@@ -75,12 +75,48 @@
                 }
                 @if (Model.Data.MultiQuestionActivityData![i].QuestionType == QuestionTypeConstants.MultipleChoiceQuestion)
                 {
-                }
+                    @await Html.PartialAsync("_MultiCheckboxQuestion",new MultiQuestion()
+                    {
+                        Index = i,
+                        ActivityType = Model.Data.MultiQuestionActivityData[i].ActivityType,
+                        Answer = Model.Data.MultiQuestionActivityData[i].Answer,
+                        Comments = Model.Data.MultiQuestionActivityData[i].Comments,
+                        DisplayComments = Model.Data.MultiQuestionActivityData[i].DisplayComments,
+                        Question = Model.Data.MultiQuestionActivityData[i].Question,
+                        QuestionGuidance = Model.Data.MultiQuestionActivityData[i].QuestionGuidance,
+                        QuestionHint = Model.Data.MultiQuestionActivityData[i].QuestionHint,
+                        QuestionId = Model.Data.MultiQuestionActivityData[i].QuestionId,
+                        QuestionType = Model.Data.MultiQuestionActivityData[i].QuestionType,
+                        Title = Model.Data.MultiQuestionActivityData[i].Title,
+                        MultipleChoice = new MultipleChoiceModel()
+                        {
+                            SelectedChoices = Model.Data.MultiQuestionActivityData[i].MultipleChoice.SelectedChoices,
+                            Choices = Model.Data.MultiQuestionActivityData[i].MultipleChoice.Choices.Select(x=> new He.PipelineAssessment.UI.Features.Workflow.ViewModels.Choice(){Answer = x.Answer,IsSingle = x.IsSingle}).ToList()
+                        }
+                        })
+                    }
                 @if (Model.Data.MultiQuestionActivityData![i].QuestionType == QuestionTypeConstants.SingleChoiceQuestion)
                 {
+                    @await Html.PartialAsync("_MultiRadioButtonQuestion",new MultiQuestion()
+                    {
+                        Index = i,
+                        ActivityType = Model.Data.MultiQuestionActivityData[i].ActivityType,
+                        Answer = Model.Data.MultiQuestionActivityData[i].Answer,
+                        Comments = Model.Data.MultiQuestionActivityData[i].Comments,
+                        DisplayComments = Model.Data.MultiQuestionActivityData[i].DisplayComments,
+                        Question = Model.Data.MultiQuestionActivityData[i].Question,
+                        QuestionGuidance = Model.Data.MultiQuestionActivityData[i].QuestionGuidance,
+                        QuestionHint = Model.Data.MultiQuestionActivityData[i].QuestionHint,
+                        QuestionId = Model.Data.MultiQuestionActivityData[i].QuestionId,
+                        QuestionType = Model.Data.MultiQuestionActivityData[i].QuestionType,
+                        Title = Model.Data.MultiQuestionActivityData[i].Title,
+                        SingleChoice = new SingleChoiceModel()
+                        {
+                            SelectedAnswer = Model.Data.MultiQuestionActivityData[i].SingleChoice.SelectedAnswer,
+                            Choices = Model.Data.MultiQuestionActivityData[i].SingleChoice.Choices.Select(x=> new He.PipelineAssessment.UI.Features.Workflow.ViewModels.Choice(){Answer = x.Answer,IsSingle = x.IsSingle}).ToList()
+                        }
+                    })
                 }
-
-
             }
         }
     </fieldset>
