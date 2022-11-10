@@ -17,7 +17,7 @@ import {
 } from '../../models/custom-component-models';
 
 import {
-  IconProvider,
+  IconProvider
 } from '../icon-provider/icon-provider'
 
 
@@ -74,7 +74,8 @@ export class ElsaMultiQuestionRecordsProperty {
     this.updatePropertyModel();
   }
 
-  onDeleteChoiceClick(question: QuestionComponent) {
+  onDeleteChoiceClick(e: Event, question: QuestionComponent) {
+    e.stopPropagation();
     this.multiQuestionModel = { ...this.multiQuestionModel, questions: this.multiQuestionModel.questions.filter(x => x != question) };
     this.updatePropertyModel();
   }
@@ -113,7 +114,9 @@ export class ElsaMultiQuestionRecordsProperty {
   onAccordionQuestionClick(e: Event) {
     let element = e.currentTarget as HTMLElement;
     element.classList.toggle("active");
-    let panel = element.nextElementSibling as HTMLElement;
+    console.log(element.parentNode);
+    console.log(element.parentNode.querySelector('.panel'));
+    let panel = element.querySelector('.panel') as HTMLElement;
     if (panel.style.display === "block") {
       panel.style.display = "none";
     } else {
@@ -123,55 +126,78 @@ export class ElsaMultiQuestionRecordsProperty {
 
   renderQuestionField(fieldId, fieldName, fieldValue, multiQuestion, onChangedFunction) {
     return <div>
-             <div class="elsa-mb-1">
+      <div class="elsa-mb-1 elsa-mt-2">
                <div class="elsa-flex">
                  <div class="elsa-flex-1">
                    <label htmlFor={fieldId} class="elsa-block elsa-text-sm elsa-font-medium elsa-text-gray-700">
-                     Question Id
+                     {fieldName}
                    </label>
                  </div>
                </div>
              </div>
-      <input type="text" id={fieldId} name={fieldName} value={fieldValue} onChange={e => 
+      <input type="text" id={fieldId} name={fieldId} value={fieldValue} onChange={e => 
         onChangedFunction(e, multiQuestion)}
                     class="disabled:elsa-opacity-50 disabled:elsa-cursor-not-allowed focus:elsa-ring-blue-500 focus:elsa-border-blue-500 elsa-block elsa-w-full elsa-min-w-0 elsa-rounded-md sm:elsa-text-sm elsa-border-gray-300"/>
            </div>;
   }
 
+  renderCheckboxField(fieldId, fieldName, isChecked, multiQuestion, onChangedFunction) {
+    return <div>
+      <div class="elsa-mb-1 elsa-mt-2">
+        <div class="elsa-flex">
+          <div>
+            <input id={fieldId} name={fieldId} type="checkbox" checked={isChecked} value={'true'} onChange={e =>
+              onChangedFunction(e, multiQuestion)}
+                   class="focus:elsa-ring-blue-500 elsa-h-8 elsa-w-8 elsa-text-blue-600 elsa-border-gray-300 elsa-rounded" />
+          </div>
+           <div>
+             <label htmlFor={fieldId} class="elsa-block elsa-text-sm elsa-font-medium elsa-text-gray-700 elsa-p-1">
+               {fieldName}
+             </label>
+           </div>
+        </div>
+       </div>
+     </div>;
+  }
+
   render() {
     const questions = this.multiQuestionModel.questions;
-
     const renderChoiceEditor = (multiQuestion: QuestionComponent, index: number) => {
       const field = `question-${index}`;
       return (
-        <div id={`${field}-id`}><button type="button" class="accordion" onClick={this.onAccordionQuestionClick}>Section 1</button>
-          <div class="panel">
-            
-            {this.renderQuestionField(`${field}-questionid`, `${field}-questionid`, `${multiQuestion.id}`, multiQuestion, this.onChoiceIdentifierChanged)}
-            {this.renderQuestionField(`${field}-title`, `${field}-title`, `${multiQuestion.title}`, multiQuestion, this.onChoiceTitleChanged)}
-            {this.renderQuestionField(`${field}-questionText`, `${field}-questionText`, `${multiQuestion.questionText}`, multiQuestion, this.onChoiceQuestionChanged)}
-            {this.renderQuestionField(`${field}-questionHint`, `${field}-questionHint`, `${multiQuestion.questionHint}`, multiQuestion, this.onChoiceHintChanged)}
-            {this.renderQuestionField(`${field}-questionGuidance`, `${field}-questionGuidance`, `${multiQuestion.questionGuidance}`, multiQuestion, this.onChoiceGuidanceChanged)}
-            <input id={`${field}-displayComments`} name={`${field}-displayComments`} type="checkbox" checked={multiQuestion.displayComments} value={'true'}
-                   onChange={e => this.onDisplayCommentsBox(e, multiQuestion)}
-                   class="focus:elsa-ring-blue-500 elsa-h-8 elsa-w-8 elsa-text-blue-600 elsa-border-gray-300 elsa-rounded" />
-
-          </div>
-          <button type="button" onClick={() => this.onDeleteChoiceClick(multiQuestion)}
-                  class="elsa-h-5 elsa-w-5 elsa-mx-auto elsa-outline-none focus:elsa-outline-none" style={{ float: "right" }}>
+        <div id={`${field}-id`} class="accordion elsa-mb-4 elsa-rounded" onClick={this.onAccordionQuestionClick}><button type="button">Question {index+1}</button>
+          <button type="button" onClick={e => this.onDeleteChoiceClick(e, multiQuestion)}
+                  class="elsa-h-5 elsa-w-5 elsa-mx-auto elsa-outline-none focus:elsa-outline-none trashcan-icon" style={{ float: "right" }}>
             <TrashCanIcon options={this.iconProvider.getOptions()} />
           </button>
+          <div class="panel elsa-rounded">
+            {this.renderQuestionField(`${field}-questionid`, `Question Id`, `${multiQuestion.id}`, multiQuestion, this.onChoiceIdentifierChanged)}
+            {this.renderQuestionField(`${field}-title`, `Question Title`, `${multiQuestion.title}`, multiQuestion, this.onChoiceTitleChanged)}
+            {this.renderQuestionField(`${field}-questionText`, `Question Text`, `${multiQuestion.questionText}`, multiQuestion, this.onChoiceQuestionChanged)}
+            {this.renderQuestionField(`${field}-questionHint`, `Question Hint`, `${multiQuestion.questionHint}`, multiQuestion, this.onChoiceHintChanged)}
+            {this.renderQuestionField(`${field}-questionGuidance`, `Guidance`, `${multiQuestion.questionGuidance}`, multiQuestion, this.onChoiceGuidanceChanged)}
+            {this.renderCheckboxField(`${field}-displayComments`, `Display Comments`, `${multiQuestion.displayComments}`, multiQuestion, this.onDisplayCommentsBox)}
+          </div>
         </div>
       );
     };
  
     return (
       <div>
+        <div class="elsa-mb-1">
+          <div class="elsa-flex">
+            <div class="elsa-flex-1">
+              <label htmlFor="Questions" class="elsa-block elsa-text-sm elsa-font-medium elsa-text-gray-700">
+                List of questions
+              </label>
+            </div>
+          </div>
+        </div>
         {questions.map(renderChoiceEditor)}
         <button type="button" onClick={() => this.onAddQuestionClick("TextQuestion")}
                   class="elsa-inline-flex elsa-items-center elsa-px-4 elsa-py-2 elsa-border elsa-border-transparent elsa-shadow-sm elsa-text-sm elsa-font-medium elsa-rounded-md elsa-text-white elsa-bg-blue-600 hover:elsa-bg-blue-700 focus:elsa-outline-none focus:elsa-ring-2 focus:elsa-ring-offset-2 focus:elsa-ring-blue-500 elsa-mt-2">
           <PlusIcon options={this.iconProvider.getOptions()} />
-            Add Choice
+            Add Question
           </button>
         {/* </elsa-multi-expression-editor> */}
       </div>

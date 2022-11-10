@@ -16,7 +16,7 @@ namespace Elsa.CustomActivities.Activities.QuestionScreen
 )]
     public class QuestionScreen : Activity
     {
-        [ActivityInput(Hint = "Page title")]
+        [ActivityInput]
         public string PageTitle { get; set; } = null!;
 
         //[ActivityInput(Label = "List of questions", Hint = "Questions to be displayed on this page.", UIHint = "question-builder", DefaultSyntax = "Json", IsDesignerCritical = true)]
