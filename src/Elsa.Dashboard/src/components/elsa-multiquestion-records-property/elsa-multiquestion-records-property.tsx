@@ -50,6 +50,15 @@ export class ElsaMultiQuestionRecordsProperty {
   multiExpressionEditor: HTMLElsaMultiExpressionEditorElement;
   syntaxMultiChoiceCount: number = 0;
 
+  @Listen('updateQuestion', { target: "body" })
+  getQuestion(event: CustomEvent) {
+    if (event.detail) {
+      console.log(event);
+      console.log(event.detail);
+      this.updateQuestion(event.detail);
+    }
+  }
+
   async componentWillLoad() {
     const propertyModel = this.propertyModel;
     const choicesJson = propertyModel.expressions[SyntaxNames.Json]
@@ -88,14 +97,7 @@ export class ElsaMultiQuestionRecordsProperty {
     this.updatePropertyModel();
   }
 
-  @Listen('updateQuestion', { target: "body" })
-  getQuestion(event: CustomEvent) {
-    if (event.detail) {
-      console.log(event);
-      console.log(event.detail);
-      this.updateQuestion(event.detail);
-    }
-  }
+
 
   onAccordionQuestionClick(e: Event) {
     let element = e.currentTarget as HTMLElement;
