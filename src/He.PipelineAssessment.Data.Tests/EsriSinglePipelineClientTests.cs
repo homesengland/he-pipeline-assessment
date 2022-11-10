@@ -14,7 +14,7 @@ namespace He.PipelineAssessment.Data.Tests
     {
         [Theory]
         [AutoMoqData]
-        public async Task PostStartWorkflow_ReturnsNull_GivenHttpClientGivesBackNonSuccessResponse(
+        public async Task GetSinglePipelineData_ReturnsNull_GivenHttpClientGivesBackNonSuccessResponse(
             [Frozen] Mock<IHttpClientFactory> httpClientFactoryMock,
             [Frozen] Mock<HttpMessageHandler> httpMessageHandlerMock,
             string spid,
@@ -28,7 +28,7 @@ namespace He.PipelineAssessment.Data.Tests
                 httpMessageHandlerMock);
 
             //Act
-            var isNull = await  sut.GetSinglePipelineData(spid);
+            var isNull = await sut.GetSinglePipelineData(spid);
 
             //Assert
             Assert.Null(isNull);
@@ -36,7 +36,7 @@ namespace He.PipelineAssessment.Data.Tests
 
         [Theory]
         [AutoMoqData]
-        public async Task PostStartWorkflow_ReturnsValue_GivenHttpClientGivesBackNonSuccessResponse(
+        public async Task GetSinglePipelineData_ReturnsValue_GivenHttpClientGivesBackNonSuccessResponse(
             [Frozen] Mock<IHttpClientFactory> httpClientFactoryMock,
             [Frozen] Mock<HttpMessageHandler> httpMessageHandlerMock,
             string spid,
@@ -51,6 +51,48 @@ namespace He.PipelineAssessment.Data.Tests
 
             //Act
             var result = await sut.GetSinglePipelineData(spid);
+
+            //Assert
+            Assert.NotNull(result);
+        }
+
+        [Theory]
+        [AutoMoqData]
+        public async Task GetSinglePipelineDataList_ReturnsNull_GivenHttpClientGivesBackNonSuccessResponse(
+            [Frozen] Mock<IHttpClientFactory> httpClientFactoryMock,
+            [Frozen] Mock<HttpMessageHandler> httpMessageHandlerMock,
+            string resp,
+            EsriSinglePipelineClient sut)
+        {
+            //Arrange
+            HttpClientTestHelpers.SetupHttpClientWithExpectedStatusCode(resp,
+                HttpStatusCode.BadRequest,
+                httpClientFactoryMock,
+                httpMessageHandlerMock);
+
+            //Act
+            var isNull = await sut.GetSinglePipelineData();
+
+            //Assert
+            Assert.Null(isNull);
+        }
+
+        [Theory]
+        [AutoMoqData]
+        public async Task GetSinglePipelineDataList_ReturnsValue_GivenHttpClientGivesBackNonSuccessResponse(
+            [Frozen] Mock<IHttpClientFactory> httpClientFactoryMock,
+            [Frozen] Mock<HttpMessageHandler> httpMessageHandlerMock,
+            string resp,
+            EsriSinglePipelineClient sut)
+        {
+            //Arrange
+            HttpClientTestHelpers.SetupHttpClientWithExpectedStatusCode(resp,
+                HttpStatusCode.OK,
+                httpClientFactoryMock,
+                httpMessageHandlerMock);
+
+            //Act
+            var result = await sut.GetSinglePipelineData();
 
             //Assert
             Assert.NotNull(result);
