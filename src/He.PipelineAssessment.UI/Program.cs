@@ -5,10 +5,8 @@ using He.PipelineAssessment.UI;
 using He.PipelineAssessment.UI.Features.Workflow.SaveAndContinue;
 using MediatR;
 using Microsoft.AspNetCore.DataProtection;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc.Razor;
 using Microsoft.EntityFrameworkCore;
-using static Microsoft.ApplicationInsights.MetricDimensionNames.TelemetryContext;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -21,6 +19,7 @@ builder.Services.AddControllersWithViews();
 builder.Services.Configure<RazorViewEngineOptions>(options =>
 {
     options.ViewLocationFormats.Add($"/Features/{{1}}/Views/{{0}}{RazorViewEngine.ViewExtension}");
+    options.ViewLocationFormats.Add($"/Features/{{1}}/Views/Shared/{{0}}{RazorViewEngine.ViewExtension}");
     options.ViewLocationFormats.Add($"/Views/Shared/{{0}}{RazorViewEngine.ViewExtension}");
 });
 

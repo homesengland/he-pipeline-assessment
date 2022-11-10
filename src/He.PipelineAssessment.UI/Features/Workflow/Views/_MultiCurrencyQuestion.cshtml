@@ -5,18 +5,10 @@
 }
 
 <div class="govuk-form-group">
-    <h1 class="govuk-heading-l">
-        @Html.DisplayTextFor(m => m.Title)
-    </h1>
-    <label class="govuk-label govuk-label--m">
-        @Html.DisplayTextFor(m => m.Question)
-    </label>
-    @if (!string.IsNullOrEmpty(Model.QuestionHint))
-    {
-        <div id="event-name-hint" class="govuk-hint">
-            @Model.QuestionHint
-        </div>
-    }
+    @await Html.PartialAsync("_QuestionTitle", Model.Title)
+
+    @await Html.PartialAsync("_QuestionText", Model.Question)
+    @await Html.PartialAsync("_QuestionHint", Model.QuestionHint)
     
     <div class="govuk-input__wrapper">
         <div class="govuk-input__prefix" aria-hidden="true">£</div>
@@ -25,22 +17,6 @@
     </div>
 
  
-    @if (!string.IsNullOrEmpty(Model.QuestionGuidance))
-    {
-        <br />
-        <details class="govuk-details" data-module="govuk-details">
-            <summary class="govuk-details__summary">
-                <span class="govuk-details__summary-text">
-                    Question guidance
-                </span>
-            </summary>
-            <div class="govuk-details__text">
-                @Model.QuestionGuidance
-            </div>
-        </details>
-    }
-    @if (Model.DisplayComments)
-    {
-        @await Html.PartialAsync("_MultiComments", new MultiComment(){Index = Model.Index, Comment = Model.Comments})
-    }
+    @await Html.PartialAsync("_QuestionGuidance", Model.QuestionGuidance)
+    @await Html.PartialAsync("_MultiComments", new MultiComment(){Index = Model.Index, Comment = Model.Comments,DisplayComments = Model.DisplayComments})
 </div>
