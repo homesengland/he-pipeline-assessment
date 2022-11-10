@@ -1,4 +1,6 @@
-﻿using System.Globalization;
+﻿using System.ComponentModel.DataAnnotations;
+using System.Globalization;
+using System.Text.Json;
 
 namespace Elsa.CustomWorkflow.Sdk.Models.Workflow
 {
@@ -192,7 +194,7 @@ namespace Elsa.CustomWorkflow.Sdk.Models.Workflow
         public int? Day { get; set; }
         [Range(1, 12)]
         public int? Month { get; set; }
-        [Range(1, 3000)]
+        [Range(1000, 3000)]
         public int? Year { get; set; }
     }
 }

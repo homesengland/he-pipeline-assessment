@@ -1,10 +1,16 @@
 ﻿@model He.PipelineAssessment.UI.Features.Workflow.SaveAndContinue.SaveAndContinueCommand
-
-@if (!Model.IsValid)
-{
-    @await Html.PartialAsync("_ValidationSummary",Model.ValidationMessages)
+@{
+    var errorFormClass = !Model.IsValid ? "govuk-form-group--error" : "";
+    var errorFieldClass = !Model.IsValid ? "govuk-input--error" : "";
 }
-<div class="govuk-form-group">
+@*<div class="govuk-list govuk-error-summary__list validation-summary-errors">
+    @if (!Model.IsValid)
+    {
+        @await Html.PartialAsync("_ValidationSummary",Model.ValidationMessages)
+    }
+</div>*@
+
+<div class="govuk-form-group @errorFormClass">
     <h1 class="govuk-heading-l">
         @Html.DisplayTextFor(m => m.Data.QuestionActivityData!.Title)
     </h1>
@@ -17,13 +23,20 @@
             @Model.Data.QuestionActivityData.QuestionHint
         </div>
     }
+    
+    @foreach(var item in Model.ValidationMessages)
+    {
+        <p class="govuk-error-message">
+            <span class="govuk-visually-hidden">Error:</span> @item
+        </p>
+    }
 
     <div class="govuk-date-input__item">
         <div class="govuk-form-group">
             <label class="govuk-label govuk-date-input__label" for="date-day">
                 Day
             </label>
-            @Html.TextBoxFor(m => Model.Data.QuestionActivityData.Date.Day, new {@class = "govuk-input govuk-date-input__input govuk-input--width-2", @name="date-day", @type = "number", @inputmode="numeric"})
+            @Html.TextBoxFor(m => Model.Data.QuestionActivityData.Date.Day, new {@class = "govuk-input govuk-date-input__input govuk-input--width-2 "+errorFieldClass, @name="date-day", @type = "number", @inputmode="numeric"})
         </div>
     </div>
     <div class="govuk-date-input__item">
@@ -31,7 +44,7 @@
             <label class="govuk-label govuk-date-input__label" for="date-month">
                 Month
             </label>
-            @Html.TextBoxFor(m => Model.Data.QuestionActivityData.Date.Month, new {@class = "govuk-input govuk-date-input__input govuk-input--width-2", @name="date-month", @type = "number", @inputmode="numeric"})
+            @Html.TextBoxFor(m => Model.Data.QuestionActivityData.Date.Month, new {@class = "govuk-input govuk-date-input__input govuk-input--width-2 "+errorFieldClass, @name="date-month", @type = "number", @inputmode="numeric"})
         </div>
     </div>
     <div class="govuk-date-input__item">
@@ -39,7 +52,7 @@
             <label class="govuk-label govuk-date-input__label" for="date-year">
                 Year
             </label>
-            @Html.TextBoxFor(m => Model.Data.QuestionActivityData.Date.Year, new {@class = "govuk-input govuk-date-input__input govuk-input--width-3", @name="date-year", @type = "number", @inputmode="numeric"})
+            @Html.TextBoxFor(m => Model.Data.QuestionActivityData.Date.Year, new {@class = "govuk-input govuk-date-input__input govuk-input--width-3 "+errorFieldClass, @name="date-year", @type = "number", @inputmode="numeric"})
         </div>
     </div>
 

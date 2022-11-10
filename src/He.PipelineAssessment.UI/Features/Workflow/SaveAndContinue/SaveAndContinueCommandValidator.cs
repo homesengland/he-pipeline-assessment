@@ -1,6 +1,6 @@
 ﻿using Elsa.CustomWorkflow.Sdk;
-using Elsa.CustomWorkflow.Sdk.Models.Workflow;
 using FluentValidation;
+using System.Globalization;
 
 namespace He.PipelineAssessment.UI.Features.Workflow.SaveAndContinue
 {
@@ -43,9 +43,27 @@ namespace He.PipelineAssessment.UI.Features.Workflow.SaveAndContinue
 
             RuleFor(x => x.Data.QuestionActivityData!.Date).Must(date =>
             {
-                if (date.Day == null && date.Month == null && date.Year == null) return true;                
-                DateTime temp;
-                if (DateTime.TryParse(@date!.Day.ToString() +"/"+ date!.Month.ToString() +"/"+ date!.Year.ToString(), out temp))
+                if (date.Day == null)
+                {
+                    return true;
+                }
+                if (date.Day != null && date.Day > 31)
+                {
+                    return false;
+                }
+                else
+                {
+                    return true;
+                }
+            }).WithMessage("Enter a Valid Day");
+
+            RuleFor(x => x.Data.QuestionActivityData!.Date).Must(date =>
+            {
+                if (date.Day == null && date.Month == null && date.Year == null) return true;
+                var dateString =
+                    $"{date.Year}-{date.Month}-{date.Day}";
+                bool isValidDate = DateTime.TryParseExact(dateString, Constants.DateFormat, CultureInfo.InvariantCulture, DateTimeStyles.AdjustToUniversal, out DateTime parsedDateTime);
+                if (isValidDate)
                 {
                     return true;
                 }
@@ -57,8 +75,10 @@ namespace He.PipelineAssessment.UI.Features.Workflow.SaveAndContinue
                 .WithMessage(x =>
                 {
                     var selectedDate = x.Data!.QuestionActivityData!.Date;
-                    DateTime temp;
-                    if (DateTime.TryParse(selectedDate!.Day.ToString() + "/" + selectedDate!.Month.ToString() + "/" + selectedDate!.Year.ToString(), out temp))
+                    var dateString =
+                        $"{selectedDate.Year}-{selectedDate.Month}-{selectedDate.Day}";
+                    bool isValidDate = DateTime.TryParseExact(dateString, Constants.DateFormat, CultureInfo.InvariantCulture, DateTimeStyles.AdjustToUniversal, out DateTime parsedDateTime);
+                    if (isValidDate)
                     {
                         return string.Empty;
                     }
