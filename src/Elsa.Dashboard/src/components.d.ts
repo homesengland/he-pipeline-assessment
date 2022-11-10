@@ -19,10 +19,7 @@ export namespace Components {
         "propertyModel": ActivityDefinitionProperty;
     }
     interface ElsaQuestion {
-        "id": string;
-        "questionSeed": QuestionComponent;
-        "questionType": string;
-        "updateParentCallback": Function;
+        "question": QuestionComponent;
     }
     interface ElsaSinglechoiceRecordsProperty {
         "activityModel": ActivityModel;
@@ -74,10 +71,8 @@ declare namespace LocalJSX {
         "propertyModel"?: ActivityDefinitionProperty;
     }
     interface ElsaQuestion {
-        "id"?: string;
-        "questionSeed"?: QuestionComponent;
-        "questionType"?: string;
-        "updateParentCallback"?: Function;
+        "onUpdateQuestion"?: (event: CustomEvent<QuestionComponent>) => void;
+        "question"?: QuestionComponent;
     }
     interface ElsaSinglechoiceRecordsProperty {
         "activityModel"?: ActivityModel;

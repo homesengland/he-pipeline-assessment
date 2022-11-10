@@ -1,4 +1,4 @@
-import { Component, h, Prop, State } from '@stencil/core';
+import { Component, h, Prop, State, Event, EventEmitter } from '@stencil/core';
 
 import {
   HTMLElsaMultiExpressionEditorElement,
@@ -7,7 +7,7 @@ import {
 } from '../../models/elsa-interfaces';
 
 import {
-  Question, QuestionComponent
+  QuestionComponent
 } from '../../models/custom-component-models';
 
 import {
@@ -22,11 +22,7 @@ import {
 
 export class MultiQuestionComponent {
 
-  @Prop() questionType: string;
-  @Prop() updateParentCallback: Function;
-  @Prop() id: string;
-  @Prop() questionSeed: QuestionComponent
-  @State() question: Question = new Question();
+  @Prop() question: QuestionComponent
   @State() iconProvider = new IconProvider();
 
   supportedSyntaxes: Array<string> = [SyntaxNames.JavaScript, SyntaxNames.Liquid];
@@ -34,75 +30,150 @@ export class MultiQuestionComponent {
   syntaxMultiChoiceCount: number = 0;
 
   async componentWillLoad() {
-    this.question = this.defaultActivityModel();
+
   }
 
-  defaultActivityModel() {
-    var activity = new Question();
-    activity.id = this.id;
-    activity.questionType = this.questionType;
-    return activity;
+  /*  @Event({ bubbles: true, composed: true }) questionChanged: EventEmitter<QuestionComponent>;*/
+  @Event({
+    eventName: 'updateQuestion',
+    composed: true,
+    cancelable: true,
+    bubbles: true,
+  }) updateQuestion: EventEmitter<QuestionComponent>;
+
+
+  updatePropertyModel(question: QuestionComponent) {
+    console.log('updating parent')
+    console.log(question);
+    this.updateQuestion.emit(question);
   }
 
-  updatePropertyModel() {
-    this.updateParentCallback(this.question);
+  onTitleChanged = (e: Event, updatedQuestion: QuestionComponent) =>  {
+    console.log('Setting title');
+    updatedQuestion.title = (e.currentTarget as HTMLInputElement).value.trim();
+    this.updatePropertyModel(updatedQuestion);
   }
 
-  onTitleChanged(e: Event) {
-    this.question.title = (e.currentTarget as HTMLInputElement).value.trim();
-    this.updatePropertyModel();
+
+  onIdentifierChanged(e: Event, updatedQuestion: QuestionComponent) {
+    updatedQuestion.id = (e.currentTarget as HTMLInputElement).value.trim();
+    this.updatePropertyModel(updatedQuestion);
   }
 
-  onIdentifierChanged(e: Event, question: Question) {
-    question.id = (e.currentTarget as HTMLInputElement).value.trim();
-    this.updatePropertyModel();
+  onQuestionChanged(e: Event, updatedQuestion: QuestionComponent, globalUpdate: EventEmitter) {
+    console.log('Updating Question');
+    console.log(e)
+    console.log(e.currentTarget);
+    updatedQuestion.questionText = (e.currentTarget as HTMLInputElement).value.trim();
+    console.log(updatedQuestion);
+    globalUpdate.emit(updatedQuestion);
+  };
+
+onGuidanceChanged(e: Event, updatedQuestion: QuestionComponent, globalUpdate: EventEmitter) {
+  console.log('Updating Question');
+  console.log(e)
+  console.log(e.currentTarget);
+  updatedQuestion.questionGuidance = (e.currentTarget as HTMLInputElement).value.trim();
+  console.log(updatedQuestion);
+  globalUpdate.emit(updatedQuestion);
   }
 
-  onQuestionChanged(e: Event) {
-    this.question.questionText = (e.currentTarget as HTMLInputElement).value.trim();
-    this.updatePropertyModel();
+  onHintChanged(e: Event, updatedQuestion: QuestionComponent) {
+    updatedQuestion.questionHint = (e.currentTarget as HTMLInputElement).value.trim();
+    this.updatePropertyModel(updatedQuestion);
   }
 
-  onGuidanceChanged(e: Event, question: Question) {
-    question.questionGuidance = (e.currentTarget as HTMLInputElement).value.trim();
-    this.updatePropertyModel();
-  }
-
-  onHintChanged(e: Event, question: Question) {
-    question.questionHint = (e.currentTarget as HTMLInputElement).value.trim();
-    this.updatePropertyModel();
-  }
-
-  onDisplayCommentsBox(e: Event, question: Question) {
+  onDisplayCommentsBox(e: Event, updatedQuestion: QuestionComponent) {
     const checkbox = (e.target as HTMLInputElement);
-    question.displayComments = checkbox.checked;
-    this.updatePropertyModel();
+    updatedQuestion.displayComments = checkbox.checked;
+    this.updatePropertyModel(updatedQuestion);
+  }
+
+  onAccordionQuestionClick(e: Event) {
+    let element = e.currentTarget as HTMLElement;
+    element.classList.toggle("active");
+    let panel = element.nextElementSibling as HTMLElement;
+    if (panel.style.display === "block") {
+      panel.style.display = "none";
+    } else {
+      panel.style.display = "block";
+    }
+  }
+
+  renderQuestionField(fieldId, fieldName, fieldValue, onChangedFunction, questionToUpdate) {
+    return <div>
+      <div class="elsa-mb-1">
+        <div class="elsa-flex">
+          <div class="elsa-flex-1">
+            <label htmlFor={fieldId} class="elsa-block elsa-text-sm elsa-font-medium elsa-text-gray-700">
+              {fieldName}
+            </label>
+          </div>
+        </div>
+      </div>
+      <input type="text" id={fieldId} name={fieldId} value={fieldValue} onChange={e =>
+        onChangedFunction(e, questionToUpdate, this.updateQuestion)}
+        class="disabled:elsa-opacity-50 disabled:elsa-cursor-not-allowed focus:elsa-ring-blue-500 focus:elsa-border-blue-500 elsa-block elsa-w-full elsa-min-w-0 elsa-rounded-md sm:elsa-text-sm elsa-border-gray-300" />
+    </div>;
+  }
+
+  renderCheckboxField(fieldId, fieldName, isChecked, onChangedFunction, questionToUpdate) {
+    return <div>
+      <div class="elsa-mb-1">
+        <div class="elsa-flex">
+          <div class="elsa-flex-1">
+            <label htmlFor={fieldId} class="elsa-block elsa-text-sm elsa-font-medium elsa-text-gray-700">
+              {fieldName}
+            </label>
+          </div>
+          <div class="elsa-flex-1">
+            <input id={fieldId} name={fieldId} type="checkbox" checked={isChecked} value={'true'}
+              onChange={e => onChangedFunction(e, questionToUpdate)}
+              class="focus:elsa-ring-blue-500 elsa-h-8 elsa-w-8 elsa-text-blue-600 elsa-border-gray-300 elsa-rounded" />
+          </div>
+        </div>
+      </div>
+    </div>;
   }
 
   render() {
+    const field = `question-${this.question.id}`;
+    console.log('rendering');
+    console.log(this.question);
     return (
-      <div>
-        <div>
-          <input type="text" id={this.question.id + "_title"} name="title" value={this.question.title} onChange={e => this.onTitleChanged(e)}
-               class="disabled:elsa-opacity-50 disabled:elsa-cursor-not-allowed focus:elsa-ring-blue-500 focus:elsa-border-blue-500 elsa-block elsa-w-full elsa-min-w-0 elsa-rounded-md sm:elsa-text-sm elsa-border-gray-300"
-               disabled={false}/>
-          {/*<input type="text" value={this.question.title} onChange={e => this.onTitleChanged(e)}*/}
-          {/*  class="focus:elsa-ring-blue-500 focus:elsa-border-blue-500 elsa-block elsa-w-full elsa-min-w-0 elsa-rounded-md sm:elsa-text-sm elsa-border-gray-300" />*/}
-          <br/>
-          <input type="text" value={this.question.questionText} onChange={e => this.onQuestionChanged(e)}
-            class="focus:elsa-ring-blue-500 focus:elsa-border-blue-500 elsa-block elsa-w-full elsa-min-w-0 elsa-rounded-md sm:elsa-text-sm elsa-border-gray-300" />
-          <br />
-          <input type="text" value={this.question.questionHint} onChange={e => this.onHintChanged(e, this.question)}
-            class="focus:elsa-ring-blue-500 focus:elsa-border-blue-500 elsa-block elsa-w-full elsa-min-w-0 elsa-rounded-md sm:elsa-text-sm elsa-border-gray-300" />
-          <br />
-          <textarea value={this.question.questionGuidance} onChange={e => this.onGuidanceChanged(e, this.question)}
-            class="focus:elsa-ring-blue-500 focus:elsa-border-blue-500 elsa-block elsa-w-full elsa-min-w-0 elsa-rounded-md sm:elsa-text-sm elsa-border-gray-300" />
-          <br />
-          <input id={"displayCommentsCheckbox_" + this.question.id} name={"displayCommentsCheckbox_" + this.question.id} type="checkbox" checked={this.question.displayComments} value={'true'}
-            onChange={e => this.onDisplayCommentsBox(e, this.question)}
-            class="focus:elsa-ring-blue-500 elsa-h-8 elsa-w-8 elsa-text-blue-600 elsa-border-gray-300 elsa-rounded" />
-        </div>
-      </div>
+          <div>
+
+        {this.renderQuestionField(`${field}-questionid`, `Identifier`, this.question.id, this.onIdentifierChanged, this.question)}
+        {this.renderQuestionField(`${field}-title`, `Title`, this.question.title, this.onTitleChanged, this.question)}
+        {this.renderQuestionField(`${field}-questionText`, `Question`, this.question.questionText, this.onQuestionChanged, this.question)}
+        {this.renderQuestionField(`${field}-questionHint`, `Hint`, this.question.questionHint, this.onHintChanged, this.question)}
+        {this.renderQuestionField(`${field}-questionGuidance`, `Guidance`, this.question.questionGuidance, this.onGuidanceChanged, this.question)}
+          {this.renderCheckboxField(`${field}-displayCommentBox`, `Display Comments`, this.question.displayComments, this.onDisplayCommentsBox, this.question)}
+
+          </div>
+
+      //<div>
+      //  <div>
+      //    <input type="text" id={this.question.id + "_title"} name="title" value={this.question.title} onChange={e => this.onTitleChanged(e)}
+      //         class="disabled:elsa-opacity-50 disabled:elsa-cursor-not-allowed focus:elsa-ring-blue-500 focus:elsa-border-blue-500 elsa-block elsa-w-full elsa-min-w-0 elsa-rounded-md sm:elsa-text-sm elsa-border-gray-300"
+      //         disabled={false}/>
+      //    {/*<input type="text" value={this.question.title} onChange={e => this.onTitleChanged(e)}*/}
+      //    {/*  class="focus:elsa-ring-blue-500 focus:elsa-border-blue-500 elsa-block elsa-w-full elsa-min-w-0 elsa-rounded-md sm:elsa-text-sm elsa-border-gray-300" />*/}
+      //    <br/>
+      //    <input type="text" value={this.question.questionText} onChange={e => this.onQuestionChanged(e)}
+      //      class="focus:elsa-ring-blue-500 focus:elsa-border-blue-500 elsa-block elsa-w-full elsa-min-w-0 elsa-rounded-md sm:elsa-text-sm elsa-border-gray-300" />
+      //    <br />
+      //    <input type="text" value={this.question.questionHint} onChange={e => this.onHintChanged(e, this.question)}
+      //      class="focus:elsa-ring-blue-500 focus:elsa-border-blue-500 elsa-block elsa-w-full elsa-min-w-0 elsa-rounded-md sm:elsa-text-sm elsa-border-gray-300" />
+      //    <br />
+      //    <textarea value={this.question.questionGuidance} onChange={e => this.onGuidanceChanged(e, this.question)}
+      //      class="focus:elsa-ring-blue-500 focus:elsa-border-blue-500 elsa-block elsa-w-full elsa-min-w-0 elsa-rounded-md sm:elsa-text-sm elsa-border-gray-300" />
+      //    <br />
+      //    <input id={"displayCommentsCheckbox_" + this.question.id} name={"displayCommentsCheckbox_" + this.question.id} type="checkbox" checked={this.question.displayComments} value={'true'}
+      //      onChange={e => this.onDisplayCommentsBox(e, this.question)}
+      //      class="focus:elsa-ring-blue-500 elsa-h-8 elsa-w-8 elsa-text-blue-600 elsa-border-gray-300 elsa-rounded" />
+      //  </div>
+      //</div>
     );
   }
 }
