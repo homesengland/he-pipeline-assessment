@@ -142,11 +142,11 @@ namespace Elsa.Server.Features.Workflow.MultiSaveAndContinue
                 var dictionList = workflowInstance.ActivityData
                     .FirstOrDefault(x => x.Key == nextActivityId).Value;
 
-                var dictionaryQuestions = dictionList.FirstOrDefault(x => x.Key == "Questions").Value;
+                var dictionaryQuestions = (AssessmentQuestions)dictionList.FirstOrDefault(x => x.Key == "Questions").Value;
 
                 if (dictionaryQuestions != null)
                 {
-                    var questionList = (List<Question>)dictionaryQuestions;
+                    var questionList = (List<Question>)dictionaryQuestions.Questions;
                     if (questionList!.Any())
                     {
                         var assessments = new List<AssessmentQuestion>();

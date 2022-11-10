@@ -7,6 +7,8 @@
         public string ActivityType { get; set; } = null!;
         public string PreviousActivityId { get; set; } = null!;
 
+        public string PageTitle { get; set; } = null!;
+
         public QuestionActivityData QuestionActivityData { get; set; } = null!;
 
         public List<QuestionActivityData> MultiQuestionActivityData { get; set; } = null!;

@@ -66,7 +66,8 @@ namespace Elsa.Server.Features.Workflow.LoadWorkflowActivity
 
                                 result.Data.ActivityType = dbAssessmentQuestion.ActivityType;
                                 result.Data.PreviousActivityId = dbAssessmentQuestion.PreviousActivityId;
-
+                                result.Data.PageTitle = (string)activityDataDictionary!
+                                    .FirstOrDefault(x => x.Key == "PageTitle").Value;
                                 if (dbAssessmentQuestion.ActivityType == "QuestionScreen")
                                 {
                                     var dbQuestions = await _elsaCustomRepository.GetAssessmentQuestions(
