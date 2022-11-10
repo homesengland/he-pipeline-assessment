@@ -10,6 +10,10 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Content Remove="appsettings.Development.json" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="Elsa" Version="2.8.2" />
     <PackageReference Include="Elsa.Activities.Http" Version="2.8.2" />
     <PackageReference Include="Elsa.Persistence.EntityFramework.SqlServer" Version="2.8.2" />
@@ -32,6 +36,10 @@
 
   <ItemGroup>
     <Folder Include="wwwroot\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="appsettings.Development.json" />
   </ItemGroup>
 
   <ItemGroup>

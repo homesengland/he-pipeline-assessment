@@ -1,14 +1,15 @@
 using Elsa.CustomWorkflow.Sdk.HttpClients;
 using FluentValidation;
+using He.PipelineAssessment.Data.SinglePipeline;
 using He.PipelineAssessment.Infrastructure.Data;
+using He.PipelineAssessment.Infrastructure.Repository;
 using He.PipelineAssessment.UI;
+using He.PipelineAssessment.UI.Features.Assessments;
 using He.PipelineAssessment.UI.Features.Workflow.SaveAndContinue;
 using MediatR;
 using Microsoft.AspNetCore.DataProtection;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc.Razor;
 using Microsoft.EntityFrameworkCore;
-using static Microsoft.ApplicationInsights.MetricDimensionNames.TelemetryContext;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -48,8 +49,23 @@ builder.Services.AddDbContext<PipelineAssessmentContext>(config =>
 builder.Services.AddScoped<DbContext>(provider => provider.GetRequiredService<PipelineAssessmentContext>());
 builder.Services.AddScoped<IValidator<SaveAndContinueCommand>, SaveAndContinueCommandValidator>();
 builder.Services.AddDataProtection().PersistKeysToDbContext<PipelineAssessmentContext>();
+builder.Services.AddScoped<IAssessmentRepository, AssessmentRepository>();
+builder.Services.AddScoped<IEsriSinglePipelineClient, EsriSinglePipelineClient>();
+builder.Services.AddScoped<IEsriSinglePipelineDataJsonHelper, EsriSinglePipelineDataJsonHelper>();
+
+string singlePipelineURL = builder.Configuration["Datasources:SinglePipeline"];
+
+builder.Services.AddHttpClient("SinglePipelineClient", client =>
+{
+    client.BaseAddress = new Uri(singlePipelineURL);
+});
+
+
 
 var app = builder.Build();
+
+
+
 
 if (app.Environment.IsDevelopment())
 {
