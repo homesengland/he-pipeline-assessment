@@ -152,10 +152,9 @@ export class ElsaMultiQuestionRecordsProperty {
     const renderChoiceEditor = (multiQuestion: QuestionComponent, index: number) => {
       const field = `question-${index}`;
       return (
-        <div id={`${field}-id`}>          <button type="button" onClick={(e) => this.onDeleteChoiceClick(e, multiQuestion)}
-          class="elsa-h-5 elsa-w-5 elsa-mx-auto elsa-outline-none focus:elsa-outline-none" style={{ float: "right" }}>
-          <TrashCanIcon options={this.iconProvider.getOptions()} />
-        </button><button type="button" class="accordion" onClick={this.onAccordionQuestionClick}>Section 1</button>
+          <div id={`${field}-id`} class="accordion elsa-mb-4 elsa-rounded" onClick={this.onAccordionQuestionClick}><button type="button">Question {index + 1}</button>
+              <button type="button" onClick={e => this.onDeleteChoiceClick(e, multiQuestion)}
+                  class="elsa-h-5 elsa-w-5 elsa-mx-auto elsa-outline-none focus:elsa-outline-none trashcan-icon" style={{ float: "right" }}>
 
           <elsa-question class="pannel" question={multiQuestion}></elsa-question>
         </div>
