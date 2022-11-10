@@ -48,56 +48,37 @@ export class MultiQuestionComponent {
     this.updateQuestion.emit(question);
   }
 
-  onTitleChanged = (e: Event, updatedQuestion: QuestionComponent) =>  {
+  onTitleChanged = (e: Event, updatedQuestion: QuestionComponent, eventEmitter: EventEmitter) =>  {
     console.log('Setting title');
     updatedQuestion.title = (e.currentTarget as HTMLInputElement).value.trim();
-    this.updatePropertyModel(updatedQuestion);
+    eventEmitter.emit(updatedQuestion);
   }
 
 
-  onIdentifierChanged(e: Event, updatedQuestion: QuestionComponent) {
+  onIdentifierChanged(e: Event, updatedQuestion: QuestionComponent, eventEmitter: EventEmitter) {
     updatedQuestion.id = (e.currentTarget as HTMLInputElement).value.trim();
-    this.updatePropertyModel(updatedQuestion);
+    eventEmitter.emit(updatedQuestion);
   }
 
-  onQuestionChanged(e: Event, updatedQuestion: QuestionComponent, globalUpdate: EventEmitter) {
-    console.log('Updating Question');
-    console.log(e)
-    console.log(e.currentTarget);
+  onQuestionChanged(e: Event, updatedQuestion: QuestionComponent, eventEmitter: EventEmitter) {
     updatedQuestion.questionText = (e.currentTarget as HTMLInputElement).value.trim();
-    console.log(updatedQuestion);
-    globalUpdate.emit(updatedQuestion);
+    eventEmitter.emit(updatedQuestion);
   };
 
-onGuidanceChanged(e: Event, updatedQuestion: QuestionComponent, globalUpdate: EventEmitter) {
-  console.log('Updating Question');
-  console.log(e)
-  console.log(e.currentTarget);
-  updatedQuestion.questionGuidance = (e.currentTarget as HTMLInputElement).value.trim();
-  console.log(updatedQuestion);
-  globalUpdate.emit(updatedQuestion);
+  onGuidanceChanged(e: Event, updatedQuestion: QuestionComponent, eventEmitter: EventEmitter) {
+    updatedQuestion.questionGuidance = (e.currentTarget as HTMLInputElement).value.trim();
+    eventEmitter.emit(updatedQuestion);
   }
 
-  onHintChanged(e: Event, updatedQuestion: QuestionComponent) {
+  onHintChanged(e: Event, updatedQuestion: QuestionComponent, eventEmitter: EventEmitter) {
     updatedQuestion.questionHint = (e.currentTarget as HTMLInputElement).value.trim();
-    this.updatePropertyModel(updatedQuestion);
+    eventEmitter.emit(updatedQuestion);
   }
 
-  onDisplayCommentsBox(e: Event, updatedQuestion: QuestionComponent) {
+  onDisplayCommentsBox(e: Event, updatedQuestion: QuestionComponent, eventEmitter: EventEmitter) {
     const checkbox = (e.target as HTMLInputElement);
     updatedQuestion.displayComments = checkbox.checked;
-    this.updatePropertyModel(updatedQuestion);
-  }
-
-  onAccordionQuestionClick(e: Event) {
-    let element = e.currentTarget as HTMLElement;
-    element.classList.toggle("active");
-    let panel = element.nextElementSibling as HTMLElement;
-    if (panel.style.display === "block") {
-      panel.style.display = "none";
-    } else {
-      panel.style.display = "block";
-    }
+    eventEmitter.emit(updatedQuestion);
   }
 
   renderQuestionField(fieldId, fieldName, fieldValue, onChangedFunction, questionToUpdate) {
@@ -119,16 +100,16 @@ onGuidanceChanged(e: Event, updatedQuestion: QuestionComponent, globalUpdate: Ev
 
   renderCheckboxField(fieldId, fieldName, isChecked, onChangedFunction, questionToUpdate) {
     return <div>
-      <div class="elsa-mb-1">
+      <div class="elsa-mb-1 elsa-mt-2">
         <div class="elsa-flex">
-          <div class="elsa-flex-1">
-            <label htmlFor={fieldId} class="elsa-block elsa-text-sm elsa-font-medium elsa-text-gray-700">
+          <div>
+            <label htmlFor={fieldId} class="elsa-block elsa-text-sm elsa-font-medium elsa-text-gray-700 elsa-p-1">
               {fieldName}
             </label>
           </div>
-          <div class="elsa-flex-1">
-            <input id={fieldId} name={fieldId} type="checkbox" checked={isChecked} value={'true'}
-              onChange={e => onChangedFunction(e, questionToUpdate)}
+          <div>
+            <input id={fieldId} name={fieldId} type="checkbox" checked={isChecked} value={'true'} onChange={e =>
+              onChangedFunction(e, questionToUpdate)}
               class="focus:elsa-ring-blue-500 elsa-h-8 elsa-w-8 elsa-text-blue-600 elsa-border-gray-300 elsa-rounded" />
           </div>
         </div>
