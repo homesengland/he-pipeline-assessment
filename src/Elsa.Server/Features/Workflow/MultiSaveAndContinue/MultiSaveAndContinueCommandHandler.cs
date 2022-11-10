@@ -142,20 +142,23 @@ namespace Elsa.Server.Features.Workflow.MultiSaveAndContinue
                 var dictionList = workflowInstance.ActivityData
                     .FirstOrDefault(x => x.Key == nextActivityId).Value;
 
-                var dictionaryQuestions = (AssessmentQuestions)dictionList.FirstOrDefault(x => x.Key == "Questions").Value;
-
-                if (dictionaryQuestions != null)
+                if (dictionList != null)
                 {
-                    var questionList = (List<Question>)dictionaryQuestions.Questions;
-                    if (questionList!.Any())
-                    {
-                        var assessments = new List<AssessmentQuestion>();
+                    var dictionaryQuestions = (AssessmentQuestions?)dictionList.FirstOrDefault(x => x.Key == "Questions").Value;
 
-                        foreach (var item in questionList!)
+                    if (dictionaryQuestions != null)
+                    {
+                        var questionList = (List<Question>)dictionaryQuestions.Questions;
+                        if (questionList!.Any())
                         {
-                            assessments.Add(_saveAndContinueMapper.SaveAndContinueCommandToNextAssessmentQuestion(command, nextActivityId, nextActivityType, item));
+                            var assessments = new List<AssessmentQuestion>();
+
+                            foreach (var item in questionList!)
+                            {
+                                assessments.Add(_saveAndContinueMapper.SaveAndContinueCommandToNextAssessmentQuestion(command, nextActivityId, nextActivityType, item));
+                            }
+                            await _elsaCustomRepository.CreateAssessmentQuestionAsync(assessments, CancellationToken.None);
                         }
-                        await _elsaCustomRepository.CreateAssessmentQuestionAsync(assessments, CancellationToken.None);
                     }
                 }
             }

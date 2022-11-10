@@ -7,10 +7,10 @@ namespace Elsa.CustomWorkflow.Sdk.Tests.Workflow
     public class ChoiceTests
     {
         [Theory]
-        [InlineAutoMoqData("Test 1", true, false)]
-        [InlineAutoMoqData("Test 2", false, true)]
+        [InlineAutoMoqData("Test 1", false)]
+        [InlineAutoMoqData("Test 2", true)]
 
-        public void ChoiceCanBeInstantiated_GivenCorrectData(string answer, bool isSelected, bool isSingle)
+        public void ChoiceCanBeInstantiated_GivenCorrectData(string answer, bool isSingle)
         {
             //Arrange
             Choice choice = new Choice();

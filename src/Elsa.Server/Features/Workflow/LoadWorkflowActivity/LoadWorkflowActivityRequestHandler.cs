@@ -62,104 +62,142 @@ namespace Elsa.Server.Features.Workflow.LoadWorkflowActivity
                             else
                             {
                                 var activityDataDictionary =
-                                    workflowInstance.ActivityData.FirstOrDefault(a => a.Key == activityRequest.ActivityId).Value;
+                                    workflowInstance.ActivityData
+                                        .FirstOrDefault(a => a.Key == activityRequest.ActivityId).Value;
 
-                                result.Data.ActivityType = dbAssessmentQuestion.ActivityType;
-                                result.Data.PreviousActivityId = dbAssessmentQuestion.PreviousActivityId;
-                                result.Data.PageTitle = (string)activityDataDictionary!
-                                    .FirstOrDefault(x => x.Key == "PageTitle").Value;
-                                if (dbAssessmentQuestion.ActivityType == "QuestionScreen")
+                                if (activityDataDictionary != null)
                                 {
-                                    var dbQuestions = await _elsaCustomRepository.GetAssessmentQuestions(
-                                        activityRequest.ActivityId, activityRequest.WorkflowInstanceId,
-                                        cancellationToken);
+                                    result.Data.ActivityType = dbAssessmentQuestion.ActivityType;
+                                    result.Data.PreviousActivityId = dbAssessmentQuestion.PreviousActivityId;
 
-
-                                    var elsaActivityAssessmentQuestions = (AssessmentQuestions?)activityDataDictionary.FirstOrDefault(x => x.Key == "Questions").Value;
-
-                                    if (elsaActivityAssessmentQuestions != null)
+                                    if (dbAssessmentQuestion.ActivityType == "QuestionScreen")
                                     {
-                                        result.Data.MultiQuestionActivityData = new List<QuestionActivityData>();
-                                        result.Data.QuestionActivityData = new QuestionActivityData();
-                                        result.Data.QuestionActivityData.ActivityType = dbAssessmentQuestion.ActivityType;
+                                        var title = (string?)activityDataDictionary.FirstOrDefault(x => x.Key == "PageTitle").Value;
+                                        result.Data.PageTitle = title;
 
-                                        foreach (var item in elsaActivityAssessmentQuestions.Questions)
+                                        var dbQuestions = await _elsaCustomRepository.GetAssessmentQuestions(
+                                            activityRequest.ActivityId, activityRequest.WorkflowInstanceId,
+                                            cancellationToken);
+
+                                        var elsaActivityAssessmentQuestions =
+                                            (AssessmentQuestions?)activityDataDictionary
+                                                .FirstOrDefault(x => x.Key == "Questions").Value;
+
+                                        if (elsaActivityAssessmentQuestions != null)
                                         {
-                                            //get me the item
-                                            var dbQuestion = dbQuestions.FirstOrDefault(x => x.QuestionId == item.Id);
+                                            result.Data.MultiQuestionActivityData = new List<QuestionActivityData>();
+                                            result.Data.QuestionActivityData = new QuestionActivityData();
+                                            result.Data.QuestionActivityData.ActivityType =
+                                                dbAssessmentQuestion.ActivityType;
 
-                                            //assign the values
-                                            var questionActivityData = new QuestionActivityData();
-                                            questionActivityData.ActivityType = dbQuestion.ActivityType;
-                                            questionActivityData.Answer = dbQuestion.Answer;
-                                            questionActivityData.Comments = dbQuestion.Comments;
-                                            questionActivityData.QuestionId = dbQuestion.QuestionId;
-                                            questionActivityData.QuestionType = dbQuestion.QuestionType;
-
-                                            questionActivityData.Question = item.QuestionText;
-                                            questionActivityData.DisplayComments = item.DisplayComments;
-                                            questionActivityData.QuestionGuidance = item.QuestionGuidance;
-                                            questionActivityData.QuestionHint = item.QuestionHint;
-
-                                            if (item.QuestionType == Constants.MultipleChoiceQuestion)
+                                            foreach (var item in elsaActivityAssessmentQuestions.Questions)
                                             {
-                                                questionActivityData.MultipleChoice = new MultipleChoiceModel();
-                                                questionActivityData.MultipleChoice.Choices = item.Checkbox.Choices.Select(x => new Choice() { Answer = x.Answer, IsSingle = x.IsSingle }).ToArray();
-                                            }
-                                            if (item.QuestionType == Constants.MultipleChoiceQuestion && !string.IsNullOrEmpty(questionActivityData.Answer))
-                                            {
-                                                var answerList = JsonSerializer.Deserialize<List<string>>(questionActivityData.Answer);
-                                                questionActivityData.MultipleChoice.SelectedChoices = answerList!;
-                                            }
+                                                //get me the item
+                                                var dbQuestion =
+                                                    dbQuestions.FirstOrDefault(x => x.QuestionId == item.Id);
+                                                if (dbQuestion != null)
+                                                {
+                                                    //assign the values
+                                                    var questionActivityData = new QuestionActivityData();
+                                                    questionActivityData.ActivityType = dbQuestion.ActivityType;
+                                                    questionActivityData.Answer = dbQuestion.Answer;
+                                                    questionActivityData.Comments = dbQuestion.Comments;
+                                                    questionActivityData.QuestionId = dbQuestion.QuestionId;
+                                                    questionActivityData.QuestionType = dbQuestion.QuestionType;
 
-                                            if (item.QuestionType == Constants.SingleChoiceQuestion)
-                                            {
-                                                questionActivityData.SingleChoice = new SingleChoiceModel();
-                                                questionActivityData.SingleChoice.Choices = item.Radio.Choices.Select(x => new SingleChoice() { Answer = x.Answer }).ToArray();
+                                                    questionActivityData.Question = item.QuestionText;
+                                                    questionActivityData.DisplayComments = item.DisplayComments;
+                                                    questionActivityData.QuestionGuidance = item.QuestionGuidance;
+                                                    questionActivityData.QuestionHint = item.QuestionHint;
 
-                                            }
-                                            if (item.QuestionType == Constants.SingleChoiceQuestion && !string.IsNullOrEmpty(questionActivityData.Answer))
-                                            {
-                                                questionActivityData.SingleChoice.SelectedAnswer = questionActivityData.Answer;
-                                            }
+                                                    if (item.QuestionType == Constants.MultipleChoiceQuestion)
+                                                    {
+                                                        questionActivityData.MultipleChoice = new MultipleChoiceModel();
+                                                        questionActivityData.MultipleChoice.Choices =
+                                                            item.Checkbox.Choices.Select(x => new Choice()
+                                                            { Answer = x.Answer, IsSingle = x.IsSingle }).ToArray();
+                                                    }
 
-                                            result.Data.MultiQuestionActivityData.Add(questionActivityData);
+                                                    if (item.QuestionType == Constants.MultipleChoiceQuestion &&
+                                                        !string.IsNullOrEmpty(questionActivityData.Answer))
+                                                    {
+                                                        var answerList =
+                                                            JsonSerializer.Deserialize<List<string>>(
+                                                                questionActivityData.Answer);
+                                                        questionActivityData.MultipleChoice.SelectedChoices =
+                                                            answerList!;
+                                                    }
+
+                                                    if (item.QuestionType == Constants.SingleChoiceQuestion)
+                                                    {
+                                                        questionActivityData.SingleChoice = new SingleChoiceModel();
+                                                        questionActivityData.SingleChoice.Choices = item.Radio.Choices
+                                                            .Select(x => new SingleChoice() { Answer = x.Answer })
+                                                            .ToArray();
+
+                                                    }
+
+                                                    if (item.QuestionType == Constants.SingleChoiceQuestion &&
+                                                        !string.IsNullOrEmpty(questionActivityData.Answer))
+                                                    {
+                                                        questionActivityData.SingleChoice.SelectedAnswer =
+                                                            questionActivityData.Answer;
+                                                    }
+
+                                                    result.Data.MultiQuestionActivityData.Add(questionActivityData);
+                                                }
+                                            }
+                                        }
+                                        else
+                                        {
+                                            result.ErrorMessages.Add(
+                                                $"Failed to map activity data to MultiQuestionActivityData");
                                         }
                                     }
                                     else
                                     {
-                                        result.ErrorMessages.Add(
-                                            $"Failed to map activity data to MultiQuestionActivityData");
+                                        var activityData =
+                                            _loadWorkflowActivityJsonHelper
+                                                .ActivityDataDictionaryToQuestionActivityData<QuestionActivityData>(
+                                                    activityDataDictionary);
+                                        if (activityData != null)
+                                        {
+                                            result.Data!.QuestionActivityData = activityData;
+                                            result.Data.QuestionActivityData.ActivityType =
+                                                dbAssessmentQuestion.ActivityType;
+                                            result.Data.QuestionActivityData.Answer = dbAssessmentQuestion.Answer;
+                                            result.Data.QuestionActivityData.Comments = dbAssessmentQuestion.Comments;
+
+                                            // Restore preserved checkboxes from previous page load
+                                            if (result.Data.ActivityType == Constants.MultipleChoiceQuestion &&
+                                                !string.IsNullOrEmpty(result.Data.QuestionActivityData.Answer))
+                                            {
+                                                var answerList =
+                                                    JsonSerializer.Deserialize<List<string>>(result.Data
+                                                        .QuestionActivityData.Answer);
+                                                result.Data.QuestionActivityData.MultipleChoice.SelectedChoices =
+                                                    answerList!;
+                                            }
+
+                                            // Restore preserved selected answer from previous page load
+                                            if (result.Data.ActivityType == Constants.SingleChoiceQuestion &&
+                                                !string.IsNullOrEmpty(result.Data.QuestionActivityData.Answer))
+                                            {
+                                                result.Data.QuestionActivityData.SingleChoice.SelectedAnswer =
+                                                    result.Data.QuestionActivityData.Answer;
+                                            }
+                                        }
+                                        else
+                                        {
+                                            result.ErrorMessages.Add(
+                                                $"Failed to map activity data");
+                                        }
                                     }
                                 }
                                 else
                                 {
-                                    var activityData = _loadWorkflowActivityJsonHelper.ActivityDataDictionaryToQuestionActivityData<QuestionActivityData>(activityDataDictionary);
-                                    if (activityData != null)
-                                    {
-                                        result.Data!.QuestionActivityData = activityData;
-                                        result.Data.QuestionActivityData.ActivityType = dbAssessmentQuestion.ActivityType;
-                                        result.Data.QuestionActivityData.Answer = dbAssessmentQuestion.Answer;
-                                        result.Data.QuestionActivityData.Comments = dbAssessmentQuestion.Comments;
-
-                                        // Restore preserved checkboxes from previous page load
-                                        if (result.Data.ActivityType == Constants.MultipleChoiceQuestion && !string.IsNullOrEmpty(result.Data.QuestionActivityData.Answer))
-                                        {
-                                            var answerList = JsonSerializer.Deserialize<List<string>>(result.Data.QuestionActivityData.Answer);
-                                            result.Data.QuestionActivityData.MultipleChoice.SelectedChoices = answerList!;
-                                        }
-
-                                        // Restore preserved selected answer from previous page load
-                                        if (result.Data.ActivityType == Constants.SingleChoiceQuestion && !string.IsNullOrEmpty(result.Data.QuestionActivityData.Answer))
-                                        {
-                                            result.Data.QuestionActivityData.SingleChoice.SelectedAnswer = result.Data.QuestionActivityData.Answer;
-                                        }
-                                    }
-                                    else
-                                    {
-                                        result.ErrorMessages.Add(
-                                            $"Failed to map activity data");
-                                    }
+                                    result.ErrorMessages.Add(
+                                        $"Activity data is null for Activity Id: {activityRequest.ActivityId}");
                                 }
                             }
                         }

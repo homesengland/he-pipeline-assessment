@@ -17,7 +17,7 @@
             <label class="govuk-label govuk-date-input__label" for="date-day">
                 Day
             </label>
-            <input type="text" name="@itemDayName" class="govuk-input govuk-date-input__input govuk-input--width-2"  type="number"  inputmode="numeric"  value="@Model.Date.Day" />
+            <input name="@itemDayName" class="govuk-input govuk-date-input__input govuk-input--width-2"  type="number"  inputmode="numeric"  value="@Model.Date!.Day" />
         </div>
     </div>
     <div class="govuk-date-input__item">
@@ -25,7 +25,7 @@
             <label class="govuk-label govuk-date-input__label" for="date-month">
                 Month
             </label>
-            <input type="text" name="@itemMonthName" class="govuk-input govuk-date-input__input govuk-input--width-2" type="number" inputmode="numeric" value="@Model.Date.Month"  />
+            <input name="@itemMonthName" class="govuk-input govuk-date-input__input govuk-input--width-2" type="number" inputmode="numeric" value="@Model.Date!.Month"  />
         </div>
     </div>
     <div class="govuk-date-input__item">
@@ -33,7 +33,7 @@
             <label class="govuk-label govuk-date-input__label" for="date-year">
                 Year
             </label>
-            <input type="text" name="@itemYearName" class="govuk-input govuk-date-input__input govuk-input--width-3" type="number" inputmode="numeric" value="@Model.Date.Year" />
+            <input name="@itemYearName" class="govuk-input govuk-date-input__input govuk-input--width-3" type="number" inputmode="numeric" value="@Model.Date!.Year" />
         </div>
     </div>
     @await Html.PartialAsync("_QuestionGuidance", Model.QuestionGuidance)

@@ -15,7 +15,7 @@ namespace He.PipelineAssessment.UI.Features.Workflow.ViewModels
         public bool DisplayComments { get; set; }
         public string? Comments { get; set; }
         public string? Answer { get; set; }
-        public Date Date { get; set; }
+        public Date? Date { get; set; }
         public decimal? Decimal { get; set; }
         public SingleChoiceModel SingleChoice { get; set; } = new SingleChoiceModel();
         public MultipleChoiceModel MultipleChoice { get; set; } = new MultipleChoiceModel();
