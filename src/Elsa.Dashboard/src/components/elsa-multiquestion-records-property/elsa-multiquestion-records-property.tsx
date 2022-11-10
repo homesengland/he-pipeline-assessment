@@ -1,4 +1,4 @@
-import { Component, h, Prop, State, Listen } from '@stencil/core';
+import { Component, h, Prop, State, Listen, forceUpdate } from '@stencil/core';
 
 import TrashCanIcon from '../../icons/trash-can';
 //import PlusIcon from '../../icons/plus_icon';
@@ -14,6 +14,8 @@ import {
 import {
   QuestionComponent,
   MultiQuestionActivity,
+  SingleChoiceQuestion,
+  MultiChoiceQuestion,
 } from '../../models/custom-component-models';
 
 import {
@@ -53,8 +55,6 @@ export class ElsaMultiQuestionRecordsProperty {
   @Listen('updateQuestion', { target: "body" })
   getQuestion(event: CustomEvent) {
     if (event.detail) {
-      console.log(event);
-      console.log(event.detail);
       this.updateQuestion(event.detail);
     }
   }
@@ -73,12 +73,17 @@ export class ElsaMultiQuestionRecordsProperty {
 
   updatePropertyModel() {
     this.propertyModel.expressions[SyntaxNames.Json] = JSON.stringify(this.multiQuestionModel);
+    forceUpdate(this);
   }
 
   updateQuestion(updatedQuestion: QuestionComponent) {
+    console.log('event recieved');
     let questionToUpdate = this.multiQuestionModel.questions.findIndex((obj) => obj.id === updatedQuestion.id);
+    console.log('event content:')
+    console.log(updatedQuestion);
     this.multiQuestionModel.questions[questionToUpdate] = updatedQuestion;
     this.updatePropertyModel();
+    console.log(this.multiQuestionModel);
   }
 
   handleAddQuestion(e: Event) {
@@ -116,6 +121,17 @@ export class ElsaMultiQuestionRecordsProperty {
       panel.style.display = "none";
     } else {
       panel.style.display = "block";
+    }
+  }
+
+  renderQuestionComponent(question: QuestionComponent) {
+    switch (question.questionType) {
+      case "MultipleChoiceQuestion":
+        return <elsa-checkbox-question onClick={(e) => e.stopPropagation()} class="panel elsa-rounded" question={question as MultiChoiceQuestion}></elsa-checkbox-question>;
+      case "SingleChoiceQuestion":
+        return <elsa-radio-question onClick={(e) => e.stopPropagation()} class="panel elsa-rounded" question={question as SingleChoiceQuestion}></elsa-radio-question>;
+      default:
+        return <elsa-question onClick={(e) => e.stopPropagation()} class="panel elsa-rounded" question={question}></elsa-question>;
     }
   }
 
@@ -165,8 +181,7 @@ export class ElsaMultiQuestionRecordsProperty {
             class="elsa-h-5 elsa-w-5 elsa-mx-auto elsa-outline-none focus:elsa-outline-none trashcan-icon" style={{ float: "right" }}>
             <TrashCanIcon options={this.iconProvider.getOptions()}></TrashCanIcon>
           </button>
-
-          <elsa-question onClick={(e) => e.stopPropagation() } class="panel elsa-rounded" question={multiQuestion}></elsa-question>
+          {this.renderQuestionComponent(multiQuestion)}
         </div>
       );
     };
@@ -184,7 +199,7 @@ export class ElsaMultiQuestionRecordsProperty {
         {this.multiQuestionModel.questions.map(renderChoiceEditor)}
 
         <select id="addQuestionDropdown"
-          onChange={(e) => this.handleAddQuestion.bind(this)(e)}
+          onChange={ (e) => this.handleAddQuestion.bind(this)(e) }
           name="addQuestionDropdown"
           class="elsa-mt-1 elsa-block focus:elsa-ring-blue-500 focus:elsa-border-blue-500 elsa-w-full elsa-shadow-sm sm:elsa-max-w-xs sm:elsa-text-sm elsa-border-gray-300 elsa-rounded-md">
           <option value="">Add a Question...</option>

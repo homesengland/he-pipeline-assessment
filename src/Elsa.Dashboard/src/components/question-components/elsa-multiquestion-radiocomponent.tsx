@@ -7,7 +7,7 @@ import {
 } from '../../models/elsa-interfaces';
 
 import {
-  QuestionComponent
+  QuestionComponent, SingleChoiceQuestion
 } from '../../models/custom-component-models';
 
 import {
@@ -16,13 +16,13 @@ import {
 
 
 @Component({
-  tag: 'elsa-question',
+  tag: 'elsa-radio-question',
   shadow: false,
 })
 
-export class MultiQuestionComponent {
+export class MultiQuestionRadioComponent {
 
-  @Prop() question: QuestionComponent
+  @Prop() question: SingleChoiceQuestion
   @State() iconProvider = new IconProvider();
 
   supportedSyntaxes: Array<string> = [SyntaxNames.JavaScript, SyntaxNames.Liquid];
@@ -129,7 +129,7 @@ export class MultiQuestionComponent {
         {this.renderQuestionField(`${field}-questionText`, `Question`, this.question.questionText, this.onQuestionChanged)}
         {this.renderQuestionField(`${field}-questionHint`, `Hint`, this.question.questionHint, this.onHintChanged)}
         {this.renderQuestionField(`${field}-questionGuidance`, `Guidance`, this.question.questionGuidance, this.onGuidanceChanged)}
-          {this.renderCheckboxField(`${field}-displayCommentBox`, `Display Comments`, this.question.displayComments, this.onDisplayCommentsBox)}
+        {this.renderCheckboxField(`${field}-displayCommentBox`, `Display Comments`, this.question.displayComments, this.onDisplayCommentsBox)}
 
           </div>
     );

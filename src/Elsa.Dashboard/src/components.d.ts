@@ -5,9 +5,12 @@
  * It contains typing information for all components that exist in this project.
  */
 import { HTMLStencilElement, JSXBase } from "@stencil/core/internal";
+import { MultiChoiceQuestion, QuestionComponent, SingleChoiceQuestion } from "./models/custom-component-models";
 import { ActivityDefinitionProperty, ActivityModel, ActivityPropertyDescriptor } from "./models/elsa-interfaces";
-import { QuestionComponent } from "./models/custom-component-models";
 export namespace Components {
+    interface ElsaCheckboxQuestion {
+        "question": MultiChoiceQuestion;
+    }
     interface ElsaMultichoiceRecordsProperty {
         "activityModel": ActivityModel;
         "propertyDescriptor": ActivityPropertyDescriptor;
@@ -21,6 +24,9 @@ export namespace Components {
     interface ElsaQuestion {
         "question": QuestionComponent;
     }
+    interface ElsaRadioQuestion {
+        "question": SingleChoiceQuestion;
+    }
     interface ElsaSinglechoiceRecordsProperty {
         "activityModel": ActivityModel;
         "propertyDescriptor": ActivityPropertyDescriptor;
@@ -28,6 +34,12 @@ export namespace Components {
     }
 }
 declare global {
+    interface HTMLElsaCheckboxQuestionElement extends Components.ElsaCheckboxQuestion, HTMLStencilElement {
+    }
+    var HTMLElsaCheckboxQuestionElement: {
+        prototype: HTMLElsaCheckboxQuestionElement;
+        new (): HTMLElsaCheckboxQuestionElement;
+    };
     interface HTMLElsaMultichoiceRecordsPropertyElement extends Components.ElsaMultichoiceRecordsProperty, HTMLStencilElement {
     }
     var HTMLElsaMultichoiceRecordsPropertyElement: {
@@ -46,6 +58,12 @@ declare global {
         prototype: HTMLElsaQuestionElement;
         new (): HTMLElsaQuestionElement;
     };
+    interface HTMLElsaRadioQuestionElement extends Components.ElsaRadioQuestion, HTMLStencilElement {
+    }
+    var HTMLElsaRadioQuestionElement: {
+        prototype: HTMLElsaRadioQuestionElement;
+        new (): HTMLElsaRadioQuestionElement;
+    };
     interface HTMLElsaSinglechoiceRecordsPropertyElement extends Components.ElsaSinglechoiceRecordsProperty, HTMLStencilElement {
     }
     var HTMLElsaSinglechoiceRecordsPropertyElement: {
@@ -53,13 +71,19 @@ declare global {
         new (): HTMLElsaSinglechoiceRecordsPropertyElement;
     };
     interface HTMLElementTagNameMap {
+        "elsa-checkbox-question": HTMLElsaCheckboxQuestionElement;
         "elsa-multichoice-records-property": HTMLElsaMultichoiceRecordsPropertyElement;
         "elsa-multiquestion-property": HTMLElsaMultiquestionPropertyElement;
         "elsa-question": HTMLElsaQuestionElement;
+        "elsa-radio-question": HTMLElsaRadioQuestionElement;
         "elsa-singlechoice-records-property": HTMLElsaSinglechoiceRecordsPropertyElement;
     }
 }
 declare namespace LocalJSX {
+    interface ElsaCheckboxQuestion {
+        "onUpdateQuestion"?: (event: CustomEvent<QuestionComponent>) => void;
+        "question"?: MultiChoiceQuestion;
+    }
     interface ElsaMultichoiceRecordsProperty {
         "activityModel"?: ActivityModel;
         "propertyDescriptor"?: ActivityPropertyDescriptor;
@@ -74,15 +98,21 @@ declare namespace LocalJSX {
         "onUpdateQuestion"?: (event: CustomEvent<QuestionComponent>) => void;
         "question"?: QuestionComponent;
     }
+    interface ElsaRadioQuestion {
+        "onUpdateQuestion"?: (event: CustomEvent<QuestionComponent>) => void;
+        "question"?: SingleChoiceQuestion;
+    }
     interface ElsaSinglechoiceRecordsProperty {
         "activityModel"?: ActivityModel;
         "propertyDescriptor"?: ActivityPropertyDescriptor;
         "propertyModel"?: ActivityDefinitionProperty;
     }
     interface IntrinsicElements {
+        "elsa-checkbox-question": ElsaCheckboxQuestion;
         "elsa-multichoice-records-property": ElsaMultichoiceRecordsProperty;
         "elsa-multiquestion-property": ElsaMultiquestionProperty;
         "elsa-question": ElsaQuestion;
+        "elsa-radio-question": ElsaRadioQuestion;
         "elsa-singlechoice-records-property": ElsaSinglechoiceRecordsProperty;
     }
 }
@@ -90,9 +120,11 @@ export { LocalJSX as JSX };
 declare module "@stencil/core" {
     export namespace JSX {
         interface IntrinsicElements {
+            "elsa-checkbox-question": LocalJSX.ElsaCheckboxQuestion & JSXBase.HTMLAttributes<HTMLElsaCheckboxQuestionElement>;
             "elsa-multichoice-records-property": LocalJSX.ElsaMultichoiceRecordsProperty & JSXBase.HTMLAttributes<HTMLElsaMultichoiceRecordsPropertyElement>;
             "elsa-multiquestion-property": LocalJSX.ElsaMultiquestionProperty & JSXBase.HTMLAttributes<HTMLElsaMultiquestionPropertyElement>;
             "elsa-question": LocalJSX.ElsaQuestion & JSXBase.HTMLAttributes<HTMLElsaQuestionElement>;
+            "elsa-radio-question": LocalJSX.ElsaRadioQuestion & JSXBase.HTMLAttributes<HTMLElsaRadioQuestionElement>;
             "elsa-singlechoice-records-property": LocalJSX.ElsaSinglechoiceRecordsProperty & JSXBase.HTMLAttributes<HTMLElsaSinglechoiceRecordsPropertyElement>;
         }
     }
