@@ -1,7 +1,9 @@
 ﻿@model He.PipelineAssessment.UI.Features.Workflow.SaveAndContinue.SaveAndContinueCommand
 
-@Html.ValidationSummary(false,"",new{@class="govuk-list govuk-error-summary__list"})
-
+@if (!Model.IsValid)
+{
+    @await Html.PartialAsync("_ValidationSummary",Model.ValidationMessages)
+}
 <div class="govuk-form-group">
     <h1 class="govuk-heading-l">
         @Html.DisplayTextFor(m => m.Data.QuestionActivityData!.Title)
@@ -15,9 +17,6 @@
             @Model.Data.QuestionActivityData.QuestionHint
         </div>
     }
-    @Html.ValidationMessageFor(m=>Model.Data.QuestionActivityData.Date.Day,"",new{@class="govuk-error-message"})
-    @Html.ValidationMessageFor(m=>Model.Data.QuestionActivityData.Date.Month,"",new{@class="govuk-error-message"})
-    @Html.ValidationMessageFor(m=>Model.Data.QuestionActivityData.Date.Year,"",new{@class="govuk-error-message"})
 
     <div class="govuk-date-input__item">
         <div class="govuk-form-group">
@@ -25,7 +24,7 @@
                 Day
             </label>
             @Html.TextBoxFor(m => Model.Data.QuestionActivityData.Date.Day, new {@class = "govuk-input govuk-date-input__input govuk-input--width-2", @name="date-day", @type = "number", @inputmode="numeric"})
-            </div>
+        </div>
     </div>
     <div class="govuk-date-input__item">
         <div class="govuk-form-group">
@@ -33,7 +32,7 @@
                 Month
             </label>
             @Html.TextBoxFor(m => Model.Data.QuestionActivityData.Date.Month, new {@class = "govuk-input govuk-date-input__input govuk-input--width-2", @name="date-month", @type = "number", @inputmode="numeric"})
-            </div>
+        </div>
     </div>
     <div class="govuk-date-input__item">
         <div class="govuk-form-group">
@@ -44,7 +43,7 @@
         </div>
     </div>
 
-
+    <br />
 
 
     @if (!string.IsNullOrEmpty(Model.Data.QuestionActivityData.QuestionGuidance))
@@ -67,6 +66,6 @@
     }
     <br />
 
-        <input id="Next" type="submit" value="Save and continue" name="Next" class="govuk-button" />
+    <input id="Next" type="submit" value="Save and continue" name="Next" class="govuk-button" />
 
 </div>

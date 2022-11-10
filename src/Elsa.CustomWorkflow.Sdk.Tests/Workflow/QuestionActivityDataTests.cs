@@ -1,9 +1,7 @@
-﻿using System.Globalization;
-using System.Security.Cryptography.X509Certificates;
-using System.Text.Json;
-using Elsa.CustomWorkflow.Sdk.Models.Workflow;
+﻿using Elsa.CustomWorkflow.Sdk.Models.Workflow;
 using He.PipelineAssessment.Common.Tests;
-using Newtonsoft.Json.Linq;
+using System.Globalization;
+using System.Text.Json;
 using Xunit;
 
 namespace Elsa.CustomWorkflow.Sdk.Tests.Workflow
@@ -52,7 +50,7 @@ namespace Elsa.CustomWorkflow.Sdk.Tests.Workflow
         {
             //Arrange
             sut.ActivityType = ActivityTypeConstants.DateQuestion;
-            var dateToTest = "2019aaaas-2-17";
+            var dateToTest = "2019aaa89787879as-2-17";
             sut.Answer = dateToTest;
 
             //Act
@@ -105,7 +103,7 @@ namespace Elsa.CustomWorkflow.Sdk.Tests.Workflow
         [InlineAutoMoqData(2000, 2, null)]
         [InlineAutoMoqData(2000, null, null)]
         [InlineAutoMoqData(null, null, null)]
-        public void SetDateDoesNotSetAnAnswer_GivenIncompleteDate(int? year, int? month, int? day, QuestionActivityData sut)
+        public void SetDateDoesNotSetAnAnswer_AndRetainsDate_GivenIncompleteDate(int? year, int? month, int? day, QuestionActivityData sut)
         {
             //Arrange
             var date = new Date
@@ -121,9 +119,9 @@ namespace Elsa.CustomWorkflow.Sdk.Tests.Workflow
 
             //Assert
             Assert.Null(sut.Answer);
-            Assert.Null(sut.Date.Day);
-            Assert.Null(sut.Date.Month);
-            Assert.Null(sut.Date.Year);
+            Assert.Equal(day, sut.Date.Day);
+            Assert.Equal(month, sut.Date.Month);
+            Assert.Equal(year, sut.Date.Year);
         }
 
         [Theory]
@@ -174,7 +172,7 @@ namespace Elsa.CustomWorkflow.Sdk.Tests.Workflow
 
             //Assert
 
-            var dateString =$"{year}-{month}-{day}";
+            var dateString = $"{year}-{month}-{day}";
             bool isParseableDateTime = DateTime.TryParseExact(dateString, Constants.DateFormat, CultureInfo.InvariantCulture, DateTimeStyles.AdjustToUniversal, out DateTime parsedDateTime);
             Assert.Equal(dateString, sut.Answer);
             Assert.True(isParseableDateTime);
@@ -230,7 +228,7 @@ namespace Elsa.CustomWorkflow.Sdk.Tests.Workflow
             sut.Answer = null;
 
             //Act
-            
+
 
             //Assert
             Assert.Null(sut.Decimal);
@@ -319,7 +317,7 @@ namespace Elsa.CustomWorkflow.Sdk.Tests.Workflow
             Assert.Equal(decimalString, sut.Answer);
             Assert.Equal(numericAnswer, sut.Decimal);
         }
-        
+
         [Theory]
         [AutoMoqData]
         public void GetMultipleChoiceReturnsDefault_GivenNoValueSet(QuestionActivityData sut)
@@ -363,7 +361,7 @@ namespace Elsa.CustomWorkflow.Sdk.Tests.Workflow
 
             //Act
             sut.MultipleChoice = new MultipleChoiceModel { Choices = choices };
-  
+
             //Assert
             Assert.Empty(sut.MultipleChoice.Choices);
             Assert.Null(sut.Answer);

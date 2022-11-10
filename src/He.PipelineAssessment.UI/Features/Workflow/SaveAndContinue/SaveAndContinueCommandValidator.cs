@@ -1,4 +1,5 @@
 ﻿using Elsa.CustomWorkflow.Sdk;
+using Elsa.CustomWorkflow.Sdk.Models.Workflow;
 using FluentValidation;
 
 namespace He.PipelineAssessment.UI.Features.Workflow.SaveAndContinue
@@ -39,6 +40,33 @@ namespace He.PipelineAssessment.UI.Features.Workflow.SaveAndContinue
                 }
                 return string.Empty;
             });
+
+            RuleFor(x => x.Data.QuestionActivityData!.Date).Must(date =>
+            {
+                if (date.Day == null && date.Month == null && date.Year == null) return true;                
+                DateTime temp;
+                if (DateTime.TryParse(@date!.Day.ToString() +"/"+ date!.Month.ToString() +"/"+ date!.Year.ToString(), out temp))
+                {
+                    return true;
+                }
+                else
+                {
+                    return false;
+                }
+            }).When(x => x.Data.QuestionActivityData!.ActivityType == ActivityTypeConstants.DateQuestion)
+                .WithMessage(x =>
+                {
+                    var selectedDate = x.Data!.QuestionActivityData!.Date;
+                    DateTime temp;
+                    if (DateTime.TryParse(selectedDate!.Day.ToString() + "/" + selectedDate!.Month.ToString() + "/" + selectedDate!.Year.ToString(), out temp))
+                    {
+                        return string.Empty;
+                    }
+                    else
+                    {
+                        return "Enter a valid date.";
+                    }
+                });
 
         }
     }
