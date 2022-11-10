@@ -33,7 +33,6 @@ export class MultiQuestionComponent {
 
   }
 
-  /*  @Event({ bubbles: true, composed: true }) questionChanged: EventEmitter<QuestionComponent>;*/
   @Event({
     eventName: 'updateQuestion',
     composed: true,
@@ -45,41 +44,30 @@ export class MultiQuestionComponent {
     let updatedQuestion = this.question;
     updatedQuestion.title = (e.currentTarget as HTMLInputElement).value.trim();
     this.updateQuestion.emit(updatedQuestion);
-    //console.log('Setting title');
-    //updatedQuestion.title = (e.currentTarget as HTMLInputElement).value.trim();
-    //eventEmitter.emit(updatedQuestion);
   }
 
   onIdentifierChanged(e: Event) {
     let updatedQuestion = this.question;
     updatedQuestion.id = (e.currentTarget as HTMLInputElement).value.trim();
     this.updateQuestion.emit(updatedQuestion);
-    //updatedQuestion.id = (e.currentTarget as HTMLInputElement).value.trim();
-    //eventEmitter.emit(updatedQuestion);
   }
 
   onQuestionChanged(e: Event) {
     let updatedQuestion = this.question;
     updatedQuestion.questionText = (e.currentTarget as HTMLInputElement).value.trim();
     this.updateQuestion.emit(updatedQuestion);
-    //updatedQuestion.questionText = (e.currentTarget as HTMLInputElement).value.trim();
-    //eventEmitter.emit(updatedQuestion);
   };
 
   onGuidanceChanged(e: Event) {
     let updatedQuestion = this.question;
     updatedQuestion.questionGuidance = (e.currentTarget as HTMLInputElement).value.trim();
     this.updateQuestion.emit(updatedQuestion);
-    //updatedQuestion.questionGuidance = (e.currentTarget as HTMLInputElement).value.trim();
-    //eventEmitter.emit(updatedQuestion);
   }
 
   onHintChanged(e: Event) {
     let updatedQuestion = this.question;
     updatedQuestion.questionHint = (e.currentTarget as HTMLInputElement).value.trim();
     this.updateQuestion.emit(updatedQuestion);
-    //updatedQuestion.questionHint = (e.currentTarget as HTMLInputElement).value.trim();
-    //eventEmitter.emit(updatedQuestion);
   }
 
   onDisplayCommentsBox(e: Event) {
@@ -88,7 +76,6 @@ export class MultiQuestionComponent {
     updatedQuestion.displayComments = checkbox.checked;
     this.updateQuestion.emit(updatedQuestion);
 
-    //eventEmitter.emit(updatedQuestion);
   }
 
   renderQuestionField(fieldId, fieldName, fieldValue, onChangedFunction) {

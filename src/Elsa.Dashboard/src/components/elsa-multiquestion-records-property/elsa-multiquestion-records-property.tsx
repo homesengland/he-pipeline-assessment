@@ -76,8 +76,6 @@ export class ElsaMultiQuestionRecordsProperty {
   }
 
   updateQuestion(updatedQuestion: QuestionComponent) {
-    console.log("update Question");
-    console.log(this.multiQuestionModel);
     let questionToUpdate = this.multiQuestionModel.questions.findIndex((obj) => obj.id === updatedQuestion.id);
     this.multiQuestionModel.questions[questionToUpdate] = updatedQuestion;
     this.updatePropertyModel();
@@ -91,7 +89,7 @@ export class ElsaMultiQuestionRecordsProperty {
     this.updatePropertyModel();
   }
 
-  onDeleteChoiceClick(e: Event, question: QuestionComponent) {
+  onDeleteQuestionClick(e: Event, question: QuestionComponent) {
     e.stopPropagation();
     this.multiQuestionModel = { ...this.multiQuestionModel, questions: this.multiQuestionModel.questions.filter(x => x != question) };
     this.updatePropertyModel();
@@ -152,11 +150,14 @@ export class ElsaMultiQuestionRecordsProperty {
     const renderChoiceEditor = (multiQuestion: QuestionComponent, index: number) => {
       const field = `question-${index}`;
       return (
-          <div id={`${field}-id`} class="accordion elsa-mb-4 elsa-rounded" onClick={this.onAccordionQuestionClick}><button type="button">Question {index + 1}</button>
-              <button type="button" onClick={e => this.onDeleteChoiceClick(e, multiQuestion)}
-                  class="elsa-h-5 elsa-w-5 elsa-mx-auto elsa-outline-none focus:elsa-outline-none trashcan-icon" style={{ float: "right" }}>
+        <div id={`${field}-id`} class="accordion elsa-mb-4 elsa-rounded" onClick={this.onAccordionQuestionClick}>
+          <button type="button">Question {index + 1}</button>
+          <button type="button" onClick={e => this.onDeleteQuestionClick(e, multiQuestion)}
+            class="elsa-h-5 elsa-w-5 elsa-mx-auto elsa-outline-none focus:elsa-outline-none trashcan-icon" style={{ float: "right" }}>
+            <TrashCanIcon options={this.iconProvider.getOptions()}></TrashCanIcon>
+          </button>
 
-          <elsa-question class="pannel" question={multiQuestion}></elsa-question>
+          <elsa-question class="panel" question={multiQuestion}></elsa-question>
         </div>
       );
     };
