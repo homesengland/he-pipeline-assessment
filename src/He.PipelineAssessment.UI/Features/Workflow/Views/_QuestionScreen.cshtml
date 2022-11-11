@@ -28,11 +28,21 @@
                 @Html.HiddenFor(m => m.Data.MultiQuestionActivityData![i].QuestionHint)
                 @Html.HiddenFor(m => m.Data.MultiQuestionActivityData![i].DisplayComments)
 
+                bool isValidItem = true;
+                if (!Model.IsValid && Model.ValidationMessages != null && Model.ValidationMessages.Errors != null)
+                {
+                    if (Model.ValidationMessages.Errors.Any(x => x.PropertyName.Contains("Data.MultiQuestionActivityData[" + i + "]")))
+                    {
+                        isValidItem = false;
+                    }
+                }
+
                 @if (Model.Data.MultiQuestionActivityData![i].QuestionType == QuestionTypeConstants.TextQuestion)
                 {
                     @await Html.PartialAsync("_MultiTextQuestion",new MultiQuestion()
                     {
                         Index = i,
+                        IsValid = isValidItem,
                         ActivityType = Model.Data.MultiQuestionActivityData[i].ActivityType,
                         Answer = Model.Data.MultiQuestionActivityData[i].Answer,
                         Comments = Model.Data.MultiQuestionActivityData[i].Comments,
@@ -54,6 +64,7 @@
                     @await Html.PartialAsync("_MultiDateQuestion",new MultiQuestion()
                     {
                         Index = i,
+                        IsValid = isValidItem,
                         ActivityType = Model.Data.MultiQuestionActivityData[i].ActivityType,
                         Answer = Model.Data.MultiQuestionActivityData[i].Answer,
                         Comments = Model.Data.MultiQuestionActivityData[i].Comments,
@@ -72,6 +83,7 @@
                     @await Html.PartialAsync("_MultiCurrencyQuestion",new MultiQuestion()
                     {
                         Index = i,
+                        IsValid = isValidItem,
                         ActivityType = Model.Data.MultiQuestionActivityData[i].ActivityType,
                         Answer = Model.Data.MultiQuestionActivityData[i].Answer,
                         Comments = Model.Data.MultiQuestionActivityData[i].Comments,
@@ -91,6 +103,7 @@
                     @await Html.PartialAsync("_MultiCheckboxQuestion",new MultiQuestion()
                     {
                         Index = i,
+                        IsValid = isValidItem,
                         ActivityType = Model.Data.MultiQuestionActivityData[i].ActivityType,
                         Answer = Model.Data.MultiQuestionActivityData[i].Answer,
                         Comments = Model.Data.MultiQuestionActivityData[i].Comments,
@@ -114,6 +127,7 @@
                     @await Html.PartialAsync("_MultiRadioButtonQuestion",new MultiQuestion()
                     {
                         Index = i,
+                        IsValid = isValidItem,
                         ActivityType = Model.Data.MultiQuestionActivityData[i].ActivityType,
                         Answer = Model.Data.MultiQuestionActivityData[i].Answer,
                         Comments = Model.Data.MultiQuestionActivityData[i].Comments,

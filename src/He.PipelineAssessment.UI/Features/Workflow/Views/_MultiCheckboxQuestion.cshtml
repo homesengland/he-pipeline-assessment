@@ -2,9 +2,12 @@
 @model He.PipelineAssessment.UI.Features.Workflow.ViewModels.MultiQuestion
 @{
     var itemName = "Data.MultiQuestionActivityData[" + Model.Index + "].MultipleChoice.SelectedChoices";
+    var formItemName = "Data.MultiQuestionActivityData[" + Model.Index + "].MultipleChoice";
+
+    var errorFormClass = !Model.IsValid ? "govuk-form-group--error" : "";
 }
 
-<div class="govuk-form-group">
+<div class="govuk-form-group @errorFormClass" id="@formItemName">
     @await Html.PartialAsync("_QuestionTitle", Model.Title)
 
     @await Html.PartialAsync("_QuestionText", Model.Question)
@@ -22,7 +25,6 @@
 
             <input type="hidden" name="@hiddenItemNameAnswer" value="@Model.MultipleChoice.Choices[i].Answer" />
             <input type="hidden" name="@hiddenItemNameIsSingle" value="@Model.MultipleChoice.Choices[i].IsSingle.ToString()" />
-           
         }
         @for (int i = 0; i < nonExclusiveChoices.Count(); i++)
         {

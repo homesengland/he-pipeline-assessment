@@ -5,6 +5,7 @@ namespace He.PipelineAssessment.UI.Features.Workflow.ViewModels
     public class MultiQuestion
     {
         public int Index { get; set; }
+        public bool IsValid { get; set; }
         public string QuestionId { get; set; } = null!;
         public string QuestionType { get; set; } = null!;
         public string ActivityType { get; set; } = null!;
