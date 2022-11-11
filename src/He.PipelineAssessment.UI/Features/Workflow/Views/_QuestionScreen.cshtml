@@ -12,7 +12,7 @@
         
         @if (!Model.IsValid && Model.ValidationMessages !=null)
         {
-            @await Html.PartialAsync("_ValidationSummary",Model.ValidationMessages)
+            @await Html.PartialAsync("_MultiValidationSummary",Model.ValidationMessages)
         }
 
         @if (Model.Data.MultiQuestionActivityData != null)
