@@ -1,4 +1,4 @@
-import { Component, h, Prop, State, Event, EventEmitter, Watch } from '@stencil/core';
+import { Component, h, Prop, State, Event, EventEmitter } from '@stencil/core';
 
 import {
   HTMLElsaMultiExpressionEditorElement,
@@ -29,12 +29,6 @@ export class MultiQuestionCheckboxComponent {
 
   @Prop() question: MultiChoiceQuestion
   @State() iconProvider = new IconProvider();
-
-  @Watch('question')
-  watchPropHandler(newValue: boolean, oldValue: boolean) {
-    console.log('The old value of question is: ', oldValue);
-    console.log('The new value of question is: ', newValue);
-  }
 
   supportedSyntaxes: Array<string> = [SyntaxNames.JavaScript, SyntaxNames.Liquid];
   multiExpressionEditor: HTMLElsaMultiExpressionEditorElement;
@@ -88,43 +82,31 @@ export class MultiQuestionCheckboxComponent {
     const checkbox = (e.target as HTMLInputElement);
     updatedQuestion.displayComments = checkbox.checked;
     this.updateQuestion.emit(updatedQuestion);
-
   }
 
   onAddChoiceClick() {
     const choiceName = `Choice ${this.question.choices.length + 1}`;
     const newChoice = { answer: choiceName, isSingle: false };
-    let modelToUpdate = this.question;
-    modelToUpdate.choices.push(newChoice)
-    //this.question.choices.push(newChoice);
-    console.log('model to update:')
-    console.log(modelToUpdate);
-    console.log('emitting event')
-    this.updateQuestion.emit(modelToUpdate);
-    console.log("after state updated:", this.question);
+    this.question = { ... this.question, choices: [... this.question.choices, newChoice] };
+    this.updateQuestion.emit(this.question);
+
+
   }
 
   onChoiceNameChanged(e: Event, record: MultiChoiceRecord) {
-    let updatedQuestion = this.question;
-    updatedQuestion.choices.filter(x => x != record);
     record.answer = (e.currentTarget as HTMLInputElement).value.trim();
-    updatedQuestion.choices.push(record);
-    this.updateQuestion.emit(updatedQuestion);
+    this.updateQuestion.emit(this.question);
   }
 
   onCheckChanged(e: Event, record: MultiChoiceRecord) {
-    let updatedQuestion = this.question;
-    updatedQuestion.choices.filter(x => x != record);
     const checkbox = (e.target as HTMLInputElement);
     record.isSingle = checkbox.checked;
-    updatedQuestion.choices.push(record);
-    this.updateQuestion.emit(updatedQuestion);
+    this.updateQuestion.emit(this.question);
   }
 
   onDeleteChoiceClick(record: MultiChoiceRecord) {
-    let updatedQuestion = this.question;
-    updatedQuestion.choices.filter(x => x != record);
-    this.updateQuestion.emit(updatedQuestion);
+    this.question = { ...this.question, choices: this.question.choices.filter(x => x != record) }
+    this.updateQuestion.emit(this.question);
   }
 
   renderQuestionField(fieldId, fieldName, fieldValue, onChangedFunction) {
@@ -139,7 +121,6 @@ export class MultiQuestionCheckboxComponent {
         </div>
       </div>
       <input type="text" id={fieldId} name={fieldId} value={fieldValue} onChange={e => {
-        console.log(this);
         onChangedFunction.bind(this)(e);
       }
       }
@@ -168,10 +149,6 @@ export class MultiQuestionCheckboxComponent {
 
   render() {
     const renderChoiceEditor = (multiChoice: MultiChoiceRecord, index: number) => {
-      //const propertyDescriptor = this.propertyDescriptor;
-      //const propertyName = propertyDescriptor.name;
-      //const fieldId = propertyName;
-      //const fieldName = propertyName;
       const field = `choice-${index}`;
       let isChecked = multiChoice.isSingle;
       return (

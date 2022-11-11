@@ -1,4 +1,4 @@
-import { Component, h, Prop, State, Listen, forceUpdate } from '@stencil/core';
+import { Component, h, Prop, State, Listen } from '@stencil/core';
 
 import TrashCanIcon from '../../icons/trash-can';
 //import PlusIcon from '../../icons/plus_icon';
@@ -73,17 +73,15 @@ export class ElsaMultiQuestionRecordsProperty {
 
   updatePropertyModel() {
     this.propertyModel.expressions[SyntaxNames.Json] = JSON.stringify(this.multiQuestionModel);
-    forceUpdate(this);
   }
 
   updateQuestion(updatedQuestion: QuestionComponent) {
-    console.log('event recieved');
     let questionToUpdate = this.multiQuestionModel.questions.findIndex((obj) => obj.id === updatedQuestion.id);
-    console.log('event content:')
-    console.log(updatedQuestion);
-    this.multiQuestionModel.questions[questionToUpdate] = updatedQuestion;
+    let newModel = this.multiQuestionModel;
+    newModel.questions[questionToUpdate] = updatedQuestion;
+    this.multiQuestionModel.questions.map(x => x.id != updatedQuestion.id);
+    this.multiQuestionModel = { ... this.multiQuestionModel, questions: newModel.questions };
     this.updatePropertyModel();
-    console.log(this.multiQuestionModel);
   }
 
   handleAddQuestion(e: Event) {
@@ -123,6 +121,24 @@ export class ElsaMultiQuestionRecordsProperty {
       panel.style.display = "block";
     }
   }
+
+  renderQuestions(model: MultiQuestionActivity) {
+    return model.questions.map(this.renderChoiceEditor)
+  }
+
+  renderChoiceEditor = (multiQuestion: QuestionComponent, index: number) => {
+    const field = `question-${index}`;
+    return (
+      <div id={`${field}-id`} class="accordion elsa-mb-4 elsa-rounded" onClick={this.onAccordionQuestionClick}>
+        <button type="button">Question {index + 1} - {multiQuestion.questionType} </button>
+        <button type="button" onClick={e => this.onDeleteQuestionClick(e, multiQuestion)}
+          class="elsa-h-5 elsa-w-5 elsa-mx-auto elsa-outline-none focus:elsa-outline-none trashcan-icon" style={{ float: "right" }}>
+          <TrashCanIcon options={this.iconProvider.getOptions()}></TrashCanIcon>
+        </button>
+        {this.renderQuestionComponent(multiQuestion)}
+      </div>
+    );
+  };
 
   renderQuestionComponent(question: QuestionComponent) {
     switch (question.questionType) {
@@ -172,19 +188,6 @@ export class ElsaMultiQuestionRecordsProperty {
   }
 
   render() {
-    const renderChoiceEditor = (multiQuestion: QuestionComponent, index: number) => {
-      const field = `question-${index}`;
-      return (
-        <div id={`${field}-id`} class="accordion elsa-mb-4 elsa-rounded" onClick={this.onAccordionQuestionClick}>
-          <button type="button">Question {index + 1} - {multiQuestion.questionType} </button>
-          <button type="button" onClick={e => this.onDeleteQuestionClick(e, multiQuestion)}
-            class="elsa-h-5 elsa-w-5 elsa-mx-auto elsa-outline-none focus:elsa-outline-none trashcan-icon" style={{ float: "right" }}>
-            <TrashCanIcon options={this.iconProvider.getOptions()}></TrashCanIcon>
-          </button>
-          {this.renderQuestionComponent(multiQuestion)}
-        </div>
-      );
-    };
     return (
       <div>
         <div class="elsa-mb-1">
@@ -196,7 +199,7 @@ export class ElsaMultiQuestionRecordsProperty {
             </div>
           </div>
         </div>
-        {this.multiQuestionModel.questions.map(renderChoiceEditor)}
+        {this.renderQuestions(this.multiQuestionModel)}
 
         <select id="addQuestionDropdown"
           onChange={ (e) => this.handleAddQuestion.bind(this)(e) }

@@ -7,12 +7,17 @@ import {
 } from '../../models/elsa-interfaces';
 
 import {
-  QuestionComponent, SingleChoiceQuestion
+  SingleChoiceQuestion,
+  SingleChoiceRecord,
+  QuestionComponent
 } from '../../models/custom-component-models';
 
 import {
   IconProvider,
 } from '../icon-provider/icon-provider'
+
+import PlusIcon from '../../icons/plus_icon';
+import TrashCanIcon from '../../icons/trash-can';
 
 
 @Component({
@@ -30,7 +35,9 @@ export class MultiQuestionRadioComponent {
   syntaxMultiChoiceCount: number = 0;
 
   async componentWillLoad() {
-
+    if (this.question && !this.question.choices) {
+      this.question.choices = [];
+    }
   }
 
   @Event({
@@ -75,7 +82,25 @@ export class MultiQuestionRadioComponent {
     const checkbox = (e.target as HTMLInputElement);
     updatedQuestion.displayComments = checkbox.checked;
     this.updateQuestion.emit(updatedQuestion);
+  }
 
+  onAddChoiceClick() {
+    const choiceName = `Choice ${this.question.choices.length + 1}`;
+    const newChoice = { answer: choiceName, isSingle: false };
+    this.question = { ... this.question, choices: [... this.question.choices, newChoice] };
+    this.updateQuestion.emit(this.question);
+
+
+  }
+
+  onChoiceNameChanged(e: Event, record: SingleChoiceRecord) {
+    record.answer = (e.currentTarget as HTMLInputElement).value.trim();
+    this.updateQuestion.emit(this.question);
+  }
+
+  onDeleteChoiceClick(record: SingleChoiceRecord) {
+    this.question = { ...this.question, choices: this.question.choices.filter(x => x != record) }
+    this.updateQuestion.emit(this.question);
   }
 
   renderQuestionField(fieldId, fieldName, fieldValue, onChangedFunction) {
@@ -90,7 +115,6 @@ export class MultiQuestionRadioComponent {
         </div>
       </div>
       <input type="text" id={fieldId} name={fieldId} value={fieldValue} onChange={e => {
-        console.log(this);
         onChangedFunction.bind(this)(e);
       }
       }
@@ -118,11 +142,26 @@ export class MultiQuestionRadioComponent {
   }
 
   render() {
+    const renderChoiceEditor = (multiChoice: SingleChoiceRecord, index: number) => {
+      return (
+        <tr key={`choice-${index}`}>
+          <td class="elsa-py-2 elsa-pr-5">
+            <input type="text" value={multiChoice.answer} onChange={e => this.onChoiceNameChanged.bind(this)(e, multiChoice)}
+              class="focus:elsa-ring-blue-500 focus:elsa-border-blue-500 elsa-block elsa-w-full elsa-min-w-0 elsa-rounded-md sm:elsa-text-sm elsa-border-gray-300" />
+          </td>
+
+          <td class="elsa-pt-1 elsa-pr-2 elsa-text-right">
+            <button type="button" onClick={() => this.onDeleteChoiceClick.bind(this)(multiChoice)}
+              class="elsa-h-5 elsa-w-5 elsa-mx-auto elsa-outline-none focus:elsa-outline-none">
+              <TrashCanIcon options={this.iconProvider.getOptions()} />
+            </button>
+          </td>
+        </tr>
+      );
+    };
     const field = `question-${this.question.id}`;
-    console.log('rendering');
-    console.log(this.question);
     return (
-          <div>
+      <div>
 
         {this.renderQuestionField(`${field}-questionid`, `Identifier`, this.question.id, this.onIdentifierChanged)}
         {this.renderQuestionField(`${field}-title`, `Title`, this.question.title, this.onTitleChanged)}
@@ -131,7 +170,30 @@ export class MultiQuestionRadioComponent {
         {this.renderQuestionField(`${field}-questionGuidance`, `Guidance`, this.question.questionGuidance, this.onGuidanceChanged)}
         {this.renderCheckboxField(`${field}-displayCommentBox`, `Display Comments`, this.question.displayComments, this.onDisplayCommentsBox)}
 
-          </div>
+        <div>
+          <table class="elsa-min-w-full elsa-divide-y elsa-divide-gray-200">
+            <thead class="elsa-bg-gray-50">
+              <tr>
+                <th
+                  class="elsa-py-3 elsa-text-left elsa-text-xs elsa-font-medium elsa-text-gray-500 elsa-tracking-wider elsa-w-10/12">Answer
+                </th>
+                <th
+                  class="elsa-py-3 elsa-text-left elsa-text-xs elsa-font-medium elsa-text-gray-500 elsa-tracking-wider elsa-w-1/12">&nbsp;</th>
+              </tr>
+            </thead>
+            <tbody>
+              {this.question.choices.map(renderChoiceEditor)}
+            </tbody>
+          </table>
+          <button type="button" onClick={() => this.onAddChoiceClick.bind(this)()}
+            class="elsa-inline-flex elsa-items-center elsa-px-4 elsa-py-2 elsa-border elsa-border-transparent elsa-shadow-sm elsa-text-sm elsa-font-medium elsa-rounded-md elsa-text-white elsa-bg-blue-600 hover:elsa-bg-blue-700 focus:elsa-outline-none focus:elsa-ring-2 focus:elsa-ring-offset-2 focus:elsa-ring-blue-500 elsa-mt-2">
+            <PlusIcon options={this.iconProvider.getOptions()} />
+            Add Choice
+          </button>
+          {/* </elsa-multi-expression-editor> */}
+        </div>
+
+      </div>
     );
   }
 }
