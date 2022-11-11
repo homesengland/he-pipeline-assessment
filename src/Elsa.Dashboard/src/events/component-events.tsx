@@ -9,16 +9,18 @@ import {
   SingleChoiceQuestion
 } from '../models/custom-component-models';
 
+
+
 abstract class BaseQuestionEventHandler {
 
   constructor() {
     
   }
-  abstract emitter: EventEmitter;
   abstract question: QuestionComponent;
+  abstract emitter: EventEmitter;
 
   //@Event({
-  //  eventName: 'questionHandled',
+  //  eventName: 'updateQuestion',
   //  composed: true,
   //  cancelable: true,
   //  bubbles: true,
@@ -64,26 +66,26 @@ abstract class BaseQuestionEventHandler {
 }
 
 export class QuestionEventHandler extends BaseQuestionEventHandler {
-  constructor(q: Question, eventEmitter: EventEmitter) {
+  constructor(q: Question, e: EventEmitter) {
     super();
     this.question = q;
-    this.emitter = eventEmitter;
+    this.emitter = e;
   }
 
   question: Question;
-  emitter: EventEmitter<QuestionComponent>
+  emitter: EventEmitter<Question>;
 }
 
 export class CheckboxEventHandler extends BaseQuestionEventHandler {
 
-  constructor(q: MultiChoiceQuestion, eventEmitter: EventEmitter) {
+  constructor(q: MultiChoiceQuestion, e: EventEmitter) {
     super();
     this.question = q;
-    this.emitter = eventEmitter;
+    this.emitter = e;
   }
 
   question: MultiChoiceQuestion;
-  emitter: EventEmitter<MultiChoiceQuestion>
+  emitter: EventEmitter<MultiChoiceQuestion>;
 
   onAddChoiceClick() {
     const choiceName = `Choice ${this.question.checkbox.choices.length + 1}`;
@@ -114,14 +116,14 @@ export class CheckboxEventHandler extends BaseQuestionEventHandler {
 
 export class RadioEventHandler extends BaseQuestionEventHandler {
 
-  constructor(q: SingleChoiceQuestion, eventEmitter: EventEmitter) {
+  constructor(q: SingleChoiceQuestion, e: EventEmitter) {
     super();
     this.question = q;
-    this.emitter = eventEmitter;
+    this.emitter = e;
   }
 
   question: SingleChoiceQuestion;
-  emitter: EventEmitter<SingleChoiceQuestion>
+  emitter: EventEmitter<SingleChoiceQuestion>;
 
   onAddChoiceClick() {
     const choiceName = `Choice ${this.question.radio.choices.length + 1}`;

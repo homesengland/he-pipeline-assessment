@@ -22,7 +22,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <None Remove="src\events\component-events.ts" />
+    <None Remove="src\events\component-events.tsx" />
   </ItemGroup>
 
   <ItemGroup>
@@ -30,7 +30,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <TypeScriptCompile Include="src\events\component-events.ts" />
+    <TypeScriptCompile Include="src\events\component-events.tsx" />
   </ItemGroup>
 
 </Project>

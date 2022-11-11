@@ -1,4 +1,4 @@
-import { Component, h, Prop, State, Event, Listen, EventEmitter } from '@stencil/core';
+import { Component, h, Prop, State, Event, EventEmitter } from '@stencil/core';
 
 import {
   HTMLElsaMultiExpressionEditorElement,
@@ -19,7 +19,7 @@ import {
 
 import PlusIcon from '../../icons/plus_icon';
 import TrashCanIcon from '../../icons/trash-can';
-//import { RadioEventHandler } from '../../events/component-events';
+import { RadioEventHandler } from '../../events/component-events';
 
 
 @Component({
@@ -32,7 +32,7 @@ export class MultiQuestionRadioComponent {
   @Prop() question: SingleChoiceQuestion
   @State() iconProvider = new IconProvider();
 
-  //handler: RadioEventHandler;
+  handler: RadioEventHandler;
 
   supportedSyntaxes: Array<string> = [SyntaxNames.JavaScript, SyntaxNames.Liquid];
   multiExpressionEditor: HTMLElsaMultiExpressionEditorElement;
@@ -44,8 +44,8 @@ export class MultiQuestionRadioComponent {
       this.question.radio = new RadioChoices();
     }
     console.log('setting handler');
-    //this.handler = new RadioEventHandler(this.question, this.updateQuestion);
-    //console.log(this.handler);
+    this.handler = new RadioEventHandler(this.question, this.updateQuestion);
+    console.log('handler', this.handler);
   }
 
   @Event({
@@ -56,13 +56,13 @@ export class MultiQuestionRadioComponent {
   }) updateQuestion: EventEmitter<QuestionComponent>;
 
 
-  @Listen('updateQuestion', { target: "body" })
-  getQuestion(event: CustomEvent) {
-    if (event.detail) {
-      console.log('Handler triggered', event.detail)
-      this.updateQuestion.emit(event.detail);
-    }
-  }
+  //@Listen('updateQuestion', { target: "body" })
+  //getQuestion(event: CustomEvent) {
+  //  if (event.detail) {
+  //    console.log('Handler triggered', event.detail)
+  //    this.updateQuestion.emit(event.detail);
+  //  }
+  //}
 
   onTitleChanged = (e: Event, question: SingleChoiceQuestion) => {
     let updatedQuestion = question;
@@ -182,7 +182,7 @@ export class MultiQuestionRadioComponent {
         {this.renderQuestionField(`${field}-questionid`, `Identifier`, this.question.id, this.onIdentifierChanged)}
         {this.renderQuestionField(`${field}-title`, `Title`, this.question.title, this.onTitleChanged)}
         {this.renderQuestionField(`${field}-questionText`, `Question`, this.question.questionText, this.onQuestionChanged)}
-        {this.renderQuestionField(`${field}-questionHint`, `Hint`, this.question.questionHint, this.onHintChanged)}
+        {this.renderQuestionField(`${field}-questionHint`, `Hint`, this.question.questionHint, this.handler.onHintChanged)}
         {this.renderQuestionField(`${field}-questionGuidance`, `Guidance`, this.question.questionGuidance, this.onGuidanceChanged)}
         {this.renderCheckboxField(`${field}-displayCommentBox`, `Display Comments`, this.question.displayComments, this.onDisplayCommentsBox)}
 
