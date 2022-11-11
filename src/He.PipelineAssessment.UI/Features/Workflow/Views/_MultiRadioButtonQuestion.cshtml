@@ -15,7 +15,12 @@
         Select all that apply
     </div>
     <div class="govuk-radios" data-module="govuk-radios">
-        @foreach(var choice in Model.SingleChoice.Choices)
+        @for (int i = 0; i < Model.SingleChoice.Choices.Count(); i++)
+        {
+            var hiddenItemNameAnswer = "Data.MultiQuestionActivityData[" + Model.Index + "].SingleChoice.Choices[" + i + "].Answer";
+            <input type="hidden" name="@hiddenItemNameAnswer" value="@Model.SingleChoice.Choices[i].Answer" />
+        }
+        @foreach (var choice in Model.SingleChoice.Choices)
         {
             int iterrator = 1;
             string isChecked = "";

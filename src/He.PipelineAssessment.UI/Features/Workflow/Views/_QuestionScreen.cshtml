@@ -9,12 +9,24 @@
                 @Html.DisplayTextFor(m => m.Data.PageTitle)
             </h1>
         </legend>
+        
+        @if (!Model.IsValid && Model.ValidationMessages !=null)
+        {
+            @await Html.PartialAsync("_ValidationSummary",Model.ValidationMessages)
+        }
+
         @if (Model.Data.MultiQuestionActivityData != null)
         {
             @for (int i = 0; i < Model.Data.MultiQuestionActivityData.Count; i++)
             {
                 @Html.HiddenFor(m => m.Data.MultiQuestionActivityData![i].QuestionId)
                 @Html.HiddenFor(m => m.Data.MultiQuestionActivityData![i].QuestionType)
+                @Html.HiddenFor(m => m.Data.MultiQuestionActivityData![i].QuestionGuidance)
+                @Html.HiddenFor(m => m.Data.MultiQuestionActivityData![i].ActivityType)
+                @Html.HiddenFor(m => m.Data.MultiQuestionActivityData![i].Title)
+                @Html.HiddenFor(m => m.Data.MultiQuestionActivityData![i].Question)
+                @Html.HiddenFor(m => m.Data.MultiQuestionActivityData![i].QuestionHint)
+                @Html.HiddenFor(m => m.Data.MultiQuestionActivityData![i].DisplayComments)
 
                 @if (Model.Data.MultiQuestionActivityData![i].QuestionType == QuestionTypeConstants.TextQuestion)
                 {
@@ -75,6 +87,7 @@
                 }
                 @if (Model.Data.MultiQuestionActivityData![i].QuestionType == QuestionTypeConstants.MultipleChoiceQuestion)
                 {
+
                     @await Html.PartialAsync("_MultiCheckboxQuestion",new MultiQuestion()
                     {
                         Index = i,
@@ -97,6 +110,7 @@
                     }
                 @if (Model.Data.MultiQuestionActivityData![i].QuestionType == QuestionTypeConstants.SingleChoiceQuestion)
                 {
+
                     @await Html.PartialAsync("_MultiRadioButtonQuestion",new MultiQuestion()
                     {
                         Index = i,
