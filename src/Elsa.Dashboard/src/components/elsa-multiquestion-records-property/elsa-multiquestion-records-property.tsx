@@ -73,6 +73,7 @@ export class ElsaMultiQuestionRecordsProperty {
 
   updatePropertyModel() {
     this.propertyModel.expressions[SyntaxNames.Json] = JSON.stringify(this.multiQuestionModel);
+    console.log(this.multiQuestionModel);
   }
 
   updateQuestion(updatedQuestion: QuestionComponent) {

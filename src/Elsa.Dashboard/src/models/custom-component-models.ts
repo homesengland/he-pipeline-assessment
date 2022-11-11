@@ -7,6 +7,16 @@ export interface SingleChoiceRecord {
   answer: string;
 }
 
+export class CheckboxChoices {
+  choices: Array<MultiChoiceRecord> = []
+}
+
+export class RadioChoices {
+  choices: Array<SingleChoiceRecord> = []
+}
+
+
+
 export interface QuestionComponent {
   id: string;
   title: string;
@@ -35,7 +45,7 @@ export class MultiChoiceQuestion implements QuestionComponent {
     displayComments: boolean;
     questionHint: string;
     questionType: string;
-    choices: Array<MultiChoiceRecord> = []
+    checkbox: CheckboxChoices;
 
 }
 
@@ -47,7 +57,7 @@ export class SingleChoiceQuestion implements QuestionComponent {
     displayComments: boolean;
     questionHint: string;
     questionType: string;
-    choices: Array<SingleChoiceRecord> = []
+    radio: RadioChoices;
 }
 
 export class MultiChoiceActivity {

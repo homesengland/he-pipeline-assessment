@@ -7,6 +7,7 @@ import {
 } from '../../models/elsa-interfaces';
 
 import {
+    CheckboxChoices,
     MultiChoiceQuestion,
   MultiChoiceRecord,
   QuestionComponent
@@ -35,8 +36,8 @@ export class MultiQuestionCheckboxComponent {
   syntaxMultiChoiceCount: number = 0;
 
   async componentWillLoad() {
-    if (this.question && !this.question.choices) {
-      this.question.choices = [];
+    if (this.question && !this.question.checkbox) {
+      this.question.checkbox = new CheckboxChoices();
     }
   }
 
@@ -85,12 +86,11 @@ export class MultiQuestionCheckboxComponent {
   }
 
   onAddChoiceClick() {
-    const choiceName = `Choice ${this.question.choices.length + 1}`;
+    const choiceName = `Choice ${this.question.checkbox.choices.length + 1}`;
     const newChoice = { answer: choiceName, isSingle: false };
-    this.question = { ... this.question, choices: [... this.question.choices, newChoice] };
+    let newCheckboxObj = { ... this.question.checkbox, choices: [... this.question.checkbox.choices, newChoice] };
+    this.question = { ... this.question, checkbox: newCheckboxObj };
     this.updateQuestion.emit(this.question);
-
-
   }
 
   onChoiceNameChanged(e: Event, record: MultiChoiceRecord) {
@@ -105,7 +105,8 @@ export class MultiQuestionCheckboxComponent {
   }
 
   onDeleteChoiceClick(record: MultiChoiceRecord) {
-    this.question = { ...this.question, choices: this.question.choices.filter(x => x != record) }
+    let newCheckboxObj = { ... this.question.checkbox, choices: this.question.checkbox.choices.filter(x => x != record) };
+    this.question = { ...this.question, checkbox: newCheckboxObj }
     this.updateQuestion.emit(this.question);
   }
 
@@ -198,7 +199,7 @@ export class MultiQuestionCheckboxComponent {
               </tr>
             </thead>
             <tbody>
-              {this.question.choices.map(renderChoiceEditor)}
+              {this.question.checkbox.choices.map(renderChoiceEditor)}
             </tbody>
           </table>
           <button type="button" onClick={() => this.onAddChoiceClick.bind(this)()}

@@ -1,4 +1,4 @@
-import { Component, h, Prop, State, Event, EventEmitter } from '@stencil/core';
+import { Component, h, Prop, State, Event, Listen, EventEmitter } from '@stencil/core';
 
 import {
   HTMLElsaMultiExpressionEditorElement,
@@ -9,7 +9,8 @@ import {
 import {
   SingleChoiceQuestion,
   SingleChoiceRecord,
-  QuestionComponent
+  QuestionComponent,
+  RadioChoices
 } from '../../models/custom-component-models';
 
 import {
@@ -18,6 +19,7 @@ import {
 
 import PlusIcon from '../../icons/plus_icon';
 import TrashCanIcon from '../../icons/trash-can';
+//import { RadioEventHandler } from '../../events/component-events';
 
 
 @Component({
@@ -30,14 +32,20 @@ export class MultiQuestionRadioComponent {
   @Prop() question: SingleChoiceQuestion
   @State() iconProvider = new IconProvider();
 
+  //handler: RadioEventHandler;
+
   supportedSyntaxes: Array<string> = [SyntaxNames.JavaScript, SyntaxNames.Liquid];
   multiExpressionEditor: HTMLElsaMultiExpressionEditorElement;
   syntaxMultiChoiceCount: number = 0;
 
   async componentWillLoad() {
-    if (this.question && !this.question.choices) {
-      this.question.choices = [];
+    console.log("load lifecycle");
+    if (this.question && !this.question.radio) {
+      this.question.radio = new RadioChoices();
     }
+    console.log('setting handler');
+    //this.handler = new RadioEventHandler(this.question, this.updateQuestion);
+    //console.log(this.handler);
   }
 
   @Event({
@@ -47,8 +55,17 @@ export class MultiQuestionRadioComponent {
     bubbles: true,
   }) updateQuestion: EventEmitter<QuestionComponent>;
 
-  onTitleChanged = (e: Event) => {
-    let updatedQuestion = this.question;
+
+  @Listen('updateQuestion', { target: "body" })
+  getQuestion(event: CustomEvent) {
+    if (event.detail) {
+      console.log('Handler triggered', event.detail)
+      this.updateQuestion.emit(event.detail);
+    }
+  }
+
+  onTitleChanged = (e: Event, question: SingleChoiceQuestion) => {
+    let updatedQuestion = question;
     updatedQuestion.title = (e.currentTarget as HTMLInputElement).value.trim();
     this.updateQuestion.emit(updatedQuestion);
   }
@@ -83,14 +100,12 @@ export class MultiQuestionRadioComponent {
     updatedQuestion.displayComments = checkbox.checked;
     this.updateQuestion.emit(updatedQuestion);
   }
-
   onAddChoiceClick() {
-    const choiceName = `Choice ${this.question.choices.length + 1}`;
+    const choiceName = `Choice ${this.question.radio.choices.length + 1}`;
     const newChoice = { answer: choiceName, isSingle: false };
-    this.question = { ... this.question, choices: [... this.question.choices, newChoice] };
+    let newRadioObj = { ... this.question.radio, choices: [... this.question.radio.choices, newChoice] };
+    this.question = { ... this.question, radio: newRadioObj };
     this.updateQuestion.emit(this.question);
-
-
   }
 
   onChoiceNameChanged(e: Event, record: SingleChoiceRecord) {
@@ -99,7 +114,8 @@ export class MultiQuestionRadioComponent {
   }
 
   onDeleteChoiceClick(record: SingleChoiceRecord) {
-    this.question = { ...this.question, choices: this.question.choices.filter(x => x != record) }
+    let newRadioObj = { ... this.question.radio, choices: this.question.radio.choices.filter(x => x != record) };
+    this.question = { ...this.question, radio: newRadioObj }
     this.updateQuestion.emit(this.question);
   }
 
@@ -133,7 +149,7 @@ export class MultiQuestionRadioComponent {
           </div>
           <div>
             <input id={fieldId} name={fieldId} type="checkbox" checked={isChecked} value={'true'} onChange={e =>
-              onChangedFunction.bind(this)(e)}
+              onChangedFunction.bind(this)(e, this.question)}
               class="focus:elsa-ring-blue-500 elsa-h-8 elsa-w-8 elsa-text-blue-600 elsa-border-gray-300 elsa-rounded" />
           </div>
         </div>
@@ -182,7 +198,7 @@ export class MultiQuestionRadioComponent {
               </tr>
             </thead>
             <tbody>
-              {this.question.choices.map(renderChoiceEditor)}
+              {this.question.radio.choices.map(renderChoiceEditor)}
             </tbody>
           </table>
           <button type="button" onClick={() => this.onAddChoiceClick.bind(this)()}
