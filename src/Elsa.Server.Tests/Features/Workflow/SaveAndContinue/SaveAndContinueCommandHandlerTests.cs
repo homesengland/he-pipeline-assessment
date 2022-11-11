@@ -5,7 +5,6 @@ using Elsa.CustomModels;
 using Elsa.Models;
 using Elsa.Persistence;
 using Elsa.Persistence.Specifications.WorkflowInstances;
-using Elsa.Server.Features.Workflow.MultiSaveAndContinue;
 using Elsa.Server.Features.Workflow.SaveAndContinue;
 using Elsa.Server.Models;
 using Elsa.Services;
@@ -44,7 +43,7 @@ namespace Elsa.Server.Tests.Features.Workflow.SaveAndContinue
                     NextActivityId = workflowInstance.Output!.ActivityId
                 },
                 ErrorMessages = new List<string>(),
-                ValidationMessages = new List<string>()
+                ValidationMessages = null
             };
             activityBlueprint.Id = workflowInstance.Output.ActivityId;
             workflowBlueprint.Activities.Add(activityBlueprint);
@@ -82,7 +81,7 @@ namespace Elsa.Server.Tests.Features.Workflow.SaveAndContinue
             Assert.Equal(opResult.Data.NextActivityId, result.Data!.NextActivityId);
             Assert.Equal(opResult.Data.WorkflowInstanceId, result.Data.WorkflowInstanceId);
             Assert.Empty(result.ErrorMessages);
-            Assert.Empty(result.ValidationMessages);
+            Assert.Null(result.ValidationMessages);
         }
 
         [Theory]
@@ -114,7 +113,7 @@ namespace Elsa.Server.Tests.Features.Workflow.SaveAndContinue
                     NextActivityId = workflowInstance.Output!.ActivityId
                 },
                 ErrorMessages = new List<string>(),
-                ValidationMessages = new List<string>()
+                ValidationMessages = null
             };
 
             activityBlueprint.Id = workflowInstance.Output.ActivityId;
@@ -158,7 +157,7 @@ namespace Elsa.Server.Tests.Features.Workflow.SaveAndContinue
             Assert.Equal(opResult.Data.NextActivityId, result.Data!.NextActivityId);
             Assert.Equal(opResult.Data.WorkflowInstanceId, result.Data.WorkflowInstanceId);
             Assert.Empty(result.ErrorMessages);
-            Assert.Empty(result.ValidationMessages);
+            Assert.Null(result.ValidationMessages);
         }
 
         //re-write to test SaveAndContinueCommandHandler Handle method

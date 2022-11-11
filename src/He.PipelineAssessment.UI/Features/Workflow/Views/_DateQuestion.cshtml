@@ -3,12 +3,12 @@
     var errorFormClass = !Model.IsValid ? "govuk-form-group--error" : "";
     var errorFieldClass = !Model.IsValid ? "govuk-input--error" : "";
 }
-@*<div class="govuk-list govuk-error-summary__list validation-summary-errors">
-    @if (!Model.IsValid)
-    {
-        @await Html.PartialAsync("_ValidationSummary",Model.ValidationMessages)
-    }
-</div>*@
+
+@if (!Model.IsValid && Model.ValidationMessages !=null)
+{
+    @await Html.PartialAsync("_ValidationSummary",Model.ValidationMessages)
+}
+
 
 <div class="govuk-form-group @errorFormClass">
     <h1 class="govuk-heading-l">
@@ -24,12 +24,16 @@
         </div>
     }
     
-    @foreach(var item in Model.ValidationMessages)
+    @if (Model.ValidationMessages != null)
     {
-        <p class="govuk-error-message">
-            <span class="govuk-visually-hidden">Error:</span> @item
-        </p>
+        foreach(var item in Model.ValidationMessages.Errors)
+        {
+            <p class="govuk-error-message">
+                <span class="govuk-visually-hidden">Error:</span> @item.ErrorMessage
+            </p>
+        }
     }
+    
 
     <div class="govuk-date-input__item">
         <div class="govuk-form-group">

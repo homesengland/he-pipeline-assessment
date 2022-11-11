@@ -41,13 +41,13 @@ namespace He.PipelineAssessment.UI.Features.Workflow.SaveAndContinue
                 return string.Empty;
             });
 
-            RuleFor(x => x.Data.QuestionActivityData!.Date).Must(date =>
+            RuleFor(x => x.Data.QuestionActivityData!.Date.Day).Must(day =>
             {
-                if (date.Day == null)
+                if (day == null)
                 {
                     return true;
                 }
-                if (date.Day != null && date.Day > 31)
+                if (day != null && day > 31)
                 {
                     return false;
                 }
@@ -55,7 +55,39 @@ namespace He.PipelineAssessment.UI.Features.Workflow.SaveAndContinue
                 {
                     return true;
                 }
-            }).WithMessage("Enter a Valid Day");
+            }).WithMessage("The date entered must include a real day");
+
+            RuleFor(x => x.Data.QuestionActivityData!.Date.Month).Must(month =>
+            {
+                if (month == null)
+                {
+                    return true;
+                }
+                if (month != null && month > 12)
+                {
+                    return false;
+                }
+                else
+                {
+                    return true;
+                }
+            }).WithMessage("The date entered must include a real month");
+
+            RuleFor(x => x.Data.QuestionActivityData!.Date.Year).Must(year =>
+            {
+                if (year == null)
+                {
+                    return true;
+                }
+                if (year != null && (year > 9999 || year < 999))
+                {
+                    return false;
+                }
+                else
+                {
+                    return true;
+                }
+            }).WithMessage("Year must include 4 numbers");
 
             RuleFor(x => x.Data.QuestionActivityData!.Date).Must(date =>
             {
@@ -84,7 +116,7 @@ namespace He.PipelineAssessment.UI.Features.Workflow.SaveAndContinue
                     }
                     else
                     {
-                        return "Enter a valid date.";
+                        return "The date entered must be a real date";
                     }
                 });
 

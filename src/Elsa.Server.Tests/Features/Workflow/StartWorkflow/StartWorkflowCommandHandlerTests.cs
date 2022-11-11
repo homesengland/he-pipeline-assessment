@@ -36,7 +36,7 @@ namespace Elsa.Server.Tests.Features.Workflow.StartWorkflow
             {
                 Data = startWorkflowResponse,
                 ErrorMessages = new List<string>(),
-                ValidationMessages = new List<string>()
+                ValidationMessages = null
             };
 
             activityBlueprint.Id = runWorkflowResult.WorkflowInstance!.LastExecutedActivityId!;
@@ -64,7 +64,7 @@ namespace Elsa.Server.Tests.Features.Workflow.StartWorkflow
             Assert.Equal(opResult.Data.NextActivityId, result.Data!.NextActivityId);
             Assert.Equal(opResult.Data.WorkflowInstanceId, result.Data.WorkflowInstanceId);
             Assert.Empty(result.ErrorMessages);
-            Assert.Empty(result.ValidationMessages);
+            Assert.Null(result.ValidationMessages);
         }
 
         [Theory]

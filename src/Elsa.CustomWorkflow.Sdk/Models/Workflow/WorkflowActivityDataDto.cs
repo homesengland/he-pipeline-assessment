@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿
+using FluentValidation.Results;
 using System.Globalization;
 using System.Text.Json;
 
@@ -8,7 +9,7 @@ namespace Elsa.CustomWorkflow.Sdk.Models.Workflow
     {
         public WorkflowActivityData Data { get; set; } = null!;
         public bool IsValid { get; set; }
-        public IList<string> ValidationMessages { get; set; } = new List<string>();
+        public ValidationResult? ValidationMessages { get; set; }
     }
 
     public class WorkflowActivityData
@@ -190,11 +191,8 @@ namespace Elsa.CustomWorkflow.Sdk.Models.Workflow
 
     public class Date
     {
-        [Range(1, 31)]
         public int? Day { get; set; }
-        [Range(1, 12)]
         public int? Month { get; set; }
-        [Range(1000, 3000)]
         public int? Year { get; set; }
     }
 }

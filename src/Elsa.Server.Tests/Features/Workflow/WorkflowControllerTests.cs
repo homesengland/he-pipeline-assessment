@@ -1,7 +1,6 @@
 ﻿using AutoFixture.Xunit2;
 using Elsa.Server.Features.Workflow;
 using Elsa.Server.Features.Workflow.LoadWorkflowActivity;
-using Elsa.Server.Features.Workflow.MultiSaveAndContinue;
 using Elsa.Server.Features.Workflow.SaveAndContinue;
 using Elsa.Server.Features.Workflow.StartWorkflow;
 using Elsa.Server.Models;
@@ -24,7 +23,7 @@ namespace Elsa.Server.Tests.Features.Workflow
             var startWorkflowOperationResult = new OperationResult<StartWorkflowResponse>
             {
                 ErrorMessages = new List<string>(),
-                ValidationMessages = new List<string>(),
+                ValidationMessages = null,
                 Data = response
             };
             //Arrange
@@ -139,7 +138,7 @@ namespace Elsa.Server.Tests.Features.Workflow
             var startWorkflowOperationResult = new OperationResult<LoadWorkflowActivityResponse>
             {
                 ErrorMessages = new List<string>(),
-                ValidationMessages = new List<string>(),
+                ValidationMessages = null,
                 Data = response
             };
             //Arrange
@@ -257,7 +256,7 @@ namespace Elsa.Server.Tests.Features.Workflow
             var startWorkflowOperationResult = new OperationResult<SaveAndContinueResponse>
             {
                 ErrorMessages = new List<string>(),
-                ValidationMessages = new List<string>(),
+                ValidationMessages = null,
                 Data = response
             };
 

@@ -36,7 +36,7 @@ namespace Elsa.Server.Tests.Models
             //Act
 
             //Assert
-            Assert.Equal(3, sut.ValidationMessages.Count);
+            Assert.Equal(3, sut.ValidationMessages!.Errors.Count);
             Assert.False(sut.IsValid);
         }
 
@@ -48,12 +48,12 @@ namespace Elsa.Server.Tests.Models
         )
         {
             //Arrange
-            sut.ValidationMessages = new List<string>();
+            sut.ValidationMessages = null;
 
             //Act
 
             //Assert
-            Assert.Equal(0, sut.ValidationMessages.Count);
+
             Assert.True(sut.IsValid);
         }
 
