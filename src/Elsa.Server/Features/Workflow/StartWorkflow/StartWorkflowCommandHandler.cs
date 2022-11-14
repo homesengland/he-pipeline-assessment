@@ -39,8 +39,6 @@ namespace Elsa.Server.Features.Workflow.StartWorkflow
 
                     if (activity != null)
                     {
-
-
                         var assessmentQuestion =
                             _startWorkflowMapper.RunWorkflowResultToAssessmentQuestion(runWorkflowResult, activity.Type);
 
