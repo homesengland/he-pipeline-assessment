@@ -435,5 +435,48 @@ namespace Elsa.Server.Tests.Features.Workflow.LoadWorkflowActivity
             loadWorkflowActivityJsonHelper.Verify(x => x.ActivityDataDictionaryToQuestionActivityData<QuestionActivityData>(It.IsAny<IDictionary<string, object?>>()), Times.Never);
 
         }
+
+        [Theory]
+        [AutoMoqData]
+        public async Task Handle_ReturnsErrors_GivenActiovityDataReturnsNullForAcitivtyId(
+         [Frozen] Mock<IQuestionInvoker> questionInvoker,
+         [Frozen] Mock<IWorkflowInstanceStore> workflowInstanceStore,
+         [Frozen] Mock<IElsaCustomRepository> elsaCustomRepository,
+         [Frozen] Mock<ILoadWorkflowActivityJsonHelper> loadWorkflowActivityJsonHelper,
+         LoadWorkflowActivityRequest loadWorkflowActivityRequest,
+         List<CollectedWorkflow> collectedWorkflows,
+         WorkflowInstance workflowInstance,
+         AssessmentQuestion assessmentQuestion,
+         QuestionActivityData questionActivityData,
+         LoadWorkflowActivityRequestHandler sut)
+        {
+
+            //Arrange
+            questionInvoker
+                .Setup(x => x.FindWorkflowsAsync(loadWorkflowActivityRequest.ActivityId, assessmentQuestion.ActivityType, loadWorkflowActivityRequest.WorkflowInstanceId, CancellationToken.None))
+                .ReturnsAsync(collectedWorkflows);
+
+            workflowInstanceStore.Setup(x =>
+                    x.FindAsync(It.IsAny<WorkflowInstanceIdSpecification>(), CancellationToken.None))
+                .ReturnsAsync(workflowInstance);
+
+            elsaCustomRepository.Setup(x => x.GetAssessmentQuestion(loadWorkflowActivityRequest.ActivityId,
+                    loadWorkflowActivityRequest.WorkflowInstanceId, CancellationToken.None))
+                .ReturnsAsync(assessmentQuestion);
+
+            loadWorkflowActivityJsonHelper
+                .Setup(x => x.ActivityDataDictionaryToQuestionActivityData<QuestionActivityData>(It.IsAny<IDictionary<string, object?>>()))
+                .Returns(questionActivityData);
+
+            IDictionary<string, object?>? customDictionary = null;
+            workflowInstance.ActivityData.Add(loadWorkflowActivityRequest.ActivityId, customDictionary!);
+
+            //Act
+            var result = await sut.Handle(loadWorkflowActivityRequest, CancellationToken.None);
+
+            //Assert
+            Assert.Null(result.Data!.QuestionActivityData);
+            Assert.Equal($"Activity data is null for Activity Id: {loadWorkflowActivityRequest.ActivityId}", result.ErrorMessages.Single());
+        }
     }
 }
