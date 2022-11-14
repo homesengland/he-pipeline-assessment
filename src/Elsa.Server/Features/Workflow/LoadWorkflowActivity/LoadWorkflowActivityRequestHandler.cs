@@ -71,7 +71,7 @@ namespace Elsa.Server.Features.Workflow.LoadWorkflowActivity
                                     result.Data.ActivityType = dbAssessmentQuestion.ActivityType;
                                     result.Data.PreviousActivityId = dbAssessmentQuestion.PreviousActivityId;
 
-                                    if (dbAssessmentQuestion.ActivityType == "QuestionScreen")
+                                    if (dbAssessmentQuestion.ActivityType == Constants.QuestionScreen)
                                     {
                                         var title = (string?)activityDataDictionary.FirstOrDefault(x => x.Key == "PageTitle").Value;
                                         result.Data.PageTitle = title;
