@@ -7,10 +7,10 @@ import {
 } from '../../models/elsa-interfaces';
 
 import {
-    CheckboxChoices,
-    MultiChoiceQuestion,
+  CheckboxQuestion,
   MultiChoiceRecord,
-  QuestionComponent
+  QuestionComponent,
+  QuestionOptions
 } from '../../models/custom-component-models';
 
 import {
@@ -19,6 +19,7 @@ import {
 
 import PlusIcon from '../../icons/plus_icon';
 import TrashCanIcon from '../../icons/trash-can';
+import { CheckboxEventHandler } from '../../events/component-events';
 
 
 @Component({
@@ -28,18 +29,14 @@ import TrashCanIcon from '../../icons/trash-can';
 
 export class MultiQuestionCheckboxComponent {
 
-  @Prop() question: MultiChoiceQuestion
+  @Prop() question: CheckboxQuestion
   @State() iconProvider = new IconProvider();
+
+  handler: CheckboxEventHandler;
 
   supportedSyntaxes: Array<string> = [SyntaxNames.JavaScript, SyntaxNames.Liquid];
   multiExpressionEditor: HTMLElsaMultiExpressionEditorElement;
   syntaxMultiChoiceCount: number = 0;
-
-  async componentWillLoad() {
-    if (this.question && !this.question.checkbox) {
-      this.question.checkbox = new CheckboxChoices();
-    }
-  }
 
   @Event({
     eventName: 'updateQuestion',
@@ -48,66 +45,12 @@ export class MultiQuestionCheckboxComponent {
     bubbles: true,
   }) updateQuestion: EventEmitter<QuestionComponent>;
 
-  onTitleChanged = (e: Event) => {
-    let updatedQuestion = this.question;
-    updatedQuestion.title = (e.currentTarget as HTMLInputElement).value.trim();
-    this.updateQuestion.emit(updatedQuestion);
-  }
 
-  onIdentifierChanged(e: Event) {
-    let updatedQuestion = this.question;
-    updatedQuestion.id = (e.currentTarget as HTMLInputElement).value.trim();
-    this.updateQuestion.emit(updatedQuestion);
-  }
-
-  onQuestionChanged(e: Event) {
-    let updatedQuestion = this.question;
-    updatedQuestion.questionText = (e.currentTarget as HTMLInputElement).value.trim();
-    this.updateQuestion.emit(updatedQuestion);
-  };
-
-  onGuidanceChanged(e: Event) {
-    let updatedQuestion = this.question;
-    updatedQuestion.questionGuidance = (e.currentTarget as HTMLInputElement).value.trim();
-    this.updateQuestion.emit(updatedQuestion);
-  }
-
-  onHintChanged(e: Event) {
-    let updatedQuestion = this.question;
-    updatedQuestion.questionHint = (e.currentTarget as HTMLInputElement).value.trim();
-    this.updateQuestion.emit(updatedQuestion);
-  }
-
-  onDisplayCommentsBox(e: Event) {
-    let updatedQuestion = this.question;
-    const checkbox = (e.target as HTMLInputElement);
-    updatedQuestion.displayComments = checkbox.checked;
-    this.updateQuestion.emit(updatedQuestion);
-  }
-
-  onAddChoiceClick() {
-    const choiceName = `Choice ${this.question.checkbox.choices.length + 1}`;
-    const newChoice = { answer: choiceName, isSingle: false };
-    let newCheckboxObj = { ... this.question.checkbox, choices: [... this.question.checkbox.choices, newChoice] };
-    this.question = { ... this.question, checkbox: newCheckboxObj };
-    this.updateQuestion.emit(this.question);
-  }
-
-  onChoiceNameChanged(e: Event, record: MultiChoiceRecord) {
-    record.answer = (e.currentTarget as HTMLInputElement).value.trim();
-    this.updateQuestion.emit(this.question);
-  }
-
-  onCheckChanged(e: Event, record: MultiChoiceRecord) {
-    const checkbox = (e.target as HTMLInputElement);
-    record.isSingle = checkbox.checked;
-    this.updateQuestion.emit(this.question);
-  }
-
-  onDeleteChoiceClick(record: MultiChoiceRecord) {
-    let newCheckboxObj = { ... this.question.checkbox, choices: this.question.checkbox.choices.filter(x => x != record) };
-    this.question = { ...this.question, checkbox: newCheckboxObj }
-    this.updateQuestion.emit(this.question);
+  async componentWillLoad() {
+    if (this.question && !this.question.checkbox) {
+      this.question.checkbox = new QuestionOptions<MultiChoiceRecord>();
+    }
+    this.handler = new CheckboxEventHandler(this.question, this.updateQuestion);
   }
 
   renderQuestionField(fieldId, fieldName, fieldValue, onChangedFunction) {
@@ -155,17 +98,17 @@ export class MultiQuestionCheckboxComponent {
       return (
         <tr key={`choice-${index}`}>
           <td class="elsa-py-2 elsa-pr-5">
-            <input type="text" value={multiChoice.answer} onChange={e => this.onChoiceNameChanged.bind(this)(e, multiChoice)}
+            <input type="text" value={multiChoice.answer} onChange={e => this.handler.onChoiceNameChanged.bind(this)(e, multiChoice)}
               class="focus:elsa-ring-blue-500 focus:elsa-border-blue-500 elsa-block elsa-w-full elsa-min-w-0 elsa-rounded-md sm:elsa-text-sm elsa-border-gray-300" />
           </td>
           <td class="elsa-py-0">
             <input id={`${field}-id`} name="choice_input" type="checkbox" checked={isChecked} value={'true'}
-              onChange={e => this.onCheckChanged.bind(this)(e, multiChoice)}
+              onChange={e => this.handler.onCheckChanged.bind(this)(e, multiChoice)}
               class="focus:elsa-ring-blue-500 elsa-h-8 elsa-w-8 elsa-text-blue-600 elsa-border-gray-300 elsa-rounded" />
           </td>
 
           <td class="elsa-pt-1 elsa-pr-2 elsa-text-right">
-            <button type="button" onClick={() => this.onDeleteChoiceClick.bind(this)(multiChoice)}
+            <button type="button" onClick={() => this.handler.onDeleteChoiceClick.bind(this)(multiChoice)}
               class="elsa-h-5 elsa-w-5 elsa-mx-auto elsa-outline-none focus:elsa-outline-none">
               <TrashCanIcon options={this.iconProvider.getOptions()} />
             </button>
@@ -177,12 +120,12 @@ export class MultiQuestionCheckboxComponent {
     return (
           <div>
 
-        {this.renderQuestionField(`${field}-questionid`, `Identifier`, this.question.id, this.onIdentifierChanged)}
-        {this.renderQuestionField(`${field}-title`, `Title`, this.question.title, this.onTitleChanged)}
-        {this.renderQuestionField(`${field}-questionText`, `Question`, this.question.questionText, this.onQuestionChanged)}
-        {this.renderQuestionField(`${field}-questionHint`, `Hint`, this.question.questionHint, this.onHintChanged)}
-        {this.renderQuestionField(`${field}-questionGuidance`, `Guidance`, this.question.questionGuidance, this.onGuidanceChanged)}
-        {this.renderCheckboxField(`${field}-displayCommentBox`, `Display Comments`, this.question.displayComments, this.onDisplayCommentsBox)}
+        {this.renderQuestionField(`${field}-questionid`, `Identifier`, this.question.id, this.handler.onIdentifierChanged)}
+        {this.renderQuestionField(`${field}-title`, `Title`, this.question.title, this.handler.onTitleChanged)}
+        {this.renderQuestionField(`${field}-questionText`, `Question`, this.question.questionText, this.handler.onQuestionChanged)}
+        {this.renderQuestionField(`${field}-questionHint`, `Hint`, this.question.questionHint, this.handler.onHintChanged)}
+        {this.renderQuestionField(`${field}-questionGuidance`, `Guidance`, this.question.questionGuidance, this.handler.onGuidanceChanged)}
+        {this.renderCheckboxField(`${field}-displayCommentBox`, `Display Comments`, this.question.displayComments, this.handler.onDisplayCommentsBox)}
 
         <div>
           <table class="elsa-min-w-full elsa-divide-y elsa-divide-gray-200">
@@ -202,7 +145,7 @@ export class MultiQuestionCheckboxComponent {
               {this.question.checkbox.choices.map(renderChoiceEditor)}
             </tbody>
           </table>
-          <button type="button" onClick={() => this.onAddChoiceClick.bind(this)()}
+          <button type="button" onClick={() => this.handler.onAddChoiceClick.bind(this)()}
             class="elsa-inline-flex elsa-items-center elsa-px-4 elsa-py-2 elsa-border elsa-border-transparent elsa-shadow-sm elsa-text-sm elsa-font-medium elsa-rounded-md elsa-text-white elsa-bg-blue-600 hover:elsa-bg-blue-700 focus:elsa-outline-none focus:elsa-ring-2 focus:elsa-ring-offset-2 focus:elsa-ring-blue-500 elsa-mt-2">
             <PlusIcon options={this.iconProvider.getOptions()} />
             Add Choice

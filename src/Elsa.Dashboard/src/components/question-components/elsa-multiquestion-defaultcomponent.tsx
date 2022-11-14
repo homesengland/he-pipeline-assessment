@@ -13,6 +13,7 @@ import {
 import {
   IconProvider,
 } from '../icon-provider/icon-provider'
+import { QuestionEventHandler } from '../../events/component-events';
 
 
 @Component({
@@ -25,13 +26,11 @@ export class MultiQuestionComponent {
   @Prop() question: QuestionComponent
   @State() iconProvider = new IconProvider();
 
+  handler: QuestionEventHandler;
+
   supportedSyntaxes: Array<string> = [SyntaxNames.JavaScript, SyntaxNames.Liquid];
   multiExpressionEditor: HTMLElsaMultiExpressionEditorElement;
   syntaxMultiChoiceCount: number = 0;
-
-  async componentWillLoad() {
-
-  }
 
   @Event({
     eventName: 'updateQuestion',
@@ -40,42 +39,8 @@ export class MultiQuestionComponent {
     bubbles: true,
   }) updateQuestion: EventEmitter<QuestionComponent>;
 
-  onTitleChanged = (e: Event) => {
-    let updatedQuestion = this.question;
-    updatedQuestion.title = (e.currentTarget as HTMLInputElement).value.trim();
-    this.updateQuestion.emit(updatedQuestion);
-  }
-
-  onIdentifierChanged(e: Event) {
-    let updatedQuestion = this.question;
-    updatedQuestion.id = (e.currentTarget as HTMLInputElement).value.trim();
-    this.updateQuestion.emit(updatedQuestion);
-  }
-
-  onQuestionChanged(e: Event) {
-    let updatedQuestion = this.question;
-    updatedQuestion.questionText = (e.currentTarget as HTMLInputElement).value.trim();
-    this.updateQuestion.emit(updatedQuestion);
-  };
-
-  onGuidanceChanged(e: Event) {
-    let updatedQuestion = this.question;
-    updatedQuestion.questionGuidance = (e.currentTarget as HTMLInputElement).value.trim();
-    this.updateQuestion.emit(updatedQuestion);
-  }
-
-  onHintChanged(e: Event) {
-    let updatedQuestion = this.question;
-    updatedQuestion.questionHint = (e.currentTarget as HTMLInputElement).value.trim();
-    this.updateQuestion.emit(updatedQuestion);
-  }
-
-  onDisplayCommentsBox(e: Event) {
-    let updatedQuestion = this.question;
-    const checkbox = (e.target as HTMLInputElement);
-    updatedQuestion.displayComments = checkbox.checked;
-    this.updateQuestion.emit(updatedQuestion);
-
+  async componentWillLoad() {
+    this.handler = new QuestionEventHandler(this.question, this.updateQuestion);
   }
 
   renderQuestionField(fieldId, fieldName, fieldValue, onChangedFunction) {
@@ -124,12 +89,12 @@ export class MultiQuestionComponent {
     return (
           <div>
 
-        {this.renderQuestionField(`${field}-questionid`, `Identifier`, this.question.id, this.onIdentifierChanged)}
-        {this.renderQuestionField(`${field}-title`, `Title`, this.question.title, this.onTitleChanged)}
-        {this.renderQuestionField(`${field}-questionText`, `Question`, this.question.questionText, this.onQuestionChanged)}
-        {this.renderQuestionField(`${field}-questionHint`, `Hint`, this.question.questionHint, this.onHintChanged)}
-        {this.renderQuestionField(`${field}-questionGuidance`, `Guidance`, this.question.questionGuidance, this.onGuidanceChanged)}
-        {this.renderCheckboxField(`${field}-displayCommentBox`, `Display Comments`, this.question.displayComments, this.onDisplayCommentsBox)}
+        {this.renderQuestionField(`${field}-questionid`, `Identifier`, this.question.id, this.handler.onIdentifierChanged)}
+        {this.renderQuestionField(`${field}-title`, `Title`, this.question.title, this.handler.onTitleChanged)}
+        {this.renderQuestionField(`${field}-questionText`, `Question`, this.question.questionText, this.handler.onQuestionChanged)}
+        {this.renderQuestionField(`${field}-questionHint`, `Hint`, this.question.questionHint, this.handler.onHintChanged)}
+        {this.renderQuestionField(`${field}-questionGuidance`, `Guidance`, this.question.questionGuidance, this.handler.onGuidanceChanged)}
+        {this.renderCheckboxField(`${field}-displayCommentBox`, `Display Comments`, this.question.displayComments, this.handler.onDisplayCommentsBox)}
 
           </div>
     );

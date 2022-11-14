@@ -5,11 +5,11 @@
  * It contains typing information for all components that exist in this project.
  */
 import { HTMLStencilElement, JSXBase } from "@stencil/core/internal";
-import { MultiChoiceQuestion, QuestionComponent, SingleChoiceQuestion } from "./models/custom-component-models";
+import { CheckboxQuestion, QuestionComponent, RadioQuestion } from "./models/custom-component-models";
 import { ActivityDefinitionProperty, ActivityModel, ActivityPropertyDescriptor } from "./models/elsa-interfaces";
 export namespace Components {
     interface ElsaCheckboxQuestion {
-        "question": MultiChoiceQuestion;
+        "question": CheckboxQuestion;
     }
     interface ElsaMultichoiceRecordsProperty {
         "activityModel": ActivityModel;
@@ -25,7 +25,7 @@ export namespace Components {
         "question": QuestionComponent;
     }
     interface ElsaRadioQuestion {
-        "question": SingleChoiceQuestion;
+        "question": RadioQuestion;
     }
     interface ElsaSinglechoiceRecordsProperty {
         "activityModel": ActivityModel;
@@ -82,7 +82,7 @@ declare global {
 declare namespace LocalJSX {
     interface ElsaCheckboxQuestion {
         "onUpdateQuestion"?: (event: CustomEvent<QuestionComponent>) => void;
-        "question"?: MultiChoiceQuestion;
+        "question"?: CheckboxQuestion;
     }
     interface ElsaMultichoiceRecordsProperty {
         "activityModel"?: ActivityModel;
@@ -100,7 +100,7 @@ declare namespace LocalJSX {
     }
     interface ElsaRadioQuestion {
         "onUpdateQuestion"?: (event: CustomEvent<QuestionComponent>) => void;
-        "question"?: SingleChoiceQuestion;
+        "question"?: RadioQuestion;
     }
     interface ElsaSinglechoiceRecordsProperty {
         "activityModel"?: ActivityModel;

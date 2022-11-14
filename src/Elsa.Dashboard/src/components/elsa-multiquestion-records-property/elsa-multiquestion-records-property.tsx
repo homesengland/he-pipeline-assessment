@@ -14,8 +14,8 @@ import {
 import {
   QuestionComponent,
   MultiQuestionActivity,
-  SingleChoiceQuestion,
-  MultiChoiceQuestion,
+  RadioQuestion,
+  CheckboxQuestion,
 } from '../../models/custom-component-models';
 
 import {
@@ -144,9 +144,9 @@ export class ElsaMultiQuestionRecordsProperty {
   renderQuestionComponent(question: QuestionComponent) {
     switch (question.questionType) {
       case "MultipleChoiceQuestion":
-        return <elsa-checkbox-question onClick={(e) => e.stopPropagation()} class="panel elsa-rounded" question={question as MultiChoiceQuestion}></elsa-checkbox-question>;
+        return <elsa-checkbox-question onClick={(e) => e.stopPropagation()} class="panel elsa-rounded" question={question as CheckboxQuestion}></elsa-checkbox-question>;
       case "SingleChoiceQuestion":
-        return <elsa-radio-question onClick={(e) => e.stopPropagation()} class="panel elsa-rounded" question={question as SingleChoiceQuestion}></elsa-radio-question>;
+        return <elsa-radio-question onClick={(e) => e.stopPropagation()} class="panel elsa-rounded" question={question as RadioQuestion}></elsa-radio-question>;
       default:
         return <elsa-question onClick={(e) => e.stopPropagation()} class="panel elsa-rounded" question={question}></elsa-question>;
     }
