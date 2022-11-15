@@ -65,6 +65,16 @@ abstract class BaseQuestionEventHandler {
   };
 }
 
+
+export class QuestionEventHandler extends BaseQuestionEventHandler {
+  constructor(q: Question, e: EventEmitter) {
+    super(q, e);
+  }
+
+  question: Question;
+  emitter: EventEmitter<Question>;
+}
+
 abstract class ChoiceQuestionEventHandler<T> extends BaseQuestionEventHandler {
 
   constructor(q: MultipleChoiceQuestion<T>, e: EventEmitter) {
@@ -76,57 +86,43 @@ abstract class ChoiceQuestionEventHandler<T> extends BaseQuestionEventHandler {
 
   abstract getChoice(name: string): OptionsRecord;
 
+  abstract assignOptions(val: QuestionOptions<T>)
+
   question: MultipleChoiceQuestion<T>;
   emitter: EventEmitter;
 
   onAddChoiceClick = () => {
+    console.log('adding choice');
     const choiceName = `Choice ${this.question.options.choices.length + 1}`;
+    console.log('question', this.question);
     const newChoice = this.getChoice(choiceName);
+    console.log('new choice', newChoice);
     let updatedChoices = { ... this.question.options, choices: [... this.question.options.choices, newChoice] } as QuestionOptions<T>;
-    this.question = { ... this.question, options: updatedChoices };
+    console.log('updated choices', updatedChoices);
+    //this.question = { ... this.question, options: updatedChoices };
+    console.log(this.question);
+    this.question = { ...this.question, options: updatedChoices }
+    this.assignOptions(updatedChoices);
+    console.log('updated question', this.question);
+    this.emitter.emit(this.question);
+    console.log('emitting...');
+  };
+
+  onChoiceNameChanged = (e: Event, record: MultiChoiceRecord) => {
+    record.answer = (e.currentTarget as HTMLInputElement).value.trim();
     this.emitter.emit(this.question);
   };
 
-//  onAddChoiceClick = () => {
-//    let q = this.question as MultipleChoiceQuestion;
-//    console.log('logging question type', q)
-//    const choiceName = `Choice ${q.getChoices.choices.length + 1}`;
-//    const newChoice = { answer: choiceName, isSingle: false };
-//    let newCheckboxObj = { ...q.getChoices, choices: [...q.getChoices.choices, newChoice] };
-//    q = q.setChoices(newCheckboxObj.choices);
-///*    q = { ... q, q.getChoices().choices : newCheckboxObj };*/
-//    this.emitter.emit(q);
-//  };
-
-  //onChoiceNameChanged = (e: Event, record: MultiChoiceRecord) => {
-  //  record.answer = (e.currentTarget as HTMLInputElement).value.trim();
-  //  this.emitter.emit(this.question);
-  //};
-
-  //onCheckChanged = (e: Event, record: MultiChoiceRecord) => {
-  //  const checkbox = (e.target as HTMLInputElement);
-  //  record.isSingle = checkbox.checked;
-  //  this.emitter.emit(this.question);
-  //};
-
-  //onDeleteChoiceClick = (record: MultiChoiceRecord) => {
-  //  let newCheckboxObj = { ... this.question.checkbox, choices: this.question.checkbox.choices.filter(x => x != record) };
-  //  this.question = { ...this.question, checkbox: newCheckboxObj }
-  //  this.emitter.emit(this.question);
-  //};
+  onDeleteChoiceClick = (record: T) => {
+    let newChoiceObj = { ... this.question.options, choices: this.question.options.choices.filter(x => x != record) };
+    this.question = { ...this.question, options: newChoiceObj }
+    this.assignOptions(newChoiceObj);
+    this.emitter.emit(this.question);
+  };
 }
 
-export class QuestionEventHandler extends BaseQuestionEventHandler {
-  constructor(q: Question, e: EventEmitter) {
-    super(q, e);
-  }
-
-  question: Question;
-  emitter: EventEmitter<Question>;
-}
 
 export class CheckboxEventHandler extends ChoiceQuestionEventHandler<MultiChoiceRecord> {
-
 
   constructor(q: CheckboxQuestion, e: EventEmitter) {
     super(q, e);
@@ -139,29 +135,13 @@ export class CheckboxEventHandler extends ChoiceQuestionEventHandler<MultiChoice
     return { answer: name, isSingle: false };
   }
 
-  onAddChoiceClick = () => {
-    const choiceName = `Choice ${this.question.checkbox.choices.length + 1}`;
-    const newChoice = { answer: choiceName, isSingle: false };
-    let newCheckboxObj = { ... this.question.checkbox, choices: [... this.question.checkbox.choices, newChoice] };
-    this.question = { ... this.question, checkbox: newCheckboxObj };
-    this.emitter.emit(this.question);
-  };
-
-  onChoiceNameChanged = (e: Event, record: MultiChoiceRecord) => {
-    record.answer = (e.currentTarget as HTMLInputElement).value.trim();
-    this.emitter.emit(this.question);
-  };
+  assignOptions(val: QuestionOptions<MultiChoiceRecord>) {
+    this.question.checkbox = val;
+  }
 
   onCheckChanged = (e: Event, record: MultiChoiceRecord) => {
     const checkbox = (e.target as HTMLInputElement);
     record.isSingle = checkbox.checked;
-    this.emitter.emit(this.question);
-  };
-
-  onDeleteChoiceClick = (record: MultiChoiceRecord) => {
-    record = record;
-    let newCheckboxObj = { ... this.question.checkbox, choices: this.question.checkbox.choices.filter(x => x != record) };
-    this.question = { ...this.question, checkbox: newCheckboxObj }
     this.emitter.emit(this.question);
   };
 
@@ -181,24 +161,7 @@ export class RadioEventHandler extends ChoiceQuestionEventHandler<SingleChoiceRe
     return { answer: name };
   }
 
-  onAddChoiceClick = () => {
-    const choiceName = `Choice ${this.question.radio.choices.length + 1}`;
-    const newChoice = { answer: choiceName, isSingle: false };
-    let newRadioObj = { ... this.question.radio, choices: [... this.question.radio.choices, newChoice] };
-    this.question = { ... this.question, radio: newRadioObj };
-    this.emitter.emit(this.question);
-  };
-
-  onChoiceNameChanged = (e: Event, record: SingleChoiceRecord) => {
-    record.answer = (e.currentTarget as HTMLInputElement).value.trim();
-    this.emitter.emit(this.question);
-  };
-
-  onDeleteChoiceClick = (record: SingleChoiceRecord) => {
-    record = record;
-    let newRadioObj = { ... this.question.radio, choices: this.question.radio.choices.filter(x => x != record) };
-    this.question = { ...this.question, radio: newRadioObj }
-    this.emitter.emit(this.question);
-  };
-
+  assignOptions = (val: QuestionOptions<SingleChoiceRecord>) => {
+    this.question.radio = val;
+  }
 }

@@ -13,16 +13,6 @@ export class QuestionOptions<T>{
   choices: Array<T> = [];
 }
 
-//export class CheckboxChoices extends  {
-//  choices: Array<MultiChoiceRecord> = []
-//}
-
-//export class RadioChoices {
-//  choices: Array<SingleChoiceRecord> = []
-//}
-
-
-
 export interface QuestionComponent {
   id: string;
   title: string;
@@ -58,6 +48,10 @@ export class RadioQuestion extends MultipleChoiceQuestion<SingleChoiceRecord> {
 
   radio: QuestionOptions<SingleChoiceRecord> = this.options;
 
+  setOptions(val: QuestionOptions<SingleChoiceRecord>) {
+    this.options = val;
+    this.radio = val;
+  }
 }
 
 

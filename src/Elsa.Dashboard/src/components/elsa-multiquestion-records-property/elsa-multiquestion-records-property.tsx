@@ -1,4 +1,4 @@
-import { Component, h, Prop, State, Listen } from '@stencil/core';
+import { Component, h, Prop, State, Listen, forceUpdate } from '@stencil/core';
 
 import TrashCanIcon from '../../icons/trash-can';
 //import PlusIcon from '../../icons/plus_icon';
@@ -57,6 +57,7 @@ export class ElsaMultiQuestionRecordsProperty {
     if (event.detail) {
       this.updateQuestion(event.detail);
     }
+    forceUpdate(this);
   }
 
   async componentWillLoad() {
