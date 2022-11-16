@@ -10,17 +10,14 @@ namespace Elsa.CustomActivities.Activities.QuestionScreen
 {
     [Trigger(
     Category = "Homes England Activities",
-    Description = "Multi question assessment screen",
+    Description = "Multi question screen",
     Outcomes = new[] { OutcomeNames.Done },
-    DisplayName = "Multi Question screen"
+    DisplayName = "Question screen"
 )]
     public class QuestionScreen : Activity
     {
         [ActivityInput(Hint = "Page title")]
         public string PageTitle { get; set; } = null!;
-
-        //[ActivityInput(Label = "List of questions", Hint = "Questions to be displayed on this page.", UIHint = "question-builder", DefaultSyntax = "Json", IsDesignerCritical = true)]
-        //public List<Question> Questions { get; set; } = new List<Question>();
 
         [ActivityInput(Label = "List of questions", Hint = "Questions to be displayed on this page.", UIHint = "question-builder", DefaultSyntax = "Json", IsDesignerCritical = true)]
         public AssessmentQuestions Questions { get; set; } = new AssessmentQuestions();
