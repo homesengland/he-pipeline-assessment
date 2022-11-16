@@ -85,18 +85,19 @@ export class ElsaQuestionScreen {
   }
 
   handleAddQuestion(e: Event) {
-    let value = (e.currentTarget as HTMLInputElement).value.trim();
+    let value = (e.currentTarget as HTMLSelectElement).value.trim();
+    let name = (e.currentTarget as HTMLSelectElement).selectedOptions[0].dataset.typename;
     if (value != null && value != "") {
-      this.onAddQuestion(value);
+      this.onAddQuestion(value, name);
       let element = e.currentTarget as HTMLSelectElement;
       element.selectedIndex = 0;
     }
   }
 
-  onAddQuestion(questionType: string) {
+  onAddQuestion(questionType: string, questionTypeName: string) {
     const questionName = `Question ${this.questionModel.questions.length + 1}`;
     let sampleId = `${this.questionModel.questions.length + 1}`
-    const newQuestion = { id: sampleId, title: questionName, questionGuidance: "", questionText: "", displayComments: false, questionHint: "", questionType: questionType };
+    const newQuestion = { id: sampleId, title: questionName, questionGuidance: "", questionText: "", displayComments: false, questionHint: "", questionType: questionType, questionTypeName: questionTypeName };
     this.questionModel = { ...this.questionModel, questions: [...this.questionModel.questions, newQuestion] };
     this.updatePropertyModel();
   }
@@ -126,7 +127,7 @@ export class ElsaQuestionScreen {
     const field = `question-${index}`;
     return (
       <div id={`${field}-id`} class="accordion elsa-mb-4 elsa-rounded" onClick={this.onAccordionQuestionClick}>
-        <button type="button">Question {index + 1} - {multiQuestion.questionType} </button>
+        <button type="button">Question {index + 1} - {multiQuestion.questionTypeName} </button>
         <button type="button" onClick={e => this.onDeleteQuestionClick(e, multiQuestion)}
           class="elsa-h-5 elsa-w-5 elsa-mx-auto elsa-outline-none focus:elsa-outline-none trashcan-icon" style={{ float: "right" }}>
           <TrashCanIcon options={this.iconProvider.getOptions()}></TrashCanIcon>
@@ -202,11 +203,11 @@ export class ElsaQuestionScreen {
           name="addQuestionDropdown"
           class="elsa-mt-1 elsa-block focus:elsa-ring-blue-500 focus:elsa-border-blue-500 elsa-w-full elsa-shadow-sm sm:elsa-max-w-xs sm:elsa-text-sm elsa-border-gray-300 elsa-rounded-md">
           <option value="">Add a Question...</option>
-          <option value="MultipleChoiceQuestion">Checkbox Question</option>
-          <option value="CurrencyQuestion">Currency Question</option>
-          <option value="DateQuestion">Date Question</option>
-          <option value="SingleChoiceQuestion">Radio Question</option>
-          <option value="TextQuestion">Text Question</option> 
+          <option value="CheckboxQuestion" data-typeName="Checkbox Question">Checkbox Question</option>
+          <option value="CurrencyQuestion" data-typeName="Currency Question">Currency Question</option>
+          <option value="DateQuestion" data-typeName="Date Question">Date Question</option>
+          <option value="RadioQuestion" data-typeName="Radio Question">Radio Question</option>
+          <option value="TextQuestion" data-typeName="Text Question">Text Question</option> 
         </select>
       </div>
     );

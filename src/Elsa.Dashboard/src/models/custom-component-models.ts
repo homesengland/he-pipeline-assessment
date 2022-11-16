@@ -26,6 +26,7 @@ export interface IQuestionComponent {
   displayComments: boolean;
   questionHint: string;
   questionType: string;
+  questionTypeName: string;
 }
 
 export class Question implements IQuestionComponent {
@@ -36,6 +37,7 @@ export class Question implements IQuestionComponent {
     displayComments: boolean;
     questionHint: string;
     questionType: string;
+    questionTypeName: string;
 }
 
 export abstract class MultipleChoiceQuestion<T extends IQuestionOption> extends Question {
