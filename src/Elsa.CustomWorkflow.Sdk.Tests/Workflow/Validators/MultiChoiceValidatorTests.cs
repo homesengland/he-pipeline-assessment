@@ -4,7 +4,7 @@ using FluentValidation.TestHelper;
 using He.PipelineAssessment.Common.Tests;
 using Xunit;
 
-namespace Elsa.CustomWorkflow.Sdk.Tests.Workflow.Validators.DateValidatorTests
+namespace Elsa.CustomWorkflow.Sdk.Tests.Workflow.Validators
 {
     public class MultiChoiceValidatorTests
     {

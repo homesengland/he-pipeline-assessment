@@ -10,11 +10,8 @@ namespace Elsa.CustomActivities.Tests.Activities.Shared
     public class QuestionBookmarkProviderTests
     {
         [Theory]
-        [InlineAutoMoqData(QuestionTypeConstants.CurrencyQuestion)]
-        [InlineAutoMoqData(QuestionTypeConstants.CheckboxQuestion)]
-        [InlineAutoMoqData(QuestionTypeConstants.RadioQuestion)]
-        [InlineAutoMoqData(QuestionTypeConstants.DateQuestion)]
-        [InlineAutoMoqData(QuestionTypeConstants.TextQuestion)]
+        [InlineAutoMoqData(ActivityTypeConstants.QuestionScreen)]
+
         public void SupportsActivityReturnsTrue_GivenRegisteredActivities(string registeredActivity, QuestionBookmarkProvider sut)
         {
             //Arrange

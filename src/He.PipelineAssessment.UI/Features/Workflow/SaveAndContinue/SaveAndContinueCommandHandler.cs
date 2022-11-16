@@ -1,6 +1,4 @@
-﻿using Elsa.CustomWorkflow.Sdk;
-using Elsa.CustomWorkflow.Sdk.HttpClients;
-using Elsa.CustomWorkflow.Sdk.Models.Workflow;
+﻿using Elsa.CustomWorkflow.Sdk.HttpClients;
 using He.PipelineAssessment.UI.Features.Workflow.LoadWorkflowActivity;
 using MediatR;
 
@@ -18,17 +16,10 @@ namespace He.PipelineAssessment.UI.Features.Workflow.SaveAndContinue
 
         public async Task<LoadWorkflowActivityRequest?> Handle(SaveAndContinueCommand request, CancellationToken cancellationToken)
         {
-            WorkflowNextActivityDataDto? response;
-            if (request.Data.ActivityType == ActivityTypeConstants.QuestionScreen)
-            {
-                var saveAndContinueComandDto = _saveAndContinueMapper.SaveAndContinueCommandToMultiSaveAndContinueCommandDto(request);
-                response = await _elsaServerHttpClient.SaveAndContinue(saveAndContinueComandDto);
-            }
-            else
-            {
-                var saveAndContinueComandDto = _saveAndContinueMapper.SaveAndContinueCommandToSaveAndContinueCommandDto(request);
-                response = await _elsaServerHttpClient.SaveAndContinue(saveAndContinueComandDto);
-            }
+
+            var saveAndContinueComandDto = _saveAndContinueMapper.SaveAndContinueCommandToMultiSaveAndContinueCommandDto(request);
+            var response = await _elsaServerHttpClient.SaveAndContinue(saveAndContinueComandDto);
+
 
             if (response != null)
             {

@@ -3,7 +3,7 @@ using Elsa.CustomWorkflow.Sdk.Models.Workflow.Validators;
 using He.PipelineAssessment.Common.Tests;
 using Xunit;
 
-namespace Elsa.CustomWorkflow.Sdk.Tests.Workflow.Validators.DateValidatorTests
+namespace Elsa.CustomWorkflow.Sdk.Tests.Workflow.Validators
 {
     public class DateValidatorTests
     {
