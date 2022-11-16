@@ -1,10 +1,12 @@
 ﻿using AutoFixture.Xunit2;
+using Elsa.CustomWorkflow.Sdk;
 using Elsa.CustomWorkflow.Sdk.HttpClients;
 using Elsa.CustomWorkflow.Sdk.Models;
 using Elsa.CustomWorkflow.Sdk.Models.Workflow;
 using He.PipelineAssessment.Common.Tests;
 using He.PipelineAssessment.UI.Features.Workflow.SaveAndContinue;
 using Moq;
+using System.Reflection.Metadata;
 using Xunit;
 
 namespace He.PipelineAssessment.UI.Tests.Features.Workflow.SaveAndContinue
@@ -51,6 +53,35 @@ namespace He.PipelineAssessment.UI.Tests.Features.Workflow.SaveAndContinue
             //Arrange
             saveAndContinueMapper
                 .Setup(x => x.SaveAndContinueCommandToSaveAndContinueCommandDto(saveAndContinueCommand))
+                .Returns(saveAndContinueCommandDto);
+
+            elsaServerHttpClient.Setup(x => x.SaveAndContinue(saveAndContinueCommandDto))
+                .ReturnsAsync(workflowNextActivityDataDto);
+
+            //Act
+            var result = await sut.Handle(saveAndContinueCommand, CancellationToken.None);
+
+            //Assert
+            Assert.NotNull(result);
+            Assert.Equal(workflowNextActivityDataDto.Data.NextActivityId, result!.ActivityId);
+            Assert.Equal(workflowNextActivityDataDto.Data.WorkflowInstanceId, result.WorkflowInstanceId);
+        }
+
+        [Theory]
+        [AutoMoqData]
+        public async Task Handle_ReturnsLoadWorkflowActivityRequest_GivenNoErrorsEncounteredAndActivityTypeIsQuestionScreen(
+        [Frozen] Mock<IElsaServerHttpClient> elsaServerHttpClient,
+        [Frozen] Mock<ISaveAndContinueMapper> saveAndContinueMapper,
+        SaveAndContinueCommand saveAndContinueCommand,
+        MultiSaveAndContinueCommandDto saveAndContinueCommandDto,
+        WorkflowNextActivityDataDto workflowNextActivityDataDto,
+        SaveAndContinueCommandHandler sut
+        )
+        {
+            //Arrange
+            saveAndContinueCommand.Data!.QuestionActivityData!.ActivityType = ActivityTypeConstants.QuestionScreen;
+            saveAndContinueMapper
+                .Setup(x => x.SaveAndContinueCommandToMultiSaveAndContinueCommandDto(saveAndContinueCommand))
                 .Returns(saveAndContinueCommandDto);
 
             elsaServerHttpClient.Setup(x => x.SaveAndContinue(saveAndContinueCommandDto))

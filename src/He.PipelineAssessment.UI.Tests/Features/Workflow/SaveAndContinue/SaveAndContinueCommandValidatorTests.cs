@@ -155,21 +155,106 @@ namespace He.PipelineAssessment.UI.Tests.Features.Workflow.SaveAndContinue
         }
 
         [Theory]
-        [AutoMoqData]
-        [InlineAutoMoqData(ActivityTypeConstants.CurrencyQuestion)]
-        [InlineAutoMoqData(ActivityTypeConstants.SingleChoiceQuestion)]
-        [InlineAutoMoqData(ActivityTypeConstants.DateQuestion)]
-        [InlineAutoMoqData(ActivityTypeConstants.TextQuestion)]
-        public void Should_not_check_for_multiple_choice_validation_when_not_multiple_choice_activity(string activityType, SaveAndContinueCommand saveAndContinueCommand)
+        [InlineAutoMoqData(ActivityTypeConstants.MultipleChoiceQuestion, true)]
+        [InlineAutoMoqData(ActivityTypeConstants.CurrencyQuestion, false)]
+        [InlineAutoMoqData(ActivityTypeConstants.SingleChoiceQuestion, false)]
+        [InlineAutoMoqData(ActivityTypeConstants.DateQuestion, false)]
+        [InlineAutoMoqData(ActivityTypeConstants.TextQuestion, false)]
+        [InlineAutoMoqData(ActivityTypeConstants.QuestionScreen, false)]
+        public void Should_not_check_for_multiple_choice_validation_when_not_multiple_choice_activity(string activityType, bool hasMultiChoiceErrors, SaveAndContinueCommand saveAndContinueCommand)
         {
             //Arrange
             saveAndContinueCommand.Data.QuestionActivityData!.ActivityType = activityType;
+            saveAndContinueCommand.Data.QuestionActivityData!.MultipleChoice = new MultipleChoiceModel()
+            {
+                Choices = new List<Choice>
+                {
+                new Choice
+                {
+                    Answer = "Test 1",
+                    IsSingle = true
+                },
+                new Choice
+                {
+                    Answer = "Test 2",
+                    IsSingle = true
+                },
+                new Choice
+                {
+                    Answer = "Test 3",
+                    IsSingle = false
+                   },
+                new Choice
+                {
+                    Answer = "Test 4",
+                    IsSingle = true
+                   },
+                },
+                SelectedChoices = new List<string>() { "Test 1", "Test 2", "Test 4" }
+            };
 
             //Act
             var result = this._validator.TestValidate(saveAndContinueCommand);
 
             //Assert
-            result.ShouldNotHaveValidationErrorFor(c => c.Data.QuestionActivityData!.MultipleChoice);
+            Assert.Equal(hasMultiChoiceErrors, result.Errors.Any(x => x.PropertyName.Contains("MultipleChoice")));
+        }
+
+
+        [Theory]
+        [InlineAutoMoqData(ActivityTypeConstants.DateQuestion, true)]
+        [InlineAutoMoqData(ActivityTypeConstants.MultipleChoiceQuestion, false)]
+        [InlineAutoMoqData(ActivityTypeConstants.CurrencyQuestion, false)]
+        [InlineAutoMoqData(ActivityTypeConstants.SingleChoiceQuestion, false)]
+        [InlineAutoMoqData(ActivityTypeConstants.TextQuestion, false)]
+        [InlineAutoMoqData(ActivityTypeConstants.QuestionScreen, false)]
+        public void Should_not_check_for_date_validation_when_not_date_activity(string activityType, bool hasDateErrors, SaveAndContinueCommand saveAndContinueCommand)
+        {
+            //Arrange
+            saveAndContinueCommand.Data.QuestionActivityData!.ActivityType = activityType;
+            saveAndContinueCommand.Data.QuestionActivityData!.Date = new Date()
+            {
+                Day = 32,
+                Month = 12,
+                Year = 2022
+            };
+
+            //Act
+            var result = this._validator.TestValidate(saveAndContinueCommand);
+
+            //Assert
+            Assert.Equal(hasDateErrors, result.Errors.Any(x => x.PropertyName.Contains("Date")));
+        }
+
+        [Theory]
+        [InlineAutoMoqData(ActivityTypeConstants.QuestionScreen, true)]
+        [InlineAutoMoqData(ActivityTypeConstants.DateQuestion, false)]
+        [InlineAutoMoqData(ActivityTypeConstants.MultipleChoiceQuestion, false)]
+        [InlineAutoMoqData(ActivityTypeConstants.CurrencyQuestion, false)]
+        [InlineAutoMoqData(ActivityTypeConstants.SingleChoiceQuestion, false)]
+        [InlineAutoMoqData(ActivityTypeConstants.TextQuestion, false)]
+        public void Should_not_check_for_question_screen_validation_when_not_question_screen_activity(string activityType, bool hasQuestionScreenErrors, SaveAndContinueCommand saveAndContinueCommand)
+        {
+            //Arrange
+            saveAndContinueCommand.Data.QuestionActivityData!.ActivityType = activityType;
+            saveAndContinueCommand.Data.MultiQuestionActivityData = new List<QuestionActivityData>();
+            var questionActivityData = new QuestionActivityData()
+            {
+                QuestionType = QuestionTypeConstants.DateQuestion,
+                Date = new Date()
+                {
+                    Day = 32,
+                    Month = 12,
+                    Year = 2022
+                }
+            };
+            saveAndContinueCommand.Data.MultiQuestionActivityData.Add(questionActivityData);
+
+            //Act
+            var result = this._validator.TestValidate(saveAndContinueCommand);
+
+            //Assert
+            Assert.Equal(hasQuestionScreenErrors, result.Errors.Any(x => x.PropertyName.Contains("MultiQuestionActivityData")));
         }
     }
 }

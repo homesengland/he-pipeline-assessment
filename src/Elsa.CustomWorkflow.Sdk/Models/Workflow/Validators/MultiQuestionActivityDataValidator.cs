@@ -2,7 +2,7 @@
 using Elsa.CustomWorkflow.Sdk.Models.Workflow;
 using FluentValidation;
 
-namespace He.PipelineAssessment.UI.Features.Workflow.SaveAndContinue.Validators
+namespace Elsa.CustomWorkflow.Sdk.Models.Workflow.Validators
 {
     public class MultiQuestionActivityDataValidator : AbstractValidator<QuestionActivityData>
     {

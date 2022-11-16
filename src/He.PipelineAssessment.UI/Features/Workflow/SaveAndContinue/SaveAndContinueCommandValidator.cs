@@ -1,6 +1,6 @@
 ﻿using Elsa.CustomWorkflow.Sdk;
 using FluentValidation;
-using He.PipelineAssessment.UI.Features.Workflow.SaveAndContinue.Validators;
+using Elsa.CustomWorkflow.Sdk.Models.Workflow.Validators;
 
 namespace He.PipelineAssessment.UI.Features.Workflow.SaveAndContinue
 {
@@ -20,7 +20,8 @@ namespace He.PipelineAssessment.UI.Features.Workflow.SaveAndContinue
                 .ForEach(x =>
                 {
                     x.SetValidator(new MultiQuestionActivityDataValidator());
-                });
+                })
+                .When(x => x.Data.QuestionActivityData!.ActivityType == ActivityTypeConstants.QuestionScreen); ;
         }
     }
 }
