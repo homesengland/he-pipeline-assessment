@@ -1,7 +1,7 @@
-import { Component, h, Prop, State, Listen, forceUpdate } from '@stencil/core';
+import { Component, h, Prop, State, Listen } from '@stencil/core';
 
 import TrashCanIcon from '../../icons/trash-can';
-//import PlusIcon from '../../icons/plus_icon';
+
 import {
   ActivityDefinitionProperty,
   ActivityModel,
@@ -12,8 +12,8 @@ import {
 } from '../../models/elsa-interfaces';
 
 import {
-  QuestionComponent,
-  MultiQuestionActivity,
+  IQuestionComponent,
+  QuestionActivity,
   RadioQuestion,
   CheckboxQuestion,
 } from '../../models/custom-component-models';
@@ -36,16 +36,16 @@ function parseJson(json: string): any {
 }
 
 @Component({
-  tag: 'elsa-multiquestion-property',
+  tag: 'elsa-question-screen',
   shadow: false,
 })
 
-export class ElsaMultiQuestionRecordsProperty {
+export class ElsaQuestionScreen {
 
   @Prop() activityModel: ActivityModel;
   @Prop() propertyDescriptor: ActivityPropertyDescriptor;
   @Prop() propertyModel: ActivityDefinitionProperty;
-  @State() multiQuestionModel: MultiQuestionActivity = new MultiQuestionActivity();
+  @State() questionModel: QuestionActivity = new QuestionActivity();
   @State() iconProvider = new IconProvider();
 
   supportedSyntaxes: Array<string> = [SyntaxNames.JavaScript, SyntaxNames.Liquid];
@@ -57,31 +57,30 @@ export class ElsaMultiQuestionRecordsProperty {
     if (event.detail) {
       this.updateQuestion(event.detail);
     }
-    forceUpdate(this);
   }
 
   async componentWillLoad() {
     const propertyModel = this.propertyModel;
     const choicesJson = propertyModel.expressions[SyntaxNames.Json]
-    this.multiQuestionModel = parseJson(choicesJson) || this.defaultActivityModel();
+    this.questionModel = parseJson(choicesJson) || this.defaultActivityModel();
   }
 
   defaultActivityModel() {
-    var activity = new MultiQuestionActivity();
+    var activity = new QuestionActivity();
     activity.questions = [];
     return activity;
   }
 
   updatePropertyModel() {
-    this.propertyModel.expressions[SyntaxNames.Json] = JSON.stringify(this.multiQuestionModel);
+    this.propertyModel.expressions[SyntaxNames.Json] = JSON.stringify(this.questionModel);
   }
 
-  updateQuestion(updatedQuestion: QuestionComponent) {
-    let questionToUpdate = this.multiQuestionModel.questions.findIndex((obj) => obj.id === updatedQuestion.id);
-    let newModel = this.multiQuestionModel;
+  updateQuestion(updatedQuestion: IQuestionComponent) {
+    let questionToUpdate = this.questionModel.questions.findIndex((obj) => obj.id === updatedQuestion.id);
+    let newModel = this.questionModel;
     newModel.questions[questionToUpdate] = updatedQuestion;
-    this.multiQuestionModel.questions.map(x => x.id != updatedQuestion.id);
-    this.multiQuestionModel = { ... this.multiQuestionModel, questions: newModel.questions };
+    this.questionModel.questions.map(x => x.id != updatedQuestion.id);
+    this.questionModel = { ... this.questionModel, questions: newModel.questions };
     this.updatePropertyModel();
   }
 
@@ -95,16 +94,16 @@ export class ElsaMultiQuestionRecordsProperty {
   }
 
   onAddQuestion(questionType: string) {
-    const questionName = `Question ${this.multiQuestionModel.questions.length + 1}`;
-    let sampleId = `${this.multiQuestionModel.questions.length + 1}`
+    const questionName = `Question ${this.questionModel.questions.length + 1}`;
+    let sampleId = `${this.questionModel.questions.length + 1}`
     const newQuestion = { id: sampleId, title: questionName, questionGuidance: "", questionText: "", displayComments: false, questionHint: "", questionType: questionType };
-    this.multiQuestionModel = { ...this.multiQuestionModel, questions: [...this.multiQuestionModel.questions, newQuestion] };
+    this.questionModel = { ...this.questionModel, questions: [...this.questionModel.questions, newQuestion] };
     this.updatePropertyModel();
   }
 
-  onDeleteQuestionClick(e: Event, question: QuestionComponent) {
+  onDeleteQuestionClick(e: Event, question: IQuestionComponent) {
     e.stopPropagation();
-    this.multiQuestionModel = { ...this.multiQuestionModel, questions: this.multiQuestionModel.questions.filter(x => x != question) };
+    this.questionModel = { ...this.questionModel, questions: this.questionModel.questions.filter(x => x != question) };
     this.updatePropertyModel();
   }
 
@@ -119,11 +118,11 @@ export class ElsaMultiQuestionRecordsProperty {
     }
   }
 
-  renderQuestions(model: MultiQuestionActivity) {
+  renderQuestions(model: QuestionActivity) {
     return model.questions.map(this.renderChoiceEditor)
   }
 
-  renderChoiceEditor = (multiQuestion: QuestionComponent, index: number) => {
+  renderChoiceEditor = (multiQuestion: IQuestionComponent, index: number) => {
     const field = `question-${index}`;
     return (
       <div id={`${field}-id`} class="accordion elsa-mb-4 elsa-rounded" onClick={this.onAccordionQuestionClick}>
@@ -137,7 +136,7 @@ export class ElsaMultiQuestionRecordsProperty {
     );
   };
 
-  renderQuestionComponent(question: QuestionComponent) {
+  renderQuestionComponent(question: IQuestionComponent) {
     switch (question.questionType) {
       case "MultipleChoiceQuestion":
         return <elsa-checkbox-question onClick={(e) => e.stopPropagation()} class="panel elsa-rounded" question={question as CheckboxQuestion}></elsa-checkbox-question>;
@@ -196,7 +195,7 @@ export class ElsaMultiQuestionRecordsProperty {
             </div>
           </div>
         </div>
-        {this.renderQuestions(this.multiQuestionModel)}
+        {this.renderQuestions(this.questionModel)}
 
         <select id="addQuestionDropdown"
           onChange={ (e) => this.handleAddQuestion.bind(this)(e) }

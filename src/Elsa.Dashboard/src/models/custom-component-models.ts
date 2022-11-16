@@ -1,19 +1,24 @@
-export interface OptionsRecord {
+///Question Options
+
+export interface IQuestionOption {
   answer: string
 }
 
-export interface MultiChoiceRecord extends OptionsRecord {
+export interface CheckboxOption extends IQuestionOption {
     isSingle: boolean;
 }
 
-export interface SingleChoiceRecord extends OptionsRecord {
+export interface RadioOption extends IQuestionOption {
 }
 
-export class QuestionOptions<T>{
+export class QuestionOptions<T extends IQuestionOption>{
   choices: Array<T> = [];
 }
 
-export interface QuestionComponent {
+
+///Questions
+
+export interface IQuestionComponent {
   id: string;
   title: string;
   questionGuidance: string;
@@ -23,7 +28,7 @@ export interface QuestionComponent {
   questionType: string;
 }
 
-export class Question implements QuestionComponent {
+export class Question implements IQuestionComponent {
     id: string;
     title: string;
     questionGuidance: string;
@@ -33,40 +38,40 @@ export class Question implements QuestionComponent {
     questionType: string;
 }
 
-export abstract class MultipleChoiceQuestion<T> extends Question {
+export abstract class MultipleChoiceQuestion<T extends IQuestionOption> extends Question {
 
   options: QuestionOptions<T> = new QuestionOptions<T>()
 }
 
-export class CheckboxQuestion extends MultipleChoiceQuestion<MultiChoiceRecord> {
+export class CheckboxQuestion extends MultipleChoiceQuestion<CheckboxOption> {
 
-  checkbox: QuestionOptions<MultiChoiceRecord> = this.options;
+  checkbox: QuestionOptions<CheckboxOption> = this.options;
 
 }
 
-export class RadioQuestion extends MultipleChoiceQuestion<SingleChoiceRecord> {
+export class RadioQuestion extends MultipleChoiceQuestion<RadioOption> {
 
-  radio: QuestionOptions<SingleChoiceRecord> = this.options;
+  radio: QuestionOptions<RadioOption> = this.options;
 
-  setOptions(val: QuestionOptions<SingleChoiceRecord>) {
+  setOptions(val: QuestionOptions<RadioOption>) {
     this.options = val;
     this.radio = val;
   }
 }
 
 
-
+//Activity Screens
 
 export class MultiChoiceActivity {
-  choices: Array<MultiChoiceRecord> = [];
+  choices: Array<CheckboxOption> = [];
 }
 
 export class SingleChoiceActivity {
-  choices: Array<SingleChoiceRecord> = [];
+  choices: Array<RadioOption> = [];
 }
 
-export class MultiQuestionActivity {
-  questions: Array<QuestionComponent> = [];
+export class QuestionActivity {
+  questions: Array<IQuestionComponent> = [];
 }
 
 

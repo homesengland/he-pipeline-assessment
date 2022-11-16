@@ -8,8 +8,8 @@ import {
 
 import {
   CheckboxQuestion,
-  MultiChoiceRecord,
-  QuestionComponent,
+  CheckboxOption,
+  IQuestionComponent,
   QuestionOptions
 } from '../../models/custom-component-models';
 
@@ -27,7 +27,7 @@ import { CheckboxEventHandler } from '../../events/component-events';
   shadow: false,
 })
 
-export class MultiQuestionCheckboxComponent {
+export class ElsaCheckboxComponent {
 
   @Prop() question: CheckboxQuestion
   @State() iconProvider = new IconProvider();
@@ -43,12 +43,12 @@ export class MultiQuestionCheckboxComponent {
     composed: true,
     cancelable: true,
     bubbles: true,
-  }) updateQuestion: EventEmitter<QuestionComponent>;
+  }) updateQuestion: EventEmitter<IQuestionComponent>;
 
 
   async componentWillLoad() {
     if (this.question && !this.question.checkbox) {
-      this.question.checkbox = new QuestionOptions<MultiChoiceRecord>();
+      this.question.checkbox = new QuestionOptions<CheckboxOption>();
     }
     this.handler = new CheckboxEventHandler(this.question, this.updateQuestion);
   }
@@ -92,7 +92,7 @@ export class MultiQuestionCheckboxComponent {
   }
 
   render() {
-    const renderChoiceEditor = (multiChoice: MultiChoiceRecord, index: number) => {
+    const renderChoiceEditor = (multiChoice: CheckboxOption, index: number) => {
       const field = `choice-${index}`;
       let isChecked = multiChoice.isSingle;
       return (

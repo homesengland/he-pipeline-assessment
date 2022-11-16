@@ -5,7 +5,7 @@
  * It contains typing information for all components that exist in this project.
  */
 import { HTMLStencilElement, JSXBase } from "@stencil/core/internal";
-import { CheckboxQuestion, QuestionComponent, RadioQuestion } from "./models/custom-component-models";
+import { CheckboxQuestion, IQuestionComponent, RadioQuestion } from "./models/custom-component-models";
 import { ActivityDefinitionProperty, ActivityModel, ActivityPropertyDescriptor } from "./models/elsa-interfaces";
 export namespace Components {
     interface ElsaCheckboxQuestion {
@@ -16,13 +16,13 @@ export namespace Components {
         "propertyDescriptor": ActivityPropertyDescriptor;
         "propertyModel": ActivityDefinitionProperty;
     }
-    interface ElsaMultiquestionProperty {
+    interface ElsaQuestion {
+        "question": IQuestionComponent;
+    }
+    interface ElsaQuestionScreen {
         "activityModel": ActivityModel;
         "propertyDescriptor": ActivityPropertyDescriptor;
         "propertyModel": ActivityDefinitionProperty;
-    }
-    interface ElsaQuestion {
-        "question": QuestionComponent;
     }
     interface ElsaRadioQuestion {
         "question": RadioQuestion;
@@ -46,17 +46,17 @@ declare global {
         prototype: HTMLElsaMultichoiceRecordsPropertyElement;
         new (): HTMLElsaMultichoiceRecordsPropertyElement;
     };
-    interface HTMLElsaMultiquestionPropertyElement extends Components.ElsaMultiquestionProperty, HTMLStencilElement {
-    }
-    var HTMLElsaMultiquestionPropertyElement: {
-        prototype: HTMLElsaMultiquestionPropertyElement;
-        new (): HTMLElsaMultiquestionPropertyElement;
-    };
     interface HTMLElsaQuestionElement extends Components.ElsaQuestion, HTMLStencilElement {
     }
     var HTMLElsaQuestionElement: {
         prototype: HTMLElsaQuestionElement;
         new (): HTMLElsaQuestionElement;
+    };
+    interface HTMLElsaQuestionScreenElement extends Components.ElsaQuestionScreen, HTMLStencilElement {
+    }
+    var HTMLElsaQuestionScreenElement: {
+        prototype: HTMLElsaQuestionScreenElement;
+        new (): HTMLElsaQuestionScreenElement;
     };
     interface HTMLElsaRadioQuestionElement extends Components.ElsaRadioQuestion, HTMLStencilElement {
     }
@@ -73,15 +73,15 @@ declare global {
     interface HTMLElementTagNameMap {
         "elsa-checkbox-question": HTMLElsaCheckboxQuestionElement;
         "elsa-multichoice-records-property": HTMLElsaMultichoiceRecordsPropertyElement;
-        "elsa-multiquestion-property": HTMLElsaMultiquestionPropertyElement;
         "elsa-question": HTMLElsaQuestionElement;
+        "elsa-question-screen": HTMLElsaQuestionScreenElement;
         "elsa-radio-question": HTMLElsaRadioQuestionElement;
         "elsa-singlechoice-records-property": HTMLElsaSinglechoiceRecordsPropertyElement;
     }
 }
 declare namespace LocalJSX {
     interface ElsaCheckboxQuestion {
-        "onUpdateQuestion"?: (event: CustomEvent<QuestionComponent>) => void;
+        "onUpdateQuestion"?: (event: CustomEvent<IQuestionComponent>) => void;
         "question"?: CheckboxQuestion;
     }
     interface ElsaMultichoiceRecordsProperty {
@@ -89,17 +89,17 @@ declare namespace LocalJSX {
         "propertyDescriptor"?: ActivityPropertyDescriptor;
         "propertyModel"?: ActivityDefinitionProperty;
     }
-    interface ElsaMultiquestionProperty {
+    interface ElsaQuestion {
+        "onUpdateQuestion"?: (event: CustomEvent<IQuestionComponent>) => void;
+        "question"?: IQuestionComponent;
+    }
+    interface ElsaQuestionScreen {
         "activityModel"?: ActivityModel;
         "propertyDescriptor"?: ActivityPropertyDescriptor;
         "propertyModel"?: ActivityDefinitionProperty;
     }
-    interface ElsaQuestion {
-        "onUpdateQuestion"?: (event: CustomEvent<QuestionComponent>) => void;
-        "question"?: QuestionComponent;
-    }
     interface ElsaRadioQuestion {
-        "onUpdateQuestion"?: (event: CustomEvent<QuestionComponent>) => void;
+        "onUpdateQuestion"?: (event: CustomEvent<IQuestionComponent>) => void;
         "question"?: RadioQuestion;
     }
     interface ElsaSinglechoiceRecordsProperty {
@@ -110,8 +110,8 @@ declare namespace LocalJSX {
     interface IntrinsicElements {
         "elsa-checkbox-question": ElsaCheckboxQuestion;
         "elsa-multichoice-records-property": ElsaMultichoiceRecordsProperty;
-        "elsa-multiquestion-property": ElsaMultiquestionProperty;
         "elsa-question": ElsaQuestion;
+        "elsa-question-screen": ElsaQuestionScreen;
         "elsa-radio-question": ElsaRadioQuestion;
         "elsa-singlechoice-records-property": ElsaSinglechoiceRecordsProperty;
     }
@@ -122,8 +122,8 @@ declare module "@stencil/core" {
         interface IntrinsicElements {
             "elsa-checkbox-question": LocalJSX.ElsaCheckboxQuestion & JSXBase.HTMLAttributes<HTMLElsaCheckboxQuestionElement>;
             "elsa-multichoice-records-property": LocalJSX.ElsaMultichoiceRecordsProperty & JSXBase.HTMLAttributes<HTMLElsaMultichoiceRecordsPropertyElement>;
-            "elsa-multiquestion-property": LocalJSX.ElsaMultiquestionProperty & JSXBase.HTMLAttributes<HTMLElsaMultiquestionPropertyElement>;
             "elsa-question": LocalJSX.ElsaQuestion & JSXBase.HTMLAttributes<HTMLElsaQuestionElement>;
+            "elsa-question-screen": LocalJSX.ElsaQuestionScreen & JSXBase.HTMLAttributes<HTMLElsaQuestionScreenElement>;
             "elsa-radio-question": LocalJSX.ElsaRadioQuestion & JSXBase.HTMLAttributes<HTMLElsaRadioQuestionElement>;
             "elsa-singlechoice-records-property": LocalJSX.ElsaSinglechoiceRecordsProperty & JSXBase.HTMLAttributes<HTMLElsaSinglechoiceRecordsPropertyElement>;
         }

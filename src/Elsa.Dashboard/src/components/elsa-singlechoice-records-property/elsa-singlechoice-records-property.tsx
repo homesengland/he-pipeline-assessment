@@ -12,7 +12,7 @@ import {
 } from '../../models/elsa-interfaces';
 
 import {
-  SingleChoiceRecord,
+  RadioOption,
   SingleChoiceActivity
 } from '../../models/custom-component-models';
 
@@ -73,12 +73,12 @@ export class ElsaSingleChoiceRecordsProperty {
     this.updatePropertyModel();
   }
 
-  onDeleteChoiceClick(singleChoice: SingleChoiceRecord) {
+  onDeleteChoiceClick(singleChoice: RadioOption) {
     this.singleChoiceModel = { ...this.singleChoiceModel, choices: this.singleChoiceModel.choices.filter(x => x != singleChoice) };
     this.updatePropertyModel();
   }
 
-  onChoiceNameChanged(e: Event, singleChoice: SingleChoiceRecord) {
+  onChoiceNameChanged(e: Event, singleChoice: RadioOption) {
     singleChoice.answer = (e.currentTarget as HTMLInputElement).value.trim();
     this.updatePropertyModel();
   }
@@ -86,7 +86,7 @@ export class ElsaSingleChoiceRecordsProperty {
   render() {
     const choices = this.singleChoiceModel.choices;
 
-    const renderChoiceEditor = (singleChoice: SingleChoiceRecord, index: number) => {
+    const renderChoiceEditor = (singleChoice: RadioOption, index: number) => {
 
       return (
         <tr key={`choice-${index}`}>

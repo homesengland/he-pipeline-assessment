@@ -12,7 +12,7 @@ import {
 } from '../../models/elsa-interfaces';
 
 import {
-  MultiChoiceRecord,
+  CheckboxOption,
   MultiChoiceActivity
 } from '../../models/custom-component-models';
 
@@ -73,17 +73,17 @@ export class ElsaMultiChoiceRecordsProperty {
     this.updatePropertyModel();
   }
 
-  onDeleteChoiceClick(multiChoice: MultiChoiceRecord) {
+  onDeleteChoiceClick(multiChoice: CheckboxOption) {
     this.multiChoiceModel = { ...this.multiChoiceModel, choices: this.multiChoiceModel.choices.filter(x => x != multiChoice) };
     this.updatePropertyModel();
   }
 
-  onChoiceNameChanged(e: Event, multiChoice: MultiChoiceRecord) {
+  onChoiceNameChanged(e: Event, multiChoice: CheckboxOption) {
     multiChoice.answer = (e.currentTarget as HTMLInputElement).value.trim();
     this.updatePropertyModel();
   }
 
-  onCheckChanged(e: Event, multiChoice: MultiChoiceRecord) {
+  onCheckChanged(e: Event, multiChoice: CheckboxOption) {
     const checkbox = (e.target as HTMLInputElement);
     multiChoice.isSingle = checkbox.checked;
     this.updatePropertyModel();
@@ -92,7 +92,7 @@ export class ElsaMultiChoiceRecordsProperty {
   render() {
     const choices = this.multiChoiceModel.choices;
 
-    const renderChoiceEditor = (multiChoice: MultiChoiceRecord, index: number) => {
+    const renderChoiceEditor = (multiChoice: CheckboxOption, index: number) => {
       const propertyDescriptor = this.propertyDescriptor;
       const propertyName = propertyDescriptor.name;
       const fieldId = propertyName;

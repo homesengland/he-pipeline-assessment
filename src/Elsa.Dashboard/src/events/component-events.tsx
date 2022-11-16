@@ -1,10 +1,10 @@
 import { EventEmitter } from '@stencil/core';
 
 import {
-  MultiChoiceRecord,
-  SingleChoiceRecord,
-  OptionsRecord,
-  QuestionComponent,
+  CheckboxOption,
+  RadioOption,
+  IQuestionOption,
+  IQuestionComponent,
   Question,
   MultipleChoiceQuestion,
   RadioQuestion,
@@ -16,7 +16,7 @@ import {
 
 abstract class BaseQuestionEventHandler {
 
-  constructor(q: QuestionComponent, e: EventEmitter) {
+  constructor(q: IQuestionComponent, e: EventEmitter) {
     this.question = q;
     this.emitter = e;
   }
@@ -62,7 +62,7 @@ abstract class BaseQuestionEventHandler {
   };
 }
 
-abstract class ChoiceQuestionEventHandler<T> extends BaseQuestionEventHandler {
+abstract class ChoiceQuestionEventHandler<T extends IQuestionOption> extends BaseQuestionEventHandler {
 
   constructor(q: MultipleChoiceQuestion<T>, e: EventEmitter) {
     super(q, e);
@@ -71,7 +71,7 @@ abstract class ChoiceQuestionEventHandler<T> extends BaseQuestionEventHandler {
     }
   }
 
-  abstract getChoice(name: string): OptionsRecord;
+  abstract getChoice(name: string): IQuestionOption;
 
   abstract assignOptions(val: QuestionOptions<T>)
 
@@ -87,7 +87,7 @@ abstract class ChoiceQuestionEventHandler<T> extends BaseQuestionEventHandler {
     this.emitter.emit(this.question);
   };
 
-  onChoiceNameChanged = (e: Event, record: MultiChoiceRecord) => {
+  onChoiceNameChanged = (e: Event, record: IQuestionOption) => {
     record.answer = (e.currentTarget as HTMLInputElement).value.trim();
     this.emitter.emit(this.question);
   };
@@ -111,7 +111,7 @@ export class QuestionEventHandler extends BaseQuestionEventHandler {
   emitter: EventEmitter<Question>;
 }
 
-export class CheckboxEventHandler extends ChoiceQuestionEventHandler<MultiChoiceRecord> {
+export class CheckboxEventHandler extends ChoiceQuestionEventHandler<CheckboxOption> {
 
   constructor(q: CheckboxQuestion, e: EventEmitter) {
     super(q, e);
@@ -120,15 +120,15 @@ export class CheckboxEventHandler extends ChoiceQuestionEventHandler<MultiChoice
   question: CheckboxQuestion;
   emitter: EventEmitter;
 
-  getChoice(name: string): MultiChoiceRecord {
+  getChoice(name: string): CheckboxOption {
     return { answer: name, isSingle: false };
   }
 
-  assignOptions(val: QuestionOptions<MultiChoiceRecord>) {
+  assignOptions(val: QuestionOptions<CheckboxOption>) {
     this.question.checkbox = val;
   }
 
-  onCheckChanged = (e: Event, record: MultiChoiceRecord) => {
+  onCheckChanged = (e: Event, record: CheckboxOption) => {
     const checkbox = (e.target as HTMLInputElement);
     record.isSingle = checkbox.checked;
     this.emitter.emit(this.question);
@@ -136,7 +136,7 @@ export class CheckboxEventHandler extends ChoiceQuestionEventHandler<MultiChoice
 
 }
 
-export class RadioEventHandler extends ChoiceQuestionEventHandler<SingleChoiceRecord> {
+export class RadioEventHandler extends ChoiceQuestionEventHandler<RadioOption> {
 
 
   constructor(q: RadioQuestion, e: EventEmitter) {
@@ -146,11 +146,11 @@ export class RadioEventHandler extends ChoiceQuestionEventHandler<SingleChoiceRe
   question: RadioQuestion;
   emitter: EventEmitter;
 
-  getChoice(name: string): SingleChoiceRecord {
+  getChoice(name: string): RadioOption {
     return { answer: name };
   }
 
-  assignOptions = (val: QuestionOptions<SingleChoiceRecord>) => {
+  assignOptions = (val: QuestionOptions<RadioOption>) => {
     this.question.radio = val;
   }
 }
