@@ -13,9 +13,9 @@ namespace Elsa.CustomWorkflow.Sdk.Tests.Workflow.Validators.DateValidatorTests
         {
             //Arrange
             MultiChoiceValidator validator = new MultiChoiceValidator();
-            MultipleChoiceModel multiChoiceModel = new MultipleChoiceModel();
+            Checkbox multiChoice = new Checkbox();
 
-            multiChoiceModel.Choices = new List<Choice>
+            multiChoice.Choices = new List<Choice>
             {
                 new Choice
                 {
@@ -38,10 +38,10 @@ namespace Elsa.CustomWorkflow.Sdk.Tests.Workflow.Validators.DateValidatorTests
                     IsSingle = true
                    },
             };
-            multiChoiceModel.SelectedChoices = new List<string>() { "Test 1", "Test 2", "Test 4" };
+            multiChoice.SelectedChoices = new List<string>() { "Test 1", "Test 2", "Test 4" };
 
             //Act
-            var expectedValidationResult = validator.TestValidate(multiChoiceModel);
+            var expectedValidationResult = validator.TestValidate(multiChoice);
 
             //Assert
             expectedValidationResult.ShouldHaveValidationErrorFor(c => c)
@@ -53,8 +53,8 @@ namespace Elsa.CustomWorkflow.Sdk.Tests.Workflow.Validators.DateValidatorTests
         {
             //Arrange
             MultiChoiceValidator validator = new MultiChoiceValidator();
-            MultipleChoiceModel multiChoiceModel = new MultipleChoiceModel();
-            multiChoiceModel.Choices = new List<Choice>
+            Checkbox multiChoice = new Checkbox();
+            multiChoice.Choices = new List<Choice>
             {
                 new Choice
                 {
@@ -72,9 +72,9 @@ namespace Elsa.CustomWorkflow.Sdk.Tests.Workflow.Validators.DateValidatorTests
                     IsSingle = true
                    },
             };
-            multiChoiceModel.SelectedChoices = new List<string>() { "Test 1", "Test 2" };
+            multiChoice.SelectedChoices = new List<string>() { "Test 1", "Test 2" };
 
-            var result = validator.TestValidate(multiChoiceModel);
+            var result = validator.TestValidate(multiChoice);
 
             //Assert
 
@@ -87,8 +87,8 @@ namespace Elsa.CustomWorkflow.Sdk.Tests.Workflow.Validators.DateValidatorTests
         {
             //Arrange
             MultiChoiceValidator validator = new MultiChoiceValidator();
-            MultipleChoiceModel multiChoiceModel = new MultipleChoiceModel();
-            multiChoiceModel.Choices = new List<Choice>
+            Checkbox multiChoice = new Checkbox();
+            multiChoice.Choices = new List<Choice>
             {
                 new Choice
                 {
@@ -106,10 +106,10 @@ namespace Elsa.CustomWorkflow.Sdk.Tests.Workflow.Validators.DateValidatorTests
                     IsSingle = true
                    },
             };
-            multiChoiceModel.SelectedChoices = new List<string>() { "Test 1" };
+            multiChoice.SelectedChoices = new List<string>() { "Test 1" };
 
             //Act
-            var result = validator.TestValidate(multiChoiceModel);
+            var result = validator.TestValidate(multiChoice);
 
             //Assert
             result.ShouldNotHaveValidationErrorFor(c => c);
@@ -120,8 +120,8 @@ namespace Elsa.CustomWorkflow.Sdk.Tests.Workflow.Validators.DateValidatorTests
         {
             //Arrange
             MultiChoiceValidator validator = new MultiChoiceValidator();
-            MultipleChoiceModel multiChoiceModel = new MultipleChoiceModel();
-            multiChoiceModel.Choices = new List<Choice>
+            Checkbox multiChoice = new Checkbox();
+            multiChoice.Choices = new List<Choice>
             {
                 new Choice
                 {
@@ -139,10 +139,10 @@ namespace Elsa.CustomWorkflow.Sdk.Tests.Workflow.Validators.DateValidatorTests
                     IsSingle = false
                    },
             };
-            multiChoiceModel.SelectedChoices = new List<string>() { "Test 2", "Test 3" };
+            multiChoice.SelectedChoices = new List<string>() { "Test 2", "Test 3" };
 
             //Act
-            var result = validator.TestValidate(multiChoiceModel);
+            var result = validator.TestValidate(multiChoice);
 
             //Assert
             result.ShouldNotHaveValidationErrorFor(c => c);

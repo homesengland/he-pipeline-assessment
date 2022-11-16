@@ -22,7 +22,6 @@
                 @Html.HiddenFor(m => m.Data.MultiQuestionActivityData![i].QuestionId)
                 @Html.HiddenFor(m => m.Data.MultiQuestionActivityData![i].QuestionType)
                 @Html.HiddenFor(m => m.Data.MultiQuestionActivityData![i].QuestionGuidance)
-                @Html.HiddenFor(m => m.Data.MultiQuestionActivityData![i].ActivityType)
                 @Html.HiddenFor(m => m.Data.MultiQuestionActivityData![i].Title)
                 @Html.HiddenFor(m => m.Data.MultiQuestionActivityData![i].Question)
                 @Html.HiddenFor(m => m.Data.MultiQuestionActivityData![i].QuestionHint)
@@ -43,7 +42,6 @@
                     {
                         Index = i,
                         IsValid = isValidItem,
-                        ActivityType = Model.Data.MultiQuestionActivityData[i].ActivityType,
                         Answer = Model.Data.MultiQuestionActivityData[i].Answer,
                         Comments = Model.Data.MultiQuestionActivityData[i].Comments,
                         DisplayComments = Model.Data.MultiQuestionActivityData[i].DisplayComments,
@@ -65,7 +63,6 @@
                     {
                         Index = i,
                         IsValid = isValidItem,
-                        ActivityType = Model.Data.MultiQuestionActivityData[i].ActivityType,
                         Answer = Model.Data.MultiQuestionActivityData[i].Answer,
                         Comments = Model.Data.MultiQuestionActivityData[i].Comments,
                         DisplayComments = Model.Data.MultiQuestionActivityData[i].DisplayComments,
@@ -84,7 +81,6 @@
                     {
                         Index = i,
                         IsValid = isValidItem,
-                        ActivityType = Model.Data.MultiQuestionActivityData[i].ActivityType,
                         Answer = Model.Data.MultiQuestionActivityData[i].Answer,
                         Comments = Model.Data.MultiQuestionActivityData[i].Comments,
                         DisplayComments = Model.Data.MultiQuestionActivityData[i].DisplayComments,
@@ -97,14 +93,13 @@
                         Decimal = Model.Data.MultiQuestionActivityData[i].Decimal
                     })
                 }
-                @if (Model.Data.MultiQuestionActivityData![i].QuestionType == QuestionTypeConstants.MultipleChoiceQuestion)
+                @if (Model.Data.MultiQuestionActivityData![i].QuestionType == QuestionTypeConstants.CheckboxQuestion)
                 {
 
                     @await Html.PartialAsync("_MultiCheckboxQuestion",new MultiQuestion()
                     {
                         Index = i,
                         IsValid = isValidItem,
-                        ActivityType = Model.Data.MultiQuestionActivityData[i].ActivityType,
                         Answer = Model.Data.MultiQuestionActivityData[i].Answer,
                         Comments = Model.Data.MultiQuestionActivityData[i].Comments,
                         DisplayComments = Model.Data.MultiQuestionActivityData[i].DisplayComments,
@@ -114,21 +109,20 @@
                         QuestionId = Model.Data.MultiQuestionActivityData[i].QuestionId,
                         QuestionType = Model.Data.MultiQuestionActivityData[i].QuestionType,
                         Title = Model.Data.MultiQuestionActivityData[i].Title,
-                        MultipleChoice = new MultipleChoiceModel()
+                        Checkbox = new Checkbox()
                         {
-                            SelectedChoices = Model.Data.MultiQuestionActivityData[i].MultipleChoice.SelectedChoices,
-                            Choices = Model.Data.MultiQuestionActivityData[i].MultipleChoice.Choices.Select(x=> new He.PipelineAssessment.UI.Features.Workflow.ViewModels.Choice(){Answer = x.Answer,IsSingle = x.IsSingle}).ToList()
+                            SelectedChoices = Model.Data.MultiQuestionActivityData[i].Checkbox.SelectedChoices,
+                            Choices = Model.Data.MultiQuestionActivityData[i].Checkbox.Choices.Select(x=> new He.PipelineAssessment.UI.Features.Workflow.ViewModels.Choice(){Answer = x.Answer,IsSingle = x.IsSingle}).ToList()
                         }
                         })
                     }
-                @if (Model.Data.MultiQuestionActivityData![i].QuestionType == QuestionTypeConstants.SingleChoiceQuestion)
+                @if (Model.Data.MultiQuestionActivityData![i].QuestionType == QuestionTypeConstants.RadioQuestion)
                 {
 
                     @await Html.PartialAsync("_MultiRadioButtonQuestion",new MultiQuestion()
                     {
                         Index = i,
                         IsValid = isValidItem,
-                        ActivityType = Model.Data.MultiQuestionActivityData[i].ActivityType,
                         Answer = Model.Data.MultiQuestionActivityData[i].Answer,
                         Comments = Model.Data.MultiQuestionActivityData[i].Comments,
                         DisplayComments = Model.Data.MultiQuestionActivityData[i].DisplayComments,
@@ -138,10 +132,10 @@
                         QuestionId = Model.Data.MultiQuestionActivityData[i].QuestionId,
                         QuestionType = Model.Data.MultiQuestionActivityData[i].QuestionType,
                         Title = Model.Data.MultiQuestionActivityData[i].Title,
-                        SingleChoice = new SingleChoiceModel()
+                        Radio = new Radio()
                         {
-                            SelectedAnswer = Model.Data.MultiQuestionActivityData[i].SingleChoice.SelectedAnswer,
-                            Choices = Model.Data.MultiQuestionActivityData[i].SingleChoice.Choices.Select(x=> new He.PipelineAssessment.UI.Features.Workflow.ViewModels.Choice(){Answer = x.Answer,IsSingle = x.IsSingle}).ToList()
+                            SelectedAnswer = Model.Data.MultiQuestionActivityData[i].Radio.SelectedAnswer,
+                            Choices = Model.Data.MultiQuestionActivityData[i].Radio.Choices.Select(x=> new He.PipelineAssessment.UI.Features.Workflow.ViewModels.Choice(){Answer = x.Answer,IsSingle = x.IsSingle}).ToList()
                         }
                     })
                 }

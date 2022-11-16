@@ -2,6 +2,7 @@
 using Elsa.CustomActivities.Activities.Shared;
 using Elsa.CustomInfrastructure.Data.Repository;
 using Elsa.CustomModels;
+using Elsa.CustomWorkflow.Sdk;
 using Elsa.Models;
 using Elsa.Persistence;
 using Elsa.Persistence.Specifications.WorkflowInstances;
@@ -10,7 +11,7 @@ using Elsa.Server.Providers;
 using Elsa.Services;
 using MediatR;
 using Open.Linq.AsyncExtensions;
-using Constants = Elsa.CustomActivities.Activities.Constants;
+
 
 namespace Elsa.Server.Features.Workflow.MultiSaveAndContinue
 {
@@ -66,7 +67,7 @@ namespace Elsa.Server.Features.Workflow.MultiSaveAndContinue
                         await _elsaCustomRepository.SaveChanges(cancellationToken);
                     }
 
-                    var collectedWorkflow = await _invoker.ExecuteWorkflowsAsync(command.ActivityId, Constants.QuestionScreen,
+                    var collectedWorkflow = await _invoker.ExecuteWorkflowsAsync(command.ActivityId, ActivityTypeConstants.QuestionScreen,
                         command.WorkflowInstanceId, dbAssessmentQuestionList, cancellationToken).FirstOrDefault();
 
                     var workflowSpecification =
@@ -143,7 +144,7 @@ namespace Elsa.Server.Features.Workflow.MultiSaveAndContinue
             var assessmentQuestion = _saveAndContinueMapper.SaveAndContinueCommandToNextAssessmentQuestion(command, nextActivityId, nextActivityType);
             await _elsaCustomRepository.CreateAssessmentQuestionAsync(assessmentQuestion);
 
-            if (nextActivityType == Constants.QuestionScreen)
+            if (nextActivityType == ActivityTypeConstants.QuestionScreen)
             {
                 //create one for each question
                 var dictionList = workflowInstance.ActivityData

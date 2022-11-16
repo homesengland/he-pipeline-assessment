@@ -18,8 +18,8 @@ namespace He.PipelineAssessment.UI.Features.Workflow.SaveAndContinue
 
         public async Task<LoadWorkflowActivityRequest?> Handle(SaveAndContinueCommand request, CancellationToken cancellationToken)
         {
-            WorkflowNextActivityDataDto? response; 
-            if (request.Data.QuestionActivityData?.ActivityType == ActivityTypeConstants.QuestionScreen)
+            WorkflowNextActivityDataDto? response;
+            if (request.Data.ActivityType == ActivityTypeConstants.QuestionScreen)
             {
                 var saveAndContinueComandDto = _saveAndContinueMapper.SaveAndContinueCommandToMultiSaveAndContinueCommandDto(request);
                 response = await _elsaServerHttpClient.SaveAndContinue(saveAndContinueComandDto);

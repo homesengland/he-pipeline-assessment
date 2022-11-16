@@ -2,7 +2,7 @@
 
 namespace Elsa.CustomWorkflow.Sdk.Models.Workflow.Validators
 {
-    public class MultiChoiceValidator : AbstractValidator<Elsa.CustomWorkflow.Sdk.Models.Workflow.MultipleChoiceModel>
+    public class MultiChoiceValidator : AbstractValidator<Elsa.CustomWorkflow.Sdk.Models.Workflow.Checkbox>
     {
         public MultiChoiceValidator()
         {

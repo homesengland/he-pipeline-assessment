@@ -1,8 +1,7 @@
 ﻿using Elsa.CustomWorkflow.Sdk.Models.Workflow;
 using Elsa.CustomWorkflow.Sdk.Models.Workflow.Validators;
-using He.PipelineAssessment.Common.Tests;
-using Xunit;
 using FluentValidation.TestHelper;
+using Xunit;
 
 namespace Elsa.CustomWorkflow.Sdk.Tests.Workflow.Validators.DateValidatorTests
 {
@@ -13,7 +12,7 @@ namespace Elsa.CustomWorkflow.Sdk.Tests.Workflow.Validators.DateValidatorTests
         {
             // Arrange
             QuestionActivityData activityData = new QuestionActivityData();
-            activityData.QuestionType = QuestionTypeConstants.MultipleChoiceQuestion;
+            activityData.QuestionType = QuestionTypeConstants.CheckboxQuestion;
             activityData.Date = new Date()
             {
                 Day = 32,
@@ -46,7 +45,7 @@ namespace Elsa.CustomWorkflow.Sdk.Tests.Workflow.Validators.DateValidatorTests
 
 
             MultiQuestionActivityDataValidator validator = new MultiQuestionActivityDataValidator();
-            
+
             //Act
             var expectedValidationResult = validator.TestValidate(activityData);
 
@@ -61,7 +60,7 @@ namespace Elsa.CustomWorkflow.Sdk.Tests.Workflow.Validators.DateValidatorTests
             //Arrange
             QuestionActivityData activityData = new QuestionActivityData();
             activityData.QuestionType = QuestionTypeConstants.DateQuestion;
-            activityData.MultipleChoice = new MultipleChoiceModel()
+            activityData.Checkbox = new Checkbox()
             {
                 Choices = new List<Choice>
                 {
@@ -95,7 +94,7 @@ namespace Elsa.CustomWorkflow.Sdk.Tests.Workflow.Validators.DateValidatorTests
             var expectedValidationResult = validator.TestValidate(activityData);
 
             //Assert
-            expectedValidationResult.ShouldNotHaveValidationErrorFor(x => x.MultipleChoice);
+            expectedValidationResult.ShouldNotHaveValidationErrorFor(x => x.Checkbox);
 
         }
 
@@ -104,8 +103,8 @@ namespace Elsa.CustomWorkflow.Sdk.Tests.Workflow.Validators.DateValidatorTests
         {
             //Arrange
             QuestionActivityData activityData = new QuestionActivityData();
-            activityData.QuestionType = QuestionTypeConstants.MultipleChoiceQuestion;
-            activityData.MultipleChoice = new MultipleChoiceModel()
+            activityData.QuestionType = QuestionTypeConstants.CheckboxQuestion;
+            activityData.Checkbox = new Checkbox()
             {
                 Choices = new List<Choice>
                 {
@@ -134,12 +133,12 @@ namespace Elsa.CustomWorkflow.Sdk.Tests.Workflow.Validators.DateValidatorTests
             };
 
             MultiQuestionActivityDataValidator validator = new MultiQuestionActivityDataValidator();
-            
+
             //Act
             var expectedValidationResult = validator.TestValidate(activityData);
 
             //Assert
-            expectedValidationResult.ShouldHaveValidationErrorFor(x => x.MultipleChoice);
+            expectedValidationResult.ShouldHaveValidationErrorFor(x => x.Checkbox);
         }
     }
 }

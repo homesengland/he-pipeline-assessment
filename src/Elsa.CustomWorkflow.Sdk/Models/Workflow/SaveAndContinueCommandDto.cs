@@ -7,9 +7,9 @@
 
         public string WorkflowInstanceId { get; set; } = null!;
 
-        public string? Answer { get; set; }
+        //public string? Answer { get; set; }
 
-        public string? Comments { get; set; }
+        //public string? Comments { get; set; }
     }
 
 }

@@ -2,6 +2,7 @@
 using Elsa.CustomActivities.Activities.QuestionScreen;
 using Elsa.CustomInfrastructure.Data.Repository;
 using Elsa.CustomModels;
+using Elsa.CustomWorkflow.Sdk;
 using Elsa.Models;
 using Elsa.Server.Features.Workflow.StartWorkflow;
 using Elsa.Server.Models;
@@ -10,7 +11,7 @@ using Elsa.Services.Models;
 using He.PipelineAssessment.Common.Tests;
 using Moq;
 using Xunit;
-using Constants = Elsa.CustomActivities.Activities.Constants;
+
 
 namespace Elsa.Server.Tests.Features.Workflow.StartWorkflow
 {
@@ -96,7 +97,7 @@ namespace Elsa.Server.Tests.Features.Workflow.StartWorkflow
             };
 
             activityBlueprint.Id = runWorkflowResult.WorkflowInstance!.LastExecutedActivityId!;
-            activityBlueprint.Type = Constants.QuestionScreen;
+            activityBlueprint.Type = ActivityTypeConstants.QuestionScreen;
             workflowBlueprint.Activities.Add(activityBlueprint);
 
             var assessmentQuestionsDictionary = new Dictionary<string, object?>();

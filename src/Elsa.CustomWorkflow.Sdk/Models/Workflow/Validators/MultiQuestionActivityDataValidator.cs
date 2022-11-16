@@ -1,6 +1,4 @@
-﻿using Elsa.CustomWorkflow.Sdk;
-using Elsa.CustomWorkflow.Sdk.Models.Workflow;
-using FluentValidation;
+﻿using FluentValidation;
 
 namespace Elsa.CustomWorkflow.Sdk.Models.Workflow.Validators
 {
@@ -8,9 +6,9 @@ namespace Elsa.CustomWorkflow.Sdk.Models.Workflow.Validators
     {
         public MultiQuestionActivityDataValidator()
         {
-            RuleFor(x => x.MultipleChoice)
+            RuleFor(x => x.Checkbox)
                 .SetValidator(new MultiChoiceValidator())
-                .When(x => x.QuestionType == QuestionTypeConstants.MultipleChoiceQuestion);
+                .When(x => x.QuestionType == QuestionTypeConstants.CheckboxQuestion);
 
             RuleFor(x => x.Date)
                 .SetValidator(new DateValidator())

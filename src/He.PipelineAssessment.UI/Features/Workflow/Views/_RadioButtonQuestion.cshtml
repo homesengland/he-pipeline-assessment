@@ -1,4 +1,4 @@
-﻿@model He.PipelineAssessment.UI.Features.Workflow.SaveAndContinue.SaveAndContinueCommand
+﻿@*@model He.PipelineAssessment.UI.Features.Workflow.SaveAndContinue.SaveAndContinueCommand
 
 <div class="govuk-form-group">
     <fieldset class="govuk-fieldset" aria-describedby="waste-hint">
@@ -21,13 +21,13 @@
             Select all that apply
         </div>
         <div class="govuk-radios" data-module="govuk-radios">
-           @foreach(var choice in Model.Data.QuestionActivityData!.SingleChoice.Choices)
+           @foreach(var choice in Model.Data.QuestionActivityData!.Radio.Choices)
             {
                 int iterrator = 1;
-                string isChecked = choice.Answer == Model.Data.QuestionActivityData.SingleChoice.SelectedAnswer? "checked" : "";
+                string isChecked = choice.Answer == Model.Data.QuestionActivityData.Radio.SelectedAnswer? "checked" : "";
                 <div class="govuk-radios__item">
                     @Html.HiddenFor(m => choice.Answer)
-                    @Html.RadioButtonFor(m => m.Data.QuestionActivityData!.SingleChoice.SelectedAnswer, choice.Answer, new {@class="govuk-radios__input", @id="radio_multi_select_"+iterrator, @checked = isChecked})
+                    @Html.RadioButtonFor(m => m.Data.QuestionActivityData!.Radio.SelectedAnswer, choice.Answer, new {@class="govuk-radios__input", @id="radio_multi_select_"+iterrator, @checked = isChecked})
                     @Html.Label(choice.Answer, choice.Answer, new {@class = "govuk-label govuk-radios__label"})
                 </div>
                 iterrator++;
@@ -56,3 +56,4 @@
 
     <input id="Next" type="submit" value="Save and continue" name="Next" class="govuk-button" />
 </div>
+*@
