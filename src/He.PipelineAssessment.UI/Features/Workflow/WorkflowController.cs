@@ -56,12 +56,6 @@ namespace He.PipelineAssessment.UI.Features.Workflow
 
                 return View("MultiSaveAndContinue", result);
 
-                //if (result.Data.ActivityType == ActivityTypeConstants.QuestionScreen)
-                //{
-
-                //}
-                ////return View("SaveAndContinue", result);
-                //return View("MultiSaveAndContinue", result);
             }
             catch (Exception e)
             {
@@ -93,7 +87,7 @@ namespace He.PipelineAssessment.UI.Features.Workflow
                 {
                     command.ValidationMessages = validationResult;
 
-                    return View("SaveAndContinue", command);
+                    return View("MultiSaveAndContinue", command);
                 }
             }
             catch (Exception e)

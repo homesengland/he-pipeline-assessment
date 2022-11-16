@@ -109,45 +109,7 @@ namespace Elsa.Server.Features.Workflow.LoadWorkflowActivity
                                                 $"Failed to map activity data to MultiQuestionActivityData");
                                         }
                                     }
-                                    //else
-                                    //{
-                                    //    var activityData =
-                                    //        _loadWorkflowActivityJsonHelper
-                                    //            .ActivityDataDictionaryToQuestionActivityData<QuestionActivityData>(
-                                    //                activityDataDictionary);
-                                    //    if (activityData != null)
-                                    //    {
-                                    //        result.Data!.QuestionActivityData = activityData;
-                                    //        result.Data.QuestionActivityData.ActivityType =
-                                    //            dbAssessmentQuestion.ActivityType;
-                                    //        result.Data.QuestionActivityData.Answer = dbAssessmentQuestion.Answer;
-                                    //        result.Data.QuestionActivityData.Comments = dbAssessmentQuestion.Comments;
 
-                                    //        // Restore preserved checkboxes from previous page load
-                                    //        if (result.Data.ActivityType == Constants.MultipleChoiceQuestion &&
-                                    //            !string.IsNullOrEmpty(result.Data.QuestionActivityData.Answer))
-                                    //        {
-                                    //            var answerList =
-                                    //                JsonSerializer.Deserialize<List<string>>(result.Data
-                                    //                    .QuestionActivityData.Answer);
-                                    //            result.Data.QuestionActivityData.Checkbox.SelectedChoices =
-                                    //                answerList!;
-                                    //        }
-
-                                    //        // Restore preserved selected answer from previous page load
-                                    //        if (result.Data.ActivityType == Constants.SingleChoiceQuestion &&
-                                    //            !string.IsNullOrEmpty(result.Data.QuestionActivityData.Answer))
-                                    //        {
-                                    //            result.Data.QuestionActivityData.Radio.SelectedAnswer =
-                                    //                result.Data.QuestionActivityData.Answer;
-                                    //        }
-                                    //    }
-                                    //    else
-                                    //    {
-                                    //        result.ErrorMessages.Add(
-                                    //            $"Failed to map activity data");
-                                    //    }
-                                    //}
                                 }
                                 else
                                 {

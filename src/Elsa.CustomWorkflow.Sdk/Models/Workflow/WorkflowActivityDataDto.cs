@@ -19,7 +19,7 @@ namespace Elsa.CustomWorkflow.Sdk.Models.Workflow
         public string PreviousActivityId { get; set; } = null!;
         public string PageTitle { get; set; } = null!;
         public string ActivityType { get; set; } = null!;
-        //public QuestionActivityData? QuestionActivityData { get; set; }
+
 
         public List<QuestionActivityData>? MultiQuestionActivityData { get; set; }
 
@@ -29,7 +29,7 @@ namespace Elsa.CustomWorkflow.Sdk.Models.Workflow
     {
         public string QuestionId { get; set; } = null!;
         public string QuestionType { get; set; } = null!;
-        //public string ActivityType { get; set; } = null!;
+
         public string Title { get; set; } = null!;
         public string Question { get; set; } = null!;
         public string? QuestionHint { get; set; }

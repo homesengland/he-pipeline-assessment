@@ -26,7 +26,6 @@
         public string? Comments { get; set; }
         public object? Output { get; set; }
 
-        //public string ActivityType { get; set; } = null!;
         public string? QuestionType { get; set; } = null!;
         public string? Answer { get; set; }
         public Checkbox Checkbox { get; set; } = null!;
