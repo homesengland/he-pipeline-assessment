@@ -1,16 +1,15 @@
 import { EventEmitter } from '@stencil/core';
 
-
 import {
   MultiChoiceRecord,
   SingleChoiceRecord,
+  OptionsRecord,
+  QuestionComponent,
   Question,
   MultipleChoiceQuestion,
-  QuestionComponent,
   RadioQuestion,
   CheckboxQuestion,
   QuestionOptions,
-  OptionsRecord,
 } from '../models/custom-component-models';
 
 
@@ -65,16 +64,6 @@ abstract class BaseQuestionEventHandler {
   };
 }
 
-
-export class QuestionEventHandler extends BaseQuestionEventHandler {
-  constructor(q: Question, e: EventEmitter) {
-    super(q, e);
-  }
-
-  question: Question;
-  emitter: EventEmitter<Question>;
-}
-
 abstract class ChoiceQuestionEventHandler<T> extends BaseQuestionEventHandler {
 
   constructor(q: MultipleChoiceQuestion<T>, e: EventEmitter) {
@@ -114,13 +103,21 @@ abstract class ChoiceQuestionEventHandler<T> extends BaseQuestionEventHandler {
   };
 
   onDeleteChoiceClick = (record: T) => {
-    let newChoiceObj = { ... this.question.options, choices: this.question.options.choices.filter(x => x != record) };
+    let newChoiceObj = { ... this.question.options, choices: this.question.options.choices.filter(x => JSON.stringify(x) != JSON.stringify(record)) };
     this.question = { ...this.question, options: newChoiceObj }
     this.assignOptions(newChoiceObj);
     this.emitter.emit(this.question);
   };
 }
 
+export class QuestionEventHandler extends BaseQuestionEventHandler {
+  constructor(q: Question, e: EventEmitter) {
+    super(q, e);
+  }
+
+  question: Question;
+  emitter: EventEmitter<Question>;
+}
 
 export class CheckboxEventHandler extends ChoiceQuestionEventHandler<MultiChoiceRecord> {
 
@@ -140,6 +137,7 @@ export class CheckboxEventHandler extends ChoiceQuestionEventHandler<MultiChoice
   }
 
   onCheckChanged = (e: Event, record: MultiChoiceRecord) => {
+    console.log("Check changed...")
     const checkbox = (e.target as HTMLInputElement);
     record.isSingle = checkbox.checked;
     this.emitter.emit(this.question);

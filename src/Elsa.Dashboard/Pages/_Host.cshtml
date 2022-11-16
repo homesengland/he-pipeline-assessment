@@ -32,12 +32,17 @@
         transition: 0.4s;
       }
 
+      .accordion > * {
+         cursor: auto;
+      }
+
       .active, .accordion:hover {
         background-color: #ccc; 
       }
 
       .trashcan-icon:hover {
-        background-color: #bbb; 
+        background-color: #bbb;
+        cursor: pointer;
       }
 
       .panel {
@@ -46,6 +51,7 @@
         background-color: white;
         overflow: hidden;
       }
+
     </style>
 </head>
 <body>
@@ -95,9 +101,6 @@
       multichoice.activityModel = activity;
       multichoice.propertyDescriptor = property;
       multichoice.propertyModel = prop;
-      console.log(activity);
-      console.log(property);
-      console.log(prop);
       return multichoice;
     }
   }
