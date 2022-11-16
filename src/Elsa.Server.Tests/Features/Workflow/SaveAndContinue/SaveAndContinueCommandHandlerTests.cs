@@ -270,7 +270,7 @@ namespace Elsa.Server.Tests.Features.Workflow.SaveAndContinue
                 Times.Never);
             Assert.Null(result.Data);
             Assert.Equal(
-                $"Unable to find workflow instance with Id: {saveAndContinueCommand.WorkflowInstanceId} and Activity Id: {saveAndContinueCommand.ActivityId} in custom database",
+                $"Unable to find activity instance with Workflow Instance Id: {saveAndContinueCommand.WorkflowInstanceId} and Activity Id: {saveAndContinueCommand.ActivityId} in custom database",
                 result.ErrorMessages.Single());
         }
 
