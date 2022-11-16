@@ -87,7 +87,6 @@ namespace Elsa.Server.Features.Workflow.LoadWorkflowActivity
                                         if (elsaActivityAssessmentQuestions != null)
                                         {
                                             result.Data.MultiQuestionActivityData = new List<QuestionActivityData>();
-                                            result.Data.QuestionActivityData = new QuestionActivityData();
                                             result.Data.ActivityType = dbAssessmentQuestion.ActivityType;
 
                                             foreach (var item in elsaActivityAssessmentQuestions.Questions)
