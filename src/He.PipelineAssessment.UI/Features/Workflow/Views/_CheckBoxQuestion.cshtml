@@ -19,13 +19,13 @@
         <div id="waste-hint" class="govuk-hint">
             Select all that apply
         </div>
-        @if(Model.ValidationMessages.Any())
+        @if (Model.ValidationMessages !=null && Model.ValidationMessages.Errors.Any())
         {
             <p id="multiplechoice-error" class="govuk-error-message">
                 <span class="govuk-visually-hidden">Error:</span> 
-                @foreach(var message in Model.ValidationMessages)
+                @foreach(var item in Model.ValidationMessages.Errors)
                 {
-                    @message
+                    @item.ErrorMessage
                     <br />
                 }
             </p>

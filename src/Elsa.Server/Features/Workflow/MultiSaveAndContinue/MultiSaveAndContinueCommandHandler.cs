@@ -10,6 +10,7 @@ using Elsa.Server.Providers;
 using Elsa.Services;
 using MediatR;
 using Open.Linq.AsyncExtensions;
+using Constants = Elsa.CustomActivities.Activities.Constants;
 
 namespace Elsa.Server.Features.Workflow.MultiSaveAndContinue
 {
@@ -47,78 +48,84 @@ namespace Elsa.Server.Features.Workflow.MultiSaveAndContinue
                     await _elsaCustomRepository.GetAssessmentQuestions(command.ActivityId, command.WorkflowInstanceId,
                         cancellationToken);
 
-                if (dbAssessmentQuestionList != null && dbAssessmentQuestionList.Any() && command.Answers != null &&
-                    command.Answers.Any())
+                if (dbAssessmentQuestionList != null && dbAssessmentQuestionList.Any())
                 {
-                    foreach (var question in dbAssessmentQuestionList)
+                    if (command.Answers != null && command.Answers.Any())
                     {
-                        var answer = command.Answers.FirstOrDefault(x => x.Id == question.QuestionId);
-
-                        if (answer != null)
+                        foreach (var question in dbAssessmentQuestionList)
                         {
-                            question.SetAnswer(answer.AnswerText, _dateTimeProvider.UtcNow());
-                            question.Comments = answer.Comments;
+                            var answer = command.Answers.FirstOrDefault(x => x.Id == question.QuestionId);
+
+                            if (answer != null)
+                            {
+                                question.SetAnswer(answer.AnswerText, _dateTimeProvider.UtcNow());
+                                question.Comments = answer.Comments;
+                            }
                         }
+
+                        await _elsaCustomRepository.SaveChanges(cancellationToken);
                     }
 
-                    await _elsaCustomRepository.SaveChanges(cancellationToken);
-                }
+                    var collectedWorkflow = await _invoker.ExecuteWorkflowsAsync(command.ActivityId, Constants.QuestionScreen,
+                        command.WorkflowInstanceId, dbAssessmentQuestionList, cancellationToken).FirstOrDefault();
 
-                var collectedWorkflow = await _invoker.ExecuteWorkflowsAsync(command.ActivityId, "QuestionScreen",
-                    command.WorkflowInstanceId, dbAssessmentQuestionList, cancellationToken).FirstOrDefault();
+                    var workflowSpecification =
+                        new WorkflowInstanceIdSpecification(collectedWorkflow.WorkflowInstanceId);
+                    var workflowInstance = await _workflowInstanceStore.FindAsync(workflowSpecification, cancellationToken);
 
-                var workflowSpecification =
-                    new WorkflowInstanceIdSpecification(collectedWorkflow.WorkflowInstanceId);
-                var workflowInstance = await _workflowInstanceStore.FindAsync(workflowSpecification, cancellationToken);
-
-                if (workflowInstance != null)
-                {
-                    if (workflowInstance.Output != null)
+                    if (workflowInstance != null)
                     {
-                        var nextActivityId = workflowInstance.Output.ActivityId;
-
-                        var workflow =
-                            await _workflowRegistry.FindAsync(workflowInstance.DefinitionId, VersionOptions.Published,
-                                cancellationToken: cancellationToken);
-
-                        var nextActivity = workflow!.Activities.FirstOrDefault(x =>
-                            x.Id == nextActivityId);
-
-                        if (nextActivity != null)
+                        if (workflowInstance.Output != null)
                         {
-                            var nextActivityRecord =
-                                await _elsaCustomRepository.GetAssessmentQuestion(nextActivityId,
-                                    command.WorkflowInstanceId, cancellationToken);
+                            var nextActivityId = workflowInstance.Output.ActivityId;
 
-                            if (nextActivityRecord == null)
+                            var workflow =
+                                await _workflowRegistry.FindAsync(workflowInstance.DefinitionId, VersionOptions.Published,
+                                    cancellationToken: cancellationToken);
+
+                            var nextActivity = workflow!.Activities.FirstOrDefault(x =>
+                                x.Id == nextActivityId);
+
+                            if (nextActivity != null)
                             {
-                                await CreateNextActivityRecord(command, nextActivityId, nextActivity.Type, workflowInstance);
+                                var nextActivityRecord =
+                                    await _elsaCustomRepository.GetAssessmentQuestion(nextActivityId,
+                                        command.WorkflowInstanceId, cancellationToken);
+
+                                if (nextActivityRecord == null)
+                                {
+                                    await CreateNextActivityRecord(command, nextActivityId, nextActivity.Type, workflowInstance);
+                                }
+
+                                result.Data = new MultiSaveAndContinueResponse
+                                {
+                                    WorkflowInstanceId = command.WorkflowInstanceId,
+                                    NextActivityId = nextActivityId,
+                                    ActivityType = nextActivity.Type
+                                };
+
                             }
-
-                            result.Data = new MultiSaveAndContinueResponse
+                            else
                             {
-                                WorkflowInstanceId = command.WorkflowInstanceId,
-                                NextActivityId = nextActivityId,
-                                ActivityType = nextActivity.Type
-                            };
-
+                                result.ErrorMessages.Add(
+                                    $"Unable to determine next activity ID");
+                            }
                         }
                         else
                         {
                             result.ErrorMessages.Add(
-                                $"Unable to determine next activity ID");
+                                $"Workflow instance output for workflow instance Id {command.WorkflowInstanceId} is not set. Unable to determine next activity");
                         }
                     }
                     else
                     {
                         result.ErrorMessages.Add(
-                            $"Workflow instance output for workflow instance Id {command.WorkflowInstanceId} is not set. Unable to determine next activity");
+                            $"Unable to find workflow instance with Id: {command.WorkflowInstanceId} in Elsa database");
                     }
                 }
                 else
                 {
-                    result.ErrorMessages.Add(
-                        $"Unable to find workflow instance with Id: {command.WorkflowInstanceId} in Elsa database");
+                    result.ErrorMessages.Add($"Unable to find any questions for Question Screen activity Workflow Instance Id: {command.WorkflowInstanceId} and Activity Id: {command.ActivityId} in custom database");
                 }
             }
 
@@ -136,26 +143,29 @@ namespace Elsa.Server.Features.Workflow.MultiSaveAndContinue
             var assessmentQuestion = _saveAndContinueMapper.SaveAndContinueCommandToNextAssessmentQuestion(command, nextActivityId, nextActivityType);
             await _elsaCustomRepository.CreateAssessmentQuestionAsync(assessmentQuestion);
 
-            if (nextActivityType == "QuestionScreen")
+            if (nextActivityType == Constants.QuestionScreen)
             {
                 //create one for each question
                 var dictionList = workflowInstance.ActivityData
                     .FirstOrDefault(x => x.Key == nextActivityId).Value;
 
-                var dictionaryQuestions = dictionList.FirstOrDefault(x => x.Key == "Questions").Value;
-
-                if (dictionaryQuestions != null)
+                if (dictionList != null)
                 {
-                    var questionList = (List<Question>)dictionaryQuestions;
-                    if (questionList!.Any())
-                    {
-                        var assessments = new List<AssessmentQuestion>();
+                    var dictionaryQuestions = (AssessmentQuestions?)dictionList.FirstOrDefault(x => x.Key == "Questions").Value;
 
-                        foreach (var item in questionList!)
+                    if (dictionaryQuestions != null)
+                    {
+                        var questionList = (List<Question>)dictionaryQuestions.Questions;
+                        if (questionList!.Any())
                         {
-                            assessments.Add(_saveAndContinueMapper.SaveAndContinueCommandToNextAssessmentQuestion(command, nextActivityId, nextActivityType, item));
+                            var assessments = new List<AssessmentQuestion>();
+
+                            foreach (var item in questionList!)
+                            {
+                                assessments.Add(_saveAndContinueMapper.SaveAndContinueCommandToNextAssessmentQuestion(command, nextActivityId, nextActivityType, item));
+                            }
+                            await _elsaCustomRepository.CreateAssessmentQuestionAsync(assessments, CancellationToken.None);
                         }
-                        await _elsaCustomRepository.CreateAssessmentQuestionAsync(assessments, CancellationToken.None);
                     }
                 }
             }

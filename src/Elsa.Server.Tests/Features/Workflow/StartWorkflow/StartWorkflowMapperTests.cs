@@ -1,4 +1,5 @@
 ﻿using AutoFixture.Xunit2;
+using Elsa.CustomActivities.Activities.QuestionScreen;
 using Elsa.CustomModels;
 using Elsa.Server.Features.Workflow.StartWorkflow;
 using Elsa.Server.Providers;
@@ -49,6 +50,71 @@ namespace Elsa.Server.Tests.Features.Workflow.StartWorkflow
 
             //Act
             var result = sut.RunWorkflowResultToAssessmentQuestion(runWorkflowResult, activityType);
+
+            //Assert
+            Assert.Null(result);
+        }
+
+        [Theory]
+        [AutoData]
+        public void RunWorkflowResultToAssessmentQuestion_WithQuestionParameter_ShouldReturnNull_WhenWorkflowInstanceIdNull(
+            [Frozen] Mock<IDateTimeProvider> mockDateTimeProvider,
+            string activityType,
+            Question question)
+        {
+            //Arrange
+            StartWorkflowMapper sut = new StartWorkflowMapper(mockDateTimeProvider.Object);
+
+            var workflowInstance = new Elsa.Models.WorkflowInstance();
+            var runWorkflowResult = new RunWorkflowResult(workflowInstance, null, null, false);
+
+            //Act
+            var result = sut.RunWorkflowResultToAssessmentQuestion(runWorkflowResult, activityType, question);
+
+            //Assert
+            Assert.Null(result);
+        }
+
+        [Theory]
+        [AutoMoqData]
+        public void RunWorkflowResultToAssessmentQuestion_WithQuestionParameter_ShouldReturnAssessmentQuestion_WhenWorkflowInstanceIsNotNull(
+           [Frozen] Mock<IDateTimeProvider> mockDateTimeProvider,
+           RunWorkflowResult runWorkflowResult,
+           string activityType,
+           Question question,
+           StartWorkflowMapper sut
+           )
+        {
+            //Arrange
+            var currentTimeUtc = DateTime.UtcNow;
+            mockDateTimeProvider.Setup(x => x.UtcNow()).Returns(currentTimeUtc);
+
+            //Act
+            var result = sut.RunWorkflowResultToAssessmentQuestion(runWorkflowResult, activityType, question);
+
+            //Assert
+            Assert.IsType<AssessmentQuestion>(result);
+            Assert.Equal(runWorkflowResult.WorkflowInstance!.LastExecutedActivityId, result!.ActivityId);
+            Assert.Equal(runWorkflowResult.WorkflowInstance!.Id, result.WorkflowInstanceId);
+            Assert.Equal(activityType, result.ActivityType);
+            Assert.Equal(runWorkflowResult.WorkflowInstance!.LastExecutedActivityId, result.PreviousActivityId);
+            Assert.Equal(currentTimeUtc, result.CreatedDateTime);
+        }
+
+        [Theory]
+        [AutoData]
+        public void RunWorkflowResultToAssessmentQuestion_WithQuestionParameter_ShouldReturnNull_WhenWorkflowInstanceNull(
+            [Frozen] Mock<IDateTimeProvider> mockDateTimeProvider,
+            string activityType,
+            Question question
+            )
+        {
+            //Arrange
+            StartWorkflowMapper sut = new StartWorkflowMapper(mockDateTimeProvider.Object);
+            var runWorkflowResult = new RunWorkflowResult(null, null, null, false);
+
+            //Act
+            var result = sut.RunWorkflowResultToAssessmentQuestion(runWorkflowResult, activityType, question);
 
             //Assert
             Assert.Null(result);
@@ -128,5 +194,7 @@ namespace Elsa.Server.Tests.Features.Workflow.StartWorkflow
             //Assert
             Assert.Null(result);
         }
+
+
     }
 }

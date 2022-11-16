@@ -5,6 +5,7 @@ using Elsa.Models;
 using Elsa.Server.Models;
 using Elsa.Services;
 using MediatR;
+using Constants = Elsa.CustomActivities.Activities.Constants;
 
 namespace Elsa.Server.Features.Workflow.StartWorkflow
 {
@@ -39,8 +40,6 @@ namespace Elsa.Server.Features.Workflow.StartWorkflow
 
                     if (activity != null)
                     {
-
-
                         var assessmentQuestion =
                             _startWorkflowMapper.RunWorkflowResultToAssessmentQuestion(runWorkflowResult, activity.Type);
 
@@ -54,7 +53,7 @@ namespace Elsa.Server.Features.Workflow.StartWorkflow
                             result.ErrorMessages.Add("Failed to deserialize RunWorkflowResult");
                         }
 
-                        if (activity.Type == "QuestionScreen")
+                        if (activity.Type == Constants.QuestionScreen)
                         {
                             //create one for each question
                             var dictionList = runWorkflowResult.WorkflowInstance.ActivityData
@@ -67,18 +66,17 @@ namespace Elsa.Server.Features.Workflow.StartWorkflow
                             {
                                 var assessments = new List<AssessmentQuestion>();
 
-                                    foreach (var item in questionList!)
+                                foreach (var item in questionList!)
+                                {
+                                    var assessment =
+                                        _startWorkflowMapper.RunWorkflowResultToAssessmentQuestion(runWorkflowResult,
+                                            activity.Type, item);
+                                    if (assessment != null)
                                     {
-                                        var assessment =
-                                            _startWorkflowMapper.RunWorkflowResultToAssessmentQuestion(runWorkflowResult,
-                                                activity.Type, item);
-                                        if (assessment != null)
-                                        {
-                                            assessments.Add(assessment);
-                                        }
+                                        assessments.Add(assessment);
                                     }
-                                    await _elsaCustomRepository.CreateAssessmentQuestionAsync(assessments, cancellationToken);
                                 }
+                                await _elsaCustomRepository.CreateAssessmentQuestionAsync(assessments, cancellationToken);
                             }
                         }
                     }
@@ -87,6 +85,11 @@ namespace Elsa.Server.Features.Workflow.StartWorkflow
                         result.ErrorMessages.Add("Failed to get activity");
                     }
                 }
+                else
+                {
+                    result.ErrorMessages.Add("Workflow instance is null");
+                }
+            }
             catch (Exception e)
             {
                 result.ErrorMessages.Add(e.Message);

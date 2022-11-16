@@ -1,0 +1,65 @@
+﻿@using He.PipelineAssessment.UI.Features.Workflow.ViewModels
+@model He.PipelineAssessment.UI.Features.Workflow.ViewModels.MultiQuestion
+@{
+    var itemName = "Data.MultiQuestionActivityData[" + Model.Index + "].MultipleChoice.SelectedChoices";
+    var formItemName = "Data.MultiQuestionActivityData[" + Model.Index + "].MultipleChoice";
+
+    var errorFormClass = !Model.IsValid ? "govuk-form-group--error" : "";
+}
+
+<div class="govuk-form-group @errorFormClass" id="@formItemName">
+    @await Html.PartialAsync("_QuestionTitle", Model.Title)
+
+    @await Html.PartialAsync("_QuestionText", Model.Question)
+    @await Html.PartialAsync("_QuestionHint", Model.QuestionHint)
+    
+    <div class="govuk-checkboxes" data-module="govuk-checkboxes">
+        @{
+            var exclusiveChoices = Model.MultipleChoice.Choices.Where(c => c.IsSingle).ToArray();
+            var nonExclusiveChoices = Model.MultipleChoice.Choices.Where(c => !c.IsSingle).ToArray();
+        }
+        @for (int i = 0; i < Model.MultipleChoice.Choices.Count(); i++)
+        {
+            var hiddenItemNameAnswer = "Data.MultiQuestionActivityData[" + Model.Index + "].MultipleChoice.Choices["+i+"].Answer";
+            var hiddenItemNameIsSingle = "Data.MultiQuestionActivityData[" + Model.Index + "].MultipleChoice.Choices["+i+"].IsSingle";
+
+            <input type="hidden" name="@hiddenItemNameAnswer" value="@Model.MultipleChoice.Choices[i].Answer" />
+            <input type="hidden" name="@hiddenItemNameIsSingle" value="@Model.MultipleChoice.Choices[i].IsSingle.ToString()" />
+        }
+        @for (int i = 0; i < nonExclusiveChoices.Count(); i++)
+        {
+            string answerText = nonExclusiveChoices[i].Answer;
+            List<string> selectedChoices = Model.MultipleChoice.SelectedChoices;
+            bool isSelected = selectedChoices != null ? selectedChoices.Contains(answerText) : false;
+
+            <div class="govuk-checkboxes__item">
+                @*Must use the input tag helper as opposed to htmlcheckbox, as all checkboxes need the same name property, which cannot be overridden easily in HtmlCheckboxFor*@
+                <input asp-for="@isSelected"
+                   value="@nonExclusiveChoices[i].Answer"
+                   name="@itemName"
+                   type="checkbox" class="govuk-checkboxes__input">
+                @Html.Label(nonExclusiveChoices[i].Answer, answerText, new {@class = "govuk-label govuk-checkboxes__label"})
+            </div>
+        }
+        @for (int i = 0; i < exclusiveChoices.Count(); i++)
+        {
+            string answerText = exclusiveChoices[i].Answer;
+            List<string> selectedChoices = Model.MultipleChoice.SelectedChoices;
+            bool isSelected = selectedChoices != null ? selectedChoices.Contains(answerText) : false;
+
+            <div class="govuk-checkboxes__divider">or</div>
+            <div class="govuk-checkboxes__item">
+                @*Must use the input tag helper as opposed to htmlcheckbox, as all checkboxes need the same name property, which cannot be overridden easily in HtmlCheckboxFor*@
+                <input asp-for="@isSelected"
+                   value="@exclusiveChoices[i].Answer"
+                   name="@itemName"
+                   type="checkbox" class="govuk-checkboxes__input" data-behaviour="exclusive">
+                @Html.Label(exclusiveChoices[i].Answer, answerText, new {@class = "govuk-label govuk-checkboxes__label"})
+            </div>
+        }
+    </div>
+
+ 
+    @await Html.PartialAsync("_QuestionGuidance", Model.QuestionGuidance)
+    @await Html.PartialAsync("_MultiComments", new MultiComment(){Index = Model.Index, Comment = Model.Comments,DisplayComments = Model.DisplayComments})
+</div>

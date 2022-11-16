@@ -1,4 +1,5 @@
 ﻿using AutoFixture.Xunit2;
+using Elsa.CustomActivities.Activities.QuestionScreen;
 using Elsa.CustomActivities.Activities.Shared;
 using Elsa.CustomInfrastructure.Data.Repository;
 using Elsa.CustomModels;
@@ -434,6 +435,301 @@ namespace Elsa.Server.Tests.Features.Workflow.LoadWorkflowActivity
             workflowInstanceStore.Verify(x => x.FindAsync(It.IsAny<WorkflowInstanceIdSpecification>(), CancellationToken.None), Times.Never);
             loadWorkflowActivityJsonHelper.Verify(x => x.ActivityDataDictionaryToQuestionActivityData<QuestionActivityData>(It.IsAny<IDictionary<string, object?>>()), Times.Never);
 
+        }
+
+        [Theory]
+        [AutoMoqData]
+        public async Task Handle_ReturnsErrors_GivenActiovityDataReturnsNullForAcitivtyId(
+         [Frozen] Mock<IQuestionInvoker> questionInvoker,
+         [Frozen] Mock<IWorkflowInstanceStore> workflowInstanceStore,
+         [Frozen] Mock<IElsaCustomRepository> elsaCustomRepository,
+         [Frozen] Mock<ILoadWorkflowActivityJsonHelper> loadWorkflowActivityJsonHelper,
+         LoadWorkflowActivityRequest loadWorkflowActivityRequest,
+         List<CollectedWorkflow> collectedWorkflows,
+         WorkflowInstance workflowInstance,
+         AssessmentQuestion assessmentQuestion,
+         QuestionActivityData questionActivityData,
+         LoadWorkflowActivityRequestHandler sut)
+        {
+
+            //Arrange
+            questionInvoker
+                .Setup(x => x.FindWorkflowsAsync(loadWorkflowActivityRequest.ActivityId, assessmentQuestion.ActivityType, loadWorkflowActivityRequest.WorkflowInstanceId, CancellationToken.None))
+                .ReturnsAsync(collectedWorkflows);
+
+            workflowInstanceStore.Setup(x =>
+                    x.FindAsync(It.IsAny<WorkflowInstanceIdSpecification>(), CancellationToken.None))
+                .ReturnsAsync(workflowInstance);
+
+            elsaCustomRepository.Setup(x => x.GetAssessmentQuestion(loadWorkflowActivityRequest.ActivityId,
+                    loadWorkflowActivityRequest.WorkflowInstanceId, CancellationToken.None))
+                .ReturnsAsync(assessmentQuestion);
+
+            loadWorkflowActivityJsonHelper
+                .Setup(x => x.ActivityDataDictionaryToQuestionActivityData<QuestionActivityData>(It.IsAny<IDictionary<string, object?>>()))
+                .Returns(questionActivityData);
+
+            IDictionary<string, object?>? customDictionary = null;
+            workflowInstance.ActivityData.Add(loadWorkflowActivityRequest.ActivityId, customDictionary!);
+
+            //Act
+            var result = await sut.Handle(loadWorkflowActivityRequest, CancellationToken.None);
+
+            //Assert
+            Assert.Null(result.Data!.QuestionActivityData);
+            Assert.Equal($"Activity data is null for Activity Id: {loadWorkflowActivityRequest.ActivityId}", result.ErrorMessages.Single());
+        }
+
+        [Theory]
+        [AutoMoqData]
+        public async Task Handle_ReturnErrors_GivenActivityIsQuestionScreenAndAssessmentQuestionsAreNull(
+  [Frozen] Mock<IQuestionInvoker> questionInvoker,
+  [Frozen] Mock<IWorkflowInstanceStore> workflowInstanceStore,
+  [Frozen] Mock<IElsaCustomRepository> elsaCustomRepository,
+  [Frozen] Mock<ILoadWorkflowActivityJsonHelper> loadWorkflowActivityJsonHelper,
+  LoadWorkflowActivityRequest loadWorkflowActivityRequest,
+  List<CollectedWorkflow> collectedWorkflows,
+  WorkflowInstance workflowInstance,
+  AssessmentQuestion assessmentQuestion,
+  List<AssessmentQuestion> assessmentQuestions,
+  QuestionActivityData questionActivityData,
+  LoadWorkflowActivityRequestHandler sut)
+        {
+
+            //Arrange
+            assessmentQuestion.ActivityType = Constants.QuestionScreen;
+
+            questionInvoker
+                .Setup(x => x.FindWorkflowsAsync(loadWorkflowActivityRequest.ActivityId, assessmentQuestion.ActivityType, loadWorkflowActivityRequest.WorkflowInstanceId, CancellationToken.None))
+                .ReturnsAsync(collectedWorkflows);
+
+            workflowInstanceStore.Setup(x =>
+                    x.FindAsync(It.IsAny<WorkflowInstanceIdSpecification>(), CancellationToken.None))
+                .ReturnsAsync(workflowInstance);
+
+            elsaCustomRepository.Setup(x => x.GetAssessmentQuestion(loadWorkflowActivityRequest.ActivityId,
+                    loadWorkflowActivityRequest.WorkflowInstanceId, CancellationToken.None))
+                .ReturnsAsync(assessmentQuestion);
+
+            elsaCustomRepository.Setup(x => x.GetAssessmentQuestions(loadWorkflowActivityRequest.ActivityId,
+            loadWorkflowActivityRequest.WorkflowInstanceId, CancellationToken.None))
+            .ReturnsAsync(assessmentQuestions);
+
+            loadWorkflowActivityJsonHelper
+                .Setup(x => x.ActivityDataDictionaryToQuestionActivityData<QuestionActivityData>(It.IsAny<IDictionary<string, object?>>()))
+            .Returns(questionActivityData);
+
+            var assessmentQuestionsDictionary = new Dictionary<string, object?>();
+            AssessmentQuestions? elsaAssessmentQuestions = null;
+            assessmentQuestionsDictionary.Add("Questions", elsaAssessmentQuestions);
+
+            workflowInstance.ActivityData.Add(loadWorkflowActivityRequest.ActivityId, assessmentQuestionsDictionary);
+
+            //Act
+            var result = await sut.Handle(loadWorkflowActivityRequest, CancellationToken.None);
+
+            //Assert
+            Assert.Null(result.Data!.MultiQuestionActivityData);
+            Assert.Equal($"Failed to map activity data to MultiQuestionActivityData", result.ErrorMessages.Single());
+        }
+
+        [Theory]
+        [AutoMoqData]
+        public async Task Handle_ReturnMultiQuestionActivityData_GivenActivityIsQuestionScreenAndNoErrorsEncountered(
+          [Frozen] Mock<IQuestionInvoker> questionInvoker,
+          [Frozen] Mock<IWorkflowInstanceStore> workflowInstanceStore,
+          [Frozen] Mock<IElsaCustomRepository> elsaCustomRepository,
+          [Frozen] Mock<ILoadWorkflowActivityJsonHelper> loadWorkflowActivityJsonHelper,
+          LoadWorkflowActivityRequest loadWorkflowActivityRequest,
+          List<CollectedWorkflow> collectedWorkflows,
+          WorkflowInstance workflowInstance,
+          AssessmentQuestion assessmentQuestion,
+          List<AssessmentQuestion> assessmentQuestions,
+          QuestionActivityData questionActivityData,
+          AssessmentQuestions elsaAssessmentQuestions,
+          LoadWorkflowActivityRequestHandler sut)
+        {
+
+            //Arrange
+            assessmentQuestion.ActivityType = Constants.QuestionScreen;
+
+            for(int i = 0; i<assessmentQuestions.Count; i++)
+            {
+                var questionId = assessmentQuestions[i].QuestionId;
+                elsaAssessmentQuestions.Questions[i].Id = questionId!;
+            }
+
+            questionInvoker
+                .Setup(x => x.FindWorkflowsAsync(loadWorkflowActivityRequest.ActivityId, assessmentQuestion.ActivityType, loadWorkflowActivityRequest.WorkflowInstanceId, CancellationToken.None))
+                .ReturnsAsync(collectedWorkflows);
+
+            workflowInstanceStore.Setup(x =>
+                    x.FindAsync(It.IsAny<WorkflowInstanceIdSpecification>(), CancellationToken.None))
+                .ReturnsAsync(workflowInstance);
+
+            elsaCustomRepository.Setup(x => x.GetAssessmentQuestion(loadWorkflowActivityRequest.ActivityId,
+                    loadWorkflowActivityRequest.WorkflowInstanceId, CancellationToken.None))
+                .ReturnsAsync(assessmentQuestion);
+
+            elsaCustomRepository.Setup(x => x.GetAssessmentQuestions(loadWorkflowActivityRequest.ActivityId,
+            loadWorkflowActivityRequest.WorkflowInstanceId, CancellationToken.None))
+            .ReturnsAsync(assessmentQuestions);
+
+            loadWorkflowActivityJsonHelper
+                .Setup(x => x.ActivityDataDictionaryToQuestionActivityData<QuestionActivityData>(It.IsAny<IDictionary<string, object?>>()))
+            .Returns(questionActivityData);
+
+            var assessmentQuestionsDictionary = new Dictionary<string, object?>();
+            assessmentQuestionsDictionary.Add("Questions", elsaAssessmentQuestions);
+
+            workflowInstance.ActivityData.Add(loadWorkflowActivityRequest.ActivityId, assessmentQuestionsDictionary);
+
+            //Act
+            var result = await sut.Handle(loadWorkflowActivityRequest, CancellationToken.None);
+
+            //Assert
+            Assert.NotNull(result.Data!.MultiQuestionActivityData);
+            Assert.Equal(assessmentQuestions.Count(), result.Data!.MultiQuestionActivityData.Count());
+            Assert.Empty(result.ErrorMessages);
+        }
+
+        [Theory]
+        [AutoMoqData]
+        public async Task Handle_ReturnMultiQuestionActivityDataWithMultiChoiceOptionsCorrectlySelected_GivenActivityIsQuestionScreenAndNoErrorsEncountered(
+          [Frozen] Mock<IQuestionInvoker> questionInvoker,
+          [Frozen] Mock<IWorkflowInstanceStore> workflowInstanceStore,
+          [Frozen] Mock<IElsaCustomRepository> elsaCustomRepository,
+          [Frozen] Mock<ILoadWorkflowActivityJsonHelper> loadWorkflowActivityJsonHelper,
+          LoadWorkflowActivityRequest loadWorkflowActivityRequest,
+          List<CollectedWorkflow> collectedWorkflows,
+          WorkflowInstance workflowInstance,
+          AssessmentQuestion assessmentQuestion,
+          List<AssessmentQuestion> assessmentQuestions,
+          QuestionActivityData questionActivityData,
+          AssessmentQuestions elsaAssessmentQuestions,
+          LoadWorkflowActivityRequestHandler sut)
+        {
+            var myChoice = @"[""Choice1""]";
+            //Arrange
+            assessmentQuestion.ActivityType = Constants.QuestionScreen;
+            assessmentQuestions[0].Answer = myChoice;
+            for (int i = 0; i < assessmentQuestions.Count; i++)
+            {
+                var questionId = assessmentQuestions[i].QuestionId;
+                elsaAssessmentQuestions.Questions[i].Id = questionId!;
+            }
+            elsaAssessmentQuestions.Questions[0].QuestionType = Constants.MultipleChoiceQuestion;
+            elsaAssessmentQuestions.Questions[0].Checkbox.Choices = new List<CheckboxRecord>()
+            {
+                new CheckboxRecord("Choice1", false),
+                new CheckboxRecord("Choice2", false),
+                new CheckboxRecord("Choice3", false)
+            };
+
+            questionInvoker
+                .Setup(x => x.FindWorkflowsAsync(loadWorkflowActivityRequest.ActivityId, assessmentQuestion.ActivityType, loadWorkflowActivityRequest.WorkflowInstanceId, CancellationToken.None))
+                .ReturnsAsync(collectedWorkflows);
+
+            workflowInstanceStore.Setup(x =>
+                    x.FindAsync(It.IsAny<WorkflowInstanceIdSpecification>(), CancellationToken.None))
+                .ReturnsAsync(workflowInstance);
+
+            elsaCustomRepository.Setup(x => x.GetAssessmentQuestion(loadWorkflowActivityRequest.ActivityId,
+                    loadWorkflowActivityRequest.WorkflowInstanceId, CancellationToken.None))
+                .ReturnsAsync(assessmentQuestion);
+
+            elsaCustomRepository.Setup(x => x.GetAssessmentQuestions(loadWorkflowActivityRequest.ActivityId,
+            loadWorkflowActivityRequest.WorkflowInstanceId, CancellationToken.None))
+            .ReturnsAsync(assessmentQuestions);
+
+            loadWorkflowActivityJsonHelper
+                .Setup(x => x.ActivityDataDictionaryToQuestionActivityData<QuestionActivityData>(It.IsAny<IDictionary<string, object?>>()))
+            .Returns(questionActivityData);
+
+            var assessmentQuestionsDictionary = new Dictionary<string, object?>();
+            assessmentQuestionsDictionary.Add("Questions", elsaAssessmentQuestions);
+
+            workflowInstance.ActivityData.Add(loadWorkflowActivityRequest.ActivityId, assessmentQuestionsDictionary);
+
+            //Act
+            var result = await sut.Handle(loadWorkflowActivityRequest, CancellationToken.None);
+
+            //Assert
+            Assert.NotNull(result.Data!.MultiQuestionActivityData);
+            Assert.Equal(assessmentQuestions.Count(), result.Data!.MultiQuestionActivityData.Count());
+            Assert.Empty(result.ErrorMessages);
+            Assert.Equal(result.Data.MultiQuestionActivityData[0].MultipleChoice.SelectedChoices.First(), "Choice1");
+            Assert.Equal(result.Data.MultiQuestionActivityData[0].MultipleChoice.SelectedChoices.Count(), 1);
+
+        }
+
+        [Theory]
+        [AutoMoqData]
+        public async Task Handle_ReturnMultiQuestionActivityDataWithSingleChoiceOptionsCorrectlySelected_GivenActivityIsQuestionScreenAndNoErrorsEncountered(
+  [Frozen] Mock<IQuestionInvoker> questionInvoker,
+  [Frozen] Mock<IWorkflowInstanceStore> workflowInstanceStore,
+  [Frozen] Mock<IElsaCustomRepository> elsaCustomRepository,
+  [Frozen] Mock<ILoadWorkflowActivityJsonHelper> loadWorkflowActivityJsonHelper,
+  LoadWorkflowActivityRequest loadWorkflowActivityRequest,
+  List<CollectedWorkflow> collectedWorkflows,
+  WorkflowInstance workflowInstance,
+  AssessmentQuestion assessmentQuestion,
+  List<AssessmentQuestion> assessmentQuestions,
+  QuestionActivityData questionActivityData,
+  AssessmentQuestions elsaAssessmentQuestions,
+  LoadWorkflowActivityRequestHandler sut)
+        {
+
+            //Arrange
+            var myChoice = "Choice1";
+            assessmentQuestion.ActivityType = Constants.QuestionScreen;
+            assessmentQuestions[0].Answer = "Choice1";
+            for (int i = 0; i < assessmentQuestions.Count; i++)
+            {
+                var questionId = assessmentQuestions[i].QuestionId;
+                elsaAssessmentQuestions.Questions[i].Id = questionId!;
+            }
+            elsaAssessmentQuestions.Questions[0].QuestionType = Constants.SingleChoiceQuestion;
+            elsaAssessmentQuestions.Questions[0].Radio.Choices = new List<RadioRecord>()
+            {
+                new RadioRecord("Choice1"),
+                new RadioRecord("Choice2"),
+                new RadioRecord("Choice3")
+            };
+
+            questionInvoker
+                .Setup(x => x.FindWorkflowsAsync(loadWorkflowActivityRequest.ActivityId, assessmentQuestion.ActivityType, loadWorkflowActivityRequest.WorkflowInstanceId, CancellationToken.None))
+                .ReturnsAsync(collectedWorkflows);
+
+            workflowInstanceStore.Setup(x =>
+                    x.FindAsync(It.IsAny<WorkflowInstanceIdSpecification>(), CancellationToken.None))
+                .ReturnsAsync(workflowInstance);
+
+            elsaCustomRepository.Setup(x => x.GetAssessmentQuestion(loadWorkflowActivityRequest.ActivityId,
+                    loadWorkflowActivityRequest.WorkflowInstanceId, CancellationToken.None))
+                .ReturnsAsync(assessmentQuestion);
+
+            elsaCustomRepository.Setup(x => x.GetAssessmentQuestions(loadWorkflowActivityRequest.ActivityId,
+            loadWorkflowActivityRequest.WorkflowInstanceId, CancellationToken.None))
+            .ReturnsAsync(assessmentQuestions);
+
+            loadWorkflowActivityJsonHelper
+                .Setup(x => x.ActivityDataDictionaryToQuestionActivityData<QuestionActivityData>(It.IsAny<IDictionary<string, object?>>()))
+            .Returns(questionActivityData);
+
+            var assessmentQuestionsDictionary = new Dictionary<string, object?>();
+            assessmentQuestionsDictionary.Add("Questions", elsaAssessmentQuestions);
+
+            workflowInstance.ActivityData.Add(loadWorkflowActivityRequest.ActivityId, assessmentQuestionsDictionary);
+
+            //Act
+            var result = await sut.Handle(loadWorkflowActivityRequest, CancellationToken.None);
+
+            //Assert
+            Assert.NotNull(result.Data!.MultiQuestionActivityData);
+            Assert.Equal(assessmentQuestions.Count(), result.Data!.MultiQuestionActivityData.Count());
+            Assert.Empty(result.ErrorMessages);
+            Assert.Equal(result.Data.MultiQuestionActivityData[0].SingleChoice.SelectedAnswer, myChoice);
         }
     }
 }

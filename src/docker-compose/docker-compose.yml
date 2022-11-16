@@ -32,6 +32,8 @@ services:
   #      - Urls__ElsaServer=http://elsaserver:5555/
   #      - ASPNETCORE_ENVIRONMENT=Development
   #      - ConnectionStrings__SqlDatabase=Server=elsadatabase;Database=PipelineAssessment;User Id=sa;password=Pass@word;Encrypt=false
+  #      - Data__UseSeedData=true
+  #      - Datasources__SinglePipeline="https://spatialservices.homesengland.org.uk/server/rest/services/Single_Pipeline_Data_Dev/FeatureServer/2/
   #elsaserver:
   #  container_name: elsaserver
   #  image: ${DOCKER_REGISTRY-}elsaserver

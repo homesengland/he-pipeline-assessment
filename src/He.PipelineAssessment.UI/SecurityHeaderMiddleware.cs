@@ -24,10 +24,11 @@ namespace He.PipelineAssessment.UI
         public async Task Invoke([NotNull] HttpContext context, [NotNull] NonceConfig nonceConfig)
         {
             var govUkSetupNonce = $"nonce-{nonceConfig.GovUkSetup}";
+            var dataTablesSetupNonce = $"nonce-{nonceConfig.DataTablesSetup}";
 
             var connectSrc = $"connect-src 'self';";
             var defaultSrc = $"default-src 'self';";
-            var scriptSrc = $"script-src 'self' '{govUkSetupNonce}' 'unsafe-eval';";
+            var scriptSrc = $"script-src 'self' '{govUkSetupNonce}' '{dataTablesSetupNonce}' 'unsafe-eval';";
             var styleSrcElem = $"style-src-elem 'self';";
             var styleSrc = $"style-src 'self';";
             var imgSrc = $"img-src 'self';";

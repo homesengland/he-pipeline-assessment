@@ -11,6 +11,7 @@ using Elsa.Services;
 using Elsa.Services.Models;
 using MediatR;
 using Open.Linq.AsyncExtensions;
+using Constants = Elsa.CustomActivities.Activities.Constants;
 
 namespace Elsa.Server.Features.Workflow.SaveAndContinue
 {
@@ -39,18 +40,18 @@ namespace Elsa.Server.Features.Workflow.SaveAndContinue
             var result = new OperationResult<SaveAndContinueResponse>();
             try
             {
-                var dbAssessmentQuestion =
+                var dbAssessmentActivityInstance =
                     await _elsaCustomRepository.GetAssessmentQuestion(command.ActivityId, command.WorkflowInstanceId, cancellationToken);
-                if (dbAssessmentQuestion != null)
+                if (dbAssessmentActivityInstance != null)
                 {
-                    dbAssessmentQuestion.Comments = command.Comments;
+                    dbAssessmentActivityInstance.Comments = command.Comments;
 
-                    dbAssessmentQuestion.SetAnswer(command.Answer, _dateTimeProvider.UtcNow()); //use DateTimeProvider
-                    await _elsaCustomRepository.UpdateAssessmentQuestion(dbAssessmentQuestion,
+                    dbAssessmentActivityInstance.SetAnswer(command.Answer, _dateTimeProvider.UtcNow()); //use DateTimeProvider
+                    await _elsaCustomRepository.UpdateAssessmentQuestion(dbAssessmentActivityInstance,
                         cancellationToken);
 
-                    var collectedWorkflow = await _invoker.ExecuteWorkflowsAsync(command.ActivityId, dbAssessmentQuestion.ActivityType,
-                    command.WorkflowInstanceId, dbAssessmentQuestion, cancellationToken).FirstOrDefault();
+                    var collectedWorkflow = await _invoker.ExecuteWorkflowsAsync(command.ActivityId, dbAssessmentActivityInstance.ActivityType,
+                    command.WorkflowInstanceId, dbAssessmentActivityInstance, cancellationToken).FirstOrDefault();
 
                     var workflowSpecification =
                         new WorkflowInstanceIdSpecification(collectedWorkflow.WorkflowInstanceId);
@@ -108,7 +109,7 @@ namespace Elsa.Server.Features.Workflow.SaveAndContinue
                 else
                 {
                     result.ErrorMessages.Add(
-                        $"Unable to find workflow instance with Id: {command.WorkflowInstanceId} and Activity Id: {command.ActivityId} in custom database");
+                        $"Unable to find activity instance with Workflow Instance Id: {command.WorkflowInstanceId} and Activity Id: {command.ActivityId} in custom database");
                 }
             }
             catch (Exception e)
@@ -125,17 +126,17 @@ namespace Elsa.Server.Features.Workflow.SaveAndContinue
             var assessmentQuestion = _saveAndContinueMapper.SaveAndContinueCommandToNextAssessmentQuestion(command, nextActivityId, nextActivityBlueprint.Type);
             await _elsaCustomRepository.CreateAssessmentQuestionAsync(assessmentQuestion);
 
-            if (nextActivityBlueprint.Type == "QuestionScreen")
+            if (nextActivityBlueprint.Type == Constants.QuestionScreen)
             {
                 //create one for each question
                 var dictionList = workflowInstance.ActivityData
                     .FirstOrDefault(x => x.Key == nextActivityId).Value;
 
-                var dictionaryQuestions = dictionList.FirstOrDefault(x => x.Key == "Questions").Value;
+                var dictionaryQuestions = (AssessmentQuestions?)dictionList.FirstOrDefault(x => x.Key == "Questions").Value;
 
                 if (dictionaryQuestions != null)
                 {
-                    var questionList = (List<Question>)dictionaryQuestions;
+                    var questionList = (List<Question>)dictionaryQuestions.Questions;
                     if (questionList!.Any())
                     {
                         var assessments = new List<AssessmentQuestion>();

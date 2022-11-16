@@ -24,7 +24,7 @@ namespace Elsa.Server.Tests.Features.Workflow
             var startWorkflowOperationResult = new OperationResult<StartWorkflowResponse>
             {
                 ErrorMessages = new List<string>(),
-                ValidationMessages = new List<string>(),
+                ValidationMessages = null,
                 Data = response
             };
             //Arrange
@@ -139,7 +139,7 @@ namespace Elsa.Server.Tests.Features.Workflow
             var startWorkflowOperationResult = new OperationResult<LoadWorkflowActivityResponse>
             {
                 ErrorMessages = new List<string>(),
-                ValidationMessages = new List<string>(),
+                ValidationMessages = null,
                 Data = response
             };
             //Arrange
@@ -257,7 +257,7 @@ namespace Elsa.Server.Tests.Features.Workflow
             var startWorkflowOperationResult = new OperationResult<SaveAndContinueResponse>
             {
                 ErrorMessages = new List<string>(),
-                ValidationMessages = new List<string>(),
+                ValidationMessages = null,
                 Data = response
             };
 
@@ -350,6 +350,121 @@ namespace Elsa.Server.Tests.Features.Workflow
 
             //Act
             var result = await controller.SaveAndContinue(command);
+
+            //Assert
+            Assert.NotNull(result);
+            Assert.IsType<ObjectResult>(result);
+
+            var objectResult = (ObjectResult)result;
+
+            Assert.Equal(500, objectResult.StatusCode);
+            Assert.IsType<NullReferenceException>(objectResult.Value);
+        }
+
+        [Theory]
+        [AutoData]
+        public async Task WorkflowController_MutliSaveAndContinue_ShouldReturnOK_WhenCommandHandlerIsSuccessful(
+            SaveAndContinueCommand command,
+            SaveAndContinueResponse response,
+            Mock<IMediator> mediatorMock)
+        {
+
+            var startWorkflowOperationResult = new OperationResult<SaveAndContinueResponse>
+            {
+                ErrorMessages = new List<string>(),
+                ValidationMessages = null,
+                Data = response
+            };
+
+            //Arrange
+            mediatorMock.Setup(x => x.Send(It.IsAny<SaveAndContinueCommand>(), CancellationToken.None)).ReturnsAsync(startWorkflowOperationResult);
+
+            WorkflowController controller = new WorkflowController(mediatorMock.Object);
+
+            //Act
+            var result = await controller.SaveAndContinue(command);
+
+            //Assert
+            Assert.NotNull(result);
+            Assert.IsType<OkObjectResult>(result);
+
+            var okResult = (OkObjectResult)result;
+            var okResultValueData = (OperationResult<SaveAndContinueResponse>)okResult.Value!;
+
+            Assert.Equal(response.NextActivityId, okResultValueData.Data!.NextActivityId);
+            Assert.Equal(response.WorkflowInstanceId, okResultValueData.Data.WorkflowInstanceId);
+
+        }
+
+        [Theory]
+        [AutoData]
+        public async Task WorkflowController_MultiSaveAndContinue_ShouldReturnBadRequest_WhenCommandHandlerReturnsErrors(
+            MultiSaveAndContinueCommand command,
+            OperationResult<MultiSaveAndContinueResponse> operationResult,
+            Mock<IMediator> mediatorMock)
+        {
+
+            //Arrange
+            mediatorMock.Setup(x => x.Send(It.IsAny<MultiSaveAndContinueCommand>(), CancellationToken.None)).ReturnsAsync(operationResult);
+
+            WorkflowController controller = new WorkflowController(mediatorMock.Object);
+
+            //Act
+            var result = await controller.MultiSaveAndContinue(command);
+
+            //Assert
+            Assert.NotNull(result);
+            Assert.IsType<BadRequestObjectResult>(result);
+
+            var badResult = (BadRequestObjectResult)result;
+            var badResultValueData = (string)badResult.Value!;
+
+            Assert.Equal(string.Join(',', operationResult.ErrorMessages), badResultValueData);
+        }
+
+        [Theory]
+        [AutoData]
+        public async Task WorkflowController_MultiSaveAndContinue_ShouldReturn500_WhenCommandHandlerThrowsException(
+            MultiSaveAndContinueCommand command,
+            Exception exception,
+            Mock<IMediator> mediatorMock)
+        {
+
+            //Arrange
+            mediatorMock.Setup(x => x.Send(It.IsAny<MultiSaveAndContinueCommand>(), CancellationToken.None)).ThrowsAsync(exception);
+
+            WorkflowController controller = new WorkflowController(mediatorMock.Object);
+
+            //Act
+            var result = await controller.MultiSaveAndContinue(command);
+
+            //Assert
+            Assert.NotNull(result);
+            Assert.IsType<ObjectResult>(result);
+
+            var objectResult = (ObjectResult)result;
+
+            Assert.Equal(500, objectResult.StatusCode);
+            Assert.IsType<Exception>(objectResult.Value);
+
+            var exceptionResult = (Exception)objectResult.Value!;
+
+            Assert.Equal(exception.Message, exceptionResult.Message);
+        }
+
+        [Theory]
+        [AutoData]
+        public async Task WorkflowController_MultiSaveAndContinue_ShouldReturn500_WhenCommandHandlerReturnsNull(
+            MultiSaveAndContinueCommand command,
+            Mock<IMediator> mediatorMock)
+        {
+            //Arrange
+            mediatorMock.Setup(x => x.Send(It.IsAny<MultiSaveAndContinueCommand>(), CancellationToken.None)).ReturnsAsync((OperationResult<MultiSaveAndContinueResponse>)null!);
+
+            WorkflowController controller = new WorkflowController(mediatorMock.Object);
+
+            //Act
+            var result = await controller.MultiSaveAndContinue(command);
 
             //Assert
             Assert.NotNull(result);

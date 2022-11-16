@@ -103,6 +103,52 @@ namespace Elsa.CustomWorkflow.Sdk.Tests.HttpClients
 
         [Theory]
         [AutoMoqData]
+        public async Task MultiSaveAndContinue_ReturnsNull_GivenHttpClientGivesBackNonSuccessResponse(
+            [Frozen] Mock<IHttpClientFactory> httpClientFactoryMock,
+            [Frozen] Mock<HttpMessageHandler> httpMessageHandlerMock,
+            MultiSaveAndContinueCommandDto saveAndContinueCommandDto,
+            WorkflowNextActivityDataDto workflowNextActivityDataDto,
+            ElsaServerHttpClient sut)
+        {
+            //Arrange
+            HttpClientTestHelpers.SetupHttpClientWithExpectedStatusCode(workflowNextActivityDataDto,
+                HttpStatusCode.BadRequest,
+                httpClientFactoryMock,
+                httpMessageHandlerMock);
+
+
+            //Act
+            var result = await sut.SaveAndContinue(saveAndContinueCommandDto);
+
+            //Assert
+            Assert.Null(result);
+        }
+
+        [Theory]
+        [AutoMoqData]
+        public async Task MultiSaveAndContinue_ReturnsWorkflowNextActivityDataDto_GivenHttpClientGivesBackNonSuccessResponse(
+            [Frozen] Mock<IHttpClientFactory> httpClientFactoryMock,
+            [Frozen] Mock<HttpMessageHandler> httpMessageHandlerMock,
+            MultiSaveAndContinueCommandDto saveAndContinueCommandDto,
+            WorkflowNextActivityDataDto workflowNextActivityDataDto,
+            ElsaServerHttpClient sut)
+        {
+            //Arrange
+            HttpClientTestHelpers.SetupHttpClientWithExpectedStatusCode(workflowNextActivityDataDto,
+                HttpStatusCode.OK,
+                httpClientFactoryMock,
+                httpMessageHandlerMock);
+
+            //Act
+            var result = await sut.SaveAndContinue(saveAndContinueCommandDto);
+
+            //Assert
+            Assert.NotNull(result);
+            Assert.IsType<WorkflowNextActivityDataDto>(result);
+        }
+
+        [Theory]
+        [AutoMoqData]
         public async Task LoadWorkflowActivity_ReturnsNull_GivenHttpClientGivesBackNonSuccessResponse(
             [Frozen] Mock<IHttpClientFactory> httpClientFactoryMock,
             [Frozen] Mock<HttpMessageHandler> httpMessageHandlerMock,

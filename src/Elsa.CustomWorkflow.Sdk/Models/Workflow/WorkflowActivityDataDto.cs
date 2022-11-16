@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿
+using FluentValidation.Results;
 using System.Globalization;
 using System.Text.Json;
 
@@ -8,7 +9,7 @@ namespace Elsa.CustomWorkflow.Sdk.Models.Workflow
     {
         public WorkflowActivityData Data { get; set; } = null!;
         public bool IsValid { get; set; }
-        public IList<string> ValidationMessages { get; set; } = new List<string>();
+        public ValidationResult? ValidationMessages { get; set; }
     }
 
     public class WorkflowActivityData
@@ -16,7 +17,7 @@ namespace Elsa.CustomWorkflow.Sdk.Models.Workflow
         public string WorkflowInstanceId { get; set; } = null!;
         public string ActivityId { get; set; } = null!;
         public string PreviousActivityId { get; set; } = null!;
-
+        public string PageTitle { get; set; } = null!;
         public QuestionActivityData? QuestionActivityData { get; set; }
 
         public List<QuestionActivityData>? MultiQuestionActivityData { get; set; }
@@ -44,6 +45,7 @@ namespace Elsa.CustomWorkflow.Sdk.Models.Workflow
         private SingleChoiceModel _singleChoice = new SingleChoiceModel();
         public SingleChoiceModel SingleChoice { get { return GetSingleChoiceModel(); } set { SetSingleChoiceModel(value); } }
 
+        private Date _date = new Date();
         public Date Date { get { return GetDate(); } set { SetDate(value); } }
 
 
@@ -52,10 +54,10 @@ namespace Elsa.CustomWorkflow.Sdk.Models.Workflow
 
         public Date GetDate()
         {
-            if (ActivityType == ActivityTypeConstants.DateQuestion && Answer != null)
+            if ((ActivityType == ActivityTypeConstants.DateQuestion || QuestionType == QuestionTypeConstants.DateQuestion) && Answer != null)
             {
                 bool isValidDate = DateTime.TryParseExact(Answer, Constants.DateFormat, CultureInfo.InvariantCulture, DateTimeStyles.AdjustToUniversal, out DateTime date);
-                if (isValidDate)
+                if (isValidDate && !String.IsNullOrEmpty(Answer) == true)
                 {
                     return new Date
                     {
@@ -64,12 +66,13 @@ namespace Elsa.CustomWorkflow.Sdk.Models.Workflow
                         Year = date.Year
                     };
                 }
+
             }
-            return new Date();
+            return _date;
         }
         public void SetMultipleChoiceModel(MultipleChoiceModel value)
         {
-            if (ActivityType == ActivityTypeConstants.MultipleChoiceQuestion)
+            if (ActivityType == ActivityTypeConstants.MultipleChoiceQuestion || QuestionType == QuestionTypeConstants.MultipleChoiceQuestion)
             {
                 _multipleChoice = value;
                 List<string> answerList = new List<string>();
@@ -84,7 +87,7 @@ namespace Elsa.CustomWorkflow.Sdk.Models.Workflow
 
         public void SetSingleChoiceModel(SingleChoiceModel value)
         {
-            if (ActivityType == ActivityTypeConstants.SingleChoiceQuestion)
+            if (ActivityType == ActivityTypeConstants.SingleChoiceQuestion || QuestionType == QuestionTypeConstants.SingleChoiceQuestion)
             {
                 _singleChoice = value;
                 Answer = null;
@@ -97,8 +100,9 @@ namespace Elsa.CustomWorkflow.Sdk.Models.Workflow
 
         public void SetDate(Date? value)
         {
-            if (ActivityType == ActivityTypeConstants.DateQuestion && value != null)
+            if ((ActivityType == ActivityTypeConstants.DateQuestion || QuestionType == QuestionTypeConstants.DateQuestion) && value != null)
             {
+                _date = value;
                 if (value.Day != null && value.Month != null && value.Year != null)
                 {
                     var dateString =
@@ -111,6 +115,7 @@ namespace Elsa.CustomWorkflow.Sdk.Models.Workflow
                 }
                 else
                 {
+
                     SetAnswer(null);
                 }
             }
@@ -127,7 +132,7 @@ namespace Elsa.CustomWorkflow.Sdk.Models.Workflow
 
         private decimal? GetDecimal()
         {
-            if (ActivityType == ActivityTypeConstants.CurrencyQuestion && Answer != null)
+            if ((ActivityType == ActivityTypeConstants.CurrencyQuestion || QuestionType == QuestionTypeConstants.CurrencyQuestion) && Answer != null)
             {
                 try
                 {
@@ -143,7 +148,7 @@ namespace Elsa.CustomWorkflow.Sdk.Models.Workflow
         }
         private void SetDecimal(decimal? value)
         {
-            if (ActivityType == ActivityTypeConstants.CurrencyQuestion)
+            if (ActivityType == ActivityTypeConstants.CurrencyQuestion || QuestionType == QuestionTypeConstants.CurrencyQuestion)
             {
                 SetAnswer(value);
             }
@@ -186,11 +191,8 @@ namespace Elsa.CustomWorkflow.Sdk.Models.Workflow
 
     public class Date
     {
-        [Range(1, 31)]
         public int? Day { get; set; }
-        [Range(1, 12)]
         public int? Month { get; set; }
-        [Range(1, 3000)]
         public int? Year { get; set; }
     }
 }
