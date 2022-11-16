@@ -74,7 +74,6 @@ export class ElsaMultiQuestionRecordsProperty {
 
   updatePropertyModel() {
     this.propertyModel.expressions[SyntaxNames.Json] = JSON.stringify(this.multiQuestionModel);
-    console.log(this.multiQuestionModel);
   }
 
   updateQuestion(updatedQuestion: QuestionComponent) {
@@ -96,12 +95,10 @@ export class ElsaMultiQuestionRecordsProperty {
   }
 
   onAddQuestion(questionType: string) {
-    console.log('Adding Question');
     const questionName = `Question ${this.multiQuestionModel.questions.length + 1}`;
     let sampleId = `${this.multiQuestionModel.questions.length + 1}`
     const newQuestion = { id: sampleId, title: questionName, questionGuidance: "", questionText: "", displayComments: false, questionHint: "", questionType: questionType };
     this.multiQuestionModel = { ...this.multiQuestionModel, questions: [...this.multiQuestionModel.questions, newQuestion] };
-    console.log(newQuestion)
     this.updatePropertyModel();
   }
 
@@ -114,8 +111,6 @@ export class ElsaMultiQuestionRecordsProperty {
   onAccordionQuestionClick(e: Event) {
     let element = e.currentTarget as HTMLElement;
     element.classList.toggle("active");
-    console.log(element.parentNode);
-    console.log(element.parentNode.querySelector('.panel'));
     let panel = element.querySelector('.panel') as HTMLElement;
     if (panel.style.display === "block") {
       panel.style.display = "none";

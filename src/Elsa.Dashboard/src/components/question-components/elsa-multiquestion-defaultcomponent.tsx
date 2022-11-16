@@ -55,7 +55,6 @@ export class MultiQuestionComponent {
         </div>
       </div>
       <input type="text" id={fieldId} name={fieldId} value={fieldValue} onChange={e => {
-        console.log(this);
         onChangedFunction.bind(this)(e);
       }
       }
@@ -84,8 +83,6 @@ export class MultiQuestionComponent {
 
   render() {
     const field = `question-${this.question.id}`;
-    console.log('rendering');
-    console.log(this.question);
     return (
           <div>
 

@@ -27,7 +27,6 @@ abstract class BaseQuestionEventHandler {
   onTitleChanged = (e: Event) => {
     let updatedQuestion = this.question;
     updatedQuestion.title = (e.currentTarget as HTMLInputElement).value.trim();
-    console.log('emitting title', this.emitter);
     this.emitter.emit(updatedQuestion);
   };
 
@@ -52,7 +51,6 @@ abstract class BaseQuestionEventHandler {
   onHintChanged = (e: Event) => {
     let updatedQuestion = this.question;
     updatedQuestion.questionHint = (e.currentTarget as HTMLInputElement).value.trim();
-    console.log(this.emitter);
     this.emitter.emit(updatedQuestion);
   };
 
@@ -81,20 +79,12 @@ abstract class ChoiceQuestionEventHandler<T> extends BaseQuestionEventHandler {
   emitter: EventEmitter;
 
   onAddChoiceClick = () => {
-    console.log('adding choice');
     const choiceName = `Choice ${this.question.options.choices.length + 1}`;
-    console.log('question', this.question);
     const newChoice = this.getChoice(choiceName);
-    console.log('new choice', newChoice);
     let updatedChoices = { ... this.question.options, choices: [... this.question.options.choices, newChoice] } as QuestionOptions<T>;
-    console.log('updated choices', updatedChoices);
-    //this.question = { ... this.question, options: updatedChoices };
-    console.log(this.question);
     this.question = { ...this.question, options: updatedChoices }
     this.assignOptions(updatedChoices);
-    console.log('updated question', this.question);
     this.emitter.emit(this.question);
-    console.log('emitting...');
   };
 
   onChoiceNameChanged = (e: Event, record: MultiChoiceRecord) => {
@@ -103,6 +93,8 @@ abstract class ChoiceQuestionEventHandler<T> extends BaseQuestionEventHandler {
   };
 
   onDeleteChoiceClick = (record: T) => {
+    //The below filter method has to convert and compare a stringified version, as the options property is mapped from the actual implmeneted property
+    //i.e. Radio or Checkbox.  Because of this the objects are not equal in reference, and the filter would fail.
     let newChoiceObj = { ... this.question.options, choices: this.question.options.choices.filter(x => JSON.stringify(x) != JSON.stringify(record)) };
     this.question = { ...this.question, options: newChoiceObj }
     this.assignOptions(newChoiceObj);
@@ -137,7 +129,6 @@ export class CheckboxEventHandler extends ChoiceQuestionEventHandler<MultiChoice
   }
 
   onCheckChanged = (e: Event, record: MultiChoiceRecord) => {
-    console.log("Check changed...")
     const checkbox = (e.target as HTMLInputElement);
     record.isSingle = checkbox.checked;
     this.emitter.emit(this.question);

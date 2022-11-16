@@ -93,7 +93,6 @@ export class MultiQuestionCheckboxComponent {
 
   render() {
     const renderChoiceEditor = (multiChoice: MultiChoiceRecord, index: number) => {
-      console.log("choice", multiChoice);
       const field = `choice-${index}`;
       let isChecked = multiChoice.isSingle;
       return (
