@@ -20,7 +20,12 @@ import {
 
 import {
   IconProvider
-} from '../icon-provider/icon-provider'
+} from '../icon-provider/icon-provider';
+
+import {
+  QuestionLibrary,
+  QuestionProvider
+} from '../question-provider/question-provider';
 
 
 function parseJson(json: string): any {
@@ -47,6 +52,7 @@ export class ElsaQuestionScreen {
   @Prop() propertyModel: ActivityDefinitionProperty;
   @State() questionModel: QuestionActivity = new QuestionActivity();
   @State() iconProvider = new IconProvider();
+  @State() questionProvider = new QuestionProvider(Object.values(QuestionLibrary));
 
   supportedSyntaxes: Array<string> = [SyntaxNames.JavaScript, SyntaxNames.Liquid];
   multiExpressionEditor: HTMLElsaMultiExpressionEditorElement;
@@ -123,16 +129,16 @@ export class ElsaQuestionScreen {
     return model.questions.map(this.renderChoiceEditor)
   }
 
-  renderChoiceEditor = (multiQuestion: IQuestionComponent, index: number) => {
+  renderChoiceEditor = (question: IQuestionComponent, index: number) => {
     const field = `question-${index}`;
     return (
       <div id={`${field}-id`} class="accordion elsa-mb-4 elsa-rounded" onClick={this.onAccordionQuestionClick}>
-        <button type="button">Question {index + 1} - {multiQuestion.questionTypeName} </button>
-        <button type="button" onClick={e => this.onDeleteQuestionClick(e, multiQuestion)}
+        <button type="button">{question.title} </button>
+        <button type="button" onClick={e => this.onDeleteQuestionClick(e, question)}
           class="elsa-h-5 elsa-w-5 elsa-mx-auto elsa-outline-none focus:elsa-outline-none trashcan-icon" style={{ float: "right" }}>
           <TrashCanIcon options={this.iconProvider.getOptions()}></TrashCanIcon>
         </button>
-        {this.renderQuestionComponent(multiQuestion)}
+        {this.renderQuestionComponent(question)}
       </div>
     );
   };
@@ -203,11 +209,7 @@ export class ElsaQuestionScreen {
           name="addQuestionDropdown"
           class="elsa-mt-1 elsa-block focus:elsa-ring-blue-500 focus:elsa-border-blue-500 elsa-w-full elsa-shadow-sm sm:elsa-max-w-xs sm:elsa-text-sm elsa-border-gray-300 elsa-rounded-md">
           <option value="">Add a Question...</option>
-          <option value="CheckboxQuestion" data-typeName="Checkbox Question">Checkbox Question</option>
-          <option value="CurrencyQuestion" data-typeName="Currency Question">Currency Question</option>
-          <option value="DateQuestion" data-typeName="Date Question">Date Question</option>
-          <option value="RadioQuestion" data-typeName="Radio Question">Radio Question</option>
-          <option value="TextQuestion" data-typeName="Text Question">Text Question</option> 
+          {this.questionProvider.displayOptions()}
         </select>
       </div>
     );
