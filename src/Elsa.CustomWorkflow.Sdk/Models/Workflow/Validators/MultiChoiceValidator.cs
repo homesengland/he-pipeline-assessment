@@ -1,8 +1,8 @@
 ﻿using FluentValidation;
 
-namespace He.PipelineAssessment.UI.Features.Workflow.SaveAndContinue.Validators
+namespace Elsa.CustomWorkflow.Sdk.Models.Workflow.Validators
 {
-    public class MultiChoiceValidator : AbstractValidator<Elsa.CustomWorkflow.Sdk.Models.Workflow.MultipleChoiceModel>
+    public class MultiChoiceValidator : AbstractValidator<Elsa.CustomWorkflow.Sdk.Models.Workflow.Checkbox>
     {
         public MultiChoiceValidator()
         {
@@ -26,20 +26,16 @@ namespace He.PipelineAssessment.UI.Features.Workflow.SaveAndContinue.Validators
                     var exclusiveAnswers = x.Choices
                         .Where(c => c.IsSingle && selectedAnswers.Contains(c.Answer)).Select(c => c.Answer).ToList();
 
-                    if (exclusiveAnswers.Any())
+                    if (exclusiveAnswers.Count() > 1)
                     {
-                        if (exclusiveAnswers.Count() > 1)
-                        {
-                            var finalInvalidAnswer = exclusiveAnswers.Last();
+                        var finalInvalidAnswer = exclusiveAnswers.Last();
 
-                            var invalidAnswers = string.Join(", ", exclusiveAnswers.Take(exclusiveAnswers.Count() - 1));
-                            return $"{invalidAnswers} and {finalInvalidAnswer} cannot be selected with any other answer.";
-                        }
-
-                        return $"{exclusiveAnswers.First()} cannot be selected with any other answer.";
+                        var invalidAnswers = string.Join(", ", exclusiveAnswers.Take(exclusiveAnswers.Count() - 1));
+                        return $"{invalidAnswers} and {finalInvalidAnswer} cannot be selected with any other answer.";
                     }
 
-                    return string.Empty;
+                    return $"{exclusiveAnswers.First()} cannot be selected with any other answer.";
+
                 });
         }
     }

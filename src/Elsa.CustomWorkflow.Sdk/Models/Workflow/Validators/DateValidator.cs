@@ -2,7 +2,7 @@
 using FluentValidation;
 using System.Globalization;
 
-namespace He.PipelineAssessment.UI.Features.Workflow.SaveAndContinue.Validators
+namespace Elsa.CustomWorkflow.Sdk.Models.Workflow.Validators
 {
     public class DateValidator : AbstractValidator<Elsa.CustomWorkflow.Sdk.Models.Workflow.Date>
     {
@@ -74,23 +74,7 @@ namespace He.PipelineAssessment.UI.Features.Workflow.SaveAndContinue.Validators
                 {
                     return false;
                 }
-            })
-                .WithMessage(x =>
-                {
-                    var selectedDate = x;
-                    var dateString =
-                        $"{selectedDate.Year}-{selectedDate.Month}-{selectedDate.Day}";
-                    bool isValidDate = DateTime.TryParseExact(dateString, Constants.DateFormat, CultureInfo.InvariantCulture,
-                        DateTimeStyles.AdjustToUniversal, out DateTime parsedDateTime);
-                    if (isValidDate)
-                    {
-                        return string.Empty;
-                    }
-                    else
-                    {
-                        return "The date entered must be a real date";
-                    }
-                });
+            }).WithMessage("The date entered must be a real date");
         }
     }
 }

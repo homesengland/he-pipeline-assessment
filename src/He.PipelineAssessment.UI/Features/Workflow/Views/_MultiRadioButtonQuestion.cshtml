@@ -1,7 +1,7 @@
 ﻿@using He.PipelineAssessment.UI.Features.Workflow.ViewModels
 @model He.PipelineAssessment.UI.Features.Workflow.ViewModels.MultiQuestion
 @{
-    var itemName = "Data.MultiQuestionActivityData[" + Model.Index + "].SingleChoice.SelectedAnswer";
+    var itemName = "Data.MultiQuestionActivityData[" + Model.Index + "].Radio.SelectedAnswer";
     var itemId = Model.Index + "radio_multi_select_";
 }
 
@@ -15,16 +15,16 @@
         Select all that apply
     </div>
     <div class="govuk-radios" data-module="govuk-radios">
-        @for (int i = 0; i < Model.SingleChoice.Choices.Count(); i++)
+        @for (int i = 0; i < Model.Radio.Choices.Count(); i++)
         {
-            var hiddenItemNameAnswer = "Data.MultiQuestionActivityData[" + Model.Index + "].SingleChoice.Choices[" + i + "].Answer";
-            <input type="hidden" name="@hiddenItemNameAnswer" value="@Model.SingleChoice.Choices[i].Answer" />
+            var hiddenItemNameAnswer = "Data.MultiQuestionActivityData[" + Model.Index + "].Radio.Choices[" + i + "].Answer";
+            <input type="hidden" name="@hiddenItemNameAnswer" value="@Model.Radio.Choices[i].Answer" />
         }
-        @foreach (var choice in Model.SingleChoice.Choices)
+        @foreach (var choice in Model.Radio.Choices)
         {
             int iterrator = 1;
             string isChecked = "";
-            if (!String.IsNullOrEmpty(Model.SingleChoice.SelectedAnswer) && choice.Answer == Model.SingleChoice.SelectedAnswer)
+            if (!String.IsNullOrEmpty(Model.Radio.SelectedAnswer) && choice.Answer == Model.Radio.SelectedAnswer)
             {
                 isChecked = "checked";
             }

@@ -1,4 +1,5 @@
-﻿using Elsa.Services;
+﻿using Elsa.CustomWorkflow.Sdk;
+using Elsa.Services;
 using System.Runtime.CompilerServices;
 
 namespace Elsa.CustomActivities.Activities.Shared
@@ -40,12 +41,7 @@ namespace Elsa.CustomActivities.Activities.Shared
         {
             return new List<string>()
             {
-                Constants.CurrencyQuestion,
-                Constants.MultipleChoiceQuestion,
-                Constants.DateQuestion,
-                Constants.TextQuestion,
-                Constants.SingleChoiceQuestion,
-                Constants.QuestionScreen
+                ActivityTypeConstants.QuestionScreen
             };
         }
     }

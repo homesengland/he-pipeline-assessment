@@ -1,8 +1,8 @@
 ﻿@using He.PipelineAssessment.UI.Features.Workflow.ViewModels
 @model He.PipelineAssessment.UI.Features.Workflow.ViewModels.MultiQuestion
 @{
-    var itemName = "Data.MultiQuestionActivityData[" + Model.Index + "].MultipleChoice.SelectedChoices";
-    var formItemName = "Data.MultiQuestionActivityData[" + Model.Index + "].MultipleChoice";
+    var itemName = "Data.MultiQuestionActivityData[" + Model.Index + "].Checkbox.SelectedChoices";
+    var formItemName = "Data.MultiQuestionActivityData[" + Model.Index + "].Checkbox";
 
     var errorFormClass = !Model.IsValid ? "govuk-form-group--error" : "";
 }
@@ -15,21 +15,21 @@
     
     <div class="govuk-checkboxes" data-module="govuk-checkboxes">
         @{
-            var exclusiveChoices = Model.MultipleChoice.Choices.Where(c => c.IsSingle).ToArray();
-            var nonExclusiveChoices = Model.MultipleChoice.Choices.Where(c => !c.IsSingle).ToArray();
+            var exclusiveChoices = Model.Checkbox.Choices.Where(c => c.IsSingle).ToArray();
+            var nonExclusiveChoices = Model.Checkbox.Choices.Where(c => !c.IsSingle).ToArray();
         }
-        @for (int i = 0; i < Model.MultipleChoice.Choices.Count(); i++)
+        @for (int i = 0; i < Model.Checkbox.Choices.Count(); i++)
         {
-            var hiddenItemNameAnswer = "Data.MultiQuestionActivityData[" + Model.Index + "].MultipleChoice.Choices["+i+"].Answer";
-            var hiddenItemNameIsSingle = "Data.MultiQuestionActivityData[" + Model.Index + "].MultipleChoice.Choices["+i+"].IsSingle";
+            var hiddenItemNameAnswer = "Data.MultiQuestionActivityData[" + Model.Index + "].Checkbox.Choices["+i+"].Answer";
+            var hiddenItemNameIsSingle = "Data.MultiQuestionActivityData[" + Model.Index + "].Checkbox.Choices["+i+"].IsSingle";
 
-            <input type="hidden" name="@hiddenItemNameAnswer" value="@Model.MultipleChoice.Choices[i].Answer" />
-            <input type="hidden" name="@hiddenItemNameIsSingle" value="@Model.MultipleChoice.Choices[i].IsSingle.ToString()" />
+            <input type="hidden" name="@hiddenItemNameAnswer" value="@Model.Checkbox.Choices[i].Answer" />
+            <input type="hidden" name="@hiddenItemNameIsSingle" value="@Model.Checkbox.Choices[i].IsSingle.ToString()" />
         }
         @for (int i = 0; i < nonExclusiveChoices.Count(); i++)
         {
             string answerText = nonExclusiveChoices[i].Answer;
-            List<string> selectedChoices = Model.MultipleChoice.SelectedChoices;
+            List<string> selectedChoices = Model.Checkbox.SelectedChoices;
             bool isSelected = selectedChoices != null ? selectedChoices.Contains(answerText) : false;
 
             <div class="govuk-checkboxes__item">
@@ -44,7 +44,7 @@
         @for (int i = 0; i < exclusiveChoices.Count(); i++)
         {
             string answerText = exclusiveChoices[i].Answer;
-            List<string> selectedChoices = Model.MultipleChoice.SelectedChoices;
+            List<string> selectedChoices = Model.Checkbox.SelectedChoices;
             bool isSelected = selectedChoices != null ? selectedChoices.Contains(answerText) : false;
 
             <div class="govuk-checkboxes__divider">or</div>

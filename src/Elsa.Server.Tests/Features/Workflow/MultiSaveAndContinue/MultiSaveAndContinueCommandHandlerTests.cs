@@ -3,18 +3,17 @@ using Elsa.CustomActivities.Activities.QuestionScreen;
 using Elsa.CustomActivities.Activities.Shared;
 using Elsa.CustomInfrastructure.Data.Repository;
 using Elsa.CustomModels;
+using Elsa.CustomWorkflow.Sdk;
 using Elsa.Models;
 using Elsa.Persistence;
 using Elsa.Persistence.Specifications.WorkflowInstances;
 using Elsa.Server.Features.Workflow.MultiSaveAndContinue;
-using Elsa.Server.Features.Workflow.SaveAndContinue;
 using Elsa.Server.Models;
 using Elsa.Services;
 using Elsa.Services.Models;
 using He.PipelineAssessment.Common.Tests;
 using Moq;
 using Xunit;
-using Constants = Elsa.CustomActivities.Activities.Constants;
 
 namespace Elsa.Server.Tests.Features.Workflow.MultiSaveAndContinue
 {
@@ -38,15 +37,15 @@ namespace Elsa.Server.Tests.Features.Workflow.MultiSaveAndContinue
                 MultiSaveAndContinueCommandHandler sut)
         {
             //Arrange
-            for(var i=0; i < currentAssessmentQuestions.Count; i++)
+            for (var i = 0; i < currentAssessmentQuestions.Count; i++)
             {
                 var questionId = saveAndContinueCommand.Answers![i].Id;
                 currentAssessmentQuestions[i].QuestionId = questionId;
             }
 
-            var opResult = new OperationResult<SaveAndContinueResponse>()
+            var opResult = new OperationResult<MultiSaveAndContinueResponse>()
             {
-                Data = new SaveAndContinueResponse
+                Data = new MultiSaveAndContinueResponse
                 {
                     WorkflowInstanceId = saveAndContinueCommand.WorkflowInstanceId,
                     NextActivityId = workflowInstance.Output!.ActivityId
@@ -66,10 +65,10 @@ namespace Elsa.Server.Tests.Features.Workflow.MultiSaveAndContinue
                     x.FindAsync(workflowInstance.DefinitionId, VersionOptions.Published, null, CancellationToken.None))
                 .ReturnsAsync(workflowBlueprint);
 
-        questionInvoker.Setup(x => x.ExecuteWorkflowsAsync(saveAndContinueCommand.ActivityId,
-                Constants.QuestionScreen,
-                saveAndContinueCommand.WorkflowInstanceId, currentAssessmentQuestions, CancellationToken.None))
-            .ReturnsAsync(collectedWorkflows);
+            questionInvoker.Setup(x => x.ExecuteWorkflowsAsync(saveAndContinueCommand.ActivityId,
+                    ActivityTypeConstants.QuestionScreen,
+                    saveAndContinueCommand.WorkflowInstanceId, currentAssessmentQuestions, CancellationToken.None))
+                .ReturnsAsync(collectedWorkflows);
 
             workflowInstanceStore
                 .Setup(x => x.FindAsync(
@@ -120,9 +119,9 @@ namespace Elsa.Server.Tests.Features.Workflow.MultiSaveAndContinue
            )
         {
             //Arrange
-            var opResult = new OperationResult<SaveAndContinueResponse>()
+            var opResult = new OperationResult<MultiSaveAndContinueResponse>()
             {
-                Data = new SaveAndContinueResponse
+                Data = new MultiSaveAndContinueResponse
                 {
                     WorkflowInstanceId = saveAndContinueCommand.WorkflowInstanceId,
                     NextActivityId = workflowInstance.Output!.ActivityId
@@ -144,7 +143,7 @@ namespace Elsa.Server.Tests.Features.Workflow.MultiSaveAndContinue
                 .ReturnsAsync(workflowBlueprint);
 
             questionInvoker.Setup(x => x.ExecuteWorkflowsAsync(saveAndContinueCommand.ActivityId,
-                    Constants.QuestionScreen,
+                    ActivityTypeConstants.QuestionScreen,
                     saveAndContinueCommand.WorkflowInstanceId, currentAssessmentQuestions, CancellationToken.None))
                 .ReturnsAsync(collectedWorkflows);
 
@@ -194,7 +193,7 @@ namespace Elsa.Server.Tests.Features.Workflow.MultiSaveAndContinue
                 .ReturnsAsync(currentAssessmentQuestions);
 
             questionInvoker.Setup(x => x.ExecuteWorkflowsAsync(saveAndContinueCommand.ActivityId,
-                    Constants.QuestionScreen,
+                    ActivityTypeConstants.QuestionScreen,
                     saveAndContinueCommand.WorkflowInstanceId, currentAssessmentQuestions, CancellationToken.None))
                 .ReturnsAsync(collectedWorkflows);
 
@@ -235,7 +234,7 @@ namespace Elsa.Server.Tests.Features.Workflow.MultiSaveAndContinue
                 .ReturnsAsync(currentAssessmentQuestions);
 
             questionInvoker.Setup(x => x.ExecuteWorkflowsAsync(saveAndContinueCommand.ActivityId,
-                    Constants.QuestionScreen,
+                    ActivityTypeConstants.QuestionScreen,
                     saveAndContinueCommand.WorkflowInstanceId, currentAssessmentQuestions, CancellationToken.None))
                 .ReturnsAsync(collectedWorkflows);
 
@@ -336,7 +335,7 @@ namespace Elsa.Server.Tests.Features.Workflow.MultiSaveAndContinue
                 .ReturnsAsync(workflowBlueprint);
 
             questionInvoker.Setup(x => x.ExecuteWorkflowsAsync(saveAndContinueCommand.ActivityId,
-                    Constants.QuestionScreen,
+                    ActivityTypeConstants.QuestionScreen,
                     saveAndContinueCommand.WorkflowInstanceId, currentAssessmentQuestions, CancellationToken.None))
                 .ReturnsAsync(collectedWorkflows);
 
@@ -375,10 +374,10 @@ namespace Elsa.Server.Tests.Features.Workflow.MultiSaveAndContinue
           )
         {
             //Arrange
-            nextActivityType = Constants.QuestionScreen;
-            var opResult = new OperationResult<SaveAndContinueResponse>()
+            nextActivityType = ActivityTypeConstants.QuestionScreen;
+            var opResult = new OperationResult<MultiSaveAndContinueResponse>()
             {
-                Data = new SaveAndContinueResponse
+                Data = new MultiSaveAndContinueResponse
                 {
                     WorkflowInstanceId = saveAndContinueCommand.WorkflowInstanceId,
                     NextActivityId = workflowInstance.Output!.ActivityId
@@ -400,7 +399,7 @@ namespace Elsa.Server.Tests.Features.Workflow.MultiSaveAndContinue
                 .ReturnsAsync(workflowBlueprint);
 
             questionInvoker.Setup(x => x.ExecuteWorkflowsAsync(saveAndContinueCommand.ActivityId,
-                    Constants.QuestionScreen,
+                    ActivityTypeConstants.QuestionScreen,
                     saveAndContinueCommand.WorkflowInstanceId, currentAssessmentQuestions, CancellationToken.None))
                 .ReturnsAsync(collectedWorkflows);
 

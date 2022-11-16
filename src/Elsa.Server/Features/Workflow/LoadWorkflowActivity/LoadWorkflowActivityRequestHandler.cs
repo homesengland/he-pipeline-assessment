@@ -2,13 +2,13 @@
 using Elsa.CustomActivities.Activities.Shared;
 using Elsa.CustomInfrastructure.Data.Repository;
 using Elsa.CustomModels;
+using Elsa.CustomWorkflow.Sdk;
 using Elsa.Persistence;
 using Elsa.Persistence.Specifications.WorkflowInstances;
 using Elsa.Server.Models;
 using Elsa.Services.Models;
 using MediatR;
 using System.Text.Json;
-using Constants = Elsa.CustomActivities.Activities.Constants;
 
 namespace Elsa.Server.Features.Workflow.LoadWorkflowActivity
 {
@@ -71,7 +71,7 @@ namespace Elsa.Server.Features.Workflow.LoadWorkflowActivity
                                     result.Data.ActivityType = dbAssessmentQuestion.ActivityType;
                                     result.Data.PreviousActivityId = dbAssessmentQuestion.PreviousActivityId;
 
-                                    if (dbAssessmentQuestion.ActivityType == Constants.QuestionScreen)
+                                    if (dbAssessmentQuestion.ActivityType == ActivityTypeConstants.QuestionScreen)
                                     {
                                         var title = (string?)activityDataDictionary.FirstOrDefault(x => x.Key == "PageTitle").Value;
                                         result.Data.PageTitle = title;
@@ -88,8 +88,7 @@ namespace Elsa.Server.Features.Workflow.LoadWorkflowActivity
                                         {
                                             result.Data.MultiQuestionActivityData = new List<QuestionActivityData>();
                                             result.Data.QuestionActivityData = new QuestionActivityData();
-                                            result.Data.QuestionActivityData.ActivityType =
-                                                dbAssessmentQuestion.ActivityType;
+                                            result.Data.ActivityType = dbAssessmentQuestion.ActivityType;
 
                                             foreach (var item in elsaActivityAssessmentQuestions.Questions)
                                             {
@@ -110,45 +109,45 @@ namespace Elsa.Server.Features.Workflow.LoadWorkflowActivity
                                                 $"Failed to map activity data to MultiQuestionActivityData");
                                         }
                                     }
-                                    else
-                                    {
-                                        var activityData =
-                                            _loadWorkflowActivityJsonHelper
-                                                .ActivityDataDictionaryToQuestionActivityData<QuestionActivityData>(
-                                                    activityDataDictionary);
-                                        if (activityData != null)
-                                        {
-                                            result.Data!.QuestionActivityData = activityData;
-                                            result.Data.QuestionActivityData.ActivityType =
-                                                dbAssessmentQuestion.ActivityType;
-                                            result.Data.QuestionActivityData.Answer = dbAssessmentQuestion.Answer;
-                                            result.Data.QuestionActivityData.Comments = dbAssessmentQuestion.Comments;
+                                    //else
+                                    //{
+                                    //    var activityData =
+                                    //        _loadWorkflowActivityJsonHelper
+                                    //            .ActivityDataDictionaryToQuestionActivityData<QuestionActivityData>(
+                                    //                activityDataDictionary);
+                                    //    if (activityData != null)
+                                    //    {
+                                    //        result.Data!.QuestionActivityData = activityData;
+                                    //        result.Data.QuestionActivityData.ActivityType =
+                                    //            dbAssessmentQuestion.ActivityType;
+                                    //        result.Data.QuestionActivityData.Answer = dbAssessmentQuestion.Answer;
+                                    //        result.Data.QuestionActivityData.Comments = dbAssessmentQuestion.Comments;
 
-                                            // Restore preserved checkboxes from previous page load
-                                            if (result.Data.ActivityType == Constants.MultipleChoiceQuestion &&
-                                                !string.IsNullOrEmpty(result.Data.QuestionActivityData.Answer))
-                                            {
-                                                var answerList =
-                                                    JsonSerializer.Deserialize<List<string>>(result.Data
-                                                        .QuestionActivityData.Answer);
-                                                result.Data.QuestionActivityData.MultipleChoice.SelectedChoices =
-                                                    answerList!;
-                                            }
+                                    //        // Restore preserved checkboxes from previous page load
+                                    //        if (result.Data.ActivityType == Constants.MultipleChoiceQuestion &&
+                                    //            !string.IsNullOrEmpty(result.Data.QuestionActivityData.Answer))
+                                    //        {
+                                    //            var answerList =
+                                    //                JsonSerializer.Deserialize<List<string>>(result.Data
+                                    //                    .QuestionActivityData.Answer);
+                                    //            result.Data.QuestionActivityData.Checkbox.SelectedChoices =
+                                    //                answerList!;
+                                    //        }
 
-                                            // Restore preserved selected answer from previous page load
-                                            if (result.Data.ActivityType == Constants.SingleChoiceQuestion &&
-                                                !string.IsNullOrEmpty(result.Data.QuestionActivityData.Answer))
-                                            {
-                                                result.Data.QuestionActivityData.SingleChoice.SelectedAnswer =
-                                                    result.Data.QuestionActivityData.Answer;
-                                            }
-                                        }
-                                        else
-                                        {
-                                            result.ErrorMessages.Add(
-                                                $"Failed to map activity data");
-                                        }
-                                    }
+                                    //        // Restore preserved selected answer from previous page load
+                                    //        if (result.Data.ActivityType == Constants.SingleChoiceQuestion &&
+                                    //            !string.IsNullOrEmpty(result.Data.QuestionActivityData.Answer))
+                                    //        {
+                                    //            result.Data.QuestionActivityData.Radio.SelectedAnswer =
+                                    //                result.Data.QuestionActivityData.Answer;
+                                    //        }
+                                    //    }
+                                    //    else
+                                    //    {
+                                    //        result.ErrorMessages.Add(
+                                    //            $"Failed to map activity data");
+                                    //    }
+                                    //}
                                 }
                                 else
                                 {
@@ -187,7 +186,7 @@ namespace Elsa.Server.Features.Workflow.LoadWorkflowActivity
         {
             //assign the values
             var questionActivityData = new QuestionActivityData();
-            questionActivityData.ActivityType = dbQuestion.ActivityType;
+            //questionActivityData.ActivityType = dbQuestion.ActivityType;
             questionActivityData.Answer = dbQuestion.Answer;
             questionActivityData.Comments = dbQuestion.Comments;
             questionActivityData.QuestionId = dbQuestion.QuestionId;
@@ -198,36 +197,36 @@ namespace Elsa.Server.Features.Workflow.LoadWorkflowActivity
             questionActivityData.QuestionGuidance = item.QuestionGuidance;
             questionActivityData.QuestionHint = item.QuestionHint;
 
-            if (item.QuestionType == Constants.MultipleChoiceQuestion)
+            if (item.QuestionType == QuestionTypeConstants.CheckboxQuestion)
             {
-                questionActivityData.MultipleChoice = new MultipleChoiceModel();
-                questionActivityData.MultipleChoice.Choices =
+                questionActivityData.Checkbox = new Checkbox();
+                questionActivityData.Checkbox.Choices =
                     item.Checkbox.Choices.Select(x => new Choice()
                     { Answer = x.Answer, IsSingle = x.IsSingle }).ToArray();
             }
 
-            if (item.QuestionType == Constants.MultipleChoiceQuestion &&
+            if (item.QuestionType == QuestionTypeConstants.CheckboxQuestion &&
                 !string.IsNullOrEmpty(questionActivityData.Answer))
             {
                 var answerList =
                     JsonSerializer.Deserialize<List<string>>(
                         questionActivityData.Answer);
-                questionActivityData.MultipleChoice.SelectedChoices =
+                questionActivityData.Checkbox.SelectedChoices =
                     answerList!;
             }
 
-            if (item.QuestionType == Constants.SingleChoiceQuestion)
+            if (item.QuestionType == QuestionTypeConstants.RadioQuestion)
             {
-                questionActivityData.SingleChoice = new SingleChoiceModel();
-                questionActivityData.SingleChoice.Choices = item.Radio.Choices
-                    .Select(x => new SingleChoice() { Answer = x.Answer })
+                questionActivityData.Radio = new Radio();
+                questionActivityData.Radio.Choices = item.Radio.Choices
+                    .Select(x => new Choice() { Answer = x.Answer })
                     .ToArray();
             }
 
-            if (item.QuestionType == Constants.SingleChoiceQuestion &&
+            if (item.QuestionType == QuestionTypeConstants.RadioQuestion &&
                 !string.IsNullOrEmpty(questionActivityData.Answer))
             {
-                questionActivityData.SingleChoice.SelectedAnswer =
+                questionActivityData.Radio.SelectedAnswer =
                     questionActivityData.Answer;
             }
 

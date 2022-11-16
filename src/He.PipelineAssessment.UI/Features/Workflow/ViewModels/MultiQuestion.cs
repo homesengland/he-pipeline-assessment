@@ -8,7 +8,6 @@ namespace He.PipelineAssessment.UI.Features.Workflow.ViewModels
         public bool IsValid { get; set; }
         public string QuestionId { get; set; } = null!;
         public string QuestionType { get; set; } = null!;
-        public string ActivityType { get; set; } = null!;
         public string Title { get; set; } = null!;
         public string Question { get; set; } = null!;
         public string? QuestionHint { get; set; }
@@ -18,18 +17,18 @@ namespace He.PipelineAssessment.UI.Features.Workflow.ViewModels
         public string? Answer { get; set; }
         public Date? Date { get; set; }
         public decimal? Decimal { get; set; }
-        public SingleChoiceModel SingleChoice { get; set; } = new SingleChoiceModel();
-        public MultipleChoiceModel MultipleChoice { get; set; } = new MultipleChoiceModel();
+        public Radio Radio { get; set; } = new Radio();
+        public Checkbox Checkbox { get; set; } = new Checkbox();
 
     }
 
-    public class MultipleChoiceModel
+    public class Checkbox
     {
         public List<string> SelectedChoices { get; set; } = null!;
         public List<Choice> Choices { get; set; } = new List<Choice>();
     }
 
-    public class SingleChoiceModel
+    public class Radio
     {
         public List<Choice> Choices { get; set; } = new List<Choice>();
         public string SelectedAnswer { get; set; } = null!;

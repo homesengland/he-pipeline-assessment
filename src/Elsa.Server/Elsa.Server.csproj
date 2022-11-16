@@ -46,6 +46,7 @@
   <ItemGroup>
     <ProjectReference Include="..\Elsa.CustomActivities\Elsa.CustomActivities.csproj" />
     <ProjectReference Include="..\Elsa.CustomInfrastructure\Elsa.CustomInfrastructure.csproj" />
+    <ProjectReference Include="..\Elsa.CustomWorkflow.Sdk\Elsa.CustomWorkflow.Sdk.csproj" />
     <ProjectReference Include="..\He.PipelineAssessment.Data\He.PipelineAssessment.Data.csproj" />
   </ItemGroup>
 
