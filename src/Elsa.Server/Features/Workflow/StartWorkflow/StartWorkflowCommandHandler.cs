@@ -5,6 +5,7 @@ using Elsa.Models;
 using Elsa.Server.Models;
 using Elsa.Services;
 using MediatR;
+using Constants = Elsa.CustomActivities.Activities.Constants;
 
 namespace Elsa.Server.Features.Workflow.StartWorkflow
 {
@@ -52,7 +53,7 @@ namespace Elsa.Server.Features.Workflow.StartWorkflow
                             result.ErrorMessages.Add("Failed to deserialize RunWorkflowResult");
                         }
 
-                        if (activity.Type == "QuestionScreen")
+                        if (activity.Type == Constants.QuestionScreen)
                         {
                             //create one for each question
                             var dictionList = runWorkflowResult.WorkflowInstance.ActivityData

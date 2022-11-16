@@ -1,4 +1,5 @@
 ﻿using AutoFixture.Xunit2;
+using Elsa.CustomActivities.Activities.QuestionScreen;
 using Elsa.CustomActivities.Activities.Shared;
 using Elsa.CustomInfrastructure.Data.Repository;
 using Elsa.CustomModels;
@@ -309,6 +310,126 @@ namespace Elsa.Server.Tests.Features.Workflow.MultiSaveAndContinue
                 Times.Never);
             Assert.Null(result.Data);
             Assert.Equal(exception.Message, result.ErrorMessages.Single());
+        }
+
+        [Theory]
+        [AutoMoqData]
+        public async Task Handle_ShouldReturnErrorMessageResult_WhenNextActivityIsNull(
+            [Frozen] Mock<IQuestionInvoker> questionInvoker,
+            [Frozen] Mock<IWorkflowInstanceStore> workflowInstanceStore,
+            [Frozen] Mock<IElsaCustomRepository> elsaCustomRepository,
+            [Frozen] Mock<IWorkflowRegistry> workflowRegistry,
+            WorkflowBlueprint workflowBlueprint,
+            List<AssessmentQuestion> currentAssessmentQuestions,
+            List<CollectedWorkflow> collectedWorkflows,
+            WorkflowInstance workflowInstance,
+            MultiSaveAndContinueCommand saveAndContinueCommand,
+            MultiSaveAndContinueCommandHandler sut)
+        {
+            //Arrange
+            elsaCustomRepository.Setup(x => x.GetAssessmentQuestions(saveAndContinueCommand.ActivityId,
+                    saveAndContinueCommand.WorkflowInstanceId, CancellationToken.None))
+                .ReturnsAsync(currentAssessmentQuestions);
+
+            workflowRegistry.Setup(x =>
+                    x.FindAsync(workflowInstance.DefinitionId, VersionOptions.Published, null, CancellationToken.None))
+                .ReturnsAsync(workflowBlueprint);
+
+            questionInvoker.Setup(x => x.ExecuteWorkflowsAsync(saveAndContinueCommand.ActivityId,
+                    Constants.QuestionScreen,
+                    saveAndContinueCommand.WorkflowInstanceId, currentAssessmentQuestions, CancellationToken.None))
+                .ReturnsAsync(collectedWorkflows);
+
+            workflowInstanceStore
+                .Setup(x => x.FindAsync(
+                    It.Is<WorkflowInstanceIdSpecification>(y => y.Id == collectedWorkflows.First().WorkflowInstanceId),
+                    CancellationToken.None)).ReturnsAsync(workflowInstance);
+
+            //Act
+            var result = await sut.Handle(saveAndContinueCommand, CancellationToken.None);
+
+            //Assert
+            Assert.Equal(1, result.ErrorMessages.Count);
+            Assert.Equal("Unable to determine next activity ID", result.ErrorMessages.Single());
+        }
+
+        [Theory]
+        [AutoMoqData]
+        public async Task
+          Handle_ShouldReturnSuccessfulOperationResult_WhenSuccessful_AndInsertsNewMultiScreenQuestionIfDoesNotExist(
+              [Frozen] Mock<IQuestionInvoker> questionInvoker,
+              [Frozen] Mock<IWorkflowInstanceStore> workflowInstanceStore,
+              [Frozen] Mock<IElsaCustomRepository> elsaCustomRepository,
+              [Frozen] Mock<IMultiSaveAndContinueMapper> saveAndContinueMapper,
+              [Frozen] Mock<IWorkflowRegistry> workflowRegistry,
+              WorkflowBlueprint workflowBlueprint,
+              ActivityBlueprint activityBlueprint,
+              List<AssessmentQuestion> currentAssessmentQuestions,
+              List<CollectedWorkflow> collectedWorkflows,
+              WorkflowInstance workflowInstance,
+              AssessmentQuestion nextAssessmentQuestion,
+              MultiSaveAndContinueCommand saveAndContinueCommand,
+              AssessmentQuestions elsaAssessmentQuestions,
+              string nextActivityType,
+              MultiSaveAndContinueCommandHandler sut
+          )
+        {
+            //Arrange
+            nextActivityType = Constants.QuestionScreen;
+            var opResult = new OperationResult<SaveAndContinueResponse>()
+            {
+                Data = new SaveAndContinueResponse
+                {
+                    WorkflowInstanceId = saveAndContinueCommand.WorkflowInstanceId,
+                    NextActivityId = workflowInstance.Output!.ActivityId
+                },
+                ErrorMessages = new List<string>(),
+                ValidationMessages = null
+            };
+
+            activityBlueprint.Id = workflowInstance.Output.ActivityId;
+            activityBlueprint.Type = nextActivityType;
+            workflowBlueprint.Activities.Add(activityBlueprint);
+
+            elsaCustomRepository.Setup(x => x.GetAssessmentQuestions(saveAndContinueCommand.ActivityId,
+                    saveAndContinueCommand.WorkflowInstanceId, CancellationToken.None))
+                .ReturnsAsync(currentAssessmentQuestions);
+
+            workflowRegistry.Setup(x =>
+                    x.FindAsync(workflowInstance.DefinitionId, VersionOptions.Published, null, CancellationToken.None))
+                .ReturnsAsync(workflowBlueprint);
+
+            questionInvoker.Setup(x => x.ExecuteWorkflowsAsync(saveAndContinueCommand.ActivityId,
+                    Constants.QuestionScreen,
+                    saveAndContinueCommand.WorkflowInstanceId, currentAssessmentQuestions, CancellationToken.None))
+                .ReturnsAsync(collectedWorkflows);
+
+            workflowInstanceStore
+                .Setup(x => x.FindAsync(
+                    It.Is<WorkflowInstanceIdSpecification>(y => y.Id == collectedWorkflows.First().WorkflowInstanceId),
+                    CancellationToken.None)).ReturnsAsync(workflowInstance);
+
+            elsaCustomRepository.Setup(x => x.GetAssessmentQuestion(workflowInstance.Output.ActivityId,
+                    saveAndContinueCommand.WorkflowInstanceId, CancellationToken.None))
+                .ReturnsAsync((AssessmentQuestion?)null);
+
+            saveAndContinueMapper
+                .Setup(x => x.SaveAndContinueCommandToNextAssessmentQuestion(saveAndContinueCommand,
+                    workflowInstance.Output!.ActivityId, nextActivityType)).Returns(nextAssessmentQuestion);
+
+            var assessmentQuestionsDictionary = new Dictionary<string, object?>();
+            assessmentQuestionsDictionary.Add("Questions", elsaAssessmentQuestions);
+            workflowInstance.ActivityData.Add(workflowInstance.Output.ActivityId, assessmentQuestionsDictionary);
+
+            //Act
+            var result = await sut.Handle(saveAndContinueCommand, CancellationToken.None);
+
+            //Assert          
+            Assert.Equal(opResult.Data.NextActivityId, result.Data!.NextActivityId);
+            Assert.Equal(opResult.Data.WorkflowInstanceId, result.Data.WorkflowInstanceId);
+            Assert.Empty(result.ErrorMessages);
+            Assert.Null(result.ValidationMessages);
+            elsaCustomRepository.Verify(x => x.CreateAssessmentQuestionAsync(It.IsAny<AssessmentQuestion>(), CancellationToken.None), Times.Once);
         }
 
     }

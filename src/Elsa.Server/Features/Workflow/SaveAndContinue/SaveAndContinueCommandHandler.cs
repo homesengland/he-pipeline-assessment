@@ -11,6 +11,7 @@ using Elsa.Services;
 using Elsa.Services.Models;
 using MediatR;
 using Open.Linq.AsyncExtensions;
+using Constants = Elsa.CustomActivities.Activities.Constants;
 
 namespace Elsa.Server.Features.Workflow.SaveAndContinue
 {
@@ -125,7 +126,7 @@ namespace Elsa.Server.Features.Workflow.SaveAndContinue
             var assessmentQuestion = _saveAndContinueMapper.SaveAndContinueCommandToNextAssessmentQuestion(command, nextActivityId, nextActivityBlueprint.Type);
             await _elsaCustomRepository.CreateAssessmentQuestionAsync(assessmentQuestion);
 
-            if (nextActivityBlueprint.Type == "QuestionScreen")
+            if (nextActivityBlueprint.Type == Constants.QuestionScreen)
             {
                 //create one for each question
                 var dictionList = workflowInstance.ActivityData

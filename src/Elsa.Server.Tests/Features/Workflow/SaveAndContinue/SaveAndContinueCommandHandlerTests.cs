@@ -13,6 +13,7 @@ using Elsa.Services.Models;
 using He.PipelineAssessment.Common.Tests;
 using Moq;
 using Xunit;
+using Constants = Elsa.CustomActivities.Activities.Constants;
 
 namespace Elsa.Server.Tests.Features.Workflow.SaveAndContinue
 {
@@ -364,7 +365,7 @@ namespace Elsa.Server.Tests.Features.Workflow.SaveAndContinue
            )
         {
             //Arrange
-            nextActivityType = "QuestionScreen";
+            nextActivityType = Constants.QuestionScreen;
             var opResult = new OperationResult<SaveAndContinueResponse>()
             {
                 Data = new SaveAndContinueResponse
