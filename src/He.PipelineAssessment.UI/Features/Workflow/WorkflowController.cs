@@ -93,7 +93,7 @@ namespace He.PipelineAssessment.UI.Features.Workflow
                 {
                     command.ValidationMessages = validationResult;
 
-                    return View("SaveAndContinue", command);
+                    return View("MultiSaveAndContinue", command);
                 }
             }
             catch (Exception e)

@@ -139,9 +139,9 @@ export class ElsaQuestionScreen {
 
   renderQuestionComponent(question: IQuestionComponent) {
     switch (question.questionType) {
-      case "MultipleChoiceQuestion":
+      case "CheckboxQuestion":
         return <elsa-checkbox-question onClick={(e) => e.stopPropagation()} class="panel elsa-rounded" question={question as CheckboxQuestion}></elsa-checkbox-question>;
-      case "SingleChoiceQuestion":
+      case "RadioQuestion":
         return <elsa-radio-question onClick={(e) => e.stopPropagation()} class="panel elsa-rounded" question={question as RadioQuestion}></elsa-radio-question>;
       default:
         return <elsa-question onClick={(e) => e.stopPropagation()} class="panel elsa-rounded" question={question}></elsa-question>;
