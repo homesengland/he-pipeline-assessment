@@ -1,14 +1,12 @@
-﻿using Elsa.Server.Models;
-using MediatR;
-
-namespace Elsa.Server.Features.Workflow.MultiSaveAndContinue
+﻿namespace Elsa.CustomWorkflow.Sdk.Models.Workflow
 {
-    public class MultiSaveAndContinueCommand : IRequest<OperationResult<MultiSaveAndContinueResponse>>
+    public class SaveAndContinueCommandDto
     {
         public string Id { get; set; } = null!;
         public string ActivityId { get; set; } = null!;
 
         public string WorkflowInstanceId { get; set; } = null!;
+
         public List<Answer>? Answers { get; set; }
     }
 

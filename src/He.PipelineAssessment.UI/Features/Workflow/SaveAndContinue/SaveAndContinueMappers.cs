@@ -5,7 +5,7 @@ namespace He.PipelineAssessment.UI.Features.Workflow.SaveAndContinue
     public interface ISaveAndContinueMapper
     {
 
-        MultiSaveAndContinueCommandDto
+        SaveAndContinueCommandDto
             SaveAndContinueCommandToMultiSaveAndContinueCommandDto(SaveAndContinueCommand saveAndContinueCommand);
     }
 
@@ -13,10 +13,10 @@ namespace He.PipelineAssessment.UI.Features.Workflow.SaveAndContinue
     {
 
 
-        public MultiSaveAndContinueCommandDto SaveAndContinueCommandToMultiSaveAndContinueCommandDto(
+        public SaveAndContinueCommandDto SaveAndContinueCommandToMultiSaveAndContinueCommandDto(
     SaveAndContinueCommand saveAndContinueCommand)
         {
-            return new MultiSaveAndContinueCommandDto
+            return new SaveAndContinueCommandDto
             {
                 Id = $"{saveAndContinueCommand.Data.WorkflowInstanceId}-{saveAndContinueCommand.Data.ActivityId}",
                 Answers = saveAndContinueCommand.Data.MultiQuestionActivityData?.Select(x => new Answer(x.QuestionId, x.Answer, x.Comments)).ToList(),

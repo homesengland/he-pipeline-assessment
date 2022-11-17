@@ -1,7 +1,5 @@
-//using Elsa.CustomActivities.Activities.Checkbox;
 using Elsa.CustomActivities.Activities.QuestionScreen;
 using Elsa.CustomActivities.Activities.Shared;
-//using Elsa.CustomActivities.Activities.Radio;
 using Elsa.CustomActivities.Activities.SinglePipelineDataSource;
 using Elsa.CustomInfrastructure.Data;
 using Elsa.CustomInfrastructure.Data.Repository;
@@ -10,7 +8,7 @@ using Elsa.Persistence.EntityFramework.SqlServer;
 using Elsa.Runtime;
 using Elsa.Server.Extensions;
 using Elsa.Server.Features.Workflow.LoadWorkflowActivity;
-using Elsa.Server.Features.Workflow.MultiSaveAndContinue;
+using Elsa.Server.Features.Workflow.QuestionScreenSaveAndContinue;
 using Elsa.Server.Features.Workflow.StartWorkflow;
 using Elsa.Server.Providers;
 using Elsa.Server.StartupTasks;
@@ -18,9 +16,6 @@ using He.PipelineAssessment.Data.SinglePipeline;
 using MediatR;
 using Microsoft.AspNetCore.DataProtection;
 using Microsoft.EntityFrameworkCore;
-//using CurrencyQuestion = Elsa.CustomActivities.Activities.Currency.CurrencyQuestion;
-//using DateQuestion = Elsa.CustomActivities.Activities.Date.DateQuestion;
-//using TextQuestion = Elsa.CustomActivities.Activities.Text.TextQuestion;
 
 var builder = WebApplication.CreateBuilder(args);
 var elsaConnectionString = builder.Configuration.GetConnectionString("Elsa");
@@ -33,11 +28,6 @@ var elsaCustomConnectionString = builder.Configuration.GetConnectionString("Elsa
 builder.Services
     .AddElsa(elsa => elsa
         .UseEntityFrameworkPersistence(ef => ef.UseSqlServer(elsaConnectionString, typeof(Elsa.Persistence.EntityFramework.SqlServer.Migrations.Initial)))
-        //.AddActivity<MultipleChoiceQuestion>()
-        //.AddActivity<SingleChoiceQuestion>()
-        //.AddActivity<CurrencyQuestion>()
-        //.AddActivity<TextQuestion>()
-        //.AddActivity<DateQuestion>()
         .AddActivity<SinglePipelineDataSource>()
         .AddActivity<QuestionScreen>()
         .AddConsoleActivities()
@@ -66,14 +56,12 @@ builder.Services.AddMediatR(typeof(Program).Assembly);
 builder.Services.AddApplicationInsightsTelemetry();
 builder.Services.AddScoped<IDateTimeProvider, DateTimeProvider>();
 
-//builder.Services.AddScoped<ISaveAndContinueHandler, SaveAndContinueHandler>();
 
 builder.Services.AddScoped<IStartWorkflowMapper, StartWorkflowMapper>();
-builder.Services.AddScoped<IMultiSaveAndContinueMapper, MultiSaveAndContinueMapper>();
+builder.Services.AddScoped<IQuestionScreenSaveAndContinueMapper, QuestionScreenSaveAndContinueMapper>();
 
 
 builder.Services.AddScoped<ILoadWorkflowActivityJsonHelper, LoadWorkflowActivityJsonHelper>();
-//builder.Services.AddScoped<ILoadWorkflowActivityMapper, LoadWorkflowActivityMapper>();
 
 builder.Services.AddScoped<IEsriSinglePipelineClient, EsriSinglePipelineClient>();
 builder.Services.AddScoped<IEsriSinglePipelineDataJsonHelper, EsriSinglePipelineDataJsonHelper>();

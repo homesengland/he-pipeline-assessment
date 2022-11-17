@@ -13,23 +13,23 @@ using MediatR;
 using Open.Linq.AsyncExtensions;
 
 
-namespace Elsa.Server.Features.Workflow.MultiSaveAndContinue
+namespace Elsa.Server.Features.Workflow.QuestionScreenSaveAndContinue
 {
-    public class MultiSaveAndContinueCommandHandler : IRequestHandler<MultiSaveAndContinueCommand,
-        OperationResult<MultiSaveAndContinueResponse>>
+    public class QuestionScreenSaveAndContinueCommandHandler : IRequestHandler<QuestionScreenSaveAndContinueCommand,
+        OperationResult<QuestionScreenSaveAndContinueResponse>>
     {
         private readonly IElsaCustomRepository _elsaCustomRepository;
         private readonly IDateTimeProvider _dateTimeProvider;
         private readonly IQuestionInvoker _invoker;
         private readonly IWorkflowInstanceStore _workflowInstanceStore;
         private readonly IWorkflowRegistry _workflowRegistry;
-        private readonly IMultiSaveAndContinueMapper _saveAndContinueMapper;
+        private readonly IQuestionScreenSaveAndContinueMapper _saveAndContinueMapper;
 
 
-        public MultiSaveAndContinueCommandHandler(IQuestionInvoker invoker,
+        public QuestionScreenSaveAndContinueCommandHandler(IQuestionInvoker invoker,
             IWorkflowInstanceStore workflowInstanceStore, IElsaCustomRepository elsaCustomRepository,
             IDateTimeProvider dateTimeProvider, IWorkflowRegistry workflowRegistry,
-            IMultiSaveAndContinueMapper saveAndContinueMapper)
+            IQuestionScreenSaveAndContinueMapper saveAndContinueMapper)
         {
             _elsaCustomRepository = elsaCustomRepository;
             _dateTimeProvider = dateTimeProvider;
@@ -39,14 +39,14 @@ namespace Elsa.Server.Features.Workflow.MultiSaveAndContinue
             _saveAndContinueMapper = saveAndContinueMapper;
         }
 
-        public async Task<OperationResult<MultiSaveAndContinueResponse>> Handle(MultiSaveAndContinueCommand command,
+        public async Task<OperationResult<QuestionScreenSaveAndContinueResponse>> Handle(QuestionScreenSaveAndContinueCommand command,
             CancellationToken cancellationToken)
         {
-            var result = new OperationResult<MultiSaveAndContinueResponse>();
+            var result = new OperationResult<QuestionScreenSaveAndContinueResponse>();
             try
             {
                 var dbAssessmentQuestionList =
-                    await _elsaCustomRepository.GetAssessmentQuestions(command.ActivityId, command.WorkflowInstanceId,
+                    await _elsaCustomRepository.GetQuestionScreenAnswers(command.ActivityId, command.WorkflowInstanceId,
                         cancellationToken);
 
                 if (dbAssessmentQuestionList != null && dbAssessmentQuestionList.Any())
@@ -90,7 +90,7 @@ namespace Elsa.Server.Features.Workflow.MultiSaveAndContinue
                             if (nextActivity != null)
                             {
                                 var nextActivityRecord =
-                                    await _elsaCustomRepository.GetAssessmentQuestion(nextActivityId,
+                                    await _elsaCustomRepository.GetCustomActivityNavigation(nextActivityId,
                                         command.WorkflowInstanceId, cancellationToken);
 
                                 if (nextActivityRecord == null)
@@ -98,7 +98,7 @@ namespace Elsa.Server.Features.Workflow.MultiSaveAndContinue
                                     await CreateNextActivityRecord(command, nextActivityId, nextActivity.Type, workflowInstance);
                                 }
 
-                                result.Data = new MultiSaveAndContinueResponse
+                                result.Data = new QuestionScreenSaveAndContinueResponse
                                 {
                                     WorkflowInstanceId = command.WorkflowInstanceId,
                                     NextActivityId = nextActivityId,
@@ -139,10 +139,10 @@ namespace Elsa.Server.Features.Workflow.MultiSaveAndContinue
             return await Task.FromResult(result);
         }
 
-        private async Task CreateNextActivityRecord(MultiSaveAndContinueCommand command, string nextActivityId, string nextActivityType, WorkflowInstance workflowInstance)
+        private async Task CreateNextActivityRecord(QuestionScreenSaveAndContinueCommand command, string nextActivityId, string nextActivityType, WorkflowInstance workflowInstance)
         {
-            var assessmentQuestion = _saveAndContinueMapper.SaveAndContinueCommandToNextAssessmentQuestion(command, nextActivityId, nextActivityType);
-            await _elsaCustomRepository.CreateAssessmentQuestionAsync(assessmentQuestion);
+            var assessmentQuestion = _saveAndContinueMapper.saveAndContinueCommandToNextCustomActivityNavigation(command, nextActivityId, nextActivityType);
+            await _elsaCustomRepository.CreateCustomActivityNavigationAsync(assessmentQuestion);
 
             if (nextActivityType == ActivityTypeConstants.QuestionScreen)
             {
@@ -159,13 +159,13 @@ namespace Elsa.Server.Features.Workflow.MultiSaveAndContinue
                         var questionList = (List<Question>)dictionaryQuestions.Questions;
                         if (questionList!.Any())
                         {
-                            var assessments = new List<AssessmentQuestion>();
+                            var assessments = new List<QuestionScreenAnswer>();
 
                             foreach (var item in questionList!)
                             {
-                                assessments.Add(_saveAndContinueMapper.SaveAndContinueCommandToNextAssessmentQuestion(command, nextActivityId, nextActivityType, item));
+                                assessments.Add(_saveAndContinueMapper.SaveAndContinueCommandToQuestionScreenAnswer(command, nextActivityId, nextActivityType, item));
                             }
-                            await _elsaCustomRepository.CreateAssessmentQuestionAsync(assessments, CancellationToken.None);
+                            await _elsaCustomRepository.CreateQuestionScreenAnswersAsync(assessments, CancellationToken.None);
                         }
                     }
                 }

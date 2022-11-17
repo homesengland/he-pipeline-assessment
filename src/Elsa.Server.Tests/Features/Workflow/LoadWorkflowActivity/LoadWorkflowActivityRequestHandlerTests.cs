@@ -30,22 +30,22 @@ namespace Elsa.Server.Tests.Features.Workflow.LoadWorkflowActivity
            LoadWorkflowActivityRequest loadWorkflowActivityRequest,
            List<CollectedWorkflow> collectedWorkflows,
            WorkflowInstance workflowInstance,
-           AssessmentQuestion assessmentQuestion,
+           CustomActivityNavigation customActivityNavigation,
            LoadWorkflowActivityRequestHandler sut)
         {
 
             //Arrange
             questionInvoker
-                .Setup(x => x.FindWorkflowsAsync(loadWorkflowActivityRequest.ActivityId, assessmentQuestion.ActivityType, loadWorkflowActivityRequest.WorkflowInstanceId, CancellationToken.None))
+                .Setup(x => x.FindWorkflowsAsync(loadWorkflowActivityRequest.ActivityId, customActivityNavigation.ActivityType, loadWorkflowActivityRequest.WorkflowInstanceId, CancellationToken.None))
                 .ReturnsAsync(collectedWorkflows);
 
             workflowInstanceStore.Setup(x =>
                     x.FindAsync(It.IsAny<WorkflowInstanceIdSpecification>(), CancellationToken.None))
                 .ReturnsAsync(workflowInstance);
 
-            elsaCustomRepository.Setup(x => x.GetAssessmentQuestion(loadWorkflowActivityRequest.ActivityId,
+            elsaCustomRepository.Setup(x => x.GetCustomActivityNavigation(loadWorkflowActivityRequest.ActivityId,
                     loadWorkflowActivityRequest.WorkflowInstanceId, CancellationToken.None))
-                .ReturnsAsync(assessmentQuestion);
+                .ReturnsAsync(customActivityNavigation);
 
             //Act
             var result = await sut.Handle(loadWorkflowActivityRequest, CancellationToken.None);
@@ -54,7 +54,7 @@ namespace Elsa.Server.Tests.Features.Workflow.LoadWorkflowActivity
             Assert.Null(result.Data!.MultiQuestionActivityData);
             Assert.Equal($"Cannot find activity Id {loadWorkflowActivityRequest.ActivityId} in the workflow activity data dictionary", result.ErrorMessages.Single());
             workflowInstanceStore.Verify(x => x.FindAsync(It.IsAny<WorkflowInstanceIdSpecification>(), CancellationToken.None), Times.Once);
-            elsaCustomRepository.Verify(x => x.GetAssessmentQuestion(loadWorkflowActivityRequest.ActivityId, loadWorkflowActivityRequest.WorkflowInstanceId, CancellationToken.None), Times.Once);
+            elsaCustomRepository.Verify(x => x.GetCustomActivityNavigation(loadWorkflowActivityRequest.ActivityId, loadWorkflowActivityRequest.WorkflowInstanceId, CancellationToken.None), Times.Once);
             loadWorkflowActivityJsonHelper.Verify(x => x.ActivityDataDictionaryToQuestionActivityData<QuestionActivityData>(It.IsAny<IDictionary<string, object?>>()), Times.Never);
 
         }
@@ -81,9 +81,9 @@ namespace Elsa.Server.Tests.Features.Workflow.LoadWorkflowActivity
                     x.FindAsync(It.IsAny<WorkflowInstanceIdSpecification>(), CancellationToken.None))
                 .ReturnsAsync(workflowInstance);
 
-            elsaCustomRepository.Setup(x => x.GetAssessmentQuestion(loadWorkflowActivityRequest.ActivityId,
+            elsaCustomRepository.Setup(x => x.GetCustomActivityNavigation(loadWorkflowActivityRequest.ActivityId,
                     loadWorkflowActivityRequest.WorkflowInstanceId, CancellationToken.None))
-                .ReturnsAsync((AssessmentQuestion?)null);
+                .ReturnsAsync((CustomActivityNavigation?)null);
 
             //Act
             var result = await sut.Handle(loadWorkflowActivityRequest, CancellationToken.None);
@@ -104,22 +104,22 @@ namespace Elsa.Server.Tests.Features.Workflow.LoadWorkflowActivity
             [Frozen] Mock<IElsaCustomRepository> elsaCustomRepository,
             [Frozen] Mock<ILoadWorkflowActivityJsonHelper> loadWorkflowActivityJsonHelper,
             LoadWorkflowActivityRequest loadWorkflowActivityRequest,
-            AssessmentQuestion assessmentQuestion,
+            CustomActivityNavigation customActivityNavigation,
             List<CollectedWorkflow> collectedWorkflows,
             LoadWorkflowActivityRequestHandler sut)
         {
             //Arrange
             questionInvoker
-                .Setup(x => x.FindWorkflowsAsync(loadWorkflowActivityRequest.ActivityId, assessmentQuestion.ActivityType, loadWorkflowActivityRequest.WorkflowInstanceId, CancellationToken.None))
+                .Setup(x => x.FindWorkflowsAsync(loadWorkflowActivityRequest.ActivityId, customActivityNavigation.ActivityType, loadWorkflowActivityRequest.WorkflowInstanceId, CancellationToken.None))
                 .ReturnsAsync(collectedWorkflows);
 
             workflowInstanceStore.Setup(x =>
                     x.FindAsync(It.IsAny<WorkflowInstanceIdSpecification>(), CancellationToken.None))
                 .ReturnsAsync((WorkflowInstance?)null);
 
-            elsaCustomRepository.Setup(x => x.GetAssessmentQuestion(loadWorkflowActivityRequest.ActivityId,
+            elsaCustomRepository.Setup(x => x.GetCustomActivityNavigation(loadWorkflowActivityRequest.ActivityId,
                     loadWorkflowActivityRequest.WorkflowInstanceId, CancellationToken.None))
-                .ReturnsAsync(assessmentQuestion);
+                .ReturnsAsync(customActivityNavigation);
 
             //Act
             var result = await sut.Handle(loadWorkflowActivityRequest, CancellationToken.None);
@@ -140,17 +140,17 @@ namespace Elsa.Server.Tests.Features.Workflow.LoadWorkflowActivity
             [Frozen] Mock<IElsaCustomRepository> elsaCustomRepository,
             [Frozen] Mock<ILoadWorkflowActivityJsonHelper> loadWorkflowActivityJsonHelper,
             LoadWorkflowActivityRequest loadWorkflowActivityRequest,
-            AssessmentQuestion assessmentQuestion,
+            CustomActivityNavigation customActivityNavigation,
             LoadWorkflowActivityRequestHandler sut)
         {
             //Arrange
             questionInvoker
-                .Setup(x => x.FindWorkflowsAsync(loadWorkflowActivityRequest.ActivityId, assessmentQuestion.ActivityType, loadWorkflowActivityRequest.WorkflowInstanceId, CancellationToken.None))
+                .Setup(x => x.FindWorkflowsAsync(loadWorkflowActivityRequest.ActivityId, customActivityNavigation.ActivityType, loadWorkflowActivityRequest.WorkflowInstanceId, CancellationToken.None))
                 .ReturnsAsync(new List<CollectedWorkflow>());
 
-            elsaCustomRepository.Setup(x => x.GetAssessmentQuestion(loadWorkflowActivityRequest.ActivityId,
+            elsaCustomRepository.Setup(x => x.GetCustomActivityNavigation(loadWorkflowActivityRequest.ActivityId,
                     loadWorkflowActivityRequest.WorkflowInstanceId, CancellationToken.None))
-                .ReturnsAsync(assessmentQuestion);
+                .ReturnsAsync(customActivityNavigation);
 
             //Act
             var result = await sut.Handle(loadWorkflowActivityRequest, CancellationToken.None);
@@ -171,18 +171,18 @@ namespace Elsa.Server.Tests.Features.Workflow.LoadWorkflowActivity
             [Frozen] Mock<IElsaCustomRepository> elsaCustomRepository,
             [Frozen] Mock<ILoadWorkflowActivityJsonHelper> loadWorkflowActivityJsonHelper,
             LoadWorkflowActivityRequest loadWorkflowActivityRequest,
-            AssessmentQuestion assessmentQuestion,
+            CustomActivityNavigation customActivityNavigation,
             Exception exception,
             LoadWorkflowActivityRequestHandler sut)
         {
             //Arrange
             questionInvoker
-                .Setup(x => x.FindWorkflowsAsync(It.IsAny<string>(), assessmentQuestion.ActivityType, It.IsAny<string>(), CancellationToken.None))
+                .Setup(x => x.FindWorkflowsAsync(It.IsAny<string>(), customActivityNavigation.ActivityType, It.IsAny<string>(), CancellationToken.None))
                 .Throws(exception);
 
-            elsaCustomRepository.Setup(x => x.GetAssessmentQuestion(loadWorkflowActivityRequest.ActivityId,
+            elsaCustomRepository.Setup(x => x.GetCustomActivityNavigation(loadWorkflowActivityRequest.ActivityId,
                     loadWorkflowActivityRequest.WorkflowInstanceId, CancellationToken.None))
-                .ReturnsAsync(assessmentQuestion);
+                .ReturnsAsync(customActivityNavigation);
 
             //Act
             var result = await sut.Handle(loadWorkflowActivityRequest, CancellationToken.None);
@@ -205,23 +205,23 @@ namespace Elsa.Server.Tests.Features.Workflow.LoadWorkflowActivity
          LoadWorkflowActivityRequest loadWorkflowActivityRequest,
          List<CollectedWorkflow> collectedWorkflows,
          WorkflowInstance workflowInstance,
-         AssessmentQuestion assessmentQuestion,
+         CustomActivityNavigation customActivityNavigation,
          QuestionActivityData questionActivityData,
          LoadWorkflowActivityRequestHandler sut)
         {
 
             //Arrange
             questionInvoker
-                .Setup(x => x.FindWorkflowsAsync(loadWorkflowActivityRequest.ActivityId, assessmentQuestion.ActivityType, loadWorkflowActivityRequest.WorkflowInstanceId, CancellationToken.None))
+                .Setup(x => x.FindWorkflowsAsync(loadWorkflowActivityRequest.ActivityId, customActivityNavigation.ActivityType, loadWorkflowActivityRequest.WorkflowInstanceId, CancellationToken.None))
                 .ReturnsAsync(collectedWorkflows);
 
             workflowInstanceStore.Setup(x =>
                     x.FindAsync(It.IsAny<WorkflowInstanceIdSpecification>(), CancellationToken.None))
                 .ReturnsAsync(workflowInstance);
 
-            elsaCustomRepository.Setup(x => x.GetAssessmentQuestion(loadWorkflowActivityRequest.ActivityId,
+            elsaCustomRepository.Setup(x => x.GetCustomActivityNavigation(loadWorkflowActivityRequest.ActivityId,
                     loadWorkflowActivityRequest.WorkflowInstanceId, CancellationToken.None))
-                .ReturnsAsync(assessmentQuestion);
+                .ReturnsAsync(customActivityNavigation);
 
             loadWorkflowActivityJsonHelper
                 .Setup(x => x.ActivityDataDictionaryToQuestionActivityData<QuestionActivityData>(It.IsAny<IDictionary<string, object?>>()))
@@ -248,28 +248,28 @@ namespace Elsa.Server.Tests.Features.Workflow.LoadWorkflowActivity
   LoadWorkflowActivityRequest loadWorkflowActivityRequest,
   List<CollectedWorkflow> collectedWorkflows,
   WorkflowInstance workflowInstance,
-  AssessmentQuestion assessmentQuestion,
-  List<AssessmentQuestion> assessmentQuestions,
+  CustomActivityNavigation customActivityNavigation,
+  List<QuestionScreenAnswer> assessmentQuestions,
   QuestionActivityData questionActivityData,
   LoadWorkflowActivityRequestHandler sut)
         {
 
             //Arrange
-            assessmentQuestion.ActivityType = ActivityTypeConstants.QuestionScreen;
+            customActivityNavigation.ActivityType = ActivityTypeConstants.QuestionScreen;
 
             questionInvoker
-                .Setup(x => x.FindWorkflowsAsync(loadWorkflowActivityRequest.ActivityId, assessmentQuestion.ActivityType, loadWorkflowActivityRequest.WorkflowInstanceId, CancellationToken.None))
+                .Setup(x => x.FindWorkflowsAsync(loadWorkflowActivityRequest.ActivityId, customActivityNavigation.ActivityType, loadWorkflowActivityRequest.WorkflowInstanceId, CancellationToken.None))
                 .ReturnsAsync(collectedWorkflows);
 
             workflowInstanceStore.Setup(x =>
                     x.FindAsync(It.IsAny<WorkflowInstanceIdSpecification>(), CancellationToken.None))
                 .ReturnsAsync(workflowInstance);
 
-            elsaCustomRepository.Setup(x => x.GetAssessmentQuestion(loadWorkflowActivityRequest.ActivityId,
+            elsaCustomRepository.Setup(x => x.GetCustomActivityNavigation(loadWorkflowActivityRequest.ActivityId,
                     loadWorkflowActivityRequest.WorkflowInstanceId, CancellationToken.None))
-                .ReturnsAsync(assessmentQuestion);
+                .ReturnsAsync(customActivityNavigation);
 
-            elsaCustomRepository.Setup(x => x.GetAssessmentQuestions(loadWorkflowActivityRequest.ActivityId,
+            elsaCustomRepository.Setup(x => x.GetQuestionScreenAnswers(loadWorkflowActivityRequest.ActivityId,
             loadWorkflowActivityRequest.WorkflowInstanceId, CancellationToken.None))
             .ReturnsAsync(assessmentQuestions);
 
@@ -301,15 +301,15 @@ namespace Elsa.Server.Tests.Features.Workflow.LoadWorkflowActivity
           LoadWorkflowActivityRequest loadWorkflowActivityRequest,
           List<CollectedWorkflow> collectedWorkflows,
           WorkflowInstance workflowInstance,
-          AssessmentQuestion assessmentQuestion,
-          List<AssessmentQuestion> assessmentQuestions,
+          CustomActivityNavigation customActivityNavigation,
+          List<QuestionScreenAnswer> assessmentQuestions,
           QuestionActivityData questionActivityData,
           AssessmentQuestions elsaAssessmentQuestions,
           LoadWorkflowActivityRequestHandler sut)
         {
 
             //Arrange
-            assessmentQuestion.ActivityType = ActivityTypeConstants.QuestionScreen;
+            customActivityNavigation.ActivityType = ActivityTypeConstants.QuestionScreen;
 
             for (int i = 0; i < assessmentQuestions.Count; i++)
             {
@@ -318,18 +318,18 @@ namespace Elsa.Server.Tests.Features.Workflow.LoadWorkflowActivity
             }
 
             questionInvoker
-                .Setup(x => x.FindWorkflowsAsync(loadWorkflowActivityRequest.ActivityId, assessmentQuestion.ActivityType, loadWorkflowActivityRequest.WorkflowInstanceId, CancellationToken.None))
+                .Setup(x => x.FindWorkflowsAsync(loadWorkflowActivityRequest.ActivityId, customActivityNavigation.ActivityType, loadWorkflowActivityRequest.WorkflowInstanceId, CancellationToken.None))
                 .ReturnsAsync(collectedWorkflows);
 
             workflowInstanceStore.Setup(x =>
                     x.FindAsync(It.IsAny<WorkflowInstanceIdSpecification>(), CancellationToken.None))
                 .ReturnsAsync(workflowInstance);
 
-            elsaCustomRepository.Setup(x => x.GetAssessmentQuestion(loadWorkflowActivityRequest.ActivityId,
+            elsaCustomRepository.Setup(x => x.GetCustomActivityNavigation(loadWorkflowActivityRequest.ActivityId,
                     loadWorkflowActivityRequest.WorkflowInstanceId, CancellationToken.None))
-                .ReturnsAsync(assessmentQuestion);
+                .ReturnsAsync(customActivityNavigation);
 
-            elsaCustomRepository.Setup(x => x.GetAssessmentQuestions(loadWorkflowActivityRequest.ActivityId,
+            elsaCustomRepository.Setup(x => x.GetQuestionScreenAnswers(loadWorkflowActivityRequest.ActivityId,
             loadWorkflowActivityRequest.WorkflowInstanceId, CancellationToken.None))
             .ReturnsAsync(assessmentQuestions);
 
@@ -361,15 +361,15 @@ namespace Elsa.Server.Tests.Features.Workflow.LoadWorkflowActivity
           LoadWorkflowActivityRequest loadWorkflowActivityRequest,
           List<CollectedWorkflow> collectedWorkflows,
           WorkflowInstance workflowInstance,
-          AssessmentQuestion assessmentQuestion,
-          List<AssessmentQuestion> assessmentQuestions,
+          CustomActivityNavigation customActivityNavigation,
+          List<QuestionScreenAnswer> assessmentQuestions,
           QuestionActivityData questionActivityData,
           AssessmentQuestions elsaAssessmentQuestions,
           LoadWorkflowActivityRequestHandler sut)
         {
             var myChoice = @"[""Choice1""]";
             //Arrange
-            assessmentQuestion.ActivityType = ActivityTypeConstants.QuestionScreen;
+            customActivityNavigation.ActivityType = ActivityTypeConstants.QuestionScreen;
             assessmentQuestions[0].Answer = myChoice;
             for (int i = 0; i < assessmentQuestions.Count; i++)
             {
@@ -385,18 +385,18 @@ namespace Elsa.Server.Tests.Features.Workflow.LoadWorkflowActivity
             };
 
             questionInvoker
-                .Setup(x => x.FindWorkflowsAsync(loadWorkflowActivityRequest.ActivityId, assessmentQuestion.ActivityType, loadWorkflowActivityRequest.WorkflowInstanceId, CancellationToken.None))
+                .Setup(x => x.FindWorkflowsAsync(loadWorkflowActivityRequest.ActivityId, customActivityNavigation.ActivityType, loadWorkflowActivityRequest.WorkflowInstanceId, CancellationToken.None))
                 .ReturnsAsync(collectedWorkflows);
 
             workflowInstanceStore.Setup(x =>
                     x.FindAsync(It.IsAny<WorkflowInstanceIdSpecification>(), CancellationToken.None))
                 .ReturnsAsync(workflowInstance);
 
-            elsaCustomRepository.Setup(x => x.GetAssessmentQuestion(loadWorkflowActivityRequest.ActivityId,
+            elsaCustomRepository.Setup(x => x.GetCustomActivityNavigation(loadWorkflowActivityRequest.ActivityId,
                     loadWorkflowActivityRequest.WorkflowInstanceId, CancellationToken.None))
-                .ReturnsAsync(assessmentQuestion);
+                .ReturnsAsync(customActivityNavigation);
 
-            elsaCustomRepository.Setup(x => x.GetAssessmentQuestions(loadWorkflowActivityRequest.ActivityId,
+            elsaCustomRepository.Setup(x => x.GetQuestionScreenAnswers(loadWorkflowActivityRequest.ActivityId,
             loadWorkflowActivityRequest.WorkflowInstanceId, CancellationToken.None))
             .ReturnsAsync(assessmentQuestions);
 
@@ -431,8 +431,8 @@ namespace Elsa.Server.Tests.Features.Workflow.LoadWorkflowActivity
   LoadWorkflowActivityRequest loadWorkflowActivityRequest,
   List<CollectedWorkflow> collectedWorkflows,
   WorkflowInstance workflowInstance,
-  AssessmentQuestion assessmentQuestion,
-  List<AssessmentQuestion> assessmentQuestions,
+  CustomActivityNavigation customActivityNavigation,
+  List<QuestionScreenAnswer> assessmentQuestions,
   QuestionActivityData questionActivityData,
   AssessmentQuestions elsaAssessmentQuestions,
   LoadWorkflowActivityRequestHandler sut)
@@ -440,7 +440,7 @@ namespace Elsa.Server.Tests.Features.Workflow.LoadWorkflowActivity
 
             //Arrange
             var myChoice = "Choice1";
-            assessmentQuestion.ActivityType = ActivityTypeConstants.QuestionScreen;
+            customActivityNavigation.ActivityType = ActivityTypeConstants.QuestionScreen;
             assessmentQuestions[0].Answer = "Choice1";
             for (int i = 0; i < assessmentQuestions.Count; i++)
             {
@@ -456,18 +456,18 @@ namespace Elsa.Server.Tests.Features.Workflow.LoadWorkflowActivity
             };
 
             questionInvoker
-                .Setup(x => x.FindWorkflowsAsync(loadWorkflowActivityRequest.ActivityId, assessmentQuestion.ActivityType, loadWorkflowActivityRequest.WorkflowInstanceId, CancellationToken.None))
+                .Setup(x => x.FindWorkflowsAsync(loadWorkflowActivityRequest.ActivityId, customActivityNavigation.ActivityType, loadWorkflowActivityRequest.WorkflowInstanceId, CancellationToken.None))
                 .ReturnsAsync(collectedWorkflows);
 
             workflowInstanceStore.Setup(x =>
                     x.FindAsync(It.IsAny<WorkflowInstanceIdSpecification>(), CancellationToken.None))
                 .ReturnsAsync(workflowInstance);
 
-            elsaCustomRepository.Setup(x => x.GetAssessmentQuestion(loadWorkflowActivityRequest.ActivityId,
+            elsaCustomRepository.Setup(x => x.GetCustomActivityNavigation(loadWorkflowActivityRequest.ActivityId,
                     loadWorkflowActivityRequest.WorkflowInstanceId, CancellationToken.None))
-                .ReturnsAsync(assessmentQuestion);
+                .ReturnsAsync(customActivityNavigation);
 
-            elsaCustomRepository.Setup(x => x.GetAssessmentQuestions(loadWorkflowActivityRequest.ActivityId,
+            elsaCustomRepository.Setup(x => x.GetQuestionScreenAnswers(loadWorkflowActivityRequest.ActivityId,
             loadWorkflowActivityRequest.WorkflowInstanceId, CancellationToken.None))
             .ReturnsAsync(assessmentQuestions);
 

@@ -34,10 +34,10 @@ export class QuestionProvider {
   }
 
   displayOptions() {
-    return this.questionList.map(this.renderOptions);
+    return this.questionList.map(this.renderOption);
   }
 
-  private renderOptions(data: QuestionData) {
+  private renderOption(data: QuestionData) {
     return (<option value={data.nameConstant} data-typeName={data.displayName}>{data.displayName}</option>);
   }
 }

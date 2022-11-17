@@ -133,11 +133,12 @@ export class ElsaQuestionScreen {
     const field = `question-${index}`;
     return (
       <div id={`${field}-id`} class="accordion elsa-mb-4 elsa-rounded" onClick={this.onAccordionQuestionClick}>
-        <button type="button">{question.title} </button>
+        <button type="button elsa-mt-1 elsa-text-m elsa-text-gray-900">{question.title} </button>
         <button type="button" onClick={e => this.onDeleteQuestionClick(e, question)}
           class="elsa-h-5 elsa-w-5 elsa-mx-auto elsa-outline-none focus:elsa-outline-none trashcan-icon" style={{ float: "right" }}>
           <TrashCanIcon options={this.iconProvider.getOptions()}></TrashCanIcon>
         </button>
+        <p class="elsa-mt-1 elsa-text-sm elsa-text-gray-900">{question.questionTypeName}</p>
         {this.renderQuestionComponent(question)}
       </div>
     );

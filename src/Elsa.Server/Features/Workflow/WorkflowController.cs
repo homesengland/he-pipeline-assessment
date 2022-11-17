@@ -1,5 +1,5 @@
 ﻿using Elsa.Server.Features.Workflow.LoadWorkflowActivity;
-using Elsa.Server.Features.Workflow.MultiSaveAndContinue;
+using Elsa.Server.Features.Workflow.QuestionScreenSaveAndContinue;
 using Elsa.Server.Features.Workflow.StartWorkflow;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
@@ -66,31 +66,8 @@ namespace Elsa.Server.Features.Workflow
             }
         }
 
-        //[HttpPost("SaveAndContinue")]
-        //public async Task<IActionResult> SaveAndContinue([FromBody] SaveAndContinueCommand model)
-        //{
-        //    try
-        //    {
-        //        var result = await this._mediator.Send(model);
-
-        //        if (result.IsSuccess)
-        //        {
-        //            return Ok(result);
-        //        }
-        //        else
-        //        {
-        //            return BadRequest(string.Join(',', result.ErrorMessages));
-        //        }
-        //    }
-        //    catch (Exception e)
-        //    {
-        //        return StatusCode(StatusCodes.Status500InternalServerError, e);
-        //    }
-
-        //}
-
-        [HttpPost("MultiSaveAndContinue")]
-        public async Task<IActionResult> MultiSaveAndContinue([FromBody] MultiSaveAndContinueCommand model)
+        [HttpPost("QuestionScreenSaveAndContinue")]
+        public async Task<IActionResult> MultiSaveAndContinue([FromBody] QuestionScreenSaveAndContinueCommand model)
         {
             try
             {
