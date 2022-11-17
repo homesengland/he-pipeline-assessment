@@ -39,12 +39,12 @@ namespace Elsa.Server.Features.Workflow.LoadWorkflowActivity
             };
             try
             {
-                var dbAssessmentQuestion =
-                    await _elsaCustomRepository.GetAssessmentQuestion(activityRequest.ActivityId, activityRequest.WorkflowInstanceId, cancellationToken);
+                var dbActivity =
+                    await _elsaCustomRepository.GetCustomActivityNavigation(activityRequest.ActivityId, activityRequest.WorkflowInstanceId, cancellationToken);
 
-                if (dbAssessmentQuestion != null)
+                if (dbActivity != null)
                 {
-                    IEnumerable<CollectedWorkflow> workflows = await _questionInvoker.FindWorkflowsAsync(activityRequest.ActivityId, dbAssessmentQuestion.ActivityType, activityRequest.WorkflowInstanceId, cancellationToken);
+                    IEnumerable<CollectedWorkflow> workflows = await _questionInvoker.FindWorkflowsAsync(activityRequest.ActivityId, dbActivity.ActivityType, activityRequest.WorkflowInstanceId, cancellationToken);
 
                     var collectedWorkflow = workflows.FirstOrDefault();
                     if (collectedWorkflow != null)
@@ -68,15 +68,15 @@ namespace Elsa.Server.Features.Workflow.LoadWorkflowActivity
 
                                 if (activityDataDictionary != null)
                                 {
-                                    result.Data.ActivityType = dbAssessmentQuestion.ActivityType;
-                                    result.Data.PreviousActivityId = dbAssessmentQuestion.PreviousActivityId;
+                                    result.Data.ActivityType = dbActivity.ActivityType;
+                                    result.Data.PreviousActivityId = dbActivity.PreviousActivityId;
 
-                                    if (dbAssessmentQuestion.ActivityType == ActivityTypeConstants.QuestionScreen)
+                                    if (dbActivity.ActivityType == ActivityTypeConstants.QuestionScreen)
                                     {
                                         var title = (string?)activityDataDictionary.FirstOrDefault(x => x.Key == "PageTitle").Value;
                                         result.Data.PageTitle = title;
 
-                                        var dbQuestions = await _elsaCustomRepository.GetAssessmentQuestions(
+                                        var dbQuestions = await _elsaCustomRepository.GetQuestionScreenQuestions(
                                             activityRequest.ActivityId, activityRequest.WorkflowInstanceId,
                                             cancellationToken);
 
@@ -87,7 +87,7 @@ namespace Elsa.Server.Features.Workflow.LoadWorkflowActivity
                                         if (elsaActivityAssessmentQuestions != null)
                                         {
                                             result.Data.MultiQuestionActivityData = new List<QuestionActivityData>();
-                                            result.Data.ActivityType = dbAssessmentQuestion.ActivityType;
+                                            result.Data.ActivityType = dbActivity.ActivityType;
 
                                             foreach (var item in elsaActivityAssessmentQuestions.Questions)
                                             {
@@ -143,11 +143,10 @@ namespace Elsa.Server.Features.Workflow.LoadWorkflowActivity
             return await Task.FromResult(result);
         }
 
-        private static QuestionActivityData CreateQuestionActivityData(AssessmentQuestion dbQuestion, Question item)
+        private static QuestionActivityData CreateQuestionActivityData(QuestionScreenQuestion dbQuestion, Question item)
         {
             //assign the values
             var questionActivityData = new QuestionActivityData();
-            //questionActivityData.ActivityType = dbQuestion.ActivityType;
             questionActivityData.Answer = dbQuestion.Answer;
             questionActivityData.Comments = dbQuestion.Comments;
             questionActivityData.QuestionId = dbQuestion.QuestionId;

@@ -32,7 +32,7 @@ namespace Elsa.CustomActivities.Activities.QuestionScreen
         )]
         public SwitchMode Mode { get; set; } = SwitchMode.MatchFirst;
 
-        [ActivityOutput] public List<AssessmentQuestion>? Output { get; set; }
+        [ActivityOutput] public List<QuestionScreenQuestion>? Output { get; set; }
 
         protected override IActivityExecutionResult OnExecute(ActivityExecutionContext context)
         {
@@ -41,7 +41,7 @@ namespace Elsa.CustomActivities.Activities.QuestionScreen
 
         protected override async ValueTask<IActivityExecutionResult> OnResumeAsync(ActivityExecutionContext context)
         {
-            var response = context.GetInput<List<AssessmentQuestion>>();
+            var response = context.GetInput<List<QuestionScreenQuestion>>();
             Output = response;
             var matches = Cases.Where(x => x.Condition).Select(x => x.Name).ToList();
             var hasAnyMatches = matches.Any();

@@ -13,7 +13,7 @@ namespace Elsa.Server.Tests.Features.Workflow.MultiSaveAndContinue
     {
         [Theory]
         [AutoMoqData]
-        public void MultiSaveAndContinueCommandToNextAssessmentQuestion_ShouldReturnAssessmentQuestion(
+        public void MultiSaveAndContinueCommandToCustomActivityNavigation_ShouldReturnAssessmentQuestion(
             [Frozen] Mock<IDateTimeProvider> mockDateTimeProvider,
             MultiSaveAndContinueCommand saveAndContinueCommand,
             string nextActivityId,
@@ -26,15 +26,12 @@ namespace Elsa.Server.Tests.Features.Workflow.MultiSaveAndContinue
             mockDateTimeProvider.Setup(x => x.UtcNow()).Returns(currentTimeUtc);
 
             //Act
-            var result = sut.SaveAndContinueCommandToNextAssessmentQuestion(saveAndContinueCommand, nextActivityId, nextActivityType);
+            var result = sut.saveAndContinueCommandToNextCustomActivityNavigation(saveAndContinueCommand, nextActivityId, nextActivityType);
 
             //Assert
-            Assert.IsType<AssessmentQuestion>(result);
+            Assert.IsType<CustomActivityNavigation>(result);
             Assert.Equal(nextActivityId, result!.ActivityId);
             Assert.Equal(nextActivityType, result!.ActivityType);
-            Assert.False(result.FinishWorkflow);
-            Assert.False(result.NavigateBack);
-            Assert.Null(result.Answer);
             Assert.Equal(saveAndContinueCommand.WorkflowInstanceId, result.WorkflowInstanceId);
             Assert.Equal(saveAndContinueCommand.ActivityId, result.PreviousActivityId);
             Assert.Equal(currentTimeUtc, result.CreatedDateTime);
@@ -42,7 +39,7 @@ namespace Elsa.Server.Tests.Features.Workflow.MultiSaveAndContinue
 
         [Theory]
         [AutoMoqData]
-        public void MultiSaveAndContinueCommandToNextAssessmentQuestion_WithQuestionParameter_ShouldReturnAssessmentQuestion(
+        public void MultiSaveAndContinueCommandToQuestionScreenQuestion_WithQuestionParameter_ShouldReturnAssessmentQuestion(
             [Frozen] Mock<IDateTimeProvider> mockDateTimeProvider,
             MultiSaveAndContinueCommand saveAndContinueCommand,
             string nextActivityId,
@@ -56,18 +53,16 @@ namespace Elsa.Server.Tests.Features.Workflow.MultiSaveAndContinue
             mockDateTimeProvider.Setup(x => x.UtcNow()).Returns(currentTimeUtc);
 
             //Act
-            var result = sut.SaveAndContinueCommandToNextAssessmentQuestion(saveAndContinueCommand, nextActivityId, nextActivityType, question);
+            var result = sut.SaveAndContinueCommandToQuestionScreenQuestion(saveAndContinueCommand, nextActivityId, nextActivityType, question);
 
             //Assert
-            Assert.IsType<AssessmentQuestion>(result);
+            Assert.IsType<QuestionScreenQuestion>(result);
             Assert.Equal(nextActivityId, result!.ActivityId);
-            Assert.Equal(nextActivityType, result!.ActivityType);
-            Assert.False(result.FinishWorkflow);
-            Assert.False(result.NavigateBack);
-            Assert.Null(result.Answer);
             Assert.Equal(saveAndContinueCommand.WorkflowInstanceId, result.WorkflowInstanceId);
-            Assert.Equal(saveAndContinueCommand.ActivityId, result.PreviousActivityId);
             Assert.Equal(currentTimeUtc, result.CreatedDateTime);
+            Assert.Equal(question.Id, result.QuestionId);
+            Assert.Equal(question.QuestionType, result.QuestionType);
+
         }
     }
 }

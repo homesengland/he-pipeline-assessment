@@ -29,10 +29,10 @@ namespace Elsa.Server.Tests.Features.Workflow.MultiSaveAndContinue
                 [Frozen] Mock<IWorkflowRegistry> workflowRegistry,
                 WorkflowBlueprint workflowBlueprint,
                 ActivityBlueprint activityBlueprint,
-                List<AssessmentQuestion> currentAssessmentQuestions,
+                List<QuestionScreenQuestion> currentAssessmentQuestions,
                 List<CollectedWorkflow> collectedWorkflows,
                 WorkflowInstance workflowInstance,
-                AssessmentQuestion nextAssessmentQuestion,
+                CustomActivityNavigation nextAssessmentActivity,
                 MultiSaveAndContinueCommand saveAndContinueCommand,
                 MultiSaveAndContinueCommandHandler sut)
         {
@@ -57,7 +57,7 @@ namespace Elsa.Server.Tests.Features.Workflow.MultiSaveAndContinue
             activityBlueprint.Id = workflowInstance.Output.ActivityId;
             workflowBlueprint.Activities.Add(activityBlueprint);
 
-            elsaCustomRepository.Setup(x => x.GetAssessmentQuestions(saveAndContinueCommand.ActivityId,
+            elsaCustomRepository.Setup(x => x.GetQuestionScreenQuestions(saveAndContinueCommand.ActivityId,
                     saveAndContinueCommand.WorkflowInstanceId, CancellationToken.None))
                 .ReturnsAsync(currentAssessmentQuestions);
 
@@ -75,9 +75,9 @@ namespace Elsa.Server.Tests.Features.Workflow.MultiSaveAndContinue
                     It.Is<WorkflowInstanceIdSpecification>(y => y.Id == collectedWorkflows.First().WorkflowInstanceId),
                     CancellationToken.None)).ReturnsAsync(workflowInstance);
 
-            elsaCustomRepository.Setup(x => x.GetAssessmentQuestion(workflowInstance.Output.ActivityId,
+            elsaCustomRepository.Setup(x => x.GetCustomActivityNavigation(workflowInstance.Output.ActivityId,
                     saveAndContinueCommand.WorkflowInstanceId, CancellationToken.None))
-                .ReturnsAsync(nextAssessmentQuestion);
+                .ReturnsAsync(nextAssessmentActivity);
 
             //Act
             var result = await sut.Handle(saveAndContinueCommand, CancellationToken.None);
@@ -86,7 +86,7 @@ namespace Elsa.Server.Tests.Features.Workflow.MultiSaveAndContinue
             elsaCustomRepository.Verify(
                 x => x.SaveChanges(CancellationToken.None), Times.Once);
             elsaCustomRepository.Verify(
-                x => x.CreateAssessmentQuestionAsync(nextAssessmentQuestion, CancellationToken.None), Times.Never);
+                x => x.CreateCustomActivityNavigationAsync(nextAssessmentActivity, CancellationToken.None), Times.Never);
 
             Assert.Equal(saveAndContinueCommand.Answers![0].AnswerText, currentAssessmentQuestions[0].Answer);
             Assert.Equal(saveAndContinueCommand.Answers![1].AnswerText, currentAssessmentQuestions[1].Answer);
@@ -109,10 +109,10 @@ namespace Elsa.Server.Tests.Features.Workflow.MultiSaveAndContinue
                [Frozen] Mock<IWorkflowRegistry> workflowRegistry,
                WorkflowBlueprint workflowBlueprint,
                ActivityBlueprint activityBlueprint,
-               List<AssessmentQuestion> currentAssessmentQuestions,
+               List<QuestionScreenQuestion> currentAssessmentQuestions,
                List<CollectedWorkflow> collectedWorkflows,
                WorkflowInstance workflowInstance,
-               AssessmentQuestion nextAssessmentQuestion,
+               CustomActivityNavigation nextAssessmentActivity,
                MultiSaveAndContinueCommand saveAndContinueCommand,
                string nextActivityType,
                MultiSaveAndContinueCommandHandler sut
@@ -134,7 +134,7 @@ namespace Elsa.Server.Tests.Features.Workflow.MultiSaveAndContinue
             activityBlueprint.Type = nextActivityType;
             workflowBlueprint.Activities.Add(activityBlueprint);
 
-            elsaCustomRepository.Setup(x => x.GetAssessmentQuestions(saveAndContinueCommand.ActivityId,
+            elsaCustomRepository.Setup(x => x.GetQuestionScreenQuestions(saveAndContinueCommand.ActivityId,
                     saveAndContinueCommand.WorkflowInstanceId, CancellationToken.None))
                 .ReturnsAsync(currentAssessmentQuestions);
 
@@ -152,13 +152,13 @@ namespace Elsa.Server.Tests.Features.Workflow.MultiSaveAndContinue
                     It.Is<WorkflowInstanceIdSpecification>(y => y.Id == collectedWorkflows.First().WorkflowInstanceId),
                     CancellationToken.None)).ReturnsAsync(workflowInstance);
 
-            elsaCustomRepository.Setup(x => x.GetAssessmentQuestion(workflowInstance.Output.ActivityId,
+            elsaCustomRepository.Setup(x => x.GetCustomActivityNavigation(workflowInstance.Output.ActivityId,
                     saveAndContinueCommand.WorkflowInstanceId, CancellationToken.None))
-                .ReturnsAsync((AssessmentQuestion?)null);
+                .ReturnsAsync((CustomActivityNavigation?)null);
 
             saveAndContinueMapper
-                .Setup(x => x.SaveAndContinueCommandToNextAssessmentQuestion(saveAndContinueCommand,
-                    workflowInstance.Output!.ActivityId, nextActivityType)).Returns(nextAssessmentQuestion);
+                .Setup(x => x.saveAndContinueCommandToNextCustomActivityNavigation(saveAndContinueCommand,
+                    workflowInstance.Output!.ActivityId, nextActivityType)).Returns(nextAssessmentActivity);
 
             //Act
             var result = await sut.Handle(saveAndContinueCommand, CancellationToken.None);
@@ -167,7 +167,7 @@ namespace Elsa.Server.Tests.Features.Workflow.MultiSaveAndContinue
             elsaCustomRepository.Verify(
                 x => x.SaveChanges(CancellationToken.None), Times.Once);
             elsaCustomRepository.Verify(
-                x => x.CreateAssessmentQuestionAsync(nextAssessmentQuestion, CancellationToken.None), Times.Once);
+                x => x.CreateCustomActivityNavigationAsync(nextAssessmentActivity, CancellationToken.None), Times.Once);
             Assert.Equal(opResult.Data.NextActivityId, result.Data!.NextActivityId);
             Assert.Equal(opResult.Data.WorkflowInstanceId, result.Data.WorkflowInstanceId);
             Assert.Empty(result.ErrorMessages);
@@ -180,7 +180,7 @@ namespace Elsa.Server.Tests.Features.Workflow.MultiSaveAndContinue
             [Frozen] Mock<IQuestionInvoker> questionInvoker,
             [Frozen] Mock<IWorkflowInstanceStore> workflowInstanceStore,
             [Frozen] Mock<IElsaCustomRepository> elsaCustomRepository,
-            List<AssessmentQuestion> currentAssessmentQuestions,
+            List<QuestionScreenQuestion> currentAssessmentQuestions,
             List<CollectedWorkflow> collectedWorkflows,
             WorkflowInstance workflowInstance,
             MultiSaveAndContinueCommand saveAndContinueCommand,
@@ -188,7 +188,7 @@ namespace Elsa.Server.Tests.Features.Workflow.MultiSaveAndContinue
         {
             //Arrange
             workflowInstance.Output = null;
-            elsaCustomRepository.Setup(x => x.GetAssessmentQuestions(saveAndContinueCommand.ActivityId,
+            elsaCustomRepository.Setup(x => x.GetQuestionScreenQuestions(saveAndContinueCommand.ActivityId,
                     saveAndContinueCommand.WorkflowInstanceId, CancellationToken.None))
                 .ReturnsAsync(currentAssessmentQuestions);
 
@@ -209,7 +209,7 @@ namespace Elsa.Server.Tests.Features.Workflow.MultiSaveAndContinue
             elsaCustomRepository.Verify(
                 x => x.SaveChanges(CancellationToken.None), Times.Once);
             elsaCustomRepository.Verify(
-                x => x.CreateAssessmentQuestionAsync(It.IsAny<AssessmentQuestion>(), CancellationToken.None),
+                x => x.CreateCustomActivityNavigationAsync(It.IsAny<CustomActivityNavigation>(), CancellationToken.None),
                 Times.Never);
             Assert.Null(result.Data);
             Assert.Equal(
@@ -223,13 +223,13 @@ namespace Elsa.Server.Tests.Features.Workflow.MultiSaveAndContinue
             [Frozen] Mock<IQuestionInvoker> questionInvoker,
             [Frozen] Mock<IWorkflowInstanceStore> workflowInstanceStore,
             [Frozen] Mock<IElsaCustomRepository> elsaCustomRepository,
-            List<AssessmentQuestion> currentAssessmentQuestions,
+            List<QuestionScreenQuestion> currentAssessmentQuestions,
             List<CollectedWorkflow> collectedWorkflows,
             MultiSaveAndContinueCommand saveAndContinueCommand,
             MultiSaveAndContinueCommandHandler sut)
         {
             //Arrange
-            elsaCustomRepository.Setup(x => x.GetAssessmentQuestions(saveAndContinueCommand.ActivityId,
+            elsaCustomRepository.Setup(x => x.GetQuestionScreenQuestions(saveAndContinueCommand.ActivityId,
                     saveAndContinueCommand.WorkflowInstanceId, CancellationToken.None))
                 .ReturnsAsync(currentAssessmentQuestions);
 
@@ -250,7 +250,7 @@ namespace Elsa.Server.Tests.Features.Workflow.MultiSaveAndContinue
             elsaCustomRepository.Verify(
                 x => x.SaveChanges(CancellationToken.None), Times.Once);
             elsaCustomRepository.Verify(
-                x => x.CreateAssessmentQuestionAsync(It.IsAny<AssessmentQuestion>(), CancellationToken.None),
+                x => x.CreateCustomActivityNavigationAsync(It.IsAny<CustomActivityNavigation>(), CancellationToken.None),
                 Times.Never);
             Assert.Null(result.Data);
             Assert.Equal(
@@ -266,9 +266,9 @@ namespace Elsa.Server.Tests.Features.Workflow.MultiSaveAndContinue
             MultiSaveAndContinueCommandHandler sut)
         {
             //Arrange
-            elsaCustomRepository.Setup(x => x.GetAssessmentQuestions(saveAndContinueCommand.ActivityId,
+            elsaCustomRepository.Setup(x => x.GetQuestionScreenQuestions(saveAndContinueCommand.ActivityId,
                     saveAndContinueCommand.WorkflowInstanceId, CancellationToken.None))
-                .ReturnsAsync(new List<AssessmentQuestion>());
+                .ReturnsAsync(new List<QuestionScreenQuestion>());
 
             //Act
             var result = await sut.Handle(saveAndContinueCommand, CancellationToken.None);
@@ -277,7 +277,7 @@ namespace Elsa.Server.Tests.Features.Workflow.MultiSaveAndContinue
             elsaCustomRepository.Verify(
                 x => x.SaveChanges(CancellationToken.None), Times.Never);
             elsaCustomRepository.Verify(
-                x => x.CreateAssessmentQuestionAsync(It.IsAny<AssessmentQuestion>(), CancellationToken.None),
+                x => x.CreateCustomActivityNavigationAsync(It.IsAny<CustomActivityNavigation>(), CancellationToken.None),
                 Times.Never);
             Assert.Null(result.Data);
             Assert.Equal(
@@ -294,7 +294,7 @@ namespace Elsa.Server.Tests.Features.Workflow.MultiSaveAndContinue
             MultiSaveAndContinueCommandHandler sut)
         {
             //Arrange
-            elsaCustomRepository.Setup(x => x.GetAssessmentQuestions(saveAndContinueCommand.ActivityId,
+            elsaCustomRepository.Setup(x => x.GetCustomActivityNavigation(saveAndContinueCommand.ActivityId,
                     saveAndContinueCommand.WorkflowInstanceId, CancellationToken.None))
                 .Throws(exception);
 
@@ -305,7 +305,7 @@ namespace Elsa.Server.Tests.Features.Workflow.MultiSaveAndContinue
             elsaCustomRepository.Verify(
                 x => x.SaveChanges(CancellationToken.None), Times.Never);
             elsaCustomRepository.Verify(
-                x => x.CreateAssessmentQuestionAsync(It.IsAny<AssessmentQuestion>(), CancellationToken.None),
+                x => x.CreateCustomActivityNavigationAsync(It.IsAny<CustomActivityNavigation>(), CancellationToken.None),
                 Times.Never);
             Assert.Null(result.Data);
             Assert.Equal(exception.Message, result.ErrorMessages.Single());
@@ -319,14 +319,14 @@ namespace Elsa.Server.Tests.Features.Workflow.MultiSaveAndContinue
             [Frozen] Mock<IElsaCustomRepository> elsaCustomRepository,
             [Frozen] Mock<IWorkflowRegistry> workflowRegistry,
             WorkflowBlueprint workflowBlueprint,
-            List<AssessmentQuestion> currentAssessmentQuestions,
+            List<QuestionScreenQuestion> currentAssessmentQuestions,
             List<CollectedWorkflow> collectedWorkflows,
             WorkflowInstance workflowInstance,
             MultiSaveAndContinueCommand saveAndContinueCommand,
             MultiSaveAndContinueCommandHandler sut)
         {
             //Arrange
-            elsaCustomRepository.Setup(x => x.GetAssessmentQuestions(saveAndContinueCommand.ActivityId,
+            elsaCustomRepository.Setup(x => x.GetQuestionScreenQuestions(saveAndContinueCommand.ActivityId,
                     saveAndContinueCommand.WorkflowInstanceId, CancellationToken.None))
                 .ReturnsAsync(currentAssessmentQuestions);
 
@@ -363,10 +363,10 @@ namespace Elsa.Server.Tests.Features.Workflow.MultiSaveAndContinue
               [Frozen] Mock<IWorkflowRegistry> workflowRegistry,
               WorkflowBlueprint workflowBlueprint,
               ActivityBlueprint activityBlueprint,
-              List<AssessmentQuestion> currentAssessmentQuestions,
+              List<QuestionScreenQuestion> currentAssessmentQuestions,
               List<CollectedWorkflow> collectedWorkflows,
               WorkflowInstance workflowInstance,
-              AssessmentQuestion nextAssessmentQuestion,
+              CustomActivityNavigation nextCustomActivityNavigation,
               MultiSaveAndContinueCommand saveAndContinueCommand,
               AssessmentQuestions elsaAssessmentQuestions,
               string nextActivityType,
@@ -390,7 +390,7 @@ namespace Elsa.Server.Tests.Features.Workflow.MultiSaveAndContinue
             activityBlueprint.Type = nextActivityType;
             workflowBlueprint.Activities.Add(activityBlueprint);
 
-            elsaCustomRepository.Setup(x => x.GetAssessmentQuestions(saveAndContinueCommand.ActivityId,
+            elsaCustomRepository.Setup(x => x.GetQuestionScreenQuestions(saveAndContinueCommand.ActivityId,
                     saveAndContinueCommand.WorkflowInstanceId, CancellationToken.None))
                 .ReturnsAsync(currentAssessmentQuestions);
 
@@ -408,13 +408,13 @@ namespace Elsa.Server.Tests.Features.Workflow.MultiSaveAndContinue
                     It.Is<WorkflowInstanceIdSpecification>(y => y.Id == collectedWorkflows.First().WorkflowInstanceId),
                     CancellationToken.None)).ReturnsAsync(workflowInstance);
 
-            elsaCustomRepository.Setup(x => x.GetAssessmentQuestion(workflowInstance.Output.ActivityId,
+            elsaCustomRepository.Setup(x => x.GetCustomActivityNavigation(workflowInstance.Output.ActivityId,
                     saveAndContinueCommand.WorkflowInstanceId, CancellationToken.None))
-                .ReturnsAsync((AssessmentQuestion?)null);
+                .ReturnsAsync((CustomActivityNavigation?)null);
 
             saveAndContinueMapper
-                .Setup(x => x.SaveAndContinueCommandToNextAssessmentQuestion(saveAndContinueCommand,
-                    workflowInstance.Output!.ActivityId, nextActivityType)).Returns(nextAssessmentQuestion);
+                .Setup(x => x.saveAndContinueCommandToNextCustomActivityNavigation(saveAndContinueCommand,
+                    workflowInstance.Output!.ActivityId, nextActivityType)).Returns(nextCustomActivityNavigation);
 
             var assessmentQuestionsDictionary = new Dictionary<string, object?>();
             assessmentQuestionsDictionary.Add("Questions", elsaAssessmentQuestions);
@@ -428,7 +428,7 @@ namespace Elsa.Server.Tests.Features.Workflow.MultiSaveAndContinue
             Assert.Equal(opResult.Data.WorkflowInstanceId, result.Data.WorkflowInstanceId);
             Assert.Empty(result.ErrorMessages);
             Assert.Null(result.ValidationMessages);
-            elsaCustomRepository.Verify(x => x.CreateAssessmentQuestionAsync(It.IsAny<AssessmentQuestion>(), CancellationToken.None), Times.Once);
+            elsaCustomRepository.Verify(x => x.CreateCustomActivityNavigationAsync(It.IsAny<CustomActivityNavigation>(), CancellationToken.None), Times.Once);
         }
 
     }

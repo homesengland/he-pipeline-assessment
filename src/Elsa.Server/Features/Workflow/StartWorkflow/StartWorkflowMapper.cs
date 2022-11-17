@@ -7,8 +7,8 @@ namespace Elsa.Server.Features.Workflow.StartWorkflow
 {
     public interface IStartWorkflowMapper
     {
-        AssessmentQuestion? RunWorkflowResultToAssessmentQuestion(RunWorkflowResult result, string activityType);
-        AssessmentQuestion? RunWorkflowResultToAssessmentQuestion(RunWorkflowResult result, string activityType, Question question);
+        CustomActivityNavigation? RunWorkflowResultToCustomNavigationActivity(RunWorkflowResult result, string activityType);
+        QuestionScreenQuestion? RunWorkflowResultToQuestionScreenQuestion(RunWorkflowResult result, string activityType, Question question);
         StartWorkflowResponse? RunWorkflowResultToStartWorkflowResponse(RunWorkflowResult result);
     }
     public class StartWorkflowMapper : IStartWorkflowMapper
@@ -19,11 +19,11 @@ namespace Elsa.Server.Features.Workflow.StartWorkflow
             _dateTimeProvider = dateTimeProvider;
         }
 
-        public AssessmentQuestion? RunWorkflowResultToAssessmentQuestion(RunWorkflowResult result, string activityType)
+        public CustomActivityNavigation? RunWorkflowResultToCustomNavigationActivity(RunWorkflowResult result, string activityType)
         {
             if (result.WorkflowInstance != null && result.WorkflowInstance
                     .LastExecutedActivityId != null)
-                return new AssessmentQuestion
+                return new CustomActivityNavigation
                 {
                     ActivityId = result.WorkflowInstance.LastExecutedActivityId,
                     ActivityType = activityType,
@@ -34,17 +34,15 @@ namespace Elsa.Server.Features.Workflow.StartWorkflow
             return null;
         }
 
-        public AssessmentQuestion? RunWorkflowResultToAssessmentQuestion(RunWorkflowResult result, string activityType,
+        public QuestionScreenQuestion? RunWorkflowResultToQuestionScreenQuestion(RunWorkflowResult result, string activityType,
             Question question)
         {
             if (result.WorkflowInstance != null && result.WorkflowInstance
                     .LastExecutedActivityId != null)
-                return new AssessmentQuestion
+                return new QuestionScreenQuestion
                 {
                     ActivityId = result.WorkflowInstance.LastExecutedActivityId,
-                    ActivityType = activityType,
                     WorkflowInstanceId = result.WorkflowInstance.Id,
-                    PreviousActivityId = result.WorkflowInstance.LastExecutedActivityId,
                     CreatedDateTime = _dateTimeProvider.UtcNow(),
                     QuestionId = question.Id,
                     QuestionType = question.QuestionType

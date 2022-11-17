@@ -46,7 +46,7 @@ namespace Elsa.Server.Features.Workflow.MultiSaveAndContinue
             try
             {
                 var dbAssessmentQuestionList =
-                    await _elsaCustomRepository.GetAssessmentQuestions(command.ActivityId, command.WorkflowInstanceId,
+                    await _elsaCustomRepository.GetQuestionScreenQuestions(command.ActivityId, command.WorkflowInstanceId,
                         cancellationToken);
 
                 if (dbAssessmentQuestionList != null && dbAssessmentQuestionList.Any())
@@ -90,7 +90,7 @@ namespace Elsa.Server.Features.Workflow.MultiSaveAndContinue
                             if (nextActivity != null)
                             {
                                 var nextActivityRecord =
-                                    await _elsaCustomRepository.GetAssessmentQuestion(nextActivityId,
+                                    await _elsaCustomRepository.GetCustomActivityNavigation(nextActivityId,
                                         command.WorkflowInstanceId, cancellationToken);
 
                                 if (nextActivityRecord == null)
@@ -141,8 +141,8 @@ namespace Elsa.Server.Features.Workflow.MultiSaveAndContinue
 
         private async Task CreateNextActivityRecord(MultiSaveAndContinueCommand command, string nextActivityId, string nextActivityType, WorkflowInstance workflowInstance)
         {
-            var assessmentQuestion = _saveAndContinueMapper.SaveAndContinueCommandToNextAssessmentQuestion(command, nextActivityId, nextActivityType);
-            await _elsaCustomRepository.CreateAssessmentQuestionAsync(assessmentQuestion);
+            var assessmentQuestion = _saveAndContinueMapper.saveAndContinueCommandToNextCustomActivityNavigation(command, nextActivityId, nextActivityType);
+            await _elsaCustomRepository.CreateCustomActivityNavigationAsync(assessmentQuestion);
 
             if (nextActivityType == ActivityTypeConstants.QuestionScreen)
             {
@@ -159,13 +159,13 @@ namespace Elsa.Server.Features.Workflow.MultiSaveAndContinue
                         var questionList = (List<Question>)dictionaryQuestions.Questions;
                         if (questionList!.Any())
                         {
-                            var assessments = new List<AssessmentQuestion>();
+                            var assessments = new List<QuestionScreenQuestion>();
 
                             foreach (var item in questionList!)
                             {
-                                assessments.Add(_saveAndContinueMapper.SaveAndContinueCommandToNextAssessmentQuestion(command, nextActivityId, nextActivityType, item));
+                                assessments.Add(_saveAndContinueMapper.SaveAndContinueCommandToQuestionScreenQuestion(command, nextActivityId, nextActivityType, item));
                             }
-                            await _elsaCustomRepository.CreateAssessmentQuestionAsync(assessments, CancellationToken.None);
+                            await _elsaCustomRepository.CreateQuestionScreenQuestionsAsync(assessments, CancellationToken.None);
                         }
                     }
                 }

@@ -11,35 +11,35 @@ namespace Elsa.CustomInfrastructure.Data.Repository
             _dbContext = dbContext;
         }
 
-        public async Task<AssessmentQuestion?> GetAssessmentQuestion(string activityId, string workflowInstanceId, CancellationToken cancellationToken = default)
+        public async Task<CustomActivityNavigation?> GetCustomActivityNavigation(string activityId, string workflowInstanceId, CancellationToken cancellationToken = default)
         {
-            return await _dbContext.Set<AssessmentQuestion>().FirstOrDefaultAsync(x => x.ActivityId == activityId && x.WorkflowInstanceId == workflowInstanceId, cancellationToken);
+            return await _dbContext.Set<CustomActivityNavigation>().FirstOrDefaultAsync(x => x.ActivityId == activityId && x.WorkflowInstanceId == workflowInstanceId, cancellationToken);
         }
 
-        public async ValueTask<int?> CreateAssessmentQuestionAsync(AssessmentQuestion model, CancellationToken cancellationToken = default)
+        public async ValueTask<int?> CreateCustomActivityNavigationAsync(CustomActivityNavigation model, CancellationToken cancellationToken = default)
         {
             await _dbContext.AddAsync(model, cancellationToken);
             await _dbContext.SaveChangesAsync(cancellationToken);
             return model.Id;
         }
 
-        public async Task<AssessmentQuestion?> UpdateAssessmentQuestion(AssessmentQuestion model, CancellationToken cancellationToken = default)
+        public async Task<QuestionScreenQuestion?> UpdateQuestionScreenQuestion(QuestionScreenQuestion model, CancellationToken cancellationToken = default)
         {
             _dbContext.Update(model);
             await _dbContext.SaveChangesAsync(cancellationToken);
             return model;
         }
 
-        public async Task CreateAssessmentQuestionAsync(List<AssessmentQuestion> assessments, CancellationToken cancellationToken)
+        public async Task CreateQuestionScreenQuestionsAsync(List<QuestionScreenQuestion> assessments, CancellationToken cancellationToken)
         {
             await _dbContext.AddRangeAsync(assessments, cancellationToken);
             await _dbContext.SaveChangesAsync(cancellationToken);
         }
 
-        public async Task<List<AssessmentQuestion>> GetAssessmentQuestions(string activityId, string workflowInstanceId,
+        public async Task<List<QuestionScreenQuestion>> GetQuestionScreenQuestions(string activityId, string workflowInstanceId,
             CancellationToken cancellationToken)
         {
-            var list = await _dbContext.Set<AssessmentQuestion>().Where(x => x.ActivityId == activityId && x.WorkflowInstanceId == workflowInstanceId && x.QuestionId != null).ToListAsync();
+            var list = await _dbContext.Set<QuestionScreenQuestion>().Where(x => x.ActivityId == activityId && x.WorkflowInstanceId == workflowInstanceId && x.QuestionId != null).ToListAsync();
             return list;
         }
 
@@ -47,5 +47,7 @@ namespace Elsa.CustomInfrastructure.Data.Repository
         {
             await _dbContext.SaveChangesAsync(cancellationToken);
         }
+
+
     }
 }

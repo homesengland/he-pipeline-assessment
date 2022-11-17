@@ -6,8 +6,8 @@ namespace Elsa.Server.Features.Workflow.MultiSaveAndContinue
 {
     public interface IMultiSaveAndContinueMapper
     {
-        AssessmentQuestion SaveAndContinueCommandToNextAssessmentQuestion(MultiSaveAndContinueCommand command, string nextActivityId, string nextActivityType);
-        AssessmentQuestion SaveAndContinueCommandToNextAssessmentQuestion(MultiSaveAndContinueCommand command, string nextActivityId, string type, Question item);
+        CustomActivityNavigation saveAndContinueCommandToNextCustomActivityNavigation(MultiSaveAndContinueCommand command, string nextActivityId, string nextActivityType);
+        QuestionScreenQuestion SaveAndContinueCommandToQuestionScreenQuestion(MultiSaveAndContinueCommand command, string nextActivityId, string type, Question item);
     }
 
     public class MultiSaveAndContinueMapper : IMultiSaveAndContinueMapper
@@ -19,34 +19,26 @@ namespace Elsa.Server.Features.Workflow.MultiSaveAndContinue
             _dateTimeProvider = dateTimeProvider;
         }
 
-        public AssessmentQuestion SaveAndContinueCommandToNextAssessmentQuestion(MultiSaveAndContinueCommand command, string nextActivityId, string nextActivityType)
+        public CustomActivityNavigation saveAndContinueCommandToNextCustomActivityNavigation(MultiSaveAndContinueCommand command, string nextActivityId, string nextActivityType)
         {
-            return new AssessmentQuestion
+            return new CustomActivityNavigation
             {
                 ActivityId = nextActivityId,
                 ActivityType = nextActivityType,
-                FinishWorkflow = false,
-                NavigateBack = false,
-                Answer = null,
-                Comments = null,
                 WorkflowInstanceId = command.WorkflowInstanceId,
                 PreviousActivityId = command.ActivityId,
                 CreatedDateTime = _dateTimeProvider.UtcNow()
             };
         }
 
-        public AssessmentQuestion SaveAndContinueCommandToNextAssessmentQuestion(MultiSaveAndContinueCommand command, string nextActivityId, string nextActivityType, Question question)
+        public QuestionScreenQuestion SaveAndContinueCommandToQuestionScreenQuestion(MultiSaveAndContinueCommand command, string nextActivityId, string nextActivityType, Question question)
         {
-            return new AssessmentQuestion
+            return new QuestionScreenQuestion
             {
                 ActivityId = nextActivityId,
-                ActivityType = nextActivityType,
-                FinishWorkflow = false,
-                NavigateBack = false,
                 Answer = null,
                 Comments = null,
                 WorkflowInstanceId = command.WorkflowInstanceId,
-                PreviousActivityId = command.ActivityId,
                 CreatedDateTime = _dateTimeProvider.UtcNow(),
                 QuestionId = question.Id,
                 QuestionType = question.QuestionType

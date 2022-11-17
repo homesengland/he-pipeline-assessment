@@ -4,16 +4,16 @@ namespace Elsa.CustomInfrastructure.Data.Repository
 {
     public interface IElsaCustomRepository
     {
-        Task<AssessmentQuestion?> GetAssessmentQuestion(string activityId,
+        Task<CustomActivityNavigation?> GetCustomActivityNavigation(string activityId,
             string workflowInstanceId,
             CancellationToken cancellationToken = default);
 
-        ValueTask<int?> CreateAssessmentQuestionAsync(AssessmentQuestion model,
+        ValueTask<int?> CreateCustomActivityNavigationAsync(CustomActivityNavigation model,
             CancellationToken cancellationToken = default);
 
-        Task<AssessmentQuestion?> UpdateAssessmentQuestion(AssessmentQuestion model, CancellationToken cancellationToken = default);
-        Task CreateAssessmentQuestionAsync(List<AssessmentQuestion> assessments, CancellationToken cancellationToken);
-        Task<List<AssessmentQuestion>> GetAssessmentQuestions(string commandActivityId, string commandWorkflowInstanceId, CancellationToken cancellationToken);
+        Task<QuestionScreenQuestion?> UpdateQuestionScreenQuestion(QuestionScreenQuestion model, CancellationToken cancellationToken = default);
+        Task CreateQuestionScreenQuestionsAsync(List<QuestionScreenQuestion> assessments, CancellationToken cancellationToken);
+        Task<List<QuestionScreenQuestion>> GetQuestionScreenQuestions(string commandActivityId, string commandWorkflowInstanceId, CancellationToken cancellationToken);
         Task SaveChanges(CancellationToken cancellationToken);
     }
 }
