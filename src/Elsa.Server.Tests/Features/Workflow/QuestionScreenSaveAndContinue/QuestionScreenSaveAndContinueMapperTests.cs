@@ -1,7 +1,7 @@
 ﻿using AutoFixture.Xunit2;
 using Elsa.CustomActivities.Activities.QuestionScreen;
 using Elsa.CustomModels;
-using Elsa.Server.Features.Workflow.MultiSaveAndContinue;
+using Elsa.Server.Features.Workflow.QuestionScreenSaveAndContinue;
 using Elsa.Server.Providers;
 using He.PipelineAssessment.Common.Tests;
 using Moq;
@@ -13,12 +13,12 @@ namespace Elsa.Server.Tests.Features.Workflow.MultiSaveAndContinue
     {
         [Theory]
         [AutoMoqData]
-        public void MultiSaveAndContinueCommandToCustomActivityNavigation_ShouldReturnAssessmentQuestion(
+        public void QuestionScreenSaveAndContinueCommandToCustomActivityNavigation_ShouldReturnAssessmentQuestion(
             [Frozen] Mock<IDateTimeProvider> mockDateTimeProvider,
-            MultiSaveAndContinueCommand saveAndContinueCommand,
+            QuestionScreenSaveAndContinueCommand saveAndContinueCommand,
             string nextActivityId,
             string nextActivityType,
-            MultiSaveAndContinueMapper sut
+            QuestionScreenSaveAndContinueMapper sut
         )
         {
             //Arrange
@@ -39,13 +39,13 @@ namespace Elsa.Server.Tests.Features.Workflow.MultiSaveAndContinue
 
         [Theory]
         [AutoMoqData]
-        public void MultiSaveAndContinueCommandToQuestionScreenQuestion_WithQuestionParameter_ShouldReturnAssessmentQuestion(
+        public void QuestionScreenSaveAndContinueCommandToQuestionScreenQuestion_WithQuestionParameter_ShouldReturnAssessmentQuestion(
             [Frozen] Mock<IDateTimeProvider> mockDateTimeProvider,
-            MultiSaveAndContinueCommand saveAndContinueCommand,
+            QuestionScreenSaveAndContinueCommand saveAndContinueCommand,
             string nextActivityId,
             string nextActivityType,
             Question question,
-            MultiSaveAndContinueMapper sut
+            QuestionScreenSaveAndContinueMapper sut
         )
         {
             //Arrange
@@ -53,10 +53,10 @@ namespace Elsa.Server.Tests.Features.Workflow.MultiSaveAndContinue
             mockDateTimeProvider.Setup(x => x.UtcNow()).Returns(currentTimeUtc);
 
             //Act
-            var result = sut.SaveAndContinueCommandToQuestionScreenQuestion(saveAndContinueCommand, nextActivityId, nextActivityType, question);
+            var result = sut.SaveAndContinueCommandToQuestionScreenAnswer(saveAndContinueCommand, nextActivityId, nextActivityType, question);
 
             //Assert
-            Assert.IsType<QuestionScreenQuestion>(result);
+            Assert.IsType<QuestionScreenAnswer>(result);
             Assert.Equal(nextActivityId, result!.ActivityId);
             Assert.Equal(saveAndContinueCommand.WorkflowInstanceId, result.WorkflowInstanceId);
             Assert.Equal(currentTimeUtc, result.CreatedDateTime);

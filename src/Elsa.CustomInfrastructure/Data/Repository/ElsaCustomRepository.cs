@@ -23,23 +23,23 @@ namespace Elsa.CustomInfrastructure.Data.Repository
             return model.Id;
         }
 
-        public async Task<QuestionScreenQuestion?> UpdateQuestionScreenQuestion(QuestionScreenQuestion model, CancellationToken cancellationToken = default)
+        public async Task<QuestionScreenAnswer?> UpdateQuestionScreenAnswer(QuestionScreenAnswer model, CancellationToken cancellationToken = default)
         {
             _dbContext.Update(model);
             await _dbContext.SaveChangesAsync(cancellationToken);
             return model;
         }
 
-        public async Task CreateQuestionScreenQuestionsAsync(List<QuestionScreenQuestion> assessments, CancellationToken cancellationToken)
+        public async Task CreateQuestionScreenAnswersAsync(List<QuestionScreenAnswer> assessments, CancellationToken cancellationToken)
         {
             await _dbContext.AddRangeAsync(assessments, cancellationToken);
             await _dbContext.SaveChangesAsync(cancellationToken);
         }
 
-        public async Task<List<QuestionScreenQuestion>> GetQuestionScreenQuestions(string activityId, string workflowInstanceId,
+        public async Task<List<QuestionScreenAnswer>> GetQuestionScreenAnswers(string activityId, string workflowInstanceId,
             CancellationToken cancellationToken)
         {
-            var list = await _dbContext.Set<QuestionScreenQuestion>().Where(x => x.ActivityId == activityId && x.WorkflowInstanceId == workflowInstanceId && x.QuestionId != null).ToListAsync();
+            var list = await _dbContext.Set<QuestionScreenAnswer>().Where(x => x.ActivityId == activityId && x.WorkflowInstanceId == workflowInstanceId && x.QuestionId != null).ToListAsync();
             return list;
         }
 

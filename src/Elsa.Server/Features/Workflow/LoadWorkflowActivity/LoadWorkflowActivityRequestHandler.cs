@@ -76,7 +76,7 @@ namespace Elsa.Server.Features.Workflow.LoadWorkflowActivity
                                         var title = (string?)activityDataDictionary.FirstOrDefault(x => x.Key == "PageTitle").Value;
                                         result.Data.PageTitle = title;
 
-                                        var dbQuestions = await _elsaCustomRepository.GetQuestionScreenQuestions(
+                                        var dbQuestions = await _elsaCustomRepository.GetQuestionScreenAnswers(
                                             activityRequest.ActivityId, activityRequest.WorkflowInstanceId,
                                             cancellationToken);
 
@@ -143,7 +143,7 @@ namespace Elsa.Server.Features.Workflow.LoadWorkflowActivity
             return await Task.FromResult(result);
         }
 
-        private static QuestionActivityData CreateQuestionActivityData(QuestionScreenQuestion dbQuestion, Question item)
+        private static QuestionActivityData CreateQuestionActivityData(QuestionScreenAnswer dbQuestion, Question item)
         {
             //assign the values
             var questionActivityData = new QuestionActivityData();

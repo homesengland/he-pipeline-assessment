@@ -7,7 +7,7 @@ using Elsa.CustomWorkflow.Sdk;
 using Elsa.Models;
 using Elsa.Persistence;
 using Elsa.Persistence.Specifications.WorkflowInstances;
-using Elsa.Server.Features.Workflow.MultiSaveAndContinue;
+using Elsa.Server.Features.Workflow.QuestionScreenSaveAndContinue;
 using Elsa.Server.Models;
 using Elsa.Services;
 using Elsa.Services.Models;
@@ -17,7 +17,7 @@ using Xunit;
 
 namespace Elsa.Server.Tests.Features.Workflow.MultiSaveAndContinue
 {
-    public class MultiSaveAndContinueCommandHandlerTests
+    public class QuestionScreenSaveAndContinueCommandHandlerTests
     {
         [Theory]
         [AutoMoqData]
@@ -29,12 +29,12 @@ namespace Elsa.Server.Tests.Features.Workflow.MultiSaveAndContinue
                 [Frozen] Mock<IWorkflowRegistry> workflowRegistry,
                 WorkflowBlueprint workflowBlueprint,
                 ActivityBlueprint activityBlueprint,
-                List<QuestionScreenQuestion> currentAssessmentQuestions,
+                List<QuestionScreenAnswer> currentAssessmentQuestions,
                 List<CollectedWorkflow> collectedWorkflows,
                 WorkflowInstance workflowInstance,
                 CustomActivityNavigation nextAssessmentActivity,
-                MultiSaveAndContinueCommand saveAndContinueCommand,
-                MultiSaveAndContinueCommandHandler sut)
+                QuestionScreenSaveAndContinueCommand saveAndContinueCommand,
+                QuestionScreenSaveAndContinueCommandHandler sut)
         {
             //Arrange
             for (var i = 0; i < currentAssessmentQuestions.Count; i++)
@@ -43,9 +43,9 @@ namespace Elsa.Server.Tests.Features.Workflow.MultiSaveAndContinue
                 currentAssessmentQuestions[i].QuestionId = questionId;
             }
 
-            var opResult = new OperationResult<MultiSaveAndContinueResponse>()
+            var opResult = new OperationResult<QuestionScreenSaveAndContinueResponse>()
             {
-                Data = new MultiSaveAndContinueResponse
+                Data = new QuestionScreenSaveAndContinueResponse
                 {
                     WorkflowInstanceId = saveAndContinueCommand.WorkflowInstanceId,
                     NextActivityId = workflowInstance.Output!.ActivityId
@@ -57,7 +57,7 @@ namespace Elsa.Server.Tests.Features.Workflow.MultiSaveAndContinue
             activityBlueprint.Id = workflowInstance.Output.ActivityId;
             workflowBlueprint.Activities.Add(activityBlueprint);
 
-            elsaCustomRepository.Setup(x => x.GetQuestionScreenQuestions(saveAndContinueCommand.ActivityId,
+            elsaCustomRepository.Setup(x => x.GetQuestionScreenAnswers(saveAndContinueCommand.ActivityId,
                     saveAndContinueCommand.WorkflowInstanceId, CancellationToken.None))
                 .ReturnsAsync(currentAssessmentQuestions);
 
@@ -105,23 +105,23 @@ namespace Elsa.Server.Tests.Features.Workflow.MultiSaveAndContinue
                [Frozen] Mock<IQuestionInvoker> questionInvoker,
                [Frozen] Mock<IWorkflowInstanceStore> workflowInstanceStore,
                [Frozen] Mock<IElsaCustomRepository> elsaCustomRepository,
-               [Frozen] Mock<IMultiSaveAndContinueMapper> saveAndContinueMapper,
+               [Frozen] Mock<IQuestionScreenSaveAndContinueMapper> saveAndContinueMapper,
                [Frozen] Mock<IWorkflowRegistry> workflowRegistry,
                WorkflowBlueprint workflowBlueprint,
                ActivityBlueprint activityBlueprint,
-               List<QuestionScreenQuestion> currentAssessmentQuestions,
+               List<QuestionScreenAnswer> currentAssessmentQuestions,
                List<CollectedWorkflow> collectedWorkflows,
                WorkflowInstance workflowInstance,
                CustomActivityNavigation nextAssessmentActivity,
-               MultiSaveAndContinueCommand saveAndContinueCommand,
+               QuestionScreenSaveAndContinueCommand saveAndContinueCommand,
                string nextActivityType,
-               MultiSaveAndContinueCommandHandler sut
+               QuestionScreenSaveAndContinueCommandHandler sut
            )
         {
             //Arrange
-            var opResult = new OperationResult<MultiSaveAndContinueResponse>()
+            var opResult = new OperationResult<QuestionScreenSaveAndContinueResponse>()
             {
-                Data = new MultiSaveAndContinueResponse
+                Data = new QuestionScreenSaveAndContinueResponse
                 {
                     WorkflowInstanceId = saveAndContinueCommand.WorkflowInstanceId,
                     NextActivityId = workflowInstance.Output!.ActivityId
@@ -134,7 +134,7 @@ namespace Elsa.Server.Tests.Features.Workflow.MultiSaveAndContinue
             activityBlueprint.Type = nextActivityType;
             workflowBlueprint.Activities.Add(activityBlueprint);
 
-            elsaCustomRepository.Setup(x => x.GetQuestionScreenQuestions(saveAndContinueCommand.ActivityId,
+            elsaCustomRepository.Setup(x => x.GetQuestionScreenAnswers(saveAndContinueCommand.ActivityId,
                     saveAndContinueCommand.WorkflowInstanceId, CancellationToken.None))
                 .ReturnsAsync(currentAssessmentQuestions);
 
@@ -180,15 +180,15 @@ namespace Elsa.Server.Tests.Features.Workflow.MultiSaveAndContinue
             [Frozen] Mock<IQuestionInvoker> questionInvoker,
             [Frozen] Mock<IWorkflowInstanceStore> workflowInstanceStore,
             [Frozen] Mock<IElsaCustomRepository> elsaCustomRepository,
-            List<QuestionScreenQuestion> currentAssessmentQuestions,
+            List<QuestionScreenAnswer> currentAssessmentQuestions,
             List<CollectedWorkflow> collectedWorkflows,
             WorkflowInstance workflowInstance,
-            MultiSaveAndContinueCommand saveAndContinueCommand,
-            MultiSaveAndContinueCommandHandler sut)
+            QuestionScreenSaveAndContinueCommand saveAndContinueCommand,
+            QuestionScreenSaveAndContinueCommandHandler sut)
         {
             //Arrange
             workflowInstance.Output = null;
-            elsaCustomRepository.Setup(x => x.GetQuestionScreenQuestions(saveAndContinueCommand.ActivityId,
+            elsaCustomRepository.Setup(x => x.GetQuestionScreenAnswers(saveAndContinueCommand.ActivityId,
                     saveAndContinueCommand.WorkflowInstanceId, CancellationToken.None))
                 .ReturnsAsync(currentAssessmentQuestions);
 
@@ -223,13 +223,13 @@ namespace Elsa.Server.Tests.Features.Workflow.MultiSaveAndContinue
             [Frozen] Mock<IQuestionInvoker> questionInvoker,
             [Frozen] Mock<IWorkflowInstanceStore> workflowInstanceStore,
             [Frozen] Mock<IElsaCustomRepository> elsaCustomRepository,
-            List<QuestionScreenQuestion> currentAssessmentQuestions,
+            List<QuestionScreenAnswer> currentAssessmentQuestions,
             List<CollectedWorkflow> collectedWorkflows,
-            MultiSaveAndContinueCommand saveAndContinueCommand,
-            MultiSaveAndContinueCommandHandler sut)
+            QuestionScreenSaveAndContinueCommand saveAndContinueCommand,
+            QuestionScreenSaveAndContinueCommandHandler sut)
         {
             //Arrange
-            elsaCustomRepository.Setup(x => x.GetQuestionScreenQuestions(saveAndContinueCommand.ActivityId,
+            elsaCustomRepository.Setup(x => x.GetQuestionScreenAnswers(saveAndContinueCommand.ActivityId,
                     saveAndContinueCommand.WorkflowInstanceId, CancellationToken.None))
                 .ReturnsAsync(currentAssessmentQuestions);
 
@@ -262,13 +262,13 @@ namespace Elsa.Server.Tests.Features.Workflow.MultiSaveAndContinue
         [AutoMoqData]
         public async Task Handle_ShouldReturnErrors_WhenAssessmentQuestionsNotFoundInDatabase(
             [Frozen] Mock<IElsaCustomRepository> elsaCustomRepository,
-            MultiSaveAndContinueCommand saveAndContinueCommand,
-            MultiSaveAndContinueCommandHandler sut)
+            QuestionScreenSaveAndContinueCommand saveAndContinueCommand,
+            QuestionScreenSaveAndContinueCommandHandler sut)
         {
             //Arrange
-            elsaCustomRepository.Setup(x => x.GetQuestionScreenQuestions(saveAndContinueCommand.ActivityId,
+            elsaCustomRepository.Setup(x => x.GetQuestionScreenAnswers(saveAndContinueCommand.ActivityId,
                     saveAndContinueCommand.WorkflowInstanceId, CancellationToken.None))
-                .ReturnsAsync(new List<QuestionScreenQuestion>());
+                .ReturnsAsync(new List<QuestionScreenAnswer>());
 
             //Act
             var result = await sut.Handle(saveAndContinueCommand, CancellationToken.None);
@@ -290,11 +290,11 @@ namespace Elsa.Server.Tests.Features.Workflow.MultiSaveAndContinue
         public async Task Handle_ShouldReturnErrors_WhenADependencyThrows(
             [Frozen] Mock<IElsaCustomRepository> elsaCustomRepository,
             Exception exception,
-            MultiSaveAndContinueCommand saveAndContinueCommand,
-            MultiSaveAndContinueCommandHandler sut)
+            QuestionScreenSaveAndContinueCommand saveAndContinueCommand,
+            QuestionScreenSaveAndContinueCommandHandler sut)
         {
             //Arrange
-            elsaCustomRepository.Setup(x => x.GetCustomActivityNavigation(saveAndContinueCommand.ActivityId,
+            elsaCustomRepository.Setup(x => x.GetQuestionScreenAnswers(saveAndContinueCommand.ActivityId,
                     saveAndContinueCommand.WorkflowInstanceId, CancellationToken.None))
                 .Throws(exception);
 
@@ -319,14 +319,14 @@ namespace Elsa.Server.Tests.Features.Workflow.MultiSaveAndContinue
             [Frozen] Mock<IElsaCustomRepository> elsaCustomRepository,
             [Frozen] Mock<IWorkflowRegistry> workflowRegistry,
             WorkflowBlueprint workflowBlueprint,
-            List<QuestionScreenQuestion> currentAssessmentQuestions,
+            List<QuestionScreenAnswer> currentAssessmentQuestions,
             List<CollectedWorkflow> collectedWorkflows,
             WorkflowInstance workflowInstance,
-            MultiSaveAndContinueCommand saveAndContinueCommand,
-            MultiSaveAndContinueCommandHandler sut)
+            QuestionScreenSaveAndContinueCommand saveAndContinueCommand,
+            QuestionScreenSaveAndContinueCommandHandler sut)
         {
             //Arrange
-            elsaCustomRepository.Setup(x => x.GetQuestionScreenQuestions(saveAndContinueCommand.ActivityId,
+            elsaCustomRepository.Setup(x => x.GetQuestionScreenAnswers(saveAndContinueCommand.ActivityId,
                     saveAndContinueCommand.WorkflowInstanceId, CancellationToken.None))
                 .ReturnsAsync(currentAssessmentQuestions);
 
@@ -359,25 +359,25 @@ namespace Elsa.Server.Tests.Features.Workflow.MultiSaveAndContinue
               [Frozen] Mock<IQuestionInvoker> questionInvoker,
               [Frozen] Mock<IWorkflowInstanceStore> workflowInstanceStore,
               [Frozen] Mock<IElsaCustomRepository> elsaCustomRepository,
-              [Frozen] Mock<IMultiSaveAndContinueMapper> saveAndContinueMapper,
+              [Frozen] Mock<IQuestionScreenSaveAndContinueMapper> saveAndContinueMapper,
               [Frozen] Mock<IWorkflowRegistry> workflowRegistry,
               WorkflowBlueprint workflowBlueprint,
               ActivityBlueprint activityBlueprint,
-              List<QuestionScreenQuestion> currentAssessmentQuestions,
+              List<QuestionScreenAnswer> currentAssessmentQuestions,
               List<CollectedWorkflow> collectedWorkflows,
               WorkflowInstance workflowInstance,
               CustomActivityNavigation nextCustomActivityNavigation,
-              MultiSaveAndContinueCommand saveAndContinueCommand,
+              QuestionScreenSaveAndContinueCommand saveAndContinueCommand,
               AssessmentQuestions elsaAssessmentQuestions,
               string nextActivityType,
-              MultiSaveAndContinueCommandHandler sut
+              QuestionScreenSaveAndContinueCommandHandler sut
           )
         {
             //Arrange
             nextActivityType = ActivityTypeConstants.QuestionScreen;
-            var opResult = new OperationResult<MultiSaveAndContinueResponse>()
+            var opResult = new OperationResult<QuestionScreenSaveAndContinueResponse>()
             {
-                Data = new MultiSaveAndContinueResponse
+                Data = new QuestionScreenSaveAndContinueResponse
                 {
                     WorkflowInstanceId = saveAndContinueCommand.WorkflowInstanceId,
                     NextActivityId = workflowInstance.Output!.ActivityId
@@ -390,7 +390,7 @@ namespace Elsa.Server.Tests.Features.Workflow.MultiSaveAndContinue
             activityBlueprint.Type = nextActivityType;
             workflowBlueprint.Activities.Add(activityBlueprint);
 
-            elsaCustomRepository.Setup(x => x.GetQuestionScreenQuestions(saveAndContinueCommand.ActivityId,
+            elsaCustomRepository.Setup(x => x.GetQuestionScreenAnswers(saveAndContinueCommand.ActivityId,
                     saveAndContinueCommand.WorkflowInstanceId, CancellationToken.None))
                 .ReturnsAsync(currentAssessmentQuestions);
 

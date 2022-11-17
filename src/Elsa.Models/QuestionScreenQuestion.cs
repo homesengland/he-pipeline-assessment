@@ -1,6 +1,6 @@
 ﻿namespace Elsa.CustomModels
 {
-    public class QuestionScreenQuestion
+    public class QuestionScreenAnswer
     {
         public int Id { get; set; }
         public string ActivityId { get; set; } = null!;

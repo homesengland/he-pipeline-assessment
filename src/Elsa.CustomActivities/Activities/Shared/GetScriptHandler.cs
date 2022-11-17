@@ -11,10 +11,10 @@ namespace Elsa.CustomActivities.Activities.Shared
         public Task Handle(EvaluatingJavaScriptExpression notification, CancellationToken cancellationToken)
         {
             var activityExecutionContext = notification.ActivityExecutionContext;
-            if (activityExecutionContext.Input != null && activityExecutionContext.Input.GetType() == typeof(QuestionScreenQuestion))
+            if (activityExecutionContext.Input != null && activityExecutionContext.Input.GetType() == typeof(QuestionScreenAnswer))
             {
                 var engine = notification.Engine;
-                engine.SetValue(JavascriptElementName, activityExecutionContext.GetInput<QuestionScreenQuestion>() ?? new QuestionScreenQuestion());
+                engine.SetValue(JavascriptElementName, activityExecutionContext.GetInput<QuestionScreenAnswer>() ?? new QuestionScreenAnswer());
             }
             return Task.CompletedTask;
         }

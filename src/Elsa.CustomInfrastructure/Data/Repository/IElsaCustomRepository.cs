@@ -11,9 +11,9 @@ namespace Elsa.CustomInfrastructure.Data.Repository
         ValueTask<int?> CreateCustomActivityNavigationAsync(CustomActivityNavigation model,
             CancellationToken cancellationToken = default);
 
-        Task<QuestionScreenQuestion?> UpdateQuestionScreenQuestion(QuestionScreenQuestion model, CancellationToken cancellationToken = default);
-        Task CreateQuestionScreenQuestionsAsync(List<QuestionScreenQuestion> assessments, CancellationToken cancellationToken);
-        Task<List<QuestionScreenQuestion>> GetQuestionScreenQuestions(string commandActivityId, string commandWorkflowInstanceId, CancellationToken cancellationToken);
+        Task<QuestionScreenAnswer?> UpdateQuestionScreenAnswer(QuestionScreenAnswer model, CancellationToken cancellationToken = default);
+        Task CreateQuestionScreenAnswersAsync(List<QuestionScreenAnswer> assessments, CancellationToken cancellationToken);
+        Task<List<QuestionScreenAnswer>> GetQuestionScreenAnswers(string commandActivityId, string commandWorkflowInstanceId, CancellationToken cancellationToken);
         Task SaveChanges(CancellationToken cancellationToken);
     }
 }

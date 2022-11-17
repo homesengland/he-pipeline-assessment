@@ -124,7 +124,7 @@ namespace Elsa.Server.Tests.Features.Workflow.StartWorkflow
 
             //Assert
             elsaCustomRepository.Verify(x => x.CreateCustomActivityNavigationAsync(customActivityNavigation, CancellationToken.None), Times.Once);
-            elsaCustomRepository.Verify(x => x.CreateQuestionScreenQuestionsAsync(It.IsAny<List<QuestionScreenQuestion>>(), CancellationToken.None), Times.Once);
+            elsaCustomRepository.Verify(x => x.CreateQuestionScreenAnswersAsync(It.IsAny<List<QuestionScreenAnswer>>(), CancellationToken.None), Times.Once);
             Assert.Equal(opResult.Data.NextActivityId, result.Data!.NextActivityId);
             Assert.Equal(opResult.Data.WorkflowInstanceId, result.Data.WorkflowInstanceId);
             Assert.Empty(result.ErrorMessages);

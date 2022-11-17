@@ -8,7 +8,7 @@ namespace Elsa.Server.Features.Workflow.StartWorkflow
     public interface IStartWorkflowMapper
     {
         CustomActivityNavigation? RunWorkflowResultToCustomNavigationActivity(RunWorkflowResult result, string activityType);
-        QuestionScreenQuestion? RunWorkflowResultToQuestionScreenQuestion(RunWorkflowResult result, string activityType, Question question);
+        QuestionScreenAnswer? RunWorkflowResultToQuestionScreenAnswer(RunWorkflowResult result, string activityType, Question question);
         StartWorkflowResponse? RunWorkflowResultToStartWorkflowResponse(RunWorkflowResult result);
     }
     public class StartWorkflowMapper : IStartWorkflowMapper
@@ -34,12 +34,12 @@ namespace Elsa.Server.Features.Workflow.StartWorkflow
             return null;
         }
 
-        public QuestionScreenQuestion? RunWorkflowResultToQuestionScreenQuestion(RunWorkflowResult result, string activityType,
+        public QuestionScreenAnswer? RunWorkflowResultToQuestionScreenAnswer(RunWorkflowResult result, string activityType,
             Question question)
         {
             if (result.WorkflowInstance != null && result.WorkflowInstance
                     .LastExecutedActivityId != null)
-                return new QuestionScreenQuestion
+                return new QuestionScreenAnswer
                 {
                     ActivityId = result.WorkflowInstance.LastExecutedActivityId,
                     WorkflowInstanceId = result.WorkflowInstance.Id,

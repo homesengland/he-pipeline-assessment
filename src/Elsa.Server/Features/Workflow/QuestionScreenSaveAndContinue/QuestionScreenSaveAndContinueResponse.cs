@@ -1,6 +1,6 @@
-﻿namespace Elsa.Server.Features.Workflow.MultiSaveAndContinue
+﻿namespace Elsa.Server.Features.Workflow.QuestionScreenSaveAndContinue
 {
-    public class MultiSaveAndContinueResponse
+    public class QuestionScreenSaveAndContinueResponse
     {
         public string WorkflowInstanceId { get; set; } = null!;
         public string NextActivityId { get; set; } = null!;

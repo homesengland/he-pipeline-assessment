@@ -4,9 +4,9 @@ using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace Elsa.CustomInfrastructure.Config
 {
-    internal class QuestionScreenQuestionConfig : IEntityTypeConfiguration<QuestionScreenQuestion>
+    public class QuestionScreenAnswerConfig : IEntityTypeConfiguration<QuestionScreenAnswer>
     {
-        public void Configure(EntityTypeBuilder<QuestionScreenQuestion> builder)
+        public void Configure(EntityTypeBuilder<QuestionScreenAnswer> builder)
         {
             builder.HasKey(x => x.Id);
             builder.Property(p => p.Id).HasColumnOrder(0);

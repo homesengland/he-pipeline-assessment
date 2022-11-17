@@ -65,19 +65,19 @@ namespace Elsa.Server.Features.Workflow.StartWorkflow
                             var questionList = (List<Question>)dictionaryQuestions!.Questions;
                             if (questionList!.Any())
                             {
-                                var assessments = new List<QuestionScreenQuestion>();
+                                var assessments = new List<QuestionScreenAnswer>();
 
                                 foreach (var item in questionList!)
                                 {
                                     var assessment =
-                                        _startWorkflowMapper.RunWorkflowResultToQuestionScreenQuestion(runWorkflowResult,
+                                        _startWorkflowMapper.RunWorkflowResultToQuestionScreenAnswer(runWorkflowResult,
                                             activity.Type, item);
                                     if (assessment != null)
                                     {
                                         assessments.Add(assessment);
                                     }
                                 }
-                                await _elsaCustomRepository.CreateQuestionScreenQuestionsAsync(assessments, cancellationToken);
+                                await _elsaCustomRepository.CreateQuestionScreenAnswersAsync(assessments, cancellationToken);
                             }
                         }
                     }
