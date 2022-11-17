@@ -34,12 +34,7 @@
 
     eventBus.on('activity-design-displaying',
       e => {
-        if (e.activityModel.type == "MultipleChoiceQuestion" ||
-          e.activityModel.type == "SingleChoiceQuestion" ||
-          e.activityModel.type == "DateQuestion" ||
-          e.activityModel.type == "TextQuestion" ||
-          e.activityModel.type == "CurrencyQuestion" ||
-          e.activityModel.type == "QuestionScreen")
+        if (e.activityModel.type == "QuestionScreen")
           e.outcomes = e.outcomes.filter(x => x !== 'Default' && x !== 'Done');
       });
   };
@@ -62,19 +57,17 @@
   function MyCustomInputDriver(elsaStudio, elementName) {
     this.display = (activity, property) => {
       var prop = (0, getOrCreateProperty)(activity, property.name);
-      var multichoice = document.createElement(elementName);
-      multichoice.activityModel = activity;
-      multichoice.propertyDescriptor = property;
-      multichoice.propertyModel = prop;
-      return multichoice;
+      var questionActivity = document.createElement(elementName);
+      questionActivity.activityModel = activity;
+      questionActivity.propertyDescriptor = property;
+      questionActivity.propertyModel = prop;
+      return questionActivity;
     }
   }
 
   elsaStudioRoot.addEventListener('initializing', e => {
     var elsaStudio = e.detail;
     elsaStudio.pluginManager.registerPlugin(MyCustomPlugin);
-    elsaStudio.propertyDisplayManager.addDriver('multiChoice-record-builder', () => new MyCustomInputDriver(elsaStudio, 'elsa-multichoice-records-property'));
-    elsaStudio.propertyDisplayManager.addDriver('singleChoice-record-builder', () => new MyCustomInputDriver(elsaStudio, 'elsa-singlechoice-records-property'));
     elsaStudio.propertyDisplayManager.addDriver('question-builder', () => new MyCustomInputDriver(elsaStudio, 'elsa-question-screen'));
 
   });
