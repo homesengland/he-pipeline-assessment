@@ -22,7 +22,7 @@ namespace Elsa.CustomInfrastructure.Migrations
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder, 1L, 1);
 
-            modelBuilder.Entity("Elsa.CustomModels.AssessmentQuestion", b =>
+            modelBuilder.Entity("Elsa.CustomModels.CustomActivityNavigation", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -41,23 +41,11 @@ namespace Elsa.CustomInfrastructure.Migrations
                         .HasMaxLength(450)
                         .HasColumnType("nvarchar(450)");
 
-                    b.Property<string>("Answer")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Comments")
-                        .HasColumnType("nvarchar(max)");
-
                     b.Property<DateTime>("CreatedDateTime")
                         .HasColumnType("datetime2");
 
-                    b.Property<bool?>("FinishWorkflow")
-                        .HasColumnType("bit");
-
                     b.Property<DateTime?>("LastModifiedDateTime")
                         .HasColumnType("datetime2");
-
-                    b.Property<bool?>("NavigateBack")
-                        .HasColumnType("bit");
 
                     b.Property<string>("PreviousActivityId")
                         .IsRequired()
@@ -71,7 +59,51 @@ namespace Elsa.CustomInfrastructure.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("AssessmentQuestions");
+                    b.ToTable("CustomActivityNavigation");
+                });
+
+            modelBuilder.Entity("Elsa.CustomModels.QuestionScreenAnswer", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasColumnOrder(0);
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+
+                    b.Property<string>("ActivityId")
+                        .IsRequired()
+                        .HasMaxLength(450)
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("Answer")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Comments")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("CreatedDateTime")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime?>("LastModifiedDateTime")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("QuestionId")
+                        .HasMaxLength(450)
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("QuestionType")
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
+
+                    b.Property<string>("WorkflowInstanceId")
+                        .IsRequired()
+                        .HasMaxLength(450)
+                        .HasColumnType("nvarchar(450)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("QuestionScreenAnswer");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.DataProtection.EntityFrameworkCore.DataProtectionKey", b =>

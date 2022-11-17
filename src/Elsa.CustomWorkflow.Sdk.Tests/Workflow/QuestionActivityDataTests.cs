@@ -9,14 +9,14 @@ namespace Elsa.CustomWorkflow.Sdk.Tests.Workflow
     public class QuestionActivityDataTests
     {
         [Theory]
-        [InlineAutoMoqData(ActivityTypeConstants.MultipleChoiceQuestion)]
-        [InlineAutoMoqData(ActivityTypeConstants.CurrencyQuestion)]
-        [InlineAutoMoqData(ActivityTypeConstants.TextQuestion)]
-        [InlineAutoMoqData(ActivityTypeConstants.SingleChoiceQuestion)]
+        [InlineAutoMoqData(QuestionTypeConstants.RadioQuestion)]
+        [InlineAutoMoqData(QuestionTypeConstants.CurrencyQuestion)]
+        [InlineAutoMoqData(QuestionTypeConstants.TextQuestion)]
+        [InlineAutoMoqData(QuestionTypeConstants.CheckboxQuestion)]
         public void GetDateReturnsEmptyDateObject_GivenNonDateActivityType(string activityType, QuestionActivityData sut)
         {
             //Arrange
-            sut.ActivityType = activityType;
+            sut.QuestionType = activityType;
 
             //Act
             var date = sut.GetDate();
@@ -32,7 +32,7 @@ namespace Elsa.CustomWorkflow.Sdk.Tests.Workflow
         public void GetDateReturnsEmptyDateObject_GivenDateActivityTypeWithNullAnswer(QuestionActivityData sut)
         {
             //Arrange
-            sut.ActivityType = ActivityTypeConstants.DateQuestion;
+            sut.QuestionType = QuestionTypeConstants.DateQuestion;
             sut.Answer = null;
 
             //Act
@@ -49,7 +49,7 @@ namespace Elsa.CustomWorkflow.Sdk.Tests.Workflow
         public void GetDateReturnsEmptyDateObject_GivenDateActivityTypeWithInvalidDateAnswer(QuestionActivityData sut)
         {
             //Arrange
-            sut.ActivityType = ActivityTypeConstants.DateQuestion;
+            sut.QuestionType = QuestionTypeConstants.DateQuestion;
             var dateToTest = "2019aaa89787879as-2-17";
             sut.Answer = dateToTest;
 
@@ -67,7 +67,7 @@ namespace Elsa.CustomWorkflow.Sdk.Tests.Workflow
         public void GetDateReturnsPopulatedDateObject_GivenDateActivityTypeWithNonNullAnswer(QuestionActivityData sut)
         {
             //Arrange
-            sut.ActivityType = ActivityTypeConstants.DateQuestion;
+            sut.QuestionType = QuestionTypeConstants.DateQuestion;
             var dateToTest = "2019-2-17";
             sut.Answer = dateToTest;
 
@@ -112,7 +112,7 @@ namespace Elsa.CustomWorkflow.Sdk.Tests.Workflow
                 Month = month,
                 Day = day
             };
-            sut.ActivityType = ActivityTypeConstants.DateQuestion;
+            sut.QuestionType = QuestionTypeConstants.DateQuestion;
 
             //Act
             sut.SetDate(date);
@@ -165,7 +165,7 @@ namespace Elsa.CustomWorkflow.Sdk.Tests.Workflow
                 Day = day
             };
             sut.Answer = null;
-            sut.ActivityType = ActivityTypeConstants.DateQuestion;
+            sut.QuestionType = QuestionTypeConstants.DateQuestion;
 
             //Act
             sut.SetDate(date);
@@ -179,10 +179,10 @@ namespace Elsa.CustomWorkflow.Sdk.Tests.Workflow
         }
 
         [Theory]
-        [InlineAutoMoqData(1999, 2, 3, ActivityTypeConstants.CurrencyQuestion)]
-        [InlineAutoMoqData(2000, 12, 3, ActivityTypeConstants.TextQuestion)]
-        [InlineAutoMoqData(2000, 2, 29, ActivityTypeConstants.MultipleChoiceQuestion)]
-        [InlineAutoMoqData(1998, 3, 5, ActivityTypeConstants.SingleChoiceQuestion)]
+        [InlineAutoMoqData(1999, 2, 3, QuestionTypeConstants.CurrencyQuestion)]
+        [InlineAutoMoqData(2000, 12, 3, QuestionTypeConstants.TextQuestion)]
+        [InlineAutoMoqData(2000, 2, 29, QuestionTypeConstants.CheckboxQuestion)]
+        [InlineAutoMoqData(1998, 3, 5, QuestionTypeConstants.RadioQuestion)]
         public void SetDateDoesNotSetAnAnswer_GivenInvalidActivityType(int? year, int? month, int? day, string activityType, QuestionActivityData sut)
         {
             //Arrange
@@ -193,7 +193,7 @@ namespace Elsa.CustomWorkflow.Sdk.Tests.Workflow
                 Day = day
             };
             sut.Answer = null;
-            sut.ActivityType = activityType;
+            sut.QuestionType = activityType;
 
             //Act
             sut.SetDate(date);
@@ -204,14 +204,14 @@ namespace Elsa.CustomWorkflow.Sdk.Tests.Workflow
 
 
         [Theory]
-        [InlineAutoMoqData(ActivityTypeConstants.MultipleChoiceQuestion)]
-        [InlineAutoMoqData(ActivityTypeConstants.DateQuestion)]
-        [InlineAutoMoqData(ActivityTypeConstants.TextQuestion)]
-        [InlineAutoMoqData(ActivityTypeConstants.SingleChoiceQuestion)]
+        [InlineAutoMoqData(QuestionTypeConstants.CheckboxQuestion)]
+        [InlineAutoMoqData(QuestionTypeConstants.DateQuestion)]
+        [InlineAutoMoqData(QuestionTypeConstants.TextQuestion)]
+        [InlineAutoMoqData(QuestionTypeConstants.RadioQuestion)]
         public void GetDecimalReturnsNull_GivenNonCurrencyActivityType(string activityType, QuestionActivityData sut)
         {
             //Arrange
-            sut.ActivityType = activityType;
+            sut.QuestionType = activityType;
 
             //Act
 
@@ -224,7 +224,7 @@ namespace Elsa.CustomWorkflow.Sdk.Tests.Workflow
         public void GetDecimalReturnsNull_GivenCurrencyActivityTypeWithNullAnswer(QuestionActivityData sut)
         {
             //Arrange
-            sut.ActivityType = ActivityTypeConstants.CurrencyQuestion;
+            sut.QuestionType = QuestionTypeConstants.CurrencyQuestion;
             sut.Answer = null;
 
             //Act
@@ -240,7 +240,7 @@ namespace Elsa.CustomWorkflow.Sdk.Tests.Workflow
         public void GetDecimalReturnsDecimalValue_GivenCorrectActivityTypeAndAnswer(string answerString, QuestionActivityData sut)
         {
             //Arrange
-            sut.ActivityType = ActivityTypeConstants.CurrencyQuestion;
+            sut.QuestionType = QuestionTypeConstants.CurrencyQuestion;
             sut.Answer = answerString;
             decimal numericAnswer = JsonSerializer.Deserialize<decimal>(answerString);
 
@@ -258,7 +258,7 @@ namespace Elsa.CustomWorkflow.Sdk.Tests.Workflow
         public void GetDecimalReturnsNull_GivenAnswerInIncorrectFormat(string answerString, QuestionActivityData sut)
         {
             //Arrange
-            sut.ActivityType = ActivityTypeConstants.CurrencyQuestion;
+            sut.QuestionType = QuestionTypeConstants.CurrencyQuestion;
             sut.Answer = answerString;
 
             //Act
@@ -268,15 +268,15 @@ namespace Elsa.CustomWorkflow.Sdk.Tests.Workflow
         }
 
         [Theory]
-        [InlineAutoMoqData(ActivityTypeConstants.MultipleChoiceQuestion)]
-        [InlineAutoMoqData(ActivityTypeConstants.DateQuestion)]
-        [InlineAutoMoqData(ActivityTypeConstants.TextQuestion)]
-        [InlineAutoMoqData(ActivityTypeConstants.SingleChoiceQuestion)]
+        [InlineAutoMoqData(QuestionTypeConstants.CheckboxQuestion)]
+        [InlineAutoMoqData(QuestionTypeConstants.DateQuestion)]
+        [InlineAutoMoqData(QuestionTypeConstants.TextQuestion)]
+        [InlineAutoMoqData(QuestionTypeConstants.RadioQuestion)]
         public void SetDecimalDoesNotWriteValue_GivenNonDecimalActivityType(string activityType, QuestionActivityData sut)
         {
             //Arrange
             sut.Answer = "12.0";
-            sut.ActivityType = activityType;
+            sut.QuestionType = activityType;
 
             //Act
             sut.Decimal = 123.0M;
@@ -290,7 +290,7 @@ namespace Elsa.CustomWorkflow.Sdk.Tests.Workflow
         public void SetDecimalWritesNullAnswer_GivenNullValue(QuestionActivityData sut)
         {
             //Arrange
-            sut.ActivityType = ActivityTypeConstants.CurrencyQuestion;
+            sut.QuestionType = QuestionTypeConstants.CurrencyQuestion;
 
             //Act
             sut.Decimal = null;
@@ -307,7 +307,7 @@ namespace Elsa.CustomWorkflow.Sdk.Tests.Workflow
         public void SetDecimalWritesExpectedAnswer_GivenCorrectValue(string decimalString, QuestionActivityData sut)
         {
             //Arrange
-            sut.ActivityType = ActivityTypeConstants.CurrencyQuestion;
+            sut.QuestionType = QuestionTypeConstants.CurrencyQuestion;
             decimal numericAnswer = JsonSerializer.Deserialize<decimal>(decimalString);
 
             //Act
@@ -327,14 +327,14 @@ namespace Elsa.CustomWorkflow.Sdk.Tests.Workflow
             //Act
 
             //Assert            
-            Assert.Empty(sut.MultipleChoice.Choices);
+            Assert.Empty(sut.Checkbox.Choices);
         }
 
         [Theory]
-        [InlineAutoMoqData(ActivityTypeConstants.CurrencyQuestion)]
-        [InlineAutoMoqData(ActivityTypeConstants.DateQuestion)]
-        [InlineAutoMoqData(ActivityTypeConstants.TextQuestion)]
-        [InlineAutoMoqData(ActivityTypeConstants.SingleChoiceQuestion)]
+        [InlineAutoMoqData(QuestionTypeConstants.CurrencyQuestion)]
+        [InlineAutoMoqData(QuestionTypeConstants.DateQuestion)]
+        [InlineAutoMoqData(QuestionTypeConstants.TextQuestion)]
+        [InlineAutoMoqData(QuestionTypeConstants.RadioQuestion)]
         public void SetChoicesForMultichoiceDoesNotSetValue_GivenValidDataButActivityTypeIsIncorrect(string activityType, QuestionActivityData sut)
         {
             //Arrange
@@ -357,13 +357,13 @@ namespace Elsa.CustomWorkflow.Sdk.Tests.Workflow
                     IsSingle = false,
                 },
             };
-            sut.ActivityType = activityType;
+            sut.QuestionType = activityType;
 
             //Act
-            sut.MultipleChoice = new MultipleChoiceModel { Choices = choices };
+            sut.Checkbox = new Checkbox { Choices = choices };
 
             //Assert
-            Assert.Empty(sut.MultipleChoice.Choices);
+            Assert.Empty(sut.Checkbox.Choices);
             Assert.Null(sut.Answer);
         }
 
@@ -393,12 +393,12 @@ namespace Elsa.CustomWorkflow.Sdk.Tests.Workflow
                 },
             };
             var answerList = new List<string>() { "Test 1" };
-            sut.ActivityType = ActivityTypeConstants.MultipleChoiceQuestion;
+            sut.QuestionType = QuestionTypeConstants.CheckboxQuestion;
 
             //Act
-            sut.MultipleChoice = new MultipleChoiceModel() { Choices = choices, SelectedChoices = answerList };
+            sut.Checkbox = new Checkbox() { Choices = choices, SelectedChoices = answerList };
             //Assert
-            Assert.Equal(choices.ToArray(), sut.MultipleChoice.Choices);
+            Assert.Equal(choices.ToArray(), sut.Checkbox.Choices);
             Assert.Equal(JsonSerializer.Serialize(answerList), sut.Answer);
         }
 
@@ -411,14 +411,14 @@ namespace Elsa.CustomWorkflow.Sdk.Tests.Workflow
             //Act
 
             //Assert            
-            Assert.Empty(sut.SingleChoice.Choices);
+            Assert.Empty(sut.Radio.Choices);
         }
 
         [Theory]
-        [InlineAutoMoqData(ActivityTypeConstants.CurrencyQuestion)]
-        [InlineAutoMoqData(ActivityTypeConstants.DateQuestion)]
-        [InlineAutoMoqData(ActivityTypeConstants.TextQuestion)]
-        [InlineAutoMoqData(ActivityTypeConstants.MultipleChoiceQuestion)]
+        [InlineAutoMoqData(QuestionTypeConstants.CurrencyQuestion)]
+        [InlineAutoMoqData(QuestionTypeConstants.DateQuestion)]
+        [InlineAutoMoqData(QuestionTypeConstants.TextQuestion)]
+        [InlineAutoMoqData(QuestionTypeConstants.CheckboxQuestion)]
         public void SetChoicesForSingleChoiceDoesNotSetValue_GivenValidDataButActivityTypeIsIncorrect(string activityType, QuestionActivityData sut)
         {
             //Arrange
@@ -438,13 +438,13 @@ namespace Elsa.CustomWorkflow.Sdk.Tests.Workflow
                     Answer = "Test 3",
                    },
             };
-            sut.ActivityType = activityType;
+            sut.QuestionType = activityType;
 
             //Act
-            sut.SingleChoice = new SingleChoiceModel { Choices = choices };
+            sut.Radio = new Radio { Choices = choices };
 
             //Assert
-            Assert.Empty(sut.SingleChoice.Choices);
+            Assert.Empty(sut.Radio.Choices);
             Assert.Null(sut.Answer);
         }
 
@@ -470,12 +470,12 @@ namespace Elsa.CustomWorkflow.Sdk.Tests.Workflow
                 },
             };
 
-            sut.ActivityType = ActivityTypeConstants.SingleChoiceQuestion;
+            sut.QuestionType = QuestionTypeConstants.RadioQuestion;
 
             //Act
-            sut.SingleChoice = new SingleChoiceModel() { Choices = choices, SelectedAnswer = choices[0].Answer };
+            sut.Radio = new Radio() { Choices = choices, SelectedAnswer = choices[0].Answer };
             //Assert
-            Assert.Equal(choices.ToArray(), sut.SingleChoice.Choices);
+            Assert.Equal(choices.ToArray(), sut.Radio.Choices);
             Assert.Equal("Test 1", sut.Answer);
         }
 

@@ -1,4 +1,6 @@
-﻿@model List<string>
+﻿@model FluentValidation.Results.ValidationResult
+
+
 
 <div class="govuk-error-summary" aria-labelledby="error-summary-title" role="alert" data-disable-auto-focus="true" data-module="govuk-error-summary">
     <h2 class="govuk-error-summary__title" id="error-summary-title">
@@ -6,10 +8,19 @@
     </h2>
     <div class="govuk-error-summary__body">
         <ul class="govuk-list govuk-error-summary__list">
-        @foreach (var msg in Model)
+        @foreach (var item in Model.Errors)
         {
+           @* string propertyId = "";
+            if (item.PropertyName !=null)
+            {
+                propertyId = item.PropertyName.Replace(".", "_");
+            }
             <li>
-                <p style="color:red">@msg</p>
+                    <a href="#@propertyId">@item.ErrorMessage</a>
+            </li>*@
+            
+            <li>
+                    <a href="#@item.PropertyName">@item.ErrorMessage</a>
             </li>
         }  
         </ul>

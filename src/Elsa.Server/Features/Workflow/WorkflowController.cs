@@ -1,5 +1,5 @@
 ﻿using Elsa.Server.Features.Workflow.LoadWorkflowActivity;
-using Elsa.Server.Features.Workflow.SaveAndContinue;
+using Elsa.Server.Features.Workflow.QuestionScreenSaveAndContinue;
 using Elsa.Server.Features.Workflow.StartWorkflow;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
@@ -66,8 +66,8 @@ namespace Elsa.Server.Features.Workflow
             }
         }
 
-        [HttpPost("SaveAndContinue")]
-        public async Task<IActionResult> SaveAndContinue([FromBody] SaveAndContinueCommand model)
+        [HttpPost("QuestionScreenSaveAndContinue")]
+        public async Task<IActionResult> MultiSaveAndContinue([FromBody] QuestionScreenSaveAndContinueCommand model)
         {
             try
             {

@@ -1,0 +1,17 @@
+﻿@model string
+
+
+@if (!string.IsNullOrEmpty(Model))
+{
+    <details class="override-question-guidance govuk-details" data-module="govuk-details">
+        <summary class="govuk-details__summary">
+            <span class="govuk-details__summary-text">
+                Question guidance
+            </span>
+        </summary>
+        <div class="govuk-details__text">
+            @Model
+        </div>
+    </details>
+}
+

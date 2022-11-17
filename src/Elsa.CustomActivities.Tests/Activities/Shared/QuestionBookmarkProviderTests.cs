@@ -1,5 +1,5 @@
-﻿using Elsa.CustomActivities.Activities;
-using Elsa.CustomActivities.Activities.Shared;
+﻿using Elsa.CustomActivities.Activities.Shared;
+using Elsa.CustomWorkflow.Sdk;
 using Elsa.Services;
 using Elsa.Services.Models;
 using He.PipelineAssessment.Common.Tests;
@@ -10,11 +10,8 @@ namespace Elsa.CustomActivities.Tests.Activities.Shared
     public class QuestionBookmarkProviderTests
     {
         [Theory]
-        [InlineAutoMoqData(Constants.CurrencyQuestion)]
-        [InlineAutoMoqData(Constants.MultipleChoiceQuestion)]
-        [InlineAutoMoqData(Constants.SingleChoiceQuestion)]
-        [InlineAutoMoqData(Constants.DateQuestion)]
-        [InlineAutoMoqData(Constants.TextQuestion)]
+        [InlineAutoMoqData(ActivityTypeConstants.QuestionScreen)]
+
         public void SupportsActivityReturnsTrue_GivenRegisteredActivities(string registeredActivity, QuestionBookmarkProvider sut)
         {
             //Arrange

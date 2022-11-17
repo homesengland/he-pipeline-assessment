@@ -1,14 +1,13 @@
 ﻿using Elsa.CustomWorkflow.Sdk.Models.Workflow;
+using Microsoft.Extensions.Logging;
 using System.Text;
 using System.Text.Json;
-using Microsoft.Extensions.Logging;
 
 namespace Elsa.CustomWorkflow.Sdk.HttpClients
 {
     public interface IElsaServerHttpClient
     {
         Task<WorkflowNextActivityDataDto?> PostStartWorkflow(StartWorkflowCommandDto model);
-
         Task<WorkflowNextActivityDataDto?> SaveAndContinue(SaveAndContinueCommandDto model);
         Task<WorkflowActivityDataDto?> LoadWorkflowActivity(LoadWorkflowActivityDto model);
     }
@@ -51,10 +50,12 @@ namespace Elsa.CustomWorkflow.Sdk.HttpClients
             return JsonSerializer.Deserialize<WorkflowNextActivityDataDto>(data, new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
         }
 
+
+
         public async Task<WorkflowNextActivityDataDto?> SaveAndContinue(SaveAndContinueCommandDto model)
         {
             string data;
-            var relativeUri = "workflow/SaveAndContinue";
+            var relativeUri = "workflow/QuestionScreenSaveAndContinue";
 
             using var request = new HttpRequestMessage(HttpMethod.Post, relativeUri);
             var content = JsonSerializer.Serialize(model);

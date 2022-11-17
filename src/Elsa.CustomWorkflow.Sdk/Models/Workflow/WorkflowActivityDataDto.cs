@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿
+using FluentValidation.Results;
 using System.Globalization;
 using System.Text.Json;
 
@@ -8,7 +9,7 @@ namespace Elsa.CustomWorkflow.Sdk.Models.Workflow
     {
         public WorkflowActivityData Data { get; set; } = null!;
         public bool IsValid { get; set; }
-        public IList<string> ValidationMessages { get; set; } = new List<string>();
+        public ValidationResult? ValidationMessages { get; set; }
     }
 
     public class WorkflowActivityData
@@ -16,14 +17,19 @@ namespace Elsa.CustomWorkflow.Sdk.Models.Workflow
         public string WorkflowInstanceId { get; set; } = null!;
         public string ActivityId { get; set; } = null!;
         public string PreviousActivityId { get; set; } = null!;
+        public string PageTitle { get; set; } = null!;
+        public string ActivityType { get; set; } = null!;
 
-        public QuestionActivityData? QuestionActivityData { get; set; }
+
+        public List<QuestionActivityData>? MultiQuestionActivityData { get; set; }
 
     }
 
     public class QuestionActivityData
     {
-        public string ActivityType { get; set; } = null!;
+        public string QuestionId { get; set; } = null!;
+        public string QuestionType { get; set; } = null!;
+
         public string Title { get; set; } = null!;
         public string Question { get; set; } = null!;
         public string? QuestionHint { get; set; }
@@ -34,11 +40,11 @@ namespace Elsa.CustomWorkflow.Sdk.Models.Workflow
         public string? Answer { get; set; }
         public decimal? Decimal { get { return GetDecimal(); } set { SetDecimal(value); } }
 
-        private MultipleChoiceModel _multipleChoice = new MultipleChoiceModel();
-        public MultipleChoiceModel MultipleChoice { get { return _multipleChoice; } set { SetMultipleChoiceModel(value); } }
+        private Checkbox _checkbox = new Checkbox();
+        public Checkbox Checkbox { get { return _checkbox; } set { SetCheckbox(value); } }
 
-        private SingleChoiceModel _singleChoice = new SingleChoiceModel();
-        public SingleChoiceModel SingleChoice { get { return GetSingleChoiceModel(); } set { SetSingleChoiceModel(value); } }
+        private Radio _radio = new Radio();
+        public Radio Radio { get { return GetRadio(); } set { SetRadio(value); } }
 
         private Date _date = new Date();
         public Date Date { get { return GetDate(); } set { SetDate(value); } }
@@ -49,7 +55,7 @@ namespace Elsa.CustomWorkflow.Sdk.Models.Workflow
 
         public Date GetDate()
         {
-            if (ActivityType == ActivityTypeConstants.DateQuestion && Answer != null)
+            if (QuestionType == QuestionTypeConstants.DateQuestion && Answer != null)
             {
                 bool isValidDate = DateTime.TryParseExact(Answer, Constants.DateFormat, CultureInfo.InvariantCulture, DateTimeStyles.AdjustToUniversal, out DateTime date);
                 if (isValidDate && !String.IsNullOrEmpty(Answer) == true)
@@ -65,11 +71,11 @@ namespace Elsa.CustomWorkflow.Sdk.Models.Workflow
             }
             return _date;
         }
-        public void SetMultipleChoiceModel(MultipleChoiceModel value)
+        public void SetCheckbox(Checkbox value)
         {
-            if (ActivityType == ActivityTypeConstants.MultipleChoiceQuestion)
+            if (QuestionType == QuestionTypeConstants.CheckboxQuestion)
             {
-                _multipleChoice = value;
+                _checkbox = value;
                 List<string> answerList = new List<string>();
                 if (value != null)
                 {
@@ -80,11 +86,11 @@ namespace Elsa.CustomWorkflow.Sdk.Models.Workflow
             }
         }
 
-        public void SetSingleChoiceModel(SingleChoiceModel value)
+        public void SetRadio(Radio value)
         {
-            if (ActivityType == ActivityTypeConstants.SingleChoiceQuestion)
+            if (QuestionType == QuestionTypeConstants.RadioQuestion)
             {
-                _singleChoice = value;
+                _radio = value;
                 Answer = null;
                 if (value != null)
                 {
@@ -95,7 +101,7 @@ namespace Elsa.CustomWorkflow.Sdk.Models.Workflow
 
         public void SetDate(Date? value)
         {
-            if (ActivityType == ActivityTypeConstants.DateQuestion && value != null)
+            if (QuestionType == QuestionTypeConstants.DateQuestion && value != null)
             {
                 _date = value;
                 if (value.Day != null && value.Month != null && value.Year != null)
@@ -116,18 +122,18 @@ namespace Elsa.CustomWorkflow.Sdk.Models.Workflow
             }
         }
 
-        private SingleChoiceModel GetSingleChoiceModel()
+        private Radio GetRadio()
         {
-            if (_singleChoice.SelectedAnswer != Answer && Answer != null)
+            if (_radio.SelectedAnswer != Answer && Answer != null)
             {
-                _singleChoice.SelectedAnswer = Answer;
+                _radio.SelectedAnswer = Answer;
             }
-            return _singleChoice;
+            return _radio;
         }
 
         private decimal? GetDecimal()
         {
-            if (ActivityType == ActivityTypeConstants.CurrencyQuestion && Answer != null)
+            if (QuestionType == QuestionTypeConstants.CurrencyQuestion && Answer != null)
             {
                 try
                 {
@@ -143,7 +149,7 @@ namespace Elsa.CustomWorkflow.Sdk.Models.Workflow
         }
         private void SetDecimal(decimal? value)
         {
-            if (ActivityType == ActivityTypeConstants.CurrencyQuestion)
+            if (QuestionType == QuestionTypeConstants.CurrencyQuestion)
             {
                 SetAnswer(value);
             }
@@ -165,13 +171,13 @@ namespace Elsa.CustomWorkflow.Sdk.Models.Workflow
         #endregion
     }
 
-    public class MultipleChoiceModel
+    public class Checkbox
     {
         public List<string> SelectedChoices { get; set; } = null!;
         public List<Choice> Choices { get; set; } = new List<Choice>();
     }
 
-    public class SingleChoiceModel
+    public class Radio
     {
         public List<Choice> Choices { get; set; } = new List<Choice>();
         public string SelectedAnswer { get; set; } = null!;
@@ -186,11 +192,8 @@ namespace Elsa.CustomWorkflow.Sdk.Models.Workflow
 
     public class Date
     {
-        [Range(1, 31)]
         public int? Day { get; set; }
-        [Range(1, 12)]
         public int? Month { get; set; }
-        [Range(1, 3000)]
         public int? Year { get; set; }
     }
 }

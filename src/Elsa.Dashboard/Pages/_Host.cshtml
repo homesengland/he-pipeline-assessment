@@ -15,70 +15,62 @@
     <link rel="icon" type="image/png" sizes="16x16" href="/_content/Elsa.Designer.Components.Web/elsa-workflows-studio/assets/images/favicon-16x16.png">
     <link rel="stylesheet" href="/_content/Elsa.Designer.Components.Web/elsa-workflows-studio/assets/fonts/inter/inter.css">
     <link rel="stylesheet" href="/_content/Elsa.Designer.Components.Web/elsa-workflows-studio/elsa-workflows-studio.css">
+    <link rel="stylesheet" href="/css/site.css">
     <script nonce ="@nonceConfig.ElsaSetup"  src="/_content/Elsa.Designer.Components.Web/monaco-editor/min/vs/loader.js"></script>
     <script nonce ="@nonceConfig.ElsaSetup"  type="module" src="/_content/Elsa.Designer.Components.Web/elsa-workflows-studio/elsa-workflows-studio.esm.js"></script>
     <script nonce ="@nonceConfig.ElsaSetup"  type="module" src="/static/build/custom-elsa.esm.js"></script>
+    <style>
+    </style>
 </head>
 <body>
 <elsa-studio-root server-url="@serverUrl" monaco-lib-path="_content/Elsa.Designer.Components.Web/monaco-editor/min">
     <elsa-studio-dashboard></elsa-studio-dashboard>
 </elsa-studio-root>
 <script nonce="@nonceConfig.ElsaSetup">
-        var elsaStudioRoot = document.querySelector('elsa-studio-root');
+  var elsaStudioRoot = document.querySelector('elsa-studio-root');
 
-        function MyCustomPlugin(elsaStudio) {
-            var eventBus = elsaStudio.eventBus;
+  function MyCustomPlugin(elsaStudio) {
+    var eventBus = elsaStudio.eventBus;
 
-            eventBus.on('activity-design-displaying',
-                e => {
-                    if (e.activityModel.type == "MultipleChoiceQuestion" ||
-                        e.activityModel.type == "SingleChoiceQuestion" ||
-                        e.activityModel.type == "DateQuestion" ||
-                    e.activityModel.type == "TextQuestion" ||
-                    e.activityModel.type == "CurrencyQuestion")
-                    e.outcomes = e.outcomes.filter(x => x !== 'Default' && x !== 'Done');
-                });
-            };
+    eventBus.on('activity-design-displaying',
+      e => {
+        if (e.activityModel.type == "QuestionScreen")
+          e.outcomes = e.outcomes.filter(x => x !== 'Default' && x !== 'Done');
+      });
+  };
 
-        function getOrCreateProperty(activity, name, defaultExpression, defaultSyntax) {
-            var property = activity.properties.find(function(x) { return x.name == name; });
-            if (!property) {
-                var expressions = {};
-                var syntax = defaultSyntax ? defaultSyntax() : undefined;
-                if (!syntax)
-                    syntax = 'Literal';
-                expressions[syntax] = defaultExpression ? defaultExpression() : undefined;
-                property = { name: name, expressions: expressions, syntax: null };
-                activity.properties.push(property);
-            }
+  function getOrCreateProperty(activity, name, defaultExpression, defaultSyntax) {
+    var property = activity.properties.find(function(x) { return x.name == name; });
+    if (!property) {
+      var expressions = {};
+      var syntax = defaultSyntax ? defaultSyntax() : undefined;
+      if (!syntax)
+        syntax = 'Literal';
+      expressions[syntax] = defaultExpression ? defaultExpression() : undefined;
+      property = { name: name, expressions: expressions, syntax: null };
+      activity.properties.push(property);
+    }
 
-            return property;
-}
+    return property;
+  }
 
-        function MyCustomInputDriver(elsaStudio, elementName) {
-          console.log("creating input driver for " + elementName)
-            this.display = (activity, property) => {
-              console.log('Logging Display');
-              console.log(this.display);
-                var prop = (0, getOrCreateProperty)(activity, property.name);
-                var multichoice = document.createElement(elementName);
-                multichoice.activityModel = activity;
-                multichoice.propertyDescriptor = property;
-                multichoice.propertyModel = prop;
-                console.log(activity);
-                console.log(property);
-                console.log(prop);
-                return multichoice;
-            }
-        }
+  function MyCustomInputDriver(elsaStudio, elementName) {
+    this.display = (activity, property) => {
+      var prop = (0, getOrCreateProperty)(activity, property.name);
+      var questionActivity = document.createElement(elementName);
+      questionActivity.activityModel = activity;
+      questionActivity.propertyDescriptor = property;
+      questionActivity.propertyModel = prop;
+      return questionActivity;
+    }
+  }
 
-        elsaStudioRoot.addEventListener('initializing', e => {
-            var elsaStudio = e.detail;
-            elsaStudio.pluginManager.registerPlugin(MyCustomPlugin);
-            elsaStudio.propertyDisplayManager.addDriver('multiChoice-record-builder', () => new MyCustomInputDriver(elsaStudio, 'elsa-multichoice-records-property'));
-            elsaStudio.propertyDisplayManager.addDriver('singleChoice-record-builder', () => new MyCustomInputDriver(elsaStudio, 'elsa-singlechoice-records-property'));
+  elsaStudioRoot.addEventListener('initializing', e => {
+    var elsaStudio = e.detail;
+    elsaStudio.pluginManager.registerPlugin(MyCustomPlugin);
+    elsaStudio.propertyDisplayManager.addDriver('question-builder', () => new MyCustomInputDriver(elsaStudio, 'elsa-question-screen'));
 
-        });
+  });
 </script>
 </body>
 </html>

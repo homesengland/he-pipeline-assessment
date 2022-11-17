@@ -1,7 +1,7 @@
 ﻿using AutoFixture.Xunit2;
 using Elsa.Server.Features.Workflow;
 using Elsa.Server.Features.Workflow.LoadWorkflowActivity;
-using Elsa.Server.Features.Workflow.SaveAndContinue;
+using Elsa.Server.Features.Workflow.QuestionScreenSaveAndContinue;
 using Elsa.Server.Features.Workflow.StartWorkflow;
 using Elsa.Server.Models;
 using MediatR;
@@ -23,7 +23,7 @@ namespace Elsa.Server.Tests.Features.Workflow
             var startWorkflowOperationResult = new OperationResult<StartWorkflowResponse>
             {
                 ErrorMessages = new List<string>(),
-                ValidationMessages = new List<string>(),
+                ValidationMessages = null,
                 Data = response
             };
             //Arrange
@@ -138,7 +138,7 @@ namespace Elsa.Server.Tests.Features.Workflow
             var startWorkflowOperationResult = new OperationResult<LoadWorkflowActivityResponse>
             {
                 ErrorMessages = new List<string>(),
-                ValidationMessages = new List<string>(),
+                ValidationMessages = null,
                 Data = response
             };
             //Arrange
@@ -243,37 +243,35 @@ namespace Elsa.Server.Tests.Features.Workflow
             Assert.IsType<NullReferenceException>(objectResult.Value);
         }
 
-
-
         [Theory]
         [AutoData]
-        public async Task WorkflowController_SaveAndContinue_ShouldReturnOK_WhenCommandHandlerIsSuccessful(
-            SaveAndContinueCommand command,
-            SaveAndContinueResponse response,
-   Mock<IMediator> mediatorMock)
+        public async Task WorkflowController_MutliSaveAndContinue_ShouldReturnOK_WhenCommandHandlerIsSuccessful(
+            QuestionScreenSaveAndContinueCommand command,
+            QuestionScreenSaveAndContinueResponse response,
+            Mock<IMediator> mediatorMock)
         {
 
-            var startWorkflowOperationResult = new OperationResult<SaveAndContinueResponse>
+            var startWorkflowOperationResult = new OperationResult<QuestionScreenSaveAndContinueResponse>
             {
                 ErrorMessages = new List<string>(),
-                ValidationMessages = new List<string>(),
+                ValidationMessages = null,
                 Data = response
             };
 
             //Arrange
-            mediatorMock.Setup(x => x.Send(It.IsAny<SaveAndContinueCommand>(), CancellationToken.None)).ReturnsAsync(startWorkflowOperationResult);
+            mediatorMock.Setup(x => x.Send(It.IsAny<QuestionScreenSaveAndContinueCommand>(), CancellationToken.None)).ReturnsAsync(startWorkflowOperationResult);
 
             WorkflowController controller = new WorkflowController(mediatorMock.Object);
 
             //Act
-            var result = await controller.SaveAndContinue(command);
+            var result = await controller.MultiSaveAndContinue(command);
 
             //Assert
             Assert.NotNull(result);
             Assert.IsType<OkObjectResult>(result);
 
             var okResult = (OkObjectResult)result;
-            var okResultValueData = (OperationResult<SaveAndContinueResponse>)okResult.Value!;
+            var okResultValueData = (OperationResult<QuestionScreenSaveAndContinueResponse>)okResult.Value!;
 
             Assert.Equal(response.NextActivityId, okResultValueData.Data!.NextActivityId);
             Assert.Equal(response.WorkflowInstanceId, okResultValueData.Data.WorkflowInstanceId);
@@ -282,19 +280,19 @@ namespace Elsa.Server.Tests.Features.Workflow
 
         [Theory]
         [AutoData]
-        public async Task WorkflowController_SaveAndContinue_ShouldReturnBadRequest_WhenCommandHandlerReturnsErrors(
-            SaveAndContinueCommand command,
-            OperationResult<SaveAndContinueResponse> operationResult,
+        public async Task WorkflowController_MultiSaveAndContinue_ShouldReturnBadRequest_WhenCommandHandlerReturnsErrors(
+            QuestionScreenSaveAndContinueCommand command,
+            OperationResult<QuestionScreenSaveAndContinueResponse> operationResult,
             Mock<IMediator> mediatorMock)
         {
 
             //Arrange
-            mediatorMock.Setup(x => x.Send(It.IsAny<SaveAndContinueCommand>(), CancellationToken.None)).ReturnsAsync(operationResult);
+            mediatorMock.Setup(x => x.Send(It.IsAny<QuestionScreenSaveAndContinueCommand>(), CancellationToken.None)).ReturnsAsync(operationResult);
 
             WorkflowController controller = new WorkflowController(mediatorMock.Object);
 
             //Act
-            var result = await controller.SaveAndContinue(command);
+            var result = await controller.MultiSaveAndContinue(command);
 
             //Assert
             Assert.NotNull(result);
@@ -308,19 +306,19 @@ namespace Elsa.Server.Tests.Features.Workflow
 
         [Theory]
         [AutoData]
-        public async Task WorkflowController_SaveAndContinue_ShouldReturn500_WhenCommandHandlerThrowsException(
-            SaveAndContinueCommand command,
+        public async Task WorkflowController_MultiSaveAndContinue_ShouldReturn500_WhenCommandHandlerThrowsException(
+            QuestionScreenSaveAndContinueCommand command,
             Exception exception,
             Mock<IMediator> mediatorMock)
         {
 
             //Arrange
-            mediatorMock.Setup(x => x.Send(It.IsAny<SaveAndContinueCommand>(), CancellationToken.None)).ThrowsAsync(exception);
+            mediatorMock.Setup(x => x.Send(It.IsAny<QuestionScreenSaveAndContinueCommand>(), CancellationToken.None)).ThrowsAsync(exception);
 
             WorkflowController controller = new WorkflowController(mediatorMock.Object);
 
             //Act
-            var result = await controller.SaveAndContinue(command);
+            var result = await controller.MultiSaveAndContinue(command);
 
             //Assert
             Assert.NotNull(result);
@@ -338,17 +336,17 @@ namespace Elsa.Server.Tests.Features.Workflow
 
         [Theory]
         [AutoData]
-        public async Task WorkflowController_SaveAndContinue_ShouldReturn500_WhenCommandHandlerReturnsNull(
-            SaveAndContinueCommand command,
+        public async Task WorkflowController_MultiSaveAndContinue_ShouldReturn500_WhenCommandHandlerReturnsNull(
+            QuestionScreenSaveAndContinueCommand command,
             Mock<IMediator> mediatorMock)
         {
             //Arrange
-            mediatorMock.Setup(x => x.Send(It.IsAny<SaveAndContinueCommand>(), CancellationToken.None)).ReturnsAsync((OperationResult<SaveAndContinueResponse>)null!);
+            mediatorMock.Setup(x => x.Send(It.IsAny<QuestionScreenSaveAndContinueCommand>(), CancellationToken.None)).ReturnsAsync((OperationResult<QuestionScreenSaveAndContinueResponse>)null!);
 
             WorkflowController controller = new WorkflowController(mediatorMock.Object);
 
             //Act
-            var result = await controller.SaveAndContinue(command);
+            var result = await controller.MultiSaveAndContinue(command);
 
             //Assert
             Assert.NotNull(result);

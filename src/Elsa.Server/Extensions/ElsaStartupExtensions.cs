@@ -1,8 +1,4 @@
-﻿using Elsa.CustomActivities.Activities.Currency;
-using Elsa.CustomActivities.Activities.Date;
-using Elsa.CustomActivities.Activities.MultipleChoice;
-using Elsa.CustomActivities.Activities.SingleChoice;
-using Elsa.CustomActivities.Activities.Text;
+﻿using Elsa.CustomActivities.Activities.QuestionScreen;
 
 namespace Elsa.Server.Extensions
 {
@@ -10,12 +6,13 @@ namespace Elsa.Server.Extensions
     {
         public static void AddCustomElsaScriptHandlers(this IServiceCollection services)
         {
-            services.AddNotificationHandlers(typeof(GetMultipleChoiceQuestionScriptHandler));
-            services.AddNotificationHandlers(typeof(GetSingleChoiceQuestionScriptHandler));
-            services.AddNotificationHandlers(typeof(GetCurrencyQuestionScriptHandler));
-            services.AddNotificationHandlers(typeof(GetTextQuestionScriptHandler));
-            services.AddNotificationHandlers(typeof(GetDateQuestionScriptHandler));
+            var activityTypes = new List<Type>
+            {
+                typeof(GetQuestionScreenScriptHandler),
+            };
+            services.AddNotificationHandlers(activityTypes.ToArray());
             services.AddJavaScriptTypeDefinitionProvider<CustomTypeDefinitionProvider>();
+
         }
     }
 }

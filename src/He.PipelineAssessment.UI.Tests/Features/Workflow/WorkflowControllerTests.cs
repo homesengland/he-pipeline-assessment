@@ -181,7 +181,7 @@ namespace He.PipelineAssessment.UI.Tests.Features.Workflow
             Assert.IsType<ViewResult>(result);
 
             var viewResult = (ViewResult)result;
-            Assert.Equal("SaveAndContinue", viewResult.ViewName);
+            Assert.Equal("MultiSaveAndContinue", viewResult.ViewName);
             Assert.IsType<SaveAndContinueCommand>(viewResult.Model);
 
         }

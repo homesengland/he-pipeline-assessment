@@ -1,12 +1,14 @@
-﻿using Elsa.CustomActivities.Activities.Shared;
+﻿using Elsa.CustomActivities.Activities.QuestionScreen;
+using Elsa.CustomActivities.Activities.Shared;
 using Elsa.CustomInfrastructure.Data.Repository;
+using Elsa.CustomModels;
+using Elsa.CustomWorkflow.Sdk;
 using Elsa.Persistence;
 using Elsa.Persistence.Specifications.WorkflowInstances;
 using Elsa.Server.Models;
 using Elsa.Services.Models;
 using MediatR;
 using System.Text.Json;
-using Constants = Elsa.CustomActivities.Activities.Constants;
 
 namespace Elsa.Server.Features.Workflow.LoadWorkflowActivity
 {
@@ -37,12 +39,12 @@ namespace Elsa.Server.Features.Workflow.LoadWorkflowActivity
             };
             try
             {
-                var dbAssessmentQuestion =
-                    await _elsaCustomRepository.GetAssessmentQuestion(activityRequest.ActivityId, activityRequest.WorkflowInstanceId, cancellationToken);
+                var dbActivity =
+                    await _elsaCustomRepository.GetCustomActivityNavigation(activityRequest.ActivityId, activityRequest.WorkflowInstanceId, cancellationToken);
 
-                if (dbAssessmentQuestion != null)
+                if (dbActivity != null)
                 {
-                    IEnumerable<CollectedWorkflow> workflows = await _questionInvoker.FindWorkflowsAsync(activityRequest.ActivityId, dbAssessmentQuestion.ActivityType, activityRequest.WorkflowInstanceId, cancellationToken);
+                    IEnumerable<CollectedWorkflow> workflows = await _questionInvoker.FindWorkflowsAsync(activityRequest.ActivityId, dbActivity.ActivityType, activityRequest.WorkflowInstanceId, cancellationToken);
 
                     var collectedWorkflow = workflows.FirstOrDefault();
                     if (collectedWorkflow != null)
@@ -61,36 +63,57 @@ namespace Elsa.Server.Features.Workflow.LoadWorkflowActivity
                             else
                             {
                                 var activityDataDictionary =
-                                    workflowInstance.ActivityData.FirstOrDefault(a => a.Key == activityRequest.ActivityId).Value;
+                                    workflowInstance.ActivityData
+                                        .FirstOrDefault(a => a.Key == activityRequest.ActivityId).Value;
 
-                                result.Data.ActivityType = dbAssessmentQuestion.ActivityType;
-                                result.Data.PreviousActivityId = dbAssessmentQuestion.PreviousActivityId;
-
-                                var activityData = _loadWorkflowActivityJsonHelper.ActivityDataDictionaryToQuestionActivityData<QuestionActivityData>(activityDataDictionary);
-                                if (activityData != null)
+                                if (activityDataDictionary != null)
                                 {
-                                    result.Data!.QuestionActivityData = activityData;
-                                    result.Data.QuestionActivityData.ActivityType = dbAssessmentQuestion.ActivityType;
-                                    result.Data.QuestionActivityData.Answer = dbAssessmentQuestion.Answer;
-                                    result.Data.QuestionActivityData.Comments = dbAssessmentQuestion.Comments;
+                                    result.Data.ActivityType = dbActivity.ActivityType;
+                                    result.Data.PreviousActivityId = dbActivity.PreviousActivityId;
 
-                                    // Restore preserved checkboxes from previous page load
-                                    if (result.Data.ActivityType == Constants.MultipleChoiceQuestion && !string.IsNullOrEmpty(result.Data.QuestionActivityData.Answer))
+                                    if (dbActivity.ActivityType == ActivityTypeConstants.QuestionScreen)
                                     {
-                                        var answerList = JsonSerializer.Deserialize<List<string>>(result.Data.QuestionActivityData.Answer);
-                                        result.Data.QuestionActivityData.MultipleChoice.SelectedChoices = answerList!;
+                                        var title = (string?)activityDataDictionary.FirstOrDefault(x => x.Key == "PageTitle").Value;
+                                        result.Data.PageTitle = title;
+
+                                        var dbQuestions = await _elsaCustomRepository.GetQuestionScreenAnswers(
+                                            activityRequest.ActivityId, activityRequest.WorkflowInstanceId,
+                                            cancellationToken);
+
+                                        var elsaActivityAssessmentQuestions =
+                                            (AssessmentQuestions?)activityDataDictionary
+                                                .FirstOrDefault(x => x.Key == "Questions").Value;
+
+                                        if (elsaActivityAssessmentQuestions != null)
+                                        {
+                                            result.Data.MultiQuestionActivityData = new List<QuestionActivityData>();
+                                            result.Data.ActivityType = dbActivity.ActivityType;
+
+                                            foreach (var item in elsaActivityAssessmentQuestions.Questions)
+                                            {
+                                                //get me the item
+                                                var dbQuestion =
+                                                    dbQuestions.FirstOrDefault(x => x.QuestionId == item.Id);
+                                                if (dbQuestion != null)
+                                                {
+                                                    var questionActivityData = CreateQuestionActivityData(dbQuestion, item);
+
+                                                    result.Data.MultiQuestionActivityData.Add(questionActivityData);
+                                                }
+                                            }
+                                        }
+                                        else
+                                        {
+                                            result.ErrorMessages.Add(
+                                                $"Failed to map activity data to MultiQuestionActivityData");
+                                        }
                                     }
 
-                                    // Restore preserved selected answer from previous page load
-                                    if (result.Data.ActivityType == Constants.SingleChoiceQuestion && !string.IsNullOrEmpty(result.Data.QuestionActivityData.Answer))
-                                    {
-                                        result.Data.QuestionActivityData.SingleChoice.SelectedAnswer = result.Data.QuestionActivityData.Answer;
-                                    }
                                 }
                                 else
                                 {
                                     result.ErrorMessages.Add(
-                                        $"Failed to map activity data");
+                                        $"Activity data is null for Activity Id: {activityRequest.ActivityId}");
                                 }
                             }
                         }
@@ -118,6 +141,56 @@ namespace Elsa.Server.Features.Workflow.LoadWorkflowActivity
             }
 
             return await Task.FromResult(result);
+        }
+
+        private static QuestionActivityData CreateQuestionActivityData(QuestionScreenAnswer dbQuestion, Question item)
+        {
+            //assign the values
+            var questionActivityData = new QuestionActivityData();
+            questionActivityData.Answer = dbQuestion.Answer;
+            questionActivityData.Comments = dbQuestion.Comments;
+            questionActivityData.QuestionId = dbQuestion.QuestionId;
+            questionActivityData.QuestionType = dbQuestion.QuestionType;
+
+            questionActivityData.Question = item.QuestionText;
+            questionActivityData.DisplayComments = item.DisplayComments;
+            questionActivityData.QuestionGuidance = item.QuestionGuidance;
+            questionActivityData.QuestionHint = item.QuestionHint;
+
+            if (item.QuestionType == QuestionTypeConstants.CheckboxQuestion)
+            {
+                questionActivityData.Checkbox = new Checkbox();
+                questionActivityData.Checkbox.Choices =
+                    item.Checkbox.Choices.Select(x => new Choice()
+                    { Answer = x.Answer, IsSingle = x.IsSingle }).ToArray();
+            }
+
+            if (item.QuestionType == QuestionTypeConstants.CheckboxQuestion &&
+                !string.IsNullOrEmpty(questionActivityData.Answer))
+            {
+                var answerList =
+                    JsonSerializer.Deserialize<List<string>>(
+                        questionActivityData.Answer);
+                questionActivityData.Checkbox.SelectedChoices =
+                    answerList!;
+            }
+
+            if (item.QuestionType == QuestionTypeConstants.RadioQuestion)
+            {
+                questionActivityData.Radio = new Radio();
+                questionActivityData.Radio.Choices = item.Radio.Choices
+                    .Select(x => new Choice() { Answer = x.Answer })
+                    .ToArray();
+            }
+
+            if (item.QuestionType == QuestionTypeConstants.RadioQuestion &&
+                !string.IsNullOrEmpty(questionActivityData.Answer))
+            {
+                questionActivityData.Radio.SelectedAnswer =
+                    questionActivityData.Answer;
+            }
+
+            return questionActivityData;
         }
     }
 }

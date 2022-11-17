@@ -22,7 +22,17 @@
   </ItemGroup>
 
   <ItemGroup>
+    <None Remove="src\events\component-events.tsx" />
+    <None Remove="src\models\activity-provider.ts" />
+  </ItemGroup>
+
+  <ItemGroup>
     <ProjectReference Include="..\Elsa.CustomInfrastructure\Elsa.CustomInfrastructure.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <TypeScriptCompile Include="src\events\component-events.tsx" />
+    <TypeScriptCompile Include="src\components\question-provider\question-provider.tsx" />
   </ItemGroup>
 
 </Project>

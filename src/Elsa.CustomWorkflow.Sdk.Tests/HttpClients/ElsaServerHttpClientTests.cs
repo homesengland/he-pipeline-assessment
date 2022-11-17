@@ -55,9 +55,13 @@ namespace Elsa.CustomWorkflow.Sdk.Tests.HttpClients
             Assert.IsType<WorkflowNextActivityDataDto>(result);
         }
 
+
+
+
+
         [Theory]
         [AutoMoqData]
-        public async Task SaveAndContinue_ReturnsNull_GivenHttpClientGivesBackNonSuccessResponse(
+        public async Task MultiSaveAndContinue_ReturnsNull_GivenHttpClientGivesBackNonSuccessResponse(
             [Frozen] Mock<IHttpClientFactory> httpClientFactoryMock,
             [Frozen] Mock<HttpMessageHandler> httpMessageHandlerMock,
             SaveAndContinueCommandDto saveAndContinueCommandDto,
@@ -80,7 +84,7 @@ namespace Elsa.CustomWorkflow.Sdk.Tests.HttpClients
 
         [Theory]
         [AutoMoqData]
-        public async Task SaveAndContinue_ReturnsWorkflowNextActivityDataDto_GivenHttpClientGivesBackNonSuccessResponse(
+        public async Task MultiSaveAndContinue_ReturnsWorkflowNextActivityDataDto_GivenHttpClientGivesBackNonSuccessResponse(
             [Frozen] Mock<IHttpClientFactory> httpClientFactoryMock,
             [Frozen] Mock<HttpMessageHandler> httpMessageHandlerMock,
             SaveAndContinueCommandDto saveAndContinueCommandDto,

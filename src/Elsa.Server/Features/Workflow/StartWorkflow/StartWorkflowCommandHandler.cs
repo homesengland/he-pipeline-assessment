@@ -1,8 +1,12 @@
-﻿using Elsa.CustomInfrastructure.Data.Repository;
+﻿using Elsa.CustomActivities.Activities.QuestionScreen;
+using Elsa.CustomInfrastructure.Data.Repository;
+using Elsa.CustomModels;
+using Elsa.CustomWorkflow.Sdk;
 using Elsa.Models;
 using Elsa.Server.Models;
 using Elsa.Services;
 using MediatR;
+
 
 namespace Elsa.Server.Features.Workflow.StartWorkflow
 {
@@ -37,17 +41,44 @@ namespace Elsa.Server.Features.Workflow.StartWorkflow
 
                     if (activity != null)
                     {
-                        var assessmentQuestion =
-                            _startWorkflowMapper.RunWorkflowResultToAssessmentQuestion(runWorkflowResult, activity.Type);
+                        var customActivityNavigation =
+                            _startWorkflowMapper.RunWorkflowResultToCustomNavigationActivity(runWorkflowResult, activity.Type);
 
-                        if (assessmentQuestion != null)
+                        if (customActivityNavigation != null)
                         {
-                            await _elsaCustomRepository.CreateAssessmentQuestionAsync(assessmentQuestion!, cancellationToken);
+                            await _elsaCustomRepository.CreateCustomActivityNavigationAsync(customActivityNavigation!, cancellationToken);
                             result.Data = _startWorkflowMapper.RunWorkflowResultToStartWorkflowResponse(runWorkflowResult);
                         }
                         else
                         {
                             result.ErrorMessages.Add("Failed to deserialize RunWorkflowResult");
+                        }
+
+                        if (activity.Type == ActivityTypeConstants.QuestionScreen)
+                        {
+                            //create one for each question
+                            var dictionList = runWorkflowResult.WorkflowInstance.ActivityData
+                                .FirstOrDefault(x => x.Key == activity.Id).Value;
+
+                            AssessmentQuestions? dictionaryQuestions = (AssessmentQuestions?)dictionList.FirstOrDefault(x => x.Key == "Questions").Value;
+
+                            var questionList = (List<Question>)dictionaryQuestions!.Questions;
+                            if (questionList!.Any())
+                            {
+                                var assessments = new List<QuestionScreenAnswer>();
+
+                                foreach (var item in questionList!)
+                                {
+                                    var assessment =
+                                        _startWorkflowMapper.RunWorkflowResultToQuestionScreenAnswer(runWorkflowResult,
+                                            activity.Type, item);
+                                    if (assessment != null)
+                                    {
+                                        assessments.Add(assessment);
+                                    }
+                                }
+                                await _elsaCustomRepository.CreateQuestionScreenAnswersAsync(assessments, cancellationToken);
+                            }
                         }
                     }
                     else
@@ -55,7 +86,10 @@ namespace Elsa.Server.Features.Workflow.StartWorkflow
                         result.ErrorMessages.Add("Failed to get activity");
                     }
                 }
-
+                else
+                {
+                    result.ErrorMessages.Add("Workflow instance is null");
+                }
             }
             catch (Exception e)
             {

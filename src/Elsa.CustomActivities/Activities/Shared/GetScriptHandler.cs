@@ -2,11 +2,6 @@
 using Elsa.Scripting.JavaScript.Events;
 using Elsa.Scripting.JavaScript.Messages;
 using MediatR;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Elsa.CustomActivities.Activities.Shared
 {
@@ -16,10 +11,10 @@ namespace Elsa.CustomActivities.Activities.Shared
         public Task Handle(EvaluatingJavaScriptExpression notification, CancellationToken cancellationToken)
         {
             var activityExecutionContext = notification.ActivityExecutionContext;
-            if (activityExecutionContext.Input != null && activityExecutionContext.Input.GetType() == typeof(AssessmentQuestion))
+            if (activityExecutionContext.Input != null && activityExecutionContext.Input.GetType() == typeof(QuestionScreenAnswer))
             {
                 var engine = notification.Engine;
-                engine.SetValue(JavascriptElementName, activityExecutionContext.GetInput<AssessmentQuestion>() ?? new AssessmentQuestion());
+                engine.SetValue(JavascriptElementName, activityExecutionContext.GetInput<QuestionScreenAnswer>() ?? new QuestionScreenAnswer());
             }
             return Task.CompletedTask;
         }

@@ -1,0 +1,39 @@
+﻿@using He.PipelineAssessment.UI.Features.Workflow.ViewModels
+@model He.PipelineAssessment.UI.Features.Workflow.ViewModels.MultiQuestion
+@{
+    var itemName = "Data.MultiQuestionActivityData[" + Model.Index + "].Radio.SelectedAnswer";
+    var itemId = Model.Index + "radio_multi_select_";
+}
+
+<div class="govuk-form-group">
+    @await Html.PartialAsync("_QuestionTitle", Model.Title)
+
+    @await Html.PartialAsync("_QuestionText", Model.Question)
+    @await Html.PartialAsync("_QuestionHint", Model.QuestionHint)
+    
+    <div class="govuk-radios" data-module="govuk-radios">
+        @for (int i = 0; i < Model.Radio.Choices.Count(); i++)
+        {
+            var hiddenItemNameAnswer = "Data.MultiQuestionActivityData[" + Model.Index + "].Radio.Choices[" + i + "].Answer";
+            <input type="hidden" name="@hiddenItemNameAnswer" value="@Model.Radio.Choices[i].Answer" />
+        }
+        @foreach (var choice in Model.Radio.Choices)
+        {
+            int iterrator = 1;
+            string isChecked = "";
+            if (!String.IsNullOrEmpty(Model.Radio.SelectedAnswer) && choice.Answer == Model.Radio.SelectedAnswer)
+            {
+                isChecked = "checked";
+            }
+            <div class="govuk-radios__item">
+                <input class="govuk-radios__input" name="@itemName" type="radio" value="@choice.Answer" id="@itemId@iterrator" @isChecked>
+                <label class="govuk-label govuk-radios__label" for="@choice.Answer">@choice.Answer</label>
+            </div>
+            iterrator++;
+        }
+    </div>
+
+ 
+    @await Html.PartialAsync("_QuestionGuidance", Model.QuestionGuidance)
+    @await Html.PartialAsync("_MultiComments", new MultiComment(){Index = Model.Index, Comment = Model.Comments,DisplayComments = Model.DisplayComments})
+</div>

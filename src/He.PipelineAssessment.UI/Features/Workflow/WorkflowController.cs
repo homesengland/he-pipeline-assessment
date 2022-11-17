@@ -3,9 +3,7 @@ using He.PipelineAssessment.UI.Features.Workflow.LoadWorkflowActivity;
 using He.PipelineAssessment.UI.Features.Workflow.SaveAndContinue;
 using He.PipelineAssessment.UI.Features.Workflow.StartWorkflow;
 using MediatR;
-using Microsoft.AspNetCore.Components.Forms;
 using Microsoft.AspNetCore.Mvc;
-using System;
 
 namespace He.PipelineAssessment.UI.Features.Workflow
 {
@@ -34,14 +32,14 @@ namespace He.PipelineAssessment.UI.Features.Workflow
         {
             try
             {
-                    var result = await this._mediator.Send(command);
+                var result = await this._mediator.Send(command);
 
-                    return RedirectToAction("LoadWorkflowActivity",
-                        new
-                        {
-                            WorkflowInstanceId = result?.WorkflowInstanceId,
-                            ActivityId = result?.ActivityId
-                        });
+                return RedirectToAction("LoadWorkflowActivity",
+                    new
+                    {
+                        WorkflowInstanceId = result?.WorkflowInstanceId,
+                        ActivityId = result?.ActivityId
+                    });
             }
             catch (Exception e)
             {
@@ -55,7 +53,9 @@ namespace He.PipelineAssessment.UI.Features.Workflow
             try
             {
                 var result = await this._mediator.Send(request);
-                return View("SaveAndContinue", result);
+
+                return View("MultiSaveAndContinue", result);
+
             }
             catch (Exception e)
             {
@@ -85,9 +85,9 @@ namespace He.PipelineAssessment.UI.Features.Workflow
                 }
                 else
                 {
-                    command.ValidationMessages = validationResult.Errors.Select(x=>x.ErrorMessage).ToList();
-              
-                    return View("SaveAndContinue", command);
+                    command.ValidationMessages = validationResult;
+
+                    return View("MultiSaveAndContinue", command);
                 }
             }
             catch (Exception e)
