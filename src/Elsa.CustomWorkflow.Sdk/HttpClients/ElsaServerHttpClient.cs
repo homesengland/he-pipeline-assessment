@@ -8,7 +8,7 @@ namespace Elsa.CustomWorkflow.Sdk.HttpClients
     public interface IElsaServerHttpClient
     {
         Task<WorkflowNextActivityDataDto?> PostStartWorkflow(StartWorkflowCommandDto model);
-        Task<WorkflowNextActivityDataDto?> SaveAndContinue(MultiSaveAndContinueCommandDto model);
+        Task<WorkflowNextActivityDataDto?> SaveAndContinue(SaveAndContinueCommandDto model);
         Task<WorkflowActivityDataDto?> LoadWorkflowActivity(LoadWorkflowActivityDto model);
     }
 
@@ -52,10 +52,10 @@ namespace Elsa.CustomWorkflow.Sdk.HttpClients
 
 
 
-        public async Task<WorkflowNextActivityDataDto?> SaveAndContinue(MultiSaveAndContinueCommandDto model)
+        public async Task<WorkflowNextActivityDataDto?> SaveAndContinue(SaveAndContinueCommandDto model)
         {
             string data;
-            var relativeUri = "workflow/MultiSaveAndContinue";
+            var relativeUri = "workflow/QuestionScreenSaveAndContinue";
 
             using var request = new HttpRequestMessage(HttpMethod.Post, relativeUri);
             var content = JsonSerializer.Serialize(model);

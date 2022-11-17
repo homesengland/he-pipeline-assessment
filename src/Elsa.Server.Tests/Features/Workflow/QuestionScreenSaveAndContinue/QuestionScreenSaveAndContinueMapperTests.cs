@@ -1,7 +1,7 @@
 ﻿using AutoFixture.Xunit2;
 using Elsa.CustomActivities.Activities.QuestionScreen;
 using Elsa.CustomModels;
-using Elsa.Server.Features.Workflow.MultiSaveAndContinue;
+using Elsa.Server.Features.Workflow.QuestionScreenSaveAndContinue;
 using Elsa.Server.Providers;
 using He.PipelineAssessment.Common.Tests;
 using Moq;
@@ -13,12 +13,12 @@ namespace Elsa.Server.Tests.Features.Workflow.MultiSaveAndContinue
     {
         [Theory]
         [AutoMoqData]
-        public void MultiSaveAndContinueCommandToNextAssessmentQuestion_ShouldReturnAssessmentQuestion(
+        public void QuestionScreenSaveAndContinueCommandToCustomActivityNavigation_ShouldReturnAssessmentQuestion(
             [Frozen] Mock<IDateTimeProvider> mockDateTimeProvider,
-            MultiSaveAndContinueCommand saveAndContinueCommand,
+            QuestionScreenSaveAndContinueCommand saveAndContinueCommand,
             string nextActivityId,
             string nextActivityType,
-            MultiSaveAndContinueMapper sut
+            QuestionScreenSaveAndContinueMapper sut
         )
         {
             //Arrange
@@ -26,15 +26,12 @@ namespace Elsa.Server.Tests.Features.Workflow.MultiSaveAndContinue
             mockDateTimeProvider.Setup(x => x.UtcNow()).Returns(currentTimeUtc);
 
             //Act
-            var result = sut.SaveAndContinueCommandToNextAssessmentQuestion(saveAndContinueCommand, nextActivityId, nextActivityType);
+            var result = sut.saveAndContinueCommandToNextCustomActivityNavigation(saveAndContinueCommand, nextActivityId, nextActivityType);
 
             //Assert
-            Assert.IsType<AssessmentQuestion>(result);
+            Assert.IsType<CustomActivityNavigation>(result);
             Assert.Equal(nextActivityId, result!.ActivityId);
             Assert.Equal(nextActivityType, result!.ActivityType);
-            Assert.False(result.FinishWorkflow);
-            Assert.False(result.NavigateBack);
-            Assert.Null(result.Answer);
             Assert.Equal(saveAndContinueCommand.WorkflowInstanceId, result.WorkflowInstanceId);
             Assert.Equal(saveAndContinueCommand.ActivityId, result.PreviousActivityId);
             Assert.Equal(currentTimeUtc, result.CreatedDateTime);
@@ -42,13 +39,13 @@ namespace Elsa.Server.Tests.Features.Workflow.MultiSaveAndContinue
 
         [Theory]
         [AutoMoqData]
-        public void MultiSaveAndContinueCommandToNextAssessmentQuestion_WithQuestionParameter_ShouldReturnAssessmentQuestion(
+        public void QuestionScreenSaveAndContinueCommandToQuestionScreenQuestion_WithQuestionParameter_ShouldReturnAssessmentQuestion(
             [Frozen] Mock<IDateTimeProvider> mockDateTimeProvider,
-            MultiSaveAndContinueCommand saveAndContinueCommand,
+            QuestionScreenSaveAndContinueCommand saveAndContinueCommand,
             string nextActivityId,
             string nextActivityType,
             Question question,
-            MultiSaveAndContinueMapper sut
+            QuestionScreenSaveAndContinueMapper sut
         )
         {
             //Arrange
@@ -56,18 +53,16 @@ namespace Elsa.Server.Tests.Features.Workflow.MultiSaveAndContinue
             mockDateTimeProvider.Setup(x => x.UtcNow()).Returns(currentTimeUtc);
 
             //Act
-            var result = sut.SaveAndContinueCommandToNextAssessmentQuestion(saveAndContinueCommand, nextActivityId, nextActivityType, question);
+            var result = sut.SaveAndContinueCommandToQuestionScreenAnswer(saveAndContinueCommand, nextActivityId, nextActivityType, question);
 
             //Assert
-            Assert.IsType<AssessmentQuestion>(result);
+            Assert.IsType<QuestionScreenAnswer>(result);
             Assert.Equal(nextActivityId, result!.ActivityId);
-            Assert.Equal(nextActivityType, result!.ActivityType);
-            Assert.False(result.FinishWorkflow);
-            Assert.False(result.NavigateBack);
-            Assert.Null(result.Answer);
             Assert.Equal(saveAndContinueCommand.WorkflowInstanceId, result.WorkflowInstanceId);
-            Assert.Equal(saveAndContinueCommand.ActivityId, result.PreviousActivityId);
             Assert.Equal(currentTimeUtc, result.CreatedDateTime);
+            Assert.Equal(question.Id, result.QuestionId);
+            Assert.Equal(question.QuestionType, result.QuestionType);
+
         }
     }
 }

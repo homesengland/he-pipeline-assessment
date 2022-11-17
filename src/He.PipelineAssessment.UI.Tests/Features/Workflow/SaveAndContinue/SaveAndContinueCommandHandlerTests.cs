@@ -18,7 +18,7 @@ namespace He.PipelineAssessment.UI.Tests.Features.Workflow.SaveAndContinue
             [Frozen] Mock<IElsaServerHttpClient> elsaServerHttpClient,
             [Frozen] Mock<ISaveAndContinueMapper> saveAndContinueMapper,
             SaveAndContinueCommand saveAndContinueCommand,
-            MultiSaveAndContinueCommandDto saveAndContinueCommandDto,
+            SaveAndContinueCommandDto saveAndContinueCommandDto,
             SaveAndContinueCommandHandler sut
         )
         {
@@ -43,7 +43,7 @@ namespace He.PipelineAssessment.UI.Tests.Features.Workflow.SaveAndContinue
             [Frozen] Mock<IElsaServerHttpClient> elsaServerHttpClient,
             [Frozen] Mock<ISaveAndContinueMapper> saveAndContinueMapper,
             SaveAndContinueCommand saveAndContinueCommand,
-            MultiSaveAndContinueCommandDto saveAndContinueCommandDto,
+            SaveAndContinueCommandDto saveAndContinueCommandDto,
             WorkflowNextActivityDataDto workflowNextActivityDataDto,
             SaveAndContinueCommandHandler sut
         )
@@ -71,7 +71,7 @@ namespace He.PipelineAssessment.UI.Tests.Features.Workflow.SaveAndContinue
         [Frozen] Mock<IElsaServerHttpClient> elsaServerHttpClient,
         [Frozen] Mock<ISaveAndContinueMapper> saveAndContinueMapper,
         SaveAndContinueCommand saveAndContinueCommand,
-        MultiSaveAndContinueCommandDto saveAndContinueCommandDto,
+        SaveAndContinueCommandDto saveAndContinueCommandDto,
         WorkflowNextActivityDataDto workflowNextActivityDataDto,
         SaveAndContinueCommandHandler sut
         )

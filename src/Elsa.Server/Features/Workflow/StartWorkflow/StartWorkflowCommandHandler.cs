@@ -41,12 +41,12 @@ namespace Elsa.Server.Features.Workflow.StartWorkflow
 
                     if (activity != null)
                     {
-                        var assessmentQuestion =
-                            _startWorkflowMapper.RunWorkflowResultToAssessmentQuestion(runWorkflowResult, activity.Type);
+                        var customActivityNavigation =
+                            _startWorkflowMapper.RunWorkflowResultToCustomNavigationActivity(runWorkflowResult, activity.Type);
 
-                        if (assessmentQuestion != null)
+                        if (customActivityNavigation != null)
                         {
-                            await _elsaCustomRepository.CreateAssessmentQuestionAsync(assessmentQuestion!, cancellationToken);
+                            await _elsaCustomRepository.CreateCustomActivityNavigationAsync(customActivityNavigation!, cancellationToken);
                             result.Data = _startWorkflowMapper.RunWorkflowResultToStartWorkflowResponse(runWorkflowResult);
                         }
                         else
@@ -65,19 +65,19 @@ namespace Elsa.Server.Features.Workflow.StartWorkflow
                             var questionList = (List<Question>)dictionaryQuestions!.Questions;
                             if (questionList!.Any())
                             {
-                                var assessments = new List<AssessmentQuestion>();
+                                var assessments = new List<QuestionScreenAnswer>();
 
                                 foreach (var item in questionList!)
                                 {
                                     var assessment =
-                                        _startWorkflowMapper.RunWorkflowResultToAssessmentQuestion(runWorkflowResult,
+                                        _startWorkflowMapper.RunWorkflowResultToQuestionScreenAnswer(runWorkflowResult,
                                             activity.Type, item);
                                     if (assessment != null)
                                     {
                                         assessments.Add(assessment);
                                     }
                                 }
-                                await _elsaCustomRepository.CreateAssessmentQuestionAsync(assessments, cancellationToken);
+                                await _elsaCustomRepository.CreateQuestionScreenAnswersAsync(assessments, cancellationToken);
                             }
                         }
                     }

@@ -64,7 +64,7 @@ namespace Elsa.CustomWorkflow.Sdk.Tests.HttpClients
         public async Task MultiSaveAndContinue_ReturnsNull_GivenHttpClientGivesBackNonSuccessResponse(
             [Frozen] Mock<IHttpClientFactory> httpClientFactoryMock,
             [Frozen] Mock<HttpMessageHandler> httpMessageHandlerMock,
-            MultiSaveAndContinueCommandDto saveAndContinueCommandDto,
+            SaveAndContinueCommandDto saveAndContinueCommandDto,
             WorkflowNextActivityDataDto workflowNextActivityDataDto,
             ElsaServerHttpClient sut)
         {
@@ -87,7 +87,7 @@ namespace Elsa.CustomWorkflow.Sdk.Tests.HttpClients
         public async Task MultiSaveAndContinue_ReturnsWorkflowNextActivityDataDto_GivenHttpClientGivesBackNonSuccessResponse(
             [Frozen] Mock<IHttpClientFactory> httpClientFactoryMock,
             [Frozen] Mock<HttpMessageHandler> httpMessageHandlerMock,
-            MultiSaveAndContinueCommandDto saveAndContinueCommandDto,
+            SaveAndContinueCommandDto saveAndContinueCommandDto,
             WorkflowNextActivityDataDto workflowNextActivityDataDto,
             ElsaServerHttpClient sut)
         {
