@@ -1,5 +1,5 @@
-import { Question } from '../models/custom-component-models';
-import { QuestionEventHandler } from './component-events'
+import { Question, CheckboxQuestion, CheckboxOption } from '../models/custom-component-models';
+import { QuestionEventHandler, CheckboxEventHandler } from './component-events'
 
 it('should construct', () => {
     const EventEmitter = require("events");
@@ -115,9 +115,26 @@ it('onTitleChanged should emit an event with updated title', () => {
 
     expect(question.displayComments).toBe(true);
     expect(emitter.emit).lastCalledWith(question);
-
-    // input.toggleAttribute("checked");
-    // expect(question.displayComments).toBe(false);
-    // expect(emitter.emit).lastCalledWith(question);
   });
   
+  it('onCheckChanged should emit an event with updated choices', () => {
+    const EventEmitter = require("events");
+    const emitter = new EventEmitter()
+    emitter.emit = jest.fn();
+    let question = new CheckboxQuestion();
+    var oldOption: CheckboxOption = {answer: 'second', isSingle: true};
+    question.options.choices = [{answer: 'first', isSingle: true}, oldOption];
+    question.checkbox.choices = [{answer: 'first', isSingle: true}, oldOption];
+    let handler = new CheckboxEventHandler(question, emitter);
+
+    let input = document.createElement('input');
+    input.checked = false;
+    let event = new Event("");
+    jest.spyOn(event, 'currentTarget', 'get').mockReturnValue(input)
+    handler.onCheckChanged(event, oldOption);
+
+    expect(question.checkbox.choices[1].isSingle).toBe(false);
+    expect(question.options.choices[1].isSingle).toBe(false);
+    expect(oldOption.isSingle).toBe(false);
+    expect(emitter.emit).lastCalledWith(question);
+  });
