@@ -56,6 +56,9 @@ abstract class BaseQuestionEventHandler {
 
   onDisplayCommentsBox= (e: Event) => {
     let updatedQuestion = this.question;
+    console.log(e);
+console.log(e.target);
+console.log(e.currentTarget);
     const checkbox = (e.target as HTMLInputElement);
     updatedQuestion.displayComments = checkbox.checked;
     this.emitter.emit(updatedQuestion);

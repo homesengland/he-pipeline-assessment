@@ -32,7 +32,8 @@
     "@elsa-workflows/elsa-workflows-studio": "^2.8.2",
     "@stencil/core": "2.13.0",
     "@stencil/router": "^1.0.1",
-    "@stencil/store": "^1.5.0"
+    "@stencil/store": "^1.5.0",
+    "jest-environment-jsdom": "^29.3.1"
   },
   "devDependencies": {
     "@types/jest": "^27.5.2",
