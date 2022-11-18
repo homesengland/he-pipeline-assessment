@@ -10,9 +10,9 @@ namespace Elsa.CustomActivities.Activities.QuestionScreen
 {
     [Trigger(
     Category = "Homes England Activities",
-    Description = "Multi question screen",
+    Description = "Set up a question screen",
     Outcomes = new[] { OutcomeNames.Done },
-    DisplayName = "Question screen"
+    DisplayName = "Question Screen"
 )]
     public class QuestionScreen : Activity
     {
