@@ -1,10 +1,10 @@
 using Elsa.CustomWorkflow.Sdk.HttpClients;
 using FluentValidation;
+using He.PipelineAssessment.Data;
 using He.PipelineAssessment.Data.SinglePipeline;
 using He.PipelineAssessment.Infrastructure.Data;
 using He.PipelineAssessment.Infrastructure.Repository;
 using He.PipelineAssessment.UI;
-using He.PipelineAssessment.UI.Features.Assessments;
 using He.PipelineAssessment.UI.Features.Workflow.SaveAndContinue;
 using MediatR;
 using Microsoft.AspNetCore.DataProtection;
@@ -56,10 +56,18 @@ builder.Services.AddScoped<IEsriSinglePipelineDataJsonHelper, EsriSinglePipeline
 
 string singlePipelineURL = builder.Configuration["Datasources:SinglePipeline"];
 
+builder.Services.AddOptions<IdentityClientConfig>()
+.Configure<IConfiguration>((settings, configuration) =>
+{
+    configuration.GetSection("IdentityClientConfig").Bind(settings);
+});
+
+builder.Services.AddScoped<IIdentityClient, IdentityClient>();
+builder.Services.AddTransient<BearerTokenHandler>();
 builder.Services.AddHttpClient("SinglePipelineClient", client =>
 {
     client.BaseAddress = new Uri(singlePipelineURL);
-});
+}).AddHttpMessageHandler<BearerTokenHandler>();
 
 
 
