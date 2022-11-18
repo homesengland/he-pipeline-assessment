@@ -21,15 +21,24 @@ namespace He.PipelineAssessment.Data
 
         public string GetAccessToken()
         {
-            string azureTenantId = _identityConfig.AzureTenantId;
-            string applicationManagedIdentity = _identityConfig.ApplicationManagedIdentity;
-            string azureResourceId = _identityConfig.AzureResourceId;
+            try
+            {
+                string azureTenantId = _identityConfig.AzureTenantId;
+                string applicationManagedIdentity = _identityConfig.ApplicationManagedIdentity;
+                string azureResourceId = _identityConfig.AzureResourceId;
 
-            var azureServiceTokenProvider = new AzureServiceTokenProvider(applicationManagedIdentity);
+                var azureServiceTokenProvider = new AzureServiceTokenProvider(applicationManagedIdentity);
 
-            var accessToken = azureServiceTokenProvider.GetAccessTokenAsync(azureResourceId, azureTenantId).Result;
+                var accessToken = azureServiceTokenProvider.GetAccessTokenAsync(azureResourceId, azureTenantId).Result;
 
-            return accessToken;
+                return accessToken;
+            }
+            catch (Exception e)
+            {
+                _logger.LogError(e, "Error getting Access Token");
+                throw;
+            }
+
         }
     }
 }
