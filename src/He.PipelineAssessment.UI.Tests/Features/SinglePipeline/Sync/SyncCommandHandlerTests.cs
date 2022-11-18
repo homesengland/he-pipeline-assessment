@@ -4,6 +4,7 @@ using He.PipelineAssessment.Data.SinglePipeline;
 using He.PipelineAssessment.Infrastructure.Repository;
 using He.PipelineAssessment.UI.Features.SinglePipeline.Sync;
 using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Logging;
 using Moq;
 using Xunit;
 using IConfiguration = Microsoft.Extensions.Configuration.IConfiguration;
@@ -37,6 +38,7 @@ namespace He.PipelineAssessment.UI.Tests.Features.SinglePipeline.Sync
             [Frozen] Mock<IEsriSinglePipelineClient> esriSinglePipelineClient,
             [Frozen] Mock<IEsriSinglePipelineDataJsonHelper> esriSinglePipelineDataJsonHelper,
             [Frozen] Mock<IAssessmentRepository> assessmentRepository,
+            [Frozen] Mock<ILogger<SyncCommandHandler>> logger,
             IConfiguration configuration,
             SyncCommandHandler sut)
         {
@@ -48,7 +50,7 @@ namespace He.PipelineAssessment.UI.Tests.Features.SinglePipeline.Sync
             configuration = new ConfigurationBuilder()
                 .AddInMemoryCollection(inMemorySettings)
                 .Build();
-            sut = new SyncCommandHandler(esriSinglePipelineClient.Object, esriSinglePipelineDataJsonHelper.Object, assessmentRepository.Object, configuration, assessmentRepository.Object);
+            sut = new SyncCommandHandler(esriSinglePipelineClient.Object, esriSinglePipelineDataJsonHelper.Object, assessmentRepository.Object, configuration, assessmentRepository.Object, logger.Object);
 
             //Act
             var result = await sut.Handle(It.IsAny<SyncCommand>(), CancellationToken.None);
@@ -65,6 +67,7 @@ namespace He.PipelineAssessment.UI.Tests.Features.SinglePipeline.Sync
             [Frozen] Mock<IEsriSinglePipelineClient> esriSinglePipelineClient,
             [Frozen] Mock<IEsriSinglePipelineDataJsonHelper> esriSinglePipelineDataJsonHelper,
             [Frozen] Mock<IAssessmentRepository> assessmentRepository,
+            [Frozen] Mock<ILogger<SyncCommandHandler>> logger,
             IConfiguration configuration,
             string stringResponse,
             SyncCommandHandler sut)
@@ -78,7 +81,7 @@ namespace He.PipelineAssessment.UI.Tests.Features.SinglePipeline.Sync
             configuration = new ConfigurationBuilder()
                 .AddInMemoryCollection(inMemorySettings)
                 .Build();
-            sut = new SyncCommandHandler(esriSinglePipelineClient.Object, esriSinglePipelineDataJsonHelper.Object, assessmentRepository.Object, configuration, assessmentRepository.Object);
+            sut = new SyncCommandHandler(esriSinglePipelineClient.Object, esriSinglePipelineDataJsonHelper.Object, assessmentRepository.Object, configuration, assessmentRepository.Object, logger.Object);
 
             //Act
             var result = await sut.Handle(It.IsAny<SyncCommand>(), CancellationToken.None);
@@ -95,6 +98,7 @@ namespace He.PipelineAssessment.UI.Tests.Features.SinglePipeline.Sync
             [Frozen] Mock<IEsriSinglePipelineClient> esriSinglePipelineClient,
             [Frozen] Mock<IEsriSinglePipelineDataJsonHelper> esriSinglePipelineDataJsonHelper,
             [Frozen] Mock<IAssessmentRepository> assessmentRepository,
+            [Frozen] Mock<ILogger<SyncCommandHandler>> logger,
             IConfiguration configuration,
             string stringResponse,
             List<Repo.Assessment> assessments,
@@ -111,7 +115,7 @@ namespace He.PipelineAssessment.UI.Tests.Features.SinglePipeline.Sync
             configuration = new ConfigurationBuilder()
                 .AddInMemoryCollection(inMemorySettings)
                 .Build();
-            sut = new SyncCommandHandler(esriSinglePipelineClient.Object, esriSinglePipelineDataJsonHelper.Object, assessmentRepository.Object, configuration, assessmentRepository.Object);
+            sut = new SyncCommandHandler(esriSinglePipelineClient.Object, esriSinglePipelineDataJsonHelper.Object, assessmentRepository.Object, configuration, assessmentRepository.Object, logger.Object);
 
             //Act
             var result = await sut.Handle(It.IsAny<SyncCommand>(), CancellationToken.None);
