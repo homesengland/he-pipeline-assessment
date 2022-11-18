@@ -13,14 +13,16 @@ namespace He.PipelineAssessment.UI.Features.SinglePipeline.Sync
         private readonly IAssessmentRepository _assessmentRepository;
         private readonly IConfiguration _config;
         private readonly IAssessmentRepository _repo;
+        private readonly ILogger<SyncCommandHandler> _logger;
 
-        public SyncCommandHandler(IEsriSinglePipelineClient esriSinglePipelineClient, IEsriSinglePipelineDataJsonHelper jsonHelper, IAssessmentRepository assessmentRepository, IConfiguration config, IAssessmentRepository repo)
+        public SyncCommandHandler(IEsriSinglePipelineClient esriSinglePipelineClient, IEsriSinglePipelineDataJsonHelper jsonHelper, IAssessmentRepository assessmentRepository, IConfiguration config, IAssessmentRepository repo, ILogger<SyncCommandHandler> logger)
         {
             _esriSinglePipelineClient = esriSinglePipelineClient;
             _jsonHelper = jsonHelper;
             _assessmentRepository = assessmentRepository;
             _config = config;
             _repo = repo;
+            _logger = logger;
         }
 
         public async Task<SyncResponse> Handle(SyncCommand request, CancellationToken cancellationToken)
@@ -65,6 +67,7 @@ namespace He.PipelineAssessment.UI.Features.SinglePipeline.Sync
             catch (Exception e)
             {
                 errorMessages.Add(e.Message);
+                _logger.LogError(e.Message);
             }
 
             return new SyncResponse()
