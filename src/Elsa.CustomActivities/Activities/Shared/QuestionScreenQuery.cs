@@ -43,9 +43,9 @@ namespace Elsa.CustomActivities.Activities.Shared
             var workflowBlueprint = workflowRegistry.FindByNameAsync(workflowName, Elsa.Models.VersionOptions.Published).Result;
             var workflowId = workflowBlueprint?.Id;
 
-            var activityId = workflowBlueprint.Activities.Where(x => x.Name == activityName);
+            var activityId = workflowBlueprint.Activities.FirstOrDefault(x => x.Name == activityName).Id;
 
-            var result = await _elsaCustomRepository.GetQuestionScreenAnswer(activityId, activityExecutionContext.CorrelationId, questionId);
+            var result = await _elsaCustomRepository.GetQuestionScreenAnswer(activityId, activityExecutionContext.CorrelationId, questionId, CancellationToken.None);
 
             return result;
 
