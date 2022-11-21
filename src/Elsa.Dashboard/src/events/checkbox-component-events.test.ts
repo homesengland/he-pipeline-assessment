@@ -1,23 +1,21 @@
-import { Question, CheckboxQuestion, CheckboxOption, RadioQuestion, RadioOption, QuestionOptions } from '../models/custom-component-models';
-import { QuestionEventHandler, CheckboxEventHandler, RadioEventHandler } from './component-events'
+import { CheckboxQuestion, CheckboxOption, QuestionOptions } from '../models/custom-component-models';
+import { CheckboxEventHandler } from './component-events'
 
-// question event handlers
-
-it('should construct question event handler', () => {
+  it('should construct checkbox event handler', () => {
     const EventEmitter = require("events");
     const emitter = new EventEmitter()
     emitter.emit = jest.fn();
-    let handler = new QuestionEventHandler(new Question(), emitter);
+    let handler = new CheckboxEventHandler(new CheckboxQuestion(), emitter);
     expect(handler).toBeTruthy();
-});
+  });
 
-it('onTitleChanged should emit an event with updated title', () => {
+  it('onTitleChanged should emit an event with updated title on checkbox', () => {
     const EventEmitter = require("events");
     const emitter = new EventEmitter()
     emitter.emit = jest.fn();
-    let question = new Question();
+    let question = new CheckboxQuestion();
     question.title = "MyTestTitle";
-    let handler = new QuestionEventHandler(question, emitter);
+    let handler = new CheckboxEventHandler(question, emitter);
 
     let input = document.createElement('input');
     input.value = "NewTitle";
@@ -29,13 +27,13 @@ it('onTitleChanged should emit an event with updated title', () => {
     expect(emitter.emit).lastCalledWith(question);
   });
 
-  it('onIdentifierChanged should emit an event with updated id', () => {
+  it('onIdentifierChanged should emit an event with updated id on checkbox', () => {
     const EventEmitter = require("events");
     const emitter = new EventEmitter()
     emitter.emit = jest.fn();
-    let question = new Question();
+    let question = new CheckboxQuestion();
     question.id = "MyId";
-    let handler = new QuestionEventHandler(question, emitter);
+    let handler = new CheckboxEventHandler(question, emitter);
 
     let input = document.createElement('input');
     input.value = "NewId";
@@ -47,13 +45,13 @@ it('onTitleChanged should emit an event with updated title', () => {
     expect(emitter.emit).lastCalledWith(question);
   });
 
-  it('onQuestionChanged should emit an event with updated question text', () => {
+  it('onQuestionChanged should emit an event with updated question text on checkbox', () => {
     const EventEmitter = require("events");
     const emitter = new EventEmitter()
     emitter.emit = jest.fn();
-    let question = new Question();
+    let question = new CheckboxQuestion();
     question.questionText = "MyQuestionText";
-    let handler = new QuestionEventHandler(question, emitter);
+    let handler = new CheckboxEventHandler(question, emitter);
 
     let input = document.createElement('input');
     input.value = "NewQuestionText";
@@ -65,13 +63,13 @@ it('onTitleChanged should emit an event with updated title', () => {
     expect(emitter.emit).lastCalledWith(question);
   });
 
-  it('onGuidanceChanged should emit an event with updated guidance', () => {
+  it('onGuidanceChanged should emit an event with updated guidance on checkbox', () => {
     const EventEmitter = require("events");
     const emitter = new EventEmitter()
     emitter.emit = jest.fn();
-    let question = new Question();
+    let question = new CheckboxQuestion();
     question.questionGuidance = "MyGuidance";
-    let handler = new QuestionEventHandler(question, emitter);
+    let handler = new CheckboxEventHandler(question, emitter);
 
     let input = document.createElement('input');
     input.value = "NewGuidance";
@@ -83,13 +81,13 @@ it('onTitleChanged should emit an event with updated title', () => {
     expect(emitter.emit).lastCalledWith(question);
   });
 
-  it('onHintChanged should emit an event with updated hint', () => {
+  it('onHintChanged should emit an event with updated hint on checkbox', () => {
     const EventEmitter = require("events");
     const emitter = new EventEmitter()
     emitter.emit = jest.fn();
-    let question = new Question();
+    let question = new CheckboxQuestion();
     question.questionHint = "MyHint";
-    let handler = new QuestionEventHandler(question, emitter);
+    let handler = new CheckboxEventHandler(question, emitter);
 
     let input = document.createElement('input');
     input.value = "NewHint";
@@ -101,13 +99,13 @@ it('onTitleChanged should emit an event with updated title', () => {
     expect(emitter.emit).lastCalledWith(question);
   });
 
-  it('onDisplayCommentsBox should emit an event with updated displayCommentsBox', () => {
+  it('onDisplayCommentsBox should emit an event with updated displayCommentsBox on checkbox', () => {
     const EventEmitter = require("events");
     const emitter = new EventEmitter()
     emitter.emit = jest.fn();
-    let question = new Question();
+    let question = new CheckboxQuestion();
     question.displayComments = false;
-    let handler = new QuestionEventHandler(question, emitter);
+    let handler = new CheckboxEventHandler(question, emitter);
 
     let input = document.createElement('input');
     input.checked = true;
@@ -117,16 +115,6 @@ it('onTitleChanged should emit an event with updated title', () => {
 
     expect(question.displayComments).toBe(true);
     expect(emitter.emit).lastCalledWith(question);
-  });
-  
-  // checkbox event handlers
-
-  it('should construct checkbox event handler', () => {
-    const EventEmitter = require("events");
-    const emitter = new EventEmitter()
-    emitter.emit = jest.fn();
-    let handler = new CheckboxEventHandler(new CheckboxQuestion(), emitter);
-    expect(handler).toBeTruthy();
   });
 
   it('onAddChoiceClick should emit an event with new choice on checkbox', () => {
@@ -198,7 +186,7 @@ it('onTitleChanged should emit an event with updated title', () => {
     expect(emitter.emit).lastCalledWith(question);
   });
 
-  it('getChoice should return a choice object with default isSingle and supplied name for checkbox', () => {
+  it('getChoice should return a choice object with default isSingle and supplied name on checkbox', () => {
     const EventEmitter = require("events");
     const emitter = new EventEmitter()
     let question = new CheckboxQuestion();
@@ -242,103 +230,4 @@ it('onTitleChanged should emit an event with updated title', () => {
     expect(question.options.choices[1].isSingle).toBe(false);
     expect(oldOption.isSingle).toBe(false);
     expect(emitter.emit).lastCalledWith(question);
-  });
-
- 
-  // radio event handlers
-
-  it('should construct radio event handler', () => {
-    const EventEmitter = require("events");
-    const emitter = new EventEmitter()
-    emitter.emit = jest.fn();
-    let handler = new RadioEventHandler(new RadioQuestion(), emitter);
-    expect(handler).toBeTruthy();
-  });
-
-  it('onAddChoiceClick should emit an event with new choice on radio', () => {
-    const EventEmitter = require("events");
-    const emitter = new EventEmitter()
-    emitter.emit = jest.fn();
-    let question = new RadioQuestion();
-    var oldOption: RadioOption = {answer: 'second'};
-    question.options.choices = [{answer: 'first'}, oldOption];
-    question.radio.choices = [{answer: 'first'}, oldOption];
-    let handler = new RadioEventHandler(question, emitter);
-
-    handler.onAddChoiceClick();
-    handler.onAddChoiceClick();
-
-    expect(handler.question.radio.choices.length).toBe(4);
-    expect(handler.question.options.choices.length).toBe(4);
-
-    let lastChoice = handler.question.radio.choices[3];
-    expect(lastChoice.answer).toBe("Choice 4");
-    expect(emitter.emit).lastCalledWith(handler.question);
-  });
-
-  it('onDeleteChoiceClick should emit an event without deleted choice on radio', () => {
-    const EventEmitter = require("events");
-    const emitter = new EventEmitter()
-    emitter.emit = jest.fn();
-    let question = new RadioQuestion();
-    var oldOption: RadioOption = {answer: 'second'};
-    question.options.choices = [{answer: 'first'}, oldOption];
-    question.radio.choices = [{answer: 'first'}, oldOption];
-    let handler = new RadioEventHandler(question, emitter);
-
-    handler.onDeleteChoiceClick(oldOption);
-
-    expect(handler.question.radio.choices.length).toBe(1);
-    expect(handler.question.options.choices.length).toBe(1);
-
-    let onlyChoice = handler.question.radio.choices[0];
-    expect(onlyChoice.answer).toBe("first");
-    expect(emitter.emit).lastCalledWith(handler.question);
-  });
-
-  it('onChoiceNameChanged should emit an event with trimmed updated choice on radio', () => {
-    const EventEmitter = require("events");
-    const emitter = new EventEmitter()
-    emitter.emit = jest.fn();
-    let question = new RadioQuestion();
-    var oldOption: RadioOption = {answer: 'second'};
-    question.options.choices = [{answer: 'first'}, oldOption];
-    question.radio.choices = [{answer: 'first'}, oldOption];
-    let handler = new RadioEventHandler(question, emitter);
-
-    let input = document.createElement('input');
-    input.value = "NewValue";
-    let event = new Event("");
-    jest.spyOn(event, 'currentTarget', 'get').mockReturnValue(input)
-    handler.onChoiceNameChanged(event, oldOption);
-
-    expect(question.radio.choices.length).toBe(2);
-    expect(question.options.choices.length).toBe(2);
-
-    let onlyChoice = question.radio.choices[1];
-    expect(onlyChoice.answer).toBe("NewValue");
-    expect(emitter.emit).lastCalledWith(question);
-  });
-
-  it('getChoice should return a choice object with supplied name for radio', () => {
-    const EventEmitter = require("events");
-    const emitter = new EventEmitter()
-    let question = new RadioQuestion();
-    let handler = new RadioEventHandler(question, emitter);
-
-    let choice = handler.getChoice("SomeName")
-
-    expect(choice.answer).toBe("SomeName");
-  });
-
-  it('assignOptions should set radio value to supplied object', () => {
-    const EventEmitter = require("events");
-    const emitter = new EventEmitter()
-    let question = new RadioQuestion();
-    let handler = new RadioEventHandler(question, emitter);
-    let questionOptions: QuestionOptions<RadioOption> = { choices: [{answer: 'Option 1'},{answer: 'Option 2'}]}
-    
-    handler.assignOptions(questionOptions)
-
-    expect(question.radio).toBe(questionOptions);
   });
