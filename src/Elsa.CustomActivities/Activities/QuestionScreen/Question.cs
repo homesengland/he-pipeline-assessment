@@ -42,12 +42,12 @@ namespace Elsa.CustomActivities.Activities.QuestionScreen
         public ICollection<CheckboxRecord> Choices { get; set; } = new List<CheckboxRecord>();
     }
 
-    public record CheckboxRecord(string Answer, bool IsSingle);
+    public record CheckboxRecord(string Identifier,string Answer, bool IsSingle);
 
     public class RadioModel
     {
         public ICollection<RadioRecord> Choices { get; set; } = new List<RadioRecord>();
     }
 
-    public record RadioRecord(string Answer);
+    public record RadioRecord(string Identifier, string Answer);
 }

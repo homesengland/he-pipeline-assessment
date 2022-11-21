@@ -25,6 +25,8 @@ namespace Elsa.CustomActivities.Activities.Shared
             var engine = notification.Engine;
 
             engine.SetValue("getQuestionAnswer", (Func<string, string, string, QuestionScreenAnswer?>)((workflowName, activityName, questionId) => GetAssessmentQuestion(activityExecutionContext, workflowName, activityName, questionId).Result));
+            engine.SetValue("getAnswer", (Func<string, string, string, string?>)((workflowName, activityName, questionId) => GetAnswer(activityExecutionContext, workflowName, activityName, questionId).Result));
+            engine.SetValue("hasAnswer", (Func<string, string, string, string[], bool>)((workflowName, activityName, questionId, possibleAnswers) => HasAnswer(activityExecutionContext, workflowName, activityName, questionId, possibleAnswers).Result));
 
         }
 
@@ -43,13 +45,55 @@ namespace Elsa.CustomActivities.Activities.Shared
             var workflowBlueprint = workflowRegistry.FindByNameAsync(workflowName, Elsa.Models.VersionOptions.Published).Result;
             var workflowId = workflowBlueprint?.Id;
 
-            var activityId = workflowBlueprint.Activities.FirstOrDefault(x => x.Name == activityName).Id;
+            var activityId = workflowBlueprint!.Activities.FirstOrDefault(x => x.Name == activityName)!.Id;
 
             var result = await _elsaCustomRepository.GetQuestionScreenAnswer(activityId, activityExecutionContext.CorrelationId, questionId, CancellationToken.None);
 
             return result;
 
         }
-    }
+
+        private async Task<string?> GetAnswer(ActivityExecutionContext activityExecutionContext, string workflowName, string activityName, string questionId)
+        {
+            var workflowRegistry = activityExecutionContext.GetService<IWorkflowRegistry>();
+            var workflowBlueprint = workflowRegistry.FindByNameAsync(workflowName, Elsa.Models.VersionOptions.Published).Result;
+            var workflowId = workflowBlueprint?.Id;
+
+            var activityId = workflowBlueprint!.Activities.FirstOrDefault(x => x.Name == activityName)!.Id;
+
+            var result = await _elsaCustomRepository.GetQuestionScreenAnswer(activityId, activityExecutionContext.CorrelationId, questionId, CancellationToken.None);
+
+            return result.Answer;
+
+        }
+
+        private async Task<bool> HasAnswer(ActivityExecutionContext activityExecutionContext, string workflowName, string activityName, string questionId, string[] answersToCheck)
+        {
+            var workflowRegistry = activityExecutionContext.GetService<IWorkflowRegistry>();
+            var workflowBlueprint = workflowRegistry.FindByNameAsync(workflowName, Elsa.Models.VersionOptions.Published).Result;
+            var workflowId = workflowBlueprint?.Id;
+
+            var activityId = workflowBlueprint!.Activities.FirstOrDefault(x => x.Name == activityName)!.Id;
+
+            var questionInstance = await _elsaCustomRepository.GetQuestionScreenAnswer(activityId, activityExecutionContext.CorrelationId, questionId, CancellationToken.None);
+
+            bool areAllAnswersIncluded = false;
+            foreach (var answer in answersToCheck)
+            {
+                if(questionInstance.Answer != null)
+                {
+                    questionInstance!.Answer.ToLower().Contains(answer.ToLower());
+                    areAllAnswersIncluded = true;
+                }
+                else
+                {
+                    areAllAnswersIncluded = false;
+                    break;
+                }
+            }
+            return areAllAnswersIncluded;
+
+        }
+}
 }
 
