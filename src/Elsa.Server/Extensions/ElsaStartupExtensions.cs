@@ -1,4 +1,5 @@
 ﻿using Elsa.CustomActivities.Activities.QuestionScreen;
+using Elsa.CustomActivities.Activities.Shared;
 
 namespace Elsa.Server.Extensions
 {
@@ -12,6 +13,8 @@ namespace Elsa.Server.Extensions
             };
             services.AddNotificationHandlers(activityTypes.ToArray());
             services.AddJavaScriptTypeDefinitionProvider<CustomTypeDefinitionProvider>();
+
+            services.AddNotificationHandlers(typeof(QuestionScreenQuery));
 
         }
     }

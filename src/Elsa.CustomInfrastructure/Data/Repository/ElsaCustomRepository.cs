@@ -43,6 +43,12 @@ namespace Elsa.CustomInfrastructure.Data.Repository
             return list;
         }
 
+        public Task<QuestionScreenAnswer> GetQuestionScreenAnswer(string activityId, string correlationId, string questionID,
+            CancellationToken cancellationToken)
+        {
+            throw new NotImplementedException();
+        }
+
         public async Task SaveChanges(CancellationToken cancellationToken)
         {
             await _dbContext.SaveChangesAsync(cancellationToken);
