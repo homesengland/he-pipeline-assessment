@@ -3,145 +3,147 @@
 @using Microsoft.AspNetCore.Mvc.TagHelpers
 @model He.PipelineAssessment.UI.Features.Workflow.SaveAndContinue.SaveAndContinueCommand
 <div class="govuk-form-group">
-    <fieldset class="govuk-fieldset" aria-describedby="waste-hint">
-        <legend class="govuk-fieldset__legend govuk-fieldset__legend--l">
-            <h1 class="govuk-heading-l">
-                @Html.DisplayTextFor(m => m.Data.PageTitle)
-            </h1>
-        </legend>
+    <div class="govuk-!-padding-bottom-6">
+        <fieldset class="govuk-fieldset" aria-describedby="waste-hint">
+            <legend class="govuk-fieldset__legend govuk-fieldset__legend--l">
+                <h1 class="govuk-heading-l">
+                    @Html.DisplayTextFor(m => m.Data.PageTitle)
+                </h1>
+            </legend>
         
-        @if (!Model.IsValid && Model.ValidationMessages !=null)
-        {
-            @await Html.PartialAsync("_MultiValidationSummary",Model.ValidationMessages)
-        }
-
-        @if (Model.Data.MultiQuestionActivityData != null)
-        {
-            @for (int i = 0; i < Model.Data.MultiQuestionActivityData.Count; i++)
+            @if (!Model.IsValid && Model.ValidationMessages !=null)
             {
-                @Html.HiddenFor(m => m.Data.MultiQuestionActivityData![i].QuestionId)
-                @Html.HiddenFor(m => m.Data.MultiQuestionActivityData![i].QuestionType)
-                @Html.HiddenFor(m => m.Data.MultiQuestionActivityData![i].QuestionGuidance)
-                @Html.HiddenFor(m => m.Data.MultiQuestionActivityData![i].Title)
-                @Html.HiddenFor(m => m.Data.MultiQuestionActivityData![i].Question)
-                @Html.HiddenFor(m => m.Data.MultiQuestionActivityData![i].QuestionHint)
-                @Html.HiddenFor(m => m.Data.MultiQuestionActivityData![i].DisplayComments)
+                @await Html.PartialAsync("_MultiValidationSummary",Model.ValidationMessages)
+            }
 
-                bool isValidItem = true;
-                if (!Model.IsValid && Model.ValidationMessages != null && Model.ValidationMessages.Errors != null)
+            @if (Model.Data.MultiQuestionActivityData != null)
+            {
+                @for (int i = 0; i < Model.Data.MultiQuestionActivityData.Count; i++)
                 {
-                    if (Model.ValidationMessages.Errors.Any(x => x.PropertyName.Contains("Data.MultiQuestionActivityData[" + i + "]")))
-                    {
-                        isValidItem = false;
-                    }
-                }
+                    @Html.HiddenFor(m => m.Data.MultiQuestionActivityData![i].QuestionId)
+                    @Html.HiddenFor(m => m.Data.MultiQuestionActivityData![i].QuestionType)
+                    @Html.HiddenFor(m => m.Data.MultiQuestionActivityData![i].QuestionGuidance)
+                    @Html.HiddenFor(m => m.Data.MultiQuestionActivityData![i].Title)
+                    @Html.HiddenFor(m => m.Data.MultiQuestionActivityData![i].Question)
+                    @Html.HiddenFor(m => m.Data.MultiQuestionActivityData![i].QuestionHint)
+                    @Html.HiddenFor(m => m.Data.MultiQuestionActivityData![i].DisplayComments)
 
-                @if (Model.Data.MultiQuestionActivityData![i].QuestionType == QuestionTypeConstants.TextQuestion)
-                {
-                    @await Html.PartialAsync("_MultiTextQuestion",new MultiQuestion()
+                    bool isValidItem = true;
+                    if (!Model.IsValid && Model.ValidationMessages != null && Model.ValidationMessages.Errors != null)
                     {
-                        Index = i,
-                        IsValid = isValidItem,
-                        Answer = Model.Data.MultiQuestionActivityData[i].Answer,
-                        Comments = Model.Data.MultiQuestionActivityData[i].Comments,
-                        DisplayComments = Model.Data.MultiQuestionActivityData[i].DisplayComments,
-                        Question = Model.Data.MultiQuestionActivityData[i].Question,
-                        QuestionGuidance = Model.Data.MultiQuestionActivityData[i].QuestionGuidance,
-                        QuestionHint = Model.Data.MultiQuestionActivityData[i].QuestionHint,
-                        QuestionId = Model.Data.MultiQuestionActivityData[i].QuestionId,
-                        QuestionType = Model.Data.MultiQuestionActivityData[i].QuestionType,
-                        Title = Model.Data.MultiQuestionActivityData[i].Title
-                    })
-                }
-                @if (Model.Data.MultiQuestionActivityData![i].QuestionType == QuestionTypeConstants.DateQuestion)
-                {
-                    var dateModel = new Date();
-                    dateModel.Day = Model.Data.MultiQuestionActivityData[i].Date.Day;
-                    dateModel.Month = Model.Data.MultiQuestionActivityData[i].Date.Month;
-                    dateModel.Year = Model.Data.MultiQuestionActivityData[i].Date.Year;
-                    @await Html.PartialAsync("_MultiDateQuestion",new MultiQuestion()
-                    {
-                        Index = i,
-                        IsValid = isValidItem,
-                        Answer = Model.Data.MultiQuestionActivityData[i].Answer,
-                        Comments = Model.Data.MultiQuestionActivityData[i].Comments,
-                        DisplayComments = Model.Data.MultiQuestionActivityData[i].DisplayComments,
-                        Question = Model.Data.MultiQuestionActivityData[i].Question,
-                        QuestionGuidance = Model.Data.MultiQuestionActivityData[i].QuestionGuidance,
-                        QuestionHint = Model.Data.MultiQuestionActivityData[i].QuestionHint,
-                        QuestionId = Model.Data.MultiQuestionActivityData[i].QuestionId,
-                        QuestionType = Model.Data.MultiQuestionActivityData[i].QuestionType,
-                        Title = Model.Data.MultiQuestionActivityData[i].Title, 
-                        Date = dateModel
-                    })
-                }
-                @if (Model.Data.MultiQuestionActivityData![i].QuestionType == QuestionTypeConstants.CurrencyQuestion)
-                {
-                    @await Html.PartialAsync("_MultiCurrencyQuestion",new MultiQuestion()
-                    {
-                        Index = i,
-                        IsValid = isValidItem,
-                        Answer = Model.Data.MultiQuestionActivityData[i].Answer,
-                        Comments = Model.Data.MultiQuestionActivityData[i].Comments,
-                        DisplayComments = Model.Data.MultiQuestionActivityData[i].DisplayComments,
-                        Question = Model.Data.MultiQuestionActivityData[i].Question,
-                        QuestionGuidance = Model.Data.MultiQuestionActivityData[i].QuestionGuidance,
-                        QuestionHint = Model.Data.MultiQuestionActivityData[i].QuestionHint,
-                        QuestionId = Model.Data.MultiQuestionActivityData[i].QuestionId,
-                        QuestionType = Model.Data.MultiQuestionActivityData[i].QuestionType,
-                        Title = Model.Data.MultiQuestionActivityData[i].Title,
-                        Decimal = Model.Data.MultiQuestionActivityData[i].Decimal
-                    })
-                }
-                @if (Model.Data.MultiQuestionActivityData![i].QuestionType == QuestionTypeConstants.CheckboxQuestion)
-                {
-
-                    @await Html.PartialAsync("_MultiCheckboxQuestion",new MultiQuestion()
-                    {
-                        Index = i,
-                        IsValid = isValidItem,
-                        Answer = Model.Data.MultiQuestionActivityData[i].Answer,
-                        Comments = Model.Data.MultiQuestionActivityData[i].Comments,
-                        DisplayComments = Model.Data.MultiQuestionActivityData[i].DisplayComments,
-                        Question = Model.Data.MultiQuestionActivityData[i].Question,
-                        QuestionGuidance = Model.Data.MultiQuestionActivityData[i].QuestionGuidance,
-                        QuestionHint = Model.Data.MultiQuestionActivityData[i].QuestionHint,
-                        QuestionId = Model.Data.MultiQuestionActivityData[i].QuestionId,
-                        QuestionType = Model.Data.MultiQuestionActivityData[i].QuestionType,
-                        Title = Model.Data.MultiQuestionActivityData[i].Title,
-                        Checkbox = new Checkbox()
+                        if (Model.ValidationMessages.Errors.Any(x => x.PropertyName.Contains("Data.MultiQuestionActivityData[" + i + "]")))
                         {
-                            SelectedChoices = Model.Data.MultiQuestionActivityData[i].Checkbox.SelectedChoices,
-                            Choices = Model.Data.MultiQuestionActivityData[i].Checkbox.Choices.Select(x=> new He.PipelineAssessment.UI.Features.Workflow.ViewModels.Choice(){Answer = x.Answer,IsSingle = x.IsSingle}).ToList()
+                            isValidItem = false;
                         }
+                    }
+
+                    @if (Model.Data.MultiQuestionActivityData![i].QuestionType == QuestionTypeConstants.TextQuestion)
+                    {
+                        @await Html.PartialAsync("_MultiTextQuestion",new MultiQuestion()
+                        {
+                            Index = i,
+                            IsValid = isValidItem,
+                            Answer = Model.Data.MultiQuestionActivityData[i].Answer,
+                            Comments = Model.Data.MultiQuestionActivityData[i].Comments,
+                            DisplayComments = Model.Data.MultiQuestionActivityData[i].DisplayComments,
+                            Question = Model.Data.MultiQuestionActivityData[i].Question,
+                            QuestionGuidance = Model.Data.MultiQuestionActivityData[i].QuestionGuidance,
+                            QuestionHint = Model.Data.MultiQuestionActivityData[i].QuestionHint,
+                            QuestionId = Model.Data.MultiQuestionActivityData[i].QuestionId,
+                            QuestionType = Model.Data.MultiQuestionActivityData[i].QuestionType,
+                            Title = Model.Data.MultiQuestionActivityData[i].Title
                         })
                     }
-                @if (Model.Data.MultiQuestionActivityData![i].QuestionType == QuestionTypeConstants.RadioQuestion)
-                {
-
-                    @await Html.PartialAsync("_MultiRadioButtonQuestion",new MultiQuestion()
+                    @if (Model.Data.MultiQuestionActivityData![i].QuestionType == QuestionTypeConstants.DateQuestion)
                     {
-                        Index = i,
-                        IsValid = isValidItem,
-                        Answer = Model.Data.MultiQuestionActivityData[i].Answer,
-                        Comments = Model.Data.MultiQuestionActivityData[i].Comments,
-                        DisplayComments = Model.Data.MultiQuestionActivityData[i].DisplayComments,
-                        Question = Model.Data.MultiQuestionActivityData[i].Question,
-                        QuestionGuidance = Model.Data.MultiQuestionActivityData[i].QuestionGuidance,
-                        QuestionHint = Model.Data.MultiQuestionActivityData[i].QuestionHint,
-                        QuestionId = Model.Data.MultiQuestionActivityData[i].QuestionId,
-                        QuestionType = Model.Data.MultiQuestionActivityData[i].QuestionType,
-                        Title = Model.Data.MultiQuestionActivityData[i].Title,
-                        Radio = new Radio()
+                        var dateModel = new Date();
+                        dateModel.Day = Model.Data.MultiQuestionActivityData[i].Date.Day;
+                        dateModel.Month = Model.Data.MultiQuestionActivityData[i].Date.Month;
+                        dateModel.Year = Model.Data.MultiQuestionActivityData[i].Date.Year;
+                        @await Html.PartialAsync("_MultiDateQuestion",new MultiQuestion()
                         {
-                            SelectedAnswer = Model.Data.MultiQuestionActivityData[i].Radio.SelectedAnswer,
-                            Choices = Model.Data.MultiQuestionActivityData[i].Radio.Choices.Select(x=> new He.PipelineAssessment.UI.Features.Workflow.ViewModels.Choice(){Answer = x.Answer,IsSingle = x.IsSingle}).ToList()
+                            Index = i,
+                            IsValid = isValidItem,
+                            Answer = Model.Data.MultiQuestionActivityData[i].Answer,
+                            Comments = Model.Data.MultiQuestionActivityData[i].Comments,
+                            DisplayComments = Model.Data.MultiQuestionActivityData[i].DisplayComments,
+                            Question = Model.Data.MultiQuestionActivityData[i].Question,
+                            QuestionGuidance = Model.Data.MultiQuestionActivityData[i].QuestionGuidance,
+                            QuestionHint = Model.Data.MultiQuestionActivityData[i].QuestionHint,
+                            QuestionId = Model.Data.MultiQuestionActivityData[i].QuestionId,
+                            QuestionType = Model.Data.MultiQuestionActivityData[i].QuestionType,
+                            Title = Model.Data.MultiQuestionActivityData[i].Title, 
+                            Date = dateModel
+                        })
+                    }
+                    @if (Model.Data.MultiQuestionActivityData![i].QuestionType == QuestionTypeConstants.CurrencyQuestion)
+                    {
+                        @await Html.PartialAsync("_MultiCurrencyQuestion",new MultiQuestion()
+                        {
+                            Index = i,
+                            IsValid = isValidItem,
+                            Answer = Model.Data.MultiQuestionActivityData[i].Answer,
+                            Comments = Model.Data.MultiQuestionActivityData[i].Comments,
+                            DisplayComments = Model.Data.MultiQuestionActivityData[i].DisplayComments,
+                            Question = Model.Data.MultiQuestionActivityData[i].Question,
+                            QuestionGuidance = Model.Data.MultiQuestionActivityData[i].QuestionGuidance,
+                            QuestionHint = Model.Data.MultiQuestionActivityData[i].QuestionHint,
+                            QuestionId = Model.Data.MultiQuestionActivityData[i].QuestionId,
+                            QuestionType = Model.Data.MultiQuestionActivityData[i].QuestionType,
+                            Title = Model.Data.MultiQuestionActivityData[i].Title,
+                            Decimal = Model.Data.MultiQuestionActivityData[i].Decimal
+                        })
+                    }
+                    @if (Model.Data.MultiQuestionActivityData![i].QuestionType == QuestionTypeConstants.CheckboxQuestion)
+                    {
+
+                        @await Html.PartialAsync("_MultiCheckboxQuestion",new MultiQuestion()
+                        {
+                            Index = i,
+                            IsValid = isValidItem,
+                            Answer = Model.Data.MultiQuestionActivityData[i].Answer,
+                            Comments = Model.Data.MultiQuestionActivityData[i].Comments,
+                            DisplayComments = Model.Data.MultiQuestionActivityData[i].DisplayComments,
+                            Question = Model.Data.MultiQuestionActivityData[i].Question,
+                            QuestionGuidance = Model.Data.MultiQuestionActivityData[i].QuestionGuidance,
+                            QuestionHint = Model.Data.MultiQuestionActivityData[i].QuestionHint,
+                            QuestionId = Model.Data.MultiQuestionActivityData[i].QuestionId,
+                            QuestionType = Model.Data.MultiQuestionActivityData[i].QuestionType,
+                            Title = Model.Data.MultiQuestionActivityData[i].Title,
+                            Checkbox = new Checkbox()
+                            {
+                                SelectedChoices = Model.Data.MultiQuestionActivityData[i].Checkbox.SelectedChoices,
+                                Choices = Model.Data.MultiQuestionActivityData[i].Checkbox.Choices.Select(x=> new He.PipelineAssessment.UI.Features.Workflow.ViewModels.Choice(){Answer = x.Answer,IsSingle = x.IsSingle}).ToList()
+                            }
+                            })
                         }
-                    })
+                    @if (Model.Data.MultiQuestionActivityData![i].QuestionType == QuestionTypeConstants.RadioQuestion)
+                    {
+
+                        @await Html.PartialAsync("_MultiRadioButtonQuestion",new MultiQuestion()
+                        {
+                            Index = i,
+                            IsValid = isValidItem,
+                            Answer = Model.Data.MultiQuestionActivityData[i].Answer,
+                            Comments = Model.Data.MultiQuestionActivityData[i].Comments,
+                            DisplayComments = Model.Data.MultiQuestionActivityData[i].DisplayComments,
+                            Question = Model.Data.MultiQuestionActivityData[i].Question,
+                            QuestionGuidance = Model.Data.MultiQuestionActivityData[i].QuestionGuidance,
+                            QuestionHint = Model.Data.MultiQuestionActivityData[i].QuestionHint,
+                            QuestionId = Model.Data.MultiQuestionActivityData[i].QuestionId,
+                            QuestionType = Model.Data.MultiQuestionActivityData[i].QuestionType,
+                            Title = Model.Data.MultiQuestionActivityData[i].Title,
+                            Radio = new Radio()
+                            {
+                                SelectedAnswer = Model.Data.MultiQuestionActivityData[i].Radio.SelectedAnswer,
+                                Choices = Model.Data.MultiQuestionActivityData[i].Radio.Choices.Select(x=> new He.PipelineAssessment.UI.Features.Workflow.ViewModels.Choice(){Answer = x.Answer,IsSingle = x.IsSingle}).ToList()
+                            }
+                        })
+                    }
                 }
             }
-        }
-    </fieldset>
+        </fieldset>
+    </div>
 
     <input id="Next" type="submit" value="Save and continue" name="Next" class="govuk-button" />
 </div>
