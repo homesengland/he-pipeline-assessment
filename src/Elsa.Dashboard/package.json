@@ -47,6 +47,13 @@
   },
   "license": "MIT",
   "jest-junit": {
-    "outputName": "junit.xml"
+    "suiteName": "jest tests",
+    "outputDirectory": ".",
+    "outputName": "junit.xml",
+    "uniqueOutputName": "false",
+    "classNameTemplate": "{classname}-{title}",
+    "titleTemplate": "{classname}-{title}",
+    "ancestorSeparator": " › ",
+    "usePathForSuiteName": "true"
   }
 }
