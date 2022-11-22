@@ -1,6 +1,7 @@
 ﻿using AutoFixture.Xunit2;
 using Elsa.CustomActivities.Activities.QuestionScreen;
 using Elsa.CustomModels;
+using Elsa.Models;
 using Elsa.Server.Features.Workflow.QuestionScreenSaveAndContinue;
 using Elsa.Server.Providers;
 using He.PipelineAssessment.Common.Tests;
@@ -18,7 +19,8 @@ namespace Elsa.Server.Tests.Features.Workflow.MultiSaveAndContinue
             QuestionScreenSaveAndContinueCommand saveAndContinueCommand,
             string nextActivityId,
             string nextActivityType,
-            QuestionScreenSaveAndContinueMapper sut
+            WorkflowInstance workflowInstance,
+                QuestionScreenSaveAndContinueMapper sut
         )
         {
             //Arrange
@@ -26,7 +28,7 @@ namespace Elsa.Server.Tests.Features.Workflow.MultiSaveAndContinue
             mockDateTimeProvider.Setup(x => x.UtcNow()).Returns(currentTimeUtc);
 
             //Act
-            var result = sut.saveAndContinueCommandToNextCustomActivityNavigation(saveAndContinueCommand, nextActivityId, nextActivityType);
+            var result = sut.saveAndContinueCommandToNextCustomActivityNavigation(saveAndContinueCommand, nextActivityId, nextActivityType, workflowInstance);
 
             //Assert
             Assert.IsType<CustomActivityNavigation>(result);
@@ -41,9 +43,9 @@ namespace Elsa.Server.Tests.Features.Workflow.MultiSaveAndContinue
         [AutoMoqData]
         public void QuestionScreenSaveAndContinueCommandToQuestionScreenQuestion_WithQuestionParameter_ShouldReturnAssessmentQuestion(
             [Frozen] Mock<IDateTimeProvider> mockDateTimeProvider,
-            QuestionScreenSaveAndContinueCommand saveAndContinueCommand,
             string nextActivityId,
             string nextActivityType,
+            WorkflowInstance workflowInstance,
             Question question,
             QuestionScreenSaveAndContinueMapper sut
         )
@@ -53,12 +55,12 @@ namespace Elsa.Server.Tests.Features.Workflow.MultiSaveAndContinue
             mockDateTimeProvider.Setup(x => x.UtcNow()).Returns(currentTimeUtc);
 
             //Act
-            var result = sut.SaveAndContinueCommandToQuestionScreenAnswer(saveAndContinueCommand, nextActivityId, nextActivityType, question);
+            var result = sut.SaveAndContinueCommandToQuestionScreenAnswer(nextActivityId, nextActivityType, question, workflowInstance);
 
             //Assert
             Assert.IsType<QuestionScreenAnswer>(result);
             Assert.Equal(nextActivityId, result!.ActivityId);
-            Assert.Equal(saveAndContinueCommand.WorkflowInstanceId, result.WorkflowInstanceId);
+            Assert.Equal(workflowInstance.Id, result.WorkflowInstanceId);
             Assert.Equal(currentTimeUtc, result.CreatedDateTime);
             Assert.Equal(question.Id, result.QuestionId);
             Assert.Equal(question.QuestionType, result.QuestionType);

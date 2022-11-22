@@ -379,9 +379,9 @@ namespace Elsa.Server.Tests.Features.Workflow.LoadWorkflowActivity
             elsaAssessmentQuestions.Questions[0].QuestionType = QuestionTypeConstants.CheckboxQuestion;
             elsaAssessmentQuestions.Questions[0].Checkbox.Choices = new List<CheckboxRecord>()
             {
-                new CheckboxRecord("Choice1", false),
-                new CheckboxRecord("Choice2", false),
-                new CheckboxRecord("Choice3", false)
+                new CheckboxRecord("A","Choice1", false),
+                new CheckboxRecord("B","Choice2", false),
+                new CheckboxRecord("C","Choice3", false)
             };
 
             questionInvoker
@@ -450,9 +450,9 @@ namespace Elsa.Server.Tests.Features.Workflow.LoadWorkflowActivity
             elsaAssessmentQuestions.Questions[0].QuestionType = QuestionTypeConstants.RadioQuestion;
             elsaAssessmentQuestions.Questions[0].Radio.Choices = new List<RadioRecord>()
             {
-                new RadioRecord("Choice1"),
-                new RadioRecord("Choice2"),
-                new RadioRecord("Choice3")
+                new RadioRecord("A","Choice1"),
+                new RadioRecord("B","Choice2"),
+                new RadioRecord("C","Choice3")
             };
 
             questionInvoker

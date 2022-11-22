@@ -27,6 +27,7 @@ namespace Elsa.Server.Features.Workflow.StartWorkflow
                 {
                     ActivityId = result.WorkflowInstance.LastExecutedActivityId,
                     ActivityType = activityType,
+                    CorrelationId = result.WorkflowInstance.CorrelationId,
                     WorkflowInstanceId = result.WorkflowInstance.Id,
                     PreviousActivityId = result.WorkflowInstance.LastExecutedActivityId,
                     CreatedDateTime = _dateTimeProvider.UtcNow()
@@ -42,6 +43,7 @@ namespace Elsa.Server.Features.Workflow.StartWorkflow
                 return new QuestionScreenAnswer
                 {
                     ActivityId = result.WorkflowInstance.LastExecutedActivityId,
+                    CorrelationId = result.WorkflowInstance.CorrelationId,
                     WorkflowInstanceId = result.WorkflowInstance.Id,
                     CreatedDateTime = _dateTimeProvider.UtcNow(),
                     QuestionId = question.Id,

@@ -158,7 +158,7 @@ namespace Elsa.Server.Tests.Features.Workflow.MultiSaveAndContinue
 
             saveAndContinueMapper
                 .Setup(x => x.saveAndContinueCommandToNextCustomActivityNavigation(saveAndContinueCommand,
-                    workflowInstance.Output!.ActivityId, nextActivityType)).Returns(nextAssessmentActivity);
+                    workflowInstance.Output!.ActivityId, nextActivityType, workflowInstance)).Returns(nextAssessmentActivity);
 
             //Act
             var result = await sut.Handle(saveAndContinueCommand, CancellationToken.None);
@@ -414,7 +414,7 @@ namespace Elsa.Server.Tests.Features.Workflow.MultiSaveAndContinue
 
             saveAndContinueMapper
                 .Setup(x => x.saveAndContinueCommandToNextCustomActivityNavigation(saveAndContinueCommand,
-                    workflowInstance.Output!.ActivityId, nextActivityType)).Returns(nextCustomActivityNavigation);
+                    workflowInstance.Output!.ActivityId, nextActivityType, workflowInstance)).Returns(nextCustomActivityNavigation);
 
             var assessmentQuestionsDictionary = new Dictionary<string, object?>();
             assessmentQuestionsDictionary.Add("Questions", elsaAssessmentQuestions);
