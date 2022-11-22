@@ -25,7 +25,7 @@ it('onTitleChanged should emit an event with updated title on standard question'
     jest.spyOn(event, 'currentTarget', 'get').mockReturnValue(input)
     handler.onTitleChanged(event)
 
-    expect(question.title).toBe("NewTitles");
+    expect(question.title).toBe("NewTitle");
     expect(emitter.emit).lastCalledWith(question);
   });
 
