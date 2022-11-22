@@ -45,5 +45,8 @@
     "ts-jest": "^29.0.3",
     "workbox-build": "^4.3.1"
   },
-  "license": "MIT"
+  "license": "MIT",
+  "jest-junit": {
+    "outputName": "junit.xml"
+  }
 }
