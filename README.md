@@ -19,6 +19,10 @@ The Elsa Dashboard project uses Elsa nuget packages to serve up the self service
 
 Elsa Dashboard uses [stencil.js](https://stenciljs.com/) components to extend functionlaity for any custom activives.
 
+We use `jest` to unit test our Typescript components. Currently unit tests can be triggered manually by running the following command (set in `package.json`), which is also available via Task Runner Explorer:
+
+`npm run unit-test`
+
 ## Elsa Custom Activities
 
 The Elsa Custom Acitives project is used to create new Elsa activies, which will be added to Elsa server start up code to make the new activies available in Elsa Dashboard for user selection.

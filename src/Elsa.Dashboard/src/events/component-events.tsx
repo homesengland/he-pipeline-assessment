@@ -56,7 +56,7 @@ abstract class BaseQuestionEventHandler {
 
   onDisplayCommentsBox= (e: Event) => {
     let updatedQuestion = this.question;
-    const checkbox = (e.target as HTMLInputElement);
+    const checkbox = (e.currentTarget as HTMLInputElement);
     updatedQuestion.displayComments = checkbox.checked;
     this.emitter.emit(updatedQuestion);
   };
@@ -129,7 +129,7 @@ export class CheckboxEventHandler extends ChoiceQuestionEventHandler<CheckboxOpt
   }
 
   onCheckChanged = (e: Event, record: CheckboxOption) => {
-    const checkbox = (e.target as HTMLInputElement);
+    const checkbox = (e.currentTarget as HTMLInputElement);
     record.isSingle = checkbox.checked;
     this.emitter.emit(this.question);
   };
