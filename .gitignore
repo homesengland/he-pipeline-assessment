@@ -359,3 +359,4 @@ pipelineassessment.db-shm
 pipelineassessment.db-wal
 
 appsettings.Development.json
+junit.xml

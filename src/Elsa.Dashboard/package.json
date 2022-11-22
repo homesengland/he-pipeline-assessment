@@ -40,9 +40,20 @@
     "jest": "^29.0.0",
     "jest-cli": "^29.0.0",
     "jest-environment-jsdom": "^29.3.1",
+    "jest-junit": "^15.0.0",
     "puppeteer": "^10.0.0",
     "ts-jest": "^29.0.3",
     "workbox-build": "^4.3.1"
   },
-  "license": "MIT"
+  "license": "MIT",
+  "jest-junit": {
+    "suiteName": "jest tests",
+    "outputDirectory": ".",
+    "outputName": "junit.xml",
+    "uniqueOutputName": "false",
+    "classNameTemplate": "{classname}-{title}",
+    "titleTemplate": "{classname}-{title}",
+    "ancestorSeparator": " › ",
+    "usePathForSuiteName": "true"
+  }
 }

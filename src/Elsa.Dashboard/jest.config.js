@@ -18,4 +18,8 @@ module.exports = {
       "tsx",
       "js"
     ],
+    reporters: [
+      "default",
+    	[ "jest-junit", { suiteName: "jest tests" } ]
+    ]
   };
