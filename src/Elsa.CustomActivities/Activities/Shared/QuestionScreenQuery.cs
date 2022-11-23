@@ -33,6 +33,7 @@ namespace Elsa.CustomActivities.Activities.Shared
             engine.SetValue("hasAllAnswers", (Func<string, string, string, string[], bool>)((workflowName, activityName, questionId, answers) => HasAllAnswers(activityExecutionContext, workflowName, activityName, questionId, answers).Result));
             engine.SetValue("hasAnyAnswer", (Func<string, string, string, string[], bool>)((workflowName, activityName, questionId, possibleAnswers) => HasAnyAnswer(activityExecutionContext, workflowName, activityName, questionId, possibleAnswers).Result));
             engine.SetValue("hasAnswer", (Func<string, string, string, string, bool>)((workflowName, activityName, questionId, answer) => HasAnswer(activityExecutionContext, workflowName, activityName, questionId, answer).Result));
+            engine.SetValue("isAnswer", (Func<string, string, string, string, bool>)((workflowName, activityName, questionId, answer) => IsAnswer(activityExecutionContext, workflowName, activityName, questionId, answer).Result));
 
             engine.SetValue("testClassForSyntax", test);
 
@@ -49,6 +50,7 @@ namespace Elsa.CustomActivities.Activities.Shared
             output.AppendLine("declare function hasAnyAnswer(workflowName: string, activityName:string, questionId:string, possibleAnswers:string[] ): boolean;");
             output.AppendLine("declare function hasAnswer(workflowName: string, activityName:string, questionId:string, answer:string ): boolean;");
             output.AppendLine("declare const testClassForSyntax: TestClassForSyntax;");
+            output.AppendLine("declare function isAnswer(workflowName: string, activityName:string, questionId:string, answer:string ): boolean;");
 
             return Task.CompletedTask;
         }
@@ -103,6 +105,28 @@ namespace Elsa.CustomActivities.Activities.Shared
 
         }
 
+        private async Task<bool> IsAnswer(ActivityExecutionContext activityExecutionContext, string workflowName, string activityName, string questionId, string answer)
+        {
+            var workflowRegistry = activityExecutionContext.GetService<IWorkflowRegistry>();
+            var workflowBlueprint = workflowRegistry.FindByNameAsync(workflowName, Elsa.Models.VersionOptions.Published).Result;
+            var workflowId = workflowBlueprint?.Id;
+
+            var activityId = workflowBlueprint!.Activities.FirstOrDefault(x => x.Name == activityName)!.Id;
+
+            var questionInstance = await _elsaCustomRepository.GetQuestionScreenAnswer(activityId, activityExecutionContext.CorrelationId, questionId, CancellationToken.None);
+
+            if (questionInstance.Answer != null && questionInstance!.Answer.ToLower() == answer.ToLower())
+            {
+                return true;
+            }
+            else
+            {
+                return false;
+
+            }
+
+        }
+
         private async Task<bool> HasAllAnswers(ActivityExecutionContext activityExecutionContext, string workflowName, string activityName, string questionId, string[] answersToCheck)
         {
             var workflowRegistry = activityExecutionContext.GetService<IWorkflowRegistry>();
@@ -143,7 +167,7 @@ namespace Elsa.CustomActivities.Activities.Shared
             bool areAllAnswersIncluded = false;
             foreach (var answer in answersToCheck)
             {
-                if (questionInstance.Answer != null && questionInstance!.Answer.ToLower().Contains(answer.ToLower()))
+                if (questionInstance.Answer != null && questionInstance!.Answer.ToLower().Contains(answer.ToLower())) //TODO: Deserialise answer to list of string
                 {
                     areAllAnswersIncluded = true;
                     break;

@@ -73,7 +73,7 @@ abstract class ChoiceQuestionEventHandler<T extends IQuestionOption> extends Bas
     }
   }
 
-  abstract getChoice(name: string): IQuestionOption;
+  abstract getChoice(name: string, identifier: string): IQuestionOption;
 
   abstract assignOptions(val: QuestionOptions<T>)
 
@@ -82,7 +82,8 @@ abstract class ChoiceQuestionEventHandler<T extends IQuestionOption> extends Bas
 
   onAddChoiceClick = () => {
     const choiceName = `Choice ${this.question.options.choices.length + 1}`;
-    const newChoice = this.getChoice(choiceName);
+    const identifier = `${this.question.options.choices.length + 1}`;
+    const newChoice = this.getChoice(choiceName, identifier);
     let updatedChoices = { ... this.question.options, choices: [... this.question.options.choices, newChoice] } as QuestionOptions<T>;
     this.question = { ...this.question, options: updatedChoices }
     this.assignOptions(updatedChoices);
@@ -91,6 +92,11 @@ abstract class ChoiceQuestionEventHandler<T extends IQuestionOption> extends Bas
 
   onChoiceNameChanged = (e: Event, record: IQuestionOption) => {
     record.answer = (e.currentTarget as HTMLInputElement).value.trim();
+    this.emitter.emit(this.question);
+  };
+
+  onChoiceIdentifierChanged = (e: Event, record: IQuestionOption) => {
+    record.identifier = (e.currentTarget as HTMLInputElement).value.trim();
     this.emitter.emit(this.question);
   };
 
@@ -126,8 +132,8 @@ export class CheckboxEventHandler extends ChoiceQuestionEventHandler<CheckboxOpt
   question: CheckboxQuestion;
   emitter: EventEmitter;
 
-  getChoice(name: string): CheckboxOption {
-    return { answer: name, isSingle: false };
+  getChoice(name: string, id: string): CheckboxOption {
+    return { identifier: id, answer: name, isSingle: false };
   }
 
   assignOptions(val: QuestionOptions<CheckboxOption>) {
@@ -152,8 +158,8 @@ export class RadioEventHandler extends ChoiceQuestionEventHandler<RadioOption> {
   question: RadioQuestion;
   emitter: EventEmitter;
 
-  getChoice(name: string): RadioOption {
-    return { answer: name };
+  getChoice(name: string, id: string): RadioOption {
+    return { identifier: id, answer: name };
   }
 
   assignOptions = (val: QuestionOptions<RadioOption>) => {
