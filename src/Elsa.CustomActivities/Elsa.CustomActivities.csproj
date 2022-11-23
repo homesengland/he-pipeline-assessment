@@ -21,4 +21,8 @@
     <ProjectReference Include="..\He.PipelineAssessment.Data\He.PipelineAssessment.Data.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Activities\Helpers\" />
+  </ItemGroup>
+
 </Project>

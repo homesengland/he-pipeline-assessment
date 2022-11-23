@@ -87,7 +87,14 @@ export class ElsaQuestionScreen {
     newModel.questions[questionToUpdate] = updatedQuestion;
     this.questionModel.questions.map(x => x.id != updatedQuestion.id);
     this.questionModel = { ... this.questionModel, questions: newModel.questions };
+    this.enforceQuestionIdentifierUniqueness();
     this.updatePropertyModel();
+  }
+
+  enforceQuestionIdentifierUniqueness() {
+    for (let i = 0; i < this.questionModel.questions.length; i++) {
+      this.questionModel.questions[i].id = i.toString();
+    }
   }
 
   handleAddQuestion(e: Event) {

@@ -1,5 +1,7 @@
 import { EventEmitter } from '@stencil/core';
 
+import { ToLetter } from '../models/utils';
+
 import {
   CheckboxOption,
   RadioOption,
@@ -91,6 +93,10 @@ abstract class ChoiceQuestionEventHandler<T extends IQuestionOption> extends Bas
     record.answer = (e.currentTarget as HTMLInputElement).value.trim();
     this.emitter.emit(this.question);
   };
+
+  enforceUniqueIdentifier() {
+    for
+  }
 
   onDeleteChoiceClick = (record: T) => {
     //The below filter method has to convert and compare a stringified version, as the options property is mapped from the actual implmeneted property
