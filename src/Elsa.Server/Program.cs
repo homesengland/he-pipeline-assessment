@@ -1,3 +1,4 @@
+using Elsa.CustomActivities.Activities.CheckYourAnswers;
 using Elsa.CustomActivities.Activities.QuestionScreen;
 using Elsa.CustomActivities.Activities.Shared;
 using Elsa.CustomActivities.Activities.SinglePipelineDataSource;
@@ -30,6 +31,7 @@ builder.Services
         .UseEntityFrameworkPersistence(ef => ef.UseSqlServer(elsaConnectionString, typeof(Elsa.Persistence.EntityFramework.SqlServer.Migrations.Initial)))
         .AddActivity<SinglePipelineDataSource>()
         .AddActivity<QuestionScreen>()
+        .AddActivity<CheckYourAnswersScreen>()
         .AddConsoleActivities()
     );
 

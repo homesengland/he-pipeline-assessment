@@ -80,7 +80,7 @@ namespace He.PipelineAssessment.UI.Features.Workflow
                     new
                     {
                         WorkflowInstanceId = result?.WorkflowInstanceId,
-                        ActivityId = result?.ActivityId
+                        ActivityId = result?.ActivityId,
                     });
                 }
                 else
