@@ -82,10 +82,12 @@ abstract class ChoiceQuestionEventHandler<T extends IQuestionOption> extends Bas
 
   onAddChoiceClick = () => {
     const choiceName = `Choice ${this.question.options.choices.length + 1}`;
-    const identifier = `${this.question.options.choices.length + 1}`;
+    const identifier = ToLetter(1 + this.question.options.choices.length);
+    console.log(identifier);
     const newChoice = this.getChoice(choiceName, identifier);
     let updatedChoices = { ... this.question.options, choices: [... this.question.options.choices, newChoice] } as QuestionOptions<T>;
     this.question = { ...this.question, options: updatedChoices }
+    this.enforceUniqueIdentifier();
     this.assignOptions(updatedChoices);
     this.emitter.emit(this.question);
   };
@@ -101,7 +103,9 @@ abstract class ChoiceQuestionEventHandler<T extends IQuestionOption> extends Bas
   };
 
   enforceUniqueIdentifier() {
-    for
+    for (let i = 0; i < this.question.options.choices.length; i++) {
+      this.question.options.choices[i].identifier = ToLetter(i+1);
+    }
   }
 
   onDeleteChoiceClick = (record: T) => {
@@ -109,6 +113,7 @@ abstract class ChoiceQuestionEventHandler<T extends IQuestionOption> extends Bas
     //i.e. Radio or Checkbox.  Because of this the objects are not equal in reference, and the filter would fail.
     let newChoiceObj = { ... this.question.options, choices: this.question.options.choices.filter(x => JSON.stringify(x) != JSON.stringify(record)) };
     this.question = { ...this.question, options: newChoiceObj }
+    this.enforceUniqueIdentifier();
     this.assignOptions(newChoiceObj);
     this.emitter.emit(this.question);
   };

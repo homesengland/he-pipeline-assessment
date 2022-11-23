@@ -96,7 +96,7 @@ export class ElsaRadioComponent {
       return (
         <tr key={`choice-${index}`}>
           <td class="elsa-py-2 elsa-pr-5">
-            <input type="text" value={multiChoice.identifier} onChange={e => this.handler.onChoiceIdentifierChanged.bind(this)(e, multiChoice)}
+            <input type="text" value={multiChoice.identifier} disabled onChange={e => this.handler.onChoiceIdentifierChanged.bind(this)(e, multiChoice)}
               class="focus:elsa-ring-blue-500 focus:elsa-border-blue-500 elsa-block elsa-w-full elsa-min-w-0 elsa-rounded-md sm:elsa-text-sm elsa-border-gray-300" />
           </td>
           <td class="elsa-py-2 elsa-pr-5">

@@ -78,6 +78,7 @@ export class ElsaQuestionScreen {
   }
 
   updatePropertyModel() {
+    this.enforceQuestionIdentifierUniqueness();
     this.propertyModel.expressions[SyntaxNames.Json] = JSON.stringify(this.questionModel);
   }
 
@@ -87,14 +88,21 @@ export class ElsaQuestionScreen {
     newModel.questions[questionToUpdate] = updatedQuestion;
     this.questionModel.questions.map(x => x.id != updatedQuestion.id);
     this.questionModel = { ... this.questionModel, questions: newModel.questions };
-    this.enforceQuestionIdentifierUniqueness();
     this.updatePropertyModel();
   }
 
   enforceQuestionIdentifierUniqueness() {
     for (let i = 0; i < this.questionModel.questions.length; i++) {
-      this.questionModel.questions[i].id = i.toString();
+      console.log('enforcing uniqueness')
+      this.questionModel.questions[i].id = (i+1).toString();
     }
+  }
+
+  hasChoices(questionType: string) {
+    if (questionType == QuestionLibrary.Checkbox.nameConstant
+      || questionType == QuestionLibrary.Radio.nameConstant)
+      return true;
+    else return false;
   }
 
   handleAddQuestion(e: Event) {
@@ -108,9 +116,9 @@ export class ElsaQuestionScreen {
   }
 
   onAddQuestion(questionType: string, questionTypeName: string) {
-    const questionName = `Question ${this.questionModel.questions.length + 1}`;
-    let sampleId = `${this.questionModel.questions.length + 1}`
-    const newQuestion = { id: sampleId, title: questionName, questionGuidance: "", questionText: "", displayComments: false, questionHint: "", questionType: questionType, questionTypeName: questionTypeName };
+    let id = (this.questionModel.questions.length + 1).toString();
+    const questionName = `Question ${id}`;
+    const newQuestion = { id: id, title: questionName, questionGuidance: "", questionText: "", displayComments: false, questionHint: "", questionType: questionType, questionTypeName: questionTypeName };
     this.questionModel = { ...this.questionModel, questions: [...this.questionModel.questions, newQuestion] };
     this.updatePropertyModel();
   }
