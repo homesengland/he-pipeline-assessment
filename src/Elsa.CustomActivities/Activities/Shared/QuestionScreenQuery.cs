@@ -159,7 +159,7 @@ namespace Elsa.CustomActivities.Activities.Shared
             bool areAllAnswersIncluded = false;
             foreach (var answer in answersToCheck)
             {
-                if (questionInstance.Answer != null && questionInstance!.Answer.ToLower().Contains(answer.ToLower()))
+                if (questionInstance.Answer != null && questionInstance!.Answer.ToLower().Contains(answer.ToLower())) //TODO: Deserialise answer to list of string
                 {
                     areAllAnswersIncluded = true;
                     break;
