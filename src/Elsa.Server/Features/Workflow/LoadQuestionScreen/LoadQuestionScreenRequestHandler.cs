@@ -17,13 +17,11 @@ namespace Elsa.Server.Features.Workflow.LoadQuestionScreen
         private readonly IQuestionInvoker _questionInvoker;
         private readonly IWorkflowInstanceStore _workflowInstanceStore;
         private readonly IElsaCustomRepository _elsaCustomRepository;
-        private readonly ILoadQuestionScreenJsonHelper _loadQuestionScreenJsonHelper;
 
-        public LoadQuestionScreenRequestHandler(IWorkflowInstanceStore workflowInstanceStore, IElsaCustomRepository elsaCustomRepository, IQuestionInvoker questionInvoker, ILoadQuestionScreenJsonHelper loadQuestionScreenJsonHelper)
+        public LoadQuestionScreenRequestHandler(IWorkflowInstanceStore workflowInstanceStore, IElsaCustomRepository elsaCustomRepository, IQuestionInvoker questionInvoker)
         {
             _workflowInstanceStore = workflowInstanceStore;
             _elsaCustomRepository = elsaCustomRepository;
-            _loadQuestionScreenJsonHelper = loadQuestionScreenJsonHelper;
             _questionInvoker = questionInvoker;
         }
 

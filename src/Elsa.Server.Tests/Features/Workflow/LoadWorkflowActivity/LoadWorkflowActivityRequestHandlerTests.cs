@@ -12,7 +12,6 @@ using Elsa.Services.Models;
 using He.PipelineAssessment.Common.Tests;
 using Moq;
 using Xunit;
-using QuestionActivityData = Elsa.Server.Features.Workflow.LoadCheckYourAnswersScreen.QuestionActivityData;
 
 namespace Elsa.Server.Tests.Features.Workflow.LoadWorkflowActivity;
 
@@ -24,7 +23,6 @@ public class LoadQuestionScreenRequestHandlerTests
         [Frozen] Mock<IQuestionInvoker> questionInvoker,
         [Frozen] Mock<IWorkflowInstanceStore> workflowInstanceStore,
         [Frozen] Mock<IElsaCustomRepository> elsaCustomRepository,
-        [Frozen] Mock<ILoadQuestionScreenJsonHelper> loadQuestionScreenJsonHelper,
         LoadQuestionScreenRequest loadQuestionScreenRequest,
         List<CollectedWorkflow> collectedWorkflows,
         WorkflowInstance workflowInstance,
@@ -59,9 +57,6 @@ public class LoadQuestionScreenRequestHandlerTests
         elsaCustomRepository.Verify(
             x => x.GetCustomActivityNavigation(loadQuestionScreenRequest.ActivityId,
                 loadQuestionScreenRequest.WorkflowInstanceId, CancellationToken.None), Times.Once);
-        loadQuestionScreenJsonHelper.Verify(
-            x => x.ActivityDataDictionaryToQuestionActivityData<QuestionActivityData>(
-                It.IsAny<IDictionary<string, object?>>()), Times.Never);
     }
 
     [Theory]
@@ -70,7 +65,6 @@ public class LoadQuestionScreenRequestHandlerTests
         [Frozen] Mock<IQuestionInvoker> questionInvoker,
         [Frozen] Mock<IWorkflowInstanceStore> workflowInstanceStore,
         [Frozen] Mock<IElsaCustomRepository> elsaCustomRepository,
-        [Frozen] Mock<ILoadQuestionScreenJsonHelper> loadQuestionScreenJsonHelper,
         LoadQuestionScreenRequest loadWorkflowActivityRequest,
         List<CollectedWorkflow> collectedWorkflows,
         WorkflowInstance workflowInstance,
@@ -100,9 +94,6 @@ public class LoadQuestionScreenRequestHandlerTests
             result.ErrorMessages.Single());
         workflowInstanceStore.Verify(
             x => x.FindAsync(It.IsAny<WorkflowInstanceIdSpecification>(), CancellationToken.None), Times.Never);
-        loadQuestionScreenJsonHelper.Verify(
-            x => x.ActivityDataDictionaryToQuestionActivityData<QuestionActivityData>(
-                It.IsAny<IDictionary<string, object?>>()), Times.Never);
     }
 
     [Theory]
@@ -111,7 +102,6 @@ public class LoadQuestionScreenRequestHandlerTests
         [Frozen] Mock<IQuestionInvoker> questionInvoker,
         [Frozen] Mock<IWorkflowInstanceStore> workflowInstanceStore,
         [Frozen] Mock<IElsaCustomRepository> elsaCustomRepository,
-        [Frozen] Mock<ILoadQuestionScreenJsonHelper> loadQuestionScreenJsonHelper,
         LoadQuestionScreenRequest loadWorkflowActivityRequest,
         CustomActivityNavigation customActivityNavigation,
         List<CollectedWorkflow> collectedWorkflows,
@@ -142,9 +132,6 @@ public class LoadQuestionScreenRequestHandlerTests
             result.ErrorMessages.Single());
         workflowInstanceStore.Verify(
             x => x.FindAsync(It.IsAny<WorkflowInstanceIdSpecification>(), CancellationToken.None), Times.Once);
-        loadQuestionScreenJsonHelper.Verify(
-            x => x.ActivityDataDictionaryToQuestionActivityData<QuestionActivityData>(
-                It.IsAny<IDictionary<string, object?>>()), Times.Never);
     }
 
     [Theory]
@@ -153,7 +140,6 @@ public class LoadQuestionScreenRequestHandlerTests
         [Frozen] Mock<IQuestionInvoker> questionInvoker,
         [Frozen] Mock<IWorkflowInstanceStore> workflowInstanceStore,
         [Frozen] Mock<IElsaCustomRepository> elsaCustomRepository,
-        [Frozen] Mock<ILoadQuestionScreenJsonHelper> loadQuestionScreenJsonHelper,
         LoadQuestionScreenRequest loadWorkflowActivityRequest,
         CustomActivityNavigation customActivityNavigation,
         LoadQuestionScreenRequestHandler sut)
@@ -179,9 +165,6 @@ public class LoadQuestionScreenRequestHandlerTests
             result.ErrorMessages.Single());
         workflowInstanceStore.Verify(
             x => x.FindAsync(It.IsAny<WorkflowInstanceIdSpecification>(), CancellationToken.None), Times.Never);
-        loadQuestionScreenJsonHelper.Verify(
-            x => x.ActivityDataDictionaryToQuestionActivityData<QuestionActivityData>(
-                It.IsAny<IDictionary<string, object?>>()), Times.Never);
     }
 
     [Theory]
@@ -190,7 +173,6 @@ public class LoadQuestionScreenRequestHandlerTests
         [Frozen] Mock<IQuestionInvoker> questionInvoker,
         [Frozen] Mock<IWorkflowInstanceStore> workflowInstanceStore,
         [Frozen] Mock<IElsaCustomRepository> elsaCustomRepository,
-        [Frozen] Mock<ILoadQuestionScreenJsonHelper> loadQuestionScreenJsonHelper,
         LoadQuestionScreenRequest loadWorkflowActivityRequest,
         CustomActivityNavigation customActivityNavigation,
         Exception exception,
@@ -214,9 +196,6 @@ public class LoadQuestionScreenRequestHandlerTests
         Assert.Equal(exception.Message, result.ErrorMessages.Single());
         workflowInstanceStore.Verify(
             x => x.FindAsync(It.IsAny<WorkflowInstanceIdSpecification>(), CancellationToken.None), Times.Never);
-        loadQuestionScreenJsonHelper.Verify(
-            x => x.ActivityDataDictionaryToQuestionActivityData<QuestionActivityData>(
-                It.IsAny<IDictionary<string, object?>>()), Times.Never);
     }
 
     [Theory]
@@ -225,12 +204,10 @@ public class LoadQuestionScreenRequestHandlerTests
         [Frozen] Mock<IQuestionInvoker> questionInvoker,
         [Frozen] Mock<IWorkflowInstanceStore> workflowInstanceStore,
         [Frozen] Mock<IElsaCustomRepository> elsaCustomRepository,
-        [Frozen] Mock<ILoadQuestionScreenJsonHelper> loadQuestionScreenJsonHelper,
         LoadQuestionScreenRequest loadWorkflowActivityRequest,
         List<CollectedWorkflow> collectedWorkflows,
         WorkflowInstance workflowInstance,
         CustomActivityNavigation customActivityNavigation,
-        QuestionActivityData questionActivityData,
         LoadQuestionScreenRequestHandler sut)
     {
         //Arrange
@@ -247,12 +224,6 @@ public class LoadQuestionScreenRequestHandlerTests
         elsaCustomRepository.Setup(x => x.GetCustomActivityNavigation(loadWorkflowActivityRequest.ActivityId,
                 loadWorkflowActivityRequest.WorkflowInstanceId, CancellationToken.None))
             .ReturnsAsync(customActivityNavigation);
-
-        loadQuestionScreenJsonHelper
-            .Setup(x =>
-                x.ActivityDataDictionaryToQuestionActivityData<QuestionActivityData>(
-                    It.IsAny<IDictionary<string, object?>>()))
-            .Returns(questionActivityData);
 
         IDictionary<string, object?>? customDictionary = null;
         workflowInstance.ActivityData.Add(loadWorkflowActivityRequest.ActivityId, customDictionary!);
@@ -272,13 +243,11 @@ public class LoadQuestionScreenRequestHandlerTests
         [Frozen] Mock<IQuestionInvoker> questionInvoker,
         [Frozen] Mock<IWorkflowInstanceStore> workflowInstanceStore,
         [Frozen] Mock<IElsaCustomRepository> elsaCustomRepository,
-        [Frozen] Mock<ILoadQuestionScreenJsonHelper> loadQuestionScreenJsonHelper,
         LoadQuestionScreenRequest loadWorkflowActivityRequest,
         List<CollectedWorkflow> collectedWorkflows,
         WorkflowInstance workflowInstance,
         CustomActivityNavigation customActivityNavigation,
         List<QuestionScreenAnswer> assessmentQuestions,
-        QuestionActivityData questionActivityData,
         LoadQuestionScreenRequestHandler sut)
     {
         //Arrange
@@ -302,12 +271,6 @@ public class LoadQuestionScreenRequestHandlerTests
                 loadWorkflowActivityRequest.WorkflowInstanceId, CancellationToken.None))
             .ReturnsAsync(assessmentQuestions);
 
-        loadQuestionScreenJsonHelper
-            .Setup(x =>
-                x.ActivityDataDictionaryToQuestionActivityData<QuestionActivityData>(
-                    It.IsAny<IDictionary<string, object?>>()))
-            .Returns(questionActivityData);
-
         var assessmentQuestionsDictionary = new Dictionary<string, object?>();
         AssessmentQuestions? elsaAssessmentQuestions = null;
         assessmentQuestionsDictionary.Add("Questions", elsaAssessmentQuestions);
@@ -328,13 +291,11 @@ public class LoadQuestionScreenRequestHandlerTests
         [Frozen] Mock<IQuestionInvoker> questionInvoker,
         [Frozen] Mock<IWorkflowInstanceStore> workflowInstanceStore,
         [Frozen] Mock<IElsaCustomRepository> elsaCustomRepository,
-        [Frozen] Mock<ILoadQuestionScreenJsonHelper> loadQuestionScreenJsonHelper,
         LoadQuestionScreenRequest loadWorkflowActivityRequest,
         List<CollectedWorkflow> collectedWorkflows,
         WorkflowInstance workflowInstance,
         CustomActivityNavigation customActivityNavigation,
         List<QuestionScreenAnswer> assessmentQuestions,
-        QuestionActivityData questionActivityData,
         AssessmentQuestions elsaAssessmentQuestions,
         LoadQuestionScreenRequestHandler sut)
     {
@@ -365,12 +326,6 @@ public class LoadQuestionScreenRequestHandlerTests
                 loadWorkflowActivityRequest.WorkflowInstanceId, CancellationToken.None))
             .ReturnsAsync(assessmentQuestions);
 
-        loadQuestionScreenJsonHelper
-            .Setup(x =>
-                x.ActivityDataDictionaryToQuestionActivityData<QuestionActivityData>(
-                    It.IsAny<IDictionary<string, object?>>()))
-            .Returns(questionActivityData);
-
         var assessmentQuestionsDictionary = new Dictionary<string, object?>();
         assessmentQuestionsDictionary.Add("Questions", elsaAssessmentQuestions);
 
@@ -392,13 +347,11 @@ public class LoadQuestionScreenRequestHandlerTests
             [Frozen] Mock<IQuestionInvoker> questionInvoker,
             [Frozen] Mock<IWorkflowInstanceStore> workflowInstanceStore,
             [Frozen] Mock<IElsaCustomRepository> elsaCustomRepository,
-            [Frozen] Mock<ILoadQuestionScreenJsonHelper> loadQuestionScreenJsonHelper,
             LoadQuestionScreenRequest loadWorkflowActivityRequest,
             List<CollectedWorkflow> collectedWorkflows,
             WorkflowInstance workflowInstance,
             CustomActivityNavigation customActivityNavigation,
             List<QuestionScreenAnswer> assessmentQuestions,
-            QuestionActivityData questionActivityData,
             AssessmentQuestions elsaAssessmentQuestions,
             LoadQuestionScreenRequestHandler sut)
     {
@@ -438,12 +391,6 @@ public class LoadQuestionScreenRequestHandlerTests
                 loadWorkflowActivityRequest.WorkflowInstanceId, CancellationToken.None))
             .ReturnsAsync(assessmentQuestions);
 
-        loadQuestionScreenJsonHelper
-            .Setup(x =>
-                x.ActivityDataDictionaryToQuestionActivityData<QuestionActivityData>(
-                    It.IsAny<IDictionary<string, object?>>()))
-            .Returns(questionActivityData);
-
         var assessmentQuestionsDictionary = new Dictionary<string, object?>();
         assessmentQuestionsDictionary.Add("Questions", elsaAssessmentQuestions);
 
@@ -467,13 +414,11 @@ public class LoadQuestionScreenRequestHandlerTests
             [Frozen] Mock<IQuestionInvoker> questionInvoker,
             [Frozen] Mock<IWorkflowInstanceStore> workflowInstanceStore,
             [Frozen] Mock<IElsaCustomRepository> elsaCustomRepository,
-            [Frozen] Mock<ILoadQuestionScreenJsonHelper> loadQuestionScreenJsonHelper,
             LoadQuestionScreenRequest loadWorkflowActivityRequest,
             List<CollectedWorkflow> collectedWorkflows,
             WorkflowInstance workflowInstance,
             CustomActivityNavigation customActivityNavigation,
             List<QuestionScreenAnswer> assessmentQuestions,
-            QuestionActivityData questionActivityData,
             AssessmentQuestions elsaAssessmentQuestions,
             LoadQuestionScreenRequestHandler sut)
     {
@@ -512,12 +457,6 @@ public class LoadQuestionScreenRequestHandlerTests
         elsaCustomRepository.Setup(x => x.GetQuestionScreenAnswers(loadWorkflowActivityRequest.ActivityId,
                 loadWorkflowActivityRequest.WorkflowInstanceId, CancellationToken.None))
             .ReturnsAsync(assessmentQuestions);
-
-        loadQuestionScreenJsonHelper
-            .Setup(x =>
-                x.ActivityDataDictionaryToQuestionActivityData<QuestionActivityData>(
-                    It.IsAny<IDictionary<string, object?>>()))
-            .Returns(questionActivityData);
 
         var assessmentQuestionsDictionary = new Dictionary<string, object?>();
         assessmentQuestionsDictionary.Add("Questions", elsaAssessmentQuestions);

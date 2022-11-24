@@ -8,7 +8,6 @@ using Elsa.Persistence.EntityFramework.Core.Extensions;
 using Elsa.Persistence.EntityFramework.SqlServer;
 using Elsa.Runtime;
 using Elsa.Server.Extensions;
-using Elsa.Server.Features.Workflow.LoadQuestionScreen;
 using Elsa.Server.Features.Workflow.QuestionScreenSaveAndContinue;
 using Elsa.Server.Features.Workflow.StartWorkflow;
 using Elsa.Server.Providers;
@@ -61,9 +60,6 @@ builder.Services.AddScoped<IDateTimeProvider, DateTimeProvider>();
 
 builder.Services.AddScoped<IStartWorkflowMapper, StartWorkflowMapper>();
 builder.Services.AddScoped<IQuestionScreenSaveAndContinueMapper, QuestionScreenSaveAndContinueMapper>();
-
-
-builder.Services.AddScoped<ILoadQuestionScreenJsonHelper, LoadQuestionScreenJsonHelper>();
 
 builder.Services.AddScoped<IEsriSinglePipelineClient, EsriSinglePipelineClient>();
 builder.Services.AddScoped<IEsriSinglePipelineDataJsonHelper, EsriSinglePipelineDataJsonHelper>();
