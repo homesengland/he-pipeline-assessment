@@ -112,7 +112,7 @@ namespace Elsa.CustomActivities.Activities.QuestionScreen.Helpers
 
                                     if (answerCheck)
                                     {
-                                        result = true;
+                                        return true;
                                     }
                                     else
                                     {
@@ -142,7 +142,7 @@ namespace Elsa.CustomActivities.Activities.QuestionScreen.Helpers
         public Task Handle(RenderingTypeScriptDefinitions notification, CancellationToken cancellationToken)
         {
             var output = notification.Output;
-            output.AppendLine("declare function radioQuestionAnswerEquals(workflowName: string, activityName:string, questionId:string, choiceIdsToCheck:string[] ): boolean;");
+            output.AppendLine("declare function radioQuestionAnswerEquals(workflowName: string, activityName:string, questionId:string, choiceIdToCheck:string ): boolean;");
             output.AppendLine("declare function radioQuestionAnswerIn(workflowName: string, activityName:string, questionId:string, choiceIdsToCheck:string[]  ): boolean;");
             return Task.CompletedTask;
         }

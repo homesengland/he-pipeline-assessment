@@ -1,4 +1,5 @@
 ﻿using Elsa.CustomInfrastructure.Data.Repository;
+using Elsa.CustomWorkflow.Sdk;
 using Elsa.Scripting.JavaScript.Events;
 using Elsa.Scripting.JavaScript.Messages;
 using Elsa.Services;
@@ -28,7 +29,7 @@ namespace Elsa.CustomActivities.Activities.QuestionScreen.Helpers
 
             var result = await _elsaCustomRepository.GetQuestionScreenAnswer(activityId, activityExecutionContext.CorrelationId, questionId, CancellationToken.None);
 
-            if (result != null && result.Answer != null && result.Answer.ToLower() == answerToCheck.ToLower())
+            if (result != null && result.QuestionType == QuestionTypeConstants.TextQuestion && result.Answer != null && result.Answer.ToLower() == answerToCheck.ToLower())
             {
                 return true;
             }
@@ -46,7 +47,7 @@ namespace Elsa.CustomActivities.Activities.QuestionScreen.Helpers
 
             var result = await _elsaCustomRepository.GetQuestionScreenAnswer(activityId, activityExecutionContext.CorrelationId, questionId, CancellationToken.None);
 
-            if (result != null && result.Answer != null && result.Answer.ToLower().Contains(answerToCheck.ToLower()))
+            if (result != null && result.QuestionType == QuestionTypeConstants.TextQuestion && result.Answer != null && result.Answer.ToLower().Contains(answerToCheck.ToLower()))
             {
                 return true;
             }
