@@ -1,12 +1,10 @@
 ﻿using Elsa.CustomInfrastructure.Data.Repository;
 using Elsa.CustomModels;
 using Elsa.Scripting.JavaScript.Events;
-using Elsa.Scripting.JavaScript.Extensions;
 using Elsa.Scripting.JavaScript.Messages;
 using Elsa.Services;
 using Elsa.Services.Models;
 using MediatR;
-using System.Linq.Expressions;
 
 namespace Elsa.CustomActivities.Activities.Shared
 {
@@ -26,7 +24,6 @@ namespace Elsa.CustomActivities.Activities.Shared
         {
             var activityExecutionContext = notification.ActivityExecutionContext;
             var engine = notification.Engine;
-            var test = new TestClassForSyntax(_elsaCustomRepository);
 
             engine.SetValue("getQuestionAnswer", (Func<string, string, string, QuestionScreenAnswer?>)((workflowName, activityName, questionId) => GetAssessmentQuestion(activityExecutionContext, workflowName, activityName, questionId).Result));
             engine.SetValue("getAnswer", (Func<string, string, string, string?>)((workflowName, activityName, questionId) => GetAnswer(activityExecutionContext, workflowName, activityName, questionId).Result));
@@ -35,7 +32,6 @@ namespace Elsa.CustomActivities.Activities.Shared
             engine.SetValue("hasAnswer", (Func<string, string, string, string, bool>)((workflowName, activityName, questionId, answer) => HasAnswer(activityExecutionContext, workflowName, activityName, questionId, answer).Result));
             engine.SetValue("isAnswer", (Func<string, string, string, string, bool>)((workflowName, activityName, questionId, answer) => IsAnswer(activityExecutionContext, workflowName, activityName, questionId, answer).Result));
 
-            engine.SetValue("testClassForSyntax", test);
 
             return Task.CompletedTask;
         }
@@ -49,7 +45,6 @@ namespace Elsa.CustomActivities.Activities.Shared
             output.AppendLine("declare function hasAllAnswers(workflowName: string, activityName:string, questionId:string, answers:string[] ): boolean;");
             output.AppendLine("declare function hasAnyAnswer(workflowName: string, activityName:string, questionId:string, possibleAnswers:string[] ): boolean;");
             output.AppendLine("declare function hasAnswer(workflowName: string, activityName:string, questionId:string, answer:string ): boolean;");
-            output.AppendLine("declare const testClassForSyntax: TestClassForSyntax;");
             output.AppendLine("declare function isAnswer(workflowName: string, activityName:string, questionId:string, answer:string ): boolean;");
 
             return Task.CompletedTask;
@@ -182,45 +177,6 @@ namespace Elsa.CustomActivities.Activities.Shared
         }
     }
 
-    public class TestClassForSyntax
-    {
 
-        private readonly IElsaCustomRepository _elsaCustomRepository;
-
-        public TestClassForSyntax(IElsaCustomRepository elsaCustomRepository)
-        {
-            _elsaCustomRepository = elsaCustomRepository;
-        }
-
-        public string TestProperty { get; set; }
-
-
-        public async Task<bool> HasAnyAnswer(ActivityExecutionContext activityExecutionContext, string workflowName, string activityName, string questionId, string[] answersToCheck)
-        {
-            var workflowRegistry = activityExecutionContext.GetService<IWorkflowRegistry>();
-            var workflowBlueprint = workflowRegistry.FindByNameAsync(workflowName, Elsa.Models.VersionOptions.Published).Result;
-            var workflowId = workflowBlueprint?.Id;
-
-            var activityId = workflowBlueprint!.Activities.FirstOrDefault(x => x.Name == activityName)!.Id;
-
-            var questionInstance = await _elsaCustomRepository.GetQuestionScreenAnswer(activityId, activityExecutionContext.CorrelationId, questionId, CancellationToken.None);
-
-            bool areAllAnswersIncluded = false;
-            foreach (var answer in answersToCheck)
-            {
-                if (questionInstance.Answer != null && questionInstance!.Answer.ToLower().Contains(answer.ToLower()))
-                {
-                    areAllAnswersIncluded = true;
-                    break;
-                }
-                else
-                {
-                    areAllAnswersIncluded = false;
-                }
-            }
-            return areAllAnswersIncluded;
-
-        }
-    }
 }
 
