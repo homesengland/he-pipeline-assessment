@@ -1,6 +1,6 @@
-﻿namespace Elsa.Server.Features.Workflow.LoadWorkflowActivity
+﻿namespace Elsa.Server.Features.Workflow.LoadCheckYourAnswersScreen
 {
-    public class LoadWorkflowActivityResponse
+    public class LoadCheckYourAnswersScreenResponse
     {
         public string WorkflowInstanceId { get; set; } = null!;
         public string ActivityId { get; set; } = null!;

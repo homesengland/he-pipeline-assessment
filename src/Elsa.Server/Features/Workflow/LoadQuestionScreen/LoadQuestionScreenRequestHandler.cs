@@ -10,28 +10,28 @@ using Elsa.Services.Models;
 using MediatR;
 using System.Text.Json;
 
-namespace Elsa.Server.Features.Workflow.LoadWorkflowActivity
+namespace Elsa.Server.Features.Workflow.LoadQuestionScreen
 {
-    public class LoadWorkflowActivityRequestHandler : IRequestHandler<LoadWorkflowActivityRequest, OperationResult<LoadWorkflowActivityResponse>>
+    public class LoadQuestionScreenRequestHandler : IRequestHandler<LoadQuestionScreenRequest, OperationResult<LoadQuestionScreenResponse>>
     {
         private readonly IQuestionInvoker _questionInvoker;
         private readonly IWorkflowInstanceStore _workflowInstanceStore;
         private readonly IElsaCustomRepository _elsaCustomRepository;
-        private readonly ILoadWorkflowActivityJsonHelper _loadWorkflowActivityJsonHelper;
+        private readonly ILoadQuestionScreenJsonHelper _loadQuestionScreenJsonHelper;
 
-        public LoadWorkflowActivityRequestHandler(IWorkflowInstanceStore workflowInstanceStore, IElsaCustomRepository elsaCustomRepository, IQuestionInvoker questionInvoker, ILoadWorkflowActivityJsonHelper loadWorkflowActivityJsonHelper)
+        public LoadQuestionScreenRequestHandler(IWorkflowInstanceStore workflowInstanceStore, IElsaCustomRepository elsaCustomRepository, IQuestionInvoker questionInvoker, ILoadQuestionScreenJsonHelper loadQuestionScreenJsonHelper)
         {
             _workflowInstanceStore = workflowInstanceStore;
             _elsaCustomRepository = elsaCustomRepository;
-            _loadWorkflowActivityJsonHelper = loadWorkflowActivityJsonHelper;
+            _loadQuestionScreenJsonHelper = loadQuestionScreenJsonHelper;
             _questionInvoker = questionInvoker;
         }
 
-        public async Task<OperationResult<LoadWorkflowActivityResponse>> Handle(LoadWorkflowActivityRequest activityRequest, CancellationToken cancellationToken)
+        public async Task<OperationResult<LoadQuestionScreenResponse>> Handle(LoadQuestionScreenRequest activityRequest, CancellationToken cancellationToken)
         {
-            var result = new OperationResult<LoadWorkflowActivityResponse>
+            var result = new OperationResult<LoadQuestionScreenResponse>
             {
-                Data = new LoadWorkflowActivityResponse
+                Data = new LoadQuestionScreenResponse
                 {
                     WorkflowInstanceId = activityRequest.WorkflowInstanceId,
                     ActivityId = activityRequest.ActivityId

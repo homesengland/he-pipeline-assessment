@@ -122,7 +122,7 @@ namespace Elsa.CustomWorkflow.Sdk.Tests.HttpClients
 
 
             //Act
-            var result = await sut.LoadWorkflowActivity(loadWorkflowActivityDto);
+            var result = await sut.LoadQuestionScreen(loadWorkflowActivityDto);
 
             //Assert
             Assert.Null(result);
@@ -144,7 +144,7 @@ namespace Elsa.CustomWorkflow.Sdk.Tests.HttpClients
                 httpMessageHandlerMock);
 
             //Act
-            var result = await sut.LoadWorkflowActivity(loadWorkflowActivityDto);
+            var result = await sut.LoadQuestionScreen(loadWorkflowActivityDto);
 
             //Assert
             Assert.NotNull(result);

@@ -1,11 +1,11 @@
 ﻿using Elsa.CustomWorkflow.Sdk.HttpClients;
 using Elsa.CustomWorkflow.Sdk.Models.Workflow;
-using He.PipelineAssessment.UI.Features.Workflow.LoadWorkflowActivity;
+using He.PipelineAssessment.UI.Features.Workflow.LoadQuestionScreen;
 using MediatR;
 
 namespace He.PipelineAssessment.UI.Features.Workflow.StartWorkflow
 {
-    public class StartWorkflowCommandHandler : IRequestHandler<StartWorkflowCommand, LoadWorkflowActivityRequest?>
+    public class StartWorkflowCommandHandler : IRequestHandler<StartWorkflowCommand, LoadQuestionScreenRequest?>
     {
         private readonly IElsaServerHttpClient _elsaServerHttpClient;
 
@@ -14,7 +14,7 @@ namespace He.PipelineAssessment.UI.Features.Workflow.StartWorkflow
             _elsaServerHttpClient = elsaServerHttpClient;
         }
 
-        public async Task<LoadWorkflowActivityRequest?> Handle(StartWorkflowCommand request, CancellationToken cancellationToken)
+        public async Task<LoadQuestionScreenRequest?> Handle(StartWorkflowCommand request, CancellationToken cancellationToken)
         {
             var dto = new StartWorkflowCommandDto()
             {
@@ -24,10 +24,11 @@ namespace He.PipelineAssessment.UI.Features.Workflow.StartWorkflow
 
             if (response != null)
             {
-                var result = new LoadWorkflowActivityRequest()
+                var result = new LoadQuestionScreenRequest()
                 {
                     ActivityId = response.Data.NextActivityId,
-                    WorkflowInstanceId = response.Data.WorkflowInstanceId
+                    WorkflowInstanceId = response.Data.WorkflowInstanceId,
+                    ActivityType = response.Data.ActivityType
                 };
 
                 return await Task.FromResult(result);
