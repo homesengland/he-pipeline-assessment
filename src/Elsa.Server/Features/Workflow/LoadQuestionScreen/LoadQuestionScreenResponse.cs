@@ -1,4 +1,6 @@
-﻿namespace Elsa.Server.Features.Workflow.LoadQuestionScreen
+﻿using Elsa.CustomModels;
+
+namespace Elsa.Server.Features.Workflow.LoadQuestionScreen
 {
     public class LoadQuestionScreenResponse
     {
@@ -6,12 +8,10 @@
         public string ActivityId { get; set; } = null!;
         public string ActivityType { get; set; } = null!;
         public string PreviousActivityId { get; set; } = null!;
-
+        public string PreviousActivityType { get; set; } = null!;
         public string? PageTitle { get; set; } = null!;
 
-
         public List<QuestionActivityData> MultiQuestionActivityData { get; set; } = null!;
-
     }
 
     public class QuestionActivityData
@@ -34,20 +34,14 @@
 
     public class Checkbox
     {
-        public Choice[] Choices { get; set; } = new List<Choice>().ToArray();
+        public QuestionScreenAnswer.Choice[] Choices { get; set; } = new List<QuestionScreenAnswer.Choice>().ToArray();
 
         public List<string> SelectedChoices { get; set; } = null!;
     }
 
-    public class Choice
-    {
-        public string Answer { get; set; } = null!;
-        public bool IsSingle { get; set; }
-    }
-
     public class Radio
     {
-        public Choice[] Choices { get; set; } = new List<Choice>().ToArray();
+        public QuestionScreenAnswer.Choice[] Choices { get; set; } = new List<QuestionScreenAnswer.Choice>().ToArray();
         public string SelectedAnswer { get; set; } = null!;
     }
 

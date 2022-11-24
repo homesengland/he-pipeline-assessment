@@ -1,12 +1,13 @@
 ﻿using Elsa.CustomActivities.Activities.QuestionScreen;
 using Elsa.CustomModels;
+using Elsa.CustomWorkflow.Sdk;
 using Elsa.Server.Providers;
 
 namespace Elsa.Server.Features.Workflow.QuestionScreenSaveAndContinue
 {
     public interface IQuestionScreenSaveAndContinueMapper
     {
-        CustomActivityNavigation saveAndContinueCommandToNextCustomActivityNavigation(QuestionScreenSaveAndContinueCommand command, string nextActivityId, string nextActivityType);
+        CustomActivityNavigation SaveAndContinueCommandToNextCustomActivityNavigation(QuestionScreenSaveAndContinueCommand command, string nextActivityId, string nextActivityType);
         QuestionScreenAnswer SaveAndContinueCommandToQuestionScreenAnswer(QuestionScreenSaveAndContinueCommand command, string nextActivityId, string type, Question item);
     }
 
@@ -19,7 +20,7 @@ namespace Elsa.Server.Features.Workflow.QuestionScreenSaveAndContinue
             _dateTimeProvider = dateTimeProvider;
         }
 
-        public CustomActivityNavigation saveAndContinueCommandToNextCustomActivityNavigation(QuestionScreenSaveAndContinueCommand command, string nextActivityId, string nextActivityType)
+        public CustomActivityNavigation SaveAndContinueCommandToNextCustomActivityNavigation(QuestionScreenSaveAndContinueCommand command, string nextActivityId, string nextActivityType)
         {
             return new CustomActivityNavigation
             {
@@ -41,8 +42,26 @@ namespace Elsa.Server.Features.Workflow.QuestionScreenSaveAndContinue
                 WorkflowInstanceId = command.WorkflowInstanceId,
                 CreatedDateTime = _dateTimeProvider.UtcNow(),
                 QuestionId = question.Id,
-                QuestionType = question.QuestionType
+                QuestionType = question.QuestionType,
+                Question = question.QuestionText,
+                Choices = MapChoices(question)
             };
+        }
+
+        private List<QuestionScreenAnswer.Choice>? MapChoices(Question question)
+        {
+            var choices = question.QuestionType switch
+            {
+                QuestionTypeConstants.CheckboxQuestion => question.Checkbox.Choices.Select(x =>
+                        new QuestionScreenAnswer.Choice() { Answer = x.Answer, IsSingle = x.IsSingle })
+                    .ToList(),
+                QuestionTypeConstants.RadioQuestion => question.Radio.Choices
+                    .Select(x => new QuestionScreenAnswer.Choice() { Answer = x.Answer, IsSingle = false })
+                    .ToList(),
+                _ => null
+            };
+
+            return choices;
         }
     }
 }

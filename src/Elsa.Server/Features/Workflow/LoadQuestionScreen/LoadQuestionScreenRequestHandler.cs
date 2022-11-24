@@ -64,54 +64,43 @@ namespace Elsa.Server.Features.Workflow.LoadQuestionScreen
                                     workflowInstance.ActivityData
                                         .FirstOrDefault(a => a.Key == activityRequest.ActivityId).Value;
 
-                                if (activityDataDictionary != null)
+                                result.Data.ActivityType = dbActivity.ActivityType;
+                                result.Data.PreviousActivityId = dbActivity.PreviousActivityId;
+                                result.Data.PreviousActivityType = dbActivity.PreviousActivityType;
+
+                                var title = (string?)activityDataDictionary.FirstOrDefault(x => x.Key == "PageTitle").Value;
+                                result.Data.PageTitle = title;
+
+                                var dbQuestions = await _elsaCustomRepository.GetQuestionScreenAnswers(
+                                    activityRequest.ActivityId, activityRequest.WorkflowInstanceId,
+                                    cancellationToken);
+
+                                var elsaActivityAssessmentQuestions =
+                                    (AssessmentQuestions?)activityDataDictionary
+                                        .FirstOrDefault(x => x.Key == "Questions").Value;
+
+                                if (elsaActivityAssessmentQuestions != null)
                                 {
+                                    result.Data.MultiQuestionActivityData = new List<QuestionActivityData>();
                                     result.Data.ActivityType = dbActivity.ActivityType;
-                                    result.Data.PreviousActivityId = dbActivity.PreviousActivityId;
 
-                                    if (dbActivity.ActivityType == ActivityTypeConstants.QuestionScreen)
+                                    foreach (var item in elsaActivityAssessmentQuestions.Questions)
                                     {
-                                        var title = (string?)activityDataDictionary.FirstOrDefault(x => x.Key == "PageTitle").Value;
-                                        result.Data.PageTitle = title;
-
-                                        var dbQuestions = await _elsaCustomRepository.GetQuestionScreenAnswers(
-                                            activityRequest.ActivityId, activityRequest.WorkflowInstanceId,
-                                            cancellationToken);
-
-                                        var elsaActivityAssessmentQuestions =
-                                            (AssessmentQuestions?)activityDataDictionary
-                                                .FirstOrDefault(x => x.Key == "Questions").Value;
-
-                                        if (elsaActivityAssessmentQuestions != null)
+                                        //get me the item
+                                        var dbQuestion =
+                                            dbQuestions.FirstOrDefault(x => x.QuestionId == item.Id);
+                                        if (dbQuestion != null)
                                         {
-                                            result.Data.MultiQuestionActivityData = new List<QuestionActivityData>();
-                                            result.Data.ActivityType = dbActivity.ActivityType;
+                                            var questionActivityData = CreateQuestionActivityData(dbQuestion, item);
 
-                                            foreach (var item in elsaActivityAssessmentQuestions.Questions)
-                                            {
-                                                //get me the item
-                                                var dbQuestion =
-                                                    dbQuestions.FirstOrDefault(x => x.QuestionId == item.Id);
-                                                if (dbQuestion != null)
-                                                {
-                                                    var questionActivityData = CreateQuestionActivityData(dbQuestion, item);
-
-                                                    result.Data.MultiQuestionActivityData.Add(questionActivityData);
-                                                }
-                                            }
-                                        }
-                                        else
-                                        {
-                                            result.ErrorMessages.Add(
-                                                $"Failed to map activity data to MultiQuestionActivityData");
+                                            result.Data.MultiQuestionActivityData.Add(questionActivityData);
                                         }
                                     }
-
                                 }
                                 else
                                 {
                                     result.ErrorMessages.Add(
-                                        $"Activity data is null for Activity Id: {activityRequest.ActivityId}");
+                                        $"Failed to map activity data to MultiQuestionActivityData");
                                 }
                             }
                         }
@@ -159,7 +148,7 @@ namespace Elsa.Server.Features.Workflow.LoadQuestionScreen
             {
                 questionActivityData.Checkbox = new Checkbox();
                 questionActivityData.Checkbox.Choices =
-                    item.Checkbox.Choices.Select(x => new Choice()
+                    item.Checkbox.Choices.Select(x => new QuestionScreenAnswer.Choice()
                     { Answer = x.Answer, IsSingle = x.IsSingle }).ToArray();
             }
 
@@ -177,7 +166,7 @@ namespace Elsa.Server.Features.Workflow.LoadQuestionScreen
             {
                 questionActivityData.Radio = new Radio();
                 questionActivityData.Radio.Choices = item.Radio.Choices
-                    .Select(x => new Choice() { Answer = x.Answer })
+                    .Select(x => new QuestionScreenAnswer.Choice() { Answer = x.Answer })
                     .ToArray();
             }
 

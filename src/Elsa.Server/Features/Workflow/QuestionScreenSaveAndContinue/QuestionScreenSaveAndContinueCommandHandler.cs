@@ -141,7 +141,7 @@ namespace Elsa.Server.Features.Workflow.QuestionScreenSaveAndContinue
 
         private async Task CreateNextActivityRecord(QuestionScreenSaveAndContinueCommand command, string nextActivityId, string nextActivityType, WorkflowInstance workflowInstance)
         {
-            var assessmentQuestion = _saveAndContinueMapper.saveAndContinueCommandToNextCustomActivityNavigation(command, nextActivityId, nextActivityType);
+            var assessmentQuestion = _saveAndContinueMapper.SaveAndContinueCommandToNextCustomActivityNavigation(command, nextActivityId, nextActivityType);
             await _elsaCustomRepository.CreateCustomActivityNavigationAsync(assessmentQuestion);
 
             if (nextActivityType == ActivityTypeConstants.QuestionScreen)

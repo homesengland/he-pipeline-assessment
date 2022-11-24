@@ -26,7 +26,7 @@ namespace Elsa.Server.Tests.Features.Workflow.QuestionScreenSaveAndContinue
             mockDateTimeProvider.Setup(x => x.UtcNow()).Returns(currentTimeUtc);
 
             //Act
-            var result = sut.saveAndContinueCommandToNextCustomActivityNavigation(saveAndContinueCommand, nextActivityId, nextActivityType);
+            var result = sut.SaveAndContinueCommandToNextCustomActivityNavigation(saveAndContinueCommand, nextActivityId, nextActivityType);
 
             //Assert
             Assert.IsType<CustomActivityNavigation>(result);

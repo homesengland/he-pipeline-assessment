@@ -15,7 +15,7 @@ using He.PipelineAssessment.Common.Tests;
 using Moq;
 using Xunit;
 
-namespace Elsa.Server.Tests.Features.Workflow.MultiSaveAndContinue
+namespace Elsa.Server.Tests.Features.Workflow.QuestionScreenSaveAndContinue
 {
     public class QuestionScreenSaveAndContinueCommandHandlerTests
     {
@@ -157,7 +157,7 @@ namespace Elsa.Server.Tests.Features.Workflow.MultiSaveAndContinue
                 .ReturnsAsync((CustomActivityNavigation?)null);
 
             saveAndContinueMapper
-                .Setup(x => x.saveAndContinueCommandToNextCustomActivityNavigation(saveAndContinueCommand,
+                .Setup(x => x.SaveAndContinueCommandToNextCustomActivityNavigation(saveAndContinueCommand,
                     workflowInstance.Output!.ActivityId, nextActivityType)).Returns(nextAssessmentActivity);
 
             //Act
@@ -413,7 +413,7 @@ namespace Elsa.Server.Tests.Features.Workflow.MultiSaveAndContinue
                 .ReturnsAsync((CustomActivityNavigation?)null);
 
             saveAndContinueMapper
-                .Setup(x => x.saveAndContinueCommandToNextCustomActivityNavigation(saveAndContinueCommand,
+                .Setup(x => x.SaveAndContinueCommandToNextCustomActivityNavigation(saveAndContinueCommand,
                     workflowInstance.Output!.ActivityId, nextActivityType)).Returns(nextCustomActivityNavigation);
 
             var assessmentQuestionsDictionary = new Dictionary<string, object?>();
