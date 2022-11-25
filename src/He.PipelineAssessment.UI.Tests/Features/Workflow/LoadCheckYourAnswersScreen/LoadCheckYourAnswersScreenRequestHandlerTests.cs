@@ -2,54 +2,55 @@
 using Elsa.CustomWorkflow.Sdk.HttpClients;
 using Elsa.CustomWorkflow.Sdk.Models.Workflow;
 using He.PipelineAssessment.Common.Tests;
+using He.PipelineAssessment.UI.Features.Workflow.LoadCheckYourAnswersScreen;
 using He.PipelineAssessment.UI.Features.Workflow.LoadQuestionScreen;
 using He.PipelineAssessment.UI.Features.Workflow.SaveAndContinue;
 using Moq;
 using Xunit;
 
-namespace He.PipelineAssessment.UI.Tests.Features.Workflow.LoadWorkflowActivity
+namespace He.PipelineAssessment.UI.Tests.Features.Workflow.LoadCheckYourAnswersScreen
 {
-    public class LoadWorkflowActivityRequestHandlerTests
+    public class LoadCheckYourAnswersScreenRequestHandlerTests
     {
         [Theory]
         [AutoMoqData]
         public async Task Handle_ReturnsNull_GivenHttpClientResponseIsNull(
            [Frozen] Mock<IElsaServerHttpClient> elsaServerHttpClient,
-           LoadQuestionScreenRequest loadWorkflowActivityRequest,
-           LoadQuestionScreenRequestHandler sut)
+           LoadCheckYourAnswersScreenRequest loadCheckYourAnswersScreenRequest,
+           LoadCheckYourAnswersScreenRequestHandler sut)
         {
             //Arrange
 
-            elsaServerHttpClient.Setup(x => x.LoadQuestionScreen(It.IsAny<LoadWorkflowActivityDto>()))
+            elsaServerHttpClient.Setup(x => x.LoadCheckYourAnswersScreen(It.IsAny<LoadWorkflowActivityDto>()))
                 .ReturnsAsync((WorkflowActivityDataDto?)null);
 
             //Act
-            var result = await sut.Handle(loadWorkflowActivityRequest, CancellationToken.None);
+            var result = await sut.Handle(loadCheckYourAnswersScreenRequest, CancellationToken.None);
 
             //Assert
             Assert.Null(result);
-            elsaServerHttpClient.Verify(x => x.LoadQuestionScreen(It.IsAny<LoadWorkflowActivityDto>()), Times.Once);
+            elsaServerHttpClient.Verify(x => x.LoadCheckYourAnswersScreen(It.IsAny<LoadWorkflowActivityDto>()), Times.Once);
         }
 
         [Theory]
         [AutoMoqData]
         public async Task Handle_ReturnsSaveAndContinueCommand_GivenNoErrorsEncountered(
             [Frozen] Mock<IElsaServerHttpClient> elsaServerHttpClient,
-            LoadQuestionScreenRequest loadWorkflowActivityRequest,
+            LoadCheckYourAnswersScreenRequest loadCheckYourAnswersScreenRequest,
             WorkflowActivityDataDto workflowActivityDataDto,
-            LoadQuestionScreenRequestHandler sut)
+            LoadCheckYourAnswersScreenRequestHandler sut)
         {
             //Arrange
-            elsaServerHttpClient.Setup(x => x.LoadQuestionScreen(It.IsAny<LoadWorkflowActivityDto>()))
+            elsaServerHttpClient.Setup(x => x.LoadCheckYourAnswersScreen(It.IsAny<LoadWorkflowActivityDto>()))
                 .ReturnsAsync(workflowActivityDataDto);
 
             //Act
-            var result = await sut.Handle(loadWorkflowActivityRequest, CancellationToken.None);
+            var result = await sut.Handle(loadCheckYourAnswersScreenRequest, CancellationToken.None);
 
             //Assert
             Assert.NotNull(result);
             Assert.IsType<SaveAndContinueCommand>(result);
-            elsaServerHttpClient.Verify(x => x.LoadQuestionScreen(It.IsAny<LoadWorkflowActivityDto>()), Times.Once);
+            elsaServerHttpClient.Verify(x => x.LoadCheckYourAnswersScreen(It.IsAny<LoadWorkflowActivityDto>()), Times.Once);
         }
     }
 }

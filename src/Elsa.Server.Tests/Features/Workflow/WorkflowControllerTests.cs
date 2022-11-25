@@ -1,5 +1,6 @@
 ﻿using AutoFixture.Xunit2;
 using Elsa.Server.Features.Workflow;
+using Elsa.Server.Features.Workflow.LoadCheckYourAnswersScreen;
 using Elsa.Server.Features.Workflow.LoadQuestionScreen;
 using Elsa.Server.Features.Workflow.QuestionScreenSaveAndContinue;
 using Elsa.Server.Features.Workflow.StartWorkflow;
@@ -130,7 +131,7 @@ namespace Elsa.Server.Tests.Features.Workflow
 
         [Theory]
         [AutoData]
-        public async Task WorkflowController_LoadWorkflowActivity_ShouldReturnOK_WhenCommandHandlerIsSuccessful(
+        public async Task WorkflowController_LoadQuestionScreen_ShouldReturnOK_WhenCommandHandlerIsSuccessful(
            LoadQuestionScreenRequest request,
            LoadQuestionScreenResponse response,
            Mock<IMediator> mediatorMock)
@@ -163,7 +164,7 @@ namespace Elsa.Server.Tests.Features.Workflow
 
         [Theory]
         [AutoData]
-        public async Task WorkflowController_LoadWorkflowActivity_ShouldReturnBadRequest_WhenCommandHandlerReturnsErrors(
+        public async Task WorkflowController_LoadQuestionScreen_ShouldReturnBadRequest_WhenCommandHandlerReturnsErrors(
             LoadQuestionScreenRequest request,
             OperationResult<LoadQuestionScreenResponse> operationResult,
             Mock<IMediator> mediatorMock)
@@ -190,7 +191,7 @@ namespace Elsa.Server.Tests.Features.Workflow
 
         [Theory]
         [AutoData]
-        public async Task WorkflowController_LoadWorkflowActivity_ShouldReturn500_WhenCommandHandlerThrowsException(
+        public async Task WorkflowController_LoadQuestionScreen_ShouldReturn500_WhenCommandHandlerThrowsException(
             LoadQuestionScreenRequest request,
             Exception exception,
             Mock<IMediator> mediatorMock)
@@ -220,7 +221,7 @@ namespace Elsa.Server.Tests.Features.Workflow
 
         [Theory]
         [AutoData]
-        public async Task WorkflowController_LoadWorkflowActivity_ShouldReturn500_WhenCommandHandlerReturnsNull(
+        public async Task WorkflowController_LoadQuestionScreen_ShouldReturn500_WhenCommandHandlerReturnsNull(
             LoadQuestionScreenRequest request,
             Mock<IMediator> mediatorMock)
         {
@@ -232,6 +233,119 @@ namespace Elsa.Server.Tests.Features.Workflow
 
             //Act
             var result = await controller.LoadQuestionScreen(request.WorkflowInstanceId, request.ActivityId);
+
+            //Assert
+            Assert.NotNull(result);
+            Assert.IsType<ObjectResult>(result);
+
+            var objectResult = (ObjectResult)result;
+
+            Assert.Equal(500, objectResult.StatusCode);
+            Assert.IsType<NullReferenceException>(objectResult.Value);
+        }
+
+        [Theory]
+        [AutoData]
+        public async Task WorkflowController_LoadCheckYourAnswersScreen_ShouldReturnOK_WhenCommandHandlerIsSuccessful(
+           LoadCheckYourAnswersScreenRequest request,
+           LoadCheckYourAnswersScreenResponse response,
+           Mock<IMediator> mediatorMock)
+        {
+            var loadCheckYourAnswersResponse = new OperationResult<LoadCheckYourAnswersScreenResponse>
+            {
+                ErrorMessages = new List<string>(),
+                ValidationMessages = null,
+                Data = response
+            };
+            //Arrange
+            mediatorMock.Setup(x => x.Send(It.IsAny<LoadCheckYourAnswersScreenRequest>(), CancellationToken.None)).ReturnsAsync(loadCheckYourAnswersResponse);
+
+            WorkflowController controller = new WorkflowController(mediatorMock.Object);
+
+            //Act
+            var result = await controller.LoadCheckYourAnswersScreen(request.WorkflowInstanceId, request.ActivityId);
+
+            //Assert
+            Assert.NotNull(result);
+            Assert.IsType<OkObjectResult>(result);
+
+            var okResult = (OkObjectResult)result;
+            var okResultValueData = (OperationResult<LoadCheckYourAnswersScreenResponse>)okResult.Value!;
+
+            Assert.Equal(response.ActivityId, okResultValueData.Data!.ActivityId);
+            Assert.Equal(response.WorkflowInstanceId, okResultValueData.Data.WorkflowInstanceId);
+
+        }
+
+        [Theory]
+        [AutoData]
+        public async Task WorkflowController_LoadCheckYourAnswersScreen_ShouldReturnBadRequest_WhenCommandHandlerReturnsErrors(
+            LoadCheckYourAnswersScreenRequest request,
+            OperationResult<LoadCheckYourAnswersScreenResponse> operationResult,
+            Mock<IMediator> mediatorMock)
+        {
+
+            //Arrange
+            mediatorMock.Setup(x => x.Send(It.IsAny<LoadCheckYourAnswersScreenRequest>(), CancellationToken.None)).ReturnsAsync(operationResult);
+
+            WorkflowController controller = new WorkflowController(mediatorMock.Object);
+
+            //Act
+            var result = await controller.LoadCheckYourAnswersScreen(request.WorkflowInstanceId, request.ActivityId);
+
+            //Assert
+            Assert.NotNull(result);
+            Assert.IsType<BadRequestObjectResult>(result);
+
+            var badResult = (BadRequestObjectResult)result;
+            var badResultValueData = (string)badResult.Value!;
+
+            Assert.Equal(string.Join(',', operationResult.ErrorMessages), badResultValueData);
+        }
+
+        [Theory]
+        [AutoData]
+        public async Task WorkflowController_LoadCheckYourAnswersScreen_ShouldReturn500_WhenCommandHandlerThrowsException(
+            LoadCheckYourAnswersScreenRequest request,
+            Exception exception,
+            Mock<IMediator> mediatorMock)
+        {
+            //Arrange
+            mediatorMock.Setup(x => x.Send(It.IsAny<LoadCheckYourAnswersScreenRequest>(), CancellationToken.None)).ThrowsAsync(exception);
+
+            WorkflowController controller = new WorkflowController(mediatorMock.Object);
+
+            //Act
+            var result = await controller.LoadCheckYourAnswersScreen(request.WorkflowInstanceId, request.ActivityId);
+
+            //Assert
+            Assert.NotNull(result);
+            Assert.IsType<ObjectResult>(result);
+
+            var objectResult = (ObjectResult)result;
+
+            Assert.Equal(500, objectResult.StatusCode);
+            Assert.IsType<Exception>(objectResult.Value);
+
+            var exceptionResult = (Exception)objectResult.Value!;
+
+            Assert.Equal(exception.Message, exceptionResult.Message);
+        }
+
+        [Theory]
+        [AutoData]
+        public async Task WorkflowController_LoadCheckYourAnswersScreen_ShouldReturn500_WhenCommandHandlerReturnsNull(
+            LoadCheckYourAnswersScreenRequest request,
+            Mock<IMediator> mediatorMock)
+        {
+
+            //Arrange
+            mediatorMock.Setup(x => x.Send(It.IsAny<LoadCheckYourAnswersScreenRequest>(), CancellationToken.None)).ReturnsAsync((OperationResult<LoadCheckYourAnswersScreenResponse>)null!);
+
+            WorkflowController controller = new WorkflowController(mediatorMock.Object);
+
+            //Act
+            var result = await controller.LoadCheckYourAnswersScreen(request.WorkflowInstanceId, request.ActivityId);
 
             //Assert
             Assert.NotNull(result);
