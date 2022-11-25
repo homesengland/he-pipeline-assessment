@@ -10,7 +10,6 @@ namespace Elsa.Server.Extensions
         {
             typeof(SinglePipelineData),
             typeof(QuestionScreenAnswer)
-
         };
     }
 }

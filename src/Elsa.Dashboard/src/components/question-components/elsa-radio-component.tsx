@@ -96,6 +96,10 @@ export class ElsaRadioComponent {
       return (
         <tr key={`choice-${index}`}>
           <td class="elsa-py-2 elsa-pr-5">
+            <input type="text" value={multiChoice.identifier} disabled onChange={e => this.handler.onChoiceIdentifierChanged.bind(this)(e, multiChoice)}
+              class="focus:elsa-ring-blue-500 focus:elsa-border-blue-500 elsa-block elsa-w-full elsa-min-w-0 elsa-rounded-md sm:elsa-text-sm elsa-border-gray-300" />
+          </td>
+          <td class="elsa-py-2 elsa-pr-5">
             <input type="text" value={multiChoice.answer} onChange={e => this.handler.onChoiceNameChanged.bind(this)(e, multiChoice)}
               class="focus:elsa-ring-blue-500 focus:elsa-border-blue-500 elsa-block elsa-w-full elsa-min-w-0 elsa-rounded-md sm:elsa-text-sm elsa-border-gray-300" />
           </td>
@@ -125,7 +129,10 @@ export class ElsaRadioComponent {
             <thead class="elsa-bg-gray-50">
               <tr>
                 <th
-                  class="elsa-py-3 elsa-text-left elsa-text-xs elsa-font-medium elsa-text-gray-500 elsa-tracking-wider elsa-w-10/12">Answer
+                  class="elsa-py-3 elsa-text-left elsa-text-xs elsa-font-medium elsa-text-gray-500 elsa-tracking-wider elsa-w-3/12">Identifier
+                </th>
+                <th
+                  class="elsa-py-3 elsa-text-left elsa-text-xs elsa-font-medium elsa-text-gray-500 elsa-tracking-wider elsa-w-9/12">Answer
                 </th>
                 <th
                   class="elsa-py-3 elsa-text-left elsa-text-xs elsa-font-medium elsa-text-gray-500 elsa-tracking-wider elsa-w-1/12">&nbsp;</th>

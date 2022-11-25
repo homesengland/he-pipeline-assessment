@@ -1,6 +1,7 @@
 ///Question Options
 
 export interface IQuestionOption {
+  identifier: string
   answer: string
 }
 

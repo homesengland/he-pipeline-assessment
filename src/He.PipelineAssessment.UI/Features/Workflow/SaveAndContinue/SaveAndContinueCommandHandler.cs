@@ -1,10 +1,9 @@
 ﻿using Elsa.CustomWorkflow.Sdk.HttpClients;
-using He.PipelineAssessment.UI.Features.Workflow.LoadWorkflowActivity;
 using MediatR;
 
 namespace He.PipelineAssessment.UI.Features.Workflow.SaveAndContinue
 {
-    public class SaveAndContinueCommandHandler : IRequestHandler<SaveAndContinueCommand, LoadWorkflowActivityRequest?>
+    public class SaveAndContinueCommandHandler : IRequestHandler<SaveAndContinueCommand, SaveAndContinueCommandResponse?>
     {
         private readonly IElsaServerHttpClient _elsaServerHttpClient;
         private readonly ISaveAndContinueMapper _saveAndContinueMapper;
@@ -14,19 +13,18 @@ namespace He.PipelineAssessment.UI.Features.Workflow.SaveAndContinue
             _saveAndContinueMapper = saveAndContinueMapper;
         }
 
-        public async Task<LoadWorkflowActivityRequest?> Handle(SaveAndContinueCommand request, CancellationToken cancellationToken)
+        public async Task<SaveAndContinueCommandResponse?> Handle(SaveAndContinueCommand request, CancellationToken cancellationToken)
         {
-
-            var saveAndContinueComandDto = _saveAndContinueMapper.SaveAndContinueCommandToMultiSaveAndContinueCommandDto(request);
-            var response = await _elsaServerHttpClient.SaveAndContinue(saveAndContinueComandDto);
-
+            var saveAndContinueCommandDto = _saveAndContinueMapper.SaveAndContinueCommandToMultiSaveAndContinueCommandDto(request);
+            var response = await _elsaServerHttpClient.SaveAndContinue(saveAndContinueCommandDto);
 
             if (response != null)
             {
-                LoadWorkflowActivityRequest result = new LoadWorkflowActivityRequest()
+                SaveAndContinueCommandResponse result = new SaveAndContinueCommandResponse()
                 {
-                    ActivityId = response!.Data.NextActivityId,
-                    WorkflowInstanceId = response.Data.WorkflowInstanceId
+                    ActivityId = response.Data.NextActivityId,
+                    WorkflowInstanceId = response.Data.WorkflowInstanceId,
+                    ActivityType = response.Data.ActivityType
                 };
 
                 return await Task.FromResult(result);

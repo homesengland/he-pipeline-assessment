@@ -10,28 +10,26 @@ using Elsa.Services.Models;
 using MediatR;
 using System.Text.Json;
 
-namespace Elsa.Server.Features.Workflow.LoadWorkflowActivity
+namespace Elsa.Server.Features.Workflow.LoadQuestionScreen
 {
-    public class LoadWorkflowActivityRequestHandler : IRequestHandler<LoadWorkflowActivityRequest, OperationResult<LoadWorkflowActivityResponse>>
+    public class LoadQuestionScreenRequestHandler : IRequestHandler<LoadQuestionScreenRequest, OperationResult<LoadQuestionScreenResponse>>
     {
         private readonly IQuestionInvoker _questionInvoker;
         private readonly IWorkflowInstanceStore _workflowInstanceStore;
         private readonly IElsaCustomRepository _elsaCustomRepository;
-        private readonly ILoadWorkflowActivityJsonHelper _loadWorkflowActivityJsonHelper;
 
-        public LoadWorkflowActivityRequestHandler(IWorkflowInstanceStore workflowInstanceStore, IElsaCustomRepository elsaCustomRepository, IQuestionInvoker questionInvoker, ILoadWorkflowActivityJsonHelper loadWorkflowActivityJsonHelper)
+        public LoadQuestionScreenRequestHandler(IWorkflowInstanceStore workflowInstanceStore, IElsaCustomRepository elsaCustomRepository, IQuestionInvoker questionInvoker)
         {
             _workflowInstanceStore = workflowInstanceStore;
             _elsaCustomRepository = elsaCustomRepository;
-            _loadWorkflowActivityJsonHelper = loadWorkflowActivityJsonHelper;
             _questionInvoker = questionInvoker;
         }
 
-        public async Task<OperationResult<LoadWorkflowActivityResponse>> Handle(LoadWorkflowActivityRequest activityRequest, CancellationToken cancellationToken)
+        public async Task<OperationResult<LoadQuestionScreenResponse>> Handle(LoadQuestionScreenRequest activityRequest, CancellationToken cancellationToken)
         {
-            var result = new OperationResult<LoadWorkflowActivityResponse>
+            var result = new OperationResult<LoadQuestionScreenResponse>
             {
-                Data = new LoadWorkflowActivityResponse
+                Data = new LoadQuestionScreenResponse
                 {
                     WorkflowInstanceId = activityRequest.WorkflowInstanceId,
                     ActivityId = activityRequest.ActivityId
@@ -39,12 +37,18 @@ namespace Elsa.Server.Features.Workflow.LoadWorkflowActivity
             };
             try
             {
-                var dbActivity =
+                var customActivityNavigation =
                     await _elsaCustomRepository.GetCustomActivityNavigation(activityRequest.ActivityId, activityRequest.WorkflowInstanceId, cancellationToken);
 
-                if (dbActivity != null)
+                if (customActivityNavigation != null)
                 {
-                    IEnumerable<CollectedWorkflow> workflows = await _questionInvoker.FindWorkflowsAsync(activityRequest.ActivityId, dbActivity.ActivityType, activityRequest.WorkflowInstanceId, cancellationToken);
+                    if (customActivityNavigation.ActivityType != ActivityTypeConstants.QuestionScreen)
+                    {
+                        throw new ApplicationException(
+                            $"Attempted to load question screen with {customActivityNavigation.ActivityType} activity type");
+                    }
+
+                    IEnumerable<CollectedWorkflow> workflows = await _questionInvoker.FindWorkflowsAsync(activityRequest.ActivityId, customActivityNavigation.ActivityType, activityRequest.WorkflowInstanceId, cancellationToken);
 
                     var collectedWorkflow = workflows.FirstOrDefault();
                     if (collectedWorkflow != null)
@@ -66,54 +70,43 @@ namespace Elsa.Server.Features.Workflow.LoadWorkflowActivity
                                     workflowInstance.ActivityData
                                         .FirstOrDefault(a => a.Key == activityRequest.ActivityId).Value;
 
-                                if (activityDataDictionary != null)
+                                result.Data.ActivityType = customActivityNavigation.ActivityType;
+                                result.Data.PreviousActivityId = customActivityNavigation.PreviousActivityId;
+                                result.Data.PreviousActivityType = customActivityNavigation.PreviousActivityType;
+
+                                var title = (string?)activityDataDictionary.FirstOrDefault(x => x.Key == "PageTitle").Value;
+                                result.Data.PageTitle = title;
+
+                                var dbQuestions = await _elsaCustomRepository.GetQuestionScreenAnswers(
+                                    activityRequest.ActivityId, activityRequest.WorkflowInstanceId,
+                                    cancellationToken);
+
+                                var elsaActivityAssessmentQuestions =
+                                    (AssessmentQuestions?)activityDataDictionary
+                                        .FirstOrDefault(x => x.Key == "Questions").Value;
+
+                                if (elsaActivityAssessmentQuestions != null)
                                 {
-                                    result.Data.ActivityType = dbActivity.ActivityType;
-                                    result.Data.PreviousActivityId = dbActivity.PreviousActivityId;
+                                    result.Data.MultiQuestionActivityData = new List<QuestionActivityData>();
+                                    result.Data.ActivityType = customActivityNavigation.ActivityType;
 
-                                    if (dbActivity.ActivityType == ActivityTypeConstants.QuestionScreen)
+                                    foreach (var item in elsaActivityAssessmentQuestions.Questions)
                                     {
-                                        var title = (string?)activityDataDictionary.FirstOrDefault(x => x.Key == "PageTitle").Value;
-                                        result.Data.PageTitle = title;
-
-                                        var dbQuestions = await _elsaCustomRepository.GetQuestionScreenAnswers(
-                                            activityRequest.ActivityId, activityRequest.WorkflowInstanceId,
-                                            cancellationToken);
-
-                                        var elsaActivityAssessmentQuestions =
-                                            (AssessmentQuestions?)activityDataDictionary
-                                                .FirstOrDefault(x => x.Key == "Questions").Value;
-
-                                        if (elsaActivityAssessmentQuestions != null)
+                                        //get me the item
+                                        var dbQuestion =
+                                            dbQuestions.FirstOrDefault(x => x.QuestionId == item.Id);
+                                        if (dbQuestion != null)
                                         {
-                                            result.Data.MultiQuestionActivityData = new List<QuestionActivityData>();
-                                            result.Data.ActivityType = dbActivity.ActivityType;
+                                            var questionActivityData = CreateQuestionActivityData(dbQuestion, item);
 
-                                            foreach (var item in elsaActivityAssessmentQuestions.Questions)
-                                            {
-                                                //get me the item
-                                                var dbQuestion =
-                                                    dbQuestions.FirstOrDefault(x => x.QuestionId == item.Id);
-                                                if (dbQuestion != null)
-                                                {
-                                                    var questionActivityData = CreateQuestionActivityData(dbQuestion, item);
-
-                                                    result.Data.MultiQuestionActivityData.Add(questionActivityData);
-                                                }
-                                            }
-                                        }
-                                        else
-                                        {
-                                            result.ErrorMessages.Add(
-                                                $"Failed to map activity data to MultiQuestionActivityData");
+                                            result.Data.MultiQuestionActivityData.Add(questionActivityData);
                                         }
                                     }
-
                                 }
                                 else
                                 {
                                     result.ErrorMessages.Add(
-                                        $"Activity data is null for Activity Id: {activityRequest.ActivityId}");
+                                        $"Failed to map activity data to MultiQuestionActivityData");
                                 }
                             }
                         }
@@ -161,7 +154,7 @@ namespace Elsa.Server.Features.Workflow.LoadWorkflowActivity
             {
                 questionActivityData.Checkbox = new Checkbox();
                 questionActivityData.Checkbox.Choices =
-                    item.Checkbox.Choices.Select(x => new Choice()
+                    item.Checkbox.Choices.Select(x => new QuestionScreenAnswer.Choice()
                     { Answer = x.Answer, IsSingle = x.IsSingle }).ToArray();
             }
 
@@ -179,7 +172,7 @@ namespace Elsa.Server.Features.Workflow.LoadWorkflowActivity
             {
                 questionActivityData.Radio = new Radio();
                 questionActivityData.Radio.Choices = item.Radio.Choices
-                    .Select(x => new Choice() { Answer = x.Answer })
+                    .Select(x => new QuestionScreenAnswer.Choice() { Answer = x.Answer })
                     .ToArray();
             }
 

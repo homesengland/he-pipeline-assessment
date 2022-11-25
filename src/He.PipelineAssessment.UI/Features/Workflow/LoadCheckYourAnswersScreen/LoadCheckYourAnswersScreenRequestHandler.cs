@@ -1,24 +1,27 @@
-﻿using Elsa.CustomWorkflow.Sdk.HttpClients;
+﻿using Elsa.CustomWorkflow.Sdk;
+using Elsa.CustomWorkflow.Sdk.HttpClients;
 using Elsa.CustomWorkflow.Sdk.Models.Workflow;
 using He.PipelineAssessment.UI.Features.Workflow.SaveAndContinue;
 using MediatR;
 using System.Text.Json;
 
-namespace He.PipelineAssessment.UI.Features.Workflow.LoadWorkflowActivity
+namespace He.PipelineAssessment.UI.Features.Workflow.LoadCheckYourAnswersScreen
 {
-    public class LoadWorkflowActivityRequestHandler : IRequestHandler<LoadWorkflowActivityRequest, SaveAndContinueCommand?>
+    public class LoadCheckYourAnswersScreenRequestHandler : IRequestHandler<LoadCheckYourAnswersScreenRequest, SaveAndContinueCommand?>
     {
         private readonly IElsaServerHttpClient _elsaServerHttpClient;
-        public LoadWorkflowActivityRequestHandler(IElsaServerHttpClient elsaServerHttpClient)
+        public LoadCheckYourAnswersScreenRequestHandler(IElsaServerHttpClient elsaServerHttpClient)
         {
             _elsaServerHttpClient = elsaServerHttpClient;
         }
-        public async Task<SaveAndContinueCommand?> Handle(LoadWorkflowActivityRequest request, CancellationToken cancellationToken)
+
+        public async Task<SaveAndContinueCommand?> Handle(LoadCheckYourAnswersScreenRequest request, CancellationToken cancellationToken)
         {
-            var response = await _elsaServerHttpClient.LoadWorkflowActivity(new LoadWorkflowActivityDto
+            var response = await _elsaServerHttpClient.LoadQuestionScreen(new LoadWorkflowActivityDto
             {
                 WorkflowInstanceId = request.WorkflowInstanceId,
-                ActivityId = request.ActivityId
+                ActivityId = request.ActivityId,
+                ActivityType = ActivityTypeConstants.CheckYourAnswersScreen
             });
 
             if (response != null)
@@ -32,6 +35,5 @@ namespace He.PipelineAssessment.UI.Features.Workflow.LoadWorkflowActivity
                 return null;
             }
         }
-
     }
 }

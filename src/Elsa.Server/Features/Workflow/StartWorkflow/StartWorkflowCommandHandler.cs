@@ -47,7 +47,7 @@ namespace Elsa.Server.Features.Workflow.StartWorkflow
                         if (customActivityNavigation != null)
                         {
                             await _elsaCustomRepository.CreateCustomActivityNavigationAsync(customActivityNavigation!, cancellationToken);
-                            result.Data = _startWorkflowMapper.RunWorkflowResultToStartWorkflowResponse(runWorkflowResult);
+                            result.Data = _startWorkflowMapper.RunWorkflowResultToStartWorkflowResponse(runWorkflowResult, activity.Type);
                         }
                         else
                         {

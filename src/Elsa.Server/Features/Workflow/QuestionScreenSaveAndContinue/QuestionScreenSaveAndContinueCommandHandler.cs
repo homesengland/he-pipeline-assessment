@@ -12,7 +12,6 @@ using Elsa.Services;
 using MediatR;
 using Open.Linq.AsyncExtensions;
 
-
 namespace Elsa.Server.Features.Workflow.QuestionScreenSaveAndContinue
 {
     public class QuestionScreenSaveAndContinueCommandHandler : IRequestHandler<QuestionScreenSaveAndContinueCommand,
@@ -141,7 +140,7 @@ namespace Elsa.Server.Features.Workflow.QuestionScreenSaveAndContinue
 
         private async Task CreateNextActivityRecord(QuestionScreenSaveAndContinueCommand command, string nextActivityId, string nextActivityType, WorkflowInstance workflowInstance)
         {
-            var assessmentQuestion = _saveAndContinueMapper.saveAndContinueCommandToNextCustomActivityNavigation(command, nextActivityId, nextActivityType);
+            var assessmentQuestion = _saveAndContinueMapper.saveAndContinueCommandToNextCustomActivityNavigation(command, nextActivityId, nextActivityType, workflowInstance);
             await _elsaCustomRepository.CreateCustomActivityNavigationAsync(assessmentQuestion);
 
             if (nextActivityType == ActivityTypeConstants.QuestionScreen)
@@ -163,7 +162,7 @@ namespace Elsa.Server.Features.Workflow.QuestionScreenSaveAndContinue
 
                             foreach (var item in questionList!)
                             {
-                                assessments.Add(_saveAndContinueMapper.SaveAndContinueCommandToQuestionScreenAnswer(command, nextActivityId, nextActivityType, item));
+                                assessments.Add(_saveAndContinueMapper.SaveAndContinueCommandToQuestionScreenAnswer(nextActivityId, nextActivityType, item, workflowInstance));
                             }
                             await _elsaCustomRepository.CreateQuestionScreenAnswersAsync(assessments, CancellationToken.None);
                         }

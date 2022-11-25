@@ -1,11 +1,11 @@
 ﻿using AutoFixture.Xunit2;
 using Elsa.CustomWorkflow.Sdk.HttpClients;
-using He.PipelineAssessment.UI.Features.Workflow.LoadWorkflowActivity;
+using Elsa.CustomWorkflow.Sdk.Models.Workflow;
+using He.PipelineAssessment.Common.Tests;
+using He.PipelineAssessment.UI.Features.Workflow.LoadQuestionScreen;
 using He.PipelineAssessment.UI.Features.Workflow.SaveAndContinue;
 using Moq;
 using Xunit;
-using Elsa.CustomWorkflow.Sdk.Models.Workflow;
-using He.PipelineAssessment.Common.Tests;
 
 namespace He.PipelineAssessment.UI.Tests.Features.Workflow.LoadWorkflowActivity
 {
@@ -15,12 +15,12 @@ namespace He.PipelineAssessment.UI.Tests.Features.Workflow.LoadWorkflowActivity
         [AutoMoqData]
         public async Task Handle_ReturnsNull_GivenHttpClientResponseIsNull(
            [Frozen] Mock<IElsaServerHttpClient> elsaServerHttpClient,
-           LoadWorkflowActivityRequest loadWorkflowActivityRequest,
-           LoadWorkflowActivityRequestHandler sut)
+           LoadQuestionScreenRequest loadWorkflowActivityRequest,
+           LoadQuestionScreenRequestHandler sut)
         {
             //Arrange
 
-            elsaServerHttpClient.Setup(x => x.LoadWorkflowActivity(It.IsAny<LoadWorkflowActivityDto>()))
+            elsaServerHttpClient.Setup(x => x.LoadQuestionScreen(It.IsAny<LoadWorkflowActivityDto>()))
                 .ReturnsAsync((WorkflowActivityDataDto?)null);
 
             //Act
@@ -28,19 +28,19 @@ namespace He.PipelineAssessment.UI.Tests.Features.Workflow.LoadWorkflowActivity
 
             //Assert
             Assert.Null(result);
-            elsaServerHttpClient.Verify(x => x.LoadWorkflowActivity(It.IsAny<LoadWorkflowActivityDto>()), Times.Once);
+            elsaServerHttpClient.Verify(x => x.LoadQuestionScreen(It.IsAny<LoadWorkflowActivityDto>()), Times.Once);
         }
 
         [Theory]
         [AutoMoqData]
         public async Task Handle_ReturnsSaveAndContinueCommand_GivenNoErrorsEncountered(
             [Frozen] Mock<IElsaServerHttpClient> elsaServerHttpClient,
-            LoadWorkflowActivityRequest loadWorkflowActivityRequest,
+            LoadQuestionScreenRequest loadWorkflowActivityRequest,
             WorkflowActivityDataDto workflowActivityDataDto,
-            LoadWorkflowActivityRequestHandler sut)
+            LoadQuestionScreenRequestHandler sut)
         {
             //Arrange
-            elsaServerHttpClient.Setup(x => x.LoadWorkflowActivity(It.IsAny<LoadWorkflowActivityDto>()))
+            elsaServerHttpClient.Setup(x => x.LoadQuestionScreen(It.IsAny<LoadWorkflowActivityDto>()))
                 .ReturnsAsync(workflowActivityDataDto);
 
             //Act
@@ -49,7 +49,7 @@ namespace He.PipelineAssessment.UI.Tests.Features.Workflow.LoadWorkflowActivity
             //Assert
             Assert.NotNull(result);
             Assert.IsType<SaveAndContinueCommand>(result);
-            elsaServerHttpClient.Verify(x => x.LoadWorkflowActivity(It.IsAny<LoadWorkflowActivityDto>()), Times.Once);
+            elsaServerHttpClient.Verify(x => x.LoadQuestionScreen(It.IsAny<LoadWorkflowActivityDto>()), Times.Once);
         }
     }
 }

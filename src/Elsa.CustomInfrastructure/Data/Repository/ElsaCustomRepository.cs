@@ -43,11 +43,34 @@ namespace Elsa.CustomInfrastructure.Data.Repository
             return list;
         }
 
+        public async Task<QuestionScreenAnswer?> GetQuestionScreenAnswer(string activityId, string correlationId, string questionID,
+            CancellationToken cancellationToken)
+        {
+            var latestQuestionScreenAnswer = _dbContext.Set<QuestionScreenAnswer>()
+                .Where(x => x.ActivityId == activityId && x.CorrelationId == correlationId && x.QuestionId == questionID)
+                .OrderBy(x => x.CreatedDateTime)
+                .FirstOrDefault();
+
+            if (latestQuestionScreenAnswer != null)
+            {
+                var result = await _dbContext.Set<QuestionScreenAnswer>().FirstOrDefaultAsync(x => x.ActivityId == activityId && x.WorkflowInstanceId == latestQuestionScreenAnswer.WorkflowInstanceId && x.QuestionId == questionID);
+
+                return result;
+            }
+
+            return null;
+
+        }
+
         public async Task SaveChanges(CancellationToken cancellationToken)
         {
             await _dbContext.SaveChangesAsync(cancellationToken);
         }
 
-
+        public async Task<List<QuestionScreenAnswer>> GetQuestionScreenAnswers(string workflowInstanceId, CancellationToken cancellationToken)
+        {
+            var list = await _dbContext.Set<QuestionScreenAnswer>().Where(x => x.WorkflowInstanceId == workflowInstanceId).ToListAsync(cancellationToken);
+            return list;
+        }
     }
 }

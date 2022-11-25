@@ -41,7 +41,8 @@ namespace Elsa.CustomActivities.Activities.Shared
         {
             return new List<string>()
             {
-                ActivityTypeConstants.QuestionScreen
+                ActivityTypeConstants.QuestionScreen,
+                ActivityTypeConstants.CheckYourAnswersScreen
             };
         }
     }

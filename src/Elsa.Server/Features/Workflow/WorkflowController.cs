@@ -1,4 +1,4 @@
-﻿using Elsa.Server.Features.Workflow.LoadWorkflowActivity;
+﻿using Elsa.Server.Features.Workflow.LoadQuestionScreen;
 using Elsa.Server.Features.Workflow.QuestionScreenSaveAndContinue;
 using Elsa.Server.Features.Workflow.StartWorkflow;
 using MediatR;
@@ -38,10 +38,10 @@ namespace Elsa.Server.Features.Workflow
             }
         }
 
-        [HttpGet("LoadWorkflowActivity")]
+        [HttpGet("LoadQuestionScreen")]
         public async Task<IActionResult> LoadWorkflowActivity(string workflowInstanceId, string activityId)
         {
-            var request = new LoadWorkflowActivityRequest
+            var request = new LoadQuestionScreenRequest
             {
                 WorkflowInstanceId = workflowInstanceId,
                 ActivityId = activityId
