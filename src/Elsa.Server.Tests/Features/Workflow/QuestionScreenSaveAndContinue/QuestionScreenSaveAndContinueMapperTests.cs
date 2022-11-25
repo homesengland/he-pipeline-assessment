@@ -64,6 +64,8 @@ namespace Elsa.Server.Tests.Features.Workflow.QuestionScreenSaveAndContinue
             Assert.Equal(currentTimeUtc, result.CreatedDateTime);
             Assert.Equal(question.Id, result.QuestionId);
             Assert.Equal(question.QuestionType, result.QuestionType);
+            Assert.Equal(question.QuestionText, result.Question);
+           // Assert.Equal(question.Checkbox.Choices.Select(x => new {Answer = x.Answer, Identifier = x.Identifier, IsSingle = x.IsSingle}), result.Choices.Select(x => new { Answer = x.Answer, Identifier = x.Identifier, IsSingle = x.IsSingle }));
 
         }
     }

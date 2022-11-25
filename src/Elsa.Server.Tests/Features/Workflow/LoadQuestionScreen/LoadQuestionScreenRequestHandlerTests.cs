@@ -63,7 +63,7 @@ public class LoadQuestionScreenRequestHandlerTests
 
     [Theory]
     [AutoMoqData]
-    public async Task Handle_ReturnsOperationResultWithErrors_GivenAssessmentQuestionDoesNotExist(
+    public async Task Handle_ReturnsOperationResultWithErrors_GivenCustomActivityNavigationDoesNotExist(
         [Frozen] Mock<IQuestionInvoker> questionInvoker,
         [Frozen] Mock<IWorkflowInstanceStore> workflowInstanceStore,
         [Frozen] Mock<IElsaCustomRepository> elsaCustomRepository,
@@ -92,7 +92,7 @@ public class LoadQuestionScreenRequestHandlerTests
         //Assert
         Assert.Null(result.Data!.MultiQuestionActivityData);
         Assert.Equal(
-            $"Unable to find workflow instance with Id: {loadWorkflowActivityRequest.WorkflowInstanceId} and Activity Id: {loadWorkflowActivityRequest.ActivityId} in Pipeline Assessment database",
+            $"Unable to find activity navigation with Workflow Id: {loadWorkflowActivityRequest.WorkflowInstanceId} and Activity Id: {loadWorkflowActivityRequest.ActivityId} in Elsa Custom database",
             result.ErrorMessages.Single());
         workflowInstanceStore.Verify(
             x => x.FindAsync(It.IsAny<WorkflowInstanceIdSpecification>(), CancellationToken.None), Times.Never);

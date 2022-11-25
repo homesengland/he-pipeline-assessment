@@ -125,7 +125,7 @@ namespace Elsa.Server.Features.Workflow.LoadQuestionScreen
                 else
                 {
                     result.ErrorMessages.Add(
-                        $"Unable to find workflow instance with Id: {activityRequest.WorkflowInstanceId} and Activity Id: {activityRequest.ActivityId} in Pipeline Assessment database");
+                        $"Unable to find activity navigation with Workflow Id: {activityRequest.WorkflowInstanceId} and Activity Id: {activityRequest.ActivityId} in Elsa Custom database");
                 }
             }
             catch (Exception e)

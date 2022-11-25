@@ -27,13 +27,13 @@ namespace Elsa.Server.Features.Workflow.LoadCheckYourAnswersScreen
             };
             try
             {
-                var dbActivity =
+                var customActivityNavigation =
                     await _elsaCustomRepository.GetCustomActivityNavigation(activityRequest.ActivityId, activityRequest.WorkflowInstanceId, cancellationToken);
 
-                if (dbActivity != null)
+                if (customActivityNavigation != null)
                 {
-                    result.Data.PreviousActivityId = dbActivity.PreviousActivityId;
-                    result.Data.PreviousActivityType = dbActivity.PreviousActivityType;
+                    result.Data.PreviousActivityId = customActivityNavigation.PreviousActivityId;
+                    result.Data.PreviousActivityType = customActivityNavigation.PreviousActivityType;
 
                     var questionScreenAnswers = await _elsaCustomRepository
                         .GetQuestionScreenAnswers(result.Data.WorkflowInstanceId, cancellationToken);
