@@ -3,7 +3,6 @@ using Elsa.CustomWorkflow.Sdk;
 using Elsa.Scripting.JavaScript.Events;
 using Elsa.Scripting.JavaScript.Messages;
 using Elsa.Services;
-using Elsa.Services.Models;
 using MediatR;
 
 namespace Elsa.CustomActivities.Activities.QuestionScreen.Helpers
@@ -12,51 +11,63 @@ namespace Elsa.CustomActivities.Activities.QuestionScreen.Helpers
     {
 
         private readonly IElsaCustomRepository _elsaCustomRepository;
+        private readonly IWorkflowRegistry _workflowRegistry;
 
-        public CurrencyQuestionHelper(IElsaCustomRepository elsaCustomRepository)
+        public CurrencyQuestionHelper(IElsaCustomRepository elsaCustomRepository, IWorkflowRegistry workflowRegistry)
         {
             _elsaCustomRepository = elsaCustomRepository;
+            _workflowRegistry = workflowRegistry;
         }
 
 
-        public async Task<bool> AnswerEqualToOrGreaterThan(ActivityExecutionContext activityExecutionContext, string workflowName, string activityName, string questionId, decimal answerToCheck)
+        public async Task<bool> AnswerEqualToOrGreaterThan(string correlationId, string workflowName, string activityName, string questionId, decimal answerToCheck)
         {
-            var workflowRegistry = activityExecutionContext.GetService<IWorkflowRegistry>();
-            var workflowBlueprint = workflowRegistry.FindByNameAsync(workflowName, Models.VersionOptions.Published).Result;
-            var workflowId = workflowBlueprint?.Id;
+            var workflowBlueprint = await _workflowRegistry.FindByNameAsync(workflowName, Models.VersionOptions.Published);
 
-            var activityId = workflowBlueprint!.Activities.FirstOrDefault(x => x.Name == activityName)!.Id;
-
-            var questionScreenAnswer = await _elsaCustomRepository.GetQuestionScreenAnswer(activityId, activityExecutionContext.CorrelationId, questionId, CancellationToken.None);
-
-            if (questionScreenAnswer != null && questionScreenAnswer.Answer != null && questionScreenAnswer.QuestionType == QuestionTypeConstants.CurrencyQuestion)
+            if (workflowBlueprint != null)
             {
-                var answer = decimal.Parse(questionScreenAnswer.Answer);
-                if (answer >= answerToCheck)
+                var activity = workflowBlueprint.Activities.FirstOrDefault(x => x.Name == activityName);
+                if (activity != null)
                 {
-                    return true;
+                    var questionScreenAnswer = await _elsaCustomRepository.GetQuestionScreenAnswer(activity.Id,
+                        correlationId, questionId, CancellationToken.None);
+
+                    if (questionScreenAnswer != null && questionScreenAnswer.Answer != null &&
+                        questionScreenAnswer.QuestionType == QuestionTypeConstants.CurrencyQuestion)
+                    {
+                        var answer = decimal.Parse(questionScreenAnswer.Answer);
+                        if (answer >= answerToCheck)
+                        {
+                            return true;
+                        }
+                    }
                 }
             }
 
             return false;
         }
 
-        public async Task<bool> AnswerEqualToOrLessThan(ActivityExecutionContext activityExecutionContext, string workflowName, string activityName, string questionId, decimal answerToCheck)
+        public async Task<bool> AnswerEqualToOrLessThan(string correlationId, string workflowName, string activityName, string questionId, decimal answerToCheck)
         {
-            var workflowRegistry = activityExecutionContext.GetService<IWorkflowRegistry>();
-            var workflowBlueprint = workflowRegistry.FindByNameAsync(workflowName, Models.VersionOptions.Published).Result;
-            var workflowId = workflowBlueprint?.Id;
+            var workflowBlueprint = await _workflowRegistry.FindByNameAsync(workflowName, Models.VersionOptions.Published);
 
-            var activityId = workflowBlueprint!.Activities.FirstOrDefault(x => x.Name == activityName)!.Id;
-
-            var questionScreenAnswer = await _elsaCustomRepository.GetQuestionScreenAnswer(activityId, activityExecutionContext.CorrelationId, questionId, CancellationToken.None);
-
-            if (questionScreenAnswer != null && questionScreenAnswer.Answer != null && questionScreenAnswer.QuestionType == QuestionTypeConstants.CurrencyQuestion)
+            if (workflowBlueprint != null)
             {
-                var answer = decimal.Parse(questionScreenAnswer.Answer);
-                if (answer <= answerToCheck)
+                var activity = workflowBlueprint.Activities.FirstOrDefault(x => x.Name == activityName);
+                if (activity != null)
                 {
-                    return true;
+                    var questionScreenAnswer = await _elsaCustomRepository.GetQuestionScreenAnswer(activity.Id,
+                        correlationId, questionId, CancellationToken.None);
+
+                    if (questionScreenAnswer != null && questionScreenAnswer.Answer != null &&
+                        questionScreenAnswer.QuestionType == QuestionTypeConstants.CurrencyQuestion)
+                    {
+                        var answer = decimal.Parse(questionScreenAnswer.Answer);
+                        if (answer <= answerToCheck)
+                        {
+                            return true;
+                        }
+                    }
                 }
             }
 
@@ -68,8 +79,8 @@ namespace Elsa.CustomActivities.Activities.QuestionScreen.Helpers
         {
             var activityExecutionContext = notification.ActivityExecutionContext;
             var engine = notification.Engine;
-            engine.SetValue("currencyQuestionAnswerEqualToOrGreaterThan", (Func<string, string, string, decimal, bool>)((workflowName, activityName, questionId, answerToCheck) => AnswerEqualToOrGreaterThan(activityExecutionContext, workflowName, activityName, questionId, answerToCheck).Result));
-            engine.SetValue("currencyQuestionAnswerEqualToOrLessThan", (Func<string, string, string, decimal, bool>)((workflowName, activityName, questionId, answerToCheck) => AnswerEqualToOrLessThan(activityExecutionContext, workflowName, activityName, questionId, answerToCheck).Result));
+            engine.SetValue("currencyQuestionAnswerEqualToOrGreaterThan", (Func<string, string, string, decimal, bool>)((workflowName, activityName, questionId, answerToCheck) => AnswerEqualToOrGreaterThan(activityExecutionContext.CorrelationId, workflowName, activityName, questionId, answerToCheck).Result));
+            engine.SetValue("currencyQuestionAnswerEqualToOrLessThan", (Func<string, string, string, decimal, bool>)((workflowName, activityName, questionId, answerToCheck) => AnswerEqualToOrLessThan(activityExecutionContext.CorrelationId, workflowName, activityName, questionId, answerToCheck).Result));
             return Task.CompletedTask;
         }
 

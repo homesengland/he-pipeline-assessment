@@ -1,11 +1,8 @@
 ﻿using Elsa.CustomInfrastructure.Data.Repository;
 using Elsa.CustomWorkflow.Sdk;
-using Elsa.Persistence;
-using Elsa.Persistence.Specifications.WorkflowInstances;
 using Elsa.Scripting.JavaScript.Events;
 using Elsa.Scripting.JavaScript.Messages;
 using Elsa.Services;
-using Elsa.Services.Models;
 using MediatR;
 
 namespace Elsa.CustomActivities.Activities.QuestionScreen.Helpers
@@ -14,46 +11,35 @@ namespace Elsa.CustomActivities.Activities.QuestionScreen.Helpers
     {
 
         private readonly IElsaCustomRepository _elsaCustomRepository;
-        private readonly IWorkflowInstanceStore _workflowInstanceStore;
+        private readonly IWorkflowRegistry _workflowRegistry;
 
-        public RadioQuestionHelper(IElsaCustomRepository elsaCustomRepository, IWorkflowInstanceStore workflowInstanceStore)
+        public RadioQuestionHelper(IElsaCustomRepository elsaCustomRepository, IWorkflowRegistry workflowRegistry)
         {
             _elsaCustomRepository = elsaCustomRepository;
-            _workflowInstanceStore = workflowInstanceStore;
+            _workflowRegistry = workflowRegistry;
         }
 
 
-        public async Task<bool> AnswerEquals(ActivityExecutionContext activityExecutionContext, string workflowName, string activityName, string questionId, string choiceIdToCheck)
+        public async Task<bool> AnswerEquals(string correlationId, string workflowName, string activityName, string questionId, string choiceIdToCheck)
         {
             bool result = false;
-            var workflowRegistry = activityExecutionContext.GetService<IWorkflowRegistry>();
-            var workflowBlueprint = workflowRegistry.FindByNameAsync(workflowName, Models.VersionOptions.Published).Result;
-            var workflowId = workflowBlueprint?.Id;
+            var workflowBlueprint = await _workflowRegistry.FindByNameAsync(workflowName, Models.VersionOptions.Published);
 
-            var activityId = workflowBlueprint!.Activities.FirstOrDefault(x => x.Name == activityName)!.Id;
-
-            var questionScreenAnswer = await _elsaCustomRepository.GetQuestionScreenAnswer(activityId, activityExecutionContext.CorrelationId, questionId, CancellationToken.None);
-            if (questionScreenAnswer != null && questionScreenAnswer.QuestionType == QuestionTypeConstants.RadioQuestion)
+            if (workflowBlueprint != null)
             {
-                var workflowSpecification =
-                    new WorkflowInstanceIdSpecification(questionScreenAnswer.WorkflowInstanceId);
-                var workflowInstance = await _workflowInstanceStore.FindAsync(workflowSpecification, CancellationToken.None);
-
-                if (workflowInstance != null)
+                var activity = workflowBlueprint.Activities.FirstOrDefault(x => x.Name == activityName);
+                if (activity != null)
                 {
-                    var dictionList = workflowInstance.ActivityData
-                        .FirstOrDefault(x => x.Key == questionScreenAnswer.ActivityId).Value;
 
-                    var dictionaryQuestions = (AssessmentQuestions?)dictionList.FirstOrDefault(x => x.Key == "Questions").Value;
-                    if (dictionaryQuestions != null)
+                    var questionScreenAnswer = await _elsaCustomRepository.GetQuestionScreenAnswer(activity.Id,
+                        correlationId, questionId, CancellationToken.None);
+                    if (questionScreenAnswer != null &&
+                        questionScreenAnswer.QuestionType == QuestionTypeConstants.RadioQuestion)
                     {
-                        var questionList = (List<Question>)dictionaryQuestions.Questions;
-                        var question = questionList.FirstOrDefault(x => x.Id == questionScreenAnswer.QuestionId);
+                        var choices = questionScreenAnswer.Choices;
 
-                        if (question != null)
+                        if (choices != null)
                         {
-                            var choices = question.Radio.Choices;
-
                             var singleChoice = choices.FirstOrDefault(x => x.Answer == questionScreenAnswer.Answer);
 
                             if (singleChoice != null && choiceIdToCheck.Contains(singleChoice.Identifier))
@@ -68,47 +54,36 @@ namespace Elsa.CustomActivities.Activities.QuestionScreen.Helpers
                     }
                 }
             }
+
             return result;
         }
 
-        public async Task<bool> AnswerIn(ActivityExecutionContext activityExecutionContext, string workflowName, string activityName, string questionId, string[] choiceIdsToCheck)
+        public async Task<bool> AnswerIn(string correlationId, string workflowName, string activityName, string questionId, string[] choiceIdsToCheck)
         {
             bool result = false;
-            var workflowRegistry = activityExecutionContext.GetService<IWorkflowRegistry>();
-            var workflowBlueprint = workflowRegistry.FindByNameAsync(workflowName, Models.VersionOptions.Published).Result;
-            var workflowId = workflowBlueprint?.Id;
+            var workflowBlueprint = await _workflowRegistry.FindByNameAsync(workflowName, Models.VersionOptions.Published);
 
-            var activityId = workflowBlueprint!.Activities.FirstOrDefault(x => x.Name == activityName)!.Id;
-
-            var questionScreenAnswer = await _elsaCustomRepository.GetQuestionScreenAnswer(activityId, activityExecutionContext.CorrelationId, questionId, CancellationToken.None);
-            if (questionScreenAnswer != null && questionScreenAnswer.QuestionType == QuestionTypeConstants.RadioQuestion)
+            if (workflowBlueprint != null)
             {
-                var workflowSpecification =
-                    new WorkflowInstanceIdSpecification(questionScreenAnswer.WorkflowInstanceId);
-                var workflowInstance = await _workflowInstanceStore.FindAsync(workflowSpecification, CancellationToken.None);
-
-                if (workflowInstance != null)
+                var activity = workflowBlueprint.Activities.FirstOrDefault(x => x.Name == activityName);
+                if (activity != null)
                 {
-                    var dictionList = workflowInstance.ActivityData
-                        .FirstOrDefault(x => x.Key == questionScreenAnswer.ActivityId).Value;
-
-                    var dictionaryQuestions = (AssessmentQuestions?)dictionList.FirstOrDefault(x => x.Key == "Questions").Value;
-                    if (dictionaryQuestions != null)
+                    var questionScreenAnswer = await _elsaCustomRepository.GetQuestionScreenAnswer(activity.Id,
+                        correlationId, questionId, CancellationToken.None);
+                    if (questionScreenAnswer != null &&
+                        questionScreenAnswer.QuestionType == QuestionTypeConstants.RadioQuestion)
                     {
-                        var questionList = (List<Question>)dictionaryQuestions.Questions;
-                        var question = questionList.FirstOrDefault(x => x.Id == questionScreenAnswer.QuestionId);
+                        var choices = questionScreenAnswer.Choices;
 
-                        if (question != null)
+                        if (choices != null)
                         {
-                            var choices = question.Radio.Choices;
-
-
                             foreach (var item in choiceIdsToCheck)
                             {
                                 var singleChoice = choices.FirstOrDefault(x => x.Identifier == item);
                                 if (singleChoice != null)
                                 {
-                                    var answerCheck = choices.Select(x => x.Identifier).Contains(item) && singleChoice.Answer == questionScreenAnswer.Answer;
+                                    var answerCheck = choices.Select(x => x.Identifier).Contains(item) &&
+                                                      singleChoice.Answer == questionScreenAnswer.Answer;
 
                                     if (answerCheck)
                                     {
@@ -123,7 +98,6 @@ namespace Elsa.CustomActivities.Activities.QuestionScreen.Helpers
                         }
                     }
                 }
-
             }
             return result;
         }
@@ -134,8 +108,8 @@ namespace Elsa.CustomActivities.Activities.QuestionScreen.Helpers
         {
             var activityExecutionContext = notification.ActivityExecutionContext;
             var engine = notification.Engine;
-            engine.SetValue("radioQuestionAnswerEquals", (Func<string, string, string, string, bool>)((workflowName, activityName, questionId, choiceIdToCheck) => AnswerEquals(activityExecutionContext, workflowName, activityName, questionId, choiceIdToCheck).Result));
-            engine.SetValue("radioQuestionAnswerIn", (Func<string, string, string, string[], bool>)((workflowName, activityName, questionId, choiceIdsToCheck) => AnswerIn(activityExecutionContext, workflowName, activityName, questionId, choiceIdsToCheck).Result));
+            engine.SetValue("radioQuestionAnswerEquals", (Func<string, string, string, string, bool>)((workflowName, activityName, questionId, choiceIdToCheck) => AnswerEquals(activityExecutionContext.CorrelationId, workflowName, activityName, questionId, choiceIdToCheck).Result));
+            engine.SetValue("radioQuestionAnswerIn", (Func<string, string, string, string[], bool>)((workflowName, activityName, questionId, choiceIdsToCheck) => AnswerIn(activityExecutionContext.CorrelationId, workflowName, activityName, questionId, choiceIdsToCheck).Result));
             return Task.CompletedTask;
         }
 
