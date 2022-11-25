@@ -127,6 +127,8 @@ import { CheckboxEventHandler } from './component-events'
     question.checkbox.choices = [{answer: 'first', isSingle: true, identifier: 'testId'}, oldOption];
     let handler = new CheckboxEventHandler(question, emitter);
 
+    jest.spyOn(handler, 'enforceUniqueIdentifier');
+
     handler.onAddChoiceClick();
     handler.onAddChoiceClick();
     handler.onAddChoiceClick();
@@ -139,7 +141,7 @@ import { CheckboxEventHandler } from './component-events'
     expect(lastChoice.answer).toBe("Choice 5");
     expect(lastChoice.identifier).toBe("E");
     expect(emitter.emit).lastCalledWith(handler.question);
-    expect(handler.enforceUniqueIdentifier).toBeCalledTimes(1);
+    expect(handler.enforceUniqueIdentifier).toBeCalledTimes(3);
   });
 
   it('onDeleteChoiceClick should emit an event without deleted choice on checkbox', () => {
@@ -151,6 +153,8 @@ import { CheckboxEventHandler } from './component-events'
     question.options.choices = [{answer: 'first', isSingle: true, identifier: 'testId'}, oldOption];
     question.checkbox.choices = [{answer: 'first', isSingle: true, identifier: 'testId'}, oldOption];
     let handler = new CheckboxEventHandler(question, emitter);
+
+    jest.spyOn(handler, 'enforceUniqueIdentifier');
 
     handler.onDeleteChoiceClick(oldOption);
 

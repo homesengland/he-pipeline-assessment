@@ -127,6 +127,8 @@ import { RadioEventHandler } from './component-events'
     question.radio.choices = [{answer: 'first', identifier: 'testId'}, oldOption];
     let handler = new RadioEventHandler(question, emitter);
 
+    jest.spyOn(handler, 'enforceUniqueIdentifier');
+
     handler.onAddChoiceClick();
     handler.onAddChoiceClick();
 
@@ -137,7 +139,7 @@ import { RadioEventHandler } from './component-events'
     expect(lastChoice.answer).toBe("Choice 4");
     expect(lastChoice.identifier).toBe("D");
     expect(emitter.emit).lastCalledWith(handler.question);
-    expect(handler.enforceUniqueIdentifier).toBeCalledTimes(1);
+    expect(handler.enforceUniqueIdentifier).toBeCalledTimes(2);
   });
 
   it('onDeleteChoiceClick should emit an event without deleted choice on radio', () => {
@@ -149,6 +151,8 @@ import { RadioEventHandler } from './component-events'
     question.options.choices = [{answer: 'first', identifier: 'testId'}, oldOption];
     question.radio.choices = [{answer: 'first', identifier: 'testId'}, oldOption];
     let handler = new RadioEventHandler(question, emitter);
+
+    jest.spyOn(handler, 'enforceUniqueIdentifier');
 
     handler.onDeleteChoiceClick(oldOption);
 
