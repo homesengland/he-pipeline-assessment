@@ -1,6 +1,5 @@
 ﻿using Elsa.CustomInfrastructure.Data.Repository;
 using Elsa.CustomWorkflow.Sdk;
-using Elsa.Persistence;
 using Elsa.Scripting.JavaScript.Events;
 using Elsa.Scripting.JavaScript.Messages;
 using Elsa.Services;
@@ -13,71 +12,90 @@ namespace Elsa.CustomActivities.Activities.QuestionScreen.Helpers
     {
 
         private readonly IElsaCustomRepository _elsaCustomRepository;
-        private readonly IWorkflowInstanceStore _workflowInstanceStore;
+        private readonly IWorkflowRegistry _workflowRegistry;
 
-        public RadioQuestionHelper(IElsaCustomRepository elsaCustomRepository, IWorkflowInstanceStore workflowInstanceStore)
+        public RadioQuestionHelper(IElsaCustomRepository elsaCustomRepository, IWorkflowRegistry workflowRegistry)
         {
             _elsaCustomRepository = elsaCustomRepository;
-            _workflowInstanceStore = workflowInstanceStore;
+            _workflowRegistry = workflowRegistry;
         }
 
 
         public async Task<bool> AnswerEquals(ActivityExecutionContext activityExecutionContext, string workflowName, string activityName, string questionId, string choiceIdToCheck)
         {
             bool result = false;
-            var workflowRegistry = activityExecutionContext.GetService<IWorkflowRegistry>();
-            var workflowBlueprint = workflowRegistry.FindByNameAsync(workflowName, Models.VersionOptions.Published).Result;
-            var workflowId = workflowBlueprint?.Id;
+            var workflowBlueprint = await _workflowRegistry.FindByNameAsync(workflowName, Models.VersionOptions.Published);
 
-            var activityId = workflowBlueprint!.Activities.FirstOrDefault(x => x.Name == activityName)!.Id;
-
-            var questionScreenAnswer = await _elsaCustomRepository.GetQuestionScreenAnswer(activityId, activityExecutionContext.CorrelationId, questionId, CancellationToken.None);
-            if (questionScreenAnswer != null && questionScreenAnswer.QuestionType == QuestionTypeConstants.RadioQuestion)
+            if (workflowBlueprint != null)
             {
-                var choices = questionScreenAnswer.Choices;
-
-                var singleChoice = choices.FirstOrDefault(x => x.Answer == questionScreenAnswer.Answer);
-
-                if (singleChoice != null && choiceIdToCheck.Contains(singleChoice.Identifier))
+                var activity = workflowBlueprint.Activities.FirstOrDefault(x => x.Name == activityName);
+                if (activity != null)
                 {
-                    return true;
-                }
-                else
-                {
-                    return false;
+
+                    var questionScreenAnswer = await _elsaCustomRepository.GetQuestionScreenAnswer(activity.Id,
+                        activityExecutionContext.CorrelationId, questionId, CancellationToken.None);
+                    if (questionScreenAnswer != null &&
+                        questionScreenAnswer.QuestionType == QuestionTypeConstants.RadioQuestion)
+                    {
+                        var choices = questionScreenAnswer.Choices;
+
+                        if (choices != null)
+                        {
+                            var singleChoice = choices.FirstOrDefault(x => x.Answer == questionScreenAnswer.Answer);
+
+                            if (singleChoice != null && choiceIdToCheck.Contains(singleChoice.Identifier))
+                            {
+                                return true;
+                            }
+                            else
+                            {
+                                return false;
+                            }
+                        }
+                    }
                 }
             }
+
             return result;
         }
 
         public async Task<bool> AnswerIn(ActivityExecutionContext activityExecutionContext, string workflowName, string activityName, string questionId, string[] choiceIdsToCheck)
         {
             bool result = false;
-            var workflowRegistry = activityExecutionContext.GetService<IWorkflowRegistry>();
-            var workflowBlueprint = workflowRegistry.FindByNameAsync(workflowName, Models.VersionOptions.Published).Result;
-            var workflowId = workflowBlueprint?.Id;
+            var workflowBlueprint = await _workflowRegistry.FindByNameAsync(workflowName, Models.VersionOptions.Published);
 
-            var activityId = workflowBlueprint!.Activities.FirstOrDefault(x => x.Name == activityName)!.Id;
-
-            var questionScreenAnswer = await _elsaCustomRepository.GetQuestionScreenAnswer(activityId, activityExecutionContext.CorrelationId, questionId, CancellationToken.None);
-            if (questionScreenAnswer != null && questionScreenAnswer.QuestionType == QuestionTypeConstants.RadioQuestion)
+            if (workflowBlueprint != null)
             {
-                var choices = questionScreenAnswer.Choices;
-
-                foreach (var item in choiceIdsToCheck)
+                var activity = workflowBlueprint.Activities.FirstOrDefault(x => x.Name == activityName);
+                if (activity != null)
                 {
-                    var singleChoice = choices.FirstOrDefault(x => x.Identifier == item);
-                    if (singleChoice != null)
+                    var questionScreenAnswer = await _elsaCustomRepository.GetQuestionScreenAnswer(activity.Id,
+                        activityExecutionContext.CorrelationId, questionId, CancellationToken.None);
+                    if (questionScreenAnswer != null &&
+                        questionScreenAnswer.QuestionType == QuestionTypeConstants.RadioQuestion)
                     {
-                        var answerCheck = choices.Select(x => x.Identifier).Contains(item) && singleChoice.Answer == questionScreenAnswer.Answer;
+                        var choices = questionScreenAnswer.Choices;
 
-                        if (answerCheck)
+                        if (choices != null)
                         {
-                            return true;
-                        }
-                        else
-                        {
-                            result = false;
+                            foreach (var item in choiceIdsToCheck)
+                            {
+                                var singleChoice = choices.FirstOrDefault(x => x.Identifier == item);
+                                if (singleChoice != null)
+                                {
+                                    var answerCheck = choices.Select(x => x.Identifier).Contains(item) &&
+                                                      singleChoice.Answer == questionScreenAnswer.Answer;
+
+                                    if (answerCheck)
+                                    {
+                                        return true;
+                                    }
+                                    else
+                                    {
+                                        result = false;
+                                    }
+                                }
+                            }
                         }
                     }
                 }

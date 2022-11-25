@@ -3,7 +3,6 @@ using Elsa.CustomWorkflow.Sdk;
 using Elsa.Scripting.JavaScript.Events;
 using Elsa.Scripting.JavaScript.Messages;
 using Elsa.Services;
-using Elsa.Services.Models;
 using MediatR;
 
 namespace Elsa.CustomActivities.Activities.QuestionScreen.Helpers
@@ -12,44 +11,56 @@ namespace Elsa.CustomActivities.Activities.QuestionScreen.Helpers
     {
 
         private readonly IElsaCustomRepository _elsaCustomRepository;
+        private readonly IWorkflowRegistry _workflowRegistry;
 
-        public TextQuestionHelper(IElsaCustomRepository elsaCustomRepository)
+        public TextQuestionHelper(IElsaCustomRepository elsaCustomRepository, IWorkflowRegistry workflowRegistry)
         {
             _elsaCustomRepository = elsaCustomRepository;
+            _workflowRegistry = workflowRegistry;
         }
 
 
-        public async Task<bool> AnswerEquals(ActivityExecutionContext activityExecutionContext, string workflowName, string activityName, string questionId, string answerToCheck)
+        public async Task<bool> AnswerEquals(string correlationId, string workflowName, string activityName, string questionId, string answerToCheck)
         {
-            var workflowRegistry = activityExecutionContext.GetService<IWorkflowRegistry>();
-            var workflowBlueprint = workflowRegistry.FindByNameAsync(workflowName, Models.VersionOptions.Published).Result;
-            var workflowId = workflowBlueprint?.Id;
 
-            var activityId = workflowBlueprint!.Activities.FirstOrDefault(x => x.Name == activityName)!.Id;
+            var workflowBlueprint = await _workflowRegistry.FindByNameAsync(workflowName, Models.VersionOptions.Published);
 
-            var result = await _elsaCustomRepository.GetQuestionScreenAnswer(activityId, activityExecutionContext.CorrelationId, questionId, CancellationToken.None);
-
-            if (result != null && result.QuestionType == QuestionTypeConstants.TextQuestion && result.Answer != null && result.Answer.ToLower() == answerToCheck.ToLower())
+            if (workflowBlueprint != null)
             {
-                return true;
-            }
+                var activity = workflowBlueprint.Activities.FirstOrDefault(x => x.Name == activityName);
+                if (activity != null)
+                {
+                    var result = await _elsaCustomRepository.GetQuestionScreenAnswer(activity.Id,
+                        correlationId, questionId, CancellationToken.None);
 
+                    if (result != null && result.QuestionType == QuestionTypeConstants.TextQuestion &&
+                        result.Answer != null && result.Answer.ToLower() == answerToCheck.ToLower())
+                    {
+                        return true;
+                    }
+                }
+            }
             return false;
         }
 
-        public async Task<bool> AnswerContains(ActivityExecutionContext activityExecutionContext, string workflowName, string activityName, string questionId, string answerToCheck)
+        public async Task<bool> AnswerContains(string correlationId, string workflowName, string activityName, string questionId, string answerToCheck)
         {
-            var workflowRegistry = activityExecutionContext.GetService<IWorkflowRegistry>();
-            var workflowBlueprint = workflowRegistry.FindByNameAsync(workflowName, Models.VersionOptions.Published).Result;
-            var workflowId = workflowBlueprint?.Id;
+            var workflowBlueprint = await _workflowRegistry.FindByNameAsync(workflowName, Models.VersionOptions.Published);
 
-            var activityId = workflowBlueprint!.Activities.FirstOrDefault(x => x.Name == activityName)!.Id;
-
-            var result = await _elsaCustomRepository.GetQuestionScreenAnswer(activityId, activityExecutionContext.CorrelationId, questionId, CancellationToken.None);
-
-            if (result != null && result.QuestionType == QuestionTypeConstants.TextQuestion && result.Answer != null && result.Answer.ToLower().Contains(answerToCheck.ToLower()))
+            if (workflowBlueprint != null)
             {
-                return true;
+                var activity = workflowBlueprint.Activities.FirstOrDefault(x => x.Name == activityName);
+                if (activity != null)
+                {
+                    var result = await _elsaCustomRepository.GetQuestionScreenAnswer(activity.Id,
+                        correlationId, questionId, CancellationToken.None);
+
+                    if (result != null && result.QuestionType == QuestionTypeConstants.TextQuestion &&
+                        result.Answer != null && result.Answer.ToLower().Contains(answerToCheck.ToLower()))
+                    {
+                        return true;
+                    }
+                }
             }
 
             return false;
@@ -59,8 +70,8 @@ namespace Elsa.CustomActivities.Activities.QuestionScreen.Helpers
         {
             var activityExecutionContext = notification.ActivityExecutionContext;
             var engine = notification.Engine;
-            engine.SetValue("textQuestionAnswerEquals", (Func<string, string, string, string, bool>)((workflowName, activityName, questionId, answerToCheck) => AnswerEquals(activityExecutionContext, workflowName, activityName, questionId, answerToCheck).Result));
-            engine.SetValue("textQuestionAnswerContains", (Func<string, string, string, string, bool>)((workflowName, activityName, questionId, answerToCheck) => AnswerContains(activityExecutionContext, workflowName, activityName, questionId, answerToCheck).Result));
+            engine.SetValue("textQuestionAnswerEquals", (Func<string, string, string, string, bool>)((workflowName, activityName, questionId, answerToCheck) => AnswerEquals(activityExecutionContext.CorrelationId, workflowName, activityName, questionId, answerToCheck).Result));
+            engine.SetValue("textQuestionAnswerContains", (Func<string, string, string, string, bool>)((workflowName, activityName, questionId, answerToCheck) => AnswerContains(activityExecutionContext.CorrelationId, workflowName, activityName, questionId, answerToCheck).Result));
             return Task.CompletedTask;
         }
 

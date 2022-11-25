@@ -14,32 +14,37 @@ namespace Elsa.CustomActivities.Activities.QuestionScreen.Helpers
     {
 
         private readonly IElsaCustomRepository _elsaCustomRepository;
-        private readonly IWorkflowInstanceStore _workflowInstanceStore;
+        private readonly IWorkflowRegistry _workflowRegistry;
 
-        public CheckboxQuestionHelper(IElsaCustomRepository elsaCustomRepository, IWorkflowInstanceStore workflowInstanceStore)
+        public CheckboxQuestionHelper(IElsaCustomRepository elsaCustomRepository, IWorkflowInstanceStore workflowInstanceStore, IWorkflowRegistry workflowRegistry)
         {
             _elsaCustomRepository = elsaCustomRepository;
-            _workflowInstanceStore = workflowInstanceStore;
+            _workflowRegistry = workflowRegistry;
         }
 
         public async Task<string> GetAnswer(ActivityExecutionContext activityExecutionContext, string workflowName, string activityName, string questionId)
         {
             string result = String.Empty;
-            var workflowRegistry = activityExecutionContext.GetService<IWorkflowRegistry>();
-            var workflowBlueprint = workflowRegistry.FindByNameAsync(workflowName, Models.VersionOptions.Published).Result;
-            var workflowId = workflowBlueprint?.Id;
+            var workflowBlueprint = await _workflowRegistry.FindByNameAsync(workflowName, Models.VersionOptions.Published);
 
-            var activityId = workflowBlueprint!.Activities.FirstOrDefault(x => x.Name == activityName)!.Id;
-
-            var questionScreenAnswer = await _elsaCustomRepository.GetQuestionScreenAnswer(activityId, activityExecutionContext.CorrelationId, questionId, CancellationToken.None);
-
-            if (questionScreenAnswer != null && questionScreenAnswer.Answer != null && questionScreenAnswer.QuestionType == QuestionTypeConstants.CheckboxQuestion)
+            if (workflowBlueprint != null)
             {
-                var answerList = JsonSerializer.Deserialize<List<string>>(questionScreenAnswer.Answer!);
-
-                if (answerList != null)
+                var activity = workflowBlueprint.Activities.FirstOrDefault(x => x.Name == activityName);
+                if (activity != null)
                 {
-                    result = string.Join(", ", answerList);
+                    var questionScreenAnswer = await _elsaCustomRepository.GetQuestionScreenAnswer(activity.Id,
+                        activityExecutionContext.CorrelationId, questionId, CancellationToken.None);
+
+                    if (questionScreenAnswer != null && questionScreenAnswer.Answer != null &&
+                        questionScreenAnswer.QuestionType == QuestionTypeConstants.CheckboxQuestion)
+                    {
+                        var answerList = JsonSerializer.Deserialize<List<string>>(questionScreenAnswer.Answer!);
+
+                        if (answerList != null)
+                        {
+                            result = string.Join(", ", answerList);
+                        }
+                    }
                 }
             }
 
@@ -49,36 +54,43 @@ namespace Elsa.CustomActivities.Activities.QuestionScreen.Helpers
         public async Task<bool> AnswerEquals(ActivityExecutionContext activityExecutionContext, string workflowName, string activityName, string questionId, string[] choiceIdsToCheck)
         {
             bool result = false;
-            var workflowRegistry = activityExecutionContext.GetService<IWorkflowRegistry>();
-            var workflowBlueprint = workflowRegistry.FindByNameAsync(workflowName, Models.VersionOptions.Published).Result;
-            var workflowId = workflowBlueprint?.Id;
+            var workflowBlueprint = await _workflowRegistry.FindByNameAsync(workflowName, Models.VersionOptions.Published);
 
-            var activityId = workflowBlueprint!.Activities.FirstOrDefault(x => x.Name == activityName)!.Id;
-
-            var questionScreenAnswer = await _elsaCustomRepository.GetQuestionScreenAnswer(activityId, activityExecutionContext.CorrelationId, questionId, CancellationToken.None);
-            if (questionScreenAnswer != null && questionScreenAnswer.QuestionType == QuestionTypeConstants.CheckboxQuestion && questionScreenAnswer.Choices != null)
+            if (workflowBlueprint != null)
             {
-                var choices = questionScreenAnswer.Choices;
-
-                var answerList = JsonSerializer.Deserialize<string[]>(questionScreenAnswer.Answer!);
-                if (answerList != null)
+                var activity = workflowBlueprint.Activities.FirstOrDefault(x => x.Name == activityName);
+                if (activity != null)
                 {
-
-                    foreach (var item in answerList)
+                    var questionScreenAnswer = await _elsaCustomRepository.GetQuestionScreenAnswer(activity.Id,
+                        activityExecutionContext.CorrelationId, questionId, CancellationToken.None);
+                    if (questionScreenAnswer != null &&
+                        questionScreenAnswer.QuestionType == QuestionTypeConstants.CheckboxQuestion &&
+                        questionScreenAnswer.Choices != null)
                     {
-                        var singleChoice = choices.FirstOrDefault(x => x.Answer == item);
+                        var choices = questionScreenAnswer.Choices;
+                        if (choices != null)
+                        {
+                            var answerList = JsonSerializer.Deserialize<string[]>(questionScreenAnswer.Answer!);
+                            if (answerList != null)
+                            {
 
-                        if (singleChoice != null && choiceIdsToCheck.Contains(singleChoice.Identifier))
-                        {
-                            result = true;
-                        }
-                        else
-                        {
-                            return false;
+                                foreach (var item in answerList)
+                                {
+                                    var singleChoice = choices.FirstOrDefault(x => x.Answer == item);
+
+                                    if (singleChoice != null && choiceIdsToCheck.Contains(singleChoice.Identifier))
+                                    {
+                                        result = true;
+                                    }
+                                    else
+                                    {
+                                        return false;
+                                    }
+                                }
+                            }
                         }
                     }
                 }
-
             }
             return result;
         }
@@ -86,34 +98,42 @@ namespace Elsa.CustomActivities.Activities.QuestionScreen.Helpers
         public async Task<bool> AnswerContains(ActivityExecutionContext activityExecutionContext, string workflowName, string activityName, string questionId, string[] choiceIdsToCheck)
         {
             bool result = false;
-            var workflowRegistry = activityExecutionContext.GetService<IWorkflowRegistry>();
-            var workflowBlueprint = workflowRegistry.FindByNameAsync(workflowName, Models.VersionOptions.Published).Result;
-            var workflowId = workflowBlueprint?.Id;
+            var workflowBlueprint = await _workflowRegistry.FindByNameAsync(workflowName, Models.VersionOptions.Published);
 
-            var activityId = workflowBlueprint!.Activities.FirstOrDefault(x => x.Name == activityName)!.Id;
-
-            var questionScreenAnswer = await _elsaCustomRepository.GetQuestionScreenAnswer(activityId, activityExecutionContext.CorrelationId, questionId, CancellationToken.None);
-            if (questionScreenAnswer != null && questionScreenAnswer.QuestionType == QuestionTypeConstants.CheckboxQuestion)
+            if (workflowBlueprint != null)
             {
-                var choices = questionScreenAnswer.Choices;
-
-                var answerList = JsonSerializer.Deserialize<string[]>(questionScreenAnswer.Answer!);
-                if (answerList != null)
+                var activity = workflowBlueprint.Activities.FirstOrDefault(x => x.Name == activityName);
+                if (activity != null)
                 {
-                    foreach (var item in choiceIdsToCheck)
-                    {
-                        var singleChoice = choices.FirstOrDefault(x => x.Identifier == item);
-                        if (singleChoice != null)
-                        {
-                            var answerCheck = choices.Select(x => x.Identifier).Contains(item) && answerList.Contains(singleChoice.Answer);
 
-                            if (answerCheck)
+                    var questionScreenAnswer = await _elsaCustomRepository.GetQuestionScreenAnswer(activity.Id, activityExecutionContext.CorrelationId, questionId, CancellationToken.None);
+                    if (questionScreenAnswer != null &&
+                        questionScreenAnswer.QuestionType == QuestionTypeConstants.CheckboxQuestion)
+                    {
+                        var choices = questionScreenAnswer.Choices;
+                        if (choices != null)
+                        {
+                            var answerList = JsonSerializer.Deserialize<string[]>(questionScreenAnswer.Answer!);
+                            if (answerList != null)
                             {
-                                result = true;
-                            }
-                            else
-                            {
-                                return false;
+                                foreach (var item in choiceIdsToCheck)
+                                {
+                                    var singleChoice = choices.FirstOrDefault(x => x.Identifier == item);
+                                    if (singleChoice != null)
+                                    {
+                                        var answerCheck = choices.Select(x => x.Identifier).Contains(item) &&
+                                                          answerList.Contains(singleChoice.Answer);
+
+                                        if (answerCheck)
+                                        {
+                                            result = true;
+                                        }
+                                        else
+                                        {
+                                            return false;
+                                        }
+                                    }
+                                }
                             }
                         }
                     }
@@ -125,28 +145,36 @@ namespace Elsa.CustomActivities.Activities.QuestionScreen.Helpers
         public async Task<bool> AnswerContains(ActivityExecutionContext activityExecutionContext, string workflowName, string activityName, string questionId, string choiceIdToCheck)
         {
             bool result = false;
-            var workflowRegistry = activityExecutionContext.GetService<IWorkflowRegistry>();
-            var workflowBlueprint = workflowRegistry.FindByNameAsync(workflowName, Models.VersionOptions.Published).Result;
-            var workflowId = workflowBlueprint?.Id;
+            var workflowBlueprint = await _workflowRegistry.FindByNameAsync(workflowName, Models.VersionOptions.Published);
 
-            var activityId = workflowBlueprint!.Activities.FirstOrDefault(x => x.Name == activityName)!.Id;
-
-            var questionScreenAnswer = await _elsaCustomRepository.GetQuestionScreenAnswer(activityId, activityExecutionContext.CorrelationId, questionId, CancellationToken.None);
-            if (questionScreenAnswer != null && questionScreenAnswer.QuestionType == QuestionTypeConstants.CheckboxQuestion)
+            if (workflowBlueprint != null)
             {
-                var choices = questionScreenAnswer.Choices;
-
-                var answerList = JsonSerializer.Deserialize<string[]>(questionScreenAnswer.Answer!);
-                if (answerList != null)
+                var activity = workflowBlueprint.Activities.FirstOrDefault(x => x.Name == activityName);
+                if (activity != null)
                 {
-                    foreach (var item in answerList)
+                    var questionScreenAnswer = await _elsaCustomRepository.GetQuestionScreenAnswer(activity.Id,
+                        activityExecutionContext.CorrelationId, questionId, CancellationToken.None);
+                    if (questionScreenAnswer != null &&
+                        questionScreenAnswer.QuestionType == QuestionTypeConstants.CheckboxQuestion)
                     {
-                        var singleChoice = choices.FirstOrDefault(x => x.Answer == item);
-
-                        if (singleChoice != null && singleChoice.Identifier == choiceIdToCheck)
+                        var choices = questionScreenAnswer.Choices;
+                        if (choices != null)
                         {
-                            return true;
+                            var answerList = JsonSerializer.Deserialize<string[]>(questionScreenAnswer.Answer!);
+                            if (answerList != null)
+                            {
+                                foreach (var item in answerList)
+                                {
+                                    var singleChoice = choices.FirstOrDefault(x => x.Answer == item);
+
+                                    if (singleChoice != null && singleChoice.Identifier == choiceIdToCheck)
+                                    {
+                                        return true;
+                                    }
+                                }
+                            }
                         }
+
                     }
                 }
             }
