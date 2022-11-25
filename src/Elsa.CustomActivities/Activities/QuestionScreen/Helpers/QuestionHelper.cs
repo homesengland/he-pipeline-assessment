@@ -2,7 +2,6 @@
 using Elsa.Scripting.JavaScript.Events;
 using Elsa.Scripting.JavaScript.Messages;
 using Elsa.Services;
-using Elsa.Services.Models;
 using MediatR;
 
 namespace Elsa.CustomActivities.Activities.QuestionScreen.Helpers
@@ -11,25 +10,32 @@ namespace Elsa.CustomActivities.Activities.QuestionScreen.Helpers
     {
 
         private readonly IElsaCustomRepository _elsaCustomRepository;
+        private readonly IWorkflowRegistry _workflowRegistry;
 
-        public QuestionHelper(IElsaCustomRepository elsaCustomRepository)
+        public QuestionHelper(IElsaCustomRepository elsaCustomRepository, IWorkflowRegistry workflowRegistry)
         {
             _elsaCustomRepository = elsaCustomRepository;
+            _workflowRegistry = workflowRegistry;
         }
 
 
-        public async Task<string> GetAnswer(ActivityExecutionContext activityExecutionContext, string workflowName, string activityName, string questionId)
+        public async Task<string> GetAnswer(string correlationId, string workflowName, string activityName, string questionId)
         {
-            var workflowRegistry = activityExecutionContext.GetService<IWorkflowRegistry>();
-            var workflowBlueprint = workflowRegistry.FindByNameAsync(workflowName, Models.VersionOptions.Published).Result;
-            var workflowId = workflowBlueprint?.Id;
+            var workflowBlueprint = await _workflowRegistry.FindByNameAsync(workflowName, Models.VersionOptions.Published);
 
-            var activityId = workflowBlueprint!.Activities.FirstOrDefault(x => x.Name == activityName)!.Id;
-            var result = await _elsaCustomRepository.GetQuestionScreenAnswer(activityId, activityExecutionContext.CorrelationId, questionId, CancellationToken.None);
-
-            if (result != null && result.Answer != null)
+            if (workflowBlueprint != null)
             {
-                return result.Answer;
+                var activity = workflowBlueprint.Activities.FirstOrDefault(x => x.Name == activityName);
+                if (activity != null)
+                {
+                    var result = await _elsaCustomRepository.GetQuestionScreenAnswer(activity.Id, correlationId, questionId, CancellationToken.None);
+
+                    if (result != null && result.Answer != null)
+                    {
+                        return result.Answer;
+                    }
+                }
+
             }
             return string.Empty;
 
@@ -39,7 +45,7 @@ namespace Elsa.CustomActivities.Activities.QuestionScreen.Helpers
         {
             var activityExecutionContext = notification.ActivityExecutionContext;
             var engine = notification.Engine;
-            engine.SetValue("questionGetAnswer", (Func<string, string, string, string?>)((workflowName, activityName, questionId) => GetAnswer(activityExecutionContext, workflowName, activityName, questionId).Result));
+            engine.SetValue("questionGetAnswer", (Func<string, string, string, string?>)((workflowName, activityName, questionId) => GetAnswer(activityExecutionContext.CorrelationId, workflowName, activityName, questionId).Result));
             return Task.CompletedTask;
         }
 

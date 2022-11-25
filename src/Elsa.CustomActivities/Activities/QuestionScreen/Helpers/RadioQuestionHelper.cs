@@ -1,7 +1,6 @@
 ﻿using Elsa.CustomInfrastructure.Data.Repository;
 using Elsa.CustomWorkflow.Sdk;
 using Elsa.Persistence;
-using Elsa.Persistence.Specifications.WorkflowInstances;
 using Elsa.Scripting.JavaScript.Events;
 using Elsa.Scripting.JavaScript.Messages;
 using Elsa.Services;
@@ -35,37 +34,17 @@ namespace Elsa.CustomActivities.Activities.QuestionScreen.Helpers
             var questionScreenAnswer = await _elsaCustomRepository.GetQuestionScreenAnswer(activityId, activityExecutionContext.CorrelationId, questionId, CancellationToken.None);
             if (questionScreenAnswer != null && questionScreenAnswer.QuestionType == QuestionTypeConstants.RadioQuestion)
             {
-                var workflowSpecification =
-                    new WorkflowInstanceIdSpecification(questionScreenAnswer.WorkflowInstanceId);
-                var workflowInstance = await _workflowInstanceStore.FindAsync(workflowSpecification, CancellationToken.None);
+                var choices = questionScreenAnswer.Choices;
 
-                if (workflowInstance != null)
+                var singleChoice = choices.FirstOrDefault(x => x.Answer == questionScreenAnswer.Answer);
+
+                if (singleChoice != null && choiceIdToCheck.Contains(singleChoice.Identifier))
                 {
-                    var dictionList = workflowInstance.ActivityData
-                        .FirstOrDefault(x => x.Key == questionScreenAnswer.ActivityId).Value;
-
-                    var dictionaryQuestions = (AssessmentQuestions?)dictionList.FirstOrDefault(x => x.Key == "Questions").Value;
-                    if (dictionaryQuestions != null)
-                    {
-                        var questionList = (List<Question>)dictionaryQuestions.Questions;
-                        var question = questionList.FirstOrDefault(x => x.Id == questionScreenAnswer.QuestionId);
-
-                        if (question != null)
-                        {
-                            var choices = question.Radio.Choices;
-
-                            var singleChoice = choices.FirstOrDefault(x => x.Answer == questionScreenAnswer.Answer);
-
-                            if (singleChoice != null && choiceIdToCheck.Contains(singleChoice.Identifier))
-                            {
-                                return true;
-                            }
-                            else
-                            {
-                                return false;
-                            }
-                        }
-                    }
+                    return true;
+                }
+                else
+                {
+                    return false;
                 }
             }
             return result;
@@ -83,47 +62,25 @@ namespace Elsa.CustomActivities.Activities.QuestionScreen.Helpers
             var questionScreenAnswer = await _elsaCustomRepository.GetQuestionScreenAnswer(activityId, activityExecutionContext.CorrelationId, questionId, CancellationToken.None);
             if (questionScreenAnswer != null && questionScreenAnswer.QuestionType == QuestionTypeConstants.RadioQuestion)
             {
-                var workflowSpecification =
-                    new WorkflowInstanceIdSpecification(questionScreenAnswer.WorkflowInstanceId);
-                var workflowInstance = await _workflowInstanceStore.FindAsync(workflowSpecification, CancellationToken.None);
+                var choices = questionScreenAnswer.Choices;
 
-                if (workflowInstance != null)
+                foreach (var item in choiceIdsToCheck)
                 {
-                    var dictionList = workflowInstance.ActivityData
-                        .FirstOrDefault(x => x.Key == questionScreenAnswer.ActivityId).Value;
-
-                    var dictionaryQuestions = (AssessmentQuestions?)dictionList.FirstOrDefault(x => x.Key == "Questions").Value;
-                    if (dictionaryQuestions != null)
+                    var singleChoice = choices.FirstOrDefault(x => x.Identifier == item);
+                    if (singleChoice != null)
                     {
-                        var questionList = (List<Question>)dictionaryQuestions.Questions;
-                        var question = questionList.FirstOrDefault(x => x.Id == questionScreenAnswer.QuestionId);
+                        var answerCheck = choices.Select(x => x.Identifier).Contains(item) && singleChoice.Answer == questionScreenAnswer.Answer;
 
-                        if (question != null)
+                        if (answerCheck)
                         {
-                            var choices = question.Radio.Choices;
-
-
-                            foreach (var item in choiceIdsToCheck)
-                            {
-                                var singleChoice = choices.FirstOrDefault(x => x.Identifier == item);
-                                if (singleChoice != null)
-                                {
-                                    var answerCheck = choices.Select(x => x.Identifier).Contains(item) && singleChoice.Answer == questionScreenAnswer.Answer;
-
-                                    if (answerCheck)
-                                    {
-                                        return true;
-                                    }
-                                    else
-                                    {
-                                        result = false;
-                                    }
-                                }
-                            }
+                            return true;
+                        }
+                        else
+                        {
+                            result = false;
                         }
                     }
                 }
-
             }
             return result;
         }
