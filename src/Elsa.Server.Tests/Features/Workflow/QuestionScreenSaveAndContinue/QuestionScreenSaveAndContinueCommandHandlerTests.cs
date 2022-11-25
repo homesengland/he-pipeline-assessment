@@ -15,7 +15,7 @@ using He.PipelineAssessment.Common.Tests;
 using Moq;
 using Xunit;
 
-namespace Elsa.Server.Tests.Features.Workflow.MultiSaveAndContinue
+namespace Elsa.Server.Tests.Features.Workflow.QuestionScreenSaveAndContinue
 {
     public class QuestionScreenSaveAndContinueCommandHandlerTests
     {

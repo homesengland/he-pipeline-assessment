@@ -25,10 +25,14 @@ namespace Elsa.CustomActivities.Activities.QuestionScreen.Helpers
             var workflowId = workflowBlueprint?.Id;
 
             var activityId = workflowBlueprint!.Activities.FirstOrDefault(x => x.Name == activityName)!.Id;
-
             var result = await _elsaCustomRepository.GetQuestionScreenAnswer(activityId, activityExecutionContext.CorrelationId, questionId, CancellationToken.None);
 
-            return result.Answer;
+            if (result != null && result.Answer != null)
+            {
+                return result.Answer;
+            }
+            return string.Empty;
+
         }
 
         public Task Handle(EvaluatingJavaScriptExpression notification, CancellationToken cancellationToken)

@@ -1,5 +1,7 @@
-﻿using FluentValidation;
-using He.PipelineAssessment.UI.Features.Workflow.LoadWorkflowActivity;
+﻿using Elsa.CustomWorkflow.Sdk;
+using FluentValidation;
+using He.PipelineAssessment.UI.Features.Workflow.LoadCheckYourAnswersScreen;
+using He.PipelineAssessment.UI.Features.Workflow.LoadQuestionScreen;
 using He.PipelineAssessment.UI.Features.Workflow.SaveAndContinue;
 using He.PipelineAssessment.UI.Features.Workflow.StartWorkflow;
 using MediatR;
@@ -38,7 +40,8 @@ namespace He.PipelineAssessment.UI.Features.Workflow
                     new
                     {
                         WorkflowInstanceId = result?.WorkflowInstanceId,
-                        ActivityId = result?.ActivityId
+                        ActivityId = result?.ActivityId,
+                        ActivityType = result?.ActivityType
                     });
             }
             catch (Exception e)
@@ -48,14 +51,42 @@ namespace He.PipelineAssessment.UI.Features.Workflow
             }
         }
 
-        public async Task<IActionResult> LoadWorkflowActivity(LoadWorkflowActivityRequest request)
+        public async Task<IActionResult> LoadWorkflowActivity(SaveAndContinueCommandResponse request)
         {
             try
             {
-                var result = await this._mediator.Send(request);
+                if (string.IsNullOrEmpty(request.ActivityType))
+                {
+                    //try to get activity type from the server?
+                }
+                switch (request.ActivityType)
+                {
+                    case ActivityTypeConstants.QuestionScreen:
+                        {
+                            var questionScreenRequest = new LoadQuestionScreenRequest
+                            {
+                                WorkflowInstanceId = request.WorkflowInstanceId,
+                                ActivityId = request.ActivityId
+                            };
+                            var result = await this._mediator.Send(questionScreenRequest);
 
-                return View("MultiSaveAndContinue", result);
+                            return View("MultiSaveAndContinue", result);
+                        }
+                    case ActivityTypeConstants.CheckYourAnswersScreen:
+                        {
+                            var checkYourAnswersScreenRequest = new LoadCheckYourAnswersScreenRequest
+                            {
+                                WorkflowInstanceId = request.WorkflowInstanceId,
+                                ActivityId = request.ActivityId
+                            };
+                            var result = await this._mediator.Send(checkYourAnswersScreenRequest);
 
+                            return View("CheckYourAnswers", result);
+                        }
+                    default:
+                        throw new ApplicationException(
+                            $"Attempted to load unsupported activity type: {request.ActivityType}");
+                }
             }
             catch (Exception e)
             {
@@ -68,7 +99,6 @@ namespace He.PipelineAssessment.UI.Features.Workflow
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> SaveAndContinue([FromForm] SaveAndContinueCommand command)
         {
-
             try
             {
                 var validationResult = _validator.Validate(command);
@@ -80,7 +110,8 @@ namespace He.PipelineAssessment.UI.Features.Workflow
                     new
                     {
                         WorkflowInstanceId = result?.WorkflowInstanceId,
-                        ActivityId = result?.ActivityId
+                        ActivityId = result?.ActivityId,
+                        ActivityType = result?.ActivityType
                     });
                 }
                 else

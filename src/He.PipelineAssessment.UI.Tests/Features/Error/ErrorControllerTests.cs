@@ -1,13 +1,6 @@
-﻿using AutoFixture.Xunit2;
-using He.PipelineAssessment.Common.Tests;
+﻿using He.PipelineAssessment.Common.Tests;
 using He.PipelineAssessment.UI.Features.Error;
-using He.PipelineAssessment.UI.Features.Workflow;
-using He.PipelineAssessment.UI.Features.Workflow.LoadWorkflowActivity;
-using He.PipelineAssessment.UI.Features.Workflow.SaveAndContinue;
-using He.PipelineAssessment.UI.Features.Workflow.StartWorkflow;
-using MediatR;
 using Microsoft.AspNetCore.Mvc;
-using Moq;
 using Xunit;
 
 namespace He.PipelineAssessment.UI.Tests.Features.Error

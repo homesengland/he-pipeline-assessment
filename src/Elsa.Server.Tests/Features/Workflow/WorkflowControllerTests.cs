@@ -1,6 +1,6 @@
 ﻿using AutoFixture.Xunit2;
 using Elsa.Server.Features.Workflow;
-using Elsa.Server.Features.Workflow.LoadWorkflowActivity;
+using Elsa.Server.Features.Workflow.LoadQuestionScreen;
 using Elsa.Server.Features.Workflow.QuestionScreenSaveAndContinue;
 using Elsa.Server.Features.Workflow.StartWorkflow;
 using Elsa.Server.Models;
@@ -131,18 +131,18 @@ namespace Elsa.Server.Tests.Features.Workflow
         [Theory]
         [AutoData]
         public async Task WorkflowController_LoadWorkflowActivity_ShouldReturnOK_WhenCommandHandlerIsSuccessful(
-           LoadWorkflowActivityRequest request,
-           LoadWorkflowActivityResponse response,
+           LoadQuestionScreenRequest request,
+           LoadQuestionScreenResponse response,
            Mock<IMediator> mediatorMock)
         {
-            var startWorkflowOperationResult = new OperationResult<LoadWorkflowActivityResponse>
+            var startWorkflowOperationResult = new OperationResult<LoadQuestionScreenResponse>
             {
                 ErrorMessages = new List<string>(),
                 ValidationMessages = null,
                 Data = response
             };
             //Arrange
-            mediatorMock.Setup(x => x.Send(It.IsAny<LoadWorkflowActivityRequest>(), CancellationToken.None)).ReturnsAsync(startWorkflowOperationResult);
+            mediatorMock.Setup(x => x.Send(It.IsAny<LoadQuestionScreenRequest>(), CancellationToken.None)).ReturnsAsync(startWorkflowOperationResult);
 
             WorkflowController controller = new WorkflowController(mediatorMock.Object);
 
@@ -154,7 +154,7 @@ namespace Elsa.Server.Tests.Features.Workflow
             Assert.IsType<OkObjectResult>(result);
 
             var okResult = (OkObjectResult)result;
-            var okResultValueData = (OperationResult<LoadWorkflowActivityResponse>)okResult.Value!;
+            var okResultValueData = (OperationResult<LoadQuestionScreenResponse>)okResult.Value!;
 
             Assert.Equal(response.ActivityId, okResultValueData.Data!.ActivityId);
             Assert.Equal(response.WorkflowInstanceId, okResultValueData.Data.WorkflowInstanceId);
@@ -164,13 +164,13 @@ namespace Elsa.Server.Tests.Features.Workflow
         [Theory]
         [AutoData]
         public async Task WorkflowController_LoadWorkflowActivity_ShouldReturnBadRequest_WhenCommandHandlerReturnsErrors(
-            LoadWorkflowActivityRequest request,
-            OperationResult<LoadWorkflowActivityResponse> operationResult,
+            LoadQuestionScreenRequest request,
+            OperationResult<LoadQuestionScreenResponse> operationResult,
             Mock<IMediator> mediatorMock)
         {
 
             //Arrange
-            mediatorMock.Setup(x => x.Send(It.IsAny<LoadWorkflowActivityRequest>(), CancellationToken.None)).ReturnsAsync(operationResult);
+            mediatorMock.Setup(x => x.Send(It.IsAny<LoadQuestionScreenRequest>(), CancellationToken.None)).ReturnsAsync(operationResult);
 
             WorkflowController controller = new WorkflowController(mediatorMock.Object);
 
@@ -191,13 +191,13 @@ namespace Elsa.Server.Tests.Features.Workflow
         [Theory]
         [AutoData]
         public async Task WorkflowController_LoadWorkflowActivity_ShouldReturn500_WhenCommandHandlerThrowsException(
-            LoadWorkflowActivityRequest request,
+            LoadQuestionScreenRequest request,
             Exception exception,
             Mock<IMediator> mediatorMock)
         {
 
             //Arrange
-            mediatorMock.Setup(x => x.Send(It.IsAny<LoadWorkflowActivityRequest>(), CancellationToken.None)).ThrowsAsync(exception);
+            mediatorMock.Setup(x => x.Send(It.IsAny<LoadQuestionScreenRequest>(), CancellationToken.None)).ThrowsAsync(exception);
 
             WorkflowController controller = new WorkflowController(mediatorMock.Object);
 
@@ -221,12 +221,12 @@ namespace Elsa.Server.Tests.Features.Workflow
         [Theory]
         [AutoData]
         public async Task WorkflowController_LoadWorkflowActivity_ShouldReturn500_WhenCommandHandlerReturnsNull(
-            LoadWorkflowActivityRequest request,
+            LoadQuestionScreenRequest request,
             Mock<IMediator> mediatorMock)
         {
 
             //Arrange
-            mediatorMock.Setup(x => x.Send(It.IsAny<LoadWorkflowActivityRequest>(), CancellationToken.None)).ReturnsAsync((OperationResult<LoadWorkflowActivityResponse>)null!);
+            mediatorMock.Setup(x => x.Send(It.IsAny<LoadQuestionScreenRequest>(), CancellationToken.None)).ReturnsAsync((OperationResult<LoadQuestionScreenResponse>)null!);
 
             WorkflowController controller = new WorkflowController(mediatorMock.Object);
 

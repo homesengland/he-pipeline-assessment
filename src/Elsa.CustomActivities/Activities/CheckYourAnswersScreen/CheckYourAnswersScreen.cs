@@ -1,26 +1,35 @@
 ﻿using Elsa.Activities.ControlFlow;
 using Elsa.ActivityResults;
 using Elsa.Attributes;
+using Elsa.CustomInfrastructure.Data.Repository;
 using Elsa.CustomModels;
 using Elsa.Expressions;
 using Elsa.Services;
 using Elsa.Services.Models;
 
-namespace Elsa.CustomActivities.Activities.QuestionScreen
+namespace Elsa.CustomActivities.Activities.CheckYourAnswers
 {
-    [Trigger(
+    [Action(
     Category = "Homes England Activities",
-    Description = "Set up a question screen",
-    Outcomes = new[] { OutcomeNames.Done },
-    DisplayName = "Question Screen"
+    Description = "Set up a check your answers screen",
+    Outcomes = new[] { OutcomeNames.Done }
     )]
-    public class QuestionScreen : Activity
+    public class CheckYourAnswersScreen : Activity
     {
-        [ActivityInput]
-        public string PageTitle { get; set; } = null!;
+        private readonly IElsaCustomRepository _elsaCustomRepository;
 
-        [ActivityInput(Label = "List of questions", Hint = "Questions to be displayed on this page.", UIHint = "question-builder", DefaultSyntax = "Json", IsDesignerCritical = true)]
-        public AssessmentQuestions Questions { get; set; } = new AssessmentQuestions();
+        public CheckYourAnswersScreen(IElsaCustomRepository elsaCustomRepository)
+        {
+            _elsaCustomRepository = elsaCustomRepository;
+        }
+
+        [ActivityInput(Hint = "Section title")]
+        public string Title { get; set; } = null!;
+        [ActivityInput(Hint = "Footer title")]
+        public string FooterTitle { get; set; } = null!;
+        [ActivityInput(Hint = "Footer text")]
+        public string FooterText { get; set; } = null!;
+        [ActivityOutput] public ICollection<QuestionScreenAnswer>? Output { get; set; }
 
         [ActivityInput(Label = "Assessment outcome conditions", Hint = "The conditions to evaluate.", UIHint = "switch-case-builder", DefaultSyntax = "Switch", IsDesignerCritical = true)]
         public ICollection<SwitchCase> Cases { get; set; } = new List<SwitchCase>();
@@ -28,21 +37,22 @@ namespace Elsa.CustomActivities.Activities.QuestionScreen
         [ActivityInput(
             Hint = "The switch mode determines whether the first match should be scheduled, or all matches.",
             DefaultValue = SwitchMode.MatchFirst,
-            SupportedSyntaxes = new[] { SyntaxNames.Literal, SyntaxNames.JavaScript, SyntaxNames.Liquid }
+            SupportedSyntaxes = new[] { SyntaxNames.JavaScript }
         )]
         public SwitchMode Mode { get; set; } = SwitchMode.MatchFirst;
 
-        [ActivityOutput] public List<QuestionScreenAnswer>? Output { get; set; }
-
-        protected override IActivityExecutionResult OnExecute(ActivityExecutionContext context)
+        protected override async ValueTask<IActivityExecutionResult> OnExecuteAsync(ActivityExecutionContext context)
         {
+            context.JournalData.Add(nameof(context.WorkflowInstance.DefinitionId), context.WorkflowInstance.DefinitionId);
+
+            // var assessmentQuestions = await _elsaCustomRepository.GetAssessmentQuestions(context.WorkflowInstance.DefinitionId, context.CorrelationId);
+            // if (assessmentQuestions != null) Output = assessmentQuestions.ToList();
+
             return Suspend();
         }
 
         protected override async ValueTask<IActivityExecutionResult> OnResumeAsync(ActivityExecutionContext context)
         {
-            var response = context.GetInput<List<QuestionScreenAnswer>>();
-            Output = response;
             var matches = Cases.Where(x => x.Condition).Select(x => x.Name).ToList();
             var hasAnyMatches = matches.Any();
             var results = Mode == SwitchMode.MatchFirst ? hasAnyMatches ? new[] { matches.First() } : Array.Empty<string>() : matches.ToArray();
@@ -55,10 +65,5 @@ namespace Elsa.CustomActivities.Activities.QuestionScreen
                 new SuspendResult()
             }));
         }
-    }
-
-    public class AssessmentQuestions
-    {
-        public List<Question> Questions { get; set; } = new List<Question>();
     }
 }

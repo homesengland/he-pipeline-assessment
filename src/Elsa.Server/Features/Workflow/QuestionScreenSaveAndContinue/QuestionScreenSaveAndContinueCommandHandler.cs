@@ -12,7 +12,6 @@ using Elsa.Services;
 using MediatR;
 using Open.Linq.AsyncExtensions;
 
-
 namespace Elsa.Server.Features.Workflow.QuestionScreenSaveAndContinue
 {
     public class QuestionScreenSaveAndContinueCommandHandler : IRequestHandler<QuestionScreenSaveAndContinueCommand,

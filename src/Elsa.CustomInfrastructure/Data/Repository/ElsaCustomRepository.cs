@@ -67,6 +67,10 @@ namespace Elsa.CustomInfrastructure.Data.Repository
             await _dbContext.SaveChangesAsync(cancellationToken);
         }
 
-
+        public async Task<List<QuestionScreenAnswer>> GetQuestionScreenAnswers(string workflowInstanceId, CancellationToken cancellationToken)
+        {
+            var list = await _dbContext.Set<QuestionScreenAnswer>().Where(x => x.WorkflowInstanceId == workflowInstanceId).ToListAsync(cancellationToken);
+            return list;
+        }
     }
 }

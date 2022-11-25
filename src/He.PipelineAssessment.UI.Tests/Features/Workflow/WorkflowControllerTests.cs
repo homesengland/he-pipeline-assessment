@@ -1,7 +1,7 @@
 ﻿using AutoFixture.Xunit2;
 using He.PipelineAssessment.Common.Tests;
 using He.PipelineAssessment.UI.Features.Workflow;
-using He.PipelineAssessment.UI.Features.Workflow.LoadWorkflowActivity;
+using He.PipelineAssessment.UI.Features.Workflow.LoadQuestionScreen;
 using He.PipelineAssessment.UI.Features.Workflow.SaveAndContinue;
 using He.PipelineAssessment.UI.Features.Workflow.StartWorkflow;
 using MediatR;
@@ -57,7 +57,7 @@ namespace He.PipelineAssessment.UI.Tests.Features.Workflow
         public async Task StartWorkflow_ShouldRedirectToAction_GivenNoExceptionsThrow(
             [Frozen] Mock<IMediator> mediator,
             StartWorkflowCommand command,
-            LoadWorkflowActivityRequest loadWorkflowActivityRequest,
+            LoadQuestionScreenRequest loadWorkflowActivityRequest,
             WorkflowController sut)
         {
             //Arrange
@@ -71,7 +71,7 @@ namespace He.PipelineAssessment.UI.Tests.Features.Workflow
             Assert.IsType<RedirectToActionResult>(result);
 
             var redirectToActionResult = (RedirectToActionResult)result;
-            Assert.Equal("LoadWorkflowActivity", redirectToActionResult.ActionName);
+            Assert.Equal("LoadQuestionScreen", redirectToActionResult.ActionName);
 
 
             var activityIdRouteValue = new KeyValuePair<string, object?>("ActivityId", loadWorkflowActivityRequest.ActivityId);
@@ -112,11 +112,11 @@ namespace He.PipelineAssessment.UI.Tests.Features.Workflow
         public async Task SaveAndContinue_ShouldRedirectToAction_GivenNoExceptionsThrow(
             [Frozen] Mock<IMediator> mediator,
             SaveAndContinueCommand command,
-            LoadWorkflowActivityRequest loadWorkflowActivityRequest,
+            SaveAndContinueCommandResponse saveAndContinueCommandResponse,
             WorkflowController sut)
         {
             //Arrange
-            mediator.Setup(x => x.Send(command, CancellationToken.None)).ReturnsAsync(loadWorkflowActivityRequest);
+            mediator.Setup(x => x.Send(command, CancellationToken.None)).ReturnsAsync(saveAndContinueCommandResponse);
 
             //Act
             var result = await sut.SaveAndContinue(command);
@@ -126,11 +126,11 @@ namespace He.PipelineAssessment.UI.Tests.Features.Workflow
             Assert.IsType<RedirectToActionResult>(result);
 
             var redirectToActionResult = (RedirectToActionResult)result;
-            Assert.Equal("LoadWorkflowActivity", redirectToActionResult.ActionName);
+            Assert.Equal("LoadQuestionScreen", redirectToActionResult.ActionName);
 
 
-            var activityIdRouteValue = new KeyValuePair<string, object?>("ActivityId", loadWorkflowActivityRequest.ActivityId);
-            var workflowInstanceIdRouteValue = new KeyValuePair<string, object?>("WorkflowInstanceId", loadWorkflowActivityRequest.WorkflowInstanceId);
+            var activityIdRouteValue = new KeyValuePair<string, object?>("ActivityId", saveAndContinueCommandResponse.ActivityId);
+            var workflowInstanceIdRouteValue = new KeyValuePair<string, object?>("WorkflowInstanceId", saveAndContinueCommandResponse.WorkflowInstanceId);
 
             Assert.Contains(activityIdRouteValue, redirectToActionResult.RouteValues!);
             Assert.Contains(workflowInstanceIdRouteValue, redirectToActionResult.RouteValues!);
@@ -141,19 +141,19 @@ namespace He.PipelineAssessment.UI.Tests.Features.Workflow
         [AutoMoqData]
         public async Task LoadWorkflowActivity_ShouldRedirectToErrorPage_GivenInnerExceptionIsCaught(
             [Frozen] Mock<IMediator> mediator,
-            LoadWorkflowActivityRequest request,
+            SaveAndContinueCommandResponse saveAndContinueCommandResponse,
             Exception exception,
             WorkflowController sut)
         {
             //Arrange
-            mediator.Setup(x => x.Send(request, CancellationToken.None)).Throws(exception);
+            mediator.Setup(x => x.Send(saveAndContinueCommandResponse, CancellationToken.None)).Throws(exception);
 
             //Act
-            var result = await sut.LoadWorkflowActivity(request);
+            var result = await sut.LoadWorkflowActivity(saveAndContinueCommandResponse);
 
             //Assert
-            mediator.Verify(x => x.Send(request, CancellationToken.None), Times.Once);
-            await Assert.ThrowsAsync<Exception>(() => mediator.Object.Send(request));
+            mediator.Verify(x => x.Send(saveAndContinueCommandResponse, CancellationToken.None), Times.Once);
+            await Assert.ThrowsAsync<Exception>(() => mediator.Object.Send(saveAndContinueCommandResponse));
 
             Assert.IsType<RedirectToActionResult>(result);
             var redirectToActionResult = (RedirectToActionResult)result;
@@ -166,15 +166,15 @@ namespace He.PipelineAssessment.UI.Tests.Features.Workflow
         [AutoMoqData]
         public async Task LoadWorkflowActivity_ShouldRedirectToAction_GivenNoExceptionsThrow(
             [Frozen] Mock<IMediator> mediator,
-            LoadWorkflowActivityRequest request,
+            SaveAndContinueCommandResponse saveAndContinueCommandResponse,
             SaveAndContinueCommand saveAndContinueCommand,
             WorkflowController sut)
         {
             //Arrange
-            mediator.Setup(x => x.Send(request, CancellationToken.None)).ReturnsAsync(saveAndContinueCommand);
+            mediator.Setup(x => x.Send(saveAndContinueCommandResponse, CancellationToken.None)).ReturnsAsync(saveAndContinueCommand);
 
             //Act
-            var result = await sut.LoadWorkflowActivity(request);
+            var result = await sut.LoadWorkflowActivity(saveAndContinueCommandResponse);
 
             //Assert
             Assert.NotNull(result);

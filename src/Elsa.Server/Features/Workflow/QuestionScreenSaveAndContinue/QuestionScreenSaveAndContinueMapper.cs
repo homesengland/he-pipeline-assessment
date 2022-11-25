@@ -1,5 +1,6 @@
 ﻿using Elsa.CustomActivities.Activities.QuestionScreen;
 using Elsa.CustomModels;
+using Elsa.CustomWorkflow.Sdk;
 using Elsa.Models;
 using Elsa.Server.Providers;
 
@@ -29,6 +30,7 @@ namespace Elsa.Server.Features.Workflow.QuestionScreenSaveAndContinue
                 CorrelationId = workflowInstance.CorrelationId,
                 WorkflowInstanceId = workflowInstance.Id,
                 PreviousActivityId = command.ActivityId,
+                PreviousActivityType = ActivityTypeConstants.QuestionScreen,
                 CreatedDateTime = _dateTimeProvider.UtcNow()
             };
         }
@@ -44,8 +46,26 @@ namespace Elsa.Server.Features.Workflow.QuestionScreenSaveAndContinue
                 WorkflowInstanceId = workflowInstance.Id,
                 CreatedDateTime = _dateTimeProvider.UtcNow(),
                 QuestionId = question.Id,
-                QuestionType = question.QuestionType
+                QuestionType = question.QuestionType,
+                Question = question.QuestionText,
+                Choices = MapChoices(question)
             };
+        }
+
+        private List<QuestionScreenAnswer.Choice>? MapChoices(Question question)
+        {
+            var choices = question.QuestionType switch
+            {
+                QuestionTypeConstants.CheckboxQuestion => question.Checkbox.Choices.Select(x =>
+                        new QuestionScreenAnswer.Choice() { Answer = x.Answer, IsSingle = x.IsSingle })
+                    .ToList(),
+                QuestionTypeConstants.RadioQuestion => question.Radio.Choices
+                    .Select(x => new QuestionScreenAnswer.Choice() { Answer = x.Answer, IsSingle = false })
+                    .ToList(),
+                _ => null
+            };
+
+            return choices;
         }
     }
 }

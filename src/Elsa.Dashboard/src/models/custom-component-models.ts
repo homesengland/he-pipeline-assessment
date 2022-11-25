@@ -6,7 +6,7 @@ export interface IQuestionOption {
 }
 
 export interface CheckboxOption extends IQuestionOption {
-    isSingle: boolean;
+  isSingle: boolean;
 }
 
 export interface RadioOption extends IQuestionOption {
@@ -42,24 +42,15 @@ export class Question implements IQuestionComponent {
 }
 
 export abstract class MultipleChoiceQuestion<T extends IQuestionOption> extends Question {
-
   options: QuestionOptions<T> = new QuestionOptions<T>()
 }
 
 export class CheckboxQuestion extends MultipleChoiceQuestion<CheckboxOption> {
-
   checkbox: QuestionOptions<CheckboxOption> = this.options;
-
 }
 
 export class RadioQuestion extends MultipleChoiceQuestion<RadioOption> {
-
   radio: QuestionOptions<RadioOption> = this.options;
-
-  setOptions(val: QuestionOptions<RadioOption>) {
-    this.options = val;
-    this.radio = val;
-  }
 }
 
 
@@ -76,9 +67,3 @@ export class SingleChoiceActivity {
 export class QuestionActivity {
   questions: Array<IQuestionComponent> = [];
 }
-
-
-
-
-
-

@@ -16,6 +16,7 @@ namespace Elsa.CustomInfrastructure.Config
             builder.Property(x => x.ActivityId).HasMaxLength(EntityConfigurationConstants.MaxLength);
             builder.Property(x => x.WorkflowInstanceId).HasMaxLength(EntityConfigurationConstants.MaxLength);
             builder.Property(x => x.PreviousActivityId).HasMaxLength(EntityConfigurationConstants.MaxLength);
+            builder.Property(x => x.PreviousActivityType).HasMaxLength(EntityConfigurationConstants.MaxLength);
         }
     }
 }

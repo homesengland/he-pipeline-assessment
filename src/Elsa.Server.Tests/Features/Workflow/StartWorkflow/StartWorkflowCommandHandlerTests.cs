@@ -56,7 +56,7 @@ namespace Elsa.Server.Tests.Features.Workflow.StartWorkflow
             startWorkflowMapper.Setup(x => x.RunWorkflowResultToCustomNavigationActivity(runWorkflowResult, activityBlueprint.Type))
                 .Returns(customActivityNavigation);
 
-            startWorkflowMapper.Setup(x => x.RunWorkflowResultToStartWorkflowResponse(runWorkflowResult))
+            startWorkflowMapper.Setup(x => x.RunWorkflowResultToStartWorkflowResponse(runWorkflowResult, activityBlueprint.Type))
                 .Returns(opResult.Data);
 
             //Act
@@ -116,7 +116,7 @@ namespace Elsa.Server.Tests.Features.Workflow.StartWorkflow
             startWorkflowMapper.Setup(x => x.RunWorkflowResultToCustomNavigationActivity(runWorkflowResult, activityBlueprint.Type))
                 .Returns(customActivityNavigation);
 
-            startWorkflowMapper.Setup(x => x.RunWorkflowResultToStartWorkflowResponse(runWorkflowResult))
+            startWorkflowMapper.Setup(x => x.RunWorkflowResultToStartWorkflowResponse(runWorkflowResult, activityBlueprint.Type))
                 .Returns(opResult.Data);
 
             //Act

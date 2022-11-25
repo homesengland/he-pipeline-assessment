@@ -4,6 +4,7 @@ using Elsa.CustomInfrastructure.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,10 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Elsa.CustomInfrastructure.Migrations
 {
     [DbContext(typeof(ElsaCustomContext))]
-    partial class ElsaCustomContextModelSnapshot : ModelSnapshot
+    [Migration("20221124150211_AddQuestionAndChoicesToQuestionScreenAnswer")]
+    partial class AddQuestionAndChoicesToQuestionScreenAnswer
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -41,10 +43,6 @@ namespace Elsa.CustomInfrastructure.Migrations
                         .HasMaxLength(450)
                         .HasColumnType("nvarchar(450)");
 
-                    b.Property<string>("CorrelationId")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
                     b.Property<DateTime>("CreatedDateTime")
                         .HasColumnType("datetime2");
 
@@ -68,7 +66,7 @@ namespace Elsa.CustomInfrastructure.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("CustomActivityNavigation", (string)null);
+                    b.ToTable("CustomActivityNavigation");
                 });
 
             modelBuilder.Entity("Elsa.CustomModels.QuestionScreenAnswer", b =>
@@ -92,10 +90,6 @@ namespace Elsa.CustomInfrastructure.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Comments")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("CorrelationId")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<DateTime>("CreatedDateTime")
@@ -122,7 +116,7 @@ namespace Elsa.CustomInfrastructure.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("QuestionScreenAnswer", (string)null);
+                    b.ToTable("QuestionScreenAnswer");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.DataProtection.EntityFrameworkCore.DataProtectionKey", b =>
@@ -141,7 +135,7 @@ namespace Elsa.CustomInfrastructure.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("DataProtectionKeys", (string)null);
+                    b.ToTable("DataProtectionKeys");
                 });
 #pragma warning restore 612, 618
         }
