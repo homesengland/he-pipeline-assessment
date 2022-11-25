@@ -3,7 +3,6 @@ using Elsa.CustomWorkflow.Sdk;
 using Elsa.Scripting.JavaScript.Events;
 using Elsa.Scripting.JavaScript.Messages;
 using Elsa.Services;
-using Elsa.Services.Models;
 using MediatR;
 
 namespace Elsa.CustomActivities.Activities.QuestionScreen.Helpers
@@ -21,7 +20,7 @@ namespace Elsa.CustomActivities.Activities.QuestionScreen.Helpers
         }
 
 
-        public async Task<bool> AnswerEquals(ActivityExecutionContext activityExecutionContext, string workflowName, string activityName, string questionId, string choiceIdToCheck)
+        public async Task<bool> AnswerEquals(string correlationId, string workflowName, string activityName, string questionId, string choiceIdToCheck)
         {
             bool result = false;
             var workflowBlueprint = await _workflowRegistry.FindByNameAsync(workflowName, Models.VersionOptions.Published);
@@ -33,7 +32,7 @@ namespace Elsa.CustomActivities.Activities.QuestionScreen.Helpers
                 {
 
                     var questionScreenAnswer = await _elsaCustomRepository.GetQuestionScreenAnswer(activity.Id,
-                        activityExecutionContext.CorrelationId, questionId, CancellationToken.None);
+                        correlationId, questionId, CancellationToken.None);
                     if (questionScreenAnswer != null &&
                         questionScreenAnswer.QuestionType == QuestionTypeConstants.RadioQuestion)
                     {
@@ -59,7 +58,7 @@ namespace Elsa.CustomActivities.Activities.QuestionScreen.Helpers
             return result;
         }
 
-        public async Task<bool> AnswerIn(ActivityExecutionContext activityExecutionContext, string workflowName, string activityName, string questionId, string[] choiceIdsToCheck)
+        public async Task<bool> AnswerIn(string correlationId, string workflowName, string activityName, string questionId, string[] choiceIdsToCheck)
         {
             bool result = false;
             var workflowBlueprint = await _workflowRegistry.FindByNameAsync(workflowName, Models.VersionOptions.Published);
@@ -70,7 +69,7 @@ namespace Elsa.CustomActivities.Activities.QuestionScreen.Helpers
                 if (activity != null)
                 {
                     var questionScreenAnswer = await _elsaCustomRepository.GetQuestionScreenAnswer(activity.Id,
-                        activityExecutionContext.CorrelationId, questionId, CancellationToken.None);
+                        correlationId, questionId, CancellationToken.None);
                     if (questionScreenAnswer != null &&
                         questionScreenAnswer.QuestionType == QuestionTypeConstants.RadioQuestion)
                     {
@@ -109,8 +108,8 @@ namespace Elsa.CustomActivities.Activities.QuestionScreen.Helpers
         {
             var activityExecutionContext = notification.ActivityExecutionContext;
             var engine = notification.Engine;
-            engine.SetValue("radioQuestionAnswerEquals", (Func<string, string, string, string, bool>)((workflowName, activityName, questionId, choiceIdToCheck) => AnswerEquals(activityExecutionContext, workflowName, activityName, questionId, choiceIdToCheck).Result));
-            engine.SetValue("radioQuestionAnswerIn", (Func<string, string, string, string[], bool>)((workflowName, activityName, questionId, choiceIdsToCheck) => AnswerIn(activityExecutionContext, workflowName, activityName, questionId, choiceIdsToCheck).Result));
+            engine.SetValue("radioQuestionAnswerEquals", (Func<string, string, string, string, bool>)((workflowName, activityName, questionId, choiceIdToCheck) => AnswerEquals(activityExecutionContext.CorrelationId, workflowName, activityName, questionId, choiceIdToCheck).Result));
+            engine.SetValue("radioQuestionAnswerIn", (Func<string, string, string, string[], bool>)((workflowName, activityName, questionId, choiceIdsToCheck) => AnswerIn(activityExecutionContext.CorrelationId, workflowName, activityName, questionId, choiceIdsToCheck).Result));
             return Task.CompletedTask;
         }
 
