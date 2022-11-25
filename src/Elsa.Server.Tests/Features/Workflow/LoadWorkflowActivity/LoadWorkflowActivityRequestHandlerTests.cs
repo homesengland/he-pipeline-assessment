@@ -200,45 +200,6 @@ public class LoadQuestionScreenRequestHandlerTests
 
     [Theory]
     [AutoMoqData]
-    public async Task Handle_ReturnsErrors_GivenActiovityDataReturnsNullForAcitivtyId(
-        [Frozen] Mock<IQuestionInvoker> questionInvoker,
-        [Frozen] Mock<IWorkflowInstanceStore> workflowInstanceStore,
-        [Frozen] Mock<IElsaCustomRepository> elsaCustomRepository,
-        LoadQuestionScreenRequest loadWorkflowActivityRequest,
-        List<CollectedWorkflow> collectedWorkflows,
-        WorkflowInstance workflowInstance,
-        CustomActivityNavigation customActivityNavigation,
-        LoadQuestionScreenRequestHandler sut)
-    {
-        //Arrange
-        questionInvoker
-            .Setup(x => x.FindWorkflowsAsync(loadWorkflowActivityRequest.ActivityId,
-                customActivityNavigation.ActivityType, loadWorkflowActivityRequest.WorkflowInstanceId,
-                CancellationToken.None))
-            .ReturnsAsync(collectedWorkflows);
-
-        workflowInstanceStore.Setup(x =>
-                x.FindAsync(It.IsAny<WorkflowInstanceIdSpecification>(), CancellationToken.None))
-            .ReturnsAsync(workflowInstance);
-
-        elsaCustomRepository.Setup(x => x.GetCustomActivityNavigation(loadWorkflowActivityRequest.ActivityId,
-                loadWorkflowActivityRequest.WorkflowInstanceId, CancellationToken.None))
-            .ReturnsAsync(customActivityNavigation);
-
-        IDictionary<string, object?>? customDictionary = null;
-        workflowInstance.ActivityData.Add(loadWorkflowActivityRequest.ActivityId, customDictionary!);
-
-        //Act
-        var result = await sut.Handle(loadWorkflowActivityRequest, CancellationToken.None);
-
-        //Assert
-        Assert.Null(result.Data!.MultiQuestionActivityData);
-        Assert.Equal($"Activity data is null for Activity Id: {loadWorkflowActivityRequest.ActivityId}",
-            result.ErrorMessages.Single());
-    }
-
-    [Theory]
-    [AutoMoqData]
     public async Task Handle_ReturnErrors_GivenActivityIsQuestionScreenAndAssessmentQuestionsAreNull(
         [Frozen] Mock<IQuestionInvoker> questionInvoker,
         [Frozen] Mock<IWorkflowInstanceStore> workflowInstanceStore,

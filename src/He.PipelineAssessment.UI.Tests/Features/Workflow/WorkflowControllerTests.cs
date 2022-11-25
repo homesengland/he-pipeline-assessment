@@ -1,6 +1,10 @@
 ﻿using AutoFixture.Xunit2;
+using Azure.Core;
+using Elsa.CustomModels;
+using Elsa.CustomWorkflow.Sdk;
 using He.PipelineAssessment.Common.Tests;
 using He.PipelineAssessment.UI.Features.Workflow;
+using He.PipelineAssessment.UI.Features.Workflow.LoadCheckYourAnswersScreen;
 using He.PipelineAssessment.UI.Features.Workflow.LoadQuestionScreen;
 using He.PipelineAssessment.UI.Features.Workflow.SaveAndContinue;
 using He.PipelineAssessment.UI.Features.Workflow.StartWorkflow;
@@ -71,15 +75,16 @@ namespace He.PipelineAssessment.UI.Tests.Features.Workflow
             Assert.IsType<RedirectToActionResult>(result);
 
             var redirectToActionResult = (RedirectToActionResult)result;
-            Assert.Equal("LoadQuestionScreen", redirectToActionResult.ActionName);
+            Assert.Equal("LoadWorkflowActivity", redirectToActionResult.ActionName);
 
 
             var activityIdRouteValue = new KeyValuePair<string, object?>("ActivityId", loadWorkflowActivityRequest.ActivityId);
             var workflowInstanceIdRouteValue = new KeyValuePair<string, object?>("WorkflowInstanceId", loadWorkflowActivityRequest.WorkflowInstanceId);
+            var activityTypeRouteValue = new KeyValuePair<string, object?>("ActivityType", loadWorkflowActivityRequest.ActivityType);
 
             Assert.Contains(activityIdRouteValue, redirectToActionResult.RouteValues!);
             Assert.Contains(workflowInstanceIdRouteValue, redirectToActionResult.RouteValues!);
-
+            Assert.Contains(activityTypeRouteValue, redirectToActionResult.RouteValues!);
         }
 
         [Theory]
@@ -126,52 +131,128 @@ namespace He.PipelineAssessment.UI.Tests.Features.Workflow
             Assert.IsType<RedirectToActionResult>(result);
 
             var redirectToActionResult = (RedirectToActionResult)result;
-            Assert.Equal("LoadQuestionScreen", redirectToActionResult.ActionName);
+            Assert.Equal("LoadWorkflowActivity", redirectToActionResult.ActionName);
 
 
             var activityIdRouteValue = new KeyValuePair<string, object?>("ActivityId", saveAndContinueCommandResponse.ActivityId);
             var workflowInstanceIdRouteValue = new KeyValuePair<string, object?>("WorkflowInstanceId", saveAndContinueCommandResponse.WorkflowInstanceId);
+            var activityTypeRouteValue = new KeyValuePair<string, object?>("ActivityType", saveAndContinueCommandResponse.ActivityType);
 
             Assert.Contains(activityIdRouteValue, redirectToActionResult.RouteValues!);
             Assert.Contains(workflowInstanceIdRouteValue, redirectToActionResult.RouteValues!);
-
+            Assert.Contains(activityTypeRouteValue, redirectToActionResult.RouteValues!);
         }
 
         [Theory]
         [AutoMoqData]
-        public async Task LoadWorkflowActivity_ShouldRedirectToErrorPage_GivenInnerExceptionIsCaught(
+        public async Task LoadWorkflowActivity_ShouldRedirectToErrorPage_GivenInnerExceptionIsCaughtForCheckYourAnswers(
             [Frozen] Mock<IMediator> mediator,
             SaveAndContinueCommandResponse saveAndContinueCommandResponse,
             Exception exception,
             WorkflowController sut)
         {
             //Arrange
-            mediator.Setup(x => x.Send(saveAndContinueCommandResponse, CancellationToken.None)).Throws(exception);
+            saveAndContinueCommandResponse.ActivityType = ActivityTypeConstants.CheckYourAnswersScreen;
+
+            mediator.Setup(x =>
+                x.Send(It.IsAny<LoadCheckYourAnswersScreenRequest>(), CancellationToken.None)).Throws(exception);
 
             //Act
             var result = await sut.LoadWorkflowActivity(saveAndContinueCommandResponse);
 
             //Assert
-            mediator.Verify(x => x.Send(saveAndContinueCommandResponse, CancellationToken.None), Times.Once);
-            await Assert.ThrowsAsync<Exception>(() => mediator.Object.Send(saveAndContinueCommandResponse));
+            mediator.Verify(x => x.Send(It.Is<LoadCheckYourAnswersScreenRequest>(y =>
+                y.ActivityId == saveAndContinueCommandResponse.ActivityId && y.WorkflowInstanceId ==
+                saveAndContinueCommandResponse.WorkflowInstanceId), CancellationToken.None), Times.Once);
+            await Assert.ThrowsAsync<Exception>(() => mediator.Object.Send(It.Is<LoadCheckYourAnswersScreenRequest>(x =>
+                x.ActivityId == saveAndContinueCommandResponse.ActivityId && x.WorkflowInstanceId ==
+                saveAndContinueCommandResponse.WorkflowInstanceId)));
 
             Assert.IsType<RedirectToActionResult>(result);
             var redirectToActionResult = (RedirectToActionResult)result;
             Assert.Equal("Error", redirectToActionResult.ControllerName);
             Assert.Equal("Index", redirectToActionResult.ActionName);
-
         }
 
         [Theory]
         [AutoMoqData]
-        public async Task LoadWorkflowActivity_ShouldRedirectToAction_GivenNoExceptionsThrow(
+        public async Task LoadWorkflowActivity_ShouldRedirectToErrorPage_GivenInnerExceptionIsCaughtForQuestionScreen(
+            [Frozen] Mock<IMediator> mediator,
+            SaveAndContinueCommandResponse saveAndContinueCommandResponse,
+            Exception exception,
+            WorkflowController sut)
+        {
+            //Arrange
+            saveAndContinueCommandResponse.ActivityType = ActivityTypeConstants.QuestionScreen;
+
+            mediator.Setup(x =>
+                x.Send(It.IsAny<LoadQuestionScreenRequest>(), CancellationToken.None)).Throws(exception);
+
+            //Act
+            var result = await sut.LoadWorkflowActivity(saveAndContinueCommandResponse);
+
+            //Assert
+            mediator.Verify(x => x.Send(It.Is<LoadQuestionScreenRequest>(y =>
+                y.ActivityId == saveAndContinueCommandResponse.ActivityId && y.WorkflowInstanceId ==
+                saveAndContinueCommandResponse.WorkflowInstanceId), CancellationToken.None), Times.Once);
+            await Assert.ThrowsAsync<Exception>(() => mediator.Object.Send(It.Is<LoadQuestionScreenRequest>(x =>
+                x.ActivityId == saveAndContinueCommandResponse.ActivityId && x.WorkflowInstanceId ==
+                saveAndContinueCommandResponse.WorkflowInstanceId)));
+
+            Assert.IsType<RedirectToActionResult>(result);
+            var redirectToActionResult = (RedirectToActionResult)result;
+            Assert.Equal("Error", redirectToActionResult.ControllerName);
+            Assert.Equal("Index", redirectToActionResult.ActionName);
+        }
+
+        [Theory]
+        [AutoMoqData]
+        public async Task LoadWorkflowActivity_ShouldRedirectToCheckYourAnswersView_GivenCheckYourAnswersScreenAndNoExceptionsThrow(
             [Frozen] Mock<IMediator> mediator,
             SaveAndContinueCommandResponse saveAndContinueCommandResponse,
             SaveAndContinueCommand saveAndContinueCommand,
             WorkflowController sut)
         {
             //Arrange
-            mediator.Setup(x => x.Send(saveAndContinueCommandResponse, CancellationToken.None)).ReturnsAsync(saveAndContinueCommand);
+            saveAndContinueCommandResponse.ActivityType = ActivityTypeConstants.CheckYourAnswersScreen;
+
+            mediator.Setup(x =>
+                    x.Send(
+                        It.Is<LoadCheckYourAnswersScreenRequest>(x =>
+                            x.ActivityId == saveAndContinueCommandResponse.ActivityId && x.WorkflowInstanceId ==
+                            saveAndContinueCommandResponse.WorkflowInstanceId), CancellationToken.None))
+                .ReturnsAsync(saveAndContinueCommand);
+
+            //Act
+            var result = await sut.LoadWorkflowActivity(saveAndContinueCommandResponse);
+
+            //Assert
+            Assert.NotNull(result);
+            Assert.IsType<ViewResult>(result);
+
+            var viewResult = (ViewResult)result;
+            Assert.Equal("CheckYourAnswers", viewResult.ViewName);
+            Assert.IsType<SaveAndContinueCommand>(viewResult.Model); // this will change
+
+        }
+
+        [Theory]
+        [AutoMoqData]
+        public async Task LoadWorkflowActivity_ShouldRedirectToMultiSaveAndContinueView_GivenQuestionScreenAndNoExceptionsThrow(
+            [Frozen] Mock<IMediator> mediator,
+            SaveAndContinueCommandResponse saveAndContinueCommandResponse,
+            SaveAndContinueCommand saveAndContinueCommand,
+            WorkflowController sut)
+        {
+            //Arrange
+            saveAndContinueCommandResponse.ActivityType = ActivityTypeConstants.QuestionScreen;
+
+            mediator.Setup(x =>
+                    x.Send(
+                        It.Is<LoadQuestionScreenRequest>(x =>
+                            x.ActivityId == saveAndContinueCommandResponse.ActivityId && x.WorkflowInstanceId ==
+                            saveAndContinueCommandResponse.WorkflowInstanceId), CancellationToken.None))
+                .ReturnsAsync(saveAndContinueCommand);
 
             //Act
             var result = await sut.LoadWorkflowActivity(saveAndContinueCommandResponse);
