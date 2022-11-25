@@ -122,9 +122,9 @@ import { CheckboxEventHandler } from './component-events'
     const emitter = new EventEmitter()
     emitter.emit = jest.fn();
     let question = new CheckboxQuestion();
-    var oldOption: CheckboxOption = {answer: 'second', isSingle: true};
-    question.options.choices = [{answer: 'first', isSingle: true}, oldOption];
-    question.checkbox.choices = [{answer: 'first', isSingle: true}, oldOption];
+    var oldOption: CheckboxOption = {answer: 'second', isSingle: true, identifier: 'testId'};
+    question.options.choices = [{answer: 'first', isSingle: true, identifier: 'testId'}, oldOption];
+    question.checkbox.choices = [{answer: 'first', isSingle: true, identifier: 'testId'}, oldOption];
     let handler = new CheckboxEventHandler(question, emitter);
 
     handler.onAddChoiceClick();
@@ -137,7 +137,9 @@ import { CheckboxEventHandler } from './component-events'
     let lastChoice = handler.question.checkbox.choices[4];
     expect(lastChoice.isSingle).toBe(false);
     expect(lastChoice.answer).toBe("Choice 5");
+    expect(lastChoice.identifier).toBe("E");
     expect(emitter.emit).lastCalledWith(handler.question);
+    expect(handler.enforceUniqueIdentifier).toBeCalledTimes(1);
   });
 
   it('onDeleteChoiceClick should emit an event without deleted choice on checkbox', () => {
@@ -145,9 +147,9 @@ import { CheckboxEventHandler } from './component-events'
     const emitter = new EventEmitter()
     emitter.emit = jest.fn();
     let question = new CheckboxQuestion();
-    var oldOption: CheckboxOption = {answer: 'second', isSingle: true};
-    question.options.choices = [{answer: 'first', isSingle: true}, oldOption];
-    question.checkbox.choices = [{answer: 'first', isSingle: true}, oldOption];
+    var oldOption: CheckboxOption = {answer: 'second', isSingle: true, identifier: 'testId'};
+    question.options.choices = [{answer: 'first', isSingle: true, identifier: 'testId'}, oldOption];
+    question.checkbox.choices = [{answer: 'first', isSingle: true, identifier: 'testId'}, oldOption];
     let handler = new CheckboxEventHandler(question, emitter);
 
     handler.onDeleteChoiceClick(oldOption);
@@ -158,7 +160,9 @@ import { CheckboxEventHandler } from './component-events'
     let onlyChoice = handler.question.checkbox.choices[0];
     expect(onlyChoice.isSingle).toBe(true);
     expect(onlyChoice.answer).toBe("first");
+    expect(onlyChoice.identifier).toBe("A");
     expect(emitter.emit).lastCalledWith(handler.question);
+    expect(handler.enforceUniqueIdentifier).toBeCalledTimes(1);
   });
 
   it('onChoiceNameChanged should emit an event with trimmed updated choice on checkbox', () => {
@@ -166,9 +170,9 @@ import { CheckboxEventHandler } from './component-events'
     const emitter = new EventEmitter()
     emitter.emit = jest.fn();
     let question = new CheckboxQuestion();
-    var oldOption: CheckboxOption = {answer: 'second', isSingle: true};
-    question.options.choices = [{answer: 'first', isSingle: true}, oldOption];
-    question.checkbox.choices = [{answer: 'first', isSingle: true}, oldOption];
+    var oldOption: CheckboxOption = {answer: 'second', isSingle: true, identifier: 'testId'};
+    question.options.choices = [{answer: 'first', isSingle: true, identifier: 'testId'}, oldOption];
+    question.checkbox.choices = [{answer: 'first', isSingle: true, identifier: 'testId'}, oldOption];
     let handler = new CheckboxEventHandler(question, emitter);
 
     let input = document.createElement('input');
@@ -186,15 +190,16 @@ import { CheckboxEventHandler } from './component-events'
     expect(emitter.emit).lastCalledWith(question);
   });
 
-  it('getChoice should return a choice object with default isSingle and supplied name on checkbox', () => {
+  it('getChoice should return a choice object with default isSingle and supplied name and id on checkbox', () => {
     const EventEmitter = require("events");
     const emitter = new EventEmitter()
     let question = new CheckboxQuestion();
     let handler = new CheckboxEventHandler(question, emitter);
 
-    let choice = handler.getChoice("SomeName")
+    let choice = handler.getChoice("SomeName", "SomeId")
 
     expect(choice.answer).toBe("SomeName");
+    expect(choice.identifier).toBe("SomeId");
     expect(choice.isSingle).toBe(false);
   });
 
@@ -203,7 +208,7 @@ import { CheckboxEventHandler } from './component-events'
     const emitter = new EventEmitter()
     let question = new CheckboxQuestion();
     let handler = new CheckboxEventHandler(question, emitter);
-    let questionOptions: QuestionOptions<CheckboxOption> = { choices: [{answer: 'Option 1', isSingle: true},{answer: 'Option 2', isSingle: true}]}
+    let questionOptions: QuestionOptions<CheckboxOption> = { choices: [{answer: 'Option 1', isSingle: true, identifier: 'testId'},{answer: 'Option 2', isSingle: true, identifier: 'testId'}]}
     
     handler.assignOptions(questionOptions)
 
@@ -215,9 +220,9 @@ import { CheckboxEventHandler } from './component-events'
     const emitter = new EventEmitter()
     emitter.emit = jest.fn();
     let question = new CheckboxQuestion();
-    var oldOption: CheckboxOption = {answer: 'second', isSingle: true};
-    question.options.choices = [{answer: 'first', isSingle: true}, oldOption];
-    question.checkbox.choices = [{answer: 'first', isSingle: true}, oldOption];
+    var oldOption: CheckboxOption = {answer: 'second', isSingle: true, identifier: 'testId'};
+    question.options.choices = [{answer: 'first', isSingle: true, identifier: 'testId'}, oldOption];
+    question.checkbox.choices = [{answer: 'first', isSingle: true, identifier: 'testId'}, oldOption];
     let handler = new CheckboxEventHandler(question, emitter);
 
     let input = document.createElement('input');
@@ -230,4 +235,18 @@ import { CheckboxEventHandler } from './component-events'
     expect(question.options.choices[1].isSingle).toBe(false);
     expect(oldOption.isSingle).toBe(false);
     expect(emitter.emit).lastCalledWith(question);
+  });
+
+  it('enforceUniqueIdentifier should create unique identifiers for checkbox options', () => {
+    const EventEmitter = require("events");
+    const emitter = new EventEmitter()
+    let question = new CheckboxQuestion();
+    let handler = new CheckboxEventHandler(question, emitter);
+    let questionOptions: QuestionOptions<CheckboxOption> = { choices: [{answer: 'Option 1', identifier: 'testId', isSingle: true},{answer: 'Option 2', identifier: 'testId',  isSingle: true}]}
+    question.options = questionOptions;
+
+    handler.enforceUniqueIdentifier()
+
+    expect(question.checkbox.choices[0].identifier).toBe('A');
+    expect(question.checkbox.choices[1].identifier).toBe('B');
   });
