@@ -37,12 +37,18 @@ namespace Elsa.Server.Features.Workflow.LoadQuestionScreen
             };
             try
             {
-                var dbActivity =
+                var customActivityNavigation =
                     await _elsaCustomRepository.GetCustomActivityNavigation(activityRequest.ActivityId, activityRequest.WorkflowInstanceId, cancellationToken);
 
-                if (dbActivity != null)
+                if (customActivityNavigation != null)
                 {
-                    IEnumerable<CollectedWorkflow> workflows = await _questionInvoker.FindWorkflowsAsync(activityRequest.ActivityId, dbActivity.ActivityType, activityRequest.WorkflowInstanceId, cancellationToken);
+                    if (customActivityNavigation.ActivityType != ActivityTypeConstants.QuestionScreen)
+                    {
+                        throw new ApplicationException(
+                            $"Attempted to load question screen with {customActivityNavigation.ActivityType} activity type");
+                    }
+
+                    IEnumerable<CollectedWorkflow> workflows = await _questionInvoker.FindWorkflowsAsync(activityRequest.ActivityId, customActivityNavigation.ActivityType, activityRequest.WorkflowInstanceId, cancellationToken);
 
                     var collectedWorkflow = workflows.FirstOrDefault();
                     if (collectedWorkflow != null)
@@ -64,9 +70,9 @@ namespace Elsa.Server.Features.Workflow.LoadQuestionScreen
                                     workflowInstance.ActivityData
                                         .FirstOrDefault(a => a.Key == activityRequest.ActivityId).Value;
 
-                                result.Data.ActivityType = dbActivity.ActivityType;
-                                result.Data.PreviousActivityId = dbActivity.PreviousActivityId;
-                                result.Data.PreviousActivityType = dbActivity.PreviousActivityType;
+                                result.Data.ActivityType = customActivityNavigation.ActivityType;
+                                result.Data.PreviousActivityId = customActivityNavigation.PreviousActivityId;
+                                result.Data.PreviousActivityType = customActivityNavigation.PreviousActivityType;
 
                                 var title = (string?)activityDataDictionary.FirstOrDefault(x => x.Key == "PageTitle").Value;
                                 result.Data.PageTitle = title;
@@ -82,7 +88,7 @@ namespace Elsa.Server.Features.Workflow.LoadQuestionScreen
                                 if (elsaActivityAssessmentQuestions != null)
                                 {
                                     result.Data.MultiQuestionActivityData = new List<QuestionActivityData>();
-                                    result.Data.ActivityType = dbActivity.ActivityType;
+                                    result.Data.ActivityType = customActivityNavigation.ActivityType;
 
                                     foreach (var item in elsaActivityAssessmentQuestions.Questions)
                                     {

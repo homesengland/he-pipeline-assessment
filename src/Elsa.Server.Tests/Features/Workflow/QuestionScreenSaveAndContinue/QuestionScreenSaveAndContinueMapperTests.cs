@@ -10,7 +10,7 @@ using Xunit;
 
 namespace Elsa.Server.Tests.Features.Workflow.QuestionScreenSaveAndContinue
 {
-    public class MutliSaveAndContinueMapperTests
+    public class MultiSaveAndContinueMapperTests
     {
         [Theory]
         [AutoMoqData]
@@ -34,7 +34,7 @@ namespace Elsa.Server.Tests.Features.Workflow.QuestionScreenSaveAndContinue
             Assert.IsType<CustomActivityNavigation>(result);
             Assert.Equal(nextActivityId, result!.ActivityId);
             Assert.Equal(nextActivityType, result!.ActivityType);
-            Assert.Equal(saveAndContinueCommand.WorkflowInstanceId, result.WorkflowInstanceId);
+            Assert.Equal(workflowInstance.Id, result.WorkflowInstanceId);
             Assert.Equal(saveAndContinueCommand.ActivityId, result.PreviousActivityId);
             Assert.Equal(currentTimeUtc, result.CreatedDateTime);
         }
