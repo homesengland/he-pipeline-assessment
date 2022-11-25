@@ -245,8 +245,8 @@ import { CheckboxEventHandler } from './component-events'
     let questionOptions: QuestionOptions<CheckboxOption> = { choices: [{answer: 'Option 1', identifier: 'testId', isSingle: true},{answer: 'Option 2', identifier: 'testId',  isSingle: true}]}
     question.options = questionOptions;
 
-    handler.enforceUniqueIdentifier()
+    handler.enforceUniqueIdentifier();
 
-    expect(question.checkbox.choices[0].identifier).toBe('A');
-    expect(question.checkbox.choices[1].identifier).toBe('B');
+    expect(question.options.choices[0].identifier).toBe('A');
+    expect(question.options.choices[1].identifier).toBe('B');
   });

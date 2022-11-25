@@ -218,8 +218,8 @@ import { RadioEventHandler } from './component-events'
     let questionOptions: QuestionOptions<RadioOption> = { choices: [{answer: 'Option 1', identifier: 'testId'},{answer: 'Option 2', identifier: 'testId'}]}
     question.options = questionOptions;
 
-    handler.enforceUniqueIdentifier()
+    handler.enforceUniqueIdentifier();
 
-    expect(question.radio.choices[0].identifier).toBe('A');
-    expect(question.radio.choices[1].identifier).toBe('B');
+    expect(question.options.choices[0].identifier).toBe('A');
+    expect(question.options.choices[1].identifier).toBe('B');
   });
