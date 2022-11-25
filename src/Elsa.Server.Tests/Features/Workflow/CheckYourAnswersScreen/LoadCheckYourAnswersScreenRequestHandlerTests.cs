@@ -22,21 +22,21 @@ public class LoadCheckYourAnswersScreenRequestHandlerTests
     [AutoMoqData]
     public async Task Handle_ReturnsOperationResultWithErrors_GivenCustomActivityNavigationDoesNotExist(
         [Frozen] Mock<IElsaCustomRepository> elsaCustomRepository,
-        LoadCheckYourAnswersRequest loadCheckYourAnswersRequest,
+        LoadCheckYourAnswersScreenRequest loadCheckYourAnswersScreenRequest,
         LoadCheckYourAnswersScreenRequestHandler sut)
     {
         //Arrange
-        elsaCustomRepository.Setup(x => x.GetCustomActivityNavigation(loadCheckYourAnswersRequest.ActivityId,
-                loadCheckYourAnswersRequest.WorkflowInstanceId, CancellationToken.None))
+        elsaCustomRepository.Setup(x => x.GetCustomActivityNavigation(loadCheckYourAnswersScreenRequest.ActivityId,
+                loadCheckYourAnswersScreenRequest.WorkflowInstanceId, CancellationToken.None))
             .ReturnsAsync((CustomActivityNavigation?)null);
 
         //Act
-        var result = await sut.Handle(loadCheckYourAnswersRequest, CancellationToken.None);
+        var result = await sut.Handle(loadCheckYourAnswersScreenRequest, CancellationToken.None);
 
         //Assert
         Assert.Null(result.Data!.QuestionScreenAnswers);
         Assert.Equal(
-            $"Unable to find activity navigation with Workflow Id: {loadCheckYourAnswersRequest.WorkflowInstanceId} and Activity Id: {loadCheckYourAnswersRequest.ActivityId} in Elsa Custom database",
+            $"Unable to find activity navigation with Workflow Id: {loadCheckYourAnswersScreenRequest.WorkflowInstanceId} and Activity Id: {loadCheckYourAnswersScreenRequest.ActivityId} in Elsa Custom database",
             result.ErrorMessages.Single());
         elsaCustomRepository.Verify(
             x => x.GetQuestionScreenAnswers(It.IsAny<string>(), CancellationToken.None), Times.Never);
@@ -46,17 +46,17 @@ public class LoadCheckYourAnswersScreenRequestHandlerTests
     [AutoMoqData]
     public async Task Handle_ReturnsOperationResultWithErrors_GivenExceptionIsThrown(
         [Frozen] Mock<IElsaCustomRepository> elsaCustomRepository,
-        LoadCheckYourAnswersRequest loadCheckYourAnswersRequest,
+        LoadCheckYourAnswersScreenRequest loadCheckYourAnswersScreenRequest,
         Exception exception,
         LoadCheckYourAnswersScreenRequestHandler sut)
     {
         //Arrange
-        elsaCustomRepository.Setup(x => x.GetCustomActivityNavigation(loadCheckYourAnswersRequest.ActivityId,
-                loadCheckYourAnswersRequest.WorkflowInstanceId, CancellationToken.None))
+        elsaCustomRepository.Setup(x => x.GetCustomActivityNavigation(loadCheckYourAnswersScreenRequest.ActivityId,
+                loadCheckYourAnswersScreenRequest.WorkflowInstanceId, CancellationToken.None))
             .ThrowsAsync(exception);
 
         //Act
-        var result = await sut.Handle(loadCheckYourAnswersRequest, CancellationToken.None);
+        var result = await sut.Handle(loadCheckYourAnswersScreenRequest, CancellationToken.None);
 
         //Assert
         Assert.Null(result.Data!.QuestionScreenAnswers);
@@ -69,27 +69,27 @@ public class LoadCheckYourAnswersScreenRequestHandlerTests
     [AutoMoqData]
     public async Task Handle_ReturnQuestionScreenAnswers_GivenActivityIsQuestionScreenAndNoErrorsEncountered(
         [Frozen] Mock<IElsaCustomRepository> elsaCustomRepository,
-        LoadCheckYourAnswersRequest loadCheckYourAnswersRequest,
+        LoadCheckYourAnswersScreenRequest loadCheckYourAnswersScreenRequest,
         CustomActivityNavigation customActivityNavigation,
         List<QuestionScreenAnswer> questionScreenAnswers,
         LoadCheckYourAnswersScreenRequestHandler sut)
     {
         //Arrange
-        elsaCustomRepository.Setup(x => x.GetCustomActivityNavigation(loadCheckYourAnswersRequest.ActivityId,
-                loadCheckYourAnswersRequest.WorkflowInstanceId, CancellationToken.None))
+        elsaCustomRepository.Setup(x => x.GetCustomActivityNavigation(loadCheckYourAnswersScreenRequest.ActivityId,
+                loadCheckYourAnswersScreenRequest.WorkflowInstanceId, CancellationToken.None))
             .ReturnsAsync(customActivityNavigation);
 
-        elsaCustomRepository.Setup(x => x.GetQuestionScreenAnswers(loadCheckYourAnswersRequest.WorkflowInstanceId, CancellationToken.None))
+        elsaCustomRepository.Setup(x => x.GetQuestionScreenAnswers(loadCheckYourAnswersScreenRequest.WorkflowInstanceId, CancellationToken.None))
             .ReturnsAsync(questionScreenAnswers);
 
         //Act
-        var result = await sut.Handle(loadCheckYourAnswersRequest, CancellationToken.None);
+        var result = await sut.Handle(loadCheckYourAnswersScreenRequest, CancellationToken.None);
 
         //Assert
         Assert.NotNull(result.Data);
         Assert.Equal(questionScreenAnswers, result.Data!.QuestionScreenAnswers);
-        Assert.Equal(loadCheckYourAnswersRequest.ActivityId, result.Data.ActivityId);
-        Assert.Equal(loadCheckYourAnswersRequest.WorkflowInstanceId, result.Data.WorkflowInstanceId);
+        Assert.Equal(loadCheckYourAnswersScreenRequest.ActivityId, result.Data.ActivityId);
+        Assert.Equal(loadCheckYourAnswersScreenRequest.WorkflowInstanceId, result.Data.WorkflowInstanceId);
         Assert.Equal(ActivityTypeConstants.CheckYourAnswersScreen, result.Data.ActivityType);
         Assert.Equal(customActivityNavigation.PreviousActivityId, result.Data.PreviousActivityId);
         Assert.Equal(customActivityNavigation.PreviousActivityType, result.Data.PreviousActivityType);

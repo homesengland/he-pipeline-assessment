@@ -5,7 +5,7 @@ using MediatR;
 
 namespace Elsa.Server.Features.Workflow.LoadCheckYourAnswersScreen
 {
-    public class LoadCheckYourAnswersScreenRequestHandler : IRequestHandler<LoadCheckYourAnswersRequest, OperationResult<LoadCheckYourAnswersScreenResponse>>
+    public class LoadCheckYourAnswersScreenRequestHandler : IRequestHandler<LoadCheckYourAnswersScreenRequest, OperationResult<LoadCheckYourAnswersScreenResponse>>
     {
         private readonly IElsaCustomRepository _elsaCustomRepository;
 
@@ -14,21 +14,21 @@ namespace Elsa.Server.Features.Workflow.LoadCheckYourAnswersScreen
             _elsaCustomRepository = elsaCustomRepository;
         }
 
-        public async Task<OperationResult<LoadCheckYourAnswersScreenResponse>> Handle(LoadCheckYourAnswersRequest activityRequest, CancellationToken cancellationToken)
+        public async Task<OperationResult<LoadCheckYourAnswersScreenResponse>> Handle(LoadCheckYourAnswersScreenRequest activityScreenRequest, CancellationToken cancellationToken)
         {
             var result = new OperationResult<LoadCheckYourAnswersScreenResponse>
             {
                 Data = new LoadCheckYourAnswersScreenResponse
                 {
-                    WorkflowInstanceId = activityRequest.WorkflowInstanceId,
-                    ActivityId = activityRequest.ActivityId,
+                    WorkflowInstanceId = activityScreenRequest.WorkflowInstanceId,
+                    ActivityId = activityScreenRequest.ActivityId,
                     ActivityType = ActivityTypeConstants.CheckYourAnswersScreen
                 }
             };
             try
             {
                 var customActivityNavigation =
-                    await _elsaCustomRepository.GetCustomActivityNavigation(activityRequest.ActivityId, activityRequest.WorkflowInstanceId, cancellationToken);
+                    await _elsaCustomRepository.GetCustomActivityNavigation(activityScreenRequest.ActivityId, activityScreenRequest.WorkflowInstanceId, cancellationToken);
 
                 if (customActivityNavigation != null)
                 {
@@ -43,7 +43,7 @@ namespace Elsa.Server.Features.Workflow.LoadCheckYourAnswersScreen
                 else
                 {
                     result.ErrorMessages.Add(
-                        $"Unable to find activity navigation with Workflow Id: {activityRequest.WorkflowInstanceId} and Activity Id: {activityRequest.ActivityId} in Elsa Custom database");
+                        $"Unable to find activity navigation with Workflow Id: {activityScreenRequest.WorkflowInstanceId} and Activity Id: {activityScreenRequest.ActivityId} in Elsa Custom database");
                 }
             }
             catch (Exception e)

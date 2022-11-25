@@ -1,4 +1,5 @@
-﻿using Elsa.Server.Features.Workflow.LoadQuestionScreen;
+﻿using Elsa.Server.Features.Workflow.LoadCheckYourAnswersScreen;
+using Elsa.Server.Features.Workflow.LoadQuestionScreen;
 using Elsa.Server.Features.Workflow.QuestionScreenSaveAndContinue;
 using Elsa.Server.Features.Workflow.StartWorkflow;
 using MediatR;
@@ -39,9 +40,37 @@ namespace Elsa.Server.Features.Workflow
         }
 
         [HttpGet("LoadQuestionScreen")]
-        public async Task<IActionResult> LoadWorkflowActivity(string workflowInstanceId, string activityId)
+        public async Task<IActionResult> LoadQuestionScreen(string workflowInstanceId, string activityId)
         {
             var request = new LoadQuestionScreenRequest
+            {
+                WorkflowInstanceId = workflowInstanceId,
+                ActivityId = activityId
+            };
+
+            try
+            {
+                var result = await this._mediator.Send(request);
+
+                if (result.IsSuccess)
+                {
+                    return Ok(result);
+                }
+                else
+                {
+                    return BadRequest(string.Join(',', result.ErrorMessages));
+                }
+            }
+            catch (Exception e)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, e);
+            }
+        }
+
+        [HttpGet("LoadCheckYourAnswersScreen")]
+        public async Task<IActionResult> LoadCheckYourAnswersScreen(string workflowInstanceId, string activityId)
+        {
+            var request = new LoadCheckYourAnswersScreenRequest()
             {
                 WorkflowInstanceId = workflowInstanceId,
                 ActivityId = activityId
