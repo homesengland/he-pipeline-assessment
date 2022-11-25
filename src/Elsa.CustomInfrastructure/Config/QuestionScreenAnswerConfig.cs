@@ -15,7 +15,6 @@ namespace Elsa.CustomInfrastructure.Config
             builder.Property(x => x.WorkflowInstanceId).HasMaxLength(EntityConfigurationConstants.MaxLength);
             builder.Property(x => x.QuestionId).HasMaxLength(EntityConfigurationConstants.MaxLength);
             builder.Property(x => x.QuestionType).HasMaxLength(EntityConfigurationConstants.QuestionTypeMaxLength);
-            //builder.Property(x => x.Choices).HasJsonConversion<IList<QuestionScreenAnswer.Choice>>();
             builder.Property(e => e.Choices).HasJsonConversion();
         }
     }

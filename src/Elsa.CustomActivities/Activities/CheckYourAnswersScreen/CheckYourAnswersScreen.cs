@@ -47,8 +47,7 @@ namespace Elsa.CustomActivities.Activities.CheckYourAnswers
 
             // var assessmentQuestions = await _elsaCustomRepository.GetAssessmentQuestions(context.WorkflowInstance.DefinitionId, context.CorrelationId);
             // if (assessmentQuestions != null) Output = assessmentQuestions.ToList();
-
-            return Suspend();
+            return await Task.FromResult(Suspend());
         }
 
         protected override async ValueTask<IActivityExecutionResult> OnResumeAsync(ActivityExecutionContext context)

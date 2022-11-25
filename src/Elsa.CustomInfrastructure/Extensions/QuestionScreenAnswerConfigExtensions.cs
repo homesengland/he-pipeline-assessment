@@ -9,7 +9,7 @@ namespace Elsa.CustomInfrastructure.Extensions
 {
     public static class QuestionScreenAnswerConfigExtensions
     {
-        public static PropertyBuilder<T> HasJsonConversion<T>(this PropertyBuilder<T> propertyBuilder) where T : class, new()
+        public static PropertyBuilder<T> HasJsonConversion<T>(this PropertyBuilder<T> propertyBuilder) where T : class?, new()
         {
             var options = new JsonSerializerOptions
             {
@@ -30,7 +30,7 @@ namespace Elsa.CustomInfrastructure.Extensions
             (
                 (l, r) => JsonSerializer.Serialize(l, options) == JsonSerializer.Serialize(r, options),
                 v => v == null ? 0 : JsonSerializer.Serialize(v, options).GetHashCode(),
-                v => JsonSerializer.Deserialize<T>(JsonSerializer.Serialize(v, options), options)
+                v => JsonSerializer.Deserialize<T>(JsonSerializer.Serialize(v, options), options)!
             );
 
             propertyBuilder.HasConversion(converter);
