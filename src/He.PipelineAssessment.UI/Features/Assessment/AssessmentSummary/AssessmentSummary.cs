@@ -46,5 +46,17 @@
             }
             else return "";
         }
+
+        public string StatusDisplayTag()
+        {
+            switch (Status)
+            {
+                case "Draft":
+                    return "blue";
+                case "Submitted":
+                    return "green";
+            }
+            return "grey";
+        }
     }
 }

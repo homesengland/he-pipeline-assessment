@@ -1,9 +1,10 @@
 ﻿using He.PipelineAssessment.Infrastructure.Repository;
+using He.PipelineAssessment.Models;
 using MediatR;
 
 namespace He.PipelineAssessment.UI.Features.Assessments.AssessmentSummary
 {
-    public class AssessmentSummaryRequestHandler : IRequestHandler<AssessmentSummaryRequest, AssessmentSummaryResponse>
+    public class AssessmentSummaryRequestHandler : IRequestHandler<AssessmentSummaryRequest, AssessmentSummaryResponse?>
     {
         private IAssessmentRepository _repository;
 
@@ -11,46 +12,57 @@ namespace He.PipelineAssessment.UI.Features.Assessments.AssessmentSummary
         {
             _repository = repository;
         }
-        public async Task<AssessmentSummaryResponse> Handle(AssessmentSummaryRequest request, CancellationToken cancellationToken)
+        public async Task<AssessmentSummaryResponse?> Handle(AssessmentSummaryRequest request, CancellationToken cancellationToken)
         {
-            var dbAssessment = await _repository.GetAssessment(request.AssessmentId);
-            if (dbAssessment != null)
+            try
             {
-                var dbStages = await _repository.GetAssessmentStages(request.AssessmentId);
-
-                var stages = new List<AssessmentSummaryStage>();
-                if (dbStages != null && dbStages.Any())
+                var dbAssessment = await _repository.GetAssessment(request.AssessmentId);
+                if (dbAssessment != null)
                 {
-                    //TODO: Put this in mapper
-                    foreach (var item in dbStages)
+                    var dbStages = await _repository.GetAssessmentStages(request.AssessmentId);
+
+                    var stages = new List<AssessmentSummaryStage>();
+                    if (dbStages != null && dbStages.Any())
                     {
-                        var stage = new AssessmentSummaryStage();
-                        stage.StageId = item.Id;
-                        stage.StageName = item.WorkflowName;
-                        stage.StartedOn = item.CreatedDateTime;
-                        stage.Submitted = item.SubmittedDateTime;
-                        stage.Status = item.Status;
-                        stage.WorkflowInstanceId = item.WorkflowInstanceId;
-                        stage.CurrentActivityId = item.CurrentActivityId;
-                        stage.CurrentActivityType = item.CurrentActivityType;
-                        stages.Add(stage);
+                        foreach (var item in dbStages)
+                        {
+                            var stage = AssessmentSummaryStage(item);
+                            stages.Add(stage);
+                        }
                     }
-                }
 
-                return new AssessmentSummaryResponse()
-                {
-                    CorrelationId = request.CorrelationId,
-                    AssessmentId = request.AssessmentId,
-                    SiteName = dbAssessment!.SiteName,
-                    CounterParty = dbAssessment.Counterparty,
-                    Reference = dbAssessment.Reference,
-                    Stages = stages
-                };
+                    return new AssessmentSummaryResponse()
+                    {
+                        CorrelationId = request.CorrelationId,
+                        AssessmentId = request.AssessmentId,
+                        SiteName = dbAssessment!.SiteName,
+                        CounterParty = dbAssessment.Counterparty,
+                        Reference = dbAssessment.Reference,
+                        Stages = stages
+                    };
+                }
             }
-            else
+            catch (Exception e)
             {
-                throw new Exception("Assessment does not exist with this id");
+                string message = e.Message;
             }
+            return null;
+        }
+
+        private static AssessmentSummaryStage AssessmentSummaryStage(AssessmentStage item)
+        {
+            var stage = new AssessmentSummaryStage()
+            {
+                StageId = item.Id,
+                StageName = item.WorkflowName,
+                StartedOn = item.CreatedDateTime,
+                Submitted = item.SubmittedDateTime,
+                Status = item.Status,
+                WorkflowInstanceId = item.WorkflowInstanceId,
+                CurrentActivityId = item.CurrentActivityId,
+                CurrentActivityType = item.CurrentActivityType
+            };
+            return stage;
         }
     }
 }

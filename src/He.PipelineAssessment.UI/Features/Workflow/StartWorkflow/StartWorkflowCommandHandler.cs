@@ -35,16 +35,7 @@ namespace He.PipelineAssessment.UI.Features.Workflow.StartWorkflow
                     ActivityType = response.Data.ActivityType
                 };
 
-                //TODO: Put this in mapper
-                var assessmentStage = new AssessmentStage();
-                assessmentStage.WorkflowInstanceId = response.Data.WorkflowInstanceId;
-                assessmentStage.CreatedDateTime = DateTime.UtcNow;
-                assessmentStage.AssessmentId = request.AssessmentId;
-                assessmentStage.Status = AssessmentStageConstants.Draft;
-                assessmentStage.WorkflowName = response.Data.WorkflowName;
-                assessmentStage.WorkflowDefinitionId = request.WorkflowDefinitionId;
-                assessmentStage.CurrentActivityId = response.Data.NextActivityId;
-                assessmentStage.CurrentActivityType = response.Data.ActivityType;
+                var assessmentStage = AssessmentStage(request, response);
 
                 await _assessmentRepository.CreateAssessmentStage(assessmentStage);
 
@@ -55,6 +46,20 @@ namespace He.PipelineAssessment.UI.Features.Workflow.StartWorkflow
                 return null;
             }
 
+        }
+
+        private static AssessmentStage AssessmentStage(StartWorkflowCommand request, WorkflowNextActivityDataDto response)
+        {
+            var assessmentStage = new AssessmentStage();
+            assessmentStage.WorkflowInstanceId = response.Data.WorkflowInstanceId;
+            assessmentStage.CreatedDateTime = DateTime.UtcNow;
+            assessmentStage.AssessmentId = request.AssessmentId;
+            assessmentStage.Status = AssessmentStageConstants.Draft;
+            assessmentStage.WorkflowName = response.Data.WorkflowName;
+            assessmentStage.WorkflowDefinitionId = request.WorkflowDefinitionId;
+            assessmentStage.CurrentActivityId = response.Data.NextActivityId;
+            assessmentStage.CurrentActivityType = response.Data.ActivityType;
+            return assessmentStage;
         }
     }
 }

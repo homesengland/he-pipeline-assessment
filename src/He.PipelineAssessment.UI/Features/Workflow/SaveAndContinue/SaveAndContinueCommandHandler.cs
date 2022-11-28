@@ -29,14 +29,13 @@ namespace He.PipelineAssessment.UI.Features.Workflow.SaveAndContinue
                     WorkflowInstanceId = response.Data.WorkflowInstanceId,
                     ActivityType = response.Data.ActivityType
                 };
-                //TODO: write mapper here?
-                var currAssessmentStage = await _assessmentRepository.GetAssessmentStage(response.Data.WorkflowInstanceId);
-                if (currAssessmentStage != null)
+                var currentAssessmentStage = await _assessmentRepository.GetAssessmentStage(response.Data.WorkflowInstanceId);
+                if (currentAssessmentStage != null)
                 {
-                    currAssessmentStage.CurrentActivityId = response.Data.NextActivityId;
-                    currAssessmentStage.CurrentActivityType = response.Data.ActivityType;
-                    currAssessmentStage.LastModifiedDateTime = DateTime.UtcNow;
-                    _assessmentRepository.SaveChanges();
+                    currentAssessmentStage.CurrentActivityId = response.Data.NextActivityId;
+                    currentAssessmentStage.CurrentActivityType = response.Data.ActivityType;
+                    currentAssessmentStage.LastModifiedDateTime = DateTime.UtcNow;
+                    await _assessmentRepository.SaveChanges();
                 }
 
                 return await Task.FromResult(result);
