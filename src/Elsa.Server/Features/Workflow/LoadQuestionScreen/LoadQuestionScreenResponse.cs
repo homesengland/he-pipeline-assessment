@@ -11,11 +11,15 @@ namespace Elsa.Server.Features.Workflow.LoadQuestionScreen
         public string PreviousActivityType { get; set; } = null!;
         public string? PageTitle { get; set; } = null!;
 
-        public List<QuestionActivityData> MultiQuestionActivityData { get; set; } = null!;
+        public string FooterTitle { get; set; } = null!;
+        public string FooterText { get; set; } = null!;
+
+        public List<QuestionActivityData> QuestionScreenAnswers { get; set; } = null!;
     }
 
     public class QuestionActivityData
     {
+        public string ActivityId { get; set; } = null!;
         public string? QuestionId { get; set; } = null!;
         public string Title { get; set; } = null!;
         public string Question { get; set; } = null!;

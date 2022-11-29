@@ -56,6 +56,7 @@ builder.Services.AddScoped<IElsaCustomRepository, ElsaCustomRepository>();
 builder.Services.AddMediatR(typeof(Program).Assembly);
 builder.Services.AddApplicationInsightsTelemetry();
 builder.Services.AddScoped<IDateTimeProvider, DateTimeProvider>();
+builder.Services.AddScoped<IActivityDataProvider, ActivityDataProvider>();
 
 
 builder.Services.AddScoped<IStartWorkflowMapper, StartWorkflowMapper>();

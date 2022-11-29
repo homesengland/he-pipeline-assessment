@@ -1,4 +1,5 @@
-﻿using Elsa.CustomWorkflow.Sdk;
+﻿using Azure.Core;
+using Elsa.CustomWorkflow.Sdk;
 using FluentValidation;
 using He.PipelineAssessment.UI.Features.Workflow.LoadCheckYourAnswersScreen;
 using He.PipelineAssessment.UI.Features.Workflow.LoadQuestionScreen;
@@ -97,7 +98,7 @@ namespace He.PipelineAssessment.UI.Features.Workflow
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> SaveAndContinue([FromForm] SaveAndContinueCommand command)
+        public async Task<IActionResult> QuestionScreenSaveAndContinue([FromForm] SaveAndContinueCommand command)
         {
             try
             {
@@ -120,6 +121,40 @@ namespace He.PipelineAssessment.UI.Features.Workflow
 
                     return View("MultiSaveAndContinue", command);
                 }
+            }
+            catch (Exception e)
+            {
+                _logger.LogError(e.Message);
+                return RedirectToAction("Index", "Error", new { message = e.Message });
+            }
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> CheckYourAnswerScreenSaveAndContinue([FromForm] SaveAndContinueCommand command)
+        {
+            try
+            {
+                var validationResult = _validator.Validate(command);
+                if (validationResult.IsValid)
+                {
+                    var result = await this._mediator.Send(command);
+
+                    return RedirectToAction("LoadWorkflowActivity",
+                    new
+                    {
+                        WorkflowInstanceId = result?.WorkflowInstanceId,
+                        ActivityId = result?.ActivityId,
+                        ActivityType = result?.ActivityType
+                    });
+                }
+                else
+                {
+                    command.ValidationMessages = validationResult;
+
+                    return View("MultiSaveAndContinue", command);
+                }
+
             }
             catch (Exception e)
             {

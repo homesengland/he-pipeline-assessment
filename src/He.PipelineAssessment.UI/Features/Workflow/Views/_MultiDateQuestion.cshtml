@@ -1,10 +1,10 @@
 ﻿@using He.PipelineAssessment.UI.Features.Workflow.ViewModels
 @model He.PipelineAssessment.UI.Features.Workflow.ViewModels.MultiQuestion
 @{
-    var itemDayName = "Data.MultiQuestionActivityData[" + Model.Index + "].Date.Day";
-    var itemMonthName = "Data.MultiQuestionActivityData[" + Model.Index + "].Date.Month";
-    var itemYearName = "Data.MultiQuestionActivityData[" + Model.Index + "].Date.Year";
-    var formItemName = "Data.MultiQuestionActivityData[" + Model.Index + "].Date";
+    var itemDayName = "Data.QuestionScreenAnswers[" + Model.Index + "].Date.Day";
+    var itemMonthName = "Data.QuestionScreenAnswers[" + Model.Index + "].Date.Month";
+    var itemYearName = "Data.QuestionScreenAnswers[" + Model.Index + "].Date.Year";
+    var formItemName = "Data.QuestionScreenAnswers[" + Model.Index + "].Date";
 
     var errorFormClass = !Model.IsValid ? "govuk-form-group--error" : "";
     var errorFieldClass = !Model.IsValid ? "govuk-input--error" : "";

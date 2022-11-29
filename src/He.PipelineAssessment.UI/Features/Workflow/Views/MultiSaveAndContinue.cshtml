@@ -10,7 +10,7 @@
 
     @Html.ActionLink("Back","LoadWorkflowActivity","Workflow", new {WorkflowInstanceId = Model.Data.WorkflowInstanceId, ActivityId = Model.Data.PreviousActivityId, ActivityType = Model.Data.ActivityType},new{ @class="govuk-back-link"})
 
-    @using (Html.BeginForm("SaveAndContinue", "Workflow", FormMethod.Post))
+    @using (Html.BeginForm("QuestionScreenSaveAndContinue", "Workflow", FormMethod.Post))
     {
         @Html.AntiForgeryToken()
         @Html.HiddenFor(m => Model.Data.WorkflowInstanceId)

@@ -87,7 +87,7 @@ namespace Elsa.Server.Features.Workflow.LoadQuestionScreen
 
                                 if (elsaActivityAssessmentQuestions != null)
                                 {
-                                    result.Data.MultiQuestionActivityData = new List<QuestionActivityData>();
+                                    result.Data.QuestionScreenAnswers = new List<QuestionActivityData>();
                                     result.Data.ActivityType = customActivityNavigation.ActivityType;
 
                                     foreach (var item in elsaActivityAssessmentQuestions.Questions)
@@ -99,14 +99,14 @@ namespace Elsa.Server.Features.Workflow.LoadQuestionScreen
                                         {
                                             var questionActivityData = CreateQuestionActivityData(dbQuestion, item);
 
-                                            result.Data.MultiQuestionActivityData.Add(questionActivityData);
+                                            result.Data.QuestionScreenAnswers.Add(questionActivityData);
                                         }
                                     }
                                 }
                                 else
                                 {
                                     result.ErrorMessages.Add(
-                                        $"Failed to map activity data to MultiQuestionActivityData");
+                                        $"Failed to map activity data to QuestionScreenAnswers");
                                 }
                             }
                         }
@@ -140,6 +140,7 @@ namespace Elsa.Server.Features.Workflow.LoadQuestionScreen
         {
             //assign the values
             var questionActivityData = new QuestionActivityData();
+            questionActivityData.ActivityId = dbQuestion.ActivityId;
             questionActivityData.Answer = dbQuestion.Answer;
             questionActivityData.Comments = dbQuestion.Comments;
             questionActivityData.QuestionId = dbQuestion.QuestionId;

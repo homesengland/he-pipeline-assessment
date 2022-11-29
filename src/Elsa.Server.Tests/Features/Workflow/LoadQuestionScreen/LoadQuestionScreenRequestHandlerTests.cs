@@ -50,7 +50,7 @@ public class LoadQuestionScreenRequestHandlerTests
         var result = await sut.Handle(loadQuestionScreenRequest, CancellationToken.None);
 
         //Assert
-        Assert.Null(result.Data!.MultiQuestionActivityData);
+        Assert.Null(result.Data!.QuestionScreenAnswers);
         Assert.Equal(
             $"Cannot find activity Id {loadQuestionScreenRequest.ActivityId} in the workflow activity data dictionary",
             result.ErrorMessages.Single());
@@ -90,7 +90,7 @@ public class LoadQuestionScreenRequestHandlerTests
         var result = await sut.Handle(loadWorkflowActivityRequest, CancellationToken.None);
 
         //Assert
-        Assert.Null(result.Data!.MultiQuestionActivityData);
+        Assert.Null(result.Data!.QuestionScreenAnswers);
         Assert.Equal(
             $"Unable to find activity navigation with Workflow Id: {loadWorkflowActivityRequest.WorkflowInstanceId} and Activity Id: {loadWorkflowActivityRequest.ActivityId} in Elsa Custom database",
             result.ErrorMessages.Single());
@@ -130,7 +130,7 @@ public class LoadQuestionScreenRequestHandlerTests
         var result = await sut.Handle(loadWorkflowActivityRequest, CancellationToken.None);
 
         //Assert
-        Assert.Null(result.Data!.MultiQuestionActivityData);
+        Assert.Null(result.Data!.QuestionScreenAnswers);
         Assert.Equal(
             $"Unable to find workflow instance with Id: {loadWorkflowActivityRequest.WorkflowInstanceId} in Elsa database",
             result.ErrorMessages.Single());
@@ -165,7 +165,7 @@ public class LoadQuestionScreenRequestHandlerTests
         var result = await sut.Handle(loadWorkflowActivityRequest, CancellationToken.None);
 
         //Assert
-        Assert.Null(result.Data!.MultiQuestionActivityData);
+        Assert.Null(result.Data!.QuestionScreenAnswers);
         Assert.Equal(
             $"Unable to progress workflow instance Id {loadWorkflowActivityRequest.WorkflowInstanceId}. No collected workflows",
             result.ErrorMessages.Single());
@@ -200,7 +200,7 @@ public class LoadQuestionScreenRequestHandlerTests
         var result = await sut.Handle(loadWorkflowActivityRequest, CancellationToken.None);
 
         //Assert
-        Assert.Null(result.Data!.MultiQuestionActivityData);
+        Assert.Null(result.Data!.QuestionScreenAnswers);
         Assert.Equal(exception.Message, result.ErrorMessages.Single());
         workflowInstanceStore.Verify(
             x => x.FindAsync(It.IsAny<WorkflowInstanceIdSpecification>(), CancellationToken.None), Times.Never);
@@ -250,8 +250,8 @@ public class LoadQuestionScreenRequestHandlerTests
         var result = await sut.Handle(loadWorkflowActivityRequest, CancellationToken.None);
 
         //Assert
-        Assert.Null(result.Data!.MultiQuestionActivityData);
-        Assert.Equal("Failed to map activity data to MultiQuestionActivityData", result.ErrorMessages.Single());
+        Assert.Null(result.Data!.QuestionScreenAnswers);
+        Assert.Equal("Failed to map activity data to QuestionScreenAnswers", result.ErrorMessages.Single());
     }
 
     [Theory]
@@ -273,7 +273,7 @@ public class LoadQuestionScreenRequestHandlerTests
         var result = await sut.Handle(loadWorkflowActivityRequest, CancellationToken.None);
 
         //Assert
-        Assert.Null(result.Data!.MultiQuestionActivityData);
+        Assert.Null(result.Data!.QuestionScreenAnswers);
         Assert.Equal($"Attempted to load question screen with {customActivityNavigation.ActivityType} activity type", result.ErrorMessages.Single());
     }
 
@@ -327,8 +327,8 @@ public class LoadQuestionScreenRequestHandlerTests
         var result = await sut.Handle(loadWorkflowActivityRequest, CancellationToken.None);
 
         //Assert
-        Assert.NotNull(result.Data!.MultiQuestionActivityData);
-        Assert.Equal(assessmentQuestions.Count(), result.Data!.MultiQuestionActivityData.Count());
+        Assert.NotNull(result.Data!.QuestionScreenAnswers);
+        Assert.Equal(assessmentQuestions.Count(), result.Data!.QuestionScreenAnswers.Count());
         Assert.Empty(result.ErrorMessages);
     }
 
@@ -392,11 +392,11 @@ public class LoadQuestionScreenRequestHandlerTests
         var result = await sut.Handle(loadWorkflowActivityRequest, CancellationToken.None);
 
         //Assert
-        Assert.NotNull(result.Data!.MultiQuestionActivityData);
-        Assert.Equal(assessmentQuestions.Count(), result.Data!.MultiQuestionActivityData.Count());
+        Assert.NotNull(result.Data!.QuestionScreenAnswers);
+        Assert.Equal(assessmentQuestions.Count(), result.Data!.QuestionScreenAnswers.Count());
         Assert.Empty(result.ErrorMessages);
-        Assert.Equal("Choice1", result.Data.MultiQuestionActivityData[0].Checkbox.SelectedChoices.First());
-        Assert.Single(result.Data.MultiQuestionActivityData[0].Checkbox.SelectedChoices);
+        Assert.Equal("Choice1", result.Data.QuestionScreenAnswers[0].Checkbox.SelectedChoices.First());
+        Assert.Single(result.Data.QuestionScreenAnswers[0].Checkbox.SelectedChoices);
     }
 
     [Theory]
@@ -459,9 +459,9 @@ public class LoadQuestionScreenRequestHandlerTests
         var result = await sut.Handle(loadWorkflowActivityRequest, CancellationToken.None);
 
         //Assert
-        Assert.NotNull(result.Data!.MultiQuestionActivityData);
-        Assert.Equal(assessmentQuestions.Count(), result.Data!.MultiQuestionActivityData.Count());
+        Assert.NotNull(result.Data!.QuestionScreenAnswers);
+        Assert.Equal(assessmentQuestions.Count(), result.Data!.QuestionScreenAnswers.Count());
         Assert.Empty(result.ErrorMessages);
-        Assert.Equal(result.Data.MultiQuestionActivityData[0].Radio.SelectedAnswer, myChoice);
+        Assert.Equal(result.Data.QuestionScreenAnswers[0].Radio.SelectedAnswer, myChoice);
     }
 }

@@ -1,7 +1,7 @@
 ﻿@using He.PipelineAssessment.UI.Features.Workflow.ViewModels
 @model He.PipelineAssessment.UI.Features.Workflow.ViewModels.MultiQuestion
 @{
-    var itemName = "Data.MultiQuestionActivityData[" + Model.Index + "].Radio.SelectedAnswer";
+    var itemName = "Data.QuestionScreenAnswers[" + Model.Index + "].Radio.SelectedAnswer";
     var itemId = Model.Index + "radio_multi_select_";
 }
 
@@ -14,7 +14,7 @@
     <div class="govuk-radios" data-module="govuk-radios">
         @for (int i = 0; i < Model.Radio.Choices.Count(); i++)
         {
-            var hiddenItemNameAnswer = "Data.MultiQuestionActivityData[" + Model.Index + "].Radio.Choices[" + i + "].Answer";
+            var hiddenItemNameAnswer = "Data.QuestionScreenAnswers[" + Model.Index + "].Radio.Choices[" + i + "].Answer";
             <input type="hidden" name="@hiddenItemNameAnswer" value="@Model.Radio.Choices[i].Answer" />
         }
         @foreach (var choice in Model.Radio.Choices)
