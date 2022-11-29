@@ -57,6 +57,8 @@ builder.Services.AddMediatR(typeof(Program).Assembly);
 builder.Services.AddApplicationInsightsTelemetry();
 builder.Services.AddScoped<IDateTimeProvider, DateTimeProvider>();
 builder.Services.AddScoped<IActivityDataProvider, ActivityDataProvider>();
+builder.Services.AddScoped<IWorkflowNextActivityProvider, WorkflowNextActivityProvider>();
+builder.Services.AddScoped<IWorkflowInstanceProvider, WorkflowInstanceProvider>();
 
 
 builder.Services.AddScoped<IStartWorkflowMapper, StartWorkflowMapper>();

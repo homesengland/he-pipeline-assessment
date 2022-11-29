@@ -2,9 +2,9 @@
 using Elsa.CustomWorkflow.Sdk.Models.Workflow.Validators;
 using FluentValidation;
 
-namespace He.PipelineAssessment.UI.Features.Workflow.SaveAndContinue
+namespace He.PipelineAssessment.UI.Features.Workflow.QuestionScreenSaveAndContinue
 {
-    public class SaveAndContinueCommandValidator : AbstractValidator<SaveAndContinueCommand>
+    public class SaveAndContinueCommandValidator : AbstractValidator<QuestionScreenSaveAndContinueCommand>
     {
         public SaveAndContinueCommandValidator()
         {

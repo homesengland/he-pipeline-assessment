@@ -4,7 +4,7 @@ using Elsa.CustomWorkflow.Sdk.Models.Workflow;
 using He.PipelineAssessment.Common.Tests;
 using He.PipelineAssessment.UI.Features.Workflow.LoadCheckYourAnswersScreen;
 using He.PipelineAssessment.UI.Features.Workflow.LoadQuestionScreen;
-using He.PipelineAssessment.UI.Features.Workflow.SaveAndContinue;
+using He.PipelineAssessment.UI.Features.Workflow.QuestionScreenSaveAndContinue;
 using Moq;
 using Xunit;
 
@@ -49,7 +49,7 @@ namespace He.PipelineAssessment.UI.Tests.Features.Workflow.LoadCheckYourAnswersS
 
             //Assert
             Assert.NotNull(result);
-            Assert.IsType<SaveAndContinueCommand>(result);
+            Assert.IsType<QuestionScreenSaveAndContinueCommand>(result);
             elsaServerHttpClient.Verify(x => x.LoadCheckYourAnswersScreen(It.IsAny<LoadWorkflowActivityDto>()), Times.Once);
         }
     }

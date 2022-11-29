@@ -96,7 +96,30 @@ namespace Elsa.Server.Features.Workflow
         }
 
         [HttpPost("QuestionScreenSaveAndContinue")]
-        public async Task<IActionResult> MultiSaveAndContinue([FromBody] QuestionScreenSaveAndContinueCommand model)
+        public async Task<IActionResult> QuestionScreenSaveAndContinue([FromBody] QuestionScreenSaveAndContinueCommand model)
+        {
+            try
+            {
+                var result = await this._mediator.Send(model);
+
+                if (result.IsSuccess)
+                {
+                    return Ok(result);
+                }
+                else
+                {
+                    return BadRequest(string.Join(',', result.ErrorMessages));
+                }
+            }
+            catch (Exception e)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, e);
+            }
+
+        }
+
+        [HttpPost("CheckYourAnswersSaveAndContinue")]
+        public async Task<IActionResult> CheckYourAnswersSaveAndContinue([FromBody] CheckYourAnswersSaveAndContinueCommand model)
         {
             try
             {

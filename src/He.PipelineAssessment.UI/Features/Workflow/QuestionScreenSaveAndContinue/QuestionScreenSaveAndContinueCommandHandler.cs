@@ -2,28 +2,28 @@
 using He.PipelineAssessment.Infrastructure.Repository;
 using MediatR;
 
-namespace He.PipelineAssessment.UI.Features.Workflow.SaveAndContinue
+namespace He.PipelineAssessment.UI.Features.Workflow.QuestionScreenSaveAndContinue
 {
-    public class SaveAndContinueCommandHandler : IRequestHandler<SaveAndContinueCommand, SaveAndContinueCommandResponse?>
+    public class QuestionScreenSaveAndContinueCommandHandler : IRequestHandler<QuestionScreenSaveAndContinueCommand, QuestionScreenSaveAndContinueCommandResponse?>
     {
         private readonly IElsaServerHttpClient _elsaServerHttpClient;
-        private readonly ISaveAndContinueMapper _saveAndContinueMapper;
+        private readonly IQuestionScreenSaveAndContinueMapper _saveAndContinueMapper;
         private readonly IAssessmentRepository _assessmentRepository;
-        public SaveAndContinueCommandHandler(IElsaServerHttpClient elsaServerHttpClient, ISaveAndContinueMapper saveAndContinueMapper, IAssessmentRepository assessmentRepository)
+        public QuestionScreenSaveAndContinueCommandHandler(IElsaServerHttpClient elsaServerHttpClient, IQuestionScreenSaveAndContinueMapper saveAndContinueMapper, IAssessmentRepository assessmentRepository)
         {
             _elsaServerHttpClient = elsaServerHttpClient;
             _saveAndContinueMapper = saveAndContinueMapper;
             _assessmentRepository = assessmentRepository;
         }
 
-        public async Task<SaveAndContinueCommandResponse?> Handle(SaveAndContinueCommand request, CancellationToken cancellationToken)
+        public async Task<QuestionScreenSaveAndContinueCommandResponse?> Handle(QuestionScreenSaveAndContinueCommand request, CancellationToken cancellationToken)
         {
             var saveAndContinueCommandDto = _saveAndContinueMapper.SaveAndContinueCommandToMultiSaveAndContinueCommandDto(request);
-            var response = await _elsaServerHttpClient.SaveAndContinue(saveAndContinueCommandDto);
+            var response = await _elsaServerHttpClient.QuestionScreenSaveAndContinue(saveAndContinueCommandDto);
 
             if (response != null)
             {
-                SaveAndContinueCommandResponse result = new SaveAndContinueCommandResponse()
+                QuestionScreenSaveAndContinueCommandResponse result = new QuestionScreenSaveAndContinueCommandResponse()
                 {
                     ActivityId = response.Data.NextActivityId,
                     WorkflowInstanceId = response.Data.WorkflowInstanceId,

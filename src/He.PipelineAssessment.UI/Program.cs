@@ -4,7 +4,7 @@ using He.PipelineAssessment.Data.SinglePipeline;
 using He.PipelineAssessment.Infrastructure.Data;
 using He.PipelineAssessment.Infrastructure.Repository;
 using He.PipelineAssessment.UI;
-using He.PipelineAssessment.UI.Features.Workflow.SaveAndContinue;
+using He.PipelineAssessment.UI.Features.Workflow.QuestionScreenSaveAndContinue;
 using MediatR;
 using Microsoft.AspNetCore.DataProtection;
 using Microsoft.AspNetCore.Mvc.Razor;
@@ -35,7 +35,7 @@ builder.Services.AddHttpClient("ElsaServerClient", client =>
 });
 
 builder.Services.AddScoped<IElsaServerHttpClient, ElsaServerHttpClient>();
-builder.Services.AddScoped<ISaveAndContinueMapper, SaveAndContinueMapper>();
+builder.Services.AddScoped<IQuestionScreenSaveAndContinueMapper, QuestionScreenSaveAndContinueMapper>();
 builder.Services.AddScoped<NonceConfig>();
 
 
@@ -47,7 +47,7 @@ builder.Services.AddDbContext<PipelineAssessmentContext>(config =>
         x => x.MigrationsAssembly("He.PipelineAssessment.Infrastructure")));
 
 builder.Services.AddScoped<DbContext>(provider => provider.GetRequiredService<PipelineAssessmentContext>());
-builder.Services.AddScoped<IValidator<SaveAndContinueCommand>, SaveAndContinueCommandValidator>();
+builder.Services.AddScoped<IValidator<QuestionScreenSaveAndContinueCommand>, QuestionScreenSaveAndContinueCommandValidator>();
 builder.Services.AddDataProtection().PersistKeysToDbContext<PipelineAssessmentContext>();
 builder.Services.AddScoped<IAssessmentRepository, AssessmentRepository>();
 builder.Services.AddScoped<IEsriSinglePipelineClient, EsriSinglePipelineClient>();

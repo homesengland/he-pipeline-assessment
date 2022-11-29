@@ -1,6 +1,9 @@
 ﻿using AutoFixture.Xunit2;
 using Elsa.Server.Features.Workflow;
+<<<<<<< HEAD
 using Elsa.Server.Features.Workflow.LoadCheckYourAnswersScreen;
+=======
+>>>>>>> origin/feature/start-oppourtunity-assessment-prototype
 using Elsa.Server.Features.Workflow.LoadQuestionScreen;
 using Elsa.Server.Features.Workflow.QuestionScreenSaveAndContinue;
 using Elsa.Server.Features.Workflow.StartWorkflow;
@@ -131,7 +134,11 @@ namespace Elsa.Server.Tests.Features.Workflow
 
         [Theory]
         [AutoData]
+<<<<<<< HEAD
         public async Task WorkflowController_LoadQuestionScreen_ShouldReturnOK_WhenCommandHandlerIsSuccessful(
+=======
+        public async Task WorkflowController_LoadWorkflowActivity_ShouldReturnOK_WhenCommandHandlerIsSuccessful(
+>>>>>>> origin/feature/start-oppourtunity-assessment-prototype
            LoadQuestionScreenRequest request,
            LoadQuestionScreenResponse response,
            Mock<IMediator> mediatorMock)
@@ -164,7 +171,11 @@ namespace Elsa.Server.Tests.Features.Workflow
 
         [Theory]
         [AutoData]
+<<<<<<< HEAD
         public async Task WorkflowController_LoadQuestionScreen_ShouldReturnBadRequest_WhenCommandHandlerReturnsErrors(
+=======
+        public async Task WorkflowController_LoadWorkflowActivity_ShouldReturnBadRequest_WhenCommandHandlerReturnsErrors(
+>>>>>>> origin/feature/start-oppourtunity-assessment-prototype
             LoadQuestionScreenRequest request,
             OperationResult<LoadQuestionScreenResponse> operationResult,
             Mock<IMediator> mediatorMock)
@@ -191,7 +202,11 @@ namespace Elsa.Server.Tests.Features.Workflow
 
         [Theory]
         [AutoData]
+<<<<<<< HEAD
         public async Task WorkflowController_LoadQuestionScreen_ShouldReturn500_WhenCommandHandlerThrowsException(
+=======
+        public async Task WorkflowController_LoadWorkflowActivity_ShouldReturn500_WhenCommandHandlerThrowsException(
+>>>>>>> origin/feature/start-oppourtunity-assessment-prototype
             LoadQuestionScreenRequest request,
             Exception exception,
             Mock<IMediator> mediatorMock)
@@ -221,7 +236,11 @@ namespace Elsa.Server.Tests.Features.Workflow
 
         [Theory]
         [AutoData]
+<<<<<<< HEAD
         public async Task WorkflowController_LoadQuestionScreen_ShouldReturn500_WhenCommandHandlerReturnsNull(
+=======
+        public async Task WorkflowController_LoadWorkflowActivity_ShouldReturn500_WhenCommandHandlerReturnsNull(
+>>>>>>> origin/feature/start-oppourtunity-assessment-prototype
             LoadQuestionScreenRequest request,
             Mock<IMediator> mediatorMock)
         {
@@ -378,7 +397,7 @@ namespace Elsa.Server.Tests.Features.Workflow
             WorkflowController controller = new WorkflowController(mediatorMock.Object);
 
             //Act
-            var result = await controller.MultiSaveAndContinue(command);
+            var result = await controller.QuestionScreenSaveAndContinue(command);
 
             //Assert
             Assert.NotNull(result);
@@ -406,7 +425,7 @@ namespace Elsa.Server.Tests.Features.Workflow
             WorkflowController controller = new WorkflowController(mediatorMock.Object);
 
             //Act
-            var result = await controller.MultiSaveAndContinue(command);
+            var result = await controller.QuestionScreenSaveAndContinue(command);
 
             //Assert
             Assert.NotNull(result);
@@ -432,7 +451,7 @@ namespace Elsa.Server.Tests.Features.Workflow
             WorkflowController controller = new WorkflowController(mediatorMock.Object);
 
             //Act
-            var result = await controller.MultiSaveAndContinue(command);
+            var result = await controller.QuestionScreenSaveAndContinue(command);
 
             //Assert
             Assert.NotNull(result);
@@ -460,7 +479,7 @@ namespace Elsa.Server.Tests.Features.Workflow
             WorkflowController controller = new WorkflowController(mediatorMock.Object);
 
             //Act
-            var result = await controller.MultiSaveAndContinue(command);
+            var result = await controller.QuestionScreenSaveAndContinue(command);
 
             //Assert
             Assert.NotNull(result);

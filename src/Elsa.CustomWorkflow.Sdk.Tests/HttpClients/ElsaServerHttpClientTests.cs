@@ -64,7 +64,7 @@ namespace Elsa.CustomWorkflow.Sdk.Tests.HttpClients
         public async Task MultiSaveAndContinue_ReturnsNull_GivenHttpClientGivesBackNonSuccessResponse(
             [Frozen] Mock<IHttpClientFactory> httpClientFactoryMock,
             [Frozen] Mock<HttpMessageHandler> httpMessageHandlerMock,
-            SaveAndContinueCommandDto saveAndContinueCommandDto,
+            QuestionScreenSaveAndContinueCommandDto saveAndContinueCommandDto,
             WorkflowNextActivityDataDto workflowNextActivityDataDto,
             ElsaServerHttpClient sut)
         {
@@ -76,7 +76,7 @@ namespace Elsa.CustomWorkflow.Sdk.Tests.HttpClients
 
 
             //Act
-            var result = await sut.SaveAndContinue(saveAndContinueCommandDto);
+            var result = await sut.QuestionScreenSaveAndContinue(saveAndContinueCommandDto);
 
             //Assert
             Assert.Null(result);
@@ -87,7 +87,7 @@ namespace Elsa.CustomWorkflow.Sdk.Tests.HttpClients
         public async Task MultiSaveAndContinue_ReturnsWorkflowNextActivityDataDto_GivenHttpClientGivesBackNonSuccessResponse(
             [Frozen] Mock<IHttpClientFactory> httpClientFactoryMock,
             [Frozen] Mock<HttpMessageHandler> httpMessageHandlerMock,
-            SaveAndContinueCommandDto saveAndContinueCommandDto,
+            QuestionScreenSaveAndContinueCommandDto saveAndContinueCommandDto,
             WorkflowNextActivityDataDto workflowNextActivityDataDto,
             ElsaServerHttpClient sut)
         {
@@ -98,7 +98,7 @@ namespace Elsa.CustomWorkflow.Sdk.Tests.HttpClients
                 httpMessageHandlerMock);
 
             //Act
-            var result = await sut.SaveAndContinue(saveAndContinueCommandDto);
+            var result = await sut.QuestionScreenSaveAndContinue(saveAndContinueCommandDto);
 
             //Assert
             Assert.NotNull(result);

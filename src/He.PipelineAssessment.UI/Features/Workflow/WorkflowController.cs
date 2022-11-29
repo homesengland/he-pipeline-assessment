@@ -1,9 +1,10 @@
 ﻿using Azure.Core;
 using Elsa.CustomWorkflow.Sdk;
 using FluentValidation;
+using He.PipelineAssessment.UI.Features.Workflow.CheckYourAnswersSaveAndContinue;
 using He.PipelineAssessment.UI.Features.Workflow.LoadCheckYourAnswersScreen;
 using He.PipelineAssessment.UI.Features.Workflow.LoadQuestionScreen;
-using He.PipelineAssessment.UI.Features.Workflow.SaveAndContinue;
+using He.PipelineAssessment.UI.Features.Workflow.QuestionScreenSaveAndContinue;
 using He.PipelineAssessment.UI.Features.Workflow.StartWorkflow;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
@@ -14,10 +15,10 @@ namespace He.PipelineAssessment.UI.Features.Workflow
     {
         private readonly ILogger<WorkflowController> _logger;
         private readonly IMediator _mediator;
-        private readonly IValidator<SaveAndContinueCommand> _validator;
+        private readonly IValidator<QuestionScreenSaveAndContinueCommand> _validator;
 
 
-        public WorkflowController(IValidator<SaveAndContinueCommand> validator, ILogger<WorkflowController> logger, IMediator mediator)
+        public WorkflowController(IValidator<QuestionScreenSaveAndContinueCommand> validator, ILogger<WorkflowController> logger, IMediator mediator)
         {
             _logger = logger;
             _mediator = mediator;
@@ -52,7 +53,7 @@ namespace He.PipelineAssessment.UI.Features.Workflow
             }
         }
 
-        public async Task<IActionResult> LoadWorkflowActivity(SaveAndContinueCommandResponse request)
+        public async Task<IActionResult> LoadWorkflowActivity(QuestionScreenSaveAndContinueCommandResponse request)
         {
             try
             {
@@ -98,7 +99,7 @@ namespace He.PipelineAssessment.UI.Features.Workflow
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> QuestionScreenSaveAndContinue([FromForm] SaveAndContinueCommand command)
+        public async Task<IActionResult> QuestionScreenSaveAndContinue([FromForm] QuestionScreenSaveAndContinueCommand command)
         {
             try
             {
@@ -131,30 +132,19 @@ namespace He.PipelineAssessment.UI.Features.Workflow
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> CheckYourAnswerScreenSaveAndContinue([FromForm] SaveAndContinueCommand command)
+        public async Task<IActionResult> CheckYourAnswerScreenSaveAndContinue([FromForm] CheckYourAnswersSaveAndContinueCommand command)
         {
             try
             {
-                var validationResult = _validator.Validate(command);
-                if (validationResult.IsValid)
+                var result = await this._mediator.Send(command);
+
+                return RedirectToAction("LoadWorkflowActivity",
+                new
                 {
-                    var result = await this._mediator.Send(command);
-
-                    return RedirectToAction("LoadWorkflowActivity",
-                    new
-                    {
-                        WorkflowInstanceId = result?.WorkflowInstanceId,
-                        ActivityId = result?.ActivityId,
-                        ActivityType = result?.ActivityType
-                    });
-                }
-                else
-                {
-                    command.ValidationMessages = validationResult;
-
-                    return View("MultiSaveAndContinue", command);
-                }
-
+                    WorkflowInstanceId = result?.WorkflowInstanceId,
+                    ActivityId = result?.ActivityId,
+                    ActivityType = result?.ActivityType
+                });
             }
             catch (Exception e)
             {

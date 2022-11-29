@@ -6,7 +6,7 @@ using He.PipelineAssessment.Common.Tests;
 using He.PipelineAssessment.UI.Features.Workflow;
 using He.PipelineAssessment.UI.Features.Workflow.LoadCheckYourAnswersScreen;
 using He.PipelineAssessment.UI.Features.Workflow.LoadQuestionScreen;
-using He.PipelineAssessment.UI.Features.Workflow.SaveAndContinue;
+using He.PipelineAssessment.UI.Features.Workflow.QuestionScreenSaveAndContinue;
 using He.PipelineAssessment.UI.Features.Workflow.StartWorkflow;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
@@ -91,7 +91,7 @@ namespace He.PipelineAssessment.UI.Tests.Features.Workflow
         [AutoMoqData]
         public async Task SaveAndContinue_ShouldRedirectToErrorPage_GivenInnerExceptionIsCaught(
             [Frozen] Mock<IMediator> mediator,
-            SaveAndContinueCommand command,
+            QuestionScreenSaveAndContinueCommand command,
             Exception exception,
             WorkflowController sut)
         {
@@ -116,8 +116,8 @@ namespace He.PipelineAssessment.UI.Tests.Features.Workflow
         [AutoMoqData]
         public async Task SaveAndContinue_ShouldRedirectToAction_GivenNoExceptionsThrow(
             [Frozen] Mock<IMediator> mediator,
-            SaveAndContinueCommand command,
-            SaveAndContinueCommandResponse saveAndContinueCommandResponse,
+            QuestionScreenSaveAndContinueCommand command,
+            QuestionScreenSaveAndContinueCommandResponse saveAndContinueCommandResponse,
             WorkflowController sut)
         {
             //Arrange
@@ -147,7 +147,7 @@ namespace He.PipelineAssessment.UI.Tests.Features.Workflow
         [AutoMoqData]
         public async Task LoadWorkflowActivity_ShouldRedirectToErrorPage_GivenInnerExceptionIsCaughtForCheckYourAnswers(
             [Frozen] Mock<IMediator> mediator,
-            SaveAndContinueCommandResponse saveAndContinueCommandResponse,
+            QuestionScreenSaveAndContinueCommandResponse saveAndContinueCommandResponse,
             Exception exception,
             WorkflowController sut)
         {
@@ -178,7 +178,7 @@ namespace He.PipelineAssessment.UI.Tests.Features.Workflow
         [AutoMoqData]
         public async Task LoadWorkflowActivity_ShouldRedirectToErrorPage_GivenInnerExceptionIsCaughtForQuestionScreen(
             [Frozen] Mock<IMediator> mediator,
-            SaveAndContinueCommandResponse saveAndContinueCommandResponse,
+            QuestionScreenSaveAndContinueCommandResponse saveAndContinueCommandResponse,
             Exception exception,
             WorkflowController sut)
         {
@@ -209,8 +209,8 @@ namespace He.PipelineAssessment.UI.Tests.Features.Workflow
         [AutoMoqData]
         public async Task LoadWorkflowActivity_ShouldRedirectToCheckYourAnswersView_GivenCheckYourAnswersScreenAndNoExceptionsThrow(
             [Frozen] Mock<IMediator> mediator,
-            SaveAndContinueCommandResponse saveAndContinueCommandResponse,
-            SaveAndContinueCommand saveAndContinueCommand,
+            QuestionScreenSaveAndContinueCommandResponse saveAndContinueCommandResponse,
+            QuestionScreenSaveAndContinueCommand saveAndContinueCommand,
             WorkflowController sut)
         {
             //Arrange
@@ -232,7 +232,7 @@ namespace He.PipelineAssessment.UI.Tests.Features.Workflow
 
             var viewResult = (ViewResult)result;
             Assert.Equal("CheckYourAnswers", viewResult.ViewName);
-            Assert.IsType<SaveAndContinueCommand>(viewResult.Model); // this will change
+            Assert.IsType<QuestionScreenSaveAndContinueCommand>(viewResult.Model); // this will change
 
         }
 
@@ -240,8 +240,8 @@ namespace He.PipelineAssessment.UI.Tests.Features.Workflow
         [AutoMoqData]
         public async Task LoadWorkflowActivity_ShouldRedirectToMultiSaveAndContinueView_GivenQuestionScreenAndNoExceptionsThrow(
             [Frozen] Mock<IMediator> mediator,
-            SaveAndContinueCommandResponse saveAndContinueCommandResponse,
-            SaveAndContinueCommand saveAndContinueCommand,
+            QuestionScreenSaveAndContinueCommandResponse saveAndContinueCommandResponse,
+            QuestionScreenSaveAndContinueCommand saveAndContinueCommand,
             WorkflowController sut)
         {
             //Arrange
@@ -263,7 +263,7 @@ namespace He.PipelineAssessment.UI.Tests.Features.Workflow
 
             var viewResult = (ViewResult)result;
             Assert.Equal("MultiSaveAndContinue", viewResult.ViewName);
-            Assert.IsType<SaveAndContinueCommand>(viewResult.Model);
+            Assert.IsType<QuestionScreenSaveAndContinueCommand>(viewResult.Model);
 
         }
     }
