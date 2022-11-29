@@ -122,10 +122,12 @@ import { RadioEventHandler } from './component-events'
     const emitter = new EventEmitter()
     emitter.emit = jest.fn();
     let question = new RadioQuestion();
-    var oldOption: RadioOption = {answer: 'second'};
-    question.options.choices = [{answer: 'first'}, oldOption];
-    question.radio.choices = [{answer: 'first'}, oldOption];
+    var oldOption: RadioOption = {answer: 'second', identifier: 'testId'};
+    question.options.choices = [{answer: 'first', identifier: 'testId'}, oldOption];
+    question.radio.choices = [{answer: 'first', identifier: 'testId'}, oldOption];
     let handler = new RadioEventHandler(question, emitter);
+
+    jest.spyOn(handler, 'enforceUniqueIdentifier');
 
     handler.onAddChoiceClick();
     handler.onAddChoiceClick();
@@ -135,7 +137,9 @@ import { RadioEventHandler } from './component-events'
 
     let lastChoice = handler.question.radio.choices[3];
     expect(lastChoice.answer).toBe("Choice 4");
+    expect(lastChoice.identifier).toBe("D");
     expect(emitter.emit).lastCalledWith(handler.question);
+    expect(handler.enforceUniqueIdentifier).toBeCalledTimes(2);
   });
 
   it('onDeleteChoiceClick should emit an event without deleted choice on radio', () => {
@@ -143,10 +147,12 @@ import { RadioEventHandler } from './component-events'
     const emitter = new EventEmitter()
     emitter.emit = jest.fn();
     let question = new RadioQuestion();
-    var oldOption: RadioOption = {answer: 'second'};
-    question.options.choices = [{answer: 'first'}, oldOption];
-    question.radio.choices = [{answer: 'first'}, oldOption];
+    var oldOption: RadioOption = {answer: 'second', identifier: 'testId'};
+    question.options.choices = [{answer: 'first', identifier: 'testId'}, oldOption];
+    question.radio.choices = [{answer: 'first', identifier: 'testId'}, oldOption];
     let handler = new RadioEventHandler(question, emitter);
+
+    jest.spyOn(handler, 'enforceUniqueIdentifier');
 
     handler.onDeleteChoiceClick(oldOption);
 
@@ -155,7 +161,9 @@ import { RadioEventHandler } from './component-events'
 
     let onlyChoice = handler.question.radio.choices[0];
     expect(onlyChoice.answer).toBe("first");
+    expect(onlyChoice.identifier).toBe("A");
     expect(emitter.emit).lastCalledWith(handler.question);
+    expect(handler.enforceUniqueIdentifier).toBeCalledTimes(1);
   });
 
   it('onChoiceNameChanged should emit an event with trimmed updated choice on radio', () => {
@@ -163,9 +171,9 @@ import { RadioEventHandler } from './component-events'
     const emitter = new EventEmitter()
     emitter.emit = jest.fn();
     let question = new RadioQuestion();
-    var oldOption: RadioOption = {answer: 'second'};
-    question.options.choices = [{answer: 'first'}, oldOption];
-    question.radio.choices = [{answer: 'first'}, oldOption];
+    var oldOption: RadioOption = {answer: 'second', identifier: 'testId'};
+    question.options.choices = [{answer: 'first', identifier: 'testId'}, oldOption];
+    question.radio.choices = [{answer: 'first', identifier: 'testId'}, oldOption];
     let handler = new RadioEventHandler(question, emitter);
 
     let input = document.createElement('input');
@@ -182,15 +190,16 @@ import { RadioEventHandler } from './component-events'
     expect(emitter.emit).lastCalledWith(question);
   });
 
-  it('getChoice should return a choice object with supplied name on radio', () => {
+  it('getChoice should return a choice object with supplied name and id on radio', () => {
     const EventEmitter = require("events");
     const emitter = new EventEmitter()
     let question = new RadioQuestion();
     let handler = new RadioEventHandler(question, emitter);
 
-    let choice = handler.getChoice("SomeName")
+    let choice = handler.getChoice("SomeName", "SomeId")
 
     expect(choice.answer).toBe("SomeName");
+    expect(choice.identifier).toBe("SomeId");
   });
 
   it('assignOptions should set radio value to supplied object', () => {
@@ -198,9 +207,23 @@ import { RadioEventHandler } from './component-events'
     const emitter = new EventEmitter()
     let question = new RadioQuestion();
     let handler = new RadioEventHandler(question, emitter);
-    let questionOptions: QuestionOptions<RadioOption> = { choices: [{answer: 'Option 1'},{answer: 'Option 2'}]}
+    let questionOptions: QuestionOptions<RadioOption> = { choices: [{answer: 'Option 1', identifier: 'testId'},{answer: 'Option 2', identifier: 'testId'}]}
     
     handler.assignOptions(questionOptions)
 
     expect(question.radio).toBe(questionOptions);
+  });
+
+  it('enforceUniqueIdentifier should create unique identifiers for radio options', () => {
+    const EventEmitter = require("events");
+    const emitter = new EventEmitter()
+    let question = new RadioQuestion();
+    let handler = new RadioEventHandler(question, emitter);
+    let questionOptions: QuestionOptions<RadioOption> = { choices: [{answer: 'Option 1', identifier: 'testId'},{answer: 'Option 2', identifier: 'testId'}]}
+    question.options = questionOptions;
+
+    handler.enforceUniqueIdentifier();
+
+    expect(question.options.choices[0].identifier).toBe('A');
+    expect(question.options.choices[1].identifier).toBe('B');
   });

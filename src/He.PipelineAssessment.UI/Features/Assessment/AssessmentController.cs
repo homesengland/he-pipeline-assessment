@@ -19,8 +19,8 @@ namespace He.PipelineAssessment.UI.Features.Assessments
 
         public async Task<IActionResult> Index()
         {
-            try 
-            { 
+            try
+            {
                 var listModel = await _mediator.Send(new AssessmentListCommand());
                 return View("Index", listModel);
             }
@@ -31,11 +31,11 @@ namespace He.PipelineAssessment.UI.Features.Assessments
             }
         }
 
-        public async Task<IActionResult> Summary(int id, int correlationId)
+        public async Task<IActionResult> Summary(int assessmentid, int correlationId)
         {
             try
             {
-                var overviewModel = await _mediator.Send(new AssessmentSummaryCommand(id, correlationId));
+                var overviewModel = await _mediator.Send(new AssessmentSummaryRequest(assessmentid, correlationId));
                 return View("Summary", overviewModel);
             }
             catch (Exception e)

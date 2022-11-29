@@ -45,7 +45,7 @@ namespace Elsa.Server.Features.Workflow.LoadCheckYourAnswersScreen
                 {
                     result.Data.PreviousActivityId = customActivityNavigation.PreviousActivityId;
                     result.Data.PreviousActivityType = customActivityNavigation.PreviousActivityType;
-                  
+
                     var questionScreenAnswers = await _elsaCustomRepository
                         .GetQuestionScreenAnswers(result.Data.WorkflowInstanceId, cancellationToken);
 

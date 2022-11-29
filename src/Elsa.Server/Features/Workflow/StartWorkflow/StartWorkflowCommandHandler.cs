@@ -32,7 +32,10 @@ namespace Elsa.Server.Features.Workflow.StartWorkflow
             {
                 var workflow =
                     await _workflowRegistry.FindAsync(request.WorkflowDefinitionId, VersionOptions.Published, cancellationToken: cancellationToken);
+
+                var workflowName = workflow!.Name != null ? workflow.Name : "undefined workflow";
                 var runWorkflowResult = await _startsWorkflow.StartWorkflowAsync(workflow!, cancellationToken: cancellationToken);
+
 
                 if (runWorkflowResult.WorkflowInstance != null)
                 {
@@ -47,7 +50,7 @@ namespace Elsa.Server.Features.Workflow.StartWorkflow
                         if (customActivityNavigation != null)
                         {
                             await _elsaCustomRepository.CreateCustomActivityNavigationAsync(customActivityNavigation!, cancellationToken);
-                            result.Data = _startWorkflowMapper.RunWorkflowResultToStartWorkflowResponse(runWorkflowResult, activity.Type);
+                            result.Data = _startWorkflowMapper.RunWorkflowResultToStartWorkflowResponse(runWorkflowResult, activity.Type, workflowName);
                         }
                         else
                         {

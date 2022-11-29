@@ -1,4 +1,5 @@
 ﻿using Elsa.CustomWorkflow.Sdk.HttpClients;
+using He.PipelineAssessment.Infrastructure.Repository;
 using MediatR;
 
 namespace He.PipelineAssessment.UI.Features.Workflow.SaveAndContinue
@@ -7,10 +8,12 @@ namespace He.PipelineAssessment.UI.Features.Workflow.SaveAndContinue
     {
         private readonly IElsaServerHttpClient _elsaServerHttpClient;
         private readonly ISaveAndContinueMapper _saveAndContinueMapper;
-        public SaveAndContinueCommandHandler(IElsaServerHttpClient elsaServerHttpClient, ISaveAndContinueMapper saveAndContinueMapper)
+        private readonly IAssessmentRepository _assessmentRepository;
+        public SaveAndContinueCommandHandler(IElsaServerHttpClient elsaServerHttpClient, ISaveAndContinueMapper saveAndContinueMapper, IAssessmentRepository assessmentRepository)
         {
             _elsaServerHttpClient = elsaServerHttpClient;
             _saveAndContinueMapper = saveAndContinueMapper;
+            _assessmentRepository = assessmentRepository;
         }
 
         public async Task<SaveAndContinueCommandResponse?> Handle(SaveAndContinueCommand request, CancellationToken cancellationToken)
@@ -26,6 +29,14 @@ namespace He.PipelineAssessment.UI.Features.Workflow.SaveAndContinue
                     WorkflowInstanceId = response.Data.WorkflowInstanceId,
                     ActivityType = response.Data.ActivityType
                 };
+                var currentAssessmentStage = await _assessmentRepository.GetAssessmentStage(response.Data.WorkflowInstanceId);
+                if (currentAssessmentStage != null)
+                {
+                    currentAssessmentStage.CurrentActivityId = response.Data.NextActivityId;
+                    currentAssessmentStage.CurrentActivityType = response.Data.ActivityType;
+                    currentAssessmentStage.LastModifiedDateTime = DateTime.UtcNow;
+                    await _assessmentRepository.SaveChanges();
+                }
 
                 return await Task.FromResult(result);
 
