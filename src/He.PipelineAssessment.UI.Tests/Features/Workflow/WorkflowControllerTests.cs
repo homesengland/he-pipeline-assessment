@@ -1,6 +1,4 @@
 ﻿using AutoFixture.Xunit2;
-using Azure.Core;
-using Elsa.CustomModels;
 using Elsa.CustomWorkflow.Sdk;
 using He.PipelineAssessment.Common.Tests;
 using He.PipelineAssessment.UI.Features.Workflow;
@@ -99,7 +97,7 @@ namespace He.PipelineAssessment.UI.Tests.Features.Workflow
             mediator.Setup(x => x.Send(command, CancellationToken.None)).Throws(exception);
 
             //Act
-            var result = await sut.SaveAndContinue(command);
+            var result = await sut.QuestionScreenSaveAndContinue(command);
 
             //Assert
             mediator.Verify(x => x.Send(command, CancellationToken.None), Times.Once);
@@ -124,7 +122,7 @@ namespace He.PipelineAssessment.UI.Tests.Features.Workflow
             mediator.Setup(x => x.Send(command, CancellationToken.None)).ReturnsAsync(saveAndContinueCommandResponse);
 
             //Act
-            var result = await sut.SaveAndContinue(command);
+            var result = await sut.QuestionScreenSaveAndContinue(command);
 
             //Assert
             Assert.NotNull(result);
