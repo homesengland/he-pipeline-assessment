@@ -50,7 +50,7 @@ namespace Elsa.Server.Tests.Features.Workflow.StartWorkflow
                 .Setup(x => x.FindAsync(startWorkflowCommand.WorkflowDefinitionId, VersionOptions.Published, null, CancellationToken.None))
                 .ReturnsAsync(workflowBlueprint);
 
-            startsWorkflow.Setup(x => x.StartWorkflowAsync(workflowBlueprint, null, null, null, null, null, CancellationToken.None))
+            startsWorkflow.Setup(x => x.StartWorkflowAsync(workflowBlueprint, null, null, startWorkflowCommand.CorrelationId, null, null, CancellationToken.None))
                 .ReturnsAsync(runWorkflowResult);
 
             startWorkflowMapper.Setup(x => x.RunWorkflowResultToCustomNavigationActivity(runWorkflowResult, activityBlueprint.Type))
@@ -110,7 +110,7 @@ namespace Elsa.Server.Tests.Features.Workflow.StartWorkflow
                 .Setup(x => x.FindAsync(startWorkflowCommand.WorkflowDefinitionId, VersionOptions.Published, null, CancellationToken.None))
                 .ReturnsAsync(workflowBlueprint);
 
-            startsWorkflow.Setup(x => x.StartWorkflowAsync(workflowBlueprint, null, null, null, null, null, CancellationToken.None))
+            startsWorkflow.Setup(x => x.StartWorkflowAsync(workflowBlueprint, null, null, startWorkflowCommand.CorrelationId, null, null, CancellationToken.None))
                 .ReturnsAsync(runWorkflowResult);
 
             startWorkflowMapper.Setup(x => x.RunWorkflowResultToCustomNavigationActivity(runWorkflowResult, activityBlueprint.Type))
@@ -150,7 +150,7 @@ namespace Elsa.Server.Tests.Features.Workflow.StartWorkflow
                 .Setup(x => x.FindAsync(startWorkflowCommand.WorkflowDefinitionId, VersionOptions.Published, null, CancellationToken.None))
                 .ReturnsAsync(workflowBlueprint);
 
-            startsWorkflow.Setup(x => x.StartWorkflowAsync(workflowBlueprint, null, null, null, null, null, CancellationToken.None))
+            startsWorkflow.Setup(x => x.StartWorkflowAsync(workflowBlueprint, null, null, startWorkflowCommand.CorrelationId, null, null, CancellationToken.None))
                 .ReturnsAsync(emptyRunWorkflowResult);
 
             //Act
@@ -183,7 +183,7 @@ namespace Elsa.Server.Tests.Features.Workflow.StartWorkflow
                 .Setup(x => x.FindAsync(startWorkflowCommand.WorkflowDefinitionId, VersionOptions.Published, null, CancellationToken.None))
                 .ReturnsAsync(workflowBlueprint);
 
-            startsWorkflow.Setup(x => x.StartWorkflowAsync(workflowBlueprint, null, null, null, null, null, CancellationToken.None))
+            startsWorkflow.Setup(x => x.StartWorkflowAsync(workflowBlueprint, null, null, startWorkflowCommand.CorrelationId, null, null, CancellationToken.None))
                 .ReturnsAsync(runWorkflowResult);
 
             startWorkflowMapper.Setup(x => x.RunWorkflowResultToCustomNavigationActivity(runWorkflowResult, activityBlueprint.Type))
@@ -236,7 +236,7 @@ namespace Elsa.Server.Tests.Features.Workflow.StartWorkflow
                 .Setup(x => x.FindAsync(startWorkflowCommand.WorkflowDefinitionId, VersionOptions.Published, null, CancellationToken.None))
                 .ReturnsAsync(workflowBlueprint);
 
-            startsWorkflow.Setup(x => x.StartWorkflowAsync(workflowBlueprint, null, null, null, null, null, CancellationToken.None))
+            startsWorkflow.Setup(x => x.StartWorkflowAsync(workflowBlueprint, null, null, startWorkflowCommand.CorrelationId, null, null, CancellationToken.None))
                 .ReturnsAsync(runWorkflowResult);
 
             //Act

@@ -34,7 +34,7 @@ namespace Elsa.Server.Features.Workflow.StartWorkflow
                     await _workflowRegistry.FindAsync(request.WorkflowDefinitionId, VersionOptions.Published, cancellationToken: cancellationToken);
 
                 var workflowName = workflow!.Name != null ? workflow.Name : "undefined workflow";
-                var runWorkflowResult = await _startsWorkflow.StartWorkflowAsync(workflow!, cancellationToken: cancellationToken);
+                var runWorkflowResult = await _startsWorkflow.StartWorkflowAsync(workflow!, null, null, request.CorrelationId, cancellationToken: cancellationToken);
 
 
                 if (runWorkflowResult.WorkflowInstance != null)
