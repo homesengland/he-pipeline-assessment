@@ -37,6 +37,7 @@ namespace Elsa.Server.Features.Workflow.StartWorkflow
                 var runWorkflowResult = await _startsWorkflow.StartWorkflowAsync(workflow!, null, null, request.CorrelationId, cancellationToken: cancellationToken);
 
 
+
                 if (runWorkflowResult.WorkflowInstance != null)
                 {
                     var activity = workflow!.Activities.FirstOrDefault(x =>
