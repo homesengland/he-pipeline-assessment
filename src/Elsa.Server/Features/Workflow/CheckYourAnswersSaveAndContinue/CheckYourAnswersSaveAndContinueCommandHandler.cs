@@ -5,8 +5,6 @@ using Elsa.CustomModels;
 using Elsa.CustomWorkflow.Sdk;
 using Elsa.Models;
 using Elsa.Persistence;
-using Elsa.Persistence.Specifications.WorkflowInstances;
-using Elsa.Server.Features.Workflow.QuestionScreenSaveAndContinue;
 using Elsa.Server.Models;
 using Elsa.Server.Providers;
 using Elsa.Services;
@@ -31,7 +29,7 @@ namespace Elsa.Server.Features.Workflow.CheckYourAnswersSaveAndContinue
         public CheckYourAnswersSaveAndContinueCommandHandler(IQuestionInvoker invoker,
             IWorkflowInstanceStore workflowInstanceStore, IElsaCustomRepository elsaCustomRepository,
             IDateTimeProvider dateTimeProvider, IWorkflowRegistry workflowRegistry,
-            IQuestionScreenSaveAndContinueMapper saveAndContinueMapper,
+            ICheckYourAnswersSaveAndContinueMapper saveAndContinueMapper,
             IWorkflowNextActivityProvider workflowNextActivityProvider,
             IWorkflowInstanceProvider workflowInstanceProvider)
         {

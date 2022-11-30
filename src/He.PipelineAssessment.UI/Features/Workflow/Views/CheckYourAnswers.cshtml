@@ -1,6 +1,7 @@
-﻿@model QuestionScreenSaveAndContinueCommand
-@    using He.PipelineAssessment.UI
-@    using Elsa.CustomWorkflow.Sdk
+﻿@model QuestionScreenSaveAndContinueCommand;
+@using He.PipelineAssessment.UI
+@using Elsa.CustomWorkflow.Sdk
+@using He.PipelineAssessment.UI.Features.Workflow.QuestionScreenSaveAndContinue
 @{
     ViewData["Title"] = "Pipeline Assessment";
     Layout = "_Layout";
@@ -51,7 +52,7 @@
             //}
             //else
             //{
-            <input id="Next" type="submit" value="Submit" name="Continue" class="govuk-button"/> 
+                <input id="Next" type="submit" value="Submit" name="Continue" class="govuk-button"/> 
             //}
         }
     </div>

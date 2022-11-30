@@ -17,11 +17,7 @@ namespace He.PipelineAssessment.UI.Features.Workflow.LoadCheckYourAnswersScreen
 
         public async Task<QuestionScreenSaveAndContinueCommand?> Handle(LoadCheckYourAnswersScreenRequest request, CancellationToken cancellationToken)
         {
-<<<<<<< HEAD
             var response = await _elsaServerHttpClient.LoadCheckYourAnswersScreen(new LoadWorkflowActivityDto
-=======
-            var response = await _elsaServerHttpClient.LoadQuestionScreen(new LoadWorkflowActivityDto
->>>>>>> origin/feature/start-oppourtunity-assessment-prototype
             {
                 WorkflowInstanceId = request.WorkflowInstanceId,
                 ActivityId = request.ActivityId,

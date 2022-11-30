@@ -47,7 +47,7 @@ builder.Services.AddDbContext<PipelineAssessmentContext>(config =>
         x => x.MigrationsAssembly("He.PipelineAssessment.Infrastructure")));
 
 builder.Services.AddScoped<DbContext>(provider => provider.GetRequiredService<PipelineAssessmentContext>());
-builder.Services.AddScoped<IValidator<QuestionScreenSaveAndContinueCommand>, QuestionScreenSaveAndContinueCommandValidator>();
+builder.Services.AddScoped<IValidator<QuestionScreenSaveAndContinueCommand>, SaveAndContinueCommandValidator>();
 builder.Services.AddDataProtection().PersistKeysToDbContext<PipelineAssessmentContext>();
 builder.Services.AddScoped<IAssessmentRepository, AssessmentRepository>();
 builder.Services.AddScoped<IEsriSinglePipelineClient, EsriSinglePipelineClient>();

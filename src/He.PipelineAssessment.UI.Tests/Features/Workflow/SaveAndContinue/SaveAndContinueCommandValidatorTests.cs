@@ -9,11 +9,11 @@ namespace He.PipelineAssessment.UI.Tests.Features.Workflow.SaveAndContinue
 {
     public class SaveAndContinueCommandValidatorTests
     {
-        private readonly QuestionScreenSaveAndContinueCommandValidator _validator;
+        private readonly SaveAndContinueCommandValidator _validator;
 
         public SaveAndContinueCommandValidatorTests()
         {
-            this._validator = new QuestionScreenSaveAndContinueCommandValidator();
+            this._validator = new SaveAndContinueCommandValidator();
         }
 
         [Theory]
