@@ -131,5 +131,47 @@ namespace Elsa.Server.Tests.Features.Workflow.Helpers
             Assert.Equal(question.QuestionText, result.Question);
             Assert.Null(result.Choices);
         }
+
+        [Theory]
+        [AutoMoqData]
+        public void CreateQuestionScreenAnswers_ShouldReturnEmptyList(
+            string activityId,
+            WorkflowInstance workflowInstance,
+            SaveAndContinueHelper sut
+        )
+        {
+            //Arrange
+
+            //Act
+            var result = sut.CreateQuestionScreenAnswers(activityId, workflowInstance);
+
+            //Assert
+            Assert.IsType<List<QuestionScreenAnswer>>(result);
+            Assert.Empty(result);
+        }
+
+        [Theory]
+        [AutoMoqData]
+        public void CreateQuestionScreenAnswers_ShouldReturnList(
+            string activityId,
+            WorkflowInstance workflowInstance,
+            AssessmentQuestions elsaAssessmentQuestions,
+            SaveAndContinueHelper sut
+        )
+        {
+            //Arrange
+            var assessmentQuestionsDictionary = new Dictionary<string, object?>();
+            //AssessmentQuestions? elsaAssessmentQuestions = null;
+            assessmentQuestionsDictionary.Add("Questions", elsaAssessmentQuestions);
+
+            workflowInstance.ActivityData.Add(activityId, assessmentQuestionsDictionary);
+
+            //Act
+            var result = sut.CreateQuestionScreenAnswers(activityId, workflowInstance);
+
+            //Assert
+            Assert.IsType<List<QuestionScreenAnswer>>(result);
+            Assert.NotEmpty(result);
+        }
     }
 }
