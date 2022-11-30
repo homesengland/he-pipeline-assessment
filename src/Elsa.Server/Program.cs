@@ -8,7 +8,7 @@ using Elsa.Persistence.EntityFramework.Core.Extensions;
 using Elsa.Persistence.EntityFramework.SqlServer;
 using Elsa.Runtime;
 using Elsa.Server.Extensions;
-using Elsa.Server.Features.Workflow.CheckYourAnswersSaveAndContinue;
+using Elsa.Server.Features.Workflow.Helpers;
 using Elsa.Server.Features.Workflow.QuestionScreenSaveAndContinue;
 using Elsa.Server.Features.Workflow.StartWorkflow;
 using Elsa.Server.Providers;
@@ -64,7 +64,7 @@ builder.Services.AddScoped<IWorkflowInstanceProvider, WorkflowInstanceProvider>(
 
 builder.Services.AddScoped<IStartWorkflowMapper, StartWorkflowMapper>();
 builder.Services.AddScoped<IQuestionScreenSaveAndContinueMapper, QuestionScreenSaveAndContinueMapper>();
-builder.Services.AddScoped<ICheckYourAnswersSaveAndContinueMapper, CheckYourAnswersSaveAndContinueMapper>();
+builder.Services.AddScoped<ISaveAndContinueHelper, SaveAndContinueHelper>();
 
 builder.Services.AddScoped<IEsriSinglePipelineClient, EsriSinglePipelineClient>();
 builder.Services.AddScoped<IEsriSinglePipelineDataJsonHelper, EsriSinglePipelineDataJsonHelper>();

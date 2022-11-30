@@ -1,14 +1,10 @@
 ﻿using Elsa.CustomInfrastructure.Data.Repository;
 using Elsa.CustomWorkflow.Sdk;
-using Elsa.Models;
 using Elsa.Persistence;
-using Elsa.Persistence.Specifications.WorkflowInstances;
 using Elsa.Server.Extensions;
 using Elsa.Server.Models;
 using Elsa.Server.Providers;
-using Elsa.Services.Models;
 using MediatR;
-using System.Threading;
 
 namespace Elsa.Server.Features.Workflow.LoadCheckYourAnswersScreen
 {
@@ -50,13 +46,14 @@ namespace Elsa.Server.Features.Workflow.LoadCheckYourAnswersScreen
                         .GetQuestionScreenAnswers(result.Data.WorkflowInstanceId, cancellationToken);
 
                     result.Data.QuestionScreenAnswers = questionScreenAnswers;
-                    
+
                     var activityDataDictionary = await _activityDataProvider.GetActivityData(activityScreenRequest.WorkflowInstanceId, activityScreenRequest.ActivityId, cancellationToken);
-                    if(activityDataDictionary != null)
+                    if (activityDataDictionary != null)
                     {
+                        result.Data.PageTitle = (string?)activityDataDictionary.GetData("Title");
                         result.Data.FooterTitle = (string?)activityDataDictionary.GetData("FooterTitle");
                         result.Data.FooterText = (string?)activityDataDictionary.GetData("FooterText");
-                    }                 
+                    }
                 }
                 else
                 {

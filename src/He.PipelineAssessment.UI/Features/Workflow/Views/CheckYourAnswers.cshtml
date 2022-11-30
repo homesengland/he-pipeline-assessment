@@ -17,10 +17,11 @@
         </h1>
 
         <div class="govuk-grid-row">
+            <div class="govuk-grid-column-two-thirds-from-desktop">
+                <dl class="govuk-summary-list govuk-!-margin-bottom-9">
             @foreach (var question in Model.Data.QuestionScreenAnswers!)
             {
-                <div class="govuk-grid-column-two-thirds-from-desktop">
-                    <dl class="govuk-summary-list govuk-!-margin-bottom-9">
+           
                         <div class="govuk-summary-list__row">
                             <dt class="govuk-summary-list__key">
                                 @question.Question
@@ -35,9 +36,10 @@
                             </dd>
 @*                            }*@
                         </div>
-                    </dl>
-                </div>
+          
             }
+                </dl>
+            </div>
         </div>
 
         <br/>

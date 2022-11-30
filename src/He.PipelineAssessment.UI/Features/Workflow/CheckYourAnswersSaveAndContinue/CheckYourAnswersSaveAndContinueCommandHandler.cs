@@ -23,7 +23,6 @@ namespace He.PipelineAssessment.UI.Features.Workflow.CheckYourAnswersSaveAndCont
                 WorkflowInstanceId = request.Data.WorkflowInstanceId
             };
             var response = await _elsaServerHttpClient.CheckYourAnswersSaveAndContinue(checkYourAnswersSaveAndContinueCommandDto);
-
             if (response != null)
             {
                 CheckYourAnswersSaveAndContinueCommandResponse result = new CheckYourAnswersSaveAndContinueCommandResponse()
@@ -35,6 +34,7 @@ namespace He.PipelineAssessment.UI.Features.Workflow.CheckYourAnswersSaveAndCont
                 var currentAssessmentStage = await _assessmentRepository.GetAssessmentStage(response.Data.WorkflowInstanceId);
                 if (currentAssessmentStage != null)
                 {
+                    currentAssessmentStage.Status = AssessmentStageConstants.Submitted;
                     currentAssessmentStage.CurrentActivityId = response.Data.NextActivityId;
                     currentAssessmentStage.CurrentActivityType = response.Data.ActivityType;
                     currentAssessmentStage.LastModifiedDateTime = DateTime.UtcNow;
