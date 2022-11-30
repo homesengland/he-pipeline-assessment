@@ -5,7 +5,7 @@ using Xunit;
 
 namespace He.PipelineAssessment.UI.Tests.Features.Workflow.SaveAndContinue
 {
-    public class SaveAndContinueMapperTests
+    public class QuestionScreenSaveAndContinueMapperTests
     {
 
         [Theory]

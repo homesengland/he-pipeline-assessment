@@ -7,11 +7,11 @@ using Xunit;
 
 namespace He.PipelineAssessment.UI.Tests.Features.Workflow.SaveAndContinue
 {
-    public class SaveAndContinueCommandValidatorTests
+    public class QuestionScreenSaveAndContinueCommandValidatorTests
     {
         private readonly SaveAndContinueCommandValidator _validator;
 
-        public SaveAndContinueCommandValidatorTests()
+        public QuestionScreenSaveAndContinueCommandValidatorTests()
         {
             this._validator = new SaveAndContinueCommandValidator();
         }

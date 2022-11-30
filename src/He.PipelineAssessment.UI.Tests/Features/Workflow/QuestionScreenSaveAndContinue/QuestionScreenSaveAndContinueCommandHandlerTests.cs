@@ -11,7 +11,7 @@ using Xunit;
 
 namespace He.PipelineAssessment.UI.Tests.Features.Workflow.SaveAndContinue
 {
-    public class SaveAndContinueCommandHandlerTests
+    public class QuestionScreenSaveAndContinueCommandHandlerTests
     {
 
         [Theory]
