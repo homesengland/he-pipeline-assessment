@@ -39,7 +39,7 @@ namespace Elsa.CustomInfrastructure.Data.Repository
         public async Task<List<QuestionScreenAnswer>> GetQuestionScreenAnswers(string activityId, string workflowInstanceId,
             CancellationToken cancellationToken)
         {
-            var list = await _dbContext.Set<QuestionScreenAnswer>().Where(x => x.ActivityId == activityId && x.WorkflowInstanceId == workflowInstanceId && x.QuestionId != null).ToListAsync();
+            var list = await _dbContext.Set<QuestionScreenAnswer>().Where(x => x.ActivityId == activityId && x.WorkflowInstanceId == workflowInstanceId && x.QuestionId != null).ToListAsync(cancellationToken);
             return list;
         }
 
