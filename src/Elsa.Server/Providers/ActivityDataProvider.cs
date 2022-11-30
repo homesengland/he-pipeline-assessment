@@ -25,10 +25,6 @@ namespace Elsa.Server.Providers
             var activityDataDictionary =
                 workflowInstance.ActivityData
                     .FirstOrDefault(a => a.Key == activityId).Value;
-            if(activityDataDictionary == null)
-            {
-                throw new Exception($"Cannot find activity data with id {activityId}.");
-            }
             return activityDataDictionary;
         }
 
