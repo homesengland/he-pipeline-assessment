@@ -47,7 +47,10 @@
             List<string> selectedChoices = Model.Checkbox.SelectedChoices;
             bool isSelected = selectedChoices != null ? selectedChoices.Contains(answerText) : false;
 
-            <div class="govuk-checkboxes__divider">or</div>
+            @if (nonExclusiveChoices.Any() || i > 0)
+            {
+                <div class="govuk-checkboxes__divider">or</div>
+            }
             <div class="govuk-checkboxes__item">
                 @*Must use the input tag helper as opposed to htmlcheckbox, as all checkboxes need the same name property, which cannot be overridden easily in HtmlCheckboxFor*@
                 <input asp-for="@isSelected"
