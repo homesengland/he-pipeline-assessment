@@ -4,7 +4,6 @@ using He.PipelineAssessment.Data.SinglePipeline;
 using He.PipelineAssessment.Infrastructure.Data;
 using He.PipelineAssessment.Infrastructure.Repository;
 using He.PipelineAssessment.UI;
-using He.PipelineAssessment.UI.Features.Assessments;
 using He.PipelineAssessment.UI.Features.Workflow.SaveAndContinue;
 using MediatR;
 using Microsoft.AspNetCore.DataProtection;
@@ -94,6 +93,6 @@ app.UseAuthorization();
 
 app.MapControllerRoute(
     name: "default",
-    pattern: "{controller=Workflow}/{action=Index}/{id?}");
+    pattern: "{controller=Assessment}/{action=Index}/{id?}");
 
 app.Run();

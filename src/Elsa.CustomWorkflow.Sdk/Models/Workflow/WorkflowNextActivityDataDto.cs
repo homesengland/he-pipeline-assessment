@@ -9,6 +9,7 @@
 
     public class WorkflowNextActivityData
     {
+        public string WorkflowName { get; set; } = null!;
         public string WorkflowInstanceId { get; set; } = null!;
         public string NextActivityId { get; set; } = null!;
         public string ActivityType { get; set; } = null!;

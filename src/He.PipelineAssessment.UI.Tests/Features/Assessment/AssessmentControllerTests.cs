@@ -66,14 +66,14 @@ namespace He.PipelineAssessment.UI.Tests.Features.SinglePipeline
            int assessmentId)
         {
             //Arrange
-            mediator.Setup(x => x.Send(It.IsAny<AssessmentSummaryCommand>(), CancellationToken.None)).Throws(exception);
+            mediator.Setup(x => x.Send(It.IsAny<AssessmentSummaryRequest>(), CancellationToken.None)).Throws(exception);
 
             //Act
             var result = await sut.Summary(assessmentId, correlationId);
 
             //Assert
-            mediator.Verify(x => x.Send(It.IsAny<AssessmentSummaryCommand>(), CancellationToken.None), Times.Once);
-            await Assert.ThrowsAsync<Exception>(() => mediator.Object.Send(It.IsAny<AssessmentSummaryCommand>()));
+            mediator.Verify(x => x.Send(It.IsAny<AssessmentSummaryRequest>(), CancellationToken.None), Times.Once);
+            await Assert.ThrowsAsync<Exception>(() => mediator.Object.Send(It.IsAny<AssessmentSummaryRequest>()));
 
             Assert.IsType<RedirectToActionResult>(result);
             var redirectToActionResult = (RedirectToActionResult)result;

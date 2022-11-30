@@ -148,7 +148,7 @@ namespace Elsa.Server.Tests.Features.Workflow.StartWorkflow
 
 
             //Act
-            var result = sut.RunWorkflowResultToStartWorkflowResponse(runWorkflowResult, "");
+            var result = sut.RunWorkflowResultToStartWorkflowResponse(runWorkflowResult, "", "");
 
             //Assert
             Assert.IsType<StartWorkflowResponse>(result);
@@ -167,7 +167,7 @@ namespace Elsa.Server.Tests.Features.Workflow.StartWorkflow
             var runWorkflowResult = new RunWorkflowResult(null, null, null, false);
 
             //Act
-            var result = sut.RunWorkflowResultToStartWorkflowResponse(runWorkflowResult, "");
+            var result = sut.RunWorkflowResultToStartWorkflowResponse(runWorkflowResult, "", "");
 
             //Assert
             Assert.Null(result);
@@ -185,7 +185,7 @@ namespace Elsa.Server.Tests.Features.Workflow.StartWorkflow
             var runWorkflowResult = new RunWorkflowResult(workflowInstance, null, null, false);
 
             //Act
-            var result = sut.RunWorkflowResultToStartWorkflowResponse(runWorkflowResult, "");
+            var result = sut.RunWorkflowResultToStartWorkflowResponse(runWorkflowResult, "", "");
 
             //Assert
             Assert.Null(result);
