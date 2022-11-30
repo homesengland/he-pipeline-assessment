@@ -37,7 +37,7 @@ namespace Elsa.Server.Features.Workflow.Helpers
             };
         }
 
-        private QuestionScreenAnswer CreateQuestionScreenAnswer(string nextActivityId, string nextActivityType, Question question, WorkflowInstance workflowInstance)
+        public QuestionScreenAnswer CreateQuestionScreenAnswer(string nextActivityId, string nextActivityType, Question question, WorkflowInstance workflowInstance)
         {
             return new QuestionScreenAnswer
             {
