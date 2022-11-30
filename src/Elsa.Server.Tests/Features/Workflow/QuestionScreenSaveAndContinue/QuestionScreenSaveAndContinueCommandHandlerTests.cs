@@ -301,9 +301,5 @@ namespace Elsa.Server.Tests.Features.Workflow.QuestionScreenSaveAndContinue
             Assert.Equal(exception.Message, result.ErrorMessages.Single());
         }
 
-
-
-
-
     }
 }
