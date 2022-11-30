@@ -10,7 +10,6 @@ namespace Elsa.Server.Features.Workflow.Helpers
     public interface ISaveAndContinueHelper
     {
         CustomActivityNavigation CreateNextCustomActivityNavigation(string previousActivityId, string previousActivityType, string nextActivityId, string nextActivityType, WorkflowInstance workflowInstance);
-        QuestionScreenAnswer CreateQuestionScreenAnswer(string nextActivityId, string type, Question item, WorkflowInstance workflowInstance);
 
         List<QuestionScreenAnswer> CreateQuestionScreenAnswers(string activityId, WorkflowInstance workflowInstance);
     }
@@ -38,7 +37,7 @@ namespace Elsa.Server.Features.Workflow.Helpers
             };
         }
 
-        public QuestionScreenAnswer CreateQuestionScreenAnswer(string nextActivityId, string nextActivityType, Question question, WorkflowInstance workflowInstance)
+        private QuestionScreenAnswer CreateQuestionScreenAnswer(string nextActivityId, string nextActivityType, Question question, WorkflowInstance workflowInstance)
         {
             return new QuestionScreenAnswer
             {

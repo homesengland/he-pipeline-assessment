@@ -23,7 +23,6 @@ namespace Elsa.Server.Features.Workflow.QuestionScreenSaveAndContinue
 
         public QuestionScreenSaveAndContinueCommandHandler(IQuestionInvoker invoker,
             IElsaCustomRepository elsaCustomRepository,
-            IQuestionScreenSaveAndContinueMapper saveAndContinueMapper,
             ISaveAndContinueHelper saveAndContinueHelper,
             IWorkflowNextActivityProvider workflowNextActivityProvider,
             IWorkflowInstanceProvider workflowInstanceProvider,
