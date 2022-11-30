@@ -43,7 +43,7 @@ export class ElsaQuestionComponent {
     this.handler = new QuestionEventHandler(this.question, this.updateQuestion);
   }
 
-  renderQuestionField(fieldId, fieldName, fieldValue, onChangedFunction) {
+  renderQuestionField(fieldId, fieldName, fieldValue, onChangedFunction, isDisabled = false) {
     return <div>
       <div class="elsa-mb-1">
         <div class="elsa-flex">
@@ -54,7 +54,7 @@ export class ElsaQuestionComponent {
           </div>
         </div>
       </div>
-      <input type="text" id={fieldId} name={fieldId} value={fieldValue} onChange={e => {
+      <input type="text" id={fieldId} name={fieldId} disabled={isDisabled} value={fieldValue} onChange={e => {
         onChangedFunction.bind(this)(e);
       }
       }
@@ -86,8 +86,8 @@ export class ElsaQuestionComponent {
     return (
           <div>
 
-        {this.renderQuestionField(`${field}-questionid`, `Identifier`, this.question.id, this.handler.onIdentifierChanged)}
-        {this.renderQuestionField(`${field}-title`, `Question Name`, this.question.title, this.handler.onTitleChanged)}
+        {this.renderQuestionField(`${field}-questionid`, `Identifier`, this.question.id, this.handler.onIdentifierChanged, true)}
+        {this.renderQuestionField(`${field}-title`, `Title`, this.question.title, this.handler.onTitleChanged)}
         {this.renderQuestionField(`${field}-questionText`, `Question`, this.question.questionText, this.handler.onQuestionChanged)}
         {this.renderQuestionField(`${field}-questionHint`, `Hint`, this.question.questionHint, this.handler.onHintChanged)}
         {this.renderQuestionField(`${field}-questionGuidance`, `Guidance`, this.question.questionGuidance, this.handler.onGuidanceChanged)}

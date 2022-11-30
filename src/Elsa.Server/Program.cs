@@ -1,3 +1,4 @@
+using Elsa.CustomActivities.Activities.CheckYourAnswers;
 using Elsa.CustomActivities.Activities.QuestionScreen;
 using Elsa.CustomActivities.Activities.Shared;
 using Elsa.CustomActivities.Activities.SinglePipelineDataSource;
@@ -7,7 +8,6 @@ using Elsa.Persistence.EntityFramework.Core.Extensions;
 using Elsa.Persistence.EntityFramework.SqlServer;
 using Elsa.Runtime;
 using Elsa.Server.Extensions;
-using Elsa.Server.Features.Workflow.LoadWorkflowActivity;
 using Elsa.Server.Features.Workflow.QuestionScreenSaveAndContinue;
 using Elsa.Server.Features.Workflow.StartWorkflow;
 using Elsa.Server.Providers;
@@ -30,6 +30,7 @@ builder.Services
         .UseEntityFrameworkPersistence(ef => ef.UseSqlServer(elsaConnectionString, typeof(Elsa.Persistence.EntityFramework.SqlServer.Migrations.Initial)))
         .AddActivity<SinglePipelineDataSource>()
         .AddActivity<QuestionScreen>()
+        .AddActivity<CheckYourAnswersScreen>()
         .AddConsoleActivities()
     );
 
@@ -59,9 +60,6 @@ builder.Services.AddScoped<IDateTimeProvider, DateTimeProvider>();
 
 builder.Services.AddScoped<IStartWorkflowMapper, StartWorkflowMapper>();
 builder.Services.AddScoped<IQuestionScreenSaveAndContinueMapper, QuestionScreenSaveAndContinueMapper>();
-
-
-builder.Services.AddScoped<ILoadWorkflowActivityJsonHelper, LoadWorkflowActivityJsonHelper>();
 
 builder.Services.AddScoped<IEsriSinglePipelineClient, EsriSinglePipelineClient>();
 builder.Services.AddScoped<IEsriSinglePipelineDataJsonHelper, EsriSinglePipelineDataJsonHelper>();

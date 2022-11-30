@@ -8,6 +8,12 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="Activities\Helpers\**" />
+    <EmbeddedResource Remove="Activities\Helpers\**" />
+    <None Remove="Activities\Helpers\**" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="Elsa" Version="2.8.2" />
     <PackageReference Include="Elsa.Client" Version="2.8.2" />
     <PackageReference Include="Elsa.Core" Version="2.8.2" />
@@ -15,6 +21,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\Elsa.CustomInfrastructure\Elsa.CustomInfrastructure.csproj" />
     <ProjectReference Include="..\Elsa.CustomWorkflow.Sdk\Elsa.CustomWorkflow.Sdk.csproj" />
     <ProjectReference Include="..\Elsa.Models\Elsa.CustomModels.csproj" />
     <ProjectReference Include="..\He.PipelineAssessment.Data\He.PipelineAssessment.Data.csproj" />

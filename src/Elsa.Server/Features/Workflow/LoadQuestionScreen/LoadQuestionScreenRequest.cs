@@ -1,9 +1,9 @@
 ﻿using Elsa.Server.Models;
 using MediatR;
 
-namespace Elsa.Server.Features.Workflow.LoadWorkflowActivity
+namespace Elsa.Server.Features.Workflow.LoadQuestionScreen
 {
-    public class LoadWorkflowActivityRequest : IRequest<OperationResult<LoadWorkflowActivityResponse>>
+    public class LoadQuestionScreenRequest : IRequest<OperationResult<LoadQuestionScreenResponse>>
     {
         public string WorkflowInstanceId { get; set; } = null!;
         public string ActivityId { get; set; } = null!;

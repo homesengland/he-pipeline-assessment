@@ -41,6 +41,10 @@ namespace Elsa.CustomInfrastructure.Migrations
                         .HasMaxLength(450)
                         .HasColumnType("nvarchar(450)");
 
+                    b.Property<string>("CorrelationId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<DateTime>("CreatedDateTime")
                         .HasColumnType("datetime2");
 
@@ -52,6 +56,11 @@ namespace Elsa.CustomInfrastructure.Migrations
                         .HasMaxLength(450)
                         .HasColumnType("nvarchar(450)");
 
+                    b.Property<string>("PreviousActivityType")
+                        .IsRequired()
+                        .HasMaxLength(450)
+                        .HasColumnType("nvarchar(450)");
+
                     b.Property<string>("WorkflowInstanceId")
                         .IsRequired()
                         .HasMaxLength(450)
@@ -59,7 +68,7 @@ namespace Elsa.CustomInfrastructure.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("CustomActivityNavigation");
+                    b.ToTable("CustomActivityNavigation", (string)null);
                 });
 
             modelBuilder.Entity("Elsa.CustomModels.QuestionScreenAnswer", b =>
@@ -79,7 +88,14 @@ namespace Elsa.CustomInfrastructure.Migrations
                     b.Property<string>("Answer")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<string>("Choices")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<string>("Comments")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("CorrelationId")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<DateTime>("CreatedDateTime")
@@ -87,6 +103,9 @@ namespace Elsa.CustomInfrastructure.Migrations
 
                     b.Property<DateTime?>("LastModifiedDateTime")
                         .HasColumnType("datetime2");
+
+                    b.Property<string>("Question")
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("QuestionId")
                         .HasMaxLength(450)
@@ -103,7 +122,7 @@ namespace Elsa.CustomInfrastructure.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("QuestionScreenAnswer");
+                    b.ToTable("QuestionScreenAnswer", (string)null);
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.DataProtection.EntityFrameworkCore.DataProtectionKey", b =>
@@ -122,7 +141,7 @@ namespace Elsa.CustomInfrastructure.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("DataProtectionKeys");
+                    b.ToTable("DataProtectionKeys", (string)null);
                 });
 #pragma warning restore 612, 618
         }

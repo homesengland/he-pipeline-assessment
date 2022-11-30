@@ -13,7 +13,7 @@ namespace Elsa.CustomActivities.Activities.QuestionScreen
     Description = "Set up a question screen",
     Outcomes = new[] { OutcomeNames.Done },
     DisplayName = "Question Screen"
-)]
+    )]
     public class QuestionScreen : Activity
     {
         [ActivityInput]

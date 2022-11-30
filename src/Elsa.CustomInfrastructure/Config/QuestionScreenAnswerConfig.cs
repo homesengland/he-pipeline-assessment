@@ -1,4 +1,5 @@
-﻿using Elsa.CustomModels;
+﻿using Elsa.CustomInfrastructure.Extensions;
+using Elsa.CustomModels;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
@@ -14,6 +15,7 @@ namespace Elsa.CustomInfrastructure.Config
             builder.Property(x => x.WorkflowInstanceId).HasMaxLength(EntityConfigurationConstants.MaxLength);
             builder.Property(x => x.QuestionId).HasMaxLength(EntityConfigurationConstants.MaxLength);
             builder.Property(x => x.QuestionType).HasMaxLength(EntityConfigurationConstants.QuestionTypeMaxLength);
+            builder.Property(e => e.Choices).HasJsonConversion();
         }
     }
 }
