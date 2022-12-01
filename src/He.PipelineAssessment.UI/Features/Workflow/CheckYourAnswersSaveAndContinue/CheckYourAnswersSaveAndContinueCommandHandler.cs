@@ -1,4 +1,5 @@
-﻿using Elsa.CustomWorkflow.Sdk.HttpClients;
+﻿using Elsa.CustomWorkflow.Sdk;
+using Elsa.CustomWorkflow.Sdk.HttpClients;
 using Elsa.CustomWorkflow.Sdk.Models.Workflow;
 using He.PipelineAssessment.Infrastructure.Repository;
 using MediatR;
@@ -25,32 +26,27 @@ namespace He.PipelineAssessment.UI.Features.Workflow.CheckYourAnswersSaveAndCont
             var response = await _elsaServerHttpClient.CheckYourAnswersSaveAndContinue(checkYourAnswersSaveAndContinueCommandDto);
             if (response != null)
             {
-                CheckYourAnswersSaveAndContinueCommandResponse result = new CheckYourAnswersSaveAndContinueCommandResponse()
-                {
-                    ActivityId = response.Data.NextActivityId,
-                    WorkflowInstanceId = response.Data.WorkflowInstanceId,
-                    ActivityType = response.Data.ActivityType
-                };
                 var currentAssessmentStage = await _assessmentRepository.GetAssessmentStage(response.Data.WorkflowInstanceId);
                 if (currentAssessmentStage != null && currentAssessmentStage.Status != AssessmentStageConstants.Submitted)
                 {
                     var submittedTime = DateTime.UtcNow;
                     currentAssessmentStage.Status = AssessmentStageConstants.Submitted;
                     currentAssessmentStage.SubmittedDateTime = submittedTime;
-                    currentAssessmentStage.CurrentActivityId = response.Data.NextActivityId;
-                    currentAssessmentStage.CurrentActivityType = response.Data.ActivityType;
+                    currentAssessmentStage.CurrentActivityId = request.Data.ActivityId;
+                    currentAssessmentStage.CurrentActivityType = ActivityTypeConstants.CheckYourAnswersScreen;
                     currentAssessmentStage.LastModifiedDateTime = submittedTime;
                     await _assessmentRepository.SaveChanges();
+
+                    CheckYourAnswersSaveAndContinueCommandResponse result = new CheckYourAnswersSaveAndContinueCommandResponse()
+                    {
+                        AssessmentId = currentAssessmentStage.AssessmentId,
+                        CorrelationId = currentAssessmentStage.Assessment.SpId.ToString(),
+                    };
+                    return await Task.FromResult(result);
                 }
-
-                return await Task.FromResult(result);
-
-            }
-            else
-            {
-                return null;
             }
 
+            return null;
         }
     }
 }

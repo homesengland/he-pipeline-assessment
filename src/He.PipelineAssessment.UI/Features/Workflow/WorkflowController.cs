@@ -1,5 +1,4 @@
-﻿using Azure.Core;
-using Elsa.CustomWorkflow.Sdk;
+﻿using Elsa.CustomWorkflow.Sdk;
 using FluentValidation;
 using He.PipelineAssessment.UI.Features.Workflow.CheckYourAnswersSaveAndContinue;
 using He.PipelineAssessment.UI.Features.Workflow.LoadCheckYourAnswersScreen;
@@ -138,12 +137,11 @@ namespace He.PipelineAssessment.UI.Features.Workflow
             {
                 var result = await this._mediator.Send(command);
 
-                return RedirectToAction("LoadWorkflowActivity",
+                return RedirectToAction("Summary", "Assessment",
                 new
                 {
-                    WorkflowInstanceId = result?.WorkflowInstanceId,
-                    ActivityId = result?.ActivityId,
-                    ActivityType = result?.ActivityType
+                    AssessmentId = result!.AssessmentId,
+                    CorrelationId = result!.CorrelationId
                 });
             }
             catch (Exception e)

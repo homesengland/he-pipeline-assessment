@@ -338,16 +338,15 @@ namespace He.PipelineAssessment.UI.Tests.Features.Workflow
             Assert.IsType<RedirectToActionResult>(result);
 
             var redirectToActionResult = (RedirectToActionResult)result;
-            Assert.Equal("LoadWorkflowActivity", redirectToActionResult.ActionName);
+            Assert.Equal("Assessment", redirectToActionResult.ControllerName);
+            Assert.Equal("Summary", redirectToActionResult.ActionName);
 
 
-            var activityIdRouteValue = new KeyValuePair<string, object?>("ActivityId", response.ActivityId);
-            var workflowInstanceIdRouteValue = new KeyValuePair<string, object?>("WorkflowInstanceId", response.WorkflowInstanceId);
-            var activityTypeRouteValue = new KeyValuePair<string, object?>("ActivityType", response.ActivityType);
+            var activityIdRouteValue = new KeyValuePair<string, object?>("CorrelationId", response.CorrelationId);
+            var workflowInstanceIdRouteValue = new KeyValuePair<string, object?>("AssessmentId", response.AssessmentId);
 
             Assert.Contains(activityIdRouteValue, redirectToActionResult.RouteValues!);
             Assert.Contains(workflowInstanceIdRouteValue, redirectToActionResult.RouteValues!);
-            Assert.Contains(activityTypeRouteValue, redirectToActionResult.RouteValues!);
         }
     }
 }

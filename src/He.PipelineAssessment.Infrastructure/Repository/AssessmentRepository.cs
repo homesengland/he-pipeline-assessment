@@ -54,7 +54,7 @@ namespace He.PipelineAssessment.Infrastructure.Repository
 
         public async Task<AssessmentStage?> GetAssessmentStage(string workflowInstance)
         {
-            return await context.Set<AssessmentStage>().FirstOrDefaultAsync(x => x.WorkflowInstanceId == workflowInstance);
+            return await context.Set<AssessmentStage>().Include(x => x.Assessment).FirstOrDefaultAsync(x => x.WorkflowInstanceId == workflowInstance);
         }
 
         public async Task<int> SaveChanges()
