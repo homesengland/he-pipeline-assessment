@@ -1,6 +1,5 @@
 ﻿using AutoFixture.Xunit2;
 using Elsa.CustomActivities.Activities.QuestionScreen;
-using Elsa.CustomActivities.Activities.Shared;
 using Elsa.CustomInfrastructure.Data.Repository;
 using Elsa.CustomModels;
 using Elsa.CustomWorkflow.Sdk;
@@ -8,7 +7,6 @@ using Elsa.Models;
 using Elsa.Persistence;
 using Elsa.Persistence.Specifications.WorkflowInstances;
 using Elsa.Server.Features.Workflow.LoadQuestionScreen;
-using Elsa.Services.Models;
 using He.PipelineAssessment.Common.Tests;
 using Moq;
 using Xunit;
@@ -20,11 +18,9 @@ public class LoadQuestionScreenRequestHandlerTests
     [Theory]
     [AutoMoqData]
     public async Task Handle_ReturnsOperationResultWithErrors_GivenActivityIdCannotBeFoundInActivityDictionary(
-        [Frozen] Mock<IQuestionInvoker> questionInvoker,
         [Frozen] Mock<IWorkflowInstanceStore> workflowInstanceStore,
         [Frozen] Mock<IElsaCustomRepository> elsaCustomRepository,
         LoadQuestionScreenRequest loadQuestionScreenRequest,
-        List<CollectedWorkflow> collectedWorkflows,
         WorkflowInstance workflowInstance,
         CustomActivityNavigation customActivityNavigation,
         LoadQuestionScreenRequestHandler sut)
@@ -32,11 +28,7 @@ public class LoadQuestionScreenRequestHandlerTests
         //Arrange
         customActivityNavigation.ActivityType = ActivityTypeConstants.QuestionScreen;
 
-        questionInvoker
-            .Setup(x => x.FindWorkflowsAsync(loadQuestionScreenRequest.ActivityId,
-                customActivityNavigation.ActivityType, loadQuestionScreenRequest.WorkflowInstanceId,
-                CancellationToken.None))
-            .ReturnsAsync(collectedWorkflows);
+
 
         workflowInstanceStore.Setup(x =>
                 x.FindAsync(It.IsAny<WorkflowInstanceIdSpecification>(), CancellationToken.None))
@@ -64,19 +56,14 @@ public class LoadQuestionScreenRequestHandlerTests
     [Theory]
     [AutoMoqData]
     public async Task Handle_ReturnsOperationResultWithErrors_GivenCustomActivityNavigationDoesNotExist(
-        [Frozen] Mock<IQuestionInvoker> questionInvoker,
         [Frozen] Mock<IWorkflowInstanceStore> workflowInstanceStore,
         [Frozen] Mock<IElsaCustomRepository> elsaCustomRepository,
         LoadQuestionScreenRequest loadWorkflowActivityRequest,
-        List<CollectedWorkflow> collectedWorkflows,
         WorkflowInstance workflowInstance,
         LoadQuestionScreenRequestHandler sut)
     {
         //Arrange
-        questionInvoker
-            .Setup(x => x.FindWorkflowsAsync(loadWorkflowActivityRequest.ActivityId,
-                It.IsAny<string>(), loadWorkflowActivityRequest.WorkflowInstanceId, CancellationToken.None))
-            .ReturnsAsync(collectedWorkflows);
+
 
         workflowInstanceStore.Setup(x =>
                 x.FindAsync(It.IsAny<WorkflowInstanceIdSpecification>(), CancellationToken.None))
@@ -101,22 +88,16 @@ public class LoadQuestionScreenRequestHandlerTests
     [Theory]
     [AutoMoqData]
     public async Task Handle_ReturnsOperationResultWithErrors_GivenCollectedWorkflowInstanceIsNull(
-        [Frozen] Mock<IQuestionInvoker> questionInvoker,
         [Frozen] Mock<IWorkflowInstanceStore> workflowInstanceStore,
         [Frozen] Mock<IElsaCustomRepository> elsaCustomRepository,
         LoadQuestionScreenRequest loadWorkflowActivityRequest,
         CustomActivityNavigation customActivityNavigation,
-        List<CollectedWorkflow> collectedWorkflows,
         LoadQuestionScreenRequestHandler sut)
     {
         //Arrange
         customActivityNavigation.ActivityType = ActivityTypeConstants.QuestionScreen;
 
-        questionInvoker
-            .Setup(x => x.FindWorkflowsAsync(loadWorkflowActivityRequest.ActivityId,
-                customActivityNavigation.ActivityType, loadWorkflowActivityRequest.WorkflowInstanceId,
-                CancellationToken.None))
-            .ReturnsAsync(collectedWorkflows);
+
 
         workflowInstanceStore.Setup(x =>
                 x.FindAsync(It.IsAny<WorkflowInstanceIdSpecification>(), CancellationToken.None))
@@ -138,45 +119,10 @@ public class LoadQuestionScreenRequestHandlerTests
             x => x.FindAsync(It.IsAny<WorkflowInstanceIdSpecification>(), CancellationToken.None), Times.Once);
     }
 
-    [Theory]
-    [AutoMoqData]
-    public async Task Handle_ReturnsOperationResultWithErrors_GivenNoWorkflowsAreCollected(
-        [Frozen] Mock<IQuestionInvoker> questionInvoker,
-        [Frozen] Mock<IWorkflowInstanceStore> workflowInstanceStore,
-        [Frozen] Mock<IElsaCustomRepository> elsaCustomRepository,
-        LoadQuestionScreenRequest loadWorkflowActivityRequest,
-        CustomActivityNavigation customActivityNavigation,
-        LoadQuestionScreenRequestHandler sut)
-    {
-        //Arrange
-        customActivityNavigation.ActivityType = ActivityTypeConstants.QuestionScreen;
-
-        questionInvoker
-            .Setup(x => x.FindWorkflowsAsync(loadWorkflowActivityRequest.ActivityId,
-                customActivityNavigation.ActivityType, loadWorkflowActivityRequest.WorkflowInstanceId,
-                CancellationToken.None))
-            .ReturnsAsync(new List<CollectedWorkflow>());
-
-        elsaCustomRepository.Setup(x => x.GetCustomActivityNavigation(loadWorkflowActivityRequest.ActivityId,
-                loadWorkflowActivityRequest.WorkflowInstanceId, CancellationToken.None))
-            .ReturnsAsync(customActivityNavigation);
-
-        //Act
-        var result = await sut.Handle(loadWorkflowActivityRequest, CancellationToken.None);
-
-        //Assert
-        Assert.Null(result.Data!.QuestionScreenAnswers);
-        Assert.Equal(
-            $"Unable to progress workflow instance Id {loadWorkflowActivityRequest.WorkflowInstanceId}. No collected workflows",
-            result.ErrorMessages.Single());
-        workflowInstanceStore.Verify(
-            x => x.FindAsync(It.IsAny<WorkflowInstanceIdSpecification>(), CancellationToken.None), Times.Never);
-    }
 
     [Theory]
     [AutoMoqData]
     public async Task Handle_ReturnsOperationResultWithErrors_GivenExceptionIsThrown(
-        [Frozen] Mock<IQuestionInvoker> questionInvoker,
         [Frozen] Mock<IWorkflowInstanceStore> workflowInstanceStore,
         [Frozen] Mock<IElsaCustomRepository> elsaCustomRepository,
         LoadQuestionScreenRequest loadWorkflowActivityRequest,
@@ -187,14 +133,9 @@ public class LoadQuestionScreenRequestHandlerTests
         //Arrange
         customActivityNavigation.ActivityType = ActivityTypeConstants.QuestionScreen;
 
-        questionInvoker
-            .Setup(x => x.FindWorkflowsAsync(It.IsAny<string>(), customActivityNavigation.ActivityType,
-                It.IsAny<string>(), CancellationToken.None))
-            .Throws(exception);
-
         elsaCustomRepository.Setup(x => x.GetCustomActivityNavigation(loadWorkflowActivityRequest.ActivityId,
                 loadWorkflowActivityRequest.WorkflowInstanceId, CancellationToken.None))
-            .ReturnsAsync(customActivityNavigation);
+            .Throws(exception);
 
         //Act
         var result = await sut.Handle(loadWorkflowActivityRequest, CancellationToken.None);
@@ -209,11 +150,9 @@ public class LoadQuestionScreenRequestHandlerTests
     [Theory]
     [AutoMoqData]
     public async Task Handle_ReturnErrors_GivenActivityIsQuestionScreenAndAssessmentQuestionsAreNull(
-        [Frozen] Mock<IQuestionInvoker> questionInvoker,
         [Frozen] Mock<IWorkflowInstanceStore> workflowInstanceStore,
         [Frozen] Mock<IElsaCustomRepository> elsaCustomRepository,
         LoadQuestionScreenRequest loadWorkflowActivityRequest,
-        List<CollectedWorkflow> collectedWorkflows,
         WorkflowInstance workflowInstance,
         CustomActivityNavigation customActivityNavigation,
         List<QuestionScreenAnswer> assessmentQuestions,
@@ -222,11 +161,7 @@ public class LoadQuestionScreenRequestHandlerTests
         //Arrange
         customActivityNavigation.ActivityType = ActivityTypeConstants.QuestionScreen;
 
-        questionInvoker
-            .Setup(x => x.FindWorkflowsAsync(loadWorkflowActivityRequest.ActivityId,
-                customActivityNavigation.ActivityType, loadWorkflowActivityRequest.WorkflowInstanceId,
-                CancellationToken.None))
-            .ReturnsAsync(collectedWorkflows);
+
 
         workflowInstanceStore.Setup(x =>
                 x.FindAsync(It.IsAny<WorkflowInstanceIdSpecification>(), CancellationToken.None))
@@ -280,11 +215,9 @@ public class LoadQuestionScreenRequestHandlerTests
     [Theory]
     [AutoMoqData]
     public async Task Handle_ReturnMultiQuestionActivityData_GivenActivityIsQuestionScreenAndNoErrorsEncountered(
-        [Frozen] Mock<IQuestionInvoker> questionInvoker,
         [Frozen] Mock<IWorkflowInstanceStore> workflowInstanceStore,
         [Frozen] Mock<IElsaCustomRepository> elsaCustomRepository,
         LoadQuestionScreenRequest loadWorkflowActivityRequest,
-        List<CollectedWorkflow> collectedWorkflows,
         WorkflowInstance workflowInstance,
         CustomActivityNavigation customActivityNavigation,
         List<QuestionScreenAnswer> assessmentQuestions,
@@ -300,11 +233,7 @@ public class LoadQuestionScreenRequestHandlerTests
             elsaAssessmentQuestions.Questions[i].Id = questionId!;
         }
 
-        questionInvoker
-            .Setup(x => x.FindWorkflowsAsync(loadWorkflowActivityRequest.ActivityId,
-                customActivityNavigation.ActivityType, loadWorkflowActivityRequest.WorkflowInstanceId,
-                CancellationToken.None))
-            .ReturnsAsync(collectedWorkflows);
+
 
         workflowInstanceStore.Setup(x =>
                 x.FindAsync(It.IsAny<WorkflowInstanceIdSpecification>(), CancellationToken.None))
@@ -336,11 +265,9 @@ public class LoadQuestionScreenRequestHandlerTests
     [AutoMoqData]
     public async Task
         Handle_ReturnMultiQuestionActivityDataWithMultiChoiceOptionsCorrectlySelected_GivenActivityIsQuestionScreenAndNoErrorsEncountered(
-            [Frozen] Mock<IQuestionInvoker> questionInvoker,
             [Frozen] Mock<IWorkflowInstanceStore> workflowInstanceStore,
             [Frozen] Mock<IElsaCustomRepository> elsaCustomRepository,
             LoadQuestionScreenRequest loadWorkflowActivityRequest,
-            List<CollectedWorkflow> collectedWorkflows,
             WorkflowInstance workflowInstance,
             CustomActivityNavigation customActivityNavigation,
             List<QuestionScreenAnswer> assessmentQuestions,
@@ -365,11 +292,7 @@ public class LoadQuestionScreenRequestHandlerTests
             new("C", "Choice3", false)
         };
 
-        questionInvoker
-            .Setup(x => x.FindWorkflowsAsync(loadWorkflowActivityRequest.ActivityId,
-                customActivityNavigation.ActivityType, loadWorkflowActivityRequest.WorkflowInstanceId,
-                CancellationToken.None))
-            .ReturnsAsync(collectedWorkflows);
+
 
         workflowInstanceStore.Setup(x =>
                 x.FindAsync(It.IsAny<WorkflowInstanceIdSpecification>(), CancellationToken.None))
@@ -403,11 +326,9 @@ public class LoadQuestionScreenRequestHandlerTests
     [AutoMoqData]
     public async Task
         Handle_ReturnMultiQuestionActivityDataWithSingleChoiceOptionsCorrectlySelected_GivenActivityIsQuestionScreenAndNoErrorsEncountered(
-            [Frozen] Mock<IQuestionInvoker> questionInvoker,
             [Frozen] Mock<IWorkflowInstanceStore> workflowInstanceStore,
             [Frozen] Mock<IElsaCustomRepository> elsaCustomRepository,
             LoadQuestionScreenRequest loadWorkflowActivityRequest,
-            List<CollectedWorkflow> collectedWorkflows,
             WorkflowInstance workflowInstance,
             CustomActivityNavigation customActivityNavigation,
             List<QuestionScreenAnswer> assessmentQuestions,
@@ -432,11 +353,7 @@ public class LoadQuestionScreenRequestHandlerTests
             new("C", "Choice3")
         };
 
-        questionInvoker
-            .Setup(x => x.FindWorkflowsAsync(loadWorkflowActivityRequest.ActivityId,
-                customActivityNavigation.ActivityType, loadWorkflowActivityRequest.WorkflowInstanceId,
-                CancellationToken.None))
-            .ReturnsAsync(collectedWorkflows);
+
 
         workflowInstanceStore.Setup(x =>
                 x.FindAsync(It.IsAny<WorkflowInstanceIdSpecification>(), CancellationToken.None))

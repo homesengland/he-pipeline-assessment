@@ -1,12 +1,10 @@
 ﻿using Elsa.CustomActivities.Activities.QuestionScreen;
-using Elsa.CustomActivities.Activities.Shared;
 using Elsa.CustomInfrastructure.Data.Repository;
 using Elsa.CustomModels;
 using Elsa.CustomWorkflow.Sdk;
 using Elsa.Persistence;
 using Elsa.Persistence.Specifications.WorkflowInstances;
 using Elsa.Server.Models;
-using Elsa.Services.Models;
 using MediatR;
 using System.Text.Json;
 
@@ -14,15 +12,13 @@ namespace Elsa.Server.Features.Workflow.LoadQuestionScreen
 {
     public class LoadQuestionScreenRequestHandler : IRequestHandler<LoadQuestionScreenRequest, OperationResult<LoadQuestionScreenResponse>>
     {
-        private readonly IQuestionInvoker _questionInvoker;
         private readonly IWorkflowInstanceStore _workflowInstanceStore;
         private readonly IElsaCustomRepository _elsaCustomRepository;
 
-        public LoadQuestionScreenRequestHandler(IWorkflowInstanceStore workflowInstanceStore, IElsaCustomRepository elsaCustomRepository, IQuestionInvoker questionInvoker)
+        public LoadQuestionScreenRequestHandler(IWorkflowInstanceStore workflowInstanceStore, IElsaCustomRepository elsaCustomRepository)
         {
             _workflowInstanceStore = workflowInstanceStore;
             _elsaCustomRepository = elsaCustomRepository;
-            _questionInvoker = questionInvoker;
         }
 
         public async Task<OperationResult<LoadQuestionScreenResponse>> Handle(LoadQuestionScreenRequest activityRequest, CancellationToken cancellationToken)
@@ -48,78 +44,67 @@ namespace Elsa.Server.Features.Workflow.LoadQuestionScreen
                             $"Attempted to load question screen with {customActivityNavigation.ActivityType} activity type");
                     }
 
-                    IEnumerable<CollectedWorkflow> workflows = await _questionInvoker.FindWorkflowsAsync(activityRequest.ActivityId, customActivityNavigation.ActivityType, activityRequest.WorkflowInstanceId, cancellationToken);
-
-                    var collectedWorkflow = workflows.FirstOrDefault();
-                    if (collectedWorkflow != null)
+                    var workflowSpecification =
+                        new WorkflowInstanceIdSpecification(activityRequest.WorkflowInstanceId);
+                    var workflowInstance = await _workflowInstanceStore.FindAsync(workflowSpecification, cancellationToken: cancellationToken);
+                    if (workflowInstance != null)
                     {
-                        var workflowSpecification =
-                            new WorkflowInstanceIdSpecification(collectedWorkflow.WorkflowInstanceId);
-                        var workflowInstance = await _workflowInstanceStore.FindAsync(workflowSpecification, cancellationToken: cancellationToken);
-                        if (workflowInstance != null)
+
+                        if (!workflowInstance.ActivityData.ContainsKey(activityRequest.ActivityId))
                         {
-
-                            if (!workflowInstance.ActivityData.ContainsKey(activityRequest.ActivityId))
-                            {
-                                result.ErrorMessages.Add(
-                                    $"Cannot find activity Id {activityRequest.ActivityId} in the workflow activity data dictionary");
-                            }
-                            else
-                            {
-                                var activityDataDictionary =
-                                    workflowInstance.ActivityData
-                                        .FirstOrDefault(a => a.Key == activityRequest.ActivityId).Value;
-
-                                result.Data.ActivityType = customActivityNavigation.ActivityType;
-                                result.Data.PreviousActivityId = customActivityNavigation.PreviousActivityId;
-                                result.Data.PreviousActivityType = customActivityNavigation.PreviousActivityType;
-
-                                var title = (string?)activityDataDictionary.FirstOrDefault(x => x.Key == "PageTitle").Value;
-                                result.Data.PageTitle = title;
-
-                                var dbQuestions = await _elsaCustomRepository.GetQuestionScreenAnswers(
-                                    activityRequest.ActivityId, activityRequest.WorkflowInstanceId,
-                                    cancellationToken);
-
-                                var elsaActivityAssessmentQuestions =
-                                    (AssessmentQuestions?)activityDataDictionary
-                                        .FirstOrDefault(x => x.Key == "Questions").Value;
-
-                                if (elsaActivityAssessmentQuestions != null)
-                                {
-                                    result.Data.QuestionScreenAnswers = new List<QuestionActivityData>();
-                                    result.Data.ActivityType = customActivityNavigation.ActivityType;
-
-                                    foreach (var item in elsaActivityAssessmentQuestions.Questions)
-                                    {
-                                        //get me the item
-                                        var dbQuestion =
-                                            dbQuestions.FirstOrDefault(x => x.QuestionId == item.Id);
-                                        if (dbQuestion != null)
-                                        {
-                                            var questionActivityData = CreateQuestionActivityData(dbQuestion, item);
-
-                                            result.Data.QuestionScreenAnswers.Add(questionActivityData);
-                                        }
-                                    }
-                                }
-                                else
-                                {
-                                    result.ErrorMessages.Add(
-                                        $"Failed to map activity data to QuestionScreenAnswers");
-                                }
-                            }
+                            result.ErrorMessages.Add(
+                                $"Cannot find activity Id {activityRequest.ActivityId} in the workflow activity data dictionary");
                         }
                         else
                         {
-                            result.ErrorMessages.Add(
-                                $"Unable to find workflow instance with Id: {activityRequest.WorkflowInstanceId} in Elsa database");
+                            var activityDataDictionary =
+                                workflowInstance.ActivityData
+                                    .FirstOrDefault(a => a.Key == activityRequest.ActivityId).Value;
+
+                            result.Data.ActivityType = customActivityNavigation.ActivityType;
+                            result.Data.PreviousActivityId = customActivityNavigation.PreviousActivityId;
+                            result.Data.PreviousActivityType = customActivityNavigation.PreviousActivityType;
+
+                            var title = (string?)activityDataDictionary.FirstOrDefault(x => x.Key == "PageTitle").Value;
+                            result.Data.PageTitle = title;
+
+                            var dbQuestions = await _elsaCustomRepository.GetQuestionScreenAnswers(
+                                activityRequest.ActivityId, activityRequest.WorkflowInstanceId,
+                                cancellationToken);
+
+                            var elsaActivityAssessmentQuestions =
+                                (AssessmentQuestions?)activityDataDictionary
+                                    .FirstOrDefault(x => x.Key == "Questions").Value;
+
+                            if (elsaActivityAssessmentQuestions != null)
+                            {
+                                result.Data.QuestionScreenAnswers = new List<QuestionActivityData>();
+                                result.Data.ActivityType = customActivityNavigation.ActivityType;
+
+                                foreach (var item in elsaActivityAssessmentQuestions.Questions)
+                                {
+                                    //get me the item
+                                    var dbQuestion =
+                                        dbQuestions.FirstOrDefault(x => x.QuestionId == item.Id);
+                                    if (dbQuestion != null)
+                                    {
+                                        var questionActivityData = CreateQuestionActivityData(dbQuestion, item);
+
+                                        result.Data.QuestionScreenAnswers.Add(questionActivityData);
+                                    }
+                                }
+                            }
+                            else
+                            {
+                                result.ErrorMessages.Add(
+                                    $"Failed to map activity data to QuestionScreenAnswers");
+                            }
                         }
                     }
                     else
                     {
                         result.ErrorMessages.Add(
-                            $"Unable to progress workflow instance Id {activityRequest.WorkflowInstanceId}. No collected workflows");
+                            $"Unable to find workflow instance with Id: {activityRequest.WorkflowInstanceId} in Elsa database");
                     }
                 }
                 else
