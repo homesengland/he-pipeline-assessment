@@ -1,20 +1,14 @@
 ﻿using AutoFixture.Xunit2;
-using Elsa.CustomActivities.Activities.QuestionScreen;
-using Elsa.CustomActivities.Activities.Shared;
 using Elsa.CustomInfrastructure.Data.Repository;
 using Elsa.CustomModels;
 using Elsa.CustomWorkflow.Sdk;
-using Elsa.Models;
-using Elsa.Persistence;
-using Elsa.Persistence.Specifications.WorkflowInstances;
 using Elsa.Server.Features.Workflow.LoadCheckYourAnswersScreen;
-using Elsa.Server.Features.Workflow.LoadQuestionScreen;
-using Elsa.Services.Models;
+using Elsa.Server.Providers;
 using He.PipelineAssessment.Common.Tests;
 using Moq;
 using Xunit;
 
-namespace Elsa.Server.Tests.Features.Workflow.CheckYourAnswersScreen;
+namespace Elsa.Server.Tests.Features.Workflow.LoadCheckYourAnswersScreen;
 
 public class LoadCheckYourAnswersScreenRequestHandlerTests
 {
@@ -69,30 +63,45 @@ public class LoadCheckYourAnswersScreenRequestHandlerTests
     [AutoMoqData]
     public async Task Handle_ReturnQuestionScreenAnswers_GivenActivityIsQuestionScreenAndNoErrorsEncountered(
         [Frozen] Mock<IElsaCustomRepository> elsaCustomRepository,
-        LoadCheckYourAnswersScreenRequest loadCheckYourAnswersScreenRequest,
+        [Frozen] Mock<IActivityDataProvider> activityDataProvider,
+        LoadCheckYourAnswersScreenRequest request,
         CustomActivityNavigation customActivityNavigation,
         List<QuestionScreenAnswer> questionScreenAnswers,
         LoadCheckYourAnswersScreenRequestHandler sut)
     {
         //Arrange
-        elsaCustomRepository.Setup(x => x.GetCustomActivityNavigation(loadCheckYourAnswersScreenRequest.ActivityId,
-                loadCheckYourAnswersScreenRequest.WorkflowInstanceId, CancellationToken.None))
+        elsaCustomRepository.Setup(x => x.GetCustomActivityNavigation(request.ActivityId,
+                request.WorkflowInstanceId, CancellationToken.None))
             .ReturnsAsync(customActivityNavigation);
 
-        elsaCustomRepository.Setup(x => x.GetQuestionScreenAnswers(loadCheckYourAnswersScreenRequest.WorkflowInstanceId, CancellationToken.None))
+        elsaCustomRepository.Setup(x => x.GetQuestionScreenAnswers(request.WorkflowInstanceId, CancellationToken.None))
             .ReturnsAsync(questionScreenAnswers);
 
+        var dictionary = new Dictionary<string, object?>()
+        {
+            { "FooterText", "MyFooterText" },
+            { "FooterTitle", "MyFooterTitle" },
+            { "Title", "MyPageTitle" }
+        };
+
+        activityDataProvider
+            .Setup(x => x.GetActivityData(request.WorkflowInstanceId, request.ActivityId, CancellationToken.None))
+            .ReturnsAsync(dictionary);
+
         //Act
-        var result = await sut.Handle(loadCheckYourAnswersScreenRequest, CancellationToken.None);
+        var result = await sut.Handle(request, CancellationToken.None);
 
         //Assert
         Assert.NotNull(result.Data);
         Assert.Equal(questionScreenAnswers, result.Data!.QuestionScreenAnswers);
-        Assert.Equal(loadCheckYourAnswersScreenRequest.ActivityId, result.Data.ActivityId);
-        Assert.Equal(loadCheckYourAnswersScreenRequest.WorkflowInstanceId, result.Data.WorkflowInstanceId);
+        Assert.Equal(request.ActivityId, result.Data.ActivityId);
+        Assert.Equal(request.WorkflowInstanceId, result.Data.WorkflowInstanceId);
         Assert.Equal(ActivityTypeConstants.CheckYourAnswersScreen, result.Data.ActivityType);
         Assert.Equal(customActivityNavigation.PreviousActivityId, result.Data.PreviousActivityId);
         Assert.Equal(customActivityNavigation.PreviousActivityType, result.Data.PreviousActivityType);
+        Assert.Equal("MyFooterText", result.Data.FooterText);
+        Assert.Equal("MyFooterTitle", result.Data.FooterTitle);
+        Assert.Equal("MyPageTitle", result.Data.PageTitle);
         Assert.Empty(result.ErrorMessages);
     }
 }

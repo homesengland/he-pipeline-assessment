@@ -1,17 +1,11 @@
-﻿using Elsa.CustomInfrastructure.Data.Repository;
-using Elsa.Persistence;
-using Elsa.Persistence.Specifications.WorkflowInstances;
-
-namespace Elsa.Server.Providers
+﻿namespace Elsa.Server.Providers
 {
     public class ActivityDataProvider : IActivityDataProvider
     {
-        private readonly IWorkflowInstanceStore _workflowInstanceStore;
         private readonly IWorkflowInstanceProvider _workflowInstanceProvider;
 
-        public ActivityDataProvider(IWorkflowInstanceStore workflowInstanceStore, IWorkflowInstanceProvider workflowInstanceProvider)
+        public ActivityDataProvider(IWorkflowInstanceProvider workflowInstanceProvider)
         {
-            _workflowInstanceStore = workflowInstanceStore;
             _workflowInstanceProvider = workflowInstanceProvider;
         }
 

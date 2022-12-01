@@ -5,6 +5,7 @@
         public const string QuestionScreen = "QuestionScreen";
         public const string SinglePipelineDataSource = "SinglePipelineDataSource";
         public const string CheckYourAnswersScreen = "CheckYourAnswersScreen";
+        public const string ConfirmationScreen = "ConfirmationScreen";
     }
 
     public class QuestionTypeConstants

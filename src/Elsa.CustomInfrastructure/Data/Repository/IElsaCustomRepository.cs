@@ -16,6 +16,6 @@ namespace Elsa.CustomInfrastructure.Data.Repository
         Task<List<QuestionScreenAnswer>> GetQuestionScreenAnswers(string activityId, string workflowInstanceId, CancellationToken cancellationToken);
         Task<QuestionScreenAnswer?> GetQuestionScreenAnswer(string activityId, string correlationId, string questionID, CancellationToken cancellationToken);
         Task SaveChanges(CancellationToken cancellationToken);
-        Task<List<QuestionScreenAnswer>> GetQuestionScreenAnswers(string workflowInstaceId, CancellationToken cancellationToken);
+        Task<List<QuestionScreenAnswer>> GetQuestionScreenAnswers(string workflowInstanceId, CancellationToken cancellationToken);
     }
 }
