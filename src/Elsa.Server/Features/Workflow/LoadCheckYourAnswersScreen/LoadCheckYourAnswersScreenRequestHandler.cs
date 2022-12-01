@@ -1,49 +1,64 @@
 ﻿using Elsa.CustomInfrastructure.Data.Repository;
 using Elsa.CustomWorkflow.Sdk;
+using Elsa.Persistence;
+using Elsa.Server.Extensions;
 using Elsa.Server.Models;
+using Elsa.Server.Providers;
 using MediatR;
 
 namespace Elsa.Server.Features.Workflow.LoadCheckYourAnswersScreen
 {
-    public class LoadCheckYourAnswersScreenRequestHandler : IRequestHandler<LoadCheckYourAnswersRequest, OperationResult<LoadCheckYourAnswersScreenResponse>>
+    public class LoadCheckYourAnswersScreenRequestHandler : IRequestHandler<LoadCheckYourAnswersScreenRequest, OperationResult<LoadCheckYourAnswersScreenResponse>>
     {
         private readonly IElsaCustomRepository _elsaCustomRepository;
+        private readonly IWorkflowInstanceStore _workflowInstanceStore;
+        private readonly IActivityDataProvider _activityDataProvider;
 
-        public LoadCheckYourAnswersScreenRequestHandler(IElsaCustomRepository elsaCustomRepository)
+        public LoadCheckYourAnswersScreenRequestHandler(IElsaCustomRepository elsaCustomRepository, IWorkflowInstanceStore workflowInstanceStore, IActivityDataProvider activityDataProvider)
         {
             _elsaCustomRepository = elsaCustomRepository;
+            _workflowInstanceStore = workflowInstanceStore;
+            _activityDataProvider = activityDataProvider;
         }
 
-        public async Task<OperationResult<LoadCheckYourAnswersScreenResponse>> Handle(LoadCheckYourAnswersRequest activityRequest, CancellationToken cancellationToken)
+        public async Task<OperationResult<LoadCheckYourAnswersScreenResponse>> Handle(LoadCheckYourAnswersScreenRequest activityScreenRequest, CancellationToken cancellationToken)
         {
             var result = new OperationResult<LoadCheckYourAnswersScreenResponse>
             {
                 Data = new LoadCheckYourAnswersScreenResponse
                 {
-                    WorkflowInstanceId = activityRequest.WorkflowInstanceId,
-                    ActivityId = activityRequest.ActivityId,
+                    WorkflowInstanceId = activityScreenRequest.WorkflowInstanceId,
+                    ActivityId = activityScreenRequest.ActivityId,
                     ActivityType = ActivityTypeConstants.CheckYourAnswersScreen
                 }
             };
             try
             {
-                var dbActivity =
-                    await _elsaCustomRepository.GetCustomActivityNavigation(activityRequest.ActivityId, activityRequest.WorkflowInstanceId, cancellationToken);
+                var customActivityNavigation =
+                    await _elsaCustomRepository.GetCustomActivityNavigation(activityScreenRequest.ActivityId, activityScreenRequest.WorkflowInstanceId, cancellationToken);
 
-                if (dbActivity != null)
+                if (customActivityNavigation != null)
                 {
-                    result.Data.PreviousActivityId = dbActivity.PreviousActivityId;
-                    result.Data.PreviousActivityType = dbActivity.PreviousActivityType;
+                    result.Data.PreviousActivityId = customActivityNavigation.PreviousActivityId;
+                    result.Data.PreviousActivityType = customActivityNavigation.PreviousActivityType;
 
                     var questionScreenAnswers = await _elsaCustomRepository
                         .GetQuestionScreenAnswers(result.Data.WorkflowInstanceId, cancellationToken);
 
                     result.Data.QuestionScreenAnswers = questionScreenAnswers;
+
+                    var activityDataDictionary = await _activityDataProvider.GetActivityData(activityScreenRequest.WorkflowInstanceId, activityScreenRequest.ActivityId, cancellationToken);
+                    if (activityDataDictionary != null)
+                    {
+                        result.Data.PageTitle = (string?)activityDataDictionary.GetData("Title");
+                        result.Data.FooterTitle = (string?)activityDataDictionary.GetData("FooterTitle");
+                        result.Data.FooterText = (string?)activityDataDictionary.GetData("FooterText");
+                    }
                 }
                 else
                 {
                     result.ErrorMessages.Add(
-                        $"Unable to find activity navigation with Workflow Id: {activityRequest.WorkflowInstanceId} and Activity Id: {activityRequest.ActivityId} in Elsa Custom database");
+                        $"Unable to find activity navigation with Workflow Id: {activityScreenRequest.WorkflowInstanceId} and Activity Id: {activityScreenRequest.ActivityId} in Elsa Custom database");
                 }
             }
             catch (Exception e)
@@ -54,4 +69,6 @@ namespace Elsa.Server.Features.Workflow.LoadCheckYourAnswersScreen
             return await Task.FromResult(result);
         }
     }
+
+
 }

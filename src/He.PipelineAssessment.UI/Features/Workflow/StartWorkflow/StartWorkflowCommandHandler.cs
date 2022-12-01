@@ -22,7 +22,8 @@ namespace He.PipelineAssessment.UI.Features.Workflow.StartWorkflow
         {
             var dto = new StartWorkflowCommandDto()
             {
-                WorkflowDefinitionId = request.WorkflowDefinitionId
+                WorkflowDefinitionId = request.WorkflowDefinitionId,
+                CorrelationId = request.CorrelationId
             };
             var response = await _elsaServerHttpClient.PostStartWorkflow(dto);
 

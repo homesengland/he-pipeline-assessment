@@ -1,18 +1,18 @@
 ﻿using Elsa.CustomWorkflow.Sdk.Models.Workflow;
 using He.PipelineAssessment.Common.Tests;
-using He.PipelineAssessment.UI.Features.Workflow.SaveAndContinue;
+using He.PipelineAssessment.UI.Features.Workflow.QuestionScreenSaveAndContinue;
 using Xunit;
 
 namespace He.PipelineAssessment.UI.Tests.Features.Workflow.SaveAndContinue
 {
-    public class SaveAndContinueMapperTests
+    public class QuestionScreenSaveAndContinueMapperTests
     {
 
         [Theory]
         [AutoMoqData]
         public void SaveAndContinueCommandToMultiSaveAndContinueCommandDto_Returns(
-            SaveAndContinueCommand saveAndContinueCommand,
-            SaveAndContinueMapper sut
+            QuestionScreenSaveAndContinueCommand saveAndContinueCommand,
+            QuestionScreenSaveAndContinueMapper sut
         )
         {
             //Arrange
@@ -24,8 +24,7 @@ namespace He.PipelineAssessment.UI.Tests.Features.Workflow.SaveAndContinue
             Assert.NotNull(result);
             Assert.Equal(saveAndContinueCommand.Data.ActivityId, result.ActivityId);
             Assert.Equal(saveAndContinueCommand.Data.WorkflowInstanceId, result.WorkflowInstanceId);
-            Assert.Equal($"{saveAndContinueCommand.Data.WorkflowInstanceId}-{saveAndContinueCommand.Data.ActivityId}", result.Id);
-            Assert.Equal(saveAndContinueCommand.Data.MultiQuestionActivityData?.Select(x => new Answer(x.QuestionId, x.Answer, x.Comments)).ToList(), result.Answers);
+            Assert.Equal(saveAndContinueCommand.Data.QuestionScreenAnswers?.Select(x => new Answer(x.QuestionId, x.Answer, x.Comments)).ToList(), result.Answers);
         }
     }
 }

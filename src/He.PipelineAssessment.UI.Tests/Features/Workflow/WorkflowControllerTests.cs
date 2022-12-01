@@ -1,12 +1,13 @@
 ﻿using AutoFixture.Xunit2;
-using Azure.Core;
-using Elsa.CustomModels;
 using Elsa.CustomWorkflow.Sdk;
+using FluentValidation;
+using FluentValidation.Results;
 using He.PipelineAssessment.Common.Tests;
 using He.PipelineAssessment.UI.Features.Workflow;
+using He.PipelineAssessment.UI.Features.Workflow.CheckYourAnswersSaveAndContinue;
 using He.PipelineAssessment.UI.Features.Workflow.LoadCheckYourAnswersScreen;
 using He.PipelineAssessment.UI.Features.Workflow.LoadQuestionScreen;
-using He.PipelineAssessment.UI.Features.Workflow.SaveAndContinue;
+using He.PipelineAssessment.UI.Features.Workflow.QuestionScreenSaveAndContinue;
 using He.PipelineAssessment.UI.Features.Workflow.StartWorkflow;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
@@ -89,9 +90,9 @@ namespace He.PipelineAssessment.UI.Tests.Features.Workflow
 
         [Theory]
         [AutoMoqData]
-        public async Task SaveAndContinue_ShouldRedirectToErrorPage_GivenInnerExceptionIsCaught(
+        public async Task QuestionScreenSaveAndContinue_ShouldRedirectToErrorPage_GivenInnerExceptionIsCaught(
             [Frozen] Mock<IMediator> mediator,
-            SaveAndContinueCommand command,
+            QuestionScreenSaveAndContinueCommand command,
             Exception exception,
             WorkflowController sut)
         {
@@ -99,7 +100,7 @@ namespace He.PipelineAssessment.UI.Tests.Features.Workflow
             mediator.Setup(x => x.Send(command, CancellationToken.None)).Throws(exception);
 
             //Act
-            var result = await sut.SaveAndContinue(command);
+            var result = await sut.QuestionScreenSaveAndContinue(command);
 
             //Assert
             mediator.Verify(x => x.Send(command, CancellationToken.None), Times.Once);
@@ -111,20 +112,47 @@ namespace He.PipelineAssessment.UI.Tests.Features.Workflow
             Assert.Equal("Index", redirectToActionResult.ActionName);
 
         }
+        [Theory]
+        [AutoMoqData]
+        public async Task QuestionScreenSaveAndContinue_ShouldRedirectToAction_GivenValidationIssuesAreFound(
+            [Frozen] Mock<IMediator> mediator,
+            [Frozen] Mock<IValidator<QuestionScreenSaveAndContinueCommand>> validator,
+            QuestionScreenSaveAndContinueCommand command,
+            QuestionScreenSaveAndContinueCommandResponse saveAndContinueCommandResponse,
+            ValidationResult validationResult,
+            WorkflowController sut)
+        {
+            //Arrange
+
+
+            mediator.Setup(x => x.Send(command, CancellationToken.None)).ReturnsAsync(saveAndContinueCommandResponse);
+            validator.Setup(x => x.Validate(It.IsAny<QuestionScreenSaveAndContinueCommand>()))
+                .Returns(validationResult);
+            //Act
+            var result = await sut.QuestionScreenSaveAndContinue(command);
+
+            //Assert
+            Assert.NotNull(result);
+            Assert.IsType<ViewResult>(result);
+
+            var redirectToActionResult = (ViewResult)result;
+            Assert.Equal("MultiSaveAndContinue", redirectToActionResult.ViewName);
+
+        }
 
         [Theory]
         [AutoMoqData]
-        public async Task SaveAndContinue_ShouldRedirectToAction_GivenNoExceptionsThrow(
+        public async Task QuestionScreenSaveAndContinue_ShouldRedirectToAction_GivenNoExceptionsThrow(
             [Frozen] Mock<IMediator> mediator,
-            SaveAndContinueCommand command,
-            SaveAndContinueCommandResponse saveAndContinueCommandResponse,
+            QuestionScreenSaveAndContinueCommand command,
+            QuestionScreenSaveAndContinueCommandResponse saveAndContinueCommandResponse,
             WorkflowController sut)
         {
             //Arrange
             mediator.Setup(x => x.Send(command, CancellationToken.None)).ReturnsAsync(saveAndContinueCommandResponse);
 
             //Act
-            var result = await sut.SaveAndContinue(command);
+            var result = await sut.QuestionScreenSaveAndContinue(command);
 
             //Assert
             Assert.NotNull(result);
@@ -147,7 +175,7 @@ namespace He.PipelineAssessment.UI.Tests.Features.Workflow
         [AutoMoqData]
         public async Task LoadWorkflowActivity_ShouldRedirectToErrorPage_GivenInnerExceptionIsCaughtForCheckYourAnswers(
             [Frozen] Mock<IMediator> mediator,
-            SaveAndContinueCommandResponse saveAndContinueCommandResponse,
+            QuestionScreenSaveAndContinueCommandResponse saveAndContinueCommandResponse,
             Exception exception,
             WorkflowController sut)
         {
@@ -178,7 +206,7 @@ namespace He.PipelineAssessment.UI.Tests.Features.Workflow
         [AutoMoqData]
         public async Task LoadWorkflowActivity_ShouldRedirectToErrorPage_GivenInnerExceptionIsCaughtForQuestionScreen(
             [Frozen] Mock<IMediator> mediator,
-            SaveAndContinueCommandResponse saveAndContinueCommandResponse,
+            QuestionScreenSaveAndContinueCommandResponse saveAndContinueCommandResponse,
             Exception exception,
             WorkflowController sut)
         {
@@ -209,8 +237,8 @@ namespace He.PipelineAssessment.UI.Tests.Features.Workflow
         [AutoMoqData]
         public async Task LoadWorkflowActivity_ShouldRedirectToCheckYourAnswersView_GivenCheckYourAnswersScreenAndNoExceptionsThrow(
             [Frozen] Mock<IMediator> mediator,
-            SaveAndContinueCommandResponse saveAndContinueCommandResponse,
-            SaveAndContinueCommand saveAndContinueCommand,
+            QuestionScreenSaveAndContinueCommandResponse saveAndContinueCommandResponse,
+            QuestionScreenSaveAndContinueCommand saveAndContinueCommand,
             WorkflowController sut)
         {
             //Arrange
@@ -232,7 +260,7 @@ namespace He.PipelineAssessment.UI.Tests.Features.Workflow
 
             var viewResult = (ViewResult)result;
             Assert.Equal("CheckYourAnswers", viewResult.ViewName);
-            Assert.IsType<SaveAndContinueCommand>(viewResult.Model); // this will change
+            Assert.IsType<QuestionScreenSaveAndContinueCommand>(viewResult.Model); // this will change
 
         }
 
@@ -240,8 +268,8 @@ namespace He.PipelineAssessment.UI.Tests.Features.Workflow
         [AutoMoqData]
         public async Task LoadWorkflowActivity_ShouldRedirectToMultiSaveAndContinueView_GivenQuestionScreenAndNoExceptionsThrow(
             [Frozen] Mock<IMediator> mediator,
-            SaveAndContinueCommandResponse saveAndContinueCommandResponse,
-            SaveAndContinueCommand saveAndContinueCommand,
+            QuestionScreenSaveAndContinueCommandResponse saveAndContinueCommandResponse,
+            QuestionScreenSaveAndContinueCommand saveAndContinueCommand,
             WorkflowController sut)
         {
             //Arrange
@@ -263,8 +291,62 @@ namespace He.PipelineAssessment.UI.Tests.Features.Workflow
 
             var viewResult = (ViewResult)result;
             Assert.Equal("MultiSaveAndContinue", viewResult.ViewName);
-            Assert.IsType<SaveAndContinueCommand>(viewResult.Model);
+            Assert.IsType<QuestionScreenSaveAndContinueCommand>(viewResult.Model);
 
+        }
+
+        [Theory]
+        [AutoMoqData]
+        public async Task CheckYourAnswerScreenSaveAndContinue_ShouldRedirectToErrorPage_GivenInnerExceptionIsCaught(
+          [Frozen] Mock<IMediator> mediator,
+          CheckYourAnswersSaveAndContinueCommand command,
+          Exception exception,
+          WorkflowController sut)
+        {
+            //Arrange
+            mediator.Setup(x => x.Send(command, CancellationToken.None)).Throws(exception);
+
+            //Act
+            var result = await sut.CheckYourAnswerScreenSaveAndContinue(command);
+
+            //Assert
+            mediator.Verify(x => x.Send(command, CancellationToken.None), Times.Once);
+            await Assert.ThrowsAsync<Exception>(() => mediator.Object.Send(command));
+
+            Assert.IsType<RedirectToActionResult>(result);
+            var redirectToActionResult = (RedirectToActionResult)result;
+            Assert.Equal("Error", redirectToActionResult.ControllerName);
+            Assert.Equal("Index", redirectToActionResult.ActionName);
+        }
+
+        [Theory]
+        [AutoMoqData]
+        public async Task CheckYourAnswerScreenSaveAndContinue_ShouldRedirectToAction_GivenNoExceptionsThrow(
+            [Frozen] Mock<IMediator> mediator,
+            CheckYourAnswersSaveAndContinueCommand command,
+            CheckYourAnswersSaveAndContinueCommandResponse response,
+            WorkflowController sut)
+        {
+            //Arrange
+            mediator.Setup(x => x.Send(command, CancellationToken.None)).ReturnsAsync(response);
+
+            //Act
+            var result = await sut.CheckYourAnswerScreenSaveAndContinue(command);
+
+            //Assert
+            Assert.NotNull(result);
+            Assert.IsType<RedirectToActionResult>(result);
+
+            var redirectToActionResult = (RedirectToActionResult)result;
+            Assert.Equal("Assessment", redirectToActionResult.ControllerName);
+            Assert.Equal("Summary", redirectToActionResult.ActionName);
+
+
+            var activityIdRouteValue = new KeyValuePair<string, object?>("CorrelationId", response.CorrelationId);
+            var workflowInstanceIdRouteValue = new KeyValuePair<string, object?>("AssessmentId", response.AssessmentId);
+
+            Assert.Contains(activityIdRouteValue, redirectToActionResult.RouteValues!);
+            Assert.Contains(workflowInstanceIdRouteValue, redirectToActionResult.RouteValues!);
         }
     }
 }

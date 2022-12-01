@@ -1,6 +1,6 @@
 ﻿@using He.PipelineAssessment.UI
 @using Elsa.CustomWorkflow.Sdk
-@model He.PipelineAssessment.UI.Features.Workflow.SaveAndContinue.SaveAndContinueCommand
+@model He.PipelineAssessment.UI.Features.Workflow.QuestionScreenSaveAndContinue.QuestionScreenSaveAndContinueCommand
 
 @{
     ViewData["Title"] = "Pipeline Assessment";
@@ -8,9 +8,9 @@
 }
 <div class="text-center">
 
-    @Html.ActionLink("Back","LoadWorkflowActivity","Workflow", new {WorkflowInstanceId = Model.Data.WorkflowInstanceId, ActivityId = Model.Data.PreviousActivityId, ActivityType = Model.Data.ActivityType},new{ @class="govuk-back-link"})
+    @Html.ActionLink("Back","LoadWorkflowActivity","Workflow", new {WorkflowInstanceId = Model.Data.WorkflowInstanceId, ActivityId = Model.Data.PreviousActivityId, ActivityType = Model.Data.PreviousActivityType},new{ @class="govuk-back-link"})
 
-    @using (Html.BeginForm("SaveAndContinue", "Workflow", FormMethod.Post))
+    @using (Html.BeginForm("QuestionScreenSaveAndContinue", "Workflow", FormMethod.Post))
     {
         @Html.AntiForgeryToken()
         @Html.HiddenFor(m => Model.Data.WorkflowInstanceId)

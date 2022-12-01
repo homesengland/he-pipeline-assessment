@@ -8,7 +8,7 @@ using Elsa.Persistence.EntityFramework.Core.Extensions;
 using Elsa.Persistence.EntityFramework.SqlServer;
 using Elsa.Runtime;
 using Elsa.Server.Extensions;
-using Elsa.Server.Features.Workflow.QuestionScreenSaveAndContinue;
+using Elsa.Server.Features.Workflow.Helpers;
 using Elsa.Server.Features.Workflow.StartWorkflow;
 using Elsa.Server.Providers;
 using Elsa.Server.StartupTasks;
@@ -56,10 +56,13 @@ builder.Services.AddScoped<IElsaCustomRepository, ElsaCustomRepository>();
 builder.Services.AddMediatR(typeof(Program).Assembly);
 builder.Services.AddApplicationInsightsTelemetry();
 builder.Services.AddScoped<IDateTimeProvider, DateTimeProvider>();
+builder.Services.AddScoped<IActivityDataProvider, ActivityDataProvider>();
+builder.Services.AddScoped<IWorkflowNextActivityProvider, WorkflowNextActivityProvider>();
+builder.Services.AddScoped<IWorkflowInstanceProvider, WorkflowInstanceProvider>();
 
 
 builder.Services.AddScoped<IStartWorkflowMapper, StartWorkflowMapper>();
-builder.Services.AddScoped<IQuestionScreenSaveAndContinueMapper, QuestionScreenSaveAndContinueMapper>();
+builder.Services.AddScoped<ISaveAndContinueHelper, SaveAndContinueHelper>();
 
 builder.Services.AddScoped<IEsriSinglePipelineClient, EsriSinglePipelineClient>();
 builder.Services.AddScoped<IEsriSinglePipelineDataJsonHelper, EsriSinglePipelineDataJsonHelper>();

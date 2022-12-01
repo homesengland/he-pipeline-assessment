@@ -83,6 +83,7 @@ abstract class ChoiceQuestionEventHandler<T extends IQuestionOption> extends Bas
   onAddChoiceClick = () => {
     const choiceName = `Choice ${this.question.options.choices.length + 1}`;
     const identifier = ToLetter(1 + this.question.options.choices.length);
+    console.log(identifier);
     const newChoice = this.getChoice(choiceName, identifier);
     let updatedChoices = { ... this.question.options, choices: [... this.question.options.choices, newChoice] } as QuestionOptions<T>;
     this.question = { ...this.question, options: updatedChoices }

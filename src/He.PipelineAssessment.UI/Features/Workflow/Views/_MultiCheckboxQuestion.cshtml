@@ -1,8 +1,8 @@
 ﻿@using He.PipelineAssessment.UI.Features.Workflow.ViewModels
 @model He.PipelineAssessment.UI.Features.Workflow.ViewModels.MultiQuestion
 @{
-    var itemName = "Data.MultiQuestionActivityData[" + Model.Index + "].Checkbox.SelectedChoices";
-    var formItemName = "Data.MultiQuestionActivityData[" + Model.Index + "].Checkbox";
+    var itemName = "Data.QuestionScreenAnswers[" + Model.Index + "].Checkbox.SelectedChoices";
+    var formItemName = "Data.QuestionScreenAnswers[" + Model.Index + "].Checkbox";
 
     var errorFormClass = !Model.IsValid ? "govuk-form-group--error" : "";
 }
@@ -20,8 +20,8 @@
         }
         @for (int i = 0; i < Model.Checkbox.Choices.Count(); i++)
         {
-            var hiddenItemNameAnswer = "Data.MultiQuestionActivityData[" + Model.Index + "].Checkbox.Choices["+i+"].Answer";
-            var hiddenItemNameIsSingle = "Data.MultiQuestionActivityData[" + Model.Index + "].Checkbox.Choices["+i+"].IsSingle";
+            var hiddenItemNameAnswer = "Data.QuestionScreenAnswers[" + Model.Index + "].Checkbox.Choices[" + i + "].Answer";
+            var hiddenItemNameIsSingle = "Data.QuestionScreenAnswers[" + Model.Index + "].Checkbox.Choices[" + i + "].IsSingle";
 
             <input type="hidden" name="@hiddenItemNameAnswer" value="@Model.Checkbox.Choices[i].Answer" />
             <input type="hidden" name="@hiddenItemNameIsSingle" value="@Model.Checkbox.Choices[i].IsSingle.ToString()" />

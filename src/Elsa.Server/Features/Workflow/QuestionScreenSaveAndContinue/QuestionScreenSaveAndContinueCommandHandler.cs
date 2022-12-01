@@ -1,14 +1,10 @@
-﻿using Elsa.CustomActivities.Activities.QuestionScreen;
-using Elsa.CustomActivities.Activities.Shared;
+﻿using Elsa.CustomActivities.Activities.Shared;
 using Elsa.CustomInfrastructure.Data.Repository;
 using Elsa.CustomModels;
 using Elsa.CustomWorkflow.Sdk;
-using Elsa.Models;
-using Elsa.Persistence;
-using Elsa.Persistence.Specifications.WorkflowInstances;
+using Elsa.Server.Features.Workflow.Helpers;
 using Elsa.Server.Models;
 using Elsa.Server.Providers;
-using Elsa.Services;
 using MediatR;
 using Open.Linq.AsyncExtensions;
 
@@ -18,24 +14,26 @@ namespace Elsa.Server.Features.Workflow.QuestionScreenSaveAndContinue
         OperationResult<QuestionScreenSaveAndContinueResponse>>
     {
         private readonly IElsaCustomRepository _elsaCustomRepository;
-        private readonly IDateTimeProvider _dateTimeProvider;
         private readonly IQuestionInvoker _invoker;
-        private readonly IWorkflowInstanceStore _workflowInstanceStore;
-        private readonly IWorkflowRegistry _workflowRegistry;
-        private readonly IQuestionScreenSaveAndContinueMapper _saveAndContinueMapper;
+        private readonly IDateTimeProvider _dateTimeProvider;
+        private readonly ISaveAndContinueHelper _saveAndContinueHelper;
+        private readonly IWorkflowNextActivityProvider _workflowNextActivityProvider;
+        private readonly IWorkflowInstanceProvider _workflowInstanceProvider;
 
 
         public QuestionScreenSaveAndContinueCommandHandler(IQuestionInvoker invoker,
-            IWorkflowInstanceStore workflowInstanceStore, IElsaCustomRepository elsaCustomRepository,
-            IDateTimeProvider dateTimeProvider, IWorkflowRegistry workflowRegistry,
-            IQuestionScreenSaveAndContinueMapper saveAndContinueMapper)
+            IElsaCustomRepository elsaCustomRepository,
+            ISaveAndContinueHelper saveAndContinueHelper,
+            IWorkflowNextActivityProvider workflowNextActivityProvider,
+            IWorkflowInstanceProvider workflowInstanceProvider,
+            IDateTimeProvider dateTimeProvider)
         {
             _elsaCustomRepository = elsaCustomRepository;
+            _saveAndContinueHelper = saveAndContinueHelper;
+            _workflowNextActivityProvider = workflowNextActivityProvider;
+            _workflowInstanceProvider = workflowInstanceProvider;
             _dateTimeProvider = dateTimeProvider;
             _invoker = invoker;
-            _workflowInstanceStore = workflowInstanceStore;
-            _workflowRegistry = workflowRegistry;
-            _saveAndContinueMapper = saveAndContinueMapper;
         }
 
         public async Task<OperationResult<QuestionScreenSaveAndContinueResponse>> Handle(QuestionScreenSaveAndContinueCommand command,
@@ -48,87 +46,53 @@ namespace Elsa.Server.Features.Workflow.QuestionScreenSaveAndContinue
                     await _elsaCustomRepository.GetQuestionScreenAnswers(command.ActivityId, command.WorkflowInstanceId,
                         cancellationToken);
 
-                if (dbAssessmentQuestionList != null && dbAssessmentQuestionList.Any())
+                if (dbAssessmentQuestionList.Any())
                 {
-                    if (command.Answers != null && command.Answers.Any())
-                    {
-                        foreach (var question in dbAssessmentQuestionList)
-                        {
-                            var answer = command.Answers.FirstOrDefault(x => x.Id == question.QuestionId);
+                    await SetAnswers(command, cancellationToken, dbAssessmentQuestionList);
 
-                            if (answer != null)
-                            {
-                                question.SetAnswer(answer.AnswerText, _dateTimeProvider.UtcNow());
-                                question.Comments = answer.Comments;
-                            }
-                        }
-
-                        await _elsaCustomRepository.SaveChanges(cancellationToken);
-                    }
-
-                    var collectedWorkflow = await _invoker.ExecuteWorkflowsAsync(command.ActivityId, ActivityTypeConstants.QuestionScreen,
+                    await _invoker.ExecuteWorkflowsAsync(command.ActivityId,
+                        ActivityTypeConstants.QuestionScreen,
                         command.WorkflowInstanceId, dbAssessmentQuestionList, cancellationToken).FirstOrDefault();
 
-                    var workflowSpecification =
-                        new WorkflowInstanceIdSpecification(collectedWorkflow.WorkflowInstanceId);
-                    var workflowInstance = await _workflowInstanceStore.FindAsync(workflowSpecification, cancellationToken);
+                    var workflowInstance =
+                        await _workflowInstanceProvider.GetWorkflowInstance(command.WorkflowInstanceId,
+                            cancellationToken);
+                    var nextActivity =
+                        await _workflowNextActivityProvider.GetNextActivity(workflowInstance, cancellationToken);
 
-                    if (workflowInstance != null)
+                    var nextActivityRecord =
+                        await _elsaCustomRepository.GetCustomActivityNavigation(nextActivity.Id,
+                            command.WorkflowInstanceId, cancellationToken);
+
+                    if (nextActivityRecord == null)
                     {
-                        if (workflowInstance.Output != null)
+                        var customActivityNavigation =
+                            _saveAndContinueHelper.CreateNextCustomActivityNavigation(command.ActivityId,
+                                ActivityTypeConstants.QuestionScreen, nextActivity.Id, nextActivity.Type,
+                                workflowInstance);
+                        await _elsaCustomRepository.CreateCustomActivityNavigationAsync(customActivityNavigation,
+                            cancellationToken);
+
+                        if (customActivityNavigation.ActivityType == ActivityTypeConstants.QuestionScreen)
                         {
-                            var nextActivityId = workflowInstance.Output.ActivityId;
-
-                            var workflow =
-                                await _workflowRegistry.FindAsync(workflowInstance.DefinitionId, VersionOptions.Published,
-                                    cancellationToken: cancellationToken);
-
-                            var nextActivity = workflow!.Activities.FirstOrDefault(x =>
-                                x.Id == nextActivityId);
-
-                            if (nextActivity != null)
-                            {
-                                var nextActivityRecord =
-                                    await _elsaCustomRepository.GetCustomActivityNavigation(nextActivityId,
-                                        command.WorkflowInstanceId, cancellationToken);
-
-                                if (nextActivityRecord == null)
-                                {
-                                    await CreateNextActivityRecord(command, nextActivityId, nextActivity.Type, workflowInstance);
-                                }
-
-                                result.Data = new QuestionScreenSaveAndContinueResponse
-                                {
-                                    WorkflowInstanceId = command.WorkflowInstanceId,
-                                    NextActivityId = nextActivityId,
-                                    ActivityType = nextActivity.Type
-                                };
-
-                            }
-                            else
-                            {
-                                result.ErrorMessages.Add(
-                                    $"Unable to determine next activity ID");
-                            }
-                        }
-                        else
-                        {
-                            result.ErrorMessages.Add(
-                                $"Workflow instance output for workflow instance Id {command.WorkflowInstanceId} is not set. Unable to determine next activity");
+                            var questions =
+                                _saveAndContinueHelper.CreateQuestionScreenAnswers(nextActivity.Id, workflowInstance);
+                            await _elsaCustomRepository.CreateQuestionScreenAnswersAsync(questions, cancellationToken);
                         }
                     }
-                    else
+
+                    result.Data = new QuestionScreenSaveAndContinueResponse
                     {
-                        result.ErrorMessages.Add(
-                            $"Unable to find workflow instance with Id: {command.WorkflowInstanceId} in Elsa database");
-                    }
+                        WorkflowInstanceId = command.WorkflowInstanceId,
+                        NextActivityId = nextActivity.Id,
+                        ActivityType = nextActivity.Type
+                    };
                 }
                 else
                 {
-                    result.ErrorMessages.Add($"Unable to find any questions for Question Screen activity Workflow Instance Id: {command.WorkflowInstanceId} and Activity Id: {command.ActivityId} in custom database");
+                    throw new Exception($"Unable to find any questions for Question Screen activity Workflow Instance Id: {command.WorkflowInstanceId} and Activity Id: {command.ActivityId} in custom database");
                 }
             }
-
 
             catch (Exception e)
             {
@@ -138,38 +102,24 @@ namespace Elsa.Server.Features.Workflow.QuestionScreenSaveAndContinue
             return await Task.FromResult(result);
         }
 
-        private async Task CreateNextActivityRecord(QuestionScreenSaveAndContinueCommand command, string nextActivityId, string nextActivityType, WorkflowInstance workflowInstance)
+        private async Task SetAnswers(QuestionScreenSaveAndContinueCommand command, CancellationToken cancellationToken,
+            List<QuestionScreenAnswer> dbAssessmentQuestionList)
         {
-            var assessmentQuestion = _saveAndContinueMapper.saveAndContinueCommandToNextCustomActivityNavigation(command, nextActivityId, nextActivityType, workflowInstance);
-            await _elsaCustomRepository.CreateCustomActivityNavigationAsync(assessmentQuestion);
-
-            if (nextActivityType == ActivityTypeConstants.QuestionScreen)
+            if (command.Answers != null && command.Answers.Any())
             {
-                //create one for each question
-                var dictionList = workflowInstance.ActivityData
-                    .FirstOrDefault(x => x.Key == nextActivityId).Value;
-
-                if (dictionList != null)
+                foreach (var question in dbAssessmentQuestionList)
                 {
-                    var dictionaryQuestions = (AssessmentQuestions?)dictionList.FirstOrDefault(x => x.Key == "Questions").Value;
+                    var answer = command.Answers.FirstOrDefault(x => x.Id == question.QuestionId);
 
-                    if (dictionaryQuestions != null)
+                    if (answer != null)
                     {
-                        var questionList = (List<Question>)dictionaryQuestions.Questions;
-                        if (questionList!.Any())
-                        {
-                            var assessments = new List<QuestionScreenAnswer>();
-
-                            foreach (var item in questionList!)
-                            {
-                                assessments.Add(_saveAndContinueMapper.SaveAndContinueCommandToQuestionScreenAnswer(nextActivityId, nextActivityType, item, workflowInstance));
-                            }
-                            await _elsaCustomRepository.CreateQuestionScreenAnswersAsync(assessments, CancellationToken.None);
-                        }
+                        question.SetAnswer(answer.AnswerText, _dateTimeProvider.UtcNow());
+                        question.Comments = answer.Comments;
                     }
                 }
+
+                await _elsaCustomRepository.SaveChanges(cancellationToken);
             }
         }
-
     }
 }

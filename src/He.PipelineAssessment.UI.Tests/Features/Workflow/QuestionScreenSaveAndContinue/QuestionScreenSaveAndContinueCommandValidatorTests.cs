@@ -2,16 +2,16 @@
 using Elsa.CustomWorkflow.Sdk.Models.Workflow;
 using FluentValidation.TestHelper;
 using He.PipelineAssessment.Common.Tests;
-using He.PipelineAssessment.UI.Features.Workflow.SaveAndContinue;
+using He.PipelineAssessment.UI.Features.Workflow.QuestionScreenSaveAndContinue;
 using Xunit;
 
 namespace He.PipelineAssessment.UI.Tests.Features.Workflow.SaveAndContinue
 {
-    public class SaveAndContinueCommandValidatorTests
+    public class QuestionScreenSaveAndContinueCommandValidatorTests
     {
         private readonly SaveAndContinueCommandValidator _validator;
 
-        public SaveAndContinueCommandValidatorTests()
+        public QuestionScreenSaveAndContinueCommandValidatorTests()
         {
             this._validator = new SaveAndContinueCommandValidator();
         }
@@ -19,11 +19,11 @@ namespace He.PipelineAssessment.UI.Tests.Features.Workflow.SaveAndContinue
         [Theory]
         [InlineAutoMoqData(ActivityTypeConstants.QuestionScreen, true)]
         [InlineAutoMoqData("Test", false)]
-        public void Should_not_check_for_question_screen_validation_when_not_question_screen_activity(string activityType, bool hasQuestionScreenErrors, SaveAndContinueCommand saveAndContinueCommand)
+        public void Should_not_check_for_question_screen_validation_when_not_question_screen_activity(string activityType, bool hasQuestionScreenErrors, QuestionScreenSaveAndContinueCommand saveAndContinueCommand)
         {
             //Arrange
             saveAndContinueCommand.Data.ActivityType = activityType;
-            saveAndContinueCommand.Data.MultiQuestionActivityData = new List<QuestionActivityData>();
+            saveAndContinueCommand.Data.QuestionScreenAnswers = new List<QuestionActivityData>();
             var questionActivityData = new QuestionActivityData()
             {
                 QuestionType = QuestionTypeConstants.DateQuestion,
@@ -34,13 +34,13 @@ namespace He.PipelineAssessment.UI.Tests.Features.Workflow.SaveAndContinue
                     Year = 2022
                 }
             };
-            saveAndContinueCommand.Data.MultiQuestionActivityData.Add(questionActivityData);
+            saveAndContinueCommand.Data.QuestionScreenAnswers.Add(questionActivityData);
 
             //Act
             var result = this._validator.TestValidate(saveAndContinueCommand);
 
             //Assert
-            Assert.Equal(hasQuestionScreenErrors, result.Errors.Any(x => x.PropertyName.Contains("MultiQuestionActivityData")));
+            Assert.Equal(hasQuestionScreenErrors, result.Errors.Any(x => x.PropertyName.Contains("QuestionScreenAnswers")));
         }
     }
 }

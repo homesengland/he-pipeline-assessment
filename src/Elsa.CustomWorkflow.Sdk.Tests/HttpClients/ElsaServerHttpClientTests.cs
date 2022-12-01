@@ -61,10 +61,10 @@ namespace Elsa.CustomWorkflow.Sdk.Tests.HttpClients
 
         [Theory]
         [AutoMoqData]
-        public async Task MultiSaveAndContinue_ReturnsNull_GivenHttpClientGivesBackNonSuccessResponse(
+        public async Task QuestionScreenSaveAndContinue_ReturnsNull_GivenHttpClientGivesBackNonSuccessResponse(
             [Frozen] Mock<IHttpClientFactory> httpClientFactoryMock,
             [Frozen] Mock<HttpMessageHandler> httpMessageHandlerMock,
-            SaveAndContinueCommandDto saveAndContinueCommandDto,
+            QuestionScreenSaveAndContinueCommandDto saveAndContinueCommandDto,
             WorkflowNextActivityDataDto workflowNextActivityDataDto,
             ElsaServerHttpClient sut)
         {
@@ -76,7 +76,7 @@ namespace Elsa.CustomWorkflow.Sdk.Tests.HttpClients
 
 
             //Act
-            var result = await sut.SaveAndContinue(saveAndContinueCommandDto);
+            var result = await sut.QuestionScreenSaveAndContinue(saveAndContinueCommandDto);
 
             //Assert
             Assert.Null(result);
@@ -84,10 +84,10 @@ namespace Elsa.CustomWorkflow.Sdk.Tests.HttpClients
 
         [Theory]
         [AutoMoqData]
-        public async Task MultiSaveAndContinue_ReturnsWorkflowNextActivityDataDto_GivenHttpClientGivesBackNonSuccessResponse(
+        public async Task QuestionScreenSaveAndContinue_ReturnsWorkflowNextActivityDataDto_GivenHttpClientGivesBackNonSuccessResponse(
             [Frozen] Mock<IHttpClientFactory> httpClientFactoryMock,
             [Frozen] Mock<HttpMessageHandler> httpMessageHandlerMock,
-            SaveAndContinueCommandDto saveAndContinueCommandDto,
+            QuestionScreenSaveAndContinueCommandDto saveAndContinueCommandDto,
             WorkflowNextActivityDataDto workflowNextActivityDataDto,
             ElsaServerHttpClient sut)
         {
@@ -98,7 +98,7 @@ namespace Elsa.CustomWorkflow.Sdk.Tests.HttpClients
                 httpMessageHandlerMock);
 
             //Act
-            var result = await sut.SaveAndContinue(saveAndContinueCommandDto);
+            var result = await sut.QuestionScreenSaveAndContinue(saveAndContinueCommandDto);
 
             //Assert
             Assert.NotNull(result);
@@ -107,7 +107,7 @@ namespace Elsa.CustomWorkflow.Sdk.Tests.HttpClients
 
         [Theory]
         [AutoMoqData]
-        public async Task LoadWorkflowActivity_ReturnsNull_GivenHttpClientGivesBackNonSuccessResponse(
+        public async Task LoadQuestionScreen_ReturnsNull_GivenHttpClientGivesBackNonSuccessResponse(
             [Frozen] Mock<IHttpClientFactory> httpClientFactoryMock,
             [Frozen] Mock<HttpMessageHandler> httpMessageHandlerMock,
             LoadWorkflowActivityDto loadWorkflowActivityDto,
@@ -130,7 +130,7 @@ namespace Elsa.CustomWorkflow.Sdk.Tests.HttpClients
 
         [Theory]
         [AutoMoqData]
-        public async Task LoadWorkflowActivity_ReturnsWorkflowNextActivityDataDto_GivenHttpClientGivesBackNonSuccessResponse(
+        public async Task LoadQuestionScreen_ReturnsWorkflowNextActivityDataDto_GivenHttpClientGivesBackNonSuccessResponse(
             [Frozen] Mock<IHttpClientFactory> httpClientFactoryMock,
             [Frozen] Mock<HttpMessageHandler> httpMessageHandlerMock,
             LoadWorkflowActivityDto loadWorkflowActivityDto,
@@ -149,6 +149,98 @@ namespace Elsa.CustomWorkflow.Sdk.Tests.HttpClients
             //Assert
             Assert.NotNull(result);
             Assert.IsType<WorkflowActivityDataDto>(result);
+        }
+
+        [Theory]
+        [AutoMoqData]
+        public async Task LoadCheckYourAnswersScreen_ReturnsNull_GivenHttpClientGivesBackNonSuccessResponse(
+            [Frozen] Mock<IHttpClientFactory> httpClientFactoryMock,
+            [Frozen] Mock<HttpMessageHandler> httpMessageHandlerMock,
+            LoadWorkflowActivityDto loadWorkflowActivityDto,
+            WorkflowActivityDataDto workflowActivityDataDto,
+            ElsaServerHttpClient sut)
+        {
+            //Arrange
+            HttpClientTestHelpers.SetupHttpClientWithExpectedStatusCode(workflowActivityDataDto,
+                HttpStatusCode.BadRequest,
+                httpClientFactoryMock,
+                httpMessageHandlerMock);
+
+
+            //Act
+            var result = await sut.LoadCheckYourAnswersScreen(loadWorkflowActivityDto);
+
+            //Assert
+            Assert.Null(result);
+        }
+
+        [Theory]
+        [AutoMoqData]
+        public async Task LoadCheckYourAnswersScreen_ReturnsWorkflowNextActivityDataDto_GivenHttpClientGivesBackNonSuccessResponse(
+            [Frozen] Mock<IHttpClientFactory> httpClientFactoryMock,
+            [Frozen] Mock<HttpMessageHandler> httpMessageHandlerMock,
+            LoadWorkflowActivityDto loadWorkflowActivityDto,
+            WorkflowActivityDataDto workflowActivityDataDto,
+            ElsaServerHttpClient sut)
+        {
+            //Arrange
+            HttpClientTestHelpers.SetupHttpClientWithExpectedStatusCode(workflowActivityDataDto,
+                HttpStatusCode.OK,
+                httpClientFactoryMock,
+                httpMessageHandlerMock);
+
+            //Act
+            var result = await sut.LoadCheckYourAnswersScreen(loadWorkflowActivityDto);
+
+            //Assert
+            Assert.NotNull(result);
+            Assert.IsType<WorkflowActivityDataDto>(result);
+        }
+
+        [Theory]
+        [AutoMoqData]
+        public async Task CheckYourAnswersSaveAndContinue_ReturnsNull_GivenHttpClientGivesBackNonSuccessResponse(
+            [Frozen] Mock<IHttpClientFactory> httpClientFactoryMock,
+            [Frozen] Mock<HttpMessageHandler> httpMessageHandlerMock,
+            CheckYourAnswersSaveAndContinueCommandDto command,
+            WorkflowNextActivityDataDto workflowNextActivityDataDto,
+            ElsaServerHttpClient sut)
+        {
+            //Arrange
+            HttpClientTestHelpers.SetupHttpClientWithExpectedStatusCode(workflowNextActivityDataDto,
+                HttpStatusCode.BadRequest,
+                httpClientFactoryMock,
+                httpMessageHandlerMock);
+
+
+            //Act
+            var result = await sut.CheckYourAnswersSaveAndContinue(command);
+
+            //Assert
+            Assert.Null(result);
+        }
+
+        [Theory]
+        [AutoMoqData]
+        public async Task CheckYourAnswersSaveAndContinue_ReturnsWorkflowNextActivityDataDto_GivenHttpClientGivesBackNonSuccessResponse(
+            [Frozen] Mock<IHttpClientFactory> httpClientFactoryMock,
+            [Frozen] Mock<HttpMessageHandler> httpMessageHandlerMock,
+            CheckYourAnswersSaveAndContinueCommandDto command,
+            WorkflowNextActivityDataDto workflowNextActivityDataDto,
+            ElsaServerHttpClient sut)
+        {
+            //Arrange
+            HttpClientTestHelpers.SetupHttpClientWithExpectedStatusCode(workflowNextActivityDataDto,
+                HttpStatusCode.OK,
+                httpClientFactoryMock,
+                httpMessageHandlerMock);
+
+            //Act
+            var result = await sut.CheckYourAnswersSaveAndContinue(command);
+
+            //Assert
+            Assert.NotNull(result);
+            Assert.IsType<WorkflowNextActivityDataDto>(result);
         }
     }
 }

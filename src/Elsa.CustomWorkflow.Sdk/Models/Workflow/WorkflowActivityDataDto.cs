@@ -17,16 +17,20 @@ namespace Elsa.CustomWorkflow.Sdk.Models.Workflow
         public string WorkflowInstanceId { get; set; } = null!;
         public string ActivityId { get; set; } = null!;
         public string PreviousActivityId { get; set; } = null!;
+        public string PreviousActivityType { get; set; } = null!;
+
         public string PageTitle { get; set; } = null!;
         public string ActivityType { get; set; } = null!;
 
-
-        public List<QuestionActivityData>? MultiQuestionActivityData { get; set; }
+        public string FooterTitle { get; set; } = null!;
+        public string FooterText { get; set; } = null!;
+        public List<QuestionActivityData>? QuestionScreenAnswers { get; set; }
 
     }
 
     public class QuestionActivityData
     {
+        public string ActivityId { get; set; } = null!;
         public string QuestionId { get; set; } = null!;
         public string QuestionType { get; set; } = null!;
 
@@ -48,8 +52,6 @@ namespace Elsa.CustomWorkflow.Sdk.Models.Workflow
 
         private Date _date = new Date();
         public Date Date { get { return GetDate(); } set { SetDate(value); } }
-
-
 
         #region Getters and Setters
 

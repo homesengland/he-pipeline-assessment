@@ -5,23 +5,23 @@ using Elsa.CustomWorkflow.Sdk.Models.Workflow;
 using He.PipelineAssessment.Common.Tests;
 using He.PipelineAssessment.Infrastructure.Repository;
 using He.PipelineAssessment.Models;
-using He.PipelineAssessment.UI.Features.Workflow.SaveAndContinue;
+using He.PipelineAssessment.UI.Features.Workflow.QuestionScreenSaveAndContinue;
 using Moq;
 using Xunit;
 
 namespace He.PipelineAssessment.UI.Tests.Features.Workflow.SaveAndContinue
 {
-    public class SaveAndContinueCommandHandlerTests
+    public class QuestionScreenSaveAndContinueCommandHandlerTests
     {
 
         [Theory]
         [AutoMoqData]
         public async Task Handle_ReturnsNull_GivenHttpClientResponseIsNull(
             [Frozen] Mock<IElsaServerHttpClient> elsaServerHttpClient,
-            [Frozen] Mock<ISaveAndContinueMapper> saveAndContinueMapper,
-            SaveAndContinueCommand saveAndContinueCommand,
-            SaveAndContinueCommandDto saveAndContinueCommandDto,
-            SaveAndContinueCommandHandler sut
+            [Frozen] Mock<IQuestionScreenSaveAndContinueMapper> saveAndContinueMapper,
+            QuestionScreenSaveAndContinueCommand saveAndContinueCommand,
+            QuestionScreenSaveAndContinueCommandDto saveAndContinueCommandDto,
+            QuestionScreenSaveAndContinueCommandHandler sut
         )
         {
             //Arrange
@@ -29,7 +29,7 @@ namespace He.PipelineAssessment.UI.Tests.Features.Workflow.SaveAndContinue
                 .Setup(x => x.SaveAndContinueCommandToMultiSaveAndContinueCommandDto(saveAndContinueCommand))
                 .Returns(saveAndContinueCommandDto);
 
-            elsaServerHttpClient.Setup(x => x.SaveAndContinue(saveAndContinueCommandDto))
+            elsaServerHttpClient.Setup(x => x.QuestionScreenSaveAndContinue(saveAndContinueCommandDto))
                 .ReturnsAsync((WorkflowNextActivityDataDto?)null);
 
             //Act
@@ -43,13 +43,13 @@ namespace He.PipelineAssessment.UI.Tests.Features.Workflow.SaveAndContinue
         [AutoMoqData]
         public async Task Handle_ReturnsLoadWorkflowActivityRequest_GivenNoErrorsEncountered(
             [Frozen] Mock<IElsaServerHttpClient> elsaServerHttpClient,
-            [Frozen] Mock<ISaveAndContinueMapper> saveAndContinueMapper,
+            [Frozen] Mock<IQuestionScreenSaveAndContinueMapper> saveAndContinueMapper,
             [Frozen] Mock<IAssessmentRepository> assessmentRepository,
             AssessmentStage assessmentStage,
-            SaveAndContinueCommand saveAndContinueCommand,
-            SaveAndContinueCommandDto saveAndContinueCommandDto,
+            QuestionScreenSaveAndContinueCommand saveAndContinueCommand,
+            QuestionScreenSaveAndContinueCommandDto saveAndContinueCommandDto,
             WorkflowNextActivityDataDto workflowNextActivityDataDto,
-            SaveAndContinueCommandHandler sut
+            QuestionScreenSaveAndContinueCommandHandler sut
         )
         {
             //Arrange
@@ -57,7 +57,7 @@ namespace He.PipelineAssessment.UI.Tests.Features.Workflow.SaveAndContinue
                 .Setup(x => x.SaveAndContinueCommandToMultiSaveAndContinueCommandDto(saveAndContinueCommand))
                 .Returns(saveAndContinueCommandDto);
 
-            elsaServerHttpClient.Setup(x => x.SaveAndContinue(saveAndContinueCommandDto))
+            elsaServerHttpClient.Setup(x => x.QuestionScreenSaveAndContinue(saveAndContinueCommandDto))
                 .ReturnsAsync(workflowNextActivityDataDto);
 
             assessmentRepository.Setup(x => x.GetAssessmentStage(workflowNextActivityDataDto.Data.WorkflowInstanceId))
@@ -77,13 +77,13 @@ namespace He.PipelineAssessment.UI.Tests.Features.Workflow.SaveAndContinue
         [AutoMoqData]
         public async Task Handle_ReturnsLoadWorkflowActivityRequest_GivenNoErrorsEncounteredAndActivityTypeIsQuestionScreen(
         [Frozen] Mock<IElsaServerHttpClient> elsaServerHttpClient,
-        [Frozen] Mock<ISaveAndContinueMapper> saveAndContinueMapper,
+        [Frozen] Mock<IQuestionScreenSaveAndContinueMapper> saveAndContinueMapper,
         [Frozen] Mock<IAssessmentRepository> assessmentRepository,
         AssessmentStage assessmentStage,
-        SaveAndContinueCommand saveAndContinueCommand,
-        SaveAndContinueCommandDto saveAndContinueCommandDto,
+        QuestionScreenSaveAndContinueCommand saveAndContinueCommand,
+        QuestionScreenSaveAndContinueCommandDto saveAndContinueCommandDto,
         WorkflowNextActivityDataDto workflowNextActivityDataDto,
-        SaveAndContinueCommandHandler sut
+        QuestionScreenSaveAndContinueCommandHandler sut
         )
         {
             //Arrange
@@ -92,7 +92,7 @@ namespace He.PipelineAssessment.UI.Tests.Features.Workflow.SaveAndContinue
                 .Setup(x => x.SaveAndContinueCommandToMultiSaveAndContinueCommandDto(saveAndContinueCommand))
                 .Returns(saveAndContinueCommandDto);
 
-            elsaServerHttpClient.Setup(x => x.SaveAndContinue(saveAndContinueCommandDto))
+            elsaServerHttpClient.Setup(x => x.QuestionScreenSaveAndContinue(saveAndContinueCommandDto))
                 .ReturnsAsync(workflowNextActivityDataDto);
 
             assessmentRepository.Setup(x => x.GetAssessmentStage(workflowNextActivityDataDto.Data.WorkflowInstanceId))

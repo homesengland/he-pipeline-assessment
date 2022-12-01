@@ -8,7 +8,8 @@ namespace Elsa.CustomWorkflow.Sdk.HttpClients
     public interface IElsaServerHttpClient
     {
         Task<WorkflowNextActivityDataDto?> PostStartWorkflow(StartWorkflowCommandDto model);
-        Task<WorkflowNextActivityDataDto?> SaveAndContinue(SaveAndContinueCommandDto model);
+        Task<WorkflowNextActivityDataDto?> QuestionScreenSaveAndContinue(QuestionScreenSaveAndContinueCommandDto model);
+        Task<WorkflowNextActivityDataDto?> CheckYourAnswersSaveAndContinue(CheckYourAnswersSaveAndContinueCommandDto model);
         Task<WorkflowActivityDataDto?> LoadQuestionScreen(LoadWorkflowActivityDto model);
         Task<WorkflowActivityDataDto?> LoadCheckYourAnswersScreen(LoadWorkflowActivityDto model);
     }
@@ -53,10 +54,37 @@ namespace Elsa.CustomWorkflow.Sdk.HttpClients
 
 
 
-        public async Task<WorkflowNextActivityDataDto?> SaveAndContinue(SaveAndContinueCommandDto model)
+        public async Task<WorkflowNextActivityDataDto?> QuestionScreenSaveAndContinue(QuestionScreenSaveAndContinueCommandDto model)
         {
             string data;
             var relativeUri = "workflow/QuestionScreenSaveAndContinue";
+
+            using var request = new HttpRequestMessage(HttpMethod.Post, relativeUri);
+            var content = JsonSerializer.Serialize(model);
+            request.Content = new StringContent(content, Encoding.UTF8, "application/json");
+
+            using (var response = await _httpClientFactory.CreateClient("ElsaServerClient")
+                       .SendAsync(request)
+                       .ConfigureAwait(false))
+            {
+                data = await response.Content.ReadAsStringAsync().ConfigureAwait(false);
+                if (!response.IsSuccessStatusCode)
+                {
+                    _logger.LogError($"StatusCode='{response.StatusCode}'," +
+                                     $"\n Message= '{data}'," +
+                                     $"\n Url='{request.RequestUri}'");
+
+                    return null;
+                }
+            }
+
+            return JsonSerializer.Deserialize<WorkflowNextActivityDataDto>(data, new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
+        }
+
+        public async Task<WorkflowNextActivityDataDto?> CheckYourAnswersSaveAndContinue(CheckYourAnswersSaveAndContinueCommandDto model)
+        {
+            string data;
+            var relativeUri = "workflow/CheckYourAnswersSaveAndContinue";
 
             using var request = new HttpRequestMessage(HttpMethod.Post, relativeUri);
             var content = JsonSerializer.Serialize(model);
