@@ -1,13 +1,12 @@
 ﻿using Elsa.Activities.ControlFlow;
 using Elsa.ActivityResults;
 using Elsa.Attributes;
-using Elsa.CustomInfrastructure.Data.Repository;
 using Elsa.CustomModels;
 using Elsa.Expressions;
 using Elsa.Services;
 using Elsa.Services.Models;
 
-namespace Elsa.CustomActivities.Activities.CheckYourAnswers
+namespace Elsa.CustomActivities.Activities.CheckYourAnswersScreen
 {
     [Action(
     Category = "Homes England Activities",
@@ -16,13 +15,6 @@ namespace Elsa.CustomActivities.Activities.CheckYourAnswers
     )]
     public class CheckYourAnswersScreen : Activity
     {
-        private readonly IElsaCustomRepository _elsaCustomRepository;
-
-        public CheckYourAnswersScreen(IElsaCustomRepository elsaCustomRepository)
-        {
-            _elsaCustomRepository = elsaCustomRepository;
-        }
-
         [ActivityInput(Hint = "Section title")]
         public string Title { get; set; } = null!;
         [ActivityInput(Hint = "Footer title")]
@@ -44,9 +36,6 @@ namespace Elsa.CustomActivities.Activities.CheckYourAnswers
         protected override async ValueTask<IActivityExecutionResult> OnExecuteAsync(ActivityExecutionContext context)
         {
             context.JournalData.Add(nameof(context.WorkflowInstance.DefinitionId), context.WorkflowInstance.DefinitionId);
-
-            // var assessmentQuestions = await _elsaCustomRepository.GetAssessmentQuestions(context.WorkflowInstance.DefinitionId, context.CorrelationId);
-            // if (assessmentQuestions != null) Output = assessmentQuestions.ToList();
 
             return await Task.FromResult(Suspend());
         }
