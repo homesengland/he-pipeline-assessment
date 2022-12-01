@@ -1,6 +1,7 @@
 ﻿using Elsa.Activities.ControlFlow;
 using Elsa.ActivityResults;
 using Elsa.Attributes;
+using Elsa.CustomModels;
 using Elsa.Expressions;
 using Elsa.Services;
 using Elsa.Services.Models;
@@ -20,6 +21,7 @@ namespace Elsa.CustomActivities.Activities.CheckYourAnswersScreen
         public string FooterTitle { get; set; } = null!;
         [ActivityInput(Hint = "Footer text")]
         public string FooterText { get; set; } = null!;
+        [ActivityOutput] public string Output { get; set; }
 
 
         [ActivityInput(Label = "Assessment outcome conditions", Hint = "The conditions to evaluate.", UIHint = "switch-case-builder", DefaultSyntax = "Switch", IsDesignerCritical = true)]
