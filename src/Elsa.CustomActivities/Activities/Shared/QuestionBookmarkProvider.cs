@@ -42,7 +42,8 @@ namespace Elsa.CustomActivities.Activities.Shared
             return new List<string>()
             {
                 ActivityTypeConstants.QuestionScreen,
-                ActivityTypeConstants.CheckYourAnswersScreen
+                ActivityTypeConstants.CheckYourAnswersScreen,
+                ActivityTypeConstants.ConfirmationScreen
             };
         }
     }

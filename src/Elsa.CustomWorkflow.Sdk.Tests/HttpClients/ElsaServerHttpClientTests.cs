@@ -242,5 +242,51 @@ namespace Elsa.CustomWorkflow.Sdk.Tests.HttpClients
             Assert.NotNull(result);
             Assert.IsType<WorkflowNextActivityDataDto>(result);
         }
+
+        [Theory]
+        [AutoMoqData]
+        public async Task LoadConfirmationScreen_ReturnsNull_GivenHttpClientGivesBackNonSuccessResponse(
+            [Frozen] Mock<IHttpClientFactory> httpClientFactoryMock,
+            [Frozen] Mock<HttpMessageHandler> httpMessageHandlerMock,
+            LoadWorkflowActivityDto loadWorkflowActivityDto,
+            WorkflowActivityDataDto workflowActivityDataDto,
+            ElsaServerHttpClient sut)
+        {
+            //Arrange
+            HttpClientTestHelpers.SetupHttpClientWithExpectedStatusCode(workflowActivityDataDto,
+                HttpStatusCode.BadRequest,
+                httpClientFactoryMock,
+                httpMessageHandlerMock);
+
+
+            //Act
+            var result = await sut.LoadConfirmationScreen(loadWorkflowActivityDto);
+
+            //Assert
+            Assert.Null(result);
+        }
+
+        [Theory]
+        [AutoMoqData]
+        public async Task LoadConfirmationScreen_ReturnsWorkflowNextActivityDataDto_GivenHttpClientGivesBackNonSuccessResponse(
+            [Frozen] Mock<IHttpClientFactory> httpClientFactoryMock,
+            [Frozen] Mock<HttpMessageHandler> httpMessageHandlerMock,
+            LoadWorkflowActivityDto loadWorkflowActivityDto,
+            WorkflowActivityDataDto workflowActivityDataDto,
+            ElsaServerHttpClient sut)
+        {
+            //Arrange
+            HttpClientTestHelpers.SetupHttpClientWithExpectedStatusCode(workflowActivityDataDto,
+                HttpStatusCode.OK,
+                httpClientFactoryMock,
+                httpMessageHandlerMock);
+
+            //Act
+            var result = await sut.LoadConfirmationScreen(loadWorkflowActivityDto);
+
+            //Assert
+            Assert.NotNull(result);
+            Assert.IsType<WorkflowActivityDataDto>(result);
+        }
     }
 }

@@ -1,5 +1,4 @@
-﻿using Elsa.CustomWorkflow.Sdk;
-using Elsa.CustomWorkflow.Sdk.HttpClients;
+﻿using Elsa.CustomWorkflow.Sdk.HttpClients;
 using Elsa.CustomWorkflow.Sdk.Models.Workflow;
 using He.PipelineAssessment.Infrastructure.Repository;
 using MediatR;
@@ -32,15 +31,16 @@ namespace He.PipelineAssessment.UI.Features.Workflow.CheckYourAnswersSaveAndCont
                     var submittedTime = DateTime.UtcNow;
                     currentAssessmentStage.Status = AssessmentStageConstants.Submitted;
                     currentAssessmentStage.SubmittedDateTime = submittedTime;
-                    currentAssessmentStage.CurrentActivityId = request.Data.ActivityId;
-                    currentAssessmentStage.CurrentActivityType = ActivityTypeConstants.CheckYourAnswersScreen;
+                    currentAssessmentStage.CurrentActivityId = response.Data.NextActivityId;
+                    currentAssessmentStage.CurrentActivityType = response.Data.ActivityType;
                     currentAssessmentStage.LastModifiedDateTime = submittedTime;
                     await _assessmentRepository.SaveChanges();
 
                     CheckYourAnswersSaveAndContinueCommandResponse result = new CheckYourAnswersSaveAndContinueCommandResponse()
                     {
-                        AssessmentId = currentAssessmentStage.AssessmentId,
-                        CorrelationId = currentAssessmentStage.Assessment.SpId.ToString(),
+                        ActivityId = response.Data.NextActivityId,
+                        ActivityType = response.Data.ActivityType,
+                        WorkflowInstanceId = response.Data.WorkflowInstanceId
                     };
                     return await Task.FromResult(result);
                 }

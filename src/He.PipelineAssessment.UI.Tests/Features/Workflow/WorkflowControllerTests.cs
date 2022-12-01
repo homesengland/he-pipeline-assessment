@@ -342,10 +342,12 @@ namespace He.PipelineAssessment.UI.Tests.Features.Workflow
             Assert.Equal("Summary", redirectToActionResult.ActionName);
 
 
-            var activityIdRouteValue = new KeyValuePair<string, object?>("CorrelationId", response.CorrelationId);
-            var workflowInstanceIdRouteValue = new KeyValuePair<string, object?>("AssessmentId", response.AssessmentId);
+            var activityIdRouteValue = new KeyValuePair<string, object?>("ActivityId", response.ActivityId);
+            var activityTypeRouteValue = new KeyValuePair<string, object?>("ActivityType", response.ActivityType);
+            var workflowInstanceIdRouteValue = new KeyValuePair<string, object?>("WorkflowInstanceId", response.WorkflowInstanceId);
 
             Assert.Contains(activityIdRouteValue, redirectToActionResult.RouteValues!);
+            Assert.Contains(activityTypeRouteValue, redirectToActionResult.RouteValues!);
             Assert.Contains(workflowInstanceIdRouteValue, redirectToActionResult.RouteValues!);
         }
     }

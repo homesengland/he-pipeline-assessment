@@ -2,6 +2,7 @@
 using FluentValidation;
 using He.PipelineAssessment.UI.Features.Workflow.CheckYourAnswersSaveAndContinue;
 using He.PipelineAssessment.UI.Features.Workflow.LoadCheckYourAnswersScreen;
+using He.PipelineAssessment.UI.Features.Workflow.LoadConfirmationScreen;
 using He.PipelineAssessment.UI.Features.Workflow.LoadQuestionScreen;
 using He.PipelineAssessment.UI.Features.Workflow.QuestionScreenSaveAndContinue;
 using He.PipelineAssessment.UI.Features.Workflow.StartWorkflow;
@@ -84,6 +85,17 @@ namespace He.PipelineAssessment.UI.Features.Workflow
 
                             return View("CheckYourAnswers", result);
                         }
+                    case ActivityTypeConstants.ConfirmationScreen:
+                        {
+                            var checkYourAnswersScreenRequest = new LoadConfirmationScreenRequest
+                            {
+                                WorkflowInstanceId = request.WorkflowInstanceId,
+                                ActivityId = request.ActivityId
+                            };
+                            var result = await this._mediator.Send(checkYourAnswersScreenRequest);
+
+                            return View("Confirmation", result);
+                        }
                     default:
                         throw new ApplicationException(
                             $"Attempted to load unsupported activity type: {request.ActivityType}");
@@ -137,12 +149,13 @@ namespace He.PipelineAssessment.UI.Features.Workflow
             {
                 var result = await this._mediator.Send(command);
 
-                return RedirectToAction("Summary", "Assessment",
-                new
-                {
-                    AssessmentId = result!.AssessmentId,
-                    CorrelationId = result!.CorrelationId
-                });
+                return RedirectToAction("LoadWorkflowActivity",
+                    new
+                    {
+                        WorkflowInstanceId = result?.WorkflowInstanceId,
+                        ActivityId = result?.ActivityId,
+                        ActivityType = result?.ActivityType
+                    });
             }
             catch (Exception e)
             {

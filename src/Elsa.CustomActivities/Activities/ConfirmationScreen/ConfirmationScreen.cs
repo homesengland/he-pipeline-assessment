@@ -27,7 +27,13 @@ namespace Elsa.CustomActivities.Activities.ConfirmationScreen
         {
             context.JournalData.Add(nameof(context.WorkflowInstance.DefinitionId), context.WorkflowInstance.DefinitionId);
 
-            return await Task.FromResult(Done());
+            return await Task.FromResult(Suspend());
+        }
+
+        protected override async ValueTask<IActivityExecutionResult> OnResumeAsync(ActivityExecutionContext context)
+        {
+
+            return await Task.FromResult(Suspend());
         }
     }
 }

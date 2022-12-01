@@ -1,0 +1,39 @@
+﻿@model He.PipelineAssessment.UI.Features.Workflow.LoadConfirmationScreen.LoadConfirmationScreenResponse;
+@using Elsa.CustomWorkflow.Sdk
+@{
+    ViewData["Title"] = "Pipeline Assessment";
+    Layout = "_Layout";
+}
+
+<div class="govuk-panel govuk-panel--confirmation">
+    <h1 class="govuk-panel__title">
+        @Model.Data.ConfirmationTitle
+    </h1>
+    <div class="govuk-panel__body">
+        @Model.Data.ConfirmationText
+    </div>
+</div>
+
+<div class="govuk-grid-row">
+    <div class="govuk-grid-column-two-thirds-from-desktop">
+        <dl class="govuk-summary-list govuk-!-margin-bottom-9">
+            @foreach (var question in Model.Data.QuestionScreenAnswers!)
+            {
+                <div class="govuk-summary-list__row">
+                    <dt class="govuk-summary-list__key">
+                        @question.Question
+                    </dt>
+                    <dd class="govuk-summary-list__value">
+                        @question.Answer
+                    </dd>
+                </div>
+            }
+        </dl>
+    </div>
+</div>
+
+<div>
+    <h2 class="govuk-heading-m">@Html.DisplayTextFor(m => m.Data.FooterTitle)</h2>
+    <p class="govuk-body">@Html.DisplayTextFor(m => m.Data.FooterText).</p>
+</div>
+

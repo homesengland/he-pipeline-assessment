@@ -455,7 +455,7 @@ namespace Elsa.Server.Tests.Features.Workflow
         {
 
             //Arrange
-            mediatorMock.Setup(x => x.Send(It.IsAny<LoadConfirmationScreenRequest>(), CancellationToken.None)).ReturnsAsync((OperationResult<LoadCheckYourAnswersScreenResponse>)null!);
+            mediatorMock.Setup(x => x.Send(It.IsAny<LoadConfirmationScreenRequest>(), CancellationToken.None)).ReturnsAsync((OperationResult<LoadConfirmationScreenResponse>)null!);
 
             WorkflowController controller = new WorkflowController(mediatorMock.Object);
 
