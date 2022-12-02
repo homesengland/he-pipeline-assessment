@@ -14,7 +14,13 @@
         @Model.Data.ConfirmationText
     </div>
 </div>
-
+<div>
+    <h2 class="govuk-heading-m">@Html.DisplayTextFor(m => m.Data.FooterTitle)</h2>
+    <p class="govuk-body">@Html.DisplayTextFor(m => m.Data.FooterText).</p>
+</div>
+<h2 class="govuk-heading-m">
+    Review your answers
+</h2>
 <div class="govuk-grid-row">
     <div class="govuk-grid-column-two-thirds-from-desktop">
         <dl class="govuk-summary-list govuk-!-margin-bottom-9">
@@ -47,11 +53,6 @@
             }
         </dl>
     </div>
-</div>
-
-<div>
-    <h2 class="govuk-heading-m">@Html.DisplayTextFor(m => m.Data.FooterTitle)</h2>
-    <p class="govuk-body">@Html.DisplayTextFor(m => m.Data.FooterText).</p>
 </div>
 
 <div>
