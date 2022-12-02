@@ -55,7 +55,5 @@
 </div>
 
 <div>
-    <span>@Model.CorrelationId</span>
-    <span>@Model.AssessmentId</span>
     @Html.ActionLink("Go to Assessment Summary", "Summary", "Assessment", new { Model.AssessmentId, Model.CorrelationId }, new { @class = "govuk-button" })
 </div>
