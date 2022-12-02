@@ -7,8 +7,10 @@
     Layout = "_Layout";
 }
 <div class="text-center">
-
-    @Html.ActionLink("Back","LoadWorkflowActivity","Workflow", new {WorkflowInstanceId = Model.Data.WorkflowInstanceId, ActivityId = Model.Data.PreviousActivityId, ActivityType = Model.Data.PreviousActivityType},new{ @class="govuk-back-link"})
+    @if (Model.Data.ActivityId != Model.Data.PreviousActivityId)
+    {
+        @Html.ActionLink("Back","LoadWorkflowActivity","Workflow", new {WorkflowInstanceId = Model.Data.WorkflowInstanceId, ActivityId = Model.Data.PreviousActivityId, ActivityType = Model.Data.PreviousActivityType},new{ @class="govuk-back-link"})
+    }
 
     @using (Html.BeginForm("QuestionScreenSaveAndContinue", "Workflow", FormMethod.Post))
     {
