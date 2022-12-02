@@ -1,6 +1,5 @@
 ﻿using Elsa.CustomInfrastructure.Data.Repository;
 using Elsa.CustomWorkflow.Sdk;
-using Elsa.Persistence;
 using Elsa.Server.Extensions;
 using Elsa.Server.Models;
 using Elsa.Server.Providers;
@@ -11,13 +10,11 @@ namespace Elsa.Server.Features.Workflow.LoadCheckYourAnswersScreen
     public class LoadCheckYourAnswersScreenRequestHandler : IRequestHandler<LoadCheckYourAnswersScreenRequest, OperationResult<LoadCheckYourAnswersScreenResponse>>
     {
         private readonly IElsaCustomRepository _elsaCustomRepository;
-        private readonly IWorkflowInstanceStore _workflowInstanceStore;
         private readonly IActivityDataProvider _activityDataProvider;
 
-        public LoadCheckYourAnswersScreenRequestHandler(IElsaCustomRepository elsaCustomRepository, IWorkflowInstanceStore workflowInstanceStore, IActivityDataProvider activityDataProvider)
+        public LoadCheckYourAnswersScreenRequestHandler(IElsaCustomRepository elsaCustomRepository, IActivityDataProvider activityDataProvider)
         {
             _elsaCustomRepository = elsaCustomRepository;
-            _workflowInstanceStore = workflowInstanceStore;
             _activityDataProvider = activityDataProvider;
         }
 
@@ -45,15 +42,12 @@ namespace Elsa.Server.Features.Workflow.LoadCheckYourAnswersScreen
                     var questionScreenAnswers = await _elsaCustomRepository
                         .GetQuestionScreenAnswers(result.Data.WorkflowInstanceId, cancellationToken);
 
-                    result.Data.QuestionScreenAnswers = questionScreenAnswers;
+                    result.Data.CheckQuestionScreenAnswers = questionScreenAnswers;
 
                     var activityDataDictionary = await _activityDataProvider.GetActivityData(activityScreenRequest.WorkflowInstanceId, activityScreenRequest.ActivityId, cancellationToken);
-                    if (activityDataDictionary != null)
-                    {
-                        result.Data.PageTitle = (string?)activityDataDictionary.GetData("Title");
-                        result.Data.FooterTitle = (string?)activityDataDictionary.GetData("FooterTitle");
-                        result.Data.FooterText = (string?)activityDataDictionary.GetData("FooterText");
-                    }
+                    result.Data.PageTitle = (string?)activityDataDictionary.GetData("Title");
+                    result.Data.FooterTitle = (string?)activityDataDictionary.GetData("FooterTitle");
+                    result.Data.FooterText = (string?)activityDataDictionary.GetData("FooterText");
                 }
                 else
                 {

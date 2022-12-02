@@ -43,23 +43,11 @@ namespace Elsa.CustomInfrastructure.Data.Repository
             return list;
         }
 
-        public async Task<QuestionScreenAnswer?> GetQuestionScreenAnswer(string activityId, string correlationId, string questionID,
+        public async Task<QuestionScreenAnswer?> GetQuestionScreenAnswer(string activityId, string workflowInstanceId, string questionID,
             CancellationToken cancellationToken)
         {
-            var latestQuestionScreenAnswer = _dbContext.Set<QuestionScreenAnswer>()
-                .Where(x => x.ActivityId == activityId && x.CorrelationId == correlationId && x.QuestionId == questionID)
-                .OrderBy(x => x.CreatedDateTime)
-                .FirstOrDefault();
-
-            if (latestQuestionScreenAnswer != null)
-            {
-                var result = await _dbContext.Set<QuestionScreenAnswer>().FirstOrDefaultAsync(x => x.ActivityId == activityId && x.WorkflowInstanceId == latestQuestionScreenAnswer.WorkflowInstanceId && x.QuestionId == questionID);
-
-                return result;
-            }
-
-            return null;
-
+            var result = await _dbContext.Set<QuestionScreenAnswer>().FirstOrDefaultAsync(x => x.ActivityId == activityId && x.WorkflowInstanceId == workflowInstanceId && x.QuestionId == questionID);
+            return result;
         }
 
         public async Task SaveChanges(CancellationToken cancellationToken)

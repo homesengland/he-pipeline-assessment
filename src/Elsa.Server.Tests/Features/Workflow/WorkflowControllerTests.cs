@@ -1,6 +1,7 @@
 ﻿using AutoFixture.Xunit2;
 using Elsa.Server.Features.Workflow;
 using Elsa.Server.Features.Workflow.LoadCheckYourAnswersScreen;
+using Elsa.Server.Features.Workflow.LoadConfirmationScreen;
 using Elsa.Server.Features.Workflow.LoadQuestionScreen;
 using Elsa.Server.Features.Workflow.QuestionScreenSaveAndContinue;
 using Elsa.Server.Features.Workflow.StartWorkflow;
@@ -347,6 +348,119 @@ namespace Elsa.Server.Tests.Features.Workflow
 
             //Act
             var result = await controller.LoadCheckYourAnswersScreen(request.WorkflowInstanceId, request.ActivityId);
+
+            //Assert
+            Assert.NotNull(result);
+            Assert.IsType<ObjectResult>(result);
+
+            var objectResult = (ObjectResult)result;
+
+            Assert.Equal(500, objectResult.StatusCode);
+            Assert.IsType<NullReferenceException>(objectResult.Value);
+        }
+
+        [Theory]
+        [AutoData]
+        public async Task WorkflowController_LoadConfirmationScreen_ShouldReturnOK_WhenCommandHandlerIsSuccessful(
+           LoadConfirmationScreenRequest request,
+           LoadConfirmationScreenResponse response,
+           Mock<IMediator> mediatorMock)
+        {
+            var operationResult = new OperationResult<LoadConfirmationScreenResponse>
+            {
+                ErrorMessages = new List<string>(),
+                ValidationMessages = null,
+                Data = response
+            };
+            //Arrange
+            mediatorMock.Setup(x => x.Send(It.IsAny<LoadConfirmationScreenRequest>(), CancellationToken.None)).ReturnsAsync(operationResult);
+
+            WorkflowController controller = new WorkflowController(mediatorMock.Object);
+
+            //Act
+            var result = await controller.LoadConfirmationScreen(request.WorkflowInstanceId, request.ActivityId);
+
+            //Assert
+            Assert.NotNull(result);
+            Assert.IsType<OkObjectResult>(result);
+
+            var okResult = (OkObjectResult)result;
+            var okResultValueData = (OperationResult<LoadConfirmationScreenResponse>)okResult.Value!;
+
+            Assert.Equal(response.ActivityId, okResultValueData.Data!.ActivityId);
+            Assert.Equal(response.WorkflowInstanceId, okResultValueData.Data.WorkflowInstanceId);
+
+        }
+
+        [Theory]
+        [AutoData]
+        public async Task WorkflowController_LoadConfirmationScreen_ShouldReturnBadRequest_WhenCommandHandlerReturnsErrors(
+            LoadConfirmationScreenRequest request,
+            OperationResult<LoadConfirmationScreenResponse> operationResult,
+            Mock<IMediator> mediatorMock)
+        {
+
+            //Arrange
+            mediatorMock.Setup(x => x.Send(It.IsAny<LoadConfirmationScreenRequest>(), CancellationToken.None)).ReturnsAsync(operationResult);
+
+            WorkflowController controller = new WorkflowController(mediatorMock.Object);
+
+            //Act
+            var result = await controller.LoadConfirmationScreen(request.WorkflowInstanceId, request.ActivityId);
+
+            //Assert
+            Assert.NotNull(result);
+            Assert.IsType<BadRequestObjectResult>(result);
+
+            var badResult = (BadRequestObjectResult)result;
+            var badResultValueData = (string)badResult.Value!;
+
+            Assert.Equal(string.Join(',', operationResult.ErrorMessages), badResultValueData);
+        }
+
+        [Theory]
+        [AutoData]
+        public async Task WorkflowController_LoadConfirmationScreen_ShouldReturn500_WhenCommandHandlerThrowsException(
+            LoadConfirmationScreenRequest request,
+            Exception exception,
+            Mock<IMediator> mediatorMock)
+        {
+            //Arrange
+            mediatorMock.Setup(x => x.Send(It.IsAny<LoadConfirmationScreenRequest>(), CancellationToken.None)).ThrowsAsync(exception);
+
+            WorkflowController controller = new WorkflowController(mediatorMock.Object);
+
+            //Act
+            var result = await controller.LoadConfirmationScreen(request.WorkflowInstanceId, request.ActivityId);
+
+            //Assert
+            Assert.NotNull(result);
+            Assert.IsType<ObjectResult>(result);
+
+            var objectResult = (ObjectResult)result;
+
+            Assert.Equal(500, objectResult.StatusCode);
+            Assert.IsType<Exception>(objectResult.Value);
+
+            var exceptionResult = (Exception)objectResult.Value!;
+
+            Assert.Equal(exception.Message, exceptionResult.Message);
+        }
+
+        [Theory]
+        [AutoData]
+        public async Task WorkflowController_LoadConfirmationScreen_ShouldReturn500_WhenCommandHandlerReturnsNull(
+            LoadConfirmationScreenRequest request,
+            Mock<IMediator> mediatorMock)
+        {
+
+            //Arrange
+            mediatorMock.Setup(x => x.Send(It.IsAny<LoadConfirmationScreenRequest>(), CancellationToken.None)).ReturnsAsync((OperationResult<LoadConfirmationScreenResponse>)null!);
+
+            WorkflowController controller = new WorkflowController(mediatorMock.Object);
+
+            //Act
+            var result = await controller.LoadConfirmationScreen(request.WorkflowInstanceId, request.ActivityId);
 
             //Assert
             Assert.NotNull(result);

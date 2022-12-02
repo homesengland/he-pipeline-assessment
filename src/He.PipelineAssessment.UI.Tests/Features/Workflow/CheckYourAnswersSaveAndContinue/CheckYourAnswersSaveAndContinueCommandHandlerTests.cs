@@ -56,8 +56,8 @@ namespace He.PipelineAssessment.UI.Tests.Features.Workflow.CheckYourAnswersSaveA
 
             //Assert
             Assert.NotNull(result);
-            Assert.Equal(assessmentStage.Assessment.SpId.ToString(), result!.CorrelationId);
-            Assert.Equal(assessmentStage.AssessmentId, result!.AssessmentId);
+            Assert.Equal(workflowNextActivityDataDto.Data.NextActivityId, result!.ActivityId);
+            Assert.Equal(workflowNextActivityDataDto.Data.WorkflowInstanceId, result.WorkflowInstanceId);
             assessmentRepository.Verify(x => x.SaveChanges(), Times.Once);
         }
     }

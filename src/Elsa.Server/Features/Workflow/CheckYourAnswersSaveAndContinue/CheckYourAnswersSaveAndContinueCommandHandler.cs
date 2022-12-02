@@ -5,7 +5,6 @@ using Elsa.Server.Features.Workflow.Helpers;
 using Elsa.Server.Models;
 using Elsa.Server.Providers;
 using MediatR;
-using Open.Linq.AsyncExtensions;
 
 namespace Elsa.Server.Features.Workflow.CheckYourAnswersSaveAndContinue
 {
@@ -39,7 +38,7 @@ namespace Elsa.Server.Features.Workflow.CheckYourAnswersSaveAndContinue
             try
             {
                 await _invoker.ExecuteWorkflowsAsync(command.ActivityId, ActivityTypeConstants.CheckYourAnswersScreen,
-                    command.WorkflowInstanceId, null, cancellationToken).FirstOrDefault();
+                    command.WorkflowInstanceId, null, cancellationToken);
 
                 var workflowInstance = await _workflowInstanceProvider.GetWorkflowInstance(command.WorkflowInstanceId, cancellationToken);
                 var nextActivity = await _workflowNextActivityProvider.GetNextActivity(workflowInstance, cancellationToken);

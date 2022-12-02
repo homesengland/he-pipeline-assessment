@@ -1,10 +1,7 @@
 ﻿using Elsa.Models;
 using Elsa.Persistence;
-using Elsa.Persistence.Specifications.WorkflowInstances;
 using Elsa.Services;
 using Elsa.Services.Models;
-using Elsa.Services.Workflows;
-using System.Threading;
 
 namespace Elsa.Server.Providers
 {
@@ -25,7 +22,7 @@ namespace Elsa.Server.Providers
                 throw new Exception($"No output found for workflow instance id {workflowInstance.Id}");
             }
 
-            var nextActivityId = workflowInstance.Output.ActivityId;
+            var nextActivityId = workflowInstance.Output.ActivityId;//workflowInstance.LastExecutedActivityId;
 
             var workflow =
                 await _workflowRegistry.FindAsync(workflowInstance.DefinitionId, VersionOptions.Published,
@@ -34,7 +31,7 @@ namespace Elsa.Server.Providers
             var nextActivity = workflow!.Activities.FirstOrDefault(x =>
                 x.Id == nextActivityId);
 
-            if(nextActivity == null)
+            if (nextActivity == null)
             {
                 throw new Exception($"Next activity not found for workflow instance id {workflowInstance.Id}.");
             }

@@ -2,11 +2,15 @@
 @using He.PipelineAssessment.UI
 @using Elsa.CustomWorkflow.Sdk
 @using He.PipelineAssessment.UI.Features.Workflow.QuestionScreenSaveAndContinue
+@using System.Text.Json
 @{
     ViewData["Title"] = "Pipeline Assessment";
     Layout = "_Layout";
 }
-@Html.ActionLink("Back","LoadWorkflowActivity","Workflow", new {WorkflowInstanceId = Model.Data.WorkflowInstanceId, ActivityId = Model.Data.PreviousActivityId, ActivityType = Model.Data.PreviousActivityType},new{ @class="govuk-back-link"})
+@if (Model.Data.ActivityId != Model.Data.PreviousActivityId)
+{
+    @Html.ActionLink("Back", "LoadWorkflowActivity", "Workflow", new {WorkflowInstanceId = Model.Data.WorkflowInstanceId, ActivityId = Model.Data.PreviousActivityId, ActivityType = Model.Data.PreviousActivityType}, new {@class = "govuk-back-link"})
+}
 @using (Html.BeginForm("CheckYourAnswerScreenSaveAndContinue", "Workflow", FormMethod.Post))
 {
     @Html.HiddenFor(m => Model.Data.WorkflowInstanceId)
@@ -19,7 +23,7 @@
         <div class="govuk-grid-row">
             <div class="govuk-grid-column-two-thirds-from-desktop">
                 <dl class="govuk-summary-list govuk-!-margin-bottom-9">
-            @foreach (var question in Model.Data.QuestionScreenAnswers!)
+                    @foreach (var question in Model.Data.CheckQuestionScreenAnswers!)
             {
            
                         <div class="govuk-summary-list__row">
@@ -27,14 +31,28 @@
                                 @question.Question
                             </dt>
                             <dd class="govuk-summary-list__value">
-                                @question.Answer
+                                @if (question.QuestionType == QuestionTypeConstants.CheckboxQuestion)
+                                {
+                                    if (question.Answer!=null)
+                                    {
+                                        var answerList = JsonSerializer.Deserialize<List<string>>(question.Answer);
+
+                                        if (answerList != null)
+                                        {
+                                            var result = string.Join(", ", answerList);
+                                            @result
+                                        }
+                                    }
+                                }
+                                else
+                                {
+                                    @question.Answer
+                                }
                             </dd>
-@*                            @if (Model.Data. != "Finished")
-                            {*@
+
                             <dd class="govuk-summary-list__actions">
                                 @Html.ActionLink("Change", "LoadWorkflowActivity", "Workflow", new { WorkflowInstanceId = Model.Data.WorkflowInstanceId, ActivityId = @question.ActivityId, ActivityType = ActivityTypeConstants.QuestionScreen }, new { @class = "govuk-link" })
                             </dd>
-@*                            }*@
                         </div>
           
             }

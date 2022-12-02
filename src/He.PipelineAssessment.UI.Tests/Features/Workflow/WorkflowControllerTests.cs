@@ -1,4 +1,5 @@
 ﻿using AutoFixture.Xunit2;
+using Azure;
 using Elsa.CustomWorkflow.Sdk;
 using FluentValidation;
 using FluentValidation.Results;
@@ -6,6 +7,7 @@ using He.PipelineAssessment.Common.Tests;
 using He.PipelineAssessment.UI.Features.Workflow;
 using He.PipelineAssessment.UI.Features.Workflow.CheckYourAnswersSaveAndContinue;
 using He.PipelineAssessment.UI.Features.Workflow.LoadCheckYourAnswersScreen;
+using He.PipelineAssessment.UI.Features.Workflow.LoadConfirmationScreen;
 using He.PipelineAssessment.UI.Features.Workflow.LoadQuestionScreen;
 using He.PipelineAssessment.UI.Features.Workflow.QuestionScreenSaveAndContinue;
 using He.PipelineAssessment.UI.Features.Workflow.StartWorkflow;
@@ -13,6 +15,7 @@ using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Moq;
 using Xunit;
+using static Microsoft.EntityFrameworkCore.DbLoggerCategory.Database;
 
 namespace He.PipelineAssessment.UI.Tests.Features.Workflow
 {
@@ -246,8 +249,8 @@ namespace He.PipelineAssessment.UI.Tests.Features.Workflow
 
             mediator.Setup(x =>
                     x.Send(
-                        It.Is<LoadCheckYourAnswersScreenRequest>(x =>
-                            x.ActivityId == saveAndContinueCommandResponse.ActivityId && x.WorkflowInstanceId ==
+                        It.Is<LoadCheckYourAnswersScreenRequest>(y =>
+                            y.ActivityId == saveAndContinueCommandResponse.ActivityId && y.WorkflowInstanceId ==
                             saveAndContinueCommandResponse.WorkflowInstanceId), CancellationToken.None))
                 .ReturnsAsync(saveAndContinueCommand);
 
@@ -266,6 +269,36 @@ namespace He.PipelineAssessment.UI.Tests.Features.Workflow
 
         [Theory]
         [AutoMoqData]
+        public async Task LoadWorkflowActivity_ShouldRedirectToConfirmationView_GivenConfirmationScreenAndNoExceptionsThrow(
+            [Frozen] Mock<IMediator> mediator,
+            QuestionScreenSaveAndContinueCommandResponse saveAndContinueCommandResponse,
+            LoadConfirmationScreenResponse response,
+            WorkflowController sut)
+        {
+            //Arrange
+            saveAndContinueCommandResponse.ActivityType = ActivityTypeConstants.ConfirmationScreen;
+
+            mediator.Setup(x =>
+                    x.Send(
+                        It.Is<LoadConfirmationScreenRequest>(y =>
+                            y.ActivityId == saveAndContinueCommandResponse.ActivityId && y.WorkflowInstanceId ==
+                            saveAndContinueCommandResponse.WorkflowInstanceId), CancellationToken.None))
+                .ReturnsAsync(response);
+
+            //Act
+            var result = await sut.LoadWorkflowActivity(saveAndContinueCommandResponse);
+
+            //Assert
+            Assert.NotNull(result);
+            Assert.IsType<ViewResult>(result);
+
+            var viewResult = (ViewResult)result;
+            Assert.Equal("Confirmation", viewResult.ViewName);
+            Assert.IsType<LoadConfirmationScreenResponse>(viewResult.Model);
+        }
+
+        [Theory]
+        [AutoMoqData]
         public async Task LoadWorkflowActivity_ShouldRedirectToMultiSaveAndContinueView_GivenQuestionScreenAndNoExceptionsThrow(
             [Frozen] Mock<IMediator> mediator,
             QuestionScreenSaveAndContinueCommandResponse saveAndContinueCommandResponse,
@@ -277,8 +310,8 @@ namespace He.PipelineAssessment.UI.Tests.Features.Workflow
 
             mediator.Setup(x =>
                     x.Send(
-                        It.Is<LoadQuestionScreenRequest>(x =>
-                            x.ActivityId == saveAndContinueCommandResponse.ActivityId && x.WorkflowInstanceId ==
+                        It.Is<LoadQuestionScreenRequest>(y =>
+                            y.ActivityId == saveAndContinueCommandResponse.ActivityId && y.WorkflowInstanceId ==
                             saveAndContinueCommandResponse.WorkflowInstanceId), CancellationToken.None))
                 .ReturnsAsync(saveAndContinueCommand);
 
@@ -293,6 +326,29 @@ namespace He.PipelineAssessment.UI.Tests.Features.Workflow
             Assert.Equal("MultiSaveAndContinue", viewResult.ViewName);
             Assert.IsType<QuestionScreenSaveAndContinueCommand>(viewResult.Model);
 
+        }
+
+        [Theory]
+        [AutoMoqData]
+        public async Task LoadWorkflowActivity_ShouldThrowApplicationException_GivenUnknownActivityType(
+            QuestionScreenSaveAndContinueCommandResponse saveAndContinueCommandResponse,
+            WorkflowController sut)
+        {
+            //Arrange
+            saveAndContinueCommandResponse.ActivityType = "UnknownType";
+
+            //Act
+            var result = await sut.LoadWorkflowActivity(saveAndContinueCommandResponse);
+
+            //Assert
+            Assert.IsType<RedirectToActionResult>(result);
+            var redirectToActionResult = (RedirectToActionResult)result;
+            Assert.Equal("Error", redirectToActionResult.ControllerName);
+            Assert.Equal("Index", redirectToActionResult.ActionName);
+
+            var exceptionRouteValue = new KeyValuePair<string, object?>("message", "Attempted to load unsupported activity type: UnknownType");
+
+            Assert.Contains(exceptionRouteValue, redirectToActionResult.RouteValues!);
         }
 
         [Theory]
@@ -338,14 +394,15 @@ namespace He.PipelineAssessment.UI.Tests.Features.Workflow
             Assert.IsType<RedirectToActionResult>(result);
 
             var redirectToActionResult = (RedirectToActionResult)result;
-            Assert.Equal("Assessment", redirectToActionResult.ControllerName);
-            Assert.Equal("Summary", redirectToActionResult.ActionName);
 
+            Assert.Equal("LoadWorkflowActivity", redirectToActionResult.ActionName);
 
-            var activityIdRouteValue = new KeyValuePair<string, object?>("CorrelationId", response.CorrelationId);
-            var workflowInstanceIdRouteValue = new KeyValuePair<string, object?>("AssessmentId", response.AssessmentId);
+            var activityIdRouteValue = new KeyValuePair<string, object?>("ActivityId", response.ActivityId);
+            var activityTypeRouteValue = new KeyValuePair<string, object?>("ActivityType", response.ActivityType);
+            var workflowInstanceIdRouteValue = new KeyValuePair<string, object?>("WorkflowInstanceId", response.WorkflowInstanceId);
 
             Assert.Contains(activityIdRouteValue, redirectToActionResult.RouteValues!);
+            Assert.Contains(activityTypeRouteValue, redirectToActionResult.RouteValues!);
             Assert.Contains(workflowInstanceIdRouteValue, redirectToActionResult.RouteValues!);
         }
     }

@@ -12,6 +12,7 @@ namespace Elsa.CustomWorkflow.Sdk.HttpClients
         Task<WorkflowNextActivityDataDto?> CheckYourAnswersSaveAndContinue(CheckYourAnswersSaveAndContinueCommandDto model);
         Task<WorkflowActivityDataDto?> LoadQuestionScreen(LoadWorkflowActivityDto model);
         Task<WorkflowActivityDataDto?> LoadCheckYourAnswersScreen(LoadWorkflowActivityDto model);
+        Task<WorkflowActivityDataDto?> LoadConfirmationScreen(LoadWorkflowActivityDto model);
     }
 
     public class ElsaServerHttpClient : IElsaServerHttpClient
@@ -135,6 +136,29 @@ namespace Elsa.CustomWorkflow.Sdk.HttpClients
         {
             string data;
             string relativeUri = $"workflow/LoadCheckYourAnswersScreen?workflowInstanceId={model.WorkflowInstanceId}&activityId={model.ActivityId}";
+
+            using (var response = await _httpClientFactory.CreateClient("ElsaServerClient")
+                       .GetAsync(relativeUri)
+                       .ConfigureAwait(false))
+            {
+                data = await response.Content.ReadAsStringAsync().ConfigureAwait(false);
+                if (!response.IsSuccessStatusCode)
+                {
+                    _logger.LogError($"StatusCode='{response.StatusCode}'," +
+                                     $"\n Message= '{data}'," +
+                                     $"\n Url='{relativeUri}'");
+
+                    return default;
+                }
+            }
+
+            return JsonSerializer.Deserialize<WorkflowActivityDataDto>(data, new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
+        }
+
+        public async Task<WorkflowActivityDataDto?> LoadConfirmationScreen(LoadWorkflowActivityDto model)
+        {
+            string data;
+            string relativeUri = $"workflow/LoadConfirmationScreen?workflowInstanceId={model.WorkflowInstanceId}&activityId={model.ActivityId}";
 
             using (var response = await _httpClientFactory.CreateClient("ElsaServerClient")
                        .GetAsync(relativeUri)

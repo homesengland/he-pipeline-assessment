@@ -52,7 +52,7 @@ namespace Elsa.Server.Features.Workflow.QuestionScreenSaveAndContinue
 
                     await _invoker.ExecuteWorkflowsAsync(command.ActivityId,
                         ActivityTypeConstants.QuestionScreen,
-                        command.WorkflowInstanceId, dbAssessmentQuestionList, cancellationToken).FirstOrDefault();
+                        command.WorkflowInstanceId, dbAssessmentQuestionList, cancellationToken);
 
                     var workflowInstance =
                         await _workflowInstanceProvider.GetWorkflowInstance(command.WorkflowInstanceId,
