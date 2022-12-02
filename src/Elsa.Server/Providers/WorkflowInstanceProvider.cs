@@ -24,5 +24,10 @@ namespace Elsa.Server.Providers
             return workflowInstance;
         }
 
+        public async Task FinishWorkflow(WorkflowInstance workflowInstance, CancellationToken cancellationToken)
+        {
+            workflowInstance.WorkflowStatus = WorkflowStatus.Finished;
+            await _workflowInstanceStore.SaveAsync(workflowInstance, cancellationToken: cancellationToken);
+        }
     }
 }

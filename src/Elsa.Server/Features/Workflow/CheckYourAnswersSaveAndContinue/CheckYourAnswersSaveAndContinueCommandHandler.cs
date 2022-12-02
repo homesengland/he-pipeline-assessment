@@ -1,6 +1,8 @@
 ﻿using Elsa.CustomActivities.Activities.Shared;
 using Elsa.CustomInfrastructure.Data.Repository;
 using Elsa.CustomWorkflow.Sdk;
+using Elsa.Models;
+using Elsa.Persistence;
 using Elsa.Server.Features.Workflow.Helpers;
 using Elsa.Server.Models;
 using Elsa.Server.Providers;
@@ -37,10 +39,19 @@ namespace Elsa.Server.Features.Workflow.CheckYourAnswersSaveAndContinue
             var result = new OperationResult<CheckYourAnswersSaveAndContinueResponse>();
             try
             {
-                await _invoker.ExecuteWorkflowsAsync(command.ActivityId, ActivityTypeConstants.CheckYourAnswersScreen,
+                var collectedWorkflows = await _invoker.ExecuteWorkflowsAsync(command.ActivityId,
+                    ActivityTypeConstants.CheckYourAnswersScreen,
                     command.WorkflowInstanceId, null, cancellationToken);
 
-                var workflowInstance = await _workflowInstanceProvider.GetWorkflowInstance(command.WorkflowInstanceId, cancellationToken);
+                var workflowInstance =
+                    await _workflowInstanceProvider.GetWorkflowInstance(command.WorkflowInstanceId,
+                        cancellationToken);
+
+                if (!collectedWorkflows.Any())
+                {
+                    throw new Exception($"Unable to progress. Workflow status is: {workflowInstance.WorkflowStatus}");
+                }
+
                 var nextActivity = await _workflowNextActivityProvider.GetNextActivity(workflowInstance, cancellationToken);
 
                 var nextActivityRecord =
@@ -65,6 +76,8 @@ namespace Elsa.Server.Features.Workflow.CheckYourAnswersSaveAndContinue
                     NextActivityId = nextActivity.Id,
                     ActivityType = nextActivity.Type
                 };
+
+                //await _workflowInstanceProvider.FinishWorkflow(workflowInstance, cancellationToken);
             }
             catch (Exception e)
             {
