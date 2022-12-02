@@ -34,7 +34,7 @@
 
     eventBus.on('activity-design-displaying',
       e => {
-        if (e.activityModel.type == "QuestionScreen")
+                    if (e.activityModel.type == "QuestionScreen" || e.activityModel.type == "CheckYourAnswersScreen")
           e.outcomes = e.outcomes.filter(x => x !== 'Default' && x !== 'Done');
       });
   };
