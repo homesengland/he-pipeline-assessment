@@ -1,6 +1,5 @@
 ﻿using Elsa.ActivityResults;
 using Elsa.Attributes;
-using Elsa.CustomModels;
 using Elsa.Services;
 using Elsa.Services.Models;
 
@@ -23,7 +22,7 @@ namespace Elsa.CustomActivities.Activities.ConfirmationScreen
         public string FooterText { get; set; } = null!;
         [ActivityInput(Hint = "Next workflow to run")]
         public string NextWorkflowDefinitionId { get; set; } = null!;
-        [ActivityOutput] public string Output { get; set; }
+        [ActivityOutput] public string Output { get; set; } = null!;
 
         protected override async ValueTask<IActivityExecutionResult> OnExecuteAsync(ActivityExecutionContext context)
         {
