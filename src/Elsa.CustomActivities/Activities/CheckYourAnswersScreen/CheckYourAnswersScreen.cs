@@ -21,8 +21,7 @@ namespace Elsa.CustomActivities.Activities.CheckYourAnswersScreen
         public string FooterTitle { get; set; } = null!;
         [ActivityInput(Hint = "Footer text")]
         public string FooterText { get; set; } = null!;
-        [ActivityOutput] public string Output { get; set; }
-
+        [ActivityOutput] public ICollection<QuestionScreenAnswer>? Output { get; set; }
 
         [ActivityInput(Label = "Assessment outcome conditions", Hint = "The conditions to evaluate.", UIHint = "switch-case-builder", DefaultSyntax = "Switch", IsDesignerCritical = true)]
         public ICollection<SwitchCase> Cases { get; set; } = new List<SwitchCase>();
