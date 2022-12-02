@@ -77,7 +77,7 @@ namespace Elsa.Server.Features.Workflow.CheckYourAnswersSaveAndContinue
                     ActivityType = nextActivity.Type
                 };
 
-                //await _workflowInstanceProvider.FinishWorkflow(workflowInstance, cancellationToken);
+                await _workflowInstanceProvider.FinishWorkflow(workflowInstance, cancellationToken);
             }
             catch (Exception e)
             {
