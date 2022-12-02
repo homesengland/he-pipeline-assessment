@@ -36,10 +36,6 @@ namespace Elsa.Server.Features.Workflow.LoadConfirmationScreen
 
                 if (customActivityNavigation != null)
                 {
-                    //don't think this will be needed as it's only for the Back button functionality
-
-                    //result.Data.PreviousActivityId = customActivityNavigation.PreviousActivityId;
-                    //result.Data.PreviousActivityType = customActivityNavigation.PreviousActivityType;
 
                     var questionScreenAnswers = await _elsaCustomRepository
                         .GetQuestionScreenAnswers(result.Data.WorkflowInstanceId, cancellationToken);
