@@ -1,5 +1,6 @@
 ﻿@model He.PipelineAssessment.UI.Features.Workflow.LoadConfirmationScreen.LoadConfirmationScreenResponse;
 @using Elsa.CustomWorkflow.Sdk
+@using System.Text.Json
 @{
     ViewData["Title"] = "Pipeline Assessment";
     Layout = "_Layout";
@@ -17,14 +18,27 @@
 <div class="govuk-grid-row">
     <div class="govuk-grid-column-two-thirds-from-desktop">
         <dl class="govuk-summary-list govuk-!-margin-bottom-9">
-            @foreach (var question in Model.Data.QuestionScreenAnswers!)
+            @foreach (var question in Model.Data.CheckQuestionScreenAnswers!)
             {
                 <div class="govuk-summary-list__row">
                     <dt class="govuk-summary-list__key">
                         @question.Question
                     </dt>
                     <dd class="govuk-summary-list__value">
-                        @question.Answer
+                        @if (question.QuestionType == QuestionTypeConstants.CheckboxQuestion)
+                        {
+                            var answerList = JsonSerializer.Deserialize<List<string>>(question.Answer!);
+
+                            if (answerList != null)
+                            {
+                                var result = string.Join(", ", answerList);
+                                @result
+                            }
+                        }
+                        else
+                        {
+                            @question.Answer
+                        }
                     </dd>
                 </div>
             }

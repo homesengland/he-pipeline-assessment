@@ -21,7 +21,7 @@ namespace Elsa.CustomActivities.Activities.QuestionScreen.Helpers
         }
 
 
-        public async Task<bool> AnswerEqualToOrGreaterThan(string correlationId, string workflowName, string activityName, string questionId, int day, int month, int year)
+        public async Task<bool> AnswerEqualToOrGreaterThan(string WorkflowInstance, string workflowName, string activityName, string questionId, int day, int month, int year)
         {
             var workflowBlueprint = await _workflowRegistry.FindByNameAsync(workflowName, Models.VersionOptions.Published);
 
@@ -31,7 +31,7 @@ namespace Elsa.CustomActivities.Activities.QuestionScreen.Helpers
                 if (activity != null)
                 {
                     var questionScreenAnswer = await _elsaCustomRepository.GetQuestionScreenAnswer(activity.Id,
-                        correlationId, questionId, CancellationToken.None);
+                        WorkflowInstance, questionId, CancellationToken.None);
 
                     if (questionScreenAnswer != null && questionScreenAnswer.Answer != null &&
                         questionScreenAnswer.QuestionType == QuestionTypeConstants.DateQuestion)
@@ -55,7 +55,7 @@ namespace Elsa.CustomActivities.Activities.QuestionScreen.Helpers
             return false;
         }
 
-        public async Task<bool> AnswerEqualToOrLessThan(string correlationId, string workflowName, string activityName, string questionId, int day, int month, int year)
+        public async Task<bool> AnswerEqualToOrLessThan(string WorkflowInstance, string workflowName, string activityName, string questionId, int day, int month, int year)
         {
             var workflowBlueprint = await _workflowRegistry.FindByNameAsync(workflowName, Models.VersionOptions.Published);
 
@@ -65,7 +65,7 @@ namespace Elsa.CustomActivities.Activities.QuestionScreen.Helpers
                 if (activity != null)
                 {
                     var questionScreenAnswer = await _elsaCustomRepository.GetQuestionScreenAnswer(activity.Id,
-                        correlationId, questionId, CancellationToken.None);
+                        WorkflowInstance, questionId, CancellationToken.None);
 
                     if (questionScreenAnswer != null && questionScreenAnswer.Answer != null &&
                         questionScreenAnswer.QuestionType == QuestionTypeConstants.DateQuestion)
@@ -94,8 +94,8 @@ namespace Elsa.CustomActivities.Activities.QuestionScreen.Helpers
         {
             var activityExecutionContext = notification.ActivityExecutionContext;
             var engine = notification.Engine;
-            engine.SetValue("dateQuestionAnswerEqualToOrGreaterThan", (Func<string, string, string, int, int, int, bool>)((workflowName, activityName, questionId, day, month, year) => AnswerEqualToOrGreaterThan(activityExecutionContext.CorrelationId, workflowName, activityName, questionId, day, month, year).Result));
-            engine.SetValue("dateQuestionAnswerEqualToOrLessThan", (Func<string, string, string, int, int, int, bool>)((workflowName, activityName, questionId, day, month, year) => AnswerEqualToOrLessThan(activityExecutionContext.CorrelationId, workflowName, activityName, questionId, day, month, year).Result));
+            engine.SetValue("dateQuestionAnswerEqualToOrGreaterThan", (Func<string, string, string, int, int, int, bool>)((workflowName, activityName, questionId, day, month, year) => AnswerEqualToOrGreaterThan(activityExecutionContext.WorkflowInstance.Id, workflowName, activityName, questionId, day, month, year).Result));
+            engine.SetValue("dateQuestionAnswerEqualToOrLessThan", (Func<string, string, string, int, int, int, bool>)((workflowName, activityName, questionId, day, month, year) => AnswerEqualToOrLessThan(activityExecutionContext.WorkflowInstance.Id, workflowName, activityName, questionId, day, month, year).Result));
             return Task.CompletedTask;
         }
 

@@ -21,7 +21,7 @@ namespace Elsa.CustomActivities.Tests.Activities.QuestionScreen.Helpers
             string workflowName,
             string activityName,
             string questionId,
-            string correlationId,
+            string workflowInstanceId,
             QuestionHelper sut)
         {
             //Arrange
@@ -30,7 +30,7 @@ namespace Elsa.CustomActivities.Tests.Activities.QuestionScreen.Helpers
             workflowRegistry.Setup(x => x.FindByNameAsync(workflowName!, VersionOptions.Published, null, default)).ReturnsAsync((WorkflowBlueprint?)null);
 
             //Act
-            var result = await sut.GetAnswer(correlationId, workflowName, activityName, questionId);
+            var result = await sut.GetAnswer(workflowInstanceId, workflowName, activityName, questionId);
 
             //Assert
             Assert.Equal(string.Empty, result);
@@ -44,7 +44,7 @@ namespace Elsa.CustomActivities.Tests.Activities.QuestionScreen.Helpers
             string workflowName,
             string activityName,
             string questionId,
-            string correlationId,
+            string workflowInstanceId,
             WorkflowBlueprint workflowBlueprint,
             QuestionHelper sut)
         {
@@ -55,7 +55,7 @@ namespace Elsa.CustomActivities.Tests.Activities.QuestionScreen.Helpers
             workflowRegistry.Setup(x => x.FindByNameAsync(workflowName!, VersionOptions.Published, null, default)).ReturnsAsync(workflowBlueprint);
 
             //Act
-            var result = await sut.GetAnswer(correlationId, workflowName, activityName, questionId);
+            var result = await sut.GetAnswer(workflowInstanceId, workflowName, activityName, questionId);
 
             //Assert
             Assert.Equal(string.Empty, result);
@@ -70,7 +70,7 @@ namespace Elsa.CustomActivities.Tests.Activities.QuestionScreen.Helpers
             string activityId,
             string activityName,
             string questionId,
-            string correlationId,
+            string workflowInstanceId,
             WorkflowBlueprint workflowBlueprint,
             QuestionHelper sut)
         {
@@ -81,12 +81,12 @@ namespace Elsa.CustomActivities.Tests.Activities.QuestionScreen.Helpers
                 Name = activityName
             });
 
-            elsaCustomRepository.Setup(x => x.GetQuestionScreenAnswer(activityId, correlationId, It.IsAny<string>(), CancellationToken.None)).ReturnsAsync((QuestionScreenAnswer?)null);
+            elsaCustomRepository.Setup(x => x.GetQuestionScreenAnswer(activityId, workflowInstanceId, It.IsAny<string>(), CancellationToken.None)).ReturnsAsync((QuestionScreenAnswer?)null);
 
             workflowRegistry.Setup(x => x.FindByNameAsync(workflowName!, VersionOptions.Published, null, default)).ReturnsAsync(workflowBlueprint);
 
             //Act
-            var result = await sut.GetAnswer(correlationId, workflowName, activityName, questionId);
+            var result = await sut.GetAnswer(workflowInstanceId, workflowName, activityName, questionId);
 
             //Assert
             Assert.Equal(string.Empty, result);
@@ -101,7 +101,7 @@ namespace Elsa.CustomActivities.Tests.Activities.QuestionScreen.Helpers
             string activityId,
             string activityName,
             string questionId,
-            string correlationId,
+            string workflowInstanceId,
             WorkflowBlueprint workflowBlueprint,
             QuestionScreenAnswer questionScreenAnswer,
             QuestionHelper sut)
@@ -113,12 +113,12 @@ namespace Elsa.CustomActivities.Tests.Activities.QuestionScreen.Helpers
                 Name = activityName
             });
 
-            elsaCustomRepository.Setup(x => x.GetQuestionScreenAnswer(activityId, correlationId, It.IsAny<string>(), CancellationToken.None)).ReturnsAsync(questionScreenAnswer);
+            elsaCustomRepository.Setup(x => x.GetQuestionScreenAnswer(activityId, workflowInstanceId, It.IsAny<string>(), CancellationToken.None)).ReturnsAsync(questionScreenAnswer);
 
             workflowRegistry.Setup(x => x.FindByNameAsync(workflowName!, VersionOptions.Published, null, default)).ReturnsAsync(workflowBlueprint);
 
             //Act
-            var result = await sut.GetAnswer(correlationId, workflowName, activityName, questionId);
+            var result = await sut.GetAnswer(workflowInstanceId, workflowName, activityName, questionId);
 
             //Assert
             Assert.Equal(questionScreenAnswer.Answer, result);

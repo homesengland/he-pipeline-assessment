@@ -1,4 +1,5 @@
 ﻿
+using Elsa.CustomModels;
 using FluentValidation.Results;
 using System.Globalization;
 using System.Text.Json;
@@ -26,6 +27,7 @@ namespace Elsa.CustomWorkflow.Sdk.Models.Workflow
         public string FooterTitle { get; set; } = null!;
         public string FooterText { get; set; } = null!;
         public string? NextWorkflowDefinitionId { get; set; } = null!;
+        public List<QuestionScreenAnswer>? CheckQuestionScreenAnswers { get; set; }
         public List<QuestionActivityData>? QuestionScreenAnswers { get; set; }
 
     }

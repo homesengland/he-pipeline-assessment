@@ -21,7 +21,7 @@ namespace Elsa.CustomActivities.Activities.QuestionScreen.Helpers
             _workflowRegistry = workflowRegistry;
         }
 
-        public async Task<string> GetAnswer(string correlationId, string workflowName, string activityName, string questionId)
+        public async Task<string> GetAnswer(string workflowInstanceId, string workflowName, string activityName, string questionId)
         {
             string result = String.Empty;
             var workflowBlueprint = await _workflowRegistry.FindByNameAsync(workflowName, Models.VersionOptions.Published);
@@ -32,7 +32,7 @@ namespace Elsa.CustomActivities.Activities.QuestionScreen.Helpers
                 if (activity != null)
                 {
                     var questionScreenAnswer = await _elsaCustomRepository.GetQuestionScreenAnswer(activity.Id,
-                        correlationId, questionId, CancellationToken.None);
+                        workflowInstanceId, questionId, CancellationToken.None);
 
                     if (questionScreenAnswer != null && questionScreenAnswer.Answer != null &&
                         questionScreenAnswer.QuestionType == QuestionTypeConstants.CheckboxQuestion)
@@ -50,7 +50,7 @@ namespace Elsa.CustomActivities.Activities.QuestionScreen.Helpers
             return result;
         }
 
-        public async Task<bool> AnswerEquals(string correlationId, string workflowName, string activityName, string questionId, string[] choiceIdsToCheck)
+        public async Task<bool> AnswerEquals(string workflowInstanceId, string workflowName, string activityName, string questionId, string[] choiceIdsToCheck)
         {
             bool result = false;
             var workflowBlueprint = await _workflowRegistry.FindByNameAsync(workflowName, Models.VersionOptions.Published);
@@ -61,7 +61,7 @@ namespace Elsa.CustomActivities.Activities.QuestionScreen.Helpers
                 if (activity != null)
                 {
                     var questionScreenAnswer = await _elsaCustomRepository.GetQuestionScreenAnswer(activity.Id,
-                        correlationId, questionId, CancellationToken.None);
+                        workflowInstanceId, questionId, CancellationToken.None);
                     if (questionScreenAnswer != null &&
                         questionScreenAnswer.QuestionType == QuestionTypeConstants.CheckboxQuestion &&
                         questionScreenAnswer.Choices != null)
@@ -94,7 +94,7 @@ namespace Elsa.CustomActivities.Activities.QuestionScreen.Helpers
             return result;
         }
 
-        public async Task<bool> AnswerContains(string correlationId, string workflowName, string activityName, string questionId, string[] choiceIdsToCheck)
+        public async Task<bool> AnswerContains(string workflowInstanceId, string workflowName, string activityName, string questionId, string[] choiceIdsToCheck)
         {
             bool result = false;
             var workflowBlueprint = await _workflowRegistry.FindByNameAsync(workflowName, Models.VersionOptions.Published);
@@ -105,7 +105,7 @@ namespace Elsa.CustomActivities.Activities.QuestionScreen.Helpers
                 if (activity != null)
                 {
 
-                    var questionScreenAnswer = await _elsaCustomRepository.GetQuestionScreenAnswer(activity.Id, correlationId, questionId, CancellationToken.None);
+                    var questionScreenAnswer = await _elsaCustomRepository.GetQuestionScreenAnswer(activity.Id, workflowInstanceId, questionId, CancellationToken.None);
                     if (questionScreenAnswer != null &&
                         questionScreenAnswer.QuestionType == QuestionTypeConstants.CheckboxQuestion)
                     {
@@ -145,9 +145,9 @@ namespace Elsa.CustomActivities.Activities.QuestionScreen.Helpers
         {
             var activityExecutionContext = notification.ActivityExecutionContext;
             var engine = notification.Engine;
-            engine.SetValue("checkboxQuestionGetAnswer", (Func<string, string, string, string?>)((workflowName, activityName, questionId) => GetAnswer(activityExecutionContext.CorrelationId, workflowName, activityName, questionId).Result));
-            engine.SetValue("checkboxQuestionAnswerEquals", (Func<string, string, string, string[], bool>)((workflowName, activityName, questionId, choiceIdsToCheck) => AnswerEquals(activityExecutionContext.CorrelationId, workflowName, activityName, questionId, choiceIdsToCheck).Result));
-            engine.SetValue("checkboxQuestionAnswerContains", (Func<string, string, string, string[], bool>)((workflowName, activityName, questionId, choiceIdsToCheck) => AnswerContains(activityExecutionContext.CorrelationId, workflowName, activityName, questionId, choiceIdsToCheck).Result));
+            engine.SetValue("checkboxQuestionGetAnswer", (Func<string, string, string, string?>)((workflowName, activityName, questionId) => GetAnswer(activityExecutionContext.WorkflowInstance.Id, workflowName, activityName, questionId).Result));
+            engine.SetValue("checkboxQuestionAnswerEquals", (Func<string, string, string, string[], bool>)((workflowName, activityName, questionId, choiceIdsToCheck) => AnswerEquals(activityExecutionContext.WorkflowInstance.Id, workflowName, activityName, questionId, choiceIdsToCheck).Result));
+            engine.SetValue("checkboxQuestionAnswerContains", (Func<string, string, string, string[], bool>)((workflowName, activityName, questionId, choiceIdsToCheck) => AnswerContains(activityExecutionContext.WorkflowInstance.Id, workflowName, activityName, questionId, choiceIdsToCheck).Result));
             return Task.CompletedTask;
         }
 

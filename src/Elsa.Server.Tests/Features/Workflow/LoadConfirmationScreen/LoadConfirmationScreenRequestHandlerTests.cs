@@ -2,10 +2,10 @@
 using Elsa.CustomInfrastructure.Data.Repository;
 using Elsa.CustomModels;
 using Elsa.CustomWorkflow.Sdk;
-using He.PipelineAssessment.Common.Tests;
-using Moq;
 using Elsa.Server.Features.Workflow.LoadConfirmationScreen;
 using Elsa.Server.Providers;
+using He.PipelineAssessment.Common.Tests;
+using Moq;
 using Xunit;
 
 namespace Elsa.Server.Tests.Features.Workflow.LoadConfirmationScreen
@@ -28,7 +28,7 @@ namespace Elsa.Server.Tests.Features.Workflow.LoadConfirmationScreen
             var result = await sut.Handle(request, CancellationToken.None);
 
             //Assert
-            Assert.Null(result.Data!.QuestionScreenAnswers);
+            Assert.Null(result.Data!.CheckQuestionScreenAnswers);
             Assert.Equal(
                 $"Unable to find activity navigation with Workflow Id: {request.WorkflowInstanceId} and Activity Id: {request.ActivityId} in Elsa Custom database",
                 result.ErrorMessages.Single());
@@ -53,7 +53,7 @@ namespace Elsa.Server.Tests.Features.Workflow.LoadConfirmationScreen
             var result = await sut.Handle(request, CancellationToken.None);
 
             //Assert
-            Assert.Null(result.Data!.QuestionScreenAnswers);
+            Assert.Null(result.Data!.CheckQuestionScreenAnswers);
             Assert.Equal(exception.Message, result.ErrorMessages.Single());
             elsaCustomRepository.Verify(
                 x => x.GetQuestionScreenAnswers(It.IsAny<string>(), CancellationToken.None), Times.Never);
@@ -94,7 +94,7 @@ namespace Elsa.Server.Tests.Features.Workflow.LoadConfirmationScreen
 
             //Assert
             Assert.NotNull(result.Data);
-            Assert.Equal(questionScreenAnswers, result.Data!.QuestionScreenAnswers);
+            Assert.Equal(questionScreenAnswers, result.Data!.CheckQuestionScreenAnswers);
             Assert.Equal(request.ActivityId, result.Data.ActivityId);
             Assert.Equal(request.WorkflowInstanceId, result.Data.WorkflowInstanceId);
             Assert.Equal(ActivityTypeConstants.ConfirmationScreen, result.Data.ActivityType);

@@ -23,7 +23,7 @@ namespace Elsa.CustomActivities.Tests.Activities.QuestionScreen.Helpers
          string workflowName,
          string activityName,
          string questionId,
-         string correlationId,
+         string workflowInstanceId,
          CheckboxQuestionHelper sut)
         {
             //Arrange
@@ -33,7 +33,7 @@ namespace Elsa.CustomActivities.Tests.Activities.QuestionScreen.Helpers
 
             var stringAnwers = new string[] { "A" };
             //Act
-            var result = await sut.AnswerEquals(correlationId, workflowName, activityName, questionId, stringAnwers);
+            var result = await sut.AnswerEquals(workflowInstanceId, workflowName, activityName, questionId, stringAnwers);
 
             //Assert
             Assert.False(result);
@@ -47,7 +47,7 @@ namespace Elsa.CustomActivities.Tests.Activities.QuestionScreen.Helpers
             string workflowName,
             string activityName,
             string questionId,
-            string correlationId,
+            string workflowInstanceId,
             WorkflowBlueprint workflowBlueprint,
             CheckboxQuestionHelper sut)
         {
@@ -59,7 +59,7 @@ namespace Elsa.CustomActivities.Tests.Activities.QuestionScreen.Helpers
 
             var stringAnwers = new string[] { "A" };
             //Act
-            var result = await sut.AnswerEquals(correlationId, workflowName, activityName, questionId, stringAnwers);
+            var result = await sut.AnswerEquals(workflowInstanceId, workflowName, activityName, questionId, stringAnwers);
 
             //Assert
             Assert.False(result);
@@ -74,7 +74,7 @@ namespace Elsa.CustomActivities.Tests.Activities.QuestionScreen.Helpers
             string activityId,
             string activityName,
             string questionId,
-            string correlationId,
+            string workflowInstanceId,
             WorkflowBlueprint workflowBlueprint,
             CheckboxQuestionHelper sut)
         {
@@ -85,13 +85,13 @@ namespace Elsa.CustomActivities.Tests.Activities.QuestionScreen.Helpers
                 Name = activityName
             });
 
-            elsaCustomRepository.Setup(x => x.GetQuestionScreenAnswer(activityId, correlationId, It.IsAny<string>(), CancellationToken.None)).ReturnsAsync((QuestionScreenAnswer?)null);
+            elsaCustomRepository.Setup(x => x.GetQuestionScreenAnswer(activityId, workflowInstanceId, It.IsAny<string>(), CancellationToken.None)).ReturnsAsync((QuestionScreenAnswer?)null);
 
             workflowRegistry.Setup(x => x.FindByNameAsync(workflowName!, VersionOptions.Published, null, default)).ReturnsAsync(workflowBlueprint);
 
             var stringAnwers = new string[] { "A" };
             //Act
-            var result = await sut.AnswerEquals(correlationId, workflowName, activityName, questionId, stringAnwers);
+            var result = await sut.AnswerEquals(workflowInstanceId, workflowName, activityName, questionId, stringAnwers);
 
             //Assert
             Assert.False(result);
@@ -106,7 +106,7 @@ namespace Elsa.CustomActivities.Tests.Activities.QuestionScreen.Helpers
             string activityId,
             string activityName,
             string questionId,
-            string correlationId,
+            string workflowInstanceId,
             WorkflowBlueprint workflowBlueprint,
             QuestionScreenAnswer questionScreenAnswer,
             CheckboxQuestionHelper sut)
@@ -121,13 +121,13 @@ namespace Elsa.CustomActivities.Tests.Activities.QuestionScreen.Helpers
             questionScreenAnswer.QuestionType = QuestionTypeConstants.CheckboxQuestion;
             questionScreenAnswer.Choices = null;
 
-            elsaCustomRepository.Setup(x => x.GetQuestionScreenAnswer(activityId, correlationId, questionId, CancellationToken.None)).ReturnsAsync(questionScreenAnswer);
+            elsaCustomRepository.Setup(x => x.GetQuestionScreenAnswer(activityId, workflowInstanceId, questionId, CancellationToken.None)).ReturnsAsync(questionScreenAnswer);
 
             workflowRegistry.Setup(x => x.FindByNameAsync(workflowName!, VersionOptions.Published, null, default)).ReturnsAsync(workflowBlueprint);
 
             var stringAnwers = new string[] { "A" };
             //Act
-            var result = await sut.AnswerEquals(correlationId, workflowName, activityName, questionId, stringAnwers);
+            var result = await sut.AnswerEquals(workflowInstanceId, workflowName, activityName, questionId, stringAnwers);
 
             //Assert
             Assert.False(result);
@@ -148,7 +148,7 @@ namespace Elsa.CustomActivities.Tests.Activities.QuestionScreen.Helpers
             string activityId,
             string activityName,
             string questionId,
-            string correlationId,
+            string workflowInstanceId,
             WorkflowBlueprint workflowBlueprint,
             QuestionScreenAnswer questionScreenAnswer,
             CheckboxQuestionHelper sut)
@@ -182,12 +182,12 @@ namespace Elsa.CustomActivities.Tests.Activities.QuestionScreen.Helpers
                 }
             };
 
-            elsaCustomRepository.Setup(x => x.GetQuestionScreenAnswer(activityId, correlationId, questionId, CancellationToken.None)).ReturnsAsync(questionScreenAnswer);
+            elsaCustomRepository.Setup(x => x.GetQuestionScreenAnswer(activityId, workflowInstanceId, questionId, CancellationToken.None)).ReturnsAsync(questionScreenAnswer);
 
             workflowRegistry.Setup(x => x.FindByNameAsync(workflowName!, VersionOptions.Published, null, default)).ReturnsAsync(workflowBlueprint);
 
             //Act
-            var result = await sut.AnswerEquals(correlationId, workflowName, activityName, questionId, choiceIdsToCheck);
+            var result = await sut.AnswerEquals(workflowInstanceId, workflowName, activityName, questionId, choiceIdsToCheck);
 
             //Assert
             Assert.Equal(expectedResult, result);
@@ -201,7 +201,7 @@ namespace Elsa.CustomActivities.Tests.Activities.QuestionScreen.Helpers
         string workflowName,
         string activityName,
         string questionId,
-        string correlationId,
+        string workflowInstanceId,
         CheckboxQuestionHelper sut)
         {
             //Arrange
@@ -211,7 +211,7 @@ namespace Elsa.CustomActivities.Tests.Activities.QuestionScreen.Helpers
 
             var stringAnwers = new string[] { "A" };
             //Act
-            var result = await sut.AnswerContains(correlationId, workflowName, activityName, questionId, stringAnwers);
+            var result = await sut.AnswerContains(workflowInstanceId, workflowName, activityName, questionId, stringAnwers);
 
             //Assert
             Assert.False(result);
@@ -225,7 +225,7 @@ namespace Elsa.CustomActivities.Tests.Activities.QuestionScreen.Helpers
             string workflowName,
             string activityName,
             string questionId,
-            string correlationId,
+            string workflowInstanceId,
             WorkflowBlueprint workflowBlueprint,
             CheckboxQuestionHelper sut)
         {
@@ -237,7 +237,7 @@ namespace Elsa.CustomActivities.Tests.Activities.QuestionScreen.Helpers
 
             var stringAnwers = new string[] { "A" };
             //Act
-            var result = await sut.AnswerContains(correlationId, workflowName, activityName, questionId, stringAnwers);
+            var result = await sut.AnswerContains(workflowInstanceId, workflowName, activityName, questionId, stringAnwers);
 
             //Assert
             Assert.False(result);
@@ -252,7 +252,7 @@ namespace Elsa.CustomActivities.Tests.Activities.QuestionScreen.Helpers
             string activityId,
             string activityName,
             string questionId,
-            string correlationId,
+            string workflowInstanceId,
             WorkflowBlueprint workflowBlueprint,
             CheckboxQuestionHelper sut)
         {
@@ -263,13 +263,13 @@ namespace Elsa.CustomActivities.Tests.Activities.QuestionScreen.Helpers
                 Name = activityName
             });
 
-            elsaCustomRepository.Setup(x => x.GetQuestionScreenAnswer(activityId, correlationId, It.IsAny<string>(), CancellationToken.None)).ReturnsAsync((QuestionScreenAnswer?)null);
+            elsaCustomRepository.Setup(x => x.GetQuestionScreenAnswer(activityId, workflowInstanceId, It.IsAny<string>(), CancellationToken.None)).ReturnsAsync((QuestionScreenAnswer?)null);
 
             workflowRegistry.Setup(x => x.FindByNameAsync(workflowName!, VersionOptions.Published, null, default)).ReturnsAsync(workflowBlueprint);
 
             var stringAnwers = new string[] { "A" };
             //Act
-            var result = await sut.AnswerContains(correlationId, workflowName, activityName, questionId, stringAnwers);
+            var result = await sut.AnswerContains(workflowInstanceId, workflowName, activityName, questionId, stringAnwers);
 
             //Assert
             Assert.False(result);
@@ -284,7 +284,7 @@ namespace Elsa.CustomActivities.Tests.Activities.QuestionScreen.Helpers
             string activityId,
             string activityName,
             string questionId,
-            string correlationId,
+            string workflowInstanceId,
             WorkflowBlueprint workflowBlueprint,
             QuestionScreenAnswer questionScreenAnswer,
             CheckboxQuestionHelper sut)
@@ -299,13 +299,13 @@ namespace Elsa.CustomActivities.Tests.Activities.QuestionScreen.Helpers
             questionScreenAnswer.QuestionType = QuestionTypeConstants.CheckboxQuestion;
             questionScreenAnswer.Choices = null;
 
-            elsaCustomRepository.Setup(x => x.GetQuestionScreenAnswer(activityId, correlationId, questionId, CancellationToken.None)).ReturnsAsync(questionScreenAnswer);
+            elsaCustomRepository.Setup(x => x.GetQuestionScreenAnswer(activityId, workflowInstanceId, questionId, CancellationToken.None)).ReturnsAsync(questionScreenAnswer);
 
             workflowRegistry.Setup(x => x.FindByNameAsync(workflowName!, VersionOptions.Published, null, default)).ReturnsAsync(workflowBlueprint);
 
             var stringAnwers = new string[] { "A" };
             //Act
-            var result = await sut.AnswerContains(correlationId, workflowName, activityName, questionId, stringAnwers);
+            var result = await sut.AnswerContains(workflowInstanceId, workflowName, activityName, questionId, stringAnwers);
 
             //Assert
             Assert.False(result);
@@ -328,7 +328,7 @@ namespace Elsa.CustomActivities.Tests.Activities.QuestionScreen.Helpers
             string activityId,
             string activityName,
             string questionId,
-            string correlationId,
+            string workflowInstanceId,
             WorkflowBlueprint workflowBlueprint,
             QuestionScreenAnswer questionScreenAnswer,
             CheckboxQuestionHelper sut)
@@ -362,12 +362,12 @@ namespace Elsa.CustomActivities.Tests.Activities.QuestionScreen.Helpers
                 }
             };
 
-            elsaCustomRepository.Setup(x => x.GetQuestionScreenAnswer(activityId, correlationId, questionId, CancellationToken.None)).ReturnsAsync(questionScreenAnswer);
+            elsaCustomRepository.Setup(x => x.GetQuestionScreenAnswer(activityId, workflowInstanceId, questionId, CancellationToken.None)).ReturnsAsync(questionScreenAnswer);
 
             workflowRegistry.Setup(x => x.FindByNameAsync(workflowName!, VersionOptions.Published, null, default)).ReturnsAsync(workflowBlueprint);
 
             //Act
-            var result = await sut.AnswerContains(correlationId, workflowName, activityName, questionId, choiceIdsToCheck);
+            var result = await sut.AnswerContains(workflowInstanceId, workflowName, activityName, questionId, choiceIdsToCheck);
 
             //Assert
             Assert.Equal(expectedResult, result);
@@ -381,7 +381,7 @@ namespace Elsa.CustomActivities.Tests.Activities.QuestionScreen.Helpers
          string workflowName,
          string activityName,
          string questionId,
-         string correlationId,
+         string workflowInstanceId,
          CheckboxQuestionHelper sut)
         {
             //Arrange
@@ -390,7 +390,7 @@ namespace Elsa.CustomActivities.Tests.Activities.QuestionScreen.Helpers
             workflowRegistry.Setup(x => x.FindByNameAsync(workflowName!, VersionOptions.Published, null, default)).ReturnsAsync((WorkflowBlueprint?)null);
 
             //Act
-            var result = await sut.GetAnswer(correlationId, workflowName, activityName, questionId);
+            var result = await sut.GetAnswer(workflowInstanceId, workflowName, activityName, questionId);
 
             //Assert
             Assert.Equal(String.Empty, result);
@@ -404,7 +404,7 @@ namespace Elsa.CustomActivities.Tests.Activities.QuestionScreen.Helpers
             string workflowName,
             string activityName,
             string questionId,
-            string correlationId,
+            string workflowInstanceId,
             WorkflowBlueprint workflowBlueprint,
             CheckboxQuestionHelper sut)
         {
@@ -415,7 +415,7 @@ namespace Elsa.CustomActivities.Tests.Activities.QuestionScreen.Helpers
             workflowRegistry.Setup(x => x.FindByNameAsync(workflowName!, VersionOptions.Published, null, default)).ReturnsAsync(workflowBlueprint);
 
             //Act
-            var result = await sut.GetAnswer(correlationId, workflowName, activityName, questionId);
+            var result = await sut.GetAnswer(workflowInstanceId, workflowName, activityName, questionId);
 
             //Assert
             Assert.Equal(String.Empty, result);
@@ -430,7 +430,7 @@ namespace Elsa.CustomActivities.Tests.Activities.QuestionScreen.Helpers
             string activityId,
             string activityName,
             string questionId,
-            string correlationId,
+            string workflowInstanceId,
             WorkflowBlueprint workflowBlueprint,
             CheckboxQuestionHelper sut)
         {
@@ -441,12 +441,12 @@ namespace Elsa.CustomActivities.Tests.Activities.QuestionScreen.Helpers
                 Name = activityName
             });
 
-            elsaCustomRepository.Setup(x => x.GetQuestionScreenAnswer(activityId, correlationId, It.IsAny<string>(), CancellationToken.None)).ReturnsAsync((QuestionScreenAnswer?)null);
+            elsaCustomRepository.Setup(x => x.GetQuestionScreenAnswer(activityId, workflowInstanceId, It.IsAny<string>(), CancellationToken.None)).ReturnsAsync((QuestionScreenAnswer?)null);
 
             workflowRegistry.Setup(x => x.FindByNameAsync(workflowName!, VersionOptions.Published, null, default)).ReturnsAsync(workflowBlueprint);
 
             //Act
-            var result = await sut.GetAnswer(correlationId, workflowName, activityName, questionId);
+            var result = await sut.GetAnswer(workflowInstanceId, workflowName, activityName, questionId);
 
             //Assert
             Assert.Equal(String.Empty, result);
@@ -462,7 +462,7 @@ namespace Elsa.CustomActivities.Tests.Activities.QuestionScreen.Helpers
         string activityId,
         string activityName,
         string questionId,
-        string correlationId,
+        string workflowInstanceId,
         WorkflowBlueprint workflowBlueprint,
         QuestionScreenAnswer questionScreenAnswer,
         CheckboxQuestionHelper sut)
@@ -479,14 +479,14 @@ namespace Elsa.CustomActivities.Tests.Activities.QuestionScreen.Helpers
             questionScreenAnswer.Answer = jsonAnswer;
 
 
-            elsaCustomRepository.Setup(x => x.GetQuestionScreenAnswer(activityId, correlationId, questionId, CancellationToken.None)).ReturnsAsync(questionScreenAnswer);
+            elsaCustomRepository.Setup(x => x.GetQuestionScreenAnswer(activityId, workflowInstanceId, questionId, CancellationToken.None)).ReturnsAsync(questionScreenAnswer);
 
             workflowRegistry.Setup(x => x.FindByNameAsync(workflowName!, VersionOptions.Published, null, default)).ReturnsAsync(workflowBlueprint);
 
             var expectedResult = string.Join(", ", answers);
 
             //Act
-            var result = await sut.GetAnswer(correlationId, workflowName, activityName, questionId);
+            var result = await sut.GetAnswer(workflowInstanceId, workflowName, activityName, questionId);
 
             //Assert
             Assert.Equal(expectedResult, result);

@@ -28,7 +28,7 @@ public class LoadCheckYourAnswersScreenRequestHandlerTests
         var result = await sut.Handle(loadCheckYourAnswersScreenRequest, CancellationToken.None);
 
         //Assert
-        Assert.Null(result.Data!.QuestionScreenAnswers);
+        Assert.Null(result.Data!.CheckQuestionScreenAnswers);
         Assert.Equal(
             $"Unable to find activity navigation with Workflow Id: {loadCheckYourAnswersScreenRequest.WorkflowInstanceId} and Activity Id: {loadCheckYourAnswersScreenRequest.ActivityId} in Elsa Custom database",
             result.ErrorMessages.Single());
@@ -53,7 +53,7 @@ public class LoadCheckYourAnswersScreenRequestHandlerTests
         var result = await sut.Handle(loadCheckYourAnswersScreenRequest, CancellationToken.None);
 
         //Assert
-        Assert.Null(result.Data!.QuestionScreenAnswers);
+        Assert.Null(result.Data!.CheckQuestionScreenAnswers);
         Assert.Equal(exception.Message, result.ErrorMessages.Single());
         elsaCustomRepository.Verify(
             x => x.GetQuestionScreenAnswers(It.IsAny<string>(), CancellationToken.None), Times.Never);
@@ -93,7 +93,7 @@ public class LoadCheckYourAnswersScreenRequestHandlerTests
 
         //Assert
         Assert.NotNull(result.Data);
-        Assert.Equal(questionScreenAnswers, result.Data!.QuestionScreenAnswers);
+        Assert.Equal(questionScreenAnswers, result.Data!.CheckQuestionScreenAnswers);
         Assert.Equal(request.ActivityId, result.Data.ActivityId);
         Assert.Equal(request.WorkflowInstanceId, result.Data.WorkflowInstanceId);
         Assert.Equal(ActivityTypeConstants.CheckYourAnswersScreen, result.Data.ActivityType);
