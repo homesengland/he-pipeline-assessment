@@ -1,4 +1,5 @@
-﻿using Elsa.CustomInfrastructure.Data.Repository;
+﻿using Elsa.CustomActivities.Activities.Shared;
+using Elsa.CustomInfrastructure.Data.Repository;
 using Elsa.CustomWorkflow.Sdk;
 using Elsa.Server.Extensions;
 using Elsa.Server.Models;
@@ -11,11 +12,13 @@ namespace Elsa.Server.Features.Workflow.LoadConfirmationScreen
     {
         private readonly IElsaCustomRepository _elsaCustomRepository;
         private readonly IActivityDataProvider _activityDataProvider;
+        private readonly IQuestionInvoker _questionInvoker;
 
-        public LoadConfirmationScreenRequestHandler(IElsaCustomRepository elsaCustomRepository, IActivityDataProvider activityDataProvider)
+        public LoadConfirmationScreenRequestHandler(IElsaCustomRepository elsaCustomRepository, IActivityDataProvider activityDataProvider, IQuestionInvoker questionInvoker)
         {
             _elsaCustomRepository = elsaCustomRepository;
             _activityDataProvider = activityDataProvider;
+            _questionInvoker = questionInvoker;
         }
 
         public async Task<OperationResult<LoadConfirmationScreenResponse>> Handle(LoadConfirmationScreenRequest request, CancellationToken cancellationToken)
@@ -54,6 +57,12 @@ namespace Elsa.Server.Features.Workflow.LoadConfirmationScreen
                     result.ErrorMessages.Add(
                         $"Unable to find activity navigation with Workflow Id: {request.WorkflowInstanceId} and Activity Id: {request.ActivityId} in Elsa Custom database");
                 }
+
+                await _questionInvoker.ExecuteWorkflowsAsync(request.ActivityId,
+                    ActivityTypeConstants.ConfirmationScreen,
+                    request.WorkflowInstanceId, null, cancellationToken);
+
+
             }
             catch (Exception e)
             {

@@ -1,8 +1,6 @@
 ﻿using Elsa.CustomActivities.Activities.Shared;
 using Elsa.CustomInfrastructure.Data.Repository;
 using Elsa.CustomWorkflow.Sdk;
-using Elsa.Models;
-using Elsa.Persistence;
 using Elsa.Server.Features.Workflow.Helpers;
 using Elsa.Server.Models;
 using Elsa.Server.Providers;
@@ -76,8 +74,6 @@ namespace Elsa.Server.Features.Workflow.CheckYourAnswersSaveAndContinue
                     NextActivityId = nextActivity.Id,
                     ActivityType = nextActivity.Type
                 };
-
-                await _workflowInstanceProvider.FinishWorkflow(workflowInstance, cancellationToken);
             }
             catch (Exception e)
             {

@@ -1,5 +1,7 @@
+using Elsa.Activities.ControlFlow;
 using Elsa.CustomActivities.Activities.CheckYourAnswersScreen;
 using Elsa.CustomActivities.Activities.ConfirmationScreen;
+using Elsa.CustomActivities.Activities.FinishWorkflow;
 using Elsa.CustomActivities.Activities.QuestionScreen;
 using Elsa.CustomActivities.Activities.Shared;
 using Elsa.CustomActivities.Activities.SinglePipelineDataSource;
@@ -33,6 +35,8 @@ builder.Services
         .AddActivity<QuestionScreen>()
         .AddActivity<CheckYourAnswersScreen>()
         .AddActivity<ConfirmationScreen>()
+        .AddActivity<FinishWorkflow>()
+        .NoCoreActivities()
         .AddConsoleActivities()
     );
 
