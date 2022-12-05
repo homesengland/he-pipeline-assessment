@@ -23,6 +23,5 @@ namespace Elsa.Server.Providers
             }
             return workflowInstance;
         }
-
     }
 }

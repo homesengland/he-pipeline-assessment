@@ -37,10 +37,19 @@ namespace Elsa.Server.Features.Workflow.CheckYourAnswersSaveAndContinue
             var result = new OperationResult<CheckYourAnswersSaveAndContinueResponse>();
             try
             {
-                await _invoker.ExecuteWorkflowsAsync(command.ActivityId, ActivityTypeConstants.CheckYourAnswersScreen,
+                var collectedWorkflows = await _invoker.ExecuteWorkflowsAsync(command.ActivityId,
+                    ActivityTypeConstants.CheckYourAnswersScreen,
                     command.WorkflowInstanceId, null, cancellationToken);
 
-                var workflowInstance = await _workflowInstanceProvider.GetWorkflowInstance(command.WorkflowInstanceId, cancellationToken);
+                var workflowInstance =
+                    await _workflowInstanceProvider.GetWorkflowInstance(command.WorkflowInstanceId,
+                        cancellationToken);
+
+                if (!collectedWorkflows.Any())
+                {
+                    throw new Exception($"Unable to progress. Workflow status is: {workflowInstance.WorkflowStatus}");
+                }
+
                 var nextActivity = await _workflowNextActivityProvider.GetNextActivity(workflowInstance, cancellationToken);
 
                 var nextActivityRecord =

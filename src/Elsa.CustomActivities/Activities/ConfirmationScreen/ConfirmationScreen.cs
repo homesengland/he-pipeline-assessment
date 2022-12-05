@@ -33,8 +33,7 @@ namespace Elsa.CustomActivities.Activities.ConfirmationScreen
 
         protected override async ValueTask<IActivityExecutionResult> OnResumeAsync(ActivityExecutionContext context)
         {
-
-            return await Task.FromResult(Suspend());
+            return await Task.FromResult(Done());
         }
     }
 }

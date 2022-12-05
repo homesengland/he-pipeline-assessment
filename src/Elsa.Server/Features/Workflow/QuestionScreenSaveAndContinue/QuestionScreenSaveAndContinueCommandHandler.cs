@@ -48,15 +48,21 @@ namespace Elsa.Server.Features.Workflow.QuestionScreenSaveAndContinue
 
                 if (dbAssessmentQuestionList.Any())
                 {
-                    await SetAnswers(command, cancellationToken, dbAssessmentQuestionList);
-
-                    await _invoker.ExecuteWorkflowsAsync(command.ActivityId,
+                    var collectedWorkflows = await _invoker.ExecuteWorkflowsAsync(command.ActivityId,
                         ActivityTypeConstants.QuestionScreen,
                         command.WorkflowInstanceId, dbAssessmentQuestionList, cancellationToken);
 
                     var workflowInstance =
                         await _workflowInstanceProvider.GetWorkflowInstance(command.WorkflowInstanceId,
                             cancellationToken);
+
+                    if (!collectedWorkflows.Any())
+                    {
+                        throw new Exception($"Unable to save answers. Workflow status is: {workflowInstance.WorkflowStatus}");
+                    }
+
+                    await SetAnswers(command, cancellationToken, dbAssessmentQuestionList);
+
                     var nextActivity =
                         await _workflowNextActivityProvider.GetNextActivity(workflowInstance, cancellationToken);
 
