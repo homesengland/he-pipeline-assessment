@@ -30,6 +30,13 @@ namespace Elsa.CustomInfrastructure.Data.Repository
             return model;
         }
 
+        public async Task<CustomActivityNavigation?> UpdateCustomActivityNavigation(CustomActivityNavigation model, CancellationToken cancellationToken = default)
+        {
+            _dbContext.Update(model);
+            await _dbContext.SaveChangesAsync(cancellationToken);
+            return model;
+        }
+
         public async Task CreateQuestionScreenAnswersAsync(List<QuestionScreenAnswer> assessments, CancellationToken cancellationToken)
         {
             await _dbContext.AddRangeAsync(assessments, cancellationToken);

@@ -99,6 +99,11 @@ namespace Elsa.Server.Features.Workflow.QuestionScreenSaveAndContinue
                             await _elsaCustomRepository.CreateQuestionScreenAnswersAsync(questions, cancellationToken);
                         }
                     }
+                    else
+                    {
+                        nextActivityRecord.LastModifiedDateTime = _dateTimeProvider.UtcNow();
+                        await _elsaCustomRepository.UpdateCustomActivityNavigation(nextActivityRecord, cancellationToken);
+                    }
 
                     var changedPathCustomNavigation =
                         await _workflowPathProvider.GetChangedPathCustomNavigation(command.WorkflowInstanceId, command.ActivityId, nextActivity.Id, cancellationToken);

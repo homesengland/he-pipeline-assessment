@@ -12,6 +12,9 @@ namespace Elsa.CustomInfrastructure.Data.Repository
             CancellationToken cancellationToken = default);
 
         Task<QuestionScreenAnswer?> UpdateQuestionScreenAnswer(QuestionScreenAnswer model, CancellationToken cancellationToken = default);
+
+        Task<CustomActivityNavigation?> UpdateCustomActivityNavigation(CustomActivityNavigation model,
+            CancellationToken cancellationToken = default);
         Task CreateQuestionScreenAnswersAsync(List<QuestionScreenAnswer> assessments, CancellationToken cancellationToken);
         Task<List<QuestionScreenAnswer>> GetQuestionScreenAnswers(string activityId, string workflowInstanceId, CancellationToken cancellationToken);
         Task<QuestionScreenAnswer?> GetQuestionScreenAnswer(string activityId, string workflowInstanceId, string questionID, CancellationToken cancellationToken);
