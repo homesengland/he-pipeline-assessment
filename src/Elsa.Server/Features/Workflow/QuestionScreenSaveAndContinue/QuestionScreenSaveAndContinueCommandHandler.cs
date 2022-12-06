@@ -2,11 +2,11 @@
 using Elsa.CustomInfrastructure.Data.Repository;
 using Elsa.CustomModels;
 using Elsa.CustomWorkflow.Sdk;
+using Elsa.Models;
 using Elsa.Server.Features.Workflow.Helpers;
 using Elsa.Server.Models;
 using Elsa.Server.Providers;
 using MediatR;
-using Open.Linq.AsyncExtensions;
 
 namespace Elsa.Server.Features.Workflow.QuestionScreenSaveAndContinue
 {
@@ -48,20 +48,30 @@ namespace Elsa.Server.Features.Workflow.QuestionScreenSaveAndContinue
 
                 if (dbAssessmentQuestionList.Any())
                 {
+                    var workflowInstance =
+                        await _workflowInstanceProvider.GetWorkflowInstance(command.WorkflowInstanceId,
+                            cancellationToken);
+
+                    if (workflowInstance.WorkflowStatus == WorkflowStatus.Finished)
+                    {
+                        throw new Exception($"Unable to save answers. Workflow status is: Finished");
+                    }
+
+                    await SetAnswers(command, cancellationToken, dbAssessmentQuestionList);
+
                     var collectedWorkflows = await _invoker.ExecuteWorkflowsAsync(command.ActivityId,
                         ActivityTypeConstants.QuestionScreen,
                         command.WorkflowInstanceId, dbAssessmentQuestionList, cancellationToken);
 
-                    var workflowInstance =
+                    //we need to refresh the workflowInstance, as calling the invoker will change it
+                    workflowInstance =
                         await _workflowInstanceProvider.GetWorkflowInstance(command.WorkflowInstanceId,
                             cancellationToken);
 
                     if (!collectedWorkflows.Any())
                     {
-                        throw new Exception($"Unable to save answers. Workflow status is: {workflowInstance.WorkflowStatus}");
+                        throw new Exception($"Unable to progress workflow. Workflow status is: {workflowInstance.WorkflowStatus}");
                     }
-
-                    await SetAnswers(command, cancellationToken, dbAssessmentQuestionList);
 
                     var nextActivity =
                         await _workflowNextActivityProvider.GetNextActivity(workflowInstance, cancellationToken);
