@@ -1,4 +1,3 @@
-using Elsa.Activities.ControlFlow;
 using Elsa.CustomActivities.Activities.CheckYourAnswersScreen;
 using Elsa.CustomActivities.Activities.ConfirmationScreen;
 using Elsa.CustomActivities.Activities.FinishWorkflow;
@@ -65,6 +64,7 @@ builder.Services.AddScoped<IDateTimeProvider, DateTimeProvider>();
 builder.Services.AddScoped<IActivityDataProvider, ActivityDataProvider>();
 builder.Services.AddScoped<IWorkflowNextActivityProvider, WorkflowNextActivityProvider>();
 builder.Services.AddScoped<IWorkflowInstanceProvider, WorkflowInstanceProvider>();
+builder.Services.AddScoped<IWorkflowPathProvider, WorkflowPathProvider>();
 
 
 builder.Services.AddScoped<IStartWorkflowMapper, StartWorkflowMapper>();

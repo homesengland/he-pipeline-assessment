@@ -19,6 +19,7 @@ namespace Elsa.Server.Features.Workflow.QuestionScreenSaveAndContinue
         private readonly ISaveAndContinueHelper _saveAndContinueHelper;
         private readonly IWorkflowNextActivityProvider _workflowNextActivityProvider;
         private readonly IWorkflowInstanceProvider _workflowInstanceProvider;
+        private readonly IWorkflowPathProvider _workflowPathProvider;
 
 
         public QuestionScreenSaveAndContinueCommandHandler(IQuestionInvoker invoker,
@@ -26,13 +27,15 @@ namespace Elsa.Server.Features.Workflow.QuestionScreenSaveAndContinue
             ISaveAndContinueHelper saveAndContinueHelper,
             IWorkflowNextActivityProvider workflowNextActivityProvider,
             IWorkflowInstanceProvider workflowInstanceProvider,
-            IDateTimeProvider dateTimeProvider)
+            IDateTimeProvider dateTimeProvider,
+            IWorkflowPathProvider workflowPathProvider)
         {
             _elsaCustomRepository = elsaCustomRepository;
             _saveAndContinueHelper = saveAndContinueHelper;
             _workflowNextActivityProvider = workflowNextActivityProvider;
             _workflowInstanceProvider = workflowInstanceProvider;
             _dateTimeProvider = dateTimeProvider;
+            _workflowPathProvider = workflowPathProvider;
             _invoker = invoker;
         }
 
@@ -95,6 +98,19 @@ namespace Elsa.Server.Features.Workflow.QuestionScreenSaveAndContinue
                                 _saveAndContinueHelper.CreateQuestionScreenAnswers(nextActivity.Id, workflowInstance);
                             await _elsaCustomRepository.CreateQuestionScreenAnswersAsync(questions, cancellationToken);
                         }
+                    }
+
+                    var changedPathCustomNavigation =
+                        await _workflowPathProvider.GetChangedPathCustomNavigation(command.WorkflowInstanceId, command.ActivityId, nextActivity.Id, cancellationToken);
+
+                    if (changedPathCustomNavigation != null)
+                    {
+                        await _elsaCustomRepository.DeleteCustomNavigation(changedPathCustomNavigation, cancellationToken);
+                        var previousPathActivities =
+                            await _workflowPathProvider.GetPreviousPathActivities(workflowInstance.DefinitionId, changedPathCustomNavigation.ActivityId, cancellationToken);
+
+                        await _elsaCustomRepository.DeleteQuestionScreenAnswers(
+                            changedPathCustomNavigation.WorkflowInstanceId, previousPathActivities, cancellationToken);
                     }
 
                     result.Data = new QuestionScreenSaveAndContinueResponse
