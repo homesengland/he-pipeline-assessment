@@ -1,5 +1,4 @@
 ﻿using Elsa.Models;
-using Elsa.Persistence;
 using Elsa.Services;
 using Elsa.Services.Models;
 
@@ -7,11 +6,9 @@ namespace Elsa.Server.Providers
 {
     public class WorkflowNextActivityProvider : IWorkflowNextActivityProvider
     {
-        private readonly IWorkflowInstanceStore _workflowInstanceStore;
         private readonly IWorkflowRegistry _workflowRegistry;
-        public WorkflowNextActivityProvider(IWorkflowInstanceStore workflowInstanceStore, IWorkflowRegistry workflowRegistry)
+        public WorkflowNextActivityProvider(IWorkflowRegistry workflowRegistry)
         {
-            _workflowInstanceStore = workflowInstanceStore;
             _workflowRegistry = workflowRegistry;
         }
 
