@@ -3,39 +3,39 @@ using Elsa.Attributes;
 using Elsa.Expressions;
 using Elsa.Services;
 using Elsa.Services.Models;
-using He.PipelineAssessment.Data.SinglePipeline;
+using He.PipelineAssessment.Data.PCSProfile;
 
-namespace Elsa.CustomActivities.Activities.SinglePipelineDataSource
+namespace Elsa.CustomActivities.Activities.PCSProfileDataSource
 {
     [Action(
         Category = "Homes England Data",
-        Description = "Get Single Pipeline Data Source",
+        Description = "Get PCS Profile Data Source",
         Outcomes = new[] { OutcomeNames.Done }
     )]
-    public class SinglePipelineDataSource : Activity
+    public class PCSProfileDataSource : Activity
     {
-        private readonly IEsriSinglePipelineClient _singlePipelineClient;
-        private readonly IEsriSinglePipelineDataJsonHelper _jsonHelper;
-        public SinglePipelineDataSource(IEsriSinglePipelineClient singlePipelineClient, IEsriSinglePipelineDataJsonHelper jsonHelper)
+        private readonly IEsriPCSProfileClient _client;
+        private readonly IEsriPCSProfileDataJsonHelper _jsonHelper;
+        public PCSProfileDataSource(IEsriPCSProfileClient client, IEsriPCSProfileDataJsonHelper jsonHelper)
         {
-            _singlePipelineClient = singlePipelineClient;
+            _client = client;
             _jsonHelper = jsonHelper;
         }
 
         [ActivityInput(Hint = "Id of the record to get", SupportedSyntaxes = new[] { SyntaxNames.Literal, SyntaxNames.Json, SyntaxNames.JavaScript })]
-        public string SpId { get; set; } = null!;
+        public string ProjectIdentified { get; set; } = null!;
 
-        [ActivityOutput] public SinglePipelineData? Output { get; set; }
+        [ActivityOutput] public PCSProfileData? Output { get; set; }
 
         protected override async ValueTask<IActivityExecutionResult> OnExecuteAsync(ActivityExecutionContext context)
         {
-            context.JournalData.Add(nameof(SpId), SpId);
+            context.JournalData.Add(nameof(ProjectIdentified), ProjectIdentified);
 
-            var data = await _singlePipelineClient.GetSinglePipelineData(SpId);
+            var data = await _client.GetPCSProfileData(ProjectIdentified);
 
             if (data != null)
             {
-                var dataResult = _jsonHelper.JsonToSinglePipelineData(data);
+                var dataResult = _jsonHelper.JsonToPCSProfileData(data);
                 this.Output = dataResult;
 
             }
