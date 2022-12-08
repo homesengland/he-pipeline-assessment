@@ -20,17 +20,19 @@ public class QuestionScreenSaveAndContinueCommandHandlerTests
     [Theory]
     [AutoMoqData]
     public async Task
-        Handle_ShouldReturnSuccessfulOperationResult_WhenSuccessful_AndDoesNotInsertNewQuestionIfAlreadyExists(
+        Handle_ShouldReturnSuccessfulOperationResult_WhenSuccessful_AndDoesNotInsertNewActivityNavigationIfAlreadyExists(
             [Frozen] Mock<IQuestionInvoker> questionInvoker,
             [Frozen] Mock<IElsaCustomRepository> elsaCustomRepository,
             [Frozen] Mock<IWorkflowNextActivityProvider> workflowNextActivityProvider,
             [Frozen] Mock<IWorkflowInstanceProvider> workflowInstanceProvider,
+            [Frozen] Mock<IDateTimeProvider> dateTimeProvider,
             WorkflowBlueprint workflowBlueprint,
             ActivityBlueprint activityBlueprint,
             List<QuestionScreenAnswer> currentAssessmentQuestions,
             WorkflowInstance workflowInstance,
             CustomActivityNavigation nextAssessmentActivity,
             QuestionScreenSaveAndContinueCommand saveAndContinueCommand,
+            DateTime date,
             QuestionScreenSaveAndContinueCommandHandler sut)
     {
         //Arrange
@@ -73,6 +75,7 @@ public class QuestionScreenSaveAndContinueCommandHandlerTests
 
         workflowNextActivityProvider.Setup(x => x.GetNextActivity(workflowInstance, CancellationToken.None))
             .ReturnsAsync(activityBlueprint);
+        dateTimeProvider.Setup(x => x.UtcNow()).Returns(date);
 
         //Act
         var result = await sut.Handle(saveAndContinueCommand, CancellationToken.None);
@@ -82,12 +85,16 @@ public class QuestionScreenSaveAndContinueCommandHandlerTests
             x => x.SaveChanges(CancellationToken.None), Times.Once);
         elsaCustomRepository.Verify(
             x => x.CreateCustomActivityNavigationAsync(nextAssessmentActivity, CancellationToken.None), Times.Never);
+        elsaCustomRepository.Verify(
+            x => x.UpdateCustomActivityNavigation(nextAssessmentActivity, CancellationToken.None), Times.Once);
         workflowInstanceProvider.Verify(
             x => x.GetWorkflowInstance(It.IsAny<string>(), CancellationToken.None), Times.Exactly(2));
 
         Assert.Equal(saveAndContinueCommand.Answers![0].AnswerText, currentAssessmentQuestions[0].Answer);
         Assert.Equal(saveAndContinueCommand.Answers![1].AnswerText, currentAssessmentQuestions[1].Answer);
         Assert.Equal(saveAndContinueCommand.Answers![2].AnswerText, currentAssessmentQuestions[2].Answer);
+
+        Assert.Equal(date, nextAssessmentActivity.LastModifiedDateTime);
 
         Assert.Equal(opResult.Data.NextActivityId, result.Data!.NextActivityId);
         Assert.Equal(opResult.Data.WorkflowInstanceId, result.Data.WorkflowInstanceId);
@@ -98,12 +105,13 @@ public class QuestionScreenSaveAndContinueCommandHandlerTests
     [Theory]
     [AutoMoqData]
     public async Task
-        Handle_ShouldReturnSuccessfulOperationResult_WhenSuccessful_AndInsertsNewQuestionIfDoesNotExist(
+        Handle_ShouldReturnSuccessfulOperationResult_WhenSuccessful_AndInsertsNewActivityNavigationIfDoesNotExist(
             [Frozen] Mock<IQuestionInvoker> questionInvoker,
             [Frozen] Mock<IElsaCustomRepository> elsaCustomRepository,
             [Frozen] Mock<IWorkflowNextActivityProvider> workflowNextActivityProvider,
             [Frozen] Mock<IWorkflowInstanceProvider> workflowInstanceProvider,
             [Frozen] Mock<ISaveAndContinueHelper> saveAndContinueHelper,
+            [Frozen] Mock<IDateTimeProvider> dateTimeProvider,
             WorkflowBlueprint workflowBlueprint,
             ActivityBlueprint activityBlueprint,
             List<QuestionScreenAnswer> currentAssessmentQuestions,
@@ -111,6 +119,7 @@ public class QuestionScreenSaveAndContinueCommandHandlerTests
             CustomActivityNavigation nextAssessmentActivity,
             QuestionScreenSaveAndContinueCommand saveAndContinueCommand,
             string nextActivityType,
+            DateTime date,
             QuestionScreenSaveAndContinueCommandHandler sut
         )
     {
@@ -154,6 +163,7 @@ public class QuestionScreenSaveAndContinueCommandHandlerTests
                 ActivityTypeConstants.QuestionScreen, activityBlueprint.Id, activityBlueprint.Type,
                 workflowInstance))
             .Returns(nextAssessmentActivity);
+        dateTimeProvider.Setup(x => x.UtcNow()).Returns(date);
 
 
         //Act
@@ -164,6 +174,8 @@ public class QuestionScreenSaveAndContinueCommandHandlerTests
             x => x.SaveChanges(CancellationToken.None), Times.Once);
         elsaCustomRepository.Verify(
             x => x.CreateCustomActivityNavigationAsync(nextAssessmentActivity, CancellationToken.None), Times.Once);
+        elsaCustomRepository.Verify(
+            x => x.UpdateCustomActivityNavigation(nextAssessmentActivity, CancellationToken.None), Times.Never);
         workflowInstanceProvider.Verify(
             x => x.GetWorkflowInstance(It.IsAny<string>(), CancellationToken.None), Times.Exactly(2));
         Assert.Equal(opResult.Data.NextActivityId, result.Data!.NextActivityId);
@@ -466,5 +478,61 @@ public class QuestionScreenSaveAndContinueCommandHandlerTests
             $"Unable to progress workflow. Workflow status is: {workflowInstance.WorkflowStatus}",
             result.ErrorMessages.Single());
         Assert.Null(result.ValidationMessages);
+    }
+
+    [Theory]
+    [AutoMoqData]
+    public async Task
+        Handle_ShouldDeleteCustomActivityNavigationAndQuestionAnswers_WhenWorkflowPathChanged(
+            [Frozen] Mock<IQuestionInvoker> questionInvoker,
+            [Frozen] Mock<IElsaCustomRepository> elsaCustomRepository,
+            [Frozen] Mock<IWorkflowPathProvider> workflowPathProvider,
+            [Frozen] Mock<IWorkflowInstanceProvider> workflowInstanceProvider,
+            [Frozen] Mock<IWorkflowNextActivityProvider> workflowNextActivityProvider,
+            ActivityBlueprint activityBlueprint,
+            List<QuestionScreenAnswer> currentAssessmentQuestions,
+            WorkflowInstance workflowInstance,
+            CustomActivityNavigation changedPathAssessmentActivity,
+            QuestionScreenSaveAndContinueCommand saveAndContinueCommand,
+            List<string> previousPathActivities,
+            QuestionScreenSaveAndContinueCommandHandler sut)
+    {
+        //Arrange
+        var collectedWorkflow = new CollectedWorkflow(saveAndContinueCommand.WorkflowInstanceId, null, null);
+
+        elsaCustomRepository.Setup(x => x.GetQuestionScreenAnswers(saveAndContinueCommand.ActivityId,
+                saveAndContinueCommand.WorkflowInstanceId, CancellationToken.None))
+            .ReturnsAsync(currentAssessmentQuestions);
+
+        questionInvoker.Setup(x => x.ExecuteWorkflowsAsync(saveAndContinueCommand.ActivityId,
+                ActivityTypeConstants.QuestionScreen,
+                saveAndContinueCommand.WorkflowInstanceId, currentAssessmentQuestions, CancellationToken.None))
+            .ReturnsAsync(new List<CollectedWorkflow>() { collectedWorkflow });
+
+        workflowInstanceProvider.Setup(x => x.GetWorkflowInstance(It.IsAny<string>(), CancellationToken.None))
+            .ReturnsAsync(workflowInstance);
+
+        workflowNextActivityProvider.Setup(x => x.GetNextActivity(workflowInstance, CancellationToken.None))
+            .ReturnsAsync(activityBlueprint);
+
+        workflowPathProvider
+            .Setup(x => x.GetChangedPathCustomNavigation(saveAndContinueCommand.WorkflowInstanceId,
+                saveAndContinueCommand.ActivityId, activityBlueprint.Id, CancellationToken.None))
+            .ReturnsAsync(changedPathAssessmentActivity);
+
+        workflowPathProvider
+            .Setup(x => x.GetPreviousPathActivities(workflowInstance.DefinitionId,
+                changedPathAssessmentActivity.ActivityId, CancellationToken.None))
+            .ReturnsAsync(previousPathActivities);
+
+        //Act
+        await sut.Handle(saveAndContinueCommand, CancellationToken.None);
+
+        //Assert
+        elsaCustomRepository.Verify(
+            x => x.DeleteCustomNavigation(changedPathAssessmentActivity, CancellationToken.None), Times.Once);
+
+        elsaCustomRepository.Verify(
+            x => x.DeleteQuestionScreenAnswers(changedPathAssessmentActivity.WorkflowInstanceId, previousPathActivities, CancellationToken.None), Times.Once);
     }
 }

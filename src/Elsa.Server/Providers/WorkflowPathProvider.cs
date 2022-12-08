@@ -52,6 +52,7 @@ namespace Elsa.Server.Providers
             }
 
             connections.AddRange(additionalConnections);
+            connections = connections.Distinct().ToList();
             return connections;
         }
     }
