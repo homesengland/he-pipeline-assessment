@@ -1,20 +1,8 @@
 ﻿using AutoFixture.Xunit2;
-using Elsa.CustomActivities.Activities.Shared;
-using Elsa.CustomInfrastructure.Data.Repository;
-using Elsa.CustomModels;
-using Elsa.CustomWorkflow.Sdk.Models.Workflow;
 using Elsa.Models;
-using Elsa.Server.Features.Workflow.CheckYourAnswersSaveAndContinue;
-using Elsa.Server.Models;
 using Elsa.Server.Providers;
-using Elsa.Services.Models;
 using He.PipelineAssessment.Common.Tests;
 using Moq;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Xunit;
 
 namespace Elsa.Server.Tests.Providers
@@ -35,7 +23,6 @@ namespace Elsa.Server.Tests.Providers
         {
             // Arrange
             workflowInstanceProviderMock.Setup(x => x.GetWorkflowInstance(workflowInstanceId, cancellationToken)).ReturnsAsync(workflowInstance);
-            var exceptionMessage = string.Empty;
 
             //Act
 
@@ -59,11 +46,9 @@ namespace Elsa.Server.Tests.Providers
         {
             // Arrange
             workflowInstanceProviderMock.Setup(x => x.GetWorkflowInstance(workflowInstanceId, cancellationToken)).ReturnsAsync(workflowInstance);
-            var exceptionMessage = string.Empty;
             IDictionary<string, object?> activityData = new Dictionary<string, object?>();
 
             var assessmentQuestionsDictionary = new Dictionary<string, object?>();
-            //AssessmentQuestions? elsaAssessmentQuestions = null;
             assessmentQuestionsDictionary.Add("title", "test");
 
             workflowInstance.ActivityData.Add(activityId, assessmentQuestionsDictionary);
