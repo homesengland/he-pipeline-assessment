@@ -1,7 +1,6 @@
 ﻿using Elsa.CustomWorkflow.Sdk.Models.Workflow;
 using Elsa.CustomWorkflow.Sdk.Models.Workflow.Validators;
 using FluentValidation.TestHelper;
-using He.PipelineAssessment.Common.Tests;
 using Xunit;
 
 namespace Elsa.CustomWorkflow.Sdk.Tests.Workflow.Validators
@@ -80,6 +79,7 @@ namespace Elsa.CustomWorkflow.Sdk.Tests.Workflow.Validators
 
             result.ShouldHaveValidationErrorFor(c => c)
                 .WithErrorMessage("Test 1 cannot be selected with any other answer.");
+            result.ShouldNotHaveValidationErrorFor(c => c.SelectedChoices);
         }
 
         [Fact]
@@ -113,6 +113,7 @@ namespace Elsa.CustomWorkflow.Sdk.Tests.Workflow.Validators
 
             //Assert
             result.ShouldNotHaveValidationErrorFor(c => c);
+            result.ShouldNotHaveValidationErrorFor(c => c.SelectedChoices);
         }
 
         [Fact]
@@ -146,6 +147,44 @@ namespace Elsa.CustomWorkflow.Sdk.Tests.Workflow.Validators
 
             //Assert
             result.ShouldNotHaveValidationErrorFor(c => c);
+            result.ShouldNotHaveValidationErrorFor(c => c.SelectedChoices);
+
+        }
+
+        [Fact]
+        public void Should_Have_Error_When_SelectedChoicesEmpty()
+        {
+            //Arrange
+            MultiChoiceValidator validator = new MultiChoiceValidator();
+            Checkbox multiChoice = new Checkbox
+            {
+                Choices = new List<Choice>
+                {
+                    new Choice
+                    {
+                        Answer = "Test 1",
+                        IsSingle = true
+                    },
+                    new Choice
+                    {
+                        Answer = "Test 2",
+                        IsSingle = false
+                    },
+                    new Choice
+                    {
+                        Answer = "Test 3",
+                        IsSingle = false
+                    },
+                },
+                SelectedChoices = new List<string>()
+            };
+
+            //Act
+            var result = validator.TestValidate(multiChoice);
+
+            //Assert
+            result.ShouldNotHaveValidationErrorFor(c => c);
+            result.ShouldHaveValidationErrorFor(c => c.SelectedChoices).WithErrorMessage("The question has not been answered");
         }
 
     }

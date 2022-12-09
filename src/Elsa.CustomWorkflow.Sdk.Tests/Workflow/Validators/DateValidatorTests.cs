@@ -9,7 +9,7 @@ namespace Elsa.CustomWorkflow.Sdk.Tests.Workflow.Validators
     {
         [Theory]
         [InlineAutoMoqData(01, 12, 2922, 0, true)]
-        [InlineAutoMoqData(null, null, null, 0, true)]
+        [InlineAutoMoqData(null, null, null, 1, false)]
         [InlineAutoMoqData(null, 12, 2022, 1, false)]
         [InlineAutoMoqData(01, null, 2022, 1, false)]
         [InlineAutoMoqData(01, 12, null, 1, false)]
