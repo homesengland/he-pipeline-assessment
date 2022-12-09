@@ -43,14 +43,33 @@ namespace Elsa.CustomWorkflow.Sdk.Tests.Workflow.Validators
             result.ShouldHaveValidationErrorFor(c => c.Answer).WithErrorMessage("The question has not been answered");
         }
 
+
         [Fact]
-        public void Should_Not_Have_Errors_When_AnswerNotNullOrEmpty()
+        public void Should_Have_Errors_When_AnswerIsNotANumber()
         {
             //Arrange
             CurrencyValidator validator = new CurrencyValidator();
             var questionActivityData = new QuestionActivityData
             {
                 Answer = "MyAnswer"
+            };
+
+            //Act
+            var result = validator.TestValidate(questionActivityData);
+
+            //Assert
+            result.ShouldNotHaveValidationErrorFor(c => c);
+            result.ShouldHaveValidationErrorFor(c => c.Answer).WithErrorMessage("The answer is not a number");
+        }
+
+        [Fact]
+        public void Should_Not_Have_Errors_When_AnswerIsANumber()
+        {
+            //Arrange
+            CurrencyValidator validator = new CurrencyValidator();
+            var questionActivityData = new QuestionActivityData
+            {
+                Answer = "1234567"
             };
 
             //Act

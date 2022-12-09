@@ -11,6 +11,11 @@ namespace Elsa.CustomWorkflow.Sdk.Models.Workflow.Validators
                     () =>
                     {
                         RuleFor(x => x.Answer).NotEmpty().WithMessage("The question has not been answered");
+                        RuleFor(x => x.Answer).Must(answer =>
+                        {
+                            var isNumeric = int.TryParse(answer, out _);
+                            return isNumeric;
+                        }).WithMessage("The answer is not a number");
                     }
                 );
         }
