@@ -2,16 +2,19 @@
 @model He.PipelineAssessment.UI.Features.Workflow.ViewModels.MultiQuestion
 @{
     var itemName = "Data.QuestionScreenAnswers[" + Model.Index + "].Radio.SelectedAnswer";
+    var formItemName = "Data.QuestionScreenAnswers[" + Model.Index + "].Radio";
+
     var itemId = Model.Index + "radio_multi_select_";
+    var errorFormClass = !Model.IsValid ? "govuk-form-group--error" : "";
 }
 
-<div class="govuk-form-group">
+<div class="govuk-form-group @errorFormClass" id="@formItemName">
     @await Html.PartialAsync("_QuestionTitle", Model.Title)
 
     @await Html.PartialAsync("_QuestionText", Model.Question)
     @await Html.PartialAsync("_QuestionHint", Model.QuestionHint)
     
-    <div class="govuk-radios" data-module="govuk-radios">
+    <div class="govuk-radios" data-module="govuk-radios" id="@itemName">
         @for (int i = 0; i < Model.Radio.Choices.Count(); i++)
         {
             var hiddenItemNameAnswer = "Data.QuestionScreenAnswers[" + Model.Index + "].Radio.Choices[" + i + "].Answer";
