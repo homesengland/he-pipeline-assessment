@@ -21,7 +21,7 @@ namespace Elsa.CustomWorkflow.Sdk.Tests.Workflow.Validators
         public void DateValidator_ValidatesCorrectlyWithCorrectNumberOfErrors_GivenDate(int? day, int? month, int? year, int expectedErrorCount, bool expectedValidationResult)
         {
             //Arrange
-            Date date = new Date()
+            Date date = new Date
             {
                 Day = day,
                 Month = month,
