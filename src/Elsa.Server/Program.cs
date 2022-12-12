@@ -2,9 +2,11 @@ using Elsa.Activities.ControlFlow;
 using Elsa.CustomActivities.Activities.CheckYourAnswersScreen;
 using Elsa.CustomActivities.Activities.ConfirmationScreen;
 using Elsa.CustomActivities.Activities.FinishWorkflow;
+using Elsa.CustomActivities.Activities.PCSProfileDataSource;
 using Elsa.CustomActivities.Activities.QuestionScreen;
 using Elsa.CustomActivities.Activities.Shared;
 using Elsa.CustomActivities.Activities.SinglePipelineDataSource;
+using Elsa.CustomActivities.Activities.VFMDataSource;
 using Elsa.CustomInfrastructure.Data;
 using Elsa.CustomInfrastructure.Data.Repository;
 using Elsa.Persistence.EntityFramework.Core.Extensions;
@@ -15,7 +17,9 @@ using Elsa.Server.Features.Workflow.Helpers;
 using Elsa.Server.Features.Workflow.StartWorkflow;
 using Elsa.Server.Providers;
 using Elsa.Server.StartupTasks;
+using He.PipelineAssessment.Data.PCSProfile;
 using He.PipelineAssessment.Data.SinglePipeline;
+using He.PipelineAssessment.Data.VFM;
 using MediatR;
 using Microsoft.AspNetCore.DataProtection;
 using Microsoft.EntityFrameworkCore;
@@ -32,6 +36,8 @@ builder.Services
     .AddElsa(elsa => elsa
         .UseEntityFrameworkPersistence(ef => ef.UseSqlServer(elsaConnectionString, typeof(Elsa.Persistence.EntityFramework.SqlServer.Migrations.Initial)))
         .AddActivity<SinglePipelineDataSource>()
+        .AddActivity<PCSProfileDataSource>()
+        .AddActivity<VFMDataSource>()
         .AddActivity<QuestionScreen>()
         .AddActivity<CheckYourAnswersScreen>()
         .AddActivity<ConfirmationScreen>()
@@ -72,6 +78,11 @@ builder.Services.AddScoped<ISaveAndContinueHelper, SaveAndContinueHelper>();
 
 builder.Services.AddScoped<IEsriSinglePipelineClient, EsriSinglePipelineClient>();
 builder.Services.AddScoped<IEsriSinglePipelineDataJsonHelper, EsriSinglePipelineDataJsonHelper>();
+builder.Services.AddScoped<IEsriVFMClient, EsriLAHouseNeedClient>();
+builder.Services.AddScoped<IEsriVFMDataJsonHelper, EsriVFMDataJsonHelper>();
+
+builder.Services.AddScoped<IEsriPCSProfileClient, EsriPCSProfileClient>();
+builder.Services.AddScoped<IEsriPCSProfileDataJsonHelper, EsriPCSProfileDataJsonHelper>();
 
 
 // Allow arbitrary client browser apps to access the API.
