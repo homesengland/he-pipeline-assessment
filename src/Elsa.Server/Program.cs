@@ -17,6 +17,7 @@ using Elsa.Server.Features.Workflow.Helpers;
 using Elsa.Server.Features.Workflow.StartWorkflow;
 using Elsa.Server.Providers;
 using Elsa.Server.StartupTasks;
+using He.PipelineAssessment.Data.LaHouseNeed;
 using He.PipelineAssessment.Data.PCSProfile;
 using He.PipelineAssessment.Data.SinglePipeline;
 using He.PipelineAssessment.Data.VFM;
@@ -78,11 +79,15 @@ builder.Services.AddScoped<ISaveAndContinueHelper, SaveAndContinueHelper>();
 
 builder.Services.AddScoped<IEsriSinglePipelineClient, EsriSinglePipelineClient>();
 builder.Services.AddScoped<IEsriSinglePipelineDataJsonHelper, EsriSinglePipelineDataJsonHelper>();
-builder.Services.AddScoped<IEsriVFMClient, EsriLAHouseNeedClient>();
+
+builder.Services.AddScoped<IEsriVFMClient, EsriVFMClient>();
 builder.Services.AddScoped<IEsriVFMDataJsonHelper, EsriVFMDataJsonHelper>();
 
 builder.Services.AddScoped<IEsriPCSProfileClient, EsriPCSProfileClient>();
 builder.Services.AddScoped<IEsriPCSProfileDataJsonHelper, EsriPCSProfileDataJsonHelper>();
+
+builder.Services.AddScoped<IEsriLaHouseNeedClient, EsriLAHouseNeedClient>();
+builder.Services.AddScoped<IEsriLaHouseNeedDataJsonHelper, EsriLAHouseNeedDataJsonHelper>();
 
 
 // Allow arbitrary client browser apps to access the API.

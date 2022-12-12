@@ -4,7 +4,7 @@ namespace He.PipelineAssessment.Data.LaHouseNeed
 {
     public interface IEsriLaHouseNeedClient
     {
-        Task<string?> GetLaHouseNeedData(string objectId, string localAuthorityName, string altLocalAuthorityName);
+        Task<string?> GetLaHouseNeedData(string gssCode, string localAuthorityName, string altLocalAuthorityName);
     }
     public class EsriLAHouseNeedClient : IEsriLaHouseNeedClient
     {
@@ -17,10 +17,10 @@ namespace He.PipelineAssessment.Data.LaHouseNeed
             _logger = logger;
         }
 
-        public async Task<string?> GetLaHouseNeedData(string objectId, string localAuthorityName, string altLocalAuthorityName)
+        public async Task<string?> GetLaHouseNeedData(string gssCode, string localAuthorityName, string altLocalAuthorityName)
         {
             string? data = null;
-            string whereClause = $"objectid={objectId}+or+la_name={localAuthorityName}+or+alt_la_name={altLocalAuthorityName}";  //Need to query the logic here.
+            string whereClause = $"gss_code={gssCode}+or+la_name={localAuthorityName}+or+alt_la_name={altLocalAuthorityName}";  //Need to query the logic here.
             string recordCount = "1";
             string outFields = "*";
 
