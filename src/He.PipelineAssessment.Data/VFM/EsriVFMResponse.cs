@@ -2,7 +2,7 @@
 {
     public class VFMCalculationData
     {
-        public int object_id { get; set; }
+        public int objectid { get; set; }
         public string? gss_code { get; set; }
         public string? la_name { get; set; }
         public string? alt_la_name { get; set; }
@@ -22,8 +22,8 @@
         public decimal? high_dem_adju_bil_ft { get; set; }
         public string? adopt_local_plan_5_y { get; set; }
         public string? hdt_check { get; set; }
-        public string? bil_ft_mar_dev_disp { get; set; }
-        public string? bil_ft_high_dem_disp { get; set; }
+        public decimal? bil_ft_mar_dev_disp { get; set; }
+        public decimal? bil_ft_high_dem_disp { get; set; }
         public decimal Shape__Area { get; set; }
         public decimal Shape__Length { get; set; }
     }

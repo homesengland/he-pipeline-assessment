@@ -1,10 +1,12 @@
 ﻿using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Primitives;
+using System.Text;
 
 namespace He.PipelineAssessment.Data.VFM
 {
     public interface IEsriVFMClient
     {
-        Task<string?> GetVFMCalculationData(string gssCode, string localAuthorityName, string altLocalAuthorityName);
+        Task<string?> GetVFMCalculationData(string? gssCode, string? localAuthorityName, string? altLocalAuthorityName);
     }
     public class EsriVFMClient : IEsriVFMClient
     {
@@ -17,14 +19,14 @@ namespace He.PipelineAssessment.Data.VFM
             _logger = logger;
         }
 
-        public async Task<string?> GetVFMCalculationData(string gssCode, string localAuthorityName, string altLocalAuthorityName)
+        public async Task<string?> GetVFMCalculationData(string? gssCode, string? localAuthorityName, string? altLocalAuthorityName)
         {
             string? data = null;
-            string whereClause = $"gss_code={gssCode}+or+la_name={localAuthorityName}+or+alt_la_name={altLocalAuthorityName}";
+            string whereClause = GetWhereClause(gssCode, localAuthorityName, altLocalAuthorityName);
             string recordCount = "1";
             string outFields = "*";
 
-            var relativeUri = $"query?where={whereClause}&resultRecordCount={recordCount}&outFields={outFields}&f=json";//potentially needs a token on the end also
+            var relativeUri = $"query?where={whereClause}&resultRecordCount={recordCount}&outFields={outFields}&returnGeometry=false&f=json";//potentially needs a token on the end also
 
             using (var response = await _httpClientFactory.CreateClient("VFMCalculationsClient")
                        .GetAsync(relativeUri)
@@ -44,5 +46,31 @@ namespace He.PipelineAssessment.Data.VFM
             return data;
         }
 
+        private string GetWhereClause(string? gssCode, string? localAuthorityName, string? altLocalAuthorityName)
+        {
+            var whereClauseBuilder = new StringBuilder();
+            if(gssCode != null)
+            {
+                whereClauseBuilder.Append($"gss_code='{gssCode}'");
+            }
+            if(localAuthorityName != null)
+            {
+                if(gssCode != null)
+                {
+                    whereClauseBuilder.Append(" OR ");
+                }
+                whereClauseBuilder.Append($"la_name = '{localAuthorityName}'");
+            }
+            if(altLocalAuthorityName != null)
+            {
+                if(gssCode != null || localAuthorityName != null)
+                {
+                    whereClauseBuilder.Append(" OR ");
+                }
+                whereClauseBuilder.Append($"alt_la_name = '{altLocalAuthorityName}'");
+            }
+
+            return whereClauseBuilder.ToString();
+        }
     }
 }

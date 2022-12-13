@@ -20,7 +20,7 @@ namespace He.PipelineAssessment.Data.PCSProfile
         public async Task<string?> GetPCSProfileData(string projectIdentifier)
         {
             string? data = null;
-            string whereClause = $"project_identifier={projectIdentifier}";
+            string whereClause = $"project_identifier='{projectIdentifier}'";
             string outFields = "*";
 
             var relativeUri = $"query?where={whereClause}&outFields={outFields}&f=json";

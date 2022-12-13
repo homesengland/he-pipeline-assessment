@@ -22,12 +22,12 @@ namespace Elsa.CustomActivities.Activities.VFMDataSource
             _jsonHelper = jsonHelper;
         }
 
-        [ActivityInput(Hint = "Gss Code of the record to get", Name = "Gss Code", SupportedSyntaxes = new[] { SyntaxNames.Literal, SyntaxNames.Json, SyntaxNames.JavaScript })]
-        public string GssCode { get; set; } = null!;
-        [ActivityInput(Hint = "Name of Local Authority", Name = "Local Authority Name", SupportedSyntaxes = new[] { SyntaxNames.Literal, SyntaxNames.Json, SyntaxNames.JavaScript })]
-        public string LocalAuthority { get; set; } = null!;
-        [ActivityInput(Hint = "Alternative Name of Local Authority", Name = "Local Authority Alternative Name", SupportedSyntaxes = new[] { SyntaxNames.Literal, SyntaxNames.Json, SyntaxNames.JavaScript })]
-        public string LocalAuthorityAlt { get; set; } = null!;
+        [ActivityInput(Hint = "Gss Code of the record to get",  SupportedSyntaxes = new[] { SyntaxNames.Literal, SyntaxNames.Json, SyntaxNames.JavaScript })]
+        public string? GssCode { get; set; }
+        [ActivityInput(Hint = "Name of Local Authority", SupportedSyntaxes = new[] { SyntaxNames.Literal, SyntaxNames.Json, SyntaxNames.JavaScript })]
+        public string? LocalAuthority { get; set; }
+        [ActivityInput(Hint = "Alternative Name of Local Authority", SupportedSyntaxes = new[] { SyntaxNames.Literal, SyntaxNames.Json, SyntaxNames.JavaScript })]
+        public string? LocalAuthorityAlt { get; set; }
 
         [ActivityOutput] public VFMCalculationData? Output { get; set; }
 

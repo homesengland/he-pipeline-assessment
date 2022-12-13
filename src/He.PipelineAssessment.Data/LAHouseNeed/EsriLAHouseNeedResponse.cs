@@ -2,7 +2,7 @@
 {
     public class LaHouseNeedData
     {
-        public int object_id { get; set; }
+        public int objectid { get; set; }
         public string? country { get; set; }
         public string? la_name { get; set; }
         public string? alt_name { get; set; }

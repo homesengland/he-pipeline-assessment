@@ -2,6 +2,7 @@ using Elsa.Activities.ControlFlow;
 using Elsa.CustomActivities.Activities.CheckYourAnswersScreen;
 using Elsa.CustomActivities.Activities.ConfirmationScreen;
 using Elsa.CustomActivities.Activities.FinishWorkflow;
+using Elsa.CustomActivities.Activities.HousingNeed;
 using Elsa.CustomActivities.Activities.PCSProfileDataSource;
 using Elsa.CustomActivities.Activities.QuestionScreen;
 using Elsa.CustomActivities.Activities.Shared;
@@ -39,6 +40,7 @@ builder.Services
         .AddActivity<SinglePipelineDataSource>()
         .AddActivity<PCSProfileDataSource>()
         .AddActivity<VFMDataSource>()
+        .AddActivity<HousingNeedDataSource>()
         .AddActivity<QuestionScreen>()
         .AddActivity<CheckYourAnswersScreen>()
         .AddActivity<ConfirmationScreen>()
@@ -110,6 +112,27 @@ string singlePipelineURL = builder.Configuration["Datasources:SinglePipeline"];
 builder.Services.AddHttpClient("SinglePipelineClient", client =>
 {
     client.BaseAddress = new Uri(singlePipelineURL);
+});
+
+string vfmURL = builder.Configuration["Datasources:VFM"];
+
+builder.Services.AddHttpClient("VFMCalculationsClient", client =>
+{
+    client.BaseAddress = new Uri(vfmURL);
+});
+
+string pcsURL = builder.Configuration["Datasources:PCS"];
+
+builder.Services.AddHttpClient("PCSProfileClient", client =>
+{
+    client.BaseAddress = new Uri(pcsURL);
+});
+
+string housingNeedURL = builder.Configuration["Datasources:HousingNeed"];
+
+builder.Services.AddHttpClient("LaHouseNeedClient", client =>
+{
+    client.BaseAddress = new Uri(housingNeedURL);
 });
 
 var app = builder.Build();
