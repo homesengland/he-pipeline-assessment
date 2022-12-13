@@ -1,3 +1,4 @@
+using Elsa.CustomWorkflow.Sdk.Extensions;
 using Elsa.CustomWorkflow.Sdk.HttpClients;
 using FluentValidation;
 using He.PipelineAssessment.Data.Auth;
@@ -51,28 +52,18 @@ builder.Services.AddScoped<DbContext>(provider => provider.GetRequiredService<Pi
 builder.Services.AddScoped<IValidator<QuestionScreenSaveAndContinueCommand>, SaveAndContinueCommandValidator>();
 builder.Services.AddDataProtection().PersistKeysToDbContext<PipelineAssessmentContext>();
 builder.Services.AddScoped<IAssessmentRepository, AssessmentRepository>();
-builder.Services.AddScoped<IEsriSinglePipelineClient, EsriSinglePipelineClient>();
-builder.Services.AddScoped<IEsriSinglePipelineDataJsonHelper, EsriSinglePipelineDataJsonHelper>();
 
-string singlePipelineURL = builder.Configuration["Datasources:SinglePipeline"];
 
-//if(builder.Environment.EnvironmentName.ToLower() != "development")
-//{
-    builder.Services.AddScoped<IIdentityClient, IdentityClient>();
-    builder.Services.AddTransient<BearerTokenHandler>();
-    builder.Services.AddHttpClient("SinglePipelineClient", client =>
-    {
-        client.BaseAddress = new Uri(singlePipelineURL);
-    }).AddHttpMessageHandler<BearerTokenHandler>();
-//}
-//else
-//{
-//    builder.Services.AddHttpClient("SinglePipelineClient", client =>
-//    {
-//        client.BaseAddress = new Uri(singlePipelineURL);
-//    });
-//}
+builder.Services.AddScoped<IIdentityClient, IdentityClient>();
+builder.Services.AddTransient<BearerTokenHandler>();
 
+builder.Services.AddOptions<IdentityClientConfig>()
+.Configure<IConfiguration>((settings, configuration) =>
+{
+    configuration.GetSection("IdentityClientConfig").Bind(settings);
+});
+
+builder.Services.AddSinglePipelineClient(builder.Configuration, builder.Environment.IsDevelopment());
 
 
 var app = builder.Build();

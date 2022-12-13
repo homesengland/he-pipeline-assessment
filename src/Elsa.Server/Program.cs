@@ -10,6 +10,7 @@ using Elsa.CustomActivities.Activities.SinglePipelineDataSource;
 using Elsa.CustomActivities.Activities.VFMDataSource;
 using Elsa.CustomInfrastructure.Data;
 using Elsa.CustomInfrastructure.Data.Repository;
+using Elsa.CustomWorkflow.Sdk.Extensions;
 using Elsa.Persistence.EntityFramework.Core.Extensions;
 using Elsa.Persistence.EntityFramework.SqlServer;
 using Elsa.Runtime;
@@ -79,18 +80,6 @@ builder.Services.AddScoped<IWorkflowInstanceProvider, WorkflowInstanceProvider>(
 builder.Services.AddScoped<IStartWorkflowMapper, StartWorkflowMapper>();
 builder.Services.AddScoped<ISaveAndContinueHelper, SaveAndContinueHelper>();
 
-builder.Services.AddScoped<IEsriSinglePipelineClient, EsriSinglePipelineClient>();
-builder.Services.AddScoped<IEsriSinglePipelineDataJsonHelper, EsriSinglePipelineDataJsonHelper>();
-
-builder.Services.AddScoped<IEsriVFMClient, EsriVFMClient>();
-builder.Services.AddScoped<IEsriVFMDataJsonHelper, EsriVFMDataJsonHelper>();
-
-builder.Services.AddScoped<IEsriPCSProfileClient, EsriPCSProfileClient>();
-builder.Services.AddScoped<IEsriPCSProfileDataJsonHelper, EsriPCSProfileDataJsonHelper>();
-
-builder.Services.AddScoped<IEsriLaHouseNeedClient, EsriLAHouseNeedClient>();
-builder.Services.AddScoped<IEsriLaHouseNeedDataJsonHelper, EsriLAHouseNeedDataJsonHelper>();
-
 
 // Allow arbitrary client browser apps to access the API.
 // In a production environment, make sure to allow only origins you trust.
@@ -106,34 +95,7 @@ if (builder.Environment.IsDevelopment())
     builder.Services.AddStartupTask<RunElsaCustomMigrations>();
 }
 
-string singlePipelineURL = builder.Configuration["Datasources:SinglePipeline"];
-
-//TODO: make this an extension in the SDK
-builder.Services.AddHttpClient("SinglePipelineClient", client =>
-{
-    client.BaseAddress = new Uri(singlePipelineURL);
-});
-
-string vfmURL = builder.Configuration["Datasources:VFM"];
-
-builder.Services.AddHttpClient("VFMCalculationsClient", client =>
-{
-    client.BaseAddress = new Uri(vfmURL);
-});
-
-string pcsURL = builder.Configuration["Datasources:PCS"];
-
-builder.Services.AddHttpClient("PCSProfileClient", client =>
-{
-    client.BaseAddress = new Uri(pcsURL);
-});
-
-string housingNeedURL = builder.Configuration["Datasources:HousingNeed"];
-
-builder.Services.AddHttpClient("LaHouseNeedClient", client =>
-{
-    client.BaseAddress = new Uri(housingNeedURL);
-});
+builder.Services.AddEsriHttpClients(builder.Configuration, builder.Environment.IsDevelopment());
 
 var app = builder.Build();
 
