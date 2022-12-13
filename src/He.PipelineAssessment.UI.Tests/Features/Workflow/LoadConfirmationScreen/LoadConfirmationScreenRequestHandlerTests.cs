@@ -80,7 +80,7 @@ namespace He.PipelineAssessment.UI.Tests.Features.Workflow.LoadConfirmationScree
             //Assert
             Assert.NotNull(result);
             Assert.IsType<LoadConfirmationScreenResponse>(result);
-            Assert.Equal(stage.Assessment.SpId.ToString(), result.CorrelationId);
+            Assert.Equal(stage.Assessment.SpId.ToString(), result!.CorrelationId);
             Assert.Equal(stage.AssessmentId, result.AssessmentId);
             elsaServerHttpClient.Verify(x => x.LoadConfirmationScreen(It.IsAny<LoadWorkflowActivityDto>()), Times.Once);
         }

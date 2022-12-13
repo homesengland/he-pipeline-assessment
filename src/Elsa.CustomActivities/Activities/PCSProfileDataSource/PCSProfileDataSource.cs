@@ -49,7 +49,7 @@ namespace Elsa.CustomActivities.Activities.PCSProfileDataSource
             }
             catch(Exception e)
             {
-                context.JournalData.Add("Error", "");
+                context.JournalData.Add("Error", e.Message);
                 return new SuspendResult();
             }
 
