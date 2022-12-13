@@ -3,8 +3,8 @@
     public class PCSProfileData
     {
         public int object_id { get; set; }
-        public string project_identifier { get; set; }
-        public string project_name { get; set; }
+        public string project_identifier { get; set; } = null!;
+        public string project_name { get; set; } = null!;
         public decimal? year_0_expend_fc { get; set; }
         public decimal? year_1_expend_fc { get; set; }
         public decimal? year_2_expend_fc { get; set; }
