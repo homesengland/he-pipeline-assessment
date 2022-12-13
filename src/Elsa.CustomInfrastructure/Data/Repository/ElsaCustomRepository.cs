@@ -30,6 +30,13 @@ namespace Elsa.CustomInfrastructure.Data.Repository
             return model;
         }
 
+        public async Task<CustomActivityNavigation?> UpdateCustomActivityNavigation(CustomActivityNavigation model, CancellationToken cancellationToken = default)
+        {
+            _dbContext.Update(model);
+            await _dbContext.SaveChangesAsync(cancellationToken);
+            return model;
+        }
+
         public async Task CreateQuestionScreenAnswersAsync(List<QuestionScreenAnswer> assessments, CancellationToken cancellationToken)
         {
             await _dbContext.AddRangeAsync(assessments, cancellationToken);
@@ -46,7 +53,7 @@ namespace Elsa.CustomInfrastructure.Data.Repository
         public async Task<QuestionScreenAnswer?> GetQuestionScreenAnswer(string activityId, string workflowInstanceId, string questionID,
             CancellationToken cancellationToken)
         {
-            var result = await _dbContext.Set<QuestionScreenAnswer>().FirstOrDefaultAsync(x => x.ActivityId == activityId && x.WorkflowInstanceId == workflowInstanceId && x.QuestionId == questionID);
+            var result = await _dbContext.Set<QuestionScreenAnswer>().FirstOrDefaultAsync(x => x.ActivityId == activityId && x.WorkflowInstanceId == workflowInstanceId && x.QuestionId == questionID, cancellationToken: cancellationToken);
             return result;
         }
 
@@ -59,6 +66,28 @@ namespace Elsa.CustomInfrastructure.Data.Repository
         {
             var list = await _dbContext.Set<QuestionScreenAnswer>().Where(x => x.WorkflowInstanceId == workflowInstanceId).ToListAsync(cancellationToken);
             return list;
+        }
+
+        public async Task<CustomActivityNavigation?> GetChangedPathNavigation(string workflowInstanceId,
+            string currentActivityId, string nextActivityId, CancellationToken cancellationToken)
+        {
+            return await _dbContext.Set<CustomActivityNavigation>()
+                .Where(x => x.WorkflowInstanceId == workflowInstanceId && x.PreviousActivityId == currentActivityId && x.ActivityId != nextActivityId &&
+                            x.ActivityId != currentActivityId).OrderByDescending(x => x.LastModifiedDateTime)
+                .FirstOrDefaultAsync(cancellationToken: cancellationToken);
+        }
+
+        public async Task DeleteCustomNavigation(CustomActivityNavigation customNavigation, CancellationToken cancellationToken)
+        {
+            _dbContext.Set<CustomActivityNavigation>().Remove(customNavigation);
+            await SaveChanges(cancellationToken);
+        }
+
+        public async Task DeleteQuestionScreenAnswers(string workflowInstanceId, List<string> previousPathActivities, CancellationToken cancellationToken)
+        {
+            var list = _dbContext.Set<QuestionScreenAnswer>().Where(x => x.WorkflowInstanceId == workflowInstanceId && previousPathActivities.Contains(x.ActivityId));
+            _dbContext.RemoveRange(list);
+            await SaveChanges(cancellationToken);
         }
     }
 }

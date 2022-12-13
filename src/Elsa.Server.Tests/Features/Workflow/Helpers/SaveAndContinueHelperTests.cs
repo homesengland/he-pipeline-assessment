@@ -41,6 +41,7 @@ namespace Elsa.Server.Tests.Features.Workflow.Helpers
             Assert.Equal(previousActivityId, result.PreviousActivityId);
             Assert.Equal(previousActivityType, result.PreviousActivityType);
             Assert.Equal(currentTimeUtc, result.CreatedDateTime);
+            Assert.Equal(currentTimeUtc, result.LastModifiedDateTime);
         }
 
         [Theory]

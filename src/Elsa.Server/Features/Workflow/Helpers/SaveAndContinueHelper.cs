@@ -1,5 +1,4 @@
 ﻿using Elsa.CustomActivities.Activities.QuestionScreen;
-using Elsa.CustomInfrastructure.Data.Repository;
 using Elsa.CustomModels;
 using Elsa.CustomWorkflow.Sdk;
 using Elsa.Models;
@@ -18,13 +17,14 @@ namespace Elsa.Server.Features.Workflow.Helpers
     {
         private readonly IDateTimeProvider _dateTimeProvider;
 
-        public SaveAndContinueHelper(IDateTimeProvider dateTimeProvider, IElsaCustomRepository elsaCustomRepository)
+        public SaveAndContinueHelper(IDateTimeProvider dateTimeProvider)
         {
             _dateTimeProvider = dateTimeProvider;
         }
 
         public CustomActivityNavigation CreateNextCustomActivityNavigation(string previousActivityId, string previousActivityType, string nextActivityId, string nextActivityType, WorkflowInstance workflowInstance)
         {
+            var now = _dateTimeProvider.UtcNow();
             return new CustomActivityNavigation
             {
                 ActivityId = nextActivityId,
@@ -33,7 +33,8 @@ namespace Elsa.Server.Features.Workflow.Helpers
                 WorkflowInstanceId = workflowInstance.Id,
                 PreviousActivityId = previousActivityId,
                 PreviousActivityType = previousActivityType,
-                CreatedDateTime = _dateTimeProvider.UtcNow()
+                CreatedDateTime = now,
+                LastModifiedDateTime = now
             };
         }
 
