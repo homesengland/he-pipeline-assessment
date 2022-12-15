@@ -18,6 +18,7 @@ using Elsa.Server.Features.Workflow.Helpers;
 using Elsa.Server.Features.Workflow.StartWorkflow;
 using Elsa.Server.Providers;
 using Elsa.Server.StartupTasks;
+using He.PipelineAssessment.Data.Auth;
 using He.PipelineAssessment.Data.LaHouseNeed;
 using He.PipelineAssessment.Data.PCSProfile;
 using He.PipelineAssessment.Data.SinglePipeline;
@@ -94,6 +95,15 @@ if (builder.Environment.IsDevelopment())
 {
     builder.Services.AddStartupTask<RunElsaCustomMigrations>();
 }
+
+builder.Services.AddScoped<IIdentityClient, IdentityClient>();
+builder.Services.AddTransient<BearerTokenHandler>();
+
+builder.Services.AddOptions<IdentityClientConfig>()
+.Configure<IConfiguration>((settings, configuration) =>
+{
+    configuration.GetSection("IdentityClientConfig").Bind(settings);
+});
 
 builder.Services.AddEsriHttpClients(builder.Configuration, builder.Environment.IsDevelopment());
 
