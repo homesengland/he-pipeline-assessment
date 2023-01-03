@@ -22,7 +22,7 @@ namespace Elsa.CustomActivities.Activities.VFMDataSource
             _jsonHelper = jsonHelper;
         }
 
-        [ActivityInput(Hint = "Gss Code of the record to get",  SupportedSyntaxes = new[] { SyntaxNames.Literal, SyntaxNames.Json, SyntaxNames.JavaScript })]
+        [ActivityInput(Hint = "Gss Code of the record to get", SupportedSyntaxes = new[] { SyntaxNames.Literal, SyntaxNames.Json, SyntaxNames.JavaScript })]
         public string? GssCode { get; set; }
         [ActivityInput(Hint = "Name of Local Authority", SupportedSyntaxes = new[] { SyntaxNames.Literal, SyntaxNames.Json, SyntaxNames.JavaScript })]
         public string? LocalAuthority { get; set; }
@@ -41,6 +41,7 @@ namespace Elsa.CustomActivities.Activities.VFMDataSource
 
             if (data != null)
             {
+                context.JournalData.Add("Data", data);
                 var dataResult = _jsonHelper.JsonToVFMCalculationData(data);
                 this.Output = dataResult;
 
