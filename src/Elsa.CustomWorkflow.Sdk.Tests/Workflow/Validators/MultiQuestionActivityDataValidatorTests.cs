@@ -1,18 +1,23 @@
 ﻿using Elsa.CustomWorkflow.Sdk.Models.Workflow;
 using Elsa.CustomWorkflow.Sdk.Models.Workflow.Validators;
 using FluentValidation.TestHelper;
+using He.PipelineAssessment.Common.Tests;
 using Xunit;
 
 namespace Elsa.CustomWorkflow.Sdk.Tests.Workflow.Validators
 {
     public class MultiQuestionActivityDataValidatorTests
     {
-        [Fact]
-        public void Date_Validation_Should_Not_Be_Run_When_Question_Type_Is_MultiChoice()
+        [Theory]
+        [InlineAutoMoqData(QuestionTypeConstants.CheckboxQuestion)]
+        [InlineAutoMoqData(QuestionTypeConstants.RadioQuestion)]
+        [InlineAutoMoqData(QuestionTypeConstants.TextQuestion)]
+        [InlineAutoMoqData(QuestionTypeConstants.CurrencyQuestion)]
+        public void Date_Validation_Should_Not_Be_Run_When_Question_Type_Is_NotDate(string questionType)
         {
             // Arrange
             QuestionActivityData activityData = new QuestionActivityData();
-            activityData.QuestionType = QuestionTypeConstants.CheckboxQuestion;
+            activityData.QuestionType = questionType;
             activityData.Date = new Date()
             {
                 Day = 32,
@@ -54,12 +59,16 @@ namespace Elsa.CustomWorkflow.Sdk.Tests.Workflow.Validators
             expectedValidationResult.ShouldHaveValidationErrorFor(x => x.Date.Day);
         }
 
-        [Fact]
-        public void MultiChoice_Validation_Should_Not_Be_Run_When_Question_Type_Is_Date()
+        [Theory]
+        [InlineAutoMoqData(QuestionTypeConstants.DateQuestion)]
+        [InlineAutoMoqData(QuestionTypeConstants.RadioQuestion)]
+        [InlineAutoMoqData(QuestionTypeConstants.TextQuestion)]
+        [InlineAutoMoqData(QuestionTypeConstants.CurrencyQuestion)]
+        public void MultiChoice_Validation_Should_Not_Be_Run_When_Question_Type_Is_NotCheckbox(string questionType)
         {
             //Arrange
             QuestionActivityData activityData = new QuestionActivityData();
-            activityData.QuestionType = QuestionTypeConstants.DateQuestion;
+            activityData.QuestionType = questionType;
             activityData.Checkbox = new Checkbox()
             {
                 Choices = new List<Choice>
@@ -95,7 +104,6 @@ namespace Elsa.CustomWorkflow.Sdk.Tests.Workflow.Validators
 
             //Assert
             expectedValidationResult.ShouldNotHaveValidationErrorFor(x => x.Checkbox);
-
         }
 
         [Fact]
@@ -139,6 +147,97 @@ namespace Elsa.CustomWorkflow.Sdk.Tests.Workflow.Validators
 
             //Assert
             expectedValidationResult.ShouldHaveValidationErrorFor(x => x.Checkbox);
+        }
+
+        [Theory]
+        [InlineAutoMoqData(QuestionTypeConstants.DateQuestion)]
+        [InlineAutoMoqData(QuestionTypeConstants.RadioQuestion)]
+        [InlineAutoMoqData(QuestionTypeConstants.CheckboxQuestion)]
+        public void Answer_Validation_Should_Not_Be_Run_When_Question_Type_Is_NotCurrencyOrText(string questionType)
+        {
+            //Arrange
+            QuestionActivityData activityData = new QuestionActivityData
+            {
+                QuestionType = questionType,
+                Answer = string.Empty
+            };
+
+            MultiQuestionActivityDataValidator validator = new MultiQuestionActivityDataValidator();
+
+            //Act
+            var expectedValidationResult = validator.TestValidate(activityData);
+
+            //Assert
+            expectedValidationResult.ShouldNotHaveValidationErrorFor(x => x.Answer);
+        }
+
+        [Theory]
+        [InlineAutoMoqData(QuestionTypeConstants.CurrencyQuestion)]
+        [InlineAutoMoqData(QuestionTypeConstants.TextQuestion)]
+        public void Answer_Validation_Should_Run_When_Question_Type_Is_CurrencyOrText(string questionType)
+        {
+            //Arrange
+            QuestionActivityData activityData = new QuestionActivityData
+            {
+                QuestionType = questionType,
+                Answer = string.Empty
+            };
+
+            MultiQuestionActivityDataValidator validator = new MultiQuestionActivityDataValidator();
+
+            //Act
+            var expectedValidationResult = validator.TestValidate(activityData);
+
+            //Assert
+            expectedValidationResult.ShouldHaveValidationErrorFor(x => x.Answer);
+        }
+
+        [Theory]
+        [InlineAutoMoqData(QuestionTypeConstants.DateQuestion)]
+        [InlineAutoMoqData(QuestionTypeConstants.CurrencyQuestion)]
+        [InlineAutoMoqData(QuestionTypeConstants.TextQuestion)]
+        [InlineAutoMoqData(QuestionTypeConstants.CheckboxQuestion)]
+        public void SelectedAnswer_Validation_Should_Not_Be_Run_When_Question_Type_Is_NotRadio(string questionType)
+        {
+            //Arrange
+            QuestionActivityData activityData = new QuestionActivityData
+            {
+                QuestionType = questionType,
+                Radio = new Radio()
+                {
+                    SelectedAnswer = string.Empty
+                }
+            };
+
+            MultiQuestionActivityDataValidator validator = new MultiQuestionActivityDataValidator();
+
+            //Act
+            var expectedValidationResult = validator.TestValidate(activityData);
+
+            //Assert
+            expectedValidationResult.ShouldNotHaveValidationErrorFor(x => x.Radio.SelectedAnswer);
+        }
+
+        [Fact]
+        public void SelectedAnswer_Validation_Should_Run_When_Question_Type_Is_Radio()
+        {
+            //Arrange
+            QuestionActivityData activityData = new QuestionActivityData
+            {
+                QuestionType = QuestionTypeConstants.RadioQuestion,
+                Radio = new Radio()
+                {
+                    SelectedAnswer = string.Empty
+                }
+            };
+
+            MultiQuestionActivityDataValidator validator = new MultiQuestionActivityDataValidator();
+
+            //Act
+            var expectedValidationResult = validator.TestValidate(activityData);
+
+            //Assert
+            expectedValidationResult.ShouldHaveValidationErrorFor(x => x.Radio.SelectedAnswer);
         }
     }
 }

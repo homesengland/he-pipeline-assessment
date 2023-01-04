@@ -13,7 +13,7 @@
     @await Html.PartialAsync("_QuestionText", Model.Question)
     @await Html.PartialAsync("_QuestionHint", Model.QuestionHint)
     
-    <div class="govuk-checkboxes" data-module="govuk-checkboxes">
+    <div class="govuk-checkboxes" data-module="govuk-checkboxes" id="@itemName">
         @{
             var exclusiveChoices = Model.Checkbox.Choices.Where(c => c.IsSingle).ToArray();
             var nonExclusiveChoices = Model.Checkbox.Choices.Where(c => !c.IsSingle).ToArray();

@@ -2,9 +2,12 @@
 @model He.PipelineAssessment.UI.Features.Workflow.ViewModels.MultiQuestion
 @{
     var itemName = "Data.QuestionScreenAnswers[" + Model.Index + "].Decimal";
+    var answerName = "Data.QuestionScreenAnswers[" + Model.Index + "].Answer";
+    var errorFormClass = !Model.IsValid ? "govuk-form-group--error" : "";
+    var errorFieldClass = !Model.IsValid ? "govuk-input--error" : "";
 }
 
-<div class="govuk-form-group">
+<div class="govuk-form-group @errorFormClass">
     @await Html.PartialAsync("_QuestionTitle", Model.Title)
 
     @await Html.PartialAsync("_QuestionText", Model.Question)
@@ -13,7 +16,7 @@
     <div class="govuk-input__wrapper">
         <div class="govuk-input__prefix" aria-hidden="true">£</div>
        
-        <input type="text" name="@itemName" class="govuk-input govuk-input--width-5" value="@Model.Decimal" />
+        <input id="@answerName" type="text" name="@itemName" class="govuk-input govuk-input--width-5 @errorFieldClass" value="@Model.Decimal" />
     </div>
 
  

@@ -9,7 +9,7 @@ namespace Elsa.CustomWorkflow.Sdk.Tests.Workflow.Validators
     {
         [Theory]
         [InlineAutoMoqData(01, 12, 2922, 0, true)]
-        [InlineAutoMoqData(null, null, null, 0, true)]
+        [InlineAutoMoqData(null, null, null, 1, false)]
         [InlineAutoMoqData(null, 12, 2022, 1, false)]
         [InlineAutoMoqData(01, null, 2022, 1, false)]
         [InlineAutoMoqData(01, 12, null, 1, false)]
@@ -21,7 +21,7 @@ namespace Elsa.CustomWorkflow.Sdk.Tests.Workflow.Validators
         public void DateValidator_ValidatesCorrectlyWithCorrectNumberOfErrors_GivenDate(int? day, int? month, int? year, int expectedErrorCount, bool expectedValidationResult)
         {
             //Arrange
-            Date date = new Date()
+            Date date = new Date
             {
                 Day = day,
                 Month = month,
