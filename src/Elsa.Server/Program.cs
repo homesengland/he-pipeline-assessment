@@ -1,11 +1,15 @@
 using Elsa.CustomActivities.Activities.CheckYourAnswersScreen;
 using Elsa.CustomActivities.Activities.ConfirmationScreen;
 using Elsa.CustomActivities.Activities.FinishWorkflow;
+using Elsa.CustomActivities.Activities.HousingNeed;
+using Elsa.CustomActivities.Activities.PCSProfileDataSource;
 using Elsa.CustomActivities.Activities.QuestionScreen;
 using Elsa.CustomActivities.Activities.Shared;
 using Elsa.CustomActivities.Activities.SinglePipelineDataSource;
+using Elsa.CustomActivities.Activities.VFMDataSource;
 using Elsa.CustomInfrastructure.Data;
 using Elsa.CustomInfrastructure.Data.Repository;
+using Elsa.CustomWorkflow.Sdk.Extensions;
 using Elsa.Persistence.EntityFramework.Core.Extensions;
 using Elsa.Persistence.EntityFramework.SqlServer;
 using Elsa.Runtime;
@@ -14,7 +18,11 @@ using Elsa.Server.Features.Workflow.Helpers;
 using Elsa.Server.Features.Workflow.StartWorkflow;
 using Elsa.Server.Providers;
 using Elsa.Server.StartupTasks;
+using He.PipelineAssessment.Data.Auth;
+using He.PipelineAssessment.Data.LaHouseNeed;
+using He.PipelineAssessment.Data.PCSProfile;
 using He.PipelineAssessment.Data.SinglePipeline;
+using He.PipelineAssessment.Data.VFM;
 using MediatR;
 using Microsoft.AspNetCore.DataProtection;
 using Microsoft.EntityFrameworkCore;
@@ -31,6 +39,9 @@ builder.Services
     .AddElsa(elsa => elsa
         .UseEntityFrameworkPersistence(ef => ef.UseSqlServer(elsaConnectionString, typeof(Elsa.Persistence.EntityFramework.SqlServer.Migrations.Initial)))
         .AddActivity<SinglePipelineDataSource>()
+        .AddActivity<PCSProfileDataSource>()
+        .AddActivity<VFMDataSource>()
+        .AddActivity<HousingNeedDataSource>()
         .AddActivity<QuestionScreen>()
         .AddActivity<CheckYourAnswersScreen>()
         .AddActivity<ConfirmationScreen>()
@@ -70,9 +81,6 @@ builder.Services.AddScoped<IWorkflowPathProvider, WorkflowPathProvider>();
 builder.Services.AddScoped<IStartWorkflowMapper, StartWorkflowMapper>();
 builder.Services.AddScoped<ISaveAndContinueHelper, SaveAndContinueHelper>();
 
-builder.Services.AddScoped<IEsriSinglePipelineClient, EsriSinglePipelineClient>();
-builder.Services.AddScoped<IEsriSinglePipelineDataJsonHelper, EsriSinglePipelineDataJsonHelper>();
-
 
 // Allow arbitrary client browser apps to access the API.
 // In a production environment, make sure to allow only origins you trust.
@@ -88,13 +96,16 @@ if (builder.Environment.IsDevelopment())
     builder.Services.AddStartupTask<RunElsaCustomMigrations>();
 }
 
-string singlePipelineURL = builder.Configuration["Datasources:SinglePipeline"];
+builder.Services.AddScoped<IIdentityClient, IdentityClient>();
+builder.Services.AddTransient<BearerTokenHandler>();
 
-//TODO: make this an extension in the SDK
-builder.Services.AddHttpClient("SinglePipelineClient", client =>
+builder.Services.AddOptions<IdentityClientConfig>()
+.Configure<IConfiguration>((settings, configuration) =>
 {
-    client.BaseAddress = new Uri(singlePipelineURL);
+    configuration.GetSection("IdentityClientConfig").Bind(settings);
 });
+
+builder.Services.AddEsriHttpClients(builder.Configuration, builder.Environment.IsDevelopment());
 
 var app = builder.Build();
 
