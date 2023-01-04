@@ -6,7 +6,7 @@
         public int? sp_id { get; set; }
         public string? sp_reference { get; set; }
         public long? date_added { get; set; }
-        public string? date_removed { get; set; }
+        public long? date_removed { get; set; }
         public string? sp_status { get; set; }
         public string? sp_business_area { get; set; }
         public string? sp_source_pipeline { get; set; }
@@ -20,8 +20,8 @@
         public int? units_or_homes { get; set; }
         public string? sp_timescale { get; set; }
         public string? delivery_timeline { get; set; }
-        public int? funding_ask { get; set; }
-        public string? land_size_hectares { get; set; }
+        public decimal? funding_ask { get; set; }
+        public decimal? land_size_hectares { get; set; }
         public string? he_advocate_f_name { get; set; }
         public string? he_advocate_s_name { get; set; }
         public string? he_advocate_email { get; set; }
@@ -40,26 +40,28 @@
         public string? confirmed_intervention { get; set; }
         public string? land_type { get; set; }
         public string? planning_stage { get; set; }
-        public string? milestone_project_concept { get; set; }
-        public string? milestone_contract { get; set; }
-        public string? milestone_start { get; set; }
-        public string? milestone_project_concept_fc { get; set; }
-        public string? milestone_contract_fc { get; set; }
-        public string? milestone_start_fc { get; set; }
-        public string? project_identifier { get; set; }
-        public string? milestone_soc_fc { get; set; }
-        public string? milestone_soc { get; set; }
-        public string? milestone_business_case_fc { get; set; }
-        public string? milestone_business_case { get; set; }
-        public string? milestone_hmt_approval { get; set; }
-        public string? milestone_hmt_submitted_fc { get; set; }
-        public string? milestone_hmt_submitted { get; set; }
-        public string? milestone_hmt_approval_fc { get; set; }
+        public long? milestone_project_concept { get; set; }
+        public long? milestone_contract { get; set; }
+        public long? milestone_start { get; set; }
+        public long? milestone_project_concept_fc { get; set; }
+        public long? milestone_contract_fc { get; set; }
+        public long? milestone_start_fc { get; set; }
+        public int? project_identifier { get; set; }
+        public long? milestone_soc_fc { get; set; }
+        public long? milestone_soc { get; set; }
+        public long? milestone_business_case_fc { get; set; }
+        public long? milestone_business_case { get; set; }
+        public long? milestone_hmt_approval { get; set; }
+        public long? milestone_hmt_submitted_fc { get; set; }
+        public long? milestone_hmt_submitted { get; set; }
+        public long? milestone_hmt_approval_fc { get; set; }
         public string? delegation_stage { get; set; }
         public string? delegation_level { get; set; }
-        public string? rdel_funding_ask { get; set; }
+        public decimal? rdel_funding_ask { get; set; }
         public string? proposed_intervention { get; set; }
         public string? multi_funct_team { get; set; }
+        public string? delegation_pathway { get; set; }
+        public long? milestone_sightings { get; set; }
     }
 
     public class Feature
