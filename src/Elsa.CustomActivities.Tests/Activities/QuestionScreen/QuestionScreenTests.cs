@@ -18,6 +18,8 @@ namespace Elsa.CustomActivities.Tests.Activities.QuestionScreen
             //Arrange
             var context = new ActivityExecutionContext(default!, default!, default!, assessmentQuestion, default, default);
 
+            sut.Cases = new List<SwitchCase>();
+
             //Act
             var result = await sut.ResumeAsync(context);
 
@@ -38,6 +40,7 @@ namespace Elsa.CustomActivities.Tests.Activities.QuestionScreen
         {
             //Arrange
             var context = new ActivityExecutionContext(default!, default!, default!, assessmentQuestion, default, default);
+            sut.Cases = new List<SwitchCase>();
             sut.Cases.Add(new SwitchCase("Test", true));
 
             //Act
