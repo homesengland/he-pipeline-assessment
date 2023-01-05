@@ -22,10 +22,6 @@ namespace Elsa.CustomActivities.Activities.QuestionScreen
         [ActivityInput(Label = "List of questions", Hint = "Questions to be displayed on this page.", UIHint = "question-builder", DefaultSyntax = "Json", IsDesignerCritical = true)]
         public AssessmentQuestions Questions { get; set; } = new AssessmentQuestions();
 
-        [ActivityInput(Hint = "Include comments box", UIHint = ActivityInputUIHints.Checkbox)]
-        public bool DisplayComments { get; set; }
-        public string Comments { get; set; } = null!;
-
         [ActivityInput(Label = "Assessment outcome conditions", Hint = "The conditions to evaluate.", UIHint = "switch-case-builder", DefaultSyntax = "Switch", IsDesignerCritical = true)]
         public ICollection<SwitchCase> Cases { get; set; } = new List<SwitchCase>();
 
