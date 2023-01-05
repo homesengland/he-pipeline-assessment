@@ -20,6 +20,8 @@ namespace Elsa.Server.Features.Workflow.QuestionScreenSaveAndContinue
         private readonly IWorkflowNextActivityProvider _workflowNextActivityProvider;
         private readonly IWorkflowInstanceProvider _workflowInstanceProvider;
         private readonly IWorkflowPathProvider _workflowPathProvider;
+        private readonly IActivityDataProvider _activityDataProvider;
+
 
 
         public QuestionScreenSaveAndContinueCommandHandler(IQuestionInvoker invoker,
@@ -28,7 +30,8 @@ namespace Elsa.Server.Features.Workflow.QuestionScreenSaveAndContinue
             IWorkflowNextActivityProvider workflowNextActivityProvider,
             IWorkflowInstanceProvider workflowInstanceProvider,
             IDateTimeProvider dateTimeProvider,
-            IWorkflowPathProvider workflowPathProvider)
+            IWorkflowPathProvider workflowPathProvider,
+            IActivityDataProvider activityDataProvider)
         {
             _elsaCustomRepository = elsaCustomRepository;
             _saveAndContinueHelper = saveAndContinueHelper;
@@ -36,6 +39,7 @@ namespace Elsa.Server.Features.Workflow.QuestionScreenSaveAndContinue
             _workflowInstanceProvider = workflowInstanceProvider;
             _dateTimeProvider = dateTimeProvider;
             _workflowPathProvider = workflowPathProvider;
+            _activityDataProvider = activityDataProvider;
             _invoker = invoker;
         }
 
@@ -78,6 +82,38 @@ namespace Elsa.Server.Features.Workflow.QuestionScreenSaveAndContinue
 
                     var nextActivity =
                         await _workflowNextActivityProvider.GetNextActivity(workflowInstance, cancellationToken);
+
+                    while (nextActivity.Type == ActivityTypeConstants.QuestionScreen)
+                    {
+                        var nextActivityData = await _activityDataProvider.GetActivityData(workflowInstance.Id, nextActivity.Id, cancellationToken);
+                        if (nextActivityData != null)
+                        {
+                            bool? condition = (bool?)nextActivityData["Condition"];
+                            if (condition.HasValue && !condition.Value)
+                            {
+                                collectedWorkflows = await _invoker.ExecuteWorkflowsAsync(nextActivity.Id,
+                                    ActivityTypeConstants.QuestionScreen,
+                                    command.WorkflowInstanceId, null, cancellationToken);
+
+                                //we need to refresh the workflowInstance, as calling the invoker will change it
+                                workflowInstance =
+                                    await _workflowInstanceProvider.GetWorkflowInstance(command.WorkflowInstanceId,
+                                        cancellationToken);
+                                if (!collectedWorkflows.Any())
+                                {
+                                    throw new Exception($"Unable to progress workflow. Workflow status is: {workflowInstance.WorkflowStatus}");
+                                }
+                                nextActivity =
+                                    await _workflowNextActivityProvider.GetNextActivity(workflowInstance, cancellationToken);
+
+                            }
+                            else
+                            {
+                                break;
+
+                            }
+                        }
+                    }
 
                     var nextActivityRecord =
                         await _elsaCustomRepository.GetCustomActivityNavigation(nextActivity.Id,
