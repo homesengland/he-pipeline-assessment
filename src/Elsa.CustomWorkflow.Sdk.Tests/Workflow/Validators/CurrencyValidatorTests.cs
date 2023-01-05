@@ -1,5 +1,5 @@
-﻿using Elsa.CustomWorkflow.Sdk.Models.Workflow.Validators;
-using Elsa.CustomWorkflow.Sdk.Models.Workflow;
+﻿using Elsa.CustomWorkflow.Sdk.Models.Workflow;
+using Elsa.CustomWorkflow.Sdk.Models.Workflow.Validators;
 using FluentValidation.TestHelper;
 using Xunit;
 
@@ -22,7 +22,7 @@ namespace Elsa.CustomWorkflow.Sdk.Tests.Workflow.Validators
 
             //Assert
             result.ShouldNotHaveValidationErrorFor(c => c);
-            result.ShouldHaveValidationErrorFor(c => c.Answer).WithErrorMessage("The question has not been answered");
+            result.ShouldHaveValidationErrorFor(c => c.Answer).WithErrorMessage("The answer must be a number");
         }
 
         [Fact]
@@ -40,7 +40,7 @@ namespace Elsa.CustomWorkflow.Sdk.Tests.Workflow.Validators
 
             //Assert
             result.ShouldNotHaveValidationErrorFor(c => c);
-            result.ShouldHaveValidationErrorFor(c => c.Answer).WithErrorMessage("The question has not been answered");
+            result.ShouldHaveValidationErrorFor(c => c.Answer).WithErrorMessage("The answer must be a number");
         }
 
 
@@ -59,7 +59,7 @@ namespace Elsa.CustomWorkflow.Sdk.Tests.Workflow.Validators
 
             //Assert
             result.ShouldNotHaveValidationErrorFor(c => c);
-            result.ShouldHaveValidationErrorFor(c => c.Answer).WithErrorMessage("The answer is not a number");
+            result.ShouldHaveValidationErrorFor(c => c.Answer).WithErrorMessage("The answer must be a number");
         }
 
         [Fact]
@@ -70,6 +70,24 @@ namespace Elsa.CustomWorkflow.Sdk.Tests.Workflow.Validators
             var questionActivityData = new QuestionActivityData
             {
                 Answer = "1234567"
+            };
+
+            //Act
+            var result = validator.TestValidate(questionActivityData);
+
+            //Assert
+            result.ShouldNotHaveValidationErrorFor(c => c);
+            result.ShouldNotHaveValidationErrorFor(c => c.Answer);
+        }
+
+        [Fact]
+        public void Should_Not_Have_Errors_When_AnswerIsADecimal()
+        {
+            //Arrange
+            CurrencyValidator validator = new CurrencyValidator();
+            var questionActivityData = new QuestionActivityData
+            {
+                Answer = "1234.567"
             };
 
             //Act

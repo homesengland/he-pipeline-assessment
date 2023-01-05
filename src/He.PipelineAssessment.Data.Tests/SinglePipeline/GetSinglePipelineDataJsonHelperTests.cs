@@ -3,7 +3,7 @@ using He.PipelineAssessment.Data.SinglePipeline;
 using System.Text.Json;
 using Xunit;
 
-namespace He.PipelineAssessment.Data.Tests
+namespace He.PipelineAssessment.Data.Tests.SinglePipeline
 {
     public class GetSinglePipelineDataJsonHelperTests
     {
