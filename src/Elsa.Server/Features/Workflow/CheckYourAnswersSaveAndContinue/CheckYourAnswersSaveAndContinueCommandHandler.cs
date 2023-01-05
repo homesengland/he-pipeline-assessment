@@ -1,5 +1,4 @@
-﻿using Elsa.CustomActivities.Activities.Shared;
-using Elsa.CustomInfrastructure.Data.Repository;
+﻿using Elsa.CustomInfrastructure.Data.Repository;
 using Elsa.CustomWorkflow.Sdk;
 using Elsa.Server.Features.Workflow.Helpers;
 using Elsa.Server.Models;
@@ -12,20 +11,18 @@ namespace Elsa.Server.Features.Workflow.CheckYourAnswersSaveAndContinue
         OperationResult<CheckYourAnswersSaveAndContinueResponse>>
     {
         private readonly IElsaCustomRepository _elsaCustomRepository;
-        private readonly IQuestionInvoker _invoker;
         private readonly ISaveAndContinueHelper _saveAndContinueHelper;
         private readonly IWorkflowNextActivityProvider _workflowNextActivityProvider;
         private readonly IWorkflowInstanceProvider _workflowInstanceProvider;
 
 
-        public CheckYourAnswersSaveAndContinueCommandHandler(IQuestionInvoker invoker,
+        public CheckYourAnswersSaveAndContinueCommandHandler(
             IElsaCustomRepository elsaCustomRepository,
             ISaveAndContinueHelper saveAndContinueHelper,
             IWorkflowNextActivityProvider workflowNextActivityProvider,
             IWorkflowInstanceProvider workflowInstanceProvider)
         {
             _elsaCustomRepository = elsaCustomRepository;
-            _invoker = invoker;
             _saveAndContinueHelper = saveAndContinueHelper;
             _workflowNextActivityProvider = workflowNextActivityProvider;
             _workflowInstanceProvider = workflowInstanceProvider;
@@ -37,20 +34,10 @@ namespace Elsa.Server.Features.Workflow.CheckYourAnswersSaveAndContinue
             var result = new OperationResult<CheckYourAnswersSaveAndContinueResponse>();
             try
             {
-                var collectedWorkflows = await _invoker.ExecuteWorkflowsAsync(command.ActivityId,
-                    ActivityTypeConstants.CheckYourAnswersScreen,
-                    command.WorkflowInstanceId, null, cancellationToken);
-
+                var nextActivity = await _workflowNextActivityProvider.GetNextActivity(command.ActivityId, command.WorkflowInstanceId, null, ActivityTypeConstants.CheckYourAnswersScreen, cancellationToken);
                 var workflowInstance =
                     await _workflowInstanceProvider.GetWorkflowInstance(command.WorkflowInstanceId,
                         cancellationToken);
-
-                if (!collectedWorkflows.Any())
-                {
-                    throw new Exception($"Unable to progress. Workflow status is: {workflowInstance.WorkflowStatus}");
-                }
-
-                var nextActivity = await _workflowNextActivityProvider.GetNextActivity(workflowInstance, cancellationToken);
 
                 var nextActivityRecord =
                    await _elsaCustomRepository.GetCustomActivityNavigation(nextActivity.Id,

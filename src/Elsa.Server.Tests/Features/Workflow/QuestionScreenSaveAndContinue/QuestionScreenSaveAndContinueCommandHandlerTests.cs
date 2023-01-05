@@ -23,7 +23,7 @@ public class QuestionScreenSaveAndContinueCommandHandlerTests
         Handle_ShouldReturnSuccessfulOperationResult_WhenSuccessful_AndDoesNotInsertNewActivityNavigationIfAlreadyExists(
             [Frozen] Mock<IQuestionInvoker> questionInvoker,
             [Frozen] Mock<IElsaCustomRepository> elsaCustomRepository,
-            [Frozen] Mock<IWorkflowNextActivityProvider> workflowNextActivityProvider,
+            [Frozen] Mock<IWorkflowRegistryProvider> workflowNextActivityProvider,
             [Frozen] Mock<IWorkflowInstanceProvider> workflowInstanceProvider,
             [Frozen] Mock<IDateTimeProvider> dateTimeProvider,
             WorkflowBlueprint workflowBlueprint,
@@ -108,7 +108,7 @@ public class QuestionScreenSaveAndContinueCommandHandlerTests
         Handle_ShouldReturnSuccessfulOperationResult_WhenSuccessful_AndInsertsNewActivityNavigationIfDoesNotExist(
             [Frozen] Mock<IQuestionInvoker> questionInvoker,
             [Frozen] Mock<IElsaCustomRepository> elsaCustomRepository,
-            [Frozen] Mock<IWorkflowNextActivityProvider> workflowNextActivityProvider,
+            [Frozen] Mock<IWorkflowRegistryProvider> workflowNextActivityProvider,
             [Frozen] Mock<IWorkflowInstanceProvider> workflowInstanceProvider,
             [Frozen] Mock<ISaveAndContinueHelper> saveAndContinueHelper,
             [Frozen] Mock<IDateTimeProvider> dateTimeProvider,
@@ -191,7 +191,7 @@ public class QuestionScreenSaveAndContinueCommandHandlerTests
         Handle_ShouldReturnSuccessfulOperationResult_WhenSuccessful_AndInsertsNewMultiScreenQuestionIfDoesNotExist(
             [Frozen] Mock<IQuestionInvoker> questionInvoker,
             [Frozen] Mock<IElsaCustomRepository> elsaCustomRepository,
-            [Frozen] Mock<IWorkflowNextActivityProvider> workflowNextActivityProvider,
+            [Frozen] Mock<IWorkflowRegistryProvider> workflowNextActivityProvider,
             [Frozen] Mock<IWorkflowInstanceProvider> workflowInstanceProvider,
             [Frozen] Mock<ISaveAndContinueHelper> saveAndContinueHelper,
             WorkflowBlueprint workflowBlueprint,
@@ -488,7 +488,7 @@ public class QuestionScreenSaveAndContinueCommandHandlerTests
             [Frozen] Mock<IElsaCustomRepository> elsaCustomRepository,
             [Frozen] Mock<IWorkflowPathProvider> workflowPathProvider,
             [Frozen] Mock<IWorkflowInstanceProvider> workflowInstanceProvider,
-            [Frozen] Mock<IWorkflowNextActivityProvider> workflowNextActivityProvider,
+            [Frozen] Mock<IWorkflowRegistryProvider> workflowNextActivityProvider,
             ActivityBlueprint activityBlueprint,
             List<QuestionScreenAnswer> currentAssessmentQuestions,
             WorkflowInstance workflowInstance,

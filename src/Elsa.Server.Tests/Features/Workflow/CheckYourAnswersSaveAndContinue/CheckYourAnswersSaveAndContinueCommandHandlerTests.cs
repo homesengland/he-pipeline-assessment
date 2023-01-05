@@ -24,7 +24,7 @@ namespace Elsa.Server.Tests.Features.Workflow.CheckYourAnswersSaveAndContinue
             Handle_ShouldReturnSuccessfulOperationResult_WhenSuccessful_AndDoesNotInsertNewQuestionIfAlreadyExists(
                 [Frozen] Mock<IQuestionInvoker> questionInvoker,
                 [Frozen] Mock<IElsaCustomRepository> elsaCustomRepository,
-                [Frozen] Mock<IWorkflowNextActivityProvider> workflowNextActivityProvider,
+                [Frozen] Mock<IWorkflowRegistryProvider> workflowNextActivityProvider,
                 [Frozen] Mock<IWorkflowInstanceProvider> workflowInstanceProvider,
                 WorkflowBlueprint workflowBlueprint,
                 ActivityBlueprint activityBlueprint,
@@ -83,7 +83,7 @@ namespace Elsa.Server.Tests.Features.Workflow.CheckYourAnswersSaveAndContinue
           Handle_ShouldReturnSuccessfulOperationResult_WhenSuccessful_AndInsertsNewQuestionIfDoesNotExist(
               [Frozen] Mock<IQuestionInvoker> questionInvoker,
               [Frozen] Mock<IElsaCustomRepository> elsaCustomRepository,
-              [Frozen] Mock<IWorkflowNextActivityProvider> workflowNextActivityProvider,
+              [Frozen] Mock<IWorkflowRegistryProvider> workflowNextActivityProvider,
               [Frozen] Mock<IWorkflowInstanceProvider> workflowInstanceProvider,
               [Frozen] Mock<ISaveAndContinueHelper> saveAndContinueHelper,
               WorkflowBlueprint workflowBlueprint,
@@ -151,7 +151,7 @@ namespace Elsa.Server.Tests.Features.Workflow.CheckYourAnswersSaveAndContinue
         Handle_ShouldReturnSuccessfulOperationResult_WhenSuccessful_AndInsertsNewMultiScreenQuestionIfDoesNotExist(
               [Frozen] Mock<IQuestionInvoker> questionInvoker,
               [Frozen] Mock<IElsaCustomRepository> elsaCustomRepository,
-              [Frozen] Mock<IWorkflowNextActivityProvider> workflowNextActivityProvider,
+              [Frozen] Mock<IWorkflowRegistryProvider> workflowNextActivityProvider,
               [Frozen] Mock<IWorkflowInstanceProvider> workflowInstanceProvider,
               [Frozen] Mock<ISaveAndContinueHelper> saveAndContinueHelper,
               WorkflowBlueprint workflowBlueprint,

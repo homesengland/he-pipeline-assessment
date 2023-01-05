@@ -4,6 +4,7 @@ using Elsa.CustomModels;
 using Elsa.CustomWorkflow.Sdk;
 using Elsa.Models;
 using Elsa.Server.Models;
+using Elsa.Server.Providers;
 using Elsa.Services;
 using MediatR;
 
@@ -16,13 +17,15 @@ namespace Elsa.Server.Features.Workflow.StartWorkflow
         private readonly IStartsWorkflow _startsWorkflow;
         private readonly IElsaCustomRepository _elsaCustomRepository;
         private readonly IStartWorkflowMapper _startWorkflowMapper;
+        private readonly IWorkflowNextActivityProvider _workflowNextActivityProvider;
 
-        public StartWorkflowCommandHandler(IWorkflowRegistry workflowRegistry, IStartsWorkflow startsWorkflow, IElsaCustomRepository elsaCustomRepository, IStartWorkflowMapper startWorkflowMapper)
+        public StartWorkflowCommandHandler(IWorkflowRegistry workflowRegistry, IStartsWorkflow startsWorkflow, IElsaCustomRepository elsaCustomRepository, IStartWorkflowMapper startWorkflowMapper, IWorkflowNextActivityProvider workflowNextActivityProvider)
         {
             _workflowRegistry = workflowRegistry;
             _startsWorkflow = startsWorkflow;
             _elsaCustomRepository = elsaCustomRepository;
             _startWorkflowMapper = startWorkflowMapper;
+            _workflowNextActivityProvider = workflowNextActivityProvider;
         }
 
         public async Task<OperationResult<StartWorkflowResponse>> Handle(StartWorkflowCommand request, CancellationToken cancellationToken)
@@ -45,6 +48,10 @@ namespace Elsa.Server.Features.Workflow.StartWorkflow
 
                     if (activity != null)
                     {
+                        var nextActivity =
+                            _workflowNextActivityProvider.GetStartWorkflowNextActivity(activity,
+                                runWorkflowResult.WorkflowInstance.Id, cancellationToken);
+
                         var customActivityNavigation =
                             _startWorkflowMapper.RunWorkflowResultToCustomNavigationActivity(runWorkflowResult, activity.Type);
 

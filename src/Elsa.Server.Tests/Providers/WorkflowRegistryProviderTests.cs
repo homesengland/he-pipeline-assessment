@@ -1,30 +1,23 @@
 ﻿using AutoFixture.Xunit2;
-using Elsa.Models;
-using Elsa.Persistence;
 using Elsa.Server.Providers;
 using Elsa.Services;
 using Elsa.Services.Models;
 using He.PipelineAssessment.Common.Tests;
 using Moq;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Xunit;
 using VersionOptions = Elsa.Models.VersionOptions;
 using WorkflowInstance = Elsa.Models.WorkflowInstance;
 
 namespace Elsa.Server.Tests.Providers
 {
-    public class WorkflowNextActivityProviderTests
+    public class WorkflowRegistryProviderTests
     {
         [Theory]
         [AutoMoqData]
         public async Task GetNextActivity_ThrowsException_WhenOutputIsNull(
             WorkflowInstance workflowInstance,
             CancellationToken cancellationToken,
-            WorkflowNextActivityProvider sut)
+            WorkflowRegistryProvider sut)
         {
             //Arrange
             workflowInstance.Output = null;
@@ -43,7 +36,7 @@ namespace Elsa.Server.Tests.Providers
             WorkflowInstance workflowInstance,
             CancellationToken cancellationToken,
             WorkflowBlueprint workflowBlueprint,
-            WorkflowNextActivityProvider sut)
+            WorkflowRegistryProvider sut)
         {
             //Arrange
             workflowRegistryMock.Setup(x => x.FindAsync(workflowInstance.DefinitionId, VersionOptions.Published, null, cancellationToken)).ReturnsAsync(workflowBlueprint);
@@ -68,7 +61,7 @@ namespace Elsa.Server.Tests.Providers
             WorkflowInstance workflowInstance,
             CancellationToken cancellationToken,
             WorkflowBlueprint workflowBlueprint,
-            WorkflowNextActivityProvider sut)
+            WorkflowRegistryProvider sut)
         {
             //Arrange
             workflowRegistryMock.Setup(x => x.FindAsync(workflowInstance.DefinitionId, VersionOptions.Published, null, cancellationToken)).ReturnsAsync(workflowBlueprint);

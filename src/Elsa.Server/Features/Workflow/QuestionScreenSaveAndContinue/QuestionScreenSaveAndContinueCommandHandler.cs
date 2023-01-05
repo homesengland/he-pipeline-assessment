@@ -1,5 +1,4 @@
-﻿using Elsa.CustomActivities.Activities.Shared;
-using Elsa.CustomInfrastructure.Data.Repository;
+﻿using Elsa.CustomInfrastructure.Data.Repository;
 using Elsa.CustomModels;
 using Elsa.CustomWorkflow.Sdk;
 using Elsa.Models;
@@ -14,33 +13,27 @@ namespace Elsa.Server.Features.Workflow.QuestionScreenSaveAndContinue
         OperationResult<QuestionScreenSaveAndContinueResponse>>
     {
         private readonly IElsaCustomRepository _elsaCustomRepository;
-        private readonly IQuestionInvoker _invoker;
         private readonly IDateTimeProvider _dateTimeProvider;
         private readonly ISaveAndContinueHelper _saveAndContinueHelper;
-        private readonly IWorkflowNextActivityProvider _workflowNextActivityProvider;
         private readonly IWorkflowInstanceProvider _workflowInstanceProvider;
         private readonly IWorkflowPathProvider _workflowPathProvider;
-        private readonly IActivityDataProvider _activityDataProvider;
+        private readonly IWorkflowNextActivityProvider _workflowNextActivityProvider;
 
 
-
-        public QuestionScreenSaveAndContinueCommandHandler(IQuestionInvoker invoker,
+        public QuestionScreenSaveAndContinueCommandHandler(
             IElsaCustomRepository elsaCustomRepository,
             ISaveAndContinueHelper saveAndContinueHelper,
-            IWorkflowNextActivityProvider workflowNextActivityProvider,
             IWorkflowInstanceProvider workflowInstanceProvider,
             IDateTimeProvider dateTimeProvider,
             IWorkflowPathProvider workflowPathProvider,
-            IActivityDataProvider activityDataProvider)
+            IWorkflowNextActivityProvider workflowNextActivityProvider)
         {
             _elsaCustomRepository = elsaCustomRepository;
             _saveAndContinueHelper = saveAndContinueHelper;
-            _workflowNextActivityProvider = workflowNextActivityProvider;
             _workflowInstanceProvider = workflowInstanceProvider;
             _dateTimeProvider = dateTimeProvider;
             _workflowPathProvider = workflowPathProvider;
-            _activityDataProvider = activityDataProvider;
-            _invoker = invoker;
+            _workflowNextActivityProvider = workflowNextActivityProvider;
         }
 
         public async Task<OperationResult<QuestionScreenSaveAndContinueResponse>> Handle(QuestionScreenSaveAndContinueCommand command,
@@ -66,54 +59,7 @@ namespace Elsa.Server.Features.Workflow.QuestionScreenSaveAndContinue
 
                     await SetAnswers(command, cancellationToken, dbAssessmentQuestionList);
 
-                    var collectedWorkflows = await _invoker.ExecuteWorkflowsAsync(command.ActivityId,
-                        ActivityTypeConstants.QuestionScreen,
-                        command.WorkflowInstanceId, dbAssessmentQuestionList, cancellationToken);
-
-                    //we need to refresh the workflowInstance, as calling the invoker will change it
-                    workflowInstance =
-                        await _workflowInstanceProvider.GetWorkflowInstance(command.WorkflowInstanceId,
-                            cancellationToken);
-
-                    if (!collectedWorkflows.Any())
-                    {
-                        throw new Exception($"Unable to progress workflow. Workflow status is: {workflowInstance.WorkflowStatus}");
-                    }
-
-                    var nextActivity =
-                        await _workflowNextActivityProvider.GetNextActivity(workflowInstance, cancellationToken);
-
-                    while (nextActivity.Type == ActivityTypeConstants.QuestionScreen)
-                    {
-                        var nextActivityData = await _activityDataProvider.GetActivityData(workflowInstance.Id, nextActivity.Id, cancellationToken);
-                        if (nextActivityData != null)
-                        {
-                            bool? condition = (bool?)nextActivityData["Condition"];
-                            if (condition.HasValue && !condition.Value)
-                            {
-                                collectedWorkflows = await _invoker.ExecuteWorkflowsAsync(nextActivity.Id,
-                                    ActivityTypeConstants.QuestionScreen,
-                                    command.WorkflowInstanceId, null, cancellationToken);
-
-                                //we need to refresh the workflowInstance, as calling the invoker will change it
-                                workflowInstance =
-                                    await _workflowInstanceProvider.GetWorkflowInstance(command.WorkflowInstanceId,
-                                        cancellationToken);
-                                if (!collectedWorkflows.Any())
-                                {
-                                    throw new Exception($"Unable to progress workflow. Workflow status is: {workflowInstance.WorkflowStatus}");
-                                }
-                                nextActivity =
-                                    await _workflowNextActivityProvider.GetNextActivity(workflowInstance, cancellationToken);
-
-                            }
-                            else
-                            {
-                                break;
-
-                            }
-                        }
-                    }
+                    var nextActivity = await _workflowNextActivityProvider.GetNextActivity(command.ActivityId, command.WorkflowInstanceId, dbAssessmentQuestionList, cancellationToken);
 
                     var nextActivityRecord =
                         await _elsaCustomRepository.GetCustomActivityNavigation(nextActivity.Id,
