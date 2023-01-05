@@ -1,4 +1,5 @@
 ﻿using System.Text.Json;
+using System.Text.Json.Serialization;
 
 namespace He.PipelineAssessment.Data.SinglePipeline
 {
@@ -8,6 +9,7 @@ namespace He.PipelineAssessment.Data.SinglePipeline
         List<SinglePipelineData>? JsonToSinglePipelineDataList(string data);
     }
 
+    [JsonNumberHandling(JsonNumberHandling.AllowReadingFromString)]
     public class EsriSinglePipelineDataJsonHelper : IEsriSinglePipelineDataJsonHelper
     {
         public SinglePipelineData? JsonToSinglePipelineData(string data)

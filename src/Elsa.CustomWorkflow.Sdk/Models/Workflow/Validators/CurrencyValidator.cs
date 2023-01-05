@@ -6,16 +6,16 @@ namespace Elsa.CustomWorkflow.Sdk.Models.Workflow.Validators
     {
         public CurrencyValidator()
         {
-            RuleFor(x => x.Answer).NotNull().WithMessage("The question has not been answered")
+            RuleFor(x => x.Answer).NotNull().WithMessage("The answer must be a number")
                 .DependentRules(
                     () =>
                     {
-                        RuleFor(x => x.Answer).NotEmpty().WithMessage("The question has not been answered");
+                        RuleFor(x => x.Answer).NotEmpty().WithMessage("The answer must be a number");
                         RuleFor(x => x.Answer).Must(answer =>
                         {
-                            var isNumeric = int.TryParse(answer, out _);
+                            var isNumeric = decimal.TryParse(answer, out _);
                             return isNumeric;
-                        }).WithMessage("The answer is not a number");
+                        }).WithMessage("The answer must be a number");
                     }
                 );
         }

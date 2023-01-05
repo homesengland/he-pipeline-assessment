@@ -47,7 +47,7 @@ namespace He.PipelineAssessment.UI.Tests.Features.Workflow.LoadConfirmationScree
                 .ReturnsAsync(workflowActivityDataDto);
 
             assessmentRepository.Setup(x => x.GetAssessmentStage(workflowActivityDataDto.Data.WorkflowInstanceId))
-                .ReturnsAsync((AssessmentStage)null);
+                .ReturnsAsync((AssessmentStage?)null);
 
             //Act
             var result = await sut.Handle(request, CancellationToken.None);

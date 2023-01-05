@@ -1,5 +1,3 @@
-
-
 using AutoFixture.Xunit2;
 using He.PipelineAssessment.Common.Tests;
 using He.PipelineAssessment.Data.SinglePipeline;
@@ -7,7 +5,7 @@ using Moq;
 using System.Net;
 using Xunit;
 
-namespace He.PipelineAssessment.Data.Tests
+namespace He.PipelineAssessment.Data.Tests.SinglePipeline
 {
 
     public class EsriSinglePipelineClientTests
