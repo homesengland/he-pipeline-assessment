@@ -79,7 +79,7 @@ builder.Services.AddScoped<IWorkflowPathProvider, WorkflowPathProvider>();
 
 
 builder.Services.AddScoped<IStartWorkflowMapper, StartWorkflowMapper>();
-builder.Services.AddScoped<ISaveAndContinueHelper, SaveAndContinueHelper>();
+builder.Services.AddScoped<IElsaCustomModelHelper, ElsaCustomModelHelper>();
 
 
 // Allow arbitrary client browser apps to access the API.

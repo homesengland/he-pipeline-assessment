@@ -1,5 +1,10 @@
 ﻿namespace Elsa.Server.Providers
 {
+    public interface IActivityDataProvider
+    {
+        public Task<IDictionary<string, object?>> GetActivityData(string workflowInstanceId, string activityId, CancellationToken cancellationToken);
+    }
+
     public class ActivityDataProvider : IActivityDataProvider
     {
         private readonly IWorkflowInstanceProvider _workflowInstanceProvider;

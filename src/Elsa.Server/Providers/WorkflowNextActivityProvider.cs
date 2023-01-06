@@ -5,6 +5,16 @@ using Elsa.Services.Models;
 
 namespace Elsa.Server.Providers
 {
+    public interface IWorkflowNextActivityProvider
+    {
+        Task<IActivityBlueprint> GetNextActivity(string commandActivityId, string workflowInstanceId,
+            List<QuestionScreenAnswer>? dbAssessmentQuestionList, string activityType,
+            CancellationToken cancellationToken);
+        Task<IActivityBlueprint> GetStartWorkflowNextActivity(IActivityBlueprint commandActivityId,
+            string workflowInstanceId,
+            CancellationToken cancellationToken);
+    }
+
     public class WorkflowNextActivityProvider : IWorkflowNextActivityProvider
     {
         private readonly IQuestionInvoker _invoker;
@@ -66,7 +76,7 @@ namespace Elsa.Server.Providers
             return nextActivity;
         }
 
-        public async Task<IActivityBlueprint?> GetStartWorkflowNextActivity(IActivityBlueprint activity,
+        public async Task<IActivityBlueprint> GetStartWorkflowNextActivity(IActivityBlueprint activity,
             string workflowInstanceId,
             CancellationToken cancellationToken)
         {

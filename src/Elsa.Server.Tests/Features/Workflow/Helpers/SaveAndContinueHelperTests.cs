@@ -3,7 +3,7 @@ using Elsa.CustomActivities.Activities.QuestionScreen;
 using Elsa.CustomModels;
 using Elsa.CustomWorkflow.Sdk;
 using Elsa.Models;
-using Elsa.Server.Features.Workflow.Helpers;
+using Elsa.Server.Helpers;
 using Elsa.Server.Providers;
 using He.PipelineAssessment.Common.Tests;
 using Moq;
@@ -22,7 +22,7 @@ namespace Elsa.Server.Tests.Features.Workflow.Helpers
                     string nextActivityId,
                     string nextActivityType,
                     WorkflowInstance workflowInstance,
-                    SaveAndContinueHelper sut
+                    ElsaCustomModelHelper sut
                 )
         {
             //Arrange
@@ -52,7 +52,7 @@ namespace Elsa.Server.Tests.Features.Workflow.Helpers
                     string nextActivityType,
                     WorkflowInstance workflowInstance,
                     Question question,
-                    SaveAndContinueHelper sut
+                    ElsaCustomModelHelper sut
                 )
         {
             //Arrange
@@ -82,7 +82,7 @@ namespace Elsa.Server.Tests.Features.Workflow.Helpers
             string nextActivityType,
             WorkflowInstance workflowInstance,
             Question question,
-            SaveAndContinueHelper sut
+            ElsaCustomModelHelper sut
         )
         {
             //Arrange
@@ -112,7 +112,7 @@ namespace Elsa.Server.Tests.Features.Workflow.Helpers
             string nextActivityType,
             WorkflowInstance workflowInstance,
             Question question,
-            SaveAndContinueHelper sut
+            ElsaCustomModelHelper sut
         )
         {
             //Arrange
@@ -138,7 +138,7 @@ namespace Elsa.Server.Tests.Features.Workflow.Helpers
         public void CreateQuestionScreenAnswers_ShouldReturnEmptyList(
             string activityId,
             WorkflowInstance workflowInstance,
-            SaveAndContinueHelper sut
+            ElsaCustomModelHelper sut
         )
         {
             //Arrange
@@ -157,7 +157,7 @@ namespace Elsa.Server.Tests.Features.Workflow.Helpers
             string activityId,
             WorkflowInstance workflowInstance,
             AssessmentQuestions elsaAssessmentQuestions,
-            SaveAndContinueHelper sut
+            ElsaCustomModelHelper sut
         )
         {
             //Arrange

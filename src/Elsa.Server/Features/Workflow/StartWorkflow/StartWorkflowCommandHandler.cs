@@ -48,28 +48,28 @@ namespace Elsa.Server.Features.Workflow.StartWorkflow
 
                     if (activity != null)
                     {
-                        var nextActivity =
+                        var nextActivity = await
                             _workflowNextActivityProvider.GetStartWorkflowNextActivity(activity,
                                 runWorkflowResult.WorkflowInstance.Id, cancellationToken);
 
                         var customActivityNavigation =
-                            _startWorkflowMapper.RunWorkflowResultToCustomNavigationActivity(runWorkflowResult, activity.Type);
+                            _startWorkflowMapper.RunWorkflowResultToCustomNavigationActivity(runWorkflowResult, nextActivity.Type);
 
                         if (customActivityNavigation != null)
                         {
                             await _elsaCustomRepository.CreateCustomActivityNavigationAsync(customActivityNavigation!, cancellationToken);
-                            result.Data = _startWorkflowMapper.RunWorkflowResultToStartWorkflowResponse(runWorkflowResult, activity.Type, workflowName);
+                            result.Data = _startWorkflowMapper.RunWorkflowResultToStartWorkflowResponse(runWorkflowResult, nextActivity.Type, workflowName);
                         }
                         else
                         {
                             result.ErrorMessages.Add("Failed to deserialize RunWorkflowResult");
                         }
 
-                        if (activity.Type == ActivityTypeConstants.QuestionScreen)
+                        if (nextActivity.Type == ActivityTypeConstants.QuestionScreen)
                         {
                             //create one for each question
                             var dictionList = runWorkflowResult.WorkflowInstance.ActivityData
-                                .FirstOrDefault(x => x.Key == activity.Id).Value;
+                                .FirstOrDefault(x => x.Key == nextActivity.Id).Value;
 
                             AssessmentQuestions? dictionaryQuestions = (AssessmentQuestions?)dictionList.FirstOrDefault(x => x.Key == "Questions").Value;
 
@@ -82,7 +82,7 @@ namespace Elsa.Server.Features.Workflow.StartWorkflow
                                 {
                                     var assessment =
                                         _startWorkflowMapper.RunWorkflowResultToQuestionScreenAnswer(runWorkflowResult,
-                                            activity.Type, item);
+                                            nextActivity.Type, item);
                                     if (assessment != null)
                                     {
                                         assessments.Add(assessment);

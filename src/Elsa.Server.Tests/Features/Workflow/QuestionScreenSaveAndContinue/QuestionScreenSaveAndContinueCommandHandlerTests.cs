@@ -4,8 +4,8 @@ using Elsa.CustomInfrastructure.Data.Repository;
 using Elsa.CustomModels;
 using Elsa.CustomWorkflow.Sdk;
 using Elsa.Models;
-using Elsa.Server.Features.Workflow.Helpers;
 using Elsa.Server.Features.Workflow.QuestionScreenSaveAndContinue;
+using Elsa.Server.Helpers;
 using Elsa.Server.Models;
 using Elsa.Server.Providers;
 using Elsa.Services.Models;
@@ -64,7 +64,7 @@ public class QuestionScreenSaveAndContinueCommandHandlerTests
         questionInvoker.Setup(x => x.ExecuteWorkflowsAsync(saveAndContinueCommand.ActivityId,
                 ActivityTypeConstants.QuestionScreen,
                 saveAndContinueCommand.WorkflowInstanceId, currentAssessmentQuestions, CancellationToken.None))
-            .ReturnsAsync(new List<CollectedWorkflow>(){ collectedWorkflow });
+            .ReturnsAsync(new List<CollectedWorkflow>() { collectedWorkflow });
 
         elsaCustomRepository.Setup(x => x.GetCustomActivityNavigation(workflowInstance.Output.ActivityId,
                 saveAndContinueCommand.WorkflowInstanceId, CancellationToken.None))
@@ -110,7 +110,7 @@ public class QuestionScreenSaveAndContinueCommandHandlerTests
             [Frozen] Mock<IElsaCustomRepository> elsaCustomRepository,
             [Frozen] Mock<IWorkflowRegistryProvider> workflowNextActivityProvider,
             [Frozen] Mock<IWorkflowInstanceProvider> workflowInstanceProvider,
-            [Frozen] Mock<ISaveAndContinueHelper> saveAndContinueHelper,
+            [Frozen] Mock<IElsaCustomModelHelper> saveAndContinueHelper,
             [Frozen] Mock<IDateTimeProvider> dateTimeProvider,
             WorkflowBlueprint workflowBlueprint,
             ActivityBlueprint activityBlueprint,
@@ -193,7 +193,7 @@ public class QuestionScreenSaveAndContinueCommandHandlerTests
             [Frozen] Mock<IElsaCustomRepository> elsaCustomRepository,
             [Frozen] Mock<IWorkflowRegistryProvider> workflowNextActivityProvider,
             [Frozen] Mock<IWorkflowInstanceProvider> workflowInstanceProvider,
-            [Frozen] Mock<ISaveAndContinueHelper> saveAndContinueHelper,
+            [Frozen] Mock<IElsaCustomModelHelper> saveAndContinueHelper,
             WorkflowBlueprint workflowBlueprint,
             ActivityBlueprint activityBlueprint,
             List<QuestionScreenAnswer> currentAssessmentQuestions,
@@ -231,7 +231,7 @@ public class QuestionScreenSaveAndContinueCommandHandlerTests
         questionInvoker.Setup(x => x.ExecuteWorkflowsAsync(saveAndContinueCommand.ActivityId,
                 ActivityTypeConstants.QuestionScreen,
                 saveAndContinueCommand.WorkflowInstanceId, currentAssessmentQuestions, CancellationToken.None))
-            .ReturnsAsync(new List<CollectedWorkflow>(){collectedWorkflow});
+            .ReturnsAsync(new List<CollectedWorkflow>() { collectedWorkflow });
 
         elsaCustomRepository.Setup(x => x.GetCustomActivityNavigation(workflowInstance.Output.ActivityId,
                 saveAndContinueCommand.WorkflowInstanceId, CancellationToken.None))

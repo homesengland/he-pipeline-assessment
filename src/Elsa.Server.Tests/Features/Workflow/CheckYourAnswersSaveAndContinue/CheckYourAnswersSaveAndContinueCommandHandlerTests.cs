@@ -5,8 +5,8 @@ using Elsa.CustomModels;
 using Elsa.CustomWorkflow.Sdk;
 using Elsa.Models;
 using Elsa.Server.Features.Workflow.CheckYourAnswersSaveAndContinue;
-using Elsa.Server.Features.Workflow.Helpers;
 using Elsa.Server.Features.Workflow.QuestionScreenSaveAndContinue;
+using Elsa.Server.Helpers;
 using Elsa.Server.Models;
 using Elsa.Server.Providers;
 using Elsa.Services.Models;
@@ -85,7 +85,7 @@ namespace Elsa.Server.Tests.Features.Workflow.CheckYourAnswersSaveAndContinue
               [Frozen] Mock<IElsaCustomRepository> elsaCustomRepository,
               [Frozen] Mock<IWorkflowRegistryProvider> workflowNextActivityProvider,
               [Frozen] Mock<IWorkflowInstanceProvider> workflowInstanceProvider,
-              [Frozen] Mock<ISaveAndContinueHelper> saveAndContinueHelper,
+              [Frozen] Mock<IElsaCustomModelHelper> saveAndContinueHelper,
               WorkflowBlueprint workflowBlueprint,
               ActivityBlueprint activityBlueprint,
               List<CollectedWorkflow> collectedWorkflows,
@@ -153,7 +153,7 @@ namespace Elsa.Server.Tests.Features.Workflow.CheckYourAnswersSaveAndContinue
               [Frozen] Mock<IElsaCustomRepository> elsaCustomRepository,
               [Frozen] Mock<IWorkflowRegistryProvider> workflowNextActivityProvider,
               [Frozen] Mock<IWorkflowInstanceProvider> workflowInstanceProvider,
-              [Frozen] Mock<ISaveAndContinueHelper> saveAndContinueHelper,
+              [Frozen] Mock<IElsaCustomModelHelper> saveAndContinueHelper,
               WorkflowBlueprint workflowBlueprint,
               ActivityBlueprint activityBlueprint,
               List<CollectedWorkflow> collectedWorkflows,

@@ -4,6 +4,10 @@ using Elsa.Services.Models;
 
 namespace Elsa.Server.Providers
 {
+    public interface IWorkflowRegistryProvider
+    {
+        public Task<IActivityBlueprint> GetNextActivity(WorkflowInstance workflowInstance, CancellationToken cancellationToken);
+    }
     public class WorkflowRegistryProvider : IWorkflowRegistryProvider
     {
         private readonly IWorkflowRegistry _workflowRegistry;
