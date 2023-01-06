@@ -8,7 +8,7 @@ namespace Elsa.Server.Services
     public interface IDeleteChangedWorkflowPathService
     {
         Task DeleteChangedWorkflowPath(string workflowInstanceId, string activityId,
-            CancellationToken cancellationToken, IActivityBlueprint nextActivity, WorkflowInstance workflowInstance);
+             IActivityBlueprint nextActivity, WorkflowInstance workflowInstance, CancellationToken cancellationToken);
     }
 
     public class DeleteChangedWorkflowPathService : IDeleteChangedWorkflowPathService
@@ -22,7 +22,7 @@ namespace Elsa.Server.Services
             _workflowPathProvider = workflowPathProvider;
         }
         public async Task DeleteChangedWorkflowPath(string workflowInstanceId, string activityId,
-            CancellationToken cancellationToken, IActivityBlueprint nextActivity, WorkflowInstance workflowInstance)
+             IActivityBlueprint nextActivity, WorkflowInstance workflowInstance, CancellationToken cancellationToken)
         {
             var changedPathCustomNavigation =
                 await _workflowPathProvider.GetChangedPathCustomNavigation(workflowInstanceId, activityId,

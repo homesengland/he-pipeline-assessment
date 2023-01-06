@@ -63,9 +63,9 @@ namespace Elsa.Server.Features.Workflow.QuestionScreenSaveAndContinue
 
                     var nextActivityRecord = await _elsaCustomRepository.GetCustomActivityNavigation(nextActivity.Id, command.WorkflowInstanceId, cancellationToken);
 
-                    await _nextActivityNavigationService.CreateNextActivityNavigation(command.ActivityId, cancellationToken, nextActivityRecord, nextActivity, workflowInstance);
+                    await _nextActivityNavigationService.CreateNextActivityNavigation(command.ActivityId, nextActivityRecord, nextActivity, workflowInstance, cancellationToken);
 
-                    await _deleteChangedWorkflowPathService.DeleteChangedWorkflowPath(command.WorkflowInstanceId, command.ActivityId, cancellationToken, nextActivity, workflowInstance);
+                    await _deleteChangedWorkflowPathService.DeleteChangedWorkflowPath(command.WorkflowInstanceId, command.ActivityId, nextActivity, workflowInstance, cancellationToken);
 
                     result.Data = new QuestionScreenSaveAndContinueResponse
                     {

@@ -77,7 +77,7 @@ namespace Elsa.Server.Tests.Features.Workflow.StartWorkflow
 
         [Theory]
         [AutoMoqData]
-        public async Task Handle_ShouldReturnSuccessfulOperationResult_ForQuestionScreenActivity_WhenSuccessful(
+        public async Task Handle_ShouldReturnSuccessfulOperationResult_GivenQuestionScreenActivityAndFirstQuestionScreenIsNotSkipped(
            [Frozen] Mock<IWorkflowRegistry> workflowRegistry,
            [Frozen] Mock<IStartsWorkflow> startsWorkflow,
            [Frozen] Mock<IStartWorkflowMapper> startWorkflowMapper,

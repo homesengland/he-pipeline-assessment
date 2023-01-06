@@ -8,6 +8,7 @@ using Elsa.Server.Features.Workflow.QuestionScreenSaveAndContinue;
 using Elsa.Server.Helpers;
 using Elsa.Server.Models;
 using Elsa.Server.Providers;
+using Elsa.Server.Services;
 using Elsa.Services.Models;
 using He.PipelineAssessment.Common.Tests;
 using Moq;
@@ -21,11 +22,12 @@ public class QuestionScreenSaveAndContinueCommandHandlerTests
     [AutoMoqData]
     public async Task
         Handle_ShouldReturnSuccessfulOperationResult_WhenSuccessful_AndDoesNotInsertNewActivityNavigationIfAlreadyExists(
-            [Frozen] Mock<IQuestionInvoker> questionInvoker,
             [Frozen] Mock<IElsaCustomRepository> elsaCustomRepository,
-            [Frozen] Mock<IWorkflowRegistryProvider> workflowNextActivityProvider,
+            [Frozen] Mock<IWorkflowNextActivityProvider> workflowNextActivityProvider,
             [Frozen] Mock<IWorkflowInstanceProvider> workflowInstanceProvider,
             [Frozen] Mock<IDateTimeProvider> dateTimeProvider,
+            [Frozen] Mock<INextActivityNavigationService> nextActivityNavigationService,
+            [Frozen] Mock<IDeleteChangedWorkflowPathService> deleteChangedWorkflowPathService,
             WorkflowBlueprint workflowBlueprint,
             ActivityBlueprint activityBlueprint,
             List<QuestionScreenAnswer> currentAssessmentQuestions,
@@ -61,11 +63,6 @@ public class QuestionScreenSaveAndContinueCommandHandlerTests
                 saveAndContinueCommand.WorkflowInstanceId, CancellationToken.None))
             .ReturnsAsync(currentAssessmentQuestions);
 
-        questionInvoker.Setup(x => x.ExecuteWorkflowsAsync(saveAndContinueCommand.ActivityId,
-                ActivityTypeConstants.QuestionScreen,
-                saveAndContinueCommand.WorkflowInstanceId, currentAssessmentQuestions, CancellationToken.None))
-            .ReturnsAsync(new List<CollectedWorkflow>() { collectedWorkflow });
-
         elsaCustomRepository.Setup(x => x.GetCustomActivityNavigation(workflowInstance.Output.ActivityId,
                 saveAndContinueCommand.WorkflowInstanceId, CancellationToken.None))
             .ReturnsAsync(nextAssessmentActivity);
@@ -73,8 +70,9 @@ public class QuestionScreenSaveAndContinueCommandHandlerTests
         workflowInstanceProvider.Setup(x => x.GetWorkflowInstance(It.IsAny<string>(), CancellationToken.None))
             .ReturnsAsync(workflowInstance);
 
-        workflowNextActivityProvider.Setup(x => x.GetNextActivity(workflowInstance, CancellationToken.None))
+        workflowNextActivityProvider.Setup(x => x.GetNextActivity(saveAndContinueCommand.ActivityId, saveAndContinueCommand.WorkflowInstanceId, currentAssessmentQuestions, ActivityTypeConstants.QuestionScreen, CancellationToken.None))
             .ReturnsAsync(activityBlueprint);
+
         dateTimeProvider.Setup(x => x.UtcNow()).Returns(date);
 
         //Act
@@ -83,18 +81,21 @@ public class QuestionScreenSaveAndContinueCommandHandlerTests
         //Assert
         elsaCustomRepository.Verify(
             x => x.SaveChanges(CancellationToken.None), Times.Once);
-        elsaCustomRepository.Verify(
-            x => x.CreateCustomActivityNavigationAsync(nextAssessmentActivity, CancellationToken.None), Times.Never);
-        elsaCustomRepository.Verify(
-            x => x.UpdateCustomActivityNavigation(nextAssessmentActivity, CancellationToken.None), Times.Once);
+
+        nextActivityNavigationService.Verify(
+            x => x.CreateNextActivityNavigation(saveAndContinueCommand.ActivityId,
+                nextAssessmentActivity, activityBlueprint, workflowInstance, CancellationToken.None), Times.Once);
+
+        deleteChangedWorkflowPathService.Verify(
+            x => x.DeleteChangedWorkflowPath(saveAndContinueCommand.WorkflowInstanceId, saveAndContinueCommand.ActivityId,
+                activityBlueprint, workflowInstance, CancellationToken.None), Times.Once);
+
         workflowInstanceProvider.Verify(
-            x => x.GetWorkflowInstance(It.IsAny<string>(), CancellationToken.None), Times.Exactly(2));
+            x => x.GetWorkflowInstance(It.IsAny<string>(), CancellationToken.None), Times.Once);
 
         Assert.Equal(saveAndContinueCommand.Answers![0].AnswerText, currentAssessmentQuestions[0].Answer);
         Assert.Equal(saveAndContinueCommand.Answers![1].AnswerText, currentAssessmentQuestions[1].Answer);
         Assert.Equal(saveAndContinueCommand.Answers![2].AnswerText, currentAssessmentQuestions[2].Answer);
-
-        Assert.Equal(date, nextAssessmentActivity.LastModifiedDateTime);
 
         Assert.Equal(opResult.Data.NextActivityId, result.Data!.NextActivityId);
         Assert.Equal(opResult.Data.WorkflowInstanceId, result.Data.WorkflowInstanceId);

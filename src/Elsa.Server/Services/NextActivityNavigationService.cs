@@ -10,9 +10,9 @@ namespace Elsa.Server.Services
 {
     public interface INextActivityNavigationService
     {
-        Task CreateNextActivityNavigation(string previousActivityId, CancellationToken cancellationToken,
+        Task CreateNextActivityNavigation(string previousActivityId,
             CustomActivityNavigation? nextActivityRecord, IActivityBlueprint nextActivity,
-            WorkflowInstance workflowInstance);
+            WorkflowInstance workflowInstance, CancellationToken cancellationToken);
     }
 
     public class NextActivityNavigationService : INextActivityNavigationService
@@ -27,8 +27,8 @@ namespace Elsa.Server.Services
             _dateTimeProvider = dateTimeProvider;
             _elsaCustomModelHelper = elsaCustomModelHelper;
         }
-        public async Task CreateNextActivityNavigation(string previousActivityId, CancellationToken cancellationToken,
-            CustomActivityNavigation? nextActivityRecord, IActivityBlueprint nextActivity, WorkflowInstance workflowInstance)
+        public async Task CreateNextActivityNavigation(string previousActivityId,
+            CustomActivityNavigation? nextActivityRecord, IActivityBlueprint nextActivity, WorkflowInstance workflowInstance, CancellationToken cancellationToken)
         {
             if (nextActivityRecord == null)
             {
