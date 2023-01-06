@@ -208,6 +208,60 @@ namespace Elsa.Server.Tests.Providers
 
         [Theory]
         [AutoMoqData]
+        public async Task GetNextActivity_ShouldNotReturnNextActivity_GivenQuestionScreenActivityTypeAndConditionDoesNotHaveValue(
+            [Frozen] Mock<IQuestionInvoker> questionInvoker,
+            [Frozen] Mock<IWorkflowInstanceProvider> workflowInstanceProvider,
+            [Frozen] Mock<IWorkflowRegistryProvider> workflowRegistryProvider,
+            [Frozen] Mock<IActivityDataProvider> activityDataProvider,
+            string activityId,
+            string workflowInstanceId,
+            WorkflowInstance workflowInstance,
+            List<CollectedWorkflow> collectedWorkflows,
+            ActivityBlueprint activityBlueprint,
+            ActivityBlueprint anotherActivityBlueprint,
+            List<QuestionScreenAnswer>? questionScreenAnswers,
+            WorkflowNextActivityProvider sut)
+        {
+            //Arrange
+            activityBlueprint.Type = ActivityTypeConstants.QuestionScreen;
+
+            questionInvoker.Setup(x => x.ExecuteWorkflowsAsync(It.IsAny<string>(),
+                    ActivityTypeConstants.QuestionScreen,
+                    workflowInstanceId, It.IsAny<List<QuestionScreenAnswer>?>(), CancellationToken.None))
+                .ReturnsAsync(collectedWorkflows);
+
+            workflowInstanceProvider.Setup(x => x.GetWorkflowInstance(workflowInstanceId, CancellationToken.None))
+                .ReturnsAsync(workflowInstance);
+
+            workflowRegistryProvider.SetupSequence(x => x.GetNextActivity(workflowInstance, CancellationToken.None))
+                .ReturnsAsync(activityBlueprint)
+                .ReturnsAsync(anotherActivityBlueprint);
+
+            var dictionary = new Dictionary<string, object?>()
+            {
+                { "Condition", null }
+            };
+            activityDataProvider
+                .Setup(x => x.GetActivityData(workflowInstance.Id, activityBlueprint.Id, CancellationToken.None))
+                .ReturnsAsync(dictionary);
+
+            var anotherDictionary = new Dictionary<string, object?>()
+            {
+                { "Condition", true }
+            };
+            activityDataProvider
+                .Setup(x => x.GetActivityData(workflowInstance.Id, anotherActivityBlueprint.Id, CancellationToken.None))
+                .ReturnsAsync(anotherDictionary);
+
+            //Act
+            var result = await sut.GetNextActivity(activityId, workflowInstanceId, questionScreenAnswers, ActivityTypeConstants.QuestionScreen, CancellationToken.None);
+
+            //Assert
+            Assert.Equal(anotherActivityBlueprint.Id, result.Id);
+        }
+
+        [Theory]
+        [AutoMoqData]
         public async Task GetNextActivity_ShouldThrowException_GivenDependencyThrows(
             [Frozen] Mock<IQuestionInvoker> questionInvoker,
             string activityId,
