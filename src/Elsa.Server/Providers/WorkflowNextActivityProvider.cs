@@ -38,10 +38,11 @@ namespace Elsa.Server.Providers
             List<QuestionScreenAnswer>? dbAssessmentQuestionList, string activityType,
             CancellationToken cancellationToken)
         {
-            IActivityBlueprint nextActivity;
-            var activityId = commandActivityId;
-            while (true)
+            IActivityBlueprint? nextActivity = null;
+            string activityId;
+            do
             {
+                activityId = nextActivity != null ? nextActivity.Id : commandActivityId;
                 var collectedWorkflows = await _invoker.ExecuteWorkflowsAsync(activityId,
                     activityType,
                     workflowInstanceId, dbAssessmentQuestionList, cancellationToken);
@@ -53,29 +54,28 @@ namespace Elsa.Server.Providers
 
                 if (!collectedWorkflows.Any())
                 {
-                    throw new Exception($"Unable to progress workflow. Workflow status is: {workflowInstance.WorkflowStatus}");
+                    throw new Exception(
+                        $"Unable to progress workflow. Workflow status is: {workflowInstance.WorkflowStatus}");
                 }
 
                 nextActivity =
                     await _workflowRegistryProvider.GetNextActivity(workflowInstance, cancellationToken);
 
-                if (nextActivity.Id == activityId)
-                    break;
-
-                activityId = nextActivity.Id;
                 dbAssessmentQuestionList = null;
                 activityType = nextActivity.Type;
 
                 if (activityType != ActivityTypeConstants.QuestionScreen)
                     break;
 
-                var nextActivityData = await _activityDataProvider.GetActivityData(workflowInstance.Id, nextActivity.Id, cancellationToken);
+                var nextActivityData =
+                    await _activityDataProvider.GetActivityData(workflowInstance.Id, nextActivity.Id,
+                        cancellationToken);
                 if (nextActivityData != null)
                 {
                     bool? condition = (bool?)nextActivityData["Condition"];
                     if (condition.HasValue && condition.Value) break;
                 }
-            }
+            } while (activityId != nextActivity.Id);
 
             return nextActivity;
         }
