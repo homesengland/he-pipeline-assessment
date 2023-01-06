@@ -19,10 +19,6 @@ using Elsa.Server.Features.Workflow.StartWorkflow;
 using Elsa.Server.Providers;
 using Elsa.Server.StartupTasks;
 using He.PipelineAssessment.Data.Auth;
-using He.PipelineAssessment.Data.LaHouseNeed;
-using He.PipelineAssessment.Data.PCSProfile;
-using He.PipelineAssessment.Data.SinglePipeline;
-using He.PipelineAssessment.Data.VFM;
 using MediatR;
 using Microsoft.AspNetCore.DataProtection;
 using Microsoft.EntityFrameworkCore;
@@ -76,6 +72,7 @@ builder.Services.AddScoped<IActivityDataProvider, ActivityDataProvider>();
 builder.Services.AddScoped<IWorkflowRegistryProvider, WorkflowRegistryProvider>();
 builder.Services.AddScoped<IWorkflowInstanceProvider, WorkflowInstanceProvider>();
 builder.Services.AddScoped<IWorkflowPathProvider, WorkflowPathProvider>();
+builder.Services.AddScoped<IWorkflowNextActivityProvider, WorkflowNextActivityProvider>();
 
 
 builder.Services.AddScoped<IStartWorkflowMapper, StartWorkflowMapper>();
