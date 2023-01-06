@@ -95,12 +95,7 @@ namespace Elsa.Server.Tests.Features.Workflow.StartWorkflow
 
             //Arrange
 
-            var opResult = new OperationResult<StartWorkflowResponse>()
-            {
-                Data = startWorkflowResponse,
-                ErrorMessages = new List<string>(),
-                ValidationMessages = null
-            };
+
 
             activityBlueprint.Id = runWorkflowResult.WorkflowInstance!.LastExecutedActivityId!;
             activityBlueprint.Type = ActivityTypeConstants.QuestionScreen;
@@ -123,7 +118,7 @@ namespace Elsa.Server.Tests.Features.Workflow.StartWorkflow
                 .Returns(customActivityNavigation);
 
             startWorkflowMapper.Setup(x => x.RunWorkflowResultToStartWorkflowResponse(runWorkflowResult, activityBlueprint.Type, workflowBlueprint.Name!))
-                .Returns(opResult.Data);
+                .Returns(startWorkflowResponse);
 
             workflowNextActivityProvider
                 .Setup(x => x.GetStartWorkflowNextActivity(activityBlueprint, runWorkflowResult.WorkflowInstance.Id,
@@ -135,9 +130,10 @@ namespace Elsa.Server.Tests.Features.Workflow.StartWorkflow
             //Assert
             elsaCustomRepository.Verify(x => x.CreateCustomActivityNavigationAsync(customActivityNavigation, CancellationToken.None), Times.Once);
             elsaCustomRepository.Verify(x => x.CreateQuestionScreenAnswersAsync(It.IsAny<List<QuestionScreenAnswer>>(), CancellationToken.None), Times.Once);
-            Assert.Equal(opResult.Data.NextActivityId, result.Data!.NextActivityId);
-            Assert.Equal(opResult.Data.WorkflowInstanceId, result.Data.WorkflowInstanceId);
-            Assert.Equal(activityBlueprint.Id, opResult.Data.NextActivityId);
+            Assert.Equal(startWorkflowResponse.NextActivityId, result.Data!.NextActivityId);
+            Assert.Equal(startWorkflowResponse.WorkflowName, result.Data.WorkflowName);
+            Assert.Equal(startWorkflowResponse.WorkflowInstanceId, result.Data.WorkflowInstanceId);
+            Assert.Equal(startWorkflowResponse.ActivityType, result.Data.ActivityType);
             Assert.Empty(result.ErrorMessages);
             Assert.Null(result.ValidationMessages);
         }

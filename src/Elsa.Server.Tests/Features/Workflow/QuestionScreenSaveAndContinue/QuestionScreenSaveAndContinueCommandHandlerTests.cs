@@ -4,7 +4,6 @@ using Elsa.CustomModels;
 using Elsa.CustomWorkflow.Sdk;
 using Elsa.Models;
 using Elsa.Server.Features.Workflow.QuestionScreenSaveAndContinue;
-using Elsa.Server.Models;
 using Elsa.Server.Providers;
 using Elsa.Server.Services;
 using Elsa.Services.Models;
@@ -39,17 +38,6 @@ public class QuestionScreenSaveAndContinueCommandHandlerTests
             var questionId = saveAndContinueCommand.Answers![i].Id;
             currentAssessmentQuestions[i].QuestionId = questionId;
         }
-
-        var opResult = new OperationResult<QuestionScreenSaveAndContinueResponse>
-        {
-            Data = new QuestionScreenSaveAndContinueResponse
-            {
-                WorkflowInstanceId = saveAndContinueCommand.WorkflowInstanceId,
-                NextActivityId = workflowInstance.Output!.ActivityId
-            },
-            ErrorMessages = new List<string>(),
-            ValidationMessages = null
-        };
 
         activityBlueprint.Id = workflowInstance.Output.ActivityId;
         workflowBlueprint.Activities.Add(activityBlueprint);
@@ -90,9 +78,9 @@ public class QuestionScreenSaveAndContinueCommandHandlerTests
         Assert.Equal(saveAndContinueCommand.Answers![1].AnswerText, currentAssessmentQuestions[1].Answer);
         Assert.Equal(saveAndContinueCommand.Answers![2].AnswerText, currentAssessmentQuestions[2].Answer);
 
-        Assert.Equal(opResult.Data.NextActivityId, result.Data!.NextActivityId);
-        Assert.Equal(opResult.Data.WorkflowInstanceId, result.Data.WorkflowInstanceId);
-        Assert.Equal(opResult.Data.ActivityType, result.Data.ActivityType);
+        Assert.Equal(activityBlueprint.Id, result.Data!.NextActivityId);
+        Assert.Equal(saveAndContinueCommand.WorkflowInstanceId, result.Data.WorkflowInstanceId);
+        Assert.Equal(activityBlueprint.Type, result.Data.ActivityType);
         Assert.Empty(result.ErrorMessages);
         Assert.Null(result.ValidationMessages);
     }

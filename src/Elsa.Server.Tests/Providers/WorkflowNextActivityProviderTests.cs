@@ -2,6 +2,7 @@
 using Elsa.CustomActivities.Activities.Shared;
 using Elsa.CustomModels;
 using Elsa.CustomWorkflow.Sdk;
+using Elsa.Models;
 using Elsa.Server.Providers;
 using Elsa.Services.Models;
 using He.PipelineAssessment.Common.Tests;
@@ -16,8 +17,10 @@ namespace Elsa.Server.Tests.Providers
         [AutoMoqData]
         public async Task GetNextActivity_ShouldThrowException_GivenNoCollectedWorkflows(
             [Frozen] Mock<IQuestionInvoker> questionInvoker,
+            [Frozen] Mock<IWorkflowInstanceProvider> workflowInstanceProvider,
             string activityId,
             string workflowInstanceId,
+            WorkflowInstance workflowInstance,
             List<QuestionScreenAnswer>? questionScreenAnswers,
             WorkflowNextActivityProvider sut)
         {
@@ -27,17 +30,82 @@ namespace Elsa.Server.Tests.Providers
                     workflowInstanceId, questionScreenAnswers, CancellationToken.None))
                 .ReturnsAsync(new List<CollectedWorkflow>());
 
+            workflowInstanceProvider.Setup(x => x.GetWorkflowInstance(workflowInstanceId, CancellationToken.None))
+                .ReturnsAsync(workflowInstance);
+
             //Act
-            var exception = await Assert.ThrowsAsync<ApplicationException>(() => sut.GetNextActivity(activityId, workflowInstanceId, questionScreenAnswers, ActivityTypeConstants.QuestionScreen, CancellationToken.None));
+            var exception = await Assert.ThrowsAsync<Exception>(() => sut.GetNextActivity(activityId, workflowInstanceId, questionScreenAnswers, ActivityTypeConstants.QuestionScreen, CancellationToken.None));
 
             //Assert
-            Assert.Equal("true", exception.Message);
+            Assert.Equal($"Unable to progress workflow. Workflow status is: {workflowInstance.WorkflowStatus}", exception.Message);
         }
 
-        [Fact]
-        public void GetNextActivity_ShouldReturnNextActivity_GivenNotQuestionScreenActivityType()
+        [Theory]
+        [AutoMoqData]
+        public async Task GetNextActivity_ShouldReturnNextActivity_GivenNotQuestionScreenActivityType(
+            [Frozen] Mock<IQuestionInvoker> questionInvoker,
+            [Frozen] Mock<IWorkflowInstanceProvider> workflowInstanceProvider,
+            [Frozen] Mock<IWorkflowRegistryProvider> workflowRegistryProvider,
+            string activityId,
+            string workflowInstanceId,
+            WorkflowInstance workflowInstance,
+            List<CollectedWorkflow> collectedWorkflows,
+            ActivityBlueprint activityBlueprint,
+            List<QuestionScreenAnswer>? questionScreenAnswers,
+            WorkflowNextActivityProvider sut)
         {
-            Assert.False(true);
+            //Arrange
+            questionInvoker.Setup(x => x.ExecuteWorkflowsAsync(activityId,
+                    ActivityTypeConstants.QuestionScreen,
+                    workflowInstanceId, questionScreenAnswers, CancellationToken.None))
+                .ReturnsAsync(collectedWorkflows);
+
+            workflowInstanceProvider.Setup(x => x.GetWorkflowInstance(workflowInstanceId, CancellationToken.None))
+                .ReturnsAsync(workflowInstance);
+
+            workflowRegistryProvider.Setup(x => x.GetNextActivity(workflowInstance, CancellationToken.None))
+                .ReturnsAsync(activityBlueprint);
+
+            //Act
+            var result = await sut.GetNextActivity(activityId, workflowInstanceId, questionScreenAnswers, ActivityTypeConstants.QuestionScreen, CancellationToken.None);
+
+            //Assert
+            Assert.Equal(activityBlueprint.Id, result.Id);
+        }
+
+        [Theory]
+        [AutoMoqData]
+        public async Task GetNextActivity_ShouldReturnNextActivity_GivenNextActivityIsSameAsCurrentActivity(
+            [Frozen] Mock<IQuestionInvoker> questionInvoker,
+            [Frozen] Mock<IWorkflowInstanceProvider> workflowInstanceProvider,
+            [Frozen] Mock<IWorkflowRegistryProvider> workflowRegistryProvider,
+            string activityId,
+            string workflowInstanceId,
+            WorkflowInstance workflowInstance,
+            List<CollectedWorkflow> collectedWorkflows,
+            ActivityBlueprint activityBlueprint,
+            List<QuestionScreenAnswer>? questionScreenAnswers,
+            WorkflowNextActivityProvider sut)
+        {
+            //Arrange
+            activityBlueprint.Id = activityId;
+
+            questionInvoker.Setup(x => x.ExecuteWorkflowsAsync(activityId,
+                    ActivityTypeConstants.QuestionScreen,
+                    workflowInstanceId, questionScreenAnswers, CancellationToken.None))
+                .ReturnsAsync(collectedWorkflows);
+
+            workflowInstanceProvider.Setup(x => x.GetWorkflowInstance(workflowInstanceId, CancellationToken.None))
+                .ReturnsAsync(workflowInstance);
+
+            workflowRegistryProvider.Setup(x => x.GetNextActivity(workflowInstance, CancellationToken.None))
+                .ReturnsAsync(activityBlueprint);
+
+            //Act
+            var result = await sut.GetNextActivity(activityId, workflowInstanceId, questionScreenAnswers, ActivityTypeConstants.QuestionScreen, CancellationToken.None);
+
+            //Assert
+            Assert.Equal(activityBlueprint.Id, result.Id);
         }
 
         [Fact]
