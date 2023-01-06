@@ -34,64 +34,56 @@ namespace Elsa.Server.Tests.Providers
             Assert.Equal("true", exception.Message);
         }
 
-        [Theory]
-        [AutoMoqData]
+        [Fact]
         public void GetNextActivity_ShouldReturnNextActivity_GivenNotQuestionScreenActivityType()
         {
             Assert.False(true);
         }
 
-        [Theory]
-        [AutoMoqData]
+        [Fact]
+
         public void GetNextActivity_ShouldReturnNextActivity_GivenQuestionScreenActivityTypeAndConditionReturnsTrue()
         {
             Assert.False(true);
         }
 
-        [Theory]
-        [AutoMoqData]
+        [Fact]
         public void GetNextActivity_ShouldNotReturnNextActivity_GivenQuestionScreenActivityTypeAndConditionReturnsFalse()
         {
             Assert.False(true);
         }
 
-        [Theory]
-        [AutoMoqData]
+        [Fact]
         public void GetNextActivity_ShouldThrowException_GivenNoValidNextActivityFound()
         {
             Assert.False(true);
         }
 
-        [Theory]
-        [AutoMoqData]
+        [Fact]
         public void GetStartWorkflowNextActivity_ShouldReturnSameActivity_GivenConditionReturnsTrue()
         {
             Assert.False(true);
         }
 
-        [Theory]
-        [AutoMoqData]
+        [Fact]
         public void GetStartWorkflowNextActivity_ShouldThrowException_GivenNoCollectedWorkflows()
         {
             Assert.False(true);
         }
 
-        [Theory]
-        [AutoMoqData]
+        [Fact]
         public void GetStartWorkflowNextActivity_ShouldReturnNextValidQuestionActivityType_GivenCurrentConditionFalse()
         {
             Assert.False(true);
         }
 
-        [Theory]
-        [AutoMoqData]
+        [Fact]
         public void GetStartWorkflowNextActivity_ShouldReturnNextActivityType_GivenCurrentConditionFalseAndNoQuestionActivityType()
         {
             Assert.False(true);
         }
 
-        [Theory]
-        [AutoMoqData]
+        [Fact]
         public void GetStartWorkflowNextActivity_ShouldThrowException_GivenNoValidNextActivityFound()
         {
             Assert.False(true);

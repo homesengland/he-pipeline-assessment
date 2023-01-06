@@ -14,9 +14,10 @@ using Elsa.Persistence.EntityFramework.Core.Extensions;
 using Elsa.Persistence.EntityFramework.SqlServer;
 using Elsa.Runtime;
 using Elsa.Server.Extensions;
-using Elsa.Server.Features.Workflow.Helpers;
 using Elsa.Server.Features.Workflow.StartWorkflow;
+using Elsa.Server.Helpers;
 using Elsa.Server.Providers;
+using Elsa.Server.Services;
 using Elsa.Server.StartupTasks;
 using He.PipelineAssessment.Data.Auth;
 using MediatR;
@@ -77,6 +78,9 @@ builder.Services.AddScoped<IWorkflowNextActivityProvider, WorkflowNextActivityPr
 
 builder.Services.AddScoped<IStartWorkflowMapper, StartWorkflowMapper>();
 builder.Services.AddScoped<IElsaCustomModelHelper, ElsaCustomModelHelper>();
+
+builder.Services.AddScoped<IDeleteChangedWorkflowPathService, DeleteChangedWorkflowPathService>();
+builder.Services.AddScoped<INextActivityNavigationService, NextActivityNavigationService>();
 
 
 // Allow arbitrary client browser apps to access the API.

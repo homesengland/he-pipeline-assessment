@@ -1,6 +1,6 @@
 ﻿using Elsa.CustomInfrastructure.Data.Repository;
 using Elsa.CustomWorkflow.Sdk;
-using Elsa.Server.Features.Workflow.Helpers;
+using Elsa.Server.Helpers;
 using Elsa.Server.Models;
 using Elsa.Server.Providers;
 using MediatR;
@@ -43,7 +43,6 @@ namespace Elsa.Server.Features.Workflow.CheckYourAnswersSaveAndContinue
                    await _elsaCustomRepository.GetCustomActivityNavigation(nextActivity.Id,
                        command.WorkflowInstanceId, cancellationToken);
 
-                //TODO: Use shared method
                 if (nextActivityRecord == null)
                 {
                     var customActivityNavigation = _elsaCustomModelHelper.CreateNextCustomActivityNavigation(command.ActivityId, ActivityTypeConstants.CheckYourAnswersScreen, nextActivity.Id, nextActivity.Type, workflowInstance);
