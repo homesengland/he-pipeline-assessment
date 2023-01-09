@@ -4,20 +4,20 @@ using Elsa.CustomWorkflow.Sdk;
 using Elsa.Models;
 using Elsa.Server.Providers;
 
-namespace Elsa.Server.Features.Workflow.Helpers
+namespace Elsa.Server.Helpers
 {
-    public interface ISaveAndContinueHelper
+    public interface IElsaCustomModelHelper
     {
         CustomActivityNavigation CreateNextCustomActivityNavigation(string previousActivityId, string previousActivityType, string nextActivityId, string nextActivityType, WorkflowInstance workflowInstance);
 
         List<QuestionScreenAnswer> CreateQuestionScreenAnswers(string activityId, WorkflowInstance workflowInstance);
     }
 
-    public class SaveAndContinueHelper : ISaveAndContinueHelper
+    public class ElsaCustomModelHelper : IElsaCustomModelHelper
     {
         private readonly IDateTimeProvider _dateTimeProvider;
 
-        public SaveAndContinueHelper(IDateTimeProvider dateTimeProvider)
+        public ElsaCustomModelHelper(IDateTimeProvider dateTimeProvider)
         {
             _dateTimeProvider = dateTimeProvider;
         }

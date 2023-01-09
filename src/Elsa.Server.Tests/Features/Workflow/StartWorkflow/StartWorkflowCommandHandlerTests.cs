@@ -6,6 +6,7 @@ using Elsa.CustomWorkflow.Sdk;
 using Elsa.Models;
 using Elsa.Server.Features.Workflow.StartWorkflow;
 using Elsa.Server.Models;
+using Elsa.Server.Providers;
 using Elsa.Services;
 using Elsa.Services.Models;
 using He.PipelineAssessment.Common.Tests;
@@ -24,6 +25,7 @@ namespace Elsa.Server.Tests.Features.Workflow.StartWorkflow
             [Frozen] Mock<IStartsWorkflow> startsWorkflow,
             [Frozen] Mock<IStartWorkflowMapper> startWorkflowMapper,
             [Frozen] Mock<IElsaCustomRepository> elsaCustomRepository,
+            [Frozen] Mock<IWorkflowNextActivityProvider> workflowNextActivityProvider,
             WorkflowBlueprint workflowBlueprint,
             ActivityBlueprint activityBlueprint,
             RunWorkflowResult runWorkflowResult,
@@ -34,7 +36,10 @@ namespace Elsa.Server.Tests.Features.Workflow.StartWorkflow
         {
 
             //Arrange
-
+            var workflowNextActivityModel = new WorkflowNextActivityModel
+            {
+                NextActivity = activityBlueprint
+            };
             var opResult = new OperationResult<StartWorkflowResponse>()
             {
                 Data = startWorkflowResponse,
@@ -44,7 +49,6 @@ namespace Elsa.Server.Tests.Features.Workflow.StartWorkflow
 
             activityBlueprint.Id = runWorkflowResult.WorkflowInstance!.LastExecutedActivityId!;
             workflowBlueprint.Activities.Add(activityBlueprint);
-
 
             workflowRegistry
                 .Setup(x => x.FindAsync(startWorkflowCommand.WorkflowDefinitionId, VersionOptions.Published, null, CancellationToken.None))
@@ -59,6 +63,10 @@ namespace Elsa.Server.Tests.Features.Workflow.StartWorkflow
             startWorkflowMapper.Setup(x => x.RunWorkflowResultToStartWorkflowResponse(runWorkflowResult, activityBlueprint.Type, workflowBlueprint.Name!))
                 .Returns(opResult.Data);
 
+            workflowNextActivityProvider
+                .Setup(x => x.GetStartWorkflowNextActivity(activityBlueprint, runWorkflowResult.WorkflowInstance.Id,
+                    CancellationToken.None)).ReturnsAsync(workflowNextActivityModel);
+
             //Act
             var result = await sut.Handle(startWorkflowCommand, CancellationToken.None);
 
@@ -72,11 +80,12 @@ namespace Elsa.Server.Tests.Features.Workflow.StartWorkflow
 
         [Theory]
         [AutoMoqData]
-        public async Task Handle_ShouldReturnSuccessfulOperationResult_ForQuestionScreenActivity_WhenSuccessful(
+        public async Task Handle_ShouldReturnSuccessfulOperationResult_GivenQuestionScreenActivityAndFirstQuestionScreenIsNotSkipped(
            [Frozen] Mock<IWorkflowRegistry> workflowRegistry,
            [Frozen] Mock<IStartsWorkflow> startsWorkflow,
            [Frozen] Mock<IStartWorkflowMapper> startWorkflowMapper,
            [Frozen] Mock<IElsaCustomRepository> elsaCustomRepository,
+           [Frozen] Mock<IWorkflowNextActivityProvider> workflowNextActivityProvider,
            WorkflowBlueprint workflowBlueprint,
            ActivityBlueprint activityBlueprint,
            RunWorkflowResult runWorkflowResult,
@@ -88,12 +97,9 @@ namespace Elsa.Server.Tests.Features.Workflow.StartWorkflow
         {
 
             //Arrange
-
-            var opResult = new OperationResult<StartWorkflowResponse>()
+            var workflowNextActivityModel = new WorkflowNextActivityModel
             {
-                Data = startWorkflowResponse,
-                ErrorMessages = new List<string>(),
-                ValidationMessages = null
+                NextActivity = activityBlueprint
             };
 
             activityBlueprint.Id = runWorkflowResult.WorkflowInstance!.LastExecutedActivityId!;
@@ -117,7 +123,154 @@ namespace Elsa.Server.Tests.Features.Workflow.StartWorkflow
                 .Returns(customActivityNavigation);
 
             startWorkflowMapper.Setup(x => x.RunWorkflowResultToStartWorkflowResponse(runWorkflowResult, activityBlueprint.Type, workflowBlueprint.Name!))
+                .Returns(startWorkflowResponse);
+
+            workflowNextActivityProvider
+                .Setup(x => x.GetStartWorkflowNextActivity(activityBlueprint, runWorkflowResult.WorkflowInstance.Id,
+                    CancellationToken.None)).ReturnsAsync(workflowNextActivityModel);
+
+            //Act
+            var result = await sut.Handle(startWorkflowCommand, CancellationToken.None);
+
+            //Assert
+            elsaCustomRepository.Verify(x => x.CreateCustomActivityNavigationAsync(customActivityNavigation, CancellationToken.None), Times.Once);
+            elsaCustomRepository.Verify(x => x.CreateQuestionScreenAnswersAsync(It.IsAny<List<QuestionScreenAnswer>>(), CancellationToken.None), Times.Once);
+            Assert.Equal(startWorkflowResponse.NextActivityId, result.Data!.NextActivityId);
+            Assert.Equal(startWorkflowResponse.WorkflowName, result.Data.WorkflowName);
+            Assert.Equal(startWorkflowResponse.WorkflowInstanceId, result.Data.WorkflowInstanceId);
+            Assert.Equal(startWorkflowResponse.ActivityType, result.Data.ActivityType);
+            Assert.Empty(result.ErrorMessages);
+            Assert.Null(result.ValidationMessages);
+        }
+
+        [Theory]
+        [AutoMoqData]
+        public async Task Handle_ShouldReturnDataFromCorrectWorkflowInstance(
+           [Frozen] Mock<IWorkflowRegistry> workflowRegistry,
+           [Frozen] Mock<IStartsWorkflow> startsWorkflow,
+           [Frozen] Mock<IStartWorkflowMapper> startWorkflowMapper,
+           [Frozen] Mock<IElsaCustomRepository> elsaCustomRepository,
+           [Frozen] Mock<IWorkflowNextActivityProvider> workflowNextActivityProvider,
+           WorkflowBlueprint workflowBlueprint,
+           ActivityBlueprint activityBlueprint,
+           RunWorkflowResult runWorkflowResult,
+           StartWorkflowCommand startWorkflowCommand,
+           CustomActivityNavigation customActivityNavigation,
+           StartWorkflowResponse startWorkflowResponse,
+           List<Question> questions,
+           WorkflowInstance workflowInstance,
+           StartWorkflowCommandHandler sut)
+        {
+
+            //Arrange
+            var workflowNextActivityModel = new WorkflowNextActivityModel
+            {
+                NextActivity = activityBlueprint,
+                WorkflowInstance = workflowInstance
+            };
+
+            activityBlueprint.Id = runWorkflowResult.WorkflowInstance!.LastExecutedActivityId!;
+            activityBlueprint.Type = ActivityTypeConstants.QuestionScreen;
+            workflowBlueprint.Activities.Add(activityBlueprint);
+
+            var assessmentQuestionsDictionary = new Dictionary<string, object?>();
+            var assessmentQuestions = new AssessmentQuestions() { Questions = questions };
+            assessmentQuestionsDictionary.Add("Questions", assessmentQuestions);
+
+            workflowInstance.ActivityData.Add(activityBlueprint.Id, assessmentQuestionsDictionary);
+
+            workflowRegistry
+                .Setup(x => x.FindAsync(startWorkflowCommand.WorkflowDefinitionId, VersionOptions.Published, null, CancellationToken.None))
+                .ReturnsAsync(workflowBlueprint);
+
+            startsWorkflow.Setup(x => x.StartWorkflowAsync(workflowBlueprint, null, null, startWorkflowCommand.CorrelationId, null, null, CancellationToken.None))
+                .ReturnsAsync(runWorkflowResult);
+
+            startWorkflowMapper.Setup(x => x.RunWorkflowResultToCustomNavigationActivity(runWorkflowResult, activityBlueprint.Type))
+                .Returns(customActivityNavigation);
+
+            startWorkflowMapper.Setup(x => x.RunWorkflowResultToStartWorkflowResponse(runWorkflowResult, activityBlueprint.Type, workflowBlueprint.Name!))
+                .Returns(startWorkflowResponse);
+
+            workflowNextActivityProvider
+                .Setup(x => x.GetStartWorkflowNextActivity(activityBlueprint, runWorkflowResult.WorkflowInstance.Id,
+                    CancellationToken.None)).ReturnsAsync(workflowNextActivityModel);
+
+            //Act
+            var result = await sut.Handle(startWorkflowCommand, CancellationToken.None);
+
+            //Assert
+            elsaCustomRepository.Verify(x => x.CreateCustomActivityNavigationAsync(customActivityNavigation, CancellationToken.None), Times.Once);
+            elsaCustomRepository.Verify(x => x.CreateQuestionScreenAnswersAsync(It.IsAny<List<QuestionScreenAnswer>>(), CancellationToken.None), Times.Once);
+            Assert.Equal(startWorkflowResponse.NextActivityId, result.Data!.NextActivityId);
+            Assert.Equal(startWorkflowResponse.WorkflowName, result.Data.WorkflowName);
+            Assert.Equal(startWorkflowResponse.WorkflowInstanceId, result.Data.WorkflowInstanceId);
+            Assert.Equal(startWorkflowResponse.ActivityType, result.Data.ActivityType);
+            Assert.Empty(result.ErrorMessages);
+            Assert.Null(result.ValidationMessages);
+        }
+
+        [Theory]
+        [AutoMoqData]
+        public async Task Handle_ShouldReturnSuccessfulOperationResult_GivenFirstQuestionScreenActivityIsSkipped(
+           [Frozen] Mock<IWorkflowRegistry> workflowRegistry,
+           [Frozen] Mock<IStartsWorkflow> startsWorkflow,
+           [Frozen] Mock<IStartWorkflowMapper> startWorkflowMapper,
+           [Frozen] Mock<IElsaCustomRepository> elsaCustomRepository,
+           [Frozen] Mock<IWorkflowNextActivityProvider> workflowNextActivityProvider,
+           WorkflowBlueprint workflowBlueprint,
+           ActivityBlueprint activityBlueprint,
+           ActivityBlueprint nextActivityBlueprint,
+           RunWorkflowResult runWorkflowResult,
+           StartWorkflowCommand startWorkflowCommand,
+           CustomActivityNavigation customActivityNavigation,
+           StartWorkflowResponse startWorkflowResponse,
+           List<Question> questions,
+           StartWorkflowCommandHandler sut)
+        {
+
+            //Arrange
+            var workflowNextActivityModel = new WorkflowNextActivityModel
+            {
+                NextActivity = nextActivityBlueprint
+            };
+            var opResult = new OperationResult<StartWorkflowResponse>()
+            {
+                Data = startWorkflowResponse,
+                ErrorMessages = new List<string>(),
+                ValidationMessages = null
+            };
+
+            activityBlueprint.Id = runWorkflowResult.WorkflowInstance!.LastExecutedActivityId!;
+            activityBlueprint.Type = ActivityTypeConstants.QuestionScreen;
+            workflowBlueprint.Activities.Add(activityBlueprint);
+
+            nextActivityBlueprint.Type = ActivityTypeConstants.QuestionScreen;
+            workflowBlueprint.Activities.Add(nextActivityBlueprint);
+
+            var assessmentQuestionsDictionary = new Dictionary<string, object?>();
+            var assessmentQuestions = new AssessmentQuestions() { Questions = questions };
+            assessmentQuestionsDictionary.Add("Questions", assessmentQuestions);
+
+            runWorkflowResult.WorkflowInstance.ActivityData.Add(activityBlueprint.Id, assessmentQuestionsDictionary);
+            runWorkflowResult.WorkflowInstance.ActivityData.Add(nextActivityBlueprint.Id, assessmentQuestionsDictionary);
+
+            workflowRegistry
+                .Setup(x => x.FindAsync(startWorkflowCommand.WorkflowDefinitionId, VersionOptions.Published, null, CancellationToken.None))
+                .ReturnsAsync(workflowBlueprint);
+
+            startsWorkflow.Setup(x => x.StartWorkflowAsync(workflowBlueprint, null, null, startWorkflowCommand.CorrelationId, null, null, CancellationToken.None))
+                .ReturnsAsync(runWorkflowResult);
+
+            startWorkflowMapper.Setup(x => x.RunWorkflowResultToCustomNavigationActivity(runWorkflowResult, nextActivityBlueprint.Type))
+                .Returns(customActivityNavigation);
+
+            startWorkflowMapper.Setup(x => x.RunWorkflowResultToStartWorkflowResponse(runWorkflowResult, nextActivityBlueprint.Type, workflowBlueprint.Name!))
                 .Returns(opResult.Data);
+
+            workflowNextActivityProvider
+                .Setup(x => x.GetStartWorkflowNextActivity(activityBlueprint, runWorkflowResult.WorkflowInstance.Id,
+                    CancellationToken.None)).ReturnsAsync(workflowNextActivityModel);
 
             //Act
             var result = await sut.Handle(startWorkflowCommand, CancellationToken.None);
@@ -128,6 +281,7 @@ namespace Elsa.Server.Tests.Features.Workflow.StartWorkflow
             Assert.Equal(opResult.Data.NextActivityId, result.Data!.NextActivityId);
             Assert.Equal(opResult.Data.WorkflowInstanceId, result.Data.WorkflowInstanceId);
             Assert.Empty(result.ErrorMessages);
+            Assert.NotEqual(activityBlueprint.Id, opResult.Data.NextActivityId);
             Assert.Null(result.ValidationMessages);
         }
 
@@ -142,10 +296,10 @@ namespace Elsa.Server.Tests.Features.Workflow.StartWorkflow
             StartWorkflowCommand startWorkflowCommand,
             StartWorkflowCommandHandler sut)
         {
+            //Arrange
             var emptyRunWorkflowResult = new RunWorkflowResult(null, null, null, true);
             workflowBlueprint.Activities.Add(activityBlueprint);
 
-            //Arrange
             workflowRegistry
                 .Setup(x => x.FindAsync(startWorkflowCommand.WorkflowDefinitionId, VersionOptions.Published, null, CancellationToken.None))
                 .ReturnsAsync(workflowBlueprint);
@@ -169,16 +323,21 @@ namespace Elsa.Server.Tests.Features.Workflow.StartWorkflow
             [Frozen] Mock<IStartsWorkflow> startsWorkflow,
             [Frozen] Mock<IStartWorkflowMapper> startWorkflowMapper,
             [Frozen] Mock<IElsaCustomRepository> elsaCustomRepository,
+            [Frozen] Mock<IWorkflowNextActivityProvider> workflowNextActivityProvider,
             WorkflowBlueprint workflowBlueprint,
             ActivityBlueprint activityBlueprint,
             RunWorkflowResult runWorkflowResult,
             StartWorkflowCommand startWorkflowCommand,
             StartWorkflowCommandHandler sut)
         {
+            //Arrange
+            var workflowNextActivityModel = new WorkflowNextActivityModel
+            {
+                NextActivity = activityBlueprint
+            };
             activityBlueprint.Id = runWorkflowResult.WorkflowInstance!.LastExecutedActivityId!;
             workflowBlueprint.Activities.Add(activityBlueprint);
 
-            //Arrange
             workflowRegistry
                 .Setup(x => x.FindAsync(startWorkflowCommand.WorkflowDefinitionId, VersionOptions.Published, null, CancellationToken.None))
                 .ReturnsAsync(workflowBlueprint);
@@ -188,6 +347,10 @@ namespace Elsa.Server.Tests.Features.Workflow.StartWorkflow
 
             startWorkflowMapper.Setup(x => x.RunWorkflowResultToCustomNavigationActivity(runWorkflowResult, activityBlueprint.Type))
                 .Returns((CustomActivityNavigation?)null);
+
+            workflowNextActivityProvider
+                .Setup(x => x.GetStartWorkflowNextActivity(activityBlueprint, runWorkflowResult.WorkflowInstance.Id,
+                    CancellationToken.None)).ReturnsAsync(workflowNextActivityModel);
 
             //Act
             var result = await sut.Handle(startWorkflowCommand, CancellationToken.None);

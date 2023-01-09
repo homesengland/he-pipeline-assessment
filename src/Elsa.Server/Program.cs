@@ -14,15 +14,12 @@ using Elsa.Persistence.EntityFramework.Core.Extensions;
 using Elsa.Persistence.EntityFramework.SqlServer;
 using Elsa.Runtime;
 using Elsa.Server.Extensions;
-using Elsa.Server.Features.Workflow.Helpers;
 using Elsa.Server.Features.Workflow.StartWorkflow;
+using Elsa.Server.Helpers;
 using Elsa.Server.Providers;
+using Elsa.Server.Services;
 using Elsa.Server.StartupTasks;
 using He.PipelineAssessment.Data.Auth;
-using He.PipelineAssessment.Data.LaHouseNeed;
-using He.PipelineAssessment.Data.PCSProfile;
-using He.PipelineAssessment.Data.SinglePipeline;
-using He.PipelineAssessment.Data.VFM;
 using MediatR;
 using Microsoft.AspNetCore.DataProtection;
 using Microsoft.EntityFrameworkCore;
@@ -73,13 +70,17 @@ builder.Services.AddMediatR(typeof(Program).Assembly);
 builder.Services.AddApplicationInsightsTelemetry();
 builder.Services.AddScoped<IDateTimeProvider, DateTimeProvider>();
 builder.Services.AddScoped<IActivityDataProvider, ActivityDataProvider>();
-builder.Services.AddScoped<IWorkflowNextActivityProvider, WorkflowNextActivityProvider>();
+builder.Services.AddScoped<IWorkflowRegistryProvider, WorkflowRegistryProvider>();
 builder.Services.AddScoped<IWorkflowInstanceProvider, WorkflowInstanceProvider>();
 builder.Services.AddScoped<IWorkflowPathProvider, WorkflowPathProvider>();
+builder.Services.AddScoped<IWorkflowNextActivityProvider, WorkflowNextActivityProvider>();
 
 
 builder.Services.AddScoped<IStartWorkflowMapper, StartWorkflowMapper>();
-builder.Services.AddScoped<ISaveAndContinueHelper, SaveAndContinueHelper>();
+builder.Services.AddScoped<IElsaCustomModelHelper, ElsaCustomModelHelper>();
+
+builder.Services.AddScoped<IDeleteChangedWorkflowPathService, DeleteChangedWorkflowPathService>();
+builder.Services.AddScoped<INextActivityNavigationService, NextActivityNavigationService>();
 
 
 // Allow arbitrary client browser apps to access the API.

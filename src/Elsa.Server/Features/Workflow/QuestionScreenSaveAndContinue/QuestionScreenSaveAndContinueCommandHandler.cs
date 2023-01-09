@@ -1,11 +1,10 @@
-﻿using Elsa.CustomActivities.Activities.Shared;
-using Elsa.CustomInfrastructure.Data.Repository;
+﻿using Elsa.CustomInfrastructure.Data.Repository;
 using Elsa.CustomModels;
 using Elsa.CustomWorkflow.Sdk;
 using Elsa.Models;
-using Elsa.Server.Features.Workflow.Helpers;
 using Elsa.Server.Models;
 using Elsa.Server.Providers;
+using Elsa.Server.Services;
 using MediatR;
 
 namespace Elsa.Server.Features.Workflow.QuestionScreenSaveAndContinue
@@ -14,29 +13,27 @@ namespace Elsa.Server.Features.Workflow.QuestionScreenSaveAndContinue
         OperationResult<QuestionScreenSaveAndContinueResponse>>
     {
         private readonly IElsaCustomRepository _elsaCustomRepository;
-        private readonly IQuestionInvoker _invoker;
         private readonly IDateTimeProvider _dateTimeProvider;
-        private readonly ISaveAndContinueHelper _saveAndContinueHelper;
-        private readonly IWorkflowNextActivityProvider _workflowNextActivityProvider;
         private readonly IWorkflowInstanceProvider _workflowInstanceProvider;
-        private readonly IWorkflowPathProvider _workflowPathProvider;
+        private readonly IWorkflowNextActivityProvider _workflowNextActivityProvider;
+        private readonly INextActivityNavigationService _nextActivityNavigationService;
+        private readonly IDeleteChangedWorkflowPathService _deleteChangedWorkflowPathService;
 
 
-        public QuestionScreenSaveAndContinueCommandHandler(IQuestionInvoker invoker,
+        public QuestionScreenSaveAndContinueCommandHandler(
             IElsaCustomRepository elsaCustomRepository,
-            ISaveAndContinueHelper saveAndContinueHelper,
-            IWorkflowNextActivityProvider workflowNextActivityProvider,
             IWorkflowInstanceProvider workflowInstanceProvider,
             IDateTimeProvider dateTimeProvider,
-            IWorkflowPathProvider workflowPathProvider)
+            IWorkflowNextActivityProvider workflowNextActivityProvider,
+            INextActivityNavigationService nextActivityNavigationService,
+            IDeleteChangedWorkflowPathService deleteChangedWorkflowPathService)
         {
             _elsaCustomRepository = elsaCustomRepository;
-            _saveAndContinueHelper = saveAndContinueHelper;
-            _workflowNextActivityProvider = workflowNextActivityProvider;
             _workflowInstanceProvider = workflowInstanceProvider;
             _dateTimeProvider = dateTimeProvider;
-            _workflowPathProvider = workflowPathProvider;
-            _invoker = invoker;
+            _workflowNextActivityProvider = workflowNextActivityProvider;
+            _nextActivityNavigationService = nextActivityNavigationService;
+            _deleteChangedWorkflowPathService = deleteChangedWorkflowPathService;
         }
 
         public async Task<OperationResult<QuestionScreenSaveAndContinueResponse>> Handle(QuestionScreenSaveAndContinueCommand command,
@@ -62,67 +59,20 @@ namespace Elsa.Server.Features.Workflow.QuestionScreenSaveAndContinue
 
                     await SetAnswers(command, cancellationToken, dbAssessmentQuestionList);
 
-                    var collectedWorkflows = await _invoker.ExecuteWorkflowsAsync(command.ActivityId,
-                        ActivityTypeConstants.QuestionScreen,
-                        command.WorkflowInstanceId, dbAssessmentQuestionList, cancellationToken);
+                    var workflowNextActivityModel = await _workflowNextActivityProvider.GetNextActivity(command.ActivityId, command.WorkflowInstanceId, dbAssessmentQuestionList, ActivityTypeConstants.QuestionScreen, cancellationToken);
+                    if (workflowNextActivityModel.WorkflowInstance != null)
+                        workflowInstance = workflowNextActivityModel.WorkflowInstance;
+                    var nextActivityRecord = await _elsaCustomRepository.GetCustomActivityNavigation(workflowNextActivityModel.NextActivity.Id, command.WorkflowInstanceId, cancellationToken);
 
-                    //we need to refresh the workflowInstance, as calling the invoker will change it
-                    workflowInstance =
-                        await _workflowInstanceProvider.GetWorkflowInstance(command.WorkflowInstanceId,
-                            cancellationToken);
+                    await _nextActivityNavigationService.CreateNextActivityNavigation(command.ActivityId, nextActivityRecord, workflowNextActivityModel.NextActivity, workflowInstance, cancellationToken);
 
-                    if (!collectedWorkflows.Any())
-                    {
-                        throw new Exception($"Unable to progress workflow. Workflow status is: {workflowInstance.WorkflowStatus}");
-                    }
-
-                    var nextActivity =
-                        await _workflowNextActivityProvider.GetNextActivity(workflowInstance, cancellationToken);
-
-                    var nextActivityRecord =
-                        await _elsaCustomRepository.GetCustomActivityNavigation(nextActivity.Id,
-                            command.WorkflowInstanceId, cancellationToken);
-
-                    if (nextActivityRecord == null)
-                    {
-                        var customActivityNavigation =
-                            _saveAndContinueHelper.CreateNextCustomActivityNavigation(command.ActivityId,
-                                ActivityTypeConstants.QuestionScreen, nextActivity.Id, nextActivity.Type,
-                                workflowInstance);
-                        await _elsaCustomRepository.CreateCustomActivityNavigationAsync(customActivityNavigation,
-                            cancellationToken);
-
-                        if (customActivityNavigation.ActivityType == ActivityTypeConstants.QuestionScreen)
-                        {
-                            var questions =
-                                _saveAndContinueHelper.CreateQuestionScreenAnswers(nextActivity.Id, workflowInstance);
-                            await _elsaCustomRepository.CreateQuestionScreenAnswersAsync(questions, cancellationToken);
-                        }
-                    }
-                    else
-                    {
-                        nextActivityRecord.LastModifiedDateTime = _dateTimeProvider.UtcNow();
-                        await _elsaCustomRepository.UpdateCustomActivityNavigation(nextActivityRecord, cancellationToken);
-                    }
-
-                    var changedPathCustomNavigation =
-                        await _workflowPathProvider.GetChangedPathCustomNavigation(command.WorkflowInstanceId, command.ActivityId, nextActivity.Id, cancellationToken);
-
-                    if (changedPathCustomNavigation != null)
-                    {
-                        await _elsaCustomRepository.DeleteCustomNavigation(changedPathCustomNavigation, cancellationToken);
-                        var previousPathActivities =
-                            await _workflowPathProvider.GetPreviousPathActivities(workflowInstance.DefinitionId, changedPathCustomNavigation.ActivityId, cancellationToken);
-
-                        await _elsaCustomRepository.DeleteQuestionScreenAnswers(
-                            changedPathCustomNavigation.WorkflowInstanceId, previousPathActivities, cancellationToken);
-                    }
+                    await _deleteChangedWorkflowPathService.DeleteChangedWorkflowPath(command.WorkflowInstanceId, command.ActivityId, workflowNextActivityModel.NextActivity, workflowInstance, cancellationToken);
 
                     result.Data = new QuestionScreenSaveAndContinueResponse
                     {
                         WorkflowInstanceId = command.WorkflowInstanceId,
-                        NextActivityId = nextActivity.Id,
-                        ActivityType = nextActivity.Type
+                        NextActivityId = workflowNextActivityModel.NextActivity.Id,
+                        ActivityType = workflowNextActivityModel.NextActivity.Type
                     };
                 }
                 else

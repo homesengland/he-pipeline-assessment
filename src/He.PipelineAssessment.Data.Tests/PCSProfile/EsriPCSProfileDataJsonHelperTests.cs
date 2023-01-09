@@ -21,7 +21,7 @@ namespace He.PipelineAssessment.Data.Tests.PCSProfile
 
             //Assert
             Assert.NotNull(result);
-            Assert.Equal(inputData.features.First().attributes.object_id, result.object_id);
+            Assert.Equal(inputData.features.First().attributes.object_id, result!.object_id);
         }
 
         [Theory]

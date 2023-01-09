@@ -1,9 +1,13 @@
-﻿using Elsa.Persistence;
+﻿using Elsa.Models;
+using Elsa.Persistence;
 using Elsa.Persistence.Specifications.WorkflowInstances;
-using Elsa.Models;
 
 namespace Elsa.Server.Providers
 {
+    public interface IWorkflowInstanceProvider
+    {
+        public Task<WorkflowInstance> GetWorkflowInstance(string workflowInstanceId, CancellationToken cancellationToken);
+    }
     public class WorkflowInstanceProvider : IWorkflowInstanceProvider
     {
         private readonly IWorkflowInstanceStore _workflowInstanceStore;
@@ -17,7 +21,7 @@ namespace Elsa.Server.Providers
             var workflowSpecification =
                     new WorkflowInstanceIdSpecification(workflowInstanceId);
             var workflowInstance = await _workflowInstanceStore.FindAsync(workflowSpecification, cancellationToken);
-            if(workflowInstance == null)
+            if (workflowInstance == null)
             {
                 throw new Exception($"Cannot find workflow for workflowId {workflowInstanceId}.");
             }
