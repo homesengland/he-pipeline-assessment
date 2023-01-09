@@ -35,6 +35,10 @@ namespace Elsa.Server.Tests.Features.Workflow.CheckYourAnswersSaveAndContinue
                 CheckYourAnswersSaveAndContinueCommandHandler sut)
         {
             //Arrange
+            var workflowNextActivityModel = new WorkflowNextActivityModel
+            {
+                NextActivity = activityBlueprint
+            };
             var opResult = new OperationResult<CheckYourAnswersSaveAndContinueResponse>()
             {
                 Data = new CheckYourAnswersSaveAndContinueResponse
@@ -64,7 +68,7 @@ namespace Elsa.Server.Tests.Features.Workflow.CheckYourAnswersSaveAndContinue
             workflowNextActivityProvider.Setup(x => x.GetNextActivity(saveAndContinueCommand.ActivityId,
                     saveAndContinueCommand.WorkflowInstanceId, null, ActivityTypeConstants.CheckYourAnswersScreen,
                     CancellationToken.None))
-                .ReturnsAsync(activityBlueprint);
+                .ReturnsAsync(workflowNextActivityModel);
 
             //Act
             var result = await sut.Handle(saveAndContinueCommand, CancellationToken.None);
@@ -101,6 +105,10 @@ namespace Elsa.Server.Tests.Features.Workflow.CheckYourAnswersSaveAndContinue
             )
         {
             //Arrange
+            var workflowNextActivityModel = new WorkflowNextActivityModel
+            {
+                NextActivity = activityBlueprint
+            };
             var opResult = new OperationResult<CheckYourAnswersSaveAndContinueResponse>()
             {
                 Data = new CheckYourAnswersSaveAndContinueResponse
@@ -131,7 +139,7 @@ namespace Elsa.Server.Tests.Features.Workflow.CheckYourAnswersSaveAndContinue
             workflowNextActivityProvider.Setup(x => x.GetNextActivity(saveAndContinueCommand.ActivityId,
                     saveAndContinueCommand.WorkflowInstanceId, null, ActivityTypeConstants.CheckYourAnswersScreen,
                     CancellationToken.None))
-                .ReturnsAsync(activityBlueprint);
+                .ReturnsAsync(workflowNextActivityModel);
 
             saveAndContinueHelper.Setup(x => x.CreateNextCustomActivityNavigation(saveAndContinueCommand.ActivityId,
                     ActivityTypeConstants.CheckYourAnswersScreen, activityBlueprint.Id, activityBlueprint.Type,
@@ -172,6 +180,10 @@ namespace Elsa.Server.Tests.Features.Workflow.CheckYourAnswersSaveAndContinue
             )
         {
             //Arrange
+            var workflowNextActivityModel = new WorkflowNextActivityModel
+            {
+                NextActivity = activityBlueprint
+            };
             var opResult = new OperationResult<QuestionScreenSaveAndContinueResponse>()
             {
                 Data = new QuestionScreenSaveAndContinueResponse
@@ -205,7 +217,7 @@ namespace Elsa.Server.Tests.Features.Workflow.CheckYourAnswersSaveAndContinue
             workflowNextActivityProvider.Setup(x => x.GetNextActivity(saveAndContinueCommand.ActivityId,
                     saveAndContinueCommand.WorkflowInstanceId, null, ActivityTypeConstants.CheckYourAnswersScreen,
                     CancellationToken.None))
-                .ReturnsAsync(activityBlueprint);
+                .ReturnsAsync(workflowNextActivityModel);
 
             saveAndContinueHelper.Setup(x => x.CreateNextCustomActivityNavigation(saveAndContinueCommand.ActivityId,
                     ActivityTypeConstants.CheckYourAnswersScreen, activityBlueprint.Id, activityBlueprint.Type,

@@ -1,16 +1,18 @@
 ﻿using Elsa.CustomActivities.Activities.Shared;
 using Elsa.CustomModels;
 using Elsa.CustomWorkflow.Sdk;
+using Elsa.Models;
+using Elsa.Server.Models;
 using Elsa.Services.Models;
 
 namespace Elsa.Server.Providers
 {
     public interface IWorkflowNextActivityProvider
     {
-        Task<IActivityBlueprint> GetNextActivity(string commandActivityId, string workflowInstanceId,
+        Task<WorkflowNextActivityModel> GetNextActivity(string commandActivityId, string workflowInstanceId,
             List<QuestionScreenAnswer>? dbAssessmentQuestionList, string activityType,
             CancellationToken cancellationToken);
-        Task<IActivityBlueprint> GetStartWorkflowNextActivity(IActivityBlueprint activityBlueprint,
+        Task<WorkflowNextActivityModel> GetStartWorkflowNextActivity(IActivityBlueprint activityBlueprint,
             string workflowInstanceId,
             CancellationToken cancellationToken);
     }
@@ -34,11 +36,12 @@ namespace Elsa.Server.Providers
             _activityDataProvider = activityDataProvider;
         }
 
-        public async Task<IActivityBlueprint> GetNextActivity(string commandActivityId, string workflowInstanceId,
+        public async Task<WorkflowNextActivityModel> GetNextActivity(string commandActivityId, string workflowInstanceId,
             List<QuestionScreenAnswer>? dbAssessmentQuestionList, string activityType,
             CancellationToken cancellationToken)
         {
             IActivityBlueprint? nextActivity = null;
+            WorkflowInstance? workflowInstance = null;
             string activityId;
             do
             {
@@ -48,7 +51,7 @@ namespace Elsa.Server.Providers
                     workflowInstanceId, dbAssessmentQuestionList, cancellationToken);
 
                 //we need to refresh the workflowInstance, as calling the invoker will change it
-                var workflowInstance =
+                workflowInstance =
                     await _workflowInstanceProvider.GetWorkflowInstance(workflowInstanceId,
                         cancellationToken);
 
@@ -77,17 +80,25 @@ namespace Elsa.Server.Providers
                 }
             } while (activityId != nextActivity.Id);
 
-            return nextActivity;
+            return new WorkflowNextActivityModel
+            {
+                NextActivity = nextActivity,
+                WorkflowInstance = workflowInstance
+            };
         }
 
-        public async Task<IActivityBlueprint> GetStartWorkflowNextActivity(IActivityBlueprint activity,
+        public async Task<WorkflowNextActivityModel> GetStartWorkflowNextActivity(IActivityBlueprint activity,
             string workflowInstanceId,
             CancellationToken cancellationToken)
         {
             IActivityBlueprint nextActivity = activity;
-            while (true)
+            WorkflowInstance? workflowInstance = null;
+            string nextActivityId;
+            do
             {
-                var nextActivityData = await _activityDataProvider.GetActivityData(workflowInstanceId, nextActivity.Id, cancellationToken);
+                nextActivityId = nextActivity.Id;
+                var nextActivityData =
+                    await _activityDataProvider.GetActivityData(workflowInstanceId, nextActivityId, cancellationToken);
                 if (nextActivityData != null)
                 {
                     bool? condition = (bool?)nextActivityData["Condition"];
@@ -97,28 +108,31 @@ namespace Elsa.Server.Providers
                     }
                 }
 
-                var collectedWorkflows = await _invoker.ExecuteWorkflowsAsync(nextActivity.Id,
+                var collectedWorkflows = await _invoker.ExecuteWorkflowsAsync(nextActivityId,
                     nextActivity.Type,
                     workflowInstanceId, null, cancellationToken);
 
                 //we need to refresh the workflowInstance, as calling the invoker will change it
-                var workflowInstance =
+                workflowInstance =
                     await _workflowInstanceProvider.GetWorkflowInstance(workflowInstanceId,
                         cancellationToken);
 
                 if (!collectedWorkflows.Any())
                 {
-                    throw new Exception($"Unable to progress workflow. Workflow status is: {workflowInstance.WorkflowStatus}");
+                    throw new Exception(
+                        $"Unable to progress workflow. Workflow status is: {workflowInstance.WorkflowStatus}");
                 }
 
                 nextActivity =
                     await _workflowRegistryProvider.GetNextActivity(workflowInstance, cancellationToken);
 
-                if (nextActivity.Type != ActivityTypeConstants.QuestionScreen)
-                    break;
-            }
+            } while (nextActivity.Type == ActivityTypeConstants.QuestionScreen && nextActivityId != nextActivity.Id);
 
-            return nextActivity;
+            return new WorkflowNextActivityModel
+            {
+                NextActivity = nextActivity,
+                WorkflowInstance = workflowInstance
+            };
         }
     }
 }

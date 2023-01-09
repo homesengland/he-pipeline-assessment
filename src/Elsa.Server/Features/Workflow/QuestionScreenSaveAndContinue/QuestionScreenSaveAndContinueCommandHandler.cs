@@ -59,19 +59,20 @@ namespace Elsa.Server.Features.Workflow.QuestionScreenSaveAndContinue
 
                     await SetAnswers(command, cancellationToken, dbAssessmentQuestionList);
 
-                    var nextActivity = await _workflowNextActivityProvider.GetNextActivity(command.ActivityId, command.WorkflowInstanceId, dbAssessmentQuestionList, ActivityTypeConstants.QuestionScreen, cancellationToken);
+                    var workflowNextActivityModel = await _workflowNextActivityProvider.GetNextActivity(command.ActivityId, command.WorkflowInstanceId, dbAssessmentQuestionList, ActivityTypeConstants.QuestionScreen, cancellationToken);
+                    if (workflowNextActivityModel.WorkflowInstance != null)
+                        workflowInstance = workflowNextActivityModel.WorkflowInstance;
+                    var nextActivityRecord = await _elsaCustomRepository.GetCustomActivityNavigation(workflowNextActivityModel.NextActivity.Id, command.WorkflowInstanceId, cancellationToken);
 
-                    var nextActivityRecord = await _elsaCustomRepository.GetCustomActivityNavigation(nextActivity.Id, command.WorkflowInstanceId, cancellationToken);
+                    await _nextActivityNavigationService.CreateNextActivityNavigation(command.ActivityId, nextActivityRecord, workflowNextActivityModel.NextActivity, workflowInstance, cancellationToken);
 
-                    await _nextActivityNavigationService.CreateNextActivityNavigation(command.ActivityId, nextActivityRecord, nextActivity, workflowInstance, cancellationToken);
-
-                    await _deleteChangedWorkflowPathService.DeleteChangedWorkflowPath(command.WorkflowInstanceId, command.ActivityId, nextActivity, workflowInstance, cancellationToken);
+                    await _deleteChangedWorkflowPathService.DeleteChangedWorkflowPath(command.WorkflowInstanceId, command.ActivityId, workflowNextActivityModel.NextActivity, workflowInstance, cancellationToken);
 
                     result.Data = new QuestionScreenSaveAndContinueResponse
                     {
                         WorkflowInstanceId = command.WorkflowInstanceId,
-                        NextActivityId = nextActivity.Id,
-                        ActivityType = nextActivity.Type
+                        NextActivityId = workflowNextActivityModel.NextActivity.Id,
+                        ActivityType = workflowNextActivityModel.NextActivity.Type
                     };
                 }
                 else

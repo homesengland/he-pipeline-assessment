@@ -4,6 +4,7 @@ using Elsa.CustomModels;
 using Elsa.CustomWorkflow.Sdk;
 using Elsa.Models;
 using Elsa.Server.Features.Workflow.QuestionScreenSaveAndContinue;
+using Elsa.Server.Models;
 using Elsa.Server.Providers;
 using Elsa.Server.Services;
 using Elsa.Services.Models;
@@ -33,13 +34,17 @@ public class QuestionScreenSaveAndContinueCommandHandlerTests
             QuestionScreenSaveAndContinueCommandHandler sut)
     {
         //Arrange
+        var workflowNextActivityModel = new WorkflowNextActivityModel
+        {
+            NextActivity = activityBlueprint
+        };
         for (var i = 0; i < currentAssessmentQuestions.Count; i++)
         {
             var questionId = saveAndContinueCommand.Answers![i].Id;
             currentAssessmentQuestions[i].QuestionId = questionId;
         }
 
-        activityBlueprint.Id = workflowInstance.Output.ActivityId;
+        activityBlueprint.Id = workflowInstance.Output!.ActivityId;
         workflowBlueprint.Activities.Add(activityBlueprint);
 
         elsaCustomRepository.Setup(x => x.GetQuestionScreenAnswers(saveAndContinueCommand.ActivityId,
@@ -54,7 +59,7 @@ public class QuestionScreenSaveAndContinueCommandHandlerTests
             .ReturnsAsync(workflowInstance);
 
         workflowNextActivityProvider.Setup(x => x.GetNextActivity(saveAndContinueCommand.ActivityId, saveAndContinueCommand.WorkflowInstanceId, currentAssessmentQuestions, ActivityTypeConstants.QuestionScreen, CancellationToken.None))
-            .ReturnsAsync(activityBlueprint);
+            .ReturnsAsync(workflowNextActivityModel);
 
         //Act
         var result = await sut.Handle(saveAndContinueCommand, CancellationToken.None);

@@ -70,7 +70,7 @@ namespace Elsa.Server.Tests.Providers
             var result = await sut.GetNextActivity(activityId, workflowInstanceId, questionScreenAnswers, ActivityTypeConstants.QuestionScreen, CancellationToken.None);
 
             //Assert
-            Assert.Equal(activityBlueprint.Id, result.Id);
+            Assert.Equal(activityBlueprint.Id, result.NextActivity.Id);
         }
 
         [Theory]
@@ -105,7 +105,7 @@ namespace Elsa.Server.Tests.Providers
             var result = await sut.GetNextActivity(activityId, workflowInstanceId, questionScreenAnswers, ActivityTypeConstants.QuestionScreen, CancellationToken.None);
 
             //Assert
-            Assert.Equal(activityBlueprint.Id, result.Id);
+            Assert.Equal(activityBlueprint.Id, result.NextActivity.Id);
         }
 
         [Theory]
@@ -149,7 +149,7 @@ namespace Elsa.Server.Tests.Providers
             var result = await sut.GetNextActivity(activityId, workflowInstanceId, questionScreenAnswers, ActivityTypeConstants.QuestionScreen, CancellationToken.None);
 
             //Assert
-            Assert.Equal(activityBlueprint.Id, result.Id);
+            Assert.Equal(activityBlueprint.Id, result.NextActivity.Id);
         }
 
         [Theory]
@@ -203,7 +203,7 @@ namespace Elsa.Server.Tests.Providers
             var result = await sut.GetNextActivity(activityId, workflowInstanceId, questionScreenAnswers, ActivityTypeConstants.QuestionScreen, CancellationToken.None);
 
             //Assert
-            Assert.Equal(anotherActivityBlueprint.Id, result.Id);
+            Assert.Equal(anotherActivityBlueprint.Id, result.NextActivity.Id);
         }
 
         [Theory]
@@ -257,7 +257,7 @@ namespace Elsa.Server.Tests.Providers
             var result = await sut.GetNextActivity(activityId, workflowInstanceId, questionScreenAnswers, ActivityTypeConstants.QuestionScreen, CancellationToken.None);
 
             //Assert
-            Assert.Equal(anotherActivityBlueprint.Id, result.Id);
+            Assert.Equal(anotherActivityBlueprint.Id, result.NextActivity.Id);
         }
 
         [Theory]
@@ -283,37 +283,229 @@ namespace Elsa.Server.Tests.Providers
 
             //Assert
             Assert.Equal(exception.Message, ex.Message);
+        }
+
+        [Theory]
+        [AutoMoqData]
+        public async Task GetStartWorkflowNextActivity_ShouldReturnSameActivity_GivenConditionReturnsTrue(
+            [Frozen] Mock<IActivityDataProvider> activityDataProvider,
+            string workflowInstanceId,
+            ActivityBlueprint activityBlueprint,
+            WorkflowNextActivityProvider sut)
+        {
+            //Arrange
+            var dictionary = new Dictionary<string, object?>()
+            {
+                { "Condition", true }
+            };
+            activityDataProvider
+                .Setup(x => x.GetActivityData(workflowInstanceId, activityBlueprint.Id, CancellationToken.None))
+                .ReturnsAsync(dictionary);
+
+            //Act
+            var result = await sut.GetStartWorkflowNextActivity(activityBlueprint, workflowInstanceId, CancellationToken.None);
+
+            //Assert
+            Assert.Equal(activityBlueprint, result.NextActivity);
+        }
+
+        [Theory]
+        [AutoMoqData]
+        public async Task GetStartWorkflowNextActivity_ShouldThrowException_GivenNoCollectedWorkflows(
+            [Frozen] Mock<IActivityDataProvider> activityDataProvider,
+            [Frozen] Mock<IQuestionInvoker> questionInvoker,
+            [Frozen] Mock<IWorkflowInstanceProvider> workflowInstanceProvider,
+            string workflowInstanceId,
+            ActivityBlueprint activityBlueprint,
+            WorkflowInstance workflowInstance,
+            WorkflowNextActivityProvider sut)
+        {
+            //Arrange
+            var dictionary = new Dictionary<string, object?>()
+            {
+                { "Condition", false }
+            };
+            activityDataProvider
+                .Setup(x => x.GetActivityData(workflowInstanceId, activityBlueprint.Id, CancellationToken.None))
+                .ReturnsAsync(dictionary);
+
+            questionInvoker.Setup(x => x.ExecuteWorkflowsAsync(activityBlueprint.Id,
+                    activityBlueprint.Type,
+                    workflowInstanceId, null, CancellationToken.None))
+                .ReturnsAsync(new List<CollectedWorkflow>());
+
+            workflowInstanceProvider.Setup(x => x.GetWorkflowInstance(workflowInstanceId, CancellationToken.None))
+                .ReturnsAsync(workflowInstance);
+
+            //Act
+            var exception = await Assert.ThrowsAsync<Exception>(() => sut.GetStartWorkflowNextActivity(activityBlueprint, workflowInstanceId, CancellationToken.None));
+
+            //Assert
+            Assert.Equal($"Unable to progress workflow. Workflow status is: {workflowInstance.WorkflowStatus}", exception.Message);
 
         }
 
-        [Fact]
-        public void GetStartWorkflowNextActivity_ShouldReturnSameActivity_GivenConditionReturnsTrue()
+        [Theory]
+        [AutoMoqData]
+        public async Task GetStartWorkflowNextActivity_ShouldReturnNextValidQuestionActivityType_GivenCurrentConditionFalse(
+            [Frozen] Mock<IActivityDataProvider> activityDataProvider,
+            [Frozen] Mock<IQuestionInvoker> questionInvoker,
+            [Frozen] Mock<IWorkflowInstanceProvider> workflowInstanceProvider,
+            [Frozen] Mock<IWorkflowRegistryProvider> workflowRegistryProvider,
+            string workflowInstanceId,
+            ActivityBlueprint activityBlueprint,
+            ActivityBlueprint anotherActivityBlueprint,
+            WorkflowInstance workflowInstance,
+            List<CollectedWorkflow> collectedWorkflows,
+            WorkflowNextActivityProvider sut)
         {
-            Assert.False(true);
+            //Arrange
+            anotherActivityBlueprint.Type = ActivityTypeConstants.QuestionScreen;
+            var dictionary = new Dictionary<string, object?>()
+            {
+                { "Condition", false }
+            };
+            activityDataProvider
+                .Setup(x => x.GetActivityData(workflowInstanceId, activityBlueprint.Id, CancellationToken.None))
+                .ReturnsAsync(dictionary);
+
+            questionInvoker.Setup(x => x.ExecuteWorkflowsAsync(It.IsAny<string>(),
+                    It.IsAny<string>(),
+                    workflowInstanceId, It.IsAny<List<QuestionScreenAnswer>?>(), CancellationToken.None))
+                .ReturnsAsync(collectedWorkflows);
+
+            workflowInstanceProvider.Setup(x => x.GetWorkflowInstance(workflowInstanceId, CancellationToken.None))
+                .ReturnsAsync(workflowInstance);
+
+            workflowRegistryProvider.Setup(x => x.GetNextActivity(workflowInstance, CancellationToken.None))
+                .ReturnsAsync(anotherActivityBlueprint);
+
+            var anotherDictionary = new Dictionary<string, object?>()
+            {
+                { "Condition", true }
+            };
+            activityDataProvider
+                .Setup(x => x.GetActivityData(workflowInstance.Id, anotherActivityBlueprint.Id, CancellationToken.None))
+                .ReturnsAsync(anotherDictionary);
+
+            //Act
+            var result = await sut.GetStartWorkflowNextActivity(activityBlueprint, workflowInstanceId, CancellationToken.None);
+
+            //Assert
+            Assert.Equal(anotherActivityBlueprint, result.NextActivity);
         }
 
-        [Fact]
-        public void GetStartWorkflowNextActivity_ShouldThrowException_GivenNoCollectedWorkflows()
+        [Theory]
+        [AutoMoqData]
+        public async Task GetStartWorkflowNextActivity_ShouldReturnNextValidQuestionActivityType_GivenCurrentConditionNotSet(
+            [Frozen] Mock<IActivityDataProvider> activityDataProvider,
+            [Frozen] Mock<IQuestionInvoker> questionInvoker,
+            [Frozen] Mock<IWorkflowInstanceProvider> workflowInstanceProvider,
+            [Frozen] Mock<IWorkflowRegistryProvider> workflowRegistryProvider,
+            string workflowInstanceId,
+            ActivityBlueprint activityBlueprint,
+            ActivityBlueprint anotherActivityBlueprint,
+            WorkflowInstance workflowInstance,
+            List<CollectedWorkflow> collectedWorkflows,
+            WorkflowNextActivityProvider sut)
         {
-            Assert.False(true);
+            //Arrange
+            anotherActivityBlueprint.Type = ActivityTypeConstants.QuestionScreen;
+            var dictionary = new Dictionary<string, object?>()
+            {
+                { "Condition", null }
+            };
+            activityDataProvider
+                .Setup(x => x.GetActivityData(workflowInstanceId, activityBlueprint.Id, CancellationToken.None))
+                .ReturnsAsync(dictionary);
+
+            questionInvoker.Setup(x => x.ExecuteWorkflowsAsync(It.IsAny<string>(),
+                    It.IsAny<string>(),
+                    workflowInstanceId, It.IsAny<List<QuestionScreenAnswer>?>(), CancellationToken.None))
+                .ReturnsAsync(collectedWorkflows);
+
+            workflowInstanceProvider.Setup(x => x.GetWorkflowInstance(workflowInstanceId, CancellationToken.None))
+                .ReturnsAsync(workflowInstance);
+
+            workflowRegistryProvider.Setup(x => x.GetNextActivity(workflowInstance, CancellationToken.None))
+                .ReturnsAsync(anotherActivityBlueprint);
+
+            var anotherDictionary = new Dictionary<string, object?>()
+            {
+                { "Condition", true }
+            };
+            activityDataProvider
+                .Setup(x => x.GetActivityData(workflowInstance.Id, anotherActivityBlueprint.Id, CancellationToken.None))
+                .ReturnsAsync(anotherDictionary);
+
+            //Act
+            var result = await sut.GetStartWorkflowNextActivity(activityBlueprint, workflowInstanceId, CancellationToken.None);
+
+            //Assert
+            Assert.Equal(anotherActivityBlueprint, result.NextActivity);
         }
 
-        [Fact]
-        public void GetStartWorkflowNextActivity_ShouldReturnNextValidQuestionActivityType_GivenCurrentConditionFalse()
+        [Theory]
+        [AutoMoqData]
+        public async Task GetStartWorkflowNextActivity_ShouldReturnNextActivityType_GivenCurrentConditionFalseAndNoQuestionActivityType(
+            [Frozen] Mock<IActivityDataProvider> activityDataProvider,
+            [Frozen] Mock<IQuestionInvoker> questionInvoker,
+            [Frozen] Mock<IWorkflowInstanceProvider> workflowInstanceProvider,
+            [Frozen] Mock<IWorkflowRegistryProvider> workflowRegistryProvider,
+            string workflowInstanceId,
+            ActivityBlueprint activityBlueprint,
+            ActivityBlueprint anotherActivityBlueprint,
+            WorkflowInstance workflowInstance,
+            List<CollectedWorkflow> collectedWorkflows,
+            WorkflowNextActivityProvider sut)
         {
-            Assert.False(true);
+            //Arrange
+            anotherActivityBlueprint.Type = "NotQuestionScreen";
+            var dictionary = new Dictionary<string, object?>()
+            {
+                { "Condition", null }
+            };
+            activityDataProvider
+                .Setup(x => x.GetActivityData(workflowInstanceId, activityBlueprint.Id, CancellationToken.None))
+                .ReturnsAsync(dictionary);
+
+            questionInvoker.Setup(x => x.ExecuteWorkflowsAsync(It.IsAny<string>(),
+                    It.IsAny<string>(),
+                    workflowInstanceId, It.IsAny<List<QuestionScreenAnswer>?>(), CancellationToken.None))
+                .ReturnsAsync(collectedWorkflows);
+
+            workflowInstanceProvider.Setup(x => x.GetWorkflowInstance(workflowInstanceId, CancellationToken.None))
+                .ReturnsAsync(workflowInstance);
+
+            workflowRegistryProvider.Setup(x => x.GetNextActivity(workflowInstance, CancellationToken.None))
+                .ReturnsAsync(anotherActivityBlueprint);
+
+            //Act
+            var result = await sut.GetStartWorkflowNextActivity(activityBlueprint, workflowInstanceId, CancellationToken.None);
+
+            //Assert
+            Assert.Equal(anotherActivityBlueprint, result.NextActivity);
         }
 
-        [Fact]
-        public void GetStartWorkflowNextActivity_ShouldReturnNextActivityType_GivenCurrentConditionFalseAndNoQuestionActivityType()
+        [Theory]
+        [AutoMoqData]
+        public async Task GetStartWorkflowNextActivity_ShouldThrowException_GivenDependencyThrows(
+            [Frozen] Mock<IActivityDataProvider> activityDataProvider,
+            IActivityBlueprint activityBlueprint,
+            string workflowInstanceId,
+            Exception exception,
+            WorkflowNextActivityProvider sut)
         {
-            Assert.False(true);
-        }
+            //Arrange
+            activityDataProvider
+                .Setup(x => x.GetActivityData(workflowInstanceId, activityBlueprint.Id, CancellationToken.None))
+                .Throws(exception);
 
-        [Fact]
-        public void GetStartWorkflowNextActivity_ShouldThrowException_GivenNoValidNextActivityFound()
-        {
-            Assert.False(true);
+            //Act
+            var ex = await Assert.ThrowsAsync<Exception>(() => sut.GetStartWorkflowNextActivity(activityBlueprint, workflowInstanceId, CancellationToken.None));
+
+            //Assert
+            Assert.Equal(exception.Message, ex.Message);
         }
     }
 }

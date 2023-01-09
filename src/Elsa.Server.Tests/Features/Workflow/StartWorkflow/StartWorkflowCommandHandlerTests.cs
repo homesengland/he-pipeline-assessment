@@ -36,7 +36,10 @@ namespace Elsa.Server.Tests.Features.Workflow.StartWorkflow
         {
 
             //Arrange
-
+            var workflowNextActivityModel = new WorkflowNextActivityModel
+            {
+                NextActivity = activityBlueprint
+            };
             var opResult = new OperationResult<StartWorkflowResponse>()
             {
                 Data = startWorkflowResponse,
@@ -62,7 +65,7 @@ namespace Elsa.Server.Tests.Features.Workflow.StartWorkflow
 
             workflowNextActivityProvider
                 .Setup(x => x.GetStartWorkflowNextActivity(activityBlueprint, runWorkflowResult.WorkflowInstance.Id,
-                    CancellationToken.None)).ReturnsAsync(activityBlueprint);
+                    CancellationToken.None)).ReturnsAsync(workflowNextActivityModel);
 
             //Act
             var result = await sut.Handle(startWorkflowCommand, CancellationToken.None);
@@ -94,8 +97,10 @@ namespace Elsa.Server.Tests.Features.Workflow.StartWorkflow
         {
 
             //Arrange
-
-
+            var workflowNextActivityModel = new WorkflowNextActivityModel
+            {
+                NextActivity = activityBlueprint
+            };
 
             activityBlueprint.Id = runWorkflowResult.WorkflowInstance!.LastExecutedActivityId!;
             activityBlueprint.Type = ActivityTypeConstants.QuestionScreen;
@@ -122,7 +127,7 @@ namespace Elsa.Server.Tests.Features.Workflow.StartWorkflow
 
             workflowNextActivityProvider
                 .Setup(x => x.GetStartWorkflowNextActivity(activityBlueprint, runWorkflowResult.WorkflowInstance.Id,
-                    CancellationToken.None)).ReturnsAsync(activityBlueprint);
+                    CancellationToken.None)).ReturnsAsync(workflowNextActivityModel);
 
             //Act
             var result = await sut.Handle(startWorkflowCommand, CancellationToken.None);
@@ -158,7 +163,10 @@ namespace Elsa.Server.Tests.Features.Workflow.StartWorkflow
         {
 
             //Arrange
-
+            var workflowNextActivityModel = new WorkflowNextActivityModel
+            {
+                NextActivity = nextActivityBlueprint
+            };
             var opResult = new OperationResult<StartWorkflowResponse>()
             {
                 Data = startWorkflowResponse,
@@ -195,7 +203,7 @@ namespace Elsa.Server.Tests.Features.Workflow.StartWorkflow
 
             workflowNextActivityProvider
                 .Setup(x => x.GetStartWorkflowNextActivity(activityBlueprint, runWorkflowResult.WorkflowInstance.Id,
-                    CancellationToken.None)).ReturnsAsync(nextActivityBlueprint);
+                    CancellationToken.None)).ReturnsAsync(workflowNextActivityModel);
 
             //Act
             var result = await sut.Handle(startWorkflowCommand, CancellationToken.None);
@@ -221,10 +229,10 @@ namespace Elsa.Server.Tests.Features.Workflow.StartWorkflow
             StartWorkflowCommand startWorkflowCommand,
             StartWorkflowCommandHandler sut)
         {
+            //Arrange
             var emptyRunWorkflowResult = new RunWorkflowResult(null, null, null, true);
             workflowBlueprint.Activities.Add(activityBlueprint);
 
-            //Arrange
             workflowRegistry
                 .Setup(x => x.FindAsync(startWorkflowCommand.WorkflowDefinitionId, VersionOptions.Published, null, CancellationToken.None))
                 .ReturnsAsync(workflowBlueprint);
@@ -255,10 +263,14 @@ namespace Elsa.Server.Tests.Features.Workflow.StartWorkflow
             StartWorkflowCommand startWorkflowCommand,
             StartWorkflowCommandHandler sut)
         {
+            //Arrange
+            var workflowNextActivityModel = new WorkflowNextActivityModel
+            {
+                NextActivity = activityBlueprint
+            };
             activityBlueprint.Id = runWorkflowResult.WorkflowInstance!.LastExecutedActivityId!;
             workflowBlueprint.Activities.Add(activityBlueprint);
 
-            //Arrange
             workflowRegistry
                 .Setup(x => x.FindAsync(startWorkflowCommand.WorkflowDefinitionId, VersionOptions.Published, null, CancellationToken.None))
                 .ReturnsAsync(workflowBlueprint);
@@ -271,7 +283,7 @@ namespace Elsa.Server.Tests.Features.Workflow.StartWorkflow
 
             workflowNextActivityProvider
                 .Setup(x => x.GetStartWorkflowNextActivity(activityBlueprint, runWorkflowResult.WorkflowInstance.Id,
-                    CancellationToken.None)).ReturnsAsync(activityBlueprint);
+                    CancellationToken.None)).ReturnsAsync(workflowNextActivityModel);
 
             //Act
             var result = await sut.Handle(startWorkflowCommand, CancellationToken.None);
