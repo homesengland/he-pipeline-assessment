@@ -145,6 +145,73 @@ namespace Elsa.Server.Tests.Features.Workflow.StartWorkflow
 
         [Theory]
         [AutoMoqData]
+        public async Task Handle_ShouldReturnDataFromCorrectWorkflowInstance(
+           [Frozen] Mock<IWorkflowRegistry> workflowRegistry,
+           [Frozen] Mock<IStartsWorkflow> startsWorkflow,
+           [Frozen] Mock<IStartWorkflowMapper> startWorkflowMapper,
+           [Frozen] Mock<IElsaCustomRepository> elsaCustomRepository,
+           [Frozen] Mock<IWorkflowNextActivityProvider> workflowNextActivityProvider,
+           WorkflowBlueprint workflowBlueprint,
+           ActivityBlueprint activityBlueprint,
+           RunWorkflowResult runWorkflowResult,
+           StartWorkflowCommand startWorkflowCommand,
+           CustomActivityNavigation customActivityNavigation,
+           StartWorkflowResponse startWorkflowResponse,
+           List<Question> questions,
+           WorkflowInstance workflowInstance,
+           StartWorkflowCommandHandler sut)
+        {
+
+            //Arrange
+            var workflowNextActivityModel = new WorkflowNextActivityModel
+            {
+                NextActivity = activityBlueprint,
+                WorkflowInstance = workflowInstance
+            };
+
+            activityBlueprint.Id = runWorkflowResult.WorkflowInstance!.LastExecutedActivityId!;
+            activityBlueprint.Type = ActivityTypeConstants.QuestionScreen;
+            workflowBlueprint.Activities.Add(activityBlueprint);
+
+            var assessmentQuestionsDictionary = new Dictionary<string, object?>();
+            var assessmentQuestions = new AssessmentQuestions() { Questions = questions };
+            assessmentQuestionsDictionary.Add("Questions", assessmentQuestions);
+
+            workflowInstance.ActivityData.Add(activityBlueprint.Id, assessmentQuestionsDictionary);
+
+            workflowRegistry
+                .Setup(x => x.FindAsync(startWorkflowCommand.WorkflowDefinitionId, VersionOptions.Published, null, CancellationToken.None))
+                .ReturnsAsync(workflowBlueprint);
+
+            startsWorkflow.Setup(x => x.StartWorkflowAsync(workflowBlueprint, null, null, startWorkflowCommand.CorrelationId, null, null, CancellationToken.None))
+                .ReturnsAsync(runWorkflowResult);
+
+            startWorkflowMapper.Setup(x => x.RunWorkflowResultToCustomNavigationActivity(runWorkflowResult, activityBlueprint.Type))
+                .Returns(customActivityNavigation);
+
+            startWorkflowMapper.Setup(x => x.RunWorkflowResultToStartWorkflowResponse(runWorkflowResult, activityBlueprint.Type, workflowBlueprint.Name!))
+                .Returns(startWorkflowResponse);
+
+            workflowNextActivityProvider
+                .Setup(x => x.GetStartWorkflowNextActivity(activityBlueprint, runWorkflowResult.WorkflowInstance.Id,
+                    CancellationToken.None)).ReturnsAsync(workflowNextActivityModel);
+
+            //Act
+            var result = await sut.Handle(startWorkflowCommand, CancellationToken.None);
+
+            //Assert
+            elsaCustomRepository.Verify(x => x.CreateCustomActivityNavigationAsync(customActivityNavigation, CancellationToken.None), Times.Once);
+            elsaCustomRepository.Verify(x => x.CreateQuestionScreenAnswersAsync(It.IsAny<List<QuestionScreenAnswer>>(), CancellationToken.None), Times.Once);
+            Assert.Equal(startWorkflowResponse.NextActivityId, result.Data!.NextActivityId);
+            Assert.Equal(startWorkflowResponse.WorkflowName, result.Data.WorkflowName);
+            Assert.Equal(startWorkflowResponse.WorkflowInstanceId, result.Data.WorkflowInstanceId);
+            Assert.Equal(startWorkflowResponse.ActivityType, result.Data.ActivityType);
+            Assert.Empty(result.ErrorMessages);
+            Assert.Null(result.ValidationMessages);
+        }
+
+        [Theory]
+        [AutoMoqData]
         public async Task Handle_ShouldReturnSuccessfulOperationResult_GivenFirstQuestionScreenActivityIsSkipped(
            [Frozen] Mock<IWorkflowRegistry> workflowRegistry,
            [Frozen] Mock<IStartsWorkflow> startsWorkflow,
