@@ -69,6 +69,7 @@
     var elsaStudio = e.detail;
     elsaStudio.pluginManager.registerPlugin(MyCustomPlugin);
     elsaStudio.propertyDisplayManager.addDriver('question-builder', () => new MyCustomInputDriver(elsaStudio, 'elsa-question-screen'));
+    elsaStudio.propertyDisplayManager.addDriver('outcome-builder', () => new MyCustomInputDriver(elsaStudio, 'elsa-outcome-screen'));
 
   });
 </script>

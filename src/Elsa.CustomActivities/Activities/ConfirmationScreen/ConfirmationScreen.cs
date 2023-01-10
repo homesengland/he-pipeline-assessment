@@ -23,14 +23,8 @@ namespace Elsa.CustomActivities.Activities.ConfirmationScreen
         [ActivityInput(Hint = "Footer text")]
         public string FooterText { get; set; } = null!;
 
-        [ActivityInput(
-            Hint = "List of Conditions",
-            UIHint = ActivityInputUIHints.MultiText,
-            DefaultSyntax = SyntaxNames.JavaScript,
-            SupportedSyntaxes = new[] { SyntaxNames.JavaScript })]
-        public List<string> StringList { get; set; } = null!;
-
-        public ICollection<ConfirmationTextItem> ConfirmationTextItems { get; set; }
+        [ActivityInput(Label = "Blocks of Outcome Text", Hint = "The Outcome to display to the end user.", UIHint = "outcome-builder", DefaultSyntax = SyntaxNames.Json, IsDesignerCritical = true)]
+        public ICollection<ConditionalText> OutcomeText { get; set; } = null!;
 
         [ActivityInput(Hint = "Next workflow to run")]
         public string NextWorkflowDefinitionId { get; set; } = null!;
@@ -48,12 +42,12 @@ namespace Elsa.CustomActivities.Activities.ConfirmationScreen
             return await Task.FromResult(Done());
         }
 
-        public class ConfirmationTextItem
+        public class ConditionalText
         {
             [ActivityInput(Hint = "The condition to evaluate.", UIHint = ActivityInputUIHints.SingleLine, SupportedSyntaxes = new[] { SyntaxNames.JavaScript }, DefaultSyntax = SyntaxNames.JavaScript)]
             public bool Condition { get; set; }
-
-            public string Text { get; set; }
+            [ActivityInput(Hint = "The text to display.", UIHint = ActivityInputUIHints.SingleLine, SupportedSyntaxes = new[] { SyntaxNames.JavaScript }, DefaultSyntax = SyntaxNames.JavaScript)]
+            public string Text { get; set; } = null!;
         }
     }
 }
