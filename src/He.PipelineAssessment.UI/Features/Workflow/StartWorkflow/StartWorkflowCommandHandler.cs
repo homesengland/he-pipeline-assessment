@@ -49,9 +49,9 @@ namespace He.PipelineAssessment.UI.Features.Workflow.StartWorkflow
 
         }
 
-        private static AssessmentStage AssessmentStage(StartWorkflowCommand request, WorkflowNextActivityDataDto response)
+        private static AssessmentToolWorkFlowInstance AssessmentStage(StartWorkflowCommand request, WorkflowNextActivityDataDto response)
         {
-            var assessmentStage = new AssessmentStage();
+            var assessmentStage = new AssessmentToolWorkFlowInstance();
             assessmentStage.WorkflowInstanceId = response.Data.WorkflowInstanceId;
             assessmentStage.CreatedDateTime = DateTime.UtcNow;
             assessmentStage.AssessmentId = request.AssessmentId;

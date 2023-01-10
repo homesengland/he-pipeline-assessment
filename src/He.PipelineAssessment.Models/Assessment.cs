@@ -11,6 +11,6 @@
         public string Reference { get; set; } = null!;
         public string Status { get; set; } = null!;
 
-        public virtual List<AssessmentStage>? AssessmentStages { get; set; }
+        public virtual List<AssessmentToolWorkFlowInstance>? AssessmentStages { get; set; }
     }
 }

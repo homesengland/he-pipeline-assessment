@@ -1,6 +1,6 @@
 ﻿namespace He.PipelineAssessment.Models
 {
-    public class AssessmentStage
+    public class AssessmentToolWorkFlowInstance
     {
         public int Id { get; set; }
         public int AssessmentId { get; set; }

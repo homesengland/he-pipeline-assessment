@@ -47,7 +47,7 @@ namespace He.PipelineAssessment.UI.Tests.Features.Workflow.LoadConfirmationScree
                 .ReturnsAsync(workflowActivityDataDto);
 
             assessmentRepository.Setup(x => x.GetAssessmentStage(workflowActivityDataDto.Data.WorkflowInstanceId))
-                .ReturnsAsync((AssessmentStage?)null);
+                .ReturnsAsync((AssessmentToolWorkFlowInstance?)null);
 
             //Act
             var result = await sut.Handle(request, CancellationToken.None);
@@ -63,7 +63,7 @@ namespace He.PipelineAssessment.UI.Tests.Features.Workflow.LoadConfirmationScree
             [Frozen] Mock<IElsaServerHttpClient> elsaServerHttpClient,
             [Frozen] Mock<IAssessmentRepository> assessmentRepository,
             LoadConfirmationScreenRequest request,
-            AssessmentStage stage,
+            AssessmentToolWorkFlowInstance stage,
             WorkflowActivityDataDto workflowActivityDataDto,
             LoadConfirmationScreenRequestHandler sut)
         {
