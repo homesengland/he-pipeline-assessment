@@ -34,6 +34,8 @@ public class QuestionScreenSaveAndContinueCommandHandlerTests
             QuestionScreenSaveAndContinueCommandHandler sut)
     {
         //Arrange
+        var expectedOrder = new List<string>() { "Delete", "Create" };
+        var actualOrder = new List<string>();
         var workflowNextActivityModel = new WorkflowNextActivityModel
         {
             NextActivity = activityBlueprint
@@ -60,6 +62,18 @@ public class QuestionScreenSaveAndContinueCommandHandlerTests
 
         workflowNextActivityProvider.Setup(x => x.GetNextActivity(saveAndContinueCommand.ActivityId, saveAndContinueCommand.WorkflowInstanceId, currentAssessmentQuestions, ActivityTypeConstants.QuestionScreen, CancellationToken.None))
             .ReturnsAsync(workflowNextActivityModel);
+
+        deleteChangedWorkflowPathService.Setup(
+                x => x.DeleteChangedWorkflowPath(saveAndContinueCommand.WorkflowInstanceId, saveAndContinueCommand.ActivityId,
+                    activityBlueprint, workflowInstance, CancellationToken.None))
+            .Returns(Task.FromResult(true))
+            .Callback(() => actualOrder.Add("Delete"));
+
+        nextActivityNavigationService.Setup(
+                x => x.CreateNextActivityNavigation(saveAndContinueCommand.ActivityId,
+                    nextAssessmentActivity, activityBlueprint, workflowInstance, CancellationToken.None))
+            .Returns(Task.FromResult(true))
+            .Callback(() => actualOrder.Add("Create"));
 
         //Act
         var result = await sut.Handle(saveAndContinueCommand, CancellationToken.None);
@@ -88,6 +102,7 @@ public class QuestionScreenSaveAndContinueCommandHandlerTests
         Assert.Equal(activityBlueprint.Type, result.Data.ActivityType);
         Assert.Empty(result.ErrorMessages);
         Assert.Null(result.ValidationMessages);
+        Assert.Equal(expectedOrder, actualOrder);
     }
 
     [Theory]
