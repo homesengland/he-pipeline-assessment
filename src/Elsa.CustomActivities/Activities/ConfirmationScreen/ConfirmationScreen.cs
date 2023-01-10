@@ -1,5 +1,7 @@
 ﻿using Elsa.ActivityResults;
 using Elsa.Attributes;
+using Elsa.Design;
+using Elsa.Expressions;
 using Elsa.Services;
 using Elsa.Services.Models;
 
@@ -20,6 +22,16 @@ namespace Elsa.CustomActivities.Activities.ConfirmationScreen
         public string FooterTitle { get; set; } = null!;
         [ActivityInput(Hint = "Footer text")]
         public string FooterText { get; set; } = null!;
+
+        [ActivityInput(
+            Hint = "List of Conditions",
+            UIHint = ActivityInputUIHints.MultiText,
+            DefaultSyntax = SyntaxNames.JavaScript,
+            SupportedSyntaxes = new[] { SyntaxNames.JavaScript })]
+        public List<string> StringList { get; set; } = null!;
+
+        public ICollection<ConfirmationTextItem> ConfirmationTextItems { get; set; }
+
         [ActivityInput(Hint = "Next workflow to run")]
         public string NextWorkflowDefinitionId { get; set; } = null!;
         [ActivityOutput] public string Output { get; set; } = null!;
@@ -34,6 +46,14 @@ namespace Elsa.CustomActivities.Activities.ConfirmationScreen
         protected override async ValueTask<IActivityExecutionResult> OnResumeAsync(ActivityExecutionContext context)
         {
             return await Task.FromResult(Done());
+        }
+
+        public class ConfirmationTextItem
+        {
+            [ActivityInput(Hint = "The condition to evaluate.", UIHint = ActivityInputUIHints.SingleLine, SupportedSyntaxes = new[] { SyntaxNames.JavaScript }, DefaultSyntax = SyntaxNames.JavaScript)]
+            public bool Condition { get; set; }
+
+            public string Text { get; set; }
         }
     }
 }

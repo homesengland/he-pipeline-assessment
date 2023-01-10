@@ -43,7 +43,7 @@ builder.Services
         .AddActivity<CheckYourAnswersScreen>()
         .AddActivity<ConfirmationScreen>()
         .AddActivity<FinishWorkflow>()
-        .NoCoreActivities()
+        //.NoCoreActivities()
         .AddConsoleActivities()
     );
 
