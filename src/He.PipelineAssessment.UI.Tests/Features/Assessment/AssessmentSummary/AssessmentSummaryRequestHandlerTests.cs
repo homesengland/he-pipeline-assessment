@@ -40,7 +40,7 @@ namespace He.PipelineAssessment.UI.Tests.Features.Assessment.AssessmentSummary
         {
 
             //Arrange
-            var emptyList = new List<AssessmentToolWorkFlowInstance>();
+            var emptyList = new List<AssessmentToolWorkflowInstance>();
             assessmentRepository.Setup(x => x.GetAssessment(It.IsAny<int>())).ReturnsAsync(assessment);
             assessmentRepository.Setup(x => x.GetAssessmentStages(It.IsAny<int>())).ReturnsAsync(emptyList);
 
@@ -63,7 +63,7 @@ namespace He.PipelineAssessment.UI.Tests.Features.Assessment.AssessmentSummary
         public async Task Handle_ReturnsAssessmentSummaryResponseWithStages_GivenStagesExist(
             [Frozen] Mock<IAssessmentRepository> assessmentRepository,
             Models.Assessment assessment,
-            List<Models.AssessmentToolWorkFlowInstance> stages,
+            List<Models.AssessmentToolWorkflowInstance> stages,
             AssessmentSummaryRequest request,
             AssessmentSummaryRequestHandler sut
         )

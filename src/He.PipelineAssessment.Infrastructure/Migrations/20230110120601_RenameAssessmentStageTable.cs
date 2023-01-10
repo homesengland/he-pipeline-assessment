@@ -1,5 +1,4 @@
-﻿using System;
-using Microsoft.EntityFrameworkCore.Migrations;
+﻿using Microsoft.EntityFrameworkCore.Migrations;
 
 #nullable disable
 
@@ -13,7 +12,7 @@ namespace He.PipelineAssessment.Infrastructure.Migrations
                 name: "AssessmentStage");
 
             migrationBuilder.CreateTable(
-                name: "AssessmentToolWorkFlowInstance",
+                name: "AssessmentToolWorkflowInstance",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
@@ -31,9 +30,9 @@ namespace He.PipelineAssessment.Infrastructure.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_AssessmentToolWorkFlowInstance", x => x.Id);
+                    table.PrimaryKey("PK_AssessmentToolWorkflowInstance", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_AssessmentToolWorkFlowInstance_Assessment_AssessmentId",
+                        name: "FK_AssessmentToolWorkflowInstance_Assessment_AssessmentId",
                         column: x => x.AssessmentId,
                         principalTable: "Assessment",
                         principalColumn: "Id",
@@ -41,15 +40,15 @@ namespace He.PipelineAssessment.Infrastructure.Migrations
                 });
 
             migrationBuilder.CreateIndex(
-                name: "IX_AssessmentToolWorkFlowInstance_AssessmentId",
-                table: "AssessmentToolWorkFlowInstance",
+                name: "IX_AssessmentToolWorkflowInstance_AssessmentId",
+                table: "AssessmentToolWorkflowInstance",
                 column: "AssessmentId");
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
-                name: "AssessmentToolWorkFlowInstance");
+                name: "AssessmentToolWorkflowInstance");
 
             migrationBuilder.CreateTable(
                 name: "AssessmentStage",

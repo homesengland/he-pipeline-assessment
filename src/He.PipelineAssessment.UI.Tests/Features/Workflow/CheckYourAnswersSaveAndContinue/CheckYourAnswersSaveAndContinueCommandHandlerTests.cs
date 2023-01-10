@@ -37,7 +37,7 @@ namespace He.PipelineAssessment.UI.Tests.Features.Workflow.CheckYourAnswersSaveA
         public async Task Handle_ReturnsCheckYourAnswersSaveAndContinueCommandResponse_GivenNoErrorsEncountered(
             [Frozen] Mock<IElsaServerHttpClient> elsaServerHttpClient,
             [Frozen] Mock<IAssessmentRepository> assessmentRepository,
-            AssessmentToolWorkFlowInstance assessmentStage,
+            AssessmentToolWorkflowInstance assessmentStage,
             CheckYourAnswersSaveAndContinueCommand saveAndContinueCommand,
             WorkflowNextActivityDataDto workflowNextActivityDataDto,
             CheckYourAnswersSaveAndContinueCommandHandler sut

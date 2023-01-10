@@ -4,9 +4,9 @@ using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace He.PipelineAssessment.Infrastructure.Config
 {
-    internal class AssessmentStageConfiguration : IEntityTypeConfiguration<AssessmentToolWorkFlowInstance>
+    internal class AssessmentStageConfiguration : IEntityTypeConfiguration<AssessmentToolWorkflowInstance>
     {
-        public void Configure(EntityTypeBuilder<AssessmentToolWorkFlowInstance> builder)
+        public void Configure(EntityTypeBuilder<AssessmentToolWorkflowInstance> builder)
         {
             builder.HasKey(x => x.Id);
 

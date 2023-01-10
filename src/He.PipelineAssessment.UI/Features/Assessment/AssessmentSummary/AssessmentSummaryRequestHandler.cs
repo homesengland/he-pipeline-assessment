@@ -49,7 +49,7 @@ namespace He.PipelineAssessment.UI.Features.Assessments.AssessmentSummary
             return null;
         }
 
-        private static AssessmentSummaryStage AssessmentSummaryStage(AssessmentToolWorkFlowInstance item)
+        private static AssessmentSummaryStage AssessmentSummaryStage(AssessmentToolWorkflowInstance item)
         {
             var stage = new AssessmentSummaryStage()
             {
