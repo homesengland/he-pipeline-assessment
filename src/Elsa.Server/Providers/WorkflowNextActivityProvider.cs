@@ -23,17 +23,20 @@ namespace Elsa.Server.Providers
         private readonly IWorkflowRegistryProvider _workflowRegistryProvider;
         private readonly IWorkflowInstanceProvider _workflowInstanceProvider;
         private readonly IActivityDataProvider _activityDataProvider;
+        private readonly ILogger<WorkflowNextActivityProvider> _logger;
 
         public WorkflowNextActivityProvider(
             IQuestionInvoker invoker,
             IWorkflowRegistryProvider workflowRegistryProvider,
             IWorkflowInstanceProvider workflowInstanceProvider,
-            IActivityDataProvider activityDataProvider)
+            IActivityDataProvider activityDataProvider,
+            ILogger<WorkflowNextActivityProvider> logger)
         {
             _invoker = invoker;
             _workflowRegistryProvider = workflowRegistryProvider;
             _workflowInstanceProvider = workflowInstanceProvider;
             _activityDataProvider = activityDataProvider;
+            _logger = logger;
         }
 
         public async Task<WorkflowNextActivityModel> GetNextActivity(string commandActivityId, string workflowInstanceId,
@@ -79,6 +82,11 @@ namespace Elsa.Server.Providers
                     if (condition.HasValue && condition.Value) break;
                 }
             } while (activityId != nextActivity.Id);
+
+            if (activityId == nextActivity.Id)
+            {
+                _logger.LogWarning("Cannot find next activity. Please check workflow definition setup.");
+            }
 
             return new WorkflowNextActivityModel
             {
