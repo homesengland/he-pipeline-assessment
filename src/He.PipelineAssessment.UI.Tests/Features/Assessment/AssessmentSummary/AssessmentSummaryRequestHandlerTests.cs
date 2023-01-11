@@ -1,7 +1,7 @@
 ﻿using AutoFixture.Xunit2;
 using He.PipelineAssessment.Common.Tests;
 using He.PipelineAssessment.Infrastructure.Repository;
-using He.PipelineAssessment.Models;
+using He.PipelineAssessment.Models.ViewModels;
 using He.PipelineAssessment.UI.Features.Assessment.AssessmentSummary;
 using He.PipelineAssessment.UI.Features.Assessments.AssessmentSummary;
 using Moq;
@@ -41,7 +41,7 @@ namespace He.PipelineAssessment.UI.Tests.Features.Assessment.AssessmentSummary
         {
 
             //Arrange
-            var emptyList = new List<AssessmentToolWorkflowInstance>();
+            var emptyList = new List<AssessmentStageViewModel>();
             assessmentRepository.Setup(x => x.GetAssessment(It.IsAny<int>())).ReturnsAsync(assessment);
             assessmentRepository.Setup(x => x.GetAssessmentStages(It.IsAny<int>())).ReturnsAsync(emptyList);
 
@@ -64,7 +64,7 @@ namespace He.PipelineAssessment.UI.Tests.Features.Assessment.AssessmentSummary
         public async Task Handle_ReturnsAssessmentSummaryResponseWithStages_GivenStagesExist(
             [Frozen] Mock<IAssessmentRepository> assessmentRepository,
             Models.Assessment assessment,
-            List<Models.AssessmentToolWorkflowInstance> stages,
+            List<AssessmentStageViewModel> stages,
             AssessmentSummaryRequest request,
             AssessmentSummaryRequestHandler sut
         )

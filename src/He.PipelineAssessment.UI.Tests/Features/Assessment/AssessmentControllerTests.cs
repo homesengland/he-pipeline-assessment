@@ -1,5 +1,6 @@
 ﻿using AutoFixture.Xunit2;
 using He.PipelineAssessment.Common.Tests;
+using He.PipelineAssessment.UI.Features.Assessment.AssessmentList;
 using He.PipelineAssessment.UI.Features.Assessment.AssessmentSummary;
 using He.PipelineAssessment.UI.Features.Assessments;
 using He.PipelineAssessment.UI.Features.Assessments.AssessmentList;
