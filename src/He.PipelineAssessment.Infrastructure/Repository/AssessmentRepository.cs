@@ -1,6 +1,7 @@
 ﻿using He.PipelineAssessment.Infrastructure.Data;
 using He.PipelineAssessment.Models;
 using He.PipelineAssessment.Models.ViewModels;
+using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
 
 namespace He.PipelineAssessment.Infrastructure.Repository
@@ -25,6 +26,7 @@ namespace He.PipelineAssessment.Infrastructure.Repository
         {
             this.context = context;
         }
+
         public async Task<List<Assessment>> GetAssessments()
         {
             return await context.Set<Assessment>().ToListAsync();
@@ -32,7 +34,9 @@ namespace He.PipelineAssessment.Infrastructure.Repository
 
         public async Task<List<AssessmentStageViewModel>> GetAssessmentStages(int assessmentId)
         {
-            var stages = await context.AssessmentStageViewModel.FromSqlRaw(sp_GetAssessmentStagesByAssessmentId, assessmentId).ToListAsync();
+            var assessmentIdParameter = new SqlParameter("@assessmentId", assessmentId);
+            var stages = await context.AssessmentStageViewModel
+                .FromSqlRaw(sp_GetAssessmentStagesByAssessmentId, assessmentIdParameter).ToListAsync();
             return new List<AssessmentStageViewModel>(stages);
         }
 

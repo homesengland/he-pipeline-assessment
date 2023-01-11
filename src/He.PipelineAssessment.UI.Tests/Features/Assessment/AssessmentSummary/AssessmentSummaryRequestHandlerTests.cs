@@ -3,7 +3,6 @@ using He.PipelineAssessment.Common.Tests;
 using He.PipelineAssessment.Infrastructure.Repository;
 using He.PipelineAssessment.Models.ViewModels;
 using He.PipelineAssessment.UI.Features.Assessment.AssessmentSummary;
-using He.PipelineAssessment.UI.Features.Assessments.AssessmentSummary;
 using Moq;
 using Xunit;
 

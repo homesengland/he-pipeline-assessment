@@ -1,17 +1,18 @@
 ﻿using He.PipelineAssessment.Infrastructure.Repository;
-using He.PipelineAssessment.Models;
-using He.PipelineAssessment.UI.Features.Assessment.AssessmentSummary;
+using He.PipelineAssessment.Models.ViewModels;
 using MediatR;
 
-namespace He.PipelineAssessment.UI.Features.Assessments.AssessmentSummary
+namespace He.PipelineAssessment.UI.Features.Assessment.AssessmentSummary
 {
     public class AssessmentSummaryRequestHandler : IRequestHandler<AssessmentSummaryRequest, AssessmentSummaryResponse?>
     {
-        private IAssessmentRepository _repository;
+        private readonly IAssessmentRepository _repository;
+        private readonly ILogger<AssessmentSummaryRequestHandler> _logger;
 
-        public AssessmentSummaryRequestHandler(IAssessmentRepository repository)
+        public AssessmentSummaryRequestHandler(IAssessmentRepository repository, ILogger<AssessmentSummaryRequestHandler> logger)
         {
             _repository = repository;
+            _logger = logger;
         }
         public async Task<AssessmentSummaryResponse?> Handle(AssessmentSummaryRequest request, CancellationToken cancellationToken)
         {
@@ -22,18 +23,15 @@ namespace He.PipelineAssessment.UI.Features.Assessments.AssessmentSummary
                 {
                     var dbStages = await _repository.GetAssessmentStages(request.AssessmentId);
 
-                    //var stages = new List<AssessmentSummaryStage>();
-                    //if (dbStages != null && dbStages.Any())
-                    //{
-                    //    foreach (var item in dbStages)
-                    //    {
-                    //        var stage = AssessmentSummaryStage(item);
-                    //        stages.Add(stage);
-                    //    }
-                    //}
-
                     var stages = new List<AssessmentSummaryStage>();
-                    //call our stored procedure
+                    if (dbStages.Any())
+                    {
+                        foreach (var item in dbStages)
+                        {
+                            var stage = AssessmentSummaryStage(item);
+                            stages.Add(stage);
+                        }
+                    }
 
                     return new AssessmentSummaryResponse()
                     {
@@ -48,22 +46,28 @@ namespace He.PipelineAssessment.UI.Features.Assessments.AssessmentSummary
             }
             catch (Exception e)
             {
-                string message = e.Message;
+                _logger.LogError(e.Message);
             }
             return null;
         }
 
-        private static AssessmentSummaryStage AssessmentSummaryStage(AssessmentToolWorkflowInstance item)
+        private static AssessmentSummaryStage AssessmentSummaryStage(AssessmentStageViewModel item)
         {
-            var stage = new AssessmentSummaryStage()
+            var stage = new AssessmentSummaryStage
             {
+                Name = item.Name,
+                IsVisible = item.IsVisible,
+                Order = item.Order,
+                AssessmentId = item.AssessmentId,
                 WorkflowName = item.WorkflowName,
-                CreatedDateTime = item.CreatedDateTime,
-                SubmittedDateTime = item.SubmittedDateTime,
-                Status = item.Status,
+                WorkflowDefinitionId = item.WorkflowDefinitionId,
                 WorkflowInstanceId = item.WorkflowInstanceId,
                 CurrentActivityId = item.CurrentActivityId,
-                CurrentActivityType = item.CurrentActivityType
+                CurrentActivityType = item.CurrentActivityType,
+                Status = item.Status,
+                CreatedDateTime = item.CreatedDateTime,
+                SubmittedDateTime = item.SubmittedDateTime,
+                AssessmentToolId = item.AssessmentToolId
             };
             return stage;
         }
