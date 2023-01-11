@@ -1,5 +1,6 @@
 ﻿using He.PipelineAssessment.Infrastructure.Repository;
 using He.PipelineAssessment.Models;
+using He.PipelineAssessment.UI.Features.Assessment.AssessmentSummary;
 using MediatR;
 
 namespace He.PipelineAssessment.UI.Features.Assessments.AssessmentSummary
@@ -21,15 +22,18 @@ namespace He.PipelineAssessment.UI.Features.Assessments.AssessmentSummary
                 {
                     var dbStages = await _repository.GetAssessmentStages(request.AssessmentId);
 
+                    //var stages = new List<AssessmentSummaryStage>();
+                    //if (dbStages != null && dbStages.Any())
+                    //{
+                    //    foreach (var item in dbStages)
+                    //    {
+                    //        var stage = AssessmentSummaryStage(item);
+                    //        stages.Add(stage);
+                    //    }
+                    //}
+
                     var stages = new List<AssessmentSummaryStage>();
-                    if (dbStages != null && dbStages.Any())
-                    {
-                        foreach (var item in dbStages)
-                        {
-                            var stage = AssessmentSummaryStage(item);
-                            stages.Add(stage);
-                        }
-                    }
+                    //call our stored procedure
 
                     return new AssessmentSummaryResponse()
                     {
@@ -53,10 +57,9 @@ namespace He.PipelineAssessment.UI.Features.Assessments.AssessmentSummary
         {
             var stage = new AssessmentSummaryStage()
             {
-                StageId = item.Id,
-                StageName = item.WorkflowName,
-                StartedOn = item.CreatedDateTime,
-                Submitted = item.SubmittedDateTime,
+                WorkflowName = item.WorkflowName,
+                CreatedDateTime = item.CreatedDateTime,
+                SubmittedDateTime = item.SubmittedDateTime,
                 Status = item.Status,
                 WorkflowInstanceId = item.WorkflowInstanceId,
                 CurrentActivityId = item.CurrentActivityId,

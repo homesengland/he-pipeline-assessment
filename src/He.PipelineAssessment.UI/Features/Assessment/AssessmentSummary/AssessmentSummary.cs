@@ -1,4 +1,4 @@
-﻿namespace He.PipelineAssessment.UI.Features.Assessments.AssessmentSummary
+﻿namespace He.PipelineAssessment.UI.Features.Assessment.AssessmentSummary
 {
     public class AssessmentSummaryResponse
     {
@@ -12,30 +12,30 @@
 
     public class AssessmentSummaryStage
     {
-        public int StageId { get; set; }
-        public string StageName { get; set; } = null!;
-
-        public string Status { get; set; } = null!;
-
-        public DateTime? StartedOn { get; set; }
-
-        public string SubmittedBy { get; set; } = null!;
-
-        public DateTime? Submitted { get; set; }
-
+        public string Name { get; set; } = null!;
+        public bool IsVisible { get; set; }
+        public int Order { get; set; }
+        public int AssessmentId { get; set; }
+        public string WorkflowName { get; set; } = null!;
+        public string WorkflowDefinitionId { get; set; } = null!;
         public string WorkflowInstanceId { get; set; } = null!;
         public string CurrentActivityId { get; set; } = null!;
         public string CurrentActivityType { get; set; } = null!;
+        public string Status { get; set; } = null!;
 
+        public DateTime? CreatedDateTime { get; set; }
+
+        public DateTime? SubmittedDateTime { get; set; }
+        public int AssessmentToolId { get; set; }
 
         public string StartedDateString()
         {
-            return AssessmentDateToString(StartedOn);
+            return AssessmentDateToString(CreatedDateTime);
         }
 
         public string SubmittedDateString()
         {
-            return AssessmentDateToString(Submitted);
+            return AssessmentDateToString(SubmittedDateTime);
         }
 
         private string AssessmentDateToString(DateTime? dateToFormat)

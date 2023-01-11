@@ -1,5 +1,5 @@
-﻿using He.PipelineAssessment.UI.Features.Assessments.AssessmentList;
-using He.PipelineAssessment.UI.Features.Assessments.AssessmentSummary;
+﻿using He.PipelineAssessment.UI.Features.Assessment.AssessmentSummary;
+using He.PipelineAssessment.UI.Features.Assessments.AssessmentList;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 

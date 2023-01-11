@@ -1,5 +1,6 @@
 ﻿using He.PipelineAssessment.Infrastructure.Data;
 using He.PipelineAssessment.Models;
+using He.PipelineAssessment.Models.ViewModels;
 using Microsoft.EntityFrameworkCore;
 
 namespace He.PipelineAssessment.Infrastructure.Repository
@@ -7,7 +8,7 @@ namespace He.PipelineAssessment.Infrastructure.Repository
     public interface IAssessmentRepository
     {
         Task<List<Assessment>> GetAssessments();
-        Task<List<AssessmentToolWorkflowInstance>> GetAssessmentStages(int assessmentId);
+        Task<List<AssessmentStageViewModel>> GetAssessmentStages(int assessmentId);
         Task<int> CreateAssessments(List<Assessment> assessments);
         Task<int> CreateAssessmentStage(AssessmentToolWorkflowInstance assessmentStage);
         Task<Assessment?> GetAssessment(int assessmentId);
@@ -18,6 +19,7 @@ namespace He.PipelineAssessment.Infrastructure.Repository
     public class AssessmentRepository : IAssessmentRepository
     {
         private readonly PipelineAssessmentContext context;
+        private readonly string sp_GetAssessmentStagesByAssessmentId = @"exec GetAssessmentStagesByAssessmentId @assessmentId";
 
         public AssessmentRepository(PipelineAssessmentContext context)
         {
@@ -28,9 +30,11 @@ namespace He.PipelineAssessment.Infrastructure.Repository
             return await context.Set<Assessment>().ToListAsync();
         }
 
-        public async Task<List<AssessmentToolWorkflowInstance>> GetAssessmentStages(int assessmentId)
+        public async Task<List<AssessmentStageViewModel>> GetAssessmentStages(int assessmentId)
         {
-            return await context.Set<AssessmentToolWorkflowInstance>().Where(x => x.AssessmentId == assessmentId).ToListAsync();
+            //return await context.Set<AssessmentToolWorkflowInstance>().Where(x => x.AssessmentId == assessmentId).ToListAsync();
+            //var stages = await context.Database.ex.(sp_GetAssessmentStagesByAssessmentId, assessmentId);
+            return new List<AssessmentStageViewModel>();
         }
 
         public async Task<int> CreateAssessments(List<Assessment> assessments)

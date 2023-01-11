@@ -1,6 +1,6 @@
 ﻿using MediatR;
 
-namespace He.PipelineAssessment.UI.Features.Assessments.AssessmentSummary
+namespace He.PipelineAssessment.UI.Features.Assessment.AssessmentSummary
 {
     public class AssessmentSummaryRequest : IRequest<AssessmentSummaryResponse>
     {
