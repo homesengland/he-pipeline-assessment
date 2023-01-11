@@ -32,9 +32,8 @@ namespace He.PipelineAssessment.Infrastructure.Repository
 
         public async Task<List<AssessmentStageViewModel>> GetAssessmentStages(int assessmentId)
         {
-            //return await context.Set<AssessmentToolWorkflowInstance>().Where(x => x.AssessmentId == assessmentId).ToListAsync();
-            //var stages = await context.Database.ex.(sp_GetAssessmentStagesByAssessmentId, assessmentId);
-            return new List<AssessmentStageViewModel>();
+            var stages = await context.AssessmentStageViewModel.FromSqlRaw(sp_GetAssessmentStagesByAssessmentId, assessmentId).ToListAsync();
+            return new List<AssessmentStageViewModel>(stages);
         }
 
         public async Task<int> CreateAssessments(List<Assessment> assessments)
