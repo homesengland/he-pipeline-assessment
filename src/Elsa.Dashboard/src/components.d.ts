@@ -11,6 +11,11 @@ export namespace Components {
     interface ElsaCheckboxQuestion {
         "question": CheckboxQuestion;
     }
+    interface ElsaOutcomeScreen {
+        "activityModel": ActivityModel;
+        "propertyDescriptor": ActivityPropertyDescriptor;
+        "propertyModel": ActivityDefinitionProperty;
+    }
     interface ElsaQuestion {
         "question": IQuestionComponent;
     }
@@ -42,6 +47,12 @@ declare global {
         prototype: HTMLElsaCheckboxQuestionElement;
         new (): HTMLElsaCheckboxQuestionElement;
     };
+    interface HTMLElsaOutcomeScreenElement extends Components.ElsaOutcomeScreen, HTMLStencilElement {
+    }
+    var HTMLElsaOutcomeScreenElement: {
+        prototype: HTMLElsaOutcomeScreenElement;
+        new (): HTMLElsaOutcomeScreenElement;
+    };
     interface HTMLElsaQuestionElement extends Components.ElsaQuestion, HTMLStencilElement {
     }
     var HTMLElsaQuestionElement: {
@@ -62,6 +73,7 @@ declare global {
     };
     interface HTMLElementTagNameMap {
         "elsa-checkbox-question": HTMLElsaCheckboxQuestionElement;
+        "elsa-outcome-screen": HTMLElsaOutcomeScreenElement;
         "elsa-question": HTMLElsaQuestionElement;
         "elsa-question-screen": HTMLElsaQuestionScreenElement;
         "elsa-radio-question": HTMLElsaRadioQuestionElement;
@@ -71,6 +83,11 @@ declare namespace LocalJSX {
     interface ElsaCheckboxQuestion {
         "onUpdateQuestion"?: (event: ElsaCheckboxQuestionCustomEvent<IQuestionComponent>) => void;
         "question"?: CheckboxQuestion;
+    }
+    interface ElsaOutcomeScreen {
+        "activityModel"?: ActivityModel;
+        "propertyDescriptor"?: ActivityPropertyDescriptor;
+        "propertyModel"?: ActivityDefinitionProperty;
     }
     interface ElsaQuestion {
         "onUpdateQuestion"?: (event: ElsaQuestionCustomEvent<IQuestionComponent>) => void;
@@ -87,6 +104,7 @@ declare namespace LocalJSX {
     }
     interface IntrinsicElements {
         "elsa-checkbox-question": ElsaCheckboxQuestion;
+        "elsa-outcome-screen": ElsaOutcomeScreen;
         "elsa-question": ElsaQuestion;
         "elsa-question-screen": ElsaQuestionScreen;
         "elsa-radio-question": ElsaRadioQuestion;
@@ -97,6 +115,7 @@ declare module "@stencil/core" {
     export namespace JSX {
         interface IntrinsicElements {
             "elsa-checkbox-question": LocalJSX.ElsaCheckboxQuestion & JSXBase.HTMLAttributes<HTMLElsaCheckboxQuestionElement>;
+            "elsa-outcome-screen": LocalJSX.ElsaOutcomeScreen & JSXBase.HTMLAttributes<HTMLElsaOutcomeScreenElement>;
             "elsa-question": LocalJSX.ElsaQuestion & JSXBase.HTMLAttributes<HTMLElsaQuestionElement>;
             "elsa-question-screen": LocalJSX.ElsaQuestionScreen & JSXBase.HTMLAttributes<HTMLElsaQuestionScreenElement>;
             "elsa-radio-question": LocalJSX.ElsaRadioQuestion & JSXBase.HTMLAttributes<HTMLElsaRadioQuestionElement>;

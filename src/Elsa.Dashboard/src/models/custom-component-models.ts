@@ -72,9 +72,9 @@ export class QuestionActivity {
 
 export interface IConditionalText {
   text: string;
-  condition: boolean;
+  condition: string;
 }
 
 export class Outcome {
-  conditionalText: Array<IConditionalText> = [];
+  outcomeText: Array<IConditionalText> = [];
 }
