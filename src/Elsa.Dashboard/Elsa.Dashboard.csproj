@@ -24,6 +24,8 @@
   <ItemGroup>
     <None Remove="src\events\component-events.tsx" />
     <None Remove="src\models\activity-provider.ts" />
+    <None Remove="src\monaco\monaco_interfaces.ts" />
+    <None Remove="src\state\state.ts" />
   </ItemGroup>
 
   <ItemGroup>
@@ -33,6 +35,8 @@
   <ItemGroup>
     <TypeScriptCompile Include="src\events\component-events.tsx" />
     <TypeScriptCompile Include="src\components\question-provider\question-provider.tsx" />
+    <TypeScriptCompile Include="src\monaco\monaco_interfaces.ts" />
+    <TypeScriptCompile Include="src\state\state.ts" />
   </ItemGroup>
 
 </Project>

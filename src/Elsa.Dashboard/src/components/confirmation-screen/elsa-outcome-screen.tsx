@@ -1,5 +1,7 @@
 import { Component, h, Prop, State } from '@stencil/core';
 
+import { CustomMonaco } from '../../monaco/custom_monaco';
+
 import TrashCanIcon from '../../icons/trash-can';
 import PlusIcon from '../../icons/plus_icon';
 
@@ -8,7 +10,7 @@ import {
   ActivityModel,
   ActivityPropertyDescriptor,
   HTMLElsaMultiExpressionEditorElement,
-  //IntellisenseContext,
+  IntellisenseContext,
   SyntaxNames
 } from '../../models/elsa-interfaces';
 
@@ -20,6 +22,7 @@ import {
 import {
   IconProvider
 } from '../icon-provider/icon-provider';
+import { HTMLElsaExpressionEditorElement, HTMLElsaMonacoElement } from '../../monaco/monaco_interfaces';
 
 function parseJson(json: string): any {
   if (!json)
@@ -40,20 +43,38 @@ function parseJson(json: string): any {
 
 export class ElsaOutcomeScreen {
 
+  @Prop() ElsaClient: object;
   @Prop() activityModel: ActivityModel;
   @Prop() propertyDescriptor: ActivityPropertyDescriptor;
   @Prop() propertyModel: ActivityDefinitionProperty;
+  @Prop({ attribute: 'editor-height', reflect: true }) editorHeight: string = '6em';
+  @Prop({ attribute: 'single-line', reflect: true }) singleLineMode: boolean = false;
+  @Prop() padding: string;
+  @Prop() libUri: string = 'defaultLib:lib.es6.d.ts';
+  @Prop() libSource: string;
+  @Prop() context?: IntellisenseContext;
   @State() iconProvider = new IconProvider();
   @State() outcome = new Outcome();
+  monaco = CustomMonaco;
 
   supportedSyntaxes: Array<string> = [SyntaxNames.JavaScript];
   multiExpressionEditor: HTMLElsaMultiExpressionEditorElement;
+
+  monacoEditor: HTMLElsaMonacoElement;
+  elementEditor: HTMLElsaExpressionEditorElement;
+
   syntaxMultiChoiceCount: number = 0;
 
   async componentWillLoad() {
+    await this.createElsaClient();
     const propertyModel = this.propertyModel;
     const choicesJson = propertyModel.expressions[SyntaxNames.Json]
     this.outcome = parseJson(choicesJson) || this.defaultActivityModel();
+    
+  }
+
+  async createElsaClient() {
+    await this.monacoEditor.addJavaScriptLib(this.libSource, this.libUri);
   }
 
   defaultActivityModel() {
@@ -67,7 +88,7 @@ export class ElsaOutcomeScreen {
   }
 
   onAddOutcome() {
-    var placeholderText = "outcome 1";
+    var placeholderText = "outcome " + this.outcome.outcomeText.length +1;
 
     var conditionalText = { text : placeholderText, condition : "true" };
 
@@ -105,13 +126,43 @@ export class ElsaOutcomeScreen {
 
       return (
         <tr key={`choice-${index}`}>
-          <td class="elsa-py-2 elsa-pr-5">
-            <textarea value={outcome.condition} onChange={e => this.onChangeCondition(e, outcome)}
-              class="focus:elsa-ring-blue-500 focus:elsa-border-blue-500 elsa-block elsa-min-w-0 elsa-w-full elsa-rounded-md sm:elsa-text-sm elsa-border-gray-300" />
+          {/*<td class="elsa-py-2 elsa-pr-5">*/}
+          {/*  <textarea value={outcome.condition} onChange={e => this.onChangeCondition(e, outcome)}*/}
+          {/*    class="focus:elsa-ring-blue-500 focus:elsa-border-blue-500 elsa-block elsa-min-w-0 elsa-w-full elsa-rounded-md sm:elsa-text-sm elsa-border-gray-300" />*/}
+          {/*</td>*/}
+          <td>
+
+            {/*<elsa-expression-editor ref={el => this.elementEditor = el}*/}
+            {/*  onExpressionChanged={e => this.onChangeCondition(e, outcome)}*/}
+            {/*  expression={'Javascript'}*/}
+            {/*  language={'Javascript'}*/}
+            {/*  editorHeight={this.editorHeight}*/}
+            {/*  singleLineMode={this.singleLineMode}*/}
+            {/*  context={this.context} />*/}
+
+
+          <elsa-monaco value={outcome.condition}
+            language={'Javascript'}
+            editor-height={this.editorHeight}
+            single-line={false}
+            padding={this.padding}
+              onValueChanged={e => this.onChangeCondition(e, outcome)}
+              ref={el => this.monacoEditor = el} />
           </td>
-          <td class="elsa-py-2 elsa-pr-5">
-            <textarea value={outcome.text} onChange={e => this.onChangeText(e, outcome)}
-              class="focus:elsa-ring-blue-500 focus:elsa-border-blue-500 elsa-block elsa-min-w-0 elsa-w-full elsa-rounded-md sm:elsa-text-sm elsa-border-gray-300" />
+
+          {/*<td class="elsa-py-2 elsa-pr-5">*/}
+          {/*  <textarea value={outcome.text} onChange={e => this.onChangeText(e, outcome)}*/}
+          {/*    class="focus:elsa-ring-blue-500 focus:elsa-border-blue-500 elsa-block elsa-min-w-0 elsa-w-full elsa-rounded-md sm:elsa-text-sm elsa-border-gray-300" />*/}
+          {/*</td>*/}
+
+          <td>
+          <elsa-monaco value={outcome.text}
+            language={'Javascript'}
+            editor-height={this.editorHeight}
+            single-line={false}
+            padding={this.padding}
+            onValueChanged={e => this.onChangeText(e, outcome)}
+              ref={el => this.monacoEditor = el} />
           </td>
          
   
