@@ -7,12 +7,14 @@
 import { HTMLStencilElement, JSXBase } from "@stencil/core/internal";
 import { MonacoValueChangedArgs } from "./monaco/custom_monaco";
 import { CheckboxQuestion, IQuestionComponent, RadioQuestion } from "./models/custom-component-models";
-import { ActivityDefinitionProperty, ActivityModel, ActivityPropertyDescriptor, IntellisenseContext } from "./models/elsa-interfaces";
+import { ActivityDefinitionProperty, ActivityModel, ActivityPropertyDescriptor, ElsaClient, IntellisenseContext } from "./models/elsa-interfaces";
 export namespace Components {
     interface CustomMonaco {
         "addJavaScriptLib": (libSource: string, libUri: string) => Promise<void>;
         "editorHeight": string;
         "language": string;
+        "libSource": string;
+        "libUri": string;
         "monacoLibPath": string;
         "padding": string;
         "setValue": (value: string) => Promise<void>;
@@ -27,12 +29,13 @@ export namespace Components {
         "activityModel": ActivityModel;
         "context"?: IntellisenseContext;
         "editorHeight": string;
-        "libSource": string;
+        "elsaClient": ElsaClient;
         "libUri": string;
         "padding": string;
         "propertyDescriptor": ActivityPropertyDescriptor;
         "propertyModel": ActivityDefinitionProperty;
         "singleLineMode": boolean;
+        "workflowDefinitionId": string;
     }
     interface ElsaQuestion {
         "question": IQuestionComponent;
@@ -96,6 +99,8 @@ declare namespace LocalJSX {
     interface CustomMonaco {
         "editorHeight"?: string;
         "language"?: string;
+        "libSource"?: string;
+        "libUri"?: string;
         "monacoLibPath"?: string;
         "onValueChanged"?: (event: CustomEvent<MonacoValueChangedArgs>) => void;
         "padding"?: string;
@@ -111,12 +116,13 @@ declare namespace LocalJSX {
         "activityModel"?: ActivityModel;
         "context"?: IntellisenseContext;
         "editorHeight"?: string;
-        "libSource"?: string;
+        "elsaClient"?: ElsaClient;
         "libUri"?: string;
         "padding"?: string;
         "propertyDescriptor"?: ActivityPropertyDescriptor;
         "propertyModel"?: ActivityDefinitionProperty;
         "singleLineMode"?: boolean;
+        "workflowDefinitionId"?: string;
     }
     interface ElsaQuestion {
         "onUpdateQuestion"?: (event: CustomEvent<IQuestionComponent>) => void;

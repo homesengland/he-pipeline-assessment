@@ -37,6 +37,9 @@
                   console.log(e);
                     if (e.activityModel.type == "QuestionScreen" || e.activityModel.type == "CheckYourAnswersScreen")
                         e.outcomes = e.outcomes.filter(x => x !== 'Default' && x !== 'Done');
+                        else if(e.activityModel.type == "ConfirmationScreen"){
+                          e.outcomes = e.outcomes.filter(x => x == 'Done');
+                        }
                 });
         };
 
@@ -70,8 +73,13 @@
             }
         }
 
-       function MyCustomOutcomeDriver(elsaStudio, elementName) {
+        function MyCustomOutcomeDriver(elsaStudio, elementName, elsaClient) {
+            console.log("Setting outcome driver");
             this.display = (activity, property) => {
+                let url = new URL(window.location.href);
+                var parts = url.pathname.split('/');
+                var workflowDefinitionId = parts[2];
+                console.log(workflowDefinitionId);
 
                 console.log("Elsa Studio", elsaStudio);
                 console.log("Property", JSON.stringify(property));
@@ -81,11 +89,8 @@
                 questionActivity.activityModel = activity;
                 questionActivity.propertyDescriptor = property;
                 questionActivity.propertyModel = prop;
-                //const elsaClient = await createElsaClient(this.serverUrl);
-                //const libSource = await elsaClient.scriptingApi.getJavaScriptTypeDefinitions(this.workflowDefinitionId, this.context);
-                //const libUri = 'defaultLib:lib.es6.d.ts';
-                //questionActivity.libSource
-                //questionActivity.libUri
+                questionActivity.elsaClient = elsaClient;
+                questionActivity.workflowDefinitionId = workflowDefinitionId;
                 return questionActivity;
             }
         }
@@ -97,9 +102,10 @@
                 var expressions = {};
                 var syntax = defaultSyntax ? defaultSyntax : undefined;
                 if (!syntax)
-                    syntax = 'Json';
+                    syntax = '{Json}';
                 expressions[syntax] = defaultExpression ? defaultExpression : undefined;
-                property = { name: name, expressions: expressions, syntax: null };
+                property = { name: name, expressions: expressions, syntax: syntax };
+                console.log(property);
                 activity.properties.push(property);
             }
             console.log("property", property);
@@ -122,9 +128,8 @@
             var elsaClient = await elsaStudio.elsaClientFactory();
             console.log("Elsa client", elsaClient);
             //const libSource = await elsaClient.scriptingApi.getJavaScriptTypeDefinitions(this.workflowDefinitionId, this.context);
-
             elsaStudio.propertyDisplayManager.addDriver('question-builder', () => new MyCustomInputDriver(elsaStudio, 'elsa-question-screen'));
-            elsaStudio.propertyDisplayManager.addDriver('outcome-builder', () => new MyCustomOutcomeDriver(elsaStudio, 'elsa-outcome-screen'));
+            //elsaStudio.propertyDisplayManager.addDriver('outcome-builder', () => new MyCustomOutcomeDriver(elsaStudio, 'elsa-outcome-screen', elsaClient));
         }
 
 </script>

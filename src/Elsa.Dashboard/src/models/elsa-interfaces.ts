@@ -70,3 +70,11 @@ export interface IntellisenseContext {
   activityTypeName: string;
   propertyName: string;
 }
+
+export interface ElsaClient {
+  scriptingApi: ScriptingApi
+}
+
+export interface ScriptingApi {
+  getJavaScriptTypeDefinitions(workflowDefinitionId: string, context?: IntellisenseContext): Promise<string>
+}

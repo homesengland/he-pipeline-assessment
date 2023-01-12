@@ -9,6 +9,7 @@ import {
   ActivityDefinitionProperty,
   ActivityModel,
   ActivityPropertyDescriptor,
+  ElsaClient,
   HTMLElsaMultiExpressionEditorElement,
   IntellisenseContext,
   SyntaxNames
@@ -22,7 +23,6 @@ import {
 import {
   IconProvider
 } from '../icon-provider/icon-provider';
-import { HTMLElsaExpressionEditorElement, HTMLElsaMonacoElement } from '../../monaco/monaco_interfaces';
 
 function parseJson(json: string): any {
   if (!json)
@@ -51,30 +51,38 @@ export class ElsaOutcomeScreen {
   @Prop({ attribute: 'single-line', reflect: true }) singleLineMode: boolean = false;
   @Prop() padding: string;
   @Prop() libUri: string = 'defaultLib:lib.es6.d.ts';
-  @Prop() libSource: string;
-  @Prop() context?: IntellisenseContext;
+  @Prop() elsaClient: ElsaClient;
+  @Prop() workflowDefinitionId: string;
+  @Prop() context?: IntellisenseContext = { activityTypeName: "ConfirmationScreen", propertyName: "OutcomeText" }
   @State() iconProvider = new IconProvider();
   @State() outcome = new Outcome();
-  monaco = CustomMonaco;
+  @State() monacoEditor: CustomMonaco = new CustomMonaco();
+  @State() libSource: string;
 
   supportedSyntaxes: Array<string> = [SyntaxNames.JavaScript];
   multiExpressionEditor: HTMLElsaMultiExpressionEditorElement;
 
-  monacoEditor: HTMLElsaMonacoElement;
-  elementEditor: HTMLElsaExpressionEditorElement;
+  //monacoEditor: CustomMonaco = new CustomMonaco();
+  /*elementEditor: HTMLElsaExpressionEditorElement;*/
 
   syntaxMultiChoiceCount: number = 0;
 
   async componentWillLoad() {
-    await this.createElsaClient();
+    await this.setupMonaco();
     const propertyModel = this.propertyModel;
+    console.log("property model", this.propertyModel);
     const choicesJson = propertyModel.expressions[SyntaxNames.Json]
+    console.log("choices Json", choicesJson)
     this.outcome = parseJson(choicesJson) || this.defaultActivityModel();
     
   }
 
-  async createElsaClient() {
-    await this.monacoEditor.addJavaScriptLib(this.libSource, this.libUri);
+  async setupMonaco() {
+    this.libSource = await this.elsaClient.scriptingApi.getJavaScriptTypeDefinitions(this.workflowDefinitionId, this.context);
+    console.log("libSource", this.libSource);
+    console.log("LibUri", this.libUri);
+    //console.log("monaco", this.monacoEditor);
+    //await this.monacoEditor.addJavaScriptLib(libSource, this.libUri);
   }
 
   defaultActivityModel() {
@@ -84,16 +92,20 @@ export class ElsaOutcomeScreen {
   }
 
   updatePropertyModel() {
+    console.log("updating Model");
+    console.log("outcome during update", this.outcome);
     this.propertyModel.expressions[SyntaxNames.Json] = JSON.stringify(this.outcome);
+    console.log("outcome after update", this.outcome);
+    console.log(this.propertyModel);
+    console.log(this.propertyModel.expressions[SyntaxNames.Json])
+    //SyntaxNames is the key here.  
   }
 
   onAddOutcome() {
-    var placeholderText = "outcome " + this.outcome.outcomeText.length +1;
-
+    var placeholderText = "Outcome " + this.outcome.outcomeText.length +1;
     var conditionalText = { text : placeholderText, condition : "true" };
-
     this.outcome = { ...this.outcome, outcomeText: [...this.outcome.outcomeText, conditionalText] };
-
+    console.log("Adding Outcome");
     this.updatePropertyModel();
   }
 
@@ -147,7 +159,9 @@ export class ElsaOutcomeScreen {
             single-line={false}
             padding={this.padding}
               onValueChanged={e => this.onChangeCondition(e, outcome)}
-              ref={el => this.monacoEditor = el} />
+              monaco-lib-source={this.libSource}
+              monaco-lib-uri={this.libUri}
+            ref={el => this.monacoEditor = el} />
           </td>
 
           {/*<td class="elsa-py-2 elsa-pr-5">*/}
@@ -161,7 +175,9 @@ export class ElsaOutcomeScreen {
             editor-height={this.editorHeight}
             single-line={false}
             padding={this.padding}
-            onValueChanged={e => this.onChangeText(e, outcome)}
+              onValueChanged={e => this.onChangeText(e, outcome)}
+              monaco-lib-source={this.libSource}
+              monaco-lib-uri={this.libUri}
               ref={el => this.monacoEditor = el} />
           </td>
          

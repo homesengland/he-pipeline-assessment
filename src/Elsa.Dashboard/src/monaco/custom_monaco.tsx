@@ -17,6 +17,8 @@ export class CustomMonaco {
   private monaco: Monaco;
 
   @Prop({ attribute: 'monaco-lib-path' }) monacoLibPath: string;
+  @Prop({ attribute: 'monaco-lib-source' }) libSource: string;
+  @Prop({ attribute: 'monaco-lib-uri' }) libUri: string;
   @Prop({ attribute: 'editor-height', reflect: true }) editorHeight: string = '5em';
   @Prop() value: string;
   @Prop() language: string;
@@ -72,6 +74,7 @@ export class CustomMonaco {
   }
 
   async componentWillLoad() {
+    await this.addJavaScriptLib(this.libSource, this.libUri);
     const monacoLibPath = this.monacoLibPath ?? state.monacoLibPath;
     this.monaco = await initializeMonacoWorker(monacoLibPath);
   }
