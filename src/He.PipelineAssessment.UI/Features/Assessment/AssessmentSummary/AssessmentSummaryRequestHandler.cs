@@ -67,7 +67,8 @@ namespace He.PipelineAssessment.UI.Features.Assessment.AssessmentSummary
                 Status = item.Status,
                 CreatedDateTime = item.CreatedDateTime,
                 SubmittedDateTime = item.SubmittedDateTime,
-                AssessmentToolId = item.AssessmentToolId
+                AssessmentToolId = item.AssessmentToolId,
+                IsFirstWorkflow = item.IsFirstWorkflow
             };
             return stage;
         }

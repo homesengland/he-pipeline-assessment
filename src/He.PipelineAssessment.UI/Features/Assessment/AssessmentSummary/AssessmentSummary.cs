@@ -25,6 +25,7 @@
         public DateTime? CreatedDateTime { get; set; }
         public DateTime? SubmittedDateTime { get; set; }
         public int? AssessmentToolId { get; set; }
+        public bool? IsFirstWorkflow { get; set; }
 
         public string StartedDateString()
         {
