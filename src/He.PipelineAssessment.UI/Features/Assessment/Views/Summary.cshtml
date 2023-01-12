@@ -39,25 +39,53 @@
                 @foreach (var assessmentStage in Model.Stages)
                 {
                     <tr class="govuk-table__row">
-                        @if (assessmentStage.AssessmentToolId != null)
+                        <td class="govuk-table__cell">
+                        @if (assessmentStage.AssessmentToolWorkflowInstanceId != null)
                         {
-                            <td class="govuk-table__cell">@Html.ActionLink(assessmentStage.Name, "LoadWorkflowActivity", "Workflow", new {WorkflowInstanceId = assessmentStage.WorkflowInstanceId, ActivityId = assessmentStage.CurrentActivityId, ActivityType = assessmentStage.CurrentActivityType})</td>
+                            @Html.ActionLink(assessmentStage.Name, "LoadWorkflowActivity", "Workflow", new { WorkflowInstanceId = assessmentStage.WorkflowInstanceId, ActivityId = assessmentStage.CurrentActivityId, ActivityType = assessmentStage.CurrentActivityType })
                         }
                         else
                         {
-                            @if(assessmentStage.IsFirstWorkflow.HasValue && assessmentStage.IsFirstWorkflow.Value)
-                            {
-                                <td class="govuk-table__cell">@Html.ActionLink(assessmentStage.Name, "LoadWorkflowActivity", "Workflow", new {WorkflowInstanceId = assessmentStage.WorkflowInstanceId, ActivityId = assessmentStage.CurrentActivityId, ActivityType = assessmentStage.CurrentActivityType})</td>
+                            @assessmentStage.Name
+                        }
+                        </td>
+                        <td class="govuk-table__cell">
+                            @if(@assessmentStage.CreatedDateTime.HasValue){
+                                @assessmentStage.CreatedDateTime
                             }
                             else
                             {
-                            <td class="govuk-table__cell">@assessmentStage.Name</td>
+                                if (!string.IsNullOrEmpty(assessmentStage.WorkflowDefinitionId))
+                                {
+                                    @using (Html.BeginForm("StartWorkflow", "Workflow", FormMethod.Post))
+                                    {
+                                        @Html.AntiForgeryToken()
+                                        @Html.HiddenFor(x => x.AssessmentId)
+                                        @Html.HiddenFor(x => x.CorrelationId)
+                                        <input type="hidden" name="WorkflowDefinitionId" value="@assessmentStage.WorkflowDefinitionId"/>
+                                        <input class="govuk-button govuk-!-margin-0" data-module="govuk-button" id="Submit" type="submit" value="Start now"/>
+                                    }
+                                }
                             }
-                        }
-                        <td class="govuk-table__cell">@assessmentStage.CreatedDateTime</td>
+                        </td>
                         <td class="govuk-table__cell">@assessmentStage.SubmittedDateTime</td>
                         
-                        <td class="govuk-table__cell"><strong class="govuk-tag govuk-tag--@assessmentStage.StatusDisplayTag()">@(assessmentStage.Status ?? "Not Started")
+                        <td class="govuk-table__cell"><strong class="govuk-tag govuk-tag--@assessmentStage.StatusDisplayTag()">
+                            @if (string.IsNullOrEmpty(assessmentStage.Status))
+                            {
+                                if (string.IsNullOrEmpty(assessmentStage.WorkflowDefinitionId))
+                                {
+                                    @:Cannot Start
+                                }
+                                else
+                                {
+                                    @:Start Stage
+                                }
+                            }
+                            else
+                            {
+                                @assessmentStage.Status
+                            }
                         </strong></td>
                         
 

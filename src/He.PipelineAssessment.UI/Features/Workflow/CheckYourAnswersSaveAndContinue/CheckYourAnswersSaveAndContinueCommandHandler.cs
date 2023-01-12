@@ -36,6 +36,11 @@ namespace He.PipelineAssessment.UI.Features.Workflow.CheckYourAnswersSaveAndCont
                     currentAssessmentStage.LastModifiedDateTime = submittedTime;
                     await _assessmentRepository.SaveChanges();
 
+                    if (!string.IsNullOrEmpty(response.Data.NextWorkflowDefinitionIds))
+                    {
+                        // create new record(s) in AssessmentToolInstanceNextWorkflow
+                    }
+
                     CheckYourAnswersSaveAndContinueCommandResponse result = new CheckYourAnswersSaveAndContinueCommandResponse()
                     {
                         ActivityId = response.Data.NextActivityId,

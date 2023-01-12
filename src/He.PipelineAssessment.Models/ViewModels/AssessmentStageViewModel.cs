@@ -6,7 +6,6 @@
         public string Name { get; set; } = null!;
         public bool IsVisible { get; set; }
         public int Order { get; set; }
-        public int? AssessmentId { get; set; }
         public string? WorkflowName { get; set; }
         public string? WorkflowDefinitionId { get; set; }
         public string? WorkflowInstanceId { get; set; }
@@ -16,6 +15,7 @@
         public DateTime? CreatedDateTime { get; set; }
         public DateTime? SubmittedDateTime { get; set; }
         public int? AssessmentToolId { get; set; }
+        public int? AssessmentToolWorkflowInstanceId { get; set; }
         public bool? IsFirstWorkflow { get; set; }
     }
 }

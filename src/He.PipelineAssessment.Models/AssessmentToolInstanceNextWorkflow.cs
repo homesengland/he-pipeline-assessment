@@ -8,7 +8,7 @@
         public bool IsStarted { get; set; }
         public int AssessmentId { get; set; }
 
-     
+
         public virtual AssessmentToolWorkflowInstance AssessmentToolWorkflowInstance { get; set; } = null!;
     }
 }

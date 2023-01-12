@@ -22,13 +22,13 @@ namespace He.PipelineAssessment.UI.Features.Assessment.AssessmentSummary
                 if (dbAssessment != null)
                 {
                     var dbStages = await _repository.GetAssessmentStages(request.AssessmentId);
-
+                    var startableTools = await _repository.GetStartableTools(request.AssessmentId);
                     var stages = new List<AssessmentSummaryStage>();
                     if (dbStages.Any())
                     {
                         foreach (var item in dbStages)
                         {
-                            var stage = AssessmentSummaryStage(item);
+                            var stage = AssessmentSummaryStage(item, startableTools);
                             stages.Add(stage);
                         }
                     }
@@ -51,16 +51,23 @@ namespace He.PipelineAssessment.UI.Features.Assessment.AssessmentSummary
             return null;
         }
 
-        private static AssessmentSummaryStage AssessmentSummaryStage(AssessmentStageViewModel item)
+        private static AssessmentSummaryStage AssessmentSummaryStage(AssessmentStageViewModel item,
+            List<StartableToolViewModel> startableToolViewModels)
         {
+            StartableToolViewModel? startableToolViewModel = new StartableToolViewModel();
+            if (!item.AssessmentToolWorkflowInstanceId.HasValue)
+            {
+                startableToolViewModel = startableToolViewModels
+                    .FirstOrDefault(x => x.AssessmentToolId == item.AssessmentToolId);
+            }
+
             var stage = new AssessmentSummaryStage
             {
                 Name = item.Name,
                 IsVisible = item.IsVisible,
                 Order = item.Order,
-                AssessmentId = item.AssessmentId,
                 WorkflowName = item.WorkflowName,
-                WorkflowDefinitionId = item.WorkflowDefinitionId,
+                WorkflowDefinitionId = item.WorkflowDefinitionId ?? startableToolViewModel?.WorkflowDefinitionId,
                 WorkflowInstanceId = item.WorkflowInstanceId,
                 CurrentActivityId = item.CurrentActivityId,
                 CurrentActivityType = item.CurrentActivityType,
@@ -68,7 +75,8 @@ namespace He.PipelineAssessment.UI.Features.Assessment.AssessmentSummary
                 CreatedDateTime = item.CreatedDateTime,
                 SubmittedDateTime = item.SubmittedDateTime,
                 AssessmentToolId = item.AssessmentToolId,
-                IsFirstWorkflow = item.IsFirstWorkflow
+                IsFirstWorkflow = item.IsFirstWorkflow ?? startableToolViewModel?.IsFirstWorkflow,
+                AssessmentToolWorkflowInstanceId = item.AssessmentToolWorkflowInstanceId
             };
             return stage;
         }

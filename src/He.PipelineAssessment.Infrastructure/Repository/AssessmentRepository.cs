@@ -10,6 +10,8 @@ namespace He.PipelineAssessment.Infrastructure.Repository
     {
         Task<List<Assessment>> GetAssessments();
         Task<List<AssessmentStageViewModel>> GetAssessmentStages(int assessmentId);
+        Task<List<StartableToolViewModel>> GetStartableTools(int assessmentId);
+
         Task<int> CreateAssessments(List<Assessment> assessments);
         Task<int> CreateAssessmentStage(AssessmentToolWorkflowInstance assessmentStage);
         Task<Assessment?> GetAssessment(int assessmentId);
@@ -21,6 +23,7 @@ namespace He.PipelineAssessment.Infrastructure.Repository
     {
         private readonly PipelineAssessmentContext context;
         private readonly string sp_GetAssessmentStagesByAssessmentId = @"exec GetAssessmentStagesByAssessmentId @assessmentId";
+        private readonly string sp_GetStartableToolsByAssessmentId = @"exec GetStartableToolsByAssessmentId @assessmentId";
 
         public AssessmentRepository(PipelineAssessmentContext context)
         {
@@ -38,6 +41,14 @@ namespace He.PipelineAssessment.Infrastructure.Repository
             var stages = await context.AssessmentStageViewModel
                 .FromSqlRaw(sp_GetAssessmentStagesByAssessmentId, assessmentIdParameter).ToListAsync();
             return new List<AssessmentStageViewModel>(stages);
+        }
+
+        public async Task<List<StartableToolViewModel>> GetStartableTools(int assessmentId)
+        {
+            var assessmentIdParameter = new SqlParameter("@assessmentId", assessmentId);
+            var startableTools = await context.StartableToolViewModel
+                .FromSqlRaw(sp_GetStartableToolsByAssessmentId, assessmentIdParameter).ToListAsync();
+            return new List<StartableToolViewModel>(startableTools);
         }
 
         public async Task<int> CreateAssessments(List<Assessment> assessments)

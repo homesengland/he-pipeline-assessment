@@ -14,18 +14,19 @@ namespace Elsa.Server.Features.Workflow.CheckYourAnswersSaveAndContinue
         private readonly IElsaCustomModelHelper _elsaCustomModelHelper;
         private readonly IWorkflowNextActivityProvider _workflowNextActivityProvider;
         private readonly IWorkflowInstanceProvider _workflowInstanceProvider;
-
+        private readonly INextWorkflowDefinitionProvider _nextWorkflowDefinitionProvider;
 
         public CheckYourAnswersSaveAndContinueCommandHandler(
             IElsaCustomRepository elsaCustomRepository,
             IElsaCustomModelHelper elsaCustomModelHelper,
             IWorkflowNextActivityProvider workflowNextActivityProvider,
-            IWorkflowInstanceProvider workflowInstanceProvider)
+            IWorkflowInstanceProvider workflowInstanceProvider, INextWorkflowDefinitionProvider nextWorkflowDefinitionProvider)
         {
             _elsaCustomRepository = elsaCustomRepository;
             _elsaCustomModelHelper = elsaCustomModelHelper;
             _workflowNextActivityProvider = workflowNextActivityProvider;
             _workflowInstanceProvider = workflowInstanceProvider;
+            _nextWorkflowDefinitionProvider = nextWorkflowDefinitionProvider;
         }
 
         public async Task<OperationResult<CheckYourAnswersSaveAndContinueResponse>> Handle(CheckYourAnswersSaveAndContinueCommand command,
@@ -55,11 +56,15 @@ namespace Elsa.Server.Features.Workflow.CheckYourAnswersSaveAndContinue
                     }
                 }
 
+                var nextWorkflowDefinitionIds =
+                    _nextWorkflowDefinitionProvider.GetNextWorkflowDefinitionIds(workflowInstance, workflowNextActivityModel.NextActivity.Id);
+
                 result.Data = new CheckYourAnswersSaveAndContinueResponse
                 {
                     WorkflowInstanceId = command.WorkflowInstanceId,
                     NextActivityId = workflowNextActivityModel.NextActivity.Id,
-                    ActivityType = workflowNextActivityModel.NextActivity.Type
+                    ActivityType = workflowNextActivityModel.NextActivity.Type,
+                    NextWorkflowDefinitionIds = nextWorkflowDefinitionIds
                 };
             }
             catch (Exception e)
