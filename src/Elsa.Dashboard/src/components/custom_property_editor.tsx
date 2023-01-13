@@ -11,7 +11,7 @@ import {
   tag: 'custom-property-editor',
   shadow: false,
 })
-export class ElsaPropertyEditor {
+export class CustomPropertyEditor {
 
   @Event() defaultSyntaxValueChanged: EventEmitter<string>;
   @Prop() activityModel: ActivityModel;
