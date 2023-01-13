@@ -1,6 +1,7 @@
 ﻿using Elsa.CustomWorkflow.Sdk.HttpClients;
 using Elsa.CustomWorkflow.Sdk.Models.Workflow;
 using He.PipelineAssessment.Infrastructure.Repository;
+using He.PipelineAssessment.Models;
 using MediatR;
 
 namespace He.PipelineAssessment.UI.Features.Workflow.CheckYourAnswersSaveAndContinue
@@ -38,7 +39,25 @@ namespace He.PipelineAssessment.UI.Features.Workflow.CheckYourAnswersSaveAndCont
 
                     if (!string.IsNullOrEmpty(response.Data.NextWorkflowDefinitionIds))
                     {
-                        // create new record(s) in AssessmentToolInstanceNextWorkflow
+                        var nextWorkflows = new List<AssessmentToolInstanceNextWorkflow>();
+                        var workflowDefinitionIds = response.Data.NextWorkflowDefinitionIds.Split(',', StringSplitOptions.TrimEntries);
+                        foreach (var workflowDefinitionId in workflowDefinitionIds)
+                        {
+                            var nextWorkflow =
+                                await _assessmentRepository.GetAssessmentToolInstanceNextWorkflow(currentAssessmentStage.Id,
+                                    workflowDefinitionId);
+
+                            if (nextWorkflow == null)
+                            {
+                                var assessmentToolInstanceNextWorkflow =
+                                    AssessmentToolInstanceNextWorkflow(currentAssessmentStage.AssessmentId,
+                                        currentAssessmentStage.Id, workflowDefinitionId);
+                                nextWorkflows.Add(assessmentToolInstanceNextWorkflow);
+                            }
+                        }
+
+                        if (nextWorkflows.Any())
+                            await _assessmentRepository.CreateAssessmentToolInstanceNextWorkflows(nextWorkflows);
                     }
 
                     CheckYourAnswersSaveAndContinueCommandResponse result = new CheckYourAnswersSaveAndContinueCommandResponse()
@@ -52,6 +71,17 @@ namespace He.PipelineAssessment.UI.Features.Workflow.CheckYourAnswersSaveAndCont
             }
 
             return null;
+        }
+
+        private AssessmentToolInstanceNextWorkflow AssessmentToolInstanceNextWorkflow(int assessmentId, int assessmentToolWorkflowInstanceId, string workflowDefinitionId)
+        {
+            return new AssessmentToolInstanceNextWorkflow
+            {
+                AssessmentId = assessmentId,
+                AssessmentToolWorkflowInstanceId = assessmentToolWorkflowInstanceId,
+                NextWorkflowDefinitionId = workflowDefinitionId,
+                IsStarted = false
+            };
         }
     }
 }

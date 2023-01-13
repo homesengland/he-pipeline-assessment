@@ -8,15 +8,19 @@ namespace He.PipelineAssessment.Infrastructure.Repository
 {
     public interface IAssessmentRepository
     {
+        Task<Assessment?> GetAssessment(int assessmentId);
         Task<List<Assessment>> GetAssessments();
+        Task<AssessmentToolWorkflowInstance?> GetAssessmentStage(string workflowInstance);
         Task<List<AssessmentStageViewModel>> GetAssessmentStages(int assessmentId);
         Task<List<StartableToolViewModel>> GetStartableTools(int assessmentId);
+        Task<AssessmentToolInstanceNextWorkflow?> GetAssessmentToolInstanceNextWorkflow(int assessmentToolWorkflowInstanceId, string workflowDefinitionId);
 
         Task<int> CreateAssessments(List<Assessment> assessments);
         Task<int> CreateAssessmentStage(AssessmentToolWorkflowInstance assessmentStage);
-        Task<Assessment?> GetAssessment(int assessmentId);
-        Task<AssessmentToolWorkflowInstance?> GetAssessmentStage(string workflowInstance);
+        Task CreateAssessmentToolInstanceNextWorkflows(List<AssessmentToolInstanceNextWorkflow> nextWorkflows);
+
         Task<int> SaveChanges();
+
     }
 
     public class AssessmentRepository : IAssessmentRepository
@@ -30,9 +34,19 @@ namespace He.PipelineAssessment.Infrastructure.Repository
             this.context = context;
         }
 
+        public async Task<Assessment?> GetAssessment(int assessmentId)
+        {
+            return await context.Set<Assessment>().FirstOrDefaultAsync(x => x.Id == assessmentId);
+        }
+
         public async Task<List<Assessment>> GetAssessments()
         {
             return await context.Set<Assessment>().ToListAsync();
+        }
+
+        public async Task<AssessmentToolWorkflowInstance?> GetAssessmentStage(string workflowInstance)
+        {
+            return await context.Set<AssessmentToolWorkflowInstance>().Include(x => x.Assessment).FirstOrDefaultAsync(x => x.WorkflowInstanceId == workflowInstance);
         }
 
         public async Task<List<AssessmentStageViewModel>> GetAssessmentStages(int assessmentId)
@@ -51,6 +65,13 @@ namespace He.PipelineAssessment.Infrastructure.Repository
             return new List<StartableToolViewModel>(startableTools);
         }
 
+        public async Task<AssessmentToolInstanceNextWorkflow?> GetAssessmentToolInstanceNextWorkflow(int assessmentToolWorkflowInstanceId, string workflowDefinitionId)
+        {
+            return await context.Set<AssessmentToolInstanceNextWorkflow>().FirstOrDefaultAsync(x =>
+                x.AssessmentToolWorkflowInstanceId == assessmentToolWorkflowInstanceId &&
+                x.NextWorkflowDefinitionId == workflowDefinitionId);
+        }
+
         public async Task<int> CreateAssessments(List<Assessment> assessments)
         {
             await context.Set<Assessment>().AddRangeAsync(assessments);
@@ -65,14 +86,10 @@ namespace He.PipelineAssessment.Infrastructure.Repository
             return await context.SaveChangesAsync();
         }
 
-        public async Task<Assessment?> GetAssessment(int assessmentId)
+        public async Task CreateAssessmentToolInstanceNextWorkflows(List<AssessmentToolInstanceNextWorkflow> nextWorkflows)
         {
-            return await context.Set<Assessment>().FirstOrDefaultAsync(x => x.Id == assessmentId);
-        }
-
-        public async Task<AssessmentToolWorkflowInstance?> GetAssessmentStage(string workflowInstance)
-        {
-            return await context.Set<AssessmentToolWorkflowInstance>().Include(x => x.Assessment).FirstOrDefaultAsync(x => x.WorkflowInstanceId == workflowInstance);
+            await context.Set<AssessmentToolInstanceNextWorkflow>().AddRangeAsync(nextWorkflows);
+            await context.SaveChangesAsync();
         }
 
         public async Task<int> SaveChanges()
