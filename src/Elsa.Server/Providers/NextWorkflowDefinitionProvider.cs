@@ -19,9 +19,14 @@ namespace Elsa.Server.Providers
         public string? GetNextWorkflowDefinitionIds(WorkflowInstance workflowInstance, string activityId)
         {
             var activityData = _activityDataProvider.GetActivityData(workflowInstance, activityId);
-            var nextWorkflowDefinitionIds = activityData["NextWorkflowDefinitionIds"]?.ToString();
+            if (activityData.HasKey("NextWorkflowDefinitionIds"))
+            {
 
-            return nextWorkflowDefinitionIds;
+                return activityData["NextWorkflowDefinitionIds"]?.ToString();
+               
+            }
+            return string.Empty;
+           
         }
     }
 }
