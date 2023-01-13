@@ -50,10 +50,10 @@ namespace He.PipelineAssessment.UI.Tests.Features.Assessment.AssessmentSummary
             //Assert
             Assert.NotNull(result);
             Assert.Equal(request.CorrelationId, result!.CorrelationId);
-            Assert.Equal(request.AssessmentId, result!.AssessmentId);
-            Assert.Equal(assessment.SiteName, result!.SiteName);
-            Assert.Equal(assessment.Counterparty, result!.CounterParty);
-            Assert.Equal(assessment.Reference, result!.Reference);
+            Assert.Equal(request.AssessmentId, result.AssessmentId);
+            Assert.Equal(assessment.SiteName, result.SiteName);
+            Assert.Equal(assessment.Counterparty, result.CounterParty);
+            Assert.Equal(assessment.Reference, result.Reference);
             Assert.Empty(result.Stages);
 
         }
@@ -78,10 +78,10 @@ namespace He.PipelineAssessment.UI.Tests.Features.Assessment.AssessmentSummary
             //Assert
             Assert.NotNull(result);
             Assert.Equal(request.CorrelationId, result!.CorrelationId);
-            Assert.Equal(request.AssessmentId, result!.AssessmentId);
-            Assert.Equal(assessment.SiteName, result!.SiteName);
-            Assert.Equal(assessment.Counterparty, result!.CounterParty);
-            Assert.Equal(assessment.Reference, result!.Reference);
+            Assert.Equal(request.AssessmentId, result.AssessmentId);
+            Assert.Equal(assessment.SiteName, result.SiteName);
+            Assert.Equal(assessment.Counterparty, result.CounterParty);
+            Assert.Equal(assessment.Reference, result.Reference);
             Assert.NotEmpty(result.Stages);
 
         }
@@ -108,11 +108,11 @@ namespace He.PipelineAssessment.UI.Tests.Features.Assessment.AssessmentSummary
             };
             var startableToolViewModel = new StartableToolViewModel()
             {
-                AssessmentToolId = stage.AssessmentToolId.Value,
+                AssessmentToolId = stage.AssessmentToolId!.Value,
                 WorkflowDefinitionId = workflowDefinitionId,
                 IsFirstWorkflow = true
             };
-            startableToolViewModels.Add(startableToolViewModel) ;
+            startableToolViewModels.Add(startableToolViewModel);
             assessmentRepository.Setup(x => x.GetAssessment(request.AssessmentId)).ReturnsAsync(assessment);
             assessmentRepository.Setup(x => x.GetAssessmentToolWorkflowInstances(request.AssessmentId)).ReturnsAsync(stages);
             assessmentRepository.Setup(x => x.GetStartableTools(request.AssessmentId)).ReturnsAsync(startableToolViewModels);
@@ -124,7 +124,7 @@ namespace He.PipelineAssessment.UI.Tests.Features.Assessment.AssessmentSummary
 
             //Assert
             Assert.NotNull(result);
-            Assert.Equal(startableToolViewModel.WorkflowDefinitionId, result.Stages.First().WorkflowDefinitionId);
+            Assert.Equal(startableToolViewModel.WorkflowDefinitionId, result!.Stages.First().WorkflowDefinitionId);
             Assert.Equal(startableToolViewModel.IsFirstWorkflow, result.Stages.First().IsFirstWorkflow);
             Assert.Null(result.Stages.First().AssessmentToolWorkflowInstanceId);
 
@@ -140,7 +140,6 @@ namespace He.PipelineAssessment.UI.Tests.Features.Assessment.AssessmentSummary
             Models.Assessment assessment,
             AssessmentStageViewModel stage,
             AssessmentSummaryRequest request,
-            string workflowDefinitionId,
             List<StartableToolViewModel> startableToolViewModels,
             AssessmentSummaryRequestHandler sut)
         {
@@ -152,7 +151,7 @@ namespace He.PipelineAssessment.UI.Tests.Features.Assessment.AssessmentSummary
             var stages = new List<AssessmentStageViewModel>()
             {
                 stage
-            };         
+            };
             assessmentRepository.Setup(x => x.GetAssessment(request.AssessmentId)).ReturnsAsync(assessment);
             assessmentRepository.Setup(x => x.GetAssessmentToolWorkflowInstances(request.AssessmentId)).ReturnsAsync(stages);
             assessmentRepository.Setup(x => x.GetStartableTools(request.AssessmentId)).ReturnsAsync(startableToolViewModels);
@@ -164,13 +163,52 @@ namespace He.PipelineAssessment.UI.Tests.Features.Assessment.AssessmentSummary
 
             //Assert
             Assert.NotNull(result);
-            Assert.Equal(stage.WorkflowDefinitionId, result.Stages.First().WorkflowDefinitionId);
+            Assert.Equal(stage.WorkflowDefinitionId, result!.Stages.First().WorkflowDefinitionId);
             Assert.Equal(stage.IsFirstWorkflow, result.Stages.First().IsFirstWorkflow);
             Assert.Null(result.Stages.First().AssessmentToolWorkflowInstanceId);
 
         }
 
+        [Theory]
+        [AutoMoqData]
+        public async Task Handle_ReturnsAssessmentStageWithOutDataFromStartableTools_GivenStageHasBeenStarted(
+           [Frozen] Mock<IAssessmentRepository> assessmentRepository,
+            Models.Assessment assessment,
+            AssessmentStageViewModel stage,
+            AssessmentSummaryRequest request,
+            string workflowDefinitionId,
+            List<StartableToolViewModel> startableToolViewModels,
+            AssessmentSummaryRequestHandler sut)
+        {
+            //Arrange
+            stage.WorkflowDefinitionId = null;
+            stage.IsFirstWorkflow = null;
+            var randomInt = 1111111;
+            stage.AssessmentToolWorkflowInstanceId = randomInt;
+            var stages = new List<AssessmentStageViewModel>()
+            {
+                stage
+            };
+            var startableToolViewModel = new StartableToolViewModel()
+            {
+                AssessmentToolId = stage.AssessmentToolId!.Value,
+                WorkflowDefinitionId = workflowDefinitionId,
+                IsFirstWorkflow = true
+            };
+            startableToolViewModels.Add(startableToolViewModel);
+            assessmentRepository.Setup(x => x.GetAssessment(request.AssessmentId)).ReturnsAsync(assessment);
+            assessmentRepository.Setup(x => x.GetAssessmentToolWorkflowInstances(request.AssessmentId)).ReturnsAsync(stages);
+            assessmentRepository.Setup(x => x.GetStartableTools(request.AssessmentId)).ReturnsAsync(startableToolViewModels);
 
+            //Act
+            var result = await sut.Handle(request, CancellationToken.None);
+
+            //Assert
+            Assert.NotNull(result);
+            Assert.Equal(stage.WorkflowDefinitionId, result!.Stages.First().WorkflowDefinitionId);
+            Assert.Equal(false, result.Stages.First().IsFirstWorkflow);
+            Assert.Equal(stage.AssessmentToolWorkflowInstanceId, result.Stages.First().AssessmentToolWorkflowInstanceId);
+        }
 
     }
 }
