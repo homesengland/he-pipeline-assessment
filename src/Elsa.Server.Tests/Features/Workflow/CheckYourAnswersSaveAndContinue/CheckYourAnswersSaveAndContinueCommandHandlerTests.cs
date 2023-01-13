@@ -26,7 +26,6 @@ namespace Elsa.Server.Tests.Features.Workflow.CheckYourAnswersSaveAndContinue
                 [Frozen] Mock<IElsaCustomRepository> elsaCustomRepository,
                 [Frozen] Mock<IWorkflowNextActivityProvider> workflowNextActivityProvider,
                 [Frozen] Mock<IWorkflowInstanceProvider> workflowInstanceProvider,
-                [Frozen] Mock<INextWorkflowDefinitionProvider> nextworkflowdefinitionprovider,
                 WorkflowBlueprint workflowBlueprint,
                 ActivityBlueprint activityBlueprint,
                 List<CollectedWorkflow> collectedWorkflows,
@@ -72,8 +71,6 @@ namespace Elsa.Server.Tests.Features.Workflow.CheckYourAnswersSaveAndContinue
                     saveAndContinueCommand.WorkflowInstanceId, null, ActivityTypeConstants.CheckYourAnswersScreen,
                     CancellationToken.None))
                 .ReturnsAsync(workflowNextActivityModel);
-           
-            nextworkflowdefinitionprovider.Setup(x => x.GetNextWorkflowDefinitionIds(workflowInstance, workflowNextActivityModel.NextActivity.Id)).Returns(workFlowDefinitionIds);
 
             //Act
             var result = await sut.Handle(saveAndContinueCommand, CancellationToken.None);
@@ -86,8 +83,7 @@ namespace Elsa.Server.Tests.Features.Workflow.CheckYourAnswersSaveAndContinue
 
             Assert.Equal(opResult.Data.NextActivityId, result.Data!.NextActivityId);
             Assert.Equal(opResult.Data.WorkflowInstanceId, result.Data.WorkflowInstanceId);
-            Assert.Equal(workFlowDefinitionIds, result.Data.NextWorkflowDefinitionIds);
-            Assert.Empty(result.ErrorMessages);           
+            Assert.Empty(result.ErrorMessages);
             Assert.Null(result.ValidationMessages);
         }
 
@@ -101,7 +97,6 @@ namespace Elsa.Server.Tests.Features.Workflow.CheckYourAnswersSaveAndContinue
                 [Frozen] Mock<IWorkflowInstanceProvider> workflowInstanceProvider,
                 [Frozen] Mock<IElsaCustomModelHelper> saveAndContinueHelper,
                 [Frozen] Mock<IElsaCustomModelHelper> elsaCustomModelHelper,
-                [Frozen] Mock<INextWorkflowDefinitionProvider> nextworkflowdefinitionprovider,
                 WorkflowBlueprint workflowBlueprint,
                 ActivityBlueprint activityBlueprint,
                 List<CollectedWorkflow> collectedWorkflows,
@@ -158,8 +153,6 @@ namespace Elsa.Server.Tests.Features.Workflow.CheckYourAnswersSaveAndContinue
                 .Setup(x => x.CreateQuestionScreenAnswers(workflowNextActivityModel.NextActivity.Id, workflowInstance))
                 .Returns(questionScreenAnswers);
 
-            nextworkflowdefinitionprovider.Setup(x => x.GetNextWorkflowDefinitionIds(workflowInstance, workflowNextActivityModel.NextActivity.Id)).Returns(string.Empty);
-
             //Act
             var result = await sut.Handle(saveAndContinueCommand, CancellationToken.None);
 
@@ -170,7 +163,6 @@ namespace Elsa.Server.Tests.Features.Workflow.CheckYourAnswersSaveAndContinue
             Assert.Equal(opResult.Data.NextActivityId, result.Data!.NextActivityId);
             Assert.Equal(opResult.Data.WorkflowInstanceId, result.Data.WorkflowInstanceId);
             Assert.Equal(activityBlueprint.Type, result.Data.ActivityType);
-            Assert.Equal(string.Empty, result.Data.NextWorkflowDefinitionIds);
             Assert.Empty(result.ErrorMessages);
             Assert.Null(result.ValidationMessages);
         }
@@ -185,7 +177,6 @@ namespace Elsa.Server.Tests.Features.Workflow.CheckYourAnswersSaveAndContinue
                 [Frozen] Mock<IWorkflowInstanceProvider> workflowInstanceProvider,
                 [Frozen] Mock<IElsaCustomModelHelper> saveAndContinueHelper,
                 [Frozen] Mock<IElsaCustomModelHelper> elsaCustomModelHelper,
-                [Frozen] Mock<INextWorkflowDefinitionProvider> nextworkflowdefinitionprovider,
                 WorkflowBlueprint workflowBlueprint,
                 ActivityBlueprint activityBlueprint,
                 List<CollectedWorkflow> collectedWorkflows,
@@ -242,8 +233,6 @@ namespace Elsa.Server.Tests.Features.Workflow.CheckYourAnswersSaveAndContinue
                 .Setup(x => x.CreateQuestionScreenAnswers(workflowNextActivityModel.NextActivity.Id, workflowInstance))
                 .Returns(questionScreenAnswers);
 
-            nextworkflowdefinitionprovider.Setup(x => x.GetNextWorkflowDefinitionIds(workflowInstance, workflowNextActivityModel.NextActivity.Id)).Returns((string?)null);
-
             //Act
             var result = await sut.Handle(saveAndContinueCommand, CancellationToken.None);
 
@@ -254,7 +243,6 @@ namespace Elsa.Server.Tests.Features.Workflow.CheckYourAnswersSaveAndContinue
             Assert.Equal(opResult.Data.NextActivityId, result.Data!.NextActivityId);
             Assert.Equal(opResult.Data.WorkflowInstanceId, result.Data.WorkflowInstanceId);
             Assert.Equal(activityBlueprint.Type, result.Data.ActivityType);
-            Assert.Null(result.Data.NextWorkflowDefinitionIds);
             Assert.Empty(result.ErrorMessages);
             Assert.Null(result.ValidationMessages);
         }

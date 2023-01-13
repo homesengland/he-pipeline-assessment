@@ -1,7 +1,6 @@
 ﻿using Elsa.CustomWorkflow.Sdk.HttpClients;
 using Elsa.CustomWorkflow.Sdk.Models.Workflow;
 using He.PipelineAssessment.Infrastructure.Repository;
-using He.PipelineAssessment.Models;
 using MediatR;
 
 namespace He.PipelineAssessment.UI.Features.Workflow.CheckYourAnswersSaveAndContinue
@@ -37,29 +36,6 @@ namespace He.PipelineAssessment.UI.Features.Workflow.CheckYourAnswersSaveAndCont
                     currentAssessmentToolWorkflowInstance.LastModifiedDateTime = submittedTime;
                     await _assessmentRepository.SaveChanges();
 
-                    if (!string.IsNullOrEmpty(response.Data.NextWorkflowDefinitionIds))
-                    {
-                        var nextWorkflows = new List<AssessmentToolInstanceNextWorkflow>();
-                        var workflowDefinitionIds = response.Data.NextWorkflowDefinitionIds.Split(',', StringSplitOptions.TrimEntries);
-                        foreach (var workflowDefinitionId in workflowDefinitionIds)
-                        {
-                            var nextWorkflow =
-                                await _assessmentRepository.GetAssessmentToolInstanceNextWorkflow(currentAssessmentToolWorkflowInstance.Id,
-                                    workflowDefinitionId);
-
-                            if (nextWorkflow == null)
-                            {
-                                var assessmentToolInstanceNextWorkflow =
-                                    AssessmentToolInstanceNextWorkflow(currentAssessmentToolWorkflowInstance.AssessmentId,
-                                        currentAssessmentToolWorkflowInstance.Id, workflowDefinitionId);
-                                nextWorkflows.Add(assessmentToolInstanceNextWorkflow);
-                            }
-                        }
-
-                        if (nextWorkflows.Any())
-                            await _assessmentRepository.CreateAssessmentToolInstanceNextWorkflows(nextWorkflows);
-                    }
-
                     CheckYourAnswersSaveAndContinueCommandResponse result = new CheckYourAnswersSaveAndContinueCommandResponse()
                     {
                         ActivityId = response.Data.NextActivityId,
@@ -71,17 +47,6 @@ namespace He.PipelineAssessment.UI.Features.Workflow.CheckYourAnswersSaveAndCont
             }
 
             return null;
-        }
-
-        private AssessmentToolInstanceNextWorkflow AssessmentToolInstanceNextWorkflow(int assessmentId, int assessmentToolWorkflowInstanceId, string workflowDefinitionId)
-        {
-            return new AssessmentToolInstanceNextWorkflow
-            {
-                AssessmentId = assessmentId,
-                AssessmentToolWorkflowInstanceId = assessmentToolWorkflowInstanceId,
-                NextWorkflowDefinitionId = workflowDefinitionId,
-                IsStarted = false
-            };
         }
     }
 }
