@@ -10,17 +10,6 @@
 <span class="govuk-caption-l">@Model.Reference</span>
 <h1 class="govuk-heading-l">@Model.SiteName @Model.CounterParty</h1>
 
-@using (Html.BeginForm("StartWorkflow", "Workflow", FormMethod.Post))
-{
-    @Html.AntiForgeryToken()
-    @Html.HiddenFor(x=>x.AssessmentId)
-    @Html.HiddenFor(x=>x.CorrelationId)
-    <h1 class="govuk-label-wrapper"><label class="govuk-label govuk-label--s" for="event-name">Enter workflow definition ID to start a workflow</label></h1>
-    <input type="text" class="govuk-input" name="WorkflowDefinitionId" />
-    <br />
-    <input class="govuk-button" data-module="govuk-button" id = "Submit" type = "submit" value = "Start now" />
-}
-
 <div class="text-center">
     <div class="text-center">
         <table class="govuk-table"> 

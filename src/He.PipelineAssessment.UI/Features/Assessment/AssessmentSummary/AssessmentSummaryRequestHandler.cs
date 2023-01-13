@@ -21,12 +21,12 @@ namespace He.PipelineAssessment.UI.Features.Assessment.AssessmentSummary
                 var dbAssessment = await _repository.GetAssessment(request.AssessmentId);
                 if (dbAssessment != null)
                 {
-                    var assessmentToolWorkflowInstances = await _repository.GetAssessmentToolWorkflowInstances(request.AssessmentId);
+                    var assessmentStages = await _repository.GetAssessmentStages(request.AssessmentId);
                     var startableTools = await _repository.GetStartableTools(request.AssessmentId);
                     var stages = new List<AssessmentSummaryStage>();
-                    if (assessmentToolWorkflowInstances.Any())
+                    if (assessmentStages.Any())
                     {
-                        foreach (var item in assessmentToolWorkflowInstances)
+                        foreach (var item in assessmentStages)
                         {
                             var stage = AssessmentSummaryStage(item, startableTools);
                             stages.Add(stage);

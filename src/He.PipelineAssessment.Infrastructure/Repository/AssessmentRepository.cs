@@ -11,9 +11,10 @@ namespace He.PipelineAssessment.Infrastructure.Repository
         Task<Assessment?> GetAssessment(int assessmentId);
         Task<List<Assessment>> GetAssessments();
         Task<AssessmentToolWorkflowInstance?> GetAssessmentToolWorkflowInstance(string workflowInstance);
-        Task<List<AssessmentStageViewModel>> GetAssessmentToolWorkflowInstances(int assessmentId);
+        Task<List<AssessmentStageViewModel>> GetAssessmentStages(int assessmentId);
         Task<List<StartableToolViewModel>> GetStartableTools(int assessmentId);
         Task<AssessmentToolInstanceNextWorkflow?> GetAssessmentToolInstanceNextWorkflow(int assessmentToolWorkflowInstanceId, string workflowDefinitionId);
+        Task<IEnumerable<AssessmentToolWorkflowInstance>> GetAssessmentToolWorkflowInstances(int assessmentId);
 
         Task<int> CreateAssessments(List<Assessment> assessments);
         Task<int> CreateAssessmentToolWorkflowInstance(AssessmentToolWorkflowInstance assessmentStage);
@@ -49,7 +50,7 @@ namespace He.PipelineAssessment.Infrastructure.Repository
             return await context.Set<AssessmentToolWorkflowInstance>().Include(x => x.Assessment).FirstOrDefaultAsync(x => x.WorkflowInstanceId == workflowInstance);
         }
 
-        public async Task<List<AssessmentStageViewModel>> GetAssessmentToolWorkflowInstances(int assessmentId)
+        public async Task<List<AssessmentStageViewModel>> GetAssessmentStages(int assessmentId)
         {
             var assessmentIdParameter = new SqlParameter("@assessmentId", assessmentId);
             var stages = await context.AssessmentStageViewModel
@@ -70,6 +71,11 @@ namespace He.PipelineAssessment.Infrastructure.Repository
             return await context.Set<AssessmentToolInstanceNextWorkflow>().FirstOrDefaultAsync(x =>
                 x.AssessmentToolWorkflowInstanceId == assessmentToolWorkflowInstanceId &&
                 x.NextWorkflowDefinitionId == workflowDefinitionId);
+        }
+
+        public async Task<IEnumerable<AssessmentToolWorkflowInstance>> GetAssessmentToolWorkflowInstances(int assessmentId)
+        {
+            return await context.Set<AssessmentToolWorkflowInstance>().Where(x => x.AssessmentId == assessmentId).ToListAsync();
         }
 
         public async Task<int> CreateAssessments(List<Assessment> assessments)
