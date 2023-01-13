@@ -167,7 +167,7 @@ export class ElsaQuestionScreen {
       case "RadioQuestion":
         return <elsa-radio-question onClick={(e) => e.stopPropagation()} class="panel elsa-rounded" question={question as RadioQuestion}></elsa-radio-question>;
       default:
-        return <elsa-question onClick={(e) => e.stopPropagation()} class="panel elsa-rounded" question={question}></elsa-question>;
+        return <elsa-question ActivityModel={this.activityModel} onClick={(e) => e.stopPropagation()} class="panel elsa-rounded" question={question}></elsa-question>;
     }
   }
 

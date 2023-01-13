@@ -1,9 +1,12 @@
 import { Component, h, Prop, State, Event, EventEmitter } from '@stencil/core';
 
 import {
+    ActivityModel,
   HTMLElsaMultiExpressionEditorElement,
+  ActivityPropertyDescriptor,
   //IntellisenseContext,
-  SyntaxNames
+  SyntaxNames,
+  ActivityDefinitionProperty
 } from '../../models/elsa-interfaces';
 
 import {
@@ -24,7 +27,9 @@ import { QuestionEventHandler } from '../../events/component-events';
 export class ElsaQuestionComponent {
 
   @Prop() question: IQuestionComponent
+  @Prop() ActivityModel: ActivityModel
   @State() iconProvider = new IconProvider();
+  @State() currentValue: string;
 
   handler: QuestionEventHandler;
 
@@ -41,6 +46,34 @@ export class ElsaQuestionComponent {
 
   async componentWillLoad() {
     this.handler = new QuestionEventHandler(this.question, this.updateQuestion);
+  }
+
+  onSyntaxValueChanged(e: CustomEvent) {
+    this.currentValue = e.detail;
+  }
+
+  sampleDescriptor() {
+    const test: ActivityPropertyDescriptor = {
+        name: "test",
+        uiHint: "",
+        label: "a test label",
+        hint: "hint about a test label",
+        options: "",
+      defaultValue: "",
+      supportedSyntaxes: [SyntaxNames.JavaScript],
+        isReadOnly: false,
+        considerValuesAsOutcomes: false,
+        disableWorkflowProviderSelection: false
+    };
+        return test
+  }
+
+  sampleModel() {
+    const test: ActivityDefinitionProperty = {
+      name: 'Test field',
+      expressions: { "Literal": '', "Javascript": '' }
+    }
+    return test;
   }
 
   renderQuestionField(fieldId, fieldName, fieldValue, onChangedFunction, isDisabled = false) {
@@ -61,6 +94,20 @@ export class ElsaQuestionComponent {
         class="disabled:elsa-opacity-50 disabled:elsa-cursor-not-allowed focus:elsa-ring-blue-500 focus:elsa-border-blue-500 elsa-block elsa-w-full elsa-min-w-0 elsa-rounded-md sm:elsa-text-sm elsa-border-gray-300" />
     </div>;
   }
+
+  //renderTestQuestionField(fieldId, fieldName, fieldValue, onChangedFunction, isDisabled = false) {
+  //  return <elsa-property-editor
+  //    activityModel={this.activityModel}
+  //    propertyDescriptor={propertyDescriptor}
+  //    propertyModel={propertyModel}
+  //    onDefaultSyntaxValueChanged={e => this.onDefaultSyntaxValueChanged(e)}
+  //    editor-height="5em"
+  //    single-line={true}>
+  //    <input type="text" id={fieldId} name={fieldName} value={fieldValue} onChange={e => onChangedFunction.bind(this)(e)}
+  //      class="disabled:elsa-opacity-50 disabled:elsa-cursor-not-allowed focus:elsa-ring-blue-500 focus:elsa-border-blue-500 elsa-block elsa-w-full elsa-min-w-0 elsa-rounded-md sm:elsa-text-sm elsa-border-gray-300"
+  //      disabled={isDisabled} />
+  //  </elsa-property-editor>;
+  //}
 
   renderCheckboxField(fieldId, fieldName, isChecked, onChangedFunction) {
     return <div>
@@ -88,6 +135,12 @@ export class ElsaQuestionComponent {
 
         {this.renderQuestionField(`${field}-questionid`, `Identifier`, this.question.id, this.handler.onIdentifierChanged, true)}
         {this.renderQuestionField(`${field}-title`, `Title`, this.question.title, this.handler.onTitleChanged)}
+        <custom-single-line-property
+          activityModel={this.ActivityModel}
+          propertyDescriptor={this.sampleDescriptor()}
+          propertyModel={this.sampleModel()}
+        >
+        </custom-single-line-property>
         {this.renderQuestionField(`${field}-questionText`, `Question`, this.question.questionText, this.handler.onQuestionChanged)}
         {this.renderQuestionField(`${field}-questionHint`, `Hint`, this.question.questionHint, this.handler.onHintChanged)}
         {this.renderQuestionField(`${field}-questionGuidance`, `Guidance`, this.question.questionGuidance, this.handler.onGuidanceChanged)}
