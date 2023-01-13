@@ -1,9 +1,9 @@
 ﻿using Elsa.CustomWorkflow.Sdk;
 using Elsa.CustomWorkflow.Sdk.HttpClients;
 using Elsa.CustomWorkflow.Sdk.Models.Workflow;
+using He.PipelineAssessment.Infrastructure.Repository;
 using MediatR;
 using System.Text.Json;
-using He.PipelineAssessment.Infrastructure.Repository;
 
 namespace He.PipelineAssessment.UI.Features.Workflow.LoadConfirmationScreen
 {
@@ -32,14 +32,14 @@ namespace He.PipelineAssessment.UI.Features.Workflow.LoadConfirmationScreen
                 string jsonResponse = JsonSerializer.Serialize(response);
                 LoadConfirmationScreenResponse? result = JsonSerializer.Deserialize<LoadConfirmationScreenResponse>(jsonResponse);
 
-                var currentAssessmentStage = await _assessmentRepository.GetAssessmentStage(response.Data.WorkflowInstanceId);
-                if (currentAssessmentStage != null && result != null)
+                var currentAssessmentToolWorkflowInstance = await _assessmentRepository.GetAssessmentToolWorkflowInstance(response.Data.WorkflowInstanceId);
+                if (currentAssessmentToolWorkflowInstance != null && result != null)
                 {
-                    result.CorrelationId = currentAssessmentStage.Assessment.SpId.ToString();
-                    result.AssessmentId = currentAssessmentStage.AssessmentId;
+                    result.CorrelationId = currentAssessmentToolWorkflowInstance.Assessment.SpId.ToString();
+                    result.AssessmentId = currentAssessmentToolWorkflowInstance.AssessmentId;
                     return await Task.FromResult(result);
                 }
-                
+
             }
             return null;
         }

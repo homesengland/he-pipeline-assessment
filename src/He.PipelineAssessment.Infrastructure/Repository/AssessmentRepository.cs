@@ -10,13 +10,13 @@ namespace He.PipelineAssessment.Infrastructure.Repository
     {
         Task<Assessment?> GetAssessment(int assessmentId);
         Task<List<Assessment>> GetAssessments();
-        Task<AssessmentToolWorkflowInstance?> GetAssessmentStage(string workflowInstance);
-        Task<List<AssessmentStageViewModel>> GetAssessmentStages(int assessmentId);
+        Task<AssessmentToolWorkflowInstance?> GetAssessmentToolWorkflowInstance(string workflowInstance);
+        Task<List<AssessmentStageViewModel>> GetAssessmentToolWorkflowInstances(int assessmentId);
         Task<List<StartableToolViewModel>> GetStartableTools(int assessmentId);
         Task<AssessmentToolInstanceNextWorkflow?> GetAssessmentToolInstanceNextWorkflow(int assessmentToolWorkflowInstanceId, string workflowDefinitionId);
 
         Task<int> CreateAssessments(List<Assessment> assessments);
-        Task<int> CreateAssessmentStage(AssessmentToolWorkflowInstance assessmentStage);
+        Task<int> CreateAssessmentToolWorkflowInstance(AssessmentToolWorkflowInstance assessmentStage);
         Task CreateAssessmentToolInstanceNextWorkflows(List<AssessmentToolInstanceNextWorkflow> nextWorkflows);
 
         Task<int> SaveChanges();
@@ -44,12 +44,12 @@ namespace He.PipelineAssessment.Infrastructure.Repository
             return await context.Set<Assessment>().ToListAsync();
         }
 
-        public async Task<AssessmentToolWorkflowInstance?> GetAssessmentStage(string workflowInstance)
+        public async Task<AssessmentToolWorkflowInstance?> GetAssessmentToolWorkflowInstance(string workflowInstance)
         {
             return await context.Set<AssessmentToolWorkflowInstance>().Include(x => x.Assessment).FirstOrDefaultAsync(x => x.WorkflowInstanceId == workflowInstance);
         }
 
-        public async Task<List<AssessmentStageViewModel>> GetAssessmentStages(int assessmentId)
+        public async Task<List<AssessmentStageViewModel>> GetAssessmentToolWorkflowInstances(int assessmentId)
         {
             var assessmentIdParameter = new SqlParameter("@assessmentId", assessmentId);
             var stages = await context.AssessmentStageViewModel
@@ -78,7 +78,7 @@ namespace He.PipelineAssessment.Infrastructure.Repository
             return await context.SaveChangesAsync();
         }
 
-        public async Task<int> CreateAssessmentStage(AssessmentToolWorkflowInstance assessmentStage)
+        public async Task<int> CreateAssessmentToolWorkflowInstance(AssessmentToolWorkflowInstance assessmentStage)
         {
             await context.Set<AssessmentToolWorkflowInstance>().AddAsync(assessmentStage);
             await context.SaveChangesAsync();

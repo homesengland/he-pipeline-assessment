@@ -26,15 +26,15 @@ namespace He.PipelineAssessment.UI.Features.Workflow.CheckYourAnswersSaveAndCont
             var response = await _elsaServerHttpClient.CheckYourAnswersSaveAndContinue(checkYourAnswersSaveAndContinueCommandDto);
             if (response != null)
             {
-                var currentAssessmentStage = await _assessmentRepository.GetAssessmentStage(response.Data.WorkflowInstanceId);
-                if (currentAssessmentStage != null && currentAssessmentStage.Status != AssessmentStageConstants.Submitted)
+                var currentAssessmentToolWorkflowInstance = await _assessmentRepository.GetAssessmentToolWorkflowInstance(response.Data.WorkflowInstanceId);
+                if (currentAssessmentToolWorkflowInstance != null && currentAssessmentToolWorkflowInstance.Status != AssessmentStageConstants.Submitted)
                 {
                     var submittedTime = DateTime.UtcNow;
-                    currentAssessmentStage.Status = AssessmentStageConstants.Submitted;
-                    currentAssessmentStage.SubmittedDateTime = submittedTime;
-                    currentAssessmentStage.CurrentActivityId = response.Data.NextActivityId;
-                    currentAssessmentStage.CurrentActivityType = response.Data.ActivityType;
-                    currentAssessmentStage.LastModifiedDateTime = submittedTime;
+                    currentAssessmentToolWorkflowInstance.Status = AssessmentStageConstants.Submitted;
+                    currentAssessmentToolWorkflowInstance.SubmittedDateTime = submittedTime;
+                    currentAssessmentToolWorkflowInstance.CurrentActivityId = response.Data.NextActivityId;
+                    currentAssessmentToolWorkflowInstance.CurrentActivityType = response.Data.ActivityType;
+                    currentAssessmentToolWorkflowInstance.LastModifiedDateTime = submittedTime;
                     await _assessmentRepository.SaveChanges();
 
                     if (!string.IsNullOrEmpty(response.Data.NextWorkflowDefinitionIds))
@@ -44,14 +44,14 @@ namespace He.PipelineAssessment.UI.Features.Workflow.CheckYourAnswersSaveAndCont
                         foreach (var workflowDefinitionId in workflowDefinitionIds)
                         {
                             var nextWorkflow =
-                                await _assessmentRepository.GetAssessmentToolInstanceNextWorkflow(currentAssessmentStage.Id,
+                                await _assessmentRepository.GetAssessmentToolInstanceNextWorkflow(currentAssessmentToolWorkflowInstance.Id,
                                     workflowDefinitionId);
 
                             if (nextWorkflow == null)
                             {
                                 var assessmentToolInstanceNextWorkflow =
-                                    AssessmentToolInstanceNextWorkflow(currentAssessmentStage.AssessmentId,
-                                        currentAssessmentStage.Id, workflowDefinitionId);
+                                    AssessmentToolInstanceNextWorkflow(currentAssessmentToolWorkflowInstance.AssessmentId,
+                                        currentAssessmentToolWorkflowInstance.Id, workflowDefinitionId);
                                 nextWorkflows.Add(assessmentToolInstanceNextWorkflow);
                             }
                         }

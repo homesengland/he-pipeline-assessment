@@ -38,7 +38,7 @@ namespace He.PipelineAssessment.UI.Features.Workflow.StartWorkflow
 
                 var assessmentStage = AssessmentStage(request, response);
 
-                await _assessmentRepository.CreateAssessmentStage(assessmentStage);
+                await _assessmentRepository.CreateAssessmentToolWorkflowInstance(assessmentStage);
 
                 return await Task.FromResult(result);
             }

@@ -34,7 +34,7 @@ namespace He.PipelineAssessment.UI.Tests.Features.Workflow.LoadConfirmationScree
 
         [Theory]
         [AutoMoqData]
-        public async Task Handle_ReturnsNull_GivenNoAssessmentStageFound(
+        public async Task Handle_ReturnsNull_GivenNoAssessmentToolWorkflowInstanceFound(
             [Frozen] Mock<IElsaServerHttpClient> elsaServerHttpClient,
             [Frozen] Mock<IAssessmentRepository> assessmentRepository,
             LoadConfirmationScreenRequest request,
@@ -46,7 +46,7 @@ namespace He.PipelineAssessment.UI.Tests.Features.Workflow.LoadConfirmationScree
             elsaServerHttpClient.Setup(x => x.LoadConfirmationScreen(It.IsAny<LoadWorkflowActivityDto>()))
                 .ReturnsAsync(workflowActivityDataDto);
 
-            assessmentRepository.Setup(x => x.GetAssessmentStage(workflowActivityDataDto.Data.WorkflowInstanceId))
+            assessmentRepository.Setup(x => x.GetAssessmentToolWorkflowInstance(workflowActivityDataDto.Data.WorkflowInstanceId))
                 .ReturnsAsync((AssessmentToolWorkflowInstance?)null);
 
             //Act
@@ -71,7 +71,7 @@ namespace He.PipelineAssessment.UI.Tests.Features.Workflow.LoadConfirmationScree
             elsaServerHttpClient.Setup(x => x.LoadConfirmationScreen(It.IsAny<LoadWorkflowActivityDto>()))
                 .ReturnsAsync(workflowActivityDataDto);
 
-            assessmentRepository.Setup(x => x.GetAssessmentStage(workflowActivityDataDto.Data.WorkflowInstanceId))
+            assessmentRepository.Setup(x => x.GetAssessmentToolWorkflowInstance(workflowActivityDataDto.Data.WorkflowInstanceId))
                 .ReturnsAsync(stage);
 
             //Act

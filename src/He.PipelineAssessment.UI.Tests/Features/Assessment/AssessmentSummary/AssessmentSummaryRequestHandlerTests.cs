@@ -42,7 +42,7 @@ namespace He.PipelineAssessment.UI.Tests.Features.Assessment.AssessmentSummary
             //Arrange
             var emptyList = new List<AssessmentStageViewModel>();
             assessmentRepository.Setup(x => x.GetAssessment(It.IsAny<int>())).ReturnsAsync(assessment);
-            assessmentRepository.Setup(x => x.GetAssessmentStages(It.IsAny<int>())).ReturnsAsync(emptyList);
+            assessmentRepository.Setup(x => x.GetAssessmentToolWorkflowInstances(It.IsAny<int>())).ReturnsAsync(emptyList);
 
             //Act
             var result = await sut.Handle(request, CancellationToken.None);
@@ -70,7 +70,7 @@ namespace He.PipelineAssessment.UI.Tests.Features.Assessment.AssessmentSummary
         {
             //Arrange
             assessmentRepository.Setup(x => x.GetAssessment(It.IsAny<int>())).ReturnsAsync(assessment);
-            assessmentRepository.Setup(x => x.GetAssessmentStages(It.IsAny<int>())).ReturnsAsync(stages);
+            assessmentRepository.Setup(x => x.GetAssessmentToolWorkflowInstances(It.IsAny<int>())).ReturnsAsync(stages);
 
             //Act
             var result = await sut.Handle(request, CancellationToken.None);

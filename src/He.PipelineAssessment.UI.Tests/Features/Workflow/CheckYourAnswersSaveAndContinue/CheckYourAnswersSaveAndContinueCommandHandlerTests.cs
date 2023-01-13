@@ -37,7 +37,7 @@ namespace He.PipelineAssessment.UI.Tests.Features.Workflow.CheckYourAnswersSaveA
         public async Task Handle_ReturnsCheckYourAnswersSaveAndContinueCommandResponse_GivenNoErrorsEncountered(
             [Frozen] Mock<IElsaServerHttpClient> elsaServerHttpClient,
             [Frozen] Mock<IAssessmentRepository> assessmentRepository,
-            AssessmentToolWorkflowInstance assessmentStage,
+            AssessmentToolWorkflowInstance assessmentToolWorkflowInstance,
             CheckYourAnswersSaveAndContinueCommand saveAndContinueCommand,
             WorkflowNextActivityDataDto workflowNextActivityDataDto,
             CheckYourAnswersSaveAndContinueCommandHandler sut
@@ -48,8 +48,8 @@ namespace He.PipelineAssessment.UI.Tests.Features.Workflow.CheckYourAnswersSaveA
             elsaServerHttpClient.Setup(x => x.CheckYourAnswersSaveAndContinue(It.IsAny<CheckYourAnswersSaveAndContinueCommandDto>()))
                 .ReturnsAsync(workflowNextActivityDataDto);
 
-            assessmentRepository.Setup(x => x.GetAssessmentStage(workflowNextActivityDataDto.Data.WorkflowInstanceId))
-                .ReturnsAsync(assessmentStage);
+            assessmentRepository.Setup(x => x.GetAssessmentToolWorkflowInstance(workflowNextActivityDataDto.Data.WorkflowInstanceId))
+                .ReturnsAsync(assessmentToolWorkflowInstance);
 
             //Act
             var result = await sut.Handle(saveAndContinueCommand, CancellationToken.None);
