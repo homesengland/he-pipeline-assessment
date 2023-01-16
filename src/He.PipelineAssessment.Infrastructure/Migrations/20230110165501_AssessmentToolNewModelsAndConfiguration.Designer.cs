@@ -4,6 +4,7 @@ using He.PipelineAssessment.Infrastructure.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,10 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace He.PipelineAssessment.Infrastructure.Migrations
 {
     [DbContext(typeof(PipelineAssessmentContext))]
-    partial class PipelineAssessmentContextModelSnapshot : ModelSnapshot
+    [Migration("20230110165501_AssessmentToolNewModelsAndConfiguration")]
+    partial class AssessmentToolNewModelsAndConfiguration
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -104,9 +106,6 @@ namespace He.PipelineAssessment.Infrastructure.Migrations
                         .HasColumnType("int");
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
-
-                    b.Property<int>("AssessmentId")
-                        .HasColumnType("int");
 
                     b.Property<int>("AssessmentToolWorkflowInstanceId")
                         .HasColumnType("int");
@@ -215,69 +214,6 @@ namespace He.PipelineAssessment.Infrastructure.Migrations
                     b.ToTable("AssessmentToolWorkflowInstance");
                 });
 
-            modelBuilder.Entity("He.PipelineAssessment.Models.ViewModels.AssessmentStageViewModel", b =>
-                {
-                    b.Property<int?>("AssessmentToolId")
-                        .HasColumnType("int");
-
-                    b.Property<int?>("AssessmentToolWorkflowInstanceId")
-                        .HasColumnType("int");
-
-                    b.Property<DateTime?>("CreatedDateTime")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("CurrentActivityId")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("CurrentActivityType")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<bool?>("IsFirstWorkflow")
-                        .HasColumnType("bit");
-
-                    b.Property<bool>("IsVisible")
-                        .HasColumnType("bit");
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<int>("Order")
-                        .HasColumnType("int");
-
-                    b.Property<string>("Status")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<DateTime?>("SubmittedDateTime")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("WorkflowDefinitionId")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("WorkflowInstanceId")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("WorkflowName")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.ToView(null);
-                });
-
-            modelBuilder.Entity("He.PipelineAssessment.Models.ViewModels.StartableToolViewModel", b =>
-                {
-                    b.Property<int>("AssessmentToolId")
-                        .HasColumnType("int");
-
-                    b.Property<bool>("IsFirstWorkflow")
-                        .HasColumnType("bit");
-
-                    b.Property<string>("WorkflowDefinitionId")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.ToView(null);
-                });
-
             modelBuilder.Entity("Microsoft.AspNetCore.DataProtection.EntityFrameworkCore.DataProtectionKey", b =>
                 {
                     b.Property<int>("Id")
@@ -322,7 +258,7 @@ namespace He.PipelineAssessment.Infrastructure.Migrations
             modelBuilder.Entity("He.PipelineAssessment.Models.AssessmentToolWorkflowInstance", b =>
                 {
                     b.HasOne("He.PipelineAssessment.Models.Assessment", "Assessment")
-                        .WithMany("AssessmentToolWorkflowInstances")
+                        .WithMany("AssessmentStages")
                         .HasForeignKey("AssessmentId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -332,7 +268,7 @@ namespace He.PipelineAssessment.Infrastructure.Migrations
 
             modelBuilder.Entity("He.PipelineAssessment.Models.Assessment", b =>
                 {
-                    b.Navigation("AssessmentToolWorkflowInstances");
+                    b.Navigation("AssessmentStages");
                 });
 
             modelBuilder.Entity("He.PipelineAssessment.Models.AssessmentTool", b =>

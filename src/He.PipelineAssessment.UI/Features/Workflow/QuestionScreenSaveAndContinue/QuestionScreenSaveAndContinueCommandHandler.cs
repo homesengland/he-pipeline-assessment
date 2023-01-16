@@ -29,12 +29,12 @@ namespace He.PipelineAssessment.UI.Features.Workflow.QuestionScreenSaveAndContin
                     WorkflowInstanceId = response.Data.WorkflowInstanceId,
                     ActivityType = response.Data.ActivityType
                 };
-                var currentAssessmentStage = await _assessmentRepository.GetAssessmentStage(response.Data.WorkflowInstanceId);
-                if (currentAssessmentStage != null)
+                var currentAssessmentToolWorkflowInstance = await _assessmentRepository.GetAssessmentToolWorkflowInstance(response.Data.WorkflowInstanceId);
+                if (currentAssessmentToolWorkflowInstance != null)
                 {
-                    currentAssessmentStage.CurrentActivityId = response.Data.NextActivityId;
-                    currentAssessmentStage.CurrentActivityType = response.Data.ActivityType;
-                    currentAssessmentStage.LastModifiedDateTime = DateTime.UtcNow;
+                    currentAssessmentToolWorkflowInstance.CurrentActivityId = response.Data.NextActivityId;
+                    currentAssessmentToolWorkflowInstance.CurrentActivityType = response.Data.ActivityType;
+                    currentAssessmentToolWorkflowInstance.LastModifiedDateTime = DateTime.UtcNow;
                     await _assessmentRepository.SaveChanges();
                 }
 

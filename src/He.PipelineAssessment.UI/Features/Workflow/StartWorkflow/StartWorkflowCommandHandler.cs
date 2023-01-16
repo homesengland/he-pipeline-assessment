@@ -38,7 +38,7 @@ namespace He.PipelineAssessment.UI.Features.Workflow.StartWorkflow
 
                 var assessmentStage = AssessmentStage(request, response);
 
-                await _assessmentRepository.CreateAssessmentStage(assessmentStage);
+                await _assessmentRepository.CreateAssessmentToolWorkflowInstance(assessmentStage);
 
                 return await Task.FromResult(result);
             }
@@ -49,9 +49,9 @@ namespace He.PipelineAssessment.UI.Features.Workflow.StartWorkflow
 
         }
 
-        private static AssessmentStage AssessmentStage(StartWorkflowCommand request, WorkflowNextActivityDataDto response)
+        private static AssessmentToolWorkflowInstance AssessmentStage(StartWorkflowCommand request, WorkflowNextActivityDataDto response)
         {
-            var assessmentStage = new AssessmentStage();
+            var assessmentStage = new AssessmentToolWorkflowInstance();
             assessmentStage.WorkflowInstanceId = response.Data.WorkflowInstanceId;
             assessmentStage.CreatedDateTime = DateTime.UtcNow;
             assessmentStage.AssessmentId = request.AssessmentId;

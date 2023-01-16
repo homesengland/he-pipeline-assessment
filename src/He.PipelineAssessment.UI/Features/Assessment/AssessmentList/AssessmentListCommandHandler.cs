@@ -1,8 +1,8 @@
 ﻿using He.PipelineAssessment.Infrastructure.Repository;
-using He.PipelineAssessment.Models;
+using He.PipelineAssessment.UI.Features.Assessments.AssessmentList;
 using MediatR;
 
-namespace He.PipelineAssessment.UI.Features.Assessments.AssessmentList
+namespace He.PipelineAssessment.UI.Features.Assessment.AssessmentList
 {
     public class AssessmentListCommandHandler : IRequestHandler<AssessmentListCommand, AssessmentListData>
     {
@@ -31,7 +31,7 @@ namespace He.PipelineAssessment.UI.Features.Assessments.AssessmentList
             }
         }
 
-        private AssessmentListData GetAssessmentListFromResults(List<Assessment> listOfAssessments)
+        private AssessmentListData GetAssessmentListFromResults(List<Models.Assessment> listOfAssessments)
         {
             AssessmentListData assessmentLandingPageData = new AssessmentListData();
             foreach (var assessment in listOfAssessments)

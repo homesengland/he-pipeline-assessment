@@ -1,6 +1,6 @@
 ﻿namespace He.PipelineAssessment.Models
 {
-    public class AssessmentStage
+    public class AssessmentToolWorkflowInstance
     {
         public int Id { get; set; }
         public int AssessmentId { get; set; }
@@ -14,5 +14,6 @@
         public DateTime? LastModifiedDateTime { get; set; }
         public DateTime? SubmittedDateTime { get; set; }
         public virtual Assessment Assessment { get; set; } = null!;
+        public virtual List<AssessmentToolInstanceNextWorkflow> AssessmentToolInstanceNextWorkflows { get; set; } = null!;
     }
 }

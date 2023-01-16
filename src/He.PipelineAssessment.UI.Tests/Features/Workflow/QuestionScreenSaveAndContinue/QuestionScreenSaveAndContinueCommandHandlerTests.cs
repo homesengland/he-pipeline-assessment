@@ -45,7 +45,7 @@ namespace He.PipelineAssessment.UI.Tests.Features.Workflow.SaveAndContinue
             [Frozen] Mock<IElsaServerHttpClient> elsaServerHttpClient,
             [Frozen] Mock<IQuestionScreenSaveAndContinueMapper> saveAndContinueMapper,
             [Frozen] Mock<IAssessmentRepository> assessmentRepository,
-            AssessmentStage assessmentStage,
+            AssessmentToolWorkflowInstance assessmentToolWorkflowInstance,
             QuestionScreenSaveAndContinueCommand saveAndContinueCommand,
             QuestionScreenSaveAndContinueCommandDto saveAndContinueCommandDto,
             WorkflowNextActivityDataDto workflowNextActivityDataDto,
@@ -60,8 +60,8 @@ namespace He.PipelineAssessment.UI.Tests.Features.Workflow.SaveAndContinue
             elsaServerHttpClient.Setup(x => x.QuestionScreenSaveAndContinue(saveAndContinueCommandDto))
                 .ReturnsAsync(workflowNextActivityDataDto);
 
-            assessmentRepository.Setup(x => x.GetAssessmentStage(workflowNextActivityDataDto.Data.WorkflowInstanceId))
-                .ReturnsAsync(assessmentStage);
+            assessmentRepository.Setup(x => x.GetAssessmentToolWorkflowInstance(workflowNextActivityDataDto.Data.WorkflowInstanceId))
+                .ReturnsAsync(assessmentToolWorkflowInstance);
 
             //Act
             var result = await sut.Handle(saveAndContinueCommand, CancellationToken.None);
@@ -79,7 +79,7 @@ namespace He.PipelineAssessment.UI.Tests.Features.Workflow.SaveAndContinue
         [Frozen] Mock<IElsaServerHttpClient> elsaServerHttpClient,
         [Frozen] Mock<IQuestionScreenSaveAndContinueMapper> saveAndContinueMapper,
         [Frozen] Mock<IAssessmentRepository> assessmentRepository,
-        AssessmentStage assessmentStage,
+        AssessmentToolWorkflowInstance assessmentToolWorkflowInstance,
         QuestionScreenSaveAndContinueCommand saveAndContinueCommand,
         QuestionScreenSaveAndContinueCommandDto saveAndContinueCommandDto,
         WorkflowNextActivityDataDto workflowNextActivityDataDto,
@@ -95,8 +95,8 @@ namespace He.PipelineAssessment.UI.Tests.Features.Workflow.SaveAndContinue
             elsaServerHttpClient.Setup(x => x.QuestionScreenSaveAndContinue(saveAndContinueCommandDto))
                 .ReturnsAsync(workflowNextActivityDataDto);
 
-            assessmentRepository.Setup(x => x.GetAssessmentStage(workflowNextActivityDataDto.Data.WorkflowInstanceId))
-                .ReturnsAsync(assessmentStage);
+            assessmentRepository.Setup(x => x.GetAssessmentToolWorkflowInstance(workflowNextActivityDataDto.Data.WorkflowInstanceId))
+                .ReturnsAsync(assessmentToolWorkflowInstance);
 
             //Act
             var result = await sut.Handle(saveAndContinueCommand, CancellationToken.None);

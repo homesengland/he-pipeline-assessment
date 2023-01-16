@@ -83,7 +83,7 @@ namespace Elsa.Server.Tests.Features.Workflow.LoadConfirmationScreen
                 { "ConfirmationText", "MyConfirmationText" },
                 { "FooterText", "MyFooterText" },
                 { "FooterTitle", "MyFooterTitle" },
-                { "NextWorkflowDefinitionId", "MyNextWorkflowDefinitionId" }
+                { "NextWorkflowDefinitionIds", "MyNextWorkflowDefinitionId" }
             };
             activityDataProvider
                 .Setup(x => x.GetActivityData(request.WorkflowInstanceId, request.ActivityId, CancellationToken.None))
@@ -102,7 +102,7 @@ namespace Elsa.Server.Tests.Features.Workflow.LoadConfirmationScreen
             Assert.Equal("MyConfirmationText", result.Data.ConfirmationText);
             Assert.Equal("MyFooterText", result.Data.FooterText);
             Assert.Equal("MyFooterTitle", result.Data.FooterTitle);
-            Assert.Equal("MyNextWorkflowDefinitionId", result.Data.NextWorkflowDefinitionId);
+            Assert.Equal("MyNextWorkflowDefinitionId", result.Data.NextWorkflowDefinitionIds);
             Assert.Empty(result.ErrorMessages);
         }
     }

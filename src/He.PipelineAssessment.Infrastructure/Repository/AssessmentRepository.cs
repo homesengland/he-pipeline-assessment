@@ -1,36 +1,81 @@
 ﻿using He.PipelineAssessment.Infrastructure.Data;
 using He.PipelineAssessment.Models;
+using He.PipelineAssessment.Models.ViewModels;
+using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
 
 namespace He.PipelineAssessment.Infrastructure.Repository
 {
     public interface IAssessmentRepository
     {
-        Task<List<Assessment>> GetAssessments();
-        Task<List<AssessmentStage>> GetAssessmentStages(int assessmentId);
-        Task<int> CreateAssessments(List<Assessment> assessments);
-        Task<int> CreateAssessmentStage(AssessmentStage assessmentStage);
         Task<Assessment?> GetAssessment(int assessmentId);
-        Task<AssessmentStage?> GetAssessmentStage(string workflowInstance);
+        Task<List<Assessment>> GetAssessments();
+        Task<AssessmentToolWorkflowInstance?> GetAssessmentToolWorkflowInstance(string workflowInstance);
+        Task<List<AssessmentStageViewModel>> GetAssessmentStages(int assessmentId);
+        Task<List<StartableToolViewModel>> GetStartableTools(int assessmentId);
+        Task<AssessmentToolInstanceNextWorkflow?> GetAssessmentToolInstanceNextWorkflow(int assessmentToolWorkflowInstanceId, string workflowDefinitionId);
+        Task<IEnumerable<AssessmentToolWorkflowInstance>> GetAssessmentToolWorkflowInstances(int assessmentId);
+
+        Task<int> CreateAssessments(List<Assessment> assessments);
+        Task<int> CreateAssessmentToolWorkflowInstance(AssessmentToolWorkflowInstance assessmentStage);
+        Task CreateAssessmentToolInstanceNextWorkflows(List<AssessmentToolInstanceNextWorkflow> nextWorkflows);
+
         Task<int> SaveChanges();
+
     }
 
     public class AssessmentRepository : IAssessmentRepository
     {
         private readonly PipelineAssessmentContext context;
+        private readonly string sp_GetAssessmentStagesByAssessmentId = @"exec GetAssessmentStagesByAssessmentId @assessmentId";
+        private readonly string sp_GetStartableToolsByAssessmentId = @"exec GetStartableToolsByAssessmentId @assessmentId";
 
         public AssessmentRepository(PipelineAssessmentContext context)
         {
             this.context = context;
         }
+
+        public async Task<Assessment?> GetAssessment(int assessmentId)
+        {
+            return await context.Set<Assessment>().FirstOrDefaultAsync(x => x.Id == assessmentId);
+        }
+
         public async Task<List<Assessment>> GetAssessments()
         {
             return await context.Set<Assessment>().ToListAsync();
         }
 
-        public async Task<List<AssessmentStage>> GetAssessmentStages(int assessmentId)
+        public async Task<AssessmentToolWorkflowInstance?> GetAssessmentToolWorkflowInstance(string workflowInstance)
         {
-            return await context.Set<AssessmentStage>().Where(x => x.AssessmentId == assessmentId).ToListAsync();
+            return await context.Set<AssessmentToolWorkflowInstance>().Include(x => x.Assessment).FirstOrDefaultAsync(x => x.WorkflowInstanceId == workflowInstance);
+        }
+
+        public async Task<List<AssessmentStageViewModel>> GetAssessmentStages(int assessmentId)
+        {
+            var assessmentIdParameter = new SqlParameter("@assessmentId", assessmentId);
+            var stages = await context.AssessmentStageViewModel
+                .FromSqlRaw(sp_GetAssessmentStagesByAssessmentId, assessmentIdParameter).ToListAsync();
+            return new List<AssessmentStageViewModel>(stages);
+        }
+
+        public async Task<List<StartableToolViewModel>> GetStartableTools(int assessmentId)
+        {
+            var assessmentIdParameter = new SqlParameter("@assessmentId", assessmentId);
+            var startableTools = await context.StartableToolViewModel
+                .FromSqlRaw(sp_GetStartableToolsByAssessmentId, assessmentIdParameter).ToListAsync();
+            return new List<StartableToolViewModel>(startableTools);
+        }
+
+        public async Task<AssessmentToolInstanceNextWorkflow?> GetAssessmentToolInstanceNextWorkflow(int assessmentToolWorkflowInstanceId, string workflowDefinitionId)
+        {
+            return await context.Set<AssessmentToolInstanceNextWorkflow>().FirstOrDefaultAsync(x =>
+                x.AssessmentToolWorkflowInstanceId == assessmentToolWorkflowInstanceId &&
+                x.NextWorkflowDefinitionId == workflowDefinitionId);
+        }
+
+        public async Task<IEnumerable<AssessmentToolWorkflowInstance>> GetAssessmentToolWorkflowInstances(int assessmentId)
+        {
+            return await context.Set<AssessmentToolWorkflowInstance>().Where(x => x.AssessmentId == assessmentId).ToListAsync();
         }
 
         public async Task<int> CreateAssessments(List<Assessment> assessments)
@@ -39,22 +84,18 @@ namespace He.PipelineAssessment.Infrastructure.Repository
             return await context.SaveChangesAsync();
         }
 
-        public async Task<int> CreateAssessmentStage(AssessmentStage assessmentStage)
+        public async Task<int> CreateAssessmentToolWorkflowInstance(AssessmentToolWorkflowInstance assessmentStage)
         {
-            await context.Set<AssessmentStage>().AddAsync(assessmentStage);
+            await context.Set<AssessmentToolWorkflowInstance>().AddAsync(assessmentStage);
             await context.SaveChangesAsync();
 
             return await context.SaveChangesAsync();
         }
 
-        public async Task<Assessment?> GetAssessment(int assessmentId)
+        public async Task CreateAssessmentToolInstanceNextWorkflows(List<AssessmentToolInstanceNextWorkflow> nextWorkflows)
         {
-            return await context.Set<Assessment>().FirstOrDefaultAsync(x => x.Id == assessmentId);
-        }
-
-        public async Task<AssessmentStage?> GetAssessmentStage(string workflowInstance)
-        {
-            return await context.Set<AssessmentStage>().Include(x => x.Assessment).FirstOrDefaultAsync(x => x.WorkflowInstanceId == workflowInstance);
+            await context.Set<AssessmentToolInstanceNextWorkflow>().AddRangeAsync(nextWorkflows);
+            await context.SaveChangesAsync();
         }
 
         public async Task<int> SaveChanges()

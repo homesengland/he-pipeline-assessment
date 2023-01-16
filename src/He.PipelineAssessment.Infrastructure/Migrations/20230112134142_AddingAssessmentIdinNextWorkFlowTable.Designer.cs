@@ -4,6 +4,7 @@ using He.PipelineAssessment.Infrastructure.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,10 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace He.PipelineAssessment.Infrastructure.Migrations
 {
     [DbContext(typeof(PipelineAssessmentContext))]
-    partial class PipelineAssessmentContextModelSnapshot : ModelSnapshot
+    [Migration("20230112134142_AddingAssessmentIdinNextWorkFlowTable")]
+    partial class AddingAssessmentIdinNextWorkFlowTable
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -217,10 +219,10 @@ namespace He.PipelineAssessment.Infrastructure.Migrations
 
             modelBuilder.Entity("He.PipelineAssessment.Models.ViewModels.AssessmentStageViewModel", b =>
                 {
-                    b.Property<int?>("AssessmentToolId")
+                    b.Property<int?>("AssessmentId")
                         .HasColumnType("int");
 
-                    b.Property<int?>("AssessmentToolWorkflowInstanceId")
+                    b.Property<int?>("AssessmentToolId")
                         .HasColumnType("int");
 
                     b.Property<DateTime?>("CreatedDateTime")
@@ -258,21 +260,6 @@ namespace He.PipelineAssessment.Infrastructure.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("WorkflowName")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.ToView(null);
-                });
-
-            modelBuilder.Entity("He.PipelineAssessment.Models.ViewModels.StartableToolViewModel", b =>
-                {
-                    b.Property<int>("AssessmentToolId")
-                        .HasColumnType("int");
-
-                    b.Property<bool>("IsFirstWorkflow")
-                        .HasColumnType("bit");
-
-                    b.Property<string>("WorkflowDefinitionId")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.ToView(null);
@@ -322,7 +309,7 @@ namespace He.PipelineAssessment.Infrastructure.Migrations
             modelBuilder.Entity("He.PipelineAssessment.Models.AssessmentToolWorkflowInstance", b =>
                 {
                     b.HasOne("He.PipelineAssessment.Models.Assessment", "Assessment")
-                        .WithMany("AssessmentToolWorkflowInstances")
+                        .WithMany("AssessmentStages")
                         .HasForeignKey("AssessmentId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -332,7 +319,7 @@ namespace He.PipelineAssessment.Infrastructure.Migrations
 
             modelBuilder.Entity("He.PipelineAssessment.Models.Assessment", b =>
                 {
-                    b.Navigation("AssessmentToolWorkflowInstances");
+                    b.Navigation("AssessmentStages");
                 });
 
             modelBuilder.Entity("He.PipelineAssessment.Models.AssessmentTool", b =>

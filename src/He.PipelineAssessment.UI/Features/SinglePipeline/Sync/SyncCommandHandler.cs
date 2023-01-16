@@ -1,6 +1,5 @@
 ﻿using He.PipelineAssessment.Data.SinglePipeline;
 using He.PipelineAssessment.Infrastructure.Repository;
-using He.PipelineAssessment.Models;
 using He.PipelineAssessment.UI.Features.Assessments;
 using MediatR;
 
@@ -75,18 +74,18 @@ namespace He.PipelineAssessment.UI.Features.SinglePipeline.Sync
 
 
 
-        private static List<Assessment> AssessmentsToBeAdded(List<int> sourceAssessmentSpIds, List<int> destinationAssessmentSpIds, List<SinglePipelineData> dataResult)
+        private static List<Models.Assessment> AssessmentsToBeAdded(List<int> sourceAssessmentSpIds, List<int> destinationAssessmentSpIds, List<SinglePipelineData> dataResult)
         {
             //items in one list not in the other
             var assessmentSpIdsToAdd = sourceAssessmentSpIds.Where(s => !destinationAssessmentSpIds.Any(d => d == s)).ToList();
             var sourceAssessmentsToAdd = dataResult.Where(x => assessmentSpIdsToAdd.Contains(x.sp_id!.Value));
 
-            var assessmentsToBeAdded = new List<Assessment>();
+            var assessmentsToBeAdded = new List<Models.Assessment>();
             foreach (var item in sourceAssessmentsToAdd)
             {
                 var fullName = item.he_advocate_f_name + " " + item.he_advocate_s_name;
                 //Add to database
-                var assessment = new Assessment()
+                var assessment = new Models.Assessment()
                 {
                     Counterparty = string.IsNullOrEmpty(item.applicant_1) ? "-" : item.applicant_1,
                     Reference = string.IsNullOrEmpty(item.internal_reference) ? "-" : item.internal_reference,

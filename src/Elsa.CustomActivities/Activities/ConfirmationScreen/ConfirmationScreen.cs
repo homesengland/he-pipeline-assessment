@@ -21,7 +21,7 @@ namespace Elsa.CustomActivities.Activities.ConfirmationScreen
         [ActivityInput(Hint = "Footer text")]
         public string FooterText { get; set; } = null!;
         [ActivityInput(Hint = "Next workflow to run")]
-        public string NextWorkflowDefinitionId { get; set; } = null!;
+        public string NextWorkflowDefinitionIds { get; set; } = null!;
         [ActivityOutput] public string Output { get; set; } = null!;
 
         protected override async ValueTask<IActivityExecutionResult> OnExecuteAsync(ActivityExecutionContext context)

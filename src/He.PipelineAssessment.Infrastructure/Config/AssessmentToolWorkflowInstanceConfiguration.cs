@@ -4,9 +4,9 @@ using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace He.PipelineAssessment.Infrastructure.Config
 {
-    internal class AssessmentStageConfiguration : IEntityTypeConfiguration<AssessmentStage>
+    internal class AssessmentToolWorkflowInstanceConfiguration : IEntityTypeConfiguration<AssessmentToolWorkflowInstance>
     {
-        public void Configure(EntityTypeBuilder<AssessmentStage> builder)
+        public void Configure(EntityTypeBuilder<AssessmentToolWorkflowInstance> builder)
         {
             builder.HasKey(x => x.Id);
 
@@ -29,7 +29,7 @@ namespace He.PipelineAssessment.Infrastructure.Config
                 .HasMaxLength(50);
 
             builder.HasOne(x => x.Assessment)
-                .WithMany(x => x.AssessmentStages)
+                .WithMany(x => x.AssessmentToolWorkflowInstances)
                 .HasForeignKey(x => x.AssessmentId);
         }
     }
