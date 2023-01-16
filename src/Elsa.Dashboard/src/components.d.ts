@@ -5,37 +5,11 @@
  * It contains typing information for all components that exist in this project.
  */
 import { HTMLStencilElement, JSXBase } from "@stencil/core/internal";
-import { MonacoValueChangedArgs } from "./monaco/custom_monaco";
 import { CheckboxQuestion, IQuestionComponent, RadioQuestion } from "./models/custom-component-models";
-import { ActivityDefinitionProperty, ActivityModel, ActivityPropertyDescriptor, ElsaClient, IntellisenseContext } from "./models/elsa-interfaces";
+import { ActivityDefinitionProperty, ActivityModel, ActivityPropertyDescriptor } from "./models/elsa-interfaces";
 export namespace Components {
-    interface CustomMonaco {
-        "addJavaScriptLib": (libSource: string, libUri: string) => Promise<void>;
-        "editorHeight": string;
-        "language": string;
-        "libSource": string;
-        "libUri": string;
-        "monacoLibPath": string;
-        "padding": string;
-        "setValue": (value: string) => Promise<void>;
-        "singleLineMode": boolean;
-        "value": string;
-    }
     interface ElsaCheckboxQuestion {
         "question": CheckboxQuestion;
-    }
-    interface ElsaOutcomeScreen {
-        "ElsaClient": object;
-        "activityModel": ActivityModel;
-        "context"?: IntellisenseContext;
-        "editorHeight": string;
-        "elsaClient": ElsaClient;
-        "libUri": string;
-        "padding": string;
-        "propertyDescriptor": ActivityPropertyDescriptor;
-        "propertyModel": ActivityDefinitionProperty;
-        "singleLineMode": boolean;
-        "workflowDefinitionId": string;
     }
     interface ElsaQuestion {
         "question": IQuestionComponent;
@@ -50,23 +24,11 @@ export namespace Components {
     }
 }
 declare global {
-    interface HTMLCustomMonacoElement extends Components.CustomMonaco, HTMLStencilElement {
-    }
-    var HTMLCustomMonacoElement: {
-        prototype: HTMLCustomMonacoElement;
-        new (): HTMLCustomMonacoElement;
-    };
     interface HTMLElsaCheckboxQuestionElement extends Components.ElsaCheckboxQuestion, HTMLStencilElement {
     }
     var HTMLElsaCheckboxQuestionElement: {
         prototype: HTMLElsaCheckboxQuestionElement;
         new (): HTMLElsaCheckboxQuestionElement;
-    };
-    interface HTMLElsaOutcomeScreenElement extends Components.ElsaOutcomeScreen, HTMLStencilElement {
-    }
-    var HTMLElsaOutcomeScreenElement: {
-        prototype: HTMLElsaOutcomeScreenElement;
-        new (): HTMLElsaOutcomeScreenElement;
     };
     interface HTMLElsaQuestionElement extends Components.ElsaQuestion, HTMLStencilElement {
     }
@@ -87,42 +49,16 @@ declare global {
         new (): HTMLElsaRadioQuestionElement;
     };
     interface HTMLElementTagNameMap {
-        "custom-monaco": HTMLCustomMonacoElement;
         "elsa-checkbox-question": HTMLElsaCheckboxQuestionElement;
-        "elsa-outcome-screen": HTMLElsaOutcomeScreenElement;
         "elsa-question": HTMLElsaQuestionElement;
         "elsa-question-screen": HTMLElsaQuestionScreenElement;
         "elsa-radio-question": HTMLElsaRadioQuestionElement;
     }
 }
 declare namespace LocalJSX {
-    interface CustomMonaco {
-        "editorHeight"?: string;
-        "language"?: string;
-        "libSource"?: string;
-        "libUri"?: string;
-        "monacoLibPath"?: string;
-        "onValueChanged"?: (event: CustomEvent<MonacoValueChangedArgs>) => void;
-        "padding"?: string;
-        "singleLineMode"?: boolean;
-        "value"?: string;
-    }
     interface ElsaCheckboxQuestion {
         "onUpdateQuestion"?: (event: CustomEvent<IQuestionComponent>) => void;
         "question"?: CheckboxQuestion;
-    }
-    interface ElsaOutcomeScreen {
-        "ElsaClient"?: object;
-        "activityModel"?: ActivityModel;
-        "context"?: IntellisenseContext;
-        "editorHeight"?: string;
-        "elsaClient"?: ElsaClient;
-        "libUri"?: string;
-        "padding"?: string;
-        "propertyDescriptor"?: ActivityPropertyDescriptor;
-        "propertyModel"?: ActivityDefinitionProperty;
-        "singleLineMode"?: boolean;
-        "workflowDefinitionId"?: string;
     }
     interface ElsaQuestion {
         "onUpdateQuestion"?: (event: CustomEvent<IQuestionComponent>) => void;
@@ -138,9 +74,7 @@ declare namespace LocalJSX {
         "question"?: RadioQuestion;
     }
     interface IntrinsicElements {
-        "custom-monaco": CustomMonaco;
         "elsa-checkbox-question": ElsaCheckboxQuestion;
-        "elsa-outcome-screen": ElsaOutcomeScreen;
         "elsa-question": ElsaQuestion;
         "elsa-question-screen": ElsaQuestionScreen;
         "elsa-radio-question": ElsaRadioQuestion;
@@ -150,9 +84,7 @@ export { LocalJSX as JSX };
 declare module "@stencil/core" {
     export namespace JSX {
         interface IntrinsicElements {
-            "custom-monaco": LocalJSX.CustomMonaco & JSXBase.HTMLAttributes<HTMLCustomMonacoElement>;
             "elsa-checkbox-question": LocalJSX.ElsaCheckboxQuestion & JSXBase.HTMLAttributes<HTMLElsaCheckboxQuestionElement>;
-            "elsa-outcome-screen": LocalJSX.ElsaOutcomeScreen & JSXBase.HTMLAttributes<HTMLElsaOutcomeScreenElement>;
             "elsa-question": LocalJSX.ElsaQuestion & JSXBase.HTMLAttributes<HTMLElsaQuestionElement>;
             "elsa-question-screen": LocalJSX.ElsaQuestionScreen & JSXBase.HTMLAttributes<HTMLElsaQuestionScreenElement>;
             "elsa-radio-question": LocalJSX.ElsaRadioQuestion & JSXBase.HTMLAttributes<HTMLElsaRadioQuestionElement>;

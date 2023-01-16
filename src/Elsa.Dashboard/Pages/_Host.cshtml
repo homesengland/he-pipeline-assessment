@@ -54,13 +54,11 @@
                 property = { name: name, expressions: expressions, syntax: null };
                 activity.properties.push(property);
             }
-
             return property;
         }
 
         function MyCustomInputDriver(elsaStudio, elementName) {
             this.display = (activity, property) => {
-
                 console.log("Elsa Studio", elsaStudio);
                 console.log("Property", property);
                 console.log("Activity", activity);
@@ -73,64 +71,12 @@
             }
         }
 
-        function MyCustomOutcomeDriver(elsaStudio, elementName, elsaClient) {
-            console.log("Setting outcome driver");
-            this.display = (activity, property) => {
-                let url = new URL(window.location.href);
-                var parts = url.pathname.split('/');
-                var workflowDefinitionId = parts[2];
-                console.log(workflowDefinitionId);
-
-                console.log("Elsa Studio", elsaStudio);
-                console.log("Property", JSON.stringify(property));
-                console.log("Activity", JSON.stringify(activity));
-                var prop = (0, getOrCreateOutcomeProperty)(activity, property.name, 'Json', 'Json');
-                var questionActivity = document.createElement(elementName);
-                questionActivity.activityModel = activity;
-                questionActivity.propertyDescriptor = property;
-                questionActivity.propertyModel = prop;
-                questionActivity.elsaClient = elsaClient;
-                questionActivity.workflowDefinitionId = workflowDefinitionId;
-                return questionActivity;
-            }
-        }
-
-        function getOrCreateOutcomeProperty(activity, name, defaultExpression, defaultSyntax) {
-            var property = activity.properties.find(function (x) { return x.name == name; });
-            if (!property) {
-                console.log("creating property");
-                var expressions = {};
-                var syntax = defaultSyntax ? defaultSyntax : undefined;
-                if (!syntax)
-                    syntax = '{Json}';
-                expressions[syntax] = defaultExpression ? defaultExpression : undefined;
-                property = { name: name, expressions: expressions, syntax: syntax };
-                console.log(property);
-                activity.properties.push(property);
-            }
-            console.log("property", property);
-            return property;
-
-        }
-
         elsaStudioRoot.addEventListener('initializing', e => {
-
-          this.InitCustomDrivers(e).then(true);
+          var elsaStudio = e.detail;
+          elsaStudio.pluginManager.registerPlugin(MyCustomPlugin);
+          elsaStudio.propertyDisplayManager.addDriver('question-builder', () => new MyCustomInputDriver(elsaStudio, 'elsa-question-screen'));
 
         });
-
-        async function InitCustomDrivers(e) {
-            console.log('E', e);
-
-            var elsaStudio = e.detail;
-            elsaStudio.pluginManager.registerPlugin(MyCustomPlugin);
-
-            var elsaClient = await elsaStudio.elsaClientFactory();
-            console.log("Elsa client", elsaClient);
-            //const libSource = await elsaClient.scriptingApi.getJavaScriptTypeDefinitions(this.workflowDefinitionId, this.context);
-            elsaStudio.propertyDisplayManager.addDriver('question-builder', () => new MyCustomInputDriver(elsaStudio, 'elsa-question-screen'));
-            //elsaStudio.propertyDisplayManager.addDriver('outcome-builder', () => new MyCustomOutcomeDriver(elsaStudio, 'elsa-outcome-screen', elsaClient));
-        }
 
 </script>
 </body>
