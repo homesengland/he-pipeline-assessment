@@ -1,4 +1,6 @@
-﻿namespace Elsa.Server.Features.Workflow.LoadConfirmationScreen
+﻿using Elsa.CustomModels;
+
+namespace Elsa.Server.Features.Workflow.LoadConfirmationScreen
 {
     public class LoadConfirmationScreenResponse
     {

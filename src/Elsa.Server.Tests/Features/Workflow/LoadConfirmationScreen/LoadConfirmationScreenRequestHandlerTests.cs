@@ -1,4 +1,14 @@
-﻿namespace Elsa.Server.Tests.Features.Workflow.LoadConfirmationScreen
+﻿using AutoFixture.Xunit2;
+using Elsa.CustomInfrastructure.Data.Repository;
+using Elsa.CustomModels;
+using Elsa.CustomWorkflow.Sdk;
+using Elsa.Server.Features.Workflow.LoadConfirmationScreen;
+using Elsa.Server.Providers;
+using He.PipelineAssessment.Common.Tests;
+using Moq;
+using Xunit;
+
+namespace Elsa.Server.Tests.Features.Workflow.LoadConfirmationScreen
 {
     public class LoadConfirmationScreenRequestHandlerTests
     {
@@ -98,7 +108,7 @@
             Assert.Equal("MyConfirmationText", result.Data.ConfirmationText);
             Assert.Equal("MyFooterText", result.Data.FooterText);
             Assert.Equal("MyFooterTitle", result.Data.FooterTitle);
-            Assert.Equal("MyNextWorkflowDefinitionId", result.Data.NextWorkflowDefinitionId);
+            Assert.Equal("MyNextWorkflowDefinitionId", result.Data.NextWorkflowDefinitionIds);
             Assert.Empty(result.ErrorMessages);
         }
     }
