@@ -1,6 +1,4 @@
-﻿using He.PipelineAssessment.Models;
-
-namespace He.PipelineAssessment.UI.Features.Assessments.AssessmentList
+﻿namespace He.PipelineAssessment.UI.Features.Assessment.AssessmentList
 {
     public class AssessmentListData
     {
@@ -16,7 +14,7 @@ namespace He.PipelineAssessment.UI.Features.Assessments.AssessmentList
         {
             Status = "New";
         }
-        public AssessmentDisplay(Assessment assessment)
+        public AssessmentDisplay(Models.Assessment assessment)
         {
             Id = assessment.Id.ToString();
             SpId = assessment.SpId.ToString();
@@ -25,7 +23,7 @@ namespace He.PipelineAssessment.UI.Features.Assessments.AssessmentList
             Counterparty = assessment.Counterparty;
             Status = assessment.Status;
             Reference = assessment.Reference;
-            
+
         }
 
         public string Id { get; set; } = null!;

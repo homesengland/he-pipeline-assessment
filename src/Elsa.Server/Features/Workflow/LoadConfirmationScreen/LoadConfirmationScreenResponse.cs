@@ -1,6 +1,4 @@
-﻿using Elsa.CustomModels;
-
-namespace Elsa.Server.Features.Workflow.LoadConfirmationScreen
+﻿namespace Elsa.Server.Features.Workflow.LoadConfirmationScreen
 {
     public class LoadConfirmationScreenResponse
     {
@@ -19,7 +17,8 @@ namespace Elsa.Server.Features.Workflow.LoadConfirmationScreen
         public string? AdditionalTextLine3 { get; set; } = null!;
         public string? AdditionalTextLine4 { get; set; } = null!;
         public string? AdditionalTextLine5 { get; set; } = null!;
-        public string? NextWorkflowDefinitionId { get; set; } = null!;
+
+        public string? NextWorkflowDefinitionIds { get; set; } = null!;
         public List<QuestionScreenAnswer>? CheckQuestionScreenAnswers { get; set; }
     }
 }

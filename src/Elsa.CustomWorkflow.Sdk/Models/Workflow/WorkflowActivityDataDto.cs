@@ -1,8 +1,4 @@
-﻿
-using Elsa.CustomModels;
-using FluentValidation.Results;
-using System.Globalization;
-using System.Text.Json;
+﻿using System.Globalization;
 
 namespace Elsa.CustomWorkflow.Sdk.Models.Workflow
 {
@@ -33,7 +29,8 @@ namespace Elsa.CustomWorkflow.Sdk.Models.Workflow
         public string AdditionalTextLine5 { get; set; } = null!;
 
 
-        public string? NextWorkflowDefinitionId { get; set; } = null!;
+
+        public string? NextWorkflowDefinitionIds { get; set; } = null!;
         public List<QuestionScreenAnswer>? CheckQuestionScreenAnswers { get; set; }
         public List<QuestionActivityData>? QuestionScreenAnswers { get; set; }
 

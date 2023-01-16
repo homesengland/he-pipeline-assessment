@@ -1,12 +1,4 @@
-﻿using Elsa.CustomActivities.Activities.Shared;
-using Elsa.CustomInfrastructure.Data.Repository;
-using Elsa.CustomWorkflow.Sdk;
-using Elsa.Server.Extensions;
-using Elsa.Server.Models;
-using Elsa.Server.Providers;
-using MediatR;
-
-namespace Elsa.Server.Features.Workflow.LoadConfirmationScreen
+﻿namespace Elsa.Server.Features.Workflow.LoadConfirmationScreen
 {
     public class LoadConfirmationScreenRequestHandler : IRequestHandler<LoadConfirmationScreenRequest, OperationResult<LoadConfirmationScreenResponse>>
     {
@@ -55,7 +47,7 @@ namespace Elsa.Server.Features.Workflow.LoadConfirmationScreen
                     result.Data.AdditionalTextLine3 = (string?)activityDataDictionary.GetData("AdditionalTextLine3");
                     result.Data.AdditionalTextLine4 = (string?)activityDataDictionary.GetData("AdditionalTextLine4");
                     result.Data.AdditionalTextLine5 = (string?)activityDataDictionary.GetData("AdditionalTextLine5");
-                    result.Data.NextWorkflowDefinitionId = (string?)activityDataDictionary.GetData("NextWorkflowDefinitionId");
+                    result.Data.NextWorkflowDefinitionIds = (string?)activityDataDictionary.GetData("NextWorkflowDefinitionIds");
                 }
                 else
                 {

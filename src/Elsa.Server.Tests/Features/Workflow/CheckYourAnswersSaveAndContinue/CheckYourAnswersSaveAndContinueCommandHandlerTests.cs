@@ -32,9 +32,11 @@ namespace Elsa.Server.Tests.Features.Workflow.CheckYourAnswersSaveAndContinue
                 WorkflowInstance workflowInstance,
                 CustomActivityNavigation nextAssessmentActivity,
                 CheckYourAnswersSaveAndContinueCommand saveAndContinueCommand,
+                string workFlowDefinitionIds,
                 CheckYourAnswersSaveAndContinueCommandHandler sut)
         {
             //Arrange
+
             var workflowNextActivityModel = new WorkflowNextActivityModel
             {
                 NextActivity = activityBlueprint
