@@ -70,8 +70,3 @@ export interface IntellisenseContext {
   activityTypeName: string;
   propertyName: string;
 }
-
-export interface IntellisenseContext {
-  activityTypeName: string;
-  propertyName: string;
-}

@@ -67,3 +67,14 @@ export class SingleChoiceActivity {
 export class QuestionActivity {
   questions: Array<IQuestionComponent> = [];
 }
+
+//Outcome Screens
+
+export interface IConditionalText {
+  text: string;
+  condition: string;
+}
+
+export class Outcome {
+  outcomeText: Array<IConditionalText> = [];
+}

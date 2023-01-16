@@ -83,6 +83,12 @@ namespace Elsa.Server.Tests.Features.Workflow.LoadConfirmationScreen
                 { "ConfirmationText", "MyConfirmationText" },
                 { "FooterText", "MyFooterText" },
                 { "FooterTitle", "MyFooterTitle" },
+                { "AdditionalTextLine1", "1" },
+                { "AdditionalTextLine2", "2" },
+                { "AdditionalTextLine3", "3" },
+                { "AdditionalTextLine4", "4" },
+                { "AdditionalTextLine5", "5" },
+
                 { "NextWorkflowDefinitionIds", "MyNextWorkflowDefinitionId" }
             };
             activityDataProvider

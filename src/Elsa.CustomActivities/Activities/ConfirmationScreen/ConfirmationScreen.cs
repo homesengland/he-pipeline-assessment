@@ -1,5 +1,7 @@
 ﻿using Elsa.ActivityResults;
 using Elsa.Attributes;
+using Elsa.Design;
+using Elsa.Expressions;
 using Elsa.Services;
 using Elsa.Services.Models;
 
@@ -20,6 +22,22 @@ namespace Elsa.CustomActivities.Activities.ConfirmationScreen
         public string FooterTitle { get; set; } = null!;
         [ActivityInput(Hint = "Footer text")]
         public string FooterText { get; set; } = null!;
+
+        [ActivityInput(Hint = "Additional Text Line 1", UIHint = ActivityInputUIHints.MultiLine, SupportedSyntaxes = new[] { SyntaxNames.JavaScript })]
+        public string AdditionalTextLine1 { get; set; } = null!;
+
+        [ActivityInput(Hint = "Additional Text Line 2", UIHint = ActivityInputUIHints.MultiLine, SupportedSyntaxes = new[] { SyntaxNames.JavaScript })]
+        public string AdditionalTextLine2 { get; set; } = null!;
+
+        [ActivityInput(Hint = "Additional Text Line 3", UIHint = ActivityInputUIHints.MultiLine, SupportedSyntaxes = new[] { SyntaxNames.JavaScript })]
+        public string AdditionalTextLine3 { get; set; } = null!;
+
+        [ActivityInput(Hint = "Additional Text Line 4", UIHint = ActivityInputUIHints.MultiLine, SupportedSyntaxes = new[] { SyntaxNames.JavaScript })]
+        public string AdditionalTextLine4 { get; set; } = null!;
+
+        [ActivityInput(Hint = "Additional Text Line 5", UIHint = ActivityInputUIHints.MultiLine, SupportedSyntaxes = new[] { SyntaxNames.JavaScript })]
+        public string AdditionalTextLine5 { get; set; } = null!;
+
         [ActivityInput(Hint = "Next workflow to run")]
         public string NextWorkflowDefinitionIds { get; set; } = null!;
         [ActivityOutput] public string Output { get; set; } = null!;
