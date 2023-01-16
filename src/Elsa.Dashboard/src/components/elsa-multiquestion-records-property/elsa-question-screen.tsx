@@ -68,7 +68,6 @@ export class ElsaQuestionScreen {
   async componentWillLoad() {
     const propertyModel = this.propertyModel;
     const choicesJson = propertyModel.expressions[SyntaxNames.Json]
-    console.log(choicesJson);
     this.questionModel = parseJson(choicesJson) || this.defaultActivityModel();
   }
 
