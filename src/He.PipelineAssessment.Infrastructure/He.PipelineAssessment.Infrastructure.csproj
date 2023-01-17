@@ -9,11 +9,13 @@
   <ItemGroup>
     <None Remove="Migrations\20230116150107_AddStoredProceduresForAssessmentSummaryPage\GetAssessmentStagesByAssessmentId.sql" />
     <None Remove="Migrations\20230116150107_AddStoredProceduresForAssessmentSummaryPage\GetStartableToolsByAssessmentId.sql" />
+    <None Remove="Migrations\20230117092610_StoredProcRole\CreateAndAssignExecutorRole.sql" />
   </ItemGroup>
 
   <ItemGroup>
     <EmbeddedResource Include="Migrations\20230116150107_AddStoredProceduresForAssessmentSummaryPage\GetStartableToolsByAssessmentId.sql" />
     <EmbeddedResource Include="Migrations\20230116150107_AddStoredProceduresForAssessmentSummaryPage\GetAssessmentStagesByAssessmentId.sql" />
+    <EmbeddedResource Include="Migrations\20230117092610_StoredProcRole\CreateAndAssignExecutorRole.sql" />
   </ItemGroup>
 
   <ItemGroup>

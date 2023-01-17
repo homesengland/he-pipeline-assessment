@@ -5,16 +5,14 @@ using System.Reflection;
 
 namespace He.PipelineAssessment.Infrastructure.Migrations
 {
-    public partial class AddStoredProceduresForAssessmentSummaryPage : Migration
+    public partial class StoredProcRole : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             var assembly = Assembly.GetExecutingAssembly();
             var sqlFiles = assembly.GetManifestResourceNames().Where(file =>
                 file.Contains(
-                    "20230116150107_AddStoredProceduresForAssessmentSummaryPage.GetAssessmentStagesByAssessmentId.sql") ||
-                file.Contains(
-                    "20230116150107_AddStoredProceduresForAssessmentSummaryPage.GetStartableToolsByAssessmentId.sql"));
+                    "20230117092610_StoredProcRole.CreateAndAssignExecutorRole.sql"));
             foreach (var sqlFile in sqlFiles)
             {
                 using (Stream stream = assembly.GetManifestResourceStream(sqlFile))
@@ -28,8 +26,7 @@ namespace He.PipelineAssessment.Infrastructure.Migrations
 
         protected override void Down(MigrationBuilder migrationBuilder)
         {
-            var dropRole = "DROP ROLE db_executor";
-            migrationBuilder.Sql(dropRole);
+
         }
     }
 }
