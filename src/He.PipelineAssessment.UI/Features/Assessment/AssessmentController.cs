@@ -32,6 +32,7 @@ namespace He.PipelineAssessment.UI.Features.Assessments
             }
         }
 
+        [ResponseCache(NoStore = true)]
         public async Task<IActionResult> Summary(int assessmentid, int correlationId)
         {
             try
