@@ -43,7 +43,7 @@ namespace Elsa.Server.Tests.Services
 
             //Assert
             elsaCustomRepository.Verify(
-                x => x.DeleteCustomNavigation(customActivityNavigation, CancellationToken.None), Times.Once);
+                x => x.DeleteCustomNavigations(previousPathActivities, workflowInstanceId, CancellationToken.None), Times.Once);
             elsaCustomRepository.Verify(
                 x => x.DeleteQuestionScreenAnswers(customActivityNavigation.WorkflowInstanceId, previousPathActivities, CancellationToken.None), Times.Once);
         }
@@ -72,9 +72,9 @@ namespace Elsa.Server.Tests.Services
 
             //Assert
             elsaCustomRepository.Verify(
-                x => x.DeleteCustomNavigation(customActivityNavigation, CancellationToken.None), Times.Never);
+                x => x.DeleteCustomNavigations(It.IsAny<List<string>>(), workflowInstanceId, CancellationToken.None), Times.Never);
             elsaCustomRepository.Verify(
-                x => x.DeleteQuestionScreenAnswers(customActivityNavigation.WorkflowInstanceId,
+                x => x.DeleteQuestionScreenAnswers(workflowInstanceId,
                     It.IsAny<List<string>>(), CancellationToken.None), Times.Never);
         }
     }

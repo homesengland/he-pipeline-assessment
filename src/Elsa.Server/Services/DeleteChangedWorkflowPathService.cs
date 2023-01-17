@@ -30,10 +30,11 @@ namespace Elsa.Server.Services
 
             if (changedPathCustomNavigation != null)
             {
-                await _elsaCustomRepository.DeleteCustomNavigation(changedPathCustomNavigation, cancellationToken);
                 var previousPathActivities =
                     await _workflowPathProvider.GetPreviousPathActivities(workflowInstance.DefinitionId,
                         changedPathCustomNavigation.ActivityId, cancellationToken);
+
+                await _elsaCustomRepository.DeleteCustomNavigations(previousPathActivities, workflowInstanceId, cancellationToken);
 
                 await _elsaCustomRepository.DeleteQuestionScreenAnswers(
                     changedPathCustomNavigation.WorkflowInstanceId, previousPathActivities, cancellationToken);

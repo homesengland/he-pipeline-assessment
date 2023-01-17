@@ -77,9 +77,10 @@ namespace Elsa.CustomInfrastructure.Data.Repository
                 .FirstOrDefaultAsync(cancellationToken: cancellationToken);
         }
 
-        public async Task DeleteCustomNavigation(CustomActivityNavigation customNavigation, CancellationToken cancellationToken)
+        public async Task DeleteCustomNavigations(List<string> previousPathActivities, string workflowInstanceId, CancellationToken cancellationToken)
         {
-            _dbContext.Set<CustomActivityNavigation>().Remove(customNavigation);
+            var list = _dbContext.Set<CustomActivityNavigation>().Where(x => x.WorkflowInstanceId == workflowInstanceId && previousPathActivities.Contains(x.ActivityId));
+            _dbContext.RemoveRange(list);
             await SaveChanges(cancellationToken);
         }
 
