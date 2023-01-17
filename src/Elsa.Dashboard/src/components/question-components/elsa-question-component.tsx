@@ -60,6 +60,7 @@ export class ElsaQuestionComponent {
         hint: "hint about a test label",
         options: "",
       defaultValue: "",
+      defaultSyntax: SyntaxNames.Literal,
       supportedSyntaxes: [SyntaxNames.JavaScript],
         isReadOnly: false,
         considerValuesAsOutcomes: false,
@@ -71,7 +72,7 @@ export class ElsaQuestionComponent {
   sampleModel() {
     const test: ActivityDefinitionProperty = {
       name: 'Test field',
-      expressions: { "Literal": '', "Javascript": '' }
+      expressions: { "Literal": '', "JavaScript": '' }
     }
     return test;
   }
@@ -135,12 +136,6 @@ export class ElsaQuestionComponent {
 
         {this.renderQuestionField(`${field}-questionid`, `Identifier`, this.question.id, this.handler.onIdentifierChanged, true)}
         {this.renderQuestionField(`${field}-title`, `Title`, this.question.title, this.handler.onTitleChanged)}
-        <custom-single-line-property
-          activityModel={this.ActivityModel}
-          propertyDescriptor={this.sampleDescriptor()}
-          propertyModel={this.sampleModel()}
-        >
-        </custom-single-line-property>
         {this.renderQuestionField(`${field}-questionText`, `Question`, this.question.questionText, this.handler.onQuestionChanged)}
         {this.renderQuestionField(`${field}-questionHint`, `Hint`, this.question.questionHint, this.handler.onHintChanged)}
         {this.renderQuestionField(`${field}-questionGuidance`, `Guidance`, this.question.questionGuidance, this.handler.onGuidanceChanged)}

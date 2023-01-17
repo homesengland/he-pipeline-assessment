@@ -23,6 +23,9 @@ namespace Elsa.CustomActivities.Activities.ConfirmationScreen
         [ActivityInput(Hint = "Footer text")]
         public string FooterText { get; set; } = null!;
 
+        [ActivityInput(Label = "Assessment Conditional Text", Hint = "Text to display on Outcome Screen.", UIHint = "custom-case-builder", DefaultSyntax = "Switch", IsDesignerCritical = true)]
+        public ICollection<ConditionalText> Cases { get; set; } = new List<ConditionalText>();
+
         [ActivityInput(Hint = "Additional Text Line 1", UIHint = ActivityInputUIHints.MultiLine, SupportedSyntaxes = new[] { SyntaxNames.JavaScript })]
         public string AdditionalTextLine1 { get; set; } = null!;
 
@@ -53,5 +56,7 @@ namespace Elsa.CustomActivities.Activities.ConfirmationScreen
         {
             return await Task.FromResult(Done());
         }
+
+        public record ConditionalText(string Name, bool Condition);
     }
 }

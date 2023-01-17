@@ -22,6 +22,9 @@
   </ItemGroup>
 
   <ItemGroup>
+    <None Remove="src\components\custom-input-property.tsx" />
+    <None Remove="src\components\custom-outcome-property.tsx" />
+    <None Remove="src\components\custom_outcome_list_property.tsx" />
     <None Remove="src\events\component-events.tsx" />
     <None Remove="src\models\activity-provider.ts" />
   </ItemGroup>
@@ -31,8 +34,17 @@
   </ItemGroup>
 
   <ItemGroup>
+    <TypeScriptCompile Include="src\components\custom-outcome-property.tsx">
+      <SubType>Code</SubType>
+    </TypeScriptCompile>
+    <TypeScriptCompile Include="src\components\custom-input-property.tsx" />
+    <TypeScriptCompile Include="src\components\custom_outcome_list_property.tsx" />
     <TypeScriptCompile Include="src\events\component-events.tsx" />
     <TypeScriptCompile Include="src\components\question-provider\question-provider.tsx" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="src\components\common-components\" />
   </ItemGroup>
 
 </Project>

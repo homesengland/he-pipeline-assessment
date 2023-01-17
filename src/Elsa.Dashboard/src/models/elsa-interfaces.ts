@@ -1,3 +1,4 @@
+import { HTMLStencilElement } from '@stencil/core/internal';
 import { Map } from './utils'
 //import { x } from '@elsa-workflows/elsa-workflows-studio';
 //Not In Use.  Using as a placeholder to prompt developers to draw, and copy any interfaces they need from Elsa directly.
@@ -30,6 +31,7 @@ export class SyntaxNames {
   static readonly JavaScript = "JavaScript";
   static readonly Liquid = "Liquid";
   static readonly Json = "Json";
+  static readonly SQL = "SQL";
   static Variable: string;
   static Output: string;
 }
@@ -64,6 +66,25 @@ export interface ElsaMultiExpressionEditor {
   "singleLineMode": boolean;
   "supportedSyntaxes": Array<string>;
   "syntax"?: string;
+}
+
+export interface HTMLElsaExpressionEditorElement extends ElsaExpressionEditor, HTMLStencilElement {
+}
+var HTMLElsaExpressionEditorElement: {
+  prototype: HTMLElsaExpressionEditorElement;
+  new(): HTMLElsaExpressionEditorElement;
+};
+
+export interface ElsaExpressionEditor {
+  "context"?: IntellisenseContext;
+  "editorHeight": string;
+  "expression": string;
+  "language": string;
+  "padding": string;
+  "serverUrl": string;
+  "setExpression": (value: string) => Promise<void>;
+  "singleLineMode": boolean;
+  "workflowDefinitionId": string;
 }
 
 export interface IntellisenseContext {

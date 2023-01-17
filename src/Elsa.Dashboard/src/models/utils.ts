@@ -1,4 +1,4 @@
-import { ActivityDefinitionProperty, ActivityModel } from "./elsa-interfaces";
+import { ActivityDefinitionProperty, ActivityModel, SyntaxNames } from "./elsa-interfaces";
 
 export type Map<T> = {
   [key: string]: T
@@ -28,4 +28,32 @@ export function getOrCreateProperty(activity: ActivityModel, name: string, defau
   }
 
   return property;
+}
+
+export function parseJson(json: string): any {
+  if (!json)
+    return null;
+
+  try {
+    return JSON.parse(json);
+  } catch (e) {
+    console.warn(`Error parsing JSON: ${e}`);
+  }
+  return undefined;
+}
+
+export function mapSyntaxToLanguage(syntax: string): any {
+  switch (syntax) {
+    case SyntaxNames.Json:
+      return 'json';
+    case SyntaxNames.JavaScript:
+      return 'javascript';
+    case SyntaxNames.Liquid:
+      return 'liquid';
+    case SyntaxNames.SQL:
+      return 'sql';
+    case SyntaxNames.Literal:
+    default:
+      return 'plaintext';
+  }
 }

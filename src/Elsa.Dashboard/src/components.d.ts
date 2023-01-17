@@ -5,10 +5,39 @@
  * It contains typing information for all components that exist in this project.
  */
 import { HTMLStencilElement, JSXBase } from "@stencil/core/internal";
-import { ActivityDefinitionProperty, ActivityModel, ActivityPropertyDescriptor } from "./models/elsa-interfaces";
-import { CheckboxQuestion, IQuestionComponent, RadioQuestion } from "./models/custom-component-models";
+import { ActivityDefinitionProperty, ActivityModel, ActivityPropertyDescriptor, IntellisenseContext } from "./models/elsa-interfaces";
+import { CheckboxQuestion, IOutcomeProperty, IQuestionComponent, ITextProperty, RadioQuestion } from "./models/custom-component-models";
+import { IconProvider } from "./components/icon-provider/icon-provider";
 export namespace Components {
-    interface CustomPropertyEditor {
+    interface CustomInputProperty {
+        "context"?: string;
+        "customProperty": ITextProperty;
+        "editorHeight": string;
+        "index": number;
+        "intellisenseContext": IntellisenseContext;
+        "propertyDescriptor": ActivityPropertyDescriptor;
+        "showLabel": boolean;
+        "singleLineMode": boolean;
+        "supportedSyntaxes": Array<string>;
+    }
+    interface CustomOutcomeListProperty {
+        "activityModel": ActivityModel;
+        "propertyDescriptor": ActivityPropertyDescriptor;
+        "propertyModel": ActivityDefinitionProperty;
+    }
+    interface CustomOutcomeProperty {
+        "context"?: string;
+        "editorHeight": string;
+        "iconProvider": IconProvider;
+        "index": number;
+        "intellisenseContext": IntellisenseContext;
+        "outcome": IOutcomeProperty;
+        "propertyDescriptor": ActivityPropertyDescriptor;
+        "showLabel": boolean;
+        "singleLineMode": boolean;
+        "supportedSyntaxes": Array<string>;
+    }
+    interface CustomPropertyEditorv2 {
         "activityModel": ActivityModel;
         "context"?: string;
         "editorHeight": string;
@@ -39,11 +68,29 @@ export namespace Components {
     }
 }
 declare global {
-    interface HTMLCustomPropertyEditorElement extends Components.CustomPropertyEditor, HTMLStencilElement {
+    interface HTMLCustomInputPropertyElement extends Components.CustomInputProperty, HTMLStencilElement {
     }
-    var HTMLCustomPropertyEditorElement: {
-        prototype: HTMLCustomPropertyEditorElement;
-        new (): HTMLCustomPropertyEditorElement;
+    var HTMLCustomInputPropertyElement: {
+        prototype: HTMLCustomInputPropertyElement;
+        new (): HTMLCustomInputPropertyElement;
+    };
+    interface HTMLCustomOutcomeListPropertyElement extends Components.CustomOutcomeListProperty, HTMLStencilElement {
+    }
+    var HTMLCustomOutcomeListPropertyElement: {
+        prototype: HTMLCustomOutcomeListPropertyElement;
+        new (): HTMLCustomOutcomeListPropertyElement;
+    };
+    interface HTMLCustomOutcomePropertyElement extends Components.CustomOutcomeProperty, HTMLStencilElement {
+    }
+    var HTMLCustomOutcomePropertyElement: {
+        prototype: HTMLCustomOutcomePropertyElement;
+        new (): HTMLCustomOutcomePropertyElement;
+    };
+    interface HTMLCustomPropertyEditorv2Element extends Components.CustomPropertyEditorv2, HTMLStencilElement {
+    }
+    var HTMLCustomPropertyEditorv2Element: {
+        prototype: HTMLCustomPropertyEditorv2Element;
+        new (): HTMLCustomPropertyEditorv2Element;
     };
     interface HTMLCustomSingleLinePropertyElement extends Components.CustomSingleLineProperty, HTMLStencilElement {
     }
@@ -76,7 +123,10 @@ declare global {
         new (): HTMLElsaRadioQuestionElement;
     };
     interface HTMLElementTagNameMap {
-        "custom-property-editor": HTMLCustomPropertyEditorElement;
+        "custom-input-property": HTMLCustomInputPropertyElement;
+        "custom-outcome-list-property": HTMLCustomOutcomeListPropertyElement;
+        "custom-outcome-property": HTMLCustomOutcomePropertyElement;
+        "custom-property-editorv2": HTMLCustomPropertyEditorv2Element;
         "custom-single-line-property": HTMLCustomSingleLinePropertyElement;
         "elsa-checkbox-question": HTMLElsaCheckboxQuestionElement;
         "elsa-question": HTMLElsaQuestionElement;
@@ -85,7 +135,38 @@ declare global {
     }
 }
 declare namespace LocalJSX {
-    interface CustomPropertyEditor {
+    interface CustomInputProperty {
+        "context"?: string;
+        "customProperty"?: ITextProperty;
+        "editorHeight"?: string;
+        "index"?: number;
+        "intellisenseContext"?: IntellisenseContext;
+        "onValueChanged"?: (event: CustomEvent<ITextProperty>) => void;
+        "propertyDescriptor"?: ActivityPropertyDescriptor;
+        "showLabel"?: boolean;
+        "singleLineMode"?: boolean;
+        "supportedSyntaxes"?: Array<string>;
+    }
+    interface CustomOutcomeListProperty {
+        "activityModel"?: ActivityModel;
+        "propertyDescriptor"?: ActivityPropertyDescriptor;
+        "propertyModel"?: ActivityDefinitionProperty;
+    }
+    interface CustomOutcomeProperty {
+        "context"?: string;
+        "editorHeight"?: string;
+        "iconProvider"?: IconProvider;
+        "index"?: number;
+        "intellisenseContext"?: IntellisenseContext;
+        "onDelete"?: (event: CustomEvent<IOutcomeProperty>) => void;
+        "onValueChanged"?: (event: CustomEvent<IOutcomeProperty>) => void;
+        "outcome"?: IOutcomeProperty;
+        "propertyDescriptor"?: ActivityPropertyDescriptor;
+        "showLabel"?: boolean;
+        "singleLineMode"?: boolean;
+        "supportedSyntaxes"?: Array<string>;
+    }
+    interface CustomPropertyEditorv2 {
         "activityModel"?: ActivityModel;
         "context"?: string;
         "editorHeight"?: string;
@@ -119,7 +200,10 @@ declare namespace LocalJSX {
         "question"?: RadioQuestion;
     }
     interface IntrinsicElements {
-        "custom-property-editor": CustomPropertyEditor;
+        "custom-input-property": CustomInputProperty;
+        "custom-outcome-list-property": CustomOutcomeListProperty;
+        "custom-outcome-property": CustomOutcomeProperty;
+        "custom-property-editorv2": CustomPropertyEditorv2;
         "custom-single-line-property": CustomSingleLineProperty;
         "elsa-checkbox-question": ElsaCheckboxQuestion;
         "elsa-question": ElsaQuestion;
@@ -131,7 +215,10 @@ export { LocalJSX as JSX };
 declare module "@stencil/core" {
     export namespace JSX {
         interface IntrinsicElements {
-            "custom-property-editor": LocalJSX.CustomPropertyEditor & JSXBase.HTMLAttributes<HTMLCustomPropertyEditorElement>;
+            "custom-input-property": LocalJSX.CustomInputProperty & JSXBase.HTMLAttributes<HTMLCustomInputPropertyElement>;
+            "custom-outcome-list-property": LocalJSX.CustomOutcomeListProperty & JSXBase.HTMLAttributes<HTMLCustomOutcomeListPropertyElement>;
+            "custom-outcome-property": LocalJSX.CustomOutcomeProperty & JSXBase.HTMLAttributes<HTMLCustomOutcomePropertyElement>;
+            "custom-property-editorv2": LocalJSX.CustomPropertyEditorv2 & JSXBase.HTMLAttributes<HTMLCustomPropertyEditorv2Element>;
             "custom-single-line-property": LocalJSX.CustomSingleLineProperty & JSXBase.HTMLAttributes<HTMLCustomSingleLinePropertyElement>;
             "elsa-checkbox-question": LocalJSX.ElsaCheckboxQuestion & JSXBase.HTMLAttributes<HTMLElsaCheckboxQuestionElement>;
             "elsa-question": LocalJSX.ElsaQuestion & JSXBase.HTMLAttributes<HTMLElsaQuestionElement>;

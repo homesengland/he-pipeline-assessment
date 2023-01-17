@@ -1,3 +1,5 @@
+import { Map } from './utils'
+
 ///Question Options
 
 export interface IQuestionOption {
@@ -70,11 +72,18 @@ export class QuestionActivity {
 
 //Outcome Screens
 
-export interface IConditionalText {
-  text: string;
-  condition: string;
+export interface IAltConditionalText {
+  name: string;
+  expressions?: Map<string>;
+  syntax?: string;
 }
 
-export class Outcome {
-  outcomeText: Array<IConditionalText> = [];
+export interface ITextProperty {
+  expressions?: Map<string>;
+  syntax?: string;
+}
+
+export interface IOutcomeProperty {
+  text: ITextProperty;
+  condition: ITextProperty;
 }
