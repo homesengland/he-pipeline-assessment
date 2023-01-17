@@ -22,7 +22,7 @@ namespace Elsa.CustomInfrastructure.Data.Repository
         Task<List<QuestionScreenAnswer>> GetQuestionScreenAnswers(string workflowInstanceId, CancellationToken cancellationToken);
         Task<CustomActivityNavigation?> GetChangedPathNavigation(string workflowInstanceId, string currentActivityId,
             string nextActivityId, CancellationToken cancellationToken);
-        Task DeleteCustomNavigation(CustomActivityNavigation changedPathCustomNavigation, CancellationToken cancellationToken);
+        Task DeleteCustomNavigations(List<string> previousPathActivities, string workflowInstanceId, CancellationToken cancellationToken);
         Task DeleteQuestionScreenAnswers(string workflowInstanceId, List<string> previousPathActivities, CancellationToken cancellationToken);
     }
 }
