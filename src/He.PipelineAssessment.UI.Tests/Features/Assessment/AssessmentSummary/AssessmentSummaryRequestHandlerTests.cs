@@ -1,6 +1,7 @@
 ﻿using AutoFixture.Xunit2;
 using He.PipelineAssessment.Common.Tests;
 using He.PipelineAssessment.Infrastructure.Repository;
+using He.PipelineAssessment.Infrastructure.Repository.StoreProc;
 using He.PipelineAssessment.Models.ViewModels;
 using He.PipelineAssessment.UI.Features.Assessment.AssessmentSummary;
 using Moq;
@@ -13,7 +14,7 @@ namespace He.PipelineAssessment.UI.Tests.Features.Assessment.AssessmentSummary
         [Theory]
         [AutoMoqData]
         public async Task Handle_ReturnsNull_GivenRepoThrowsError(
-            [Frozen] Mock<IAssessmentRepository> assessmentRepository,
+            [Frozen] Mock<IAssessmentRepository> assessmentRepository,           
             AssessmentSummaryRequest request,
             Exception exception,
             AssessmentSummaryRequestHandler sut
@@ -33,6 +34,7 @@ namespace He.PipelineAssessment.UI.Tests.Features.Assessment.AssessmentSummary
         [AutoMoqData]
         public async Task Handle_ReturnsAssessmentSummaryResponseWithNoStages_GivenNoStagesExistYet(
             [Frozen] Mock<IAssessmentRepository> assessmentRepository,
+            [Frozen] Mock<IStoreProcRepository> storeProcRepository,
             Models.Assessment assessment,
             AssessmentSummaryRequest request,
             AssessmentSummaryRequestHandler sut
@@ -42,7 +44,7 @@ namespace He.PipelineAssessment.UI.Tests.Features.Assessment.AssessmentSummary
             //Arrange
             var emptyList = new List<AssessmentStageViewModel>();
             assessmentRepository.Setup(x => x.GetAssessment(It.IsAny<int>())).ReturnsAsync(assessment);
-            assessmentRepository.Setup(x => x.GetAssessmentStages(It.IsAny<int>())).ReturnsAsync(emptyList);
+            storeProcRepository.Setup(x => x.GetAssessmentStages(It.IsAny<int>())).ReturnsAsync(emptyList);
 
             //Act
             var result = await sut.Handle(request, CancellationToken.None);
@@ -62,6 +64,7 @@ namespace He.PipelineAssessment.UI.Tests.Features.Assessment.AssessmentSummary
         [AutoMoqData]
         public async Task Handle_ReturnsAssessmentSummaryResponseWithStages_GivenStagesExist(
             [Frozen] Mock<IAssessmentRepository> assessmentRepository,
+             [Frozen] Mock<IStoreProcRepository> storeProcRepository,
             Models.Assessment assessment,
             List<AssessmentStageViewModel> stages,
             AssessmentSummaryRequest request,
@@ -70,7 +73,7 @@ namespace He.PipelineAssessment.UI.Tests.Features.Assessment.AssessmentSummary
         {
             //Arrange
             assessmentRepository.Setup(x => x.GetAssessment(It.IsAny<int>())).ReturnsAsync(assessment);
-            assessmentRepository.Setup(x => x.GetAssessmentStages(It.IsAny<int>())).ReturnsAsync(stages);
+            storeProcRepository.Setup(x => x.GetAssessmentStages(It.IsAny<int>())).ReturnsAsync(stages);
 
             //Act
             var result = await sut.Handle(request, CancellationToken.None);
@@ -90,6 +93,7 @@ namespace He.PipelineAssessment.UI.Tests.Features.Assessment.AssessmentSummary
         [AutoMoqData]
         public async Task Handle_ReturnsAssessmentStageWithDataFromStartableTools_GivenStageIsStartable(
             [Frozen] Mock<IAssessmentRepository> assessmentRepository,
+            [Frozen] Mock<IStoreProcRepository> storeProcRepository,
             Models.Assessment assessment,
             AssessmentStageViewModel stage,
             AssessmentSummaryRequest request,
@@ -114,8 +118,8 @@ namespace He.PipelineAssessment.UI.Tests.Features.Assessment.AssessmentSummary
             };
             startableToolViewModels.Add(startableToolViewModel);
             assessmentRepository.Setup(x => x.GetAssessment(request.AssessmentId)).ReturnsAsync(assessment);
-            assessmentRepository.Setup(x => x.GetAssessmentStages(request.AssessmentId)).ReturnsAsync(stages);
-            assessmentRepository.Setup(x => x.GetStartableTools(request.AssessmentId)).ReturnsAsync(startableToolViewModels);
+            storeProcRepository.Setup(x => x.GetAssessmentStages(request.AssessmentId)).ReturnsAsync(stages);
+            storeProcRepository.Setup(x => x.GetStartableTools(request.AssessmentId)).ReturnsAsync(startableToolViewModels);
 
 
             //Act
@@ -137,6 +141,7 @@ namespace He.PipelineAssessment.UI.Tests.Features.Assessment.AssessmentSummary
         public async Task Handle_ReturnsAssessmentStageWithOutDataFromStartableTools_GivenStageCanNotbeStarted
             (
             [Frozen] Mock<IAssessmentRepository> assessmentRepository,
+            [Frozen] Mock<IStoreProcRepository> storeProcRepository,
             Models.Assessment assessment,
             AssessmentStageViewModel stage,
             AssessmentSummaryRequest request,
@@ -153,8 +158,8 @@ namespace He.PipelineAssessment.UI.Tests.Features.Assessment.AssessmentSummary
                 stage
             };
             assessmentRepository.Setup(x => x.GetAssessment(request.AssessmentId)).ReturnsAsync(assessment);
-            assessmentRepository.Setup(x => x.GetAssessmentStages(request.AssessmentId)).ReturnsAsync(stages);
-            assessmentRepository.Setup(x => x.GetStartableTools(request.AssessmentId)).ReturnsAsync(startableToolViewModels);
+            storeProcRepository.Setup(x => x.GetAssessmentStages(request.AssessmentId)).ReturnsAsync(stages);
+            storeProcRepository.Setup(x => x.GetStartableTools(request.AssessmentId)).ReturnsAsync(startableToolViewModels);
 
 
             //Act
@@ -173,6 +178,7 @@ namespace He.PipelineAssessment.UI.Tests.Features.Assessment.AssessmentSummary
         [AutoMoqData]
         public async Task Handle_ReturnsAssessmentStageWithOutDataFromStartableTools_GivenStageHasBeenStarted(
            [Frozen] Mock<IAssessmentRepository> assessmentRepository,
+           [Frozen] Mock<IStoreProcRepository> storeProcRepository,
             Models.Assessment assessment,
             AssessmentStageViewModel stage,
             AssessmentSummaryRequest request,
@@ -197,8 +203,8 @@ namespace He.PipelineAssessment.UI.Tests.Features.Assessment.AssessmentSummary
             };
             startableToolViewModels.Add(startableToolViewModel);
             assessmentRepository.Setup(x => x.GetAssessment(request.AssessmentId)).ReturnsAsync(assessment);
-            assessmentRepository.Setup(x => x.GetAssessmentStages(request.AssessmentId)).ReturnsAsync(stages);
-            assessmentRepository.Setup(x => x.GetStartableTools(request.AssessmentId)).ReturnsAsync(startableToolViewModels);
+            storeProcRepository.Setup(x => x.GetAssessmentStages(request.AssessmentId)).ReturnsAsync(stages);
+            storeProcRepository.Setup(x => x.GetStartableTools(request.AssessmentId)).ReturnsAsync(startableToolViewModels);
 
             //Act
             var result = await sut.Handle(request, CancellationToken.None);

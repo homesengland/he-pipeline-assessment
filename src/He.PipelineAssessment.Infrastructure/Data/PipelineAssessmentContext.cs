@@ -17,15 +17,11 @@ namespace He.PipelineAssessment.Infrastructure.Data
         public DbSet<Assessment> Assessment { get; set; } = default!;
         public DbSet<AssessmentTool> AssessmentTool { get; set; } = default!;
         public DbSet<AssessmentToolInstanceNextWorkflow> AssessmentToolInstanceNextWorkflow { get; set; } = default!;
-        public DbSet<AssessmentToolWorkflow> AssessmentToolWorkflow { get; set; } = default!;
-        public DbSet<AssessmentStageViewModel> AssessmentStageViewModel { get; set; } = default!;
-        public DbSet<StartableToolViewModel> StartableToolViewModel { get; set; } = default!;
+        public DbSet<AssessmentToolWorkflow> AssessmentToolWorkflow { get; set; } = default!;    
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            base.OnModelCreating(modelBuilder);
-            modelBuilder.Entity<AssessmentStageViewModel>().HasNoKey().ToView(null);
-            modelBuilder.Entity<StartableToolViewModel>().HasNoKey().ToView(null);
+            base.OnModelCreating(modelBuilder);            
             modelBuilder.ApplyConfigurationsFromAssembly(typeof(AssessmentConfiguration).Assembly);
         }
     }
