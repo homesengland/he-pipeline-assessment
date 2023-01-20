@@ -14,10 +14,10 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Elsa" Version="2.8.2" />
-    <PackageReference Include="Elsa.Client" Version="2.8.2" />
-    <PackageReference Include="Elsa.Core" Version="2.8.2" />
-    <PackageReference Include="Elsa.Server.Api" Version="2.8.2" />
+    <PackageReference Include="Elsa" Version="2.9.3" />
+    <PackageReference Include="Elsa.Client" Version="2.9.3" />
+    <PackageReference Include="Elsa.Core" Version="2.9.3" />
+    <PackageReference Include="Elsa.Server.Api" Version="2.9.3" />
   </ItemGroup>
 
   <ItemGroup>
