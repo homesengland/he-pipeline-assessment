@@ -11,8 +11,7 @@ namespace He.PipelineAssessment.Infrastructure.Repository
         Task<Assessment?> GetAssessment(int assessmentId);
         Task<List<Assessment>> GetAssessments();
         Task<AssessmentToolWorkflowInstance?> GetAssessmentToolWorkflowInstance(string workflowInstance);
-        Task<List<AssessmentStageViewModel>> GetAssessmentStages(int assessmentId);
-        Task<List<StartableToolViewModel>> GetStartableTools(int assessmentId);
+       
         Task<AssessmentToolInstanceNextWorkflow?> GetAssessmentToolInstanceNextWorkflow(int assessmentToolWorkflowInstanceId, string workflowDefinitionId);
         Task<IEnumerable<AssessmentToolWorkflowInstance>> GetAssessmentToolWorkflowInstances(int assessmentId);
 
@@ -27,9 +26,7 @@ namespace He.PipelineAssessment.Infrastructure.Repository
     public class AssessmentRepository : IAssessmentRepository
     {
         private readonly PipelineAssessmentContext context;
-        private readonly string sp_GetAssessmentStagesByAssessmentId = @"exec GetAssessmentStagesByAssessmentId @assessmentId";
-        private readonly string sp_GetStartableToolsByAssessmentId = @"exec GetStartableToolsByAssessmentId @assessmentId";
-
+      
         public AssessmentRepository(PipelineAssessmentContext context)
         {
             this.context = context;
@@ -50,21 +47,7 @@ namespace He.PipelineAssessment.Infrastructure.Repository
             return await context.Set<AssessmentToolWorkflowInstance>().Include(x => x.Assessment).FirstOrDefaultAsync(x => x.WorkflowInstanceId == workflowInstance);
         }
 
-        public async Task<List<AssessmentStageViewModel>> GetAssessmentStages(int assessmentId)
-        {
-            var assessmentIdParameter = new SqlParameter("@assessmentId", assessmentId);
-            var stages = await context.AssessmentStageViewModel
-                .FromSqlRaw(sp_GetAssessmentStagesByAssessmentId, assessmentIdParameter).ToListAsync();
-            return new List<AssessmentStageViewModel>(stages);
-        }
-
-        public async Task<List<StartableToolViewModel>> GetStartableTools(int assessmentId)
-        {
-            var assessmentIdParameter = new SqlParameter("@assessmentId", assessmentId);
-            var startableTools = await context.StartableToolViewModel
-                .FromSqlRaw(sp_GetStartableToolsByAssessmentId, assessmentIdParameter).ToListAsync();
-            return new List<StartableToolViewModel>(startableTools);
-        }
+       
 
         public async Task<AssessmentToolInstanceNextWorkflow?> GetAssessmentToolInstanceNextWorkflow(int assessmentToolWorkflowInstanceId, string workflowDefinitionId)
         {

@@ -5,12 +5,14 @@ using He.PipelineAssessment.Data.Auth;
 using He.PipelineAssessment.Data.SinglePipeline;
 using He.PipelineAssessment.Infrastructure.Data;
 using He.PipelineAssessment.Infrastructure.Repository;
+using He.PipelineAssessment.Infrastructure.Repository.StoreProc;
 using He.PipelineAssessment.UI;
 using He.PipelineAssessment.UI.Features.Workflow.QuestionScreenSaveAndContinue;
 using MediatR;
 using Microsoft.AspNetCore.DataProtection;
 using Microsoft.AspNetCore.Mvc.Razor;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.DependencyInjection;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -48,10 +50,16 @@ builder.Services.AddDbContext<PipelineAssessmentContext>(config =>
     config.UseSqlServer(pipelineAssessmentConnectionString,
         x => x.MigrationsAssembly("He.PipelineAssessment.Infrastructure")));
 
+builder.Services.AddDbContext<PipelineAssessmentStoreProcContext>(config =>
+    config.UseSqlServer(pipelineAssessmentConnectionString));
+
 builder.Services.AddScoped<DbContext>(provider => provider.GetRequiredService<PipelineAssessmentContext>());
+builder.Services.AddScoped<DbContext>(provider => provider.GetRequiredService<PipelineAssessmentStoreProcContext>());
+
 builder.Services.AddScoped<IValidator<QuestionScreenSaveAndContinueCommand>, SaveAndContinueCommandValidator>();
 builder.Services.AddDataProtection().PersistKeysToDbContext<PipelineAssessmentContext>();
 builder.Services.AddScoped<IAssessmentRepository, AssessmentRepository>();
+builder.Services.AddScoped<IStoreProcRepository, StoreProcRepository>();
 
 
 builder.Services.AddScoped<IIdentityClient, IdentityClient>();
