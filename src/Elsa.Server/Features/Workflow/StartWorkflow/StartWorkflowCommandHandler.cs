@@ -19,8 +19,8 @@ namespace Elsa.Server.Features.Workflow.StartWorkflow
         private readonly INextActivityNavigationService _nextActivityNavigationService;
 
 
-        public StartWorkflowCommandHandler(IWorkflowRegistry workflowRegistry, IStartsWorkflow startsWorkflow, 
-                                           IElsaCustomRepository elsaCustomRepository, IStartWorkflowMapper startWorkflowMapper, 
+        public StartWorkflowCommandHandler(IWorkflowRegistry workflowRegistry, IStartsWorkflow startsWorkflow,
+                                           IElsaCustomRepository elsaCustomRepository, IStartWorkflowMapper startWorkflowMapper,
                                            IWorkflowNextActivityProvider workflowNextActivityProvider,
                                            INextActivityNavigationService nextActivityNavigationService)
         {
@@ -29,7 +29,7 @@ namespace Elsa.Server.Features.Workflow.StartWorkflow
             _elsaCustomRepository = elsaCustomRepository;
             _startWorkflowMapper = startWorkflowMapper;
             _workflowNextActivityProvider = workflowNextActivityProvider;
-            _nextActivityNavigationService= nextActivityNavigationService;
+            _nextActivityNavigationService = nextActivityNavigationService;
         }
 
         public async Task<OperationResult<StartWorkflowResponse>> Handle(StartWorkflowCommand request, CancellationToken cancellationToken)
@@ -45,63 +45,29 @@ namespace Elsa.Server.Features.Workflow.StartWorkflow
 
                 if (runWorkflowResult.WorkflowInstance != null)
                 {
-                    var workflowInstance = runWorkflowResult.WorkflowInstance; 
+                    var workflowInstance = runWorkflowResult.WorkflowInstance;
 
                     var activity = workflow!.Activities.FirstOrDefault(x =>
                         x.Id == runWorkflowResult.WorkflowInstance.LastExecutedActivityId);
 
                     if (activity != null)
                     {
-                        var workflowNextActivityModel = await _workflowNextActivityProvider.GetStartWorkflowNextActivity(activity,runWorkflowResult.WorkflowInstance.Id, cancellationToken);
-                       
+                        var workflowNextActivityModel = await _workflowNextActivityProvider.GetStartWorkflowNextActivity(activity, runWorkflowResult.WorkflowInstance.Id, cancellationToken);
+
                         if (workflowNextActivityModel.WorkflowInstance != null)
                             workflowInstance = workflowNextActivityModel.WorkflowInstance;
 
                         var nextActivityRecord = await _elsaCustomRepository.GetCustomActivityNavigation(workflowNextActivityModel.NextActivity.Id, workflowInstance.Id, cancellationToken);
-                        
+
                         await _nextActivityNavigationService.CreateNextActivityNavigation(activity.Id, nextActivityRecord, workflowNextActivityModel.NextActivity, workflowInstance, cancellationToken);
 
-
-                        //var customActivityNavigation =
-                        //    _startWorkflowMapper.RunWorkflowResultToCustomNavigationActivity(runWorkflowResult, workflowNextActivityModel.NextActivity.Type);
-
-                        //if (customActivityNavigation != null)
-                        //{
-                        //    await _elsaCustomRepository.CreateCustomActivityNavigationAsync(customActivityNavigation!, cancellationToken);
-                        //    result.Data = _startWorkflowMapper.RunWorkflowResultToStartWorkflowResponse(runWorkflowResult, workflowNextActivityModel.NextActivity.Type, workflowName);
-                        //}
-                        //else
-                        //{
-                        //    result.ErrorMessages.Add("Failed to deserialize RunWorkflowResult");
-                        //}
-
-                        //if (workflowNextActivityModel.NextActivity.Type == ActivityTypeConstants.QuestionScreen)
-                        //{
-                        //    //create one for each question
-                        //    var workflowInstance = workflowNextActivityModel.WorkflowInstance ?? runWorkflowResult.WorkflowInstance;
-                        //    var dictionList = workflowInstance.ActivityData
-                        //        .FirstOrDefault(x => x.Key == workflowNextActivityModel.NextActivity.Id).Value;
-
-                        //    AssessmentQuestions? dictionaryQuestions = (AssessmentQuestions?)dictionList.FirstOrDefault(x => x.Key == "Questions").Value;
-
-                        //    var questionList = (List<Question>)dictionaryQuestions!.Questions;
-                        //    if (questionList!.Any())
-                        //    {
-                        //        var assessments = new List<QuestionScreenAnswer>();
-
-                        //        foreach (var item in questionList!)
-                        //        {
-                        //            var assessment =
-                        //                _startWorkflowMapper.RunWorkflowResultToQuestionScreenAnswer(runWorkflowResult,
-                        //                    workflowNextActivityModel.NextActivity.Type, item);
-                        //            if (assessment != null)
-                        //            {
-                        //                assessments.Add(assessment);
-                        //            }
-                        //        }
-                        //        await _elsaCustomRepository.CreateQuestionScreenAnswersAsync(assessments, cancellationToken);
-                        //    }
-                        //}
+                        result.Data = new StartWorkflowResponse
+                        {
+                            WorkflowInstanceId = workflowInstance.Id,
+                            NextActivityId = workflowNextActivityModel.NextActivity.Id,
+                            ActivityType = workflowNextActivityModel.NextActivity.Type,
+                            WorkflowName = workflowName
+                        };
                     }
                     else
                     {
