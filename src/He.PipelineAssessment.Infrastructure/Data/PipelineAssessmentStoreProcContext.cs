@@ -6,10 +6,10 @@ namespace He.PipelineAssessment.Infrastructure.Data
 {
     public class PipelineAssessmentStoreProcContext : DbContext
     {
-        public PipelineAssessmentStoreProcContext(DbContextOptions options) : base(options)
+        public PipelineAssessmentStoreProcContext(DbContextOptions<PipelineAssessmentStoreProcContext> options) : base(options)
         {
 
-        }        
+        }
         public DbSet<AssessmentStageViewModel> AssessmentStageViewModel { get; set; } = default!;
         public DbSet<StartableToolViewModel> StartableToolViewModel { get; set; } = default!;
 
