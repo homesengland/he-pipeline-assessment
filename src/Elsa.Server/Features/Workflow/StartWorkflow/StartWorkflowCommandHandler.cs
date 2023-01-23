@@ -14,20 +14,18 @@ namespace Elsa.Server.Features.Workflow.StartWorkflow
         private readonly IWorkflowRegistry _workflowRegistry;
         private readonly IStartsWorkflow _startsWorkflow;
         private readonly IElsaCustomRepository _elsaCustomRepository;
-        private readonly IStartWorkflowMapper _startWorkflowMapper;
         private readonly IWorkflowNextActivityProvider _workflowNextActivityProvider;
         private readonly INextActivityNavigationService _nextActivityNavigationService;
 
 
         public StartWorkflowCommandHandler(IWorkflowRegistry workflowRegistry, IStartsWorkflow startsWorkflow,
-                                           IElsaCustomRepository elsaCustomRepository, IStartWorkflowMapper startWorkflowMapper,
+                                           IElsaCustomRepository elsaCustomRepository,
                                            IWorkflowNextActivityProvider workflowNextActivityProvider,
                                            INextActivityNavigationService nextActivityNavigationService)
         {
             _workflowRegistry = workflowRegistry;
             _startsWorkflow = startsWorkflow;
             _elsaCustomRepository = elsaCustomRepository;
-            _startWorkflowMapper = startWorkflowMapper;
             _workflowNextActivityProvider = workflowNextActivityProvider;
             _nextActivityNavigationService = nextActivityNavigationService;
         }
@@ -41,13 +39,13 @@ namespace Elsa.Server.Features.Workflow.StartWorkflow
                     await _workflowRegistry.FindAsync(request.WorkflowDefinitionId, VersionOptions.Published, cancellationToken: cancellationToken);
 
                 var workflowName = workflow!.Name != null ? workflow.Name : "undefined workflow";
-                var runWorkflowResult = await _startsWorkflow.StartWorkflowAsync(workflow!, null, null, request.CorrelationId, cancellationToken: cancellationToken);
+                var runWorkflowResult = await _startsWorkflow.StartWorkflowAsync(workflow, null, null, request.CorrelationId, cancellationToken: cancellationToken);
 
                 if (runWorkflowResult.WorkflowInstance != null)
                 {
                     var workflowInstance = runWorkflowResult.WorkflowInstance;
 
-                    var activity = workflow!.Activities.FirstOrDefault(x =>
+                    var activity = workflow.Activities.FirstOrDefault(x =>
                         x.Id == runWorkflowResult.WorkflowInstance.LastExecutedActivityId);
 
                     if (activity != null)
