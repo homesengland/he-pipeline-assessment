@@ -7,6 +7,7 @@ using Elsa.Models;
 using Elsa.Server.Features.Workflow.StartWorkflow;
 using Elsa.Server.Models;
 using Elsa.Server.Providers;
+using Elsa.Server.Services;
 using Elsa.Services;
 using Elsa.Services.Models;
 using He.PipelineAssessment.Common.Tests;
@@ -148,15 +149,14 @@ namespace Elsa.Server.Tests.Features.Workflow.StartWorkflow
         public async Task Handle_ShouldReturnDataFromCorrectWorkflowInstance(
            [Frozen] Mock<IWorkflowRegistry> workflowRegistry,
            [Frozen] Mock<IStartsWorkflow> startsWorkflow,
-           [Frozen] Mock<IStartWorkflowMapper> startWorkflowMapper,
            [Frozen] Mock<IElsaCustomRepository> elsaCustomRepository,
+           [Frozen] Mock<INextActivityNavigationService> nextActivityNavigationService,
            [Frozen] Mock<IWorkflowNextActivityProvider> workflowNextActivityProvider,
            WorkflowBlueprint workflowBlueprint,
            ActivityBlueprint activityBlueprint,
            RunWorkflowResult runWorkflowResult,
            StartWorkflowCommand startWorkflowCommand,
            CustomActivityNavigation customActivityNavigation,
-           StartWorkflowResponse startWorkflowResponse,
            List<Question> questions,
            WorkflowInstance workflowInstance,
            StartWorkflowCommandHandler sut)
@@ -186,26 +186,25 @@ namespace Elsa.Server.Tests.Features.Workflow.StartWorkflow
             startsWorkflow.Setup(x => x.StartWorkflowAsync(workflowBlueprint, null, null, startWorkflowCommand.CorrelationId, null, null, CancellationToken.None))
                 .ReturnsAsync(runWorkflowResult);
 
-            startWorkflowMapper.Setup(x => x.RunWorkflowResultToCustomNavigationActivity(runWorkflowResult, activityBlueprint.Type))
-                .Returns(customActivityNavigation);
-
-            startWorkflowMapper.Setup(x => x.RunWorkflowResultToStartWorkflowResponse(runWorkflowResult, activityBlueprint.Type, workflowBlueprint.Name!))
-                .Returns(startWorkflowResponse);
-
             workflowNextActivityProvider
                 .Setup(x => x.GetStartWorkflowNextActivity(activityBlueprint, runWorkflowResult.WorkflowInstance.Id,
                     CancellationToken.None)).ReturnsAsync(workflowNextActivityModel);
+
+            elsaCustomRepository
+                .Setup(x => x.GetCustomActivityNavigation(workflowNextActivityModel.NextActivity.Id,
+                    workflowInstance.Id, CancellationToken.None)).ReturnsAsync(customActivityNavigation);
 
             //Act
             var result = await sut.Handle(startWorkflowCommand, CancellationToken.None);
 
             //Assert
-            elsaCustomRepository.Verify(x => x.CreateCustomActivityNavigationAsync(customActivityNavigation, CancellationToken.None), Times.Once);
-            elsaCustomRepository.Verify(x => x.CreateQuestionScreenAnswersAsync(It.IsAny<List<QuestionScreenAnswer>>(), CancellationToken.None), Times.Once);
-            Assert.Equal(startWorkflowResponse.NextActivityId, result.Data!.NextActivityId);
-            Assert.Equal(startWorkflowResponse.WorkflowName, result.Data.WorkflowName);
-            Assert.Equal(startWorkflowResponse.WorkflowInstanceId, result.Data.WorkflowInstanceId);
-            Assert.Equal(startWorkflowResponse.ActivityType, result.Data.ActivityType);
+            nextActivityNavigationService.Verify(
+                x => x.CreateNextActivityNavigation(workflowNextActivityModel.NextActivity.Id, customActivityNavigation,
+                    workflowNextActivityModel.NextActivity, workflowNextActivityModel.WorkflowInstance, CancellationToken.None), Times.Once);
+            Assert.Equal(workflowNextActivityModel.WorkflowInstance.Id, result.Data!.WorkflowInstanceId);
+            Assert.Equal(workflowNextActivityModel.NextActivity.Id, result.Data.NextActivityId);
+            Assert.Equal(workflowNextActivityModel.NextActivity.Type, result.Data.ActivityType);
+            Assert.Equal(workflowBlueprint.Name, result.Data.WorkflowName);
             Assert.Empty(result.ErrorMessages);
             Assert.Null(result.ValidationMessages);
         }
