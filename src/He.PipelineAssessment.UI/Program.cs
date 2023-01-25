@@ -60,6 +60,7 @@ builder.Services.AddScoped<IValidator<QuestionScreenSaveAndContinueCommand>, Sav
 builder.Services.AddDataProtection().PersistKeysToDbContext<PipelineAssessmentContext>();
 builder.Services.AddScoped<IAssessmentRepository, AssessmentRepository>();
 builder.Services.AddScoped<IStoreProcRepository, StoreProcRepository>();
+builder.Services.AddScoped<IAdminAssessmentToolRepository, AdminAssessmentToolRepository>();
 
 
 builder.Services.AddScoped<IIdentityClient, IdentityClient>();
