@@ -7,14 +7,14 @@ import {
   HTMLElsaMultiExpressionEditorElement,
   IntellisenseContext,
   SyntaxNames
-} from "../models/elsa-interfaces";
-import { parseJson } from "../models/utils";
-import { IOutcomeProperty } from "../models/custom-component-models";
-import { IconProvider } from "./icon-provider/icon-provider";
-import PlusIcon from '../icons/plus_icon';
-import TrashCanIcon from '../icons/trash-can';
+} from "../../models/elsa-interfaces";
+import { parseJson } from "../../models/utils";
+import { IOutcomeProperty } from "../../models/custom-component-models";
+import { IconProvider } from "../icon-provider/icon-provider";
+import PlusIcon from '../../icons/plus_icon';
+import TrashCanIcon from '../../icons/trash-can';
 
-import { mapSyntaxToLanguage } from '../models/utils';
+import { mapSyntaxToLanguage } from '../../models/utils';
 
 
 @Component({
@@ -145,20 +145,7 @@ export class CustomOutcomeListProperty {
             <th
               class="elsa-px-6 elsa-py-3 elsa-text-left elsa-text-xs elsa-font-medium elsa-text-gray-500 elsa-tracking-wider elsa-w-2/12">Text
             </th>
-            <td class="elsa-py-2 elsa-pr-5">
-              {/*<custom-input-property*/}
-              {/*  onValueChanged={e => this.onTextChanged(e, outcome)}*/}
-              {/*  customProperty={textProperty}*/}
-              {/*  propertyDescriptor={this.propertyDescriptor}*/}
-              {/*  intellisenseContext={textContext}*/}
-              {/*  singleLineMode={false}*/}
-              {/*  context={context}*/}
-              {/*  showLabel={true}*/}
-              {/*  supportedSyntaxes={this.supportedSyntaxes}*/}
-              {/*  index={index}*/}
-              {/*>*/}
-              {/*</custom-input-property>*/}
-
+            <td class="elsa-py-2 elsa-pl-5">
               <div class="elsa-mt-1 elsa-relative elsa-rounded-md elsa-shadow-sm">
               <elsa-expression-editor
                 key={`expression-editor-${index}-${this.syntaxSwitchCount}`}
@@ -186,20 +173,7 @@ export class CustomOutcomeListProperty {
             <th
               class="elsa-px-6 elsa-py-3 elsa-text-left elsa-text-xs elsa-font-medium elsa-text-gray-500 elsa-tracking-wider elsa-w-2/12">Condition
             </th>
-            <td class="elsa-py-2 pl-5">
-              {/*<custom-input-property*/}
-              {/*  onValueChanged={e => this.onConditionChanged(e, outcome)}*/}
-              {/*  customProperty={conditionProperty}*/}
-              {/*  propertyDescriptor={this.propertyDescriptor}*/}
-              {/*  intellisenseContext={conditionContext}*/}
-              {/*  singleLineMode={false}*/}
-              {/*  context={context}*/}
-              {/*  showLabel={true}*/}
-              {/*  supportedSyntaxes={this.supportedSyntaxes}*/}
-              {/*  index={index}*/}
-              {/*>*/}
-              {/*</custom-input-property>*/}
-
+            <td class="elsa-py-2 pl-5">  
               <div class="elsa-mt-1 elsa-relative elsa-rounded-md elsa-shadow-sm">
                 <elsa-expression-editor
                   key={`expression-editor-${index}-${this.syntaxSwitchCount}`}

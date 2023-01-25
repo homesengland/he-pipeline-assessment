@@ -3,12 +3,12 @@ import {
   ActivityPropertyDescriptor,
   SyntaxNames,
   IntellisenseContext,
-} from "../models/elsa-interfaces";
+} from "../../models/elsa-interfaces";
 
-import { IconProvider } from "./icon-provider/icon-provider";
-import TrashCanIcon from '../icons/trash-can';
+import { IconProvider } from "../icon-provider/icon-provider";
+import TrashCanIcon from '../../icons/trash-can';
 
-import { IOutcomeProperty, ITextProperty } from "../models/custom-component-models"
+import { IOutcomeProperty, ITextProperty } from "../../models/custom-component-models"
 
 @Component({
   tag: 'custom-outcome-property',

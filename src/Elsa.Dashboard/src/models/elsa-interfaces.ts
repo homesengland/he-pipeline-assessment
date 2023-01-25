@@ -91,3 +91,9 @@ export interface IntellisenseContext {
   activityTypeName: string;
   propertyName: string;
 }
+
+export interface SwitchCase {
+  name: string;
+  expressions?: Map<string>;
+  syntax?: string;
+}

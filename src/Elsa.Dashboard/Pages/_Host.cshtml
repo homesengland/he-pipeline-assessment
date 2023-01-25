@@ -40,8 +40,48 @@
                         else if(e.activityModel.type == "ConfirmationScreen"){
                           e.outcomes = e.outcomes.filter(x => x == 'Done');
                         }
+                    onActivityDesignDisplaying(e);
                 });
         };
+
+        //function MyCustomSwitchPlugin(elsaStudio) {
+        //    var eventBus = elsaStudio.eventBus;
+        //    eventBus.on('activity-design-displaying', this.onActivityDesignDisplaying);
+        //}
+
+        function onActivityDesignDisplaying(context) {
+          console.log('Context', context);
+            const activityModel = context.activityModel;
+            const activityDescriptor = context.activityDescriptor;
+            const propertyDescriptors = activityDescriptor.inputProperties;
+            const switchCaseProperties = propertyDescriptors.filter(x => x.uiHint == 'custom-switch-case-builder');
+            if (switchCaseProperties.length == 0)
+                return;
+            let outcomesHash = {};
+            const syntax = 'Switch';
+            for (const propertyDescriptor of switchCaseProperties) {
+                const props = activityModel.properties || [];
+                const casesProp = props.find(x => x.name == propertyDescriptor.name) || { expressions: { 'Switch': '' }, syntax: syntax };
+                const expression = casesProp.expressions[syntax] || [];
+                const cases = !!expression['$values'] ? expression['$values'] : Array.isArray(expression) ? expression : parseJson(expression) || [];
+                for (const c of cases)
+                    outcomesHash[c.name] = true;
+            }
+            const outcomes = Object.keys(outcomesHash);
+            context.outcomes = [...outcomes];
+        }
+
+        function parseJson(json) {
+            if (!json)
+                return null;
+            try {
+                return JSON.parse(json);
+            }
+            catch (e) {
+                console.warn(`Error parsing JSON: ${e}`);
+            }
+            return undefined;
+        }
 
         function getOrCreateProperty(activity, name, defaultExpression, defaultSyntax) {
             var property = activity.properties.find(function (x) { return x.name == name; });
@@ -85,11 +125,27 @@
             }
         }
 
+        function MyCustomSwitchCaseDriver(elsaStudio, elementName) {
+            this.display = (activity, property) => {
+                console.log("Elsa Studio", elsaStudio);
+                console.log("Property", property);
+                console.log("Activity", activity);
+                var prop = (0, getOrCreateProperty)(activity, property.name);
+                var questionActivity = document.createElement(elementName);
+                questionActivity.activityModel = activity;
+                questionActivity.propertyDescriptor = property;
+                questionActivity.propertyModel = prop;
+                return questionActivity;
+            }
+        }
+
         elsaStudioRoot.addEventListener('initializing', e => {
           var elsaStudio = e.detail;
           elsaStudio.pluginManager.registerPlugin(MyCustomPlugin);
+          //elsaStudio.pluginManager.registerPlugin(MyCustomSwitchPlugin);
           elsaStudio.propertyDisplayManager.addDriver('question-builder', () => new MyCustomInputDriver(elsaStudio, 'elsa-question-screen'));
-            elsaStudio.propertyDisplayManager.addDriver('custom-case-builder', () => new MyCustomOutcomeDriver(elsaStudio, 'custom-outcome-list-property'));
+          elsaStudio.propertyDisplayManager.addDriver('custom-case-builder', () => new MyCustomOutcomeDriver(elsaStudio, 'custom-outcome-list-property'));
+          elsaStudio.propertyDisplayManager.addDriver('custom-switch-case-builder', () => new MyCustomSwitchCaseDriver(elsaStudio, 'custom-elsa-switch-cases-property'));
 
         });
 

@@ -4,11 +4,11 @@ import {
   SyntaxNames,
   IntellisenseContext,
   HTMLElsaExpressionEditorElement
-} from "../models/elsa-interfaces";
+} from "../../models/elsa-interfaces";
 
-import { mapSyntaxToLanguage } from "../models/utils";
+import { mapSyntaxToLanguage } from "../../models/utils";
 
-import { ITextProperty } from "../models/custom-component-models"
+import { ITextProperty } from "../../models/custom-component-models"
 
 @Component({
   tag: 'custom-input-property',
