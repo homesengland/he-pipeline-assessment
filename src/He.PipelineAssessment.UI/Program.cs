@@ -2,17 +2,16 @@ using Elsa.CustomWorkflow.Sdk.Extensions;
 using Elsa.CustomWorkflow.Sdk.HttpClients;
 using FluentValidation;
 using He.PipelineAssessment.Data.Auth;
-using He.PipelineAssessment.Data.SinglePipeline;
 using He.PipelineAssessment.Infrastructure.Data;
 using He.PipelineAssessment.Infrastructure.Repository;
 using He.PipelineAssessment.Infrastructure.Repository.StoreProc;
 using He.PipelineAssessment.UI;
+using He.PipelineAssessment.UI.Features.Admin.AssessmentTool.Queries;
 using He.PipelineAssessment.UI.Features.Workflow.QuestionScreenSaveAndContinue;
 using MediatR;
 using Microsoft.AspNetCore.DataProtection;
 using Microsoft.AspNetCore.Mvc.Razor;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.DependencyInjection;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -40,6 +39,7 @@ builder.Services.AddHttpClient("ElsaServerClient", client =>
 
 builder.Services.AddScoped<IElsaServerHttpClient, ElsaServerHttpClient>();
 builder.Services.AddScoped<IQuestionScreenSaveAndContinueMapper, QuestionScreenSaveAndContinueMapper>();
+builder.Services.AddScoped<IAssessmentToolMapper, AssessmentToolMapper>();
 builder.Services.AddScoped<NonceConfig>();
 
 

@@ -1,6 +1,4 @@
-﻿using He.PipelineAssessment.UI.Features.Assessment.AssessmentList;
-
-namespace He.PipelineAssessment.UI.Features.Admin.AssessmentTool
+﻿namespace He.PipelineAssessment.UI.Features.Admin.AssessmentTool.Queries
 {
     public class AssessmentToolData
     {
@@ -25,11 +23,10 @@ namespace He.PipelineAssessment.UI.Features.Admin.AssessmentTool
         public string WorkflowDefinitionId { get; set; }
         public bool IsFirstWorkflow { get; set; }
         public int Version { get; set; }
-        public bool IsLatest  { get; set;}
+        public bool IsLatest { get; set; }
 
     }
 }
 
 
 
- 

@@ -1,11 +1,11 @@
-﻿namespace He.PipelineAssessment.UI.Features.Admin.AssessmentTool
+﻿namespace He.PipelineAssessment.UI.Features.Admin.AssessmentTool.Queries
 {
     public interface IAssessmentToolMapper
     {
         AssessmentToolData AssessmentToolsToAssessmentToolData(List<Models.AssessmentTool> assessmentTools);
     }
     public class AssessmentToolMapper : IAssessmentToolMapper
-    {      
+    {
         public AssessmentToolData AssessmentToolsToAssessmentToolData(List<Models.AssessmentTool> assessmentTools)
         {
             return new AssessmentToolData
@@ -19,12 +19,12 @@
                     {
                         Id = y.Id,
                         AssessmentToolId = y.AssessmentToolId,
-                        IsFirstWorkflow= y.IsFirstWorkflow,
-                        IsLatest   = y.IsLatest,
-                        WorkflowDefinitionId= y.WorkflowDefinitionId,   
-                        Version= y.Version,
+                        IsFirstWorkflow = y.IsFirstWorkflow,
+                        IsLatest = y.IsLatest,
+                        WorkflowDefinitionId = y.WorkflowDefinitionId,
+                        Version = y.Version,
 
-                    }).ToList(): new List<AssessmentToolWorkflowDto> { }
+                    }).ToList() : new List<AssessmentToolWorkflowDto> { }
                 }).ToList(),
             };
         }

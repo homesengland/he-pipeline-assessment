@@ -1,5 +1,5 @@
-﻿using He.PipelineAssessment.UI.Features.Assessments;
-using He.PipelineAssessment.UI.Features.Assessments.AssessmentList;
+﻿using He.PipelineAssessment.UI.Features.Admin.AssessmentTool.Queries;
+using He.PipelineAssessment.UI.Features.Assessments;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 
@@ -10,6 +10,12 @@ namespace He.PipelineAssessment.UI.Features.Admin
         private readonly ILogger<AssessmentController> _logger;
         private readonly IMediator _mediator;
 
+        public AdminController(ILogger<AssessmentController> logger, IMediator mediator)
+        {
+            _logger = logger;
+            _mediator = mediator;
+        }
+
         public IActionResult Index()
         {
             return View();
@@ -17,19 +23,19 @@ namespace He.PipelineAssessment.UI.Features.Admin
 
         //Get all assessment-tools 
         [HttpGet]
-        public async Task<IActionResult> GetAssessmentTools()
+        public async Task<IActionResult> AssessmentTool()
         {
             try
             {
                 var assessmentTools = await _mediator.Send(new AssessmentToolRequest());
-                return View("AssessmentTools");
+                return View("AssessmentTool", assessmentTools);
             }
             catch (Exception e)
             {
                 _logger.LogError(e.Message);
                 return RedirectToAction("Index", "Error", new { message = e.Message });
             }
-           
+
         }
 
         //Create an assessment tool
@@ -40,17 +46,18 @@ namespace He.PipelineAssessment.UI.Features.Admin
         }
 
         //update an assessment tool
-        [HttpPut]
-        public async Task<IActionResult> UpdateAssessmentTool()
+        [HttpPost]
+        public async Task<IActionResult> UpdateAssessmentTool([FromBody] AssessmentToolDto assessmentTool)
         {
-            return View();
+            return RedirectToAction("AssessmentTool");
         }
 
         //delete an assessment tool 
-        [HttpDelete]
-        public async Task<IActionResult> DeleteAssessmentTool()
+        [HttpPost]
+        public async Task<IActionResult> DeleteAssessmentTool(int assessmentToolId)
         {
-            return View();
+            //TODO: implement mediator
+            return RedirectToAction("AssessmentTool");
         }
     }
 }
