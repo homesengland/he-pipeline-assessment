@@ -1,6 +1,6 @@
-﻿using He.PipelineAssessment.UI.Features.Admin.AssessmentToolManagement.Queries;
-using He.PipelineAssessment.Models;
-using He.PipelineAssessment.UI.Features.Admin.AssessmentToolManagement.Commands;
+﻿using He.PipelineAssessment.Models;
+using He.PipelineAssessment.UI.Features.Admin.AssessmentToolManagement.Commands.CreateAssessmentTool;
+using He.PipelineAssessment.UI.Features.Admin.AssessmentToolManagement.Queries;
 
 namespace He.PipelineAssessment.UI.Features.Admin.AssessmentToolManagement
 {
@@ -8,7 +8,7 @@ namespace He.PipelineAssessment.UI.Features.Admin.AssessmentToolManagement
     {
         AssessmentToolListData AssessmentToolsToAssessmentToolData(List<Models.AssessmentTool> assessmentTools);
         AssessmentTool CreateAssessmentToolDtoToAssessmentTool(CreateAssessmentToolDto assessmentToolDto);
-         
+
     }
     public class AssessmentToolMapper : IAssessmentToolMapper
     {

@@ -2,7 +2,7 @@
 using He.PipelineAssessment.UI.Common.Utility;
 using MediatR;
 
-namespace He.PipelineAssessment.UI.Features.Admin.AssessmentToolManagement.Commands
+namespace He.PipelineAssessment.UI.Features.Admin.AssessmentToolManagement.Commands.CreateAssessmentTool
 {
     public class CreateAssessmentToolCommandHandler : IRequestHandler<CreateAssessmentToolCommand, CreateAssessmentToolData>
     {
@@ -31,10 +31,10 @@ namespace He.PipelineAssessment.UI.Features.Admin.AssessmentToolManagement.Comma
                 await _adminAssessmentToolRepository.CreateAssessmentTool(assessmenttool);
 
                 command.AssessmentToolDto.Id = assessmenttool.Id;
-                return new CreateAssessmentToolData 
+                return new CreateAssessmentToolData
                 {
-                  AssessmentToolDto= command.AssessmentToolDto
-                   
+                    AssessmentToolDto = command.AssessmentToolDto
+
                 };
 
             }
@@ -48,9 +48,9 @@ namespace He.PipelineAssessment.UI.Features.Admin.AssessmentToolManagement.Comma
                 };
 
             }
-            
-            
+
+
         }
-      
+
     }
 }

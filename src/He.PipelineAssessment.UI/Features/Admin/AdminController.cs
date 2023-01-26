@@ -1,7 +1,7 @@
-﻿using He.PipelineAssessment.UI.Features.Admin.AssessmentToolManagement.Commands;
+﻿using He.PipelineAssessment.UI.Features.Admin.AssessmentToolManagement.Commands.CreateAssessmentTool;
+using He.PipelineAssessment.UI.Features.Admin.AssessmentToolManagement.Commands.UpdateAssessmentTool;
 using He.PipelineAssessment.UI.Features.Admin.AssessmentToolManagement.Queries;
 using He.PipelineAssessment.UI.Features.Assessments;
-using He.PipelineAssessment.UI.Features.Assessments.AssessmentList;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 
@@ -50,9 +50,15 @@ namespace He.PipelineAssessment.UI.Features.Admin
 
         //update an assessment tool
         [HttpPost]
-        public async Task<IActionResult> UpdateAssessmentTool(int assessmentToolId, string name, int order)
+        public async Task<IActionResult> UpdateAssessmentTool(UpdateAssessmentToolCommand updateAssessmentToolCommand)
         {
-            
+            if (updateAssessmentToolCommand.Id == 0)
+            {
+                return RedirectToAction("Index", "Error", new { message = "Bad request. No Assessment Tool Id provided." });
+            }
+
+            await _mediator.Send(updateAssessmentToolCommand);
+
             return RedirectToAction("AssessmentTool");
         }
 
