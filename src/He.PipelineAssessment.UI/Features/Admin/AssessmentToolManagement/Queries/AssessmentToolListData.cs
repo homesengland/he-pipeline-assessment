@@ -1,6 +1,6 @@
-﻿namespace He.PipelineAssessment.UI.Features.Admin.AssessmentTool.Queries
+﻿namespace He.PipelineAssessment.UI.Features.Admin.AssessmentToolManagement.Queries
 {
-    public class AssessmentToolData
+    public class AssessmentToolListData
     {
         public List<string> ValidationMessages { get; set; } = new List<string>();
         public bool IsValid { get { return ValidationMessages != null && ValidationMessages.Count == 0; } }

@@ -6,7 +6,8 @@ using He.PipelineAssessment.Infrastructure.Data;
 using He.PipelineAssessment.Infrastructure.Repository;
 using He.PipelineAssessment.Infrastructure.Repository.StoreProc;
 using He.PipelineAssessment.UI;
-using He.PipelineAssessment.UI.Features.Admin.AssessmentTool.Queries;
+using He.PipelineAssessment.UI.Common.Utility;
+using He.PipelineAssessment.UI.Features.Admin.AssessmentToolManagement;
 using He.PipelineAssessment.UI.Features.Workflow.QuestionScreenSaveAndContinue;
 using MediatR;
 using Microsoft.AspNetCore.DataProtection;
@@ -61,6 +62,7 @@ builder.Services.AddDataProtection().PersistKeysToDbContext<PipelineAssessmentCo
 builder.Services.AddScoped<IAssessmentRepository, AssessmentRepository>();
 builder.Services.AddScoped<IStoreProcRepository, StoreProcRepository>();
 builder.Services.AddScoped<IAdminAssessmentToolRepository, AdminAssessmentToolRepository>();
+builder.Services.AddScoped<IDateTimeProvider, DateTimeProvider>();
 
 
 builder.Services.AddScoped<IIdentityClient, IdentityClient>();

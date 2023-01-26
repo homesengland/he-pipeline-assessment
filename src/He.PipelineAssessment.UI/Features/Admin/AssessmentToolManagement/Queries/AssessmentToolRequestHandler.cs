@@ -1,9 +1,9 @@
 ﻿using He.PipelineAssessment.Infrastructure.Repository;
 using MediatR;
 
-namespace He.PipelineAssessment.UI.Features.Admin.AssessmentTool.Queries
+namespace He.PipelineAssessment.UI.Features.Admin.AssessmentToolManagement.Queries
 {
-    public class AssessmentToolRequestHandler : IRequestHandler<AssessmentToolRequest, AssessmentToolData>
+    public class AssessmentToolRequestHandler : IRequestHandler<AssessmentToolRequest, AssessmentToolListData>
     {
         private readonly IAdminAssessmentToolRepository _adminAssessmentToolRepository;
         private readonly IAssessmentToolMapper _assessmentToolMapper;
@@ -13,7 +13,7 @@ namespace He.PipelineAssessment.UI.Features.Admin.AssessmentTool.Queries
             _adminAssessmentToolRepository = adminAssessmentToolRepository;
             _assessmentToolMapper = assessmentToolMapper;
         }
-        public async Task<AssessmentToolData> Handle(AssessmentToolRequest request, CancellationToken cancellationToken)
+        public async Task<AssessmentToolListData> Handle(AssessmentToolRequest request, CancellationToken cancellationToken)
         {
             try
             {
@@ -25,7 +25,7 @@ namespace He.PipelineAssessment.UI.Features.Admin.AssessmentTool.Queries
             catch (Exception e)
             {
                 List<string> errors = new List<string> { $"An error occurred whilst accessing our data. Exception: {e.Message}" };
-                return new AssessmentToolData()
+                return new AssessmentToolListData()
                 {
                     ValidationMessages = errors
                 };

@@ -1,5 +1,7 @@
-﻿using He.PipelineAssessment.UI.Features.Admin.AssessmentTool.Queries;
+﻿using He.PipelineAssessment.UI.Features.Admin.AssessmentToolManagement.Commands;
+using He.PipelineAssessment.UI.Features.Admin.AssessmentToolManagement.Queries;
 using He.PipelineAssessment.UI.Features.Assessments;
+using He.PipelineAssessment.UI.Features.Assessments.AssessmentList;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 
@@ -40,15 +42,17 @@ namespace He.PipelineAssessment.UI.Features.Admin
 
         //Create an assessment tool
         [HttpPost]
-        public async Task<IActionResult> CreateAssessmentTool()
+        public async Task<IActionResult> CreateAssessmentTool(CreateAssessmentToolCommand createAssessmentToolCommand)
         {
-            return View();
+            var createAssessmentToolData = await _mediator.Send(createAssessmentToolCommand);
+            return RedirectToAction("AssessmentTool");
         }
 
         //update an assessment tool
         [HttpPost]
-        public async Task<IActionResult> UpdateAssessmentTool([FromBody] AssessmentToolDto assessmentTool)
+        public async Task<IActionResult> UpdateAssessmentTool(int assessmentToolId, string name, int order)
         {
+            
             return RedirectToAction("AssessmentTool");
         }
 
