@@ -20,10 +20,15 @@ namespace Elsa.CustomActivities.Activities.QuestionScreen
         [ActivityInput]
         public string PageTitle { get; set; } = null!;
 
-        [ActivityInput(Label = "List of questions", Hint = "Questions to be displayed on this page.", UIHint = CustomActivityUIHints.QuestionScreen, DefaultSyntax = "Json", IsDesignerCritical = true)]
+        [ActivityInput(Label = "List of questions",
+            Hint = "Questions to be displayed on this page.", 
+            UIHint = CustomActivityUIHints.QuestionScreen, 
+            DefaultSyntax = SyntaxNames.Json, 
+            SupportedSyntaxes =new[] { SyntaxNames.Json }, 
+            IsDesignerCritical = true)]
         public AssessmentQuestions Questions { get; set; } = new AssessmentQuestions();
 
-        [ActivityInput(Hint = "The condition to evaluate.", UIHint = ActivityInputUIHints.SingleLine, SupportedSyntaxes = new[] { SyntaxNames.JavaScript }, DefaultSyntax = SyntaxNames.JavaScript)]
+        [ActivityInput(Hint = "Set the condition to state whether the question is displayed or not.", UIHint = CustomActivityUIHints.CustomTextProperty, SupportedSyntaxes = new[] { SyntaxNames.JavaScript }, DefaultSyntax = SyntaxNames.JavaScript)]
         public bool Condition { get; set; }
 
         [ActivityInput(Label = "Assessment outcome conditions", Hint = "The conditions to evaluate.", UIHint = CustomActivityUIHints.CustomSwitch, DefaultSyntax = "Switch", IsDesignerCritical = true)]

@@ -42,19 +42,26 @@ export namespace Components {
         "singleLineMode": boolean;
         "supportedSyntaxes": Array<string>;
     }
-    interface ElsaCheckboxQuestion {
-        "question": CheckboxQuestion;
+    interface CustomTextProperty {
+        "activityModel": ActivityModel;
+        "editorHeight": string;
+        "propertyDescriptor": ActivityPropertyDescriptor;
+        "propertyModel": ActivityDefinitionProperty;
+        "singleLine": boolean;
     }
-    interface ElsaQuestion {
-        "ActivityModel": ActivityModel;
-        "question": IQuestionComponent;
-    }
-    interface ElsaQuestionScreen {
+    interface MultiQuestionProperty {
         "activityModel": ActivityModel;
         "propertyDescriptor": ActivityPropertyDescriptor;
         "propertyModel": ActivityDefinitionProperty;
     }
-    interface ElsaRadioQuestion {
+    interface QuestionCheckboxProperty {
+        "question": CheckboxQuestion;
+    }
+    interface QuestionProperty {
+        "ActivityModel": ActivityModel;
+        "question": IQuestionComponent;
+    }
+    interface QuestionRadioProperty {
         "question": RadioQuestion;
     }
 }
@@ -83,39 +90,46 @@ declare global {
         prototype: HTMLCustomOutcomePropertyElement;
         new (): HTMLCustomOutcomePropertyElement;
     };
-    interface HTMLElsaCheckboxQuestionElement extends Components.ElsaCheckboxQuestion, HTMLStencilElement {
+    interface HTMLCustomTextPropertyElement extends Components.CustomTextProperty, HTMLStencilElement {
     }
-    var HTMLElsaCheckboxQuestionElement: {
-        prototype: HTMLElsaCheckboxQuestionElement;
-        new (): HTMLElsaCheckboxQuestionElement;
+    var HTMLCustomTextPropertyElement: {
+        prototype: HTMLCustomTextPropertyElement;
+        new (): HTMLCustomTextPropertyElement;
     };
-    interface HTMLElsaQuestionElement extends Components.ElsaQuestion, HTMLStencilElement {
+    interface HTMLMultiQuestionPropertyElement extends Components.MultiQuestionProperty, HTMLStencilElement {
     }
-    var HTMLElsaQuestionElement: {
-        prototype: HTMLElsaQuestionElement;
-        new (): HTMLElsaQuestionElement;
+    var HTMLMultiQuestionPropertyElement: {
+        prototype: HTMLMultiQuestionPropertyElement;
+        new (): HTMLMultiQuestionPropertyElement;
     };
-    interface HTMLElsaQuestionScreenElement extends Components.ElsaQuestionScreen, HTMLStencilElement {
+    interface HTMLQuestionCheckboxPropertyElement extends Components.QuestionCheckboxProperty, HTMLStencilElement {
     }
-    var HTMLElsaQuestionScreenElement: {
-        prototype: HTMLElsaQuestionScreenElement;
-        new (): HTMLElsaQuestionScreenElement;
+    var HTMLQuestionCheckboxPropertyElement: {
+        prototype: HTMLQuestionCheckboxPropertyElement;
+        new (): HTMLQuestionCheckboxPropertyElement;
     };
-    interface HTMLElsaRadioQuestionElement extends Components.ElsaRadioQuestion, HTMLStencilElement {
+    interface HTMLQuestionPropertyElement extends Components.QuestionProperty, HTMLStencilElement {
     }
-    var HTMLElsaRadioQuestionElement: {
-        prototype: HTMLElsaRadioQuestionElement;
-        new (): HTMLElsaRadioQuestionElement;
+    var HTMLQuestionPropertyElement: {
+        prototype: HTMLQuestionPropertyElement;
+        new (): HTMLQuestionPropertyElement;
+    };
+    interface HTMLQuestionRadioPropertyElement extends Components.QuestionRadioProperty, HTMLStencilElement {
+    }
+    var HTMLQuestionRadioPropertyElement: {
+        prototype: HTMLQuestionRadioPropertyElement;
+        new (): HTMLQuestionRadioPropertyElement;
     };
     interface HTMLElementTagNameMap {
         "custom-elsa-switch-cases-property": HTMLCustomElsaSwitchCasesPropertyElement;
         "custom-input-property": HTMLCustomInputPropertyElement;
         "custom-outcome-list-property": HTMLCustomOutcomeListPropertyElement;
         "custom-outcome-property": HTMLCustomOutcomePropertyElement;
-        "elsa-checkbox-question": HTMLElsaCheckboxQuestionElement;
-        "elsa-question": HTMLElsaQuestionElement;
-        "elsa-question-screen": HTMLElsaQuestionScreenElement;
-        "elsa-radio-question": HTMLElsaRadioQuestionElement;
+        "custom-text-property": HTMLCustomTextPropertyElement;
+        "multi-question-property": HTMLMultiQuestionPropertyElement;
+        "question-checkbox-property": HTMLQuestionCheckboxPropertyElement;
+        "question-property": HTMLQuestionPropertyElement;
+        "question-radio-property": HTMLQuestionRadioPropertyElement;
     }
 }
 declare namespace LocalJSX {
@@ -155,21 +169,28 @@ declare namespace LocalJSX {
         "singleLineMode"?: boolean;
         "supportedSyntaxes"?: Array<string>;
     }
-    interface ElsaCheckboxQuestion {
-        "onUpdateQuestion"?: (event: CustomEvent<IQuestionComponent>) => void;
-        "question"?: CheckboxQuestion;
+    interface CustomTextProperty {
+        "activityModel"?: ActivityModel;
+        "editorHeight"?: string;
+        "propertyDescriptor"?: ActivityPropertyDescriptor;
+        "propertyModel"?: ActivityDefinitionProperty;
+        "singleLine"?: boolean;
     }
-    interface ElsaQuestion {
-        "ActivityModel"?: ActivityModel;
-        "onUpdateQuestion"?: (event: CustomEvent<IQuestionComponent>) => void;
-        "question"?: IQuestionComponent;
-    }
-    interface ElsaQuestionScreen {
+    interface MultiQuestionProperty {
         "activityModel"?: ActivityModel;
         "propertyDescriptor"?: ActivityPropertyDescriptor;
         "propertyModel"?: ActivityDefinitionProperty;
     }
-    interface ElsaRadioQuestion {
+    interface QuestionCheckboxProperty {
+        "onUpdateQuestion"?: (event: CustomEvent<IQuestionComponent>) => void;
+        "question"?: CheckboxQuestion;
+    }
+    interface QuestionProperty {
+        "ActivityModel"?: ActivityModel;
+        "onUpdateQuestion"?: (event: CustomEvent<IQuestionComponent>) => void;
+        "question"?: IQuestionComponent;
+    }
+    interface QuestionRadioProperty {
         "onUpdateQuestion"?: (event: CustomEvent<IQuestionComponent>) => void;
         "question"?: RadioQuestion;
     }
@@ -178,10 +199,11 @@ declare namespace LocalJSX {
         "custom-input-property": CustomInputProperty;
         "custom-outcome-list-property": CustomOutcomeListProperty;
         "custom-outcome-property": CustomOutcomeProperty;
-        "elsa-checkbox-question": ElsaCheckboxQuestion;
-        "elsa-question": ElsaQuestion;
-        "elsa-question-screen": ElsaQuestionScreen;
-        "elsa-radio-question": ElsaRadioQuestion;
+        "custom-text-property": CustomTextProperty;
+        "multi-question-property": MultiQuestionProperty;
+        "question-checkbox-property": QuestionCheckboxProperty;
+        "question-property": QuestionProperty;
+        "question-radio-property": QuestionRadioProperty;
     }
 }
 export { LocalJSX as JSX };
@@ -192,10 +214,11 @@ declare module "@stencil/core" {
             "custom-input-property": LocalJSX.CustomInputProperty & JSXBase.HTMLAttributes<HTMLCustomInputPropertyElement>;
             "custom-outcome-list-property": LocalJSX.CustomOutcomeListProperty & JSXBase.HTMLAttributes<HTMLCustomOutcomeListPropertyElement>;
             "custom-outcome-property": LocalJSX.CustomOutcomeProperty & JSXBase.HTMLAttributes<HTMLCustomOutcomePropertyElement>;
-            "elsa-checkbox-question": LocalJSX.ElsaCheckboxQuestion & JSXBase.HTMLAttributes<HTMLElsaCheckboxQuestionElement>;
-            "elsa-question": LocalJSX.ElsaQuestion & JSXBase.HTMLAttributes<HTMLElsaQuestionElement>;
-            "elsa-question-screen": LocalJSX.ElsaQuestionScreen & JSXBase.HTMLAttributes<HTMLElsaQuestionScreenElement>;
-            "elsa-radio-question": LocalJSX.ElsaRadioQuestion & JSXBase.HTMLAttributes<HTMLElsaRadioQuestionElement>;
+            "custom-text-property": LocalJSX.CustomTextProperty & JSXBase.HTMLAttributes<HTMLCustomTextPropertyElement>;
+            "multi-question-property": LocalJSX.MultiQuestionProperty & JSXBase.HTMLAttributes<HTMLMultiQuestionPropertyElement>;
+            "question-checkbox-property": LocalJSX.QuestionCheckboxProperty & JSXBase.HTMLAttributes<HTMLQuestionCheckboxPropertyElement>;
+            "question-property": LocalJSX.QuestionProperty & JSXBase.HTMLAttributes<HTMLQuestionPropertyElement>;
+            "question-radio-property": LocalJSX.QuestionRadioProperty & JSXBase.HTMLAttributes<HTMLQuestionRadioPropertyElement>;
         }
     }
 }

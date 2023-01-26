@@ -34,7 +34,6 @@ export class CustomOutcomeListProperty {
   syntaxSwitchCount: number = 0;
 
   async componentWillLoad() {
-    console.log('Loading Component')
     const propertyModel = this.propertyModel;
     const casesJson = propertyModel.expressions['Switch']
     this.outcomes = parseJson(casesJson) || [];
@@ -65,10 +64,8 @@ export class CustomOutcomeListProperty {
   }
 
   onAddOutcomeClick() {
-    console.log("Add Coutcome");
     const newCase = { text: { syntax: SyntaxNames.JavaScript, expressions: { [SyntaxNames.JavaScript]: '' } }, condition: { syntax: SyntaxNames.JavaScript, expressions: { [SyntaxNames.JavaScript]: '' } }  };
     this.outcomes = [...this.outcomes, newCase];
-    console.log("outcomes", this.outcomes);
     this.updatePropertyModel();
   }
 
@@ -78,7 +75,6 @@ export class CustomOutcomeListProperty {
   }
 
   onTextChanged(e: CustomEvent<string>, outcome: IOutcomeProperty) {
-    console.log('updating text');
     this.outcomes = this.outcomes.filter(x => x != outcome);
     outcome.text.expressions[outcome.text.syntax] = e.detail;
     this.outcomes = [...this.outcomes, outcome];

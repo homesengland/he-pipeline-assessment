@@ -27,6 +27,7 @@
     <None Remove="src\components\custom_outcome_list_property.tsx" />
     <None Remove="src\events\component-events.tsx" />
     <None Remove="src\models\activity-provider.ts" />
+    <None Remove="src\models\Question.Model.ts" />
   </ItemGroup>
 
   <ItemGroup>
@@ -41,6 +42,7 @@
     <TypeScriptCompile Include="src\components\common-components\custom_outcome_list_property.tsx" />
     <TypeScriptCompile Include="src\events\component-events.tsx" />
     <TypeScriptCompile Include="src\components\question-provider\question-provider.tsx" />
+    <TypeScriptCompile Include="src\models\question.model.ts" />
   </ItemGroup>
 
 </Project>

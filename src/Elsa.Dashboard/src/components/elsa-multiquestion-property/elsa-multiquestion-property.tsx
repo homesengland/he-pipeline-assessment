@@ -41,11 +41,11 @@ function parseJson(json: string): any {
 }
 
 @Component({
-  tag: 'elsa-question-screen',
+  tag: 'multi-question-property',
   shadow: false,
 })
 
-export class ElsaQuestionScreen {
+export class MultiQuestionProperty {
 
   @Prop() activityModel: ActivityModel;
   @Prop() propertyDescriptor: ActivityPropertyDescriptor;
@@ -68,7 +68,6 @@ export class ElsaQuestionScreen {
   async componentWillLoad() {
     const propertyModel = this.propertyModel;
     const choicesJson = propertyModel.expressions[SyntaxNames.Json]
-    console.log(choicesJson);
     this.questionModel = parseJson(choicesJson) || this.defaultActivityModel();
   }
 
@@ -163,11 +162,11 @@ export class ElsaQuestionScreen {
   renderQuestionComponent(question: IQuestionComponent) {
     switch (question.questionType) {
       case "CheckboxQuestion":
-        return <elsa-checkbox-question onClick={(e) => e.stopPropagation()} class="panel elsa-rounded" question={question as CheckboxQuestion}></elsa-checkbox-question>;
+        return <question-checkbox-property onClick={(e) => e.stopPropagation()} class="panel elsa-rounded" question={question as CheckboxQuestion}></question-checkbox-property>;
       case "RadioQuestion":
-        return <elsa-radio-question onClick={(e) => e.stopPropagation()} class="panel elsa-rounded" question={question as RadioQuestion}></elsa-radio-question>;
+        return <question-radio-property onClick={(e) => e.stopPropagation()} class="panel elsa-rounded" question={question as RadioQuestion}></question-radio-property>;
       default:
-        return <elsa-question ActivityModel={this.activityModel} onClick={(e) => e.stopPropagation()} class="panel elsa-rounded" question={question}></elsa-question>;
+        return <question-property ActivityModel={this.activityModel} onClick={(e) => e.stopPropagation()} class="panel elsa-rounded" question={question}></question-property>;
     }
   }
 

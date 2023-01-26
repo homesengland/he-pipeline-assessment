@@ -23,7 +23,7 @@ import { RadioEventHandler } from '../../events/component-events';
 
 
 @Component({
-  tag: 'elsa-radio-question',
+  tag: 'question-radio-property',
   shadow: false,
 })
 

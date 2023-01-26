@@ -21,6 +21,17 @@ export class QuestionOptions<T extends IQuestionOption>{
 
 ///Questions
 
+export interface ISampleQuestionProperty {
+  name: string;
+  syntax?: string;
+  expressions: Map<string>;
+  value?: any;
+}
+
+export interface ISampleQuestion {
+  properties: Array<ISampleQuestionProperty>;
+}
+
 export interface IQuestionComponent {
   id: string;
   title: string;

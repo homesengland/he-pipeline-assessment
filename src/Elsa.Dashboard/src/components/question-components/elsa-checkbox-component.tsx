@@ -23,7 +23,7 @@ import { CheckboxEventHandler } from '../../events/component-events';
 
 
 @Component({
-  tag: 'elsa-checkbox-question',
+  tag: 'question-checkbox-property',
   shadow: false,
 })
 

@@ -4,7 +4,6 @@ import {
     ActivityModel,
   HTMLElsaMultiExpressionEditorElement,
   ActivityPropertyDescriptor,
-  //IntellisenseContext,
   SyntaxNames,
   ActivityDefinitionProperty
 } from '../../models/elsa-interfaces';
@@ -18,9 +17,8 @@ import {
 } from '../icon-provider/icon-provider'
 import { QuestionEventHandler } from '../../events/component-events';
 
-
 @Component({
-  tag: 'elsa-question',
+  tag: 'question-property',
   shadow: false,
 })
 
@@ -69,10 +67,18 @@ export class ElsaQuestionComponent {
         return test
   }
 
-  sampleModel() {
+  sampleModel(name: string, syntax: string, modelValue: string) {
+    let value = {};
+    if (syntax == 'Literal') {
+      value = { syntax, modelValue }
+    }
+    else {
+      value = { "Literal": '', syntax: modelValue }
+    }
+
     const test: ActivityDefinitionProperty = {
-      name: 'Test field',
-      expressions: { "Literal": '', "JavaScript": '' }
+      name: name,
+      expressions: value
     }
     return test;
   }
@@ -95,20 +101,6 @@ export class ElsaQuestionComponent {
         class="disabled:elsa-opacity-50 disabled:elsa-cursor-not-allowed focus:elsa-ring-blue-500 focus:elsa-border-blue-500 elsa-block elsa-w-full elsa-min-w-0 elsa-rounded-md sm:elsa-text-sm elsa-border-gray-300" />
     </div>;
   }
-
-  //renderTestQuestionField(fieldId, fieldName, fieldValue, onChangedFunction, isDisabled = false) {
-  //  return <elsa-property-editor
-  //    activityModel={this.activityModel}
-  //    propertyDescriptor={propertyDescriptor}
-  //    propertyModel={propertyModel}
-  //    onDefaultSyntaxValueChanged={e => this.onDefaultSyntaxValueChanged(e)}
-  //    editor-height="5em"
-  //    single-line={true}>
-  //    <input type="text" id={fieldId} name={fieldName} value={fieldValue} onChange={e => onChangedFunction.bind(this)(e)}
-  //      class="disabled:elsa-opacity-50 disabled:elsa-cursor-not-allowed focus:elsa-ring-blue-500 focus:elsa-border-blue-500 elsa-block elsa-w-full elsa-min-w-0 elsa-rounded-md sm:elsa-text-sm elsa-border-gray-300"
-  //      disabled={isDisabled} />
-  //  </elsa-property-editor>;
-  //}
 
   renderCheckboxField(fieldId, fieldName, isChecked, onChangedFunction) {
     return <div>
@@ -136,7 +128,12 @@ export class ElsaQuestionComponent {
 
         {this.renderQuestionField(`${field}-questionid`, `Identifier`, this.question.id, this.handler.onIdentifierChanged, true)}
         {this.renderQuestionField(`${field}-title`, `Title`, this.question.title, this.handler.onTitleChanged)}
-        {this.renderQuestionField(`${field}-questionText`, `Question`, this.question.questionText, this.handler.onQuestionChanged)}
+        {/*{this.renderQuestionField(`${field}-questionText`, `Question`, this.question.questionText, this.handler.onQuestionChanged)}*/}
+        <custom-text-property
+          activityModel={this.ActivityModel}
+          propertyModel={this.sampleModel(this.question.questionText, 'Javascript', 'true')}
+          propertyDescriptor={this.sampleDescriptor()}
+        ></custom-text-property>
         {this.renderQuestionField(`${field}-questionHint`, `Hint`, this.question.questionHint, this.handler.onHintChanged)}
         {this.renderQuestionField(`${field}-questionGuidance`, `Guidance`, this.question.questionGuidance, this.handler.onGuidanceChanged)}
         {this.renderCheckboxField(`${field}-displayCommentBox`, `Display Comments`, this.question.displayComments, this.handler.onDisplayCommentsBox)}

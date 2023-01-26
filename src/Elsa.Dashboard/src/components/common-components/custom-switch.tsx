@@ -44,12 +44,8 @@ export class CustomElsaSwitchCasesProperty {
   }
 
   updatePropertyModel() {
-    console.log("Property Model Pre Update", this.propertyModel);
     this.propertyModel.expressions['Switch'] = JSON.stringify(this.cases);
     this.multiExpressionEditor.expressions[SyntaxNames.Json] = JSON.stringify(this.cases, null, 2);
-    console.log("MultiExpresionEditor Updated.  Cases:", this.cases)
-    console.log("Cases", JSON.stringify(this.cases, null, 2))
-
   }
 
   onDefaultSyntaxValueChanged(e: CustomEvent) {
@@ -74,10 +70,7 @@ export class CustomElsaSwitchCasesProperty {
   }
 
   onCaseExpressionChanged(e: CustomEvent<string>, switchCase: SwitchCase) {
-    console.log("Expression Changed:", e.detail)
     switchCase.expressions[switchCase.syntax] = e.detail;
-    console.log("SwitchCase", switchCase);
-    console.log("UpdatingPropertyModel")
     this.updatePropertyModel();
   }
 
@@ -100,11 +93,9 @@ export class CustomElsaSwitchCasesProperty {
 
     this.propertyModel.expressions['Switch'] = json;
     this.cases = parsed;
-    console.log("Property Model Switch:", this.propertyModel)
   }
 
   onMultiExpressionEditorSyntaxChanged(e: CustomEvent<string>) {
-    console.log(e);
     e = e;
     this.syntaxSwitchCount++;
   }
