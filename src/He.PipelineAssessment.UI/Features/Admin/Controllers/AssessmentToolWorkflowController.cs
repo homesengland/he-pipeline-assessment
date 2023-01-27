@@ -1,4 +1,6 @@
-﻿using MediatR;
+﻿using He.PipelineAssessment.UI.Features.Admin.AssessmentToolManagement.Commands.CreateAssessmentToolWorkflowCommand;
+using He.PipelineAssessment.UI.Features.Admin.AssessmentToolManagement.Commands.UpdateAssessmentToolWorkflowCommand;
+using MediatR;
 using Microsoft.AspNetCore.Mvc;
 
 namespace He.PipelineAssessment.UI.Features.Admin.Controllers
@@ -58,10 +60,10 @@ namespace He.PipelineAssessment.UI.Features.Admin.Controllers
         [HttpPost]
         public async Task<IActionResult> UpdateAssessmentTool(UpdateAssessmentToolWorkflowCommand updateAssessmentToolWorkflowCommand)
         {
-            if (updateAssessmentToolWorkflowCommand.Id == 0)
-            {
-                return RedirectToAction("Index", "Error", new { message = "Bad request. No Assessment Tool Id provided." });
-            }
+            //if (updateAssessmentToolWorkflowCommand.Id == 0)
+            //{
+            //    return RedirectToAction("Index", "Error", new { message = "Bad request. No Assessment Tool Id provided." });
+            //}
 
             try
             {

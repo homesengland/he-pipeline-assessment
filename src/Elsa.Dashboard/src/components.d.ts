@@ -23,6 +23,18 @@ export namespace Components {
         "question": RadioQuestion;
     }
 }
+export interface ElsaCheckboxQuestionCustomEvent<T> extends CustomEvent<T> {
+    detail: T;
+    target: HTMLElsaCheckboxQuestionElement;
+}
+export interface ElsaQuestionCustomEvent<T> extends CustomEvent<T> {
+    detail: T;
+    target: HTMLElsaQuestionElement;
+}
+export interface ElsaRadioQuestionCustomEvent<T> extends CustomEvent<T> {
+    detail: T;
+    target: HTMLElsaRadioQuestionElement;
+}
 declare global {
     interface HTMLElsaCheckboxQuestionElement extends Components.ElsaCheckboxQuestion, HTMLStencilElement {
     }
@@ -57,11 +69,11 @@ declare global {
 }
 declare namespace LocalJSX {
     interface ElsaCheckboxQuestion {
-        "onUpdateQuestion"?: (event: CustomEvent<IQuestionComponent>) => void;
+        "onUpdateQuestion"?: (event: ElsaCheckboxQuestionCustomEvent<IQuestionComponent>) => void;
         "question"?: CheckboxQuestion;
     }
     interface ElsaQuestion {
-        "onUpdateQuestion"?: (event: CustomEvent<IQuestionComponent>) => void;
+        "onUpdateQuestion"?: (event: ElsaQuestionCustomEvent<IQuestionComponent>) => void;
         "question"?: IQuestionComponent;
     }
     interface ElsaQuestionScreen {
@@ -70,7 +82,7 @@ declare namespace LocalJSX {
         "propertyModel"?: ActivityDefinitionProperty;
     }
     interface ElsaRadioQuestion {
-        "onUpdateQuestion"?: (event: CustomEvent<IQuestionComponent>) => void;
+        "onUpdateQuestion"?: (event: ElsaRadioQuestionCustomEvent<IQuestionComponent>) => void;
         "question"?: RadioQuestion;
     }
     interface IntrinsicElements {
