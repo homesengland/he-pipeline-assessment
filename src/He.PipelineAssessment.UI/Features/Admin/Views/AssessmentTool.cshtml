@@ -23,46 +23,46 @@
                 @foreach (var assessmentTool in Model.AssessmentTools)
                 {
                     <tr class="govuk-table__row">
-                        <td class="govuk-table__cell">
-                            @*@Html.TextBoxFor(m => @assessmentTool.Name, new {@class="govuk-input"})*@
-                            @Html.TextBox("name", assessmentTool.Name, "", new {@class="govuk-input"})
-                        </td>
-                        <td class="govuk-table__cell">
-                            @Html.TextBoxFor(m => @assessmentTool.Order, new {@class="govuk-input"})
-                        </td>
-                        <td class="govuk-table__cell">
-                            <table class="govuk-table">
-                                <tbody class="govuk-table__body">
-                                    @foreach (var assessmentToolWorkflow in assessmentTool.AssessmentToolWorkFlows)
-                                    {
-                                        <tr class="govuk-table__row">
-                                            <td class="govuk-table__cell">
-                                                @assessmentToolWorkflow.WorkflowDefinitionId
-                                            </td>
-                                            <td class="govuk-table__cell">
-                                                @assessmentToolWorkflow.IsFirstWorkflow
-                                            </td>
-                                        </tr>
-                                    }
-                            </table>
-
-                        </td>
-                        <td class="govuk-table__cell">
-                            @using (Html.BeginForm("UpdateAssessmentTool", "Admin", FormMethod.Post))
-                            {
+                        @using (Html.BeginForm("UpdateAssessmentTool", "Admin", FormMethod.Post))
+                        {
+                            <td class="govuk-table__cell">
+                                @Html.TextBox("name", assessmentTool.Name, "", new { @class = "govuk-input" })
+                            </td>
+                            <td class="govuk-table__cell">
+                                @Html.TextBox("order", assessmentTool.Order, "", new { @class = "govuk-input" })
+                            </td>
+                            <td class="govuk-table__cell">
                                 @Html.AntiForgeryToken()
                                 @Html.Hidden("id", assessmentTool.Id)
-                                @Html.Hidden("order", assessmentTool.Order)
-                                @Html.HiddenFor(x => assessmentTool.Name)
-                                <input class="govuk-button govuk-!-margin-0" data-module="govuk-button" id="Update" type="submit" value="Update" />
-                            }
+                                <input class="govuk-button govuk-!-margin-0" data-module="govuk-button" id="Update" type="submit" value="Update"/>
+                            </td>
+                        }
+                        <td class="govuk-table__cell">
+                            <table class="govuk-table" style="margin-bottom: 0">
+                                <tbody class="govuk-table__body">
+                                @foreach (var assessmentToolWorkflow in assessmentTool.AssessmentToolWorkFlows)
+                                {
+                                    <tr class="govuk-table__row">
+                                        <td class="govuk-table__cell">
+                                            @assessmentToolWorkflow.WorkflowDefinitionId
+                                        </td>
+                                        <td class="govuk-table__cell">
+                                            @if(assessmentToolWorkflow.IsFirstWorkflow)
+                                            {
+                                                @:"First workflow"
+                                            }
+                                        </td>
+                                    </tr>
+                                }
+                            </table>
                         </td>
+
                         <td class="govuk-table__cell">
                             @using (Html.BeginForm("DeleteAssessmentTool", "Admin", FormMethod.Post))
                             {
                                 @Html.AntiForgeryToken()
                                 @Html.Hidden("assessmentToolId", assessmentTool.Id)
-                                <input class="govuk-button govuk-!-margin-0" data-module="govuk-button" id="Delete" type="submit" value="Delete" />
+                                <input class="govuk-button govuk-!-margin-0" data-module="govuk-button" id="Delete" type="submit" value="Delete"/>
                             }
                         </td>
                     </tr>

@@ -2,8 +2,10 @@
 
 namespace He.PipelineAssessment.UI.Features.Admin.AssessmentToolManagement.Commands.CreateAssessmentTool
 {
-    public class CreateAssessmentToolCommand : IRequest<CreateAssessmentToolData>
+    public class CreateAssessmentToolCommand : IRequest
     {
-        public CreateAssessmentToolDto AssessmentToolDto { get; set; } = null!;
+        public int Id { get; set; }
+        public string Name { get; set; }
+        public int Order { get; set; }
     }
 }

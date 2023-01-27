@@ -1,4 +1,5 @@
 ﻿using He.PipelineAssessment.UI.Features.Admin.AssessmentToolManagement.Commands.CreateAssessmentTool;
+using He.PipelineAssessment.UI.Features.Admin.AssessmentToolManagement.Commands.DeleteAssessmentTool;
 using He.PipelineAssessment.UI.Features.Admin.AssessmentToolManagement.Commands.UpdateAssessmentTool;
 using He.PipelineAssessment.UI.Features.Admin.AssessmentToolManagement.Queries;
 using He.PipelineAssessment.UI.Features.Assessments;
@@ -44,8 +45,16 @@ namespace He.PipelineAssessment.UI.Features.Admin
         [HttpPost]
         public async Task<IActionResult> CreateAssessmentTool(CreateAssessmentToolCommand createAssessmentToolCommand)
         {
-            var createAssessmentToolData = await _mediator.Send(createAssessmentToolCommand);
-            return RedirectToAction("AssessmentTool");
+            try
+            {
+                await _mediator.Send(createAssessmentToolCommand);
+                return RedirectToAction("AssessmentTool");
+            }
+            catch (Exception e)
+            {
+                _logger.LogError(e.Message);
+                return RedirectToAction("Index", "Error", new { message = e.Message });
+            }
         }
 
         //update an assessment tool
@@ -57,17 +66,35 @@ namespace He.PipelineAssessment.UI.Features.Admin
                 return RedirectToAction("Index", "Error", new { message = "Bad request. No Assessment Tool Id provided." });
             }
 
-            await _mediator.Send(updateAssessmentToolCommand);
+            try
+            {
+                await _mediator.Send(updateAssessmentToolCommand);
 
-            return RedirectToAction("AssessmentTool");
+                return RedirectToAction("AssessmentTool");
+            }
+            catch (Exception e)
+            {
+                _logger.LogError(e.Message);
+                return RedirectToAction("Index", "Error", new { message = e.Message });
+            }
+
         }
 
         //delete an assessment tool 
         [HttpPost]
         public async Task<IActionResult> DeleteAssessmentTool(int assessmentToolId)
         {
-            //TODO: implement mediator
-            return RedirectToAction("AssessmentTool");
+            try
+            {
+                await _mediator.Send(new DeleteAssessmentToolCommand(assessmentToolId));
+
+                return RedirectToAction("AssessmentTool");
+            }
+            catch (Exception e)
+            {
+                _logger.LogError(e.Message);
+                return RedirectToAction("Index", "Error", new { message = e.Message });
+            }
         }
     }
 }
