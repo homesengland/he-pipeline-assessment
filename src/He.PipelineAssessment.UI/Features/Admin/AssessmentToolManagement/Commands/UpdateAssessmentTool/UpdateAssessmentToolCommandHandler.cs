@@ -1,4 +1,5 @@
 ﻿using He.PipelineAssessment.Infrastructure.Repository;
+using He.PipelineAssessment.UI.Common.Exceptions;
 using He.PipelineAssessment.UI.Common.Utility;
 using MediatR;
 
@@ -21,7 +22,7 @@ namespace He.PipelineAssessment.UI.Features.Admin.AssessmentToolManagement.Comma
             var entity = await _adminAssessmentToolRepository.GetAssessmentToolById(request.Id);
             if (entity == null)
             {
-                throw new NotImplementedException();
+                throw new NotFoundException($"Assessment Tool with Id {request.Id} not found");
             }
             entity.Name = request.Name;
             entity.Order = request.Order;

@@ -38,6 +38,14 @@
                             </td>
                         }
                         <td class="govuk-table__cell">
+                            @using (Html.BeginForm("DeleteAssessmentTool", "Admin", FormMethod.Post))
+                            {
+                                @Html.AntiForgeryToken()
+                                @Html.Hidden("assessmentToolId", assessmentTool.Id)
+                                <input class="govuk-button govuk-!-margin-0" data-module="govuk-button" id="Delete" type="submit" value="Delete"/>
+                            }
+                        </td>
+                        <td class="govuk-table__cell">
                             <table class="govuk-table" style="margin-bottom: 0">
                                 <tbody class="govuk-table__body">
                                 @foreach (var assessmentToolWorkflow in assessmentTool.AssessmentToolWorkFlows)
@@ -57,14 +65,7 @@
                             </table>
                         </td>
 
-                        <td class="govuk-table__cell">
-                            @using (Html.BeginForm("DeleteAssessmentTool", "Admin", FormMethod.Post))
-                            {
-                                @Html.AntiForgeryToken()
-                                @Html.Hidden("assessmentToolId", assessmentTool.Id)
-                                <input class="govuk-button govuk-!-margin-0" data-module="govuk-button" id="Delete" type="submit" value="Delete"/>
-                            }
-                        </td>
+
                     </tr>
                 }
             </tbody>
@@ -73,28 +74,28 @@
         @using (Html.BeginForm("CreateAssessmentTool", "Admin", FormMethod.Post))
         {
             @Html.AntiForgeryToken()
-            var createAssessmentToolDto = new CreateAssessmentToolDto()
+            var createAssessmentToolCommand = new CreateAssessmentToolCommand()
                 {
                     Order = Model.AssessmentTools.Max(x => x.Order) + 1
                 };
 
             <div class="govuk-form-group">
                 <h3 class="govuk-label-wrapper">                   
-                 @Html.LabelFor(m => createAssessmentToolDto.Name ,new {@class="govuk-label govuk-label--s"} )              
+                 @Html.LabelFor(m => createAssessmentToolCommand.Name ,new {@class="govuk-label govuk-label--s"} )              
               </h3>
-                @Html.TextBoxFor(m => createAssessmentToolDto.Name, new {@class="govuk-input"})
+                @Html.TextBoxFor(m => createAssessmentToolCommand.Name, new {@class="govuk-input"})
             </div>
 
             
           <div class="govuk-form-group">
                 <h3 class="govuk-label-wrapper">                   
-                 @Html.LabelFor(m => createAssessmentToolDto.Order ,new {@class="govuk-label govuk-label--s"} )              
+                 @Html.LabelFor(m => createAssessmentToolCommand.Order ,new {@class="govuk-label govuk-label--s"} )              
               </h3>
-                @Html.TextBoxFor(m => createAssessmentToolDto.Order, new {@class="govuk-input"})
+                @Html.TextBoxFor(m => createAssessmentToolCommand.Order, new {@class="govuk-input"})
             </div>
 
-            @Html.ValidationMessageFor(m => createAssessmentToolDto.Name)
-            @Html.ValidationMessageFor(m => createAssessmentToolDto.Order)          
+            @Html.ValidationMessageFor(m => createAssessmentToolCommand.Name)
+            @Html.ValidationMessageFor(m => createAssessmentToolCommand.Order)          
           
      
             <input class="govuk-button" data-module="govuk-button" id="Submit" type="submit" value="Create AssessmentTool" />
