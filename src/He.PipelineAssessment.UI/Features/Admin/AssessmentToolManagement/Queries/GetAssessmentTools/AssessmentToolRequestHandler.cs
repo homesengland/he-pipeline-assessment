@@ -1,7 +1,7 @@
 ﻿using He.PipelineAssessment.Infrastructure.Repository;
 using MediatR;
 
-namespace He.PipelineAssessment.UI.Features.Admin.AssessmentToolManagement.Queries
+namespace He.PipelineAssessment.UI.Features.Admin.AssessmentToolManagement.Queries.GetAssessmentTools
 {
     public class AssessmentToolRequestHandler : IRequestHandler<AssessmentToolRequest, AssessmentToolListData>
     {

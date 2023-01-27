@@ -1,4 +1,4 @@
-﻿namespace He.PipelineAssessment.UI.Features.Admin.AssessmentToolManagement.Queries
+﻿namespace He.PipelineAssessment.UI.Features.Admin.AssessmentToolManagement.Queries.GetAssessmentTools
 {
     public class AssessmentToolListData
     {

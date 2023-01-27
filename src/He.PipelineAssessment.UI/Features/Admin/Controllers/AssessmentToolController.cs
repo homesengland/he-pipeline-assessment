@@ -1,19 +1,11 @@
-﻿using He.PipelineAssessment.UI.Features.Admin.AssessmentToolManagement.Commands.CreateAssessmentTool;
-using He.PipelineAssessment.UI.Features.Admin.AssessmentToolManagement.Commands.DeleteAssessmentTool;
-using He.PipelineAssessment.UI.Features.Admin.AssessmentToolManagement.Commands.UpdateAssessmentTool;
-using He.PipelineAssessment.UI.Features.Admin.AssessmentToolManagement.Queries;
-using He.PipelineAssessment.UI.Features.Assessments;
-using MediatR;
-using Microsoft.AspNetCore.Mvc;
-
-namespace He.PipelineAssessment.UI.Features.Admin
+﻿namespace He.PipelineAssessment.UI.Features.Admin.Controllers
 {
-    public class AdminController : Controller
+    public class AssessmentToolController : Controller
     {
-        private readonly ILogger<AssessmentController> _logger;
+        private readonly ILogger<AssessmentToolController> _logger;
         private readonly IMediator _mediator;
 
-        public AdminController(ILogger<AssessmentController> logger, IMediator mediator)
+        public AssessmentToolController(ILogger<AssessmentToolController> logger, IMediator mediator)
         {
             _logger = logger;
             _mediator = mediator;
