@@ -2,17 +2,18 @@
 using He.PipelineAssessment.UI.Features.Admin.AssessmentToolManagement.Commands.DeleteAssessmentTool;
 using He.PipelineAssessment.UI.Features.Admin.AssessmentToolManagement.Commands.UpdateAssessmentTool;
 using He.PipelineAssessment.UI.Features.Admin.AssessmentToolManagement.Queries.GetAssessmentTools;
+using He.PipelineAssessment.UI.Features.Admin.AssessmentToolManagement.Queries.GetAssessmentToolWorkflows;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 
 namespace He.PipelineAssessment.UI.Features.Admin.Controllers
 {
-    public class AssessmentToolController : Controller
+    public class AdminController : Controller
     {
-        private readonly ILogger<AssessmentToolController> _logger;
+        private readonly ILogger<AdminController> _logger;
         private readonly IMediator _mediator;
 
-        public AssessmentToolController(ILogger<AssessmentToolController> logger, IMediator mediator)
+        public AdminController(ILogger<AdminController> logger, IMediator mediator)
         {
             _logger = logger;
             _mediator = mediator;
@@ -31,6 +32,23 @@ namespace He.PipelineAssessment.UI.Features.Admin.Controllers
             {
                 var assessmentTools = await _mediator.Send(new AssessmentToolRequest());
                 return View("AssessmentTool", assessmentTools);
+            }
+            catch (Exception e)
+            {
+                _logger.LogError(e.Message);
+                return RedirectToAction("Index", "Error", new { message = e.Message });
+            }
+
+        }
+
+        //Get all assessment-tools 
+        [HttpGet]
+        public async Task<IActionResult> AssessmentToolWorkflow(int assessmentToolId)
+        {
+            try
+            {
+                var assessmentToolsWorkflows = await _mediator.Send(new AssessmentToolWorkflowQuery(assessmentToolId));
+                return View("AssessmentToolWorkflow", assessmentToolsWorkflows);
             }
             catch (Exception e)
             {

@@ -9,10 +9,11 @@ namespace He.PipelineAssessment.UI.Features.Admin.AssessmentToolManagement
         AssessmentToolListData AssessmentToolsToAssessmentToolData(List<Models.AssessmentTool> assessmentTools);
         AssessmentTool CreateAssessmentToolCommandToAssessmentTool(CreateAssessmentToolCommand assessmentToolDto);
 
+        List<Queries.GetAssessmentToolWorkflows.AssessmentToolWorkflowDto> AssessmentToolWorkflowsToAssessmentToolDto(List<AssessmentToolWorkflow> toList);
     }
     public class AssessmentToolMapper : IAssessmentToolMapper
     {
-        public AssessmentToolListData AssessmentToolsToAssessmentToolData(List<Models.AssessmentTool> assessmentTools)
+        public AssessmentToolListData AssessmentToolsToAssessmentToolData(List<AssessmentTool> assessmentTools)
         {
             return new AssessmentToolListData
             {
@@ -43,6 +44,20 @@ namespace He.PipelineAssessment.UI.Features.Admin.AssessmentToolManagement
                 Order = assessmentToolDto.Order,
                 IsVisible = true
             };
+        }
+
+        public List<Queries.GetAssessmentToolWorkflows.AssessmentToolWorkflowDto> AssessmentToolWorkflowsToAssessmentToolDto(List<AssessmentToolWorkflow> assessmentToolWorkflows)
+        {
+            return assessmentToolWorkflows.Select(x => new Queries.GetAssessmentToolWorkflows.AssessmentToolWorkflowDto
+            {
+                Id = x.Id,
+                AssessmentToolId = x.AssessmentToolId,
+                AssessmentToolName = x.AssessmentTool.Name,
+                IsFirstWorkflow = x.IsFirstWorkflow,
+                IsLatest = x.IsLatest,
+                Version = x.Version,
+                WorkflowDefinitionId = x.WorkflowDefinitionId
+            }).ToList();
         }
     }
 

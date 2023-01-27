@@ -9,7 +9,7 @@ namespace He.PipelineAssessment.Infrastructure.Repository
     {
         Task<IEnumerable<AssessmentTool>> GetAssessmentTools();
         Task<AssessmentTool?> GetAssessmentToolById(int assessmentToolId);
-
+        Task<IEnumerable<AssessmentToolWorkflow>> GetAssessmentToolWorkflows(int assessmentToolId);
 
         Task<int> CreateAssessmentTool(AssessmentTool assessmentTool);
 
@@ -34,6 +34,12 @@ namespace He.PipelineAssessment.Infrastructure.Repository
         public async Task<AssessmentTool?> GetAssessmentToolById(int assessmentToolId)
         {
             return await _context.Set<AssessmentTool>().FirstOrDefaultAsync(x => x.Id == assessmentToolId);
+        }
+
+        public async Task<IEnumerable<AssessmentToolWorkflow>> GetAssessmentToolWorkflows(int assessmentToolId)
+        {
+            return await _context.Set<AssessmentToolWorkflow>().Include(x => x.AssessmentTool).Where(x => x.AssessmentToolId == assessmentToolId)
+                .ToListAsync();
         }
 
         public async Task<int> CreateAssessmentTool(AssessmentTool assessmentTool)

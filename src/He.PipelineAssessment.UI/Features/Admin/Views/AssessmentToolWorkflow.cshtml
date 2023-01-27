@@ -1,6 +1,5 @@
-﻿@using He.PipelineAssessment.UI.Features.Admin.AssessmentToolManagement.Commands.CreateAssessmentTool
-@using He.PipelineAssessment.UI.Features.Admin.AssessmentToolManagement.Queries.GetAssessmentTools;
-@model AssessmentToolListData;
+﻿@using He.PipelineAssessment.UI.Features.Admin.AssessmentToolManagement.Queries.GetAssessmentToolWorkflows;
+@model List<AssessmentToolWorkflowDto>;
 
 @{
     ViewData["Title"] = "Assessment Tools";
@@ -10,31 +9,28 @@
 <div class="text-center">
     <div class="text-center">
         <table class="govuk-table">
-            <caption class="govuk-table__caption govuk-table__caption--m">Assessment Tools</caption>
+            <caption class="govuk-table__caption govuk-table__caption--m">Assessment Tool Workflow for Assessment Tool @Model.FirstOrDefault()?.AssessmentToolName</caption>
             <thead class="govuk-table__head">
                 <tr class="govuk-table__row">
-                    <th scope="col" class="govuk-table__header">Name</th>
-                    <th scope="col" class="govuk-table__header">Order</th>
-                    <th scope="col" class="govuk-table__header">Assessment Tool Workflows</th>
-                    <th scope="col" class="govuk-table__header">Update</th>
-                    <th scope="col" class="govuk-table__header">Delete</th>
+                    <th scope="col" class="govuk-table__header">WorkflowDefinitionId</th>
+                    <th scope="col" class="govuk-table__header">IsFirstWorkflow</th>
                 </tr>
             </thead>
             <tbody class="govuk-table__body">
-                @foreach (var assessmentTool in Model.AssessmentTools)
+                @foreach (var assessmentToolWorkflow in Model)
                 {
                     <tr class="govuk-table__row">
                         @using (Html.BeginForm("UpdateAssessmentTool", "Admin", FormMethod.Post))
                         {
                             <td class="govuk-table__cell">
-                                @Html.TextBox("name", assessmentTool.Name, "", new { @class = "govuk-input" })
+                                @Html.TextBox("workflowDefinitionId", assessmentToolWorkflow.WorkflowDefinitionId, "", new { @class = "govuk-input" })
                             </td>
                             <td class="govuk-table__cell">
-                                @Html.TextBox("order", assessmentTool.Order, "", new { @class = "govuk-input" })
+                                @Html.TextBox("isFirstWorkflow", assessmentToolWorkflow.IsFirstWorkflow, "", new { @class = "govuk-input" })
                             </td>
                             <td class="govuk-table__cell">
                                 @Html.AntiForgeryToken()
-                                @Html.Hidden("id", assessmentTool.Id)
+                                @Html.Hidden("id", assessmentToolWorkflow.Id)
                                 <input class="govuk-button govuk-!-margin-0" data-module="govuk-button" id="Update" type="submit" value="Update"/>
                             </td>
                         }
@@ -42,34 +38,15 @@
                             @using (Html.BeginForm("DeleteAssessmentTool", "Admin", FormMethod.Post))
                             {
                                 @Html.AntiForgeryToken()
-                                @Html.Hidden("assessmentToolId", assessmentTool.Id)
+                                @Html.Hidden("assessmentToolWorkflowId", assessmentToolWorkflow.Id)
                                 <input class="govuk-button govuk-!-margin-0" data-module="govuk-button" id="Delete" type="submit" value="Delete"/>
                             }
-                        </td>
-                        <td class="govuk-table__cell">
-                            <table class="govuk-table" style="margin-bottom: 0">
-                                <tbody class="govuk-table__body">
-                                @foreach (var assessmentToolWorkflow in assessmentTool.AssessmentToolWorkFlows)
-                                {
-                                    <tr class="govuk-table__row">
-                                        <td class="govuk-table__cell">
-                                            @assessmentToolWorkflow.WorkflowDefinitionId
-                                        </td>
-                                        <td class="govuk-table__cell">
-                                            @if(assessmentToolWorkflow.IsFirstWorkflow)
-                                            {
-                                                @:First workflow
-                                            }
-                                        </td>
-                                    </tr>
-                                }
-                            </table>
                         </td>
                     </tr>
                 }
             </tbody>
         </table>
-
+@*
         @using (Html.BeginForm("CreateAssessmentTool", "Admin", FormMethod.Post))
         {
             @Html.AntiForgeryToken()
@@ -98,6 +75,6 @@
           
      
             <input class="govuk-button" data-module="govuk-button" id="Submit" type="submit" value="Create AssessmentTool" />
-        }
+        }*@
     </div>
 </div>
