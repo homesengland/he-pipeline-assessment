@@ -2,11 +2,11 @@
 using He.PipelineAssessment.UI.Features.Admin.AssessmentToolManagement.Commands.CreateAssessmentTool;
 using He.PipelineAssessment.UI.Features.Admin.AssessmentToolManagement.Queries.GetAssessmentTools;
 
-namespace He.PipelineAssessment.UI.Features.Admin.AssessmentToolManagement
+namespace He.PipelineAssessment.UI.Features.Admin.AssessmentToolManagement.Mappers
 {
     public interface IAssessmentToolMapper
     {
-        AssessmentToolListData AssessmentToolsToAssessmentToolData(List<Models.AssessmentTool> assessmentTools);
+        AssessmentToolListData AssessmentToolsToAssessmentToolData(List<AssessmentTool> assessmentTools);
         AssessmentTool CreateAssessmentToolCommandToAssessmentTool(CreateAssessmentToolCommand assessmentToolDto);
 
         List<Queries.GetAssessmentToolWorkflows.AssessmentToolWorkflowDto> AssessmentToolWorkflowsToAssessmentToolDto(List<AssessmentToolWorkflow> toList);

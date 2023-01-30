@@ -48,4 +48,8 @@
     <ProjectReference Include="..\He.PipelineAssessment.Infrastructure\He.PipelineAssessment.Infrastructure.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Features\Admin\AssessmentToolManagement\Queries\GetAssessmentToolWorkflows\" />
+  </ItemGroup>
+
 </Project>
