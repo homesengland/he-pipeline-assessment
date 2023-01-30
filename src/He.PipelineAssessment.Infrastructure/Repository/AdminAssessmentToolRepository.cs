@@ -33,7 +33,7 @@ namespace He.PipelineAssessment.Infrastructure.Repository
 
         public async Task<AssessmentTool?> GetAssessmentToolById(int assessmentToolId)
         {
-            return await _context.Set<AssessmentTool>().FirstOrDefaultAsync(x => x.Id == assessmentToolId);
+            return await _context.Set<AssessmentTool>().Include(x => x.AssessmentToolWorkflows).FirstOrDefaultAsync(x => x.Id == assessmentToolId);
         }
 
         public async Task<IEnumerable<AssessmentToolWorkflow>> GetAssessmentToolWorkflows(int assessmentToolId)

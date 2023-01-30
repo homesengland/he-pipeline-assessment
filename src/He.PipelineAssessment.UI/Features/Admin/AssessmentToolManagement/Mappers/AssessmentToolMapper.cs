@@ -52,7 +52,6 @@ namespace He.PipelineAssessment.UI.Features.Admin.AssessmentToolManagement.Mappe
             {
                 Id = x.Id,
                 AssessmentToolId = x.AssessmentToolId,
-                AssessmentToolName = x.AssessmentTool.Name,
                 IsFirstWorkflow = x.IsFirstWorkflow,
                 IsLatest = x.IsLatest,
                 Version = x.Version,

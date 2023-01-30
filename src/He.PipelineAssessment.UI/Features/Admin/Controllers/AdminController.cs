@@ -1,6 +1,8 @@
 ﻿using He.PipelineAssessment.UI.Features.Admin.AssessmentToolManagement.Commands.CreateAssessmentTool;
+using He.PipelineAssessment.UI.Features.Admin.AssessmentToolManagement.Commands.CreateAssessmentToolWorkflowCommand;
 using He.PipelineAssessment.UI.Features.Admin.AssessmentToolManagement.Commands.DeleteAssessmentTool;
 using He.PipelineAssessment.UI.Features.Admin.AssessmentToolManagement.Commands.UpdateAssessmentTool;
+using He.PipelineAssessment.UI.Features.Admin.AssessmentToolManagement.Commands.UpdateAssessmentToolWorkflowCommand;
 using He.PipelineAssessment.UI.Features.Admin.AssessmentToolManagement.Queries.GetAssessmentTools;
 using He.PipelineAssessment.UI.Features.Admin.AssessmentToolManagement.Queries.GetAssessmentToolWorkflows;
 using MediatR;
@@ -74,6 +76,22 @@ namespace He.PipelineAssessment.UI.Features.Admin.Controllers
             }
         }
 
+        //Create an assessment tool workflow
+        [HttpPost]
+        public async Task<IActionResult> CreateAssessmentToolWorkflow(CreateAssessmentToolWorkflowCommand createAssessmentToolWorkflowCommand)
+        {
+            try
+            {
+                await _mediator.Send(createAssessmentToolWorkflowCommand);
+                return RedirectToAction("AssessmentToolWorkflow", new { assessmentToolId = createAssessmentToolWorkflowCommand.AssessmentToolId });
+            }
+            catch (Exception e)
+            {
+                _logger.LogError(e.Message);
+                return RedirectToAction("Index", "Error", new { message = e.Message });
+            }
+        }
+
         //update an assessment tool
         [HttpPost]
         public async Task<IActionResult> UpdateAssessmentTool(UpdateAssessmentToolCommand updateAssessmentToolCommand)
@@ -88,6 +106,29 @@ namespace He.PipelineAssessment.UI.Features.Admin.Controllers
                 await _mediator.Send(updateAssessmentToolCommand);
 
                 return RedirectToAction("AssessmentTool");
+            }
+            catch (Exception e)
+            {
+                _logger.LogError(e.Message);
+                return RedirectToAction("Index", "Error", new { message = e.Message });
+            }
+
+        }
+
+        //update an assessment tool workflow
+        [HttpPost]
+        public async Task<IActionResult> UpdateAssessmentToolWorkflow(UpdateAssessmentToolWorkflowCommand updateAssessmentToolWorkflowCommand)
+        {
+            if (updateAssessmentToolWorkflowCommand.Id == 0)
+            {
+                return RedirectToAction("Index", "Error", new { message = "Bad request. No Assessment Tool Workflow Id provided." });
+            }
+
+            try
+            {
+                await _mediator.Send(updateAssessmentToolWorkflowCommand);
+
+                return RedirectToAction("AssessmentToolWorkflow", new { assessmentToolId = updateAssessmentToolWorkflowCommand.AssessmentToolId });
             }
             catch (Exception e)
             {

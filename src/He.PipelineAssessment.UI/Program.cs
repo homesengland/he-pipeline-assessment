@@ -63,6 +63,7 @@ builder.Services.AddDataProtection().PersistKeysToDbContext<PipelineAssessmentCo
 builder.Services.AddScoped<IAssessmentRepository, AssessmentRepository>();
 builder.Services.AddScoped<IStoreProcRepository, StoreProcRepository>();
 builder.Services.AddScoped<IAdminAssessmentToolRepository, AdminAssessmentToolRepository>();
+builder.Services.AddScoped<IAdminAssessmentToolWorkflowRepository, AdminAssessmentToolWorkflowRepository>();
 builder.Services.AddScoped<IDateTimeProvider, DateTimeProvider>();
 
 
