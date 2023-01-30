@@ -13,7 +13,7 @@
     @await Html.PartialAsync("_QuestionHint", Model.QuestionHint)
 
     <div class="govuk-input__wrapper">
-        <textarea id="@itemName" name="@itemName" class="govuk-textarea govuk-textarea--width-6 @errorFieldClass" rows="5" value="@Model.Answer"></textarea>
+        <textarea id="@itemName" name="@itemName" class="govuk-textarea govuk-textarea--width-6 @errorFieldClass" rows="5">@Model.Answer</textarea>
     </div>
 
     @await Html.PartialAsync("_QuestionGuidance", Model.QuestionGuidance)
