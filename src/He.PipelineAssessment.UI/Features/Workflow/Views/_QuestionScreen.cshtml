@@ -70,7 +70,9 @@
                         QuestionHint = Model.Data.QuestionScreenAnswers[i].QuestionHint,
                         QuestionId = Model.Data.QuestionScreenAnswers[i].QuestionId,
                         QuestionType = Model.Data.QuestionScreenAnswers[i].QuestionType,
-                        Title = Model.Data.QuestionScreenAnswers[i].Title
+                        Title = Model.Data.QuestionScreenAnswers[i].Title,
+                        CharacterLimit = Model.Data.QuestionScreenAnswers[i].CharacterLimit
+
                         })
                     }
                     @if (Model.Data.QuestionScreenAnswers![i].QuestionType == QuestionTypeConstants.DateQuestion)

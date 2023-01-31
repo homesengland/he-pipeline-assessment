@@ -16,6 +16,7 @@ import {
   QuestionActivity,
   RadioQuestion,
   CheckboxQuestion,
+  TextAreaQuestion
 } from '../../models/custom-component-models';
 
 import {
@@ -118,7 +119,7 @@ export class ElsaQuestionScreen {
   onAddQuestion(questionType: string, questionTypeName: string) {
     let id = (this.questionModel.questions.length + 1).toString();
     const questionName = `Question ${id}`;
-    const newQuestion = { id: id, title: questionName, questionGuidance: "", questionText: "", displayComments: false, questionHint: "", questionType: questionType, questionTypeName: questionTypeName };
+    const newQuestion = { id: id, title: questionName, questionGuidance: "", questionText: "", displayComments: false, questionHint: "", questionType: questionType, questionTypeName: questionTypeName };  
     this.questionModel = { ...this.questionModel, questions: [...this.questionModel.questions, newQuestion] };
     this.updatePropertyModel();
   }
@@ -165,6 +166,8 @@ export class ElsaQuestionScreen {
         return <elsa-checkbox-question onClick={(e) => e.stopPropagation()} class="panel elsa-rounded" question={question as CheckboxQuestion}></elsa-checkbox-question>;
       case "RadioQuestion":
         return <elsa-radio-question onClick={(e) => e.stopPropagation()} class="panel elsa-rounded" question={question as RadioQuestion}></elsa-radio-question>;
+      case "TextAreaQuestion":
+        return <elsa-textarea-question onClick={(e) => e.stopPropagation()} class="panel elsa-rounded" question={question as TextAreaQuestion}></elsa-textarea-question>;
       default:
         return <elsa-question onClick={(e) => e.stopPropagation()} class="panel elsa-rounded" question={question}></elsa-question>;
     }

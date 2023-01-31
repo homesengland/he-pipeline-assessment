@@ -55,6 +55,8 @@ namespace Elsa.CustomWorkflow.Sdk.Models.Workflow
         public string? Answer { get; set; }
         public decimal? Decimal { get { return GetDecimal(); } set { SetDecimal(value); } }
 
+        public int? CharacterLimit { get; set; }
+
         private Checkbox _checkbox = new Checkbox();
         public Checkbox Checkbox { get { return _checkbox; } set { SetCheckbox(value); } }
 
