@@ -1,0 +1,22 @@
+﻿@model He.PipelineAssessment.UI.Features.Admin.AssessmentToolManagement.Queries.GetAssessmentToolWorkflows.AssessmentToolWorkflowListDto;
+
+@{
+    ViewData["Title"] = "Assessment Tools";
+    Layout = "_Layout";
+}
+
+<div class="text-center">
+    <h2>You are about to delete the following Assessment Tool: @Model.AssessmentToolName</h2>
+        <p>This will also delete the following Assessment Tool Workflows, as they are currently associated with this assessment tool:</p>
+        @foreach (var assessmentToolWorkflow in Model.AssessmentToolWorkflowDtos)
+        {
+            @assessmentToolWorkflow.WorkflowDefinitionId
+            <br />
+        }
+        @using (Html.BeginForm("DeleteAssessmentTool", "Admin", FormMethod.Post))
+        {
+            @Html.AntiForgeryToken()
+            @Html.Hidden("assessmentToolId", Model.AssessmentToolId)
+            <input class="govuk-button govuk-!-margin-0" data-module="govuk-button" id="Delete" type="submit" value="Delete"/>
+        }
+</div>

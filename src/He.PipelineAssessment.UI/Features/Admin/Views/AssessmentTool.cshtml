@@ -39,12 +39,7 @@
                             </td>
                         }
                         <td class="govuk-table__cell">
-                            @using (Html.BeginForm("DeleteAssessmentTool", "Admin", FormMethod.Post))
-                            {
-                                @Html.AntiForgeryToken()
-                                @Html.Hidden("assessmentToolId", assessmentTool.Id)
-                                <input class="govuk-button govuk-!-margin-0" data-module="govuk-button" id="Delete" type="submit" value="Delete"/>
-                            }
+                            @Html.ActionLink("Delete", "GetAssessmentToolById","Admin",new {assessmentToolId = assessmentTool.Id})
                         </td>
                         <td class="govuk-table__cell">
                             <table class="govuk-table" style="margin-bottom: 0">

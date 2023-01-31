@@ -31,13 +31,11 @@
                         <td class="govuk-table__cell">
                             <div class="govuk-radios--inline">
                                 <div class="govuk-radios__item">
-@*                                    @Html.RadioButtonFor(model => model.gender, "Male", new { @checked = true }) and
-                                    @Html.RadioButtonFor(model => model.gender, "Female", new { @checked = true })*@
-                                    @Html.RadioButtonFor(m => assessmentToolWorkflow.IsFirstWorkflow, "True", new { @class = "govuk-radios__input" })
+                                    @Html.RadioButton("IsFirstWorkflow", "True", assessmentToolWorkflow.IsFirstWorkflow, new { @class = "govuk-radios__input" })
                                     <label class="govuk-label govuk-radios__label" for="@assessmentToolWorkflow.IsFirstWorkflow">Yes</label>
                                 </div>
                                 <div class="govuk-radios__item">
-                                        @Html.RadioButtonFor(m => assessmentToolWorkflow.IsFirstWorkflow, "False", new { @class = "govuk-radios__input" })
+                                    @Html.RadioButton("IsFirstWorkflow", "False", !assessmentToolWorkflow.IsFirstWorkflow, new { @class = "govuk-radios__input" })
                                     <label class="govuk-label govuk-radios__label" for="@assessmentToolWorkflow.IsFirstWorkflow">No</label>
                                 </div>
                             </div>
@@ -50,7 +48,7 @@
                         </td>
                     }
                     <td class="govuk-table__cell">
-                        @using (Html.BeginForm("DeleteAssessmentTool", "Admin", FormMethod.Post))
+                        @using (Html.BeginForm("DeleteAssessmentToolWorkflow", "Admin", FormMethod.Post))
                         {
                             @Html.AntiForgeryToken()
                             @Html.Hidden("assessmentToolWorkflowId", assessmentToolWorkflow.Id)

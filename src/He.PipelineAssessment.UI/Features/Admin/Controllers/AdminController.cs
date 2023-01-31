@@ -1,6 +1,7 @@
 ﻿using He.PipelineAssessment.UI.Features.Admin.AssessmentToolManagement.Commands.CreateAssessmentTool;
 using He.PipelineAssessment.UI.Features.Admin.AssessmentToolManagement.Commands.CreateAssessmentToolWorkflowCommand;
 using He.PipelineAssessment.UI.Features.Admin.AssessmentToolManagement.Commands.DeleteAssessmentTool;
+using He.PipelineAssessment.UI.Features.Admin.AssessmentToolManagement.Commands.DeleteAssessmentToolWorkflow;
 using He.PipelineAssessment.UI.Features.Admin.AssessmentToolManagement.Commands.UpdateAssessmentTool;
 using He.PipelineAssessment.UI.Features.Admin.AssessmentToolManagement.Commands.UpdateAssessmentToolWorkflowCommand;
 using He.PipelineAssessment.UI.Features.Admin.AssessmentToolManagement.Queries.GetAssessmentTools;
@@ -58,6 +59,23 @@ namespace He.PipelineAssessment.UI.Features.Admin.Controllers
                 return RedirectToAction("Index", "Error", new { message = e.Message });
             }
 
+        }
+
+        //get an assessment tool 
+        [HttpGet]
+        public async Task<IActionResult> GetAssessmentToolById(int assessmentToolId)
+        {
+            try
+            {
+                var assessmentToolsWorkflows = await _mediator.Send(new AssessmentToolWorkflowQuery(assessmentToolId));
+
+                return View("DeleteAssessmentTool", assessmentToolsWorkflows);
+            }
+            catch (Exception e)
+            {
+                _logger.LogError(e.Message);
+                return RedirectToAction("Index", "Error", new { message = e.Message });
+            }
         }
 
         //Create an assessment tool
@@ -147,6 +165,23 @@ namespace He.PipelineAssessment.UI.Features.Admin.Controllers
                 await _mediator.Send(new DeleteAssessmentToolCommand(assessmentToolId));
 
                 return RedirectToAction("AssessmentTool");
+            }
+            catch (Exception e)
+            {
+                _logger.LogError(e.Message);
+                return RedirectToAction("Index", "Error", new { message = e.Message });
+            }
+        }
+
+        //delete an assessment tool workflow
+        [HttpPost]
+        public async Task<IActionResult> DeleteAssessmentToolWorkflow(int assessmentToolWorkflowId, int assessmentToolId)
+        {
+            try
+            {
+                await _mediator.Send(new DeleteAssessmentToolWorkflowCommand(assessmentToolWorkflowId));
+
+                return RedirectToAction("AssessmentToolWorkflow", new { assessmentToolId });
             }
             catch (Exception e)
             {
