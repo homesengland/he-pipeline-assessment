@@ -1,6 +1,7 @@
 ﻿using Elsa.Activities.ControlFlow;
 using Elsa.ActivityResults;
 using Elsa.Attributes;
+using Elsa.CustomActivities.Constants;
 using Elsa.CustomModels;
 using Elsa.Design;
 using Elsa.Expressions;
@@ -28,7 +29,7 @@ namespace Elsa.CustomActivities.Activities.QuestionScreen
             IsDesignerCritical = true)]
         public AssessmentQuestions Questions { get; set; } = new AssessmentQuestions();
 
-        [ActivityInput(Hint = "Set the condition to state whether the question is displayed or not.", UIHint = CustomActivityUIHints.CustomTextProperty, SupportedSyntaxes = new[] { SyntaxNames.JavaScript }, DefaultSyntax = SyntaxNames.JavaScript)]
+        [ActivityInput(Hint = "Set the condition to state whether the question is displayed or not.", UIHint = ActivityInputUIHints.SingleLine, SupportedSyntaxes = new[] { SyntaxNames.JavaScript }, DefaultSyntax = SyntaxNames.JavaScript)]
         public bool Condition { get; set; }
 
         [ActivityInput(Label = "Assessment outcome conditions", Hint = "The conditions to evaluate.", UIHint = CustomActivityUIHints.CustomSwitch, DefaultSyntax = "Switch", IsDesignerCritical = true)]

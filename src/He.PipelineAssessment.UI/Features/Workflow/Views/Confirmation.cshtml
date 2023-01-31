@@ -17,7 +17,11 @@
 <div>
     <h2 class="govuk-heading-m">@Html.DisplayTextFor(m => m.Data.FooterTitle)</h2>
     <p class="govuk-body">@Html.DisplayTextFor(m => m.Data.FooterText).</p>
-    @if (!string.IsNullOrEmpty(Model.Data.AdditionalTextLine1))
+
+    @foreach(string answer in Model.Data.Text){
+        <p class="govuk-body">@Html.DisplayTextFor(m => answer).</p>
+    }
+  @*  @if (!string.IsNullOrEmpty(Model.Data.AdditionalTextLine1))
     {
         <p class="govuk-body">@Html.DisplayTextFor(m => m.Data.AdditionalTextLine1).</p>
     }
@@ -36,7 +40,7 @@
     @if (!string.IsNullOrEmpty(Model.Data.AdditionalTextLine5))
     {
         <p class="govuk-body">@Html.DisplayTextFor(m => m.Data.AdditionalTextLine5).</p>
-    }
+    }*@
 </div>
 
 <h2 class="govuk-heading-m">

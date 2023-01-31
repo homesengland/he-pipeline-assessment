@@ -1,3 +1,4 @@
+using Elsa;
 using Elsa.CustomActivities.Activities.CheckYourAnswersScreen;
 using Elsa.CustomActivities.Activities.ConfirmationScreen;
 using Elsa.CustomActivities.Activities.FinishWorkflow;
@@ -7,9 +8,11 @@ using Elsa.CustomActivities.Activities.QuestionScreen;
 using Elsa.CustomActivities.Activities.Shared;
 using Elsa.CustomActivities.Activities.SinglePipelineDataSource;
 using Elsa.CustomActivities.Activities.VFMDataSource;
+using Elsa.CustomActivities.Handlers;
 using Elsa.CustomInfrastructure.Data;
 using Elsa.CustomInfrastructure.Data.Repository;
 using Elsa.CustomWorkflow.Sdk.Extensions;
+using Elsa.Expressions;
 using Elsa.Persistence.EntityFramework.Core.Extensions;
 using Elsa.Persistence.EntityFramework.SqlServer;
 using Elsa.Runtime;
@@ -48,6 +51,8 @@ builder.Services
         .NoCoreActivities()
         .AddConsoleActivities()
     );
+
+builder.Services.TryAddProvider<IExpressionHandler, ConditionalTextListExpressionHandler>(ServiceLifetime.Singleton);
 
 builder.Services.AddDbContext<ElsaCustomContext>(config =>
     config.UseSqlServer(elsaCustomConnectionString,

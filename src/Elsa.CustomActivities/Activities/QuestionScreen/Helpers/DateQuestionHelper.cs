@@ -1,10 +1,10 @@
 ﻿using Elsa.CustomInfrastructure.Data.Repository;
-using Elsa.CustomWorkflow.Sdk;
 using Elsa.Scripting.JavaScript.Events;
 using Elsa.Scripting.JavaScript.Messages;
 using Elsa.Services;
 using MediatR;
 using System.Globalization;
+using Elsa.CustomWorkflow.Sdk;
 
 namespace Elsa.CustomActivities.Activities.QuestionScreen.Helpers
 {
@@ -36,12 +36,12 @@ namespace Elsa.CustomActivities.Activities.QuestionScreen.Helpers
                     if (questionScreenAnswer != null && questionScreenAnswer.Answer != null &&
                         questionScreenAnswer.QuestionType == QuestionTypeConstants.DateQuestion)
                     {
-                        DateTime.TryParseExact(questionScreenAnswer.Answer, Constants.DateFormat,
+                        DateTime.TryParseExact(questionScreenAnswer.Answer, CustomWorkflow.Sdk.Constants.DateFormat,
                             CultureInfo.InvariantCulture, DateTimeStyles.AdjustToUniversal, out DateTime answerDate);
 
                         var dateString =
                             $"{year}-{month}-{day}";
-                        DateTime.TryParseExact(dateString, Constants.DateFormat, CultureInfo.InvariantCulture,
+                        DateTime.TryParseExact(dateString, CustomWorkflow.Sdk.Constants.DateFormat, CultureInfo.InvariantCulture,
                             DateTimeStyles.AdjustToUniversal, out DateTime answerToCheckDateTime);
 
                         if (answerDate >= answerToCheckDateTime)
@@ -70,12 +70,12 @@ namespace Elsa.CustomActivities.Activities.QuestionScreen.Helpers
                     if (questionScreenAnswer != null && questionScreenAnswer.Answer != null &&
                         questionScreenAnswer.QuestionType == QuestionTypeConstants.DateQuestion)
                     {
-                        DateTime.TryParseExact(questionScreenAnswer.Answer, Constants.DateFormat,
+                        DateTime.TryParseExact(questionScreenAnswer.Answer, CustomWorkflow.Sdk.Constants.DateFormat,
                             CultureInfo.InvariantCulture, DateTimeStyles.AdjustToUniversal, out DateTime answerDate);
 
                         var dateString =
                             $"{year}-{month}-{day}";
-                        DateTime.TryParseExact(dateString, Constants.DateFormat, CultureInfo.InvariantCulture,
+                        DateTime.TryParseExact(dateString, CustomWorkflow.Sdk.Constants.DateFormat, CultureInfo.InvariantCulture,
                             DateTimeStyles.AdjustToUniversal, out DateTime answerToCheckDateTime);
 
                         if (answerDate <= answerToCheckDateTime)

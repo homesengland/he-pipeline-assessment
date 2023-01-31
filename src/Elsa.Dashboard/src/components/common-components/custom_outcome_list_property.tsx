@@ -26,7 +26,7 @@ export class CustomOutcomeListProperty {
   @Prop() activityModel: ActivityModel;
   @Prop() propertyDescriptor: ActivityPropertyDescriptor;
   @Prop() propertyModel: ActivityDefinitionProperty;
-  @State() outcomes: Array<IOutcomeProperty> = [];
+  @State() text: Array<IOutcomeProperty> = [];
   @State() iconProvider = new IconProvider();
 
   supportedSyntaxes: Array<string> = [SyntaxNames.JavaScript];
@@ -35,14 +35,16 @@ export class CustomOutcomeListProperty {
 
   async componentWillLoad() {
     const propertyModel = this.propertyModel;
-    const casesJson = propertyModel.expressions['Switch']
-    this.outcomes = parseJson(casesJson) || [];
-    console.log("Outcomes", this.outcomes);
+    const casesJson = propertyModel.expressions['ConditionalTextList']
+    this.text = parseJson(casesJson) || [];
+    console.log("Outcomes", this.text);
   }
 
   updatePropertyModel() {
-    this.propertyModel.expressions['Switch'] = JSON.stringify(this.outcomes);
-    this.multiExpressionEditor.expressions[SyntaxNames.Json] = JSON.stringify(this.outcomes, null, 2);
+    this.propertyModel.expressions['ConditionalTextList'] = JSON.stringify(this.text);
+    this.multiExpressionEditor.expressions[SyntaxNames.Json] = JSON.stringify(this.text, null, 2);
+    console.log(this.multiExpressionEditor);
+    console.log(this.propertyModel);
   }
   onMultiExpressionEditorValueChanged(e: CustomEvent<string>) {
     const json = e.detail;
@@ -54,8 +56,8 @@ export class CustomOutcomeListProperty {
     if (!Array.isArray(parsed))
       return;
 
-    this.propertyModel.expressions['Switch'] = json;
-    this.outcomes = parsed;
+    this.propertyModel.expressions['ConditionalTextList'] = json;
+    this.text = parsed;
   }
 
   onMultiExpressionEditorSyntaxChanged(e: CustomEvent<string>) {
@@ -65,27 +67,29 @@ export class CustomOutcomeListProperty {
 
   onAddOutcomeClick() {
     const newCase = { text: { syntax: SyntaxNames.JavaScript, expressions: { [SyntaxNames.JavaScript]: '' } }, condition: { syntax: SyntaxNames.JavaScript, expressions: { [SyntaxNames.JavaScript]: '' } }  };
-    this.outcomes = [...this.outcomes, newCase];
+    this.text = [...this.text, newCase];
     this.updatePropertyModel();
   }
 
   onHandleDelete(outcome: IOutcomeProperty) {
-    this.outcomes = this.outcomes.filter(x => x != outcome);
+    this.text = this.text.filter(x => x != outcome);
     this.updatePropertyModel();
   }
 
   onTextChanged(e: CustomEvent<string>, outcome: IOutcomeProperty) {
-    this.outcomes = this.outcomes.filter(x => x != outcome);
     outcome.text.expressions[outcome.text.syntax] = e.detail;
-    this.outcomes = [...this.outcomes, outcome];
+    console.log("updating text");
+    //this.text = this.text.filter(x => x != outcome);
+    //outcome.text.expressions[outcome.text.syntax] = e.detail;
+    //this.text = [...this.text, outcome];
+    //console.log("Text", this.text)
     this.updatePropertyModel();
 
   }
 
   onConditionChanged(e: CustomEvent<string>, outcome: IOutcomeProperty) {
-    this.outcomes = this.outcomes.filter(x => x != outcome);
     outcome.condition.expressions[outcome.condition.syntax] = e.detail;
-    this.outcomes = [...this.outcomes, outcome];
+    console.log("updating condition")
     this.updatePropertyModel();
   }
 
@@ -116,7 +120,7 @@ export class CustomOutcomeListProperty {
   }
 
   render() {
-    const outcomes = this.outcomes;
+    const outcomes = this.text;
 /*    const supportedSyntaxes = this.supportedSyntaxes;*/
     const json = JSON.stringify(outcomes, null, 2);
 

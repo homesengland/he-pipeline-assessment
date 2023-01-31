@@ -158,7 +158,7 @@
           elsaStudio.pluginManager.registerPlugin(MyCustomPlugin);
           //elsaStudio.pluginManager.registerPlugin(MyCustomSwitchPlugin);
             elsaStudio.propertyDisplayManager.addDriver('question-builder', () => new MyCustomInputDriver(elsaStudio, 'multi-question-property'));
-          elsaStudio.propertyDisplayManager.addDriver('custom-case-builder', () => new MyCustomOutcomeDriver(elsaStudio, 'custom-outcome-list-property'));
+          elsaStudio.propertyDisplayManager.addDriver('custom-text-case-builder', () => new MyCustomOutcomeDriver(elsaStudio, 'custom-outcome-list-property'));
           elsaStudio.propertyDisplayManager.addDriver('custom-switch-case-builder', () => new MyCustomSwitchCaseDriver(elsaStudio, 'custom-elsa-switch-cases-property'));
             elsaStudio.propertyDisplayManager.addDriver('custom-text-property-builder', () => new MyCustomTextPropertyDriver(elsaStudio, 'custom-text-property'));
 
