@@ -17,6 +17,7 @@ namespace He.PipelineAssessment.UI.Features.Admin.AssessmentToolManagement.Comma
             var entity = await _adminAssessmentToolWorkflowRepository.GetAssessmentToolWorkflowById(request.Id);
             ArgumentNullException.ThrowIfNull(entity, "Assessment Workflow not found");
             entity.WorkflowDefinitionId = request.WorkflowDefinitionId;
+            entity.Name = request.Name;
             entity.IsFirstWorkflow = request.IsFirstWorkflow;
             return await _adminAssessmentToolWorkflowRepository.UpdateAssessmentToolWorkflow(entity);
         }

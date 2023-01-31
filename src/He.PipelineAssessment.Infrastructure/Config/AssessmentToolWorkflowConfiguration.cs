@@ -11,6 +11,8 @@ namespace He.PipelineAssessment.Infrastructure.Config
             builder.HasKey(x => x.Id);
             builder.Property(x => x.WorkflowDefinitionId)
                 .HasMaxLength(450);
+            builder.Property(x => x.Name)
+                .HasMaxLength(100);
 
             builder.HasOne(x => x.AssessmentTool)
                 .WithMany(x => x.AssessmentToolWorkflows)

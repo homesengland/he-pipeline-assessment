@@ -17,7 +17,8 @@ namespace He.PipelineAssessment.UI.Features.Admin.AssessmentToolManagement.Mappe
                 IsFirstWorkflow = assessmentToolWorkflowCommand.IsFirstWorkflow,
                 Version = assessmentToolWorkflowCommand.Version,
                 IsLatest = assessmentToolWorkflowCommand.IsLatest,
-                WorkflowDefinitionId = assessmentToolWorkflowCommand.WorkflowDefinitionId
+                WorkflowDefinitionId = assessmentToolWorkflowCommand.WorkflowDefinitionId,
+                Name = assessmentToolWorkflowCommand.Name
             };
         }
     }

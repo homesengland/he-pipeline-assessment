@@ -16,7 +16,7 @@
                     <th scope="col" class="govuk-table__header">Name</th>
                     <th scope="col" class="govuk-table__header">Order</th>                    
                     <th scope="col" class="govuk-table__header">Update</th>
-                    <th scope="col" class="govuk-table__header">Delete</th>
+                    <th scope="col" class="govuk-table__header">Remove</th>
                     <th scope="col" class="govuk-table__header">Assessment Tool Workflows</th>
                 </tr>
             </thead>
@@ -39,7 +39,7 @@
                             </td>
                         }
                         <td class="govuk-table__cell">
-                            @Html.ActionLink("Delete", "GetAssessmentToolById","Admin",new {assessmentToolId = assessmentTool.Id})
+                            @Html.ActionLink("Remove", "GetAssessmentToolById","Admin",new {assessmentToolId = assessmentTool.Id})
                         </td>
                         <td class="govuk-table__cell">
                             <table class="govuk-table" style="margin-bottom: 0">

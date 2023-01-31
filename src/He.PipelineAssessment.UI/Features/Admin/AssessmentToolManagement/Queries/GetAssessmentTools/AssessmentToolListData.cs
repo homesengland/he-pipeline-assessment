@@ -19,6 +19,7 @@
     public class AssessmentToolWorkflowDto
     {
         public int Id { get; set; }
+        public string Name { get; set; }
         public int AssessmentToolId { get; set; }
         public string WorkflowDefinitionId { get; set; }
         public bool IsFirstWorkflow { get; set; }

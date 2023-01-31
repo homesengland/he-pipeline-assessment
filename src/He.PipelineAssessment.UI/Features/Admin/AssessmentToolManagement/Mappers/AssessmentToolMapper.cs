@@ -25,6 +25,7 @@ namespace He.PipelineAssessment.UI.Features.Admin.AssessmentToolManagement.Mappe
                     AssessmentToolWorkFlows = x.AssessmentToolWorkflows != null ? x.AssessmentToolWorkflows.Select(y => new AssessmentToolWorkflowDto
                     {
                         Id = y.Id,
+                        Name = y.Name,
                         AssessmentToolId = y.AssessmentToolId,
                         IsFirstWorkflow = y.IsFirstWorkflow,
                         IsLatest = y.IsLatest,
@@ -51,6 +52,7 @@ namespace He.PipelineAssessment.UI.Features.Admin.AssessmentToolManagement.Mappe
             return assessmentToolWorkflows.Select(x => new Queries.GetAssessmentToolWorkflows.AssessmentToolWorkflowDto
             {
                 Id = x.Id,
+                Name = x.Name,
                 AssessmentToolId = x.AssessmentToolId,
                 IsFirstWorkflow = x.IsFirstWorkflow,
                 IsLatest = x.IsLatest,

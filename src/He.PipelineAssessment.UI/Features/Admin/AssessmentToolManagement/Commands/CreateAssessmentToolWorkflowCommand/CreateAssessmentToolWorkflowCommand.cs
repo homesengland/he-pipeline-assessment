@@ -4,6 +4,7 @@ namespace He.PipelineAssessment.UI.Features.Admin.AssessmentToolManagement.Comma
 {
     public class CreateAssessmentToolWorkflowCommand : IRequest<int>
     {
+        public string Name { get; set; } = string.Empty;
         public string WorkflowDefinitionId { get; set; } = string.Empty;
         public bool IsFirstWorkflow { get; set; } = false;
         public int AssessmentToolId { get; set; }
