@@ -1,17 +1,14 @@
 ﻿using FluentValidation;
-using He.PipelineAssessment.Models;
 using He.PipelineAssessment.UI.Features.Admin.AssessmentToolManagement.Commands.CreateAssessmentTool;
-using He.PipelineAssessment.UI.Features.Admin.AssessmentToolManagement.Commands.CreateAssessmentToolWorkflowCommand;
+using He.PipelineAssessment.UI.Features.Admin.AssessmentToolManagement.Commands.CreateAssessmentToolWorkflow;
 using He.PipelineAssessment.UI.Features.Admin.AssessmentToolManagement.Commands.DeleteAssessmentTool;
 using He.PipelineAssessment.UI.Features.Admin.AssessmentToolManagement.Commands.DeleteAssessmentToolWorkflow;
 using He.PipelineAssessment.UI.Features.Admin.AssessmentToolManagement.Commands.UpdateAssessmentTool;
 using He.PipelineAssessment.UI.Features.Admin.AssessmentToolManagement.Commands.UpdateAssessmentToolWorkflowCommand;
 using He.PipelineAssessment.UI.Features.Admin.AssessmentToolManagement.Queries.GetAssessmentTools;
 using He.PipelineAssessment.UI.Features.Admin.AssessmentToolManagement.Queries.GetAssessmentToolWorkflows;
-using He.PipelineAssessment.UI.Features.Admin.AssessmentToolManagement.Validators;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
-using static Microsoft.EntityFrameworkCore.DbLoggerCategory.Database;
 
 namespace He.PipelineAssessment.UI.Features.Admin.Controllers
 {
@@ -19,13 +16,18 @@ namespace He.PipelineAssessment.UI.Features.Admin.Controllers
     {
         private readonly ILogger<AdminController> _logger;
         private readonly IMediator _mediator;
-        private readonly IValidator<CreateAssessmentToolCommand> _validator;
+        private readonly IValidator<CreateAssessmentToolCommand> _createAssessmentToolCommandValidator;
+        private readonly IValidator<CreateAssessmentToolWorkflowCommand> _createAssessmentToolWorkflowCommandValidator;
 
-        public AdminController(IValidator<CreateAssessmentToolCommand> validator, ILogger<AdminController> logger, IMediator mediator)
+        public AdminController(IValidator<CreateAssessmentToolCommand> createAssessmentToolCommandValidator,
+            ILogger<AdminController> logger,
+            IMediator mediator,
+            IValidator<CreateAssessmentToolWorkflowCommand> createAssessmentToolWorkflowCommandValidator)
         {
             _logger = logger;
             _mediator = mediator;
-            _validator = validator;
+            _createAssessmentToolWorkflowCommandValidator = createAssessmentToolWorkflowCommandValidator;
+            _createAssessmentToolCommandValidator = createAssessmentToolCommandValidator;
         }
 
         public IActionResult Index()
@@ -84,23 +86,51 @@ namespace He.PipelineAssessment.UI.Features.Admin.Controllers
             }
         }
 
-        //Create an assessment tool
-        [HttpPost]
-        public async Task<IActionResult> CreateAssessmentTool(CreateAssessmentToolCommand createAssessmentToolCommand)
+        [HttpGet]
+        public Task<IActionResult> LoadAssessmentTool(CreateAssessmentToolDto createAssessmentToolDto)
         {
             try
             {
-                var validationResult = _validator.Validate(createAssessmentToolCommand);
+                return Task.FromResult<IActionResult>(View("LoadAssessmentTool", createAssessmentToolDto));
+            }
+            catch (Exception e)
+            {
+                _logger.LogError(e.Message);
+                return Task.FromResult<IActionResult>(RedirectToAction("Index", "Error", new { message = e.Message }));
+            }
+        }
+
+        [HttpGet]
+        public Task<IActionResult> LoadAssessmentToolWorkflow(CreateAssessmentToolWorkflowDto createAssessmentToolWorkflowDto)
+        {
+            try
+            {
+                return Task.FromResult<IActionResult>(View("LoadAssessmentToolWorkflow", createAssessmentToolWorkflowDto));
+            }
+            catch (Exception e)
+            {
+                _logger.LogError(e.Message);
+                return Task.FromResult<IActionResult>(RedirectToAction("Index", "Error", new { message = e.Message }));
+            }
+        }
+
+        //Create an assessment tool
+        [HttpPost]
+        public async Task<IActionResult> CreateAssessmentTool(CreateAssessmentToolDto createAssessmentToolDto)
+        {
+            try
+            {
+                var validationResult = _createAssessmentToolCommandValidator.Validate(createAssessmentToolDto.CreateAssessmentToolCommand);
                 if (validationResult.IsValid)
                 {
-                    await _mediator.Send(createAssessmentToolCommand);
+                    await _mediator.Send(createAssessmentToolDto.CreateAssessmentToolCommand);
                     return RedirectToAction("AssessmentTool");
                 }
                 else
                 {
-                    ModelState.AddModelError("NewItem.Name", validationResult.ToString());
-
-                    return RedirectToAction("AssessmentTool");
+                    //ModelState.AddModelError("NewItem.Name", validationResult.ToString());
+                    createAssessmentToolDto.ValidationResult = validationResult;
+                    return View("LoadAssessmentTool", createAssessmentToolDto);
                 }
             }
             catch (Exception e)
@@ -112,12 +142,21 @@ namespace He.PipelineAssessment.UI.Features.Admin.Controllers
 
         //Create an assessment tool workflow
         [HttpPost]
-        public async Task<IActionResult> CreateAssessmentToolWorkflow(CreateAssessmentToolWorkflowCommand createAssessmentToolWorkflowCommand)
+        public async Task<IActionResult> CreateAssessmentToolWorkflow(CreateAssessmentToolWorkflowDto createAssessmentToolWorkflowDto)
         {
             try
             {
-                await _mediator.Send(createAssessmentToolWorkflowCommand);
-                return RedirectToAction("AssessmentToolWorkflow", new { assessmentToolId = createAssessmentToolWorkflowCommand.AssessmentToolId });
+                var validationResult = _createAssessmentToolWorkflowCommandValidator.Validate(createAssessmentToolWorkflowDto.CreateAssessmentToolWorkflowCommand);
+                if (validationResult.IsValid)
+                {
+                    await _mediator.Send(createAssessmentToolWorkflowDto.CreateAssessmentToolWorkflowCommand);
+                    return RedirectToAction("AssessmentToolWorkflow", createAssessmentToolWorkflowDto.AssessmentToolId);
+                }
+                else
+                {
+                    createAssessmentToolWorkflowDto.ValidationResult = validationResult;
+                    return View("LoadAssessmentToolWorkflow", createAssessmentToolWorkflowDto);
+                }
             }
             catch (Exception e)
             {

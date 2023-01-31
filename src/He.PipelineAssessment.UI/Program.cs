@@ -8,6 +8,7 @@ using He.PipelineAssessment.Infrastructure.Repository.StoreProc;
 using He.PipelineAssessment.UI;
 using He.PipelineAssessment.UI.Common.Utility;
 using He.PipelineAssessment.UI.Features.Admin.AssessmentToolManagement.Commands.CreateAssessmentTool;
+using He.PipelineAssessment.UI.Features.Admin.AssessmentToolManagement.Commands.CreateAssessmentToolWorkflow;
 using He.PipelineAssessment.UI.Features.Admin.AssessmentToolManagement.Mappers;
 using He.PipelineAssessment.UI.Features.Admin.AssessmentToolManagement.Validators;
 using He.PipelineAssessment.UI.Features.Workflow.QuestionScreenSaveAndContinue;
@@ -63,6 +64,7 @@ builder.Services.AddScoped<DbContext>(provider => provider.GetRequiredService<Pi
 //Validators
 builder.Services.AddScoped<IValidator<QuestionScreenSaveAndContinueCommand>, SaveAndContinueCommandValidator>();
 builder.Services.AddScoped<IValidator<CreateAssessmentToolCommand>, CreateAssessmentToolCommandValidator>();
+builder.Services.AddScoped<IValidator<CreateAssessmentToolWorkflowCommand>, CreateAssessmentToolWorkflowCommandValidator>();
 
 builder.Services.AddDataProtection().PersistKeysToDbContext<PipelineAssessmentContext>();
 builder.Services.AddScoped<IAssessmentRepository, AssessmentRepository>();

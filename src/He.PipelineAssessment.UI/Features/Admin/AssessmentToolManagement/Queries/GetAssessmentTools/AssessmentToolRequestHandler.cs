@@ -14,23 +14,15 @@ namespace He.PipelineAssessment.UI.Features.Admin.AssessmentToolManagement.Queri
             _adminAssessmentToolRepository = adminAssessmentToolRepository;
             _assessmentToolMapper = assessmentToolMapper;
         }
-        public async Task<AssessmentToolListData> Handle(AssessmentToolRequest request, CancellationToken cancellationToken)
-        {
-            try
-            {
-                var assessmentTools = await _adminAssessmentToolRepository.GetAssessmentTools();
-                var assessmentToolData = _assessmentToolMapper.AssessmentToolsToAssessmentToolData(assessmentTools.ToList());
 
-                return assessmentToolData;
-            }
-            catch (Exception e)
-            {
-                List<string> errors = new List<string> { $"An error occurred whilst accessing our data. Exception: {e.Message}" };
-                return new AssessmentToolListData()
-                {
-                    ValidationMessages = errors
-                };
-            }
+        public async Task<AssessmentToolListData> Handle(AssessmentToolRequest request,
+            CancellationToken cancellationToken)
+        {
+            var assessmentTools = await _adminAssessmentToolRepository.GetAssessmentTools();
+            var assessmentToolData =
+                _assessmentToolMapper.AssessmentToolsToAssessmentToolData(assessmentTools.ToList());
+
+            return assessmentToolData;
         }
     }
 }

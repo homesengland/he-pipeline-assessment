@@ -1,5 +1,4 @@
-﻿@using He.PipelineAssessment.UI.Features.Admin.AssessmentToolManagement.Commands.CreateAssessmentToolWorkflowCommand
-@using He.PipelineAssessment.UI.Features.Admin.AssessmentToolManagement.Queries.GetAssessmentToolWorkflows;
+﻿@using He.PipelineAssessment.UI.Features.Admin.AssessmentToolManagement.Queries.GetAssessmentToolWorkflows;
 @model AssessmentToolWorkflowListDto;
 
 @{
@@ -64,9 +63,10 @@
             }
             </tbody>
         </table>
+        @Html.ActionLink("Create Assessment Tool Workflow", "LoadAssessmentToolWorkflow","Admin", null, new {@class = "govuk-link"})
 
 
-        @using (Html.BeginForm("CreateAssessmentToolWorkflow", "Admin", FormMethod.Post))
+        @*@using (Html.BeginForm("CreateAssessmentToolWorkflow", "Admin", FormMethod.Post))
         {
             @Html.AntiForgeryToken()
             var createAssessmentToolWorkflowCommand = new CreateAssessmentToolWorkflowCommand();
@@ -103,6 +103,6 @@
             @Html.ValidationMessageFor(m => createAssessmentToolWorkflowCommand.IsFirstWorkflow)
             @Html.Hidden("createAssessmentToolWorkflowCommand.AssessmentToolId", @Model.AssessmentToolId)
             <input class="govuk-button" data-module="govuk-button" id="Submit" type="submit" value="Create Assessment Tool Workflow" />
-        }
+        }*@
     </div>
 </div>

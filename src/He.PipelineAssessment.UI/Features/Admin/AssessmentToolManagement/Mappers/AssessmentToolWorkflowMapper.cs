@@ -1,5 +1,5 @@
 ﻿using He.PipelineAssessment.Models;
-using He.PipelineAssessment.UI.Features.Admin.AssessmentToolManagement.Commands.CreateAssessmentToolWorkflowCommand;
+using He.PipelineAssessment.UI.Features.Admin.AssessmentToolManagement.Commands.CreateAssessmentToolWorkflow;
 
 namespace He.PipelineAssessment.UI.Features.Admin.AssessmentToolManagement.Mappers
 {

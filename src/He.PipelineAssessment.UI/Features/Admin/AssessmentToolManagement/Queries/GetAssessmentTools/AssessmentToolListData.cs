@@ -1,12 +1,13 @@
-﻿using He.PipelineAssessment.UI.Features.Admin.AssessmentToolManagement.Commands.CreateAssessmentTool;
+﻿using FluentValidation.Results;
+using He.PipelineAssessment.UI.Features.Admin.AssessmentToolManagement.Commands.CreateAssessmentTool;
 
 namespace He.PipelineAssessment.UI.Features.Admin.AssessmentToolManagement.Queries.GetAssessmentTools
 {
     public class AssessmentToolListData
     {
-        public CreateAssessmentToolCommand CreateAssessmentToolCommand { get; set; }
-        public List<string> ValidationMessages { get; set; } = new List<string>();
-        public bool IsValid { get { return ValidationMessages != null && ValidationMessages.Count == 0; } }
+        public CreateAssessmentToolCommand CreateAssessmentToolCommand { get; set; } = new();
+        public ValidationResult? ValidationMessages { get; set; }
+        //public bool IsValid { get { return ValidationMessages != null && ValidationMessages.Count == 0; } }
         public List<AssessmentToolDto> AssessmentTools { get; set; } = new List<AssessmentToolDto>();
     }
 
@@ -30,7 +31,7 @@ namespace He.PipelineAssessment.UI.Features.Admin.AssessmentToolManagement.Queri
         public bool IsLatest { get; set; }
 
     }
-    
+
 }
 
 
