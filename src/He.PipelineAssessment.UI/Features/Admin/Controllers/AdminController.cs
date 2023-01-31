@@ -1,4 +1,6 @@
-﻿using He.PipelineAssessment.UI.Features.Admin.AssessmentToolManagement.Commands.CreateAssessmentTool;
+﻿using FluentValidation;
+using He.PipelineAssessment.Models;
+using He.PipelineAssessment.UI.Features.Admin.AssessmentToolManagement.Commands.CreateAssessmentTool;
 using He.PipelineAssessment.UI.Features.Admin.AssessmentToolManagement.Commands.CreateAssessmentToolWorkflowCommand;
 using He.PipelineAssessment.UI.Features.Admin.AssessmentToolManagement.Commands.DeleteAssessmentTool;
 using He.PipelineAssessment.UI.Features.Admin.AssessmentToolManagement.Commands.DeleteAssessmentToolWorkflow;
@@ -6,8 +8,10 @@ using He.PipelineAssessment.UI.Features.Admin.AssessmentToolManagement.Commands.
 using He.PipelineAssessment.UI.Features.Admin.AssessmentToolManagement.Commands.UpdateAssessmentToolWorkflowCommand;
 using He.PipelineAssessment.UI.Features.Admin.AssessmentToolManagement.Queries.GetAssessmentTools;
 using He.PipelineAssessment.UI.Features.Admin.AssessmentToolManagement.Queries.GetAssessmentToolWorkflows;
+using He.PipelineAssessment.UI.Features.Admin.AssessmentToolManagement.Validators;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
+using static Microsoft.EntityFrameworkCore.DbLoggerCategory.Database;
 
 namespace He.PipelineAssessment.UI.Features.Admin.Controllers
 {
@@ -15,11 +19,13 @@ namespace He.PipelineAssessment.UI.Features.Admin.Controllers
     {
         private readonly ILogger<AdminController> _logger;
         private readonly IMediator _mediator;
+        private readonly IValidator<CreateAssessmentToolCommand> _validator;
 
-        public AdminController(ILogger<AdminController> logger, IMediator mediator)
+        public AdminController(IValidator<CreateAssessmentToolCommand> validator, ILogger<AdminController> logger, IMediator mediator)
         {
             _logger = logger;
             _mediator = mediator;
+            _validator = validator;
         }
 
         public IActionResult Index()
@@ -84,8 +90,18 @@ namespace He.PipelineAssessment.UI.Features.Admin.Controllers
         {
             try
             {
-                await _mediator.Send(createAssessmentToolCommand);
-                return RedirectToAction("AssessmentTool");
+                var validationResult = _validator.Validate(createAssessmentToolCommand);
+                if (validationResult.IsValid)
+                {
+                    await _mediator.Send(createAssessmentToolCommand);
+                    return RedirectToAction("AssessmentTool");
+                }
+                else
+                {
+                    ModelState.AddModelError("NewItem.Name", validationResult.ToString());
+
+                    return RedirectToAction("AssessmentTool");
+                }
             }
             catch (Exception e)
             {

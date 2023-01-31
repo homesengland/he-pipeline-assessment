@@ -1,7 +1,10 @@
-﻿namespace He.PipelineAssessment.UI.Features.Admin.AssessmentToolManagement.Queries.GetAssessmentTools
+﻿using He.PipelineAssessment.UI.Features.Admin.AssessmentToolManagement.Commands.CreateAssessmentTool;
+
+namespace He.PipelineAssessment.UI.Features.Admin.AssessmentToolManagement.Queries.GetAssessmentTools
 {
     public class AssessmentToolListData
     {
+        public CreateAssessmentToolCommand CreateAssessmentToolCommand { get; set; }
         public List<string> ValidationMessages { get; set; } = new List<string>();
         public bool IsValid { get { return ValidationMessages != null && ValidationMessages.Count == 0; } }
         public List<AssessmentToolDto> AssessmentTools { get; set; } = new List<AssessmentToolDto>();
@@ -27,6 +30,7 @@
         public bool IsLatest { get; set; }
 
     }
+    
 }
 
 
