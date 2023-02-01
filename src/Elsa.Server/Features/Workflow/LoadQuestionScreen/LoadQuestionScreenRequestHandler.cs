@@ -135,6 +135,7 @@ namespace Elsa.Server.Features.Workflow.LoadQuestionScreen
             questionActivityData.DisplayComments = item.DisplayComments;
             questionActivityData.QuestionGuidance = item.QuestionGuidance;
             questionActivityData.QuestionHint = item.QuestionHint;
+            questionActivityData.CharacterLimit = item.CharacterLimit;
 
             if (item.QuestionType == QuestionTypeConstants.CheckboxQuestion)
             {

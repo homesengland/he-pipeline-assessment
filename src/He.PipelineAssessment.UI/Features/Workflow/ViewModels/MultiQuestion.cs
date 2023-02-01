@@ -19,7 +19,7 @@ namespace He.PipelineAssessment.UI.Features.Workflow.ViewModels
         public decimal? Decimal { get; set; }
         public Radio Radio { get; set; } = new Radio();
         public Checkbox Checkbox { get; set; } = new Checkbox();
-
+        public int? CharacterLimit { get; set; }
     }
 
     public class Checkbox
