@@ -17,7 +17,7 @@ namespace He.PipelineAssessment.UI.Features.Admin.AssessmentToolManagement.Comma
 
         }
 
-        public async Task<int> Handle(CreateAssessmentToolWorkflow.CreateAssessmentToolWorkflowCommand request, CancellationToken cancellationToken)
+        public async Task<int> Handle(CreateAssessmentToolWorkflowCommand request, CancellationToken cancellationToken)
         {
             var entity = _assessmentToolWorkflowMapper.CreateAssessmentToolWorkflowCommandToAssessmentToolWorkflow(request);
             await _adminAssessmentToolWorkflowRepository.CreateAssessmentToolWorkflow(entity);

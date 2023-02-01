@@ -5,104 +5,70 @@
     ViewData["Title"] = "Assessment Tools";
     Layout = "_Layout";
 }
-@Html.ActionLink("Back","AssessmentTool","Admin", null,new{ @class="govuk-back-link"})
+<div class="govuk-grid-row">
+    <div class="govuk-grid-column-two-thirds">
+        @Html.ActionLink("Back","AssessmentTool","Admin", null,new{ @class="govuk-back-link"})
+    </div>
+    <div class="govuk-grid-column-one-third pull-right">
+        @Html.ActionLink("Create Assessment Tool Workflow", "LoadAssessmentToolWorkflow", "Admin", new { Model.AssessmentToolId }, new { @class = "govuk-link" })
+    </div>
+</div>
 <div class="text-center">
     <div class="text-center">
         <table class="govuk-table">
             <caption class="govuk-table__caption govuk-table__caption--m">Workflow Definitions for: @Model.AssessmentToolName</caption>
             <thead class="govuk-table__head">
-            <tr class="govuk-table__row">
-                <th scope="col" class="govuk-table__header">WorkflowDefinitionId</th>
-                <th scope="col" class="govuk-table__header">Name</th>
-                <th scope="col" class="govuk-table__header">IsFirstWorkflow</th>
-                <th scope="col" class="govuk-table__header">Update</th>
-                <th scope="col" class="govuk-table__header">Delete</th>
-            </tr>
+                <tr class="govuk-table__row">
+                    <th scope="col" class="govuk-table__header">WorkflowDefinitionId</th>
+                    <th scope="col" class="govuk-table__header">Name</th>
+                    <th scope="col" class="govuk-table__header">IsFirstWorkflow</th>
+                    <th scope="col" class="govuk-table__header">Update</th>
+                    <th scope="col" class="govuk-table__header">Delete</th>
+                </tr>
             </thead>
             <tbody class="govuk-table__body">
-            @foreach (var assessmentToolWorkflow in Model.AssessmentToolWorkflowDtos)
-            {
-                <tr class="govuk-table__row">
+                @foreach (var assessmentToolWorkflow in Model.AssessmentToolWorkflowDtos)
+                {
+                    <tr class="govuk-table__row">
                         @using (Html.BeginForm("UpdateAssessmentToolWorkflow", "Admin", FormMethod.Post))
-                    {
-                        <td class="govuk-table__cell">
-                            @Html.TextBox("workflowDefinitionId", assessmentToolWorkflow.WorkflowDefinitionId, "", new { @class = "govuk-input" })
-                        </td>
-                        <td class="govuk-table__cell">
-                            @Html.TextBox("name", assessmentToolWorkflow.Name, "", new { @class = "govuk-input" })
-                        </td>
-                        <td class="govuk-table__cell">
-                            <div class="govuk-radios--inline">
-                                <div class="govuk-radios__item">
-                                    @Html.RadioButton("IsFirstWorkflow", "True", assessmentToolWorkflow.IsFirstWorkflow, new { @class = "govuk-radios__input" })
-                                    <label class="govuk-label govuk-radios__label" for="@assessmentToolWorkflow.IsFirstWorkflow">Yes</label>
-                                </div>
-                                <div class="govuk-radios__item">
-                                    @Html.RadioButton("IsFirstWorkflow", "False", !assessmentToolWorkflow.IsFirstWorkflow, new { @class = "govuk-radios__input" })
-                                    <label class="govuk-label govuk-radios__label" for="@assessmentToolWorkflow.IsFirstWorkflow">No</label>
-                                </div>
-                            </div>
-                        </td>
-                        <td class="govuk-table__cell">
-                            @Html.AntiForgeryToken()
-                            @Html.Hidden("id", assessmentToolWorkflow.Id)
-                            @Html.Hidden("assessmentToolId", assessmentToolWorkflow.AssessmentToolId)
-                            <input class="govuk-button govuk-!-margin-0" data-module="govuk-button" id="Update" type="submit" value="Update"/>
-                        </td>
-                    }
-                    <td class="govuk-table__cell">
-                        @using (Html.BeginForm("DeleteAssessmentToolWorkflow", "Admin", FormMethod.Post))
                         {
-                            @Html.AntiForgeryToken()
-                            @Html.Hidden("assessmentToolWorkflowId", assessmentToolWorkflow.Id)
-                            @Html.Hidden("assessmentToolId", assessmentToolWorkflow.AssessmentToolId)
-                            <input class="govuk-button govuk-!-margin-0" data-module="govuk-button" id="Delete" type="submit" value="Delete"/>
+                            <td class="govuk-table__cell">
+                                @Html.TextBox("workflowDefinitionId", assessmentToolWorkflow.WorkflowDefinitionId, "", new { @class = "govuk-input" })
+                            </td>
+                            <td class="govuk-table__cell">
+                                @Html.TextBox("name", assessmentToolWorkflow.Name, "", new { @class = "govuk-input" })
+                            </td>
+                            <td class="govuk-table__cell">
+                                <div class="govuk-radios--inline">
+                                    <div class="govuk-radios__item">
+                                        @Html.RadioButton("IsFirstWorkflow", "True", assessmentToolWorkflow.IsFirstWorkflow, new { @class = "govuk-radios__input" })
+                                        <label class="govuk-label govuk-radios__label" for="@assessmentToolWorkflow.IsFirstWorkflow">Yes</label>
+                                    </div>
+                                    <div class="govuk-radios__item">
+                                        @Html.RadioButton("IsFirstWorkflow", "False", !assessmentToolWorkflow.IsFirstWorkflow, new { @class = "govuk-radios__input" })
+                                        <label class="govuk-label govuk-radios__label" for="@assessmentToolWorkflow.IsFirstWorkflow">No</label>
+                                    </div>
+                                </div>
+                            </td>
+                            <td class="govuk-table__cell">
+                                @Html.AntiForgeryToken()
+                                @Html.Hidden("id", assessmentToolWorkflow.Id)
+                                @Html.Hidden("assessmentToolId", assessmentToolWorkflow.AssessmentToolId)
+                                <input class="govuk-button govuk-!-margin-0" data-module="govuk-button" id="Update" type="submit" value="Update" />
+                            </td>
                         }
-                    </td>
-                </tr>
-            }
+                        <td class="govuk-table__cell">
+                            @using (Html.BeginForm("DeleteAssessmentToolWorkflow", "Admin", FormMethod.Post))
+                            {
+                                @Html.AntiForgeryToken()
+                                @Html.Hidden("assessmentToolWorkflowId", assessmentToolWorkflow.Id)
+                                @Html.Hidden("assessmentToolId", assessmentToolWorkflow.AssessmentToolId)
+                                <input class="govuk-button govuk-!-margin-0 govuk-button--warning" data-module="govuk-button" id="Delete" type="submit" value="Delete" />
+                            }
+                        </td>
+                    </tr>
+                }
             </tbody>
         </table>
-        @Html.ActionLink("Create Assessment Tool Workflow", "LoadAssessmentToolWorkflow","Admin", null, new {@class = "govuk-link"})
-
-
-        @*@using (Html.BeginForm("CreateAssessmentToolWorkflow", "Admin", FormMethod.Post))
-        {
-            @Html.AntiForgeryToken()
-            var createAssessmentToolWorkflowCommand = new CreateAssessmentToolWorkflowCommand();
-
-            <div class="govuk-form-group">
-                <h3 class="govuk-label-wrapper">                   
-                 @Html.LabelFor(m => createAssessmentToolWorkflowCommand.WorkflowDefinitionId ,new {@class="govuk-label govuk-label--s"} )              
-              </h3>
-                @Html.TextBoxFor(m => createAssessmentToolWorkflowCommand.WorkflowDefinitionId, new {@class="govuk-input"})
-            </div>
-            <div class="govuk-form-group">
-                <h3 class="govuk-label-wrapper">                   
-                    @Html.LabelFor(m => createAssessmentToolWorkflowCommand.Name ,new {@class="govuk-label govuk-label--s"} )              
-                </h3>
-                @Html.TextBoxFor(m => createAssessmentToolWorkflowCommand.Name, new {@class="govuk-input"})
-            </div>
-            <div class="govuk-form-group">
-                <h3 class="govuk-label-wrapper">
-                    @Html.LabelFor(m => createAssessmentToolWorkflowCommand.IsFirstWorkflow ,new {@class="govuk-label govuk-label--s"} )
-                </h3>
-                <div class="govuk-radios">
-                    <div class="govuk-radios__item">
-                        @Html.RadioButtonFor(m => createAssessmentToolWorkflowCommand.IsFirstWorkflow, "True", new { @class = "govuk-radios__input" })
-                        <label class="govuk-label govuk-radios__label" for="@createAssessmentToolWorkflowCommand.IsFirstWorkflow">Yes</label>
-                    </div>
-                    <div class="govuk-radios__item">
-                        @Html.RadioButtonFor(m => createAssessmentToolWorkflowCommand.IsFirstWorkflow, "False", new { @checked = "checked", @class = "govuk-radios__input" })
-                        <label class="govuk-label govuk-radios__label" for="@createAssessmentToolWorkflowCommand.IsFirstWorkflow">No</label>
-                    </div>
-                </div>
-            </div>
-
-            @Html.ValidationMessageFor(m => createAssessmentToolWorkflowCommand.WorkflowDefinitionId)
-            @Html.ValidationMessageFor(m => createAssessmentToolWorkflowCommand.IsFirstWorkflow)
-            @Html.Hidden("createAssessmentToolWorkflowCommand.AssessmentToolId", @Model.AssessmentToolId)
-            <input class="govuk-button" data-module="govuk-button" id="Submit" type="submit" value="Create Assessment Tool Workflow" />
-        }*@
     </div>
 </div>
