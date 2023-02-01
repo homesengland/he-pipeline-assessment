@@ -42,6 +42,18 @@ export interface ElsaTextareaQuestionCustomEvent<T> extends CustomEvent<T> {
     detail: T;
     target: HTMLElsaTextareaQuestionElement;
 }
+export interface ElsaCheckboxQuestionCustomEvent<T> extends CustomEvent<T> {
+    detail: T;
+    target: HTMLElsaCheckboxQuestionElement;
+}
+export interface ElsaQuestionCustomEvent<T> extends CustomEvent<T> {
+    detail: T;
+    target: HTMLElsaQuestionElement;
+}
+export interface ElsaRadioQuestionCustomEvent<T> extends CustomEvent<T> {
+    detail: T;
+    target: HTMLElsaRadioQuestionElement;
+}
 declare global {
     interface HTMLElsaCheckboxQuestionElement extends Components.ElsaCheckboxQuestion, HTMLStencilElement {
     }

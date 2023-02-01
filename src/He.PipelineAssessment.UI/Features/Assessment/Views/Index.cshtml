@@ -9,10 +9,15 @@
 }
 
 
-<h1 class="govuk-label-wrapper govuk-grid-row">
-    <label class="govuk-label govuk-label--l govuk-grid-row-three-quarters pull-left" for="event-name">Assessment Search</label>
-    @Html.ActionLink("Sync", "Sync", "SinglePipeline",null,new{@class="govuk-button pull-right govuk-grid-row-one-quarter"})
-    </h1>
+<div class="govuk-grid-row">
+    <h1 class="govuk-heading-l govuk-grid-column-three-quarters pull-left" for="event-name">Assessment Search</h1>
+    <div class="govuk-grid-column-one-quarter">
+        <div class="govuk-grid-row">
+            @Html.ActionLink("Admin", "AssessmentTool","Admin", null, new{@class="govuk-link pull-right govuk-grid-column-one-half govuk-!-font-size-24"})
+            @Html.ActionLink("Sync", "Sync", "SinglePipeline",null,new{@class="govuk-button pull-right govuk-grid-column-one-half"})
+        </div>
+    </div>
+</div>
 <br/>
 
 <div class="text-center">

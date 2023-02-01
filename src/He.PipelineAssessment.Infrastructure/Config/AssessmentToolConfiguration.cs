@@ -9,6 +9,8 @@ namespace He.PipelineAssessment.Infrastructure.Config
         public void Configure(EntityTypeBuilder<AssessmentTool> builder)
         {
             builder.HasKey(x => x.Id);
+            builder.Property(x => x.Name)
+                .HasMaxLength(100);
         }
     }
 }

@@ -17,7 +17,7 @@ namespace He.PipelineAssessment.UI.Features.Assessments
             _logger = logger;
             _mediator = mediator;
         }
-
+        
         public async Task<IActionResult> Index()
         {
             try
