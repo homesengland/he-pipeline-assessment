@@ -7,8 +7,8 @@ namespace He.PipelineAssessment.UI.Features.Admin.AssessmentToolManagement.Valid
     {
         public UpdateAssessmentToolCommandValidator()
         {
-            RuleFor(c => c.Name).NotEmpty().WithMessage("The name cannot be empty");
-            RuleFor(c => c.Order).NotEmpty().GreaterThan(0);
+            RuleFor(c => c.Name).NotEmpty().WithMessage("The {PropertyName} cannot be empty");
+            RuleFor(c => c.Order).GreaterThan(0);
         }
     }
 }

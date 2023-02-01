@@ -18,18 +18,21 @@ namespace He.PipelineAssessment.UI.Features.Admin.Controllers
         private readonly IMediator _mediator;
         private readonly IValidator<CreateAssessmentToolCommand> _createAssessmentToolCommandValidator;
         private readonly IValidator<UpdateAssessmentToolCommand> _updateAssessmentToolCommandValidator;
+        private readonly IValidator<UpdateAssessmentToolWorkflowCommand> _updateAssessmentToolWorkflowCommandValidator;
         private readonly IValidator<CreateAssessmentToolWorkflowCommand> _createAssessmentToolWorkflowCommandValidator;
 
         public AdminController(IValidator<CreateAssessmentToolCommand> createAssessmentToolCommandValidator,
             ILogger<AdminController> logger,
             IMediator mediator,
             IValidator<CreateAssessmentToolWorkflowCommand> createAssessmentToolWorkflowCommandValidator,
-            IValidator<UpdateAssessmentToolCommand> updateAssessmentToolCommandValidator)
+            IValidator<UpdateAssessmentToolCommand> updateAssessmentToolCommandValidator,
+            IValidator<UpdateAssessmentToolWorkflowCommand> updateAssessmentToolWorkflowCommandValidator)
         {
             _logger = logger;
             _mediator = mediator;
             _createAssessmentToolWorkflowCommandValidator = createAssessmentToolWorkflowCommandValidator;
             _updateAssessmentToolCommandValidator = updateAssessmentToolCommandValidator;
+            _updateAssessmentToolWorkflowCommandValidator = updateAssessmentToolWorkflowCommandValidator;
             _createAssessmentToolCommandValidator = createAssessmentToolCommandValidator;
         }
 
@@ -192,33 +195,54 @@ namespace He.PipelineAssessment.UI.Features.Admin.Controllers
                     if (validatedAssessmentTool != null)
                     {
                         validatedAssessmentTool.ValidationResult = validationResult;
+                        validatedAssessmentTool.Name = updateAssessmentToolDto.UpdateAssessmentToolCommand.Name;
+                        validatedAssessmentTool.Order = updateAssessmentToolDto.UpdateAssessmentToolCommand.Order;
                     }
-
                     return View("AssessmentTool", assessmentToolList);
                 }
             }
             catch (Exception e)
             {
                 _logger.LogError(e.Message);
-                return RedirectToAction("Index", "Error", new { message = e.Message });
+                return RedirectToAction("Index", "Error", new
+                {
+                    message = e.Message
+                });
             }
 
         }
 
         //update an assessment tool workflow
         [HttpPost]
-        public async Task<IActionResult> UpdateAssessmentToolWorkflow(UpdateAssessmentToolWorkflowCommand updateAssessmentToolWorkflowCommand)
+        public async Task<IActionResult> UpdateAssessmentToolWorkflow(UpdateAssessmentToolWorkflowDto updateAssessmentToolWorkflowDto)
         {
-            if (updateAssessmentToolWorkflowCommand.Id == 0)
+            if (updateAssessmentToolWorkflowDto.UpdateAssessmentToolWorkflowCommand.Id == 0)
             {
                 return RedirectToAction("Index", "Error", new { message = "Bad request. No Assessment Tool Workflow Id provided." });
             }
 
             try
             {
-                await _mediator.Send(updateAssessmentToolWorkflowCommand);
+                var validationResult = await _updateAssessmentToolWorkflowCommandValidator.ValidateAsync(updateAssessmentToolWorkflowDto.UpdateAssessmentToolWorkflowCommand);
+                if (validationResult.IsValid)
+                {
+                    await _mediator.Send(updateAssessmentToolWorkflowDto.UpdateAssessmentToolWorkflowCommand);
 
-                return RedirectToAction("AssessmentToolWorkflow", new { assessmentToolId = updateAssessmentToolWorkflowCommand.AssessmentToolId });
+                    return RedirectToAction("AssessmentToolWorkflow", new { assessmentToolId = updateAssessmentToolWorkflowDto.UpdateAssessmentToolWorkflowCommand.AssessmentToolId });
+                }
+                else
+                {
+                    var assessmentToolWorkflowList = await _mediator.Send(new AssessmentToolWorkflowQuery(updateAssessmentToolWorkflowDto.UpdateAssessmentToolWorkflowCommand.AssessmentToolId));
+                    var validatedAssessmentToolWorkflow = assessmentToolWorkflowList.AssessmentToolWorkflowDtos.FirstOrDefault(x =>
+                        x.Id == updateAssessmentToolWorkflowDto.UpdateAssessmentToolWorkflowCommand.Id);
+                    if (validatedAssessmentToolWorkflow != null)
+                    {
+                        validatedAssessmentToolWorkflow.ValidationResult = validationResult;
+                        validatedAssessmentToolWorkflow.Name = updateAssessmentToolWorkflowDto.UpdateAssessmentToolWorkflowCommand.Name;
+                        validatedAssessmentToolWorkflow.WorkflowDefinitionId = updateAssessmentToolWorkflowDto.UpdateAssessmentToolWorkflowCommand.WorkflowDefinitionId;
+                    }
+                    return View("AssessmentToolWorkflow", assessmentToolWorkflowList);
+                }
             }
             catch (Exception e)
             {

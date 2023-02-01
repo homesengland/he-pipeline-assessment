@@ -1,7 +1,14 @@
-﻿using MediatR;
+﻿using FluentValidation.Results;
+using MediatR;
 
 namespace He.PipelineAssessment.UI.Features.Admin.AssessmentToolManagement.Commands.UpdateAssessmentToolWorkflowCommand
 {
+    public class UpdateAssessmentToolWorkflowDto
+    {
+        public UpdateAssessmentToolWorkflowCommand UpdateAssessmentToolWorkflowCommand { get; set; } = new();
+        public ValidationResult? ValidationResult { get; set; }
+    }
+
     public class UpdateAssessmentToolWorkflowCommand : IRequest<int>
     {
         public int Id { get; set; }
