@@ -76,7 +76,7 @@ export class ElsaTextAreaComponent {
           </div>
         </div>
       </div>
-      <input type="number" id={fieldId} name={fieldId} disabled={isDisabled} value={fieldValue} onChange={e => {
+      <input type="number" min="0" id={fieldId} name={fieldId} disabled={isDisabled} value={fieldValue} onChange={e => {
         onChangedFunction.bind(this)(e);
       }
       }

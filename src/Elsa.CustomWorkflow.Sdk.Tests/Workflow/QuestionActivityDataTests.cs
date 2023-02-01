@@ -13,6 +13,7 @@ namespace Elsa.CustomWorkflow.Sdk.Tests.Workflow
         [InlineAutoMoqData(QuestionTypeConstants.CurrencyQuestion)]
         [InlineAutoMoqData(QuestionTypeConstants.TextQuestion)]
         [InlineAutoMoqData(QuestionTypeConstants.CheckboxQuestion)]
+        [InlineAutoMoqData(QuestionTypeConstants.TextAreaQuestion)]
         public void GetDateReturnsEmptyDateObject_GivenNonDateActivityType(string activityType, QuestionActivityData sut)
         {
             //Arrange
@@ -183,6 +184,7 @@ namespace Elsa.CustomWorkflow.Sdk.Tests.Workflow
         [InlineAutoMoqData(2000, 12, 3, QuestionTypeConstants.TextQuestion)]
         [InlineAutoMoqData(2000, 2, 29, QuestionTypeConstants.CheckboxQuestion)]
         [InlineAutoMoqData(1998, 3, 5, QuestionTypeConstants.RadioQuestion)]
+        [InlineAutoMoqData(1998, 3, 5, QuestionTypeConstants.TextAreaQuestion)]
         public void SetDateDoesNotSetAnAnswer_GivenInvalidActivityType(int? year, int? month, int? day, string activityType, QuestionActivityData sut)
         {
             //Arrange
@@ -208,6 +210,7 @@ namespace Elsa.CustomWorkflow.Sdk.Tests.Workflow
         [InlineAutoMoqData(QuestionTypeConstants.DateQuestion)]
         [InlineAutoMoqData(QuestionTypeConstants.TextQuestion)]
         [InlineAutoMoqData(QuestionTypeConstants.RadioQuestion)]
+        [InlineAutoMoqData(QuestionTypeConstants.TextAreaQuestion)]
         public void GetDecimalReturnsNull_GivenNonCurrencyActivityType(string activityType, QuestionActivityData sut)
         {
             //Arrange
@@ -272,6 +275,7 @@ namespace Elsa.CustomWorkflow.Sdk.Tests.Workflow
         [InlineAutoMoqData(QuestionTypeConstants.DateQuestion)]
         [InlineAutoMoqData(QuestionTypeConstants.TextQuestion)]
         [InlineAutoMoqData(QuestionTypeConstants.RadioQuestion)]
+        [InlineAutoMoqData(QuestionTypeConstants.TextAreaQuestion)]
         public void SetDecimalDoesNotWriteValue_GivenNonDecimalActivityType(string activityType, QuestionActivityData sut)
         {
             //Arrange
@@ -335,6 +339,7 @@ namespace Elsa.CustomWorkflow.Sdk.Tests.Workflow
         [InlineAutoMoqData(QuestionTypeConstants.DateQuestion)]
         [InlineAutoMoqData(QuestionTypeConstants.TextQuestion)]
         [InlineAutoMoqData(QuestionTypeConstants.RadioQuestion)]
+        [InlineAutoMoqData(QuestionTypeConstants.TextAreaQuestion)]
         public void SetChoicesForMultichoiceDoesNotSetValue_GivenValidDataButActivityTypeIsIncorrect(string activityType, QuestionActivityData sut)
         {
             //Arrange
@@ -419,6 +424,7 @@ namespace Elsa.CustomWorkflow.Sdk.Tests.Workflow
         [InlineAutoMoqData(QuestionTypeConstants.DateQuestion)]
         [InlineAutoMoqData(QuestionTypeConstants.TextQuestion)]
         [InlineAutoMoqData(QuestionTypeConstants.CheckboxQuestion)]
+        [InlineAutoMoqData(QuestionTypeConstants.TextAreaQuestion)]
         public void SetChoicesForSingleChoiceDoesNotSetValue_GivenValidDataButActivityTypeIsIncorrect(string activityType, QuestionActivityData sut)
         {
             //Arrange
@@ -479,5 +485,36 @@ namespace Elsa.CustomWorkflow.Sdk.Tests.Workflow
             Assert.Equal("Test 1", sut.Answer);
         }
 
+        [Theory]
+        [InlineAutoMoqData(QuestionTypeConstants.CurrencyQuestion)]
+        [InlineAutoMoqData(QuestionTypeConstants.DateQuestion)]
+        [InlineAutoMoqData(QuestionTypeConstants.TextQuestion)]
+        [InlineAutoMoqData(QuestionTypeConstants.RadioQuestion)]
+        [InlineAutoMoqData(QuestionTypeConstants.CheckboxQuestion)]
+        public void SetCharacterLimitDoesNotSetValue_GivenValidCharacterLimitButActivityTypeIsIncorrect(string activityType, QuestionActivityData sut)
+        {
+            //Arrange
+            sut.QuestionType = activityType;
+
+            //Act
+            sut.CharacterLimit = 5;
+
+            //Assert
+            Assert.Null(sut.CharacterLimit);
+        }
+
+        [Theory]
+        [AutoMoqData]
+        public void SetCharacterLimitSetsValue_GivenValidCharacterLimitAndActivityTypeIsCorrect(QuestionActivityData sut)
+        {
+            //Arrange
+            sut.QuestionType = QuestionTypeConstants.TextAreaQuestion;
+
+            //Act
+            sut.CharacterLimit = 5;
+
+            //Assert
+            Assert.Equal(5, sut.CharacterLimit);
+        }
     }
 }
