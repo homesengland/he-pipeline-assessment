@@ -1,10 +1,8 @@
-﻿using Elsa.CustomActivities.Activities.QuestionScreen;
-using Elsa.CustomInfrastructure.Data.Repository;
-using Elsa.CustomModels;
-using Elsa.CustomWorkflow.Sdk;
+﻿using Elsa.CustomInfrastructure.Data.Repository;
 using Elsa.Models;
 using Elsa.Server.Models;
 using Elsa.Server.Providers;
+using Elsa.Server.Services;
 using Elsa.Services;
 using MediatR;
 
@@ -16,16 +14,20 @@ namespace Elsa.Server.Features.Workflow.StartWorkflow
         private readonly IWorkflowRegistry _workflowRegistry;
         private readonly IStartsWorkflow _startsWorkflow;
         private readonly IElsaCustomRepository _elsaCustomRepository;
-        private readonly IStartWorkflowMapper _startWorkflowMapper;
         private readonly IWorkflowNextActivityProvider _workflowNextActivityProvider;
+        private readonly INextActivityNavigationService _nextActivityNavigationService;
 
-        public StartWorkflowCommandHandler(IWorkflowRegistry workflowRegistry, IStartsWorkflow startsWorkflow, IElsaCustomRepository elsaCustomRepository, IStartWorkflowMapper startWorkflowMapper, IWorkflowNextActivityProvider workflowNextActivityProvider)
+
+        public StartWorkflowCommandHandler(IWorkflowRegistry workflowRegistry, IStartsWorkflow startsWorkflow,
+                                           IElsaCustomRepository elsaCustomRepository,
+                                           IWorkflowNextActivityProvider workflowNextActivityProvider,
+                                           INextActivityNavigationService nextActivityNavigationService)
         {
             _workflowRegistry = workflowRegistry;
             _startsWorkflow = startsWorkflow;
             _elsaCustomRepository = elsaCustomRepository;
-            _startWorkflowMapper = startWorkflowMapper;
             _workflowNextActivityProvider = workflowNextActivityProvider;
+            _nextActivityNavigationService = nextActivityNavigationService;
         }
 
         public async Task<OperationResult<StartWorkflowResponse>> Handle(StartWorkflowCommand request, CancellationToken cancellationToken)
@@ -37,59 +39,33 @@ namespace Elsa.Server.Features.Workflow.StartWorkflow
                     await _workflowRegistry.FindAsync(request.WorkflowDefinitionId, VersionOptions.Published, cancellationToken: cancellationToken);
 
                 var workflowName = workflow!.Name != null ? workflow.Name : "undefined workflow";
-                var runWorkflowResult = await _startsWorkflow.StartWorkflowAsync(workflow!, null, null, request.CorrelationId, cancellationToken: cancellationToken);
+                var runWorkflowResult = await _startsWorkflow.StartWorkflowAsync(workflow, null, null, request.CorrelationId, cancellationToken: cancellationToken);
 
                 if (runWorkflowResult.WorkflowInstance != null)
                 {
-                    var activity = workflow!.Activities.FirstOrDefault(x =>
+                    var workflowInstance = runWorkflowResult.WorkflowInstance;
+
+                    var activity = workflow.Activities.FirstOrDefault(x =>
                         x.Id == runWorkflowResult.WorkflowInstance.LastExecutedActivityId);
 
                     if (activity != null)
                     {
-                        var workflowNextActivityModel = await
-                            _workflowNextActivityProvider.GetStartWorkflowNextActivity(activity,
-                                runWorkflowResult.WorkflowInstance.Id, cancellationToken);
+                        var workflowNextActivityModel = await _workflowNextActivityProvider.GetStartWorkflowNextActivity(activity, runWorkflowResult.WorkflowInstance.Id, cancellationToken);
 
-                        var customActivityNavigation =
-                            _startWorkflowMapper.RunWorkflowResultToCustomNavigationActivity(runWorkflowResult, workflowNextActivityModel.NextActivity.Type);
+                        if (workflowNextActivityModel.WorkflowInstance != null)
+                            workflowInstance = workflowNextActivityModel.WorkflowInstance;
 
-                        if (customActivityNavigation != null)
+                        var nextActivityRecord = await _elsaCustomRepository.GetCustomActivityNavigation(workflowNextActivityModel.NextActivity.Id, workflowInstance.Id, cancellationToken);
+
+                        await _nextActivityNavigationService.CreateNextActivityNavigation(workflowNextActivityModel.NextActivity.Id, nextActivityRecord, workflowNextActivityModel.NextActivity, workflowInstance, cancellationToken);
+
+                        result.Data = new StartWorkflowResponse
                         {
-                            await _elsaCustomRepository.CreateCustomActivityNavigationAsync(customActivityNavigation!, cancellationToken);
-                            result.Data = _startWorkflowMapper.RunWorkflowResultToStartWorkflowResponse(runWorkflowResult, workflowNextActivityModel.NextActivity.Type, workflowName);
-                        }
-                        else
-                        {
-                            result.ErrorMessages.Add("Failed to deserialize RunWorkflowResult");
-                        }
-
-                        if (workflowNextActivityModel.NextActivity.Type == ActivityTypeConstants.QuestionScreen)
-                        {
-                            //create one for each question
-                            var workflowInstance = workflowNextActivityModel.WorkflowInstance ?? runWorkflowResult.WorkflowInstance;
-                            var dictionList = workflowInstance.ActivityData
-                                .FirstOrDefault(x => x.Key == workflowNextActivityModel.NextActivity.Id).Value;
-
-                            AssessmentQuestions? dictionaryQuestions = (AssessmentQuestions?)dictionList.FirstOrDefault(x => x.Key == "Questions").Value;
-
-                            var questionList = (List<Question>)dictionaryQuestions!.Questions;
-                            if (questionList!.Any())
-                            {
-                                var assessments = new List<QuestionScreenAnswer>();
-
-                                foreach (var item in questionList!)
-                                {
-                                    var assessment =
-                                        _startWorkflowMapper.RunWorkflowResultToQuestionScreenAnswer(runWorkflowResult,
-                                            workflowNextActivityModel.NextActivity.Type, item);
-                                    if (assessment != null)
-                                    {
-                                        assessments.Add(assessment);
-                                    }
-                                }
-                                await _elsaCustomRepository.CreateQuestionScreenAnswersAsync(assessments, cancellationToken);
-                            }
-                        }
+                            WorkflowInstanceId = workflowInstance.Id,
+                            NextActivityId = workflowNextActivityModel.NextActivity.Id,
+                            ActivityType = workflowNextActivityModel.NextActivity.Type,
+                            WorkflowName = workflowName
+                        };
                     }
                     else
                     {
