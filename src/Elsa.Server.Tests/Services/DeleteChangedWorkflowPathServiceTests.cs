@@ -57,7 +57,6 @@ namespace Elsa.Server.Tests.Services
             string activityId,
             IActivityBlueprint nextActivity,
             WorkflowInstance workflowInstance,
-            CustomActivityNavigation customActivityNavigation,
             DeleteChangedWorkflowPathService sut)
         {
             //Arrange

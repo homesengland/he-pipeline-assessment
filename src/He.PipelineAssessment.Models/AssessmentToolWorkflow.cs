@@ -8,7 +8,7 @@
         public bool IsFirstWorkflow { get; set; }
         public int Version { get; set; }
         public bool IsLatest { get; set; }
-        public string Name { get; set; }
+        public string Name { get; set; } = null!;
 
         public virtual AssessmentTool AssessmentTool { get; set; } = null!;
     }
