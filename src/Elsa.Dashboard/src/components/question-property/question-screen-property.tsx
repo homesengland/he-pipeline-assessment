@@ -41,7 +41,7 @@ function parseJson(json: string): any {
 }
 
 @Component({
-  tag: 'multi-question-property',
+  tag: 'question-screen-property',
   shadow: false,
 })
 

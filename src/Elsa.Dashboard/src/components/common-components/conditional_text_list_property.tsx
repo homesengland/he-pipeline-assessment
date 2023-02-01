@@ -18,7 +18,7 @@ import { mapSyntaxToLanguage } from '../../models/utils';
 
 
 @Component({
-  tag: 'custom-outcome-list-property',
+  tag: 'conditional-text-list-property',
   shadow: false,
 })
 export class CustomOutcomeListProperty {

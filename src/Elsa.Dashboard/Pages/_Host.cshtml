@@ -26,6 +26,22 @@
 <elsa-studio-root server-url="@serverUrl" monaco-lib-path="_content/Elsa.Designer.Components.Web/monaco-editor/min">
     <elsa-studio-dashboard></elsa-studio-dashboard>
 </elsa-studio-root>
+
+<script nonce="@nonceConfig.ElsaSetup">
+        var elsaStudioRoot = document.querySelector('elsa-studio-root');
+
+        var serverUrl = "@serverUrl"
+        serverUrl = serverUrl += '/activities/properties'
+        console.log("RequestUrl", serverUrl);
+        const headers = new Headers();
+        headers.append("Content-Disposition", "inline");
+        const request = new Request(serverUrl, { method: 'GET', headers: headers });
+
+        fetch(request)
+            .then((response) => console.log("Response", response))
+            .catch((e) => console.log(e));
+    </script>
+
 <script nonce="@nonceConfig.ElsaSetup">
         var elsaStudioRoot = document.querySelector('elsa-studio-root');
 
@@ -43,11 +59,6 @@
                     onActivityDesignDisplaying(e);
                 });
         };
-
-        //function MyCustomSwitchPlugin(elsaStudio) {
-        //    var eventBus = elsaStudio.eventBus;
-        //    eventBus.on('activity-design-displaying', this.onActivityDesignDisplaying);
-        //}
 
         function onActivityDesignDisplaying(context) {
           console.log('Context', context);
@@ -113,9 +124,6 @@
 
         function MyCustomOutcomeDriver(elsaStudio, elementName) {
             this.display = (activity, property) => {
-                //console.log("Elsa Studio", elsaStudio);
-                //console.log("Property", property);
-                //console.log("Activity", activity);
                 var prop = (0, getOrCreateProperty)(activity, property.name);
                 var questionActivity = document.createElement(elementName);
                 questionActivity.activityModel = activity;
@@ -127,9 +135,6 @@
 
         function MyCustomSwitchCaseDriver(elsaStudio, elementName) {
             this.display = (activity, property) => {
-                //console.log("Elsa Studio", elsaStudio);
-                //console.log("Property", property);
-                //console.log("Activity", activity);
                 var prop = (0, getOrCreateProperty)(activity, property.name);
                 var questionActivity = document.createElement(elementName);
                 questionActivity.activityModel = activity;
@@ -141,9 +146,6 @@
 
         function MyCustomTextPropertyDriver(elsaStudio, elementName) {
             this.display = (activity, property) => {
-                //console.log("Elsa Studio", elsaStudio);
-                //console.log("Property", property);
-                //console.log("Activity", activity);
                 var prop = (0, getOrCreateProperty)(activity, property.name);
                 var questionActivity = document.createElement(elementName);
                 questionActivity.activityModel = activity;
@@ -157,12 +159,10 @@
           var elsaStudio = e.detail;
           elsaStudio.pluginManager.registerPlugin(MyCustomPlugin);
           //elsaStudio.pluginManager.registerPlugin(MyCustomSwitchPlugin);
-            elsaStudio.propertyDisplayManager.addDriver('question-builder', () => new MyCustomInputDriver(elsaStudio, 'multi-question-property'));
-          elsaStudio.propertyDisplayManager.addDriver('custom-text-case-builder', () => new MyCustomOutcomeDriver(elsaStudio, 'custom-outcome-list-property'));
-          elsaStudio.propertyDisplayManager.addDriver('custom-switch-case-builder', () => new MyCustomSwitchCaseDriver(elsaStudio, 'custom-elsa-switch-cases-property'));
+            elsaStudio.propertyDisplayManager.addDriver('question-screen-builder', () => new MyCustomInputDriver(elsaStudio, 'question-screen-property'));
+            elsaStudio.propertyDisplayManager.addDriver('custom-text-case-list-builder', () => new MyCustomOutcomeDriver(elsaStudio, 'conditional-text-list-property",'));
+            elsaStudio.propertyDisplayManager.addDriver('custom-switch-case-builder', () => new MyCustomSwitchCaseDriver(elsaStudio, 'custom-elsa-switch-cases-property'));
             elsaStudio.propertyDisplayManager.addDriver('custom-text-property-builder', () => new MyCustomTextPropertyDriver(elsaStudio, 'custom-text-property'));
-
-
         });
 
 </script>

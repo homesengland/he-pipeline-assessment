@@ -22,6 +22,13 @@
   </ItemGroup>
 
   <ItemGroup>
+    <None Remove="Scripts\Activities\GetCustomActivityProperties.js" />
+    <None Remove="Scripts\CustomElsa.js" />
+    <None Remove="Scripts\Drivers\ConditionalTextListPropertyDriver.js" />
+    <None Remove="Scripts\Drivers\CustomSwitchPropertyDriver.js" />
+    <None Remove="Scripts\Drivers\CustomTextPropertyDriver.js" />
+    <None Remove="Scripts\Drivers\QuestionPropertyDriver.js" />
+    <None Remove="Scripts\Plugins\CustomPlugins.js" />
     <None Remove="src\components\custom-input-property.tsx" />
     <None Remove="src\components\custom-outcome-property.tsx" />
     <None Remove="src\components\custom_outcome_list_property.tsx" />
@@ -31,15 +38,32 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Content Include="Scripts\Activities\GetCustomActivityProperties.js" />
+    <Content Include="Scripts\CustomElsa.js" />
+    <Content Include="Scripts\Drivers\ConditionalTextListPropertyDriver.js" />
+    <Content Include="Scripts\Drivers\CustomSwitchPropertyDriver.js" />
+    <Content Include="Scripts\Drivers\CustomTextPropertyDriver.js" />
+    <Content Include="Scripts\Drivers\QuestionPropertyDriver.js" />
+    <Content Include="Scripts\Plugins\CustomPlugins.js" />
+  </ItemGroup>
+
+  <ItemGroup>
     <ProjectReference Include="..\Elsa.CustomInfrastructure\Elsa.CustomInfrastructure.csproj" />
   </ItemGroup>
 
   <ItemGroup>
+    <TypeScriptCompile Include="Scripts\Activities\GetCustomActivityProperties.js" />
+    <TypeScriptCompile Include="Scripts\CustomElsa.js" />
+    <TypeScriptCompile Include="Scripts\Drivers\ConditionalTextListPropertyDriver.js" />
+    <TypeScriptCompile Include="Scripts\Drivers\CustomSwitchPropertyDriver.js" />
+    <TypeScriptCompile Include="Scripts\Drivers\CustomTextPropertyDriver.js" />
+    <TypeScriptCompile Include="Scripts\Drivers\QuestionPropertyDriver.js" />
+    <TypeScriptCompile Include="Scripts\Plugins\CustomPlugins.js" />
     <TypeScriptCompile Include="src\components\common-components\custom-outcome-property.tsx">
       <SubType>Code</SubType>
     </TypeScriptCompile>
     <TypeScriptCompile Include="src\components\common-components\custom-input-property.tsx" />
-    <TypeScriptCompile Include="src\components\common-components\custom_outcome_list_property.tsx" />
+    <TypeScriptCompile Include="src\components\common-components\conditional_text_list_property.tsx" />
     <TypeScriptCompile Include="src\events\component-events.tsx" />
     <TypeScriptCompile Include="src\components\question-provider\question-provider.tsx" />
     <TypeScriptCompile Include="src\models\question.model.ts" />
