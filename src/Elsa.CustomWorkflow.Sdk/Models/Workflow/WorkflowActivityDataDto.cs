@@ -55,6 +55,9 @@ namespace Elsa.CustomWorkflow.Sdk.Models.Workflow
         public string? Answer { get; set; }
         public decimal? Decimal { get { return GetDecimal(); } set { SetDecimal(value); } }
 
+        private int? _characterLimit;
+        public int? CharacterLimit { get { return _characterLimit; } set { SetCharacterLimit(value); } }
+
         private Checkbox _checkbox = new Checkbox();
         public Checkbox Checkbox { get { return _checkbox; } set { SetCheckbox(value); } }
 
@@ -132,6 +135,14 @@ namespace Elsa.CustomWorkflow.Sdk.Models.Workflow
 
                     SetAnswer(null);
                 }
+            }
+        }
+
+        public void SetCharacterLimit(int? value)
+        {
+            if (QuestionType == QuestionTypeConstants.TextAreaQuestion && value != null)
+            {
+                _characterLimit = value;
             }
         }
 

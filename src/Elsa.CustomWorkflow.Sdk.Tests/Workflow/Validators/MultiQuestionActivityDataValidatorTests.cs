@@ -13,6 +13,7 @@ namespace Elsa.CustomWorkflow.Sdk.Tests.Workflow.Validators
         [InlineAutoMoqData(QuestionTypeConstants.RadioQuestion)]
         [InlineAutoMoqData(QuestionTypeConstants.TextQuestion)]
         [InlineAutoMoqData(QuestionTypeConstants.CurrencyQuestion)]
+        [InlineAutoMoqData(QuestionTypeConstants.TextAreaQuestion)]
         public void Date_Validation_Should_Not_Be_Run_When_Question_Type_Is_NotDate(string questionType)
         {
             // Arrange
@@ -64,6 +65,7 @@ namespace Elsa.CustomWorkflow.Sdk.Tests.Workflow.Validators
         [InlineAutoMoqData(QuestionTypeConstants.RadioQuestion)]
         [InlineAutoMoqData(QuestionTypeConstants.TextQuestion)]
         [InlineAutoMoqData(QuestionTypeConstants.CurrencyQuestion)]
+        [InlineAutoMoqData(QuestionTypeConstants.TextAreaQuestion)]
         public void MultiChoice_Validation_Should_Not_Be_Run_When_Question_Type_Is_NotCheckbox(string questionType)
         {
             //Arrange
@@ -174,6 +176,7 @@ namespace Elsa.CustomWorkflow.Sdk.Tests.Workflow.Validators
         [Theory]
         [InlineAutoMoqData(QuestionTypeConstants.CurrencyQuestion)]
         [InlineAutoMoqData(QuestionTypeConstants.TextQuestion)]
+        [InlineAutoMoqData(QuestionTypeConstants.TextAreaQuestion)]
         public void Answer_Validation_Should_Run_When_Question_Type_Is_CurrencyOrText(string questionType)
         {
             //Arrange

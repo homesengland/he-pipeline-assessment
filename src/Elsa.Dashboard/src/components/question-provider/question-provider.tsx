@@ -23,6 +23,7 @@ export const QuestionLibrary = {
   Date: new QuestionData("DateQuestion", "Date Question", "A question that provides a user with fields to enter a single date."),
   Radio: new QuestionData("RadioQuestion", "Radio Question", "A question that provides a user with a number of options presented as radio buttons.  A user may only select a single value."),
   Text: new QuestionData("TextQuestion", "Text Question", "A question that provides a user with a free form, one-line text box."),
+  TextArea: new QuestionData("TextAreaQuestion", "Text Area Question", "A question that provides a user with a free form, multi-line text box."),
 };
 
 export class QuestionProvider {
