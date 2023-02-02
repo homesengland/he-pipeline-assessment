@@ -50,7 +50,7 @@ namespace He.PipelineAssessment.UI.Tests.Features.Admin.AssessmentToolManagement
                 await Assert.ThrowsAsync<ArgumentNullException>(() => sut.Handle(updateAssessmentToolWorkflowCommand, CancellationToken.None));
 
             //Assert          
-            Assert.Equal("Value cannot be null. (Parameter 'Assessment Workflow not found')", result.Message);
+            Assert.Equal("Value cannot be null. (Parameter 'Assessment Tool Workflow not found')", result.Message);
         }
 
         [Theory]
