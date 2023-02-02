@@ -47,7 +47,7 @@ namespace He.PipelineAssessment.UI.Features.Admin.Controllers
         {
             try
             {
-                var assessmentTools = await _mediator.Send(new AssessmentToolRequest());
+                var assessmentTools = await _mediator.Send(new AssessmentToolQuery());
                 return View("AssessmentTool", assessmentTools);
             }
             catch (Exception e)
@@ -189,7 +189,7 @@ namespace He.PipelineAssessment.UI.Features.Admin.Controllers
                 }
                 else
                 {
-                    var assessmentToolList = await _mediator.Send(new AssessmentToolRequest());
+                    var assessmentToolList = await _mediator.Send(new AssessmentToolQuery());
                     var validatedAssessmentTool = assessmentToolList.AssessmentTools.FirstOrDefault(x =>
                         x.Id == updateAssessmentToolDto.UpdateAssessmentToolCommand.Id);
                     if (validatedAssessmentTool != null)

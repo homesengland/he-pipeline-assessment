@@ -4,7 +4,7 @@ using MediatR;
 
 namespace He.PipelineAssessment.UI.Features.Admin.AssessmentToolManagement.Queries.GetAssessmentTools
 {
-    public class AssessmentToolRequestHandler : IRequestHandler<AssessmentToolRequest, AssessmentToolListData>
+    public class AssessmentToolRequestHandler : IRequestHandler<AssessmentToolQuery, AssessmentToolListData>
     {
         private readonly IAdminAssessmentToolRepository _adminAssessmentToolRepository;
         private readonly IAssessmentToolMapper _assessmentToolMapper;
@@ -15,7 +15,7 @@ namespace He.PipelineAssessment.UI.Features.Admin.AssessmentToolManagement.Queri
             _assessmentToolMapper = assessmentToolMapper;
         }
 
-        public async Task<AssessmentToolListData> Handle(AssessmentToolRequest request,
+        public async Task<AssessmentToolListData> Handle(AssessmentToolQuery query,
             CancellationToken cancellationToken)
         {
             var assessmentTools = await _adminAssessmentToolRepository.GetAssessmentTools();

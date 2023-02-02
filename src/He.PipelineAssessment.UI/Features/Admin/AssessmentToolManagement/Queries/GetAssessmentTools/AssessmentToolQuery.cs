@@ -2,7 +2,7 @@
 
 namespace He.PipelineAssessment.UI.Features.Admin.AssessmentToolManagement.Queries.GetAssessmentTools
 {
-    public class AssessmentToolRequest : IRequest<AssessmentToolListData>
+    public class AssessmentToolQuery : IRequest<AssessmentToolListData>
     {
     }
 }
