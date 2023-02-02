@@ -37,7 +37,8 @@ namespace He.PipelineAssessment.Infrastructure.Repository
         public async Task<int> DeleteAssessmentToolWorkflow(AssessmentToolWorkflow assessmentToolWorkflow)
         {
             _context.Set<AssessmentToolWorkflow>().Remove(assessmentToolWorkflow);
-            return await _context.SaveChangesAsync();
+            var result =  await _context.SaveChangesAsync();
+            return result;
         }
 
         public async Task<int> UpdateAssessmentToolWorkflow(AssessmentToolWorkflow assessmentToolWorkflow)
