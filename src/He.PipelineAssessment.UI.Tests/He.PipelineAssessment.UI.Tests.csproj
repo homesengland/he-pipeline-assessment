@@ -35,7 +35,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Features\Admin\AssessmentToolManagement\Mappers\" />
     <Folder Include="Features\Admin\AssessmentToolManagement\Validators\" />
   </ItemGroup>
 
