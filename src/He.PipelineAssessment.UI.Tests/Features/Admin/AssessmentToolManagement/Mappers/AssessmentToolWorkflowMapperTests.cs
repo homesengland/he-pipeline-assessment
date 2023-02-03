@@ -10,7 +10,7 @@ namespace He.PipelineAssessment.UI.Tests.Features.Admin.AssessmentToolManagement
     {
         [Theory]
         [AutoMoqData]
-        public void CreateAssessmentToolWorkflowCommandToAssessmentToolWorkflow_Returns(
+        public void ShouldCreateAssessmentToolWorkflowCommandToAssessmentToolWorkflow_Returns(
            CreateAssessmentToolWorkflowCommand assessmentToolWorkflowCommand,
            AssessmentToolWorkflowMapper sut
        )
