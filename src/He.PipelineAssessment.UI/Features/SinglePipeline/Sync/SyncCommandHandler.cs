@@ -1,6 +1,5 @@
 ﻿using He.PipelineAssessment.Data.SinglePipeline;
 using He.PipelineAssessment.Infrastructure.Repository;
-using He.PipelineAssessment.UI.Features.Assessments;
 using MediatR;
 
 namespace He.PipelineAssessment.UI.Features.SinglePipeline.Sync
@@ -35,30 +34,34 @@ namespace He.PipelineAssessment.UI.Features.SinglePipeline.Sync
                 //else
                 //{
 
-                    var data = await _esriSinglePipelineClient.GetSinglePipelineData();
-                    if (data != null)
-                    {
-                       // var dataResult = _jsonHelper.JsonToSinglePipelineDataList(data);
-                        //if (data != null)
-                        //{
-                            List<int> sourceAssessmentSpIds = data.Select(x => x.sp_id!.Value).ToList();
+                var data = await _esriSinglePipelineClient.GetSinglePipelineData();
+                if (data != null)
+                {
+                    // var dataResult = _jsonHelper.JsonToSinglePipelineDataList(data);
+                    //if (data != null)
+                    //{
+                    List<int> sourceAssessmentSpIds = data.Select(x => x.sp_id!.Value).ToList();
 
-                            var destinationAssessments = await _assessmentRepository.GetAssessments();
-                            var destinationAssessmentSpIds = destinationAssessments.Select(x => x.SpId).ToList();
+                    var destinationAssessments = await _assessmentRepository.GetAssessments();
+                    var destinationAssessmentSpIds = destinationAssessments.Select(x => x.SpId).ToList();
 
-                            var assessmentsToBeAdded = AssessmentsToBeAdded(sourceAssessmentSpIds, destinationAssessmentSpIds, data);
-                            await _assessmentRepository.CreateAssessments(assessmentsToBeAdded);
-                        //}
-                        //else
-                        //{
-                        //    errorMessages.Add("Single Pipeline Response data failed to deserialize");
-                        //}
+                    var assessmentsToBeAdded = AssessmentsToBeAdded(sourceAssessmentSpIds, destinationAssessmentSpIds, data);
+                    await _assessmentRepository.CreateAssessments(assessmentsToBeAdded);
 
-                    }
-                    else
-                    {
-                        errorMessages.Add("Single Pipeline Response data returned null");
-                    }
+                    //update existing items to latest values
+
+
+                    //}
+                    //else
+                    //{
+                    //    errorMessages.Add("Single Pipeline Response data failed to deserialize");
+                    //}
+
+                }
+                else
+                {
+                    errorMessages.Add("Single Pipeline Response data returned null");
+                }
                 //}
 
             }
