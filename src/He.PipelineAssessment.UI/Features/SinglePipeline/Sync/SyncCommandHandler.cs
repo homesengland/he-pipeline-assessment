@@ -27,13 +27,13 @@ namespace He.PipelineAssessment.UI.Features.SinglePipeline.Sync
             var errorMessages = new List<string>();
             try
             {
-                if (_config["Data:UseSeedData"].ToLower() == "true")
-                {
-                    var dataGenerator = new AssessmentStubData();
-                    await _repo.CreateAssessments(dataGenerator.GetAssessments());
-                }
-                else
-                {
+                //if (_config["Data:UseSeedData"].ToLower() == "true")
+                //{
+                //    var dataGenerator = new AssessmentStubData();
+                //    await _repo.CreateAssessments(dataGenerator.GetAssessments());
+                //}
+                //else
+                //{
                     var data = await _esriSinglePipelineClient.GetSinglePipelineData();
                     if (data != null)
                     {
@@ -58,7 +58,7 @@ namespace He.PipelineAssessment.UI.Features.SinglePipeline.Sync
                     {
                         errorMessages.Add("Single Pipeline Response data returned null");
                     }
-                }
+                //}
 
             }
             catch (Exception e)
