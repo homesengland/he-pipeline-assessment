@@ -12,24 +12,21 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace He.PipelineAssessment.UI.Features.Admin.Controllers
 {
-    public class AdminController : Controller
+    public class AdminController : BaseController<AdminController>
     {
-        private readonly ILogger<AdminController> _logger;
-        private readonly IMediator _mediator;
         private readonly IValidator<CreateAssessmentToolCommand> _createAssessmentToolCommandValidator;
         private readonly IValidator<UpdateAssessmentToolCommand> _updateAssessmentToolCommandValidator;
         private readonly IValidator<UpdateAssessmentToolWorkflowCommand> _updateAssessmentToolWorkflowCommandValidator;
         private readonly IValidator<CreateAssessmentToolWorkflowCommand> _createAssessmentToolWorkflowCommandValidator;
 
-        public AdminController(IValidator<CreateAssessmentToolCommand> createAssessmentToolCommandValidator,
-            ILogger<AdminController> logger,
-            IMediator mediator,
+        public AdminController(
+            IValidator<CreateAssessmentToolCommand> createAssessmentToolCommandValidator,
             IValidator<CreateAssessmentToolWorkflowCommand> createAssessmentToolWorkflowCommandValidator,
             IValidator<UpdateAssessmentToolCommand> updateAssessmentToolCommandValidator,
-            IValidator<UpdateAssessmentToolWorkflowCommand> updateAssessmentToolWorkflowCommandValidator)
+            IValidator<UpdateAssessmentToolWorkflowCommand> updateAssessmentToolWorkflowCommandValidator,
+            IMediator mediator,
+            ILogger<AdminController> logger) : base(mediator, logger)
         {
-            _logger = logger;
-            _mediator = mediator;
             _createAssessmentToolWorkflowCommandValidator = createAssessmentToolWorkflowCommandValidator;
             _updateAssessmentToolCommandValidator = updateAssessmentToolCommandValidator;
             _updateAssessmentToolWorkflowCommandValidator = updateAssessmentToolWorkflowCommandValidator;
