@@ -34,24 +34,25 @@ namespace He.PipelineAssessment.UI.Features.SinglePipeline.Sync
                 //}
                 //else
                 //{
+
                     var data = await _esriSinglePipelineClient.GetSinglePipelineData();
                     if (data != null)
                     {
-                        var dataResult = _jsonHelper.JsonToSinglePipelineDataList(data);
-                        if (dataResult != null)
-                        {
-                            List<int> sourceAssessmentSpIds = dataResult.Select(x => x.sp_id!.Value).ToList();
+                       // var dataResult = _jsonHelper.JsonToSinglePipelineDataList(data);
+                        //if (data != null)
+                        //{
+                            List<int> sourceAssessmentSpIds = data.Select(x => x.sp_id!.Value).ToList();
 
                             var destinationAssessments = await _assessmentRepository.GetAssessments();
                             var destinationAssessmentSpIds = destinationAssessments.Select(x => x.SpId).ToList();
 
-                            var assessmentsToBeAdded = AssessmentsToBeAdded(sourceAssessmentSpIds, destinationAssessmentSpIds, dataResult);
+                            var assessmentsToBeAdded = AssessmentsToBeAdded(sourceAssessmentSpIds, destinationAssessmentSpIds, data);
                             await _assessmentRepository.CreateAssessments(assessmentsToBeAdded);
-                        }
-                        else
-                        {
-                            errorMessages.Add("Single Pipeline Response data failed to deserialize");
-                        }
+                        //}
+                        //else
+                        //{
+                        //    errorMessages.Add("Single Pipeline Response data failed to deserialize");
+                        //}
 
                     }
                     else
