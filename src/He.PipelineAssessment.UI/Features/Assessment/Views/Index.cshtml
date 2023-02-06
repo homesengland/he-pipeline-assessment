@@ -32,6 +32,7 @@
             <th scope="col" class="govuk-table__header">Project</th>
             <th scope="col" class="govuk-table__header" data-searchable="true">Project Manager</th>
             <th scope="col" class="govuk-table__header" data-searchable="true">Partner</th>
+            <th scope="col" class="govuk-table__header" data-searchable="true">Local Authority</th>
             <th scope="col" class="govuk-table__header">Date created</th>
             <th scope="col" class="govuk-table__header" data-searchable="true">Status</th>
         </tr>
@@ -44,6 +45,7 @@
                 <td class="govuk-table__cell">@assessment.SiteName</td>
                 <td class="govuk-table__cell">@assessment.ProjectManager</td>
                 <td class="govuk-table__cell">@assessment.Counterparty</td>
+                <td class="govuk-table__cell">@assessment.LocalAuthority</td>
                 <td class="govuk-table__cell">@assessment.DateCreated.ToString("d - MM - yy HH:mm:ss")</td>
                 <td class="govuk-table__cell"><strong class="govuk-tag govuk-tag--@assessment.StatusDisplayTag()">@assessment.Status</strong></td>
             </tr>

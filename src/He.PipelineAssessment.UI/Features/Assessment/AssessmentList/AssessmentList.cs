@@ -23,6 +23,7 @@
             Counterparty = assessment.Counterparty;
             Status = assessment.Status;
             Reference = assessment.Reference;
+            LocalAuthority = assessment.LocalAuthority; 
 
         }
 
@@ -38,6 +39,8 @@
 
         public string Reference { get; set; } = null!;
         public string Status { get; set; }
+
+        public string LocalAuthority { get; set; } = null!;
 
         public string? AssessmentWorkflowId { get; set; } = null!;
 

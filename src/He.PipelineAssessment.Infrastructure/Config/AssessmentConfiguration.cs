@@ -31,6 +31,9 @@ namespace He.PipelineAssessment.Infrastructure.Config
 
             builder.Property(x => x.Status)
                 .HasMaxLength(50);
+
+            builder.Property(x => x.LocalAuthority)
+                .HasMaxLength(500);
         }
     }
 }

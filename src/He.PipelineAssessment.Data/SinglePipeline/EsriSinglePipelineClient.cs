@@ -48,11 +48,10 @@ namespace He.PipelineAssessment.Data.SinglePipeline
         public async Task<string?> GetSinglePipelineData()
         {
             string? data = null;
-            string whereClause = "1=1";
-            string recordCount = "100";
-            string outFields = "sp_id,internal_reference,pipeline_opportunity_site_name,applicant_1";
+            string whereClause = "sp_status in ('Active', 'Approved','In Programme') AND sp_stage in ('Lead', 'Opportunity', 'Contracted','Holding')";          
+            string outFields = "sp_id,internal_reference,pipeline_opportunity_site_name,applicant_1,he_advocate_f_name,he_advocate_s_name,he_advocate_email,local_authority";
 
-            var relativeUri = $"query?where={whereClause}&resultRecordCount={recordCount}&outFields={outFields}&f=json";//potentially needs a token on the end also
+            var relativeUri = $"query?where={whereClause}&outFields={outFields}&f=json";//potentially needs a token on the end also
             using (var response = await _httpClientFactory.CreateClient("SinglePipelineClient")
                        .GetAsync(relativeUri)
                        .ConfigureAwait(false))

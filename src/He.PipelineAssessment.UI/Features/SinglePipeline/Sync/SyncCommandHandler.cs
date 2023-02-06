@@ -98,6 +98,8 @@ namespace He.PipelineAssessment.UI.Features.SinglePipeline.Sync
                         ? "-" : fullName,
                     ProjectManagerEmail = string.IsNullOrEmpty(item.he_advocate_email)
                         ? "-" : item.he_advocate_email,
+                    LocalAuthority = string.IsNullOrEmpty(item.local_authority)
+                        ? "-" : item.local_authority,
                 };
                 assessmentsToBeAdded.Add(assessment);
             }

@@ -10,6 +10,7 @@
         public string Counterparty { get; set; } = null!;
         public string Reference { get; set; } = null!;
         public string Status { get; set; } = null!;
+        public string LocalAuthority { get; set; } = null!;
 
 
         public virtual List<AssessmentToolWorkflowInstance>? AssessmentToolWorkflowInstances { get; set; }
