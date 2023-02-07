@@ -28,9 +28,7 @@ namespace He.PipelineAssessment.UI.Features.Assessment.AssessmentList
             Status = assessment.Status;
             Reference = assessment.Reference;
             LocalAuthority =  assessment.LocalAuthority;
-            FundingAsk = string.Format(new CultureInfo("en-GB", false), "{0:c0}", assessment.FundingAsk);
-
-            //FundingAsk = assessment.FundingAsk;
+            FundingAsk = string.Format(new CultureInfo("en-GB", false), "{0:c0}", assessment.FundingAsk);           
             NumberOfHomes = assessment.NumberOfHomes;
         }
 
