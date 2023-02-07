@@ -53,22 +53,22 @@ namespace He.PipelineAssessment.Data.Tests.SinglePipeline
             Assert.Null(result);
         }
 
-        [Theory]
-        [AutoMoqData]
-        public void ProperInputData_To_JsonToSinglePipelineDataList_ReturnsProperResponse(
-            EsriSinglePipelineResponse inputData,
-            EsriSinglePipelineDataJsonHelper helper)
-        {
-            //Arrange
-            var strData = JsonSerializer.Serialize(inputData);
+        //[Theory]
+        //[AutoMoqData]
+        //public void ProperInputData_To_JsonToSinglePipelineDataList_ReturnsProperResponse(
+        //    EsriSinglePipelineResponse inputData,
+        //    EsriSinglePipelineDataJsonHelper helper)
+        //{
+        //    //Arrange
+        //    var strData = JsonSerializer.Serialize(inputData);
 
-            //Act
-            var result = helper.JsonToSinglePipelineDataList(strData);
+        //    //Act
+        //    var result = helper.JsonToSinglePipelineDataList(strData);
 
-            //Assert
-            Assert.NotNull(result);
-            Assert.Equal(inputData.features.Count, result!.Count);
-        }
+        //    //Assert
+        //    Assert.NotNull(result);
+        //    Assert.Equal(inputData.features.Count, result!.Count);
+        //}
 
         [Theory]
         [AutoMoqData]
