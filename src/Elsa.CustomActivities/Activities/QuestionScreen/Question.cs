@@ -27,10 +27,13 @@ namespace Elsa.CustomActivities.Activities.QuestionScreen
 
         [ActivityInput(Hint = "Question guidance", UIHint = ActivityInputUIHints.MultiLine)]
         public string QuestionGuidance { get; set; } = null!;
-
+        
         [ActivityInput(Hint = "Include comments box", UIHint = ActivityInputUIHints.Checkbox)]
         public bool DisplayComments { get; set; }
         public string Comments { get; set; } = null!;
+
+        [ActivityInput(Hint = "Character limit")]
+        public int? CharacterLimit { get; set; }
 
         public CheckboxModel Checkbox { get; set; } = new CheckboxModel();
         public RadioModel Radio { get; set; } = new RadioModel();

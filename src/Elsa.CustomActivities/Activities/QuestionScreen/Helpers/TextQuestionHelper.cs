@@ -33,7 +33,8 @@ namespace Elsa.CustomActivities.Activities.QuestionScreen.Helpers
                     var result = await _elsaCustomRepository.GetQuestionScreenAnswer(activity.Id,
                         workflowInstanceId, questionId, CancellationToken.None);
 
-                    if (result != null && result.QuestionType == QuestionTypeConstants.TextQuestion &&
+                    if (result != null && (result.QuestionType == QuestionTypeConstants.TextQuestion || 
+                        result.QuestionType == QuestionTypeConstants.TextAreaQuestion) &&
                         result.Answer != null && result.Answer.ToLower() == answerToCheck.ToLower())
                     {
                         return true;
@@ -55,7 +56,8 @@ namespace Elsa.CustomActivities.Activities.QuestionScreen.Helpers
                     var result = await _elsaCustomRepository.GetQuestionScreenAnswer(activity.Id,
                         workflowInstanceId, questionId, CancellationToken.None);
 
-                    if (result != null && result.QuestionType == QuestionTypeConstants.TextQuestion &&
+                    if (result != null && (result.QuestionType == QuestionTypeConstants.TextQuestion ||
+                        result.QuestionType == QuestionTypeConstants.TextAreaQuestion ) &&
                         result.Answer != null && result.Answer.ToLower().Contains(answerToCheck.ToLower()))
                     {
                         return true;

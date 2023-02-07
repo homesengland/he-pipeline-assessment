@@ -1,8 +1,4 @@
-﻿using He.PipelineAssessment.Models;
-using He.PipelineAssessment.UI.Features.Admin.AssessmentToolManagement.Commands.CreateAssessmentTool;
-using He.PipelineAssessment.UI.Features.Admin.AssessmentToolManagement.Queries.GetAssessmentTools;
-
-namespace He.PipelineAssessment.UI.Features.Admin.AssessmentToolManagement.Mappers
+﻿namespace He.PipelineAssessment.UI.Features.Admin.AssessmentToolManagement.Mappers
 {
     public interface IAssessmentToolMapper
     {

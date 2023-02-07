@@ -15,5 +15,6 @@
         public const string RadioQuestion = "RadioQuestion";
         public const string DateQuestion = "DateQuestion";
         public const string TextQuestion = "TextQuestion";
+        public const string TextAreaQuestion = "TextAreaQuestion";
     }
 }

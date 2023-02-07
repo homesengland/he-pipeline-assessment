@@ -1,8 +1,4 @@
-﻿using He.PipelineAssessment.Infrastructure.Data;
-using He.PipelineAssessment.Models;
-using Microsoft.EntityFrameworkCore;
-
-namespace He.PipelineAssessment.Infrastructure.Repository
+﻿namespace He.PipelineAssessment.Infrastructure.Repository
 {
     public interface IAdminAssessmentToolWorkflowRepository
     {
@@ -37,8 +33,7 @@ namespace He.PipelineAssessment.Infrastructure.Repository
         public async Task<int> DeleteAssessmentToolWorkflow(AssessmentToolWorkflow assessmentToolWorkflow)
         {
             _context.Set<AssessmentToolWorkflow>().Remove(assessmentToolWorkflow);
-            var result =  await _context.SaveChangesAsync();
-            return result;
+            return await _context.SaveChangesAsync();
         }
 
         public async Task<int> UpdateAssessmentToolWorkflow(AssessmentToolWorkflow assessmentToolWorkflow)
