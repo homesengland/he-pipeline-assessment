@@ -7,7 +7,7 @@ namespace He.PipelineAssessment.UI.Features.Admin.AssessmentToolManagement.Mappe
     public interface IAssessmentToolMapper
     {
         AssessmentToolListData AssessmentToolsToAssessmentToolData(List<AssessmentTool> assessmentTools);
-        AssessmentTool CreateAssessmentToolCommandToAssessmentTool(CreateAssessmentToolCommand assessmentToolDto);
+        AssessmentTool CreateAssessmentToolCommandToAssessmentTool(CreateAssessmentToolCommand createAssessmentToolCommand);
 
         List<Queries.GetAssessmentToolWorkflows.AssessmentToolWorkflowDto> AssessmentToolWorkflowsToAssessmentToolDto(List<AssessmentToolWorkflow> toList);
     }
@@ -37,12 +37,12 @@ namespace He.PipelineAssessment.UI.Features.Admin.AssessmentToolManagement.Mappe
             };
         }
 
-        public AssessmentTool CreateAssessmentToolCommandToAssessmentTool(CreateAssessmentToolCommand assessmentToolDto)
+        public AssessmentTool CreateAssessmentToolCommandToAssessmentTool(CreateAssessmentToolCommand createAssessmentToolCommand)
         {
             return new AssessmentTool
             {
-                Name = assessmentToolDto.Name,
-                Order = assessmentToolDto.Order,
+                Name = createAssessmentToolCommand.Name,
+                Order = createAssessmentToolCommand.Order,
                 IsVisible = true
             };
         }
