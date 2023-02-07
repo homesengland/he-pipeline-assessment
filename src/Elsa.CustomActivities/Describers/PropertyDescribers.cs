@@ -18,7 +18,7 @@ namespace Elsa.CustomActivities.Describers
             return inputProperties;
         }
 
-        private static IEnumerable<ActivityInputDescriptor> DescribeInputProperties(IEnumerable<PropertyInfo> properties, string category = null)
+        private static IEnumerable<ActivityInputDescriptor> DescribeInputProperties(IEnumerable<PropertyInfo> properties, string? category = null)
         {
             foreach (var propertyInfo in properties)
             {

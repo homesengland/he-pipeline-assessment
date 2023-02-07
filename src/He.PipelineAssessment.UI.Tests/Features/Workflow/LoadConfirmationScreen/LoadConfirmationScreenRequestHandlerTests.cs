@@ -102,7 +102,7 @@ namespace He.PipelineAssessment.UI.Tests.Features.Workflow.LoadConfirmationScree
 
             assessmentRepository.Setup(x => x.GetAssessmentToolWorkflowInstance(workflowActivityDataDto.Data.WorkflowInstanceId))
                 .ReturnsAsync(assessmentToolWorkflowInstance);
-            workflowActivityDataDto.Data.NextWorkflowDefinitionIds = "workflowDefinition1, workflowDefinition2";
+            workflowActivityDataDto.Data.NextWorkflowDefinitionId = "workflowDefinition1, workflowDefinition2";
             assessmentRepository
                 .Setup(x => x.GetAssessmentToolInstanceNextWorkflow(assessmentToolWorkflowInstance.Id,
                     "workflowDefinition1")).ReturnsAsync((AssessmentToolInstanceNextWorkflow?)null);
@@ -141,7 +141,7 @@ namespace He.PipelineAssessment.UI.Tests.Features.Workflow.LoadConfirmationScree
 
             assessmentRepository.Setup(x => x.GetAssessmentToolWorkflowInstance(workflowActivityDataDto.Data.WorkflowInstanceId))
                 .ReturnsAsync(assessmentToolWorkflowInstance);
-            workflowActivityDataDto.Data.NextWorkflowDefinitionIds = "workflowDefinition1, workflowDefinition2";
+            workflowActivityDataDto.Data.NextWorkflowDefinitionId = "workflowDefinition1, workflowDefinition2";
             assessmentRepository
                 .Setup(x => x.GetAssessmentToolInstanceNextWorkflow(assessmentToolWorkflowInstance.Id,
                     "workflowDefinition1")).ReturnsAsync(nextWorkflow1);
@@ -178,7 +178,7 @@ namespace He.PipelineAssessment.UI.Tests.Features.Workflow.LoadConfirmationScree
 
             assessmentRepository.Setup(x => x.GetAssessmentToolWorkflowInstance(workflowActivityDataDto.Data.WorkflowInstanceId))
                 .ReturnsAsync(assessmentToolWorkflowInstance);
-            workflowActivityDataDto.Data.NextWorkflowDefinitionIds = "workflowDefinition1, workflowDefinition2";
+            workflowActivityDataDto.Data.NextWorkflowDefinitionId = "workflowDefinition1, workflowDefinition2";
             assessmentRepository
                 .Setup(x => x.GetAssessmentToolInstanceNextWorkflow(assessmentToolWorkflowInstance.Id,
                     "workflowDefinition1")).ReturnsAsync(nextWorkflow1);
@@ -216,7 +216,7 @@ namespace He.PipelineAssessment.UI.Tests.Features.Workflow.LoadConfirmationScree
 
             assessmentRepository.Setup(x => x.GetAssessmentToolWorkflowInstance(workflowActivityDataDto.Data.WorkflowInstanceId))
                 .ReturnsAsync(assessmentToolWorkflowInstance);
-            workflowActivityDataDto.Data.NextWorkflowDefinitionIds = string.Empty;
+            workflowActivityDataDto.Data.NextWorkflowDefinitionId = string.Empty;
 
             //Act
             await sut.Handle(request, CancellationToken.None);
@@ -244,7 +244,7 @@ namespace He.PipelineAssessment.UI.Tests.Features.Workflow.LoadConfirmationScree
 
             assessmentRepository.Setup(x => x.GetAssessmentToolWorkflowInstance(workflowActivityDataDto.Data.WorkflowInstanceId))
                 .ReturnsAsync(assessmentToolWorkflowInstance);
-            workflowActivityDataDto.Data.NextWorkflowDefinitionIds = null;
+            workflowActivityDataDto.Data.NextWorkflowDefinitionId = null;
 
             //Act
             await sut.Handle(request, CancellationToken.None);

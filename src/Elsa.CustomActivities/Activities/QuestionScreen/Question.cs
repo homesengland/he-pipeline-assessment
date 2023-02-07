@@ -36,12 +36,12 @@ namespace Elsa.CustomActivities.Activities.QuestionScreen
         [ActivityInput(Hint = "Include comments box", UIHint = ActivityInputUIHints.Checkbox)]
         public bool DisplayComments { get; set; }
         public string Comments { get; set; } = null!;
-        
-        [ActivityInput(UIHint = CustomActivityUIHints.CheckboxQuestionProperty)]
+
 
         [ActivityInput(Hint = "Character limit")]
         public int? CharacterLimit { get; set; }
 
+        [ActivityInput(UIHint = CustomActivityUIHints.CheckboxQuestionProperty)]
         public CheckboxModel Checkbox { get; set; } = new CheckboxModel();
 
         [ActivityInput(UIHint = CustomActivityUIHints.RadioQuestionProperty)]

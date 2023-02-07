@@ -72,7 +72,7 @@ namespace Elsa.CustomActivities.Tests.Handlers.ConditionalTextList
             string? textAnswer = text?.Expressions![text.Syntax!];
             Models.Result<string?> expectedTextResult = Models.Result.Success(textAnswer);
 
-            expressionEvaluator.Setup(x => x.TryEvaluateAsync<string>(text.Expressions![text.Syntax!],
+            expressionEvaluator.Setup(x => x.TryEvaluateAsync<string>(text!.Expressions![text.Syntax!],
                 text.Syntax!, context, CancellationToken.None)).Returns(Task.FromResult(expectedTextResult));
 
 
@@ -120,7 +120,7 @@ namespace Elsa.CustomActivities.Tests.Handlers.ConditionalTextList
             string? textAnswer = text?.Expressions![text.Syntax!];
             Models.Result<string?> expectedTextResult = Models.Result.Success(textAnswer);
 
-            expressionEvaluator.Setup(x => x.TryEvaluateAsync<string>(text.Expressions![text.Syntax!],
+            expressionEvaluator.Setup(x => x.TryEvaluateAsync<string>(text!.Expressions![text.Syntax!],
                 text.Syntax!, context, CancellationToken.None)).Returns(Task.FromResult(expectedTextResult));
 
 
