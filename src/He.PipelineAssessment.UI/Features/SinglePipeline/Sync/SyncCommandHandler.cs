@@ -26,20 +26,11 @@ namespace He.PipelineAssessment.UI.Features.SinglePipeline.Sync
             var errorMessages = new List<string>();
             try
             {
-                //if (_config["Data:UseSeedData"].ToLower() == "true")
-                //{
-                //    var dataGenerator = new AssessmentStubData();
-                //    await _repo.CreateAssessments(dataGenerator.GetAssessments());
-                //}
-                //else
-                //{
+
 
                 var data = await _esriSinglePipelineClient.GetSinglePipelineData();
                 if (data != null)
                 {
-                    // var dataResult = _jsonHelper.JsonToSinglePipelineDataList(data);
-                    //if (data != null)
-                    //{
                     List<int> sourceAssessmentSpIds = data.Select(x => x.sp_id!.Value).ToList();
 
                     var destinationAssessments = await _assessmentRepository.GetAssessments();
@@ -48,21 +39,15 @@ namespace He.PipelineAssessment.UI.Features.SinglePipeline.Sync
                     var assessmentsToBeAdded = AssessmentsToBeAdded(sourceAssessmentSpIds, destinationAssessmentSpIds, data);
                     await _assessmentRepository.CreateAssessments(assessmentsToBeAdded);
 
-                    //update existing items to latest values
-
-
-                    //}
-                    //else
-                    //{
-                    //    errorMessages.Add("Single Pipeline Response data failed to deserialize");
-                    //}
+                    var existingAssessments = destinationAssessmentSpIds.Intersect(sourceAssessmentSpIds).ToList();
+                    await UpdateAssessments(destinationAssessments, existingAssessments, data);
+                    await _assessmentRepository.SaveChanges();
 
                 }
                 else
                 {
                     errorMessages.Add("Single Pipeline Response data returned null");
                 }
-                //}
 
             }
             catch (Exception e)
@@ -76,7 +61,54 @@ namespace He.PipelineAssessment.UI.Features.SinglePipeline.Sync
             };
         }
 
+        private Task UpdateAssessments(List<Models.Assessment> destinationAssessments, List<int> existingAssessments, List<SinglePipelineData> data)
+        {
+            foreach (var spId in existingAssessments)
+            {
+                var destination = destinationAssessments.FirstOrDefault(x => x.SpId == spId);
+                var source = data.FirstOrDefault(x => x.sp_id == spId);
 
+                if (destination != null && source != null)
+                {
+                    var fullName = source.he_advocate_f_name + " " + source.he_advocate_s_name;
+
+                    if (!string.IsNullOrEmpty(source.applicant_1) && destination.Counterparty != source.applicant_1)
+                    {
+                        destination.Counterparty = source.applicant_1!;
+                    }
+                    if (!string.IsNullOrEmpty(source.internal_reference) && destination.Reference != source.internal_reference)
+                    {
+                        destination.Reference = source.internal_reference!;
+                    }
+                    if (!string.IsNullOrEmpty(source.pipeline_opportunity_site_name) && destination.SiteName != source.pipeline_opportunity_site_name)
+                    {
+                        destination.SiteName = source.pipeline_opportunity_site_name!;
+                    }
+                    if (!string.IsNullOrEmpty(source.he_advocate_f_name) && destination.ProjectManager != fullName)
+                    {
+                        destination.ProjectManager = fullName;
+                    }
+                    if (!string.IsNullOrEmpty(source.he_advocate_email) && destination.ProjectManagerEmail != source.he_advocate_email)
+                    {
+                        destination.ProjectManagerEmail = source.he_advocate_email!;
+                    }
+                    if (!string.IsNullOrEmpty(source.local_authority) && destination.LocalAuthority != source.local_authority)
+                    {
+                        destination.LocalAuthority = source.local_authority!;
+                    }
+                    if (source.funding_ask.HasValue && destination.FundingAsk != source.funding_ask)
+                    {
+                        destination.FundingAsk = source.funding_ask!;
+                    }
+                    if (source.units_or_homes.HasValue && destination.NumberOfHomes != source.units_or_homes)
+                    {
+                        destination.NumberOfHomes = source.units_or_homes!;
+                    }
+                }
+            }
+
+            return Task.CompletedTask;
+        }
 
         private static List<Models.Assessment> AssessmentsToBeAdded(List<int> sourceAssessmentSpIds, List<int> destinationAssessmentSpIds, List<SinglePipelineData> dataResult)
         {
@@ -104,6 +136,8 @@ namespace He.PipelineAssessment.UI.Features.SinglePipeline.Sync
                         ? "-" : item.he_advocate_email,
                     LocalAuthority = string.IsNullOrEmpty(item.local_authority)
                         ? "-" : item.local_authority,
+                    FundingAsk = item.funding_ask,
+                    NumberOfHomes = item.units_or_homes,
                 };
                 assessmentsToBeAdded.Add(assessment);
             }
