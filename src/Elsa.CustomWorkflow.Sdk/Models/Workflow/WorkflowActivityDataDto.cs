@@ -1,5 +1,4 @@
-﻿
-using Elsa.CustomModels;
+﻿using Elsa.CustomModels;
 using FluentValidation.Results;
 using System.Globalization;
 using System.Text.Json;
@@ -49,6 +48,9 @@ namespace Elsa.CustomWorkflow.Sdk.Models.Workflow
         public object Output { get; set; } = null!;
         public string? Answer { get; set; }
         public decimal? Decimal { get { return GetDecimal(); } set { SetDecimal(value); } }
+
+        private int? _characterLimit;
+        public int? CharacterLimit { get { return _characterLimit; } set { SetCharacterLimit(value); } }
 
         private Checkbox _checkbox = new Checkbox();
         public Checkbox Checkbox { get { return _checkbox; } set { SetCheckbox(value); } }
@@ -127,6 +129,14 @@ namespace Elsa.CustomWorkflow.Sdk.Models.Workflow
 
                     SetAnswer(null);
                 }
+            }
+        }
+
+        public void SetCharacterLimit(int? value)
+        {
+            if (QuestionType == QuestionTypeConstants.TextAreaQuestion && value != null)
+            {
+                _characterLimit = value;
             }
         }
 

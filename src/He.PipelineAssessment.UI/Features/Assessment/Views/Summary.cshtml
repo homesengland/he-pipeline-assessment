@@ -1,5 +1,5 @@
 ﻿@using He.PipelineAssessment.UI
-@model He.PipelineAssessment.UI.Features.Assessments.AssessmentSummary.AssessmentSummaryResponse;
+@model He.PipelineAssessment.UI.Features.Assessment.AssessmentSummary.AssessmentSummaryResponse;
 
 @{
     ViewData["Title"] = "Assessment Summary";
@@ -10,17 +10,6 @@
 <span class="govuk-caption-l">@Model.Reference</span>
 <h1 class="govuk-heading-l">@Model.SiteName @Model.CounterParty</h1>
 
-@using (Html.BeginForm("StartWorkflow", "Workflow", FormMethod.Post))
-{
-    @Html.AntiForgeryToken()
-    @Html.HiddenFor(x=>x.AssessmentId)
-    @Html.HiddenFor(x=>x.CorrelationId)
-    <h1 class="govuk-label-wrapper"><label class="govuk-label govuk-label--s" for="event-name">Enter workflow definition ID to start a workflow</label></h1>
-    <input type="text" class="govuk-input" name="WorkflowDefinitionId" />
-    <br />
-    <input class="govuk-button" data-module="govuk-button" id = "Submit" type = "submit" value = "Start now" />
-}
-
 <div class="text-center">
     <div class="text-center">
         <table class="govuk-table"> 
@@ -28,9 +17,11 @@
             <thead class="govuk-table__head">
                 <tr class="govuk-table__row">
                     <th scope="col" class="govuk-table__header">Stage</th>
-                    <th scope="col" class="govuk-table__header">Started</th>
-                    <th scope="col" class="govuk-table__header">Submitted</th>
                     <th scope="col" class="govuk-table__header">Status</th>
+
+                    <th scope="col" class="govuk-table__header">Started</th>
+                    <th scope="col" class="govuk-table__header">Submitted By</th>
+                    <th scope="col" class="govuk-table__header">Result</th>
 
                     
                 </tr>
@@ -39,10 +30,59 @@
                 @foreach (var assessmentStage in Model.Stages)
                 {
                     <tr class="govuk-table__row">
-                        <td class="govuk-table__cell">@Html.ActionLink(assessmentStage.StageName, "LoadWorkflowActivity", "Workflow", new {WorkflowInstanceId = assessmentStage.WorkflowInstanceId, ActivityId = assessmentStage.CurrentActivityId, ActivityType = assessmentStage.CurrentActivityType})</td>
-                        <td class="govuk-table__cell">@assessmentStage.StartedOn</td>
-                        <td class="govuk-table__cell">@assessmentStage.Submitted</td>
-                        <td class="govuk-table__cell"><strong class="govuk-tag govuk-tag--@assessmentStage.StatusDisplayTag()">@assessmentStage.Status</strong></td>
+                        <td class="govuk-table__cell">
+                            @if (assessmentStage.AssessmentToolWorkflowInstanceId != null)
+                            {
+                                @Html.ActionLink(assessmentStage.Name, "LoadWorkflowActivity", "Workflow", new { WorkflowInstanceId = assessmentStage.WorkflowInstanceId, ActivityId = assessmentStage.CurrentActivityId, ActivityType = assessmentStage.CurrentActivityType })
+                            }
+                            else
+                            {
+                                @assessmentStage.Name
+                            }
+                        </td>
+                        
+                        <td class="govuk-table__cell"><strong class="govuk-tag govuk-tag--@assessmentStage.StatusDisplayTag()">
+                            @if (string.IsNullOrEmpty(assessmentStage.Status))
+                            {
+                                if (string.IsNullOrEmpty(assessmentStage.WorkflowDefinitionId))
+                                {
+                                    @:Cannot Start
+                                }
+                                else
+                                {
+                                    @:Start Stage
+                                }
+                            }
+                            else
+                            {
+                                @assessmentStage.Status
+                            }
+                        </strong></td>
+
+                        <td class="govuk-table__cell">
+                            @if(@assessmentStage.CreatedDateTime.HasValue){
+                                @assessmentStage.CreatedDateTime
+                            }
+                            else
+                            {
+                                if (!string.IsNullOrEmpty(assessmentStage.WorkflowDefinitionId))
+                                {
+                                    @using (Html.BeginForm("StartWorkflow", "Workflow", FormMethod.Post))
+                                    {
+                                        @Html.AntiForgeryToken()
+                                        @Html.HiddenFor(x => x.AssessmentId)
+                                        @Html.HiddenFor(x => x.CorrelationId)
+                                        <input type="hidden" name="WorkflowDefinitionId" value="@assessmentStage.WorkflowDefinitionId"/>
+                                        <input class="govuk-button govuk-!-margin-0" data-module="govuk-button" id="Submit" type="submit" value="Start now"/>
+                                    }
+                                }
+                            }
+                        </td>
+                        <td class="govuk-table__cell"> </td>
+                        <td class="govuk-table__cell"> </td>
+                        
+     
+                        
 
                     </tr>
                 }

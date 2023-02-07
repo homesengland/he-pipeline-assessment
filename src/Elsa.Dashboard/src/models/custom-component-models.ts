@@ -66,6 +66,10 @@ export class RadioQuestion extends MultipleChoiceQuestion<RadioOption> {
   radio: QuestionOptions<RadioOption> = this.options;
 }
 
+export class TextAreaQuestion extends Question {
+  characterLimit: number;
+}
+
 
 //Activity Screens
 

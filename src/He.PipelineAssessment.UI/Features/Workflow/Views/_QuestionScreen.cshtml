@@ -55,6 +55,26 @@
                             Title = Model.Data.QuestionScreenAnswers[i].Title
                         })
                     }
+
+                    @if (Model.Data.QuestionScreenAnswers![i].QuestionType == QuestionTypeConstants.TextAreaQuestion)
+                    {
+                        @await Html.PartialAsync("_MultiTextAreaQuestion",new MultiQuestion()
+                    {
+                        Index = i,
+                        IsValid = isValidItem,
+                        Answer = Model.Data.QuestionScreenAnswers[i].Answer,
+                        Comments = Model.Data.QuestionScreenAnswers[i].Comments,
+                        DisplayComments = Model.Data.QuestionScreenAnswers[i].DisplayComments,
+                        Question = Model.Data.QuestionScreenAnswers[i].Question,
+                        QuestionGuidance = Model.Data.QuestionScreenAnswers[i].QuestionGuidance,
+                        QuestionHint = Model.Data.QuestionScreenAnswers[i].QuestionHint,
+                        QuestionId = Model.Data.QuestionScreenAnswers[i].QuestionId,
+                        QuestionType = Model.Data.QuestionScreenAnswers[i].QuestionType,
+                        Title = Model.Data.QuestionScreenAnswers[i].Title,
+                        CharacterLimit = Model.Data.QuestionScreenAnswers[i].CharacterLimit
+
+                        })
+                    }
                     @if (Model.Data.QuestionScreenAnswers![i].QuestionType == QuestionTypeConstants.DateQuestion)
                     {
                         var dateModel = new Date();

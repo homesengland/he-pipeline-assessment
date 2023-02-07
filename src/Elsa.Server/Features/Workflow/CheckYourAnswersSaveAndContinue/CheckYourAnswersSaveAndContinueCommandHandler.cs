@@ -15,7 +15,6 @@ namespace Elsa.Server.Features.Workflow.CheckYourAnswersSaveAndContinue
         private readonly IWorkflowNextActivityProvider _workflowNextActivityProvider;
         private readonly IWorkflowInstanceProvider _workflowInstanceProvider;
 
-
         public CheckYourAnswersSaveAndContinueCommandHandler(
             IElsaCustomRepository elsaCustomRepository,
             IElsaCustomModelHelper elsaCustomModelHelper,

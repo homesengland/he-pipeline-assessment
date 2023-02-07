@@ -2,10 +2,17 @@ using Elsa.CustomWorkflow.Sdk.Extensions;
 using Elsa.CustomWorkflow.Sdk.HttpClients;
 using FluentValidation;
 using He.PipelineAssessment.Data.Auth;
-using He.PipelineAssessment.Data.SinglePipeline;
 using He.PipelineAssessment.Infrastructure.Data;
 using He.PipelineAssessment.Infrastructure.Repository;
+using He.PipelineAssessment.Infrastructure.Repository.StoreProc;
 using He.PipelineAssessment.UI;
+using He.PipelineAssessment.UI.Common.Utility;
+using He.PipelineAssessment.UI.Features.Admin.AssessmentToolManagement.Commands.CreateAssessmentTool;
+using He.PipelineAssessment.UI.Features.Admin.AssessmentToolManagement.Commands.CreateAssessmentToolWorkflow;
+using He.PipelineAssessment.UI.Features.Admin.AssessmentToolManagement.Commands.UpdateAssessmentTool;
+using He.PipelineAssessment.UI.Features.Admin.AssessmentToolManagement.Commands.UpdateAssessmentToolWorkflowCommand;
+using He.PipelineAssessment.UI.Features.Admin.AssessmentToolManagement.Mappers;
+using He.PipelineAssessment.UI.Features.Admin.AssessmentToolManagement.Validators;
 using He.PipelineAssessment.UI.Features.Workflow.QuestionScreenSaveAndContinue;
 using MediatR;
 using Microsoft.AspNetCore.DataProtection;
@@ -38,6 +45,8 @@ builder.Services.AddHttpClient("ElsaServerClient", client =>
 
 builder.Services.AddScoped<IElsaServerHttpClient, ElsaServerHttpClient>();
 builder.Services.AddScoped<IQuestionScreenSaveAndContinueMapper, QuestionScreenSaveAndContinueMapper>();
+builder.Services.AddScoped<IAssessmentToolMapper, AssessmentToolMapper>();
+builder.Services.AddScoped<IAssessmentToolWorkflowMapper, AssessmentToolWorkflowMapper>();
 builder.Services.AddScoped<NonceConfig>();
 
 
@@ -48,10 +57,25 @@ builder.Services.AddDbContext<PipelineAssessmentContext>(config =>
     config.UseSqlServer(pipelineAssessmentConnectionString,
         x => x.MigrationsAssembly("He.PipelineAssessment.Infrastructure")));
 
+builder.Services.AddDbContext<PipelineAssessmentStoreProcContext>(config =>
+    config.UseSqlServer(pipelineAssessmentConnectionString));
+
 builder.Services.AddScoped<DbContext>(provider => provider.GetRequiredService<PipelineAssessmentContext>());
+builder.Services.AddScoped<DbContext>(provider => provider.GetRequiredService<PipelineAssessmentStoreProcContext>());
+
+//Validators
 builder.Services.AddScoped<IValidator<QuestionScreenSaveAndContinueCommand>, SaveAndContinueCommandValidator>();
+builder.Services.AddScoped<IValidator<CreateAssessmentToolCommand>, CreateAssessmentToolCommandValidator>();
+builder.Services.AddScoped<IValidator<CreateAssessmentToolWorkflowCommand>, CreateAssessmentToolWorkflowCommandValidator>();
+builder.Services.AddScoped<IValidator<UpdateAssessmentToolCommand>, UpdateAssessmentToolCommandValidator>();
+builder.Services.AddScoped<IValidator<UpdateAssessmentToolWorkflowCommand>, UpdateAssessmentToolWorkflowCommandValidator>();
+
 builder.Services.AddDataProtection().PersistKeysToDbContext<PipelineAssessmentContext>();
 builder.Services.AddScoped<IAssessmentRepository, AssessmentRepository>();
+builder.Services.AddScoped<IStoreProcRepository, StoreProcRepository>();
+builder.Services.AddScoped<IAdminAssessmentToolRepository, AdminAssessmentToolRepository>();
+builder.Services.AddScoped<IAdminAssessmentToolWorkflowRepository, AdminAssessmentToolWorkflowRepository>();
+builder.Services.AddScoped<IDateTimeProvider, DateTimeProvider>();
 
 
 builder.Services.AddScoped<IIdentityClient, IdentityClient>();

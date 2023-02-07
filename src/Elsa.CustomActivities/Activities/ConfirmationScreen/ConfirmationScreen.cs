@@ -33,7 +33,7 @@ namespace Elsa.CustomActivities.Activities.ConfirmationScreen
         public ICollection<string> Text { get; set; } = new List<string>();
 
         [ActivityInput(Hint = "Next workflow to run")]
-        public string NextWorkflowDefinitionId { get; set; } = null!;
+        public string NextWorkflowDefinitionIds { get; set; } = null!;
         [ActivityOutput] public string Output { get; set; } = null!;
 
         protected override async ValueTask<IActivityExecutionResult> OnExecuteAsync(ActivityExecutionContext context)

@@ -35,6 +35,7 @@ namespace Elsa.Server.Tests.Features.Workflow.CheckYourAnswersSaveAndContinue
                 CheckYourAnswersSaveAndContinueCommandHandler sut)
         {
             //Arrange
+
             var workflowNextActivityModel = new WorkflowNextActivityModel
             {
                 NextActivity = activityBlueprint

@@ -7,44 +7,6 @@ namespace Elsa.CustomActivities.Tests.Activities.ConfirmationScreen
 {
     public class ConfirmationScreenTests
     {
-        //[Theory]
-        //[AutoMoqData]
-        //public async Task OnExecute_ReturnsSuspendResult(
-        //    [Frozen] Mock<IServiceProvider> serviceProvider,
-        //    [Frozen] Mock<IServiceScope> serviceScope,
-        //    [Frozen] Mock<IServiceScopeFactory> serviceScopeFactory,
-        //    [Frozen] Mock<IMediator> mediator,
-        //    JsonSerializer jsonSerializer,
-        //    WorkflowBlueprint workflowBlueprint,
-        //    WorkflowInstance workflowInstance,
-        //    CustomActivities.Activities.ConfirmationScreen.ConfirmationScreen sut)
-        //{
-        //    //Arrange
-        //    serviceScope.Setup(x => x.ServiceProvider).Returns(serviceProvider.Object);
-
-        //    serviceScopeFactory
-        //        .Setup(x => x.CreateScope())
-        //        .Returns(serviceScope.Object);
-
-        //    serviceProvider
-        //        .Setup(x => x.GetService(typeof(IServiceScopeFactory)))
-        //        .Returns(serviceScopeFactory.Object);
-
-        //    serviceProvider.Setup(x => x.GetService(typeof(JsonSerializer))).Returns(jsonSerializer);
-        //    serviceProvider.Setup(x => x.GetService(typeof(IMediator))).Returns(mediator.Object);
-
-        //    WorkflowExecutionContext workflowExecutionContext = new WorkflowExecutionContext(serviceProvider.Object, workflowBlueprint, workflowInstance, null);
-
-        //    var context = new ActivityExecutionContext(default!, workflowExecutionContext, default!, null, default, default);
-
-        //    //Act
-        //    var result = await sut.ExecuteAsync(context);
-
-        //    //Assert
-        //    Assert.NotNull(result);
-        //    var outcomeResult = (SuspendResult)result;
-        //    Assert.IsType<SuspendResult>(outcomeResult);
-        //}
 
         [Theory]
         [AutoMoqData]

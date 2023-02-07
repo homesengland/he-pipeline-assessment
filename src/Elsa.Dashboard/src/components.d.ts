@@ -133,6 +133,12 @@ declare global {
         prototype: HTMLQuestionScreenPropertyElement;
         new (): HTMLQuestionScreenPropertyElement;
     };
+    interface HTMLElsaTextareaQuestionElement extends Components.ElsaTextareaQuestion, HTMLStencilElement {
+    }
+    var HTMLElsaTextareaQuestionElement: {
+        prototype: HTMLElsaTextareaQuestionElement;
+        new (): HTMLElsaTextareaQuestionElement;
+    };
     interface HTMLElementTagNameMap {
         "conditional-text-list-property": HTMLConditionalTextListPropertyElement;
         "custom-elsa-switch-cases-property": HTMLCustomElsaSwitchCasesPropertyElement;
@@ -214,6 +220,10 @@ declare namespace LocalJSX {
         "propertyDescriptor"?: ActivityPropertyDescriptor;
         "propertyModel"?: ActivityDefinitionProperty;
         "questionProperties"?: Array<ActivityPropertyDescriptor>;
+    }
+    interface ElsaTextareaQuestion {
+        "onUpdateQuestion"?: (event: ElsaTextareaQuestionCustomEvent<IQuestionComponent>) => void;
+        "question"?: TextAreaQuestion;
     }
     interface IntrinsicElements {
         "conditional-text-list-property": ConditionalTextListProperty;

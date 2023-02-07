@@ -17,7 +17,6 @@ using Elsa.Persistence.EntityFramework.Core.Extensions;
 using Elsa.Persistence.EntityFramework.SqlServer;
 using Elsa.Runtime;
 using Elsa.Server.Extensions;
-using Elsa.Server.Features.Workflow.StartWorkflow;
 using Elsa.Server.Helpers;
 using Elsa.Server.Providers;
 using Elsa.Server.Services;
@@ -82,8 +81,6 @@ builder.Services.AddScoped<IWorkflowInstanceProvider, WorkflowInstanceProvider>(
 builder.Services.AddScoped<IWorkflowPathProvider, WorkflowPathProvider>();
 builder.Services.AddScoped<IWorkflowNextActivityProvider, WorkflowNextActivityProvider>();
 
-
-builder.Services.AddScoped<IStartWorkflowMapper, StartWorkflowMapper>();
 builder.Services.AddScoped<IElsaCustomModelHelper, ElsaCustomModelHelper>();
 
 builder.Services.AddScoped<IDeleteChangedWorkflowPathService, DeleteChangedWorkflowPathService>();

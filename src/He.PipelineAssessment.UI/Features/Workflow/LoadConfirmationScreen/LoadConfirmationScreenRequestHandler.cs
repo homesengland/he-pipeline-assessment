@@ -1,9 +1,10 @@
 ﻿using Elsa.CustomWorkflow.Sdk;
 using Elsa.CustomWorkflow.Sdk.HttpClients;
 using Elsa.CustomWorkflow.Sdk.Models.Workflow;
+using He.PipelineAssessment.Infrastructure.Repository;
+using He.PipelineAssessment.Models;
 using MediatR;
 using System.Text.Json;
-using He.PipelineAssessment.Infrastructure.Repository;
 
 namespace He.PipelineAssessment.UI.Features.Workflow.LoadConfirmationScreen
 {
@@ -32,16 +33,49 @@ namespace He.PipelineAssessment.UI.Features.Workflow.LoadConfirmationScreen
                 string jsonResponse = JsonSerializer.Serialize(response);
                 LoadConfirmationScreenResponse? result = JsonSerializer.Deserialize<LoadConfirmationScreenResponse>(jsonResponse);
 
-                var currentAssessmentStage = await _assessmentRepository.GetAssessmentStage(response.Data.WorkflowInstanceId);
-                if (currentAssessmentStage != null && result != null)
+                var currentAssessmentToolWorkflowInstance = await _assessmentRepository.GetAssessmentToolWorkflowInstance(response.Data.WorkflowInstanceId);
+                if (currentAssessmentToolWorkflowInstance != null && result != null)
                 {
-                    result.CorrelationId = currentAssessmentStage.Assessment.SpId.ToString();
-                    result.AssessmentId = currentAssessmentStage.AssessmentId;
+                    if (!string.IsNullOrEmpty(response.Data.NextWorkflowDefinitionIds))
+                    {
+                        var nextWorkflows = new List<AssessmentToolInstanceNextWorkflow>();
+                        var workflowDefinitionIds = response.Data.NextWorkflowDefinitionIds.Split(',', StringSplitOptions.TrimEntries);
+                        foreach (var workflowDefinitionId in workflowDefinitionIds)
+                        {
+                            var nextWorkflow =
+                                await _assessmentRepository.GetAssessmentToolInstanceNextWorkflow(currentAssessmentToolWorkflowInstance.Id,
+                                    workflowDefinitionId);
+
+                            if (nextWorkflow == null)
+                            {
+                                var assessmentToolInstanceNextWorkflow =
+                                    AssessmentToolInstanceNextWorkflow(currentAssessmentToolWorkflowInstance.AssessmentId,
+                                        currentAssessmentToolWorkflowInstance.Id, workflowDefinitionId);
+                                nextWorkflows.Add(assessmentToolInstanceNextWorkflow);
+                            }
+                        }
+
+                        if (nextWorkflows.Any())
+                            await _assessmentRepository.CreateAssessmentToolInstanceNextWorkflows(nextWorkflows);
+                    }
+                    result.CorrelationId = currentAssessmentToolWorkflowInstance.Assessment.SpId.ToString();
+                    result.AssessmentId = currentAssessmentToolWorkflowInstance.AssessmentId;
                     return await Task.FromResult(result);
                 }
-                
+
             }
             return null;
+        }
+
+        private AssessmentToolInstanceNextWorkflow AssessmentToolInstanceNextWorkflow(int assessmentId, int assessmentToolWorkflowInstanceId, string workflowDefinitionId)
+        {
+            return new AssessmentToolInstanceNextWorkflow
+            {
+                AssessmentId = assessmentId,
+                AssessmentToolWorkflowInstanceId = assessmentToolWorkflowInstanceId,
+                NextWorkflowDefinitionId = workflowDefinitionId,
+                IsStarted = false
+            };
         }
     }
 }

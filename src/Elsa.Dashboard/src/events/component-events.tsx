@@ -12,6 +12,7 @@ import {
   RadioQuestion,
   CheckboxQuestion,
   QuestionOptions,
+  TextAreaQuestion
 } from '../models/custom-component-models';
 
 
@@ -169,4 +170,21 @@ export class RadioEventHandler extends ChoiceQuestionEventHandler<RadioOption> {
   assignOptions = (val: QuestionOptions<RadioOption>) => {
     this.question.radio = val;
   }
+}
+
+export class TextAreaEventHandler extends BaseQuestionEventHandler {
+
+
+  constructor(q: TextAreaQuestion, e: EventEmitter) {
+    super(q, e);
+  };
+
+  question: TextAreaQuestion;
+  emitter: EventEmitter;
+
+  onCharacterLimitChanged = (e: Event) => {
+    let updatedQuestion = this.question;
+    updatedQuestion.characterLimit = (e.currentTarget as HTMLInputElement).valueAsNumber;
+    this.emitter.emit(updatedQuestion);
+  };
 }

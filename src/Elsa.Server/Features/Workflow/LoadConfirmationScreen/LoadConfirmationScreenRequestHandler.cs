@@ -52,11 +52,7 @@ namespace Elsa.Server.Features.Workflow.LoadConfirmationScreen
                     result.Data.FooterTitle = (string?)activityDataDictionary.GetData("FooterTitle");
                     result.Data.FooterText = (string?)activityDataDictionary.GetData("FooterText");
                     result.Data.Text = (List<string>)activityDataDictionary.GetData("Text")! ?? new List<string>();
-                    //result.Data.AdditionalTextLine1 = (string?)activityDataDictionary.GetData("AdditionalTextLine1");
-                    //result.Data.AdditionalTextLine2 = (string?)activityDataDictionary.GetData("AdditionalTextLine2");
-                    //result.Data.AdditionalTextLine3 = (string?)activityDataDictionary.GetData("AdditionalTextLine3");
-                    //result.Data.AdditionalTextLine4 = (string?)activityDataDictionary.GetData("AdditionalTextLine4");
-                    //result.Data.AdditionalTextLine5 = (string?)activityDataDictionary.GetData("AdditionalTextLine5");
+
                     result.Data.NextWorkflowDefinitionId = (string?)activityDataDictionary.GetData("NextWorkflowDefinitionId");
                 }
                 else
