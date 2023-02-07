@@ -1,4 +1,8 @@
-﻿namespace He.PipelineAssessment.Infrastructure.Repository
+﻿using He.PipelineAssessment.Infrastructure.Data;
+using He.PipelineAssessment.Models;
+using Microsoft.EntityFrameworkCore;
+
+namespace He.PipelineAssessment.Infrastructure.Repository
 {
     public interface IAdminAssessmentToolWorkflowRepository
     {

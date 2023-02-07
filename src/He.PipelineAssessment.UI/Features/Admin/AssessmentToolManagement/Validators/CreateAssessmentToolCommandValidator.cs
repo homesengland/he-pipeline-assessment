@@ -1,4 +1,7 @@
-﻿namespace He.PipelineAssessment.UI.Features.Admin.AssessmentToolManagement.Validators
+﻿using FluentValidation;
+using He.PipelineAssessment.UI.Features.Admin.AssessmentToolManagement.Commands.CreateAssessmentTool;
+
+namespace He.PipelineAssessment.UI.Features.Admin.AssessmentToolManagement.Validators
 {
     public class CreateAssessmentToolCommandValidator : AbstractValidator<CreateAssessmentToolCommand>
     {
