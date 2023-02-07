@@ -27,7 +27,7 @@ namespace Elsa.CustomWorkflow.Sdk.Models.Workflow
         public string FooterText { get; set; } = null!;
         public List<string> Text { get; set; } = null!;
 
-        public string? NextWorkflowDefinitionId { get; set; } = null!;
+        public string? NextWorkflowDefinitionIds { get; set; } = null!;
         public List<QuestionScreenAnswer>? CheckQuestionScreenAnswers { get; set; }
         public List<QuestionActivityData>? QuestionScreenAnswers { get; set; }
 

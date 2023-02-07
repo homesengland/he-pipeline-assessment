@@ -36,10 +36,10 @@ namespace He.PipelineAssessment.UI.Features.Workflow.LoadConfirmationScreen
                 var currentAssessmentToolWorkflowInstance = await _assessmentRepository.GetAssessmentToolWorkflowInstance(response.Data.WorkflowInstanceId);
                 if (currentAssessmentToolWorkflowInstance != null && result != null)
                 {
-                    if (!string.IsNullOrEmpty(response.Data.NextWorkflowDefinitionId))
+                    if (!string.IsNullOrEmpty(response.Data.NextWorkflowDefinitionIds))
                     {
                         var nextWorkflows = new List<AssessmentToolInstanceNextWorkflow>();
-                        var workflowDefinitionIds = response.Data.NextWorkflowDefinitionId.Split(',', StringSplitOptions.TrimEntries);
+                        var workflowDefinitionIds = response.Data.NextWorkflowDefinitionIds.Split(',', StringSplitOptions.TrimEntries);
                         foreach (var workflowDefinitionId in workflowDefinitionIds)
                         {
                             var nextWorkflow =
