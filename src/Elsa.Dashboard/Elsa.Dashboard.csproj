@@ -22,13 +22,13 @@
   </ItemGroup>
 
   <ItemGroup>
-    <None Remove="Scripts\Activities\GetCustomActivityProperties.js" />
-    <None Remove="Scripts\CustomElsa.js" />
-    <None Remove="Scripts\Drivers\ConditionalTextListPropertyDriver.js" />
-    <None Remove="Scripts\Drivers\CustomSwitchPropertyDriver.js" />
-    <None Remove="Scripts\Drivers\CustomTextPropertyDriver.js" />
-    <None Remove="Scripts\Drivers\QuestionPropertyDriver.js" />
-    <None Remove="Scripts\Plugins\CustomPlugins.js" />
+    <None Remove="wwwroot\Scripts\Activities\GetCustomActivityProperties.js" />
+    <None Remove="wwwroot\Scripts\CustomElsa.js" />
+    <None Remove="wwwroot\Scripts\Drivers\ConditionalTextListPropertyDriver.js" />
+    <None Remove="wwwroot\Scripts\Drivers\CustomSwitchPropertyDriver.js" />
+    <None Remove="wwwroot\Scripts\Drivers\CustomTextPropertyDriver.js" />
+    <None Remove="wwwroot\Scripts\Drivers\QuestionPropertyDriver.js" />
+    <None Remove="wwwroot\Scripts\Plugins\CustomPlugins.js" />
     <None Remove="src\components\custom-input-property.tsx" />
     <None Remove="src\components\custom-outcome-property.tsx" />
     <None Remove="src\components\custom_outcome_list_property.tsx" />
@@ -38,13 +38,8 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Content Include="Scripts\Activities\GetCustomActivityProperties.js" />
-    <Content Include="Scripts\CustomElsa.js" />
-    <Content Include="Scripts\Drivers\ConditionalTextListPropertyDriver.js" />
-    <Content Include="Scripts\Drivers\CustomSwitchPropertyDriver.js" />
-    <Content Include="Scripts\Drivers\CustomTextPropertyDriver.js" />
-    <Content Include="Scripts\Drivers\QuestionPropertyDriver.js" />
-    <Content Include="Scripts\Plugins\CustomPlugins.js" />
+    <None Include="wwwroot\Scripts\Constants\CustomComponentTags.js" />
+    <None Include="wwwroot\Scripts\Constants\CustomPropertyUiHints.js" />
   </ItemGroup>
 
   <ItemGroup>
@@ -52,13 +47,13 @@
   </ItemGroup>
 
   <ItemGroup>
-    <TypeScriptCompile Include="Scripts\Activities\GetCustomActivityProperties.js" />
-    <TypeScriptCompile Include="Scripts\CustomElsa.js" />
-    <TypeScriptCompile Include="Scripts\Drivers\ConditionalTextListPropertyDriver.js" />
-    <TypeScriptCompile Include="Scripts\Drivers\CustomSwitchPropertyDriver.js" />
-    <TypeScriptCompile Include="Scripts\Drivers\CustomTextPropertyDriver.js" />
-    <TypeScriptCompile Include="Scripts\Drivers\QuestionPropertyDriver.js" />
-    <TypeScriptCompile Include="Scripts\Plugins\CustomPlugins.js" />
+    <TypeScriptCompile Include="wwwroot\Scripts\Activities\GetCustomActivityProperties.js" />
+    <TypeScriptCompile Include="wwwroot\Scripts\CustomElsa.js" />
+    <TypeScriptCompile Include="wwwroot\Scripts\Drivers\ConditionalTextListPropertyDriver.js" />
+    <TypeScriptCompile Include="wwwroot\Scripts\Drivers\CustomSwitchPropertyDriver.js" />
+    <TypeScriptCompile Include="wwwroot\Scripts\Drivers\CustomTextPropertyDriver.js" />
+    <TypeScriptCompile Include="wwwroot\Scripts\Drivers\QuestionPropertyDriver.js" />
+    <TypeScriptCompile Include="wwwroot\Scripts\Plugins\CustomPlugins.js" />
     <TypeScriptCompile Include="src\components\common-components\custom-outcome-property.tsx">
       <SubType>Code</SubType>
     </TypeScriptCompile>

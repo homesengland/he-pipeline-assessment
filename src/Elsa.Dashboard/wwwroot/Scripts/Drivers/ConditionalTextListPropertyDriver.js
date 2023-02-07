@@ -1,3 +1,5 @@
+import { getOrCreateProperty } from '../Activities/GetOrCreateProperty.js'
+
 export function ConditionalTextListDriver(elsaStudio, elementName) {
   this.display = (activity, property) => {
     console.log("Elsa Studio", elsaStudio);

@@ -8,11 +8,25 @@ export function RegisterCustomPlugins(elsaStudio){
     });
 }
 
+const ActivitiesWithFilteredOutcomes = [
+  "QuestionScreen",
+  "CheckYourAnswersScreen"
+];
+
+const ActivitiesWithDoneOutcome = [
+  "ConfirmationScreen"
+];
+
+const SwitchSyntax = 'Switch';
+const DefaultOutcome = 'Default';
+const DoneOutcome = 'Done'
+
+
 function DisableDefaultOutcomePaths(eventContext) {
-  if (eventContext.activityModel.type == "QuestionScreen" || eventContext.activityModel.type == "CheckYourAnswersScreen")
-    eventContext.outcomes = e.outcomes.filter(x => x !== 'Default' && x !== 'Done');
-  else if (eventContext.activityModel.type == "ConfirmationScreen") {
-    e.outcomes = e.outcomes.filter(x => x == 'Done');
+  if (ActivitiesWithFilteredOutcomes.includes(eventContext.activityModel.type))
+    eventContext.outcomes = eventContext.outcomes.filter(x => x !== DefaultOutcome && x !== DoneOutcome);
+  else if (eventContext.activityModel.type == ActivitiesWithDoneOutcome) {
+    eventContext.outcomes = eventContext.outcomes.filter(x => x == DoneOutcome);
   }
 }
 
@@ -25,10 +39,10 @@ function EnableCustomSwitchOutcomePaths(eventContext) {
   if (switchCaseProperties.length == 0)
     return;
   let outcomesHash = {};
-  const syntax = 'Switch';
+  const syntax = SwitchSyntax;
   for (const propertyDescriptor of switchCaseProperties) {
     const props = activityModel.properties || [];
-    const casesProp = props.find(x => x.name == propertyDescriptor.name) || { expressions: { 'Switch': '' }, syntax: syntax };
+    const casesProp = props.find(x => x.name == propertyDescriptor.name) || { expressions: { SwitchSyntax: '' }, syntax: syntax };
     const expression = casesProp.expressions[syntax] || [];
     const cases = !!expression['$values'] ? expression['$values'] : Array.isArray(expression) ? expression : parseJson(expression) || [];
     for (const c of cases)

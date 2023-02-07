@@ -1,18 +1,15 @@
-import { GetCustomActivityProperties } from './Activities/GetCustomActivityProperties';
-import { RegisterCustomPlugins } from './Plugins/CustomPlugins';
-import { CustomPropertyUIHints } from '../Constants/CustomPropertyUiHints';
-import { CustomComponentTags } from '../Constants/CustomComponentTags';
-import { QuestionDriver } from './Drivers/QuestionPropertyDriver';
-import { CustomSwitchDriver } from './Drivers/CustomSwitchPropertyDriver';
-import { CustomTextDriver } from './Drivers/CustomTextPropertyDriver';
-import { ConditionalTextListDriver } from './Drivers/ConditionalTextListPropertyDriver';
+import { GetCustomActivityProperties } from './Activities/GetCustomActivityProperties.js';
+import { RegisterCustomPlugins } from './Plugins/CustomPlugins.js';
+import { CustomPropertyUIHints } from './Constants/CustomPropertyUiHints.js';
+import { CustomComponentTags } from './Constants/CustomComponentTags.js';
+import { QuestionDriver } from './Drivers/QuestionPropertyDriver.js';
+import { CustomSwitchDriver } from './Drivers/CustomSwitchPropertyDriver.js';
+import { CustomTextDriver } from './Drivers/CustomTextPropertyDriver.js';
+import { ConditionalTextListDriver } from './Drivers/ConditionalTextListPropertyDriver.js';
 
 
-export async function InitCustomElsa() {
-  const elsaStudioRoot = document.querySelector('elsa-studio-root');
-
-  const customProperties = await GetCustomActivityProperties(elsaStudioRoot.serverUrl);
-
+export async function InitCustomElsa(elsaStudioRoot, serverUrl) {
+  const customProperties = await GetCustomActivityProperties(serverUrl);
   console.log(customProperties);
 
   elsaStudioRoot.addEventListener('initializing', e => {

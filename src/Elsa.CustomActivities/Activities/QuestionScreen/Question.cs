@@ -1,5 +1,6 @@
 ﻿using Elsa.Attributes;
 using Elsa.CustomActivities.Activities.QuestionScreen;
+using Elsa.CustomActivities.Constants;
 using Elsa.CustomActivities.Describers;
 using Elsa.Design;
 using Elsa.Expressions;
@@ -35,8 +36,11 @@ namespace Elsa.CustomActivities.Activities.QuestionScreen
         [ActivityInput(Hint = "Include comments box", UIHint = ActivityInputUIHints.Checkbox)]
         public bool DisplayComments { get; set; }
         public string Comments { get; set; } = null!;
-
+        
+        [ActivityInput(UIHint = CustomActivityUIHints.CheckboxQuestionProperty)]
         public CheckboxModel Checkbox { get; set; } = new CheckboxModel();
+
+        [ActivityInput(UIHint = CustomActivityUIHints.RadioQuestionProperty)]
         public RadioModel Radio { get; set; } = new RadioModel();
 
     }

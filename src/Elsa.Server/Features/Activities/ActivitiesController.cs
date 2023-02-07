@@ -20,7 +20,7 @@ namespace Elsa.Server.Features.Activities
         {
             try
             {
-                var results = await _mediator.Send(new CustomPropertyRequest());
+                var results = await _mediator.Send(new CustomPropertyCommand());
                 return Ok(results);
             }
             catch (Exception e)

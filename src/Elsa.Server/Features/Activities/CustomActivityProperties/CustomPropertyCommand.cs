@@ -3,7 +3,7 @@ using MediatR;
 
 namespace Elsa.Server.Features.Activities.CustomActivityProperties
 {
-    public class CustomPropertyRequest : IRequest<IDictionary<string, IEnumerable<ActivityInputDescriptor>>>
+    public class CustomPropertyCommand : IRequest<IDictionary<string, IEnumerable<ActivityInputDescriptor>>>
     {
     }
 }

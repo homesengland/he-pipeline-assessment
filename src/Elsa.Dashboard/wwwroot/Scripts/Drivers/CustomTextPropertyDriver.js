@@ -1,4 +1,6 @@
-export function QuestionDriver(elsaStudio, elementName) {
+import { getOrCreateProperty } from '../Activities/GetOrCreateProperty.js'
+
+export function CustomTextDriver(elsaStudio, elementName) {
   this.display = (activity, property) => {
     console.log("Elsa Studio", elsaStudio);
     console.log("Property", property);

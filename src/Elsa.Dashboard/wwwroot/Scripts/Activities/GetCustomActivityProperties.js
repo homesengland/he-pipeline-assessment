@@ -9,11 +9,14 @@ export async function GetCustomActivityProperties(serverUrl) {
   const headers = new Headers();
   headers.append("Content-Disposition", "inline");
   const request = new Request(serverUrl, { method: 'GET', headers: headers });
-  const activities;
+  var properties = {};
   fetch(request)
-    .then((response) => console.log("Response", response))
-    .then((response) => activities = response.data)
+    .then((response) => response.json())
+    .then((data) => console.log("Data",data))
+    .then((data) => properties = data)
     .catch((e) => console.log(e));
 
-  return activities;
+  console.log("custom properties", properties)
+
+  return properties;
 }

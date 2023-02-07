@@ -50,6 +50,7 @@ export class MultiQuestionProperty {
   @Prop() activityModel: ActivityModel;
   @Prop() propertyDescriptor: ActivityPropertyDescriptor;
   @Prop() propertyModel: ActivityDefinitionProperty;
+  @Prop() questionProperties: Array<ActivityPropertyDescriptor>;
   @State() questionModel: QuestionActivity = new QuestionActivity();
   @State() iconProvider = new IconProvider();
   @State() questionProvider = new QuestionProvider(Object.values(QuestionLibrary));
@@ -186,6 +187,7 @@ export class MultiQuestionProperty {
         class="disabled:elsa-opacity-50 disabled:elsa-cursor-not-allowed focus:elsa-ring-blue-500 focus:elsa-border-blue-500 elsa-block elsa-w-full elsa-min-w-0 elsa-rounded-md sm:elsa-text-sm elsa-border-gray-300" />
     </div>;
   }
+
 
   renderCheckboxField(fieldId, fieldName, isChecked, multiQuestion, onChangedFunction) {
     return <div>
