@@ -37,7 +37,8 @@ namespace He.PipelineAssessment.UI.Features.Assessment.AssessmentList
             foreach (var assessment in listOfAssessments)
             {
                 var assessmentDisplay = new AssessmentDisplay(assessment);
-                assessmentDisplay.DateCreated = DateTime.UtcNow;
+                assessmentDisplay.CreatedDate = DateTime.UtcNow;
+                assessmentDisplay.LastModified = DateTime.UtcNow;
                 assessmentDisplay.AssessmentWorkflowId = Guid.NewGuid().ToString();
                 assessmentLandingPageData.ListOfAssessments.Add(assessmentDisplay);
             }

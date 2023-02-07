@@ -2,3 +2,12 @@
     margin-top: 5px !important;
     margin-bottom: 0px !important;
 }
+.govuk-full-width-container {
+    max-width: 1800px;
+    margin-right: 50px;
+    margin-left: 50px;
+}
+.override-header-select {
+    justify-content: space-between;
+    margin-right: 1350px;
+}

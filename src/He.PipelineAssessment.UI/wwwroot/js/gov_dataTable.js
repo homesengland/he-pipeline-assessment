@@ -5,6 +5,7 @@
         initComplete: function () {
             this.api()
                 .columns($('[data-searchable]'))
+                
                 .every(function () {
                     var column = this;
 
@@ -39,4 +40,5 @@
         },
 
     });
+    $("#assessmentListTable_length").hide();
 }

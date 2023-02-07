@@ -5,7 +5,7 @@
 
 @{
     ViewData["Title"] = "Pipeline Assessment";
-    Layout = "_Layout";
+    Layout = "_LayoutFullWidth";
 }
 
 
@@ -22,19 +22,23 @@
 
 <div class="text-center">
     
-    <div id="search-div" class="header-select"></div><br />
+    <div id="search-div" class="header-select override-header-select"></div><br />
 
     <table class="govuk-table" id="assessmentListTable">
 
         <thead class="govuk-table__head">
         <tr class="govuk-table__row">
             <th scope="col" class="govuk-table__header">Reference</th>
-            <th scope="col" class="govuk-table__header">Project</th>
+            <th scope="col" class="govuk-table__header">Project</th>          
+            <th scope="col" class="govuk-table__header" >Partner</th>
+            <th scope="col" class="govuk-table__header" >Local Authority</th>
+            <th scope="col" class="govuk-table__header">Funding Ask</th>
+            <th scope="col" class="govuk-table__header">Homes</th>
             <th scope="col" class="govuk-table__header" data-searchable="true">Project Manager</th>
-            <th scope="col" class="govuk-table__header" data-searchable="true">Partner</th>
-            <th scope="col" class="govuk-table__header" data-searchable="true">Local Authority</th>
-            <th scope="col" class="govuk-table__header">Date created</th>
+            <th scope="col" class="govuk-table__header">Date Created</th>
+            <th scope="col" class="govuk-table__header">Last Updated</th>
             <th scope="col" class="govuk-table__header" data-searchable="true">Status</th>
+
         </tr>
         </thead>
         <tbody class="govuk-table__body">
@@ -43,10 +47,13 @@
             <tr class="govuk-table__row">
                 <td class="govuk-table__cell"><a asp-controller="Assessment" asp-action="Summary" asp-route-assessmentid="@assessment.Id" asp-route-correlationId="@assessment.SpId" class="govuk-link">@assessment.Reference</a> </td>
                 <td class="govuk-table__cell">@assessment.SiteName</td>
-                <td class="govuk-table__cell">@assessment.ProjectManager</td>
                 <td class="govuk-table__cell">@assessment.Counterparty</td>
                 <td class="govuk-table__cell">@assessment.LocalAuthority</td>
-                <td class="govuk-table__cell">@assessment.DateCreated.ToString("d - MM - yy HH:mm:ss")</td>
+                <td class="govuk-table__cell">@assessment.FundingAsk</td>
+                <td class="govuk-table__cell">@assessment.NumberOfHomes</td>
+                <td class="govuk-table__cell">@assessment.ProjectManager</td>
+                <td class="govuk-table__cell">@assessment.CreatedDate.Date.ToLongDateString()</td>
+                <td class="govuk-table__cell">@assessment.LastModified.Value.Date.ToLongDateString()</td>
                 <td class="govuk-table__cell"><strong class="govuk-tag govuk-tag--@assessment.StatusDisplayTag()">@assessment.Status</strong></td>
             </tr>
         }

@@ -1,4 +1,8 @@
-﻿namespace He.PipelineAssessment.UI.Features.Assessment.AssessmentList
+﻿using He.PipelineAssessment.Infrastructure.Migrations;
+using System.ComponentModel.DataAnnotations;
+using System.Globalization;
+
+namespace He.PipelineAssessment.UI.Features.Assessment.AssessmentList
 {
     public class AssessmentListData
     {
@@ -23,8 +27,11 @@
             Counterparty = assessment.Counterparty;
             Status = assessment.Status;
             Reference = assessment.Reference;
-            LocalAuthority = assessment.LocalAuthority; 
+            LocalAuthority =  assessment.LocalAuthority;
+            FundingAsk = string.Format(new CultureInfo("en-GB", false), "{0:c0}", assessment.FundingAsk);
 
+            //FundingAsk = assessment.FundingAsk;
+            NumberOfHomes = assessment.NumberOfHomes;
         }
 
         public string Id { get; set; } = null!;
@@ -35,13 +42,16 @@
 
         public string Counterparty { get; set; } = null!;
 
-        public DateTime DateCreated { get; set; }
+        public DateTime CreatedDate { get; set; }
 
         public string Reference { get; set; } = null!;
         public string Status { get; set; }
 
         public string LocalAuthority { get; set; } = null!;
-
+       
+        public string? FundingAsk { get; set; }
+        public int? NumberOfHomes { get; set; }
+        public DateTime? LastModified { get; set; } 
         public string? AssessmentWorkflowId { get; set; } = null!;
 
         public string StatusDisplayTag()
