@@ -1,4 +1,5 @@
-﻿using Elsa.Server.Features.Activities.CustomActivityProperties;
+﻿using Elsa.Metadata;
+using Elsa.Server.Features.Activities.CustomActivityProperties;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 
@@ -20,8 +21,9 @@ namespace Elsa.Server.Features.Activities
         {
             try
             {
-                var results = await _mediator.Send(new CustomPropertyCommand());
+                IDictionary<string, IEnumerable<ActivityInputDescriptor>> results = await _mediator.Send(new CustomPropertyCommand());
                 return Ok(results);
+                
             }
             catch (Exception e)
             {

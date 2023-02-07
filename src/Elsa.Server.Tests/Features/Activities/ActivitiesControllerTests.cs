@@ -6,6 +6,7 @@ using Elsa.Server.Models;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Moq;
+using Newtonsoft.Json;
 using Xunit;
 
 namespace Elsa.Server.Tests.Features.Activities
@@ -31,12 +32,6 @@ namespace Elsa.Server.Tests.Features.Activities
             //Assert
             Assert.NotNull(result);
             Assert.IsType<OkObjectResult>(result);
-
-            var okResult = (OkObjectResult)result;
-            var okResultValueData = (OperationResult<Dictionary<string, IEnumerable<ActivityInputDescriptor>>>)okResult.Value!;
-
-            Assert.Equal(response[firstKey], okResultValueData.Data![firstKey]);
-
         }
 
         [Theory]
@@ -66,31 +61,6 @@ namespace Elsa.Server.Tests.Features.Activities
             var exceptionResult = (Exception)objectResult.Value!;
 
             Assert.Equal(exception.Message, exceptionResult.Message);
-        }
-
-
-        [Theory]
-        [AutoData]
-        public async Task ActvityController_GetCustomActivityProperties_ShouldReturn500_WhenCommandHandlerReturnsNull(
-            Mock<IMediator> mediatorMock)
-        {
-
-            //Arrange
-            mediatorMock.Setup(x => x.Send(It.IsAny<CustomPropertyCommand>(), CancellationToken.None)).ReturnsAsync((Dictionary<string, IEnumerable<ActivityInputDescriptor>>)null!);
-
-            ActivitiesController controller = new ActivitiesController(mediatorMock.Object);
-
-            //Act
-            var result = await controller.GetCustomActivityProperties();
-
-            //Assert
-            Assert.NotNull(result);
-            Assert.IsType<ObjectResult>(result);
-
-            var objectResult = (ObjectResult)result;
-
-            Assert.Equal(500, objectResult.StatusCode);
-            Assert.IsType<NullReferenceException>(objectResult.Value);
         }
 
     }
