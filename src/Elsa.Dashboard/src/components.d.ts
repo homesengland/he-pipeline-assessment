@@ -6,7 +6,7 @@
  */
 import { HTMLStencilElement, JSXBase } from "@stencil/core/internal";
 import { ActivityDefinitionProperty, ActivityModel, ActivityPropertyDescriptor, IntellisenseContext } from "./models/elsa-interfaces";
-import { CheckboxQuestion, IOutcomeProperty, IQuestionComponent, ITextProperty, RadioQuestion } from "./models/custom-component-models";
+import { CheckboxQuestion, IOutcomeProperty, IQuestionComponent, ITextProperty, RadioQuestion, TextAreaQuestion } from "./models/custom-component-models";
 import { IconProvider } from "./components/icon-provider/icon-provider";
 export namespace Components {
     interface ConditionalTextListProperty {
@@ -48,6 +48,9 @@ export namespace Components {
         "propertyDescriptor": ActivityPropertyDescriptor;
         "propertyModel": ActivityDefinitionProperty;
         "singleLine": boolean;
+    }
+    interface ElsaTextareaQuestion {
+        "question": TextAreaQuestion;
     }
     interface QuestionCheckboxProperty {
         "question": CheckboxQuestion;
@@ -103,6 +106,12 @@ declare global {
         prototype: HTMLCustomTextPropertyElement;
         new (): HTMLCustomTextPropertyElement;
     };
+    interface HTMLElsaTextareaQuestionElement extends Components.ElsaTextareaQuestion, HTMLStencilElement {
+    }
+    var HTMLElsaTextareaQuestionElement: {
+        prototype: HTMLElsaTextareaQuestionElement;
+        new (): HTMLElsaTextareaQuestionElement;
+    };
     interface HTMLQuestionCheckboxPropertyElement extends Components.QuestionCheckboxProperty, HTMLStencilElement {
     }
     var HTMLQuestionCheckboxPropertyElement: {
@@ -133,18 +142,13 @@ declare global {
         prototype: HTMLQuestionScreenPropertyElement;
         new (): HTMLQuestionScreenPropertyElement;
     };
-    interface HTMLElsaTextareaQuestionElement extends Components.ElsaTextareaQuestion, HTMLStencilElement {
-    }
-    var HTMLElsaTextareaQuestionElement: {
-        prototype: HTMLElsaTextareaQuestionElement;
-        new (): HTMLElsaTextareaQuestionElement;
-    };
     interface HTMLElementTagNameMap {
         "conditional-text-list-property": HTMLConditionalTextListPropertyElement;
         "custom-elsa-switch-cases-property": HTMLCustomElsaSwitchCasesPropertyElement;
         "custom-input-property": HTMLCustomInputPropertyElement;
         "custom-outcome-property": HTMLCustomOutcomePropertyElement;
         "custom-text-property": HTMLCustomTextPropertyElement;
+        "elsa-textarea-question": HTMLElsaTextareaQuestionElement;
         "question-checkbox-property": HTMLQuestionCheckboxPropertyElement;
         "question-property": HTMLQuestionPropertyElement;
         "question-property-v2": HTMLQuestionPropertyV2Element;
@@ -196,6 +200,10 @@ declare namespace LocalJSX {
         "propertyModel"?: ActivityDefinitionProperty;
         "singleLine"?: boolean;
     }
+    interface ElsaTextareaQuestion {
+        "onUpdateQuestion"?: (event: CustomEvent<IQuestionComponent>) => void;
+        "question"?: TextAreaQuestion;
+    }
     interface QuestionCheckboxProperty {
         "onUpdateQuestion"?: (event: CustomEvent<IQuestionComponent>) => void;
         "question"?: CheckboxQuestion;
@@ -221,16 +229,13 @@ declare namespace LocalJSX {
         "propertyModel"?: ActivityDefinitionProperty;
         "questionProperties"?: Array<ActivityPropertyDescriptor>;
     }
-    interface ElsaTextareaQuestion {
-        "onUpdateQuestion"?: (event: ElsaTextareaQuestionCustomEvent<IQuestionComponent>) => void;
-        "question"?: TextAreaQuestion;
-    }
     interface IntrinsicElements {
         "conditional-text-list-property": ConditionalTextListProperty;
         "custom-elsa-switch-cases-property": CustomElsaSwitchCasesProperty;
         "custom-input-property": CustomInputProperty;
         "custom-outcome-property": CustomOutcomeProperty;
         "custom-text-property": CustomTextProperty;
+        "elsa-textarea-question": ElsaTextareaQuestion;
         "question-checkbox-property": QuestionCheckboxProperty;
         "question-property": QuestionProperty;
         "question-property-v2": QuestionPropertyV2;
@@ -247,6 +252,7 @@ declare module "@stencil/core" {
             "custom-input-property": LocalJSX.CustomInputProperty & JSXBase.HTMLAttributes<HTMLCustomInputPropertyElement>;
             "custom-outcome-property": LocalJSX.CustomOutcomeProperty & JSXBase.HTMLAttributes<HTMLCustomOutcomePropertyElement>;
             "custom-text-property": LocalJSX.CustomTextProperty & JSXBase.HTMLAttributes<HTMLCustomTextPropertyElement>;
+            "elsa-textarea-question": LocalJSX.ElsaTextareaQuestion & JSXBase.HTMLAttributes<HTMLElsaTextareaQuestionElement>;
             "question-checkbox-property": LocalJSX.QuestionCheckboxProperty & JSXBase.HTMLAttributes<HTMLQuestionCheckboxPropertyElement>;
             "question-property": LocalJSX.QuestionProperty & JSXBase.HTMLAttributes<HTMLQuestionPropertyElement>;
             "question-property-v2": LocalJSX.QuestionPropertyV2 & JSXBase.HTMLAttributes<HTMLQuestionPropertyV2Element>;

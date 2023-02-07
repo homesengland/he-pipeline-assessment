@@ -68,55 +68,6 @@ namespace Elsa.CustomActivities.Describers
             }
         }
 
-        //public async Task<ActivityDescriptor> DescribeAsync(Type activityType, CancellationToken cancellationToken = default)
-        //{
-        //    var activityAttribute = activityType.GetCustomAttribute<ActivityAttribute>(false);
-        //    var typeName = activityAttribute?.Type ?? activityType.Name;
-        //    var displayName = activityAttribute?.DisplayName ?? activityType.Name.Humanize(LetterCasing.Title);
-        //    var description = activityAttribute?.Description;
-        //    var category = activityAttribute?.Category ?? "Miscellaneous";
-        //    var traits = activityAttribute?.Traits ?? ActivityTraits.Action;
-        //    //var outcomes = await GetOutcomesAsync(activityAttribute, cancellationToken);
-        //    var outcomes = Array.Empty<string>();
-        //    var properties = activityType.GetProperties();
-        //    var inputProperties = DescribeInputProperties(properties).OrderBy(x => x.Order);
-        //    var outputProperties = DescribeOutputProperties(properties);
-
-        //    return new ActivityDescriptor
-        //    {
-        //        Type = typeName.Pascalize(),
-        //        DisplayName = displayName,
-        //        Description = description,
-        //        Category = category,
-        //        Traits = traits,
-        //        InputProperties = inputProperties.ToArray(),
-        //        OutputProperties = outputProperties.ToArray(),
-        //        Outcomes = outcomes
-        //    };
-        //}
-
-
-
-        //private IEnumerable<ActivityOutputDescriptor> DescribeOutputProperties(IEnumerable<PropertyInfo> properties)
-        //{
-        //    foreach (var propertyInfo in properties)
-        //    {
-        //        var activityPropertyAttribute = propertyInfo.GetCustomAttribute<ActivityOutputAttribute>();
-
-        //        if (activityPropertyAttribute == null)
-        //            continue;
-
-        //        yield return new ActivityOutputDescriptor
-        //        (
-        //            (activityPropertyAttribute.Name ?? propertyInfo.Name).Pascalize(),
-        //            propertyInfo.PropertyType,
-        //            activityPropertyAttribute.Hint,
-        //            activityPropertyAttribute.DefaultWorkflowStorageProvider,
-        //            activityPropertyAttribute.DisableWorkflowProviderSelection
-        //        );
-        //    }
-        //}
-
 
     }
 }
