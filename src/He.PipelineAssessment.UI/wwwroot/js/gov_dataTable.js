@@ -1,5 +1,6 @@
 ﻿function initDataTable (tableId, columnNumberToSort, searchElementId) {
-    $('#' + tableId).DataTable({
+    $('#' + tableId).DataTable({       
+        "bLengthChange": false,
         order: [[columnNumberToSort, 'desc']],
 
         initComplete: function () {
@@ -39,6 +40,5 @@
                 });
         },
 
-    });
-    $("#assessmentListTable_length").hide();
+    });   
 }
