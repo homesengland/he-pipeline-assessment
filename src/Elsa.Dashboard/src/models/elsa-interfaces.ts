@@ -97,3 +97,34 @@ export interface SwitchCase {
   expressions?: Map<string>;
   syntax?: string;
 }
+
+export interface MonacoValueChangedArgs {
+  value: string;
+  markers: Array<any>;
+}
+
+export interface SelectList {
+  items: Array<SelectListItem> | Array<string>;
+  isFlagsEnum: boolean;
+}
+
+export interface SelectListItem {
+  text: string;
+  value: string;
+}
+
+export interface RuntimeSelectListProviderSettings {
+  runtimeSelectListProviderType: string;
+  context?: any;
+}
+
+export interface CustomMonacoElement {
+  "addJavaScriptLib": (libSource: string, libUri: string) => Promise<void>;
+  "editorHeight": string;
+  "language": string;
+  "monacoLibPath": string;
+  "padding": string;
+  "setValue": (value: string) => Promise<void>;
+  "singleLineMode": boolean;
+  "value": string;
+}

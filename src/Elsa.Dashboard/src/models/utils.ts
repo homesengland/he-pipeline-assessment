@@ -1,4 +1,4 @@
-import { ActivityDefinitionProperty, ActivityModel, SyntaxNames } from "./elsa-interfaces";
+import { ActivityDefinitionProperty, ActivityModel, SyntaxNames, SelectList, RuntimeSelectListProviderSettings, ActivityPropertyDescriptor } from "./elsa-interfaces";
 
 export type Map<T> = {
   [key: string]: T
@@ -57,3 +57,32 @@ export function mapSyntaxToLanguage(syntax: string): any {
       return 'plaintext';
   }
 }
+
+export async function awaitElement(selector) {
+  while (document.querySelector(selector) === null) {
+    await new Promise(resolve => requestAnimationFrame(resolve))
+  }
+  return document.querySelector(selector);
+}
+
+//async function fetchRuntimeItems(serverUrl: string, options: RuntimeSelectListProviderSettings): Promise<SelectList> {
+//  //const elsaClient = await createElsaClient(serverUrl);
+//  //return await elsaClient.designerApi.runtimeSelectItemsApi.get(options.runtimeSelectListProviderType, options.context || {});
+//}
+
+//export async function getSelectListItems(serverUrl: string, propertyDescriptor: ActivityPropertyDescriptor): Promise<SelectList> {
+//  const options: any = propertyDescriptor.options;
+//  let selectList: SelectList;
+
+//  if (!!options && options.runtimeSelectListProviderType)
+//    selectList = await fetchRuntimeItems(serverUrl, options);
+//  else if (Array.isArray(options))
+//    selectList = {
+//      items: options,
+//      isFlagsEnum: false
+//    };
+//  else
+//    selectList = options as SelectList;
+
+//  return selectList || { items: [], isFlagsEnum: false };
+//}

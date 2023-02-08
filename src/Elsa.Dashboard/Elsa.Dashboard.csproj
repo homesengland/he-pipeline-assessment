@@ -22,6 +22,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <None Remove="src\components\common-properties\imported-elsa\workflow-editor.tsx" />
     <None Remove="wwwroot\Scripts\Activities\GetCustomActivityProperties.js" />
     <None Remove="wwwroot\Scripts\CustomElsa.js" />
     <None Remove="wwwroot\Scripts\Drivers\ConditionalTextListPropertyDriver.js" />
@@ -47,6 +48,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <TypeScriptCompile Include="src\components\common-properties\imported-elsa\workflow-editor.tsx" />
     <TypeScriptCompile Include="wwwroot\Scripts\Activities\GetCustomActivityProperties.js" />
     <TypeScriptCompile Include="wwwroot\Scripts\CustomElsa.js" />
     <TypeScriptCompile Include="wwwroot\Scripts\Drivers\ConditionalTextListPropertyDriver.js" />
@@ -54,11 +56,11 @@
     <TypeScriptCompile Include="wwwroot\Scripts\Drivers\CustomTextPropertyDriver.js" />
     <TypeScriptCompile Include="wwwroot\Scripts\Drivers\QuestionPropertyDriver.js" />
     <TypeScriptCompile Include="wwwroot\Scripts\Plugins\CustomPlugins.js" />
-    <TypeScriptCompile Include="src\components\common-components\custom-outcome-property.tsx">
+    <TypeScriptCompile Include="src\components\common-properties\custom-outcome-property.tsx">
       <SubType>Code</SubType>
     </TypeScriptCompile>
-    <TypeScriptCompile Include="src\components\common-components\custom-input-property.tsx" />
-    <TypeScriptCompile Include="src\components\common-components\conditional_text_list_property.tsx" />
+    <TypeScriptCompile Include="src\components\common-properties\custom-input-property.tsx" />
+    <TypeScriptCompile Include="src\components\common-properties\conditional_text_list_property.tsx" />
     <TypeScriptCompile Include="src\events\component-events.tsx" />
     <TypeScriptCompile Include="src\components\question-provider\question-provider.tsx" />
     <TypeScriptCompile Include="src\models\question.model.ts" />
