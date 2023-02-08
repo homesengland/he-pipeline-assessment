@@ -1,6 +1,6 @@
 ﻿@using He.PipelineAssessment.UI
 @addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
-@model He.PipelineAssessment.UI.Features.Assessment.AssessmentList.AssessmentListData
+@model List<He.PipelineAssessment.Models.ViewModels.AssessmentDataViewModel>
 @inject NonceConfig nonceConfig
 
 @{
@@ -42,8 +42,10 @@
         </tr>
         </thead>
         <tbody class="govuk-table__body">
-        @foreach (var assessment in Model.ListOfAssessments)
-        {
+        @foreach (var assessment in Model)
+{
+            var lastModified = assessment.LastModifiedDateTime.HasValue ? assessment.LastModifiedDateTime.Value.Date.ToLongDateString() : "";
+
             <tr class="govuk-table__row">
                 <td class="govuk-table__cell"><a asp-controller="Assessment" asp-action="Summary" asp-route-assessmentid="@assessment.Id" asp-route-correlationId="@assessment.SpId" class="govuk-link">@assessment.Reference</a> </td>
                 <td class="govuk-table__cell">@assessment.SiteName</td>
@@ -52,8 +54,8 @@
                 <td class="govuk-table__cell">@assessment.FundingAsk</td>
                 <td class="govuk-table__cell">@assessment.NumberOfHomes</td>
                 <td class="govuk-table__cell">@assessment.ProjectManager</td>
-                <td class="govuk-table__cell">@assessment.CreatedDate.Date.ToLongDateString()</td>
-                <td class="govuk-table__cell">@assessment.LastModified.Value.Date.ToLongDateString()</td>
+                <td class="govuk-table__cell">@assessment.CreatedDateTime.Date.ToLongDateString()</td>
+                <td class="govuk-table__cell">@lastModified </td>
                 <td class="govuk-table__cell"><strong class="govuk-tag govuk-tag--@assessment.StatusDisplayTag()">@assessment.Status</strong></td>
             </tr>
         }

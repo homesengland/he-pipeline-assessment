@@ -1,5 +1,4 @@
 ﻿using He.PipelineAssessment.Infrastructure.Data;
-using He.PipelineAssessment.Models;
 using He.PipelineAssessment.Models.ViewModels;
 using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
@@ -11,23 +10,21 @@ namespace He.PipelineAssessment.Infrastructure.Repository.StoreProc
     {
         Task<List<AssessmentStageViewModel>> GetAssessmentStages(int assessmentId);
         Task<List<StartableToolViewModel>> GetStartableTools(int assessmentId);
-
-        Task<List<AssessmentDataViewModel>> GetAssessmentData();
-
+        Task<List<AssessmentDataViewModel>> GetAssessments();
     }
     public class StoreProcRepository : IStoreProcRepository
     {
         private readonly PipelineAssessmentStoreProcContext _storeProcContext;
         private readonly string sp_GetAssessmentStagesByAssessmentId = @"exec GetAssessmentStagesByAssessmentId @assessmentId";
         private readonly string sp_GetStartableToolsByAssessmentId = @"exec GetStartableToolsByAssessmentId @assessmentId";
-        private readonly string sp_AssessmentData = @"exec GetAssessmentData";
+        private readonly string sp_AssessmentData = @"exec GetAssessments";
         public StoreProcRepository(PipelineAssessmentStoreProcContext storeProcContext)
         {
             _storeProcContext = storeProcContext;
         }
 
-        public async Task<List<AssessmentDataViewModel>> GetAssessmentData()
-        {           
+        public async Task<List<AssessmentDataViewModel>> GetAssessments()
+        {
             var assessmentData = await _storeProcContext.AssessmentDataViewModel
                 .FromSqlRaw(sp_AssessmentData).ToListAsync();
             return new List<AssessmentDataViewModel>(assessmentData);

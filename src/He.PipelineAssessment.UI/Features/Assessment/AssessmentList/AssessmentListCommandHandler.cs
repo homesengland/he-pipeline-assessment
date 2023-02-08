@@ -1,7 +1,6 @@
 ﻿using He.PipelineAssessment.Infrastructure.Repository;
 using He.PipelineAssessment.Infrastructure.Repository.StoreProc;
 using He.PipelineAssessment.Models.ViewModels;
-using He.PipelineAssessment.UI.Features.Assessment.AssessmentSummary;
 using He.PipelineAssessment.UI.Features.Assessments.AssessmentList;
 using MediatR;
 
@@ -11,9 +10,9 @@ namespace He.PipelineAssessment.UI.Features.Assessment.AssessmentList
     {
         private readonly IAssessmentRepository _assessmentRepository;
         private readonly IStoreProcRepository _storeProcRepository;
-        private readonly ILogger<AssessmentSummaryRequestHandler> _logger;
+        private readonly ILogger<AssessmentListCommandHandler> _logger;
 
-        public AssessmentListCommandHandler(IAssessmentRepository repository,IStoreProcRepository storeProcRepository, ILogger<AssessmentSummaryRequestHandler> logger)
+        public AssessmentListCommandHandler(IAssessmentRepository repository, IStoreProcRepository storeProcRepository, ILogger<AssessmentListCommandHandler> logger)
         {
             _assessmentRepository = repository;
             _storeProcRepository = storeProcRepository;
@@ -23,7 +22,7 @@ namespace He.PipelineAssessment.UI.Features.Assessment.AssessmentList
         {
             try
             {
-                var dbAssessment = await _storeProcRepository.GetAssessmentData();
+                var dbAssessment = await _storeProcRepository.GetAssessments();
                 //var listOfAssessments = await _assessmentRepository.GetAssessments();
                 //var assessmentListData = GetAssessmentListFromResults(listOfAssessments);
 
@@ -51,8 +50,8 @@ namespace He.PipelineAssessment.UI.Features.Assessment.AssessmentList
         //    return assessmentLandingPageData;
         //}
 
-     
 
-      
+
+
     }
 }

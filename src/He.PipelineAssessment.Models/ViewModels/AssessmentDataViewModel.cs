@@ -13,8 +13,22 @@
         public string? LocalAuthority { get; set; }
         public decimal? FundingAsk { get; set; }
         public int? NumberOfHomes { get; set; }
-        public DateTime? CreatedDateTime { get; set; }
+        public DateTime CreatedDateTime { get; set; }
         public DateTime? LastModifiedDateTime { get; set; }
         public string? Status { get; set; }
+
+        public string StatusDisplayTag()
+        {
+            switch (Status)
+            {
+                case "New":
+                    return "blue";
+                case "Complete":
+                    return "green";
+                case "Failed":
+                    return "red";
+            }
+            return "yellow";
+        }
     }
 }
