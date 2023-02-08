@@ -1,4 +1,6 @@
-﻿namespace He.PipelineAssessment.Models.ViewModels
+﻿using System.Globalization;
+
+namespace He.PipelineAssessment.Models.ViewModels
 {
 
     public class AssessmentDataViewModel
@@ -30,5 +32,20 @@
             }
             return "yellow";
         }
+
+        public string FundingAskCurrency
+        {
+            get 
+            {
+                if (FundingAsk.HasValue)
+                {
+                    return String.Format(new CultureInfo("en-GB", false), "{0:c0}", this.FundingAsk);
+                }
+                else
+                {
+                    return "-";
+                }
+            }
+        }        
     }
 }
