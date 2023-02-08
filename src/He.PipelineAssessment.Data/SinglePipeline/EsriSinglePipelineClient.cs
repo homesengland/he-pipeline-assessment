@@ -5,7 +5,7 @@ namespace He.PipelineAssessment.Data.SinglePipeline
     public interface IEsriSinglePipelineClient
     {
         Task<string?> GetSinglePipelineData(string spid);
-        Task<List<SinglePipelineData>?> GetSinglePipelineData();
+        Task<SinglePipelineDataList?> GetSinglePipelineDataList(int offset);
     }
     public class EsriSinglePipelineClient : IEsriSinglePipelineClient
     {
@@ -45,33 +45,9 @@ namespace He.PipelineAssessment.Data.SinglePipeline
             }
 
             return data;
-        }
+        }      
 
-        public async Task<List<SinglePipelineData>?> GetSinglePipelineData()
-        {
-            var singlePipelineData = new List<SinglePipelineData>();
-            bool hasRecordsOutsanding = true;
-            int offset = 0;
-
-            while (hasRecordsOutsanding)
-            {
-                var result = await DataResultSinglePipelineData(singlePipelineData, offset);
-                if (result != null && result.SinglePipelineData != null)
-                {
-                    singlePipelineData.AddRange(result.SinglePipelineData);
-                    offset += result.SinglePipelineData.Count;
-                    hasRecordsOutsanding = result.ExceededTransferLimit;
-                }
-                else
-                {
-                    break;
-                }
-            }
-
-            return singlePipelineData;
-        }
-
-        private async Task<SinglePipelineDataList?> DataResultSinglePipelineData(List<SinglePipelineData> singlePipelineData, int offset)
+        public async Task<SinglePipelineDataList?> GetSinglePipelineDataList(int offset)
         {
             string? data = null;
             string whereClause =
@@ -104,9 +80,7 @@ namespace He.PipelineAssessment.Data.SinglePipeline
                 else
                 {
                     return null;
-                }
-
-                return null;
+                }              
             }
         }
     }

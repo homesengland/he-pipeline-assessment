@@ -1,0 +1,46 @@
+﻿using AutoFixture.Xunit2;
+using He.PipelineAssessment.Common.Tests;
+using He.PipelineAssessment.Data.SinglePipeline;
+using Moq;
+using Xunit;
+
+namespace He.PipelineAssessment.Data.Tests.SinglePipeline
+{
+    public class SinglePipelineServiceTests
+    {
+        [Theory]
+        [AutoMoqData]
+        public async Task GetSinglePipelineData(
+        [Frozen]Mock<IEsriSinglePipelineClient> singlePiplelineClient,
+        SinglePipelineService sut )
+        {
+            //Arrange
+            singlePiplelineClient.Setup(x => x.GetSinglePipelineDataList(0)).Throws(new Exception());
+
+            //Act
+            var result = await sut.GetSinglePipelineData();
+
+
+            //Assert
+            Assert.Empty(result);
+        }
+
+        [Theory]
+        [AutoMoqData]
+        public async Task GetSinglePipelineData_ReturnsNull_GivenSinglePipelineDataListisNull(
+       [Frozen] Mock<IEsriSinglePipelineClient> singlePiplelineClient,
+       SinglePipelineDataList singlePipelineDataList,
+       SinglePipelineService sut)
+        {
+            //Arrange
+            singlePiplelineClient.Setup(x => x.GetSinglePipelineDataList(0)).ReturnsAsync(singlePipelineDataList);
+
+            //Act
+            var result = await sut.GetSinglePipelineData();
+
+
+            //Assert
+            Assert.NotNull(result);
+        }
+    }
+}
