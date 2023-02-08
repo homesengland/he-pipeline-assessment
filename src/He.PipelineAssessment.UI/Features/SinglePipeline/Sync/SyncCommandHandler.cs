@@ -13,8 +13,9 @@ namespace He.PipelineAssessment.UI.Features.SinglePipeline.Sync
         private readonly IConfiguration _config;
         private readonly IAssessmentRepository _repo;
         private readonly IDateTimeProvider _dateTimeProvider;
+        private readonly ISinglePipelineService _singlePipelineService;
 
-        public SyncCommandHandler(IEsriSinglePipelineClient esriSinglePipelineClient, IEsriSinglePipelineDataJsonHelper jsonHelper, IAssessmentRepository assessmentRepository, IConfiguration config, IAssessmentRepository repo, IDateTimeProvider dateTimeProvider)
+        public SyncCommandHandler(IEsriSinglePipelineClient esriSinglePipelineClient, IEsriSinglePipelineDataJsonHelper jsonHelper, IAssessmentRepository assessmentRepository, IConfiguration config, IAssessmentRepository repo, IDateTimeProvider dateTimeProvider, ISinglePipelineService singlePipelineService)
         {
             _esriSinglePipelineClient = esriSinglePipelineClient;
             _jsonHelper = jsonHelper;
@@ -22,6 +23,7 @@ namespace He.PipelineAssessment.UI.Features.SinglePipeline.Sync
             _config = config;
             _repo = repo;
             _dateTimeProvider = dateTimeProvider;
+            _singlePipelineService = singlePipelineService;
         }
 
         public async Task<SyncResponse> Handle(SyncCommand request, CancellationToken cancellationToken)
@@ -29,7 +31,7 @@ namespace He.PipelineAssessment.UI.Features.SinglePipeline.Sync
             var errorMessages = new List<string>();
             try
             {
-                var data = await _esriSinglePipelineClient.GetSinglePipelineData();
+                var data = await _singlePipelineService.GetSinglePipelineData();
                 if (data != null)
                 {
                     List<int> sourceAssessmentSpIds = data.Select(x => x.sp_id!.Value).ToList();
