@@ -1,9 +1,9 @@
-﻿using He.PipelineAssessment.UI.Features.Assessment.AssessmentList;
+﻿using He.PipelineAssessment.Models.ViewModels;
 using MediatR;
 
 namespace He.PipelineAssessment.UI.Features.Assessments.AssessmentList
 {
-    public class AssessmentListCommand : IRequest<AssessmentListData>
+    public class AssessmentListCommand : IRequest<List<AssessmentDataViewModel>>
     {
     }
 }

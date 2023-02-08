@@ -31,6 +31,7 @@ namespace He.PipelineAssessment.UI.Features.Assessment.AssessmentList
             FundingAsk = string.Format(new CultureInfo("en-GB", false), "{0:c0}", assessment.FundingAsk);           
             NumberOfHomes = assessment.NumberOfHomes;
         }
+        
 
         public string Id { get; set; } = null!;
         public string SpId { get; set; } = null!;

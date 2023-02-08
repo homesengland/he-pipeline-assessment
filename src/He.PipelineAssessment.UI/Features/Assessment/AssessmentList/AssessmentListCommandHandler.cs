@@ -1,48 +1,58 @@
 ﻿using He.PipelineAssessment.Infrastructure.Repository;
+using He.PipelineAssessment.Infrastructure.Repository.StoreProc;
+using He.PipelineAssessment.Models.ViewModels;
+using He.PipelineAssessment.UI.Features.Assessment.AssessmentSummary;
 using He.PipelineAssessment.UI.Features.Assessments.AssessmentList;
 using MediatR;
 
 namespace He.PipelineAssessment.UI.Features.Assessment.AssessmentList
 {
-    public class AssessmentListCommandHandler : IRequestHandler<AssessmentListCommand, AssessmentListData>
+    public class AssessmentListCommandHandler : IRequestHandler<AssessmentListCommand, List<AssessmentDataViewModel>>
     {
-        private IAssessmentRepository _assessmentRepository;
+        private readonly IAssessmentRepository _assessmentRepository;
+        private readonly IStoreProcRepository _storeProcRepository;
+        private readonly ILogger<AssessmentSummaryRequestHandler> _logger;
 
-        public AssessmentListCommandHandler(IAssessmentRepository repository)
+        public AssessmentListCommandHandler(IAssessmentRepository repository,IStoreProcRepository storeProcRepository, ILogger<AssessmentSummaryRequestHandler> logger)
         {
             _assessmentRepository = repository;
+            _storeProcRepository = storeProcRepository;
+            _logger = logger;
         }
-        public async Task<AssessmentListData> Handle(AssessmentListCommand request, CancellationToken cancellationToken)
+        public async Task<List<AssessmentDataViewModel>> Handle(AssessmentListCommand request, CancellationToken cancellationToken)
         {
             try
             {
-                var listOfAssessments = await _assessmentRepository.GetAssessments();
-                var assessmentListData = GetAssessmentListFromResults(listOfAssessments);
+                var dbAssessment = await _storeProcRepository.GetAssessmentData();
+                //var listOfAssessments = await _assessmentRepository.GetAssessments();
+                //var assessmentListData = GetAssessmentListFromResults(listOfAssessments);
 
-                return assessmentListData;
+                return dbAssessment;
             }
             catch (Exception e)
             {
-                List<string> errors = new List<string> { $"An error occured whilst accessing our data. Exception: {e.Message}" };
-                return new AssessmentListData
-                {
-                    ValidationMessages = errors
-                };
+                _logger.LogError(e.Message);
+
             }
+            return new List<AssessmentDataViewModel>();
         }
 
-        private AssessmentListData GetAssessmentListFromResults(List<Models.Assessment> listOfAssessments)
-        {
-            AssessmentListData assessmentLandingPageData = new AssessmentListData();
-            foreach (var assessment in listOfAssessments)
-            {
-                var assessmentDisplay = new AssessmentDisplay(assessment);
-                assessmentDisplay.CreatedDate = DateTime.UtcNow;
-                assessmentDisplay.LastModified = DateTime.UtcNow;
-                assessmentDisplay.AssessmentWorkflowId = Guid.NewGuid().ToString();
-                assessmentLandingPageData.ListOfAssessments.Add(assessmentDisplay);
-            }
-            return assessmentLandingPageData;
-        }
+        //private AssessmentListData GetAssessmentListFromResults(List<Models.Assessment> listOfAssessments)
+        //{
+        //    AssessmentListData assessmentLandingPageData = new AssessmentListData();
+        //    foreach (var assessment in listOfAssessments)
+        //    {
+        //        var assessmentDisplay = new AssessmentDisplay(assessment);
+        //        assessmentDisplay.CreatedDate = DateTime.UtcNow;
+        //        assessmentDisplay.LastModified = DateTime.UtcNow;
+        //        assessmentDisplay.AssessmentWorkflowId = Guid.NewGuid().ToString();
+        //        assessmentLandingPageData.ListOfAssessments.Add(assessmentDisplay);
+        //    }
+        //    return assessmentLandingPageData;
+        //}
+
+     
+
+      
     }
 }
