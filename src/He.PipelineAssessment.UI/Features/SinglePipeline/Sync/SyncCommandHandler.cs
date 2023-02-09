@@ -23,7 +23,7 @@ namespace He.PipelineAssessment.UI.Features.SinglePipeline.Sync
             try
             {
                 var data = await _singlePipelineService.GetSinglePipelineData();
-                if (data != null)
+                if (data.Any())
                 {
                     List<int> sourceAssessmentSpIds = data.Select(x => x.sp_id!.Value).ToList();
 
