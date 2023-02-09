@@ -42,18 +42,12 @@ namespace He.PipelineAssessment.UI.Tests.Features.SinglePipeline.Sync
          SyncCommandHandlerHelper sut)
         {
             //Arrange
-            //var sourceAssessmentSpIds = new Models.Assessment()
-            //{
-            //    SpId = 2
-            //};
-
-
+           
             var sourceAssessmentSpIds = new List<int>
             {
                 2,6,8
             };
-            //singlePipelineData.First().sp_id = 7;
-            //singlePipelineData.Last().sp_id = 5;
+          
             var destinationAssessmentSpIds = new List<int>();
             destinationAssessmentSpIds.Add(2);
             destinationAssessmentSpIds.Add(4);
@@ -70,9 +64,7 @@ namespace He.PipelineAssessment.UI.Tests.Features.SinglePipeline.Sync
             //Assert
 
             Assert.Empty(result);
-           // Assert.Equal(new List<int> { 2,6,8}, result.);
-          //  Assert.Equal(new List<int> { 2,6, 8 }, result.Select(x => x.Id).ToList());
-            // Assert.Equal(new List<int> { 5, 7 }, result.Select(x => x.Id).ToList());
+          
         }
     }
 }
