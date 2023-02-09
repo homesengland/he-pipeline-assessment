@@ -1,5 +1,5 @@
 ﻿using He.PipelineAssessment.Infrastructure.Repository;
-using He.PipelineAssessment.Infrastructure.Repository.StoreProc;
+using He.PipelineAssessment.Infrastructure.Repository.StoredProcedure;
 using He.PipelineAssessment.Models.ViewModels;
 using MediatR;
 
@@ -8,16 +8,16 @@ namespace He.PipelineAssessment.UI.Features.Assessment.AssessmentSummary
     public class AssessmentSummaryRequestHandler : IRequestHandler<AssessmentSummaryRequest, AssessmentSummaryResponse?>
     {
         private readonly IAssessmentRepository _repository;
-        private readonly IStoreProcRepository _storeProcRepository;
+        private readonly IStoredProcedureRepository _storedProcedureRepository;
         private readonly ILogger<AssessmentSummaryRequestHandler> _logger;
 
-        public AssessmentSummaryRequestHandler(IAssessmentRepository repository, 
+        public AssessmentSummaryRequestHandler(IAssessmentRepository repository,
                                                ILogger<AssessmentSummaryRequestHandler> logger,
-                                               IStoreProcRepository storeProcRepository)
+                                               IStoredProcedureRepository storedProcedureRepository)
         {
             _repository = repository;
             _logger = logger;
-            _storeProcRepository = storeProcRepository;
+            _storedProcedureRepository = storedProcedureRepository;
         }
         public async Task<AssessmentSummaryResponse?> Handle(AssessmentSummaryRequest request, CancellationToken cancellationToken)
         {
@@ -26,8 +26,8 @@ namespace He.PipelineAssessment.UI.Features.Assessment.AssessmentSummary
                 var dbAssessment = await _repository.GetAssessment(request.AssessmentId);
                 if (dbAssessment != null)
                 {
-                    var assessmentStages = await _storeProcRepository.GetAssessmentStages(request.AssessmentId);
-                    var startableTools = await _storeProcRepository.GetStartableTools(request.AssessmentId);
+                    var assessmentStages = await _storedProcedureRepository.GetAssessmentStages(request.AssessmentId);
+                    var startableTools = await _storedProcedureRepository.GetStartableTools(request.AssessmentId);
                     var stages = new List<AssessmentSummaryStage>();
                     if (assessmentStages.Any())
                     {
