@@ -7,13 +7,13 @@ namespace He.PipelineAssessment.UI.Features.SinglePipeline.Sync
     public class SyncCommandHandler : IRequestHandler<SyncCommand, SyncResponse>
     {
         private readonly IAssessmentRepository _assessmentRepository;
-        private readonly ISinglePipelineService _singlePipelineService;
+        private readonly ISinglePipelineProvider _singlePipelineProvider;
         private readonly ISyncCommandHandlerHelper _syncCommandHandlerHelper;
 
-        public SyncCommandHandler(IAssessmentRepository assessmentRepository, ISinglePipelineService singlePipelineService, ISyncCommandHandlerHelper syncCommandHandlerHelper)
+        public SyncCommandHandler(IAssessmentRepository assessmentRepository, ISinglePipelineProvider singlePipelineProvider, ISyncCommandHandlerHelper syncCommandHandlerHelper)
         {
             _assessmentRepository = assessmentRepository;
-            _singlePipelineService = singlePipelineService;
+            _singlePipelineProvider = singlePipelineProvider;
             _syncCommandHandlerHelper = syncCommandHandlerHelper;
         }
 
@@ -22,7 +22,7 @@ namespace He.PipelineAssessment.UI.Features.SinglePipeline.Sync
             var errorMessages = new List<string>();
             try
             {
-                var data = await _singlePipelineService.GetSinglePipelineData();
+                var data = await _singlePipelineProvider.GetSinglePipelineData();
                 if (data.Any())
                 {
                     List<int> sourceAssessmentSpIds = data.Select(x => x.sp_id!.Value).ToList();

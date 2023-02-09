@@ -1,6 +1,5 @@
 ﻿using AutoFixture.Xunit2;
 using He.PipelineAssessment.Common.Tests;
-using He.PipelineAssessment.Infrastructure.Repository;
 using He.PipelineAssessment.Infrastructure.Repository.StoredProcedure;
 using He.PipelineAssessment.Models.ViewModels;
 using He.PipelineAssessment.UI.Features.Assessment.AssessmentList;
@@ -16,21 +15,19 @@ namespace He.PipelineAssessment.UI.Tests.Features.Assessment.AssessmentList
         [Theory]
         [AutoMoqData]
         public async Task Handle_ReturnsError_GivenRepoThrowsError(
-            [Frozen] Mock<IAssessmentRepository> assessmentRepository,
+            [Frozen] Mock<IStoredProcedureRepository> repo,
             AssessmentListCommand assessmentListCommand,
             Exception exception,
             AssessmentListCommandHandler sut
         )
         {
             //Arrange
-            assessmentRepository.Setup(x => x.GetAssessments()).Throws(exception);
+            repo.Setup(x => x.GetAssessments()).Throws(exception);
 
             //Act
             var result = await sut.Handle(assessmentListCommand, CancellationToken.None);
 
             //Assert
-
-            Assert.IsType<List<AssessmentDataViewModel>>(result);
             Assert.Empty(result);
         }
 

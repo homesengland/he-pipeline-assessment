@@ -2,20 +2,20 @@
 
 namespace He.PipelineAssessment.Data.SinglePipeline
 {
-   
-    public interface ISinglePipelineService
+
+    public interface ISinglePipelineProvider
     {
         Task<List<SinglePipelineData>> GetSinglePipelineData();
 
-    }   
-    public class SinglePipelineService : ISinglePipelineService
+    }
+    public class SinglePipelineProvider : ISinglePipelineProvider
     {
         private readonly IEsriSinglePipelineClient _esriSinglePipelineClient;
-        private readonly ILogger<SinglePipelineService> _logger;
-        public SinglePipelineService(IEsriSinglePipelineClient esriSinglePipelineClient, ILogger<SinglePipelineService> logger )
+        private readonly ILogger<SinglePipelineProvider> _logger;
+        public SinglePipelineProvider(IEsriSinglePipelineClient esriSinglePipelineClient, ILogger<SinglePipelineProvider> logger)
         {
-           _esriSinglePipelineClient= esriSinglePipelineClient; 
-            _logger= logger;
+            _esriSinglePipelineClient = esriSinglePipelineClient;
+            _logger = logger;
         }
         public async Task<List<SinglePipelineData>> GetSinglePipelineData()
         {
@@ -39,7 +39,7 @@ namespace He.PipelineAssessment.Data.SinglePipeline
                     }
                 }
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 _logger.LogError("Error in getting data from singlepipeline data", ex);
             }

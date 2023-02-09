@@ -5,7 +5,7 @@ namespace He.PipelineAssessment.UI.Features.SinglePipeline.Sync
 {
     public interface ISyncCommandHandlerHelper
     {
-        List<Models.Assessment> AssessmentsToBeAdded(List<int> sourceAssessmentSpIds, List<int> destinationAssessmentSpIds, List<SinglePipelineData> dataResult);
+        List<Models.Assessment> AssessmentsToBeAdded(List<int> sourceAssessmentSpIds, List<int> destinationAssessmentSpIds, List<SinglePipelineData> sourcSinglePipelineData);
         List<Models.Assessment> UpdateAssessments(List<Models.Assessment> destinationAssessments, List<int> existingAssessments, List<SinglePipelineData> data);
     }
 
@@ -18,10 +18,10 @@ namespace He.PipelineAssessment.UI.Features.SinglePipeline.Sync
             _dateTimeProvider = dateTimeProvider;
         }
 
-        public List<Models.Assessment> AssessmentsToBeAdded(List<int> sourceAssessmentSpIds, List<int> destinationAssessmentSpIds, List<SinglePipelineData> dataResult)
+        public List<Models.Assessment> AssessmentsToBeAdded(List<int> sourceAssessmentSpIds, List<int> destinationAssessmentSpIds, List<SinglePipelineData> sourceSinglePipelineData)
         {
-            var assessmentSpIdsToAdd = sourceAssessmentSpIds.Where(s => destinationAssessmentSpIds.Any(d => d == s)).ToList();
-            var sourceAssessmentsToAdd = dataResult.Where(x => assessmentSpIdsToAdd.Contains(x.sp_id!.Value));
+            var assessmentSpIdsToAdd = sourceAssessmentSpIds.Where(p => destinationAssessmentSpIds.All(p2 => p2 != p)).ToList();
+            var sourceAssessmentsToAdd = sourceSinglePipelineData.Where(x => assessmentSpIdsToAdd.Contains(x.sp_id!.Value));
 
             var assessmentsToBeAdded = new List<Models.Assessment>();
             foreach (var item in sourceAssessmentsToAdd)

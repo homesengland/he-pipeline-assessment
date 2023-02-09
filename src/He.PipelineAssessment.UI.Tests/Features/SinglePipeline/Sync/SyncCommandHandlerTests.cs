@@ -13,7 +13,7 @@ namespace He.PipelineAssessment.UI.Tests.Features.SinglePipeline.Sync
         [Theory]
         [AutoMoqData]
         public async Task Handle_ReturnsErrors_GivenExceptionIsThrown(
-            [Frozen] Mock<ISinglePipelineService> singlePipelineService,
+            [Frozen] Mock<ISinglePipelineProvider> singlePipelineService,
             Exception exception,
             SyncCommandHandler sut)
         {
@@ -31,7 +31,7 @@ namespace He.PipelineAssessment.UI.Tests.Features.SinglePipeline.Sync
         [Theory]
         [AutoMoqData]
         public async Task Handle_ReturnsErrors_GivenResponseDataIsEmpty(
-            [Frozen] Mock<ISinglePipelineService> singlePipelineService,           
+            [Frozen] Mock<ISinglePipelineProvider> singlePipelineService,           
             SyncCommandHandler sut)
         {
             //Arrange
@@ -52,7 +52,7 @@ namespace He.PipelineAssessment.UI.Tests.Features.SinglePipeline.Sync
         public async Task Handle_CreateorUpdateAssessmentRecords_GivenSignlePipelineDataIsNotEmpty(
             
             [Frozen] Mock<ISyncCommandHandlerHelper> syncCommandHandlerHelper,
-            [Frozen] Mock<ISinglePipelineService> singlePipelineService,
+            [Frozen] Mock<ISinglePipelineProvider> singlePipelineService,
             [Frozen] Mock<IAssessmentRepository> assessmentRepository,
             List<Models.Assessment> assessmentsTobeAdded,           
             List<Models.Assessment> assessments,

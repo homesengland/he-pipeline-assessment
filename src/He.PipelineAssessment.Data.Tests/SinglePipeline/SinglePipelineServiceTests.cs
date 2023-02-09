@@ -13,7 +13,7 @@ namespace He.PipelineAssessment.Data.Tests.SinglePipeline
         [AutoMoqData]
         public async Task GetSinglePipelineData(
         [Frozen]Mock<IEsriSinglePipelineClient> singlePiplelineClient,
-        SinglePipelineService sut )
+        SinglePipelineProvider sut )
         {
             //Arrange
             singlePiplelineClient.Setup(x => x.GetSinglePipelineDataList(0)).Throws(new Exception());
@@ -31,7 +31,7 @@ namespace He.PipelineAssessment.Data.Tests.SinglePipeline
         public async Task GetSinglePipelineData_ReturnsNotNull_GivenSinglePipelineDataListisNull(
        [Frozen] Mock<IEsriSinglePipelineClient> singlePiplelineClient,
        SinglePipelineDataList singlePipelineDataList,
-       SinglePipelineService sut)
+       SinglePipelineProvider sut)
         {
             //Arrange
             singlePiplelineClient.Setup(x => x.GetSinglePipelineDataList(0)).ReturnsAsync(singlePipelineDataList);
@@ -48,7 +48,7 @@ namespace He.PipelineAssessment.Data.Tests.SinglePipeline
         [AutoMoqData]
         public async Task GetSinglePipelineData_ReturnsEmptyList_GivenSinglePipelineDataListisNull(
        [Frozen] Mock<IEsriSinglePipelineClient> singlePiplelineClient,       
-       SinglePipelineService sut)
+       SinglePipelineProvider sut)
         {
             //Arrange
             singlePiplelineClient.Setup(x => x.GetSinglePipelineDataList(0)).ReturnsAsync((SinglePipelineDataList?)null);
