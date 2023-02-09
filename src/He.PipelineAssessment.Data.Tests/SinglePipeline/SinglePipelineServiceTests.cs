@@ -2,6 +2,7 @@
 using He.PipelineAssessment.Common.Tests;
 using He.PipelineAssessment.Data.SinglePipeline;
 using Moq;
+using System;
 using Xunit;
 
 namespace He.PipelineAssessment.Data.Tests.SinglePipeline
@@ -27,7 +28,7 @@ namespace He.PipelineAssessment.Data.Tests.SinglePipeline
 
         [Theory]
         [AutoMoqData]
-        public async Task GetSinglePipelineData_ReturnsNull_GivenSinglePipelineDataListisNull(
+        public async Task GetSinglePipelineData_ReturnsNotNull_GivenSinglePipelineDataListisNull(
        [Frozen] Mock<IEsriSinglePipelineClient> singlePiplelineClient,
        SinglePipelineDataList singlePipelineDataList,
        SinglePipelineService sut)
@@ -41,6 +42,23 @@ namespace He.PipelineAssessment.Data.Tests.SinglePipeline
 
             //Assert
             Assert.NotNull(result);
+        }
+
+        [Theory]
+        [AutoMoqData]
+        public async Task GetSinglePipelineData_ReturnsEmptyList_GivenSinglePipelineDataListisNull(
+       [Frozen] Mock<IEsriSinglePipelineClient> singlePiplelineClient,       
+       SinglePipelineService sut)
+        {
+            //Arrange
+            singlePiplelineClient.Setup(x => x.GetSinglePipelineDataList(0)).ReturnsAsync((SinglePipelineDataList?)null);
+
+            //Act
+            var result = await sut.GetSinglePipelineData();
+
+
+            //Assert
+            Assert.Empty(result);
         }
     }
 }

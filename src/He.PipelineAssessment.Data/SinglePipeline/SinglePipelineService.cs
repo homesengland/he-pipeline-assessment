@@ -5,7 +5,7 @@ namespace He.PipelineAssessment.Data.SinglePipeline
    
     public interface ISinglePipelineService
     {
-        Task<List<SinglePipelineData>?> GetSinglePipelineData();
+        Task<List<SinglePipelineData>> GetSinglePipelineData();
 
     }   
     public class SinglePipelineService : ISinglePipelineService
@@ -17,7 +17,7 @@ namespace He.PipelineAssessment.Data.SinglePipeline
            _esriSinglePipelineClient= esriSinglePipelineClient; 
             _logger= logger;
         }
-        public async Task<List<SinglePipelineData>?> GetSinglePipelineData()
+        public async Task<List<SinglePipelineData>> GetSinglePipelineData()
         {
             var singlePipelineData = new List<SinglePipelineData>();
             bool hasRecordsOutsanding = true;
