@@ -3,22 +3,22 @@ using He.PipelineAssessment.Models.ViewModels;
 using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
 
-namespace He.PipelineAssessment.Infrastructure.Repository.StoreProc
+namespace He.PipelineAssessment.Infrastructure.Repository.StoredProcedure
 {
 
-    public interface IStoreProcRepository
+    public interface IStoredProcedureRepository
     {
         Task<List<AssessmentStageViewModel>> GetAssessmentStages(int assessmentId);
         Task<List<StartableToolViewModel>> GetStartableTools(int assessmentId);
         Task<List<AssessmentDataViewModel>> GetAssessments();
     }
-    public class StoreProcRepository : IStoreProcRepository
+    public class StoredProcedureRepository : IStoredProcedureRepository
     {
         private readonly PipelineAssessmentStoreProcContext _storeProcContext;
         private readonly string sp_GetAssessmentStagesByAssessmentId = @"exec GetAssessmentStagesByAssessmentId @assessmentId";
         private readonly string sp_GetStartableToolsByAssessmentId = @"exec GetStartableToolsByAssessmentId @assessmentId";
         private readonly string sp_AssessmentData = @"exec GetAssessments";
-        public StoreProcRepository(PipelineAssessmentStoreProcContext storeProcContext)
+        public StoredProcedureRepository(PipelineAssessmentStoreProcContext storeProcContext)
         {
             _storeProcContext = storeProcContext;
         }
