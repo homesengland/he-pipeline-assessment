@@ -6,7 +6,7 @@ namespace He.PipelineAssessment.Data.SinglePipeline
     public interface IEsriSinglePipelineDataJsonHelper
     {
         SinglePipelineData? JsonToSinglePipelineData(string data);
-        List<SinglePipelineData>? JsonToSinglePipelineDataList(string data);
+        SinglePipelineDataList? JsonToSinglePipelineDataList(string data);
     }
 
     [JsonNumberHandling(JsonNumberHandling.AllowReadingFromString)]
@@ -32,7 +32,7 @@ namespace He.PipelineAssessment.Data.SinglePipeline
             return null;
         }
 
-        public List<SinglePipelineData>? JsonToSinglePipelineDataList(string data)
+        public SinglePipelineDataList? JsonToSinglePipelineDataList(string data)
         {
             try
             {
@@ -40,7 +40,11 @@ namespace He.PipelineAssessment.Data.SinglePipeline
                 if (result != null && result.features.Any())
                 {
                     List<SinglePipelineData> dataResult = result.features.Select(x => x.attributes).ToList();
-                    return dataResult;
+                    return new SinglePipelineDataList
+                    {
+                        SinglePipelineData = dataResult,
+                        ExceededTransferLimit = result.exceededTransferLimit
+                    };
                 }
             }
             catch (Exception)

@@ -1,7 +1,7 @@
 ﻿using AutoFixture.Xunit2;
 using He.PipelineAssessment.Common.Tests;
 using He.PipelineAssessment.Infrastructure.Repository;
-using He.PipelineAssessment.Infrastructure.Repository.StoreProc;
+using He.PipelineAssessment.Infrastructure.Repository.StoredProcedure;
 using He.PipelineAssessment.Models.ViewModels;
 using He.PipelineAssessment.UI.Features.Assessment.AssessmentSummary;
 using Moq;
@@ -14,7 +14,7 @@ namespace He.PipelineAssessment.UI.Tests.Features.Assessment.AssessmentSummary
         [Theory]
         [AutoMoqData]
         public async Task Handle_ReturnsNull_GivenRepoThrowsError(
-            [Frozen] Mock<IAssessmentRepository> assessmentRepository,           
+            [Frozen] Mock<IAssessmentRepository> assessmentRepository,
             AssessmentSummaryRequest request,
             Exception exception,
             AssessmentSummaryRequestHandler sut
@@ -34,7 +34,7 @@ namespace He.PipelineAssessment.UI.Tests.Features.Assessment.AssessmentSummary
         [AutoMoqData]
         public async Task Handle_ReturnsAssessmentSummaryResponseWithNoStages_GivenNoStagesExistYet(
             [Frozen] Mock<IAssessmentRepository> assessmentRepository,
-            [Frozen] Mock<IStoreProcRepository> storeProcRepository,
+            [Frozen] Mock<IStoredProcedureRepository> storeProcRepository,
             Models.Assessment assessment,
             AssessmentSummaryRequest request,
             AssessmentSummaryRequestHandler sut
@@ -64,7 +64,7 @@ namespace He.PipelineAssessment.UI.Tests.Features.Assessment.AssessmentSummary
         [AutoMoqData]
         public async Task Handle_ReturnsAssessmentSummaryResponseWithStages_GivenStagesExist(
             [Frozen] Mock<IAssessmentRepository> assessmentRepository,
-             [Frozen] Mock<IStoreProcRepository> storeProcRepository,
+             [Frozen] Mock<IStoredProcedureRepository> storeProcRepository,
             Models.Assessment assessment,
             List<AssessmentStageViewModel> stages,
             AssessmentSummaryRequest request,
@@ -93,7 +93,7 @@ namespace He.PipelineAssessment.UI.Tests.Features.Assessment.AssessmentSummary
         [AutoMoqData]
         public async Task Handle_ReturnsAssessmentStageWithDataFromStartableTools_GivenStageIsStartable(
             [Frozen] Mock<IAssessmentRepository> assessmentRepository,
-            [Frozen] Mock<IStoreProcRepository> storeProcRepository,
+            [Frozen] Mock<IStoredProcedureRepository> storeProcRepository,
             Models.Assessment assessment,
             AssessmentStageViewModel stage,
             AssessmentSummaryRequest request,
@@ -141,7 +141,7 @@ namespace He.PipelineAssessment.UI.Tests.Features.Assessment.AssessmentSummary
         public async Task Handle_ReturnsAssessmentStageWithOutDataFromStartableTools_GivenStageCanNotbeStarted
             (
             [Frozen] Mock<IAssessmentRepository> assessmentRepository,
-            [Frozen] Mock<IStoreProcRepository> storeProcRepository,
+            [Frozen] Mock<IStoredProcedureRepository> storeProcRepository,
             Models.Assessment assessment,
             AssessmentStageViewModel stage,
             AssessmentSummaryRequest request,
@@ -178,7 +178,7 @@ namespace He.PipelineAssessment.UI.Tests.Features.Assessment.AssessmentSummary
         [AutoMoqData]
         public async Task Handle_ReturnsAssessmentStageWithOutDataFromStartableTools_GivenStageHasBeenStarted(
            [Frozen] Mock<IAssessmentRepository> assessmentRepository,
-           [Frozen] Mock<IStoreProcRepository> storeProcRepository,
+           [Frozen] Mock<IStoredProcedureRepository> storeProcRepository,
             Models.Assessment assessment,
             AssessmentStageViewModel stage,
             AssessmentSummaryRequest request,

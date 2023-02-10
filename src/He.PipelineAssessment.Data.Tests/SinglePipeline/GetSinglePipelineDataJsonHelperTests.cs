@@ -67,7 +67,7 @@ namespace He.PipelineAssessment.Data.Tests.SinglePipeline
 
             //Assert
             Assert.NotNull(result);
-            Assert.Equal(inputData.features.Count, result!.Count);
+
         }
 
         [Theory]

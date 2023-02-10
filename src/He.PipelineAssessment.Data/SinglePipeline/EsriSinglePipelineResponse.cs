@@ -83,5 +83,13 @@
         public string globalIdFieldName { get; set; } = null!;
         public List<Field> fields { get; set; } = null!;
         public List<Feature> features { get; set; } = null!;
+        public bool exceededTransferLimit { get; set; } 
+    }
+
+    public class SinglePipelineDataList
+    {
+        public List<SinglePipelineData>? SinglePipelineData { get; set; }
+        public bool ExceededTransferLimit { get; set; }
+
     }
 }

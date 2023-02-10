@@ -5,18 +5,20 @@ namespace He.PipelineAssessment.Data.SinglePipeline
     public interface IEsriSinglePipelineClient
     {
         Task<string?> GetSinglePipelineData(string spid);
-        Task<string?> GetSinglePipelineData();
+        Task<SinglePipelineDataList?> GetSinglePipelineDataList(int offset);
     }
     public class EsriSinglePipelineClient : IEsriSinglePipelineClient
     {
 
         private readonly IHttpClientFactory _httpClientFactory;
         private readonly ILogger<EsriSinglePipelineClient> _logger;
+        private readonly IEsriSinglePipelineDataJsonHelper _jsonHelper;
 
-        public EsriSinglePipelineClient(IHttpClientFactory httpClientFactory, ILogger<EsriSinglePipelineClient> logger)
+        public EsriSinglePipelineClient(IHttpClientFactory httpClientFactory, ILogger<EsriSinglePipelineClient> logger, IEsriSinglePipelineDataJsonHelper jsonHelper)
         {
             _httpClientFactory = httpClientFactory;
             _logger = logger;
+            _jsonHelper = jsonHelper;
         }
 
         public async Task<string?> GetSinglePipelineData(string spid)
@@ -43,21 +45,24 @@ namespace He.PipelineAssessment.Data.SinglePipeline
             }
 
             return data;
-        }
+        }      
 
-        public async Task<string?> GetSinglePipelineData()
+        public async Task<SinglePipelineDataList?> GetSinglePipelineDataList(int offset)
         {
             string? data = null;
-            string whereClause = "1=1";
-            string recordCount = "100";
-            string outFields = "sp_id,internal_reference,pipeline_opportunity_site_name,applicant_1";
+            string whereClause =
+                "sp_status in ('Active', 'Approved','In Programme') AND sp_stage in ('Lead', 'Opportunity', 'Contracted','Holding')";
+            string orderBy = "esri_id";
+            string outFields =
+                "sp_id,internal_reference,pipeline_opportunity_site_name,applicant_1,he_advocate_f_name,he_advocate_s_name,he_advocate_email,local_authority,funding_ask,units_or_homes";
 
-            var relativeUri = $"query?where={whereClause}&resultRecordCount={recordCount}&outFields={outFields}&f=json";//potentially needs a token on the end also
-            using (var response = await _httpClientFactory.CreateClient("SinglePipelineClient")
-                       .GetAsync(relativeUri)
+            var relativeUri =
+                $"query?where={whereClause}&outFields={outFields}&orderByFields={orderBy}&resultOffset={offset}&f=json"; //potentially needs a token on the end also
+            using (var response = await _httpClientFactory.CreateClient("SinglePipelineClient").GetAsync(relativeUri)
                        .ConfigureAwait(false))
             {
                 data = await response.Content.ReadAsStringAsync().ConfigureAwait(false);
+
                 if (!response.IsSuccessStatusCode)
                 {
                     _logger.LogError($"StatusCode='{response.StatusCode}'," +
@@ -66,9 +71,17 @@ namespace He.PipelineAssessment.Data.SinglePipeline
 
                     return null;
                 }
-            }
 
-            return data;
+                var dataResult = _jsonHelper.JsonToSinglePipelineDataList(data);
+                if (dataResult != null)
+                {
+                    return dataResult;
+                }
+                else
+                {
+                    return null;
+                }              
+            }
         }
     }
 }
