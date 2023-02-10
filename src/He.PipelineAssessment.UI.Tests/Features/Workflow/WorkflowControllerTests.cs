@@ -1,5 +1,4 @@
 ﻿using AutoFixture.Xunit2;
-using Azure;
 using Elsa.CustomWorkflow.Sdk;
 using FluentValidation;
 using FluentValidation.Results;
@@ -15,7 +14,6 @@ using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Moq;
 using Xunit;
-using static Microsoft.EntityFrameworkCore.DbLoggerCategory.Database;
 
 namespace He.PipelineAssessment.UI.Tests.Features.Workflow
 {

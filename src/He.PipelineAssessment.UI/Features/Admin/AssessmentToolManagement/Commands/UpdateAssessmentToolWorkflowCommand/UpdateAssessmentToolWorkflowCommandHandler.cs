@@ -15,7 +15,7 @@ namespace He.PipelineAssessment.UI.Features.Admin.AssessmentToolManagement.Comma
         public async Task<int> Handle(UpdateAssessmentToolWorkflowCommand request, CancellationToken cancellationToken)
         {
             var entity = await _adminAssessmentToolWorkflowRepository.GetAssessmentToolWorkflowById(request.Id);
-            ArgumentNullException.ThrowIfNull(entity, "Assessment Workflow not found");
+            ArgumentNullException.ThrowIfNull(entity, "Assessment Tool Workflow not found");
             entity.WorkflowDefinitionId = request.WorkflowDefinitionId;
             entity.Name = request.Name;
             entity.IsFirstWorkflow = request.IsFirstWorkflow;
