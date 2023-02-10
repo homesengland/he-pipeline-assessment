@@ -2,9 +2,10 @@ using Elsa.CustomWorkflow.Sdk.Extensions;
 using Elsa.CustomWorkflow.Sdk.HttpClients;
 using FluentValidation;
 using He.PipelineAssessment.Data.Auth;
+using He.PipelineAssessment.Data.SinglePipeline;
 using He.PipelineAssessment.Infrastructure.Data;
 using He.PipelineAssessment.Infrastructure.Repository;
-using He.PipelineAssessment.Infrastructure.Repository.StoreProc;
+using He.PipelineAssessment.Infrastructure.Repository.StoredProcedure;
 using He.PipelineAssessment.UI;
 using He.PipelineAssessment.UI.Common.Utility;
 using He.PipelineAssessment.UI.Features.Admin.AssessmentToolManagement.Commands.CreateAssessmentTool;
@@ -13,6 +14,7 @@ using He.PipelineAssessment.UI.Features.Admin.AssessmentToolManagement.Commands.
 using He.PipelineAssessment.UI.Features.Admin.AssessmentToolManagement.Commands.UpdateAssessmentToolWorkflowCommand;
 using He.PipelineAssessment.UI.Features.Admin.AssessmentToolManagement.Mappers;
 using He.PipelineAssessment.UI.Features.Admin.AssessmentToolManagement.Validators;
+using He.PipelineAssessment.UI.Features.SinglePipeline.Sync;
 using He.PipelineAssessment.UI.Features.Workflow.QuestionScreenSaveAndContinue;
 using MediatR;
 using Microsoft.AspNetCore.DataProtection;
@@ -69,13 +71,15 @@ builder.Services.AddScoped<IValidator<CreateAssessmentToolCommand>, CreateAssess
 builder.Services.AddScoped<IValidator<CreateAssessmentToolWorkflowCommand>, CreateAssessmentToolWorkflowCommandValidator>();
 builder.Services.AddScoped<IValidator<UpdateAssessmentToolCommand>, UpdateAssessmentToolCommandValidator>();
 builder.Services.AddScoped<IValidator<UpdateAssessmentToolWorkflowCommand>, UpdateAssessmentToolWorkflowCommandValidator>();
+builder.Services.AddScoped<ISinglePipelineProvider, SinglePipelineProvider>();
 
 builder.Services.AddDataProtection().PersistKeysToDbContext<PipelineAssessmentContext>();
 builder.Services.AddScoped<IAssessmentRepository, AssessmentRepository>();
-builder.Services.AddScoped<IStoreProcRepository, StoreProcRepository>();
+builder.Services.AddScoped<IStoredProcedureRepository, StoredProcedureRepository>();
 builder.Services.AddScoped<IAdminAssessmentToolRepository, AdminAssessmentToolRepository>();
 builder.Services.AddScoped<IAdminAssessmentToolWorkflowRepository, AdminAssessmentToolWorkflowRepository>();
 builder.Services.AddScoped<IDateTimeProvider, DateTimeProvider>();
+builder.Services.AddScoped<ISyncCommandHandlerHelper, SyncCommandHandlerHelper>();
 
 
 builder.Services.AddScoped<IIdentityClient, IdentityClient>();

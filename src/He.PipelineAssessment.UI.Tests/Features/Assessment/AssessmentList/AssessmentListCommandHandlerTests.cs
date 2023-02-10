@@ -1,11 +1,11 @@
 ﻿using AutoFixture.Xunit2;
 using He.PipelineAssessment.Common.Tests;
-using He.PipelineAssessment.Infrastructure.Repository;
+using He.PipelineAssessment.Infrastructure.Repository.StoredProcedure;
+using He.PipelineAssessment.Models.ViewModels;
 using He.PipelineAssessment.UI.Features.Assessment.AssessmentList;
 using He.PipelineAssessment.UI.Features.Assessments.AssessmentList;
 using Moq;
 using Xunit;
-using Repo = He.PipelineAssessment.Models;
 
 namespace He.PipelineAssessment.UI.Tests.Features.Assessment.AssessmentList
 {
@@ -15,37 +15,33 @@ namespace He.PipelineAssessment.UI.Tests.Features.Assessment.AssessmentList
         [Theory]
         [AutoMoqData]
         public async Task Handle_ReturnsError_GivenRepoThrowsError(
-            [Frozen] Mock<IAssessmentRepository> assessmentRepository,
+            [Frozen] Mock<IStoredProcedureRepository> repo,
             AssessmentListCommand assessmentListCommand,
             Exception exception,
             AssessmentListCommandHandler sut
         )
         {
             //Arrange
-            assessmentRepository.Setup(x => x.GetAssessments()).Throws(exception);
+            repo.Setup(x => x.GetAssessments()).Throws(exception);
 
             //Act
             var result = await sut.Handle(assessmentListCommand, CancellationToken.None);
 
             //Assert
-
-            Assert.IsType<AssessmentListData>(result);
-            Assert.Empty(result.ListOfAssessments);
-            Assert.False(result.IsValid);
-            Assert.Single(result.ValidationMessages);
+            Assert.Empty(result);
         }
 
         [Theory]
         [AutoMoqData]
         public async Task Handle_ReturnsLAssessmentListData_GivenNoErrorsEncountered(
-            [Frozen] Mock<IAssessmentRepository> assessmentRepository,
+            [Frozen] Mock<IStoredProcedureRepository> repo,
              AssessmentListCommand assessmentListCommand,
-            List<Repo.Assessment> assessments,
+            List<AssessmentDataViewModel> assessments,
             AssessmentListCommandHandler sut
         )
         {
             //Arrange
-            assessmentRepository.Setup(x => x.GetAssessments())
+            repo.Setup(x => x.GetAssessments())
                 .ReturnsAsync(assessments);
 
             //Act
@@ -53,7 +49,8 @@ namespace He.PipelineAssessment.UI.Tests.Features.Assessment.AssessmentList
 
             //Assert
             Assert.NotNull(result);
-            Assert.Equal(assessments.Count(), result.ListOfAssessments.Count());
+            Assert.NotEmpty(result);
+            Assert.Equal(assessments.Count(), result.Count());
         }
     }
 }

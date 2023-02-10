@@ -79,8 +79,8 @@ table.dataTable thead > tr > td.sorting_desc_disabled:after {
   display: block;
   opacity: 0.125;
   right: 10px;
-  line-height: 9px;
-  font-size: 0.9em;
+  line-height: 15px;
+  font-size: 1.5em;
 }
 table.dataTable thead > tr > th.sorting:before, table.dataTable thead > tr > th.sorting_asc:before, table.dataTable thead > tr > th.sorting_desc:before, table.dataTable thead > tr > th.sorting_asc_disabled:before, table.dataTable thead > tr > th.sorting_desc_disabled:before,
 table.dataTable thead > tr > td.sorting:before,

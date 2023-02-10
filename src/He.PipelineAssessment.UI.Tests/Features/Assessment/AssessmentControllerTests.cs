@@ -1,6 +1,6 @@
 ﻿using AutoFixture.Xunit2;
 using He.PipelineAssessment.Common.Tests;
-using He.PipelineAssessment.UI.Features.Assessment.AssessmentList;
+using He.PipelineAssessment.Models.ViewModels;
 using He.PipelineAssessment.UI.Features.Assessment.AssessmentSummary;
 using He.PipelineAssessment.UI.Features.Assessments;
 using He.PipelineAssessment.UI.Features.Assessments.AssessmentList;
@@ -41,7 +41,7 @@ namespace He.PipelineAssessment.UI.Tests.Features.SinglePipeline
         public async Task Index_ShouldRedirectToAction_GivenNoExceptionsThrow(
             [Frozen] Mock<IMediator> mediator,
             AssessmentListCommand command,
-            AssessmentListData response,
+            List<AssessmentDataViewModel> response,
             AssessmentController sut)
         {
             //Arrange
@@ -86,7 +86,7 @@ namespace He.PipelineAssessment.UI.Tests.Features.SinglePipeline
         public async Task Summary_ShouldRedirectToAction_GivenNoExceptionsThrow(
             [Frozen] Mock<IMediator> mediator,
             AssessmentListCommand command,
-            AssessmentListData response,
+            List<AssessmentDataViewModel> response,
             AssessmentController sut,
             int correlationId,
             int assessmentId)
