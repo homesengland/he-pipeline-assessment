@@ -20,7 +20,7 @@ export async function InitCustomElsa(elsaStudioRoot, serverUrl) {
 
   function RegisterDrivers(elsaStudio) {
     elsaStudio.propertyDisplayManager.addDriver(CustomPropertyUIHints.QuestionScreenBuilder,
-      () => new QuestionDriver(elsaStudio, CustomComponentTags.QuestionScreen));
+      () => new QuestionDriver(elsaStudio, CustomComponentTags.QuestionScreen, customProperties[CustomPropertyUIHints.QuestionScreenBuilder]));
 
     elsaStudio.propertyDisplayManager.addDriver(CustomPropertyUIHints.ConditionalTextListBuilder,
       () => new ConditionalTextListDriver(elsaStudio, CustomComponentTags.ConditionalTextList));

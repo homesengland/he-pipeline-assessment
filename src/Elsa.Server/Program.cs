@@ -8,6 +8,7 @@ using Elsa.CustomActivities.Activities.QuestionScreen;
 using Elsa.CustomActivities.Activities.Shared;
 using Elsa.CustomActivities.Activities.SinglePipelineDataSource;
 using Elsa.CustomActivities.Activities.VFMDataSource;
+using Elsa.CustomActivities.Describers;
 using Elsa.CustomActivities.Handlers;
 using Elsa.CustomInfrastructure.Data;
 using Elsa.CustomInfrastructure.Data.Repository;
@@ -47,9 +48,11 @@ builder.Services
         .AddActivity<CheckYourAnswersScreen>()
         .AddActivity<ConfirmationScreen>()
         .AddActivity<FinishWorkflow>()
-        //.NoCoreActivities()
+        .NoCoreActivities()
         .AddConsoleActivities()
     );
+
+builder.Services.AddScoped<ICustomPropertyDescriber, CustomPropertyDescriber>();
 
 builder.Services.TryAddProvider<IExpressionHandler, ConditionalTextListExpressionHandler>(ServiceLifetime.Singleton);
 

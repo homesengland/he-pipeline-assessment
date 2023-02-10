@@ -17,6 +17,7 @@ export class HESingleLineProperty {
   @Prop() activityModel: ActivityModel;
   @Prop() propertyDescriptor: ActivityPropertyDescriptor;
   @Prop() propertyModel: ActivityDefinitionProperty;
+  @Prop() onUpdate: Function;
   @State() currentValue: string;
 
   onChange(e: Event) {

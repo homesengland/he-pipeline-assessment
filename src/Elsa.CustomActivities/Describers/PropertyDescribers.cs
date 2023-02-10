@@ -5,20 +5,32 @@ using Elsa.Metadata;
 using Humanizer;
 using Elsa.CustomActivities.Activities;
 using Elsa.CustomActivities.Resolver;
+using Elsa.CustomActivities.OptionsProviders;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace Elsa.CustomActivities.Describers
 {
-    public static class CustomPropertyDescribers
+    public interface ICustomPropertyDescriber
     {
+        public IEnumerable<ActivityInputDescriptor> DescribeInputProperties(Type propertyType);
+    }
 
-        public static IEnumerable<ActivityInputDescriptor> DescribeInputProperties(Type propertyType)
+    public class CustomPropertyDescriber : ICustomPropertyDescriber
+    {
+        private readonly IServiceProvider _serviceProvider;
+        public CustomPropertyDescriber(IServiceProvider provider)
+        {
+            _serviceProvider = provider;
+        }
+
+        public IEnumerable<ActivityInputDescriptor> DescribeInputProperties(Type propertyType)
         {
             var properties = propertyType.GetProperties();
             var inputProperties = DescribeInputProperties(properties).OrderBy(x => x.Order);
             return inputProperties;
         }
 
-        private static IEnumerable<ActivityInputDescriptor> DescribeInputProperties(IEnumerable<PropertyInfo> properties, string? category = null)
+        private IEnumerable<ActivityInputDescriptor> DescribeInputProperties(IEnumerable<PropertyInfo> properties, string? category = null)
         {
             foreach (var propertyInfo in properties)
             {
@@ -51,8 +63,7 @@ namespace Elsa.CustomActivities.Describers
                     CustomUIHintResolver.GetUIHint(propertyInfo),
                     activityPropertyAttribute.Label ?? propertyInfo.Name.Humanize(LetterCasing.Title),
                     activityPropertyAttribute.Hint,
-                    null,
-                    //_optionsResolver.GetOptions(propertyInfo),
+                    GetOptions(activityPropertyAttribute.OptionsProvider),
                     activityPropertyAttribute.Category ?? category,
                     activityPropertyAttribute.Order,
                     activityPropertyAttribute.DefaultValue,
@@ -66,6 +77,16 @@ namespace Elsa.CustomActivities.Describers
                     activityPropertyAttribute.ConsiderValuesAsOutcomes
                 );
             }
+        }
+
+        private object? GetOptions(Type? type)
+        {
+            if (type != null && type.IsAssignableFrom(typeof(IOptionsProvider)))
+            {
+                IOptionsProvider optionsProvider = (IOptionsProvider)_serviceProvider.GetRequiredService(type);
+                return optionsProvider.GetOptions();
+            }
+            return null;
         }
 
 

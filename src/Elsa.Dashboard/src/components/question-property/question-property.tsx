@@ -1,15 +1,13 @@
 import { Component, Prop, State } from '@stencil/core';
 
 import {
-    ActivityModel,
   HTMLElsaMultiExpressionEditorElement,
   ActivityPropertyDescriptor,
   SyntaxNames,
-  ActivityDefinitionProperty
 } from '../../models/elsa-interfaces';
 
 import {
-  IQuestionComponent
+  QuestionProperty
 } from '../../models/custom-component-models';
 
 import {
@@ -22,12 +20,9 @@ import { QuestionEventHandler } from '../../events/component-events';
   shadow: false,
 })
 
-export class ElsaQuestionComponent {
+export class HEQuestionComponent {
 
-  @Prop() question: IQuestionComponent
-  @Prop() Type: string
-  @Prop() Properties: Array<ActivityPropertyDescriptor>
-  @Prop() ActivityModel: ActivityModel
+  @Prop() question: QuestionProperty
   @State() iconProvider = new IconProvider();
   @State() currentValue: string;
 
@@ -36,39 +31,6 @@ export class ElsaQuestionComponent {
   supportedSyntaxes: Array<string> = [SyntaxNames.JavaScript, SyntaxNames.Liquid];
   multiExpressionEditor: HTMLElsaMultiExpressionEditorElement;
   syntaxMultiChoiceCount: number = 0;
-
-  sampleDescriptor() {
-    const test: ActivityPropertyDescriptor = {
-        name: "test",
-        uiHint: "",
-        label: "a test label",
-        hint: "hint about a test label",
-        options: "",
-      defaultValue: "",
-      defaultSyntax: SyntaxNames.Literal,
-      supportedSyntaxes: [SyntaxNames.JavaScript],
-        isReadOnly: false,
-        considerValuesAsOutcomes: false,
-        disableWorkflowProviderSelection: false
-    };
-        return test
-  }
-
-  sampleModel(name: string, syntax: string, modelValue: string) {
-    let value = {};
-    if (syntax == 'Literal') {
-      value = { syntax, modelValue }
-    }
-    else {
-      value = { "Literal": '', syntax: modelValue }
-    }
-
-    const test: ActivityDefinitionProperty = {
-      name: name,
-      expressions: value
-    }
-    return test;
-  }
 
   //renderQuestionField(fieldId, fieldName, fieldValue, onChangedFunction, isDisabled = false) {
   //  return <div>
@@ -116,7 +78,7 @@ export class ElsaQuestionComponent {
 
   render() {
     return (
-      this.Properties.map(this.renderPropertyEditor)
+      this.question.descriptor.map(this.renderPropertyEditor)
     )
     
   }

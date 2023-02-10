@@ -8,7 +8,7 @@ import {
 
 
 @Component({
-  tag: 'He-multi-line-property',
+  tag: 'he-multi-line-property',
   shadow: false,
 })
   //Copy of Elsa Switch Case

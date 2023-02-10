@@ -1,3 +1,5 @@
+import { IQuestionData } from '../components/question-provider/question-provider';
+import { ActivityDefinitionProperty, ActivityPropertyDescriptor } from './elsa-interfaces';
 import { Map } from './utils'
 
 ///Question Options
@@ -102,3 +104,17 @@ export interface IOutcomeProperty {
   text: ITextProperty;
   condition: ITextProperty;
 }
+
+//Alt Question Screens
+
+export class QuestionScreenProperty {
+  questions: Array<QuestionProperty> = [];
+}
+
+export class QuestionProperty {
+  value: ActivityDefinitionProperty;
+  descriptor: Array<ActivityPropertyDescriptor> = [];
+  questionType: IQuestionData;
+}
+
+

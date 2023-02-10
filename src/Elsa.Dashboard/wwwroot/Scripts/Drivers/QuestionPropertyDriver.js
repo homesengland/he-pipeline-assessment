@@ -1,6 +1,6 @@
 import { getOrCreateProperty } from '../Activities/GetOrCreateProperty.js'
 
-export function QuestionDriver(elsaStudio, elementName) {
+export function QuestionDriver(elsaStudio, elementName, customProperties) {
   this.display = (activity, property) => {
     console.log("Elsa Studio", elsaStudio);
     console.log("Property", property);

@@ -1,184 +1,184 @@
-import { Component, h, Prop, State } from '@stencil/core';
+//import { Component, h, Prop, State } from '@stencil/core';
 
-import { awaitElement } from '../../../models/utils';
+//import { awaitElement } from '../../../models/utils';
 
-import {
-  ActivityDefinitionProperty,
-  ActivityModel,
-  ActivityPropertyDescriptor,
-  SyntaxNames,
-  SelectList,
-  RuntimeSelectListProviderSettings
-} from "../../../models/elsa-interfaces"; 
+//import {
+//  ActivityDefinitionProperty,
+//  ActivityModel,
+//  ActivityPropertyDescriptor,
+//  SyntaxNames,
+//  SelectList,
+//  RuntimeSelectListProviderSettings
+//} from "../../../models/elsa-interfaces"; 
 
-import Tunnel from "../imported-elsa/workflow-editor";
-import { getSelectListItems } from "../../../models/utils";
-
-
-@Component({
-  tag: 'he-dropdown-property',
-  shadow: false,
-})
-  //Copy of Elsa Switch Case
-  //Copied to allow us control over how the expression editor is displayed.
-export class HEDropdownProperty {
-
-  @Prop() activityModel: ActivityModel;
-  @Prop() propertyDescriptor: ActivityPropertyDescriptor;
-  @Prop() propertyModel: ActivityDefinitionProperty;
-  @Prop({ mutable: true }) serverUrl: string;
-  @State() currentValue?: string;
-
-  selectList: SelectList = { items: [], isFlagsEnum: false };
+//import Tunnel from "../imported-elsa/workflow-editor";
+//import { getSelectListItems } from "../../../models/utils";
 
 
-  async componentWillLoad() {
-    const defaultSyntax = this.propertyDescriptor.defaultSyntax || SyntaxNames.Literal;
-    this.currentValue = this.propertyModel.expressions[defaultSyntax] || undefined;
-    const dependsOnEvent = this.propertyDescriptor.options?.context?.dependsOnEvent;
+//@Component({
+//  tag: 'he-dropdown-property',
+//  shadow: false,
+//})
+//  //Copy of Elsa Switch Case
+//  //Copied to allow us control over how the expression editor is displayed.
+//export class HEDropdownProperty {
 
-    // Does this property have a dependency on another property?
-    if (!!dependsOnEvent) {
+//  @Prop() activityModel: ActivityModel;
+//  @Prop() propertyDescriptor: ActivityPropertyDescriptor;
+//  @Prop() propertyModel: ActivityDefinitionProperty;
+//  @Prop({ mutable: true }) serverUrl: string;
+//  @State() currentValue?: string;
 
-      // Collect current property values of the activity.
-      const initialDepsValue = {};
+//  selectList: SelectList = { items: [], isFlagsEnum: false };
 
-      for (const event of dependsOnEvent) {
-        for (const value of this.activityModel.properties) {
-          initialDepsValue[value.name] = value.expressions['Literal'];
-        }
 
-        // Listen for change events on the dependency dropdown list.
-        const dependentInputElement: HTMLSelectElement = await awaitElement('#' + event);
-        dependentInputElement.addEventListener('change', this.reloadSelectListFromDeps);
+//  async componentWillLoad() {
+//    const defaultSyntax = this.propertyDescriptor.defaultSyntax || SyntaxNames.Literal;
+//    this.currentValue = this.propertyModel.expressions[defaultSyntax] || undefined;
+//    const dependsOnEvent = this.propertyDescriptor.options?.context?.dependsOnEvent;
 
-        // Get the current value of the dependency dropdown list.
-        initialDepsValue[event] = dependentInputElement.value;
-      }
+//    // Does this property have a dependency on another property?
+//    if (!!dependsOnEvent) {
 
-      // Load the list items from the backend.
-      const options: RuntimeSelectListProviderSettings = {
-        context: {
-          ...this.propertyDescriptor.options.context,
-          depValues: initialDepsValue
-        },
-        runtimeSelectListProviderType: (this.propertyDescriptor.options as RuntimeSelectListProviderSettings).runtimeSelectListProviderType
+//      // Collect current property values of the activity.
+//      const initialDepsValue = {};
 
-      };
-      this.selectList = await getSelectListItems(this.serverUrl, { options: options } as ActivityPropertyDescriptor);
+//      for (const event of dependsOnEvent) {
+//        for (const value of this.activityModel.properties) {
+//          initialDepsValue[value.name] = value.expressions['Literal'];
+//        }
 
-      if (this.currentValue == undefined) {
-        const firstOption: any = this.selectList.items[0];
+//        // Listen for change events on the dependency dropdown list.
+//        const dependentInputElement: HTMLSelectElement = await awaitElement('#' + event);
+//        dependentInputElement.addEventListener('change', this.reloadSelectListFromDeps);
 
-        if (firstOption) {
-          const optionIsObject = typeof (firstOption) == 'object';
-          this.currentValue = optionIsObject ? firstOption.value : firstOption.toString();
-        }
-      }
+//        // Get the current value of the dependency dropdown list.
+//        initialDepsValue[event] = dependentInputElement.value;
+//      }
 
-    } else {
-      this.selectList = await getSelectListItems(this.serverUrl, this.propertyDescriptor);
+//      // Load the list items from the backend.
+//      const options: RuntimeSelectListProviderSettings = {
+//        context: {
+//          ...this.propertyDescriptor.options.context,
+//          depValues: initialDepsValue
+//        },
+//        runtimeSelectListProviderType: (this.propertyDescriptor.options as RuntimeSelectListProviderSettings).runtimeSelectListProviderType
 
-      if (this.currentValue == undefined) {
-        const firstOption: any = this.selectList.items[0];
+//      };
+//      this.selectList = await getSelectListItems(this.serverUrl, { options: options } as ActivityPropertyDescriptor);
 
-        if (firstOption) {
-          const optionIsObject = typeof (firstOption) == 'object';
-          this.currentValue = optionIsObject ? firstOption.value : firstOption.toString();
-        }
-      }
-    }
+//      if (this.currentValue == undefined) {
+//        const firstOption: any = this.selectList.items[0];
 
-    if (this.currentValue != undefined) {
-      this.propertyModel.expressions[defaultSyntax] = this.currentValue;
-    }
-  }
+//        if (firstOption) {
+//          const optionIsObject = typeof (firstOption) == 'object';
+//          this.currentValue = optionIsObject ? firstOption.value : firstOption.toString();
+//        }
+//      }
 
-  private reloadSelectListFromDeps = async (e: InputEvent) => {
-    const depValues = {};
+//    } else {
+//      this.selectList = await getSelectListItems(this.serverUrl, this.propertyDescriptor);
 
-    for (const dependencyPropName of this.propertyDescriptor.options.context.dependsOnValue) {
-      const value = this.activityModel.properties.find((prop) => {
-        return prop.name == dependencyPropName;
-      });
-      depValues[dependencyPropName] = value.expressions["Literal"];
-    }
+//      if (this.currentValue == undefined) {
+//        const firstOption: any = this.selectList.items[0];
 
-    // Need to get the latest value of the component that just changed.
-    // For this we need to get the value from the event.
-    const currentTarget = e.currentTarget as HTMLSelectElement;
-    depValues[currentTarget.id] = currentTarget.value;
+//        if (firstOption) {
+//          const optionIsObject = typeof (firstOption) == 'object';
+//          this.currentValue = optionIsObject ? firstOption.value : firstOption.toString();
+//        }
+//      }
+//    }
 
-    let options: RuntimeSelectListProviderSettings = {
-      context: {
-        ...this.propertyDescriptor.options.context,
-        depValues: depValues
-      },
-      runtimeSelectListProviderType: (this.propertyDescriptor.options as RuntimeSelectListProviderSettings).runtimeSelectListProviderType
-    }
+//    if (this.currentValue != undefined) {
+//      this.propertyModel.expressions[defaultSyntax] = this.currentValue;
+//    }
+//  }
 
-    this.selectList = await getSelectListItems(this.serverUrl, { options: options } as ActivityPropertyDescriptor);
+//  private reloadSelectListFromDeps = async (e: InputEvent) => {
+//    const depValues = {};
 
-    const firstOption: any = this.selectList.items[0];
-    let currentSelectList = await awaitElement('#' + this.propertyDescriptor.name);
+//    for (const dependencyPropName of this.propertyDescriptor.options.context.dependsOnValue) {
+//      const value = this.activityModel.properties.find((prop) => {
+//        return prop.name == dependencyPropName;
+//      });
+//      depValues[dependencyPropName] = value.expressions["Literal"];
+//    }
 
-    if (firstOption) {
-      const optionIsObject = typeof (firstOption) == 'object';
-      this.currentValue = optionIsObject ? firstOption.value : firstOption.toString();
-    }
+//    // Need to get the latest value of the component that just changed.
+//    // For this we need to get the value from the event.
+//    const currentTarget = e.currentTarget as HTMLSelectElement;
+//    depValues[currentTarget.id] = currentTarget.value;
 
-    // Dispatch change event so that dependent dropdown elements refresh.
-    // Do this after the current component has re-rendered, otherwise the current value will be sent to the backend, which is outdated.
-    requestAnimationFrame(() => {
-      currentSelectList.dispatchEvent(new Event("change"));
-    });
-  }
+//    let options: RuntimeSelectListProviderSettings = {
+//      context: {
+//        ...this.propertyDescriptor.options.context,
+//        depValues: depValues
+//      },
+//      runtimeSelectListProviderType: (this.propertyDescriptor.options as RuntimeSelectListProviderSettings).runtimeSelectListProviderType
+//    }
 
-  private onChange(e: Event) {
-    const select = (e.target as HTMLSelectElement);
-    const defaultSyntax = this.propertyDescriptor.defaultSyntax || SyntaxNames.Literal;
-    this.propertyModel.expressions[defaultSyntax] = this.currentValue = select.value;
-  }
+//    this.selectList = await getSelectListItems(this.serverUrl, { options: options } as ActivityPropertyDescriptor);
 
-  private onDefaultSyntaxValueChanged(e: CustomEvent) {
-    this.currentValue = e.detail;
-  }
+//    const firstOption: any = this.selectList.items[0];
+//    let currentSelectList = await awaitElement('#' + this.propertyDescriptor.name);
 
-  render() {
-    const propertyDescriptor = this.propertyDescriptor;
-    const propertyModel = this.propertyModel;
-    const propertyName = propertyDescriptor.name;
-    const fieldId = propertyName;
-    const fieldName = propertyName;
-    let currentValue = this.currentValue;
-    const { items } = this.selectList;
+//    if (firstOption) {
+//      const optionIsObject = typeof (firstOption) == 'object';
+//      this.currentValue = optionIsObject ? firstOption.value : firstOption.toString();
+//    }
 
-    if (currentValue == undefined) {
-      const defaultValue = this.propertyDescriptor.defaultValue;
-      currentValue = defaultValue ? defaultValue.toString() : undefined;
-    }
+//    // Dispatch change event so that dependent dropdown elements refresh.
+//    // Do this after the current component has re-rendered, otherwise the current value will be sent to the backend, which is outdated.
+//    requestAnimationFrame(() => {
+//      currentSelectList.dispatchEvent(new Event("change"));
+//    });
+//  }
 
-    return (
-      <elsa-property-editor
-        activityModel={this.activityModel}
-        propertyDescriptor={propertyDescriptor}
-        propertyModel={propertyModel}
-        onDefaultSyntaxValueChanged={e => this.onDefaultSyntaxValueChanged(e)}
-        single-line={true}>
-        <select id={fieldId}
-          name={fieldName}
-          onChange={e => this.onChange(e)}
-          class="elsa-mt-1 elsa-block focus:elsa-ring-blue-500 focus:elsa-border-blue-500 elsa-w-full elsa-shadow-sm sm:elsa-max-w-xs sm:elsa-text-sm elsa-border-gray-300 elsa-rounded-md">
-          {items.map(item => {
-            const optionIsObject = typeof (item) == 'object';
-            const value = optionIsObject ? item.value : item.toString();
-            const text = optionIsObject ? item.text : item.toString();
-            return <option value={value} selected={value === currentValue}>{text}</option>;
-          })}
-        </select>
-      </elsa-property-editor>
-    );
-  }
-}
+//  private onChange(e: Event) {
+//    const select = (e.target as HTMLSelectElement);
+//    const defaultSyntax = this.propertyDescriptor.defaultSyntax || SyntaxNames.Literal;
+//    this.propertyModel.expressions[defaultSyntax] = this.currentValue = select.value;
+//  }
 
-Tunnel.injectProps(HEDropdownProperty, ['serverUrl']);
+//  private onDefaultSyntaxValueChanged(e: CustomEvent) {
+//    this.currentValue = e.detail;
+//  }
+
+//  render() {
+//    const propertyDescriptor = this.propertyDescriptor;
+//    const propertyModel = this.propertyModel;
+//    const propertyName = propertyDescriptor.name;
+//    const fieldId = propertyName;
+//    const fieldName = propertyName;
+//    let currentValue = this.currentValue;
+//    const { items } = this.selectList;
+
+//    if (currentValue == undefined) {
+//      const defaultValue = this.propertyDescriptor.defaultValue;
+//      currentValue = defaultValue ? defaultValue.toString() : undefined;
+//    }
+
+//    return (
+//      <elsa-property-editor
+//        activityModel={this.activityModel}
+//        propertyDescriptor={propertyDescriptor}
+//        propertyModel={propertyModel}
+//        onDefaultSyntaxValueChanged={e => this.onDefaultSyntaxValueChanged(e)}
+//        single-line={true}>
+//        <select id={fieldId}
+//          name={fieldName}
+//          onChange={e => this.onChange(e)}
+//          class="elsa-mt-1 elsa-block focus:elsa-ring-blue-500 focus:elsa-border-blue-500 elsa-w-full elsa-shadow-sm sm:elsa-max-w-xs sm:elsa-text-sm elsa-border-gray-300 elsa-rounded-md">
+//          {items.map(item => {
+//            const optionIsObject = typeof (item) == 'object';
+//            const value = optionIsObject ? item.value : item.toString();
+//            const text = optionIsObject ? item.text : item.toString();
+//            return <option value={value} selected={value === currentValue}>{text}</option>;
+//          })}
+//        </select>
+//      </elsa-property-editor>
+//    );
+//  }
+//}
+
+//Tunnel.injectProps(HEDropdownProperty, ['serverUrl']);

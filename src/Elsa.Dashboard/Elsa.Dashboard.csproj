@@ -23,6 +23,11 @@
 
   <ItemGroup>
     <None Remove="src\components\common-properties\imported-elsa\workflow-editor.tsx" />
+    <None Remove="src\components\drivers\he-checkbox-driver.tsx" />
+    <None Remove="src\components\drivers\he-checklist-driver.tsx" />
+    <None Remove="src\components\drivers\he-single-line-driver.tsx" />
+    <None Remove="src\components\drivers\he-switch-cases-driver.tsx" />
+    <None Remove="src\models\display-driver.ts" />
     <None Remove="wwwroot\Scripts\Activities\GetCustomActivityProperties.js" />
     <None Remove="wwwroot\Scripts\CustomElsa.js" />
     <None Remove="wwwroot\Scripts\Drivers\ConditionalTextListPropertyDriver.js" />
@@ -49,6 +54,11 @@
 
   <ItemGroup>
     <TypeScriptCompile Include="src\components\common-properties\imported-elsa\workflow-editor.tsx" />
+    <TypeScriptCompile Include="src\components\drivers\he-checklist-driver.tsx" />
+    <TypeScriptCompile Include="src\components\drivers\he-single-line-driver.tsx" />
+    <TypeScriptCompile Include="src\components\drivers\he-checkbox-driver.tsx" />
+    <TypeScriptCompile Include="src\components\drivers\he-switch-cases-driver.tsx" />
+    <TypeScriptCompile Include="src\models\display-driver.ts" />
     <TypeScriptCompile Include="wwwroot\Scripts\Activities\GetCustomActivityProperties.js" />
     <TypeScriptCompile Include="wwwroot\Scripts\CustomElsa.js" />
     <TypeScriptCompile Include="wwwroot\Scripts\Drivers\ConditionalTextListPropertyDriver.js" />

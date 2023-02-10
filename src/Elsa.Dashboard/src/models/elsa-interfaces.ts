@@ -128,3 +128,5 @@ export interface CustomMonacoElement {
   "singleLineMode": boolean;
   "value": string;
 }
+
+

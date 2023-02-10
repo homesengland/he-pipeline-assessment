@@ -1,4 +1,4 @@
-import { ActivityDefinitionProperty, ActivityModel, SyntaxNames, SelectList, RuntimeSelectListProviderSettings, ActivityPropertyDescriptor } from "./elsa-interfaces";
+import { ActivityDefinitionProperty, ActivityModel, SyntaxNames } from "./elsa-interfaces";
 
 export type Map<T> = {
   [key: string]: T
