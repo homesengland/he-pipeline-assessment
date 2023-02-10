@@ -1,7 +1,7 @@
 ﻿function initDataTable (tableId, columnNumberToSort, searchElementId) {
     $('#' + tableId).DataTable({       
         "bLengthChange": false,
-        order: [[columnNumberToSort, 'desc']],
+        order: [[columnNumberToSort, 'asc']],
         "columnDefs": [
             { "width": "5%", "targets": 0 },
             { "width": "15%", "targets": 1 },
