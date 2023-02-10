@@ -35,7 +35,7 @@ namespace He.PipelineAssessment.Models.ViewModels
 
         public string FundingAskCurrency
         {
-            get 
+            get
             {
                 if (FundingAsk.HasValue)
                 {
@@ -46,6 +46,21 @@ namespace He.PipelineAssessment.Models.ViewModels
                     return "-";
                 }
             }
-        }        
+        }
+
+        public string NumberOfHomesFormatted
+        {
+            get
+            {
+                if (NumberOfHomes.HasValue)
+                {
+                    return NumberOfHomes.Value.ToString("N0");
+                }
+                else
+                {
+                    return "-";
+                }
+            }
+        }
     }
 }
