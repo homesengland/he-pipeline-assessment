@@ -1,4 +1,4 @@
-import { Component, h, Prop, State } from '@stencil/core';
+import { Component, h, Event, EventEmitter, Prop, State } from '@stencil/core';
 import {
   ActivityDefinitionProperty,
   ActivityModel,
@@ -29,6 +29,8 @@ export class HEChecklistProperty {
   @Prop() propertyModel: ActivityDefinitionProperty;
   @State() cases: Array<SwitchCase> = [];
   @State() iconProvider = new IconProvider();
+  @Event() expressionChanged: EventEmitter<string>;
+
 
   @State() switchTextHeight: string = "";
 

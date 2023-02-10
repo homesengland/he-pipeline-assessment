@@ -1,4 +1,4 @@
-import { Component, h, Prop, State } from '@stencil/core';
+import { Component, h, Event, EventEmitter, Prop, State } from '@stencil/core';
 import {
   ActivityDefinitionProperty,
   ActivityModel,
@@ -21,13 +21,15 @@ import ExpandIcon from '../../../icons/expand_icon';
 })
 //Copy of Elsa Switch Case
 //Copied to allow us control over how the expression editor is displayed.
-export class HESwitchCasesProperty {
+export class HeSwitchCasesProperty {
 
   @Prop() activityModel: ActivityModel;
   @Prop() propertyDescriptor: ActivityPropertyDescriptor;
   @Prop() propertyModel: ActivityDefinitionProperty;
   @State() cases: Array<SwitchCase> = [];
   @State() iconProvider = new IconProvider();
+  @Event() expressionChanged: EventEmitter<string>;
+
 
   @State() switchTextHeight: string = "";
 
@@ -39,12 +41,12 @@ export class HESwitchCasesProperty {
 
   async componentWillLoad() {
     const propertyModel = this.propertyModel;
-    const casesJson = propertyModel.expressions['Switch']
+    const casesJson = propertyModel.expressions[SyntaxNames.Switch]
     this.cases = parseJson(casesJson) || [];
   }
 
   updatePropertyModel() {
-    this.propertyModel.expressions['Switch'] = JSON.stringify(this.cases);
+    this.propertyModel.expressions[SyntaxNames.Switch] = JSON.stringify(this.cases);
     this.multiExpressionEditor.expressions[SyntaxNames.Json] = JSON.stringify(this.cases, null, 2);
   }
 
@@ -91,7 +93,7 @@ export class HESwitchCasesProperty {
     if (!Array.isArray(parsed))
       return;
 
-    this.propertyModel.expressions['Switch'] = json;
+    this.propertyModel.expressions[SyntaxNames.Switch] = json;
     this.cases = parsed;
   }
 

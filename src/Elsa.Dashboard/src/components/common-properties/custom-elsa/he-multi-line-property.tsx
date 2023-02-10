@@ -1,4 +1,4 @@
-import { Component, h, Prop, State } from '@stencil/core';
+import { Component, h, Event, EventEmitter, Prop, State } from '@stencil/core';
 import {
   ActivityDefinitionProperty,
   ActivityModel,
@@ -19,6 +19,8 @@ export class HEMultiLineProperty {
   @Prop() propertyDescriptor: ActivityPropertyDescriptor;
   @Prop() propertyModel: ActivityDefinitionProperty;
   @State() currentValue: string;
+  @Event() expressionChanged: EventEmitter<string>;
+
   componentWillLoad() {
     const defaultSyntax = this.propertyDescriptor.defaultSyntax || SyntaxNames.Literal;
     this.currentValue = this.propertyModel.expressions[defaultSyntax] || undefined;

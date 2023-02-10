@@ -1,4 +1,4 @@
-import { Component, h, Prop, State } from '@stencil/core';
+import { Component, h, EventEmitter, Event, Prop, State } from '@stencil/core';
 import {
   ActivityDefinitionProperty,
   ActivityModel,
@@ -12,13 +12,14 @@ import {
 })
   //Copy of Elsa Switch Case
   //Copied to allow us control over how the expression editor is displayed.
-export class HESingleLineProperty {
+export class HeSingleLineProperty {
 
   @Prop() activityModel: ActivityModel;
   @Prop() propertyDescriptor: ActivityPropertyDescriptor;
   @Prop() propertyModel: ActivityDefinitionProperty;
-  @Prop() onUpdate: Function;
   @State() currentValue: string;
+  @Event() expressionChanged: EventEmitter<string>;
+
 
   onChange(e: Event) {
     const input = e.currentTarget as HTMLInputElement;

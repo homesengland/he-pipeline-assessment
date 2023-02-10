@@ -4,15 +4,15 @@ import { getOrCreateProperty } from "../../models/utils";
 import { HePropertyDisplayDriver } from "../../models/display-manager";
 import { HeProperty } from "../../models/custom-component-models";
 
-export class HeSingleLineDriver implements HePropertyDisplayDriver {
+export class HeMultiTextDriver implements HePropertyDisplayDriver {
+
   display(activity: ActivityModel, property: ActivityPropertyDescriptor) {
     const prop = getOrCreateProperty(activity, property.name);
-    return <he-single-line-property activityModel={activity} propertyDescriptor={property} propertyModel={prop} />;
+    return <he-multi-text-property activityModel={activity} propertyDescriptor={property} propertyModel={prop} />;
   }
 
   displayNested(activity: ActivityModel, property: HeProperty, onExpressionChanged: Function) {
     const prop = getOrCreateProperty(activity, property.descriptor.name);
-    return <he-single-line-property activityModel={activity} propertyDescriptor={property.descriptor} propertyModel={prop.value} onExpressionChanged={e => onExpressionChanged(e, property)} />;
-  }
+    return <he-multi-text-property activityModel={activity} propertyDescriptor={property.descriptor} propertyModel={prop.value} onExpressionChanged={e => onExpressionChanged(e, property)} />;
   }
 }

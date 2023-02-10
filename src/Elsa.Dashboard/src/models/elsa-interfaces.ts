@@ -32,6 +32,7 @@ export class SyntaxNames {
   static readonly Liquid = "Liquid";
   static readonly Json = "Json";
   static readonly SQL = "SQL";
+  static readonly Switch = "Switch"
   static Variable: string;
   static Output: string;
 }

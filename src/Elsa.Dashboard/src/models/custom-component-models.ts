@@ -111,6 +111,12 @@ export class QuestionScreenProperty {
   questions: Array<QuestionProperty> = [];
 }
 
+export class HeProperty {
+  value: ActivityDefinitionProperty;
+  descriptor: ActivityPropertyDescriptor
+}
+
+
 export class QuestionProperty {
   value: ActivityDefinitionProperty;
   descriptor: Array<ActivityPropertyDescriptor> = [];

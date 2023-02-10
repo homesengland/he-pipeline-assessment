@@ -1,4 +1,4 @@
-import { Component, h, Prop, State } from '@stencil/core';
+import { Component, h, Event, EventEmitter, Prop, State } from '@stencil/core';
 import {
   ActivityDefinitionProperty,
   ActivityModel,
@@ -18,6 +18,8 @@ export class HECheckboxProperty {
   @Prop() activityModel: ActivityModel;
   @Prop() propertyDescriptor: ActivityPropertyDescriptor;
   @Prop() propertyModel: ActivityDefinitionProperty;
+  @Event() expressionChanged: EventEmitter<string>;
+
   @State() isChecked: boolean
 
   async componentWillLoad() {
