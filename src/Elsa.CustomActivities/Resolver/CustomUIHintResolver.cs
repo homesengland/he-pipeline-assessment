@@ -1,5 +1,6 @@
 ﻿using Elsa.Attributes;
 using Elsa.CustomActivities.Activities.QuestionScreen;
+using Elsa.CustomActivities.Constants;
 using Elsa.Design;
 using System;
 using System.Collections;
@@ -23,18 +24,18 @@ namespace Elsa.CustomActivities.Resolver
             var type = activityPropertyInfo.PropertyType;
 
             if (type == typeof(bool) || type == typeof(bool?))
-                return ActivityInputUIHints.Checkbox;
+                return HePropertyUIHints.Checkbox;
 
             if (type == typeof(string))
-                return ActivityInputUIHints.SingleLine;
+                return HePropertyUIHints.SingleLine;
 
             if (typeof(IEnumerable).IsAssignableFrom(type))
-                return ActivityInputUIHints.Dropdown;
+                return HePropertyUIHints.Dropdown;
 
             if (type.IsEnum && type.GetTypeOfNullable().IsEnum)
-                return ActivityInputUIHints.Dropdown;
+                return HePropertyUIHints.Dropdown;
 
-            return ActivityInputUIHints.SingleLine;
+            return HePropertyUIHints.SingleLine;
         }
     }
 }

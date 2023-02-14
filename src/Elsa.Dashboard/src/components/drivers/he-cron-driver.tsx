@@ -12,7 +12,6 @@ export class HeCronDriver implements HePropertyDisplayDriver {
   }
 
   displayNested(activity: ActivityModel, property: HeProperty, onExpressionChanged: Function) {
-    const prop = getOrCreateProperty(activity, property.descriptor.name);
-    return <he-cron-expression-property activityModel={activity} propertyDescriptor={property.descriptor} propertyModel={prop.value} onExpressionChanged={e => onExpressionChanged(e, property)} />;
+    return <he-cron-expression-property activityModel={activity} propertyDescriptor={property.descriptor} propertyModel={property.value} onExpressionChanged={e => onExpressionChanged(e, property)} />;
   }
 }

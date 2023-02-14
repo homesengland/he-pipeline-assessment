@@ -10,38 +10,16 @@ import { HeRadioListDriver } from "../components/drivers/he-radio-list-driver";
 import { HeScriptDriver } from "../components/drivers/he-script-driver";
 import { HeSingleLineDriver } from "../components/drivers/he-single-line-driver";
 import { HeSwitchCaseDriver } from "../components/drivers/he-switch-cases-driver";
-import { HeProperty } from "./custom-component-models";
+import { Dictionary, HeProperty } from "./custom-component-models";
 import { ActivityModel, ActivityPropertyDescriptor } from "./elsa-interfaces";
 
-
-//export interface DefaultDrivers {
-//  drivers: Record<string, HePropertyDisplayDriver>
-//}
-
-//export class DefaultDriversFactory implements DefaultDrivers {
-//  constructor() {
-//    this.drivers["single-line"] = new HeSingleLineDriver();
-//    this.drivers["multi-line"] = new HeMultiLineDriver();
-//    this.drivers["json"] = new HeJsonDriver();
-//    this.drivers["check-list"] = new HeCheckListDriver();
-//    this.drivers["radio-list"] = new HeRadioListDriver();
-//    this.drivers["checkbox"] = new HeCheckboxDriver();
-//    this.drivers["dropdown"] = new HeDropdownDriver();
-//    this.drivers["multi-text"] = new HeMultiTextDriver();
-//    this.drivers["code-editor"] = new HeScriptDriver();
-//    this.drivers["switch-case-builder"] = new HeSwitchCaseDriver();
-//    this.drivers["dictionary"] = new HeDictionaryDriver();
-//    this.drivers["cron-expression"] = new HeCronDriver();
-//  }
-//    drivers: Record<string, HePropertyDisplayDriver>;
-//}
 
 export interface HePropertyDisplayDriver {
   display(model: ActivityModel, property: ActivityPropertyDescriptor)
   displayNested(model: ActivityModel, property: HeProperty, onUpdate: Function)
 }
 
-export class DefaultDriversFactory implements Record<string, HePropertyDisplayDriver> {
+export class DefaultDriversFactory {
   constructor() {
     this.drivers["he-single-line"] = new HeSingleLineDriver();
     this.drivers["he-multi-line"] = new HeMultiLineDriver();
@@ -56,26 +34,33 @@ export class DefaultDriversFactory implements Record<string, HePropertyDisplayDr
     this.drivers["he-dictionary"] = new HeDictionaryDriver();
     this.drivers["he-cron-expression"] = new HeCronDriver();
   }
-    [uiHint: string]: HePropertyDisplayDriver;
+  drivers: Dictionary<HePropertyDisplayDriver> = { };
 }
 
 
 
 export class HePropertyDisplayManager {
+  constructor() {
+    this.driverFactory = new DefaultDriversFactory();
+  }
 
-  driverFactory: DefaultDriversFactory = new DefaultDriversFactory();
+  driverFactory: DefaultDriversFactory;
 
   getDriver(type: string) {
-    return this.driverFactory[type];
+    console.log("Key", type);
+    console.log("Factory", this.driverFactory);
+    console.log("Drivers:", this.driverFactory.drivers)
+    return this.driverFactory.drivers[type];
   }
 
   display(model: ActivityModel, property: ActivityPropertyDescriptor) {
-    const driver = this.getDriver(property.uiHint);
+    const driver: HePropertyDisplayDriver = this.getDriver(property.uiHint);
     return driver.display(model, property)
   }
 
   displayNested(model: ActivityModel, property: HeProperty, onUpdate: Function) {
-    const driver = this.getDriver(property.descriptor.uiHint);
+    const driver: HePropertyDisplayDriver = this.getDriver(property.descriptor.uiHint);
+    console.log("Driver", driver);
     return driver.displayNested(model, property, onUpdate)
   }
 }

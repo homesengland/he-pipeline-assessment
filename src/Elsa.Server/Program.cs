@@ -48,6 +48,8 @@ builder.Services
         .AddActivity<CheckYourAnswersScreen>()
         .AddActivity<ConfirmationScreen>()
         .AddActivity<FinishWorkflow>()
+        //Remove when Testing is complete
+        .AddActivity<QuestionScreenTest>()
         .NoCoreActivities()
         .AddConsoleActivities()
     );

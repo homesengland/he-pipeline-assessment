@@ -16,7 +16,8 @@ namespace Elsa.Server.Features.Activities.CustomActivityProperties
         public Task<IDictionary<string, IEnumerable<ActivityInputDescriptor>>> Handle(CustomPropertyCommand request, CancellationToken cancellationToken)
         {
             IDictionary<string, IEnumerable<ActivityInputDescriptor>> propertyResponses = new Dictionary<string, IEnumerable<ActivityInputDescriptor>>();
-            propertyResponses.Add("QuestionProperty", _describer.DescribeInputProperties(typeof(Question)));
+            propertyResponses.Add("QuestionProperties", _describer.DescribeInputProperties(typeof(Question)));
+            propertyResponses.Add("QuestionPropertiesTest", _describer.DescribeInputProperties(typeof(QuestionTest)));
             return Task.FromResult(propertyResponses);
         }
     }

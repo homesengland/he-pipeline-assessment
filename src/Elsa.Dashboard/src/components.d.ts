@@ -6,7 +6,7 @@
  */
 import { HTMLStencilElement, JSXBase } from "@stencil/core/internal";
 import { ActivityDefinitionProperty, ActivityModel, ActivityPropertyDescriptor, IntellisenseContext } from "./models/elsa-interfaces";
-import { CheckboxQuestion, IOutcomeProperty, IQuestionComponent, ITextProperty, RadioQuestion, TextAreaQuestion } from "./models/custom-component-models";
+import { CheckboxQuestion, HeProperty, IOutcomeProperty, IQuestionComponent, ITextProperty, QuestionProperty2, RadioQuestion, TextAreaQuestion } from "./models/custom-component-models";
 import { IconProvider } from "./components/icon-provider/icon-provider";
 export namespace Components {
     interface ConditionalTextListProperty {
@@ -52,6 +52,36 @@ export namespace Components {
     interface ElsaTextareaQuestion {
         "question": TextAreaQuestion;
     }
+    interface HeCheckListProperty {
+        "activityModel": ActivityModel;
+        "propertyDescriptor": ActivityPropertyDescriptor;
+        "propertyModel": ActivityDefinitionProperty;
+    }
+    interface HeCheckboxProperty {
+        "activityModel": ActivityModel;
+        "propertyDescriptor": ActivityPropertyDescriptor;
+        "propertyModel": ActivityDefinitionProperty;
+    }
+    interface HeJsonProperty {
+        "activityModel": ActivityModel;
+        "propertyDescriptor": ActivityPropertyDescriptor;
+        "propertyModel": ActivityDefinitionProperty;
+    }
+    interface HeMultiLineProperty {
+        "activityModel": ActivityModel;
+        "propertyDescriptor": ActivityPropertyDescriptor;
+        "propertyModel": ActivityDefinitionProperty;
+    }
+    interface HeSingleLineProperty {
+        "activityModel": ActivityModel;
+        "propertyDescriptor": ActivityPropertyDescriptor;
+        "propertyModel": ActivityDefinitionProperty;
+    }
+    interface HeSwitchCasesProperty {
+        "activityModel": ActivityModel;
+        "propertyDescriptor": ActivityPropertyDescriptor;
+        "propertyModel": ActivityDefinitionProperty;
+    }
     interface QuestionCheckboxProperty {
         "question": CheckboxQuestion;
     }
@@ -60,10 +90,12 @@ export namespace Components {
         "question": IQuestionComponent;
     }
     interface QuestionPropertyV2 {
-        "ActivityModel": ActivityModel;
-        "Properties": Array<ActivityPropertyDescriptor>;
-        "Type": string;
-        "question": IQuestionComponent;
+        "activityModel": ActivityModel;
+        "questionModel": QuestionProperty2;
+    }
+    interface QuestionPropertyV3 {
+        "activityModel": ActivityModel;
+        "questionModel": QuestionProperty2;
     }
     interface QuestionRadioProperty {
         "question": RadioQuestion;
@@ -74,6 +106,60 @@ export namespace Components {
         "propertyModel": ActivityDefinitionProperty;
         "questionProperties": Array<ActivityPropertyDescriptor>;
     }
+    interface QuestionScreenPropertyV2 {
+        "activityModel": ActivityModel;
+        "propertyDescriptor": ActivityPropertyDescriptor;
+        "propertyModel": ActivityDefinitionProperty;
+        "questionProperties": Array<ActivityPropertyDescriptor>;
+    }
+}
+export interface CustomInputPropertyCustomEvent<T> extends CustomEvent<T> {
+    detail: T;
+    target: HTMLCustomInputPropertyElement;
+}
+export interface CustomOutcomePropertyCustomEvent<T> extends CustomEvent<T> {
+    detail: T;
+    target: HTMLCustomOutcomePropertyElement;
+}
+export interface ElsaTextareaQuestionCustomEvent<T> extends CustomEvent<T> {
+    detail: T;
+    target: HTMLElsaTextareaQuestionElement;
+}
+export interface HeCheckListPropertyCustomEvent<T> extends CustomEvent<T> {
+    detail: T;
+    target: HTMLHeCheckListPropertyElement;
+}
+export interface HeCheckboxPropertyCustomEvent<T> extends CustomEvent<T> {
+    detail: T;
+    target: HTMLHeCheckboxPropertyElement;
+}
+export interface HeJsonPropertyCustomEvent<T> extends CustomEvent<T> {
+    detail: T;
+    target: HTMLHeJsonPropertyElement;
+}
+export interface HeMultiLinePropertyCustomEvent<T> extends CustomEvent<T> {
+    detail: T;
+    target: HTMLHeMultiLinePropertyElement;
+}
+export interface HeSingleLinePropertyCustomEvent<T> extends CustomEvent<T> {
+    detail: T;
+    target: HTMLHeSingleLinePropertyElement;
+}
+export interface HeSwitchCasesPropertyCustomEvent<T> extends CustomEvent<T> {
+    detail: T;
+    target: HTMLHeSwitchCasesPropertyElement;
+}
+export interface QuestionCheckboxPropertyCustomEvent<T> extends CustomEvent<T> {
+    detail: T;
+    target: HTMLQuestionCheckboxPropertyElement;
+}
+export interface QuestionPropertyCustomEvent<T> extends CustomEvent<T> {
+    detail: T;
+    target: HTMLQuestionPropertyElement;
+}
+export interface QuestionRadioPropertyCustomEvent<T> extends CustomEvent<T> {
+    detail: T;
+    target: HTMLQuestionRadioPropertyElement;
 }
 declare global {
     interface HTMLConditionalTextListPropertyElement extends Components.ConditionalTextListProperty, HTMLStencilElement {
@@ -112,6 +198,42 @@ declare global {
         prototype: HTMLElsaTextareaQuestionElement;
         new (): HTMLElsaTextareaQuestionElement;
     };
+    interface HTMLHeCheckListPropertyElement extends Components.HeCheckListProperty, HTMLStencilElement {
+    }
+    var HTMLHeCheckListPropertyElement: {
+        prototype: HTMLHeCheckListPropertyElement;
+        new (): HTMLHeCheckListPropertyElement;
+    };
+    interface HTMLHeCheckboxPropertyElement extends Components.HeCheckboxProperty, HTMLStencilElement {
+    }
+    var HTMLHeCheckboxPropertyElement: {
+        prototype: HTMLHeCheckboxPropertyElement;
+        new (): HTMLHeCheckboxPropertyElement;
+    };
+    interface HTMLHeJsonPropertyElement extends Components.HeJsonProperty, HTMLStencilElement {
+    }
+    var HTMLHeJsonPropertyElement: {
+        prototype: HTMLHeJsonPropertyElement;
+        new (): HTMLHeJsonPropertyElement;
+    };
+    interface HTMLHeMultiLinePropertyElement extends Components.HeMultiLineProperty, HTMLStencilElement {
+    }
+    var HTMLHeMultiLinePropertyElement: {
+        prototype: HTMLHeMultiLinePropertyElement;
+        new (): HTMLHeMultiLinePropertyElement;
+    };
+    interface HTMLHeSingleLinePropertyElement extends Components.HeSingleLineProperty, HTMLStencilElement {
+    }
+    var HTMLHeSingleLinePropertyElement: {
+        prototype: HTMLHeSingleLinePropertyElement;
+        new (): HTMLHeSingleLinePropertyElement;
+    };
+    interface HTMLHeSwitchCasesPropertyElement extends Components.HeSwitchCasesProperty, HTMLStencilElement {
+    }
+    var HTMLHeSwitchCasesPropertyElement: {
+        prototype: HTMLHeSwitchCasesPropertyElement;
+        new (): HTMLHeSwitchCasesPropertyElement;
+    };
     interface HTMLQuestionCheckboxPropertyElement extends Components.QuestionCheckboxProperty, HTMLStencilElement {
     }
     var HTMLQuestionCheckboxPropertyElement: {
@@ -130,6 +252,12 @@ declare global {
         prototype: HTMLQuestionPropertyV2Element;
         new (): HTMLQuestionPropertyV2Element;
     };
+    interface HTMLQuestionPropertyV3Element extends Components.QuestionPropertyV3, HTMLStencilElement {
+    }
+    var HTMLQuestionPropertyV3Element: {
+        prototype: HTMLQuestionPropertyV3Element;
+        new (): HTMLQuestionPropertyV3Element;
+    };
     interface HTMLQuestionRadioPropertyElement extends Components.QuestionRadioProperty, HTMLStencilElement {
     }
     var HTMLQuestionRadioPropertyElement: {
@@ -142,6 +270,12 @@ declare global {
         prototype: HTMLQuestionScreenPropertyElement;
         new (): HTMLQuestionScreenPropertyElement;
     };
+    interface HTMLQuestionScreenPropertyV2Element extends Components.QuestionScreenPropertyV2, HTMLStencilElement {
+    }
+    var HTMLQuestionScreenPropertyV2Element: {
+        prototype: HTMLQuestionScreenPropertyV2Element;
+        new (): HTMLQuestionScreenPropertyV2Element;
+    };
     interface HTMLElementTagNameMap {
         "conditional-text-list-property": HTMLConditionalTextListPropertyElement;
         "custom-elsa-switch-cases-property": HTMLCustomElsaSwitchCasesPropertyElement;
@@ -149,11 +283,19 @@ declare global {
         "custom-outcome-property": HTMLCustomOutcomePropertyElement;
         "custom-text-property": HTMLCustomTextPropertyElement;
         "elsa-textarea-question": HTMLElsaTextareaQuestionElement;
+        "he-check-list-property": HTMLHeCheckListPropertyElement;
+        "he-checkbox-property": HTMLHeCheckboxPropertyElement;
+        "he-json-property": HTMLHeJsonPropertyElement;
+        "he-multi-line-property": HTMLHeMultiLinePropertyElement;
+        "he-single-line-property": HTMLHeSingleLinePropertyElement;
+        "he-switch-cases-property": HTMLHeSwitchCasesPropertyElement;
         "question-checkbox-property": HTMLQuestionCheckboxPropertyElement;
         "question-property": HTMLQuestionPropertyElement;
         "question-property-v2": HTMLQuestionPropertyV2Element;
+        "question-property-v3": HTMLQuestionPropertyV3Element;
         "question-radio-property": HTMLQuestionRadioPropertyElement;
         "question-screen-property": HTMLQuestionScreenPropertyElement;
+        "question-screen-property-v2": HTMLQuestionScreenPropertyV2Element;
     }
 }
 declare namespace LocalJSX {
@@ -173,7 +315,7 @@ declare namespace LocalJSX {
         "editorHeight"?: string;
         "index"?: number;
         "intellisenseContext"?: IntellisenseContext;
-        "onValueChanged"?: (event: CustomEvent<ITextProperty>) => void;
+        "onValueChanged"?: (event: CustomInputPropertyCustomEvent<ITextProperty>) => void;
         "propertyDescriptor"?: ActivityPropertyDescriptor;
         "showLabel"?: boolean;
         "singleLineMode"?: boolean;
@@ -185,8 +327,8 @@ declare namespace LocalJSX {
         "iconProvider"?: IconProvider;
         "index"?: number;
         "intellisenseContext"?: IntellisenseContext;
-        "onDelete"?: (event: CustomEvent<IOutcomeProperty>) => void;
-        "onValueChanged"?: (event: CustomEvent<IOutcomeProperty>) => void;
+        "onDelete"?: (event: CustomOutcomePropertyCustomEvent<IOutcomeProperty>) => void;
+        "onValueChanged"?: (event: CustomOutcomePropertyCustomEvent<IOutcomeProperty>) => void;
         "outcome"?: IOutcomeProperty;
         "propertyDescriptor"?: ActivityPropertyDescriptor;
         "showLabel"?: boolean;
@@ -201,29 +343,73 @@ declare namespace LocalJSX {
         "singleLine"?: boolean;
     }
     interface ElsaTextareaQuestion {
-        "onUpdateQuestion"?: (event: CustomEvent<IQuestionComponent>) => void;
+        "onUpdateQuestion"?: (event: ElsaTextareaQuestionCustomEvent<IQuestionComponent>) => void;
         "question"?: TextAreaQuestion;
     }
+    interface HeCheckListProperty {
+        "activityModel"?: ActivityModel;
+        "onExpressionChanged"?: (event: HeCheckListPropertyCustomEvent<string>) => void;
+        "propertyDescriptor"?: ActivityPropertyDescriptor;
+        "propertyModel"?: ActivityDefinitionProperty;
+    }
+    interface HeCheckboxProperty {
+        "activityModel"?: ActivityModel;
+        "onExpressionChanged"?: (event: HeCheckboxPropertyCustomEvent<string>) => void;
+        "propertyDescriptor"?: ActivityPropertyDescriptor;
+        "propertyModel"?: ActivityDefinitionProperty;
+    }
+    interface HeJsonProperty {
+        "activityModel"?: ActivityModel;
+        "onExpressionChanged"?: (event: HeJsonPropertyCustomEvent<string>) => void;
+        "propertyDescriptor"?: ActivityPropertyDescriptor;
+        "propertyModel"?: ActivityDefinitionProperty;
+    }
+    interface HeMultiLineProperty {
+        "activityModel"?: ActivityModel;
+        "onExpressionChanged"?: (event: HeMultiLinePropertyCustomEvent<string>) => void;
+        "propertyDescriptor"?: ActivityPropertyDescriptor;
+        "propertyModel"?: ActivityDefinitionProperty;
+    }
+    interface HeSingleLineProperty {
+        "activityModel"?: ActivityModel;
+        "onExpressionChanged"?: (event: HeSingleLinePropertyCustomEvent<HeProperty>) => void;
+        "propertyDescriptor"?: ActivityPropertyDescriptor;
+        "propertyModel"?: ActivityDefinitionProperty;
+    }
+    interface HeSwitchCasesProperty {
+        "activityModel"?: ActivityModel;
+        "onExpressionChanged"?: (event: HeSwitchCasesPropertyCustomEvent<string>) => void;
+        "propertyDescriptor"?: ActivityPropertyDescriptor;
+        "propertyModel"?: ActivityDefinitionProperty;
+    }
     interface QuestionCheckboxProperty {
-        "onUpdateQuestion"?: (event: CustomEvent<IQuestionComponent>) => void;
+        "onUpdateQuestion"?: (event: QuestionCheckboxPropertyCustomEvent<IQuestionComponent>) => void;
         "question"?: CheckboxQuestion;
     }
     interface QuestionProperty {
         "ActivityModel"?: ActivityModel;
-        "onUpdateQuestion"?: (event: CustomEvent<IQuestionComponent>) => void;
+        "onUpdateQuestion"?: (event: QuestionPropertyCustomEvent<IQuestionComponent>) => void;
         "question"?: IQuestionComponent;
     }
     interface QuestionPropertyV2 {
-        "ActivityModel"?: ActivityModel;
-        "Properties"?: Array<ActivityPropertyDescriptor>;
-        "Type"?: string;
-        "question"?: IQuestionComponent;
+        "activityModel"?: ActivityModel;
+        "questionModel"?: QuestionProperty2;
+    }
+    interface QuestionPropertyV3 {
+        "activityModel"?: ActivityModel;
+        "questionModel"?: QuestionProperty2;
     }
     interface QuestionRadioProperty {
-        "onUpdateQuestion"?: (event: CustomEvent<IQuestionComponent>) => void;
+        "onUpdateQuestion"?: (event: QuestionRadioPropertyCustomEvent<IQuestionComponent>) => void;
         "question"?: RadioQuestion;
     }
     interface QuestionScreenProperty {
+        "activityModel"?: ActivityModel;
+        "propertyDescriptor"?: ActivityPropertyDescriptor;
+        "propertyModel"?: ActivityDefinitionProperty;
+        "questionProperties"?: Array<ActivityPropertyDescriptor>;
+    }
+    interface QuestionScreenPropertyV2 {
         "activityModel"?: ActivityModel;
         "propertyDescriptor"?: ActivityPropertyDescriptor;
         "propertyModel"?: ActivityDefinitionProperty;
@@ -236,11 +422,19 @@ declare namespace LocalJSX {
         "custom-outcome-property": CustomOutcomeProperty;
         "custom-text-property": CustomTextProperty;
         "elsa-textarea-question": ElsaTextareaQuestion;
+        "he-check-list-property": HeCheckListProperty;
+        "he-checkbox-property": HeCheckboxProperty;
+        "he-json-property": HeJsonProperty;
+        "he-multi-line-property": HeMultiLineProperty;
+        "he-single-line-property": HeSingleLineProperty;
+        "he-switch-cases-property": HeSwitchCasesProperty;
         "question-checkbox-property": QuestionCheckboxProperty;
         "question-property": QuestionProperty;
         "question-property-v2": QuestionPropertyV2;
+        "question-property-v3": QuestionPropertyV3;
         "question-radio-property": QuestionRadioProperty;
         "question-screen-property": QuestionScreenProperty;
+        "question-screen-property-v2": QuestionScreenPropertyV2;
     }
 }
 export { LocalJSX as JSX };
@@ -253,11 +447,19 @@ declare module "@stencil/core" {
             "custom-outcome-property": LocalJSX.CustomOutcomeProperty & JSXBase.HTMLAttributes<HTMLCustomOutcomePropertyElement>;
             "custom-text-property": LocalJSX.CustomTextProperty & JSXBase.HTMLAttributes<HTMLCustomTextPropertyElement>;
             "elsa-textarea-question": LocalJSX.ElsaTextareaQuestion & JSXBase.HTMLAttributes<HTMLElsaTextareaQuestionElement>;
+            "he-check-list-property": LocalJSX.HeCheckListProperty & JSXBase.HTMLAttributes<HTMLHeCheckListPropertyElement>;
+            "he-checkbox-property": LocalJSX.HeCheckboxProperty & JSXBase.HTMLAttributes<HTMLHeCheckboxPropertyElement>;
+            "he-json-property": LocalJSX.HeJsonProperty & JSXBase.HTMLAttributes<HTMLHeJsonPropertyElement>;
+            "he-multi-line-property": LocalJSX.HeMultiLineProperty & JSXBase.HTMLAttributes<HTMLHeMultiLinePropertyElement>;
+            "he-single-line-property": LocalJSX.HeSingleLineProperty & JSXBase.HTMLAttributes<HTMLHeSingleLinePropertyElement>;
+            "he-switch-cases-property": LocalJSX.HeSwitchCasesProperty & JSXBase.HTMLAttributes<HTMLHeSwitchCasesPropertyElement>;
             "question-checkbox-property": LocalJSX.QuestionCheckboxProperty & JSXBase.HTMLAttributes<HTMLQuestionCheckboxPropertyElement>;
             "question-property": LocalJSX.QuestionProperty & JSXBase.HTMLAttributes<HTMLQuestionPropertyElement>;
             "question-property-v2": LocalJSX.QuestionPropertyV2 & JSXBase.HTMLAttributes<HTMLQuestionPropertyV2Element>;
+            "question-property-v3": LocalJSX.QuestionPropertyV3 & JSXBase.HTMLAttributes<HTMLQuestionPropertyV3Element>;
             "question-radio-property": LocalJSX.QuestionRadioProperty & JSXBase.HTMLAttributes<HTMLQuestionRadioPropertyElement>;
             "question-screen-property": LocalJSX.QuestionScreenProperty & JSXBase.HTMLAttributes<HTMLQuestionScreenPropertyElement>;
+            "question-screen-property-v2": LocalJSX.QuestionScreenPropertyV2 & JSXBase.HTMLAttributes<HTMLQuestionScreenPropertyV2Element>;
         }
     }
 }

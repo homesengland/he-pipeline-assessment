@@ -108,7 +108,7 @@ export interface IOutcomeProperty {
 //Alt Question Screens
 
 export class QuestionScreenProperty {
-  questions: Array<QuestionProperty> = [];
+  questions: Array<QuestionProperty2> = [];
 }
 
 export class HeProperty {
@@ -117,10 +117,15 @@ export class HeProperty {
 }
 
 
-export class QuestionProperty {
+export class QuestionProperty2 {
   value: ActivityDefinitionProperty;
   descriptor: Array<ActivityPropertyDescriptor> = [];
   questionType: IQuestionData;
 }
+
+export interface Dictionary<T> {
+  [Key: string]: T;
+}
+
 
 

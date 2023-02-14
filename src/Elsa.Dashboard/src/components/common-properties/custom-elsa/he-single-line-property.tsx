@@ -1,4 +1,5 @@
 import { Component, h, EventEmitter, Event, Prop, State } from '@stencil/core';
+import { HeProperty } from '../../../models/custom-component-models';
 import {
   ActivityDefinitionProperty,
   ActivityModel,
@@ -18,7 +19,7 @@ export class HeSingleLineProperty {
   @Prop() propertyDescriptor: ActivityPropertyDescriptor;
   @Prop() propertyModel: ActivityDefinitionProperty;
   @State() currentValue: string;
-  @Event() expressionChanged: EventEmitter<string>;
+  @Event() expressionChanged: EventEmitter<HeProperty>;
 
 
   onChange(e: Event) {

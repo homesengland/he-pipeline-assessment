@@ -4,3 +4,8 @@ export const CustomPropertyUIHints = {
   CustomSwitchBuilder: "custom-switch-case-builder",
   CustomTextBuilder: "custom-text-property-builder",
 };
+
+export const PropertyDescriberHints = {
+  QuestionScreenBuilder: "QuestionProperties",
+  QuestionScreenBuilderTest: "QuestionPropertiesTest",
+}

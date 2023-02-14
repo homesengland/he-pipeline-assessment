@@ -10,7 +10,7 @@ import {
 
 import {
   QuestionActivity,
-  QuestionProperty,
+  QuestionProperty2,
   QuestionScreenProperty
 } from '../../models/custom-component-models';
 
@@ -39,7 +39,7 @@ function parseJson(json: string): any {
 }
 
 @Component({
-  tag: 'question-screen-property',
+  tag: 'question-screen-property-v2',
   shadow: false,
 })
 
@@ -74,7 +74,7 @@ export class MultiQuestionProperty {
     this.propertyModel.expressions[SyntaxNames.Json] = JSON.stringify(this.questionModel);
   }
 
-  onDeleteQuestionClick(e: Event, question: QuestionProperty) {
+  onDeleteQuestionClick(e: Event, question: QuestionProperty2) {
     e.stopPropagation();
     this.questionModel = { ...this.questionModel, questions: this.questionModel.questions.filter(x => x != question) };
     this.updatePropertyModel();
@@ -95,7 +95,7 @@ export class MultiQuestionProperty {
     return model.questions.map(this.renderChoiceEditor)
   }
 
-  renderChoiceEditor = (question: QuestionProperty, index: number) => {
+  renderChoiceEditor = (question: QuestionProperty2, index: number) => {
     const field = `question-${index}`;
     return (
       <div id={`${field}-id`} class="accordion elsa-mb-4 elsa-rounded" onClick={this.onAccordionQuestionClick}>
@@ -112,7 +112,7 @@ export class MultiQuestionProperty {
 
   handleAddQuestion(e: Event) {
     let value = (e.currentTarget as HTMLSelectElement).value.trim();
-    let data: IQuestionData = JSON.parse((e.currentTarget as HTMLSelectElement).selectedOptions[0].dataset.data)
+    let data: IQuestionData = JSON.parse((e.currentTarget as HTMLSelectElement).selectedOptions[0].dataset.type)
     if (value != null && value != "") {
       this.onAddQuestion(data);
       let element = e.currentTarget as HTMLSelectElement;
@@ -132,15 +132,19 @@ export class MultiQuestionProperty {
     const questionName = `Question ${id}`;
     const newValue = this.newQuestionValue(questionName);
 
-    let newQuestion: QuestionProperty = { value: newValue, descriptor: this.questionProperties, questionType: questionType }
+    let newQuestion: QuestionProperty2 = { value: newValue, descriptor: this.questionProperties, questionType: questionType }
     this.questionModel = { ...this.questionModel, questions: [...this.questionModel.questions, newQuestion] };
     this.updatePropertyModel();
   }
 
 
 
-  renderQuestionComponent(question: QuestionProperty) {
-    return <question-property onClick={(e) => e.stopPropagation()} class="panel elsa-rounded" question={question}></question-property>
+  renderQuestionComponent(question: QuestionProperty2) {
+    return <question-property-v3
+      class="panel elsa-rounded"
+      activityModel={this.activityModel}
+      questionModel={question}
+      onClick={(e) => e.stopPropagation()}></question-property-v3>
   }
 
   render() {

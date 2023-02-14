@@ -39,6 +39,6 @@ export class QuestionProvider {
   }
 
   private renderOption(data: QuestionData) {
-    return (<option value={data.nameConstant} data-type={data}>{data.displayName}</option>);
+    return (<option value={data.nameConstant} data-type={JSON.stringify(data)}>{data.displayName}</option>);
   }
 }

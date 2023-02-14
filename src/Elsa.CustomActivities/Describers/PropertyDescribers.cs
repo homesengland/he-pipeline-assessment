@@ -7,6 +7,7 @@ using Elsa.CustomActivities.Activities;
 using Elsa.CustomActivities.Resolver;
 using Elsa.CustomActivities.OptionsProviders;
 using Microsoft.Extensions.DependencyInjection;
+using Elsa.Expressions;
 
 namespace Elsa.CustomActivities.Describers
 {
