@@ -8,6 +8,7 @@ using Elsa.CustomActivities.Resolver;
 using Elsa.CustomActivities.OptionsProviders;
 using Microsoft.Extensions.DependencyInjection;
 using Elsa.Expressions;
+using Elsa.CustomActivities.PropertyDecorator;
 
 namespace Elsa.CustomActivities.Describers
 {
@@ -52,12 +53,12 @@ namespace Elsa.CustomActivities.Describers
                     continue;
                 }
 
-                var activityPropertyAttribute = propertyInfo.GetCustomAttribute<ActivityInputAttribute>();
+                var activityPropertyAttribute = propertyInfo.GetCustomAttribute<HeActivityInputAttribute>();
 
                 if (activityPropertyAttribute == null)
                     continue;
 
-                yield return new ActivityInputDescriptor
+                yield return new HeActivityInputDescriptor
                 (
                     activityPropertyAttribute.Name ?? propertyInfo.Name,
                     propertyInfo.PropertyType,
@@ -75,7 +76,10 @@ namespace Elsa.CustomActivities.Describers
                     activityPropertyAttribute.IsDesignerCritical,
                     activityPropertyAttribute.DefaultWorkflowStorageProvider,
                     activityPropertyAttribute.DisableWorkflowProviderSelection,
-                    activityPropertyAttribute.ConsiderValuesAsOutcomes
+                    activityPropertyAttribute.ConsiderValuesAsOutcomes,
+                    activityPropertyAttribute.DisplayInDesigner,
+                    activityPropertyAttribute.ConditionalActivityType
+                    
                 );
             }
         }

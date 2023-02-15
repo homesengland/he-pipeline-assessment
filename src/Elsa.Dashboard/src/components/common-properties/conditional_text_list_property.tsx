@@ -6,7 +6,6 @@ import {
   HTMLElsaExpressionEditorElement,
   HTMLElsaMultiExpressionEditorElement,
   IntellisenseContext,
-  SyntaxNames
 } from "../../models/elsa-interfaces";
 import { parseJson } from "../../models/utils";
 import { IOutcomeProperty } from "../../models/custom-component-models";
@@ -15,6 +14,7 @@ import PlusIcon from '../../icons/plus_icon';
 import TrashCanIcon from '../../icons/trash-can';
 
 import { mapSyntaxToLanguage } from '../../models/utils';
+import { SyntaxNames } from '../../constants/Constants';
 
 
 @Component({

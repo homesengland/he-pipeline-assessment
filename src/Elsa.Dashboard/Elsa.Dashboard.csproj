@@ -35,6 +35,7 @@
     <None Remove="src\components\drivers\he-script-driver.tsx" />
     <None Remove="src\components\drivers\he-single-line-driver.tsx" />
     <None Remove="src\components\drivers\he-switch-cases-driver.tsx" />
+    <None Remove="src\constants\Constants.ts" />
     <None Remove="src\models\display-manager.ts" />
     <None Remove="wwwroot\Scripts\Activities\GetCustomActivityProperties.js" />
     <None Remove="wwwroot\Scripts\CustomElsa.js" />
@@ -74,6 +75,7 @@
     <TypeScriptCompile Include="src\components\drivers\he-single-line-driver.tsx" />
     <TypeScriptCompile Include="src\components\drivers\he-checkbox-driver.tsx" />
     <TypeScriptCompile Include="src\components\drivers\he-switch-cases-driver.tsx" />
+    <TypeScriptCompile Include="src\constants\constants.ts" />
     <TypeScriptCompile Include="src\models\display-manager.ts" />
     <TypeScriptCompile Include="wwwroot\Scripts\Activities\GetCustomActivityProperties.js" />
     <TypeScriptCompile Include="wwwroot\Scripts\CustomElsa.js" />

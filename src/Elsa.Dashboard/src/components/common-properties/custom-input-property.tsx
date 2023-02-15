@@ -1,7 +1,6 @@
 import { Component, h, Prop, Event, EventEmitter } from '@stencil/core';
 import {
   ActivityPropertyDescriptor,
-  SyntaxNames,
   IntellisenseContext,
   HTMLElsaExpressionEditorElement
 } from "../../models/elsa-interfaces";
@@ -9,6 +8,7 @@ import {
 import { mapSyntaxToLanguage } from "../../models/utils";
 
 import { ITextProperty } from "../../models/custom-component-models"
+import { SyntaxNames } from '../../constants/Constants';
 
 @Component({
   tag: 'custom-input-property',

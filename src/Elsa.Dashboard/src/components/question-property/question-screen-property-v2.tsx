@@ -5,10 +5,10 @@ import {
   ActivityModel,
   ActivityPropertyDescriptor,
   HTMLElsaMultiExpressionEditorElement,
-  SyntaxNames
 } from '../../models/elsa-interfaces';
 
 import {
+    HeActivityPropertyDescriptor,
   QuestionActivity,
   QuestionModel,
   QuestionScreenProperty
@@ -24,6 +24,8 @@ import {
   QuestionProvider
 } from '../question-provider/question-provider';
 import TrashCanIcon from '../../icons/trash-can';
+import { SyntaxNames } from '../../constants/Constants';
+import { filterPropertiesByType } from '../../models/utils';
 
 
 function parseJson(json: string): any {
@@ -48,7 +50,7 @@ export class MultiQuestionProperty {
   @Prop() activityModel: ActivityModel;
   @Prop() propertyDescriptor: ActivityPropertyDescriptor;
   @Prop() propertyModel: ActivityDefinitionProperty;
-  @Prop() questionProperties: Array<ActivityPropertyDescriptor>;
+  @Prop() questionProperties: Array<HeActivityPropertyDescriptor>;
   @State() questionModel: QuestionScreenProperty = new QuestionScreenProperty();
   @State() iconProvider = new IconProvider();
   @State() questionProvider = new QuestionProvider(Object.values(QuestionLibrary));
@@ -59,6 +61,7 @@ export class MultiQuestionProperty {
 
 
   async componentWillLoad() {
+    console.log("Loading Question Screen:", this.questionProperties)
     const propertyModel = this.propertyModel;
     const choicesJson = propertyModel.expressions[SyntaxNames.Json]
     this.questionModel = parseJson(choicesJson) || this.defaultActivityModel();
@@ -137,9 +140,12 @@ export class MultiQuestionProperty {
     let id = (this.questionModel.questions.length + 1).toString();
     const questionName = `Question ${id}`;
     const newValue = this.newQuestionValue(questionName);
-
-    let newQuestion: QuestionModel = { value: newValue, descriptor: this.questionProperties, questionType: questionType }
+    let filteredValues = filterPropertiesByType(this.questionProperties, questionType.nameConstant);
+    console.log("questionProperties", this.questionProperties);
+    console.log("FilteredPRoperties", filteredValues);
+    let newQuestion: QuestionModel = { value: newValue, descriptor: filterPropertiesByType(this.questionProperties, questionType.nameConstant), questionType: questionType }
     this.questionModel = { ...this.questionModel, questions: [...this.questionModel.questions, newQuestion] };
+    
     this.updatePropertyModel();
   }
 

@@ -2,6 +2,25 @@ import { IQuestionData } from '../components/question-provider/question-provider
 import { ActivityDefinitionProperty, ActivityPropertyDescriptor } from './elsa-interfaces';
 import { Map } from './utils'
 
+export interface HeActivityPropertyDescriptor extends ActivityPropertyDescriptor {
+  name: string;
+  uiHint: string;
+  label?: string;
+  hint?: string;
+  options?: any;
+  category?: string;
+  defaultValue?: any;
+  defaultSyntax?: string;
+  supportedSyntaxes: Array<string>;
+  isReadOnly?: boolean;
+  defaultWorkflowStorageProvider?: string;
+  disableWorkflowProviderSelection: boolean;
+  considerValuesAsOutcomes: boolean;
+  displayInDesigner: boolean;
+  conditionalActivityType?: string;
+}
+
+
 ///Question Options
 
 export interface IQuestionOption {
@@ -114,13 +133,13 @@ export class QuestionScreenProperty {
 export class NestedProperty
 {
   value: ActivityDefinitionProperty;
-  descriptor: ActivityPropertyDescriptor
+  descriptor: HeActivityPropertyDescriptor
 }
 
 
 export class QuestionModel {
   value: ActivityDefinitionProperty;
-  descriptor: Array<ActivityPropertyDescriptor> = [];
+  descriptor: Array<HeActivityPropertyDescriptor> = [];
   questionType: IQuestionData;
 }
 

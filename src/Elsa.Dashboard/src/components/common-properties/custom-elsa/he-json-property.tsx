@@ -1,10 +1,10 @@
 import { Component, h, Event, EventEmitter, Prop, State } from '@stencil/core';
+import { SyntaxNames } from '../../../constants/Constants';
 import {
   ActivityDefinitionProperty,
   ActivityModel,
   ActivityPropertyDescriptor,
   MonacoValueChangedArgs,
-  SyntaxNames
 } from "../../../models/elsa-interfaces";
 
 @Component({

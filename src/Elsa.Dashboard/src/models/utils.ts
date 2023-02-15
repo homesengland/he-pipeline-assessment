@@ -1,4 +1,6 @@
-import { ActivityDefinitionProperty, ActivityModel, SyntaxNames } from "./elsa-interfaces";
+import { SyntaxNames } from "../constants/Constants";
+import { HeActivityPropertyDescriptor } from "./custom-component-models";
+import { ActivityDefinitionProperty, ActivityModel } from "./elsa-interfaces";
 
 export type Map<T> = {
   [key: string]: T
@@ -56,6 +58,16 @@ export function mapSyntaxToLanguage(syntax: string): any {
     default:
       return 'plaintext';
   }
+}
+
+export function filterPropertiesByType(questionProperties: Array<HeActivityPropertyDescriptor>, questionType: string) {
+  const propertiesJson: string = JSON.stringify(questionProperties);
+  const properties: Array<HeActivityPropertyDescriptor> = JSON.parse(propertiesJson);
+  const filteredProperties: Array<HeActivityPropertyDescriptor> = properties.filter(property => property.displayInDesigner == true);
+  console.log("Filtered PRoperties by Display In Dashboard", filteredProperties);
+  const filteredPropertiesByConditionalScreen = filteredProperties.filter(property => property.conditionalActivityType == null || property.conditionalActivityType != questionType);
+  console.log("Filtered PRoperties by Conditional Type", filteredPropertiesByConditionalScreen);
+  return filteredPropertiesByConditionalScreen;
 }
 
 export async function awaitElement(selector) {

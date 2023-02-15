@@ -3,7 +3,6 @@ import { Component, h, Prop, State, Event, EventEmitter } from '@stencil/core';
 import {
   HTMLElsaMultiExpressionEditorElement,
   //IntellisenseContext,
-  SyntaxNames
 } from '../../models/elsa-interfaces';
 
 import {
@@ -20,6 +19,7 @@ import {
 import PlusIcon from '../../icons/plus_icon';
 import TrashCanIcon from '../../icons/trash-can';
 import { CheckboxEventHandler } from '../../events/component-events';
+import { SyntaxNames } from '../../constants/Constants';
 
 
 @Component({

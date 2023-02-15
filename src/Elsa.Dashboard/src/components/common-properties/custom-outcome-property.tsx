@@ -1,7 +1,6 @@
 import { Component, h, Prop, Event, EventEmitter } from '@stencil/core';
 import {
   ActivityPropertyDescriptor,
-  SyntaxNames,
   IntellisenseContext,
 } from "../../models/elsa-interfaces";
 
@@ -9,6 +8,7 @@ import { IconProvider } from "../icon-provider/icon-provider";
 import TrashCanIcon from '../../icons/trash-can';
 
 import { IOutcomeProperty, ITextProperty } from "../../models/custom-component-models"
+import { SyntaxNames } from '../../constants/Constants';
 
 @Component({
   tag: 'custom-outcome-property',

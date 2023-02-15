@@ -6,7 +6,6 @@ import {
   HTMLElsaExpressionEditorElement,
   HTMLElsaMultiExpressionEditorElement,
   IntellisenseContext,
-  SyntaxNames
 } from "../../../models/elsa-interfaces";
 import { mapSyntaxToLanguage, parseJson } from "../../../models/utils";
 import { SwitchCase } from "../../../models/elsa-interfaces";
@@ -14,6 +13,7 @@ import { IconProvider } from "../../icon-provider/icon-provider";
 import PlusIcon from '../../../icons/plus_icon';
 import TrashCanIcon from '../../../icons/trash-can';
 import ExpandIcon from '../../../icons/expand_icon';
+import { SyntaxNames } from '../../../constants/Constants';
 
 @Component({
   tag: 'he-check-list-property',

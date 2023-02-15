@@ -3,12 +3,11 @@ import { Component, EventEmitter, Event, Prop, State } from '@stencil/core';
 import {
     ActivityModel,
   HTMLElsaMultiExpressionEditorElement,
-  ActivityDefinitionProperty,
-  ActivityPropertyDescriptor,
-  SyntaxNames,
+  ActivityDefinitionProperty
 } from '../../models/elsa-interfaces';
 
 import {
+    HeActivityPropertyDescriptor,
   NestedProperty,
   QuestionModel,
 } from '../../models/custom-component-models';
@@ -18,6 +17,7 @@ import {
 } from '../icon-provider/icon-provider'
 import { HePropertyDisplayManager } from '../../models/display-manager';
 import { parseJson, Map } from '../../models/utils';
+import { SyntaxNames } from '../../constants/Constants';
 
 @Component({
   tag: 'question-property',
@@ -71,7 +71,7 @@ export class QuestionProperty {
     return propertyArray;
   }
 
-  createQuestionProperty(descriptor: ActivityPropertyDescriptor): NestedProperty {
+  createQuestionProperty(descriptor: HeActivityPropertyDescriptor): NestedProperty {
     let propertyValue: ActivityDefinitionProperty = {
       syntax: descriptor.defaultSyntax,
       value: null,

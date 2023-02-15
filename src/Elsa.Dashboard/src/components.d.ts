@@ -6,7 +6,7 @@
  */
 import { HTMLStencilElement, JSXBase } from "@stencil/core/internal";
 import { ActivityDefinitionProperty, ActivityModel, ActivityPropertyDescriptor, IntellisenseContext } from "./models/elsa-interfaces";
-import { CheckboxQuestion, IOutcomeProperty, IQuestionComponent, ITextProperty, QuestionModel, RadioQuestion, TextAreaQuestion } from "./models/custom-component-models";
+import { CheckboxQuestion, HeActivityPropertyDescriptor, IOutcomeProperty, IQuestionComponent, ITextProperty, QuestionModel, RadioQuestion, TextAreaQuestion } from "./models/custom-component-models";
 import { IconProvider } from "./components/icon-provider/icon-provider";
 export namespace Components {
     interface ConditionalTextListProperty {
@@ -110,7 +110,7 @@ export namespace Components {
         "activityModel": ActivityModel;
         "propertyDescriptor": ActivityPropertyDescriptor;
         "propertyModel": ActivityDefinitionProperty;
-        "questionProperties": Array<ActivityPropertyDescriptor>;
+        "questionProperties": Array<HeActivityPropertyDescriptor>;
     }
 }
 export interface CustomInputPropertyCustomEvent<T> extends CustomEvent<T> {
@@ -418,7 +418,7 @@ declare namespace LocalJSX {
         "activityModel"?: ActivityModel;
         "propertyDescriptor"?: ActivityPropertyDescriptor;
         "propertyModel"?: ActivityDefinitionProperty;
-        "questionProperties"?: Array<ActivityPropertyDescriptor>;
+        "questionProperties"?: Array<HeActivityPropertyDescriptor>;
     }
     interface IntrinsicElements {
         "conditional-text-list-property": ConditionalTextListProperty;

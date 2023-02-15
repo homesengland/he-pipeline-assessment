@@ -4,7 +4,6 @@ import {
     ActivityModel,
   HTMLElsaMultiExpressionEditorElement,
   ActivityPropertyDescriptor,
-  SyntaxNames,
   ActivityDefinitionProperty
 } from '../../models/elsa-interfaces';
 
@@ -16,6 +15,7 @@ import {
   IconProvider,
 } from '../icon-provider/icon-provider'
 import { QuestionEventHandler } from '../../events/component-events';
+import { SyntaxNames } from '../../constants/Constants';
 
 @Component({
   tag: 'question-property-old',

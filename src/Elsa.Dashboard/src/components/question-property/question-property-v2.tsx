@@ -3,7 +3,6 @@ import { Component, Prop, State } from '@stencil/core';
 import {
     ActivityModel,
   HTMLElsaMultiExpressionEditorElement,
-  SyntaxNames,
 } from '../../models/elsa-interfaces';
 
 import {
@@ -17,6 +16,7 @@ import {
 import { QuestionEventHandler } from '../../events/component-events';
 import { HePropertyDisplayManager } from '../../models/display-manager';
 import { parseJson } from '../../models/utils';
+import { SyntaxNames } from '../../constants/Constants';
 
 @Component({
   tag: 'question-property-v2',

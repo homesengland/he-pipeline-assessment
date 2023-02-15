@@ -1,9 +1,9 @@
 import { Component, h, Event, EventEmitter, Prop, State } from '@stencil/core';
+import { SyntaxNames } from '../../../constants/Constants';
 import {
   ActivityDefinitionProperty,
   ActivityModel,
   ActivityPropertyDescriptor,
-  SyntaxNames,
 } from "../../../models/elsa-interfaces";
 
 

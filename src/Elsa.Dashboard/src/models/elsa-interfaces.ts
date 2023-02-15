@@ -26,17 +26,6 @@ export interface ActivityDefinitionProperty {
   value?: any;
 }
 
-export class SyntaxNames {
-  static readonly Literal = "Literal";
-  static readonly JavaScript = "JavaScript";
-  static readonly Liquid = "Liquid";
-  static readonly Json = "Json";
-  static readonly SQL = "SQL";
-  static readonly Switch = "Switch"
-  static Variable: string;
-  static Output: string;
-}
-
 export interface ActivityModel {
   activityId: string;
   type: string;

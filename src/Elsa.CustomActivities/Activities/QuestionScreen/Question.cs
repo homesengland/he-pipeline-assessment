@@ -17,7 +17,6 @@ namespace Elsa.CustomActivities.Activities.QuestionScreen
         [ActivityInput(Hint = "Section title")]
         public string Title { get; set; } = null!;
 
-        [ActivityInput(Hint = "Question Identifier")]
         public string QuestionType { get; set; } = null!;
 
         [ActivityInput(
@@ -35,6 +34,7 @@ namespace Elsa.CustomActivities.Activities.QuestionScreen
         
         [ActivityInput(Hint = "Include comments box", UIHint = ActivityInputUIHints.Checkbox)]
         public bool DisplayComments { get; set; }
+
         public string Comments { get; set; } = null!;
 
 

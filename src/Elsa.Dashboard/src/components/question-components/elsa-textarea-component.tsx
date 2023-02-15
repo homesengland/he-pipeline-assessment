@@ -2,8 +2,6 @@ import { Component, h, Prop, State, Event, EventEmitter } from '@stencil/core';
 
 import {
   HTMLElsaMultiExpressionEditorElement,
-  //IntellisenseContext,
-  SyntaxNames
 } from '../../models/elsa-interfaces';
 
 import {
@@ -14,6 +12,7 @@ import {
   IconProvider,
 } from '../icon-provider/icon-provider'
 import { TextAreaEventHandler } from '../../events/component-events';
+import { SyntaxNames } from '../../constants/Constants';
 
 
 @Component({

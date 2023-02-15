@@ -7,8 +7,6 @@ import {
   ActivityModel,
   ActivityPropertyDescriptor,
   HTMLElsaMultiExpressionEditorElement,
-  //IntellisenseContext,
-  SyntaxNames
 } from '../../models/elsa-interfaces';
 
 import {
@@ -27,6 +25,7 @@ import {
   QuestionLibrary,
   QuestionProvider
 } from '../question-provider/question-provider';
+import { SyntaxNames } from '../../constants/Constants';
 
 
 function parseJson(json: string): any {
