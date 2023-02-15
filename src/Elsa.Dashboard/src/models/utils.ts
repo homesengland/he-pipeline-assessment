@@ -63,11 +63,12 @@ export function mapSyntaxToLanguage(syntax: string): any {
 export function filterPropertiesByType(questionProperties: Array<HeActivityPropertyDescriptor>, questionType: string) {
   const propertiesJson: string = JSON.stringify(questionProperties);
   const properties: Array<HeActivityPropertyDescriptor> = JSON.parse(propertiesJson);
+  properties.forEach(p => {
+    if (p.conditionalActivityType != null && p.conditionalActivityType != questionType)
+      p.displayInDesigner = false;
+  });
   const filteredProperties: Array<HeActivityPropertyDescriptor> = properties.filter(property => property.displayInDesigner == true);
-  console.log("Filtered PRoperties by Display In Dashboard", filteredProperties);
-  const filteredPropertiesByConditionalScreen = filteredProperties.filter(property => property.conditionalActivityType == null || property.conditionalActivityType != questionType);
-  console.log("Filtered PRoperties by Conditional Type", filteredPropertiesByConditionalScreen);
-  return filteredPropertiesByConditionalScreen;
+  return filteredProperties;
 }
 
 export async function awaitElement(selector) {

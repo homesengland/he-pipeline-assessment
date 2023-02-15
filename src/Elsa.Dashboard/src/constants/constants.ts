@@ -4,7 +4,7 @@ export class SyntaxNames {
   static readonly Liquid = "Liquid";
   static readonly Json = "Json";
   static readonly SQL = "SQL";
-  static readonly Switch = "Switch"
+  static readonly Switch = "Switch";
   static readonly Question = "Question";
   static Variable: string;
   static Output: string;
