@@ -2,7 +2,7 @@ import { ActivityModel, ActivityPropertyDescriptor } from "../../models/elsa-int
 import { h } from "@stencil/core";
 import { getOrCreateProperty } from "../../models/utils";
 import { HePropertyDisplayDriver } from "../../models/display-manager";
-import { HeProperty } from "../../models/custom-component-models";
+import { NestedProperty } from "../../models/custom-component-models";
 
 export class HeCronDriver implements HePropertyDisplayDriver {
 
@@ -11,7 +11,7 @@ export class HeCronDriver implements HePropertyDisplayDriver {
     return <he-cron-expression-property activityModel={activity} propertyDescriptor={property} propertyModel={prop} />;
   }
 
-  displayNested(activity: ActivityModel, property: HeProperty, onExpressionChanged: Function) {
+  displayNested(activity: ActivityModel, property: NestedProperty, onExpressionChanged: Function) {
     return <he-cron-expression-property activityModel={activity} propertyDescriptor={property.descriptor} propertyModel={property.value} onExpressionChanged={e => onExpressionChanged(e, property)} />;
   }
 }

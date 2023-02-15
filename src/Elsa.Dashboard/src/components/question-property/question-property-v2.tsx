@@ -7,8 +7,8 @@ import {
 } from '../../models/elsa-interfaces';
 
 import {
-  HeProperty,
-  QuestionProperty2
+  NestedProperty,
+  QuestionModel
 } from '../../models/custom-component-models';
 
 import {
@@ -26,10 +26,10 @@ import { parseJson } from '../../models/utils';
 export class HEQuestionComponent {
 
   @Prop() activityModel: ActivityModel;
-  @Prop() questionModel: QuestionProperty2;
+  @Prop() questionModel: QuestionModel;
   @State() iconProvider = new IconProvider();
   @State() currentValue: string;
-  @State() questionProperties: Array<HeProperty>;
+  @State() questionProperties: Array<NestedProperty>;
 
   handler: QuestionEventHandler;
 
@@ -47,7 +47,7 @@ export class HEQuestionComponent {
     console.log("Question Properties", this.questionProperties)
   }
 
-  onPropertyExpressionChange(event: Event, property: HeProperty) {
+  onPropertyExpressionChange(event: Event, property: NestedProperty) {
     console.log(event);
     console.log(property);
   }
@@ -58,7 +58,7 @@ export class HEQuestionComponent {
   render() {
     const displayManager = this.displayManager
 
-    const renderPropertyEditor = (property: HeProperty) => {
+    const renderPropertyEditor = (property: NestedProperty) => {
       return displayManager.displayNested(this.activityModel, property, this.onPropertyExpressionChange)
     }
 

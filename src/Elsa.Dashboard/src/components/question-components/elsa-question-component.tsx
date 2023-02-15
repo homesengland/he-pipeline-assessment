@@ -18,7 +18,7 @@ import {
 import { QuestionEventHandler } from '../../events/component-events';
 
 @Component({
-  tag: 'question-property',
+  tag: 'question-property-old',
   shadow: false,
 })
 

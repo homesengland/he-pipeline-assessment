@@ -10,7 +10,7 @@ import {
 
 import {
   QuestionActivity,
-  QuestionProperty2,
+  QuestionModel,
   QuestionScreenProperty
 } from '../../models/custom-component-models';
 
@@ -71,10 +71,11 @@ export class MultiQuestionProperty {
   }
 
   updatePropertyModel() {
+    console.log("UpdatePropertyModel:", this.questionModel);
     this.propertyModel.expressions[SyntaxNames.Json] = JSON.stringify(this.questionModel);
   }
 
-  onDeleteQuestionClick(e: Event, question: QuestionProperty2) {
+  onDeleteQuestionClick(e: Event, question: QuestionModel) {
     e.stopPropagation();
     this.questionModel = { ...this.questionModel, questions: this.questionModel.questions.filter(x => x != question) };
     this.updatePropertyModel();
@@ -91,11 +92,16 @@ export class MultiQuestionProperty {
     }
   }
 
+  onUpdateQuestion(e: Event) {
+    e = e;
+    this.updatePropertyModel();
+  }
+
   renderQuestions(model: QuestionScreenProperty) {
     return model.questions.map(this.renderChoiceEditor)
   }
 
-  renderChoiceEditor = (question: QuestionProperty2, index: number) => {
+  renderChoiceEditor = (question: QuestionModel, index: number) => {
     const field = `question-${index}`;
     return (
       <div id={`${field}-id`} class="accordion elsa-mb-4 elsa-rounded" onClick={this.onAccordionQuestionClick}>
@@ -132,19 +138,22 @@ export class MultiQuestionProperty {
     const questionName = `Question ${id}`;
     const newValue = this.newQuestionValue(questionName);
 
-    let newQuestion: QuestionProperty2 = { value: newValue, descriptor: this.questionProperties, questionType: questionType }
+    let newQuestion: QuestionModel = { value: newValue, descriptor: this.questionProperties, questionType: questionType }
     this.questionModel = { ...this.questionModel, questions: [...this.questionModel.questions, newQuestion] };
     this.updatePropertyModel();
   }
 
 
 
-  renderQuestionComponent(question: QuestionProperty2) {
-    return <question-property-v3
+  renderQuestionComponent(question: QuestionModel) {
+    console.log("Render Question screen property:", question);
+    return <question-property
       class="panel elsa-rounded"
       activityModel={this.activityModel}
       questionModel={question}
-      onClick={(e) => e.stopPropagation()}></question-property-v3>
+      onClick={(e) => e.stopPropagation()}
+      onUpdateQuestionScreen={e => this.onUpdateQuestion(e)}
+    ></question-property>
   }
 
   render() {

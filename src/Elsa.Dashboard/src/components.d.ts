@@ -6,7 +6,7 @@
  */
 import { HTMLStencilElement, JSXBase } from "@stencil/core/internal";
 import { ActivityDefinitionProperty, ActivityModel, ActivityPropertyDescriptor, IntellisenseContext } from "./models/elsa-interfaces";
-import { CheckboxQuestion, HeProperty, IOutcomeProperty, IQuestionComponent, ITextProperty, QuestionProperty2, RadioQuestion, TextAreaQuestion } from "./models/custom-component-models";
+import { CheckboxQuestion, IOutcomeProperty, IQuestionComponent, ITextProperty, QuestionModel, RadioQuestion, TextAreaQuestion } from "./models/custom-component-models";
 import { IconProvider } from "./components/icon-provider/icon-provider";
 export namespace Components {
     interface ConditionalTextListProperty {
@@ -86,16 +86,16 @@ export namespace Components {
         "question": CheckboxQuestion;
     }
     interface QuestionProperty {
+        "activityModel": ActivityModel;
+        "questionModel": QuestionModel;
+    }
+    interface QuestionPropertyOld {
         "ActivityModel": ActivityModel;
         "question": IQuestionComponent;
     }
     interface QuestionPropertyV2 {
         "activityModel": ActivityModel;
-        "questionModel": QuestionProperty2;
-    }
-    interface QuestionPropertyV3 {
-        "activityModel": ActivityModel;
-        "questionModel": QuestionProperty2;
+        "questionModel": QuestionModel;
     }
     interface QuestionRadioProperty {
         "question": RadioQuestion;
@@ -156,6 +156,10 @@ export interface QuestionCheckboxPropertyCustomEvent<T> extends CustomEvent<T> {
 export interface QuestionPropertyCustomEvent<T> extends CustomEvent<T> {
     detail: T;
     target: HTMLQuestionPropertyElement;
+}
+export interface QuestionPropertyOldCustomEvent<T> extends CustomEvent<T> {
+    detail: T;
+    target: HTMLQuestionPropertyOldElement;
 }
 export interface QuestionRadioPropertyCustomEvent<T> extends CustomEvent<T> {
     detail: T;
@@ -246,17 +250,17 @@ declare global {
         prototype: HTMLQuestionPropertyElement;
         new (): HTMLQuestionPropertyElement;
     };
+    interface HTMLQuestionPropertyOldElement extends Components.QuestionPropertyOld, HTMLStencilElement {
+    }
+    var HTMLQuestionPropertyOldElement: {
+        prototype: HTMLQuestionPropertyOldElement;
+        new (): HTMLQuestionPropertyOldElement;
+    };
     interface HTMLQuestionPropertyV2Element extends Components.QuestionPropertyV2, HTMLStencilElement {
     }
     var HTMLQuestionPropertyV2Element: {
         prototype: HTMLQuestionPropertyV2Element;
         new (): HTMLQuestionPropertyV2Element;
-    };
-    interface HTMLQuestionPropertyV3Element extends Components.QuestionPropertyV3, HTMLStencilElement {
-    }
-    var HTMLQuestionPropertyV3Element: {
-        prototype: HTMLQuestionPropertyV3Element;
-        new (): HTMLQuestionPropertyV3Element;
     };
     interface HTMLQuestionRadioPropertyElement extends Components.QuestionRadioProperty, HTMLStencilElement {
     }
@@ -291,8 +295,8 @@ declare global {
         "he-switch-cases-property": HTMLHeSwitchCasesPropertyElement;
         "question-checkbox-property": HTMLQuestionCheckboxPropertyElement;
         "question-property": HTMLQuestionPropertyElement;
+        "question-property-old": HTMLQuestionPropertyOldElement;
         "question-property-v2": HTMLQuestionPropertyV2Element;
-        "question-property-v3": HTMLQuestionPropertyV3Element;
         "question-radio-property": HTMLQuestionRadioPropertyElement;
         "question-screen-property": HTMLQuestionScreenPropertyElement;
         "question-screen-property-v2": HTMLQuestionScreenPropertyV2Element;
@@ -372,7 +376,7 @@ declare namespace LocalJSX {
     }
     interface HeSingleLineProperty {
         "activityModel"?: ActivityModel;
-        "onExpressionChanged"?: (event: HeSingleLinePropertyCustomEvent<HeProperty>) => void;
+        "onExpressionChanged"?: (event: HeSingleLinePropertyCustomEvent<string>) => void;
         "propertyDescriptor"?: ActivityPropertyDescriptor;
         "propertyModel"?: ActivityDefinitionProperty;
     }
@@ -387,17 +391,18 @@ declare namespace LocalJSX {
         "question"?: CheckboxQuestion;
     }
     interface QuestionProperty {
+        "activityModel"?: ActivityModel;
+        "onUpdateQuestionScreen"?: (event: QuestionPropertyCustomEvent<string>) => void;
+        "questionModel"?: QuestionModel;
+    }
+    interface QuestionPropertyOld {
         "ActivityModel"?: ActivityModel;
-        "onUpdateQuestion"?: (event: QuestionPropertyCustomEvent<IQuestionComponent>) => void;
+        "onUpdateQuestion"?: (event: QuestionPropertyOldCustomEvent<IQuestionComponent>) => void;
         "question"?: IQuestionComponent;
     }
     interface QuestionPropertyV2 {
         "activityModel"?: ActivityModel;
-        "questionModel"?: QuestionProperty2;
-    }
-    interface QuestionPropertyV3 {
-        "activityModel"?: ActivityModel;
-        "questionModel"?: QuestionProperty2;
+        "questionModel"?: QuestionModel;
     }
     interface QuestionRadioProperty {
         "onUpdateQuestion"?: (event: QuestionRadioPropertyCustomEvent<IQuestionComponent>) => void;
@@ -430,8 +435,8 @@ declare namespace LocalJSX {
         "he-switch-cases-property": HeSwitchCasesProperty;
         "question-checkbox-property": QuestionCheckboxProperty;
         "question-property": QuestionProperty;
+        "question-property-old": QuestionPropertyOld;
         "question-property-v2": QuestionPropertyV2;
-        "question-property-v3": QuestionPropertyV3;
         "question-radio-property": QuestionRadioProperty;
         "question-screen-property": QuestionScreenProperty;
         "question-screen-property-v2": QuestionScreenPropertyV2;
@@ -455,8 +460,8 @@ declare module "@stencil/core" {
             "he-switch-cases-property": LocalJSX.HeSwitchCasesProperty & JSXBase.HTMLAttributes<HTMLHeSwitchCasesPropertyElement>;
             "question-checkbox-property": LocalJSX.QuestionCheckboxProperty & JSXBase.HTMLAttributes<HTMLQuestionCheckboxPropertyElement>;
             "question-property": LocalJSX.QuestionProperty & JSXBase.HTMLAttributes<HTMLQuestionPropertyElement>;
+            "question-property-old": LocalJSX.QuestionPropertyOld & JSXBase.HTMLAttributes<HTMLQuestionPropertyOldElement>;
             "question-property-v2": LocalJSX.QuestionPropertyV2 & JSXBase.HTMLAttributes<HTMLQuestionPropertyV2Element>;
-            "question-property-v3": LocalJSX.QuestionPropertyV3 & JSXBase.HTMLAttributes<HTMLQuestionPropertyV3Element>;
             "question-radio-property": LocalJSX.QuestionRadioProperty & JSXBase.HTMLAttributes<HTMLQuestionRadioPropertyElement>;
             "question-screen-property": LocalJSX.QuestionScreenProperty & JSXBase.HTMLAttributes<HTMLQuestionScreenPropertyElement>;
             "question-screen-property-v2": LocalJSX.QuestionScreenPropertyV2 & JSXBase.HTMLAttributes<HTMLQuestionScreenPropertyV2Element>;

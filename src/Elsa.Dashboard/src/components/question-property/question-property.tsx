@@ -1,4 +1,4 @@
-import { Component, Prop, State } from '@stencil/core';
+import { Component, EventEmitter, Event, Prop, State } from '@stencil/core';
 
 import {
     ActivityModel,
@@ -9,32 +9,30 @@ import {
 } from '../../models/elsa-interfaces';
 
 import {
-  HeProperty,
-  QuestionProperty2,
+  NestedProperty,
+  QuestionModel,
 } from '../../models/custom-component-models';
 
 import {
   IconProvider,
 } from '../icon-provider/icon-provider'
-import { QuestionEventHandler } from '../../events/component-events';
 import { HePropertyDisplayManager } from '../../models/display-manager';
 import { parseJson, Map } from '../../models/utils';
 
 @Component({
-  tag: 'question-property-v3',
+  tag: 'question-property',
   shadow: false,
 })
 
-export class HEQuestionComponent {
+export class QuestionProperty {
 
   @Prop() activityModel: ActivityModel;
-  @Prop() questionModel: QuestionProperty2;
+  @Prop() questionModel: QuestionModel;
   @State() iconProvider = new IconProvider();
   @State() currentValue: string;
-  @State() questionProperties: Array<HeProperty>;
+  @State() nestedQuestionProperties: Array<NestedProperty>;
   @State() displayManager: HePropertyDisplayManager = new HePropertyDisplayManager();
-
-  handler: QuestionEventHandler;
+  @Event() updateQuestionScreen: EventEmitter<string>;
 
   //supportedSyntaxes: Array<string> = [SyntaxNames.JavaScript, SyntaxNames.Liquid];
   multiExpressionEditor: HTMLElsaMultiExpressionEditorElement;
@@ -48,7 +46,7 @@ export class HEQuestionComponent {
     const propertyJson = model.value.expressions[SyntaxNames.Json]
     console.log("Property Json", propertyJson);
     this.getOrCreateQuestionProperties();
-    console.log("Question Properties", this.questionProperties)
+    console.log("Question Properties", this.nestedQuestionProperties)
   }
 
   getOrCreateQuestionProperties() {
@@ -56,15 +54,15 @@ export class HEQuestionComponent {
     const propertyJson = model.value.expressions[SyntaxNames.Json]
     if (propertyJson != null && propertyJson != undefined && parseJson(propertyJson).length > 0) {
       
-      this.questionProperties = parseJson(propertyJson);
+      this.nestedQuestionProperties = parseJson(propertyJson);
     }
     else {
-      this.questionProperties = this.createQuestionProperties();
+      this.nestedQuestionProperties = this.createQuestionProperties();
     }
   }
 
-  createQuestionProperties(): Array<HeProperty> {
-    let propertyArray: Array<HeProperty> = [];
+  createQuestionProperties(): Array<NestedProperty> {
+    let propertyArray: Array<NestedProperty> = [];
     const descriptor = this.questionModel.descriptor;
     descriptor.forEach(d => {
       var prop = this.createQuestionProperty(d);
@@ -73,20 +71,27 @@ export class HEQuestionComponent {
     return propertyArray;
   }
 
-  createQuestionProperty(descriptor: ActivityPropertyDescriptor): HeProperty {
+  createQuestionProperty(descriptor: ActivityPropertyDescriptor): NestedProperty {
     let propertyValue: ActivityDefinitionProperty = {
       syntax: descriptor.defaultSyntax,
       value: null,
       name: descriptor.name,
       expressions: this.getExpressionMap(descriptor.supportedSyntaxes)
     }
-    let property: HeProperty = { value: propertyValue, descriptor: descriptor }
+    let property: NestedProperty = { value: propertyValue, descriptor: descriptor }
     return property;
   }
 
-  onPropertyExpressionChange(event: Event, property: HeProperty) {
+  onPropertyExpressionChange(event: Event, property: NestedProperty) {
     console.log("Expression Changed Event", event);
     console.log("Expression Changed Property", property);
+    this.updateQuestionModel();
+  }
+
+  updateQuestionModel() {
+    let nestedQuestionsJson = JSON.stringify(this.nestedQuestionProperties);
+    this.questionModel.value.expressions[SyntaxNames.Json] = nestedQuestionsJson;
+    this.updateQuestionScreen.emit(JSON.stringify(this.questionModel));
   }
 
   getExpressionMap(syntaxes: Array<string>): Map<string> {
@@ -112,14 +117,14 @@ export class HEQuestionComponent {
 
     const displayManager = this.displayManager;
 
-    const renderPropertyEditor = (property: HeProperty) => {
+    const renderPropertyEditor = (property: NestedProperty) => {
       console.log("Display Manager", this.displayManager);
-      var content = displayManager.displayNested(this.activityModel, property, this.onPropertyExpressionChange);
+      var content = displayManager.displayNested(this.activityModel, property, this.onPropertyExpressionChange.bind(this));
       return content;
     }
 
     return (
-      this.questionProperties.map(renderPropertyEditor)
+      this.nestedQuestionProperties.map(renderPropertyEditor)
     )
     
   }

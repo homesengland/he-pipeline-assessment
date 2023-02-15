@@ -170,7 +170,7 @@ export class MultiQuestionProperty {
         case "TextAreaQuestion":
             return <elsa-textarea-question onClick={(e) => e.stopPropagation()} class="panel elsa-rounded" question={question as TextAreaQuestion}></elsa-textarea-question>;
       default:
-        return <question-property ActivityModel={this.activityModel} onClick={(e) => e.stopPropagation()} class="panel elsa-rounded" question={question}></question-property>;
+        return <question-property-old ActivityModel={this.activityModel} onClick={(e) => e.stopPropagation()} class="panel elsa-rounded" question={question}></question-property-old>;
     }
   }
 

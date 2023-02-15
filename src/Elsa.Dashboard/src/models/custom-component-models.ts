@@ -108,16 +108,17 @@ export interface IOutcomeProperty {
 //Alt Question Screens
 
 export class QuestionScreenProperty {
-  questions: Array<QuestionProperty2> = [];
+  questions: Array<QuestionModel> = [];
 }
 
-export class HeProperty {
+export class NestedProperty
+{
   value: ActivityDefinitionProperty;
   descriptor: ActivityPropertyDescriptor
 }
 
 
-export class QuestionProperty2 {
+export class QuestionModel {
   value: ActivityDefinitionProperty;
   descriptor: Array<ActivityPropertyDescriptor> = [];
   questionType: IQuestionData;

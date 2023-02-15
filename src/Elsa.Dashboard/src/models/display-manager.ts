@@ -10,13 +10,13 @@ import { HeRadioListDriver } from "../components/drivers/he-radio-list-driver";
 import { HeScriptDriver } from "../components/drivers/he-script-driver";
 import { HeSingleLineDriver } from "../components/drivers/he-single-line-driver";
 import { HeSwitchCaseDriver } from "../components/drivers/he-switch-cases-driver";
-import { Dictionary, HeProperty } from "./custom-component-models";
+import { Dictionary, NestedProperty } from "./custom-component-models";
 import { ActivityModel, ActivityPropertyDescriptor } from "./elsa-interfaces";
 
 
 export interface HePropertyDisplayDriver {
   display(model: ActivityModel, property: ActivityPropertyDescriptor)
-  displayNested(model: ActivityModel, property: HeProperty, onUpdate: Function)
+  displayNested(model: ActivityModel, property: NestedProperty, onUpdate: Function)
 }
 
 export class DefaultDriversFactory {
@@ -58,7 +58,7 @@ export class HePropertyDisplayManager {
     return driver.display(model, property)
   }
 
-  displayNested(model: ActivityModel, property: HeProperty, onUpdate: Function) {
+  displayNested(model: ActivityModel, property: NestedProperty, onUpdate: Function) {
     const driver: HePropertyDisplayDriver = this.getDriver(property.descriptor.uiHint);
     console.log("Driver", driver);
     return driver.displayNested(model, property, onUpdate)
