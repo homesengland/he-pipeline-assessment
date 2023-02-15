@@ -32,6 +32,7 @@
     <None Remove="src\components\drivers\he-multi-line-driver.tsx" />
     <None Remove="src\components\drivers\he-multi-text-driver.tsx" />
     <None Remove="src\components\drivers\he-radio-list-driver.tsx" />
+    <None Remove="src\components\drivers\he-radio-options-driver.tsx" />
     <None Remove="src\components\drivers\he-script-driver.tsx" />
     <None Remove="src\components\drivers\he-single-line-driver.tsx" />
     <None Remove="src\components\drivers\he-switch-cases-driver.tsx" />
@@ -74,6 +75,7 @@
     <TypeScriptCompile Include="src\components\drivers\he-check-list-driver.tsx" />
     <TypeScriptCompile Include="src\components\drivers\he-single-line-driver.tsx" />
     <TypeScriptCompile Include="src\components\drivers\he-checkbox-driver.tsx" />
+    <TypeScriptCompile Include="src\components\drivers\he-radio-options-driver.tsx" />
     <TypeScriptCompile Include="src\components\drivers\he-switch-cases-driver.tsx" />
     <TypeScriptCompile Include="src\constants\constants.ts" />
     <TypeScriptCompile Include="src\models\display-manager.ts" />

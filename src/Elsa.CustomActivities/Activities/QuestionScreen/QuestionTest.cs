@@ -44,6 +44,8 @@ namespace Elsa.CustomActivities.Activities.QuestionScreen
         [HeActivityInput(Hint = "Character limit", UIHint = HePropertyUIHints.SingleLine, ConditionalActivityType = QuestionTypeConstants.TextAreaQuestion)]
         public int? CharacterLimit { get; set; }
 
+        [HeActivityInput(UIHint = HePropertyUIHints.RadioOptions, ConditionalActivityType = QuestionTypeConstants.RadioQuestion)]
+        public RadioModel Radio { get; set; } = new RadioModel();
 
     }
 

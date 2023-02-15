@@ -7,6 +7,7 @@ import { HeJsonDriver } from "../components/drivers/he-json-driver";
 import { HeMultiLineDriver } from "../components/drivers/he-multi-line-driver";
 import { HeMultiTextDriver } from "../components/drivers/he-multi-text-driver";
 import { HeRadioListDriver } from "../components/drivers/he-radio-list-driver";
+import { HeRadioOptionsDriver } from "../components/drivers/he-radio-options-driver";
 import { HeScriptDriver } from "../components/drivers/he-script-driver";
 import { HeSingleLineDriver } from "../components/drivers/he-single-line-driver";
 import { HeSwitchCaseDriver } from "../components/drivers/he-switch-cases-driver";
@@ -33,6 +34,7 @@ export class DefaultDriversFactory {
     this.drivers["he-switch-case-builder"] = new HeSwitchCaseDriver();
     this.drivers["he-dictionary"] = new HeDictionaryDriver();
     this.drivers["he-cron-expression"] = new HeCronDriver();
+    this.drivers["he-radio-options"] = new HeRadioOptionsDriver();
   }
   drivers: Dictionary<HePropertyDisplayDriver> = { };
 }

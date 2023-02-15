@@ -15,5 +15,7 @@ namespace Elsa.CustomActivities.Constants
         public const string ScriptEditor = "he-code-editor";
         public const string SingleLine = "he-single-line";
         public const string SwitchCase = "he-switch-case-builder";
+        public const string RadioOptions = "he-radio-options";
+        public const string CheckboxOptions = "he-checkbox-options";
     }
 }

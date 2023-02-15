@@ -108,10 +108,7 @@ export class QuestionActivity {
 
 //Outcome Screens
 
-export interface IAltConditionalText {
-  name: string;
-  expressions?: Map<string>;
-  syntax?: string;
+export interface IAltConditionalText extends IActivityValue {
 }
 
 export interface ITextProperty {
@@ -147,5 +144,10 @@ export interface Dictionary<T> {
   [Key: string]: T;
 }
 
+export interface IActivityValue {
+  name: string;
+  expressions?: Map<string>;
+  syntax?: string;
+}
 
 

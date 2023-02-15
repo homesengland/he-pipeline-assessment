@@ -14,7 +14,7 @@ export namespace Components {
         "propertyDescriptor": ActivityPropertyDescriptor;
         "propertyModel": ActivityDefinitionProperty;
     }
-    interface CustomElsaSwitchCasesProperty {
+    interface CustomElsaSwitchOptionsProperty {
         "activityModel": ActivityModel;
         "propertyDescriptor": ActivityPropertyDescriptor;
         "propertyModel": ActivityDefinitionProperty;
@@ -72,12 +72,17 @@ export namespace Components {
         "propertyDescriptor": ActivityPropertyDescriptor;
         "propertyModel": ActivityDefinitionProperty;
     }
+    interface HeRadioOptionsProperty {
+        "activityModel": ActivityModel;
+        "propertyDescriptor": ActivityPropertyDescriptor;
+        "propertyModel": ActivityDefinitionProperty;
+    }
     interface HeSingleLineProperty {
         "activityModel": ActivityModel;
         "propertyDescriptor": ActivityPropertyDescriptor;
         "propertyModel": ActivityDefinitionProperty;
     }
-    interface HeSwitchCasesProperty {
+    interface HeSwitchOptionsProperty {
         "activityModel": ActivityModel;
         "propertyDescriptor": ActivityPropertyDescriptor;
         "propertyModel": ActivityDefinitionProperty;
@@ -141,13 +146,17 @@ export interface HeMultiLinePropertyCustomEvent<T> extends CustomEvent<T> {
     detail: T;
     target: HTMLHeMultiLinePropertyElement;
 }
+export interface HeRadioOptionsPropertyCustomEvent<T> extends CustomEvent<T> {
+    detail: T;
+    target: HTMLHeRadioOptionsPropertyElement;
+}
 export interface HeSingleLinePropertyCustomEvent<T> extends CustomEvent<T> {
     detail: T;
     target: HTMLHeSingleLinePropertyElement;
 }
-export interface HeSwitchCasesPropertyCustomEvent<T> extends CustomEvent<T> {
+export interface HeSwitchOptionsPropertyCustomEvent<T> extends CustomEvent<T> {
     detail: T;
-    target: HTMLHeSwitchCasesPropertyElement;
+    target: HTMLHeSwitchOptionsPropertyElement;
 }
 export interface QuestionCheckboxPropertyCustomEvent<T> extends CustomEvent<T> {
     detail: T;
@@ -172,11 +181,11 @@ declare global {
         prototype: HTMLConditionalTextListPropertyElement;
         new (): HTMLConditionalTextListPropertyElement;
     };
-    interface HTMLCustomElsaSwitchCasesPropertyElement extends Components.CustomElsaSwitchCasesProperty, HTMLStencilElement {
+    interface HTMLCustomElsaSwitchOptionsPropertyElement extends Components.CustomElsaSwitchOptionsProperty, HTMLStencilElement {
     }
-    var HTMLCustomElsaSwitchCasesPropertyElement: {
-        prototype: HTMLCustomElsaSwitchCasesPropertyElement;
-        new (): HTMLCustomElsaSwitchCasesPropertyElement;
+    var HTMLCustomElsaSwitchOptionsPropertyElement: {
+        prototype: HTMLCustomElsaSwitchOptionsPropertyElement;
+        new (): HTMLCustomElsaSwitchOptionsPropertyElement;
     };
     interface HTMLCustomInputPropertyElement extends Components.CustomInputProperty, HTMLStencilElement {
     }
@@ -226,17 +235,23 @@ declare global {
         prototype: HTMLHeMultiLinePropertyElement;
         new (): HTMLHeMultiLinePropertyElement;
     };
+    interface HTMLHeRadioOptionsPropertyElement extends Components.HeRadioOptionsProperty, HTMLStencilElement {
+    }
+    var HTMLHeRadioOptionsPropertyElement: {
+        prototype: HTMLHeRadioOptionsPropertyElement;
+        new (): HTMLHeRadioOptionsPropertyElement;
+    };
     interface HTMLHeSingleLinePropertyElement extends Components.HeSingleLineProperty, HTMLStencilElement {
     }
     var HTMLHeSingleLinePropertyElement: {
         prototype: HTMLHeSingleLinePropertyElement;
         new (): HTMLHeSingleLinePropertyElement;
     };
-    interface HTMLHeSwitchCasesPropertyElement extends Components.HeSwitchCasesProperty, HTMLStencilElement {
+    interface HTMLHeSwitchOptionsPropertyElement extends Components.HeSwitchOptionsProperty, HTMLStencilElement {
     }
-    var HTMLHeSwitchCasesPropertyElement: {
-        prototype: HTMLHeSwitchCasesPropertyElement;
-        new (): HTMLHeSwitchCasesPropertyElement;
+    var HTMLHeSwitchOptionsPropertyElement: {
+        prototype: HTMLHeSwitchOptionsPropertyElement;
+        new (): HTMLHeSwitchOptionsPropertyElement;
     };
     interface HTMLQuestionCheckboxPropertyElement extends Components.QuestionCheckboxProperty, HTMLStencilElement {
     }
@@ -282,7 +297,7 @@ declare global {
     };
     interface HTMLElementTagNameMap {
         "conditional-text-list-property": HTMLConditionalTextListPropertyElement;
-        "custom-elsa-switch-cases-property": HTMLCustomElsaSwitchCasesPropertyElement;
+        "custom-elsa-switch-options-property": HTMLCustomElsaSwitchOptionsPropertyElement;
         "custom-input-property": HTMLCustomInputPropertyElement;
         "custom-outcome-property": HTMLCustomOutcomePropertyElement;
         "custom-text-property": HTMLCustomTextPropertyElement;
@@ -291,8 +306,9 @@ declare global {
         "he-checkbox-property": HTMLHeCheckboxPropertyElement;
         "he-json-property": HTMLHeJsonPropertyElement;
         "he-multi-line-property": HTMLHeMultiLinePropertyElement;
+        "he-radio-options-property": HTMLHeRadioOptionsPropertyElement;
         "he-single-line-property": HTMLHeSingleLinePropertyElement;
-        "he-switch-cases-property": HTMLHeSwitchCasesPropertyElement;
+        "he-switch-options-property": HTMLHeSwitchOptionsPropertyElement;
         "question-checkbox-property": HTMLQuestionCheckboxPropertyElement;
         "question-property": HTMLQuestionPropertyElement;
         "question-property-old": HTMLQuestionPropertyOldElement;
@@ -308,7 +324,7 @@ declare namespace LocalJSX {
         "propertyDescriptor"?: ActivityPropertyDescriptor;
         "propertyModel"?: ActivityDefinitionProperty;
     }
-    interface CustomElsaSwitchCasesProperty {
+    interface CustomElsaSwitchOptionsProperty {
         "activityModel"?: ActivityModel;
         "propertyDescriptor"?: ActivityPropertyDescriptor;
         "propertyModel"?: ActivityDefinitionProperty;
@@ -374,15 +390,21 @@ declare namespace LocalJSX {
         "propertyDescriptor"?: ActivityPropertyDescriptor;
         "propertyModel"?: ActivityDefinitionProperty;
     }
+    interface HeRadioOptionsProperty {
+        "activityModel"?: ActivityModel;
+        "onExpressionChanged"?: (event: HeRadioOptionsPropertyCustomEvent<string>) => void;
+        "propertyDescriptor"?: ActivityPropertyDescriptor;
+        "propertyModel"?: ActivityDefinitionProperty;
+    }
     interface HeSingleLineProperty {
         "activityModel"?: ActivityModel;
         "onExpressionChanged"?: (event: HeSingleLinePropertyCustomEvent<string>) => void;
         "propertyDescriptor"?: ActivityPropertyDescriptor;
         "propertyModel"?: ActivityDefinitionProperty;
     }
-    interface HeSwitchCasesProperty {
+    interface HeSwitchOptionsProperty {
         "activityModel"?: ActivityModel;
-        "onExpressionChanged"?: (event: HeSwitchCasesPropertyCustomEvent<string>) => void;
+        "onExpressionChanged"?: (event: HeSwitchOptionsPropertyCustomEvent<string>) => void;
         "propertyDescriptor"?: ActivityPropertyDescriptor;
         "propertyModel"?: ActivityDefinitionProperty;
     }
@@ -422,7 +444,7 @@ declare namespace LocalJSX {
     }
     interface IntrinsicElements {
         "conditional-text-list-property": ConditionalTextListProperty;
-        "custom-elsa-switch-cases-property": CustomElsaSwitchCasesProperty;
+        "custom-elsa-switch-options-property": CustomElsaSwitchOptionsProperty;
         "custom-input-property": CustomInputProperty;
         "custom-outcome-property": CustomOutcomeProperty;
         "custom-text-property": CustomTextProperty;
@@ -431,8 +453,9 @@ declare namespace LocalJSX {
         "he-checkbox-property": HeCheckboxProperty;
         "he-json-property": HeJsonProperty;
         "he-multi-line-property": HeMultiLineProperty;
+        "he-radio-options-property": HeRadioOptionsProperty;
         "he-single-line-property": HeSingleLineProperty;
-        "he-switch-cases-property": HeSwitchCasesProperty;
+        "he-switch-options-property": HeSwitchOptionsProperty;
         "question-checkbox-property": QuestionCheckboxProperty;
         "question-property": QuestionProperty;
         "question-property-old": QuestionPropertyOld;
@@ -447,7 +470,7 @@ declare module "@stencil/core" {
     export namespace JSX {
         interface IntrinsicElements {
             "conditional-text-list-property": LocalJSX.ConditionalTextListProperty & JSXBase.HTMLAttributes<HTMLConditionalTextListPropertyElement>;
-            "custom-elsa-switch-cases-property": LocalJSX.CustomElsaSwitchCasesProperty & JSXBase.HTMLAttributes<HTMLCustomElsaSwitchCasesPropertyElement>;
+            "custom-elsa-switch-options-property": LocalJSX.CustomElsaSwitchOptionsProperty & JSXBase.HTMLAttributes<HTMLCustomElsaSwitchOptionsPropertyElement>;
             "custom-input-property": LocalJSX.CustomInputProperty & JSXBase.HTMLAttributes<HTMLCustomInputPropertyElement>;
             "custom-outcome-property": LocalJSX.CustomOutcomeProperty & JSXBase.HTMLAttributes<HTMLCustomOutcomePropertyElement>;
             "custom-text-property": LocalJSX.CustomTextProperty & JSXBase.HTMLAttributes<HTMLCustomTextPropertyElement>;
@@ -456,8 +479,9 @@ declare module "@stencil/core" {
             "he-checkbox-property": LocalJSX.HeCheckboxProperty & JSXBase.HTMLAttributes<HTMLHeCheckboxPropertyElement>;
             "he-json-property": LocalJSX.HeJsonProperty & JSXBase.HTMLAttributes<HTMLHeJsonPropertyElement>;
             "he-multi-line-property": LocalJSX.HeMultiLineProperty & JSXBase.HTMLAttributes<HTMLHeMultiLinePropertyElement>;
+            "he-radio-options-property": LocalJSX.HeRadioOptionsProperty & JSXBase.HTMLAttributes<HTMLHeRadioOptionsPropertyElement>;
             "he-single-line-property": LocalJSX.HeSingleLineProperty & JSXBase.HTMLAttributes<HTMLHeSingleLinePropertyElement>;
-            "he-switch-cases-property": LocalJSX.HeSwitchCasesProperty & JSXBase.HTMLAttributes<HTMLHeSwitchCasesPropertyElement>;
+            "he-switch-options-property": LocalJSX.HeSwitchOptionsProperty & JSXBase.HTMLAttributes<HTMLHeSwitchOptionsPropertyElement>;
             "question-checkbox-property": LocalJSX.QuestionCheckboxProperty & JSXBase.HTMLAttributes<HTMLQuestionCheckboxPropertyElement>;
             "question-property": LocalJSX.QuestionProperty & JSXBase.HTMLAttributes<HTMLQuestionPropertyElement>;
             "question-property-old": LocalJSX.QuestionPropertyOld & JSXBase.HTMLAttributes<HTMLQuestionPropertyOldElement>;
