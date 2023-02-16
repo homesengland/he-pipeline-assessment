@@ -47,6 +47,9 @@ namespace Elsa.CustomActivities.Activities.QuestionScreen
         [HeActivityInput(UIHint = HePropertyUIHints.RadioOptions, ConditionalActivityType = QuestionTypeConstants.RadioQuestion)]
         public RadioModel Radio { get; set; } = new RadioModel();
 
+        [HeActivityInput(UIHint = HePropertyUIHints.CheckboxOptions, ConditionalActivityType = QuestionTypeConstants.CheckboxQuestion)]
+        public CheckboxModel Checkbox { get; set; } = new CheckboxModel();
+
     }
 
 

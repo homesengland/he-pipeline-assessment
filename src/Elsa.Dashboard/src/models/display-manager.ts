@@ -1,5 +1,6 @@
 import { HeCheckListDriver } from "../components/drivers/he-check-list-driver";
 import { HeCheckboxDriver } from "../components/drivers/he-checkbox-driver";
+import { HeCheckboxOptionsDriver } from "../components/drivers/he-checkbox-options-driver";
 import { HeCronDriver } from "../components/drivers/he-cron-driver";
 import { HeDictionaryDriver } from "../components/drivers/he-dictionary-driver";
 import { HeDropdownDriver } from "../components/drivers/he-dropdown-driver";
@@ -35,6 +36,7 @@ export class DefaultDriversFactory {
     this.drivers["he-dictionary"] = new HeDictionaryDriver();
     this.drivers["he-cron-expression"] = new HeCronDriver();
     this.drivers["he-radio-options"] = new HeRadioOptionsDriver();
+    this.drivers["he-checkbox-options"] = new HeCheckboxOptionsDriver();
   }
   drivers: Dictionary<HePropertyDisplayDriver> = { };
 }

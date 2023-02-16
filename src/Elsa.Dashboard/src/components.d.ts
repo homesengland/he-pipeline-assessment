@@ -57,6 +57,11 @@ export namespace Components {
         "propertyDescriptor": ActivityPropertyDescriptor;
         "propertyModel": ActivityDefinitionProperty;
     }
+    interface HeCheckboxOptionsProperty {
+        "activityModel": ActivityModel;
+        "propertyDescriptor": ActivityPropertyDescriptor;
+        "propertyModel": ActivityDefinitionProperty;
+    }
     interface HeCheckboxProperty {
         "activityModel": ActivityModel;
         "propertyDescriptor": ActivityPropertyDescriptor;
@@ -133,6 +138,10 @@ export interface ElsaTextareaQuestionCustomEvent<T> extends CustomEvent<T> {
 export interface HeCheckListPropertyCustomEvent<T> extends CustomEvent<T> {
     detail: T;
     target: HTMLHeCheckListPropertyElement;
+}
+export interface HeCheckboxOptionsPropertyCustomEvent<T> extends CustomEvent<T> {
+    detail: T;
+    target: HTMLHeCheckboxOptionsPropertyElement;
 }
 export interface HeCheckboxPropertyCustomEvent<T> extends CustomEvent<T> {
     detail: T;
@@ -216,6 +225,12 @@ declare global {
     var HTMLHeCheckListPropertyElement: {
         prototype: HTMLHeCheckListPropertyElement;
         new (): HTMLHeCheckListPropertyElement;
+    };
+    interface HTMLHeCheckboxOptionsPropertyElement extends Components.HeCheckboxOptionsProperty, HTMLStencilElement {
+    }
+    var HTMLHeCheckboxOptionsPropertyElement: {
+        prototype: HTMLHeCheckboxOptionsPropertyElement;
+        new (): HTMLHeCheckboxOptionsPropertyElement;
     };
     interface HTMLHeCheckboxPropertyElement extends Components.HeCheckboxProperty, HTMLStencilElement {
     }
@@ -303,6 +318,7 @@ declare global {
         "custom-text-property": HTMLCustomTextPropertyElement;
         "elsa-textarea-question": HTMLElsaTextareaQuestionElement;
         "he-check-list-property": HTMLHeCheckListPropertyElement;
+        "he-checkbox-options-property": HTMLHeCheckboxOptionsPropertyElement;
         "he-checkbox-property": HTMLHeCheckboxPropertyElement;
         "he-json-property": HTMLHeJsonPropertyElement;
         "he-multi-line-property": HTMLHeMultiLinePropertyElement;
@@ -369,6 +385,12 @@ declare namespace LocalJSX {
     interface HeCheckListProperty {
         "activityModel"?: ActivityModel;
         "onExpressionChanged"?: (event: HeCheckListPropertyCustomEvent<string>) => void;
+        "propertyDescriptor"?: ActivityPropertyDescriptor;
+        "propertyModel"?: ActivityDefinitionProperty;
+    }
+    interface HeCheckboxOptionsProperty {
+        "activityModel"?: ActivityModel;
+        "onExpressionChanged"?: (event: HeCheckboxOptionsPropertyCustomEvent<string>) => void;
         "propertyDescriptor"?: ActivityPropertyDescriptor;
         "propertyModel"?: ActivityDefinitionProperty;
     }
@@ -450,6 +472,7 @@ declare namespace LocalJSX {
         "custom-text-property": CustomTextProperty;
         "elsa-textarea-question": ElsaTextareaQuestion;
         "he-check-list-property": HeCheckListProperty;
+        "he-checkbox-options-property": HeCheckboxOptionsProperty;
         "he-checkbox-property": HeCheckboxProperty;
         "he-json-property": HeJsonProperty;
         "he-multi-line-property": HeMultiLineProperty;
@@ -476,6 +499,7 @@ declare module "@stencil/core" {
             "custom-text-property": LocalJSX.CustomTextProperty & JSXBase.HTMLAttributes<HTMLCustomTextPropertyElement>;
             "elsa-textarea-question": LocalJSX.ElsaTextareaQuestion & JSXBase.HTMLAttributes<HTMLElsaTextareaQuestionElement>;
             "he-check-list-property": LocalJSX.HeCheckListProperty & JSXBase.HTMLAttributes<HTMLHeCheckListPropertyElement>;
+            "he-checkbox-options-property": LocalJSX.HeCheckboxOptionsProperty & JSXBase.HTMLAttributes<HTMLHeCheckboxOptionsPropertyElement>;
             "he-checkbox-property": LocalJSX.HeCheckboxProperty & JSXBase.HTMLAttributes<HTMLHeCheckboxPropertyElement>;
             "he-json-property": LocalJSX.HeJsonProperty & JSXBase.HTMLAttributes<HTMLHeJsonPropertyElement>;
             "he-multi-line-property": LocalJSX.HeMultiLineProperty & JSXBase.HTMLAttributes<HTMLHeMultiLinePropertyElement>;

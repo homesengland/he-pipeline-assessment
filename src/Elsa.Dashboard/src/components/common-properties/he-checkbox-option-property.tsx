@@ -1,33 +1,32 @@
-import { Component, h, Event, EventEmitter, Prop, State } from '@stencil/core';
-import {
-  ActivityDefinitionProperty,
-  ActivityModel,
-  ActivityPropertyDescriptor,
-  HTMLElsaExpressionEditorElement,
-  HTMLElsaMultiExpressionEditorElement,
-  IntellisenseContext
-} from "../../models/elsa-interfaces";
-import { mapSyntaxToLanguage, parseJson } from "../../models/utils";
-import { IconProvider } from "../icon-provider/icon-provider";
+import { Component, Event, EventEmitter, h, Prop, State } from '@stencil/core';
+import { SyntaxNames } from '../../constants/Constants';
+import ExpandIcon from '../../icons/expand_icon';
 import PlusIcon from '../../icons/plus_icon';
 import TrashCanIcon from '../../icons/trash-can';
-import ExpandIcon from '../../icons/expand_icon';
-import { SyntaxNames } from '../../constants/Constants';
-import { IActivityValue } from '../../models/custom-component-models';
-import { ToLetter } from '../../models/utils';
+import { ICheckboxValue } from '../../models/custom-component-models';
+import {
+    ActivityDefinitionProperty,
+    ActivityModel,
+    ActivityPropertyDescriptor,
+    HTMLElsaExpressionEditorElement,
+    HTMLElsaMultiExpressionEditorElement,
+    IntellisenseContext
+} from "../../models/elsa-interfaces";
+import { mapSyntaxToLanguage, parseJson, ToLetter } from "../../models/utils";
+import { IconProvider } from "../icon-provider/icon-provider";
 
 @Component({
-  tag: 'he-radio-options-property',
+  tag: 'he-checkbox-options-property',
   shadow: false,
 })
 //Copy of Elsa Switch Case
 //Copied to allow us control over how the expression editor is displayed.
-export class HeRadioOptionProperty {
+export class HeCheckboxOptionProperty {
 
   @Prop() activityModel: ActivityModel;
   @Prop() propertyDescriptor: ActivityPropertyDescriptor;
   @Prop() propertyModel: ActivityDefinitionProperty;
-  @State() options: Array<IActivityValue> = [];
+  @State() options: Array<ICheckboxValue> = [];
   @State() iconProvider = new IconProvider();
   @Event() expressionChanged: EventEmitter<string>;
 
@@ -57,28 +56,34 @@ export class HeRadioOptionProperty {
   }
 
   onAddOptionClick() {
-    const optionName = ToLetter(this.options.length+1);
-    const newOption = { name: optionName, syntax: SyntaxNames.Literal, expressions: { [SyntaxNames.Literal]: '' } };
+    const optionName = ToLetter(this.options.length + 1);
+    const newOption: ICheckboxValue = { name: optionName, isSingle: false, syntax: SyntaxNames.Literal, expressions: { [SyntaxNames.Literal]: '' } };
     this.options = [...this.options, newOption];
     this.updatePropertyModel();
   }
 
-  onDeleteOptionClick(switchCase: IActivityValue) {
-    this.options = this.options.filter(x => x != switchCase);
+  onDeleteOptionClick(checkbox: ICheckboxValue) {
+    this.options = this.options.filter(x => x != checkbox);
     this.updatePropertyModel();
   }
 
-  onOptionNameChanged(e: Event, radioOption: IActivityValue) {
-    radioOption.name = (e.currentTarget as HTMLInputElement).value.trim();
+  onOptionNameChanged(e: Event, checkbox: ICheckboxValue) {
+    checkbox.name = (e.currentTarget as HTMLInputElement).value.trim();
     this.updatePropertyModel();
   }
 
-  onOptionExpressionChanged(e: CustomEvent<string>, radioOption: IActivityValue) {
-    radioOption.expressions[radioOption.syntax] = e.detail;
+  onOptionExpressionChanged(e: CustomEvent<string>, checkbox: ICheckboxValue) {
+    checkbox.expressions[checkbox.syntax] = e.detail;
     this.updatePropertyModel();
   }
 
-  onOptionSyntaxChanged(e: Event, switchCase: IActivityValue, expressionEditor: HTMLElsaExpressionEditorElement) {
+  onCheckChanged(e: Event, checkbox: ICheckboxValue) {
+    const checkboxElement = (e.currentTarget as HTMLInputElement);
+    checkbox.isSingle = checkboxElement.checked;
+    this.updatePropertyModel();
+  }
+
+  onOptionSyntaxChanged(e: Event, switchCase: ICheckboxValue, expressionEditor: HTMLElsaExpressionEditorElement) {
     const select = e.currentTarget as HTMLSelectElement;
     switchCase.syntax = select.value;
     expressionEditor.language = mapSyntaxToLanguage(switchCase.syntax);
@@ -113,16 +118,16 @@ export class HeRadioOptionProperty {
     const supportedSyntaxes = this.supportedSyntaxes;
     const json = JSON.stringify(cases, null, 2);
 
-    const renderCaseEditor = (radioOption: IActivityValue, index: number) => {
-      const expression = radioOption.expressions[radioOption.syntax];
-      const syntax = radioOption.syntax;
+    const renderCaseEditor = (checkboxOption: ICheckboxValue, index: number) => {
+      const expression = checkboxOption.expressions[checkboxOption.syntax];
+      const syntax = checkboxOption.syntax;
       const monacoLanguage = mapSyntaxToLanguage(syntax);
       let expressionEditor = null;
 
       return (
         <tr key={`case-${index}`}>
           <td class="elsa-py-2 elsa-pr-5">
-            <input type="text" value={radioOption.name} onChange={e => this.onOptionNameChanged(e, radioOption)}
+            <input type="text" value={checkboxOption.name} onChange={e => this.onOptionNameChanged(e, checkboxOption)}
               class="focus:elsa-ring-blue-500 focus:elsa-border-blue-500 elsa-block elsa-w-full elsa-min-w-0 elsa-rounded-md sm:elsa-text-sm elsa-border-gray-300" />
           </td>
           <td class="elsa-py-2 pl-5">
@@ -136,10 +141,10 @@ export class HeRadioOptionProperty {
                 single-line={false}
                 editorHeight={this.editorHeight}
                 padding="elsa-pt-1.5 elsa-pl-1 elsa-pr-28"
-                onExpressionChanged={e => this.onOptionExpressionChanged(e, radioOption)}
+                onExpressionChanged={e => this.onOptionExpressionChanged(e, checkboxOption)}
               />
               <div class="elsa-absolute elsa-inset-y-0 elsa-right-0 elsa-flex elsa-items-center">
-                <select onChange={e => this.onOptionSyntaxChanged(e, radioOption, expressionEditor)}
+                <select onChange={e => this.onOptionSyntaxChanged(e, checkboxOption, expressionEditor)}
                   class="focus:elsa-ring-blue-500 focus:elsa-border-blue-500 elsa-h-full elsa-py-0 elsa-pl-2 elsa-pr-7 elsa-border-transparent elsa-bg-transparent elsa-text-gray-500 sm:elsa-text-sm elsa-rounded-md">
                   {supportedSyntaxes.map(supportedSyntax => {
                     const selected = supportedSyntax == syntax;
@@ -149,8 +154,13 @@ export class HeRadioOptionProperty {
               </div>
             </div>
           </td>
+          <td class="elsa-py-0">
+            <input name="choice_input" type="checkbox" checked={checkboxOption.isSingle} value={'true'}
+              onChange={e => this.onCheckChanged.bind(e, checkboxOption)}
+              class="focus:elsa-ring-blue-500 elsa-h-8 elsa-w-8 elsa-text-blue-600 elsa-border-gray-300 elsa-rounded" />
+          </td>
           <td class="elsa-pt-1 elsa-pr-2 elsa-text-right">
-            <button type="button" onClick={() => this.onDeleteOptionClick(radioOption)}
+            <button type="button" onClick={() => this.onDeleteOptionClick(checkboxOption)}
               class="elsa-h-5 elsa-w-5 elsa-mx-auto elsa-outline-none focus:elsa-outline-none">
               <TrashCanIcon options={this.iconProvider.getOptions()}></TrashCanIcon>
             </button>
@@ -183,13 +193,16 @@ export class HeRadioOptionProperty {
             <thead class="elsa-bg-gray-50">
               <tr>
                 <th
-                  class="elsa-px-6 elsa-py-3 elsa-text-left elsa-text-xs elsa-font-medium elsa-text-gray-500 elsa-text-right elsa-tracking-wider elsa-w-3/12">Identifier
+                  class="elsa-py-3 elsa-text-left elsa-text-xs elsa-font-medium elsa-text-gray-500 elsa-tracking-wider elsa-w-2/12">Identifier
                 </th>
                 <th
-                  class="elsa-px-6 elsa-py-3 elsa-text-left elsa-text-xs elsa-font-medium elsa-text-gray-500 elsa-text-right elsa-tracking-wider elsa-w-8/12">Answer
+                  class="elsa-py-3 elsa-text-left elsa-text-xs elsa-font-medium elsa-text-gray-500 elsa-tracking-wider elsa-w-8/12">Answer
                 </th>
                 <th
-                  class="elsa-px-6 elsa-py-3 elsa-text-left elsa-text-xs elsa-font-medium elsa-text-gray-500 elsa-text-right elsa-tracking-wider elsa-w-1/12">
+                  class="elsa-py-3 elsa-text-left elsa-text-xs elsa-font-medium elsa-text-gray-500 elsa-tracking-wider elsa-w-1/12">IsSingle
+                </th>
+                <th
+                  class="elsa-py-3 elsa-text-left elsa-text-xs elsa-font-medium elsa-text-gray-500 elsa-tracking-wider elsa-w-1/12">
                   <button type="button" onClick={() => this.onExpandSwitchArea()}
                     class="elsa-h-5 elsa-w-5 elsa-mx-auto elsa-outline-none focus:elsa-outline-none">
                     <ExpandIcon options={this.iconProvider.getOptions()}></ExpandIcon>

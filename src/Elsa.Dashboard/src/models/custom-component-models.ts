@@ -108,7 +108,7 @@ export class QuestionActivity {
 
 //Outcome Screens
 
-export interface IAltConditionalText extends IActivityValue {
+export interface IAltConditionalText extends ICheckboxValue {
 }
 
 export interface ITextProperty {
@@ -148,6 +148,10 @@ export interface IActivityValue {
   name: string;
   expressions?: Map<string>;
   syntax?: string;
+}
+
+export interface ICheckboxValue extends IActivityValue {
+  isSingle: boolean;
 }
 
 
