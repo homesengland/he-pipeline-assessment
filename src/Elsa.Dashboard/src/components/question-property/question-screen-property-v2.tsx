@@ -5,6 +5,7 @@ import {
   ActivityModel,
   ActivityPropertyDescriptor,
   HTMLElsaMultiExpressionEditorElement,
+  IntellisenseContext,
 } from '../../models/elsa-interfaces';
 
 import {
@@ -63,7 +64,7 @@ export class MultiQuestionProperty {
   async componentWillLoad() {
     console.log("Loading Question Screen:", this.questionProperties)
     const propertyModel = this.propertyModel;
-    const choicesJson = propertyModel.expressions[SyntaxNames.Json]
+    const choicesJson = propertyModel.expressions[SyntaxNames.QuestionScreen]
     this.questionModel = parseJson(choicesJson) || this.defaultActivityModel();
   }
 
@@ -75,7 +76,7 @@ export class MultiQuestionProperty {
 
   updatePropertyModel() {
     console.log("UpdatePropertyModel:", this.questionModel);
-    this.propertyModel.expressions[SyntaxNames.Json] = JSON.stringify(this.questionModel);
+    this.propertyModel.expressions[SyntaxNames.QuestionScreen] = JSON.stringify(this.questionModel);
   }
 
   onDeleteQuestionClick(e: Event, question: QuestionModel) {
@@ -149,6 +150,24 @@ export class MultiQuestionProperty {
     this.updatePropertyModel();
   }
 
+  onMultiExpressionEditorValueChanged(e: CustomEvent<string>) {
+    const json = e.detail;
+    const parsed = parseJson(json);
+
+    if (!parsed)
+      return;
+
+    if (!Array.isArray(parsed))
+      return;
+
+    this.propertyModel.expressions[SyntaxNames.Json] = json;
+    this.questionModel.questions = parsed;
+  }
+
+  onMultiExpressionEditorSyntaxChanged(e: CustomEvent<string>) {
+    e = e;
+  }
+
 
 
   renderQuestionComponent(question: QuestionModel) {
@@ -163,8 +182,25 @@ export class MultiQuestionProperty {
   }
 
   render() {
+    const context: IntellisenseContext = {
+      activityTypeName: this.activityModel.type,
+      propertyName: this.propertyDescriptor.name
+    };
+    const json = JSON.stringify(this.questionModel, null, 2);
+
     return (
       <div>
+        <elsa-multi-expression-editor
+          ref={el => this.multiExpressionEditor = el}
+          label={this.propertyDescriptor.label}
+          defaultSyntax={SyntaxNames.Json}
+          supportedSyntaxes={[SyntaxNames.Json]}
+          context={context}
+          expressions={{ 'Json': json }}
+          editor-height="20rem"
+          onExpressionChanged={e => this.onMultiExpressionEditorValueChanged(e)}
+          onSyntaxChanged={e => this.onMultiExpressionEditorSyntaxChanged(e)}
+        >
         <div class="elsa-mb-1">
           <div class="elsa-flex">
             <div class="elsa-flex-1">
@@ -182,7 +218,8 @@ export class MultiQuestionProperty {
           class="elsa-mt-1 elsa-block focus:elsa-ring-blue-500 focus:elsa-border-blue-500 elsa-w-full elsa-shadow-sm sm:elsa-max-w-xs sm:elsa-text-sm elsa-border-gray-300 elsa-rounded-md">
           <option value="">Add a Question...</option>
           {this.questionProvider.displayOptions()}
-        </select>
+          </select>
+        </elsa-multi-expression-editor>
       </div>
     );
   }

@@ -6,6 +6,7 @@ export class SyntaxNames {
   static readonly SQL = "SQL";
   static readonly Switch = "Switch";
   static readonly Question = "Question";
+  static readonly QuestionScreen = "QuestionScreen";
   static Variable: string;
   static Output: string;
 }

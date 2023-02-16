@@ -25,7 +25,7 @@ namespace Elsa.CustomActivities.Activities.QuestionScreen
             Hint = "Questions to be displayed on this page.", 
             UIHint = CustomActivityUIHints.QuestionScreen, 
             DefaultSyntax = SyntaxNames.Json, 
-            SupportedSyntaxes =new[] { SyntaxNames.Json }, 
+            SupportedSyntaxes =new[] { CustomSyntaxNames.QuestionList }, 
             IsDesignerCritical = true)]
         public AssessmentQuestionsTest Questions { get; set; } = new AssessmentQuestionsTest();
 
