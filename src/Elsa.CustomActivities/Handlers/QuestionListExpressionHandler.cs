@@ -80,10 +80,17 @@ namespace Elsa.CustomActivities.Handlers
 
         public record QuestionListModel
         {
-            public List<QuestionElement> Questions { get; set; } = null!;
+            public List<QuestionElementModel> Questions { get; set; } = null!;
 
         }
 
+        public record QuestionElementModel
+        {
+            public List<QuestionProperty> QuestionProperties { get; set; } = null!;
+        }
+
         public record QuestionElement(IDictionary<string, string>? Expressions, string? Syntax, string? name);
+
+        public record QuestionProperty(IDictionary<string, string>? Expressions, string? Syntax, string? name);
     }
 }
