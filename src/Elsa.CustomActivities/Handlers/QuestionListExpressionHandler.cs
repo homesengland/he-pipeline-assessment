@@ -1,7 +1,10 @@
-﻿using Elsa.CustomActivities.Constants;
+﻿using Elsa.CustomActivities.Activities.QuestionScreen;
+using Elsa.CustomActivities.Constants;
 using Elsa.Expressions;
 using Elsa.Serialization;
 using Elsa.Services.Models;
+using NetBox.Extensions;
+using Newtonsoft.Json;
 using System.Runtime.CompilerServices;
 
 
@@ -19,12 +22,41 @@ namespace Elsa.CustomActivities.Handlers
 
         public async Task<object?> EvaluateAsync(string expression, Type returnType, ActivityExecutionContext context, CancellationToken cancellationToken)     
         {
-            var caseModels = TryDeserializeExpression(expression);
+            QuestionListModel questionScreen = TryDeserializeExpression(expression);
+            List<QuestionElementModel> questions = new List<QuestionElementModel>();
+            foreach(QuestionElement questionElement in questionScreen.Questions)
+            {
+                var listOfProperties = ParseQuestion(questionElement);
+                questions.Add(new QuestionElementModel { QuestionProperties = listOfProperties });
+            }
+
+            List<Question> parsedQuestions = new List<Question>();
+
+
+
+            var questionProperties = questionModel.Questions.ForEach(q => ParseQuestion(q));
             var evaluatedCases = await EvaluateCasesAsync(caseModels, context, cancellationToken).ToListAsync(cancellationToken);
             return evaluatedCases;
         }
 
-        private async IAsyncEnumerable<string> EvaluateCasesAsync(IEnumerable<QuestionListModel> caseModels, ActivityExecutionContext context, [EnumeratorCancellation] CancellationToken cancellationToken)
+        private Question ElsaElementToQuestion(QuestionElementModel elsaModel)
+        {
+            //Late night thoughts - but why not have a specific expression handler for each type of Custom Context?
+        }
+
+        private List<QuestionProperty> ParseQuestion(QuestionElement element)
+        {
+            List <QuestionProperty> questionProperties = new List<QuestionProperty>();
+            var questionJson = element.Expressions![element.Syntax!];
+            var parsedQuestions = JsonConvert.DeserializeObject<List<QuestionProperty>>(questionJson);
+            if(parsedQuestions != null)
+            {
+                questionProperties.AddRange(parsedQuestions);
+            }
+            return questionProperties;
+        }
+
+        private async IAsyncEnumerable<Question> EvaluateCasesAsync(IEnumerable<QuestionListModel> caseModels, ActivityExecutionContext context, [EnumeratorCancellation] CancellationToken cancellationToken)
         {
             var validCaseModels = ValidCaseModels(caseModels);
             var evaluator = context.GetService<IExpressionEvaluator>();
@@ -40,47 +72,47 @@ namespace Elsa.CustomActivities.Handlers
             }
         }
 
-        private async Task<string> EvaluateText(IExpressionEvaluator evaluator, ActivityExecutionContext context, ConditionalTextModel caseModel, CancellationToken cancellationToken)
-        {
-            var syntax = caseModel.Text.Syntax!;
-            var expression = caseModel.Text.Expressions![syntax];
-            var result = await evaluator.TryEvaluateAsync<string>(expression, syntax, context, cancellationToken);
-            return result.Value ?? "";
-        }
+        //private async Task<string> EvaluateText(IExpressionEvaluator evaluator, ActivityExecutionContext context, ConditionalTextModel caseModel, CancellationToken cancellationToken)
+        //{
+        //    var syntax = caseModel.Text.Syntax!;
+        //    var expression = caseModel.Text.Expressions![syntax];
+        //    var result = await evaluator.TryEvaluateAsync<string>(expression, syntax, context, cancellationToken);
+        //    return result.Value ?? "";
+        //}
 
-        private async Task<bool> EvaluateCondition(IExpressionEvaluator evaluator, ActivityExecutionContext context, ConditionalTextModel caseModel, CancellationToken cancellationToken)
-        {
-            var syntax = caseModel.Condition.Syntax!;
-            var expression = caseModel.Condition.Expressions![syntax];
-            var result = await evaluator.TryEvaluateAsync<bool>(expression, syntax, context, cancellationToken);
-            var caseResult = result.Success && result.Value;
-            return caseResult;
-        }
+        //private async Task<bool> EvaluateCondition(IExpressionEvaluator evaluator, ActivityExecutionContext context, ConditionalTextModel caseModel, CancellationToken cancellationToken)
+        //{
+        //    var syntax = caseModel.Condition.Syntax!;
+        //    var expression = caseModel.Condition.Expressions![syntax];
+        //    var result = await evaluator.TryEvaluateAsync<bool>(expression, syntax, context, cancellationToken);
+        //    var caseResult = result.Success && result.Value;
+        //    return caseResult;
+        //}
 
-        private IEnumerable<ConditionalTextModel> ValidCaseModels(IEnumerable<ConditionalTextModel> caseModels)
-        {
-            List<ConditionalTextModel> validCaseModels = new List<ConditionalTextModel>();
-            validCaseModels = caseModels.Where(x => x.Text.Expressions != null && !string.IsNullOrWhiteSpace(x.Text.Syntax) && x.Text.Expressions.ContainsKey(x.Text.Syntax)).ToList();
-            var filteredValidCaseModels = validCaseModels.Where(x => x.Condition.Expressions != null && !string.IsNullOrWhiteSpace(x.Condition.Syntax) && x.Condition.Expressions.ContainsKey(x.Condition.Syntax)).ToList();
-            return filteredValidCaseModels;
-        }
+        //private IEnumerable<ConditionalTextModel> ValidCaseModels(IEnumerable<ConditionalTextModel> caseModels)
+        //{
+        //    List<ConditionalTextModel> validCaseModels = new List<ConditionalTextModel>();
+        //    validCaseModels = caseModels.Where(x => x.Text.Expressions != null && !string.IsNullOrWhiteSpace(x.Text.Syntax) && x.Text.Expressions.ContainsKey(x.Text.Syntax)).ToList();
+        //    var filteredValidCaseModels = validCaseModels.Where(x => x.Condition.Expressions != null && !string.IsNullOrWhiteSpace(x.Condition.Syntax) && x.Condition.Expressions.ContainsKey(x.Condition.Syntax)).ToList();
+        //    return filteredValidCaseModels;
+        //}
 
-        private IList<QuestionListModel> TryDeserializeExpression(string expression)
+        private QuestionListModel TryDeserializeExpression(string expression)
         {
             try
             {
-                return _contentSerializer.Deserialize<IList<QuestionListModel>>(expression);
+                return _contentSerializer.Deserialize<QuestionListModel>(expression);
             }
             catch
             {
-                return new List<QuestionListModel>();
+                return new QuestionListModel();
             }
         }
 
 
         public record QuestionListModel
         {
-            public List<QuestionElementModel> Questions { get; set; } = null!;
+            public List<QuestionElement> Questions { get; set; } = null!;
 
         }
 
@@ -92,5 +124,5 @@ namespace Elsa.CustomActivities.Handlers
         public record QuestionElement(IDictionary<string, string>? Expressions, string? Syntax, string? name);
 
         public record QuestionProperty(IDictionary<string, string>? Expressions, string? Syntax, string? name);
-    }
+
 }
