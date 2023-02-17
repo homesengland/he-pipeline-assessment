@@ -8,6 +8,7 @@ using He.PipelineAssessment.Infrastructure.Repository;
 using He.PipelineAssessment.Infrastructure.Repository.StoredProcedure;
 using He.PipelineAssessment.UI;
 using He.PipelineAssessment.UI.Common.Utility;
+using He.PipelineAssessment.UI.Extensions;
 using He.PipelineAssessment.UI.Features.Admin.AssessmentToolManagement.Commands.CreateAssessmentTool;
 using He.PipelineAssessment.UI.Features.Admin.AssessmentToolManagement.Commands.CreateAssessmentToolWorkflow;
 using He.PipelineAssessment.UI.Features.Admin.AssessmentToolManagement.Commands.UpdateAssessmentTool;
@@ -25,6 +26,9 @@ var builder = WebApplication.CreateBuilder(args);
 
 
 var pipelineAssessmentConnectionString = builder.Configuration.GetConnectionString("SqlDatabase");
+
+builder.AddCustomAuth0Configuration();
+builder.Services.AddCustomAuthentication();
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();
@@ -120,6 +124,7 @@ app.UseHttpsRedirection();
 app.UseStaticFiles();
 
 app.UseRouting();
+app.UseAuthentication();
 
 app.UseAuthorization();
 
