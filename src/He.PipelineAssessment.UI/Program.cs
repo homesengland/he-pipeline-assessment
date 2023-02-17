@@ -27,8 +27,7 @@ var builder = WebApplication.CreateBuilder(args);
 
 var pipelineAssessmentConnectionString = builder.Configuration.GetConnectionString("SqlDatabase");
 
-builder.AddCustomAuth0Configuration();
-builder.Services.AddCustomAuthentication();
+
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();
@@ -97,6 +96,8 @@ builder.Services.AddOptions<IdentityClientConfig>()
 
 builder.Services.AddSinglePipelineClient(builder.Configuration, builder.Environment.IsDevelopment());
 
+builder.AddCustomAuth0Configuration();
+builder.Services.AddCustomAuthentication();
 
 var app = builder.Build();
 
