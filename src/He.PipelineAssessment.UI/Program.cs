@@ -8,7 +8,6 @@ using He.PipelineAssessment.Infrastructure.Repository;
 using He.PipelineAssessment.Infrastructure.Repository.StoredProcedure;
 using He.PipelineAssessment.UI;
 using He.PipelineAssessment.UI.Common.Utility;
-using He.PipelineAssessment.UI.Extensions;
 using He.PipelineAssessment.UI.Features.Admin.AssessmentToolManagement.Commands.CreateAssessmentTool;
 using He.PipelineAssessment.UI.Features.Admin.AssessmentToolManagement.Commands.CreateAssessmentToolWorkflow;
 using He.PipelineAssessment.UI.Features.Admin.AssessmentToolManagement.Commands.UpdateAssessmentTool;
@@ -96,8 +95,8 @@ builder.Services.AddOptions<IdentityClientConfig>()
 
 builder.Services.AddSinglePipelineClient(builder.Configuration, builder.Environment.IsDevelopment());
 
-builder.AddCustomAuth0Configuration();
-builder.Services.AddCustomAuthentication();
+//builder.AddCustomAuth0Configuration();
+//builder.Services.AddCustomAuthentication();
 
 var app = builder.Build();
 
