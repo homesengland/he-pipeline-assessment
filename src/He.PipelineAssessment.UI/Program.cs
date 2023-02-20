@@ -95,8 +95,8 @@ builder.Services.AddOptions<IdentityClientConfig>()
 
 builder.Services.AddSinglePipelineClient(builder.Configuration, builder.Environment.IsDevelopment());
 
-//builder.AddCustomAuth0Configuration();
-//builder.Services.AddCustomAuthentication();
+builder.AddCustomAuth0Configuration();
+builder.Services.AddCustomAuthentication();
 
 var app = builder.Build();
 
