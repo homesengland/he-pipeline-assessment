@@ -16,13 +16,13 @@ ARG INTERNAL_FEED_ACCESSTOKEN
 ENV VSS_NUGET_EXTERNAL_FEED_ENDPOINTS \
     "{\"endpointCredentials\": [{\"endpoint\":\"https://pkgs.dev.azure.com/homesengland/_packaging/homesengland/nuget/v3/index.json\", \"username\":\"docker\", \"password\":\"${INTERNAL_FEED_ACCESSTOKEN}\"}]}"
 
-RUN dotnet restore "He.PipelineAssessment.UI/He.PipelineAssessment.UI.csproj"
+#RUN dotnet restore "He.PipelineAssessment.UI/He.PipelineAssessment.UI.csproj"
 COPY . .
 WORKDIR "/src/He.PipelineAssessment.UI"
 RUN dotnet build "He.PipelineAssessment.UI.csproj" -c Debug -o /app/build
 
 FROM build AS publish
-RUN dotnet publish "He.PipelineAssessment.UI.csproj" -c Debug -o /app/publish /p:UseAppHost=false
+RUN dotnet publish "He.PipelineAssessment.UI.csproj" -c Debug -o /app/publish /p:UseAppHost=false --no-restore
 
 FROM base AS final
 WORKDIR /app
