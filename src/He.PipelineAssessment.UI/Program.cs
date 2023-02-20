@@ -8,6 +8,7 @@ using He.PipelineAssessment.Infrastructure.Repository;
 using He.PipelineAssessment.Infrastructure.Repository.StoredProcedure;
 using He.PipelineAssessment.UI;
 using He.PipelineAssessment.UI.Common.Utility;
+using He.PipelineAssessment.UI.Extensions;
 using He.PipelineAssessment.UI.Features.Admin.AssessmentToolManagement.Commands.CreateAssessmentTool;
 using He.PipelineAssessment.UI.Features.Admin.AssessmentToolManagement.Commands.CreateAssessmentToolWorkflow;
 using He.PipelineAssessment.UI.Features.Admin.AssessmentToolManagement.Commands.UpdateAssessmentTool;
@@ -25,6 +26,8 @@ var builder = WebApplication.CreateBuilder(args);
 
 
 var pipelineAssessmentConnectionString = builder.Configuration.GetConnectionString("SqlDatabase");
+
+
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();
@@ -93,6 +96,8 @@ builder.Services.AddOptions<IdentityClientConfig>()
 
 builder.Services.AddSinglePipelineClient(builder.Configuration, builder.Environment.IsDevelopment());
 
+builder.AddCustomAuth0Configuration();
+builder.Services.AddCustomAuthentication();
 
 var app = builder.Build();
 
@@ -111,7 +116,11 @@ if (!app.Environment.IsDevelopment())
 {
     app.UseExceptionHandler("/Error/Index");
     // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
-    app.UseHsts();
+    app.Use((context, next) =>
+    {
+        context.Request.Scheme = "https";
+        return next();
+    });
 }
 
 app.UseMiddleware<SecurityHeaderMiddleware>();
@@ -120,6 +129,7 @@ app.UseHttpsRedirection();
 app.UseStaticFiles();
 
 app.UseRouting();
+app.UseAuthentication();
 
 app.UseAuthorization();
 
