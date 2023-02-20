@@ -58,10 +58,6 @@
                 options.FallbackPolicy = new AuthorizationPolicyBuilder()
                     .RequireAuthenticatedUser()
                     .Build();
-
-                options.AddPolicy(AuthorizationPolicies.AssignmentToPipelineAssessorRoleRequired, policy => policy.RequireRole(AppRole.PipelineAssessor));
-
-                options.AddPolicy(AuthorizationPolicies.AssignmentToPipelineAdminRoleRequired, policy => policy.RequireRole(AppRole.PipelineAdmin));
             });
 
             services.AddControllers(config =>
@@ -73,17 +69,5 @@
                 config.Filters.Add(new AuthorizeFilter(policy));
             });
         }
-    }
-
-    public static class AppRole
-    {
-        public const string PipelineAdmin = "Pipeline.Admin";
-        public const string PipelineAssessor = "Pipeline.Assessor";
-    }
-
-    public static class AuthorizationPolicies
-    {
-        public const string AssignmentToPipelineAssessorRoleRequired = "AssignmentToPipelineAssessorRoleRequired";
-        public const string AssignmentToPipelineAdminRoleRequired = "AssignmentToPipelineAdminRoleRequired";
     }
 }
