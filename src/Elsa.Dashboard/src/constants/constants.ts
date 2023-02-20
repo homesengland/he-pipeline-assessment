@@ -6,7 +6,7 @@ export class SyntaxNames {
   static readonly SQL = "SQL";
   static readonly Switch = "Switch";
   static readonly Question = "Question";
-  static readonly QuestionScreen = "QuestionScreen";
+  static readonly QuestionList = "QuestionList";
   static Variable: string;
   static Output: string;
 }
@@ -26,4 +26,12 @@ export class ActivityTypeConstants {
   static readonly SinglePipelineDataSource = "SinglePipelineDataSource";
   static readonly CheckYourAnswersScreen = "CheckYourAnswersScreen";
   static readonly ConfirmationScreen = "ConfirmationScreen";
+}
+
+export class PropertyOutputTypes {
+  static readonly String = "string";
+  static readonly Boolean = "bool";
+  static readonly Number = "int";
+  static readonly Checkbox = "checkbox";
+  static readonly Radio = "radio";
 }

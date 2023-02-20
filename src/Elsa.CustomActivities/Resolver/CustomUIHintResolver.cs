@@ -14,9 +14,9 @@ namespace Elsa.CustomActivities.Resolver
 {
     public static class CustomUIHintResolver
     {
-        public static string GetUIHint(PropertyInfo activityPropertyInfo)
+        public static string GetUIHint<T>(PropertyInfo activityPropertyInfo) where T : ActivityInputAttribute
         {
-            var activityPropertyAttribute = activityPropertyInfo.GetCustomAttribute<ActivityInputAttribute>();
+            var activityPropertyAttribute = activityPropertyInfo.GetCustomAttribute<T>();
 
             if (activityPropertyAttribute != null && activityPropertyAttribute.UIHint != null)
                 return activityPropertyAttribute.UIHint;

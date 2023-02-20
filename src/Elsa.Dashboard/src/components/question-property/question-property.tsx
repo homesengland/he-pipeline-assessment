@@ -40,18 +40,12 @@ export class QuestionProperty {
   
 
   async componentWillLoad() {
-    console.log("Loading Display Manager", this.displayManager)
-    console.log("Component loading", this.questionModel)
-    const model = this.questionModel;
-    const propertyJson = model.value.expressions[SyntaxNames.Json]
-    console.log("Property Json", propertyJson);
     this.getOrCreateQuestionProperties();
-    console.log("Question Properties", this.nestedQuestionProperties)
   }
 
   getOrCreateQuestionProperties() {
     const model = this.questionModel;
-    const propertyJson = model.value.expressions[SyntaxNames.Json]
+    const propertyJson = model.value.expressions[SyntaxNames.QuestionList]
     if (propertyJson != null && propertyJson != undefined && parseJson(propertyJson).length > 0) {
       
       this.nestedQuestionProperties = parseJson(propertyJson);
@@ -73,24 +67,26 @@ export class QuestionProperty {
 
   createQuestionProperty(descriptor: HeActivityPropertyDescriptor): NestedProperty {
     let propertyValue: ActivityDefinitionProperty = {
-      syntax: descriptor.defaultSyntax,
-      value: null,
+      syntax: descriptor.defaultSyntax ?? "Literal",
+      value: descriptor.expectedOutputType,
       name: descriptor.name,
       expressions: this.getExpressionMap(descriptor.supportedSyntaxes)
     }
+    console.log("Creating Question Property", propertyValue);
     let property: NestedProperty = { value: propertyValue, descriptor: descriptor }
     return property;
   }
 
   onPropertyExpressionChange(event: Event, property: NestedProperty) {
-    console.log("Expression Changed Event", event);
-    console.log("Expression Changed Property", property);
+    event = event;
+    property = property;
     this.updateQuestionModel();
   }
 
   updateQuestionModel() {
+    console.log("Nested Properties", this.nestedQuestionProperties);
     let nestedQuestionsJson = JSON.stringify(this.nestedQuestionProperties);
-    this.questionModel.value.expressions[SyntaxNames.Json] = nestedQuestionsJson;
+    this.questionModel.value.expressions[SyntaxNames.QuestionList] = nestedQuestionsJson;
     this.updateQuestionScreen.emit(JSON.stringify(this.questionModel));
   }
 

@@ -13,6 +13,7 @@ namespace Elsa.CustomActivities.Describers
 
         //Used to match to a given Nested Activity Type (i.e. Question Type) in Elsa and only to be displayed if null, or a match.
         public string? ConditionalActivityType { get; set; }
+        public string? ExpectedOutputType { get; set; }
 
         public HeActivityInputDescriptor() : base() { }
 
@@ -20,6 +21,7 @@ namespace Elsa.CustomActivities.Describers
             Type type,
             string uiHint,
             string label,
+            string expectedOutputType,
             string? hint = null,
             object? options = null,
             string? category = null,
@@ -35,11 +37,13 @@ namespace Elsa.CustomActivities.Describers
             bool considerValuesAsOutcomes = false,
             bool displayInDesigner = true,
             string? conditionalActivityType = null
+
             ) 
             : base(name, type, uiHint, label, hint, options, category, order, defaultValue, defaultSyntax, supportedSyntaxes, isReadOnly, isBrowsable, isDesignerCritical, defaultWorkflowStorageProvider, disableWorkflowProviderSelection, considerValuesAsOutcomes) 
         {
             DisplayInDesigner = displayInDesigner;
             ConditionalActivityType = conditionalActivityType;
+            ExpectedOutputType = expectedOutputType;
         }
     }
 

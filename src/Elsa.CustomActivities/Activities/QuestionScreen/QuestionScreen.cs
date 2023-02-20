@@ -22,10 +22,10 @@ namespace Elsa.CustomActivities.Activities.QuestionScreen
         public string PageTitle { get; set; } = null!;
 
         [ActivityInput(Label = "List of questions",
-            Hint = "Questions to be displayed on this page.", 
-            UIHint = CustomActivityUIHints.QuestionScreen, 
-            DefaultSyntax = SyntaxNames.Json, 
-            SupportedSyntaxes =new[] { CustomSyntaxNames.QuestionList }, 
+            Hint = "Questions to be displayed on this page.",
+            UIHint = CustomActivityUIHints.QuestionScreen,
+            DefaultSyntax = CustomSyntaxNames.QuestionList,
+            SupportedSyntaxes = new[] { SyntaxNames.Json },
             IsDesignerCritical = true)]
         public AssessmentQuestions Questions { get; set; } = new AssessmentQuestions();
 

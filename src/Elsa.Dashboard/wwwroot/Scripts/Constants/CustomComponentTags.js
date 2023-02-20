@@ -1,6 +1,6 @@
 export const CustomComponentTags = {
   QuestionScreen: "question-screen-property",
   ConditionalTextList: "conditional-text-list-property",
-  CustomSwitch: "custom-elsa-switch-cases-property",
+  CustomSwitch: "he-switch-options-property",
   CustomTextArea: "custom-text-property",
 };

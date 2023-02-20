@@ -12,8 +12,8 @@ import { IconProvider } from "../icon-provider/icon-provider";
 import PlusIcon from '../../icons/plus_icon';
 import TrashCanIcon from '../../icons/trash-can';
 import ExpandIcon from '../../icons/expand_icon';
-import { SyntaxNames } from '../../constants/Constants';
-import { IActivityValue } from '../../models/custom-component-models';
+import { PropertyOutputTypes, SyntaxNames } from '../../constants/Constants';
+import { NestedActivityDefinitionProperty } from '../../models/custom-component-models';
 import { ToLetter } from '../../models/utils';
 
 @Component({
@@ -27,7 +27,7 @@ export class HeRadioOptionProperty {
   @Prop() activityModel: ActivityModel;
   @Prop() propertyDescriptor: ActivityPropertyDescriptor;
   @Prop() propertyModel: ActivityDefinitionProperty;
-  @State() options: Array<IActivityValue> = [];
+  @State() options: Array<NestedActivityDefinitionProperty> = [];
   @State() iconProvider = new IconProvider();
   @Event() expressionChanged: EventEmitter<string>;
 
@@ -58,27 +58,27 @@ export class HeRadioOptionProperty {
 
   onAddOptionClick() {
     const optionName = ToLetter(this.options.length+1);
-    const newOption = { name: optionName, syntax: SyntaxNames.Literal, expressions: { [SyntaxNames.Literal]: '' } };
+    const newOption: NestedActivityDefinitionProperty = { name: optionName, syntax: SyntaxNames.Literal, expressions: { [SyntaxNames.Literal]: '' }, type: PropertyOutputTypes.Radio  };
     this.options = [...this.options, newOption];
     this.updatePropertyModel();
   }
 
-  onDeleteOptionClick(switchCase: IActivityValue) {
+  onDeleteOptionClick(switchCase: NestedActivityDefinitionProperty) {
     this.options = this.options.filter(x => x != switchCase);
     this.updatePropertyModel();
   }
 
-  onOptionNameChanged(e: Event, radioOption: IActivityValue) {
+  onOptionNameChanged(e: Event, radioOption: NestedActivityDefinitionProperty) {
     radioOption.name = (e.currentTarget as HTMLInputElement).value.trim();
     this.updatePropertyModel();
   }
 
-  onOptionExpressionChanged(e: CustomEvent<string>, radioOption: IActivityValue) {
+  onOptionExpressionChanged(e: CustomEvent<string>, radioOption: NestedActivityDefinitionProperty) {
     radioOption.expressions[radioOption.syntax] = e.detail;
     this.updatePropertyModel();
   }
 
-  onOptionSyntaxChanged(e: Event, switchCase: IActivityValue, expressionEditor: HTMLElsaExpressionEditorElement) {
+  onOptionSyntaxChanged(e: Event, switchCase: NestedActivityDefinitionProperty, expressionEditor: HTMLElsaExpressionEditorElement) {
     const select = e.currentTarget as HTMLSelectElement;
     switchCase.syntax = select.value;
     expressionEditor.language = mapSyntaxToLanguage(switchCase.syntax);
@@ -113,7 +113,7 @@ export class HeRadioOptionProperty {
     const supportedSyntaxes = this.supportedSyntaxes;
     const json = JSON.stringify(cases, null, 2);
 
-    const renderCaseEditor = (radioOption: IActivityValue, index: number) => {
+    const renderCaseEditor = (radioOption: NestedActivityDefinitionProperty, index: number) => {
       const expression = radioOption.expressions[radioOption.syntax];
       const syntax = radioOption.syntax;
       const monacoLanguage = mapSyntaxToLanguage(syntax);

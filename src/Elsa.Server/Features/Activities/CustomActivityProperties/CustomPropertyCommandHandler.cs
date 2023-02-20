@@ -17,7 +17,6 @@ namespace Elsa.Server.Features.Activities.CustomActivityProperties
         {
             IDictionary<string, IEnumerable<ActivityInputDescriptor>> propertyResponses = new Dictionary<string, IEnumerable<ActivityInputDescriptor>>();
             propertyResponses.Add("QuestionProperties", _describer.DescribeInputProperties(typeof(Question)));
-            propertyResponses.Add("QuestionPropertiesTest", _describer.DescribeInputProperties(typeof(QuestionTest)));
             return Task.FromResult(propertyResponses);
         }
     }

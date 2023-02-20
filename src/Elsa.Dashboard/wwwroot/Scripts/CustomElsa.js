@@ -2,7 +2,7 @@ import { GetCustomActivityProperties } from './Activities/GetCustomActivityPrope
 import { RegisterCustomPlugins } from './Plugins/CustomPlugins.js';
 import { CustomPropertyUIHints, PropertyDescriberHints } from './Constants/CustomPropertyUiHints.js';
 import { CustomComponentTags } from './Constants/CustomComponentTags.js';
-import { QuestionDriver, QuestionDriverTest } from './Drivers/QuestionPropertyDriver.js';
+import { QuestionDriver } from './Drivers/QuestionPropertyDriver.js';
 import { CustomSwitchDriver } from './Drivers/CustomSwitchPropertyDriver.js';
 import { CustomTextDriver } from './Drivers/CustomTextPropertyDriver.js';
 import { ConditionalTextListDriver } from './Drivers/ConditionalTextListPropertyDriver.js';
@@ -20,10 +20,7 @@ export async function InitCustomElsa(elsaStudioRoot, serverUrl) {
 
   function RegisterDrivers(elsaStudio) {
     elsaStudio.propertyDisplayManager.addDriver(CustomPropertyUIHints.QuestionScreenBuilder,
-      () => new QuestionDriver(elsaStudio, CustomComponentTags.QuestionScreen, customProperties[CustomPropertyUIHints.QuestionScreenBuilder]));
-
-    elsaStudio.propertyDisplayManager.addDriver(CustomPropertyUIHints.QuestionScreenBuilder,
-      () => new QuestionDriverTest(elsaStudio, "question-screen-property-v2", customProperties[PropertyDescriberHints.QuestionScreenBuilderTest]));
+      () => new QuestionDriver(elsaStudio, CustomComponentTags.QuestionScreen, customProperties[PropertyDescriberHints.QuestionScreenBuilder]));
 
     elsaStudio.propertyDisplayManager.addDriver(CustomPropertyUIHints.ConditionalTextListBuilder,
       () => new ConditionalTextListDriver(elsaStudio, CustomComponentTags.ConditionalTextList));

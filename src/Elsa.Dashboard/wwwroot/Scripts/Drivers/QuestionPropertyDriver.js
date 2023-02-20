@@ -1,17 +1,6 @@
 import { getOrCreateProperty } from '../Activities/GetOrCreateProperty.js'
 
-export function QuestionDriver(elsaStudio, elementName) {
-  this.display = (activity, property) => {
-    var prop = (0, getOrCreateProperty)(activity, property.name);
-    var questionActivity = document.createElement(elementName);
-    questionActivity.activityModel = activity;
-    questionActivity.propertyDescriptor = property;
-    questionActivity.propertyModel = prop;
-    return questionActivity;
-  }
-}
-
-export function QuestionDriverTest(elsaStudio, elementName, customProperties) {
+export function QuestionDriver(elsaStudio, elementName, customProperties) {
   this.display = (activity, property) => {
     var prop = (0, getOrCreateProperty)(activity, property.name);
     var questionActivity = document.createElement(elementName);
@@ -22,3 +11,15 @@ export function QuestionDriverTest(elsaStudio, elementName, customProperties) {
     return questionActivity;
   }
 }
+
+//export function QuestionDriverTest(elsaStudio, elementName, customProperties) {
+//  this.display = (activity, property) => {
+//    var prop = (0, getOrCreateProperty)(activity, property.name);
+//    var questionActivity = document.createElement(elementName);
+//    questionActivity.activityModel = activity;
+//    questionActivity.propertyDescriptor = property;
+//    questionActivity.propertyModel = prop;
+//    questionActivity.questionProperties = customProperties;
+//    return questionActivity;
+//  }
+//}

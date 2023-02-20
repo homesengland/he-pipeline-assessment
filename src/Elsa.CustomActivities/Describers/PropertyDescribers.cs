@@ -62,8 +62,9 @@ namespace Elsa.CustomActivities.Describers
                 (
                     activityPropertyAttribute.Name ?? propertyInfo.Name,
                     propertyInfo.PropertyType,
-                    CustomUIHintResolver.GetUIHint(propertyInfo),
+                    CustomUIHintResolver.GetUIHint<HeActivityInputAttribute>(propertyInfo),
                     activityPropertyAttribute.Label ?? propertyInfo.Name.Humanize(LetterCasing.Title),
+                    OutputTypeHintResolver.GetOutputTypeHint<HeActivityInputAttribute>(propertyInfo),
                     activityPropertyAttribute.Hint,
                     GetOptions(activityPropertyAttribute.OptionsProvider),
                     activityPropertyAttribute.Category ?? category,

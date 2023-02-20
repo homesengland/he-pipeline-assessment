@@ -6,6 +6,5 @@ export const CustomPropertyUIHints = {
 };
 
 export const PropertyDescriberHints = {
-  QuestionScreenBuilder: "QuestionProperties",
-  QuestionScreenBuilderTest: "QuestionPropertiesTest",
+  QuestionScreenBuilder: "QuestionProperties"
 }

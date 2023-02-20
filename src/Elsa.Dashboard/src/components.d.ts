@@ -14,11 +14,6 @@ export namespace Components {
         "propertyDescriptor": ActivityPropertyDescriptor;
         "propertyModel": ActivityDefinitionProperty;
     }
-    interface CustomElsaSwitchOptionsProperty {
-        "activityModel": ActivityModel;
-        "propertyDescriptor": ActivityPropertyDescriptor;
-        "propertyModel": ActivityDefinitionProperty;
-    }
     interface CustomInputProperty {
         "context"?: string;
         "customProperty": ITextProperty;
@@ -114,13 +109,18 @@ export namespace Components {
         "activityModel": ActivityModel;
         "propertyDescriptor": ActivityPropertyDescriptor;
         "propertyModel": ActivityDefinitionProperty;
-        "questionProperties": Array<ActivityPropertyDescriptor>;
+        "questionProperties": Array<HeActivityPropertyDescriptor>;
     }
-    interface QuestionScreenPropertyV2 {
+    interface QuestionScreenPropertyOld {
         "activityModel": ActivityModel;
         "propertyDescriptor": ActivityPropertyDescriptor;
         "propertyModel": ActivityDefinitionProperty;
-        "questionProperties": Array<HeActivityPropertyDescriptor>;
+        "questionProperties": Array<ActivityPropertyDescriptor>;
+    }
+    interface SwitchOptionsProperty {
+        "activityModel": ActivityModel;
+        "propertyDescriptor": ActivityPropertyDescriptor;
+        "propertyModel": ActivityDefinitionProperty;
     }
 }
 export interface CustomInputPropertyCustomEvent<T> extends CustomEvent<T> {
@@ -189,12 +189,6 @@ declare global {
     var HTMLConditionalTextListPropertyElement: {
         prototype: HTMLConditionalTextListPropertyElement;
         new (): HTMLConditionalTextListPropertyElement;
-    };
-    interface HTMLCustomElsaSwitchOptionsPropertyElement extends Components.CustomElsaSwitchOptionsProperty, HTMLStencilElement {
-    }
-    var HTMLCustomElsaSwitchOptionsPropertyElement: {
-        prototype: HTMLCustomElsaSwitchOptionsPropertyElement;
-        new (): HTMLCustomElsaSwitchOptionsPropertyElement;
     };
     interface HTMLCustomInputPropertyElement extends Components.CustomInputProperty, HTMLStencilElement {
     }
@@ -304,15 +298,20 @@ declare global {
         prototype: HTMLQuestionScreenPropertyElement;
         new (): HTMLQuestionScreenPropertyElement;
     };
-    interface HTMLQuestionScreenPropertyV2Element extends Components.QuestionScreenPropertyV2, HTMLStencilElement {
+    interface HTMLQuestionScreenPropertyOldElement extends Components.QuestionScreenPropertyOld, HTMLStencilElement {
     }
-    var HTMLQuestionScreenPropertyV2Element: {
-        prototype: HTMLQuestionScreenPropertyV2Element;
-        new (): HTMLQuestionScreenPropertyV2Element;
+    var HTMLQuestionScreenPropertyOldElement: {
+        prototype: HTMLQuestionScreenPropertyOldElement;
+        new (): HTMLQuestionScreenPropertyOldElement;
+    };
+    interface HTMLSwitchOptionsPropertyElement extends Components.SwitchOptionsProperty, HTMLStencilElement {
+    }
+    var HTMLSwitchOptionsPropertyElement: {
+        prototype: HTMLSwitchOptionsPropertyElement;
+        new (): HTMLSwitchOptionsPropertyElement;
     };
     interface HTMLElementTagNameMap {
         "conditional-text-list-property": HTMLConditionalTextListPropertyElement;
-        "custom-elsa-switch-options-property": HTMLCustomElsaSwitchOptionsPropertyElement;
         "custom-input-property": HTMLCustomInputPropertyElement;
         "custom-outcome-property": HTMLCustomOutcomePropertyElement;
         "custom-text-property": HTMLCustomTextPropertyElement;
@@ -331,16 +330,12 @@ declare global {
         "question-property-v2": HTMLQuestionPropertyV2Element;
         "question-radio-property": HTMLQuestionRadioPropertyElement;
         "question-screen-property": HTMLQuestionScreenPropertyElement;
-        "question-screen-property-v2": HTMLQuestionScreenPropertyV2Element;
+        "question-screen-property-old": HTMLQuestionScreenPropertyOldElement;
+        "switch-options-property": HTMLSwitchOptionsPropertyElement;
     }
 }
 declare namespace LocalJSX {
     interface ConditionalTextListProperty {
-        "activityModel"?: ActivityModel;
-        "propertyDescriptor"?: ActivityPropertyDescriptor;
-        "propertyModel"?: ActivityDefinitionProperty;
-    }
-    interface CustomElsaSwitchOptionsProperty {
         "activityModel"?: ActivityModel;
         "propertyDescriptor"?: ActivityPropertyDescriptor;
         "propertyModel"?: ActivityDefinitionProperty;
@@ -456,17 +451,21 @@ declare namespace LocalJSX {
         "activityModel"?: ActivityModel;
         "propertyDescriptor"?: ActivityPropertyDescriptor;
         "propertyModel"?: ActivityDefinitionProperty;
-        "questionProperties"?: Array<ActivityPropertyDescriptor>;
+        "questionProperties"?: Array<HeActivityPropertyDescriptor>;
     }
-    interface QuestionScreenPropertyV2 {
+    interface QuestionScreenPropertyOld {
         "activityModel"?: ActivityModel;
         "propertyDescriptor"?: ActivityPropertyDescriptor;
         "propertyModel"?: ActivityDefinitionProperty;
-        "questionProperties"?: Array<HeActivityPropertyDescriptor>;
+        "questionProperties"?: Array<ActivityPropertyDescriptor>;
+    }
+    interface SwitchOptionsProperty {
+        "activityModel"?: ActivityModel;
+        "propertyDescriptor"?: ActivityPropertyDescriptor;
+        "propertyModel"?: ActivityDefinitionProperty;
     }
     interface IntrinsicElements {
         "conditional-text-list-property": ConditionalTextListProperty;
-        "custom-elsa-switch-options-property": CustomElsaSwitchOptionsProperty;
         "custom-input-property": CustomInputProperty;
         "custom-outcome-property": CustomOutcomeProperty;
         "custom-text-property": CustomTextProperty;
@@ -485,7 +484,8 @@ declare namespace LocalJSX {
         "question-property-v2": QuestionPropertyV2;
         "question-radio-property": QuestionRadioProperty;
         "question-screen-property": QuestionScreenProperty;
-        "question-screen-property-v2": QuestionScreenPropertyV2;
+        "question-screen-property-old": QuestionScreenPropertyOld;
+        "switch-options-property": SwitchOptionsProperty;
     }
 }
 export { LocalJSX as JSX };
@@ -493,7 +493,6 @@ declare module "@stencil/core" {
     export namespace JSX {
         interface IntrinsicElements {
             "conditional-text-list-property": LocalJSX.ConditionalTextListProperty & JSXBase.HTMLAttributes<HTMLConditionalTextListPropertyElement>;
-            "custom-elsa-switch-options-property": LocalJSX.CustomElsaSwitchOptionsProperty & JSXBase.HTMLAttributes<HTMLCustomElsaSwitchOptionsPropertyElement>;
             "custom-input-property": LocalJSX.CustomInputProperty & JSXBase.HTMLAttributes<HTMLCustomInputPropertyElement>;
             "custom-outcome-property": LocalJSX.CustomOutcomeProperty & JSXBase.HTMLAttributes<HTMLCustomOutcomePropertyElement>;
             "custom-text-property": LocalJSX.CustomTextProperty & JSXBase.HTMLAttributes<HTMLCustomTextPropertyElement>;
@@ -512,7 +511,8 @@ declare module "@stencil/core" {
             "question-property-v2": LocalJSX.QuestionPropertyV2 & JSXBase.HTMLAttributes<HTMLQuestionPropertyV2Element>;
             "question-radio-property": LocalJSX.QuestionRadioProperty & JSXBase.HTMLAttributes<HTMLQuestionRadioPropertyElement>;
             "question-screen-property": LocalJSX.QuestionScreenProperty & JSXBase.HTMLAttributes<HTMLQuestionScreenPropertyElement>;
-            "question-screen-property-v2": LocalJSX.QuestionScreenPropertyV2 & JSXBase.HTMLAttributes<HTMLQuestionScreenPropertyV2Element>;
+            "question-screen-property-old": LocalJSX.QuestionScreenPropertyOld & JSXBase.HTMLAttributes<HTMLQuestionScreenPropertyOldElement>;
+            "switch-options-property": LocalJSX.SwitchOptionsProperty & JSXBase.HTMLAttributes<HTMLSwitchOptionsPropertyElement>;
         }
     }
 }

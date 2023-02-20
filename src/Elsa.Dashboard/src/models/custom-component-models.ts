@@ -18,6 +18,7 @@ export interface HeActivityPropertyDescriptor extends ActivityPropertyDescriptor
   considerValuesAsOutcomes: boolean;
   displayInDesigner: boolean;
   conditionalActivityType?: string;
+  expectedOutputType: string;
 }
 
 
@@ -144,13 +145,11 @@ export interface Dictionary<T> {
   [Key: string]: T;
 }
 
-export interface IActivityValue {
-  name: string;
-  expressions?: Map<string>;
-  syntax?: string;
+export interface NestedActivityDefinitionProperty extends ActivityDefinitionProperty {
+  type: string;
 }
 
-export interface ICheckboxValue extends IActivityValue {
+export interface ICheckboxValue extends NestedActivityDefinitionProperty {
   isSingle: boolean;
 }
 

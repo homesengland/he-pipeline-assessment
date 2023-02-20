@@ -85,6 +85,7 @@ namespace Elsa.CustomActivities.Handlers
             public ConditionalTextElement Condition { get; set; } = null!;
         }
 
-        public record ConditionalTextElement(IDictionary<string, string>? Expressions, string? Syntax);
+        public record ConditionalTextElement(IDictionary<string, string>? Expressions, string? Syntax); //: IElsaProperty(Expressions, Syntax);
+
     }
 }

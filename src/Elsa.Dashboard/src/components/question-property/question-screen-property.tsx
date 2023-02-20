@@ -1,20 +1,18 @@
-import { Component, h, Prop, State, Listen } from '@stencil/core';
-
-import TrashCanIcon from '../../icons/trash-can';
+import { Component, h, Prop, State } from '@stencil/core';
 
 import {
   ActivityDefinitionProperty,
   ActivityModel,
   ActivityPropertyDescriptor,
   HTMLElsaMultiExpressionEditorElement,
+  IntellisenseContext,
 } from '../../models/elsa-interfaces';
 
 import {
-  IQuestionComponent,
+    HeActivityPropertyDescriptor,
   QuestionActivity,
-  RadioQuestion,
-  CheckboxQuestion,
-  TextAreaQuestion
+  QuestionModel,
+  QuestionScreenProperty
 } from '../../models/custom-component-models';
 
 import {
@@ -22,10 +20,13 @@ import {
 } from '../icon-provider/icon-provider';
 
 import {
+    IQuestionData,
   QuestionLibrary,
   QuestionProvider
 } from '../question-provider/question-provider';
+import TrashCanIcon from '../../icons/trash-can';
 import { SyntaxNames } from '../../constants/Constants';
+import { filterPropertiesByType } from '../../models/utils';
 
 
 function parseJson(json: string): any {
@@ -45,13 +46,13 @@ function parseJson(json: string): any {
   shadow: false,
 })
 
-export class MultiQuestionProperty {
+export class QuestionScreen {
 
   @Prop() activityModel: ActivityModel;
   @Prop() propertyDescriptor: ActivityPropertyDescriptor;
   @Prop() propertyModel: ActivityDefinitionProperty;
-  @Prop() questionProperties: Array<ActivityPropertyDescriptor>;
-  @State() questionModel: QuestionActivity = new QuestionActivity();
+  @Prop() questionProperties: Array<HeActivityPropertyDescriptor>;
+  @State() questionModel: QuestionScreenProperty = new QuestionScreenProperty();
   @State() iconProvider = new IconProvider();
   @State() questionProvider = new QuestionProvider(Object.values(QuestionLibrary));
 
@@ -59,16 +60,11 @@ export class MultiQuestionProperty {
   multiExpressionEditor: HTMLElsaMultiExpressionEditorElement;
   syntaxMultiChoiceCount: number = 0;
 
-  @Listen('updateQuestion', { target: "body" })
-  getQuestion(event: CustomEvent) {
-    if (event.detail) {
-      this.updateQuestion(event.detail);
-    }
-  }
 
   async componentWillLoad() {
+    console.log("Loading Question Screen:", this.questionProperties)
     const propertyModel = this.propertyModel;
-    const choicesJson = propertyModel.expressions[SyntaxNames.Json]
+    const choicesJson = propertyModel.expressions[SyntaxNames.QuestionList]
     this.questionModel = parseJson(choicesJson) || this.defaultActivityModel();
   }
 
@@ -79,52 +75,11 @@ export class MultiQuestionProperty {
   }
 
   updatePropertyModel() {
-    this.enforceQuestionIdentifierUniqueness();
-    this.propertyModel.expressions[SyntaxNames.Json] = JSON.stringify(this.questionModel);
+    console.log("UpdatePropertyModel:", this.questionModel);
+    this.propertyModel.expressions[SyntaxNames.QuestionList] = JSON.stringify(this.questionModel);
   }
 
-  updateQuestion(updatedQuestion: IQuestionComponent) {
-    let questionToUpdate = this.questionModel.questions.findIndex((obj) => obj.id === updatedQuestion.id);
-    let newModel = this.questionModel;
-    newModel.questions[questionToUpdate] = updatedQuestion;
-    this.questionModel.questions.map(x => x.id != updatedQuestion.id);
-    this.questionModel = { ... this.questionModel, questions: newModel.questions };
-    this.updatePropertyModel();
-  }
-
-  enforceQuestionIdentifierUniqueness() {
-    for (let i = 0; i < this.questionModel.questions.length; i++) {
-      console.log('enforcing uniqueness')
-      this.questionModel.questions[i].id = (i+1).toString();
-    }
-  }
-
-  hasChoices(questionType: string) {
-    if (questionType == QuestionLibrary.Checkbox.nameConstant
-      || questionType == QuestionLibrary.Radio.nameConstant)
-      return true;
-    else return false;
-  }
-
-  handleAddQuestion(e: Event) {
-    let value = (e.currentTarget as HTMLSelectElement).value.trim();
-    let name = (e.currentTarget as HTMLSelectElement).selectedOptions[0].dataset.typename;
-    if (value != null && value != "") {
-      this.onAddQuestion(value, name);
-      let element = e.currentTarget as HTMLSelectElement;
-      element.selectedIndex = 0;
-    }
-  }
-
-  onAddQuestion(questionType: string, questionTypeName: string) {
-    let id = (this.questionModel.questions.length + 1).toString();
-    const questionName = `Question ${id}`;
-    const newQuestion = { id: id, title: questionName, questionGuidance: "", questionText: "", displayComments: false, questionHint: "", questionType: questionType, questionTypeName: questionTypeName };  
-    this.questionModel = { ...this.questionModel, questions: [...this.questionModel.questions, newQuestion] };
-    this.updatePropertyModel();
-  }
-
-  onDeleteQuestionClick(e: Event, question: IQuestionComponent) {
+  onDeleteQuestionClick(e: Event, question: QuestionModel) {
     e.stopPropagation();
     this.questionModel = { ...this.questionModel, questions: this.questionModel.questions.filter(x => x != question) };
     this.updatePropertyModel();
@@ -141,88 +96,123 @@ export class MultiQuestionProperty {
     }
   }
 
-  renderQuestions(model: QuestionActivity) {
+  onUpdateQuestion(e: Event) {
+    e = e;
+    this.updatePropertyModel();
+  }
+
+  renderQuestions(model: QuestionScreenProperty) {
     return model.questions.map(this.renderChoiceEditor)
   }
 
-  renderChoiceEditor = (question: IQuestionComponent, index: number) => {
+  renderChoiceEditor = (question: QuestionModel, index: number) => {
     const field = `question-${index}`;
     return (
       <div id={`${field}-id`} class="accordion elsa-mb-4 elsa-rounded" onClick={this.onAccordionQuestionClick}>
-        <button type="button elsa-mt-1 elsa-text-m elsa-text-gray-900">{question.title} </button>
+        <button type="button elsa-mt-1 elsa-text-m elsa-text-gray-900">{question.value.name} </button>
         <button type="button" onClick={e => this.onDeleteQuestionClick(e, question)}
           class="elsa-h-5 elsa-w-5 elsa-mx-auto elsa-outline-none focus:elsa-outline-none trashcan-icon" style={{ float: "right" }}>
           <TrashCanIcon options={this.iconProvider.getOptions()}></TrashCanIcon>
         </button>
-        <p class="elsa-mt-1 elsa-text-sm elsa-text-gray-900">{question.questionTypeName}</p>
+        <p class="elsa-mt-1 elsa-text-sm elsa-text-gray-900">{question.questionType.displayName}</p>
         {this.renderQuestionComponent(question)}
       </div>
     );
   };
 
-  renderQuestionComponent(question: IQuestionComponent) {
-    switch (question.questionType) {
-      case "CheckboxQuestion":
-        return <question-checkbox-property onClick={(e) => e.stopPropagation()} class="panel elsa-rounded" question={question as CheckboxQuestion}></question-checkbox-property>;
-      case "RadioQuestion":
-            return <question-radio-property onClick={(e) => e.stopPropagation()} class="panel elsa-rounded" question={question as RadioQuestion}></question-radio-property>;
-        case "TextAreaQuestion":
-            return <elsa-textarea-question onClick={(e) => e.stopPropagation()} class="panel elsa-rounded" question={question as TextAreaQuestion}></elsa-textarea-question>;
-      default:
-        return <question-property-old ActivityModel={this.activityModel} onClick={(e) => e.stopPropagation()} class="panel elsa-rounded" question={question}></question-property-old>;
+  handleAddQuestion(e: Event) {
+    let value = (e.currentTarget as HTMLSelectElement).value.trim();
+    let data: IQuestionData = JSON.parse((e.currentTarget as HTMLSelectElement).selectedOptions[0].dataset.type)
+    if (value != null && value != "") {
+      this.onAddQuestion(data);
+      let element = e.currentTarget as HTMLSelectElement;
+      element.selectedIndex = 0;
     }
   }
 
-  renderQuestionField(fieldId, fieldName, fieldValue, multiQuestion, onChangedFunction) {
-    return <div>
-      <div class="elsa-mb-1 elsa-mt-2">
-        <div class="elsa-flex">
-          <div class="elsa-flex-1">
-            <label htmlFor={fieldId} class="elsa-block elsa-text-sm elsa-font-medium elsa-text-gray-700">
-              {fieldName}
-            </label>
-          </div>
-        </div>
-      </div>
-      <input type="text" id={fieldId} name={fieldId} value={fieldValue} onChange={e =>
-        onChangedFunction(e, multiQuestion)}
-        class="disabled:elsa-opacity-50 disabled:elsa-cursor-not-allowed focus:elsa-ring-blue-500 focus:elsa-border-blue-500 elsa-block elsa-w-full elsa-min-w-0 elsa-rounded-md sm:elsa-text-sm elsa-border-gray-300" />
-    </div>;
+  newQuestionValue(name: string) {
+    var value = "";
+    var defaultSyntax = SyntaxNames.QuestionList;
+    var expression: ActivityDefinitionProperty = { name: name, value: value, syntax: defaultSyntax, expressions: { defaultSyntax: value }, }
+    return expression;
+  }
+
+  onAddQuestion(questionType: IQuestionData) {
+    let id = (this.questionModel.questions.length + 1).toString();
+    const questionName = `Question ${id}`;
+    const newValue = this.newQuestionValue(questionName);
+    let filteredValues = filterPropertiesByType(this.questionProperties, questionType.nameConstant);
+    console.log("questionProperties", this.questionProperties);
+    console.log("FilteredPRoperties", filteredValues);
+    let newQuestion: QuestionModel = { value: newValue, descriptor: filterPropertiesByType(this.questionProperties, questionType.nameConstant), questionType: questionType }
+    this.questionModel = { ...this.questionModel, questions: [...this.questionModel.questions, newQuestion] };
+    
+    this.updatePropertyModel();
+  }
+
+  onMultiExpressionEditorValueChanged(e: CustomEvent<string>) {
+    const json = e.detail;
+    const parsed = parseJson(json);
+
+    if (!parsed)
+      return;
+
+    if (!Array.isArray(parsed))
+      return;
+
+    this.propertyModel.expressions[SyntaxNames.Json] = json;
+    this.questionModel.questions = parsed;
+  }
+
+  onMultiExpressionEditorSyntaxChanged(e: CustomEvent<string>) {
+    e = e;
   }
 
 
-  renderCheckboxField(fieldId, fieldName, isChecked, multiQuestion, onChangedFunction) {
-    return <div>
-      <div class="elsa-mb-1 elsa-mt-2">
-        <div class="elsa-flex">
-          <div>
-            <input id={fieldId} name={fieldId} type="checkbox" checked={isChecked} value={'true'} onChange={e =>
-              onChangedFunction(e, multiQuestion)}
-              class="focus:elsa-ring-blue-500 elsa-h-8 elsa-w-8 elsa-text-blue-600 elsa-border-gray-300 elsa-rounded" />
-          </div>
-          <div>
-            <label htmlFor={fieldId} class="elsa-block elsa-text-sm elsa-font-medium elsa-text-gray-700 elsa-p-1">
-              {fieldName}
-            </label>
-          </div>
-        </div>
-      </div>
-    </div>;
+
+  renderQuestionComponent(question: QuestionModel) {
+    console.log("Render Question screen property:", question);
+    return <question-property
+      class="panel elsa-rounded"
+      activityModel={this.activityModel}
+      questionModel={question}
+      onClick={(e) => e.stopPropagation()}
+      onUpdateQuestionScreen={e => this.onUpdateQuestion(e)}
+    ></question-property>
   }
 
   render() {
+    const context: IntellisenseContext = {
+      activityTypeName: this.activityModel.type,
+      propertyName: this.propertyDescriptor.name
+    };
+    const json = JSON.stringify(this.questionModel, null, 2);
+
     return (
       <div>
-        <div class="elsa-mb-1">
-          <div class="elsa-flex">
-            <div class="elsa-flex-1">
-              <label htmlFor="Questions" class="elsa-block elsa-text-sm elsa-font-medium elsa-text-gray-700">
-                List of questions
-              </label>
-            </div>
-          </div>
-        </div>
         {this.renderQuestions(this.questionModel)}
+
+        <elsa-multi-expression-editor
+          ref={el => this.multiExpressionEditor = el}
+          label={this.propertyDescriptor.label}
+          defaultSyntax={SyntaxNames.Json}
+          supportedSyntaxes={[SyntaxNames.Json]}
+          context={context}
+          expressions={{ 'Json': json }}
+          editor-height="20rem"
+          onExpressionChanged={e => this.onMultiExpressionEditorValueChanged(e)}
+          onSyntaxChanged={e => this.onMultiExpressionEditorSyntaxChanged(e)}
+        >
+        {/*<div class="elsa-mb-1">*/}
+        {/*  <div class="elsa-flex">*/}
+        {/*    <div class="elsa-flex-1">*/}
+        {/*      <label htmlFor="Questions" class="elsa-block elsa-text-sm elsa-font-medium elsa-text-gray-700">*/}
+        {/*        List of questions*/}
+        {/*      </label>*/}
+        {/*    </div>*/}
+        {/*  </div>*/}
+        {/*</div>*/}
+
 
         <select id="addQuestionDropdown"
           onChange={ (e) => this.handleAddQuestion.bind(this)(e) }
@@ -230,7 +220,8 @@ export class MultiQuestionProperty {
           class="elsa-mt-1 elsa-block focus:elsa-ring-blue-500 focus:elsa-border-blue-500 elsa-w-full elsa-shadow-sm sm:elsa-max-w-xs sm:elsa-text-sm elsa-border-gray-300 elsa-rounded-md">
           <option value="">Add a Question...</option>
           {this.questionProvider.displayOptions()}
-        </select>
+          </select>
+        </elsa-multi-expression-editor>
       </div>
     );
   }

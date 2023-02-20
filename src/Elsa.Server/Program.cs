@@ -26,6 +26,7 @@ using He.PipelineAssessment.Data.Auth;
 using MediatR;
 using Microsoft.AspNetCore.DataProtection;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.DependencyInjection.Extensions;
 using System.Reflection.Metadata;
 
 
@@ -48,8 +49,6 @@ builder.Services
         .AddActivity<CheckYourAnswersScreen>()
         .AddActivity<ConfirmationScreen>()
         .AddActivity<FinishWorkflow>()
-        //Remove when Testing is complete
-        .AddActivity<QuestionScreenTest>()
         .NoCoreActivities()
         .AddConsoleActivities()
     );
@@ -57,6 +56,8 @@ builder.Services
 builder.Services.AddScoped<ICustomPropertyDescriber, CustomPropertyDescriber>();
 
 builder.Services.TryAddProvider<IExpressionHandler, ConditionalTextListExpressionHandler>(ServiceLifetime.Singleton);
+builder.Services.TryAddProvider<IExpressionHandler, QuestionListExpressionHandler>(ServiceLifetime.Singleton);
+builder.Services.TryAddSingleton<INestedSyntaxExpressionHandler, NestedSyntaxExpressionHandler>();
 
 builder.Services.AddDbContext<ElsaCustomContext>(config =>
     config.UseSqlServer(elsaCustomConnectionString,

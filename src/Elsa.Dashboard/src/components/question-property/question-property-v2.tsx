@@ -39,21 +39,15 @@ export class HEQuestionComponent {
   displayManager: HePropertyDisplayManager = new HePropertyDisplayManager();
 
   async componentWillLoad() {
-    console.log("Question Model", this.questionModel);
     const model = this.questionModel;
     const propertyJson = model.value.expressions[SyntaxNames.Json]
-    console.log("Property Json", propertyJson)
     this.questionProperties = parseJson(propertyJson) || []
-    console.log("Question Properties", this.questionProperties)
   }
 
   onPropertyExpressionChange(event: Event, property: NestedProperty) {
-    console.log(event);
-    console.log(property);
+    event = event;
+    property = property;
   }
-
-
-
 
   render() {
     const displayManager = this.displayManager

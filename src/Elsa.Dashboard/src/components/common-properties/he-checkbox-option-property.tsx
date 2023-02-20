@@ -1,5 +1,5 @@
 import { Component, Event, EventEmitter, h, Prop, State } from '@stencil/core';
-import { SyntaxNames } from '../../constants/Constants';
+import { PropertyOutputTypes, SyntaxNames } from '../../constants/Constants';
 import ExpandIcon from '../../icons/expand_icon';
 import PlusIcon from '../../icons/plus_icon';
 import TrashCanIcon from '../../icons/trash-can';
@@ -57,7 +57,7 @@ export class HeCheckboxOptionProperty {
 
   onAddOptionClick() {
     const optionName = ToLetter(this.options.length + 1);
-    const newOption: ICheckboxValue = { name: optionName, isSingle: false, syntax: SyntaxNames.Literal, expressions: { [SyntaxNames.Literal]: '' } };
+    const newOption: ICheckboxValue = { name: optionName, isSingle: false, syntax: SyntaxNames.Literal, expressions: { [SyntaxNames.Literal]: '' }, type: PropertyOutputTypes.Checkbox};
     this.options = [...this.options, newOption];
     this.updatePropertyModel();
   }
