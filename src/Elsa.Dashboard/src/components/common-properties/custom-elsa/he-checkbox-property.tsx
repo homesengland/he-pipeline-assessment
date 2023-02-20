@@ -31,6 +31,7 @@ export class HECheckboxProperty {
     this.isChecked = checkbox.checked;
     const defaultSyntax = this.propertyDescriptor.defaultSyntax || SyntaxNames.Literal;
     this.propertyModel.expressions[defaultSyntax] = this.isChecked.toString();
+    this.expressionChanged.emit(JSON.stringify(this.propertyModel));
   }
 
   onDefaultSyntaxValueChanged(e: CustomEvent) {

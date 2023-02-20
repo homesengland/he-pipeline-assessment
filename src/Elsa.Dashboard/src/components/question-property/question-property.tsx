@@ -67,7 +67,7 @@ export class QuestionProperty {
 
   createQuestionProperty(descriptor: HeActivityPropertyDescriptor): NestedProperty {
     let propertyValue: ActivityDefinitionProperty = {
-      syntax: descriptor.defaultSyntax ?? "Literal",
+      syntax: descriptor.defaultSyntax,
       value: descriptor.expectedOutputType,
       name: descriptor.name,
       expressions: this.getExpressionMap(descriptor.supportedSyntaxes)

@@ -27,7 +27,7 @@ namespace Elsa.CustomActivities.Describers
             string? category = null,
             float order = 0f,
             object? defaultValue = null,
-            string? defaultSyntax = "Literal",
+            string? defaultSyntax = null,
             IEnumerable<string>? supportedSyntaxes = null,
             bool isReadOnly = false,
             bool isBrowsable = true,

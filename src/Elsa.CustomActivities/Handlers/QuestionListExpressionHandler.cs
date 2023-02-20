@@ -27,20 +27,21 @@ namespace Elsa.CustomActivities.Handlers
         public async Task<object?> EvaluateAsync(string expression, Type returnType, ActivityExecutionContext context, CancellationToken cancellationToken)
         {
             QuestionListModelRaw listExpression = TryParseRawExpression(expression);
-            QuestionListModel questionScreen = new QuestionListModel();
-            List<QuestionElement> listOfValues = listExpression.Questions.Select(x => x.Value).ToList();
+            //QuestionListModel questionScreen = new QuestionListModel();
+            List<QuestionElement> listOfValues = listExpression.Questions.Select(x => new QuestionElement { Question = x.Value, QuestionType = x.QuestionType.NameConstant}).ToList();
 
-            questionScreen.Questions = listOfValues;
+            //questionScreen.Questions = listOfValues;
 
             List<QuestionElementModel> questions = new List<QuestionElementModel>();
-            foreach (QuestionElement questionElement in questionScreen.Questions)
+            foreach (QuestionElement questionElement in listOfValues)
             {
                 var listOfProperties = ParseQuestion(questionElement);
-                questions.Add(new QuestionElementModel { QuestionProperties = listOfProperties });
+                questions.Add(new QuestionElementModel { QuestionProperties = listOfProperties, QuestionType = questionElement.QuestionType });
             }
             var evaluator = context.GetService<IExpressionEvaluator>();
             var parsedQuestions = await ElsaElementListToQuestionList(questions, evaluator, context);
-            return parsedQuestions;
+            AssessmentQuestions questionModel = new AssessmentQuestions() { Questions = parsedQuestions };
+            return questionModel;
         }
 
         private async Task<List<Question>> ElsaElementListToQuestionList(List<QuestionElementModel> elsaModels, IExpressionEvaluator evaluator, ActivityExecutionContext context)
@@ -62,16 +63,17 @@ namespace Elsa.CustomActivities.Handlers
             foreach(PropertyInfo property in questionProperties)
             {
                 var propertyName = GetPropertyName(property);
-                var propertyType = property.PropertyType;
                 if(propertyDictionary.TryGetValue(propertyName, out QuestionProperty? elsaQuestionProperty))
                 {
                     if (elsaQuestionProperty != null)
                     {
-                        var propertyValue = await EvaluateModel(elsaQuestionProperty, evaluator, context);
+                        Type propertyType = property.PropertyType;
+                        var propertyValue = await EvaluateModel(elsaQuestionProperty, evaluator, context, propertyType);
                         property.SetValue(question, propertyValue);
                     }
                 }
             }
+            question.QuestionType = elsaModel.QuestionType;
             return question;
 
             //Late night thoughts - but why not have a specific expression handler for each type of Custom Context?
@@ -93,23 +95,31 @@ namespace Elsa.CustomActivities.Handlers
             return dict;
         }
 
-        private async Task<object?> EvaluateModel(IElsaProperty property, IExpressionEvaluator evaluator, ActivityExecutionContext context)
+        private async Task<object?> EvaluateModel(IElsaProperty property, IExpressionEvaluator evaluator, ActivityExecutionContext context, Type propertyType)
         {
-            Type outputType = _handler.GetReturnType(property.Value ?? SyntaxNames.Literal);
-            if (outputType != null && outputType == typeof(string))
+
+            if (propertyType != null && propertyType == typeof(string))
             {
                 string result = await _handler.EvaluateFromExpressions<string>(evaluator, context, property, CancellationToken.None);
                 return result;
             }
-            if (outputType != null && outputType == typeof(bool))
+            if (propertyType != null && propertyType == typeof(bool))
             {
                 bool result = await _handler.EvaluateFromExpressions<bool>(evaluator, context, property, CancellationToken.None);
                 return result;
             }
-            if (outputType != null && outputType == typeof(bool))
+            if (propertyType != null && propertyType == typeof(int) || propertyType == typeof(int?))
             {
                 int result = await _handler.EvaluateFromExpressions<int>(evaluator, context, property, CancellationToken.None);
                 return result;
+            }
+            if(propertyType != null && propertyType == typeof(CheckboxModel))
+            {
+                return null;
+            }
+            if(propertyType != null && propertyType == typeof(RadioModel))
+            {
+                return null;
             }
             else
             {
@@ -121,8 +131,9 @@ namespace Elsa.CustomActivities.Handlers
         private List<QuestionProperty> ParseQuestion(QuestionElement element)
         {
             List<QuestionProperty> questionProperties = new List<QuestionProperty>();
-            var questionJson = element.Expressions![element.Syntax!];
+            var questionJson = element.Question.Expressions![element.Question.Syntax!];
             var parsedQuestionsRaw = JsonConvert.DeserializeObject<List<QuestionPropertyRaw>>(questionJson);
+
             
             if (parsedQuestionsRaw != null)
             {
@@ -144,15 +155,15 @@ namespace Elsa.CustomActivities.Handlers
             }
         }
 
-        private QuestionListModel TryDeserializeExpression(string expression)
+        private List<QuestionElement> TryDeserializeExpression(string expression)
         {
             try
             {
-                return _contentSerializer.Deserialize<QuestionListModel>(expression);
+                return _contentSerializer.Deserialize<List<QuestionElement>>(expression);
             }
             catch
             {
-                return new QuestionListModel();
+                return new List<QuestionElement>();
             }
         }
 
@@ -163,27 +174,33 @@ namespace Elsa.CustomActivities.Handlers
 
         }
 
-        public record QuestionListModel
-        {
-            public List<QuestionElement> Questions { get; set; } = null!;
-        }
+        //public record QuestionListModel
+        //{
+        //    public List<QuestionElement> Questions { get; set; } = null!;
+        //}
 
 
         public record QuestionElementModel
         {
             public List<QuestionProperty> QuestionProperties { get; set; } = null!;
+            public string QuestionType { get; set; } = null!;
         }
 
         public record QuestionElementRaw
         {
-            public QuestionElement Value { get; set; } = null!;
+            public IElsaProperty Value { get; set; } = null!;
             public List<HeActivityInputDescriptor> Descriptor { get; set; } = null!;
             public QuestionTypeModel QuestionType { get; set; } = null!;
         }
 
         public record QuestionTypeModel(string NameConstant, string DisplayName, string Description);
 
-        public record QuestionElement(IDictionary<string, string>? Expressions, string? Syntax, string Value, string Name) : IElsaProperty(Expressions, Syntax, Value, Name);
+        public record QuestionElement
+        {
+            public IElsaProperty Question { get; set; } = null!;
+            public string QuestionType { get; set; } = null!;
+        }
+        
 
         public record QuestionPropertyRaw(QuestionProperty Value, HeActivityInputDescriptor Descriptor);
         public record QuestionProperty(IDictionary<string, string>? Expressions, string? Syntax, string Value, string Name) : IElsaProperty(Expressions, Syntax, Value, Name);
