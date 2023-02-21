@@ -7,7 +7,7 @@
     using Microsoft.AspNetCore.Mvc.Authorization;
     using Microsoft.Extensions.DependencyInjection;
 
-    public static class CustomExtentionsMethods
+    public static class CustomExtensionMethods
     {
         public static void AddCustomAuth0Configuration(this WebApplicationBuilder builder)
         {
