@@ -1,4 +1,5 @@
 ﻿using Elsa.Metadata;
+using Microsoft.EntityFrameworkCore.Storage;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -14,6 +15,8 @@ namespace Elsa.CustomActivities.Describers
         //Used to match to a given Nested Activity Type (i.e. Question Type) in Elsa and only to be displayed if null, or a match.
         public string? ConditionalActivityType { get; set; }
         public string? ExpectedOutputType { get; set; }
+
+
 
         public HeActivityInputDescriptor() : base() { }
 

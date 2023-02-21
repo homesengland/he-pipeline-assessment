@@ -1,9 +1,9 @@
 ﻿using Elsa.CustomActivities.Constants;
+using Elsa.CustomActivities.Handlers.ParseModels;
 using Elsa.Expressions;
 using Elsa.Serialization;
 using Elsa.Services.Models;
 using System.Runtime.CompilerServices;
-
 
 namespace Elsa.CustomActivities.Handlers
 {
@@ -78,14 +78,7 @@ namespace Elsa.CustomActivities.Handlers
         }
 
 
-        public record ConditionalTextModel
-        {
-            public ConditionalTextElement Text { get; set; } = null!;
 
-            public ConditionalTextElement Condition { get; set; } = null!;
-        }
-
-        public record ConditionalTextElement(IDictionary<string, string>? Expressions, string? Syntax); //: IElsaProperty(Expressions, Syntax);
 
     }
 }

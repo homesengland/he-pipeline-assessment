@@ -48,8 +48,12 @@ export class HeRadioOptionProperty {
 
   updatePropertyModel() {
     this.propertyModel.expressions[SyntaxNames.Json] = JSON.stringify(this.options);
+    console.log("Updating Options:", this.options);
+    console.log("Updating Stringified Options", JSON.stringify(this.options));
     this.multiExpressionEditor.expressions[SyntaxNames.Json] = JSON.stringify(this.options, null, 2);
+    console.log("Multi Expression Editor Options:", this.multiExpressionEditor.expressions[SyntaxNames.Json])
     this.expressionChanged.emit(JSON.stringify(this.propertyModel))
+    console.log("propertyModel on Update:", this.propertyModel);
   }
 
   onDefaultSyntaxValueChanged(e: CustomEvent) {
@@ -60,6 +64,7 @@ export class HeRadioOptionProperty {
     const optionName = ToLetter(this.options.length+1);
     const newOption: NestedActivityDefinitionProperty = { name: optionName, syntax: SyntaxNames.Literal, expressions: { [SyntaxNames.Literal]: '' }, type: PropertyOutputTypes.Radio  };
     this.options = [...this.options, newOption];
+    console.log("Options after Add:", this.options);
     this.updatePropertyModel();
   }
 
