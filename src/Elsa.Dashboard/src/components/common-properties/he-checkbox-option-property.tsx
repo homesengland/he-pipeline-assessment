@@ -12,8 +12,8 @@ import {
     HTMLElsaMultiExpressionEditorElement,
     IntellisenseContext
 } from "../../models/elsa-interfaces";
-import { mapSyntaxToLanguage, parseJson, ToLetter } from "../../models/utils";
-import { IconProvider } from "../icon-provider/icon-provider";
+import { mapSyntaxToLanguage, parseJson, ToLetter } from "../../utils/utils";
+import { IconProvider } from "../providers/icon-provider/icon-provider";
 
 @Component({
   tag: 'he-checkbox-options-property',

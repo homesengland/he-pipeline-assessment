@@ -5,7 +5,7 @@ import {
   HTMLElsaExpressionEditorElement
 } from "../../models/elsa-interfaces";
 
-import { mapSyntaxToLanguage } from "../../models/utils";
+import { mapSyntaxToLanguage } from "../../utils/utils";
 
 import { ITextProperty } from "../../models/custom-component-models"
 import { SyntaxNames } from '../../constants/Constants';

@@ -7,9 +7,9 @@ import {
   HTMLElsaMultiExpressionEditorElement,
   IntellisenseContext
 } from "../../../models/elsa-interfaces";
-import { mapSyntaxToLanguage, parseJson } from "../../../models/utils";
+import { mapSyntaxToLanguage, parseJson } from "../../../utils/utils";
 import { SwitchCase } from "../../../models/elsa-interfaces";
-import { IconProvider } from "../../icon-provider/icon-provider";
+import { IconProvider } from "../../providers/icon-provider/icon-provider";
 import PlusIcon from '../../../icons/plus_icon';
 import TrashCanIcon from '../../../icons/trash-can';
 import ExpandIcon from '../../../icons/expand_icon';

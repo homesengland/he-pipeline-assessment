@@ -1,4 +1,4 @@
-import { Map } from '../../models/utils';
+import { Map } from '../../../utils/utils';
 import { h } from '@stencil/core';
 
 export enum IconName {

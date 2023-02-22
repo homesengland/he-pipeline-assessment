@@ -7,14 +7,13 @@ import {
   HTMLElsaMultiExpressionEditorElement,
   IntellisenseContext
 } from "../../models/elsa-interfaces";
-import { mapSyntaxToLanguage, parseJson } from "../../models/utils";
-import { IconProvider } from "../icon-provider/icon-provider";
+import { mapSyntaxToLanguage, parseJson, ToLetter } from "../../utils/utils";
+import { IconProvider } from "../providers/icon-provider/icon-provider";
 import PlusIcon from '../../icons/plus_icon';
 import TrashCanIcon from '../../icons/trash-can';
 import ExpandIcon from '../../icons/expand_icon';
 import { PropertyOutputTypes, SyntaxNames } from '../../constants/Constants';
 import { NestedActivityDefinitionProperty } from '../../models/custom-component-models';
-import { ToLetter } from '../../models/utils';
 
 @Component({
   tag: 'he-radio-options-property',

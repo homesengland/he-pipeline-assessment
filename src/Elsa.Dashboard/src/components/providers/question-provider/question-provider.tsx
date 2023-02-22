@@ -1,5 +1,5 @@
 import { h } from '@stencil/core';
-import { QuestionTypeConstants } from '../../constants/Constants';
+import { QuestionTypeConstants } from '../../../constants/Constants';
 
 export interface IQuestionData {
   nameConstant: string,

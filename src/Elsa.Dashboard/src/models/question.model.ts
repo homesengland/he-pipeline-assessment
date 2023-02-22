@@ -1,4 +1,4 @@
-import { Map } from './utils';
+import { Map } from '../utils/utils';
 
 export interface Question {
   category: string;

@@ -26,7 +26,7 @@ import {
 } from '../question-provider/question-provider';
 import TrashCanIcon from '../../icons/trash-can';
 import { SyntaxNames } from '../../constants/Constants';
-import { filterPropertiesByType } from '../../models/utils';
+import { filterPropertiesByType } from '../../utils/utils';
 
 
 function parseJson(json: string): any {

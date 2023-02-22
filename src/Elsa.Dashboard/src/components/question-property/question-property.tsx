@@ -15,8 +15,8 @@ import {
 import {
   IconProvider,
 } from '../icon-provider/icon-provider'
-import { HePropertyDisplayManager } from '../../models/display-manager';
-import { parseJson, Map } from '../../models/utils';
+import { HePropertyDisplayManager } from '../../nested-drivers/display-managers/display-manager';
+import { parseJson, Map } from '../../utils/utils';
 import { SyntaxNames } from '../../constants/Constants';
 
 @Component({
@@ -34,7 +34,6 @@ export class QuestionProperty {
   @State() displayManager: HePropertyDisplayManager = new HePropertyDisplayManager();
   @Event() updateQuestionScreen: EventEmitter<string>;
 
-  //supportedSyntaxes: Array<string> = [SyntaxNames.JavaScript, SyntaxNames.Liquid];
   multiExpressionEditor: HTMLElsaMultiExpressionEditorElement;
   syntaxMultiChoiceCount: number = 0;
   

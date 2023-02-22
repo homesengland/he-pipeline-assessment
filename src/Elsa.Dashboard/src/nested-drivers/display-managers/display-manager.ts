@@ -1,19 +1,19 @@
-import { HeCheckListDriver } from "../components/nested-drivers/he-check-list-driver";
-import { HeCheckboxDriver } from "../components/nested-drivers/he-checkbox-driver";
-import { HeCheckboxOptionsDriver } from "../components/nested-drivers/he-checkbox-options-driver";
-import { HeCronDriver } from "../components/nested-drivers/he-cron-driver";
-import { HeDictionaryDriver } from "../components/nested-drivers/he-dictionary-driver";
-import { HeDropdownDriver } from "../components/nested-drivers/he-dropdown-driver";
-import { HeJsonDriver } from "../components/nested-drivers/he-json-driver";
-import { HeMultiLineDriver } from "../components/nested-drivers/he-multi-line-driver";
-import { HeMultiTextDriver } from "../components/nested-drivers/he-multi-text-driver";
-import { HeRadioListDriver } from "../components/nested-drivers/he-radio-list-driver";
-import { HeRadioOptionsDriver } from "../components/nested-drivers/he-radio-options-driver";
-import { HeScriptDriver } from "../components/nested-drivers/he-script-driver";
-import { HeSingleLineDriver } from "../components/nested-drivers/he-single-line-driver";
-import { HeSwitchCaseDriver } from "../components/nested-drivers/he-switch-cases-driver";
-import { Dictionary, NestedProperty } from "./custom-component-models";
-import { ActivityModel, ActivityPropertyDescriptor } from "./elsa-interfaces";
+import { HeCheckListDriver } from "../he-check-list-driver";
+import { HeCheckboxDriver } from "../he-checkbox-driver";
+import { HeCheckboxOptionsDriver } from "../he-checkbox-options-driver";
+import { HeCronDriver } from "../he-cron-driver";
+import { HeDictionaryDriver } from "../he-dictionary-driver";
+import { HeDropdownDriver } from "../he-dropdown-driver";
+import { HeJsonDriver } from "../he-json-driver";
+import { HeMultiLineDriver } from "../he-multi-line-driver";
+import { HeMultiTextDriver } from "../he-multi-text-driver";
+import { HeRadioListDriver } from "../he-radio-list-driver";
+import { HeRadioOptionsDriver } from "../he-radio-options-driver";
+import { HeScriptDriver } from "../he-script-driver";
+import { HeSingleLineDriver } from "../he-single-line-driver";
+import { HeSwitchCaseDriver } from "../he-switch-cases-driver";
+import { Dictionary, NestedProperty } from "../../models/custom-component-models";
+import { ActivityModel, ActivityPropertyDescriptor } from "../../models/elsa-interfaces";
 
 
 export interface HePropertyDisplayDriver {

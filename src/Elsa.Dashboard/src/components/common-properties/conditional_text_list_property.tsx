@@ -7,13 +7,12 @@ import {
   HTMLElsaMultiExpressionEditorElement,
   IntellisenseContext,
 } from "../../models/elsa-interfaces";
-import { parseJson } from "../../models/utils";
 import { IOutcomeProperty } from "../../models/custom-component-models";
-import { IconProvider } from "../icon-provider/icon-provider";
+import { IconProvider } from "../providers/icon-provider/icon-provider";
 import PlusIcon from '../../icons/plus_icon';
 import TrashCanIcon from '../../icons/trash-can';
 
-import { mapSyntaxToLanguage } from '../../models/utils';
+import { mapSyntaxToLanguage, parseJson } from '../../utils/utils';
 import { SyntaxNames } from '../../constants/Constants';
 
 

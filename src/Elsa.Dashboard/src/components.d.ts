@@ -75,21 +75,11 @@ export namespace Components {
         "activityModel": ActivityModel;
         "questionModel": QuestionModel;
     }
-    interface QuestionPropertyV2 {
-        "activityModel": ActivityModel;
-        "questionModel": QuestionModel;
-    }
     interface QuestionScreenProperty {
         "activityModel": ActivityModel;
         "propertyDescriptor": ActivityPropertyDescriptor;
         "propertyModel": ActivityDefinitionProperty;
         "questionProperties": Array<HeActivityPropertyDescriptor>;
-    }
-    interface QuestionScreenPropertyOld {
-        "activityModel": ActivityModel;
-        "propertyDescriptor": ActivityPropertyDescriptor;
-        "propertyModel": ActivityDefinitionProperty;
-        "questionProperties": Array<ActivityPropertyDescriptor>;
     }
     interface SwitchOptionsProperty {
         "activityModel": ActivityModel;
@@ -210,23 +200,11 @@ declare global {
         prototype: HTMLQuestionPropertyElement;
         new (): HTMLQuestionPropertyElement;
     };
-    interface HTMLQuestionPropertyV2Element extends Components.QuestionPropertyV2, HTMLStencilElement {
-    }
-    var HTMLQuestionPropertyV2Element: {
-        prototype: HTMLQuestionPropertyV2Element;
-        new (): HTMLQuestionPropertyV2Element;
-    };
     interface HTMLQuestionScreenPropertyElement extends Components.QuestionScreenProperty, HTMLStencilElement {
     }
     var HTMLQuestionScreenPropertyElement: {
         prototype: HTMLQuestionScreenPropertyElement;
         new (): HTMLQuestionScreenPropertyElement;
-    };
-    interface HTMLQuestionScreenPropertyOldElement extends Components.QuestionScreenPropertyOld, HTMLStencilElement {
-    }
-    var HTMLQuestionScreenPropertyOldElement: {
-        prototype: HTMLQuestionScreenPropertyOldElement;
-        new (): HTMLQuestionScreenPropertyOldElement;
     };
     interface HTMLSwitchOptionsPropertyElement extends Components.SwitchOptionsProperty, HTMLStencilElement {
     }
@@ -247,9 +225,7 @@ declare global {
         "he-single-line-property": HTMLHeSingleLinePropertyElement;
         "he-switch-options-property": HTMLHeSwitchOptionsPropertyElement;
         "question-property": HTMLQuestionPropertyElement;
-        "question-property-v2": HTMLQuestionPropertyV2Element;
         "question-screen-property": HTMLQuestionScreenPropertyElement;
-        "question-screen-property-old": HTMLQuestionScreenPropertyOldElement;
         "switch-options-property": HTMLSwitchOptionsPropertyElement;
     }
 }
@@ -331,21 +307,11 @@ declare namespace LocalJSX {
         "onUpdateQuestionScreen"?: (event: QuestionPropertyCustomEvent<string>) => void;
         "questionModel"?: QuestionModel;
     }
-    interface QuestionPropertyV2 {
-        "activityModel"?: ActivityModel;
-        "questionModel"?: QuestionModel;
-    }
     interface QuestionScreenProperty {
         "activityModel"?: ActivityModel;
         "propertyDescriptor"?: ActivityPropertyDescriptor;
         "propertyModel"?: ActivityDefinitionProperty;
         "questionProperties"?: Array<HeActivityPropertyDescriptor>;
-    }
-    interface QuestionScreenPropertyOld {
-        "activityModel"?: ActivityModel;
-        "propertyDescriptor"?: ActivityPropertyDescriptor;
-        "propertyModel"?: ActivityDefinitionProperty;
-        "questionProperties"?: Array<ActivityPropertyDescriptor>;
     }
     interface SwitchOptionsProperty {
         "activityModel"?: ActivityModel;
@@ -365,9 +331,7 @@ declare namespace LocalJSX {
         "he-single-line-property": HeSingleLineProperty;
         "he-switch-options-property": HeSwitchOptionsProperty;
         "question-property": QuestionProperty;
-        "question-property-v2": QuestionPropertyV2;
         "question-screen-property": QuestionScreenProperty;
-        "question-screen-property-old": QuestionScreenPropertyOld;
         "switch-options-property": SwitchOptionsProperty;
     }
 }
@@ -387,9 +351,7 @@ declare module "@stencil/core" {
             "he-single-line-property": LocalJSX.HeSingleLineProperty & JSXBase.HTMLAttributes<HTMLHeSingleLinePropertyElement>;
             "he-switch-options-property": LocalJSX.HeSwitchOptionsProperty & JSXBase.HTMLAttributes<HTMLHeSwitchOptionsPropertyElement>;
             "question-property": LocalJSX.QuestionProperty & JSXBase.HTMLAttributes<HTMLQuestionPropertyElement>;
-            "question-property-v2": LocalJSX.QuestionPropertyV2 & JSXBase.HTMLAttributes<HTMLQuestionPropertyV2Element>;
             "question-screen-property": LocalJSX.QuestionScreenProperty & JSXBase.HTMLAttributes<HTMLQuestionScreenPropertyElement>;
-            "question-screen-property-old": LocalJSX.QuestionScreenPropertyOld & JSXBase.HTMLAttributes<HTMLQuestionScreenPropertyOldElement>;
             "switch-options-property": LocalJSX.SwitchOptionsProperty & JSXBase.HTMLAttributes<HTMLSwitchOptionsPropertyElement>;
         }
     }
