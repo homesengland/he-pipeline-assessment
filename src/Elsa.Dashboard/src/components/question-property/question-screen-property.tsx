@@ -10,20 +10,19 @@ import {
 
 import {
     HeActivityPropertyDescriptor,
-  QuestionActivity,
   QuestionModel,
   QuestionScreenProperty
 } from '../../models/custom-component-models';
 
 import {
   IconProvider
-} from '../icon-provider/icon-provider';
+} from '../providers/icon-provider/icon-provider';
 
 import {
     IQuestionData,
   QuestionLibrary,
   QuestionProvider
-} from '../question-provider/question-provider';
+} from '../providers/question-provider/question-provider';
 import TrashCanIcon from '../../icons/trash-can';
 import { SyntaxNames } from '../../constants/Constants';
 import { filterPropertiesByType } from '../../utils/utils';
@@ -69,7 +68,7 @@ export class QuestionScreen {
   }
 
   defaultActivityModel() {
-    var activity = new QuestionActivity();
+    var activity = new QuestionScreenProperty();
     activity.questions = [];
     return activity;
   }

@@ -1,6 +1,6 @@
-import { IQuestionData } from '../components/question-provider/question-provider';
+import { IQuestionData } from '../components/providers/question-provider/question-provider';
 import { ActivityDefinitionProperty, ActivityPropertyDescriptor } from './elsa-interfaces';
-import { Map } from './utils'
+import { Map } from '../utils/utils'
 
 export interface HeActivityPropertyDescriptor extends ActivityPropertyDescriptor {
   name: string;
@@ -21,92 +21,6 @@ export interface HeActivityPropertyDescriptor extends ActivityPropertyDescriptor
   expectedOutputType: string;
 }
 
-
-///Question Options
-
-export interface IQuestionOption {
-  identifier: string
-  answer: string
-}
-
-export interface CheckboxOption extends IQuestionOption {
-  isSingle: boolean;
-}
-
-export interface RadioOption extends IQuestionOption {
-}
-
-export class QuestionOptions<T extends IQuestionOption>{
-  choices: Array<T> = [];
-}
-
-
-///Questions
-
-export interface ISampleQuestionProperty {
-  name: string;
-  syntax?: string;
-  expressions: Map<string>;
-  value?: any;
-}
-
-export interface ISampleQuestion {
-  properties: Array<ISampleQuestionProperty>;
-}
-
-export interface IQuestionComponent {
-  id: string;
-  title: string;
-  questionGuidance: string;
-  questionText: string;
-  displayComments: boolean;
-  questionHint: string;
-  questionType: string;
-  questionTypeName: string;
-}
-
-export class Question implements IQuestionComponent {
-    id: string;
-    title: string;
-    questionGuidance: string;
-    questionText: string;
-    displayComments: boolean;
-    questionHint: string;
-    questionType: string;
-    questionTypeName: string;
-}
-
-export abstract class MultipleChoiceQuestion<T extends IQuestionOption> extends Question {
-  options: QuestionOptions<T> = new QuestionOptions<T>()
-}
-
-export class CheckboxQuestion extends MultipleChoiceQuestion<CheckboxOption> {
-  checkbox: QuestionOptions<CheckboxOption> = this.options;
-}
-
-export class RadioQuestion extends MultipleChoiceQuestion<RadioOption> {
-  radio: QuestionOptions<RadioOption> = this.options;
-}
-
-export class TextAreaQuestion extends Question {
-  characterLimit: number;
-}
-
-
-//Activity Screens
-
-export class MultiChoiceActivity {
-  choices: Array<CheckboxOption> = [];
-}
-
-export class SingleChoiceActivity {
-  choices: Array<RadioOption> = [];
-}
-
-export class QuestionActivity {
-  questions: Array<IQuestionComponent> = [];
-}
-
 //Outcome Screens
 
 export interface IAltConditionalText extends ICheckboxValue {
@@ -122,7 +36,7 @@ export interface IOutcomeProperty {
   condition: ITextProperty;
 }
 
-//Alt Question Screens
+// Question Screens
 
 export class QuestionScreenProperty {
   questions: Array<QuestionModel> = [];

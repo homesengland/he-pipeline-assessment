@@ -14,7 +14,7 @@ import {
 
 import {
   IconProvider,
-} from '../icon-provider/icon-provider'
+} from '../providers/icon-provider/icon-provider'
 import { HePropertyDisplayManager } from '../../nested-drivers/display-managers/display-manager';
 import { parseJson, Map } from '../../utils/utils';
 import { SyntaxNames } from '../../constants/Constants';

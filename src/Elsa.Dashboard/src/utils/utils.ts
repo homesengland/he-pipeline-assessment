@@ -1,6 +1,6 @@
 import { SyntaxNames } from "../constants/Constants";
-import { HeActivityPropertyDescriptor } from "./custom-component-models";
-import { ActivityDefinitionProperty, ActivityModel } from "./elsa-interfaces";
+import { HeActivityPropertyDescriptor } from "../models/custom-component-models";
+import { ActivityDefinitionProperty, ActivityModel } from "../models/elsa-interfaces";
 
 export type Map<T> = {
   [key: string]: T

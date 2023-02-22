@@ -35,7 +35,6 @@
     <None Remove="src\components\custom-outcome-property.tsx" />
     <None Remove="src\components\custom_outcome_list_property.tsx" />
     <None Remove="src\models\activity-provider.ts" />
-    <None Remove="src\models\Question.Model.ts" />
   </ItemGroup>
 
   <ItemGroup>
@@ -74,7 +73,6 @@
     <TypeScriptCompile Include="src\components\common-properties\custom-input-property.tsx" />
     <TypeScriptCompile Include="src\components\common-properties\conditional_text_list_property.tsx" />
     <TypeScriptCompile Include="src\components\providers\question-provider\question-provider.tsx" />
-    <TypeScriptCompile Include="src\models\question.model.ts" />
   </ItemGroup>
 
 </Project>
