@@ -7,6 +7,7 @@ export class SyntaxNames {
   static readonly Switch = "Switch";
   static readonly Question = "Question";
   static readonly QuestionList = "QuestionList";
+  static readonly Checked = "Checked";
   static Variable: string;
   static Output: string;
 }

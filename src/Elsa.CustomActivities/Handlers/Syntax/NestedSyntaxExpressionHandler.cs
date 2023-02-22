@@ -1,4 +1,5 @@
 ﻿using Elsa.CustomActivities.Activities.QuestionScreen;
+using Elsa.CustomActivities.Constants;
 using Elsa.CustomActivities.Handlers.Models;
 using Elsa.CustomActivities.Handlers.ParseModels;
 using Elsa.CustomActivities.Resolver;
@@ -61,8 +62,7 @@ namespace Elsa.CustomActivities.Handlers.Syntax
                 var parsedProperties = ParseToCheckboxModel(property);
                 if(parsedProperties != null)
                 {
-                    return ElsaPropertiesToCheckboxRecordList(parsedProperties);
-                    List<CheckboxRecord> records = await ElsaPropertiesToCheckboxRecordList(parsedProperties);
+                    List<CheckboxRecord> records = await ElsaPropertiesToCheckboxRecordList(parsedProperties, evaluator, context);
                     result.Choices = records;
                 }
                 return result;
@@ -74,8 +74,7 @@ namespace Elsa.CustomActivities.Handlers.Syntax
                 var parsedProperties = ParseToRadioModel(property);
                 if (parsedProperties != null)
                 {
-                    return ElsaPropertiesToCheckboxRecordList(parsedProperties);
-                    List<RadioRecord> records = await ElsaPropertiesToCheckboxRecordList(parsedProperties);
+                    List<RadioRecord> records = await ElsaPropertiesToRadioRecordList(parsedProperties, evaluator, context);
                     result.Choices = records;
                 }
                 return result;
@@ -102,34 +101,29 @@ namespace Elsa.CustomActivities.Handlers.Syntax
 
         private async Task<List<CheckboxRecord>> ElsaPropertiesToCheckboxRecordList(List<ElsaProperty> properties, IExpressionEvaluator evaluator, ActivityExecutionContext context)
         {
-            List<CheckboxRecord> result = new List<CheckboxRecord>();
-            foreach(ElsaProperty property in properties)
-            {
-                result.Add(ElsaPropertyToCheckboxRecord(property, evaluator, context));
-            }
-            return result;
+            CheckboxRecord[] resultArray = await Task.WhenAll(properties.Select(x => ElsaPropertyToCheckboxRecord(x, evaluator, context)));
+            return resultArray.ToList();
         }
 
         private async Task<List<RadioRecord>> ElsaPropertiesToRadioRecordList(List<ElsaProperty> properties, IExpressionEvaluator evaluator, ActivityExecutionContext context)
         {
-            List<RadioRecord> result = new List<RadioRecord>();
-            foreach(ElsaProperty property in properties)
-            {
-                result.Add(ElsaPropertyToRadioRecord(property, evaluator, context));
-            }
-            return result;
+            RadioRecord[] resultArray = await Task.WhenAll(properties.Select(x => ElsaPropertyToRadioRecord(x, evaluator, context)));
+            return resultArray.ToList();
         }
 
-        private CheckboxRecord ElsaPropertyToCheckboxRecord(ElsaProperty property, IExpressionEvaluator evaluator, ActivityExecutionContext context)
+        private async Task<CheckboxRecord> ElsaPropertyToCheckboxRecord(ElsaProperty property, IExpressionEvaluator evaluator, ActivityExecutionContext context)
         {
-            property = property;
-            return new CheckboxRecord();
+            string identifier = property.Name;
+            string value = await EvaluateFromExpressions<string>(evaluator, context, property, CancellationToken.None);
+            bool isSingle = property.Expressions?[CustomSyntaxNames.Checked].ToLower() == "true";
+            return new CheckboxRecord(identifier, value, isSingle);
         }
 
-        private RadioRecord ElsaPropertyToRadioRecord(ElsaProperty property, IExpressionEvaluator evaluator, ActivityExecutionContext context)
+        private async Task<RadioRecord> ElsaPropertyToRadioRecord(ElsaProperty property, IExpressionEvaluator evaluator, ActivityExecutionContext context)
         {
-            property = property;
-            return new RadioRecord();
+            var identifier = property.Name;
+            var value = await EvaluateFromExpressions<string>(evaluator, context, property, CancellationToken.None);
+            return new RadioRecord(identifier, value);
         }
 
         public Type GetReturnType(string typeHint)

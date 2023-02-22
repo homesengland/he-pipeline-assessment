@@ -3,7 +3,7 @@ import { PropertyOutputTypes, SyntaxNames } from '../../constants/Constants';
 import ExpandIcon from '../../icons/expand_icon';
 import PlusIcon from '../../icons/plus_icon';
 import TrashCanIcon from '../../icons/trash-can';
-import { ICheckboxValue } from '../../models/custom-component-models';
+import { NestedActivityDefinitionProperty } from '../../models/custom-component-models';
 import {
     ActivityDefinitionProperty,
     ActivityModel,
@@ -26,7 +26,7 @@ export class HeCheckboxOptionProperty {
   @Prop() activityModel: ActivityModel;
   @Prop() propertyDescriptor: ActivityPropertyDescriptor;
   @Prop() propertyModel: ActivityDefinitionProperty;
-  @State() options: Array<ICheckboxValue> = [];
+  @State() options: Array<NestedActivityDefinitionProperty> = [];
   @State() iconProvider = new IconProvider();
   @Event() expressionChanged: EventEmitter<string>;
 
@@ -57,33 +57,35 @@ export class HeCheckboxOptionProperty {
 
   onAddOptionClick() {
     const optionName = ToLetter(this.options.length + 1);
-    const newOption: ICheckboxValue = { name: optionName, isSingle: false, syntax: SyntaxNames.Literal, expressions: { [SyntaxNames.Literal]: '' }, type: PropertyOutputTypes.Checkbox};
+    const newOption: NestedActivityDefinitionProperty = { name: optionName, syntax: SyntaxNames.Literal, expressions: { [SyntaxNames.Literal]: '', [SyntaxNames.Checked]: 'false' }, type: PropertyOutputTypes.Checkbox };
     this.options = [...this.options, newOption];
     this.updatePropertyModel();
   }
 
-  onDeleteOptionClick(checkbox: ICheckboxValue) {
+  onDeleteOptionClick(checkbox: NestedActivityDefinitionProperty) {
     this.options = this.options.filter(x => x != checkbox);
     this.updatePropertyModel();
   }
 
-  onOptionNameChanged(e: Event, checkbox: ICheckboxValue) {
+  onOptionNameChanged(e: Event, checkbox: NestedActivityDefinitionProperty) {
     checkbox.name = (e.currentTarget as HTMLInputElement).value.trim();
     this.updatePropertyModel();
   }
 
-  onOptionExpressionChanged(e: CustomEvent<string>, checkbox: ICheckboxValue) {
+  onOptionExpressionChanged(e: CustomEvent<string>, checkbox: NestedActivityDefinitionProperty) {
     checkbox.expressions[checkbox.syntax] = e.detail;
     this.updatePropertyModel();
   }
 
-  onCheckChanged(e: Event, checkbox: ICheckboxValue) {
+  onCheckChanged(e: Event, checkbox: NestedActivityDefinitionProperty) {
     const checkboxElement = (e.currentTarget as HTMLInputElement);
-    checkbox.isSingle = checkboxElement.checked;
+    checkbox.expressions[SyntaxNames.Checked] = checkboxElement.checked.toString();
+    console.log("On Check Changed:", checkbox);
     this.updatePropertyModel();
+    console.log("checkboxes after update:", this.options);
   }
 
-  onOptionSyntaxChanged(e: Event, switchCase: ICheckboxValue, expressionEditor: HTMLElsaExpressionEditorElement) {
+  onOptionSyntaxChanged(e: Event, switchCase: NestedActivityDefinitionProperty, expressionEditor: HTMLElsaExpressionEditorElement) {
     const select = e.currentTarget as HTMLSelectElement;
     switchCase.syntax = select.value;
     expressionEditor.language = mapSyntaxToLanguage(switchCase.syntax);
@@ -118,10 +120,11 @@ export class HeCheckboxOptionProperty {
     const supportedSyntaxes = this.supportedSyntaxes;
     const json = JSON.stringify(cases, null, 2);
 
-    const renderCaseEditor = (checkboxOption: ICheckboxValue, index: number) => {
+    const renderCaseEditor = (checkboxOption: NestedActivityDefinitionProperty, index: number) => {
       const expression = checkboxOption.expressions[checkboxOption.syntax];
       const syntax = checkboxOption.syntax;
       const monacoLanguage = mapSyntaxToLanguage(syntax);
+      const checked = checkboxOption.expressions[SyntaxNames.Checked] == 'true';
       let expressionEditor = null;
 
       return (
@@ -155,8 +158,8 @@ export class HeCheckboxOptionProperty {
             </div>
           </td>
           <td class="elsa-py-0">
-            <input name="choice_input" type="checkbox" checked={checkboxOption.isSingle} value={'true'}
-              onChange={e => this.onCheckChanged.bind(e, checkboxOption)}
+            <input name="choice_input" type="checkbox" checked={checked} value={'true'}
+              onChange={e => this.onCheckChanged(e, checkboxOption)}
               class="focus:elsa-ring-blue-500 elsa-h-8 elsa-w-8 elsa-text-blue-600 elsa-border-gray-300 elsa-rounded" />
           </td>
           <td class="elsa-pt-1 elsa-pr-2 elsa-text-right">

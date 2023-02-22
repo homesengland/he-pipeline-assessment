@@ -22,21 +22,20 @@
   </ItemGroup>
 
   <ItemGroup>
-    <None Remove="src\components\common-properties\imported-elsa\workflow-editor.tsx" />
-    <None Remove="src\components\drivers\he-check-list-driver.tsx" />
-    <None Remove="src\components\drivers\he-checkbox-driver.tsx" />
-    <None Remove="src\components\drivers\he-checkbox-options-driver.tsx" />
-    <None Remove="src\components\drivers\he-cron-driver.tsx" />
-    <None Remove="src\components\drivers\he-dictionary-driver.tsx" />
-    <None Remove="src\components\drivers\he-dropdown-driver.tsx" />
-    <None Remove="src\components\drivers\he-json-driver.tsx" />
-    <None Remove="src\components\drivers\he-multi-line-driver.tsx" />
-    <None Remove="src\components\drivers\he-multi-text-driver.tsx" />
-    <None Remove="src\components\drivers\he-radio-list-driver.tsx" />
-    <None Remove="src\components\drivers\he-radio-options-driver.tsx" />
-    <None Remove="src\components\drivers\he-script-driver.tsx" />
-    <None Remove="src\components\drivers\he-single-line-driver.tsx" />
-    <None Remove="src\components\drivers\he-switch-cases-driver.tsx" />
+    <None Remove="src\components\nested-drivers\he-check-list-driver.tsx" />
+    <None Remove="src\components\nested-drivers\he-checkbox-driver.tsx" />
+    <None Remove="src\components\nested-drivers\he-checkbox-options-driver.tsx" />
+    <None Remove="src\components\nested-drivers\he-cron-driver.tsx" />
+    <None Remove="src\components\nested-drivers\he-dictionary-driver.tsx" />
+    <None Remove="src\components\nested-drivers\he-dropdown-driver.tsx" />
+    <None Remove="src\components\nested-drivers\he-json-driver.tsx" />
+    <None Remove="src\components\nested-drivers\he-multi-line-driver.tsx" />
+    <None Remove="src\components\nested-drivers\he-multi-text-driver.tsx" />
+    <None Remove="src\components\nested-drivers\he-radio-list-driver.tsx" />
+    <None Remove="src\components\nested-drivers\he-radio-options-driver.tsx" />
+    <None Remove="src\components\nested-drivers\he-script-driver.tsx" />
+    <None Remove="src\components\nested-drivers\he-single-line-driver.tsx" />
+    <None Remove="src\components\nested-drivers\he-switch-cases-driver.tsx" />
     <None Remove="src\constants\Constants.ts" />
     <None Remove="src\models\display-manager.ts" />
     <None Remove="wwwroot\Scripts\Activities\GetCustomActivityProperties.js" />
@@ -64,21 +63,20 @@
   </ItemGroup>
 
   <ItemGroup>
-    <TypeScriptCompile Include="src\components\common-properties\imported-elsa\workflow-editor.tsx" />
-    <TypeScriptCompile Include="src\components\drivers\he-checkbox-options-driver.tsx" />
-    <TypeScriptCompile Include="src\components\drivers\he-script-driver.tsx" />
-    <TypeScriptCompile Include="src\components\drivers\he-radio-list-driver.tsx" />
-    <TypeScriptCompile Include="src\components\drivers\he-multi-text-driver.tsx" />
-    <TypeScriptCompile Include="src\components\drivers\he-multi-line-driver.tsx" />
-    <TypeScriptCompile Include="src\components\drivers\he-json-driver.tsx" />
-    <TypeScriptCompile Include="src\components\drivers\he-dropdown-driver.tsx" />
-    <TypeScriptCompile Include="src\components\drivers\he-dictionary-driver.tsx" />
-    <TypeScriptCompile Include="src\components\drivers\he-cron-driver.tsx" />
-    <TypeScriptCompile Include="src\components\drivers\he-check-list-driver.tsx" />
-    <TypeScriptCompile Include="src\components\drivers\he-single-line-driver.tsx" />
-    <TypeScriptCompile Include="src\components\drivers\he-checkbox-driver.tsx" />
-    <TypeScriptCompile Include="src\components\drivers\he-radio-options-driver.tsx" />
-    <TypeScriptCompile Include="src\components\drivers\he-switch-cases-driver.tsx" />
+    <TypeScriptCompile Include="src\components\nested-drivers\he-checkbox-options-driver.tsx" />
+    <TypeScriptCompile Include="src\components\nested-drivers\he-script-driver.tsx" />
+    <TypeScriptCompile Include="src\components\nested-drivers\he-radio-list-driver.tsx" />
+    <TypeScriptCompile Include="src\components\nested-drivers\he-multi-text-driver.tsx" />
+    <TypeScriptCompile Include="src\components\nested-drivers\he-multi-line-driver.tsx" />
+    <TypeScriptCompile Include="src\components\nested-drivers\he-json-driver.tsx" />
+    <TypeScriptCompile Include="src\components\nested-drivers\he-dropdown-driver.tsx" />
+    <TypeScriptCompile Include="src\components\nested-drivers\he-dictionary-driver.tsx" />
+    <TypeScriptCompile Include="src\components\nested-drivers\he-cron-driver.tsx" />
+    <TypeScriptCompile Include="src\components\nested-drivers\he-check-list-driver.tsx" />
+    <TypeScriptCompile Include="src\components\nested-drivers\he-single-line-driver.tsx" />
+    <TypeScriptCompile Include="src\components\nested-drivers\he-checkbox-driver.tsx" />
+    <TypeScriptCompile Include="src\components\nested-drivers\he-radio-options-driver.tsx" />
+    <TypeScriptCompile Include="src\components\nested-drivers\he-switch-cases-driver.tsx" />
     <TypeScriptCompile Include="src\constants\constants.ts" />
     <TypeScriptCompile Include="src\models\display-manager.ts" />
     <TypeScriptCompile Include="wwwroot\Scripts\Activities\GetCustomActivityProperties.js" />
@@ -88,9 +86,6 @@
     <TypeScriptCompile Include="wwwroot\Scripts\Drivers\CustomTextPropertyDriver.js" />
     <TypeScriptCompile Include="wwwroot\Scripts\Drivers\QuestionPropertyDriver.js" />
     <TypeScriptCompile Include="wwwroot\Scripts\Plugins\CustomPlugins.js" />
-    <TypeScriptCompile Include="src\components\common-properties\custom-outcome-property.tsx">
-      <SubType>Code</SubType>
-    </TypeScriptCompile>
     <TypeScriptCompile Include="src\components\common-properties\custom-input-property.tsx" />
     <TypeScriptCompile Include="src\components\common-properties\conditional_text_list_property.tsx" />
     <TypeScriptCompile Include="src\events\component-events.tsx" />
