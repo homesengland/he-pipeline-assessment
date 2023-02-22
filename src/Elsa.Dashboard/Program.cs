@@ -1,5 +1,4 @@
 using Elsa.CustomInfrastructure.Data;
-using Elsa.CustomInfrastructure.Extensions;
 using Elsa.Dashboard;
 using Microsoft.AspNetCore.DataProtection;
 using Microsoft.EntityFrameworkCore;
@@ -22,8 +21,8 @@ builder.Services.AddScoped<DbContext>(provider => provider.GetRequiredService<El
 builder.Services.AddDataProtection().PersistKeysToDbContext<ElsaCustomContext>();
 
 // For Authentication
-builder.AddCustomAuth0Configuration();
-builder.Services.AddCustomAuthentication();
+//builder.AddCustomAuth0Configuration();
+//builder.Services.AddCustomAuthentication();
 
 var app = builder.Build();
 
