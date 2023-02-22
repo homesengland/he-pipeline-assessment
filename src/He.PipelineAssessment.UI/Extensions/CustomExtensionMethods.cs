@@ -1,7 +1,6 @@
 ﻿using He.Identity.Auth0;
 using He.Identity.Mvc;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Mvc.Authorization;
 
 namespace He.PipelineAssessment.UI.Extensions
 {
@@ -55,15 +54,6 @@ namespace He.PipelineAssessment.UI.Extensions
                 options.FallbackPolicy = new AuthorizationPolicyBuilder()
                     .RequireAuthenticatedUser()
                     .Build();
-            });
-
-            services.AddControllers(config =>
-            {
-                var policy = new AuthorizationPolicyBuilder()
-                                 .RequireAuthenticatedUser()
-                                 .Build();
-
-                config.Filters.Add(new AuthorizeFilter(policy));
             });
         }
     }

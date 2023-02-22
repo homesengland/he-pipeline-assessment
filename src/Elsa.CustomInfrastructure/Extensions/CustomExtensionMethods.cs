@@ -4,7 +4,6 @@
     using He.Identity.Mvc;
     using Microsoft.AspNetCore.Authorization;
     using Microsoft.AspNetCore.Builder;
-    using Microsoft.AspNetCore.Mvc.Authorization;
     using Microsoft.Extensions.DependencyInjection;
 
     public static class CustomExtensionMethods
@@ -58,15 +57,6 @@
                 options.FallbackPolicy = new AuthorizationPolicyBuilder()
                     .RequireAuthenticatedUser()
                     .Build();
-            });
-
-            services.AddControllers(config =>
-            {
-                var policy = new AuthorizationPolicyBuilder()
-                                 .RequireAuthenticatedUser()
-                                 .Build();
-
-                config.Filters.Add(new AuthorizeFilter(policy));
             });
         }
     }
