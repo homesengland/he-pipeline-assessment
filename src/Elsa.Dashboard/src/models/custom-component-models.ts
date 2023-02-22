@@ -38,22 +38,36 @@ export interface IOutcomeProperty {
 
 // Question Screens
 
-export class QuestionScreenProperty {
-  questions: Array<QuestionModel> = [];
+//export class QuestionScreenProperty {
+//  questions: Array<QuestionModel> = [];
+//}
+
+export interface INestedActivityListProperty {
+  activities: Array<NestedPropertyModel>;
+}
+
+export class QuestionScreenProperty implements INestedActivityListProperty {
+  activities: Array<NestedPropertyModel> = [];
 }
 
 export class NestedProperty
 {
   value: ActivityDefinitionProperty;
-  descriptor: HeActivityPropertyDescriptor
+  descriptor: HeActivityPropertyDescriptor;
 }
 
-
-export class QuestionModel {
+export class NestedPropertyModel {
   value: ActivityDefinitionProperty;
   descriptor: Array<HeActivityPropertyDescriptor> = [];
-  questionType: IQuestionData;
+  ActivityType: IQuestionData;
 }
+
+
+//export class QuestionModel {
+//  value: ActivityDefinitionProperty;
+//  descriptor: Array<HeActivityPropertyDescriptor> = [];
+//  questionType: IQuestionData;
+//}
 
 export interface Dictionary<T> {
   [Key: string]: T;

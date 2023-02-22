@@ -7,6 +7,7 @@ using Elsa.Design;
 using Elsa.Expressions;
 using Elsa.Services;
 using Elsa.Services.Models;
+using System.ComponentModel;
 
 namespace Elsa.CustomActivities.Activities.QuestionScreen
 {
@@ -30,7 +31,7 @@ namespace Elsa.CustomActivities.Activities.QuestionScreen
         public AssessmentQuestions Questions { get; set; } = new AssessmentQuestions();
 
         [ActivityInput(Hint = "Set the condition to state whether the question is displayed or not.", UIHint = ActivityInputUIHints.SingleLine, SupportedSyntaxes = new[] { SyntaxNames.JavaScript }, DefaultSyntax = SyntaxNames.JavaScript)]
-        public bool Condition { get; set; }
+        public bool Condition { get; set; } = true;
 
         [ActivityInput(Label = "Assessment outcome conditions", Hint = "The conditions to evaluate.", UIHint = CustomActivityUIHints.CustomSwitch, DefaultSyntax = "Switch", IsDesignerCritical = true)]
         public ICollection<SwitchCase> Cases { get; set; } = new List<SwitchCase>();

@@ -30,14 +30,14 @@ namespace Elsa.CustomActivities.Handlers
 
         public async Task<object?> EvaluateAsync(string expression, Type returnType, ActivityExecutionContext context, CancellationToken cancellationToken)
         {
-            QuestionListModelRaw listExpression = TryDeserializeExpression(expression);
-            List<QuestionElement> listOfValues = listExpression.Questions.Select(x => new QuestionElement { Question = x.Value, QuestionType = x.QuestionType.NameConstant}).ToList();
+            ActivityListModelRaw listExpression = TryDeserializeExpression(expression);
+            List<ActivityElement> listOfValues = listExpression.Activities.Select(x => new ActivityElement { Activity = x.Value, ActivityType = x.ActivityType.NameConstant}).ToList();
 
-            List<QuestionElementProperties> questions = new List<QuestionElementProperties>();
-            foreach (QuestionElement questionElement in listOfValues)
+            List<ActivityElementProperties> questions = new List<ActivityElementProperties>();
+            foreach (ActivityElement questionElement in listOfValues)
             {
-                var listOfProperties = ParseQuestion(questionElement);
-                questions.Add(new QuestionElementProperties { QuestionProperties = listOfProperties, QuestionType = questionElement.QuestionType });
+                var listOfProperties = ParseActivity(questionElement);
+                questions.Add(new ActivityElementProperties { ActivityProperties = listOfProperties, ActivityType = questionElement.ActivityType });
             }
             var evaluator = context.GetService<IExpressionEvaluator>();
             var parsedQuestions = await ElsaElementListToQuestionList(questions, evaluator, context);
@@ -45,10 +45,10 @@ namespace Elsa.CustomActivities.Handlers
             return questionModel;
         }
 
-        private async Task<List<Question>> ElsaElementListToQuestionList(List<QuestionElementProperties> elsaModels, IExpressionEvaluator evaluator, ActivityExecutionContext context)
+        private async Task<List<Question>> ElsaElementListToQuestionList(List<ActivityElementProperties> elsaModels, IExpressionEvaluator evaluator, ActivityExecutionContext context)
         {
             List<Question> parsedQuestions = new List<Question>();
-            foreach (QuestionElementProperties model in elsaModels)
+            foreach (ActivityElementProperties model in elsaModels)
             {
                 Question parsedQuestion = await ElsaElementToQuestion(model, evaluator, context);
                 parsedQuestions.Add(parsedQuestion);
@@ -56,7 +56,7 @@ namespace Elsa.CustomActivities.Handlers
             return parsedQuestions;
         }
 
-        private async Task<Question> ElsaElementToQuestion(QuestionElementProperties elsaModel, IExpressionEvaluator evaluator, ActivityExecutionContext context)
+        private async Task<Question> ElsaElementToQuestion(ActivityElementProperties elsaModel, IExpressionEvaluator evaluator, ActivityExecutionContext context)
         {
             Question question = new Question();
             var propertyDictionary = ElsaModelToPropertyDictionary(elsaModel);
@@ -74,7 +74,7 @@ namespace Elsa.CustomActivities.Handlers
                     }
                 }
             }
-            question.QuestionType = elsaModel.QuestionType;
+            question.QuestionType = elsaModel.ActivityType;
             return question;
         }
 
@@ -88,18 +88,18 @@ namespace Elsa.CustomActivities.Handlers
             return property.Name;
         }
 
-        private Dictionary<string, ElsaProperty> ElsaModelToPropertyDictionary(QuestionElementProperties elsaModel)
+        private Dictionary<string, ElsaProperty> ElsaModelToPropertyDictionary(ActivityElementProperties elsaModel)
         {
-            var dict =  elsaModel.QuestionProperties.ToDictionary(x => x.Name);
+            var dict =  elsaModel.ActivityProperties.ToDictionary(x => x.Name);
             return dict;
         }
 
-        private List<ElsaProperty> ParseQuestion(QuestionElement element)
+        private List<ElsaProperty> ParseActivity(ActivityElement element)
         {
 
             List<ElsaProperty> questionProperties = new List<ElsaProperty>();
-            var questionJson = element.Question.Expressions![element.Question.Syntax!];
-            var parsedQuestionsRaw = JsonConvert.DeserializeObject<List<QuestionPropertyRaw>>(questionJson, new TypeConverter());
+            var questionJson = element.Activity.Expressions![element.Activity.Syntax!];
+            var parsedQuestionsRaw = JsonConvert.DeserializeObject<List<ActivityPropertyRaw>>(questionJson, new TypeConverter());
 
             
             if (parsedQuestionsRaw != null)
@@ -110,15 +110,15 @@ namespace Elsa.CustomActivities.Handlers
             return questionProperties;
         }
 
-        private QuestionListModelRaw TryDeserializeExpression(string expression)
+        private ActivityListModelRaw TryDeserializeExpression(string expression)
         {
             try
             {
-                return _contentSerializer.Deserialize<QuestionListModelRaw>(expression);
+                return _contentSerializer.Deserialize<ActivityListModelRaw>(expression);
             }
             catch
             {
-                return new QuestionListModelRaw();
+                return new ActivityListModelRaw();
             }
         }
 

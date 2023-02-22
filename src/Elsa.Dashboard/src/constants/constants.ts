@@ -8,6 +8,7 @@ export class SyntaxNames {
   static readonly Question = "Question";
   static readonly QuestionList = "QuestionList";
   static readonly Checked = "Checked";
+  static readonly ConditionalTextList = 'ConditionalTextList'
   static Variable: string;
   static Output: string;
 }

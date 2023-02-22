@@ -9,7 +9,7 @@ import {
 import {
     HeActivityPropertyDescriptor,
   NestedProperty,
-  QuestionModel,
+  NestedPropertyModel,
 } from '../../models/custom-component-models';
 
 import {
@@ -27,7 +27,7 @@ import { SyntaxNames } from '../../constants/Constants';
 export class QuestionProperty {
 
   @Prop() activityModel: ActivityModel;
-  @Prop() questionModel: QuestionModel;
+  @Prop() questionModel: NestedPropertyModel;
   @State() iconProvider = new IconProvider();
   @State() currentValue: string;
   @State() nestedQuestionProperties: Array<NestedProperty>;
@@ -71,7 +71,6 @@ export class QuestionProperty {
       name: descriptor.name,
       expressions: this.getExpressionMap(descriptor.supportedSyntaxes)
     }
-    console.log("Creating Question Property", propertyValue);
     let property: NestedProperty = { value: propertyValue, descriptor: descriptor }
     return property;
   }
@@ -83,7 +82,6 @@ export class QuestionProperty {
   }
 
   updateQuestionModel() {
-    console.log("Nested Properties", this.nestedQuestionProperties);
     let nestedQuestionsJson = JSON.stringify(this.nestedQuestionProperties);
     this.questionModel.value.expressions[SyntaxNames.QuestionList] = nestedQuestionsJson;
     this.updateQuestionScreen.emit(JSON.stringify(this.questionModel));
@@ -93,7 +91,6 @@ export class QuestionProperty {
     if (syntaxes.length > 0) {
       var value: Map<string> = { };
       syntaxes.forEach(s => {
-        console.log("Syntax", s);
         value[s] = "";
       })
       return value;
@@ -113,7 +110,6 @@ export class QuestionProperty {
     const displayManager = this.displayManager;
 
     const renderPropertyEditor = (property: NestedProperty) => {
-      console.log("Display Manager", this.displayManager);
       var content = displayManager.displayNested(this.activityModel, property, this.onPropertyExpressionChange.bind(this));
       return content;
     }

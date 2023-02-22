@@ -34,16 +34,13 @@ export class CustomOutcomeListProperty {
 
   async componentWillLoad() {
     const propertyModel = this.propertyModel;
-    const casesJson = propertyModel.expressions['ConditionalTextList']
+    const casesJson = propertyModel.expressions[SyntaxNames.ConditionalTextList]
     this.text = parseJson(casesJson) || [];
-    console.log("Outcomes", this.text);
   }
 
   updatePropertyModel() {
     this.propertyModel.expressions['ConditionalTextList'] = JSON.stringify(this.text);
     this.multiExpressionEditor.expressions[SyntaxNames.Json] = JSON.stringify(this.text, null, 2);
-    console.log(this.multiExpressionEditor);
-    console.log(this.propertyModel);
   }
   onMultiExpressionEditorValueChanged(e: CustomEvent<string>) {
     const json = e.detail;
@@ -55,7 +52,7 @@ export class CustomOutcomeListProperty {
     if (!Array.isArray(parsed))
       return;
 
-    this.propertyModel.expressions['ConditionalTextList'] = json;
+    this.propertyModel.expressions[SyntaxNames.ConditionalTextList] = json;
     this.text = parsed;
   }
 
@@ -77,18 +74,12 @@ export class CustomOutcomeListProperty {
 
   onTextChanged(e: CustomEvent<string>, outcome: IOutcomeProperty) {
     outcome.text.expressions[outcome.text.syntax] = e.detail;
-    console.log("updating text");
-    //this.text = this.text.filter(x => x != outcome);
-    //outcome.text.expressions[outcome.text.syntax] = e.detail;
-    //this.text = [...this.text, outcome];
-    //console.log("Text", this.text)
     this.updatePropertyModel();
 
   }
 
   onConditionChanged(e: CustomEvent<string>, outcome: IOutcomeProperty) {
     outcome.condition.expressions[outcome.condition.syntax] = e.detail;
-    console.log("updating condition")
     this.updatePropertyModel();
   }
 
@@ -120,7 +111,6 @@ export class CustomOutcomeListProperty {
 
   render() {
     const outcomes = this.text;
-/*    const supportedSyntaxes = this.supportedSyntaxes;*/
     const json = JSON.stringify(outcomes, null, 2);
 
     const renderCaseEditor = (outcome: IOutcomeProperty, index: number) => {  

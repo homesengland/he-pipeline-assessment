@@ -80,9 +80,7 @@ export class HeCheckboxOptionProperty {
   onCheckChanged(e: Event, checkbox: NestedActivityDefinitionProperty) {
     const checkboxElement = (e.currentTarget as HTMLInputElement);
     checkbox.expressions[SyntaxNames.Checked] = checkboxElement.checked.toString();
-    console.log("On Check Changed:", checkbox);
     this.updatePropertyModel();
-    console.log("checkboxes after update:", this.options);
   }
 
   onOptionSyntaxChanged(e: Event, switchCase: NestedActivityDefinitionProperty, expressionEditor: HTMLElsaExpressionEditorElement) {

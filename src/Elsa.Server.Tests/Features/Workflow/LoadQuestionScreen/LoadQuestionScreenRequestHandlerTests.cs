@@ -284,7 +284,7 @@ public class LoadQuestionScreenRequestHandlerTests
             elsaAssessmentQuestions.Questions[i].Id = questionId!;
         }
 
-        elsaAssessmentQuestions.Questions[0].QuestionType = QuestionTypeConstants.CheckboxQuestion;
+        elsaAssessmentQuestions.Questions[0].ActivityType = QuestionTypeConstants.CheckboxQuestion;
         elsaAssessmentQuestions.Questions[0].Checkbox.Choices = new List<CheckboxRecord>
         {
             new("A", "Choice1", false),
@@ -345,7 +345,7 @@ public class LoadQuestionScreenRequestHandlerTests
             elsaAssessmentQuestions.Questions[i].Id = questionId!;
         }
 
-        elsaAssessmentQuestions.Questions[0].QuestionType = QuestionTypeConstants.RadioQuestion;
+        elsaAssessmentQuestions.Questions[0].ActivityType = QuestionTypeConstants.RadioQuestion;
         elsaAssessmentQuestions.Questions[0].Radio.Choices = new List<RadioRecord>
         {
             new("A", "Choice1"),

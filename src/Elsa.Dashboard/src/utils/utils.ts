@@ -39,7 +39,9 @@ export function parseJson(json: string): any {
   try {
     return JSON.parse(json);
   } catch (e) {
-    console.warn(`Error parsing JSON: ${e}`);
+    //console.warn(`Error parsing JSON: ${e}`);
+    //The Above never parses quite correctly,
+    e = e;
   }
   return undefined;
 }

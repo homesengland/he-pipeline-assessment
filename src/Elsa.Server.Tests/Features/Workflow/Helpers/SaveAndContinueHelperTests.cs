@@ -56,7 +56,7 @@ namespace Elsa.Server.Tests.Features.Workflow.Helpers
                 )
         {
             //Arrange
-            question.QuestionType = QuestionTypeConstants.CheckboxQuestion;
+            question.ActivityType = QuestionTypeConstants.CheckboxQuestion;
             var currentTimeUtc = DateTime.UtcNow;
             mockDateTimeProvider.Setup(x => x.UtcNow()).Returns(currentTimeUtc);
 
@@ -69,7 +69,7 @@ namespace Elsa.Server.Tests.Features.Workflow.Helpers
             Assert.Equal(workflowInstance.Id, result.WorkflowInstanceId);
             Assert.Equal(currentTimeUtc, result.CreatedDateTime);
             Assert.Equal(question.Id, result.QuestionId);
-            Assert.Equal(question.QuestionType, result.QuestionType);
+            Assert.Equal(question.ActivityType, result.QuestionType);
             Assert.Equal(question.QuestionText, result.Question);
             Assert.Equal(question.Checkbox.Choices, result.Choices!.Select(x => new CheckboxRecord(x.Identifier, x.Answer, x.IsSingle)));
         }
@@ -86,7 +86,7 @@ namespace Elsa.Server.Tests.Features.Workflow.Helpers
         )
         {
             //Arrange
-            question.QuestionType = QuestionTypeConstants.RadioQuestion;
+            question.ActivityType = QuestionTypeConstants.RadioQuestion;
             var currentTimeUtc = DateTime.UtcNow;
             mockDateTimeProvider.Setup(x => x.UtcNow()).Returns(currentTimeUtc);
 
@@ -99,7 +99,7 @@ namespace Elsa.Server.Tests.Features.Workflow.Helpers
             Assert.Equal(workflowInstance.Id, result.WorkflowInstanceId);
             Assert.Equal(currentTimeUtc, result.CreatedDateTime);
             Assert.Equal(question.Id, result.QuestionId);
-            Assert.Equal(question.QuestionType, result.QuestionType);
+            Assert.Equal(question.ActivityType, result.QuestionType);
             Assert.Equal(question.QuestionText, result.Question);
             Assert.Equal(question.Radio.Choices, result.Choices!.Select(x => new RadioRecord(x.Identifier, x.Answer)));
         }
@@ -128,7 +128,7 @@ namespace Elsa.Server.Tests.Features.Workflow.Helpers
             Assert.Equal(workflowInstance.Id, result.WorkflowInstanceId);
             Assert.Equal(currentTimeUtc, result.CreatedDateTime);
             Assert.Equal(question.Id, result.QuestionId);
-            Assert.Equal(question.QuestionType, result.QuestionType);
+            Assert.Equal(question.ActivityType, result.QuestionType);
             Assert.Equal(question.QuestionText, result.Question);
             Assert.Null(result.Choices);
         }

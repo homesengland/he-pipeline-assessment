@@ -6,7 +6,7 @@
  */
 import { HTMLStencilElement, JSXBase } from "@stencil/core/internal";
 import { ActivityDefinitionProperty, ActivityModel, ActivityPropertyDescriptor, IntellisenseContext } from "./models/elsa-interfaces";
-import { HeActivityPropertyDescriptor, ITextProperty, QuestionModel } from "./models/custom-component-models";
+import { HeActivityPropertyDescriptor, ITextProperty, NestedPropertyModel } from "./models/custom-component-models";
 export namespace Components {
     interface ConditionalTextListProperty {
         "activityModel": ActivityModel;
@@ -73,7 +73,7 @@ export namespace Components {
     }
     interface QuestionProperty {
         "activityModel": ActivityModel;
-        "questionModel": QuestionModel;
+        "questionModel": NestedPropertyModel;
     }
     interface QuestionScreenProperty {
         "activityModel": ActivityModel;
@@ -305,7 +305,7 @@ declare namespace LocalJSX {
     interface QuestionProperty {
         "activityModel"?: ActivityModel;
         "onUpdateQuestionScreen"?: (event: QuestionPropertyCustomEvent<string>) => void;
-        "questionModel"?: QuestionModel;
+        "questionModel"?: NestedPropertyModel;
     }
     interface QuestionScreenProperty {
         "activityModel"?: ActivityModel;

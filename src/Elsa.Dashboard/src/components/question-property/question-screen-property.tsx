@@ -10,7 +10,8 @@ import {
 
 import {
     HeActivityPropertyDescriptor,
-  QuestionModel,
+  //QuestionModel,
+  NestedPropertyModel,
   QuestionScreenProperty
 } from '../../models/custom-component-models';
 
@@ -25,20 +26,7 @@ import {
 } from '../providers/question-provider/question-provider';
 import TrashCanIcon from '../../icons/trash-can';
 import { SyntaxNames } from '../../constants/Constants';
-import { filterPropertiesByType } from '../../utils/utils';
-
-
-function parseJson(json: string): any {
-  if (!json)
-    return null;
-
-  try {
-    return JSON.parse(json);
-  } catch (e) {
-    console.warn(`Error parsing JSON: ${e}`);
-  }
-  return undefined;
-}
+import { filterPropertiesByType, parseJson } from '../../utils/utils';
 
 @Component({
   tag: 'question-screen-property',
@@ -61,7 +49,6 @@ export class QuestionScreen {
 
 
   async componentWillLoad() {
-    console.log("Loading Question Screen:", this.questionProperties)
     const propertyModel = this.propertyModel;
     const choicesJson = propertyModel.expressions[SyntaxNames.QuestionList]
     this.questionModel = parseJson(choicesJson) || this.defaultActivityModel();
@@ -69,18 +56,17 @@ export class QuestionScreen {
 
   defaultActivityModel() {
     var activity = new QuestionScreenProperty();
-    activity.questions = [];
+    activity.activities = [];
     return activity;
   }
 
   updatePropertyModel() {
-    console.log("UpdatePropertyModel:", this.questionModel);
     this.propertyModel.expressions[SyntaxNames.QuestionList] = JSON.stringify(this.questionModel);
   }
 
-  onDeleteQuestionClick(e: Event, question: QuestionModel) {
+  onDeleteQuestionClick(e: Event, question: NestedPropertyModel) {
     e.stopPropagation();
-    this.questionModel = { ...this.questionModel, questions: this.questionModel.questions.filter(x => x != question) };
+    this.questionModel = { ...this.questionModel, activities: this.questionModel.activities.filter(x => x != question) };
     this.updatePropertyModel();
   }
 
@@ -101,10 +87,10 @@ export class QuestionScreen {
   }
 
   renderQuestions(model: QuestionScreenProperty) {
-    return model.questions.map(this.renderChoiceEditor)
+    return model.activities.map(this.renderChoiceEditor)
   }
 
-  renderChoiceEditor = (question: QuestionModel, index: number) => {
+  renderChoiceEditor = (question: NestedPropertyModel, index: number) => {
     const field = `question-${index}`;
     return (
       <div id={`${field}-id`} class="accordion elsa-mb-4 elsa-rounded" onClick={this.onAccordionQuestionClick}>
@@ -113,7 +99,7 @@ export class QuestionScreen {
           class="elsa-h-5 elsa-w-5 elsa-mx-auto elsa-outline-none focus:elsa-outline-none trashcan-icon" style={{ float: "right" }}>
           <TrashCanIcon options={this.iconProvider.getOptions()}></TrashCanIcon>
         </button>
-        <p class="elsa-mt-1 elsa-text-sm elsa-text-gray-900">{question.questionType.displayName}</p>
+        <p class="elsa-mt-1 elsa-text-sm elsa-text-gray-900">{question.ActivityType.displayName}</p>
         {this.renderQuestionComponent(question)}
       </div>
     );
@@ -137,14 +123,11 @@ export class QuestionScreen {
   }
 
   onAddQuestion(questionType: IQuestionData) {
-    let id = (this.questionModel.questions.length + 1).toString();
+    let id = (this.questionModel.activities.length + 1).toString();
     const questionName = `Question ${id}`;
     const newValue = this.newQuestionValue(questionName);
-    let filteredValues = filterPropertiesByType(this.questionProperties, questionType.nameConstant);
-    console.log("questionProperties", this.questionProperties);
-    console.log("FilteredPRoperties", filteredValues);
-    let newQuestion: QuestionModel = { value: newValue, descriptor: filterPropertiesByType(this.questionProperties, questionType.nameConstant), questionType: questionType }
-    this.questionModel = { ...this.questionModel, questions: [...this.questionModel.questions, newQuestion] };
+    let newQuestion: NestedPropertyModel = { value: newValue, descriptor: filterPropertiesByType(this.questionProperties, questionType.nameConstant), ActivityType: questionType }
+    this.questionModel = { ...this.questionModel, activities: [...this.questionModel.activities, newQuestion] };
     
     this.updatePropertyModel();
   }
@@ -160,7 +143,7 @@ export class QuestionScreen {
       return;
 
     this.propertyModel.expressions[SyntaxNames.Json] = json;
-    this.questionModel.questions = parsed;
+    this.questionModel.activities = parsed;
   }
 
   onMultiExpressionEditorSyntaxChanged(e: CustomEvent<string>) {
@@ -169,8 +152,7 @@ export class QuestionScreen {
 
 
 
-  renderQuestionComponent(question: QuestionModel) {
-    console.log("Render Question screen property:", question);
+  renderQuestionComponent(question: NestedPropertyModel) {
     return <question-property
       class="panel elsa-rounded"
       activityModel={this.activityModel}
