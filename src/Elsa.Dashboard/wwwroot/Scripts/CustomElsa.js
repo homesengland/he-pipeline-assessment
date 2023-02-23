@@ -1,4 +1,3 @@
-import { GetCustomActivityProperties } from './Activities/GetCustomActivityProperties.js';
 import { RegisterCustomPlugins } from './Plugins/CustomPlugins.js';
 import { CustomPropertyUIHints, PropertyDescriberHints } from './Constants/CustomPropertyUiHints.js';
 import { CustomComponentTags } from './Constants/CustomComponentTags.js';
@@ -7,15 +6,8 @@ import { CustomSwitchDriver } from './Drivers/CustomSwitchPropertyDriver.js';
 import { CustomTextDriver } from './Drivers/CustomTextPropertyDriver.js';
 import { ConditionalTextListDriver } from './Drivers/ConditionalTextListPropertyDriver.js';
 
-export async function GetCustomActivities(serverUrl) {
-  const customProperties = await GetCustomActivityProperties(serverUrl);
-  console.log(customProperties);
-  return customProperties;
-}
-
 
 export function InitCustomElsa(elsaStudioRoot, customProperties) {
-
 
   elsaStudioRoot.addEventListener('initializing', e => {
     var elsaStudio = e.detail;

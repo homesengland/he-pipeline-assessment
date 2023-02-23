@@ -184,15 +184,6 @@ export class QuestionScreen {
           onExpressionChanged={e => this.onMultiExpressionEditorValueChanged(e)}
           onSyntaxChanged={e => this.onMultiExpressionEditorSyntaxChanged(e)}
         >
-        {/*<div class="elsa-mb-1">*/}
-        {/*  <div class="elsa-flex">*/}
-        {/*    <div class="elsa-flex-1">*/}
-        {/*      <label htmlFor="Questions" class="elsa-block elsa-text-sm elsa-font-medium elsa-text-gray-700">*/}
-        {/*        List of questions*/}
-        {/*      </label>*/}
-        {/*    </div>*/}
-        {/*  </div>*/}
-        {/*</div>*/}
 
 
         <select id="addQuestionDropdown"

@@ -16,10 +16,7 @@ string serverURl = builder.Configuration["Urls:ElsaServer"];
 builder.Services.AddHttpClient("ElsaServerClient", client =>
 {
   client.BaseAddress = new Uri(serverURl);
-
 });
-
-builder.Services.AddControllers();
 
 builder.Services.AddScoped<IElsaServerHttpClient, ElsaServerHttpClient>();
 
@@ -47,17 +44,12 @@ app
     .UseDirectoryBrowser()
     .UseEndpoints(endpoints =>
     {
-        // Elsa API Endpoints are implemented as regular ASP.NET Core API controllers.
-        endpoints.MapControllers();
+      // Elsa API Endpoints are implemented as regular ASP.NET Core API controllers.
+      endpoints.MapControllers();
 
-        // For Dashboard.
-        endpoints.MapFallbackToPage("/_Host");
-
+      // For Dashboard.
+      endpoints.MapFallbackToPage("/_Host");
 
     });
-
-app.MapControllerRoute(
-    name: "default",
-    pattern: "{controller=home}/{action=index}/{id?}");
 
 app.Run();

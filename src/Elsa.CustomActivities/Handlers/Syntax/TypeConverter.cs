@@ -28,11 +28,12 @@ namespace Elsa.CustomActivities.Handlers.Syntax
 
         public override void WriteJson(JsonWriter writer, Type? value, JsonSerializer serializer)
         {
-            if(value == null)
+            if(value != null)
             {
-                writer.WriteNull();
+                writer.WriteValue(value.Name);
             }
-            writer.WriteValue(value.ToString());
+            writer.WriteNull();
+
         }
     }
 }

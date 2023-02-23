@@ -1,4 +1,6 @@
 ﻿using AutoFixture.Xunit2;
+using Elsa.CustomActivities.Describers;
+using Elsa.CustomActivities.PropertyDecorator;
 using Elsa.Metadata;
 using Elsa.Server.Features.Activities;
 using Elsa.Server.Features.Activities.CustomActivityProperties;
@@ -16,7 +18,7 @@ namespace Elsa.Server.Tests.Features.Activities
         [Theory]
         [AutoData]
         public async Task ActvityController_GetCustomActivityProperties_ShouldReturnOK_WhenCommandHandlerIsSuccessful(
-            Dictionary<string, IEnumerable<ActivityInputDescriptor>> response,
+            Dictionary<string, List<HeActivityInputDescriptor>> response,
             Mock<IMediator> mediatorMock)
         {
             //Arrange
