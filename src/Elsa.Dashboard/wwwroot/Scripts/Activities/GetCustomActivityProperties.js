@@ -27,7 +27,25 @@ export async function GetCustomActivityProperties(serverUrl) {
   const headers = new Headers();
   headers.append("Content-Disposition", "inline");
   const request = new Request(serverUrl, { method: 'GET', headers: headers });
-  const response = await fetch(request);
+  //const response = await fetch(request);
+  const response = await FetchRetry(request, 10000, 5);
   const json = response.json();
   return json;
+}
+
+function wait(delay) {
+  return new Promise((resolve) => setTimeout(resolve, delay));
+}
+
+async function FetchRetry(url, delay, tries, fetchOptions = {}) {
+  let jsonResponse = "";
+  function onError(err) {
+    triesLeft = tries - 1;
+    if (!triesLeft) {
+      throw err;
+    }
+    return wait(delay).then(() => fetchRetry(url, delay, triesLeft, fetchOptions));
+  }
+  jsonResponse = fetch(url, fetchOptions).catch(onError);
+  return jsonResponse
 }

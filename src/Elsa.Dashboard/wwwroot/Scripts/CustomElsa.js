@@ -10,15 +10,14 @@ import { ConditionalTextListDriver } from './Drivers/ConditionalTextListProperty
 
 export async function InitCustomElsa(elsaStudioRoot, serverUrl) {
   const customProperties = await GetCustomActivityProperties(serverUrl);
-  console.log("Custom properties", customProperties);
 
   elsaStudioRoot.addEventListener('initializing', e => {
     var elsaStudio = e.detail;
     RegisterPlugins(elsaStudio);
-    RegisterDrivers(elsaStudio);
+    RegisterDrivers(elsaStudio, customProperties);
   });
 
-  function RegisterDrivers(elsaStudio) {
+  function RegisterDrivers(elsaStudio, customProperties) {
     elsaStudio.propertyDisplayManager.addDriver(CustomPropertyUIHints.QuestionScreenBuilder,
       () => new QuestionDriver(elsaStudio, CustomComponentTags.QuestionScreen, customProperties[PropertyDescriberHints.QuestionScreenBuilder]));
 
