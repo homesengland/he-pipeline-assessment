@@ -1,13 +1,13 @@
 import { h } from '@stencil/core';
 import { QuestionTypeConstants } from '../../../constants/Constants';
 
-export interface IQuestionData {
+export interface IActivityData {
   nameConstant: string,
   displayName: string,
   description: string
 }
 
-export class QuestionData implements IQuestionData {
+export class QuestionData implements IActivityData {
   constructor(constant: string, displayname: string, description: string) {
     this.nameConstant = constant;
     this.displayName = displayname;

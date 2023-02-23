@@ -1,4 +1,4 @@
-import { IQuestionData } from '../components/providers/question-provider/question-provider';
+import { IActivityData } from '../components/providers/question-provider/question-provider';
 import { ActivityDefinitionProperty, ActivityPropertyDescriptor } from './elsa-interfaces';
 import { Map } from '../utils/utils'
 
@@ -59,7 +59,7 @@ export class NestedProperty
 export class NestedPropertyModel {
   value: ActivityDefinitionProperty;
   descriptor: Array<HeActivityPropertyDescriptor> = [];
-  ActivityType: IQuestionData;
+  ActivityType: IActivityData;
 }
 
 

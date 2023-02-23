@@ -20,7 +20,7 @@ import {
 } from '../providers/icon-provider/icon-provider';
 
 import {
-    IQuestionData,
+  IActivityData,
   QuestionLibrary,
   QuestionProvider
 } from '../providers/question-provider/question-provider';
@@ -107,7 +107,7 @@ export class QuestionScreen {
 
   handleAddQuestion(e: Event) {
     let value = (e.currentTarget as HTMLSelectElement).value.trim();
-    let data: IQuestionData = JSON.parse((e.currentTarget as HTMLSelectElement).selectedOptions[0].dataset.type)
+    let data: IActivityData = JSON.parse((e.currentTarget as HTMLSelectElement).selectedOptions[0].dataset.type)
     if (value != null && value != "") {
       this.onAddQuestion(data);
       let element = e.currentTarget as HTMLSelectElement;
@@ -122,7 +122,7 @@ export class QuestionScreen {
     return expression;
   }
 
-  onAddQuestion(questionType: IQuestionData) {
+  onAddQuestion(questionType: IActivityData) {
     let id = (this.questionModel.activities.length + 1).toString();
     const questionName = `Question ${id}`;
     const newValue = this.newQuestionValue(questionName);
