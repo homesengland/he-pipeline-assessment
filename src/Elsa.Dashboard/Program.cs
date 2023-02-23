@@ -2,6 +2,7 @@ using Elsa.CustomInfrastructure.Data;
 using Elsa.Dashboard;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.DataProtection;
+using Elsa.CustomWorkflow.Sdk.HttpClients;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -10,6 +11,15 @@ builder.Services.AddRazorPages();
 builder.Services.AddScoped<NonceConfig>();
 builder.Services.AddScoped<DbContext>(provider => provider.GetRequiredService<ElsaCustomContext>());
 builder.Services.AddDataProtection().PersistKeysToDbContext<ElsaCustomContext>();
+
+string serverURl = builder.Configuration["Urls:ElsaServer"];
+builder.Services.AddHttpClient("ElsaServerClient", client =>
+{
+  client.BaseAddress = new Uri(serverURl);
+
+});
+
+builder.Services.AddScoped<IElsaServerHttpClient, ElsaServerHttpClient>();
 
 var app = builder.Build();
 

@@ -36,10 +36,11 @@
 </elsa-studio-root>
 
  <script nonce="@nonceConfig.ElsaSetup" type="module">
-        import {InitCustomElsa} from "InitCustomElsa"
-        console.log("InitCustomElsa")
+        import { InitCustomElsa } from "InitCustomElsa"
+        import { GetCustomActivities } from "InitCustomElsa"
         var elsaStudioRoot = document.querySelector('elsa-studio-root');
-        InitCustomElsa(elsaStudioRoot, "@serverUrl")
+        let customActivities = await GetCustomActivities("@serverUrl")
+        InitCustomElsa(elsaStudioRoot, customActivities)
 </script>
 
 </body>

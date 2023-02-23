@@ -7,9 +7,15 @@ import { CustomSwitchDriver } from './Drivers/CustomSwitchPropertyDriver.js';
 import { CustomTextDriver } from './Drivers/CustomTextPropertyDriver.js';
 import { ConditionalTextListDriver } from './Drivers/ConditionalTextListPropertyDriver.js';
 
-
-export async function InitCustomElsa(elsaStudioRoot, serverUrl) {
+export async function GetCustomActivities(serverUrl) {
   const customProperties = await GetCustomActivityProperties(serverUrl);
+  console.log(customProperties);
+  return customProperties;
+}
+
+
+export function InitCustomElsa(elsaStudioRoot, customProperties) {
+
 
   elsaStudioRoot.addEventListener('initializing', e => {
     var elsaStudio = e.detail;
