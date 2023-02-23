@@ -1,6 +1,8 @@
 using Elsa.CustomWorkflow.Sdk.HttpClients;
 using Elsa.CustomWorkflow.Sdk.Models.Activities;
 using Microsoft.AspNetCore.Mvc;
+using Newtonsoft.Json;
+using System.Text.Json.Serialization;
 
 namespace Elsa.Dashboard.Controllers
 {
@@ -18,7 +20,7 @@ namespace Elsa.Dashboard.Controllers
 
       var jsonResponse = await _httpClient.LoadCustomActivities();
 
-      return View();
+      return RedirectToPage("/_Host", jsonResponse);
     }
   }
 }

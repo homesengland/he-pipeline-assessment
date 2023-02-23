@@ -19,6 +19,8 @@ builder.Services.AddHttpClient("ElsaServerClient", client =>
 
 });
 
+builder.Services.AddControllers();
+
 builder.Services.AddScoped<IElsaServerHttpClient, ElsaServerHttpClient>();
 
 var app = builder.Build();
@@ -50,6 +52,12 @@ app
 
         // For Dashboard.
         endpoints.MapFallbackToPage("/_Host");
+
+
     });
+
+app.MapControllerRoute(
+    name: "default",
+    pattern: "{controller=home}/{action=index}/{id?}");
 
 app.Run();
