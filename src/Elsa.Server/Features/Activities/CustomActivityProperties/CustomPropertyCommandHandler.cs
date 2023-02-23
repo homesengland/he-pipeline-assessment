@@ -5,7 +5,7 @@ using MediatR;
 
 namespace Elsa.Server.Features.Activities.CustomActivityProperties
 {
-    public class CustomPropertyCommandHandler : IRequestHandler<CustomPropertyCommand, IDictionary<string, IEnumerable<ActivityInputDescriptor>>>
+    public class CustomPropertyCommandHandler : IRequestHandler<CustomPropertyCommand, Dictionary<string, List<HeActivityInputDescriptor>>>
     {
         private readonly ICustomPropertyDescriber _describer;
         public CustomPropertyCommandHandler(ICustomPropertyDescriber describer)
@@ -13,9 +13,9 @@ namespace Elsa.Server.Features.Activities.CustomActivityProperties
             _describer = describer;
         }
 
-        public Task<IDictionary<string, IEnumerable<ActivityInputDescriptor>>> Handle(CustomPropertyCommand request, CancellationToken cancellationToken)
+        public Task<Dictionary<string, List<HeActivityInputDescriptor>>> Handle(CustomPropertyCommand request, CancellationToken cancellationToken)
         {
-            IDictionary<string, IEnumerable<ActivityInputDescriptor>> propertyResponses = new Dictionary<string, IEnumerable<ActivityInputDescriptor>>();
+            IDictionary<string, IEnumerable<HeActivityInputDescriptor>> propertyResponses = new Dictionary<string, IEnumerable<HeActivityInputDescriptor>>();
             propertyResponses.Add("QuestionProperties", _describer.DescribeInputProperties(typeof(Question)));
             return Task.FromResult(propertyResponses);
         }

@@ -14,7 +14,7 @@ namespace Elsa.CustomActivities.Describers
 {
     public interface ICustomPropertyDescriber
     {
-        public IEnumerable<ActivityInputDescriptor> DescribeInputProperties(Type propertyType);
+        public IEnumerable<HeActivityInputDescriptor> DescribeInputProperties(Type propertyType);
     }
 
     public class CustomPropertyDescriber : ICustomPropertyDescriber
@@ -25,14 +25,14 @@ namespace Elsa.CustomActivities.Describers
             _serviceProvider = provider;
         }
 
-        public IEnumerable<ActivityInputDescriptor> DescribeInputProperties(Type propertyType)
+        public IEnumerable<HeActivityInputDescriptor> DescribeInputProperties(Type propertyType)
         {
             var properties = propertyType.GetProperties();
             var inputProperties = DescribeInputProperties(properties).OrderBy(x => x.Order);
             return inputProperties;
         }
 
-        private IEnumerable<ActivityInputDescriptor> DescribeInputProperties(IEnumerable<PropertyInfo> properties, string? category = null)
+        private IEnumerable<HeActivityInputDescriptor> DescribeInputProperties(IEnumerable<PropertyInfo> properties, string? category = null)
         {
             foreach (var propertyInfo in properties)
             {

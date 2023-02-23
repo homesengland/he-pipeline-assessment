@@ -20,7 +20,7 @@ namespace Elsa.Dashboard.Controllers
 
       var jsonResponse = await _httpClient.LoadCustomActivities();
 
-      return RedirectToPage("/_Host", jsonResponse);
+      return RedirectToPage("/_Host");
     }
   }
 }
