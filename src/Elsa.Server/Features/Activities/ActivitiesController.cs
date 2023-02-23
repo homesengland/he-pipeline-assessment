@@ -1,4 +1,6 @@
-﻿using Elsa.Metadata;
+﻿using Elsa.CustomActivities.Describers;
+using Elsa.CustomWorkflow.Sdk.Models.Activities;
+using Elsa.Metadata;
 using Elsa.Server.Features.Activities.CustomActivityProperties;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
@@ -21,7 +23,7 @@ namespace Elsa.Server.Features.Activities
         {
             try
             {
-                IDictionary<string, IEnumerable<ActivityInputDescriptor>> results = await _mediator.Send(new CustomPropertyCommand());
+                Dictionary<string, List<HeActivityInputDescriptor>> results = await _mediator.Send(new CustomPropertyCommand());
                 return Ok(results);
                 
             }
