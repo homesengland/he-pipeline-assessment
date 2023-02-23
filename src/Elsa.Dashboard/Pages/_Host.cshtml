@@ -1,5 +1,7 @@
 @page "/"
+@model Dictionary<string, List<HeActivityInputDescriptorDTO>>
 @using Microsoft.Extensions.Configuration
+@using Elsa.CustomWorkflow.Sdk.Models.Activities;
 @inject NonceConfig nonceConfig
 @inject IConfiguration Configuration
 @{
@@ -37,9 +39,9 @@
 
  <script nonce="@nonceConfig.ElsaSetup" type="module">
         import { InitCustomElsa } from "InitCustomElsa"
-        import { GetCustomActivities } from "InitCustomElsa"
         var elsaStudioRoot = document.querySelector('elsa-studio-root');
-        let customActivities = await GetCustomActivities("@serverUrl")
+        let customActivities = @Json.Serialize(Model)
+        console.log("Custom Activities", customActivities);
         InitCustomElsa(elsaStudioRoot, customActivities)
 </script>
 
