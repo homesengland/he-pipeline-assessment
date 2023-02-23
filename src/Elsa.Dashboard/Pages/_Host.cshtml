@@ -44,7 +44,6 @@
         import { InitCustomElsa } from "InitCustomElsa"
         var elsaStudioRoot = document.querySelector('elsa-studio-root');
         let customActivities = @Html.Raw(jsonResponse)
-        console.log("Custom Activities", customActivities);
         InitCustomElsa(elsaStudioRoot, customActivities)
 </script>
 
