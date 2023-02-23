@@ -89,14 +89,23 @@ namespace Elsa.CustomActivities.Handlers.Syntax
 
         private List<ElsaProperty> ParseToCheckboxModel(ElsaProperty property)
         {
-            var checkboxJsonList = JsonConvert.DeserializeObject<List<ElsaProperty>>(property.Expressions[SyntaxNames.Json]);
-            return checkboxJsonList ?? new List<ElsaProperty>();
+            if(property.Expressions != null)
+            {
+                var checkboxJsonList = JsonConvert.DeserializeObject<List<ElsaProperty>>(property.Expressions[SyntaxNames.Json]);
+                return checkboxJsonList ?? new List<ElsaProperty>();
+            }
+            return new List<ElsaProperty>();
         }
 
         private List<ElsaProperty> ParseToRadioModel(ElsaProperty property)
         {
-            var radioJson = JsonConvert.DeserializeObject<List<ElsaProperty>>(property.Expressions[SyntaxNames.Json]);
-            return radioJson ?? new List<ElsaProperty>();
+            if(property.Expressions != null)
+            {
+                var radioJson = JsonConvert.DeserializeObject<List<ElsaProperty>>(property.Expressions[SyntaxNames.Json]);
+                return radioJson ?? new List<ElsaProperty>();
+            }
+            return new List<ElsaProperty>();
+
         }
 
         private async Task<List<CheckboxRecord>> ElsaPropertiesToCheckboxRecordList(List<ElsaProperty> properties, IExpressionEvaluator evaluator, ActivityExecutionContext context)
