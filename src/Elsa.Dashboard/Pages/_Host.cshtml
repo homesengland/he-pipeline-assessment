@@ -1,11 +1,9 @@
 @page "/"
+@using Elsa.Dashboard.PageModels
 @using Elsa.CustomWorkflow.Sdk.HttpClients
 @using Microsoft.Extensions.Configuration
+@model ElsaDashboardLoader
 @inject NonceConfig nonceConfig
-@inject IElsaServerHttpClient client
-@{
-    string? jsonResponse = await client.LoadCustomActivities();
-}
 @inject IConfiguration Configuration
 @{
     string serverUrl = Configuration["Urls:ElsaServer"];
@@ -43,7 +41,7 @@
  <script nonce="@nonceConfig.ElsaSetup" type="module">
         import { InitCustomElsa } from "InitCustomElsa"
         var elsaStudioRoot = document.querySelector('elsa-studio-root');
-        let customActivities = @Html.Raw(jsonResponse)
+        let customActivities = @Html.Raw(Model.JsonResponse)
         InitCustomElsa(elsaStudioRoot, customActivities)
 </script>
 

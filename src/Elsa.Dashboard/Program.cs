@@ -57,7 +57,6 @@ app
 
       // For Dashboard.
       endpoints.MapFallbackToPage("/_Host");
-
     });
 
 app.Run();
