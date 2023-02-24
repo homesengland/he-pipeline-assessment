@@ -45,7 +45,9 @@ namespace He.PipelineAssessment.UI.Features.Assessment.AssessmentSummary
                         SiteName = dbAssessment!.SiteName,
                         CounterParty = dbAssessment.Counterparty,
                         Reference = dbAssessment.Reference,
-                        Stages = stages
+                        Stages = stages,
+                        LocalAuthority = dbAssessment.LocalAuthority,
+                        ProjectManager = dbAssessment.ProjectManager
                     };
                 }
             }

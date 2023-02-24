@@ -1,4 +1,6 @@
-﻿namespace He.PipelineAssessment.UI.Features.Assessment.AssessmentSummary
+﻿using He.PipelineAssessment.Models.ViewModels;
+
+namespace He.PipelineAssessment.UI.Features.Assessment.AssessmentSummary
 {
     public class AssessmentSummaryResponse
     {
@@ -7,7 +9,10 @@
         public string SiteName { get; set; } = null!;
         public string CounterParty { get; set; } = null!;
         public string Reference { get; set; } = null!;
+        public string? LocalAuthority { get; set; }
+        public string? ProjectManager { get; set; }   
         public IEnumerable<AssessmentSummaryStage> Stages { get; set; } = null!;
+
     }
 
     public class AssessmentSummaryStage
