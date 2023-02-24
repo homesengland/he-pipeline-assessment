@@ -16,7 +16,7 @@ using Xunit;
 
 namespace Elsa.Server.Tests.Features.Workflow.CheckYourAnswersSaveAndContinue
 {
-    public class CheckYourAnswersSaveAndContinueCommandHandlerTests
+    public class CustomActivityPropertyCommandHandlerTests
     {
         [Theory]
         [AutoMoqData]

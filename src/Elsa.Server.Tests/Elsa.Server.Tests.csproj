@@ -35,4 +35,8 @@
 		<ProjectReference Include="..\He.PipelineAssessment.Common.Tests\He.PipelineAssessment.Common.Tests.csproj" />
 	</ItemGroup>
 
+	<ItemGroup>
+	  <Folder Include="Features\Activities\CustomActivityProperty\" />
+	</ItemGroup>
+
 </Project>

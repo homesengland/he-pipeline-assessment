@@ -12,7 +12,12 @@
     <PackageReference Include="Elsa.Designer.Components.Web" Version="2.9.3" />
     <PackageReference Include="Microsoft.AspNetCore.DataProtection" Version="6.0.9" />
     <PackageReference Include="Microsoft.AspNetCore.DataProtection.EntityFrameworkCore" Version="6.0.9" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="6.0.9">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
     <PackageReference Include="Microsoft.VisualStudio.Azure.Containers.Tools.Targets" Version="1.17.0" />
+    <PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
   </ItemGroup>
 
   <ItemGroup>
@@ -22,17 +27,58 @@
   </ItemGroup>
 
   <ItemGroup>
-    <None Remove="src\events\component-events.tsx" />
+    <None Remove="src\constants\Constants.ts" />
+    <None Remove="src\models\display-manager.ts" />
+    <None Remove="wwwroot\Scripts\Activities\GetCustomActivityProperties.js" />
+    <None Remove="wwwroot\Scripts\CustomElsa.js" />
+    <None Remove="wwwroot\Scripts\Drivers\ConditionalTextListPropertyDriver.js" />
+    <None Remove="wwwroot\Scripts\Drivers\CustomSwitchPropertyDriver.js" />
+    <None Remove="wwwroot\Scripts\Drivers\CustomTextPropertyDriver.js" />
+    <None Remove="wwwroot\Scripts\Drivers\QuestionPropertyDriver.js" />
+    <None Remove="wwwroot\Scripts\Plugins\CustomPlugins.js" />
+    <None Remove="src\components\custom-input-property.tsx" />
+    <None Remove="src\components\custom-outcome-property.tsx" />
+    <None Remove="src\components\custom_outcome_list_property.tsx" />
     <None Remove="src\models\activity-provider.ts" />
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Elsa.CustomInfrastructure\Elsa.CustomInfrastructure.csproj" />
+    <None Include="wwwroot\Scripts\Constants\CustomComponentTags.js" />
+    <None Include="wwwroot\Scripts\Constants\CustomPropertyUiHints.js" />
   </ItemGroup>
 
   <ItemGroup>
-    <TypeScriptCompile Include="src\events\component-events.tsx" />
-    <TypeScriptCompile Include="src\components\question-provider\question-provider.tsx" />
+    <ProjectReference Include="..\Elsa.CustomInfrastructure\Elsa.CustomInfrastructure.csproj" />
+    <ProjectReference Include="..\Elsa.CustomWorkflow.Sdk\Elsa.CustomWorkflow.Sdk.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <TypeScriptCompile Include="src\nested-drivers\he-checkbox-options-driver.tsx" />
+    <TypeScriptCompile Include="src\nested-drivers\he-script-driver.tsx" />
+    <TypeScriptCompile Include="src\nested-drivers\he-radio-list-driver.tsx" />
+    <TypeScriptCompile Include="src\nested-drivers\he-multi-text-driver.tsx" />
+    <TypeScriptCompile Include="src\nested-drivers\he-multi-line-driver.tsx" />
+    <TypeScriptCompile Include="src\nested-drivers\he-json-driver.tsx" />
+    <TypeScriptCompile Include="src\nested-drivers\he-dropdown-driver.tsx" />
+    <TypeScriptCompile Include="src\nested-drivers\he-dictionary-driver.tsx" />
+    <TypeScriptCompile Include="src\nested-drivers\he-cron-driver.tsx" />
+    <TypeScriptCompile Include="src\nested-drivers\he-check-list-driver.tsx" />
+    <TypeScriptCompile Include="src\nested-drivers\he-single-line-driver.tsx" />
+    <TypeScriptCompile Include="src\nested-drivers\he-checkbox-driver.tsx" />
+    <TypeScriptCompile Include="src\nested-drivers\he-radio-options-driver.tsx" />
+    <TypeScriptCompile Include="src\nested-drivers\he-switch-cases-driver.tsx" />
+    <TypeScriptCompile Include="src\constants\constants.ts" />
+    <TypeScriptCompile Include="src\nested-drivers\display-managers\display-manager.ts" />
+    <TypeScriptCompile Include="wwwroot\Scripts\Activities\GetCustomActivityProperties.js" />
+    <TypeScriptCompile Include="wwwroot\Scripts\CustomElsa.js" />
+    <TypeScriptCompile Include="wwwroot\Scripts\Drivers\ConditionalTextListPropertyDriver.js" />
+    <TypeScriptCompile Include="wwwroot\Scripts\Drivers\CustomSwitchPropertyDriver.js" />
+    <TypeScriptCompile Include="wwwroot\Scripts\Drivers\CustomTextPropertyDriver.js" />
+    <TypeScriptCompile Include="wwwroot\Scripts\Drivers\QuestionPropertyDriver.js" />
+    <TypeScriptCompile Include="wwwroot\Scripts\Plugins\CustomPlugins.js" />
+    <TypeScriptCompile Include="src\components\common-properties\custom-input-property.tsx" />
+    <TypeScriptCompile Include="src\components\common-properties\conditional_text_list_property.tsx" />
+    <TypeScriptCompile Include="src\components\providers\question-provider\question-provider.tsx" />
   </ItemGroup>
 
 </Project>

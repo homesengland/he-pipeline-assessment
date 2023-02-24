@@ -78,7 +78,6 @@ namespace He.PipelineAssessment.UI.Tests.Features.Admin.AssessmentToolManagement
         public async Task Handle_ThrowException_GivenAssessmentToolNotFound
         (
              [Frozen] Mock<IAdminAssessmentToolRepository> adminAssessmentToolRepository,
-             Exception exception,
              UpdateAssessmentToolCommand updateAssessmentToolCommand,
              UpdateAssessmentToolCommandHandler sut
         )

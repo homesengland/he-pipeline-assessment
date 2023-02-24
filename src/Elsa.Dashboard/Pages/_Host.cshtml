@@ -1,6 +1,11 @@
 @page "/"
+@using Elsa.CustomWorkflow.Sdk.HttpClients
 @using Microsoft.Extensions.Configuration
 @inject NonceConfig nonceConfig
+@inject IElsaServerHttpClient client
+@{
+    string? jsonResponse = await client.LoadCustomActivities();
+}
 @inject IConfiguration Configuration
 @{
     string serverUrl = Configuration["Urls:ElsaServer"];
@@ -16,9 +21,17 @@
     <link rel="stylesheet" href="/_content/Elsa.Designer.Components.Web/elsa-workflows-studio/assets/fonts/inter/inter.css">
     <link rel="stylesheet" href="/_content/Elsa.Designer.Components.Web/elsa-workflows-studio/elsa-workflows-studio.css">
     <link rel="stylesheet" href="/css/site.css">
+    <script nonce="@nonceConfig.ElsaSetup" type="importmap">
+        {
+                  "imports": {
+                    "InitCustomElsa": "/Scripts/CustomElsa.js"
+                  }
+                }</script>
     <script nonce ="@nonceConfig.ElsaSetup"  src="/_content/Elsa.Designer.Components.Web/monaco-editor/min/vs/loader.js"></script>
     <script nonce ="@nonceConfig.ElsaSetup"  type="module" src="/_content/Elsa.Designer.Components.Web/elsa-workflows-studio/elsa-workflows-studio.esm.js"></script>
     <script nonce ="@nonceConfig.ElsaSetup"  type="module" src="/static/build/custom-elsa.esm.js"></script>
+    <script nonce="@nonceConfig.ElsaSetup" type="module" src="/Scripts/CustomElsa.js"></script>
+
     <style>
     </style>
 </head>
@@ -26,58 +39,13 @@
 <elsa-studio-root server-url="@serverUrl" monaco-lib-path="_content/Elsa.Designer.Components.Web/monaco-editor/min">
     <elsa-studio-dashboard></elsa-studio-dashboard>
 </elsa-studio-root>
-<script nonce="@nonceConfig.ElsaSetup">
+
+ <script nonce="@nonceConfig.ElsaSetup" type="module">
+        import { InitCustomElsa } from "InitCustomElsa"
         var elsaStudioRoot = document.querySelector('elsa-studio-root');
-
-        function MyCustomPlugin(elsaStudio) {
-            var eventBus = elsaStudio.eventBus;
-
-            eventBus.on('activity-design-displaying',
-                e => {
-                  console.log(e);
-                    if (e.activityModel.type == "QuestionScreen" || e.activityModel.type == "CheckYourAnswersScreen")
-                        e.outcomes = e.outcomes.filter(x => x !== 'Default' && x !== 'Done');
-                        else if(e.activityModel.type == "ConfirmationScreen"){
-                          e.outcomes = e.outcomes.filter(x => x == 'Done');
-                        }
-                });
-        };
-
-        function getOrCreateProperty(activity, name, defaultExpression, defaultSyntax) {
-            var property = activity.properties.find(function (x) { return x.name == name; });
-            if (!property) {
-                var expressions = {};
-                var syntax = defaultSyntax ? defaultSyntax() : undefined;
-                if (!syntax)
-                    syntax = 'Literal';
-                expressions[syntax] = defaultExpression ? defaultExpression() : undefined;
-                property = { name: name, expressions: expressions, syntax: null };
-                activity.properties.push(property);
-            }
-            return property;
-        }
-
-        function MyCustomInputDriver(elsaStudio, elementName) {
-            this.display = (activity, property) => {
-                console.log("Elsa Studio", elsaStudio);
-                console.log("Property", property);
-                console.log("Activity", activity);
-                var prop = (0, getOrCreateProperty)(activity, property.name);
-                var questionActivity = document.createElement(elementName);
-                questionActivity.activityModel = activity;
-                questionActivity.propertyDescriptor = property;
-                questionActivity.propertyModel = prop;
-                return questionActivity;
-            }
-        }
-
-        elsaStudioRoot.addEventListener('initializing', e => {
-          var elsaStudio = e.detail;
-          elsaStudio.pluginManager.registerPlugin(MyCustomPlugin);
-          elsaStudio.propertyDisplayManager.addDriver('question-builder', () => new MyCustomInputDriver(elsaStudio, 'elsa-question-screen'));
-
-        });
-
+        let customActivities = @Html.Raw(jsonResponse)
+        InitCustomElsa(elsaStudioRoot, customActivities)
 </script>
+
 </body>
 </html>
