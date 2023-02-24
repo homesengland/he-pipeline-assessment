@@ -1,5 +1,5 @@
 import { Component, Event, EventEmitter, h, Prop, State } from '@stencil/core';
-import { PropertyOutputTypes, SyntaxNames } from '../../constants/Constants';
+import { PropertyOutputTypes, SyntaxNames } from '../../constants/constants';
 import ExpandIcon from '../../icons/expand_icon';
 import PlusIcon from '../../icons/plus_icon';
 import TrashCanIcon from '../../icons/trash-can';

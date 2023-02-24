@@ -1,4 +1,4 @@
-import { SyntaxNames } from "../constants/Constants";
+import { SyntaxNames } from "../constants/constants";
 import { HeActivityPropertyDescriptor } from "../models/custom-component-models";
 import { ActivityDefinitionProperty, ActivityModel } from "../models/elsa-interfaces";
 
