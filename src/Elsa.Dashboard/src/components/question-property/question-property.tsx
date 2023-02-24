@@ -17,7 +17,7 @@ import {
 } from '../providers/icon-provider/icon-provider'
 import { HePropertyDisplayManager } from '../../nested-drivers/display-managers/display-manager';
 import { parseJson, Map } from '../../utils/utils';
-import { SyntaxNames } from '../../constants/Constants';
+import { SyntaxNames } from '../../constants/constants';
 
 @Component({
   tag: 'question-property',

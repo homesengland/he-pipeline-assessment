@@ -12,7 +12,7 @@ import { IconProvider } from "../providers/icon-provider/icon-provider";
 import PlusIcon from '../../icons/plus_icon';
 import TrashCanIcon from '../../icons/trash-can';
 import ExpandIcon from '../../icons/expand_icon';
-import { PropertyOutputTypes, SyntaxNames } from '../../constants/Constants';
+import { PropertyOutputTypes, SyntaxNames } from '../../constants/constants';
 import { NestedActivityDefinitionProperty } from '../../models/custom-component-models';
 
 @Component({
