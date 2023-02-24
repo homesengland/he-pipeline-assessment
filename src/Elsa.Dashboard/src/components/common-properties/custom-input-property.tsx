@@ -8,7 +8,7 @@ import {
 import { mapSyntaxToLanguage } from "../../utils/utils";
 
 import { ITextProperty } from "../../models/custom-component-models"
-import { SyntaxNames } from '../../constants/Constants';
+import { SyntaxNames } from '../../constants/constants';
 
 @Component({
   tag: 'custom-input-property',

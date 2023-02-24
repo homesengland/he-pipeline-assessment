@@ -25,7 +25,7 @@ import {
   QuestionProvider
 } from '../providers/question-provider/question-provider';
 import TrashCanIcon from '../../icons/trash-can';
-import { SyntaxNames } from '../../constants/Constants';
+import { SyntaxNames } from '../../constants/constants';
 import { filterPropertiesByType, parseJson } from '../../utils/utils';
 
 @Component({

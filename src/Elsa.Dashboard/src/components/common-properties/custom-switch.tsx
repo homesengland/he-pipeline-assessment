@@ -13,7 +13,7 @@ import { IconProvider } from "../providers/icon-provider/icon-provider";
 import PlusIcon from '../../icons/plus_icon';
 import TrashCanIcon from '../../icons/trash-can';
 import ExpandIcon from '../../icons/expand_icon';
-import { SyntaxNames } from '../../constants/Constants';
+import { SyntaxNames } from '../../constants/constants';
 
 @Component({
   tag: 'switch-options-property',

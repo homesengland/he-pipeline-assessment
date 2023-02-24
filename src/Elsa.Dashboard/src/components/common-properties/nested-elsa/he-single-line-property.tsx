@@ -1,5 +1,5 @@
 import { Component, h, EventEmitter, Event, Prop, State } from '@stencil/core';
-import { SyntaxNames } from '../../../constants/Constants';
+import { SyntaxNames } from '../../../constants/constants';
 import {
   ActivityDefinitionProperty,
   ActivityModel,

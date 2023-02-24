@@ -13,7 +13,7 @@ import PlusIcon from '../../icons/plus_icon';
 import TrashCanIcon from '../../icons/trash-can';
 
 import { mapSyntaxToLanguage, parseJson } from '../../utils/utils';
-import { SyntaxNames } from '../../constants/Constants';
+import { SyntaxNames } from '../../constants/constants';
 
 
 @Component({
