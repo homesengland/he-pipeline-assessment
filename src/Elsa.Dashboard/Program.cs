@@ -21,7 +21,10 @@ builder.Services.AddScoped<DbContext>(provider => provider.GetRequiredService<El
 builder.Services.AddDataProtection().PersistKeysToDbContext<ElsaCustomContext>();
 
 string serverURl = builder.Configuration["Urls:ElsaServer"];
-builder.Services.AddHttpClient("ElsaServerClient");
+builder.Services.AddHttpClient("ElsaServerClient", client =>
+{
+  client.BaseAddress = new Uri(serverURl);
+});
 
 builder.Services.AddScoped<IElsaServerHttpClient, ElsaServerHttpClient>();
 

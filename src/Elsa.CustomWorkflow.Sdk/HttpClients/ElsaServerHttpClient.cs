@@ -14,7 +14,7 @@ namespace Elsa.CustomWorkflow.Sdk.HttpClients
         Task<WorkflowActivityDataDto?> LoadCheckYourAnswersScreen(LoadWorkflowActivityDto model);
         Task<WorkflowActivityDataDto?> LoadConfirmationScreen(LoadWorkflowActivityDto model);
 
-        Task<string?> LoadCustomActivities();
+        Task<string?> LoadCustomActivities(string elsaServer);
     }
 
     public class ElsaServerHttpClient : IElsaServerHttpClient
@@ -180,31 +180,23 @@ namespace Elsa.CustomWorkflow.Sdk.HttpClients
             return JsonSerializer.Deserialize<WorkflowActivityDataDto>(data, new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
         }
 
-        public async Task<string?> LoadCustomActivities()
+        public async Task<string?> LoadCustomActivities(string elsaServer)
         {
             string data;
-            string relativeUri = "activities/properties";
-            var client = _httpClientFactory.CreateClient("ElsaServerClient");
-            _logger.LogInformation("Base Url:" + client.BaseAddress!);
+            string fullUri = $"{elsaServer}/activities/properties";
+            var client = _httpClientFactory.CreateClient();
             using (var response = await client
-                       .GetAsync("https://ccflow-nonprod-dev.homesengland.org.uk/elsa-server/activities/properties")
+                       .GetAsync(fullUri)
                        .ConfigureAwait(false))
             {
-
                 data = await response.Content.ReadAsStringAsync().ConfigureAwait(false);
                 if (!response.IsSuccessStatusCode)
                 {
                     _logger.LogError($"StatusCode='{response.StatusCode}'," +
                                      $"\n Message= '{data}'," +
-                                     $"\n Url='{relativeUri}'");
+                                     $"\n Url='{fullUri}'");
 
                     return default;
-                }
-                else
-                {
-                    _logger.LogInformation($"SUCCESS!! StatusCode='{response.StatusCode}'," +
-                                           $"\n Message= '{data}'," +
-                                           $"\n Url='{relativeUri}'");
                 }
             }
             return data;
