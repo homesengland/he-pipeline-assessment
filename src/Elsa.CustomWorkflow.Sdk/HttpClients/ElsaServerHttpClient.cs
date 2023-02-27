@@ -187,7 +187,7 @@ namespace Elsa.CustomWorkflow.Sdk.HttpClients
             var client = _httpClientFactory.CreateClient("ElsaServerClient");
             _logger.LogInformation("Base Url:" + client.BaseAddress!);
             using (var response = await client
-                       .GetAsync(relativeUri)
+                       .GetAsync("https://ccflow-nonprod-dev.homesengland.org.uk/elsa-server/activities/properties")
                        .ConfigureAwait(false))
             {
 
@@ -199,6 +199,12 @@ namespace Elsa.CustomWorkflow.Sdk.HttpClients
                                      $"\n Url='{relativeUri}'");
 
                     return default;
+                }
+                else
+                {
+                    _logger.LogInformation($"SUCCESS!! StatusCode='{response.StatusCode}'," +
+                                           $"\n Message= '{data}'," +
+                                           $"\n Url='{relativeUri}'");
                 }
             }
             return data;
