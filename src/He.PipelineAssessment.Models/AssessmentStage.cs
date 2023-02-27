@@ -13,6 +13,7 @@
         public DateTime CreatedDateTime { get; set; }
         public DateTime? LastModifiedDateTime { get; set; }
         public DateTime? SubmittedDateTime { get; set; }
+        public string? Result { get; set; }
         public virtual Assessment Assessment { get; set; } = null!;
         public virtual List<AssessmentToolInstanceNextWorkflow> AssessmentToolInstanceNextWorkflows { get; set; } = null!;
     }

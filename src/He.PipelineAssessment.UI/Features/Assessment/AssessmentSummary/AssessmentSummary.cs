@@ -31,6 +31,7 @@ namespace He.PipelineAssessment.UI.Features.Assessment.AssessmentSummary
         public int? AssessmentToolId { get; set; }
         public int? AssessmentToolWorkflowInstanceId { get; set; }
         public bool? IsFirstWorkflow { get; set; }
+        public string? Result { get; set; } = null;
 
         public string StartedDateString()
         {
