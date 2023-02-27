@@ -8,6 +8,7 @@ using He.PipelineAssessment.UI.Features.Workflow.QuestionScreenSaveAndContinue;
 using He.PipelineAssessment.UI.Features.Workflow.StartWorkflow;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
+using System.Security.Claims;
 
 namespace He.PipelineAssessment.UI.Features.Workflow
 {
@@ -147,6 +148,9 @@ namespace He.PipelineAssessment.UI.Features.Workflow
         {
             try
             {
+              //  var userName = User.Identities.First().Claims.First(c => c.Type == "name").Value;
+
+               
                 var result = await this._mediator.Send(command);
 
                 return RedirectToAction("LoadWorkflowActivity",

@@ -4,6 +4,7 @@ using He.PipelineAssessment.Infrastructure.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,10 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace He.PipelineAssessment.Infrastructure.Migrations
 {
     [DbContext(typeof(PipelineAssessmentContext))]
-    partial class PipelineAssessmentContextModelSnapshot : ModelSnapshot
+    [Migration("20230227132912_AddResultandSubmittedBytoAssessmentToolWorkflowInstance")]
+    partial class AddResultandSubmittedBytoAssessmentToolWorkflowInstance
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -209,8 +211,7 @@ namespace He.PipelineAssessment.Infrastructure.Migrations
                         .HasColumnType("datetime2");
 
                     b.Property<string>("Result")
-                        .HasMaxLength(100)
-                        .HasColumnType("nvarchar(100)");
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Status")
                         .IsRequired()
@@ -218,8 +219,7 @@ namespace He.PipelineAssessment.Infrastructure.Migrations
                         .HasColumnType("nvarchar(50)");
 
                     b.Property<string>("SubmittedBy")
-                        .HasMaxLength(250)
-                        .HasColumnType("nvarchar(250)");
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<DateTime?>("SubmittedDateTime")
                         .HasColumnType("datetime2");
