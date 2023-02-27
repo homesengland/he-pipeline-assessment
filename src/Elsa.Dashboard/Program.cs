@@ -49,7 +49,6 @@ app
         })// For Dashboard.
 
     .UseRouting()
-    .UseDirectoryBrowser()
     .UseEndpoints(endpoints =>
     {
       // Elsa API Endpoints are implemented as regular ASP.NET Core API controllers.

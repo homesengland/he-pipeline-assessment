@@ -1,9 +1,7 @@
-﻿using Elsa.CustomWorkflow.Sdk.Models.Activities;
-using Elsa.CustomWorkflow.Sdk.Models.Workflow;
+﻿using Elsa.CustomWorkflow.Sdk.Models.Workflow;
 using Microsoft.Extensions.Logging;
 using System.Text;
 using System.Text.Json;
-using System.Text.Json.Serialization;
 
 namespace Elsa.CustomWorkflow.Sdk.HttpClients
 {
@@ -185,11 +183,14 @@ namespace Elsa.CustomWorkflow.Sdk.HttpClients
         public async Task<string?> LoadCustomActivities()
         {
             string data;
-            string relativeUri = $"activities/properties";
-            using (var response = await _httpClientFactory.CreateClient("ElsaServerClient")
+            string relativeUri = "activities/properties";
+            var client = _httpClientFactory.CreateClient("ElsaServerClient");
+            _logger.LogInformation("Base Url:" + client.BaseAddress!);
+            using (var response = await client
                        .GetAsync(relativeUri)
                        .ConfigureAwait(false))
             {
+
                 data = await response.Content.ReadAsStringAsync().ConfigureAwait(false);
                 if (!response.IsSuccessStatusCode)
                 {
