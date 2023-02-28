@@ -36,6 +36,11 @@ namespace He.PipelineAssessment.UI.Features.Workflow.LoadConfirmationScreen
                 var currentAssessmentToolWorkflowInstance = await _assessmentRepository.GetAssessmentToolWorkflowInstance(response.Data.WorkflowInstanceId);
                 if (currentAssessmentToolWorkflowInstance != null && result != null)
                 {
+                    var data = response.Data.ConfirmationTitle;
+                    currentAssessmentToolWorkflowInstance.Result = data;
+                    await _assessmentRepository.SaveChanges();
+
+
                     if (!string.IsNullOrEmpty(response.Data.NextWorkflowDefinitionIds))
                     {
                         var nextWorkflows = new List<AssessmentToolInstanceNextWorkflow>();

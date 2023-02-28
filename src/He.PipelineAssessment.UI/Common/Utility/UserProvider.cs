@@ -21,6 +21,7 @@
         {           
             if (_httpContextAccessor.HttpContext != null)
             {
+               
                 var userName = _httpContextAccessor.HttpContext.User.Identities.First().Claims.First(c => c.Type == "name").Value;            
                 return userName;
             }

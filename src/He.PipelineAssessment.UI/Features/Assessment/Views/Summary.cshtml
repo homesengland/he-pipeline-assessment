@@ -10,9 +10,9 @@
 <span class="govuk-caption-l">@Model.Reference</span>
 <h1 class="govuk-heading-l">@Model.SiteName</h1>
 
-<div class="govuk-heading-m">@Model.LocalAuthority</div>
-<div class="govuk-heading-m">@Model.CounterParty</div>
-<div class="govuk-heading-m">@Model.ProjectManager</div>
+<p class="govuk-body">@Model.LocalAuthority</p>
+<p class="govuk-body">@Model.CounterParty</p>
+<p class="govuk-body">@Model.ProjectManager</p>
 
 <div class="text-center">
     <div class="text-center">
@@ -25,8 +25,7 @@
                     <th scope="col" class="govuk-table__header">Last Updated</th>
                     <th scope="col" class="govuk-table__header">Date Submitted</th>
                     <th scope="col" class="govuk-table__header">Submitted By</th>
-                    <th scope="col" class="govuk-table__header">Result</th>
-                    <th scope="col" class="govuk-table__header">Requests</th>
+                    <th scope="col" class="govuk-table__header">Result</th>                   
                 </tr>
             </thead>
             <tbody class="govuk-table__body">
@@ -86,14 +85,13 @@
                                 }
                             }
                         </td>
+                          <td class="govuk-table__cell">
+                        @assessmentStage.SubmittedBy    
+                        </td>
                         <td class="govuk-table__cell">
                         @assessmentStage.Result    
                         </td>
                         <td class="govuk-table__cell"> </td>
-                        
-     
-                        
-
                     </tr>
                 }
             </tbody>

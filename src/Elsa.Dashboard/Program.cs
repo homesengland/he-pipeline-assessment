@@ -22,8 +22,8 @@ builder.Services.AddScoped<DbContext>(provider => provider.GetRequiredService<El
 builder.Services.AddDataProtection().PersistKeysToDbContext<ElsaCustomContext>();
 
 // For Authentication
-builder.AddCustomAuth0Configuration();
-builder.Services.AddCustomAuthentication();
+//builder.AddCustomAuth0Configuration();
+//builder.Services.AddCustomAuthentication();
 
 var app = builder.Build();
 
@@ -49,8 +49,8 @@ app.UseStaticFiles()
     }) // For Dashboard.
     .UseRouting()
     .UseDirectoryBrowser()
-    .UseAuthentication()
-    .UseAuthorization()
+    //.UseAuthentication()
+    //.UseAuthorization()
 
   .UseEndpoints(endpoints =>
   {

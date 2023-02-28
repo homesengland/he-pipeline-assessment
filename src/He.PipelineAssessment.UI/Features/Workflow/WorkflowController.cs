@@ -147,10 +147,7 @@ namespace He.PipelineAssessment.UI.Features.Workflow
         public async Task<IActionResult> CheckYourAnswerScreenSaveAndContinue([FromForm] CheckYourAnswersSaveAndContinueCommand command)
         {
             try
-            {
-              //  var userName = User.Identities.First().Claims.First(c => c.Type == "name").Value;
-
-               
+            {           
                 var result = await this._mediator.Send(command);
 
                 return RedirectToAction("LoadWorkflowActivity",
