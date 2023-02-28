@@ -48,25 +48,31 @@ namespace He.PipelineAssessment.UI.Extensions
 
         public static void AddCustomAuthentication(this IServiceCollection services)
         {
-
             services.AddAuthorization(options =>
             {
                 options.FallbackPolicy = new AuthorizationPolicyBuilder()
                     .RequireAuthenticatedUser()
-                    .Build();
+                .Build();
+
+                options.AddPolicy(AuthorizationPolicies.AssignmentToPipelineAssessorRoleRequired, policy => policy.RequireRole(AppRole.PipelineAssessor));
+                options.AddPolicy(AuthorizationPolicies.AssignmentToPipelineAdminRoleRequired, policy => policy.RequireRole(AppRole.PipelineAdmin));
+                options.AddPolicy(AuthorizationPolicies.AssignmentToPipelineEconomistRoleRequired, policy => policy.RequireRole(AppRole.PipelineEconomist));
+
             });
         }
     }
     public static class AppRole
     {
+        public const string PipelineAdmin = "Admin";
+        public const string PipelineAssessor = "Assessor";
+        public const string PipelineEconomist = "Economist";
 
-        public const string PipelineAdmin = "Pipeline.Admin";
-        public const string PipelineAssessor = "Pipeline.Assessor";
     }
 
     public static class AuthorizationPolicies
     {
-        public const string AssignmentToPipelineAssessorRoleRequired = "AssignmentToPipelineAssessorRoleRequired";
         public const string AssignmentToPipelineAdminRoleRequired = "AssignmentToPipelineAdminRoleRequired";
+        public const string AssignmentToPipelineAssessorRoleRequired = "AssignmentToPipelineAssessorRoleRequired";
+        public const string AssignmentToPipelineEconomistRoleRequired = "AssignmentToPipelineEconomistRoleRequired";
     }
 }
