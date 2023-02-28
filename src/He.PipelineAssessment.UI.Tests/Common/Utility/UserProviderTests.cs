@@ -1,4 +1,5 @@
 ﻿using AutoFixture.Xunit2;
+using Azure.Core;
 using He.PipelineAssessment.Common.Tests;
 using He.PipelineAssessment.UI.Common.Utility;
 using Microsoft.AspNetCore.Http;
@@ -48,6 +49,49 @@ namespace He.PipelineAssessment.UI.Tests.Common.Utility
 
             //Act
             var result = sut.GetUserName();
+
+            //Assert
+            Assert.Null(result);
+        }
+
+        [Theory]
+        [AutoMoqData]
+        public void GetUserEmail_ReturnsEmail_GivenHttpHttpContextResponseIsNotNull(
+          [Frozen] Mock<IHttpContextAccessor> httpContextAccessor,
+          ClaimsPrincipal claimsPrincipal,
+          ClaimsIdentity claimsIdentity,
+           UserProvider sut)
+        {
+            //Arrange
+            var context = new DefaultHttpContext();
+
+            var claim = new Claim("emailaddress", "Kevin@homesengland.gov.uk");
+            claimsIdentity.AddClaim(claim);
+            claimsPrincipal.AddIdentity(claimsIdentity);
+
+            context.User = claimsPrincipal;
+
+            httpContextAccessor.SetupGet(accessor => accessor.HttpContext).Returns(context);
+
+            //Act
+            var result = sut.GetUserEmail();
+
+            //Assert
+            Assert.NotNull(result);
+            Assert.Equal("Kevin@homesengland.gov.uk", result);
+        }
+
+        [Theory]
+        [AutoMoqData]
+        public void GetUserEmail_ReturnsNull_GivenHttpHttpContextResponseIsNull(
+         [Frozen] Mock<IHttpContextAccessor> httpContextAccessor,
+          UserProvider sut)
+        {
+            //Arrange
+            httpContextAccessor.SetupGet(accessor => accessor.HttpContext).Returns((HttpContext?)null);
+
+            //Act
+            var result = sut.GetUserEmail();
 
             //Assert
             Assert.Null(result);
