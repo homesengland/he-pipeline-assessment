@@ -1,6 +1,5 @@
 ﻿using AutoFixture.Xunit2;
-using Azure.Core;
-using He.PipelineAssessment.Common.Tests;
+using He.PipelineAssessment.Tests.Common;
 using He.PipelineAssessment.UI.Common.Utility;
 using Microsoft.AspNetCore.Http;
 using Moq;

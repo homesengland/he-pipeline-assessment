@@ -7,7 +7,7 @@ using Elsa.Server.Helpers;
 using Elsa.Server.Providers;
 using Elsa.Server.Services;
 using Elsa.Services.Models;
-using He.PipelineAssessment.Common.Tests;
+using He.PipelineAssessment.Tests.Common;
 using Moq;
 using Xunit;
 

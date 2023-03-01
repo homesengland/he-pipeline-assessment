@@ -1,4 +1,4 @@
-﻿using He.PipelineAssessment.Common.Tests;
+﻿using He.PipelineAssessment.Tests.Common;
 using He.PipelineAssessment.Models;
 using He.PipelineAssessment.UI.Features.Admin.AssessmentToolManagement.Commands.CreateAssessmentTool;
 using He.PipelineAssessment.UI.Features.Admin.AssessmentToolManagement.Mappers;

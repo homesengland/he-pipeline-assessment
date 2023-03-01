@@ -1,4 +1,4 @@
-﻿using He.PipelineAssessment.Common.Tests;
+﻿using He.PipelineAssessment.Tests.Common;
 using He.PipelineAssessment.UI.Features.Error;
 using Microsoft.AspNetCore.Mvc;
 using Xunit;
