@@ -1,41 +1,54 @@
 ﻿using Elsa.Attributes;
+using Elsa.CustomActivities.Activities.QuestionScreen;
+using Elsa.CustomActivities.Constants;
+using Elsa.CustomActivities.Describers;
+using Elsa.CustomActivities.PropertyDecorator;
+using Elsa.CustomWorkflow.Sdk;
 using Elsa.Design;
 using Elsa.Expressions;
+using Elsa.Metadata;
+using Esprima.Ast;
 
 namespace Elsa.CustomActivities.Activities.QuestionScreen
 {
     public class Question
     {
-        [ActivityInput(Hint = "Question Identifier")]
+        [HeActivityInput(Hint = "Question Identifier")]
         public string Id { get; set; } = null!;
 
-        [ActivityInput(Hint = "Section title")]
+        [HeActivityInput(Hint = "Section title",
+            UIHint = HePropertyUIHints.SingleLine,
+            SupportedSyntaxes = new[] { SyntaxNames.Literal, SyntaxNames.JavaScript })]
         public string Title { get; set; } = null!;
 
-        [ActivityInput(Hint = "Question Identifier")]
         public string QuestionType { get; set; } = null!;
 
-        [ActivityInput(
+        [HeActivityInput(
             Hint = "Question to ask",
-            UIHint = ActivityInputUIHints.SingleLine,
-            DefaultSyntax = SyntaxNames.Literal,
-            SupportedSyntaxes = new[] { SyntaxNames.Literal })]
+            UIHint = HePropertyUIHints.SingleLine,
+            SupportedSyntaxes = new[] { SyntaxNames.Literal, SyntaxNames.JavaScript })]
         public string QuestionText { get; set; } = null!;
 
-        [ActivityInput(Hint = "Question hint", UIHint = ActivityInputUIHints.SingleLine)]
+        [HeActivityInput(Hint = "Question hint", UIHint = HePropertyUIHints.SingleLine)]
         public string QuestionHint { get; set; } = null!;
 
-        [ActivityInput(Hint = "Question guidance", UIHint = ActivityInputUIHints.MultiLine)]
+
+        [HeActivityInput(Hint = "Question guidance", UIHint = HePropertyUIHints.MultiLine)]
         public string QuestionGuidance { get; set; } = null!;
-        
-        [ActivityInput(Hint = "Include comments box", UIHint = ActivityInputUIHints.Checkbox)]
+
+        [HeActivityInput(Hint = "Include comments box", UIHint = HePropertyUIHints.Checkbox)]
         public bool DisplayComments { get; set; }
+
         public string Comments { get; set; } = null!;
 
-        [ActivityInput(Hint = "Character limit")]
+
+        [HeActivityInput(Hint = "Character limit", UIHint = HePropertyUIHints.SingleLine, ConditionalActivityType = QuestionTypeConstants.TextAreaQuestion, ExpectedOutputType = ExpectedOutputHints.Number)]
         public int? CharacterLimit { get; set; }
 
+        [HeActivityInput(UIHint = HePropertyUIHints.CheckboxOptions, ConditionalActivityType = QuestionTypeConstants.CheckboxQuestion, ExpectedOutputType = ExpectedOutputHints.Checkbox)]
         public CheckboxModel Checkbox { get; set; } = new CheckboxModel();
+
+        [HeActivityInput(UIHint = HePropertyUIHints.RadioOptions, ConditionalActivityType = QuestionTypeConstants.RadioQuestion, ExpectedOutputType = ExpectedOutputHints.Radio)]
         public RadioModel Radio { get; set; } = new RadioModel();
 
     }
@@ -53,4 +66,6 @@ namespace Elsa.CustomActivities.Activities.QuestionScreen
     }
 
     public record RadioRecord(string Identifier, string Answer);
+
+
 }

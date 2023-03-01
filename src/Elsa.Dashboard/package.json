@@ -31,7 +31,8 @@
   "dependencies": {
     "@stencil/core": "^2.19.3",
     "@stencil/router": "^1.0.1",
-    "@stencil/store": "^1.5.0"
+    "@stencil/store": "^1.5.0",
+    "construe": "^0.4.1"
   },
   "devDependencies": {
     "@types/jest": "^27.5.2",

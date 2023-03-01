@@ -1,5 +1,6 @@
 ﻿using Elsa.ActivityResults;
 using Elsa.Attributes;
+using Elsa.CustomActivities.Constants;
 using Elsa.Design;
 using Elsa.Expressions;
 using Elsa.Services;
@@ -23,20 +24,13 @@ namespace Elsa.CustomActivities.Activities.ConfirmationScreen
         [ActivityInput(Hint = "Footer text")]
         public string FooterText { get; set; } = null!;
 
-        [ActivityInput(Hint = "Additional Text Line 1", UIHint = ActivityInputUIHints.MultiLine, SupportedSyntaxes = new[] { SyntaxNames.JavaScript })]
-        public string AdditionalTextLine1 { get; set; } = null!;
-
-        [ActivityInput(Hint = "Additional Text Line 2", UIHint = ActivityInputUIHints.MultiLine, SupportedSyntaxes = new[] { SyntaxNames.JavaScript })]
-        public string AdditionalTextLine2 { get; set; } = null!;
-
-        [ActivityInput(Hint = "Additional Text Line 3", UIHint = ActivityInputUIHints.MultiLine, SupportedSyntaxes = new[] { SyntaxNames.JavaScript })]
-        public string AdditionalTextLine3 { get; set; } = null!;
-
-        [ActivityInput(Hint = "Additional Text Line 4", UIHint = ActivityInputUIHints.MultiLine, SupportedSyntaxes = new[] { SyntaxNames.JavaScript })]
-        public string AdditionalTextLine4 { get; set; } = null!;
-
-        [ActivityInput(Hint = "Additional Text Line 5", UIHint = ActivityInputUIHints.MultiLine, SupportedSyntaxes = new[] { SyntaxNames.JavaScript })]
-        public string AdditionalTextLine5 { get; set; } = null!;
+        [ActivityInput(Label = "Assessment Conditional Text", 
+            Hint = "Text to display on Outcome Screen.", 
+            UIHint = CustomActivityUIHints.ConditionalText, 
+            SupportedSyntaxes = new[] { SyntaxNames.Json }, 
+            DefaultSyntax = CustomSyntaxNames.ConditionalTextList, 
+            IsDesignerCritical = true)]
+        public ICollection<string> Text { get; set; } = new List<string>();
 
         [ActivityInput(Hint = "Next workflow to run")]
         public string NextWorkflowDefinitionIds { get; set; } = null!;
