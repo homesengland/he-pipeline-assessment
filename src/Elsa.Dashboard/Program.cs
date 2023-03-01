@@ -1,6 +1,7 @@
 using Elsa.CustomInfrastructure.Data;
 using Elsa.CustomWorkflow.Sdk.HttpClients;
 using Elsa.Dashboard;
+using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.DataProtection;
 using Microsoft.EntityFrameworkCore;
 
@@ -30,6 +31,7 @@ builder.Services.AddScoped<IElsaServerHttpClient, ElsaServerHttpClient>();
 
 var app = builder.Build();
 app.UseExceptionHandler("/Error");
+//app.UseStatusCodePagesWithReExecute("/Error");
 
 if (!app.Environment.IsDevelopment())
 {

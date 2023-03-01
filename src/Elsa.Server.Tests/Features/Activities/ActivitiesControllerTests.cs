@@ -64,6 +64,5 @@ namespace Elsa.Server.Tests.Features.Activities
 
             Assert.Equal(exception.Message, exceptionResult.Message);
         }
-
     }
 }
