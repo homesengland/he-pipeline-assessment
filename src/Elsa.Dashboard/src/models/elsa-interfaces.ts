@@ -1,4 +1,5 @@
-import { Map } from './utils'
+import { HTMLStencilElement } from '@stencil/core/internal';
+import { Map } from '../utils/utils'
 //import { x } from '@elsa-workflows/elsa-workflows-studio';
 //Not In Use.  Using as a placeholder to prompt developers to draw, and copy any interfaces they need from Elsa directly.
 
@@ -23,15 +24,6 @@ export interface ActivityDefinitionProperty {
   syntax?: string;
   expressions: Map<string>;
   value?: any;
-}
-
-export class SyntaxNames {
-  static readonly Literal = "Literal";
-  static readonly JavaScript = "JavaScript";
-  static readonly Liquid = "Liquid";
-  static readonly Json = "Json";
-  static Variable: string;
-  static Output: string;
 }
 
 export interface ActivityModel {
@@ -66,7 +58,65 @@ export interface ElsaMultiExpressionEditor {
   "syntax"?: string;
 }
 
+export interface HTMLElsaExpressionEditorElement extends ElsaExpressionEditor, HTMLStencilElement {
+}
+var HTMLElsaExpressionEditorElement: {
+  prototype: HTMLElsaExpressionEditorElement;
+  new(): HTMLElsaExpressionEditorElement;
+};
+
+export interface ElsaExpressionEditor {
+  "context"?: IntellisenseContext;
+  "editorHeight": string;
+  "expression": string;
+  "language": string;
+  "padding": string;
+  "serverUrl": string;
+  "setExpression": (value: string) => Promise<void>;
+  "singleLineMode": boolean;
+  "workflowDefinitionId": string;
+}
+
 export interface IntellisenseContext {
   activityTypeName: string;
   propertyName: string;
 }
+
+export interface SwitchCase {
+  name: string;
+  expressions?: Map<string>;
+  syntax?: string;
+}
+
+export interface MonacoValueChangedArgs {
+  value: string;
+  markers: Array<any>;
+}
+
+export interface SelectList {
+  items: Array<SelectListItem> | Array<string>;
+  isFlagsEnum: boolean;
+}
+
+export interface SelectListItem {
+  text: string;
+  value: string;
+}
+
+export interface RuntimeSelectListProviderSettings {
+  runtimeSelectListProviderType: string;
+  context?: any;
+}
+
+export interface CustomMonacoElement {
+  "addJavaScriptLib": (libSource: string, libUri: string) => Promise<void>;
+  "editorHeight": string;
+  "language": string;
+  "monacoLibPath": string;
+  "padding": string;
+  "setValue": (value: string) => Promise<void>;
+  "singleLineMode": boolean;
+  "value": string;
+}
+
+

@@ -12,7 +12,7 @@ namespace He.PipelineAssessment.UI.Tests.Features.SinglePipeline.Sync
     {
         [Theory]
         [AutoMoqData]
-        public async Task AssessmentsToBeAdded_ShouldRetrunEmptyList_GivenListofSourceandDestinationSpIdsIsTheSame(
+        public void AssessmentsToBeAdded_ShouldRetrunEmptyList_GivenListofSourceandDestinationSpIdsIsTheSame(
          [Frozen] Mock<IDateTimeProvider> dateTimeProvider,
          List<Models.Assessment> assessmentList,
          List<SinglePipelineData> singlePipelineData,
@@ -45,7 +45,7 @@ namespace He.PipelineAssessment.UI.Tests.Features.SinglePipeline.Sync
 
         [Theory]
         [AutoMoqData]
-        public async Task AssessmentsToBeAdded_ShouldRetrunListOFSinglePipelineData_GivenListofSourceandDestinationSpIdsIsDifferent(
+        public void AssessmentsToBeAdded_ShouldRetrunListOFSinglePipelineData_GivenListofSourceandDestinationSpIdsIsDifferent(
             [Frozen] Mock<IDateTimeProvider> dateTimeProvider,
             List<Models.Assessment> assessmentList,
             List<SinglePipelineData> singlePipelineData,

@@ -13,6 +13,8 @@ namespace Elsa.CustomWorkflow.Sdk.HttpClients
         Task<WorkflowActivityDataDto?> LoadQuestionScreen(LoadWorkflowActivityDto model);
         Task<WorkflowActivityDataDto?> LoadCheckYourAnswersScreen(LoadWorkflowActivityDto model);
         Task<WorkflowActivityDataDto?> LoadConfirmationScreen(LoadWorkflowActivityDto model);
+
+        Task<string?> LoadCustomActivities(string elsaServer);
     }
 
     public class ElsaServerHttpClient : IElsaServerHttpClient
@@ -178,5 +180,26 @@ namespace Elsa.CustomWorkflow.Sdk.HttpClients
             return JsonSerializer.Deserialize<WorkflowActivityDataDto>(data, new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
         }
 
+        public async Task<string?> LoadCustomActivities(string elsaServer)
+        {
+            string data;
+            string fullUri = $"{elsaServer}/activities/properties";
+            var client = _httpClientFactory.CreateClient();
+            using (var response = await client
+                       .GetAsync(fullUri)
+                       .ConfigureAwait(false))
+            {
+                data = await response.Content.ReadAsStringAsync().ConfigureAwait(false);
+                if (!response.IsSuccessStatusCode)
+                {
+                    _logger.LogError($"StatusCode='{response.StatusCode}'," +
+                                     $"\n Message= '{data}'," +
+                                     $"\n Url='{fullUri}'");
+
+                    return default;
+                }
+            }
+            return data;
+        }
     }
 }
