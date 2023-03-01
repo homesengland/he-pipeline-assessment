@@ -1,4 +1,4 @@
-﻿<Project Sdk="Microsoft.NET.Sdk.Web">
+<Project Sdk="Microsoft.NET.Sdk.Web">
 
   <PropertyGroup>
     <TargetFramework>net6.0</TargetFramework>
@@ -12,6 +12,7 @@
     <PackageReference Include="Elsa.Designer.Components.Web" Version="2.9.3" />
     <PackageReference Include="Microsoft.AspNetCore.DataProtection" Version="6.0.9" />
     <PackageReference Include="Microsoft.AspNetCore.DataProtection.EntityFrameworkCore" Version="6.0.9" />
+    <PackageReference Include="Microsoft.Data.SqlClient" Version="5.0.0" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="6.0.9">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
@@ -29,7 +30,6 @@
   <ItemGroup>
     <None Remove="src\constants\Constants.ts" />
     <None Remove="src\models\display-manager.ts" />
-    <None Remove="wwwroot\Scripts\Activities\GetCustomActivityProperties.js" />
     <None Remove="wwwroot\Scripts\CustomElsa.js" />
     <None Remove="wwwroot\Scripts\Drivers\ConditionalTextListPropertyDriver.js" />
     <None Remove="wwwroot\Scripts\Drivers\CustomSwitchPropertyDriver.js" />
@@ -69,7 +69,6 @@
     <TypeScriptCompile Include="src\nested-drivers\he-switch-cases-driver.tsx" />
     <TypeScriptCompile Include="src\constants\constants.ts" />
     <TypeScriptCompile Include="src\nested-drivers\display-managers\display-manager.ts" />
-    <TypeScriptCompile Include="wwwroot\Scripts\Activities\GetCustomActivityProperties.js" />
     <TypeScriptCompile Include="wwwroot\Scripts\CustomElsa.js" />
     <TypeScriptCompile Include="wwwroot\Scripts\Drivers\ConditionalTextListPropertyDriver.js" />
     <TypeScriptCompile Include="wwwroot\Scripts\Drivers\CustomSwitchPropertyDriver.js" />

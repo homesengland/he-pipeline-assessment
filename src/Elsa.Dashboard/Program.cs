@@ -29,10 +29,10 @@ builder.Services.AddHttpClient("ElsaServerClient", client =>
 builder.Services.AddScoped<IElsaServerHttpClient, ElsaServerHttpClient>();
 
 var app = builder.Build();
+app.UseExceptionHandler("/Error");
 
 if (!app.Environment.IsDevelopment())
 {
-  app.UseExceptionHandler("/Error");
   // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
   app.UseHsts();
 }
@@ -49,7 +49,6 @@ app
         })// For Dashboard.
 
     .UseRouting()
-    .UseDirectoryBrowser()
     .UseEndpoints(endpoints =>
     {
       // Elsa API Endpoints are implemented as regular ASP.NET Core API controllers.
@@ -57,7 +56,6 @@ app
 
       // For Dashboard.
       endpoints.MapFallbackToPage("/_Host");
-
     });
 
 app.Run();

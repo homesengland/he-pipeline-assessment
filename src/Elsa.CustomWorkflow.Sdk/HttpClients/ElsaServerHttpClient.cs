@@ -1,9 +1,7 @@
-﻿using Elsa.CustomWorkflow.Sdk.Models.Activities;
-using Elsa.CustomWorkflow.Sdk.Models.Workflow;
+﻿using Elsa.CustomWorkflow.Sdk.Models.Workflow;
 using Microsoft.Extensions.Logging;
 using System.Text;
 using System.Text.Json;
-using System.Text.Json.Serialization;
 
 namespace Elsa.CustomWorkflow.Sdk.HttpClients
 {
@@ -16,7 +14,7 @@ namespace Elsa.CustomWorkflow.Sdk.HttpClients
         Task<WorkflowActivityDataDto?> LoadCheckYourAnswersScreen(LoadWorkflowActivityDto model);
         Task<WorkflowActivityDataDto?> LoadConfirmationScreen(LoadWorkflowActivityDto model);
 
-        Task<string?> LoadCustomActivities();
+        Task<string?> LoadCustomActivities(string elsaServer);
     }
 
     public class ElsaServerHttpClient : IElsaServerHttpClient
@@ -182,12 +180,13 @@ namespace Elsa.CustomWorkflow.Sdk.HttpClients
             return JsonSerializer.Deserialize<WorkflowActivityDataDto>(data, new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
         }
 
-        public async Task<string?> LoadCustomActivities()
+        public async Task<string?> LoadCustomActivities(string elsaServer)
         {
             string data;
-            string relativeUri = $"activities/properties";
-            using (var response = await _httpClientFactory.CreateClient("ElsaServerClient")
-                       .GetAsync(relativeUri)
+            string fullUri = $"{elsaServer}/activities/properties";
+            var client = _httpClientFactory.CreateClient();
+            using (var response = await client
+                       .GetAsync(fullUri)
                        .ConfigureAwait(false))
             {
                 data = await response.Content.ReadAsStringAsync().ConfigureAwait(false);
@@ -195,7 +194,7 @@ namespace Elsa.CustomWorkflow.Sdk.HttpClients
                 {
                     _logger.LogError($"StatusCode='{response.StatusCode}'," +
                                      $"\n Message= '{data}'," +
-                                     $"\n Url='{relativeUri}'");
+                                     $"\n Url='{fullUri}'");
 
                     return default;
                 }
