@@ -57,8 +57,11 @@ namespace He.PipelineAssessment.UI.Extensions
                 options.AddPolicy(AuthorizationPolicies.AssignmentToPipelineAssessorRoleRequired, policy => policy.RequireRole(AppRole.PipelineAssessor));
                 options.AddPolicy(AuthorizationPolicies.AssignmentToPipelineAdminRoleRequired, policy => policy.RequireRole(AppRole.PipelineAdmin));
                 options.AddPolicy(AuthorizationPolicies.AssignmentToPipelineEconomistRoleRequired, policy => policy.RequireRole(AppRole.PipelineEconomist));
+                options.AddPolicy(AuthorizationPolicies.AssignmentToPipelineProjectManagerRoleRequired, policy => policy.RequireRole(AppRole.PipelineProjectManager));
+                options.AddPolicy(AuthorizationPolicies.AssignmentToPipelineObserverRoleRequired, policy => policy.RequireRole(AppRole.PipelineObserver));
 
             });
+
         }
     }
     public static class AppRole
@@ -66,6 +69,8 @@ namespace He.PipelineAssessment.UI.Extensions
         public const string PipelineAdmin = "Admin";
         public const string PipelineAssessor = "Assessor";
         public const string PipelineEconomist = "Economist";
+        public const string PipelineProjectManager = "ProjectManager";
+        public const string PipelineObserver = "Observer";
 
     }
 
@@ -74,5 +79,7 @@ namespace He.PipelineAssessment.UI.Extensions
         public const string AssignmentToPipelineAdminRoleRequired = "AssignmentToPipelineAdminRoleRequired";
         public const string AssignmentToPipelineAssessorRoleRequired = "AssignmentToPipelineAssessorRoleRequired";
         public const string AssignmentToPipelineEconomistRoleRequired = "AssignmentToPipelineEconomistRoleRequired";
+        public const string AssignmentToPipelineProjectManagerRoleRequired = "AssignmentToPipelineProjectManagerRoleRequired";
+        public const string AssignmentToPipelineObserverRoleRequired = "AssignmentToPipelineObserverRoleRequired";
     }
 }
