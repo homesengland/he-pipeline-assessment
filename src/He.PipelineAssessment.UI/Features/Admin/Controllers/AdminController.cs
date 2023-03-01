@@ -14,14 +14,14 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace He.PipelineAssessment.UI.Features.Admin.Controllers
 {
-    [Authorize(Policy = AuthorizationPolicies.AssignmentToPipelineAdminRoleRequired)]
+    [Authorize(Policy = AuthorizationPolicies.AssignmentToPipelineAdminBuildRoleRequired)]
     public class AdminController : BaseController<AdminController>
     {
         private readonly IValidator<CreateAssessmentToolCommand> _createAssessmentToolCommandValidator;
         private readonly IValidator<UpdateAssessmentToolCommand> _updateAssessmentToolCommandValidator;
         private readonly IValidator<UpdateAssessmentToolWorkflowCommand> _updateAssessmentToolWorkflowCommandValidator;
         private readonly IValidator<CreateAssessmentToolWorkflowCommand> _createAssessmentToolWorkflowCommandValidator;
-
+        
         public AdminController(
             IValidator<CreateAssessmentToolCommand> createAssessmentToolCommandValidator,
             IValidator<CreateAssessmentToolWorkflowCommand> createAssessmentToolWorkflowCommandValidator,
