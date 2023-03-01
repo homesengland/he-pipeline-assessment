@@ -80,8 +80,8 @@ namespace He.PipelineAssessment.UI.Extensions
         public const string PipelineAssessorInvestment = "PipelineAssessment.AssessorInvestment";
         public const string PipelineAssessorDevelopment = "PipelineAssessment.AssessorDevelopment";
         public const string PipelineEconomist = "PipelineAssessment.Economist";
-        public const string PipelineProjectManager = "ProjectManager";
-        public const string PipelineObserver = "Observer";
+        public const string PipelineProjectManager = "PipelineAssessment.ProjectManager";
+        public const string PipelineObserver = "PipelineAssessment.Observer";
 
     }
 
