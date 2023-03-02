@@ -11,6 +11,13 @@ COPY ["Elsa.Server/Elsa.Server.csproj", "Elsa.Server/"]
 COPY ["Elsa.CustomActivities/Elsa.CustomActivities.csproj", "Elsa.CustomActivities/"]
 COPY ["Elsa.Models/Elsa.CustomModels.csproj", "Elsa.Models/"]
 COPY ["Elsa.CustomInfrastructure/Elsa.CustomInfrastructure.csproj", "Elsa.CustomInfrastructure/"]
+COPY "nuget.config" .
+
+RUN curl -L "https://raw.githubusercontent.com/Microsoft/artifacts-credprovider/master/helpers/installcredprovider.sh" | sh
+ARG INTERNAL_FEED_ACCESSTOKEN
+ENV VSS_NUGET_EXTERNAL_FEED_ENDPOINTS \
+    "{\"endpointCredentials\": [{\"endpoint\":\"https://pkgs.dev.azure.com/homesengland/_packaging/homesengland/nuget/v3/index.json\", \"username\":\"docker\", \"password\":\"${INTERNAL_FEED_ACCESSTOKEN}\"}]}"
+
 RUN dotnet restore "Elsa.Server/Elsa.Server.csproj"
 COPY . .
 WORKDIR "/src/Elsa.Server"
