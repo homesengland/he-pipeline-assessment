@@ -1,5 +1,4 @@
 ﻿using FluentValidation;
-using He.PipelineAssessment.UI.Extensions;
 using He.PipelineAssessment.UI.Features.Admin.AssessmentToolManagement.Commands.CreateAssessmentTool;
 using He.PipelineAssessment.UI.Features.Admin.AssessmentToolManagement.Commands.CreateAssessmentToolWorkflow;
 using He.PipelineAssessment.UI.Features.Admin.AssessmentToolManagement.Commands.DeleteAssessmentTool;
@@ -9,7 +8,6 @@ using He.PipelineAssessment.UI.Features.Admin.AssessmentToolManagement.Commands.
 using He.PipelineAssessment.UI.Features.Admin.AssessmentToolManagement.Queries.GetAssessmentTools;
 using He.PipelineAssessment.UI.Features.Admin.AssessmentToolManagement.Queries.GetAssessmentToolWorkflows;
 using MediatR;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace He.PipelineAssessment.UI.Features.Admin.Controllers
@@ -45,8 +43,6 @@ namespace He.PipelineAssessment.UI.Features.Admin.Controllers
         [HttpGet]
         public async Task<IActionResult> AssessmentTool()
         {
-            User.IsInRole("Pipeline.Admin");
-
             try
             {
                 var assessmentTools = await _mediator.Send(new AssessmentToolQuery());
