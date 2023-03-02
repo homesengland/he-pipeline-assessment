@@ -46,7 +46,7 @@ app.Use((context, next) =>
 
 app.UseMiddleware<SecurityHeaderMiddleware>();
 
-app.UseStaticFiles(new StaticFileOptions
+app.UseStaticFiles().UseStaticFiles(new StaticFileOptions
 {
   FileProvider =
       new Microsoft.Extensions.FileProviders.PhysicalFileProvider(Path.Combine(Directory.GetCurrentDirectory(),
