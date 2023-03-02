@@ -1,15 +1,9 @@
 ﻿using AutoFixture.Xunit2;
 using Elsa.CustomActivities.Activities.QuestionScreen;
 using Elsa.CustomActivities.Describers;
-using Elsa.CustomInfrastructure.Data.Repository;
-using Elsa.CustomModels;
-using Elsa.CustomWorkflow.Sdk;
 using Elsa.Server.Features.Activities.CustomActivityProperties;
-using Elsa.Server.Features.Workflow.LoadCheckYourAnswersScreen;
-using Elsa.Server.Providers;
-using He.PipelineAssessment.Common.Tests;
+using He.PipelineAssessment.Tests.Common;
 using Moq;
-using NuGet.Frameworks;
 using Xunit;
 
 namespace Elsa.Server.Tests.Features.Activities.CustomActivityProperty;
