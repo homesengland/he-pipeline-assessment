@@ -6,7 +6,7 @@ using Elsa.CustomModels;
 using Elsa.Expressions;
 using Elsa.Serialization;
 using Elsa.Services.Models;
-using He.PipelineAssessment.Common.Tests;
+using He.PipelineAssessment.Tests.Common;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.OpenApi.Any;
 using Moq;

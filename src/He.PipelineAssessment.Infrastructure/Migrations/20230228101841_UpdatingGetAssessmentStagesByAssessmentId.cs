@@ -1,7 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore.Migrations;
 using System.Reflection;
 
-
+#nullable disable
 
 namespace He.PipelineAssessment.Infrastructure.Migrations
 {
