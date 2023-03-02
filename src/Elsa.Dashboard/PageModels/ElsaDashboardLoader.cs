@@ -31,8 +31,11 @@ namespace Elsa.Dashboard.PageModels
       {
         JsonResponse = await _client.LoadCustomActivities(_serverUrl);
       }
-      HttpContext.Response.StatusCode = (int)HttpStatusCode.FailedDependency;
-      throw new NullReferenceException("No Configuration value found for Urls:ElsaServer");
+      else
+      {
+        HttpContext.Response.StatusCode = (int)HttpStatusCode.FailedDependency;
+        throw new NullReferenceException("No Configuration value found for Urls:ElsaServer");
+      }
     }
   }
 }

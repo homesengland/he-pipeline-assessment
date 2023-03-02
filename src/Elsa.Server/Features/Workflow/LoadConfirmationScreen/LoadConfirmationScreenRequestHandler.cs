@@ -53,7 +53,7 @@ namespace Elsa.Server.Features.Workflow.LoadConfirmationScreen
                     result.Data.FooterText = (string?)activityDataDictionary.GetData("FooterText");
                     result.Data.Text = (List<string>)activityDataDictionary.GetData("Text")! ?? new List<string>();
 
-                    result.Data.NextWorkflowDefinitionId = (string?)activityDataDictionary.GetData("NextWorkflowDefinitionId");
+                    result.Data.NextWorkflowDefinitionIds = (string?)activityDataDictionary.GetData("NextWorkflowDefinitionIds");
                 }
                 else
                 {

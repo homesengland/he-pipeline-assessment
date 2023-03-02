@@ -16,7 +16,7 @@ namespace Elsa.Server.Features.Workflow.LoadConfirmationScreen
         public string? FooterTitle { get; set; } = null!;
         public string? FooterText { get; set; } = null!;
         public List<string> Text { get; set; } = new List<string>();
-        public string? NextWorkflowDefinitionId { get; set; } = null!;
+        public string? NextWorkflowDefinitionIds { get; set; } = null!;
         public List<QuestionScreenAnswer>? CheckQuestionScreenAnswers { get; set; }
     }
 }

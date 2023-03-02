@@ -39,7 +39,7 @@ namespace Elsa.Dashboard.PageModels
       else if(exceptionHandlerPathFeature?.Error is Exception)
       {
         _logger.LogInformation(exceptionHandlerPathFeature?.Error, String.Format("Unknown error encountered: ", exceptionHandlerPathFeature?.Error.Message));
-        ErrorMessage = "Sorry, something went wrong whilst trying to access this resource.";
+        ErrorMessage = "Sorry, something went wrong whilst trying to access this service.";
         AdditionalMessage = "Please contact the support team to investigate further.";
       }
       else

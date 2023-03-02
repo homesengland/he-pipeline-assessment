@@ -31,7 +31,6 @@ builder.Services.AddScoped<IElsaServerHttpClient, ElsaServerHttpClient>();
 
 var app = builder.Build();
 app.UseExceptionHandler("/Error");
-//app.UseStatusCodePagesWithReExecute("/Error");
 
 if (!app.Environment.IsDevelopment())
 {
