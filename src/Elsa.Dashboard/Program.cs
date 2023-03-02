@@ -2,6 +2,7 @@ using Elsa.CustomInfrastructure.Data;
 using Elsa.CustomInfrastructure.Extensions;
 using Elsa.CustomWorkflow.Sdk.HttpClients;
 using Elsa.Dashboard;
+using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.DataProtection;
 using Microsoft.EntityFrameworkCore;
 
