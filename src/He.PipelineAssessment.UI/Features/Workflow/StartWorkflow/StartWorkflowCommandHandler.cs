@@ -9,41 +9,51 @@ namespace He.PipelineAssessment.UI.Features.Workflow.StartWorkflow
 {
     public class StartWorkflowCommandHandler : IRequestHandler<StartWorkflowCommand, LoadQuestionScreenRequest?>
     {
+        
         private readonly IElsaServerHttpClient _elsaServerHttpClient;
         private readonly IAssessmentRepository _assessmentRepository;
-
-        public StartWorkflowCommandHandler(IElsaServerHttpClient elsaServerHttpClient, IAssessmentRepository assessmentRepository)
+        private readonly ILogger<StartWorkflowCommandHandler> _logger;
+        public StartWorkflowCommandHandler(IElsaServerHttpClient elsaServerHttpClient, IAssessmentRepository assessmentRepository, ILogger<StartWorkflowCommandHandler> logger)
         {
             _elsaServerHttpClient = elsaServerHttpClient;
             _assessmentRepository = assessmentRepository;
+            _logger = logger;
         }
 
         public async Task<LoadQuestionScreenRequest?> Handle(StartWorkflowCommand request, CancellationToken cancellationToken)
         {
-            var dto = new StartWorkflowCommandDto()
+            try
             {
-                WorkflowDefinitionId = request.WorkflowDefinitionId,
-                CorrelationId = request.CorrelationId
-            };
-            var response = await _elsaServerHttpClient.PostStartWorkflow(dto);
-
-            if (response != null)
-            {
-                var result = new LoadQuestionScreenRequest()
+                var dto = new StartWorkflowCommandDto()
                 {
-                    ActivityId = response.Data.NextActivityId,
-                    WorkflowInstanceId = response.Data.WorkflowInstanceId,
-                    ActivityType = response.Data.ActivityType
+                    WorkflowDefinitionId = request.WorkflowDefinitionId,
+                    CorrelationId = request.CorrelationId
                 };
+                var response = await _elsaServerHttpClient.PostStartWorkflow(dto);
 
-                var assessmentStage = AssessmentStage(request, response);
+                if (response != null)
+                {
+                    var result = new LoadQuestionScreenRequest()
+                    {
+                        ActivityId = response.Data.NextActivityId,
+                        WorkflowInstanceId = response.Data.WorkflowInstanceId,
+                        ActivityType = response.Data.ActivityType
+                    };
 
-                await _assessmentRepository.CreateAssessmentToolWorkflowInstance(assessmentStage);
+                    var assessmentStage = AssessmentStage(request, response);
 
-                return await Task.FromResult(result);
+                    await _assessmentRepository.CreateAssessmentToolWorkflowInstance(assessmentStage);
+
+                    return await Task.FromResult(result);
+                }
+                else
+                {
+                    return null;
+                }
             }
-            else
+            catch (Exception e)
             {
+               _logger.LogError(e.Message);
                 return null;
             }
 

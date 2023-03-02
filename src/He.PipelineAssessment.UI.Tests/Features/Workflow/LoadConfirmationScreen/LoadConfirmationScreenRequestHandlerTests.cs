@@ -1,7 +1,7 @@
 ﻿using AutoFixture.Xunit2;
 using Elsa.CustomWorkflow.Sdk.HttpClients;
 using Elsa.CustomWorkflow.Sdk.Models.Workflow;
-using He.PipelineAssessment.Common.Tests;
+using He.PipelineAssessment.Tests.Common;
 using He.PipelineAssessment.Infrastructure.Repository;
 using He.PipelineAssessment.Models;
 using He.PipelineAssessment.UI.Features.Workflow.LoadConfirmationScreen;
@@ -82,6 +82,7 @@ namespace He.PipelineAssessment.UI.Tests.Features.Workflow.LoadConfirmationScree
             Assert.IsType<LoadConfirmationScreenResponse>(result);
             Assert.Equal(stage.Assessment.SpId.ToString(), result!.CorrelationId);
             Assert.Equal(stage.AssessmentId, result.AssessmentId);
+            assessmentRepository.Verify(x => x.SaveChanges(), Times.Once);
             elsaServerHttpClient.Verify(x => x.LoadConfirmationScreen(It.IsAny<LoadWorkflowActivityDto>()), Times.Once);
         }
 

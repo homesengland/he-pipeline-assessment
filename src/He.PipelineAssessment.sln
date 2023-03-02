@@ -50,8 +50,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "He.PipelineAssessment.Data.
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tests.Common", "Tests.Common", "{A3BBE60D-1B99-4D99-B22D-CBD7074FFE69}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "He.PipelineAssessment.Common.Tests", "He.PipelineAssessment.Common.Tests\He.PipelineAssessment.Common.Tests.csproj", "{29D4A6A4-216E-44A1-9AD6-DEB2CD27567E}"
-EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "He.PipelineAssessment.Models", "He.PipelineAssessment.Models\He.PipelineAssessment.Models.csproj", "{A7A1F529-34A3-4FAB-B3A8-99E9C98BBC2F}"
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "He.PipelineAssessment.Models", "He.PipelineAssessment.Models\He.PipelineAssessment.Models.csproj", "{A7A1F529-34A3-4FAB-B3A8-99E9C98BBC2F}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tests.Dashboard", "Tests.Dashboard", "{1F9496B2-63B1-4BBB-B30A-095D5CD76E32}"
@@ -124,10 +123,6 @@ Global
 		{C4C045BE-E653-4005-A406-BE3A92989D84}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{C4C045BE-E653-4005-A406-BE3A92989D84}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{C4C045BE-E653-4005-A406-BE3A92989D84}.Release|Any CPU.Build.0 = Release|Any CPU
-		{29D4A6A4-216E-44A1-9AD6-DEB2CD27567E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{29D4A6A4-216E-44A1-9AD6-DEB2CD27567E}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{29D4A6A4-216E-44A1-9AD6-DEB2CD27567E}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{29D4A6A4-216E-44A1-9AD6-DEB2CD27567E}.Release|Any CPU.Build.0 = Release|Any CPU
 		{A7A1F529-34A3-4FAB-B3A8-99E9C98BBC2F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{A7A1F529-34A3-4FAB-B3A8-99E9C98BBC2F}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{A7A1F529-34A3-4FAB-B3A8-99E9C98BBC2F}.Release|Any CPU.ActiveCfg = Release|Any CPU

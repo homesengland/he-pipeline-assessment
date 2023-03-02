@@ -1,7 +1,7 @@
 ﻿using Elsa.CustomWorkflow.Sdk;
 using Elsa.CustomWorkflow.Sdk.Models.Workflow;
 using FluentValidation.TestHelper;
-using He.PipelineAssessment.Common.Tests;
+using He.PipelineAssessment.Tests.Common;
 using He.PipelineAssessment.UI.Features.Workflow.QuestionScreenSaveAndContinue;
 using Xunit;
 

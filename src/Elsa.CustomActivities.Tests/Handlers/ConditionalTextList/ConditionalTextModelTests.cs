@@ -1,5 +1,5 @@
 ﻿using Elsa.CustomActivities.Handlers.ParseModels;
-using He.PipelineAssessment.Common.Tests;
+using He.PipelineAssessment.Tests.Common;
 using System;
 using System.Collections.Generic;
 using System.Linq;

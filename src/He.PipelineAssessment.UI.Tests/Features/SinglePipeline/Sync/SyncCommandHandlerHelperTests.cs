@@ -1,6 +1,6 @@
 ﻿using AutoFixture.Xunit2;
-using He.PipelineAssessment.Common.Tests;
 using He.PipelineAssessment.Data.SinglePipeline;
+using He.PipelineAssessment.Tests.Common;
 using He.PipelineAssessment.UI.Common.Utility;
 using He.PipelineAssessment.UI.Features.SinglePipeline.Sync;
 using Moq;
