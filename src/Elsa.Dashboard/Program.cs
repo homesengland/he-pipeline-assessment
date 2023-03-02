@@ -42,15 +42,9 @@ app.Use((context, next) =>
   context.Request.Scheme = "https";
   return next();
 });
-}
-
-app.Use((context, next) =>
-{
-  context.Request.Scheme = "https";
-  return next();
-});
 
 app.UseMiddleware<SecurityHeaderMiddleware>();
+
 app.UseStaticFiles(new StaticFileOptions
 {
   FileProvider =
@@ -71,6 +65,5 @@ app.UseStaticFiles(new StaticFileOptions
     // For Dashboard.
     endpoints.MapFallbackToPage("/_Host");
   });
-    });
 
 app.Run();
