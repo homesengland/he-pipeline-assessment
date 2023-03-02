@@ -1,5 +1,5 @@
 ﻿using AutoFixture.Xunit2;
-using He.PipelineAssessment.Common.Tests;
+using He.PipelineAssessment.Tests.Common;
 using He.PipelineAssessment.Data.SinglePipeline;
 using He.PipelineAssessment.Infrastructure.Repository;
 using He.PipelineAssessment.UI.Features.SinglePipeline.Sync;

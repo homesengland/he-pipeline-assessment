@@ -2,7 +2,7 @@
 using Elsa.CustomWorkflow.Sdk;
 using FluentValidation;
 using FluentValidation.Results;
-using He.PipelineAssessment.Common.Tests;
+using He.PipelineAssessment.Tests.Common;
 using He.PipelineAssessment.UI.Features.Workflow;
 using He.PipelineAssessment.UI.Features.Workflow.CheckYourAnswersSaveAndContinue;
 using He.PipelineAssessment.UI.Features.Workflow.LoadCheckYourAnswersScreen;

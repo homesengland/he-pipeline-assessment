@@ -1,5 +1,5 @@
-﻿using He.PipelineAssessment.Common.Tests;
-using He.PipelineAssessment.Data.LaHouseNeed;
+﻿using He.PipelineAssessment.Data.LaHouseNeed;
+using He.PipelineAssessment.Tests.Common;
 using System.Text.Json;
 using Xunit;
 

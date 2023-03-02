@@ -5,7 +5,7 @@ using Elsa.CustomWorkflow.Sdk;
 using Elsa.Models;
 using Elsa.Server.Helpers;
 using Elsa.Server.Providers;
-using He.PipelineAssessment.Common.Tests;
+using He.PipelineAssessment.Tests.Common;
 using Moq;
 using Xunit;
 

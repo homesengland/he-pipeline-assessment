@@ -17,5 +17,7 @@
         public int? AssessmentToolId { get; set; }
         public int? AssessmentToolWorkflowInstanceId { get; set; }
         public bool? IsFirstWorkflow { get; set; }
+        public string? Result { get; set; } = null;
+        public string? SubmittedBy { get; set; } = null;
     }
 }

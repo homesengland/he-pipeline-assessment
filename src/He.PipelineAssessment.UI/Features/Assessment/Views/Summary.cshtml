@@ -8,7 +8,11 @@
 
 @Html.ActionLink("Back","Index","Assessment", null,new{ @class="govuk-back-link"})
 <span class="govuk-caption-l">@Model.Reference</span>
-<h1 class="govuk-heading-l">@Model.SiteName @Model.CounterParty</h1>
+<h1 class="govuk-heading-l">@Model.SiteName</h1>
+
+<p class="govuk-body">@Model.LocalAuthority</p>
+<p class="govuk-body">@Model.CounterParty</p>
+<p class="govuk-body">@Model.ProjectManager</p>
 
 <div class="text-center">
     <div class="text-center">
@@ -18,12 +22,10 @@
                 <tr class="govuk-table__row">
                     <th scope="col" class="govuk-table__header">Stage</th>
                     <th scope="col" class="govuk-table__header">Status</th>
-
-                    <th scope="col" class="govuk-table__header">Started</th>
+                    <th scope="col" class="govuk-table__header">Last Updated</th>
+                    <th scope="col" class="govuk-table__header">Date Submitted</th>
                     <th scope="col" class="govuk-table__header">Submitted By</th>
-                    <th scope="col" class="govuk-table__header">Result</th>
-
-                    
+                    <th scope="col" class="govuk-table__header">Result</th>                   
                 </tr>
             </thead>
             <tbody class="govuk-table__body">
@@ -58,10 +60,15 @@
                                 @assessmentStage.Status
                             }
                         </strong></td>
-
+                        <td class="govuk-table__cell">
+                            @if (@assessmentStage.SubmittedDateTime.HasValue)
+                            {
+                                @assessmentStage.SubmittedDateTime.Value.Date.ToLongDateString()
+                            }
+                           
                         <td class="govuk-table__cell">
                             @if(@assessmentStage.CreatedDateTime.HasValue){
-                                @assessmentStage.CreatedDateTime
+                                    @assessmentStage.CreatedDateTime.Value.Date.ToLongDateString()
                             }
                             else
                             {
@@ -78,12 +85,13 @@
                                 }
                             }
                         </td>
+                          <td class="govuk-table__cell">
+                        @assessmentStage.SubmittedBy    
+                        </td>
+                        <td class="govuk-table__cell">
+                        @assessmentStage.Result    
+                        </td>
                         <td class="govuk-table__cell"> </td>
-                        <td class="govuk-table__cell"> </td>
-                        
-     
-                        
-
                     </tr>
                 }
             </tbody>

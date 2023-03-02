@@ -1,7 +1,7 @@
 ﻿using AutoFixture.Xunit2;
 using Elsa.Models;
 using Elsa.Server.Providers;
-using He.PipelineAssessment.Common.Tests;
+using He.PipelineAssessment.Tests.Common;
 using Moq;
 using Xunit;
 
