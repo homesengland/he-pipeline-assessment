@@ -43,6 +43,7 @@ app.Use((context, next) =>
   return next();
 });
 
+
 app.UseMiddleware<SecurityHeaderMiddleware>();
 
 app.UseStaticFiles(new StaticFileOptions
@@ -52,7 +53,8 @@ app.UseStaticFiles(new StaticFileOptions
         @"www")),
   ServeUnknownFileTypes = true,
   RequestPath = "/static"
-}) // For Dashboard.
+})
+  // For Dashboard.
   .UseRouting()
   .UseAuthentication()
   .UseAuthorization()
