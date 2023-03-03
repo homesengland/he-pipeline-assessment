@@ -1,27 +1,4 @@
-﻿using He.PipelineAssessment.Common.Tests;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc.ModelBinding;
-using Microsoft.AspNetCore.Mvc.RazorPages;
-using Microsoft.AspNetCore.Mvc.Routing;
-using Microsoft.AspNetCore.Mvc.ViewFeatures;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Routing;
-using Moq;
-using System;
-using Xunit;
-using Elsa.Dashboard.PageModels;
-using AutoFixture.Xunit2;
-using Elsa.CustomWorkflow.Sdk.HttpClients;
-using Microsoft.Extensions.Configuration;
-using Elsa.CustomWorkflow.Sdk.Models.Activities;
-using System.Runtime.Serialization.Json;
-using Newtonsoft.Json;
-using System.Net;
-using System.Net.Http;
-using Microsoft.Extensions.Logging;
-using System.Net.WebSockets;
-
-namespace Elsa.Dashboard.Tests.Pages
+﻿namespace Elsa.Dashboard.Tests.Pages
 {
     public class _HostPageTests
     {

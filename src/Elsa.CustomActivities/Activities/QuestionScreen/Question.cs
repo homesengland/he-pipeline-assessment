@@ -1,13 +1,7 @@
-﻿using Elsa.Attributes;
-using Elsa.CustomActivities.Activities.QuestionScreen;
-using Elsa.CustomActivities.Constants;
-using Elsa.CustomActivities.Describers;
+﻿using Elsa.CustomActivities.Constants;
 using Elsa.CustomActivities.PropertyDecorator;
 using Elsa.CustomWorkflow.Sdk;
-using Elsa.Design;
 using Elsa.Expressions;
-using Elsa.Metadata;
-using Esprima.Ast;
 
 namespace Elsa.CustomActivities.Activities.QuestionScreen
 {
@@ -32,24 +26,40 @@ namespace Elsa.CustomActivities.Activities.QuestionScreen
         [HeActivityInput(Hint = "Question hint", UIHint = HePropertyUIHints.SingleLine)]
         public string QuestionHint { get; set; } = null!;
 
-
         [HeActivityInput(Hint = "Question guidance", UIHint = HePropertyUIHints.MultiLine)]
         public string QuestionGuidance { get; set; } = null!;
 
         [HeActivityInput(Hint = "Include comments box", UIHint = HePropertyUIHints.Checkbox)]
         public bool DisplayComments { get; set; }
 
-        public string Comments { get; set; } = null!;
-
-
-        [HeActivityInput(Hint = "Character limit", UIHint = HePropertyUIHints.SingleLine, ConditionalActivityType = QuestionTypeConstants.TextAreaQuestion, ExpectedOutputType = ExpectedOutputHints.Number)]
+        [HeActivityInput(Hint = "Character limit", UIHint = HePropertyUIHints.SingleLine, ConditionalActivityTypes = new[] { QuestionTypeConstants.TextAreaQuestion }, ExpectedOutputType = ExpectedOutputHints.Number)]
         public int? CharacterLimit { get; set; }
 
-        [HeActivityInput(UIHint = HePropertyUIHints.CheckboxOptions, ConditionalActivityType = QuestionTypeConstants.CheckboxQuestion, ExpectedOutputType = ExpectedOutputHints.Checkbox)]
+        [HeActivityInput(UIHint = HePropertyUIHints.CheckboxOptions, ConditionalActivityTypes = new[] { QuestionTypeConstants.CheckboxQuestion }, ExpectedOutputType = ExpectedOutputHints.Checkbox)]
         public CheckboxModel Checkbox { get; set; } = new CheckboxModel();
 
-        [HeActivityInput(UIHint = HePropertyUIHints.RadioOptions, ConditionalActivityType = QuestionTypeConstants.RadioQuestion, ExpectedOutputType = ExpectedOutputHints.Radio)]
+        [HeActivityInput(UIHint = HePropertyUIHints.RadioOptions, ConditionalActivityTypes = new[] { QuestionTypeConstants.RadioQuestion }, ExpectedOutputType = ExpectedOutputHints.Radio)]
         public RadioModel Radio { get; set; } = new RadioModel();
+
+        [HeActivityInput(Hint = "Fill in to display a pre-populated value", UIHint = HePropertyUIHints.SingleLine,
+            SupportedSyntaxes = new[] { SyntaxNames.Literal, SyntaxNames.JavaScript },
+            ConditionalActivityTypes = new[]
+            {
+                QuestionTypeConstants.TextQuestion,
+                QuestionTypeConstants.TextAreaQuestion,
+                QuestionTypeConstants.CurrencyQuestion
+            })]
+        public string? Answer { get; set; }
+
+        [HeActivityInput(Hint = "Tick if the pre-populated answer should be read-only",
+            UIHint = HePropertyUIHints.Checkbox,
+            ConditionalActivityTypes = new[]
+            {
+                QuestionTypeConstants.TextQuestion,
+                QuestionTypeConstants.TextAreaQuestion,
+                QuestionTypeConstants.CurrencyQuestion
+            })]
+        public bool IsReadOnly { get; set; } = false;
 
     }
 
@@ -58,7 +68,7 @@ namespace Elsa.CustomActivities.Activities.QuestionScreen
         public ICollection<CheckboxRecord> Choices { get; set; } = new List<CheckboxRecord>();
     }
 
-    public record CheckboxRecord(string Identifier,string Answer, bool IsSingle);
+    public record CheckboxRecord(string Identifier, string Answer, bool IsSingle);
 
     public class RadioModel
     {

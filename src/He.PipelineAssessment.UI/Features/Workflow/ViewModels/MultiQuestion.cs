@@ -15,6 +15,7 @@ namespace He.PipelineAssessment.UI.Features.Workflow.ViewModels
         public bool DisplayComments { get; set; }
         public string? Comments { get; set; }
         public string? Answer { get; set; }
+        public bool IsReadOnly { get; set; }
         public Date? Date { get; set; }
         public decimal? Decimal { get; set; }
         public Radio Radio { get; set; } = new Radio();

@@ -34,6 +34,7 @@ namespace Elsa.Server.Features.Workflow.LoadQuestionScreen
         public int? CharacterLimit { get; set; }
         public Checkbox Checkbox { get; set; } = null!;
         public Radio Radio { get; set; } = null!;
+        public bool IsReadOnly { get; set; }
     }
 
 
