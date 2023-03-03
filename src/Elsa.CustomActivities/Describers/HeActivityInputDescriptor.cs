@@ -34,8 +34,7 @@ namespace Elsa.CustomActivities.Describers
             bool considerValuesAsOutcomes = false,
             bool displayInDesigner = true,
             IEnumerable<string>? conditionalActivityTypes = null
-
-            )
+        )
             : base(name, type, uiHint, label, hint, options, category, order, defaultValue, defaultSyntax, supportedSyntaxes, isReadOnly, isBrowsable, isDesignerCritical, defaultWorkflowStorageProvider, disableWorkflowProviderSelection, considerValuesAsOutcomes)
         {
             DisplayInDesigner = displayInDesigner;
