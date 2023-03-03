@@ -60,6 +60,7 @@ namespace Elsa.CustomActivities.Activities.QuestionScreen
                 QuestionTypeConstants.CurrencyQuestion
             })]
         public bool IsReadOnly { get; set; } = false;
+
     }
 
     public class CheckboxModel
