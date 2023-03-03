@@ -11,6 +11,8 @@ using He.PipelineAssessment.UI.Features.Admin.AssessmentToolManagement.Queries.G
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using System.Security.Claims;
+using static He.PipelineAssessment.UI.Authorization.Constants;
 
 namespace He.PipelineAssessment.UI.Features.Admin.Controllers
 {
@@ -45,10 +47,27 @@ namespace He.PipelineAssessment.UI.Features.Admin.Controllers
         [HttpGet]
         public async Task<IActionResult> AssessmentTool()
         {
+            var assessmentTools = new AssessmentToolListData();
+
+            var isRoleExist = User.IsInRole(AppRole.PipelineEconomist);
+
             try
             {
-                var assessmentTools = await _mediator.Send(new AssessmentToolQuery());
-                return View("AssessmentTool", assessmentTools);
+                if (isRoleExist)
+                {
+                    var userEmail = User.FindFirstValue(ClaimTypes.Email);
+
+                    assessmentTools = await _mediator.Send(new AssessmentToolQuery());
+
+                    return View("AssessmentTool", assessmentTools);
+                }
+                else
+                {
+                    assessmentTools = await _mediator.Send(new AssessmentToolQuery());
+
+                    return View("AssessmentTool", assessmentTools);
+                }
+
             }
             catch (Exception e)
             {
