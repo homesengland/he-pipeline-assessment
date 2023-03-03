@@ -72,6 +72,8 @@ namespace Elsa.Server.Features.Workflow.LoadQuestionScreen
                                 activityRequest.ActivityId, activityRequest.WorkflowInstanceId,
                                 cancellationToken);
 
+                            AssessmentQuestions? questions = (AssessmentQuestions?)activityDataDictionary.FirstOrDefault(x => x.Key == "Questions").Value;
+
                             var elsaActivityAssessmentQuestions =
                                 (AssessmentQuestions?)activityDataDictionary
                                     .FirstOrDefault(x => x.Key == "Questions").Value;
@@ -126,7 +128,7 @@ namespace Elsa.Server.Features.Workflow.LoadQuestionScreen
             //assign the values
             var questionActivityData = new QuestionActivityData();
             questionActivityData.ActivityId = dbQuestion.ActivityId;
-            questionActivityData.Answer = dbQuestion.Answer;
+            questionActivityData.Answer = dbQuestion.Answer ?? item.Answer;
             questionActivityData.Comments = dbQuestion.Comments;
             questionActivityData.QuestionId = dbQuestion.QuestionId;
             questionActivityData.QuestionType = dbQuestion.QuestionType;
@@ -136,6 +138,7 @@ namespace Elsa.Server.Features.Workflow.LoadQuestionScreen
             questionActivityData.QuestionGuidance = item.QuestionGuidance;
             questionActivityData.QuestionHint = item.QuestionHint;
             questionActivityData.CharacterLimit = item.CharacterLimit;
+            questionActivityData.IsReadOnly = item.IsReadOnly;
 
             if (item.QuestionType == QuestionTypeConstants.CheckboxQuestion)
             {

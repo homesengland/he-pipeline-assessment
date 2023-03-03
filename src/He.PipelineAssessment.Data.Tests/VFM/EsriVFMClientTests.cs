@@ -1,5 +1,5 @@
 ﻿using AutoFixture.Xunit2;
-using He.PipelineAssessment.Common.Tests;
+using He.PipelineAssessment.Tests.Common;
 using He.PipelineAssessment.Data.VFM;
 using Moq;
 using System.Net;

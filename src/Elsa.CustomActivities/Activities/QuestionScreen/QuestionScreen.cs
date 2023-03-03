@@ -1,11 +1,13 @@
 ﻿using Elsa.Activities.ControlFlow;
 using Elsa.ActivityResults;
 using Elsa.Attributes;
+using Elsa.CustomActivities.Constants;
 using Elsa.CustomModels;
 using Elsa.Design;
 using Elsa.Expressions;
 using Elsa.Services;
 using Elsa.Services.Models;
+using System.ComponentModel;
 
 namespace Elsa.CustomActivities.Activities.QuestionScreen
 {
@@ -20,13 +22,18 @@ namespace Elsa.CustomActivities.Activities.QuestionScreen
         [ActivityInput]
         public string PageTitle { get; set; } = null!;
 
-        [ActivityInput(Label = "List of questions", Hint = "Questions to be displayed on this page.", UIHint = "question-builder", DefaultSyntax = "Json", IsDesignerCritical = true)]
+        [ActivityInput(Label = "List of questions",
+            Hint = "Questions to be displayed on this page.",
+            UIHint = CustomActivityUIHints.QuestionScreen,
+            DefaultSyntax = CustomSyntaxNames.QuestionList,
+            SupportedSyntaxes = new[] { SyntaxNames.Json },
+            IsDesignerCritical = true)]
         public AssessmentQuestions Questions { get; set; } = new AssessmentQuestions();
 
-        [ActivityInput(Hint = "The condition to evaluate.", UIHint = ActivityInputUIHints.SingleLine, SupportedSyntaxes = new[] { SyntaxNames.JavaScript }, DefaultSyntax = SyntaxNames.JavaScript, DefaultValue = true)]
-        public bool Condition { get; set; }
+        [ActivityInput(Hint = "Set the condition to state whether the question is displayed or not.", UIHint = ActivityInputUIHints.SingleLine, SupportedSyntaxes = new[] { SyntaxNames.JavaScript }, DefaultSyntax = SyntaxNames.JavaScript)]
+        public bool Condition { get; set; } = true;
 
-        [ActivityInput(Label = "Assessment outcome conditions", Hint = "The conditions to evaluate.", UIHint = "switch-case-builder", DefaultSyntax = "Switch", IsDesignerCritical = true)]
+        [ActivityInput(Label = "Assessment outcome conditions", Hint = "The conditions to evaluate.", UIHint = CustomActivityUIHints.CustomSwitch, DefaultSyntax = "Switch", IsDesignerCritical = true)]
         public ICollection<SwitchCase> Cases { get; set; } = new List<SwitchCase>();
 
         [ActivityInput(

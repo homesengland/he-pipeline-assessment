@@ -8,6 +8,7 @@ using He.PipelineAssessment.UI.Features.Workflow.QuestionScreenSaveAndContinue;
 using He.PipelineAssessment.UI.Features.Workflow.StartWorkflow;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
+using System.Security.Claims;
 
 namespace He.PipelineAssessment.UI.Features.Workflow
 {
@@ -146,7 +147,7 @@ namespace He.PipelineAssessment.UI.Features.Workflow
         public async Task<IActionResult> CheckYourAnswerScreenSaveAndContinue([FromForm] CheckYourAnswersSaveAndContinueCommand command)
         {
             try
-            {
+            {           
                 var result = await this._mediator.Send(command);
 
                 return RedirectToAction("LoadWorkflowActivity",

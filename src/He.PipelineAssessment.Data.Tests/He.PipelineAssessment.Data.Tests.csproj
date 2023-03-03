@@ -30,8 +30,8 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\He.PipelineAssessment.Common.Tests\He.PipelineAssessment.Common.Tests.csproj" />
     <ProjectReference Include="..\He.PipelineAssessment.Data\He.PipelineAssessment.Data.csproj" />
+    <ProjectReference Include="..\He.PipelineAssessment.Tests.Common\He.PipelineAssessment.Tests.Common.csproj" />
   </ItemGroup>
 
 </Project>

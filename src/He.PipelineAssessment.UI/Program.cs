@@ -83,7 +83,8 @@ builder.Services.AddScoped<IAdminAssessmentToolRepository, AdminAssessmentToolRe
 builder.Services.AddScoped<IAdminAssessmentToolWorkflowRepository, AdminAssessmentToolWorkflowRepository>();
 builder.Services.AddScoped<IDateTimeProvider, DateTimeProvider>();
 builder.Services.AddScoped<ISyncCommandHandlerHelper, SyncCommandHandlerHelper>();
-
+builder.Services.AddScoped<IUserProvider, UserProvider>();
+builder.Services.AddHttpContextAccessor();
 
 builder.Services.AddScoped<IIdentityClient, IdentityClient>();
 builder.Services.AddTransient<BearerTokenHandler>();

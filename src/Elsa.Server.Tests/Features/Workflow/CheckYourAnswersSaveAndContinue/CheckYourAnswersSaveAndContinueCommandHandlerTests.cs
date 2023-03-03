@@ -10,13 +10,13 @@ using Elsa.Server.Helpers;
 using Elsa.Server.Models;
 using Elsa.Server.Providers;
 using Elsa.Services.Models;
-using He.PipelineAssessment.Common.Tests;
+using He.PipelineAssessment.Tests.Common;
 using Moq;
 using Xunit;
 
 namespace Elsa.Server.Tests.Features.Workflow.CheckYourAnswersSaveAndContinue
 {
-    public class CheckYourAnswersSaveAndContinueCommandHandlerTests
+    public class CustomActivityPropertyCommandHandlerTests
     {
         [Theory]
         [AutoMoqData]

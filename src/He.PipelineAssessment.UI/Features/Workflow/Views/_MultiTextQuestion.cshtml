@@ -4,6 +4,7 @@
     var itemName = "Data.QuestionScreenAnswers[" + Model.Index + "].Answer";
     var errorFormClass = !Model.IsValid ? "govuk-form-group--error" : "";
     var errorFieldClass = !Model.IsValid ? "govuk-input--error" : "";
+    var isReadOnly = Model.IsReadOnly ? "disabled" : "";
 }
 
 <div class="govuk-form-group @errorFormClass">
@@ -13,7 +14,7 @@
     @await Html.PartialAsync("_QuestionHint", Model.QuestionHint)
 
     <div class="govuk-input__wrapper">
-        <input id="@itemName" type="text" name="@itemName" class="govuk-input govuk-input--width-6 @errorFieldClass" value="@Model.Answer" />
+        <input id="@itemName" type="text" name="@itemName" class="govuk-input govuk-input--width-6 @errorFieldClass" @isReadOnly value="@Model.Answer" />
     </div>
 
     @await Html.PartialAsync("_QuestionGuidance", Model.QuestionGuidance)

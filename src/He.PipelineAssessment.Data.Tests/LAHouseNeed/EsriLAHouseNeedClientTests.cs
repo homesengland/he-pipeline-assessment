@@ -1,6 +1,6 @@
 ﻿using AutoFixture.Xunit2;
-using He.PipelineAssessment.Common.Tests;
 using He.PipelineAssessment.Data.LaHouseNeed;
+using He.PipelineAssessment.Tests.Common;
 using Moq;
 using System.Net;
 using Xunit;

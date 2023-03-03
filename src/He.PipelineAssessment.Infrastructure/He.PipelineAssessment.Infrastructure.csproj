@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <TargetFramework>net6.0</TargetFramework>
@@ -7,17 +7,21 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="Deployment\CreateAndAssignExecutorRole.sql" />
     <None Remove="Migrations\20230116150107_AddStoredProceduresForAssessmentSummaryPage\GetAssessmentStagesByAssessmentId.sql" />
     <None Remove="Migrations\20230116150107_AddStoredProceduresForAssessmentSummaryPage\GetStartableToolsByAssessmentId.sql" />
     <None Remove="Migrations\20230117092610_StoredProcRole\CreateAndAssignExecutorRole.sql" />
     <None Remove="Migrations\20230208091930_AssessmentListStoredProc\GetAssessments.sql" />
+    <None Remove="Migrations\20230228101841_UpdatingGetAssessmentStagesByAssessmentId\GetAssessmentStagesByAssessmentId.sql" />
   </ItemGroup>
 
   <ItemGroup>
+    <EmbeddedResource Include="Deployment\CreateAndAssignExecutorRole.sql" />
     <EmbeddedResource Include="Migrations\20230116150107_AddStoredProceduresForAssessmentSummaryPage\GetStartableToolsByAssessmentId.sql" />
     <EmbeddedResource Include="Migrations\20230116150107_AddStoredProceduresForAssessmentSummaryPage\GetAssessmentStagesByAssessmentId.sql" />
     <EmbeddedResource Include="Migrations\20230117092610_StoredProcRole\CreateAndAssignExecutorRole.sql" />
     <EmbeddedResource Include="Migrations\20230208091930_AssessmentListStoredProc\GetAssessments.sql" />
+    <EmbeddedResource Include="Migrations\20230228101841_UpdatingGetAssessmentStagesByAssessmentId\GetAssessmentStagesByAssessmentId.sql" />
   </ItemGroup>
 
   <ItemGroup>

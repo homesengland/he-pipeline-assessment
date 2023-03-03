@@ -7,7 +7,7 @@ using Elsa.Models;
 using Elsa.Persistence;
 using Elsa.Persistence.Specifications.WorkflowInstances;
 using Elsa.Server.Features.Workflow.LoadQuestionScreen;
-using He.PipelineAssessment.Common.Tests;
+using He.PipelineAssessment.Tests.Common;
 using Moq;
 using Xunit;
 
@@ -380,5 +380,113 @@ public class LoadQuestionScreenRequestHandlerTests
         Assert.Equal(assessmentQuestions.Count(), result.Data!.QuestionScreenAnswers.Count());
         Assert.Empty(result.ErrorMessages);
         Assert.Equal(result.Data.QuestionScreenAnswers[0].Radio.SelectedAnswer, myChoice);
+    }
+
+    [Theory]
+    [AutoMoqData]
+    public async Task
+        Handle_ReturnMultiQuestionActivityDataWithPrepopulatedAnswers_GivenOnlyPrepopulatedAnswerAreProvided(
+            [Frozen] Mock<IWorkflowInstanceStore> workflowInstanceStore,
+            [Frozen] Mock<IElsaCustomRepository> elsaCustomRepository,
+            LoadQuestionScreenRequest loadWorkflowActivityRequest,
+            WorkflowInstance workflowInstance,
+            CustomActivityNavigation customActivityNavigation,
+            List<QuestionScreenAnswer> assessmentQuestions,
+            AssessmentQuestions elsaAssessmentQuestions,
+            LoadQuestionScreenRequestHandler sut)
+    {
+        //Arrange
+        customActivityNavigation.ActivityType = ActivityTypeConstants.QuestionScreen;
+        assessmentQuestions[0].Answer = null;
+        for (var i = 0; i < assessmentQuestions.Count; i++)
+        {
+            var questionId = assessmentQuestions[i].QuestionId;
+            elsaAssessmentQuestions.Questions[i].Id = questionId!;
+        }
+
+        elsaAssessmentQuestions.Questions[0].Answer = "PrepopulatedAnswer";
+        elsaAssessmentQuestions.Questions[0].IsReadOnly = true;
+        elsaAssessmentQuestions.Questions[0].QuestionType = QuestionTypeConstants.TextAreaQuestion;
+
+        workflowInstanceStore.Setup(x =>
+                x.FindAsync(It.IsAny<WorkflowInstanceIdSpecification>(), CancellationToken.None))
+            .ReturnsAsync(workflowInstance);
+
+        elsaCustomRepository.Setup(x => x.GetCustomActivityNavigation(loadWorkflowActivityRequest.ActivityId,
+                loadWorkflowActivityRequest.WorkflowInstanceId, CancellationToken.None))
+            .ReturnsAsync(customActivityNavigation);
+
+        elsaCustomRepository.Setup(x => x.GetQuestionScreenAnswers(loadWorkflowActivityRequest.ActivityId,
+                loadWorkflowActivityRequest.WorkflowInstanceId, CancellationToken.None))
+            .ReturnsAsync(assessmentQuestions);
+
+        var assessmentQuestionsDictionary = new Dictionary<string, object?>();
+        assessmentQuestionsDictionary.Add("Questions", elsaAssessmentQuestions);
+
+        workflowInstance.ActivityData.Add(loadWorkflowActivityRequest.ActivityId, assessmentQuestionsDictionary);
+
+        //Act
+        var result = await sut.Handle(loadWorkflowActivityRequest, CancellationToken.None);
+
+        //Assert
+        Assert.NotNull(result.Data!.QuestionScreenAnswers);
+        Assert.Equal(assessmentQuestions.Count(), result.Data!.QuestionScreenAnswers.Count());
+        Assert.Empty(result.ErrorMessages);
+        Assert.Equal("PrepopulatedAnswer", result.Data.QuestionScreenAnswers[0].Answer);
+        Assert.True(result.Data.QuestionScreenAnswers[0].IsReadOnly);
+    }
+
+    [Theory]
+    [AutoMoqData]
+    public async Task
+        Handle_ReturnMultiQuestionActivityDataWithDatabaseAnswers_GivenBothDatabaseAndPrepopulatedAnswerAreProvided(
+            [Frozen] Mock<IWorkflowInstanceStore> workflowInstanceStore,
+            [Frozen] Mock<IElsaCustomRepository> elsaCustomRepository,
+            LoadQuestionScreenRequest loadWorkflowActivityRequest,
+            WorkflowInstance workflowInstance,
+            CustomActivityNavigation customActivityNavigation,
+            List<QuestionScreenAnswer> assessmentQuestions,
+            AssessmentQuestions elsaAssessmentQuestions,
+            LoadQuestionScreenRequestHandler sut)
+    {
+        //Arrange
+        customActivityNavigation.ActivityType = ActivityTypeConstants.QuestionScreen;
+        assessmentQuestions[0].Answer = "DatabaseAnswer";
+        for (var i = 0; i < assessmentQuestions.Count; i++)
+        {
+            var questionId = assessmentQuestions[i].QuestionId;
+            elsaAssessmentQuestions.Questions[i].Id = questionId!;
+        }
+
+        elsaAssessmentQuestions.Questions[0].Answer = "PrepopulatedAnswer";
+        elsaAssessmentQuestions.Questions[0].IsReadOnly = false;
+        elsaAssessmentQuestions.Questions[0].QuestionType = QuestionTypeConstants.TextAreaQuestion;
+
+        workflowInstanceStore.Setup(x =>
+                x.FindAsync(It.IsAny<WorkflowInstanceIdSpecification>(), CancellationToken.None))
+            .ReturnsAsync(workflowInstance);
+
+        elsaCustomRepository.Setup(x => x.GetCustomActivityNavigation(loadWorkflowActivityRequest.ActivityId,
+                loadWorkflowActivityRequest.WorkflowInstanceId, CancellationToken.None))
+            .ReturnsAsync(customActivityNavigation);
+
+        elsaCustomRepository.Setup(x => x.GetQuestionScreenAnswers(loadWorkflowActivityRequest.ActivityId,
+                loadWorkflowActivityRequest.WorkflowInstanceId, CancellationToken.None))
+            .ReturnsAsync(assessmentQuestions);
+
+        var assessmentQuestionsDictionary = new Dictionary<string, object?>();
+        assessmentQuestionsDictionary.Add("Questions", elsaAssessmentQuestions);
+
+        workflowInstance.ActivityData.Add(loadWorkflowActivityRequest.ActivityId, assessmentQuestionsDictionary);
+
+        //Act
+        var result = await sut.Handle(loadWorkflowActivityRequest, CancellationToken.None);
+
+        //Assert
+        Assert.NotNull(result.Data!.QuestionScreenAnswers);
+        Assert.Equal(assessmentQuestions.Count(), result.Data!.QuestionScreenAnswers.Count());
+        Assert.Empty(result.ErrorMessages);
+        Assert.Equal("DatabaseAnswer", result.Data.QuestionScreenAnswers[0].Answer);
+        Assert.False(result.Data.QuestionScreenAnswers[0].IsReadOnly);
     }
 }

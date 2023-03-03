@@ -45,7 +45,10 @@ namespace He.PipelineAssessment.UI.Features.Assessment.AssessmentSummary
                         SiteName = dbAssessment!.SiteName,
                         CounterParty = dbAssessment.Counterparty,
                         Reference = dbAssessment.Reference,
-                        Stages = stages
+                        Stages = stages,
+                        LocalAuthority = dbAssessment.LocalAuthority,
+                        ProjectManager = dbAssessment.ProjectManager
+                        
                     };
                 }
             }
@@ -81,7 +84,9 @@ namespace He.PipelineAssessment.UI.Features.Assessment.AssessmentSummary
                 SubmittedDateTime = item.SubmittedDateTime,
                 AssessmentToolId = item.AssessmentToolId,
                 IsFirstWorkflow = item.IsFirstWorkflow ?? startableToolViewModel?.IsFirstWorkflow,
-                AssessmentToolWorkflowInstanceId = item.AssessmentToolWorkflowInstanceId
+                AssessmentToolWorkflowInstanceId = item.AssessmentToolWorkflowInstanceId,
+                Result = item.Result,
+                SubmittedBy = item.SubmittedBy
             };
             return stage;
         }

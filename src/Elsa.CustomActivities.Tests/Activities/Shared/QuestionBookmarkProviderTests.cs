@@ -2,7 +2,7 @@
 using Elsa.CustomWorkflow.Sdk;
 using Elsa.Services;
 using Elsa.Services.Models;
-using He.PipelineAssessment.Common.Tests;
+using He.PipelineAssessment.Tests.Common;
 using Xunit;
 
 namespace Elsa.CustomActivities.Tests.Activities.Shared

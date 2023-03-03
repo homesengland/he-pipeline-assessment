@@ -1,6 +1,6 @@
 ﻿using Elsa.CustomWorkflow.Sdk.Models.Workflow;
 using Elsa.CustomWorkflow.Sdk.Models.Workflow.Validators;
-using He.PipelineAssessment.Common.Tests;
+using He.PipelineAssessment.Tests.Common;
 using Xunit;
 
 namespace Elsa.CustomWorkflow.Sdk.Tests.Workflow.Validators
