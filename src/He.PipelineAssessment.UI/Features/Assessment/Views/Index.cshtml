@@ -2,6 +2,8 @@
 @using System.Globalization;
 @using He.PipelineAssessment.UI.Extensions;
 @using System.Security.Claims;
+@using Microsoft.AspNetCore.Authorization
+@inject IAuthorizationService AuthorizationService
 @addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
 @model List<He.PipelineAssessment.Models.ViewModels.AssessmentDataViewModel>
 @inject NonceConfig nonceConfig
@@ -13,20 +15,27 @@
 }
 
 
+
+
 <div class="govuk-grid-row">
     <h1 class="govuk-heading-l govuk-grid-column-three-quarters pull-left" for="event-name">Assessment Search</h1>
-    <div class="govuk-grid-column-one-quarter">
-        <div class="govuk-grid-row">
-            @Html.ActionLink("Admin", "AssessmentTool","Admin", null, new{@class="govuk-link pull-right govuk-grid-column-one-half govuk-!-font-size-24"})
-            @Html.ActionLink("Sync", "Sync", "SinglePipeline",null,new{@class="govuk-button pull-right govuk-grid-column-one-half"})
+
+    @if ((await AuthorizationService.AuthorizeAsync(User, AuthorizationPolicies.AssignmentToPipelineAdminRoleRequired)).Succeeded)
+    {
+        <div class="govuk-grid-column-one-quarter">
+            <div class="govuk-grid-row">
+                @Html.ActionLink("Admin", "AssessmentTool","Admin", null, new{@class="govuk-link pull-right govuk-grid-column-one-half govuk-!-font-size-24"})
+                @Html.ActionLink("Sync", "Sync", "SinglePipeline",null,new{@class="govuk-button pull-right govuk-grid-column-one-half"})
+            </div>
         </div>
-    </div>
+    }
+
 </div>
 <br />
 
 <div class="text-center">
 
-    @if (User.IsInRole(AppRole.PipelineEconomist))
+   @* @if (User.IsInRole(AppRole.PipelineEconomist))
     {
         var userEmail = User.FindFirstValue(ClaimTypes.Email);
 
@@ -35,7 +44,7 @@
     else
     {
         assssments = Model.ToList();
-    }
+    }*@
 
     <div class="govuk-grid-row">
         <div class="govuk-grid-column-one-half">

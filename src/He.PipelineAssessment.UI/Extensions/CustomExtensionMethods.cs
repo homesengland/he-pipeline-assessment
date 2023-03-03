@@ -62,26 +62,26 @@ namespace He.PipelineAssessment.UI.Extensions
                     .RequireAuthenticatedUser()
                 .Build();
 
-                options.AddPolicy(AuthorizationPolicies.AssignmentToPipelineObserverRoleRequired, policy => policy.RequireRole(AppRole.PipelineObserver));
-                options.AddPolicy(AuthorizationPolicies.AssignmentToPipelineProjectManagerRoleRequired, policy => policy.RequireRole(AppRole.PipelineProjectManager));
-                options.AddPolicy(AuthorizationPolicies.AssignmentToPipelineAssessorMPPRoleRequired, policy => policy.RequireRole(AppRole.PipelineAssessorMPP));
-                options.AddPolicy(AuthorizationPolicies.AssignmentToPipelineAssessorInvestmentRoleRequired, policy => policy.RequireRole(AppRole.PipelineAssessorInvestment));
-                options.AddPolicy(AuthorizationPolicies.AssignmentToPipelineAssessorDevelopmentRoleRequired, policy => policy.RequireRole(AppRole.PipelineAssessorDevelopment));
-                options.AddPolicy(AuthorizationPolicies.AssignmentToPipelineAdminOperationsRoleRequired, policy => policy.RequireRole(AppRole.PipelineAdminOperations));
-                options.AddPolicy(AuthorizationPolicies.AssignmentToPipelineAdminBuildRoleRequired, policy => policy.RequireRole(AppRole.PipelineAdminBuild));
-                options.AddPolicy(AuthorizationPolicies.AssignmentToPipelineEconomistRoleRequired, policy => policy.RequireRole(AppRole.PipelineEconomist));
+                //options.AddPolicy(AuthorizationPolicies.AssignmentToPipelineObserverRoleRequired, policy => policy.RequireRole(AppRole.PipelineObserver));
+                //options.AddPolicy(AuthorizationPolicies.AssignmentToPipelineProjectManagerRoleRequired, policy => policy.RequireRole(AppRole.PipelineProjectManager));
+                //options.AddPolicy(AuthorizationPolicies.AssignmentToPipelineAssessorMPPRoleRequired, policy => policy.RequireRole(AppRole.PipelineAssessorMPP));
+                //options.AddPolicy(AuthorizationPolicies.AssignmentToPipelineAssessorInvestmentRoleRequired, policy => policy.RequireRole(AppRole.PipelineAssessorInvestment));
+                //options.AddPolicy(AuthorizationPolicies.AssignmentToPipelineAssessorDevelopmentRoleRequired, policy => policy.RequireRole(AppRole.PipelineAssessorDevelopment));
+                //options.AddPolicy(AuthorizationPolicies.AssignmentToPipelineAdminOperationsRoleRequired, policy => policy.RequireRole(AppRole.PipelineAdminOperations));
+                //options.AddPolicy(AuthorizationPolicies.AssignmentToPipelineAdminBuildRoleRequired, policy => policy.RequireRole(AppRole.PipelineAdminBuild));
+                //options.AddPolicy(AuthorizationPolicies.AssignmentToPipelineEconomistRoleRequired, policy => policy.RequireRole(AppRole.PipelineEconomist));
 
                 //// Might we don't need below policies but I will keep it till to finish this story
-                //options.AddPolicy(AuthorizationPolicies.AssignmentToPipelineNAObserverRoleRequired, 
-                //    policy => policy.RequireRole(AppRole.PipelineEconomist, 
+                //options.AddPolicy(AuthorizationPolicies.AssignmentToPipelineNAObserverRoleRequired,
+                //    policy => policy.RequireRole(AppRole.PipelineEconomist,
                 //                AppRole.PipelineProjectManager,
                 //                AppRole.PipelineAssessorMPP,
-                //                AppRole.PipelineAssessorInvestment, 
-                //                AppRole.PipelineAssessorDevelopment, 
-                //                AppRole.PipelineAdminOperations, 
+                //                AppRole.PipelineAssessorInvestment,
+                //                AppRole.PipelineAssessorDevelopment,
+                //                AppRole.PipelineAdminOperations,
                 //                AppRole.PipelineAdminBuild));
 
-                //options.AddPolicy(AuthorizationPolicies.AssignmentToPipelineNotAllowedObserverRoleRequired, 
+                //options.AddPolicy(AuthorizationPolicies.AssignmentToPipelineNotAllowedObserverRoleRequired,
                 //    policy => policy.RequireRole(AppRole.PipelineProjectManager,
                 //                AppRole.PipelineAssessorMPP,
                 //                AppRole.PipelineAssessorInvestment,
@@ -90,17 +90,28 @@ namespace He.PipelineAssessment.UI.Extensions
                 //                AppRole.PipelineAdminBuild,
                 //                AppRole.PipelineObserver));
 
-                options.AddPolicy(AuthorizationPolicies.AssignmentToPipelineEditAllAssessnentRoleRequired,
-                  policy => policy.RequireRole(AppRole.PipelineAdminOperations,
-                                AppRole.PipelineAdminBuild));
+                //options.AddPolicy(AuthorizationPolicies.AssignmentToPipelineEditAllAssessnentRoleRequired,
+                //  policy => policy.RequireRole(AppRole.PipelineAdminOperations,
+                //                AppRole.PipelineAdminBuild));
 
-                options.AddPolicy(AuthorizationPolicies.AssignmentToPipelineAssessnentRequestWorkQueueRoleRequired,
+                options.AddPolicy(AuthorizationPolicies.AssignmentToPipelineAdminRoleRequired,
                 policy => policy.RequireRole(AppRole.PipelineAdminOperations,
                                 AppRole.PipelineAdminBuild));
 
-                options.AddPolicy(AuthorizationPolicies.AssignmentToPipelineAssessnentRequestWorkQueueRoleRequired,
-                policy => policy.RequireRole(AppRole.PipelineAdminOperations,
+                //options.AddPolicy(AuthorizationPolicies.AssignmentToPipelineAssessnentRequestWorkQueueRoleRequired,
+                //policy => policy.RequireRole(AppRole.PipelineAdminOperations,
+                //                AppRole.PipelineAdminBuild,
+                //                AppRole.PipelineEconomist));
+
+
+                options.AddPolicy(AuthorizationPolicies.AssignmentToPipelineViewAssessmentRoleRequired,
+                    policy => policy.RequireRole(AppRole.PipelineProjectManager,
+                                AppRole.PipelineAssessorMPP,
+                                AppRole.PipelineAssessorInvestment,
+                                AppRole.PipelineAssessorDevelopment,
+                                AppRole.PipelineAdminOperations,
                                 AppRole.PipelineAdminBuild,
+                                AppRole.PipelineObserver,
                                 AppRole.PipelineEconomist));
 
 
@@ -133,11 +144,13 @@ namespace He.PipelineAssessment.UI.Extensions
         public const string AssignmentToPipelineProjectManagerRoleRequired = "AssignmentToPipelineProjectManagerRoleRequired";
         public const string AssignmentToPipelineObserverRoleRequired = "AssignmentToPipelineObserverRoleRequired";
 
-        //// Might we don't need below policies but I will keep it till to finish this story
-        //public const string AssignmentToPipelineNAObserverRoleRequired = "AssignmentToPipelineNAObserverRoleRequired";
-        //public const string AssignmentToPipelineNotAllowedObserverRoleRequired = "AssignmentToPipelineNotAllowedObserverRoleRequired";
+        // Might we don't need below policies but I will keep it till to finish this story
+        public const string AssignmentToPipelineNAObserverRoleRequired = "AssignmentToPipelineNAObserverRoleRequired";
+        public const string AssignmentToPipelineNotAllowedObserverRoleRequired = "AssignmentToPipelineNotAllowedObserverRoleRequired";
         public const string AssignmentToPipelineEditAllAssessnentRoleRequired = "AssignmentToPipelineEditAllAssessnentRoleRequired";
         public const string AssignmentToPipelineAssessnentRequestWorkQueueRoleRequired = "AssignmentToPipelineAssessnentRequestWorkQueueRoleRequired";
-        public const string AssignmentToPipelineEconomistWorkQueueRoleRequired = "AssignmentToPipelineEconomistWorkQueueRoleRequired";
+        public const string AssignmentToPipelineAdminRoleRequired = "AssignmentToPipelineAdminRoleRequired";
+
+        public const string AssignmentToPipelineViewAssessmentRoleRequired = "AssignmentToPipelineViewAssessmentRoleRequired";
     }
 }
