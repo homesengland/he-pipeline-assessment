@@ -28,7 +28,10 @@
                     @Html.HiddenFor(m => m.Data.QuestionScreenAnswers![i].Question)
                     @Html.HiddenFor(m => m.Data.QuestionScreenAnswers![i].QuestionHint)
                     @Html.HiddenFor(m => m.Data.QuestionScreenAnswers![i].DisplayComments)
-                    @Html.HiddenFor(m => m.Data.QuestionScreenAnswers![i].Answer)
+                    if (Model.Data.QuestionScreenAnswers![i].IsReadOnly)
+                    {
+                        @Html.HiddenFor(m => m.Data.QuestionScreenAnswers![i].Answer)
+                    }
                     @Html.HiddenFor(m => m.Data.QuestionScreenAnswers![i].IsReadOnly)
 
                     bool isValidItem = true;
