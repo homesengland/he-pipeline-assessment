@@ -1,4 +1,4 @@
-﻿using He.PipelineAssessment.UI.Extensions;
+﻿using He.PipelineAssessment.UI.Authorization;
 using He.PipelineAssessment.UI.Features.Assessment.AssessmentSummary;
 using He.PipelineAssessment.UI.Features.Assessment.TestAssessmentSummary;
 using He.PipelineAssessment.UI.Features.Assessments.AssessmentList;
@@ -20,7 +20,7 @@ namespace He.PipelineAssessment.UI.Features.Assessments
             _mediator = mediator;
         }
 
-        [Authorize(Policy = AuthorizationPolicies.AssignmentToPipelineViewAssessmentRoleRequired)]
+        [Authorize(Policy = Constants.AuthorizationPolicies.AssignmentToPipelineViewAssessmentRoleRequired)]
         public async Task<IActionResult> Index()
         {
             try
@@ -35,7 +35,7 @@ namespace He.PipelineAssessment.UI.Features.Assessments
             }
         }
 
-        [Authorize(Policy = AuthorizationPolicies.AssignmentToPipelineViewAssessmentRoleRequired)]
+        [Authorize(Policy = Constants.AuthorizationPolicies.AssignmentToPipelineViewAssessmentRoleRequired)]
         [ResponseCache(NoStore = true)]
         public async Task<IActionResult> Summary(int assessmentid, int correlationId)
         {

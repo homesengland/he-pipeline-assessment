@@ -1,5 +1,6 @@
 ﻿@using He.PipelineAssessment.UI
 @using System.Globalization;
+@using He.PipelineAssessment.UI.Authorization;
 @using He.PipelineAssessment.UI.Extensions;
 @using System.Security.Claims;
 @using Microsoft.AspNetCore.Authorization
@@ -11,16 +12,13 @@
 @{
     ViewData["Title"] = "Pipeline Assessment";
     Layout = "_LayoutFullWidth";
-    var assssments = Model;
 }
 
-
-
-
 <div class="govuk-grid-row">
+
     <h1 class="govuk-heading-l govuk-grid-column-three-quarters pull-left" for="event-name">Assessment Search</h1>
 
-    @if ((await AuthorizationService.AuthorizeAsync(User, AuthorizationPolicies.AssignmentToPipelineAdminRoleRequired)).Succeeded)
+    @if ((await AuthorizationService.AuthorizeAsync(User, Constants.AuthorizationPolicies.AssignmentToPipelineAdminRoleRequired)).Succeeded)
     {
         <div class="govuk-grid-column-one-quarter">
             <div class="govuk-grid-row">
@@ -34,17 +32,6 @@
 <br />
 
 <div class="text-center">
-
-   @* @if (User.IsInRole(AppRole.PipelineEconomist))
-    {
-        var userEmail = User.FindFirstValue(ClaimTypes.Email);
-
-        assssments = Model.Where(x => x.ProjectManagerEmail == userEmail).ToList();
-    }
-    else
-    {
-        assssments = Model.ToList();
-    }*@
 
     <div class="govuk-grid-row">
         <div class="govuk-grid-column-one-half">
@@ -71,11 +58,10 @@
                 <th scope="col" class="govuk-table__header">Date Created</th>
                 <th scope="col" class="govuk-table__header">Last Updated</th>
                 <th scope="col" class="govuk-table__header" data-searchable="true">Status</th>
-
             </tr>
         </thead>
         <tbody class="govuk-table__body">
-            @foreach (var assessment in assssments)
+            @foreach (var assessment in Model)
             {
                 var lastModified = assessment.LastModifiedDateTime.HasValue ? assessment.LastModifiedDateTime.Value.Date.ToLongDateString() : "";
 
