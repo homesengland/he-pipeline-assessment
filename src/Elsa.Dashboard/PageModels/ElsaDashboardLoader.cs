@@ -11,7 +11,7 @@ using System.Reflection.Metadata.Ecma335;
 
 namespace Elsa.Dashboard.PageModels
 {
-  [Authorize]
+  //[Authorize]
   public class ElsaDashboardLoader : PageModel
   {
     private string _serverUrl { get; set; }

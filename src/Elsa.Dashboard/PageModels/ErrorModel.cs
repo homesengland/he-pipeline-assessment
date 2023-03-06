@@ -7,7 +7,7 @@ namespace Elsa.Dashboard.PageModels
 {
   [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
   [IgnoreAntiforgeryToken]
-  [AllowAnonymous]
+  //[AllowAnonymous]
   public class ErrorModel : PageModel
   {
     private readonly ILogger<ErrorModel> _logger;
