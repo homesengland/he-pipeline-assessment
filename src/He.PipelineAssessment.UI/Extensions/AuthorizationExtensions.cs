@@ -57,8 +57,7 @@ namespace He.PipelineAssessment.UI.Extensions
                 .Build();
 
                 options.AddPolicy(Constants.AuthorizationPolicies.AssignmentToPipelineAdminRoleRequired,
-                policy => policy.RequireRole(Constants.AppRole.PipelineAdminOperations,
-                                Constants.AppRole.PipelineAdminBuild));
+                policy => policy.RequireRole(Constants.AppRole.PipelineAdminOperations));
 
                 options.AddPolicy(Constants.AuthorizationPolicies.AssignmentToPipelineViewAssessmentRoleRequired,
                     policy => policy.RequireRole(Constants.AppRole.PipelineProjectManager,
@@ -66,7 +65,6 @@ namespace He.PipelineAssessment.UI.Extensions
                                 Constants.AppRole.PipelineAssessorInvestment,
                                 Constants.AppRole.PipelineAssessorDevelopment,
                                 Constants.AppRole.PipelineAdminOperations,
-                                Constants.AppRole.PipelineAdminBuild,
                                 Constants.AppRole.PipelineObserver,
                                 Constants.AppRole.PipelineEconomist));
             });
