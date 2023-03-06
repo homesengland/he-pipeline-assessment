@@ -109,15 +109,14 @@ export class TextActivityProperty {
   }
 
   onExpandConditionArea(index: number) {
-    let test = this.conditionDisplayHeightMap;
-    console.log(this.conditionDisplayHeightMap[index]);
+    let tempValue = Object.assign(this.conditionDisplayHeightMap);
     let height = this.conditionDisplayHeightMap[index];
     if (height == null) {
-      this.conditionDisplayHeightMap[index] = "6em";
+      tempValue[index] = "6em";
     } else {
-      this.conditionDisplayHeightMap[index] == "2.75em" ? this.conditionDisplayHeightMap[index] = "6em" : this.conditionDisplayHeightMap[index] = "2.75em";
+      this.conditionDisplayHeightMap[index] == "2.75em" ? tempValue[index] = "6em" : tempValue[index] = "2.75em";
     }
-    //this.conditionDisplayHeightMap = [...this.conditionDisplayHeightMap, "6em"].map();
+    this.conditionDisplayHeightMap = { ... this.conditionDisplayHeightMap, tempValue }
   }
 
   //getEditorHeight(options: any) {
