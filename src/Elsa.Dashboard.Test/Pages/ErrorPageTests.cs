@@ -1,21 +1,11 @@
-﻿using Elsa.CustomWorkflow.Sdk.HttpClients;
-using Elsa.CustomWorkflow.Sdk.Models.Activities;
-using Elsa.Dashboard.PageModels;
-using He.PipelineAssessment.Common.Tests;
+﻿using Elsa.Dashboard.PageModels;
+using He.PipelineAssessment.Tests.Common;
 using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Http.Features;
 using Microsoft.AspNetCore.Mvc.RazorPages;
-using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using Moq;
-using Newtonsoft.Json;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Net;
-using System.Text;
-using System.Threading.Tasks;
 using Xunit;
 
 namespace Elsa.Dashboard.Tests.Pages
@@ -32,10 +22,10 @@ namespace Elsa.Dashboard.Tests.Pages
 
             // Arrange
             features.Setup(p => p.Get<IExceptionHandlerPathFeature>()).Returns(new ExceptionHandlerFeature
-                    {
-                        Path = "/",
-                        Error = new HttpRequestException()
-                    });
+            {
+                Path = "/",
+                Error = new HttpRequestException()
+            });
             context.Setup(p => p.Features).Returns(features.Object);
             var pageModel = new ErrorModel(logger);
             var pageContext = new PageContext

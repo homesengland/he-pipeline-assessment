@@ -28,6 +28,11 @@
                     @Html.HiddenFor(m => m.Data.QuestionScreenAnswers![i].Question)
                     @Html.HiddenFor(m => m.Data.QuestionScreenAnswers![i].QuestionHint)
                     @Html.HiddenFor(m => m.Data.QuestionScreenAnswers![i].DisplayComments)
+                    if (Model.Data.QuestionScreenAnswers![i].IsReadOnly)
+                    {
+                        @Html.HiddenFor(m => m.Data.QuestionScreenAnswers![i].Answer)
+                    }
+                    @Html.HiddenFor(m => m.Data.QuestionScreenAnswers![i].IsReadOnly)
 
                     bool isValidItem = true;
                     if (!Model.IsValid && Model.ValidationMessages != null && Model.ValidationMessages.Errors != null)
@@ -45,6 +50,7 @@
                             Index = i,
                             IsValid = isValidItem,
                             Answer = Model.Data.QuestionScreenAnswers[i].Answer,
+                            IsReadOnly = Model.Data.QuestionScreenAnswers[i].IsReadOnly,
                             Comments = Model.Data.QuestionScreenAnswers[i].Comments,
                             DisplayComments = Model.Data.QuestionScreenAnswers[i].DisplayComments,
                             Question = Model.Data.QuestionScreenAnswers[i].Question,
@@ -63,6 +69,7 @@
                         Index = i,
                         IsValid = isValidItem,
                         Answer = Model.Data.QuestionScreenAnswers[i].Answer,
+            IsReadOnly = Model.Data.QuestionScreenAnswers[i].IsReadOnly,
                         Comments = Model.Data.QuestionScreenAnswers[i].Comments,
                         DisplayComments = Model.Data.QuestionScreenAnswers[i].DisplayComments,
                         Question = Model.Data.QuestionScreenAnswers[i].Question,
@@ -86,6 +93,7 @@
                             Index = i,
                             IsValid = isValidItem,
                             Answer = Model.Data.QuestionScreenAnswers[i].Answer,
+            IsReadOnly = Model.Data.QuestionScreenAnswers[i].IsReadOnly,
                             Comments = Model.Data.QuestionScreenAnswers[i].Comments,
                             DisplayComments = Model.Data.QuestionScreenAnswers[i].DisplayComments,
                             Question = Model.Data.QuestionScreenAnswers[i].Question,
@@ -104,6 +112,7 @@
                             Index = i,
                             IsValid = isValidItem,
                             Answer = Model.Data.QuestionScreenAnswers[i].Answer,
+            IsReadOnly = Model.Data.QuestionScreenAnswers[i].IsReadOnly,
                             Comments = Model.Data.QuestionScreenAnswers[i].Comments,
                             DisplayComments = Model.Data.QuestionScreenAnswers[i].DisplayComments,
                             Question = Model.Data.QuestionScreenAnswers[i].Question,
@@ -123,6 +132,7 @@
                             Index = i,
                             IsValid = isValidItem,
                             Answer = Model.Data.QuestionScreenAnswers[i].Answer,
+            IsReadOnly = Model.Data.QuestionScreenAnswers[i].IsReadOnly,
                             Comments = Model.Data.QuestionScreenAnswers[i].Comments,
                             DisplayComments = Model.Data.QuestionScreenAnswers[i].DisplayComments,
                             Question = Model.Data.QuestionScreenAnswers[i].Question,
@@ -146,6 +156,7 @@
                             Index = i,
                             IsValid = isValidItem,
                             Answer = Model.Data.QuestionScreenAnswers[i].Answer,
+            IsReadOnly = Model.Data.QuestionScreenAnswers[i].IsReadOnly,
                             Comments = Model.Data.QuestionScreenAnswers[i].Comments,
                             DisplayComments = Model.Data.QuestionScreenAnswers[i].DisplayComments,
                             Question = Model.Data.QuestionScreenAnswers[i].Question,
