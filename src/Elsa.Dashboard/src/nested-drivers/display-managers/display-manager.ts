@@ -12,6 +12,7 @@ import { HeRadioOptionsDriver } from "../he-radio-options-driver";
 import { HeScriptDriver } from "../he-script-driver";
 import { HeSingleLineDriver } from "../he-single-line-driver";
 import { HeSwitchCaseDriver } from "../he-switch-cases-driver";
+import { HeTextActivityDriver } from "../he-text-activity-driver";
 import { Dictionary, NestedProperty } from "../../models/custom-component-models";
 import { ActivityModel, ActivityPropertyDescriptor } from "../../models/elsa-interfaces";
 
@@ -37,6 +38,7 @@ export class DefaultDriversFactory {
     this.drivers["he-cron-expression"] = new HeCronDriver();
     this.drivers["he-radio-options"] = new HeRadioOptionsDriver();
     this.drivers["he-checkbox-options"] = new HeCheckboxOptionsDriver();
+    this.drivers["he-text-activity"] = new HeTextActivityDriver();
   }
   drivers: Dictionary<HePropertyDisplayDriver> = { };
 }

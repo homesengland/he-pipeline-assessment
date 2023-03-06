@@ -41,6 +41,9 @@ namespace Elsa.CustomActivities.Activities.QuestionScreen
         [HeActivityInput(UIHint = HePropertyUIHints.RadioOptions, ConditionalActivityTypes = new[] { QuestionTypeConstants.RadioQuestion }, ExpectedOutputType = ExpectedOutputHints.Radio)]
         public RadioModel Radio { get; set; } = new RadioModel();
 
+        [HeActivityInput(UIHint = HePropertyUIHints.TextActivity, ConditionalActivityTypes = new[] { ActivityTypeConstants.TextActivity }, ExpectedOutputType = ExpectedOutputHints.TextActivity)]
+        public TextModel Text { get; set; } = new TextModel();
+
         [HeActivityInput(Hint = "Fill in to display a pre-populated value", UIHint = HePropertyUIHints.SingleLine,
             SupportedSyntaxes = new[] { SyntaxNames.Literal, SyntaxNames.JavaScript },
             ConditionalActivityTypes = new[]
@@ -75,7 +78,12 @@ namespace Elsa.CustomActivities.Activities.QuestionScreen
         public ICollection<RadioRecord> Choices { get; set; } = new List<RadioRecord>();
     }
 
+    public class TextModel
+    {
+        public ICollection<TextRecord> TextRecords { get; set; } = new List<TextRecord>();
+    }
+
     public record RadioRecord(string Identifier, string Answer);
 
-
+    public record TextRecord(string Text, bool IsParagraph);
 }
