@@ -1,12 +1,13 @@
-﻿namespace Elsa.CustomInfrastructure.Extensions
+namespace Elsa.CustomInfrastructure.Extensions
 {
-    using He.Identity.Auth0;
+  using Elsa.Dashboard.Authorization;
+  using He.Identity.Auth0;
     using He.Identity.Mvc;
     using Microsoft.AspNetCore.Authorization;
     using Microsoft.AspNetCore.Builder;
     using Microsoft.Extensions.DependencyInjection;
 
-    public static class CustomExtensionMethods
+    public static class AuthorizationExtensions
     {
         public static void AddCustomAuth0Configuration(this WebApplicationBuilder builder)
         {
@@ -54,6 +55,7 @@
         {
             services.AddAuthorization(options =>
             {
+                options.DefaultPolicy = new AuthorizationPolicyBuilder().RequireRole(Constants.AppRole.ElsaDashboardAdmin).Build();
                 options.FallbackPolicy = new AuthorizationPolicyBuilder()
                     .RequireAuthenticatedUser()
                     .Build();

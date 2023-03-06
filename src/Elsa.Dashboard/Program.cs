@@ -73,8 +73,7 @@ app.UseStaticFiles().UseStaticFiles(new StaticFileOptions
   {
     // Elsa API Endpoints are implemented as regular ASP.NET Core API controllers.
     endpoints
-      .MapControllers();
-    endpoints.MapControllers();
+      .MapControllers();//.RequireAuthorization("AssignmentToElsaDashboardAdminRoleRequired");
     // For Dashboard.
     endpoints.MapFallbackToPage("/_Host");
   });

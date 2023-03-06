@@ -1,4 +1,5 @@
 using Elsa.CustomWorkflow.Sdk.HttpClients;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using System.Net;
@@ -8,6 +9,7 @@ using System.Reflection.Metadata.Ecma335;
 
 namespace Elsa.Dashboard.PageModels
 {
+  [Authorize]
   public class ElsaDashboardLoader : PageModel
   {
     private string _serverUrl { get; set; }
