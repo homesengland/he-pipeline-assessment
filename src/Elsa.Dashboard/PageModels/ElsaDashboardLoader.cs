@@ -1,11 +1,7 @@
 using Elsa.CustomWorkflow.Sdk.HttpClients;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using System.Net;
-using System.Net.Sockets;
-using System.Net.WebSockets;
-using System.Reflection.Metadata.Ecma335;
 
 namespace Elsa.Dashboard.PageModels
 {
@@ -15,8 +11,8 @@ namespace Elsa.Dashboard.PageModels
     private string _serverUrl { get; set; }
     private IElsaServerHttpClient _client { get; set; }
 
-    private ILogger<ElsaDashboardLoader> _logger {get;set;}
-    
+    private ILogger<ElsaDashboardLoader> _logger { get; set; }
+
     public string? JsonResponse { get; set; }
 
     public ElsaDashboardLoader(IElsaServerHttpClient client, IConfiguration configuration, ILogger<ElsaDashboardLoader> logger)

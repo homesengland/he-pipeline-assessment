@@ -10,11 +10,7 @@ var builder = WebApplication.CreateBuilder(args);
 var elsaCustomConnectionString = builder.Configuration.GetConnectionString("ElsaCustom");
 
 // For Dashboard.
-builder.Services.AddRazorPages(
-  options =>
-  {
-    options.Conventions.AddPageRoute("/AccessDenied", "access-denied");
-  });
+builder.Services.AddRazorPages();
 
 builder.Services.AddScoped<NonceConfig>();
 
@@ -77,7 +73,7 @@ app.UseStaticFiles().UseStaticFiles(new StaticFileOptions
   {
     // Elsa API Endpoints are implemented as regular ASP.NET Core API controllers.
     endpoints
-      .MapControllers();//.RequireAuthorization("AssignmentToElsaDashboardAdminRoleRequired");
+      .MapControllers();
     // For Dashboard.
     endpoints.MapFallbackToPage("/_Host");
   });
