@@ -4,7 +4,7 @@ using Elsa.CustomModels;
 using Elsa.CustomWorkflow.Sdk;
 using Elsa.Server.Features.Workflow.LoadConfirmationScreen;
 using Elsa.Server.Providers;
-using He.PipelineAssessment.Common.Tests;
+using He.PipelineAssessment.Tests.Common;
 using Moq;
 using Xunit;
 
@@ -87,7 +87,7 @@ namespace Elsa.Server.Tests.Features.Workflow.LoadConfirmationScreen
                 {
                     "1", "2", "3"
                 } },
-                { "NextWorkflowDefinitionId", "MyNextWorkflowDefinitionId" }
+                { "NextWorkflowDefinitionIds", "MyNextWorkflowDefinitionId" }
             };
             activityDataProvider
                 .Setup(x => x.GetActivityData(request.WorkflowInstanceId, request.ActivityId, CancellationToken.None))
@@ -108,7 +108,7 @@ namespace Elsa.Server.Tests.Features.Workflow.LoadConfirmationScreen
             Assert.Equal("MyFooterTitle", result.Data.FooterTitle);
             Assert.Equal(3, result.Data.Text.Count());
             Assert.Equal("1", result.Data.Text.FirstOrDefault());
-            Assert.Equal("MyNextWorkflowDefinitionId", result.Data.NextWorkflowDefinitionId);
+            Assert.Equal("MyNextWorkflowDefinitionId", result.Data.NextWorkflowDefinitionIds);
             Assert.Empty(result.ErrorMessages);
         }
     }

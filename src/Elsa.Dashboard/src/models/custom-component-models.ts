@@ -17,7 +17,7 @@ export interface HeActivityPropertyDescriptor extends ActivityPropertyDescriptor
   disableWorkflowProviderSelection: boolean;
   considerValuesAsOutcomes: boolean;
   displayInDesigner: boolean;
-  conditionalActivityType?: string;
+  conditionalActivityTypes?: Array<string>;
   expectedOutputType: string;
 }
 

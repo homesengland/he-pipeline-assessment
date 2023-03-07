@@ -32,11 +32,7 @@
 
 	<ItemGroup>
 		<ProjectReference Include="..\Elsa.Server\Elsa.Server.csproj" />
-		<ProjectReference Include="..\He.PipelineAssessment.Common.Tests\He.PipelineAssessment.Common.Tests.csproj" />
-	</ItemGroup>
-
-	<ItemGroup>
-	  <Folder Include="Features\Activities\CustomActivityProperty\" />
+		<ProjectReference Include="..\He.PipelineAssessment.Tests.Common\He.PipelineAssessment.Tests.Common.csproj" />
 	</ItemGroup>
 
 </Project>

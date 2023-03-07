@@ -4,7 +4,7 @@ using Elsa.CustomModels;
 using Elsa.CustomWorkflow.Sdk;
 using Elsa.Server.Features.Workflow.LoadCheckYourAnswersScreen;
 using Elsa.Server.Providers;
-using He.PipelineAssessment.Common.Tests;
+using He.PipelineAssessment.Tests.Common;
 using Moq;
 using Xunit;
 

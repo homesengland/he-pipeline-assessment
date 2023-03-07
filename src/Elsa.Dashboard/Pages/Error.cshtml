@@ -1,4 +1,6 @@
 @page "/Error"
+@using Elsa.Dashboard.PageModels
+@model ErrorModel
 <html lang="en">
 <head>
   <link href="~/styles/govuk-frontend-4.3.0.min.css" rel="stylesheet">
@@ -42,12 +44,14 @@
   <main class="govuk-main-wrapper govuk-main-wrapper--l" id="main-content" role="main">
     <div class="govuk-grid-row">
       <div class="govuk-grid-column-two-thirds">
-        <h1 class="govuk-heading-l">Sorry, there is a problem with the service</h1>
-        <p class="govuk-body">Try again later.</p>
+        <h1 class="govuk-heading-l">@Model.ErrorMessage</h1>
+        <p class="govuk-body">@Model.AdditionalMessage</p>
         <p class="govuk-body">We saved your answers. They will be available for 30 days.</p>
+        @if(Model.SuggestRetry){
         <p class="govuk-body">
           Try reloading <a href="/" class="govuk-link">Elsa Dashboard</a>
         </p>
+                }
       </div>
     </div>
   </main>

@@ -1,14 +1,11 @@
 ﻿
-using System.Reflection;
-using Elsa.Attributes;
-using Elsa.Metadata;
-using Humanizer;
 using Elsa.CustomActivities.Activities;
-using Elsa.CustomActivities.Resolver;
 using Elsa.CustomActivities.OptionsProviders;
-using Microsoft.Extensions.DependencyInjection;
-using Elsa.Expressions;
 using Elsa.CustomActivities.PropertyDecorator;
+using Elsa.CustomActivities.Resolver;
+using Humanizer;
+using Microsoft.Extensions.DependencyInjection;
+using System.Reflection;
 
 namespace Elsa.CustomActivities.Describers
 {
@@ -79,8 +76,8 @@ namespace Elsa.CustomActivities.Describers
                     activityPropertyAttribute.DisableWorkflowProviderSelection,
                     activityPropertyAttribute.ConsiderValuesAsOutcomes,
                     activityPropertyAttribute.DisplayInDesigner,
-                    activityPropertyAttribute.ConditionalActivityType
-                    
+                    activityPropertyAttribute.ConditionalActivityTypes
+
                 );
             }
         }

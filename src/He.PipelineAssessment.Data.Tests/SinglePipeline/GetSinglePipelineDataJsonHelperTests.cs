@@ -1,4 +1,4 @@
-﻿using He.PipelineAssessment.Common.Tests;
+﻿using He.PipelineAssessment.Tests.Common;
 using He.PipelineAssessment.Data.SinglePipeline;
 using System.Text.Json;
 using Xunit;
