@@ -10,7 +10,11 @@ var builder = WebApplication.CreateBuilder(args);
 var elsaCustomConnectionString = builder.Configuration.GetConnectionString("ElsaCustom");
 
 // For Dashboard.
-builder.Services.AddRazorPages();
+builder.Services.AddRazorPages(
+  options =>
+  {
+    options.Conventions.AddPageRoute("/AccessDenied", "access-denied");
+  });
 
 builder.Services.AddScoped<NonceConfig>();
 

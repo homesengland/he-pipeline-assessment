@@ -4,7 +4,6 @@ namespace Elsa.Dashboard.Authorization
   {
     public static class AppRole
     {
-      public const string Test = "PipelineAssessment.Observer";
       public const string ElsaDashboardAdmin = "ElsaDashboard.Admin";
     }
 
