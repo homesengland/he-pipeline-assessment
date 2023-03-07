@@ -13,7 +13,7 @@ import PlusIcon from '../../icons/plus_icon';
 import TrashCanIcon from '../../icons/trash-can';
 import ExpandIcon from '../../icons/expand_icon';
 import { mapSyntaxToLanguage, parseJson, ToLetter, Map } from '../../utils/utils';
-import { PropertyOutputTypes, SyntaxNames } from '../../constants/constants';
+import { PropertyOutputTypes, SyntaxNames, TextActivityOptionsSyntax } from '../../constants/constants';
 
 @Component({
   tag: 'he-text-activity-property',
@@ -29,7 +29,9 @@ export class TextActivityProperty {
   @Event() expressionChanged: EventEmitter<string>;
 
   supportedSyntaxes: Array<string> = [SyntaxNames.Literal, SyntaxNames.JavaScript];
+
   @State() conditionDisplayHeightMap: Map<string> = {};
+  @State() optionsDisplayToggle: Map<string> = {};
 
   multiExpressionEditor: HTMLElsaMultiExpressionEditorElement;
   syntaxSwitchCount: number = 0;
@@ -68,8 +70,7 @@ export class TextActivityProperty {
     const textName = ToLetter(this.text.length + 1);
     const newTextElement: INestedTextActivity = {
       syntax: SyntaxNames.Literal,
-      isParagraph: false,
-      expressions: { [SyntaxNames.Literal]: '' },
+      expressions: { [SyntaxNames.Literal]: '', [TextActivityOptionsSyntax.Paragraph]: 'true' },
       condition: { syntax: SyntaxNames.JavaScript, expressions: { [SyntaxNames.JavaScript]: 'true' } },
       type: PropertyOutputTypes.TextActivity,
       name: textName
@@ -94,6 +95,12 @@ export class TextActivityProperty {
     this.updatePropertyModel();
   }
 
+  onIsParagraphChecked(e: Event, textActivity: INestedTextActivity) {
+    const checkboxElement = (e.currentTarget as HTMLInputElement);
+    textActivity.expressions[TextActivityOptionsSyntax.Paragraph] = checkboxElement.checked.toString();
+    this.updatePropertyModel();
+  }
+
   onTextSyntaxChanged(e: Event, textActivity: INestedTextActivity, expressionEditor: HTMLElsaExpressionEditorElement) {
     const select = e.currentTarget as HTMLSelectElement;
     textActivity.syntax = select.value;
@@ -109,28 +116,26 @@ export class TextActivityProperty {
   }
 
   onExpandConditionArea(index: number) {
-    let test = this.conditionDisplayHeightMap;
-    console.log(this.conditionDisplayHeightMap[index]);
+    let tempValue = Object.assign(this.conditionDisplayHeightMap);
     let height = this.conditionDisplayHeightMap[index];
     if (height == null) {
-      this.conditionDisplayHeightMap[index] = "6em";
+      tempValue[index] = "6em";
     } else {
-      this.conditionDisplayHeightMap[index] == "2.75em" ? this.conditionDisplayHeightMap[index] = "6em" : this.conditionDisplayHeightMap[index] = "2.75em";
+      this.conditionDisplayHeightMap[index] == "2.75em" ? tempValue[index] = "6em" : tempValue[index] = "2.75em";
     }
-    //this.conditionDisplayHeightMap = [...this.conditionDisplayHeightMap, "6em"].map();
+    this.conditionDisplayHeightMap = { ... this.conditionDisplayHeightMap, tempValue }
   }
 
-  //getEditorHeight(options: any) {
-  //  const editorHeightName = options.editorHeight || 'Default';
-
-  //  switch (editorHeightName) {
-  //    case 'Large':
-  //      return { propertyEditor: '30em', textArea: 6 }
-  //    case 'Default':
-  //    default:
-  //      return { propertyEditor: '25em', textArea: 3 }
-  //  }
-  //}
+  onToggleOptions(index: number) {
+    let tempValue = Object.assign(this.optionsDisplayToggle);
+    let height = this.optionsDisplayToggle[index];
+    if (height == null) {
+      tempValue[index] = "table-row";
+    } else {
+      this.optionsDisplayToggle[index] == "none" ? tempValue[index] = "table-row" : tempValue[index] = "none";
+    }
+    this.conditionDisplayHeightMap = { ... this.conditionDisplayHeightMap, tempValue }
+  }
 
   render() {
     const textElements = this.text;
@@ -141,14 +146,18 @@ export class TextActivityProperty {
       const conditionSyntax = nestedTextActivity.condition.syntax;
       const textExpression = nestedTextActivity.expressions[textSyntax];
       const conditionExpression = nestedTextActivity.condition.expressions[conditionSyntax];
+      const paragraphChecked = nestedTextActivity.expressions[TextActivityOptionsSyntax.Paragraph] == 'true';
 
       const textLanguage = mapSyntaxToLanguage(textSyntax);
       const conditionLanguage = mapSyntaxToLanguage(conditionSyntax);
 
       const conditionEditorHeight = this.conditionDisplayHeightMap[index] ?? "2.75em";
+      const optionsDisplay = this.optionsDisplayToggle[index] ?? "none";
 
       let textExpressionEditor = null;
       let conditionExpressionEditor = null;
+
+      let colWidth = "100%";
 
 
       return (
@@ -158,7 +167,7 @@ export class TextActivityProperty {
             <th
               class="elsa-px-6 elsa-py-3 elsa-text-left elsa-text-xs elsa-font-medium elsa-text-gray-500 elsa-tracking-wider elsa-w-2/12">Text
             </th>
-            <td class="elsa-py-2 elsa-pl-5" colSpan={2}>
+            <td class="elsa-py-2 pl-5" style={{ width: colWidth }}>
               <div class="elsa-mt-1 elsa-relative elsa-rounded-md elsa-shadow-sm">
               <elsa-expression-editor
                 key={`expression-editor-${index}-${this.syntaxSwitchCount}`}
@@ -181,46 +190,6 @@ export class TextActivityProperty {
                 </div>
               </div>
             </td>
-          </tr>
-          <tr>
-            <th
-              class="elsa-px-6 elsa-py-3 elsa-text-left elsa-text-xs elsa-font-medium elsa-text-gray-500 elsa-tracking-wider elsa-w-2/12">Condition
-            </th>
-            <td class="elsa-py-2 pl-5" colSpan={2}>  
-              <div class="elsa-mt-1 elsa-relative elsa-rounded-md elsa-shadow-sm">
-                <elsa-expression-editor
-                  key={`expression-editor-${index}-${this.syntaxSwitchCount}`}
-                  ref={el => conditionExpressionEditor = el}
-                  expression={conditionExpression}
-                  language={conditionLanguage}
-                  single-line={false}
-                  editorHeight={conditionEditorHeight}
-                  padding="elsa-pt-1.5 elsa-pl-1 elsa-pr-28"
-                  onExpressionChanged={e => this.onConditionChanged(e, nestedTextActivity)}
-                />
-                <div class="elsa-absolute elsa-inset-y-0 elsa-right-0 elsa-flex elsa-items-center">
-                  <select onChange={e => this.onTextSyntaxChanged(e, nestedTextActivity, conditionExpressionEditor)}
-                    class="focus:elsa-ring-blue-500 focus:elsa-border-blue-500 elsa-h-full elsa-py-0 elsa-pl-2 elsa-pr-7 elsa-border-transparent elsa-bg-transparent elsa-text-gray-500 sm:elsa-text-sm elsa-rounded-md">
-                    {this.supportedSyntaxes.map(supportedSyntax => {
-                      const selected = supportedSyntax == conditionSyntax;
-                      return <option selected={selected}>{supportedSyntax}</option>;
-                    })}
-                  </select>
-                </div>
-              </div>
-            </td>
-          </tr>
-          <tr>
-
-            <th
-              class="elsa-px-6 elsa-py-3 elsa-text-left elsa-text-xs elsa-font-medium elsa-text-gray-500 elsa-text-right elsa-tracking-wider elsa-w-1/12">&nbsp;
-            </th>
-            <td class="elsa-pt-1 elsa-pr-2 elsa-text-right">
-              <button type="button" onClick={() => this.onExpandConditionArea(index)}
-                      class="elsa-h-5 elsa-w-5 elsa-mx-auto elsa-outline-none focus:elsa-outline-none">
-                <ExpandIcon options={this.iconProvider.getOptions()}></ExpandIcon>
-              </button>
-            </td>
             <td class="elsa-pt-1 elsa-pr-2 elsa-text-right">
               <button type="button" onClick={() => this.onHandleDelete(nestedTextActivity)}
                 class="elsa-h-5 elsa-w-5 elsa-mx-auto elsa-outline-none focus:elsa-outline-none">
@@ -228,7 +197,59 @@ export class TextActivityProperty {
               </button>
             </td>
           </tr>
-          </tbody>
+
+          <tr onClick={() => this.onToggleOptions(index)}>
+            <th
+              class="elsa-px-6 elsa-py-3 elsa-text-left elsa-text-xs elsa-font-medium elsa-text-gray-500 elsa-text-left elsa-tracking-wider elsa-w-1/12" colSpan={3} style={{ cursor: "zoom-in" }}> Options
+            </th>
+          </tr>
+          <tr style={{ display: optionsDisplay }} >
+              <th
+                class="elsa-px-6 elsa-py-3 elsa-text-left elsa-text-xs elsa-font-medium elsa-text-gray-500 elsa-tracking-wider elsa-w-2/12">Display on Page
+              </th>
+              <td class="elsa-py-2 pl-5" style={{ width: colWidth }}>
+                <div class="elsa-mt-1 elsa-relative elsa-rounded-md elsa-shadow-sm">
+                  <elsa-expression-editor
+                    key={`expression-editor-${index}-${this.syntaxSwitchCount}`}
+                    ref={el => conditionExpressionEditor = el}
+                    expression={conditionExpression}
+                    language={conditionLanguage}
+                    single-line={false}
+                    editorHeight={conditionEditorHeight}
+                    padding="elsa-pt-1.5 elsa-pl-1 elsa-pr-28"
+                    onExpressionChanged={e => this.onConditionChanged(e, nestedTextActivity)}
+                  />
+                  <div class="elsa-absolute elsa-inset-y-0 elsa-right-0 elsa-flex elsa-items-center">
+                    <select onChange={e => this.onTextSyntaxChanged(e, nestedTextActivity, conditionExpressionEditor)}
+                      class="focus:elsa-ring-blue-500 focus:elsa-border-blue-500 elsa-h-full elsa-py-0 elsa-pl-2 elsa-pr-7 elsa-border-transparent elsa-bg-transparent elsa-text-gray-500 sm:elsa-text-sm elsa-rounded-md">
+                      {this.supportedSyntaxes.map(supportedSyntax => {
+                        const selected = supportedSyntax == conditionSyntax;
+                        return <option selected={selected}>{supportedSyntax}</option>;
+                      })}
+                    </select>
+                  </div>
+                </div>
+              </td>
+              <td class="elsa-pt-1 elsa-pr-2 elsa-text-right">
+                <button type="button" onClick={() => this.onExpandConditionArea(index)}
+                  class="elsa-h-5 elsa-w-5 elsa-mx-auto elsa-outline-none focus:elsa-outline-none">
+                  <ExpandIcon options={this.iconProvider.getOptions()}></ExpandIcon>
+                </button>
+              </td>
+            </tr>
+          <tr style={{ display: optionsDisplay }}>
+              <th
+                class="elsa-px-6 elsa-py-3 elsa-text-left elsa-text-xs elsa-font-medium elsa-text-gray-500 elsa-tracking-wider elsa-w-2/12">Is Paragraph
+              </th>
+                <td class="elsa-py-0">
+                  <input name="choice_input" type="checkbox" checked={paragraphChecked} value={'true'}
+                    onChange={e => this.onIsParagraphChecked(e, nestedTextActivity)}
+                    class="focus:elsa-ring-blue-500 elsa-h-8 elsa-w-8 elsa-text-blue-600 elsa-border-gray-300 elsa-rounded" />
+              </td>
+              <td>
+              </td>
+            </tr>
+        </tbody>
       );
     };
 

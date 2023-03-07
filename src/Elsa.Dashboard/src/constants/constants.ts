@@ -13,6 +13,10 @@ export class SyntaxNames {
   static Output: string;
 }
 
+export class TextActivityOptionsSyntax {
+  static readonly Paragraph = "Paragraph";
+}
+
 export class QuestionTypeConstants {
   static readonly CurrencyQuestion = "CurrencyQuestion";
   static readonly CheckboxQuestion = "CheckboxQuestion";
