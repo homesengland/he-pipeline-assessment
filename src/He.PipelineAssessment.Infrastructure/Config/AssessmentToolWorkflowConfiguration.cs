@@ -8,6 +8,7 @@ namespace He.PipelineAssessment.Infrastructure.Config
     {
         public void Configure(EntityTypeBuilder<AssessmentToolWorkflow> builder)
         {
+            builder.ToTable("AssessmentToolWorkflow", table => table.IsTemporal());
             builder.HasKey(x => x.Id);
             builder.Property(x => x.WorkflowDefinitionId)
                 .HasMaxLength(450);

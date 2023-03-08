@@ -8,6 +8,7 @@ namespace He.PipelineAssessment.Infrastructure.Config
     {
         public void Configure(EntityTypeBuilder<AssessmentTool> builder)
         {
+            builder.ToTable(x => x.IsTemporal());
             builder.HasKey(x => x.Id);
             builder.Property(x => x.Name)
                 .HasMaxLength(100);
