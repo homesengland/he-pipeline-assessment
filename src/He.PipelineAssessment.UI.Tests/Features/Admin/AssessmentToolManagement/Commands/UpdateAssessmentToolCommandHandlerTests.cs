@@ -60,7 +60,7 @@ namespace He.PipelineAssessment.UI.Tests.Features.Admin.AssessmentToolManagement
             Assert.Equal(Unit.Value, result);
             adminAssessmentToolRepository.Verify(
               x => x.UpdateAssessmentTool(It.Is<AssessmentTool>(y =>
-                  y.LastModified == date &&
+                  y.LastModifiedDate == date &&
                   y.Order == updateAssessmentToolCommand.Order &&
                   y.Name == updateAssessmentToolCommand.Name)), Times.Once);
         }

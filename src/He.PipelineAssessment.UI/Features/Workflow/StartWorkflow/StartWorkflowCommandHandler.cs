@@ -63,7 +63,7 @@ namespace He.PipelineAssessment.UI.Features.Workflow.StartWorkflow
         {
             var assessmentStage = new AssessmentToolWorkflowInstance();
             assessmentStage.WorkflowInstanceId = response.Data.WorkflowInstanceId;
-            assessmentStage.CreatedDateTime = DateTime.UtcNow;
+            assessmentStage.CreatedDate = DateTime.UtcNow;
             assessmentStage.AssessmentId = request.AssessmentId;
             assessmentStage.Status = AssessmentStageConstants.Draft;
             assessmentStage.WorkflowName = response.Data.WorkflowName;

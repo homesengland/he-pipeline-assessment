@@ -34,7 +34,7 @@ namespace He.PipelineAssessment.UI.Features.Workflow.QuestionScreenSaveAndContin
                 {
                     currentAssessmentToolWorkflowInstance.CurrentActivityId = response.Data.NextActivityId;
                     currentAssessmentToolWorkflowInstance.CurrentActivityType = response.Data.ActivityType;
-                    currentAssessmentToolWorkflowInstance.LastModifiedDateTime = DateTime.UtcNow;
+                    currentAssessmentToolWorkflowInstance.LastModifiedDate = DateTime.UtcNow;
                     await _assessmentRepository.SaveChanges();
                 }
 

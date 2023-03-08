@@ -59,7 +59,7 @@ public class CreateAssessmentToolCommandHandlerTests
         //Assert          
         adminAssessmentToolRepository.Verify(
             x => x.CreateAssessmentTool(It.Is<AssessmentTool>(y =>
-                y.CreatedDate == date && y.LastModified == date)), Times.Once);
+                y.CreatedDate == date && y.LastModifiedDate == date)), Times.Once);
         Assert.Equal(Unit.Value, result);
     }
 }

@@ -26,7 +26,7 @@ namespace He.PipelineAssessment.UI.Features.Admin.AssessmentToolManagement.Comma
             var utcNow = _dateTimeProvider.UtcNow();
 
             assessmentTool.CreatedDate = utcNow;
-            assessmentTool.LastModified = utcNow;
+            assessmentTool.LastModifiedDate = utcNow;
 
             await _adminAssessmentToolRepository.CreateAssessmentTool(assessmentTool);
             return Unit.Value;

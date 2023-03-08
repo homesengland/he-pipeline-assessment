@@ -80,7 +80,7 @@ namespace He.PipelineAssessment.UI.Features.Assessment.AssessmentSummary
                 CurrentActivityId = item.CurrentActivityId,
                 CurrentActivityType = item.CurrentActivityType,
                 Status = item.Status,
-                CreatedDateTime = item.CreatedDateTime,
+                CreatedDateTime = item.CreatedDate,
                 SubmittedDateTime = item.SubmittedDateTime,
                 AssessmentToolId = item.AssessmentToolId,
                 IsFirstWorkflow = item.IsFirstWorkflow ?? startableToolViewModel?.IsFirstWorkflow,

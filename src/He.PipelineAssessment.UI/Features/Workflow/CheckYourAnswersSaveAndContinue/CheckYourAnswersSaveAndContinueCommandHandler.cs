@@ -39,7 +39,7 @@ namespace He.PipelineAssessment.UI.Features.Workflow.CheckYourAnswersSaveAndCont
                     currentAssessmentToolWorkflowInstance.SubmittedDateTime = submittedTime;
                     currentAssessmentToolWorkflowInstance.CurrentActivityId = response.Data.NextActivityId;
                     currentAssessmentToolWorkflowInstance.CurrentActivityType = response.Data.ActivityType;
-                    currentAssessmentToolWorkflowInstance.LastModifiedDateTime = submittedTime;              
+                    currentAssessmentToolWorkflowInstance.LastModifiedDate = submittedTime;              
                     currentAssessmentToolWorkflowInstance.SubmittedBy = _userProvider.GetUserName();
                     await _assessmentRepository.SaveChanges();
 

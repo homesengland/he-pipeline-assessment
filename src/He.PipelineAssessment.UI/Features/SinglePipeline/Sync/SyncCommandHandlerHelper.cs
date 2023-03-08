@@ -44,7 +44,7 @@ namespace He.PipelineAssessment.UI.Features.SinglePipeline.Sync
                         ? "-" : item.local_authority,
                     FundingAsk = item.funding_ask,
                     NumberOfHomes = item.units_or_homes,
-                    CreatedDateTime = _dateTimeProvider.UtcNow()
+                    CreatedDate = _dateTimeProvider.UtcNow()
                 };
                 assessmentsToBeAdded.Add(assessment);
             }
@@ -105,7 +105,7 @@ namespace He.PipelineAssessment.UI.Features.SinglePipeline.Sync
                     }
                     if (isModified)
                     {
-                        destination.LastModifiedDateTime = _dateTimeProvider.UtcNow();
+                        destination.LastModifiedDate = _dateTimeProvider.UtcNow();
                     }
                 }
             }

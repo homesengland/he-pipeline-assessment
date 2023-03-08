@@ -26,7 +26,7 @@ namespace He.PipelineAssessment.UI.Features.Admin.AssessmentToolManagement.Comma
             }
             entity.Name = request.Name;
             entity.Order = request.Order;
-            entity.LastModified = _dateTimeProvider.UtcNow();
+            entity.LastModifiedDate = _dateTimeProvider.UtcNow();
             await _adminAssessmentToolRepository.UpdateAssessmentTool(entity);
             return Unit.Value;
         }
