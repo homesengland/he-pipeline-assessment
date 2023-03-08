@@ -11,13 +11,9 @@ namespace He.PipelineAssessment.UI.Extensions
         {
 
             string auth0AppClientId = builder.Configuration["Auth0Config:ClientId"];
-
             string auth0AppClientSecret = builder.Configuration["Auth0Config:ClientSecret"];
-
             string auth0Domain = builder.Configuration["Auth0Config:Domain"];
-
             string identifier = builder.Configuration["Auth0Config:Identifier"];
-
             string supportEmail = builder.Configuration["Auth0Config:SupportEmail"];
 
             var auth0Config = new Auth0Config(auth0Domain, auth0AppClientId, auth0AppClientSecret);
