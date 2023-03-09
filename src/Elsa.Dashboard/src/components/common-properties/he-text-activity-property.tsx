@@ -32,6 +32,7 @@ export class TextActivityProperty {
 
   @State() conditionDisplayHeightMap: Map<string> = {};
   @State() optionsDisplayToggle: Map<string> = {};
+  @State() urlDisplayToggle: Map<string> = {};
 
   multiExpressionEditor: HTMLElsaMultiExpressionEditorElement;
   syntaxSwitchCount: number = 0;
@@ -107,10 +108,16 @@ export class TextActivityProperty {
     this.updatePropertyModel();
   }
 
-  onIsHyperlinkChecked(e: Event, textActivity: INestedTextActivity) {
+  onUrlChanged(e: CustomEvent<string>, textActivity: INestedTextActivity) {
+    textActivity.condition.expressions[TextActivityOptionsSyntax.Url] = e.detail;
+    this.updatePropertyModel();
+  }
+
+  onIsHyperlinkChecked(e: Event, textActivity: INestedTextActivity, index:number) {
     const checkboxElement = (e.currentTarget as HTMLInputElement);
     textActivity.expressions[TextActivityOptionsSyntax.Hyperlink] = checkboxElement.checked.toString();
     this.updatePropertyModel();
+    this.onDisplayUrl(index)
 
     // do something to render textbox here
   }
@@ -151,6 +158,16 @@ export class TextActivityProperty {
     }
     this.conditionDisplayHeightMap = { ... this.conditionDisplayHeightMap, tempValue }
   }
+  onDisplayUrl(index: number) {
+    let tempValue = Object.assign(this.urlDisplayToggle);
+    let height = this.urlDisplayToggle[index];
+    if (height == null) {
+      tempValue[index] = "table-row";
+    } else {
+      this.urlDisplayToggle[index] == "none" ? tempValue[index] = "table-row" : tempValue[index] = "none";
+    }
+    this.urlDisplayToggle = { ... this.urlDisplayToggle, tempValue }
+  }
 
   render() {
     const textElements = this.text;
@@ -161,16 +178,18 @@ export class TextActivityProperty {
       const conditionSyntax = nestedTextActivity.condition.syntax;
       const textExpression = nestedTextActivity.expressions[textSyntax];
       const conditionExpression = nestedTextActivity.condition.expressions[conditionSyntax];
+      const urlExpression = nestedTextActivity.expressions[TextActivityOptionsSyntax.Url] ?? "https://www"
       const paragraphChecked = nestedTextActivity.expressions[TextActivityOptionsSyntax.Paragraph] == 'true';
       const guidanceChecked = nestedTextActivity.expressions[TextActivityOptionsSyntax.Guidance] == 'true';
       const hyperlinkChecked = nestedTextActivity.expressions[TextActivityOptionsSyntax.Hyperlink] == 'true';
 
       const textLanguage = mapSyntaxToLanguage(textSyntax);
       const conditionLanguage = mapSyntaxToLanguage(conditionSyntax);
+      const urlLanguage = mapSyntaxToLanguage(SyntaxNames.Literal)
 
       const conditionEditorHeight = this.conditionDisplayHeightMap[index] ?? "2.75em";
       const optionsDisplay = this.optionsDisplayToggle[index] ?? "none";
-      const urlDisplay = hyperlinkChecked ? "table-cell" : "none";
+      const urlDisplay = this.urlDisplayToggle[index] ?? "none";
 
       let textExpressionEditor = null;
       let conditionExpressionEditor = null;
@@ -285,33 +304,32 @@ export class TextActivityProperty {
             </th>
             <td class="elsa-py-0">
               <input name="choice_input" type="checkbox" checked={hyperlinkChecked} value={nestedTextActivity.expressions[TextActivityOptionsSyntax.Hyperlink]}
-                onChange={e => this.onIsHyperlinkChecked(e, nestedTextActivity)}
+                onChange={e => this.onIsHyperlinkChecked(e, nestedTextActivity, index)}
                 class="focus:elsa-ring-blue-500 elsa-h-8 elsa-w-8 elsa-text-blue-600 elsa-border-gray-300 elsa-rounded" />
             </td>
-          </tr>
-            <tr>
             <td>
-              <div class="elsa-mt-1 elsa-relative elsa-rounded-md elsa-shadow-sm" style={{ display: urlDisplay }}>
+            </td>
+          </tr>
+          <tr style={{ display: urlDisplay }}>
+            <th
+              class="elsa-px-6 elsa-py-3 elsa-text-left elsa-text-xs elsa-font-medium elsa-text-gray-500 elsa-tracking-wider elsa-w-2/12">Url
+            </th>
+            <td class="elsa-py-2 pl-5" style={{ width: colWidth }}>
+
+              <div class="elsa-mt-1 elsa-relative elsa-rounded-md elsa-shadow-sm">
                 <elsa-expression-editor
                   key={`expression-editor-${index}-${this.syntaxSwitchCount}`}
                   ref={el => conditionExpressionEditor = el}
-                  expression={conditionExpression}
-                  language={conditionLanguage}
-                  single-line={false}
-                  editorHeight={conditionEditorHeight}
+                  expression={urlExpression}
+                  language={urlLanguage}
+                  single-line={true}
+                  editorHeight="2.75em"
                   padding="elsa-pt-1.5 elsa-pl-1 elsa-pr-28"
-                  onExpressionChanged={e => this.onConditionChanged(e, nestedTextActivity)}
+                  onExpressionChanged={e => this.onUrlChanged(e, nestedTextActivity)}
                 />
-                <div class="elsa-absolute elsa-inset-y-0 elsa-right-0 elsa-flex elsa-items-center">
-                  <select onChange={e => this.onTextSyntaxChanged(e, nestedTextActivity, conditionExpressionEditor)}
-                          class="focus:elsa-ring-blue-500 focus:elsa-border-blue-500 elsa-h-full elsa-py-0 elsa-pl-2 elsa-pr-7 elsa-border-transparent elsa-bg-transparent elsa-text-gray-500 sm:elsa-text-sm elsa-rounded-md">
-                    {this.supportedSyntaxes.map(supportedSyntax => {
-                      const selected = supportedSyntax == conditionSyntax;
-                      return <option selected={selected}>{supportedSyntax}</option>;
-                    })}
-                  </select>
-                </div>
               </div>
+            </td>
+            <td>
             </td>
           </tr>
         </tbody>
