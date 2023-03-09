@@ -72,7 +72,7 @@ export class TextActivityProperty {
       syntax: SyntaxNames.Literal,
       expressions: { [SyntaxNames.Literal]: '', [TextActivityOptionsSyntax.Paragraph]: 'true' },
       condition: { syntax: SyntaxNames.JavaScript, expressions: { [SyntaxNames.JavaScript]: 'true' } },
-      type: PropertyOutputTypes.TextActivity,
+      type: PropertyOutputTypes.Information,
       name: textName
     };
     this.text = [...this.text, newTextElement];

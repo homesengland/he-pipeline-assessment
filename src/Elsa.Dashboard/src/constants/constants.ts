@@ -37,7 +37,7 @@ export class ActivityTypeConstants {
   static readonly SinglePipelineDataSource = "SinglePipelineDataSource";
   static readonly CheckYourAnswersScreen = "CheckYourAnswersScreen";
   static readonly ConfirmationScreen = "ConfirmationScreen";
-  static readonly TextActivity = "TextActivity";
+  static readonly Information = "Information";
 }
 
 export class PropertyOutputTypes {
@@ -46,5 +46,5 @@ export class PropertyOutputTypes {
   static readonly Number = "int";
   static readonly Checkbox = "checkbox";
   static readonly Radio = "radio";
-  static readonly TextActivity = "text-activity";
+  static readonly Information = "information";
 }

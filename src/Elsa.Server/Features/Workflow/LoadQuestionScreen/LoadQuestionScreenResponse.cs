@@ -34,6 +34,7 @@ namespace Elsa.Server.Features.Workflow.LoadQuestionScreen
         public int? CharacterLimit { get; set; }
         public Checkbox Checkbox { get; set; } = null!;
         public Radio Radio { get; set; } = null!;
+        public Information Information { get; set; } = null!;
         public bool IsReadOnly { get; set; }
     }
 
@@ -49,6 +50,11 @@ namespace Elsa.Server.Features.Workflow.LoadQuestionScreen
     {
         public QuestionScreenAnswer.Choice[] Choices { get; set; } = new List<QuestionScreenAnswer.Choice>().ToArray();
         public string SelectedAnswer { get; set; } = null!;
+    }
+
+    public class Information
+    {
+        public InformationText[] TextList { get; set; } = new List<InformationText>().ToArray();
     }
 
 }

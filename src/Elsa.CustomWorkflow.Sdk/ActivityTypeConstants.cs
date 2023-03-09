@@ -17,5 +17,6 @@
         public const string DateQuestion = "DateQuestion";
         public const string TextQuestion = "TextQuestion";
         public const string TextAreaQuestion = "TextAreaQuestion";
+        public const string Information = "Information";
     }
 }
