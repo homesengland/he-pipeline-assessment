@@ -248,6 +248,7 @@ namespace Elsa.CustomActivities.Tests.Handlers.Syntax
 
         }
 
+        [Theory, AutoMoqData]
         public async void EvaluateFromExpression_ReturnsDefaultValue_WhenKeyNotFoundExpressionThrown(
             Mock<IServiceProvider> provider,
             Mock<IExpressionEvaluator> evaluator,
