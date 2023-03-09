@@ -1,5 +1,5 @@
 import { Component, Event, EventEmitter, h, Prop, State } from '@stencil/core';
-import { PropertyOutputTypes, SyntaxNames } from '../../constants/constants';
+import { CheckboxOptionsSyntax, PropertyOutputTypes, SyntaxNames } from '../../constants/constants';
 import ExpandIcon from '../../icons/expand_icon';
 import PlusIcon from '../../icons/plus_icon';
 import TrashCanIcon from '../../icons/trash-can';
@@ -57,7 +57,7 @@ export class HeCheckboxOptionProperty {
 
   onAddOptionClick() {
     const optionName = ToLetter(this.options.length + 1);
-    const newOption: NestedActivityDefinitionProperty = { name: optionName, syntax: SyntaxNames.Literal, expressions: { [SyntaxNames.Literal]: '', [SyntaxNames.Checked]: 'false' }, type: PropertyOutputTypes.Checkbox };
+    const newOption: NestedActivityDefinitionProperty = { name: optionName, syntax: SyntaxNames.Literal, expressions: { [SyntaxNames.Literal]: '', [CheckboxOptionsSyntax.Single]: 'false' }, type: PropertyOutputTypes.Checkbox };
     this.options = [...this.options, newOption];
     this.updatePropertyModel();
   }
@@ -79,7 +79,7 @@ export class HeCheckboxOptionProperty {
 
   onCheckChanged(e: Event, checkbox: NestedActivityDefinitionProperty) {
     const checkboxElement = (e.currentTarget as HTMLInputElement);
-    checkbox.expressions[SyntaxNames.Checked] = checkboxElement.checked.toString();
+    checkbox.expressions[CheckboxOptionsSyntax.Single] = checkboxElement.checked.toString();
     this.updatePropertyModel();
   }
 
@@ -122,7 +122,7 @@ export class HeCheckboxOptionProperty {
       const expression = checkboxOption.expressions[checkboxOption.syntax];
       const syntax = checkboxOption.syntax;
       const monacoLanguage = mapSyntaxToLanguage(syntax);
-      const checked = checkboxOption.expressions[SyntaxNames.Checked] == 'true';
+      const checked = checkboxOption.expressions[CheckboxOptionsSyntax.Single] == 'true';
       let expressionEditor = null;
 
       return (

@@ -1,4 +1,5 @@
-﻿using Elsa.CustomActivities.Constants;
+﻿using Elsa.CustomActivities.Activities.Common;
+using Elsa.CustomActivities.Constants;
 using Elsa.CustomActivities.PropertyDecorator;
 using Elsa.CustomWorkflow.Sdk;
 using Elsa.Expressions;
@@ -65,25 +66,4 @@ namespace Elsa.CustomActivities.Activities.QuestionScreen
         public bool IsReadOnly { get; set; } = false;
 
     }
-
-    public class CheckboxModel
-    {
-        public ICollection<CheckboxRecord> Choices { get; set; } = new List<CheckboxRecord>();
-    }
-
-    public record CheckboxRecord(string Identifier, string Answer, bool IsSingle);
-
-    public class RadioModel
-    {
-        public ICollection<RadioRecord> Choices { get; set; } = new List<RadioRecord>();
-    }
-
-    public class TextModel
-    {
-        public ICollection<TextRecord> TextRecords { get; set; } = new List<TextRecord>();
-    }
-
-    public record RadioRecord(string Identifier, string Answer);
-
-    public record TextRecord(string Text, bool IsParagraph, bool IsGuidance);
 }
