@@ -20,6 +20,7 @@ export class CheckboxOptionsSyntax {
 export class TextActivityOptionsSyntax {
   static readonly Paragraph = "Paragraph";
   static readonly Guidance = "Guidance";
+  static readonly Hyperlink = "Hyperlink";
 }
 
 export class QuestionTypeConstants {

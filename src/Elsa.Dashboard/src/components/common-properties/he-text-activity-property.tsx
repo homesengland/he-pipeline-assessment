@@ -107,6 +107,15 @@ export class TextActivityProperty {
     this.updatePropertyModel();
   }
 
+  onIsHyperlinkChecked(e: Event, textActivity: INestedTextActivity) {
+    const checkboxElement = (e.currentTarget as HTMLInputElement);
+    textActivity.expressions[TextActivityOptionsSyntax.Hyperlink] = checkboxElement.checked.toString();
+    this.updatePropertyModel();
+
+    // do something to render textbox here
+  }
+
+
   onTextSyntaxChanged(e: Event, textActivity: INestedTextActivity, expressionEditor: HTMLElsaExpressionEditorElement) {
     const select = e.currentTarget as HTMLSelectElement;
     textActivity.syntax = select.value;
@@ -153,12 +162,15 @@ export class TextActivityProperty {
       const textExpression = nestedTextActivity.expressions[textSyntax];
       const conditionExpression = nestedTextActivity.condition.expressions[conditionSyntax];
       const paragraphChecked = nestedTextActivity.expressions[TextActivityOptionsSyntax.Paragraph] == 'true';
+      const guidanceChecked = nestedTextActivity.expressions[TextActivityOptionsSyntax.Guidance] == 'true';
+      const hyperlinkChecked = nestedTextActivity.expressions[TextActivityOptionsSyntax.Hyperlink] == 'true';
 
       const textLanguage = mapSyntaxToLanguage(textSyntax);
       const conditionLanguage = mapSyntaxToLanguage(conditionSyntax);
 
       const conditionEditorHeight = this.conditionDisplayHeightMap[index] ?? "2.75em";
       const optionsDisplay = this.optionsDisplayToggle[index] ?? "none";
+      const urlDisplay = hyperlinkChecked ? "table-cell" : "none";
 
       let textExpressionEditor = null;
       let conditionExpressionEditor = null;
@@ -260,11 +272,46 @@ export class TextActivityProperty {
               class="elsa-px-6 elsa-py-3 elsa-text-left elsa-text-xs elsa-font-medium elsa-text-gray-500 elsa-tracking-wider elsa-w-2/12">Is <br/>Guidance
             </th>
             <td class="elsa-py-0">
-              <input name="choice_input" type="checkbox" checked={paragraphChecked} value={nestedTextActivity.expressions[TextActivityOptionsSyntax.Guidance]}
+              <input name="choice_input" type="checkbox" checked={guidanceChecked} value={nestedTextActivity.expressions[TextActivityOptionsSyntax.Guidance]}
                 onChange={e => this.onIsParagraphChecked(e, nestedTextActivity)}
                 class="focus:elsa-ring-blue-500 elsa-h-8 elsa-w-8 elsa-text-blue-600 elsa-border-gray-300 elsa-rounded" />
             </td>
             <td>
+            </td>
+          </tr>
+          <tr style={{ display: optionsDisplay }}>
+            <th
+              class="elsa-px-6 elsa-py-3 elsa-text-left elsa-text-xs elsa-font-medium elsa-text-gray-500 elsa-tracking-wider elsa-w-2/12">Is <br/>Hyperlink
+            </th>
+            <td class="elsa-py-0">
+              <input name="choice_input" type="checkbox" checked={hyperlinkChecked} value={nestedTextActivity.expressions[TextActivityOptionsSyntax.Hyperlink]}
+                onChange={e => this.onIsHyperlinkChecked(e, nestedTextActivity)}
+                class="focus:elsa-ring-blue-500 elsa-h-8 elsa-w-8 elsa-text-blue-600 elsa-border-gray-300 elsa-rounded" />
+            </td>
+          </tr>
+            <tr>
+            <td>
+              <div class="elsa-mt-1 elsa-relative elsa-rounded-md elsa-shadow-sm" style={{ display: urlDisplay }}>
+                <elsa-expression-editor
+                  key={`expression-editor-${index}-${this.syntaxSwitchCount}`}
+                  ref={el => conditionExpressionEditor = el}
+                  expression={conditionExpression}
+                  language={conditionLanguage}
+                  single-line={false}
+                  editorHeight={conditionEditorHeight}
+                  padding="elsa-pt-1.5 elsa-pl-1 elsa-pr-28"
+                  onExpressionChanged={e => this.onConditionChanged(e, nestedTextActivity)}
+                />
+                <div class="elsa-absolute elsa-inset-y-0 elsa-right-0 elsa-flex elsa-items-center">
+                  <select onChange={e => this.onTextSyntaxChanged(e, nestedTextActivity, conditionExpressionEditor)}
+                          class="focus:elsa-ring-blue-500 focus:elsa-border-blue-500 elsa-h-full elsa-py-0 elsa-pl-2 elsa-pr-7 elsa-border-transparent elsa-bg-transparent elsa-text-gray-500 sm:elsa-text-sm elsa-rounded-md">
+                    {this.supportedSyntaxes.map(supportedSyntax => {
+                      const selected = supportedSyntax == conditionSyntax;
+                      return <option selected={selected}>{supportedSyntax}</option>;
+                    })}
+                  </select>
+                </div>
+              </div>
             </td>
           </tr>
         </tbody>
