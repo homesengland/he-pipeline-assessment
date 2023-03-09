@@ -3,6 +3,7 @@ using Elsa.CustomWorkflow.Sdk.HttpClients;
 using FluentValidation;
 using He.PipelineAssessment.Data.Auth;
 using He.PipelineAssessment.Data.SinglePipeline;
+using He.PipelineAssessment.Infrastructure;
 using He.PipelineAssessment.Infrastructure.Data;
 using He.PipelineAssessment.Infrastructure.Repository;
 using He.PipelineAssessment.Infrastructure.Repository.StoredProcedure;

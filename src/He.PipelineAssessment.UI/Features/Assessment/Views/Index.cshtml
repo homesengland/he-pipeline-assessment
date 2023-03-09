@@ -63,7 +63,8 @@
         <tbody class="govuk-table__body">
         @foreach (var assessment in Model)
 {
-            var lastModified = assessment.LastModifiedDate.HasValue ? assessment.LastModifiedDate.Value.Date.ToLongDateString() : "";
+            var lastModified = assessment.LastModifiedDateTime.HasValue ? assessment.LastModifiedDateTime.Value.Date.ToLongDateString() : "";
+                var created = assessment.CreatedDateTime.HasValue ? assessment.CreatedDateTime.Value.Date.ToLongDateString() : "";
 
             <tr class="govuk-table__row">
                 <td class="govuk-table__cell"><a asp-controller="Assessment" asp-action="Summary" asp-route-assessmentid="@assessment.Id" asp-route-correlationId="@assessment.SpId" class="govuk-link">@assessment.Reference</a> </td>
@@ -73,7 +74,7 @@
                 <td class="govuk-table__cell">@assessment.FundingAskCurrency</td>
                 <td class="govuk-table__cell">@assessment.NumberOfHomesFormatted</td>
                 <td class="govuk-table__cell">@assessment.ProjectManager</td>
-                <td class="govuk-table__cell">@assessment.CreatedDate.Date.ToLongDateString()</td>
+                <td class="govuk-table__cell">@created</td>
                 <td class="govuk-table__cell">@lastModified </td>
                 <td class="govuk-table__cell"><strong class="govuk-tag govuk-tag--@assessment.StatusDisplayTag()">@assessment.Status</strong></td>
             </tr>

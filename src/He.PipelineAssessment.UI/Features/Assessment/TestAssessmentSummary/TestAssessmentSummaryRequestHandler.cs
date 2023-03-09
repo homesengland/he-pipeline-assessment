@@ -60,7 +60,7 @@ namespace He.PipelineAssessment.UI.Features.Assessment.TestAssessmentSummary
             var stage = new AssessmentSummaryStage()
             {
                 Name = item.WorkflowName,
-                CreatedDateTime = item.CreatedDate,
+                CreatedDateTime = item.CreatedDateTime,
                 SubmittedDateTime = item.SubmittedDateTime,
                 Status = item.Status,
                 WorkflowInstanceId = item.WorkflowInstanceId,

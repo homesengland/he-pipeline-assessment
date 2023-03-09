@@ -48,7 +48,7 @@ namespace He.PipelineAssessment.UI.Features.Assessment.AssessmentSummary
                         Stages = stages,
                         LocalAuthority = dbAssessment.LocalAuthority,
                         ProjectManager = dbAssessment.ProjectManager
-                        
+
                     };
                 }
             }
@@ -80,7 +80,7 @@ namespace He.PipelineAssessment.UI.Features.Assessment.AssessmentSummary
                 CurrentActivityId = item.CurrentActivityId,
                 CurrentActivityType = item.CurrentActivityType,
                 Status = item.Status,
-                CreatedDateTime = item.CreatedDate,
+                CreatedDateTime = item.CreatedDateTime,
                 SubmittedDateTime = item.SubmittedDateTime,
                 AssessmentToolId = item.AssessmentToolId,
                 IsFirstWorkflow = item.IsFirstWorkflow ?? startableToolViewModel?.IsFirstWorkflow,

@@ -1,7 +1,7 @@
 ﻿using AutoFixture.Xunit2;
-using He.PipelineAssessment.Tests.Common;
 using He.PipelineAssessment.Infrastructure.Repository;
 using He.PipelineAssessment.Models;
+using He.PipelineAssessment.Tests.Common;
 using He.PipelineAssessment.UI.Common.Utility;
 using He.PipelineAssessment.UI.Features.Admin.AssessmentToolManagement.Commands.CreateAssessmentTool;
 using He.PipelineAssessment.UI.Features.Admin.AssessmentToolManagement.Mappers;
@@ -59,7 +59,7 @@ public class CreateAssessmentToolCommandHandlerTests
         //Assert          
         adminAssessmentToolRepository.Verify(
             x => x.CreateAssessmentTool(It.Is<AssessmentTool>(y =>
-                y.CreatedDate == date && y.LastModifiedDate == date)), Times.Once);
+                y.CreatedDateTime == date && y.LastModifiedDateTime == date)), Times.Once);
         Assert.Equal(Unit.Value, result);
     }
 }

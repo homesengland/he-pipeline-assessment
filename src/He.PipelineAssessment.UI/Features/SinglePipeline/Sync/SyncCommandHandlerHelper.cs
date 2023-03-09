@@ -43,8 +43,7 @@ namespace He.PipelineAssessment.UI.Features.SinglePipeline.Sync
                     LocalAuthority = string.IsNullOrEmpty(item.local_authority)
                         ? "-" : item.local_authority,
                     FundingAsk = item.funding_ask,
-                    NumberOfHomes = item.units_or_homes,
-                    CreatedDate = _dateTimeProvider.UtcNow()
+                    NumberOfHomes = item.units_or_homes
                 };
                 assessmentsToBeAdded.Add(assessment);
             }
@@ -105,7 +104,8 @@ namespace He.PipelineAssessment.UI.Features.SinglePipeline.Sync
                     }
                     if (isModified)
                     {
-                        destination.LastModifiedDate = _dateTimeProvider.UtcNow();
+                        //TODO: dont think we need this isModified bool
+                        //destination.LastModifiedDate = _dateTimeProvider.UtcNow();
                     }
                 }
             }
