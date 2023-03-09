@@ -104,40 +104,5 @@ namespace Elsa.CustomActivities.Tests.Describers
             Assert.Equal("Last", thirdProperty.Label);
             Assert.Equal(5, thirdProperty.Order);
         }
-
-        //[Theory]
-        //[AutoMoqData]
-        //public void DescribeInputProperties_ShouldReturnProperties_GivenTypeWithHeActivityInputAttributePropertiesAndOptions(
-        //    [Frozen] Mock<IServiceProvider> serviceProvider,
-        //    JsonOptions options,
-        //    CustomPropertyDescriber sut)
-        //{
-        //    //Arrange
-        //    var testOptionsProvider = new TestOptionsProvider();
-        //    var type = new TestClassWithOneHeActivityInputAttributeProperty().GetType();
-        //    serviceProvider.Setup(x => x.GetService(testOptionsProvider.GetType())).Returns(testOptionsProvider);
-
-        //    //Act
-        //    var result = sut.DescribeInputProperties(type);
-
-        //    //Assert
-        //    var property = result.Single();
-        //    Assert.Equal("HeActivityInput", property.Name);
-        //    Assert.Equal("He Activity Input", property.Label);
-        //    Assert.Null(property.Category);
-        //    Assert.Equal(options, property.Options);
-        //}
-
-        //public class TestOptionsProvider : IOptionsProvider
-        //{
-        //    public IOptions GetOptions()
-        //    {
-        //        return new JsonOptions()
-        //        {
-        //            Data = "TestData",
-        //            Metadata = "TestMetadata"
-        //        };
-        //    }
-        //}
     }
 }
