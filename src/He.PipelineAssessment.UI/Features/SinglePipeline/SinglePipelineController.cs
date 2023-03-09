@@ -1,9 +1,12 @@
-﻿using He.PipelineAssessment.UI.Features.SinglePipeline.Sync;
+﻿using He.PipelineAssessment.UI.Authorization;
+using He.PipelineAssessment.UI.Features.SinglePipeline.Sync;
 using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace He.PipelineAssessment.UI.Features.SinglePipeline
 {
+    [Authorize(Policy = Constants.AuthorizationPolicies.AssignmentToPipelineAdminRoleRequired)]
     public class SinglePipelineController : Controller
     {
         private readonly ILogger<SinglePipelineController> _logger;
