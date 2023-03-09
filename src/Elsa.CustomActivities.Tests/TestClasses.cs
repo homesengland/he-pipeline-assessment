@@ -22,6 +22,10 @@ namespace Elsa.CustomActivities.Tests
     {
         public int IntType { get; set; }
     }
+    public class TestClassWithOneListProperty
+    {
+        public List<object> ListType { get; set; }
+    }
 
     public class TestClassWithOneOtherProperty
     {
@@ -60,7 +64,6 @@ namespace Elsa.CustomActivities.Tests
 
     public class TestClassWithOneHeActivityInputAttributeProperty
     {
-        //[HeActivityInput(OptionsProvider = typeof(IOptionsProvider))]
         [HeActivityInput]
         public string HeActivityInput { get; set; }
     }
@@ -73,5 +76,12 @@ namespace Elsa.CustomActivities.Tests
         public string Last { get; set; }
         [HeActivityInput(Order = 1)]
         public string First { get; set; }
+    }
+
+    public class TestClassWithOneUIHintProperty
+    {
+        //[HeActivityInput(OptionsProvider = typeof(IOptionsProvider))]
+        [HeActivityInput(UIHint = "TestUIHint")]
+        public string HeActivityInput { get; set; }
     }
 }

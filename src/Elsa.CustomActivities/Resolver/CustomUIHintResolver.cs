@@ -1,14 +1,7 @@
 ﻿using Elsa.Attributes;
-using Elsa.CustomActivities.Activities.QuestionScreen;
 using Elsa.CustomActivities.Constants;
-using Elsa.Design;
-using System;
 using System.Collections;
-using System.Collections.Generic;
-using System.Linq;
 using System.Reflection;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Elsa.CustomActivities.Resolver
 {

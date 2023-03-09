@@ -29,7 +29,7 @@ namespace Elsa.CustomActivities.Tests.Resolver
             var property = testClassType.GetProperties().First();
 
             //Act
-            var result = OutputTypeHintResolver.GetOutputTypeHint<HeActivityInputAttribute>(property);
+            var result = CustomUIHintResolver.GetUIHint<HeActivityInputAttribute>(property);
 
             //Assert
             Assert.Equal(HePropertyUIHints.Checkbox, result);
@@ -43,52 +43,52 @@ namespace Elsa.CustomActivities.Tests.Resolver
             var property = testClassType.GetProperties().First();
 
             //Act
-            var result = OutputTypeHintResolver.GetOutputTypeHint<HeActivityInputAttribute>(property);
+            var result = CustomUIHintResolver.GetUIHint<HeActivityInputAttribute>(property);
 
             //Assert
             Assert.Equal(HePropertyUIHints.Checkbox, result);
         }
 
-        //[Fact]
-        //public void GetOutputTypeHint_ShouldReturnNumberOutput_GivenAnInt()
-        //{
-        //    //Arrange
-        //    var testClassType = new TestClassWithOneIntProperty().GetType();
-        //    var property = testClassType.GetProperties().First();
+        [Fact]
+        public void GetUIHint_ShouldReturnSingleLineOutput_GivenAnInt()
+        {
+            //Arrange
+            var testClassType = new TestClassWithOneIntProperty().GetType();
+            var property = testClassType.GetProperties().First();
 
-        //    //Act
-        //    var result = OutputTypeHintResolver.GetOutputTypeHint<HeActivityInputAttribute>(property);
+            //Act
+            var result = CustomUIHintResolver.GetUIHint<HeActivityInputAttribute>(property);
 
-        //    //Assert
-        //    Assert.Equal(ExpectedOutputHints.Number, result);
-        //}
+            //Assert
+            Assert.Equal(HePropertyUIHints.SingleLine, result);
+        }
 
-        //[Fact]
-        //public void GetOutputTypeHint_ShouldReturnTextOutput_GivenAnyOtherTypeWhenNoExpectedOutputTypeProvided()
-        //{
-        //    //Arrange
-        //    var testClassType = new TestClassWithOneOtherProperty().GetType();
-        //    var property = testClassType.GetProperties().First();
+        [Fact]
+        public void GetUIHint_ShouldReturnDropdownOutput_GivenACollection()
+        {
+            //Arrange
+            var testClassType = new TestClassWithOneListProperty().GetType();
+            var property = testClassType.GetProperties().First();
 
-        //    //Act
-        //    var result = OutputTypeHintResolver.GetOutputTypeHint<HeActivityInputAttribute>(property);
+            //Act
+            var result = CustomUIHintResolver.GetUIHint<HeActivityInputAttribute>(property);
 
-        //    //Assert
-        //    Assert.Equal(ExpectedOutputHints.Text, result);
-        //}
+            //Assert
+            Assert.Equal(HePropertyUIHints.Dropdown, result);
+        }
 
-        //[Fact]
-        //public void GetOutputTypeHint_ShouldReturnTextOutput_GivenAnyOtherTypeAndExpectedOutputTypeProvided()
-        //{
-        //    //Arrange
-        //    var testClassType = new TestClassWithOnePropertyAndExpectedOutputType().GetType();
-        //    var property = testClassType.GetProperties().First();
+        [Fact]
+        public void GetUIHint_ShouldReturnDropdownOutput_GivenAUIHintAttributeProperty()
+        {
+            //Arrange
+            var testClassType = new TestClassWithOneUIHintProperty().GetType();
+            var property = testClassType.GetProperties().First();
 
-        //    //Act
-        //    var result = OutputTypeHintResolver.GetOutputTypeHint<HeActivityInputAttribute>(property);
+            //Act
+            var result = CustomUIHintResolver.GetUIHint<HeActivityInputAttribute>(property);
 
-        //    //Assert
-        //    Assert.Equal("test", result);
-        //}
+            //Assert
+            Assert.Equal("TestUIHint", result);
+        }
     }
 }
