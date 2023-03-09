@@ -177,7 +177,7 @@ namespace Elsa.Server.Features.Workflow.LoadQuestionScreen
             {
                 questionActivityData.Information = new Information();
                 questionActivityData.Information.TextList = item.Text.TextRecords
-                    .Select(x => new InformationText() { Text = x.Text, IsGuidance = x.IsGuidance, IsParagraph = x.IsParagraph })
+                    .Select(x => new InformationText() { Text = x.Text, IsGuidance = x.IsGuidance, IsParagraph = x.IsParagraph, IsHyperlink = x.IsHyperlink, Url = x.Url })
                     .ToArray();
             }
 

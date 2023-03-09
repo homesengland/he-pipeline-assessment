@@ -2,7 +2,6 @@
 using Elsa.CustomActivities.Activities.QuestionScreen;
 using Elsa.CustomActivities.Constants;
 using Elsa.CustomActivities.Handlers.Models;
-using Elsa.CustomActivities.Handlers.ParseModels;
 using Elsa.CustomActivities.Resolver;
 using Elsa.Expressions;
 using Elsa.Services.Models;
@@ -62,13 +61,13 @@ namespace Elsa.CustomActivities.Handlers.Syntax
             {
                 CheckboxModel result = new CheckboxModel();
                 var parsedProperties = ParseToCheckboxModel(property);
-                if(parsedProperties != null)
+                if (parsedProperties != null)
                 {
                     List<CheckboxRecord> records = await ElsaPropertiesToCheckboxRecordList(parsedProperties, evaluator, context);
                     result.Choices = records;
                 }
                 return result;
-                
+
             }
             if (propertyType != null && propertyType == typeof(RadioModel))
             {
@@ -103,7 +102,7 @@ namespace Elsa.CustomActivities.Handlers.Syntax
 
         private List<ElsaProperty> ParseToCheckboxModel(ElsaProperty property)
         {
-            if(property.Expressions != null)
+            if (property.Expressions != null)
             {
                 var checkboxJsonList = JsonConvert.DeserializeObject<List<ElsaProperty>>(property.Expressions[SyntaxNames.Json]);
                 return checkboxJsonList ?? new List<ElsaProperty>();
@@ -113,7 +112,7 @@ namespace Elsa.CustomActivities.Handlers.Syntax
 
         private List<ElsaProperty> ParseToRadioModel(ElsaProperty property)
         {
-            if(property.Expressions != null)
+            if (property.Expressions != null)
             {
                 var radioJson = JsonConvert.DeserializeObject<List<ElsaProperty>>(property.Expressions[SyntaxNames.Json]);
                 return radioJson ?? new List<ElsaProperty>();
@@ -153,8 +152,9 @@ namespace Elsa.CustomActivities.Handlers.Syntax
             string value = await EvaluateFromExpressions<string>(evaluator, context, property, CancellationToken.None);
             bool isParagraph = property.Expressions?[TextActivitySyntaxNames.Paragraph].ToLower() == "true"; ;
             bool isGuidance = property.Expressions?[TextActivitySyntaxNames.Guidance].ToLower() == "true"; ;
+            bool isHyperlink = property.Expressions?[TextActivitySyntaxNames.Hyperlink].ToLower() == "true"; ;
 
-            return new TextRecord(value, isParagraph, isGuidance);
+            return new TextRecord(value, isParagraph, isGuidance, isHyperlink, "changeMe");
         }
 
         private async Task<RadioRecord> ElsaPropertyToRadioRecord(ElsaProperty property, IExpressionEvaluator evaluator, ActivityExecutionContext context)
