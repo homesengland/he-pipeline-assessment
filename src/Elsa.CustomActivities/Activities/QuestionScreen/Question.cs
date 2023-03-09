@@ -85,5 +85,5 @@ namespace Elsa.CustomActivities.Activities.QuestionScreen
 
     public record RadioRecord(string Identifier, string Answer);
 
-    public record TextRecord(string Text, bool IsParagraph);
+    public record TextRecord(string Text, bool IsParagraph, bool IsGuidance);
 }

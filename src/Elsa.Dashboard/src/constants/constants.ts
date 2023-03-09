@@ -15,6 +15,7 @@ export class SyntaxNames {
 
 export class TextActivityOptionsSyntax {
   static readonly Paragraph = "Paragraph";
+  static readonly Guidance = "Guidance";
 }
 
 export class QuestionTypeConstants {

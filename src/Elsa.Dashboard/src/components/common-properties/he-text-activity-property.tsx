@@ -101,6 +101,12 @@ export class TextActivityProperty {
     this.updatePropertyModel();
   }
 
+  onIsGuidanceChecked(e: Event, textActivity: INestedTextActivity) {
+    const checkboxElement = (e.currentTarget as HTMLInputElement);
+    textActivity.expressions[TextActivityOptionsSyntax.Guidance] = checkboxElement.checked.toString();
+    this.updatePropertyModel();
+  }
+
   onTextSyntaxChanged(e: Event, textActivity: INestedTextActivity, expressionEditor: HTMLElsaExpressionEditorElement) {
     const select = e.currentTarget as HTMLSelectElement;
     textActivity.syntax = select.value;
@@ -239,16 +245,28 @@ export class TextActivityProperty {
             </tr>
           <tr style={{ display: optionsDisplay }}>
               <th
-                class="elsa-px-6 elsa-py-3 elsa-text-left elsa-text-xs elsa-font-medium elsa-text-gray-500 elsa-tracking-wider elsa-w-2/12">Is Paragraph
+              class="elsa-px-6 elsa-py-3 elsa-text-left elsa-text-xs elsa-font-medium elsa-text-gray-500 elsa-tracking-wider elsa-w-2/12">Is <br />Paragraph
               </th>
-                <td class="elsa-py-0">
-                  <input name="choice_input" type="checkbox" checked={paragraphChecked} value={'true'}
+            <td class="elsa-py-0">
+              <input name="choice_input" type="checkbox" checked={paragraphChecked} value={nestedTextActivity.expressions[TextActivityOptionsSyntax.Paragraph]}
                     onChange={e => this.onIsParagraphChecked(e, nestedTextActivity)}
                     class="focus:elsa-ring-blue-500 elsa-h-8 elsa-w-8 elsa-text-blue-600 elsa-border-gray-300 elsa-rounded" />
               </td>
               <td>
               </td>
-            </tr>
+          </tr>
+          <tr style={{ display: optionsDisplay }}>
+            <th
+              class="elsa-px-6 elsa-py-3 elsa-text-left elsa-text-xs elsa-font-medium elsa-text-gray-500 elsa-tracking-wider elsa-w-2/12">Is <br/>Guidance
+            </th>
+            <td class="elsa-py-0">
+              <input name="choice_input" type="checkbox" checked={paragraphChecked} value={nestedTextActivity.expressions[TextActivityOptionsSyntax.Guidance]}
+                onChange={e => this.onIsParagraphChecked(e, nestedTextActivity)}
+                class="focus:elsa-ring-blue-500 elsa-h-8 elsa-w-8 elsa-text-blue-600 elsa-border-gray-300 elsa-rounded" />
+            </td>
+            <td>
+            </td>
+          </tr>
         </tbody>
       );
     };
