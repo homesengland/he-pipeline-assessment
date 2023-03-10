@@ -19,5 +19,6 @@ namespace Elsa.CustomActivities.Constants
         public const string Paragraph = "Paragraph";
         public const string Guidance = "Guidance";
         public const string Hyperlink = "Hyperlink";
+        public const string Url = "Url";
     }
 }

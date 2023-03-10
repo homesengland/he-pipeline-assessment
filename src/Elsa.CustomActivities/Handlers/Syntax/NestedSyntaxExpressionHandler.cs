@@ -1,5 +1,4 @@
 ﻿using Elsa.CustomActivities.Activities.Common;
-using Elsa.CustomActivities.Activities.QuestionScreen;
 using Elsa.CustomActivities.Constants;
 using Elsa.CustomActivities.Handlers.Models;
 using Elsa.CustomActivities.Resolver;
@@ -150,11 +149,12 @@ namespace Elsa.CustomActivities.Handlers.Syntax
         private async Task<TextRecord> ElsaPropertyToTextRecord(ElsaProperty property, IExpressionEvaluator evaluator, ActivityExecutionContext context)
         {
             string value = await EvaluateFromExpressions<string>(evaluator, context, property, CancellationToken.None);
-            bool isParagraph = property.Expressions?[TextActivitySyntaxNames.Paragraph].ToLower() == "true"; ;
-            bool isGuidance = property.Expressions?[TextActivitySyntaxNames.Guidance].ToLower() == "true"; ;
-            bool isHyperlink = property.Expressions?[TextActivitySyntaxNames.Hyperlink].ToLower() == "true"; ;
+            bool isParagraph = property.Expressions?[TextActivitySyntaxNames.Paragraph].ToLower() == "true";
+            bool isGuidance = property.Expressions?[TextActivitySyntaxNames.Guidance].ToLower() == "true";
+            bool isHyperlink = property.Expressions?[TextActivitySyntaxNames.Hyperlink].ToLower() == "true";
+            string? url = property.Expressions?[TextActivitySyntaxNames.Url];
 
-            return new TextRecord(value, isParagraph, isGuidance, isHyperlink, "changeMe");
+            return new TextRecord(value, isParagraph, isGuidance, isHyperlink, url);
         }
 
         private async Task<RadioRecord> ElsaPropertyToRadioRecord(ElsaProperty property, IExpressionEvaluator evaluator, ActivityExecutionContext context)
