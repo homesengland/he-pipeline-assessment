@@ -83,7 +83,7 @@ namespace Elsa.CustomActivities.Handlers.Syntax
             if (propertyType != null && propertyType == typeof(TextModel))
             {
                 TextModel result = new TextModel();
-                var parsedProperties = ParseToRadioModel(property);
+                var parsedProperties = ParseToTextModel(property);
                 if (parsedProperties != null)
                 {
                     List<TextRecord> records = await ElsaPropertiesToTextRecordList(parsedProperties, evaluator, context);
@@ -119,6 +119,16 @@ namespace Elsa.CustomActivities.Handlers.Syntax
             return new List<ElsaProperty>();
 
         }
+        private List<ElsaProperty> ParseToTextModel(ElsaProperty property)
+        {
+            if (property.Expressions != null)
+            {
+                var textJson = JsonConvert.DeserializeObject<List<ElsaProperty>>(property.Expressions[CustomSyntaxNames.ConditionalTextList]);
+                return textJson ?? new List<ElsaProperty>();
+            }
+            return new List<ElsaProperty>();
+
+        }
 
         private async Task<List<CheckboxRecord>> ElsaPropertiesToCheckboxRecordList(List<ElsaProperty> properties, IExpressionEvaluator evaluator, ActivityExecutionContext context)
         {
@@ -150,9 +160,24 @@ namespace Elsa.CustomActivities.Handlers.Syntax
         {
             string value = await EvaluateFromExpressions<string>(evaluator, context, property, CancellationToken.None);
             bool isParagraph = property.Expressions?[TextActivitySyntaxNames.Paragraph].ToLower() == "true";
-            bool isGuidance = property.Expressions?[TextActivitySyntaxNames.Guidance].ToLower() == "true";
-            bool isHyperlink = property.Expressions?[TextActivitySyntaxNames.Hyperlink].ToLower() == "true";
-            string? url = property.Expressions?[TextActivitySyntaxNames.Url];
+            bool isGuidance = false;
+            bool isHyperlink = false;
+            string? url = string.Empty;
+
+            if (property.Expressions!.ContainsKey(TextActivitySyntaxNames.Hyperlink))
+            {
+                isHyperlink = property.Expressions?[TextActivitySyntaxNames.Hyperlink].ToLower() == "true";
+            };
+
+            if (property.Expressions!.ContainsKey(TextActivitySyntaxNames.Guidance))
+            {
+                isGuidance = property.Expressions?[TextActivitySyntaxNames.Guidance].ToLower() == "true";
+            };
+
+            if (property.Expressions!.ContainsKey(TextActivitySyntaxNames.Url))
+            {
+                url = property.Expressions?[TextActivitySyntaxNames.Url];
+            };
 
             return new TextRecord(value, isParagraph, isGuidance, isHyperlink, url);
         }
