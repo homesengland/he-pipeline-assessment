@@ -116,9 +116,8 @@ export class TextActivityProperty {
   onIsHyperlinkChecked(e: Event, textActivity: INestedTextActivity, index:number) {
     const checkboxElement = (e.currentTarget as HTMLInputElement);
     textActivity.expressions[TextActivityOptionsSyntax.Hyperlink] = checkboxElement.checked.toString();
+    this.onDisplayUrl(index);
     this.updatePropertyModel();
-    this.onDisplayUrl(index)
-
     // do something to render textbox here
   }
 
@@ -150,18 +149,19 @@ export class TextActivityProperty {
 
   onToggleOptions(index: number) {
     let tempValue = Object.assign(this.optionsDisplayToggle);
-    let height = this.optionsDisplayToggle[index];
-    if (height == null) {
+    let tableRowClass = this.optionsDisplayToggle[index];
+    if (tableRowClass == null) {
       tempValue[index] = "table-row";
     } else {
       this.optionsDisplayToggle[index] == "none" ? tempValue[index] = "table-row" : tempValue[index] = "none";
     }
-    this.conditionDisplayHeightMap = { ... this.conditionDisplayHeightMap, tempValue }
+    this.optionsDisplayToggle = { ... this.optionsDisplayToggle, tempValue }
   }
+
   onDisplayUrl(index: number) {
     let tempValue = Object.assign(this.urlDisplayToggle);
-    let height = this.urlDisplayToggle[index];
-    if (height == null) {
+    let tableRowClass = this.urlDisplayToggle[index];
+    if (tableRowClass == null) {
       tempValue[index] = "table-row";
     } else {
       this.urlDisplayToggle[index] == "none" ? tempValue[index] = "table-row" : tempValue[index] = "none";
@@ -189,7 +189,10 @@ export class TextActivityProperty {
 
       const conditionEditorHeight = this.conditionDisplayHeightMap[index] ?? "2.75em";
       const optionsDisplay = this.optionsDisplayToggle[index] ?? "none";
-      const urlDisplay = this.urlDisplayToggle[index] ?? "none";
+      const urlDisplay =
+        this.urlDisplayToggle[index] != null && this.optionsDisplayToggle[index] != null && this.optionsDisplayToggle[index] != "none"
+          ? this.urlDisplayToggle[index]
+          : "none";
 
       let textExpressionEditor = null;
       let conditionExpressionEditor = null;
