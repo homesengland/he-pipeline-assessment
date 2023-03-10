@@ -170,7 +170,6 @@ namespace He.PipelineAssessment.UI.Tests.Features.SinglePipeline.Sync
             singlePipelineDataList.Add(singlePipelineData);
 
             //Arrange
-            dateTimeProvider.Setup(x => x.UtcNow()).Returns(DateTime.UtcNow);
 
             //Act
             var result = sut.UpdateAssessments(destinationAssessments, existingAssessments, singlePipelineDataList);
@@ -185,7 +184,6 @@ namespace He.PipelineAssessment.UI.Tests.Features.SinglePipeline.Sync
             Assert.Equal(singlePipelineData.local_authority, result[0].LocalAuthority);
             Assert.Equal(singlePipelineData.funding_ask, result[0].FundingAsk);
             Assert.Equal(singlePipelineData.units_or_homes, result[0].NumberOfHomes);
-            dateTimeProvider.Verify(x => x.UtcNow(), Times.Once);
         }
     }
 }
