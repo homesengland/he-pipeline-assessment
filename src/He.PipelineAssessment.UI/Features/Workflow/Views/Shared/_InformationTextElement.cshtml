@@ -1,2 +1,10 @@
 ﻿@using He.PipelineAssessment.UI.Features.Workflow.ViewModels
 @model He.PipelineAssessment.UI.Features.Workflow.ViewModels.InformationText
+
+@if(Model.IsHyperlink && !string.IsNullOrEmpty(Model.Url)){
+    <a src="Model.Url">@Model.Text</a>
+}
+else{
+    <span>Model.Text</span>
+}
+

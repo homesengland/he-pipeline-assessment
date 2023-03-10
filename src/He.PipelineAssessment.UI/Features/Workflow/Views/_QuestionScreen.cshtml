@@ -168,7 +168,8 @@
                             Radio = new Radio()
                             {
                                 SelectedAnswer = Model.Data.QuestionScreenAnswers[i].Radio.SelectedAnswer,
-                                Choices = Model.Data.QuestionScreenAnswers[i].Radio.Choices.Select(x=> new He.PipelineAssessment.UI.Features.Workflow.ViewModels.Choice(){Answer = x.Answer,IsSingle = x.IsSingle}).ToList()
+                                Choices = Model.Data.QuestionScreenAnswers[i].Radio.Choices
+                                .Select(x=> new He.PipelineAssessment.UI.Features.Workflow.ViewModels.Choice(){Answer = x.Answer,IsSingle = x.IsSingle}).ToList()
                             }
                         })
                     }
@@ -176,7 +177,7 @@
                     @if (Model.Data.QuestionScreenAnswers![i].QuestionType == QuestionTypeConstants.Information)
                     {
 
-                        @await Html.PartialAsync("_InformationText",new MultiQuestion()
+                        @await Html.PartialAsync("_Information",new MultiQuestion()
                         {
                             Index = i,
                             IsValid = isValidItem,
@@ -192,7 +193,13 @@
                             Title = Model.Data.QuestionScreenAnswers[i].Title,
                             Information = new Information
                             {
-                                Text = Model.Data.QuestionScreenAnswers[i].Information.InformationTextList
+                                Text = Model.Data.QuestionScreenAnswers[i].Information.InformationTextList.
+                                Select(x => new He.PipelineAssessment.UI.Features.Workflow.ViewModels.InformationText(){
+                                    Text = x.Text,
+                                    IsHyperlink = x.IsHyperlink,
+                                    IsGuidance = x.IsGuidance,
+                                    IsParagraph = x.IsParagraph
+                                }).ToList()
                             }
                         })
                     }
