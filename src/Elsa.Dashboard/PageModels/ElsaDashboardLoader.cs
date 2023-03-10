@@ -1,4 +1,5 @@
 using Elsa.CustomWorkflow.Sdk.HttpClients;
+using Elsa.Dashboard.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.Extensions.Options;

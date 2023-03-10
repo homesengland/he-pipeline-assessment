@@ -1,11 +1,8 @@
-﻿using Elsa.CustomActivities.Activities;
-using Elsa.CustomActivities.PropertyDecorator;
-
-namespace Elsa.CustomActivities.Tests
+﻿namespace Elsa.CustomActivities.Tests
 {
     public class TestClassWithOneStringProperty
     {
-        public string StringType { get; set; }
+        public string StringType { get; set; } = null!;
     }
 
     public class TestClassWithOneBooleanProperty
@@ -24,64 +21,64 @@ namespace Elsa.CustomActivities.Tests
     }
     public class TestClassWithOneListProperty
     {
-        public List<object> ListType { get; set; }
+        public List<object> ListType { get; set; } = null!;
     }
 
     public class TestClassWithOneOtherProperty
     {
-        public object ObjectType { get; set; }
+        public object ObjectType { get; set; } = null!;
     }
 
     public class TestClassWithOnePropertyAndExpectedOutputType
     {
         [HeActivityInput(ExpectedOutputType = "test")]
-        public object ObjectType { get; set; }
+        public object ObjectType { get; set; } = null!;
     }
 
     public class TestClassWithOneCustomElsaAttributeProperty
     {
         [CustomElsaAttributeObject]
-        public MyNestedClass CustomElsaAttributeProperty { get; set; }
+        public MyNestedClass CustomElsaAttributeProperty { get; set; } = null!;
 
         public class MyNestedClass
         {
             [HeActivityInput]
-            public string HeActivityInput { get; set; }
+            public string HeActivityInput { get; set; } = null!;
         }
     }
 
     public class TestClassWithOneCustomElsaAttributePropertyAndCategory
     {
         [CustomElsaAttributeObject]
-        public MyNestedClass CustomElsaAttributeProperty { get; set; }
+        public MyNestedClass CustomElsaAttributeProperty { get; set; } = null!;
 
         public class MyNestedClass
         {
             [HeActivityInput(Category = "TestCategory")]
-            public string HeActivityInput { get; set; }
+            public string HeActivityInput { get; set; } = null!;
         }
     }
 
     public class TestClassWithOneHeActivityInputAttributeProperty
     {
         [HeActivityInput]
-        public string HeActivityInput { get; set; }
+        public string HeActivityInput { get; set; } = null!;
     }
 
     public class TestClassWithMultipleHeActivityInputAttributeProperties
     {
         [HeActivityInput(Order = 2)]
-        public string HeActivityInput { get; set; }
+        public string HeActivityInput { get; set; } = null!;
         [HeActivityInput(Order = 5)]
-        public string Last { get; set; }
+        public string Last { get; set; } = null!;
         [HeActivityInput(Order = 1)]
-        public string First { get; set; }
+        public string First { get; set; } = null!;
     }
 
     public class TestClassWithOneUIHintProperty
     {
         //[HeActivityInput(OptionsProvider = typeof(IOptionsProvider))]
         [HeActivityInput(UIHint = "TestUIHint")]
-        public string HeActivityInput { get; set; }
+        public string HeActivityInput { get; set; } = null!;
     }
 }
