@@ -47,7 +47,7 @@ namespace Elsa.CustomActivities.Tests
         {
             [HeActivityInput]
             public string HeActivityInput { get; set; } = null!;
-        } 
+        }
     }
 
     public class TestClassWithOneCustomElsaAttributePropertyAndCategory
