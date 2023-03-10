@@ -1,4 +1,7 @@
-﻿namespace Elsa.CustomActivities.Tests
+﻿using Elsa.CustomActivities.Activities;
+using Elsa.CustomActivities.PropertyDecorator;
+
+namespace Elsa.CustomActivities.Tests
 {
     public class TestClassWithOneStringProperty
     {
