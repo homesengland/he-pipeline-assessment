@@ -1,28 +1,2 @@
 ﻿@using He.PipelineAssessment.UI.Features.Workflow.ViewModels
 @model He.PipelineAssessment.UI.Features.Workflow.ViewModels.InformationText
-@{
-    var itemDayName = "Data.QuestionScreenAnswers[" + Model.Index + "].Date.Day";
-    var itemMonthName = "Data.QuestionScreenAnswers[" + Model.Index + "].Date.Month";
-    var itemYearName = "Data.QuestionScreenAnswers[" + Model.Index + "].Date.Year";
-    var formItemName = "Data.QuestionScreenAnswers[" + Model.Index + "].Date";
-
-    var errorFormClass = !Model.IsValid ? "govuk-form-group--error" : "";
-    var errorFieldClass = !Model.IsValid ? "govuk-input--error" : "";
-}
-
-@if(Model.IsParagraph){
-    <p>
-
-
-}
-@if(Model.IsHyperlink){
-    <a src="@Model.Url">
-}
-                <span>@Model.Text</span>
-@if(Model.IsHyperlink){
-    </a>
-}
-
-@if(Model.IsParagraph){
-        </p>
-}

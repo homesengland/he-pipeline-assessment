@@ -1,33 +1,3 @@
 ﻿@using He.PipelineAssessment.UI.Features.Workflow.ViewModels
 @model He.PipelineAssessment.UI.Features.Workflow.ViewModels.Information
 
-<div class="govuk-form-group @errorFormClass" id="@formItemName">
-
-
-    <div class="govuk-date-input__item">
-        <div class="govuk-form-group">
-            <label class="govuk-label govuk-date-input__label" for="date-day">
-                Day
-            </label>
-            <input id="@itemDayName" name="@itemDayName" class="govuk-input govuk-date-input__input govuk-input--width-2 @errorFieldClass"  type="number"  inputmode="numeric"  value="@Model.Date!.Day" />
-        </div>
-    </div>
-    <div class="govuk-date-input__item">
-        <div class="govuk-form-group">
-            <label class="govuk-label govuk-date-input__label" for="date-month">
-                Month
-            </label>
-            <input id="@itemMonthName" name="@itemMonthName" class="govuk-input govuk-date-input__input govuk-input--width-2 @errorFieldClass" type="number" inputmode="numeric" value="@Model.Date!.Month" />
-        </div>
-    </div>
-    <div class="govuk-date-input__item">
-        <div class="govuk-form-group">
-            <label class="govuk-label govuk-date-input__label" for="date-year">
-                Year
-            </label>
-            <input id="@itemYearName" name="@itemYearName" class="govuk-input govuk-date-input__input govuk-input--width-3 @errorFieldClass" type="number" inputmode="numeric" value="@Model.Date!.Year" />
-        </div>
-    </div>
-    @await Html.PartialAsync("_QuestionGuidance", Model.QuestionGuidance)
-    @await Html.PartialAsync("_MultiComments", new MultiComment(){Index = Model.Index, Comment = Model.Comments,DisplayComments = Model.DisplayComments})
-</div>
