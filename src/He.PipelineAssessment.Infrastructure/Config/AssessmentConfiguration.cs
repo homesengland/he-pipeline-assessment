@@ -1,8 +1,6 @@
 ﻿using He.PipelineAssessment.Models;
-using He.PipelineAssessment.UI.Features.Assessments;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
-using Microsoft.Extensions.Configuration;
 
 namespace He.PipelineAssessment.Infrastructure.Config
 {
@@ -36,6 +34,12 @@ namespace He.PipelineAssessment.Infrastructure.Config
 
             builder.Property(x => x.LocalAuthority)
                 .HasMaxLength(500);
+
+            builder.Property(x => x.CreatedBy)
+                .HasMaxLength(EntityConfigurationConstants.MaxLength);
+
+            builder.Property(x => x.LastModifiedBy)
+                .HasMaxLength(EntityConfigurationConstants.MaxLength);
         }
     }
 }

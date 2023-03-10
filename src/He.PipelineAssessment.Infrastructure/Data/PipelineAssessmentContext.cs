@@ -2,6 +2,7 @@
 using He.PipelineAssessment.Models;
 using Microsoft.AspNetCore.DataProtection.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
+using System.Net;
 
 namespace He.PipelineAssessment.Infrastructure.Data
 {
@@ -29,61 +30,31 @@ namespace He.PipelineAssessment.Infrastructure.Data
         {
 
             var userName = _userProvider.GetUserName();
-            if (userName == null)
+
+            if (userName is null)
             {
-                userName = "";
+                userName ="";
             }
 
-            foreach (var entity in ChangeTracker.Entries<AuditableEntity>())
+            foreach (var entry in ChangeTracker.Entries<AuditableEntity>())
             {
-                switch (entity.State)
+                switch (entry.State)
                 {
                     case EntityState.Added:
-                        entity.Entity.CreatedBy = userName;
-                        entity.Entity.CreatedDateTime = DateTime.UtcNow;
+                        entry.Entity.CreatedBy = userName;
+                        entry.Entity.CreatedDateTime = DateTime.UtcNow;
 
                         break;
 
                     case EntityState.Modified:
-                        entity.Entity.LastModifiedBy = userName;
-                        entity.Entity.LastModifiedDateTime = DateTime.UtcNow;
+                        entry.Entity.LastModifiedBy = userName;
+                        entry.Entity.LastModifiedDateTime = DateTime.UtcNow;
                         break;
                 }
             }
 
             return base.SaveChangesAsync(cancellationToken);
 
-            //this.ChangeTracker.DetectChanges();
-
-            //var added = this.ChangeTracker.Entries()
-            //            .Where(t => t.State == EntityState.Added)
-            //            .Select(t => t.Entity)
-            //            .ToArray();
-
-            //foreach (var entity in added)
-            //{
-            //    if (entity is AuditableEntity)
-            //    {
-            //        var track = entity as AuditableEntity;
-            //        track.CreatedDate = DateTime.Now;
-            //        track.CreatedBy = UserId;
-            //    }
-            //}
-
-            //var modified = this.ChangeTracker.Entries()
-            //            .Where(t => t.State == EntityState.Modified)
-            //            .Select(t => t.Entity)
-            //            .ToArray();
-
-            //foreach (var entity in modified)
-            //{
-            //    if (entity is AuditableEntity)
-            //    {
-            //        var track = entity as AuditableEntity;
-            //        track.ModifiedDate = DateTime.Now;
-            //        track.ModifiedBy = UserId;
-            //    }
-            //}
         }
 
     }

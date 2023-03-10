@@ -18,6 +18,12 @@ namespace He.PipelineAssessment.Infrastructure.Config
             builder.HasOne(x => x.AssessmentTool)
                 .WithMany(x => x.AssessmentToolWorkflows)
                 .HasForeignKey(x => x.AssessmentToolId);
+
+            builder.Property(x => x.CreatedBy)
+               .HasMaxLength(EntityConfigurationConstants.MaxLength);
+
+            builder.Property(x => x.LastModifiedBy)
+                .HasMaxLength(EntityConfigurationConstants.MaxLength);
         }
     }
 }

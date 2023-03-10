@@ -38,6 +38,12 @@ namespace He.PipelineAssessment.Infrastructure.Config
 
             builder.Property(x => x.SubmittedBy)
                .HasMaxLength(250);
+
+            builder.Property(x => x.CreatedBy)
+               .HasMaxLength(EntityConfigurationConstants.MaxLength);
+
+            builder.Property(x => x.LastModifiedBy)
+                .HasMaxLength(EntityConfigurationConstants.MaxLength);
         }
     }
 }
