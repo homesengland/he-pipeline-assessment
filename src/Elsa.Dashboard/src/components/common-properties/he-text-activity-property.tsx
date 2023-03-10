@@ -109,7 +109,7 @@ export class TextActivityProperty {
   }
 
   onUrlChanged(e: CustomEvent<string>, textActivity: INestedTextActivity) {
-    textActivity.condition.expressions[TextActivityOptionsSyntax.Url] = e.detail;
+    textActivity.expressions[TextActivityOptionsSyntax.Url] = e.detail;
     this.updatePropertyModel();
   }
 
@@ -325,7 +325,7 @@ export class TextActivityProperty {
                   single-line={true}
                   editorHeight="2.75em"
                   padding="elsa-pt-1.5 elsa-pl-1 elsa-pr-28"
-                  onExpressionChanged={e => this.onUrlChanged(e, nestedTextActivity)}
+                  onExpressionChanged={e => this.onUrlChanged.bind()(e, nestedTextActivity)}
                 />
               </div>
             </td>

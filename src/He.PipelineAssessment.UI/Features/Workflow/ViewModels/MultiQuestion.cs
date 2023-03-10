@@ -20,7 +20,13 @@ namespace He.PipelineAssessment.UI.Features.Workflow.ViewModels
         public decimal? Decimal { get; set; }
         public Radio Radio { get; set; } = new Radio();
         public Checkbox Checkbox { get; set; } = new Checkbox();
+        public Information Information { get; set; } = new Information();
         public int? CharacterLimit { get; set; }
+    }
+
+    public class Information
+    {
+        public List<InformationText> Text { get; set; } = new List<InformationText>();
     }
 
     public class Checkbox
@@ -33,6 +39,15 @@ namespace He.PipelineAssessment.UI.Features.Workflow.ViewModels
     {
         public List<Choice> Choices { get; set; } = new List<Choice>();
         public string SelectedAnswer { get; set; } = null!;
+    }
+
+    public class InformationText
+    {
+        public string Text { get; set; } = null!;
+        public bool IsParagraph { get; set; } = true;
+        public bool IsGuidance { get; set; } = false;
+        public bool IsHyperlink { get; set; } = false;
+        public string? Url { get; set; }
     }
 
 
