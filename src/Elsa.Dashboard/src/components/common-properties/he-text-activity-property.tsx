@@ -116,10 +116,8 @@ export class TextActivityProperty {
   onIsHyperlinkChecked(e: Event, textActivity: INestedTextActivity, index:number) {
     const checkboxElement = (e.currentTarget as HTMLInputElement);
     textActivity.expressions[TextActivityOptionsSyntax.Hyperlink] = checkboxElement.checked.toString();
+    this.onDisplayUrl(index);
     this.updatePropertyModel();
-    this.onDisplayUrl(index)
-
-    // do something to render textbox here
   }
 
 
@@ -150,18 +148,19 @@ export class TextActivityProperty {
 
   onToggleOptions(index: number) {
     let tempValue = Object.assign(this.optionsDisplayToggle);
-    let height = this.optionsDisplayToggle[index];
-    if (height == null) {
+    let tableRowClass = this.optionsDisplayToggle[index];
+    if (tableRowClass == null) {
       tempValue[index] = "table-row";
     } else {
       this.optionsDisplayToggle[index] == "none" ? tempValue[index] = "table-row" : tempValue[index] = "none";
     }
-    this.conditionDisplayHeightMap = { ... this.conditionDisplayHeightMap, tempValue }
+    this.optionsDisplayToggle = { ... this.optionsDisplayToggle, tempValue }
   }
+
   onDisplayUrl(index: number) {
     let tempValue = Object.assign(this.urlDisplayToggle);
-    let height = this.urlDisplayToggle[index];
-    if (height == null) {
+    let tableRowClass = this.urlDisplayToggle[index];
+    if (tableRowClass == null) {
       tempValue[index] = "table-row";
     } else {
       this.urlDisplayToggle[index] == "none" ? tempValue[index] = "table-row" : tempValue[index] = "none";
@@ -178,7 +177,7 @@ export class TextActivityProperty {
       const conditionSyntax = nestedTextActivity.condition.syntax;
       const textExpression = nestedTextActivity.expressions[textSyntax];
       const conditionExpression = nestedTextActivity.condition.expressions[conditionSyntax];
-      const urlExpression = nestedTextActivity.expressions[TextActivityOptionsSyntax.Url] ?? "https://www"
+      const urlExpression = nestedTextActivity.expressions[TextActivityOptionsSyntax.Url] ?? "https://www";
       const paragraphChecked = nestedTextActivity.expressions[TextActivityOptionsSyntax.Paragraph] == 'true';
       const guidanceChecked = nestedTextActivity.expressions[TextActivityOptionsSyntax.Guidance] == 'true';
       const hyperlinkChecked = nestedTextActivity.expressions[TextActivityOptionsSyntax.Hyperlink] == 'true';
@@ -188,8 +187,18 @@ export class TextActivityProperty {
       const urlLanguage = mapSyntaxToLanguage(SyntaxNames.Literal)
 
       const conditionEditorHeight = this.conditionDisplayHeightMap[index] ?? "2.75em";
+      if (this.optionsDisplayToggle[index] == null && (guidanceChecked || hyperlinkChecked)) {
+        this.optionsDisplayToggle[index] = "table-row";
+        if (this.urlDisplayToggle[index] == null && hyperlinkChecked) {
+          this.urlDisplayToggle[index] = "table-row";
+        }
+      }
+
       const optionsDisplay = this.optionsDisplayToggle[index] ?? "none";
-      const urlDisplay = this.urlDisplayToggle[index] ?? "none";
+      const urlDisplay =
+        this.urlDisplayToggle[index] != null && this.optionsDisplayToggle[index] != null && this.optionsDisplayToggle[index] != "none"
+          ? this.urlDisplayToggle[index]
+          : "none";
 
       let textExpressionEditor = null;
       let conditionExpressionEditor = null;
@@ -292,7 +301,7 @@ export class TextActivityProperty {
             </th>
             <td class="elsa-py-0">
               <input name="choice_input" type="checkbox" checked={guidanceChecked} value={nestedTextActivity.expressions[TextActivityOptionsSyntax.Guidance]}
-                onChange={e => this.onIsParagraphChecked(e, nestedTextActivity)}
+                onChange={e => this.onIsGuidanceChecked(e, nestedTextActivity)}
                 class="focus:elsa-ring-blue-500 elsa-h-8 elsa-w-8 elsa-text-blue-600 elsa-border-gray-300 elsa-rounded" />
             </td>
             <td>
