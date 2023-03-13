@@ -14,7 +14,6 @@ namespace Elsa.CustomActivities.Handlers.Syntax
 {
     public class TypeConverter : JsonConverter<Type>
     {
-        Dictionary<string, Type> _types = new Dictionary<string, Type>();
         public override Type? ReadJson(JsonReader reader, Type objectType, Type? existingValue, bool hasExistingValue, JsonSerializer serializer)
         {
             string? typeName = (string)reader.Value!;
