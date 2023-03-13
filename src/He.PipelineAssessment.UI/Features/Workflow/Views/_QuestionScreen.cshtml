@@ -194,11 +194,13 @@
                             Information = new Information
                             {
                                 Text = Model.Data.QuestionScreenAnswers[i].Information.InformationTextList.
-                                Select(x => new He.PipelineAssessment.UI.Features.Workflow.ViewModels.InformationText(){
+                                Select(x => new InformationText
+                                {
                                     Text = x.Text,
                                     IsHyperlink = x.IsHyperlink,
                                     IsGuidance = x.IsGuidance,
-                                    IsParagraph = x.IsParagraph
+                                    IsParagraph = x.IsParagraph,
+                                    Url = x.Url
                                 }).ToList()
                             }
                         })

@@ -54,7 +54,7 @@ namespace Elsa.Server.Features.Workflow.LoadQuestionScreen
 
     public class Information
     {
-        public InformationText[] TextList { get; set; } = new List<InformationText>().ToArray();
+        public InformationText[] InformationTextList { get; set; } = new List<InformationText>().ToArray();
     }
 
 }
