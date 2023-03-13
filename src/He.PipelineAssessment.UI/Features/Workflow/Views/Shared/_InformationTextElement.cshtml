@@ -2,9 +2,9 @@
 @model He.PipelineAssessment.UI.Features.Workflow.ViewModels.InformationText
 
 @if(Model.IsHyperlink && !string.IsNullOrEmpty(Model.Url)){
-    <a src="Model.Url">@Model.Text</a>
+    <a class="govuk-body govuk-link" href="@Model.Url">@Model.Text</a>
 }
 else{
-    <span>Model.Text</span>
+    <span class="govuk-body">@Model.Text</span>
 }
 
