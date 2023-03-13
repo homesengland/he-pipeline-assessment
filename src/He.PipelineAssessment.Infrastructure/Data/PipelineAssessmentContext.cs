@@ -2,14 +2,16 @@
 using He.PipelineAssessment.Models;
 using Microsoft.AspNetCore.DataProtection.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
+using System.Net;
 
 namespace He.PipelineAssessment.Infrastructure.Data
 {
     public class PipelineAssessmentContext : DbContext, IDataProtectionKeyContext
     {
-        public PipelineAssessmentContext(DbContextOptions<PipelineAssessmentContext> options) : base(options)
+        private readonly IUserProvider _userProvider;
+        public PipelineAssessmentContext(DbContextOptions<PipelineAssessmentContext> options, IUserProvider userProvider) : base(options)
         {
-
+            _userProvider = userProvider;
         }
 
         public DbSet<DataProtectionKey> DataProtectionKeys { get; set; } = default!;
@@ -23,5 +25,37 @@ namespace He.PipelineAssessment.Infrastructure.Data
             base.OnModelCreating(modelBuilder);
             modelBuilder.ApplyConfigurationsFromAssembly(typeof(AssessmentConfiguration).Assembly);
         }
+
+        public override Task<int> SaveChangesAsync(CancellationToken cancellationToken = new CancellationToken())
+        {
+
+            var userName = _userProvider.GetUserName();
+
+            if (userName is null)
+            {
+                userName ="";
+            }
+
+            foreach (var entry in ChangeTracker.Entries<AuditableEntity>())
+            {
+                switch (entry.State)
+                {
+                    case EntityState.Added:
+                        entry.Entity.CreatedBy = userName;
+                        entry.Entity.CreatedDateTime = DateTime.UtcNow;
+
+                        break;
+
+                    case EntityState.Modified:
+                        entry.Entity.LastModifiedBy = userName;
+                        entry.Entity.LastModifiedDateTime = DateTime.UtcNow;
+                        break;
+                }
+            }
+
+            return base.SaveChangesAsync(cancellationToken);
+
+        }
+
     }
 }

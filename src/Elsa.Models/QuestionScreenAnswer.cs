@@ -1,6 +1,6 @@
 ﻿namespace Elsa.CustomModels
 {
-    public class QuestionScreenAnswer
+    public class QuestionScreenAnswer : AuditableEntity
     {
         public int Id { get; set; }
         public string ActivityId { get; set; } = null!;
@@ -11,8 +11,6 @@
         public string? QuestionType { get; set; }
         public string? Answer { get; set; }
         public string? Comments { get; set; }
-        public DateTime CreatedDateTime { get; set; }
-        public DateTime? LastModifiedDateTime { get; set; }
         public List<Choice>? Choices { get; set; }
 
         public void SetAnswer(string? answer, DateTime lastModifiedDateTime)
