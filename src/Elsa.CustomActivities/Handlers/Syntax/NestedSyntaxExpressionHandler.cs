@@ -144,8 +144,8 @@ namespace Elsa.CustomActivities.Handlers.Syntax
 
         private async Task<List<TextRecord>> ElsaPropertiesToTextRecordList(List<ElsaProperty> properties, IExpressionEvaluator evaluator, ActivityExecutionContext context)
         {
-            TextRecord[] resultArray = await Task.WhenAll(properties.Select(x => ElsaPropertyToTextRecord(x, evaluator, context)));
-            return resultArray.ToList();
+            TextRecord?[] resultArray = await Task.WhenAll(properties.Select(x => ElsaPropertyToTextRecord(x, evaluator, context)));
+            return resultArray.Where(x => x != null).ToList()!;
         }
 
         private async Task<CheckboxRecord> ElsaPropertyToCheckboxRecord(ElsaProperty property, IExpressionEvaluator evaluator, ActivityExecutionContext context)
@@ -156,9 +156,14 @@ namespace Elsa.CustomActivities.Handlers.Syntax
             return new CheckboxRecord(identifier, value, isSingle);
         }
 
-        private async Task<TextRecord> ElsaPropertyToTextRecord(ElsaProperty property, IExpressionEvaluator evaluator, ActivityExecutionContext context)
+        private async Task<TextRecord?> ElsaPropertyToTextRecord(ElsaProperty property, IExpressionEvaluator evaluator, ActivityExecutionContext context)
         {
             string value = await EvaluateFromExpressions<string>(evaluator, context, property, CancellationToken.None);
+            var condition = await evaluator.EvaluateAsync<bool>(property.Expressions?[CustomSyntaxNames.Condition], SyntaxNames.JavaScript, context);
+            if (!condition)
+            {
+                return null;
+            }
             bool isParagraph = property.Expressions?[TextActivitySyntaxNames.Paragraph].ToLower() == "true";
             bool isGuidance = false;
             bool isHyperlink = false;

@@ -7,6 +7,7 @@ namespace Elsa.CustomActivities.Constants
         public const string ConditionalTextList = "ConditionalTextList";
         public const string QuestionList = "QuestionList";
         public const string Checked = "Checked";
+        public const string Condition = "Condition";
     }
 
     public class CheckboxSyntaxNames

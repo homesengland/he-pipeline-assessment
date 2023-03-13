@@ -22,6 +22,7 @@ export class TextActivityOptionsSyntax {
   static readonly Guidance = "Guidance";
   static readonly Hyperlink = "Hyperlink";
   static readonly Url = "Url";
+  static readonly Condition = "Condition";
 }
 
 export class QuestionTypeConstants {

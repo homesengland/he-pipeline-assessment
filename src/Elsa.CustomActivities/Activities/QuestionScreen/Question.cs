@@ -11,23 +11,18 @@ namespace Elsa.CustomActivities.Activities.QuestionScreen
         [HeActivityInput(Hint = "Question Identifier")]
         public string Id { get; set; } = null!;
 
-        [HeActivityInput(Hint = "Section title",
-            UIHint = HePropertyUIHints.SingleLine,
-            SupportedSyntaxes = new[] { SyntaxNames.Literal, SyntaxNames.JavaScript })]
-        public string Title { get; set; } = null!;
-
         public string QuestionType { get; set; } = null!;
 
         [HeActivityInput(
             Hint = "Question to ask",
             UIHint = HePropertyUIHints.SingleLine,
-            SupportedSyntaxes = new[] { SyntaxNames.Literal, SyntaxNames.JavaScript })]
+            SupportedSyntaxes = new[] { SyntaxNames.Literal, SyntaxNames.JavaScript }, ConditionalActivityTypes = new[] { QuestionTypeConstants.CurrencyQuestion, QuestionTypeConstants.CheckboxQuestion, QuestionTypeConstants.RadioQuestion, QuestionTypeConstants.DateQuestion, QuestionTypeConstants.TextQuestion, QuestionTypeConstants.TextAreaQuestion })]
         public string QuestionText { get; set; } = null!;
 
-        [HeActivityInput(Hint = "Question hint", UIHint = HePropertyUIHints.SingleLine)]
+        [HeActivityInput(Hint = "Question hint", UIHint = HePropertyUIHints.SingleLine, ConditionalActivityTypes = new[] { QuestionTypeConstants.CurrencyQuestion, QuestionTypeConstants.CheckboxQuestion, QuestionTypeConstants.RadioQuestion, QuestionTypeConstants.DateQuestion, QuestionTypeConstants.TextQuestion, QuestionTypeConstants.TextAreaQuestion })]
         public string QuestionHint { get; set; } = null!;
 
-        [HeActivityInput(Hint = "Question guidance", UIHint = HePropertyUIHints.MultiLine)]
+        [HeActivityInput(Hint = "Question guidance", UIHint = HePropertyUIHints.MultiLine, ConditionalActivityTypes = new[] { QuestionTypeConstants.CurrencyQuestion, QuestionTypeConstants.CheckboxQuestion, QuestionTypeConstants.RadioQuestion, QuestionTypeConstants.DateQuestion, QuestionTypeConstants.TextQuestion, QuestionTypeConstants.TextAreaQuestion })]
         public string QuestionGuidance { get; set; } = null!;
 
         [HeActivityInput(Hint = "Include comments box", UIHint = HePropertyUIHints.Checkbox)]

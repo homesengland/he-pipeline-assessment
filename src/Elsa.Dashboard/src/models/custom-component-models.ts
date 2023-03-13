@@ -81,7 +81,3 @@ export interface ICheckboxValue extends NestedActivityDefinitionProperty {
   isSingle: boolean;
 }
 
-export interface INestedTextActivity extends NestedActivityDefinitionProperty {
-  condition: ITextProperty;
-}
-
