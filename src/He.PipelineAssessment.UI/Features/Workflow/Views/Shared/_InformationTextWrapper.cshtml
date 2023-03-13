@@ -2,12 +2,9 @@
 @model He.PipelineAssessment.UI.Features.Workflow.ViewModels.InformationText
 
 @if(Model.IsGuidance){
-<details class="govuk-details" data-module="govuk-details">
-    <div class="govuk-details__text">
+    <div class="govuk-inset-text">
         @await Html.PartialAsync("_InformationTextElement", Model)
     </div>
-</details>
-    
 }
 else if(Model.IsParagraph){
     <p>
