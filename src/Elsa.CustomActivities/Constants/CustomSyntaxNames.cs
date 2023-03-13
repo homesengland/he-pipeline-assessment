@@ -16,6 +16,7 @@ namespace Elsa.CustomActivities.Constants
 
     public class TextActivitySyntaxNames
     {
+        public const string TextActivity = "TextActivity";
         public const string Paragraph = "Paragraph";
         public const string Guidance = "Guidance";
         public const string Hyperlink = "Hyperlink";

@@ -1,5 +1,6 @@
 ﻿using Elsa.ActivityResults;
 using Elsa.Attributes;
+using Elsa.CustomActivities.Activities.Common;
 using Elsa.CustomActivities.Constants;
 using Elsa.Design;
 using Elsa.Expressions;
@@ -26,11 +27,11 @@ namespace Elsa.CustomActivities.Activities.ConfirmationScreen
 
         [ActivityInput(Label = "Assessment Conditional Text", 
             Hint = "Text to display on Outcome Screen.", 
-            UIHint = CustomActivityUIHints.ConditionalText, 
+            UIHint = CustomActivityUIHints.TextActivityProperty, 
             SupportedSyntaxes = new[] { SyntaxNames.Json }, 
-            DefaultSyntax = CustomSyntaxNames.ConditionalTextList, 
+            DefaultSyntax = TextActivitySyntaxNames.TextActivity, 
             IsDesignerCritical = true)]
-        public ICollection<string> Text { get; set; } = new List<string>();
+        public TextModel Text { get; set; } = new TextModel();
 
         [ActivityInput(Hint = "Next workflow to run")]
         public string NextWorkflowDefinitionIds { get; set; } = null!;
