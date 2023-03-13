@@ -22,8 +22,6 @@ export function InitCustomElsa(elsaStudioRoot, customProperties) {
     elsaStudio.propertyDisplayManager.addDriver(CustomPropertyUIHints.TextActivityBuilder,
       () => new TextActivityDriver(elsaStudio, CustomComponentTags.TextActivity));
 
-    //elsaStudio.propertyDisplayManager.addDriver(CustomPropertyUIHints.ConditionalTextListBuilder,
-    //  () => new ConditionalTextListDriver(elsaStudio, CustomComponentTags.ConditionalTextList));
 
     elsaStudio.propertyDisplayManager.addDriver(CustomPropertyUIHints.CustomTextBuilder,
       () => new CustomTextDriver(elsaStudio, CustomComponentTags.CustomTextArea));
