@@ -7,7 +7,7 @@ namespace Elsa.CustomInfrastructure.Data
 {
     public class ElsaCustomContext : DbContext, IDataProtectionKeyContext
     {
-        public ElsaCustomContext(DbContextOptions options) : base(options) {}
+        public ElsaCustomContext(DbContextOptions options) : base(options) { }
 
         public DbSet<DataProtectionKey> DataProtectionKeys { get; set; } = default!;
 
@@ -19,25 +19,17 @@ namespace Elsa.CustomInfrastructure.Data
 
         public override Task<int> SaveChangesAsync(CancellationToken cancellationToken = new CancellationToken())
         {
-            var userName = "";
-
-            if (userName is null)
-            {
-                userName = "";
-            }
 
             foreach (var entry in ChangeTracker.Entries<AuditableEntity>())
             {
                 switch (entry.State)
                 {
                     case EntityState.Added:
-                        entry.Entity.CreatedBy = userName;
                         entry.Entity.CreatedDateTime = DateTime.UtcNow;
 
                         break;
 
                     case EntityState.Modified:
-                        entry.Entity.LastModifiedBy = userName;
                         entry.Entity.LastModifiedDateTime = DateTime.UtcNow;
                         break;
                 }

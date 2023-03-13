@@ -17,8 +17,7 @@ namespace Elsa.CustomInfrastructure.Config
             builder.Property(x => x.QuestionId).HasMaxLength(EntityConfigurationConstants.MaxLength);
             builder.Property(x => x.QuestionType).HasMaxLength(EntityConfigurationConstants.QuestionTypeMaxLength);
             builder.Property(e => e.Choices).HasJsonConversion();
-            builder.Property(x => x.CreatedBy).HasMaxLength(EntityConfigurationConstants.MaxLength);
-            builder.Property(x => x.LastModifiedBy).HasMaxLength(EntityConfigurationConstants.MaxLength);
+
         }
     }
 }
