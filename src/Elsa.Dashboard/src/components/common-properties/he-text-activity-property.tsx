@@ -8,7 +8,7 @@ import {
   IntellisenseContext,
 } from "../../models/elsa-interfaces";
 import { IconProvider } from "../providers/icon-provider/icon-provider";
-import { INestedTextActivity } from "../../models/custom-component-models";
+import { NestedActivityDefinitionProperty } from "../../models/custom-component-models";
 import PlusIcon from '../../icons/plus_icon';
 import TrashCanIcon from '../../icons/trash-can';
 import ExpandIcon from '../../icons/expand_icon';
@@ -24,7 +24,7 @@ export class TextActivityProperty {
   @Prop() activityModel: ActivityModel;
   @Prop() propertyDescriptor: ActivityPropertyDescriptor;
   @Prop() propertyModel: ActivityDefinitionProperty;
-  @State() text: Array<INestedTextActivity> = [];
+  @State() text: Array<NestedActivityDefinitionProperty> = [];
   @State() iconProvider = new IconProvider();
   @Event() expressionChanged: EventEmitter<string>;
 
@@ -69,10 +69,9 @@ export class TextActivityProperty {
 
   onAddElementClick() {
     const textName = ToLetter(this.text.length + 1);
-    const newTextElement: INestedTextActivity = {
+    const newTextElement: NestedActivityDefinitionProperty = {
       syntax: SyntaxNames.Literal,
-      expressions: { [SyntaxNames.Literal]: '', [TextActivityOptionsSyntax.Paragraph]: 'true' },
-      condition: { syntax: SyntaxNames.JavaScript, expressions: { [SyntaxNames.JavaScript]: 'true' } },
+      expressions: { [SyntaxNames.Literal]: '', [TextActivityOptionsSyntax.Paragraph]: 'true', [TextActivityOptionsSyntax.Condition]: 'true' },
       type: PropertyOutputTypes.Information,
       name: textName
     };
@@ -80,40 +79,40 @@ export class TextActivityProperty {
     this.updatePropertyModel();
   }
 
-  onHandleDelete(textActivity: INestedTextActivity) {
+  onHandleDelete(textActivity: NestedActivityDefinitionProperty) {
     this.text = this.text.filter(x => x != textActivity);
     this.updatePropertyModel();
   }
 
-  onTextChanged(e: CustomEvent<string>, textActivity: INestedTextActivity) {
+  onTextChanged(e: CustomEvent<string>, textActivity: NestedActivityDefinitionProperty) {
     textActivity.expressions[textActivity.syntax] = e.detail;
     this.updatePropertyModel();
 
   }
 
-  onConditionChanged(e: CustomEvent<string>, textActivity: INestedTextActivity) {
-    textActivity.condition.expressions[textActivity.condition.syntax] = e.detail;
+  onConditionChanged(e: CustomEvent<string>, textActivity: NestedActivityDefinitionProperty) {
+    textActivity.expressions[TextActivityOptionsSyntax.Condition] = e.detail;
     this.updatePropertyModel();
   }
 
-  onIsParagraphChecked(e: Event, textActivity: INestedTextActivity) {
+  onIsParagraphChecked(e: Event, textActivity: NestedActivityDefinitionProperty) {
     const checkboxElement = (e.currentTarget as HTMLInputElement);
     textActivity.expressions[TextActivityOptionsSyntax.Paragraph] = checkboxElement.checked.toString();
     this.updatePropertyModel();
   }
 
-  onIsGuidanceChecked(e: Event, textActivity: INestedTextActivity) {
+  onIsGuidanceChecked(e: Event, textActivity: NestedActivityDefinitionProperty) {
     const checkboxElement = (e.currentTarget as HTMLInputElement);
     textActivity.expressions[TextActivityOptionsSyntax.Guidance] = checkboxElement.checked.toString();
     this.updatePropertyModel();
   }
 
-  onUrlChanged(e: CustomEvent<string>, textActivity: INestedTextActivity) {
+  onUrlChanged(e: CustomEvent<string>, textActivity: NestedActivityDefinitionProperty) {
     textActivity.expressions[TextActivityOptionsSyntax.Url] = e.detail;
     this.updatePropertyModel();
   }
 
-  onIsHyperlinkChecked(e: Event, textActivity: INestedTextActivity, index:number) {
+  onIsHyperlinkChecked(e: Event, textActivity: NestedActivityDefinitionProperty, index:number) {
     const checkboxElement = (e.currentTarget as HTMLInputElement);
     textActivity.expressions[TextActivityOptionsSyntax.Hyperlink] = checkboxElement.checked.toString();
     this.onDisplayUrl(index);
@@ -121,14 +120,14 @@ export class TextActivityProperty {
   }
 
 
-  onTextSyntaxChanged(e: Event, textActivity: INestedTextActivity, expressionEditor: HTMLElsaExpressionEditorElement) {
+  onTextSyntaxChanged(e: Event, textActivity: NestedActivityDefinitionProperty, expressionEditor: HTMLElsaExpressionEditorElement) {
     const select = e.currentTarget as HTMLSelectElement;
     textActivity.syntax = select.value;
     expressionEditor.language = mapSyntaxToLanguage(textActivity.syntax);
     this.updatePropertyModel();
   }
 
-  onConditionSyntaxChanged(e: Event, textActivity: INestedTextActivity, expressionEditor: HTMLElsaExpressionEditorElement) {
+  onConditionSyntaxChanged(e: Event, textActivity: NestedActivityDefinitionProperty, expressionEditor: HTMLElsaExpressionEditorElement) {
     const select = e.currentTarget as HTMLSelectElement;
     textActivity.syntax = select.value;
     expressionEditor.language = mapSyntaxToLanguage(textActivity.syntax);
@@ -171,12 +170,12 @@ export class TextActivityProperty {
   render() {
     const textElements = this.text;
     const json = JSON.stringify(textElements, null, 2);
-    const renderCaseEditor = (nestedTextActivity: INestedTextActivity, index: number) => {  
+    const renderCaseEditor = (nestedTextActivity: NestedActivityDefinitionProperty, index: number) => {  
 
       const textSyntax = nestedTextActivity.syntax;
-      const conditionSyntax = nestedTextActivity.condition.syntax;
+      const conditionSyntax = SyntaxNames.JavaScript;
       const textExpression = nestedTextActivity.expressions[textSyntax];
-      const conditionExpression = nestedTextActivity.condition.expressions[conditionSyntax];
+      const conditionExpression = nestedTextActivity.expressions[TextActivityOptionsSyntax.Condition];
       const urlExpression = nestedTextActivity.expressions[TextActivityOptionsSyntax.Url] ?? "https://www";
       const paragraphChecked = nestedTextActivity.expressions[TextActivityOptionsSyntax.Paragraph] == 'true';
       const guidanceChecked = nestedTextActivity.expressions[TextActivityOptionsSyntax.Guidance] == 'true';
@@ -268,8 +267,8 @@ export class TextActivityProperty {
                   <div class="elsa-absolute elsa-inset-y-0 elsa-right-0 elsa-flex elsa-items-center">
                     <select onChange={e => this.onTextSyntaxChanged(e, nestedTextActivity, conditionExpressionEditor)}
                       class="focus:elsa-ring-blue-500 focus:elsa-border-blue-500 elsa-h-full elsa-py-0 elsa-pl-2 elsa-pr-7 elsa-border-transparent elsa-bg-transparent elsa-text-gray-500 sm:elsa-text-sm elsa-rounded-md">
-                      {this.supportedSyntaxes.map(supportedSyntax => {
-                        const selected = supportedSyntax == conditionSyntax;
+                      {this.supportedSyntaxes.filter(x => x == SyntaxNames.JavaScript).map(supportedSyntax => {
+                        const selected = supportedSyntax == SyntaxNames.JavaScript;
                         return <option selected={selected}>{supportedSyntax}</option>;
                       })}
                     </select>

@@ -386,6 +386,64 @@ public class LoadQuestionScreenRequestHandlerTests
     [Theory]
     [AutoMoqData]
     public async Task
+        Handle_ReturnMultiQuestionActivityDataWithInformationObject_GivenActivityIsQuestionScreenAndNoErrorsEncountered(
+            [Frozen] Mock<IWorkflowInstanceStore> workflowInstanceStore,
+            [Frozen] Mock<IElsaCustomRepository> elsaCustomRepository,
+            LoadQuestionScreenRequest loadWorkflowActivityRequest,
+            WorkflowInstance workflowInstance,
+            CustomActivityNavigation customActivityNavigation,
+            List<QuestionScreenAnswer> assessmentQuestions,
+            AssessmentQuestions elsaAssessmentQuestions,
+            TextModel textModel,
+            LoadQuestionScreenRequestHandler sut)
+    {
+        //Arrange
+        customActivityNavigation.ActivityType = ActivityTypeConstants.QuestionScreen;
+        for (var i = 0; i < assessmentQuestions.Count; i++)
+        {
+            var questionId = assessmentQuestions[i].QuestionId;
+            elsaAssessmentQuestions.Questions[i].Id = questionId!;
+        }
+
+        elsaAssessmentQuestions.Questions[0].QuestionType = QuestionTypeConstants.Information;
+        elsaAssessmentQuestions.Questions[0].Text = textModel;
+
+        workflowInstanceStore.Setup(x =>
+                x.FindAsync(It.IsAny<WorkflowInstanceIdSpecification>(), CancellationToken.None))
+            .ReturnsAsync(workflowInstance);
+
+        elsaCustomRepository.Setup(x => x.GetCustomActivityNavigation(loadWorkflowActivityRequest.ActivityId,
+                loadWorkflowActivityRequest.WorkflowInstanceId, CancellationToken.None))
+            .ReturnsAsync(customActivityNavigation);
+
+        elsaCustomRepository.Setup(x => x.GetQuestionScreenAnswers(loadWorkflowActivityRequest.ActivityId,
+                loadWorkflowActivityRequest.WorkflowInstanceId, CancellationToken.None))
+            .ReturnsAsync(assessmentQuestions);
+
+        var assessmentQuestionsDictionary = new Dictionary<string, object?>();
+        assessmentQuestionsDictionary.Add("Questions", elsaAssessmentQuestions);
+
+        workflowInstance.ActivityData.Add(loadWorkflowActivityRequest.ActivityId, assessmentQuestionsDictionary);
+
+        //Act
+        var result = await sut.Handle(loadWorkflowActivityRequest, CancellationToken.None);
+
+        //Assert
+        Assert.NotNull(result.Data!.QuestionScreenAnswers);
+        Assert.Equal(assessmentQuestions.Count(), result.Data!.QuestionScreenAnswers.Count());
+        Assert.Empty(result.ErrorMessages);
+        var textRecord = textModel.TextRecords.First();
+        var actualText = result.Data.QuestionScreenAnswers[0].Information.InformationTextList.First();
+        Assert.Equal(textRecord.Text, actualText.Text);
+        Assert.Equal(textRecord.IsHyperlink, actualText.IsHyperlink);
+        Assert.Equal(textRecord.IsGuidance, actualText.IsGuidance);
+        Assert.Equal(textRecord.IsParagraph, actualText.IsParagraph);
+        Assert.Equal(textRecord.Url, actualText.Url);
+    }
+
+    [Theory]
+    [AutoMoqData]
+    public async Task
         Handle_ReturnMultiQuestionActivityDataWithPrepopulatedAnswers_GivenOnlyPrepopulatedAnswerAreProvided(
             [Frozen] Mock<IWorkflowInstanceStore> workflowInstanceStore,
             [Frozen] Mock<IElsaCustomRepository> elsaCustomRepository,
