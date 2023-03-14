@@ -21,7 +21,7 @@ import { NestedActivityDefinitionProperty } from '../../models/custom-component-
 })
 //Copy of Elsa Switch Case
 //Copied to allow us control over how the expression editor is displayed.
-export class HeRadioOptionProperty {
+export class HePotScoreRadioOptionProperty {
 
   @Prop() activityModel: ActivityModel;
   @Prop() propertyDescriptor: ActivityPropertyDescriptor;
@@ -36,6 +36,7 @@ export class HeRadioOptionProperty {
   @State() editorHeight: string = "2.75em"
 
   supportedSyntaxes: Array<string> = [SyntaxNames.JavaScript, SyntaxNames.Liquid, SyntaxNames.Literal];
+  potScores: Array<string> = ["High", "Medium", "Low", "Very Low"];
   multiExpressionEditor: HTMLElsaMultiExpressionEditorElement;
   syntaxSwitchCount: number = 0;
 
@@ -110,9 +111,11 @@ export class HeRadioOptionProperty {
   render() {
     const cases = this.options;
     const supportedSyntaxes = this.supportedSyntaxes;
+    const potScores = this.potScores;
     const json = JSON.stringify(cases, null, 2);
 
     const renderCaseEditor = (radioOption: NestedActivityDefinitionProperty, index: number) => {
+      const selectedScore = "High";
       const expression = radioOption.expressions[radioOption.syntax];
       const syntax = radioOption.syntax;
       const monacoLanguage = mapSyntaxToLanguage(syntax);
@@ -122,10 +125,9 @@ export class HeRadioOptionProperty {
         <tr key={`case-${index}`}>
           <td class="elsa-py-2 elsa-pr-5">
             <input type="text" value={radioOption.name} onChange={e => this.onOptionNameChanged(e, radioOption)}
-              class="focus:elsa-ring-blue-500 focus:elsa-border-blue-500 elsa-block elsa-w-full elsa-min-w-0 elsa-rounded-md sm:elsa-text-sm elsa-border-gray-300" />
+              class="elsa-mt-1 focus:elsa-ring-blue-500 focus:elsa-border-blue-500 elsa-block elsa-w-full elsa-min-w-0 elsa-rounded-md sm:elsa-text-sm elsa-border-gray-300" />
           </td>
-          <td class="elsa-py-2 pl-5">
-
+          <td class="elsa-py-2 elsa-pr-5">
             <div class="elsa-mt-1 elsa-relative elsa-rounded-md elsa-shadow-sm">
               <elsa-expression-editor
                 key={`expression-editor-${index}-${this.syntaxSwitchCount}`}
@@ -147,6 +149,15 @@ export class HeRadioOptionProperty {
                 </select>
               </div>
             </div>
+          </td>
+          <td class="elsa-py-2 elsa-pr-2">
+              <select onChange={e => this.onOptionSyntaxChanged(e, radioOption, expressionEditor)}
+                class="elsa-mt-1 elsa-block focus:elsa-ring-blue-500 focus:elsa-border-blue-500 elsa-w-full elsa-shadow-sm sm:elsa-max-w-xs sm:elsa-text-sm elsa-border-gray-300 elsa-rounded-md">
+                {potScores.map(potScore => {
+                  const selected = potScore == selectedScore;
+                  return <option selected={selected}>{potScore}</option>;
+                })}
+              </select>
           </td>
           <td class="elsa-pt-1 elsa-pr-2 elsa-text-right">
             <button type="button" onClick={() => this.onDeleteOptionClick(radioOption)}
@@ -182,13 +193,16 @@ export class HeRadioOptionProperty {
             <thead class="elsa-bg-gray-50">
               <tr>
                 <th
-                  class="elsa-px-6 elsa-py-3 elsa-text-left elsa-text-xs elsa-font-medium elsa-text-gray-500 elsa-text-right elsa-tracking-wider elsa-w-3/12">Identifier
+                  class="elsa-px-6 elsa-py-3 elsa-text-left elsa-text-xs elsa-font-medium elsa-text-gray-500 elsa-text-right elsa-tracking-wider elsa-w-1/12">Identifier
                 </th>
                 <th
                   class="elsa-px-6 elsa-py-3 elsa-text-left elsa-text-xs elsa-font-medium elsa-text-gray-500 elsa-text-right elsa-tracking-wider elsa-w-8/12">Answer
                 </th>
                 <th
-                  class="elsa-px-6 elsa-py-3 elsa-text-left elsa-text-xs elsa-font-medium elsa-text-gray-500 elsa-text-right elsa-tracking-wider elsa-w-1/12">
+                  class="elsa-px-6 elsa-py-3 elsa-text-left elsa-text-xs elsa-font-medium elsa-text-gray-500 elsa-text-right elsa-tracking-wider elsa-w-3/12">Score
+                </th>
+                <th
+                  class="elsa-px-1 elsa-py-3 elsa-text-left elsa-text-xs elsa-font-medium elsa-text-gray-500 elsa-text-right elsa-tracking-wider elsa-w-1/12">
                   <button type="button" onClick={() => this.onExpandSwitchArea()}
                     class="elsa-h-5 elsa-w-5 elsa-mx-auto elsa-outline-none focus:elsa-outline-none">
                     <ExpandIcon options={this.iconProvider.getOptions()}></ExpandIcon>
