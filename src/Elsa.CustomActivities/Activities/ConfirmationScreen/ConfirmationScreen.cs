@@ -31,7 +31,15 @@ namespace Elsa.CustomActivities.Activities.ConfirmationScreen
             SupportedSyntaxes = new[] { SyntaxNames.Json }, 
             DefaultSyntax = TextActivitySyntaxNames.TextActivity, 
             IsDesignerCritical = true)]
-        public TextModel Text { get; set; } = new TextModel();
+        public TextModel TextNew { get; set; } = new TextModel();
+
+        [ActivityInput(Label = "Assessment Conditional Text",
+    Hint = "Text to display on Outcome Screen.",
+    UIHint = CustomActivityUIHints.ConditionalText,
+    SupportedSyntaxes = new[] { SyntaxNames.Json },
+    DefaultSyntax = CustomSyntaxNames.ConditionalTextList,
+    IsDesignerCritical = true)]
+        public ICollection<string> Text { get; set; } = new List<string>();
 
         [ActivityInput(Hint = "Next workflow to run")]
         public string NextWorkflowDefinitionIds { get; set; } = null!;
