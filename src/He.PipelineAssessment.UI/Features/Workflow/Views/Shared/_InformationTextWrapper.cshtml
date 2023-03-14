@@ -1,0 +1,16 @@
+﻿@using He.PipelineAssessment.UI.Features.Workflow.ViewModels
+@model He.PipelineAssessment.UI.Features.Workflow.ViewModels.InformationText
+
+@if(Model.IsGuidance){
+    <div class="govuk-inset-text">
+        @await Html.PartialAsync("_InformationTextElement", Model)
+    </div>
+}
+else if(Model.IsParagraph){
+    <p>
+        @await Html.PartialAsync("_InformationTextElement", Model)
+    </p>
+}
+else{
+    @await Html.PartialAsync("_InformationTextElement", Model)
+}

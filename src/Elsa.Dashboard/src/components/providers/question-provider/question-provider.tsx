@@ -1,5 +1,5 @@
 import { h } from '@stencil/core';
-import { QuestionTypeConstants } from '../../../constants/constants';
+import { QuestionTypeConstants, ActivityTypeConstants } from '../../../constants/constants';
 
 export interface IActivityData {
   nameConstant: string,
@@ -25,6 +25,7 @@ export const QuestionLibrary = {
   Radio: new QuestionData(QuestionTypeConstants.RadioQuestion, "Radio Question", "A question that provides a user with a number of options presented as radio buttons.  A user may only select a single value."),
   Text: new QuestionData(QuestionTypeConstants.TextQuestion, "Text Question", "A question that provides a user with a free form, one-line text box."),
   TextArea: new QuestionData(QuestionTypeConstants.TextAreaQuestion, "Text Area Question", "A question that provides a user with a free form, multi-line text box."),
+  Information: new QuestionData(ActivityTypeConstants.Information, "Information Text", "A text to display additional information about the given screen.")
 };
 
 export class QuestionProvider {

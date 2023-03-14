@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Elsa.CustomActivities.Constants
+﻿namespace Elsa.CustomActivities.Constants
 {
     public class ExpectedOutputHints
     {
@@ -13,5 +7,6 @@ namespace Elsa.CustomActivities.Constants
         public const string Number = "int";
         public const string Checkbox = "checkbox";
         public const string Radio = "radio";
+        public const string TextActivity = "text-activity";
     }
 }
