@@ -1,4 +1,13 @@
-﻿namespace Elsa.CustomActivities.Handlers.Syntax
+﻿using Elsa.CustomActivities.Activities.Common;
+using Elsa.CustomActivities.Constants;
+using Elsa.CustomActivities.Handlers.Models;
+using Elsa.CustomActivities.Resolver;
+using Elsa.Expressions;
+using Elsa.Services.Models;
+using Microsoft.Extensions.Logging;
+using Newtonsoft.Json;
+
+namespace Elsa.CustomActivities.Handlers.Syntax
 {
 
 
@@ -65,7 +74,7 @@
                 var parsedProperties = ParseToTextModel(property);
                 if (parsedProperties != null)
                 {
-                    List<TextRecord> records = await ElsaPropertiesToTextRecordList(parsedProperties, evaluator, context);
+                    List<TextModel.TextRecord> records = await ElsaPropertiesToTextRecordList(parsedProperties, evaluator, context);
                     result.TextRecords = records;
                 }
                 return result;
@@ -146,9 +155,9 @@
             return resultArray.ToList();
         }
 
-        private async Task<List<TextRecord>> ElsaPropertiesToTextRecordList(List<ElsaProperty> properties, IExpressionEvaluator evaluator, ActivityExecutionContext context)
+        private async Task<List<TextModel.TextRecord>> ElsaPropertiesToTextRecordList(List<ElsaProperty> properties, IExpressionEvaluator evaluator, ActivityExecutionContext context)
         {
-            TextRecord?[] resultArray = await Task.WhenAll(properties.Select(x => ElsaPropertyToTextRecord(x, evaluator, context)));
+            TextModel.TextRecord?[] resultArray = await Task.WhenAll(properties.Select(x => ElsaPropertyToTextRecord(x, evaluator, context)));
             return resultArray.Where(x => x != null).ToList()!;
         }
 
@@ -160,7 +169,7 @@
             return new CheckboxRecord(identifier, value, isSingle);
         }
 
-        private async Task<TextRecord?> ElsaPropertyToTextRecord(ElsaProperty property, IExpressionEvaluator evaluator, ActivityExecutionContext context)
+        private async Task<TextModel.TextRecord?> ElsaPropertyToTextRecord(ElsaProperty property, IExpressionEvaluator evaluator, ActivityExecutionContext context)
         {
             string value = await EvaluateFromExpressions<string>(evaluator, context, property, CancellationToken.None);
             var condition = await evaluator.EvaluateAsync<bool>(property.Expressions?[CustomSyntaxNames.Condition], SyntaxNames.JavaScript, context);
@@ -188,7 +197,7 @@
                 url = property.Expressions?[TextActivitySyntaxNames.Url];
             };
 
-            return new TextRecord(value, isParagraph, isGuidance, isHyperlink, url);
+            return new TextModel.TextRecord(value, isParagraph, isGuidance, isHyperlink, url);
         }
 
         private async Task<RadioRecord> ElsaPropertyToRadioRecord(ElsaProperty property, IExpressionEvaluator evaluator, ActivityExecutionContext context)
