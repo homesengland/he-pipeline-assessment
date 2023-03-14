@@ -10,6 +10,7 @@ namespace Elsa.CustomInfrastructure.Config
 
         public void Configure(EntityTypeBuilder<CustomActivityNavigation> builder)
         {
+            builder.ToTable(x => x.IsTemporal());
             builder.HasKey(x => x.Id);
             builder.Property(p => p.Id).HasColumnOrder(0);
             builder.Property(x => x.ActivityType).HasMaxLength(EntityConfigurationConstants.MaxLength);
@@ -17,6 +18,7 @@ namespace Elsa.CustomInfrastructure.Config
             builder.Property(x => x.WorkflowInstanceId).HasMaxLength(EntityConfigurationConstants.MaxLength);
             builder.Property(x => x.PreviousActivityId).HasMaxLength(EntityConfigurationConstants.MaxLength);
             builder.Property(x => x.PreviousActivityType).HasMaxLength(EntityConfigurationConstants.MaxLength);
+
         }
     }
 }

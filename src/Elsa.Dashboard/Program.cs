@@ -40,7 +40,12 @@ builder.AddCustomAuth0Configuration();
 builder.Services.AddCustomAuthentication();
 
 var app = builder.Build();
-app.UseExceptionHandler("/Error");
+
+if (!app.Environment.IsDevelopment())
+{
+  app.UseExceptionHandler("/Error");
+
+}
 
 app.Use((context, next) =>
 {
@@ -48,6 +53,12 @@ app.Use((context, next) =>
   return next();
 });
 
+
+app.Use((context, next) =>
+{
+  context.Request.Scheme = "https";
+  return next();
+});
 
 app.UseMiddleware<SecurityHeaderMiddleware>();
 
@@ -68,7 +79,6 @@ app.UseStaticFiles().UseStaticFiles(new StaticFileOptions
     // Elsa API Endpoints are implemented as regular ASP.NET Core API controllers.
     endpoints
       .MapControllers();
-    endpoints.MapControllers();
     // For Dashboard.
     endpoints.MapFallbackToPage("/_Host");
   });

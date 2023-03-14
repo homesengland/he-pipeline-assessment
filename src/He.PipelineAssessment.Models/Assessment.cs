@@ -1,6 +1,6 @@
 ﻿namespace He.PipelineAssessment.Models
 {
-    public class Assessment
+    public class Assessment : AuditableEntity
     {
         public int Id { get; set; }
         public int SpId { get; set; }
@@ -13,9 +13,6 @@
         public string LocalAuthority { get; set; } = null!;
         public decimal? FundingAsk { get; set; }
         public int? NumberOfHomes { get; set; }
-        public DateTime CreatedDateTime { get; set; }
-        public DateTime? LastModifiedDateTime { get; set; }
-
 
         public virtual List<AssessmentToolWorkflowInstance>? AssessmentToolWorkflowInstances { get; set; }
     }

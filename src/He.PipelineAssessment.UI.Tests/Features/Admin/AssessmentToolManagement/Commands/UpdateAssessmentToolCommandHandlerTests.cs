@@ -3,7 +3,6 @@ using He.PipelineAssessment.Infrastructure.Repository;
 using He.PipelineAssessment.Models;
 using He.PipelineAssessment.Tests.Common;
 using He.PipelineAssessment.UI.Common.Exceptions;
-using He.PipelineAssessment.UI.Common.Utility;
 using He.PipelineAssessment.UI.Features.Admin.AssessmentToolManagement.Commands.UpdateAssessmentTool;
 using MediatR;
 using Moq;
@@ -40,17 +39,14 @@ namespace He.PipelineAssessment.UI.Tests.Features.Admin.AssessmentToolManagement
         public async Task Handle_CallsUpdateAssessmentToolRepositoryWithCorrectValues
          (
             [Frozen] Mock<IAdminAssessmentToolRepository> adminAssessmentToolRepository,
-            [Frozen] Mock<IDateTimeProvider> dateTimeProvider,
              UpdateAssessmentToolCommand updateAssessmentToolCommand,
              AssessmentTool assessmentTool,
-             DateTime date,
              UpdateAssessmentToolCommandHandler sut
          )
         {
             //Arrange           
             adminAssessmentToolRepository.Setup(x => x.GetAssessmentToolById(updateAssessmentToolCommand.Id))
                 .ReturnsAsync(assessmentTool);
-            dateTimeProvider.Setup(y => y.UtcNow()).Returns(date);
 
             //Act
             var result = await sut.Handle(updateAssessmentToolCommand, CancellationToken.None);
@@ -60,7 +56,6 @@ namespace He.PipelineAssessment.UI.Tests.Features.Admin.AssessmentToolManagement
             Assert.Equal(Unit.Value, result);
             adminAssessmentToolRepository.Verify(
               x => x.UpdateAssessmentTool(It.Is<AssessmentTool>(y =>
-                  y.LastModified == date &&
                   y.Order == updateAssessmentToolCommand.Order &&
                   y.Name == updateAssessmentToolCommand.Name)), Times.Once);
         }

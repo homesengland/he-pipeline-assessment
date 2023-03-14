@@ -1,6 +1,6 @@
 ﻿using AutoFixture.Xunit2;
+using He.PipelineAssessment.Infrastructure;
 using He.PipelineAssessment.Tests.Common;
-using He.PipelineAssessment.UI.Common.Utility;
 using Microsoft.AspNetCore.Http;
 using Moq;
 using System.Security.Claims;

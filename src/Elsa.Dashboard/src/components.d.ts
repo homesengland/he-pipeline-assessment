@@ -71,6 +71,11 @@ export namespace Components {
         "propertyDescriptor": ActivityPropertyDescriptor;
         "propertyModel": ActivityDefinitionProperty;
     }
+    interface HeTextActivityProperty {
+        "activityModel": ActivityModel;
+        "propertyDescriptor": ActivityPropertyDescriptor;
+        "propertyModel": ActivityDefinitionProperty;
+    }
     interface QuestionProperty {
         "activityModel": ActivityModel;
         "questionModel": NestedPropertyModel;
@@ -122,6 +127,10 @@ export interface HeSingleLinePropertyCustomEvent<T> extends CustomEvent<T> {
 export interface HeSwitchOptionsPropertyCustomEvent<T> extends CustomEvent<T> {
     detail: T;
     target: HTMLHeSwitchOptionsPropertyElement;
+}
+export interface HeTextActivityPropertyCustomEvent<T> extends CustomEvent<T> {
+    detail: T;
+    target: HTMLHeTextActivityPropertyElement;
 }
 export interface QuestionPropertyCustomEvent<T> extends CustomEvent<T> {
     detail: T;
@@ -194,6 +203,12 @@ declare global {
         prototype: HTMLHeSwitchOptionsPropertyElement;
         new (): HTMLHeSwitchOptionsPropertyElement;
     };
+    interface HTMLHeTextActivityPropertyElement extends Components.HeTextActivityProperty, HTMLStencilElement {
+    }
+    var HTMLHeTextActivityPropertyElement: {
+        prototype: HTMLHeTextActivityPropertyElement;
+        new (): HTMLHeTextActivityPropertyElement;
+    };
     interface HTMLQuestionPropertyElement extends Components.QuestionProperty, HTMLStencilElement {
     }
     var HTMLQuestionPropertyElement: {
@@ -224,6 +239,7 @@ declare global {
         "he-radio-options-property": HTMLHeRadioOptionsPropertyElement;
         "he-single-line-property": HTMLHeSingleLinePropertyElement;
         "he-switch-options-property": HTMLHeSwitchOptionsPropertyElement;
+        "he-text-activity-property": HTMLHeTextActivityPropertyElement;
         "question-property": HTMLQuestionPropertyElement;
         "question-screen-property": HTMLQuestionScreenPropertyElement;
         "switch-options-property": HTMLSwitchOptionsPropertyElement;
@@ -302,6 +318,12 @@ declare namespace LocalJSX {
         "propertyDescriptor"?: ActivityPropertyDescriptor;
         "propertyModel"?: ActivityDefinitionProperty;
     }
+    interface HeTextActivityProperty {
+        "activityModel"?: ActivityModel;
+        "onExpressionChanged"?: (event: HeTextActivityPropertyCustomEvent<string>) => void;
+        "propertyDescriptor"?: ActivityPropertyDescriptor;
+        "propertyModel"?: ActivityDefinitionProperty;
+    }
     interface QuestionProperty {
         "activityModel"?: ActivityModel;
         "onUpdateQuestionScreen"?: (event: QuestionPropertyCustomEvent<string>) => void;
@@ -330,6 +352,7 @@ declare namespace LocalJSX {
         "he-radio-options-property": HeRadioOptionsProperty;
         "he-single-line-property": HeSingleLineProperty;
         "he-switch-options-property": HeSwitchOptionsProperty;
+        "he-text-activity-property": HeTextActivityProperty;
         "question-property": QuestionProperty;
         "question-screen-property": QuestionScreenProperty;
         "switch-options-property": SwitchOptionsProperty;
@@ -350,6 +373,7 @@ declare module "@stencil/core" {
             "he-radio-options-property": LocalJSX.HeRadioOptionsProperty & JSXBase.HTMLAttributes<HTMLHeRadioOptionsPropertyElement>;
             "he-single-line-property": LocalJSX.HeSingleLineProperty & JSXBase.HTMLAttributes<HTMLHeSingleLinePropertyElement>;
             "he-switch-options-property": LocalJSX.HeSwitchOptionsProperty & JSXBase.HTMLAttributes<HTMLHeSwitchOptionsPropertyElement>;
+            "he-text-activity-property": LocalJSX.HeTextActivityProperty & JSXBase.HTMLAttributes<HTMLHeTextActivityPropertyElement>;
             "question-property": LocalJSX.QuestionProperty & JSXBase.HTMLAttributes<HTMLQuestionPropertyElement>;
             "question-screen-property": LocalJSX.QuestionScreenProperty & JSXBase.HTMLAttributes<HTMLQuestionScreenPropertyElement>;
             "switch-options-property": LocalJSX.SwitchOptionsProperty & JSXBase.HTMLAttributes<HTMLSwitchOptionsPropertyElement>;

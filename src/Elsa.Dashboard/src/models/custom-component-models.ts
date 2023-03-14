@@ -17,7 +17,7 @@ export interface HeActivityPropertyDescriptor extends ActivityPropertyDescriptor
   disableWorkflowProviderSelection: boolean;
   considerValuesAsOutcomes: boolean;
   displayInDesigner: boolean;
-  conditionalActivityType?: string;
+  conditionalActivityTypes?: Array<string>;
   expectedOutputType: string;
 }
 
@@ -80,5 +80,4 @@ export interface NestedActivityDefinitionProperty extends ActivityDefinitionProp
 export interface ICheckboxValue extends NestedActivityDefinitionProperty {
   isSingle: boolean;
 }
-
 

@@ -47,6 +47,7 @@ namespace Elsa.CustomWorkflow.Sdk.Models.Workflow
         public string? Comments { get; set; }
         public object Output { get; set; } = null!;
         public string? Answer { get; set; }
+        public bool IsReadOnly { get; set; }
         public decimal? Decimal { get { return GetDecimal(); } set { SetDecimal(value); } }
 
         private int? _characterLimit;
@@ -60,6 +61,8 @@ namespace Elsa.CustomWorkflow.Sdk.Models.Workflow
 
         private Date _date = new Date();
         public Date Date { get { return GetDate(); } set { SetDate(value); } }
+
+        public Information Information { get; set; } = new Information();
 
         #region Getters and Setters
 
@@ -213,6 +216,11 @@ namespace Elsa.CustomWorkflow.Sdk.Models.Workflow
         public int? Day { get; set; }
         public int? Month { get; set; }
         public int? Year { get; set; }
+    }
+
+    public class Information
+    {
+        public List<InformationText> InformationTextList { get; set; } = new List<InformationText>();
     }
 }
 

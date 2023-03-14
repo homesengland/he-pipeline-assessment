@@ -128,7 +128,7 @@ namespace Elsa.Server.Features.Workflow.LoadQuestionScreen
             //assign the values
             var questionActivityData = new QuestionActivityData();
             questionActivityData.ActivityId = dbQuestion.ActivityId;
-            questionActivityData.Answer = dbQuestion.Answer;
+            questionActivityData.Answer = dbQuestion.Answer ?? item.Answer;
             questionActivityData.Comments = dbQuestion.Comments;
             questionActivityData.QuestionId = dbQuestion.QuestionId;
             questionActivityData.QuestionType = dbQuestion.QuestionType;
@@ -138,6 +138,7 @@ namespace Elsa.Server.Features.Workflow.LoadQuestionScreen
             questionActivityData.QuestionGuidance = item.QuestionGuidance;
             questionActivityData.QuestionHint = item.QuestionHint;
             questionActivityData.CharacterLimit = item.CharacterLimit;
+            questionActivityData.IsReadOnly = item.IsReadOnly;
 
             if (item.QuestionType == QuestionTypeConstants.CheckboxQuestion)
             {
@@ -170,6 +171,14 @@ namespace Elsa.Server.Features.Workflow.LoadQuestionScreen
             {
                 questionActivityData.Radio.SelectedAnswer =
                     questionActivityData.Answer;
+            }
+
+            if (item.QuestionType == QuestionTypeConstants.Information)
+            {
+                questionActivityData.Information = new Information();
+                questionActivityData.Information.InformationTextList = item.Text.TextRecords
+                    .Select(x => new InformationText() { Text = x.Text, IsGuidance = x.IsGuidance, IsParagraph = x.IsParagraph, IsHyperlink = x.IsHyperlink, Url = x.Url })
+                    .ToArray();
             }
 
             return questionActivityData;

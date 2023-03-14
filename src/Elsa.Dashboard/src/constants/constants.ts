@@ -13,6 +13,18 @@ export class SyntaxNames {
   static Output: string;
 }
 
+export class CheckboxOptionsSyntax {
+  static readonly Single = "Single";
+}
+
+export class TextActivityOptionsSyntax {
+  static readonly Paragraph = "Paragraph";
+  static readonly Guidance = "Guidance";
+  static readonly Hyperlink = "Hyperlink";
+  static readonly Url = "Url";
+  static readonly Condition = "Condition";
+}
+
 export class QuestionTypeConstants {
   static readonly CurrencyQuestion = "CurrencyQuestion";
   static readonly CheckboxQuestion = "CheckboxQuestion";
@@ -28,6 +40,7 @@ export class ActivityTypeConstants {
   static readonly SinglePipelineDataSource = "SinglePipelineDataSource";
   static readonly CheckYourAnswersScreen = "CheckYourAnswersScreen";
   static readonly ConfirmationScreen = "ConfirmationScreen";
+  static readonly Information = "Information";
 }
 
 export class PropertyOutputTypes {
@@ -36,4 +49,5 @@ export class PropertyOutputTypes {
   static readonly Number = "int";
   static readonly Checkbox = "checkbox";
   static readonly Radio = "radio";
+  static readonly Information = "information";
 }

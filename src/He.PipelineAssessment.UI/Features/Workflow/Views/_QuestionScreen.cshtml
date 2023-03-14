@@ -28,6 +28,11 @@
                     @Html.HiddenFor(m => m.Data.QuestionScreenAnswers![i].Question)
                     @Html.HiddenFor(m => m.Data.QuestionScreenAnswers![i].QuestionHint)
                     @Html.HiddenFor(m => m.Data.QuestionScreenAnswers![i].DisplayComments)
+                    if (Model.Data.QuestionScreenAnswers![i].IsReadOnly)
+                    {
+                        @Html.HiddenFor(m => m.Data.QuestionScreenAnswers![i].Answer)
+                    }
+                    @Html.HiddenFor(m => m.Data.QuestionScreenAnswers![i].IsReadOnly)
 
                     bool isValidItem = true;
                     if (!Model.IsValid && Model.ValidationMessages != null && Model.ValidationMessages.Errors != null)
@@ -45,6 +50,7 @@
                             Index = i,
                             IsValid = isValidItem,
                             Answer = Model.Data.QuestionScreenAnswers[i].Answer,
+                            IsReadOnly = Model.Data.QuestionScreenAnswers[i].IsReadOnly,
                             Comments = Model.Data.QuestionScreenAnswers[i].Comments,
                             DisplayComments = Model.Data.QuestionScreenAnswers[i].DisplayComments,
                             Question = Model.Data.QuestionScreenAnswers[i].Question,
@@ -63,6 +69,7 @@
                         Index = i,
                         IsValid = isValidItem,
                         Answer = Model.Data.QuestionScreenAnswers[i].Answer,
+            IsReadOnly = Model.Data.QuestionScreenAnswers[i].IsReadOnly,
                         Comments = Model.Data.QuestionScreenAnswers[i].Comments,
                         DisplayComments = Model.Data.QuestionScreenAnswers[i].DisplayComments,
                         Question = Model.Data.QuestionScreenAnswers[i].Question,
@@ -86,6 +93,7 @@
                             Index = i,
                             IsValid = isValidItem,
                             Answer = Model.Data.QuestionScreenAnswers[i].Answer,
+            IsReadOnly = Model.Data.QuestionScreenAnswers[i].IsReadOnly,
                             Comments = Model.Data.QuestionScreenAnswers[i].Comments,
                             DisplayComments = Model.Data.QuestionScreenAnswers[i].DisplayComments,
                             Question = Model.Data.QuestionScreenAnswers[i].Question,
@@ -104,6 +112,7 @@
                             Index = i,
                             IsValid = isValidItem,
                             Answer = Model.Data.QuestionScreenAnswers[i].Answer,
+            IsReadOnly = Model.Data.QuestionScreenAnswers[i].IsReadOnly,
                             Comments = Model.Data.QuestionScreenAnswers[i].Comments,
                             DisplayComments = Model.Data.QuestionScreenAnswers[i].DisplayComments,
                             Question = Model.Data.QuestionScreenAnswers[i].Question,
@@ -123,6 +132,7 @@
                             Index = i,
                             IsValid = isValidItem,
                             Answer = Model.Data.QuestionScreenAnswers[i].Answer,
+            IsReadOnly = Model.Data.QuestionScreenAnswers[i].IsReadOnly,
                             Comments = Model.Data.QuestionScreenAnswers[i].Comments,
                             DisplayComments = Model.Data.QuestionScreenAnswers[i].DisplayComments,
                             Question = Model.Data.QuestionScreenAnswers[i].Question,
@@ -146,6 +156,7 @@
                             Index = i,
                             IsValid = isValidItem,
                             Answer = Model.Data.QuestionScreenAnswers[i].Answer,
+            IsReadOnly = Model.Data.QuestionScreenAnswers[i].IsReadOnly,
                             Comments = Model.Data.QuestionScreenAnswers[i].Comments,
                             DisplayComments = Model.Data.QuestionScreenAnswers[i].DisplayComments,
                             Question = Model.Data.QuestionScreenAnswers[i].Question,
@@ -157,7 +168,40 @@
                             Radio = new Radio()
                             {
                                 SelectedAnswer = Model.Data.QuestionScreenAnswers[i].Radio.SelectedAnswer,
-                                Choices = Model.Data.QuestionScreenAnswers[i].Radio.Choices.Select(x=> new He.PipelineAssessment.UI.Features.Workflow.ViewModels.Choice(){Answer = x.Answer,IsSingle = x.IsSingle}).ToList()
+                                Choices = Model.Data.QuestionScreenAnswers[i].Radio.Choices
+                                .Select(x=> new He.PipelineAssessment.UI.Features.Workflow.ViewModels.Choice(){Answer = x.Answer,IsSingle = x.IsSingle}).ToList()
+                            }
+                        })
+                    }
+
+                    @if (Model.Data.QuestionScreenAnswers![i].QuestionType == QuestionTypeConstants.Information)
+                    {
+
+                        @await Html.PartialAsync("_Information",new MultiQuestion()
+                        {
+                            Index = i,
+                            IsValid = isValidItem,
+                            Answer = Model.Data.QuestionScreenAnswers[i].Answer,
+                            IsReadOnly = Model.Data.QuestionScreenAnswers[i].IsReadOnly,
+                            Comments = Model.Data.QuestionScreenAnswers[i].Comments,
+                            DisplayComments = Model.Data.QuestionScreenAnswers[i].DisplayComments,
+                            Question = Model.Data.QuestionScreenAnswers[i].Question,
+                            QuestionGuidance = Model.Data.QuestionScreenAnswers[i].QuestionGuidance,
+                            QuestionHint = Model.Data.QuestionScreenAnswers[i].QuestionHint,
+                            QuestionId = Model.Data.QuestionScreenAnswers[i].QuestionId,
+                            QuestionType = Model.Data.QuestionScreenAnswers[i].QuestionType,
+                            Title = Model.Data.QuestionScreenAnswers[i].Title,
+                            Information = new Information
+                            {
+                                Text = Model.Data.QuestionScreenAnswers[i].Information.InformationTextList.
+                                Select(x => new InformationText
+                                {
+                                    Text = x.Text,
+                                    IsHyperlink = x.IsHyperlink,
+                                    IsGuidance = x.IsGuidance,
+                                    IsParagraph = x.IsParagraph,
+                                    Url = x.Url
+                                }).ToList()
                             }
                         })
                     }

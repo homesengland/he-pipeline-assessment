@@ -1,5 +1,5 @@
-﻿function initDataTable (tableId, columnNumberToSort, searchElementId) {
-    $('#' + tableId).DataTable({       
+﻿function initDataTable(tableId, columnNumberToSort, searchElementId) {
+    $('#' + tableId).DataTable({
         "bLengthChange": false,
         order: [[columnNumberToSort, 'asc']],
         "columnDefs": [
@@ -18,8 +18,9 @@
             "sSearch": "Search"
         },
 
-        initComplete: function ()
-        {
+        initComplete: function () {
+            $('#' + tableId).removeAttr("hidden");
+            $('#' + tableId).removeAttr("style");
             $("#" + tableId + "_filter").detach().appendTo('#filter-div');
             $(".dataTables_filter").children('label').children("input[type='search']").addClass('govuk-input');
             $(".dataTables_filter").children('label').addClass('govuk-label');

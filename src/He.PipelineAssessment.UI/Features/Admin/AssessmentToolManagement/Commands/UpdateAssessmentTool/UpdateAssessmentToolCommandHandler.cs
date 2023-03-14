@@ -1,6 +1,5 @@
 ﻿using He.PipelineAssessment.Infrastructure.Repository;
 using He.PipelineAssessment.UI.Common.Exceptions;
-using He.PipelineAssessment.UI.Common.Utility;
 using MediatR;
 
 namespace He.PipelineAssessment.UI.Features.Admin.AssessmentToolManagement.Commands.UpdateAssessmentTool
@@ -8,13 +7,10 @@ namespace He.PipelineAssessment.UI.Features.Admin.AssessmentToolManagement.Comma
     public class UpdateAssessmentToolCommandHandler : IRequestHandler<UpdateAssessmentToolCommand>
     {
         private readonly IAdminAssessmentToolRepository _adminAssessmentToolRepository;
-        private readonly IDateTimeProvider _dateTimeProvider;
 
-        public UpdateAssessmentToolCommandHandler(IAdminAssessmentToolRepository adminAssessmentToolRepository,
-            IDateTimeProvider dateTimeProvider)
+        public UpdateAssessmentToolCommandHandler(IAdminAssessmentToolRepository adminAssessmentToolRepository)
         {
             _adminAssessmentToolRepository = adminAssessmentToolRepository;
-            _dateTimeProvider = dateTimeProvider;
         }
 
         public async Task<Unit> Handle(UpdateAssessmentToolCommand request, CancellationToken cancellationToken)
@@ -26,7 +22,6 @@ namespace He.PipelineAssessment.UI.Features.Admin.AssessmentToolManagement.Comma
             }
             entity.Name = request.Name;
             entity.Order = request.Order;
-            entity.LastModified = _dateTimeProvider.UtcNow();
             await _adminAssessmentToolRepository.UpdateAssessmentTool(entity);
             return Unit.Value;
         }

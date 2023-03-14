@@ -7,7 +7,7 @@ namespace Elsa.CustomActivities.Describers
         public bool DisplayInDesigner { get; set; } = true;
 
         //Used to match to a given Nested Activity Type (i.e. Question Type) in Elsa and only to be displayed if null, or a match.
-        public string? ConditionalActivityType { get; set; }
+        public IEnumerable<string>? ConditionalActivityTypes { get; set; }
         public string? ExpectedOutputType { get; set; }
 
 
@@ -33,16 +33,15 @@ namespace Elsa.CustomActivities.Describers
             bool disableWorkflowProviderSelection = false,
             bool considerValuesAsOutcomes = false,
             bool displayInDesigner = true,
-            string? conditionalActivityType = null
-
-            ) 
-            : base(name, type, uiHint, label, hint, options, category, order, defaultValue, defaultSyntax, supportedSyntaxes, isReadOnly, isBrowsable, isDesignerCritical, defaultWorkflowStorageProvider, disableWorkflowProviderSelection, considerValuesAsOutcomes) 
+            IEnumerable<string>? conditionalActivityTypes = null
+        )
+            : base(name, type, uiHint, label, hint, options, category, order, defaultValue, defaultSyntax, supportedSyntaxes, isReadOnly, isBrowsable, isDesignerCritical, defaultWorkflowStorageProvider, disableWorkflowProviderSelection, considerValuesAsOutcomes)
         {
             DisplayInDesigner = displayInDesigner;
-            ConditionalActivityType = conditionalActivityType;
+            ConditionalActivityTypes = conditionalActivityTypes ?? new List<string>();
             ExpectedOutputType = expectedOutputType;
         }
     }
 
-    
+
 }
