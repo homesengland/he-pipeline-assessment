@@ -4,6 +4,7 @@ import { CustomComponentTags } from './Constants/CustomComponentTags.js';
 import { QuestionDriver } from './Drivers/QuestionPropertyDriver.js';
 import { CustomSwitchDriver } from './Drivers/CustomSwitchPropertyDriver.js';
 import { CustomTextDriver } from './Drivers/CustomTextPropertyDriver.js';
+import { ConditionalTextListDriver } from './Drivers/ConditionalTextListPropertyDriver.js';
 import { TextActivityDriver } from './Drivers/TextActivityPropertyDriver.js';
 
 

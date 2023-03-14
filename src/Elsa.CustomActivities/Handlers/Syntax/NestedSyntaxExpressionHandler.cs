@@ -123,7 +123,7 @@ namespace Elsa.CustomActivities.Handlers.Syntax
         {
             if (property.Expressions != null)
             {
-                var textJson = JsonConvert.DeserializeObject<List<ElsaProperty>>(property.Expressions[CustomSyntaxNames.ConditionalTextList]);
+                var textJson = JsonConvert.DeserializeObject<List<ElsaProperty>>(property.Expressions[TextActivitySyntaxNames.TextActivity]);
                 return textJson ?? new List<ElsaProperty>();
             }
             return new List<ElsaProperty>();
