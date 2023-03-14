@@ -3,11 +3,11 @@ using Elsa.CustomWorkflow.Sdk.HttpClients;
 using FluentValidation;
 using He.PipelineAssessment.Data.Auth;
 using He.PipelineAssessment.Data.SinglePipeline;
+using He.PipelineAssessment.Infrastructure;
 using He.PipelineAssessment.Infrastructure.Data;
 using He.PipelineAssessment.Infrastructure.Repository;
 using He.PipelineAssessment.Infrastructure.Repository.StoredProcedure;
 using He.PipelineAssessment.UI;
-using He.PipelineAssessment.UI.Common.Utility;
 using He.PipelineAssessment.UI.Extensions;
 using He.PipelineAssessment.UI.Features.Admin.AssessmentToolManagement.Commands.CreateAssessmentTool;
 using He.PipelineAssessment.UI.Features.Admin.AssessmentToolManagement.Commands.CreateAssessmentToolWorkflow;
@@ -81,7 +81,6 @@ builder.Services.AddScoped<IAssessmentRepository, AssessmentRepository>();
 builder.Services.AddScoped<IStoredProcedureRepository, StoredProcedureRepository>();
 builder.Services.AddScoped<IAdminAssessmentToolRepository, AdminAssessmentToolRepository>();
 builder.Services.AddScoped<IAdminAssessmentToolWorkflowRepository, AdminAssessmentToolWorkflowRepository>();
-builder.Services.AddScoped<IDateTimeProvider, DateTimeProvider>();
 builder.Services.AddScoped<ISyncCommandHandlerHelper, SyncCommandHandlerHelper>();
 builder.Services.AddScoped<IUserProvider, UserProvider>();
 builder.Services.AddHttpContextAccessor();
@@ -101,8 +100,6 @@ builder.AddCustomAuth0Configuration();
 builder.Services.AddCustomAuthentication();
 
 var app = builder.Build();
-
-
 
 
 if (app.Environment.IsDevelopment())

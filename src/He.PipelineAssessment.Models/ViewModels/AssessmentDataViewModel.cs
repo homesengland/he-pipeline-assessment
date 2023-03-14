@@ -3,7 +3,7 @@
 namespace He.PipelineAssessment.Models.ViewModels
 {
 
-    public class AssessmentDataViewModel
+    public class AssessmentDataViewModel : AuditableEntityViewModel
     {
         public int Id { get; set; }
         public int SpId { get; set; }
@@ -15,8 +15,6 @@ namespace He.PipelineAssessment.Models.ViewModels
         public string? LocalAuthority { get; set; }
         public decimal? FundingAsk { get; set; }
         public int? NumberOfHomes { get; set; }
-        public DateTime CreatedDateTime { get; set; }
-        public DateTime? LastModifiedDateTime { get; set; }
         public string? Status { get; set; }
 
         public string StatusDisplayTag()

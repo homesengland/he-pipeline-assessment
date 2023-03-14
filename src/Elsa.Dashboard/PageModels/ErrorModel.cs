@@ -1,11 +1,13 @@
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Diagnostics;
+using Microsoft.AspNetCore.Authorization;
 
 namespace Elsa.Dashboard.PageModels
 {
   [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
   [IgnoreAntiforgeryToken]
+  //[AllowAnonymous]
   public class ErrorModel : PageModel
   {
     private readonly ILogger<ErrorModel> _logger;

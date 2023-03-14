@@ -1,26 +1,26 @@
 using Elsa.CustomWorkflow.Sdk.HttpClients;
-using Microsoft.AspNetCore.Mvc;
+using Elsa.Dashboard.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc.RazorPages;
+using Microsoft.Extensions.Options;
 using System.Net;
-using System.Net.Sockets;
-using System.Net.WebSockets;
-using System.Reflection.Metadata.Ecma335;
 
 namespace Elsa.Dashboard.PageModels
 {
+  [Authorize]
   public class ElsaDashboardLoader : PageModel
   {
     private string _serverUrl { get; set; }
     private IElsaServerHttpClient _client { get; set; }
 
-    private ILogger<ElsaDashboardLoader> _logger {get;set;}
-    
+    private ILogger<ElsaDashboardLoader> _logger { get; set; }
+
     public string? JsonResponse { get; set; }
 
-    public ElsaDashboardLoader(IElsaServerHttpClient client, IConfiguration configuration, ILogger<ElsaDashboardLoader> logger)
+    public ElsaDashboardLoader(IElsaServerHttpClient client, IOptions<Urls> options, ILogger<ElsaDashboardLoader> logger)
     {
 
-      _serverUrl = configuration.GetSection("Urls").GetValue<string>("ElsaServer") ?? string.Empty;
+      _serverUrl = options.Value.ElsaServer ?? string.Empty;
       _client = client;
       _logger = logger;
     }

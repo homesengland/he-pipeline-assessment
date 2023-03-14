@@ -1,19 +1,12 @@
-﻿using Elsa.Attributes;
-using Elsa.CustomActivities.Constants;
+﻿using Elsa.CustomActivities.Constants;
 using Elsa.CustomActivities.PropertyDecorator;
-using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.Linq;
 using System.Reflection;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Elsa.CustomActivities.Resolver
 {
     public static class OutputTypeHintResolver
     {
-        public static string GetOutputTypeHint<T>(PropertyInfo activityPropertyInfo) where T: HeActivityInputAttribute
+        public static string GetOutputTypeHint<T>(PropertyInfo activityPropertyInfo) where T : HeActivityInputAttribute
         {
             var activityPropertyAttribute = activityPropertyInfo.GetCustomAttribute<T>();
 

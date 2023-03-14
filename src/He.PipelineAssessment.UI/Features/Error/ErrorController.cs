@@ -8,5 +8,11 @@ namespace He.PipelineAssessment.UI.Features.Error
         {
             return View();
         }
+
+        [Route("access-denied")]
+        public IActionResult AccessDenied()
+        {
+            return View("AccessDenied");
+        }
     }
 }
