@@ -68,6 +68,18 @@ namespace Elsa.CustomActivities.Handlers.Syntax
                 return result;
 
             }
+            if (propertyType != null && propertyType == typeof(PotScoreRadioModel))
+            {
+                PotScoreRadioModel result = new PotScoreRadioModel();
+                var parsedProperties = ParseToRadioModel(property);
+                if (parsedProperties != null)
+                {
+                    List<PotScoreRadioRecord> records = await ElsaPropertiesToPotScoreRadioRecordList(parsedProperties, evaluator, context);
+                    result.Choices = records;
+                }
+                return result;
+
+            }
             if (propertyType != null && propertyType == typeof(TextModel))
             {
                 TextModel result = new TextModel();
@@ -142,7 +154,6 @@ namespace Elsa.CustomActivities.Handlers.Syntax
             return new List<ElsaProperty>();
 
         }
-
         private async Task<List<CheckboxRecord>> ElsaPropertiesToCheckboxRecordList(List<ElsaProperty> properties, IExpressionEvaluator evaluator, ActivityExecutionContext context)
         {
             CheckboxRecord[] resultArray = await Task.WhenAll(properties.Select(x => ElsaPropertyToCheckboxRecord(x, evaluator, context)));
@@ -152,6 +163,12 @@ namespace Elsa.CustomActivities.Handlers.Syntax
         private async Task<List<RadioRecord>> ElsaPropertiesToRadioRecordList(List<ElsaProperty> properties, IExpressionEvaluator evaluator, ActivityExecutionContext context)
         {
             RadioRecord[] resultArray = await Task.WhenAll(properties.Select(x => ElsaPropertyToRadioRecord(x, evaluator, context)));
+            return resultArray.ToList();
+        }
+
+        private async Task<List<PotScoreRadioRecord>> ElsaPropertiesToPotScoreRadioRecordList(List<ElsaProperty> properties, IExpressionEvaluator evaluator, ActivityExecutionContext context)
+        {
+            PotScoreRadioRecord[] resultArray = await Task.WhenAll(properties.Select(x => ElsaPropertyToPotScoreRadioRecord(x, evaluator, context)));
             return resultArray.ToList();
         }
 
@@ -205,6 +222,20 @@ namespace Elsa.CustomActivities.Handlers.Syntax
             var identifier = property.Name;
             var value = await EvaluateFromExpressions<string>(evaluator, context, property, CancellationToken.None);
             return new RadioRecord(identifier, value);
+        }
+
+        private async Task<PotScoreRadioRecord> ElsaPropertyToPotScoreRadioRecord(ElsaProperty property, IExpressionEvaluator evaluator, ActivityExecutionContext context)
+        {
+            var identifier = property.Name;
+            string? potScore = string.Empty;
+            var value = await EvaluateFromExpressions<string>(evaluator, context, property, CancellationToken.None);
+
+            if (property.Expressions!.ContainsKey(CustomSyntaxNames.PotScore))
+            {
+                potScore = property.Expressions?[CustomSyntaxNames.PotScore];
+            };
+
+            return new PotScoreRadioRecord(identifier, value, Enum.Parse<PotScoreEnum>(potScore!));
         }
 
         public Type GetReturnType(string typeHint)

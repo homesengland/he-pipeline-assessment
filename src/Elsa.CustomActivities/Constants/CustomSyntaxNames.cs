@@ -8,6 +8,7 @@ namespace Elsa.CustomActivities.Constants
         public const string QuestionList = "QuestionList";
         public const string Checked = "Checked";
         public const string Condition = "Condition";
+        public const string PotScore = "PotScore";
     }
 
     public class CheckboxSyntaxNames
@@ -22,4 +23,5 @@ namespace Elsa.CustomActivities.Constants
         public const string Hyperlink = "Hyperlink";
         public const string Url = "Url";
     }
+
 }
