@@ -25,7 +25,7 @@ namespace Elsa.CustomWorkflow.Sdk.Models.Workflow
         public string? ConfirmationText { get; set; } = null!;
         public string FooterTitle { get; set; } = null!;
         public string FooterText { get; set; } = null!;
-        public Information Information { get; set; } = null!;
+        public Information Text { get; set; } = null!;
 
         public string? NextWorkflowDefinitionIds { get; set; } = null!;
         public List<QuestionScreenAnswer>? CheckQuestionScreenAnswers { get; set; }

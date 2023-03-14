@@ -1,10 +1,14 @@
-﻿using Elsa.CustomActivities.Constants;
+﻿using Elsa.CustomActivities.Activities.Common;
+using Elsa.CustomActivities.Constants;
 using Elsa.CustomActivities.Handlers.Models;
 using Elsa.CustomActivities.Handlers.ParseModels;
 using Elsa.Expressions;
 using Elsa.Serialization;
 using Elsa.Services.Models;
+using Newtonsoft.Json;
+using Polly;
 using System.Runtime.CompilerServices;
+using static Elsa.CustomActivities.Activities.Common.TextModel;
 
 namespace Elsa.CustomActivities.Handlers
 {
@@ -20,50 +24,65 @@ namespace Elsa.CustomActivities.Handlers
 
         public async Task<object?> EvaluateAsync(string expression, Type returnType, ActivityExecutionContext context, CancellationToken cancellationToken)     
         {
-            var caseModels = TryDeserializeExpression(expression);
-            //var evaluatedCases = await EvaluateCasesAsync(caseModels, context, cancellationToken).ToListAsync(cancellationToken);
-            return null;
-        }
-
-        private async IAsyncEnumerable<string> EvaluateCasesAsync(IEnumerable<ConditionalTextModel> caseModels, ActivityExecutionContext context, [EnumeratorCancellation] CancellationToken cancellationToken)
-        {
-            var validCaseModels = ValidCaseModels(caseModels);
             var evaluator = context.GetService<IExpressionEvaluator>();
+            TextModel result = new TextModel();
+            var informatinTextProperties = TryDeserializeExpression(expression);
+            var textRecords = await ElsaPropertiesToTextRecordList(informatinTextProperties, evaluator, context);
+            result.TextRecords = textRecords;
+            return result;
+        }
 
-            foreach (var caseModel in validCaseModels)
+        private async Task<List<TextRecord>> ElsaPropertiesToTextRecordList(List<ElsaProperty> properties, IExpressionEvaluator evaluator, ActivityExecutionContext context)
+        {
+            TextRecord?[] resultArray = await Task.WhenAll(properties.Select(x => ElsaPropertyToTextRecord(x, evaluator, context)));
+            return resultArray.Where(x => x != null).ToList()!;
+        }
+
+        private async Task<TextRecord?> ElsaPropertyToTextRecord(ElsaProperty property, IExpressionEvaluator evaluator, ActivityExecutionContext context)
+        {
+            string value = await EvaluateFromExpressions<string>(evaluator, context, property, CancellationToken.None);
+            var condition = await evaluator.EvaluateAsync<bool>(property.Expressions?[CustomSyntaxNames.Condition], SyntaxNames.JavaScript, context);
+            if (!condition)
             {
-                var text = await EvaluateText(evaluator, context, caseModel, cancellationToken);
-                var condition = await EvaluateCondition(evaluator, context, caseModel, cancellationToken);
-                if (condition)
-                {
-                    yield return text;
-                }
+                return null;
             }
+            bool isParagraph = property.Expressions?[TextActivitySyntaxNames.Paragraph].ToLower() == "true";
+            bool isGuidance = false;
+            bool isHyperlink = false;
+            string? url = string.Empty;
+
+            if (property.Expressions!.ContainsKey(TextActivitySyntaxNames.Hyperlink))
+            {
+                isHyperlink = property.Expressions?[TextActivitySyntaxNames.Hyperlink].ToLower() == "true";
+            };
+
+            if (property.Expressions!.ContainsKey(TextActivitySyntaxNames.Guidance))
+            {
+                isGuidance = property.Expressions?[TextActivitySyntaxNames.Guidance].ToLower() == "true";
+            };
+
+            if (property.Expressions!.ContainsKey(TextActivitySyntaxNames.Url))
+            {
+                url = property.Expressions?[TextActivitySyntaxNames.Url];
+            };
+
+            return new TextRecord(value, isParagraph, isGuidance, isHyperlink, url);
         }
 
-        private async Task<string> EvaluateText(IExpressionEvaluator evaluator, ActivityExecutionContext context, ConditionalTextModel caseModel, CancellationToken cancellationToken)
+        public async Task<T> EvaluateFromExpressions<T>(IExpressionEvaluator evaluator, ActivityExecutionContext context, ElsaProperty property, CancellationToken cancellationToken = default)
         {
-            var syntax = caseModel.Text.Syntax!;
-            var expression = caseModel.Text.Expressions![syntax];
-            var result = await evaluator.TryEvaluateAsync<string>(expression, syntax, context, cancellationToken);
-            return result.Value ?? "";
-        }
-
-        private async Task<bool> EvaluateCondition(IExpressionEvaluator evaluator, ActivityExecutionContext context, ConditionalTextModel caseModel, CancellationToken cancellationToken)
-        {
-            var syntax = caseModel.Condition.Syntax!;
-            var expression = caseModel.Condition.Expressions![syntax];
-            var result = await evaluator.TryEvaluateAsync<bool>(expression, syntax, context, cancellationToken);
-            var caseResult = result.Success && result.Value;
-            return caseResult;
-        }
-
-        private IEnumerable<ConditionalTextModel> ValidCaseModels(IEnumerable<ConditionalTextModel> caseModels)
-        {
-            List<ConditionalTextModel> validCaseModels = new List<ConditionalTextModel>();
-            validCaseModels = caseModels.Where(x => x.Text.Expressions != null && !string.IsNullOrWhiteSpace(x.Text.Syntax) && x.Text.Expressions.ContainsKey(x.Text.Syntax)).ToList();
-            var filteredValidCaseModels = validCaseModels.Where(x => x.Condition.Expressions != null && !string.IsNullOrWhiteSpace(x.Condition.Syntax) && x.Condition.Expressions.ContainsKey(x.Condition.Syntax)).ToList();
-            return filteredValidCaseModels;
+            var syntax = property.Syntax ?? SyntaxNames.Literal;
+            if (property.Expressions != null && property.Expressions.Count > 0)
+            {
+                var expression = property.Expressions![syntax];
+                var result = await evaluator.TryEvaluateAsync<T>(expression, syntax, context, cancellationToken);
+                if (result.Value != null)
+                {
+                    return result.Value;
+                }
+                return default!;
+            }
+            else return default!;
         }
 
         private List<ElsaProperty> TryDeserializeExpression(string expression)
