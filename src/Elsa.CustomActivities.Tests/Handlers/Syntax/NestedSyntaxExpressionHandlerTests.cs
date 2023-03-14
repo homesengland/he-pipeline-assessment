@@ -193,14 +193,16 @@ namespace Elsa.CustomActivities.Tests.Handlers.Syntax
             {
                 {SyntaxNames.JavaScript, javascriptValue},
                 {SyntaxNames.Literal, stringValue },
-                { CustomSyntaxNames.Checked, "false"}
+                {CustomSyntaxNames.Checked, "false"},
+                {CheckboxSyntaxNames.Single, "false"}
             };
 
             var uncheckedPropertyDictionary = new Dictionary<string, string>()
             {
                 {SyntaxNames.JavaScript, javascriptValue},
                 {SyntaxNames.Literal, stringValue },
-                { CustomSyntaxNames.Checked, "true"}
+                {CustomSyntaxNames.Checked, "true"},
+                {CheckboxSyntaxNames.Single, "true"}
             };
             var firstProperty = SampleElsaProperty(checkedPropertyDictionary, SyntaxNames.JavaScript, "A");
             var secondProperty = SampleElsaProperty(uncheckedPropertyDictionary, SyntaxNames.Literal, "B");
