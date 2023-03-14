@@ -1,4 +1,5 @@
 ﻿@model He.PipelineAssessment.UI.Features.Workflow.LoadConfirmationScreen.LoadConfirmationScreenResponse;
+@using Elsa.CustomModels;
 @using Elsa.CustomWorkflow.Sdk
 @using System.Text.Json
 @{
@@ -18,8 +19,18 @@
     <h2 class="govuk-heading-m">@Html.DisplayTextFor(m => m.Data.FooterTitle)</h2>
     <p class="govuk-body">@Html.DisplayTextFor(m => m.Data.FooterText).</p>
 
-    @foreach(string answer in Model.Data.Text){
-        <p class="govuk-body">@Html.DisplayTextFor(m => answer).</p>
+    @foreach (var text in Model.Data.Information.InformationTextList.
+    Select(x => new InformationText
+    {
+        Text = x.Text,
+        IsHyperlink = x.IsHyperlink,
+        IsGuidance = x.IsGuidance,
+        IsParagraph = x.IsParagraph,
+        Url = x.Url
+    }).ToList())
+    {
+        @await Html.PartialAsync("_InformationTextWrapper", text)
+       // <p class="govuk-body">@Html.DisplayTextFor(m => answer).</p>
     }
 </div>
 

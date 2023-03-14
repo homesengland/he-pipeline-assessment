@@ -127,7 +127,6 @@ namespace Elsa.CustomActivities.Handlers.Syntax
                 return textJson ?? new List<ElsaProperty>();
             }
             return new List<ElsaProperty>();
-
         }
 
         private async Task<List<CheckboxRecord>> ElsaPropertiesToCheckboxRecordList(List<ElsaProperty> properties, IExpressionEvaluator evaluator, ActivityExecutionContext context)
