@@ -1,21 +1,13 @@
-﻿using Castle.Core.Logging;
-using Elsa.CustomActivities.Activities.QuestionScreen;
+﻿using Elsa.CustomActivities.Activities.Common;
 using Elsa.CustomActivities.Constants;
-using Elsa.CustomActivities.Describers;
 using Elsa.CustomActivities.Handlers.Models;
 using Elsa.CustomActivities.Handlers.Syntax;
-using Elsa.CustomWorkflow.Sdk;
-using Elsa.CustomWorkflow.Sdk.Models.Workflow;
 using Elsa.Expressions;
-using Elsa.Models;
 using Elsa.Services.Models;
 using He.PipelineAssessment.Tests.Common;
-using Jint.Native.Json;
-using Microsoft.EntityFrameworkCore.Metadata.Internal;
 using Microsoft.Extensions.Logging;
 using Moq;
 using Newtonsoft.Json;
-using System.Security.Principal;
 using Xunit;
 
 namespace Elsa.CustomActivities.Tests.Handlers.Syntax
@@ -37,12 +29,12 @@ namespace Elsa.CustomActivities.Tests.Handlers.Syntax
 
             var context = new ActivityExecutionContext(provider.Object, default!, default!, default!, default, default);
 
-                int result = Int32.Parse(value);
-                evaluator.Setup(x => x.TryEvaluateAsync<int>(sampleProperty.Expressions![sampleProperty.Syntax!],
-                    sampleProperty.Syntax!, context, CancellationToken.None)).Returns(Task.FromResult(Models.Result.Success(result)));
+            int result = Int32.Parse(value);
+            evaluator.Setup(x => x.TryEvaluateAsync<int>(sampleProperty.Expressions![sampleProperty.Syntax!],
+                sampleProperty.Syntax!, context, CancellationToken.None)).Returns(Task.FromResult(Models.Result.Success(result)));
 
-                evaluator.Setup(x => x.TryEvaluateAsync<int>(javascriptProperty.Expressions![javascriptProperty.Syntax!],
-                    javascriptProperty.Syntax!, context, CancellationToken.None)).Returns(Task.FromResult(Models.Result.Success(result)));
+            evaluator.Setup(x => x.TryEvaluateAsync<int>(javascriptProperty.Expressions![javascriptProperty.Syntax!],
+                javascriptProperty.Syntax!, context, CancellationToken.None)).Returns(Task.FromResult(Models.Result.Success(result)));
 
             NestedSyntaxExpressionHandler handler = new NestedSyntaxExpressionHandler(logger);
 
@@ -95,34 +87,34 @@ namespace Elsa.CustomActivities.Tests.Handlers.Syntax
             Mock<IServiceProvider> provider,
             Mock<IExpressionEvaluator> evaluator,
             ILogger<NestedSyntaxExpressionHandler> logger)
-                {
-                    //Arrange
-                    string value = "Success";
-                    string javascriptQuery = "activities[x].Output()";
-                    Type type = typeof(string);
-                    ElsaProperty sampleProperty = SampleProperty(SyntaxNames.Literal, type, value);
-                    ElsaProperty javascriptProperty = SampleProperty(SyntaxNames.JavaScript, type, javascriptQuery);
+        {
+            //Arrange
+            string value = "Success";
+            string javascriptQuery = "activities[x].Output()";
+            Type type = typeof(string);
+            ElsaProperty sampleProperty = SampleProperty(SyntaxNames.Literal, type, value);
+            ElsaProperty javascriptProperty = SampleProperty(SyntaxNames.JavaScript, type, javascriptQuery);
 
-                    var context = new ActivityExecutionContext(provider.Object, default!, default!, default!, default, default);
+            var context = new ActivityExecutionContext(provider.Object, default!, default!, default!, default, default);
 
-                    string result = value;
-                    evaluator.Setup(x => x.TryEvaluateAsync<string>(sampleProperty.Expressions![sampleProperty.Syntax!],
-                        sampleProperty.Syntax!, context, CancellationToken.None)).Returns(Task.FromResult(Models.Result.Success<string?>(value)));
+            string result = value;
+            evaluator.Setup(x => x.TryEvaluateAsync<string>(sampleProperty.Expressions![sampleProperty.Syntax!],
+                sampleProperty.Syntax!, context, CancellationToken.None)).Returns(Task.FromResult(Models.Result.Success<string?>(value)));
 
-                    evaluator.Setup(x => x.TryEvaluateAsync<string>(javascriptProperty.Expressions![javascriptProperty.Syntax!],
-                        javascriptProperty.Syntax!, context, CancellationToken.None)).Returns(Task.FromResult(Models.Result.Success<string?>(value)));
+            evaluator.Setup(x => x.TryEvaluateAsync<string>(javascriptProperty.Expressions![javascriptProperty.Syntax!],
+                javascriptProperty.Syntax!, context, CancellationToken.None)).Returns(Task.FromResult(Models.Result.Success<string?>(value)));
 
-                    NestedSyntaxExpressionHandler handler = new NestedSyntaxExpressionHandler(logger);
+            NestedSyntaxExpressionHandler handler = new NestedSyntaxExpressionHandler(logger);
 
-                    //Act
+            //Act
 
-                    var output = await handler.EvaluateModel(sampleProperty!, evaluator.Object, context, type);
-                    var parsedJavascriptOutput = await handler.EvaluateModel(javascriptProperty!, evaluator.Object, context, type);
+            var output = await handler.EvaluateModel(sampleProperty!, evaluator.Object, context, type);
+            var parsedJavascriptOutput = await handler.EvaluateModel(javascriptProperty!, evaluator.Object, context, type);
 
-                    //Assert
-                    Assert.Equal(type, output!.GetType());
-                    Assert.Equal(type, parsedJavascriptOutput!.GetType());
-                }
+            //Assert
+            Assert.Equal(type, output!.GetType());
+            Assert.Equal(type, parsedJavascriptOutput!.GetType());
+        }
 
         [Theory, AutoMoqData]
         public async void EvaluateFromExpression_ReturnsRadioData_GivenRadioType(
@@ -133,7 +125,7 @@ namespace Elsa.CustomActivities.Tests.Handlers.Syntax
             //Arrange
             string value = SampleRadioJson();
             Type type = typeof(RadioModel);
-            
+
             var context = new ActivityExecutionContext(provider.Object, default!, default!, default!, default, default);
 
             var javascriptValue = "First Value";
@@ -169,7 +161,7 @@ namespace Elsa.CustomActivities.Tests.Handlers.Syntax
 
 
             //Assert
-            if(output != null)
+            if (output != null)
             {
                 var expectedOutput = JsonConvert.DeserializeObject<List<RadioRecord>>(value);
                 Assert.Equal(type, output!.GetType());
@@ -179,7 +171,7 @@ namespace Elsa.CustomActivities.Tests.Handlers.Syntax
             {
                 Assert.True(false, "Output did not produce a non-null object");
             }
-            
+
         }
 
         [Theory, AutoMoqData]
