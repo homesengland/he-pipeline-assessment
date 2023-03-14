@@ -29,6 +29,7 @@ export class QuestionTypeConstants {
   static readonly CurrencyQuestion = "CurrencyQuestion";
   static readonly CheckboxQuestion = "CheckboxQuestion";
   static readonly RadioQuestion = "RadioQuestion";
+  static readonly PotScoreRadioQuestion = "PotScoreRadioQuestion";
   static readonly DateQuestion = "DateQuestion";
   static readonly TextQuestion = "TextQuestion";
   static readonly TextAreaQuestion = "TextAreaQuestion";

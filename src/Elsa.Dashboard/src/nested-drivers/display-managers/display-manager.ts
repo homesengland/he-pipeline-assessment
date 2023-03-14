@@ -9,6 +9,7 @@ import { HeMultiLineDriver } from "../he-multi-line-driver";
 import { HeMultiTextDriver } from "../he-multi-text-driver";
 import { HeRadioListDriver } from "../he-radio-list-driver";
 import { HeRadioOptionsDriver } from "../he-radio-options-driver";
+import { HePotScoreRadioOptionsDriver } from "../he-potscore-radio-options-driver";
 import { HeScriptDriver } from "../he-script-driver";
 import { HeSingleLineDriver } from "../he-single-line-driver";
 import { HeSwitchCaseDriver } from "../he-switch-cases-driver";
@@ -37,10 +38,11 @@ export class DefaultDriversFactory {
     this.drivers["he-dictionary"] = new HeDictionaryDriver();
     this.drivers["he-cron-expression"] = new HeCronDriver();
     this.drivers["he-radio-options"] = new HeRadioOptionsDriver();
+    this.drivers["he-potscore-radio-options"] = new HePotScoreRadioOptionsDriver();
     this.drivers["he-checkbox-options"] = new HeCheckboxOptionsDriver();
     this.drivers["he-text-activity"] = new HeTextActivityDriver();
   }
-  drivers: Dictionary<HePropertyDisplayDriver> = { };
+  drivers: Dictionary<HePropertyDisplayDriver> = {};
 }
 
 
