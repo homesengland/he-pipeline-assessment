@@ -9,7 +9,7 @@ namespace He.PipelineAssessment.UI.Features.Workflow.StartWorkflow
 {
     public class StartWorkflowCommandHandler : IRequestHandler<StartWorkflowCommand, LoadQuestionScreenRequest?>
     {
-        
+
         private readonly IElsaServerHttpClient _elsaServerHttpClient;
         private readonly IAssessmentRepository _assessmentRepository;
         private readonly ILogger<StartWorkflowCommandHandler> _logger;
@@ -53,7 +53,7 @@ namespace He.PipelineAssessment.UI.Features.Workflow.StartWorkflow
             }
             catch (Exception e)
             {
-               _logger.LogError(e.Message);
+                _logger.LogError(e.Message);
                 return null;
             }
 
@@ -63,7 +63,6 @@ namespace He.PipelineAssessment.UI.Features.Workflow.StartWorkflow
         {
             var assessmentStage = new AssessmentToolWorkflowInstance();
             assessmentStage.WorkflowInstanceId = response.Data.WorkflowInstanceId;
-            assessmentStage.CreatedDateTime = DateTime.UtcNow;
             assessmentStage.AssessmentId = request.AssessmentId;
             assessmentStage.Status = AssessmentStageConstants.Draft;
             assessmentStage.WorkflowName = response.Data.WorkflowName;

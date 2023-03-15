@@ -1,6 +1,6 @@
 ﻿namespace He.PipelineAssessment.Models
 {
-    public class AssessmentToolWorkflow
+    public class AssessmentToolWorkflow : AuditableEntity
     {
         public int Id { get; set; }
         public int AssessmentToolId { get; set; }

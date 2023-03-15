@@ -48,7 +48,7 @@ namespace He.PipelineAssessment.UI.Features.Assessment.AssessmentSummary
                         Stages = stages,
                         LocalAuthority = dbAssessment.LocalAuthority,
                         ProjectManager = dbAssessment.ProjectManager
-                        
+
                     };
                 }
             }

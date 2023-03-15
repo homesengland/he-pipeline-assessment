@@ -1,8 +1,7 @@
 ﻿using AutoFixture.Xunit2;
-using He.PipelineAssessment.Tests.Common;
 using He.PipelineAssessment.Infrastructure.Repository;
 using He.PipelineAssessment.Models;
-using He.PipelineAssessment.UI.Common.Utility;
+using He.PipelineAssessment.Tests.Common;
 using He.PipelineAssessment.UI.Features.Admin.AssessmentToolManagement.Commands.CreateAssessmentTool;
 using He.PipelineAssessment.UI.Features.Admin.AssessmentToolManagement.Mappers;
 using MediatR;
@@ -41,9 +40,7 @@ public class CreateAssessmentToolCommandHandlerTests
     (
         [Frozen] Mock<IAssessmentToolMapper> assessmentToolMapper,
         [Frozen] Mock<IAdminAssessmentToolRepository> adminAssessmentToolRepository,
-        [Frozen] Mock<IDateTimeProvider> dateTimeProvider,
         CreateAssessmentToolCommand createAssessmentToolCommand,
-        DateTime date,
         AssessmentTool assessmentTool,
         CreateAssessmentToolCommandHandler sut
     )
@@ -51,7 +48,6 @@ public class CreateAssessmentToolCommandHandlerTests
         //Arrange
         assessmentToolMapper.Setup(x => x.CreateAssessmentToolCommandToAssessmentTool(createAssessmentToolCommand))
             .Returns(assessmentTool);
-        dateTimeProvider.Setup(x => x.UtcNow()).Returns(date);
 
         //Act
         var result = await sut.Handle(createAssessmentToolCommand, CancellationToken.None);
@@ -59,7 +55,7 @@ public class CreateAssessmentToolCommandHandlerTests
         //Assert          
         adminAssessmentToolRepository.Verify(
             x => x.CreateAssessmentTool(It.Is<AssessmentTool>(y =>
-                y.CreatedDate == date && y.LastModified == date)), Times.Once);
+                y.Name == assessmentTool.Name)), Times.Once);
         Assert.Equal(Unit.Value, result);
     }
 }

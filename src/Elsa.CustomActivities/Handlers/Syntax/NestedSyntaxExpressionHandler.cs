@@ -4,6 +4,7 @@ using Elsa.CustomActivities.Handlers.Models;
 using Elsa.CustomActivities.Resolver;
 using Elsa.Expressions;
 using Elsa.Services.Models;
+using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 using static Elsa.CustomActivities.Activities.Common.TextModel;
 
@@ -14,28 +15,16 @@ namespace Elsa.CustomActivities.Handlers.Syntax
     public interface INestedSyntaxExpressionHandler
     {
         Type GetReturnType(string typeHint);
-        Task<T> EvaluateFromExpressions<T>(IExpressionEvaluator evaluator, ActivityExecutionContext context, ElsaProperty property, CancellationToken cancellationToken);
+        //Task<T> EvaluateFromExpressions<T>(IExpressionEvaluator evaluator, ActivityExecutionContext context, ElsaProperty property, CancellationToken cancellationToken);
         Task<object?> EvaluateModel(ElsaProperty property, IExpressionEvaluator evaluator, ActivityExecutionContext context, Type propertyType);
-
     }
 
     public class NestedSyntaxExpressionHandler : INestedSyntaxExpressionHandler
     {
-
-        public async Task<T> EvaluateFromExpressions<T>(IExpressionEvaluator evaluator, ActivityExecutionContext context, ElsaProperty property, CancellationToken cancellationToken = default)
+        private ILogger<NestedSyntaxExpressionHandler> _logger;
+        public NestedSyntaxExpressionHandler(ILogger<NestedSyntaxExpressionHandler> logger)
         {
-            var syntax = property.Syntax ?? SyntaxNames.Literal;
-            if (property.Expressions != null && property.Expressions.Count > 0)
-            {
-                var expression = property.Expressions![syntax];
-                var result = await evaluator.TryEvaluateAsync<T>(expression, syntax, context, cancellationToken);
-                if (result.Value != null)
-                {
-                    return result.Value;
-                }
-                return default!;
-            }
-            else return default!;
+            _logger = logger;
         }
 
         public async Task<object?> EvaluateModel(ElsaProperty property, IExpressionEvaluator evaluator, ActivityExecutionContext context, Type propertyType)
@@ -86,6 +75,18 @@ namespace Elsa.CustomActivities.Handlers.Syntax
                 var parsedProperties = ParseToTextModel(property);
                 if (parsedProperties != null)
                 {
+                    List<TextModel.TextRecord> records = await ElsaPropertiesToTextRecordList(parsedProperties, evaluator, context);
+                    result.TextRecords = records;
+                }
+                return result;
+
+            }
+            if (propertyType != null && propertyType == typeof(TextModel))
+            {
+                TextModel result = new TextModel();
+                var parsedProperties = ParseToTextModel(property);
+                if (parsedProperties != null)
+                {
                     List<TextRecord> records = await ElsaPropertiesToTextRecordList(parsedProperties, evaluator, context);
                     result.TextRecords = records;
                 }
@@ -97,6 +98,31 @@ namespace Elsa.CustomActivities.Handlers.Syntax
                 string result = await EvaluateFromExpressions<string>(evaluator, context, property, CancellationToken.None);
                 return result;
             }
+        }
+
+        private async Task<T> EvaluateFromExpressions<T>(IExpressionEvaluator evaluator, ActivityExecutionContext context, ElsaProperty property, CancellationToken cancellationToken = default)
+        {
+            try
+            {
+                var syntax = property.Syntax ?? SyntaxNames.Literal;
+                if (property.Expressions != null && property.Expressions.Count > 0)
+                {
+                    var expression = property.Expressions![syntax];
+                    var result = await evaluator.TryEvaluateAsync<T>(expression, syntax, context, cancellationToken);
+                    if (result.Value != null)
+                    {
+                        return result.Value;
+                    }
+                    return default!;
+                }
+                else return default!;
+            }
+            catch (KeyNotFoundException e)
+            {
+                _logger.LogError(e, "Incorrect data structure.  Expression did not contain correct Syntax");
+                return default!;
+            }
+
         }
 
         private List<ElsaProperty> ParseToCheckboxModel(ElsaProperty property)
@@ -127,6 +153,8 @@ namespace Elsa.CustomActivities.Handlers.Syntax
                 return textJson ?? new List<ElsaProperty>();
             }
             return new List<ElsaProperty>();
+        }
+
         }
 
         private async Task<List<CheckboxRecord>> ElsaPropertiesToCheckboxRecordList(List<ElsaProperty> properties, IExpressionEvaluator evaluator, ActivityExecutionContext context)

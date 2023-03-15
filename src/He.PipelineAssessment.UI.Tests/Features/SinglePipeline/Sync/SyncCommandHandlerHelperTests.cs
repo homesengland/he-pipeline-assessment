@@ -1,9 +1,6 @@
-﻿using AutoFixture.Xunit2;
-using He.PipelineAssessment.Data.SinglePipeline;
+﻿using He.PipelineAssessment.Data.SinglePipeline;
 using He.PipelineAssessment.Tests.Common;
-using He.PipelineAssessment.UI.Common.Utility;
 using He.PipelineAssessment.UI.Features.SinglePipeline.Sync;
-using Moq;
 using Xunit;
 
 namespace He.PipelineAssessment.UI.Tests.Features.SinglePipeline.Sync
@@ -13,13 +10,11 @@ namespace He.PipelineAssessment.UI.Tests.Features.SinglePipeline.Sync
         [Theory]
         [AutoMoqData]
         public void AssessmentsToBeAdded_ShouldRetrunEmptyList_GivenListofSourceandDestinationSpIdsIsTheSame(
-         [Frozen] Mock<IDateTimeProvider> dateTimeProvider,
          List<Models.Assessment> assessmentList,
          List<SinglePipelineData> singlePipelineData,
         SyncCommandHandlerHelper sut)
         {
             //Arrange
-            dateTimeProvider.Setup(x => x.UtcNow()).Returns(DateTime.UtcNow);
             var sourceAssessmentSpIds = new List<int>
             {
              2,6,8
@@ -46,14 +41,12 @@ namespace He.PipelineAssessment.UI.Tests.Features.SinglePipeline.Sync
         [Theory]
         [AutoMoqData]
         public void AssessmentsToBeAdded_ShouldRetrunListOFSinglePipelineData_GivenListofSourceandDestinationSpIdsIsDifferent(
-            [Frozen] Mock<IDateTimeProvider> dateTimeProvider,
             List<Models.Assessment> assessmentList,
             List<SinglePipelineData> singlePipelineData,
             SyncCommandHandlerHelper sut)
         {
 
             //Arrange
-            dateTimeProvider.Setup(x => x.UtcNow()).Returns(DateTime.UtcNow);
             var sourceAssessmentSpIds = new List<int>
             {
                 2,6,8
@@ -79,7 +72,6 @@ namespace He.PipelineAssessment.UI.Tests.Features.SinglePipeline.Sync
         [Theory]
         [AutoMoqData]
         public void UpdateAssessments_ShouldReturnSameListOfAssessmentModel_GivenNoChangesIdentified(
-            [Frozen] Mock<IDateTimeProvider> dateTimeProvider,
             Models.Assessment destinationAssessment,
             SinglePipelineData singlePipelineData,
             SyncCommandHandlerHelper sut)
@@ -114,7 +106,6 @@ namespace He.PipelineAssessment.UI.Tests.Features.SinglePipeline.Sync
             singlePipelineDataList.Add(singlePipelineData);
 
             //Arrange
-            dateTimeProvider.Setup(x => x.UtcNow()).Returns(DateTime.UtcNow);
 
             //Act
             var result = sut.UpdateAssessments(destinationAssessments, existingAssessments, singlePipelineDataList);
@@ -129,13 +120,11 @@ namespace He.PipelineAssessment.UI.Tests.Features.SinglePipeline.Sync
             Assert.Equal(singlePipelineData.local_authority, result[0].LocalAuthority);
             Assert.Equal(singlePipelineData.funding_ask, result[0].FundingAsk);
             Assert.Equal(singlePipelineData.units_or_homes, result[0].NumberOfHomes);
-            dateTimeProvider.Verify(x => x.UtcNow(), Times.Never);
         }
 
         [Theory]
         [AutoMoqData]
         public void UpdateAssessments_ShouldReturnUpdatedListOfAssessmentModel_GivenChangesIdentified(
-           [Frozen] Mock<IDateTimeProvider> dateTimeProvider,
            Models.Assessment destinationAssessment,
            SinglePipelineData singlePipelineData,
            SyncCommandHandlerHelper sut)
@@ -170,7 +159,6 @@ namespace He.PipelineAssessment.UI.Tests.Features.SinglePipeline.Sync
             singlePipelineDataList.Add(singlePipelineData);
 
             //Arrange
-            dateTimeProvider.Setup(x => x.UtcNow()).Returns(DateTime.UtcNow);
 
             //Act
             var result = sut.UpdateAssessments(destinationAssessments, existingAssessments, singlePipelineDataList);
@@ -185,7 +173,6 @@ namespace He.PipelineAssessment.UI.Tests.Features.SinglePipeline.Sync
             Assert.Equal(singlePipelineData.local_authority, result[0].LocalAuthority);
             Assert.Equal(singlePipelineData.funding_ask, result[0].FundingAsk);
             Assert.Equal(singlePipelineData.units_or_homes, result[0].NumberOfHomes);
-            dateTimeProvider.Verify(x => x.UtcNow(), Times.Once);
         }
     }
 }
