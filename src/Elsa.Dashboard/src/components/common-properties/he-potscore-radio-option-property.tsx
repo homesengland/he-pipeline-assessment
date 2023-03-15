@@ -13,7 +13,7 @@ import PlusIcon from '../../icons/plus_icon';
 import TrashCanIcon from '../../icons/trash-can';
 import ExpandIcon from '../../icons/expand_icon';
 import { PropertyOutputTypes, SyntaxNames } from '../../constants/constants';
-import { NestedActivityDefinitionProperty } from '../../models/custom-component-models';
+import { PotScoreNestedActivityDefinitionProperty } from '../../models/custom-component-models';
 
 @Component({
   tag: 'he-potscore-radio-options-property',
@@ -26,7 +26,7 @@ export class HePotScoreRadioOptionProperty {
   @Prop() activityModel: ActivityModel;
   @Prop() propertyDescriptor: ActivityPropertyDescriptor;
   @Prop() propertyModel: ActivityDefinitionProperty;
-  @State() options: Array<NestedActivityDefinitionProperty> = [];
+  @State() options: Array<PotScoreNestedActivityDefinitionProperty> = [];
   @State() iconProvider = new IconProvider();
   @Event() expressionChanged: EventEmitter<string>;
 
@@ -58,30 +58,39 @@ export class HePotScoreRadioOptionProperty {
 
   onAddOptionClick() {
     const optionName = ToLetter(this.options.length+1);
-    const newOption: NestedActivityDefinitionProperty = { name: optionName, syntax: SyntaxNames.Literal, expressions: { [SyntaxNames.Literal]: '' }, type: PropertyOutputTypes.Radio  };
+    const newOption: PotScoreNestedActivityDefinitionProperty = { name: optionName, syntax: SyntaxNames.Literal, expressions: { [SyntaxNames.Literal]: '' }, type: PropertyOutputTypes.Radio, potScore: 'High' };
     this.options = [...this.options, newOption];
     this.updatePropertyModel();
   }
 
-  onDeleteOptionClick(switchCase: NestedActivityDefinitionProperty) {
+  onDeleteOptionClick(switchCase: PotScoreNestedActivityDefinitionProperty) {
     this.options = this.options.filter(x => x != switchCase);
     this.updatePropertyModel();
   }
 
-  onOptionNameChanged(e: Event, radioOption: NestedActivityDefinitionProperty) {
+  onOptionNameChanged(e: Event, radioOption: PotScoreNestedActivityDefinitionProperty) {
     radioOption.name = (e.currentTarget as HTMLInputElement).value.trim();
     this.updatePropertyModel();
   }
 
-  onOptionExpressionChanged(e: CustomEvent<string>, radioOption: NestedActivityDefinitionProperty) {
+  onOptionExpressionChanged(e: CustomEvent<string>, radioOption: PotScoreNestedActivityDefinitionProperty) {
     radioOption.expressions[radioOption.syntax] = e.detail;
     this.updatePropertyModel();
   }
 
-  onOptionSyntaxChanged(e: Event, switchCase: NestedActivityDefinitionProperty, expressionEditor: HTMLElsaExpressionEditorElement) {
+  onOptionSyntaxChanged(e: Event, switchCase: PotScoreNestedActivityDefinitionProperty, expressionEditor: HTMLElsaExpressionEditorElement) {
     const select = e.currentTarget as HTMLSelectElement;
     switchCase.syntax = select.value;
     expressionEditor.language = mapSyntaxToLanguage(switchCase.syntax);
+    this.updatePropertyModel();
+  }
+
+  onPotScoreChanged(e: Event, switchCase: PotScoreNestedActivityDefinitionProperty) {
+ /*   console.log("potcore2", e.target);*/
+    const select = e.currentTarget as HTMLSelectElement;
+    switchCase.potScore = select.value;
+    console.log("potcore3", switchCase.potScore, select);
+    /*expressionEditor.language = mapSyntaxToLanguage(switchCase.syntax);*/
     this.updatePropertyModel();
   }
 
@@ -114,7 +123,7 @@ export class HePotScoreRadioOptionProperty {
     const potScores = this.potScores;
     const json = JSON.stringify(cases, null, 2);
 
-    const renderCaseEditor = (radioOption: NestedActivityDefinitionProperty, index: number) => {
+    const renderCaseEditor = (radioOption: PotScoreNestedActivityDefinitionProperty, index: number) => {
       const selectedScore = "High";
       const expression = radioOption.expressions[radioOption.syntax];
       const syntax = radioOption.syntax;
@@ -151,7 +160,7 @@ export class HePotScoreRadioOptionProperty {
             </div>
           </td>
           <td class="elsa-py-2 elsa-pr-2">
-              <select onChange={e => this.onOptionSyntaxChanged(e, radioOption, expressionEditor)}
+            <select onChange={e => this.onPotScoreChanged(e, radioOption)}
                 class="elsa-mt-1 elsa-block focus:elsa-ring-blue-500 focus:elsa-border-blue-500 elsa-w-full elsa-shadow-sm sm:elsa-max-w-xs sm:elsa-text-sm elsa-border-gray-300 elsa-rounded-md">
                 {potScores.map(potScore => {
                   const selected = potScore == selectedScore;

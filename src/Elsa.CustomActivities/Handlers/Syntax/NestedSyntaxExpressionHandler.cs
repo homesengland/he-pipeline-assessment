@@ -235,7 +235,7 @@ namespace Elsa.CustomActivities.Handlers.Syntax
                 potScore = property.Expressions?[CustomSyntaxNames.PotScore];
             };
 
-            return new PotScoreRadioRecord(identifier, value, Enum.Parse<PotScoreEnum>(potScore!));
+            return new PotScoreRadioRecord(identifier, value, Enum.Parse<PotScore>(potScore!));
         }
 
         public Type GetReturnType(string typeHint)
