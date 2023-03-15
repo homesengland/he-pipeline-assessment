@@ -11,10 +11,11 @@ export function InitCustomElsa(elsaStudioRoot, customProperties, potScoreOptions
   elsaStudioRoot.addEventListener('initializing', e => {
     var elsaStudio = e.detail;
     RegisterPlugins(elsaStudio);
-    RegisterDrivers(elsaStudio, customProperties);
+    RegisterDrivers(elsaStudio, customProperties, potScoreOptions);
   });
 
-  function RegisterDrivers(elsaStudio, customProperties) {
+  function RegisterDrivers(elsaStudio, customProperties, potScoreOptions) {
+    console.log('inside customelsa.js', potScoreOptions);
     elsaStudio.propertyDisplayManager.addDriver(CustomPropertyUIHints.QuestionScreenBuilder,
       () => new QuestionDriver(elsaStudio, CustomComponentTags.QuestionScreen, customProperties[PropertyDescriberHints.QuestionScreenBuilder]), potScoreOptions);
 

@@ -58,6 +58,7 @@ export namespace Components {
     }
     interface HePotscoreRadioOptionsProperty {
         "activityModel": ActivityModel;
+        "potScoreOptions": Array<string>;
         "propertyDescriptor": ActivityPropertyDescriptor;
         "propertyModel": ActivityDefinitionProperty;
     }
@@ -319,6 +320,7 @@ declare namespace LocalJSX {
     interface HePotscoreRadioOptionsProperty {
         "activityModel"?: ActivityModel;
         "onExpressionChanged"?: (event: HePotscoreRadioOptionsPropertyCustomEvent<string>) => void;
+        "potScoreOptions"?: Array<string>;
         "propertyDescriptor"?: ActivityPropertyDescriptor;
         "propertyModel"?: ActivityDefinitionProperty;
     }

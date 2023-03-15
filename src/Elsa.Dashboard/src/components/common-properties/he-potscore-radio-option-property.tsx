@@ -121,6 +121,7 @@ export class HePotScoreRadioOptionProperty {
     const supportedSyntaxes = this.supportedSyntaxes;
     const potScores = this.potScores;
     const json = JSON.stringify(cases, null, 2);
+    console.log('pso', this.potScoreOptions);
 
     const renderCaseEditor = (radioOption: PotScoreNestedActivityDefinitionProperty, index: number) => {
       const selectedScore = radioOption.potScore;
