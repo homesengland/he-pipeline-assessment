@@ -26,9 +26,11 @@ export class HePotScoreRadioOptionProperty {
   @Prop() activityModel: ActivityModel;
   @Prop() propertyDescriptor: ActivityPropertyDescriptor;
   @Prop() propertyModel: ActivityDefinitionProperty;
+  @Prop() potScoreOptions: Array<string>; 
   @State() options: Array<PotScoreNestedActivityDefinitionProperty> = [];
   @State() iconProvider = new IconProvider();
   @Event() expressionChanged: EventEmitter<string>;
+
 
 
   @State() switchTextHeight: string = "";

@@ -6,8 +6,7 @@ import { CustomSwitchDriver } from './Drivers/CustomSwitchPropertyDriver.js';
 import { CustomTextDriver } from './Drivers/CustomTextPropertyDriver.js';
 import { ConditionalTextListDriver } from './Drivers/ConditionalTextListPropertyDriver.js';
 
-
-export function InitCustomElsa(elsaStudioRoot, customProperties) {
+export function InitCustomElsa(elsaStudioRoot, customProperties, potScoreOptions) {
 
   elsaStudioRoot.addEventListener('initializing', e => {
     var elsaStudio = e.detail;
@@ -17,7 +16,7 @@ export function InitCustomElsa(elsaStudioRoot, customProperties) {
 
   function RegisterDrivers(elsaStudio, customProperties) {
     elsaStudio.propertyDisplayManager.addDriver(CustomPropertyUIHints.QuestionScreenBuilder,
-      () => new QuestionDriver(elsaStudio, CustomComponentTags.QuestionScreen, customProperties[PropertyDescriberHints.QuestionScreenBuilder]));
+      () => new QuestionDriver(elsaStudio, CustomComponentTags.QuestionScreen, customProperties[PropertyDescriberHints.QuestionScreenBuilder]), potScoreOptions);
 
     elsaStudio.propertyDisplayManager.addDriver(CustomPropertyUIHints.ConditionalTextListBuilder,
       () => new ConditionalTextListDriver(elsaStudio, CustomComponentTags.ConditionalTextList));
