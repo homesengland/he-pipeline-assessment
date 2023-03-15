@@ -5,6 +5,7 @@ using Elsa.CustomActivities.Handlers.ParseModels;
 using Elsa.Expressions;
 using Elsa.Serialization;
 using Elsa.Services.Models;
+using Jint.Native.Boolean;
 using Newtonsoft.Json;
 using Polly;
 using System.Runtime.CompilerServices;
@@ -40,36 +41,21 @@ namespace Elsa.CustomActivities.Handlers
 
         private async Task<TextRecord?> ElsaPropertyToTextRecord(ElsaProperty property, IExpressionEvaluator evaluator, ActivityExecutionContext context)
         {
-            string value = await EvaluateFromExpressions<string>(evaluator, context, property, CancellationToken.None);
-            var condition = await evaluator.EvaluateAsync<bool>(property.Expressions?[CustomSyntaxNames.Condition], SyntaxNames.JavaScript, context);
+            string value = await EvaluateTextFromExpressions<string>(evaluator, context, property, CancellationToken.None);
+            var condition = await EvaluateCondition(property, evaluator, context);
             if (!condition)
             {
                 return null;
             }
-            bool isParagraph = property.Expressions?[TextActivitySyntaxNames.Paragraph].ToLower() == "true";
-            bool isGuidance = false;
-            bool isHyperlink = false;
-            string? url = string.Empty;
-
-            if (property.Expressions!.ContainsKey(TextActivitySyntaxNames.Hyperlink))
-            {
-                isHyperlink = property.Expressions?[TextActivitySyntaxNames.Hyperlink].ToLower() == "true";
-            };
-
-            if (property.Expressions!.ContainsKey(TextActivitySyntaxNames.Guidance))
-            {
-                isGuidance = property.Expressions?[TextActivitySyntaxNames.Guidance].ToLower() == "true";
-            };
-
-            if (property.Expressions!.ContainsKey(TextActivitySyntaxNames.Url))
-            {
-                url = property.Expressions?[TextActivitySyntaxNames.Url];
-            };
+            bool isParagraph = EvaluateParagraph(property);
+            bool isGuidance = EvaluateGuidance(property);
+            bool isHyperlink = EvaluateHyperlink(property);
+            string? url = EvaluateUrl(property);
 
             return new TextRecord(value, isParagraph, isGuidance, isHyperlink, url);
         }
 
-        public async Task<T> EvaluateFromExpressions<T>(IExpressionEvaluator evaluator, ActivityExecutionContext context, ElsaProperty property, CancellationToken cancellationToken = default)
+        public async Task<T> EvaluateTextFromExpressions<T>(IExpressionEvaluator evaluator, ActivityExecutionContext context, ElsaProperty property, CancellationToken cancellationToken = default)
         {
             var syntax = property.Syntax ?? SyntaxNames.Literal;
             if (property.Expressions != null && property.Expressions.Count > 0)
@@ -83,6 +69,56 @@ namespace Elsa.CustomActivities.Handlers
                 return default!;
             }
             else return default!;
+        }
+
+        public async Task<bool> EvaluateCondition(ElsaProperty property, IExpressionEvaluator evaluator, ActivityExecutionContext context)
+        {
+            if (property.Expressions!.ContainsKey(CustomSyntaxNames.Condition))
+            {
+                var result = await evaluator.TryEvaluateAsync<bool>(property.Expressions?[CustomSyntaxNames.Condition], SyntaxNames.JavaScript, context);
+                return result.Value;
+            }
+            return true;
+        }
+
+        public bool EvaluateParagraph(ElsaProperty property)
+        {
+            if (property.Expressions!.ContainsKey(TextActivitySyntaxNames.Paragraph))
+            {
+                bool value = property.Expressions?[TextActivitySyntaxNames.Paragraph].ToLower() == "true";
+                return value;
+            };
+            return false;
+        }
+
+        public bool EvaluateGuidance(ElsaProperty property)
+        {
+            if (property.Expressions!.ContainsKey(TextActivitySyntaxNames.Guidance))
+            {
+                bool value = property.Expressions?[TextActivitySyntaxNames.Guidance].ToLower() == "true";
+                return value;
+            };
+            return false;
+        }
+
+        public bool EvaluateHyperlink(ElsaProperty property)
+        {
+            if (property.Expressions!.ContainsKey(TextActivitySyntaxNames.Hyperlink))
+            {
+                bool value = property.Expressions?[TextActivitySyntaxNames.Hyperlink].ToLower() == "true";
+                return value;
+            };
+            return false;
+        }
+
+        public string? EvaluateUrl(ElsaProperty property)
+        {
+            if (property.Expressions!.ContainsKey(TextActivitySyntaxNames.Url))
+            {
+                string? value = property.Expressions?[TextActivitySyntaxNames.Url];
+                return value;
+            };
+            return string.Empty;
         }
 
         private List<ElsaProperty> TryDeserializeExpression(string expression)

@@ -6,7 +6,6 @@ using Elsa.Expressions;
 using Elsa.Services.Models;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
-using static Elsa.CustomActivities.Activities.Common.TextModel;
 
 namespace Elsa.CustomActivities.Handlers.Syntax
 {
@@ -75,7 +74,7 @@ namespace Elsa.CustomActivities.Handlers.Syntax
                 var parsedProperties = ParseToTextModel(property);
                 if (parsedProperties != null)
                 {
-                    List<TextModel.TextRecord> records = await ElsaPropertiesToTextRecordList(parsedProperties, evaluator, context);
+                    List<TextRecord> records = await ElsaPropertiesToTextRecordList(parsedProperties, evaluator, context);
                     result.TextRecords = records;
                 }
                 return result;
