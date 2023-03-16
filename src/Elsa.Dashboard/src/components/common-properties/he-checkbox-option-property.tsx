@@ -12,7 +12,7 @@ import {
   HTMLElsaMultiExpressionEditorElement,
   IntellisenseContext
 } from "../../models/elsa-interfaces";
-import { mapSyntaxToLanguage, parseJson, ToLetter } from "../../utils/utils";
+import { mapSyntaxToLanguage, parseJson, ToLetter, Map } from "../../utils/utils";
 import { IconProvider } from "../providers/icon-provider/icon-provider";
 
 @Component({
@@ -29,7 +29,7 @@ export class HeCheckboxOptionProperty {
   @State() options: Array<NestedActivityDefinitionProperty> = [];
   @State() iconProvider = new IconProvider();
   @Event() expressionChanged: EventEmitter<string>;
-
+  @State() optionsDisplayToggle: Map<string> = {};
 
   @State() switchTextHeight: string = "";
 
@@ -125,6 +125,17 @@ export class HeCheckboxOptionProperty {
     this.editorHeight == "2.75em" ? this.editorHeight = "8em" : this.editorHeight = "2.75em"
   }
 
+  onToggleOptions(index: number) {
+    let tempValue = Object.assign(this.optionsDisplayToggle);
+    let tableRowClass = this.optionsDisplayToggle[index];
+    if (tableRowClass == null) {
+      tempValue[index] = "table-row";
+    } else {
+      this.optionsDisplayToggle[index] == "none" ? tempValue[index] = "table-row" : tempValue[index] = "none";
+    }
+    this.optionsDisplayToggle = { ... this.optionsDisplayToggle, tempValue }
+  }
+
   render() {
     const cases = this.options;
     const supportedSyntaxes = this.supportedSyntaxes;
@@ -144,14 +155,18 @@ export class HeCheckboxOptionProperty {
       let prePopulatedExpressionEditor = null;
       let colWidth = "100%";
 
+      const optionsDisplay = this.optionsDisplayToggle[index] ?? "none";
+
       return (
         <tbody>
           <tr key={`case-${index}`}>
             <th class="elsa-py-3 elsa-text-left elsa-text-xs elsa-font-medium elsa-text-gray-500 elsa-tracking-wider elsa-w-2/12">Identifier</th>
 
             <td class="elsa-py-2 pl-5" style={{ width: colWidth }}>
+            <div>
               <input type="text" value={checkboxOption.name} onChange={e => this.onOptionNameChanged(e, checkboxOption)}
-                class="focus:elsa-ring-blue-500 focus:elsa-border-blue-500 elsa-block elsa-w-full elsa-min-w-0 elsa-rounded-md sm:elsa-text-sm elsa-border-gray-300" />
+                  class="focus:elsa-ring-blue-500 focus:elsa-border-blue-500 elsa-block elsa-w-full elsa-min-w-0 elsa-rounded-md sm:elsa-text-sm elsa-border-gray-300" />
+              </div>
             </td>
 
             <td class="elsa-pt-1 elsa-pr-2 elsa-text-right">
@@ -164,7 +179,7 @@ export class HeCheckboxOptionProperty {
           </tr>
 
           <tr>
-            <th class="elsa-py-3 elsa-text-left elsa-text-xs elsa-font-medium elsa-text-gray-500 elsa-tracking-wider elsa-w-8/12">Answer</th>
+            <th class="elsa-py-3 elsa-text-left elsa-text-xs elsa-font-medium elsa-text-gray-500 elsa-tracking-wider elsa-w-2/12">Answer</th>
 
             <td class="elsa-py-2 pl-5" style={{ width: colWidth }}>
               <div class="elsa-mt-1 elsa-relative elsa-rounded-md elsa-shadow-sm">
@@ -196,8 +211,17 @@ export class HeCheckboxOptionProperty {
               </button>
             </td>
           </tr>
-          <tr>
-            <th class="elsa-py-3 elsa-text-left elsa-text-xs elsa-font-medium elsa-text-gray-500 elsa-tracking-wider elsa-w-1/12">IsSingle</th>
+
+          <tr onClick={() => this.onToggleOptions(index)}>
+            <th
+              class="elsa-py-3 elsa-text-left elsa-text-xs elsa-font-medium elsa-text-gray-500 elsa-text-left elsa-tracking-wider elsa-w-2/12" colSpan={3} style={{ cursor: "zoom-in" }}> Options
+            </th>
+            <td></td>
+            <td></td>
+          </tr>
+
+          <tr style={{ display: optionsDisplay }} >
+            <th class="elsa-py-3 elsa-text-left elsa-text-xs elsa-font-medium elsa-text-gray-500 elsa-tracking-wider elsa-w-2/12">IsSingle</th>
             <td class="elsa-py-0">
               <input name="choice_input" type="checkbox" checked={checked} value={'true'}
                 onChange={e => this.onCheckChanged(e, checkboxOption)}
@@ -207,7 +231,7 @@ export class HeCheckboxOptionProperty {
           </tr>
 
 
-          <tr>
+          <tr style={{ display: optionsDisplay }} >
             <th class="elsa-py-3 elsa-text-left elsa-text-xs elsa-font-medium elsa-text-gray-500 elsa-tracking-wider elsa-w-2/12">Pre Populated</th>
             <td class="elsa-py-2 pl-5" style={{ width: colWidth }}>
               <div class="elsa-mt-1 elsa-relative elsa-rounded-md elsa-shadow-sm">
@@ -234,7 +258,8 @@ export class HeCheckboxOptionProperty {
             </td>
             <td></td>
           </tr>
-        </tbody>
+          </tbody>
+        
       );
     };
 
@@ -258,8 +283,8 @@ export class HeCheckboxOptionProperty {
           onSyntaxChanged={e => this.onMultiExpressionEditorSyntaxChanged(e)}
         >
 
-          <table class="elsa-min-w-full elsa-divide-y elsa-divide-gray-200 elsa-table-striped">
-            {cases.map(renderCaseEditor)}
+          <table class="elsa-min-w-full elsa-divide-y elsa-divide-gray-200">
+          {cases.map(renderCaseEditor)}
           </table>
           <button type="button" onClick={() => this.onAddOptionClick()}
             class="elsa-inline-flex elsa-items-center elsa-px-4 elsa-py-2 elsa-border elsa-border-transparent elsa-shadow-sm elsa-text-sm elsa-font-medium elsa-rounded-md elsa-text-white elsa-bg-blue-600 hover:elsa-bg-blue-700 focus:elsa-outline-none focus:elsa-ring-2 focus:elsa-ring-offset-2 focus:elsa-ring-blue-500 elsa-mt-2">

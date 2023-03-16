@@ -7,7 +7,7 @@ import {
   HTMLElsaMultiExpressionEditorElement,
   IntellisenseContext
 } from "../../models/elsa-interfaces";
-import { mapSyntaxToLanguage, parseJson, ToLetter } from "../../utils/utils";
+import { mapSyntaxToLanguage, parseJson, ToLetter,Map } from "../../utils/utils";
 import { IconProvider } from "../providers/icon-provider/icon-provider";
 import PlusIcon from '../../icons/plus_icon';
 import TrashCanIcon from '../../icons/trash-can';
@@ -29,7 +29,7 @@ export class HeRadioOptionProperty {
   @State() options: Array<NestedActivityDefinitionProperty> = [];
   @State() iconProvider = new IconProvider();
   @Event() expressionChanged: EventEmitter<string>;
-
+  @State() optionsDisplayToggle: Map<string> = {};
 
   @State() switchTextHeight: string = "";
 
@@ -112,6 +112,17 @@ export class HeRadioOptionProperty {
     this.editorHeight == "2.75em" ? this.editorHeight = "8em" : this.editorHeight = "2.75em"
   }
 
+  onToggleOptions(index: number) {
+    let tempValue = Object.assign(this.optionsDisplayToggle);
+    let tableRowClass = this.optionsDisplayToggle[index];
+    if (tableRowClass == null) {
+      tempValue[index] = "table-row";
+    } else {
+      this.optionsDisplayToggle[index] == "none" ? tempValue[index] = "table-row" : tempValue[index] = "none";
+    }
+    this.optionsDisplayToggle = { ... this.optionsDisplayToggle, tempValue }
+  }
+
   render() {
     const cases = this.options;
     const supportedSyntaxes = this.supportedSyntaxes;
@@ -129,14 +140,15 @@ export class HeRadioOptionProperty {
       let expressionEditor = null;
       let prePopulatedExpressionEditor = null;
       let colWidth = "100%";
+      const optionsDisplay = this.optionsDisplayToggle[index] ?? "none";
 
       return (
         <tbody>
           <tr key={`case-${index}`}>
             <th
-              class="elsa-px-6 elsa-py-3 elsa-text-left elsa-text-xs elsa-font-medium elsa-text-gray-500 elsa-text-right elsa-tracking-wider elsa-w-3/12">Identifier
+              class="elsa-py-3 elsa-text-left elsa-text-xs elsa-font-medium elsa-text-gray-500 elsa-tracking-wider elsa-w-2/12">Identifier
             </th>
-          <td class="elsa-py-2 elsa-pr-5">
+            <td class="elsa-py-2 elsa-pr-5" style={{ width: colWidth }}>
             <input type="text" value={radioOption.name} onChange={e => this.onOptionNameChanged(e, radioOption)}
               class="focus:elsa-ring-blue-500 focus:elsa-border-blue-500 elsa-block elsa-w-full elsa-min-w-0 elsa-rounded-md sm:elsa-text-sm elsa-border-gray-300" />
             </td>
@@ -152,9 +164,9 @@ export class HeRadioOptionProperty {
         <tr>
        
               <th
-                class="elsa-px-6 elsa-py-3 elsa-text-left elsa-text-xs elsa-font-medium elsa-text-gray-500 elsa-text-right elsa-tracking-wider elsa-w-8/12">Answer
+                class="elsa-py-3 elsa-text-left elsa-text-xs elsa-font-medium elsa-text-gray-500 elsa-tracking-wider elsa-w-2/12">Answer
             </th>
-            <td class="elsa-py-2 pl-5">
+            <td class="elsa-py-2 pl-5" style={{ width: colWidth }}>
             <div class="elsa-mt-1 elsa-relative elsa-rounded-md elsa-shadow-sm">
               <elsa-expression-editor
                 key={`expression-editor-${index}-${this.syntaxSwitchCount}`}
@@ -178,7 +190,7 @@ export class HeRadioOptionProperty {
             </div>
             </td>
             <td
-              class="elsa-px-6 elsa-py-3 elsa-text-left elsa-text-xs elsa-font-medium elsa-text-gray-500 elsa-text-right elsa-tracking-wider elsa-w-1/12">
+              class="elsa-py-3 elsa-text-left elsa-text-xs elsa-font-medium elsa-text-gray-500 elsa-tracking-wider elsa-w-2/12">
               <button type="button" onClick={() => this.onExpandSwitchArea()}
                 class="elsa-h-5 elsa-w-5 elsa-mx-auto elsa-outline-none focus:elsa-outline-none">
                 <ExpandIcon options={this.iconProvider.getOptions()}></ExpandIcon>
@@ -186,7 +198,15 @@ export class HeRadioOptionProperty {
             </td>
           </tr>
 
-          <tr>
+          <tr onClick={() => this.onToggleOptions(index)}>
+            <th
+              class="elsa-py-3 elsa-text-left elsa-text-xs elsa-font-medium elsa-text-gray-500 elsa-text-left elsa-tracking-wider elsa-w-2/12" colSpan={3} style={{ cursor: "zoom-in" }}> Options
+            </th>
+            <td></td>
+            <td></td>
+          </tr>
+
+          <tr style={{ display: optionsDisplay }}>
             <th class="elsa-py-3 elsa-text-left elsa-text-xs elsa-font-medium elsa-text-gray-500 elsa-tracking-wider elsa-w-2/12">Pre Populated</th>
             <td class="elsa-py-2 pl-5" style={{ width: colWidth }}>
               <div class="elsa-mt-1 elsa-relative elsa-rounded-md elsa-shadow-sm">
@@ -236,7 +256,7 @@ export class HeRadioOptionProperty {
           onExpressionChanged={e => this.onMultiExpressionEditorValueChanged(e)}
           onSyntaxChanged={e => this.onMultiExpressionEditorSyntaxChanged(e)}
         >
-          <table class="elsa-min-w-full elsa-divide-y elsa-divide-gray-200 elsa-table-striped">
+          <table class="elsa-min-w-full elsa-divide-y elsa-divide-gray-200">
             {cases.map(renderCaseEditor)}
           </table>
         
