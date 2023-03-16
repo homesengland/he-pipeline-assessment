@@ -17,6 +17,11 @@ namespace Elsa.CustomActivities.Constants
         public const string PrePopulated = "PrePopulated";
     }
 
+    public class RadioSyntaxNames
+    {
+        public const string PrePopulated = "PrePopulated";
+    }
+
     public class TextActivitySyntaxNames
     {
         public const string TextActivity = "TextActivity";

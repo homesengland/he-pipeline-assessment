@@ -164,6 +164,7 @@ namespace Elsa.CustomActivities.Handlers.Syntax
         private async Task<List<RadioRecord>> ElsaPropertiesToRadioRecordList(List<ElsaProperty> properties, IExpressionEvaluator evaluator, ActivityExecutionContext context)
         {
             RadioRecord[] resultArray = await Task.WhenAll(properties.Select(x => ElsaPropertyToRadioRecord(x, evaluator, context)));
+
             return resultArray.ToList();
         }
 
@@ -217,7 +218,8 @@ namespace Elsa.CustomActivities.Handlers.Syntax
         {
             var identifier = property.Name;
             var value = await EvaluateFromExpressions<string>(evaluator, context, property, CancellationToken.None);
-            return new RadioRecord(identifier, value);
+            bool isPrePopulated = property.Expressions?[RadioSyntaxNames.PrePopulated].ToLower() == "true";
+            return new RadioRecord(identifier, value, isPrePopulated);
         }
 
         public Type GetReturnType(string typeHint)

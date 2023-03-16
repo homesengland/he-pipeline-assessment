@@ -12,7 +12,7 @@ import { IconProvider } from "../providers/icon-provider/icon-provider";
 import PlusIcon from '../../icons/plus_icon';
 import TrashCanIcon from '../../icons/trash-can';
 import ExpandIcon from '../../icons/expand_icon';
-import { PropertyOutputTypes, SyntaxNames } from '../../constants/constants';
+import { PropertyOutputTypes, RadioOptionsSyntax, SyntaxNames } from '../../constants/constants';
 import { NestedActivityDefinitionProperty } from '../../models/custom-component-models';
 
 @Component({
@@ -56,8 +56,8 @@ export class HeRadioOptionProperty {
   }
 
   onAddOptionClick() {
-    const optionName = ToLetter(this.options.length+1);
-    const newOption: NestedActivityDefinitionProperty = { name: optionName, syntax: SyntaxNames.Literal, expressions: { [SyntaxNames.Literal]: '' }, type: PropertyOutputTypes.Radio  };
+    const optionName = ToLetter(this.options.length + 1);
+    const newOption: NestedActivityDefinitionProperty = { name: optionName, syntax: SyntaxNames.Literal, expressions: { [SyntaxNames.Literal]: '', [RadioOptionsSyntax.PrePopulated]:'false' }, type: PropertyOutputTypes.Radio };
     this.options = [...this.options, newOption];
     this.updatePropertyModel();
   }
@@ -81,6 +81,11 @@ export class HeRadioOptionProperty {
     const select = e.currentTarget as HTMLSelectElement;
     switchCase.syntax = select.value;
     expressionEditor.language = mapSyntaxToLanguage(switchCase.syntax);
+    this.updatePropertyModel();
+  }
+
+  onPrePopulatedChanged(e: CustomEvent<string>, radio: NestedActivityDefinitionProperty) {
+    radio.expressions[RadioOptionsSyntax.PrePopulated] = e.detail;
     this.updatePropertyModel();
   }
 
@@ -116,16 +121,40 @@ export class HeRadioOptionProperty {
       const expression = radioOption.expressions[radioOption.syntax];
       const syntax = radioOption.syntax;
       const monacoLanguage = mapSyntaxToLanguage(syntax);
+      const prePopulatedSyntax = SyntaxNames.JavaScript;
+      const prePopulatedExpression = radioOption.expressions[RadioOptionsSyntax.PrePopulated];
+
+      const prePopulatedLanguage = mapSyntaxToLanguage(prePopulatedSyntax);
+
       let expressionEditor = null;
+      let prePopulatedExpressionEditor = null;
+      let colWidth = "100%";
 
       return (
-        <tr key={`case-${index}`}>
+        <tbody>
+          <tr key={`case-${index}`}>
+            <th
+              class="elsa-px-6 elsa-py-3 elsa-text-left elsa-text-xs elsa-font-medium elsa-text-gray-500 elsa-text-right elsa-tracking-wider elsa-w-3/12">Identifier
+            </th>
           <td class="elsa-py-2 elsa-pr-5">
             <input type="text" value={radioOption.name} onChange={e => this.onOptionNameChanged(e, radioOption)}
               class="focus:elsa-ring-blue-500 focus:elsa-border-blue-500 elsa-block elsa-w-full elsa-min-w-0 elsa-rounded-md sm:elsa-text-sm elsa-border-gray-300" />
-          </td>
-          <td class="elsa-py-2 pl-5">
+            </td>
+            <td class="elsa-pt-1 elsa-pr-2 elsa-text-right">
+              <button type="button" onClick={() => this.onDeleteOptionClick(radioOption)}
+                class="elsa-h-5 elsa-w-5 elsa-mx-auto elsa-outline-none focus:elsa-outline-none">
+                <TrashCanIcon options={this.iconProvider.getOptions()}></TrashCanIcon>
+              </button>
+            </td>
 
+        </tr>
+
+        <tr>
+       
+              <th
+                class="elsa-px-6 elsa-py-3 elsa-text-left elsa-text-xs elsa-font-medium elsa-text-gray-500 elsa-text-right elsa-tracking-wider elsa-w-8/12">Answer
+            </th>
+            <td class="elsa-py-2 pl-5">
             <div class="elsa-mt-1 elsa-relative elsa-rounded-md elsa-shadow-sm">
               <elsa-expression-editor
                 key={`expression-editor-${index}-${this.syntaxSwitchCount}`}
@@ -147,14 +176,44 @@ export class HeRadioOptionProperty {
                 </select>
               </div>
             </div>
-          </td>
-          <td class="elsa-pt-1 elsa-pr-2 elsa-text-right">
-            <button type="button" onClick={() => this.onDeleteOptionClick(radioOption)}
-              class="elsa-h-5 elsa-w-5 elsa-mx-auto elsa-outline-none focus:elsa-outline-none">
-              <TrashCanIcon options={this.iconProvider.getOptions()}></TrashCanIcon>
-            </button>
-          </td>
-        </tr>
+            </td>
+            <td
+              class="elsa-px-6 elsa-py-3 elsa-text-left elsa-text-xs elsa-font-medium elsa-text-gray-500 elsa-text-right elsa-tracking-wider elsa-w-1/12">
+              <button type="button" onClick={() => this.onExpandSwitchArea()}
+                class="elsa-h-5 elsa-w-5 elsa-mx-auto elsa-outline-none focus:elsa-outline-none">
+                <ExpandIcon options={this.iconProvider.getOptions()}></ExpandIcon>
+              </button>
+            </td>
+          </tr>
+
+          <tr>
+            <th class="elsa-py-3 elsa-text-left elsa-text-xs elsa-font-medium elsa-text-gray-500 elsa-tracking-wider elsa-w-2/12">Pre Populated</th>
+            <td class="elsa-py-2 pl-5" style={{ width: colWidth }}>
+              <div class="elsa-mt-1 elsa-relative elsa-rounded-md elsa-shadow-sm">
+                <elsa-expression-editor
+                  key={`expression-editor-${index}-${this.syntaxSwitchCount}`}
+                  ref={el => prePopulatedExpressionEditor = el}
+                  expression={prePopulatedExpression}
+                  language={prePopulatedLanguage}
+                  single-line={false}
+                  editorHeight="2.75em"
+                  padding="elsa-pt-1.5 elsa-pl-1 elsa-pr-28"
+                  onExpressionChanged={e => this.onPrePopulatedChanged(e, radioOption)}
+                />
+                <div class="elsa-absolute elsa-inset-y-0 elsa-right-0 elsa-flex elsa-items-center">
+                  <select onChange={e => this.onOptionSyntaxChanged(e, radioOption, prePopulatedExpressionEditor)}
+                    class="focus:elsa-ring-blue-500 focus:elsa-border-blue-500 elsa-h-full elsa-py-0 elsa-pl-2 elsa-pr-7 elsa-border-transparent elsa-bg-transparent elsa-text-gray-500 sm:elsa-text-sm elsa-rounded-md">
+                    {this.supportedSyntaxes.filter(x => x == SyntaxNames.JavaScript).map(supportedSyntax => {
+                      const selected = supportedSyntax == SyntaxNames.JavaScript;
+                      return <option selected={selected}>{supportedSyntax}</option>;
+                    })}
+                  </select>
+                </div>
+              </div>
+            </td>
+            <td></td>
+          </tr>
+        </tbody>
       );
     };
 
@@ -177,33 +236,14 @@ export class HeRadioOptionProperty {
           onExpressionChanged={e => this.onMultiExpressionEditorValueChanged(e)}
           onSyntaxChanged={e => this.onMultiExpressionEditorSyntaxChanged(e)}
         >
-
-          <table class="elsa-min-w-full elsa-divide-y elsa-divide-gray-200">
-            <thead class="elsa-bg-gray-50">
-              <tr>
-                <th
-                  class="elsa-px-6 elsa-py-3 elsa-text-left elsa-text-xs elsa-font-medium elsa-text-gray-500 elsa-text-right elsa-tracking-wider elsa-w-3/12">Identifier
-                </th>
-                <th
-                  class="elsa-px-6 elsa-py-3 elsa-text-left elsa-text-xs elsa-font-medium elsa-text-gray-500 elsa-text-right elsa-tracking-wider elsa-w-8/12">Answer
-                </th>
-                <th
-                  class="elsa-px-6 elsa-py-3 elsa-text-left elsa-text-xs elsa-font-medium elsa-text-gray-500 elsa-text-right elsa-tracking-wider elsa-w-1/12">
-                  <button type="button" onClick={() => this.onExpandSwitchArea()}
-                    class="elsa-h-5 elsa-w-5 elsa-mx-auto elsa-outline-none focus:elsa-outline-none">
-                    <ExpandIcon options={this.iconProvider.getOptions()}></ExpandIcon>
-                  </button>
-                </th>
-              </tr>
-            </thead>
-            <tbody>
-              {cases.map(renderCaseEditor)}
-            </tbody>
+          <table class="elsa-min-w-full elsa-divide-y elsa-divide-gray-200 elsa-table-striped">
+            {cases.map(renderCaseEditor)}
           </table>
+        
           <button type="button" onClick={() => this.onAddOptionClick()}
             class="elsa-inline-flex elsa-items-center elsa-px-4 elsa-py-2 elsa-border elsa-border-transparent elsa-shadow-sm elsa-text-sm elsa-font-medium elsa-rounded-md elsa-text-white elsa-bg-blue-600 hover:elsa-bg-blue-700 focus:elsa-outline-none focus:elsa-ring-2 focus:elsa-ring-offset-2 focus:elsa-ring-blue-500 elsa-mt-2">
             <PlusIcon options={this.iconProvider.getOptions()}></PlusIcon>
-            Add Case
+            Add Answer
           </button>
         </elsa-multi-expression-editor>
       </div>

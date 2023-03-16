@@ -5,6 +5,7 @@
     var formItemName = "Data.QuestionScreenAnswers[" + Model.Index + "].Checkbox";
 
     var errorFormClass = !Model.IsValid ? "govuk-form-group--error" : "";
+    var isReadOnly = Model.IsReadOnly ? "disabled" : "";
 }
 
 <div class="govuk-form-group @errorFormClass" id="@formItemName">
@@ -34,12 +35,28 @@
 
             <div class="govuk-checkboxes__item">
                 @*Must use the input tag helper as opposed to htmlcheckbox, as all checkboxes need the same name property, which cannot be overridden easily in HtmlCheckboxFor*@
-                <input asp-for="@isSelected"
+                
+                @if(String.IsNullOrEmpty(isReadOnly))
+                {
+                    <input asp-for="@isSelected"
                    value="@nonExclusiveChoices[i].Answer"
                    name="@itemName"
-                   type="checkbox" class="govuk-checkboxes__input">
+                   type="checkbox" class="govuk-checkboxes__input" >
+                }
+                else
+                {
+                    <input asp-for="@isSelected"
+                   value="@nonExclusiveChoices[i].Answer"
+                   name="@itemName"
+                   type="checkbox" class="govuk-checkboxes__input" disabled="@isReadOnly">
+                   
+                }
                 @Html.Label(nonExclusiveChoices[i].Answer, answerText, new {@class = "govuk-label govuk-checkboxes__label"})
             </div>
+            if (!String.IsNullOrEmpty(isReadOnly) && isSelected)
+            {
+                <input type="hidden" value="@nonExclusiveChoices[i].Answer" name="@itemName">
+            }
         }
         @for (int i = 0; i < exclusiveChoices.Count(); i++)
         {
@@ -52,13 +69,29 @@
                 <div class="govuk-checkboxes__divider">or</div>
             }
             <div class="govuk-checkboxes__item">
+
+                @if (String.IsNullOrEmpty(isReadOnly))
+                {
                 @*Must use the input tag helper as opposed to htmlcheckbox, as all checkboxes need the same name property, which cannot be overridden easily in HtmlCheckboxFor*@
                 <input asp-for="@isSelected"
                    value="@exclusiveChoices[i].Answer"
                    name="@itemName"
-                   type="checkbox" class="govuk-checkboxes__input" data-behaviour="exclusive">
+                   type="checkbox" class="govuk-checkboxes__input" data-behaviour="exclusive" >
+                }
+                else
+                {
+                    <input asp-for="@isSelected"
+                   value="@exclusiveChoices[i].Answer"
+                   name="@itemName"
+                   type="checkbox" class="govuk-checkboxes__input" disabled="@isReadOnly">
+                   
+                }
                 @Html.Label(exclusiveChoices[i].Answer, answerText, new {@class = "govuk-label govuk-checkboxes__label"})
             </div>
+            if (!String.IsNullOrEmpty(isReadOnly) && isSelected)
+            {
+                <input type="hidden" value="@exclusiveChoices[i].Answer" name="@itemName">
+            }
         }
     </div>
 

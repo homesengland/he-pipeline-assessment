@@ -19,6 +19,10 @@ export class CheckboxOptionsSyntax {
   static readonly PrePopulated = "PrePopulated";
 }
 
+export class RadioOptionsSyntax {
+  static readonly PrePopulated = "PrePopulated";
+}
+
 export class TextActivityOptionsSyntax {
   static readonly Paragraph = "Paragraph";
   static readonly Guidance = "Guidance";

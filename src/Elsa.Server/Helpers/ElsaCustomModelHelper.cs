@@ -63,7 +63,7 @@ namespace Elsa.Server.Helpers
                         new QuestionScreenAnswer.Choice() { Identifier = x.Identifier, Answer = x.Answer, IsSingle = x.IsSingle, IsPrePopulated = x.IsPrePopulated })
                     .ToList(),
                 QuestionTypeConstants.RadioQuestion => question.Radio.Choices
-                    .Select(x => new QuestionScreenAnswer.Choice() { Identifier = x.Identifier, Answer = x.Answer, IsSingle = false })
+                    .Select(x => new QuestionScreenAnswer.Choice() { Identifier = x.Identifier, Answer = x.Answer, IsSingle = false, IsPrePopulated = x.IsPrePopulated })
                     .ToList(),
                 _ => null
             };

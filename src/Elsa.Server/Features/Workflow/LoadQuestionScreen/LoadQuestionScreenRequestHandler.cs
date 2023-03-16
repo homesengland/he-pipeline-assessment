@@ -175,6 +175,13 @@ namespace Elsa.Server.Features.Workflow.LoadQuestionScreen
             }
 
             if (item.QuestionType == QuestionTypeConstants.RadioQuestion &&
+               string.IsNullOrEmpty(questionActivityData.Answer) && item.Radio.Choices.Any(x => x.IsPrePopulated))
+            {
+                questionActivityData.Radio.SelectedAnswer =
+                    item.Radio.Choices.First(x => x.IsPrePopulated).Answer;
+            }
+
+            if (item.QuestionType == QuestionTypeConstants.RadioQuestion &&
                 !string.IsNullOrEmpty(questionActivityData.Answer))
             {
                 questionActivityData.Radio.SelectedAnswer =
