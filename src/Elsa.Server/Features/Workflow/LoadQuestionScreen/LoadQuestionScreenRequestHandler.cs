@@ -149,6 +149,14 @@ namespace Elsa.Server.Features.Workflow.LoadQuestionScreen
             }
 
             if (item.QuestionType == QuestionTypeConstants.CheckboxQuestion &&
+                          string.IsNullOrEmpty(questionActivityData.Answer) && item.Checkbox.Choices.Any(x => x.IsPrePopulated))
+            {
+                var answerList = item.Checkbox.Choices.Where(x => x.IsPrePopulated).Select(x => x.Answer).ToList();
+
+                questionActivityData.Checkbox.SelectedChoices = answerList;
+            }
+
+            if (item.QuestionType == QuestionTypeConstants.CheckboxQuestion &&
                 !string.IsNullOrEmpty(questionActivityData.Answer))
             {
                 var answerList =

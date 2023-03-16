@@ -60,7 +60,7 @@ namespace Elsa.Server.Helpers
             var choices = question.QuestionType switch
             {
                 QuestionTypeConstants.CheckboxQuestion => question.Checkbox.Choices.Select(x =>
-                        new QuestionScreenAnswer.Choice() { Identifier = x.Identifier, Answer = x.Answer, IsSingle = x.IsSingle })
+                        new QuestionScreenAnswer.Choice() { Identifier = x.Identifier, Answer = x.Answer, IsSingle = x.IsSingle, IsPrePopulated = x.IsPrePopulated })
                     .ToList(),
                 QuestionTypeConstants.RadioQuestion => question.Radio.Choices
                     .Select(x => new QuestionScreenAnswer.Choice() { Identifier = x.Identifier, Answer = x.Answer, IsSingle = false })

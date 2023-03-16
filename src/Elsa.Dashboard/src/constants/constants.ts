@@ -16,6 +16,7 @@ export class SyntaxNames {
 
 export class CheckboxOptionsSyntax {
   static readonly Single = "Single";
+  static readonly PrePopulated = "PrePopulated";
 }
 
 export class TextActivityOptionsSyntax {
