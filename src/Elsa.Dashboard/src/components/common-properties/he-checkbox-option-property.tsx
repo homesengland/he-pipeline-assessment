@@ -258,7 +258,7 @@ export class HeCheckboxOptionProperty {
           onSyntaxChanged={e => this.onMultiExpressionEditorSyntaxChanged(e)}
         >
 
-          <table class="elsa-min-w-full elsa-divide-y elsa-divide-gray-200">
+          <table class="elsa-min-w-full elsa-divide-y elsa-divide-gray-200 elsa-table-striped">
             {cases.map(renderCaseEditor)}
           </table>
           <button type="button" onClick={() => this.onAddOptionClick()}
