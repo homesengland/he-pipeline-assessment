@@ -1,13 +1,6 @@
-﻿using Esprima.Ast;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Elsa.CustomActivities.OptionsProviders
+﻿namespace Elsa.CustomActivities.OptionsProviders
 {
-    public  interface IOptions
+    public interface IOptions
     {
         public string Data { get; set; }
         public string Metadata { get; set; }
@@ -17,5 +10,11 @@ namespace Elsa.CustomActivities.OptionsProviders
     {
         public string Data { get; set; } = null!;
         public string Metadata { get; set; } = null!;
+    }
+
+    public class PotScoreOptions : IOptions
+    {
+        public string Data { get; set; }
+        public string Metadata { get; set; }
     }
 }

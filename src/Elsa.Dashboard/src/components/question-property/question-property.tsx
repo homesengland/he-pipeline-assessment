@@ -44,9 +44,8 @@ export class QuestionProperty {
 
   getOrCreateQuestionProperties() {
     const model = this.questionModel;
-    const propertyJson = model.value.expressions[SyntaxNames.QuestionList]
+    const propertyJson = model.value.expressions[SyntaxNames.QuestionList];
     if (propertyJson != null && propertyJson != undefined && parseJson(propertyJson).length > 0) {
-      
       this.nestedQuestionProperties = parseJson(propertyJson);
     }
     else {

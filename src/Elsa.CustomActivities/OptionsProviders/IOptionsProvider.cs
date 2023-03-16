@@ -1,12 +1,11 @@
 ﻿
 using Newtonsoft.Json;
-using System.Security.Cryptography.X509Certificates;
 
 namespace Elsa.CustomActivities.OptionsProviders
 {
     public interface IOptionsProvider
     {
-        public IOptions GetOptions();
+        public string GetOptions();
     }
 
     public class JsonOptionsProvider : IOptionsProvider
@@ -20,13 +19,25 @@ namespace Elsa.CustomActivities.OptionsProviders
             _jsonData = data != null ? JsonConvert.SerializeObject(data) : "";
         }
 
-        public IOptions GetOptions()
+        //public IOptions GetOptions()
+        //{
+        //    return new JsonOptions
+        //    {
+        //        Data = _jsonData,
+        //        Metadata = _jsonMetadata,
+        //    };
+        //}
+        public string GetOptions()
         {
-            return new JsonOptions
-            {
-                Data = _jsonData,
-                Metadata = _jsonMetadata,
-            };
+            throw new NotImplementedException();
+        }
+    }
+
+    public class PotScoreOptionsProvider : IOptionsProvider
+    {
+        public string GetOptions()
+        {
+            return "High, Medium, Low, Very Low";
         }
     }
 

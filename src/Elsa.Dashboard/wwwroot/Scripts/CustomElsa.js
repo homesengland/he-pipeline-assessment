@@ -1,23 +1,22 @@
 import { RegisterCustomPlugins } from './Plugins/CustomPlugins.js';
-import { CustomPropertyUIHints, PropertyDescriberHints } from './Constants/CustomPropertyUiHints.js';
+import { CustomPropertyUIHints, QuestionOptions } from './Constants/CustomPropertyUiHints.js';
 import { CustomComponentTags } from './Constants/CustomComponentTags.js';
 import { QuestionDriver } from './Drivers/QuestionPropertyDriver.js';
 import { CustomSwitchDriver } from './Drivers/CustomSwitchPropertyDriver.js';
 import { CustomTextDriver } from './Drivers/CustomTextPropertyDriver.js';
 import { ConditionalTextListDriver } from './Drivers/ConditionalTextListPropertyDriver.js';
 
-export function InitCustomElsa(elsaStudioRoot, customProperties, potScoreOptions) {
+export function InitCustomElsa(elsaStudioRoot, customProperties) {
 
   elsaStudioRoot.addEventListener('initializing', e => {
     var elsaStudio = e.detail;
     RegisterPlugins(elsaStudio);
-    RegisterDrivers(elsaStudio, customProperties, potScoreOptions);
+    RegisterDrivers(elsaStudio, customProperties);
   });
 
-  function RegisterDrivers(elsaStudio, customProperties, potScoreOptions) {
-    console.log('inside customelsa.js', potScoreOptions);
+  function RegisterDrivers(elsaStudio, customProperties) {
     elsaStudio.propertyDisplayManager.addDriver(CustomPropertyUIHints.QuestionScreenBuilder,
-      () => new QuestionDriver(elsaStudio, CustomComponentTags.QuestionScreen, customProperties[PropertyDescriberHints.QuestionScreenBuilder]), potScoreOptions);
+      () => new QuestionDriver(CustomComponentTags.QuestionScreen, customProperties));
 
     elsaStudio.propertyDisplayManager.addDriver(CustomPropertyUIHints.ConditionalTextListBuilder,
       () => new ConditionalTextListDriver(elsaStudio, CustomComponentTags.ConditionalTextList));

@@ -84,7 +84,7 @@ namespace Elsa.CustomActivities.Describers
 
         private object? GetOptions(Type? type)
         {
-            if (type != null && type.IsAssignableFrom(typeof(IOptionsProvider)))
+            if (type != null && typeof(IOptionsProvider).IsAssignableFrom(type))
             {
                 IOptionsProvider optionsProvider = (IOptionsProvider)_serviceProvider.GetRequiredService(type);
                 return optionsProvider.GetOptions();

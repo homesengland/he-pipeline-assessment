@@ -1,5 +1,6 @@
 ﻿using Elsa.CustomActivities.Activities.Common;
 using Elsa.CustomActivities.Constants;
+using Elsa.CustomActivities.OptionsProviders;
 using Elsa.CustomActivities.PropertyDecorator;
 using Elsa.CustomWorkflow.Sdk;
 using Elsa.Expressions;
@@ -40,7 +41,7 @@ namespace Elsa.CustomActivities.Activities.QuestionScreen
         [HeActivityInput(UIHint = HePropertyUIHints.RadioOptions, ConditionalActivityTypes = new[] { QuestionTypeConstants.RadioQuestion }, ExpectedOutputType = ExpectedOutputHints.Radio)]
         public RadioModel Radio { get; set; } = new RadioModel();
 
-        [HeActivityInput(UIHint = HePropertyUIHints.PotScoreRadioOptions, ConditionalActivityTypes = new[] { QuestionTypeConstants.PotScoreRadioQuestion }, ExpectedOutputType = ExpectedOutputHints.Radio)]
+        [HeActivityInput(UIHint = HePropertyUIHints.PotScoreRadioOptions, ConditionalActivityTypes = new[] { QuestionTypeConstants.PotScoreRadioQuestion }, ExpectedOutputType = ExpectedOutputHints.Radio, OptionsProvider = typeof(PotScoreOptionsProvider))]
         public PotScoreRadioModel PotScoreRadio { get; set; } = new PotScoreRadioModel();
 
         [HeActivityInput(UIHint = HePropertyUIHints.TextActivity, ConditionalActivityTypes = new[] { QuestionTypeConstants.Information }, ExpectedOutputType = ExpectedOutputHints.TextActivity)]

@@ -31,7 +31,6 @@
     <None Remove="src\components\common-properties\he-text-activity-property.tsx" />
     <None Remove="src\constants\Constants.ts" />
     <None Remove="src\models\display-manager.ts" />
-    <None Remove="src\nested-drivers\display-managers\potscore-radio-display-manager.ts" />
     <None Remove="src\nested-drivers\he-text-activity-driver.tsx" />
     <None Remove="wwwroot\Scripts\CustomElsa.js" />
     <None Remove="wwwroot\Scripts\Drivers\ConditionalTextListPropertyDriver.js" />
@@ -57,7 +56,6 @@
 
   <ItemGroup>
     <TypeScriptCompile Include="src\components\common-properties\he-text-activity-property.tsx" />
-    <TypeScriptCompile Include="src\nested-drivers\display-managers\potscore-radio-display-manager.ts" />
     <TypeScriptCompile Include="src\nested-drivers\he-text-activity-driver.tsx" />
     <TypeScriptCompile Include="src\nested-drivers\he-checkbox-options-driver.tsx" />
     <TypeScriptCompile Include="src\nested-drivers\he-script-driver.tsx" />
