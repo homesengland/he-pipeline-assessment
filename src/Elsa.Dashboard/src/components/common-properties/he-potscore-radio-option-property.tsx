@@ -44,6 +44,7 @@ export class HePotScoreRadioOptionProperty {
   async componentWillLoad() {
     const propertyModel = this.propertyModel;
     this.potScoreOptions = parseJson(this.propertyDescriptor.options);
+    console.log("potScoreOptions", this.potScoreOptions)
     const optionsJson = propertyModel.expressions[SyntaxNames.Json];
     this.options = parseJson(optionsJson) || [];
   }

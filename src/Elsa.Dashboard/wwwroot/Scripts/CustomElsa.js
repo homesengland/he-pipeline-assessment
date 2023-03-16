@@ -1,5 +1,5 @@
 import { RegisterCustomPlugins } from './Plugins/CustomPlugins.js';
-import { CustomPropertyUIHints, QuestionOptions } from './Constants/CustomPropertyUiHints.js';
+import { CustomPropertyUIHints } from './Constants/CustomPropertyUiHints.js';
 import { CustomComponentTags } from './Constants/CustomComponentTags.js';
 import { QuestionDriver } from './Drivers/QuestionPropertyDriver.js';
 import { CustomSwitchDriver } from './Drivers/CustomSwitchPropertyDriver.js';
