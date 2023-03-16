@@ -43,7 +43,7 @@ export class HePotScoreRadioOptionProperty {
 
   async componentWillLoad() {
     const propertyModel = this.propertyModel;
-    this.potScoreOptions = this.propertyDescriptor.options.split(',');
+    this.potScoreOptions = parseJson(this.propertyDescriptor.options);
     const optionsJson = propertyModel.expressions[SyntaxNames.Json];
     this.options = parseJson(optionsJson) || [];
   }

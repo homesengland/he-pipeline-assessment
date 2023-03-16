@@ -42,7 +42,6 @@
         import { InitCustomElsa } from "InitCustomElsa"
         var elsaStudioRoot = document.querySelector('elsa-studio-root');
         let customActivities = @Html.Raw(Model.JsonResponse)
-        //let potScoreOptions = ["High", "Medium", "Low", "Very Low"];
         InitCustomElsa(elsaStudioRoot, customActivities)
     </script>
 
