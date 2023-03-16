@@ -288,9 +288,9 @@ public class LoadQuestionScreenRequestHandlerTests
         elsaAssessmentQuestions.Questions[0].QuestionType = QuestionTypeConstants.CheckboxQuestion;
         elsaAssessmentQuestions.Questions[0].Checkbox.Choices = new List<CheckboxRecord>
         {
-            new("A", "Choice1", false),
-            new("B", "Choice2", false),
-            new("C", "Choice3", false)
+            new("A", "Choice1", false,false),
+            new("B", "Choice2", false, false),
+            new("C", "Choice3", false,false)
         };
 
 
@@ -349,9 +349,9 @@ public class LoadQuestionScreenRequestHandlerTests
         elsaAssessmentQuestions.Questions[0].QuestionType = QuestionTypeConstants.RadioQuestion;
         elsaAssessmentQuestions.Questions[0].Radio.Choices = new List<RadioRecord>
         {
-            new("A", "Choice1"),
-            new("B", "Choice2"),
-            new("C", "Choice3")
+            new("A", "Choice1",false),
+            new("B", "Choice2",false),
+            new("C", "Choice3",false)
         };
 
 

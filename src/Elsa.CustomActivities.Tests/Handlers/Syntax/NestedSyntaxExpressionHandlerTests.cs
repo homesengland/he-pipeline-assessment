@@ -134,7 +134,8 @@ namespace Elsa.CustomActivities.Tests.Handlers.Syntax
             var propertyDictionary = new Dictionary<string, string>()
             {
                 {SyntaxNames.JavaScript, javascriptValue },
-                {SyntaxNames.Literal, stringValue }
+                {SyntaxNames.Literal, stringValue },
+                {RadioSyntaxNames.PrePopulated, "false" },
             };
             var firstProperty = SampleElsaProperty(propertyDictionary, SyntaxNames.JavaScript, "A");
             var secondProperty = SampleElsaProperty(propertyDictionary, SyntaxNames.Literal, "B");
@@ -194,7 +195,8 @@ namespace Elsa.CustomActivities.Tests.Handlers.Syntax
                 {SyntaxNames.JavaScript, javascriptValue},
                 {SyntaxNames.Literal, stringValue },
                 {CustomSyntaxNames.Checked, "false"},
-                {CheckboxSyntaxNames.Single, "false"}
+                {CheckboxSyntaxNames.Single, "false"},
+                {CheckboxSyntaxNames.PrePopulated, "false"}
             };
 
             var uncheckedPropertyDictionary = new Dictionary<string, string>()
@@ -202,7 +204,8 @@ namespace Elsa.CustomActivities.Tests.Handlers.Syntax
                 {SyntaxNames.JavaScript, javascriptValue},
                 {SyntaxNames.Literal, stringValue },
                 {CustomSyntaxNames.Checked, "true"},
-                {CheckboxSyntaxNames.Single, "true"}
+                {CheckboxSyntaxNames.Single, "true"},
+                {CheckboxSyntaxNames.PrePopulated, "false"}
             };
             var firstProperty = SampleElsaProperty(checkedPropertyDictionary, SyntaxNames.JavaScript, "A");
             var secondProperty = SampleElsaProperty(uncheckedPropertyDictionary, SyntaxNames.Literal, "B");
@@ -287,8 +290,8 @@ namespace Elsa.CustomActivities.Tests.Handlers.Syntax
         {
             var records = new List<RadioRecord>()
                 {
-                     new RadioRecord("A", "First Value") ,
-                     new RadioRecord("B", "Second Value")
+                     new RadioRecord("A", "First Value", false) ,
+                     new RadioRecord("B", "Second Value",false)
             };
 
             return JsonConvert.SerializeObject(records);
@@ -311,8 +314,8 @@ namespace Elsa.CustomActivities.Tests.Handlers.Syntax
         {
             var records = new List<CheckboxRecord>()
                 {
-                     new CheckboxRecord("A", "First Value", false) ,
-                     new CheckboxRecord("B", "Second Value", true)
+                     new CheckboxRecord("A", "First Value", false,false) ,
+                     new CheckboxRecord("B", "Second Value", true,false)
             };
 
             return JsonConvert.SerializeObject(records);
