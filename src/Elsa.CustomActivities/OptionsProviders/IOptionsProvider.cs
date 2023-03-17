@@ -11,11 +11,5 @@ namespace Elsa.CustomActivities.OptionsProviders
     {
         public string GetOptions() => 
             JsonConvert.SerializeObject(new List<string> { "High", "Medium", "Low", "Very Low" });
-        //{
-        //    var potScoreOptions = new List<string> { "High", "Medium", "Low", "Very Low" };
-
-        //    return JsonConvert.SerializeObject(potScoreOptions);
-        //}
     }
-
 }

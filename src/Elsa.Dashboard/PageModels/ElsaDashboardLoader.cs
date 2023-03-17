@@ -10,7 +10,7 @@ namespace Elsa.Dashboard.PageModels
   [Authorize]
   public class ElsaDashboardLoader : PageModel
   {
-    private string _serverUrl { get; set; }
+    public string _serverUrl { get; set; }
     private IElsaServerHttpClient _client { get; set; }
 
     private ILogger<ElsaDashboardLoader> _logger { get; set; }

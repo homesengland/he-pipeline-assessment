@@ -27,6 +27,7 @@
             public string Identifier { get; set; } = null!;
             public string Answer { get; set; } = null!;
             public bool IsSingle { get; set; }
+            public bool IsPrePopulated { get; set; }
         }
     }
 }

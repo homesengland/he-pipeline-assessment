@@ -8,13 +8,19 @@ export class SyntaxNames {
   static readonly Question = "Question";
   static readonly QuestionList = "QuestionList";
   static readonly Checked = "Checked";
-  static readonly ConditionalTextList = 'ConditionalTextList'
+  static readonly ConditionalTextList = 'ConditionalTextList';
+  static readonly TextActivity = 'TextActivity';
   static Variable: string;
   static Output: string;
 }
 
 export class CheckboxOptionsSyntax {
   static readonly Single = "Single";
+  static readonly PrePopulated = "PrePopulated";
+}
+
+export class RadioOptionsSyntax {
+  static readonly PrePopulated = "PrePopulated";
 }
 
 export class TextActivityOptionsSyntax {

@@ -56,6 +56,7 @@ builder.Services
 builder.Services.AddScoped<ICustomPropertyDescriber, CustomPropertyDescriber>();
 
 builder.Services.TryAddProvider<IExpressionHandler, ConditionalTextListExpressionHandler>(ServiceLifetime.Singleton);
+builder.Services.TryAddProvider<IExpressionHandler, InformationTextExpressionHandler>(ServiceLifetime.Singleton);
 builder.Services.TryAddProvider<IExpressionHandler, QuestionListExpressionHandler>(ServiceLifetime.Singleton);
 builder.Services.TryAddSingleton<INestedSyntaxExpressionHandler, NestedSyntaxExpressionHandler>();
 
