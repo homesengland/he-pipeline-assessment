@@ -14,6 +14,12 @@ namespace Elsa.CustomActivities.Constants
     public class CheckboxSyntaxNames
     {
         public const string Single = "Single";
+        public const string PrePopulated = "PrePopulated";
+    }
+
+    public class RadioSyntaxNames
+    {
+        public const string PrePopulated = "PrePopulated";
     }
 
     public class TextActivitySyntaxNames

@@ -149,6 +149,14 @@ namespace Elsa.Server.Features.Workflow.LoadQuestionScreen
             }
 
             if (item.QuestionType == QuestionTypeConstants.CheckboxQuestion &&
+                          string.IsNullOrEmpty(questionActivityData.Answer) && item.Checkbox.Choices.Any(x => x.IsPrePopulated))
+            {
+                var answerList = item.Checkbox.Choices.Where(x => x.IsPrePopulated).Select(x => x.Answer).ToList();
+
+                questionActivityData.Checkbox.SelectedChoices = answerList;
+            }
+
+            if (item.QuestionType == QuestionTypeConstants.CheckboxQuestion &&
                 !string.IsNullOrEmpty(questionActivityData.Answer))
             {
                 var answerList =
@@ -164,6 +172,13 @@ namespace Elsa.Server.Features.Workflow.LoadQuestionScreen
                 questionActivityData.Radio.Choices = item.Radio.Choices
                     .Select(x => new QuestionScreenAnswer.Choice() { Answer = x.Answer })
                     .ToArray();
+            }
+
+            if (item.QuestionType == QuestionTypeConstants.RadioQuestion &&
+               string.IsNullOrEmpty(questionActivityData.Answer) && item.Radio.Choices.Any(x => x.IsPrePopulated))
+            {
+                questionActivityData.Radio.SelectedAnswer =
+                    item.Radio.Choices.First(x => x.IsPrePopulated).Answer;
             }
 
             if (item.QuestionType == QuestionTypeConstants.RadioQuestion &&

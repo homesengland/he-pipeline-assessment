@@ -6,6 +6,7 @@ using Elsa.Expressions;
 using Elsa.Services.Models;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
+using static Elsa.CustomActivities.Activities.Common.TextModel;
 
 namespace Elsa.CustomActivities.Handlers.Syntax
 {
@@ -64,6 +65,18 @@ namespace Elsa.CustomActivities.Handlers.Syntax
                 {
                     List<RadioRecord> records = await ElsaPropertiesToRadioRecordList(parsedProperties, evaluator, context);
                     result.Choices = records;
+                }
+                return result;
+
+            }
+            if (propertyType != null && propertyType == typeof(TextModel))
+            {
+                TextModel result = new TextModel();
+                var parsedProperties = ParseToTextModel(property);
+                if (parsedProperties != null)
+                {
+                    List<TextRecord> records = await ElsaPropertiesToTextRecordList(parsedProperties, evaluator, context);
+                    result.TextRecords = records;
                 }
                 return result;
 
@@ -172,13 +185,14 @@ namespace Elsa.CustomActivities.Handlers.Syntax
         return resultArray.Where(x => x != null).ToList()!;
     }
 
-    private async Task<CheckboxRecord> ElsaPropertyToCheckboxRecord(ElsaProperty property, IExpressionEvaluator evaluator, ActivityExecutionContext context)
-    {
-        string identifier = property.Name;
-        string value = await EvaluateFromExpressions<string>(evaluator, context, property, CancellationToken.None);
-        bool isSingle = property.Expressions?[CheckboxSyntaxNames.Single].ToLower() == "true";
-        return new CheckboxRecord(identifier, value, isSingle);
-    }
+        private async Task<CheckboxRecord> ElsaPropertyToCheckboxRecord(ElsaProperty property, IExpressionEvaluator evaluator, ActivityExecutionContext context)
+        {
+            string identifier = property.Name;
+            string value = await EvaluateFromExpressions<string>(evaluator, context, property, CancellationToken.None);
+            bool isSingle = property.Expressions?[CheckboxSyntaxNames.Single].ToLower() == "true";
+            bool isPrePopulated = property.Expressions?[CheckboxSyntaxNames.PrePopulated].ToLower() == "true";
+            return new CheckboxRecord(identifier, value, isSingle, isPrePopulated);
+        }
 
     private async Task<TextRecord?> ElsaPropertyToTextRecord(ElsaProperty property, IExpressionEvaluator evaluator, ActivityExecutionContext context)
     {
@@ -208,15 +222,16 @@ namespace Elsa.CustomActivities.Handlers.Syntax
             url = property.Expressions?[TextActivitySyntaxNames.Url];
         };
 
-        return new TextRecord(value, isParagraph, isGuidance, isHyperlink, url);
-    }
+            return new TextModel.TextRecord(value, isParagraph, isGuidance, isHyperlink, url);
+        }
 
-    private async Task<RadioRecord> ElsaPropertyToRadioRecord(ElsaProperty property, IExpressionEvaluator evaluator, ActivityExecutionContext context)
-    {
-        var identifier = property.Name;
-        var value = await EvaluateFromExpressions<string>(evaluator, context, property, CancellationToken.None);
-        return new RadioRecord(identifier, value);
-    }
+        private async Task<RadioRecord> ElsaPropertyToRadioRecord(ElsaProperty property, IExpressionEvaluator evaluator, ActivityExecutionContext context)
+        {
+            var identifier = property.Name;
+            var value = await EvaluateFromExpressions<string>(evaluator, context, property, CancellationToken.None);
+            bool isPrePopulated = property.Expressions?[RadioSyntaxNames.PrePopulated].ToLower() == "true";
+            return new RadioRecord(identifier, value, isPrePopulated);
+        }
 
     public Type GetReturnType(string typeHint)
     {

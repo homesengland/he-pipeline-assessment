@@ -56,7 +56,9 @@ namespace Elsa.CustomActivities.Activities.QuestionScreen
             {
                 QuestionTypeConstants.TextQuestion,
                 QuestionTypeConstants.TextAreaQuestion,
-                QuestionTypeConstants.CurrencyQuestion
+                QuestionTypeConstants.CurrencyQuestion,
+                QuestionTypeConstants.RadioQuestion,
+                QuestionTypeConstants.CheckboxQuestion
             })]
         public bool IsReadOnly { get; set; } = false;
 
