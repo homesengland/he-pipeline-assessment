@@ -101,7 +101,7 @@ namespace Elsa.CustomWorkflow.Sdk.Models.Workflow
 
         public void SetRadio(Radio value)
         {
-            if (QuestionType == QuestionTypeConstants.RadioQuestion)
+            if (QuestionType == QuestionTypeConstants.RadioQuestion || QuestionType == QuestionTypeConstants.PotScoreRadioQuestion)
             {
                 _radio = value;
                 Answer = null;

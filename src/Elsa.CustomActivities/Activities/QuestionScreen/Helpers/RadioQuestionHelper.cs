@@ -34,7 +34,7 @@ namespace Elsa.CustomActivities.Activities.QuestionScreen.Helpers
                     var questionScreenAnswer = await _elsaCustomRepository.GetQuestionScreenAnswer(activity.Id,
                         WorkflowInstance, questionId, CancellationToken.None);
                     if (questionScreenAnswer != null &&
-                        questionScreenAnswer.QuestionType == QuestionTypeConstants.RadioQuestion)
+                        (questionScreenAnswer.QuestionType == QuestionTypeConstants.RadioQuestion || questionScreenAnswer.QuestionType == QuestionTypeConstants.PotScoreRadioQuestion))
                     {
                         var choices = questionScreenAnswer.Choices;
 
@@ -71,7 +71,7 @@ namespace Elsa.CustomActivities.Activities.QuestionScreen.Helpers
                     var questionScreenAnswer = await _elsaCustomRepository.GetQuestionScreenAnswer(activity.Id,
                         WorkflowInstance, questionId, CancellationToken.None);
                     if (questionScreenAnswer != null &&
-                        questionScreenAnswer.QuestionType == QuestionTypeConstants.RadioQuestion)
+                        (questionScreenAnswer.QuestionType == QuestionTypeConstants.RadioQuestion || questionScreenAnswer.QuestionType == QuestionTypeConstants.PotScoreRadioQuestion))
                     {
                         var choices = questionScreenAnswer.Choices;
 
