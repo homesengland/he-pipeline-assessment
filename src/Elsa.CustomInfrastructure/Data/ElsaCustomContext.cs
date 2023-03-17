@@ -10,7 +10,6 @@ namespace Elsa.CustomInfrastructure.Data
         public ElsaCustomContext(DbContextOptions options) : base(options) { }
 
         public DbSet<DataProtectionKey> DataProtectionKeys { get; set; } = default!;
-
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);

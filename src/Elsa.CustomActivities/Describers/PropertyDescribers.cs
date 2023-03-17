@@ -87,7 +87,7 @@ namespace Elsa.CustomActivities.Describers
             if (type != null && typeof(IOptionsProvider).IsAssignableFrom(type))
             {
                 IOptionsProvider optionsProvider = (IOptionsProvider)_serviceProvider.GetRequiredService(type);
-                return optionsProvider.GetOptions();
+                return optionsProvider.GetOptions(CancellationToken.None);
             }
             return null;
         }
