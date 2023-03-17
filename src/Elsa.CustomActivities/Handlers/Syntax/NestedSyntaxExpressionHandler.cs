@@ -44,6 +44,11 @@ namespace Elsa.CustomActivities.Handlers.Syntax
                 int result = await EvaluateFromExpressions<int>(evaluator, context, property, CancellationToken.None);
                 return result;
             }
+            if (propertyType != null && propertyType == typeof(double))
+            {
+                double result = await EvaluateFromExpressions<double>(evaluator, context, property, CancellationToken.None);
+                return result;
+            }
             if (propertyType != null && propertyType == typeof(CheckboxModel))
             {
                 CheckboxModel result = new CheckboxModel();
@@ -241,15 +246,15 @@ namespace Elsa.CustomActivities.Handlers.Syntax
         private async Task<PotScoreRadioRecord> ElsaPropertyToPotScoreRadioRecord(ElsaProperty property, IExpressionEvaluator evaluator, ActivityExecutionContext context)
         {
             var identifier = property.Name;
-            string? potScore = string.Empty;
+            string potScore = string.Empty;
             var value = await EvaluateFromExpressions<string>(evaluator, context, property, CancellationToken.None);
 
             if (property.Expressions!.ContainsKey(CustomSyntaxNames.PotScore))
             {
-                potScore = property.Expressions?[CustomSyntaxNames.PotScore];
+                potScore = property.Expressions?[CustomSyntaxNames.PotScore]!;
             };
 
-            return new PotScoreRadioRecord(identifier, value, Enum.Parse<PotScore>(potScore!));
+            return new PotScoreRadioRecord(identifier, value, potScore);
         }
 
         public Type GetReturnType(string typeHint)
