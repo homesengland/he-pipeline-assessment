@@ -33,7 +33,7 @@ namespace Elsa.CustomActivities.Activities.QuestionScreen
         public int? CharacterLimit { get; set; }
 
         [HeActivityInput(Hint = "Question Weighting", UIHint = HePropertyUIHints.SingleLine, ConditionalActivityTypes = new[] { QuestionTypeConstants.PotScoreRadioQuestion }, ExpectedOutputType = ExpectedOutputHints.Double)]
-        public int QuestionWeighting { get; set; }
+        public double QuestionWeighting { get; set; }
 
         [HeActivityInput(UIHint = HePropertyUIHints.CheckboxOptions, ConditionalActivityTypes = new[] { QuestionTypeConstants.CheckboxQuestion }, ExpectedOutputType = ExpectedOutputHints.Checkbox)]
         public CheckboxModel Checkbox { get; set; } = new CheckboxModel();
