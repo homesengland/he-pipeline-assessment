@@ -9,12 +9,13 @@ namespace Elsa.CustomActivities.OptionsProviders
 
     public class PotScoreOptionsProvider : IOptionsProvider
     {
-        public string GetOptions()
-        {
-            var potScoreOptions = new List<string> { "High", "Medium", "Low", "Very Low" };
+        public string GetOptions() => 
+            JsonConvert.SerializeObject(new List<string> { "High", "Medium", "Low", "Very Low" });
+        //{
+        //    var potScoreOptions = new List<string> { "High", "Medium", "Low", "Very Low" };
 
-            return JsonConvert.SerializeObject(potScoreOptions);
-        }
+        //    return JsonConvert.SerializeObject(potScoreOptions);
+        //}
     }
 
 }
