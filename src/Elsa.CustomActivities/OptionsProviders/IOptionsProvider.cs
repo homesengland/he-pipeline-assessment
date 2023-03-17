@@ -12,12 +12,12 @@ namespace Elsa.CustomActivities.OptionsProviders
     {
         private readonly IElsaCustomRepository _elsaCustomRepository;
         public PotScoreOptionsProvider(IElsaCustomRepository elsaCustomRepository) => _elsaCustomRepository = elsaCustomRepository;
-       
-        public async Task<string> GetOptions(CancellationToken cancellationToken)
+
+        public async Task<string> GetOptions(CancellationToken cancellationToken = default)
         {
             var potScoreOptions = (await _elsaCustomRepository.GetPotScoreOptionsAsync(cancellationToken)).Select(x => x.Name).ToList();
 
-            return JsonConvert.SerializeObject(potScoreOptions, Formatting.Indented);
+            return JsonConvert.SerializeObject(potScoreOptions);
         }
     }
 }
