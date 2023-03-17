@@ -5,21 +5,20 @@ using Elsa.CustomActivities.Handlers.ParseModels;
 using Elsa.Expressions;
 using Elsa.Serialization;
 using Elsa.Services.Models;
-using Jint.Native.Boolean;
-using Newtonsoft.Json;
-using Polly;
-using System.Runtime.CompilerServices;
-using static Elsa.CustomActivities.Activities.Common.TextModel;
+using Microsoft.Extensions.Logging;
 
 namespace Elsa.CustomActivities.Handlers
 {
     public class InformationTextExpressionHandler : IExpressionHandler
     {
         private readonly IContentSerializer _contentSerializer;
+        private readonly ILogger<IExpressionHandler> _logger;
         public string Syntax => TextActivitySyntaxNames.TextActivity;
+        
 
-        public InformationTextExpressionHandler(IContentSerializer contentSerializer)
+        public InformationTextExpressionHandler(ILogger<IExpressionHandler> logger, IContentSerializer contentSerializer)
         {
+            _logger = logger;
             _contentSerializer = contentSerializer;
         }
 
@@ -33,7 +32,7 @@ namespace Elsa.CustomActivities.Handlers
             return result;
         }
 
-        private async Task<List<TextRecord>> ElsaPropertiesToTextRecordList(List<ElsaProperty> properties, IExpressionEvaluator evaluator, ActivityExecutionContext context)
+        public async Task<List<TextRecord>> ElsaPropertiesToTextRecordList(List<ElsaProperty> properties, IExpressionEvaluator evaluator, ActivityExecutionContext context)
         {
             TextRecord?[] resultArray = await Task.WhenAll(properties.Select(x => ElsaPropertyToTextRecord(x, evaluator, context)));
             return resultArray.Where(x => x != null).ToList()!;
@@ -41,7 +40,8 @@ namespace Elsa.CustomActivities.Handlers
 
         private async Task<TextRecord?> ElsaPropertyToTextRecord(ElsaProperty property, IExpressionEvaluator evaluator, ActivityExecutionContext context)
         {
-            string value = await EvaluateTextFromExpressions<string>(evaluator, context, property, CancellationToken.None);
+            string value = await property.EvaluateFromExpressions<string>(evaluator, context, _logger, CancellationToken.None);
+            //string value = await EvaluateTextFromExpressions<string>(evaluator, context, property, CancellationToken.None);
             var condition = await EvaluateCondition(property, evaluator, context);
             if (!condition)
             {
@@ -55,21 +55,21 @@ namespace Elsa.CustomActivities.Handlers
             return new TextRecord(value, isParagraph, isGuidance, isHyperlink, url);
         }
 
-        public async Task<T> EvaluateTextFromExpressions<T>(IExpressionEvaluator evaluator, ActivityExecutionContext context, ElsaProperty property, CancellationToken cancellationToken = default)
-        {
-            var syntax = property.Syntax ?? SyntaxNames.Literal;
-            if (property.Expressions != null && property.Expressions.Count > 0)
-            {
-                var expression = property.Expressions![syntax];
-                var result = await evaluator.TryEvaluateAsync<T>(expression, syntax, context, cancellationToken);
-                if (result.Value != null)
-                {
-                    return result.Value;
-                }
-                return default!;
-            }
-            else return default!;
-        }
+        //public async Task<T> EvaluateTextFromExpressions<T>(IExpressionEvaluator evaluator, ActivityExecutionContext context, ElsaProperty property, CancellationToken cancellationToken = default)
+        //{
+        //    var syntax = property.Syntax ?? SyntaxNames.Literal;
+        //    if (property.Expressions != null && property.Expressions.Count > 0)
+        //    {
+        //        var expression = property.Expressions![syntax];
+        //        var result = await evaluator.TryEvaluateAsync<T>(expression, syntax, context, cancellationToken);
+        //        if (result.Value != null)
+        //        {
+        //            return result.Value;
+        //        }
+        //        return default!;
+        //    }
+        //    else return default!;
+        //}
 
         public async Task<bool> EvaluateCondition(ElsaProperty property, IExpressionEvaluator evaluator, ActivityExecutionContext context)
         {

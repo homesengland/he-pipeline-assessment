@@ -3,11 +3,14 @@ using Elsa.CustomActivities.Constants;
 using Elsa.CustomActivities.Handlers.Models;
 using Elsa.CustomActivities.Handlers.Syntax;
 using Elsa.Expressions;
+using Elsa.Serialization;
 using Elsa.Services.Models;
 using He.PipelineAssessment.Tests.Common;
 using Microsoft.Extensions.Logging;
 using Moq;
 using Newtonsoft.Json;
+using Rebus.Serialization;
+using System.IdentityModel.Tokens.Jwt;
 using Xunit;
 
 namespace Elsa.CustomActivities.Tests.Handlers.Syntax
@@ -18,7 +21,8 @@ namespace Elsa.CustomActivities.Tests.Handlers.Syntax
         public async void EvaluateFromExpression_ReturnsIntData_GivenIntType(
             Mock<IServiceProvider> provider,
             Mock<IExpressionEvaluator> evaluator,
-            ILogger<NestedSyntaxExpressionHandler> logger)
+            IContentSerializer serializer,
+            ILogger<IExpressionHandler> logger)
         {
             //Arrange
             string value = "123";
@@ -36,7 +40,7 @@ namespace Elsa.CustomActivities.Tests.Handlers.Syntax
             evaluator.Setup(x => x.TryEvaluateAsync<int>(javascriptProperty.Expressions![javascriptProperty.Syntax!],
                 javascriptProperty.Syntax!, context, CancellationToken.None)).Returns(Task.FromResult(Models.Result.Success(result)));
 
-            NestedSyntaxExpressionHandler handler = new NestedSyntaxExpressionHandler(logger);
+            NestedSyntaxExpressionHandler handler = new NestedSyntaxExpressionHandler(logger, serializer);
 
             //Act
 
@@ -52,7 +56,8 @@ namespace Elsa.CustomActivities.Tests.Handlers.Syntax
         public async void EvaluateFromExpression_ReturnsBoolData_GivenBoolType(
             Mock<IServiceProvider> provider,
             Mock<IExpressionEvaluator> evaluator,
-            ILogger<NestedSyntaxExpressionHandler> logger)
+            ILogger<IExpressionHandler> logger,
+            IContentSerializer serializer)
         {
             //Arrange
             string value = "true";
@@ -70,7 +75,7 @@ namespace Elsa.CustomActivities.Tests.Handlers.Syntax
             evaluator.Setup(x => x.TryEvaluateAsync<bool>(javascriptProperty.Expressions![javascriptProperty.Syntax!],
                 javascriptProperty.Syntax!, context, CancellationToken.None)).Returns(Task.FromResult(Models.Result.Success(result)));
 
-            NestedSyntaxExpressionHandler handler = new NestedSyntaxExpressionHandler(logger);
+            NestedSyntaxExpressionHandler handler = new NestedSyntaxExpressionHandler(logger, serializer);
 
             //Act
 
@@ -86,7 +91,8 @@ namespace Elsa.CustomActivities.Tests.Handlers.Syntax
         public async void EvaluateFromExpression_ReturnsStringData_GivenStringType(
             Mock<IServiceProvider> provider,
             Mock<IExpressionEvaluator> evaluator,
-            ILogger<NestedSyntaxExpressionHandler> logger)
+            ILogger<IExpressionHandler> logger,
+            IContentSerializer serializer)
         {
             //Arrange
             string value = "Success";
@@ -104,7 +110,7 @@ namespace Elsa.CustomActivities.Tests.Handlers.Syntax
             evaluator.Setup(x => x.TryEvaluateAsync<string>(javascriptProperty.Expressions![javascriptProperty.Syntax!],
                 javascriptProperty.Syntax!, context, CancellationToken.None)).Returns(Task.FromResult(Models.Result.Success<string?>(value)));
 
-            NestedSyntaxExpressionHandler handler = new NestedSyntaxExpressionHandler(logger);
+            NestedSyntaxExpressionHandler handler = new NestedSyntaxExpressionHandler(logger, serializer);
 
             //Act
 
@@ -120,7 +126,8 @@ namespace Elsa.CustomActivities.Tests.Handlers.Syntax
         public async void EvaluateFromExpression_ReturnsRadioData_GivenRadioType(
             Mock<IServiceProvider> provider,
             Mock<IExpressionEvaluator> evaluator,
-            ILogger<NestedSyntaxExpressionHandler> logger)
+            ILogger<IExpressionHandler> logger,
+            IContentSerializer serializer)
         {
             //Arrange
             string value = SampleRadioJson();
@@ -155,7 +162,7 @@ namespace Elsa.CustomActivities.Tests.Handlers.Syntax
             evaluator.Setup(x => x.TryEvaluateAsync<string>(secondProperty.Expressions![secondProperty.Syntax!],
                 secondProperty.Syntax!, context, CancellationToken.None)).Returns(Task.FromResult(Models.Result.Success<string?>(stringValue)));
 
-            NestedSyntaxExpressionHandler handler = new NestedSyntaxExpressionHandler(logger);
+            NestedSyntaxExpressionHandler handler = new NestedSyntaxExpressionHandler(logger, serializer);
 
             //Act
             RadioModel? output = (RadioModel?)await handler.EvaluateModel(sampleProperty!, evaluator.Object, context, type);
@@ -179,7 +186,8 @@ namespace Elsa.CustomActivities.Tests.Handlers.Syntax
         public async void EvaluateFromExpression_ReturnsCheckboxData_GivenCheckboxType(
             Mock<IServiceProvider> provider,
             Mock<IExpressionEvaluator> evaluator,
-            ILogger<NestedSyntaxExpressionHandler> logger)
+            ILogger<IExpressionHandler> logger,
+            IContentSerializer serializer)
         {
             //Arrange
             string value = SampleCheckboxJson();
@@ -225,31 +233,91 @@ namespace Elsa.CustomActivities.Tests.Handlers.Syntax
             evaluator.Setup(x => x.TryEvaluateAsync<string>(secondProperty.Expressions![secondProperty.Syntax!],
                 secondProperty.Syntax!, context, CancellationToken.None)).Returns(Task.FromResult(Models.Result.Success<string?>(stringValue)));
 
-            NestedSyntaxExpressionHandler handler = new NestedSyntaxExpressionHandler(logger);
+            NestedSyntaxExpressionHandler handler = new NestedSyntaxExpressionHandler(logger, serializer);
 
             //Act
             CheckboxModel? output = (CheckboxModel?)await handler.EvaluateModel(sampleProperty!, evaluator.Object, context, type);
+
+        }
+
+        [Theory, AutoMoqData]
+        public async void EvaluateFromExpression_ReturnsTextModel_GivenTextType(
+           Mock<IServiceProvider> provider,
+           Mock<IExpressionEvaluator> evaluator,
+           ILogger<IExpressionHandler> logger,
+            IContentSerializer serializer)
+        {
+            //Arrange
+            string value = SampleTextJson();
+            Type type = typeof(TextModel);
+
+            var context = new ActivityExecutionContext(provider.Object, default!, default!, default!, default, default);
+
+            var javascriptValue = "First Text Value";
+            var stringValue = "Link Text Value";
+
+            var textJsParagraphPropertyDictionary = new Dictionary<string, string>()
+            {
+                {SyntaxNames.JavaScript, javascriptValue},
+                {SyntaxNames.Literal, stringValue },
+                {TextActivitySyntaxNames.Paragraph, "true"},
+                {TextActivitySyntaxNames.Guidance, "true"},
+                {TextActivitySyntaxNames.Hyperlink, "false"},
+                {TextActivitySyntaxNames.Url, ""},
+            };
+
+            var textLiteralNoParagraphPropertyDictionary = new Dictionary<string, string>()
+            {
+                {SyntaxNames.JavaScript, javascriptValue},
+                {SyntaxNames.Literal, stringValue },
+                {TextActivitySyntaxNames.Paragraph, "true"},
+                {TextActivitySyntaxNames.Guidance, "false"},
+                {TextActivitySyntaxNames.Hyperlink, "true"},
+                {TextActivitySyntaxNames.Url, "https://www.foo.bar"},
+            };
+            var firstProperty = SampleElsaProperty(textJsParagraphPropertyDictionary, SyntaxNames.JavaScript, "A");
+            var secondProperty = SampleElsaProperty(textLiteralNoParagraphPropertyDictionary, SyntaxNames.Literal, "B");
+
+            var propertyList = new List<ElsaProperty>()
+            {
+                firstProperty,
+                secondProperty
+            };
+
+            ElsaProperty sampleProperty = SampleProperty(SyntaxNames.Json, type, JsonConvert.SerializeObject(propertyList));
+
+            List<TextRecord>? result = JsonConvert.DeserializeObject<List<TextRecord>>(value);
+            evaluator.Setup(x => x.TryEvaluateAsync<string>(firstProperty.Expressions![firstProperty.Syntax!],
+                firstProperty.Syntax!, context, CancellationToken.None)).Returns(Task.FromResult(Models.Result.Success<string?>(javascriptValue)));
+
+            evaluator.Setup(x => x.TryEvaluateAsync<string>(secondProperty.Expressions![secondProperty.Syntax!],
+                secondProperty.Syntax!, context, CancellationToken.None)).Returns(Task.FromResult(Models.Result.Success<string?>(stringValue)));
+
+            NestedSyntaxExpressionHandler handler = new NestedSyntaxExpressionHandler(logger, serializer);
+
+            //Act
+            TextModel? output = (TextModel?)await handler.EvaluateModel(sampleProperty!, evaluator.Object, context, type);
 
 
             //Assert
             if (output != null)
             {
-                var expectedOutput = JsonConvert.DeserializeObject<List<CheckboxRecord>>(value);
+                var expectedOutput = JsonConvert.DeserializeObject<List<TextRecord>>(value);
                 Assert.Equal(type, output!.GetType());
-                Assert.Equal(expectedOutput, output.Choices);
+                Assert.Equal(expectedOutput, output.TextRecords);
             }
             else
             {
                 Assert.True(false, "Output did not produce a non-null object");
             }
-
         }
 
-        [Theory, AutoMoqData]
+            [Theory, AutoMoqData]
         public async void EvaluateFromExpression_ReturnsDefaultValue_WhenKeyNotFoundExpressionThrown(
             Mock<IServiceProvider> provider,
             Mock<IExpressionEvaluator> evaluator,
-            ILogger<NestedSyntaxExpressionHandler> logger)
+            ILogger<IExpressionHandler> logger,
+            IContentSerializer serializer)
         {
             string value = "123";
             Type type = typeof(int);
@@ -262,7 +330,7 @@ namespace Elsa.CustomActivities.Tests.Handlers.Syntax
                 SyntaxNames.JavaScript, context, CancellationToken.None)).Returns(Task.FromResult(Models.Result.Success(result)));
 
 
-            NestedSyntaxExpressionHandler handler = new NestedSyntaxExpressionHandler(logger);
+            NestedSyntaxExpressionHandler handler = new NestedSyntaxExpressionHandler(logger, serializer);
 
             //Act
 
@@ -297,25 +365,23 @@ namespace Elsa.CustomActivities.Tests.Handlers.Syntax
             return JsonConvert.SerializeObject(records);
         }
 
-        //private string SampleCheckboxElsaPropertyJson(string selectedSyntax)
-        //{
-        //    var dict = new Dictionary<string, string>{
-        //            {SyntaxNames.Literal, "Test" },
-        //            {SyntaxNames.JavaScript, "'Test'" }
-        //        };
-        //    var records = new List<ElsaProperty>();
-        //    records.Add(SampleElsaProperty(dict, SyntaxNames.Literal, "Property 1"));
-        //    records.Add(SampleElsaProperty(dict, SyntaxNames.JavaScript, "Property 2"));
-
-        //    return JsonConvert.SerializeObject(records);
-        //}
-
         private string SampleCheckboxJson()
         {
             var records = new List<CheckboxRecord>()
                 {
                      new CheckboxRecord("A", "First Value", false,false) ,
                      new CheckboxRecord("B", "Second Value", true,false)
+            };
+
+            return JsonConvert.SerializeObject(records);
+        }
+
+        private string SampleTextJson()
+        {
+            var records = new List<TextRecord>()
+                {
+                     new TextRecord("First Text Value", true, true, false, string.Empty),
+                     new TextRecord("Link Text Value", true, false, true, "https://www.foo.bar")
             };
 
             return JsonConvert.SerializeObject(records);

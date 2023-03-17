@@ -9,6 +9,8 @@ namespace Elsa.CustomActivities.Constants
         public const string Checked = "Checked";
         public const string Condition = "Condition";
         public const string RandomTest = "RandomTest";
+        public const string CheckboxList = "CheckboxList";
+        public const string RadioList = "RadioList";
     }
 
     public class CheckboxSyntaxNames

@@ -44,7 +44,7 @@ export class TextActivityProperty {
   }
 
   updatePropertyModel() {
-    this.propertyModel.expressions[SyntaxNames.TextActivity] = JSON.stringify(this.text);
+    this.propertyModel.expressions[SyntaxNames.Json] = JSON.stringify(this.text);
     this.multiExpressionEditor.expressions[SyntaxNames.Json] = JSON.stringify(this.text, null, 2);
     this.expressionChanged.emit(JSON.stringify(this.propertyModel));
   }
