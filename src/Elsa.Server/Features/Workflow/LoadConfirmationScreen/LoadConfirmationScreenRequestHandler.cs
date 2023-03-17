@@ -1,5 +1,7 @@
-﻿using Elsa.CustomActivities.Activities.Shared;
+﻿using Elsa.CustomActivities.Activities.Common;
+using Elsa.CustomActivities.Activities.Shared;
 using Elsa.CustomInfrastructure.Data.Repository;
+using Elsa.CustomModels;
 using Elsa.CustomWorkflow.Sdk;
 using Elsa.Server.Extensions;
 using Elsa.Server.Models;
@@ -51,7 +53,10 @@ namespace Elsa.Server.Features.Workflow.LoadConfirmationScreen
                     result.Data.ConfirmationText = (string?)activityDataDictionary.GetData("ConfirmationText");
                     result.Data.FooterTitle = (string?)activityDataDictionary.GetData("FooterTitle");
                     result.Data.FooterText = (string?)activityDataDictionary.GetData("FooterText");
-                    result.Data.Text = (List<string>)activityDataDictionary.GetData("Text")! ?? new List<string>();
+                    var textModel = (TextModel)activityDataDictionary.GetData("Text")! ?? new TextModel();
+                    result.Data.Text = new Information();
+                    result.Data.Text.InformationTextList = textModel.TextRecords.Select(x => new InformationText() { Text = x.Text, IsGuidance = x.IsGuidance, IsParagraph = x.IsParagraph, IsHyperlink = x.IsHyperlink, Url = x.Url })
+                    .ToArray();
 
                     result.Data.NextWorkflowDefinitionIds = (string?)activityDataDictionary.GetData("NextWorkflowDefinitionIds");
                 }
