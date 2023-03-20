@@ -63,7 +63,7 @@ export class TextActivityProperty {
   }
 
   onMultiExpressionEditorSyntaxChanged(e: CustomEvent<string>) {
-    console.log(e);
+    e = e;
     this.syntaxSwitchCount++;
   }
 

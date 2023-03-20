@@ -55,22 +55,6 @@ namespace Elsa.CustomActivities.Handlers
             return new TextRecord(value, isParagraph, isGuidance, isHyperlink, url);
         }
 
-        //public async Task<T> EvaluateTextFromExpressions<T>(IExpressionEvaluator evaluator, ActivityExecutionContext context, ElsaProperty property, CancellationToken cancellationToken = default)
-        //{
-        //    var syntax = property.Syntax ?? SyntaxNames.Literal;
-        //    if (property.Expressions != null && property.Expressions.Count > 0)
-        //    {
-        //        var expression = property.Expressions![syntax];
-        //        var result = await evaluator.TryEvaluateAsync<T>(expression, syntax, context, cancellationToken);
-        //        if (result.Value != null)
-        //        {
-        //            return result.Value;
-        //        }
-        //        return default!;
-        //    }
-        //    else return default!;
-        //}
-
         public async Task<bool> EvaluateCondition(ElsaProperty property, IExpressionEvaluator evaluator, ActivityExecutionContext context)
         {
             if (property.Expressions!.ContainsKey(CustomSyntaxNames.Condition))

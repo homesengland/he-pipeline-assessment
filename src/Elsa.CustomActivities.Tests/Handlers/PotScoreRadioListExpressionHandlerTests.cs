@@ -206,12 +206,10 @@ Mock<IContentSerializer> serializer,
         }
 
         [Theory, AutoMoqData]
-        public async void EvaluatePotScore_ReturnsExpectedData_whenCorrectDataIsProvided(
-Mock<IContentSerializer> serializer,
-    Mock<IServiceProvider> provider,
-    bool prePopulatedValue,
-    Mock<IExpressionEvaluator> evaluator,
-    Mock<ILogger<IExpressionHandler>> logger)
+        public void EvaluatePotScore_ReturnsExpectedData_whenCorrectDataIsProvided(
+        Mock<IContentSerializer> serializer,
+        bool prePopulatedValue,
+        Mock<ILogger<IExpressionHandler>> logger)
         {
             //Arrange
 
@@ -230,10 +228,8 @@ Mock<IContentSerializer> serializer,
         }
 
         [Theory, AutoMoqData]
-        public async void EvaluatePotScore_ReturnsEmptyString_WhenNoDataIsProvided(
+        public void EvaluatePotScore_ReturnsEmptyString_WhenNoDataIsProvided(
             Mock<IContentSerializer> serializer,
-            Mock<IServiceProvider> provider,
-            Mock<IExpressionEvaluator> evaluator,
             Mock<ILogger<IExpressionHandler>> logger)
         {
             //Arrange

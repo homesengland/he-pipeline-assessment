@@ -55,9 +55,6 @@ export class HePropertyDisplayManager {
   driverFactory: DefaultDriversFactory;
 
   getDriver(type: string) {
-    console.log("Key", type);
-    console.log("Factory", this.driverFactory);
-    console.log("Drivers:", this.driverFactory.drivers)
     return this.driverFactory.drivers[type];
   }
 
@@ -68,7 +65,6 @@ export class HePropertyDisplayManager {
 
   displayNested(model: ActivityModel, property: NestedProperty, onUpdate: Function) {
     const driver: HePropertyDisplayDriver = this.getDriver(property.descriptor.uiHint);
-    console.log("Driver", driver);
     return driver.displayNested(model, property, onUpdate)
   }
 }

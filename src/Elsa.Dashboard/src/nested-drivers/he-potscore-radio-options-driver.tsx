@@ -12,8 +12,6 @@ export class HePotScoreRadioOptionsDriver implements HePropertyDisplayDriver {
   }
 
   displayNested(activity: ActivityModel, property: NestedProperty, onExpressionChanged: Function) {
-    console.log('activity HePotScoreRadioOptionsDriver', activity);
-    console.log('property HePotScoreRadioOptionsDriver', property);
     return <he-potscore-radio-options-property activityModel={activity} propertyDescriptor={property.descriptor} propertyModel={property.value} onExpressionChanged={e => onExpressionChanged(e, property)} />;
   }
 }

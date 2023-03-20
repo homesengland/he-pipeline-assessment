@@ -14,7 +14,7 @@
 
     public class PotScoreOptions : IOptions
     {
-        public string Data { get; set; }
-        public string Metadata { get; set; }
+        public string Data { get; set; } = null!;
+        public string? Metadata { get; set; }
     }
 }
