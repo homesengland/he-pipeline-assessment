@@ -62,7 +62,15 @@ export class HePotScoreRadioOptionProperty {
 
   onAddOptionClick() {
     const optionName = ToLetter(this.options.length + 1);
-    const newOption: NestedActivityDefinitionProperty = { name: optionName, syntax: SyntaxNames.Literal, expressions: { [SyntaxNames.Literal]: '', [RadioOptionsSyntax.PrePopulated]: 'false' }, type: PropertyOutputTypes.Radio };
+    const newOption: NestedActivityDefinitionProperty = {
+      name: optionName,
+      syntax: SyntaxNames.Literal,
+      expressions: {
+        [SyntaxNames.Literal]: '',
+        [RadioOptionsSyntax.PrePopulated]: 'false',
+        [RadioOptionsSyntax.PotScore]: this.potScoreOptions[0]
+      }, type: PropertyOutputTypes.Radio
+    };
     this.options = [...this.options, newOption];
     this.updatePropertyModel();
   }
@@ -91,7 +99,7 @@ export class HePotScoreRadioOptionProperty {
 
   onPotScoreChanged(e: Event, property: NestedActivityDefinitionProperty) {
     const select = e.currentTarget as HTMLSelectElement;
-    property.expressions["PotScore"] = select.value;
+    property.expressions[RadioOptionsSyntax.PotScore] = select.value;
     this.updatePropertyModel();
   }
 
@@ -140,7 +148,7 @@ export class HePotScoreRadioOptionProperty {
     const json = JSON.stringify(cases, null, 2);
 
     const renderCaseEditor = (radioOption: NestedActivityDefinitionProperty, index: number) => {
-      const selectedScore = radioOption.expressions["PotScore"];
+      const selectedScore = radioOption.expressions[RadioOptionsSyntax.PotScore];
       const expression = radioOption.expressions[radioOption.syntax];
       const syntax = radioOption.syntax;
       const monacoLanguage = mapSyntaxToLanguage(syntax);

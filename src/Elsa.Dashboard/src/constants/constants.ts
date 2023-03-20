@@ -21,6 +21,7 @@ export class CheckboxOptionsSyntax {
 
 export class RadioOptionsSyntax {
   static readonly PrePopulated = "PrePopulated";
+  static readonly PotScore = "PotScore";
 }
 
 export class TextActivityOptionsSyntax {
