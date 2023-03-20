@@ -116,6 +116,18 @@ namespace Elsa.CustomActivities.Tests.Resolver
             Assert.Equal(typeof(int), result);
         }
 
+        [Fact]
+        public void GetTypeFromTypeHint_ShouldReturnDoubleType_GivenDoubleOutputType()
+        {
+            //Arrange
+
+            //Act
+            var result = OutputTypeHintResolver.GetTypeFromTypeHint(ExpectedOutputHints.Double);
+
+            //Assert
+            Assert.Equal(typeof(double), result);
+        }
+
         [Theory]
         [InlineAutoMoqData(ExpectedOutputHints.Checkbox)]
         [InlineAutoMoqData(ExpectedOutputHints.Radio)]
