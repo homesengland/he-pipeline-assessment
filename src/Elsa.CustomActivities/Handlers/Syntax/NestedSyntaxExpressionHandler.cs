@@ -25,12 +25,15 @@ namespace Elsa.CustomActivities.Handlers.Syntax
         private InformationTextExpressionHandler _informationExpressionHandler;
         private CheckboxExpressionHandler _checkboxExpressionHandler;
         private RadioExpressionHandler _radioExpressionHandler;
+        private PotScoreRadioExpressionHandler _potScoreRadioExpressionHandler;
         public NestedSyntaxExpressionHandler(ILogger<IExpressionHandler> logger, IContentSerializer serializer)
         {
             _logger = logger;
             _informationExpressionHandler = new InformationTextExpressionHandler(logger, serializer);
             _radioExpressionHandler = new RadioExpressionHandler(logger, serializer);
             _checkboxExpressionHandler = new CheckboxExpressionHandler(logger, serializer);
+            _potScoreRadioExpressionHandler = new PotScoreRadioExpressionHandler(logger, serializer);
+
         }
 
         public async Task<object?> EvaluateModel(ElsaProperty property, IExpressionEvaluator evaluator, ActivityExecutionContext context, Type propertyType)
@@ -53,7 +56,7 @@ namespace Elsa.CustomActivities.Handlers.Syntax
             }
             if (propertyType != null && propertyType == typeof(double))
             {
-                double result = await EvaluateFromExpressions<double>(evaluator, context, property, CancellationToken.None);
+                double result = await property.EvaluateFromExpressions<double>(evaluator, context, _logger, CancellationToken.None);
                 return result;
             }
             if (propertyType != null && propertyType == typeof(CheckboxModel))
@@ -83,10 +86,10 @@ namespace Elsa.CustomActivities.Handlers.Syntax
             if (propertyType != null && propertyType == typeof(PotScoreRadioModel))
             {
                 PotScoreRadioModel result = new PotScoreRadioModel();
-                var parsedProperties = ParseToRadioModel(property);
+                var parsedProperties = ParseToList(property);
                 if (parsedProperties != null)
                 {
-                    List<PotScoreRadioRecord> records = await ElsaPropertiesToPotScoreRadioRecordList(parsedProperties, evaluator, context);
+                    List<PotScoreRadioRecord> records = await _potScoreRadioExpressionHandler.ElsaPropertiesToPotScoreRadioRecordList(parsedProperties, evaluator, context);
                     result.Choices = records;
                 }
                 return result;
