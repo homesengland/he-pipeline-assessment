@@ -62,12 +62,12 @@ namespace Elsa.CustomActivities.Handlers
             if (property.Expressions!.ContainsKey(CheckboxSyntaxNames.PrePopulated))
             {
                 string expression = property.Expressions[CheckboxSyntaxNames.PrePopulated] ?? "false";
-                bool isSingle = await property.EvaluateFromExpressionsExplicit<bool>(evaluator, 
+                bool prePopulated = await property.EvaluateFromExpressionsExplicit<bool>(evaluator, 
                     context, _logger, 
                     expression.ToLower(), 
                     SyntaxNames.JavaScript, 
                     CancellationToken.None);
-                return isSingle;
+                return prePopulated;
             }
             return false;
         }

@@ -71,6 +71,9 @@ export class QuestionProperty {
       name: descriptor.name,
       expressions: this.getExpressionMap(descriptor.supportedSyntaxes)
     }
+    if (descriptor.name.toLowerCase() == 'id') {
+      propertyValue.expressions[SyntaxNames.Literal] = this.questionModel.value.value;
+    }
     let property: NestedProperty = { value: propertyValue, descriptor: descriptor }
     return property;
   }
@@ -101,9 +104,6 @@ export class QuestionProperty {
       return value;
     }
   }
-
-
-
 
   render() {
 
