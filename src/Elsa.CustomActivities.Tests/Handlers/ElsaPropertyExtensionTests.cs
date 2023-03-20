@@ -4,9 +4,11 @@ using Elsa.Expressions;
 using Elsa.Serialization;
 using Elsa.Services.Models;
 using He.PipelineAssessment.Tests.Common;
+using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.Extensions.Logging;
 using Moq;
 using Newtonsoft.Json;
+using System.Collections.Generic;
 using Xunit;
 
 namespace Elsa.CustomActivities.Tests.Handlers
@@ -71,14 +73,27 @@ namespace Elsa.CustomActivities.Tests.Handlers
         }
 
         [Theory, AutoMoqData]
-        public async void EvaluateFromExpressionsReturnsCorrectType_GivenCalledWithAGenericType()
+        public void EvaluateFromExpressionsReturnsCorrectType_GivenCalledWithAGenericType(
+            Mock<IServiceProvider> provider,
+            Mock<IExpressionEvaluator> evaluator,
+            Mock<ILogger<IExpressionHandler>> logger)
         {
             //Arrange
+            var context = new ActivityExecutionContext(provider.Object, default!, default!, default!, default, default);
+
+            provider.Setup(x => x.GetService(typeof(IExpressionEvaluator))).Returns(evaluator.Object);
+            var booleanProperty = GetDictionary(SyntaxNames.Literal, "true");
+            var stringProperty = GetDictionary(SyntaxNames.Literal, "true");
+            var intProperty = GetDictionary(SyntaxNames.Literal, "123");
+            var doubleProperty = GetDictionary(SyntaxNames.Literal, "123.0");
 
             //Act
+            GenericReturnTypeEvaluateFromExpressions<bool>(SampleElsaProperty(booleanProperty, SyntaxNames.Literal, "bool"), evaluator, context, logger.Object);
+            GenericReturnTypeEvaluateFromExpressions<string>(SampleElsaProperty(stringProperty, SyntaxNames.Literal, "bool"), evaluator, context, logger.Object);
+            GenericReturnTypeEvaluateFromExpressions<int>(SampleElsaProperty(intProperty, SyntaxNames.Literal, "bool"), evaluator, context, logger.Object);
+            GenericReturnTypeEvaluateFromExpressions<double>(SampleElsaProperty(doubleProperty, SyntaxNames.Literal, "bool"), evaluator, context, logger.Object);
 
             //Assert
-            Assert.True(false);
         }
 
         [Theory, AutoMoqData]
@@ -127,25 +142,36 @@ namespace Elsa.CustomActivities.Tests.Handlers
         }
 
         [Theory, AutoMoqData]
-        public async void EvaluateFromExpressionsExplicitReturnsCorrectType_GivenCalledWithAGenericType()
+        public async void EvaluateFromExpressionsExplicitReturnsDefault_GivenNoExpressionsOnProperty(
+            Mock<IServiceProvider> provider,
+            Mock<IExpressionEvaluator> evaluator,
+            Mock<ILogger<IExpressionHandler>> logger
+            )
         {
             //Arrange
+            var emptyDictionary = new Dictionary<string, string>() { { "NotLiteralSyntax", "test" } };
+            var sampleElsaProperty1 = SampleElsaProperty(emptyDictionary, SyntaxNames.Literal, "Text A");
+            var context = new ActivityExecutionContext(provider.Object, default!, default!, default!, default, default);
+
+            provider.Setup(x => x.GetService(typeof(IExpressionEvaluator))).Returns(evaluator.Object);
+
+            //evaluator.Setup(x => x.TryEvaluateAsync<string>(sampleElsaProperty1.Expressions!["NotLiteralSyntax"], SyntaxNames.Literal, context, CancellationToken.None))
+            //    .Returns(Task.FromResult(Models.Result.Success<string?>(string.Empty)));
 
             //Act
+            var result = await sampleElsaProperty1.EvaluateFromExpressionsExplicit<string>(
+                evaluator.Object,
+                context, 
+                logger.Object, 
+                "Test", 
+                SyntaxNames.Literal, 
+                CancellationToken.None);
 
             //Assert
-            Assert.True(false);
-        }
-
-        [Theory, AutoMoqData]
-        public async void EvaluateFromExpressionsExplicitReturnsDefault_GivenNoExpressionsOnProperty()
-        {
-            //Arrange
-
-            //Act
-
-            //Assert
-            Assert.True(false);
+            // we can't verify LogError as it's a non-virtual static method - might need to look at checking it via reflection
+            // otherwise this test is the same as the one above
+            //logger.Verify(x => x.LogError(It.IsAny<KeyNotFoundException>(), "Incorrect data structure.  Expression did not contain correct Syntax"), Times.Once);
+            Assert.Null(result);
         }
 
         [Theory, AutoMoqData]
@@ -158,6 +184,21 @@ namespace Elsa.CustomActivities.Tests.Handlers
 
             //Assert
             Assert.True(false);
+        }
+
+        public async void GenericReturnTypeEvaluateFromExpressions<T>(ElsaProperty property, Mock<IExpressionEvaluator> evaluator, ActivityExecutionContext context, ILogger logger)
+        {
+            evaluator.Setup(x => x.TryEvaluateAsync<T>(property.Expressions![property.Syntax!], property.Syntax!, context, CancellationToken.None))
+            .Returns(Task.FromResult(Models.Result.Success<T?>(default(T))));
+
+            var result = await property.EvaluateFromExpressions<T>(evaluator.Object, context, logger, CancellationToken.None);
+                
+
+            Assert.Equal(default(T), result);
+            if(result != null)
+            {
+                Assert.Equal(typeof(T), result.GetType());
+            }
         }
 
         private Dictionary<string, string> GetDictionary(string defaultSyntax,
@@ -194,3 +235,4 @@ namespace Elsa.CustomActivities.Tests.Handlers
         }
     }
 }
+
