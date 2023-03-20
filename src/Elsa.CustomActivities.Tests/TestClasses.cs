@@ -22,6 +22,12 @@ namespace Elsa.CustomActivities.Tests
     {
         public int IntType { get; set; }
     }
+
+    public class TestClassWithOneDoubleProperty
+    {
+        public double DoubleType { get; set; }
+    }
+
     public class TestClassWithOneListProperty
     {
         public List<object> ListType { get; set; } = null!;
