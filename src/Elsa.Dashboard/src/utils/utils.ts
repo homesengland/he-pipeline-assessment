@@ -70,6 +70,7 @@ export function filterPropertiesByType(questionProperties: Array<HeActivityPrope
       p.displayInDesigner = false;
   });
   const filteredProperties: Array<HeActivityPropertyDescriptor> = properties.filter(property => property.displayInDesigner == true);
+  console.log('filteredProperties', filteredProperties);
   return filteredProperties;
 }
 

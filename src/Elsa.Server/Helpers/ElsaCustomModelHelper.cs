@@ -65,6 +65,9 @@ namespace Elsa.Server.Helpers
                 QuestionTypeConstants.RadioQuestion => question.Radio.Choices
                     .Select(x => new QuestionScreenAnswer.Choice() { Identifier = x.Identifier, Answer = x.Answer, IsSingle = false, IsPrePopulated = x.IsPrePopulated })
                     .ToList(),
+                QuestionTypeConstants.PotScoreRadioQuestion => question.PotScoreRadio.Choices
+                    .Select(x => new QuestionScreenAnswer.Choice() { Identifier = x.Identifier, Answer = x.Answer, IsSingle = false, IsPrePopulated = x.IsPrePopulated })
+                    .ToList(),
                 _ => null
             };
 

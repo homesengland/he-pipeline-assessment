@@ -7,7 +7,6 @@ using Elsa.Serialization;
 using Elsa.Services.Models;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
-using static Elsa.CustomActivities.Activities.Common.TextModel;
 
 namespace Elsa.CustomActivities.Handlers.Syntax
 {
@@ -52,6 +51,11 @@ namespace Elsa.CustomActivities.Handlers.Syntax
                 int result = await property.EvaluateFromExpressions<int>(evaluator, context, _logger, CancellationToken.None);
                 return result;
             }
+            if (propertyType != null && propertyType == typeof(double))
+            {
+                double result = await EvaluateFromExpressions<double>(evaluator, context, property, CancellationToken.None);
+                return result;
+            }
             if (propertyType != null && propertyType == typeof(CheckboxModel))
             {
                 CheckboxModel result = new CheckboxModel();
@@ -71,6 +75,18 @@ namespace Elsa.CustomActivities.Handlers.Syntax
                 if (parsedProperties != null)
                 {
                     List<RadioRecord> records = await _radioExpressionHandler.ElsaPropertiesToRadioRecordList(parsedProperties, evaluator, context);
+                    result.Choices = records;
+                }
+                return result;
+
+            }
+            if (propertyType != null && propertyType == typeof(PotScoreRadioModel))
+            {
+                PotScoreRadioModel result = new PotScoreRadioModel();
+                var parsedProperties = ParseToRadioModel(property);
+                if (parsedProperties != null)
+                {
+                    List<PotScoreRadioRecord> records = await ElsaPropertiesToPotScoreRadioRecordList(parsedProperties, evaluator, context);
                     result.Choices = records;
                 }
                 return result;

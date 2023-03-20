@@ -17,5 +17,6 @@
         public const string TextQuestion = "TextQuestion";
         public const string TextAreaQuestion = "TextAreaQuestion";
         public const string Information = "Information";
+        public const string PotScoreRadioQuestion = "PotScoreRadioQuestion";
     }
 }

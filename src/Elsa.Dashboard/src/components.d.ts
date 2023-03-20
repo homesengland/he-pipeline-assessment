@@ -56,6 +56,11 @@ export namespace Components {
         "propertyDescriptor": ActivityPropertyDescriptor;
         "propertyModel": ActivityDefinitionProperty;
     }
+    interface HePotscoreRadioOptionsProperty {
+        "activityModel": ActivityModel;
+        "propertyDescriptor": ActivityPropertyDescriptor;
+        "propertyModel": ActivityDefinitionProperty;
+    }
     interface HeRadioOptionsProperty {
         "activityModel": ActivityModel;
         "propertyDescriptor": ActivityPropertyDescriptor;
@@ -115,6 +120,10 @@ export interface HeJsonPropertyCustomEvent<T> extends CustomEvent<T> {
 export interface HeMultiLinePropertyCustomEvent<T> extends CustomEvent<T> {
     detail: T;
     target: HTMLHeMultiLinePropertyElement;
+}
+export interface HePotscoreRadioOptionsPropertyCustomEvent<T> extends CustomEvent<T> {
+    detail: T;
+    target: HTMLHePotscoreRadioOptionsPropertyElement;
 }
 export interface HeRadioOptionsPropertyCustomEvent<T> extends CustomEvent<T> {
     detail: T;
@@ -185,6 +194,12 @@ declare global {
         prototype: HTMLHeMultiLinePropertyElement;
         new (): HTMLHeMultiLinePropertyElement;
     };
+    interface HTMLHePotscoreRadioOptionsPropertyElement extends Components.HePotscoreRadioOptionsProperty, HTMLStencilElement {
+    }
+    var HTMLHePotscoreRadioOptionsPropertyElement: {
+        prototype: HTMLHePotscoreRadioOptionsPropertyElement;
+        new (): HTMLHePotscoreRadioOptionsPropertyElement;
+    };
     interface HTMLHeRadioOptionsPropertyElement extends Components.HeRadioOptionsProperty, HTMLStencilElement {
     }
     var HTMLHeRadioOptionsPropertyElement: {
@@ -236,6 +251,7 @@ declare global {
         "he-checkbox-property": HTMLHeCheckboxPropertyElement;
         "he-json-property": HTMLHeJsonPropertyElement;
         "he-multi-line-property": HTMLHeMultiLinePropertyElement;
+        "he-potscore-radio-options-property": HTMLHePotscoreRadioOptionsPropertyElement;
         "he-radio-options-property": HTMLHeRadioOptionsPropertyElement;
         "he-single-line-property": HTMLHeSingleLinePropertyElement;
         "he-switch-options-property": HTMLHeSwitchOptionsPropertyElement;
@@ -300,6 +316,12 @@ declare namespace LocalJSX {
         "propertyDescriptor"?: ActivityPropertyDescriptor;
         "propertyModel"?: ActivityDefinitionProperty;
     }
+    interface HePotscoreRadioOptionsProperty {
+        "activityModel"?: ActivityModel;
+        "onExpressionChanged"?: (event: HePotscoreRadioOptionsPropertyCustomEvent<string>) => void;
+        "propertyDescriptor"?: ActivityPropertyDescriptor;
+        "propertyModel"?: ActivityDefinitionProperty;
+    }
     interface HeRadioOptionsProperty {
         "activityModel"?: ActivityModel;
         "onExpressionChanged"?: (event: HeRadioOptionsPropertyCustomEvent<string>) => void;
@@ -349,6 +371,7 @@ declare namespace LocalJSX {
         "he-checkbox-property": HeCheckboxProperty;
         "he-json-property": HeJsonProperty;
         "he-multi-line-property": HeMultiLineProperty;
+        "he-potscore-radio-options-property": HePotscoreRadioOptionsProperty;
         "he-radio-options-property": HeRadioOptionsProperty;
         "he-single-line-property": HeSingleLineProperty;
         "he-switch-options-property": HeSwitchOptionsProperty;
@@ -370,6 +393,7 @@ declare module "@stencil/core" {
             "he-checkbox-property": LocalJSX.HeCheckboxProperty & JSXBase.HTMLAttributes<HTMLHeCheckboxPropertyElement>;
             "he-json-property": LocalJSX.HeJsonProperty & JSXBase.HTMLAttributes<HTMLHeJsonPropertyElement>;
             "he-multi-line-property": LocalJSX.HeMultiLineProperty & JSXBase.HTMLAttributes<HTMLHeMultiLinePropertyElement>;
+            "he-potscore-radio-options-property": LocalJSX.HePotscoreRadioOptionsProperty & JSXBase.HTMLAttributes<HTMLHePotscoreRadioOptionsPropertyElement>;
             "he-radio-options-property": LocalJSX.HeRadioOptionsProperty & JSXBase.HTMLAttributes<HTMLHeRadioOptionsPropertyElement>;
             "he-single-line-property": LocalJSX.HeSingleLineProperty & JSXBase.HTMLAttributes<HTMLHeSingleLinePropertyElement>;
             "he-switch-options-property": LocalJSX.HeSwitchOptionsProperty & JSXBase.HTMLAttributes<HTMLHeSwitchOptionsPropertyElement>;
