@@ -248,13 +248,14 @@ namespace Elsa.CustomActivities.Handlers.Syntax
             var identifier = property.Name;
             string potScore = string.Empty;
             var value = await EvaluateFromExpressions<string>(evaluator, context, property, CancellationToken.None);
+            bool isPrePopulated = property.Expressions?[RadioSyntaxNames.PrePopulated].ToLower() == "true";
 
             if (property.Expressions!.ContainsKey(CustomSyntaxNames.PotScore))
             {
                 potScore = property.Expressions?[CustomSyntaxNames.PotScore]!;
             };
 
-            return new PotScoreRadioRecord(identifier, value, potScore);
+            return new PotScoreRadioRecord(identifier, value, potScore, isPrePopulated);
         }
 
         public Type GetReturnType(string typeHint)

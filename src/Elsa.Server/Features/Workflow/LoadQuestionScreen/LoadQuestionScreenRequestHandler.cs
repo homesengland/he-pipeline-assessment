@@ -166,7 +166,7 @@ namespace Elsa.Server.Features.Workflow.LoadQuestionScreen
                     answerList!;
             }
 
-            if (item.QuestionType == QuestionTypeConstants.RadioQuestion || item.QuestionType == QuestionTypeConstants.PotScoreRadioQuestion)
+            if (item.QuestionType == QuestionTypeConstants.RadioQuestion)
             {
                 questionActivityData.Radio = new Radio();
                 questionActivityData.Radio.Choices = item.Radio.Choices
@@ -174,11 +174,26 @@ namespace Elsa.Server.Features.Workflow.LoadQuestionScreen
                     .ToArray();
             }
 
-            if ((item.QuestionType == QuestionTypeConstants.RadioQuestion || item.QuestionType == QuestionTypeConstants.PotScoreRadioQuestion) &&
+            if (item.QuestionType == QuestionTypeConstants.PotScoreRadioQuestion)
+            {
+                questionActivityData.Radio = new Radio();
+                questionActivityData.Radio.Choices = item.PotScoreRadio.Choices
+                    .Select(x => new QuestionScreenAnswer.Choice() { Answer = x.Answer })
+                    .ToArray();
+            }
+
+            if ((item.QuestionType == QuestionTypeConstants.RadioQuestion ) &&
                string.IsNullOrEmpty(questionActivityData.Answer) && item.Radio.Choices.Any(x => x.IsPrePopulated))
             {
                 questionActivityData.Radio.SelectedAnswer =
                     item.Radio.Choices.First(x => x.IsPrePopulated).Answer;
+            }
+
+            if ((item.QuestionType == QuestionTypeConstants.PotScoreRadioQuestion) &&
+   string.IsNullOrEmpty(questionActivityData.Answer) && item.PotScoreRadio.Choices.Any(x => x.IsPrePopulated))
+            {
+                questionActivityData.Radio.SelectedAnswer =
+                    item.PotScoreRadio.Choices.First(x => x.IsPrePopulated).Answer;
             }
 
             if ((item.QuestionType == QuestionTypeConstants.RadioQuestion || item.QuestionType == QuestionTypeConstants.PotScoreRadioQuestion) &&
