@@ -312,7 +312,106 @@ namespace Elsa.CustomActivities.Tests.Handlers.Syntax
             }
         }
 
-            [Theory, AutoMoqData]
+        [Theory, AutoMoqData]
+        public async void EvaluateFromExpression_ReturnsDoubleModel_GivenDoubleType(
+   Mock<IServiceProvider> provider,
+   Mock<IExpressionEvaluator> evaluator,
+   ILogger<IExpressionHandler> logger,
+    IContentSerializer serializer)
+        {
+            //Arrange
+            double value = 2.0;
+            string javascriptQuery = "activities[x].Output()";
+            Type type = typeof(double);
+            ElsaProperty sampleProperty = SampleProperty(SyntaxNames.Literal, type, value.ToString());
+            ElsaProperty javascriptProperty = SampleProperty(SyntaxNames.JavaScript, type, javascriptQuery);
+
+            var context = new ActivityExecutionContext(provider.Object, default!, default!, default!, default, default);
+
+            string result = value.ToString();
+            evaluator.Setup(x => x.TryEvaluateAsync<string>(sampleProperty.Expressions![sampleProperty.Syntax!],
+                sampleProperty.Syntax!, context, CancellationToken.None)).Returns(Task.FromResult(Models.Result.Success<string?>(value.ToString())));
+
+            evaluator.Setup(x => x.TryEvaluateAsync<string>(javascriptProperty.Expressions![javascriptProperty.Syntax!],
+                javascriptProperty.Syntax!, context, CancellationToken.None)).Returns(Task.FromResult(Models.Result.Success<string?>(value.ToString())));
+
+            NestedSyntaxExpressionHandler handler = new NestedSyntaxExpressionHandler(logger, serializer);
+
+            //Act
+
+            var output = await handler.EvaluateModel(sampleProperty!, evaluator.Object, context, type);
+            var parsedJavascriptOutput = await handler.EvaluateModel(javascriptProperty!, evaluator.Object, context, type);
+
+            //Assert
+            Assert.Equal(type, output!.GetType());
+            Assert.Equal(type, parsedJavascriptOutput!.GetType());
+        }
+
+
+        [Theory, AutoMoqData]
+        public async void EvaluateFromExpression_ReturnsPotScoreRadioData_GivenPotScoreRadioType(
+    Mock<IServiceProvider> provider,
+    Mock<IExpressionEvaluator> evaluator,
+    ILogger<IExpressionHandler> logger,
+    IContentSerializer serializer)
+        {
+            //Arrange
+            var javascriptValue = "First Value";
+            var stringValue = "Second Value";
+            var potValue = "High";
+            string value = PotScoreRadioJson(javascriptValue, stringValue, potValue);
+            Type type = typeof(PotScoreRadioModel);
+
+            var context = new ActivityExecutionContext(provider.Object, default!, default!, default!, default, default);
+
+
+
+            var propertyDictionary = new Dictionary<string, string>()
+            {
+                {SyntaxNames.JavaScript, javascriptValue },
+                {SyntaxNames.Literal, stringValue },
+                {RadioSyntaxNames.PrePopulated, "false" },
+                {CustomSyntaxNames.PotScore, potValue }
+            };
+            var firstProperty = SampleElsaProperty(propertyDictionary, SyntaxNames.JavaScript, "A");
+            var secondProperty = SampleElsaProperty(propertyDictionary, SyntaxNames.Literal, "B");
+
+            var propertyList = new List<ElsaProperty>()
+            {
+                firstProperty,
+                secondProperty
+            };
+
+            ElsaProperty sampleProperty = SampleProperty(SyntaxNames.Json, type, JsonConvert.SerializeObject(propertyList));
+
+            List<PotScoreRadioRecord>? result = JsonConvert.DeserializeObject<List<PotScoreRadioRecord>>(value);
+            evaluator.Setup(x => x.TryEvaluateAsync<string>(firstProperty.Expressions![firstProperty.Syntax!],
+                firstProperty.Syntax!, context, CancellationToken.None)).Returns(Task.FromResult(Models.Result.Success<string?>(javascriptValue)));
+
+            evaluator.Setup(x => x.TryEvaluateAsync<string>(secondProperty.Expressions![secondProperty.Syntax!],
+                secondProperty.Syntax!, context, CancellationToken.None)).Returns(Task.FromResult(Models.Result.Success<string?>(stringValue)));
+
+            NestedSyntaxExpressionHandler handler = new NestedSyntaxExpressionHandler(logger, serializer);
+
+            //Act
+            PotScoreRadioModel? output = (PotScoreRadioModel?)await handler.EvaluateModel(sampleProperty!, evaluator.Object, context, type);
+
+
+            //Assert
+            if (output != null)
+            {
+                var expectedOutput = JsonConvert.DeserializeObject<List<PotScoreRadioRecord>>(value);
+                Assert.Equal(type, output!.GetType());
+                Assert.Equal(expectedOutput, output.Choices);
+            }
+            else
+            {
+                Assert.True(false, "Output did not produce a non-null object");
+            }
+
+        }
+
+        [Theory, AutoMoqData]
         public async void EvaluateFromExpression_ReturnsDefaultValue_WhenKeyNotFoundExpressionThrown(
             Mock<IServiceProvider> provider,
             Mock<IExpressionEvaluator> evaluator,
@@ -360,6 +459,17 @@ namespace Elsa.CustomActivities.Tests.Handlers.Syntax
                 {
                      new RadioRecord("A", "First Value", false) ,
                      new RadioRecord("B", "Second Value",false)
+            };
+
+            return JsonConvert.SerializeObject(records);
+        }
+
+        private string PotScoreRadioJson(string firstValue, string secondValue, string potScore)
+        {
+            var records = new List<PotScoreRadioRecord>()
+                {
+                     new PotScoreRadioRecord("A", firstValue, potScore, false) ,
+                     new PotScoreRadioRecord("B", secondValue, potScore, false)
             };
 
             return JsonConvert.SerializeObject(records);
