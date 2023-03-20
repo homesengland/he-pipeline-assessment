@@ -1,6 +1,4 @@
-﻿using Elsa.CustomActivities.Activities.Common;
-using Elsa.CustomActivities.Constants;
-using Elsa.CustomActivities.Handlers;
+﻿using Elsa.CustomActivities.Constants;
 using Elsa.CustomActivities.Handlers.Models;
 using Elsa.Expressions;
 using Elsa.Serialization;
@@ -9,11 +7,6 @@ using He.PipelineAssessment.Tests.Common;
 using Microsoft.Extensions.Logging;
 using Moq;
 using Newtonsoft.Json;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Xunit;
 
 namespace Elsa.CustomActivities.Tests.Handlers
@@ -27,43 +20,43 @@ namespace Elsa.CustomActivities.Tests.Handlers
                                     Mock<IContentSerializer> serialiser,
                         Mock<ILogger<IExpressionHandler>> logger)
         {
-                //Arrange
-                List<ElsaProperty> PotScoreRadioListProperties = new List<ElsaProperty>();
+            //Arrange
+            List<ElsaProperty> PotScoreRadioListProperties = new List<ElsaProperty>();
 
-                string sampleElsaText1 = "A piece of text 1";
-                string sampleElsaText2 = "'A piece of text '+ RandomJavascriptExpression";
-                string sampleElsaText2Actual = "A piece of text 2";
-                string sampleElsaText3 = "This test should not display";
+            string sampleElsaText1 = "A piece of text 1";
+            string sampleElsaText2 = "'A piece of text '+ RandomJavascriptExpression";
+            string sampleElsaText2Actual = "A piece of text 2";
+            string sampleElsaText3 = "This test should not display";
 
-                var sampleElsaProperty1 = SampleElsaProperty(GetDictionary(SyntaxNames.Literal, sampleElsaText1), SyntaxNames.Literal, "Text A");
-                var sampleElsaProperty2 = SampleElsaProperty(GetDictionary(SyntaxNames.JavaScript, sampleElsaText2), SyntaxNames.JavaScript, "Text B");
-                var sampleElsaProperty3 = SampleElsaProperty(GetDictionary(SyntaxNames.Literal, sampleElsaText3, prePopulatedValue: "true"), SyntaxNames.Literal, "Text C");
+            var sampleElsaProperty1 = SampleElsaProperty(GetDictionary(SyntaxNames.Literal, sampleElsaText1), SyntaxNames.Literal, "Text A");
+            var sampleElsaProperty2 = SampleElsaProperty(GetDictionary(SyntaxNames.JavaScript, sampleElsaText2), SyntaxNames.JavaScript, "Text B");
+            var sampleElsaProperty3 = SampleElsaProperty(GetDictionary(SyntaxNames.Literal, sampleElsaText3, prePopulatedValue: "true"), SyntaxNames.Literal, "Text C");
 
-                PotScoreRadioListProperties.Add(sampleElsaProperty1);
-                PotScoreRadioListProperties.Add(sampleElsaProperty2);
-                PotScoreRadioListProperties.Add(sampleElsaProperty3);
+            PotScoreRadioListProperties.Add(sampleElsaProperty1);
+            PotScoreRadioListProperties.Add(sampleElsaProperty2);
+            PotScoreRadioListProperties.Add(sampleElsaProperty3);
 
-                string expressionString = JsonConvert.SerializeObject(PotScoreRadioListProperties);
+            string expressionString = JsonConvert.SerializeObject(PotScoreRadioListProperties);
 
-                var context = new ActivityExecutionContext(provider.Object, default!, default!, default!, default, default);
+            var context = new ActivityExecutionContext(provider.Object, default!, default!, default!, default, default);
 
-                serialiser.Setup(x => x.Deserialize<List<ElsaProperty>>(expressionString)).Returns(PotScoreRadioListProperties);
+            serialiser.Setup(x => x.Deserialize<List<ElsaProperty>>(expressionString)).Returns(PotScoreRadioListProperties);
 
-                provider.Setup(x => x.GetService(typeof(IExpressionEvaluator))).Returns(evaluator.Object);
-                evaluator.Setup(x => x.TryEvaluateAsync<string>(sampleElsaProperty1.Expressions![sampleElsaProperty1.Syntax!],
-                    sampleElsaProperty1.Syntax!, context, CancellationToken.None)).Returns(Task.FromResult(Models.Result.Success<string?>(sampleElsaText1)));
+            provider.Setup(x => x.GetService(typeof(IExpressionEvaluator))).Returns(evaluator.Object);
+            evaluator.Setup(x => x.TryEvaluateAsync<string>(sampleElsaProperty1.Expressions![sampleElsaProperty1.Syntax!],
+                sampleElsaProperty1.Syntax!, context, CancellationToken.None)).Returns(Task.FromResult(Models.Result.Success<string?>(sampleElsaText1)));
 
-                evaluator.Setup(x => x.TryEvaluateAsync<string>(sampleElsaProperty2.Expressions![sampleElsaProperty2.Syntax!],
-                    sampleElsaProperty2.Syntax!, context, CancellationToken.None)).Returns(Task.FromResult(Models.Result.Success<string?>(sampleElsaText2Actual)));
+            evaluator.Setup(x => x.TryEvaluateAsync<string>(sampleElsaProperty2.Expressions![sampleElsaProperty2.Syntax!],
+                sampleElsaProperty2.Syntax!, context, CancellationToken.None)).Returns(Task.FromResult(Models.Result.Success<string?>(sampleElsaText2Actual)));
 
-                evaluator.Setup(x => x.TryEvaluateAsync<string>(sampleElsaProperty3.Expressions![sampleElsaProperty3.Syntax!],
-                    sampleElsaProperty3.Syntax!, context, CancellationToken.None)).Returns(Task.FromResult(Models.Result.Success<string?>(sampleElsaText3)));
+            evaluator.Setup(x => x.TryEvaluateAsync<string>(sampleElsaProperty3.Expressions![sampleElsaProperty3.Syntax!],
+                sampleElsaProperty3.Syntax!, context, CancellationToken.None)).Returns(Task.FromResult(Models.Result.Success<string?>(sampleElsaText3)));
 
-                evaluator.Setup(x => x.TryEvaluateAsync<bool>("true", SyntaxNames.JavaScript
-                    , context, CancellationToken.None)).Returns(Task.FromResult(Models.Result.Success<bool>(true)));
+            evaluator.Setup(x => x.TryEvaluateAsync<bool>("true", SyntaxNames.JavaScript
+                , context, CancellationToken.None)).Returns(Task.FromResult(Models.Result.Success<bool>(true)));
 
-                evaluator.Setup(x => x.TryEvaluateAsync<bool>("false", SyntaxNames.JavaScript
-                    , context, CancellationToken.None)).Returns(Task.FromResult(Models.Result.Success<bool>(false)));
+            evaluator.Setup(x => x.TryEvaluateAsync<bool>("false", SyntaxNames.JavaScript
+                , context, CancellationToken.None)).Returns(Task.FromResult(Models.Result.Success<bool>(false)));
 
 
             //Act
@@ -77,6 +70,95 @@ namespace Elsa.CustomActivities.Tests.Handlers
             Assert.Equal(sampleElsaText3, resultText3);
         }
 
+        [Theory, AutoMoqData]
+        public async void EvaluateFromExpressionsReturnsCorrectType_GivenCalledWithAGenericType()
+        {
+            //Arrange
+
+            //Act
+
+            //Assert
+            Assert.True(false);
+        }
+
+        [Theory, AutoMoqData]
+        public async void EvaluateFromExpressionsReturnsDefault_GivenNoExpressionsOnProperty(
+            Mock<IServiceProvider> provider,
+            Mock<IExpressionEvaluator> evaluator,
+            Mock<ILogger<IExpressionHandler>> logger
+            )
+        {
+            //Arrange
+            var emptyDictionary = new Dictionary<string, string>();
+            var sampleElsaProperty1 = SampleElsaProperty(emptyDictionary, SyntaxNames.Literal, "Text A");
+            var context = new ActivityExecutionContext(provider.Object, default!, default!, default!, default, default);
+
+            provider.Setup(x => x.GetService(typeof(IExpressionEvaluator))).Returns(evaluator.Object);
+
+            //Act
+            var result = await sampleElsaProperty1.EvaluateFromExpressions<string>(evaluator.Object, context, logger.Object, CancellationToken.None);
+
+            //Assert
+            Assert.Null(result);
+        }
+
+        [Theory, AutoMoqData]
+        public async void EvaluateFromExpressionsThrowsKeyNotFoundException_GivenPropertyNotFoundInGivenDictionary(
+            Mock<IServiceProvider> provider,
+            Mock<IExpressionEvaluator> evaluator,
+            Mock<ILogger<IExpressionHandler>> logger
+            )
+        {
+            //Arrange
+            var emptyDictionary = new Dictionary<string, string>() { { "NotLiteralSyntax", "test" } };
+            var sampleElsaProperty1 = SampleElsaProperty(emptyDictionary, SyntaxNames.Literal, "Text A");
+            var context = new ActivityExecutionContext(provider.Object, default!, default!, default!, default, default);
+
+            provider.Setup(x => x.GetService(typeof(IExpressionEvaluator))).Returns(evaluator.Object);
+
+            //Act
+            var result = await sampleElsaProperty1.EvaluateFromExpressions<string>(evaluator.Object, context, logger.Object, CancellationToken.None);
+
+            //Assert
+            // we can't verify LogError as it's a non-virtual static method - might need to look at checking it via reflection
+            // otherwise this test is the same as the one above
+            //logger.Verify(x => x.LogError(It.IsAny<KeyNotFoundException>(), "Incorrect data structure.  Expression did not contain correct Syntax"), Times.Once);
+            Assert.Null(result);
+        }
+
+        [Theory, AutoMoqData]
+        public async void EvaluateFromExpressionsExplicitReturnsCorrectType_GivenCalledWithAGenericType()
+        {
+            //Arrange
+
+            //Act
+
+            //Assert
+            Assert.True(false);
+        }
+
+        [Theory, AutoMoqData]
+        public async void EvaluateFromExpressionsExplicitReturnsDefault_GivenNoExpressionsOnProperty()
+        {
+            //Arrange
+
+            //Act
+
+            //Assert
+            Assert.True(false);
+        }
+
+        [Theory, AutoMoqData]
+
+        public async void EvaluateFromExpressionsExplicitThrowsKeyNotFoundException_GivenPropertyNotFoundInGivenDictionary()
+        {
+            //Arrange
+
+            //Act
+
+            //Assert
+            Assert.True(false);
+        }
 
         private Dictionary<string, string> GetDictionary(string defaultSyntax,
             string defaultValue,
