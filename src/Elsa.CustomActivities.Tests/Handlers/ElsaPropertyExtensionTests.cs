@@ -5,11 +5,9 @@ using Elsa.Expressions;
 using Elsa.Serialization;
 using Elsa.Services.Models;
 using He.PipelineAssessment.Tests.Common;
-using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.Extensions.Logging;
 using Moq;
 using Newtonsoft.Json;
-using System.Collections.Generic;
 using Xunit;
 
 namespace Elsa.CustomActivities.Tests.Handlers
@@ -162,10 +160,10 @@ namespace Elsa.CustomActivities.Tests.Handlers
             //Act
             var result = await sampleElsaProperty1.EvaluateFromExpressionsExplicit<string>(
                 evaluator.Object,
-                context, 
-                logger.Object, 
-                "Test", 
-                SyntaxNames.Literal, 
+                context,
+                logger.Object,
+                "Test",
+                SyntaxNames.Literal,
                 CancellationToken.None);
 
             //Assert
@@ -181,7 +179,7 @@ namespace Elsa.CustomActivities.Tests.Handlers
             [Frozen] Mock<IServiceProvider> provider,
             [Frozen] Mock<IExpressionEvaluator> evaluator,
             [Frozen] Mock<ILogger<IExpressionHandler>> logger)
-        { 
+        {
             //Arrange
             var emptyDictionary = new Dictionary<string, string>() { { "NotLiteralSyntax", "test" } };
             var sampleElsaProperty1 = SampleElsaProperty(emptyDictionary, SyntaxNames.Literal, "Text A");
@@ -206,16 +204,46 @@ namespace Elsa.CustomActivities.Tests.Handlers
             //logger.Verify(x => x.LogError(It.IsAny<KeyNotFoundException>(), "Incorrect data structure.  Expression did not contain correct Syntax"), Times.Once);
         }
 
+        [Theory, AutoMoqData]
+
+        public async void EvaluateFromExpressionsReturnsNull_NoExpressionFoundInGivenDictionary(
+           [Frozen] Mock<IServiceProvider> provider,
+           [Frozen] Mock<IExpressionEvaluator> evaluator,
+           [Frozen] Mock<ILogger<IExpressionHandler>> logger)
+        {
+            //Arrange
+            var emptyDictionary = new Dictionary<string, string>() { };
+            var sampleElsaProperty1 = SampleElsaProperty(emptyDictionary, SyntaxNames.Literal, "Text A");
+            var context = new ActivityExecutionContext(provider.Object, default!, default!, default!, default, default);
+            provider.Setup(x => x.GetService(typeof(IExpressionEvaluator))).Returns(evaluator.Object);
+            Exception exception = new Exception();
+
+            //Act
+            var result = await sampleElsaProperty1.EvaluateFromExpressionsExplicit<string>(
+                    evaluator.Object,
+                    context,
+                    logger.Object,
+                    "Test",
+                    SyntaxNames.JavaScript,
+                    CancellationToken.None);
+
+            //Assert
+            Assert.Null(result);
+            // we can't verify LogError as it's a non-virtual static method - might need to look at checking it via reflection
+            // otherwise this test is the same as the one above
+            //logger.Verify(x => x.LogError(It.IsAny<KeyNotFoundException>(), "Incorrect data structure.  Expression did not contain correct Syntax"), Times.Once);
+        }
+
         internal async void GenericReturnTypeEvaluateFromExpressions<T>(ElsaProperty property, Mock<IExpressionEvaluator> evaluator, ActivityExecutionContext context, ILogger logger)
         {
             evaluator.Setup(x => x.TryEvaluateAsync<T>(property.Expressions![property.Syntax!], property.Syntax!, context, CancellationToken.None))
             .Returns(Task.FromResult(Models.Result.Success<T?>(default(T))));
 
             var result = await property.EvaluateFromExpressions<T>(evaluator.Object, context, logger, CancellationToken.None);
-                
+
 
             Assert.Equal(default(T), result);
-            if(result != null)
+            if (result != null)
             {
                 Assert.Equal(typeof(T), result.GetType());
             }
