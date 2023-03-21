@@ -206,7 +206,7 @@ namespace Elsa.CustomActivities.Tests.Handlers
             //logger.Verify(x => x.LogError(It.IsAny<KeyNotFoundException>(), "Incorrect data structure.  Expression did not contain correct Syntax"), Times.Once);
         }
 
-        public async void GenericReturnTypeEvaluateFromExpressions<T>(ElsaProperty property, Mock<IExpressionEvaluator> evaluator, ActivityExecutionContext context, ILogger logger)
+        internal async void GenericReturnTypeEvaluateFromExpressions<T>(ElsaProperty property, Mock<IExpressionEvaluator> evaluator, ActivityExecutionContext context, ILogger logger)
         {
             evaluator.Setup(x => x.TryEvaluateAsync<T>(property.Expressions![property.Syntax!], property.Syntax!, context, CancellationToken.None))
             .Returns(Task.FromResult(Models.Result.Success<T?>(default(T))));
