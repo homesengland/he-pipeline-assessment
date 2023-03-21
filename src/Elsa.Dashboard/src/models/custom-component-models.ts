@@ -77,6 +77,10 @@ export interface NestedActivityDefinitionProperty extends ActivityDefinitionProp
   type: string;
 }
 
+export interface PotScoreNestedActivityDefinitionProperty extends NestedActivityDefinitionProperty {
+  potScore: string;
+}
+
 export interface ICheckboxValue extends NestedActivityDefinitionProperty {
   isSingle: boolean;
 }

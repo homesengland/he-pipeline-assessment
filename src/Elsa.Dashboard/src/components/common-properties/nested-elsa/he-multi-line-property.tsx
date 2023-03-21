@@ -22,8 +22,6 @@ export class HEMultiLineProperty {
   @Event() expressionChanged: EventEmitter<string>;
 
   componentWillLoad() {
-    console.log("Multi Line Property Model", this.propertyModel);
-    console.log("Multi Line Property Descriptor", this.propertyDescriptor);
     const defaultSyntax = this.propertyDescriptor.defaultSyntax || SyntaxNames.Literal;
     this.currentValue = this.propertyModel.expressions[defaultSyntax] || undefined;
   }

@@ -1,4 +1,3 @@
-using Elsa;
 using Elsa.CustomActivities.Activities.CheckYourAnswersScreen;
 using Elsa.CustomActivities.Activities.ConfirmationScreen;
 using Elsa.CustomActivities.Activities.FinishWorkflow;
@@ -11,6 +10,7 @@ using Elsa.CustomActivities.Activities.VFMDataSource;
 using Elsa.CustomActivities.Describers;
 using Elsa.CustomActivities.Handlers;
 using Elsa.CustomActivities.Handlers.Syntax;
+using Elsa.CustomActivities.OptionsProviders;
 using Elsa.CustomInfrastructure.Data;
 using Elsa.CustomInfrastructure.Data.Repository;
 using Elsa.CustomWorkflow.Sdk.Extensions;
@@ -28,7 +28,6 @@ using MediatR;
 using Microsoft.AspNetCore.DataProtection;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection.Extensions;
-using System.Reflection.Metadata;
 
 
 var builder = WebApplication.CreateBuilder(args);
@@ -56,7 +55,6 @@ builder.Services
 
 builder.Services.AddScoped<ICustomPropertyDescriber, CustomPropertyDescriber>();
 
-builder.Services.TryAddProvider<IExpressionHandler, ConditionalTextListExpressionHandler>(ServiceLifetime.Singleton);
 builder.Services.TryAddProvider<IExpressionHandler, InformationTextExpressionHandler>(ServiceLifetime.Singleton);
 builder.Services.TryAddProvider<IExpressionHandler, QuestionListExpressionHandler>(ServiceLifetime.Singleton);
 builder.Services.TryAddSingleton<INestedSyntaxExpressionHandler, NestedSyntaxExpressionHandler>();
@@ -88,6 +86,7 @@ builder.Services.AddScoped<IWorkflowRegistryProvider, WorkflowRegistryProvider>(
 builder.Services.AddScoped<IWorkflowInstanceProvider, WorkflowInstanceProvider>();
 builder.Services.AddScoped<IWorkflowPathProvider, WorkflowPathProvider>();
 builder.Services.AddScoped<IWorkflowNextActivityProvider, WorkflowNextActivityProvider>();
+builder.Services.AddScoped(typeof(PotScoreOptionsProvider));
 
 builder.Services.AddScoped<IElsaCustomModelHelper, ElsaCustomModelHelper>();
 

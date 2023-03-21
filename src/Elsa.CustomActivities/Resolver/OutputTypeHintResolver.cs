@@ -24,6 +24,9 @@ namespace Elsa.CustomActivities.Resolver
             if (type == typeof(int))
                 return ExpectedOutputHints.Number;
 
+            if (type == typeof(double))
+                return ExpectedOutputHints.Double;
+
             return ExpectedOutputHints.Text;
         }
 
@@ -35,6 +38,8 @@ namespace Elsa.CustomActivities.Resolver
                     return typeof(bool);
                 case ExpectedOutputHints.Number:
                     return typeof(int);
+                case ExpectedOutputHints.Double:
+                    return typeof(double);
                 default:
                     return typeof(string);
             }

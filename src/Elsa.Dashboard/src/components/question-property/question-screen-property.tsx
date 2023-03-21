@@ -115,8 +115,8 @@ export class QuestionScreen {
     }
   }
 
-  newQuestionValue(name: string) {
-    var value = "";
+  newQuestionValue(name: string, id: string) {
+    var value = id;
     var defaultSyntax = SyntaxNames.QuestionList;
     var expression: ActivityDefinitionProperty = { name: name, value: value, syntax: defaultSyntax, expressions: { defaultSyntax: value }, }
     return expression;
@@ -125,8 +125,9 @@ export class QuestionScreen {
   onAddQuestion(questionType: IActivityData) {
     let id = (this.questionModel.activities.length + 1).toString();
     const questionName = `Question ${id}`;
-    const newValue = this.newQuestionValue(questionName);
-    let newQuestion: NestedPropertyModel = { value: newValue, descriptor: filterPropertiesByType(this.questionProperties, questionType.nameConstant), ActivityType: questionType }
+    const newValue = this.newQuestionValue(questionName, id);
+    let propertyDescriptors = filterPropertiesByType(this.questionProperties, questionType.nameConstant);
+    let newQuestion: NestedPropertyModel = { value: newValue, descriptor: propertyDescriptors, ActivityType: questionType }
     this.questionModel = { ...this.questionModel, activities: [...this.questionModel.activities, newQuestion] };
     
     this.updatePropertyModel();

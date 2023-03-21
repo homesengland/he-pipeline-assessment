@@ -44,9 +44,8 @@ export class QuestionProperty {
 
   getOrCreateQuestionProperties() {
     const model = this.questionModel;
-    const propertyJson = model.value.expressions[SyntaxNames.QuestionList]
+    const propertyJson = model.value.expressions[SyntaxNames.QuestionList];
     if (propertyJson != null && propertyJson != undefined && parseJson(propertyJson).length > 0) {
-      
       this.nestedQuestionProperties = parseJson(propertyJson);
     }
     else {
@@ -70,6 +69,9 @@ export class QuestionProperty {
       value: descriptor.expectedOutputType,
       name: descriptor.name,
       expressions: this.getExpressionMap(descriptor.supportedSyntaxes)
+    }
+    if (descriptor.name.toLowerCase() == 'id') {
+      propertyValue.expressions[SyntaxNames.Literal] = this.questionModel.value.value;
     }
     let property: NestedProperty = { value: propertyValue, descriptor: descriptor }
     return property;
@@ -101,9 +103,6 @@ export class QuestionProperty {
       return value;
     }
   }
-
-
-
 
   render() {
 

@@ -90,5 +90,9 @@ namespace Elsa.CustomInfrastructure.Data.Repository
             _dbContext.RemoveRange(list);
             await SaveChanges(cancellationToken);
         }
+
+        public async Task<List<PotScoreOption>> GetPotScoreOptionsAsync(CancellationToken cancellationToken) =>
+            await _dbContext.Set<PotScoreOption>().Where(x => x.IsActive).ToListAsync();
+     
     }
 }

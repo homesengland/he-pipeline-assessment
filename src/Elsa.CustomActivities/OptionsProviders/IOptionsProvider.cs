@@ -1,33 +1,23 @@
-﻿
+﻿using Elsa.CustomInfrastructure.Data.Repository;
 using Newtonsoft.Json;
-using System.Security.Cryptography.X509Certificates;
 
 namespace Elsa.CustomActivities.OptionsProviders
 {
     public interface IOptionsProvider
     {
-        public IOptions GetOptions();
+        Task<string> GetOptions(CancellationToken cancellationToken);
     }
 
-    public class JsonOptionsProvider : IOptionsProvider
+    public class PotScoreOptionsProvider : IOptionsProvider
     {
-        public string _jsonMetadata = "";
-        public string _jsonData = "";
+        private readonly IElsaCustomRepository _elsaCustomRepository;
+        public PotScoreOptionsProvider(IElsaCustomRepository elsaCustomRepository) => _elsaCustomRepository = elsaCustomRepository;
 
-        public JsonOptionsProvider(object? metaData, object? data)
+        public async Task<string> GetOptions(CancellationToken cancellationToken = default)
         {
-            _jsonMetadata = metaData != null ? JsonConvert.SerializeObject(metaData) : "";
-            _jsonData = data != null ? JsonConvert.SerializeObject(data) : "";
-        }
+            var potScoreOptions = (await _elsaCustomRepository.GetPotScoreOptionsAsync(cancellationToken)).Select(x => x.Name).ToList();
 
-        public IOptions GetOptions()
-        {
-            return new JsonOptions
-            {
-                Data = _jsonData,
-                Metadata = _jsonMetadata,
-            };
+            return JsonConvert.SerializeObject(potScoreOptions);
         }
     }
-
 }

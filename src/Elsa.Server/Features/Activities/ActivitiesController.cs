@@ -1,6 +1,4 @@
 ﻿using Elsa.CustomActivities.Describers;
-using Elsa.CustomWorkflow.Sdk.Models.Activities;
-using Elsa.Metadata;
 using Elsa.Server.Features.Activities.CustomActivityProperties;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;

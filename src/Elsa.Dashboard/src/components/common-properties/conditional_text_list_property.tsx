@@ -57,8 +57,8 @@ export class CustomOutcomeListProperty {
   }
 
   onMultiExpressionEditorSyntaxChanged(e: CustomEvent<string>) {
-    console.log(e);
     this.syntaxSwitchCount++;
+    e = e;
   }
 
   onAddOutcomeClick() {

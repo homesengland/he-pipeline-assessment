@@ -6,8 +6,6 @@ namespace Elsa.CustomInfrastructure.Config
 {
     public class CustomActivityNavigationConfig : IEntityTypeConfiguration<CustomActivityNavigation>
     {
-
-
         public void Configure(EntityTypeBuilder<CustomActivityNavigation> builder)
         {
             builder.ToTable(x => x.IsTemporal());
