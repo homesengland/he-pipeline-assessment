@@ -1,4 +1,5 @@
-﻿using Elsa.CustomActivities.Constants;
+﻿using AutoFixture.Xunit2;
+using Elsa.CustomActivities.Constants;
 using Elsa.CustomActivities.Handlers.Models;
 using Elsa.Expressions;
 using Elsa.Serialization;
@@ -17,10 +18,10 @@ namespace Elsa.CustomActivities.Tests.Handlers
     {
         [Theory, AutoMoqData]
         public async void EvaluateAsyncReturnsExpectedString_GivenCorrectDataInput(
-                                    Mock<IServiceProvider> provider,
-                                    Mock<IExpressionEvaluator> evaluator,
-                                    Mock<IContentSerializer> serialiser,
-                        Mock<ILogger<IExpressionHandler>> logger)
+                                    [Frozen] Mock<IServiceProvider> provider,
+                                    [Frozen] Mock<IExpressionEvaluator> evaluator,
+                                    [Frozen] Mock<IContentSerializer> serialiser,
+                        [Frozen] Mock<ILogger<IExpressionHandler>> logger)
         {
             //Arrange
             List<ElsaProperty> PotScoreRadioListProperties = new List<ElsaProperty>();
@@ -74,9 +75,9 @@ namespace Elsa.CustomActivities.Tests.Handlers
 
         [Theory, AutoMoqData]
         public void EvaluateFromExpressionsReturnsCorrectType_GivenCalledWithAGenericType(
-            Mock<IServiceProvider> provider,
-            Mock<IExpressionEvaluator> evaluator,
-            Mock<ILogger<IExpressionHandler>> logger)
+            [Frozen] Mock<IServiceProvider> provider,
+            [Frozen] Mock<IExpressionEvaluator> evaluator,
+            [Frozen] Mock<ILogger<IExpressionHandler>> logger)
         {
             //Arrange
             var context = new ActivityExecutionContext(provider.Object, default!, default!, default!, default, default);
@@ -98,9 +99,9 @@ namespace Elsa.CustomActivities.Tests.Handlers
 
         [Theory, AutoMoqData]
         public async void EvaluateFromExpressionsReturnsDefault_GivenNoExpressionsOnProperty(
-            Mock<IServiceProvider> provider,
-            Mock<IExpressionEvaluator> evaluator,
-            Mock<ILogger<IExpressionHandler>> logger
+            [Frozen] Mock<IServiceProvider> provider,
+            [Frozen] Mock<IExpressionEvaluator> evaluator,
+            [Frozen] Mock<ILogger<IExpressionHandler>> logger
             )
         {
             //Arrange
@@ -119,9 +120,9 @@ namespace Elsa.CustomActivities.Tests.Handlers
 
         [Theory, AutoMoqData]
         public async void EvaluateFromExpressionsThrowsKeyNotFoundException_GivenPropertyNotFoundInGivenDictionary(
-            Mock<IServiceProvider> provider,
-            Mock<IExpressionEvaluator> evaluator,
-            Mock<ILogger<IExpressionHandler>> logger
+           [Frozen] Mock<IServiceProvider> provider,
+           [Frozen] Mock<IExpressionEvaluator> evaluator,
+           [Frozen] Mock<ILogger<IExpressionHandler>> logger
             )
         {
             //Arrange
@@ -143,9 +144,9 @@ namespace Elsa.CustomActivities.Tests.Handlers
 
         [Theory, AutoMoqData]
         public async void EvaluateFromExpressionsExplicitReturnsDefault_GivenNoExpressionsOnProperty(
-            Mock<IServiceProvider> provider,
-            Mock<IExpressionEvaluator> evaluator,
-            Mock<ILogger<IExpressionHandler>> logger
+            [Frozen] Mock<IServiceProvider> provider,
+            [Frozen] Mock<IExpressionEvaluator> evaluator,
+            [Frozen] Mock<ILogger<IExpressionHandler>> logger
             )
         {
             //Arrange
@@ -176,14 +177,33 @@ namespace Elsa.CustomActivities.Tests.Handlers
 
         [Theory, AutoMoqData]
 
-        public async void EvaluateFromExpressionsExplicitThrowsKeyNotFoundException_GivenPropertyNotFoundInGivenDictionary()
-        {
+        public async void EvaluateFromExpressionsExplicitThrowsKeyNotFoundException_GivenPropertyNotFoundInGivenDictionary(
+            [Frozen] Mock<IServiceProvider> provider,
+            [Frozen] Mock<IExpressionEvaluator> evaluator,
+            [Frozen] Mock<ILogger<IExpressionHandler>> logger)
+        { 
             //Arrange
+            var emptyDictionary = new Dictionary<string, string>() { { "NotLiteralSyntax", "test" } };
+            var sampleElsaProperty1 = SampleElsaProperty(emptyDictionary, SyntaxNames.Literal, "Text A");
+            var context = new ActivityExecutionContext(provider.Object, default!, default!, default!, default, default);
+            provider.Setup(x => x.GetService(typeof(IExpressionEvaluator))).Returns(evaluator.Object);
+            evaluator.Setup(x => x.TryEvaluateAsync<string>("Test", SyntaxNames.JavaScript, context, CancellationToken.None)).Throws(new KeyNotFoundException());
+            Exception exception = new Exception();
 
             //Act
+            var result = await sampleElsaProperty1.EvaluateFromExpressionsExplicit<string>(
+                    evaluator.Object,
+                    context,
+                    logger.Object,
+                    "Test",
+                    SyntaxNames.JavaScript,
+                    CancellationToken.None);
 
             //Assert
-            Assert.True(false);
+            Assert.Null(result);
+            // we can't verify LogError as it's a non-virtual static method - might need to look at checking it via reflection
+            // otherwise this test is the same as the one above
+            //logger.Verify(x => x.LogError(It.IsAny<KeyNotFoundException>(), "Incorrect data structure.  Expression did not contain correct Syntax"), Times.Once);
         }
 
         public async void GenericReturnTypeEvaluateFromExpressions<T>(ElsaProperty property, Mock<IExpressionEvaluator> evaluator, ActivityExecutionContext context, ILogger logger)
