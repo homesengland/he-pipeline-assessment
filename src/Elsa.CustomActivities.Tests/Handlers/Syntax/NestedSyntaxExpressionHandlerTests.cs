@@ -9,8 +9,6 @@ using He.PipelineAssessment.Tests.Common;
 using Microsoft.Extensions.Logging;
 using Moq;
 using Newtonsoft.Json;
-using Rebus.Serialization;
-using System.IdentityModel.Tokens.Jwt;
 using Xunit;
 
 namespace Elsa.CustomActivities.Tests.Handlers.Syntax
@@ -440,6 +438,31 @@ namespace Elsa.CustomActivities.Tests.Handlers.Syntax
             Assert.Equal(default(int), output);
         }
 
+        [Theory, AutoMoqData]
+        public async void EvaluateFromExpression_ReturnsValueAsString_GivenTypeNotHandled(
+            Mock<IServiceProvider> provider,
+            Mock<IExpressionEvaluator> evaluator,
+            ILogger<IExpressionHandler> logger,
+            IContentSerializer serializer)
+        {
+            string value = "123";
+            Type type = typeof(List<string>);
+            ElsaProperty sampleProperty = SampleProperty(SyntaxNames.Literal, type, value);
+
+            var context = new ActivityExecutionContext(provider.Object, default!, default!, default!, default, default);
+
+            evaluator.Setup(x => x.TryEvaluateAsync<string>(sampleProperty.Expressions![sampleProperty.Syntax!],
+                SyntaxNames.Literal, context, CancellationToken.None)).Returns(Task.FromResult(Models.Result.Success<string?>(value)));
+
+            NestedSyntaxExpressionHandler handler = new NestedSyntaxExpressionHandler(logger, serializer);
+
+            //Act
+            var output = await handler.EvaluateModel(sampleProperty!, evaluator.Object, context, type);
+
+            //Assert
+            Assert.Equal(typeof(string), output!.GetType());
+            Assert.Equal(value, output);
+        }
 
 
 
