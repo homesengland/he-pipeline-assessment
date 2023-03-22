@@ -5,7 +5,6 @@ using Elsa.CustomActivities.Handlers;
 using Elsa.CustomActivities.Handlers.Models;
 using Elsa.Expressions;
 using Elsa.Serialization;
-using Elsa.Server.Api.Models;
 using Elsa.Services.Models;
 using He.PipelineAssessment.Tests.Common;
 using Microsoft.Extensions.Logging;
@@ -163,7 +162,7 @@ namespace Elsa.CustomActivities.Tests.Handlers
 
             CheckboxExpressionHandler handler = new CheckboxExpressionHandler(logger.Object, serializer.Object);
 
-            ElsaProperty property = SampleElsaProperty(GetDictionary(SyntaxNames.Literal, "Sample Text", prePopulatedValue: prePopulatedValue.ToString()), SyntaxNames.Literal, "Checkbox Text");
+            ElsaProperty property = SampleElsaProperty(GetDictionary(SyntaxNames.Literal, "Sample Text", prePopulatedValue: prePopulatedValue.ToString().ToLower()), SyntaxNames.Literal, "Checkbox Text");
 
             evaluator.Setup(x => x.TryEvaluateAsync<bool>(property.Expressions![CheckboxSyntaxNames.PrePopulated].ToLower(),
                 SyntaxNames.JavaScript, It.IsAny<ActivityExecutionContext>(), It.IsAny<CancellationToken>())).Returns(Task.FromResult(Models.Result.Success<bool>(prePopulatedValue)));
@@ -173,7 +172,7 @@ namespace Elsa.CustomActivities.Tests.Handlers
 
             //Assert
             Assert.Equal(prePopulatedValue, actualPrePopulatedValue);
-            
+
         }
 
         [Theory, AutoMoqData]
@@ -259,8 +258,8 @@ namespace Elsa.CustomActivities.Tests.Handlers
         }
 
 
-        private Dictionary<string, string> GetDictionary(string defaultSyntax, 
-            string defaultValue, 
+        private Dictionary<string, string> GetDictionary(string defaultSyntax,
+            string defaultValue,
             string prePopulatedValue = "false",
             string isSingle = "false")
         {
