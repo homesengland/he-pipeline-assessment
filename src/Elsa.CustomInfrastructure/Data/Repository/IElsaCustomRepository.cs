@@ -24,5 +24,7 @@ namespace Elsa.CustomInfrastructure.Data.Repository
             string nextActivityId, CancellationToken cancellationToken);
         Task DeleteCustomNavigations(List<string> previousPathActivities, string workflowInstanceId, CancellationToken cancellationToken);
         Task DeleteQuestionScreenAnswers(string workflowInstanceId, List<string> previousPathActivities, CancellationToken cancellationToken);
+
+        Task<List<PotScoreOption>> GetPotScoreOptionsAsync(CancellationToken cancellationToken = default);
     }
 }

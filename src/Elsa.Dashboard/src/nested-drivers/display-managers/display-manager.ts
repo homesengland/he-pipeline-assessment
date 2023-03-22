@@ -9,6 +9,7 @@ import { HeMultiLineDriver } from "../he-multi-line-driver";
 import { HeMultiTextDriver } from "../he-multi-text-driver";
 import { HeRadioListDriver } from "../he-radio-list-driver";
 import { HeRadioOptionsDriver } from "../he-radio-options-driver";
+import { HePotScoreRadioOptionsDriver } from "../he-potscore-radio-options-driver";
 import { HeScriptDriver } from "../he-script-driver";
 import { HeSingleLineDriver } from "../he-single-line-driver";
 import { HeSwitchCaseDriver } from "../he-switch-cases-driver";
@@ -37,10 +38,11 @@ export class DefaultDriversFactory {
     this.drivers["he-dictionary"] = new HeDictionaryDriver();
     this.drivers["he-cron-expression"] = new HeCronDriver();
     this.drivers["he-radio-options"] = new HeRadioOptionsDriver();
+    this.drivers["he-potscore-radio-options"] = new HePotScoreRadioOptionsDriver();
     this.drivers["he-checkbox-options"] = new HeCheckboxOptionsDriver();
     this.drivers["he-text-activity"] = new HeTextActivityDriver();
   }
-  drivers: Dictionary<HePropertyDisplayDriver> = { };
+  drivers: Dictionary<HePropertyDisplayDriver> = {};
 }
 
 
@@ -53,9 +55,6 @@ export class HePropertyDisplayManager {
   driverFactory: DefaultDriversFactory;
 
   getDriver(type: string) {
-    console.log("Key", type);
-    console.log("Factory", this.driverFactory);
-    console.log("Drivers:", this.driverFactory.drivers)
     return this.driverFactory.drivers[type];
   }
 
@@ -66,7 +65,6 @@ export class HePropertyDisplayManager {
 
   displayNested(model: ActivityModel, property: NestedProperty, onUpdate: Function) {
     const driver: HePropertyDisplayDriver = this.getDriver(property.descriptor.uiHint);
-    console.log("Driver", driver);
     return driver.displayNested(model, property, onUpdate)
   }
 }

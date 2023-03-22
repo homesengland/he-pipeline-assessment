@@ -72,7 +72,7 @@ namespace Elsa.Server.Tests.Features.Workflow.Helpers
             Assert.Equal(question.Id, result.QuestionId);
             Assert.Equal(question.QuestionType, result.QuestionType);
             Assert.Equal(question.QuestionText, result.Question);
-            Assert.Equal(question.Checkbox.Choices, result.Choices!.Select(x => new CheckboxRecord(x.Identifier, x.Answer, x.IsSingle)));
+            Assert.Equal(question.Checkbox.Choices, result.Choices!.Select(x => new CheckboxRecord(x.Identifier, x.Answer, x.IsSingle, x.IsPrePopulated)));
         }
 
         [Theory]
@@ -102,7 +102,7 @@ namespace Elsa.Server.Tests.Features.Workflow.Helpers
             Assert.Equal(question.Id, result.QuestionId);
             Assert.Equal(question.QuestionType, result.QuestionType);
             Assert.Equal(question.QuestionText, result.Question);
-            Assert.Equal(question.Radio.Choices, result.Choices!.Select(x => new RadioRecord(x.Identifier, x.Answer)));
+            Assert.Equal(question.Radio.Choices, result.Choices!.Select(x => new RadioRecord(x.Identifier, x.Answer, x.IsPrePopulated)));
         }
 
         [Theory]

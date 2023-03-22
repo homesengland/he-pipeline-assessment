@@ -90,5 +90,19 @@ namespace Elsa.CustomActivities.Tests.Resolver
             //Assert
             Assert.Equal("TestUIHint", result);
         }
+
+        [Fact]
+        public void GetUIHint_ShouldReturnSingleLineOutput_GivenADouble()
+        {
+            //Arrange
+            var testClassType = new TestClassWithOneDoubleProperty().GetType();
+            var property = testClassType.GetProperties().First();
+
+            //Act
+            var result = CustomUIHintResolver.GetUIHint<HeActivityInputAttribute>(property);
+
+            //Assert
+            Assert.Equal(HePropertyUIHints.SingleLine, result);
+        }
     }
 }

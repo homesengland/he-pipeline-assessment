@@ -39,12 +39,12 @@ export class TextActivityProperty {
 
   async componentWillLoad() {
     const propertyModel = this.propertyModel;
-    const casesJson = propertyModel.expressions[SyntaxNames.ConditionalTextList];
+    const casesJson = propertyModel.expressions[SyntaxNames.TextActivity];
     this.text = parseJson(casesJson) || [];
   }
 
   updatePropertyModel() {
-    this.propertyModel.expressions[SyntaxNames.ConditionalTextList] = JSON.stringify(this.text);
+    this.propertyModel.expressions[SyntaxNames.TextActivity] = JSON.stringify(this.text);
     this.multiExpressionEditor.expressions[SyntaxNames.Json] = JSON.stringify(this.text, null, 2);
     this.expressionChanged.emit(JSON.stringify(this.propertyModel));
   }
@@ -63,7 +63,7 @@ export class TextActivityProperty {
   }
 
   onMultiExpressionEditorSyntaxChanged(e: CustomEvent<string>) {
-    console.log(e);
+    e = e;
     this.syntaxSwitchCount++;
   }
 

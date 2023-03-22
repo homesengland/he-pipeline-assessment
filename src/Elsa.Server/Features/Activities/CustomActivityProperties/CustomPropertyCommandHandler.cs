@@ -1,9 +1,6 @@
 ﻿using Elsa.CustomActivities.Activities.QuestionScreen;
 using Elsa.CustomActivities.Describers;
-using Elsa.Metadata;
-using Elsa.Server.Providers;
 using MediatR;
-using SQLitePCL;
 
 namespace Elsa.Server.Features.Activities.CustomActivityProperties
 {

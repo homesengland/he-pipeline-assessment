@@ -31,7 +31,6 @@ function DisableDefaultOutcomePaths(eventContext) {
 }
 
 function EnableCustomSwitchOutcomePaths(eventContext) {
-  console.log('Context', eventContext);
   const activityModel = eventContext.activityModel;
   const activityDescriptor = eventContext.activityDescriptor;
   const propertyDescriptors = activityDescriptor.inputProperties;

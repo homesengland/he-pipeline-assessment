@@ -25,7 +25,7 @@ namespace Elsa.CustomWorkflow.Sdk.Models.Workflow
         public string? ConfirmationText { get; set; } = null!;
         public string FooterTitle { get; set; } = null!;
         public string FooterText { get; set; } = null!;
-        public List<string> Text { get; set; } = null!;
+        public Information Text { get; set; } = null!;
 
         public string? NextWorkflowDefinitionIds { get; set; } = null!;
         public List<QuestionScreenAnswer>? CheckQuestionScreenAnswers { get; set; }
@@ -101,7 +101,7 @@ namespace Elsa.CustomWorkflow.Sdk.Models.Workflow
 
         public void SetRadio(Radio value)
         {
-            if (QuestionType == QuestionTypeConstants.RadioQuestion)
+            if (QuestionType == QuestionTypeConstants.RadioQuestion || QuestionType == QuestionTypeConstants.PotScoreRadioQuestion)
             {
                 _radio = value;
                 Answer = null;
@@ -221,6 +221,15 @@ namespace Elsa.CustomWorkflow.Sdk.Models.Workflow
     public class Information
     {
         public List<InformationText> InformationTextList { get; set; } = new List<InformationText>();
+    }
+
+    public class InformationText
+    {
+        public string Text { get; set; } = null!;
+        public bool IsParagraph { get; set; } = true;
+        public bool IsGuidance { get; set; } = false;
+        public bool IsHyperlink { get; set; } = false;
+        public string? Url { get; set; }
     }
 }
 

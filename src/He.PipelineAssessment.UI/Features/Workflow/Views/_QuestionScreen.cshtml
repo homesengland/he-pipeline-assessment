@@ -148,7 +148,7 @@
                             }
                             })
                         }
-                    @if (Model.Data.QuestionScreenAnswers![i].QuestionType == QuestionTypeConstants.RadioQuestion)
+                    @if (Model.Data.QuestionScreenAnswers![i].QuestionType == QuestionTypeConstants.RadioQuestion || Model.Data.QuestionScreenAnswers![i].QuestionType == QuestionTypeConstants.PotScoreRadioQuestion)
                     {
 
                         @await Html.PartialAsync("_MultiRadioButtonQuestion",new MultiQuestion()

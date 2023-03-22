@@ -288,9 +288,9 @@ public class LoadQuestionScreenRequestHandlerTests
         elsaAssessmentQuestions.Questions[0].QuestionType = QuestionTypeConstants.CheckboxQuestion;
         elsaAssessmentQuestions.Questions[0].Checkbox.Choices = new List<CheckboxRecord>
         {
-            new("A", "Choice1", false),
-            new("B", "Choice2", false),
-            new("C", "Choice3", false)
+            new("A", "Choice1", false,false),
+            new("B", "Choice2", false, false),
+            new("C", "Choice3", false,false)
         };
 
 
@@ -349,9 +349,9 @@ public class LoadQuestionScreenRequestHandlerTests
         elsaAssessmentQuestions.Questions[0].QuestionType = QuestionTypeConstants.RadioQuestion;
         elsaAssessmentQuestions.Questions[0].Radio.Choices = new List<RadioRecord>
         {
-            new("A", "Choice1"),
-            new("B", "Choice2"),
-            new("C", "Choice3")
+            new("A", "Choice1",false),
+            new("B", "Choice2",false),
+            new("C", "Choice3",false)
         };
 
 
@@ -381,6 +381,240 @@ public class LoadQuestionScreenRequestHandlerTests
         Assert.Equal(assessmentQuestions.Count(), result.Data!.QuestionScreenAnswers.Count());
         Assert.Empty(result.ErrorMessages);
         Assert.Equal(result.Data.QuestionScreenAnswers[0].Radio.SelectedAnswer, myChoice);
+    }
+
+    [Theory]
+    [AutoMoqData]
+    public async Task
+        Handle_ReturnMultiQuestionActivityDataWithPotScoreChoiceOptionsCorrectlySelected_GivenActivityIsQuestionScreenAndNoErrorsEncountered(
+            [Frozen] Mock<IWorkflowInstanceStore> workflowInstanceStore,
+            [Frozen] Mock<IElsaCustomRepository> elsaCustomRepository,
+            LoadQuestionScreenRequest loadWorkflowActivityRequest,
+            WorkflowInstance workflowInstance,
+            CustomActivityNavigation customActivityNavigation,
+            List<QuestionScreenAnswer> assessmentQuestions,
+            AssessmentQuestions elsaAssessmentQuestions,
+            LoadQuestionScreenRequestHandler sut)
+    {
+        //Arrange
+        var myChoice = "Choice1";
+        customActivityNavigation.ActivityType = ActivityTypeConstants.QuestionScreen;
+        assessmentQuestions[0].Answer = "Choice1";
+        for (var i = 0; i < assessmentQuestions.Count; i++)
+        {
+            var questionId = assessmentQuestions[i].QuestionId;
+            elsaAssessmentQuestions.Questions[i].Id = questionId!;
+        }
+
+        elsaAssessmentQuestions.Questions[0].QuestionType = QuestionTypeConstants.PotScoreRadioQuestion;
+        elsaAssessmentQuestions.Questions[0].PotScoreRadio.Choices = new List<PotScoreRadioRecord>
+        {
+            new("A", "Choice1","1",false),
+            new("B", "Choice2","1", false),
+            new("C", "Choice3","1", false)
+        };
+
+
+
+        workflowInstanceStore.Setup(x =>
+                x.FindAsync(It.IsAny<WorkflowInstanceIdSpecification>(), CancellationToken.None))
+            .ReturnsAsync(workflowInstance);
+
+        elsaCustomRepository.Setup(x => x.GetCustomActivityNavigation(loadWorkflowActivityRequest.ActivityId,
+                loadWorkflowActivityRequest.WorkflowInstanceId, CancellationToken.None))
+            .ReturnsAsync(customActivityNavigation);
+
+        elsaCustomRepository.Setup(x => x.GetQuestionScreenAnswers(loadWorkflowActivityRequest.ActivityId,
+                loadWorkflowActivityRequest.WorkflowInstanceId, CancellationToken.None))
+            .ReturnsAsync(assessmentQuestions);
+
+        var assessmentQuestionsDictionary = new Dictionary<string, object?>();
+        assessmentQuestionsDictionary.Add("Questions", elsaAssessmentQuestions);
+
+        workflowInstance.ActivityData.Add(loadWorkflowActivityRequest.ActivityId, assessmentQuestionsDictionary);
+
+        //Act
+        var result = await sut.Handle(loadWorkflowActivityRequest, CancellationToken.None);
+
+        //Assert
+        Assert.NotNull(result.Data!.QuestionScreenAnswers);
+        Assert.Equal(assessmentQuestions.Count(), result.Data!.QuestionScreenAnswers.Count());
+        Assert.Empty(result.ErrorMessages);
+        Assert.Equal(result.Data.QuestionScreenAnswers[0].Radio.SelectedAnswer, myChoice);
+    }
+
+    [Theory]
+    [AutoMoqData]
+    public async Task
+        Handle_ReturnMultiQuestionActivityDataWithPotScoreChoiceOptionsCorrectlySelected_GivenActivityIsQuestionScreenPrepopulatedIsSelectedAndNoErrorsEncountered(
+            [Frozen] Mock<IWorkflowInstanceStore> workflowInstanceStore,
+            [Frozen] Mock<IElsaCustomRepository> elsaCustomRepository,
+            LoadQuestionScreenRequest loadWorkflowActivityRequest,
+            WorkflowInstance workflowInstance,
+            CustomActivityNavigation customActivityNavigation,
+            List<QuestionScreenAnswer> assessmentQuestions,
+            AssessmentQuestions elsaAssessmentQuestions,
+            LoadQuestionScreenRequestHandler sut)
+    {
+        //Arrange
+        var myChoice = "Choice1"; 
+        customActivityNavigation.ActivityType = ActivityTypeConstants.QuestionScreen;
+        assessmentQuestions[0].Answer = "";
+        for (var i = 0; i < assessmentQuestions.Count; i++)
+        {
+            var questionId = assessmentQuestions[i].QuestionId;
+            elsaAssessmentQuestions.Questions[i].Id = questionId!;
+        }
+
+        elsaAssessmentQuestions.Questions[0].QuestionType = QuestionTypeConstants.PotScoreRadioQuestion;
+        elsaAssessmentQuestions.Questions[0].PotScoreRadio.Choices = new List<PotScoreRadioRecord>
+        {
+            new("A", "Choice1","1",true),
+            new("B", "Choice2","1", false),
+            new("C", "Choice3","1", false)
+        };
+
+        workflowInstanceStore.Setup(x =>
+                x.FindAsync(It.IsAny<WorkflowInstanceIdSpecification>(), CancellationToken.None))
+            .ReturnsAsync(workflowInstance);
+
+        elsaCustomRepository.Setup(x => x.GetCustomActivityNavigation(loadWorkflowActivityRequest.ActivityId,
+                loadWorkflowActivityRequest.WorkflowInstanceId, CancellationToken.None))
+            .ReturnsAsync(customActivityNavigation);
+
+        elsaCustomRepository.Setup(x => x.GetQuestionScreenAnswers(loadWorkflowActivityRequest.ActivityId,
+                loadWorkflowActivityRequest.WorkflowInstanceId, CancellationToken.None))
+            .ReturnsAsync(assessmentQuestions);
+
+        var assessmentQuestionsDictionary = new Dictionary<string, object?>();
+        assessmentQuestionsDictionary.Add("Questions", elsaAssessmentQuestions);
+
+        workflowInstance.ActivityData.Add(loadWorkflowActivityRequest.ActivityId, assessmentQuestionsDictionary);
+
+        //Act
+        var result = await sut.Handle(loadWorkflowActivityRequest, CancellationToken.None);
+
+        //Assert
+        Assert.NotNull(result.Data!.QuestionScreenAnswers);
+        Assert.Equal(assessmentQuestions.Count(), result.Data!.QuestionScreenAnswers.Count());
+        Assert.Empty(result.ErrorMessages);
+        Assert.Equal(myChoice, result.Data.QuestionScreenAnswers[0].Radio.SelectedAnswer);
+    }
+
+    [Theory]
+    [AutoMoqData]
+    public async Task
+        Handle_ReturnMultiQuestionActivityDataWithRadioChoiceOptionsCorrectlySelected_GivenActivityIsQuestionScreenPrepopulatedIsSelectedAndNoErrorsEncountered(
+            [Frozen] Mock<IWorkflowInstanceStore> workflowInstanceStore,
+            [Frozen] Mock<IElsaCustomRepository> elsaCustomRepository,
+            LoadQuestionScreenRequest loadWorkflowActivityRequest,
+            WorkflowInstance workflowInstance,
+            CustomActivityNavigation customActivityNavigation,
+            List<QuestionScreenAnswer> assessmentQuestions,
+            AssessmentQuestions elsaAssessmentQuestions,
+            LoadQuestionScreenRequestHandler sut)
+    {
+        //Arrange
+        var myChoice = "Choice1";
+        customActivityNavigation.ActivityType = ActivityTypeConstants.QuestionScreen;
+        assessmentQuestions[0].Answer = "";
+        for (var i = 0; i < assessmentQuestions.Count; i++)
+        {
+            var questionId = assessmentQuestions[i].QuestionId;
+            elsaAssessmentQuestions.Questions[i].Id = questionId!;
+        }
+
+        elsaAssessmentQuestions.Questions[0].QuestionType = QuestionTypeConstants.RadioQuestion;
+        elsaAssessmentQuestions.Questions[0].Radio.Choices = new List<RadioRecord>
+        {
+            new("A", "Choice1",true),
+            new("B", "Choice2",false),
+            new("C", "Choice3",false)
+        };
+
+        workflowInstanceStore.Setup(x =>
+                x.FindAsync(It.IsAny<WorkflowInstanceIdSpecification>(), CancellationToken.None))
+            .ReturnsAsync(workflowInstance);
+
+        elsaCustomRepository.Setup(x => x.GetCustomActivityNavigation(loadWorkflowActivityRequest.ActivityId,
+                loadWorkflowActivityRequest.WorkflowInstanceId, CancellationToken.None))
+            .ReturnsAsync(customActivityNavigation);
+
+        elsaCustomRepository.Setup(x => x.GetQuestionScreenAnswers(loadWorkflowActivityRequest.ActivityId,
+                loadWorkflowActivityRequest.WorkflowInstanceId, CancellationToken.None))
+            .ReturnsAsync(assessmentQuestions);
+
+        var assessmentQuestionsDictionary = new Dictionary<string, object?>();
+        assessmentQuestionsDictionary.Add("Questions", elsaAssessmentQuestions);
+
+        workflowInstance.ActivityData.Add(loadWorkflowActivityRequest.ActivityId, assessmentQuestionsDictionary);
+
+        //Act
+        var result = await sut.Handle(loadWorkflowActivityRequest, CancellationToken.None);
+
+        //Assert
+        Assert.NotNull(result.Data!.QuestionScreenAnswers);
+        Assert.Equal(assessmentQuestions.Count(), result.Data!.QuestionScreenAnswers.Count());
+        Assert.Empty(result.ErrorMessages);
+        Assert.Equal(myChoice, result.Data.QuestionScreenAnswers[0].Radio.SelectedAnswer);
+    }
+
+    [Theory]
+    [AutoMoqData]
+    public async Task
+        Handle_ReturnMultiQuestionActivityDataWithCheckboxChoiceOptionsCorrectlySelected_GivenActivityIsQuestionScreenPrepopulatedIsSelectedAndNoErrorsEncountered(
+            [Frozen] Mock<IWorkflowInstanceStore> workflowInstanceStore,
+            [Frozen] Mock<IElsaCustomRepository> elsaCustomRepository,
+            LoadQuestionScreenRequest loadWorkflowActivityRequest,
+            WorkflowInstance workflowInstance,
+            CustomActivityNavigation customActivityNavigation,
+            List<QuestionScreenAnswer> assessmentQuestions,
+            AssessmentQuestions elsaAssessmentQuestions,
+            LoadQuestionScreenRequestHandler sut)
+    {
+        //Arrange
+        customActivityNavigation.ActivityType = ActivityTypeConstants.QuestionScreen;
+        assessmentQuestions[0].Answer = "";
+        for (var i = 0; i < assessmentQuestions.Count; i++)
+        {
+            var questionId = assessmentQuestions[i].QuestionId;
+            elsaAssessmentQuestions.Questions[i].Id = questionId!;
+        }
+
+        elsaAssessmentQuestions.Questions[0].QuestionType = QuestionTypeConstants.CheckboxQuestion;
+        elsaAssessmentQuestions.Questions[0].Checkbox.Choices = new List<CheckboxRecord>
+        {
+            new("A", "Choice1",false,true),
+            new("B", "Choice2",false,true),
+            new("C", "Choice3",false,false)
+        };
+
+        workflowInstanceStore.Setup(x =>
+                x.FindAsync(It.IsAny<WorkflowInstanceIdSpecification>(), CancellationToken.None))
+            .ReturnsAsync(workflowInstance);
+
+        elsaCustomRepository.Setup(x => x.GetCustomActivityNavigation(loadWorkflowActivityRequest.ActivityId,
+                loadWorkflowActivityRequest.WorkflowInstanceId, CancellationToken.None))
+            .ReturnsAsync(customActivityNavigation);
+
+        elsaCustomRepository.Setup(x => x.GetQuestionScreenAnswers(loadWorkflowActivityRequest.ActivityId,
+                loadWorkflowActivityRequest.WorkflowInstanceId, CancellationToken.None))
+            .ReturnsAsync(assessmentQuestions);
+
+        var assessmentQuestionsDictionary = new Dictionary<string, object?>();
+        assessmentQuestionsDictionary.Add("Questions", elsaAssessmentQuestions);
+
+        workflowInstance.ActivityData.Add(loadWorkflowActivityRequest.ActivityId, assessmentQuestionsDictionary);
+
+        //Act
+        var result = await sut.Handle(loadWorkflowActivityRequest, CancellationToken.None);
+
+        //Assert
+        Assert.NotNull(result.Data!.QuestionScreenAnswers);
+        Assert.Equal(assessmentQuestions.Count(), result.Data!.QuestionScreenAnswers.Count());
+        Assert.Empty(result.ErrorMessages);
+        Assert.Equal("Choice1", result.Data.QuestionScreenAnswers[0].Checkbox.SelectedChoices[0]);
+        Assert.Equal("Choice2", result.Data.QuestionScreenAnswers[0].Checkbox.SelectedChoices[1]);
     }
 
     [Theory]
@@ -548,4 +782,6 @@ public class LoadQuestionScreenRequestHandlerTests
         Assert.Equal("DatabaseAnswer", result.Data.QuestionScreenAnswers[0].Answer);
         Assert.False(result.Data.QuestionScreenAnswers[0].IsReadOnly);
     }
+
+   
 }

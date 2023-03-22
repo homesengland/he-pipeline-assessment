@@ -3,4 +3,5 @@ export const CustomComponentTags = {
   ConditionalTextList: "conditional-text-list-property",
   CustomSwitch: "he-switch-options-property",
   CustomTextArea: "custom-text-property",
+  TextActivity: "he-text-activity-property"
 };
