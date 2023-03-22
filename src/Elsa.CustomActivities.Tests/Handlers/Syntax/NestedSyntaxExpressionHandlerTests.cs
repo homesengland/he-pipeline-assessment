@@ -282,7 +282,7 @@ namespace Elsa.CustomActivities.Tests.Handlers.Syntax
                 secondProperty
             };
 
-            ElsaProperty sampleProperty = SampleProperty(SyntaxNames.Json, type, JsonConvert.SerializeObject(propertyList));
+            ElsaProperty sampleProperty = SampleProperty(TextActivitySyntaxNames.TextActivity, type, JsonConvert.SerializeObject(propertyList));
 
             List<TextRecord>? result = JsonConvert.DeserializeObject<List<TextRecord>>(value);
             evaluator.Setup(x => x.TryEvaluateAsync<string>(firstProperty.Expressions![firstProperty.Syntax!],

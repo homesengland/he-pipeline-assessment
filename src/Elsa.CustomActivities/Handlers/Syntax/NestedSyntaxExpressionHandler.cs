@@ -98,7 +98,7 @@ namespace Elsa.CustomActivities.Handlers.Syntax
             if (propertyType != null && propertyType == typeof(TextModel))
             {
                 TextModel result = new TextModel();
-                var parsedProperties = ParseToList(property);
+                var parsedProperties = ParseToList(property, TextActivitySyntaxNames.TextActivity);
                 if (parsedProperties != null)
                 {
                     List<TextRecord> records = await _informationExpressionHandler.ElsaPropertiesToTextRecordList(parsedProperties, evaluator, context);
@@ -124,10 +124,10 @@ namespace Elsa.CustomActivities.Handlers.Syntax
             return new List<ElsaProperty>();
         }
 
-    public Type GetReturnType(string typeHint)
-    {
-        return OutputTypeHintResolver.GetTypeFromTypeHint(typeHint);
+        public Type GetReturnType(string typeHint)
+        {
+            return OutputTypeHintResolver.GetTypeFromTypeHint(typeHint);
+        }
     }
-}
 
 }
