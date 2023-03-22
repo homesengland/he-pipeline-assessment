@@ -1,7 +1,6 @@
 ﻿using Elsa.CustomActivities.Activities.Common;
 using Elsa.CustomActivities.Constants;
 using Elsa.CustomActivities.Handlers.Models;
-using Elsa.CustomActivities.Handlers.ParseModels;
 using Elsa.Expressions;
 using Elsa.Serialization;
 using Elsa.Services.Models;
@@ -14,7 +13,7 @@ namespace Elsa.CustomActivities.Handlers
         private readonly IContentSerializer _contentSerializer;
         private readonly ILogger<IExpressionHandler> _logger;
         public string Syntax => TextActivitySyntaxNames.TextActivity;
-        
+
 
         public InformationTextExpressionHandler(ILogger<IExpressionHandler> logger, IContentSerializer contentSerializer)
         {
@@ -22,7 +21,7 @@ namespace Elsa.CustomActivities.Handlers
             _contentSerializer = contentSerializer;
         }
 
-        public async Task<object?> EvaluateAsync(string expression, Type returnType, ActivityExecutionContext context, CancellationToken cancellationToken)     
+        public async Task<object?> EvaluateAsync(string expression, Type returnType, ActivityExecutionContext context, CancellationToken cancellationToken)
         {
             var evaluator = context.GetService<IExpressionEvaluator>();
             TextModel result = new TextModel();
@@ -59,8 +58,13 @@ namespace Elsa.CustomActivities.Handlers
         {
             if (property.Expressions!.ContainsKey(CustomSyntaxNames.Condition))
             {
-                var result = await evaluator.TryEvaluateAsync<bool>(property.Expressions?[CustomSyntaxNames.Condition], SyntaxNames.JavaScript, context);
-                return result.Value;
+                string expression = property.Expressions[CustomSyntaxNames.Condition] ?? "false";
+                bool conditionResult = await property.EvaluateFromExpressionsExplicit<bool>(evaluator,
+                    context, _logger,
+                    expression,
+                    SyntaxNames.JavaScript,
+                    CancellationToken.None);
+                return conditionResult;
             }
             return true;
         }

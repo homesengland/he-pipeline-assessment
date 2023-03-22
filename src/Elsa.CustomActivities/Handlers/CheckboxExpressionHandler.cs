@@ -1,7 +1,6 @@
 ﻿using Elsa.CustomActivities.Activities.Common;
 using Elsa.CustomActivities.Constants;
 using Elsa.CustomActivities.Handlers.Models;
-using Elsa.CustomActivities.Handlers.ParseModels;
 using Elsa.Expressions;
 using Elsa.Serialization;
 using Elsa.Services.Models;
@@ -14,7 +13,7 @@ namespace Elsa.CustomActivities.Handlers
         private readonly IContentSerializer _contentSerializer;
         private readonly ILogger<IExpressionHandler> _logger;
         public string Syntax => CustomSyntaxNames.CheckboxList;
-        
+
 
         public CheckboxExpressionHandler(ILogger<IExpressionHandler> logger, IContentSerializer contentSerializer)
         {
@@ -22,7 +21,7 @@ namespace Elsa.CustomActivities.Handlers
             _contentSerializer = contentSerializer;
         }
 
-        public async Task<object?> EvaluateAsync(string expression, Type returnType, ActivityExecutionContext context, CancellationToken cancellationToken)     
+        public async Task<object?> EvaluateAsync(string expression, Type returnType, ActivityExecutionContext context, CancellationToken cancellationToken)
         {
             var evaluator = context.GetService<IExpressionEvaluator>();
             CheckboxModel result = new CheckboxModel();
@@ -62,10 +61,10 @@ namespace Elsa.CustomActivities.Handlers
             if (property.Expressions!.ContainsKey(CheckboxSyntaxNames.PrePopulated))
             {
                 string expression = property.Expressions[CheckboxSyntaxNames.PrePopulated] ?? "false";
-                bool prePopulated = await property.EvaluateFromExpressionsExplicit<bool>(evaluator, 
-                    context, _logger, 
-                    expression.ToLower(), 
-                    SyntaxNames.JavaScript, 
+                bool prePopulated = await property.EvaluateFromExpressionsExplicit<bool>(evaluator,
+                    context, _logger,
+                    expression,
+                    SyntaxNames.JavaScript,
                     CancellationToken.None);
                 return prePopulated;
             }

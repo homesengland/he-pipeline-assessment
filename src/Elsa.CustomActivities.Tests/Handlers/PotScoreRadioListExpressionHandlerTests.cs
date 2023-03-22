@@ -5,7 +5,6 @@ using Elsa.CustomActivities.Handlers;
 using Elsa.CustomActivities.Handlers.Models;
 using Elsa.Expressions;
 using Elsa.Serialization;
-using Elsa.Server.Api.Models;
 using Elsa.Services.Models;
 using He.PipelineAssessment.Tests.Common;
 using Microsoft.Extensions.Logging;
@@ -163,7 +162,7 @@ Mock<IContentSerializer> serializer,
 
             PotScoreRadioExpressionHandler handler = new PotScoreRadioExpressionHandler(logger.Object, serializer.Object);
 
-            ElsaProperty property = SampleElsaProperty(GetDictionary(SyntaxNames.Literal, "Sample Text", prePopulatedValue: prePopulatedValue.ToString()), SyntaxNames.Literal, "Checkbox Text");
+            ElsaProperty property = SampleElsaProperty(GetDictionary(SyntaxNames.Literal, "Sample Text", prePopulatedValue: prePopulatedValue.ToString().ToLower()), SyntaxNames.Literal, "Checkbox Text");
 
             evaluator.Setup(x => x.TryEvaluateAsync<bool>(property.Expressions![RadioSyntaxNames.PrePopulated].ToLower(),
                 SyntaxNames.JavaScript, It.IsAny<ActivityExecutionContext>(), It.IsAny<CancellationToken>())).Returns(Task.FromResult(Models.Result.Success<bool>(prePopulatedValue)));
@@ -193,7 +192,7 @@ Mock<IContentSerializer> serializer,
 
             propertyWithNoKey.Expressions!.Remove(RadioSyntaxNames.PrePopulated);
 
-            
+
 
             //Act
             bool actualPrePopulatedValueNoKey = await handler.EvaluatePrePopulated(propertyWithNoKey, evaluator.Object, context);
@@ -254,8 +253,8 @@ Mock<IContentSerializer> serializer,
         }
 
 
-        private Dictionary<string, string> GetDictionary(string defaultSyntax, 
-            string defaultValue, 
+        private Dictionary<string, string> GetDictionary(string defaultSyntax,
+            string defaultValue,
             string prePopulatedValue = "false",
             string potScoreValue = "")
         {
