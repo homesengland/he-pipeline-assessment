@@ -49,7 +49,7 @@ public class QuestionScreenSaveAndContinueCommandHandlerTests
         activityBlueprint.Id = workflowInstance.Output!.ActivityId;
         workflowBlueprint.Activities.Add(activityBlueprint);
 
-        elsaCustomRepository.Setup(x => x.GetQuestionScreenAnswers(saveAndContinueCommand.ActivityId,
+        elsaCustomRepository.Setup(x => x.GetQuestionScreenQuestions(saveAndContinueCommand.ActivityId,
                 saveAndContinueCommand.WorkflowInstanceId, CancellationToken.None))
             .ReturnsAsync(currentAssessmentQuestions);
 
@@ -114,7 +114,7 @@ public class QuestionScreenSaveAndContinueCommandHandlerTests
         QuestionScreenSaveAndContinueCommandHandler sut)
     {
         //Arrange
-        elsaCustomRepository.Setup(x => x.GetQuestionScreenAnswers(saveAndContinueCommand.ActivityId,
+        elsaCustomRepository.Setup(x => x.GetQuestionScreenQuestions(saveAndContinueCommand.ActivityId,
                 saveAndContinueCommand.WorkflowInstanceId, CancellationToken.None))
             .ReturnsAsync(new List<QuestionScreenQuestion>());
 
@@ -145,7 +145,7 @@ public class QuestionScreenSaveAndContinueCommandHandlerTests
         QuestionScreenSaveAndContinueCommandHandler sut)
     {
         //Arrange
-        elsaCustomRepository.Setup(x => x.GetQuestionScreenAnswers(saveAndContinueCommand.ActivityId,
+        elsaCustomRepository.Setup(x => x.GetQuestionScreenQuestions(saveAndContinueCommand.ActivityId,
                 saveAndContinueCommand.WorkflowInstanceId, CancellationToken.None))
             .Throws(exception);
 
@@ -188,7 +188,7 @@ public class QuestionScreenSaveAndContinueCommandHandlerTests
 
         nextAssessmentActivity.ActivityType = ActivityTypeConstants.QuestionScreen;
 
-        elsaCustomRepository.Setup(x => x.GetQuestionScreenAnswers(saveAndContinueCommand.ActivityId,
+        elsaCustomRepository.Setup(x => x.GetQuestionScreenQuestions(saveAndContinueCommand.ActivityId,
                 saveAndContinueCommand.WorkflowInstanceId, CancellationToken.None))
             .ReturnsAsync(currentAssessmentQuestions);
 
@@ -252,7 +252,7 @@ public class QuestionScreenSaveAndContinueCommandHandlerTests
         activityBlueprint.Id = workflowInstance.Output!.ActivityId;
         workflowBlueprint.Activities.Add(activityBlueprint);
 
-        elsaCustomRepository.Setup(x => x.GetQuestionScreenAnswers(saveAndContinueCommand.ActivityId,
+        elsaCustomRepository.Setup(x => x.GetQuestionScreenQuestions(saveAndContinueCommand.ActivityId,
                 saveAndContinueCommand.WorkflowInstanceId, CancellationToken.None))
             .ReturnsAsync(currentAssessmentQuestions);
 

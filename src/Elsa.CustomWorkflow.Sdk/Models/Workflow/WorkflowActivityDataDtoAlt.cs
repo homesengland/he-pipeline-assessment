@@ -1,7 +1,6 @@
 ﻿using Elsa.CustomModels;
 using FluentValidation.Results;
 using System.Globalization;
-using System.Text.Json;
 
 namespace Elsa.CustomWorkflow.Sdk.Models.Workflow.Alt
 {
@@ -38,7 +37,7 @@ namespace Elsa.CustomWorkflow.Sdk.Models.Workflow.Alt
         public int? Id { get; set; }
         public string? Answer { get; set; }
         public string? Score { get; set; }
-        //public int? ChoiceId { get; set; }
+        //public int? QuestionActivityChoiceId { get; set; }
 
     }
 
@@ -152,7 +151,7 @@ namespace Elsa.CustomWorkflow.Sdk.Models.Workflow.Alt
                 {
                     var choice = _radio.Choices.Where(x => x.Answer == value.SelectedAnswer);
                     SetChoiceAnswers(choice);
-     
+
                 }
             }
         }
@@ -213,13 +212,12 @@ namespace Elsa.CustomWorkflow.Sdk.Models.Workflow.Alt
 
         public void SetChoiceAnswers(IEnumerable<Choice> choices)
         {
-            foreach(Choice choice in choices)
+            foreach (Choice choice in choices)
             {
                 Answers.Add(new QuestionActivityAnswer
                 {
                     Answer = choice.Answer,
-                    Id = choice.Id,
-                    Value = choice.Value
+                    Id = choice.Id
                 });
             }
         }

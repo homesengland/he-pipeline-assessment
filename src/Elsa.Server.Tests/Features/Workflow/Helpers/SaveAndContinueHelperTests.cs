@@ -62,7 +62,7 @@ namespace Elsa.Server.Tests.Features.Workflow.Helpers
             mockDateTimeProvider.Setup(x => x.UtcNow()).Returns(currentTimeUtc);
 
             //Act
-            var result = sut.CreateQuestionScreenAnswer(nextActivityId, nextActivityType, question, workflowInstance);
+            var result = sut.CreateQuestionScreenQuestion(nextActivityId, nextActivityType, question, workflowInstance);
 
             //Assert
             Assert.IsType<QuestionScreenQuestion>(result);
@@ -92,7 +92,7 @@ namespace Elsa.Server.Tests.Features.Workflow.Helpers
             mockDateTimeProvider.Setup(x => x.UtcNow()).Returns(currentTimeUtc);
 
             //Act
-            var result = sut.CreateQuestionScreenAnswer(nextActivityId, nextActivityType, question, workflowInstance);
+            var result = sut.CreateQuestionScreenQuestion(nextActivityId, nextActivityType, question, workflowInstance);
 
             //Assert
             Assert.IsType<QuestionScreenQuestion>(result);
@@ -121,7 +121,7 @@ namespace Elsa.Server.Tests.Features.Workflow.Helpers
             mockDateTimeProvider.Setup(x => x.UtcNow()).Returns(currentTimeUtc);
 
             //Act
-            var result = sut.CreateQuestionScreenAnswer(nextActivityId, nextActivityType, question, workflowInstance);
+            var result = sut.CreateQuestionScreenQuestion(nextActivityId, nextActivityType, question, workflowInstance);
 
             //Assert
             Assert.IsType<QuestionScreenQuestion>(result);
@@ -145,7 +145,7 @@ namespace Elsa.Server.Tests.Features.Workflow.Helpers
             //Arrange
 
             //Act
-            var result = sut.CreateQuestionScreenAnswers(activityId, workflowInstance);
+            var result = sut.CreateQuestionScreenQuestions(activityId, workflowInstance);
 
             //Assert
             Assert.IsType<List<QuestionScreenQuestion>>(result);
@@ -169,7 +169,7 @@ namespace Elsa.Server.Tests.Features.Workflow.Helpers
             workflowInstance.ActivityData.Add(activityId, assessmentQuestionsDictionary);
 
             //Act
-            var result = sut.CreateQuestionScreenAnswers(activityId, workflowInstance);
+            var result = sut.CreateQuestionScreenQuestions(activityId, workflowInstance);
 
             //Assert
             Assert.IsType<List<QuestionScreenQuestion>>(result);

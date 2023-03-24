@@ -20,7 +20,7 @@ namespace Elsa.CustomActivities.Activities.QuestionScreen.Helpers
         }
 
 
-        public async Task<bool> AnswerEquals(string WorkflowInstance, string workflowName, string activityName, string questionId, string choiceIdToCheck)
+        public async Task<bool> AnswerEquals(string workflowInstance, string workflowName, string activityName, string questionId, string choiceIdToCheck)
         {
             bool result = false;
             var workflowBlueprint = await _workflowRegistry.FindByNameAsync(workflowName, Models.VersionOptions.Published);
@@ -31,16 +31,17 @@ namespace Elsa.CustomActivities.Activities.QuestionScreen.Helpers
                 if (activity != null)
                 {
 
-                    var questionScreenAnswer = await _elsaCustomRepository.GetQuestionScreenAnswer(activity.Id,
-                        WorkflowInstance, questionId, CancellationToken.None);
-                    if (questionScreenAnswer != null &&
-                        (questionScreenAnswer.QuestionType == QuestionTypeConstants.RadioQuestion || questionScreenAnswer.QuestionType == QuestionTypeConstants.PotScoreRadioQuestion))
+                    var questionScreenQuestion = await _elsaCustomRepository.GetQuestionScreenQuestion(activity.Id,
+                        workflowInstance, questionId, CancellationToken.None);
+                    if (questionScreenQuestion != null &&
+                        (questionScreenQuestion.QuestionType == QuestionTypeConstants.RadioQuestion || questionScreenQuestion.QuestionType == QuestionTypeConstants.PotScoreRadioQuestion))
                     {
-                        var choices = questionScreenAnswer.Choices;
+                        var choices = questionScreenQuestion.Choices;
 
-                        if (choices != null)
+                        if (choices != null && questionScreenQuestion.Answers != null && questionScreenQuestion.Answers.Count == 1)
                         {
-                            var singleChoice = choices.FirstOrDefault(x => x.Answer == questionScreenAnswer.Answer);
+                            var singleAnswer = questionScreenQuestion.Answers.First();
+                            var singleChoice = choices.FirstOrDefault(x => x.Answer == singleAnswer.Answer);
 
                             if (singleChoice != null && choiceIdToCheck.Contains(singleChoice.Identifier))
                             {
@@ -51,6 +52,8 @@ namespace Elsa.CustomActivities.Activities.QuestionScreen.Helpers
                                 return false;
                             }
                         }
+
+                        return false;
                     }
                 }
             }
@@ -58,7 +61,7 @@ namespace Elsa.CustomActivities.Activities.QuestionScreen.Helpers
             return result;
         }
 
-        public async Task<bool> AnswerIn(string WorkflowInstance, string workflowName, string activityName, string questionId, string[] choiceIdsToCheck)
+        public async Task<bool> AnswerIn(string workflowInstance, string workflowName, string activityName, string questionId, string[] choiceIdsToCheck)
         {
             bool result = false;
             var workflowBlueprint = await _workflowRegistry.FindByNameAsync(workflowName, Models.VersionOptions.Published);
@@ -68,22 +71,23 @@ namespace Elsa.CustomActivities.Activities.QuestionScreen.Helpers
                 var activity = workflowBlueprint.Activities.FirstOrDefault(x => x.Name == activityName);
                 if (activity != null)
                 {
-                    var questionScreenAnswer = await _elsaCustomRepository.GetQuestionScreenAnswer(activity.Id,
-                        WorkflowInstance, questionId, CancellationToken.None);
-                    if (questionScreenAnswer != null &&
-                        (questionScreenAnswer.QuestionType == QuestionTypeConstants.RadioQuestion || questionScreenAnswer.QuestionType == QuestionTypeConstants.PotScoreRadioQuestion))
+                    var questionScreenQuestion = await _elsaCustomRepository.GetQuestionScreenQuestion(activity.Id,
+                        workflowInstance, questionId, CancellationToken.None);
+                    if (questionScreenQuestion != null &&
+                        (questionScreenQuestion.QuestionType == QuestionTypeConstants.RadioQuestion || questionScreenQuestion.QuestionType == QuestionTypeConstants.PotScoreRadioQuestion))
                     {
-                        var choices = questionScreenAnswer.Choices;
+                        var choices = questionScreenQuestion.Choices;
 
-                        if (choices != null)
+                        if (choices != null && questionScreenQuestion.Answers != null && questionScreenQuestion.Answers.Count == 1)
                         {
+                            var singleAnswer = questionScreenQuestion.Answers.First();
                             foreach (var item in choiceIdsToCheck)
                             {
                                 var singleChoice = choices.FirstOrDefault(x => x.Identifier == item);
                                 if (singleChoice != null)
                                 {
                                     var answerCheck = choices.Select(x => x.Identifier).Contains(item) &&
-                                                      singleChoice.Answer == questionScreenAnswer.Answer;
+                                                      singleChoice.Answer == singleAnswer.Answer;
 
                                     if (answerCheck)
                                     {

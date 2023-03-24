@@ -40,7 +40,7 @@ namespace Elsa.Server.Features.Workflow.LoadCheckYourAnswersScreen
                     result.Data.PreviousActivityType = customActivityNavigation.PreviousActivityType;
 
                     var questionScreenAnswers = await _elsaCustomRepository
-                        .GetQuestionScreenAnswers(result.Data.WorkflowInstanceId, cancellationToken);
+                        .GetQuestionScreenQuestions(result.Data.WorkflowInstanceId, cancellationToken);
 
                     result.Data.CheckQuestionScreenAnswers = questionScreenAnswers;
 

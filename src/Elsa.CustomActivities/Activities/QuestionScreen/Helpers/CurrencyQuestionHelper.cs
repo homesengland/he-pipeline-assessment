@@ -29,16 +29,20 @@ namespace Elsa.CustomActivities.Activities.QuestionScreen.Helpers
                 var activity = workflowBlueprint.Activities.FirstOrDefault(x => x.Name == activityName);
                 if (activity != null)
                 {
-                    var questionScreenAnswer = await _elsaCustomRepository.GetQuestionScreenAnswer(activity.Id,
+                    var questionScreenQuestion = await _elsaCustomRepository.GetQuestionScreenQuestion(activity.Id,
                         workflowInstanceId, questionId, CancellationToken.None);
 
-                    if (questionScreenAnswer != null && questionScreenAnswer.Answer != null &&
-                        questionScreenAnswer.QuestionType == QuestionTypeConstants.CurrencyQuestion)
+                    if (questionScreenQuestion != null && questionScreenQuestion.Answers != null &&
+                        questionScreenQuestion.QuestionType == QuestionTypeConstants.CurrencyQuestion)
                     {
-                        var answer = decimal.Parse(questionScreenAnswer.Answer);
-                        if (answer >= answerToCheck)
+                        var questionScreenAnswer = questionScreenQuestion.Answers.FirstOrDefault();
+                        if (questionScreenAnswer != null)
                         {
-                            return true;
+                            var answer = decimal.Parse(questionScreenAnswer.Answer);
+                            if (answer >= answerToCheck)
+                            {
+                                return true;
+                            }
                         }
                     }
                 }
@@ -56,16 +60,20 @@ namespace Elsa.CustomActivities.Activities.QuestionScreen.Helpers
                 var activity = workflowBlueprint.Activities.FirstOrDefault(x => x.Name == activityName);
                 if (activity != null)
                 {
-                    var questionScreenAnswer = await _elsaCustomRepository.GetQuestionScreenAnswer(activity.Id,
+                    var questionScreenQuestion = await _elsaCustomRepository.GetQuestionScreenQuestion(activity.Id,
                         workflowInstanceId, questionId, CancellationToken.None);
 
-                    if (questionScreenAnswer != null && questionScreenAnswer.Answer != null &&
-                        questionScreenAnswer.QuestionType == QuestionTypeConstants.CurrencyQuestion)
+                    if (questionScreenQuestion != null && questionScreenQuestion.Answers != null &&
+                        questionScreenQuestion.QuestionType == QuestionTypeConstants.CurrencyQuestion)
                     {
-                        var answer = decimal.Parse(questionScreenAnswer.Answer);
-                        if (answer <= answerToCheck)
+                        var questionScreenAnswer = questionScreenQuestion.Answers.FirstOrDefault();
+                        if (questionScreenAnswer != null)
                         {
-                            return true;
+                            var answer = decimal.Parse(questionScreenAnswer.Answer);
+                            if (answer <= answerToCheck)
+                            {
+                                return true;
+                            }
                         }
                     }
                 }

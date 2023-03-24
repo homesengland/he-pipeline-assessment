@@ -58,7 +58,7 @@ namespace Elsa.Server.Tests.Services
                     ActivityTypeConstants.QuestionScreen, nextActivity.Id, nextActivity.Type, workflowInstance))
                 .Returns(customActivityNavigation);
 
-            elsaCustomModelHelper.Setup(x => x.CreateQuestionScreenAnswers(nextActivity.Id, workflowInstance))
+            elsaCustomModelHelper.Setup(x => x.CreateQuestionScreenQuestions(nextActivity.Id, workflowInstance))
                 .Returns(questionScreenAnswers);
 
             //Act
@@ -67,7 +67,7 @@ namespace Elsa.Server.Tests.Services
 
             //Assert
             elsaCustomRepository.Verify(
-                x => x.CreateQuestionScreenAnswersAsync(questionScreenAnswers, CancellationToken.None), Times.Once);
+                x => x.CreateQuestionScreenQuestionsAsync(questionScreenAnswers, CancellationToken.None), Times.Once);
         }
 
         [Theory]
@@ -96,7 +96,7 @@ namespace Elsa.Server.Tests.Services
 
             //Assert
             elsaCustomRepository.Verify(
-                x => x.CreateQuestionScreenAnswersAsync(It.IsAny<List<QuestionScreenQuestion>>(), CancellationToken.None), Times.Never);
+                x => x.CreateQuestionScreenQuestionsAsync(It.IsAny<List<QuestionScreenQuestion>>(), CancellationToken.None), Times.Never);
         }
 
         [Theory]
@@ -122,7 +122,7 @@ namespace Elsa.Server.Tests.Services
             //Assert
             Assert.Equal(date, nextActivityRecord.LastModifiedDateTime);
             elsaCustomRepository.Verify(
-                x => x.CreateQuestionScreenAnswersAsync(It.IsAny<List<QuestionScreenQuestion>>(), CancellationToken.None), Times.Never);
+                x => x.CreateQuestionScreenQuestionsAsync(It.IsAny<List<QuestionScreenQuestion>>(), CancellationToken.None), Times.Never);
             elsaCustomRepository.Verify(
                 x => x.CreateCustomActivityNavigationAsync(customActivityNavigation, CancellationToken.None), Times.Never);
             elsaCustomRepository.Verify(

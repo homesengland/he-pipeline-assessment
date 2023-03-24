@@ -149,7 +149,7 @@ namespace Elsa.Server.Tests.Features.Workflow.CheckYourAnswersSaveAndContinue
                 .Returns(nextAssessmentActivity);
 
             elsaCustomModelHelper
-                .Setup(x => x.CreateQuestionScreenAnswers(workflowNextActivityModel.NextActivity.Id, workflowInstance))
+                .Setup(x => x.CreateQuestionScreenQuestions(workflowNextActivityModel.NextActivity.Id, workflowInstance))
                 .Returns(questionScreenAnswers);
 
             //Act
@@ -158,7 +158,7 @@ namespace Elsa.Server.Tests.Features.Workflow.CheckYourAnswersSaveAndContinue
             //Assert
             elsaCustomRepository.Verify(
                 x => x.CreateCustomActivityNavigationAsync(nextAssessmentActivity, CancellationToken.None), Times.Once);
-            elsaCustomRepository.Verify(x => x.CreateQuestionScreenAnswersAsync(questionScreenAnswers, CancellationToken.None), Times.Once);
+            elsaCustomRepository.Verify(x => x.CreateQuestionScreenQuestionsAsync(questionScreenAnswers, CancellationToken.None), Times.Once);
             Assert.Equal(opResult.Data.NextActivityId, result.Data!.NextActivityId);
             Assert.Equal(opResult.Data.WorkflowInstanceId, result.Data.WorkflowInstanceId);
             Assert.Equal(activityBlueprint.Type, result.Data.ActivityType);
@@ -229,7 +229,7 @@ namespace Elsa.Server.Tests.Features.Workflow.CheckYourAnswersSaveAndContinue
                 .Returns(nextAssessmentActivity);
 
             elsaCustomModelHelper
-                .Setup(x => x.CreateQuestionScreenAnswers(workflowNextActivityModel.NextActivity.Id, workflowInstance))
+                .Setup(x => x.CreateQuestionScreenQuestions(workflowNextActivityModel.NextActivity.Id, workflowInstance))
                 .Returns(questionScreenAnswers);
 
             //Act
@@ -238,7 +238,7 @@ namespace Elsa.Server.Tests.Features.Workflow.CheckYourAnswersSaveAndContinue
             //Assert
             elsaCustomRepository.Verify(
                 x => x.CreateCustomActivityNavigationAsync(nextAssessmentActivity, CancellationToken.None), Times.Once);
-            elsaCustomRepository.Verify(x => x.CreateQuestionScreenAnswersAsync(questionScreenAnswers, CancellationToken.None), Times.Never);
+            elsaCustomRepository.Verify(x => x.CreateQuestionScreenQuestionsAsync(questionScreenAnswers, CancellationToken.None), Times.Never);
             Assert.Equal(opResult.Data.NextActivityId, result.Data!.NextActivityId);
             Assert.Equal(opResult.Data.WorkflowInstanceId, result.Data.WorkflowInstanceId);
             Assert.Equal(activityBlueprint.Type, result.Data.ActivityType);
@@ -310,7 +310,7 @@ namespace Elsa.Server.Tests.Features.Workflow.CheckYourAnswersSaveAndContinue
                     workflowInstance))
                 .Returns(nextAssessmentActivity);
 
-            saveAndContinueHelper.Setup(x => x.CreateQuestionScreenAnswers(activityBlueprint.Id, workflowInstance))
+            saveAndContinueHelper.Setup(x => x.CreateQuestionScreenQuestions(activityBlueprint.Id, workflowInstance))
                 .Returns(nextAssessmentQuestions);
 
             //Act
@@ -320,7 +320,7 @@ namespace Elsa.Server.Tests.Features.Workflow.CheckYourAnswersSaveAndContinue
             elsaCustomRepository.Verify(
                 x => x.CreateCustomActivityNavigationAsync(nextAssessmentActivity, CancellationToken.None), Times.Once);
             elsaCustomRepository.Verify(
-                x => x.CreateQuestionScreenAnswersAsync(nextAssessmentQuestions, CancellationToken.None), Times.Once);
+                x => x.CreateQuestionScreenQuestionsAsync(nextAssessmentQuestions, CancellationToken.None), Times.Once);
             Assert.Equal(opResult.Data.NextActivityId, result.Data!.NextActivityId);
             Assert.Equal(opResult.Data.WorkflowInstanceId, result.Data.WorkflowInstanceId);
             Assert.Empty(result.ErrorMessages);
@@ -406,7 +406,7 @@ namespace Elsa.Server.Tests.Features.Workflow.CheckYourAnswersSaveAndContinue
                     workflowNextActivityModel.NextActivity.Type, workflowInstance),
                 Times.Once);
             elsaCustomModelHelper.Verify(
-                x => x.CreateQuestionScreenAnswers(workflowNextActivityModel.NextActivity.Id, workflowInstance),
+                x => x.CreateQuestionScreenQuestions(workflowNextActivityModel.NextActivity.Id, workflowInstance),
                 Times.Once);
         }
 

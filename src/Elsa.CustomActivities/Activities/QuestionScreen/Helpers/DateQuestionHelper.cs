@@ -1,10 +1,10 @@
 ﻿using Elsa.CustomInfrastructure.Data.Repository;
+using Elsa.CustomWorkflow.Sdk;
 using Elsa.Scripting.JavaScript.Events;
 using Elsa.Scripting.JavaScript.Messages;
 using Elsa.Services;
 using MediatR;
 using System.Globalization;
-using Elsa.CustomWorkflow.Sdk;
 
 namespace Elsa.CustomActivities.Activities.QuestionScreen.Helpers
 {
@@ -21,7 +21,7 @@ namespace Elsa.CustomActivities.Activities.QuestionScreen.Helpers
         }
 
 
-        public async Task<bool> AnswerEqualToOrGreaterThan(string WorkflowInstance, string workflowName, string activityName, string questionId, int day, int month, int year)
+        public async Task<bool> AnswerEqualToOrGreaterThan(string workflowInstance, string workflowName, string activityName, string questionId, int day, int month, int year)
         {
             var workflowBlueprint = await _workflowRegistry.FindByNameAsync(workflowName, Models.VersionOptions.Published);
 
@@ -30,23 +30,27 @@ namespace Elsa.CustomActivities.Activities.QuestionScreen.Helpers
                 var activity = workflowBlueprint.Activities.FirstOrDefault(x => x.Name == activityName);
                 if (activity != null)
                 {
-                    var questionScreenAnswer = await _elsaCustomRepository.GetQuestionScreenAnswer(activity.Id,
-                        WorkflowInstance, questionId, CancellationToken.None);
+                    var questionScreenQuestion = await _elsaCustomRepository.GetQuestionScreenQuestion(activity.Id,
+                        workflowInstance, questionId, CancellationToken.None);
 
-                    if (questionScreenAnswer != null && questionScreenAnswer.Answer != null &&
-                        questionScreenAnswer.QuestionType == QuestionTypeConstants.DateQuestion)
+                    if (questionScreenQuestion != null && questionScreenQuestion.Answers != null &&
+                        questionScreenQuestion.QuestionType == QuestionTypeConstants.DateQuestion)
                     {
-                        DateTime.TryParseExact(questionScreenAnswer.Answer, CustomWorkflow.Sdk.Constants.DateFormat,
-                            CultureInfo.InvariantCulture, DateTimeStyles.AdjustToUniversal, out DateTime answerDate);
-
-                        var dateString =
-                            $"{year}-{month}-{day}";
-                        DateTime.TryParseExact(dateString, CustomWorkflow.Sdk.Constants.DateFormat, CultureInfo.InvariantCulture,
-                            DateTimeStyles.AdjustToUniversal, out DateTime answerToCheckDateTime);
-
-                        if (answerDate >= answerToCheckDateTime)
+                        var questionScreenAnswer = questionScreenQuestion.Answers.FirstOrDefault();
+                        if (questionScreenAnswer != null)
                         {
-                            return true;
+                            DateTime.TryParseExact(questionScreenAnswer.Answer, CustomWorkflow.Sdk.Constants.DateFormat,
+                                CultureInfo.InvariantCulture, DateTimeStyles.AdjustToUniversal, out DateTime answerDate);
+
+                            var dateString =
+                                $"{year}-{month}-{day}";
+                            DateTime.TryParseExact(dateString, CustomWorkflow.Sdk.Constants.DateFormat, CultureInfo.InvariantCulture,
+                                DateTimeStyles.AdjustToUniversal, out DateTime answerToCheckDateTime);
+
+                            if (answerDate >= answerToCheckDateTime)
+                            {
+                                return true;
+                            }
                         }
                     }
                 }
@@ -55,7 +59,7 @@ namespace Elsa.CustomActivities.Activities.QuestionScreen.Helpers
             return false;
         }
 
-        public async Task<bool> AnswerEqualToOrLessThan(string WorkflowInstance, string workflowName, string activityName, string questionId, int day, int month, int year)
+        public async Task<bool> AnswerEqualToOrLessThan(string workflowInstance, string workflowName, string activityName, string questionId, int day, int month, int year)
         {
             var workflowBlueprint = await _workflowRegistry.FindByNameAsync(workflowName, Models.VersionOptions.Published);
 
@@ -64,24 +68,30 @@ namespace Elsa.CustomActivities.Activities.QuestionScreen.Helpers
                 var activity = workflowBlueprint.Activities.FirstOrDefault(x => x.Name == activityName);
                 if (activity != null)
                 {
-                    var questionScreenAnswer = await _elsaCustomRepository.GetQuestionScreenAnswer(activity.Id,
-                        WorkflowInstance, questionId, CancellationToken.None);
+                    var questionScreenQuestion = await _elsaCustomRepository.GetQuestionScreenQuestion(activity.Id,
+                        workflowInstance, questionId, CancellationToken.None);
 
-                    if (questionScreenAnswer != null && questionScreenAnswer.Answer != null &&
-                        questionScreenAnswer.QuestionType == QuestionTypeConstants.DateQuestion)
+                    if (questionScreenQuestion != null && questionScreenQuestion.Answers != null &&
+                        questionScreenQuestion.QuestionType == QuestionTypeConstants.DateQuestion)
                     {
-                        DateTime.TryParseExact(questionScreenAnswer.Answer, CustomWorkflow.Sdk.Constants.DateFormat,
-                            CultureInfo.InvariantCulture, DateTimeStyles.AdjustToUniversal, out DateTime answerDate);
-
-                        var dateString =
-                            $"{year}-{month}-{day}";
-                        DateTime.TryParseExact(dateString, CustomWorkflow.Sdk.Constants.DateFormat, CultureInfo.InvariantCulture,
-                            DateTimeStyles.AdjustToUniversal, out DateTime answerToCheckDateTime);
-
-                        if (answerDate <= answerToCheckDateTime)
+                        var questionScreenAnswer = questionScreenQuestion.Answers.FirstOrDefault();
+                        if (questionScreenAnswer != null)
                         {
-                            return true;
+                            DateTime.TryParseExact(questionScreenAnswer.Answer, CustomWorkflow.Sdk.Constants.DateFormat,
+                                CultureInfo.InvariantCulture, DateTimeStyles.AdjustToUniversal, out DateTime answerDate);
+
+                            var dateString =
+                                $"{year}-{month}-{day}";
+                            DateTime.TryParseExact(dateString, CustomWorkflow.Sdk.Constants.DateFormat, CultureInfo.InvariantCulture,
+                                DateTimeStyles.AdjustToUniversal, out DateTime answerToCheckDateTime);
+
+                            if (answerDate <= answerToCheckDateTime)
+                            {
+                                return true;
+                            }
                         }
+
+
                     }
                 }
             }
