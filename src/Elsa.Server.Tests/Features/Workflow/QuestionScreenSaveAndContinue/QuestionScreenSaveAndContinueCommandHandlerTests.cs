@@ -27,7 +27,7 @@ public class QuestionScreenSaveAndContinueCommandHandlerTests
             [Frozen] Mock<IDeleteChangedWorkflowPathService> deleteChangedWorkflowPathService,
             WorkflowBlueprint workflowBlueprint,
             ActivityBlueprint activityBlueprint,
-            List<QuestionScreenAnswer> currentAssessmentQuestions,
+            List<QuestionScreenQuestion> currentAssessmentQuestions,
             WorkflowInstance workflowInstance,
             CustomActivityNavigation nextAssessmentActivity,
             QuestionScreenSaveAndContinueCommand saveAndContinueCommand,
@@ -116,7 +116,7 @@ public class QuestionScreenSaveAndContinueCommandHandlerTests
         //Arrange
         elsaCustomRepository.Setup(x => x.GetQuestionScreenAnswers(saveAndContinueCommand.ActivityId,
                 saveAndContinueCommand.WorkflowInstanceId, CancellationToken.None))
-            .ReturnsAsync(new List<QuestionScreenAnswer>());
+            .ReturnsAsync(new List<QuestionScreenQuestion>());
 
         //Act
         var result = await sut.Handle(saveAndContinueCommand, CancellationToken.None);
@@ -173,7 +173,7 @@ public class QuestionScreenSaveAndContinueCommandHandlerTests
         [Frozen] Mock<IDeleteChangedWorkflowPathService> deleteChangedWorkflowPathService,
         WorkflowBlueprint workflowBlueprint,
         ActivityBlueprint activityBlueprint,
-        List<QuestionScreenAnswer> currentAssessmentQuestions,
+        List<QuestionScreenQuestion> currentAssessmentQuestions,
         WorkflowInstance workflowInstance,
         CustomActivityNavigation nextAssessmentActivity,
         QuestionScreenSaveAndContinueCommand saveAndContinueCommand,
@@ -230,7 +230,7 @@ public class QuestionScreenSaveAndContinueCommandHandlerTests
             [Frozen] Mock<IDeleteChangedWorkflowPathService> deleteChangedWorkflowPathService,
             WorkflowBlueprint workflowBlueprint,
             ActivityBlueprint activityBlueprint,
-            List<QuestionScreenAnswer> currentAssessmentQuestions,
+            List<QuestionScreenQuestion> currentAssessmentQuestions,
             WorkflowInstance workflowInstance,
             WorkflowInstance anotherWorkflowInstance,
             CustomActivityNavigation nextAssessmentActivity,

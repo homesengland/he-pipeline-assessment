@@ -90,7 +90,7 @@ namespace Elsa.Server.Features.Workflow.QuestionScreenSaveAndContinue
         }
 
         private async Task SetAnswers(QuestionScreenSaveAndContinueCommand command, CancellationToken cancellationToken,
-            List<QuestionScreenAnswer> dbAssessmentQuestionList)
+            List<QuestionScreenQuestion> dbAssessmentQuestionList)
         {
             if (command.Answers != null && command.Answers.Any())
             {
@@ -100,7 +100,10 @@ namespace Elsa.Server.Features.Workflow.QuestionScreenSaveAndContinue
 
                     if (answer != null)
                     {
-                        question.SetAnswer(answer.AnswerText, _dateTimeProvider.UtcNow());
+                        //question.Answers();
+
+                        //question.SetAnswer(answer.AnswerText, _dateTimeProvider.UtcNow());//could be single string or array
+
                         question.Comments = answer.Comments;
                     }
                 }

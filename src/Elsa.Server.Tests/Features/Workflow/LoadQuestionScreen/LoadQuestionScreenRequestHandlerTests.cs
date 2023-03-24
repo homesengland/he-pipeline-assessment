@@ -156,7 +156,7 @@ public class LoadQuestionScreenRequestHandlerTests
         LoadQuestionScreenRequest loadWorkflowActivityRequest,
         WorkflowInstance workflowInstance,
         CustomActivityNavigation customActivityNavigation,
-        List<QuestionScreenAnswer> assessmentQuestions,
+        List<QuestionScreenQuestion> assessmentQuestions,
         LoadQuestionScreenRequestHandler sut)
     {
         //Arrange
@@ -221,7 +221,7 @@ public class LoadQuestionScreenRequestHandlerTests
         LoadQuestionScreenRequest loadWorkflowActivityRequest,
         WorkflowInstance workflowInstance,
         CustomActivityNavigation customActivityNavigation,
-        List<QuestionScreenAnswer> assessmentQuestions,
+        List<QuestionScreenQuestion> assessmentQuestions,
         AssessmentQuestions elsaAssessmentQuestions,
         LoadQuestionScreenRequestHandler sut)
     {
@@ -271,7 +271,7 @@ public class LoadQuestionScreenRequestHandlerTests
             LoadQuestionScreenRequest loadWorkflowActivityRequest,
             WorkflowInstance workflowInstance,
             CustomActivityNavigation customActivityNavigation,
-            List<QuestionScreenAnswer> assessmentQuestions,
+            List<QuestionScreenQuestion> assessmentQuestions,
             AssessmentQuestions elsaAssessmentQuestions,
             LoadQuestionScreenRequestHandler sut)
     {
@@ -332,7 +332,7 @@ public class LoadQuestionScreenRequestHandlerTests
             LoadQuestionScreenRequest loadWorkflowActivityRequest,
             WorkflowInstance workflowInstance,
             CustomActivityNavigation customActivityNavigation,
-            List<QuestionScreenAnswer> assessmentQuestions,
+            List<QuestionScreenQuestion> assessmentQuestions,
             AssessmentQuestions elsaAssessmentQuestions,
             LoadQuestionScreenRequestHandler sut)
     {
@@ -392,7 +392,7 @@ public class LoadQuestionScreenRequestHandlerTests
             LoadQuestionScreenRequest loadWorkflowActivityRequest,
             WorkflowInstance workflowInstance,
             CustomActivityNavigation customActivityNavigation,
-            List<QuestionScreenAnswer> assessmentQuestions,
+            List<QuestionScreenQuestion> assessmentQuestions,
             AssessmentQuestions elsaAssessmentQuestions,
             LoadQuestionScreenRequestHandler sut)
     {
@@ -452,7 +452,7 @@ public class LoadQuestionScreenRequestHandlerTests
             LoadQuestionScreenRequest loadWorkflowActivityRequest,
             WorkflowInstance workflowInstance,
             CustomActivityNavigation customActivityNavigation,
-            List<QuestionScreenAnswer> assessmentQuestions,
+            List<QuestionScreenQuestion> assessmentQuestions,
             AssessmentQuestions elsaAssessmentQuestions,
             LoadQuestionScreenRequestHandler sut)
     {
@@ -510,7 +510,7 @@ public class LoadQuestionScreenRequestHandlerTests
             LoadQuestionScreenRequest loadWorkflowActivityRequest,
             WorkflowInstance workflowInstance,
             CustomActivityNavigation customActivityNavigation,
-            List<QuestionScreenAnswer> assessmentQuestions,
+            List<QuestionScreenQuestion> assessmentQuestions,
             AssessmentQuestions elsaAssessmentQuestions,
             LoadQuestionScreenRequestHandler sut)
     {
@@ -568,7 +568,7 @@ public class LoadQuestionScreenRequestHandlerTests
             LoadQuestionScreenRequest loadWorkflowActivityRequest,
             WorkflowInstance workflowInstance,
             CustomActivityNavigation customActivityNavigation,
-            List<QuestionScreenAnswer> assessmentQuestions,
+            List<QuestionScreenQuestion> assessmentQuestions,
             AssessmentQuestions elsaAssessmentQuestions,
             LoadQuestionScreenRequestHandler sut)
     {
@@ -626,7 +626,7 @@ public class LoadQuestionScreenRequestHandlerTests
             LoadQuestionScreenRequest loadWorkflowActivityRequest,
             WorkflowInstance workflowInstance,
             CustomActivityNavigation customActivityNavigation,
-            List<QuestionScreenAnswer> assessmentQuestions,
+            List<QuestionScreenQuestion> assessmentQuestions,
             AssessmentQuestions elsaAssessmentQuestions,
             TextModel textModel,
             LoadQuestionScreenRequestHandler sut)
@@ -684,7 +684,7 @@ public class LoadQuestionScreenRequestHandlerTests
             LoadQuestionScreenRequest loadWorkflowActivityRequest,
             WorkflowInstance workflowInstance,
             CustomActivityNavigation customActivityNavigation,
-            List<QuestionScreenAnswer> assessmentQuestions,
+            List<QuestionScreenQuestion> assessmentQuestions,
             AssessmentQuestions elsaAssessmentQuestions,
             LoadQuestionScreenRequestHandler sut)
     {
@@ -738,7 +738,7 @@ public class LoadQuestionScreenRequestHandlerTests
             LoadQuestionScreenRequest loadWorkflowActivityRequest,
             WorkflowInstance workflowInstance,
             CustomActivityNavigation customActivityNavigation,
-            List<QuestionScreenAnswer> assessmentQuestions,
+            List<QuestionScreenQuestion> assessmentQuestions,
             AssessmentQuestions elsaAssessmentQuestions,
             LoadQuestionScreenRequestHandler sut)
     {

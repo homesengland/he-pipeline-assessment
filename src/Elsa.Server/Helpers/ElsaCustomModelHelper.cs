@@ -10,7 +10,7 @@ namespace Elsa.Server.Helpers
     {
         CustomActivityNavigation CreateNextCustomActivityNavigation(string previousActivityId, string previousActivityType, string nextActivityId, string nextActivityType, WorkflowInstance workflowInstance);
 
-        List<QuestionScreenAnswer> CreateQuestionScreenAnswers(string activityId, WorkflowInstance workflowInstance);
+        List<QuestionScreenQuestion> CreateQuestionScreenAnswers(string activityId, WorkflowInstance workflowInstance);
     }
 
     public class ElsaCustomModelHelper : IElsaCustomModelHelper
@@ -38,13 +38,11 @@ namespace Elsa.Server.Helpers
             };
         }
 
-        public QuestionScreenAnswer CreateQuestionScreenAnswer(string nextActivityId, string nextActivityType, Question question, WorkflowInstance workflowInstance)
+        public QuestionScreenQuestion CreateQuestionScreenAnswer(string nextActivityId, string nextActivityType, Question question, WorkflowInstance workflowInstance)
         {
-            return new QuestionScreenAnswer
+            return new QuestionScreenQuestion
             {
                 ActivityId = nextActivityId,
-                Answer = null,
-                Comments = null,
                 CorrelationId = workflowInstance.CorrelationId,
                 WorkflowInstanceId = workflowInstance.Id,
                 CreatedDateTime = _dateTimeProvider.UtcNow(),
@@ -55,18 +53,18 @@ namespace Elsa.Server.Helpers
             };
         }
 
-        private List<QuestionScreenAnswer.Choice>? MapChoices(Question question)
+        private List<QuestionScreenChoice>? MapChoices(Question question)
         {
             var choices = question.QuestionType switch
             {
-                QuestionTypeConstants.CheckboxQuestion => question.Checkbox.Choices.Select(x =>
-                        new QuestionScreenAnswer.Choice() { Identifier = x.Identifier, Answer = x.Answer, IsSingle = x.IsSingle, IsPrePopulated = x.IsPrePopulated })
+                QuestionTypeConstants.CheckboxQuestion => question.Checkbox.Choices
+                    .Select(x => new QuestionScreenChoice() { Identifier = x.Identifier, Answer = x.Answer, IsSingle = x.IsSingle, IsPrePopulated = x.IsPrePopulated })
                     .ToList(),
                 QuestionTypeConstants.RadioQuestion => question.Radio.Choices
-                    .Select(x => new QuestionScreenAnswer.Choice() { Identifier = x.Identifier, Answer = x.Answer, IsSingle = false, IsPrePopulated = x.IsPrePopulated })
+                    .Select(x => new QuestionScreenChoice() { Identifier = x.Identifier, Answer = x.Answer, IsSingle = false, IsPrePopulated = x.IsPrePopulated })
                     .ToList(),
                 QuestionTypeConstants.PotScoreRadioQuestion => question.PotScoreRadio.Choices
-                    .Select(x => new QuestionScreenAnswer.Choice() { Identifier = x.Identifier, Answer = x.Answer, IsSingle = false, IsPrePopulated = x.IsPrePopulated })
+                    .Select(x => new QuestionScreenChoice() { Identifier = x.Identifier, Answer = x.Answer, IsSingle = false, IsPrePopulated = x.IsPrePopulated, PotScoreCategory = x.PotScore })
                     .ToList(),
                 _ => null
             };
@@ -74,9 +72,9 @@ namespace Elsa.Server.Helpers
             return choices;
         }
 
-        public List<QuestionScreenAnswer> CreateQuestionScreenAnswers(string activityId, WorkflowInstance workflowInstance)
+        public List<QuestionScreenQuestion> CreateQuestionScreenAnswers(string activityId, WorkflowInstance workflowInstance)
         {
-            var assessments = new List<QuestionScreenAnswer>();
+            var assessments = new List<QuestionScreenQuestion>();
             //create one for each question
             var dictionList = workflowInstance.ActivityData
                 .FirstOrDefault(x => x.Key == activityId).Value;

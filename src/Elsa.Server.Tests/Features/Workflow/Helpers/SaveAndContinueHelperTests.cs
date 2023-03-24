@@ -65,7 +65,7 @@ namespace Elsa.Server.Tests.Features.Workflow.Helpers
             var result = sut.CreateQuestionScreenAnswer(nextActivityId, nextActivityType, question, workflowInstance);
 
             //Assert
-            Assert.IsType<QuestionScreenAnswer>(result);
+            Assert.IsType<QuestionScreenQuestion>(result);
             Assert.Equal(nextActivityId, result!.ActivityId);
             Assert.Equal(workflowInstance.Id, result.WorkflowInstanceId);
             Assert.Equal(currentTimeUtc, result.CreatedDateTime);
@@ -95,7 +95,7 @@ namespace Elsa.Server.Tests.Features.Workflow.Helpers
             var result = sut.CreateQuestionScreenAnswer(nextActivityId, nextActivityType, question, workflowInstance);
 
             //Assert
-            Assert.IsType<QuestionScreenAnswer>(result);
+            Assert.IsType<QuestionScreenQuestion>(result);
             Assert.Equal(nextActivityId, result!.ActivityId);
             Assert.Equal(workflowInstance.Id, result.WorkflowInstanceId);
             Assert.Equal(currentTimeUtc, result.CreatedDateTime);
@@ -124,7 +124,7 @@ namespace Elsa.Server.Tests.Features.Workflow.Helpers
             var result = sut.CreateQuestionScreenAnswer(nextActivityId, nextActivityType, question, workflowInstance);
 
             //Assert
-            Assert.IsType<QuestionScreenAnswer>(result);
+            Assert.IsType<QuestionScreenQuestion>(result);
             Assert.Equal(nextActivityId, result!.ActivityId);
             Assert.Equal(workflowInstance.Id, result.WorkflowInstanceId);
             Assert.Equal(currentTimeUtc, result.CreatedDateTime);
@@ -148,7 +148,7 @@ namespace Elsa.Server.Tests.Features.Workflow.Helpers
             var result = sut.CreateQuestionScreenAnswers(activityId, workflowInstance);
 
             //Assert
-            Assert.IsType<List<QuestionScreenAnswer>>(result);
+            Assert.IsType<List<QuestionScreenQuestion>>(result);
             Assert.Empty(result);
         }
 
@@ -172,7 +172,7 @@ namespace Elsa.Server.Tests.Features.Workflow.Helpers
             var result = sut.CreateQuestionScreenAnswers(activityId, workflowInstance);
 
             //Assert
-            Assert.IsType<List<QuestionScreenAnswer>>(result);
+            Assert.IsType<List<QuestionScreenQuestion>>(result);
             Assert.NotEmpty(result);
         }
     }

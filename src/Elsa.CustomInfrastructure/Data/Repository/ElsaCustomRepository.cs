@@ -23,7 +23,7 @@ namespace Elsa.CustomInfrastructure.Data.Repository
             return model.Id;
         }
 
-        public async Task<QuestionScreenAnswer?> UpdateQuestionScreenAnswer(QuestionScreenAnswer model, CancellationToken cancellationToken = default)
+        public async Task<QuestionScreenQuestion?> UpdateQuestionScreenAnswer(QuestionScreenQuestion model, CancellationToken cancellationToken = default)
         {
             _dbContext.Update(model);
             await _dbContext.SaveChangesAsync(cancellationToken);
@@ -37,23 +37,23 @@ namespace Elsa.CustomInfrastructure.Data.Repository
             return model;
         }
 
-        public async Task CreateQuestionScreenAnswersAsync(List<QuestionScreenAnswer> assessments, CancellationToken cancellationToken)
+        public async Task CreateQuestionScreenAnswersAsync(List<QuestionScreenQuestion> assessments, CancellationToken cancellationToken)
         {
             await _dbContext.AddRangeAsync(assessments, cancellationToken);
             await _dbContext.SaveChangesAsync(cancellationToken);
         }
 
-        public async Task<List<QuestionScreenAnswer>> GetQuestionScreenAnswers(string activityId, string workflowInstanceId,
+        public async Task<List<QuestionScreenQuestion>> GetQuestionScreenAnswers(string activityId, string workflowInstanceId,
             CancellationToken cancellationToken)
         {
-            var list = await _dbContext.Set<QuestionScreenAnswer>().Where(x => x.ActivityId == activityId && x.WorkflowInstanceId == workflowInstanceId && x.QuestionId != null).ToListAsync(cancellationToken);
+            var list = await _dbContext.Set<QuestionScreenQuestion>().Where(x => x.ActivityId == activityId && x.WorkflowInstanceId == workflowInstanceId && x.QuestionId != null).ToListAsync(cancellationToken);
             return list;
         }
 
-        public async Task<QuestionScreenAnswer?> GetQuestionScreenAnswer(string activityId, string workflowInstanceId, string questionID,
+        public async Task<QuestionScreenQuestion?> GetQuestionScreenAnswer(string activityId, string workflowInstanceId, string questionID,
             CancellationToken cancellationToken)
         {
-            var result = await _dbContext.Set<QuestionScreenAnswer>().FirstOrDefaultAsync(x => x.ActivityId == activityId && x.WorkflowInstanceId == workflowInstanceId && x.QuestionId == questionID, cancellationToken: cancellationToken);
+            var result = await _dbContext.Set<QuestionScreenQuestion>().FirstOrDefaultAsync(x => x.ActivityId == activityId && x.WorkflowInstanceId == workflowInstanceId && x.QuestionId == questionID, cancellationToken: cancellationToken);
             return result;
         }
 
@@ -62,9 +62,9 @@ namespace Elsa.CustomInfrastructure.Data.Repository
             await _dbContext.SaveChangesAsync(cancellationToken);
         }
 
-        public async Task<List<QuestionScreenAnswer>> GetQuestionScreenAnswers(string workflowInstanceId, CancellationToken cancellationToken)
+        public async Task<List<QuestionScreenQuestion>> GetQuestionScreenAnswers(string workflowInstanceId, CancellationToken cancellationToken)
         {
-            var list = await _dbContext.Set<QuestionScreenAnswer>().Where(x => x.WorkflowInstanceId == workflowInstanceId).ToListAsync(cancellationToken);
+            var list = await _dbContext.Set<QuestionScreenQuestion>().Where(x => x.WorkflowInstanceId == workflowInstanceId).ToListAsync(cancellationToken);
             return list;
         }
 
@@ -86,13 +86,18 @@ namespace Elsa.CustomInfrastructure.Data.Repository
 
         public async Task DeleteQuestionScreenAnswers(string workflowInstanceId, List<string> previousPathActivities, CancellationToken cancellationToken)
         {
-            var list = _dbContext.Set<QuestionScreenAnswer>().Where(x => x.WorkflowInstanceId == workflowInstanceId && previousPathActivities.Contains(x.ActivityId));
+            var list = _dbContext.Set<QuestionScreenQuestion>().Where(x => x.WorkflowInstanceId == workflowInstanceId && previousPathActivities.Contains(x.ActivityId));
             _dbContext.RemoveRange(list);
             await SaveChanges(cancellationToken);
         }
 
         public async Task<List<PotScoreOption>> GetPotScoreOptionsAsync(CancellationToken cancellationToken) =>
             await _dbContext.Set<PotScoreOption>().Where(x => x.IsActive).ToListAsync();
-     
+
+        public async Task CreateQuestionWorkflowInstance(QuestionWorkflowInstance questionWorkflowInstance, CancellationToken cancellationToken = default)
+        {
+            await _dbContext.AddAsync(questionWorkflowInstance, cancellationToken);
+            await _dbContext.SaveChangesAsync(cancellationToken);
+        }
     }
 }

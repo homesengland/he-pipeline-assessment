@@ -1,4 +1,5 @@
 ﻿using Elsa.CustomInfrastructure.Data.Repository;
+using Elsa.CustomModels;
 using Elsa.Models;
 using Elsa.Server.Models;
 using Elsa.Server.Providers;
@@ -44,6 +45,16 @@ namespace Elsa.Server.Features.Workflow.StartWorkflow
                 if (runWorkflowResult.WorkflowInstance != null)
                 {
                     var workflowInstance = runWorkflowResult.WorkflowInstance;
+
+                    var questionWorkflowInstance = new QuestionWorkflowInstance()
+                    {
+                        WorkflowInstanceId = workflowInstance.Id,
+                        WorkflowDefinitionId = workflowInstance.DefinitionId,
+                        CorrelationId = request.CorrelationId,
+                        WorkflowName = workflowName
+                    };
+
+                    await _elsaCustomRepository.CreateQuestionWorkflowInstance(questionWorkflowInstance, cancellationToken);
 
                     var activity = workflow.Activities.FirstOrDefault(x =>
                         x.Id == runWorkflowResult.WorkflowInstance.LastExecutedActivityId);
