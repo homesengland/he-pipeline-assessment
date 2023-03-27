@@ -121,7 +121,9 @@ namespace Elsa.CustomActivities.Tests.Activities.QuestionScreen.Helpers
             var result = await sut.GetAnswer(workflowInstanceId, workflowName, activityName, questionId);
 
             //Assert
-            Assert.Equal(questionScreenAnswer.Answer, result);
+            Assert.False(true, "TODO");
+
+            //Assert.Equal(questionScreenAnswer.Answer, result);
         }
     }
 }

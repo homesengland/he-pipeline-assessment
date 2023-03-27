@@ -93,9 +93,10 @@ public class QuestionScreenSaveAndContinueCommandHandlerTests
         workflowInstanceProvider.Verify(
             x => x.GetWorkflowInstance(It.IsAny<string>(), CancellationToken.None), Times.Once);
 
-        Assert.Equal(saveAndContinueCommand.Answers![0].AnswerText, currentAssessmentQuestions[0].Answer);
-        Assert.Equal(saveAndContinueCommand.Answers![1].AnswerText, currentAssessmentQuestions[1].Answer);
-        Assert.Equal(saveAndContinueCommand.Answers![2].AnswerText, currentAssessmentQuestions[2].Answer);
+        Assert.False(true, "TODO");
+        //Assert.Equal(saveAndContinueCommand.Answers![0].AnswerText, currentAssessmentQuestions[0].Answer);
+        //Assert.Equal(saveAndContinueCommand.Answers![1].AnswerText, currentAssessmentQuestions[1].Answer);
+        //Assert.Equal(saveAndContinueCommand.Answers![2].AnswerText, currentAssessmentQuestions[2].Answer);
 
         Assert.Equal(activityBlueprint.Id, result.Data!.NextActivityId);
         Assert.Equal(saveAndContinueCommand.WorkflowInstanceId, result.Data.WorkflowInstanceId);

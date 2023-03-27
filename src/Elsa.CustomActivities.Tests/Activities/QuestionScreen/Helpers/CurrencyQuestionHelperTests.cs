@@ -8,6 +8,7 @@ using Elsa.Services;
 using Elsa.Services.Models;
 using He.PipelineAssessment.Tests.Common;
 using Moq;
+using System.Globalization;
 using Xunit;
 
 namespace Elsa.CustomActivities.Tests.Activities.QuestionScreen.Helpers
@@ -119,7 +120,7 @@ namespace Elsa.CustomActivities.Tests.Activities.QuestionScreen.Helpers
                 Name = activityName
             });
             questionScreenAnswer.QuestionType = QuestionTypeConstants.CurrencyQuestion;
-            questionScreenAnswer.Answer = answer.ToString();
+            questionScreenAnswer.Answers = new List<QuestionScreenAnswer> { new() { Answer = answer.ToString(CultureInfo.InvariantCulture) } };
 
             elsaCustomRepository.Setup(x => x.GetQuestionScreenQuestion(activityId, workflowInstanceId, questionId, CancellationToken.None)).ReturnsAsync(questionScreenAnswer);
 
@@ -237,7 +238,7 @@ namespace Elsa.CustomActivities.Tests.Activities.QuestionScreen.Helpers
                 Name = activityName
             });
             questionScreenAnswer.QuestionType = QuestionTypeConstants.CurrencyQuestion;
-            questionScreenAnswer.Answer = answer.ToString();
+            questionScreenAnswer.Answers = new List<QuestionScreenAnswer> { new() { Answer = answer.ToString(CultureInfo.InvariantCulture) } };
 
             elsaCustomRepository.Setup(x => x.GetQuestionScreenQuestion(activityId, workflowInstanceId, questionId, CancellationToken.None)).ReturnsAsync(questionScreenAnswer);
 

@@ -275,10 +275,9 @@ public class LoadQuestionScreenRequestHandlerTests
             AssessmentQuestions elsaAssessmentQuestions,
             LoadQuestionScreenRequestHandler sut)
     {
-        var myChoice = @"[""Choice1""]";
         //Arrange
         customActivityNavigation.ActivityType = ActivityTypeConstants.QuestionScreen;
-        assessmentQuestions[0].Answer = myChoice;
+        assessmentQuestions[0].Answers = new List<QuestionScreenAnswer> { new() { Answer = "Choice1" } };
         for (var i = 0; i < assessmentQuestions.Count; i++)
         {
             var questionId = assessmentQuestions[i].QuestionId;
@@ -339,7 +338,7 @@ public class LoadQuestionScreenRequestHandlerTests
         //Arrange
         var myChoice = "Choice1";
         customActivityNavigation.ActivityType = ActivityTypeConstants.QuestionScreen;
-        assessmentQuestions[0].Answer = "Choice1";
+        assessmentQuestions[0].Answers = new List<QuestionScreenAnswer> { new() { Answer = "Choice1" } };
         for (var i = 0; i < assessmentQuestions.Count; i++)
         {
             var questionId = assessmentQuestions[i].QuestionId;
@@ -399,7 +398,7 @@ public class LoadQuestionScreenRequestHandlerTests
         //Arrange
         var myChoice = "Choice1";
         customActivityNavigation.ActivityType = ActivityTypeConstants.QuestionScreen;
-        assessmentQuestions[0].Answer = "Choice1";
+        assessmentQuestions[0].Answers = new List<QuestionScreenAnswer> { new() { Answer = myChoice } };
         for (var i = 0; i < assessmentQuestions.Count; i++)
         {
             var questionId = assessmentQuestions[i].QuestionId;
@@ -457,9 +456,9 @@ public class LoadQuestionScreenRequestHandlerTests
             LoadQuestionScreenRequestHandler sut)
     {
         //Arrange
-        var myChoice = "Choice1"; 
+        var myChoice = "Choice1";
         customActivityNavigation.ActivityType = ActivityTypeConstants.QuestionScreen;
-        assessmentQuestions[0].Answer = "";
+        assessmentQuestions[0].Answers = new List<QuestionScreenAnswer> { new() { Answer = "" } };
         for (var i = 0; i < assessmentQuestions.Count; i++)
         {
             var questionId = assessmentQuestions[i].QuestionId;
@@ -517,7 +516,7 @@ public class LoadQuestionScreenRequestHandlerTests
         //Arrange
         var myChoice = "Choice1";
         customActivityNavigation.ActivityType = ActivityTypeConstants.QuestionScreen;
-        assessmentQuestions[0].Answer = "";
+        assessmentQuestions[0].Answers = new List<QuestionScreenAnswer> { new() { Answer = "" } };
         for (var i = 0; i < assessmentQuestions.Count; i++)
         {
             var questionId = assessmentQuestions[i].QuestionId;
@@ -574,7 +573,7 @@ public class LoadQuestionScreenRequestHandlerTests
     {
         //Arrange
         customActivityNavigation.ActivityType = ActivityTypeConstants.QuestionScreen;
-        assessmentQuestions[0].Answer = "";
+        assessmentQuestions[0].Answers = new List<QuestionScreenAnswer> { new() { Answer = "" } };
         for (var i = 0; i < assessmentQuestions.Count; i++)
         {
             var questionId = assessmentQuestions[i].QuestionId;
@@ -690,7 +689,7 @@ public class LoadQuestionScreenRequestHandlerTests
     {
         //Arrange
         customActivityNavigation.ActivityType = ActivityTypeConstants.QuestionScreen;
-        assessmentQuestions[0].Answer = null;
+        assessmentQuestions[0].Answers = null;
         for (var i = 0; i < assessmentQuestions.Count; i++)
         {
             var questionId = assessmentQuestions[i].QuestionId;
@@ -744,7 +743,7 @@ public class LoadQuestionScreenRequestHandlerTests
     {
         //Arrange
         customActivityNavigation.ActivityType = ActivityTypeConstants.QuestionScreen;
-        assessmentQuestions[0].Answer = "DatabaseAnswer";
+        assessmentQuestions[0].Answers = new List<QuestionScreenAnswer> { new() { Answer = "DatabaseAnswer" } };
         for (var i = 0; i < assessmentQuestions.Count; i++)
         {
             var questionId = assessmentQuestions[i].QuestionId;
@@ -783,5 +782,5 @@ public class LoadQuestionScreenRequestHandlerTests
         Assert.False(result.Data.QuestionScreenAnswers[0].IsReadOnly);
     }
 
-   
+
 }
