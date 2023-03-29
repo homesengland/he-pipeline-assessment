@@ -43,7 +43,7 @@ namespace Elsa.Server.Features.Workflow.QuestionScreenSaveAndContinue
             try
             {
                 var dbAssessmentQuestionList =
-                    await _elsaCustomRepository.GetQuestionScreenQuestions(command.ActivityId, command.WorkflowInstanceId,
+                    await _elsaCustomRepository.GetQuestions(command.ActivityId, command.WorkflowInstanceId,
                         cancellationToken);
 
                 if (dbAssessmentQuestionList.Any())
@@ -96,16 +96,29 @@ namespace Elsa.Server.Features.Workflow.QuestionScreenSaveAndContinue
             {
                 foreach (var question in dbAssessmentQuestionList)
                 {
-                    var answer = command.Answers.FirstOrDefault(x => x.Id == question.QuestionId);
-
-                    if (answer != null)
+                    var answers = command.Answers.Where(x => x.Id == question.QuestionId);
+                    var now = _dateTimeProvider.UtcNow();
+                    if (answers.Any())
                     {
-                        //question.Answers();
-
-                        //question.SetAnswer(answer.AnswerText, _dateTimeProvider.UtcNow());//could be single string or array
-
-                        question.Comments = answer.Comments;
+                        question.Answers = answers.Select(x => new CustomModels.Answer
+                        {
+                            AnswerText = x.AnswerText ?? "",
+                            CreatedDateTime = now,
+                            LastModifiedDateTime = now,
+                            Choice = question.Choices?.FirstOrDefault(y => y.Answer == x.AnswerText)
+                        }).ToList();
+                        question.Comments = answers.First().Comments;
+                        question.LastModifiedDateTime = now;
                     }
+
+                    //if (answer != null)
+                    //{
+                    //    //question.Answers();
+                    //    // check Answers if an Answer
+                    //    question.SetAnswer(answer.AnswerText, _dateTimeProvider.UtcNow());//could be single string or array
+
+                    //    question.Comments = answer.Comments;
+                    //}
                 }
 
                 await _elsaCustomRepository.SaveChanges(cancellationToken);

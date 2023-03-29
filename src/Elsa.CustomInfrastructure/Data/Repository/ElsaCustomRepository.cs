@@ -43,10 +43,10 @@ namespace Elsa.CustomInfrastructure.Data.Repository
             await _dbContext.SaveChangesAsync(cancellationToken);
         }
 
-        public async Task<List<Question>> GetQuestionScreenQuestions(string activityId, string workflowInstanceId,
+        public async Task<List<Question>> GetQuestions(string activityId, string workflowInstanceId,
             CancellationToken cancellationToken)
         {
-            var list = await _dbContext.Set<Question>().Where(x => x.ActivityId == activityId && x.WorkflowInstanceId == workflowInstanceId && x.QuestionId != null).ToListAsync(cancellationToken);
+            var list = await _dbContext.Set<Question>().Where(x => x.ActivityId == activityId && x.WorkflowInstanceId == workflowInstanceId && x.QuestionId != null).Include(x => x.Choices).ToListAsync(cancellationToken);
             return list;
         }
 
@@ -62,7 +62,7 @@ namespace Elsa.CustomInfrastructure.Data.Repository
             await _dbContext.SaveChangesAsync(cancellationToken);
         }
 
-        public async Task<List<Question>> GetQuestionScreenQuestions(string workflowInstanceId, CancellationToken cancellationToken)
+        public async Task<List<Question>> GetQuestions(string workflowInstanceId, CancellationToken cancellationToken)
         {
             var list = await _dbContext.Set<Question>().Where(x => x.WorkflowInstanceId == workflowInstanceId).ToListAsync(cancellationToken);
             return list;

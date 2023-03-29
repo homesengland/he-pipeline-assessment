@@ -44,7 +44,7 @@ namespace Elsa.Server.Features.Workflow.LoadConfirmationScreen
                 {
 
                     var questionScreenAnswers = await _elsaCustomRepository
-                        .GetQuestionScreenQuestions(result.Data.WorkflowInstanceId, cancellationToken);
+                        .GetQuestions(result.Data.WorkflowInstanceId, cancellationToken);
 
                     result.Data.CheckQuestionScreenAnswers = questionScreenAnswers;
 

@@ -16,10 +16,10 @@ namespace Elsa.CustomInfrastructure.Data.Repository
         Task<CustomActivityNavigation?> UpdateCustomActivityNavigation(CustomActivityNavigation model,
             CancellationToken cancellationToken = default);
         Task CreateQuestionScreenQuestionsAsync(List<Question> assessments, CancellationToken cancellationToken);
-        Task<List<Question>> GetQuestionScreenQuestions(string activityId, string workflowInstanceId, CancellationToken cancellationToken);
+        Task<List<Question>> GetQuestions(string activityId, string workflowInstanceId, CancellationToken cancellationToken);
         Task<Question?> GetQuestionScreenQuestion(string activityId, string workflowInstanceId, string questionID, CancellationToken cancellationToken);
         Task SaveChanges(CancellationToken cancellationToken);
-        Task<List<Question>> GetQuestionScreenQuestions(string workflowInstanceId, CancellationToken cancellationToken);
+        Task<List<Question>> GetQuestions(string workflowInstanceId, CancellationToken cancellationToken);
         Task<CustomActivityNavigation?> GetChangedPathNavigation(string workflowInstanceId, string currentActivityId,
             string nextActivityId, CancellationToken cancellationToken);
         Task DeleteCustomNavigations(List<string> previousPathActivities, string workflowInstanceId, CancellationToken cancellationToken);
