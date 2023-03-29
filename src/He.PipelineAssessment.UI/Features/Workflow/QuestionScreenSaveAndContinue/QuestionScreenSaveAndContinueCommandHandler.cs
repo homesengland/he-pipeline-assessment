@@ -27,7 +27,8 @@ namespace He.PipelineAssessment.UI.Features.Workflow.QuestionScreenSaveAndContin
                 {
                     ActivityId = response.Data.NextActivityId,
                     WorkflowInstanceId = response.Data.WorkflowInstanceId,
-                    ActivityType = response.Data.ActivityType
+                    ActivityType = response.Data.ActivityType,
+
                 };
                 var currentAssessmentToolWorkflowInstance = await _assessmentRepository.GetAssessmentToolWorkflowInstance(response.Data.WorkflowInstanceId);
                 if (currentAssessmentToolWorkflowInstance != null)

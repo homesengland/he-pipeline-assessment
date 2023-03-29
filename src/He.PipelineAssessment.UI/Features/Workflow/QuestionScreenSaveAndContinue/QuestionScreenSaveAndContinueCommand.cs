@@ -5,6 +5,8 @@ namespace He.PipelineAssessment.UI.Features.Workflow.QuestionScreenSaveAndContin
 {
     public class QuestionScreenSaveAndContinueCommand : WorkflowActivityDataDto, IRequest<QuestionScreenSaveAndContinueCommandResponse>
     {
+        public int AssessmentId { get; set; }
+        public string CorrelationId { get; set; } = null!;
 
     }
 

@@ -7,6 +7,7 @@ using He.PipelineAssessment.UI.Features.Workflow.LoadQuestionScreen;
 using He.PipelineAssessment.UI.Features.Workflow.QuestionScreenSaveAndContinue;
 using He.PipelineAssessment.UI.Features.Workflow.StartWorkflow;
 using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Security.Claims;
 
@@ -100,6 +101,50 @@ namespace He.PipelineAssessment.UI.Features.Workflow
                     default:
                         throw new ApplicationException(
                             $"Attempted to load unsupported activity type: {request.ActivityType}");
+                }
+            }
+            catch (Exception e)
+            {
+                _logger.LogError(e.Message);
+                return RedirectToAction("Index", "Error", new { message = e.Message });
+            }
+        }
+
+        //[Authorize(Roles ="")]
+        public async Task<IActionResult> LoadReadOnlyWorkflowActivity(QuestionScreenSaveAndContinueCommandResponse request)
+        {
+            try
+            {
+                if (string.IsNullOrEmpty(request.ActivityType))
+                {
+                    //try to get activity type from the server?
+                }
+                switch (request.ActivityType)
+                {
+                    case ActivityTypeConstants.ConfirmationScreen:
+                        {
+                            var checkYourAnswersScreenRequest = new LoadConfirmationScreenRequest
+                            {
+                                WorkflowInstanceId = request.WorkflowInstanceId,
+                                ActivityId = request.ActivityId
+                            };
+                            var result = await this._mediator.Send(checkYourAnswersScreenRequest);
+
+                            return View("Confirmation", result);
+                        }
+
+                    default:
+                        {
+                            var checkYourAnswersScreenRequest = new LoadCheckYourAnswersScreenRequest
+                            {
+                                WorkflowInstanceId = request.WorkflowInstanceId,
+                                ActivityId = request.ActivityId
+                            };
+                            var result = await this._mediator.Send(checkYourAnswersScreenRequest);
+
+                            return View("CheckYourAnswers", result);
+                        }
+
                 }
             }
             catch (Exception e)
