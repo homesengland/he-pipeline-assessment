@@ -328,6 +328,99 @@ namespace He.PipelineAssessment.UI.Tests.Features.Workflow
 
         [Theory]
         [AutoMoqData]
+        public async Task LoadReadOnlyWorkflowActivity_ShouldRedirectToConfirmationView_GivenConfirmationScreenAndNoExceptionsThrow(
+          [Frozen] Mock<IMediator> mediator,
+          QuestionScreenSaveAndContinueCommandResponse saveAndContinueCommandResponse,
+          LoadConfirmationScreenResponse response,
+          WorkflowController sut)
+        {
+            //Arrange
+            saveAndContinueCommandResponse.ActivityType = ActivityTypeConstants.ConfirmationScreen;
+
+            mediator.Setup(x =>
+                    x.Send(
+                        It.Is<LoadConfirmationScreenRequest>(y =>
+                            y.ActivityId == saveAndContinueCommandResponse.ActivityId && y.WorkflowInstanceId ==
+                            saveAndContinueCommandResponse.WorkflowInstanceId), CancellationToken.None))
+                .ReturnsAsync(response);
+
+            //Act
+            var result = await sut.LoadReadOnlyWorkflowActivity(saveAndContinueCommandResponse);
+
+            //Assert
+            Assert.NotNull(result);
+            Assert.IsType<ViewResult>(result);
+
+            var viewResult = (ViewResult)result;
+            Assert.Equal("Confirmation", viewResult.ViewName);
+            Assert.IsType<LoadConfirmationScreenResponse>(viewResult.Model);
+        }
+
+        [Theory]
+        [AutoMoqData]
+        public async Task LoadReadOnlyWorkflowActivity_ShouldRedirectToErrorPage_GivenInnerExceptionIsCaughtForCheckYourAnswers(
+           [Frozen] Mock<IMediator> mediator,
+           QuestionScreenSaveAndContinueCommandResponse saveAndContinueCommandResponse,
+           Exception exception,
+           WorkflowController sut)
+        {
+            //Arrange
+            saveAndContinueCommandResponse.ActivityType = ActivityTypeConstants.CheckYourAnswersScreen;
+
+            mediator.Setup(x =>
+                x.Send(It.IsAny<LoadCheckYourAnswersScreenRequest>(), CancellationToken.None)).Throws(exception);
+
+            //Act
+            var result = await sut.LoadReadOnlyWorkflowActivity(saveAndContinueCommandResponse);
+
+            //Assert
+            mediator.Verify(x => x.Send(It.Is<LoadCheckYourAnswersScreenRequest>(y =>
+                y.ActivityId == saveAndContinueCommandResponse.ActivityId && y.WorkflowInstanceId ==
+                saveAndContinueCommandResponse.WorkflowInstanceId), CancellationToken.None), Times.Once);
+            await Assert.ThrowsAsync<Exception>(() => mediator.Object.Send(It.Is<LoadCheckYourAnswersScreenRequest>(x =>
+                x.ActivityId == saveAndContinueCommandResponse.ActivityId && x.WorkflowInstanceId ==
+                saveAndContinueCommandResponse.WorkflowInstanceId)));
+
+            Assert.IsType<RedirectToActionResult>(result);
+            var redirectToActionResult = (RedirectToActionResult)result;
+            Assert.Equal("Error", redirectToActionResult.ControllerName);
+            Assert.Equal("Index", redirectToActionResult.ActionName);
+        }
+
+
+        [Theory]
+        [AutoMoqData]
+        public async Task LoadReadOnlyWorkflowActivity_ShouldRedirectToCheckYourAnswersView_GivenCheckYourAnswersScreenAndNoExceptionsThrow(
+           [Frozen] Mock<IMediator> mediator,
+           QuestionScreenSaveAndContinueCommandResponse saveAndContinueCommandResponse,
+           QuestionScreenSaveAndContinueCommand saveAndContinueCommand,
+           WorkflowController sut)
+        {
+            //Arrange
+            saveAndContinueCommandResponse.ActivityType = ActivityTypeConstants.CheckYourAnswersScreen;
+
+            mediator.Setup(x =>
+                    x.Send(
+                        It.Is<LoadCheckYourAnswersScreenRequest>(y =>
+                            y.ActivityId == saveAndContinueCommandResponse.ActivityId && y.WorkflowInstanceId ==
+                            saveAndContinueCommandResponse.WorkflowInstanceId), CancellationToken.None))
+                .ReturnsAsync(saveAndContinueCommand);
+
+            //Act
+            var result = await sut.LoadReadOnlyWorkflowActivity(saveAndContinueCommandResponse);
+
+            //Assert
+            Assert.NotNull(result);
+            Assert.IsType<ViewResult>(result);
+
+            var viewResult = (ViewResult)result;
+            Assert.Equal("CheckYourAnswersReadOnly", viewResult.ViewName);
+            Assert.IsType<QuestionScreenSaveAndContinueCommand>(viewResult.Model); // this will change
+        }
+
+
+        [Theory]
+        [AutoMoqData]
         public async Task LoadWorkflowActivity_ShouldThrowApplicationException_GivenUnknownActivityType(
             QuestionScreenSaveAndContinueCommandResponse saveAndContinueCommandResponse,
             WorkflowController sut)

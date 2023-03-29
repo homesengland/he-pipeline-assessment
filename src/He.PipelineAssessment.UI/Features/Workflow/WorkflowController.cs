@@ -142,7 +142,7 @@ namespace He.PipelineAssessment.UI.Features.Workflow
                             };
                             var result = await this._mediator.Send(checkYourAnswersScreenRequest);
 
-                            return View("CheckYourAnswers", result);
+                            return View("CheckYourAnswersReadOnly", result);
                         }
 
                 }
