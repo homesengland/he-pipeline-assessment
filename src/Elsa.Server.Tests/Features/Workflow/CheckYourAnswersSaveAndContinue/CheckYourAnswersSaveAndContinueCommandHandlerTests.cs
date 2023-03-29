@@ -102,7 +102,7 @@ namespace Elsa.Server.Tests.Features.Workflow.CheckYourAnswersSaveAndContinue
                 WorkflowInstance workflowInstance,
                 CustomActivityNavigation nextAssessmentActivity,
                 CheckYourAnswersSaveAndContinueCommand saveAndContinueCommand,
-                List<QuestionScreenQuestion> questionScreenAnswers,
+                List<Question> questionScreenAnswers,
                 CheckYourAnswersSaveAndContinueCommandHandler sut
             )
         {
@@ -182,7 +182,7 @@ namespace Elsa.Server.Tests.Features.Workflow.CheckYourAnswersSaveAndContinue
                 WorkflowInstance workflowInstance,
                 CustomActivityNavigation nextAssessmentActivity,
                 CheckYourAnswersSaveAndContinueCommand saveAndContinueCommand,
-                List<QuestionScreenQuestion> questionScreenAnswers,
+                List<Question> questionScreenAnswers,
                 CheckYourAnswersSaveAndContinueCommandHandler sut
             )
         {
@@ -260,7 +260,7 @@ namespace Elsa.Server.Tests.Features.Workflow.CheckYourAnswersSaveAndContinue
                 List<CollectedWorkflow> collectedWorkflows,
                 WorkflowInstance workflowInstance,
                 CustomActivityNavigation nextAssessmentActivity,
-                List<QuestionScreenQuestion> nextAssessmentQuestions,
+                List<Question> nextAssessmentQuestions,
                 CheckYourAnswersSaveAndContinueCommand saveAndContinueCommand,
                 CheckYourAnswersSaveAndContinueCommandHandler sut
             )

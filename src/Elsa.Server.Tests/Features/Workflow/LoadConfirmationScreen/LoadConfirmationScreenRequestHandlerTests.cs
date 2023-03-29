@@ -66,7 +66,7 @@ namespace Elsa.Server.Tests.Features.Workflow.LoadConfirmationScreen
             [Frozen] Mock<IActivityDataProvider> activityDataProvider,
             LoadConfirmationScreenRequest request,
             CustomActivityNavigation customActivityNavigation,
-            List<QuestionScreenQuestion> questionScreenAnswers,
+            List<Question> questionScreenAnswers,
             LoadConfirmationScreenRequestHandler sut)
         {
             //Arrange

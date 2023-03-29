@@ -6,6 +6,7 @@ using Elsa.Persistence;
 using Elsa.Persistence.Specifications.WorkflowInstances;
 using Elsa.Server.Models;
 using MediatR;
+using Question = Elsa.CustomModels.Question;
 
 namespace Elsa.Server.Features.Workflow.LoadQuestionScreen
 {
@@ -122,12 +123,12 @@ namespace Elsa.Server.Features.Workflow.LoadQuestionScreen
             return await Task.FromResult(result);
         }
 
-        private static QuestionActivityData CreateQuestionActivityData(QuestionScreenQuestion dbQuestion, Question item)
+        private static QuestionActivityData CreateQuestionActivityData(Question dbQuestion, CustomActivities.Activities.QuestionScreen.Question item)
         {
             //assign the values
             var questionActivityData = new QuestionActivityData();
             questionActivityData.ActivityId = dbQuestion.ActivityId;
-            questionActivityData.Answer = dbQuestion.Answers != null && dbQuestion.Answers.Count() == 1 ? dbQuestion.Answers.First().Answer : item.Answer;
+            questionActivityData.Answer = dbQuestion.Answers != null && dbQuestion.Answers.Count() == 1 ? dbQuestion.Answers.First().AnswerText : item.Answer;
             questionActivityData.Comments = dbQuestion.Comments;
             questionActivityData.QuestionId = dbQuestion.QuestionId;
             questionActivityData.QuestionType = dbQuestion.QuestionType;
@@ -158,7 +159,7 @@ namespace Elsa.Server.Features.Workflow.LoadQuestionScreen
             if (item.QuestionType == QuestionTypeConstants.CheckboxQuestion &&
                 dbQuestion.Answers != null && dbQuestion.Answers.Any())
             {
-                var answerList = dbQuestion.Answers.Select(x => x.Answer).ToList();
+                var answerList = dbQuestion.Answers.Select(x => x.AnswerText).ToList();
 
                 questionActivityData.Checkbox.SelectedChoices =
                     answerList!;
@@ -197,7 +198,7 @@ namespace Elsa.Server.Features.Workflow.LoadQuestionScreen
             if ((item.QuestionType == QuestionTypeConstants.RadioQuestion || item.QuestionType == QuestionTypeConstants.PotScoreRadioQuestion) &&
                  dbQuestion.Answers != null && dbQuestion.Answers.Any())
             {
-                questionActivityData.Radio.SelectedAnswer = dbQuestion.Answers.First().Answer;
+                questionActivityData.Radio.SelectedAnswer = dbQuestion.Answers.First().AnswerText;
             }
 
             if (item.QuestionType == QuestionTypeConstants.Information)

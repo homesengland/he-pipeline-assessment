@@ -21,7 +21,7 @@ namespace Elsa.Server.Tests.Providers
             string activityId,
             string workflowInstanceId,
             WorkflowInstance workflowInstance,
-            List<QuestionScreenQuestion>? questionScreenAnswers,
+            List<Question>? questionScreenAnswers,
             WorkflowNextActivityProvider sut)
         {
             //Arrange
@@ -51,7 +51,7 @@ namespace Elsa.Server.Tests.Providers
             WorkflowInstance workflowInstance,
             List<CollectedWorkflow> collectedWorkflows,
             ActivityBlueprint activityBlueprint,
-            List<QuestionScreenQuestion>? questionScreenAnswers,
+            List<Question>? questionScreenAnswers,
             WorkflowNextActivityProvider sut)
         {
             //Arrange
@@ -84,7 +84,7 @@ namespace Elsa.Server.Tests.Providers
             WorkflowInstance workflowInstance,
             List<CollectedWorkflow> collectedWorkflows,
             ActivityBlueprint activityBlueprint,
-            List<QuestionScreenQuestion>? questionScreenAnswers,
+            List<Question>? questionScreenAnswers,
             WorkflowNextActivityProvider sut)
         {
             //Arrange
@@ -120,7 +120,7 @@ namespace Elsa.Server.Tests.Providers
             WorkflowInstance workflowInstance,
             List<CollectedWorkflow> collectedWorkflows,
             ActivityBlueprint activityBlueprint,
-            List<QuestionScreenQuestion>? questionScreenAnswers,
+            List<Question>? questionScreenAnswers,
             WorkflowNextActivityProvider sut)
         {
             //Arrange
@@ -165,7 +165,7 @@ namespace Elsa.Server.Tests.Providers
             List<CollectedWorkflow> collectedWorkflows,
             ActivityBlueprint activityBlueprint,
             ActivityBlueprint anotherActivityBlueprint,
-            List<QuestionScreenQuestion>? questionScreenAnswers,
+            List<Question>? questionScreenAnswers,
             WorkflowNextActivityProvider sut)
         {
             //Arrange
@@ -173,7 +173,7 @@ namespace Elsa.Server.Tests.Providers
 
             questionInvoker.Setup(x => x.ExecuteWorkflowsAsync(It.IsAny<string>(),
                     ActivityTypeConstants.QuestionScreen,
-                    workflowInstanceId, It.IsAny<List<QuestionScreenQuestion>?>(), CancellationToken.None))
+                    workflowInstanceId, It.IsAny<List<Question>?>(), CancellationToken.None))
                 .ReturnsAsync(collectedWorkflows);
 
             workflowInstanceProvider.Setup(x => x.GetWorkflowInstance(workflowInstanceId, CancellationToken.None))
@@ -219,7 +219,7 @@ namespace Elsa.Server.Tests.Providers
             List<CollectedWorkflow> collectedWorkflows,
             ActivityBlueprint activityBlueprint,
             ActivityBlueprint anotherActivityBlueprint,
-            List<QuestionScreenQuestion>? questionScreenAnswers,
+            List<Question>? questionScreenAnswers,
             WorkflowNextActivityProvider sut)
         {
             //Arrange
@@ -227,7 +227,7 @@ namespace Elsa.Server.Tests.Providers
 
             questionInvoker.Setup(x => x.ExecuteWorkflowsAsync(It.IsAny<string>(),
                     ActivityTypeConstants.QuestionScreen,
-                    workflowInstanceId, It.IsAny<List<QuestionScreenQuestion>?>(), CancellationToken.None))
+                    workflowInstanceId, It.IsAny<List<Question>?>(), CancellationToken.None))
                 .ReturnsAsync(collectedWorkflows);
 
             workflowInstanceProvider.Setup(x => x.GetWorkflowInstance(workflowInstanceId, CancellationToken.None))
@@ -267,14 +267,14 @@ namespace Elsa.Server.Tests.Providers
             string activityId,
             string workflowInstanceId,
             Exception exception,
-            List<QuestionScreenQuestion>? questionScreenAnswers,
+            List<Question>? questionScreenAnswers,
             WorkflowNextActivityProvider sut)
         {
             //Arrange
             questionInvoker
                 .Setup(x => x.ExecuteWorkflowsAsync(It.IsAny<string>(),
                     ActivityTypeConstants.QuestionScreen,
-                    workflowInstanceId, It.IsAny<List<QuestionScreenQuestion>?>(), CancellationToken.None))
+                    workflowInstanceId, It.IsAny<List<Question>?>(), CancellationToken.None))
                 .Throws(exception);
 
             //Act
@@ -371,7 +371,7 @@ namespace Elsa.Server.Tests.Providers
 
             questionInvoker.Setup(x => x.ExecuteWorkflowsAsync(It.IsAny<string>(),
                     It.IsAny<string>(),
-                    workflowInstanceId, It.IsAny<List<QuestionScreenQuestion>?>(), CancellationToken.None))
+                    workflowInstanceId, It.IsAny<List<Question>?>(), CancellationToken.None))
                 .ReturnsAsync(collectedWorkflows);
 
             workflowInstanceProvider.Setup(x => x.GetWorkflowInstance(workflowInstanceId, CancellationToken.None))
@@ -421,7 +421,7 @@ namespace Elsa.Server.Tests.Providers
 
             questionInvoker.Setup(x => x.ExecuteWorkflowsAsync(It.IsAny<string>(),
                     It.IsAny<string>(),
-                    workflowInstanceId, It.IsAny<List<QuestionScreenQuestion>?>(), CancellationToken.None))
+                    workflowInstanceId, It.IsAny<List<Question>?>(), CancellationToken.None))
                 .ReturnsAsync(collectedWorkflows);
 
             workflowInstanceProvider.Setup(x => x.GetWorkflowInstance(workflowInstanceId, CancellationToken.None))
@@ -471,7 +471,7 @@ namespace Elsa.Server.Tests.Providers
 
             questionInvoker.Setup(x => x.ExecuteWorkflowsAsync(It.IsAny<string>(),
                     It.IsAny<string>(),
-                    workflowInstanceId, It.IsAny<List<QuestionScreenQuestion>?>(), CancellationToken.None))
+                    workflowInstanceId, It.IsAny<List<Question>?>(), CancellationToken.None))
                 .ReturnsAsync(collectedWorkflows);
 
             workflowInstanceProvider.Setup(x => x.GetWorkflowInstance(workflowInstanceId, CancellationToken.None))

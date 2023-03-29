@@ -35,7 +35,7 @@ namespace Elsa.CustomActivities.Activities.QuestionScreen.Helpers
 
                     if (result != null && (result.QuestionType == QuestionTypeConstants.TextQuestion ||
                         result.QuestionType == QuestionTypeConstants.TextAreaQuestion) &&
-                        result.Answers != null && result.Answers.Count == 1 && result.Answers.First().Answer.ToLower() == answerToCheck.ToLower())
+                        result.Answers != null && result.Answers.Count == 1 && result.Answers.First().AnswerText.ToLower() == answerToCheck.ToLower())
                     {
                         return true;
                     }
@@ -58,7 +58,7 @@ namespace Elsa.CustomActivities.Activities.QuestionScreen.Helpers
 
                     if (result != null && (result.QuestionType == QuestionTypeConstants.TextQuestion ||
                         result.QuestionType == QuestionTypeConstants.TextAreaQuestion) &&
-                        result.Answers != null && result.Answers.Count == 1 && result.Answers.First().Answer.ToLower().Contains(answerToCheck.ToLower()))
+                        result.Answers != null && result.Answers.Count == 1 && result.Answers.First().AnswerText.ToLower().Contains(answerToCheck.ToLower()))
                     {
                         return true;
                     }

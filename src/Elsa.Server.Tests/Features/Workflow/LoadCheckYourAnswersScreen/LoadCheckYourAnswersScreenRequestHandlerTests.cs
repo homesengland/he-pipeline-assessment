@@ -66,7 +66,7 @@ public class LoadCheckYourAnswersScreenRequestHandlerTests
         [Frozen] Mock<IActivityDataProvider> activityDataProvider,
         LoadCheckYourAnswersScreenRequest request,
         CustomActivityNavigation customActivityNavigation,
-        List<QuestionScreenQuestion> questionScreenAnswers,
+        List<Question> questionScreenAnswers,
         LoadCheckYourAnswersScreenRequestHandler sut)
     {
         //Arrange

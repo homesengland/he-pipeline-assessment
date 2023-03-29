@@ -9,6 +9,7 @@ using Elsa.Server.Providers;
 using He.PipelineAssessment.Tests.Common;
 using Moq;
 using Xunit;
+using Question = Elsa.CustomModels.Question;
 
 namespace Elsa.Server.Tests.Features.Workflow.Helpers
 {
@@ -52,7 +53,7 @@ namespace Elsa.Server.Tests.Features.Workflow.Helpers
                     string nextActivityId,
                     string nextActivityType,
                     WorkflowInstance workflowInstance,
-                    Question question,
+                    CustomActivities.Activities.QuestionScreen.Question question,
                     ElsaCustomModelHelper sut
                 )
         {
@@ -65,13 +66,13 @@ namespace Elsa.Server.Tests.Features.Workflow.Helpers
             var result = sut.CreateQuestionScreenQuestion(nextActivityId, nextActivityType, question, workflowInstance);
 
             //Assert
-            Assert.IsType<QuestionScreenQuestion>(result);
+            Assert.IsType<Question>(result);
             Assert.Equal(nextActivityId, result!.ActivityId);
             Assert.Equal(workflowInstance.Id, result.WorkflowInstanceId);
             Assert.Equal(currentTimeUtc, result.CreatedDateTime);
             Assert.Equal(question.Id, result.QuestionId);
             Assert.Equal(question.QuestionType, result.QuestionType);
-            Assert.Equal(question.QuestionText, result.Question);
+            Assert.Equal(question.QuestionText, result.QuestionText);
             Assert.Equal(question.Checkbox.Choices, result.Choices!.Select(x => new CheckboxRecord(x.Identifier, x.Answer, x.IsSingle, x.IsPrePopulated)));
         }
 
@@ -82,7 +83,7 @@ namespace Elsa.Server.Tests.Features.Workflow.Helpers
             string nextActivityId,
             string nextActivityType,
             WorkflowInstance workflowInstance,
-            Question question,
+            CustomActivities.Activities.QuestionScreen.Question question,
             ElsaCustomModelHelper sut
         )
         {
@@ -95,13 +96,13 @@ namespace Elsa.Server.Tests.Features.Workflow.Helpers
             var result = sut.CreateQuestionScreenQuestion(nextActivityId, nextActivityType, question, workflowInstance);
 
             //Assert
-            Assert.IsType<QuestionScreenQuestion>(result);
+            Assert.IsType<Question>(result);
             Assert.Equal(nextActivityId, result!.ActivityId);
             Assert.Equal(workflowInstance.Id, result.WorkflowInstanceId);
             Assert.Equal(currentTimeUtc, result.CreatedDateTime);
             Assert.Equal(question.Id, result.QuestionId);
             Assert.Equal(question.QuestionType, result.QuestionType);
-            Assert.Equal(question.QuestionText, result.Question);
+            Assert.Equal(question.QuestionText, result.QuestionText);
             Assert.Equal(question.Radio.Choices, result.Choices!.Select(x => new RadioRecord(x.Identifier, x.Answer, x.IsPrePopulated)));
         }
 
@@ -112,7 +113,7 @@ namespace Elsa.Server.Tests.Features.Workflow.Helpers
             string nextActivityId,
             string nextActivityType,
             WorkflowInstance workflowInstance,
-            Question question,
+            CustomActivities.Activities.QuestionScreen.Question question,
             ElsaCustomModelHelper sut
         )
         {
@@ -124,13 +125,13 @@ namespace Elsa.Server.Tests.Features.Workflow.Helpers
             var result = sut.CreateQuestionScreenQuestion(nextActivityId, nextActivityType, question, workflowInstance);
 
             //Assert
-            Assert.IsType<QuestionScreenQuestion>(result);
+            Assert.IsType<Question>(result);
             Assert.Equal(nextActivityId, result!.ActivityId);
             Assert.Equal(workflowInstance.Id, result.WorkflowInstanceId);
             Assert.Equal(currentTimeUtc, result.CreatedDateTime);
             Assert.Equal(question.Id, result.QuestionId);
             Assert.Equal(question.QuestionType, result.QuestionType);
-            Assert.Equal(question.QuestionText, result.Question);
+            Assert.Equal(question.QuestionText, result.QuestionText);
             Assert.Null(result.Choices);
         }
 
@@ -148,7 +149,7 @@ namespace Elsa.Server.Tests.Features.Workflow.Helpers
             var result = sut.CreateQuestionScreenQuestions(activityId, workflowInstance);
 
             //Assert
-            Assert.IsType<List<QuestionScreenQuestion>>(result);
+            Assert.IsType<List<Question>>(result);
             Assert.Empty(result);
         }
 
@@ -172,7 +173,7 @@ namespace Elsa.Server.Tests.Features.Workflow.Helpers
             var result = sut.CreateQuestionScreenQuestions(activityId, workflowInstance);
 
             //Assert
-            Assert.IsType<List<QuestionScreenQuestion>>(result);
+            Assert.IsType<List<Question>>(result);
             Assert.NotEmpty(result);
         }
     }

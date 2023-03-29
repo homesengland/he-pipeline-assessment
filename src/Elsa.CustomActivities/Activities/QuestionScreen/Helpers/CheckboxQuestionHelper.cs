@@ -36,7 +36,7 @@ namespace Elsa.CustomActivities.Activities.QuestionScreen.Helpers
                     if (questionScreenQuestion != null && questionScreenQuestion.Answers != null &&
                         questionScreenQuestion.QuestionType == QuestionTypeConstants.CheckboxQuestion)
                     {
-                        return string.Join(',', questionScreenQuestion.Answers.Select(x => x.Answer));
+                        return string.Join(',', questionScreenQuestion.Answers.Select(x => x.AnswerText));
                     }
                 }
             }
@@ -63,7 +63,7 @@ namespace Elsa.CustomActivities.Activities.QuestionScreen.Helpers
                         var choices = questionScreenQuestion.Choices;
                         if (choices != null && questionScreenQuestion.Answers != null)
                         {
-                            var answerList = questionScreenQuestion.Answers.Select(x => x.Answer).ToList();
+                            var answerList = questionScreenQuestion.Answers.Select(x => x.AnswerText).ToList();
                             foreach (var item in answerList)
                             {
                                 var singleChoice = choices.FirstOrDefault(x => x.Answer == item);
@@ -102,7 +102,7 @@ namespace Elsa.CustomActivities.Activities.QuestionScreen.Helpers
                         var choices = questionScreenQuestion.Choices;
                         if (choices != null && questionScreenQuestion.Answers != null)
                         {
-                            var answerList = questionScreenQuestion.Answers.Select(x => x.Answer).ToList();
+                            var answerList = questionScreenQuestion.Answers.Select(x => x.AnswerText).ToList();
                             foreach (var item in choiceIdsToCheck)
                             {
                                 var singleChoice = choices.FirstOrDefault(x => x.Identifier == item);

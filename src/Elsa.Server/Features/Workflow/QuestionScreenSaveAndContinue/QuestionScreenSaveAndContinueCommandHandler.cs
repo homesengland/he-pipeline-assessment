@@ -90,7 +90,7 @@ namespace Elsa.Server.Features.Workflow.QuestionScreenSaveAndContinue
         }
 
         private async Task SetAnswers(QuestionScreenSaveAndContinueCommand command, CancellationToken cancellationToken,
-            List<QuestionScreenQuestion> dbAssessmentQuestionList)
+            List<Question> dbAssessmentQuestionList)
         {
             if (command.Answers != null && command.Answers.Any())
             {

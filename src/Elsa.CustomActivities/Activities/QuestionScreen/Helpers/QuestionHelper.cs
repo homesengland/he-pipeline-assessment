@@ -32,7 +32,7 @@ namespace Elsa.CustomActivities.Activities.QuestionScreen.Helpers
 
                     if (result?.Answers != null)
                     {
-                        return string.Join(',', result.Answers.Select(x => x.Answer));
+                        return string.Join(',', result.Answers.Select(x => x.AnswerText));
                     }
                 }
 

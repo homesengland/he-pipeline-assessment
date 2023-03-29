@@ -39,7 +39,7 @@ namespace Elsa.CustomActivities.Activities.QuestionScreen.Helpers
                         var questionScreenAnswer = questionScreenQuestion.Answers.FirstOrDefault();
                         if (questionScreenAnswer != null)
                         {
-                            DateTime.TryParseExact(questionScreenAnswer.Answer, CustomWorkflow.Sdk.Constants.DateFormat,
+                            DateTime.TryParseExact(questionScreenAnswer.AnswerText, CustomWorkflow.Sdk.Constants.DateFormat,
                                 CultureInfo.InvariantCulture, DateTimeStyles.AdjustToUniversal, out DateTime answerDate);
 
                             var dateString =
@@ -77,7 +77,7 @@ namespace Elsa.CustomActivities.Activities.QuestionScreen.Helpers
                         var questionScreenAnswer = questionScreenQuestion.Answers.FirstOrDefault();
                         if (questionScreenAnswer != null)
                         {
-                            DateTime.TryParseExact(questionScreenAnswer.Answer, CustomWorkflow.Sdk.Constants.DateFormat,
+                            DateTime.TryParseExact(questionScreenAnswer.AnswerText, CustomWorkflow.Sdk.Constants.DateFormat,
                                 CultureInfo.InvariantCulture, DateTimeStyles.AdjustToUniversal, out DateTime answerDate);
 
                             var dateString =

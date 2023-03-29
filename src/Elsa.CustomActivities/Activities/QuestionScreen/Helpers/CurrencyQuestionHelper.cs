@@ -38,7 +38,7 @@ namespace Elsa.CustomActivities.Activities.QuestionScreen.Helpers
                         var questionScreenAnswer = questionScreenQuestion.Answers.FirstOrDefault();
                         if (questionScreenAnswer != null)
                         {
-                            var answer = decimal.Parse(questionScreenAnswer.Answer);
+                            var answer = decimal.Parse(questionScreenAnswer.AnswerText);
                             if (answer >= answerToCheck)
                             {
                                 return true;
@@ -69,7 +69,7 @@ namespace Elsa.CustomActivities.Activities.QuestionScreen.Helpers
                         var questionScreenAnswer = questionScreenQuestion.Answers.FirstOrDefault();
                         if (questionScreenAnswer != null)
                         {
-                            var answer = decimal.Parse(questionScreenAnswer.Answer);
+                            var answer = decimal.Parse(questionScreenAnswer.AnswerText);
                             if (answer <= answerToCheck)
                             {
                                 return true;

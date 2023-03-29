@@ -41,7 +41,7 @@ namespace Elsa.CustomActivities.Activities.QuestionScreen.Helpers
                         if (choices != null && questionScreenQuestion.Answers != null && questionScreenQuestion.Answers.Count == 1)
                         {
                             var singleAnswer = questionScreenQuestion.Answers.First();
-                            var singleChoice = choices.FirstOrDefault(x => x.Answer == singleAnswer.Answer);
+                            var singleChoice = choices.FirstOrDefault(x => x.Answer == singleAnswer.AnswerText);
 
                             if (singleChoice != null && choiceIdToCheck.Contains(singleChoice.Identifier))
                             {
@@ -87,7 +87,7 @@ namespace Elsa.CustomActivities.Activities.QuestionScreen.Helpers
                                 if (singleChoice != null)
                                 {
                                     var answerCheck = choices.Select(x => x.Identifier).Contains(item) &&
-                                                      singleChoice.Answer == singleAnswer.Answer;
+                                                      singleChoice.Answer == singleAnswer.AnswerText;
 
                                     if (answerCheck)
                                     {

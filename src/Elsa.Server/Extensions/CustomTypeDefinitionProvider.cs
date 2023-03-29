@@ -15,7 +15,7 @@ namespace Elsa.Server.Extensions
             typeof(LaHouseNeedData),
             typeof(PCSProfileData),
             typeof(VFMCalculationData),
-            typeof(QuestionScreenQuestion)
+            typeof(Question)
         };
     }
 }

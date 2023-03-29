@@ -49,7 +49,7 @@ namespace Elsa.Server.Tests.Services
             IActivityBlueprint nextActivity,
             WorkflowInstance workflowInstance,
             CustomActivityNavigation customActivityNavigation,
-            List<QuestionScreenQuestion> questionScreenAnswers,
+            List<Question> questionScreenAnswers,
             NextActivityNavigationService sut)
         {
             //Arrange
@@ -96,7 +96,7 @@ namespace Elsa.Server.Tests.Services
 
             //Assert
             elsaCustomRepository.Verify(
-                x => x.CreateQuestionScreenQuestionsAsync(It.IsAny<List<QuestionScreenQuestion>>(), CancellationToken.None), Times.Never);
+                x => x.CreateQuestionScreenQuestionsAsync(It.IsAny<List<Question>>(), CancellationToken.None), Times.Never);
         }
 
         [Theory]
@@ -122,7 +122,7 @@ namespace Elsa.Server.Tests.Services
             //Assert
             Assert.Equal(date, nextActivityRecord.LastModifiedDateTime);
             elsaCustomRepository.Verify(
-                x => x.CreateQuestionScreenQuestionsAsync(It.IsAny<List<QuestionScreenQuestion>>(), CancellationToken.None), Times.Never);
+                x => x.CreateQuestionScreenQuestionsAsync(It.IsAny<List<Question>>(), CancellationToken.None), Times.Never);
             elsaCustomRepository.Verify(
                 x => x.CreateCustomActivityNavigationAsync(customActivityNavigation, CancellationToken.None), Times.Never);
             elsaCustomRepository.Verify(

@@ -11,6 +11,7 @@ using Elsa.Server.Features.Workflow.LoadQuestionScreen;
 using He.PipelineAssessment.Tests.Common;
 using Moq;
 using Xunit;
+using Question = Elsa.CustomModels.Question;
 
 namespace Elsa.Server.Tests.Features.Workflow.LoadQuestionScreen;
 
@@ -156,7 +157,7 @@ public class LoadQuestionScreenRequestHandlerTests
         LoadQuestionScreenRequest loadWorkflowActivityRequest,
         WorkflowInstance workflowInstance,
         CustomActivityNavigation customActivityNavigation,
-        List<QuestionScreenQuestion> assessmentQuestions,
+        List<Question> assessmentQuestions,
         LoadQuestionScreenRequestHandler sut)
     {
         //Arrange
@@ -221,7 +222,7 @@ public class LoadQuestionScreenRequestHandlerTests
         LoadQuestionScreenRequest loadWorkflowActivityRequest,
         WorkflowInstance workflowInstance,
         CustomActivityNavigation customActivityNavigation,
-        List<QuestionScreenQuestion> assessmentQuestions,
+        List<Question> assessmentQuestions,
         AssessmentQuestions elsaAssessmentQuestions,
         LoadQuestionScreenRequestHandler sut)
     {
@@ -271,13 +272,13 @@ public class LoadQuestionScreenRequestHandlerTests
             LoadQuestionScreenRequest loadWorkflowActivityRequest,
             WorkflowInstance workflowInstance,
             CustomActivityNavigation customActivityNavigation,
-            List<QuestionScreenQuestion> assessmentQuestions,
+            List<Question> assessmentQuestions,
             AssessmentQuestions elsaAssessmentQuestions,
             LoadQuestionScreenRequestHandler sut)
     {
         //Arrange
         customActivityNavigation.ActivityType = ActivityTypeConstants.QuestionScreen;
-        assessmentQuestions[0].Answers = new List<QuestionAnswer> { new() { Answer = "Choice1" } };
+        assessmentQuestions[0].Answers = new List<Answer> { new() { AnswerText = "Choice1" } };
         for (var i = 0; i < assessmentQuestions.Count; i++)
         {
             var questionId = assessmentQuestions[i].QuestionId;
@@ -331,14 +332,14 @@ public class LoadQuestionScreenRequestHandlerTests
             LoadQuestionScreenRequest loadWorkflowActivityRequest,
             WorkflowInstance workflowInstance,
             CustomActivityNavigation customActivityNavigation,
-            List<QuestionScreenQuestion> assessmentQuestions,
+            List<Question> assessmentQuestions,
             AssessmentQuestions elsaAssessmentQuestions,
             LoadQuestionScreenRequestHandler sut)
     {
         //Arrange
         var myChoice = "Choice1";
         customActivityNavigation.ActivityType = ActivityTypeConstants.QuestionScreen;
-        assessmentQuestions[0].Answers = new List<QuestionAnswer> { new() { Answer = "Choice1" } };
+        assessmentQuestions[0].Answers = new List<Answer> { new() { AnswerText = "Choice1" } };
         for (var i = 0; i < assessmentQuestions.Count; i++)
         {
             var questionId = assessmentQuestions[i].QuestionId;
@@ -391,14 +392,14 @@ public class LoadQuestionScreenRequestHandlerTests
             LoadQuestionScreenRequest loadWorkflowActivityRequest,
             WorkflowInstance workflowInstance,
             CustomActivityNavigation customActivityNavigation,
-            List<QuestionScreenQuestion> assessmentQuestions,
+            List<Question> assessmentQuestions,
             AssessmentQuestions elsaAssessmentQuestions,
             LoadQuestionScreenRequestHandler sut)
     {
         //Arrange
         var myChoice = "Choice1";
         customActivityNavigation.ActivityType = ActivityTypeConstants.QuestionScreen;
-        assessmentQuestions[0].Answers = new List<QuestionAnswer> { new() { Answer = myChoice } };
+        assessmentQuestions[0].Answers = new List<Answer> { new() { AnswerText = myChoice } };
         for (var i = 0; i < assessmentQuestions.Count; i++)
         {
             var questionId = assessmentQuestions[i].QuestionId;
@@ -451,14 +452,14 @@ public class LoadQuestionScreenRequestHandlerTests
             LoadQuestionScreenRequest loadWorkflowActivityRequest,
             WorkflowInstance workflowInstance,
             CustomActivityNavigation customActivityNavigation,
-            List<QuestionScreenQuestion> assessmentQuestions,
+            List<Question> assessmentQuestions,
             AssessmentQuestions elsaAssessmentQuestions,
             LoadQuestionScreenRequestHandler sut)
     {
         //Arrange
         var myChoice = "Choice1";
         customActivityNavigation.ActivityType = ActivityTypeConstants.QuestionScreen;
-        assessmentQuestions[0].Answers = new List<QuestionAnswer> { new() { Answer = "" } };
+        assessmentQuestions[0].Answers = new List<Answer> { new() { AnswerText = "" } };
         for (var i = 0; i < assessmentQuestions.Count; i++)
         {
             var questionId = assessmentQuestions[i].QuestionId;
@@ -509,14 +510,14 @@ public class LoadQuestionScreenRequestHandlerTests
             LoadQuestionScreenRequest loadWorkflowActivityRequest,
             WorkflowInstance workflowInstance,
             CustomActivityNavigation customActivityNavigation,
-            List<QuestionScreenQuestion> assessmentQuestions,
+            List<Question> assessmentQuestions,
             AssessmentQuestions elsaAssessmentQuestions,
             LoadQuestionScreenRequestHandler sut)
     {
         //Arrange
         var myChoice = "Choice1";
         customActivityNavigation.ActivityType = ActivityTypeConstants.QuestionScreen;
-        assessmentQuestions[0].Answers = new List<QuestionAnswer> { new() { Answer = "" } };
+        assessmentQuestions[0].Answers = new List<Answer> { new() { AnswerText = "" } };
         for (var i = 0; i < assessmentQuestions.Count; i++)
         {
             var questionId = assessmentQuestions[i].QuestionId;
@@ -567,13 +568,13 @@ public class LoadQuestionScreenRequestHandlerTests
             LoadQuestionScreenRequest loadWorkflowActivityRequest,
             WorkflowInstance workflowInstance,
             CustomActivityNavigation customActivityNavigation,
-            List<QuestionScreenQuestion> assessmentQuestions,
+            List<Question> assessmentQuestions,
             AssessmentQuestions elsaAssessmentQuestions,
             LoadQuestionScreenRequestHandler sut)
     {
         //Arrange
         customActivityNavigation.ActivityType = ActivityTypeConstants.QuestionScreen;
-        assessmentQuestions[0].Answers = new List<QuestionAnswer> { new() { Answer = "" } };
+        assessmentQuestions[0].Answers = new List<Answer> { new() { AnswerText = "" } };
         for (var i = 0; i < assessmentQuestions.Count; i++)
         {
             var questionId = assessmentQuestions[i].QuestionId;
@@ -625,7 +626,7 @@ public class LoadQuestionScreenRequestHandlerTests
             LoadQuestionScreenRequest loadWorkflowActivityRequest,
             WorkflowInstance workflowInstance,
             CustomActivityNavigation customActivityNavigation,
-            List<QuestionScreenQuestion> assessmentQuestions,
+            List<Question> assessmentQuestions,
             AssessmentQuestions elsaAssessmentQuestions,
             TextModel textModel,
             LoadQuestionScreenRequestHandler sut)
@@ -683,7 +684,7 @@ public class LoadQuestionScreenRequestHandlerTests
             LoadQuestionScreenRequest loadWorkflowActivityRequest,
             WorkflowInstance workflowInstance,
             CustomActivityNavigation customActivityNavigation,
-            List<QuestionScreenQuestion> assessmentQuestions,
+            List<Question> assessmentQuestions,
             AssessmentQuestions elsaAssessmentQuestions,
             LoadQuestionScreenRequestHandler sut)
     {
@@ -737,13 +738,13 @@ public class LoadQuestionScreenRequestHandlerTests
             LoadQuestionScreenRequest loadWorkflowActivityRequest,
             WorkflowInstance workflowInstance,
             CustomActivityNavigation customActivityNavigation,
-            List<QuestionScreenQuestion> assessmentQuestions,
+            List<Question> assessmentQuestions,
             AssessmentQuestions elsaAssessmentQuestions,
             LoadQuestionScreenRequestHandler sut)
     {
         //Arrange
         customActivityNavigation.ActivityType = ActivityTypeConstants.QuestionScreen;
-        assessmentQuestions[0].Answers = new List<QuestionAnswer> { new() { Answer = "DatabaseAnswer" } };
+        assessmentQuestions[0].Answers = new List<Answer> { new() { AnswerText = "DatabaseAnswer" } };
         for (var i = 0; i < assessmentQuestions.Count; i++)
         {
             var questionId = assessmentQuestions[i].QuestionId;
