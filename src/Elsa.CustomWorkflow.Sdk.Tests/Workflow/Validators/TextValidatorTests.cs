@@ -1,5 +1,5 @@
-﻿using Elsa.CustomWorkflow.Sdk.Models.Workflow.Validators;
-using Elsa.CustomWorkflow.Sdk.Models.Workflow;
+﻿using Elsa.CustomWorkflow.Sdk.Models.Workflow;
+using Elsa.CustomWorkflow.Sdk.Models.Workflow.Validators;
 using FluentValidation.TestHelper;
 using Xunit;
 
@@ -14,7 +14,7 @@ namespace Elsa.CustomWorkflow.Sdk.Tests.Workflow.Validators
             TextValidator validator = new TextValidator();
             var questionActivityData = new QuestionActivityData
             {
-                Answer = null
+                Answers = null
             };
 
             //Act
@@ -22,7 +22,7 @@ namespace Elsa.CustomWorkflow.Sdk.Tests.Workflow.Validators
 
             //Assert
             result.ShouldNotHaveValidationErrorFor(c => c);
-            result.ShouldHaveValidationErrorFor(c => c.Answer).WithErrorMessage("The question has not been answered");
+            result.ShouldHaveValidationErrorFor(c => c.Answers).WithErrorMessage("The question has not been answered");
         }
 
         [Fact]
@@ -32,7 +32,7 @@ namespace Elsa.CustomWorkflow.Sdk.Tests.Workflow.Validators
             TextValidator validator = new TextValidator();
             var questionActivityData = new QuestionActivityData
             {
-                Answer = string.Empty
+                Answers = new List<QuestionActivityAnswer>()
             };
 
             //Act
@@ -40,7 +40,7 @@ namespace Elsa.CustomWorkflow.Sdk.Tests.Workflow.Validators
 
             //Assert
             result.ShouldNotHaveValidationErrorFor(c => c);
-            result.ShouldHaveValidationErrorFor(c => c.Answer).WithErrorMessage("The question has not been answered");
+            result.ShouldHaveValidationErrorFor(c => c.Answers).WithErrorMessage("The question has not been answered");
         }
 
         [Fact]
@@ -50,7 +50,8 @@ namespace Elsa.CustomWorkflow.Sdk.Tests.Workflow.Validators
             TextValidator validator = new TextValidator();
             var questionActivityData = new QuestionActivityData
             {
-                Answer = "MyAnswer"
+                Answers = new List<QuestionActivityAnswer> { new QuestionActivityAnswer { Answer = "MyAnswer" } }
+
             };
 
             //Act
@@ -58,7 +59,7 @@ namespace Elsa.CustomWorkflow.Sdk.Tests.Workflow.Validators
 
             //Assert
             result.ShouldNotHaveValidationErrorFor(c => c);
-            result.ShouldNotHaveValidationErrorFor(c => c.Answer);
+            result.ShouldNotHaveValidationErrorFor(c => c.Answers);
         }
     }
 }

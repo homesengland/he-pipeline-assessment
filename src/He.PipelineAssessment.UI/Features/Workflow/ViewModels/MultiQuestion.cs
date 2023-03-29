@@ -14,7 +14,7 @@ namespace He.PipelineAssessment.UI.Features.Workflow.ViewModels
         public string? QuestionGuidance { get; set; }
         public bool DisplayComments { get; set; }
         public string? Comments { get; set; }
-        public string? Answer { get; set; }
+        public List<QuestionActivityAnswer> Answers { get; set; } = new();
         public bool IsReadOnly { get; set; }
         public Date? Date { get; set; }
         public decimal? Decimal { get; set; }
@@ -65,5 +65,12 @@ namespace He.PipelineAssessment.UI.Features.Workflow.ViewModels
         public int? Month { get; set; }
         [Range(1, 3000)]
         public int? Year { get; set; }
+    }
+
+    public class QuestionActivityAnswer
+    {
+        public int? Id { get; set; }
+        public string? Answer { get; set; }
+        public string? Score { get; set; }
     }
 }

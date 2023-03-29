@@ -6,11 +6,11 @@ namespace Elsa.CustomWorkflow.Sdk.Models.Workflow.Validators
     {
         public TextValidator()
         {
-            RuleFor(x => x.Answer).NotNull().WithMessage("The question has not been answered")
+            RuleFor(x => x.Answers).NotNull().WithMessage("The question has not been answered")
                 .DependentRules(
                     () =>
                     {
-                        RuleFor(x => x.Answer).NotEmpty().WithMessage("The question has not been answered");
+                        RuleForEach(x => x.Answers.Select(y => y.Answer)).NotEmpty().WithMessage("The question has not been answered");
                     }
                 );
         }

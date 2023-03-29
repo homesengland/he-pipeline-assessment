@@ -161,7 +161,7 @@ namespace Elsa.CustomWorkflow.Sdk.Tests.Workflow.Validators
             QuestionActivityData activityData = new QuestionActivityData
             {
                 QuestionType = questionType,
-                Answer = string.Empty
+                Answers = new List<QuestionActivityAnswer>()
             };
 
             MultiQuestionActivityDataValidator validator = new MultiQuestionActivityDataValidator();
@@ -170,7 +170,7 @@ namespace Elsa.CustomWorkflow.Sdk.Tests.Workflow.Validators
             var expectedValidationResult = validator.TestValidate(activityData);
 
             //Assert
-            expectedValidationResult.ShouldNotHaveValidationErrorFor(x => x.Answer);
+            expectedValidationResult.ShouldNotHaveValidationErrorFor(x => x.Answers);
         }
 
         [Theory]
@@ -183,7 +183,7 @@ namespace Elsa.CustomWorkflow.Sdk.Tests.Workflow.Validators
             QuestionActivityData activityData = new QuestionActivityData
             {
                 QuestionType = questionType,
-                Answer = string.Empty
+                Answers = new List<QuestionActivityAnswer>()
             };
 
             MultiQuestionActivityDataValidator validator = new MultiQuestionActivityDataValidator();
@@ -192,7 +192,7 @@ namespace Elsa.CustomWorkflow.Sdk.Tests.Workflow.Validators
             var expectedValidationResult = validator.TestValidate(activityData);
 
             //Assert
-            expectedValidationResult.ShouldHaveValidationErrorFor(x => x.Answer);
+            expectedValidationResult.ShouldHaveValidationErrorFor(x => x.Answers);
         }
 
         [Theory]

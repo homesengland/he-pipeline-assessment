@@ -30,7 +30,7 @@
                     @Html.HiddenFor(m => m.Data.QuestionScreenAnswers![i].DisplayComments)
                     if (Model.Data.QuestionScreenAnswers![i].IsReadOnly)
                     {
-                        @Html.HiddenFor(m => m.Data.QuestionScreenAnswers![i].Answer)
+                        @Html.HiddenFor(m => m.Data.QuestionScreenAnswers![i].Answers)
                     }
                     @Html.HiddenFor(m => m.Data.QuestionScreenAnswers![i].IsReadOnly)
 
@@ -49,7 +49,12 @@
                         {
                             Index = i,
                             IsValid = isValidItem,
-                            Answer = Model.Data.QuestionScreenAnswers[i].Answer,
+                            Answers = Model.Data.QuestionScreenAnswers[i].Answers.Select(x => new QuestionActivityAnswer
+                            {
+                                Answer = x.Answer,
+                                Id = x.Id,
+                                Score = x.Score
+                            }).ToList(),
                             IsReadOnly = Model.Data.QuestionScreenAnswers[i].IsReadOnly,
                             Comments = Model.Data.QuestionScreenAnswers[i].Comments,
                             DisplayComments = Model.Data.QuestionScreenAnswers[i].DisplayComments,
@@ -68,8 +73,13 @@
                     {
                         Index = i,
                         IsValid = isValidItem,
-                        Answer = Model.Data.QuestionScreenAnswers[i].Answer,
-            IsReadOnly = Model.Data.QuestionScreenAnswers[i].IsReadOnly,
+                        Answers = Model.Data.QuestionScreenAnswers[i].Answers.Select(x => new QuestionActivityAnswer
+                        {
+                            Answer = x.Answer,
+                            Id = x.Id,
+                            Score = x.Score
+                        }).ToList(),
+                        IsReadOnly = Model.Data.QuestionScreenAnswers[i].IsReadOnly,
                         Comments = Model.Data.QuestionScreenAnswers[i].Comments,
                         DisplayComments = Model.Data.QuestionScreenAnswers[i].DisplayComments,
                         Question = Model.Data.QuestionScreenAnswers[i].Question,
@@ -92,8 +102,13 @@
                         {
                             Index = i,
                             IsValid = isValidItem,
-                            Answer = Model.Data.QuestionScreenAnswers[i].Answer,
-            IsReadOnly = Model.Data.QuestionScreenAnswers[i].IsReadOnly,
+                            Answers = Model.Data.QuestionScreenAnswers[i].Answers.Select(x => new QuestionActivityAnswer
+                            {
+                                Answer = x.Answer,
+                                Id = x.Id,
+                                Score = x.Score
+                            }).ToList(),
+                            IsReadOnly = Model.Data.QuestionScreenAnswers[i].IsReadOnly,
                             Comments = Model.Data.QuestionScreenAnswers[i].Comments,
                             DisplayComments = Model.Data.QuestionScreenAnswers[i].DisplayComments,
                             Question = Model.Data.QuestionScreenAnswers[i].Question,
@@ -111,8 +126,13 @@
                         {
                             Index = i,
                             IsValid = isValidItem,
-                            Answer = Model.Data.QuestionScreenAnswers[i].Answer,
-            IsReadOnly = Model.Data.QuestionScreenAnswers[i].IsReadOnly,
+                            Answers = Model.Data.QuestionScreenAnswers[i].Answers.Select(x => new QuestionActivityAnswer
+                            {
+                                Answer = x.Answer,
+                                Id = x.Id,
+                                Score = x.Score
+                            }).ToList(),
+                            IsReadOnly = Model.Data.QuestionScreenAnswers[i].IsReadOnly,
                             Comments = Model.Data.QuestionScreenAnswers[i].Comments,
                             DisplayComments = Model.Data.QuestionScreenAnswers[i].DisplayComments,
                             Question = Model.Data.QuestionScreenAnswers[i].Question,
@@ -131,8 +151,13 @@
                         {
                             Index = i,
                             IsValid = isValidItem,
-                            Answer = Model.Data.QuestionScreenAnswers[i].Answer,
-            IsReadOnly = Model.Data.QuestionScreenAnswers[i].IsReadOnly,
+                            Answers = Model.Data.QuestionScreenAnswers[i].Answers.Select(x => new QuestionActivityAnswer
+                            {
+                                Answer = x.Answer,
+                                Id = x.Id,
+                                Score = x.Score
+                            }).ToList(),
+                            IsReadOnly = Model.Data.QuestionScreenAnswers[i].IsReadOnly,
                             Comments = Model.Data.QuestionScreenAnswers[i].Comments,
                             DisplayComments = Model.Data.QuestionScreenAnswers[i].DisplayComments,
                             Question = Model.Data.QuestionScreenAnswers[i].Question,
@@ -155,8 +180,13 @@
                         {
                             Index = i,
                             IsValid = isValidItem,
-                            Answer = Model.Data.QuestionScreenAnswers[i].Answer,
-            IsReadOnly = Model.Data.QuestionScreenAnswers[i].IsReadOnly,
+                            Answers = Model.Data.QuestionScreenAnswers[i].Answers.Select(x => new QuestionActivityAnswer
+                            {
+                                Answer = x.Answer,
+                                Id = x.Id,
+                                Score = x.Score
+                            }).ToList(),
+                            IsReadOnly = Model.Data.QuestionScreenAnswers[i].IsReadOnly,
                             Comments = Model.Data.QuestionScreenAnswers[i].Comments,
                             DisplayComments = Model.Data.QuestionScreenAnswers[i].DisplayComments,
                             Question = Model.Data.QuestionScreenAnswers[i].Question,
@@ -181,7 +211,12 @@
                         {
                             Index = i,
                             IsValid = isValidItem,
-                            Answer = Model.Data.QuestionScreenAnswers[i].Answer,
+                            Answers = Model.Data.QuestionScreenAnswers[i].Answers.Select(x => new QuestionActivityAnswer
+                            {
+                                Answer = x.Answer,
+                                Id = x.Id,
+                                Score = x.Score
+                            }).ToList(),
                             IsReadOnly = Model.Data.QuestionScreenAnswers[i].IsReadOnly,
                             Comments = Model.Data.QuestionScreenAnswers[i].Comments,
                             DisplayComments = Model.Data.QuestionScreenAnswers[i].DisplayComments,
