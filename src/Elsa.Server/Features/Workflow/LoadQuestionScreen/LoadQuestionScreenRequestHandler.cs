@@ -143,7 +143,7 @@ namespace Elsa.Server.Features.Workflow.LoadQuestionScreen
             {
                 questionActivityData.Checkbox = new Checkbox();
                 questionActivityData.Checkbox.Choices =
-                    item.Checkbox.Choices.Select(x => new QuestionScreenChoice()
+                    item.Checkbox.Choices.Select(x => new QuestionChoice()
                     { Answer = x.Answer, IsSingle = x.IsSingle }).ToArray();
             }
 
@@ -168,7 +168,7 @@ namespace Elsa.Server.Features.Workflow.LoadQuestionScreen
             {
                 questionActivityData.Radio = new Radio();
                 questionActivityData.Radio.Choices = item.Radio.Choices
-                    .Select(x => new QuestionScreenChoice() { Answer = x.Answer })
+                    .Select(x => new QuestionChoice() { Answer = x.Answer })
                     .ToArray();
             }
 
@@ -176,7 +176,7 @@ namespace Elsa.Server.Features.Workflow.LoadQuestionScreen
             {
                 questionActivityData.Radio = new Radio();
                 questionActivityData.Radio.Choices = item.PotScoreRadio.Choices
-                    .Select(x => new QuestionScreenChoice() { Answer = x.Answer })
+                    .Select(x => new QuestionChoice() { Answer = x.Answer })
                     .ToArray();
             }
 

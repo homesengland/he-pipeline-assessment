@@ -5,9 +5,9 @@ using Microsoft.EntityFrameworkCore.Metadata.Builders;
 namespace Elsa.CustomInfrastructure.Config
 {
 
-    public class QuestionScreenChoiceConfig : IEntityTypeConfiguration<QuestionScreenChoice>
+    public class QuestionScreenChoiceConfig : IEntityTypeConfiguration<QuestionChoice>
     {
-        public void Configure(EntityTypeBuilder<QuestionScreenChoice> builder)
+        public void Configure(EntityTypeBuilder<QuestionChoice> builder)
         {
             builder.ToTable(x => x.IsTemporal());
             builder.HasKey(x => x.Id);

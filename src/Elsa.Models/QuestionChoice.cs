@@ -1,6 +1,6 @@
 ﻿namespace Elsa.CustomModels
 {
-    public class QuestionScreenChoice : AuditableEntity
+    public class QuestionChoice : AuditableEntity
     {
 
         public int Id { get; set; }

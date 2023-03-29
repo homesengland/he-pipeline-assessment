@@ -123,7 +123,7 @@ namespace Elsa.CustomActivities.Tests.Activities.QuestionScreen.Helpers
                 Name = activityName
             });
             questionScreenAnswer.QuestionType = QuestionTypeConstants.DateQuestion;
-            questionScreenAnswer.Answers = new List<QuestionScreenAnswer> { new() { Answer = $"{answerYear}-{answerMonth}-{answerDay}" } };
+            questionScreenAnswer.Answers = new List<QuestionAnswer> { new() { Answer = $"{answerYear}-{answerMonth}-{answerDay}" } };
 
             elsaCustomRepository.Setup(x => x.GetQuestionScreenQuestion(activityId, workflowInstanceId, questionId, CancellationToken.None)).ReturnsAsync(questionScreenAnswer);
 
@@ -245,7 +245,7 @@ namespace Elsa.CustomActivities.Tests.Activities.QuestionScreen.Helpers
                 Name = activityName
             });
             questionScreenAnswer.QuestionType = QuestionTypeConstants.DateQuestion;
-            questionScreenAnswer.Answers = new List<QuestionScreenAnswer> { new() { Answer = $"{answerYear}-{answerMonth}-{answerDay}" } };
+            questionScreenAnswer.Answers = new List<QuestionAnswer> { new() { Answer = $"{answerYear}-{answerMonth}-{answerDay}" } };
 
             elsaCustomRepository.Setup(x => x.GetQuestionScreenQuestion(activityId, workflowInstanceId, questionId, CancellationToken.None)).ReturnsAsync(questionScreenAnswer);
 

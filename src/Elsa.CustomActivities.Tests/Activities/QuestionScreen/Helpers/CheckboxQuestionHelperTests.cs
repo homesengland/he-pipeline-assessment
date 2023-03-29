@@ -138,7 +138,7 @@ namespace Elsa.CustomActivities.Tests.Activities.QuestionScreen.Helpers
         [InlineAutoMoqData(new string[] { "Answer 1" }, new string[] { "B", "C" }, false)]
         [InlineAutoMoqData(new string[] { "Answer 1", "Answer 2" }, new string[] { "A" }, false)]
         public async Task AnswerEquals_ReturnsExpectedValue(
-            List<QuestionScreenAnswer> answers,
+            List<QuestionAnswer> answers,
             string[] choiceIdsToCheck,
             bool expectedResult,
             [Frozen] Mock<IElsaCustomRepository> elsaCustomRepository,
@@ -161,19 +161,19 @@ namespace Elsa.CustomActivities.Tests.Activities.QuestionScreen.Helpers
 
             questionScreenQuestion.QuestionType = QuestionTypeConstants.CheckboxQuestion;
             questionScreenQuestion.Answers = answers;
-            questionScreenQuestion.Choices = new List<QuestionScreenChoice>()
+            questionScreenQuestion.Choices = new List<QuestionChoice>()
             {
-                new QuestionScreenChoice()
+                new QuestionChoice()
                 {
                     Answer = "Answer 1",
                     Identifier = "A"
                 },
-                new QuestionScreenChoice()
+                new QuestionChoice()
                 {
                     Answer = "Answer 2",
                     Identifier = "B"
                 },
-                new QuestionScreenChoice()
+                new QuestionChoice()
                 {
                     Answer = "Answer 3",
                     Identifier = "C"
@@ -317,7 +317,7 @@ namespace Elsa.CustomActivities.Tests.Activities.QuestionScreen.Helpers
         [InlineAutoMoqData(new string[] { "Answer 1" }, new string[] { "B", "C" }, false)]
 
         public async Task AnswerContains_ReturnsExpectedValue(
-            List<QuestionScreenAnswer> answers,
+            List<QuestionAnswer> answers,
             string[] choiceIdsToCheck,
             bool expectedResult,
             [Frozen] Mock<IElsaCustomRepository> elsaCustomRepository,
@@ -340,19 +340,19 @@ namespace Elsa.CustomActivities.Tests.Activities.QuestionScreen.Helpers
 
             questionScreenQuestion.QuestionType = QuestionTypeConstants.CheckboxQuestion;
             questionScreenQuestion.Answers = answers;
-            questionScreenQuestion.Choices = new List<QuestionScreenChoice>()
+            questionScreenQuestion.Choices = new List<QuestionChoice>()
             {
-                new QuestionScreenChoice()
+                new QuestionChoice()
                 {
                     Answer = "Answer 1",
                     Identifier = "A"
                 },
-                new QuestionScreenChoice()
+                new QuestionChoice()
                 {
                     Answer = "Answer 2",
                     Identifier = "B"
                 },
-                new QuestionScreenChoice()
+                new QuestionChoice()
                 {
                     Answer = "Answer 3",
                     Identifier = "C"
@@ -452,7 +452,7 @@ namespace Elsa.CustomActivities.Tests.Activities.QuestionScreen.Helpers
         [Theory]
         [AutoMoqData]
         public async Task GetAnswer_ReturnsExpectedValue(
-        List<QuestionScreenAnswer> answers,
+        List<QuestionAnswer> answers,
         [Frozen] Mock<IElsaCustomRepository> elsaCustomRepository,
         [Frozen] Mock<IWorkflowRegistry> workflowRegistry,
         string workflowName,

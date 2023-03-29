@@ -277,7 +277,7 @@ public class LoadQuestionScreenRequestHandlerTests
     {
         //Arrange
         customActivityNavigation.ActivityType = ActivityTypeConstants.QuestionScreen;
-        assessmentQuestions[0].Answers = new List<QuestionScreenAnswer> { new() { Answer = "Choice1" } };
+        assessmentQuestions[0].Answers = new List<QuestionAnswer> { new() { Answer = "Choice1" } };
         for (var i = 0; i < assessmentQuestions.Count; i++)
         {
             var questionId = assessmentQuestions[i].QuestionId;
@@ -338,7 +338,7 @@ public class LoadQuestionScreenRequestHandlerTests
         //Arrange
         var myChoice = "Choice1";
         customActivityNavigation.ActivityType = ActivityTypeConstants.QuestionScreen;
-        assessmentQuestions[0].Answers = new List<QuestionScreenAnswer> { new() { Answer = "Choice1" } };
+        assessmentQuestions[0].Answers = new List<QuestionAnswer> { new() { Answer = "Choice1" } };
         for (var i = 0; i < assessmentQuestions.Count; i++)
         {
             var questionId = assessmentQuestions[i].QuestionId;
@@ -398,7 +398,7 @@ public class LoadQuestionScreenRequestHandlerTests
         //Arrange
         var myChoice = "Choice1";
         customActivityNavigation.ActivityType = ActivityTypeConstants.QuestionScreen;
-        assessmentQuestions[0].Answers = new List<QuestionScreenAnswer> { new() { Answer = myChoice } };
+        assessmentQuestions[0].Answers = new List<QuestionAnswer> { new() { Answer = myChoice } };
         for (var i = 0; i < assessmentQuestions.Count; i++)
         {
             var questionId = assessmentQuestions[i].QuestionId;
@@ -458,7 +458,7 @@ public class LoadQuestionScreenRequestHandlerTests
         //Arrange
         var myChoice = "Choice1";
         customActivityNavigation.ActivityType = ActivityTypeConstants.QuestionScreen;
-        assessmentQuestions[0].Answers = new List<QuestionScreenAnswer> { new() { Answer = "" } };
+        assessmentQuestions[0].Answers = new List<QuestionAnswer> { new() { Answer = "" } };
         for (var i = 0; i < assessmentQuestions.Count; i++)
         {
             var questionId = assessmentQuestions[i].QuestionId;
@@ -516,7 +516,7 @@ public class LoadQuestionScreenRequestHandlerTests
         //Arrange
         var myChoice = "Choice1";
         customActivityNavigation.ActivityType = ActivityTypeConstants.QuestionScreen;
-        assessmentQuestions[0].Answers = new List<QuestionScreenAnswer> { new() { Answer = "" } };
+        assessmentQuestions[0].Answers = new List<QuestionAnswer> { new() { Answer = "" } };
         for (var i = 0; i < assessmentQuestions.Count; i++)
         {
             var questionId = assessmentQuestions[i].QuestionId;
@@ -573,7 +573,7 @@ public class LoadQuestionScreenRequestHandlerTests
     {
         //Arrange
         customActivityNavigation.ActivityType = ActivityTypeConstants.QuestionScreen;
-        assessmentQuestions[0].Answers = new List<QuestionScreenAnswer> { new() { Answer = "" } };
+        assessmentQuestions[0].Answers = new List<QuestionAnswer> { new() { Answer = "" } };
         for (var i = 0; i < assessmentQuestions.Count; i++)
         {
             var questionId = assessmentQuestions[i].QuestionId;
@@ -743,7 +743,7 @@ public class LoadQuestionScreenRequestHandlerTests
     {
         //Arrange
         customActivityNavigation.ActivityType = ActivityTypeConstants.QuestionScreen;
-        assessmentQuestions[0].Answers = new List<QuestionScreenAnswer> { new() { Answer = "DatabaseAnswer" } };
+        assessmentQuestions[0].Answers = new List<QuestionAnswer> { new() { Answer = "DatabaseAnswer" } };
         for (var i = 0; i < assessmentQuestions.Count; i++)
         {
             var questionId = assessmentQuestions[i].QuestionId;

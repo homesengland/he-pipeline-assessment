@@ -12,7 +12,7 @@
         public double? Weighting { get; set; }
         public string? Comments { get; set; }
 
-        public virtual List<QuestionScreenChoice>? Choices { get; set; }
-        public virtual List<QuestionScreenAnswer>? Answers { get; set; }
+        public virtual List<QuestionChoice>? Choices { get; set; }
+        public virtual List<QuestionAnswer>? Answers { get; set; }
     }
 }

@@ -53,18 +53,18 @@ namespace Elsa.Server.Helpers
             };
         }
 
-        private List<QuestionScreenChoice>? MapChoices(Question question)
+        private List<QuestionChoice>? MapChoices(Question question)
         {
             var choices = question.QuestionType switch
             {
                 QuestionTypeConstants.CheckboxQuestion => question.Checkbox.Choices
-                    .Select(x => new QuestionScreenChoice() { Identifier = x.Identifier, Answer = x.Answer, IsSingle = x.IsSingle, IsPrePopulated = x.IsPrePopulated })
+                    .Select(x => new QuestionChoice() { Identifier = x.Identifier, Answer = x.Answer, IsSingle = x.IsSingle, IsPrePopulated = x.IsPrePopulated })
                     .ToList(),
                 QuestionTypeConstants.RadioQuestion => question.Radio.Choices
-                    .Select(x => new QuestionScreenChoice() { Identifier = x.Identifier, Answer = x.Answer, IsSingle = false, IsPrePopulated = x.IsPrePopulated })
+                    .Select(x => new QuestionChoice() { Identifier = x.Identifier, Answer = x.Answer, IsSingle = false, IsPrePopulated = x.IsPrePopulated })
                     .ToList(),
                 QuestionTypeConstants.PotScoreRadioQuestion => question.PotScoreRadio.Choices
-                    .Select(x => new QuestionScreenChoice() { Identifier = x.Identifier, Answer = x.Answer, IsSingle = false, IsPrePopulated = x.IsPrePopulated, PotScoreCategory = x.PotScore })
+                    .Select(x => new QuestionChoice() { Identifier = x.Identifier, Answer = x.Answer, IsSingle = false, IsPrePopulated = x.IsPrePopulated, PotScoreCategory = x.PotScore })
                     .ToList(),
                 _ => null
             };

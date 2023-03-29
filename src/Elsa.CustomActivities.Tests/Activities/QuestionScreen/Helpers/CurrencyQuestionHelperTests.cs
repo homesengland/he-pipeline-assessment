@@ -120,7 +120,7 @@ namespace Elsa.CustomActivities.Tests.Activities.QuestionScreen.Helpers
                 Name = activityName
             });
             questionScreenAnswer.QuestionType = QuestionTypeConstants.CurrencyQuestion;
-            questionScreenAnswer.Answers = new List<QuestionScreenAnswer> { new() { Answer = answer.ToString(CultureInfo.InvariantCulture) } };
+            questionScreenAnswer.Answers = new List<QuestionAnswer> { new() { Answer = answer.ToString(CultureInfo.InvariantCulture) } };
 
             elsaCustomRepository.Setup(x => x.GetQuestionScreenQuestion(activityId, workflowInstanceId, questionId, CancellationToken.None)).ReturnsAsync(questionScreenAnswer);
 
@@ -238,7 +238,7 @@ namespace Elsa.CustomActivities.Tests.Activities.QuestionScreen.Helpers
                 Name = activityName
             });
             questionScreenAnswer.QuestionType = QuestionTypeConstants.CurrencyQuestion;
-            questionScreenAnswer.Answers = new List<QuestionScreenAnswer> { new() { Answer = answer.ToString(CultureInfo.InvariantCulture) } };
+            questionScreenAnswer.Answers = new List<QuestionAnswer> { new() { Answer = answer.ToString(CultureInfo.InvariantCulture) } };
 
             elsaCustomRepository.Setup(x => x.GetQuestionScreenQuestion(activityId, workflowInstanceId, questionId, CancellationToken.None)).ReturnsAsync(questionScreenAnswer);
 

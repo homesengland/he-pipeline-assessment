@@ -153,20 +153,20 @@ namespace Elsa.CustomActivities.Tests.Activities.QuestionScreen.Helpers
                 Name = activityName
             });
             questionScreenAnswer.QuestionType = QuestionTypeConstants.RadioQuestion;
-            questionScreenAnswer.Answers = new List<QuestionScreenAnswer> { new() { Answer = answer } };
-            questionScreenAnswer.Choices = new List<QuestionScreenChoice>()
+            questionScreenAnswer.Answers = new List<QuestionAnswer> { new() { Answer = answer } };
+            questionScreenAnswer.Choices = new List<QuestionChoice>()
             {
-                new QuestionScreenChoice()
+                new QuestionChoice()
                 {
                     Answer = "Answer 1",
                     Identifier = "A"
                 },
-                new QuestionScreenChoice()
+                new QuestionChoice()
                 {
                     Answer = "Answer 2",
                     Identifier = "B"
                 },
-                new QuestionScreenChoice()
+                new QuestionChoice()
                 {
                     Answer = "Answer 3",
                     Identifier = "C"
@@ -330,20 +330,20 @@ namespace Elsa.CustomActivities.Tests.Activities.QuestionScreen.Helpers
                 Name = activityName
             });
             questionScreenAnswer.QuestionType = QuestionTypeConstants.RadioQuestion;
-            questionScreenAnswer.Answers = new List<QuestionScreenAnswer> { new() { Answer = answer } };
-            questionScreenAnswer.Choices = new List<QuestionScreenChoice>()
+            questionScreenAnswer.Answers = new List<QuestionAnswer> { new() { Answer = answer } };
+            questionScreenAnswer.Choices = new List<QuestionChoice>()
             {
-                new QuestionScreenChoice()
+                new QuestionChoice()
                 {
                     Answer = "Answer 1",
                     Identifier = "A"
                 },
-                new QuestionScreenChoice()
+                new QuestionChoice()
                 {
                     Answer = "Answer 2",
                     Identifier = "B"
                 },
-                new QuestionScreenChoice()
+                new QuestionChoice()
                 {
                     Answer = "Answer 3",
                     Identifier = "C"

@@ -119,7 +119,7 @@ namespace Elsa.CustomActivities.Tests.Activities.QuestionScreen.Helpers
                 Name = activityName
             });
             questionScreenAnswer.QuestionType = QuestionTypeConstants.TextQuestion;
-            questionScreenAnswer.Answers = new List<QuestionScreenAnswer> { new() { Answer = answer } };
+            questionScreenAnswer.Answers = new List<QuestionAnswer> { new() { Answer = answer } };
 
             elsaCustomRepository.Setup(x => x.GetQuestionScreenQuestion(activityId, workflowInstanceId, questionId, CancellationToken.None)).ReturnsAsync(questionScreenAnswer);
 
@@ -158,7 +158,7 @@ namespace Elsa.CustomActivities.Tests.Activities.QuestionScreen.Helpers
                 Name = activityName
             });
             questionScreenAnswer.QuestionType = QuestionTypeConstants.TextAreaQuestion;
-            questionScreenAnswer.Answers = new List<QuestionScreenAnswer> { new() { Answer = answer } };
+            questionScreenAnswer.Answers = new List<QuestionAnswer> { new() { Answer = answer } };
 
             elsaCustomRepository.Setup(x => x.GetQuestionScreenQuestion(activityId, workflowInstanceId, questionId, CancellationToken.None)).ReturnsAsync(questionScreenAnswer);
 
@@ -277,7 +277,7 @@ namespace Elsa.CustomActivities.Tests.Activities.QuestionScreen.Helpers
                 Name = activityName
             });
             questionScreenAnswer.QuestionType = QuestionTypeConstants.TextQuestion;
-            questionScreenAnswer.Answers = new List<QuestionScreenAnswer> { new() { Answer = answer } };
+            questionScreenAnswer.Answers = new List<QuestionAnswer> { new() { Answer = answer } };
 
             elsaCustomRepository.Setup(x => x.GetQuestionScreenQuestion(activityId, workflowInstanceId, questionId, CancellationToken.None)).ReturnsAsync(questionScreenAnswer);
 
@@ -315,7 +315,7 @@ namespace Elsa.CustomActivities.Tests.Activities.QuestionScreen.Helpers
                 Name = activityName
             });
             questionScreenAnswer.QuestionType = QuestionTypeConstants.TextAreaQuestion;
-            questionScreenAnswer.Answers = new List<QuestionScreenAnswer> { new() { Answer = answer } };
+            questionScreenAnswer.Answers = new List<QuestionAnswer> { new() { Answer = answer } };
 
             elsaCustomRepository.Setup(x => x.GetQuestionScreenQuestion(activityId, workflowInstanceId, questionId, CancellationToken.None)).ReturnsAsync(questionScreenAnswer);
 

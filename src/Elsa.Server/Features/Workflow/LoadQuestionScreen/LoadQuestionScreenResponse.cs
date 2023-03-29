@@ -41,14 +41,14 @@ namespace Elsa.Server.Features.Workflow.LoadQuestionScreen
 
     public class Checkbox
     {
-        public QuestionScreenChoice[] Choices { get; set; } = new List<QuestionScreenChoice>().ToArray();
+        public QuestionChoice[] Choices { get; set; } = new List<QuestionChoice>().ToArray();
 
         public List<string> SelectedChoices { get; set; } = null!;
     }
 
     public class Radio
     {
-        public QuestionScreenChoice[] Choices { get; set; } = new List<QuestionScreenChoice>().ToArray();
+        public QuestionChoice[] Choices { get; set; } = new List<QuestionChoice>().ToArray();
         public string SelectedAnswer { get; set; } = null!;
     }
 
