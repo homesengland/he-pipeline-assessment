@@ -1,7 +1,8 @@
 ﻿@using He.PipelineAssessment.UI.Features.Workflow.ViewModels
 @model He.PipelineAssessment.UI.Features.Workflow.ViewModels.MultiQuestion
 @{
-    var itemName = "Data.QuestionScreenAnswers[" + Model.Index + "].Answer";
+    var itemName = "Data.QuestionScreenAnswers[" + Model.Index + "].Text";
+    var answerName = "Data.QuestionScreenAnswers[" + Model.Index + "].Answer";
     var errorFormClass = !Model.IsValid ? "govuk-form-group--error" : "";
     var errorFieldClass = !Model.IsValid ? "govuk-input--error" : "";
     var isReadOnly = Model.IsReadOnly ? "disabled" : "";
@@ -14,10 +15,10 @@
     @await Html.PartialAsync("_QuestionHint", Model.QuestionHint)
 
     <div class="govuk-input__wrapper">
-        <textarea id="@itemName" name="@itemName" class="govuk-textarea govuk-textarea--width-6 @errorFieldClass" rows="5" maxlength="@Model.CharacterLimit" @isReadOnly>@Model.Answers[0].Answer</textarea>
+        <textarea id="@answerName" name="@itemName" class="govuk-textarea govuk-textarea--width-6 @errorFieldClass" rows="5" maxlength="@Model.CharacterLimit" @isReadOnly>@Model.Text</textarea>
     </div>
 
     @await Html.PartialAsync("_QuestionGuidance", Model.QuestionGuidance)
 
-    @await Html.PartialAsync("_MultiComments", new MultiComment(){Index = Model.Index, Comment = Model.Comments,DisplayComments = Model.DisplayComments})
+    @await Html.PartialAsync("_Comments", new MultiComment(){Index = Model.Index, Comment = Model.Comments,DisplayComments = Model.DisplayComments})
 </div>

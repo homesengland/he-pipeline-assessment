@@ -56,6 +56,7 @@ namespace Elsa.CustomWorkflow.Sdk.Models.Workflow
         public object Output { get; set; } = null!;
         public List<QuestionActivityAnswer> Answers { get; set; } = new List<QuestionActivityAnswer>();
         public bool IsReadOnly { get; set; }
+        public string? Text { get { return GetText(); } set { SetText(value); } }
         public decimal? Decimal { get { return GetDecimal(); } set { SetDecimal(value); } }
 
         private int? _characterLimit;
@@ -120,6 +121,25 @@ namespace Elsa.CustomWorkflow.Sdk.Models.Workflow
             }
             return null;
         }
+
+        private string? GetText()
+        {
+            if((QuestionType == QuestionTypeConstants.TextQuestion || QuestionType == QuestionTypeConstants.TextAreaQuestion) && HasAnswers())
+            {
+                try
+                {
+                    string? textAnswer = Answers.FirstOrDefault()!.AnswerText ?? string.Empty;
+                    return textAnswer;
+
+                }
+                catch(Exception)
+                {
+                    return null;
+                }
+            }
+            return "";
+        }
+
         #endregion
 
 
@@ -188,6 +208,14 @@ namespace Elsa.CustomWorkflow.Sdk.Models.Workflow
             if (QuestionType == QuestionTypeConstants.CurrencyQuestion)
             {
                 SetAnswerString(value.ToString());
+            }
+        }
+
+        private void SetText(string? value)
+        {
+            if(QuestionType == QuestionTypeConstants.TextAreaQuestion || QuestionType == QuestionTypeConstants.TextQuestion)
+            {
+                SetAnswerString(value);
             }
         }
 

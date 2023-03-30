@@ -22,5 +22,5 @@
 
  
     @await Html.PartialAsync("_QuestionGuidance", Model.QuestionGuidance)
-    @await Html.PartialAsync("_MultiComments", new MultiComment(){Index = Model.Index, Comment = Model.Comments,DisplayComments = Model.DisplayComments})
+    @await Html.PartialAsync("_Comments", new MultiComment(){Index = Model.Index, Comment = Model.Comments,DisplayComments = Model.DisplayComments})
 </div>

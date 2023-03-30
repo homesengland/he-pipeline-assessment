@@ -18,6 +18,7 @@ namespace He.PipelineAssessment.UI.Features.Workflow.ViewModels
         public bool IsReadOnly { get; set; }
         public Date? Date { get; set; }
         public decimal? Decimal { get; set; }
+        public string? Text { get; set; }
         public Radio Radio { get; set; } = new Radio();
         public Checkbox Checkbox { get; set; } = new Checkbox();
         public Information Information { get; set; } = new Information();
