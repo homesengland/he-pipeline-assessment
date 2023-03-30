@@ -21,7 +21,6 @@ namespace He.PipelineAssessment.UI.Tests.Features.Workflow.LoadCheckYourAnswersS
            LoadCheckYourAnswersScreenRequestHandler sut)
         {
             //Arrange
-
             elsaServerHttpClient.Setup(x => x.LoadCheckYourAnswersScreen(It.IsAny<LoadWorkflowActivityDto>()))
                 .ReturnsAsync((WorkflowActivityDataDto?)null);
 
