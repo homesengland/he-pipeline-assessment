@@ -57,6 +57,7 @@ namespace He.PipelineAssessment.UI.Features.Workflow.LoadQuestionScreen
                     {
                         string jsonResponse = JsonSerializer.Serialize(response);
                         QuestionScreenSaveAndContinueCommand? result = JsonSerializer.Deserialize<QuestionScreenSaveAndContinueCommand>(jsonResponse);
+                        result.IsCorrectBusinessArea = true;
                         return await Task.FromResult(result);
                     }
                     else
