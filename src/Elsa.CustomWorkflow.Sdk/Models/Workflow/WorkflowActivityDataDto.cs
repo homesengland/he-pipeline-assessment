@@ -169,7 +169,7 @@ namespace Elsa.CustomWorkflow.Sdk.Models.Workflow
                 Answers = new List<QuestionActivityAnswer>();
                 if (value != null)
                 {
-                    var choice = _radio.Choices.Where(x => x.Answer == value.SelectedAnswer);
+                    var choice = _radio.Choices.Where(x => x.Answer == value.SelectedAnswer).ToList();
                     SetChoiceAnswers(choice);
 
                 }

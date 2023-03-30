@@ -125,10 +125,12 @@ namespace Elsa.Server.Features.Workflow.LoadQuestionScreen
 
         private static QuestionActivityData CreateQuestionActivityData(Question dbQuestion, CustomActivities.Activities.QuestionScreen.Question item)
         {
+            List<Answer> answers = dbQuestion.Answers!.Any() ? 
+                dbQuestion.Answers! : new List<Answer> { new Answer { AnswerText = item.Answer ?? string.Empty } };
             //assign the values
             var questionActivityData = new QuestionActivityData();
             questionActivityData.ActivityId = dbQuestion.ActivityId;
-            questionActivityData.Answers = dbQuestion.Answers!;
+            questionActivityData.Answers = answers;
             questionActivityData.Comments = dbQuestion.Comments;
             questionActivityData.QuestionId = dbQuestion.QuestionId;
             questionActivityData.QuestionType = dbQuestion.QuestionType;
@@ -169,6 +171,8 @@ namespace Elsa.Server.Features.Workflow.LoadQuestionScreen
                 questionActivityData.Radio.Choices = item.Radio.Choices
                     .Select(x => new QuestionChoice() { Answer = x.Answer })
                     .ToArray();
+                questionActivityData.Radio.SelectedAnswer =
+                    item.Radio.Choices.First(x => x.IsPrePopulated).Answer;
             }
 
             if (item.QuestionType == QuestionTypeConstants.PotScoreRadioQuestion)
@@ -177,18 +181,6 @@ namespace Elsa.Server.Features.Workflow.LoadQuestionScreen
                 questionActivityData.Radio.Choices = item.PotScoreRadio.Choices
                     .Select(x => new QuestionChoice() { Answer = x.Answer })
                     .ToArray();
-            }
-
-            if ((item.QuestionType == QuestionTypeConstants.RadioQuestion) &&
-               !questionActivityData.HasAnswers() && item.Radio.Choices.Any(x => x.IsPrePopulated))
-            {
-                questionActivityData.Radio.SelectedAnswer =
-                    item.Radio.Choices.First(x => x.IsPrePopulated).Answer;
-            }
-
-            if ((item.QuestionType == QuestionTypeConstants.PotScoreRadioQuestion) &&
-                !questionActivityData.HasAnswers() && item.PotScoreRadio.Choices.Any(x => x.IsPrePopulated))
-            {
                 questionActivityData.Radio.SelectedAnswer =
                     item.PotScoreRadio.Choices.First(x => x.IsPrePopulated).Answer;
             }

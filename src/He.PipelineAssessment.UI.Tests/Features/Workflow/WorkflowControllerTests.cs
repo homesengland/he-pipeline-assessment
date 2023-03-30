@@ -137,7 +137,7 @@ namespace He.PipelineAssessment.UI.Tests.Features.Workflow
             Assert.IsType<ViewResult>(result);
 
             var redirectToActionResult = (ViewResult)result;
-            Assert.Equal("MultiSaveAndContinue", redirectToActionResult.ViewName);
+            Assert.Equal("SaveAndContinue", redirectToActionResult.ViewName);
 
         }
 
@@ -321,7 +321,7 @@ namespace He.PipelineAssessment.UI.Tests.Features.Workflow
             Assert.IsType<ViewResult>(result);
 
             var viewResult = (ViewResult)result;
-            Assert.Equal("MultiSaveAndContinue", viewResult.ViewName);
+            Assert.Equal("SaveAndContinue", viewResult.ViewName);
             Assert.IsType<QuestionScreenSaveAndContinueCommand>(viewResult.Model);
 
         }

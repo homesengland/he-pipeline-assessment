@@ -484,7 +484,7 @@ namespace Elsa.CustomWorkflow.Sdk.Tests.Workflow
             sut.Radio = new Radio() { Choices = choices, SelectedAnswer = choices[0].Answer };
             //Assert
             Assert.Equal(choices.ToArray(), sut.Radio.Choices);
-            Assert.Equal("Test 1", sut.Answers.FirstOrDefault().AnswerText);
+            Assert.Equal("Test 1", sut.Answers!.FirstOrDefault()!.AnswerText);
         }
 
         [Theory]

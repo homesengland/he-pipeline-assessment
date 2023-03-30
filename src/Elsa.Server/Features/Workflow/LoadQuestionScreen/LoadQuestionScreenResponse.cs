@@ -54,7 +54,7 @@ namespace Elsa.Server.Features.Workflow.LoadQuestionScreen
     public class Radio
     {
         public QuestionChoice[] Choices { get; set; } = new List<QuestionChoice>().ToArray();
-        public string SelectedAnswer { get; set; } = null!;
+        public string? SelectedAnswer { get; set; }
     }
 
     public class Information

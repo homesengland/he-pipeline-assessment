@@ -73,7 +73,7 @@ namespace He.PipelineAssessment.UI.Features.Workflow
                             };
                             var result = await this._mediator.Send(questionScreenRequest);
 
-                            return View("MultiSaveAndContinue", result);
+                            return View("SaveAndContinue", result);
                         }
                     case ActivityTypeConstants.CheckYourAnswersScreen:
                         {
@@ -132,7 +132,7 @@ namespace He.PipelineAssessment.UI.Features.Workflow
                 {
                     command.ValidationMessages = validationResult;
 
-                    return View("MultiSaveAndContinue", command);
+                    return View("SaveAndContinue", command);
                 }
             }
             catch (Exception e)
