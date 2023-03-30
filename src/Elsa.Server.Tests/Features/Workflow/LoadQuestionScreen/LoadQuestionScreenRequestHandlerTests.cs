@@ -725,7 +725,7 @@ public class LoadQuestionScreenRequestHandlerTests
         Assert.NotNull(result.Data!.QuestionScreenAnswers);
         Assert.Equal(assessmentQuestions.Count(), result.Data!.QuestionScreenAnswers.Count());
         Assert.Empty(result.ErrorMessages);
-        Assert.Equal("PrepopulatedAnswer", result.Data.QuestionScreenAnswers[0].Answer);
+        Assert.Equal("PrepopulatedAnswer", result.Data.QuestionScreenAnswers[0].Answers.FirstOrDefault().AnswerText);
         Assert.True(result.Data.QuestionScreenAnswers[0].IsReadOnly);
     }
 
@@ -779,7 +779,7 @@ public class LoadQuestionScreenRequestHandlerTests
         Assert.NotNull(result.Data!.QuestionScreenAnswers);
         Assert.Equal(assessmentQuestions.Count(), result.Data!.QuestionScreenAnswers.Count());
         Assert.Empty(result.ErrorMessages);
-        Assert.Equal("DatabaseAnswer", result.Data.QuestionScreenAnswers[0].Answer);
+        Assert.Equal("DatabaseAnswer", result.Data.QuestionScreenAnswers[0].Answers.FirstOrDefault().AnswerText);
         Assert.False(result.Data.QuestionScreenAnswers[0].IsReadOnly);
     }
 

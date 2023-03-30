@@ -14,10 +14,7 @@
     @await Html.PartialAsync("_QuestionHint", Model.QuestionHint)
 
     <div class="govuk-input__wrapper">
-        @foreach (var answer in @Model.Answers)
-        {
-            <textarea id="@itemName" name="@itemName" class="govuk-textarea govuk-textarea--width-6 @errorFieldClass" rows="5" maxlength="@Model.CharacterLimit" @isReadOnly>@answer.Answer</textarea>
-        }
+        <textarea id="@itemName" name="@itemName" class="govuk-textarea govuk-textarea--width-6 @errorFieldClass" rows="5" maxlength="@Model.CharacterLimit" @isReadOnly>@Model.Answers[0].Answer</textarea>
     </div>
 
     @await Html.PartialAsync("_QuestionGuidance", Model.QuestionGuidance)

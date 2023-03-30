@@ -128,7 +128,7 @@ namespace Elsa.Server.Features.Workflow.LoadQuestionScreen
             //assign the values
             var questionActivityData = new QuestionActivityData();
             questionActivityData.ActivityId = dbQuestion.ActivityId;
-            questionActivityData.Answer = dbQuestion.Answers != null && dbQuestion.Answers.Count() == 1 ? dbQuestion.Answers.First().AnswerText : item.Answer;
+            questionActivityData.Answers = dbQuestion.Answers!;
             questionActivityData.Comments = dbQuestion.Comments;
             questionActivityData.QuestionId = dbQuestion.QuestionId;
             questionActivityData.QuestionType = dbQuestion.QuestionType;
@@ -148,18 +148,16 @@ namespace Elsa.Server.Features.Workflow.LoadQuestionScreen
                     { Answer = x.Answer, IsSingle = x.IsSingle }).ToArray();
             }
 
-            if (item.QuestionType == QuestionTypeConstants.CheckboxQuestion &&
-                          string.IsNullOrEmpty(questionActivityData.Answer) && item.Checkbox.Choices.Any(x => x.IsPrePopulated))
+            if (item.QuestionType == QuestionTypeConstants.CheckboxQuestion && !questionActivityData.HasAnswers() && item.Checkbox.Choices.Any(x => x.IsPrePopulated))
             {
                 var answerList = item.Checkbox.Choices.Where(x => x.IsPrePopulated).Select(x => x.Answer).ToList();
 
                 questionActivityData.Checkbox.SelectedChoices = answerList;
             }
 
-            if (item.QuestionType == QuestionTypeConstants.CheckboxQuestion &&
-                dbQuestion.Answers != null && dbQuestion.Answers.Any())
+            if (item.QuestionType == QuestionTypeConstants.CheckboxQuestion && questionActivityData.HasAnswers())
             {
-                var answerList = dbQuestion.Answers.Select(x => x.AnswerText).ToList();
+                var answerList = questionActivityData.Answers.Select(x => x.AnswerText).ToList();
 
                 questionActivityData.Checkbox.SelectedChoices =
                     answerList!;
@@ -182,14 +180,14 @@ namespace Elsa.Server.Features.Workflow.LoadQuestionScreen
             }
 
             if ((item.QuestionType == QuestionTypeConstants.RadioQuestion) &&
-               string.IsNullOrEmpty(questionActivityData.Answer) && item.Radio.Choices.Any(x => x.IsPrePopulated))
+               !questionActivityData.HasAnswers() && item.Radio.Choices.Any(x => x.IsPrePopulated))
             {
                 questionActivityData.Radio.SelectedAnswer =
                     item.Radio.Choices.First(x => x.IsPrePopulated).Answer;
             }
 
             if ((item.QuestionType == QuestionTypeConstants.PotScoreRadioQuestion) &&
-                string.IsNullOrEmpty(questionActivityData.Answer) && item.PotScoreRadio.Choices.Any(x => x.IsPrePopulated))
+                !questionActivityData.HasAnswers() && item.PotScoreRadio.Choices.Any(x => x.IsPrePopulated))
             {
                 questionActivityData.Radio.SelectedAnswer =
                     item.PotScoreRadio.Choices.First(x => x.IsPrePopulated).Answer;

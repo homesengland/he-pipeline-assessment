@@ -30,12 +30,17 @@ namespace Elsa.Server.Features.Workflow.LoadQuestionScreen
         public object? Output { get; set; }
 
         public string? QuestionType { get; set; } = null!;
-        public string? Answer { get; set; }
         public int? CharacterLimit { get; set; }
         public Checkbox Checkbox { get; set; } = null!;
         public Radio Radio { get; set; } = null!;
         public Information Information { get; set; } = null!;
         public bool IsReadOnly { get; set; }
+        public List<Answer> Answers { get; set; } = new();
+
+        public bool HasAnswers()
+        {
+            return Answers.Any();
+        }
     }
 
 

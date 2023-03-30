@@ -13,6 +13,6 @@
         public string? Comments { get; set; }
 
         public virtual List<QuestionChoice>? Choices { get; set; }
-        public virtual List<Answer>? Answers { get; set; }
+        public virtual List<Answer>? Answers { get; set; } = new();
     }
 }
