@@ -63,6 +63,14 @@ namespace He.PipelineAssessment.UI.Extensions
                                 Constants.AppRole.PipelineAdminOperations,
                                 Constants.AppRole.PipelineObserver,
                                 Constants.AppRole.PipelineEconomist));
+
+                options.AddPolicy(Constants.AuthorizationPolicies.AssignmentToWorkflowExecuteRoleRequired,
+                   policy => policy.RequireRole(
+                                Constants.AppRole.PipelineAssessorMPP,
+                                Constants.AppRole.PipelineAssessorInvestment,
+                                Constants.AppRole.PipelineAssessorDevelopment,
+                                Constants.AppRole.PipelineAdminOperations,
+                                Constants.AppRole.PipelineEconomist));
             });
         }
     }

@@ -9,10 +9,10 @@ using He.PipelineAssessment.UI.Features.Workflow.StartWorkflow;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using System.Security.Claims;
 
 namespace He.PipelineAssessment.UI.Features.Workflow
 {
+    [Authorize]
     public class WorkflowController : Controller
     {
         private readonly ILogger<WorkflowController> _logger;
@@ -27,11 +27,7 @@ namespace He.PipelineAssessment.UI.Features.Workflow
             _validator = validator;
         }
 
-        public IActionResult Index()
-        {
-            return View("Index", new StartWorkflowCommand() { WorkflowDefinitionId = "e1ded93b0b4a432ebeb2b8e10bc1175a" });
-        }
-
+        [Authorize(Policy = Authorization.Constants.AuthorizationPolicies.AssignmentToWorkflowExecuteRoleRequired)]
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> StartWorkflow([FromForm] StartWorkflowCommand command)
@@ -55,6 +51,7 @@ namespace He.PipelineAssessment.UI.Features.Workflow
             }
         }
 
+        [Authorize(Policy = Authorization.Constants.AuthorizationPolicies.AssignmentToWorkflowExecuteRoleRequired)]
         public async Task<IActionResult> LoadWorkflowActivity(QuestionScreenSaveAndContinueCommandResponse request)
         {
             try
@@ -110,7 +107,7 @@ namespace He.PipelineAssessment.UI.Features.Workflow
             }
         }
 
-        //[Authorize(Roles ="")]
+        [Authorize(Policy = Authorization.Constants.AuthorizationPolicies.AssignmentToPipelineViewAssessmentRoleRequired)]
         public async Task<IActionResult> LoadReadOnlyWorkflowActivity(QuestionScreenSaveAndContinueCommandResponse request)
         {
             try
@@ -154,6 +151,7 @@ namespace He.PipelineAssessment.UI.Features.Workflow
             }
         }
 
+        [Authorize(Policy = Authorization.Constants.AuthorizationPolicies.AssignmentToWorkflowExecuteRoleRequired)]
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> QuestionScreenSaveAndContinue([FromForm] QuestionScreenSaveAndContinueCommand command)
@@ -187,6 +185,7 @@ namespace He.PipelineAssessment.UI.Features.Workflow
             }
         }
 
+        [Authorize(Policy = Authorization.Constants.AuthorizationPolicies.AssignmentToWorkflowExecuteRoleRequired)]
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> CheckYourAnswerScreenSaveAndContinue([FromForm] CheckYourAnswersSaveAndContinueCommand command)
