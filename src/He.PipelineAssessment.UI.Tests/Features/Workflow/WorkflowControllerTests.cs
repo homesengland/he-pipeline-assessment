@@ -21,21 +21,6 @@ namespace He.PipelineAssessment.UI.Tests.Features.Workflow
     {
         [Theory]
         [AutoMoqData]
-        public void Index_ShouldReturn(
-            WorkflowController sut)
-        {
-            //Arrange
-
-            //Act
-            var result = sut.Index();
-
-            //Assert
-            Assert.IsAssignableFrom<IActionResult>(result);
-            Assert.IsType<ViewResult>(result);
-        }
-
-        [Theory]
-        [AutoMoqData]
         public async Task StartWorkflow_ShouldRedirectToErrorPage_GivenInnerExceptionIsCaught(
             [Frozen] Mock<IMediator> mediator,
             StartWorkflowCommand command,

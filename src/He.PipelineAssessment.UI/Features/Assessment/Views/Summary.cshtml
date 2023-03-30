@@ -47,7 +47,7 @@
                                 }
                                 else
                                 {
-                                    @Html.ActionLink(assessmentStage.Name +" "+ "ReadOnly", "LoadReadOnlyWorkflowActivity", "Workflow", new { WorkflowInstanceId = assessmentStage.WorkflowInstanceId, ActivityId = assessmentStage.CurrentActivityId, ActivityType = assessmentStage.CurrentActivityType })
+                                    @Html.ActionLink(assessmentStage.Name, "LoadReadOnlyWorkflowActivity", "Workflow", new { WorkflowInstanceId = assessmentStage.WorkflowInstanceId, ActivityId = assessmentStage.CurrentActivityId, ActivityType = assessmentStage.CurrentActivityType })
 
                                 }
                             }
@@ -89,15 +89,20 @@
                                 }
                                 else
                                 {
-                                    if (!string.IsNullOrEmpty(assessmentStage.WorkflowDefinitionId))
+
+                                    if ((await AuthorizationService.AuthorizeAsync(User, Constants.AuthorizationPolicies.AssignmentToWorkflowExecuteRoleRequired)).Succeeded)
                                     {
-                                        @using (Html.BeginForm("StartWorkflow", "Workflow", FormMethod.Post))
+
+                                        if (!string.IsNullOrEmpty(assessmentStage.WorkflowDefinitionId))
                                         {
-                                            @Html.AntiForgeryToken()
-                                            @Html.HiddenFor(x => x.AssessmentId)
-                                            @Html.HiddenFor(x => x.CorrelationId)
-                                        <input type="hidden" name="WorkflowDefinitionId" value="@assessmentStage.WorkflowDefinitionId" />
-                                        <input class="govuk-button govuk-!-margin-0" data-module="govuk-button" id="Submit" type="submit" value="Start now" />
+                                            @using (Html.BeginForm("StartWorkflow", "Workflow", FormMethod.Post))
+                                            {
+                                                @Html.AntiForgeryToken()
+                                                @Html.HiddenFor(x => x.AssessmentId)
+                                                @Html.HiddenFor(x => x.CorrelationId)
+                                            <input type="hidden" name="WorkflowDefinitionId" value="@assessmentStage.WorkflowDefinitionId" />
+                                            <input class="govuk-button govuk-!-margin-0" data-module="govuk-button" id="Submit" type="submit" value="Start now" />
+                                            }
                                         }
                                     }
                                 }

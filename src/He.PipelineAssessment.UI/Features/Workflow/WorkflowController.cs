@@ -36,13 +36,21 @@ namespace He.PipelineAssessment.UI.Features.Workflow
             {
                 var result = await this._mediator.Send(command);
 
-                return RedirectToAction("LoadWorkflowActivity",
-                    new
-                    {
-                        WorkflowInstanceId = result?.WorkflowInstanceId,
-                        ActivityId = result?.ActivityId,
-                        ActivityType = result?.ActivityType
-                    });
+                if(result.IsCorrectBusinessArea)
+                {
+
+                    return RedirectToAction("LoadWorkflowActivity",
+                        new
+                        {
+                            WorkflowInstanceId = result?.WorkflowInstanceId,
+                            ActivityId = result?.ActivityId,
+                            ActivityType = result?.ActivityType
+                        });
+                } else
+                {
+                    return RedirectToAction("AccessDenied", "Error");
+                }
+
             }
             catch (Exception e)
             {
