@@ -16,7 +16,7 @@ namespace He.PipelineAssessment.UI.Features.Workflow.CheckYourAnswersSaveAndCont
         private readonly ILogger<CheckYourAnswersSaveAndContinueCommandHandler> _logger;
         public CheckYourAnswersSaveAndContinueCommandHandler(IElsaServerHttpClient elsaServerHttpClient,
                                                               IAssessmentRepository assessmentRepository,
-                                                              IUserProvider userProvider, IRoleValidation roleValidation, 
+                                                              IUserProvider userProvider, IRoleValidation roleValidation,
                                                               ILogger<CheckYourAnswersSaveAndContinueCommandHandler> logger)
         {
             _elsaServerHttpClient = elsaServerHttpClient;
@@ -61,7 +61,8 @@ namespace He.PipelineAssessment.UI.Features.Workflow.CheckYourAnswersSaveAndCont
                         {
                             ActivityId = response.Data.NextActivityId,
                             ActivityType = response.Data.ActivityType,
-                            WorkflowInstanceId = response.Data.WorkflowInstanceId
+                            WorkflowInstanceId = response.Data.WorkflowInstanceId,
+                            IsCorrectBusinessArea = true
                         };
                         return await Task.FromResult(result);
                     }
@@ -75,7 +76,7 @@ namespace He.PipelineAssessment.UI.Features.Workflow.CheckYourAnswersSaveAndCont
                 _logger.LogError(e.Message);
                 return null;
             }
-           
+
         }
     }
 }
