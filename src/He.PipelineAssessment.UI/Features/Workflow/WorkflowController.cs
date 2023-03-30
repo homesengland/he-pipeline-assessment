@@ -76,7 +76,8 @@ namespace He.PipelineAssessment.UI.Features.Workflow
                             var questionScreenRequest = new LoadQuestionScreenRequest
                             {
                                 WorkflowInstanceId = request.WorkflowInstanceId,
-                                ActivityId = request.ActivityId
+                                ActivityId = request.ActivityId,
+                                IsReadOnly = false
                             };
                             var result = await this._mediator.Send(questionScreenRequest);
 
@@ -96,7 +97,8 @@ namespace He.PipelineAssessment.UI.Features.Workflow
                             {
                                 WorkflowInstanceId = request.WorkflowInstanceId,
                                 ActivityId = request.ActivityId,
-                                IsReadOnly = false
+                                IsReadOnly = false,
+                                
                             };
 
                             var result = await this._mediator.Send(checkYourAnswersScreenRequest);

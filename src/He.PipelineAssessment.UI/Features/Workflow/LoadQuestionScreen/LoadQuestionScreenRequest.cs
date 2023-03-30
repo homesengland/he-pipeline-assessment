@@ -9,5 +9,6 @@ namespace He.PipelineAssessment.UI.Features.Workflow.LoadQuestionScreen
         public string ActivityId { get; set; } = null!;
         public string ActivityType { get; set; } = null!;
         public bool IsCorrectBusinessArea { get; set; }
+        public bool IsReadOnly { get; set; }
     }
 }
