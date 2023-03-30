@@ -1,7 +1,7 @@
 ﻿@using He.PipelineAssessment.UI.Features.Workflow.ViewModels
 @model He.PipelineAssessment.UI.Features.Workflow.ViewModels.MultiQuestion
 @{
-    var itemName = "Data.QuestionScreenAnswers[" + Model.Index + "].Answer";
+    var itemName = "Data.QuestionScreenAnswers[" + Model.Index + "].Answers[0].Answer";
     var errorFormClass = !Model.IsValid ? "govuk-form-group--error" : "";
     var errorFieldClass = !Model.IsValid ? "govuk-input--error" : "";
     var isReadOnly = Model.IsReadOnly ? "disabled" : "";
@@ -14,7 +14,7 @@
     @await Html.PartialAsync("_QuestionHint", Model.QuestionHint)
 
     <div class="govuk-input__wrapper">
-        <input id="@itemName" type="text" name="@itemName" class="govuk-input govuk-input--width-6 @errorFieldClass" @isReadOnly value="@Model.Answers[0].Answer" />
+        <input id="@itemName" type="text" name="@itemName" class="govuk-input govuk-input--width-6 @errorFieldClass" @isReadOnly value="@Model.Answers[0].Answer"/>
     </div>
 
     @await Html.PartialAsync("_QuestionGuidance", Model.QuestionGuidance)

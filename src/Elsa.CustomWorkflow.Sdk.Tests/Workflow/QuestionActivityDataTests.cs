@@ -52,7 +52,7 @@ namespace Elsa.CustomWorkflow.Sdk.Tests.Workflow
             //Arrange
             sut.QuestionType = QuestionTypeConstants.DateQuestion;
             var dateToTest = "2019aaa89787879as-2-17";
-            sut.Answers = new List<QuestionActivityAnswer> { new() { Answer = dateToTest } };
+            sut.Answers = new List<QuestionActivityAnswer> { new() { AnswerText = dateToTest } };
 
             //Act
             var date = sut.GetDate();
@@ -70,7 +70,7 @@ namespace Elsa.CustomWorkflow.Sdk.Tests.Workflow
             //Arrange
             sut.QuestionType = QuestionTypeConstants.DateQuestion;
             var dateToTest = "2019-2-17";
-            sut.Answers = new List<QuestionActivityAnswer> { new() { Answer = dateToTest } };
+            sut.Answers = new List<QuestionActivityAnswer> { new() { AnswerText = dateToTest } };
 
             //Act
             var date = sut.GetDate();
@@ -175,7 +175,7 @@ namespace Elsa.CustomWorkflow.Sdk.Tests.Workflow
 
             var dateString = $"{year}-{month}-{day}";
             bool isParseableDateTime = DateTime.TryParseExact(dateString, Constants.DateFormat, CultureInfo.InvariantCulture, DateTimeStyles.AdjustToUniversal, out DateTime parsedDateTime);
-            Assert.Equal(dateString, sut.Answers.FirstOrDefault().Answer);
+            Assert.Equal(dateString, sut.Answers.FirstOrDefault().AnswerText);
             Assert.True(isParseableDateTime);
         }
 
@@ -244,7 +244,7 @@ namespace Elsa.CustomWorkflow.Sdk.Tests.Workflow
         {
             //Arrange
             sut.QuestionType = QuestionTypeConstants.CurrencyQuestion;
-            sut.Answers = new List<QuestionActivityAnswer> { new() { Answer = answerString } };
+            sut.Answers = new List<QuestionActivityAnswer> { new() { AnswerText = answerString } };
 
             decimal numericAnswer = JsonSerializer.Deserialize<decimal>(answerString);
 
@@ -263,7 +263,7 @@ namespace Elsa.CustomWorkflow.Sdk.Tests.Workflow
         {
             //Arrange
             sut.QuestionType = QuestionTypeConstants.CurrencyQuestion;
-            sut.Answers = new List<QuestionActivityAnswer> { new() { Answer = answerString } };
+            sut.Answers = new List<QuestionActivityAnswer> { new() { AnswerText = answerString } };
 
             //Act
 
@@ -280,7 +280,7 @@ namespace Elsa.CustomWorkflow.Sdk.Tests.Workflow
         public void SetDecimalDoesNotWriteValue_GivenNonDecimalActivityType(string activityType, QuestionActivityData sut)
         {
             //Arrange
-            sut.Answers = new List<QuestionActivityAnswer> { new() { Answer = "12.0" } };
+            sut.Answers = new List<QuestionActivityAnswer> { new() { AnswerText = "12.0" } };
 
             sut.QuestionType = activityType;
 
@@ -288,7 +288,7 @@ namespace Elsa.CustomWorkflow.Sdk.Tests.Workflow
             sut.Decimal = 123.0M;
 
             //Assert
-            Assert.Equal("12.0", sut.Answers.FirstOrDefault().Answer);
+            Assert.Equal("12.0", sut.Answers.FirstOrDefault().AnswerText);
         }
 
         [Theory]
@@ -302,7 +302,7 @@ namespace Elsa.CustomWorkflow.Sdk.Tests.Workflow
             sut.Decimal = null;
 
             //Assert
-            Assert.Null(sut.Answers.FirstOrDefault().Answer);
+            Assert.Null(sut.Answers.FirstOrDefault().AnswerText);
             Assert.Null(sut.Decimal);
         }
 
@@ -320,7 +320,7 @@ namespace Elsa.CustomWorkflow.Sdk.Tests.Workflow
             sut.Decimal = numericAnswer;
 
             //Assert
-            Assert.Equal(decimalString, sut.Answers.FirstOrDefault().Answer);
+            Assert.Equal(decimalString, sut.Answers.FirstOrDefault().AnswerText);
             Assert.Equal(numericAnswer, sut.Decimal);
         }
 
@@ -406,7 +406,7 @@ namespace Elsa.CustomWorkflow.Sdk.Tests.Workflow
             sut.Checkbox = new Checkbox() { Choices = choices, SelectedChoices = answerList };
             //Assert
             Assert.Equal(choices.ToArray(), sut.Checkbox.Choices);
-            Assert.Equal(JsonSerializer.Serialize(answerList), sut.Answers.FirstOrDefault().Answer);
+            Assert.Equal(JsonSerializer.Serialize(answerList), sut.Answers.FirstOrDefault().AnswerText);
         }
 
         [Theory]
@@ -484,7 +484,7 @@ namespace Elsa.CustomWorkflow.Sdk.Tests.Workflow
             sut.Radio = new Radio() { Choices = choices, SelectedAnswer = choices[0].Answer };
             //Assert
             Assert.Equal(choices.ToArray(), sut.Radio.Choices);
-            Assert.Equal("Test 1", sut.Answers.FirstOrDefault().Answer);
+            Assert.Equal("Test 1", sut.Answers.FirstOrDefault().AnswerText);
         }
 
         [Theory]

@@ -35,7 +35,7 @@ namespace Elsa.CustomWorkflow.Sdk.Models.Workflow
     public class QuestionActivityAnswer
     {
         public int? Id { get; set; }
-        public string? Answer { get; set; }
+        public string? AnswerText { get; set; }
         public string? Score { get; set; }
         //public int? QuestionActivityChoiceId { get; set; }
 
@@ -77,7 +77,7 @@ namespace Elsa.CustomWorkflow.Sdk.Models.Workflow
         {
             if (QuestionType == QuestionTypeConstants.DateQuestion && HasAnswers())
             {
-                string? dateString = Answers.FirstOrDefault()!.Answer;
+                string? dateString = Answers.FirstOrDefault()!.AnswerText;
                 bool isValidDate = DateTime.TryParseExact(dateString, Constants.DateFormat, CultureInfo.InvariantCulture, DateTimeStyles.AdjustToUniversal, out DateTime date);
                 if (isValidDate && !String.IsNullOrEmpty(dateString) == true)
                 {
@@ -95,9 +95,9 @@ namespace Elsa.CustomWorkflow.Sdk.Models.Workflow
 
         private Radio GetRadio()
         {
-            if (HasAnswers() && _radio.SelectedAnswer != Answers.FirstOrDefault()!.Answer)
+            if (HasAnswers() && _radio.SelectedAnswer != Answers.FirstOrDefault()!.AnswerText)
             {
-                _radio.SelectedAnswer = Answers.FirstOrDefault()!.Answer!;
+                _radio.SelectedAnswer = Answers.FirstOrDefault()!.AnswerText!;
             }
             return _radio;
         }
@@ -109,7 +109,7 @@ namespace Elsa.CustomWorkflow.Sdk.Models.Workflow
                 try
                 {
                     decimal decimalAnswer = default;
-                    decimal.TryParse(Answers.FirstOrDefault()!.Answer, out decimalAnswer);
+                    decimal.TryParse(Answers.FirstOrDefault()!.AnswerText, out decimalAnswer);
                     return decimalAnswer;
                 }
                 catch (Exception)
@@ -199,13 +199,13 @@ namespace Elsa.CustomWorkflow.Sdk.Models.Workflow
         {
             if (HasAnswers())
             {
-                Answers.FirstOrDefault()!.Answer = answer;
+                Answers.FirstOrDefault()!.AnswerText = answer;
             }
             else
             {
                 Answers.Add(new QuestionActivityAnswer
                 {
-                    Answer = answer
+                    AnswerText = answer
                 });
             }
         }
@@ -216,7 +216,7 @@ namespace Elsa.CustomWorkflow.Sdk.Models.Workflow
             {
                 Answers.Add(new QuestionActivityAnswer
                 {
-                    Answer = choice.Answer,
+                    AnswerText = choice.Answer,
                     Id = choice.Id
                 });
             }

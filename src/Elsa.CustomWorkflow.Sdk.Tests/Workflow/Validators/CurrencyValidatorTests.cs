@@ -51,7 +51,7 @@ namespace Elsa.CustomWorkflow.Sdk.Tests.Workflow.Validators
             CurrencyValidator validator = new CurrencyValidator();
             var questionActivityData = new QuestionActivityData
             {
-                Answers = new List<QuestionActivityAnswer> { new QuestionActivityAnswer { Answer = "MyAnswer" } }
+                Answers = new List<QuestionActivityAnswer> { new QuestionActivityAnswer { AnswerText = "MyAnswer" } }
             };
 
             //Act
@@ -69,7 +69,7 @@ namespace Elsa.CustomWorkflow.Sdk.Tests.Workflow.Validators
             CurrencyValidator validator = new CurrencyValidator();
             var questionActivityData = new QuestionActivityData
             {
-                Answers = new List<QuestionActivityAnswer> { new QuestionActivityAnswer { Answer = "1234567" } }
+                Answers = new List<QuestionActivityAnswer> { new QuestionActivityAnswer { AnswerText = "1234567" } }
             };
 
             //Act
@@ -87,7 +87,7 @@ namespace Elsa.CustomWorkflow.Sdk.Tests.Workflow.Validators
             CurrencyValidator validator = new CurrencyValidator();
             var questionActivityData = new QuestionActivityData
             {
-                Answers = new List<QuestionActivityAnswer> { new QuestionActivityAnswer { Answer = "1234.567" } }
+                Answers = new List<QuestionActivityAnswer> { new QuestionActivityAnswer { AnswerText = "1234.567" } }
             };
 
             //Act

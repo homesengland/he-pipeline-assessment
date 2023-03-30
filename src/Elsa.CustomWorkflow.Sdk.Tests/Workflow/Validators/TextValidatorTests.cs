@@ -50,7 +50,7 @@ namespace Elsa.CustomWorkflow.Sdk.Tests.Workflow.Validators
             TextValidator validator = new TextValidator();
             var questionActivityData = new QuestionActivityData
             {
-                Answers = new List<QuestionActivityAnswer> { new QuestionActivityAnswer { Answer = "MyAnswer" } }
+                Answers = new List<QuestionActivityAnswer> { new QuestionActivityAnswer { AnswerText = "MyAnswer" } }
 
             };
 

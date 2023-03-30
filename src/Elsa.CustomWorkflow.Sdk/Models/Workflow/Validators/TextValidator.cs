@@ -10,7 +10,7 @@ namespace Elsa.CustomWorkflow.Sdk.Models.Workflow.Validators
                 .DependentRules(
                     () =>
                     {
-                        RuleForEach(x => x.Answers.Select(y => y.Answer)).NotEmpty().WithMessage("The question has not been answered");
+                        RuleForEach(x => x.Answers.Select(y => y.AnswerText)).NotEmpty().WithMessage("The question has not been answered");
                     }
                 );
         }

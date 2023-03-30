@@ -21,6 +21,10 @@
             {
                 @for (int i = 0; i < Model.Data.QuestionScreenAnswers.Count; i++)
                 {
+                    if (!Model.Data.QuestionScreenAnswers[i].Answers.Any())
+                    {
+                        Model.Data.QuestionScreenAnswers[i].Answers.Add(new Elsa.CustomWorkflow.Sdk.Models.Workflow.QuestionActivityAnswer());
+                    }
                     @Html.HiddenFor(m => m.Data.QuestionScreenAnswers![i].QuestionId)
                     @Html.HiddenFor(m => m.Data.QuestionScreenAnswers![i].QuestionType)
                     @Html.HiddenFor(m => m.Data.QuestionScreenAnswers![i].QuestionGuidance)
@@ -51,7 +55,7 @@
                             IsValid = isValidItem,
                             Answers = Model.Data.QuestionScreenAnswers[i].Answers.Select(x => new QuestionActivityAnswer
                             {
-                                Answer = x.Answer,
+                                Answer = x.AnswerText,
                                 Id = x.Id,
                                 Score = x.Score
                             }).ToList(),
@@ -75,7 +79,7 @@
                         IsValid = isValidItem,
                         Answers = Model.Data.QuestionScreenAnswers[i].Answers.Select(x => new QuestionActivityAnswer
                         {
-                            Answer = x.Answer,
+                            Answer = x.AnswerText,
                             Id = x.Id,
                             Score = x.Score
                         }).ToList(),
@@ -104,7 +108,7 @@
                             IsValid = isValidItem,
                             Answers = Model.Data.QuestionScreenAnswers[i].Answers.Select(x => new QuestionActivityAnswer
                             {
-                                Answer = x.Answer,
+                                Answer = x.AnswerText,
                                 Id = x.Id,
                                 Score = x.Score
                             }).ToList(),
@@ -128,7 +132,7 @@
                             IsValid = isValidItem,
                             Answers = Model.Data.QuestionScreenAnswers[i].Answers.Select(x => new QuestionActivityAnswer
                             {
-                                Answer = x.Answer,
+                                Answer = x.AnswerText,
                                 Id = x.Id,
                                 Score = x.Score
                             }).ToList(),
@@ -153,7 +157,7 @@
                             IsValid = isValidItem,
                             Answers = Model.Data.QuestionScreenAnswers[i].Answers.Select(x => new QuestionActivityAnswer
                             {
-                                Answer = x.Answer,
+                                Answer = x.AnswerText,
                                 Id = x.Id,
                                 Score = x.Score
                             }).ToList(),
@@ -182,7 +186,7 @@
                             IsValid = isValidItem,
                             Answers = Model.Data.QuestionScreenAnswers[i].Answers.Select(x => new QuestionActivityAnswer
                             {
-                                Answer = x.Answer,
+                                Answer = x.AnswerText,
                                 Id = x.Id,
                                 Score = x.Score
                             }).ToList(),
@@ -213,7 +217,7 @@
                             IsValid = isValidItem,
                             Answers = Model.Data.QuestionScreenAnswers[i].Answers.Select(x => new QuestionActivityAnswer
                             {
-                                Answer = x.Answer,
+                                Answer = x.AnswerText,
                                 Id = x.Id,
                                 Score = x.Score
                             }).ToList(),

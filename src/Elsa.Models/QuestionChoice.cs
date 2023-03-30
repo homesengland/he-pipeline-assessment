@@ -1,10 +1,13 @@
-﻿namespace Elsa.CustomModels
+﻿using Newtonsoft.Json;
+
+namespace Elsa.CustomModels
 {
     public class QuestionChoice : AuditableEntity
     {
 
         public int Id { get; set; }
         public int QuestionId { get; set; }
+        [JsonIgnore]
         public Question Question { get; set; } = null!;
 
         public string Identifier { get; set; } = null!;
