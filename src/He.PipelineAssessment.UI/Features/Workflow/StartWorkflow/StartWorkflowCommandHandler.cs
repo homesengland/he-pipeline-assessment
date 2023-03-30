@@ -1,7 +1,5 @@
-﻿using Azure.Core;
-using Elsa.CustomWorkflow.Sdk.HttpClients;
+﻿using Elsa.CustomWorkflow.Sdk.HttpClients;
 using Elsa.CustomWorkflow.Sdk.Models.Workflow;
-using He.PipelineAssessment.Infrastructure;
 using He.PipelineAssessment.Infrastructure.Repository;
 using He.PipelineAssessment.Models;
 using He.PipelineAssessment.UI.Authorization;
@@ -15,20 +13,19 @@ namespace He.PipelineAssessment.UI.Features.Workflow.StartWorkflow
 
         private readonly IElsaServerHttpClient _elsaServerHttpClient;
         private readonly IAssessmentRepository _assessmentRepository;
+        private readonly IRoleValidation _roleValidation;
         private readonly ILogger<StartWorkflowCommandHandler> _logger;
-        public StartWorkflowCommandHandler(IElsaServerHttpClient elsaServerHttpClient, IAssessmentRepository assessmentRepository, IUserProvider userProvider, ILogger<StartWorkflowCommandHandler> logger)
+        public StartWorkflowCommandHandler(IElsaServerHttpClient elsaServerHttpClient, IAssessmentRepository assessmentRepository, IRoleValidation roleValidation, ILogger<StartWorkflowCommandHandler> logger)
         {
             _elsaServerHttpClient = elsaServerHttpClient;
             _assessmentRepository = assessmentRepository;
-            _userProvider = userProvider;
+            _roleValidation = roleValidation;
             _logger = logger;
         }
 
         public async Task<LoadQuestionScreenRequest?> Handle(StartWorkflowCommand request, CancellationToken cancellationToken)
         {
-            var isRoleExist = await ValidateRole(request.AssessmentId);
-
-            if(!isRoleExist)
+            if (!await _roleValidation.ValidateRole(request.AssessmentId))
             {
                 return new LoadQuestionScreenRequest()
                 {
@@ -84,31 +81,6 @@ namespace He.PipelineAssessment.UI.Features.Workflow.StartWorkflow
             assessmentStage.CurrentActivityId = response.Data.NextActivityId;
             assessmentStage.CurrentActivityType = response.Data.ActivityType;
             return assessmentStage;
-        }
-
-        private async Task<bool> IsRoleExist(int assessmentId)
-        {
-            bool isRoleExist = false;
-            var assessment = await _assessmentRepository.GetAssessment(assessmentId);
-
-            if (assessment != null)
-            {
-                switch (assessment?.BusinessArea)
-                {
-                    case "MPP":
-                        isRoleExist = _userProvider.CheckUserRole(Constants.AppRole.PipelineAssessorMPP);
-                        return isRoleExist;
-                    case "Investment":
-                        isRoleExist = _userProvider.CheckUserRole(Constants.AppRole.PipelineAssessorInvestment);
-                        return isRoleExist;
-                    case "Development":
-                        isRoleExist = _userProvider.CheckUserRole(Constants.AppRole.PipelineAssessorDevelopment);
-                        return isRoleExist;
-                    default: return isRoleExist;
-                }
-            }
-
-            return isRoleExist;
         }
     }
 }

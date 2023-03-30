@@ -7,6 +7,7 @@ namespace He.PipelineAssessment.UI.Features.Workflow.QuestionScreenSaveAndContin
     {
         public int AssessmentId { get; set; }
         public string CorrelationId { get; set; } = null!;
+        public bool IsCorrectBusinessArea { get; set; }
 
     }
 

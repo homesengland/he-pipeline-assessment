@@ -3,7 +3,12 @@ using He.PipelineAssessment.Infrastructure;
 
 namespace He.PipelineAssessment.UI.Authorization;
 
-public class RoleValidation
+public interface IRoleValidation
+{
+    Task<bool> ValidateRole(int assessmentId);
+
+}
+public class RoleValidation : IRoleValidation
 {
     private readonly IAssessmentRepository _assessmentRepository;
     private readonly IUserProvider _userProvider;
@@ -13,9 +18,10 @@ public class RoleValidation
         _assessmentRepository = assessmentRepository;
         _userProvider = userProvider;
     }
-    private async Task<bool> ValidateRole(int assessmentId)
+    public async Task<bool> ValidateRole(int assessmentId)
     {
         bool isRoleExist = false;
+
         var assessment = await _assessmentRepository.GetAssessment(assessmentId);
 
         if (assessment != null)
@@ -23,13 +29,13 @@ public class RoleValidation
             switch (assessment?.BusinessArea)
             {
                 case "MPP":
-                    isRoleExist = _userProvider.CheckUserRole(Constants.AppRole.PipelineAssessorMPP);
+                    isRoleExist = (_userProvider.CheckUserRole(Constants.AppRole.PipelineAssessorMPP) || _userProvider.CheckUserRole(Constants.AppRole.PipelineAdminOperations));
                     return isRoleExist;
                 case "Investment":
-                    isRoleExist = _userProvider.CheckUserRole(Constants.AppRole.PipelineAssessorInvestment);
+                    isRoleExist = (_userProvider.CheckUserRole(Constants.AppRole.PipelineAssessorInvestment) || _userProvider.CheckUserRole(Constants.AppRole.PipelineAdminOperations));
                     return isRoleExist;
                 case "Development":
-                    isRoleExist = _userProvider.CheckUserRole(Constants.AppRole.PipelineAssessorDevelopment);
+                    isRoleExist = (_userProvider.CheckUserRole(Constants.AppRole.PipelineAssessorDevelopment) || _userProvider.CheckUserRole(Constants.AppRole.PipelineAdminOperations));
                     return isRoleExist;
                 default: return isRoleExist;
             }
@@ -38,3 +44,4 @@ public class RoleValidation
         return isRoleExist;
     }
 }
+

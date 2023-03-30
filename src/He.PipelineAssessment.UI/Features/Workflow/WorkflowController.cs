@@ -34,9 +34,9 @@ namespace He.PipelineAssessment.UI.Features.Workflow
         {
             try
             {
-                var result = await this._mediator.Send(command);
+                var result = await _mediator.Send(command);
 
-                if(result.IsCorrectBusinessArea)
+                if (result.IsCorrectBusinessArea)
                 {
 
                     return RedirectToAction("LoadWorkflowActivity",
@@ -46,7 +46,8 @@ namespace He.PipelineAssessment.UI.Features.Workflow
                             ActivityId = result?.ActivityId,
                             ActivityType = result?.ActivityType
                         });
-                } else
+                }
+                else
                 {
                     return RedirectToAction("AccessDenied", "Error");
                 }
@@ -79,7 +80,15 @@ namespace He.PipelineAssessment.UI.Features.Workflow
                             };
                             var result = await this._mediator.Send(questionScreenRequest);
 
-                            return View("MultiSaveAndContinue", result);
+                            if (result.IsCorrectBusinessArea)
+                            {
+                                return View("MultiSaveAndContinue", result);
+                            }
+                            else
+                            {
+                                return RedirectToAction("LoadReadOnlyWorkflowActivity", request);
+
+                            }
                         }
                     case ActivityTypeConstants.CheckYourAnswersScreen:
                         {
@@ -88,9 +97,20 @@ namespace He.PipelineAssessment.UI.Features.Workflow
                                 WorkflowInstanceId = request.WorkflowInstanceId,
                                 ActivityId = request.ActivityId
                             };
+
                             var result = await this._mediator.Send(checkYourAnswersScreenRequest);
 
-                            return View("CheckYourAnswers", result);
+                            if (result.IsCorrectBusinessArea)
+                            {
+                                return View("CheckYourAnswers", result);
+                            }
+                            else
+                            {
+
+                                return RedirectToAction("LoadReadOnlyWorkflowActivity", request);
+
+                            }
+
                         }
                     case ActivityTypeConstants.ConfirmationScreen:
                         {
@@ -99,9 +119,17 @@ namespace He.PipelineAssessment.UI.Features.Workflow
                                 WorkflowInstanceId = request.WorkflowInstanceId,
                                 ActivityId = request.ActivityId
                             };
+
                             var result = await this._mediator.Send(checkYourAnswersScreenRequest);
 
-                            return View("Confirmation", result);
+                            if (result.IsCorrectBusinessArea)
+                            {
+                                return View("Confirmation", result);
+                            }
+                            else
+                            {
+                                return RedirectToAction("LoadReadOnlyWorkflowActivity", request);
+                            }
                         }
                     default:
                         throw new ApplicationException(
@@ -171,13 +199,22 @@ namespace He.PipelineAssessment.UI.Features.Workflow
                 {
                     var result = await this._mediator.Send(command);
 
-                    return RedirectToAction("LoadWorkflowActivity",
-                    new
+                    if (result.IsCorrectBusinessArea)
                     {
-                        WorkflowInstanceId = result?.WorkflowInstanceId,
-                        ActivityId = result?.ActivityId,
-                        ActivityType = result?.ActivityType
-                    });
+
+                        return RedirectToAction("LoadWorkflowActivity",
+                        new
+                        {
+                            WorkflowInstanceId = result?.WorkflowInstanceId,
+                            ActivityId = result?.ActivityId,
+                            ActivityType = result?.ActivityType
+                        });
+                    }
+                    else
+                    {
+                        return RedirectToAction("AccessDenied", "Error");
+                    }
+
                 }
                 else
                 {
@@ -199,16 +236,25 @@ namespace He.PipelineAssessment.UI.Features.Workflow
         public async Task<IActionResult> CheckYourAnswerScreenSaveAndContinue([FromForm] CheckYourAnswersSaveAndContinueCommand command)
         {
             try
-            {           
-                var result = await this._mediator.Send(command);
+            {
+                var result = await _mediator.Send(command);
 
-                return RedirectToAction("LoadWorkflowActivity",
-                    new
-                    {
-                        WorkflowInstanceId = result?.WorkflowInstanceId,
-                        ActivityId = result?.ActivityId,
-                        ActivityType = result?.ActivityType
-                    });
+                if (result.IsCorrectBusinessArea)
+                {
+
+                    return RedirectToAction("LoadWorkflowActivity",
+                        new
+                        {
+                            WorkflowInstanceId = result?.WorkflowInstanceId,
+                            ActivityId = result?.ActivityId,
+                            ActivityType = result?.ActivityType
+                        });
+                }
+                else
+                {
+                    return RedirectToAction("AccessDenied", "Error");
+                }
+
             }
             catch (Exception e)
             {

@@ -92,7 +92,6 @@
 
                                     if ((await AuthorizationService.AuthorizeAsync(User, Constants.AuthorizationPolicies.AssignmentToWorkflowExecuteRoleRequired)).Succeeded)
                                     {
-
                                         if (!string.IsNullOrEmpty(assessmentStage.WorkflowDefinitionId))
                                         {
                                             @using (Html.BeginForm("StartWorkflow", "Workflow", FormMethod.Post))
