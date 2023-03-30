@@ -125,7 +125,7 @@ namespace Elsa.Server.Features.Workflow.LoadQuestionScreen
 
         private static QuestionActivityData CreateQuestionActivityData(Question dbQuestion, CustomActivities.Activities.QuestionScreen.Question item)
         {
-            List<Answer> answers = dbQuestion.Answers!.Any() ? 
+            List<Answer> answers = dbQuestion.Answers!.Any() ?
                 dbQuestion.Answers! : new List<Answer> { new Answer { AnswerText = item.Answer ?? string.Empty } };
             //assign the values
             var questionActivityData = new QuestionActivityData();
@@ -148,21 +148,18 @@ namespace Elsa.Server.Features.Workflow.LoadQuestionScreen
                 questionActivityData.Checkbox.Choices =
                     item.Checkbox.Choices.Select(x => new QuestionChoice()
                     { Answer = x.Answer, IsSingle = x.IsSingle }).ToArray();
-            }
 
-            if (item.QuestionType == QuestionTypeConstants.CheckboxQuestion && !questionActivityData.HasAnswers() && item.Checkbox.Choices.Any(x => x.IsPrePopulated))
-            {
-                var answerList = item.Checkbox.Choices.Where(x => x.IsPrePopulated).Select(x => x.Answer).ToList();
+                List<string> answerList;
+                if (dbQuestion.Answers != null && dbQuestion.Answers.Any())
+                {
+                    answerList = dbQuestion.Answers.Select(x => x.AnswerText).ToList();
+                }
+                else
+                {
+                    answerList = item.Checkbox.Choices.Where(x => x.IsPrePopulated).Select(x => x.Answer).ToList();
+                }
 
                 questionActivityData.Checkbox.SelectedChoices = answerList;
-            }
-
-            if (item.QuestionType == QuestionTypeConstants.CheckboxQuestion && questionActivityData.HasAnswers())
-            {
-                var answerList = questionActivityData.Answers.Select(x => x.AnswerText).ToList();
-
-                questionActivityData.Checkbox.SelectedChoices =
-                    answerList!;
             }
 
             if (item.QuestionType == QuestionTypeConstants.RadioQuestion)

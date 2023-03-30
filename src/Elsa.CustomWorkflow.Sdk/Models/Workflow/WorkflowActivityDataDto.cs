@@ -66,7 +66,11 @@ namespace Elsa.CustomWorkflow.Sdk.Models.Workflow
         public Checkbox Checkbox { get { return _checkbox; } set { SetCheckbox(value); } }
 
         private Radio _radio = new Radio();
-        public Radio Radio { get { return GetRadio(); } set { SetRadio(value); } }
+        public Radio Radio
+        {
+            get { return _radio; }
+            set { SetRadio(value); }
+        }
 
         private Date _date = new Date();
         public Date Date { get { return GetDate(); } set { SetDate(value); } }
@@ -94,14 +98,14 @@ namespace Elsa.CustomWorkflow.Sdk.Models.Workflow
             return _date;
         }
 
-        private Radio GetRadio()
-        {
-            if (HasAnswers() && _radio.SelectedAnswer != Answers.FirstOrDefault()!.AnswerText)
-            {
-                _radio.SelectedAnswer = Answers.FirstOrDefault()!.AnswerText!;
-            }
-            return _radio;
-        }
+        //private Radio GetRadio()
+        //{
+        //    if (HasAnswers() && _radio.SelectedAnswer != Answers.FirstOrDefault()!.AnswerText)
+        //    {
+        //        _radio.SelectedAnswer = Answers.FirstOrDefault()!.AnswerText!;
+        //    }
+        //    return _radio;
+        //}
 
         private decimal? GetDecimal()
         {
@@ -124,7 +128,7 @@ namespace Elsa.CustomWorkflow.Sdk.Models.Workflow
 
         private string? GetText()
         {
-            if((QuestionType == QuestionTypeConstants.TextQuestion || QuestionType == QuestionTypeConstants.TextAreaQuestion) && HasAnswers())
+            if ((QuestionType == QuestionTypeConstants.TextQuestion || QuestionType == QuestionTypeConstants.TextAreaQuestion) && HasAnswers())
             {
                 try
                 {
@@ -132,7 +136,7 @@ namespace Elsa.CustomWorkflow.Sdk.Models.Workflow
                     return textAnswer;
 
                 }
-                catch(Exception)
+                catch (Exception)
                 {
                     return null;
                 }
@@ -213,7 +217,7 @@ namespace Elsa.CustomWorkflow.Sdk.Models.Workflow
 
         private void SetText(string? value)
         {
-            if(QuestionType == QuestionTypeConstants.TextAreaQuestion || QuestionType == QuestionTypeConstants.TextQuestion)
+            if (QuestionType == QuestionTypeConstants.TextAreaQuestion || QuestionType == QuestionTypeConstants.TextQuestion)
             {
                 SetAnswerString(value);
             }
@@ -240,14 +244,17 @@ namespace Elsa.CustomWorkflow.Sdk.Models.Workflow
 
         public void SetChoiceAnswers(IEnumerable<Choice> choices)
         {
+            var answers = new List<QuestionActivityAnswer>();
             foreach (Choice choice in choices)
             {
-                Answers.Add(new QuestionActivityAnswer
+                answers.Add(new QuestionActivityAnswer
                 {
                     AnswerText = choice.Answer,
                     Id = choice.Id
                 });
             }
+
+            Answers = answers;
         }
 
         public bool HasAnswers()
