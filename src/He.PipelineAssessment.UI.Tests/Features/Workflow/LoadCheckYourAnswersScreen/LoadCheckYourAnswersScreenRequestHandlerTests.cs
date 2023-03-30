@@ -59,5 +59,24 @@ namespace He.PipelineAssessment.UI.Tests.Features.Workflow.LoadCheckYourAnswersS
             Assert.Equal(assessmentToolWorkflowInstance.AssessmentId, result.AssessmentId);
             elsaServerHttpClient.Verify(x => x.LoadCheckYourAnswersScreen(It.IsAny<LoadWorkflowActivityDto>()), Times.Once);
         }
+
+        [Theory]
+        [AutoMoqData]
+        public async Task Handle_ReturnsNull_GivenErrorsEncountered(
+           [Frozen] Mock<IElsaServerHttpClient> elsaServerHttpClient,
+           LoadCheckYourAnswersScreenRequest loadCheckYourAnswersScreenRequest,
+           LoadCheckYourAnswersScreenRequestHandler sut)
+        {
+            //Arrange
+            elsaServerHttpClient.Setup(x => x.LoadCheckYourAnswersScreen(It.IsAny<LoadWorkflowActivityDto>()))
+                .Throws(new Exception("There is an issue"));
+
+            //Act
+            var result = await sut.Handle(loadCheckYourAnswersScreenRequest, CancellationToken.None);
+
+            //Assert
+            Assert.Null(result);
+        }
+
     }
 }
