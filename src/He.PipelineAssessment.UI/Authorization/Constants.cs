@@ -20,6 +20,11 @@
             public const string AssignmentToPipelineAdminRoleRequired = "AssignmentToPipelineAdminRoleRequired";
 
             public const string AssignmentToPipelineViewAssessmentRoleRequired = "AssignmentToPipelineViewAssessmentRoleRequired";
+
+            public const string AssignmentToPipelineObserverRoleRequired = "AssignmentToPipelineObserverRoleRequired";
+
+            public const string AssignmentToWorkflowExecuteRoleRequired = "AssignmentToWorkflowExecuteRoleRequired";
+
         }
     }
 }
