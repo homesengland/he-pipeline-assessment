@@ -8,6 +8,6 @@ namespace He.PipelineAssessment.UI.Features.Workflow.LoadCheckYourAnswersScreen
         public string WorkflowInstanceId { get; set; } = null!;
         public string ActivityId { get; set; } = null!;
 
-        public bool IsCorrectBusinessArea { get; set; }
+        public bool IsReadOnly { get; set; }
     }
 }

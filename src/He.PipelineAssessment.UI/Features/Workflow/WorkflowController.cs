@@ -95,7 +95,8 @@ namespace He.PipelineAssessment.UI.Features.Workflow
                             var checkYourAnswersScreenRequest = new LoadCheckYourAnswersScreenRequest
                             {
                                 WorkflowInstanceId = request.WorkflowInstanceId,
-                                ActivityId = request.ActivityId
+                                ActivityId = request.ActivityId,
+                                IsReadOnly = false
                             };
 
                             var result = await this._mediator.Send(checkYourAnswersScreenRequest);
@@ -171,7 +172,8 @@ namespace He.PipelineAssessment.UI.Features.Workflow
                             var checkYourAnswersScreenRequest = new LoadCheckYourAnswersScreenRequest
                             {
                                 WorkflowInstanceId = request.WorkflowInstanceId,
-                                ActivityId = request.ActivityId
+                                ActivityId = request.ActivityId,
+                                IsReadOnly = true
                             };
                             var result = await this._mediator.Send(checkYourAnswersScreenRequest);
 

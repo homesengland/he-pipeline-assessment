@@ -15,7 +15,7 @@ namespace He.PipelineAssessment.UI.Features.Workflow.LoadCheckYourAnswersScreen
         private readonly ILogger<LoadCheckYourAnswersScreenRequestHandler> _logger;
 
         public LoadCheckYourAnswersScreenRequestHandler(
-            IElsaServerHttpClient elsaServerHttpClient, 
+            IElsaServerHttpClient elsaServerHttpClient,
             IAssessmentRepository assessmentRepository,
              ILogger<LoadCheckYourAnswersScreenRequestHandler> logger)
         {
@@ -26,6 +26,8 @@ namespace He.PipelineAssessment.UI.Features.Workflow.LoadCheckYourAnswersScreen
 
         public async Task<QuestionScreenSaveAndContinueCommand?> Handle(LoadCheckYourAnswersScreenRequest request, CancellationToken cancellationToken)
         {
+            //if its readonly dont check the business area
+            //if its not readonly do check
             try
             {
                 var response = await _elsaServerHttpClient.LoadCheckYourAnswersScreen(new LoadWorkflowActivityDto
@@ -37,7 +39,6 @@ namespace He.PipelineAssessment.UI.Features.Workflow.LoadCheckYourAnswersScreen
 
                 if (response != null)
                 {
-
                     string jsonResponse = JsonSerializer.Serialize(response);
                     QuestionScreenSaveAndContinueCommand? result = JsonSerializer.Deserialize<QuestionScreenSaveAndContinueCommand>(jsonResponse);
                     var entity = await _assessmentRepository.GetAssessmentToolWorkflowInstance(request.WorkflowInstanceId);
@@ -46,6 +47,7 @@ namespace He.PipelineAssessment.UI.Features.Workflow.LoadCheckYourAnswersScreen
                     {
                         result.AssessmentId = entity.AssessmentId;
                         result.CorrelationId = entity.Assessment.SpId.ToString();
+                        result.IsCorrectBusinessArea = true;
                     }
 
                     return await Task.FromResult(result);
@@ -62,10 +64,10 @@ namespace He.PipelineAssessment.UI.Features.Workflow.LoadCheckYourAnswersScreen
 
                 return null;
             }
-           
+
         }
 
-        
+
 
     }
 }
