@@ -29,15 +29,16 @@ namespace He.PipelineAssessment.UI.Features.Workflow.QuestionScreenSaveAndContin
 
         public async Task<QuestionScreenSaveAndContinueCommandResponse?> Handle(QuestionScreenSaveAndContinueCommand request, CancellationToken cancellationToken)
         {
-            if (!await _roleValidation.ValidateRole(request.AssessmentId))
-            {
-                return new QuestionScreenSaveAndContinueCommandResponse()
-                {
-                    IsCorrectBusinessArea = false
-                };
-            }
             try
             {
+                if (!await _roleValidation.ValidateRole(request.AssessmentId))
+                {
+                    return new QuestionScreenSaveAndContinueCommandResponse()
+                    {
+                        IsCorrectBusinessArea = false
+                    };
+                }
+
                 var saveAndContinueCommandDto = _saveAndContinueMapper.SaveAndContinueCommandToMultiSaveAndContinueCommandDto(request);
                 var response = await _elsaServerHttpClient.QuestionScreenSaveAndContinue(saveAndContinueCommandDto);
 

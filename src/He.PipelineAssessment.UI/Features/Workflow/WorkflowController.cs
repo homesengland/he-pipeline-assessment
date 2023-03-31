@@ -98,7 +98,6 @@ namespace He.PipelineAssessment.UI.Features.Workflow
                                 WorkflowInstanceId = request.WorkflowInstanceId,
                                 ActivityId = request.ActivityId,
                                 IsReadOnly = false,
-                                
                             };
 
                             var result = await this._mediator.Send(checkYourAnswersScreenRequest);
@@ -258,7 +257,6 @@ namespace He.PipelineAssessment.UI.Features.Workflow
                 {
                     return RedirectToAction("AccessDenied", "Error");
                 }
-
             }
             catch (Exception e)
             {

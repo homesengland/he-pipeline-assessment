@@ -30,22 +30,22 @@ namespace He.PipelineAssessment.UI.Features.Workflow.LoadQuestionScreen
         }
         public async Task<QuestionScreenSaveAndContinueCommand?> Handle(LoadQuestionScreenRequest request, CancellationToken cancellationToken)
         {
-
-            var assessmentWorkflowInstance = await _assessmentRepository.GetAssessmentToolWorkflowInstance(request.WorkflowInstanceId);
-
-            var isRoleExist = await _roleValidation.ValidateRole(assessmentWorkflowInstance!.AssessmentId);
-
-            if (!isRoleExist && !request.IsReadOnly)
+            try
             {
-                return new QuestionScreenSaveAndContinueCommand()
+                var assessmentWorkflowInstance = await _assessmentRepository.GetAssessmentToolWorkflowInstance(request.WorkflowInstanceId);
+
+                var isRoleExist = await _roleValidation.ValidateRole(assessmentWorkflowInstance!.AssessmentId);
+
+                if (!isRoleExist && !request.IsReadOnly)
                 {
-                    IsCorrectBusinessArea = false
-                };
-            }
-            else
-            {
-                try
+                    return new QuestionScreenSaveAndContinueCommand()
+                    {
+                        IsCorrectBusinessArea = false
+                    };
+                }
+                else
                 {
+
                     var response = await _elsaServerHttpClient.LoadQuestionScreen(new LoadWorkflowActivityDto
                     {
                         WorkflowInstanceId = request.WorkflowInstanceId,
@@ -64,14 +64,14 @@ namespace He.PipelineAssessment.UI.Features.Workflow.LoadQuestionScreen
                     {
                         return null;
                     }
-
                 }
-                catch (Exception e)
-                {
-                    _logger.LogError(e.Message);
 
-                    return null;
-                }
+            }
+            catch (Exception e)
+            {
+                _logger.LogError(e.Message);
+
+                return null;
             }
         }
 

@@ -30,21 +30,22 @@ namespace He.PipelineAssessment.UI.Features.Workflow.LoadCheckYourAnswersScreen
 
         public async Task<QuestionScreenSaveAndContinueCommand?> Handle(LoadCheckYourAnswersScreenRequest request, CancellationToken cancellationToken)
         {
-            var assessmentWorkflowInstance = await _assessmentRepository.GetAssessmentToolWorkflowInstance(request.WorkflowInstanceId);
-
-            var isRoleExist = await _roleValidation.ValidateRole(assessmentWorkflowInstance!.AssessmentId);
-
-            if (!isRoleExist && !request.IsReadOnly)
+            try
             {
-                return new QuestionScreenSaveAndContinueCommand()
+                var assessmentWorkflowInstance = await _assessmentRepository.GetAssessmentToolWorkflowInstance(request.WorkflowInstanceId);
+
+                var isRoleExist = await _roleValidation.ValidateRole(assessmentWorkflowInstance!.AssessmentId);
+
+                if (!isRoleExist && !request.IsReadOnly)
                 {
-                    IsCorrectBusinessArea = false
-                };
-            }
-            else
-            {
-                try
+                    return new QuestionScreenSaveAndContinueCommand()
+                    {
+                        IsCorrectBusinessArea = false
+                    };
+                }
+                else
                 {
+
                     var response = await _elsaServerHttpClient.LoadCheckYourAnswersScreen(new LoadWorkflowActivityDto
                     {
                         WorkflowInstanceId = request.WorkflowInstanceId,
@@ -73,13 +74,15 @@ namespace He.PipelineAssessment.UI.Features.Workflow.LoadCheckYourAnswersScreen
                     }
 
                 }
-                catch (Exception e)
-                {
-                    _logger.LogError(e.Message);
-
-                    return null;
-                }
             }
+            catch (Exception e)
+            {
+                _logger.LogError(e.Message);
+
+                return null;
+            }
+
         }
     }
 }
+

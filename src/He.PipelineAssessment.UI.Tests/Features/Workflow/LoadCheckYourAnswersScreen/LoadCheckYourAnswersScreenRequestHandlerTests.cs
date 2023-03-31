@@ -4,6 +4,7 @@ using Elsa.CustomWorkflow.Sdk.Models.Workflow;
 using He.PipelineAssessment.Infrastructure.Repository;
 using He.PipelineAssessment.Models;
 using He.PipelineAssessment.Tests.Common;
+using He.PipelineAssessment.UI.Authorization;
 using He.PipelineAssessment.UI.Features.Workflow.LoadCheckYourAnswersScreen;
 using He.PipelineAssessment.UI.Features.Workflow.QuestionScreenSaveAndContinue;
 using Moq;
@@ -17,10 +18,18 @@ namespace He.PipelineAssessment.UI.Tests.Features.Workflow.LoadCheckYourAnswersS
         [AutoMoqData]
         public async Task Handle_ReturnsNull_GivenHttpClientResponseIsNull(
            [Frozen] Mock<IElsaServerHttpClient> elsaServerHttpClient,
+           [Frozen] Mock<IAssessmentRepository> assessmentRepository,
+           [Frozen] Mock<IRoleValidation> roleValidation,
            LoadCheckYourAnswersScreenRequest loadCheckYourAnswersScreenRequest,
+           AssessmentToolWorkflowInstance assessmentToolWorkflowInstance,
            LoadCheckYourAnswersScreenRequestHandler sut)
         {
             //Arrange
+            assessmentRepository.Setup(x => x.GetAssessmentToolWorkflowInstance(loadCheckYourAnswersScreenRequest.WorkflowInstanceId))
+               .ReturnsAsync(assessmentToolWorkflowInstance);
+
+            roleValidation.Setup(x => x.ValidateRole(assessmentToolWorkflowInstance.AssessmentId)).ReturnsAsync(true);
+
             elsaServerHttpClient.Setup(x => x.LoadCheckYourAnswersScreen(It.IsAny<LoadWorkflowActivityDto>()))
                 .ReturnsAsync((WorkflowActivityDataDto?)null);
 
@@ -54,6 +63,7 @@ namespace He.PipelineAssessment.UI.Tests.Features.Workflow.LoadCheckYourAnswersS
 
             //Assert
             Assert.NotNull(result);
+            Assert.True(result!.IsCorrectBusinessArea);
             Assert.IsType<QuestionScreenSaveAndContinueCommand>(result);
             Assert.Equal(assessmentToolWorkflowInstance.Assessment.SpId.ToString(), result!.CorrelationId);
             Assert.Equal(assessmentToolWorkflowInstance.AssessmentId, result.AssessmentId);
@@ -76,6 +86,29 @@ namespace He.PipelineAssessment.UI.Tests.Features.Workflow.LoadCheckYourAnswersS
 
             //Assert
             Assert.Null(result);
+        }
+
+        [Theory]
+        [AutoMoqData]
+        public async Task Handle_ReturnsNull_GivenIncorrectBusinessArea(
+           [Frozen] Mock<IAssessmentRepository> assessmentRepository,
+           [Frozen] Mock<IRoleValidation> roleValidation,
+           LoadCheckYourAnswersScreenRequest loadCheckYourAnswersScreenRequest,
+           AssessmentToolWorkflowInstance assessmentToolWorkflowInstance,
+           LoadCheckYourAnswersScreenRequestHandler sut)
+        {
+            //Arrange
+            assessmentRepository.Setup(x => x.GetAssessmentToolWorkflowInstance(loadCheckYourAnswersScreenRequest.WorkflowInstanceId))
+               .ReturnsAsync(assessmentToolWorkflowInstance);
+
+            roleValidation.Setup(x => x.ValidateRole(assessmentToolWorkflowInstance.AssessmentId)).ReturnsAsync(false);
+
+
+            //Act
+            var result = await sut.Handle(loadCheckYourAnswersScreenRequest, CancellationToken.None);
+
+            //Assert
+            Assert.False(result!.IsCorrectBusinessArea);  
         }
 
     }

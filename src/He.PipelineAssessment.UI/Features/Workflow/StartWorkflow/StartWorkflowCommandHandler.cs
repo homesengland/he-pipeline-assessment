@@ -25,15 +25,16 @@ namespace He.PipelineAssessment.UI.Features.Workflow.StartWorkflow
 
         public async Task<LoadQuestionScreenRequest?> Handle(StartWorkflowCommand request, CancellationToken cancellationToken)
         {
-            if (!await _roleValidation.ValidateRole(request.AssessmentId))
-            {
-                return new LoadQuestionScreenRequest()
-                {
-                    IsCorrectBusinessArea = false
-                };
-            }
             try
             {
+                if (!await _roleValidation.ValidateRole(request.AssessmentId))
+                {
+                    return new LoadQuestionScreenRequest()
+                    {
+                        IsCorrectBusinessArea = false
+                    };
+                }
+
                 var dto = new StartWorkflowCommandDto()
                 {
                     WorkflowDefinitionId = request.WorkflowDefinitionId,
