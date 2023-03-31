@@ -152,14 +152,14 @@ namespace Elsa.Server.Features.Workflow.LoadQuestionScreen
                         { Answer = x.Answer, IsSingle = x.IsSingle, Id = x.Id }).ToArray()
                     };
 
-                    List<string> answerList;
+                    List<int> answerList;
                     if (dbQuestion.Answers != null && dbQuestion.Answers.Any())
                     {
-                        answerList = dbQuestion.Answers.Select(x => x.AnswerText).ToList();
+                        answerList = dbQuestion.Answers.Select(x => x.Choice!.Id).ToList();
                     }
                     else
                     {
-                        answerList = dbQuestion.Choices.Where(x => x.IsPrePopulated).Select(x => x.Answer).ToList();
+                        answerList = dbQuestion.Choices.Where(x => x.IsPrePopulated).Select(x => x.Id).ToList();
                     }
 
                     questionActivityData.Checkbox.SelectedChoices = answerList;
@@ -178,12 +178,12 @@ namespace Elsa.Server.Features.Workflow.LoadQuestionScreen
                     };
                     if (dbQuestion.Answers != null && dbQuestion.Answers.Any())
                     {
-                        questionActivityData.Radio.SelectedAnswer = dbQuestion.Answers.First().AnswerText;
+                        questionActivityData.Radio.SelectedAnswer = dbQuestion.Answers.First().Choice!.Id;
                     }
                     else
                     {
                         questionActivityData.Radio.SelectedAnswer =
-                            dbQuestion.Choices.First(x => x.IsPrePopulated).Answer;
+                            dbQuestion.Choices.First(x => x.IsPrePopulated).Id;
                     }
                 }
             }

@@ -96,7 +96,7 @@ namespace Elsa.CustomWorkflow.Sdk.Tests.Workflow.Validators
                     IsSingle = true
                    },
                 },
-                SelectedChoices = new List<string>() { "Test 1", "Test 2", "Test 4" }
+                SelectedChoices = new List<int>() { 1, 2, 4 }
             };
 
             MultiQuestionActivityDataValidator validator = new MultiQuestionActivityDataValidator();
@@ -139,7 +139,7 @@ namespace Elsa.CustomWorkflow.Sdk.Tests.Workflow.Validators
                     IsSingle = true
                    },
                 },
-                SelectedChoices = new List<string>() { "Test 1", "Test 2", "Test 4" }
+                SelectedChoices = new List<int>() { 1, 2, 4 }
             };
 
             MultiQuestionActivityDataValidator validator = new MultiQuestionActivityDataValidator();
@@ -208,7 +208,7 @@ namespace Elsa.CustomWorkflow.Sdk.Tests.Workflow.Validators
                 QuestionType = questionType,
                 Radio = new Radio()
                 {
-                    SelectedAnswer = string.Empty
+                    SelectedAnswer = 0
                 }
             };
 
@@ -230,7 +230,7 @@ namespace Elsa.CustomWorkflow.Sdk.Tests.Workflow.Validators
                 QuestionType = QuestionTypeConstants.RadioQuestion,
                 Radio = new Radio()
                 {
-                    SelectedAnswer = string.Empty
+                    SelectedAnswer = 0
                 }
             };
 

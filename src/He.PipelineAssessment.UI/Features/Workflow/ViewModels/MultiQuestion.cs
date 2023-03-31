@@ -32,14 +32,14 @@ namespace He.PipelineAssessment.UI.Features.Workflow.ViewModels
 
     public class Checkbox
     {
-        public List<string> SelectedChoices { get; set; } = null!;
+        public List<int> SelectedChoices { get; set; } = null!;
         public List<Choice> Choices { get; set; } = new List<Choice>();
     }
 
     public class Radio
     {
         public List<Choice> Choices { get; set; } = new List<Choice>();
-        public string SelectedAnswer { get; set; } = null!;
+        public int SelectedAnswer { get; set; }
     }
 
     public class InformationText
@@ -54,6 +54,7 @@ namespace He.PipelineAssessment.UI.Features.Workflow.ViewModels
 
     public class Choice
     {
+        public int Id { get; set; }
         public string Answer { get; set; } = null!;
         public bool IsSingle { get; set; }
     }

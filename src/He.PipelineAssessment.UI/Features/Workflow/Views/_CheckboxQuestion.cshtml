@@ -29,9 +29,9 @@
         }
         @for (int i = 0; i < nonExclusiveChoices.Count(); i++)
         {
-            string answerText = nonExclusiveChoices[i].Answer;
-            List<string> selectedChoices = Model.Checkbox.SelectedChoices;
-            bool isSelected = selectedChoices != null ? selectedChoices.Contains(answerText) : false;
+            int answerId = nonExclusiveChoices[i].Id;
+            List<int> selectedChoices = Model.Checkbox.SelectedChoices;
+            bool isSelected = selectedChoices.Contains(answerId);
 
             <div class="govuk-checkboxes__item">
                 @*Must use the input tag helper as opposed to htmlcheckbox, as all checkboxes need the same name property, which cannot be overridden easily in HtmlCheckboxFor*@
@@ -51,7 +51,7 @@
                    type="checkbox" class="govuk-checkboxes__input" disabled="@isReadOnly">
                    
                 }
-                @Html.Label(nonExclusiveChoices[i].Answer, answerText, new {@class = "govuk-label govuk-checkboxes__label"})
+                @Html.Label(nonExclusiveChoices[i].Answer, nonExclusiveChoices[i].Answer, new {@class = "govuk-label govuk-checkboxes__label"})
             </div>
             if (!String.IsNullOrEmpty(isReadOnly) && isSelected)
             {
@@ -60,9 +60,9 @@
         }
         @for (int i = 0; i < exclusiveChoices.Count(); i++)
         {
-            string answerText = exclusiveChoices[i].Answer;
-            List<string> selectedChoices = Model.Checkbox.SelectedChoices;
-            bool isSelected = selectedChoices != null ? selectedChoices.Contains(answerText) : false;
+            int answerId = exclusiveChoices[i].Id;
+            List<int> selectedChoices = Model.Checkbox.SelectedChoices;
+            bool isSelected = selectedChoices.Contains(answerId);
 
             @if (nonExclusiveChoices.Any() || i > 0)
             {
@@ -86,7 +86,7 @@
                    type="checkbox" class="govuk-checkboxes__input" disabled="@isReadOnly">
                    
                 }
-                @Html.Label(exclusiveChoices[i].Answer, answerText, new {@class = "govuk-label govuk-checkboxes__label"})
+                @Html.Label(exclusiveChoices[i].Answer, exclusiveChoices[i].Answer, new {@class = "govuk-label govuk-checkboxes__label"})
             </div>
             if (!String.IsNullOrEmpty(isReadOnly) && isSelected)
             {

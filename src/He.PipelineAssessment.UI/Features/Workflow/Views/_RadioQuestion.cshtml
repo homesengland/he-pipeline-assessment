@@ -25,7 +25,7 @@
         {
             int iterrator = 1;
             string isChecked = "";
-            if (!String.IsNullOrEmpty(Model.Radio.SelectedAnswer) && choice.Answer == Model.Radio.SelectedAnswer)
+            if (choice.Id == Model.Radio.SelectedAnswer)
             {
                 isChecked = "checked";
             }

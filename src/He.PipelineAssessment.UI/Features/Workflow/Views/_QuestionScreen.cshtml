@@ -160,7 +160,7 @@
                     @if (Model.Data.QuestionScreenAnswers![i].QuestionType == QuestionTypeConstants.CheckboxQuestion)
                     {
 
-                        @await Html.PartialAsync("_CheckboxQuestion",new MultiQuestion()
+                        @await Html.PartialAsync("_CheckboxQuestion", new MultiQuestion()
                         {
                             Index = i,
                             IsValid = isValidItem,
@@ -182,10 +182,10 @@
                             Checkbox = new Checkbox()
                             {
                                 SelectedChoices = Model.Data.QuestionScreenAnswers[i].Checkbox.SelectedChoices,
-                                Choices = Model.Data.QuestionScreenAnswers[i].Checkbox.Choices.Select(x=> new He.PipelineAssessment.UI.Features.Workflow.ViewModels.Choice(){Answer = x.Answer,IsSingle = x.IsSingle}).ToList()
+                                Choices = Model.Data.QuestionScreenAnswers[i].Checkbox.Choices.Select(x => new Choice() { Answer = x.Answer, IsSingle = x.IsSingle, Id = x.Id }).ToList()
                             }
-                            })
-                        }
+                        })
+                    }
                     @if (Model.Data.QuestionScreenAnswers![i].QuestionType == QuestionTypeConstants.RadioQuestion || Model.Data.QuestionScreenAnswers![i].QuestionType == QuestionTypeConstants.PotScoreRadioQuestion)
                     {
 
@@ -212,7 +212,7 @@
                             {
                                 SelectedAnswer = Model.Data.QuestionScreenAnswers[i].Radio.SelectedAnswer,
                                 Choices = Model.Data.QuestionScreenAnswers[i].Radio.Choices
-                                .Select(x=> new He.PipelineAssessment.UI.Features.Workflow.ViewModels.Choice(){Answer = x.Answer,IsSingle = x.IsSingle}).ToList()
+                                .Select(x=> new Choice(){Answer = x.Answer,IsSingle = x.IsSingle, Id = x.Id}).ToList()
                             }
                         })
 

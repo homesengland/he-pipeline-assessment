@@ -1,5 +1,5 @@
-﻿using Elsa.CustomWorkflow.Sdk.Models.Workflow.Validators;
-using Elsa.CustomWorkflow.Sdk.Models.Workflow;
+﻿using Elsa.CustomWorkflow.Sdk.Models.Workflow;
+using Elsa.CustomWorkflow.Sdk.Models.Workflow.Validators;
 using FluentValidation.TestHelper;
 using Xunit;
 
@@ -29,7 +29,7 @@ namespace Elsa.CustomWorkflow.Sdk.Tests.Workflow.Validators
                         Answer = "Test 3"
                     },
                 },
-                SelectedAnswer = string.Empty
+                SelectedAnswer = 0
             };
 
             //Act
@@ -62,7 +62,7 @@ namespace Elsa.CustomWorkflow.Sdk.Tests.Workflow.Validators
                         Answer = "Test 3"
                     },
                 },
-                SelectedAnswer = "MyAnswer"
+                SelectedAnswer = 345
             };
 
             //Act

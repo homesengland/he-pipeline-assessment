@@ -319,7 +319,7 @@ public class LoadQuestionScreenRequestHandlerTests
         Assert.NotNull(result.Data!.QuestionScreenAnswers);
         Assert.Equal(assessmentQuestions.Count(), result.Data!.QuestionScreenAnswers.Count());
         Assert.Empty(result.ErrorMessages);
-        Assert.Equal("Choice1", result.Data.QuestionScreenAnswers[0].Checkbox.SelectedChoices.First());
+        Assert.Equal(1, result.Data.QuestionScreenAnswers[0].Checkbox.SelectedChoices.First());
         Assert.Single(result.Data.QuestionScreenAnswers[0].Checkbox.SelectedChoices);
     }
 
@@ -380,7 +380,7 @@ public class LoadQuestionScreenRequestHandlerTests
         Assert.NotNull(result.Data!.QuestionScreenAnswers);
         Assert.Equal(assessmentQuestions.Count(), result.Data!.QuestionScreenAnswers.Count());
         Assert.Empty(result.ErrorMessages);
-        Assert.Equal(result.Data.QuestionScreenAnswers[0].Radio.SelectedAnswer, myChoice);
+        Assert.Equal(1, result.Data.QuestionScreenAnswers[0].Radio.SelectedAnswer);
     }
 
     [Theory]
@@ -440,7 +440,7 @@ public class LoadQuestionScreenRequestHandlerTests
         Assert.NotNull(result.Data!.QuestionScreenAnswers);
         Assert.Equal(assessmentQuestions.Count(), result.Data!.QuestionScreenAnswers.Count());
         Assert.Empty(result.ErrorMessages);
-        Assert.Equal(result.Data.QuestionScreenAnswers[0].Radio.SelectedAnswer, myChoice);
+        Assert.Equal(1, result.Data.QuestionScreenAnswers[0].Radio.SelectedAnswer);
     }
 
     [Theory]
@@ -498,7 +498,7 @@ public class LoadQuestionScreenRequestHandlerTests
         Assert.NotNull(result.Data!.QuestionScreenAnswers);
         Assert.Equal(assessmentQuestions.Count(), result.Data!.QuestionScreenAnswers.Count());
         Assert.Empty(result.ErrorMessages);
-        Assert.Equal(myChoice, result.Data.QuestionScreenAnswers[0].Radio.SelectedAnswer);
+        Assert.Equal(1, result.Data.QuestionScreenAnswers[0].Radio.SelectedAnswer);
     }
 
     [Theory]
@@ -556,7 +556,7 @@ public class LoadQuestionScreenRequestHandlerTests
         Assert.NotNull(result.Data!.QuestionScreenAnswers);
         Assert.Equal(assessmentQuestions.Count(), result.Data!.QuestionScreenAnswers.Count());
         Assert.Empty(result.ErrorMessages);
-        Assert.Equal(myChoice, result.Data.QuestionScreenAnswers[0].Radio.SelectedAnswer);
+        Assert.Equal(1, result.Data.QuestionScreenAnswers[0].Radio.SelectedAnswer);
     }
 
     [Theory]
@@ -613,8 +613,8 @@ public class LoadQuestionScreenRequestHandlerTests
         Assert.NotNull(result.Data!.QuestionScreenAnswers);
         Assert.Equal(assessmentQuestions.Count(), result.Data!.QuestionScreenAnswers.Count());
         Assert.Empty(result.ErrorMessages);
-        Assert.Equal("Choice1", result.Data.QuestionScreenAnswers[0].Checkbox.SelectedChoices[0]);
-        Assert.Equal("Choice2", result.Data.QuestionScreenAnswers[0].Checkbox.SelectedChoices[1]);
+        Assert.Equal(1, result.Data.QuestionScreenAnswers[0].Checkbox.SelectedChoices[0]);
+        Assert.Equal(2, result.Data.QuestionScreenAnswers[0].Checkbox.SelectedChoices[1]);
     }
 
     [Theory]

@@ -159,7 +159,7 @@ namespace Elsa.CustomWorkflow.Sdk.Models.Workflow
                 Answers = new List<QuestionActivityAnswer>();
                 if (value != null && value.SelectedChoices != null)
                 {
-                    selectedChoices = _checkbox.Choices.Where(c => _checkbox.SelectedChoices.Contains(c.Answer)).ToList();
+                    selectedChoices = _checkbox.Choices.Where(c => _checkbox.SelectedChoices.Contains(c.Id)).ToList();
                 }
                 SetChoiceAnswers(selectedChoices);
             }
@@ -173,7 +173,7 @@ namespace Elsa.CustomWorkflow.Sdk.Models.Workflow
                 Answers = new List<QuestionActivityAnswer>();
                 if (value != null)
                 {
-                    var choice = _radio.Choices.Where(x => x.Answer == value.SelectedAnswer).ToList();
+                    var choice = _radio.Choices.Where(x => x.Id == value.SelectedAnswer).ToList();
                     SetChoiceAnswers(choice);
 
                 }
@@ -266,20 +266,20 @@ namespace Elsa.CustomWorkflow.Sdk.Models.Workflow
 
     public class Checkbox
     {
-        public List<string>? SelectedChoices { get; set; }
+        public List<int>? SelectedChoices { get; set; }
         public List<Choice> Choices { get; set; } = new List<Choice>();
     }
 
     public class Radio
     {
         public List<Choice> Choices { get; set; } = new List<Choice>();
-        public string SelectedAnswer { get; set; } = null!;
+        public int SelectedAnswer { get; set; }
     }
 
 
     public class Choice
     {
-        public int? Id { get; set; }
+        public int Id { get; set; }
         public string Answer { get; set; } = null!;
         public bool IsSingle { get; set; }
         public string? Value { get; set; }

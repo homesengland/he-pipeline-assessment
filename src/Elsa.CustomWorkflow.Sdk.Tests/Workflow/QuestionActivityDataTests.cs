@@ -399,7 +399,7 @@ namespace Elsa.CustomWorkflow.Sdk.Tests.Workflow
                      IsSingle = true,
                 },
             };
-            var answerList = new List<string>() { "Test 1" };
+            var answerList = new List<int>() { 1 };
             sut.QuestionType = QuestionTypeConstants.CheckboxQuestion;
 
             //Act
@@ -481,7 +481,7 @@ namespace Elsa.CustomWorkflow.Sdk.Tests.Workflow
             sut.QuestionType = QuestionTypeConstants.RadioQuestion;
 
             //Act
-            sut.Radio = new Radio() { Choices = choices, SelectedAnswer = choices[0].Answer };
+            sut.Radio = new Radio() { Choices = choices, SelectedAnswer = choices[0].Id };
             //Assert
             Assert.Equal(choices.ToArray(), sut.Radio.Choices);
             Assert.Equal("Test 1", sut.Answers!.FirstOrDefault()!.AnswerText);

@@ -48,13 +48,13 @@ namespace Elsa.Server.Features.Workflow.LoadQuestionScreen
     {
         public QuestionChoice[] Choices { get; set; } = new List<QuestionChoice>().ToArray();
 
-        public List<string> SelectedChoices { get; set; } = null!;
+        public List<int> SelectedChoices { get; set; } = null!;
     }
 
     public class Radio
     {
         public QuestionChoice[] Choices { get; set; } = new List<QuestionChoice>().ToArray();
-        public string? SelectedAnswer { get; set; }
+        public int? SelectedAnswer { get; set; }
     }
 
     public class Information

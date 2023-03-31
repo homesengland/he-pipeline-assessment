@@ -37,7 +37,7 @@ namespace Elsa.CustomWorkflow.Sdk.Tests.Workflow.Validators
                     IsSingle = true
                    },
             };
-            multiChoice.SelectedChoices = new List<string>() { "Test 1", "Test 2", "Test 4" };
+            multiChoice.SelectedChoices = new List<int>() { 1, 2, 4 };
 
             //Act
             var expectedValidationResult = validator.TestValidate(multiChoice);
@@ -71,7 +71,7 @@ namespace Elsa.CustomWorkflow.Sdk.Tests.Workflow.Validators
                     IsSingle = true
                    },
             };
-            multiChoice.SelectedChoices = new List<string>() { "Test 1", "Test 2" };
+            multiChoice.SelectedChoices = new List<int>() { 1, 2 };
 
             var result = validator.TestValidate(multiChoice);
 
@@ -106,7 +106,7 @@ namespace Elsa.CustomWorkflow.Sdk.Tests.Workflow.Validators
                     IsSingle = true
                    },
             };
-            multiChoice.SelectedChoices = new List<string>() { "Test 1" };
+            multiChoice.SelectedChoices = new List<int>() { 1 };
 
             //Act
             var result = validator.TestValidate(multiChoice);
@@ -140,7 +140,7 @@ namespace Elsa.CustomWorkflow.Sdk.Tests.Workflow.Validators
                     IsSingle = false
                    },
             };
-            multiChoice.SelectedChoices = new List<string>() { "Test 2", "Test 3" };
+            multiChoice.SelectedChoices = new List<int>() { 2, 3 };
 
             //Act
             var result = validator.TestValidate(multiChoice);
@@ -176,7 +176,7 @@ namespace Elsa.CustomWorkflow.Sdk.Tests.Workflow.Validators
                         IsSingle = false
                     },
                 },
-                SelectedChoices = new List<string>()
+                SelectedChoices = new List<int>()
             };
 
             //Act
