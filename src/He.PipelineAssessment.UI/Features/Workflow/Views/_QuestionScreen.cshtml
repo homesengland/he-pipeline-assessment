@@ -1,7 +1,6 @@
 ﻿@using Elsa.CustomWorkflow.Sdk
 @using He.PipelineAssessment.UI.Features.Workflow.QuestionScreenSaveAndContinue
 @using He.PipelineAssessment.UI.Features.Workflow.ViewModels
-@using Microsoft.AspNetCore.Mvc.TagHelpers
 @model QuestionScreenSaveAndContinueCommand
 <div class="govuk-form-group">
     <div class="govuk-!-padding-bottom-6">
@@ -32,10 +31,6 @@
                     @Html.HiddenFor(m => m.Data.QuestionScreenAnswers![i].Question)
                     @Html.HiddenFor(m => m.Data.QuestionScreenAnswers![i].QuestionHint)
                     @Html.HiddenFor(m => m.Data.QuestionScreenAnswers![i].DisplayComments)
-                    if (Model.Data.QuestionScreenAnswers![i].IsReadOnly)
-                    {
-                        @Html.HiddenFor(m => m.Data.QuestionScreenAnswers![i].Answers)
-                    }
                     @Html.HiddenFor(m => m.Data.QuestionScreenAnswers![i].IsReadOnly)
 
                     bool isValidItem = true;
@@ -70,6 +65,10 @@
                             Title = Model.Data.QuestionScreenAnswers[i].Title,
                             Text =  Model.Data.QuestionScreenAnswers[i].Text
                         })
+                        if (Model.Data.QuestionScreenAnswers![i].IsReadOnly)
+                        {
+                            @Html.HiddenFor(m => m.Data.QuestionScreenAnswers![i].Text)
+                        }
                     }
 
                     @if (Model.Data.QuestionScreenAnswers![i].QuestionType == QuestionTypeConstants.TextAreaQuestion)
@@ -97,6 +96,10 @@
                         Text =  Model.Data.QuestionScreenAnswers[i].Text
 
                         })
+                        if (Model.Data.QuestionScreenAnswers![i].IsReadOnly)
+                        {
+                            @Html.HiddenFor(m => m.Data.QuestionScreenAnswers![i].Text)
+                        }
                     }
                     @if (Model.Data.QuestionScreenAnswers![i].QuestionType == QuestionTypeConstants.DateQuestion)
                     {
@@ -149,6 +152,10 @@
                             Title = Model.Data.QuestionScreenAnswers[i].Title,
                             Decimal = Model.Data.QuestionScreenAnswers[i].Decimal
                         })
+                        if (Model.Data.QuestionScreenAnswers![i].IsReadOnly)
+                        {
+                            @Html.HiddenFor(m => m.Data.QuestionScreenAnswers![i].Decimal)
+                        }
                     }
                     @if (Model.Data.QuestionScreenAnswers![i].QuestionType == QuestionTypeConstants.CheckboxQuestion)
                     {
@@ -208,6 +215,11 @@
                                 .Select(x=> new He.PipelineAssessment.UI.Features.Workflow.ViewModels.Choice(){Answer = x.Answer,IsSingle = x.IsSingle}).ToList()
                             }
                         })
+
+                        if (Model.Data.QuestionScreenAnswers![i].IsReadOnly)
+                        {
+                            @Html.HiddenFor(m => m.Data.QuestionScreenAnswers![i].Radio.SelectedAnswer)
+                        }
                     }
 
                     @if (Model.Data.QuestionScreenAnswers![i].QuestionType == QuestionTypeConstants.Information)

@@ -144,48 +144,48 @@ namespace Elsa.Server.Features.Workflow.LoadQuestionScreen
 
             if (item.QuestionType == QuestionTypeConstants.CheckboxQuestion)
             {
-                questionActivityData.Checkbox = new Checkbox();
-                questionActivityData.Checkbox.Choices =
-                    item.Checkbox.Choices.Select(x => new QuestionChoice()
-                    { Answer = x.Answer, IsSingle = x.IsSingle }).ToArray();
-
-                List<string> answerList;
-                if (dbQuestion.Answers != null && dbQuestion.Answers.Any())
+                if (dbQuestion.Choices != null)
                 {
-                    answerList = dbQuestion.Answers.Select(x => x.AnswerText).ToList();
+                    questionActivityData.Checkbox = new Checkbox
+                    {
+                        Choices = dbQuestion.Choices.Select(x => new QuestionChoice()
+                        { Answer = x.Answer, IsSingle = x.IsSingle, Id = x.Id }).ToArray()
+                    };
+
+                    List<string> answerList;
+                    if (dbQuestion.Answers != null && dbQuestion.Answers.Any())
+                    {
+                        answerList = dbQuestion.Answers.Select(x => x.AnswerText).ToList();
+                    }
+                    else
+                    {
+                        answerList = dbQuestion.Choices.Where(x => x.IsPrePopulated).Select(x => x.Answer).ToList();
+                    }
+
+                    questionActivityData.Checkbox.SelectedChoices = answerList;
                 }
-                else
+            }
+
+            if (item.QuestionType == QuestionTypeConstants.RadioQuestion || item.QuestionType == QuestionTypeConstants.PotScoreRadioQuestion)
+            {
+                if (dbQuestion.Choices != null)
                 {
-                    answerList = item.Checkbox.Choices.Where(x => x.IsPrePopulated).Select(x => x.Answer).ToList();
+                    questionActivityData.Radio = new Radio
+                    {
+                        Choices = dbQuestion.Choices
+                            .Select(x => new QuestionChoice() { Answer = x.Answer, Id = x.Id })
+                            .ToArray()
+                    };
+                    if (dbQuestion.Answers != null && dbQuestion.Answers.Any())
+                    {
+                        questionActivityData.Radio.SelectedAnswer = dbQuestion.Answers.First().AnswerText;
+                    }
+                    else
+                    {
+                        questionActivityData.Radio.SelectedAnswer =
+                            dbQuestion.Choices.First(x => x.IsPrePopulated).Answer;
+                    }
                 }
-
-                questionActivityData.Checkbox.SelectedChoices = answerList;
-            }
-
-            if (item.QuestionType == QuestionTypeConstants.RadioQuestion)
-            {
-                questionActivityData.Radio = new Radio();
-                questionActivityData.Radio.Choices = item.Radio.Choices
-                    .Select(x => new QuestionChoice() { Answer = x.Answer })
-                    .ToArray();
-                questionActivityData.Radio.SelectedAnswer =
-                    item.Radio.Choices.First(x => x.IsPrePopulated).Answer;
-            }
-
-            if (item.QuestionType == QuestionTypeConstants.PotScoreRadioQuestion)
-            {
-                questionActivityData.Radio = new Radio();
-                questionActivityData.Radio.Choices = item.PotScoreRadio.Choices
-                    .Select(x => new QuestionChoice() { Answer = x.Answer })
-                    .ToArray();
-                questionActivityData.Radio.SelectedAnswer =
-                    item.PotScoreRadio.Choices.First(x => x.IsPrePopulated).Answer;
-            }
-
-            if ((item.QuestionType == QuestionTypeConstants.RadioQuestion || item.QuestionType == QuestionTypeConstants.PotScoreRadioQuestion) &&
-                 dbQuestion.Answers != null && dbQuestion.Answers.Any())
-            {
-                questionActivityData.Radio.SelectedAnswer = dbQuestion.Answers.First().AnswerText;
             }
 
             if (item.QuestionType == QuestionTypeConstants.Information)
