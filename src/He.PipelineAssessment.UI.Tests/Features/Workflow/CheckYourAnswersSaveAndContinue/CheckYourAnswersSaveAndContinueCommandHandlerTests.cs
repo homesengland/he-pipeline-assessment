@@ -24,7 +24,7 @@ namespace He.PipelineAssessment.UI.Tests.Features.Workflow.CheckYourAnswersSaveA
         {
             //Arrange
 
-            roleValidation.Setup(x => x.ValidateRole(saveAndContinueCommand.AssessmentId)).ReturnsAsync(true); 
+            roleValidation.Setup(x => x.ValidateRole(saveAndContinueCommand.AssessmentId)).ReturnsAsync(true);
 
             elsaServerHttpClient.Setup(x => x.CheckYourAnswersSaveAndContinue(It.IsAny<CheckYourAnswersSaveAndContinueCommandDto>()))
                 .ReturnsAsync((WorkflowNextActivityDataDto?)null);
@@ -71,16 +71,38 @@ namespace He.PipelineAssessment.UI.Tests.Features.Workflow.CheckYourAnswersSaveA
 
         [Theory]
         [AutoMoqData]
-        public async Task Handle_ReturnsNull_GivenErrorsEncountered(
-            [Frozen] Mock<IElsaServerHttpClient> elsaServerHttpClient,
+        public async Task Handle_ReturnsNull_GivenIncorrectBusinessArea(
+
+            [Frozen] Mock<IRoleValidation> roleValidation,
             CheckYourAnswersSaveAndContinueCommand saveAndContinueCommand,
-             AssessmentToolWorkflowInstance assessmentToolWorkflowInstance,
             CheckYourAnswersSaveAndContinueCommandHandler sut
         )
         {
             //Arrange
-            elsaServerHttpClient.Setup(x => x.CheckYourAnswersSaveAndContinue(It.IsAny<CheckYourAnswersSaveAndContinueCommandDto>()))
-                 .ReturnsAsync((assessmentToolWorkflowInstance?)null);
+
+            roleValidation.Setup(x => x.ValidateRole(saveAndContinueCommand.AssessmentId)).ReturnsAsync(false);
+
+
+            //Act
+            var result = await sut.Handle(saveAndContinueCommand, CancellationToken.None);
+
+            //Assert
+            Assert.False(result!.IsCorrectBusinessArea);
+        }
+
+
+        [Theory]
+        [AutoMoqData]
+        public async Task Handle_ReturnsNull_GivenException(
+          [Frozen] Mock<IRoleValidation> roleValidation,
+          CheckYourAnswersSaveAndContinueCommand saveAndContinueCommand,
+          CheckYourAnswersSaveAndContinueCommandHandler sut
+      )
+        {
+            //Arrange
+
+            roleValidation.Setup(x => x.ValidateRole(saveAndContinueCommand.AssessmentId)).ThrowsAsync(new Exception());
+
 
             //Act
             var result = await sut.Handle(saveAndContinueCommand, CancellationToken.None);

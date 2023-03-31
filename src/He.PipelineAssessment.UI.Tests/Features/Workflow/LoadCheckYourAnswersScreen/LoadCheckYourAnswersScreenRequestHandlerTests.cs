@@ -98,17 +98,18 @@ namespace He.PipelineAssessment.UI.Tests.Features.Workflow.LoadCheckYourAnswersS
            LoadCheckYourAnswersScreenRequestHandler sut)
         {
             //Arrange
+            loadCheckYourAnswersScreenRequest.IsReadOnly = false;
+
             assessmentRepository.Setup(x => x.GetAssessmentToolWorkflowInstance(loadCheckYourAnswersScreenRequest.WorkflowInstanceId))
-               .ReturnsAsync(assessmentToolWorkflowInstance);
+              .ReturnsAsync(assessmentToolWorkflowInstance);
 
             roleValidation.Setup(x => x.ValidateRole(assessmentToolWorkflowInstance.AssessmentId)).ReturnsAsync(false);
-
-
+           
             //Act
             var result = await sut.Handle(loadCheckYourAnswersScreenRequest, CancellationToken.None);
 
             //Assert
-            Assert.False(result!.IsCorrectBusinessArea);  
+            Assert.False(result!.IsCorrectBusinessArea);
         }
 
     }
