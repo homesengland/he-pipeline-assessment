@@ -119,26 +119,5 @@ namespace He.PipelineAssessment.UI.Tests.Features.Workflow.LoadQuestionScreen
             //Assert
             Assert.Null(result);
         }
-
-        //public async Task Handle_ReturnsSaveAndContinueCommand_GivenIncorrectRole(
-        // [Frozen] Mock<IAssessmentRepository> assessmentRepository,
-        // [Frozen] Mock<IRoleValidation> roleValidation,
-        // LoadQuestionScreenRequest loadWorkflowActivityRequest,
-        // AssessmentToolWorkflowInstance assessmentToolWorkflowInstance,
-        // LoadQuestionScreenRequestHandler sut)
-        //{
-        //    //Arrange
-
-        //    assessmentRepository.Setup(x => x.GetAssessmentToolWorkflowInstance(loadWorkflowActivityRequest.WorkflowInstanceId))
-        //       .ReturnsAsync(assessmentToolWorkflowInstance);
-
-        //    roleValidation.Setup(x => x.ValidateRole(assessmentToolWorkflowInstance.AssessmentId)).ReturnsAsync(false);
-
-        //    //Act
-        //    var result = await sut.Handle(loadWorkflowActivityRequest, CancellationToken.None);
-
-        //    //Assert
-        //    Assert.False(result!.IsCorrectBusinessArea);
-        //}
     }
 }

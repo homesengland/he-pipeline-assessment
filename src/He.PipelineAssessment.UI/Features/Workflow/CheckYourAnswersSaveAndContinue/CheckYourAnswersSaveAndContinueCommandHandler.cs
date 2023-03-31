@@ -28,52 +28,56 @@ namespace He.PipelineAssessment.UI.Features.Workflow.CheckYourAnswersSaveAndCont
 
         public async Task<CheckYourAnswersSaveAndContinueCommandResponse?> Handle(CheckYourAnswersSaveAndContinueCommand request, CancellationToken cancellationToken)
         {
-            if (!await _roleValidation.ValidateRole(request.AssessmentId))
-            {
-                return new CheckYourAnswersSaveAndContinueCommandResponse()
-                {
-                    IsCorrectBusinessArea = false
-                };
-            }
             try
             {
-                var checkYourAnswersSaveAndContinueCommandDto = new CheckYourAnswersSaveAndContinueCommandDto()
+                if (!await _roleValidation.ValidateRole(request.AssessmentId))
                 {
-                    ActivityId = request.Data.ActivityId,
-                    WorkflowInstanceId = request.Data.WorkflowInstanceId
-                };
-                var response = await _elsaServerHttpClient.CheckYourAnswersSaveAndContinue(checkYourAnswersSaveAndContinueCommandDto);
-                if (response != null)
-                {
-                    var currentAssessmentToolWorkflowInstance = await _assessmentRepository.GetAssessmentToolWorkflowInstance(response.Data.WorkflowInstanceId);
-                    if (currentAssessmentToolWorkflowInstance != null && currentAssessmentToolWorkflowInstance.Status != AssessmentStageConstants.Submitted)
+                    return new CheckYourAnswersSaveAndContinueCommandResponse()
                     {
-
-                        var submittedTime = DateTime.UtcNow;
-                        currentAssessmentToolWorkflowInstance.Status = AssessmentStageConstants.Submitted;
-                        currentAssessmentToolWorkflowInstance.SubmittedDateTime = submittedTime;
-                        currentAssessmentToolWorkflowInstance.CurrentActivityId = response.Data.NextActivityId;
-                        currentAssessmentToolWorkflowInstance.CurrentActivityType = response.Data.ActivityType;
-                        currentAssessmentToolWorkflowInstance.SubmittedBy = _userProvider.GetUserName();
-                        await _assessmentRepository.SaveChanges();
-
-                        CheckYourAnswersSaveAndContinueCommandResponse result = new CheckYourAnswersSaveAndContinueCommandResponse()
-                        {
-                            ActivityId = response.Data.NextActivityId,
-                            ActivityType = response.Data.ActivityType,
-                            WorkflowInstanceId = response.Data.WorkflowInstanceId,
-                            IsCorrectBusinessArea = true
-                        };
-                        return await Task.FromResult(result);
-                    }
+                        IsCorrectBusinessArea = false
+                    };
                 }
+                else
+                {
+                    var checkYourAnswersSaveAndContinueCommandDto = new CheckYourAnswersSaveAndContinueCommandDto()
+                    {
+                        ActivityId = request.Data.ActivityId,
+                        WorkflowInstanceId = request.Data.WorkflowInstanceId
+                    };
+                    var response = await _elsaServerHttpClient.CheckYourAnswersSaveAndContinue(checkYourAnswersSaveAndContinueCommandDto);
 
-                return null;
+                    if (response != null)
+                    {
+                        var currentAssessmentToolWorkflowInstance = await _assessmentRepository.GetAssessmentToolWorkflowInstance(response.Data.WorkflowInstanceId);
+                        if (currentAssessmentToolWorkflowInstance != null && currentAssessmentToolWorkflowInstance.Status != AssessmentStageConstants.Submitted)
+                        {
 
+                            var submittedTime = DateTime.UtcNow;
+                            currentAssessmentToolWorkflowInstance.Status = AssessmentStageConstants.Submitted;
+                            currentAssessmentToolWorkflowInstance.SubmittedDateTime = submittedTime;
+                            currentAssessmentToolWorkflowInstance.CurrentActivityId = response.Data.NextActivityId;
+                            currentAssessmentToolWorkflowInstance.CurrentActivityType = response.Data.ActivityType;
+                            currentAssessmentToolWorkflowInstance.SubmittedBy = _userProvider.GetUserName();
+                            await _assessmentRepository.SaveChanges();
+
+                            CheckYourAnswersSaveAndContinueCommandResponse result = new CheckYourAnswersSaveAndContinueCommandResponse()
+                            {
+                                ActivityId = response.Data.NextActivityId,
+                                ActivityType = response.Data.ActivityType,
+                                WorkflowInstanceId = response.Data.WorkflowInstanceId,
+                                IsCorrectBusinessArea = true
+                            };
+                            return await Task.FromResult(result);
+                        }
+                    }
+
+                    return null;
+                }
             }
             catch (Exception e)
             {
                 _logger.LogError(e.Message);
+
                 return null;
             }
 
