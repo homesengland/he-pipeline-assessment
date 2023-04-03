@@ -36,7 +36,7 @@ namespace Elsa.CustomActivities.Activities.QuestionScreen.Helpers
                     if (questionScreenQuestion != null && questionScreenQuestion.Answers != null &&
                         questionScreenQuestion.QuestionType == QuestionTypeConstants.CheckboxQuestion)
                     {
-                        return string.Join(',', questionScreenQuestion.Answers.Select(x => x.AnswerText));
+                        return string.Join(", ", questionScreenQuestion.Answers.Select(x => x.AnswerText));
                     }
                 }
             }

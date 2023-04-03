@@ -52,7 +52,7 @@ namespace Elsa.Server.Features.Workflow.LoadCheckYourAnswersScreen
                 else
                 {
                     result.ErrorMessages.Add(
-                        $"Unable to find activity navigation with Workflow Id: {activityScreenRequest.WorkflowInstanceId} and Activity Id: {activityScreenRequest.ActivityId} in Elsa Custom database");
+                        $"Unable to find activity navigation with Workflow ChoiceId: {activityScreenRequest.WorkflowInstanceId} and Activity ChoiceId: {activityScreenRequest.ActivityId} in Elsa Custom database");
                 }
             }
             catch (Exception e)
