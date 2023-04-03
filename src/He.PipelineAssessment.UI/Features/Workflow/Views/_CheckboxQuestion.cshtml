@@ -21,9 +21,11 @@
         }
         @for (int i = 0; i < Model.Checkbox.Choices.Count(); i++)
         {
+            var hiddenItemNameId = "Data.QuestionScreenAnswers[" + Model.Index + "].Checkbox.Choices[" + i + "].Id";
             var hiddenItemNameAnswer = "Data.QuestionScreenAnswers[" + Model.Index + "].Checkbox.Choices[" + i + "].Answer";
             var hiddenItemNameIsSingle = "Data.QuestionScreenAnswers[" + Model.Index + "].Checkbox.Choices[" + i + "].IsSingle";
 
+            <input type="hidden" name="@hiddenItemNameId" value="@Model.Checkbox.Choices[i].Id" />
             <input type="hidden" name="@hiddenItemNameAnswer" value="@Model.Checkbox.Choices[i].Answer" />
             <input type="hidden" name="@hiddenItemNameIsSingle" value="@Model.Checkbox.Choices[i].IsSingle.ToString()" />
         }
@@ -39,14 +41,14 @@
                 @if(String.IsNullOrEmpty(isReadOnly))
                 {
                     <input asp-for="@isSelected"
-                   value="@nonExclusiveChoices[i].Answer"
+                   value="@nonExclusiveChoices[i].Id"
                    name="@itemName"
                    type="checkbox" class="govuk-checkboxes__input" >
                 }
                 else
                 {
                     <input asp-for="@isSelected"
-                   value="@nonExclusiveChoices[i].Answer"
+                   value="@nonExclusiveChoices[i].Id"
                    name="@itemName"
                    type="checkbox" class="govuk-checkboxes__input" disabled="@isReadOnly">
                    
@@ -55,7 +57,7 @@
             </div>
             if (!String.IsNullOrEmpty(isReadOnly) && isSelected)
             {
-                <input type="hidden" value="@nonExclusiveChoices[i].Answer" name="@itemName">
+                <input type="hidden" value="@nonExclusiveChoices[i].Id" name="@itemName">
             }
         }
         @for (int i = 0; i < exclusiveChoices.Count(); i++)
@@ -74,14 +76,14 @@
                 {
                 @*Must use the input tag helper as opposed to htmlcheckbox, as all checkboxes need the same name property, which cannot be overridden easily in HtmlCheckboxFor*@
                 <input asp-for="@isSelected"
-                   value="@exclusiveChoices[i].Answer"
+                   value="@exclusiveChoices[i].Id"
                    name="@itemName"
                    type="checkbox" class="govuk-checkboxes__input" data-behaviour="exclusive" >
                 }
                 else
                 {
                     <input asp-for="@isSelected"
-                   value="@exclusiveChoices[i].Answer"
+                   value="@exclusiveChoices[i].Id"
                    name="@itemName"
                    type="checkbox" class="govuk-checkboxes__input" disabled="@isReadOnly">
                    
@@ -90,7 +92,7 @@
             </div>
             if (!String.IsNullOrEmpty(isReadOnly) && isSelected)
             {
-                <input type="hidden" value="@exclusiveChoices[i].Answer" name="@itemName">
+                <input type="hidden" value="@exclusiveChoices[i].Id" name="@itemName">
             }
         }
     </div>

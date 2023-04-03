@@ -19,7 +19,9 @@
         @for (int i = 0; i < Model.Radio.Choices.Count(); i++)
         {
             var hiddenItemNameAnswer = "Data.QuestionScreenAnswers[" + Model.Index + "].Radio.Choices[" + i + "].Answer";
+            var hiddenItemNameId = "Data.QuestionScreenAnswers[" + Model.Index + "].Radio.Choices[" + i + "].Id";
             <input type="hidden" name="@hiddenItemNameAnswer" value="@Model.Radio.Choices[i].Answer"/>
+            <input type="hidden" name="@hiddenItemNameId" value="@Model.Radio.Choices[i].Id" />
         }
         @foreach (var choice in Model.Radio.Choices)
         {
@@ -30,7 +32,7 @@
                 isChecked = "checked";
             }
             <div class="govuk-radios__item">
-                <input class="govuk-radios__input" name="@itemName" type="radio" value="@choice.Answer" id="@itemId@iterrator" @isChecked @isReadOnly>
+                <input class="govuk-radios__input" name="@itemName" type="radio" value="@choice.Id" id="@itemId@iterrator" @isChecked @isReadOnly>
                 <label class="govuk-label govuk-radios__label" for="@choice.Answer">@choice.Answer</label>
             </div>
             iterrator++;

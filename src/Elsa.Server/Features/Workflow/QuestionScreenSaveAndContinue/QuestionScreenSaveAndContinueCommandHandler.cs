@@ -96,7 +96,7 @@ namespace Elsa.Server.Features.Workflow.QuestionScreenSaveAndContinue
             {
                 foreach (var question in dbAssessmentQuestionList)
                 {
-                    var answers = command.Answers.Where(x => x.Id == question.QuestionId);
+                    var answers = command.Answers.Where(x => x.WorkflowQuestionId == question.QuestionId);
                     var now = _dateTimeProvider.UtcNow();
                     if (answers.Any())
                     {
@@ -105,20 +105,11 @@ namespace Elsa.Server.Features.Workflow.QuestionScreenSaveAndContinue
                             AnswerText = x.AnswerText ?? "",
                             CreatedDateTime = now,
                             LastModifiedDateTime = now,
-                            Choice = question.Choices?.FirstOrDefault(y => y.Answer == x.AnswerText)
+                            Choice = question.Choices?.FirstOrDefault(y => y.Id == x.ChoiceId)
                         }).ToList();
                         question.Comments = answers.First().Comments;
                         question.LastModifiedDateTime = now;
                     }
-
-                    //if (answer != null)
-                    //{
-                    //    //question.Answers();
-                    //    // check Answers if an Answer
-                    //    question.SetAnswer(answer.AnswerText, _dateTimeProvider.UtcNow());//could be single string or array
-
-                    //    question.Comments = answer.Comments;
-                    //}
                 }
 
                 await _elsaCustomRepository.SaveChanges(cancellationToken);

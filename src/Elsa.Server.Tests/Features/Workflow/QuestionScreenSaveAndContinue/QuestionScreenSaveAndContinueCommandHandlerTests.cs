@@ -42,7 +42,7 @@ public class QuestionScreenSaveAndContinueCommandHandlerTests
         };
         for (var i = 0; i < currentAssessmentQuestions.Count; i++)
         {
-            var questionId = saveAndContinueCommand.Answers![i].Id;
+            var questionId = saveAndContinueCommand.Answers![i].WorkflowQuestionId;
             currentAssessmentQuestions[i].QuestionId = questionId;
         }
 
@@ -246,7 +246,7 @@ public class QuestionScreenSaveAndContinueCommandHandlerTests
         };
         for (var i = 0; i < currentAssessmentQuestions.Count; i++)
         {
-            var questionId = saveAndContinueCommand.Answers![i].Id;
+            var questionId = saveAndContinueCommand.Answers![i].WorkflowQuestionId;
             currentAssessmentQuestions[i].QuestionId = questionId;
         }
 
