@@ -7,11 +7,12 @@ using He.PipelineAssessment.UI.Features.Workflow.LoadQuestionScreen;
 using He.PipelineAssessment.UI.Features.Workflow.QuestionScreenSaveAndContinue;
 using He.PipelineAssessment.UI.Features.Workflow.StartWorkflow;
 using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using System.Security.Claims;
 
 namespace He.PipelineAssessment.UI.Features.Workflow
 {
+    [Authorize]
     public class WorkflowController : Controller
     {
         private readonly ILogger<WorkflowController> _logger;
@@ -26,26 +27,31 @@ namespace He.PipelineAssessment.UI.Features.Workflow
             _validator = validator;
         }
 
-        public IActionResult Index()
-        {
-            return View("Index", new StartWorkflowCommand() { WorkflowDefinitionId = "e1ded93b0b4a432ebeb2b8e10bc1175a" });
-        }
-
+        [Authorize(Policy = Authorization.Constants.AuthorizationPolicies.AssignmentToWorkflowExecuteRoleRequired)]
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> StartWorkflow([FromForm] StartWorkflowCommand command)
         {
             try
             {
-                var result = await this._mediator.Send(command);
+                var result = await _mediator.Send(command);
 
-                return RedirectToAction("LoadWorkflowActivity",
-                    new
-                    {
-                        WorkflowInstanceId = result?.WorkflowInstanceId,
-                        ActivityId = result?.ActivityId,
-                        ActivityType = result?.ActivityType
-                    });
+                if (result.IsCorrectBusinessArea)
+                {
+
+                    return RedirectToAction("LoadWorkflowActivity",
+                        new
+                        {
+                            WorkflowInstanceId = result?.WorkflowInstanceId,
+                            ActivityId = result?.ActivityId,
+                            ActivityType = result?.ActivityType
+                        });
+                }
+                else
+                {
+                    return RedirectToAction("AccessDenied", "Error");
+                }
+
             }
             catch (Exception e)
             {
@@ -54,6 +60,7 @@ namespace He.PipelineAssessment.UI.Features.Workflow
             }
         }
 
+        [Authorize(Policy = Authorization.Constants.AuthorizationPolicies.AssignmentToWorkflowExecuteRoleRequired)]
         public async Task<IActionResult> LoadWorkflowActivity(QuestionScreenSaveAndContinueCommandResponse request)
         {
             try
@@ -69,22 +76,43 @@ namespace He.PipelineAssessment.UI.Features.Workflow
                             var questionScreenRequest = new LoadQuestionScreenRequest
                             {
                                 WorkflowInstanceId = request.WorkflowInstanceId,
-                                ActivityId = request.ActivityId
+                                ActivityId = request.ActivityId,
+                                IsReadOnly = false
                             };
                             var result = await this._mediator.Send(questionScreenRequest);
 
-                            return View("MultiSaveAndContinue", result);
+                            if (result.IsCorrectBusinessArea)
+                            {
+                                return View("MultiSaveAndContinue", result);
+                            }
+                            else
+                            {
+                                return RedirectToAction("LoadReadOnlyWorkflowActivity", request);
+
+                            }
                         }
                     case ActivityTypeConstants.CheckYourAnswersScreen:
                         {
                             var checkYourAnswersScreenRequest = new LoadCheckYourAnswersScreenRequest
                             {
                                 WorkflowInstanceId = request.WorkflowInstanceId,
-                                ActivityId = request.ActivityId
+                                ActivityId = request.ActivityId,
+                                IsReadOnly = false,
                             };
+
                             var result = await this._mediator.Send(checkYourAnswersScreenRequest);
 
-                            return View("CheckYourAnswers", result);
+                            if (result.IsCorrectBusinessArea)
+                            {
+                                return View("CheckYourAnswers", result);
+                            }
+                            else
+                            {
+
+                                return RedirectToAction("LoadReadOnlyWorkflowActivity", request);
+
+                            }
+
                         }
                     case ActivityTypeConstants.ConfirmationScreen:
                         {
@@ -93,9 +121,17 @@ namespace He.PipelineAssessment.UI.Features.Workflow
                                 WorkflowInstanceId = request.WorkflowInstanceId,
                                 ActivityId = request.ActivityId
                             };
+
                             var result = await this._mediator.Send(checkYourAnswersScreenRequest);
 
-                            return View("Confirmation", result);
+                            if (result.IsCorrectBusinessArea)
+                            {
+                                return View("Confirmation", result);
+                            }
+                            else
+                            {
+                                return RedirectToAction("LoadReadOnlyWorkflowActivity", request);
+                            }
                         }
                     default:
                         throw new ApplicationException(
@@ -109,6 +145,52 @@ namespace He.PipelineAssessment.UI.Features.Workflow
             }
         }
 
+        [Authorize(Policy = Authorization.Constants.AuthorizationPolicies.AssignmentToPipelineViewAssessmentRoleRequired)]
+        public async Task<IActionResult> LoadReadOnlyWorkflowActivity(QuestionScreenSaveAndContinueCommandResponse request)
+        {
+            try
+            {
+                if (string.IsNullOrEmpty(request.ActivityType))
+                {
+                    //try to get activity type from the server?
+                }
+                switch (request.ActivityType)
+                {
+                    case ActivityTypeConstants.ConfirmationScreen:
+                        {
+                            var checkYourAnswersScreenRequest = new LoadConfirmationScreenRequest
+                            {
+                                WorkflowInstanceId = request.WorkflowInstanceId,
+                                ActivityId = request.ActivityId
+                            };
+                            var result = await this._mediator.Send(checkYourAnswersScreenRequest);
+
+                            return View("Confirmation", result);
+                        }
+
+                    default:
+                        {
+                            var checkYourAnswersScreenRequest = new LoadCheckYourAnswersScreenRequest
+                            {
+                                WorkflowInstanceId = request.WorkflowInstanceId,
+                                ActivityId = request.ActivityId,
+                                IsReadOnly = true
+                            };
+                            var result = await this._mediator.Send(checkYourAnswersScreenRequest);
+
+                            return View("CheckYourAnswersReadOnly", result);
+                        }
+
+                }
+            }
+            catch (Exception e)
+            {
+                _logger.LogError(e.Message);
+                return RedirectToAction("Index", "Error", new { message = e.Message });
+            }
+        }
+
+        [Authorize(Policy = Authorization.Constants.AuthorizationPolicies.AssignmentToWorkflowExecuteRoleRequired)]
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> QuestionScreenSaveAndContinue([FromForm] QuestionScreenSaveAndContinueCommand command)
@@ -120,13 +202,22 @@ namespace He.PipelineAssessment.UI.Features.Workflow
                 {
                     var result = await this._mediator.Send(command);
 
-                    return RedirectToAction("LoadWorkflowActivity",
-                    new
+                    if (result.IsCorrectBusinessArea)
                     {
-                        WorkflowInstanceId = result?.WorkflowInstanceId,
-                        ActivityId = result?.ActivityId,
-                        ActivityType = result?.ActivityType
-                    });
+
+                        return RedirectToAction("LoadWorkflowActivity",
+                        new
+                        {
+                            WorkflowInstanceId = result?.WorkflowInstanceId,
+                            ActivityId = result?.ActivityId,
+                            ActivityType = result?.ActivityType
+                        });
+                    }
+                    else
+                    {
+                        return RedirectToAction("AccessDenied", "Error");
+                    }
+
                 }
                 else
                 {
@@ -142,21 +233,30 @@ namespace He.PipelineAssessment.UI.Features.Workflow
             }
         }
 
+        [Authorize(Policy = Authorization.Constants.AuthorizationPolicies.AssignmentToWorkflowExecuteRoleRequired)]
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> CheckYourAnswerScreenSaveAndContinue([FromForm] CheckYourAnswersSaveAndContinueCommand command)
         {
             try
-            {           
-                var result = await this._mediator.Send(command);
+            {
+                var result = await _mediator.Send(command);
 
-                return RedirectToAction("LoadWorkflowActivity",
-                    new
-                    {
-                        WorkflowInstanceId = result?.WorkflowInstanceId,
-                        ActivityId = result?.ActivityId,
-                        ActivityType = result?.ActivityType
-                    });
+                if (result.IsCorrectBusinessArea)
+                {
+
+                    return RedirectToAction("LoadWorkflowActivity",
+                        new
+                        {
+                            WorkflowInstanceId = result?.WorkflowInstanceId,
+                            ActivityId = result?.ActivityId,
+                            ActivityType = result?.ActivityType
+                        });
+                }
+                else
+                {
+                    return RedirectToAction("AccessDenied", "Error");
+                }
             }
             catch (Exception e)
             {
