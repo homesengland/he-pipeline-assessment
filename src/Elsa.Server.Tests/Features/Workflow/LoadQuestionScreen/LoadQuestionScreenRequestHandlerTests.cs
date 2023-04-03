@@ -278,7 +278,8 @@ public class LoadQuestionScreenRequestHandlerTests
     {
         //Arrange
         customActivityNavigation.ActivityType = ActivityTypeConstants.QuestionScreen;
-        assessmentQuestions[0].Answers = new List<Answer> { new() { AnswerText = "Choice1" } };
+        assessmentQuestions[0].Answers = new List<Answer> {
+            new() { AnswerText = "", Choice = new QuestionChoice { Id = 1, Identifier = "A" } } };
         for (var i = 0; i < assessmentQuestions.Count; i++)
         {
             var questionId = assessmentQuestions[i].QuestionId;
@@ -286,14 +287,6 @@ public class LoadQuestionScreenRequestHandlerTests
         }
 
         elsaAssessmentQuestions.Questions[0].QuestionType = QuestionTypeConstants.CheckboxQuestion;
-        elsaAssessmentQuestions.Questions[0].Checkbox.Choices = new List<CheckboxRecord>
-        {
-            new("A", "Choice1", false,false),
-            new("B", "Choice2", false, false),
-            new("C", "Choice3", false,false)
-        };
-
-
 
         workflowInstanceStore.Setup(x =>
                 x.FindAsync(It.IsAny<WorkflowInstanceIdSpecification>(), CancellationToken.None))
@@ -339,7 +332,8 @@ public class LoadQuestionScreenRequestHandlerTests
         //Arrange
         var myChoice = "Choice1";
         customActivityNavigation.ActivityType = ActivityTypeConstants.QuestionScreen;
-        assessmentQuestions[0].Answers = new List<Answer> { new() { AnswerText = "Choice1" } };
+        assessmentQuestions[0].Answers = new List<Answer> {
+            new() { AnswerText = myChoice, Choice = new QuestionChoice { Id = 1, Identifier = "A" } } };
         for (var i = 0; i < assessmentQuestions.Count; i++)
         {
             var questionId = assessmentQuestions[i].QuestionId;
@@ -347,14 +341,6 @@ public class LoadQuestionScreenRequestHandlerTests
         }
 
         elsaAssessmentQuestions.Questions[0].QuestionType = QuestionTypeConstants.RadioQuestion;
-        elsaAssessmentQuestions.Questions[0].Radio.Choices = new List<RadioRecord>
-        {
-            new("A", "Choice1",false),
-            new("B", "Choice2",false),
-            new("C", "Choice3",false)
-        };
-
-
 
         workflowInstanceStore.Setup(x =>
                 x.FindAsync(It.IsAny<WorkflowInstanceIdSpecification>(), CancellationToken.None))
@@ -399,7 +385,8 @@ public class LoadQuestionScreenRequestHandlerTests
         //Arrange
         var myChoice = "Choice1";
         customActivityNavigation.ActivityType = ActivityTypeConstants.QuestionScreen;
-        assessmentQuestions[0].Answers = new List<Answer> { new() { AnswerText = myChoice } };
+        assessmentQuestions[0].Answers = new List<Answer> {
+            new() { AnswerText = myChoice, Choice = new QuestionChoice { Id = 1, Identifier = "A" } } };
         for (var i = 0; i < assessmentQuestions.Count; i++)
         {
             var questionId = assessmentQuestions[i].QuestionId;
@@ -459,7 +446,8 @@ public class LoadQuestionScreenRequestHandlerTests
         //Arrange
         var myChoice = "Choice1";
         customActivityNavigation.ActivityType = ActivityTypeConstants.QuestionScreen;
-        assessmentQuestions[0].Answers = new List<Answer> { new() { AnswerText = "" } };
+        assessmentQuestions[0].Answers = new List<Answer> {
+            new() { AnswerText = "", Choice = new QuestionChoice { Id = 1, Identifier = "A" } } };
         for (var i = 0; i < assessmentQuestions.Count; i++)
         {
             var questionId = assessmentQuestions[i].QuestionId;
@@ -467,12 +455,6 @@ public class LoadQuestionScreenRequestHandlerTests
         }
 
         elsaAssessmentQuestions.Questions[0].QuestionType = QuestionTypeConstants.PotScoreRadioQuestion;
-        elsaAssessmentQuestions.Questions[0].PotScoreRadio.Choices = new List<PotScoreRadioRecord>
-        {
-            new("A", "Choice1","1",true),
-            new("B", "Choice2","1", false),
-            new("C", "Choice3","1", false)
-        };
 
         workflowInstanceStore.Setup(x =>
                 x.FindAsync(It.IsAny<WorkflowInstanceIdSpecification>(), CancellationToken.None))
@@ -517,7 +499,8 @@ public class LoadQuestionScreenRequestHandlerTests
         //Arrange
         var myChoice = "Choice1";
         customActivityNavigation.ActivityType = ActivityTypeConstants.QuestionScreen;
-        assessmentQuestions[0].Answers = new List<Answer> { new() { AnswerText = "" } };
+        assessmentQuestions[0].Answers = new List<Answer> {
+            new() { AnswerText = "", Choice = new QuestionChoice { Id = 1, Identifier = "A" } } };
         for (var i = 0; i < assessmentQuestions.Count; i++)
         {
             var questionId = assessmentQuestions[i].QuestionId;
@@ -525,12 +508,6 @@ public class LoadQuestionScreenRequestHandlerTests
         }
 
         elsaAssessmentQuestions.Questions[0].QuestionType = QuestionTypeConstants.RadioQuestion;
-        elsaAssessmentQuestions.Questions[0].Radio.Choices = new List<RadioRecord>
-        {
-            new("A", "Choice1",true),
-            new("B", "Choice2",false),
-            new("C", "Choice3",false)
-        };
 
         workflowInstanceStore.Setup(x =>
                 x.FindAsync(It.IsAny<WorkflowInstanceIdSpecification>(), CancellationToken.None))
@@ -574,7 +551,9 @@ public class LoadQuestionScreenRequestHandlerTests
     {
         //Arrange
         customActivityNavigation.ActivityType = ActivityTypeConstants.QuestionScreen;
-        assessmentQuestions[0].Answers = new List<Answer> { new() { AnswerText = "" } };
+        assessmentQuestions[0].Answers = new List<Answer> {
+            new() { AnswerText = "", Choice = new QuestionChoice { Id = 1, Identifier = "A" } },
+            new() { AnswerText = "", Choice = new QuestionChoice {Id = 2, Identifier = "B" } }};
         for (var i = 0; i < assessmentQuestions.Count; i++)
         {
             var questionId = assessmentQuestions[i].QuestionId;
@@ -582,12 +561,6 @@ public class LoadQuestionScreenRequestHandlerTests
         }
 
         elsaAssessmentQuestions.Questions[0].QuestionType = QuestionTypeConstants.CheckboxQuestion;
-        elsaAssessmentQuestions.Questions[0].Checkbox.Choices = new List<CheckboxRecord>
-        {
-            new("A", "Choice1",false,true),
-            new("B", "Choice2",false,true),
-            new("C", "Choice3",false,false)
-        };
 
         workflowInstanceStore.Setup(x =>
                 x.FindAsync(It.IsAny<WorkflowInstanceIdSpecification>(), CancellationToken.None))
@@ -690,20 +663,25 @@ public class LoadQuestionScreenRequestHandlerTests
     {
         //Arrange
         customActivityNavigation.ActivityType = ActivityTypeConstants.QuestionScreen;
-        assessmentQuestions[0].Answers = null;
         for (var i = 0; i < assessmentQuestions.Count; i++)
         {
             var questionId = assessmentQuestions[i].QuestionId;
             elsaAssessmentQuestions.Questions[i].Id = questionId!;
+            assessmentQuestions[i].Answers = new List<Answer>();
         }
 
         elsaAssessmentQuestions.Questions[0].Answer = "PrepopulatedAnswer";
         elsaAssessmentQuestions.Questions[0].IsReadOnly = true;
         elsaAssessmentQuestions.Questions[0].QuestionType = QuestionTypeConstants.TextAreaQuestion;
 
+        var assessmentQuestionsDictionary = new Dictionary<string, object?>();
+        assessmentQuestionsDictionary.Add("Questions", elsaAssessmentQuestions);
+
+        workflowInstance.ActivityData.Add(loadWorkflowActivityRequest.ActivityId, assessmentQuestionsDictionary);
+
         workflowInstanceStore.Setup(x =>
-                x.FindAsync(It.IsAny<WorkflowInstanceIdSpecification>(), CancellationToken.None))
-            .ReturnsAsync(workflowInstance);
+        x.FindAsync(It.IsAny<WorkflowInstanceIdSpecification>(), CancellationToken.None))
+    .ReturnsAsync(workflowInstance);
 
         elsaCustomRepository.Setup(x => x.GetCustomActivityNavigation(loadWorkflowActivityRequest.ActivityId,
                 loadWorkflowActivityRequest.WorkflowInstanceId, CancellationToken.None))
@@ -713,11 +691,6 @@ public class LoadQuestionScreenRequestHandlerTests
                 loadWorkflowActivityRequest.WorkflowInstanceId, CancellationToken.None))
             .ReturnsAsync(assessmentQuestions);
 
-        var assessmentQuestionsDictionary = new Dictionary<string, object?>();
-        assessmentQuestionsDictionary.Add("Questions", elsaAssessmentQuestions);
-
-        workflowInstance.ActivityData.Add(loadWorkflowActivityRequest.ActivityId, assessmentQuestionsDictionary);
-
         //Act
         var result = await sut.Handle(loadWorkflowActivityRequest, CancellationToken.None);
 
@@ -725,7 +698,7 @@ public class LoadQuestionScreenRequestHandlerTests
         Assert.NotNull(result.Data!.QuestionScreenAnswers);
         Assert.Equal(assessmentQuestions.Count(), result.Data!.QuestionScreenAnswers.Count());
         Assert.Empty(result.ErrorMessages);
-        Assert.Equal("PrepopulatedAnswer", result.Data.QuestionScreenAnswers[0].Answers.FirstOrDefault().AnswerText);
+        Assert.Equal("PrepopulatedAnswer", result.Data.QuestionScreenAnswers[0].Answers.FirstOrDefault()!.AnswerText);
         Assert.True(result.Data.QuestionScreenAnswers[0].IsReadOnly);
     }
 

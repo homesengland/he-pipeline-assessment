@@ -34,7 +34,7 @@ namespace Elsa.CustomWorkflow.Sdk.Models.Workflow
 
     public class QuestionActivityAnswer
     {
-        public int? Id { get; set; }
+        public int? ChoiceId { get; set; }
         public string? AnswerText { get; set; }
         public string? Score { get; set; }
         //public int? QuestionActivityChoiceId { get; set; }
@@ -114,8 +114,14 @@ namespace Elsa.CustomWorkflow.Sdk.Models.Workflow
                 try
                 {
                     decimal decimalAnswer = default;
-                    decimal.TryParse(Answers.FirstOrDefault()!.AnswerText, out decimalAnswer);
-                    return decimalAnswer;
+                    if(decimal.TryParse(Answers.FirstOrDefault()!.AnswerText, out decimalAnswer))
+                    {
+                        return decimalAnswer;
+                    }
+                    else
+                    {
+                        return null;
+                    }
                 }
                 catch (Exception)
                 {
@@ -187,8 +193,7 @@ namespace Elsa.CustomWorkflow.Sdk.Models.Workflow
                 _date = value;
                 if (value.Day != null && value.Month != null && value.Year != null)
                 {
-                    var dateString =
-                    $"{value.Year}-{value.Month}-{value.Day}";
+                    var dateString = $"{value.Year}-{value.Month}-{value.Day}";
                     bool isValidDate = DateTime.TryParseExact(dateString, Constants.DateFormat, CultureInfo.InvariantCulture, DateTimeStyles.AdjustToUniversal, out DateTime parsedDateTime);
                     if (isValidDate)
                     {
@@ -250,7 +255,7 @@ namespace Elsa.CustomWorkflow.Sdk.Models.Workflow
                 answers.Add(new QuestionActivityAnswer
                 {
                     AnswerText = choice.Answer,
-                    Id = choice.Id
+                    ChoiceId = choice.Id
                 });
             }
 

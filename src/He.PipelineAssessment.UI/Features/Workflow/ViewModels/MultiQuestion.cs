@@ -71,7 +71,7 @@ namespace He.PipelineAssessment.UI.Features.Workflow.ViewModels
 
     public class QuestionActivityAnswer
     {
-        public int? Id { get; set; }
+        public int? ChoiceId { get; set; }
         public string? Answer { get; set; }
         public string? Score { get; set; }
     }

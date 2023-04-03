@@ -138,7 +138,7 @@ namespace Elsa.CustomActivities.Tests.Activities.QuestionScreen.Helpers
         [InlineAutoMoqData(new string[] { "Answer 1" }, new string[] { "B", "C" }, false)]
         [InlineAutoMoqData(new string[] { "Answer 1", "Answer 2" }, new string[] { "A" }, false)]
         public async Task AnswerEquals_ReturnsExpectedValue(
-            List<Answer> answers,
+            string[] answers,
             string[] choiceIdsToCheck,
             bool expectedResult,
             [Frozen] Mock<IElsaCustomRepository> elsaCustomRepository,
@@ -160,7 +160,7 @@ namespace Elsa.CustomActivities.Tests.Activities.QuestionScreen.Helpers
             });
 
             question.QuestionType = QuestionTypeConstants.CheckboxQuestion;
-            question.Answers = answers;
+            question.Answers = answers.Select(x => new Answer { AnswerText = x }).ToList();
             question.Choices = new List<QuestionChoice>()
             {
                 new QuestionChoice()
@@ -317,7 +317,7 @@ namespace Elsa.CustomActivities.Tests.Activities.QuestionScreen.Helpers
         [InlineAutoMoqData(new string[] { "Answer 1" }, new string[] { "B", "C" }, false)]
 
         public async Task AnswerContains_ReturnsExpectedValue(
-            List<Answer> answers,
+            string[] answers,
             string[] choiceIdsToCheck,
             bool expectedResult,
             [Frozen] Mock<IElsaCustomRepository> elsaCustomRepository,
@@ -339,7 +339,7 @@ namespace Elsa.CustomActivities.Tests.Activities.QuestionScreen.Helpers
             });
 
             question.QuestionType = QuestionTypeConstants.CheckboxQuestion;
-            question.Answers = answers;
+            question.Answers = answers.Select(x => new Answer { AnswerText = x}).ToList();
             question.Choices = new List<QuestionChoice>()
             {
                 new QuestionChoice()
@@ -479,7 +479,7 @@ namespace Elsa.CustomActivities.Tests.Activities.QuestionScreen.Helpers
 
             workflowRegistry.Setup(x => x.FindByNameAsync(workflowName!, VersionOptions.Published, null, default)).ReturnsAsync(workflowBlueprint);
 
-            var expectedResult = string.Join(", ", answers);
+            var expectedResult = string.Join(",", answers.Select(x => x.AnswerText));
 
             //Act
             var result = await sut.GetAnswer(workflowInstanceId, workflowName, activityName, questionId);

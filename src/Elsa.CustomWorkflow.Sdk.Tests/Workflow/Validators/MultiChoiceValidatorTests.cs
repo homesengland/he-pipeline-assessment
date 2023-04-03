@@ -18,21 +18,25 @@ namespace Elsa.CustomWorkflow.Sdk.Tests.Workflow.Validators
             {
                 new Choice
                 {
+                    Id = 1,
                     Answer = "Test 1",
                     IsSingle = true
                 },
                 new Choice
                 {
+                    Id = 2,
                     Answer = "Test 2",
                     IsSingle = true
                 },
                 new Choice
                 {
+                    Id = 3,
                     Answer = "Test 3",
                     IsSingle = false
                    },
                 new Choice
                 {
+                    Id = 4,
                     Answer = "Test 4",
                     IsSingle = true
                    },
@@ -57,16 +61,19 @@ namespace Elsa.CustomWorkflow.Sdk.Tests.Workflow.Validators
             {
                 new Choice
                 {
+                    Id = 1,
                     Answer = "Test 1",
                     IsSingle = true
                 },
                 new Choice
                 {
+                    Id = 2,
                     Answer = "Test 2",
                     IsSingle = false
                 },
                 new Choice
                 {
+                    Id = 3,
                     Answer = "Test 3",
                     IsSingle = true
                    },

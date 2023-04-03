@@ -10,7 +10,7 @@ namespace Elsa.CustomModels
         public Question Question { get; set; } = null!;
 
         public int? QuestionChoiceId { get; set; }
-        public QuestionChoice? Choice { get; set; } = null!;
+        public QuestionChoice? Choice { get; set; }
 
         public string AnswerText { get; set; } = null!;
 

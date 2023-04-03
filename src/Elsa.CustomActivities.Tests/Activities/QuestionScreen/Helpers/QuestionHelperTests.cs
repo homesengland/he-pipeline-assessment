@@ -103,7 +103,7 @@ namespace Elsa.CustomActivities.Tests.Activities.QuestionScreen.Helpers
             string questionId,
             string workflowInstanceId,
             WorkflowBlueprint workflowBlueprint,
-            Question questionScreenAnswer,
+            Question question,
             QuestionHelper sut)
         {
             //Arrange
@@ -113,7 +113,9 @@ namespace Elsa.CustomActivities.Tests.Activities.QuestionScreen.Helpers
                 Name = activityName
             });
 
-            elsaCustomRepository.Setup(x => x.GetQuestionScreenQuestion(activityId, workflowInstanceId, It.IsAny<string>(), CancellationToken.None)).ReturnsAsync(questionScreenAnswer);
+
+
+            elsaCustomRepository.Setup(x => x.GetQuestionScreenQuestion(activityId, workflowInstanceId, It.IsAny<string>(), CancellationToken.None)).ReturnsAsync(question);
 
             workflowRegistry.Setup(x => x.FindByNameAsync(workflowName!, VersionOptions.Published, null, default)).ReturnsAsync(workflowBlueprint);
 
@@ -121,9 +123,8 @@ namespace Elsa.CustomActivities.Tests.Activities.QuestionScreen.Helpers
             var result = await sut.GetAnswer(workflowInstanceId, workflowName, activityName, questionId);
 
             //Assert
-            Assert.False(true, "TODO");
 
-            //Assert.Equal(questionScreenAnswer.Answer, result);
+            Assert.Equal(string.Join(",",question.Answers!.Select(x => x.AnswerText)), result);
         }
     }
 }
