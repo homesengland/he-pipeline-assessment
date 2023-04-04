@@ -14,6 +14,6 @@ namespace Elsa.Server.Features.Workflow.LoadCheckYourAnswersScreen
 
         public string? FooterTitle { get; set; } = null!;
         public string? FooterText { get; set; } = null!;
-        public List<Question>? CheckQuestionScreenAnswers { get; set; }
+        public List<Question>? CheckQuestions { get; set; }
     }
 }

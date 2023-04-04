@@ -23,7 +23,7 @@ namespace Elsa.CustomInfrastructure.Data.Repository
             return model.Id;
         }
 
-        public async Task<Question?> UpdateQuestionScreenQuestion(Question model, CancellationToken cancellationToken = default)
+        public async Task<Question?> UpdateQuestion(Question model, CancellationToken cancellationToken = default)
         {
             _dbContext.Update(model);
             await _dbContext.SaveChangesAsync(cancellationToken);
@@ -37,7 +37,7 @@ namespace Elsa.CustomInfrastructure.Data.Repository
             return model;
         }
 
-        public async Task CreateQuestionScreenQuestionsAsync(List<Question> assessments, CancellationToken cancellationToken)
+        public async Task CreateQuestionsAsync(List<Question> assessments, CancellationToken cancellationToken)
         {
             await _dbContext.AddRangeAsync(assessments, cancellationToken);
             await _dbContext.SaveChangesAsync(cancellationToken);
@@ -50,7 +50,7 @@ namespace Elsa.CustomInfrastructure.Data.Repository
             return list;
         }
 
-        public async Task<Question?> GetQuestionScreenQuestion(string activityId, string workflowInstanceId, string questionID,
+        public async Task<Question?> GetQuestion(string activityId, string workflowInstanceId, string questionID,
             CancellationToken cancellationToken)
         {
             var result = await _dbContext.Set<Question>().FirstOrDefaultAsync(x => x.ActivityId == activityId && x.WorkflowInstanceId == workflowInstanceId && x.QuestionId == questionID, cancellationToken: cancellationToken);
@@ -84,7 +84,7 @@ namespace Elsa.CustomInfrastructure.Data.Repository
             await SaveChanges(cancellationToken);
         }
 
-        public async Task DeleteQuestionScreenQuestions(string workflowInstanceId, List<string> previousPathActivities, CancellationToken cancellationToken)
+        public async Task DeleteQuestions(string workflowInstanceId, List<string> previousPathActivities, CancellationToken cancellationToken)
         {
             var list = _dbContext.Set<Question>().Where(x => x.WorkflowInstanceId == workflowInstanceId && previousPathActivities.Contains(x.ActivityId));
             _dbContext.RemoveRange(list);

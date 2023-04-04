@@ -27,8 +27,8 @@ namespace Elsa.CustomWorkflow.Sdk.Models.Workflow
         public Information Text { get; set; } = null!;
 
         public string? NextWorkflowDefinitionIds { get; set; } = null!;
-        public List<Question>? CheckQuestionScreenAnswers { get; set; }
-        public List<QuestionActivityData>? QuestionScreenAnswers { get; set; }
+        public List<Question>? CheckQuestions { get; set; }
+        public List<QuestionActivityData>? Questions { get; set; }
 
     }
 

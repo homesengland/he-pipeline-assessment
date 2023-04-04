@@ -42,14 +42,14 @@ namespace Elsa.Server.Tests.Services
 
         [Theory]
         [AutoMoqData]
-        public async Task CreateNextActivityNavigation_ShouldCreateQuestionScreenAnswers_GivenQuestionScreenActivityType(
+        public async Task CreateNextActivityNavigation_ShouldCreateQuestions_GivenQuestionScreenActivityType(
             [Frozen] Mock<IElsaCustomModelHelper> elsaCustomModelHelper,
             [Frozen] Mock<IElsaCustomRepository> elsaCustomRepository,
             string previousActivityId,
             IActivityBlueprint nextActivity,
             WorkflowInstance workflowInstance,
             CustomActivityNavigation customActivityNavigation,
-            List<Question> questionScreenAnswers,
+            List<Question> questions,
             NextActivityNavigationService sut)
         {
             //Arrange
@@ -58,8 +58,8 @@ namespace Elsa.Server.Tests.Services
                     ActivityTypeConstants.QuestionScreen, nextActivity.Id, nextActivity.Type, workflowInstance))
                 .Returns(customActivityNavigation);
 
-            elsaCustomModelHelper.Setup(x => x.CreateQuestionScreenQuestions(nextActivity.Id, workflowInstance))
-                .Returns(questionScreenAnswers);
+            elsaCustomModelHelper.Setup(x => x.CreateQuestions(nextActivity.Id, workflowInstance))
+                .Returns(questions);
 
             //Act
             await sut.CreateNextActivityNavigation(previousActivityId, null, nextActivity,
@@ -67,14 +67,14 @@ namespace Elsa.Server.Tests.Services
 
             //Assert
             elsaCustomRepository.Verify(
-                x => x.CreateQuestionScreenQuestionsAsync(questionScreenAnswers, CancellationToken.None), Times.Once);
+                x => x.CreateQuestionsAsync(questions, CancellationToken.None), Times.Once);
         }
 
         [Theory]
         [InlineAutoMoqData(ActivityTypeConstants.CheckYourAnswersScreen)]
         [InlineAutoMoqData(ActivityTypeConstants.ConfirmationScreen)]
         [InlineAutoMoqData(ActivityTypeConstants.SinglePipelineDataSource)]
-        public async Task CreateNextActivityNavigation_ShouldNotCreateQuestionScreenAnswers_GivenOtherActivityTypes(
+        public async Task CreateNextActivityNavigation_ShouldNotCreateQuestions_GivenOtherActivityTypes(
             string activityType,
             [Frozen] Mock<IElsaCustomModelHelper> elsaCustomModelHelper,
             [Frozen] Mock<IElsaCustomRepository> elsaCustomRepository,
@@ -96,7 +96,7 @@ namespace Elsa.Server.Tests.Services
 
             //Assert
             elsaCustomRepository.Verify(
-                x => x.CreateQuestionScreenQuestionsAsync(It.IsAny<List<Question>>(), CancellationToken.None), Times.Never);
+                x => x.CreateQuestionsAsync(It.IsAny<List<Question>>(), CancellationToken.None), Times.Never);
         }
 
         [Theory]
@@ -122,7 +122,7 @@ namespace Elsa.Server.Tests.Services
             //Assert
             Assert.Equal(date, nextActivityRecord.LastModifiedDateTime);
             elsaCustomRepository.Verify(
-                x => x.CreateQuestionScreenQuestionsAsync(It.IsAny<List<Question>>(), CancellationToken.None), Times.Never);
+                x => x.CreateQuestionsAsync(It.IsAny<List<Question>>(), CancellationToken.None), Times.Never);
             elsaCustomRepository.Verify(
                 x => x.CreateCustomActivityNavigationAsync(customActivityNavigation, CancellationToken.None), Times.Never);
             elsaCustomRepository.Verify(

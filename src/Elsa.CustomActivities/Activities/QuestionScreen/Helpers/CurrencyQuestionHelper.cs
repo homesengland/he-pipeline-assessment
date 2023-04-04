@@ -29,16 +29,16 @@ namespace Elsa.CustomActivities.Activities.QuestionScreen.Helpers
                 var activity = workflowBlueprint.Activities.FirstOrDefault(x => x.Name == activityName);
                 if (activity != null)
                 {
-                    var questionScreenQuestion = await _elsaCustomRepository.GetQuestionScreenQuestion(activity.Id,
+                    var question = await _elsaCustomRepository.GetQuestion(activity.Id,
                         workflowInstanceId, questionId, CancellationToken.None);
 
-                    if (questionScreenQuestion != null && questionScreenQuestion.Answers != null &&
-                        questionScreenQuestion.QuestionType == QuestionTypeConstants.CurrencyQuestion)
+                    if (question != null && question.Answers != null &&
+                        question.QuestionType == QuestionTypeConstants.CurrencyQuestion)
                     {
-                        var questionScreenAnswer = questionScreenQuestion.Answers.FirstOrDefault();
-                        if (questionScreenAnswer != null)
+                        var question = question.Answers.FirstOrDefault();
+                        if (question != null)
                         {
-                            var answer = decimal.Parse(questionScreenAnswer.AnswerText);
+                            var answer = decimal.Parse(question.AnswerText);
                             if (answer >= answerToCheck)
                             {
                                 return true;
@@ -60,16 +60,16 @@ namespace Elsa.CustomActivities.Activities.QuestionScreen.Helpers
                 var activity = workflowBlueprint.Activities.FirstOrDefault(x => x.Name == activityName);
                 if (activity != null)
                 {
-                    var questionScreenQuestion = await _elsaCustomRepository.GetQuestionScreenQuestion(activity.Id,
+                    var question = await _elsaCustomRepository.GetQuestion(activity.Id,
                         workflowInstanceId, questionId, CancellationToken.None);
 
-                    if (questionScreenQuestion != null && questionScreenQuestion.Answers != null &&
-                        questionScreenQuestion.QuestionType == QuestionTypeConstants.CurrencyQuestion)
+                    if (question != null && question.Answers != null &&
+                        question.QuestionType == QuestionTypeConstants.CurrencyQuestion)
                     {
-                        var questionScreenAnswer = questionScreenQuestion.Answers.FirstOrDefault();
-                        if (questionScreenAnswer != null)
+                        var question = question.Answers.FirstOrDefault();
+                        if (question != null)
                         {
-                            var answer = decimal.Parse(questionScreenAnswer.AnswerText);
+                            var answer = decimal.Parse(question.AnswerText);
                             if (answer <= answerToCheck)
                             {
                                 return true;

@@ -321,7 +321,7 @@ namespace Elsa.CustomWorkflow.Sdk.Tests.Workflow
             sut.Decimal = numericAnswer;
 
             //Assert
-            Assert.Equal(decimalString, sut.Answers.FirstOrDefault().AnswerText);
+            Assert.Equal(decimalString, sut.Answers.FirstOrDefault()!.AnswerText);
             Assert.Equal(numericAnswer, sut.Decimal);
         }
 

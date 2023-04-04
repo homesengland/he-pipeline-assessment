@@ -39,10 +39,10 @@ namespace Elsa.Server.Features.Workflow.LoadCheckYourAnswersScreen
                     result.Data.PreviousActivityId = customActivityNavigation.PreviousActivityId;
                     result.Data.PreviousActivityType = customActivityNavigation.PreviousActivityType;
 
-                    var questionScreenAnswers = await _elsaCustomRepository
+                    var questions = await _elsaCustomRepository
                         .GetQuestions(result.Data.WorkflowInstanceId, cancellationToken);
 
-                    result.Data.CheckQuestionScreenAnswers = questionScreenAnswers;
+                    result.Data.CheckQuestions = questions;
 
                     var activityDataDictionary = await _activityDataProvider.GetActivityData(activityScreenRequest.WorkflowInstanceId, activityScreenRequest.ActivityId, cancellationToken);
                     result.Data.PageTitle = (string?)activityDataDictionary.GetData("Title");

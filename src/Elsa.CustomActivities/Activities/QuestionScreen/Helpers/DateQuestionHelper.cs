@@ -30,16 +30,16 @@ namespace Elsa.CustomActivities.Activities.QuestionScreen.Helpers
                 var activity = workflowBlueprint.Activities.FirstOrDefault(x => x.Name == activityName);
                 if (activity != null)
                 {
-                    var questionScreenQuestion = await _elsaCustomRepository.GetQuestionScreenQuestion(activity.Id,
+                    var question = await _elsaCustomRepository.GetQuestion(activity.Id,
                         workflowInstance, questionId, CancellationToken.None);
 
-                    if (questionScreenQuestion != null && questionScreenQuestion.Answers != null &&
-                        questionScreenQuestion.QuestionType == QuestionTypeConstants.DateQuestion)
+                    if (question != null && question.Answers != null &&
+                        question.QuestionType == QuestionTypeConstants.DateQuestion)
                     {
-                        var questionScreenAnswer = questionScreenQuestion.Answers.FirstOrDefault();
-                        if (questionScreenAnswer != null)
+                        var question = question.Answers.FirstOrDefault();
+                        if (question != null)
                         {
-                            DateTime.TryParseExact(questionScreenAnswer.AnswerText, CustomWorkflow.Sdk.Constants.DateFormat,
+                            DateTime.TryParseExact(question.AnswerText, CustomWorkflow.Sdk.Constants.DateFormat,
                                 CultureInfo.InvariantCulture, DateTimeStyles.AdjustToUniversal, out DateTime answerDate);
 
                             var dateString =
@@ -68,16 +68,16 @@ namespace Elsa.CustomActivities.Activities.QuestionScreen.Helpers
                 var activity = workflowBlueprint.Activities.FirstOrDefault(x => x.Name == activityName);
                 if (activity != null)
                 {
-                    var questionScreenQuestion = await _elsaCustomRepository.GetQuestionScreenQuestion(activity.Id,
+                    var question = await _elsaCustomRepository.GetQuestion(activity.Id,
                         workflowInstance, questionId, CancellationToken.None);
 
-                    if (questionScreenQuestion != null && questionScreenQuestion.Answers != null &&
-                        questionScreenQuestion.QuestionType == QuestionTypeConstants.DateQuestion)
+                    if (question != null && question.Answers != null &&
+                        question.QuestionType == QuestionTypeConstants.DateQuestion)
                     {
-                        var questionScreenAnswer = questionScreenQuestion.Answers.FirstOrDefault();
-                        if (questionScreenAnswer != null)
+                        var question = question.Answers.FirstOrDefault();
+                        if (question != null)
                         {
-                            DateTime.TryParseExact(questionScreenAnswer.AnswerText, CustomWorkflow.Sdk.Constants.DateFormat,
+                            DateTime.TryParseExact(question.AnswerText, CustomWorkflow.Sdk.Constants.DateFormat,
                                 CultureInfo.InvariantCulture, DateTimeStyles.AdjustToUniversal, out DateTime answerDate);
 
                             var dateString =

@@ -31,16 +31,16 @@ namespace Elsa.CustomActivities.Activities.QuestionScreen.Helpers
                 if (activity != null)
                 {
 
-                    var questionScreenQuestion = await _elsaCustomRepository.GetQuestionScreenQuestion(activity.Id,
+                    var question = await _elsaCustomRepository.GetQuestion(activity.Id,
                         workflowInstance, questionId, CancellationToken.None);
-                    if (questionScreenQuestion != null &&
-                        (questionScreenQuestion.QuestionType == QuestionTypeConstants.RadioQuestion || questionScreenQuestion.QuestionType == QuestionTypeConstants.PotScoreRadioQuestion))
+                    if (question != null &&
+                        (question.QuestionType == QuestionTypeConstants.RadioQuestion || question.QuestionType == QuestionTypeConstants.PotScoreRadioQuestion))
                     {
-                        var choices = questionScreenQuestion.Choices;
+                        var choices = question.Choices;
 
-                        if (choices != null && questionScreenQuestion.Answers != null && questionScreenQuestion.Answers.Count == 1)
+                        if (choices != null && question.Answers != null && question.Answers.Count == 1)
                         {
-                            var singleAnswer = questionScreenQuestion.Answers.First();
+                            var singleAnswer = question.Answers.First();
                             var singleChoice = choices.FirstOrDefault(x => x.Answer == singleAnswer.AnswerText);
 
                             if (singleChoice != null && choiceIdToCheck.Contains(singleChoice.Identifier))
@@ -71,16 +71,16 @@ namespace Elsa.CustomActivities.Activities.QuestionScreen.Helpers
                 var activity = workflowBlueprint.Activities.FirstOrDefault(x => x.Name == activityName);
                 if (activity != null)
                 {
-                    var questionScreenQuestion = await _elsaCustomRepository.GetQuestionScreenQuestion(activity.Id,
+                    var question = await _elsaCustomRepository.GetQuestion(activity.Id,
                         workflowInstance, questionId, CancellationToken.None);
-                    if (questionScreenQuestion != null &&
-                        (questionScreenQuestion.QuestionType == QuestionTypeConstants.RadioQuestion || questionScreenQuestion.QuestionType == QuestionTypeConstants.PotScoreRadioQuestion))
+                    if (question != null &&
+                        (question.QuestionType == QuestionTypeConstants.RadioQuestion || question.QuestionType == QuestionTypeConstants.PotScoreRadioQuestion))
                     {
-                        var choices = questionScreenQuestion.Choices;
+                        var choices = question.Choices;
 
-                        if (choices != null && questionScreenQuestion.Answers != null && questionScreenQuestion.Answers.Count == 1)
+                        if (choices != null && question.Answers != null && question.Answers.Count == 1)
                         {
-                            var singleAnswer = questionScreenQuestion.Answers.First();
+                            var singleAnswer = question.Answers.First();
                             foreach (var item in choiceIdsToCheck)
                             {
                                 var singleChoice = choices.FirstOrDefault(x => x.Identifier == item);

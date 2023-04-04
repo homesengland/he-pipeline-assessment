@@ -30,13 +30,13 @@ namespace Elsa.CustomActivities.Activities.QuestionScreen.Helpers
                 var activity = workflowBlueprint.Activities.FirstOrDefault(x => x.Name == activityName);
                 if (activity != null)
                 {
-                    var questionScreenQuestion = await _elsaCustomRepository.GetQuestionScreenQuestion(activity.Id,
+                    var question = await _elsaCustomRepository.GetQuestion(activity.Id,
                         workflowInstanceId, questionId, CancellationToken.None);
 
-                    if (questionScreenQuestion != null && questionScreenQuestion.Answers != null &&
-                        questionScreenQuestion.QuestionType == QuestionTypeConstants.CheckboxQuestion)
+                    if (question != null && question.Answers != null &&
+                        question.QuestionType == QuestionTypeConstants.CheckboxQuestion)
                     {
-                        return string.Join(",", questionScreenQuestion.Answers.Select(x => x.AnswerText));
+                        return string.Join(",", question.Answers.Select(x => x.AnswerText));
                     }
                 }
             }
@@ -54,16 +54,16 @@ namespace Elsa.CustomActivities.Activities.QuestionScreen.Helpers
                 var activity = workflowBlueprint.Activities.FirstOrDefault(x => x.Name == activityName);
                 if (activity != null)
                 {
-                    var questionScreenQuestion = await _elsaCustomRepository.GetQuestionScreenQuestion(activity.Id,
+                    var question = await _elsaCustomRepository.GetQuestion(activity.Id,
                         workflowInstanceId, questionId, CancellationToken.None);
-                    if (questionScreenQuestion != null &&
-                        questionScreenQuestion.QuestionType == QuestionTypeConstants.CheckboxQuestion &&
-                        questionScreenQuestion.Choices != null)
+                    if (question != null &&
+                        question.QuestionType == QuestionTypeConstants.CheckboxQuestion &&
+                        question.Choices != null)
                     {
-                        var choices = questionScreenQuestion.Choices;
-                        if (choices != null && questionScreenQuestion.Answers != null)
+                        var choices = question.Choices;
+                        if (choices != null && question.Answers != null)
                         {
-                            var answerList = questionScreenQuestion.Answers.Select(x => x.AnswerText).ToList();
+                            var answerList = question.Answers.Select(x => x.AnswerText).ToList();
                             foreach (var item in answerList)
                             {
                                 var singleChoice = choices.FirstOrDefault(x => x.Answer == item);
@@ -95,14 +95,14 @@ namespace Elsa.CustomActivities.Activities.QuestionScreen.Helpers
                 if (activity != null)
                 {
 
-                    var questionScreenQuestion = await _elsaCustomRepository.GetQuestionScreenQuestion(activity.Id, workflowInstanceId, questionId, CancellationToken.None);
-                    if (questionScreenQuestion != null &&
-                        questionScreenQuestion.QuestionType == QuestionTypeConstants.CheckboxQuestion)
+                    var question = await _elsaCustomRepository.GetQuestion(activity.Id, workflowInstanceId, questionId, CancellationToken.None);
+                    if (question != null &&
+                        question.QuestionType == QuestionTypeConstants.CheckboxQuestion)
                     {
-                        var choices = questionScreenQuestion.Choices;
-                        if (choices != null && questionScreenQuestion.Answers != null)
+                        var choices = question.Choices;
+                        if (choices != null && question.Answers != null)
                         {
-                            var answerList = questionScreenQuestion.Answers.Select(x => x.AnswerText).ToList();
+                            var answerList = question.Answers.Select(x => x.AnswerText).ToList();
                             foreach (var item in choiceIdsToCheck)
                             {
                                 var singleChoice = choices.FirstOrDefault(x => x.Identifier == item);

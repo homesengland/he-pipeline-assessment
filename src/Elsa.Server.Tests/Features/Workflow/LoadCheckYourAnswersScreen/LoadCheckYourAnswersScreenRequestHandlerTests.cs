@@ -28,7 +28,7 @@ public class LoadCheckYourAnswersScreenRequestHandlerTests
         var result = await sut.Handle(loadCheckYourAnswersScreenRequest, CancellationToken.None);
 
         //Assert
-        Assert.Null(result.Data!.CheckQuestionScreenAnswers);
+        Assert.Null(result.Data!.CheckQuestions);
         Assert.Equal(
             $"Unable to find activity navigation with Workflow Id: {loadCheckYourAnswersScreenRequest.WorkflowInstanceId} and Activity Id: {loadCheckYourAnswersScreenRequest.ActivityId} in Elsa Custom database",
             result.ErrorMessages.Single());
@@ -53,7 +53,7 @@ public class LoadCheckYourAnswersScreenRequestHandlerTests
         var result = await sut.Handle(loadCheckYourAnswersScreenRequest, CancellationToken.None);
 
         //Assert
-        Assert.Null(result.Data!.CheckQuestionScreenAnswers);
+        Assert.Null(result.Data!.CheckQuestions);
         Assert.Equal(exception.Message, result.ErrorMessages.Single());
         elsaCustomRepository.Verify(
             x => x.GetQuestions(It.IsAny<string>(), CancellationToken.None), Times.Never);
@@ -61,12 +61,12 @@ public class LoadCheckYourAnswersScreenRequestHandlerTests
 
     [Theory]
     [AutoMoqData]
-    public async Task Handle_ReturnQuestionScreenAnswers_GivenActivityIsQuestionScreenAndNoErrorsEncountered(
+    public async Task Handle_ReturnQuestions_GivenActivityIsQuestionScreenAndNoErrorsEncountered(
         [Frozen] Mock<IElsaCustomRepository> elsaCustomRepository,
         [Frozen] Mock<IActivityDataProvider> activityDataProvider,
         LoadCheckYourAnswersScreenRequest request,
         CustomActivityNavigation customActivityNavigation,
-        List<Question> questionScreenAnswers,
+        List<Question> questions,
         LoadCheckYourAnswersScreenRequestHandler sut)
     {
         //Arrange
@@ -75,7 +75,7 @@ public class LoadCheckYourAnswersScreenRequestHandlerTests
             .ReturnsAsync(customActivityNavigation);
 
         elsaCustomRepository.Setup(x => x.GetQuestions(request.WorkflowInstanceId, CancellationToken.None))
-            .ReturnsAsync(questionScreenAnswers);
+            .ReturnsAsync(questions);
 
         var dictionary = new Dictionary<string, object?>()
         {
@@ -93,7 +93,7 @@ public class LoadCheckYourAnswersScreenRequestHandlerTests
 
         //Assert
         Assert.NotNull(result.Data);
-        Assert.Equal(questionScreenAnswers, result.Data!.CheckQuestionScreenAnswers);
+        Assert.Equal(questions, result.Data!.CheckQuestions);
         Assert.Equal(request.ActivityId, result.Data.ActivityId);
         Assert.Equal(request.WorkflowInstanceId, result.Data.WorkflowInstanceId);
         Assert.Equal(ActivityTypeConstants.CheckYourAnswersScreen, result.Data.ActivityType);
