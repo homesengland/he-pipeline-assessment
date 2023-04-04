@@ -30,7 +30,7 @@ namespace Elsa.CustomActivities.Activities.QuestionScreen.Helpers
                 var activity = workflowBlueprint.Activities.FirstOrDefault(x => x.Name == activityName);
                 if (activity != null)
                 {
-                    var questionScreenQuestion = await _elsaCustomRepository.GetQuestionScreenQuestion(activity.Id,
+                    var questionScreenQuestion = await _elsaCustomRepository.GetQuestion(activity.Id,
                         workflowInstance, questionId, CancellationToken.None);
 
                     if (questionScreenQuestion != null && questionScreenQuestion.Answers != null &&
@@ -68,7 +68,7 @@ namespace Elsa.CustomActivities.Activities.QuestionScreen.Helpers
                 var activity = workflowBlueprint.Activities.FirstOrDefault(x => x.Name == activityName);
                 if (activity != null)
                 {
-                    var questionScreenQuestion = await _elsaCustomRepository.GetQuestionScreenQuestion(activity.Id,
+                    var questionScreenQuestion = await _elsaCustomRepository.GetQuestion(activity.Id,
                         workflowInstance, questionId, CancellationToken.None);
 
                     if (questionScreenQuestion != null && questionScreenQuestion.Answers != null &&

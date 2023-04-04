@@ -43,7 +43,7 @@ namespace Elsa.Server.Services
                 {
                     var questions =
                         _elsaCustomModelHelper.CreateQuestionScreenQuestions(nextActivity.Id, workflowInstance);
-                    await _elsaCustomRepository.CreateQuestionScreenQuestionsAsync(questions, cancellationToken);
+                    await _elsaCustomRepository.CreateQuestionsAsync(questions, cancellationToken);
                 }
             }
             else

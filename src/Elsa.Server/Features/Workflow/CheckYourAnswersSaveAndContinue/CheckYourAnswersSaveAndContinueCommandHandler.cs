@@ -50,7 +50,7 @@ namespace Elsa.Server.Features.Workflow.CheckYourAnswersSaveAndContinue
                     if (customActivityNavigation.ActivityType == ActivityTypeConstants.QuestionScreen)
                     {
                         var questions = _elsaCustomModelHelper.CreateQuestionScreenQuestions(workflowNextActivityModel.NextActivity.Id, workflowInstance);
-                        await _elsaCustomRepository.CreateQuestionScreenQuestionsAsync(questions, cancellationToken);
+                        await _elsaCustomRepository.CreateQuestionsAsync(questions, cancellationToken);
                     }
                 }
 

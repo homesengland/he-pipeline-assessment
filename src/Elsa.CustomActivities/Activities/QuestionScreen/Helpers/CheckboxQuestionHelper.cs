@@ -30,7 +30,7 @@ namespace Elsa.CustomActivities.Activities.QuestionScreen.Helpers
                 var activity = workflowBlueprint.Activities.FirstOrDefault(x => x.Name == activityName);
                 if (activity != null)
                 {
-                    var questionScreenQuestion = await _elsaCustomRepository.GetQuestionScreenQuestion(activity.Id,
+                    var questionScreenQuestion = await _elsaCustomRepository.GetQuestion(activity.Id,
                         workflowInstanceId, questionId, CancellationToken.None);
 
                     if (questionScreenQuestion != null && questionScreenQuestion.Answers != null &&
@@ -54,7 +54,7 @@ namespace Elsa.CustomActivities.Activities.QuestionScreen.Helpers
                 var activity = workflowBlueprint.Activities.FirstOrDefault(x => x.Name == activityName);
                 if (activity != null)
                 {
-                    var questionScreenQuestion = await _elsaCustomRepository.GetQuestionScreenQuestion(activity.Id,
+                    var questionScreenQuestion = await _elsaCustomRepository.GetQuestion(activity.Id,
                         workflowInstanceId, questionId, CancellationToken.None);
                     if (questionScreenQuestion != null &&
                         questionScreenQuestion.QuestionType == QuestionTypeConstants.CheckboxQuestion &&
@@ -95,7 +95,7 @@ namespace Elsa.CustomActivities.Activities.QuestionScreen.Helpers
                 if (activity != null)
                 {
 
-                    var questionScreenQuestion = await _elsaCustomRepository.GetQuestionScreenQuestion(activity.Id, workflowInstanceId, questionId, CancellationToken.None);
+                    var questionScreenQuestion = await _elsaCustomRepository.GetQuestion(activity.Id, workflowInstanceId, questionId, CancellationToken.None);
                     if (questionScreenQuestion != null &&
                         questionScreenQuestion.QuestionType == QuestionTypeConstants.CheckboxQuestion)
                     {

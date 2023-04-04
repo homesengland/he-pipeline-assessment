@@ -158,7 +158,7 @@ namespace Elsa.Server.Tests.Features.Workflow.CheckYourAnswersSaveAndContinue
             //Assert
             elsaCustomRepository.Verify(
                 x => x.CreateCustomActivityNavigationAsync(nextAssessmentActivity, CancellationToken.None), Times.Once);
-            elsaCustomRepository.Verify(x => x.CreateQuestionScreenQuestionsAsync(questionScreenAnswers, CancellationToken.None), Times.Once);
+            elsaCustomRepository.Verify(x => x.CreateQuestionsAsync(questionScreenAnswers, CancellationToken.None), Times.Once);
             Assert.Equal(opResult.Data.NextActivityId, result.Data!.NextActivityId);
             Assert.Equal(opResult.Data.WorkflowInstanceId, result.Data.WorkflowInstanceId);
             Assert.Equal(activityBlueprint.Type, result.Data.ActivityType);
@@ -238,7 +238,7 @@ namespace Elsa.Server.Tests.Features.Workflow.CheckYourAnswersSaveAndContinue
             //Assert
             elsaCustomRepository.Verify(
                 x => x.CreateCustomActivityNavigationAsync(nextAssessmentActivity, CancellationToken.None), Times.Once);
-            elsaCustomRepository.Verify(x => x.CreateQuestionScreenQuestionsAsync(questionScreenAnswers, CancellationToken.None), Times.Never);
+            elsaCustomRepository.Verify(x => x.CreateQuestionsAsync(questionScreenAnswers, CancellationToken.None), Times.Never);
             Assert.Equal(opResult.Data.NextActivityId, result.Data!.NextActivityId);
             Assert.Equal(opResult.Data.WorkflowInstanceId, result.Data.WorkflowInstanceId);
             Assert.Equal(activityBlueprint.Type, result.Data.ActivityType);
@@ -320,7 +320,7 @@ namespace Elsa.Server.Tests.Features.Workflow.CheckYourAnswersSaveAndContinue
             elsaCustomRepository.Verify(
                 x => x.CreateCustomActivityNavigationAsync(nextAssessmentActivity, CancellationToken.None), Times.Once);
             elsaCustomRepository.Verify(
-                x => x.CreateQuestionScreenQuestionsAsync(nextAssessmentQuestions, CancellationToken.None), Times.Once);
+                x => x.CreateQuestionsAsync(nextAssessmentQuestions, CancellationToken.None), Times.Once);
             Assert.Equal(opResult.Data.NextActivityId, result.Data!.NextActivityId);
             Assert.Equal(opResult.Data.WorkflowInstanceId, result.Data.WorkflowInstanceId);
             Assert.Empty(result.ErrorMessages);
