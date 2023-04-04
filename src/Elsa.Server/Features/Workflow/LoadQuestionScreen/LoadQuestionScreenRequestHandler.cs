@@ -72,8 +72,6 @@ namespace Elsa.Server.Features.Workflow.LoadQuestionScreen
                                 activityRequest.ActivityId, activityRequest.WorkflowInstanceId,
                                 cancellationToken);
 
-                            AssessmentQuestions? questions = (AssessmentQuestions?)activityDataDictionary.FirstOrDefault(x => x.Key == "Questions").Value;
-
                             var elsaActivityAssessmentQuestions =
                                 (AssessmentQuestions?)activityDataDictionary
                                     .FirstOrDefault(x => x.Key == "Questions").Value;

@@ -394,14 +394,6 @@ public class LoadQuestionScreenRequestHandlerTests
         }
 
         elsaAssessmentQuestions.Questions[0].QuestionType = QuestionTypeConstants.PotScoreRadioQuestion;
-        elsaAssessmentQuestions.Questions[0].PotScoreRadio.Choices = new List<PotScoreRadioRecord>
-        {
-            new("A", "Choice1","1",false),
-            new("B", "Choice2","1", false),
-            new("C", "Choice3","1", false)
-        };
-
-
 
         workflowInstanceStore.Setup(x =>
                 x.FindAsync(It.IsAny<WorkflowInstanceIdSpecification>(), CancellationToken.None))
@@ -446,13 +438,18 @@ public class LoadQuestionScreenRequestHandlerTests
         //Arrange
         var myChoice = "Choice1";
         customActivityNavigation.ActivityType = ActivityTypeConstants.QuestionScreen;
-        assessmentQuestions[0].Answers = new List<Answer> {
-            new() { AnswerText = "", Choice = new QuestionChoice { Id = 1, Identifier = "A" } } };
+        assessmentQuestions[0].Answers = new List<Answer>();
         for (var i = 0; i < assessmentQuestions.Count; i++)
         {
             var questionId = assessmentQuestions[i].QuestionId;
             elsaAssessmentQuestions.Questions[i].Id = questionId!;
         }
+
+        assessmentQuestions[0].Choices = new List<QuestionChoice>()
+        {
+            new QuestionChoice { Id = 1, Answer = "Choice1", IsPrePopulated = true },
+            new QuestionChoice { Id = 2, Answer = "Choice2", IsPrePopulated = false }
+        };
 
         elsaAssessmentQuestions.Questions[0].QuestionType = QuestionTypeConstants.PotScoreRadioQuestion;
 
@@ -499,13 +496,18 @@ public class LoadQuestionScreenRequestHandlerTests
         //Arrange
         var myChoice = "Choice1";
         customActivityNavigation.ActivityType = ActivityTypeConstants.QuestionScreen;
-        assessmentQuestions[0].Answers = new List<Answer> {
-            new() { AnswerText = "", Choice = new QuestionChoice { Id = 1, Identifier = "A" } } };
+        assessmentQuestions[0].Answers = new List<Answer>();
         for (var i = 0; i < assessmentQuestions.Count; i++)
         {
             var questionId = assessmentQuestions[i].QuestionId;
             elsaAssessmentQuestions.Questions[i].Id = questionId!;
         }
+
+        assessmentQuestions[0].Choices = new List<QuestionChoice>()
+        {
+            new QuestionChoice { Id = 1, Answer = "Choice1", IsPrePopulated = true },
+            new QuestionChoice { Id = 2, Answer = "Choice2", IsPrePopulated = false }
+        };
 
         elsaAssessmentQuestions.Questions[0].QuestionType = QuestionTypeConstants.RadioQuestion;
 
@@ -551,14 +553,19 @@ public class LoadQuestionScreenRequestHandlerTests
     {
         //Arrange
         customActivityNavigation.ActivityType = ActivityTypeConstants.QuestionScreen;
-        assessmentQuestions[0].Answers = new List<Answer> {
-            new() { AnswerText = "", Choice = new QuestionChoice { Id = 1, Identifier = "A" } },
-            new() { AnswerText = "", Choice = new QuestionChoice {Id = 2, Identifier = "B" } }};
+        assessmentQuestions[0].Answers = new List<Answer>();
         for (var i = 0; i < assessmentQuestions.Count; i++)
         {
             var questionId = assessmentQuestions[i].QuestionId;
             elsaAssessmentQuestions.Questions[i].Id = questionId!;
         }
+
+        assessmentQuestions[0].Choices = new List<QuestionChoice>()
+        {
+            new QuestionChoice { Id = 1, Answer = "Choice1", IsPrePopulated = true },
+            new QuestionChoice { Id = 2, Answer = "Choice2", IsPrePopulated = true },
+            new QuestionChoice { Id = 3, Answer = "Choice3", IsPrePopulated = false }
+        };
 
         elsaAssessmentQuestions.Questions[0].QuestionType = QuestionTypeConstants.CheckboxQuestion;
 
@@ -584,8 +591,9 @@ public class LoadQuestionScreenRequestHandlerTests
 
         //Assert
         Assert.NotNull(result.Data!.QuestionScreenAnswers);
-        Assert.Equal(assessmentQuestions.Count(), result.Data!.QuestionScreenAnswers.Count());
+        Assert.Equal(assessmentQuestions.Count, result.Data!.QuestionScreenAnswers.Count);
         Assert.Empty(result.ErrorMessages);
+        Assert.Equal(2, result.Data.QuestionScreenAnswers[0].Checkbox.SelectedChoices.Count);
         Assert.Equal(1, result.Data.QuestionScreenAnswers[0].Checkbox.SelectedChoices[0]);
         Assert.Equal(2, result.Data.QuestionScreenAnswers[0].Checkbox.SelectedChoices[1]);
     }
