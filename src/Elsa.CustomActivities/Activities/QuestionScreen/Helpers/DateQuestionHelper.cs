@@ -36,10 +36,10 @@ namespace Elsa.CustomActivities.Activities.QuestionScreen.Helpers
                     if (question != null && question.Answers != null &&
                         question.QuestionType == QuestionTypeConstants.DateQuestion)
                     {
-                        var question = question.Answers.FirstOrDefault();
-                        if (question != null)
+                        var answer = question.Answers.FirstOrDefault();
+                        if (answer != null)
                         {
-                            DateTime.TryParseExact(question.AnswerText, CustomWorkflow.Sdk.Constants.DateFormat,
+                            DateTime.TryParseExact(answer.AnswerText, CustomWorkflow.Sdk.Constants.DateFormat,
                                 CultureInfo.InvariantCulture, DateTimeStyles.AdjustToUniversal, out DateTime answerDate);
 
                             var dateString =
@@ -74,10 +74,10 @@ namespace Elsa.CustomActivities.Activities.QuestionScreen.Helpers
                     if (question != null && question.Answers != null &&
                         question.QuestionType == QuestionTypeConstants.DateQuestion)
                     {
-                        var question = question.Answers.FirstOrDefault();
-                        if (question != null)
+                        var answer = question.Answers.FirstOrDefault();
+                        if (answer != null)
                         {
-                            DateTime.TryParseExact(question.AnswerText, CustomWorkflow.Sdk.Constants.DateFormat,
+                            DateTime.TryParseExact(answer.AnswerText, CustomWorkflow.Sdk.Constants.DateFormat,
                                 CultureInfo.InvariantCulture, DateTimeStyles.AdjustToUniversal, out DateTime answerDate);
 
                             var dateString =

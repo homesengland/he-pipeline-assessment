@@ -35,11 +35,11 @@ namespace Elsa.CustomActivities.Activities.QuestionScreen.Helpers
                     if (question != null && question.Answers != null &&
                         question.QuestionType == QuestionTypeConstants.CurrencyQuestion)
                     {
-                        var question = question.Answers.FirstOrDefault();
-                        if (question != null)
+                        var answer = question.Answers.FirstOrDefault();
+                        if (answer != null)
                         {
-                            var answer = decimal.Parse(question.AnswerText);
-                            if (answer >= answerToCheck)
+                            var answerText = decimal.Parse(answer.AnswerText);
+                            if (answerText >= answerToCheck)
                             {
                                 return true;
                             }
@@ -66,11 +66,11 @@ namespace Elsa.CustomActivities.Activities.QuestionScreen.Helpers
                     if (question != null && question.Answers != null &&
                         question.QuestionType == QuestionTypeConstants.CurrencyQuestion)
                     {
-                        var question = question.Answers.FirstOrDefault();
-                        if (question != null)
+                        var answer = question.Answers.FirstOrDefault();
+                        if (answer != null)
                         {
-                            var answer = decimal.Parse(question.AnswerText);
-                            if (answer <= answerToCheck)
+                            var answerText = decimal.Parse(answer.AnswerText);
+                            if (answerText <= answerToCheck)
                             {
                                 return true;
                             }

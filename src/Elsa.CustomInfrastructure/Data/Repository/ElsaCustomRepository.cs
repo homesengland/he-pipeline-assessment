@@ -64,7 +64,7 @@ namespace Elsa.CustomInfrastructure.Data.Repository
 
         public async Task<List<Question>> GetQuestions(string workflowInstanceId, CancellationToken cancellationToken)
         {
-            var list = await _dbContext.Set<Question>().Where(x => x.WorkflowInstanceId == workflowInstanceId).ToListAsync(cancellationToken);
+            var list = await _dbContext.Set<Question>().Where(x => x.WorkflowInstanceId == workflowInstanceId).Include(x => x.Answers).ToListAsync(cancellationToken);
             return list;
         }
 
