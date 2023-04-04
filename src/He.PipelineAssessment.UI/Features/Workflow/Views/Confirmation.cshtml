@@ -15,7 +15,7 @@
 </div>
 <div>
     <h2 class="govuk-heading-m">@Html.DisplayTextFor(m => m.Data.FooterTitle)</h2>
-    <p class="govuk-body">@Html.DisplayTextFor(m => m.Data.FooterText).</p>
+    <p class="govuk-body">@Html.DisplayTextFor(m => m.Data.FooterText)</p>
 
     @foreach (var text in Model.Data.Text.InformationTextList.
     Select(x => new InformationText
@@ -34,29 +34,7 @@
 <h2 class="govuk-heading-m">
     Review your answers
 </h2>
-<div class="govuk-grid-row">
-    <div class="govuk-grid-column-two-thirds-from-desktop">
-        <dl class="govuk-summary-list govuk-!-margin-bottom-9">
-            @foreach (var question in Model.Data.CheckQuestions!)
-            {
-                <div class="govuk-summary-list__row">
-                    <dt class="govuk-summary-list__key">
-                        @question.QuestionText
-                    </dt>
-                    <dd class="govuk-summary-list__value">
-                        @if (question.Answers != null)
-                        {
-                            @foreach (var answer in question.Answers)
-                            {
-                                <p>@answer</p>
-                            }
-                        }
-                    </dd>
-                </div>
-            }
-        </dl>
-    </div>
-</div>
+@await Html.PartialAsync("_ReviewAnswers",new ReviewAnswers{Questions = Model.Data.CheckQuestions, RenderChangeLinks = false})
 
 <div>
     @Html.ActionLink("Go to Assessment Summary", "Summary", "Assessment", new { Model.AssessmentId, Model.CorrelationId }, new { @class = "govuk-button" })
