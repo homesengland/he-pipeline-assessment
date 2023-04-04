@@ -1,5 +1,5 @@
 ﻿@using Microsoft.ApplicationInsights.Extensibility.Implementation
-@model He.PipelineAssessment.UI.Features.Workflow.ViewModels.MultiComment
+@model He.PipelineAssessment.UI.Features.Workflow.ViewModels.Comment
 @{
     var itemName = "Data.Questions[" + Model.Index + "].Comments";
 }
@@ -10,6 +10,6 @@
         <label class="govuk-label" for="more-detail">
             Comments
         </label>
-        <textarea id="more-detail" name="@itemName" class="govuk-textarea" maxlength=2000 >@Model.Comment</textarea>
+        <textarea id="more-detail" name="@itemName" class="govuk-textarea" maxlength=2000 >@Model.CommentText</textarea>
     </div>
 }

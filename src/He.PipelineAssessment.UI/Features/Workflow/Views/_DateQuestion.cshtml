@@ -1,5 +1,5 @@
 ﻿@using He.PipelineAssessment.UI.Features.Workflow.ViewModels
-@model He.PipelineAssessment.UI.Features.Workflow.ViewModels.MultiQuestion
+@model He.PipelineAssessment.UI.Features.Workflow.ViewModels.Question
 @{
     var itemDayName = "Data.Questions[" + Model.Index + "].Date.Day";
     var itemMonthName = "Data.Questions[" + Model.Index + "].Date.Month";
@@ -13,7 +13,7 @@
 <div class="govuk-form-group @errorFormClass" id="@formItemName">
     @await Html.PartialAsync("_QuestionTitle", Model.Title)
 
-    @await Html.PartialAsync("_QuestionText", Model.Question)
+    @await Html.PartialAsync("_QuestionText", Model.QuestionText)
     @await Html.PartialAsync("_QuestionHint", Model.QuestionHint)
 
     <div class="govuk-date-input__item">
@@ -41,5 +41,5 @@
         </div>
     </div>
     @await Html.PartialAsync("_QuestionGuidance", Model.QuestionGuidance)
-    @await Html.PartialAsync("_Comments", new MultiComment(){Index = Model.Index, Comment = Model.Comments,DisplayComments = Model.DisplayComments})
+    @await Html.PartialAsync("_Comments", new Comment(){Index = Model.Index, CommentText = Model.Comments,DisplayComments = Model.DisplayComments})
 </div>

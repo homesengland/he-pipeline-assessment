@@ -1,5 +1,5 @@
 ﻿@using He.PipelineAssessment.UI.Features.Workflow.ViewModels
-@model He.PipelineAssessment.UI.Features.Workflow.ViewModels.MultiQuestion
+@model He.PipelineAssessment.UI.Features.Workflow.ViewModels.Question
 @{
     var itemName = "Data.Questions[" + Model.Index + "].Checkbox.SelectedChoices";
     var formItemName = "Data.Questions[" + Model.Index + "].Checkbox";
@@ -11,7 +11,7 @@
 <div class="govuk-form-group @errorFormClass" id="@formItemName">
     @await Html.PartialAsync("_QuestionTitle", Model.Title)
 
-    @await Html.PartialAsync("_QuestionText", Model.Question)
+    @await Html.PartialAsync("_QuestionText", Model.QuestionText)
     @await Html.PartialAsync("_QuestionHint", Model.QuestionHint)
     
     <div class="govuk-checkboxes" data-module="govuk-checkboxes" id="@itemName">
@@ -99,5 +99,5 @@
 
  
     @await Html.PartialAsync("_QuestionGuidance", Model.QuestionGuidance)
-    @await Html.PartialAsync("_Comments", new MultiComment(){Index = Model.Index, Comment = Model.Comments,DisplayComments = Model.DisplayComments})
+    @await Html.PartialAsync("_Comments", new Comment(){Index = Model.Index, CommentText = Model.Comments,DisplayComments = Model.DisplayComments})
 </div>

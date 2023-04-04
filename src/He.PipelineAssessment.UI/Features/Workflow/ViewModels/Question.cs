@@ -2,14 +2,14 @@
 
 namespace He.PipelineAssessment.UI.Features.Workflow.ViewModels
 {
-    public class MultiQuestion
+    public class Question
     {
         public int Index { get; set; }
         public bool IsValid { get; set; }
         public string QuestionId { get; set; } = null!;
         public string QuestionType { get; set; } = null!;
         public string Title { get; set; } = null!;
-        public string Question { get; set; } = null!;
+        public string QuestionText { get; set; } = null!;
         public string? QuestionHint { get; set; }
         public string? QuestionGuidance { get; set; }
         public bool DisplayComments { get; set; }

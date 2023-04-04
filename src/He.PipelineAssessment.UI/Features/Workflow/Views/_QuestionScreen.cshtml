@@ -44,7 +44,7 @@
 
                     @if (Model.Data.Questions![i].QuestionType == QuestionTypeConstants.TextQuestion)
                     {
-                        @await Html.PartialAsync("_TextQuestion",new MultiQuestion()
+                        @await Html.PartialAsync("_TextQuestion",new Question()
                         {
                             Index = i,
                             IsValid = isValidItem,
@@ -57,7 +57,7 @@
                             IsReadOnly = Model.Data.Questions[i].IsReadOnly,
                             Comments = Model.Data.Questions[i].Comments,
                             DisplayComments = Model.Data.Questions[i].DisplayComments,
-                            Question = Model.Data.Questions[i].Question,
+                            QuestionText = Model.Data.Questions[i].Question,
                             QuestionGuidance = Model.Data.Questions[i].QuestionGuidance,
                             QuestionHint = Model.Data.Questions[i].QuestionHint,
                             QuestionId = Model.Data.Questions[i].QuestionId,
@@ -73,7 +73,7 @@
 
                     @if (Model.Data.Questions![i].QuestionType == QuestionTypeConstants.TextAreaQuestion)
                     {
-                        @await Html.PartialAsync("_TextAreaQuestion",new MultiQuestion()
+                        @await Html.PartialAsync("_TextAreaQuestion",new Question()
                     {
                         Index = i,
                         IsValid = isValidItem,
@@ -86,7 +86,7 @@
                         IsReadOnly = Model.Data.Questions[i].IsReadOnly,
                         Comments = Model.Data.Questions[i].Comments,
                         DisplayComments = Model.Data.Questions[i].DisplayComments,
-                        Question = Model.Data.Questions[i].Question,
+                        QuestionText = Model.Data.Questions[i].Question,
                         QuestionGuidance = Model.Data.Questions[i].QuestionGuidance,
                         QuestionHint = Model.Data.Questions[i].QuestionHint,
                         QuestionId = Model.Data.Questions[i].QuestionId,
@@ -107,7 +107,7 @@
                         dateModel.Day = Model.Data.Questions[i].Date.Day;
                         dateModel.Month = Model.Data.Questions[i].Date.Month;
                         dateModel.Year = Model.Data.Questions[i].Date.Year;
-                        @await Html.PartialAsync("_DateQuestion",new MultiQuestion()
+                        @await Html.PartialAsync("_DateQuestion",new Question()
                         {
                             Index = i,
                             IsValid = isValidItem,
@@ -120,7 +120,7 @@
                             IsReadOnly = Model.Data.Questions[i].IsReadOnly,
                             Comments = Model.Data.Questions[i].Comments,
                             DisplayComments = Model.Data.Questions[i].DisplayComments,
-                            Question = Model.Data.Questions[i].Question,
+                            QuestionText = Model.Data.Questions[i].Question,
                             QuestionGuidance = Model.Data.Questions[i].QuestionGuidance,
                             QuestionHint = Model.Data.Questions[i].QuestionHint,
                             QuestionId = Model.Data.Questions[i].QuestionId,
@@ -131,7 +131,7 @@
                     }
                     @if (Model.Data.Questions![i].QuestionType == QuestionTypeConstants.CurrencyQuestion)
                     {
-                        @await Html.PartialAsync("_CurrencyQuestion",new MultiQuestion()
+                        @await Html.PartialAsync("_CurrencyQuestion",new Question()
                         {
                             Index = i,
                             IsValid = isValidItem,
@@ -144,7 +144,7 @@
                             IsReadOnly = Model.Data.Questions[i].IsReadOnly,
                             Comments = Model.Data.Questions[i].Comments,
                             DisplayComments = Model.Data.Questions[i].DisplayComments,
-                            Question = Model.Data.Questions[i].Question,
+                            QuestionText = Model.Data.Questions[i].Question,
                             QuestionGuidance = Model.Data.Questions[i].QuestionGuidance,
                             QuestionHint = Model.Data.Questions[i].QuestionHint,
                             QuestionId = Model.Data.Questions[i].QuestionId,
@@ -160,7 +160,7 @@
                     @if (Model.Data.Questions![i].QuestionType == QuestionTypeConstants.CheckboxQuestion)
                     {
 
-                        @await Html.PartialAsync("_CheckboxQuestion", new MultiQuestion()
+                        @await Html.PartialAsync("_CheckboxQuestion", new Question()
                         {
                             Index = i,
                             IsValid = isValidItem,
@@ -173,7 +173,7 @@
                             IsReadOnly = Model.Data.Questions[i].IsReadOnly,
                             Comments = Model.Data.Questions[i].Comments,
                             DisplayComments = Model.Data.Questions[i].DisplayComments,
-                            Question = Model.Data.Questions[i].Question,
+                            QuestionText = Model.Data.Questions[i].Question,
                             QuestionGuidance = Model.Data.Questions[i].QuestionGuidance,
                             QuestionHint = Model.Data.Questions[i].QuestionHint,
                             QuestionId = Model.Data.Questions[i].QuestionId,
@@ -189,7 +189,7 @@
                     @if (Model.Data.Questions![i].QuestionType == QuestionTypeConstants.RadioQuestion || Model.Data.Questions![i].QuestionType == QuestionTypeConstants.PotScoreRadioQuestion)
                     {
 
-                        @await Html.PartialAsync("_RadioQuestion",new MultiQuestion()
+                        @await Html.PartialAsync("_RadioQuestion",new Question()
                         {
                             Index = i,
                             IsValid = isValidItem,
@@ -202,7 +202,7 @@
                             IsReadOnly = Model.Data.Questions[i].IsReadOnly,
                             Comments = Model.Data.Questions[i].Comments,
                             DisplayComments = Model.Data.Questions[i].DisplayComments,
-                            Question = Model.Data.Questions[i].Question,
+                            QuestionText = Model.Data.Questions[i].Question,
                             QuestionGuidance = Model.Data.Questions[i].QuestionGuidance,
                             QuestionHint = Model.Data.Questions[i].QuestionHint,
                             QuestionId = Model.Data.Questions[i].QuestionId,
@@ -225,7 +225,7 @@
                     @if (Model.Data.Questions![i].QuestionType == QuestionTypeConstants.Information)
                     {
 
-                        @await Html.PartialAsync("_Information",new MultiQuestion()
+                        @await Html.PartialAsync("_Information",new Question()
                         {
                             Index = i,
                             IsValid = isValidItem,
@@ -238,7 +238,7 @@
                             IsReadOnly = Model.Data.Questions[i].IsReadOnly,
                             Comments = Model.Data.Questions[i].Comments,
                             DisplayComments = Model.Data.Questions[i].DisplayComments,
-                            Question = Model.Data.Questions[i].Question,
+                            QuestionText = Model.Data.Questions[i].Question,
                             QuestionGuidance = Model.Data.Questions[i].QuestionGuidance,
                             QuestionHint = Model.Data.Questions[i].QuestionHint,
                             QuestionId = Model.Data.Questions[i].QuestionId,
