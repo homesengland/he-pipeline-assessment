@@ -11,7 +11,7 @@ namespace Elsa.Server.Helpers
     {
         CustomActivityNavigation CreateNextCustomActivityNavigation(string previousActivityId, string previousActivityType, string nextActivityId, string nextActivityType, WorkflowInstance workflowInstance);
 
-        List<Question> CreateQuestionScreenQuestions(string activityId, WorkflowInstance workflowInstance);
+        List<Question> CreateQuestions(string activityId, WorkflowInstance workflowInstance);
     }
 
     public class ElsaCustomModelHelper : IElsaCustomModelHelper
@@ -39,7 +39,7 @@ namespace Elsa.Server.Helpers
             };
         }
 
-        public Question CreateQuestionScreenQuestion(string nextActivityId, string nextActivityType, CustomActivities.Activities.QuestionScreen.Question question, WorkflowInstance workflowInstance)
+        public Question CreateQuestion(string nextActivityId, string nextActivityType, CustomActivities.Activities.QuestionScreen.Question question, WorkflowInstance workflowInstance)
         {
             return new Question
             {
@@ -73,9 +73,9 @@ namespace Elsa.Server.Helpers
             return choices;
         }
 
-        public List<Question> CreateQuestionScreenQuestions(string activityId, WorkflowInstance workflowInstance)
+        public List<Question> CreateQuestions(string activityId, WorkflowInstance workflowInstance)
         {
-            var questionScreenQuestions = new List<Question>();
+            var questions = new List<Question>();
             //create one for each question
             var dictionList = workflowInstance.ActivityData
                 .FirstOrDefault(x => x.Key == activityId).Value;
@@ -91,14 +91,14 @@ namespace Elsa.Server.Helpers
                     {
                         foreach (var item in questionList!)
                         {
-                            questionScreenQuestions.Add(this.CreateQuestionScreenQuestion(activityId, ActivityTypeConstants.QuestionScreen, item, workflowInstance));
+                            questions.Add(this.CreateQuestion(activityId, ActivityTypeConstants.QuestionScreen, item, workflowInstance));
                         }
-                        return questionScreenQuestions;
+                        return questions;
                     }
                 }
             }
 
-            return questionScreenQuestions;
+            return questions;
         }
     }
 }

@@ -149,7 +149,7 @@ namespace Elsa.Server.Tests.Features.Workflow.CheckYourAnswersSaveAndContinue
                 .Returns(nextAssessmentActivity);
 
             elsaCustomModelHelper
-                .Setup(x => x.CreateQuestionScreenQuestions(workflowNextActivityModel.NextActivity.Id, workflowInstance))
+                .Setup(x => x.CreateQuestions(workflowNextActivityModel.NextActivity.Id, workflowInstance))
                 .Returns(questions);
 
             //Act
@@ -229,7 +229,7 @@ namespace Elsa.Server.Tests.Features.Workflow.CheckYourAnswersSaveAndContinue
                 .Returns(nextAssessmentActivity);
 
             elsaCustomModelHelper
-                .Setup(x => x.CreateQuestionScreenQuestions(workflowNextActivityModel.NextActivity.Id, workflowInstance))
+                .Setup(x => x.CreateQuestions(workflowNextActivityModel.NextActivity.Id, workflowInstance))
                 .Returns(questions);
 
             //Act
@@ -310,7 +310,7 @@ namespace Elsa.Server.Tests.Features.Workflow.CheckYourAnswersSaveAndContinue
                     workflowInstance))
                 .Returns(nextAssessmentActivity);
 
-            saveAndContinueHelper.Setup(x => x.CreateQuestionScreenQuestions(activityBlueprint.Id, workflowInstance))
+            saveAndContinueHelper.Setup(x => x.CreateQuestions(activityBlueprint.Id, workflowInstance))
                 .Returns(nextAssessmentQuestions);
 
             //Act
@@ -406,7 +406,7 @@ namespace Elsa.Server.Tests.Features.Workflow.CheckYourAnswersSaveAndContinue
                     workflowNextActivityModel.NextActivity.Type, workflowInstance),
                 Times.Once);
             elsaCustomModelHelper.Verify(
-                x => x.CreateQuestionScreenQuestions(workflowNextActivityModel.NextActivity.Id, workflowInstance),
+                x => x.CreateQuestions(workflowNextActivityModel.NextActivity.Id, workflowInstance),
                 Times.Once);
         }
 

@@ -63,7 +63,7 @@ namespace Elsa.Server.Tests.Features.Workflow.Helpers
             mockDateTimeProvider.Setup(x => x.UtcNow()).Returns(currentTimeUtc);
 
             //Act
-            var result = sut.CreateQuestionScreenQuestion(nextActivityId, nextActivityType, question, workflowInstance);
+            var result = sut.CreateQuestion(nextActivityId, nextActivityType, question, workflowInstance);
 
             //Assert
             Assert.IsType<Question>(result);
@@ -93,7 +93,7 @@ namespace Elsa.Server.Tests.Features.Workflow.Helpers
             mockDateTimeProvider.Setup(x => x.UtcNow()).Returns(currentTimeUtc);
 
             //Act
-            var result = sut.CreateQuestionScreenQuestion(nextActivityId, nextActivityType, question, workflowInstance);
+            var result = sut.CreateQuestion(nextActivityId, nextActivityType, question, workflowInstance);
 
             //Assert
             Assert.IsType<Question>(result);
@@ -122,7 +122,7 @@ namespace Elsa.Server.Tests.Features.Workflow.Helpers
             mockDateTimeProvider.Setup(x => x.UtcNow()).Returns(currentTimeUtc);
 
             //Act
-            var result = sut.CreateQuestionScreenQuestion(nextActivityId, nextActivityType, question, workflowInstance);
+            var result = sut.CreateQuestion(nextActivityId, nextActivityType, question, workflowInstance);
 
             //Assert
             Assert.IsType<Question>(result);
@@ -146,7 +146,7 @@ namespace Elsa.Server.Tests.Features.Workflow.Helpers
             //Arrange
 
             //Act
-            var result = sut.CreateQuestionScreenQuestions(activityId, workflowInstance);
+            var result = sut.CreateQuestions(activityId, workflowInstance);
 
             //Assert
             Assert.IsType<List<Question>>(result);
@@ -170,7 +170,7 @@ namespace Elsa.Server.Tests.Features.Workflow.Helpers
             workflowInstance.ActivityData.Add(activityId, assessmentQuestionsDictionary);
 
             //Act
-            var result = sut.CreateQuestionScreenQuestions(activityId, workflowInstance);
+            var result = sut.CreateQuestions(activityId, workflowInstance);
 
             //Assert
             Assert.IsType<List<Question>>(result);

@@ -29,13 +29,13 @@ namespace Elsa.CustomActivities.Activities.QuestionScreen.Helpers
                 var activity = workflowBlueprint.Activities.FirstOrDefault(x => x.Name == activityName);
                 if (activity != null)
                 {
-                    var questionScreenQuestion = await _elsaCustomRepository.GetQuestion(activity.Id,
+                    var question = await _elsaCustomRepository.GetQuestion(activity.Id,
                         workflowInstanceId, questionId, CancellationToken.None);
 
-                    if (questionScreenQuestion != null && questionScreenQuestion.Answers != null &&
-                        questionScreenQuestion.QuestionType == QuestionTypeConstants.CurrencyQuestion)
+                    if (question != null && question.Answers != null &&
+                        question.QuestionType == QuestionTypeConstants.CurrencyQuestion)
                     {
-                        var question = questionScreenQuestion.Answers.FirstOrDefault();
+                        var question = question.Answers.FirstOrDefault();
                         if (question != null)
                         {
                             var answer = decimal.Parse(question.AnswerText);
@@ -60,13 +60,13 @@ namespace Elsa.CustomActivities.Activities.QuestionScreen.Helpers
                 var activity = workflowBlueprint.Activities.FirstOrDefault(x => x.Name == activityName);
                 if (activity != null)
                 {
-                    var questionScreenQuestion = await _elsaCustomRepository.GetQuestion(activity.Id,
+                    var question = await _elsaCustomRepository.GetQuestion(activity.Id,
                         workflowInstanceId, questionId, CancellationToken.None);
 
-                    if (questionScreenQuestion != null && questionScreenQuestion.Answers != null &&
-                        questionScreenQuestion.QuestionType == QuestionTypeConstants.CurrencyQuestion)
+                    if (question != null && question.Answers != null &&
+                        question.QuestionType == QuestionTypeConstants.CurrencyQuestion)
                     {
-                        var question = questionScreenQuestion.Answers.FirstOrDefault();
+                        var question = question.Answers.FirstOrDefault();
                         if (question != null)
                         {
                             var answer = decimal.Parse(question.AnswerText);

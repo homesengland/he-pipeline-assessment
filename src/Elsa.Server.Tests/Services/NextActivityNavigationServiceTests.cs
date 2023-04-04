@@ -58,7 +58,7 @@ namespace Elsa.Server.Tests.Services
                     ActivityTypeConstants.QuestionScreen, nextActivity.Id, nextActivity.Type, workflowInstance))
                 .Returns(customActivityNavigation);
 
-            elsaCustomModelHelper.Setup(x => x.CreateQuestionScreenQuestions(nextActivity.Id, workflowInstance))
+            elsaCustomModelHelper.Setup(x => x.CreateQuestions(nextActivity.Id, workflowInstance))
                 .Returns(questions);
 
             //Act
