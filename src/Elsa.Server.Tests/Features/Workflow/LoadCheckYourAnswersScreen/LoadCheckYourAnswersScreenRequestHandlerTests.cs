@@ -66,7 +66,7 @@ public class LoadCheckYourAnswersScreenRequestHandlerTests
         [Frozen] Mock<IActivityDataProvider> activityDataProvider,
         LoadCheckYourAnswersScreenRequest request,
         CustomActivityNavigation customActivityNavigation,
-        List<Question> questionScreenAnswers,
+        List<Question> questions,
         LoadCheckYourAnswersScreenRequestHandler sut)
     {
         //Arrange
@@ -75,7 +75,7 @@ public class LoadCheckYourAnswersScreenRequestHandlerTests
             .ReturnsAsync(customActivityNavigation);
 
         elsaCustomRepository.Setup(x => x.GetQuestions(request.WorkflowInstanceId, CancellationToken.None))
-            .ReturnsAsync(questionScreenAnswers);
+            .ReturnsAsync(questions);
 
         var dictionary = new Dictionary<string, object?>()
         {
@@ -93,7 +93,7 @@ public class LoadCheckYourAnswersScreenRequestHandlerTests
 
         //Assert
         Assert.NotNull(result.Data);
-        Assert.Equal(questionScreenAnswers, result.Data!.CheckQuestionScreenAnswers);
+        Assert.Equal(questions, result.Data!.CheckQuestionScreenAnswers);
         Assert.Equal(request.ActivityId, result.Data.ActivityId);
         Assert.Equal(request.WorkflowInstanceId, result.Data.WorkflowInstanceId);
         Assert.Equal(ActivityTypeConstants.CheckYourAnswersScreen, result.Data.ActivityType);

@@ -104,7 +104,7 @@ namespace Elsa.CustomActivities.Tests.Activities.QuestionScreen.Helpers
             string questionId,
             string workflowInstanceId,
             WorkflowBlueprint workflowBlueprint,
-            Question questionScreenAnswer,
+            Question question,
             RadioQuestionHelper sut)
         {
             //Arrange
@@ -114,10 +114,10 @@ namespace Elsa.CustomActivities.Tests.Activities.QuestionScreen.Helpers
                 Name = activityName
             });
 
-            questionScreenAnswer.QuestionType = QuestionTypeConstants.CheckboxQuestion;
-            questionScreenAnswer.Choices = null;
+            question.QuestionType = QuestionTypeConstants.CheckboxQuestion;
+            question.Choices = null;
 
-            elsaCustomRepository.Setup(x => x.GetQuestion(activityId, workflowInstanceId, questionId, CancellationToken.None)).ReturnsAsync(questionScreenAnswer);
+            elsaCustomRepository.Setup(x => x.GetQuestion(activityId, workflowInstanceId, questionId, CancellationToken.None)).ReturnsAsync(question);
 
             workflowRegistry.Setup(x => x.FindByNameAsync(workflowName!, VersionOptions.Published, null, default)).ReturnsAsync(workflowBlueprint);
 
@@ -143,7 +143,7 @@ namespace Elsa.CustomActivities.Tests.Activities.QuestionScreen.Helpers
             string questionId,
             string workflowInstanceId,
             WorkflowBlueprint workflowBlueprint,
-            Question questionScreenAnswer,
+            Question question,
             RadioQuestionHelper sut)
         {
             //Arrange
@@ -152,9 +152,9 @@ namespace Elsa.CustomActivities.Tests.Activities.QuestionScreen.Helpers
                 Id = activityId,
                 Name = activityName
             });
-            questionScreenAnswer.QuestionType = QuestionTypeConstants.RadioQuestion;
-            questionScreenAnswer.Answers = new List<Answer> { new() { AnswerText = answer } };
-            questionScreenAnswer.Choices = new List<QuestionChoice>()
+            question.QuestionType = QuestionTypeConstants.RadioQuestion;
+            question.Answers = new List<Answer> { new() { AnswerText = answer } };
+            question.Choices = new List<QuestionChoice>()
             {
                 new QuestionChoice()
                 {
@@ -173,7 +173,7 @@ namespace Elsa.CustomActivities.Tests.Activities.QuestionScreen.Helpers
                 }
             };
 
-            elsaCustomRepository.Setup(x => x.GetQuestion(activityId, workflowInstanceId, questionId, CancellationToken.None)).ReturnsAsync(questionScreenAnswer);
+            elsaCustomRepository.Setup(x => x.GetQuestion(activityId, workflowInstanceId, questionId, CancellationToken.None)).ReturnsAsync(question);
 
             workflowRegistry.Setup(x => x.FindByNameAsync(workflowName!, VersionOptions.Published, null, default)).ReturnsAsync(workflowBlueprint);
 
@@ -280,7 +280,7 @@ namespace Elsa.CustomActivities.Tests.Activities.QuestionScreen.Helpers
             string questionId,
             string workflowInstanceId,
             WorkflowBlueprint workflowBlueprint,
-            Question questionScreenAnswer,
+            Question question,
             RadioQuestionHelper sut)
         {
             //Arrange
@@ -290,10 +290,10 @@ namespace Elsa.CustomActivities.Tests.Activities.QuestionScreen.Helpers
                 Name = activityName
             });
 
-            questionScreenAnswer.QuestionType = QuestionTypeConstants.CheckboxQuestion;
-            questionScreenAnswer.Choices = null;
+            question.QuestionType = QuestionTypeConstants.CheckboxQuestion;
+            question.Choices = null;
 
-            elsaCustomRepository.Setup(x => x.GetQuestion(activityId, workflowInstanceId, questionId, CancellationToken.None)).ReturnsAsync(questionScreenAnswer);
+            elsaCustomRepository.Setup(x => x.GetQuestion(activityId, workflowInstanceId, questionId, CancellationToken.None)).ReturnsAsync(question);
 
             workflowRegistry.Setup(x => x.FindByNameAsync(workflowName!, VersionOptions.Published, null, default)).ReturnsAsync(workflowBlueprint);
 
@@ -320,7 +320,7 @@ namespace Elsa.CustomActivities.Tests.Activities.QuestionScreen.Helpers
             string questionId,
             string workflowInstanceId,
             WorkflowBlueprint workflowBlueprint,
-            Question questionScreenAnswer,
+            Question question,
             RadioQuestionHelper sut)
         {
             //Arrange
@@ -329,9 +329,9 @@ namespace Elsa.CustomActivities.Tests.Activities.QuestionScreen.Helpers
                 Id = activityId,
                 Name = activityName
             });
-            questionScreenAnswer.QuestionType = QuestionTypeConstants.RadioQuestion;
-            questionScreenAnswer.Answers = new List<Answer> { new() { AnswerText = answer } };
-            questionScreenAnswer.Choices = new List<QuestionChoice>()
+            question.QuestionType = QuestionTypeConstants.RadioQuestion;
+            question.Answers = new List<Answer> { new() { AnswerText = answer } };
+            question.Choices = new List<QuestionChoice>()
             {
                 new QuestionChoice()
                 {
@@ -350,7 +350,7 @@ namespace Elsa.CustomActivities.Tests.Activities.QuestionScreen.Helpers
                 }
             };
 
-            elsaCustomRepository.Setup(x => x.GetQuestion(activityId, workflowInstanceId, questionId, CancellationToken.None)).ReturnsAsync(questionScreenAnswer);
+            elsaCustomRepository.Setup(x => x.GetQuestion(activityId, workflowInstanceId, questionId, CancellationToken.None)).ReturnsAsync(question);
 
             workflowRegistry.Setup(x => x.FindByNameAsync(workflowName!, VersionOptions.Published, null, default)).ReturnsAsync(workflowBlueprint);
 

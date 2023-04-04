@@ -110,7 +110,7 @@ namespace Elsa.CustomActivities.Tests.Activities.QuestionScreen.Helpers
             string questionId,
             string workflowInstanceId,
             WorkflowBlueprint workflowBlueprint,
-            Question questionScreenAnswer,
+            Question question,
             CurrencyQuestionHelper sut)
         {
             //Arrange
@@ -119,10 +119,10 @@ namespace Elsa.CustomActivities.Tests.Activities.QuestionScreen.Helpers
                 Id = activityId,
                 Name = activityName
             });
-            questionScreenAnswer.QuestionType = QuestionTypeConstants.CurrencyQuestion;
-            questionScreenAnswer.Answers = new List<Answer> { new() { AnswerText = answer.ToString(CultureInfo.InvariantCulture) } };
+            question.QuestionType = QuestionTypeConstants.CurrencyQuestion;
+            question.Answers = new List<Answer> { new() { AnswerText = answer.ToString(CultureInfo.InvariantCulture) } };
 
-            elsaCustomRepository.Setup(x => x.GetQuestion(activityId, workflowInstanceId, questionId, CancellationToken.None)).ReturnsAsync(questionScreenAnswer);
+            elsaCustomRepository.Setup(x => x.GetQuestion(activityId, workflowInstanceId, questionId, CancellationToken.None)).ReturnsAsync(question);
 
             workflowRegistry.Setup(x => x.FindByNameAsync(workflowName!, VersionOptions.Published, null, default)).ReturnsAsync(workflowBlueprint);
 
@@ -228,7 +228,7 @@ namespace Elsa.CustomActivities.Tests.Activities.QuestionScreen.Helpers
             string questionId,
             string workflowInstanceId,
             WorkflowBlueprint workflowBlueprint,
-            Question questionScreenAnswer,
+            Question question,
             CurrencyQuestionHelper sut)
         {
             //Arrange
@@ -237,10 +237,10 @@ namespace Elsa.CustomActivities.Tests.Activities.QuestionScreen.Helpers
                 Id = activityId,
                 Name = activityName
             });
-            questionScreenAnswer.QuestionType = QuestionTypeConstants.CurrencyQuestion;
-            questionScreenAnswer.Answers = new List<Answer> { new() { AnswerText = answer.ToString(CultureInfo.InvariantCulture) } };
+            question.QuestionType = QuestionTypeConstants.CurrencyQuestion;
+            question.Answers = new List<Answer> { new() { AnswerText = answer.ToString(CultureInfo.InvariantCulture) } };
 
-            elsaCustomRepository.Setup(x => x.GetQuestion(activityId, workflowInstanceId, questionId, CancellationToken.None)).ReturnsAsync(questionScreenAnswer);
+            elsaCustomRepository.Setup(x => x.GetQuestion(activityId, workflowInstanceId, questionId, CancellationToken.None)).ReturnsAsync(question);
 
             workflowRegistry.Setup(x => x.FindByNameAsync(workflowName!, VersionOptions.Published, null, default)).ReturnsAsync(workflowBlueprint);
 

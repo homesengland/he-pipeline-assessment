@@ -36,10 +36,10 @@ namespace Elsa.CustomActivities.Activities.QuestionScreen.Helpers
                     if (questionScreenQuestion != null && questionScreenQuestion.Answers != null &&
                         questionScreenQuestion.QuestionType == QuestionTypeConstants.DateQuestion)
                     {
-                        var questionScreenAnswer = questionScreenQuestion.Answers.FirstOrDefault();
-                        if (questionScreenAnswer != null)
+                        var question = questionScreenQuestion.Answers.FirstOrDefault();
+                        if (question != null)
                         {
-                            DateTime.TryParseExact(questionScreenAnswer.AnswerText, CustomWorkflow.Sdk.Constants.DateFormat,
+                            DateTime.TryParseExact(question.AnswerText, CustomWorkflow.Sdk.Constants.DateFormat,
                                 CultureInfo.InvariantCulture, DateTimeStyles.AdjustToUniversal, out DateTime answerDate);
 
                             var dateString =
@@ -74,10 +74,10 @@ namespace Elsa.CustomActivities.Activities.QuestionScreen.Helpers
                     if (questionScreenQuestion != null && questionScreenQuestion.Answers != null &&
                         questionScreenQuestion.QuestionType == QuestionTypeConstants.DateQuestion)
                     {
-                        var questionScreenAnswer = questionScreenQuestion.Answers.FirstOrDefault();
-                        if (questionScreenAnswer != null)
+                        var question = questionScreenQuestion.Answers.FirstOrDefault();
+                        if (question != null)
                         {
-                            DateTime.TryParseExact(questionScreenAnswer.AnswerText, CustomWorkflow.Sdk.Constants.DateFormat,
+                            DateTime.TryParseExact(question.AnswerText, CustomWorkflow.Sdk.Constants.DateFormat,
                                 CultureInfo.InvariantCulture, DateTimeStyles.AdjustToUniversal, out DateTime answerDate);
 
                             var dateString =

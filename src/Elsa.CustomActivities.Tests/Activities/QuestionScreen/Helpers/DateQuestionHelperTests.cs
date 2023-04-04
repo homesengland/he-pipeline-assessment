@@ -113,7 +113,7 @@ namespace Elsa.CustomActivities.Tests.Activities.QuestionScreen.Helpers
             string questionId,
             string workflowInstanceId,
             WorkflowBlueprint workflowBlueprint,
-            Question questionScreenAnswer,
+            Question question,
             DateQuestionHelper sut)
         {
             //Arrange
@@ -122,10 +122,10 @@ namespace Elsa.CustomActivities.Tests.Activities.QuestionScreen.Helpers
                 Id = activityId,
                 Name = activityName
             });
-            questionScreenAnswer.QuestionType = QuestionTypeConstants.DateQuestion;
-            questionScreenAnswer.Answers = new List<Answer> { new() { AnswerText = $"{answerYear}-{answerMonth}-{answerDay}" } };
+            question.QuestionType = QuestionTypeConstants.DateQuestion;
+            question.Answers = new List<Answer> { new() { AnswerText = $"{answerYear}-{answerMonth}-{answerDay}" } };
 
-            elsaCustomRepository.Setup(x => x.GetQuestion(activityId, workflowInstanceId, questionId, CancellationToken.None)).ReturnsAsync(questionScreenAnswer);
+            elsaCustomRepository.Setup(x => x.GetQuestion(activityId, workflowInstanceId, questionId, CancellationToken.None)).ReturnsAsync(question);
 
             workflowRegistry.Setup(x => x.FindByNameAsync(workflowName!, VersionOptions.Published, null, default)).ReturnsAsync(workflowBlueprint);
 
@@ -235,7 +235,7 @@ namespace Elsa.CustomActivities.Tests.Activities.QuestionScreen.Helpers
             string questionId,
             string workflowInstanceId,
             WorkflowBlueprint workflowBlueprint,
-            Question questionScreenAnswer,
+            Question question,
             DateQuestionHelper sut)
         {
             //Arrange
@@ -244,10 +244,10 @@ namespace Elsa.CustomActivities.Tests.Activities.QuestionScreen.Helpers
                 Id = activityId,
                 Name = activityName
             });
-            questionScreenAnswer.QuestionType = QuestionTypeConstants.DateQuestion;
-            questionScreenAnswer.Answers = new List<Answer> { new() { AnswerText = $"{answerYear}-{answerMonth}-{answerDay}" } };
+            question.QuestionType = QuestionTypeConstants.DateQuestion;
+            question.Answers = new List<Answer> { new() { AnswerText = $"{answerYear}-{answerMonth}-{answerDay}" } };
 
-            elsaCustomRepository.Setup(x => x.GetQuestion(activityId, workflowInstanceId, questionId, CancellationToken.None)).ReturnsAsync(questionScreenAnswer);
+            elsaCustomRepository.Setup(x => x.GetQuestion(activityId, workflowInstanceId, questionId, CancellationToken.None)).ReturnsAsync(question);
 
             workflowRegistry.Setup(x => x.FindByNameAsync(workflowName!, VersionOptions.Published, null, default)).ReturnsAsync(workflowBlueprint);
 

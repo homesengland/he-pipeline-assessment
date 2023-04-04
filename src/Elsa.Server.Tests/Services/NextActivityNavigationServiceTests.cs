@@ -49,7 +49,7 @@ namespace Elsa.Server.Tests.Services
             IActivityBlueprint nextActivity,
             WorkflowInstance workflowInstance,
             CustomActivityNavigation customActivityNavigation,
-            List<Question> questionScreenAnswers,
+            List<Question> questions,
             NextActivityNavigationService sut)
         {
             //Arrange
@@ -59,7 +59,7 @@ namespace Elsa.Server.Tests.Services
                 .Returns(customActivityNavigation);
 
             elsaCustomModelHelper.Setup(x => x.CreateQuestionScreenQuestions(nextActivity.Id, workflowInstance))
-                .Returns(questionScreenAnswers);
+                .Returns(questions);
 
             //Act
             await sut.CreateNextActivityNavigation(previousActivityId, null, nextActivity,
@@ -67,7 +67,7 @@ namespace Elsa.Server.Tests.Services
 
             //Assert
             elsaCustomRepository.Verify(
-                x => x.CreateQuestionsAsync(questionScreenAnswers, CancellationToken.None), Times.Once);
+                x => x.CreateQuestionsAsync(questions, CancellationToken.None), Times.Once);
         }
 
         [Theory]
