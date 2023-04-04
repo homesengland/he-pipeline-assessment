@@ -48,7 +48,7 @@ namespace Elsa.Server.Tests.Features.Workflow.Helpers
 
         [Theory]
         [AutoMoqData]
-        public void CreateQuestionScreenAnswer_ShouldReturnQuestionScreenAnswerForCheckbox(
+        public void CreateQuestion_ShouldReturnQuestionForCheckbox(
                     [Frozen] Mock<IDateTimeProvider> mockDateTimeProvider,
                     string nextActivityId,
                     string nextActivityType,
@@ -78,7 +78,7 @@ namespace Elsa.Server.Tests.Features.Workflow.Helpers
 
         [Theory]
         [AutoMoqData]
-        public void CreateQuestionScreenAnswer_ShouldReturnQuestionScreenAnswerForRadio(
+        public void CreateQuestion_ShouldReturnQuestionForRadio(
             [Frozen] Mock<IDateTimeProvider> mockDateTimeProvider,
             string nextActivityId,
             string nextActivityType,
@@ -108,7 +108,7 @@ namespace Elsa.Server.Tests.Features.Workflow.Helpers
 
         [Theory]
         [AutoMoqData]
-        public void CreateQuestionScreenAnswer_ShouldReturnQuestionScreenAnswerForStandardQuestions(
+        public void CreateQuestion_ShouldReturnQuestionForStandardQuestions(
             [Frozen] Mock<IDateTimeProvider> mockDateTimeProvider,
             string nextActivityId,
             string nextActivityType,
@@ -137,7 +137,7 @@ namespace Elsa.Server.Tests.Features.Workflow.Helpers
 
         [Theory]
         [AutoMoqData]
-        public void CreateQuestionScreenAnswers_ShouldReturnEmptyList(
+        public void CreateQuestions_ShouldReturnEmptyList(
             string activityId,
             WorkflowInstance workflowInstance,
             ElsaCustomModelHelper sut
@@ -155,7 +155,7 @@ namespace Elsa.Server.Tests.Features.Workflow.Helpers
 
         [Theory]
         [AutoMoqData]
-        public void CreateQuestionScreenAnswers_ShouldReturnList(
+        public void CreateQuestions_ShouldReturnList(
             string activityId,
             WorkflowInstance workflowInstance,
             AssessmentQuestions elsaAssessmentQuestions,

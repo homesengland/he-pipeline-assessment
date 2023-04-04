@@ -14,7 +14,7 @@ namespace Elsa.Server.Features.Workflow.LoadQuestionScreen
         public string FooterTitle { get; set; } = null!;
         public string FooterText { get; set; } = null!;
 
-        public List<QuestionActivityData> QuestionScreenAnswers { get; set; } = null!;
+        public List<QuestionActivityData> Questions { get; set; } = null!;
     }
 
     public class QuestionActivityData

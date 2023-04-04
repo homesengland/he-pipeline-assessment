@@ -24,7 +24,7 @@ namespace He.PipelineAssessment.UI.Tests.Features.Workflow.SaveAndContinue
             Assert.NotNull(result);
             Assert.Equal(saveAndContinueCommand.Data.ActivityId, result.ActivityId);
             Assert.Equal(saveAndContinueCommand.Data.WorkflowInstanceId, result.WorkflowInstanceId);
-            Assert.Equal(saveAndContinueCommand.Data.QuestionScreenAnswers?.SelectMany(x => x.Answers.Select(y => new Answer(x.QuestionId, y.AnswerText, x.Comments, y.ChoiceId))).ToList(), result.Answers);
+            Assert.Equal(saveAndContinueCommand.Data.Questions?.SelectMany(x => x.Answers.Select(y => new Answer(x.QuestionId, y.AnswerText, x.Comments, y.ChoiceId))).ToList(), result.Answers);
         }
     }
 }

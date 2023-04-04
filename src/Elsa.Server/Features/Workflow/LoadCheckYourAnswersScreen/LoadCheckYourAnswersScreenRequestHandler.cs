@@ -42,7 +42,7 @@ namespace Elsa.Server.Features.Workflow.LoadCheckYourAnswersScreen
                     var questions = await _elsaCustomRepository
                         .GetQuestions(result.Data.WorkflowInstanceId, cancellationToken);
 
-                    result.Data.CheckQuestionScreenAnswers = questions;
+                    result.Data.CheckQuestions = questions;
 
                     var activityDataDictionary = await _activityDataProvider.GetActivityData(activityScreenRequest.WorkflowInstanceId, activityScreenRequest.ActivityId, cancellationToken);
                     result.Data.PageTitle = (string?)activityDataDictionary.GetData("Title");

@@ -5,7 +5,7 @@ using Microsoft.EntityFrameworkCore.Metadata.Builders;
 namespace Elsa.CustomInfrastructure.Config
 {
 
-    public class QuestionScreenAnswerConfig : IEntityTypeConfiguration<Answer>
+    public class AnswerConfig : IEntityTypeConfiguration<Answer>
     {
         public void Configure(EntityTypeBuilder<Answer> builder)
         {

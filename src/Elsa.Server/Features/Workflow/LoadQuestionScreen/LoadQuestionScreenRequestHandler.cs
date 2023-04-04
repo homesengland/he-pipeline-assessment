@@ -78,7 +78,7 @@ namespace Elsa.Server.Features.Workflow.LoadQuestionScreen
 
                             if (elsaActivityAssessmentQuestions != null)
                             {
-                                result.Data.QuestionScreenAnswers = new List<QuestionActivityData>();
+                                result.Data.Questions = new List<QuestionActivityData>();
                                 result.Data.ActivityType = customActivityNavigation.ActivityType;
 
                                 foreach (var item in elsaActivityAssessmentQuestions.Questions)
@@ -90,14 +90,14 @@ namespace Elsa.Server.Features.Workflow.LoadQuestionScreen
                                     {
                                         var questionActivityData = CreateQuestionActivityData(dbQuestion, item);
 
-                                        result.Data.QuestionScreenAnswers.Add(questionActivityData);
+                                        result.Data.Questions.Add(questionActivityData);
                                     }
                                 }
                             }
                             else
                             {
                                 result.ErrorMessages.Add(
-                                    $"Failed to map activity data to QuestionScreenAnswers");
+                                    $"Failed to map activity data to Questions");
                             }
                         }
                     }

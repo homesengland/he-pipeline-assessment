@@ -42,7 +42,7 @@ namespace Elsa.Server.Tests.Services
 
         [Theory]
         [AutoMoqData]
-        public async Task CreateNextActivityNavigation_ShouldCreateQuestionScreenAnswers_GivenQuestionScreenActivityType(
+        public async Task CreateNextActivityNavigation_ShouldCreateQuestions_GivenQuestionScreenActivityType(
             [Frozen] Mock<IElsaCustomModelHelper> elsaCustomModelHelper,
             [Frozen] Mock<IElsaCustomRepository> elsaCustomRepository,
             string previousActivityId,
@@ -74,7 +74,7 @@ namespace Elsa.Server.Tests.Services
         [InlineAutoMoqData(ActivityTypeConstants.CheckYourAnswersScreen)]
         [InlineAutoMoqData(ActivityTypeConstants.ConfirmationScreen)]
         [InlineAutoMoqData(ActivityTypeConstants.SinglePipelineDataSource)]
-        public async Task CreateNextActivityNavigation_ShouldNotCreateQuestionScreenAnswers_GivenOtherActivityTypes(
+        public async Task CreateNextActivityNavigation_ShouldNotCreateQuestions_GivenOtherActivityTypes(
             string activityType,
             [Frozen] Mock<IElsaCustomModelHelper> elsaCustomModelHelper,
             [Frozen] Mock<IElsaCustomRepository> elsaCustomRepository,

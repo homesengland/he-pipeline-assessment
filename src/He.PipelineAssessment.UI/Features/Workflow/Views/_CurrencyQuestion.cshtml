@@ -1,8 +1,8 @@
 ﻿@using He.PipelineAssessment.UI.Features.Workflow.ViewModels
 @model He.PipelineAssessment.UI.Features.Workflow.ViewModels.MultiQuestion
 @{
-    var itemName = "Data.QuestionScreenAnswers[" + Model.Index + "].Decimal";
-    var answerName = "Data.QuestionScreenAnswers[" + Model.Index + "].Answer";
+    var itemName = "Data.Questions[" + Model.Index + "].Decimal";
+    var answerName = "Data.Questions[" + Model.Index + "].Answer";
     var errorFormClass = !Model.IsValid ? "govuk-form-group--error" : "";
     var errorFieldClass = !Model.IsValid ? "govuk-input--error" : "";
     var isReadOnly = Model.IsReadOnly ? "disabled" : "";
