@@ -4,6 +4,7 @@ using Elsa.CustomActivities.Activities.FinishWorkflow;
 using Elsa.CustomActivities.Activities.HousingNeed;
 using Elsa.CustomActivities.Activities.PCSProfileDataSource;
 using Elsa.CustomActivities.Activities.QuestionScreen;
+using Elsa.CustomActivities.Activities.Scoring;
 using Elsa.CustomActivities.Activities.Shared;
 using Elsa.CustomActivities.Activities.SinglePipelineDataSource;
 using Elsa.CustomActivities.Activities.VFMDataSource;
@@ -49,6 +50,7 @@ builder.Services
         .AddActivity<CheckYourAnswersScreen>()
         .AddActivity<ConfirmationScreen>()
         .AddActivity<FinishWorkflow>()
+        .AddActivity<PotScore>()
         .NoCoreActivities()
         .AddConsoleActivities()
     );
