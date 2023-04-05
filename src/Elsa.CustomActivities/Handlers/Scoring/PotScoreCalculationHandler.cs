@@ -2,6 +2,7 @@
 using Elsa.CustomActivities.Activities.Scoring;
 using Elsa.CustomActivities.Constants;
 using Elsa.CustomActivities.Handlers.Models;
+using Elsa.CustomInfrastructure.Data.Repository;
 using Elsa.Expressions;
 using Elsa.Serialization;
 using Elsa.Services.Models;
@@ -18,19 +19,21 @@ namespace Elsa.CustomActivities.Handlers.Scoring
     {
         private readonly IContentSerializer _contentSerializer;
         private readonly ILogger<IExpressionHandler> _logger;
+        private readonly IElsaCustomRepository _repository;
         public string Syntax => ScoringSyntaxNames.PotScore;
 
 
-        public PotScoreCalculationHandler(ILogger<IExpressionHandler> logger, IContentSerializer contentSerializer)
+        public PotScoreCalculationHandler(ILogger<IExpressionHandler> logger, IContentSerializer contentSerializer, IElsaCustomRepository repository)
         {
             _logger = logger;
             _contentSerializer = contentSerializer;
+            _repository = repository;
         }
 
         public async Task<object?> EvaluateAsync(string expression, Type returnType, ActivityExecutionContext context, CancellationToken cancellationToken)
         {
             var evaluator = context.GetService<IExpressionEvaluator>();
-            PotScore result = new PotScore();
+            PotScore result = new PotScore(_repository);
             var potScoreDictionary = TryDeserializeExpression(expression);
             string score = await ElsaPropertyToCalculatedPotScoreResult(potScoreDictionary, evaluator, context);
             result.Output = score;

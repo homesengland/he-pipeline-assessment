@@ -1,5 +1,6 @@
 ﻿using Elsa.CustomModels;
 using Microsoft.EntityFrameworkCore;
+using System.Threading;
 
 namespace Elsa.CustomInfrastructure.Data.Repository
 {
@@ -98,6 +99,17 @@ namespace Elsa.CustomInfrastructure.Data.Repository
         {
             await _dbContext.AddAsync(questionWorkflowInstance, cancellationToken);
             await _dbContext.SaveChangesAsync(cancellationToken);
+        }
+
+        public async Task SetWorkflowInstanceResult(string workflowInstanceId, string result, CancellationToken cancellationToken = default)
+        {
+            var workflowInstance = _dbContext.Set<QuestionWorkflowInstance>().Where(x => x.WorkflowInstanceId == workflowInstanceId).ToList();
+            foreach(var workflow in workflowInstance)
+            {
+                workflow.Result = result;
+            }
+            _dbContext.UpdateRange(workflowInstance);
+            await SaveChanges(cancellationToken);
         }
     }
 }

@@ -97,6 +97,17 @@ namespace He.PipelineAssessment.UI.Features.Workflow
 
                             return View("Confirmation", result);
                         }
+                    case ActivityTypeConstants.PotScoreCalculation:
+                        {
+                            var checkYourAnswersScreenRequest = new LoadConfirmationScreenRequest
+                            {
+                                WorkflowInstanceId = request.WorkflowInstanceId,
+                                ActivityId = request.ActivityId
+                            };
+                            var result = await this._mediator.Send(checkYourAnswersScreenRequest);
+
+                            return View("Confirmation", result);
+                        }
                     default:
                         throw new ApplicationException(
                             $"Attempted to load unsupported activity type: {request.ActivityType}");

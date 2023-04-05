@@ -2,10 +2,14 @@
 using Elsa.ActivityResults;
 using Elsa.Attributes;
 using Elsa.CustomActivities.Constants;
+using Elsa.CustomInfrastructure.Data.Repository;
 using Elsa.Design;
 using Elsa.Expressions;
+using Elsa.Persistence;
 using Elsa.Services;
 using Elsa.Services.Models;
+using He.PipelineAssessment.Data.PCSProfile;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using System.ComponentModel.DataAnnotations;
 
 namespace Elsa.CustomActivities.Activities.Scoring
@@ -18,6 +22,14 @@ namespace Elsa.CustomActivities.Activities.Scoring
         )]
     public class PotScore : Activity
     {
+
+        private readonly IElsaCustomRepository _elsaCustomRepository;
+        public PotScore(IElsaCustomRepository elsaCustomRepository)
+        {
+            _elsaCustomRepository = elsaCustomRepository;
+        }
+
+
         [ActivityInput(Hint = "Set the formula for how to calculate the pot-score outcome of this stage",
             UIHint = ActivityInputUIHints.MultiLine, 
             SupportedSyntaxes = new[] { SyntaxNames.JavaScript }, 
@@ -36,26 +48,43 @@ namespace Elsa.CustomActivities.Activities.Scoring
 
         [ActivityOutput] public string? Output { get; set; }
 
-        protected override IActivityExecutionResult OnExecute(ActivityExecutionContext context)
+        protected override async ValueTask<IActivityExecutionResult> OnExecuteAsync(ActivityExecutionContext context)
         {
+            try
+            {
+                if(Calculation == null || Calculation == string.Empty)
+                {
+                    context.JournalData.Add("Error", "Unable to parse Calculation");
+                }
+                else
+                {
+                    Output = Calculation;
+                    await _elsaCustomRepository.SetWorkflowInstanceResult(context.WorkflowInstance.Id, Calculation);
+                }
+            }
+            catch(Exception e)
+            {
+                context.JournalData.Add("Error", string.Format("Error occured whilst updating workflow with {0} score.", Calculation) );
+            }
+
             return Done();
         }
 
-        protected override async ValueTask<IActivityExecutionResult> OnResumeAsync(ActivityExecutionContext context)
-        {
-            var response = context.GetInput<string>();
-            Output = response;
-            var matches = Cases.Where(x => x.Condition).Select(x => x.Name).ToList();
-            var hasAnyMatches = matches.Any();
-            var results = Mode == SwitchMode.MatchFirst ? hasAnyMatches ? new[] { matches.First() } : Array.Empty<string>() : matches.ToArray();
-            var outcomes = hasAnyMatches ? results : new[] { OutcomeNames.Default };
-            context.JournalData.Add("Matches", matches);
+        //protected override async ValueTask<IActivityExecutionResult> OnResumeAsync(ActivityExecutionContext context)
+        //{
+        //    var response = context.GetInput<string>();
+        //    Output = response;
+        //    var matches = Cases.Where(x => x.Condition).Select(x => x.Name).ToList();
+        //    var hasAnyMatches = matches.Any();
+        //    var results = Mode == SwitchMode.MatchFirst ? hasAnyMatches ? new[] { matches.First() } : Array.Empty<string>() : matches.ToArray();
+        //    var outcomes = hasAnyMatches ? results : new[] { OutcomeNames.Default };
+        //    context.JournalData.Add("Matches", matches);
 
-            return await Task.FromResult(new CombinedResult(new List<IActivityExecutionResult>
-            {
-                Outcomes(outcomes),
-                new SuspendResult()
-            }));
-        }
+        //    return await Task.FromResult(new CombinedResult(new List<IActivityExecutionResult>
+        //    {
+        //        Outcomes(outcomes),
+        //        new SuspendResult()
+        //    }));
+        //}
     }
 }

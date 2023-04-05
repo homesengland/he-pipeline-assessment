@@ -6,6 +6,7 @@
         public const string SinglePipelineDataSource = "SinglePipelineDataSource";
         public const string CheckYourAnswersScreen = "CheckYourAnswersScreen";
         public const string ConfirmationScreen = "ConfirmationScreen";
+        public const string PotScoreCalculation = "PotScore";
     }
 
     public class QuestionTypeConstants
