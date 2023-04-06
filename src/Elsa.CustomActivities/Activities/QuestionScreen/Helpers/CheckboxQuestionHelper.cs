@@ -1,6 +1,5 @@
 ﻿using Elsa.CustomInfrastructure.Data.Repository;
 using Elsa.CustomWorkflow.Sdk;
-using Elsa.Persistence;
 using Elsa.Scripting.JavaScript.Events;
 using Elsa.Scripting.JavaScript.Messages;
 using Elsa.Services;
@@ -15,7 +14,7 @@ namespace Elsa.CustomActivities.Activities.QuestionScreen.Helpers
         private readonly IElsaCustomRepository _elsaCustomRepository;
         private readonly IWorkflowRegistry _workflowRegistry;
 
-        public CheckboxQuestionHelper(IElsaCustomRepository elsaCustomRepository, IWorkflowInstanceStore workflowInstanceStore, IWorkflowRegistry workflowRegistry)
+        public CheckboxQuestionHelper(IElsaCustomRepository elsaCustomRepository, IWorkflowRegistry workflowRegistry)
         {
             _elsaCustomRepository = elsaCustomRepository;
             _workflowRegistry = workflowRegistry;
@@ -94,7 +93,7 @@ namespace Elsa.CustomActivities.Activities.QuestionScreen.Helpers
             return result;
         }
 
-        public async Task<bool> AnswerContains(string workflowInstanceId, string workflowName, string activityName, string questionId, string[] choiceIdsToCheck)
+        public async Task<bool> AnswerContains(string workflowInstanceId, string workflowName, string activityName, string questionId, string[] choiceIdsToCheck, bool containsAny = false)
         {
             bool result = false;
             var workflowBlueprint = await _workflowRegistry.FindByNameAsync(workflowName, Models.VersionOptions.Published);
@@ -123,13 +122,27 @@ namespace Elsa.CustomActivities.Activities.QuestionScreen.Helpers
                                         var answerCheck = choices.Select(x => x.Identifier).Contains(item) &&
                                                           answerList.Contains(singleChoice.Answer);
 
-                                        if (answerCheck)
+                                        if (containsAny)
                                         {
-                                            result = true;
+                                            if (answerCheck)
+                                            {
+                                                return true;
+                                            }
+                                            else
+                                            {
+                                                result = false;
+                                            }
                                         }
                                         else
                                         {
-                                            return false;
+                                            if (answerCheck)
+                                            {
+                                                result = true;
+                                            }
+                                            else
+                                            {
+                                                return false;
+                                            }
                                         }
                                     }
                                 }
@@ -178,6 +191,7 @@ namespace Elsa.CustomActivities.Activities.QuestionScreen.Helpers
             engine.SetValue("checkboxQuestionGetAnswer", (Func<string, string, string, string?>)((workflowName, activityName, questionId) => GetAnswer(activityExecutionContext.WorkflowInstance.Id, workflowName, activityName, questionId).Result));
             engine.SetValue("checkboxQuestionAnswerEquals", (Func<string, string, string, string[], bool>)((workflowName, activityName, questionId, choiceIdsToCheck) => AnswerEquals(activityExecutionContext.WorkflowInstance.Id, workflowName, activityName, questionId, choiceIdsToCheck).Result));
             engine.SetValue("checkboxQuestionAnswerContains", (Func<string, string, string, string[], bool>)((workflowName, activityName, questionId, choiceIdsToCheck) => AnswerContains(activityExecutionContext.WorkflowInstance.Id, workflowName, activityName, questionId, choiceIdsToCheck).Result));
+            engine.SetValue("checkboxQuestionAnswerContainsAny", (Func<string, string, string, string[], bool>)((workflowName, activityName, questionId, choiceIdsToCheck) => AnswerContains(activityExecutionContext.WorkflowInstance.Id, workflowName, activityName, questionId, choiceIdsToCheck, true).Result));
             engine.SetValue("checkboxQuestionAnswerCount", (Func<string, string, string, int>)((workflowName, activityName, questionId) => AnswerCount(activityExecutionContext.WorkflowInstance.Id, workflowName, activityName, questionId).Result));
             return Task.CompletedTask;
         }
@@ -188,6 +202,7 @@ namespace Elsa.CustomActivities.Activities.QuestionScreen.Helpers
             output.AppendLine("declare function checkboxQuestionGetAnswer(workflowName: string, activityName:string, questionId:string ): string;");
             output.AppendLine("declare function checkboxQuestionAnswerEquals(workflowName: string, activityName:string, questionId:string, choiceIdsToCheck:string[] ): boolean;");
             output.AppendLine("declare function checkboxQuestionAnswerContains(workflowName: string, activityName:string, questionId:string, choiceIdsToCheck:string[]  ): boolean;");
+            output.AppendLine("declare function checkboxQuestionAnswerContainsAny(workflowName: string, activityName:string, questionId:string, choiceIdsToCheck:string[]  ): boolean;");
             output.AppendLine("declare function checkboxQuestionAnswerCount(workflowName: string, activityName:string, questionId:string ): int;");
             return Task.CompletedTask;
         }

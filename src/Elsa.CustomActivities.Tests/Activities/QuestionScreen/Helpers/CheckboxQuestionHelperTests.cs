@@ -374,6 +374,69 @@ namespace Elsa.CustomActivities.Tests.Activities.QuestionScreen.Helpers
         }
 
         [Theory]
+        [InlineAutoMoqData(new string[] { "Answer 1" }, new string[] { "A" }, true)]
+        [InlineAutoMoqData(new string[] { "Answer 1", "Answer 2" }, new string[] { "A", "D" }, true)]
+        [InlineAutoMoqData(new string[] { "Answer 1", "Answer 2" }, new string[] { "A", "B", "C" }, true)]
+        [InlineAutoMoqData(new string[] { "Answer 1", "Answer 2", "Answer 3" }, new string[] { "A", "B", "C" }, true)]
+        [InlineAutoMoqData(new string[] { "Answer 1", "Answer 2", "Answer 3" }, new string[] { "A", "B", "C", "D" }, true)]
+        [InlineAutoMoqData(new string[] { "Answer 1" }, new string[] { "B", "C" }, false)]
+
+        public async Task AnswerContainsAny_ReturnsExpectedValue(
+            string[] answers,
+            string[] choiceIdsToCheck,
+            bool expectedResult,
+            [Frozen] Mock<IElsaCustomRepository> elsaCustomRepository,
+            [Frozen] Mock<IWorkflowRegistry> workflowRegistry,
+            string workflowName,
+            string activityId,
+            string activityName,
+            string questionId,
+            string workflowInstanceId,
+            WorkflowBlueprint workflowBlueprint,
+            QuestionScreenAnswer questionScreenAnswer,
+            CheckboxQuestionHelper sut)
+        {
+            //Arrange
+            workflowBlueprint.Activities.Add(new ActivityBlueprint()
+            {
+                Id = activityId,
+                Name = activityName
+            });
+            var jsonAnswer = JsonSerializer.Serialize(answers);
+
+            questionScreenAnswer.QuestionType = QuestionTypeConstants.CheckboxQuestion;
+            questionScreenAnswer.Answer = jsonAnswer;
+            questionScreenAnswer.Choices = new List<QuestionScreenAnswer.Choice>()
+            {
+                new QuestionScreenAnswer.Choice()
+                {
+                    Answer = "Answer 1",
+                    Identifier = "A"
+                },
+                new QuestionScreenAnswer.Choice()
+                {
+                    Answer = "Answer 2",
+                    Identifier = "B"
+                },
+                new QuestionScreenAnswer.Choice()
+                {
+                    Answer = "Answer 3",
+                    Identifier = "C"
+                }
+            };
+
+            elsaCustomRepository.Setup(x => x.GetQuestionScreenAnswer(activityId, workflowInstanceId, questionId, CancellationToken.None)).ReturnsAsync(questionScreenAnswer);
+
+            workflowRegistry.Setup(x => x.FindByNameAsync(workflowName!, VersionOptions.Published, null, default)).ReturnsAsync(workflowBlueprint);
+
+            //Act
+            var result = await sut.AnswerContains(workflowInstanceId, workflowName, activityName, questionId, choiceIdsToCheck, true);
+
+            //Assert
+            Assert.Equal(expectedResult, result);
+        }
+
+        [Theory]
         [AutoMoqData]
         public async Task GetAnswer_ReturnsEmptyString_GivenWorkflowFindByNameAsyncReturnsNull(
          [Frozen] Mock<IElsaCustomRepository> elsaCustomRepository,
