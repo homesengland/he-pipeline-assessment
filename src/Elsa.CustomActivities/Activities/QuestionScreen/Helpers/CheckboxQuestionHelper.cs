@@ -141,7 +141,7 @@ namespace Elsa.CustomActivities.Activities.QuestionScreen.Helpers
             return result;
         }
 
-        public async Task<int> Count(string workflowInstanceId, string workflowName, string activityName, string questionId)
+        public async Task<int> AnswerCount(string workflowInstanceId, string workflowName, string activityName, string questionId)
         {
             int result = -1;
             var workflowBlueprint = await _workflowRegistry.FindByNameAsync(workflowName, Models.VersionOptions.Published);
@@ -178,7 +178,7 @@ namespace Elsa.CustomActivities.Activities.QuestionScreen.Helpers
             engine.SetValue("checkboxQuestionGetAnswer", (Func<string, string, string, string?>)((workflowName, activityName, questionId) => GetAnswer(activityExecutionContext.WorkflowInstance.Id, workflowName, activityName, questionId).Result));
             engine.SetValue("checkboxQuestionAnswerEquals", (Func<string, string, string, string[], bool>)((workflowName, activityName, questionId, choiceIdsToCheck) => AnswerEquals(activityExecutionContext.WorkflowInstance.Id, workflowName, activityName, questionId, choiceIdsToCheck).Result));
             engine.SetValue("checkboxQuestionAnswerContains", (Func<string, string, string, string[], bool>)((workflowName, activityName, questionId, choiceIdsToCheck) => AnswerContains(activityExecutionContext.WorkflowInstance.Id, workflowName, activityName, questionId, choiceIdsToCheck).Result));
-            engine.SetValue("checkboxQuestionCount", (Func<string, string, string, int>)((workflowName, activityName, questionId) => Count(activityExecutionContext.WorkflowInstance.Id, workflowName, activityName, questionId).Result));
+            engine.SetValue("checkboxQuestionAnswerCount", (Func<string, string, string, int>)((workflowName, activityName, questionId) => AnswerCount(activityExecutionContext.WorkflowInstance.Id, workflowName, activityName, questionId).Result));
             return Task.CompletedTask;
         }
 
@@ -188,7 +188,7 @@ namespace Elsa.CustomActivities.Activities.QuestionScreen.Helpers
             output.AppendLine("declare function checkboxQuestionGetAnswer(workflowName: string, activityName:string, questionId:string ): string;");
             output.AppendLine("declare function checkboxQuestionAnswerEquals(workflowName: string, activityName:string, questionId:string, choiceIdsToCheck:string[] ): boolean;");
             output.AppendLine("declare function checkboxQuestionAnswerContains(workflowName: string, activityName:string, questionId:string, choiceIdsToCheck:string[]  ): boolean;");
-            output.AppendLine("declare function checkboxQuestionCount(workflowName: string, activityName:string, questionId:string ): int;");
+            output.AppendLine("declare function checkboxQuestionAnswerCount(workflowName: string, activityName:string, questionId:string ): int;");
             return Task.CompletedTask;
         }
     }

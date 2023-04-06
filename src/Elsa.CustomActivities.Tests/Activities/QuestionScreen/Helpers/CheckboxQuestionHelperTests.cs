@@ -494,7 +494,7 @@ namespace Elsa.CustomActivities.Tests.Activities.QuestionScreen.Helpers
 
         [Theory]
         [AutoMoqData]
-        public async Task Count_ReturnsDefaultValue_GivenWorkflowFindByNameAsyncReturnsNull(
+        public async Task AnswerCount_ReturnsDefaultValue_GivenWorkflowFindByNameAsyncReturnsNull(
         [Frozen] Mock<IWorkflowRegistry> workflowRegistry,
         string workflowName,
         string activityName,
@@ -506,7 +506,7 @@ namespace Elsa.CustomActivities.Tests.Activities.QuestionScreen.Helpers
             workflowRegistry.Setup(x => x.FindByNameAsync(workflowName!, VersionOptions.Published, null, default)).ReturnsAsync((WorkflowBlueprint?)null);
 
             //Act
-            var result = await sut.Count(workflowInstanceId, workflowName, activityName, questionId);
+            var result = await sut.AnswerCount(workflowInstanceId, workflowName, activityName, questionId);
 
             //Assert
             Assert.Equal(-1, result);
@@ -514,7 +514,7 @@ namespace Elsa.CustomActivities.Tests.Activities.QuestionScreen.Helpers
 
         [Theory]
         [AutoMoqData]
-        public async Task Count_ReturnsDefaultValue_GivenWorkflowActivitiesReturnsNull(
+        public async Task AnswerCount_ReturnsDefaultValue_GivenWorkflowActivitiesReturnsNull(
             [Frozen] Mock<IElsaCustomRepository> elsaCustomRepository,
             [Frozen] Mock<IWorkflowRegistry> workflowRegistry,
             string workflowName,
@@ -531,7 +531,7 @@ namespace Elsa.CustomActivities.Tests.Activities.QuestionScreen.Helpers
             workflowRegistry.Setup(x => x.FindByNameAsync(workflowName!, VersionOptions.Published, null, default)).ReturnsAsync(workflowBlueprint);
 
             //Act
-            var result = await sut.Count(workflowInstanceId, workflowName, activityName, questionId);
+            var result = await sut.AnswerCount(workflowInstanceId, workflowName, activityName, questionId);
 
             //Assert
             Assert.Equal(-1, result);
@@ -539,7 +539,7 @@ namespace Elsa.CustomActivities.Tests.Activities.QuestionScreen.Helpers
 
         [Theory]
         [AutoMoqData]
-        public async Task Count_ReturnsDefaultValue_GivenGetQuestionRecordReturnsNull(
+        public async Task AnswerCount_ReturnsDefaultValue_GivenGetQuestionRecordReturnsNull(
             [Frozen] Mock<IElsaCustomRepository> elsaCustomRepository,
             [Frozen] Mock<IWorkflowRegistry> workflowRegistry,
             string workflowName,
@@ -562,7 +562,7 @@ namespace Elsa.CustomActivities.Tests.Activities.QuestionScreen.Helpers
             workflowRegistry.Setup(x => x.FindByNameAsync(workflowName!, VersionOptions.Published, null, default)).ReturnsAsync(workflowBlueprint);
 
             //Act
-            var result = await sut.Count(workflowInstanceId, workflowName, activityName, questionId);
+            var result = await sut.AnswerCount(workflowInstanceId, workflowName, activityName, questionId);
 
             //Assert
             Assert.Equal(-1, result);
@@ -570,7 +570,7 @@ namespace Elsa.CustomActivities.Tests.Activities.QuestionScreen.Helpers
 
         [Theory]
         [AutoMoqData]
-        public async Task Count_ReturnsDefaultValue_GivenGetQuestionRecordReturnsNotACheckbox(
+        public async Task AnswerCount_ReturnsDefaultValue_GivenGetQuestionRecordReturnsNotACheckbox(
             [Frozen] Mock<IElsaCustomRepository> elsaCustomRepository,
             [Frozen] Mock<IWorkflowRegistry> workflowRegistry,
             string workflowName,
@@ -595,7 +595,7 @@ namespace Elsa.CustomActivities.Tests.Activities.QuestionScreen.Helpers
             workflowRegistry.Setup(x => x.FindByNameAsync(workflowName!, VersionOptions.Published, null, default)).ReturnsAsync(workflowBlueprint);
 
             //Act
-            var result = await sut.Count(workflowInstanceId, workflowName, activityName, questionId);
+            var result = await sut.AnswerCount(workflowInstanceId, workflowName, activityName, questionId);
 
             //Assert
             Assert.Equal(-1, result);
@@ -603,7 +603,7 @@ namespace Elsa.CustomActivities.Tests.Activities.QuestionScreen.Helpers
 
         [Theory]
         [AutoMoqData]
-        public async Task Count_ReturnsDefaultValue_GivenChoicesAreNull(
+        public async Task AnswerCount_ReturnsDefaultValue_GivenChoicesAreNull(
             [Frozen] Mock<IElsaCustomRepository> elsaCustomRepository,
             [Frozen] Mock<IWorkflowRegistry> workflowRegistry,
             string workflowName,
@@ -630,7 +630,7 @@ namespace Elsa.CustomActivities.Tests.Activities.QuestionScreen.Helpers
             workflowRegistry.Setup(x => x.FindByNameAsync(workflowName!, VersionOptions.Published, null, default)).ReturnsAsync(workflowBlueprint);
 
             //Act
-            var result = await sut.Count(workflowInstanceId, workflowName, activityName, questionId);
+            var result = await sut.AnswerCount(workflowInstanceId, workflowName, activityName, questionId);
 
             //Assert
             Assert.Equal(-1, result);
@@ -641,7 +641,7 @@ namespace Elsa.CustomActivities.Tests.Activities.QuestionScreen.Helpers
         [InlineAutoMoqData(new string[] { "Answer 1", "Answer 2" }, 2)]
         [InlineAutoMoqData(new string[] { "Answer 1", "Answer 2", "Answer 3" }, 3)]
 
-        public async Task Count_ReturnsExpectedValue(
+        public async Task AnswerCount_ReturnsExpectedValue(
             string[] answers,
             int expectedResult,
             [Frozen] Mock<IElsaCustomRepository> elsaCustomRepository,
@@ -666,31 +666,13 @@ namespace Elsa.CustomActivities.Tests.Activities.QuestionScreen.Helpers
 
             questionScreenAnswer.QuestionType = QuestionTypeConstants.CheckboxQuestion;
             questionScreenAnswer.Answer = jsonAnswer;
-            questionScreenAnswer.Choices = new List<QuestionScreenAnswer.Choice>()
-            {
-                new QuestionScreenAnswer.Choice()
-                {
-                    Answer = "Answer 1",
-                    Identifier = "A"
-                },
-                new QuestionScreenAnswer.Choice()
-                {
-                    Answer = "Answer 2",
-                    Identifier = "B"
-                },
-                new QuestionScreenAnswer.Choice()
-                {
-                    Answer = "Answer 3",
-                    Identifier = "C"
-                }
-            };
 
             elsaCustomRepository.Setup(x => x.GetQuestionScreenAnswer(activityId, workflowInstanceId, questionId, CancellationToken.None)).ReturnsAsync(questionScreenAnswer);
 
             workflowRegistry.Setup(x => x.FindByNameAsync(workflowName!, VersionOptions.Published, null, default)).ReturnsAsync(workflowBlueprint);
 
             //Act
-            var result = await sut.Count(workflowInstanceId, workflowName, activityName, questionId);
+            var result = await sut.AnswerCount(workflowInstanceId, workflowName, activityName, questionId);
 
             //Assert
             Assert.Equal(expectedResult, result);
