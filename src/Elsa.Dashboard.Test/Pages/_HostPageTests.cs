@@ -5,10 +5,8 @@ using Elsa.CustomWorkflow.Sdk.HttpClients;
 using Elsa.CustomWorkflow.Sdk.Models.Activities;
 using Newtonsoft.Json;
 using Microsoft.Extensions.Logging;
-using System.Net.WebSockets;
 using Microsoft.Extensions.Options;
 using Elsa.Dashboard.Models;
-using Microsoft.AspNetCore.Builder.Extensions;
 using He.PipelineAssessment.Tests.Common;
 
 namespace Elsa.Dashboard.Tests.Pages
