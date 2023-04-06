@@ -3,7 +3,6 @@ using Elsa.CustomInfrastructure.Extensions;
 using Elsa.CustomWorkflow.Sdk.HttpClients;
 using Elsa.Dashboard;
 using Elsa.Dashboard.Models;
-using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.DataProtection;
 using Microsoft.EntityFrameworkCore;
 
