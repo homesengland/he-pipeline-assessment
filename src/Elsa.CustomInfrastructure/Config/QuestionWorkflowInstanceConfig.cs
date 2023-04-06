@@ -13,6 +13,7 @@ namespace Elsa.CustomInfrastructure.Config
             builder.Property(p => p.Id).HasColumnOrder(0);
             builder.Property(x => x.WorkflowInstanceId).HasMaxLength(EntityConfigurationConstants.MaxLength);
             builder.Property(x => x.Result).HasMaxLength(EntityConfigurationConstants.MaxLength);
+            builder.Property(x => x.Result).HasMaxLength(EntityConfigurationConstants.MaxLength);
             builder.Property(x => x.WorkflowName).HasMaxLength(EntityConfigurationConstants.MaxLength);
             builder.Property(x => x.CorrelationId).HasMaxLength(EntityConfigurationConstants.QuestionTypeMaxLength);
         }

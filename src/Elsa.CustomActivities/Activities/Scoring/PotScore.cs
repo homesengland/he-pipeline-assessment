@@ -59,7 +59,7 @@ namespace Elsa.CustomActivities.Activities.Scoring
                 else
                 {
                     Output = Calculation;
-                    await _elsaCustomRepository.SetWorkflowInstanceResult(context.WorkflowInstance.Id, Calculation);
+                    await _elsaCustomRepository.SetWorkflowInstanceScore(context.WorkflowInstance.Id, Calculation);
                 }
             }
             catch(Exception e)
@@ -69,22 +69,5 @@ namespace Elsa.CustomActivities.Activities.Scoring
 
             return Done();
         }
-
-        //protected override async ValueTask<IActivityExecutionResult> OnResumeAsync(ActivityExecutionContext context)
-        //{
-        //    var response = context.GetInput<string>();
-        //    Output = response;
-        //    var matches = Cases.Where(x => x.Condition).Select(x => x.Name).ToList();
-        //    var hasAnyMatches = matches.Any();
-        //    var results = Mode == SwitchMode.MatchFirst ? hasAnyMatches ? new[] { matches.First() } : Array.Empty<string>() : matches.ToArray();
-        //    var outcomes = hasAnyMatches ? results : new[] { OutcomeNames.Default };
-        //    context.JournalData.Add("Matches", matches);
-
-        //    return await Task.FromResult(new CombinedResult(new List<IActivityExecutionResult>
-        //    {
-        //        Outcomes(outcomes),
-        //        new SuspendResult()
-        //    }));
-        //}
     }
 }

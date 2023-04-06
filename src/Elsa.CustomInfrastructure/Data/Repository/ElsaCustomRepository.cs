@@ -111,5 +111,16 @@ namespace Elsa.CustomInfrastructure.Data.Repository
             _dbContext.UpdateRange(workflowInstance);
             await SaveChanges(cancellationToken);
         }
+
+        public async Task SetWorkflowInstanceScore(string workflowInstanceId, string score, CancellationToken cancellationToken = default)
+        {
+            var workflowInstance = _dbContext.Set<QuestionWorkflowInstance>().Where(x => x.WorkflowInstanceId == workflowInstanceId).ToList();
+            foreach (var workflow in workflowInstance)
+            {
+                workflow.Score = score;
+            }
+            _dbContext.UpdateRange(workflowInstance);
+            await SaveChanges(cancellationToken);
+        }
     }
 }

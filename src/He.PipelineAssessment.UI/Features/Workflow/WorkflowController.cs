@@ -5,6 +5,7 @@ using He.PipelineAssessment.UI.Features.Workflow.LoadCheckYourAnswersScreen;
 using He.PipelineAssessment.UI.Features.Workflow.LoadConfirmationScreen;
 using He.PipelineAssessment.UI.Features.Workflow.LoadQuestionScreen;
 using He.PipelineAssessment.UI.Features.Workflow.QuestionScreenSaveAndContinue;
+using He.PipelineAssessment.UI.Features.Workflow.SetResult;
 using He.PipelineAssessment.UI.Features.Workflow.StartWorkflow;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
@@ -99,14 +100,14 @@ namespace He.PipelineAssessment.UI.Features.Workflow
                         }
                     case ActivityTypeConstants.PotScoreCalculation:
                         {
-                            var checkYourAnswersScreenRequest = new LoadConfirmationScreenRequest
+                            var checkYourAnswersScreenRequest = new SetResultRequest
                             {
                                 WorkflowInstanceId = request.WorkflowInstanceId,
                                 ActivityId = request.ActivityId
                             };
                             var result = await this._mediator.Send(checkYourAnswersScreenRequest);
 
-                            return View("Confirmation", result);
+                            return RedirectToAction("LoadWorkflowActivity", result);
                         }
                     default:
                         throw new ApplicationException(
