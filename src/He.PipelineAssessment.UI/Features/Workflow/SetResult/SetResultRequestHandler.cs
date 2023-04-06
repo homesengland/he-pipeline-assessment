@@ -34,40 +34,7 @@ namespace He.PipelineAssessment.UI.Features.Workflow.LoadConfirmationScreen
             {
                 string jsonResponse = JsonSerializer.Serialize(response);
                 SetResultResponse? result = JsonSerializer.Deserialize<SetResultResponse>(jsonResponse);
-
-                //var currentAssessmentToolWorkflowInstance = await _assessmentRepository.GetAssessmentToolWorkflowInstance(response.Data.WorkflowInstanceId);
-                //if (currentAssessmentToolWorkflowInstance != null && result != null)
-                //{
-                //    var data = response.Data.ConfirmationTitle;
-                //    currentAssessmentToolWorkflowInstance.Result = data;
-                //    await _assessmentRepository.SaveChanges();
-
-
-                //    if (!string.IsNullOrEmpty(response.Data.NextWorkflowDefinitionIds))
-                //    {
-                //        var nextWorkflows = new List<AssessmentToolInstanceNextWorkflow>();
-                //        var workflowDefinitionIds = response.Data.NextWorkflowDefinitionIds.Split(',', StringSplitOptions.TrimEntries);
-                //        foreach (var workflowDefinitionId in workflowDefinitionIds)
-                //        {
-                //            var nextWorkflow =
-                //                await _assessmentRepository.GetAssessmentToolInstanceNextWorkflow(currentAssessmentToolWorkflowInstance.Id,
-                //                    workflowDefinitionId);
-
-                //            if (nextWorkflow == null)
-                //            {
-                //                var assessmentToolInstanceNextWorkflow =
-                //                    AssessmentToolInstanceNextWorkflow(currentAssessmentToolWorkflowInstance.AssessmentId,
-                //                        currentAssessmentToolWorkflowInstance.Id, workflowDefinitionId);
-                //                nextWorkflows.Add(assessmentToolInstanceNextWorkflow);
-                //            }
-                //        }
-
-                //        if (nextWorkflows.Any())
-                //            await _assessmentRepository.CreateAssessmentToolInstanceNextWorkflows(nextWorkflows);
-                //    }
-                //    result.CorrelationId = currentAssessmentToolWorkflowInstance.Assessment.SpId.ToString();
-                //    result.AssessmentId = currentAssessmentToolWorkflowInstance.AssessmentId;
-                    QuestionScreenSaveAndContinueCommandResponse nextActivityResponse = new QuestionScreenSaveAndContinueCommandResponse();
+                QuestionScreenSaveAndContinueCommandResponse nextActivityResponse = new QuestionScreenSaveAndContinueCommandResponse();
                 nextActivityResponse.ActivityId = result.Data.ActivityId;
                 nextActivityResponse.ActivityType = result.Data.ActivityType;
                 nextActivityResponse.WorkflowInstanceId = result.Data.WorkflowInstanceId;
@@ -76,15 +43,4 @@ namespace He.PipelineAssessment.UI.Features.Workflow.LoadConfirmationScreen
             return null;
             }
         }
-
-        //private AssessmentToolInstanceNextWorkflow AssessmentToolInstanceNextWorkflow(int assessmentId, int assessmentToolWorkflowInstanceId, string workflowDefinitionId)
-        //{
-        //    return new AssessmentToolInstanceNextWorkflow
-        //    {
-        //        AssessmentId = assessmentId,
-        //        AssessmentToolWorkflowInstanceId = assessmentToolWorkflowInstanceId,
-        //        NextWorkflowDefinitionId = workflowDefinitionId,
-        //        IsStarted = false
-        //    };
-        //}
     }

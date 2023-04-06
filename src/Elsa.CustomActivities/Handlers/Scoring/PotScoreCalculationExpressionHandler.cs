@@ -15,29 +15,25 @@ using System.Threading.Tasks;
 
 namespace Elsa.CustomActivities.Handlers.Scoring
 {
-    public class PotScoreCalculationHandler : IExpressionHandler
+    public class PotScoreCalculationExpressionHandler : IExpressionHandler
     {
         private readonly IContentSerializer _contentSerializer;
         private readonly ILogger<IExpressionHandler> _logger;
-        private readonly IElsaCustomRepository _repository;
         public string Syntax => ScoringSyntaxNames.PotScore;
 
 
-        public PotScoreCalculationHandler(ILogger<IExpressionHandler> logger, IContentSerializer contentSerializer, IElsaCustomRepository repository)
+        public PotScoreCalculationExpressionHandler(ILogger<IExpressionHandler> logger, IContentSerializer contentSerializer)
         {
             _logger = logger;
             _contentSerializer = contentSerializer;
-            _repository = repository;
         }
 
         public async Task<object?> EvaluateAsync(string expression, Type returnType, ActivityExecutionContext context, CancellationToken cancellationToken)
         {
             var evaluator = context.GetService<IExpressionEvaluator>();
-            PotScore result = new PotScore(_repository);
             var potScoreDictionary = TryDeserializeExpression(expression);
             string score = await ElsaPropertyToCalculatedPotScoreResult(potScoreDictionary, evaluator, context);
-            result.Output = score;
-            return result;
+            return score;
         }
 
         private async Task<string> ElsaPropertyToCalculatedPotScoreResult(ElsaProperty potScoreDictionary, IExpressionEvaluator evaluator, ActivityExecutionContext context)
