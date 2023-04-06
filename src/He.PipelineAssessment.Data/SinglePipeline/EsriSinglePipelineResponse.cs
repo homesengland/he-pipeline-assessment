@@ -62,6 +62,9 @@
         public string? multi_funct_team { get; set; }
         public string? delegation_pathway { get; set; }
         public long? milestone_sightings { get; set; }
+        public string? project_owner { get; set; }
+        public string? project_owner_email { get; set; }
+
     }
 
     public class Feature
