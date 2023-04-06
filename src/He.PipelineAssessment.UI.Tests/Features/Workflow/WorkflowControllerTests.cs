@@ -14,26 +14,12 @@ using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Moq;
 using Xunit;
+using Xunit.Sdk;
 
 namespace He.PipelineAssessment.UI.Tests.Features.Workflow
 {
     public class WorkflowControllerTests
     {
-        [Theory]
-        [AutoMoqData]
-        public void Index_ShouldReturn(
-            WorkflowController sut)
-        {
-            //Arrange
-
-            //Act
-            var result = sut.Index();
-
-            //Assert
-            Assert.IsAssignableFrom<IActionResult>(result);
-            Assert.IsType<ViewResult>(result);
-        }
-
         [Theory]
         [AutoMoqData]
         public async Task StartWorkflow_ShouldRedirectToErrorPage_GivenInnerExceptionIsCaught(
@@ -87,6 +73,29 @@ namespace He.PipelineAssessment.UI.Tests.Features.Workflow
             Assert.Contains(activityIdRouteValue, redirectToActionResult.RouteValues!);
             Assert.Contains(workflowInstanceIdRouteValue, redirectToActionResult.RouteValues!);
             Assert.Contains(activityTypeRouteValue, redirectToActionResult.RouteValues!);
+        }
+
+        [Theory]
+        [AutoMoqData]
+        public async Task StartWorkflow_ShouldRedirectToAction_GivenIncorrectBusinessArea(
+           [Frozen] Mock<IMediator> mediator,
+           StartWorkflowCommand command,
+           LoadQuestionScreenRequest loadWorkflowActivityRequest,
+           WorkflowController sut)
+        {
+            //Arrange
+            loadWorkflowActivityRequest.IsCorrectBusinessArea = false;
+            mediator.Setup(x => x.Send(command, CancellationToken.None)).ReturnsAsync(loadWorkflowActivityRequest);
+
+            //Act
+            var result = await sut.StartWorkflow(command);
+
+            //Assert
+            Assert.NotNull(result);
+            Assert.IsType<RedirectToActionResult>(result);
+
+            var redirectToActionResult = (RedirectToActionResult)result;
+            Assert.Equal("AccessDenied", redirectToActionResult.ActionName);
         }
 
         [Theory]
@@ -174,6 +183,29 @@ namespace He.PipelineAssessment.UI.Tests.Features.Workflow
 
         [Theory]
         [AutoMoqData]
+        public async Task QuestionScreenSaveAndContinue_ShouldRedirectToAction_GivenIncorrectBusinessArea(
+           [Frozen] Mock<IMediator> mediator,
+           QuestionScreenSaveAndContinueCommand command,
+           QuestionScreenSaveAndContinueCommandResponse saveAndContinueCommandResponse,
+           WorkflowController sut)
+        {
+            //Arrange
+            saveAndContinueCommandResponse.IsCorrectBusinessArea = false;
+            mediator.Setup(x => x.Send(command, CancellationToken.None)).ReturnsAsync(saveAndContinueCommandResponse);
+
+            //Act
+            var result = await sut.QuestionScreenSaveAndContinue(command);
+
+            //Assert
+            Assert.NotNull(result);
+            Assert.IsType<RedirectToActionResult>(result);
+
+            var redirectToActionResult = (RedirectToActionResult)result;
+            Assert.Equal("AccessDenied", redirectToActionResult.ActionName);
+        }
+
+        [Theory]
+        [AutoMoqData]
         public async Task LoadWorkflowActivity_ShouldRedirectToErrorPage_GivenInnerExceptionIsCaughtForCheckYourAnswers(
             [Frozen] Mock<IMediator> mediator,
             QuestionScreenSaveAndContinueCommandResponse saveAndContinueCommandResponse,
@@ -243,6 +275,7 @@ namespace He.PipelineAssessment.UI.Tests.Features.Workflow
             WorkflowController sut)
         {
             //Arrange
+            saveAndContinueCommand.IsCorrectBusinessArea = true;
             saveAndContinueCommandResponse.ActivityType = ActivityTypeConstants.CheckYourAnswersScreen;
 
             mediator.Setup(x =>
@@ -262,7 +295,35 @@ namespace He.PipelineAssessment.UI.Tests.Features.Workflow
             var viewResult = (ViewResult)result;
             Assert.Equal("CheckYourAnswers", viewResult.ViewName);
             Assert.IsType<QuestionScreenSaveAndContinueCommand>(viewResult.Model); // this will change
+        }
 
+        [Theory]
+        [AutoMoqData]
+        public async Task LoadWorkflowActivity_ShouldRedirectToLoadReadOnlyWorkflowActivity_GivenCheckYourAnswersScreenAndIncorrectCorrectBusinessArea(
+            [Frozen] Mock<IMediator> mediator,
+            QuestionScreenSaveAndContinueCommandResponse saveAndContinueCommandResponse,
+            QuestionScreenSaveAndContinueCommand saveAndContinueCommand,
+            WorkflowController sut)
+        {
+            //Arrange
+            saveAndContinueCommandResponse.ActivityType = ActivityTypeConstants.CheckYourAnswersScreen;
+
+            mediator.Setup(x =>
+                    x.Send(
+                        It.Is<LoadCheckYourAnswersScreenRequest>(y =>
+                            y.ActivityId == saveAndContinueCommandResponse.ActivityId && y.WorkflowInstanceId ==
+                            saveAndContinueCommandResponse.WorkflowInstanceId), CancellationToken.None))
+                .ReturnsAsync(saveAndContinueCommand);
+
+            //Act
+            var result = await sut.LoadWorkflowActivity(saveAndContinueCommandResponse);
+
+            //Assert
+            Assert.NotNull(result);
+            Assert.IsType<RedirectToActionResult>(result);
+            Assert.IsType<RedirectToActionResult>(result);
+            var redirectToActionResult = (RedirectToActionResult)result;
+            Assert.Equal("LoadReadOnlyWorkflowActivity", redirectToActionResult.ActionName);
         }
 
         [Theory]
@@ -274,6 +335,7 @@ namespace He.PipelineAssessment.UI.Tests.Features.Workflow
             WorkflowController sut)
         {
             //Arrange
+            response.IsCorrectBusinessArea = true;
             saveAndContinueCommandResponse.ActivityType = ActivityTypeConstants.ConfirmationScreen;
 
             mediator.Setup(x =>
@@ -297,6 +359,34 @@ namespace He.PipelineAssessment.UI.Tests.Features.Workflow
 
         [Theory]
         [AutoMoqData]
+        public async Task LoadWorkflowActivity_ShouldRedirectToLoadReadOnlyWorkflowActivity_GivenIncorrectBusinessArea(
+           [Frozen] Mock<IMediator> mediator,
+           QuestionScreenSaveAndContinueCommandResponse saveAndContinueCommandResponse,
+           LoadConfirmationScreenResponse response,
+           WorkflowController sut)
+        {
+            //Arrange
+            saveAndContinueCommandResponse.ActivityType = ActivityTypeConstants.ConfirmationScreen;
+
+            mediator.Setup(x =>
+                    x.Send(
+                        It.Is<LoadConfirmationScreenRequest>(y =>
+                            y.ActivityId == saveAndContinueCommandResponse.ActivityId && y.WorkflowInstanceId ==
+                            saveAndContinueCommandResponse.WorkflowInstanceId), CancellationToken.None))
+                .ReturnsAsync(response);
+
+            //Act
+            var result = await sut.LoadWorkflowActivity(saveAndContinueCommandResponse);
+
+            //Assert
+            Assert.NotNull(result);
+            Assert.IsType<RedirectToActionResult>(result);
+            var redirectToActionResult = (RedirectToActionResult)result;
+            Assert.Equal("LoadReadOnlyWorkflowActivity", redirectToActionResult.ActionName);
+        }
+
+        [Theory]
+        [AutoMoqData]
         public async Task LoadWorkflowActivity_ShouldRedirectToMultiSaveAndContinueView_GivenQuestionScreenAndNoExceptionsThrow(
             [Frozen] Mock<IMediator> mediator,
             QuestionScreenSaveAndContinueCommandResponse saveAndContinueCommandResponse,
@@ -304,6 +394,7 @@ namespace He.PipelineAssessment.UI.Tests.Features.Workflow
             WorkflowController sut)
         {
             //Arrange
+            saveAndContinueCommand.IsCorrectBusinessArea = true;
             saveAndContinueCommandResponse.ActivityType = ActivityTypeConstants.QuestionScreen;
 
             mediator.Setup(x =>
@@ -325,6 +416,128 @@ namespace He.PipelineAssessment.UI.Tests.Features.Workflow
             Assert.IsType<QuestionScreenSaveAndContinueCommand>(viewResult.Model);
 
         }
+
+        [Theory]
+        [AutoMoqData]
+        public async Task LoadWorkflowActivity_ShouldRedirectToLoadReadOnlyWorkflowActivity_GivenQuestionScreenAndIsNotCorrectBusinessArea(
+          [Frozen] Mock<IMediator> mediator,
+          QuestionScreenSaveAndContinueCommandResponse saveAndContinueCommandResponse,
+          QuestionScreenSaveAndContinueCommand saveAndContinueCommand,
+          WorkflowController sut)
+        {
+            //Arrange
+            saveAndContinueCommandResponse.ActivityType = ActivityTypeConstants.QuestionScreen;
+
+            mediator.Setup(x =>
+                    x.Send(
+                        It.Is<LoadQuestionScreenRequest>(y =>
+                            y.ActivityId == saveAndContinueCommandResponse.ActivityId && y.WorkflowInstanceId ==
+                            saveAndContinueCommandResponse.WorkflowInstanceId), CancellationToken.None))
+                .ReturnsAsync(saveAndContinueCommand);
+
+            //Act
+            var result = await sut.LoadWorkflowActivity(saveAndContinueCommandResponse);
+
+            //Assert
+            Assert.NotNull(result);
+            Assert.IsType<RedirectToActionResult>(result);
+            var redirectToActionResult = (RedirectToActionResult)result;
+            Assert.Equal("LoadReadOnlyWorkflowActivity", redirectToActionResult.ActionName);
+        }
+
+
+        [Theory]
+        [AutoMoqData]
+        public async Task LoadReadOnlyWorkflowActivity_ShouldRedirectToConfirmationView_GivenConfirmationScreenAndNoExceptionsThrow(
+          [Frozen] Mock<IMediator> mediator,
+          QuestionScreenSaveAndContinueCommandResponse saveAndContinueCommandResponse,
+          LoadConfirmationScreenResponse response,
+          WorkflowController sut)
+        {
+            //Arrange
+            saveAndContinueCommandResponse.ActivityType = ActivityTypeConstants.ConfirmationScreen;
+
+            mediator.Setup(x =>
+                    x.Send(
+                        It.Is<LoadConfirmationScreenRequest>(y =>
+                            y.ActivityId == saveAndContinueCommandResponse.ActivityId && y.WorkflowInstanceId ==
+                            saveAndContinueCommandResponse.WorkflowInstanceId), CancellationToken.None))
+                .ReturnsAsync(response);
+
+            //Act
+            var result = await sut.LoadReadOnlyWorkflowActivity(saveAndContinueCommandResponse);
+
+            //Assert
+            Assert.NotNull(result);
+            Assert.IsType<ViewResult>(result);
+
+            var viewResult = (ViewResult)result;
+            Assert.Equal("Confirmation", viewResult.ViewName);
+            Assert.IsType<LoadConfirmationScreenResponse>(viewResult.Model);
+        }
+
+        [Theory]
+        [AutoMoqData]
+        public async Task LoadReadOnlyWorkflowActivity_ShouldRedirectToErrorPage_GivenInnerExceptionIsCaughtForCheckYourAnswers(
+           [Frozen] Mock<IMediator> mediator,
+           QuestionScreenSaveAndContinueCommandResponse saveAndContinueCommandResponse,
+           Exception exception,
+           WorkflowController sut)
+        {
+            //Arrange
+            saveAndContinueCommandResponse.ActivityType = ActivityTypeConstants.CheckYourAnswersScreen;
+
+            mediator.Setup(x =>
+                x.Send(It.IsAny<LoadCheckYourAnswersScreenRequest>(), CancellationToken.None)).Throws(exception);
+
+            //Act
+            var result = await sut.LoadReadOnlyWorkflowActivity(saveAndContinueCommandResponse);
+
+            //Assert
+            mediator.Verify(x => x.Send(It.Is<LoadCheckYourAnswersScreenRequest>(y =>
+                y.ActivityId == saveAndContinueCommandResponse.ActivityId && y.WorkflowInstanceId ==
+                saveAndContinueCommandResponse.WorkflowInstanceId), CancellationToken.None), Times.Once);
+            await Assert.ThrowsAsync<Exception>(() => mediator.Object.Send(It.Is<LoadCheckYourAnswersScreenRequest>(x =>
+                x.ActivityId == saveAndContinueCommandResponse.ActivityId && x.WorkflowInstanceId ==
+                saveAndContinueCommandResponse.WorkflowInstanceId)));
+
+            Assert.IsType<RedirectToActionResult>(result);
+            var redirectToActionResult = (RedirectToActionResult)result;
+            Assert.Equal("Error", redirectToActionResult.ControllerName);
+            Assert.Equal("Index", redirectToActionResult.ActionName);
+        }
+
+
+        [Theory]
+        [AutoMoqData]
+        public async Task LoadReadOnlyWorkflowActivity_ShouldRedirectToCheckYourAnswersView_GivenCheckYourAnswersScreenAndNoExceptionsThrow(
+           [Frozen] Mock<IMediator> mediator,
+           QuestionScreenSaveAndContinueCommandResponse saveAndContinueCommandResponse,
+           QuestionScreenSaveAndContinueCommand saveAndContinueCommand,
+           WorkflowController sut)
+        {
+            //Arrange
+            saveAndContinueCommandResponse.ActivityType = ActivityTypeConstants.CheckYourAnswersScreen;
+
+            mediator.Setup(x =>
+                    x.Send(
+                        It.Is<LoadCheckYourAnswersScreenRequest>(y =>
+                            y.ActivityId == saveAndContinueCommandResponse.ActivityId && y.WorkflowInstanceId ==
+                            saveAndContinueCommandResponse.WorkflowInstanceId), CancellationToken.None))
+                .ReturnsAsync(saveAndContinueCommand);
+
+            //Act
+            var result = await sut.LoadReadOnlyWorkflowActivity(saveAndContinueCommandResponse);
+
+            //Assert
+            Assert.NotNull(result);
+            Assert.IsType<ViewResult>(result);
+
+            var viewResult = (ViewResult)result;
+            Assert.Equal("CheckYourAnswersReadOnly", viewResult.ViewName);
+            Assert.IsType<QuestionScreenSaveAndContinueCommand>(viewResult.Model); // this will change
+        }
+
 
         [Theory]
         [AutoMoqData]
@@ -382,9 +595,10 @@ namespace He.PipelineAssessment.UI.Tests.Features.Workflow
             WorkflowController sut)
         {
             //Arrange
+            response.IsCorrectBusinessArea = true;
             mediator.Setup(x => x.Send(command, CancellationToken.None)).ReturnsAsync(response);
 
-            //Act
+            //AcT
             var result = await sut.CheckYourAnswerScreenSaveAndContinue(command);
 
             //Assert
@@ -402,6 +616,30 @@ namespace He.PipelineAssessment.UI.Tests.Features.Workflow
             Assert.Contains(activityIdRouteValue, redirectToActionResult.RouteValues!);
             Assert.Contains(activityTypeRouteValue, redirectToActionResult.RouteValues!);
             Assert.Contains(workflowInstanceIdRouteValue, redirectToActionResult.RouteValues!);
+        }
+
+        [Theory]
+        [AutoMoqData]
+        public async Task CheckYourAnswerScreenSaveAndContinue_ShouldRedirectToAction_GivenIncorrectBusinessArea(
+           [Frozen] Mock<IMediator> mediator,
+           CheckYourAnswersSaveAndContinueCommand command,
+           CheckYourAnswersSaveAndContinueCommandResponse response,
+           WorkflowController sut)
+        {
+            //Arrange
+            mediator.Setup(x => x.Send(command, CancellationToken.None)).ReturnsAsync(response);
+
+            //AcT
+            var result = await sut.CheckYourAnswerScreenSaveAndContinue(command);
+
+            //Assert
+            Assert.NotNull(result);
+            Assert.IsType<RedirectToActionResult>(result);
+
+            var redirectToActionResult = (RedirectToActionResult)result;
+
+            Assert.Equal("AccessDenied", redirectToActionResult.ActionName);
+
         }
     }
 }

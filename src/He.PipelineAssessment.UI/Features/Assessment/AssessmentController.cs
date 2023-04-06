@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace He.PipelineAssessment.UI.Features.Assessments
 {
+    [Authorize]
     public class AssessmentController : Controller
     {
         private readonly ILogger<AssessmentController> _logger;
@@ -51,6 +52,7 @@ namespace He.PipelineAssessment.UI.Features.Assessments
             }
         }
 
+        [Authorize(Policy = Constants.AuthorizationPolicies.AssignmentToPipelineViewAssessmentRoleRequired)]
         public async Task<IActionResult> TestSummary(int assessmentid, int correlationId)
         {
             try

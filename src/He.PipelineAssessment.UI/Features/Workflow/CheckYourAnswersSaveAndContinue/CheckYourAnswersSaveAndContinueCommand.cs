@@ -5,6 +5,7 @@ namespace He.PipelineAssessment.UI.Features.Workflow.CheckYourAnswersSaveAndCont
 {
     public class CheckYourAnswersSaveAndContinueCommand : WorkflowActivityDataDto, IRequest<CheckYourAnswersSaveAndContinueCommandResponse>
     {
+        public int AssessmentId { get; set; }
 
     }
 
