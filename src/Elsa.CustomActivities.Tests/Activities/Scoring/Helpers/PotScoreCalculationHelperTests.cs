@@ -295,5 +295,59 @@ namespace Elsa.CustomActivities.Tests.Activities.Scoring.Helpers
             //Assert
             Assert.Equal(15, result);
         }
+
+        [Theory]
+        [AutoMoqData]
+        public async Task GetScore_ReturnsFailedResult_GivenWorkflowQuestionsInstanceDoesNotExist(
+            [Frozen] Mock<IElsaCustomRepository> elsaCustomRepository,
+            string workflowInstanceId,
+            PotScoreCalculationHelper sut)
+        {
+            //Arrange
+            elsaCustomRepository.Setup(x => x.GetQuestionWorkflowInstance(workflowInstanceId, CancellationToken.None)).ReturnsAsync((QuestionWorkflowInstance?)null);
+
+            //Act
+            var result = await sut.GetPotScore(workflowInstanceId);
+
+            //Assert
+            Assert.Equal(string.Empty, result);
+        }
+
+        [Theory]
+        [AutoMoqData]
+        public async Task GetScore_ReturnsFailedResult_GivenWorkflowQuestionsInstanceDoesNotHaveScore(
+            [Frozen] Mock<IElsaCustomRepository> elsaCustomRepository,
+            string workflowInstanceId,
+            QuestionWorkflowInstance instance,
+            PotScoreCalculationHelper sut)
+        {
+            //Arrange
+            instance.Score = null;
+            elsaCustomRepository.Setup(x => x.GetQuestionWorkflowInstance(workflowInstanceId, CancellationToken.None)).ReturnsAsync(instance);
+
+            //Act
+            var result = await sut.GetPotScore(workflowInstanceId);
+
+            //Assert
+            Assert.Equal(string.Empty, result);
+        }
+
+        [Theory]
+        [AutoMoqData]
+        public async Task GetScore_ReturnsCorrectScore_GivenWorkflowQuestionsInstanceHasScore(
+            [Frozen] Mock<IElsaCustomRepository> elsaCustomRepository,
+            string workflowInstanceId,
+            QuestionWorkflowInstance instance,
+            PotScoreCalculationHelper sut)
+        {
+            //Arrange
+            elsaCustomRepository.Setup(x => x.GetQuestionWorkflowInstance(workflowInstanceId, CancellationToken.None)).ReturnsAsync(instance);
+
+            //Act
+            var result = await sut.GetPotScore(workflowInstanceId);
+
+            //Assert
+            Assert.Equal(instance.Score, result);
+        }
     }
 }
