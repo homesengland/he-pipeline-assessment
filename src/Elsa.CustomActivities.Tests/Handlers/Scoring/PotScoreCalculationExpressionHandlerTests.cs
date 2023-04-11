@@ -124,8 +124,6 @@ namespace Elsa.CustomActivities.Tests.Handlers.Scoring
             PotScoreCalculationExpressionHandler handler =
                 new PotScoreCalculationExpressionHandler(logger.Object, serializer.Object);
 
-            string actualResult = "10";
-
             ElsaProperty sampleProperty = SampleElsaProperty(
                 GetDictionary(CustomSyntaxNames.PotScore, "'SampleJavascriptMethod('Workflow_B', 'Low'')"),
                 CustomSyntaxNames.PotScore,
@@ -163,8 +161,6 @@ namespace Elsa.CustomActivities.Tests.Handlers.Scoring
 
             PotScoreCalculationExpressionHandler handler =
                 new PotScoreCalculationExpressionHandler(logger.Object, serializer.Object);
-
-            string actualResult = "10";
 
             ElsaProperty sampleProperty = SampleElsaProperty(
                 GetDictionary(CustomSyntaxNames.PotScore, "'SampleJavascriptMethod('Workflow_B', 'Low'')"),

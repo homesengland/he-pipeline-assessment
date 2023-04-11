@@ -7,6 +7,7 @@ using Elsa.Server.Features.Workflow.LoadCheckYourAnswersScreen;
 using Elsa.Server.Features.Workflow.LoadConfirmationScreen;
 using Elsa.Server.Features.Workflow.LoadQuestionScreen;
 using Elsa.Server.Features.Workflow.QuestionScreenSaveAndContinue;
+using Elsa.Server.Features.Workflow.SetWorkflowResult;
 using Elsa.Server.Features.Workflow.StartWorkflow;
 using Elsa.Server.Models;
 using MediatR;
@@ -601,8 +602,8 @@ namespace Elsa.Server.Tests.Features.Workflow
         [AutoData]
         public async Task WorkflowController_CheckYourAnswersSaveAndContinue_ShouldReturnOK_WhenCommandHandlerIsSuccessful(
 
-   CheckYourAnswersSaveAndContinueCommand request,
-   Mock<IMediator> mediatorMock)
+           CheckYourAnswersSaveAndContinueCommand request,
+           Mock<IMediator> mediatorMock)
         {
             var response = SampleResponse<CheckYourAnswersSaveAndContinueResponse>();
             var startWorkflowOperationResult = new OperationResult<CheckYourAnswersSaveAndContinueResponse>
@@ -715,6 +716,133 @@ namespace Elsa.Server.Tests.Features.Workflow
             Assert.Equal(500, objectResult.StatusCode);
             Assert.IsType<NullReferenceException>(objectResult.Value);
         }
+
+
+        [Theory]
+        [AutoData]
+        public async Task WorkflowController_SetResult_ShouldReturnOK_WhenCommandHandlerIsSuccessful(
+        SetWorkflowResultCommand command,
+        SetWorkflowResultResponse response,
+        Mock<IMediator> mediatorMock)
+        {
+            var setWorkflowOperationResult = new OperationResult<SetWorkflowResultResponse>
+            {
+                ErrorMessages = new List<string>(),
+                ValidationMessages = null,
+                Data = response
+            };
+            //Arrange
+            mediatorMock.Setup(x => x.Send(It.IsAny<SetWorkflowResultCommand>(), CancellationToken.None)).ReturnsAsync(setWorkflowOperationResult);
+
+            WorkflowController controller = new WorkflowController(mediatorMock.Object);
+
+            //Act
+            var result = await controller.SetResult(command.WorkflowInstanceId, command.ActivityId);
+
+            //Assert
+            Assert.NotNull(result);
+            Assert.IsType<OkObjectResult>(result);
+
+            var okResult = (OkObjectResult)result;
+            var okResultValueData = (OperationResult<SetWorkflowResultResponse>)okResult.Value!;
+
+            Assert.Equal(response.NextActivityId, okResultValueData.Data!.NextActivityId);
+            Assert.Equal(response.WorkflowInstanceId, okResultValueData.Data.WorkflowInstanceId);
+
+        }
+
+        [Theory]
+        [AutoData]
+        public async Task WorkflowController_SetResult_ShouldReturn500_WhenCommandHandlerThrowsException(
+        SetWorkflowResultCommand command,
+        Mock<IMediator> mediatorMock)
+        {
+         
+            //Arrange
+
+            OperationResult<SetWorkflowResultResponse> operationResult = new OperationResult<SetWorkflowResultResponse>();
+            operationResult.ErrorMessages = new List<string> { "StandardErrorMessage" };
+
+            mediatorMock.Setup(x => x.Send(It.IsAny<SetWorkflowResultCommand>(), CancellationToken.None)).ReturnsAsync(operationResult);
+
+            WorkflowController controller = new WorkflowController(mediatorMock.Object);
+
+            //Act
+            var result = await controller.SetResult(command.WorkflowInstanceId, command.ActivityId);
+
+            //Assert
+            Assert.NotNull(result);
+            Assert.IsType<BadRequestObjectResult>(result);
+
+            var badResult = (BadRequestObjectResult)result;
+            var badResultValueData = (string)badResult.Value!;
+
+            Assert.Equal(string.Join(',', operationResult.ErrorMessages), badResultValueData);
+
+        }
+
+        [Theory]
+        [AutoData]
+        public async Task WorkflowController_SetResult_ShouldReturnBadRequest_WhenCommandHandlerReturnsErrors(
+           SetWorkflowResultCommand command,
+            Exception exception,
+           Mock<IMediator> mediatorMock)
+        {
+
+            //Arrange
+
+
+            mediatorMock.Setup(x => x.Send(It.IsAny<SetWorkflowResultCommand>(), CancellationToken.None)).ThrowsAsync(exception);
+
+            WorkflowController controller = new WorkflowController(mediatorMock.Object);
+
+            //Act
+            var result = await controller.SetResult(command.WorkflowInstanceId, command.ActivityId);
+
+            //Assert
+            Assert.NotNull(result);
+            Assert.IsType<ObjectResult>(result);
+
+            var objectResult = (ObjectResult)result;
+
+            Assert.Equal(500, objectResult.StatusCode);
+            Assert.IsType<Exception>(objectResult.Value);
+
+            var exceptionResult = (Exception)objectResult.Value!;
+
+            Assert.Equal(exception.Message, exceptionResult.Message);
+
+        }
+
+
+        [Theory]
+        [AutoData]
+        public async Task WorkflowController_SetResult_ShouldReturn500_WhenCommandHandlerReturnsNull(
+           SetWorkflowResultCommand command,
+           Mock<IMediator> mediatorMock)
+        {
+
+            //Arrange
+
+
+            mediatorMock.Setup(x => x.Send(It.IsAny<SetWorkflowResultCommand>(), CancellationToken.None)).ReturnsAsync((OperationResult<SetWorkflowResultResponse>)null!);
+
+            WorkflowController controller = new WorkflowController(mediatorMock.Object);
+
+            //Act
+            var result = await controller.SetResult(command.WorkflowInstanceId, command.ActivityId);
+
+            //Assert
+            Assert.NotNull(result);
+            Assert.IsType<ObjectResult>(result);
+
+            var objectResult = (ObjectResult)result;
+
+            Assert.Equal(500, objectResult.StatusCode);
+            Assert.IsType<NullReferenceException>(objectResult.Value);
+
+        }
+
 
         private T SampleResponse<T>()
         {

@@ -17,13 +17,13 @@ namespace He.PipelineAssessment.UI.Features.SinglePipeline.Sync
 
         public List<Models.Assessment> AssessmentsToBeAdded(List<int> sourceAssessmentSpIds, List<int> destinationAssessmentSpIds, List<SinglePipelineData> sourceSinglePipelineData)
         {
+
             var assessmentSpIdsToAdd = sourceAssessmentSpIds.Where(p => destinationAssessmentSpIds.All(p2 => p2 != p)).ToList();
             var sourceAssessmentsToAdd = sourceSinglePipelineData.Where(x => assessmentSpIdsToAdd.Contains(x.sp_id!.Value));
 
             var assessmentsToBeAdded = new List<Models.Assessment>();
             foreach (var item in sourceAssessmentsToAdd)
             {
-                var fullName = item.he_advocate_f_name + " " + item.he_advocate_s_name;
                 var assessment = new Models.Assessment()
                 {
                     Counterparty = string.IsNullOrEmpty(item.applicant_1) ? "-" : item.applicant_1,
@@ -33,15 +33,18 @@ namespace He.PipelineAssessment.UI.Features.SinglePipeline.Sync
                         : item.pipeline_opportunity_site_name,
                     SpId = item.sp_id.HasValue ? item.sp_id.Value : 999,
                     Status = "New",
-                    ProjectManager = string.IsNullOrEmpty(item.he_advocate_f_name)
-                        ? "-" : fullName,
-                    ProjectManagerEmail = string.IsNullOrEmpty(item.he_advocate_email)
-                        ? "-" : item.he_advocate_email,
+                    ProjectManager = string.IsNullOrEmpty(item.project_owner)
+                        ? "-" : item.project_owner,
+                    ProjectManagerEmail = string.IsNullOrEmpty(item.project_owner_email)
+                        ? "-" : item.project_owner_email,
                     LocalAuthority = string.IsNullOrEmpty(item.local_authority)
                         ? "-" : item.local_authority,
                     FundingAsk = item.funding_ask,
-                    NumberOfHomes = item.units_or_homes
+                    NumberOfHomes = item.units_or_homes,
+                    BusinessArea = string.IsNullOrEmpty(item.sp_business_area)
+                         ? "-" : item.sp_business_area,
                 };
+
                 assessmentsToBeAdded.Add(assessment);
             }
 
@@ -56,8 +59,6 @@ namespace He.PipelineAssessment.UI.Features.SinglePipeline.Sync
 
                 if (destination != null && source != null)
                 {
-                    var fullName = source.he_advocate_f_name + " " + source.he_advocate_s_name;
-
                     if (!string.IsNullOrEmpty(source.applicant_1) && destination.Counterparty != source.applicant_1)
                     {
                         destination.Counterparty = source.applicant_1!;
@@ -70,17 +71,21 @@ namespace He.PipelineAssessment.UI.Features.SinglePipeline.Sync
                     {
                         destination.SiteName = source.pipeline_opportunity_site_name!;
                     }
-                    if (!string.IsNullOrEmpty(source.he_advocate_f_name) && destination.ProjectManager != fullName)
+                    if (!string.IsNullOrEmpty(source.project_owner) && destination.ProjectManager != source.project_owner)
                     {
-                        destination.ProjectManager = fullName;
+                        destination.ProjectManager = source.project_owner;
                     }
-                    if (!string.IsNullOrEmpty(source.he_advocate_email) && destination.ProjectManagerEmail != source.he_advocate_email)
+                    if (!string.IsNullOrEmpty(source.project_owner_email) && destination.ProjectManagerEmail != source.project_owner_email)
                     {
-                        destination.ProjectManagerEmail = source.he_advocate_email!;
+                        destination.ProjectManagerEmail = source.project_owner_email!;
                     }
                     if (!string.IsNullOrEmpty(source.local_authority) && destination.LocalAuthority != source.local_authority)
                     {
                         destination.LocalAuthority = source.local_authority!;
+                    }
+                    if (!string.IsNullOrEmpty(source.sp_business_area) && destination.BusinessArea != source.sp_business_area)
+                    {
+                        destination.BusinessArea = source.sp_business_area!;
                     }
                     if (source.funding_ask.HasValue && destination.FundingAsk != source.funding_ask)
                     {

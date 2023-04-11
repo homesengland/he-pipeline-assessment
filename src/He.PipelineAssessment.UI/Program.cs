@@ -8,6 +8,7 @@ using He.PipelineAssessment.Infrastructure.Data;
 using He.PipelineAssessment.Infrastructure.Repository;
 using He.PipelineAssessment.Infrastructure.Repository.StoredProcedure;
 using He.PipelineAssessment.UI;
+using He.PipelineAssessment.UI.Authorization;
 using He.PipelineAssessment.UI.Extensions;
 using He.PipelineAssessment.UI.Features.Admin.AssessmentToolManagement.Commands.CreateAssessmentTool;
 using He.PipelineAssessment.UI.Features.Admin.AssessmentToolManagement.Commands.CreateAssessmentToolWorkflow;
@@ -83,6 +84,8 @@ builder.Services.AddScoped<IAdminAssessmentToolRepository, AdminAssessmentToolRe
 builder.Services.AddScoped<IAdminAssessmentToolWorkflowRepository, AdminAssessmentToolWorkflowRepository>();
 builder.Services.AddScoped<ISyncCommandHandlerHelper, SyncCommandHandlerHelper>();
 builder.Services.AddScoped<IUserProvider, UserProvider>();
+builder.Services.AddScoped<IRoleValidation, RoleValidation>();
+
 builder.Services.AddHttpContextAccessor();
 
 builder.Services.AddScoped<IIdentityClient, IdentityClient>();

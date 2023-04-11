@@ -1,6 +1,5 @@
 ﻿using Elsa.CustomInfrastructure.Data.Repository;
 using Elsa.CustomWorkflow.Sdk;
-using Elsa.Server.Features.Workflow.CheckYourAnswersSaveAndContinue;
 using Elsa.Server.Models;
 using Elsa.Server.Providers;
 using Elsa.Server.Services;
@@ -34,15 +33,12 @@ namespace Elsa.Server.Features.Workflow.SetWorkflowResult
             try
             {
                 var workflowNextActivityModel = await _workflowNextActivityProvider.GetNextActivity(command.ActivityId, command.WorkflowInstanceId, null, ActivityTypeConstants.CheckYourAnswersScreen, cancellationToken);
-                var workflowInstance =
-                    await _workflowInstanceProvider.GetWorkflowInstance(command.WorkflowInstanceId,
-                        cancellationToken);
 
                 var nextActivityRecord =
                    await _elsaCustomRepository.GetCustomActivityNavigation(workflowNextActivityModel.NextActivity.Id,
                        command.WorkflowInstanceId, cancellationToken);
 
-                await _nextActivityNavigationService.CreateNextActivityNavigation(command.ActivityId, nextActivityRecord, workflowNextActivityModel.NextActivity, workflowInstance, cancellationToken);
+                await _nextActivityNavigationService.CreateNextActivityNavigation(command.ActivityId, nextActivityRecord, workflowNextActivityModel.NextActivity, workflowNextActivityModel.WorkflowInstance!, cancellationToken);
 
                 result.Data = new SetWorkflowResultResponse
                 {

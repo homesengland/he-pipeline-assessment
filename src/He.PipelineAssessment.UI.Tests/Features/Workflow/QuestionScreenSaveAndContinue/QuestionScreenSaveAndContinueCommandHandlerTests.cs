@@ -8,6 +8,8 @@ using He.PipelineAssessment.Models;
 using He.PipelineAssessment.UI.Features.Workflow.QuestionScreenSaveAndContinue;
 using Moq;
 using Xunit;
+using He.PipelineAssessment.UI.Authorization;
+using static Microsoft.EntityFrameworkCore.DbLoggerCategory.Database;
 
 namespace He.PipelineAssessment.UI.Tests.Features.Workflow.SaveAndContinue
 {
@@ -19,12 +21,15 @@ namespace He.PipelineAssessment.UI.Tests.Features.Workflow.SaveAndContinue
         public async Task Handle_ReturnsNull_GivenHttpClientResponseIsNull(
             [Frozen] Mock<IElsaServerHttpClient> elsaServerHttpClient,
             [Frozen] Mock<IQuestionScreenSaveAndContinueMapper> saveAndContinueMapper,
+            [Frozen] Mock<IRoleValidation> roleValidation,
             QuestionScreenSaveAndContinueCommand saveAndContinueCommand,
             QuestionScreenSaveAndContinueCommandDto saveAndContinueCommandDto,
             QuestionScreenSaveAndContinueCommandHandler sut
         )
         {
             //Arrange
+            roleValidation.Setup(x => x.ValidateRole(saveAndContinueCommand.AssessmentId)).ReturnsAsync(true);
+
             saveAndContinueMapper
                 .Setup(x => x.SaveAndContinueCommandToMultiSaveAndContinueCommandDto(saveAndContinueCommand))
                 .Returns(saveAndContinueCommandDto);
@@ -45,6 +50,7 @@ namespace He.PipelineAssessment.UI.Tests.Features.Workflow.SaveAndContinue
             [Frozen] Mock<IElsaServerHttpClient> elsaServerHttpClient,
             [Frozen] Mock<IQuestionScreenSaveAndContinueMapper> saveAndContinueMapper,
             [Frozen] Mock<IAssessmentRepository> assessmentRepository,
+            [Frozen] Mock<IRoleValidation> roleValidation,
             AssessmentToolWorkflowInstance assessmentToolWorkflowInstance,
             QuestionScreenSaveAndContinueCommand saveAndContinueCommand,
             QuestionScreenSaveAndContinueCommandDto saveAndContinueCommandDto,
@@ -53,6 +59,8 @@ namespace He.PipelineAssessment.UI.Tests.Features.Workflow.SaveAndContinue
         )
         {
             //Arrange
+            roleValidation.Setup(x => x.ValidateRole(saveAndContinueCommand.AssessmentId)).ReturnsAsync(true);
+
             saveAndContinueMapper
                 .Setup(x => x.SaveAndContinueCommandToMultiSaveAndContinueCommandDto(saveAndContinueCommand))
                 .Returns(saveAndContinueCommandDto);
@@ -72,40 +80,44 @@ namespace He.PipelineAssessment.UI.Tests.Features.Workflow.SaveAndContinue
             Assert.Equal(workflowNextActivityDataDto.Data.WorkflowInstanceId, result.WorkflowInstanceId);
             assessmentRepository.Verify(x => x.SaveChanges(), Times.Once);
         }
+
 
         [Theory]
         [AutoMoqData]
-        public async Task Handle_ReturnsLoadWorkflowActivityRequest_GivenNoErrorsEncounteredAndActivityTypeIsQuestionScreen(
-        [Frozen] Mock<IElsaServerHttpClient> elsaServerHttpClient,
-        [Frozen] Mock<IQuestionScreenSaveAndContinueMapper> saveAndContinueMapper,
-        [Frozen] Mock<IAssessmentRepository> assessmentRepository,
-        AssessmentToolWorkflowInstance assessmentToolWorkflowInstance,
-        QuestionScreenSaveAndContinueCommand saveAndContinueCommand,
-        QuestionScreenSaveAndContinueCommandDto saveAndContinueCommandDto,
-        WorkflowNextActivityDataDto workflowNextActivityDataDto,
-        QuestionScreenSaveAndContinueCommandHandler sut
-        )
+        public async Task Handle_ReturnsLoadWorkflowActivityRequest_GivenIncorrectRole(
+          QuestionScreenSaveAndContinueCommand saveAndContinueCommand,
+          QuestionScreenSaveAndContinueCommandHandler sut
+      )
         {
             //Arrange
-            saveAndContinueCommand.Data!.ActivityType = ActivityTypeConstants.QuestionScreen;
-            saveAndContinueMapper
-                .Setup(x => x.SaveAndContinueCommandToMultiSaveAndContinueCommandDto(saveAndContinueCommand))
-                .Returns(saveAndContinueCommandDto);
-
-            elsaServerHttpClient.Setup(x => x.QuestionScreenSaveAndContinue(saveAndContinueCommandDto))
-                .ReturnsAsync(workflowNextActivityDataDto);
-
-            assessmentRepository.Setup(x => x.GetAssessmentToolWorkflowInstance(workflowNextActivityDataDto.Data.WorkflowInstanceId))
-                .ReturnsAsync(assessmentToolWorkflowInstance);
+           
 
             //Act
             var result = await sut.Handle(saveAndContinueCommand, CancellationToken.None);
 
             //Assert
-            Assert.NotNull(result);
-            Assert.Equal(workflowNextActivityDataDto.Data.NextActivityId, result!.ActivityId);
-            Assert.Equal(workflowNextActivityDataDto.Data.WorkflowInstanceId, result.WorkflowInstanceId);
-            assessmentRepository.Verify(x => x.SaveChanges(), Times.Once);
+            Assert.False(result!.IsCorrectBusinessArea);
         }
+
+
+
+        [Theory]
+        [AutoMoqData]
+        public async Task Handle_ReturnsLoadWorkflowActivityRequest_ErrorsOccur(
+          [Frozen] Mock<IRoleValidation> roleValidation,
+          QuestionScreenSaveAndContinueCommand saveAndContinueCommand,
+          QuestionScreenSaveAndContinueCommandHandler sut
+      )
+        {
+            //Arrange
+            roleValidation.Setup(x => x.ValidateRole(saveAndContinueCommand.AssessmentId)).ThrowsAsync(new Exception());
+
+            //Act
+            var result = await sut.Handle(saveAndContinueCommand, CancellationToken.None);
+
+            //Assert
+            Assert.Null(result);
+        }
+
     }
 }

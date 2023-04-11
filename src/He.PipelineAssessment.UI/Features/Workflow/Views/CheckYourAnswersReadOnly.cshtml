@@ -1,0 +1,23 @@
+﻿@model QuestionScreenSaveAndContinueCommand;
+@using He.PipelineAssessment.UI.Features.Workflow.QuestionScreenSaveAndContinue
+@using He.PipelineAssessment.UI.Features.Workflow.ViewModels
+@{
+    ViewData["Title"] = "Pipeline Assessment";
+    Layout = "_Layout";
+}
+<div class="govuk-form-group">
+    <h1 class="govuk-heading-l">
+        @Html.DisplayTextFor(m => m.Data.PageTitle)
+    </h1>
+
+    @await Html.PartialAsync("_ReviewAnswers",new ReviewAnswers{Questions = Model.Data.CheckQuestions, RenderChangeLinks = false, WorkflowInstanceId = Model.Data.WorkflowInstanceId})
+
+    <br />
+    <div>
+        <h2 class="govuk-heading-m">@Html.DisplayTextFor(m => m.Data.FooterTitle)</h2>
+        <p class="govuk-body">@Html.DisplayTextFor(m => m.Data.FooterText).</p>
+    </div>
+    @{
+        @Html.ActionLink("Go to Assessment Summary", "Summary", "Assessment", new { Model.AssessmentId, Model.CorrelationId }, new { @class = "govuk-button" })
+     }
+</div>

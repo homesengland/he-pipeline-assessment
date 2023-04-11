@@ -87,6 +87,7 @@ namespace He.PipelineAssessment.UI.Tests.Features.SinglePipeline.Sync
             destinationAssessment.LocalAuthority = "LocalAuthority";
             destinationAssessment.FundingAsk = 123;
             destinationAssessment.NumberOfHomes = 345;
+            destinationAssessment.BusinessArea = "Land";
 
             var destinationAssessments = new List<Models.Assessment>();
             destinationAssessments.Add(destinationAssessment);
@@ -95,12 +96,12 @@ namespace He.PipelineAssessment.UI.Tests.Features.SinglePipeline.Sync
             singlePipelineData.applicant_1 = "Counterparty";
             singlePipelineData.internal_reference = "Reference";
             singlePipelineData.pipeline_opportunity_site_name = "SiteName";
-            singlePipelineData.he_advocate_f_name = "Project";
-            singlePipelineData.he_advocate_s_name = "Manager";
-            singlePipelineData.he_advocate_email = "ProjectManagerEmail";
+            singlePipelineData.project_owner = "Project Manager";
+            singlePipelineData.project_owner_email = "ProjectManagerEmail";
             singlePipelineData.local_authority = "LocalAuthority";
             singlePipelineData.funding_ask = 123;
             singlePipelineData.units_or_homes = 345;
+            singlePipelineData.sp_business_area = "Land";
 
             var singlePipelineDataList = new List<SinglePipelineData>();
             singlePipelineDataList.Add(singlePipelineData);
@@ -115,11 +116,12 @@ namespace He.PipelineAssessment.UI.Tests.Features.SinglePipeline.Sync
             Assert.Equal(singlePipelineData.applicant_1, result[0].Counterparty);
             Assert.Equal(singlePipelineData.internal_reference, result[0].Reference);
             Assert.Equal(singlePipelineData.pipeline_opportunity_site_name, result[0].SiteName);
-            Assert.Equal(singlePipelineData.he_advocate_f_name + " " + singlePipelineData.he_advocate_s_name, result[0].ProjectManager);
-            Assert.Equal(singlePipelineData.he_advocate_email, result[0].ProjectManagerEmail);
+            Assert.Equal(singlePipelineData.project_owner, result[0].ProjectManager);
+            Assert.Equal(singlePipelineData.project_owner_email, result[0].ProjectManagerEmail);
             Assert.Equal(singlePipelineData.local_authority, result[0].LocalAuthority);
             Assert.Equal(singlePipelineData.funding_ask, result[0].FundingAsk);
             Assert.Equal(singlePipelineData.units_or_homes, result[0].NumberOfHomes);
+            Assert.Equal(singlePipelineData.sp_business_area, result[0].BusinessArea);
         }
 
         [Theory]
@@ -140,6 +142,8 @@ namespace He.PipelineAssessment.UI.Tests.Features.SinglePipeline.Sync
             destinationAssessment.LocalAuthority = "LocalAuthority";
             destinationAssessment.FundingAsk = 123;
             destinationAssessment.NumberOfHomes = 345;
+            destinationAssessment.BusinessArea = "Land";
+
 
             var destinationAssessments = new List<Models.Assessment>();
             destinationAssessments.Add(destinationAssessment);
@@ -148,14 +152,14 @@ namespace He.PipelineAssessment.UI.Tests.Features.SinglePipeline.Sync
             singlePipelineData.applicant_1 = "applicant_1";
             singlePipelineData.internal_reference = "internal_reference";
             singlePipelineData.pipeline_opportunity_site_name = "pipeline_opportunity_site_name";
-            singlePipelineData.he_advocate_f_name = "he_advocate_f_name";
-            singlePipelineData.he_advocate_s_name = "he_advocate_s_name";
-            singlePipelineData.he_advocate_email = "he_advocate_email";
+            singlePipelineData.project_owner = "project_owner";
+            singlePipelineData.project_owner_email = "project_owner_email";
             singlePipelineData.local_authority = "local_authority";
             singlePipelineData.funding_ask = 555;
             singlePipelineData.units_or_homes = 667;
+            singlePipelineData.sp_business_area = "Investment";
 
-            var singlePipelineDataList = new List<SinglePipelineData>();
+           var singlePipelineDataList = new List<SinglePipelineData>();
             singlePipelineDataList.Add(singlePipelineData);
 
             //Arrange
@@ -168,11 +172,14 @@ namespace He.PipelineAssessment.UI.Tests.Features.SinglePipeline.Sync
             Assert.Equal(singlePipelineData.applicant_1, result[0].Counterparty);
             Assert.Equal(singlePipelineData.internal_reference, result[0].Reference);
             Assert.Equal(singlePipelineData.pipeline_opportunity_site_name, result[0].SiteName);
-            Assert.Equal(singlePipelineData.he_advocate_f_name + " " + singlePipelineData.he_advocate_s_name, result[0].ProjectManager);
-            Assert.Equal(singlePipelineData.he_advocate_email, result[0].ProjectManagerEmail);
+            Assert.Equal(singlePipelineData.project_owner, result[0].ProjectManager);
+            Assert.Equal(singlePipelineData.project_owner_email, result[0].ProjectManagerEmail);
             Assert.Equal(singlePipelineData.local_authority, result[0].LocalAuthority);
             Assert.Equal(singlePipelineData.funding_ask, result[0].FundingAsk);
             Assert.Equal(singlePipelineData.units_or_homes, result[0].NumberOfHomes);
+            Assert.Equal(singlePipelineData.sp_business_area, result[0].BusinessArea);
+
+
         }
     }
 }

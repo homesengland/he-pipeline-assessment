@@ -158,12 +158,12 @@ namespace Elsa.CustomWorkflow.Sdk.Models.Workflow
 
         public void SetCheckbox(Checkbox value)
         {
-            if (QuestionType == QuestionTypeConstants.CheckboxQuestion && value != null)
+            if (QuestionType == QuestionTypeConstants.CheckboxQuestion)
             {
                 _checkbox = value;
                 List<Choice> selectedChoices = new List<Choice>();
                 Answers = new List<QuestionActivityAnswer>();
-                if (value != null && value.SelectedChoices != null)
+                if (_checkbox.SelectedChoices != null)
                 {
                     selectedChoices = _checkbox.Choices.Where(c => _checkbox.SelectedChoices.Contains(c.Id)).ToList();
                 }
