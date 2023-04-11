@@ -54,7 +54,12 @@ namespace He.PipelineAssessment.Data.SinglePipeline
                 "sp_status in ('Active', 'Approved','In Programme') AND sp_stage in ('Lead', 'Opportunity', 'Contracted','Holding')";
             string orderBy = "esri_id";
             string outFields =
-                "sp_id,internal_reference,pipeline_opportunity_site_name,applicant_1,he_advocate_f_name,he_advocate_s_name,he_advocate_email,local_authority,funding_ask,units_or_homes";
+                "sp_id,internal_reference,pipeline_opportunity_site_name," +
+                "applicant_1," +
+                "project_owner," +
+                "project_owner_email,local_authority,funding_ask," +
+                "units_or_homes," +
+                "sp_business_area";
 
             var relativeUri =
                 $"query?where={whereClause}&outFields={outFields}&orderByFields={orderBy}&resultOffset={offset}&f=json"; //potentially needs a token on the end also
