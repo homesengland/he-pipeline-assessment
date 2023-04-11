@@ -27,7 +27,6 @@ namespace He.PipelineAssessment.UI.Features.Workflow.LoadConfirmationScreen
             {
                 WorkflowInstanceId = request.WorkflowInstanceId,
                 ActivityId = request.ActivityId,
-                ActivityType = ActivityTypeConstants.ConfirmationScreen
             });
 
             if (response != null)
