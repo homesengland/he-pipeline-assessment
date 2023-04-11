@@ -9,7 +9,6 @@ using He.PipelineAssessment.UI.Features.Workflow.SetResult;
 using He.PipelineAssessment.UI.Features.Workflow.StartWorkflow;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
-using System.Security.Claims;
 
 namespace He.PipelineAssessment.UI.Features.Workflow
 {
@@ -100,12 +99,12 @@ namespace He.PipelineAssessment.UI.Features.Workflow
                         }
                     case ActivityTypeConstants.PotScoreCalculation:
                         {
-                            var checkYourAnswersScreenRequest = new SetResultRequest
+                            var setResultRequest = new SetResultRequest
                             {
                                 WorkflowInstanceId = request.WorkflowInstanceId,
                                 ActivityId = request.ActivityId
                             };
-                            var result = await this._mediator.Send(checkYourAnswersScreenRequest);
+                            var result = await this._mediator.Send(setResultRequest);
 
                             return RedirectToAction("LoadWorkflowActivity", result);
                         }
