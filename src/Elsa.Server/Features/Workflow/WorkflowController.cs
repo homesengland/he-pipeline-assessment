@@ -177,7 +177,7 @@ namespace Elsa.Server.Features.Workflow
         {
             try
             {
-                var result = await this._mediator.Send(new SetWorkflowResultCommand
+                var result = await _mediator.Send(new SetWorkflowResultCommand
                 {
                     WorkflowInstanceId = workflowInstanceId,
                     ActivityId = activityId
