@@ -1,23 +1,14 @@
 ﻿using Elsa.CustomActivities.Activities.Common;
 using Elsa.CustomActivities.Constants;
-using Elsa.CustomActivities.Handlers;
 using Elsa.CustomActivities.Handlers.Models;
 using Elsa.CustomActivities.Handlers.Scoring;
-using Elsa.CustomActivities.Handlers.Syntax;
-using Elsa.CustomInfrastructure.Data.Repository;
 using Elsa.Expressions;
 using Elsa.Serialization;
 using Elsa.Services.Models;
 using He.PipelineAssessment.Tests.Common;
-using Jint.Native.Json;
 using Microsoft.Extensions.Logging;
 using Moq;
 using Newtonsoft.Json;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Xunit;
 
 namespace Elsa.CustomActivities.Tests.Handlers.Scoring
