@@ -332,7 +332,6 @@ namespace He.PipelineAssessment.UI.Tests.Features.Workflow
         public async Task LoadWorkflowActivity_ShouldRedirectToItself_GivenPotScoreCalculationAndNoExceptionsThrow(
             [Frozen] Mock<IMediator> mediator,
             QuestionScreenSaveAndContinueCommandResponse saveAndContinueCommandResponse,
-            QuestionScreenSaveAndContinueCommand saveAndContinueCommand,
             WorkflowController sut)
         {
             //Arrange

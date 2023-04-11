@@ -9,7 +9,6 @@ using He.PipelineAssessment.UI.Features.Workflow.SetResult;
 using He.PipelineAssessment.UI.Features.Workflow.StartWorkflow;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
-using System.Security.Claims;
 
 namespace He.PipelineAssessment.UI.Features.Workflow
 {
