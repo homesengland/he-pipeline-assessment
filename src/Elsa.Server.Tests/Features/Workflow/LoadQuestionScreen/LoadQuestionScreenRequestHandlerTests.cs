@@ -436,7 +436,6 @@ public class LoadQuestionScreenRequestHandlerTests
             LoadQuestionScreenRequestHandler sut)
     {
         //Arrange
-        var myChoice = "Choice1";
         customActivityNavigation.ActivityType = ActivityTypeConstants.QuestionScreen;
         assessmentQuestions[0].Answers = new List<Answer>();
         for (var i = 0; i < assessmentQuestions.Count; i++)
@@ -494,7 +493,6 @@ public class LoadQuestionScreenRequestHandlerTests
             LoadQuestionScreenRequestHandler sut)
     {
         //Arrange
-        var myChoice = "Choice1";
         customActivityNavigation.ActivityType = ActivityTypeConstants.QuestionScreen;
         assessmentQuestions[0].Answers = new List<Answer>();
         for (var i = 0; i < assessmentQuestions.Count; i++)
@@ -760,7 +758,7 @@ public class LoadQuestionScreenRequestHandlerTests
         Assert.NotNull(result.Data!.Questions);
         Assert.Equal(assessmentQuestions.Count(), result.Data!.Questions.Count());
         Assert.Empty(result.ErrorMessages);
-        Assert.Equal("DatabaseAnswer", result.Data.Questions[0].Answers.FirstOrDefault().AnswerText);
+        Assert.Equal("DatabaseAnswer", result.Data.Questions[0].Answers.FirstOrDefault()?.AnswerText);
         Assert.False(result.Data.Questions[0].IsReadOnly);
     }
 

@@ -63,7 +63,7 @@ namespace Elsa.CustomActivities.Activities.Scoring
                     await _elsaCustomRepository.SetWorkflowInstanceScore(context.WorkflowInstance.Id, Calculation);
                 }
             }
-            catch(Exception e)
+            catch(Exception)
             {
                 context.JournalData.Add("Error", string.Format("Error occured whilst updating workflow with {0} score.", Calculation) );
                 return new SuspendResult();
