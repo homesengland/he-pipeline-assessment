@@ -23,7 +23,7 @@ namespace He.PipelineAssessment.UI.Features.Workflow.LoadConfirmationScreen
 
         public async Task<QuestionScreenSaveAndContinueCommandResponse?> Handle(SetResultRequest request, CancellationToken cancellationToken)
         {
-            var response = await _elsaServerHttpClient.LoadConfirmationScreen(new LoadWorkflowActivityDto
+            var response = await _elsaServerHttpClient.SetResult(new LoadWorkflowActivityDto
             {
                 WorkflowInstanceId = request.WorkflowInstanceId,
                 ActivityId = request.ActivityId,
