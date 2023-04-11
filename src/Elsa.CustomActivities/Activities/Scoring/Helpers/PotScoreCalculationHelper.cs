@@ -39,6 +39,28 @@ namespace Elsa.CustomActivities.Activities.Scoring.Helpers
             return failedResult;
         }
 
+        //public async Task<double> GetPotScore(string workflowInstanceId)
+        //{
+        //    string failedResult = string.Empty;
+        //    List<double> totalSelectedScores = new List<double>();
+
+        //    var workflowQuestions = await _elsaCustomRepository.GetQuestions(workflowInstanceId, CancellationToken.None);
+        //    if (workflowQuestions.Count > 0)
+        //    {
+        //        foreach (var question in workflowQuestions)
+        //        {
+        //            double? questionScore = question.Answers?.Where(a => a.Choice?.PotScoreCategory?.ToLower() == potValue.ToLower())
+        //                .Select(_ => question.Weighting).FirstOrDefault();
+        //            if (questionScore != null)
+        //            {
+        //                totalSelectedScores.Add(questionScore.Value);
+        //            }
+        //        }
+        //        return totalSelectedScores.Sum();
+        //    }
+        //    return failedResult;
+        //}
+
         public Task Handle(EvaluatingJavaScriptExpression notification, CancellationToken cancellationToken)
         {
             var activityExecutionContext = notification.ActivityExecutionContext;
