@@ -9,6 +9,7 @@ using He.PipelineAssessment.Tests.Common;
 using Microsoft.Extensions.Logging;
 using Moq;
 using Newtonsoft.Json;
+using System.Runtime.CompilerServices;
 using Xunit;
 
 namespace Elsa.CustomActivities.Tests.Handlers.Scoring
@@ -39,7 +40,7 @@ namespace Elsa.CustomActivities.Tests.Handlers.Scoring
         }
 
         [Theory, AutoMoqData]
-        public async void EvaluateAsync_ReturnsCalculatedValuesData(
+        public async void EvaluatePotScoreCalculation_ReturnsCorrectData_WhenCorrectDataIsProvided(
             Mock<IServiceProvider> provider,
             Mock<IExpressionEvaluator> evaluator,
             Mock<IContentSerializer> serialiser,
@@ -109,6 +110,136 @@ namespace Elsa.CustomActivities.Tests.Handlers.Scoring
             Assert.Null(actualPotScoreNoKey);
             Assert.Null(actualPotScoreEmptyValue);
         }
+
+
+        [Theory, AutoMoqData]
+        public async void EvaluatePotScoreCalculation_ReturnsNullValue_WhenWrongDataProvided(
+            Mock<IServiceProvider> provider,
+            Mock<IContentSerializer> serializer,
+            Mock<IExpressionEvaluator> evaluator,
+            Mock<ILogger<IExpressionHandler>> logger)
+        {
+            //Arrange
+
+            PotScoreCalculationExpressionHandler handler =
+                new PotScoreCalculationExpressionHandler(logger.Object, serializer.Object);
+
+            string actualResult = "10";
+
+            ElsaProperty sampleProperty = SampleElsaProperty(
+                GetDictionary(CustomSyntaxNames.PotScore, "'SampleJavascriptMethod('Workflow_B', 'Low'')"),
+                CustomSyntaxNames.PotScore,
+                "Pot Score Calculation");
+
+            string expressionString = JsonConvert.SerializeObject(sampleProperty);
+
+
+            var context = new ActivityExecutionContext(provider.Object, default!, default!, default!, default, default);
+
+
+            provider.Setup(x => x.GetService(typeof(IExpressionEvaluator))).Returns(evaluator.Object);
+            serializer.Setup(x => x.Deserialize<ElsaProperty>(expressionString)).Returns(sampleProperty);
+
+            evaluator.Setup(x => x.TryEvaluateAsync<string>(sampleProperty.Expressions![sampleProperty.Syntax!],
+                sampleProperty.Syntax!, context, CancellationToken.None)).Returns(Task.FromResult(Models.Result.Success<string?>(default)));
+
+
+            //Act
+            var actualPotScoreDefaultValue = await handler.EvaluateAsync(expressionString, typeof(string), context, CancellationToken.None);
+
+
+            //Assert
+            Assert.Null(actualPotScoreDefaultValue);
+        }
+
+        [Theory, AutoMoqData]
+        public async void EvaluatePotScoreCalculation_ReturnsNull_WhenEvaluatorThrowsError(
+            Mock<IServiceProvider> provider,
+            Mock<IContentSerializer> serializer,
+            Mock<IExpressionEvaluator> evaluator,
+            Mock<ILogger<IExpressionHandler>> logger)
+        {
+            //Arrange
+
+            PotScoreCalculationExpressionHandler handler =
+                new PotScoreCalculationExpressionHandler(logger.Object, serializer.Object);
+
+            string actualResult = "10";
+
+            ElsaProperty sampleProperty = SampleElsaProperty(
+                GetDictionary(CustomSyntaxNames.PotScore, "'SampleJavascriptMethod('Workflow_B', 'Low'')"),
+                CustomSyntaxNames.PotScore,
+                "Pot Score Calculation");
+
+            string expressionString = JsonConvert.SerializeObject(sampleProperty);
+
+            KeyNotFoundException exception = new KeyNotFoundException();
+
+            var context = new ActivityExecutionContext(provider.Object, default!, default!, default!, default, default);
+
+
+            provider.Setup(x => x.GetService(typeof(IExpressionEvaluator))).Returns(evaluator.Object);
+            serializer.Setup(x => x.Deserialize<ElsaProperty>(expressionString)).Returns(sampleProperty);
+
+            evaluator.Setup(x => x.TryEvaluateAsync<string>(null,
+                SyntaxNames.Literal, context, CancellationToken.None)).Returns(Task.FromResult(Models.Result.Success<string?>(null)));
+
+            evaluator.Setup(x => x.TryEvaluateAsync<string>(sampleProperty.Expressions![sampleProperty.Syntax!],
+                sampleProperty.Syntax!, context, CancellationToken.None)).Throws(exception);
+
+            sampleProperty.Expressions!.Remove(CustomSyntaxNames.PotScore);
+
+            //Act
+            var actualPotScoreDefaultValue = await handler.EvaluateAsync(expressionString, typeof(string), context, CancellationToken.None);
+
+
+            //Assert
+            Assert.Null(actualPotScoreDefaultValue);
+        }
+
+        [Theory, AutoMoqData]
+        public async void EvaluatePotScoreCalculation_ReturnsNull_WhenSerializerThrowsError(
+            Mock<IServiceProvider> provider,
+            Mock<IContentSerializer> serializer,
+            Mock<IExpressionEvaluator> evaluator,
+            Mock<ILogger<IExpressionHandler>> logger)
+        {
+            //Arrange
+
+            PotScoreCalculationExpressionHandler handler =
+                new PotScoreCalculationExpressionHandler(logger.Object, serializer.Object);
+
+            ElsaProperty sampleProperty = SampleElsaProperty(
+                GetDictionary(CustomSyntaxNames.PotScore, "'SampleJavascriptMethod('Workflow_B', 'Low'')"),
+                CustomSyntaxNames.PotScore,
+                "Pot Score Calculation");
+
+            string expressionString = JsonConvert.SerializeObject(sampleProperty);
+
+            KeyNotFoundException exception = new KeyNotFoundException();
+
+            var context = new ActivityExecutionContext(provider.Object, default!, default!, default!, default, default);
+
+
+            provider.Setup(x => x.GetService(typeof(IExpressionEvaluator))).Returns(evaluator.Object);
+            serializer.Setup(x => x.Deserialize<ElsaProperty>(expressionString)).Throws(new Exception());
+
+
+
+            evaluator.Setup(x => x.TryEvaluateAsync<string>(null,
+               SyntaxNames.Literal, context, CancellationToken.None)).Returns(Task.FromResult(Models.Result.Success<string?>(null)));
+
+            sampleProperty.Expressions!.Remove(CustomSyntaxNames.PotScore);
+
+            //Act
+            var actualPotScoreDefaultValue = await handler.EvaluateAsync(expressionString, typeof(string), context, CancellationToken.None);
+
+
+            //Assert
+            Assert.Null(actualPotScoreDefaultValue);
+        }
+
+
 
         private Dictionary<string, string> GetDictionary(string defaultSyntax,
             string defaultValue,
