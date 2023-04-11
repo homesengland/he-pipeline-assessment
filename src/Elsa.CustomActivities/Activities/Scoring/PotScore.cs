@@ -55,6 +55,7 @@ namespace Elsa.CustomActivities.Activities.Scoring
                 if(Calculation == null || Calculation == string.Empty)
                 {
                     context.JournalData.Add("Error", "Unable to parse Calculation");
+                    return new SuspendResult();
                 }
                 else
                 {
@@ -65,6 +66,7 @@ namespace Elsa.CustomActivities.Activities.Scoring
             catch(Exception e)
             {
                 context.JournalData.Add("Error", string.Format("Error occured whilst updating workflow with {0} score.", Calculation) );
+                return new SuspendResult();
             }
 
             return Done();
