@@ -3,6 +3,7 @@ using Elsa.Server.Features.Workflow.LoadCheckYourAnswersScreen;
 using Elsa.Server.Features.Workflow.LoadConfirmationScreen;
 using Elsa.Server.Features.Workflow.LoadQuestionScreen;
 using Elsa.Server.Features.Workflow.QuestionScreenSaveAndContinue;
+using Elsa.Server.Features.Workflow.SetWorkflowResult;
 using Elsa.Server.Features.Workflow.StartWorkflow;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
@@ -154,6 +155,33 @@ namespace Elsa.Server.Features.Workflow
             try
             {
                 var result = await this._mediator.Send(model);
+
+                if (result.IsSuccess)
+                {
+                    return Ok(result);
+                }
+                else
+                {
+                    return BadRequest(string.Join(',', result.ErrorMessages));
+                }
+            }
+            catch (Exception e)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, e);
+            }
+
+        }
+
+        [HttpPost("SetResult")]
+        public async Task<IActionResult> SetResult([FromBody] string workflowInstanceId, string activityId)
+        {
+            try
+            {
+                var result = await this._mediator.Send(new SetWorkflowResultCommand
+                {
+                    WorkflowInstanceId = workflowInstanceId,
+                    ActivityId = activityId
+                });
 
                 if (result.IsSuccess)
                 {
