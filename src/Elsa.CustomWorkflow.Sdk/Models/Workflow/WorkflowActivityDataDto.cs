@@ -161,12 +161,8 @@ namespace Elsa.CustomWorkflow.Sdk.Models.Workflow
             if (QuestionType == QuestionTypeConstants.CheckboxQuestion)
             {
                 _checkbox = value;
-                List<Choice> selectedChoices = new List<Choice>();
                 Answers = new List<QuestionActivityAnswer>();
-                if (_checkbox.SelectedChoices != null)
-                {
-                    selectedChoices = _checkbox.Choices.Where(c => _checkbox.SelectedChoices.Contains(c.Id)).ToList();
-                }
+                List<Choice> selectedChoices = _checkbox.Choices.Where(c => _checkbox.SelectedChoices.Contains(c.Id)).ToList();
                 SetChoiceAnswers(selectedChoices);
             }
         }
@@ -271,14 +267,14 @@ namespace Elsa.CustomWorkflow.Sdk.Models.Workflow
 
     public class Checkbox
     {
-        public List<int>? SelectedChoices { get; set; }
+        public List<int> SelectedChoices { get; set; } = new List<int>();
         public List<Choice> Choices { get; set; } = new List<Choice>();
     }
 
     public class Radio
     {
         public List<Choice> Choices { get; set; } = new List<Choice>();
-        public int SelectedAnswer { get; set; }
+        public int? SelectedAnswer { get; set; }
     }
 
 

@@ -180,8 +180,11 @@ namespace Elsa.Server.Features.Workflow.LoadQuestionScreen
                     }
                     else
                     {
-                        questionActivityData.Radio.SelectedAnswer =
-                            dbQuestion.Choices.First(x => x.IsPrePopulated).Id;
+                        var prepopulatedAnswer = dbQuestion.Choices.FirstOrDefault(x => x.IsPrePopulated);
+                        if (prepopulatedAnswer != null)
+                        {
+                            questionActivityData.Radio.SelectedAnswer = prepopulatedAnswer.Id;
+                        }
                     }
                 }
             }

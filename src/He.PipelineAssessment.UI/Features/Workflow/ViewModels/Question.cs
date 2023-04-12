@@ -39,7 +39,7 @@ namespace He.PipelineAssessment.UI.Features.Workflow.ViewModels
     public class Radio
     {
         public List<Choice> Choices { get; set; } = new List<Choice>();
-        public int SelectedAnswer { get; set; }
+        public int? SelectedAnswer { get; set; }
     }
 
     public class InformationText

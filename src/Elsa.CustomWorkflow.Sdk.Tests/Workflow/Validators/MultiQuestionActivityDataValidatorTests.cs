@@ -212,7 +212,7 @@ namespace Elsa.CustomWorkflow.Sdk.Tests.Workflow.Validators
                 QuestionType = questionType,
                 Radio = new Radio()
                 {
-                    SelectedAnswer = 0
+                    SelectedAnswer = null
                 }
             };
 
@@ -234,7 +234,7 @@ namespace Elsa.CustomWorkflow.Sdk.Tests.Workflow.Validators
                 QuestionType = QuestionTypeConstants.RadioQuestion,
                 Radio = new Radio()
                 {
-                    SelectedAnswer = 0
+                    SelectedAnswer = null
                 }
             };
 

@@ -8,13 +8,13 @@ namespace Elsa.CustomWorkflow.Sdk.Tests.Workflow.Validators
     public class TextValidatorTests
     {
         [Fact]
-        public void Should_Have_Error_When_AnswerIsNull()
+        public void Should_Have_Error_When_AnswerTextIsNull()
         {
             //Arrange
             TextValidator validator = new TextValidator();
             var questionActivityData = new QuestionActivityData
             {
-                Answers = null
+                Answers = new List<QuestionActivityAnswer>() { new() {AnswerText = null}}
             };
 
             //Act

@@ -8,7 +8,7 @@ namespace Elsa.CustomWorkflow.Sdk.Tests.Workflow.Validators
     public class RadioValidatorTests
     {
         [Fact]
-        public void Should_Have_Error_When_SelectedAnswerEmpty()
+        public void Should_Have_Error_When_SelectedAnswerNull()
         {
             //Arrange
             RadioValidator validator = new RadioValidator();
@@ -29,7 +29,7 @@ namespace Elsa.CustomWorkflow.Sdk.Tests.Workflow.Validators
                         Answer = "Test 3"
                     },
                 },
-                SelectedAnswer = 0
+                SelectedAnswer = null
             };
 
             //Act
