@@ -18,7 +18,7 @@ namespace Elsa.Server.Features.Workflow.LoadConfirmationScreen
         //public List<string> Text { get; set; } = new List<string>();
         public Information Text { get; set; } = null!;
         public string? NextWorkflowDefinitionIds { get; set; } = null!;
-        public List<QuestionScreenAnswer>? CheckQuestionScreenAnswers { get; set; }
+        public List<Question>? CheckQuestions { get; set; }
     }
 
     public class Information

@@ -10,7 +10,7 @@ namespace Elsa.Server.Providers
     public interface IWorkflowNextActivityProvider
     {
         Task<WorkflowNextActivityModel> GetNextActivity(string commandActivityId, string workflowInstanceId,
-            List<QuestionScreenAnswer>? dbAssessmentQuestionList, string activityType,
+            List<Question>? dbAssessmentQuestionList, string activityType,
             CancellationToken cancellationToken);
         Task<WorkflowNextActivityModel> GetStartWorkflowNextActivity(IActivityBlueprint activityBlueprint,
             string workflowInstanceId,
@@ -40,7 +40,7 @@ namespace Elsa.Server.Providers
         }
 
         public async Task<WorkflowNextActivityModel> GetNextActivity(string commandActivityId, string workflowInstanceId,
-            List<QuestionScreenAnswer>? dbAssessmentQuestionList, string activityType,
+            List<Question>? dbAssessmentQuestionList, string activityType,
             CancellationToken cancellationToken)
         {
             IActivityBlueprint? nextActivity = null;

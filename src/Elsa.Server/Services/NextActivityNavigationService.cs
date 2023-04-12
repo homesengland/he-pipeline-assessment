@@ -42,8 +42,8 @@ namespace Elsa.Server.Services
                 if (customActivityNavigation.ActivityType == ActivityTypeConstants.QuestionScreen)
                 {
                     var questions =
-                        _elsaCustomModelHelper.CreateQuestionScreenAnswers(nextActivity.Id, workflowInstance);
-                    await _elsaCustomRepository.CreateQuestionScreenAnswersAsync(questions, cancellationToken);
+                        _elsaCustomModelHelper.CreateQuestions(nextActivity.Id, workflowInstance);
+                    await _elsaCustomRepository.CreateQuestionsAsync(questions, cancellationToken);
                 }
             }
             else

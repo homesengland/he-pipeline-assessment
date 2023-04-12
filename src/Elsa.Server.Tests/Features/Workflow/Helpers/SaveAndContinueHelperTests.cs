@@ -9,6 +9,7 @@ using Elsa.Server.Providers;
 using He.PipelineAssessment.Tests.Common;
 using Moq;
 using Xunit;
+using Question = Elsa.CustomModels.Question;
 
 namespace Elsa.Server.Tests.Features.Workflow.Helpers
 {
@@ -47,12 +48,12 @@ namespace Elsa.Server.Tests.Features.Workflow.Helpers
 
         [Theory]
         [AutoMoqData]
-        public void CreateQuestionScreenAnswer_ShouldReturnQuestionScreenAnswerForCheckbox(
+        public void CreateQuestion_ShouldReturnQuestionForCheckbox(
                     [Frozen] Mock<IDateTimeProvider> mockDateTimeProvider,
                     string nextActivityId,
                     string nextActivityType,
                     WorkflowInstance workflowInstance,
-                    Question question,
+                    CustomActivities.Activities.QuestionScreen.Question question,
                     ElsaCustomModelHelper sut
                 )
         {
@@ -62,27 +63,27 @@ namespace Elsa.Server.Tests.Features.Workflow.Helpers
             mockDateTimeProvider.Setup(x => x.UtcNow()).Returns(currentTimeUtc);
 
             //Act
-            var result = sut.CreateQuestionScreenAnswer(nextActivityId, nextActivityType, question, workflowInstance);
+            var result = sut.CreateQuestion(nextActivityId, nextActivityType, question, workflowInstance);
 
             //Assert
-            Assert.IsType<QuestionScreenAnswer>(result);
+            Assert.IsType<Question>(result);
             Assert.Equal(nextActivityId, result!.ActivityId);
             Assert.Equal(workflowInstance.Id, result.WorkflowInstanceId);
             Assert.Equal(currentTimeUtc, result.CreatedDateTime);
             Assert.Equal(question.Id, result.QuestionId);
             Assert.Equal(question.QuestionType, result.QuestionType);
-            Assert.Equal(question.QuestionText, result.Question);
+            Assert.Equal(question.QuestionText, result.QuestionText);
             Assert.Equal(question.Checkbox.Choices, result.Choices!.Select(x => new CheckboxRecord(x.Identifier, x.Answer, x.IsSingle, x.IsPrePopulated)));
         }
 
         [Theory]
         [AutoMoqData]
-        public void CreateQuestionScreenAnswer_ShouldReturnQuestionScreenAnswerForRadio(
+        public void CreateQuestion_ShouldReturnQuestionForRadio(
             [Frozen] Mock<IDateTimeProvider> mockDateTimeProvider,
             string nextActivityId,
             string nextActivityType,
             WorkflowInstance workflowInstance,
-            Question question,
+            CustomActivities.Activities.QuestionScreen.Question question,
             ElsaCustomModelHelper sut
         )
         {
@@ -92,27 +93,27 @@ namespace Elsa.Server.Tests.Features.Workflow.Helpers
             mockDateTimeProvider.Setup(x => x.UtcNow()).Returns(currentTimeUtc);
 
             //Act
-            var result = sut.CreateQuestionScreenAnswer(nextActivityId, nextActivityType, question, workflowInstance);
+            var result = sut.CreateQuestion(nextActivityId, nextActivityType, question, workflowInstance);
 
             //Assert
-            Assert.IsType<QuestionScreenAnswer>(result);
+            Assert.IsType<Question>(result);
             Assert.Equal(nextActivityId, result!.ActivityId);
             Assert.Equal(workflowInstance.Id, result.WorkflowInstanceId);
             Assert.Equal(currentTimeUtc, result.CreatedDateTime);
             Assert.Equal(question.Id, result.QuestionId);
             Assert.Equal(question.QuestionType, result.QuestionType);
-            Assert.Equal(question.QuestionText, result.Question);
+            Assert.Equal(question.QuestionText, result.QuestionText);
             Assert.Equal(question.Radio.Choices, result.Choices!.Select(x => new RadioRecord(x.Identifier, x.Answer, x.IsPrePopulated)));
         }
 
         [Theory]
         [AutoMoqData]
-        public void CreateQuestionScreenAnswer_ShouldReturnQuestionScreenAnswerForStandardQuestions(
+        public void CreateQuestion_ShouldReturnQuestionForStandardQuestions(
             [Frozen] Mock<IDateTimeProvider> mockDateTimeProvider,
             string nextActivityId,
             string nextActivityType,
             WorkflowInstance workflowInstance,
-            Question question,
+            CustomActivities.Activities.QuestionScreen.Question question,
             ElsaCustomModelHelper sut
         )
         {
@@ -121,22 +122,22 @@ namespace Elsa.Server.Tests.Features.Workflow.Helpers
             mockDateTimeProvider.Setup(x => x.UtcNow()).Returns(currentTimeUtc);
 
             //Act
-            var result = sut.CreateQuestionScreenAnswer(nextActivityId, nextActivityType, question, workflowInstance);
+            var result = sut.CreateQuestion(nextActivityId, nextActivityType, question, workflowInstance);
 
             //Assert
-            Assert.IsType<QuestionScreenAnswer>(result);
+            Assert.IsType<Question>(result);
             Assert.Equal(nextActivityId, result!.ActivityId);
             Assert.Equal(workflowInstance.Id, result.WorkflowInstanceId);
             Assert.Equal(currentTimeUtc, result.CreatedDateTime);
             Assert.Equal(question.Id, result.QuestionId);
             Assert.Equal(question.QuestionType, result.QuestionType);
-            Assert.Equal(question.QuestionText, result.Question);
+            Assert.Equal(question.QuestionText, result.QuestionText);
             Assert.Null(result.Choices);
         }
 
         [Theory]
         [AutoMoqData]
-        public void CreateQuestionScreenAnswers_ShouldReturnEmptyList(
+        public void CreateQuestions_ShouldReturnEmptyList(
             string activityId,
             WorkflowInstance workflowInstance,
             ElsaCustomModelHelper sut
@@ -145,16 +146,16 @@ namespace Elsa.Server.Tests.Features.Workflow.Helpers
             //Arrange
 
             //Act
-            var result = sut.CreateQuestionScreenAnswers(activityId, workflowInstance);
+            var result = sut.CreateQuestions(activityId, workflowInstance);
 
             //Assert
-            Assert.IsType<List<QuestionScreenAnswer>>(result);
+            Assert.IsType<List<Question>>(result);
             Assert.Empty(result);
         }
 
         [Theory]
         [AutoMoqData]
-        public void CreateQuestionScreenAnswers_ShouldReturnList(
+        public void CreateQuestions_ShouldReturnList(
             string activityId,
             WorkflowInstance workflowInstance,
             AssessmentQuestions elsaAssessmentQuestions,
@@ -169,10 +170,10 @@ namespace Elsa.Server.Tests.Features.Workflow.Helpers
             workflowInstance.ActivityData.Add(activityId, assessmentQuestionsDictionary);
 
             //Act
-            var result = sut.CreateQuestionScreenAnswers(activityId, workflowInstance);
+            var result = sut.CreateQuestions(activityId, workflowInstance);
 
             //Assert
-            Assert.IsType<List<QuestionScreenAnswer>>(result);
+            Assert.IsType<List<Question>>(result);
             Assert.NotEmpty(result);
         }
     }

@@ -30,12 +30,12 @@ namespace Elsa.CustomActivities.Activities.QuestionScreen.Helpers
                 var activity = workflowBlueprint.Activities.FirstOrDefault(x => x.Name == activityName);
                 if (activity != null)
                 {
-                    var result = await _elsaCustomRepository.GetQuestionScreenAnswer(activity.Id,
+                    var result = await _elsaCustomRepository.GetQuestion(activity.Id,
                         workflowInstanceId, questionId, CancellationToken.None);
 
-                    if (result != null && (result.QuestionType == QuestionTypeConstants.TextQuestion || 
+                    if (result != null && (result.QuestionType == QuestionTypeConstants.TextQuestion ||
                         result.QuestionType == QuestionTypeConstants.TextAreaQuestion) &&
-                        result.Answer != null && result.Answer.ToLower() == answerToCheck.ToLower())
+                        result.Answers != null && result.Answers.Count == 1 && result.Answers.First().AnswerText.ToLower() == answerToCheck.ToLower())
                     {
                         return true;
                     }
@@ -53,12 +53,12 @@ namespace Elsa.CustomActivities.Activities.QuestionScreen.Helpers
                 var activity = workflowBlueprint.Activities.FirstOrDefault(x => x.Name == activityName);
                 if (activity != null)
                 {
-                    var result = await _elsaCustomRepository.GetQuestionScreenAnswer(activity.Id,
+                    var result = await _elsaCustomRepository.GetQuestion(activity.Id,
                         workflowInstanceId, questionId, CancellationToken.None);
 
                     if (result != null && (result.QuestionType == QuestionTypeConstants.TextQuestion ||
-                        result.QuestionType == QuestionTypeConstants.TextAreaQuestion ) &&
-                        result.Answer != null && result.Answer.ToLower().Contains(answerToCheck.ToLower()))
+                        result.QuestionType == QuestionTypeConstants.TextAreaQuestion) &&
+                        result.Answers != null && result.Answers.Count == 1 && result.Answers.First().AnswerText.ToLower().Contains(answerToCheck.ToLower()))
                     {
                         return true;
                     }

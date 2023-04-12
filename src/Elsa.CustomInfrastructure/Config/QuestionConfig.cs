@@ -1,13 +1,12 @@
-﻿using Elsa.CustomInfrastructure.Extensions;
-using Elsa.CustomModels;
+﻿using Elsa.CustomModels;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace Elsa.CustomInfrastructure.Config
 {
-    public class QuestionScreenAnswerConfig : IEntityTypeConfiguration<QuestionScreenAnswer>
+    public class QuestionConfig : IEntityTypeConfiguration<Question>
     {
-        public void Configure(EntityTypeBuilder<QuestionScreenAnswer> builder)
+        public void Configure(EntityTypeBuilder<Question> builder)
         {
             builder.ToTable(x => x.IsTemporal());
             builder.HasKey(x => x.Id);
@@ -16,7 +15,6 @@ namespace Elsa.CustomInfrastructure.Config
             builder.Property(x => x.WorkflowInstanceId).HasMaxLength(EntityConfigurationConstants.MaxLength);
             builder.Property(x => x.QuestionId).HasMaxLength(EntityConfigurationConstants.MaxLength);
             builder.Property(x => x.QuestionType).HasMaxLength(EntityConfigurationConstants.QuestionTypeMaxLength);
-            builder.Property(e => e.Choices).HasJsonConversion();
 
         }
     }

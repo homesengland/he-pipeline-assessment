@@ -27,7 +27,7 @@ public class QuestionScreenSaveAndContinueCommandHandlerTests
             [Frozen] Mock<IDeleteChangedWorkflowPathService> deleteChangedWorkflowPathService,
             WorkflowBlueprint workflowBlueprint,
             ActivityBlueprint activityBlueprint,
-            List<QuestionScreenAnswer> currentAssessmentQuestions,
+            List<Question> currentAssessmentQuestions,
             WorkflowInstance workflowInstance,
             CustomActivityNavigation nextAssessmentActivity,
             QuestionScreenSaveAndContinueCommand saveAndContinueCommand,
@@ -42,14 +42,14 @@ public class QuestionScreenSaveAndContinueCommandHandlerTests
         };
         for (var i = 0; i < currentAssessmentQuestions.Count; i++)
         {
-            var questionId = saveAndContinueCommand.Answers![i].Id;
+            var questionId = saveAndContinueCommand.Answers![i].WorkflowQuestionId;
             currentAssessmentQuestions[i].QuestionId = questionId;
         }
 
         activityBlueprint.Id = workflowInstance.Output!.ActivityId;
         workflowBlueprint.Activities.Add(activityBlueprint);
 
-        elsaCustomRepository.Setup(x => x.GetQuestionScreenAnswers(saveAndContinueCommand.ActivityId,
+        elsaCustomRepository.Setup(x => x.GetQuestions(saveAndContinueCommand.ActivityId,
                 saveAndContinueCommand.WorkflowInstanceId, CancellationToken.None))
             .ReturnsAsync(currentAssessmentQuestions);
 
@@ -93,9 +93,9 @@ public class QuestionScreenSaveAndContinueCommandHandlerTests
         workflowInstanceProvider.Verify(
             x => x.GetWorkflowInstance(It.IsAny<string>(), CancellationToken.None), Times.Once);
 
-        Assert.Equal(saveAndContinueCommand.Answers![0].AnswerText, currentAssessmentQuestions[0].Answer);
-        Assert.Equal(saveAndContinueCommand.Answers![1].AnswerText, currentAssessmentQuestions[1].Answer);
-        Assert.Equal(saveAndContinueCommand.Answers![2].AnswerText, currentAssessmentQuestions[2].Answer);
+        Assert.Equal(saveAndContinueCommand.Answers![0].AnswerText, currentAssessmentQuestions[0].Answers![0].AnswerText);
+        Assert.Equal(saveAndContinueCommand.Answers![1].AnswerText, currentAssessmentQuestions[1].Answers![0].AnswerText);
+        Assert.Equal(saveAndContinueCommand.Answers![2].AnswerText, currentAssessmentQuestions[2].Answers![0].AnswerText);
 
         Assert.Equal(activityBlueprint.Id, result.Data!.NextActivityId);
         Assert.Equal(saveAndContinueCommand.WorkflowInstanceId, result.Data.WorkflowInstanceId);
@@ -114,9 +114,9 @@ public class QuestionScreenSaveAndContinueCommandHandlerTests
         QuestionScreenSaveAndContinueCommandHandler sut)
     {
         //Arrange
-        elsaCustomRepository.Setup(x => x.GetQuestionScreenAnswers(saveAndContinueCommand.ActivityId,
+        elsaCustomRepository.Setup(x => x.GetQuestions(saveAndContinueCommand.ActivityId,
                 saveAndContinueCommand.WorkflowInstanceId, CancellationToken.None))
-            .ReturnsAsync(new List<QuestionScreenAnswer>());
+            .ReturnsAsync(new List<Question>());
 
         //Act
         var result = await sut.Handle(saveAndContinueCommand, CancellationToken.None);
@@ -145,7 +145,7 @@ public class QuestionScreenSaveAndContinueCommandHandlerTests
         QuestionScreenSaveAndContinueCommandHandler sut)
     {
         //Arrange
-        elsaCustomRepository.Setup(x => x.GetQuestionScreenAnswers(saveAndContinueCommand.ActivityId,
+        elsaCustomRepository.Setup(x => x.GetQuestions(saveAndContinueCommand.ActivityId,
                 saveAndContinueCommand.WorkflowInstanceId, CancellationToken.None))
             .Throws(exception);
 
@@ -173,7 +173,7 @@ public class QuestionScreenSaveAndContinueCommandHandlerTests
         [Frozen] Mock<IDeleteChangedWorkflowPathService> deleteChangedWorkflowPathService,
         WorkflowBlueprint workflowBlueprint,
         ActivityBlueprint activityBlueprint,
-        List<QuestionScreenAnswer> currentAssessmentQuestions,
+        List<Question> currentAssessmentQuestions,
         WorkflowInstance workflowInstance,
         CustomActivityNavigation nextAssessmentActivity,
         QuestionScreenSaveAndContinueCommand saveAndContinueCommand,
@@ -188,7 +188,7 @@ public class QuestionScreenSaveAndContinueCommandHandlerTests
 
         nextAssessmentActivity.ActivityType = ActivityTypeConstants.QuestionScreen;
 
-        elsaCustomRepository.Setup(x => x.GetQuestionScreenAnswers(saveAndContinueCommand.ActivityId,
+        elsaCustomRepository.Setup(x => x.GetQuestions(saveAndContinueCommand.ActivityId,
                 saveAndContinueCommand.WorkflowInstanceId, CancellationToken.None))
             .ReturnsAsync(currentAssessmentQuestions);
 
@@ -230,7 +230,7 @@ public class QuestionScreenSaveAndContinueCommandHandlerTests
             [Frozen] Mock<IDeleteChangedWorkflowPathService> deleteChangedWorkflowPathService,
             WorkflowBlueprint workflowBlueprint,
             ActivityBlueprint activityBlueprint,
-            List<QuestionScreenAnswer> currentAssessmentQuestions,
+            List<Question> currentAssessmentQuestions,
             WorkflowInstance workflowInstance,
             WorkflowInstance anotherWorkflowInstance,
             CustomActivityNavigation nextAssessmentActivity,
@@ -245,14 +245,14 @@ public class QuestionScreenSaveAndContinueCommandHandlerTests
         };
         for (var i = 0; i < currentAssessmentQuestions.Count; i++)
         {
-            var questionId = saveAndContinueCommand.Answers![i].Id;
+            var questionId = saveAndContinueCommand.Answers![i].WorkflowQuestionId;
             currentAssessmentQuestions[i].QuestionId = questionId;
         }
 
         activityBlueprint.Id = workflowInstance.Output!.ActivityId;
         workflowBlueprint.Activities.Add(activityBlueprint);
 
-        elsaCustomRepository.Setup(x => x.GetQuestionScreenAnswers(saveAndContinueCommand.ActivityId,
+        elsaCustomRepository.Setup(x => x.GetQuestions(saveAndContinueCommand.ActivityId,
                 saveAndContinueCommand.WorkflowInstanceId, CancellationToken.None))
             .ReturnsAsync(currentAssessmentQuestions);
 

@@ -18,7 +18,7 @@ namespace He.PipelineAssessment.UI.Features.Workflow.QuestionScreenSaveAndContin
         {
             return new QuestionScreenSaveAndContinueCommandDto
             {
-                Answers = saveAndContinueCommand.Data.QuestionScreenAnswers?.Select(x => new Answer(x.QuestionId, x.Answer, x.Comments)).ToList(),
+                Answers = saveAndContinueCommand.Data.Questions?.SelectMany(x => x.Answers.Select(y => new Answer(x.QuestionId, y.AnswerText, x.Comments, y.ChoiceId))).ToList(),
                 WorkflowInstanceId = saveAndContinueCommand.Data.WorkflowInstanceId,
                 ActivityId = saveAndContinueCommand.Data.ActivityId
             };

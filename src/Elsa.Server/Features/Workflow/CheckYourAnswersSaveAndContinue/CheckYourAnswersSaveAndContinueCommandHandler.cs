@@ -1,8 +1,8 @@
 ﻿using Elsa.CustomInfrastructure.Data.Repository;
 using Elsa.CustomWorkflow.Sdk;
-using Elsa.Server.Helpers;
 using Elsa.Server.Models;
 using Elsa.Server.Providers;
+using Elsa.Server.Services;
 using MediatR;
 
 namespace Elsa.Server.Features.Workflow.CheckYourAnswersSaveAndContinue
@@ -11,20 +11,20 @@ namespace Elsa.Server.Features.Workflow.CheckYourAnswersSaveAndContinue
         OperationResult<CheckYourAnswersSaveAndContinueResponse>>
     {
         private readonly IElsaCustomRepository _elsaCustomRepository;
-        private readonly IElsaCustomModelHelper _elsaCustomModelHelper;
         private readonly IWorkflowNextActivityProvider _workflowNextActivityProvider;
         private readonly IWorkflowInstanceProvider _workflowInstanceProvider;
+        private readonly INextActivityNavigationService _nextActivityNavigationService;
 
         public CheckYourAnswersSaveAndContinueCommandHandler(
             IElsaCustomRepository elsaCustomRepository,
-            IElsaCustomModelHelper elsaCustomModelHelper,
             IWorkflowNextActivityProvider workflowNextActivityProvider,
-            IWorkflowInstanceProvider workflowInstanceProvider)
+            IWorkflowInstanceProvider workflowInstanceProvider, 
+            INextActivityNavigationService nextActivityNavigationService)
         {
             _elsaCustomRepository = elsaCustomRepository;
-            _elsaCustomModelHelper = elsaCustomModelHelper;
             _workflowNextActivityProvider = workflowNextActivityProvider;
             _workflowInstanceProvider = workflowInstanceProvider;
+            _nextActivityNavigationService = nextActivityNavigationService;
         }
 
         public async Task<OperationResult<CheckYourAnswersSaveAndContinueResponse>> Handle(CheckYourAnswersSaveAndContinueCommand command,
@@ -42,17 +42,7 @@ namespace Elsa.Server.Features.Workflow.CheckYourAnswersSaveAndContinue
                    await _elsaCustomRepository.GetCustomActivityNavigation(workflowNextActivityModel.NextActivity.Id,
                        command.WorkflowInstanceId, cancellationToken);
 
-                if (nextActivityRecord == null)
-                {
-                    var customActivityNavigation = _elsaCustomModelHelper.CreateNextCustomActivityNavigation(command.ActivityId, ActivityTypeConstants.CheckYourAnswersScreen, workflowNextActivityModel.NextActivity.Id, workflowNextActivityModel.NextActivity.Type, workflowInstance);
-                    await _elsaCustomRepository.CreateCustomActivityNavigationAsync(customActivityNavigation, cancellationToken);
-
-                    if (customActivityNavigation.ActivityType == ActivityTypeConstants.QuestionScreen)
-                    {
-                        var questions = _elsaCustomModelHelper.CreateQuestionScreenAnswers(workflowNextActivityModel.NextActivity.Id, workflowInstance);
-                        await _elsaCustomRepository.CreateQuestionScreenAnswersAsync(questions, cancellationToken);
-                    }
-                }
+                await _nextActivityNavigationService.CreateNextActivityNavigation(command.ActivityId, nextActivityRecord, workflowNextActivityModel.NextActivity, workflowInstance, cancellationToken);
 
                 result.Data = new CheckYourAnswersSaveAndContinueResponse
                 {

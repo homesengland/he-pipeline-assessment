@@ -43,7 +43,7 @@ namespace Elsa.Server.Features.Workflow.QuestionScreenSaveAndContinue
             try
             {
                 var dbAssessmentQuestionList =
-                    await _elsaCustomRepository.GetQuestionScreenAnswers(command.ActivityId, command.WorkflowInstanceId,
+                    await _elsaCustomRepository.GetQuestions(command.ActivityId, command.WorkflowInstanceId,
                         cancellationToken);
 
                 if (dbAssessmentQuestionList.Any())
@@ -90,18 +90,25 @@ namespace Elsa.Server.Features.Workflow.QuestionScreenSaveAndContinue
         }
 
         private async Task SetAnswers(QuestionScreenSaveAndContinueCommand command, CancellationToken cancellationToken,
-            List<QuestionScreenAnswer> dbAssessmentQuestionList)
+            List<Question> dbAssessmentQuestionList)
         {
             if (command.Answers != null && command.Answers.Any())
             {
                 foreach (var question in dbAssessmentQuestionList)
                 {
-                    var answer = command.Answers.FirstOrDefault(x => x.Id == question.QuestionId);
-
-                    if (answer != null)
+                    var answers = command.Answers.Where(x => x.WorkflowQuestionId == question.QuestionId);
+                    var now = _dateTimeProvider.UtcNow();
+                    if (answers.Any())
                     {
-                        question.SetAnswer(answer.AnswerText, _dateTimeProvider.UtcNow());
-                        question.Comments = answer.Comments;
+                        question.Answers = answers.Select(x => new CustomModels.Answer
+                        {
+                            AnswerText = x.AnswerText ?? "",
+                            CreatedDateTime = now,
+                            LastModifiedDateTime = now,
+                            Choice = question.Choices?.FirstOrDefault(y => y.Id == x.ChoiceId)
+                        }).ToList();
+                        question.Comments = answers.First().Comments;
+                        question.LastModifiedDateTime = now;
                     }
                 }
 

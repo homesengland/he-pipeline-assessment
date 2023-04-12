@@ -7,7 +7,7 @@ namespace Elsa.CustomActivities.Activities.Shared
 {
     public interface IQuestionInvoker
     {
-        Task<IEnumerable<CollectedWorkflow>> ExecuteWorkflowsAsync(string activityId, string activityType, string workflowInstanceId, List<QuestionScreenAnswer>? model, CancellationToken cancellationToken = default);
+        Task<IEnumerable<CollectedWorkflow>> ExecuteWorkflowsAsync(string activityId, string activityType, string workflowInstanceId, List<Question>? model, CancellationToken cancellationToken = default);
     }
 
     public class QuestionInvoker : IQuestionInvoker
@@ -20,7 +20,7 @@ namespace Elsa.CustomActivities.Activities.Shared
         }
 
 
-        public async Task<IEnumerable<CollectedWorkflow>> ExecuteWorkflowsAsync(string activityId, string activityType, string workflowInstanceId, List<QuestionScreenAnswer>? model, CancellationToken cancellationToken = default)
+        public async Task<IEnumerable<CollectedWorkflow>> ExecuteWorkflowsAsync(string activityId, string activityType, string workflowInstanceId, List<Question>? model, CancellationToken cancellationToken = default)
         {
             var context = new WorkflowsQuery(activityType, new QuestionBookmark() { ActivityId = activityId.ToLowerInvariant() }, null, workflowInstanceId);
             var collectedWorkflows = await _workflowLaunchpad.CollectAndExecuteWorkflowsAsync(context, new WorkflowInput(model), cancellationToken);

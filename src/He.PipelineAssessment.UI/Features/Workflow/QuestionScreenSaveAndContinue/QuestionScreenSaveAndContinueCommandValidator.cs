@@ -9,7 +9,7 @@ namespace He.PipelineAssessment.UI.Features.Workflow.QuestionScreenSaveAndContin
         public SaveAndContinueCommandValidator()
         {
 
-            RuleFor(x => x.Data.QuestionScreenAnswers)
+            RuleFor(x => x.Data.Questions)
                 .ForEach(x =>
                 {
                     x.SetValidator(new MultiQuestionActivityDataValidator());

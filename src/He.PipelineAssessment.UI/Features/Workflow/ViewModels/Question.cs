@@ -2,22 +2,23 @@
 
 namespace He.PipelineAssessment.UI.Features.Workflow.ViewModels
 {
-    public class MultiQuestion
+    public class Question
     {
         public int Index { get; set; }
         public bool IsValid { get; set; }
         public string QuestionId { get; set; } = null!;
         public string QuestionType { get; set; } = null!;
         public string Title { get; set; } = null!;
-        public string Question { get; set; } = null!;
+        public string QuestionText { get; set; } = null!;
         public string? QuestionHint { get; set; }
         public string? QuestionGuidance { get; set; }
         public bool DisplayComments { get; set; }
         public string? Comments { get; set; }
-        public string? Answer { get; set; }
+        public List<QuestionActivityAnswer> Answers { get; set; } = new();
         public bool IsReadOnly { get; set; }
         public Date? Date { get; set; }
         public decimal? Decimal { get; set; }
+        public string? Text { get; set; }
         public Radio Radio { get; set; } = new Radio();
         public Checkbox Checkbox { get; set; } = new Checkbox();
         public Information Information { get; set; } = new Information();
@@ -31,14 +32,14 @@ namespace He.PipelineAssessment.UI.Features.Workflow.ViewModels
 
     public class Checkbox
     {
-        public List<string> SelectedChoices { get; set; } = null!;
+        public List<int> SelectedChoices { get; set; } = null!;
         public List<Choice> Choices { get; set; } = new List<Choice>();
     }
 
     public class Radio
     {
         public List<Choice> Choices { get; set; } = new List<Choice>();
-        public string SelectedAnswer { get; set; } = null!;
+        public int? SelectedAnswer { get; set; }
     }
 
     public class InformationText
@@ -53,6 +54,7 @@ namespace He.PipelineAssessment.UI.Features.Workflow.ViewModels
 
     public class Choice
     {
+        public int Id { get; set; }
         public string Answer { get; set; } = null!;
         public bool IsSingle { get; set; }
     }
@@ -65,5 +67,12 @@ namespace He.PipelineAssessment.UI.Features.Workflow.ViewModels
         public int? Month { get; set; }
         [Range(1, 3000)]
         public int? Year { get; set; }
+    }
+
+    public class QuestionActivityAnswer
+    {
+        public int? ChoiceId { get; set; }
+        public string? Answer { get; set; }
+        public string? Score { get; set; }
     }
 }

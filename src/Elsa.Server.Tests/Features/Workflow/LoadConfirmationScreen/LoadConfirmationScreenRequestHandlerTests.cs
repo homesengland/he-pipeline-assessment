@@ -28,12 +28,12 @@ namespace Elsa.Server.Tests.Features.Workflow.LoadConfirmationScreen
             var result = await sut.Handle(request, CancellationToken.None);
 
             //Assert
-            Assert.Null(result.Data!.CheckQuestionScreenAnswers);
+            Assert.Null(result.Data!.CheckQuestions);
             Assert.Equal(
                 $"Unable to find activity navigation with Workflow Id: {request.WorkflowInstanceId} and Activity Id: {request.ActivityId} in Elsa Custom database",
                 result.ErrorMessages.Single());
             elsaCustomRepository.Verify(
-                x => x.GetQuestionScreenAnswers(It.IsAny<string>(), CancellationToken.None), Times.Never);
+                x => x.GetQuestions(It.IsAny<string>(), CancellationToken.None), Times.Never);
         }
 
         [Theory]
@@ -53,20 +53,20 @@ namespace Elsa.Server.Tests.Features.Workflow.LoadConfirmationScreen
             var result = await sut.Handle(request, CancellationToken.None);
 
             //Assert
-            Assert.Null(result.Data!.CheckQuestionScreenAnswers);
+            Assert.Null(result.Data!.CheckQuestions);
             Assert.Equal(exception.Message, result.ErrorMessages.Single());
             elsaCustomRepository.Verify(
-                x => x.GetQuestionScreenAnswers(It.IsAny<string>(), CancellationToken.None), Times.Never);
+                x => x.GetQuestions(It.IsAny<string>(), CancellationToken.None), Times.Never);
         }
 
         [Theory]
         [AutoMoqData]
-        public async Task Handle_ReturnQuestionScreenAnswers_GivenNoErrorsEncountered(
+        public async Task Handle_ReturnQuestions_GivenNoErrorsEncountered(
             [Frozen] Mock<IElsaCustomRepository> elsaCustomRepository,
             [Frozen] Mock<IActivityDataProvider> activityDataProvider,
             LoadConfirmationScreenRequest request,
             CustomActivityNavigation customActivityNavigation,
-            List<QuestionScreenAnswer> questionScreenAnswers,
+            List<Question> questions,
             LoadConfirmationScreenRequestHandler sut)
         {
             //Arrange
@@ -74,8 +74,8 @@ namespace Elsa.Server.Tests.Features.Workflow.LoadConfirmationScreen
                     request.WorkflowInstanceId, CancellationToken.None))
                 .ReturnsAsync(customActivityNavigation);
 
-            elsaCustomRepository.Setup(x => x.GetQuestionScreenAnswers(request.WorkflowInstanceId, CancellationToken.None))
-                .ReturnsAsync(questionScreenAnswers);
+            elsaCustomRepository.Setup(x => x.GetQuestions(request.WorkflowInstanceId, CancellationToken.None))
+                .ReturnsAsync(questions);
 
             var dictionary = new Dictionary<string, object?>()
             {
@@ -94,7 +94,7 @@ namespace Elsa.Server.Tests.Features.Workflow.LoadConfirmationScreen
 
             //Assert
             Assert.NotNull(result.Data);
-            Assert.Equal(questionScreenAnswers, result.Data!.CheckQuestionScreenAnswers);
+            Assert.Equal(questions, result.Data!.CheckQuestions);
             Assert.Equal(request.ActivityId, result.Data.ActivityId);
             Assert.Equal(request.WorkflowInstanceId, result.Data.WorkflowInstanceId);
             Assert.Equal(ActivityTypeConstants.ConfirmationScreen, result.Data.ActivityType);

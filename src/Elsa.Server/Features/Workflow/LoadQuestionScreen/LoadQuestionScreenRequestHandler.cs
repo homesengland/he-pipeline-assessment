@@ -6,7 +6,7 @@ using Elsa.Persistence;
 using Elsa.Persistence.Specifications.WorkflowInstances;
 using Elsa.Server.Models;
 using MediatR;
-using System.Text.Json;
+using Question = Elsa.CustomModels.Question;
 
 namespace Elsa.Server.Features.Workflow.LoadQuestionScreen
 {
@@ -68,11 +68,9 @@ namespace Elsa.Server.Features.Workflow.LoadQuestionScreen
                             var title = (string?)activityDataDictionary.FirstOrDefault(x => x.Key == "PageTitle").Value;
                             result.Data.PageTitle = title;
 
-                            var dbQuestions = await _elsaCustomRepository.GetQuestionScreenAnswers(
+                            var dbQuestions = await _elsaCustomRepository.GetQuestions(
                                 activityRequest.ActivityId, activityRequest.WorkflowInstanceId,
                                 cancellationToken);
-
-                            AssessmentQuestions? questions = (AssessmentQuestions?)activityDataDictionary.FirstOrDefault(x => x.Key == "Questions").Value;
 
                             var elsaActivityAssessmentQuestions =
                                 (AssessmentQuestions?)activityDataDictionary
@@ -80,7 +78,7 @@ namespace Elsa.Server.Features.Workflow.LoadQuestionScreen
 
                             if (elsaActivityAssessmentQuestions != null)
                             {
-                                result.Data.QuestionScreenAnswers = new List<QuestionActivityData>();
+                                result.Data.Questions = new List<QuestionActivityData>();
                                 result.Data.ActivityType = customActivityNavigation.ActivityType;
 
                                 foreach (var item in elsaActivityAssessmentQuestions.Questions)
@@ -92,14 +90,14 @@ namespace Elsa.Server.Features.Workflow.LoadQuestionScreen
                                     {
                                         var questionActivityData = CreateQuestionActivityData(dbQuestion, item);
 
-                                        result.Data.QuestionScreenAnswers.Add(questionActivityData);
+                                        result.Data.Questions.Add(questionActivityData);
                                     }
                                 }
                             }
                             else
                             {
                                 result.ErrorMessages.Add(
-                                    $"Failed to map activity data to QuestionScreenAnswers");
+                                    $"Failed to map activity data to Questions");
                             }
                         }
                     }
@@ -123,12 +121,14 @@ namespace Elsa.Server.Features.Workflow.LoadQuestionScreen
             return await Task.FromResult(result);
         }
 
-        private static QuestionActivityData CreateQuestionActivityData(QuestionScreenAnswer dbQuestion, Question item)
+        private static QuestionActivityData CreateQuestionActivityData(Question dbQuestion, CustomActivities.Activities.QuestionScreen.Question item)
         {
+            List<Answer> answers = dbQuestion.Answers!.Any() ?
+                dbQuestion.Answers! : new List<Answer> { new Answer { AnswerText = item.Answer ?? string.Empty } };
             //assign the values
             var questionActivityData = new QuestionActivityData();
             questionActivityData.ActivityId = dbQuestion.ActivityId;
-            questionActivityData.Answer = dbQuestion.Answer ?? item.Answer;
+            questionActivityData.Answers = answers;
             questionActivityData.Comments = dbQuestion.Comments;
             questionActivityData.QuestionId = dbQuestion.QuestionId;
             questionActivityData.QuestionType = dbQuestion.QuestionType;
@@ -142,65 +142,51 @@ namespace Elsa.Server.Features.Workflow.LoadQuestionScreen
 
             if (item.QuestionType == QuestionTypeConstants.CheckboxQuestion)
             {
-                questionActivityData.Checkbox = new Checkbox();
-                questionActivityData.Checkbox.Choices =
-                    item.Checkbox.Choices.Select(x => new QuestionScreenAnswer.Choice()
-                    { Answer = x.Answer, IsSingle = x.IsSingle }).ToArray();
+                if (dbQuestion.Choices != null)
+                {
+                    questionActivityData.Checkbox = new Checkbox
+                    {
+                        Choices = dbQuestion.Choices.Select(x => new QuestionChoice()
+                        { Answer = x.Answer, IsSingle = x.IsSingle, Id = x.Id }).ToArray()
+                    };
+
+                    List<int> answerList;
+                    if (dbQuestion.Answers != null && dbQuestion.Answers.Any())
+                    {
+                        answerList = dbQuestion.Answers.Select(x => x.Choice!.Id).ToList();
+                    }
+                    else
+                    {
+                        answerList = dbQuestion.Choices.Where(x => x.IsPrePopulated).Select(x => x.Id).ToList();
+                    }
+
+                    questionActivityData.Checkbox.SelectedChoices = answerList;
+                }
             }
 
-            if (item.QuestionType == QuestionTypeConstants.CheckboxQuestion &&
-                          string.IsNullOrEmpty(questionActivityData.Answer) && item.Checkbox.Choices.Any(x => x.IsPrePopulated))
+            if (item.QuestionType == QuestionTypeConstants.RadioQuestion || item.QuestionType == QuestionTypeConstants.PotScoreRadioQuestion)
             {
-                var answerList = item.Checkbox.Choices.Where(x => x.IsPrePopulated).Select(x => x.Answer).ToList();
-
-                questionActivityData.Checkbox.SelectedChoices = answerList;
-            }
-
-            if (item.QuestionType == QuestionTypeConstants.CheckboxQuestion &&
-                !string.IsNullOrEmpty(questionActivityData.Answer))
-            {
-                var answerList =
-                    JsonSerializer.Deserialize<List<string>>(
-                        questionActivityData.Answer);
-                questionActivityData.Checkbox.SelectedChoices =
-                    answerList!;
-            }
-
-            if (item.QuestionType == QuestionTypeConstants.RadioQuestion)
-            {
-                questionActivityData.Radio = new Radio();
-                questionActivityData.Radio.Choices = item.Radio.Choices
-                    .Select(x => new QuestionScreenAnswer.Choice() { Answer = x.Answer })
-                    .ToArray();
-            }
-
-            if (item.QuestionType == QuestionTypeConstants.PotScoreRadioQuestion)
-            {
-                questionActivityData.Radio = new Radio();
-                questionActivityData.Radio.Choices = item.PotScoreRadio.Choices
-                    .Select(x => new QuestionScreenAnswer.Choice() { Answer = x.Answer })
-                    .ToArray();
-            }
-
-            if ((item.QuestionType == QuestionTypeConstants.RadioQuestion ) &&
-               string.IsNullOrEmpty(questionActivityData.Answer) && item.Radio.Choices.Any(x => x.IsPrePopulated))
-            {
-                questionActivityData.Radio.SelectedAnswer =
-                    item.Radio.Choices.First(x => x.IsPrePopulated).Answer;
-            }
-
-            if ((item.QuestionType == QuestionTypeConstants.PotScoreRadioQuestion) &&
-   string.IsNullOrEmpty(questionActivityData.Answer) && item.PotScoreRadio.Choices.Any(x => x.IsPrePopulated))
-            {
-                questionActivityData.Radio.SelectedAnswer =
-                    item.PotScoreRadio.Choices.First(x => x.IsPrePopulated).Answer;
-            }
-
-            if ((item.QuestionType == QuestionTypeConstants.RadioQuestion || item.QuestionType == QuestionTypeConstants.PotScoreRadioQuestion) &&
-                !string.IsNullOrEmpty(questionActivityData.Answer))
-            {
-                questionActivityData.Radio.SelectedAnswer =
-                    questionActivityData.Answer;
+                if (dbQuestion.Choices != null)
+                {
+                    questionActivityData.Radio = new Radio
+                    {
+                        Choices = dbQuestion.Choices
+                            .Select(x => new QuestionChoice() { Answer = x.Answer, Id = x.Id })
+                            .ToArray()
+                    };
+                    if (dbQuestion.Answers != null && dbQuestion.Answers.Any())
+                    {
+                        questionActivityData.Radio.SelectedAnswer = dbQuestion.Answers.First().Choice!.Id;
+                    }
+                    else
+                    {
+                        var prepopulatedAnswer = dbQuestion.Choices.FirstOrDefault(x => x.IsPrePopulated);
+                        if (prepopulatedAnswer != null)
+                        {
+                            questionActivityData.Radio.SelectedAnswer = prepopulatedAnswer.Id;
+                        }
+                    }
+                }
             }
 
             if (item.QuestionType == QuestionTypeConstants.Information)

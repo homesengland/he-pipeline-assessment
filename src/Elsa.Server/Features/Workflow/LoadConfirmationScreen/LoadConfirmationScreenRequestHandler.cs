@@ -43,10 +43,10 @@ namespace Elsa.Server.Features.Workflow.LoadConfirmationScreen
                 if (customActivityNavigation != null)
                 {
 
-                    var questionScreenAnswers = await _elsaCustomRepository
-                        .GetQuestionScreenAnswers(result.Data.WorkflowInstanceId, cancellationToken);
+                    var questions = await _elsaCustomRepository
+                        .GetQuestions(result.Data.WorkflowInstanceId, cancellationToken);
 
-                    result.Data.CheckQuestionScreenAnswers = questionScreenAnswers;
+                    result.Data.CheckQuestions = questions;
 
                     var activityDataDictionary = await _activityDataProvider.GetActivityData(request.WorkflowInstanceId, request.ActivityId, cancellationToken);
                     result.Data.ConfirmationTitle = (string?)activityDataDictionary.GetData("ConfirmationTitle");

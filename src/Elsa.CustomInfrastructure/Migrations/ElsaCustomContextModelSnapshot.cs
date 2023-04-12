@@ -22,6 +22,62 @@ namespace Elsa.CustomInfrastructure.Migrations
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder, 1L, 1);
 
+            modelBuilder.Entity("Elsa.CustomModels.Answer", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasColumnOrder(0);
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+
+                    b.Property<string>("AnswerText")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("CreatedDateTime")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime?>("LastModifiedDateTime")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime>("PeriodEnd")
+                        .ValueGeneratedOnAddOrUpdate()
+                        .HasColumnType("datetime2")
+                        .HasColumnName("PeriodEnd");
+
+                    b.Property<DateTime>("PeriodStart")
+                        .ValueGeneratedOnAddOrUpdate()
+                        .HasColumnType("datetime2")
+                        .HasColumnName("PeriodStart");
+
+                    b.Property<int?>("QuestionChoiceId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("QuestionId")
+                        .HasMaxLength(450)
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("QuestionChoiceId");
+
+                    b.HasIndex("QuestionId");
+
+                    b.ToTable("Answer");
+
+                    b.ToTable(tb => tb.IsTemporal(ttb =>
+                        {
+                            ttb
+                                .HasPeriodStart("PeriodStart")
+                                .HasColumnName("PeriodStart");
+                            ttb
+                                .HasPeriodEnd("PeriodEnd")
+                                .HasColumnName("PeriodEnd");
+                        }
+                    ));
+                });
+
             modelBuilder.Entity("Elsa.CustomModels.CustomActivityNavigation", b =>
                 {
                     b.Property<int>("Id")
@@ -141,7 +197,7 @@ namespace Elsa.CustomInfrastructure.Migrations
                     ));
                 });
 
-            modelBuilder.Entity("Elsa.CustomModels.QuestionScreenAnswer", b =>
+            modelBuilder.Entity("Elsa.CustomModels.Question", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -154,12 +210,6 @@ namespace Elsa.CustomInfrastructure.Migrations
                         .IsRequired()
                         .HasMaxLength(450)
                         .HasColumnType("nvarchar(450)");
-
-                    b.Property<string>("Answer")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Choices")
-                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Comments")
                         .HasColumnType("nvarchar(max)");
@@ -184,16 +234,19 @@ namespace Elsa.CustomInfrastructure.Migrations
                         .HasColumnType("datetime2")
                         .HasColumnName("PeriodStart");
 
-                    b.Property<string>("Question")
-                        .HasColumnType("nvarchar(max)");
-
                     b.Property<string>("QuestionId")
                         .HasMaxLength(450)
                         .HasColumnType("nvarchar(450)");
 
+                    b.Property<string>("QuestionText")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<string>("QuestionType")
                         .HasMaxLength(100)
                         .HasColumnType("nvarchar(100)");
+
+                    b.Property<double?>("Weighting")
+                        .HasColumnType("float");
 
                     b.Property<string>("WorkflowInstanceId")
                         .IsRequired()
@@ -202,7 +255,135 @@ namespace Elsa.CustomInfrastructure.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("QuestionScreenAnswer");
+                    b.ToTable("Question");
+
+                    b.ToTable(tb => tb.IsTemporal(ttb =>
+                        {
+                            ttb
+                                .HasPeriodStart("PeriodStart")
+                                .HasColumnName("PeriodStart");
+                            ttb
+                                .HasPeriodEnd("PeriodEnd")
+                                .HasColumnName("PeriodEnd");
+                        }
+                    ));
+                });
+
+            modelBuilder.Entity("Elsa.CustomModels.QuestionChoice", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasColumnOrder(0);
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+
+                    b.Property<string>("Answer")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("CreatedDateTime")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Identifier")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<bool>("IsPrePopulated")
+                        .HasColumnType("bit");
+
+                    b.Property<bool>("IsSingle")
+                        .HasColumnType("bit");
+
+                    b.Property<DateTime?>("LastModifiedDateTime")
+                        .HasColumnType("datetime2");
+
+                    b.Property<double?>("NumericScore")
+                        .HasColumnType("float");
+
+                    b.Property<DateTime>("PeriodEnd")
+                        .ValueGeneratedOnAddOrUpdate()
+                        .HasColumnType("datetime2")
+                        .HasColumnName("PeriodEnd");
+
+                    b.Property<DateTime>("PeriodStart")
+                        .ValueGeneratedOnAddOrUpdate()
+                        .HasColumnType("datetime2")
+                        .HasColumnName("PeriodStart");
+
+                    b.Property<string>("PotScoreCategory")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("QuestionId")
+                        .HasMaxLength(450)
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("QuestionId");
+
+                    b.ToTable("QuestionChoice");
+
+                    b.ToTable(tb => tb.IsTemporal(ttb =>
+                        {
+                            ttb
+                                .HasPeriodStart("PeriodStart")
+                                .HasColumnName("PeriodStart");
+                            ttb
+                                .HasPeriodEnd("PeriodEnd")
+                                .HasColumnName("PeriodEnd");
+                        }
+                    ));
+                });
+
+            modelBuilder.Entity("Elsa.CustomModels.QuestionWorkflowInstance", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasColumnOrder(0);
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+
+                    b.Property<string>("CorrelationId")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
+
+                    b.Property<DateTime>("PeriodEnd")
+                        .ValueGeneratedOnAddOrUpdate()
+                        .HasColumnType("datetime2")
+                        .HasColumnName("PeriodEnd");
+
+                    b.Property<DateTime>("PeriodStart")
+                        .ValueGeneratedOnAddOrUpdate()
+                        .HasColumnType("datetime2")
+                        .HasColumnName("PeriodStart");
+
+                    b.Property<string>("Result")
+                        .HasMaxLength(450)
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("Score")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("WorkflowDefinitionId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("WorkflowInstanceId")
+                        .IsRequired()
+                        .HasMaxLength(450)
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("WorkflowName")
+                        .IsRequired()
+                        .HasMaxLength(450)
+                        .HasColumnType("nvarchar(450)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("QuestionWorkflowInstance");
 
                     b.ToTable(tb => tb.IsTemporal(ttb =>
                         {
@@ -233,6 +414,41 @@ namespace Elsa.CustomInfrastructure.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("DataProtectionKeys");
+                });
+
+            modelBuilder.Entity("Elsa.CustomModels.Answer", b =>
+                {
+                    b.HasOne("Elsa.CustomModels.QuestionChoice", "Choice")
+                        .WithMany()
+                        .HasForeignKey("QuestionChoiceId");
+
+                    b.HasOne("Elsa.CustomModels.Question", "Question")
+                        .WithMany("Answers")
+                        .HasForeignKey("QuestionId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Choice");
+
+                    b.Navigation("Question");
+                });
+
+            modelBuilder.Entity("Elsa.CustomModels.QuestionChoice", b =>
+                {
+                    b.HasOne("Elsa.CustomModels.Question", "Question")
+                        .WithMany("Choices")
+                        .HasForeignKey("QuestionId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Question");
+                });
+
+            modelBuilder.Entity("Elsa.CustomModels.Question", b =>
+                {
+                    b.Navigation("Answers");
+
+                    b.Navigation("Choices");
                 });
 #pragma warning restore 612, 618
         }
