@@ -4,7 +4,6 @@ using Elsa.Scripting.JavaScript.Events;
 using Elsa.Scripting.JavaScript.Messages;
 using Elsa.Services;
 using MediatR;
-using Newtonsoft.Json;
 
 namespace Elsa.CustomActivities.Activities.QuestionScreen.Helpers
 {
@@ -102,8 +101,7 @@ namespace Elsa.CustomActivities.Activities.QuestionScreen.Helpers
                     if (question != null &&
                         question.QuestionType == QuestionTypeConstants.CheckboxQuestion)
                     {
-                        //var choices = question.Choices;
-                        if (/*choices != null &&*/ question.Answers != null)
+                        if (question.Answers != null)
                         {
                             foreach (var item in choiceIdsToCheck)
                             {
