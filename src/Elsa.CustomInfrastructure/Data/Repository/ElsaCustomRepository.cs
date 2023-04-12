@@ -101,6 +101,12 @@ namespace Elsa.CustomInfrastructure.Data.Repository
             await _dbContext.SaveChangesAsync(cancellationToken);
         }
 
+        public async Task<QuestionWorkflowInstance?> GetQuestionWorkflowInstance(string workflowInstanceId, CancellationToken cancellationToken = default)
+        {
+            QuestionWorkflowInstance? workflow = await _dbContext.Set<QuestionWorkflowInstance>().FirstOrDefaultAsync(x => x.WorkflowInstanceId == workflowInstanceId);
+            return workflow;
+        }
+
         public async Task SetWorkflowInstanceResult(string workflowInstanceId, string result, CancellationToken cancellationToken = default)
         {
             var workflowInstance = _dbContext.Set<QuestionWorkflowInstance>().Where(x => x.WorkflowInstanceId == workflowInstanceId).ToList();
