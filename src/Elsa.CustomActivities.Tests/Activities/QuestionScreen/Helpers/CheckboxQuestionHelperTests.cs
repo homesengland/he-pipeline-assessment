@@ -133,12 +133,12 @@ namespace Elsa.CustomActivities.Tests.Activities.QuestionScreen.Helpers
         }
 
         [Theory]
-        [InlineAutoMoqData(new string[] { "Answer 1" }, new string[] { "A" }, true)]
-        [InlineAutoMoqData(new string[] { "Answer 1", "Answer 2" }, new string[] { "A", "B" }, true)]
-        [InlineAutoMoqData(new string[] { "Answer 1" }, new string[] { "B", "C" }, false)]
-        [InlineAutoMoqData(new string[] { "Answer 1", "Answer 2" }, new string[] { "A" }, false)]
+        [InlineAutoMoqData(new string[] { "A" }, new string[] { "A" }, true)]
+        [InlineAutoMoqData(new string[] { "A", "B" }, new string[] { "A", "B" }, true)]
+        [InlineAutoMoqData(new string[] { "A" }, new string[] { "B", "C" }, false)]
+        [InlineAutoMoqData(new string[] { "A", "B" }, new string[] { "A" }, false)]
         public async Task AnswerEquals_ReturnsExpectedValue(
-            string[] answers,
+            string[] expectedIdentifiers,
             string[] choiceIdsToCheck,
             bool expectedResult,
             [Frozen] Mock<IElsaCustomRepository> elsaCustomRepository,
@@ -160,25 +160,8 @@ namespace Elsa.CustomActivities.Tests.Activities.QuestionScreen.Helpers
             });
 
             question.QuestionType = QuestionTypeConstants.CheckboxQuestion;
-            question.Answers = answers.Select(x => new Answer { AnswerText = x }).ToList();
-            question.Choices = new List<QuestionChoice>()
-            {
-                new QuestionChoice()
-                {
-                    Answer = "Answer 1",
-                    Identifier = "A"
-                },
-                new QuestionChoice()
-                {
-                    Answer = "Answer 2",
-                    Identifier = "B"
-                },
-                new QuestionChoice()
-                {
-                    Answer = "Answer 3",
-                    Identifier = "C"
-                }
-            };
+            question.Answers = expectedIdentifiers
+                .Select(x => new Answer() { Choice = new QuestionChoice() { Identifier = x } }).ToList();
 
             elsaCustomRepository.Setup(x => x.GetQuestion(activityId, workflowInstanceId, questionId, CancellationToken.None)).ReturnsAsync(question);
 

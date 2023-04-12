@@ -57,24 +57,20 @@ namespace Elsa.CustomActivities.Activities.QuestionScreen.Helpers
                         workflowInstanceId, questionId, CancellationToken.None);
                     if (question != null &&
                         question.QuestionType == QuestionTypeConstants.CheckboxQuestion &&
-                        question.Choices != null)
+                        question.Answers != null)
                     {
-                        var choices = question.Choices;
-                        if (choices != null && question.Answers != null)
+                        if(question.Answers.Count != choiceIdsToCheck.Length)
+                            return false;
+                        foreach (var item in choiceIdsToCheck)
                         {
-                            var answerList = question.Answers.Select(x => x.AnswerText).ToList();
-                            foreach (var item in answerList)
+                            var answerFound = question.Answers.FirstOrDefault(x => x.Choice?.Identifier == item);
+                            if (answerFound != null)
                             {
-                                var singleChoice = choices.FirstOrDefault(x => x.Answer == item);
-
-                                if (singleChoice != null && choiceIdsToCheck.Contains(singleChoice.Identifier))
-                                {
-                                    result = true;
-                                }
-                                else
-                                {
-                                    return false;
-                                }
+                                result = true;
+                            }
+                            else
+                            {
+                                result = false;
                             }
                         }
                     }
@@ -101,6 +97,7 @@ namespace Elsa.CustomActivities.Activities.QuestionScreen.Helpers
                     if (question != null &&
                         question.QuestionType == QuestionTypeConstants.CheckboxQuestion)
                     {
+
                         if (question.Answers != null)
                         {
                             foreach (var item in choiceIdsToCheck)

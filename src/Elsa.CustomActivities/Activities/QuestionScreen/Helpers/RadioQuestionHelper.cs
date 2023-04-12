@@ -36,21 +36,11 @@ namespace Elsa.CustomActivities.Activities.QuestionScreen.Helpers
                     if (question != null &&
                         (question.QuestionType == QuestionTypeConstants.RadioQuestion || question.QuestionType == QuestionTypeConstants.PotScoreRadioQuestion))
                     {
-                        var choices = question.Choices;
-
-                        if (choices != null && question.Answers != null && question.Answers.Count == 1)
+                        if (question.Answers != null && question.Answers.Count == 1)
                         {
                             var singleAnswer = question.Answers.First();
-                            var singleChoice = choices.FirstOrDefault(x => x.Answer == singleAnswer.AnswerText);
 
-                            if (singleChoice != null && choiceIdToCheck.Contains(singleChoice.Identifier))
-                            {
-                                return true;
-                            }
-                            else
-                            {
-                                return false;
-                            }
+                            return choiceIdToCheck == singleAnswer.Choice?.Identifier;
                         }
 
                         return false;
@@ -81,24 +71,7 @@ namespace Elsa.CustomActivities.Activities.QuestionScreen.Helpers
                         if (choices != null && question.Answers != null && question.Answers.Count == 1)
                         {
                             var singleAnswer = question.Answers.First();
-                            foreach (var item in choiceIdsToCheck)
-                            {
-                                var singleChoice = choices.FirstOrDefault(x => x.Identifier == item);
-                                if (singleChoice != null)
-                                {
-                                    var answerCheck = choices.Select(x => x.Identifier).Contains(item) &&
-                                                      singleChoice.Answer == singleAnswer.AnswerText;
-
-                                    if (answerCheck)
-                                    {
-                                        return true;
-                                    }
-                                    else
-                                    {
-                                        result = false;
-                                    }
-                                }
-                            }
+                            return choiceIdsToCheck.Contains(singleAnswer.Choice?.Identifier);
                         }
                     }
                 }
