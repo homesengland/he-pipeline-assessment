@@ -34,7 +34,7 @@ namespace Elsa.CustomWorkflow.Sdk.Tests.Workflow
         {
             //Arrange
             sut.QuestionType = QuestionTypeConstants.DateQuestion;
-            sut.Answers = null;
+            sut.Answers = new List<QuestionActivityAnswer>() { new() { AnswerText = null } };
 
             //Act
             var date = sut.GetDate();
@@ -86,13 +86,13 @@ namespace Elsa.CustomWorkflow.Sdk.Tests.Workflow
         public void SetDateDoesNotSetAnAnswer_GivenNullValue(QuestionActivityData sut)
         {
             //Arrange
-            sut.Answers = null;
+            sut.Answers = new List<QuestionActivityAnswer>() { new() { AnswerText = null } };
 
             //Act
             sut.SetDate(null);
 
             //Assert
-            Assert.Null(sut.Answers);
+            Assert.Null(sut.Answers.First().AnswerText);
             Assert.Null(sut.Date.Day);
             Assert.Null(sut.Date.Month);
             Assert.Null(sut.Date.Year);
@@ -140,13 +140,13 @@ namespace Elsa.CustomWorkflow.Sdk.Tests.Workflow
                 Month = month,
                 Day = day
             };
-            sut.Answers = null;
+            sut.Answers = new List<QuestionActivityAnswer>() { new() { AnswerText = null } };
 
             //Act
             sut.SetDate(date);
 
             //Assert
-            Assert.Null(sut.Answers);
+            Assert.Null(sut.Answers.First().AnswerText);
             Assert.Null(sut.Date.Day);
             Assert.Null(sut.Date.Month);
             Assert.Null(sut.Date.Year);
@@ -195,14 +195,14 @@ namespace Elsa.CustomWorkflow.Sdk.Tests.Workflow
                 Month = month,
                 Day = day
             };
-            sut.Answers = null;
+            sut.Answers = new List<QuestionActivityAnswer>() { new() { AnswerText = null } };
             sut.QuestionType = activityType;
 
             //Act
             sut.SetDate(date);
 
             //Assert
-            Assert.Null(sut.Answers);
+            Assert.Null(sut.Answers.First().AnswerText);
         }
 
 
@@ -229,7 +229,7 @@ namespace Elsa.CustomWorkflow.Sdk.Tests.Workflow
         {
             //Arrange
             sut.QuestionType = QuestionTypeConstants.CurrencyQuestion;
-            sut.Answers = null;
+            sut.Answers = new List<QuestionActivityAnswer>() { new() { AnswerText = null } };
 
             //Act
 
@@ -346,7 +346,7 @@ namespace Elsa.CustomWorkflow.Sdk.Tests.Workflow
         public void SetChoicesForMultichoiceDoesNotSetValue_GivenValidDataButActivityTypeIsIncorrect(string activityType, QuestionActivityData sut)
         {
             //Arrange
-            sut.Answers = null;
+            sut.Answers = new List<QuestionActivityAnswer>() { new() { AnswerText = null } };
             List<Choice> choices = new List<Choice>
             {
                 new Choice
@@ -372,7 +372,7 @@ namespace Elsa.CustomWorkflow.Sdk.Tests.Workflow
 
             //Assert
             Assert.Empty(sut.Checkbox.Choices);
-            Assert.Null(sut.Answers);
+            Assert.Null(sut.Answers.First().AnswerText);
         }
 
 
@@ -381,7 +381,7 @@ namespace Elsa.CustomWorkflow.Sdk.Tests.Workflow
         public void SetChoicesForMultichoiceSetsCorrectValueAndAnswer_GivenValidDataAndActivityTypeIsCorrect(QuestionActivityData sut)
         {
             //Arrange
-            sut.Answers = null;
+            sut.Answers = new List<QuestionActivityAnswer>() { new() { AnswerText = null } };
             List<Choice> choices = new List<Choice>
             {
                 new Choice
@@ -436,7 +436,7 @@ namespace Elsa.CustomWorkflow.Sdk.Tests.Workflow
         public void SetChoicesForSingleChoiceDoesNotSetValue_GivenValidDataButActivityTypeIsIncorrect(string activityType, QuestionActivityData sut)
         {
             //Arrange
-            sut.Answers = null;
+            sut.Answers = new List<QuestionActivityAnswer>() { new() { AnswerText = null } };
             List<Choice> choices = new List<Choice>
             {
                 new Choice
@@ -459,7 +459,7 @@ namespace Elsa.CustomWorkflow.Sdk.Tests.Workflow
 
             //Assert
             Assert.Empty(sut.Radio.Choices);
-            Assert.Null(sut.Answers);
+            Assert.Null(sut.Answers.First().AnswerText);
         }
 
         [Theory]
@@ -467,7 +467,7 @@ namespace Elsa.CustomWorkflow.Sdk.Tests.Workflow
         public void SetChoicesForSinglechoiceSetsCorrectValueAndAnswer_GivenValidDataAndActivityTypeIsCorrect(QuestionActivityData sut)
         {
             //Arrange
-            sut.Answers = null;
+            sut.Answers = new List<QuestionActivityAnswer>() { new() { AnswerText = null } };
             List<Choice> choices = new List<Choice>
             {
                 new Choice

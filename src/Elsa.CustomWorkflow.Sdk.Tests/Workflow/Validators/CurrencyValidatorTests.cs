@@ -14,7 +14,7 @@ namespace Elsa.CustomWorkflow.Sdk.Tests.Workflow.Validators
             CurrencyValidator validator = new CurrencyValidator();
             var questionActivityData = new QuestionActivityData
             {
-                Answers = null
+                Answers = new List<QuestionActivityAnswer>() { new() { AnswerText = null } }
             };
 
             //Act
