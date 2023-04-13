@@ -1,7 +1,6 @@
 ﻿using Elsa.CustomModels;
 using FluentValidation.Results;
 using System.Globalization;
-using System.Text.Json;
 
 namespace Elsa.CustomWorkflow.Sdk.Models.Workflow
 {
@@ -28,8 +27,17 @@ namespace Elsa.CustomWorkflow.Sdk.Models.Workflow
         public Information Text { get; set; } = null!;
 
         public string? NextWorkflowDefinitionIds { get; set; } = null!;
-        public List<QuestionScreenAnswer>? CheckQuestionScreenAnswers { get; set; }
-        public List<QuestionActivityData>? QuestionScreenAnswers { get; set; }
+        public List<Question>? CheckQuestions { get; set; }
+        public List<QuestionActivityData>? Questions { get; set; }
+
+    }
+
+    public class QuestionActivityAnswer
+    {
+        public int? ChoiceId { get; set; }
+        public string? AnswerText { get; set; }
+        public string? Score { get; set; }
+        //public int? QuestionActivityChoiceId { get; set; }
 
     }
 
@@ -46,8 +54,9 @@ namespace Elsa.CustomWorkflow.Sdk.Models.Workflow
         public bool DisplayComments { get; set; }
         public string? Comments { get; set; }
         public object Output { get; set; } = null!;
-        public string? Answer { get; set; }
+        public List<QuestionActivityAnswer> Answers { get; set; } = new List<QuestionActivityAnswer>();
         public bool IsReadOnly { get; set; }
+        public string? Text { get { return GetText(); } set { SetText(value); } }
         public decimal? Decimal { get { return GetDecimal(); } set { SetDecimal(value); } }
 
         private int? _characterLimit;
@@ -57,21 +66,25 @@ namespace Elsa.CustomWorkflow.Sdk.Models.Workflow
         public Checkbox Checkbox { get { return _checkbox; } set { SetCheckbox(value); } }
 
         private Radio _radio = new Radio();
-        public Radio Radio { get { return GetRadio(); } set { SetRadio(value); } }
+        public Radio Radio
+        {
+            get { return _radio; }
+            set { SetRadio(value); }
+        }
 
         private Date _date = new Date();
         public Date Date { get { return GetDate(); } set { SetDate(value); } }
 
         public Information Information { get; set; } = new Information();
 
-        #region Getters and Setters
-
+        #region Getters
         public Date GetDate()
         {
-            if (QuestionType == QuestionTypeConstants.DateQuestion && Answer != null)
+            if (QuestionType == QuestionTypeConstants.DateQuestion && HasAnswers())
             {
-                bool isValidDate = DateTime.TryParseExact(Answer, Constants.DateFormat, CultureInfo.InvariantCulture, DateTimeStyles.AdjustToUniversal, out DateTime date);
-                if (isValidDate && !String.IsNullOrEmpty(Answer) == true)
+                string? dateString = Answers.FirstOrDefault()!.AnswerText;
+                bool isValidDate = DateTime.TryParseExact(dateString, Constants.DateFormat, CultureInfo.InvariantCulture, DateTimeStyles.AdjustToUniversal, out DateTime date);
+                if (isValidDate && !String.IsNullOrEmpty(dateString) == true)
                 {
                     return new Date
                     {
@@ -84,18 +97,73 @@ namespace Elsa.CustomWorkflow.Sdk.Models.Workflow
             }
             return _date;
         }
+
+        //private Radio GetRadio()
+        //{
+        //    if (HasAnswers() && _radio.SelectedAnswer != Answers.FirstOrDefault()!.AnswerText)
+        //    {
+        //        _radio.SelectedAnswer = Answers.FirstOrDefault()!.AnswerText!;
+        //    }
+        //    return _radio;
+        //}
+
+        private decimal? GetDecimal()
+        {
+            if (QuestionType == QuestionTypeConstants.CurrencyQuestion && HasAnswers())
+            {
+                try
+                {
+                    decimal decimalAnswer = default;
+                    if(decimal.TryParse(Answers.FirstOrDefault()!.AnswerText, out decimalAnswer))
+                    {
+                        return decimalAnswer;
+                    }
+                    else
+                    {
+                        return null;
+                    }
+                }
+                catch (Exception)
+                {
+                    return null;
+                }
+
+            }
+            return null;
+        }
+
+        private string? GetText()
+        {
+            if ((QuestionType == QuestionTypeConstants.TextQuestion || QuestionType == QuestionTypeConstants.TextAreaQuestion) && HasAnswers())
+            {
+                try
+                {
+                    string? textAnswer = Answers.FirstOrDefault()!.AnswerText ?? string.Empty;
+                    return textAnswer;
+
+                }
+                catch (Exception)
+                {
+                    return null;
+                }
+            }
+            return "";
+        }
+
+        #endregion
+
+
+        #region Setters
+
+
         public void SetCheckbox(Checkbox value)
         {
             if (QuestionType == QuestionTypeConstants.CheckboxQuestion)
             {
                 _checkbox = value;
-                List<string> answerList = new List<string>();
-                if (value != null)
-                {
-                    answerList = value.SelectedChoices;
-                }
-
-                SetAnswer(answerList);
+                Answers = new List<QuestionActivityAnswer>();
+                List<Choice> selectedChoices = _checkbox.Choices.Where(c => _checkbox.SelectedChoices.Contains(c.Id)).ToList();
+                SetChoiceAnswers(selectedChoices);
             }
         }
 
@@ -104,10 +172,12 @@ namespace Elsa.CustomWorkflow.Sdk.Models.Workflow
             if (QuestionType == QuestionTypeConstants.RadioQuestion || QuestionType == QuestionTypeConstants.PotScoreRadioQuestion)
             {
                 _radio = value;
-                Answer = null;
+                Answers = new List<QuestionActivityAnswer>();
                 if (value != null)
                 {
-                    Answer = value.SelectedAnswer;
+                    var choice = _radio.Choices.Where(x => x.Id == value.SelectedAnswer).ToList();
+                    SetChoiceAnswers(choice);
+
                 }
             }
         }
@@ -119,18 +189,12 @@ namespace Elsa.CustomWorkflow.Sdk.Models.Workflow
                 _date = value;
                 if (value.Day != null && value.Month != null && value.Year != null)
                 {
-                    var dateString =
-                    $"{value.Year}-{value.Month}-{value.Day}";
+                    var dateString = $"{value.Year}-{value.Month}-{value.Day}";
                     bool isValidDate = DateTime.TryParseExact(dateString, Constants.DateFormat, CultureInfo.InvariantCulture, DateTimeStyles.AdjustToUniversal, out DateTime parsedDateTime);
                     if (isValidDate)
                     {
-                        Answer = dateString;
+                        SetAnswerString(dateString);
                     }
-                }
-                else
-                {
-
-                    SetAnswer(null);
                 }
             }
         }
@@ -143,72 +207,83 @@ namespace Elsa.CustomWorkflow.Sdk.Models.Workflow
             }
         }
 
-        private Radio GetRadio()
-        {
-            if (_radio.SelectedAnswer != Answer && Answer != null)
-            {
-                _radio.SelectedAnswer = Answer;
-            }
-            return _radio;
-        }
 
-        private decimal? GetDecimal()
-        {
-            if (QuestionType == QuestionTypeConstants.CurrencyQuestion && Answer != null)
-            {
-                try
-                {
-                    return JsonSerializer.Deserialize<decimal?>(Answer);
-                }
-                catch (System.Text.Json.JsonException)
-                {
-                    return null;
-                }
-
-            }
-            return null;
-        }
         private void SetDecimal(decimal? value)
         {
             if (QuestionType == QuestionTypeConstants.CurrencyQuestion)
             {
-                SetAnswer(value);
+                SetAnswerString(value.ToString());
             }
         }
 
-        private void SetAnswer(object? o)
+        private void SetText(string? value)
         {
-            if (o != null)
+            if (QuestionType == QuestionTypeConstants.TextAreaQuestion || QuestionType == QuestionTypeConstants.TextQuestion)
             {
-                string answer = JsonSerializer.Serialize(o);
-                Answer = answer;
-            }
-            else
-            {
-                Answer = null;
+                SetAnswerString(value);
             }
         }
 
         #endregion
+
+        #region Helpers
+
+        public void SetAnswerString(string? answer)
+        {
+            if (HasAnswers())
+            {
+                Answers.FirstOrDefault()!.AnswerText = answer;
+            }
+            else
+            {
+                Answers.Add(new QuestionActivityAnswer
+                {
+                    AnswerText = answer
+                });
+            }
+        }
+
+        public void SetChoiceAnswers(IEnumerable<Choice> choices)
+        {
+            var answers = new List<QuestionActivityAnswer>();
+            foreach (Choice choice in choices)
+            {
+                answers.Add(new QuestionActivityAnswer
+                {
+                    AnswerText = choice.Answer,
+                    ChoiceId = choice.Id
+                });
+            }
+
+            Answers = answers;
+        }
+
+        public bool HasAnswers()
+        {
+            return Answers != null && Answers.Count > 0 && Answers.FirstOrDefault() != null;
+        }
+        #endregion 
     }
 
     public class Checkbox
     {
-        public List<string> SelectedChoices { get; set; } = null!;
+        public List<int> SelectedChoices { get; set; } = new List<int>();
         public List<Choice> Choices { get; set; } = new List<Choice>();
     }
 
     public class Radio
     {
         public List<Choice> Choices { get; set; } = new List<Choice>();
-        public string SelectedAnswer { get; set; } = null!;
+        public int? SelectedAnswer { get; set; }
     }
 
 
     public class Choice
     {
+        public int Id { get; set; }
         public string Answer { get; set; } = null!;
         public bool IsSingle { get; set; }
+        public string? Value { get; set; }
     }
 
     public class Date

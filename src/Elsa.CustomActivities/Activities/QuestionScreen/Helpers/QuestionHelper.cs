@@ -28,11 +28,11 @@ namespace Elsa.CustomActivities.Activities.QuestionScreen.Helpers
                 var activity = workflowBlueprint.Activities.FirstOrDefault(x => x.Name == activityName);
                 if (activity != null)
                 {
-                    var result = await _elsaCustomRepository.GetQuestionScreenAnswer(activity.Id, WorkflowInstance, questionId, CancellationToken.None);
+                    var result = await _elsaCustomRepository.GetQuestion(activity.Id, WorkflowInstance, questionId, CancellationToken.None);
 
-                    if (result != null && result.Answer != null)
+                    if (result?.Answers != null)
                     {
-                        return result.Answer;
+                        return string.Join(',', result.Answers.Select(x => x.AnswerText));
                     }
                 }
 

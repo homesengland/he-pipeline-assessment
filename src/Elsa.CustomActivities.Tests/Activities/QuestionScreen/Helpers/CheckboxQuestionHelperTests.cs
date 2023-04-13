@@ -8,7 +8,6 @@ using Elsa.Services;
 using Elsa.Services.Models;
 using He.PipelineAssessment.Tests.Common;
 using Moq;
-using System.Text.Json;
 using Xunit;
 
 namespace Elsa.CustomActivities.Tests.Activities.QuestionScreen.Helpers
@@ -27,7 +26,7 @@ namespace Elsa.CustomActivities.Tests.Activities.QuestionScreen.Helpers
          CheckboxQuestionHelper sut)
         {
             //Arrange
-            elsaCustomRepository.Setup(x => x.GetQuestionScreenAnswer(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>(), CancellationToken.None)).ReturnsAsync((QuestionScreenAnswer?)null);
+            elsaCustomRepository.Setup(x => x.GetQuestion(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>(), CancellationToken.None)).ReturnsAsync((Question?)null);
 
             workflowRegistry.Setup(x => x.FindByNameAsync(workflowName!, VersionOptions.Published, null, default)).ReturnsAsync((WorkflowBlueprint?)null);
 
@@ -53,7 +52,7 @@ namespace Elsa.CustomActivities.Tests.Activities.QuestionScreen.Helpers
         {
 
             //Arrange
-            elsaCustomRepository.Setup(x => x.GetQuestionScreenAnswer(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>(), CancellationToken.None)).ReturnsAsync((QuestionScreenAnswer?)null);
+            elsaCustomRepository.Setup(x => x.GetQuestion(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>(), CancellationToken.None)).ReturnsAsync((Question?)null);
 
             workflowRegistry.Setup(x => x.FindByNameAsync(workflowName!, VersionOptions.Published, null, default)).ReturnsAsync(workflowBlueprint);
 
@@ -85,7 +84,7 @@ namespace Elsa.CustomActivities.Tests.Activities.QuestionScreen.Helpers
                 Name = activityName
             });
 
-            elsaCustomRepository.Setup(x => x.GetQuestionScreenAnswer(activityId, workflowInstanceId, It.IsAny<string>(), CancellationToken.None)).ReturnsAsync((QuestionScreenAnswer?)null);
+            elsaCustomRepository.Setup(x => x.GetQuestion(activityId, workflowInstanceId, It.IsAny<string>(), CancellationToken.None)).ReturnsAsync((Question?)null);
 
             workflowRegistry.Setup(x => x.FindByNameAsync(workflowName!, VersionOptions.Published, null, default)).ReturnsAsync(workflowBlueprint);
 
@@ -108,7 +107,7 @@ namespace Elsa.CustomActivities.Tests.Activities.QuestionScreen.Helpers
             string questionId,
             string workflowInstanceId,
             WorkflowBlueprint workflowBlueprint,
-            QuestionScreenAnswer questionScreenAnswer,
+            Question question,
             CheckboxQuestionHelper sut)
         {
             //Arrange
@@ -118,10 +117,10 @@ namespace Elsa.CustomActivities.Tests.Activities.QuestionScreen.Helpers
                 Name = activityName
             });
 
-            questionScreenAnswer.QuestionType = QuestionTypeConstants.CheckboxQuestion;
-            questionScreenAnswer.Choices = null;
+            question.QuestionType = QuestionTypeConstants.CheckboxQuestion;
+            question.Choices = null;
 
-            elsaCustomRepository.Setup(x => x.GetQuestionScreenAnswer(activityId, workflowInstanceId, questionId, CancellationToken.None)).ReturnsAsync(questionScreenAnswer);
+            elsaCustomRepository.Setup(x => x.GetQuestion(activityId, workflowInstanceId, questionId, CancellationToken.None)).ReturnsAsync(question);
 
             workflowRegistry.Setup(x => x.FindByNameAsync(workflowName!, VersionOptions.Published, null, default)).ReturnsAsync(workflowBlueprint);
 
@@ -134,12 +133,12 @@ namespace Elsa.CustomActivities.Tests.Activities.QuestionScreen.Helpers
         }
 
         [Theory]
-        [InlineAutoMoqData(new string[] { "Answer 1" }, new string[] { "A" }, true)]
-        [InlineAutoMoqData(new string[] { "Answer 1", "Answer 2" }, new string[] { "A", "B" }, true)]
-        [InlineAutoMoqData(new string[] { "Answer 1" }, new string[] { "B", "C" }, false)]
-        [InlineAutoMoqData(new string[] { "Answer 1", "Answer 2" }, new string[] { "A" }, false)]
+        [InlineAutoMoqData(new string[] { "A" }, new string[] { "A" }, true)]
+        [InlineAutoMoqData(new string[] { "A", "B" }, new string[] { "A", "B" }, true)]
+        [InlineAutoMoqData(new string[] { "A" }, new string[] { "B", "C" }, false)]
+        [InlineAutoMoqData(new string[] { "A", "B" }, new string[] { "A" }, false)]
         public async Task AnswerEquals_ReturnsExpectedValue(
-            string[] answers,
+            string[] expectedIdentifiers,
             string[] choiceIdsToCheck,
             bool expectedResult,
             [Frozen] Mock<IElsaCustomRepository> elsaCustomRepository,
@@ -150,7 +149,7 @@ namespace Elsa.CustomActivities.Tests.Activities.QuestionScreen.Helpers
             string questionId,
             string workflowInstanceId,
             WorkflowBlueprint workflowBlueprint,
-            QuestionScreenAnswer questionScreenAnswer,
+            Question question,
             CheckboxQuestionHelper sut)
         {
             //Arrange
@@ -159,30 +158,12 @@ namespace Elsa.CustomActivities.Tests.Activities.QuestionScreen.Helpers
                 Id = activityId,
                 Name = activityName
             });
-            var jsonAnswer = JsonSerializer.Serialize(answers);
 
-            questionScreenAnswer.QuestionType = QuestionTypeConstants.CheckboxQuestion;
-            questionScreenAnswer.Answer = jsonAnswer;
-            questionScreenAnswer.Choices = new List<QuestionScreenAnswer.Choice>()
-            {
-                new QuestionScreenAnswer.Choice()
-                {
-                    Answer = "Answer 1",
-                    Identifier = "A"
-                },
-                new QuestionScreenAnswer.Choice()
-                {
-                    Answer = "Answer 2",
-                    Identifier = "B"
-                },
-                new QuestionScreenAnswer.Choice()
-                {
-                    Answer = "Answer 3",
-                    Identifier = "C"
-                }
-            };
+            question.QuestionType = QuestionTypeConstants.CheckboxQuestion;
+            question.Answers = expectedIdentifiers
+                .Select(x => new Answer() { Choice = new QuestionChoice() { Identifier = x } }).ToList();
 
-            elsaCustomRepository.Setup(x => x.GetQuestionScreenAnswer(activityId, workflowInstanceId, questionId, CancellationToken.None)).ReturnsAsync(questionScreenAnswer);
+            elsaCustomRepository.Setup(x => x.GetQuestion(activityId, workflowInstanceId, questionId, CancellationToken.None)).ReturnsAsync(question);
 
             workflowRegistry.Setup(x => x.FindByNameAsync(workflowName!, VersionOptions.Published, null, default)).ReturnsAsync(workflowBlueprint);
 
@@ -205,7 +186,7 @@ namespace Elsa.CustomActivities.Tests.Activities.QuestionScreen.Helpers
         CheckboxQuestionHelper sut)
         {
             //Arrange
-            elsaCustomRepository.Setup(x => x.GetQuestionScreenAnswer(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>(), CancellationToken.None)).ReturnsAsync((QuestionScreenAnswer?)null);
+            elsaCustomRepository.Setup(x => x.GetQuestion(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>(), CancellationToken.None)).ReturnsAsync((Question?)null);
 
             workflowRegistry.Setup(x => x.FindByNameAsync(workflowName!, VersionOptions.Published, null, default)).ReturnsAsync((WorkflowBlueprint?)null);
 
@@ -231,7 +212,7 @@ namespace Elsa.CustomActivities.Tests.Activities.QuestionScreen.Helpers
         {
 
             //Arrange
-            elsaCustomRepository.Setup(x => x.GetQuestionScreenAnswer(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>(), CancellationToken.None)).ReturnsAsync((QuestionScreenAnswer?)null);
+            elsaCustomRepository.Setup(x => x.GetQuestion(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>(), CancellationToken.None)).ReturnsAsync((Question?)null);
 
             workflowRegistry.Setup(x => x.FindByNameAsync(workflowName!, VersionOptions.Published, null, default)).ReturnsAsync(workflowBlueprint);
 
@@ -263,7 +244,7 @@ namespace Elsa.CustomActivities.Tests.Activities.QuestionScreen.Helpers
                 Name = activityName
             });
 
-            elsaCustomRepository.Setup(x => x.GetQuestionScreenAnswer(activityId, workflowInstanceId, It.IsAny<string>(), CancellationToken.None)).ReturnsAsync((QuestionScreenAnswer?)null);
+            elsaCustomRepository.Setup(x => x.GetQuestion(activityId, workflowInstanceId, It.IsAny<string>(), CancellationToken.None)).ReturnsAsync((Question?)null);
 
             workflowRegistry.Setup(x => x.FindByNameAsync(workflowName!, VersionOptions.Published, null, default)).ReturnsAsync(workflowBlueprint);
 
@@ -286,7 +267,7 @@ namespace Elsa.CustomActivities.Tests.Activities.QuestionScreen.Helpers
             string questionId,
             string workflowInstanceId,
             WorkflowBlueprint workflowBlueprint,
-            QuestionScreenAnswer questionScreenAnswer,
+            Question question,
             CheckboxQuestionHelper sut)
         {
             //Arrange
@@ -296,10 +277,10 @@ namespace Elsa.CustomActivities.Tests.Activities.QuestionScreen.Helpers
                 Name = activityName
             });
 
-            questionScreenAnswer.QuestionType = QuestionTypeConstants.CheckboxQuestion;
-            questionScreenAnswer.Choices = null;
+            question.QuestionType = QuestionTypeConstants.CheckboxQuestion;
+            question.Choices = null;
 
-            elsaCustomRepository.Setup(x => x.GetQuestionScreenAnswer(activityId, workflowInstanceId, questionId, CancellationToken.None)).ReturnsAsync(questionScreenAnswer);
+            elsaCustomRepository.Setup(x => x.GetQuestion(activityId, workflowInstanceId, questionId, CancellationToken.None)).ReturnsAsync(question);
 
             workflowRegistry.Setup(x => x.FindByNameAsync(workflowName!, VersionOptions.Published, null, default)).ReturnsAsync(workflowBlueprint);
 
@@ -312,14 +293,14 @@ namespace Elsa.CustomActivities.Tests.Activities.QuestionScreen.Helpers
         }
 
         [Theory]
-        [InlineAutoMoqData(new string[] { "Answer 1" }, new string[] { "A" }, true)]
-        [InlineAutoMoqData(new string[] { "Answer 1", "Answer 2" }, new string[] { "A" }, true)]
-        [InlineAutoMoqData(new string[] { "Answer 1", "Answer 2" }, new string[] { "A", "B" }, true)]
-        [InlineAutoMoqData(new string[] { "Answer 1", "Answer 2", "Answer 3" }, new string[] { "A", "B" }, true)]
-        [InlineAutoMoqData(new string[] { "Answer 1" }, new string[] { "B", "C" }, false)]
+        [InlineAutoMoqData(new string[] { "A" }, new string[] { "A" }, true)]
+        [InlineAutoMoqData(new string[] { "A", "B" }, new string[] { "A" }, true)]
+        [InlineAutoMoqData(new string[] { "A", "B" }, new string[] { "A", "B" }, true)]
+        [InlineAutoMoqData(new string[] { "A", "B", "C" }, new string[] { "A", "B" }, true)]
+        [InlineAutoMoqData(new string[] { "A" }, new string[] { "B", "C" }, false)]
 
         public async Task AnswerContains_ReturnsExpectedValue(
-            string[] answers,
+            string[] expectedIdentifiers,
             string[] choiceIdsToCheck,
             bool expectedResult,
             [Frozen] Mock<IElsaCustomRepository> elsaCustomRepository,
@@ -330,7 +311,7 @@ namespace Elsa.CustomActivities.Tests.Activities.QuestionScreen.Helpers
             string questionId,
             string workflowInstanceId,
             WorkflowBlueprint workflowBlueprint,
-            QuestionScreenAnswer questionScreenAnswer,
+            Question question,
             CheckboxQuestionHelper sut)
         {
             //Arrange
@@ -339,30 +320,12 @@ namespace Elsa.CustomActivities.Tests.Activities.QuestionScreen.Helpers
                 Id = activityId,
                 Name = activityName
             });
-            var jsonAnswer = JsonSerializer.Serialize(answers);
 
-            questionScreenAnswer.QuestionType = QuestionTypeConstants.CheckboxQuestion;
-            questionScreenAnswer.Answer = jsonAnswer;
-            questionScreenAnswer.Choices = new List<QuestionScreenAnswer.Choice>()
-            {
-                new QuestionScreenAnswer.Choice()
-                {
-                    Answer = "Answer 1",
-                    Identifier = "A"
-                },
-                new QuestionScreenAnswer.Choice()
-                {
-                    Answer = "Answer 2",
-                    Identifier = "B"
-                },
-                new QuestionScreenAnswer.Choice()
-                {
-                    Answer = "Answer 3",
-                    Identifier = "C"
-                }
-            };
+            question.QuestionType = QuestionTypeConstants.CheckboxQuestion;
+            question.Answers = expectedIdentifiers
+                .Select(x => new Answer() { Choice = new QuestionChoice() { Identifier = x } }).ToList();
 
-            elsaCustomRepository.Setup(x => x.GetQuestionScreenAnswer(activityId, workflowInstanceId, questionId, CancellationToken.None)).ReturnsAsync(questionScreenAnswer);
+            elsaCustomRepository.Setup(x => x.GetQuestion(activityId, workflowInstanceId, questionId, CancellationToken.None)).ReturnsAsync(question);
 
             workflowRegistry.Setup(x => x.FindByNameAsync(workflowName!, VersionOptions.Published, null, default)).ReturnsAsync(workflowBlueprint);
 
@@ -374,15 +337,15 @@ namespace Elsa.CustomActivities.Tests.Activities.QuestionScreen.Helpers
         }
 
         [Theory]
-        [InlineAutoMoqData(new string[] { "Answer 1" }, new string[] { "A" }, true)]
-        [InlineAutoMoqData(new string[] { "Answer 1", "Answer 2" }, new string[] { "A", "D" }, true)]
-        [InlineAutoMoqData(new string[] { "Answer 1", "Answer 2" }, new string[] { "A", "B", "C" }, true)]
-        [InlineAutoMoqData(new string[] { "Answer 1", "Answer 2", "Answer 3" }, new string[] { "A", "B", "C" }, true)]
-        [InlineAutoMoqData(new string[] { "Answer 1", "Answer 2", "Answer 3" }, new string[] { "A", "B", "C", "D" }, true)]
-        [InlineAutoMoqData(new string[] { "Answer 1" }, new string[] { "B", "C" }, false)]
+        [InlineAutoMoqData(new string[] { "A" }, new string[] { "A" }, true)]
+        [InlineAutoMoqData(new string[] { "A", "B" }, new string[] { "A", "D" }, true)]
+        [InlineAutoMoqData(new string[] { "A", "B" }, new string[] { "A", "B", "C" }, true)]
+        [InlineAutoMoqData(new string[] { "A", "B", "C" }, new string[] { "A", "B", "C" }, true)]
+        [InlineAutoMoqData(new string[] { "A", "B", "C" }, new string[] { "A", "B", "C", "D" }, true)]
+        [InlineAutoMoqData(new string[] { "A" }, new string[] { "B", "C" }, false)]
 
         public async Task AnswerContainsAny_ReturnsExpectedValue(
-            string[] answers,
+            string[] expectedIdentifiers,
             string[] choiceIdsToCheck,
             bool expectedResult,
             [Frozen] Mock<IElsaCustomRepository> elsaCustomRepository,
@@ -393,7 +356,7 @@ namespace Elsa.CustomActivities.Tests.Activities.QuestionScreen.Helpers
             string questionId,
             string workflowInstanceId,
             WorkflowBlueprint workflowBlueprint,
-            QuestionScreenAnswer questionScreenAnswer,
+            Question question,
             CheckboxQuestionHelper sut)
         {
             //Arrange
@@ -402,30 +365,12 @@ namespace Elsa.CustomActivities.Tests.Activities.QuestionScreen.Helpers
                 Id = activityId,
                 Name = activityName
             });
-            var jsonAnswer = JsonSerializer.Serialize(answers);
 
-            questionScreenAnswer.QuestionType = QuestionTypeConstants.CheckboxQuestion;
-            questionScreenAnswer.Answer = jsonAnswer;
-            questionScreenAnswer.Choices = new List<QuestionScreenAnswer.Choice>()
-            {
-                new QuestionScreenAnswer.Choice()
-                {
-                    Answer = "Answer 1",
-                    Identifier = "A"
-                },
-                new QuestionScreenAnswer.Choice()
-                {
-                    Answer = "Answer 2",
-                    Identifier = "B"
-                },
-                new QuestionScreenAnswer.Choice()
-                {
-                    Answer = "Answer 3",
-                    Identifier = "C"
-                }
-            };
+            question.QuestionType = QuestionTypeConstants.CheckboxQuestion;
+            question.Answers = expectedIdentifiers
+                .Select(x => new Answer() { Choice = new QuestionChoice() { Identifier = x } }).ToList();
 
-            elsaCustomRepository.Setup(x => x.GetQuestionScreenAnswer(activityId, workflowInstanceId, questionId, CancellationToken.None)).ReturnsAsync(questionScreenAnswer);
+            elsaCustomRepository.Setup(x => x.GetQuestion(activityId, workflowInstanceId, questionId, CancellationToken.None)).ReturnsAsync(question);
 
             workflowRegistry.Setup(x => x.FindByNameAsync(workflowName!, VersionOptions.Published, null, default)).ReturnsAsync(workflowBlueprint);
 
@@ -448,7 +393,7 @@ namespace Elsa.CustomActivities.Tests.Activities.QuestionScreen.Helpers
          CheckboxQuestionHelper sut)
         {
             //Arrange
-            elsaCustomRepository.Setup(x => x.GetQuestionScreenAnswer(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>(), CancellationToken.None)).ReturnsAsync((QuestionScreenAnswer?)null);
+            elsaCustomRepository.Setup(x => x.GetQuestion(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>(), CancellationToken.None)).ReturnsAsync((Question?)null);
 
             workflowRegistry.Setup(x => x.FindByNameAsync(workflowName!, VersionOptions.Published, null, default)).ReturnsAsync((WorkflowBlueprint?)null);
 
@@ -473,7 +418,7 @@ namespace Elsa.CustomActivities.Tests.Activities.QuestionScreen.Helpers
         {
 
             //Arrange
-            elsaCustomRepository.Setup(x => x.GetQuestionScreenAnswer(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>(), CancellationToken.None)).ReturnsAsync((QuestionScreenAnswer?)null);
+            elsaCustomRepository.Setup(x => x.GetQuestion(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>(), CancellationToken.None)).ReturnsAsync((Question?)null);
 
             workflowRegistry.Setup(x => x.FindByNameAsync(workflowName!, VersionOptions.Published, null, default)).ReturnsAsync(workflowBlueprint);
 
@@ -504,7 +449,7 @@ namespace Elsa.CustomActivities.Tests.Activities.QuestionScreen.Helpers
                 Name = activityName
             });
 
-            elsaCustomRepository.Setup(x => x.GetQuestionScreenAnswer(activityId, workflowInstanceId, It.IsAny<string>(), CancellationToken.None)).ReturnsAsync((QuestionScreenAnswer?)null);
+            elsaCustomRepository.Setup(x => x.GetQuestion(activityId, workflowInstanceId, It.IsAny<string>(), CancellationToken.None)).ReturnsAsync((Question?)null);
 
             workflowRegistry.Setup(x => x.FindByNameAsync(workflowName!, VersionOptions.Published, null, default)).ReturnsAsync(workflowBlueprint);
 
@@ -518,7 +463,7 @@ namespace Elsa.CustomActivities.Tests.Activities.QuestionScreen.Helpers
         [Theory]
         [AutoMoqData]
         public async Task GetAnswer_ReturnsExpectedValue(
-        string[] answers,
+        List<Answer> answers,
         [Frozen] Mock<IElsaCustomRepository> elsaCustomRepository,
         [Frozen] Mock<IWorkflowRegistry> workflowRegistry,
         string workflowName,
@@ -527,7 +472,7 @@ namespace Elsa.CustomActivities.Tests.Activities.QuestionScreen.Helpers
         string questionId,
         string workflowInstanceId,
         WorkflowBlueprint workflowBlueprint,
-        QuestionScreenAnswer questionScreenAnswer,
+        Question question,
         CheckboxQuestionHelper sut)
         {
             //Arrange
@@ -536,17 +481,16 @@ namespace Elsa.CustomActivities.Tests.Activities.QuestionScreen.Helpers
                 Id = activityId,
                 Name = activityName
             });
-            var jsonAnswer = JsonSerializer.Serialize(answers);
 
-            questionScreenAnswer.QuestionType = QuestionTypeConstants.CheckboxQuestion;
-            questionScreenAnswer.Answer = jsonAnswer;
+            question.QuestionType = QuestionTypeConstants.CheckboxQuestion;
+            question.Answers = answers;
 
 
-            elsaCustomRepository.Setup(x => x.GetQuestionScreenAnswer(activityId, workflowInstanceId, questionId, CancellationToken.None)).ReturnsAsync(questionScreenAnswer);
+            elsaCustomRepository.Setup(x => x.GetQuestion(activityId, workflowInstanceId, questionId, CancellationToken.None)).ReturnsAsync(question);
 
             workflowRegistry.Setup(x => x.FindByNameAsync(workflowName!, VersionOptions.Published, null, default)).ReturnsAsync(workflowBlueprint);
 
-            var expectedResult = string.Join(", ", answers);
+            var expectedResult = string.Join(",", answers.Select(x => x.AnswerText));
 
             //Act
             var result = await sut.GetAnswer(workflowInstanceId, workflowName, activityName, questionId);
@@ -589,7 +533,7 @@ namespace Elsa.CustomActivities.Tests.Activities.QuestionScreen.Helpers
         {
 
             //Arrange
-            elsaCustomRepository.Setup(x => x.GetQuestionScreenAnswer(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>(), CancellationToken.None)).ReturnsAsync((QuestionScreenAnswer?)null);
+            elsaCustomRepository.Setup(x => x.GetQuestion(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>(), CancellationToken.None)).ReturnsAsync((Question?)null);
 
             workflowRegistry.Setup(x => x.FindByNameAsync(workflowName!, VersionOptions.Published, null, default)).ReturnsAsync(workflowBlueprint);
 
@@ -620,7 +564,7 @@ namespace Elsa.CustomActivities.Tests.Activities.QuestionScreen.Helpers
                 Name = activityName
             });
 
-            elsaCustomRepository.Setup(x => x.GetQuestionScreenAnswer(activityId, workflowInstanceId, It.IsAny<string>(), CancellationToken.None)).ReturnsAsync((QuestionScreenAnswer?)null);
+            elsaCustomRepository.Setup(x => x.GetQuestion(activityId, workflowInstanceId, It.IsAny<string>(), CancellationToken.None)).ReturnsAsync((Question?)null);
 
             workflowRegistry.Setup(x => x.FindByNameAsync(workflowName!, VersionOptions.Published, null, default)).ReturnsAsync(workflowBlueprint);
 
@@ -641,7 +585,7 @@ namespace Elsa.CustomActivities.Tests.Activities.QuestionScreen.Helpers
             string activityName,
             string questionId,
             string workflowInstanceId,
-            QuestionScreenAnswer questionScreenAnswer,
+            Question question,
             WorkflowBlueprint workflowBlueprint,
             CheckboxQuestionHelper sut)
         {
@@ -652,8 +596,8 @@ namespace Elsa.CustomActivities.Tests.Activities.QuestionScreen.Helpers
                 Name = activityName
             });
 
-            questionScreenAnswer.QuestionType = "NotACheckbox";
-            elsaCustomRepository.Setup(x => x.GetQuestionScreenAnswer(activityId, workflowInstanceId, It.IsAny<string>(), CancellationToken.None)).ReturnsAsync(questionScreenAnswer);
+            question.QuestionType = "NotACheckbox";
+            elsaCustomRepository.Setup(x => x.GetQuestion(activityId, workflowInstanceId, It.IsAny<string>(), CancellationToken.None)).ReturnsAsync(question);
 
             workflowRegistry.Setup(x => x.FindByNameAsync(workflowName!, VersionOptions.Published, null, default)).ReturnsAsync(workflowBlueprint);
 
@@ -675,7 +619,7 @@ namespace Elsa.CustomActivities.Tests.Activities.QuestionScreen.Helpers
             string questionId,
             string workflowInstanceId,
             WorkflowBlueprint workflowBlueprint,
-            QuestionScreenAnswer questionScreenAnswer,
+            Question question,
             CheckboxQuestionHelper sut)
         {
             //Arrange
@@ -685,10 +629,10 @@ namespace Elsa.CustomActivities.Tests.Activities.QuestionScreen.Helpers
                 Name = activityName
             });
 
-            questionScreenAnswer.QuestionType = QuestionTypeConstants.CheckboxQuestion;
-            questionScreenAnswer.Choices = null;
+            question.QuestionType = QuestionTypeConstants.CheckboxQuestion;
+            question.Answers = null;
 
-            elsaCustomRepository.Setup(x => x.GetQuestionScreenAnswer(activityId, workflowInstanceId, questionId, CancellationToken.None)).ReturnsAsync(questionScreenAnswer);
+            elsaCustomRepository.Setup(x => x.GetQuestion(activityId, workflowInstanceId, questionId, CancellationToken.None)).ReturnsAsync(question);
 
             workflowRegistry.Setup(x => x.FindByNameAsync(workflowName!, VersionOptions.Published, null, default)).ReturnsAsync(workflowBlueprint);
 
@@ -715,7 +659,7 @@ namespace Elsa.CustomActivities.Tests.Activities.QuestionScreen.Helpers
             string questionId,
             string workflowInstanceId,
             WorkflowBlueprint workflowBlueprint,
-            QuestionScreenAnswer questionScreenAnswer,
+            Question question,
             CheckboxQuestionHelper sut)
         {
             //Arrange
@@ -725,12 +669,18 @@ namespace Elsa.CustomActivities.Tests.Activities.QuestionScreen.Helpers
                 Name = activityName
             });
 
-            var jsonAnswer = JsonSerializer.Serialize(answers);
+            question.Answers = new List<Answer>();
+            foreach (var answer in answers)
+            {
+                question.Answers.Add(new Answer
+                {
+                    AnswerText = answer
+                });
+            }
 
-            questionScreenAnswer.QuestionType = QuestionTypeConstants.CheckboxQuestion;
-            questionScreenAnswer.Answer = jsonAnswer;
+            question.QuestionType = QuestionTypeConstants.CheckboxQuestion;
 
-            elsaCustomRepository.Setup(x => x.GetQuestionScreenAnswer(activityId, workflowInstanceId, questionId, CancellationToken.None)).ReturnsAsync(questionScreenAnswer);
+            elsaCustomRepository.Setup(x => x.GetQuestion(activityId, workflowInstanceId, questionId, CancellationToken.None)).ReturnsAsync(question);
 
             workflowRegistry.Setup(x => x.FindByNameAsync(workflowName!, VersionOptions.Published, null, default)).ReturnsAsync(workflowBlueprint);
 

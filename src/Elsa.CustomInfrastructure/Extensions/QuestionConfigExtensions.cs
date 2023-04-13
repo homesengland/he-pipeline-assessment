@@ -7,7 +7,7 @@ using System.Text.Json.Serialization;
 
 namespace Elsa.CustomInfrastructure.Extensions
 {
-    public static class QuestionScreenAnswerConfigExtensions
+    public static class QuestionConfigExtensions
     {
         public static PropertyBuilder<T> HasJsonConversion<T>(this PropertyBuilder<T> propertyBuilder) where T : class?, new()
         {

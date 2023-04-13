@@ -21,20 +21,20 @@ namespace Elsa.Server.Tests.Providers
             string activityId,
             string workflowInstanceId,
             WorkflowInstance workflowInstance,
-            List<QuestionScreenAnswer>? questionScreenAnswers,
+            List<Question>? questions,
             WorkflowNextActivityProvider sut)
         {
             //Arrange
             questionInvoker.Setup(x => x.ExecuteWorkflowsAsync(activityId,
                     ActivityTypeConstants.QuestionScreen,
-                    workflowInstanceId, questionScreenAnswers, CancellationToken.None))
+                    workflowInstanceId, questions, CancellationToken.None))
                 .ReturnsAsync(new List<CollectedWorkflow>());
 
             workflowInstanceProvider.Setup(x => x.GetWorkflowInstance(workflowInstanceId, CancellationToken.None))
                 .ReturnsAsync(workflowInstance);
 
             //Act
-            var exception = await Assert.ThrowsAsync<Exception>(() => sut.GetNextActivity(activityId, workflowInstanceId, questionScreenAnswers, ActivityTypeConstants.QuestionScreen, CancellationToken.None));
+            var exception = await Assert.ThrowsAsync<Exception>(() => sut.GetNextActivity(activityId, workflowInstanceId, questions, ActivityTypeConstants.QuestionScreen, CancellationToken.None));
 
             //Assert
             Assert.Equal($"Unable to progress workflow. Workflow status is: {workflowInstance.WorkflowStatus}", exception.Message);
@@ -51,13 +51,13 @@ namespace Elsa.Server.Tests.Providers
             WorkflowInstance workflowInstance,
             List<CollectedWorkflow> collectedWorkflows,
             ActivityBlueprint activityBlueprint,
-            List<QuestionScreenAnswer>? questionScreenAnswers,
+            List<Question>? questions,
             WorkflowNextActivityProvider sut)
         {
             //Arrange
             questionInvoker.Setup(x => x.ExecuteWorkflowsAsync(activityId,
                     ActivityTypeConstants.QuestionScreen,
-                    workflowInstanceId, questionScreenAnswers, CancellationToken.None))
+                    workflowInstanceId, questions, CancellationToken.None))
                 .ReturnsAsync(collectedWorkflows);
 
             workflowInstanceProvider.Setup(x => x.GetWorkflowInstance(workflowInstanceId, CancellationToken.None))
@@ -67,7 +67,7 @@ namespace Elsa.Server.Tests.Providers
                 .ReturnsAsync(activityBlueprint);
 
             //Act
-            var result = await sut.GetNextActivity(activityId, workflowInstanceId, questionScreenAnswers, ActivityTypeConstants.QuestionScreen, CancellationToken.None);
+            var result = await sut.GetNextActivity(activityId, workflowInstanceId, questions, ActivityTypeConstants.QuestionScreen, CancellationToken.None);
 
             //Assert
             Assert.Equal(activityBlueprint.Id, result.NextActivity.Id);
@@ -84,7 +84,7 @@ namespace Elsa.Server.Tests.Providers
             WorkflowInstance workflowInstance,
             List<CollectedWorkflow> collectedWorkflows,
             ActivityBlueprint activityBlueprint,
-            List<QuestionScreenAnswer>? questionScreenAnswers,
+            List<Question>? questions,
             WorkflowNextActivityProvider sut)
         {
             //Arrange
@@ -92,7 +92,7 @@ namespace Elsa.Server.Tests.Providers
 
             questionInvoker.Setup(x => x.ExecuteWorkflowsAsync(activityId,
                     ActivityTypeConstants.QuestionScreen,
-                    workflowInstanceId, questionScreenAnswers, CancellationToken.None))
+                    workflowInstanceId, questions, CancellationToken.None))
                 .ReturnsAsync(collectedWorkflows);
 
             workflowInstanceProvider.Setup(x => x.GetWorkflowInstance(workflowInstanceId, CancellationToken.None))
@@ -102,7 +102,7 @@ namespace Elsa.Server.Tests.Providers
                 .ReturnsAsync(activityBlueprint);
 
             //Act
-            var result = await sut.GetNextActivity(activityId, workflowInstanceId, questionScreenAnswers, ActivityTypeConstants.QuestionScreen, CancellationToken.None);
+            var result = await sut.GetNextActivity(activityId, workflowInstanceId, questions, ActivityTypeConstants.QuestionScreen, CancellationToken.None);
 
             //Assert
             Assert.Equal(activityBlueprint.Id, result.NextActivity.Id);
@@ -120,7 +120,7 @@ namespace Elsa.Server.Tests.Providers
             WorkflowInstance workflowInstance,
             List<CollectedWorkflow> collectedWorkflows,
             ActivityBlueprint activityBlueprint,
-            List<QuestionScreenAnswer>? questionScreenAnswers,
+            List<Question>? questions,
             WorkflowNextActivityProvider sut)
         {
             //Arrange
@@ -128,7 +128,7 @@ namespace Elsa.Server.Tests.Providers
 
             questionInvoker.Setup(x => x.ExecuteWorkflowsAsync(activityId,
                     ActivityTypeConstants.QuestionScreen,
-                    workflowInstanceId, questionScreenAnswers, CancellationToken.None))
+                    workflowInstanceId, questions, CancellationToken.None))
                 .ReturnsAsync(collectedWorkflows);
 
             workflowInstanceProvider.Setup(x => x.GetWorkflowInstance(workflowInstanceId, CancellationToken.None))
@@ -146,7 +146,7 @@ namespace Elsa.Server.Tests.Providers
                 .ReturnsAsync(dictionary);
 
             //Act
-            var result = await sut.GetNextActivity(activityId, workflowInstanceId, questionScreenAnswers, ActivityTypeConstants.QuestionScreen, CancellationToken.None);
+            var result = await sut.GetNextActivity(activityId, workflowInstanceId, questions, ActivityTypeConstants.QuestionScreen, CancellationToken.None);
 
             //Assert
             Assert.Equal(activityBlueprint.Id, result.NextActivity.Id);
@@ -165,7 +165,7 @@ namespace Elsa.Server.Tests.Providers
             List<CollectedWorkflow> collectedWorkflows,
             ActivityBlueprint activityBlueprint,
             ActivityBlueprint anotherActivityBlueprint,
-            List<QuestionScreenAnswer>? questionScreenAnswers,
+            List<Question>? questions,
             WorkflowNextActivityProvider sut)
         {
             //Arrange
@@ -173,7 +173,7 @@ namespace Elsa.Server.Tests.Providers
 
             questionInvoker.Setup(x => x.ExecuteWorkflowsAsync(It.IsAny<string>(),
                     ActivityTypeConstants.QuestionScreen,
-                    workflowInstanceId, It.IsAny<List<QuestionScreenAnswer>?>(), CancellationToken.None))
+                    workflowInstanceId, It.IsAny<List<Question>?>(), CancellationToken.None))
                 .ReturnsAsync(collectedWorkflows);
 
             workflowInstanceProvider.Setup(x => x.GetWorkflowInstance(workflowInstanceId, CancellationToken.None))
@@ -200,7 +200,7 @@ namespace Elsa.Server.Tests.Providers
                 .ReturnsAsync(anotherDictionary);
 
             //Act
-            var result = await sut.GetNextActivity(activityId, workflowInstanceId, questionScreenAnswers, ActivityTypeConstants.QuestionScreen, CancellationToken.None);
+            var result = await sut.GetNextActivity(activityId, workflowInstanceId, questions, ActivityTypeConstants.QuestionScreen, CancellationToken.None);
 
             //Assert
             Assert.Equal(anotherActivityBlueprint.Id, result.NextActivity.Id);
@@ -219,7 +219,7 @@ namespace Elsa.Server.Tests.Providers
             List<CollectedWorkflow> collectedWorkflows,
             ActivityBlueprint activityBlueprint,
             ActivityBlueprint anotherActivityBlueprint,
-            List<QuestionScreenAnswer>? questionScreenAnswers,
+            List<Question>? questions,
             WorkflowNextActivityProvider sut)
         {
             //Arrange
@@ -227,7 +227,7 @@ namespace Elsa.Server.Tests.Providers
 
             questionInvoker.Setup(x => x.ExecuteWorkflowsAsync(It.IsAny<string>(),
                     ActivityTypeConstants.QuestionScreen,
-                    workflowInstanceId, It.IsAny<List<QuestionScreenAnswer>?>(), CancellationToken.None))
+                    workflowInstanceId, It.IsAny<List<Question>?>(), CancellationToken.None))
                 .ReturnsAsync(collectedWorkflows);
 
             workflowInstanceProvider.Setup(x => x.GetWorkflowInstance(workflowInstanceId, CancellationToken.None))
@@ -254,7 +254,7 @@ namespace Elsa.Server.Tests.Providers
                 .ReturnsAsync(anotherDictionary);
 
             //Act
-            var result = await sut.GetNextActivity(activityId, workflowInstanceId, questionScreenAnswers, ActivityTypeConstants.QuestionScreen, CancellationToken.None);
+            var result = await sut.GetNextActivity(activityId, workflowInstanceId, questions, ActivityTypeConstants.QuestionScreen, CancellationToken.None);
 
             //Assert
             Assert.Equal(anotherActivityBlueprint.Id, result.NextActivity.Id);
@@ -267,19 +267,19 @@ namespace Elsa.Server.Tests.Providers
             string activityId,
             string workflowInstanceId,
             Exception exception,
-            List<QuestionScreenAnswer>? questionScreenAnswers,
+            List<Question>? questions,
             WorkflowNextActivityProvider sut)
         {
             //Arrange
             questionInvoker
                 .Setup(x => x.ExecuteWorkflowsAsync(It.IsAny<string>(),
                     ActivityTypeConstants.QuestionScreen,
-                    workflowInstanceId, It.IsAny<List<QuestionScreenAnswer>?>(), CancellationToken.None))
+                    workflowInstanceId, It.IsAny<List<Question>?>(), CancellationToken.None))
                 .Throws(exception);
 
             //Act
             var ex = await Assert.ThrowsAsync<Exception>(() => sut.GetNextActivity(activityId, workflowInstanceId,
-                questionScreenAnswers, ActivityTypeConstants.QuestionScreen, CancellationToken.None));
+                questions, ActivityTypeConstants.QuestionScreen, CancellationToken.None));
 
             //Assert
             Assert.Equal(exception.Message, ex.Message);
@@ -371,7 +371,7 @@ namespace Elsa.Server.Tests.Providers
 
             questionInvoker.Setup(x => x.ExecuteWorkflowsAsync(It.IsAny<string>(),
                     It.IsAny<string>(),
-                    workflowInstanceId, It.IsAny<List<QuestionScreenAnswer>?>(), CancellationToken.None))
+                    workflowInstanceId, It.IsAny<List<Question>?>(), CancellationToken.None))
                 .ReturnsAsync(collectedWorkflows);
 
             workflowInstanceProvider.Setup(x => x.GetWorkflowInstance(workflowInstanceId, CancellationToken.None))
@@ -421,7 +421,7 @@ namespace Elsa.Server.Tests.Providers
 
             questionInvoker.Setup(x => x.ExecuteWorkflowsAsync(It.IsAny<string>(),
                     It.IsAny<string>(),
-                    workflowInstanceId, It.IsAny<List<QuestionScreenAnswer>?>(), CancellationToken.None))
+                    workflowInstanceId, It.IsAny<List<Question>?>(), CancellationToken.None))
                 .ReturnsAsync(collectedWorkflows);
 
             workflowInstanceProvider.Setup(x => x.GetWorkflowInstance(workflowInstanceId, CancellationToken.None))
@@ -471,7 +471,7 @@ namespace Elsa.Server.Tests.Providers
 
             questionInvoker.Setup(x => x.ExecuteWorkflowsAsync(It.IsAny<string>(),
                     It.IsAny<string>(),
-                    workflowInstanceId, It.IsAny<List<QuestionScreenAnswer>?>(), CancellationToken.None))
+                    workflowInstanceId, It.IsAny<List<Question>?>(), CancellationToken.None))
                 .ReturnsAsync(collectedWorkflows);
 
             workflowInstanceProvider.Setup(x => x.GetWorkflowInstance(workflowInstanceId, CancellationToken.None))

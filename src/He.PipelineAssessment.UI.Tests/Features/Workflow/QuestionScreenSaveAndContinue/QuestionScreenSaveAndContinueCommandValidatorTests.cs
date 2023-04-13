@@ -23,7 +23,7 @@ namespace He.PipelineAssessment.UI.Tests.Features.Workflow.SaveAndContinue
         {
             //Arrange
             saveAndContinueCommand.Data.ActivityType = activityType;
-            saveAndContinueCommand.Data.QuestionScreenAnswers = new List<QuestionActivityData>();
+            saveAndContinueCommand.Data.Questions = new List<QuestionActivityData>();
             var questionActivityData = new QuestionActivityData()
             {
                 QuestionType = QuestionTypeConstants.DateQuestion,
@@ -34,13 +34,13 @@ namespace He.PipelineAssessment.UI.Tests.Features.Workflow.SaveAndContinue
                     Year = 2022
                 }
             };
-            saveAndContinueCommand.Data.QuestionScreenAnswers.Add(questionActivityData);
+            saveAndContinueCommand.Data.Questions.Add(questionActivityData);
 
             //Act
             var result = this._validator.TestValidate(saveAndContinueCommand);
 
             //Assert
-            Assert.Equal(hasQuestionScreenErrors, result.Errors.Any(x => x.PropertyName.Contains("QuestionScreenAnswers")));
+            Assert.Equal(hasQuestionScreenErrors, result.Errors.Any(x => x.PropertyName.Contains("Questions")));
         }
     }
 }

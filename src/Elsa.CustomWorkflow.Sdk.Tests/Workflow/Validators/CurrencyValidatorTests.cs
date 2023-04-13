@@ -14,7 +14,7 @@ namespace Elsa.CustomWorkflow.Sdk.Tests.Workflow.Validators
             CurrencyValidator validator = new CurrencyValidator();
             var questionActivityData = new QuestionActivityData
             {
-                Answer = null
+                Answers = new List<QuestionActivityAnswer>() { new() { AnswerText = null } }
             };
 
             //Act
@@ -22,7 +22,7 @@ namespace Elsa.CustomWorkflow.Sdk.Tests.Workflow.Validators
 
             //Assert
             result.ShouldNotHaveValidationErrorFor(c => c);
-            result.ShouldHaveValidationErrorFor(c => c.Answer).WithErrorMessage("The answer must be a number");
+            result.ShouldHaveValidationErrorFor(c => c.Answers).WithErrorMessage("The answer must be a number");
         }
 
         [Fact]
@@ -32,7 +32,7 @@ namespace Elsa.CustomWorkflow.Sdk.Tests.Workflow.Validators
             CurrencyValidator validator = new CurrencyValidator();
             var questionActivityData = new QuestionActivityData
             {
-                Answer = string.Empty
+                Answers = new List<QuestionActivityAnswer>()
             };
 
             //Act
@@ -40,7 +40,7 @@ namespace Elsa.CustomWorkflow.Sdk.Tests.Workflow.Validators
 
             //Assert
             result.ShouldNotHaveValidationErrorFor(c => c);
-            result.ShouldHaveValidationErrorFor(c => c.Answer).WithErrorMessage("The answer must be a number");
+            result.ShouldHaveValidationErrorFor(c => c.Answers).WithErrorMessage("The answer must be a number");
         }
 
 
@@ -51,7 +51,7 @@ namespace Elsa.CustomWorkflow.Sdk.Tests.Workflow.Validators
             CurrencyValidator validator = new CurrencyValidator();
             var questionActivityData = new QuestionActivityData
             {
-                Answer = "MyAnswer"
+                Answers = new List<QuestionActivityAnswer> { new QuestionActivityAnswer { AnswerText = "MyAnswer" } }
             };
 
             //Act
@@ -59,7 +59,7 @@ namespace Elsa.CustomWorkflow.Sdk.Tests.Workflow.Validators
 
             //Assert
             result.ShouldNotHaveValidationErrorFor(c => c);
-            result.ShouldHaveValidationErrorFor(c => c.Answer).WithErrorMessage("The answer must be a number");
+            result.ShouldHaveValidationErrorFor(c => c.Answers).WithErrorMessage("The answer must be a number");
         }
 
         [Fact]
@@ -69,7 +69,7 @@ namespace Elsa.CustomWorkflow.Sdk.Tests.Workflow.Validators
             CurrencyValidator validator = new CurrencyValidator();
             var questionActivityData = new QuestionActivityData
             {
-                Answer = "1234567"
+                Answers = new List<QuestionActivityAnswer> { new QuestionActivityAnswer { AnswerText = "1234567" } }
             };
 
             //Act
@@ -77,7 +77,7 @@ namespace Elsa.CustomWorkflow.Sdk.Tests.Workflow.Validators
 
             //Assert
             result.ShouldNotHaveValidationErrorFor(c => c);
-            result.ShouldNotHaveValidationErrorFor(c => c.Answer);
+            result.ShouldNotHaveValidationErrorFor(c => c.Answers);
         }
 
         [Fact]
@@ -87,7 +87,7 @@ namespace Elsa.CustomWorkflow.Sdk.Tests.Workflow.Validators
             CurrencyValidator validator = new CurrencyValidator();
             var questionActivityData = new QuestionActivityData
             {
-                Answer = "1234.567"
+                Answers = new List<QuestionActivityAnswer> { new QuestionActivityAnswer { AnswerText = "1234.567" } }
             };
 
             //Act
@@ -95,7 +95,7 @@ namespace Elsa.CustomWorkflow.Sdk.Tests.Workflow.Validators
 
             //Assert
             result.ShouldNotHaveValidationErrorFor(c => c);
-            result.ShouldNotHaveValidationErrorFor(c => c.Answer);
+            result.ShouldNotHaveValidationErrorFor(c => c.Answers);
         }
     }
 }

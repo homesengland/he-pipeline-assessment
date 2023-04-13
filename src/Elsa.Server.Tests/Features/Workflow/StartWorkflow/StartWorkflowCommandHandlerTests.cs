@@ -13,6 +13,7 @@ using Elsa.Services.Models;
 using He.PipelineAssessment.Tests.Common;
 using Moq;
 using Xunit;
+using Question = Elsa.CustomActivities.Activities.QuestionScreen.Question;
 using WorkflowInstance = Elsa.Models.WorkflowInstance;
 
 

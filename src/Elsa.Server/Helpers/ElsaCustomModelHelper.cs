@@ -3,6 +3,7 @@ using Elsa.CustomModels;
 using Elsa.CustomWorkflow.Sdk;
 using Elsa.Models;
 using Elsa.Server.Providers;
+using Question = Elsa.CustomModels.Question;
 
 namespace Elsa.Server.Helpers
 {
@@ -10,7 +11,7 @@ namespace Elsa.Server.Helpers
     {
         CustomActivityNavigation CreateNextCustomActivityNavigation(string previousActivityId, string previousActivityType, string nextActivityId, string nextActivityType, WorkflowInstance workflowInstance);
 
-        List<QuestionScreenAnswer> CreateQuestionScreenAnswers(string activityId, WorkflowInstance workflowInstance);
+        List<Question> CreateQuestions(string activityId, WorkflowInstance workflowInstance);
     }
 
     public class ElsaCustomModelHelper : IElsaCustomModelHelper
@@ -38,35 +39,33 @@ namespace Elsa.Server.Helpers
             };
         }
 
-        public QuestionScreenAnswer CreateQuestionScreenAnswer(string nextActivityId, string nextActivityType, Question question, WorkflowInstance workflowInstance)
+        public Question CreateQuestion(string nextActivityId, string nextActivityType, CustomActivities.Activities.QuestionScreen.Question question, WorkflowInstance workflowInstance)
         {
-            return new QuestionScreenAnswer
+            return new Question
             {
                 ActivityId = nextActivityId,
-                Answer = null,
-                Comments = null,
                 CorrelationId = workflowInstance.CorrelationId,
                 WorkflowInstanceId = workflowInstance.Id,
                 CreatedDateTime = _dateTimeProvider.UtcNow(),
                 QuestionId = question.Id,
                 QuestionType = question.QuestionType,
-                Question = question.QuestionText,
+                QuestionText = question.QuestionText,
                 Choices = MapChoices(question)
             };
         }
 
-        private List<QuestionScreenAnswer.Choice>? MapChoices(Question question)
+        private List<QuestionChoice>? MapChoices(CustomActivities.Activities.QuestionScreen.Question question)
         {
             var choices = question.QuestionType switch
             {
-                QuestionTypeConstants.CheckboxQuestion => question.Checkbox.Choices.Select(x =>
-                        new QuestionScreenAnswer.Choice() { Identifier = x.Identifier, Answer = x.Answer, IsSingle = x.IsSingle, IsPrePopulated = x.IsPrePopulated })
+                QuestionTypeConstants.CheckboxQuestion => question.Checkbox.Choices
+                    .Select(x => new QuestionChoice() { Identifier = x.Identifier, Answer = x.Answer, IsSingle = x.IsSingle, IsPrePopulated = x.IsPrePopulated })
                     .ToList(),
                 QuestionTypeConstants.RadioQuestion => question.Radio.Choices
-                    .Select(x => new QuestionScreenAnswer.Choice() { Identifier = x.Identifier, Answer = x.Answer, IsSingle = false, IsPrePopulated = x.IsPrePopulated })
+                    .Select(x => new QuestionChoice() { Identifier = x.Identifier, Answer = x.Answer, IsSingle = false, IsPrePopulated = x.IsPrePopulated })
                     .ToList(),
                 QuestionTypeConstants.PotScoreRadioQuestion => question.PotScoreRadio.Choices
-                    .Select(x => new QuestionScreenAnswer.Choice() { Identifier = x.Identifier, Answer = x.Answer, IsSingle = false, IsPrePopulated = x.IsPrePopulated })
+                    .Select(x => new QuestionChoice() { Identifier = x.Identifier, Answer = x.Answer, IsSingle = false, IsPrePopulated = x.IsPrePopulated, PotScoreCategory = x.PotScore })
                     .ToList(),
                 _ => null
             };
@@ -74,9 +73,9 @@ namespace Elsa.Server.Helpers
             return choices;
         }
 
-        public List<QuestionScreenAnswer> CreateQuestionScreenAnswers(string activityId, WorkflowInstance workflowInstance)
+        public List<Question> CreateQuestions(string activityId, WorkflowInstance workflowInstance)
         {
-            var assessments = new List<QuestionScreenAnswer>();
+            var questions = new List<Question>();
             //create one for each question
             var dictionList = workflowInstance.ActivityData
                 .FirstOrDefault(x => x.Key == activityId).Value;
@@ -87,19 +86,19 @@ namespace Elsa.Server.Helpers
 
                 if (dictionaryQuestions != null)
                 {
-                    var questionList = (List<Question>)dictionaryQuestions.Questions;
+                    var questionList = (List<CustomActivities.Activities.QuestionScreen.Question>)dictionaryQuestions.Questions;
                     if (questionList!.Any())
                     {
                         foreach (var item in questionList!)
                         {
-                            assessments.Add(this.CreateQuestionScreenAnswer(activityId, ActivityTypeConstants.QuestionScreen, item, workflowInstance));
+                            questions.Add(this.CreateQuestion(activityId, ActivityTypeConstants.QuestionScreen, item, workflowInstance));
                         }
-                        return assessments;
+                        return questions;
                     }
                 }
             }
 
-            return assessments;
+            return questions;
         }
     }
 }

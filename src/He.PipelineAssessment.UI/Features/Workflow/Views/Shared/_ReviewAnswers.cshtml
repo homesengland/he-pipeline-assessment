@@ -1,0 +1,35 @@
+﻿@using Elsa.CustomWorkflow.Sdk
+@model He.PipelineAssessment.UI.Features.Workflow.ViewModels.ReviewAnswers;
+@{
+}
+<div class="govuk-grid-row">
+    <div class="govuk-grid-column-two-thirds-from-desktop">
+        <dl class="govuk-summary-list govuk-!-margin-bottom-9">
+            @foreach (var question in Model.Questions!)
+            {
+           
+                <div class="govuk-summary-list__row">
+                    <dt class="govuk-summary-list__key">
+                        @question.QuestionText
+                    </dt>
+                    <dd class="govuk-summary-list__value">
+                        @if (question.Answers != null)
+                        {
+                            @foreach (var answer in question.Answers)
+                            {
+                                <p>@answer.AnswerText</p>
+                            }
+                        }
+                    </dd>
+                    @if (Model.RenderChangeLinks && Model.WorkflowInstanceId != null)
+                    {
+                        <dd class="govuk-summary-list__actions">
+                            @Html.ActionLink("Change", "LoadWorkflowActivity", "Workflow", new { WorkflowInstanceId = Model.WorkflowInstanceId, ActivityId = @question.ActivityId, ActivityType = ActivityTypeConstants.QuestionScreen }, new { @class = "govuk-link" })
+                        </dd>
+                    }
+                </div>
+          
+            }
+        </dl>
+    </div>
+</div>

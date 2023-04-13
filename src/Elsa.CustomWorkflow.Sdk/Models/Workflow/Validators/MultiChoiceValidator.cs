@@ -12,10 +12,10 @@ namespace Elsa.CustomWorkflow.Sdk.Models.Workflow.Validators
                     {
                         RuleFor(x => x).Must(multipleChoice =>
                             {
-                                if (multipleChoice.SelectedChoices.Count() <= 1) return true;
+                                if (multipleChoice.SelectedChoices!.Count() <= 1) return true;
                                 foreach (var choice in multipleChoice.Choices)
                                 {
-                                    if (choice.IsSingle && multipleChoice.SelectedChoices.Contains(choice.Answer))
+                                    if (choice.IsSingle && multipleChoice.SelectedChoices!.Contains(choice.Id))
                                     {
                                         return false;
                                     }
@@ -27,7 +27,7 @@ namespace Elsa.CustomWorkflow.Sdk.Models.Workflow.Validators
                             {
                                 var selectedAnswers = x.SelectedChoices;
                                 var exclusiveAnswers = x.Choices
-                                    .Where(c => c.IsSingle && selectedAnswers.Contains(c.Answer)).Select(c => c.Answer)
+                                    .Where(c => c.IsSingle && selectedAnswers!.Contains(c.Id)).Select(c => c.Answer)
                                     .ToList();
 
                                 if (exclusiveAnswers.Count() > 1)

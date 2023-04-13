@@ -12,7 +12,7 @@ namespace Elsa.CustomActivities.Tests.Activities.QuestionScreen
         [Theory]
         [AutoMoqData]
         public async Task OnResumeAsyncReturnsCombinedResultWithDefaultOutcomeAndSuspendResult_GivenCorrectContextWithNoMatches(
-            List<QuestionScreenAnswer> assessmentQuestion,
+            List<Question> assessmentQuestion,
             CustomActivities.Activities.QuestionScreen.QuestionScreen sut)
         {
             //Arrange
@@ -35,7 +35,7 @@ namespace Elsa.CustomActivities.Tests.Activities.QuestionScreen
         [Theory]
         [AutoMoqData]
         public async Task OnResumeAsyncReturnsCombinedResultWithMatchedOutcomeAndSuspendResult_GivenCorrectContextWithMatches(
-            List<QuestionScreenAnswer> assessmentQuestion,
+            List<Question> assessmentQuestion,
             CustomActivities.Activities.QuestionScreen.QuestionScreen sut)
         {
             //Arrange

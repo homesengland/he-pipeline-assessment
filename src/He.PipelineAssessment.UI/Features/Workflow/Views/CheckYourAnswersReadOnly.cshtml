@@ -1,8 +1,6 @@
 ﻿@model QuestionScreenSaveAndContinueCommand;
-@using He.PipelineAssessment.UI
-@using Elsa.CustomWorkflow.Sdk
 @using He.PipelineAssessment.UI.Features.Workflow.QuestionScreenSaveAndContinue
-@using System.Text.Json
+@using He.PipelineAssessment.UI.Features.Workflow.ViewModels
 @{
     ViewData["Title"] = "Pipeline Assessment";
     Layout = "_Layout";
@@ -12,42 +10,7 @@
         @Html.DisplayTextFor(m => m.Data.PageTitle)
     </h1>
 
-    <div class="govuk-grid-row">
-        <div class="govuk-grid-column-two-thirds-from-desktop">
-            <dl class="govuk-summary-list govuk-!-margin-bottom-9">
-                @foreach (var question in Model.Data.CheckQuestionScreenAnswers!)
-                {
-
-                    <div class="govuk-summary-list__row">
-                        <dt class="govuk-summary-list__key">
-                            @question.Question
-                        </dt>
-                        <dd class="govuk-summary-list__value">
-                            @if (question.QuestionType == QuestionTypeConstants.CheckboxQuestion)
-                            {
-                                if (question.Answer != null)
-                                {
-                                    var answerList = JsonSerializer.Deserialize<List<string>>(question.Answer);
-
-                                    if (answerList != null)
-                                    {
-                                        var result = string.Join(", ", answerList);
-                                        @result
-                                    }
-                                }
-                            }
-                            else
-                            {
-                                @question.Answer
-                            }
-                        </dd>
-
-                    </div>
-
-                }
-            </dl>
-        </div>
-    </div>
+    @await Html.PartialAsync("_ReviewAnswers",new ReviewAnswers{Questions = Model.Data.CheckQuestions, RenderChangeLinks = false, WorkflowInstanceId = Model.Data.WorkflowInstanceId})
 
     <br />
     <div>

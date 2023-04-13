@@ -96,7 +96,7 @@ namespace Elsa.CustomWorkflow.Sdk.Tests.Workflow.Validators
                     IsSingle = true
                    },
                 },
-                SelectedChoices = new List<string>() { "Test 1", "Test 2", "Test 4" }
+                SelectedChoices = new List<int>() { 1, 2, 4 }
             };
 
             MultiQuestionActivityDataValidator validator = new MultiQuestionActivityDataValidator();
@@ -120,26 +120,30 @@ namespace Elsa.CustomWorkflow.Sdk.Tests.Workflow.Validators
                 {
                 new Choice
                 {
+                    Id = 1,
                     Answer = "Test 1",
                     IsSingle = true
                 },
                 new Choice
                 {
+                    Id = 2,
                     Answer = "Test 2",
                     IsSingle = true
                 },
                 new Choice
                 {
+                    Id = 3,
                     Answer = "Test 3",
                     IsSingle = false
                    },
                 new Choice
                 {
+                    Id = 4,
                     Answer = "Test 4",
                     IsSingle = true
                    },
                 },
-                SelectedChoices = new List<string>() { "Test 1", "Test 2", "Test 4" }
+                SelectedChoices = new List<int>() { 1, 2, 4 }
             };
 
             MultiQuestionActivityDataValidator validator = new MultiQuestionActivityDataValidator();
@@ -161,7 +165,7 @@ namespace Elsa.CustomWorkflow.Sdk.Tests.Workflow.Validators
             QuestionActivityData activityData = new QuestionActivityData
             {
                 QuestionType = questionType,
-                Answer = string.Empty
+                Answers = new List<QuestionActivityAnswer>()
             };
 
             MultiQuestionActivityDataValidator validator = new MultiQuestionActivityDataValidator();
@@ -170,7 +174,7 @@ namespace Elsa.CustomWorkflow.Sdk.Tests.Workflow.Validators
             var expectedValidationResult = validator.TestValidate(activityData);
 
             //Assert
-            expectedValidationResult.ShouldNotHaveValidationErrorFor(x => x.Answer);
+            expectedValidationResult.ShouldNotHaveValidationErrorFor(x => x.Answers);
         }
 
         [Theory]
@@ -183,7 +187,7 @@ namespace Elsa.CustomWorkflow.Sdk.Tests.Workflow.Validators
             QuestionActivityData activityData = new QuestionActivityData
             {
                 QuestionType = questionType,
-                Answer = string.Empty
+                Answers = new List<QuestionActivityAnswer>()
             };
 
             MultiQuestionActivityDataValidator validator = new MultiQuestionActivityDataValidator();
@@ -192,7 +196,7 @@ namespace Elsa.CustomWorkflow.Sdk.Tests.Workflow.Validators
             var expectedValidationResult = validator.TestValidate(activityData);
 
             //Assert
-            expectedValidationResult.ShouldHaveValidationErrorFor(x => x.Answer);
+            expectedValidationResult.ShouldHaveValidationErrorFor(x => x.Answers);
         }
 
         [Theory]
@@ -208,7 +212,7 @@ namespace Elsa.CustomWorkflow.Sdk.Tests.Workflow.Validators
                 QuestionType = questionType,
                 Radio = new Radio()
                 {
-                    SelectedAnswer = string.Empty
+                    SelectedAnswer = null
                 }
             };
 
@@ -230,7 +234,7 @@ namespace Elsa.CustomWorkflow.Sdk.Tests.Workflow.Validators
                 QuestionType = QuestionTypeConstants.RadioQuestion,
                 Radio = new Radio()
                 {
-                    SelectedAnswer = string.Empty
+                    SelectedAnswer = null
                 }
             };
 

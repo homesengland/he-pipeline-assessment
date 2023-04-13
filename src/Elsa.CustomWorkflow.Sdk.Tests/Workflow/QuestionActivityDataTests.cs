@@ -34,7 +34,7 @@ namespace Elsa.CustomWorkflow.Sdk.Tests.Workflow
         {
             //Arrange
             sut.QuestionType = QuestionTypeConstants.DateQuestion;
-            sut.Answer = null;
+            sut.Answers = new List<QuestionActivityAnswer>() { new() { AnswerText = null } };
 
             //Act
             var date = sut.GetDate();
@@ -52,7 +52,7 @@ namespace Elsa.CustomWorkflow.Sdk.Tests.Workflow
             //Arrange
             sut.QuestionType = QuestionTypeConstants.DateQuestion;
             var dateToTest = "2019aaa89787879as-2-17";
-            sut.Answer = dateToTest;
+            sut.Answers = new List<QuestionActivityAnswer> { new() { AnswerText = dateToTest } };
 
             //Act
             var date = sut.GetDate();
@@ -70,7 +70,7 @@ namespace Elsa.CustomWorkflow.Sdk.Tests.Workflow
             //Arrange
             sut.QuestionType = QuestionTypeConstants.DateQuestion;
             var dateToTest = "2019-2-17";
-            sut.Answer = dateToTest;
+            sut.Answers = new List<QuestionActivityAnswer> { new() { AnswerText = dateToTest } };
 
             //Act
             var date = sut.GetDate();
@@ -86,13 +86,13 @@ namespace Elsa.CustomWorkflow.Sdk.Tests.Workflow
         public void SetDateDoesNotSetAnAnswer_GivenNullValue(QuestionActivityData sut)
         {
             //Arrange
-            sut.Answer = null;
+            sut.Answers = new List<QuestionActivityAnswer>() { new() { AnswerText = null } };
 
             //Act
             sut.SetDate(null);
 
             //Assert
-            Assert.Null(sut.Answer);
+            Assert.Null(sut.Answers.First().AnswerText);
             Assert.Null(sut.Date.Day);
             Assert.Null(sut.Date.Month);
             Assert.Null(sut.Date.Year);
@@ -107,6 +107,7 @@ namespace Elsa.CustomWorkflow.Sdk.Tests.Workflow
         public void SetDateDoesNotSetAnAnswer_AndRetainsDate_GivenIncompleteDate(int? year, int? month, int? day, QuestionActivityData sut)
         {
             //Arrange
+            sut.Answers = new List<QuestionActivityAnswer>();
             var date = new Date
             {
                 Year = year,
@@ -119,7 +120,7 @@ namespace Elsa.CustomWorkflow.Sdk.Tests.Workflow
             sut.SetDate(date);
 
             //Assert
-            Assert.Null(sut.Answer);
+            Assert.Empty(sut.Answers);
             Assert.Equal(day, sut.Date.Day);
             Assert.Equal(month, sut.Date.Month);
             Assert.Equal(year, sut.Date.Year);
@@ -139,13 +140,13 @@ namespace Elsa.CustomWorkflow.Sdk.Tests.Workflow
                 Month = month,
                 Day = day
             };
-            sut.Answer = null;
+            sut.Answers = new List<QuestionActivityAnswer>() { new() { AnswerText = null } };
 
             //Act
             sut.SetDate(date);
 
             //Assert
-            Assert.Null(sut.Answer);
+            Assert.Null(sut.Answers.First().AnswerText);
             Assert.Null(sut.Date.Day);
             Assert.Null(sut.Date.Month);
             Assert.Null(sut.Date.Year);
@@ -165,7 +166,7 @@ namespace Elsa.CustomWorkflow.Sdk.Tests.Workflow
                 Month = month,
                 Day = day
             };
-            sut.Answer = null;
+            sut.Answers = new List<QuestionActivityAnswer>();
             sut.QuestionType = QuestionTypeConstants.DateQuestion;
 
             //Act
@@ -175,7 +176,7 @@ namespace Elsa.CustomWorkflow.Sdk.Tests.Workflow
 
             var dateString = $"{year}-{month}-{day}";
             bool isParseableDateTime = DateTime.TryParseExact(dateString, Constants.DateFormat, CultureInfo.InvariantCulture, DateTimeStyles.AdjustToUniversal, out DateTime parsedDateTime);
-            Assert.Equal(dateString, sut.Answer);
+            Assert.Equal(dateString, sut.Answers!.FirstOrDefault()!.AnswerText);
             Assert.True(isParseableDateTime);
         }
 
@@ -194,14 +195,14 @@ namespace Elsa.CustomWorkflow.Sdk.Tests.Workflow
                 Month = month,
                 Day = day
             };
-            sut.Answer = null;
+            sut.Answers = new List<QuestionActivityAnswer>() { new() { AnswerText = null } };
             sut.QuestionType = activityType;
 
             //Act
             sut.SetDate(date);
 
             //Assert
-            Assert.Null(sut.Answer);
+            Assert.Null(sut.Answers.First().AnswerText);
         }
 
 
@@ -228,7 +229,7 @@ namespace Elsa.CustomWorkflow.Sdk.Tests.Workflow
         {
             //Arrange
             sut.QuestionType = QuestionTypeConstants.CurrencyQuestion;
-            sut.Answer = null;
+            sut.Answers = new List<QuestionActivityAnswer>() { new() { AnswerText = null } };
 
             //Act
 
@@ -244,7 +245,8 @@ namespace Elsa.CustomWorkflow.Sdk.Tests.Workflow
         {
             //Arrange
             sut.QuestionType = QuestionTypeConstants.CurrencyQuestion;
-            sut.Answer = answerString;
+            sut.Answers = new List<QuestionActivityAnswer> { new() { AnswerText = answerString } };
+
             decimal numericAnswer = JsonSerializer.Deserialize<decimal>(answerString);
 
             //Act
@@ -262,7 +264,7 @@ namespace Elsa.CustomWorkflow.Sdk.Tests.Workflow
         {
             //Arrange
             sut.QuestionType = QuestionTypeConstants.CurrencyQuestion;
-            sut.Answer = answerString;
+            sut.Answers = new List<QuestionActivityAnswer> { new() { AnswerText = answerString } };
 
             //Act
 
@@ -279,14 +281,15 @@ namespace Elsa.CustomWorkflow.Sdk.Tests.Workflow
         public void SetDecimalDoesNotWriteValue_GivenNonDecimalActivityType(string activityType, QuestionActivityData sut)
         {
             //Arrange
-            sut.Answer = "12.0";
+            sut.Answers = new List<QuestionActivityAnswer> { new() { AnswerText = "12.0" } };
+
             sut.QuestionType = activityType;
 
             //Act
             sut.Decimal = 123.0M;
 
             //Assert
-            Assert.Equal("12.0", sut.Answer);
+            Assert.Equal("12.0", sut.Answers.FirstOrDefault()!.AnswerText);
         }
 
         [Theory]
@@ -300,7 +303,7 @@ namespace Elsa.CustomWorkflow.Sdk.Tests.Workflow
             sut.Decimal = null;
 
             //Assert
-            Assert.Null(sut.Answer);
+            Assert.Equal(string.Empty, sut.Answers.FirstOrDefault()!.AnswerText);
             Assert.Null(sut.Decimal);
         }
 
@@ -318,7 +321,7 @@ namespace Elsa.CustomWorkflow.Sdk.Tests.Workflow
             sut.Decimal = numericAnswer;
 
             //Assert
-            Assert.Equal(decimalString, sut.Answer);
+            Assert.Equal(decimalString, sut.Answers.FirstOrDefault()!.AnswerText);
             Assert.Equal(numericAnswer, sut.Decimal);
         }
 
@@ -343,7 +346,7 @@ namespace Elsa.CustomWorkflow.Sdk.Tests.Workflow
         public void SetChoicesForMultichoiceDoesNotSetValue_GivenValidDataButActivityTypeIsIncorrect(string activityType, QuestionActivityData sut)
         {
             //Arrange
-            sut.Answer = null;
+            sut.Answers = new List<QuestionActivityAnswer>() { new() { AnswerText = null } };
             List<Choice> choices = new List<Choice>
             {
                 new Choice
@@ -369,7 +372,7 @@ namespace Elsa.CustomWorkflow.Sdk.Tests.Workflow
 
             //Assert
             Assert.Empty(sut.Checkbox.Choices);
-            Assert.Null(sut.Answer);
+            Assert.Null(sut.Answers.First().AnswerText);
         }
 
 
@@ -378,33 +381,38 @@ namespace Elsa.CustomWorkflow.Sdk.Tests.Workflow
         public void SetChoicesForMultichoiceSetsCorrectValueAndAnswer_GivenValidDataAndActivityTypeIsCorrect(QuestionActivityData sut)
         {
             //Arrange
-            sut.Answer = null;
+            sut.Answers = new List<QuestionActivityAnswer>() { new() { AnswerText = null } };
             List<Choice> choices = new List<Choice>
             {
                 new Choice
                 {
+                    Id = 1,
                     Answer = "Test 1",
                     IsSingle = false,
                 },
                 new Choice
                 {
+                    Id = 2,
                     Answer = "Test 2",
                      IsSingle = false,
                 },
                 new Choice
                 {
+                    Id = 3,
                     Answer = "Test 3",
                      IsSingle = true,
                 },
             };
-            var answerList = new List<string>() { "Test 1" };
+            var answerList = new List<Answer>{ new Answer("0", "Test 1", null, 1)};
+            var selectedChoices = new List<int> { 1 };
             sut.QuestionType = QuestionTypeConstants.CheckboxQuestion;
 
             //Act
-            sut.Checkbox = new Checkbox() { Choices = choices, SelectedChoices = answerList };
+            sut.Checkbox = new Checkbox() { Choices = choices, SelectedChoices = selectedChoices };
             //Assert
             Assert.Equal(choices.ToArray(), sut.Checkbox.Choices);
-            Assert.Equal(JsonSerializer.Serialize(answerList), sut.Answer);
+            Assert.Equal(answerList.First().AnswerText, sut.Answers!.FirstOrDefault()!.AnswerText);
+            Assert.Equal(answerList.First().ChoiceId, sut.Answers!.FirstOrDefault()!.ChoiceId);
         }
 
         [Theory]
@@ -428,7 +436,7 @@ namespace Elsa.CustomWorkflow.Sdk.Tests.Workflow
         public void SetChoicesForSingleChoiceDoesNotSetValue_GivenValidDataButActivityTypeIsIncorrect(string activityType, QuestionActivityData sut)
         {
             //Arrange
-            sut.Answer = null;
+            sut.Answers = new List<QuestionActivityAnswer>() { new() { AnswerText = null } };
             List<Choice> choices = new List<Choice>
             {
                 new Choice
@@ -451,7 +459,7 @@ namespace Elsa.CustomWorkflow.Sdk.Tests.Workflow
 
             //Assert
             Assert.Empty(sut.Radio.Choices);
-            Assert.Null(sut.Answer);
+            Assert.Null(sut.Answers.First().AnswerText);
         }
 
         [Theory]
@@ -459,7 +467,7 @@ namespace Elsa.CustomWorkflow.Sdk.Tests.Workflow
         public void SetChoicesForSinglechoiceSetsCorrectValueAndAnswer_GivenValidDataAndActivityTypeIsCorrect(QuestionActivityData sut)
         {
             //Arrange
-            sut.Answer = null;
+            sut.Answers = new List<QuestionActivityAnswer>() { new() { AnswerText = null } };
             List<Choice> choices = new List<Choice>
             {
                 new Choice
@@ -479,10 +487,10 @@ namespace Elsa.CustomWorkflow.Sdk.Tests.Workflow
             sut.QuestionType = QuestionTypeConstants.RadioQuestion;
 
             //Act
-            sut.Radio = new Radio() { Choices = choices, SelectedAnswer = choices[0].Answer };
+            sut.Radio = new Radio() { Choices = choices, SelectedAnswer = choices[0].Id };
             //Assert
             Assert.Equal(choices.ToArray(), sut.Radio.Choices);
-            Assert.Equal("Test 1", sut.Answer);
+            Assert.Equal("Test 1", sut.Answers!.FirstOrDefault()!.AnswerText);
         }
 
         [Theory]

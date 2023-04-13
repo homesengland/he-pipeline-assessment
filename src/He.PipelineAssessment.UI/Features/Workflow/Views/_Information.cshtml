@@ -1,5 +1,5 @@
 ﻿@using He.PipelineAssessment.UI.Features.Workflow.ViewModels
-@model He.PipelineAssessment.UI.Features.Workflow.ViewModels.MultiQuestion
+@model He.PipelineAssessment.UI.Features.Workflow.ViewModels.Question
 
 @foreach(var text in Model.Information.Text){
      @await Html.PartialAsync("_InformationTextWrapper", text)

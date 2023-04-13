@@ -36,7 +36,7 @@ namespace Elsa.Server.Services
 
                 await _elsaCustomRepository.DeleteCustomNavigations(previousPathActivities, workflowInstanceId, cancellationToken);
 
-                await _elsaCustomRepository.DeleteQuestionScreenAnswers(
+                await _elsaCustomRepository.DeleteQuestions(
                     changedPathCustomNavigation.WorkflowInstanceId, previousPathActivities, cancellationToken);
             }
         }

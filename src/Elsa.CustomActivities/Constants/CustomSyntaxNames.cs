@@ -33,4 +33,9 @@ namespace Elsa.CustomActivities.Constants
         public const string Url = "Url";
     }
 
+    public class ScoringSyntaxNames
+    {
+        public const string PotScore = "CalculatePotScore";
+    }
+
 }

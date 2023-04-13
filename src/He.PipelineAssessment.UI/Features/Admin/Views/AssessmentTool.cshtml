@@ -74,7 +74,7 @@
                         </td>
                         <td class="govuk-table__cell">
                             @Html.AntiForgeryToken()
-                            @Html.Hidden("UpdateAssessmentToolCommand.Id", assessmentTool.Id)
+                            @Html.Hidden("UpdateAssessmentToolCommand.ChoiceId", assessmentTool.Id)
                             <input class="govuk-button govuk-!-margin-0" data-module="govuk-button" id="Update" type="submit" value="Update" />
                         </td>
                     }

@@ -5,6 +5,7 @@ using He.PipelineAssessment.UI.Features.Workflow.LoadCheckYourAnswersScreen;
 using He.PipelineAssessment.UI.Features.Workflow.LoadConfirmationScreen;
 using He.PipelineAssessment.UI.Features.Workflow.LoadQuestionScreen;
 using He.PipelineAssessment.UI.Features.Workflow.QuestionScreenSaveAndContinue;
+using He.PipelineAssessment.UI.Features.Workflow.SetResult;
 using He.PipelineAssessment.UI.Features.Workflow.StartWorkflow;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
@@ -83,7 +84,7 @@ namespace He.PipelineAssessment.UI.Features.Workflow
 
                             if (result.IsCorrectBusinessArea)
                             {
-                                return View("MultiSaveAndContinue", result);
+                                return View("SaveAndContinue", result);
                             }
                             else
                             {
@@ -132,6 +133,17 @@ namespace He.PipelineAssessment.UI.Features.Workflow
                             {
                                 return RedirectToAction("LoadReadOnlyWorkflowActivity", request);
                             }
+                        }
+                    case ActivityTypeConstants.PotScoreCalculation:
+                        {
+                            var setResultRequest = new SetResultRequest
+                            {
+                                WorkflowInstanceId = request.WorkflowInstanceId,
+                                ActivityId = request.ActivityId
+                            };
+                            var result = await this._mediator.Send(setResultRequest);
+
+                            return RedirectToAction("LoadWorkflowActivity", result);
                         }
                     default:
                         throw new ApplicationException(
@@ -223,7 +235,7 @@ namespace He.PipelineAssessment.UI.Features.Workflow
                 {
                     command.ValidationMessages = validationResult;
 
-                    return View("MultiSaveAndContinue", command);
+                    return View("SaveAndContinue", command);
                 }
             }
             catch (Exception e)

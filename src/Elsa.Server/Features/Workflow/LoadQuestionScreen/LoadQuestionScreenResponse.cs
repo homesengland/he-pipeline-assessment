@@ -14,7 +14,7 @@ namespace Elsa.Server.Features.Workflow.LoadQuestionScreen
         public string FooterTitle { get; set; } = null!;
         public string FooterText { get; set; } = null!;
 
-        public List<QuestionActivityData> QuestionScreenAnswers { get; set; } = null!;
+        public List<QuestionActivityData> Questions { get; set; } = null!;
     }
 
     public class QuestionActivityData
@@ -30,26 +30,31 @@ namespace Elsa.Server.Features.Workflow.LoadQuestionScreen
         public object? Output { get; set; }
 
         public string? QuestionType { get; set; } = null!;
-        public string? Answer { get; set; }
         public int? CharacterLimit { get; set; }
         public Checkbox Checkbox { get; set; } = null!;
         public Radio Radio { get; set; } = null!;
         public Information Information { get; set; } = null!;
         public bool IsReadOnly { get; set; }
+        public List<Answer> Answers { get; set; } = new();
+
+        public bool HasAnswers()
+        {
+            return Answers.Any();
+        }
     }
 
 
     public class Checkbox
     {
-        public QuestionScreenAnswer.Choice[] Choices { get; set; } = new List<QuestionScreenAnswer.Choice>().ToArray();
+        public QuestionChoice[] Choices { get; set; } = new List<QuestionChoice>().ToArray();
 
-        public List<string> SelectedChoices { get; set; } = null!;
+        public List<int> SelectedChoices { get; set; } = null!;
     }
 
     public class Radio
     {
-        public QuestionScreenAnswer.Choice[] Choices { get; set; } = new List<QuestionScreenAnswer.Choice>().ToArray();
-        public string SelectedAnswer { get; set; } = null!;
+        public QuestionChoice[] Choices { get; set; } = new List<QuestionChoice>().ToArray();
+        public int? SelectedAnswer { get; set; }
     }
 
     public class Information
