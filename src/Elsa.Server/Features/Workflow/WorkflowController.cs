@@ -173,15 +173,11 @@ namespace Elsa.Server.Features.Workflow
         }
 
         [HttpPost("SetResult")]
-        public async Task<IActionResult> SetResult([FromBody] string workflowInstanceId, string activityId)
+        public async Task<IActionResult> SetResult([FromBody] SetWorkflowResultCommand command)
         {
             try
             {
-                var result = await _mediator.Send(new SetWorkflowResultCommand
-                {
-                    WorkflowInstanceId = workflowInstanceId,
-                    ActivityId = activityId
-                });
+                var result = await _mediator.Send(command);
 
                 if (result.IsSuccess)
                 {

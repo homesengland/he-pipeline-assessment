@@ -30,10 +30,12 @@ namespace Elsa.CustomActivities.Activities.Scoring
         }
 
 
-        [ActivityInput(Hint = "Set the formula for how to calculate the pot-score outcome of this stage",
+        [ActivityInput(
+            Hint = "Set the formula for how to calculate the pot-score outcome of this stage",
             UIHint = ActivityInputUIHints.MultiLine, 
             SupportedSyntaxes = new[] { SyntaxNames.JavaScript }, 
-            DefaultSyntax = ScoringSyntaxNames.PotScore)]
+            DefaultSyntax = ScoringSyntaxNames.PotScore,
+            IsDesignerCritical = true)]
         public string Calculation { get; set; } = null!;
 
         [ActivityInput(Label = "Scoring outcome conditions", Hint = "The conditions to evaluate.", UIHint = CustomActivityUIHints.CustomSwitch, DefaultSyntax = "Switch", IsDesignerCritical = true)]

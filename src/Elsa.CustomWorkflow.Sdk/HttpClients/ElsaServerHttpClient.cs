@@ -208,8 +208,12 @@ namespace Elsa.CustomWorkflow.Sdk.HttpClients
             string data;
             string relativeUri = $"workflow/SetResult?workflowInstanceId={model.WorkflowInstanceId}&activityId={model.ActivityId}";
 
+            using var request = new HttpRequestMessage(HttpMethod.Post, relativeUri);
+            var content = JsonSerializer.Serialize(model);
+            request.Content = new StringContent(content, Encoding.UTF8, "application/json");
+
             using (var response = await _httpClientFactory.CreateClient("ElsaServerClient")
-                       .GetAsync(relativeUri)
+                       .SendAsync(request)
                        .ConfigureAwait(false))
             {
                 data = await response.Content.ReadAsStringAsync().ConfigureAwait(false);

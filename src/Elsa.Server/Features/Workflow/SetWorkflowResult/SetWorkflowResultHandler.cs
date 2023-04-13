@@ -32,7 +32,7 @@ namespace Elsa.Server.Features.Workflow.SetWorkflowResult
             var result = new OperationResult<SetWorkflowResultResponse>();
             try
             {
-                var workflowNextActivityModel = await _workflowNextActivityProvider.GetNextActivity(command.ActivityId, command.WorkflowInstanceId, null, ActivityTypeConstants.CheckYourAnswersScreen, cancellationToken);
+                var workflowNextActivityModel = await _workflowNextActivityProvider.GetNextActivity(command.ActivityId, command.WorkflowInstanceId, null, ActivityTypeConstants.PotScoreCalculation, cancellationToken);
 
                 var nextActivityRecord =
                    await _elsaCustomRepository.GetCustomActivityNavigation(workflowNextActivityModel.NextActivity.Id,

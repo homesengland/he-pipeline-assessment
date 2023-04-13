@@ -10,6 +10,7 @@ using Elsa.CustomActivities.Activities.SinglePipelineDataSource;
 using Elsa.CustomActivities.Activities.VFMDataSource;
 using Elsa.CustomActivities.Describers;
 using Elsa.CustomActivities.Handlers;
+using Elsa.CustomActivities.Handlers.Scoring;
 using Elsa.CustomActivities.Handlers.Syntax;
 using Elsa.CustomActivities.OptionsProviders;
 using Elsa.CustomInfrastructure.Data;
@@ -60,6 +61,7 @@ builder.Services.AddScoped<ICustomPropertyDescriber, CustomPropertyDescriber>();
 
 builder.Services.TryAddProvider<IExpressionHandler, InformationTextExpressionHandler>(ServiceLifetime.Singleton);
 builder.Services.TryAddProvider<IExpressionHandler, QuestionListExpressionHandler>(ServiceLifetime.Singleton);
+builder.Services.TryAddProvider<IExpressionHandler, PotScoreCalculationExpressionHandler>(ServiceLifetime.Singleton);
 builder.Services.TryAddSingleton<INestedSyntaxExpressionHandler, NestedSyntaxExpressionHandler>();
 
 builder.Services.AddDbContext<ElsaCustomContext>(config =>
