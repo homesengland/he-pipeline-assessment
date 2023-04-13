@@ -19,5 +19,7 @@
         public const string TextAreaQuestion = "TextAreaQuestion";
         public const string Information = "Information";
         public const string PotScoreRadioQuestion = "PotScoreRadioQuestion";
+        public const string WeightedRadioQuestion = "WeightedRadioQuestion";
+        public const string WeightedCheckboxQuestion = "WeightedCheckboxQuestion";
     }
 }

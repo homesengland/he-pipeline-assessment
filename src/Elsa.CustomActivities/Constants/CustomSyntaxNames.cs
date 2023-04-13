@@ -36,6 +36,8 @@ namespace Elsa.CustomActivities.Constants
     public class ScoringSyntaxNames
     {
         public const string PotScore = "CalculatePotScore";
+        public const string Radio = "WeightedRadio";
+        public const string Checkbox = "WeightedCheckbox";
     }
 
 }

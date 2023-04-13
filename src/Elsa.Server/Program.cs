@@ -51,6 +51,7 @@ builder.Services
         .AddActivity<ConfirmationScreen>()
         .AddActivity<FinishWorkflow>()
         .AddActivity<PotScore>()
+        .AddActivity<WeightedScore>()
         .NoCoreActivities()
         .AddConsoleActivities()
     );
