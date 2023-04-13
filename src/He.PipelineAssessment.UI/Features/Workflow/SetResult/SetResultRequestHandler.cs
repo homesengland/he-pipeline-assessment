@@ -1,4 +1,5 @@
 ﻿using System.Text.Json;
+using Elsa.CustomWorkflow.Sdk;
 using Elsa.CustomWorkflow.Sdk.HttpClients;
 using Elsa.CustomWorkflow.Sdk.Models.Workflow;
 using He.PipelineAssessment.UI.Features.Workflow.QuestionScreenSaveAndContinue;
@@ -23,6 +24,12 @@ namespace He.PipelineAssessment.UI.Features.Workflow.SetResult
                 WorkflowInstanceId = request.WorkflowInstanceId,
                 ActivityId = request.ActivityId,
             });
+            //var response = await _elsaServerHttpClient.LoadConfirmationScreen(new LoadWorkflowActivityDto
+            //{
+            //    WorkflowInstanceId = request.WorkflowInstanceId,
+            //    ActivityId = request.ActivityId,
+            //    ActivityType = ActivityTypeConstants.ConfirmationScreen
+            //});
 
             if (response != null)
             {
