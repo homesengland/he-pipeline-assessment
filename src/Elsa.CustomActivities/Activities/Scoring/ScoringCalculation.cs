@@ -14,37 +14,28 @@ using System.ComponentModel.DataAnnotations;
 
 namespace Elsa.CustomActivities.Activities.Scoring
 {
-    [Trigger(
+    [Action(
         Category = "Pipeline Assessment Scoring",
         Description = "Set the Formula to calculate Pot Score Outcomes",
         Outcomes = new[] { OutcomeNames.Done },
-        DisplayName = "Pot Score"
+        DisplayName = "Calculation"
         )]
-    public class PotScore : Activity
+    public class ScoringCalculation : Activity
     {
 
         private readonly IElsaCustomRepository _elsaCustomRepository;
-        public PotScore(IElsaCustomRepository elsaCustomRepository)
+        public ScoringCalculation(IElsaCustomRepository elsaCustomRepository)
         {
             _elsaCustomRepository = elsaCustomRepository;
         }
 
-
-        [ActivityInput(Hint = "Set the formula for how to calculate the pot-score outcome of this stage",
+        [ActivityInput(
+            Hint = "Set the formula for how to calculate the pot-score outcome of this stage",
             UIHint = ActivityInputUIHints.MultiLine, 
             SupportedSyntaxes = new[] { SyntaxNames.JavaScript }, 
-            DefaultSyntax = ScoringSyntaxNames.PotScore)]
+            DefaultSyntax = ScoringSyntaxNames.ScoringCalculation,
+            IsDesignerCritical = true)]
         public string Calculation { get; set; } = null!;
-
-        [ActivityInput(Label = "Scoring outcome conditions", Hint = "The conditions to evaluate.", UIHint = CustomActivityUIHints.CustomSwitch, DefaultSyntax = "Switch", IsDesignerCritical = true)]
-        public ICollection<SwitchCase> Cases { get; set; } = new List<SwitchCase>();
-
-        [ActivityInput(
-            Hint = "The switch mode determines whether the first match should be scheduled, or all matches.",
-            DefaultValue = SwitchMode.MatchFirst,
-            SupportedSyntaxes = new[] { SyntaxNames.Literal, SyntaxNames.JavaScript, SyntaxNames.Liquid }
-        )]
-        public SwitchMode Mode { get; set; } = SwitchMode.MatchFirst;
 
         [ActivityOutput] public string? Output { get; set; }
 

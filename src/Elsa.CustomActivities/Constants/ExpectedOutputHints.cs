@@ -8,6 +8,8 @@
         public const string Double = "double";
         public const string Checkbox = "checkbox";
         public const string Radio = "radio";
+        public const string WeightedRadio = "weightedRadio";
+        public const string WeightedCheckbox = "weightedCheckbox";
         public const string TextActivity = "text-activity";
     }
 }
