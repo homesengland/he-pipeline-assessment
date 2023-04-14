@@ -32,7 +32,15 @@ namespace Elsa.CustomActivities.Activities.QuestionScreen
         [HeActivityInput(Hint = "Character limit", UIHint = HePropertyUIHints.SingleLine, ConditionalActivityTypes = new[] { QuestionTypeConstants.TextAreaQuestion }, ExpectedOutputType = ExpectedOutputHints.Number)]
         public int? CharacterLimit { get; set; }
 
-        [HeActivityInput(Hint = "Question Weighting", UIHint = HePropertyUIHints.SingleLine, ConditionalActivityTypes = new[] { QuestionTypeConstants.PotScoreRadioQuestion }, ExpectedOutputType = ExpectedOutputHints.Double)]
+        [HeActivityInput(Hint = "Question Weighting", 
+            UIHint = HePropertyUIHints.SingleLine, 
+            ConditionalActivityTypes = new[] 
+            { 
+                QuestionTypeConstants.PotScoreRadioQuestion,
+                QuestionTypeConstants.WeightedCheckboxQuestion,
+                QuestionTypeConstants.WeightedRadioQuestion
+            }, 
+            ExpectedOutputType = ExpectedOutputHints.Double)]
         public double QuestionWeighting { get; set; }
 
         [HeActivityInput(UIHint = HePropertyUIHints.CheckboxOptions, ConditionalActivityTypes = new[] { QuestionTypeConstants.CheckboxQuestion }, ExpectedOutputType = ExpectedOutputHints.Checkbox)]
@@ -43,6 +51,16 @@ namespace Elsa.CustomActivities.Activities.QuestionScreen
 
         [HeActivityInput(UIHint = HePropertyUIHints.PotScoreRadioOptions, ConditionalActivityTypes = new[] { QuestionTypeConstants.PotScoreRadioQuestion }, ExpectedOutputType = ExpectedOutputHints.Radio, OptionsProvider = typeof(PotScoreOptionsProvider))]
         public PotScoreRadioModel PotScoreRadio { get; set; } = new PotScoreRadioModel();
+
+        [HeActivityInput(UIHint = HePropertyUIHints.WeightedRadioOptions, 
+            ConditionalActivityTypes = new[] { QuestionTypeConstants.WeightedRadioQuestion }, 
+            ExpectedOutputType = ExpectedOutputHints.WeightedRadio)]
+        public WeightedRadioModel WeightedRadio { get; set; } = new WeightedRadioModel();
+
+        [HeActivityInput(UIHint = HePropertyUIHints.WeightedCheckboxOptions, 
+            ConditionalActivityTypes = new[] { QuestionTypeConstants.WeightedCheckboxQuestion }, 
+            ExpectedOutputType = ExpectedOutputHints.WeightedCheckbox)]
+        public WeightedCheckboxModel WeightedCheckbox { get; set; } = new WeightedCheckboxModel();
 
         [HeActivityInput(UIHint = HePropertyUIHints.TextActivity, ConditionalActivityTypes = new[] { QuestionTypeConstants.Information }, ExpectedOutputType = ExpectedOutputHints.TextActivity)]
         public TextModel Text { get; set; } = new TextModel();

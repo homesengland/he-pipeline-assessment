@@ -9,7 +9,6 @@ using He.PipelineAssessment.UI.Features.Workflow.LoadCheckYourAnswersScreen;
 using He.PipelineAssessment.UI.Features.Workflow.LoadConfirmationScreen;
 using He.PipelineAssessment.UI.Features.Workflow.LoadQuestionScreen;
 using He.PipelineAssessment.UI.Features.Workflow.QuestionScreenSaveAndContinue;
-using He.PipelineAssessment.UI.Features.Workflow.SetResult;
 using He.PipelineAssessment.UI.Features.Workflow.StartWorkflow;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
@@ -475,34 +474,6 @@ namespace He.PipelineAssessment.UI.Tests.Features.Workflow
             var viewResult = (ViewResult)result;
             Assert.Equal("Confirmation", viewResult.ViewName);
             Assert.IsType<LoadConfirmationScreenResponse>(viewResult.Model);
-        }
-
-        [Theory]
-        [AutoMoqData]
-        public async Task LoadWorkflowActivity_ShouldRedirectToItself_GivenPotScoreCalculationAndNoExceptionsThrow(
-            [Frozen] Mock<IMediator> mediator,
-            QuestionScreenSaveAndContinueCommandResponse saveAndContinueCommandResponse,
-            WorkflowController sut)
-        {
-            //Arrange
-            saveAndContinueCommandResponse.ActivityType = ActivityTypeConstants.PotScoreCalculation;
-
-            mediator.Setup(x =>
-                    x.Send(
-                        It.Is<SetResultRequest>(y =>
-                            y.ActivityId == saveAndContinueCommandResponse.ActivityId && y.WorkflowInstanceId ==
-                            saveAndContinueCommandResponse.WorkflowInstanceId), CancellationToken.None))
-                .ReturnsAsync(saveAndContinueCommandResponse);
-
-            //Act
-            var result = await sut.LoadWorkflowActivity(saveAndContinueCommandResponse);
-
-            //Assert
-            Assert.NotNull(result);
-            Assert.IsType<RedirectToActionResult>(result);
-
-            var redirectToActionResult = (RedirectToActionResult)result;
-            Assert.Equal("LoadWorkflowActivity", redirectToActionResult.ActionName);
         }
 
         [Theory]

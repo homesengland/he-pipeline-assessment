@@ -12,6 +12,7 @@ using Elsa.CustomActivities.Activities.TriggerWorkflow;
 using Elsa.CustomActivities.Activities.VFMDataSource;
 using Elsa.CustomActivities.Describers;
 using Elsa.CustomActivities.Handlers;
+using Elsa.CustomActivities.Handlers.Scoring;
 using Elsa.CustomActivities.Handlers.Syntax;
 using Elsa.CustomActivities.OptionsProviders;
 using Elsa.CustomInfrastructure.Data;
@@ -53,7 +54,8 @@ builder.Services
         .AddActivity<CheckYourAnswersScreen>()
         .AddActivity<ConfirmationScreen>()
         .AddActivity<FinishWorkflow>()
-        .AddActivity<PotScore>()
+        .AddActivity<ScoringCalculation>()
+        .AddActivity<WeightedScore>()
         .AddActivity<RunEconomicCalculations>()
         .AddActivity<SetVariable>()
         .AddConsoleActivities()
@@ -63,6 +65,7 @@ builder.Services.AddScoped<ICustomPropertyDescriber, CustomPropertyDescriber>();
 
 builder.Services.TryAddProvider<IExpressionHandler, InformationTextExpressionHandler>(ServiceLifetime.Singleton);
 builder.Services.TryAddProvider<IExpressionHandler, QuestionListExpressionHandler>(ServiceLifetime.Singleton);
+builder.Services.TryAddProvider<IExpressionHandler, ScoringCalculationExpressionHandler>(ServiceLifetime.Singleton);
 builder.Services.TryAddSingleton<INestedSyntaxExpressionHandler, NestedSyntaxExpressionHandler>();
 
 builder.Services.AddDbContext<ElsaCustomContext>(config =>

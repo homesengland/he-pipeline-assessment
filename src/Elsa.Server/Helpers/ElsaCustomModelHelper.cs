@@ -50,6 +50,7 @@ namespace Elsa.Server.Helpers
                 QuestionId = question.Id,
                 QuestionType = question.QuestionType,
                 QuestionText = question.QuestionText,
+                Weighting = question.QuestionWeighting,
                 Choices = MapChoices(question)
             };
         }
