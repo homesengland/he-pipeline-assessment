@@ -17,7 +17,7 @@ namespace Elsa.CustomActivities.Tests.Handlers.Scoring
     public class PotScoreCalculationExpressionHandlerTests
     {
         [Theory, AutoMoqData]
-        public void PotScoreCalculationExpressionHandlerInheritsFromCorrectBaseClass(PotScoreCalculationExpressionHandler sut)
+        public void PotScoreCalculationExpressionHandlerInheritsFromCorrectBaseClass(ScoringCalculationExpressionHandler sut)
         {
             //Arrange
 
@@ -29,14 +29,14 @@ namespace Elsa.CustomActivities.Tests.Handlers.Scoring
         }
 
         [Theory, AutoMoqData]
-        public void ExpressionHandlerUsesCorrectSyntax_GivenDefaultValuesUsed(PotScoreCalculationExpressionHandler sut)
+        public void ExpressionHandlerUsesCorrectSyntax_GivenDefaultValuesUsed(ScoringCalculationExpressionHandler sut)
         {
             //Arrange
 
             //Act
 
             //Assert
-            Assert.Equal(ScoringSyntaxNames.PotScore, sut.Syntax);
+            Assert.Equal(ScoringSyntaxNames.ScoringCalculation, sut.Syntax);
         }
 
         [Theory, AutoMoqData]
@@ -65,7 +65,7 @@ namespace Elsa.CustomActivities.Tests.Handlers.Scoring
             evaluator.Setup(x => x.TryEvaluateAsync<string>(sampleProperty.Expressions![sampleProperty.Syntax!],
                 sampleProperty.Syntax!, context, CancellationToken.None)).Returns(Task.FromResult(Models.Result.Success<string?>(actualResult)));
 
-            PotScoreCalculationExpressionHandler sut = new PotScoreCalculationExpressionHandler(logger.Object, serialiser.Object);
+            ScoringCalculationExpressionHandler sut = new ScoringCalculationExpressionHandler(logger.Object, serialiser.Object);
 
             //Act
 
@@ -86,8 +86,8 @@ namespace Elsa.CustomActivities.Tests.Handlers.Scoring
         {
             //Arrange
 
-            PotScoreCalculationExpressionHandler handler = 
-                new PotScoreCalculationExpressionHandler(logger.Object, serializer.Object);
+            ScoringCalculationExpressionHandler handler = 
+                new ScoringCalculationExpressionHandler(logger.Object, serializer.Object);
 
             ElsaProperty propertyWithNoKey = SampleElsaProperty(GetDictionary(SyntaxNames.Literal, "Sample Text", prePopulatedValue: string.Empty, potScoreValue: string.Empty), SyntaxNames.Literal, "Radio Text");
             ElsaProperty propertyWithInvalidValue = SampleElsaProperty(GetDictionary(SyntaxNames.Literal, "Sample Text", prePopulatedValue: "Abc123", potScoreValue: string.Empty), SyntaxNames.Literal, "Radio Text 2");
@@ -121,8 +121,8 @@ namespace Elsa.CustomActivities.Tests.Handlers.Scoring
         {
             //Arrange
 
-            PotScoreCalculationExpressionHandler handler =
-                new PotScoreCalculationExpressionHandler(logger.Object, serializer.Object);
+            ScoringCalculationExpressionHandler handler =
+                new ScoringCalculationExpressionHandler(logger.Object, serializer.Object);
 
             ElsaProperty sampleProperty = SampleElsaProperty(
                 GetDictionary(CustomSyntaxNames.PotScore, "'SampleJavascriptMethod('Workflow_B', 'Low'')"),
@@ -159,8 +159,8 @@ namespace Elsa.CustomActivities.Tests.Handlers.Scoring
         {
             //Arrange
 
-            PotScoreCalculationExpressionHandler handler =
-                new PotScoreCalculationExpressionHandler(logger.Object, serializer.Object);
+            ScoringCalculationExpressionHandler handler =
+                new ScoringCalculationExpressionHandler(logger.Object, serializer.Object);
 
             ElsaProperty sampleProperty = SampleElsaProperty(
                 GetDictionary(CustomSyntaxNames.PotScore, "'SampleJavascriptMethod('Workflow_B', 'Low'')"),
@@ -202,8 +202,8 @@ namespace Elsa.CustomActivities.Tests.Handlers.Scoring
         {
             //Arrange
 
-            PotScoreCalculationExpressionHandler handler =
-                new PotScoreCalculationExpressionHandler(logger.Object, serializer.Object);
+            ScoringCalculationExpressionHandler handler =
+                new ScoringCalculationExpressionHandler(logger.Object, serializer.Object);
 
             ElsaProperty sampleProperty = SampleElsaProperty(
                 GetDictionary(CustomSyntaxNames.PotScore, "'SampleJavascriptMethod('Workflow_B', 'Low'')"),

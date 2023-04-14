@@ -18,13 +18,13 @@ namespace Elsa.CustomActivities.Activities.Scoring
         Category = "Pipeline Assessment Scoring",
         Description = "Set the Formula to calculate Pot Score Outcomes",
         Outcomes = new[] { OutcomeNames.Done },
-        DisplayName = "Pot Score"
+        DisplayName = "Calculation"
         )]
-    public class PotScore : Activity
+    public class ScoringCalculation : Activity
     {
 
         private readonly IElsaCustomRepository _elsaCustomRepository;
-        public PotScore(IElsaCustomRepository elsaCustomRepository)
+        public ScoringCalculation(IElsaCustomRepository elsaCustomRepository)
         {
             _elsaCustomRepository = elsaCustomRepository;
         }
@@ -33,7 +33,7 @@ namespace Elsa.CustomActivities.Activities.Scoring
             Hint = "Set the formula for how to calculate the pot-score outcome of this stage",
             UIHint = ActivityInputUIHints.MultiLine, 
             SupportedSyntaxes = new[] { SyntaxNames.JavaScript }, 
-            DefaultSyntax = ScoringSyntaxNames.PotScore,
+            DefaultSyntax = ScoringSyntaxNames.ScoringCalculation,
             IsDesignerCritical = true)]
         public string Calculation { get; set; } = null!;
 

@@ -5,6 +5,7 @@ using Elsa.Scripting.JavaScript.Events;
 using Elsa.Scripting.JavaScript.Messages;
 using Elsa.Services;
 using MediatR;
+using Microsoft.Extensions.Logging;
 
 namespace Elsa.CustomActivities.Activities.Scoring.Helpers
 {
@@ -12,32 +13,43 @@ namespace Elsa.CustomActivities.Activities.Scoring.Helpers
     {
 
         private readonly IElsaCustomRepository _elsaCustomRepository;
+        private readonly ILogger<PotScoreCalculationHelper> _logger;
 
-        public PotScoreCalculationHelper(IElsaCustomRepository elsaCustomRepository)
+        public PotScoreCalculationHelper(IElsaCustomRepository elsaCustomRepository, ILogger<PotScoreCalculationHelper> logger)
         {
             _elsaCustomRepository = elsaCustomRepository;
+            _logger = logger;
         }
 
         public async Task<double> GetTotalPotValue(string workflowInstanceId, string potValue)
         {
-            double failedResult = -1;
-            List<double> totalSelectedScores = new List<double>();
-
-            var workflowQuestions = await _elsaCustomRepository.GetQuestions(workflowInstanceId, CancellationToken.None);
-            if(workflowQuestions.Count > 0)
+            try
             {
-                foreach(var question in workflowQuestions)
+                double failedResult = -1;
+                List<double> totalSelectedScores = new List<double>();
+
+                var workflowQuestions = await _elsaCustomRepository.GetQuestions(workflowInstanceId, CancellationToken.None);
+                if (workflowQuestions.Count > 0)
                 {
-                    double? questionScore = question.Answers?.Where(a => a.Choice?.PotScoreCategory?.ToLower() == potValue.ToLower())
-                        .Select(_ => question.Weighting).FirstOrDefault();
-                    if(questionScore != null)
+                    foreach (var question in workflowQuestions)
                     {
-                        totalSelectedScores.Add(questionScore.Value);
+                        double? questionScore = question.Answers?.Where(a => a.Choice?.PotScoreCategory?.ToLower() == potValue.ToLower())
+                            .Select(_ => question.Weighting).FirstOrDefault();
+                        if (questionScore != null)
+                        {
+                            totalSelectedScores.Add(questionScore.Value);
+                        }
                     }
+                    return totalSelectedScores.Sum();
                 }
-                return totalSelectedScores.Sum();
+                return failedResult;
             }
-            return failedResult;
+            catch(Exception e)
+            {
+                _logger.LogError(string.Format("Error whilst retrieving Pot Value: {0}", potValue), e);
+                throw (e);
+            }
+
         }
 
         public async Task<string> GetPotScore(string workflowInstanceId)

@@ -16,7 +16,6 @@ namespace Elsa.CustomActivities.OptionsProviders
         public async Task<string> GetOptions(CancellationToken cancellationToken = default)
         {
             var potScoreOptions = (await _elsaCustomRepository.GetPotScoreOptionsAsync(cancellationToken)).Select(x => x.Name).ToList();
-            potScoreOptions = new List<string> { "High", "Medium", "Low" };
             return JsonConvert.SerializeObject(potScoreOptions);
         }
     }

@@ -15,14 +15,14 @@ using System.Threading.Tasks;
 
 namespace Elsa.CustomActivities.Handlers.Scoring
 {
-    public class PotScoreCalculationExpressionHandler : IExpressionHandler
+    public class ScoringCalculationExpressionHandler : IExpressionHandler
     {
         private readonly IContentSerializer _contentSerializer;
         private readonly ILogger<IExpressionHandler> _logger;
-        public string Syntax => ScoringSyntaxNames.PotScore;
+        public string Syntax => ScoringSyntaxNames.ScoringCalculation;
 
 
-        public PotScoreCalculationExpressionHandler(ILogger<IExpressionHandler> logger, IContentSerializer contentSerializer)
+        public ScoringCalculationExpressionHandler(ILogger<IExpressionHandler> logger, IContentSerializer contentSerializer)
         {
             _logger = logger;
             _contentSerializer = contentSerializer;
