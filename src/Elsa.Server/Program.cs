@@ -1,3 +1,4 @@
+using Elsa.Activities.Primitives;
 using Elsa.CustomActivities.Activities.CheckYourAnswersScreen;
 using Elsa.CustomActivities.Activities.ConfirmationScreen;
 using Elsa.CustomActivities.Activities.FinishWorkflow;
@@ -7,6 +8,7 @@ using Elsa.CustomActivities.Activities.QuestionScreen;
 using Elsa.CustomActivities.Activities.Scoring;
 using Elsa.CustomActivities.Activities.Shared;
 using Elsa.CustomActivities.Activities.SinglePipelineDataSource;
+using Elsa.CustomActivities.Activities.TriggerWorkflow;
 using Elsa.CustomActivities.Activities.VFMDataSource;
 using Elsa.CustomActivities.Describers;
 using Elsa.CustomActivities.Handlers;
@@ -42,6 +44,7 @@ var elsaCustomConnectionString = builder.Configuration.GetConnectionString("Elsa
 builder.Services
     .AddElsa(elsa => elsa
         .UseEntityFrameworkPersistence(ef => ef.UseSqlServer(elsaConnectionString, typeof(Elsa.Persistence.EntityFramework.SqlServer.Migrations.Initial)))
+        .NoCoreActivities()
         .AddActivity<SinglePipelineDataSource>()
         .AddActivity<PCSProfileDataSource>()
         .AddActivity<VFMDataSource>()
@@ -51,7 +54,8 @@ builder.Services
         .AddActivity<ConfirmationScreen>()
         .AddActivity<FinishWorkflow>()
         .AddActivity<PotScore>()
-        .NoCoreActivities()
+        .AddActivity<RunEconomicCalculations>()
+        .AddActivity<SetVariable>()
         .AddConsoleActivities()
     );
 

@@ -1,16 +1,12 @@
-﻿using Elsa.Activities.ControlFlow;
-using Elsa.ActivityResults;
+﻿using Elsa.ActivityResults;
 using Elsa.Attributes;
 using Elsa.CustomActivities.Constants;
 using Elsa.CustomInfrastructure.Data.Repository;
+using Elsa.CustomModels;
 using Elsa.Design;
 using Elsa.Expressions;
-using Elsa.Persistence;
 using Elsa.Services;
 using Elsa.Services.Models;
-using He.PipelineAssessment.Data.PCSProfile;
-using Microsoft.AspNetCore.Mvc.Rendering;
-using System.ComponentModel.DataAnnotations;
 
 namespace Elsa.CustomActivities.Activities.Scoring
 {
@@ -36,16 +32,6 @@ namespace Elsa.CustomActivities.Activities.Scoring
             DefaultSyntax = ScoringSyntaxNames.PotScore)]
         public string Calculation { get; set; } = null!;
 
-        [ActivityInput(Label = "Scoring outcome conditions", Hint = "The conditions to evaluate.", UIHint = CustomActivityUIHints.CustomSwitch, DefaultSyntax = "Switch", IsDesignerCritical = true)]
-        public ICollection<SwitchCase> Cases { get; set; } = new List<SwitchCase>();
-
-        [ActivityInput(
-            Hint = "The switch mode determines whether the first match should be scheduled, or all matches.",
-            DefaultValue = SwitchMode.MatchFirst,
-            SupportedSyntaxes = new[] { SyntaxNames.Literal, SyntaxNames.JavaScript, SyntaxNames.Liquid }
-        )]
-        public SwitchMode Mode { get; set; } = SwitchMode.MatchFirst;
-
         [ActivityOutput] public string? Output { get; set; }
 
         protected override async ValueTask<IActivityExecutionResult> OnExecuteAsync(ActivityExecutionContext context)
@@ -60,6 +46,22 @@ namespace Elsa.CustomActivities.Activities.Scoring
                 else
                 {
                     Output = Calculation;
+                    if (context.WorkflowExecutionContext.Input != null)
+                    {
+                        var workflowInstance = await
+                            _elsaCustomRepository.GetQuestionWorkflowInstance(context.WorkflowInstance.Id);
+                        if (workflowInstance == null)
+                        {
+                            var questionWorkflowInstance = new QuestionWorkflowInstance()
+                            {
+                                WorkflowInstanceId = context.WorkflowInstance.Id,
+                                WorkflowDefinitionId = context.WorkflowInstance.DefinitionId,
+                                CorrelationId = context.WorkflowInstance.CorrelationId,
+                                WorkflowName = context.WorkflowExecutionContext.WorkflowBlueprint.Name ?? context.WorkflowInstance.DefinitionId
+                            };
+                            await _elsaCustomRepository.CreateQuestionWorkflowInstance(questionWorkflowInstance, CancellationToken.None);
+                        }
+                    }
                     await _elsaCustomRepository.SetWorkflowInstanceScore(context.WorkflowInstance.Id, Calculation);
                 }
             }
