@@ -1,5 +1,6 @@
 ﻿using Elsa.CustomInfrastructure.Data.Repository;
 using Elsa.CustomModels;
+using Elsa.CustomWorkflow.Sdk.Models.Workflow;
 using Elsa.Persistence;
 using Elsa.Scripting.JavaScript.Events;
 using Elsa.Scripting.JavaScript.Messages;
@@ -33,11 +34,9 @@ namespace Elsa.CustomActivities.Activities.Scoring.Helpers
                 {
                     foreach (var question in workflowQuestions)
                     {
-                        double? questionScore = question.Answers?.Where(a => a.Choice?.PotScoreCategory?.ToLower() == potValue.ToLower())
-                            .Select(_ => question.Weighting).FirstOrDefault();
-                        if (questionScore != null)
+                        if(question != null && TryGetMatchingPotScoreWeighting(question, potValue, out double potScoreWeighting))
                         {
-                            totalSelectedScores.Add(questionScore.Value);
+                            totalSelectedScores.Add(potScoreWeighting);
                         }
                     }
                     return totalSelectedScores.Sum();
@@ -71,17 +70,35 @@ namespace Elsa.CustomActivities.Activities.Scoring.Helpers
         {
             var activityExecutionContext = notification.ActivityExecutionContext;
             var engine = notification.Engine;
-            engine.SetValue("getTotalPotValue", (Func<string, string, double>)((workflowName, potName) => GetTotalPotValue(activityExecutionContext.WorkflowInstance.Id, potName).Result));
-            engine.SetValue("getPotScore", (Func<string, string>)((workflowInstanceId) => GetPotScore(activityExecutionContext.WorkflowInstance.Id).Result));
+            engine.SetValue("getTotalPotValue", (Func<string, double>)((potValueName) => GetTotalPotValue(activityExecutionContext.WorkflowInstance.Id, potValueName).Result));
+            engine.SetValue("getPotScore", (Func<string>)(() => GetPotScore(activityExecutionContext.WorkflowInstance.Id).Result));
             return Task.CompletedTask;
         }
 
         public Task Handle(RenderingTypeScriptDefinitions notification, CancellationToken cancellationToken)
         {
             var output = notification.Output;
-            output.AppendLine("declare function getTotalPotValue(workflowInstanceId: string, potValueName:string ): number;");
+            output.AppendLine("declare function getTotalPotValue(potValueName:string ): number;");
             output.AppendLine("declare function getPotScore(): string;");
             return Task.CompletedTask;
+        }
+
+        private bool TryGetMatchingPotScoreWeighting(Question question, string potToMatch, out double potScoreWeighting)
+        {
+            potScoreWeighting = 0;
+            if (question.Answers?.Any() ?? false)
+            {
+                QuestionChoice? selectedChoice = question.Answers?.FirstOrDefault()!.Choice;
+                if(selectedChoice != null && selectedChoice.PotScoreCategory != null)
+                {
+                    if(selectedChoice.PotScoreCategory.ToLower() == potToMatch.ToLower() && question.Weighting != null)
+                    {
+                        potScoreWeighting = question.Weighting.Value;
+                        return true;
+                    }
+                }
+            }
+            return false;
         }
     }
 }
