@@ -46,7 +46,7 @@ namespace Elsa.CustomActivities.Activities.Scoring.Helpers
             catch(Exception e)
             {
                 _logger.LogError(string.Format("Error whilst retrieving Pot Value: {0}", potValue), e);
-                throw (e);
+                throw (new Exception(e.Message, e.InnerException));
             }
 
         }
