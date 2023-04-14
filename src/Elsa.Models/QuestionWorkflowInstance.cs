@@ -9,5 +9,6 @@
         public string CorrelationId { get; set; } = null!;
         public string? Result { get; set; }
         public string? Score { get; set; }
+        public DateTime CreatedDateTime { get; set; }
     }
 }
