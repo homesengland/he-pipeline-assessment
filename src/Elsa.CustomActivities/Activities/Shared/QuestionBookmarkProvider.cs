@@ -43,8 +43,7 @@ namespace Elsa.CustomActivities.Activities.Shared
             {
                 ActivityTypeConstants.QuestionScreen,
                 ActivityTypeConstants.CheckYourAnswersScreen,
-                ActivityTypeConstants.ConfirmationScreen,
-                ActivityTypeConstants.PotScoreCalculation,
+                ActivityTypeConstants.ConfirmationScreen
             };
         }
     }
