@@ -84,6 +84,8 @@ namespace Elsa.CustomActivities.Activities.QuestionScreen
                 QuestionTypeConstants.CurrencyQuestion,
                 QuestionTypeConstants.RadioQuestion,
                 QuestionTypeConstants.PotScoreRadioQuestion,
+                QuestionTypeConstants.WeightedRadioQuestion,
+                QuestionTypeConstants.WeightedCheckboxQuestion,
                 QuestionTypeConstants.CheckboxQuestion
             })]
         public bool IsReadOnly { get; set; } = false;

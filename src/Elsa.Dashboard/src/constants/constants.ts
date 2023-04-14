@@ -14,6 +14,12 @@ export class SyntaxNames {
   static Output: string;
 }
 
+export class QuestionCategories {
+  static readonly None = "None";
+  static readonly Question = "Question";
+  static readonly Scoring = "Scoring";
+}
+
 export class CheckboxOptionsSyntax {
   static readonly Single = "Single";
   static readonly PrePopulated = "PrePopulated";
@@ -36,10 +42,13 @@ export class QuestionTypeConstants {
   static readonly CurrencyQuestion = "CurrencyQuestion";
   static readonly CheckboxQuestion = "CheckboxQuestion";
   static readonly RadioQuestion = "RadioQuestion";
-  static readonly PotScoreRadioQuestion = "PotScoreRadioQuestion";
   static readonly DateQuestion = "DateQuestion";
   static readonly TextQuestion = "TextQuestion";
   static readonly TextAreaQuestion = "TextAreaQuestion";
+
+  static readonly PotScoreRadioQuestion = "PotScoreRadioQuestion";
+  static readonly WeightedRadioQuestion = "WeightedRadioQuestion";
+  static readonly WeightedCheckboxQuestion = "WeightedCheckboxQuestion";
 
 }
 
