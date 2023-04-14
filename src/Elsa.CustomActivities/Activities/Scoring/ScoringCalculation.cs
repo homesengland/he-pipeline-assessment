@@ -1,22 +1,18 @@
-﻿using Elsa.Activities.ControlFlow;
-using Elsa.ActivityResults;
+﻿using Elsa.ActivityResults;
 using Elsa.Attributes;
 using Elsa.CustomActivities.Constants;
 using Elsa.CustomInfrastructure.Data.Repository;
+using Elsa.CustomModels;
 using Elsa.Design;
 using Elsa.Expressions;
-using Elsa.Persistence;
 using Elsa.Services;
 using Elsa.Services.Models;
-using He.PipelineAssessment.Data.PCSProfile;
-using Microsoft.AspNetCore.Mvc.Rendering;
-using System.ComponentModel.DataAnnotations;
 
 namespace Elsa.CustomActivities.Activities.Scoring
 {
     [Action(
         Category = "Pipeline Assessment Scoring",
-        Description = "Set the Formula to calculate Pot Score Outcomes",
+        Description = "Set the Formula to calculate Score Outcomes",
         Outcomes = new[] { OutcomeNames.Done },
         DisplayName = "Calculation"
         )]
@@ -43,7 +39,7 @@ namespace Elsa.CustomActivities.Activities.Scoring
         {
             try
             {
-                if(Calculation == null || Calculation == string.Empty)
+                if(Calculation == string.Empty)
                 {
                     context.JournalData.Add("Error", "Unable to parse Calculation");
                     return new SuspendResult();
@@ -51,12 +47,30 @@ namespace Elsa.CustomActivities.Activities.Scoring
                 else
                 {
                     Output = Calculation;
+
+                    if (context.WorkflowExecutionContext.Input != null)
+                    {
+                        var workflowInstance = await
+                            _elsaCustomRepository.GetQuestionWorkflowInstance(context.WorkflowInstance.Id);
+                        if (workflowInstance == null)
+                        {
+                            var questionWorkflowInstance = new QuestionWorkflowInstance()
+                            {
+                                WorkflowInstanceId = context.WorkflowInstance.Id,
+                                WorkflowDefinitionId = context.WorkflowInstance.DefinitionId,
+                                CorrelationId = context.WorkflowInstance.CorrelationId,
+                                WorkflowName = context.WorkflowExecutionContext.WorkflowBlueprint.Name ?? context.WorkflowInstance.DefinitionId
+                            };
+                            await _elsaCustomRepository.CreateQuestionWorkflowInstance(questionWorkflowInstance, CancellationToken.None);
+                        }
+                    }
+
                     await _elsaCustomRepository.SetWorkflowInstanceScore(context.WorkflowInstance.Id, Calculation);
                 }
             }
             catch(Exception)
             {
-                context.JournalData.Add("Error", string.Format("Error occured whilst updating workflow with {0} score.", Calculation) );
+                context.JournalData.Add("Error", $"Error occurred whilst updating workflow with {Calculation} score.");
                 return new SuspendResult();
             }
 

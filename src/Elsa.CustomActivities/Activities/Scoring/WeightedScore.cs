@@ -47,23 +47,6 @@ namespace Elsa.CustomActivities.Activities.Scoring
                 else
                 {
                     Output = Calculation;
-                    if (context.WorkflowExecutionContext.Input != null)
-                    {
-                        var workflowInstance = await
-                            _elsaCustomRepository.GetQuestionWorkflowInstance(context.WorkflowInstance.Id);
-                        if (workflowInstance == null)
-                        {
-                            var questionWorkflowInstance = new QuestionWorkflowInstance()
-                            {
-                                WorkflowInstanceId = context.WorkflowInstance.Id,
-                                WorkflowDefinitionId = context.WorkflowInstance.DefinitionId,
-                                CorrelationId = context.WorkflowInstance.CorrelationId,
-                                WorkflowName = context.WorkflowExecutionContext.WorkflowBlueprint.Name ?? context.WorkflowInstance.DefinitionId
-                            };
-                            await _elsaCustomRepository.CreateQuestionWorkflowInstance(questionWorkflowInstance, CancellationToken.None);
-                        }
-                    }
-                    await _elsaCustomRepository.SetWorkflowInstanceScore(context.WorkflowInstance.Id, Calculation);
                 }
             }
             catch (Exception)
