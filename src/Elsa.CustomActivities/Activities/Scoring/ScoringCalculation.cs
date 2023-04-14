@@ -3,6 +3,7 @@ using Elsa.Attributes;
 using Elsa.CustomActivities.Constants;
 using Elsa.CustomInfrastructure.Data.Repository;
 using Elsa.CustomModels;
+using Elsa.CustomWorkflow.Sdk.Providers;
 using Elsa.Design;
 using Elsa.Expressions;
 using Elsa.Services;
@@ -20,9 +21,12 @@ namespace Elsa.CustomActivities.Activities.Scoring
     {
 
         private readonly IElsaCustomRepository _elsaCustomRepository;
-        public ScoringCalculation(IElsaCustomRepository elsaCustomRepository)
+        private readonly IDateTimeProvider _dateTimeProvider;
+
+        public ScoringCalculation(IElsaCustomRepository elsaCustomRepository, IDateTimeProvider dateTimeProvider)
         {
             _elsaCustomRepository = elsaCustomRepository;
+            _dateTimeProvider = dateTimeProvider;
         }
 
         [ActivityInput(
@@ -59,7 +63,8 @@ namespace Elsa.CustomActivities.Activities.Scoring
                                 WorkflowInstanceId = context.WorkflowInstance.Id,
                                 WorkflowDefinitionId = context.WorkflowInstance.DefinitionId,
                                 CorrelationId = context.WorkflowInstance.CorrelationId,
-                                WorkflowName = context.WorkflowExecutionContext.WorkflowBlueprint.Name ?? context.WorkflowInstance.DefinitionId
+                                WorkflowName = context.WorkflowExecutionContext.WorkflowBlueprint.Name ?? context.WorkflowInstance.DefinitionId,
+                                CreatedDateTime = _dateTimeProvider.UtcNow()
                             };
                             await _elsaCustomRepository.CreateQuestionWorkflowInstance(questionWorkflowInstance, CancellationToken.None);
                         }

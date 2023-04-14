@@ -1,9 +1,8 @@
 ﻿using AutoFixture.Xunit2;
-using Elsa.Server.Models;
-using Elsa.Server.Providers;
+using Elsa.CustomWorkflow.Sdk.Providers;
 using Xunit;
 
-namespace Elsa.Server.Tests.Providers
+namespace Elsa.CustomWorkflow.Sdk.Tests.Providers
 {
     public class DateTimeProviderTests
     {

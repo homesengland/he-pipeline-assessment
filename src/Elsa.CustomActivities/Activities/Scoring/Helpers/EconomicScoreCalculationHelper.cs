@@ -38,7 +38,8 @@ namespace Elsa.CustomActivities.Activities.Scoring.Helpers
             }
             catch(Exception e)
             {
-                _logger.LogError(string.Format("Error whilst retrieving Economic Calculation: '{0}' for Correlation Id {1}", name, correlationId), e);
+                _logger.LogError(
+                    $"Error whilst retrieving Economic Calculation: '{name}' for Correlation Id {correlationId}", e);
                 throw (new Exception(e.Message, e.InnerException));
             }
         }

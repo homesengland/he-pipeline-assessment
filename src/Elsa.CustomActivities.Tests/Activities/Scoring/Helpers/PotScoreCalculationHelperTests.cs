@@ -349,5 +349,24 @@ namespace Elsa.CustomActivities.Tests.Activities.Scoring.Helpers
             //Assert
             Assert.Equal(instance.Score, result);
         }
+
+        [Theory]
+        [AutoMoqData]
+        public async Task GetScore_Rethrows_GivenDependencyThrows(
+            [Frozen] Mock<IElsaCustomRepository> elsaCustomRepository,
+            string workflowInstanceId,
+            string potScoreCategory,
+            PotScoreCalculationHelper sut)
+        {
+            //Arrange
+            var exception = new ApplicationException("TestMessage");
+            elsaCustomRepository.Setup(x => x.GetQuestions(workflowInstanceId, CancellationToken.None)).ThrowsAsync(exception);
+
+            //Act
+            var exceptionThrown = await Assert.ThrowsAsync<Exception>(() => sut.GetTotalPotValue(workflowInstanceId, potScoreCategory));
+
+            //Assert
+            Assert.Equal(exception.Message, exceptionThrown.Message);
+        }
     }
 }

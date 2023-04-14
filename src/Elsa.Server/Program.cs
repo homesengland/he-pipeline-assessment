@@ -18,6 +18,7 @@ using Elsa.CustomActivities.OptionsProviders;
 using Elsa.CustomInfrastructure.Data;
 using Elsa.CustomInfrastructure.Data.Repository;
 using Elsa.CustomWorkflow.Sdk.Extensions;
+using Elsa.CustomWorkflow.Sdk.Providers;
 using Elsa.Expressions;
 using Elsa.Persistence.EntityFramework.Core.Extensions;
 using Elsa.Persistence.EntityFramework.SqlServer;
