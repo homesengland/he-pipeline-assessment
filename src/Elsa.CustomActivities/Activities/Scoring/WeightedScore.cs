@@ -71,6 +71,7 @@ namespace Elsa.CustomActivities.Activities.Scoring
 
         private async Task SetWorkflowCalculationScore()
         {
+            await Task.CompletedTask;
             //TODO
         }
 
