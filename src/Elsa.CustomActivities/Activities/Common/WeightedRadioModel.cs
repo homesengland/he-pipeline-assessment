@@ -1,14 +1,15 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Elsa.CustomActivities.Activities.Common
+﻿namespace Elsa.CustomActivities.Activities.Common
 {
     public class WeightedRadioModel
     {
-        public ICollection<WeightedRadioRecord> Choices { get; set; } = new List<WeightedRadioRecord>();
+        public IDictionary<string, WeightedRadioGroup> Groups { get; set; } = new Dictionary<string, WeightedRadioGroup>();
+
     }
-    public record WeightedRadioRecord(string Identifier, string Answer, string Group, string Score, bool IsPrePopulated);
+    public class WeightedRadioGroup
+    {
+        public ICollection<WeightedRadioRecord> Choices { get; set; } = new List<WeightedRadioRecord>();
+        public int MaxGroupScore { get; set; }
+
+    }
+    public record WeightedRadioRecord(string Identifier, string Answer, string Score, bool IsPrePopulated);
 }

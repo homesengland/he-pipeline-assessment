@@ -40,6 +40,7 @@ export class HeWeightedRadioOptionProperty {
   supportedSyntaxes: Array<string> = [SyntaxNames.JavaScript, SyntaxNames.Liquid, SyntaxNames.Literal];
   multiExpressionEditor: HTMLElsaMultiExpressionEditorElement;
   syntaxSwitchCount: number = 0;
+  scoreSyntaxSwitchCount: number= 0;
 
   async componentWillLoad() {
     const propertyModel = this.propertyModel;
@@ -87,10 +88,15 @@ export class HeWeightedRadioOptionProperty {
     this.updatePropertyModel();
   }
 
-  onOptionSyntaxChanged(e: Event, switchCase: NestedActivityDefinitionProperty, expressionEditor: HTMLElsaExpressionEditorElement) {
+  onScoreExpressionChanged(e: CustomEvent<string>, radioOption: NestedActivityDefinitionProperty) {
+    radioOption.expressions[RadioOptionsSyntax.Score] = e.detail;
+    this.updatePropertyModel();
+  }
+
+  onOptionSyntaxChanged(e: Event, property: NestedActivityDefinitionProperty, expressionEditor: HTMLElsaExpressionEditorElement) {
     const select = e.currentTarget as HTMLSelectElement;
-    switchCase.syntax = select.value;
-    expressionEditor.language = mapSyntaxToLanguage(switchCase.syntax);
+    property.syntax = select.value;
+    expressionEditor.language = mapSyntaxToLanguage(property.syntax);
     this.updatePropertyModel();
   }
 
@@ -150,11 +156,14 @@ export class HeWeightedRadioOptionProperty {
       const monacoLanguage = mapSyntaxToLanguage(syntax);
       const prePopulatedSyntax = SyntaxNames.JavaScript;
       const prePopulatedExpression = radioOption.expressions[RadioOptionsSyntax.PrePopulated];
+      const scoreExpression = radioOption.expressions[RadioOptionsSyntax.Score];
 
       const prePopulatedLanguage = mapSyntaxToLanguage(prePopulatedSyntax);
+      
 
       let expressionEditor = null;
       let prePopulatedExpressionEditor = null;
+      let scoreExpressionEditor = null;
       let colWidth = "100%";
       const optionsDisplay = this.optionsDisplayToggle[index] ?? "none";
 
@@ -216,10 +225,30 @@ export class HeWeightedRadioOptionProperty {
 
           <tr>
             <th class="elsa-py-3 elsa-text-left elsa-text-xs elsa-font-medium elsa-text-gray-500 elsa-tracking-wider elsa-w-2/12">
-              Pot Score
+              Score
             </th>
-            <td class="elsa-py-2 elsa-pr-5" style={{ width: colWidth }}>
-
+            <td class="elsa-py-2 pl-5" style={{ width: colWidth }}>
+              <div class="elsa-mt-1 elsa-relative elsa-rounded-md elsa-shadow-sm">
+                <elsa-expression-editor
+                  key={`expression-editor-${index}-${this.scoreSyntaxSwitchCount}`}
+                  ref={el => scoreExpressionEditor = el}
+                  expression={scoreExpression}
+                  language={monacoLanguage}
+                  single-line={false}
+                  editorHeight={this.editorHeight}
+                  padding="elsa-pt-1.5 elsa-pl-1 elsa-pr-28"
+                  onExpressionChanged={e => this.onScoreExpressionChanged(e, radioOption)}
+                />
+                <div class="elsa-absolute elsa-inset-y-0 elsa-right-0 elsa-flex elsa-items-center">
+                  <select onChange={e => this.onOptionSyntaxChanged(e, radioOption, scoreExpressionEditor)}
+                    class="focus:elsa-ring-blue-500 focus:elsa-border-blue-500 elsa-h-full elsa-py-0 elsa-pl-2 elsa-pr-7 elsa-border-transparent elsa-bg-transparent elsa-text-gray-500 sm:elsa-text-sm elsa-rounded-md">
+                    {this.supportedSyntaxes.filter(x => x == SyntaxNames.Literal).map(supportedSyntax => {
+                      const selected = supportedSyntax == SyntaxNames.Literal;
+                      return <option selected={selected}>{supportedSyntax}</option>;
+                    })}
+                  </select>
+                </div>
+              </div>
             </td>
             <td></td>
           </tr>

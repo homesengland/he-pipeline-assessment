@@ -23,11 +23,13 @@ export class QuestionCategories {
 export class CheckboxOptionsSyntax {
   static readonly Single = "Single";
   static readonly PrePopulated = "PrePopulated";
+  static readonly Score = "Score";
 }
 
 export class RadioOptionsSyntax {
   static readonly PrePopulated = "PrePopulated";
   static readonly PotScore = "PotScore";
+  static readonly Score = "Score";
 }
 
 export class TextActivityOptionsSyntax {
