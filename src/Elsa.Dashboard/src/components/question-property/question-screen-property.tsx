@@ -9,7 +9,7 @@ import {
 } from '../../models/elsa-interfaces';
 
 import {
-    HeActivityPropertyDescriptor,
+  HeActivityPropertyDescriptor,
   //QuestionModel,
   NestedPropertyModel,
   QuestionScreenProperty
@@ -121,7 +121,7 @@ export class QuestionScreen {
 
   handleFilterQuestions(e: Event) {
     let value = (e.currentTarget as HTMLSelectElement).value.trim();
-    let data: string =(e.currentTarget as HTMLSelectElement).selectedOptions[0].dataset.type
+    let data: string = (e.currentTarget as HTMLSelectElement).selectedOptions[0].dataset.type
     if (value != null && value != "") {
       this.onToggleDropdownFilter(data);
     }
@@ -153,7 +153,7 @@ export class QuestionScreen {
     let propertyDescriptors = filterPropertiesByType(this.questionProperties, questionType.nameConstant);
     let newQuestion: NestedPropertyModel = { value: newValue, descriptor: propertyDescriptors, ActivityType: questionType }
     this.questionModel = { ...this.questionModel, activities: [...this.questionModel.activities, newQuestion] };
-    
+
     this.updatePropertyModel();
   }
 
@@ -211,32 +211,39 @@ export class QuestionScreen {
           onExpressionChanged={e => this.onMultiExpressionEditorValueChanged(e)}
           onSyntaxChanged={e => this.onMultiExpressionEditorSyntaxChanged(e)}
         >
+          <div class="elsa-justify-content">
+            <div class="elsa-pr-5 elsa-mt-1 elsa-w-full sm:elsa-max-w-xs sm:elsa-text-sm elsa-border-gray-300 elsa-rounded-md">
+              <select id="toggleCategoryDropdown"
+                onChange={(e) => this.handleFilterQuestions.bind(this)(e)}
+                name="toggleCategoryDropdown"
+                class="elsa-inline-block focus:elsa-ring-blue-500 px-6 focus:elsa-border-blue-500 elsa-w-full elsa-shadow-sm sm:elsa-max-w-xs sm:elsa-text-sm elsa-border-gray-300 elsa-rounded-md">
+                {this.questionProvider.displayDropdownToggleOptions()}
+              </select>
+            </div>
 
-          <select id="addQuestionDropdown"
-            onChange={(e) => this.handleFilterQuestions.bind(this)(e)}
-            name="toggleCategoryDropdown"
-            class="elsa-mt-1 elsa-inline-block focus:elsa-ring-blue-500 focus:elsa-border-blue-500 elsa-w-full elsa-shadow-sm sm:elsa-max-w-xs sm:elsa-text-sm elsa-border-gray-300 elsa-rounded-md">
-            {this.questionProvider.displayDropdownToggleOptions()}
-          </select>
-
-
-        <select id="addQuestionDropdown"
-          onChange={ (e) => this.handleAddQuestion.bind(this)(e) }
-            name="addQuestionDropdown"
-            style={{ display: displayStandardQuestions }}
-          class="elsa-mt-1 elsa-inline-block focus:elsa-ring-blue-500 focus:elsa-border-blue-500 elsa-w-full elsa-shadow-sm sm:elsa-max-w-xs sm:elsa-text-sm elsa-border-gray-300 elsa-rounded-md">
-          <option value="">Add a Question...</option>
-          {this.questionProvider.displayOptions()}
-          </select>
-
-          <select id="addQuestionDropdown"
-            onChange={(e) => this.handleAddQuestion.bind(this)(e)}
-            name="addScoringQuestionDropdown"
-            style={{ display: displayScoringQuestions }}
-            class="elsa-mt-1 elsa-inline-block focus:elsa-ring-blue-500 focus:elsa-border-blue-500 elsa-w-full elsa-shadow-sm sm:elsa-max-w-xs sm:elsa-text-sm elsa-border-gray-300 elsa-rounded-md">
-            <option value="">Add a Scoring Question...</option>
-            {this.questionProvider.displayScoringOptions()}
-          </select>
+            <div
+              class="elsa-mt-1 elsa-w-full sm:elsa-max-w-xs sm:elsa-text-sm elsa-border-gray-300 elsa-rounded-md"
+              style={{ display: displayStandardQuestions }}            >
+              <select id="addQuestionDropdown"
+                onChange={(e) => this.handleAddQuestion.bind(this)(e)}
+                name="addQuestionDropdown"
+                class="elsa-inline-block focus:elsa-ring-blue-500 focus:elsa-border-blue-500 elsa-w-full elsa-shadow-sm sm:elsa-max-w-xs sm:elsa-text-sm elsa-border-gray-300 elsa-rounded-md">
+                <option value="">Add a Question...</option>
+                {this.questionProvider.displayOptions()}
+              </select>
+            </div>
+            <div
+              class="elsa-mt-1 elsa-w-full sm:elsa-max-w-xs sm:elsa-text-sm elsa-border-gray-300 elsa-rounded-md"
+              style={{ display: displayScoringQuestions }}>
+              <select id="addScoringQuestionDropdown"
+                onChange={(e) => this.handleAddQuestion.bind(this)(e)}
+                name="addScoringQuestionDropdown"
+                class="elsa-inline-block focus:elsa-ring-blue-500 focus:elsa-border-blue-500 elsa-w-full elsa-shadow-sm sm:elsa-max-w-xs sm:elsa-text-sm elsa-border-gray-300 elsa-rounded-md">
+                <option value="">Add a Scoring Question...</option>
+                {this.questionProvider.displayScoringOptions()}
+              </select>
+            </div>
+          </div>
         </elsa-multi-expression-editor>
       </div>
     );

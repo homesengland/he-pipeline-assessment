@@ -17,13 +17,29 @@ namespace Elsa.CustomActivities.Activities.QuestionScreen
         [HeActivityInput(
             Hint = "Question to ask",
             UIHint = HePropertyUIHints.SingleLine,
-            SupportedSyntaxes = new[] { SyntaxNames.Literal, SyntaxNames.JavaScript }, ConditionalActivityTypes = new[] { QuestionTypeConstants.CurrencyQuestion, QuestionTypeConstants.CheckboxQuestion, QuestionTypeConstants.RadioQuestion, QuestionTypeConstants.PotScoreRadioQuestion, QuestionTypeConstants.DateQuestion, QuestionTypeConstants.TextQuestion, QuestionTypeConstants.TextAreaQuestion })]
+            SupportedSyntaxes = new[] { SyntaxNames.Literal, SyntaxNames.JavaScript }, 
+            ConditionalActivityTypes = new[] { QuestionTypeConstants.CurrencyQuestion, 
+                QuestionTypeConstants.CheckboxQuestion, QuestionTypeConstants.RadioQuestion, 
+                QuestionTypeConstants.PotScoreRadioQuestion, QuestionTypeConstants.DateQuestion, 
+                QuestionTypeConstants.TextQuestion, QuestionTypeConstants.TextAreaQuestion,
+                QuestionTypeConstants.WeightedCheckboxQuestion, QuestionTypeConstants.WeightedRadioQuestion})]
         public string QuestionText { get; set; } = null!;
 
-        [HeActivityInput(Hint = "Question hint", UIHint = HePropertyUIHints.SingleLine, ConditionalActivityTypes = new[] { QuestionTypeConstants.CurrencyQuestion, QuestionTypeConstants.CheckboxQuestion, QuestionTypeConstants.RadioQuestion, QuestionTypeConstants.PotScoreRadioQuestion, QuestionTypeConstants.DateQuestion, QuestionTypeConstants.TextQuestion, QuestionTypeConstants.TextAreaQuestion })]
+        [HeActivityInput(Hint = "Question hint", UIHint = HePropertyUIHints.SingleLine, 
+            ConditionalActivityTypes = new[] { QuestionTypeConstants.CurrencyQuestion,
+                QuestionTypeConstants.CheckboxQuestion, QuestionTypeConstants.RadioQuestion, 
+                QuestionTypeConstants.PotScoreRadioQuestion, QuestionTypeConstants.DateQuestion, 
+                QuestionTypeConstants.TextQuestion, QuestionTypeConstants.TextAreaQuestion,
+                QuestionTypeConstants.WeightedCheckboxQuestion, QuestionTypeConstants.WeightedRadioQuestion})]
         public string QuestionHint { get; set; } = null!;
 
-        [HeActivityInput(Hint = "Question guidance", UIHint = HePropertyUIHints.MultiLine, ConditionalActivityTypes = new[] { QuestionTypeConstants.CurrencyQuestion, QuestionTypeConstants.CheckboxQuestion, QuestionTypeConstants.RadioQuestion, QuestionTypeConstants.PotScoreRadioQuestion, QuestionTypeConstants.DateQuestion, QuestionTypeConstants.TextQuestion, QuestionTypeConstants.TextAreaQuestion })]
+
+        [HeActivityInput(Hint = "Question guidance", UIHint = HePropertyUIHints.MultiLine, 
+            ConditionalActivityTypes = new[] { QuestionTypeConstants.CurrencyQuestion, 
+                QuestionTypeConstants.CheckboxQuestion, QuestionTypeConstants.RadioQuestion, 
+                QuestionTypeConstants.PotScoreRadioQuestion, QuestionTypeConstants.DateQuestion, 
+                QuestionTypeConstants.TextQuestion, QuestionTypeConstants.TextAreaQuestion,
+                QuestionTypeConstants.WeightedCheckboxQuestion, QuestionTypeConstants.WeightedRadioQuestion})]
         public string QuestionGuidance { get; set; } = null!;
 
         [HeActivityInput(Hint = "Include comments box", UIHint = HePropertyUIHints.Checkbox)]

@@ -81,6 +81,16 @@ export namespace Components {
         "propertyDescriptor": ActivityPropertyDescriptor;
         "propertyModel": ActivityDefinitionProperty;
     }
+    interface HeWeightedCheckboxOptionsProperty {
+        "activityModel": ActivityModel;
+        "propertyDescriptor": ActivityPropertyDescriptor;
+        "propertyModel": ActivityDefinitionProperty;
+    }
+    interface HeWeightedRadioOptionsProperty {
+        "activityModel": ActivityModel;
+        "propertyDescriptor": ActivityPropertyDescriptor;
+        "propertyModel": ActivityDefinitionProperty;
+    }
     interface QuestionProperty {
         "activityModel": ActivityModel;
         "questionModel": NestedPropertyModel;
@@ -140,6 +150,14 @@ export interface HeSwitchOptionsPropertyCustomEvent<T> extends CustomEvent<T> {
 export interface HeTextActivityPropertyCustomEvent<T> extends CustomEvent<T> {
     detail: T;
     target: HTMLHeTextActivityPropertyElement;
+}
+export interface HeWeightedCheckboxOptionsPropertyCustomEvent<T> extends CustomEvent<T> {
+    detail: T;
+    target: HTMLHeWeightedCheckboxOptionsPropertyElement;
+}
+export interface HeWeightedRadioOptionsPropertyCustomEvent<T> extends CustomEvent<T> {
+    detail: T;
+    target: HTMLHeWeightedRadioOptionsPropertyElement;
 }
 export interface QuestionPropertyCustomEvent<T> extends CustomEvent<T> {
     detail: T;
@@ -224,6 +242,18 @@ declare global {
         prototype: HTMLHeTextActivityPropertyElement;
         new (): HTMLHeTextActivityPropertyElement;
     };
+    interface HTMLHeWeightedCheckboxOptionsPropertyElement extends Components.HeWeightedCheckboxOptionsProperty, HTMLStencilElement {
+    }
+    var HTMLHeWeightedCheckboxOptionsPropertyElement: {
+        prototype: HTMLHeWeightedCheckboxOptionsPropertyElement;
+        new (): HTMLHeWeightedCheckboxOptionsPropertyElement;
+    };
+    interface HTMLHeWeightedRadioOptionsPropertyElement extends Components.HeWeightedRadioOptionsProperty, HTMLStencilElement {
+    }
+    var HTMLHeWeightedRadioOptionsPropertyElement: {
+        prototype: HTMLHeWeightedRadioOptionsPropertyElement;
+        new (): HTMLHeWeightedRadioOptionsPropertyElement;
+    };
     interface HTMLQuestionPropertyElement extends Components.QuestionProperty, HTMLStencilElement {
     }
     var HTMLQuestionPropertyElement: {
@@ -256,6 +286,8 @@ declare global {
         "he-single-line-property": HTMLHeSingleLinePropertyElement;
         "he-switch-options-property": HTMLHeSwitchOptionsPropertyElement;
         "he-text-activity-property": HTMLHeTextActivityPropertyElement;
+        "he-weighted-checkbox-options-property": HTMLHeWeightedCheckboxOptionsPropertyElement;
+        "he-weighted-radio-options-property": HTMLHeWeightedRadioOptionsPropertyElement;
         "question-property": HTMLQuestionPropertyElement;
         "question-screen-property": HTMLQuestionScreenPropertyElement;
         "switch-options-property": HTMLSwitchOptionsPropertyElement;
@@ -346,6 +378,18 @@ declare namespace LocalJSX {
         "propertyDescriptor"?: ActivityPropertyDescriptor;
         "propertyModel"?: ActivityDefinitionProperty;
     }
+    interface HeWeightedCheckboxOptionsProperty {
+        "activityModel"?: ActivityModel;
+        "onExpressionChanged"?: (event: HeWeightedCheckboxOptionsPropertyCustomEvent<string>) => void;
+        "propertyDescriptor"?: ActivityPropertyDescriptor;
+        "propertyModel"?: ActivityDefinitionProperty;
+    }
+    interface HeWeightedRadioOptionsProperty {
+        "activityModel"?: ActivityModel;
+        "onExpressionChanged"?: (event: HeWeightedRadioOptionsPropertyCustomEvent<string>) => void;
+        "propertyDescriptor"?: ActivityPropertyDescriptor;
+        "propertyModel"?: ActivityDefinitionProperty;
+    }
     interface QuestionProperty {
         "activityModel"?: ActivityModel;
         "onUpdateQuestionScreen"?: (event: QuestionPropertyCustomEvent<string>) => void;
@@ -376,6 +420,8 @@ declare namespace LocalJSX {
         "he-single-line-property": HeSingleLineProperty;
         "he-switch-options-property": HeSwitchOptionsProperty;
         "he-text-activity-property": HeTextActivityProperty;
+        "he-weighted-checkbox-options-property": HeWeightedCheckboxOptionsProperty;
+        "he-weighted-radio-options-property": HeWeightedRadioOptionsProperty;
         "question-property": QuestionProperty;
         "question-screen-property": QuestionScreenProperty;
         "switch-options-property": SwitchOptionsProperty;
@@ -398,6 +444,8 @@ declare module "@stencil/core" {
             "he-single-line-property": LocalJSX.HeSingleLineProperty & JSXBase.HTMLAttributes<HTMLHeSingleLinePropertyElement>;
             "he-switch-options-property": LocalJSX.HeSwitchOptionsProperty & JSXBase.HTMLAttributes<HTMLHeSwitchOptionsPropertyElement>;
             "he-text-activity-property": LocalJSX.HeTextActivityProperty & JSXBase.HTMLAttributes<HTMLHeTextActivityPropertyElement>;
+            "he-weighted-checkbox-options-property": LocalJSX.HeWeightedCheckboxOptionsProperty & JSXBase.HTMLAttributes<HTMLHeWeightedCheckboxOptionsPropertyElement>;
+            "he-weighted-radio-options-property": LocalJSX.HeWeightedRadioOptionsProperty & JSXBase.HTMLAttributes<HTMLHeWeightedRadioOptionsPropertyElement>;
             "question-property": LocalJSX.QuestionProperty & JSXBase.HTMLAttributes<HTMLQuestionPropertyElement>;
             "question-screen-property": LocalJSX.QuestionScreenProperty & JSXBase.HTMLAttributes<HTMLQuestionScreenPropertyElement>;
             "switch-options-property": LocalJSX.SwitchOptionsProperty & JSXBase.HTMLAttributes<HTMLSwitchOptionsPropertyElement>;

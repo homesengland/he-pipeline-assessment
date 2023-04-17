@@ -94,4 +94,9 @@ elsa-modal-dialog > div > div > div:first-child {
   elsa-modal-dialog > div[aria-modal*="true"] {
     max-width: 75%;
   }
+
+  .elsa-justify-content {
+      display: flex;
+      justify-content: start;
+  }
 }
