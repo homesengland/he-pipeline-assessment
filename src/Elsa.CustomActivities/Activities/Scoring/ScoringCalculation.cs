@@ -21,16 +21,14 @@ namespace Elsa.CustomActivities.Activities.Scoring
     {
 
         private readonly IElsaCustomRepository _elsaCustomRepository;
-        private readonly IDateTimeProvider _dateTimeProvider;
 
-        public ScoringCalculation(IElsaCustomRepository elsaCustomRepository, IDateTimeProvider dateTimeProvider)
+        public ScoringCalculation(IElsaCustomRepository elsaCustomRepository)
         {
             _elsaCustomRepository = elsaCustomRepository;
-            _dateTimeProvider = dateTimeProvider;
         }
 
         [ActivityInput(
-            Hint = "Set the formula for how to calculate the pot-score outcome of this stage",
+            Hint = "Set the formula for how to calculate a score",
             UIHint = ActivityInputUIHints.MultiLine, 
             SupportedSyntaxes = new[] { SyntaxNames.JavaScript }, 
             DefaultSyntax = ScoringSyntaxNames.ScoringCalculation,
@@ -52,25 +50,26 @@ namespace Elsa.CustomActivities.Activities.Scoring
                 {
                     Output = Calculation;
 
-                    if (context.WorkflowExecutionContext.Input != null)
+                    var workflowInstance = await
+                        _elsaCustomRepository.GetQuestionWorkflowInstanceByDefinitionId(context.WorkflowInstance.DefinitionId, context.WorkflowInstance.CorrelationId, CancellationToken.None);
+                    if (workflowInstance == null)
                     {
-                        var workflowInstance = await
-                            _elsaCustomRepository.GetQuestionWorkflowInstance(context.WorkflowInstance.Id);
-                        if (workflowInstance == null)
+                        var questionWorkflowInstance = new QuestionWorkflowInstance()
                         {
-                            var questionWorkflowInstance = new QuestionWorkflowInstance()
-                            {
-                                WorkflowInstanceId = context.WorkflowInstance.Id,
-                                WorkflowDefinitionId = context.WorkflowInstance.DefinitionId,
-                                CorrelationId = context.WorkflowInstance.CorrelationId,
-                                WorkflowName = context.WorkflowExecutionContext.WorkflowBlueprint.Name ?? context.WorkflowInstance.DefinitionId,
-                                CreatedDateTime = _dateTimeProvider.UtcNow()
-                            };
-                            await _elsaCustomRepository.CreateQuestionWorkflowInstance(questionWorkflowInstance, CancellationToken.None);
-                        }
+                            WorkflowInstanceId = context.WorkflowInstance.Id,
+                            WorkflowDefinitionId = context.WorkflowInstance.DefinitionId,
+                            CorrelationId = context.WorkflowInstance.CorrelationId,
+                            WorkflowName = context.WorkflowExecutionContext.WorkflowBlueprint.Name ?? context.WorkflowInstance.DefinitionId,
+                            Score = Calculation
+                        };
+                        await _elsaCustomRepository.CreateQuestionWorkflowInstance(questionWorkflowInstance, CancellationToken.None);
                     }
-
-                    await _elsaCustomRepository.SetWorkflowInstanceScore(context.WorkflowInstance.Id, Calculation);
+                    else
+                    {
+                        workflowInstance.WorkflowInstanceId = context.WorkflowInstance.Id;
+                        workflowInstance.Score = Calculation;
+                        await _elsaCustomRepository.SaveChanges(CancellationToken.None);
+                    }
                 }
             }
             catch(Exception)

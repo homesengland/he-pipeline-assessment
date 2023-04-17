@@ -28,7 +28,7 @@ namespace Elsa.CustomActivities.Activities.Scoring.Helpers
 
                 if (workflowInstances.Any())
                 {
-                    var latestCalculation = workflowInstances.OrderByDescending(x => x.CreatedDateTime).First();
+                    var latestCalculation = workflowInstances.First();
                     if (latestCalculation.Score != null)
                     {
                         double.TryParse(latestCalculation.Score, out result);

@@ -88,13 +88,11 @@ namespace Elsa.CustomActivities.Tests.Activities.Scoring.Helpers
             //Arrange
             var earlierWorkflowInstance = new QuestionWorkflowInstance
             {
-                Score = "1234.5",
-                CreatedDateTime = new DateTime(2000, 1, 1)
+                Score = "1234.5"
             };
             var laterWorkflowInstance = new QuestionWorkflowInstance
             {
-                Score = "5678.9",
-                CreatedDateTime = new DateTime(2035, 1, 1)
+                Score = "5678.9"
             };
             elsaCustomRepository
                 .Setup(x => x.GetQuestionWorkflowInstancesByName(correlationId, name, CancellationToken.None))
