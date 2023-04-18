@@ -22,16 +22,16 @@ namespace Elsa.CustomActivities.Tests.Activities.QuestionScreen.Helpers
        string workflowName,
        string activityName,
        string questionId,
-       string workflowInstanceId,
+       string correlationId,
        DateQuestionHelper sut)
         {
             //Arrange
-            elsaCustomRepository.Setup(x => x.GetQuestion(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>(), CancellationToken.None)).ReturnsAsync((Question?)null);
+            elsaCustomRepository.Setup(x => x.GetQuestionByCorrelationId(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>(), CancellationToken.None)).ReturnsAsync((Question?)null);
 
             workflowRegistry.Setup(x => x.FindByNameAsync(workflowName!, VersionOptions.Published, null, default)).ReturnsAsync((WorkflowBlueprint?)null);
 
             //Act
-            var result = await sut.AnswerEqualToOrGreaterThan(workflowInstanceId, workflowName, activityName, questionId, 1, 2, 1900);
+            var result = await sut.AnswerEqualToOrGreaterThan(correlationId, workflowName, activityName, questionId, 1, 2, 1900);
 
             //Assert
             Assert.False(result);
@@ -45,18 +45,18 @@ namespace Elsa.CustomActivities.Tests.Activities.QuestionScreen.Helpers
             string workflowName,
             string activityName,
             string questionId,
-            string workflowInstanceId,
+            string correlationId,
             WorkflowBlueprint workflowBlueprint,
             DateQuestionHelper sut)
         {
 
             //Arrange
-            elsaCustomRepository.Setup(x => x.GetQuestion(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>(), CancellationToken.None)).ReturnsAsync((Question?)null);
+            elsaCustomRepository.Setup(x => x.GetQuestionByCorrelationId(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>(), CancellationToken.None)).ReturnsAsync((Question?)null);
 
             workflowRegistry.Setup(x => x.FindByNameAsync(workflowName!, VersionOptions.Published, null, default)).ReturnsAsync(workflowBlueprint);
 
             //Act
-            var result = await sut.AnswerEqualToOrGreaterThan(workflowInstanceId, workflowName, activityName, questionId, 1, 2, 1900);
+            var result = await sut.AnswerEqualToOrGreaterThan(correlationId, workflowName, activityName, questionId, 1, 2, 1900);
 
             //Assert
             Assert.False(result);
@@ -71,7 +71,7 @@ namespace Elsa.CustomActivities.Tests.Activities.QuestionScreen.Helpers
             string activityId,
             string activityName,
             string questionId,
-            string workflowInstanceId,
+            string correlationId,
             WorkflowBlueprint workflowBlueprint,
             DateQuestionHelper sut)
         {
@@ -82,12 +82,12 @@ namespace Elsa.CustomActivities.Tests.Activities.QuestionScreen.Helpers
                 Name = activityName
             });
 
-            elsaCustomRepository.Setup(x => x.GetQuestion(activityId, workflowInstanceId, It.IsAny<string>(), CancellationToken.None)).ReturnsAsync((Question?)null);
+            elsaCustomRepository.Setup(x => x.GetQuestionByCorrelationId(activityId, correlationId, It.IsAny<string>(), CancellationToken.None)).ReturnsAsync((Question?)null);
 
             workflowRegistry.Setup(x => x.FindByNameAsync(workflowName!, VersionOptions.Published, null, default)).ReturnsAsync(workflowBlueprint);
 
             //Act
-            var result = await sut.AnswerEqualToOrGreaterThan(workflowInstanceId, workflowName, activityName, questionId, 1, 2, 1900);
+            var result = await sut.AnswerEqualToOrGreaterThan(correlationId, workflowName, activityName, questionId, 1, 2, 1900);
 
             //Assert
             Assert.False(result);
@@ -111,7 +111,7 @@ namespace Elsa.CustomActivities.Tests.Activities.QuestionScreen.Helpers
             string activityId,
             string activityName,
             string questionId,
-            string workflowInstanceId,
+            string correlationId,
             WorkflowBlueprint workflowBlueprint,
             Question question,
             DateQuestionHelper sut)
@@ -125,12 +125,12 @@ namespace Elsa.CustomActivities.Tests.Activities.QuestionScreen.Helpers
             question.QuestionType = QuestionTypeConstants.DateQuestion;
             question.Answers = new List<Answer> { new() { AnswerText = $"{answerYear}-{answerMonth}-{answerDay}" } };
 
-            elsaCustomRepository.Setup(x => x.GetQuestion(activityId, workflowInstanceId, questionId, CancellationToken.None)).ReturnsAsync(question);
+            elsaCustomRepository.Setup(x => x.GetQuestionByCorrelationId(activityId, correlationId, questionId, CancellationToken.None)).ReturnsAsync(question);
 
             workflowRegistry.Setup(x => x.FindByNameAsync(workflowName!, VersionOptions.Published, null, default)).ReturnsAsync(workflowBlueprint);
 
             //Act
-            var result = await sut.AnswerEqualToOrGreaterThan(workflowInstanceId, workflowName, activityName, questionId, answerToCheckDay, answerToCheckMonth, answerToCheckYear);
+            var result = await sut.AnswerEqualToOrGreaterThan(correlationId, workflowName, activityName, questionId, answerToCheckDay, answerToCheckMonth, answerToCheckYear);
 
             //Assert
             Assert.Equal(expectedResult, result);
@@ -144,16 +144,16 @@ namespace Elsa.CustomActivities.Tests.Activities.QuestionScreen.Helpers
              string workflowName,
              string activityName,
              string questionId,
-             string workflowInstanceId,
+             string correlationId,
              DateQuestionHelper sut)
         {
             //Arrange
-            elsaCustomRepository.Setup(x => x.GetQuestion(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>(), CancellationToken.None)).ReturnsAsync((Question?)null);
+            elsaCustomRepository.Setup(x => x.GetQuestionByCorrelationId(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>(), CancellationToken.None)).ReturnsAsync((Question?)null);
 
             workflowRegistry.Setup(x => x.FindByNameAsync(workflowName!, VersionOptions.Published, null, default)).ReturnsAsync((WorkflowBlueprint?)null);
 
             //Act
-            var result = await sut.AnswerEqualToOrLessThan(workflowInstanceId, workflowName, activityName, questionId, 1, 2, 1900);
+            var result = await sut.AnswerEqualToOrLessThan(correlationId, workflowName, activityName, questionId, 1, 2, 1900);
 
             //Assert
             Assert.False(result);
@@ -167,18 +167,18 @@ namespace Elsa.CustomActivities.Tests.Activities.QuestionScreen.Helpers
             string workflowName,
             string activityName,
             string questionId,
-            string workflowInstanceId,
+            string correlationId,
             WorkflowBlueprint workflowBlueprint,
             DateQuestionHelper sut)
         {
 
             //Arrange
-            elsaCustomRepository.Setup(x => x.GetQuestion(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>(), CancellationToken.None)).ReturnsAsync((Question?)null);
+            elsaCustomRepository.Setup(x => x.GetQuestionByCorrelationId(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>(), CancellationToken.None)).ReturnsAsync((Question?)null);
 
             workflowRegistry.Setup(x => x.FindByNameAsync(workflowName!, VersionOptions.Published, null, default)).ReturnsAsync(workflowBlueprint);
 
             //Act
-            var result = await sut.AnswerEqualToOrLessThan(workflowInstanceId, workflowName, activityName, questionId, 1, 2, 1900);
+            var result = await sut.AnswerEqualToOrLessThan(correlationId, workflowName, activityName, questionId, 1, 2, 1900);
 
             //Assert
             Assert.False(result);
@@ -193,7 +193,7 @@ namespace Elsa.CustomActivities.Tests.Activities.QuestionScreen.Helpers
             string activityId,
             string activityName,
             string questionId,
-            string workflowInstanceId,
+            string correlationId,
             WorkflowBlueprint workflowBlueprint,
             DateQuestionHelper sut)
         {
@@ -204,12 +204,12 @@ namespace Elsa.CustomActivities.Tests.Activities.QuestionScreen.Helpers
                 Name = activityName
             });
 
-            elsaCustomRepository.Setup(x => x.GetQuestion(activityId, workflowInstanceId, It.IsAny<string>(), CancellationToken.None)).ReturnsAsync((Question?)null);
+            elsaCustomRepository.Setup(x => x.GetQuestionByCorrelationId(activityId, correlationId, It.IsAny<string>(), CancellationToken.None)).ReturnsAsync((Question?)null);
 
             workflowRegistry.Setup(x => x.FindByNameAsync(workflowName!, VersionOptions.Published, null, default)).ReturnsAsync(workflowBlueprint);
 
             //Act
-            var result = await sut.AnswerEqualToOrLessThan(workflowInstanceId, workflowName, activityName, questionId, 1, 2, 1900);
+            var result = await sut.AnswerEqualToOrLessThan(correlationId, workflowName, activityName, questionId, 1, 2, 1900);
 
             //Assert
             Assert.False(result);
@@ -233,7 +233,7 @@ namespace Elsa.CustomActivities.Tests.Activities.QuestionScreen.Helpers
             string activityId,
             string activityName,
             string questionId,
-            string workflowInstanceId,
+            string correlationId,
             WorkflowBlueprint workflowBlueprint,
             Question question,
             DateQuestionHelper sut)
@@ -247,12 +247,12 @@ namespace Elsa.CustomActivities.Tests.Activities.QuestionScreen.Helpers
             question.QuestionType = QuestionTypeConstants.DateQuestion;
             question.Answers = new List<Answer> { new() { AnswerText = $"{answerYear}-{answerMonth}-{answerDay}" } };
 
-            elsaCustomRepository.Setup(x => x.GetQuestion(activityId, workflowInstanceId, questionId, CancellationToken.None)).ReturnsAsync(question);
+            elsaCustomRepository.Setup(x => x.GetQuestionByCorrelationId(activityId, correlationId, questionId, CancellationToken.None)).ReturnsAsync(question);
 
             workflowRegistry.Setup(x => x.FindByNameAsync(workflowName!, VersionOptions.Published, null, default)).ReturnsAsync(workflowBlueprint);
 
             //Act
-            var result = await sut.AnswerEqualToOrLessThan(workflowInstanceId, workflowName, activityName, questionId, answerToCheckDay, answerToCheckMonth, answerToCheckYear);
+            var result = await sut.AnswerEqualToOrLessThan(correlationId, workflowName, activityName, questionId, answerToCheckDay, answerToCheckMonth, answerToCheckYear);
 
             //Assert
             Assert.Equal(expectedResult, result);

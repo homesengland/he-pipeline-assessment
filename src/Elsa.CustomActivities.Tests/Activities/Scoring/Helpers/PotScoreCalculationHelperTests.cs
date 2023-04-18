@@ -18,7 +18,7 @@ namespace Elsa.CustomActivities.Tests.Activities.Scoring.Helpers
             PotScoreCalculationHelper sut)
         {
             //Arrange
-            elsaCustomRepository.Setup(x => x.GetQuestions(workflowInstanceId, CancellationToken.None)).ReturnsAsync(new List<Question>());
+            elsaCustomRepository.Setup(x => x.GetWorkflowInstanceQuestions(workflowInstanceId, CancellationToken.None)).ReturnsAsync(new List<Question>());
 
             //Act
             var result = await sut.GetTotalPotValue(workflowInstanceId, "test");
@@ -44,7 +44,7 @@ namespace Elsa.CustomActivities.Tests.Activities.Scoring.Helpers
                     questionAnswer.Choice!.PotScoreCategory = "RandomPotScoreCategory";
                 }
             }
-            elsaCustomRepository.Setup(x => x.GetQuestions(workflowInstanceId, CancellationToken.None)).ReturnsAsync(questions);
+            elsaCustomRepository.Setup(x => x.GetWorkflowInstanceQuestions(workflowInstanceId, CancellationToken.None)).ReturnsAsync(questions);
 
             //Act
             var result = await sut.GetTotalPotValue(workflowInstanceId, potScoreCategory);
@@ -80,7 +80,7 @@ namespace Elsa.CustomActivities.Tests.Activities.Scoring.Helpers
                 }
             };
 
-            elsaCustomRepository.Setup(x => x.GetQuestions(workflowInstanceId, CancellationToken.None)).ReturnsAsync(questions);
+            elsaCustomRepository.Setup(x => x.GetWorkflowInstanceQuestions(workflowInstanceId, CancellationToken.None)).ReturnsAsync(questions);
 
             //Act
             var result = await sut.GetTotalPotValue(workflowInstanceId, potScoreCategory);
@@ -123,7 +123,7 @@ namespace Elsa.CustomActivities.Tests.Activities.Scoring.Helpers
                 }
             };
 
-            elsaCustomRepository.Setup(x => x.GetQuestions(workflowInstanceId, CancellationToken.None)).ReturnsAsync(questions);
+            elsaCustomRepository.Setup(x => x.GetWorkflowInstanceQuestions(workflowInstanceId, CancellationToken.None)).ReturnsAsync(questions);
 
             //Act
             var result = await sut.GetTotalPotValue(workflowInstanceId, potScoreCategory);
@@ -173,7 +173,7 @@ namespace Elsa.CustomActivities.Tests.Activities.Scoring.Helpers
                 }
             };
 
-            elsaCustomRepository.Setup(x => x.GetQuestions(workflowInstanceId, CancellationToken.None)).ReturnsAsync(questions);
+            elsaCustomRepository.Setup(x => x.GetWorkflowInstanceQuestions(workflowInstanceId, CancellationToken.None)).ReturnsAsync(questions);
 
             //Act
             var result = await sut.GetTotalPotValue(workflowInstanceId, potScoreCategory);
@@ -223,7 +223,7 @@ namespace Elsa.CustomActivities.Tests.Activities.Scoring.Helpers
                 }
             };
 
-            elsaCustomRepository.Setup(x => x.GetQuestions(workflowInstanceId, CancellationToken.None)).ReturnsAsync(questions);
+            elsaCustomRepository.Setup(x => x.GetWorkflowInstanceQuestions(workflowInstanceId, CancellationToken.None)).ReturnsAsync(questions);
 
             //Act
             var result = await sut.GetTotalPotValue(workflowInstanceId, potScoreCategory);
@@ -287,7 +287,7 @@ namespace Elsa.CustomActivities.Tests.Activities.Scoring.Helpers
                 }
             };
 
-            elsaCustomRepository.Setup(x => x.GetQuestions(workflowInstanceId, CancellationToken.None)).ReturnsAsync(questions);
+            elsaCustomRepository.Setup(x => x.GetWorkflowInstanceQuestions(workflowInstanceId, CancellationToken.None)).ReturnsAsync(questions);
 
             //Act
             var result = await sut.GetTotalPotValue(workflowInstanceId, potScoreCategory);
@@ -360,7 +360,7 @@ namespace Elsa.CustomActivities.Tests.Activities.Scoring.Helpers
         {
             //Arrange
             var exception = new ApplicationException("TestMessage");
-            elsaCustomRepository.Setup(x => x.GetQuestions(workflowInstanceId, CancellationToken.None)).ThrowsAsync(exception);
+            elsaCustomRepository.Setup(x => x.GetWorkflowInstanceQuestions(workflowInstanceId, CancellationToken.None)).ThrowsAsync(exception);
 
             //Act
             var exceptionThrown = await Assert.ThrowsAsync<Exception>(() => sut.GetTotalPotValue(workflowInstanceId, potScoreCategory));
