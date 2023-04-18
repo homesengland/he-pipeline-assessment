@@ -59,6 +59,9 @@ namespace Elsa.CustomActivities.Activities.QuestionScreen
             ExpectedOutputType = ExpectedOutputHints.Double)]
         public double QuestionWeighting { get; set; }
 
+        [HeActivityInput(Hint = "Maximum available score for any combination of answers.", Name = "Max Question Score",  ConditionalActivityTypes = new[]{ QuestionTypeConstants.WeightedRadioQuestion, QuestionTypeConstants.WeightedCheckboxQuestion })]
+        public int? MaxScore { get; set; }
+
         [HeActivityInput(UIHint = HePropertyUIHints.CheckboxOptions, ConditionalActivityTypes = new[] { QuestionTypeConstants.CheckboxQuestion }, ExpectedOutputType = ExpectedOutputHints.Checkbox)]
         public CheckboxModel Checkbox { get; set; } = new CheckboxModel();
 
