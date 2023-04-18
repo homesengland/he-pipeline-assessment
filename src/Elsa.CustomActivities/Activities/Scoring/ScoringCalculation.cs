@@ -1,4 +1,5 @@
-﻿using Elsa.ActivityResults;
+﻿using System.Globalization;
+using Elsa.ActivityResults;
 using Elsa.Attributes;
 using Elsa.CustomActivities.Constants;
 using Elsa.CustomInfrastructure.Data.Repository;
@@ -48,6 +49,7 @@ namespace Elsa.CustomActivities.Activities.Scoring
                 }
                 else
                 {
+                    Calculation = TruncateCalculation(Calculation);
                     Output = Calculation;
 
                     var workflowInstance = await
@@ -81,6 +83,17 @@ namespace Elsa.CustomActivities.Activities.Scoring
             }
 
             return Done();
+        }
+
+        private string TruncateCalculation(string calculation)
+        {
+            var isDouble = double.TryParse(calculation, out var number);
+            if (isDouble)
+            {
+                number = Math.Round(number, 2);
+                return number.ToString(CultureInfo.InvariantCulture);
+            }
+            return calculation;
         }
     }
 }
