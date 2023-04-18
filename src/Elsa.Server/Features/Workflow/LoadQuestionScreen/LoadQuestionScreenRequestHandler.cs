@@ -68,7 +68,7 @@ namespace Elsa.Server.Features.Workflow.LoadQuestionScreen
                             var title = (string?)activityDataDictionary.FirstOrDefault(x => x.Key == "PageTitle").Value;
                             result.Data.PageTitle = title;
 
-                            var dbQuestions = await _elsaCustomRepository.GetQuestions(
+                            var dbQuestions = await _elsaCustomRepository.GetActivityQuestions(
                                 activityRequest.ActivityId, activityRequest.WorkflowInstanceId,
                                 cancellationToken);
 

@@ -1,4 +1,4 @@
-﻿namespace Elsa.Server.Providers
+﻿namespace Elsa.CustomWorkflow.Sdk.Providers
 {
     public interface IDateTimeProvider
     {

@@ -1,5 +1,6 @@
 ﻿using Elsa.CustomInfrastructure.Data.Repository;
 using Elsa.CustomModels;
+using Elsa.CustomWorkflow.Sdk.Providers;
 using Elsa.Models;
 using Elsa.Server.Models;
 using Elsa.Server.Providers;
@@ -17,18 +18,22 @@ namespace Elsa.Server.Features.Workflow.StartWorkflow
         private readonly IElsaCustomRepository _elsaCustomRepository;
         private readonly IWorkflowNextActivityProvider _workflowNextActivityProvider;
         private readonly INextActivityNavigationService _nextActivityNavigationService;
+        private readonly IDateTimeProvider _dateTimeProvider;
 
 
-        public StartWorkflowCommandHandler(IWorkflowRegistry workflowRegistry, IStartsWorkflow startsWorkflow,
-                                           IElsaCustomRepository elsaCustomRepository,
-                                           IWorkflowNextActivityProvider workflowNextActivityProvider,
-                                           INextActivityNavigationService nextActivityNavigationService)
+        public StartWorkflowCommandHandler(IWorkflowRegistry workflowRegistry,
+            IStartsWorkflow startsWorkflow,
+            IElsaCustomRepository elsaCustomRepository,
+            IWorkflowNextActivityProvider workflowNextActivityProvider,
+            INextActivityNavigationService nextActivityNavigationService,
+            IDateTimeProvider dateTimeProvider)
         {
             _workflowRegistry = workflowRegistry;
             _startsWorkflow = startsWorkflow;
             _elsaCustomRepository = elsaCustomRepository;
             _workflowNextActivityProvider = workflowNextActivityProvider;
             _nextActivityNavigationService = nextActivityNavigationService;
+            _dateTimeProvider = dateTimeProvider;
         }
 
         public async Task<OperationResult<StartWorkflowResponse>> Handle(StartWorkflowCommand request, CancellationToken cancellationToken)

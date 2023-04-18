@@ -173,7 +173,7 @@ public class LoadQuestionScreenRequestHandlerTests
                 loadWorkflowActivityRequest.WorkflowInstanceId, CancellationToken.None))
             .ReturnsAsync(customActivityNavigation);
 
-        elsaCustomRepository.Setup(x => x.GetQuestions(loadWorkflowActivityRequest.ActivityId,
+        elsaCustomRepository.Setup(x => x.GetActivityQuestions(loadWorkflowActivityRequest.ActivityId,
                 loadWorkflowActivityRequest.WorkflowInstanceId, CancellationToken.None))
             .ReturnsAsync(assessmentQuestions);
 
@@ -245,7 +245,7 @@ public class LoadQuestionScreenRequestHandlerTests
                 loadWorkflowActivityRequest.WorkflowInstanceId, CancellationToken.None))
             .ReturnsAsync(customActivityNavigation);
 
-        elsaCustomRepository.Setup(x => x.GetQuestions(loadWorkflowActivityRequest.ActivityId,
+        elsaCustomRepository.Setup(x => x.GetActivityQuestions(loadWorkflowActivityRequest.ActivityId,
                 loadWorkflowActivityRequest.WorkflowInstanceId, CancellationToken.None))
             .ReturnsAsync(assessmentQuestions);
 
@@ -296,7 +296,7 @@ public class LoadQuestionScreenRequestHandlerTests
                 loadWorkflowActivityRequest.WorkflowInstanceId, CancellationToken.None))
             .ReturnsAsync(customActivityNavigation);
 
-        elsaCustomRepository.Setup(x => x.GetQuestions(loadWorkflowActivityRequest.ActivityId,
+        elsaCustomRepository.Setup(x => x.GetActivityQuestions(loadWorkflowActivityRequest.ActivityId,
                 loadWorkflowActivityRequest.WorkflowInstanceId, CancellationToken.None))
             .ReturnsAsync(assessmentQuestions);
 
@@ -350,7 +350,7 @@ public class LoadQuestionScreenRequestHandlerTests
                 loadWorkflowActivityRequest.WorkflowInstanceId, CancellationToken.None))
             .ReturnsAsync(customActivityNavigation);
 
-        elsaCustomRepository.Setup(x => x.GetQuestions(loadWorkflowActivityRequest.ActivityId,
+        elsaCustomRepository.Setup(x => x.GetActivityQuestions(loadWorkflowActivityRequest.ActivityId,
                 loadWorkflowActivityRequest.WorkflowInstanceId, CancellationToken.None))
             .ReturnsAsync(assessmentQuestions);
 
@@ -403,7 +403,7 @@ public class LoadQuestionScreenRequestHandlerTests
                 loadWorkflowActivityRequest.WorkflowInstanceId, CancellationToken.None))
             .ReturnsAsync(customActivityNavigation);
 
-        elsaCustomRepository.Setup(x => x.GetQuestions(loadWorkflowActivityRequest.ActivityId,
+        elsaCustomRepository.Setup(x => x.GetActivityQuestions(loadWorkflowActivityRequest.ActivityId,
                 loadWorkflowActivityRequest.WorkflowInstanceId, CancellationToken.None))
             .ReturnsAsync(assessmentQuestions);
 
@@ -460,7 +460,7 @@ public class LoadQuestionScreenRequestHandlerTests
                 loadWorkflowActivityRequest.WorkflowInstanceId, CancellationToken.None))
             .ReturnsAsync(customActivityNavigation);
 
-        elsaCustomRepository.Setup(x => x.GetQuestions(loadWorkflowActivityRequest.ActivityId,
+        elsaCustomRepository.Setup(x => x.GetActivityQuestions(loadWorkflowActivityRequest.ActivityId,
                 loadWorkflowActivityRequest.WorkflowInstanceId, CancellationToken.None))
             .ReturnsAsync(assessmentQuestions);
 
@@ -517,7 +517,7 @@ public class LoadQuestionScreenRequestHandlerTests
                 loadWorkflowActivityRequest.WorkflowInstanceId, CancellationToken.None))
             .ReturnsAsync(customActivityNavigation);
 
-        elsaCustomRepository.Setup(x => x.GetQuestions(loadWorkflowActivityRequest.ActivityId,
+        elsaCustomRepository.Setup(x => x.GetActivityQuestions(loadWorkflowActivityRequest.ActivityId,
                 loadWorkflowActivityRequest.WorkflowInstanceId, CancellationToken.None))
             .ReturnsAsync(assessmentQuestions);
 
@@ -575,7 +575,7 @@ public class LoadQuestionScreenRequestHandlerTests
                 loadWorkflowActivityRequest.WorkflowInstanceId, CancellationToken.None))
             .ReturnsAsync(customActivityNavigation);
 
-        elsaCustomRepository.Setup(x => x.GetQuestions(loadWorkflowActivityRequest.ActivityId,
+        elsaCustomRepository.Setup(x => x.GetActivityQuestions(loadWorkflowActivityRequest.ActivityId,
                 loadWorkflowActivityRequest.WorkflowInstanceId, CancellationToken.None))
             .ReturnsAsync(assessmentQuestions);
 
@@ -629,7 +629,7 @@ public class LoadQuestionScreenRequestHandlerTests
                 loadWorkflowActivityRequest.WorkflowInstanceId, CancellationToken.None))
             .ReturnsAsync(customActivityNavigation);
 
-        elsaCustomRepository.Setup(x => x.GetQuestions(loadWorkflowActivityRequest.ActivityId,
+        elsaCustomRepository.Setup(x => x.GetActivityQuestions(loadWorkflowActivityRequest.ActivityId,
                 loadWorkflowActivityRequest.WorkflowInstanceId, CancellationToken.None))
             .ReturnsAsync(assessmentQuestions);
 
@@ -693,7 +693,7 @@ public class LoadQuestionScreenRequestHandlerTests
                 loadWorkflowActivityRequest.WorkflowInstanceId, CancellationToken.None))
             .ReturnsAsync(customActivityNavigation);
 
-        elsaCustomRepository.Setup(x => x.GetQuestions(loadWorkflowActivityRequest.ActivityId,
+        elsaCustomRepository.Setup(x => x.GetActivityQuestions(loadWorkflowActivityRequest.ActivityId,
                 loadWorkflowActivityRequest.WorkflowInstanceId, CancellationToken.None))
             .ReturnsAsync(assessmentQuestions);
 
@@ -742,7 +742,7 @@ public class LoadQuestionScreenRequestHandlerTests
                 loadWorkflowActivityRequest.WorkflowInstanceId, CancellationToken.None))
             .ReturnsAsync(customActivityNavigation);
 
-        elsaCustomRepository.Setup(x => x.GetQuestions(loadWorkflowActivityRequest.ActivityId,
+        elsaCustomRepository.Setup(x => x.GetActivityQuestions(loadWorkflowActivityRequest.ActivityId,
                 loadWorkflowActivityRequest.WorkflowInstanceId, CancellationToken.None))
             .ReturnsAsync(assessmentQuestions);
 

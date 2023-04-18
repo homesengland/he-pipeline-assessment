@@ -1,8 +1,8 @@
-﻿using Elsa.Activities.ControlFlow;
-using Elsa.ActivityResults;
+﻿using Elsa.ActivityResults;
 using Elsa.Attributes;
 using Elsa.CustomActivities.Constants;
 using Elsa.CustomInfrastructure.Data.Repository;
+using Elsa.CustomModels;
 using Elsa.Design;
 using Elsa.Expressions;
 using Elsa.Services;
@@ -32,16 +32,6 @@ namespace Elsa.CustomActivities.Activities.Scoring
 
         public string Calculation { get; set; } = null!;
 
-        [ActivityInput(Label = "Scoring outcome conditions", Hint = "The conditions to evaluate.", UIHint = CustomActivityUIHints.CustomSwitch, DefaultSyntax = "Switch", IsDesignerCritical = true)]
-        public ICollection<SwitchCase> Cases { get; set; } = new List<SwitchCase>();
-
-        [ActivityInput(
-            Hint = "The switch mode determines whether the first match should be scheduled, or all matches.",
-            DefaultValue = SwitchMode.MatchFirst,
-            SupportedSyntaxes = new[] { SyntaxNames.Literal, SyntaxNames.JavaScript, SyntaxNames.Liquid }
-        )]
-        public SwitchMode Mode { get; set; } = SwitchMode.MatchFirst;
-
         [ActivityOutput] public string? Output { get; set; }
 
         protected override async ValueTask<IActivityExecutionResult> OnExecuteAsync(ActivityExecutionContext context)
@@ -57,7 +47,6 @@ namespace Elsa.CustomActivities.Activities.Scoring
                 else
                 {
                     Output = Calculation;
-                    await _elsaCustomRepository.SetWorkflowInstanceScore(context.WorkflowInstance.Id, Calculation);
                 }
             }
             catch (Exception)
