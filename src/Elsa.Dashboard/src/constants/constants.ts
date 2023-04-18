@@ -32,6 +32,10 @@ export class RadioOptionsSyntax {
   static readonly Score = "Score";
 }
 
+export class WeightedScoringSyntax {
+  static readonly MaxGroupScore = "MaxGroupScore";
+}
+
 export class TextActivityOptionsSyntax {
   static readonly Paragraph = "Paragraph";
   static readonly Guidance = "Guidance";
@@ -68,5 +72,6 @@ export class PropertyOutputTypes {
   static readonly Number = "int";
   static readonly Checkbox = "checkbox";
   static readonly Radio = "radio";
+  static readonly RadioGroup = "radioGroup";
   static readonly Information = "information";
 }

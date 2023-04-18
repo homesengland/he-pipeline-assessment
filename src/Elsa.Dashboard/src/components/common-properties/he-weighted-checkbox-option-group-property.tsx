@@ -16,12 +16,12 @@ import { CheckboxOptionsSyntax, PropertyOutputTypes, RadioOptionsSyntax, SyntaxN
 import { NestedActivityDefinitionProperty } from '../../models/custom-component-models';
 
 @Component({
-  tag: 'he-weighted-checkbox-options-property',
+  tag: 'he-weighted-checkbox-option-group-property',
   shadow: false,
 })
 //Copy of Elsa Switch Case
 //Copied to allow us control over how the expression editor is displayed.
-export class HeWeightedCheckboxOptionProperty {
+export class HeWeightedCheckboxOptionGroupProperty {
 
   @Prop() activityModel: ActivityModel;
   @Prop() propertyDescriptor: ActivityPropertyDescriptor;
