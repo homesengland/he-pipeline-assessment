@@ -29,7 +29,7 @@ namespace Elsa.CustomActivities.Activities.Scoring.Helpers
                 double failedResult = -1;
                 List<double> totalSelectedScores = new List<double>();
 
-                var workflowQuestions = await _elsaCustomRepository.GetQuestions(workflowInstanceId, CancellationToken.None);
+                var workflowQuestions = await _elsaCustomRepository.GetWorkflowInstanceQuestions(workflowInstanceId, CancellationToken.None);
                 if (workflowQuestions.Count > 0)
                 {
                     foreach (var question in workflowQuestions)

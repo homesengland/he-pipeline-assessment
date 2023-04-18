@@ -44,7 +44,7 @@ namespace Elsa.Server.Features.Workflow.QuestionScreenSaveAndContinue
             try
             {
                 var dbAssessmentQuestionList =
-                    await _elsaCustomRepository.GetQuestions(command.ActivityId, command.WorkflowInstanceId,
+                    await _elsaCustomRepository.GetActivityQuestions(command.ActivityId, command.WorkflowInstanceId,
                         cancellationToken);
 
                 if (dbAssessmentQuestionList.Any())

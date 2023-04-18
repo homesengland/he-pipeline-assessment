@@ -20,7 +20,7 @@ namespace Elsa.CustomActivities.Activities.QuestionScreen.Helpers
         }
 
 
-        public async Task<bool> AnswerEquals(string workflowInstanceId, string workflowName, string activityName, string questionId, string answerToCheck)
+        public async Task<bool> AnswerEquals(string correlationId, string workflowName, string activityName, string questionId, string answerToCheck)
         {
 
             var workflowBlueprint = await _workflowRegistry.FindByNameAsync(workflowName, Models.VersionOptions.Published);
@@ -30,8 +30,8 @@ namespace Elsa.CustomActivities.Activities.QuestionScreen.Helpers
                 var activity = workflowBlueprint.Activities.FirstOrDefault(x => x.Name == activityName);
                 if (activity != null)
                 {
-                    var result = await _elsaCustomRepository.GetQuestion(activity.Id,
-                        workflowInstanceId, questionId, CancellationToken.None);
+                    var result = await _elsaCustomRepository.GetQuestionByCorrelationId(activity.Id,
+                        correlationId, questionId, CancellationToken.None);
 
                     if (result != null && (result.QuestionType == QuestionTypeConstants.TextQuestion ||
                         result.QuestionType == QuestionTypeConstants.TextAreaQuestion) &&
@@ -44,7 +44,7 @@ namespace Elsa.CustomActivities.Activities.QuestionScreen.Helpers
             return false;
         }
 
-        public async Task<bool> AnswerContains(string workflowInstanceId, string workflowName, string activityName, string questionId, string answerToCheck)
+        public async Task<bool> AnswerContains(string correlationId, string workflowName, string activityName, string questionId, string answerToCheck)
         {
             var workflowBlueprint = await _workflowRegistry.FindByNameAsync(workflowName, Models.VersionOptions.Published);
 
@@ -53,8 +53,8 @@ namespace Elsa.CustomActivities.Activities.QuestionScreen.Helpers
                 var activity = workflowBlueprint.Activities.FirstOrDefault(x => x.Name == activityName);
                 if (activity != null)
                 {
-                    var result = await _elsaCustomRepository.GetQuestion(activity.Id,
-                        workflowInstanceId, questionId, CancellationToken.None);
+                    var result = await _elsaCustomRepository.GetQuestionByCorrelationId(activity.Id,
+                        correlationId, questionId, CancellationToken.None);
 
                     if (result != null && (result.QuestionType == QuestionTypeConstants.TextQuestion ||
                         result.QuestionType == QuestionTypeConstants.TextAreaQuestion) &&
@@ -72,8 +72,8 @@ namespace Elsa.CustomActivities.Activities.QuestionScreen.Helpers
         {
             var activityExecutionContext = notification.ActivityExecutionContext;
             var engine = notification.Engine;
-            engine.SetValue("textQuestionAnswerEquals", (Func<string, string, string, string, bool>)((workflowName, activityName, questionId, answerToCheck) => AnswerEquals(activityExecutionContext.WorkflowInstance.Id, workflowName, activityName, questionId, answerToCheck).Result));
-            engine.SetValue("textQuestionAnswerContains", (Func<string, string, string, string, bool>)((workflowName, activityName, questionId, answerToCheck) => AnswerContains(activityExecutionContext.WorkflowInstance.Id, workflowName, activityName, questionId, answerToCheck).Result));
+            engine.SetValue("textQuestionAnswerEquals", (Func<string, string, string, string, bool>)((workflowName, activityName, questionId, answerToCheck) => AnswerEquals(activityExecutionContext.CorrelationId, workflowName, activityName, questionId, answerToCheck).Result));
+            engine.SetValue("textQuestionAnswerContains", (Func<string, string, string, string, bool>)((workflowName, activityName, questionId, answerToCheck) => AnswerContains(activityExecutionContext.CorrelationId, workflowName, activityName, questionId, answerToCheck).Result));
             return Task.CompletedTask;
         }
 

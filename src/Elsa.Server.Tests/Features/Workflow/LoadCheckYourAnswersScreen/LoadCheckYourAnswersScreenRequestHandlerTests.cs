@@ -33,7 +33,7 @@ public class LoadCheckYourAnswersScreenRequestHandlerTests
             $"Unable to find activity navigation with Workflow Id: {loadCheckYourAnswersScreenRequest.WorkflowInstanceId} and Activity Id: {loadCheckYourAnswersScreenRequest.ActivityId} in Elsa Custom database",
             result.ErrorMessages.Single());
         elsaCustomRepository.Verify(
-            x => x.GetQuestions(It.IsAny<string>(), CancellationToken.None), Times.Never);
+            x => x.GetWorkflowInstanceQuestions(It.IsAny<string>(), CancellationToken.None), Times.Never);
     }
 
     [Theory]
@@ -56,7 +56,7 @@ public class LoadCheckYourAnswersScreenRequestHandlerTests
         Assert.Null(result.Data!.CheckQuestions);
         Assert.Equal(exception.Message, result.ErrorMessages.Single());
         elsaCustomRepository.Verify(
-            x => x.GetQuestions(It.IsAny<string>(), CancellationToken.None), Times.Never);
+            x => x.GetWorkflowInstanceQuestions(It.IsAny<string>(), CancellationToken.None), Times.Never);
     }
 
     [Theory]
@@ -74,7 +74,7 @@ public class LoadCheckYourAnswersScreenRequestHandlerTests
                 request.WorkflowInstanceId, CancellationToken.None))
             .ReturnsAsync(customActivityNavigation);
 
-        elsaCustomRepository.Setup(x => x.GetQuestions(request.WorkflowInstanceId, CancellationToken.None))
+        elsaCustomRepository.Setup(x => x.GetWorkflowInstanceQuestions(request.WorkflowInstanceId, CancellationToken.None))
             .ReturnsAsync(questions);
 
         var dictionary = new Dictionary<string, object?>()
