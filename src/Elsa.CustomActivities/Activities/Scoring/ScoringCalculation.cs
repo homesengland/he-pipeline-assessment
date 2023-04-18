@@ -68,6 +68,8 @@ namespace Elsa.CustomActivities.Activities.Scoring
                     {
                         workflowInstance.WorkflowInstanceId = context.WorkflowInstance.Id;
                         workflowInstance.Score = Calculation;
+                        workflowInstance.WorkflowName = context.WorkflowExecutionContext.WorkflowBlueprint.Name ??
+                                                        context.WorkflowInstance.DefinitionId;
                         await _elsaCustomRepository.SaveChanges(CancellationToken.None);
                     }
                 }

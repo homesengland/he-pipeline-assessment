@@ -5,7 +5,7 @@ using Elsa.Services;
 using Elsa.Services.Models;
 using Elsa.Services.WorkflowStorage;
 
-namespace Elsa.CustomActivities.Activities.TriggerWorkflow
+namespace Elsa.CustomActivities.Activities.RunEconomicCalculations
 {
     public class RunEconomicCalculations : RunWorkflow
     {

@@ -72,6 +72,7 @@ namespace Elsa.CustomActivities.Tests.Activities.Scoring
             Assert.Equal("Done", outcomeResult.Outcomes.First());
             Assert.Equal(sut.Calculation, questionWorkflowInstance.Score);
             Assert.Equal(context.WorkflowInstance.Id, questionWorkflowInstance.WorkflowInstanceId);
+            Assert.Equal(context.WorkflowInstance.DefinitionId, questionWorkflowInstance.WorkflowName);
             elsaCustomRepository.Verify(
                 x => x.SaveChanges(CancellationToken.None),
                 Times.Once);
