@@ -12,7 +12,7 @@ namespace Elsa.CustomActivities.Tests.Activities.Scoring.Helpers
     {
         [Theory]
         [AutoMoqData]
-        public async Task GetGetEconomicCalculation_ReturnsDefaultResult_GivenNoWorkflowInstances(
+        public async Task GetEconomicCalculation_ReturnsDefaultResult_GivenNoWorkflowInstances(
             [Frozen] Mock<IElsaCustomRepository> elsaCustomRepository,
             string name,
             string correlationId,
@@ -30,7 +30,7 @@ namespace Elsa.CustomActivities.Tests.Activities.Scoring.Helpers
 
         [Theory]
         [AutoMoqData]
-        public async Task GetGetEconomicCalculation_ReturnsDefaultResult_GivenNoScoreSetOnWorkflowInstance(
+        public async Task GetEconomicCalculation_ReturnsDefaultResult_GivenNoScoreSetOnWorkflowInstance(
             [Frozen] Mock<IElsaCustomRepository> elsaCustomRepository,
             string name,
             string correlationId,
@@ -55,7 +55,7 @@ namespace Elsa.CustomActivities.Tests.Activities.Scoring.Helpers
 
         [Theory]
         [AutoMoqData]
-        public async Task GetGetEconomicCalculation_ReturnsDefaultResult_GivenScoreIsNotANumber(
+        public async Task GetEconomicCalculation_ReturnsDefaultResult_GivenScoreIsNotANumber(
             [Frozen] Mock<IElsaCustomRepository> elsaCustomRepository,
             string name,
             string correlationId,
@@ -79,7 +79,7 @@ namespace Elsa.CustomActivities.Tests.Activities.Scoring.Helpers
 
         [Theory]
         [AutoMoqData]
-        public async Task GetGetEconomicCalculation_ReturnsScoreFromLatestWorkflowInstance_GivenScoreIsANumber(
+        public async Task GetEconomicCalculation_ReturnsScoreFromLatestWorkflowInstance_GivenScoreIsANumber(
             [Frozen] Mock<IElsaCustomRepository> elsaCustomRepository,
             string name,
             string correlationId,
@@ -107,7 +107,7 @@ namespace Elsa.CustomActivities.Tests.Activities.Scoring.Helpers
 
         [Theory]
         [AutoMoqData]
-        public async Task GetGetEconomicCalculation_Rethrows_GivenDependencyThrows(
+        public async Task GetEconomicCalculation_Rethrows_GivenDependencyThrows(
             [Frozen] Mock<IElsaCustomRepository> elsaCustomRepository,
             string name,
             string correlationId,

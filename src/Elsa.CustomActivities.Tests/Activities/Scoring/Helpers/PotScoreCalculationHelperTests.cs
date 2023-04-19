@@ -368,5 +368,121 @@ namespace Elsa.CustomActivities.Tests.Activities.Scoring.Helpers
             //Assert
             Assert.Equal(exception.Message, exceptionThrown.Message);
         }
+
+        [Theory]
+        [AutoMoqData]
+        public async Task GetPotScoreCalculation_ReturnsDefaultResult_GivenNoWorkflowInstances(
+            [Frozen] Mock<IElsaCustomRepository> elsaCustomRepository,
+            string name,
+            string correlationId,
+            PotScoreCalculationHelper sut)
+        {
+            //Arrange
+            elsaCustomRepository.Setup(x => x.GetQuestionWorkflowInstancesByName(correlationId, name, CancellationToken.None)).ReturnsAsync(new List<QuestionWorkflowInstance>());
+
+            //Act
+            var result = await sut.GetPotScoreCalculation(correlationId, name);
+
+            //Assert
+            Assert.Equal(0, result);
+        }
+
+        [Theory]
+        [AutoMoqData]
+        public async Task GetPotScoreCalculation_ReturnsDefaultResult_GivenNoScoreSetOnWorkflowInstance(
+            [Frozen] Mock<IElsaCustomRepository> elsaCustomRepository,
+            string name,
+            string correlationId,
+            PotScoreCalculationHelper sut)
+        {
+            //Arrange
+            var workflowInstance = new QuestionWorkflowInstance
+            {
+                Score = null
+            };
+            elsaCustomRepository
+                .Setup(x => x.GetQuestionWorkflowInstancesByName(correlationId, name, CancellationToken.None))
+                .ReturnsAsync(new List<QuestionWorkflowInstance>() { workflowInstance });
+
+            //Act
+            var result = await sut.GetPotScoreCalculation(correlationId, name);
+
+            //Assert
+            Assert.Equal(0, result);
+        }
+
+
+        [Theory]
+        [AutoMoqData]
+        public async Task GetPotScoreCalculation_ReturnsDefaultResult_GivenScoreIsNotANumber(
+            [Frozen] Mock<IElsaCustomRepository> elsaCustomRepository,
+            string name,
+            string correlationId,
+            PotScoreCalculationHelper sut)
+        {
+            //Arrange
+            var workflowInstance = new QuestionWorkflowInstance
+            {
+                Score = "NotANumber"
+            };
+            elsaCustomRepository
+                .Setup(x => x.GetQuestionWorkflowInstancesByName(correlationId, name, CancellationToken.None))
+                .ReturnsAsync(new List<QuestionWorkflowInstance>() { workflowInstance });
+
+            //Act
+            var result = await sut.GetPotScoreCalculation(correlationId, name);
+
+            //Assert
+            Assert.Equal(0, result);
+        }
+
+        [Theory]
+        [AutoMoqData]
+        public async Task GetPotScoreCalculation_ReturnsScoreFromLatestWorkflowInstance_GivenScoreIsANumber(
+            [Frozen] Mock<IElsaCustomRepository> elsaCustomRepository,
+            string name,
+            string correlationId,
+            PotScoreCalculationHelper sut)
+        {
+            //Arrange
+            var earlierWorkflowInstance = new QuestionWorkflowInstance
+            {
+                Score = "1234.5"
+            };
+            var laterWorkflowInstance = new QuestionWorkflowInstance
+            {
+                Score = "5678.9"
+            };
+            elsaCustomRepository
+                .Setup(x => x.GetQuestionWorkflowInstancesByName(correlationId, name, CancellationToken.None))
+                .ReturnsAsync(new List<QuestionWorkflowInstance>() { laterWorkflowInstance, earlierWorkflowInstance });
+
+            //Act
+            var result = await sut.GetPotScoreCalculation(correlationId, name);
+
+            //Assert
+            Assert.Equal(5678.9, result);
+        }
+
+        [Theory]
+        [AutoMoqData]
+        public async Task GetPotScoreCalculation_Rethrows_GivenDependencyThrows(
+            [Frozen] Mock<IElsaCustomRepository> elsaCustomRepository,
+            string name,
+            string correlationId,
+            PotScoreCalculationHelper sut)
+        {
+            //Arrange
+            var exception = new ApplicationException("TestMessage");
+            elsaCustomRepository
+                .Setup(x => x.GetQuestionWorkflowInstancesByName(correlationId, name, CancellationToken.None))
+                .ThrowsAsync(exception);
+
+            //Assert
+            var exceptionThrown = await Assert.ThrowsAsync<Exception>(() => sut.GetPotScoreCalculation(correlationId, name));
+
+            //Assert
+            Assert.Equal(exception.Message, exceptionThrown.Message);
+        }
     }
 }
