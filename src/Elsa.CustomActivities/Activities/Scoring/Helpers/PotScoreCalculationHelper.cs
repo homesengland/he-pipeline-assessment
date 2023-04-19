@@ -50,7 +50,7 @@ namespace Elsa.CustomActivities.Activities.Scoring.Helpers
 
         }
 
-        public async Task<string> GetPotScore(string workflowInstanceId)
+        public async Task<string> GetWorkflowScore(string workflowInstanceId)
         {
             string failedResult = string.Empty;
 
@@ -96,7 +96,7 @@ namespace Elsa.CustomActivities.Activities.Scoring.Helpers
             var activityExecutionContext = notification.ActivityExecutionContext;
             var engine = notification.Engine;
             engine.SetValue("getTotalPotValue", (Func<string, double>)((potValueName) => GetTotalPotValue(activityExecutionContext.WorkflowInstance.Id, potValueName).Result));
-            engine.SetValue("getPotScore", (Func<string>)(() => GetPotScore(activityExecutionContext.WorkflowInstance.Id).Result));
+            engine.SetValue("getWorkflowScore", (Func<string>)(() => GetWorkflowScore(activityExecutionContext.WorkflowInstance.Id).Result));
             engine.SetValue("getPotScoreCalculation", (Func<string, double>)((name) => GetPotScoreCalculation(activityExecutionContext.CorrelationId, name).Result));
             return Task.CompletedTask;
         }
@@ -105,7 +105,7 @@ namespace Elsa.CustomActivities.Activities.Scoring.Helpers
         {
             var output = notification.Output;
             output.AppendLine("declare function getTotalPotValue(potValueName:string ): number;");
-            output.AppendLine("declare function getPotScore(): string;");
+            output.AppendLine("declare function getWorkflowScore(): string;");
             output.AppendLine("declare function getPotScoreCalculation(name:string): number;");
             return Task.CompletedTask;
         }

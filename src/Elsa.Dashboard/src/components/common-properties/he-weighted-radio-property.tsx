@@ -160,6 +160,8 @@ export class HeWeightedRadioProperty {
     const renderRadioGroups = (radioGroup: NestedActivityDefinitionProperty) => {
       console.log("loading groups", radioGroup);
 
+    const eventHandler = this.onPropertyExpressionChange.bind(this);
+
       return (
         <div>
           <div class="elsa-mb-1">
@@ -177,7 +179,7 @@ export class HeWeightedRadioProperty {
       <he-weighted-radio-option-group-property
         activityModel={this.activityModel}
           propertyModel={radioGroup}
-          onExpressionChanged={e => this.onPropertyExpressionChange.bind(e, radioGroup)}>
+            onExpressionChanged={e => eventHandler(e, radioGroup)}>
         </he-weighted-radio-option-group-property>
         <br/>
           <hr/>
