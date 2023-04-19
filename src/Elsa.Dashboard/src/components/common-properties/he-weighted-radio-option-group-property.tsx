@@ -242,7 +242,7 @@ export class HeWeightedRadioOptionGroupProperty {
                   ref={el => scoreExpressionEditor = el}
                   expression={scoreExpression}
                   language={monacoLanguage}
-                  single-line={false}
+                  single-line={true}
                   editorHeight={this.editorHeight}
                   padding="elsa-pt-1.5 elsa-pl-1 elsa-pr-28"
                   onExpressionChanged={e => this.onScoreExpressionChanged(e, radioAnswer)}
@@ -300,7 +300,7 @@ export class HeWeightedRadioOptionGroupProperty {
       );
     };
 
-    const groupName = "Radio Group " + this.propertyModel.name;
+    const groupName = "Radio group " + this.propertyModel.name + " answers";
 
     const context: IntellisenseContext = {
       activityTypeName: this.activityModel.type,
@@ -311,7 +311,7 @@ export class HeWeightedRadioOptionGroupProperty {
 
     return (
       <div>
-
+        <br/>
         <div class="elsa-mb-1">
           <div class="elsa-flex">
             <div class="elsa-flex-1">
@@ -343,6 +343,8 @@ export class HeWeightedRadioOptionGroupProperty {
           </div>
           <p class="elsa-mt-2 elsa-text-sm elsa-text-gray-500">Override the maximum score that can be achieved by any number of answers in this group, even if their combined sum is greater.</p>
         </div>
+
+        <br/>
 
         <elsa-multi-expression-editor
           ref={el => this.multiExpressionEditor = el}

@@ -34,6 +34,8 @@ export class RadioOptionsSyntax {
 
 export class WeightedScoringSyntax {
   static readonly MaxGroupScore = "MaxGroupScore";
+  static readonly QuestionArrayScore = "QuestionArrayScore";
+  static readonly GroupArrayScore = "GroupArrayScore";
 }
 
 export class TextActivityOptionsSyntax {

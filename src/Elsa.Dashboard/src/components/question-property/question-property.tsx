@@ -115,6 +115,7 @@ export class QuestionProperty {
 
     return (
       this.nestedQuestionProperties.map(renderPropertyEditor)
+      
     )
     
   }

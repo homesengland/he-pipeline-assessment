@@ -3,7 +3,9 @@ using Elsa.CustomActivities.Constants;
 using Elsa.CustomActivities.OptionsProviders;
 using Elsa.CustomActivities.PropertyDecorator;
 using Elsa.CustomWorkflow.Sdk;
+using Elsa.Design;
 using Elsa.Expressions;
+using Parlot.Fluent;
 
 namespace Elsa.CustomActivities.Activities.QuestionScreen
 {
@@ -59,8 +61,16 @@ namespace Elsa.CustomActivities.Activities.QuestionScreen
             ExpectedOutputType = ExpectedOutputHints.Double)]
         public double QuestionWeighting { get; set; }
 
-        [HeActivityInput(Hint = "Maximum available score for any combination of answers.", Name = "Max Question Score",  ConditionalActivityTypes = new[]{ QuestionTypeConstants.WeightedRadioQuestion, QuestionTypeConstants.WeightedCheckboxQuestion })]
+        [HeActivityInput(Hint = "Maximum available score for any combination of answers.", Name = "Max Question Score",  
+            ConditionalActivityTypes = new[]{ QuestionTypeConstants.WeightedRadioQuestion, QuestionTypeConstants.WeightedCheckboxQuestion })]
         public int? MaxScore { get; set; }
+
+        [HeActivityInput(UIHint = HePropertyUIHints.MultiText,
+            Hint = "The score for the question, based on the corresponding number of questions answered in all groups.  This is not compatable with Group Score Array, and this will always take precedence.", 
+            Name = "Score Array", 
+            ConditionalActivityTypes = new[] { QuestionTypeConstants.WeightedRadioQuestion, QuestionTypeConstants.WeightedCheckboxQuestion }
+            )]
+        public ISet<string>? ScoreArray { get; set; }
 
         [HeActivityInput(UIHint = HePropertyUIHints.CheckboxOptions, ConditionalActivityTypes = new[] { QuestionTypeConstants.CheckboxQuestion }, ExpectedOutputType = ExpectedOutputHints.Checkbox)]
         public CheckboxModel Checkbox { get; set; } = new CheckboxModel();

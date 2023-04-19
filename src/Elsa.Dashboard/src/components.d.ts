@@ -56,6 +56,11 @@ export namespace Components {
         "propertyDescriptor": ActivityPropertyDescriptor;
         "propertyModel": ActivityDefinitionProperty;
     }
+    interface HeMultiTextProperty {
+        "activityModel": ActivityModel;
+        "propertyDescriptor": ActivityPropertyDescriptor;
+        "propertyModel": ActivityDefinitionProperty;
+    }
     interface HePotscoreRadioOptionsProperty {
         "activityModel": ActivityModel;
         "propertyDescriptor": ActivityPropertyDescriptor;
@@ -139,6 +144,10 @@ export interface HeJsonPropertyCustomEvent<T> extends CustomEvent<T> {
 export interface HeMultiLinePropertyCustomEvent<T> extends CustomEvent<T> {
     detail: T;
     target: HTMLHeMultiLinePropertyElement;
+}
+export interface HeMultiTextPropertyCustomEvent<T> extends CustomEvent<T> {
+    detail: T;
+    target: HTMLHeMultiTextPropertyElement;
 }
 export interface HePotscoreRadioOptionsPropertyCustomEvent<T> extends CustomEvent<T> {
     detail: T;
@@ -229,6 +238,12 @@ declare global {
         prototype: HTMLHeMultiLinePropertyElement;
         new (): HTMLHeMultiLinePropertyElement;
     };
+    interface HTMLHeMultiTextPropertyElement extends Components.HeMultiTextProperty, HTMLStencilElement {
+    }
+    var HTMLHeMultiTextPropertyElement: {
+        prototype: HTMLHeMultiTextPropertyElement;
+        new (): HTMLHeMultiTextPropertyElement;
+    };
     interface HTMLHePotscoreRadioOptionsPropertyElement extends Components.HePotscoreRadioOptionsProperty, HTMLStencilElement {
     }
     var HTMLHePotscoreRadioOptionsPropertyElement: {
@@ -310,6 +325,7 @@ declare global {
         "he-checkbox-property": HTMLHeCheckboxPropertyElement;
         "he-json-property": HTMLHeJsonPropertyElement;
         "he-multi-line-property": HTMLHeMultiLinePropertyElement;
+        "he-multi-text-property": HTMLHeMultiTextPropertyElement;
         "he-potscore-radio-options-property": HTMLHePotscoreRadioOptionsPropertyElement;
         "he-radio-options-property": HTMLHeRadioOptionsPropertyElement;
         "he-single-line-property": HTMLHeSingleLinePropertyElement;
@@ -376,6 +392,12 @@ declare namespace LocalJSX {
     interface HeMultiLineProperty {
         "activityModel"?: ActivityModel;
         "onExpressionChanged"?: (event: HeMultiLinePropertyCustomEvent<string>) => void;
+        "propertyDescriptor"?: ActivityPropertyDescriptor;
+        "propertyModel"?: ActivityDefinitionProperty;
+    }
+    interface HeMultiTextProperty {
+        "activityModel"?: ActivityModel;
+        "onExpressionChanged"?: (event: HeMultiTextPropertyCustomEvent<string>) => void;
         "propertyDescriptor"?: ActivityPropertyDescriptor;
         "propertyModel"?: ActivityDefinitionProperty;
     }
@@ -457,6 +479,7 @@ declare namespace LocalJSX {
         "he-checkbox-property": HeCheckboxProperty;
         "he-json-property": HeJsonProperty;
         "he-multi-line-property": HeMultiLineProperty;
+        "he-multi-text-property": HeMultiTextProperty;
         "he-potscore-radio-options-property": HePotscoreRadioOptionsProperty;
         "he-radio-options-property": HeRadioOptionsProperty;
         "he-single-line-property": HeSingleLineProperty;
@@ -483,6 +506,7 @@ declare module "@stencil/core" {
             "he-checkbox-property": LocalJSX.HeCheckboxProperty & JSXBase.HTMLAttributes<HTMLHeCheckboxPropertyElement>;
             "he-json-property": LocalJSX.HeJsonProperty & JSXBase.HTMLAttributes<HTMLHeJsonPropertyElement>;
             "he-multi-line-property": LocalJSX.HeMultiLineProperty & JSXBase.HTMLAttributes<HTMLHeMultiLinePropertyElement>;
+            "he-multi-text-property": LocalJSX.HeMultiTextProperty & JSXBase.HTMLAttributes<HTMLHeMultiTextPropertyElement>;
             "he-potscore-radio-options-property": LocalJSX.HePotscoreRadioOptionsProperty & JSXBase.HTMLAttributes<HTMLHePotscoreRadioOptionsPropertyElement>;
             "he-radio-options-property": LocalJSX.HeRadioOptionsProperty & JSXBase.HTMLAttributes<HTMLHeRadioOptionsPropertyElement>;
             "he-single-line-property": LocalJSX.HeSingleLineProperty & JSXBase.HTMLAttributes<HTMLHeSingleLinePropertyElement>;

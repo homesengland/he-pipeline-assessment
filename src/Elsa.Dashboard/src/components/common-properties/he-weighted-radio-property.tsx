@@ -158,15 +158,18 @@ export class HeWeightedRadioProperty {
     const json = JSON.stringify(answerGroups, null, 2);
 
     const renderRadioGroups = (radioGroup: NestedActivityDefinitionProperty) => {
-      console.log("loading groups", radioGroup);
 
     const eventHandler = this.onPropertyExpressionChange.bind(this);
 
       return (
         <div>
+          <br/>
           <div class="elsa-mb-1">
             <div class="elsa-flex">
-              <div class="elsa-flex-1">
+              <div class="elsa-flex-1 elsa-mx-auto">
+                <h3>Group: {radioGroup.name}</h3>
+              </div>
+              <div>
                 <button type="button" onClick={() => this.onDeleteGroupClick(radioGroup)}
                   class="elsa-h-5 elsa-w-5 elsa-mx-auto elsa-outline-none focus:elsa-outline-none">
                   <TrashCanIcon options={this.iconProvider.getOptions()}></TrashCanIcon>
@@ -206,9 +209,10 @@ export class HeWeightedRadioProperty {
           onExpressionChanged={e => this.onMultiExpressionEditorValueChanged(e)}
           onSyntaxChanged={e => this.onMultiExpressionEditorSyntaxChanged(e)}
         >
-          <table class="elsa-min-w-full elsa-divide-y elsa-divide-gray-200">
+          <hr/>
+          <div class="elsa-min-w-full elsa-divide-y elsa-divide-gray-200">
             {answerGroups.map(renderRadioGroups)}
-          </table>
+          </div>
 
           <button type="button" onClick={() => this.onAddGroupClick()}
             class="elsa-inline-flex elsa-items-center elsa-px-4 elsa-py-2 elsa-border elsa-border-transparent elsa-shadow-sm elsa-text-sm elsa-font-medium elsa-rounded-md elsa-text-white elsa-bg-blue-600 hover:elsa-bg-blue-700 focus:elsa-outline-none focus:elsa-ring-2 focus:elsa-ring-offset-2 focus:elsa-ring-blue-500 elsa-mt-2">
