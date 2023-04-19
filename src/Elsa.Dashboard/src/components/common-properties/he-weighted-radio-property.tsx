@@ -113,6 +113,7 @@ export class HeWeightedRadioProperty {
   }
 
   onPropertyExpressionChange(event: Event, property: NestedActivityDefinitionProperty) {
+    console.log("Expression changed");
     event = event;
     property = property;
     this.updatePropertyModel();
