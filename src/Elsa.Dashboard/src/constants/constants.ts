@@ -73,6 +73,7 @@ export class PropertyOutputTypes {
   static readonly Boolean = "bool";
   static readonly Number = "int";
   static readonly Checkbox = "checkbox";
+  static readonly CheckboxGroup = "checkboxGroup";
   static readonly Radio = "radio";
   static readonly RadioGroup = "radioGroup";
   static readonly Information = "information";

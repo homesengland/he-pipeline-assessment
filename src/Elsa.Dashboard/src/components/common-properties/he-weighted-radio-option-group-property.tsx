@@ -108,12 +108,6 @@ export class HeWeightedRadioOptionGroupProperty {
     this.updatePropertyModel();
   }
 
-  onPotScoreChanged(e: Event, property: NestedActivityDefinitionProperty) {
-    const select = e.currentTarget as HTMLSelectElement;
-    property.expressions[RadioOptionsSyntax.PotScore] = select.value;
-    this.updatePropertyModel();
-  }
-
   onPrePopulatedChanged(e: CustomEvent<string>, radio: NestedActivityDefinitionProperty) {
     radio.expressions[RadioOptionsSyntax.PrePopulated] = e.detail;
     this.updatePropertyModel();

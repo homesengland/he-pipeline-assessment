@@ -1,5 +1,5 @@
 import { SyntaxNames } from "../constants/constants";
-import { HeActivityPropertyDescriptor } from "../models/custom-component-models";
+import { HeActivityPropertyDescriptor, NestedActivityDefinitionProperty } from "../models/custom-component-models";
 import { ActivityDefinitionProperty, ActivityModel } from "../models/elsa-interfaces";
 
 export type Map<T> = {
@@ -78,4 +78,9 @@ export async function awaitElement(selector) {
     await new Promise(resolve => requestAnimationFrame(resolve))
   }
   return document.querySelector(selector);
+}
+
+export function onUpdateCustomExpression(event: CustomEvent<string>, property: NestedActivityDefinitionProperty, syntax: string, update: Function) {
+  property.expressions[syntax] = (event.currentTarget as HTMLInputElement).value.trim();
+  update();
 }

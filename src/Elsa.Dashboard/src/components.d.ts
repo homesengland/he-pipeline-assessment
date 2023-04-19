@@ -88,8 +88,7 @@ export namespace Components {
     }
     interface HeWeightedCheckboxOptionGroupProperty {
         "activityModel": ActivityModel;
-        "propertyDescriptor": ActivityPropertyDescriptor;
-        "propertyModel": ActivityDefinitionProperty;
+        "propertyModel": NestedActivityDefinitionProperty;
     }
     interface HeWeightedCheckboxProperty {
         "activityModel": ActivityModel;
@@ -434,8 +433,7 @@ declare namespace LocalJSX {
     interface HeWeightedCheckboxOptionGroupProperty {
         "activityModel"?: ActivityModel;
         "onExpressionChanged"?: (event: HeWeightedCheckboxOptionGroupPropertyCustomEvent<string>) => void;
-        "propertyDescriptor"?: ActivityPropertyDescriptor;
-        "propertyModel"?: ActivityDefinitionProperty;
+        "propertyModel"?: NestedActivityDefinitionProperty;
     }
     interface HeWeightedCheckboxProperty {
         "activityModel"?: ActivityModel;
