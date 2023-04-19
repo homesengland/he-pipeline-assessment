@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Event, Prop, State } from '@stencil/core';
+import { Component, EventEmitter, Event, Prop, State, h } from '@stencil/core';
 
 import {
     ActivityModel,
@@ -109,12 +109,23 @@ export class QuestionProperty {
     const displayManager = this.displayManager;
 
     const renderPropertyEditor = (property: NestedProperty) => {
+
       var content = displayManager.displayNested(this.activityModel, property, this.onPropertyExpressionChange.bind(this));
-      return content;
+      let id = property.descriptor.name + "Category";
+      return (
+        <elsa-control id={id} class="sm:elsa-col-span-6 hydrated">
+          {content}
+        </elsa-control>
+        );
     }
 
     return (
-      this.nestedQuestionProperties.map(renderPropertyEditor)
+      <div class="elsa-grid elsa-grid-cols-1 elsa-gap-y-6 elsa-gap-x-4 sm:elsa-grid-cols-6">
+
+        {this.nestedQuestionProperties.map(renderPropertyEditor)}
+
+      </div>
+      
       
     )
     
