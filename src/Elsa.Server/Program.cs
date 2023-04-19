@@ -1,9 +1,11 @@
+using Elsa.Activities.Primitives;
 using Elsa.CustomActivities.Activities.CheckYourAnswersScreen;
 using Elsa.CustomActivities.Activities.ConfirmationScreen;
 using Elsa.CustomActivities.Activities.FinishWorkflow;
 using Elsa.CustomActivities.Activities.HousingNeed;
 using Elsa.CustomActivities.Activities.PCSProfileDataSource;
 using Elsa.CustomActivities.Activities.QuestionScreen;
+using Elsa.CustomActivities.Activities.RunEconomicCalculations;
 using Elsa.CustomActivities.Activities.Scoring;
 using Elsa.CustomActivities.Activities.Shared;
 using Elsa.CustomActivities.Activities.SinglePipelineDataSource;
@@ -16,6 +18,7 @@ using Elsa.CustomActivities.OptionsProviders;
 using Elsa.CustomInfrastructure.Data;
 using Elsa.CustomInfrastructure.Data.Repository;
 using Elsa.CustomWorkflow.Sdk.Extensions;
+using Elsa.CustomWorkflow.Sdk.Providers;
 using Elsa.Expressions;
 using Elsa.Persistence.EntityFramework.Core.Extensions;
 using Elsa.Persistence.EntityFramework.SqlServer;
@@ -43,6 +46,7 @@ var elsaCustomConnectionString = builder.Configuration.GetConnectionString("Elsa
 builder.Services
     .AddElsa(elsa => elsa
         .UseEntityFrameworkPersistence(ef => ef.UseSqlServer(elsaConnectionString, typeof(Elsa.Persistence.EntityFramework.SqlServer.Migrations.Initial)))
+        .NoCoreActivities()
         .AddActivity<SinglePipelineDataSource>()
         .AddActivity<PCSProfileDataSource>()
         .AddActivity<VFMDataSource>()
@@ -53,7 +57,8 @@ builder.Services
         .AddActivity<FinishWorkflow>()
         .AddActivity<ScoringCalculation>()
         .AddActivity<WeightedScore>()
-        .NoCoreActivities()
+        .AddActivity<RunEconomicCalculations>()
+        .AddActivity<SetVariable>()
         .AddConsoleActivities()
     );
 

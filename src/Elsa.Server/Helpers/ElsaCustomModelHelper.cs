@@ -1,8 +1,8 @@
 ﻿using Elsa.CustomActivities.Activities.QuestionScreen;
 using Elsa.CustomModels;
 using Elsa.CustomWorkflow.Sdk;
+using Elsa.CustomWorkflow.Sdk.Providers;
 using Elsa.Models;
-using Elsa.Server.Providers;
 using Question = Elsa.CustomModels.Question;
 
 namespace Elsa.Server.Helpers

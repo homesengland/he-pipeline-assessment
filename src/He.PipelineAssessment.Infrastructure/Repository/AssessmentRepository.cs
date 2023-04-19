@@ -1,7 +1,5 @@
 ﻿using He.PipelineAssessment.Infrastructure.Data;
 using He.PipelineAssessment.Models;
-using He.PipelineAssessment.Models.ViewModels;
-using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
 
 namespace He.PipelineAssessment.Infrastructure.Repository

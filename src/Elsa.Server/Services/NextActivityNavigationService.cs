@@ -1,9 +1,9 @@
 ﻿using Elsa.CustomInfrastructure.Data.Repository;
 using Elsa.CustomModels;
 using Elsa.CustomWorkflow.Sdk;
+using Elsa.CustomWorkflow.Sdk.Providers;
 using Elsa.Models;
 using Elsa.Server.Helpers;
-using Elsa.Server.Providers;
 using Elsa.Services.Models;
 
 namespace Elsa.Server.Services

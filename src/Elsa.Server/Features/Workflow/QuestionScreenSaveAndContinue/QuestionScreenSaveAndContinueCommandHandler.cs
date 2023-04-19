@@ -1,6 +1,7 @@
 ﻿using Elsa.CustomInfrastructure.Data.Repository;
 using Elsa.CustomModels;
 using Elsa.CustomWorkflow.Sdk;
+using Elsa.CustomWorkflow.Sdk.Providers;
 using Elsa.Models;
 using Elsa.Server.Models;
 using Elsa.Server.Providers;
@@ -43,7 +44,7 @@ namespace Elsa.Server.Features.Workflow.QuestionScreenSaveAndContinue
             try
             {
                 var dbAssessmentQuestionList =
-                    await _elsaCustomRepository.GetQuestions(command.ActivityId, command.WorkflowInstanceId,
+                    await _elsaCustomRepository.GetActivityQuestions(command.ActivityId, command.WorkflowInstanceId,
                         cancellationToken);
 
                 if (dbAssessmentQuestionList.Any())

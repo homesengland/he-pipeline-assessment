@@ -4,7 +4,6 @@ using Elsa.CustomWorkflow.Sdk.Models.Workflow;
 using Elsa.Persistence;
 using Elsa.Scripting.JavaScript.Events;
 using Elsa.Scripting.JavaScript.Messages;
-using Elsa.Services;
 using MediatR;
 using Microsoft.Extensions.Logging;
 
@@ -29,7 +28,7 @@ namespace Elsa.CustomActivities.Activities.Scoring.Helpers
                 double failedResult = -1;
                 List<double> totalSelectedScores = new List<double>();
 
-                var workflowQuestions = await _elsaCustomRepository.GetQuestions(workflowInstanceId, CancellationToken.None);
+                var workflowQuestions = await _elsaCustomRepository.GetWorkflowInstanceQuestions(workflowInstanceId, CancellationToken.None);
                 if (workflowQuestions.Count > 0)
                 {
                     foreach (var question in workflowQuestions)
@@ -66,12 +65,39 @@ namespace Elsa.CustomActivities.Activities.Scoring.Helpers
             }
         }
 
+        public async Task<double> GetPotScoreCalculation(string correlationId, string name)
+        {
+            try
+            {
+                double result = 0;
+
+                var workflowInstances = await _elsaCustomRepository.GetQuestionWorkflowInstancesByName(correlationId, name, CancellationToken.None);
+
+                if (workflowInstances.Any())
+                {
+                    var latestCalculation = workflowInstances.First();
+                    if (latestCalculation.Score != null)
+                    {
+                        double.TryParse(latestCalculation.Score, out result);
+                    }
+                }
+                return result;
+            }
+            catch (Exception e)
+            {
+                _logger.LogError(
+                    $"Error whilst retrieving PotScore Calculation: '{name}' for Correlation Id {correlationId}", e);
+                throw (new Exception(e.Message, e.InnerException));
+            }
+        }
+
         public Task Handle(EvaluatingJavaScriptExpression notification, CancellationToken cancellationToken)
         {
             var activityExecutionContext = notification.ActivityExecutionContext;
             var engine = notification.Engine;
             engine.SetValue("getTotalPotValue", (Func<string, double>)((potValueName) => GetTotalPotValue(activityExecutionContext.WorkflowInstance.Id, potValueName).Result));
             engine.SetValue("getPotScore", (Func<string>)(() => GetPotScore(activityExecutionContext.WorkflowInstance.Id).Result));
+            engine.SetValue("getPotScoreCalculation", (Func<string, double>)((name) => GetPotScoreCalculation(activityExecutionContext.CorrelationId, name).Result));
             return Task.CompletedTask;
         }
 
@@ -80,6 +106,7 @@ namespace Elsa.CustomActivities.Activities.Scoring.Helpers
             var output = notification.Output;
             output.AppendLine("declare function getTotalPotValue(potValueName:string ): number;");
             output.AppendLine("declare function getPotScore(): string;");
+            output.AppendLine("declare function getPotScoreCalculation(name:string): number;");
             return Task.CompletedTask;
         }
 

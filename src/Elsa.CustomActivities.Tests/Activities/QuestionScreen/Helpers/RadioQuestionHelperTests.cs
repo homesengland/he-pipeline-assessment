@@ -22,16 +22,16 @@ namespace Elsa.CustomActivities.Tests.Activities.QuestionScreen.Helpers
           string workflowName,
           string activityName,
           string questionId,
-          string workflowInstanceId,
+          string correlationId,
           RadioQuestionHelper sut)
         {
             //Arrange
-            elsaCustomRepository.Setup(x => x.GetQuestion(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>(), CancellationToken.None)).ReturnsAsync((Question?)null);
+            elsaCustomRepository.Setup(x => x.GetQuestionByCorrelationId(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>(), CancellationToken.None)).ReturnsAsync((Question?)null);
 
             workflowRegistry.Setup(x => x.FindByNameAsync(workflowName!, VersionOptions.Published, null, default)).ReturnsAsync((WorkflowBlueprint?)null);
 
             //Act
-            var result = await sut.AnswerEquals(workflowInstanceId, workflowName, activityName, questionId, "A");
+            var result = await sut.AnswerEquals(correlationId, workflowName, activityName, questionId, "A");
 
             //Assert
             Assert.False(result);
@@ -45,18 +45,18 @@ namespace Elsa.CustomActivities.Tests.Activities.QuestionScreen.Helpers
             string workflowName,
             string activityName,
             string questionId,
-            string workflowInstanceId,
+            string correlationId,
             WorkflowBlueprint workflowBlueprint,
             RadioQuestionHelper sut)
         {
 
             //Arrange
-            elsaCustomRepository.Setup(x => x.GetQuestion(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>(), CancellationToken.None)).ReturnsAsync((Question?)null);
+            elsaCustomRepository.Setup(x => x.GetQuestionByCorrelationId(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>(), CancellationToken.None)).ReturnsAsync((Question?)null);
 
             workflowRegistry.Setup(x => x.FindByNameAsync(workflowName!, VersionOptions.Published, null, default)).ReturnsAsync(workflowBlueprint);
 
             //Act
-            var result = await sut.AnswerEquals(workflowInstanceId, workflowName, activityName, questionId, "A");
+            var result = await sut.AnswerEquals(correlationId, workflowName, activityName, questionId, "A");
 
             //Assert
             Assert.False(result);
@@ -71,7 +71,7 @@ namespace Elsa.CustomActivities.Tests.Activities.QuestionScreen.Helpers
             string activityId,
             string activityName,
             string questionId,
-            string workflowInstanceId,
+            string correlationId,
             WorkflowBlueprint workflowBlueprint,
             RadioQuestionHelper sut)
         {
@@ -82,12 +82,12 @@ namespace Elsa.CustomActivities.Tests.Activities.QuestionScreen.Helpers
                 Name = activityName
             });
 
-            elsaCustomRepository.Setup(x => x.GetQuestion(activityId, workflowInstanceId, It.IsAny<string>(), CancellationToken.None)).ReturnsAsync((Question?)null);
+            elsaCustomRepository.Setup(x => x.GetQuestionByCorrelationId(activityId, correlationId, It.IsAny<string>(), CancellationToken.None)).ReturnsAsync((Question?)null);
 
             workflowRegistry.Setup(x => x.FindByNameAsync(workflowName!, VersionOptions.Published, null, default)).ReturnsAsync(workflowBlueprint);
 
             //Act
-            var result = await sut.AnswerEquals(workflowInstanceId, workflowName, activityName, questionId, "A");
+            var result = await sut.AnswerEquals(correlationId, workflowName, activityName, questionId, "A");
 
             //Assert
             Assert.False(result);
@@ -102,7 +102,7 @@ namespace Elsa.CustomActivities.Tests.Activities.QuestionScreen.Helpers
             string activityId,
             string activityName,
             string questionId,
-            string workflowInstanceId,
+            string correlationId,
             WorkflowBlueprint workflowBlueprint,
             Question question,
             RadioQuestionHelper sut)
@@ -117,12 +117,12 @@ namespace Elsa.CustomActivities.Tests.Activities.QuestionScreen.Helpers
             question.QuestionType = QuestionTypeConstants.RadioQuestion;
             question.Answers = null;
 
-            elsaCustomRepository.Setup(x => x.GetQuestion(activityId, workflowInstanceId, questionId, CancellationToken.None)).ReturnsAsync(question);
+            elsaCustomRepository.Setup(x => x.GetQuestionByCorrelationId(activityId, correlationId, questionId, CancellationToken.None)).ReturnsAsync(question);
 
             workflowRegistry.Setup(x => x.FindByNameAsync(workflowName!, VersionOptions.Published, null, default)).ReturnsAsync(workflowBlueprint);
 
             //Act
-            var result = await sut.AnswerEquals(workflowInstanceId, workflowName, activityName, questionId, "A");
+            var result = await sut.AnswerEquals(correlationId, workflowName, activityName, questionId, "A");
 
             //Assert
             Assert.False(result);
@@ -141,7 +141,7 @@ namespace Elsa.CustomActivities.Tests.Activities.QuestionScreen.Helpers
             string activityId,
             string activityName,
             string questionId,
-            string workflowInstanceId,
+            string correlationId,
             WorkflowBlueprint workflowBlueprint,
             Question question,
             RadioQuestionHelper sut)
@@ -155,12 +155,12 @@ namespace Elsa.CustomActivities.Tests.Activities.QuestionScreen.Helpers
             question.QuestionType = QuestionTypeConstants.RadioQuestion;
             question.Answers = new List<Answer> { new Answer() { Choice = new QuestionChoice() { Identifier = expectedIdentifier } }}.ToList();
 
-            elsaCustomRepository.Setup(x => x.GetQuestion(activityId, workflowInstanceId, questionId, CancellationToken.None)).ReturnsAsync(question);
+            elsaCustomRepository.Setup(x => x.GetQuestionByCorrelationId(activityId, correlationId, questionId, CancellationToken.None)).ReturnsAsync(question);
 
             workflowRegistry.Setup(x => x.FindByNameAsync(workflowName!, VersionOptions.Published, null, default)).ReturnsAsync(workflowBlueprint);
 
             //Act
-            var result = await sut.AnswerEquals(workflowInstanceId, workflowName, activityName, questionId, choiceIdToCheck);
+            var result = await sut.AnswerEquals(correlationId, workflowName, activityName, questionId, choiceIdToCheck);
 
             //Assert
             Assert.Equal(expectedResult, result);
@@ -174,18 +174,18 @@ namespace Elsa.CustomActivities.Tests.Activities.QuestionScreen.Helpers
           string workflowName,
           string activityName,
           string questionId,
-          string workflowInstanceId,
+          string correlationId,
           RadioQuestionHelper sut)
         {
             //Arrange
-            elsaCustomRepository.Setup(x => x.GetQuestion(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>(), CancellationToken.None)).ReturnsAsync((Question?)null);
+            elsaCustomRepository.Setup(x => x.GetQuestionByCorrelationId(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>(), CancellationToken.None)).ReturnsAsync((Question?)null);
 
             workflowRegistry.Setup(x => x.FindByNameAsync(workflowName!, VersionOptions.Published, null, default)).ReturnsAsync((WorkflowBlueprint?)null);
 
             var stringAnwers = new string[] { "A" };
 
             //Act
-            var result = await sut.AnswerIn(workflowInstanceId, workflowName, activityName, questionId, stringAnwers);
+            var result = await sut.AnswerIn(correlationId, workflowName, activityName, questionId, stringAnwers);
 
             //Assert
             Assert.False(result);
@@ -199,20 +199,20 @@ namespace Elsa.CustomActivities.Tests.Activities.QuestionScreen.Helpers
             string workflowName,
             string activityName,
             string questionId,
-            string workflowInstanceId,
+            string correlationId,
             WorkflowBlueprint workflowBlueprint,
             RadioQuestionHelper sut)
         {
 
             //Arrange
-            elsaCustomRepository.Setup(x => x.GetQuestion(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>(), CancellationToken.None)).ReturnsAsync((Question?)null);
+            elsaCustomRepository.Setup(x => x.GetQuestionByCorrelationId(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>(), CancellationToken.None)).ReturnsAsync((Question?)null);
 
             workflowRegistry.Setup(x => x.FindByNameAsync(workflowName!, VersionOptions.Published, null, default)).ReturnsAsync(workflowBlueprint);
 
             var stringAnwers = new string[] { "A" };
 
             //Act
-            var result = await sut.AnswerIn(workflowInstanceId, workflowName, activityName, questionId, stringAnwers);
+            var result = await sut.AnswerIn(correlationId, workflowName, activityName, questionId, stringAnwers);
 
             //Assert
             Assert.False(result);
@@ -227,7 +227,7 @@ namespace Elsa.CustomActivities.Tests.Activities.QuestionScreen.Helpers
             string activityId,
             string activityName,
             string questionId,
-            string workflowInstanceId,
+            string correlationId,
             WorkflowBlueprint workflowBlueprint,
             RadioQuestionHelper sut)
         {
@@ -238,14 +238,14 @@ namespace Elsa.CustomActivities.Tests.Activities.QuestionScreen.Helpers
                 Name = activityName
             });
 
-            elsaCustomRepository.Setup(x => x.GetQuestion(activityId, workflowInstanceId, It.IsAny<string>(), CancellationToken.None)).ReturnsAsync((Question?)null);
+            elsaCustomRepository.Setup(x => x.GetQuestionByCorrelationId(activityId, correlationId, It.IsAny<string>(), CancellationToken.None)).ReturnsAsync((Question?)null);
 
             workflowRegistry.Setup(x => x.FindByNameAsync(workflowName!, VersionOptions.Published, null, default)).ReturnsAsync(workflowBlueprint);
 
             var stringAnwers = new string[] { "A" };
 
             //Act
-            var result = await sut.AnswerIn(workflowInstanceId, workflowName, activityName, questionId, stringAnwers);
+            var result = await sut.AnswerIn(correlationId, workflowName, activityName, questionId, stringAnwers);
 
             //Assert
             Assert.False(result);
@@ -260,7 +260,7 @@ namespace Elsa.CustomActivities.Tests.Activities.QuestionScreen.Helpers
             string activityId,
             string activityName,
             string questionId,
-            string workflowInstanceId,
+            string correlationId,
             WorkflowBlueprint workflowBlueprint,
             Question question,
             RadioQuestionHelper sut)
@@ -274,13 +274,13 @@ namespace Elsa.CustomActivities.Tests.Activities.QuestionScreen.Helpers
 
             question.Answers = null;
 
-            elsaCustomRepository.Setup(x => x.GetQuestion(activityId, workflowInstanceId, questionId, CancellationToken.None)).ReturnsAsync(question);
+            elsaCustomRepository.Setup(x => x.GetQuestionByCorrelationId(activityId, correlationId, questionId, CancellationToken.None)).ReturnsAsync(question);
 
             workflowRegistry.Setup(x => x.FindByNameAsync(workflowName!, VersionOptions.Published, null, default)).ReturnsAsync(workflowBlueprint);
 
             var stringAnwers = new string[] { "A" };
             //Act
-            var result = await sut.AnswerIn(workflowInstanceId, workflowName, activityName, questionId, stringAnwers);
+            var result = await sut.AnswerIn(correlationId, workflowName, activityName, questionId, stringAnwers);
 
             //Assert
             Assert.False(result);
@@ -299,7 +299,7 @@ namespace Elsa.CustomActivities.Tests.Activities.QuestionScreen.Helpers
             string activityId,
             string activityName,
             string questionId,
-            string workflowInstanceId,
+            string correlationId,
             WorkflowBlueprint workflowBlueprint,
             Question question,
             RadioQuestionHelper sut)
@@ -314,12 +314,12 @@ namespace Elsa.CustomActivities.Tests.Activities.QuestionScreen.Helpers
 
             question.Answers = new List<Answer> { new Answer() { Choice = new QuestionChoice() { Identifier = answer } } }.ToList();
 
-            elsaCustomRepository.Setup(x => x.GetQuestion(activityId, workflowInstanceId, questionId, CancellationToken.None)).ReturnsAsync(question);
+            elsaCustomRepository.Setup(x => x.GetQuestionByCorrelationId(activityId, correlationId, questionId, CancellationToken.None)).ReturnsAsync(question);
 
             workflowRegistry.Setup(x => x.FindByNameAsync(workflowName!, VersionOptions.Published, null, default)).ReturnsAsync(workflowBlueprint);
 
             //Act
-            var result = await sut.AnswerIn(workflowInstanceId, workflowName, activityName, questionId, choiceIdsToCheck);
+            var result = await sut.AnswerIn(correlationId, workflowName, activityName, questionId, choiceIdsToCheck);
 
             //Assert
             Assert.Equal(expectedResult, result);
