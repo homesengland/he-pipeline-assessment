@@ -10,7 +10,7 @@ namespace Elsa.CustomModels
     {
         public int Id { get; set; }
         public int QuestionDataDictionaryGroupId { get; set; }
-        public QuestionDataDictionaryGroup? Group { get; set; }
+        public QuestionDataDictionaryGroup Group { get; set; } = null!;
         public string Name { get; set; }
         public string LegacyName { get; set; }
         public string Type { get; set; }

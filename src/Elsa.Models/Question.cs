@@ -14,5 +14,8 @@
 
         public virtual List<QuestionChoice>? Choices { get; set; }
         public virtual List<Answer>? Answers { get; set; } = new();
+
+        public int? QuestionDataDictionaryId { get; set; }
+        public virtual QuestionDataDictionary? QuestionDataDictionary { get; set; } 
     }
 }

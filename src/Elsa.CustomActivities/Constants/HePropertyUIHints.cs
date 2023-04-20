@@ -17,6 +17,7 @@ namespace Elsa.CustomActivities.Constants
         public const string SwitchCase = "he-switch-case-builder";
         public const string RadioOptions = "he-radio-options";
         public const string PotScoreRadioOptions = "he-potscore-radio-options";
+        public const string DataDictionaryOptions = "he-data-dictionary-options";
         public const string WeightedRadioOptions = "he-weighted-radio-options";
         public const string WeightedCheckboxOptions = "he-weighted-checkbox-options";
         public const string CheckboxOptions = "he-checkbox-options";

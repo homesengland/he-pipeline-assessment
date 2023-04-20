@@ -105,7 +105,13 @@ namespace Elsa.CustomInfrastructure.Data.Repository
         }
 
         public async Task<List<PotScoreOption>> GetPotScoreOptionsAsync(CancellationToken cancellationToken) =>
-            await _dbContext.Set<PotScoreOption>().Where(x => x.IsActive).ToListAsync();
+            await _dbContext.Set<PotScoreOption>().Where(x => x.IsActive).ToListAsync(cancellationToken);
+
+        public async Task<List<QuestionDataDictionary>> GetQuestionDataDictionaryListAsync(CancellationToken cancellationToken = default)
+        {
+            var result = await _dbContext.Set<QuestionDataDictionary>().ToListAsync(cancellationToken);
+            return result;
+        }
 
         public async Task CreateQuestionWorkflowInstance(QuestionWorkflowInstance questionWorkflowInstance, CancellationToken cancellationToken = default)
         {
