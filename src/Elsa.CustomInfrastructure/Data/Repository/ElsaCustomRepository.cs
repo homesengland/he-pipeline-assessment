@@ -109,7 +109,7 @@ namespace Elsa.CustomInfrastructure.Data.Repository
 
         public async Task<List<QuestionDataDictionary>> GetQuestionDataDictionaryListAsync(CancellationToken cancellationToken = default)
         {
-            var result = await _dbContext.Set<QuestionDataDictionary>().ToListAsync(cancellationToken);
+            var result = await _dbContext.Set<QuestionDataDictionary>().Include(x => x.Group).ToListAsync(cancellationToken);
             return result;
         }
 

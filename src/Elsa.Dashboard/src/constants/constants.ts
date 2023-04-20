@@ -10,6 +10,7 @@ export class SyntaxNames {
   static readonly Checked = "Checked";
   static readonly ConditionalTextList = 'ConditionalTextList';
   static readonly TextActivity = 'TextActivity';
+  static readonly DataDictionary = 'DataDictionary';
   static Variable: string;
   static Output: string;
 }

@@ -11,7 +11,7 @@ export class HeQuestionDataDictionaryDriver implements HePropertyDisplayDriver {
     return <he-question-data-dictionary-property activityModel={activity} propertyDescriptor={property} propertyModel={prop} />;
   }
 
-  displayNested(activity: ActivityModel, property: NestedProperty, onExpressionChanged: Function) {
-    return <he-question-data-dictionary-property activityModel={activity} propertyDescriptor={property.descriptor} propertyModel={property.value} onExpressionChanged={e => onExpressionChanged(e, property)} />;
+  displayNested(activity: ActivityModel, property: NestedProperty) {
+    return <he-question-data-dictionary-property activityModel={activity} propertyDescriptor={property.descriptor} propertyModel={property.value} />;
   }
 }

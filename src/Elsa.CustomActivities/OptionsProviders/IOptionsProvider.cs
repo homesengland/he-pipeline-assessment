@@ -27,7 +27,7 @@ namespace Elsa.CustomActivities.OptionsProviders
 
         public async Task<string> GetOptions(CancellationToken cancellationToken = default)
         {
-            var result = (await _elsaCustomRepository.GetQuestionDataDictionaryListAsync(cancellationToken)).Select(x=> new{x.Name,x.Id, GroupName= x.Group.Name}).ToList();
+            var result = (await _elsaCustomRepository.GetQuestionDataDictionaryListAsync(cancellationToken)).Select(x=> x.Name /*new{x.Name,x.Id, GroupName= x.Group.Name}*/).ToList();
             return JsonConvert.SerializeObject(result);
         }
     }

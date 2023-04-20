@@ -11,13 +11,17 @@
   transition: 0.4s;
 }
 
-  .accordion > * {
-    cursor: auto;
-  }
+.accordion > * {
+  cursor: auto;
+}
 
-  .active, .accordion:hover {
-    background-color: #ccc;
-  }
+.accordion-paragraph {
+  cursor: pointer !important;
+}
+
+.active, .accordion:hover {
+  background-color: #ccc;
+}
 
 .trashcan-icon:hover {
   background-color: #bbb;
