@@ -1,15 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Elsa.CustomActivities.Activities.Common
+﻿namespace Elsa.CustomActivities.Activities.Common
 {
     
     public class DataDictionaryModel
     {
-        public ICollection<DataDictionaryRecord> Choices { get; set; } = new List<DataDictionaryRecord>();
+        public DataDictionaryRecord? DataDictionary { get; set; }
     }
-    public record DataDictionaryRecord(string Identifier, string FieldName);
+    public record DataDictionaryRecord(string Identifier, string Name);
 }

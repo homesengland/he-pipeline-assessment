@@ -6,7 +6,7 @@
  */
 import { HTMLStencilElement, JSXBase } from "@stencil/core/internal";
 import { ActivityDefinitionProperty, ActivityModel, ActivityPropertyDescriptor, IntellisenseContext } from "./models/elsa-interfaces";
-import { HeActivityPropertyDescriptor, ITextProperty, NestedPropertyModel } from "./models/custom-component-models";
+import { HeActivityPropertyDescriptor, ITextProperty, NestedActivityDefinitionProperty, NestedPropertyModel } from "./models/custom-component-models";
 export namespace Components {
     interface ConditionalTextListProperty {
         "activityModel": ActivityModel;
@@ -63,6 +63,7 @@ export namespace Components {
     }
     interface HeQuestionDataDictionaryProperty {
         "activityModel": ActivityModel;
+        "dictionary": NestedActivityDefinitionProperty;
         "propertyDescriptor": ActivityPropertyDescriptor;
         "propertyModel": ActivityDefinitionProperty;
     }
@@ -129,6 +130,10 @@ export interface HeMultiLinePropertyCustomEvent<T> extends CustomEvent<T> {
 export interface HePotscoreRadioOptionsPropertyCustomEvent<T> extends CustomEvent<T> {
     detail: T;
     target: HTMLHePotscoreRadioOptionsPropertyElement;
+}
+export interface HeQuestionDataDictionaryPropertyCustomEvent<T> extends CustomEvent<T> {
+    detail: T;
+    target: HTMLHeQuestionDataDictionaryPropertyElement;
 }
 export interface HeRadioOptionsPropertyCustomEvent<T> extends CustomEvent<T> {
     detail: T;
@@ -336,6 +341,8 @@ declare namespace LocalJSX {
     }
     interface HeQuestionDataDictionaryProperty {
         "activityModel"?: ActivityModel;
+        "dictionary"?: NestedActivityDefinitionProperty;
+        "onExpressionChanged"?: (event: HeQuestionDataDictionaryPropertyCustomEvent<string>) => void;
         "propertyDescriptor"?: ActivityPropertyDescriptor;
         "propertyModel"?: ActivityDefinitionProperty;
     }

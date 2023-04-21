@@ -113,6 +113,13 @@ namespace Elsa.CustomInfrastructure.Data.Repository
             return result;
         }
 
+        public async Task<List<QuestionDataDictionaryGroup>> GetQuestionDataDictionaryGroupsAsync(CancellationToken cancellationToken = default)
+        {
+            var result = await _dbContext.Set<QuestionDataDictionaryGroup>().Include(x => x.QuestionDataDictionaryList).ToListAsync(cancellationToken);
+            return result;
+
+        }
+
         public async Task CreateQuestionWorkflowInstance(QuestionWorkflowInstance questionWorkflowInstance, CancellationToken cancellationToken = default)
         {
             await _dbContext.AddAsync(questionWorkflowInstance, cancellationToken);

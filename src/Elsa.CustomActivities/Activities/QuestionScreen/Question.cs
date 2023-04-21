@@ -64,7 +64,7 @@ namespace Elsa.CustomActivities.Activities.QuestionScreen
                 QuestionTypeConstants.CheckboxQuestion,
                 QuestionTypeConstants.WeightedCheckboxQuestion,
                 QuestionTypeConstants.WeightedRadioQuestion
-            }, OptionsProvider = typeof(QuestionDataDictionaryOptionsProvider))]
+            }, OptionsProvider = typeof(QuestionDataDictionaryOptionsProvider), ExpectedOutputType = ExpectedOutputHints.Number)]
         public DataDictionaryModel DataDictionary { get; set; } = new DataDictionaryModel();
 
         [HeActivityInput(UIHint = HePropertyUIHints.WeightedRadioOptions, 

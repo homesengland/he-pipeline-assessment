@@ -106,6 +106,12 @@ namespace Elsa.CustomActivities.Handlers.Syntax
                 }
                 return result;
 
+            }            
+            if (propertyType != null && propertyType == typeof(DataDictionaryModel))
+            {
+                var parsedProperties = ParseToList(property);
+
+                return 1;
             }
             else
             {

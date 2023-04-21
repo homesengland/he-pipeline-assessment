@@ -64,7 +64,7 @@ namespace Elsa.CustomInfrastructure.Migrations
 
                     b.HasIndex("QuestionId");
 
-                    b.ToTable("Answer", (string)null);
+                    b.ToTable("Answer");
 
                     b.ToTable(tb => tb.IsTemporal(ttb =>
                         {
@@ -134,7 +134,7 @@ namespace Elsa.CustomInfrastructure.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("CustomActivityNavigation", (string)null);
+                    b.ToTable("CustomActivityNavigation");
 
                     b.ToTable(tb => tb.IsTemporal(ttb =>
                         {
@@ -183,7 +183,7 @@ namespace Elsa.CustomInfrastructure.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("PotScoreOption", (string)null);
+                    b.ToTable("PotScoreOption");
 
                     b.ToTable(tb => tb.IsTemporal(ttb =>
                         {
@@ -260,7 +260,7 @@ namespace Elsa.CustomInfrastructure.Migrations
 
                     b.HasIndex("QuestionDataDictionaryId");
 
-                    b.ToTable("Question", (string)null);
+                    b.ToTable("Question");
 
                     b.ToTable(tb => tb.IsTemporal(ttb =>
                         {
@@ -327,7 +327,7 @@ namespace Elsa.CustomInfrastructure.Migrations
 
                     b.HasIndex("QuestionId");
 
-                    b.ToTable("QuestionChoice", (string)null);
+                    b.ToTable("QuestionChoice");
 
                     b.ToTable(tb => tb.IsTemporal(ttb =>
                         {
@@ -393,7 +393,7 @@ namespace Elsa.CustomInfrastructure.Migrations
 
                     b.HasIndex("QuestionDataDictionaryGroupId");
 
-                    b.ToTable("QuestionDataDictionary", (string)null);
+                    b.ToTable("QuestionDataDictionary");
 
                     b.ToTable(tb => tb.IsTemporal(ttb =>
                         {
@@ -438,7 +438,7 @@ namespace Elsa.CustomInfrastructure.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("QuestionDataDictionaryGroup", (string)null);
+                    b.ToTable("QuestionDataDictionaryGroup");
 
                     b.ToTable(tb => tb.IsTemporal(ttb =>
                         {
@@ -499,7 +499,7 @@ namespace Elsa.CustomInfrastructure.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("QuestionWorkflowInstance", (string)null);
+                    b.ToTable("QuestionWorkflowInstance");
 
                     b.ToTable(tb => tb.IsTemporal(ttb =>
                         {
@@ -529,7 +529,7 @@ namespace Elsa.CustomInfrastructure.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("DataProtectionKeys", (string)null);
+                    b.ToTable("DataProtectionKeys");
                 });
 
             modelBuilder.Entity("Elsa.CustomModels.Answer", b =>
@@ -572,7 +572,7 @@ namespace Elsa.CustomInfrastructure.Migrations
             modelBuilder.Entity("Elsa.CustomModels.QuestionDataDictionary", b =>
                 {
                     b.HasOne("Elsa.CustomModels.QuestionDataDictionaryGroup", "Group")
-                        .WithMany()
+                        .WithMany("QuestionDataDictionaryList")
                         .HasForeignKey("QuestionDataDictionaryGroupId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -585,6 +585,11 @@ namespace Elsa.CustomInfrastructure.Migrations
                     b.Navigation("Answers");
 
                     b.Navigation("Choices");
+                });
+
+            modelBuilder.Entity("Elsa.CustomModels.QuestionDataDictionaryGroup", b =>
+                {
+                    b.Navigation("QuestionDataDictionaryList");
                 });
 #pragma warning restore 612, 618
         }
