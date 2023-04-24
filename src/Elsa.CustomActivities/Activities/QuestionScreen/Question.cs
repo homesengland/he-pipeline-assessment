@@ -53,7 +53,7 @@ namespace Elsa.CustomActivities.Activities.QuestionScreen
         public PotScoreRadioModel PotScoreRadio { get; set; } = new PotScoreRadioModel();
 
         [HeActivityInput(UIHint = HePropertyUIHints.QuestionDataDictionary,
-            SupportedSyntaxes = new[] { SyntaxNames.Literal },
+            DefaultSyntax = SyntaxNames.Literal,
             ConditionalActivityTypes = new[]
             {
                 QuestionTypeConstants.TextQuestion,
