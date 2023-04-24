@@ -3,11 +3,11 @@ import { Component, EventEmitter, Event, Prop, State, h } from '@stencil/core';
 import {
     ActivityModel,
   HTMLElsaMultiExpressionEditorElement,
-  ActivityDefinitionProperty
 } from '../../models/elsa-interfaces';
 
 import {
     HeActivityPropertyDescriptor,
+  NestedActivityDefinitionProperty,
   NestedProperty,
   NestedPropertyModel,
 } from '../../models/custom-component-models';
@@ -64,16 +64,17 @@ export class QuestionProperty {
   }
 
   createQuestionProperty(descriptor: HeActivityPropertyDescriptor): NestedProperty {
-    let propertyValue: ActivityDefinitionProperty = {
+    let propertyValue: NestedActivityDefinitionProperty = {
       syntax: descriptor.defaultSyntax,
       value: descriptor.expectedOutputType,
       name: descriptor.name,
-      expressions: this.getExpressionMap(descriptor.supportedSyntaxes)
+      expressions: this.getExpressionMap(descriptor.supportedSyntaxes),
+      type: ''
     }
     if (descriptor.name.toLowerCase() == 'id') {
       propertyValue.expressions[SyntaxNames.Literal] = this.questionModel.value.value;
     }
-    let property: NestedProperty = { value: propertyValue, descriptor: descriptor }
+    let property: NestedProperty = { value: propertyValue, descriptor: descriptor, }
     return property;
   }
 

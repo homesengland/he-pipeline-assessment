@@ -16,7 +16,7 @@ import { PropertyOutputTypes, RadioOptionsSyntax, SyntaxNames } from '../../cons
 import { NestedActivityDefinitionProperty } from '../../models/custom-component-models';
 
 @Component({
-  tag: 'he-potscore-radio-options-property',
+  tag: 'he-potscore-radio-answers-property',
   shadow: false,
 })
 //Copy of Elsa Switch Case

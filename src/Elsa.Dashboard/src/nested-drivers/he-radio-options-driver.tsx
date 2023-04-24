@@ -12,6 +12,6 @@ export class HeRadioOptionsDriver implements HePropertyDisplayDriver {
   }
 
   displayNested(activity: ActivityModel, property: NestedProperty, onExpressionChanged: Function) {
-    return <he-radio-options-property activityModel={activity} propertyDescriptor={property.descriptor} propertyModel={property.value} onExpressionChanged={e => onExpressionChanged(e, property)} />;
+    return <he-radio-options-property-alt activityModel={activity} propertyDescriptor={property.descriptor} propertyModel={property.value} onExpressionChanged={e => onExpressionChanged(e, property)} />;
   }
 }

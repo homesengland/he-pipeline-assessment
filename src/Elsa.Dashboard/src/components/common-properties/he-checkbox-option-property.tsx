@@ -16,7 +16,7 @@ import { mapSyntaxToLanguage, parseJson, ToLetter, Map } from "../../utils/utils
 import { IconProvider } from "../providers/icon-provider/icon-provider";
 
 @Component({
-  tag: 'he-checkbox-options-property',
+  tag: 'he-checkbox-answers-property',
   shadow: false,
 })
 //Copy of Elsa Switch Case

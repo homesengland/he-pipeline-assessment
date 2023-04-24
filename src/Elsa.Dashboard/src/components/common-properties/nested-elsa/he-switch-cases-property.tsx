@@ -16,7 +16,7 @@ import ExpandIcon from '../../../icons/expand_icon';
 import { SyntaxNames } from '../../../constants/constants';
 
 @Component({
-  tag: 'he-switch-options-property',
+  tag: 'he-switch-answers-property',
   shadow: false,
 })
 //Copy of Elsa Switch Case

@@ -1,4 +1,5 @@
-﻿using Elsa.CustomActivities.Activities.Common;
+﻿using Elsa.Attributes;
+using Elsa.CustomActivities.Activities.Common;
 using Elsa.CustomActivities.Constants;
 using Elsa.CustomActivities.OptionsProviders;
 using Elsa.CustomActivities.PropertyDecorator;
@@ -72,10 +73,23 @@ namespace Elsa.CustomActivities.Activities.QuestionScreen
             )]
         public ISet<string>? ScoreArray { get; set; }
 
+        [HeActivityInput(
+            Hint = "Set the formula for how the calculation is worked out for the Question.  This overrides all other scoring.",
+            Name = "Override standard scoring calculations",
+            UIHint = HePropertyUIHints.MultiLine,
+            SupportedSyntaxes = new[] { SyntaxNames.JavaScript },
+            DefaultSyntax = SyntaxNames.JavaScript,
+            ConditionalActivityTypes = new[] { QuestionTypeConstants.WeightedRadioQuestion, QuestionTypeConstants.WeightedCheckboxQuestion },
+            IsDesignerCritical = true)]
+        public int? ScoreOverride { get; set; } = null!;
+
         [HeActivityInput(UIHint = HePropertyUIHints.CheckboxOptions, ConditionalActivityTypes = new[] { QuestionTypeConstants.CheckboxQuestion }, ExpectedOutputType = ExpectedOutputHints.Checkbox)]
         public CheckboxModel Checkbox { get; set; } = new CheckboxModel();
 
-        [HeActivityInput(UIHint = HePropertyUIHints.RadioOptions, ConditionalActivityTypes = new[] { QuestionTypeConstants.RadioQuestion }, ExpectedOutputType = ExpectedOutputHints.Radio)]
+        [HeActivityInput(UIHint = HePropertyUIHints.RadioOptions, 
+            ConditionalActivityTypes = new[] { QuestionTypeConstants.RadioQuestion }, 
+            ExpectedOutputType = ExpectedOutputHints.Radio,
+            HasNestedProperties = true)]
         public RadioModel Radio { get; set; } = new RadioModel();
 
         [HeActivityInput(UIHint = HePropertyUIHints.PotScoreRadioOptions, ConditionalActivityTypes = new[] { QuestionTypeConstants.PotScoreRadioQuestion }, ExpectedOutputType = ExpectedOutputHints.Radio, OptionsProvider = typeof(PotScoreOptionsProvider))]
