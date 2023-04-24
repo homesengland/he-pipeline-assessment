@@ -88,11 +88,11 @@ export interface ICheckboxValue extends NestedActivityDefinitionProperty {
 export interface DataDictionaryGroup {
   Id: number;
   Name: string;
-  questionDataDictionaryList: Array<DataDictionary>;
+  QuestionDataDictionaryList: Array<DataDictionary>;
 }
 
 export interface DataDictionary{
-  id: number;
-  name: string;
-  legacyName: string;
+  Id: number;
+  Name: string;
+  LegacyName: string;
 }

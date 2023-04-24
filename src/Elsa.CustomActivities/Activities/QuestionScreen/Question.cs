@@ -53,6 +53,7 @@ namespace Elsa.CustomActivities.Activities.QuestionScreen
         public PotScoreRadioModel PotScoreRadio { get; set; } = new PotScoreRadioModel();
 
         [HeActivityInput(UIHint = HePropertyUIHints.QuestionDataDictionary,
+            SupportedSyntaxes = new[] { SyntaxNames.Literal },
             ConditionalActivityTypes = new[]
             {
                 QuestionTypeConstants.TextQuestion,
@@ -64,8 +65,8 @@ namespace Elsa.CustomActivities.Activities.QuestionScreen
                 QuestionTypeConstants.CheckboxQuestion,
                 QuestionTypeConstants.WeightedCheckboxQuestion,
                 QuestionTypeConstants.WeightedRadioQuestion
-            }, OptionsProvider = typeof(QuestionDataDictionaryOptionsProvider), ExpectedOutputType = ExpectedOutputHints.Number)]
-        public DataDictionaryModel DataDictionary { get; set; } = new DataDictionaryModel();
+            }, OptionsProvider = typeof(QuestionDataDictionaryOptionsProvider))]
+        public int? DataDictionary { get; set; }
 
         [HeActivityInput(UIHint = HePropertyUIHints.WeightedRadioOptions, 
             ConditionalActivityTypes = new[] { QuestionTypeConstants.WeightedRadioQuestion }, 
