@@ -60,7 +60,9 @@ namespace Elsa.CustomInfrastructure.Data.Repository
         {
             var result = await _dbContext.Set<Question>()
                 .Where(x => x.ActivityId == activityId && x.CorrelationId == correlationId && x.QuestionId == questionID)
-                .OrderBy(x => x.CreatedDateTime)
+                .Include(x => x.Choices)
+                .Include(x => x.Answers)
+                .OrderByDescending(x => x.CreatedDateTime)
                 .FirstOrDefaultAsync(cancellationToken: cancellationToken);
            
             return result;
