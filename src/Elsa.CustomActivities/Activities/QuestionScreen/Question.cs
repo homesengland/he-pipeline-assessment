@@ -54,6 +54,7 @@ namespace Elsa.CustomActivities.Activities.QuestionScreen
 
         [HeActivityInput(UIHint = HePropertyUIHints.QuestionDataDictionary,
             DefaultSyntax = SyntaxNames.Literal,
+            Hint ="Assigns data dictionary item to this question for reporting purposes",
             ConditionalActivityTypes = new[]
             {
                 QuestionTypeConstants.TextQuestion,

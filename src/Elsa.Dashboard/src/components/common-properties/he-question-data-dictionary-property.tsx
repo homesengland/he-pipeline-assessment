@@ -75,6 +75,8 @@ export class HEQuestionDataDictionaryProperty {
   }
 
   render() {
+    const displayGroupStyle = "inline-block";
+    const displayDataDictionaryItemsStyle =  "inline-block" ;
     const selectedDataDictionaryItem = this.selectedDataDictionaryItem;
     const clearSelection = selectedDataDictionaryItem == 0;
     let selectedGroup = this.selectedGroup;
@@ -83,30 +85,34 @@ export class HEQuestionDataDictionaryProperty {
     }
 
     return (
-      <div>
-      <h1>Group dictionary dropdown</h1>
+      <div style={{ padding: "10px 0px 10px 0px" }}>
+      <label class="elsa-block elsa-text-sm elsa-font-medium elsa-text-gray-700">Data Dictionary</label>
+      <div class="elsa-justify-content">
+        <span style={{ display: displayGroupStyle, padding: "0px 10px 0px 0px" }}>
         <select onChange={e => this.onGroupDictionaryOptionChanged(e)}
-          class="elsa-mt-1 elsa-block focus:elsa-ring-blue-500 focus:elsa-border-blue-500 elsa-w-full elsa-shadow-sm sm:elsa-max-w-xs sm:elsa-text-sm elsa-border-gray-300 elsa-rounded-md">
+          class="elsa-mt-1 elsa-inline-block focus:elsa-ring-blue-500 focus:elsa-border-blue-500 elsa-w-full elsa-shadow-sm sm:elsa-max-w-xs sm:elsa-text-sm elsa-border-gray-300 elsa-rounded-md">
           <option value="0">Choose Group</option>
           {this.groupDictionary.map(data => {
             const selected = data == selectedGroup;
           return <option selected={selected} value={data.Id}>{data.Name}</option>;
         })}
-        </select>
+          </select>
+        </span>
         {this.dataDictionaryDisplayToggle ?
-        <div>
-          <h1>Data dictionary dropdown</h1>
+          <span style={{ display: displayDataDictionaryItemsStyle, padding: "0px 5px 0px 0px" }}>
           <select id="test_1" onChange={e => this.onDataDictionaryOptionChanged(e)}
-              class="elsa-mt-1 elsa-block focus:elsa-ring-blue-500 focus:elsa-border-blue-500 elsa-w-full elsa-shadow-sm sm:elsa-max-w-xs sm:elsa-text-sm elsa-border-gray-300 elsa-rounded-md">
+              class="elsa-mt-1 elsa-inline-block focus:elsa-ring-blue-500 focus:elsa-border-blue-500 elsa-w-full elsa-shadow-sm sm:elsa-max-w-xs sm:elsa-text-sm elsa-border-gray-300 elsa-rounded-md">
               <option selected={clearSelection} value="0">Choose Field</option>
             {this.dataDictionary.map(data => {
               const selected = data.Id == selectedDataDictionaryItem;
               return <option selected={selected} value={data.Id}>{data.Name}</option>;
             })}
           </select>
-        </div> : ""}
+          </span> : ""}
       
-      </div>
+        </div>
+        <p class="elsa-mt-2 elsa-text-sm elsa-text-gray-500">Assigns a data dictionary field to the question for reporting purposes</p>
+        </div>
     )
   }
 
