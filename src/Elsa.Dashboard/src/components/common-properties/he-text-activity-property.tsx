@@ -14,6 +14,7 @@ import TrashCanIcon from '../../icons/trash-can';
 import ExpandIcon from '../../icons/expand_icon';
 import { mapSyntaxToLanguage, parseJson, ToLetter, Map } from '../../utils/utils';
 import { PropertyOutputTypes, SyntaxNames, TextActivityOptionsSyntax } from '../../constants/constants';
+import { ToggleDictionaryDisplay } from '../../functions/display-toggle';
 
 @Component({
   tag: 'he-text-activity-property',
@@ -146,24 +147,12 @@ export class TextActivityProperty {
   }
 
   onToggleOptions(index: number) {
-    let tempValue = Object.assign(this.optionsDisplayToggle);
-    let tableRowClass = this.optionsDisplayToggle[index];
-    if (tableRowClass == null) {
-      tempValue[index] = "table-row";
-    } else {
-      this.optionsDisplayToggle[index] == "none" ? tempValue[index] = "table-row" : tempValue[index] = "none";
-    }
+    let tempValue = ToggleDictionaryDisplay(index, this.optionsDisplayToggle)
     this.optionsDisplayToggle = { ... this.optionsDisplayToggle, tempValue }
   }
 
   onDisplayUrl(index: number) {
-    let tempValue = Object.assign(this.urlDisplayToggle);
-    let tableRowClass = this.urlDisplayToggle[index];
-    if (tableRowClass == null) {
-      tempValue[index] = "table-row";
-    } else {
-      this.urlDisplayToggle[index] == "none" ? tempValue[index] = "table-row" : tempValue[index] = "none";
-    }
+    let tempValue = ToggleDictionaryDisplay(index, this.urlDisplayToggle)
     this.urlDisplayToggle = { ... this.urlDisplayToggle, tempValue }
   }
 

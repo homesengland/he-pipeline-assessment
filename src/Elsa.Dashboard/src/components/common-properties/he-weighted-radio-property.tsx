@@ -15,6 +15,7 @@ import PlusIcon from '../../icons/plus_icon';
 import { PropertyOutputTypes, RadioOptionsSyntax, SyntaxNames } from '../../constants/constants';
 import { NestedActivityDefinitionProperty } from '../../models/custom-component-models';
 import TrashCanIcon from '../../icons/trash-can';
+import { ToggleDictionaryDisplay } from '../../functions/display-toggle'
 
 @Component({
   tag: 'he-weighted-radio-property',
@@ -143,13 +144,7 @@ export class HeWeightedRadioProperty {
   }
 
   onToggleOptions(index: number) {
-    let tempValue = Object.assign(this.optionsDisplayToggle);
-    let tableRowClass = this.optionsDisplayToggle[index];
-    if (tableRowClass == null) {
-      tempValue[index] = "table-row";
-    } else {
-      this.optionsDisplayToggle[index] == "none" ? tempValue[index] = "table-row" : tempValue[index] = "none";
-    }
+    let tempValue = ToggleDictionaryDisplay(index, this.optionsDisplayToggle)
     this.optionsDisplayToggle = { ... this.optionsDisplayToggle, tempValue }
   }
 

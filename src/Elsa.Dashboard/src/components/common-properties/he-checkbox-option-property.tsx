@@ -1,5 +1,6 @@
 import { Component, Event, EventEmitter, h, Prop, State } from '@stencil/core';
 import { CheckboxOptionsSyntax, PropertyOutputTypes, SyntaxNames } from '../../constants/constants';
+import { ToggleDictionaryDisplay } from '../../functions/display-toggle';
 import ExpandIcon from '../../icons/expand_icon';
 import PlusIcon from '../../icons/plus_icon';
 import TrashCanIcon from '../../icons/trash-can';
@@ -16,7 +17,7 @@ import { mapSyntaxToLanguage, parseJson, ToLetter, Map } from "../../utils/utils
 import { IconProvider } from "../providers/icon-provider/icon-provider";
 
 @Component({
-  tag: 'he-checkbox-answers-property',
+  tag: 'he-checkbox-options-property',
   shadow: false,
 })
 //Copy of Elsa Switch Case
@@ -126,13 +127,7 @@ export class HeCheckboxOptionProperty {
   }
 
   onToggleOptions(index: number) {
-    let tempValue = Object.assign(this.optionsDisplayToggle);
-    let tableRowClass = this.optionsDisplayToggle[index];
-    if (tableRowClass == null) {
-      tempValue[index] = "table-row";
-    } else {
-      this.optionsDisplayToggle[index] == "none" ? tempValue[index] = "table-row" : tempValue[index] = "none";
-    }
+    let tempValue = ToggleDictionaryDisplay(index, this.optionsDisplayToggle)
     this.optionsDisplayToggle = { ... this.optionsDisplayToggle, tempValue }
   }
 

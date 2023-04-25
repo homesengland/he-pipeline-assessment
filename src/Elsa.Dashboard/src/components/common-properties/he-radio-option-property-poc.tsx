@@ -12,12 +12,12 @@ import { HeActivityPropertyDescriptor, NestedActivityDefinitionProperty, NestedA
 import TrashCanIcon from '../../icons/trash-can';
 
 @Component({
-  tag: 'he-radio-options-property-alt',
+  tag: 'he-radio-options-property-poc',
   shadow: false,
 })
 //Copy of Elsa Switch Case
 //Copied to allow us control over how the expression editor is displayed.
-export class HeRadioOptionProperty {
+export class HeRadioOptionPropertyPOC {
 
   @Prop() activityModel: ActivityModel;
   @Prop() propertyDescriptor: HeActivityPropertyDescriptor;

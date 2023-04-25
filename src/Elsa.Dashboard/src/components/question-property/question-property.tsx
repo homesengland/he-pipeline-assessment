@@ -114,9 +114,7 @@ export class QuestionProperty {
       var content = displayManager.displayNested(this.activityModel, property, this.onPropertyExpressionChange.bind(this));
       let id = property.descriptor.name + "Category";
       return (
-        <elsa-control id={id} class="sm:elsa-col-span-6 hydrated">
-          {content}
-        </elsa-control>
+        <he-elsa-control id={id} content={content} class="sm:elsa-col-span-6 hydrated"/>
         );
     }
 

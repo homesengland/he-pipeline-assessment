@@ -32,6 +32,7 @@
     <None Remove="src\components\common-properties\nested-properties\nested-property-list.tsx" />
     <None Remove="src\constants\Constants.ts" />
     <None Remove="src\models\display-manager.ts" />
+    <None Remove="src\models\display-toggle.tsx" />
     <None Remove="src\nested-drivers\he-text-activity-driver.tsx" />
     <None Remove="wwwroot\Scripts\CustomElsa.js" />
     <None Remove="wwwroot\Scripts\Drivers\ConditionalTextListPropertyDriver.js" />
@@ -59,6 +60,7 @@
   <ItemGroup>
     <TypeScriptCompile Include="src\components\common-properties\he-text-activity-property.tsx" />
     <TypeScriptCompile Include="src\components\common-properties\nested-properties\nested-property-list.tsx" />
+    <TypeScriptCompile Include="src\functions\display-toggle.tsx" />
     <TypeScriptCompile Include="src\nested-drivers\he-text-activity-driver.tsx" />
     <TypeScriptCompile Include="src\nested-drivers\he-checkbox-options-driver.tsx" />
     <TypeScriptCompile Include="src\nested-drivers\he-script-driver.tsx" />

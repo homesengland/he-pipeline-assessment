@@ -42,6 +42,7 @@ export class HEMultiTextProperty {
 
     this.currentValue = JSON.stringify(newValues);
     this.propertyModel.expressions[SyntaxNames.Json] = this.currentValue;
+    console.log(this.currentValue);
     this.expressionChanged.emit(JSON.stringify(this.propertyModel));
   }
 

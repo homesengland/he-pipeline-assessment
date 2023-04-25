@@ -65,13 +65,6 @@ export class NestedPropertyModel {
   ActivityType: IActivityData;
 }
 
-
-//export class QuestionModel {
-//  value: ActivityDefinitionProperty;
-//  descriptor: Array<HeActivityPropertyDescriptor> = [];
-//  questionType: IQuestionData;
-//}
-
 export interface Dictionary<T> {
   [Key: string]: T;
 }
