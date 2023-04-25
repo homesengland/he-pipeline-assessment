@@ -23,13 +23,14 @@ export class HEQuestionDataDictionaryProperty {
   @Prop() propertyDescriptor: ActivityPropertyDescriptor;
   @Prop() propertyModel: ActivityDefinitionProperty;
   @Event() expressionChanged: EventEmitter<string>;
-  @State() dataDictionaryDisplayToggle: boolean = false;
+  //@State() 
   @State() dataDictionary: Array<DataDictionary> = [];
 
   groupDictionary: Array<DataDictionaryGroup> = [];//change this to an array of class
   selectedDataDictionaryItem: number;
   selectedGroupDictionaryId: number;
   selectedGroup: DataDictionaryGroup;
+  dataDictionaryDisplayToggle: boolean = false;
 
   async componentWillLoad() {
     //const propertyModel = this.propertyModel;
@@ -39,6 +40,16 @@ export class HEQuestionDataDictionaryProperty {
     console.log('propmodel', this.propertyModel);
     console.log('propdescriptor', this.propertyDescriptor);
     console.log('groupDictionary', this.groupDictionary);
+
+  
+    if (this.selectedGroup == undefined) {
+      this.selectedGroup = this.groupDictionary.filter(x => x.QuestionDataDictionaryList.filter(y => y.Id == this.selectedDataDictionaryItem)[0])[0];
+    }
+    if (this.selectedGroup != undefined) {
+      this.dataDictionaryDisplayToggle = true;
+      this.dataDictionary = [...this.selectedGroup.QuestionDataDictionaryList];
+
+    }
   }
 
   updatePropertyModel(updatedValue: string) {
@@ -59,6 +70,9 @@ export class HEQuestionDataDictionaryProperty {
       this.selectedGroup = selectedGroup;
       this.dataDictionaryDisplayToggle = true;
       this.dataDictionary = [...selectedGroup.QuestionDataDictionaryList];
+
+      //const dataDictionarySelect = document.getElementById("test_1") as HTMLSelectElement;
+      //dataDictionarySelect.selectedIndex =0;
     }
     else {
       this.dataDictionaryDisplayToggle = false;
@@ -87,6 +101,7 @@ export class HEQuestionDataDictionaryProperty {
     if (selectedGroup == undefined) {
       selectedGroup = this.groupDictionary.filter(x => x.QuestionDataDictionaryList.filter(y => y.Id == selectedDataDictionaryItem)[0])[0];
     }
+
     /*const selectedGroupDictionaryId = this.selectedGroupDictionaryId;*/
     console.log('this.selectedGroupDictionaryId', this.selectedGroupDictionaryId);
     console.log('selectedGroup', selectedGroup);
@@ -107,7 +122,7 @@ export class HEQuestionDataDictionaryProperty {
         {this.dataDictionaryDisplayToggle ?
         <div>
           <h1>Data dictionary dropdown</h1>
-          <select onChange={e => this.onDataDictionaryOptionChanged(e)}
+          <select id="test_1" onChange={e => this.onDataDictionaryOptionChanged(e)}
               class="elsa-mt-1 elsa-block focus:elsa-ring-blue-500 focus:elsa-border-blue-500 elsa-w-full elsa-shadow-sm sm:elsa-max-w-xs sm:elsa-text-sm elsa-border-gray-300 elsa-rounded-md">
               <option selected={clearSelection} value="0">--- Select ---</option>
               {console.log('render dataDictionary', this.dataDictionary)}
