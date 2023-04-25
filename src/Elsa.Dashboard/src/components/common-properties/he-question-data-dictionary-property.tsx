@@ -25,9 +25,9 @@ export class HEQuestionDataDictionaryProperty {
   @Event() expressionChanged: EventEmitter<string>;
   //@State() 
   @State() dataDictionary: Array<DataDictionary> = [];
+  @State() selectedDataDictionaryItem: number;
 
   groupDictionary: Array<DataDictionaryGroup> = [];//change this to an array of class
-  selectedDataDictionaryItem: number;
   selectedGroupDictionaryId: number;
   selectedGroup: DataDictionaryGroup;
   dataDictionaryDisplayToggle: boolean = false;
@@ -71,8 +71,6 @@ export class HEQuestionDataDictionaryProperty {
       this.dataDictionaryDisplayToggle = true;
       this.dataDictionary = [...selectedGroup.QuestionDataDictionaryList];
 
-      //const dataDictionarySelect = document.getElementById("test_1") as HTMLSelectElement;
-      //dataDictionarySelect.selectedIndex =0;
     }
     else {
       this.dataDictionaryDisplayToggle = false;
