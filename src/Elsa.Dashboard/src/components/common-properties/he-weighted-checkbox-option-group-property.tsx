@@ -3,7 +3,6 @@ import {
     ActivityDefinitionProperty,
   ActivityModel,
   ActivityPropertyDescriptor,
-  HTMLElsaExpressionEditorElement,
   HTMLElsaMultiExpressionEditorElement,
   IntellisenseContext
 } from "../../models/elsa-interfaces";
@@ -15,13 +14,13 @@ import ExpandIcon from '../../icons/expand_icon';
 import { CheckboxOptionsSyntax, PropertyOutputTypes, SyntaxNames, WeightedScoringSyntax } from '../../constants/constants';
 import { NestedActivityDefinitionProperty } from '../../models/custom-component-models';
 import { ToggleDictionaryDisplay } from '../../functions/display-toggle'
+import { UpdateCheckbox, UpdateExpression, UpdateName, UpdateSyntax } from '../../functions/updateModel';
 
 @Component({
   tag: 'he-weighted-checkbox-option-group-property',
   shadow: false,
 })
-//Copy of Elsa Switch Case
-//Copied to allow us control over how the expression editor is displayed.
+
 export class HeWeightedCheckboxOptionGroupProperty {
 
   @Prop() activityModel: ActivityModel;
@@ -30,12 +29,14 @@ export class HeWeightedCheckboxOptionGroupProperty {
   @State() iconProvider = new IconProvider();
   @Event() expressionChanged: EventEmitter<string>;
   @State() optionsDisplayToggle: Map<string> = {};
-
-
-
   @State() switchTextHeight: string = "";
-
   @State() editorHeight: string = "2.75em"
+
+  UpdateExpression: Function = UpdateExpression.bind(this);
+  UpdateName: Function = UpdateName.bind(this);
+  UpdateCheckbox: Function = UpdateCheckbox.bind(this);
+  UpdateSyntax: Function = UpdateSyntax.bind(this);
+
 
   supportedSyntaxes: Array<string> = [SyntaxNames.JavaScript, SyntaxNames.Liquid, SyntaxNames.Literal];
   multiExpressionEditor: HTMLElsaMultiExpressionEditorElement;
@@ -76,54 +77,6 @@ export class HeWeightedCheckboxOptionGroupProperty {
 
   onDeleteOptionClick(switchCase: NestedActivityDefinitionProperty) {
     this.answers = this.answers.filter(x => x != switchCase);
-    this.updatePropertyModel();
-  }
-
-  onOptionNameChanged(e: Event, checkboxOption: NestedActivityDefinitionProperty) {
-    checkboxOption.name = (e.currentTarget as HTMLInputElement).value.trim();
-    this.updatePropertyModel();
-  }
-
-  onGroupNameChanged(e: Event) {
-    this.propertyModel.name = (e.currentTarget as HTMLInputElement).value.trim();
-    this.updatePropertyModel();
-  }
-
-  onMaxGroupScoreChanged(e: Event) {
-    this.propertyModel.expressions[WeightedScoringSyntax.MaxGroupScore] = (e.currentTarget as HTMLInputElement).value.trim();
-    this.updatePropertyModel();
-  }
-
-  onGroupArrayScoreChanged(e: Event) {
-    this.propertyModel.expressions[WeightedScoringSyntax.GroupArrayScore] = (e.currentTarget as HTMLInputElement).value.trim();
-    this.updatePropertyModel();
-  }
-
-  onOptionExpressionChanged(e: CustomEvent<string>, checkboxOption: NestedActivityDefinitionProperty) {
-    checkboxOption.expressions[checkboxOption.syntax] = e.detail;
-    this.updatePropertyModel();
-  }
-
-  onScoreExpressionChanged(e: CustomEvent<string>, checkboxOption: NestedActivityDefinitionProperty) {
-    checkboxOption.expressions[CheckboxOptionsSyntax.Score] = e.detail;
-    this.updatePropertyModel();
-  }
-
-  onAnswerSyntaxChanged(e: Event, property: NestedActivityDefinitionProperty, expressionEditor: HTMLElsaExpressionEditorElement) {
-    const select = e.currentTarget as HTMLSelectElement;
-    property.syntax = select.value;
-    expressionEditor.language = mapSyntaxToLanguage(property.syntax);
-    this.updatePropertyModel();
-  }
-
-  onPrePopulatedChanged(e: CustomEvent<string>, checkbox: NestedActivityDefinitionProperty) {
-    checkbox.expressions[CheckboxOptionsSyntax.PrePopulated] = e.detail;
-    this.updatePropertyModel();
-  }
-
-  onCheckChanged(e: Event, checkbox: NestedActivityDefinitionProperty) {
-    const checkboxElement = (e.currentTarget as HTMLInputElement);
-    checkbox.expressions[CheckboxOptionsSyntax.Single] = checkboxElement.checked.toString();
     this.updatePropertyModel();
   }
 
@@ -219,7 +172,7 @@ export class HeWeightedCheckboxOptionGroupProperty {
               class="elsa-py-3 elsa-text-left elsa-text-xs elsa-font-medium elsa-text-gray-500 elsa-tracking-wider elsa-w-2/12">Identifier
             </th>
             <td class="elsa-py-2 elsa-pr-5" style={{ width: colWidth }}>
-              <input type="text" value={checkboxAnswer.name} onChange={e => this.onOptionNameChanged(e, checkboxAnswer)}
+              <input type="text" value={checkboxAnswer.name} onChange={e => this.UpdateName(e, checkboxAnswer)}
                 class="focus:elsa-ring-blue-500 focus:elsa-border-blue-500 elsa-block elsa-w-full elsa-min-w-0 elsa-rounded-md sm:elsa-text-sm elsa-border-gray-300" />
             </td>
             <td class="elsa-pt-1 elsa-pr-2 elsa-text-right">
@@ -246,10 +199,10 @@ export class HeWeightedCheckboxOptionGroupProperty {
                   single-line={false}
                   editorHeight={this.editorHeight}
                   padding="elsa-pt-1.5 elsa-pl-1 elsa-pr-28"
-                  onExpressionChanged={e => this.onOptionExpressionChanged(e, checkboxAnswer)}
+                  onExpressionChanged={e => this.UpdateExpression(e, checkboxAnswer, checkboxAnswer.syntax)}
                 />
                 <div class="elsa-absolute elsa-inset-y-0 elsa-right-0 elsa-flex elsa-items-center">
-                  <select onChange={e => this.onAnswerSyntaxChanged(e, checkboxAnswer, expressionEditor)}
+                  <select onChange={e => this.UpdateSyntax(e, checkboxAnswer, expressionEditor)}
                     class="focus:elsa-ring-blue-500 focus:elsa-border-blue-500 elsa-h-full elsa-py-0 elsa-pl-2 elsa-pr-7 elsa-border-transparent elsa-bg-transparent elsa-text-gray-500 sm:elsa-text-sm elsa-rounded-md">
                     {supportedSyntaxes.map(supportedSyntax => {
                       const selected = supportedSyntax == syntax;
@@ -282,10 +235,10 @@ export class HeWeightedCheckboxOptionGroupProperty {
                   single-line={true}
                   editorHeight={this.editorHeight}
                   padding="elsa-pt-1.5 elsa-pl-1 elsa-pr-28"
-                  onExpressionChanged={e => this.onScoreExpressionChanged(e, checkboxAnswer)}
+                  onExpressionChanged={e => this.UpdateExpression(e, checkboxAnswer, CheckboxOptionsSyntax.Score)}
                 />
                 <div class="elsa-absolute elsa-inset-y-0 elsa-right-0 elsa-flex elsa-items-center">
-                  <select onChange={e => this.onAnswerSyntaxChanged(e, checkboxAnswer, scoreExpressionEditor)}
+                  <select onChange={e => this.UpdateSyntax(e, checkboxAnswer, scoreExpressionEditor)}
                     class="focus:elsa-ring-blue-500 focus:elsa-border-blue-500 elsa-h-full elsa-py-0 elsa-pl-2 elsa-pr-7 elsa-border-transparent elsa-bg-transparent elsa-text-gray-500 sm:elsa-text-sm elsa-rounded-md">
                     {this.supportedSyntaxes.filter(x => x == SyntaxNames.Literal).map(supportedSyntax => {
                       const selected = supportedSyntax == SyntaxNames.Literal;
@@ -310,7 +263,7 @@ export class HeWeightedCheckboxOptionGroupProperty {
             <th class="elsa-py-3 elsa-text-left elsa-text-xs elsa-font-medium elsa-text-gray-500 elsa-tracking-wider elsa-w-2/12">IsSingle</th>
             <td class="elsa-py-0">
               <input name="choice_input" type="checkbox" checked={checked} value={'true'}
-                onChange={e => this.onCheckChanged(e, checkboxAnswer)}
+                onChange={e => this.UpdateCheckbox(e, checkboxAnswer, CheckboxOptionsSyntax.Single)}
                 class="focus:elsa-ring-blue-500 elsa-h-8 elsa-w-8 elsa-text-blue-600 elsa-border-gray-300 elsa-rounded" />
             </td>
             <td></td>
@@ -328,10 +281,10 @@ export class HeWeightedCheckboxOptionGroupProperty {
                   single-line={false}
                   editorHeight="2.75em"
                   padding="elsa-pt-1.5 elsa-pl-1 elsa-pr-28"
-                  onExpressionChanged={e => this.onPrePopulatedChanged(e, checkboxAnswer)}
+                  onExpressionChanged={e => this.UpdateExpression(e, checkboxAnswer, CheckboxOptionsSyntax.PrePopulated)}
                 />
                 <div class="elsa-absolute elsa-inset-y-0 elsa-right-0 elsa-flex elsa-items-center">
-                  <select onChange={e => this.onAnswerSyntaxChanged(e, checkboxAnswer, prePopulatedExpressionEditor)}
+                  <select onChange={e => this.UpdateSyntax(e, checkboxAnswer, prePopulatedExpressionEditor)}
                     class="focus:elsa-ring-blue-500 focus:elsa-border-blue-500 elsa-h-full elsa-py-0 elsa-pl-2 elsa-pr-7 elsa-border-transparent elsa-bg-transparent elsa-text-gray-500 sm:elsa-text-sm elsa-rounded-md">
                     {this.supportedSyntaxes.filter(x => x == SyntaxNames.JavaScript).map(supportedSyntax => {
                       const selected = supportedSyntax == SyntaxNames.JavaScript;
@@ -372,7 +325,7 @@ export class HeWeightedCheckboxOptionGroupProperty {
 
         <div>
           <div>
-            <input type="text" value={this.propertyModel.name} onChange={e => this.onGroupNameChanged(e)}
+            <input type="text" value={this.propertyModel.name} onChange={e => this.UpdateName(e, this.propertyModel)}
               class="focus:elsa-ring-blue-500 focus:elsa-border-bue-500 elsa-block elsa-w-full elsa-min-w-0 elsa-rounded-md sm:elsa-text-sm elsa-border-gray-300" />
           </div>
           <p class="elsa-mt-2 elsa-text-sm elsa-text-gray-500">The name of the group of Anwers.  Each group name must be unique.</p>
@@ -388,7 +341,7 @@ export class HeWeightedCheckboxOptionGroupProperty {
 
         <div>
           <div>
-            <input type="text" value={this.propertyModel.expressions[WeightedScoringSyntax.MaxGroupScore]} onChange={e => this.onMaxGroupScoreChanged(e)}
+            <input type="text" value={this.propertyModel.expressions[WeightedScoringSyntax.MaxGroupScore]} onChange={e => this.UpdateExpression(e, this.propertyModel, WeightedScoringSyntax.MaxGroupScore)}
               class="focus:elsa-ring-blue-500 focus:elsa-border-bue-500 elsa-block elsa-w-full elsa-min-w-0 elsa-rounded-md sm:elsa-text-sm elsa-border-gray-300" />
           </div>
           <p class="elsa-mt-2 elsa-text-sm elsa-text-gray-500">Override the maximum score that can be achieved by any number of answers in this group, even if their combined sum is greater.</p>
@@ -397,8 +350,8 @@ export class HeWeightedCheckboxOptionGroupProperty {
         <div>
             <he-multi-text-property
             activityModel={this.activityModel}
-              propertyModel={multiTextModel}
-              onChange={e => this.onGroupArrayScoreChanged(e)}
+            propertyModel={multiTextModel}
+            onChange={e => this.UpdateExpression(e, this.propertyModel, WeightedScoringSyntax.GroupArrayScore)}
               propertyDescriptor={ multiTextDescriptor }
             >
             </he-multi-text-property>

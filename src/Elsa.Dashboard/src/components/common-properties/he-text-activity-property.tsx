@@ -3,7 +3,6 @@ import {
   ActivityDefinitionProperty,
   ActivityModel,
   ActivityPropertyDescriptor,
-  HTMLElsaExpressionEditorElement,
   HTMLElsaMultiExpressionEditorElement,
   IntellisenseContext,
 } from "../../models/elsa-interfaces";
@@ -15,6 +14,7 @@ import ExpandIcon from '../../icons/expand_icon';
 import { mapSyntaxToLanguage, parseJson, ToLetter, Map } from '../../utils/utils';
 import { PropertyOutputTypes, SyntaxNames, TextActivityOptionsSyntax } from '../../constants/constants';
 import { ToggleDictionaryDisplay } from '../../functions/display-toggle';
+import { UpdateCheckbox, UpdateExpression, UpdateName, UpdateSyntax } from '../../functions/updateModel';
 
 @Component({
   tag: 'he-text-activity-property',
@@ -34,6 +34,11 @@ export class TextActivityProperty {
   @State() conditionDisplayHeightMap: Map<string> = {};
   @State() optionsDisplayToggle: Map<string> = {};
   @State() urlDisplayToggle: Map<string> = {};
+
+  UpdateExpression: Function = UpdateExpression.bind(this);
+  UpdateName: Function = UpdateName.bind(this);
+  UpdateCheckbox: Function = UpdateCheckbox.bind(this);
+  UpdateSyntax: Function = UpdateSyntax.bind(this);
 
   multiExpressionEditor: HTMLElsaMultiExpressionEditorElement;
   syntaxSwitchCount: number = 0;
@@ -82,56 +87,6 @@ export class TextActivityProperty {
 
   onHandleDelete(textActivity: NestedActivityDefinitionProperty) {
     this.text = this.text.filter(x => x != textActivity);
-    this.updatePropertyModel();
-  }
-
-  onTextChanged(e: CustomEvent<string>, textActivity: NestedActivityDefinitionProperty) {
-    textActivity.expressions[textActivity.syntax] = e.detail;
-    this.updatePropertyModel();
-
-  }
-
-  onConditionChanged(e: CustomEvent<string>, textActivity: NestedActivityDefinitionProperty) {
-    textActivity.expressions[TextActivityOptionsSyntax.Condition] = e.detail;
-    this.updatePropertyModel();
-  }
-
-  onIsParagraphChecked(e: Event, textActivity: NestedActivityDefinitionProperty) {
-    const checkboxElement = (e.currentTarget as HTMLInputElement);
-    textActivity.expressions[TextActivityOptionsSyntax.Paragraph] = checkboxElement.checked.toString();
-    this.updatePropertyModel();
-  }
-
-  onIsGuidanceChecked(e: Event, textActivity: NestedActivityDefinitionProperty) {
-    const checkboxElement = (e.currentTarget as HTMLInputElement);
-    textActivity.expressions[TextActivityOptionsSyntax.Guidance] = checkboxElement.checked.toString();
-    this.updatePropertyModel();
-  }
-
-  onUrlChanged(e: CustomEvent<string>, textActivity: NestedActivityDefinitionProperty) {
-    textActivity.expressions[TextActivityOptionsSyntax.Url] = e.detail;
-    this.updatePropertyModel();
-  }
-
-  onIsHyperlinkChecked(e: Event, textActivity: NestedActivityDefinitionProperty, index:number) {
-    const checkboxElement = (e.currentTarget as HTMLInputElement);
-    textActivity.expressions[TextActivityOptionsSyntax.Hyperlink] = checkboxElement.checked.toString();
-    this.onDisplayUrl(index);
-    this.updatePropertyModel();
-  }
-
-
-  onTextSyntaxChanged(e: Event, textActivity: NestedActivityDefinitionProperty, expressionEditor: HTMLElsaExpressionEditorElement) {
-    const select = e.currentTarget as HTMLSelectElement;
-    textActivity.syntax = select.value;
-    expressionEditor.language = mapSyntaxToLanguage(textActivity.syntax);
-    this.updatePropertyModel();
-  }
-
-  onConditionSyntaxChanged(e: Event, textActivity: NestedActivityDefinitionProperty, expressionEditor: HTMLElsaExpressionEditorElement) {
-    const select = e.currentTarget as HTMLSelectElement;
-    textActivity.syntax = select.value;
-    expressionEditor.language = mapSyntaxToLanguage(textActivity.syntax);
     this.updatePropertyModel();
   }
 
@@ -210,11 +165,11 @@ export class TextActivityProperty {
                 language={textLanguage}
                 single-line={false}
                 editorHeight="2.75em"
-                padding="elsa-pt-1.5 elsa-pl-1 elsa-pr-28"
-                onExpressionChanged={e => this.onTextChanged(e, nestedTextActivity)}
+                  padding="elsa-pt-1.5 elsa-pl-1 elsa-pr-28"
+                  onExpressionChanged={e => this.UpdateExpression(e, nestedTextActivity, nestedTextActivity.syntax)}
                 />
                 <div class="elsa-absolute elsa-inset-y-0 elsa-right-0 elsa-flex elsa-items-center">
-                  <select onChange={e => this.onTextSyntaxChanged(e, nestedTextActivity, textExpressionEditor)}
+                  <select onChange={e => this.UpdateSyntax(e, nestedTextActivity, textExpressionEditor)}
                     class="focus:elsa-ring-blue-500 focus:elsa-border-blue-500 elsa-h-full elsa-py-0 elsa-pl-2 elsa-pr-7 elsa-border-transparent elsa-bg-transparent elsa-text-gray-500 sm:elsa-text-sm elsa-rounded-md">
                     {this.supportedSyntaxes.map(supportedSyntax => {
                       const selected = supportedSyntax == textSyntax;
@@ -250,11 +205,11 @@ export class TextActivityProperty {
                     language={conditionLanguage}
                     single-line={false}
                     editorHeight={conditionEditorHeight}
-                    padding="elsa-pt-1.5 elsa-pl-1 elsa-pr-28"
-                    onExpressionChanged={e => this.onConditionChanged(e, nestedTextActivity)}
+                  padding="elsa-pt-1.5 elsa-pl-1 elsa-pr-28"
+                  onExpressionChanged={e => this.UpdateExpression(e, nestedTextActivity, TextActivityOptionsSyntax.Condition)}
                   />
-                  <div class="elsa-absolute elsa-inset-y-0 elsa-right-0 elsa-flex elsa-items-center">
-                    <select onChange={e => this.onTextSyntaxChanged(e, nestedTextActivity, conditionExpressionEditor)}
+                <div class="elsa-absolute elsa-inset-y-0 elsa-right-0 elsa-flex elsa-items-center">
+                  <select onChange={e => this.UpdateSyntax(e, nestedTextActivity, conditionExpressionEditor)}
                       class="focus:elsa-ring-blue-500 focus:elsa-border-blue-500 elsa-h-full elsa-py-0 elsa-pl-2 elsa-pr-7 elsa-border-transparent elsa-bg-transparent elsa-text-gray-500 sm:elsa-text-sm elsa-rounded-md">
                       {this.supportedSyntaxes.filter(x => x == SyntaxNames.JavaScript).map(supportedSyntax => {
                         const selected = supportedSyntax == SyntaxNames.JavaScript;
@@ -277,7 +232,7 @@ export class TextActivityProperty {
               </th>
             <td class="elsa-py-0">
               <input name="choice_input" type="checkbox" checked={paragraphChecked} value={nestedTextActivity.expressions[TextActivityOptionsSyntax.Paragraph]}
-                    onChange={e => this.onIsParagraphChecked(e, nestedTextActivity)}
+                onChange={e => this.UpdateCheckbox(e, nestedTextActivity, TextActivityOptionsSyntax.Paragraph)}
                     class="focus:elsa-ring-blue-500 elsa-h-8 elsa-w-8 elsa-text-blue-600 elsa-border-gray-300 elsa-rounded" />
               </td>
               <td>
@@ -289,7 +244,7 @@ export class TextActivityProperty {
             </th>
             <td class="elsa-py-0">
               <input name="choice_input" type="checkbox" checked={guidanceChecked} value={nestedTextActivity.expressions[TextActivityOptionsSyntax.Guidance]}
-                onChange={e => this.onIsGuidanceChecked(e, nestedTextActivity)}
+                onChange={e => this.UpdateCheckbox(e, nestedTextActivity, TextActivityOptionsSyntax.Guidance)}
                 class="focus:elsa-ring-blue-500 elsa-h-8 elsa-w-8 elsa-text-blue-600 elsa-border-gray-300 elsa-rounded" />
             </td>
             <td>
@@ -301,7 +256,7 @@ export class TextActivityProperty {
             </th>
             <td class="elsa-py-0">
               <input name="choice_input" type="checkbox" checked={hyperlinkChecked} value={nestedTextActivity.expressions[TextActivityOptionsSyntax.Hyperlink]}
-                onChange={e => this.onIsHyperlinkChecked(e, nestedTextActivity, index)}
+                onChange={e => [this.UpdateCheckbox(e, nestedTextActivity, TextActivityOptionsSyntax.Hyperlink), this.onDisplayUrl(index)]}
                 class="focus:elsa-ring-blue-500 elsa-h-8 elsa-w-8 elsa-text-blue-600 elsa-border-gray-300 elsa-rounded" />
             </td>
             <td>
@@ -322,7 +277,7 @@ export class TextActivityProperty {
                   single-line={true}
                   editorHeight="2.75em"
                   padding="elsa-pt-1.5 elsa-pl-1 elsa-pr-28"
-                  onExpressionChanged={e => this.onUrlChanged(e, nestedTextActivity)}
+                  onExpressionChanged={e => this.UpdateExpression(e, nestedTextActivity, TextActivityOptionsSyntax.Url)}
                 />
               </div>
             </td>

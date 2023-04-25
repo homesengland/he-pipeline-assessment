@@ -3,15 +3,14 @@ import {
   ActivityDefinitionProperty,
   ActivityModel,
   ActivityPropertyDescriptor,
-  HTMLElsaExpressionEditorElement,
   HTMLElsaMultiExpressionEditorElement,
   IntellisenseContext
 } from "../../models/elsa-interfaces";
-import { mapSyntaxToLanguage, parseJson, ToLetter, Map } from "../../utils/utils";
+import {  parseJson, ToLetter, Map } from "../../utils/utils";
 import { IconProvider } from "../providers/icon-provider/icon-provider";
 import PlusIcon from '../../icons/plus_icon';
 import TrashCanIcon from '../../icons/trash-can';
-import { CheckboxOptionsSyntax, PropertyOutputTypes, SyntaxNames, WeightedScoringSyntax } from '../../constants/constants';
+import { PropertyOutputTypes, SyntaxNames, WeightedScoringSyntax } from '../../constants/constants';
 import { NestedActivityDefinitionProperty } from '../../models/custom-component-models';
 import { ToggleDictionaryDisplay } from '../../functions/display-toggle'
 
@@ -76,33 +75,6 @@ export class HeWeightedCheckboxProperty {
 
   onDeleteGroupClick(checkboxGroup: NestedActivityDefinitionProperty) {
     this.groups = this.groups.filter(x => x != checkboxGroup);
-    this.updatePropertyModel();
-  }
-
-  onGroupNameChanged(e: Event, checkboxGroup: NestedActivityDefinitionProperty) {
-    checkboxGroup.name = (e.currentTarget as HTMLInputElement).value.trim();
-    this.updatePropertyModel();
-  }
-
-  onGroupExpressionChanged(e: CustomEvent<string>, checkboxOption: NestedActivityDefinitionProperty) {
-    checkboxOption.expressions[checkboxOption.syntax] = e.detail;
-    this.updatePropertyModel();
-  }
-
-  onScoreExpressionChanged(e: CustomEvent<string>, checkboxOption: NestedActivityDefinitionProperty) {
-    checkboxOption.expressions[CheckboxOptionsSyntax.Score] = e.detail;
-    this.updatePropertyModel();
-  }
-
-  onOptionSyntaxChanged(e: Event, property: NestedActivityDefinitionProperty, expressionEditor: HTMLElsaExpressionEditorElement) {
-    const select = e.currentTarget as HTMLSelectElement;
-    property.syntax = select.value;
-    expressionEditor.language = mapSyntaxToLanguage(property.syntax);
-    this.updatePropertyModel();
-  }
-
-  onPrePopulatedChanged(e: CustomEvent<string>, checkbox: NestedActivityDefinitionProperty) {
-    checkbox.expressions[CheckboxOptionsSyntax.PrePopulated] = e.detail;
     this.updatePropertyModel();
   }
 

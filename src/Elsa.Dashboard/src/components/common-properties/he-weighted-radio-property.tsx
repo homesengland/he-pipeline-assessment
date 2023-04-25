@@ -3,16 +3,13 @@ import {
   ActivityDefinitionProperty,
   ActivityModel,
   ActivityPropertyDescriptor,
-  HTMLElsaExpressionEditorElement,
   HTMLElsaMultiExpressionEditorElement,
   IntellisenseContext
 } from "../../models/elsa-interfaces";
-import { mapSyntaxToLanguage, parseJson, ToLetter, Map } from "../../utils/utils";
+import {  parseJson, ToLetter, Map } from "../../utils/utils";
 import { IconProvider } from "../providers/icon-provider/icon-provider";
 import PlusIcon from '../../icons/plus_icon';
-//import TrashCanIcon from '../../icons/trash-can';
-//import ExpandIcon from '../../icons/expand_icon';
-import { PropertyOutputTypes, RadioOptionsSyntax, SyntaxNames } from '../../constants/constants';
+import { PropertyOutputTypes, SyntaxNames } from '../../constants/constants';
 import { NestedActivityDefinitionProperty } from '../../models/custom-component-models';
 import TrashCanIcon from '../../icons/trash-can';
 import { ToggleDictionaryDisplay } from '../../functions/display-toggle'
@@ -32,11 +29,7 @@ export class HeWeightedRadioProperty {
   @State() iconProvider = new IconProvider();
   @Event() expressionChanged: EventEmitter<string>;
   @State() optionsDisplayToggle: Map<string> = {};
-
-
-
   @State() switchTextHeight: string = "";
-
   @State() editorHeight: string = "2.75em"
 
   supportedSyntaxes: Array<string> = [SyntaxNames.JavaScript, SyntaxNames.Liquid, SyntaxNames.Literal];
@@ -72,44 +65,10 @@ export class HeWeightedRadioProperty {
     };
     this.groups = [... this.groups, newGroup];
     this.updatePropertyModel();
-    console.log("Added Group, property Updated");
   }
 
   onDeleteGroupClick(radioGroup: NestedActivityDefinitionProperty) {
     this.groups = this.groups.filter(x => x != radioGroup);
-    this.updatePropertyModel();
-  }
-
-  onGroupNameChanged(e: Event, radioOption: NestedActivityDefinitionProperty) {
-    radioOption.name = (e.currentTarget as HTMLInputElement).value.trim();
-    this.updatePropertyModel();
-  }
-
-  onGroupExpressionChanged(e: CustomEvent<string>, radioOption: NestedActivityDefinitionProperty) {
-    radioOption.expressions[radioOption.syntax] = e.detail;
-    this.updatePropertyModel();
-  }
-
-  onScoreExpressionChanged(e: CustomEvent<string>, radioOption: NestedActivityDefinitionProperty) {
-    radioOption.expressions[RadioOptionsSyntax.Score] = e.detail;
-    this.updatePropertyModel();
-  }
-
-  onOptionSyntaxChanged(e: Event, property: NestedActivityDefinitionProperty, expressionEditor: HTMLElsaExpressionEditorElement) {
-    const select = e.currentTarget as HTMLSelectElement;
-    property.syntax = select.value;
-    expressionEditor.language = mapSyntaxToLanguage(property.syntax);
-    this.updatePropertyModel();
-  }
-
-  onPotScoreChanged(e: Event, property: NestedActivityDefinitionProperty) {
-    const select = e.currentTarget as HTMLSelectElement;
-    property.expressions[RadioOptionsSyntax.PotScore] = select.value;
-    this.updatePropertyModel();
-  }
-
-  onPrePopulatedChanged(e: CustomEvent<string>, radio: NestedActivityDefinitionProperty) {
-    radio.expressions[RadioOptionsSyntax.PrePopulated] = e.detail;
     this.updatePropertyModel();
   }
 
