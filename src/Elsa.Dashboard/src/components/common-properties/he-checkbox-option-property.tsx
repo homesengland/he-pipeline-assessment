@@ -20,8 +20,7 @@ import { IconProvider } from "../providers/icon-provider/icon-provider";
   tag: 'he-checkbox-options-property',
   shadow: false,
 })
-//Copy of Elsa Switch Case
-//Copied to allow us control over how the expression editor is displayed.
+
 export class HeCheckboxOptionProperty {
 
   @Prop() activityModel: ActivityModel;
@@ -56,6 +55,7 @@ export class HeCheckboxOptionProperty {
     this.multiExpressionEditor.expressions[SyntaxNames.Json] = JSON.stringify(this.options, null, 2);
     this.expressionChanged.emit(JSON.stringify(this.propertyModel))
   }
+  
 
   onDefaultSyntaxValueChanged(e: CustomEvent) {
     this.options = e.detail;

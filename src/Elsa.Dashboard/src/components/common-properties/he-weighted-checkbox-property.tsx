@@ -18,8 +18,7 @@ import { ToggleDictionaryDisplay } from '../../functions/display-toggle'
   tag: 'he-weighted-checkbox-property',
   shadow: false,
 })
-//Copy of Elsa Switch Case
-//Copied to allow us control over how the expression editor is displayed.
+
 export class HeWeightedCheckboxProperty {
 
   @Prop() activityModel: ActivityModel;

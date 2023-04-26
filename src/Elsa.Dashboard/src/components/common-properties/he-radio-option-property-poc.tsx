@@ -10,13 +10,13 @@ import PlusIcon from '../../icons/plus_icon';
 import { PropertyOutputTypes, RadioOptionsSyntax, SyntaxNames } from '../../constants/constants';
 import { HeActivityPropertyDescriptor, NestedActivityDefinitionProperty, NestedActivityDefinitionPropertyAlt } from '../../models/custom-component-models';
 import TrashCanIcon from '../../icons/trash-can';
+import { OnMultiExpressionEditorValueChanged } from './../../functions/multiExpressionEditorUpdate'
 
 @Component({
   tag: 'he-radio-options-property-poc',
   shadow: false,
 })
-//Copy of Elsa Switch Case
-//Copied to allow us control over how the expression editor is displayed.
+
 export class HeRadioOptionPropertyPOC {
 
   @Prop() activityModel: ActivityModel;
@@ -34,6 +34,8 @@ export class HeRadioOptionPropertyPOC {
   supportedSyntaxes: Array<string> = [SyntaxNames.JavaScript, SyntaxNames.Liquid, SyntaxNames.Literal];
   multiExpressionEditor: HTMLElsaMultiExpressionEditorElement;
   syntaxSwitchCount: number = 0;
+
+  OnMultiExpressionEditorValueChanged = OnMultiExpressionEditorValueChanged.bind(this);
 
   async componentWillLoad() {
     const propertyModel = this.propertyModel;
@@ -78,18 +80,22 @@ export class HeRadioOptionPropertyPOC {
     this.updatePropertyModel();
   }
 
-  onMultiExpressionEditorValueChanged(e: CustomEvent<string>) {
-    const json = e.detail;
-    const parsed = parseJson(json);
+  //onMultiExpressionEditorValueChanged(e: CustomEvent<string>) {
+  //  const json = e.detail;
+  //  const parsed = parseJson(json);
 
-    if (!parsed)
-      return;
+  //  if (!parsed)
+  //    return;
 
-    if (!Array.isArray(parsed))
-      return;
+  //  if (!Array.isArray(parsed))
+  //    return;
 
-    this.propertyModel.expressions[SyntaxNames.Json] = json;
-    this.answers = parsed;
+  //  this.propertyModel.expressions[SyntaxNames.Json] = json;
+  //  this.answers = parsed;
+  //}
+
+  updateNestedExpressions(parsed: Array<NestedActivityDefinitionPropertyAlt>) {
+    this.answers = parsed
   }
 
   onMultiExpressionEditorSyntaxChanged(e: CustomEvent<string>) {
@@ -158,7 +164,7 @@ export class HeRadioOptionPropertyPOC {
           context={context}
           expressions={{ 'Json': json }}
           editor-height="20rem"
-          onExpressionChanged={e => this.onMultiExpressionEditorValueChanged(e)}
+          onExpressionChanged={e => this.OnMultiExpressionEditorValueChanged(e)}
           onSyntaxChanged={e => this.onMultiExpressionEditorSyntaxChanged(e)}
         >
           <div class="elsa-min-w-full elsa-divide-y elsa-divide-gray-200">

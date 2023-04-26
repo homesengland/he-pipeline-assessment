@@ -18,8 +18,7 @@ import { ToggleDictionaryDisplay } from '../../functions/display-toggle'
   tag: 'he-weighted-radio-property',
   shadow: false,
 })
-//Copy of Elsa Switch Case
-//Copied to allow us control over how the expression editor is displayed.
+
 export class HeWeightedRadioProperty {
 
   @Prop() activityModel: ActivityModel;
@@ -73,7 +72,6 @@ export class HeWeightedRadioProperty {
   }
 
   onPropertyExpressionChange(event: Event, property: NestedActivityDefinitionProperty) {
-    console.log("Expression changed");
     event = event;
     property = property;
     this.updatePropertyModel();

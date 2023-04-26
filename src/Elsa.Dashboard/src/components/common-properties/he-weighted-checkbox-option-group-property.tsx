@@ -44,7 +44,6 @@ export class HeWeightedCheckboxOptionGroupProperty {
   scoreSyntaxSwitchCount: number = 0;
 
   async componentWillLoad() {
-    console.log("Loading group component");
     const propertyModel = this.propertyModel;
     const answersJson = propertyModel.expressions[SyntaxNames.Json];
     this.answers = parseJson(answersJson) || [];

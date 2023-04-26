@@ -20,8 +20,7 @@ import { UpdateCheckbox, UpdateExpression, UpdateName, UpdateSyntax } from '../.
   tag: 'he-radio-options-property',
   shadow: false,
 })
-//Copy of Elsa Switch Case
-//Copied to allow us control over how the expression editor is displayed.
+
 export class HeRadioOptionProperty {
 
   @Prop() activityModel: ActivityModel;

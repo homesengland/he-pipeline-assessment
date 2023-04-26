@@ -5,26 +5,10 @@
  * It contains typing information for all components that exist in this project.
  */
 import { HTMLStencilElement, JSXBase } from "@stencil/core/internal";
-import { ActivityDefinitionProperty, ActivityModel, ActivityPropertyDescriptor, IntellisenseContext } from "./models/elsa-interfaces";
-import { HeActivityPropertyDescriptor, ITextProperty, NestedActivityDefinitionProperty, NestedPropertyModel } from "./models/custom-component-models";
+import { ActivityDefinitionProperty, ActivityModel, ActivityPropertyDescriptor } from "./models/elsa-interfaces";
 import { VNode } from "@stencil/core";
+import { HeActivityPropertyDescriptor, NestedActivityDefinitionProperty, NestedPropertyModel } from "./models/custom-component-models";
 export namespace Components {
-    interface ConditionalTextListProperty {
-        "activityModel": ActivityModel;
-        "propertyDescriptor": ActivityPropertyDescriptor;
-        "propertyModel": ActivityDefinitionProperty;
-    }
-    interface CustomInputProperty {
-        "context"?: string;
-        "customProperty": ITextProperty;
-        "editorHeight": string;
-        "index": number;
-        "intellisenseContext": IntellisenseContext;
-        "propertyDescriptor": ActivityPropertyDescriptor;
-        "showLabel": boolean;
-        "singleLineMode": boolean;
-        "supportedSyntaxes": Array<string>;
-    }
     interface CustomTextProperty {
         "activityModel": ActivityModel;
         "editorHeight": string;
@@ -134,10 +118,6 @@ export namespace Components {
         "propertyModel": ActivityDefinitionProperty;
     }
 }
-export interface CustomInputPropertyCustomEvent<T> extends CustomEvent<T> {
-    detail: T;
-    target: HTMLCustomInputPropertyElement;
-}
 export interface HeCheckListPropertyCustomEvent<T> extends CustomEvent<T> {
     detail: T;
     target: HTMLHeCheckListPropertyElement;
@@ -211,18 +191,6 @@ export interface QuestionPropertyCustomEvent<T> extends CustomEvent<T> {
     target: HTMLQuestionPropertyElement;
 }
 declare global {
-    interface HTMLConditionalTextListPropertyElement extends Components.ConditionalTextListProperty, HTMLStencilElement {
-    }
-    var HTMLConditionalTextListPropertyElement: {
-        prototype: HTMLConditionalTextListPropertyElement;
-        new (): HTMLConditionalTextListPropertyElement;
-    };
-    interface HTMLCustomInputPropertyElement extends Components.CustomInputProperty, HTMLStencilElement {
-    }
-    var HTMLCustomInputPropertyElement: {
-        prototype: HTMLCustomInputPropertyElement;
-        new (): HTMLCustomInputPropertyElement;
-    };
     interface HTMLCustomTextPropertyElement extends Components.CustomTextProperty, HTMLStencilElement {
     }
     var HTMLCustomTextPropertyElement: {
@@ -356,8 +324,6 @@ declare global {
         new (): HTMLSwitchAnswersPropertyElement;
     };
     interface HTMLElementTagNameMap {
-        "conditional-text-list-property": HTMLConditionalTextListPropertyElement;
-        "custom-input-property": HTMLCustomInputPropertyElement;
         "custom-text-property": HTMLCustomTextPropertyElement;
         "he-check-list-property": HTMLHeCheckListPropertyElement;
         "he-checkbox-options-property": HTMLHeCheckboxOptionsPropertyElement;
@@ -383,23 +349,6 @@ declare global {
     }
 }
 declare namespace LocalJSX {
-    interface ConditionalTextListProperty {
-        "activityModel"?: ActivityModel;
-        "propertyDescriptor"?: ActivityPropertyDescriptor;
-        "propertyModel"?: ActivityDefinitionProperty;
-    }
-    interface CustomInputProperty {
-        "context"?: string;
-        "customProperty"?: ITextProperty;
-        "editorHeight"?: string;
-        "index"?: number;
-        "intellisenseContext"?: IntellisenseContext;
-        "onValueChanged"?: (event: CustomInputPropertyCustomEvent<ITextProperty>) => void;
-        "propertyDescriptor"?: ActivityPropertyDescriptor;
-        "showLabel"?: boolean;
-        "singleLineMode"?: boolean;
-        "supportedSyntaxes"?: Array<string>;
-    }
     interface CustomTextProperty {
         "activityModel"?: ActivityModel;
         "editorHeight"?: string;
@@ -527,8 +476,6 @@ declare namespace LocalJSX {
         "propertyModel"?: ActivityDefinitionProperty;
     }
     interface IntrinsicElements {
-        "conditional-text-list-property": ConditionalTextListProperty;
-        "custom-input-property": CustomInputProperty;
         "custom-text-property": CustomTextProperty;
         "he-check-list-property": HeCheckListProperty;
         "he-checkbox-options-property": HeCheckboxOptionsProperty;
@@ -557,8 +504,6 @@ export { LocalJSX as JSX };
 declare module "@stencil/core" {
     export namespace JSX {
         interface IntrinsicElements {
-            "conditional-text-list-property": LocalJSX.ConditionalTextListProperty & JSXBase.HTMLAttributes<HTMLConditionalTextListPropertyElement>;
-            "custom-input-property": LocalJSX.CustomInputProperty & JSXBase.HTMLAttributes<HTMLCustomInputPropertyElement>;
             "custom-text-property": LocalJSX.CustomTextProperty & JSXBase.HTMLAttributes<HTMLCustomTextPropertyElement>;
             "he-check-list-property": LocalJSX.HeCheckListProperty & JSXBase.HTMLAttributes<HTMLHeCheckListPropertyElement>;
             "he-checkbox-options-property": LocalJSX.HeCheckboxOptionsProperty & JSXBase.HTMLAttributes<HTMLHeCheckboxOptionsPropertyElement>;
