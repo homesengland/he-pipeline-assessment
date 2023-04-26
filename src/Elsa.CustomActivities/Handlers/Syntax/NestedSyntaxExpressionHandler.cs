@@ -118,7 +118,8 @@ namespace Elsa.CustomActivities.Handlers.Syntax
         {
             if (property.Expressions != null)
             {
-                var elsaPropertyList = JsonConvert.DeserializeObject<List<ElsaProperty>>(property.Expressions[defaultSyntax]);
+                var propertyExpression = property.Expressions[defaultSyntax];
+                var elsaPropertyList = JsonConvert.DeserializeObject<List<ElsaProperty>>(propertyExpression);
                 return elsaPropertyList ?? new List<ElsaProperty>();
             }
             return new List<ElsaProperty>();

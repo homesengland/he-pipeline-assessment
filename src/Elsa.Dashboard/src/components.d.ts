@@ -61,6 +61,11 @@ export namespace Components {
         "propertyDescriptor": ActivityPropertyDescriptor;
         "propertyModel": ActivityDefinitionProperty;
     }
+    interface HeQuestionDataDictionaryProperty {
+        "activityModel": ActivityModel;
+        "propertyDescriptor": ActivityPropertyDescriptor;
+        "propertyModel": ActivityDefinitionProperty;
+    }
     interface HeRadioOptionsProperty {
         "activityModel": ActivityModel;
         "propertyDescriptor": ActivityPropertyDescriptor;
@@ -124,6 +129,10 @@ export interface HeMultiLinePropertyCustomEvent<T> extends CustomEvent<T> {
 export interface HePotscoreRadioOptionsPropertyCustomEvent<T> extends CustomEvent<T> {
     detail: T;
     target: HTMLHePotscoreRadioOptionsPropertyElement;
+}
+export interface HeQuestionDataDictionaryPropertyCustomEvent<T> extends CustomEvent<T> {
+    detail: T;
+    target: HTMLHeQuestionDataDictionaryPropertyElement;
 }
 export interface HeRadioOptionsPropertyCustomEvent<T> extends CustomEvent<T> {
     detail: T;
@@ -200,6 +209,12 @@ declare global {
         prototype: HTMLHePotscoreRadioOptionsPropertyElement;
         new (): HTMLHePotscoreRadioOptionsPropertyElement;
     };
+    interface HTMLHeQuestionDataDictionaryPropertyElement extends Components.HeQuestionDataDictionaryProperty, HTMLStencilElement {
+    }
+    var HTMLHeQuestionDataDictionaryPropertyElement: {
+        prototype: HTMLHeQuestionDataDictionaryPropertyElement;
+        new (): HTMLHeQuestionDataDictionaryPropertyElement;
+    };
     interface HTMLHeRadioOptionsPropertyElement extends Components.HeRadioOptionsProperty, HTMLStencilElement {
     }
     var HTMLHeRadioOptionsPropertyElement: {
@@ -252,6 +267,7 @@ declare global {
         "he-json-property": HTMLHeJsonPropertyElement;
         "he-multi-line-property": HTMLHeMultiLinePropertyElement;
         "he-potscore-radio-options-property": HTMLHePotscoreRadioOptionsPropertyElement;
+        "he-question-data-dictionary-property": HTMLHeQuestionDataDictionaryPropertyElement;
         "he-radio-options-property": HTMLHeRadioOptionsPropertyElement;
         "he-single-line-property": HTMLHeSingleLinePropertyElement;
         "he-switch-options-property": HTMLHeSwitchOptionsPropertyElement;
@@ -322,6 +338,12 @@ declare namespace LocalJSX {
         "propertyDescriptor"?: ActivityPropertyDescriptor;
         "propertyModel"?: ActivityDefinitionProperty;
     }
+    interface HeQuestionDataDictionaryProperty {
+        "activityModel"?: ActivityModel;
+        "onExpressionChanged"?: (event: HeQuestionDataDictionaryPropertyCustomEvent<string>) => void;
+        "propertyDescriptor"?: ActivityPropertyDescriptor;
+        "propertyModel"?: ActivityDefinitionProperty;
+    }
     interface HeRadioOptionsProperty {
         "activityModel"?: ActivityModel;
         "onExpressionChanged"?: (event: HeRadioOptionsPropertyCustomEvent<string>) => void;
@@ -372,6 +394,7 @@ declare namespace LocalJSX {
         "he-json-property": HeJsonProperty;
         "he-multi-line-property": HeMultiLineProperty;
         "he-potscore-radio-options-property": HePotscoreRadioOptionsProperty;
+        "he-question-data-dictionary-property": HeQuestionDataDictionaryProperty;
         "he-radio-options-property": HeRadioOptionsProperty;
         "he-single-line-property": HeSingleLineProperty;
         "he-switch-options-property": HeSwitchOptionsProperty;
@@ -394,6 +417,7 @@ declare module "@stencil/core" {
             "he-json-property": LocalJSX.HeJsonProperty & JSXBase.HTMLAttributes<HTMLHeJsonPropertyElement>;
             "he-multi-line-property": LocalJSX.HeMultiLineProperty & JSXBase.HTMLAttributes<HTMLHeMultiLinePropertyElement>;
             "he-potscore-radio-options-property": LocalJSX.HePotscoreRadioOptionsProperty & JSXBase.HTMLAttributes<HTMLHePotscoreRadioOptionsPropertyElement>;
+            "he-question-data-dictionary-property": LocalJSX.HeQuestionDataDictionaryProperty & JSXBase.HTMLAttributes<HTMLHeQuestionDataDictionaryPropertyElement>;
             "he-radio-options-property": LocalJSX.HeRadioOptionsProperty & JSXBase.HTMLAttributes<HTMLHeRadioOptionsPropertyElement>;
             "he-single-line-property": LocalJSX.HeSingleLineProperty & JSXBase.HTMLAttributes<HTMLHeSingleLinePropertyElement>;
             "he-switch-options-property": LocalJSX.HeSwitchOptionsProperty & JSXBase.HTMLAttributes<HTMLHeSwitchOptionsPropertyElement>;

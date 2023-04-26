@@ -4,6 +4,7 @@ using Elsa.CustomInfrastructure.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,10 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Elsa.CustomInfrastructure.Migrations
 {
     [DbContext(typeof(ElsaCustomContext))]
-    partial class ElsaCustomContextModelSnapshot : ModelSnapshot
+    [Migration("20230420124720_AddQuestionDataDictionaryToQuestion")]
+    partial class AddQuestionDataDictionaryToQuestion
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -354,6 +356,7 @@ namespace Elsa.CustomInfrastructure.Migrations
                         .HasColumnType("datetime2");
 
                     b.Property<string>("Description")
+                        .IsRequired()
                         .HasMaxLength(450)
                         .HasColumnType("nvarchar(450)");
 
@@ -361,6 +364,7 @@ namespace Elsa.CustomInfrastructure.Migrations
                         .HasColumnType("datetime2");
 
                     b.Property<string>("LegacyName")
+                        .IsRequired()
                         .HasMaxLength(450)
                         .HasColumnType("nvarchar(450)");
 
@@ -383,6 +387,7 @@ namespace Elsa.CustomInfrastructure.Migrations
                         .HasColumnType("int");
 
                     b.Property<string>("Type")
+                        .IsRequired()
                         .HasMaxLength(30)
                         .HasColumnType("nvarchar(30)");
 
@@ -569,7 +574,7 @@ namespace Elsa.CustomInfrastructure.Migrations
             modelBuilder.Entity("Elsa.CustomModels.QuestionDataDictionary", b =>
                 {
                     b.HasOne("Elsa.CustomModels.QuestionDataDictionaryGroup", "Group")
-                        .WithMany("QuestionDataDictionaryList")
+                        .WithMany()
                         .HasForeignKey("QuestionDataDictionaryGroupId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -582,11 +587,6 @@ namespace Elsa.CustomInfrastructure.Migrations
                     b.Navigation("Answers");
 
                     b.Navigation("Choices");
-                });
-
-            modelBuilder.Entity("Elsa.CustomModels.QuestionDataDictionaryGroup", b =>
-                {
-                    b.Navigation("QuestionDataDictionaryList");
                 });
 #pragma warning restore 612, 618
         }

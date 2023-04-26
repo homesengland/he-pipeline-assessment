@@ -94,12 +94,12 @@ export class QuestionScreen {
     const field = `question-${index}`;
     return (
       <div id={`${field}-id`} class="accordion elsa-mb-4 elsa-rounded" onClick={this.onAccordionQuestionClick}>
-        <button type="button elsa-mt-1 elsa-text-m elsa-text-gray-900">{question.value.name} </button>
+        <p class="elsa-mt-1 elsa-text-base elsa-text-gray-900 accordion-paragraph">{question.value.name}</p>
         <button type="button" onClick={e => this.onDeleteQuestionClick(e, question)}
           class="elsa-h-5 elsa-w-5 elsa-mx-auto elsa-outline-none focus:elsa-outline-none trashcan-icon" style={{ float: "right" }}>
           <TrashCanIcon options={this.iconProvider.getOptions()}></TrashCanIcon>
         </button>
-        <p class="elsa-mt-1 elsa-text-sm elsa-text-gray-900">{question.ActivityType.displayName}</p>
+        <p class="elsa-mt-1 elsa-text-sm elsa-text-gray-900 accordion-paragraph">{question.ActivityType.displayName}</p>
         {this.renderQuestionComponent(question)}
       </div>
     );

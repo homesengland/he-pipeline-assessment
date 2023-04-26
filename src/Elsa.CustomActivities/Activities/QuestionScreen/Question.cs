@@ -52,6 +52,23 @@ namespace Elsa.CustomActivities.Activities.QuestionScreen
         [HeActivityInput(UIHint = HePropertyUIHints.PotScoreRadioOptions, ConditionalActivityTypes = new[] { QuestionTypeConstants.PotScoreRadioQuestion }, ExpectedOutputType = ExpectedOutputHints.Radio, OptionsProvider = typeof(PotScoreOptionsProvider))]
         public PotScoreRadioModel PotScoreRadio { get; set; } = new PotScoreRadioModel();
 
+        [HeActivityInput(UIHint = HePropertyUIHints.QuestionDataDictionary,
+            DefaultSyntax = SyntaxNames.Literal,
+            Hint ="Assigns data dictionary item to this question for reporting purposes",
+            ConditionalActivityTypes = new[]
+            {
+                QuestionTypeConstants.TextQuestion,
+                QuestionTypeConstants.TextAreaQuestion,
+                QuestionTypeConstants.CurrencyQuestion,
+                QuestionTypeConstants.DateQuestion,
+                QuestionTypeConstants.RadioQuestion,
+                QuestionTypeConstants.PotScoreRadioQuestion,
+                QuestionTypeConstants.CheckboxQuestion,
+                QuestionTypeConstants.WeightedCheckboxQuestion,
+                QuestionTypeConstants.WeightedRadioQuestion
+            }, OptionsProvider = typeof(QuestionDataDictionaryOptionsProvider))]
+        public int? DataDictionary { get; set; }
+
         [HeActivityInput(UIHint = HePropertyUIHints.WeightedRadioOptions, 
             ConditionalActivityTypes = new[] { QuestionTypeConstants.WeightedRadioQuestion }, 
             ExpectedOutputType = ExpectedOutputHints.WeightedRadio)]
