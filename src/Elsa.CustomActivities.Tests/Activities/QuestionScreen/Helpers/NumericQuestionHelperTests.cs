@@ -270,5 +270,121 @@ namespace Elsa.CustomActivities.Tests.Activities.QuestionScreen.Helpers
             //Assert
             Assert.Equal(expectedResult, result);
         }
+
+        [Theory]
+        [AutoMoqData]
+        public async Task GetDecimalAnswer_ReturnsEmptyString_WorkflowFindByNameAsyncReturnsNull(
+            [Frozen] Mock<IElsaCustomRepository> elsaCustomRepository,
+            [Frozen] Mock<IWorkflowRegistry> workflowRegistry,
+            string workflowName,
+            string activityName,
+            string questionId,
+            string correlationId,
+            NumericQuestionHelper sut)
+        {
+            //Arrange
+            elsaCustomRepository.Setup(x => x.GetQuestionByCorrelationId(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>(), CancellationToken.None)).ReturnsAsync((Question?)null);
+
+            workflowRegistry.Setup(x => x.FindByNameAsync(workflowName!, VersionOptions.Published, null, default)).ReturnsAsync((WorkflowBlueprint?)null);
+
+            //Act
+            var result = await sut.GetDecimalAnswer(correlationId, workflowName, activityName, questionId);
+
+            //Assert
+            Assert.Null(result);
+        }
+
+        [Theory]
+        [AutoMoqData]
+        public async Task GetDecimalAnswer_ReturnsEmptyString_WorkflowActivitesReturnsNull(
+            [Frozen] Mock<IElsaCustomRepository> elsaCustomRepository,
+            [Frozen] Mock<IWorkflowRegistry> workflowRegistry,
+            string workflowName,
+            string activityName,
+            string questionId,
+            string correlationId,
+            WorkflowBlueprint workflowBlueprint,
+            NumericQuestionHelper sut)
+        {
+
+            //Arrange
+            elsaCustomRepository.Setup(x => x.GetQuestionByCorrelationId(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>(), CancellationToken.None)).ReturnsAsync((Question?)null);
+
+            workflowRegistry.Setup(x => x.FindByNameAsync(workflowName!, VersionOptions.Published, null, default)).ReturnsAsync(workflowBlueprint);
+
+            //Act
+            var result = await sut.GetDecimalAnswer(correlationId, workflowName, activityName, questionId);
+
+            //Assert
+            Assert.Null(result);
+        }
+
+        [Theory]
+        [AutoMoqData]
+        public async Task GetDecimalAnswer_ReturnsEmptyString_GetQuestionRecordReturnsNull(
+            [Frozen] Mock<IElsaCustomRepository> elsaCustomRepository,
+            [Frozen] Mock<IWorkflowRegistry> workflowRegistry,
+            string workflowName,
+            string activityId,
+            string activityName,
+            string questionId,
+            string correlationId,
+            WorkflowBlueprint workflowBlueprint,
+            NumericQuestionHelper sut)
+        {
+            //Arrange
+            workflowBlueprint.Activities.Add(new ActivityBlueprint()
+            {
+                Id = activityId,
+                Name = activityName
+            });
+
+            elsaCustomRepository.Setup(x => x.GetQuestionByCorrelationId(activityId, correlationId, It.IsAny<string>(), CancellationToken.None)).ReturnsAsync((Question?)null);
+
+            workflowRegistry.Setup(x => x.FindByNameAsync(workflowName!, VersionOptions.Published, null, default)).ReturnsAsync(workflowBlueprint);
+
+            //Act
+            var result = await sut.GetDecimalAnswer(correlationId, workflowName, activityName, questionId);
+
+            //Assert
+            Assert.Null(result);
+        }
+
+        [Theory]
+        [AutoMoqData]
+        public async Task GetDecimalAnswer_ReturnsValue(
+            [Frozen] Mock<IElsaCustomRepository> elsaCustomRepository,
+            [Frozen] Mock<IWorkflowRegistry> workflowRegistry,
+            string workflowName,
+            string activityId,
+            string activityName,
+            string questionId,
+            string correlationId,
+            WorkflowBlueprint workflowBlueprint,
+            Question question,
+            NumericQuestionHelper sut)
+        {
+            //Arrange
+            workflowBlueprint.Activities.Add(new ActivityBlueprint()
+            {
+                Id = activityId,
+                Name = activityName
+            });
+
+            elsaCustomRepository.Setup(x => x.GetQuestionByCorrelationId(activityId, correlationId, It.IsAny<string>(), CancellationToken.None)).ReturnsAsync(question);
+
+            workflowRegistry.Setup(x => x.FindByNameAsync(workflowName!, VersionOptions.Published, null, default)).ReturnsAsync(workflowBlueprint);
+
+            question.QuestionType = QuestionTypeConstants.CurrencyQuestion;
+            question.Answers![0].AnswerText = "123.345";
+
+            //Act
+            var result = await sut.GetDecimalAnswer(correlationId, workflowName, activityName, questionId);
+
+            //Assert
+            Assert.Equal((decimal)123.345,result!.Value);
+           
+        }
+
     }
 }

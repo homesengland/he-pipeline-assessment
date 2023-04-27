@@ -90,6 +90,40 @@ namespace Elsa.CustomActivities.Activities.QuestionScreen.Helpers
             return false;
         }
 
+        public async Task<decimal?> GetDecimalAnswer(string correlationId, string workflowName, string activityName, string questionId)
+        {
+            var workflowBlueprint = await _workflowRegistry.FindByNameAsync(workflowName, Models.VersionOptions.Published);
+
+            if (workflowBlueprint != null)
+            {
+                var activity = workflowBlueprint.Activities.FirstOrDefault(x => x.Name == activityName);
+                if (activity != null)
+                {
+                    var question = await _elsaCustomRepository.GetQuestionByCorrelationId(activity.Id,
+                        correlationId, questionId, CancellationToken.None);
+
+                    if (question != null && question.Answers != null &&
+                        (
+                            question.QuestionType == QuestionTypeConstants.CurrencyQuestion ||
+                            question.QuestionType == QuestionTypeConstants.DecimalQuestion ||
+                            question.QuestionType == QuestionTypeConstants.PercentageQuestion ||
+                            question.QuestionType == QuestionTypeConstants.IntegerQuestion))
+                    {
+                        var answer = question.Answers.FirstOrDefault();
+                        if (answer != null)
+                        {
+                            var answerText = decimal.Parse(answer.AnswerText);
+                            return answerText;
+                        }
+                    }
+                }
+            }
+
+            return null;
+        }
+
+      
+
 
         public Task Handle(EvaluatingJavaScriptExpression notification, CancellationToken cancellationToken)
         {
@@ -98,15 +132,19 @@ namespace Elsa.CustomActivities.Activities.QuestionScreen.Helpers
 
             engine.SetValue("currencyQuestionAnswerEqualToOrGreaterThan", (Func<string, string, string, decimal, bool>)((workflowName, activityName, questionId, answerToCheck) => AnswerEqualToOrGreaterThan(activityExecutionContext.CorrelationId, workflowName, activityName, questionId, answerToCheck).Result));
             engine.SetValue("currencyQuestionAnswerEqualToOrLessThan", (Func<string, string, string, decimal, bool>)((workflowName, activityName, questionId, answerToCheck) => AnswerEqualToOrLessThan(activityExecutionContext.CorrelationId, workflowName, activityName, questionId, answerToCheck).Result));
+            engine.SetValue("currencyQuestionGetAnswer", (Func<string, string, string, decimal?>)((workflowName, activityName, questionId) => GetDecimalAnswer(activityExecutionContext.CorrelationId, workflowName, activityName, questionId).Result));
 
             engine.SetValue("decimalQuestionAnswerEqualToOrGreaterThan", (Func<string, string, string, decimal, bool>)((workflowName, activityName, questionId, answerToCheck) => AnswerEqualToOrGreaterThan(activityExecutionContext.CorrelationId, workflowName, activityName, questionId, answerToCheck).Result));
             engine.SetValue("decimalQuestionAnswerEqualToOrLessThan", (Func<string, string, string, decimal, bool>)((workflowName, activityName, questionId, answerToCheck) => AnswerEqualToOrLessThan(activityExecutionContext.CorrelationId, workflowName, activityName, questionId, answerToCheck).Result));
+            engine.SetValue("decimalQuestionGetAnswer", (Func<string, string, string, decimal?>)((workflowName, activityName, questionId) => GetDecimalAnswer(activityExecutionContext.CorrelationId, workflowName, activityName, questionId).Result));
 
             engine.SetValue("percentageQuestionAnswerEqualToOrGreaterThan", (Func<string, string, string, decimal, bool>)((workflowName, activityName, questionId, answerToCheck) => AnswerEqualToOrGreaterThan(activityExecutionContext.CorrelationId, workflowName, activityName, questionId, answerToCheck).Result));
             engine.SetValue("percentageQuestionAnswerEqualToOrLessThan", (Func<string, string, string, decimal, bool>)((workflowName, activityName, questionId, answerToCheck) => AnswerEqualToOrLessThan(activityExecutionContext.CorrelationId, workflowName, activityName, questionId, answerToCheck).Result));
+            engine.SetValue("percentageQuestionGetAnswer", (Func<string, string, string, decimal?>)((workflowName, activityName, questionId) => GetDecimalAnswer(activityExecutionContext.CorrelationId, workflowName, activityName, questionId).Result));
 
             engine.SetValue("integerQuestionAnswerEqualToOrGreaterThan", (Func<string, string, string, decimal, bool>)((workflowName, activityName, questionId, answerToCheck) => AnswerEqualToOrGreaterThan(activityExecutionContext.CorrelationId, workflowName, activityName, questionId, answerToCheck).Result));
             engine.SetValue("integerQuestionAnswerEqualToOrLessThan", (Func<string, string, string, decimal, bool>)((workflowName, activityName, questionId, answerToCheck) => AnswerEqualToOrLessThan(activityExecutionContext.CorrelationId, workflowName, activityName, questionId, answerToCheck).Result));
+            engine.SetValue("integerQuestionGetAnswer", (Func<string, string, string, decimal?>)((workflowName, activityName, questionId) => GetDecimalAnswer(activityExecutionContext.CorrelationId, workflowName, activityName, questionId).Result));
 
             return Task.CompletedTask;
         }
@@ -116,15 +154,19 @@ namespace Elsa.CustomActivities.Activities.QuestionScreen.Helpers
             var output = notification.Output;
             output.AppendLine("declare function currencyQuestionAnswerEqualToOrGreaterThan(workflowName: string, activityName:string, questionId:string, answerToCheck:decimal ): boolean;");
             output.AppendLine("declare function currencyQuestionAnswerEqualToOrLessThan(workflowName: string, activityName:string, questionId:string, answerToCheck:decimal ): boolean;");
+            output.AppendLine("declare function currencyQuestionGetAnswer(workflowName: string, activityName:string, questionId:string ): number;");
 
             output.AppendLine("declare function decimalQuestionAnswerEqualToOrGreaterThan(workflowName: string, activityName:string, questionId:string, answerToCheck:decimal ): boolean;");
             output.AppendLine("declare function decimalQuestionAnswerEqualToOrLessThan(workflowName: string, activityName:string, questionId:string, answerToCheck:decimal ): boolean;");
+            output.AppendLine("declare function decimalQuestionGetAnswer(workflowName: string, activityName:string, questionId:string ): number;");
 
             output.AppendLine("declare function percentageQuestionAnswerEqualToOrGreaterThan(workflowName: string, activityName:string, questionId:string, answerToCheck:decimal ): boolean;");
             output.AppendLine("declare function percentageQuestionAnswerEqualToOrLessThan(workflowName: string, activityName:string, questionId:string, answerToCheck:decimal ): boolean;");
+            output.AppendLine("declare function percentageQuestionGetAnswer(workflowName: string, activityName:string, questionId:string ): number;");
 
             output.AppendLine("declare function integerQuestionAnswerEqualToOrGreaterThan(workflowName: string, activityName:string, questionId:string, answerToCheck:decimal ): boolean;");
             output.AppendLine("declare function integerQuestionAnswerEqualToOrLessThan(workflowName: string, activityName:string, questionId:string, answerToCheck:decimal ): boolean;");
+            output.AppendLine("declare function integerQuestionGetAnswer(workflowName: string, activityName:string, questionId:string ): number;");
 
             return Task.CompletedTask;
         }
