@@ -309,6 +309,7 @@ export class HeWeightedCheckboxOptionGroupProperty {
 
     let multiTextDescriptor = this.multiTextPropertyDescriptor();
     let multiTextModel = this.multiTextModel();
+    console.log("logging multi text...");
 
 
     return (
@@ -350,8 +351,8 @@ export class HeWeightedCheckboxOptionGroupProperty {
             <he-multi-text-property
             activityModel={this.activityModel}
             propertyModel={multiTextModel}
-            onChange={e => this.UpdateExpression(e, this.propertyModel, WeightedScoringSyntax.GroupArrayScore)}
-              propertyDescriptor={ multiTextDescriptor }
+            onExpressionChanged={e => this.UpdateExpression(e, this.propertyModel, WeightedScoringSyntax.GroupArrayScore)}
+            propertyDescriptor={ multiTextDescriptor }
             >
             </he-multi-text-property>
         </div>
