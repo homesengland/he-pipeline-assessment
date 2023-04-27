@@ -14,7 +14,7 @@ import ExpandIcon from '../../icons/expand_icon';
 import { PropertyOutputTypes, RadioOptionsSyntax, SyntaxNames } from '../../constants/constants';
 import { NestedActivityDefinitionProperty } from '../../models/custom-component-models';
 import { ToggleDictionaryDisplay } from '../../functions/display-toggle'
-import { UpdateCheckbox, UpdateExpression, UpdateName, UpdateSyntax } from '../../functions/updateModel';
+import { UpdateCheckbox, CustomUpdateExpression, UpdateName, UpdateSyntax } from '../../functions/updateModel';
 
 @Component({
   tag: 'he-radio-options-property',
@@ -39,7 +39,7 @@ export class HeRadioOptionProperty {
   multiExpressionEditor: HTMLElsaMultiExpressionEditorElement;
   syntaxSwitchCount: number = 0;
 
-  UpdateExpression: Function = UpdateExpression.bind(this);
+  UpdateExpression: Function = CustomUpdateExpression.bind(this);
   UpdateName: Function = UpdateName.bind(this);
   UpdateCheckbox: Function = UpdateCheckbox.bind(this);
   UpdateSyntax: Function = UpdateSyntax.bind(this);

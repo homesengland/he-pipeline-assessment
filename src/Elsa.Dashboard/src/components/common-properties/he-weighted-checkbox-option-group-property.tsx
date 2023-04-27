@@ -14,7 +14,7 @@ import ExpandIcon from '../../icons/expand_icon';
 import { CheckboxOptionsSyntax, PropertyOutputTypes, SyntaxNames, WeightedScoringSyntax } from '../../constants/constants';
 import { NestedActivityDefinitionProperty } from '../../models/custom-component-models';
 import { ToggleDictionaryDisplay } from '../../functions/display-toggle'
-import { UpdateCheckbox, UpdateExpression, UpdateName, UpdateSyntax } from '../../functions/updateModel';
+import { UpdateCheckbox, CustomUpdateExpression, StandardUpdateExpression, UpdateName, UpdateSyntax } from '../../functions/updateModel';
 
 @Component({
   tag: 'he-weighted-checkbox-option-group-property',
@@ -32,7 +32,8 @@ export class HeWeightedCheckboxOptionGroupProperty {
   @State() switchTextHeight: string = "";
   @State() editorHeight: string = "2.75em"
 
-  UpdateExpression: Function = UpdateExpression.bind(this);
+  CustomUpdateExpression: Function = CustomUpdateExpression.bind(this);
+  StandardUpdateExpression: Function = StandardUpdateExpression.bind(this);
   UpdateName: Function = UpdateName.bind(this);
   UpdateCheckbox: Function = UpdateCheckbox.bind(this);
   UpdateSyntax: Function = UpdateSyntax.bind(this);
@@ -198,7 +199,7 @@ export class HeWeightedCheckboxOptionGroupProperty {
                   single-line={false}
                   editorHeight={this.editorHeight}
                   padding="elsa-pt-1.5 elsa-pl-1 elsa-pr-28"
-                  onExpressionChanged={e => this.UpdateExpression(e, checkboxAnswer, checkboxAnswer.syntax)}
+                  onExpressionChanged={e => this.CustomUpdateExpression(e, checkboxAnswer, checkboxAnswer.syntax)}
                 />
                 <div class="elsa-absolute elsa-inset-y-0 elsa-right-0 elsa-flex elsa-items-center">
                   <select onChange={e => this.UpdateSyntax(e, checkboxAnswer, expressionEditor)}
@@ -234,7 +235,7 @@ export class HeWeightedCheckboxOptionGroupProperty {
                   single-line={true}
                   editorHeight={this.editorHeight}
                   padding="elsa-pt-1.5 elsa-pl-1 elsa-pr-28"
-                  onExpressionChanged={e => this.UpdateExpression(e, checkboxAnswer, CheckboxOptionsSyntax.Score)}
+                  onExpressionChanged={e => this.CustomUpdateExpression(e, checkboxAnswer, CheckboxOptionsSyntax.Score)}
                 />
                 <div class="elsa-absolute elsa-inset-y-0 elsa-right-0 elsa-flex elsa-items-center">
                   <select onChange={e => this.UpdateSyntax(e, checkboxAnswer, scoreExpressionEditor)}
@@ -280,7 +281,7 @@ export class HeWeightedCheckboxOptionGroupProperty {
                   single-line={false}
                   editorHeight="2.75em"
                   padding="elsa-pt-1.5 elsa-pl-1 elsa-pr-28"
-                  onExpressionChanged={e => this.UpdateExpression(e, checkboxAnswer, CheckboxOptionsSyntax.PrePopulated)}
+                  onExpressionChanged={e => this.CustomUpdateExpression(e, checkboxAnswer, CheckboxOptionsSyntax.PrePopulated)}
                 />
                 <div class="elsa-absolute elsa-inset-y-0 elsa-right-0 elsa-flex elsa-items-center">
                   <select onChange={e => this.UpdateSyntax(e, checkboxAnswer, prePopulatedExpressionEditor)}
@@ -341,7 +342,7 @@ export class HeWeightedCheckboxOptionGroupProperty {
 
         <div>
           <div>
-            <input type="text" value={this.propertyModel.expressions[WeightedScoringSyntax.MaxGroupScore]} onChange={e => this.UpdateExpression(e, this.propertyModel, WeightedScoringSyntax.MaxGroupScore)}
+            <input type="text" value={this.propertyModel.expressions[WeightedScoringSyntax.MaxGroupScore]} onChange={e => this.StandardUpdateExpression(e, this.propertyModel, WeightedScoringSyntax.MaxGroupScore)}
               class="focus:elsa-ring-blue-500 focus:elsa-border-bue-500 elsa-block elsa-w-full elsa-min-w-0 elsa-rounded-md sm:elsa-text-sm elsa-border-gray-300" />
           </div>
           <p class="elsa-mt-2 elsa-text-sm elsa-text-gray-500">Override the maximum score that can be achieved by any number of answers in this group, even if their combined sum is greater.</p>
@@ -351,7 +352,7 @@ export class HeWeightedCheckboxOptionGroupProperty {
             <he-multi-text-property
             activityModel={this.activityModel}
             propertyModel={multiTextModel}
-            onExpressionChanged={e => this.UpdateExpression(e, this.propertyModel, WeightedScoringSyntax.GroupArrayScore)}
+            onExpressionChanged={e => this.CustomUpdateExpression(e, this.propertyModel, WeightedScoringSyntax.GroupArrayScore)}
             propertyDescriptor={ multiTextDescriptor }
             >
             </he-multi-text-property>

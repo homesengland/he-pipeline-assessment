@@ -63,6 +63,11 @@ namespace Elsa.CustomActivities.Handlers.Syntax
                 double result = await property.EvaluateFromExpressions<double>(evaluator, context, _logger, CancellationToken.None);
                 return result;
             }
+            if (propertyType != null && (propertyType == typeof(decimal) || propertyType == typeof(decimal?)))
+            {
+                decimal result = await property.EvaluateFromExpressions<decimal>(evaluator, context, _logger, CancellationToken.None);
+                return result;
+            }
             if (propertyType != null && propertyType == typeof(CheckboxModel))
             {
                 CheckboxModel result = new CheckboxModel();

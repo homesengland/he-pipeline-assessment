@@ -1,7 +1,7 @@
 import { Component, Event, EventEmitter, h, Prop, State } from '@stencil/core';
 import { CheckboxOptionsSyntax, PropertyOutputTypes, SyntaxNames } from '../../constants/constants';
 import { ToggleDictionaryDisplay } from '../../functions/display-toggle';
-import { UpdateExpression, UpdateCheckbox, UpdateName, UpdateSyntax } from '../../functions/updateModel';
+import { CustomUpdateExpression, UpdateCheckbox, UpdateName, UpdateSyntax } from '../../functions/updateModel';
 import ExpandIcon from '../../icons/expand_icon';
 import PlusIcon from '../../icons/plus_icon';
 import TrashCanIcon from '../../icons/trash-can';
@@ -35,7 +35,7 @@ export class HeCheckboxOptionProperty {
 
   @State() editorHeight: string = "2.75em"
 
-  UpdateExpression: Function = UpdateExpression.bind(this);
+  UpdateExpression: Function = CustomUpdateExpression.bind(this);
   UpdateName: Function = UpdateName.bind(this);
   UpdateCheckbox: Function = UpdateCheckbox.bind(this);
   UpdateSyntax: Function = UpdateSyntax.bind(this);

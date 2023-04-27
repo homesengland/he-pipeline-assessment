@@ -12,7 +12,7 @@ import ExpandIcon from '../../icons/expand_icon';
 import { PropertyOutputTypes, RadioOptionsSyntax, SyntaxNames, WeightedScoringSyntax } from '../../constants/constants';
 import { NestedActivityDefinitionProperty } from '../../models/custom-component-models';
 import { ToggleDictionaryDisplay } from '../../functions/display-toggle'
-import { UpdateCheckbox, UpdateExpression, UpdateName, UpdateSyntax } from '../../functions/updateModel';
+import { UpdateCheckbox, CustomUpdateExpression, UpdateName, UpdateSyntax } from '../../functions/updateModel';
 
 @Component({
   tag: 'he-weighted-radio-option-group-property',
@@ -30,7 +30,7 @@ export class HeWeightedRadioOptionGroupProperty {
   @State() switchTextHeight: string = "";
   @State() editorHeight: string = "2.75em"
 
-  UpdateExpression: Function = UpdateExpression.bind(this);
+  CustomUpdateExpression: Function = CustomUpdateExpression.bind(this);
   UpdateName: Function = UpdateName.bind(this);
   UpdateCheckbox: Function = UpdateCheckbox.bind(this);
   UpdateSyntax: Function = UpdateSyntax.bind(this);
@@ -162,7 +162,7 @@ export class HeWeightedRadioOptionGroupProperty {
                   single-line={false}
                   editorHeight={this.editorHeight}
                   padding="elsa-pt-1.5 elsa-pl-1 elsa-pr-28"
-                  onExpressionChanged={e => this.UpdateExpression(e, radioAnswer, radioAnswer.syntax)}
+                  onExpressionChanged={e => this.CustomUpdateExpression(e, radioAnswer, radioAnswer.syntax)}
                 />
                 <div class="elsa-absolute elsa-inset-y-0 elsa-right-0 elsa-flex elsa-items-center">
                   <select onChange={e => this.UpdateSyntax(e, radioAnswer, expressionEditor)}
@@ -198,7 +198,7 @@ export class HeWeightedRadioOptionGroupProperty {
                   single-line={true}
                   editorHeight={this.editorHeight}
                   padding="elsa-pt-1.5 elsa-pl-1 elsa-pr-28"
-                  onExpressionChanged={e => this.UpdateExpression(e, radioAnswer, RadioOptionsSyntax.Score)}
+                  onExpressionChanged={e => this.CustomUpdateExpression(e, radioAnswer, RadioOptionsSyntax.Score)}
                 />
                 <div class="elsa-absolute elsa-inset-y-0 elsa-right-0 elsa-flex elsa-items-center">
                   <select onChange={e => this.UpdateSyntax(e, radioAnswer, scoreExpressionEditor)}
@@ -234,7 +234,7 @@ export class HeWeightedRadioOptionGroupProperty {
                   single-line={false}
                   editorHeight="2.75em"
                   padding="elsa-pt-1.5 elsa-pl-1 elsa-pr-28"
-                  onExpressionChanged={e => this.UpdateExpression(e, radioAnswer, RadioOptionsSyntax.PrePopulated)}
+                  onExpressionChanged={e => this.CustomUpdateExpression(e, radioAnswer, RadioOptionsSyntax.PrePopulated)}
                 />
                 <div class="elsa-absolute elsa-inset-y-0 elsa-right-0 elsa-flex elsa-items-center">
                   <select onChange={e => this.UpdateSyntax(e, radioAnswer, prePopulatedExpressionEditor)}
@@ -291,7 +291,7 @@ export class HeWeightedRadioOptionGroupProperty {
 
         <div>
           <div>
-            <input type="text" value={this.propertyModel.expressions[WeightedScoringSyntax.MaxGroupScore]} onChange={e => this.UpdateExpression(e, this.propertyModel, WeightedScoringSyntax.MaxGroupScore)}
+            <input type="text" value={this.propertyModel.expressions[WeightedScoringSyntax.MaxGroupScore]} onChange={e => this.CustomUpdateExpression(e, this.propertyModel, WeightedScoringSyntax.MaxGroupScore)}
               class="focus:elsa-ring-blue-500 focus:elsa-border-bue-500 elsa-block elsa-w-full elsa-min-w-0 elsa-rounded-md sm:elsa-text-sm elsa-border-gray-300" />
           </div>
           <p class="elsa-mt-2 elsa-text-sm elsa-text-gray-500">Override the maximum score that can be achieved by any number of answers in this group, even if their combined sum is greater.</p>

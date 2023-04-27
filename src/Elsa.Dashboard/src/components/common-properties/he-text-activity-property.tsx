@@ -14,7 +14,7 @@ import ExpandIcon from '../../icons/expand_icon';
 import { mapSyntaxToLanguage, parseJson, ToLetter, Map } from '../../utils/utils';
 import { PropertyOutputTypes, SyntaxNames, TextActivityOptionsSyntax } from '../../constants/constants';
 import { ToggleDictionaryDisplay } from '../../functions/display-toggle';
-import { UpdateCheckbox, UpdateExpression, UpdateName, UpdateSyntax } from '../../functions/updateModel';
+import { UpdateCheckbox, CustomUpdateExpression, UpdateName, UpdateSyntax } from '../../functions/updateModel';
 
 @Component({
   tag: 'he-text-activity-property',
@@ -35,7 +35,7 @@ export class TextActivityProperty {
   @State() optionsDisplayToggle: Map<string> = {};
   @State() urlDisplayToggle: Map<string> = {};
 
-  UpdateExpression: Function = UpdateExpression.bind(this);
+  UpdateExpression: Function = CustomUpdateExpression.bind(this);
   UpdateName: Function = UpdateName.bind(this);
   UpdateCheckbox: Function = UpdateCheckbox.bind(this);
   UpdateSyntax: Function = UpdateSyntax.bind(this);

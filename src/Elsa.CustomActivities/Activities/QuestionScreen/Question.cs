@@ -81,7 +81,7 @@ namespace Elsa.CustomActivities.Activities.QuestionScreen
             DefaultSyntax = SyntaxNames.JavaScript,
             ConditionalActivityTypes = new[] { QuestionTypeConstants.WeightedRadioQuestion, QuestionTypeConstants.WeightedCheckboxQuestion },
             IsDesignerCritical = true)]
-        public decimal? ScoreOverride { get; set; } = null!;
+        public decimal? Score { get; set; } = null!;
 
         [HeActivityInput(UIHint = HePropertyUIHints.CheckboxOptions, ConditionalActivityTypes = new[] { QuestionTypeConstants.CheckboxQuestion }, ExpectedOutputType = ExpectedOutputHints.Checkbox)]
         public CheckboxModel Checkbox { get; set; } = new CheckboxModel();

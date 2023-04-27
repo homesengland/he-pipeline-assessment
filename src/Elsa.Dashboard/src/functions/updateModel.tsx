@@ -4,8 +4,13 @@ import { mapSyntaxToLanguage } from "../utils/utils";
 
 //Update Model method referenced in the below functions MUST be included on the component in which they are consumed.
 
-export function UpdateExpression(e: CustomEvent<string>, property: NestedActivityDefinitionProperty, syntax: string) {
+export function CustomUpdateExpression(e: CustomEvent<string>, property: NestedActivityDefinitionProperty, syntax: string) {
   property.expressions[syntax] = e.detail;
+  this.updatePropertyModel();
+}
+
+export function StandardUpdateExpression(e: Event, property: NestedActivityDefinitionProperty, syntax: string) {
+  property.expressions[syntax] = (e.currentTarget as HTMLInputElement).value.trim();
   this.updatePropertyModel();
 }
 
