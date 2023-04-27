@@ -20,7 +20,10 @@ export class QuestionData implements IActivityData {
 
 export const QuestionLibrary = {
   Checkbox: new QuestionData(QuestionTypeConstants.CheckboxQuestion, "Checkbox Question", "A question that provides a user with a number of options presented as checkboxes.  A user may multiple values, but you can restrict this by using the 'isSingle' property."),
-  Currency: new QuestionData(QuestionTypeConstants.CurrencyQuestion, "Currency Question", "A question that provides a user with a text box to enter a numeric value"),
+  Currency: new QuestionData(QuestionTypeConstants.CurrencyQuestion, "Currency Question", "A question that provides a user with a text box to enter a numeric value for currency"),
+  Decimal: new QuestionData(QuestionTypeConstants.DecimalQuestion, "Decimal Question", "A question that provides a user with a text box to enter a numeric value with decimal points"),
+  Integer: new QuestionData(QuestionTypeConstants.IntegerQuestion, "Integer Question", "A question that provides a user with a text box to enter a numeric value for whole numbers only"),
+  Percentage: new QuestionData(QuestionTypeConstants.PercentageQuestion, "Percentage Question", "A question that provides a user with a text box to enter a numeric value with decimal points that which will be used as percentage"),
   Date: new QuestionData(QuestionTypeConstants.DateQuestion, "Date Question", "A question that provides a user with fields to enter a single date."),
   Radio: new QuestionData(QuestionTypeConstants.RadioQuestion, "Radio Question", "A question that provides a user with a number of options presented as radio buttons.  A user may only select a single value."),
   PotScoreRadio: new QuestionData(QuestionTypeConstants.PotScoreRadioQuestion, "PotScore Radio Question", "A question that provides a user with a number of options presented as radio buttons with a score associated with each option.  A user may only select a single value."),

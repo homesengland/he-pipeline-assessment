@@ -5,13 +5,13 @@ using Xunit;
 
 namespace Elsa.CustomWorkflow.Sdk.Tests.Workflow.Validators
 {
-    public class CurrencyValidatorTests
+    public class DecimalValidatorTests
     {
         [Fact]
         public void Should_Have_Error_When_AnswerIsNull()
         {
             //Arrange
-            CurrencyValidator validator = new CurrencyValidator();
+            DecimalValidator validator = new DecimalValidator();
             var questionActivityData = new QuestionActivityData
             {
                 Answers = new List<QuestionActivityAnswer>() { new() { AnswerText = null } }
@@ -29,7 +29,7 @@ namespace Elsa.CustomWorkflow.Sdk.Tests.Workflow.Validators
         public void Should_Have_Error_When_AnswerIsEmpty()
         {
             //Arrange
-            CurrencyValidator validator = new CurrencyValidator();
+            DecimalValidator validator = new DecimalValidator();
             var questionActivityData = new QuestionActivityData
             {
                 Answers = new List<QuestionActivityAnswer>()
@@ -48,7 +48,7 @@ namespace Elsa.CustomWorkflow.Sdk.Tests.Workflow.Validators
         public void Should_Have_Errors_When_AnswerIsNotANumber()
         {
             //Arrange
-            CurrencyValidator validator = new CurrencyValidator();
+            DecimalValidator validator = new DecimalValidator();
             var questionActivityData = new QuestionActivityData
             {
                 Answers = new List<QuestionActivityAnswer> { new QuestionActivityAnswer { AnswerText = "MyAnswer" } }
@@ -66,7 +66,7 @@ namespace Elsa.CustomWorkflow.Sdk.Tests.Workflow.Validators
         public void Should_Not_Have_Errors_When_AnswerIsANumber()
         {
             //Arrange
-            CurrencyValidator validator = new CurrencyValidator();
+            DecimalValidator validator = new DecimalValidator();
             var questionActivityData = new QuestionActivityData
             {
                 Answers = new List<QuestionActivityAnswer> { new QuestionActivityAnswer { AnswerText = "1234567" } }
@@ -84,7 +84,7 @@ namespace Elsa.CustomWorkflow.Sdk.Tests.Workflow.Validators
         public void Should_Not_Have_Errors_When_AnswerIsADecimal()
         {
             //Arrange
-            CurrencyValidator validator = new CurrencyValidator();
+            DecimalValidator validator = new DecimalValidator();
             var questionActivityData = new QuestionActivityData
             {
                 Answers = new List<QuestionActivityAnswer> { new QuestionActivityAnswer { AnswerText = "1234.567" } }

@@ -13,7 +13,7 @@ using Xunit;
 
 namespace Elsa.CustomActivities.Tests.Activities.QuestionScreen.Helpers
 {
-    public class CurrencyQuestionHelperTests
+    public class NumericQuestionHelperTests
     {
         [Theory]
         [AutoMoqData]
@@ -24,7 +24,7 @@ namespace Elsa.CustomActivities.Tests.Activities.QuestionScreen.Helpers
         string activityName,
         string questionId,
         string correlationId,
-        CurrencyQuestionHelper sut)
+        NumericQuestionHelper sut)
         {
             //Arrange
             elsaCustomRepository.Setup(x => x.GetQuestionByCorrelationId(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>(), CancellationToken.None)).ReturnsAsync((Question?)null);
@@ -48,7 +48,7 @@ namespace Elsa.CustomActivities.Tests.Activities.QuestionScreen.Helpers
             string questionId,
             string correlationId,
             WorkflowBlueprint workflowBlueprint,
-            CurrencyQuestionHelper sut)
+            NumericQuestionHelper sut)
         {
 
             //Arrange
@@ -74,7 +74,7 @@ namespace Elsa.CustomActivities.Tests.Activities.QuestionScreen.Helpers
             string questionId,
             string correlationId,
             WorkflowBlueprint workflowBlueprint,
-            CurrencyQuestionHelper sut)
+            NumericQuestionHelper sut)
         {
             //Arrange
             workflowBlueprint.Activities.Add(new ActivityBlueprint()
@@ -95,12 +95,22 @@ namespace Elsa.CustomActivities.Tests.Activities.QuestionScreen.Helpers
         }
 
         [Theory]
-        [InlineAutoMoqData(100, 100, true)]
-        [InlineAutoMoqData(1000, 100, true)]
-        [InlineAutoMoqData(100, 200, false)]
+        [InlineAutoMoqData(100, 100, QuestionTypeConstants.CurrencyQuestion, true)]
+        [InlineAutoMoqData(1000, 100, QuestionTypeConstants.CurrencyQuestion, true)]
+        [InlineAutoMoqData(100, 200, QuestionTypeConstants.CurrencyQuestion, false)]
+        [InlineAutoMoqData(100, 100, QuestionTypeConstants.PercentageQuestion, true)]
+        [InlineAutoMoqData(1000, 100, QuestionTypeConstants.PercentageQuestion, true)]
+        [InlineAutoMoqData(100, 200, QuestionTypeConstants.PercentageQuestion, false)]
+        [InlineAutoMoqData(100, 100, QuestionTypeConstants.DecimalQuestion, true)]
+        [InlineAutoMoqData(1000, 100, QuestionTypeConstants.DecimalQuestion, true)]
+        [InlineAutoMoqData(100, 200, QuestionTypeConstants.DecimalQuestion, false)]
+        [InlineAutoMoqData(100, 100, QuestionTypeConstants.IntegerQuestion, true)]
+        [InlineAutoMoqData(1000, 100, QuestionTypeConstants.IntegerQuestion, true)]
+        [InlineAutoMoqData(100, 200, QuestionTypeConstants.IntegerQuestion, false)]
         public async Task AnswerEqualToOrGreaterThan_ReturnsExpectedValue(
             decimal answer,
             decimal answerToCheck,
+            string questionType,
             bool expectedResult,
             [Frozen] Mock<IElsaCustomRepository> elsaCustomRepository,
             [Frozen] Mock<IWorkflowRegistry> workflowRegistry,
@@ -111,7 +121,7 @@ namespace Elsa.CustomActivities.Tests.Activities.QuestionScreen.Helpers
             string correlationId,
             WorkflowBlueprint workflowBlueprint,
             Question question,
-            CurrencyQuestionHelper sut)
+            NumericQuestionHelper sut)
         {
             //Arrange
             workflowBlueprint.Activities.Add(new ActivityBlueprint()
@@ -119,7 +129,7 @@ namespace Elsa.CustomActivities.Tests.Activities.QuestionScreen.Helpers
                 Id = activityId,
                 Name = activityName
             });
-            question.QuestionType = QuestionTypeConstants.CurrencyQuestion;
+            question.QuestionType = questionType;
             question.Answers = new List<Answer> { new() { AnswerText = answer.ToString(CultureInfo.InvariantCulture) } };
 
             elsaCustomRepository.Setup(x => x.GetQuestionByCorrelationId(activityId, correlationId, questionId, CancellationToken.None)).ReturnsAsync(question);
@@ -142,7 +152,7 @@ namespace Elsa.CustomActivities.Tests.Activities.QuestionScreen.Helpers
             string activityName,
             string questionId,
             string correlationId,
-            CurrencyQuestionHelper sut)
+            NumericQuestionHelper sut)
         {
             //Arrange
             elsaCustomRepository.Setup(x => x.GetQuestionByCorrelationId(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>(), CancellationToken.None)).ReturnsAsync((Question?)null);
@@ -166,7 +176,7 @@ namespace Elsa.CustomActivities.Tests.Activities.QuestionScreen.Helpers
             string questionId,
             string correlationId,
             WorkflowBlueprint workflowBlueprint,
-            CurrencyQuestionHelper sut)
+            NumericQuestionHelper sut)
         {
 
             //Arrange
@@ -192,7 +202,7 @@ namespace Elsa.CustomActivities.Tests.Activities.QuestionScreen.Helpers
             string questionId,
             string correlationId,
             WorkflowBlueprint workflowBlueprint,
-            CurrencyQuestionHelper sut)
+            NumericQuestionHelper sut)
         {
             //Arrange
             workflowBlueprint.Activities.Add(new ActivityBlueprint()
@@ -213,12 +223,22 @@ namespace Elsa.CustomActivities.Tests.Activities.QuestionScreen.Helpers
         }
 
         [Theory]
-        [InlineAutoMoqData(100, 100, true)]
-        [InlineAutoMoqData(1000, 100, false)]
-        [InlineAutoMoqData(100, 200, true)]
+        [InlineAutoMoqData(100, 100, QuestionTypeConstants.CurrencyQuestion, true)]
+        [InlineAutoMoqData(1000, 100, QuestionTypeConstants.CurrencyQuestion, false)]
+        [InlineAutoMoqData(100, 200, QuestionTypeConstants.CurrencyQuestion, true)]
+        [InlineAutoMoqData(100, 100, QuestionTypeConstants.PercentageQuestion, true)]
+        [InlineAutoMoqData(1000, 100, QuestionTypeConstants.PercentageQuestion, false)]
+        [InlineAutoMoqData(100, 200, QuestionTypeConstants.PercentageQuestion, true)]
+        [InlineAutoMoqData(100, 100, QuestionTypeConstants.DecimalQuestion, true)]
+        [InlineAutoMoqData(1000, 100, QuestionTypeConstants.DecimalQuestion, false)]
+        [InlineAutoMoqData(100, 200, QuestionTypeConstants.DecimalQuestion, true)]
+        [InlineAutoMoqData(100, 100, QuestionTypeConstants.IntegerQuestion, true)]
+        [InlineAutoMoqData(1000, 100, QuestionTypeConstants.IntegerQuestion, false)]
+        [InlineAutoMoqData(100, 200, QuestionTypeConstants.IntegerQuestion, true)]
         public async Task AnswerEqualToOrLessThan_ReturnsExpectedValue(
             decimal answer,
             decimal answerToCheck,
+            string questionType,
             bool expectedResult,
             [Frozen] Mock<IElsaCustomRepository> elsaCustomRepository,
             [Frozen] Mock<IWorkflowRegistry> workflowRegistry,
@@ -229,7 +249,7 @@ namespace Elsa.CustomActivities.Tests.Activities.QuestionScreen.Helpers
             string correlationId,
             WorkflowBlueprint workflowBlueprint,
             Question question,
-            CurrencyQuestionHelper sut)
+            NumericQuestionHelper sut)
         {
             //Arrange
             workflowBlueprint.Activities.Add(new ActivityBlueprint()
@@ -237,7 +257,7 @@ namespace Elsa.CustomActivities.Tests.Activities.QuestionScreen.Helpers
                 Id = activityId,
                 Name = activityName
             });
-            question.QuestionType = QuestionTypeConstants.CurrencyQuestion;
+            question.QuestionType = questionType;
             question.Answers = new List<Answer> { new() { AnswerText = answer.ToString(CultureInfo.InvariantCulture) } };
 
             elsaCustomRepository.Setup(x => x.GetQuestionByCorrelationId(activityId, correlationId, questionId, CancellationToken.None)).ReturnsAsync(question);

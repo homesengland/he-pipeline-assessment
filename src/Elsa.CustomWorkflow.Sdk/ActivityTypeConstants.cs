@@ -12,6 +12,9 @@
     public class QuestionTypeConstants
     {
         public const string CurrencyQuestion = "CurrencyQuestion";
+        public const string PercentageQuestion = "PercentageQuestion";
+        public const string DecimalQuestion = "DecimalQuestion";
+        public const string IntegerQuestion = "IntegerQuestion";
         public const string CheckboxQuestion = "CheckboxQuestion";
         public const string RadioQuestion = "RadioQuestion";
         public const string DateQuestion = "DateQuestion";
