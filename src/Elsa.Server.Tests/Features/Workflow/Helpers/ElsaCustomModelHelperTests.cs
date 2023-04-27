@@ -13,7 +13,7 @@ using Question = Elsa.CustomModels.Question;
 
 namespace Elsa.Server.Tests.Features.Workflow.Helpers
 {
-    public class SaveAndContinueHelperTests
+    public class ElsaCustomModelHelperTests
     {
         [Theory]
         [AutoMoqData]
@@ -136,6 +136,29 @@ namespace Elsa.Server.Tests.Features.Workflow.Helpers
             Assert.Equal(question.QuestionText, result.QuestionText);
             Assert.Equal(question.DataDictionary, result.QuestionDataDictionaryId);
             Assert.Null(result.Choices);
+        }
+
+        [Theory]
+        [AutoMoqData]
+        public void CreateQuestion_ShouldReturnNullQuestionDataDictionary_GivenTheValueIsZero(
+            [Frozen] Mock<IDateTimeProvider> mockDateTimeProvider,
+            string nextActivityId,
+            string nextActivityType,
+            WorkflowInstance workflowInstance,
+            CustomActivities.Activities.QuestionScreen.Question question,
+            ElsaCustomModelHelper sut
+        )
+        {
+            //Arrange
+            var currentTimeUtc = DateTime.UtcNow;
+            question.DataDictionary = 0;
+            mockDateTimeProvider.Setup(x => x.UtcNow()).Returns(currentTimeUtc);
+
+            //Act
+            var result = sut.CreateQuestion(nextActivityId, nextActivityType, question, workflowInstance);
+
+            //Assert
+            Assert.Null(result.QuestionDataDictionary);
         }
 
         [Theory]
