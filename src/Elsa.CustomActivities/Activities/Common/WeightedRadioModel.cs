@@ -13,9 +13,10 @@ namespace Elsa.CustomActivities.Activities.Common
     }
     public class WeightedRadioGroup
     {
+        public string GroupIdentifier { get; set; } = null!;
         public ICollection<WeightedRadioRecord> Choices { get; set; } = new List<WeightedRadioRecord>();
-        public int MaxGroupScore { get; set; }
+        public int? MaxGroupScore { get; set; }
 
     }
-    public record WeightedRadioRecord(string Identifier, string Answer, string Score, bool IsPrePopulated);
+    public record WeightedRadioRecord(string Identifier, string Answer, int Score, bool IsPrePopulated);
 }

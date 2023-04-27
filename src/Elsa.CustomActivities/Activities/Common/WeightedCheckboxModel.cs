@@ -13,10 +13,12 @@ namespace Elsa.CustomActivities.Activities.Common
     }
     public class WeightedCheckboxGroup
     {
+        public string GroupIdentifier { get; set; } = null!;
         public ICollection<WeightedCheckboxRecord> Choices { get; set; } = new List<WeightedCheckboxRecord>();
-        public int MaxGroupScore { get; set; }
+        public int? MaxGroupScore { get; set; }
+        public List<int>? GroupArrayScore { get; set; }
 
     }
 
-    public record WeightedCheckboxRecord(string Identifier, string Answer, bool IsSingle, string Score, bool IsPrePopulated);
+    public record WeightedCheckboxRecord(string Identifier, string Answer, bool IsSingle, int Score, bool IsPrePopulated);
 }
