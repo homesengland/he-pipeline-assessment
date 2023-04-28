@@ -1,5 +1,5 @@
 import { Component, EventEmitter, Event, Prop, State } from '@stencil/core';
-
+import { DataDictionaryGroup } from '../../models/custom-component-models';
 import {
     ActivityModel,
   HTMLElsaMultiExpressionEditorElement,
@@ -28,6 +28,7 @@ export class QuestionProperty {
 
   @Prop() activityModel: ActivityModel;
   @Prop() questionModel: NestedPropertyModel;
+  @Prop() dataDictionaryGroup: Array<DataDictionaryGroup> = [];
   @State() iconProvider = new IconProvider();
   @State() currentValue: string;
   @State() nestedQuestionProperties: Array<NestedProperty>;
@@ -40,6 +41,7 @@ export class QuestionProperty {
 
   async componentWillLoad() {
     this.getOrCreateQuestionProperties();
+    console.log("Loading Question Component----- dataDictionaryGroup --- value", this.dataDictionaryGroup)
   }
 
   getOrCreateQuestionProperties() {
@@ -105,11 +107,12 @@ export class QuestionProperty {
   }
 
   render() {
-
+    console.log("Render Started");
     const displayManager = this.displayManager;
 
     const renderPropertyEditor = (property: NestedProperty) => {
-      var content = displayManager.displayNested(this.activityModel, property, this.onPropertyExpressionChange.bind(this));
+      console.log("Loading Question ----- dataDictionaryGroup --- value", this.dataDictionaryGroup);
+      var content = displayManager.displayNested(this.activityModel, property, this.onPropertyExpressionChange.bind(this), this.dataDictionaryGroup);
       return content;
     }
 

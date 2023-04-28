@@ -1,5 +1,5 @@
 import { Component, h, Prop, State } from '@stencil/core';
-
+import { DataDictionaryGroup } from '../../models/custom-component-models';
 import {
   ActivityDefinitionProperty,
   ActivityModel,
@@ -39,6 +39,7 @@ export class QuestionScreen {
   @Prop() propertyDescriptor: ActivityPropertyDescriptor;
   @Prop() propertyModel: ActivityDefinitionProperty;
   @Prop() questionProperties: Array<HeActivityPropertyDescriptor>;
+  @Prop() dataDictionaryGroup: Array<DataDictionaryGroup>;
   @State() questionModel: QuestionScreenProperty = new QuestionScreenProperty();
   @State() iconProvider = new IconProvider();
   @State() questionProvider = new QuestionProvider(Object.values(QuestionLibrary));
@@ -52,6 +53,7 @@ export class QuestionScreen {
     const propertyModel = this.propertyModel;
     const choicesJson = propertyModel.expressions[SyntaxNames.QuestionList]
     this.questionModel = parseJson(choicesJson) || this.defaultActivityModel();
+    console.log("Loading Question Screen----- dataDictionaryGroup --- value", this.dataDictionaryGroup)
   }
 
   defaultActivityModel() {
@@ -154,10 +156,12 @@ export class QuestionScreen {
 
 
   renderQuestionComponent(question: NestedPropertyModel) {
+    console.log("Adding Question Component ----- dataDictionaryGroup --- value", this.dataDictionaryGroup)
     return <question-property
       class="panel elsa-rounded"
       activityModel={this.activityModel}
       questionModel={question}
+      dataDictionaryGroup={this.dataDictionaryGroup}
       onClick={(e) => e.stopPropagation()}
       onUpdateQuestionScreen={e => this.onUpdateQuestion(e)}
     ></question-property>

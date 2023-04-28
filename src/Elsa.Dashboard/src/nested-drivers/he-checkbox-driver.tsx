@@ -2,7 +2,7 @@ import { ActivityModel, ActivityPropertyDescriptor } from "../models/elsa-interf
 import { h } from "@stencil/core";
 import { getOrCreateProperty } from "../utils/utils";
 import { HePropertyDisplayDriver } from "./display-managers/display-manager";
-import { NestedProperty } from "../models/custom-component-models";
+import { DataDictionaryGroup, NestedProperty } from "../models/custom-component-models";
 
 export class HeCheckboxDriver implements HePropertyDisplayDriver {
 
@@ -11,7 +11,8 @@ export class HeCheckboxDriver implements HePropertyDisplayDriver {
     return <he-checkbox-property activityModel={activity} propertyDescriptor={property} propertyModel={prop} />;
   }
 
-  displayNested(activity: ActivityModel, property: NestedProperty, onExpressionChanged: Function) {
+  displayNested(activity: ActivityModel, property: NestedProperty, onExpressionChanged: Function, dataDictionaryGroup: Array<DataDictionaryGroup> = null) {
+    dataDictionaryGroup = dataDictionaryGroup;
     return <he-checkbox-property activityModel={activity} propertyDescriptor={property.descriptor} propertyModel={property.value} onExpressionChanged={e => onExpressionChanged(e, property)} />;
   }
 }
