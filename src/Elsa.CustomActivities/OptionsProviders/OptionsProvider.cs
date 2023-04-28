@@ -16,8 +16,19 @@ namespace Elsa.CustomActivities.OptionsProviders
         public async Task<string> GetOptions(CancellationToken cancellationToken = default)
         {
             var potScoreOptions = (await _elsaCustomRepository.GetPotScoreOptionsAsync(cancellationToken)).Select(x => x.Name).ToList();
-
             return JsonConvert.SerializeObject(potScoreOptions);
+        }
+    }
+
+    public class QuestionDataDictionaryOptionsProvider : IOptionsProvider
+    {
+        private readonly IElsaCustomRepository _elsaCustomRepository;
+        public QuestionDataDictionaryOptionsProvider(IElsaCustomRepository elsaCustomRepository) => _elsaCustomRepository = elsaCustomRepository;
+
+        public async Task<string> GetOptions(CancellationToken cancellationToken = default)
+        {
+            var result = (await _elsaCustomRepository.GetQuestionDataDictionaryGroupsAsync(cancellationToken)).ToList();
+            return JsonConvert.SerializeObject(result);
         }
     }
 }

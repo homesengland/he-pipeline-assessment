@@ -12,6 +12,9 @@
     public class QuestionTypeConstants
     {
         public const string CurrencyQuestion = "CurrencyQuestion";
+        public const string PercentageQuestion = "PercentageQuestion";
+        public const string DecimalQuestion = "DecimalQuestion";
+        public const string IntegerQuestion = "IntegerQuestion";
         public const string CheckboxQuestion = "CheckboxQuestion";
         public const string RadioQuestion = "RadioQuestion";
         public const string DateQuestion = "DateQuestion";
@@ -19,5 +22,7 @@
         public const string TextAreaQuestion = "TextAreaQuestion";
         public const string Information = "Information";
         public const string PotScoreRadioQuestion = "PotScoreRadioQuestion";
+        public const string WeightedRadioQuestion = "WeightedRadioQuestion";
+        public const string WeightedCheckboxQuestion = "WeightedCheckboxQuestion";
     }
 }

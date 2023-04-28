@@ -44,17 +44,27 @@ namespace Elsa.CustomInfrastructure.Data.Repository
             await _dbContext.SaveChangesAsync(cancellationToken);
         }
 
-        public async Task<List<Question>> GetQuestions(string activityId, string workflowInstanceId,
+        public async Task<List<Question>> GetActivityQuestions(string activityId, string workflowInstanceId,
             CancellationToken cancellationToken)
         {
-            var list = await _dbContext.Set<Question>().Where(x => x.ActivityId == activityId && x.WorkflowInstanceId == workflowInstanceId && x.QuestionId != null).Include(x => x.Choices).Include(x => x.Answers).ToListAsync(cancellationToken);
+            var list = await _dbContext.Set<Question>()
+                .Where(x => x.ActivityId == activityId && x.WorkflowInstanceId == workflowInstanceId && x.QuestionId != null)
+                .Include(x => x.Choices)
+                .Include(x => x.Answers)
+                .ToListAsync(cancellationToken);
             return list;
         }
 
-        public async Task<Question?> GetQuestion(string activityId, string workflowInstanceId, string questionID,
+        public async Task<Question?> GetQuestionByCorrelationId(string activityId, string correlationId, string questionID,
             CancellationToken cancellationToken)
         {
-            var result = await _dbContext.Set<Question>().FirstOrDefaultAsync(x => x.ActivityId == activityId && x.WorkflowInstanceId == workflowInstanceId && x.QuestionId == questionID, cancellationToken: cancellationToken);
+            var result = await _dbContext.Set<Question>()
+                .Where(x => x.ActivityId == activityId && x.CorrelationId == correlationId && x.QuestionId == questionID)
+                .Include(x => x.Choices)
+                .Include(x => x.Answers)
+                .OrderByDescending(x => x.CreatedDateTime)
+                .FirstOrDefaultAsync(cancellationToken: cancellationToken);
+           
             return result;
         }
 
@@ -63,9 +73,13 @@ namespace Elsa.CustomInfrastructure.Data.Repository
             await _dbContext.SaveChangesAsync(cancellationToken);
         }
 
-        public async Task<List<Question>> GetQuestions(string workflowInstanceId, CancellationToken cancellationToken)
+        public async Task<List<Question>> GetWorkflowInstanceQuestions(string workflowInstanceId, CancellationToken cancellationToken)
         {
-            var list = await _dbContext.Set<Question>().Where(x => x.WorkflowInstanceId == workflowInstanceId).Include(x => x.Answers).ToListAsync(cancellationToken);
+            var list = await _dbContext.Set<Question>()
+                .Where(x => x.WorkflowInstanceId == workflowInstanceId)
+                .Include(x => x.Choices)
+                .Include(x => x.Answers)
+                .ToListAsync(cancellationToken);
             return list;
         }
 
@@ -93,7 +107,20 @@ namespace Elsa.CustomInfrastructure.Data.Repository
         }
 
         public async Task<List<PotScoreOption>> GetPotScoreOptionsAsync(CancellationToken cancellationToken) =>
-            await _dbContext.Set<PotScoreOption>().Where(x => x.IsActive).ToListAsync();
+            await _dbContext.Set<PotScoreOption>().Where(x => x.IsActive).ToListAsync(cancellationToken);
+
+        public async Task<List<QuestionDataDictionary>> GetQuestionDataDictionaryListAsync(CancellationToken cancellationToken = default)
+        {
+            var result = await _dbContext.Set<QuestionDataDictionary>().Include(x => x.Group).ToListAsync(cancellationToken);
+            return result;
+        }
+
+        public async Task<List<QuestionDataDictionaryGroup>> GetQuestionDataDictionaryGroupsAsync(CancellationToken cancellationToken = default)
+        {
+            var result = await _dbContext.Set<QuestionDataDictionaryGroup>().Include(x => x.QuestionDataDictionaryList).ToListAsync(cancellationToken);
+            return result;
+
+        }
 
         public async Task CreateQuestionWorkflowInstance(QuestionWorkflowInstance questionWorkflowInstance, CancellationToken cancellationToken = default)
         {
@@ -105,6 +132,25 @@ namespace Elsa.CustomInfrastructure.Data.Repository
         {
             QuestionWorkflowInstance? workflow = await _dbContext.Set<QuestionWorkflowInstance>().FirstOrDefaultAsync(x => x.WorkflowInstanceId == workflowInstanceId);
             return workflow;
+        }
+
+        public async Task<List<QuestionWorkflowInstance>> GetQuestionWorkflowInstancesByName(string correlationId, string name,
+            CancellationToken cancellationToken = default)
+        {
+            var workflowInstances = await _dbContext.Set<QuestionWorkflowInstance>()
+                .Where(x => x.CorrelationId == correlationId && x.WorkflowName == name).ToListAsync(cancellationToken);
+            return workflowInstances;
+        }
+
+        public async Task<QuestionWorkflowInstance?> GetQuestionWorkflowInstanceByDefinitionId(string workflowDefinitionId, string correlationId,
+            CancellationToken cancellationToken = default)
+        {
+            var workflowInstance = await _dbContext.Set<QuestionWorkflowInstance>()
+                .FirstOrDefaultAsync(
+                    x => x.WorkflowDefinitionId == workflowDefinitionId && x.CorrelationId == correlationId,
+                    cancellationToken: cancellationToken);
+
+            return workflowInstance;
         }
 
         public async Task SetWorkflowInstanceResult(string workflowInstanceId, string result, CancellationToken cancellationToken = default)

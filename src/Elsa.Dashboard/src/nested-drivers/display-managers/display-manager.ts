@@ -16,6 +16,7 @@ import { HeSwitchCaseDriver } from "../he-switch-cases-driver";
 import { HeTextActivityDriver } from "../he-text-activity-driver";
 import { Dictionary, NestedProperty } from "../../models/custom-component-models";
 import { ActivityModel, ActivityPropertyDescriptor } from "../../models/elsa-interfaces";
+import { HeQuestionDataDictionaryDriver } from "../he-question-data-dictionary-driver";
 
 
 export interface HePropertyDisplayDriver {
@@ -41,6 +42,7 @@ export class DefaultDriversFactory {
     this.drivers["he-potscore-radio-options"] = new HePotScoreRadioOptionsDriver();
     this.drivers["he-checkbox-options"] = new HeCheckboxOptionsDriver();
     this.drivers["he-text-activity"] = new HeTextActivityDriver();
+    this.drivers["he-question-data-dictionary"] = new HeQuestionDataDictionaryDriver();
   }
   drivers: Dictionary<HePropertyDisplayDriver> = {};
 }

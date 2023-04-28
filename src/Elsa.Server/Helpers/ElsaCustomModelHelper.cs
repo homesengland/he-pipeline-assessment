@@ -1,8 +1,8 @@
 ﻿using Elsa.CustomActivities.Activities.QuestionScreen;
 using Elsa.CustomModels;
 using Elsa.CustomWorkflow.Sdk;
+using Elsa.CustomWorkflow.Sdk.Providers;
 using Elsa.Models;
-using Elsa.Server.Providers;
 using Question = Elsa.CustomModels.Question;
 
 namespace Elsa.Server.Helpers
@@ -50,6 +50,8 @@ namespace Elsa.Server.Helpers
                 QuestionId = question.Id,
                 QuestionType = question.QuestionType,
                 QuestionText = question.QuestionText,
+                Weighting = question.QuestionWeighting,
+                QuestionDataDictionaryId = question.DataDictionary == 0 ? null : question.DataDictionary,
                 Choices = MapChoices(question)
             };
         }

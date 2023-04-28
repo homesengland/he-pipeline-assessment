@@ -19,7 +19,7 @@ namespace Elsa.CustomActivities.Activities.QuestionScreen.Helpers
         }
 
 
-        public async Task<string> GetAnswer(string WorkflowInstance, string workflowName, string activityName, string questionId)
+        public async Task<string> GetAnswer(string correlationId, string workflowName, string activityName, string questionId)
         {
             var workflowBlueprint = await _workflowRegistry.FindByNameAsync(workflowName, Models.VersionOptions.Published);
 
@@ -28,7 +28,7 @@ namespace Elsa.CustomActivities.Activities.QuestionScreen.Helpers
                 var activity = workflowBlueprint.Activities.FirstOrDefault(x => x.Name == activityName);
                 if (activity != null)
                 {
-                    var result = await _elsaCustomRepository.GetQuestion(activity.Id, WorkflowInstance, questionId, CancellationToken.None);
+                    var result = await _elsaCustomRepository.GetQuestionByCorrelationId(activity.Id, correlationId, questionId, CancellationToken.None);
 
                     if (result?.Answers != null)
                     {
@@ -45,7 +45,7 @@ namespace Elsa.CustomActivities.Activities.QuestionScreen.Helpers
         {
             var activityExecutionContext = notification.ActivityExecutionContext;
             var engine = notification.Engine;
-            engine.SetValue("questionGetAnswer", (Func<string, string, string, string?>)((workflowName, activityName, questionId) => GetAnswer(activityExecutionContext.WorkflowInstance.Id, workflowName, activityName, questionId).Result));
+            engine.SetValue("questionGetAnswer", (Func<string, string, string, string?>)((workflowName, activityName, questionId) => GetAnswer(activityExecutionContext.CorrelationId, workflowName, activityName, questionId).Result));
             return Task.CompletedTask;
         }
 

@@ -2,9 +2,9 @@
 
 namespace Elsa.CustomWorkflow.Sdk.Models.Workflow.Validators
 {
-    public class CurrencyValidator : AbstractValidator<QuestionActivityData>
+    public class DecimalValidator : AbstractValidator<QuestionActivityData>
     {
-        public CurrencyValidator()
+        public DecimalValidator()
         {
             RuleFor(x => x.Answers).NotEmpty().WithMessage("The answer must be a number")
                 .DependentRules(

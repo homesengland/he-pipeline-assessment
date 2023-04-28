@@ -1,20 +1,24 @@
+using Elsa.Activities.Primitives;
 using Elsa.CustomActivities.Activities.CheckYourAnswersScreen;
 using Elsa.CustomActivities.Activities.ConfirmationScreen;
 using Elsa.CustomActivities.Activities.FinishWorkflow;
 using Elsa.CustomActivities.Activities.HousingNeed;
 using Elsa.CustomActivities.Activities.PCSProfileDataSource;
 using Elsa.CustomActivities.Activities.QuestionScreen;
+using Elsa.CustomActivities.Activities.RunEconomicCalculations;
 using Elsa.CustomActivities.Activities.Scoring;
 using Elsa.CustomActivities.Activities.Shared;
 using Elsa.CustomActivities.Activities.SinglePipelineDataSource;
 using Elsa.CustomActivities.Activities.VFMDataSource;
 using Elsa.CustomActivities.Describers;
 using Elsa.CustomActivities.Handlers;
+using Elsa.CustomActivities.Handlers.Scoring;
 using Elsa.CustomActivities.Handlers.Syntax;
 using Elsa.CustomActivities.OptionsProviders;
 using Elsa.CustomInfrastructure.Data;
 using Elsa.CustomInfrastructure.Data.Repository;
 using Elsa.CustomWorkflow.Sdk.Extensions;
+using Elsa.CustomWorkflow.Sdk.Providers;
 using Elsa.Expressions;
 using Elsa.Persistence.EntityFramework.Core.Extensions;
 using Elsa.Persistence.EntityFramework.SqlServer;
@@ -42,6 +46,7 @@ var elsaCustomConnectionString = builder.Configuration.GetConnectionString("Elsa
 builder.Services
     .AddElsa(elsa => elsa
         .UseEntityFrameworkPersistence(ef => ef.UseSqlServer(elsaConnectionString, typeof(Elsa.Persistence.EntityFramework.SqlServer.Migrations.Initial)))
+        .NoCoreActivities()
         .AddActivity<SinglePipelineDataSource>()
         .AddActivity<PCSProfileDataSource>()
         .AddActivity<VFMDataSource>()
@@ -50,8 +55,10 @@ builder.Services
         .AddActivity<CheckYourAnswersScreen>()
         .AddActivity<ConfirmationScreen>()
         .AddActivity<FinishWorkflow>()
-        .AddActivity<PotScore>()
-        .NoCoreActivities()
+        .AddActivity<ScoringCalculation>()
+        .AddActivity<WeightedScore>()
+        .AddActivity<RunEconomicCalculations>()
+        .AddActivity<SetVariable>()
         .AddConsoleActivities()
     );
 
@@ -59,6 +66,7 @@ builder.Services.AddScoped<ICustomPropertyDescriber, CustomPropertyDescriber>();
 
 builder.Services.TryAddProvider<IExpressionHandler, InformationTextExpressionHandler>(ServiceLifetime.Singleton);
 builder.Services.TryAddProvider<IExpressionHandler, QuestionListExpressionHandler>(ServiceLifetime.Singleton);
+builder.Services.TryAddProvider<IExpressionHandler, ScoringCalculationExpressionHandler>(ServiceLifetime.Singleton);
 builder.Services.TryAddSingleton<INestedSyntaxExpressionHandler, NestedSyntaxExpressionHandler>();
 
 builder.Services.AddDbContext<ElsaCustomContext>(config =>
@@ -89,6 +97,7 @@ builder.Services.AddScoped<IWorkflowInstanceProvider, WorkflowInstanceProvider>(
 builder.Services.AddScoped<IWorkflowPathProvider, WorkflowPathProvider>();
 builder.Services.AddScoped<IWorkflowNextActivityProvider, WorkflowNextActivityProvider>();
 builder.Services.AddScoped(typeof(PotScoreOptionsProvider));
+builder.Services.AddScoped(typeof(QuestionDataDictionaryOptionsProvider));
 
 builder.Services.AddScoped<IElsaCustomModelHelper, ElsaCustomModelHelper>();
 

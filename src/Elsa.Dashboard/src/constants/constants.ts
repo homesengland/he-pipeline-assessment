@@ -10,6 +10,7 @@ export class SyntaxNames {
   static readonly Checked = "Checked";
   static readonly ConditionalTextList = 'ConditionalTextList';
   static readonly TextActivity = 'TextActivity';
+  static readonly DataDictionary = 'DataDictionary';
   static Variable: string;
   static Output: string;
 }
@@ -34,6 +35,9 @@ export class TextActivityOptionsSyntax {
 
 export class QuestionTypeConstants {
   static readonly CurrencyQuestion = "CurrencyQuestion";
+  static readonly PercentageQuestion = "PercentageQuestion";
+  static readonly DecimalQuestion = "DecimalQuestion";
+  static readonly IntegerQuestion = "IntegerQuestion";
   static readonly CheckboxQuestion = "CheckboxQuestion";
   static readonly RadioQuestion = "RadioQuestion";
   static readonly PotScoreRadioQuestion = "PotScoreRadioQuestion";
