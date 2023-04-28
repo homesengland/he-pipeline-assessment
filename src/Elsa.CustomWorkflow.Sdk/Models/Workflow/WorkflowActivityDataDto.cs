@@ -284,6 +284,13 @@ namespace Elsa.CustomWorkflow.Sdk.Models.Workflow
         public string Answer { get; set; } = null!;
         public bool IsSingle { get; set; }
         public string? Value { get; set; }
+        public ChoiceGroup? ChoiceGroup { get; set; }
+    }
+
+    public class ChoiceGroup
+    {
+        public string GroupIdentifier { get; set; } = null!;
+
     }
 
     public class Date
