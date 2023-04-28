@@ -14,14 +14,14 @@ import { HeScriptDriver } from "../he-script-driver";
 import { HeSingleLineDriver } from "../he-single-line-driver";
 import { HeSwitchCaseDriver } from "../he-switch-cases-driver";
 import { HeTextActivityDriver } from "../he-text-activity-driver";
-import { DataDictionaryGroup, Dictionary, NestedProperty } from "../../models/custom-component-models";
+import {  Dictionary, NestedProperty } from "../../models/custom-component-models";
 import { ActivityModel, ActivityPropertyDescriptor } from "../../models/elsa-interfaces";
 import { HeQuestionDataDictionaryDriver } from "../he-question-data-dictionary-driver";
 
 
 export interface HePropertyDisplayDriver {
   display(model: ActivityModel, property: ActivityPropertyDescriptor)
-  displayNested(model: ActivityModel, property: NestedProperty, onUpdate: Function, dataDictionaryGroup: Array<DataDictionaryGroup>)
+  displayNested(model: ActivityModel, property: NestedProperty, onUpdate: Function)
 }
 
 export class DefaultDriversFactory {
@@ -65,10 +65,10 @@ export class HePropertyDisplayManager {
     return driver.display(model, property)
   }
 
-  displayNested(model: ActivityModel, property: NestedProperty, onUpdate: Function, dataDictionaryGroup: Array<DataDictionaryGroup> = null) {
+  displayNested(model: ActivityModel, property: NestedProperty, onUpdate: Function) {
     const driver: HePropertyDisplayDriver = this.getDriver(property.descriptor.uiHint);
 
-    return driver.displayNested(model, property, onUpdate, dataDictionaryGroup)
+    return driver.displayNested(model, property, onUpdate)
   }
 }
 

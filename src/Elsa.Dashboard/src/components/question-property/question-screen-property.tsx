@@ -1,5 +1,6 @@
 import { Component, h, Prop, State } from '@stencil/core';
 import { DataDictionaryGroup } from '../../models/custom-component-models';
+import state  from '../../stores/dataDictionaryStore';
 import {
   ActivityDefinitionProperty,
   ActivityModel,
@@ -54,6 +55,7 @@ export class QuestionScreen {
     const choicesJson = propertyModel.expressions[SyntaxNames.QuestionList]
     this.questionModel = parseJson(choicesJson) || this.defaultActivityModel();
     console.log("Loading Question Screen----- dataDictionaryGroup --- value", this.dataDictionaryGroup)
+    state.dictionaryGroups = this.dataDictionaryGroup;
   }
 
   defaultActivityModel() {

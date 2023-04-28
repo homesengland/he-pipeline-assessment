@@ -1,4 +1,5 @@
 import { Component, h, Event, EventEmitter, Prop, State } from '@stencil/core';
+import state from '../../stores/dataDictionaryStore';
 
 import { SyntaxNames } from '../../constants/constants';
 import { DataDictionary, DataDictionaryGroup } from '../../models/custom-component-models';
@@ -22,11 +23,12 @@ export class HEQuestionDataDictionaryProperty {
   @Prop() activityModel: ActivityModel;
   @Prop() propertyDescriptor: ActivityPropertyDescriptor;
   @Prop() propertyModel: ActivityDefinitionProperty;
-  @Prop() dataDictionaryGroup: Array<DataDictionaryGroup> = [];
 
   @Event() expressionChanged: EventEmitter<string>;
   @State() dataDictionary: Array<DataDictionary> = [];
   @State() selectedDataDictionaryItem: number;
+
+  dataDictionaryGroup: Array<DataDictionaryGroup> = state.dictionaryGroups;
 
   selectedGroupDictionaryId: number;
   selectedGroup: DataDictionaryGroup;

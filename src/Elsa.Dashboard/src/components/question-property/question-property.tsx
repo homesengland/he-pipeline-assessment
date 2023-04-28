@@ -111,8 +111,8 @@ export class QuestionProperty {
     const displayManager = this.displayManager;
 
     const renderPropertyEditor = (property: NestedProperty) => {
-      console.log("Loading Question ----- dataDictionaryGroup --- value", this.dataDictionaryGroup);
-       var content = displayManager.displayNested(this.activityModel, property, this.onPropertyExpressionChange.bind(this), this.dataDictionaryGroup);
+
+       var content = displayManager.displayNested(this.activityModel, property, this.onPropertyExpressionChange.bind(this));
       return content;
     }
 

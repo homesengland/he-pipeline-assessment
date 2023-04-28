@@ -63,7 +63,6 @@ export namespace Components {
     }
     interface HeQuestionDataDictionaryProperty {
         "activityModel": ActivityModel;
-        "dataDictionaryGroup": Array<DataDictionaryGroup>;
         "propertyDescriptor": ActivityPropertyDescriptor;
         "propertyModel": ActivityDefinitionProperty;
     }
@@ -343,7 +342,6 @@ declare namespace LocalJSX {
     }
     interface HeQuestionDataDictionaryProperty {
         "activityModel"?: ActivityModel;
-        "dataDictionaryGroup"?: Array<DataDictionaryGroup>;
         "onExpressionChanged"?: (event: HeQuestionDataDictionaryPropertyCustomEvent<string>) => void;
         "propertyDescriptor"?: ActivityPropertyDescriptor;
         "propertyModel"?: ActivityDefinitionProperty;
