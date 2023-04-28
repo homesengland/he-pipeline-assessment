@@ -35,6 +35,9 @@ export class TextActivityOptionsSyntax {
 
 export class QuestionTypeConstants {
   static readonly CurrencyQuestion = "CurrencyQuestion";
+  static readonly PercentageQuestion = "PercentageQuestion";
+  static readonly DecimalQuestion = "DecimalQuestion";
+  static readonly IntegerQuestion = "IntegerQuestion";
   static readonly CheckboxQuestion = "CheckboxQuestion";
   static readonly RadioQuestion = "RadioQuestion";
   static readonly PotScoreRadioQuestion = "PotScoreRadioQuestion";
