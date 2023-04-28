@@ -182,7 +182,7 @@
                             Checkbox = new Checkbox()
                             {
                                 SelectedChoices = Model.Data.Questions[i].Checkbox.SelectedChoices,
-                                Choices = Model.Data.Questions[i].Checkbox.Choices.Select(x => new Choice() { Answer = x.Answer, IsSingle = x.IsSingle, Id = x.Id, ChoiceGroup = x.ChoiceGroup != null ? new ChoiceGroup() {GroupIdentifier = x.ChoiceGroup.GroupIdentifier} : null}).ToList()
+            Choices = Model.Data.Questions[i].Checkbox.Choices.Select(x => new Choice() { Answer = x.Answer, IsSingle = x.IsSingle, Id = x.Id, ChoiceGroup = x.QuestionChoiceGroup != null ? new ChoiceGroup() {GroupIdentifier = x.QuestionChoiceGroup.GroupIdentifier} : null}).ToList()
                             }
                         })
                     }

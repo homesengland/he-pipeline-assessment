@@ -14,88 +14,96 @@
     @await Html.PartialAsync("_QuestionText", Model.QuestionText)
     @await Html.PartialAsync("_QuestionHint", Model.QuestionHint)
     
-    <div class="govuk-checkboxes" data-module="govuk-checkboxes" id="@itemName">
-        @{
-            var exclusiveChoices = Model.Checkbox.Choices.Where(c => c.IsSingle).ToArray();
-            var nonExclusiveChoices = Model.Checkbox.Choices.Where(c => !c.IsSingle).ToArray();
-        }
-        @for (int i = 0; i < Model.Checkbox.Choices.Count(); i++)
-        {
-            var hiddenItemNameId = "Data.Questions[" + Model.Index + "].Checkbox.Choices[" + i + "].Id";
-            var hiddenItemNameAnswer = "Data.Questions[" + Model.Index + "].Checkbox.Choices[" + i + "].Answer";
-            var hiddenItemNameIsSingle = "Data.Questions[" + Model.Index + "].Checkbox.Choices[" + i + "].IsSingle";
-
-            <input type="hidden" name="@hiddenItemNameId" value="@Model.Checkbox.Choices[i].Id" />
-            <input type="hidden" name="@hiddenItemNameAnswer" value="@Model.Checkbox.Choices[i].Answer" />
-            <input type="hidden" name="@hiddenItemNameIsSingle" value="@Model.Checkbox.Choices[i].IsSingle.ToString()" />
-        }
-        @for (int i = 0; i < nonExclusiveChoices.Count(); i++)
-        {
-            int answerId = nonExclusiveChoices[i].Id;
-            List<int> selectedChoices = Model.Checkbox.SelectedChoices;
-            bool isSelected = selectedChoices.Contains(answerId);
-
-            <div class="govuk-checkboxes__item">
-                @*Must use the input tag helper as opposed to htmlcheckbox, as all checkboxes need the same name property, which cannot be overridden easily in HtmlCheckboxFor*@
-                
-                @if(String.IsNullOrEmpty(isReadOnly))
-                {
-                    <input asp-for="@isSelected"
-                   value="@nonExclusiveChoices[i].Id"
-                   name="@itemName"
-                   type="checkbox" class="govuk-checkboxes__input" >
-                }
-                else
-                {
-                    <input asp-for="@isSelected"
-                   value="@nonExclusiveChoices[i].Id"
-                   name="@itemName"
-                   type="checkbox" class="govuk-checkboxes__input" disabled="@isReadOnly">
-                   
-                }
-                @Html.Label(nonExclusiveChoices[i].Answer, nonExclusiveChoices[i].Answer, new {@class = "govuk-label govuk-checkboxes__label"})
-            </div>
-            if (!String.IsNullOrEmpty(isReadOnly) && isSelected)
-            {
-                <input type="hidden" value="@nonExclusiveChoices[i].Id" name="@itemName">
+    @{
+        var renderedCheckboxes = 0;
+    }
+    @foreach (var group in Model.Checkbox.Choices.Select(x => x.ChoiceGroup?.GroupIdentifier).Distinct())
+    {
+        var groupCheckboxChoices = Model.Checkbox.Choices.Where(x => x.ChoiceGroup?.GroupIdentifier == group).ToList();
+        <div class="govuk-checkboxes" data-module="govuk-checkboxes" id="@itemName">
+            @{
+                var exclusiveChoices = groupCheckboxChoices.Where(c => c.IsSingle).ToArray();
+                var nonExclusiveChoices = groupCheckboxChoices.Where(c => !c.IsSingle).ToArray();
             }
-        }
-        @for (int i = 0; i < exclusiveChoices.Count(); i++)
-        {
-            int answerId = exclusiveChoices[i].Id;
-            List<int> selectedChoices = Model.Checkbox.SelectedChoices;
-            bool isSelected = selectedChoices.Contains(answerId);
-
-            @if (nonExclusiveChoices.Any() || i > 0)
+            @for (int i = 0; i < groupCheckboxChoices.Count(); i++)
             {
-                <div class="govuk-checkboxes__divider">or</div>
-            }
-            <div class="govuk-checkboxes__item">
+                var hiddenItemNameId = "Data.Questions[" + Model.Index + "].Checkbox.Choices[" + i + renderedCheckboxes + "].Id";
+                var hiddenItemNameAnswer = "Data.Questions[" + Model.Index + "].Checkbox.Choices[" + i + renderedCheckboxes + "].Answer";
+                var hiddenItemNameIsSingle = "Data.Questions[" + Model.Index + "].Checkbox.Choices[" + i + renderedCheckboxes + "].IsSingle";
 
-                @if (String.IsNullOrEmpty(isReadOnly))
-                {
-                @*Must use the input tag helper as opposed to htmlcheckbox, as all checkboxes need the same name property, which cannot be overridden easily in HtmlCheckboxFor*@
-                <input asp-for="@isSelected"
-                   value="@exclusiveChoices[i].Id"
-                   name="@itemName"
-                   type="checkbox" class="govuk-checkboxes__input" data-behaviour="exclusive" >
-                }
-                else
-                {
-                    <input asp-for="@isSelected"
-                   value="@exclusiveChoices[i].Id"
-                   name="@itemName"
-                   type="checkbox" class="govuk-checkboxes__input" disabled="@isReadOnly">
-                   
-                }
-                @Html.Label(exclusiveChoices[i].Answer, exclusiveChoices[i].Answer, new {@class = "govuk-label govuk-checkboxes__label"})
-            </div>
-            if (!String.IsNullOrEmpty(isReadOnly) && isSelected)
-            {
-                <input type="hidden" value="@exclusiveChoices[i].Id" name="@itemName">
+                <input type="hidden" name="@hiddenItemNameId" value="@groupCheckboxChoices[i + renderedCheckboxes].Id" />
+                <input type="hidden" name="@hiddenItemNameAnswer" value="@groupCheckboxChoices[i + renderedCheckboxes].Answer" />
+                <input type="hidden" name="@hiddenItemNameIsSingle" value="@groupCheckboxChoices[i + renderedCheckboxes].IsSingle.ToString()" />
             }
-        }
-    </div>
+            @for (int i = 0; i < nonExclusiveChoices.Count(); i++)
+            {
+                int answerId = nonExclusiveChoices[i + renderedCheckboxes].Id;
+                List<int> selectedChoices = Model.Checkbox.SelectedChoices;
+                bool isSelected = selectedChoices.Contains(answerId);
+
+                <div class="govuk-checkboxes__item">
+                    @*Must use the input tag helper as opposed to htmlcheckbox, as all checkboxes need the same name property, which cannot be overridden easily in HtmlCheckboxFor*@
+
+                    @if (String.IsNullOrEmpty(isReadOnly))
+                    {
+                        <input asp-for="@isSelected"
+                   value="@nonExclusiveChoices[i + renderedCheckboxes].Id"
+                               name="@itemName"
+                               type="checkbox" class="govuk-checkboxes__input">
+                    }
+                    else
+                    {
+                        <input asp-for="@isSelected"
+                   value="@nonExclusiveChoices[i + renderedCheckboxes].Id"
+                               name="@itemName"
+                               type="checkbox" class="govuk-checkboxes__input" disabled="@isReadOnly">
+
+                    }
+                    @Html.Label(nonExclusiveChoices[i + renderedCheckboxes].Answer, nonExclusiveChoices[i + renderedCheckboxes].Answer, new {@class = "govuk-label govuk-checkboxes__label"})
+                </div>
+                if (!String.IsNullOrEmpty(isReadOnly) && isSelected)
+                {
+                    <input type="hidden" value="@nonExclusiveChoices[i + renderedCheckboxes].Id" name="@itemName">
+                }
+            }
+            @for (int i = 0; i < exclusiveChoices.Count(); i++)
+            {
+                int answerId = exclusiveChoices[i + renderedCheckboxes].Id;
+                List<int> selectedChoices = Model.Checkbox.SelectedChoices;
+                bool isSelected = selectedChoices.Contains(answerId);
+
+                @if (nonExclusiveChoices.Any() || i > 0)
+                {
+                    <div class="govuk-checkboxes__divider">or</div>
+                }
+                <div class="govuk-checkboxes__item">
+
+                    @if (String.IsNullOrEmpty(isReadOnly))
+                    {
+                        @*Must use the input tag helper as opposed to htmlcheckbox, as all checkboxes need the same name property, which cannot be overridden easily in HtmlCheckboxFor*@
+                        <input asp-for="@isSelected"
+                   value="@exclusiveChoices[i + renderedCheckboxes].Id"
+                               name="@itemName"
+                               type="checkbox" class="govuk-checkboxes__input" data-behaviour="exclusive">
+                    }
+                    else
+                    {
+                        <input asp-for="@isSelected"
+                   value="@exclusiveChoices[i + renderedCheckboxes].Id"
+                               name="@itemName"
+                               type="checkbox" class="govuk-checkboxes__input" disabled="@isReadOnly">
+
+                    }
+                    @Html.Label(exclusiveChoices[i + renderedCheckboxes].Answer, exclusiveChoices[i + renderedCheckboxes].Answer, new {@class = "govuk-label govuk-checkboxes__label"})
+                </div>
+                if (!String.IsNullOrEmpty(isReadOnly) && isSelected)
+                {
+                    <input type="hidden" value="@exclusiveChoices[i + renderedCheckboxes].Id" name="@itemName">
+                }
+            }
+        </div>
+        renderedCheckboxes += groupCheckboxChoices.Count;
+    }
 
  
     @await Html.PartialAsync("_QuestionGuidance", Model.QuestionGuidance)
