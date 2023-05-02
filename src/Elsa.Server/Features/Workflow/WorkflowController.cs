@@ -5,11 +5,13 @@ using Elsa.Server.Features.Workflow.LoadQuestionScreen;
 using Elsa.Server.Features.Workflow.QuestionScreenSaveAndContinue;
 using Elsa.Server.Features.Workflow.StartWorkflow;
 using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Elsa.Server.Features.Workflow
 {
     [Route("workflow")]
+    [Authorize]
     public class WorkflowController : Controller
     {
         private readonly IMediator _mediator;
