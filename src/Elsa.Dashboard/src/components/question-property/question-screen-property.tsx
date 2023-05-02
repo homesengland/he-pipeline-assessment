@@ -54,7 +54,6 @@ export class QuestionScreen {
     const propertyModel = this.propertyModel;
     const choicesJson = propertyModel.expressions[SyntaxNames.QuestionList]
     this.questionModel = parseJson(choicesJson) || this.defaultActivityModel();
-    console.log("Loading Question Screen----- dataDictionaryGroup --- value", this.dataDictionaryGroup)
     state.dictionaryGroups = this.dataDictionaryGroup;
   }
 
@@ -158,7 +157,6 @@ export class QuestionScreen {
 
 
   renderQuestionComponent(question: NestedPropertyModel) {
-    console.log("Adding Question Component ----- dataDictionaryGroup --- value", this.dataDictionaryGroup)
     return <question-property
       class="panel elsa-rounded"
       activityModel={this.activityModel}
