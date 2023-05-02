@@ -8,7 +8,7 @@ namespace Elsa.CustomWorkflow.Sdk.Models.Workflow.Validators
         {
             RuleFor(x => x.Checkbox)
                 .SetValidator(new MultiChoiceValidator())
-                .When(x => x.QuestionType == QuestionTypeConstants.CheckboxQuestion);
+                .When(x => x.QuestionType == QuestionTypeConstants.CheckboxQuestion || x.QuestionType == QuestionTypeConstants.WeightedCheckboxQuestion);
 
             RuleFor(x => x.Radio)
                 .SetValidator(new RadioValidator())

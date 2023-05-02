@@ -1,4 +1,5 @@
 ﻿using FluentValidation;
+using System.Linq;
 
 namespace Elsa.CustomWorkflow.Sdk.Models.Workflow.Validators
 {
@@ -13,34 +14,79 @@ namespace Elsa.CustomWorkflow.Sdk.Models.Workflow.Validators
                         RuleFor(x => x).Must(multipleChoice =>
                             {
                                 if (multipleChoice.SelectedChoices!.Count() <= 1) return true;
-                                foreach (var choice in multipleChoice.Choices)
+                                var distinctSelectedGroups = multipleChoice.Choices
+                                    .Where(x => multipleChoice.SelectedChoices.Contains(x.Id))
+                                    .Select(x => x.QuestionChoiceGroup).Distinct().ToList();
+
+                                if (distinctSelectedGroups.Any())
                                 {
-                                    if (choice.IsSingle && multipleChoice.SelectedChoices!.Contains(choice.Id))
+                                    foreach (var distinctSelectedGroup in distinctSelectedGroups)
                                     {
-                                        return false;
+                                        var choicesForGroup = multipleChoice.Choices.Where(x => x.QuestionChoiceGroup == distinctSelectedGroup).ToList();
+                                        var selectedChoicesForGroup =
+                                            multipleChoice.SelectedChoices.Where(x =>
+                                                choicesForGroup.Select(y => y.Id).Contains(x));
+                                        if (selectedChoicesForGroup.Count() <= 1) return true;
+                                        foreach (var choice in choicesForGroup)
+                                        {
+                                            if (choice.IsSingle && multipleChoice.SelectedChoices!.Contains(choice.Id))
+                                            {
+                                                return false;
+                                            }
+                                        }
                                     }
                                 }
 
                                 return true;
                             })
-                            .WithMessage(x =>
+                            .WithMessage(multipleChoice =>
                             {
-                                var selectedAnswers = x.SelectedChoices;
-                                var exclusiveAnswers = x.Choices
-                                    .Where(c => c.IsSingle && selectedAnswers!.Contains(c.Id)).Select(c => c.Answer)
-                                    .ToList();
-
-                                if (exclusiveAnswers.Count() > 1)
+                                var validationMessage = "";
+                                var distinctSelectedGroups = multipleChoice.Choices
+                                    .Where(x => multipleChoice.SelectedChoices.Contains(x.Id))
+                                    .Select(x => x.QuestionChoiceGroup).Distinct().ToList();
+                                if (distinctSelectedGroups.Any())
                                 {
-                                    var finalInvalidAnswer = exclusiveAnswers.Last();
+                                    foreach (var distinctSelectedGroup in distinctSelectedGroups)
+                                    {
+                                        var groupValidation = true;
+                                        var choicesForGroup = multipleChoice.Choices.Where(x => x.QuestionChoiceGroup == distinctSelectedGroup).ToList();
+                                        var selectedAnswers =
+                                            multipleChoice.SelectedChoices.Where(x =>
+                                                choicesForGroup.Select(y => y.Id).Contains(x)).ToList();
+                                        if (selectedAnswers.Count() <= 1) continue;
+                                        foreach (var choice in choicesForGroup)
+                                        {
+                                            if (choice.IsSingle && multipleChoice.SelectedChoices!.Contains(choice.Id))
+                                            {
+                                                groupValidation = false;
+                                                break;
+                                            }
+                                        }
+                                        if(groupValidation) continue;
 
-                                    var invalidAnswers = string.Join(", ",
-                                        exclusiveAnswers.Take(exclusiveAnswers.Count() - 1));
-                                    return
-                                        $"{invalidAnswers} and {finalInvalidAnswer} cannot be selected with any other answer.";
+                                        var exclusiveAnswers = choicesForGroup
+                                            .Where(c => c.IsSingle && selectedAnswers!.Contains(c.Id)).Select(c => c.Answer)
+                                            .ToList();
+
+                                        if (exclusiveAnswers.Count() > 1)
+                                        {
+                                            var finalInvalidAnswer = exclusiveAnswers.Last();
+
+                                            var invalidAnswers = string.Join(", ",
+                                                exclusiveAnswers.Take(exclusiveAnswers.Count() - 1));
+                                            validationMessage +=
+                                                $"{invalidAnswers} and {finalInvalidAnswer} cannot be selected with any other answer in the group.";
+                                        }
+                                        else
+                                        {
+                                            validationMessage += $"{exclusiveAnswers.First()} cannot be selected with any other answer in the group.";
+                                        }
+                                        
+                                    }
                                 }
 
-                                return $"{exclusiveAnswers.First()} cannot be selected with any other answer.";
+                                return validationMessage;
 
                             });
                     });
