@@ -20,7 +20,7 @@ resources:
     ref: 'main'
   - repository: templates
     type: git
-    name: 'Pipeline Assessment/Templates'   
+    name: 'Cloud Hosting Service/Templates'   
     ref: 'master'
 
 stages:
