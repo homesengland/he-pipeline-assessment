@@ -41,7 +41,7 @@ export class QuestionProperty {
 
   async componentWillLoad() {
     this.getOrCreateQuestionProperties();
-    console.log("Loading Question Component----- dataDictionaryGroup --- value", this.dataDictionaryGroup)
+   
   }
 
   getOrCreateQuestionProperties() {
@@ -107,7 +107,6 @@ export class QuestionProperty {
   }
 
   render() {
-    console.log("Render Started");
     const displayManager = this.displayManager;
 
     const renderPropertyEditor = (property: NestedProperty) => {
