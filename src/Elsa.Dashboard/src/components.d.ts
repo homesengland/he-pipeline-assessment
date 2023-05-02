@@ -6,7 +6,7 @@
  */
 import { HTMLStencilElement, JSXBase } from "@stencil/core/internal";
 import { ActivityDefinitionProperty, ActivityModel, ActivityPropertyDescriptor, IntellisenseContext } from "./models/elsa-interfaces";
-import { HeActivityPropertyDescriptor, ITextProperty, NestedPropertyModel } from "./models/custom-component-models";
+import { DataDictionaryGroup, HeActivityPropertyDescriptor, ITextProperty, NestedPropertyModel } from "./models/custom-component-models";
 export namespace Components {
     interface ConditionalTextListProperty {
         "activityModel": ActivityModel;
@@ -88,10 +88,12 @@ export namespace Components {
     }
     interface QuestionProperty {
         "activityModel": ActivityModel;
+        "dataDictionaryGroup": Array<DataDictionaryGroup>;
         "questionModel": NestedPropertyModel;
     }
     interface QuestionScreenProperty {
         "activityModel": ActivityModel;
+        "dataDictionaryGroup": Array<DataDictionaryGroup>;
         "propertyDescriptor": ActivityPropertyDescriptor;
         "propertyModel": ActivityDefinitionProperty;
         "questionProperties": Array<HeActivityPropertyDescriptor>;
@@ -370,11 +372,13 @@ declare namespace LocalJSX {
     }
     interface QuestionProperty {
         "activityModel"?: ActivityModel;
+        "dataDictionaryGroup"?: Array<DataDictionaryGroup>;
         "onUpdateQuestionScreen"?: (event: QuestionPropertyCustomEvent<string>) => void;
         "questionModel"?: NestedPropertyModel;
     }
     interface QuestionScreenProperty {
         "activityModel"?: ActivityModel;
+        "dataDictionaryGroup"?: Array<DataDictionaryGroup>;
         "propertyDescriptor"?: ActivityPropertyDescriptor;
         "propertyModel"?: ActivityDefinitionProperty;
         "questionProperties"?: Array<HeActivityPropertyDescriptor>;

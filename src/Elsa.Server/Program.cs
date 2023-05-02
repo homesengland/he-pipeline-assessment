@@ -97,7 +97,6 @@ builder.Services.AddScoped<IWorkflowInstanceProvider, WorkflowInstanceProvider>(
 builder.Services.AddScoped<IWorkflowPathProvider, WorkflowPathProvider>();
 builder.Services.AddScoped<IWorkflowNextActivityProvider, WorkflowNextActivityProvider>();
 builder.Services.AddScoped(typeof(PotScoreOptionsProvider));
-builder.Services.AddScoped(typeof(QuestionDataDictionaryOptionsProvider));
 
 builder.Services.AddScoped<IElsaCustomModelHelper, ElsaCustomModelHelper>();
 
