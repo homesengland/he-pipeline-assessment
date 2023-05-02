@@ -103,7 +103,7 @@ namespace Elsa.Server.Helpers
                             {
                                 Identifier = x.Identifier,
                                 Answer = x.Answer,
-                                IsSingle = false,
+                                IsSingle = x.IsSingle,
                                 IsPrePopulated = x.IsPrePopulated,
                                 QuestionChoiceGroup = group
                             }).ToList());

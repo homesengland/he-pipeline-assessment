@@ -57,7 +57,7 @@ namespace He.PipelineAssessment.UI.Features.Workflow.ViewModels
         public int Id { get; set; }
         public string Answer { get; set; } = null!;
         public bool IsSingle { get; set; }
-        public ChoiceGroup? ChoiceGroup { get; set; }
+        public ChoiceGroup? QuestionChoiceGroup { get; set; }
     }
 
     public class ChoiceGroup

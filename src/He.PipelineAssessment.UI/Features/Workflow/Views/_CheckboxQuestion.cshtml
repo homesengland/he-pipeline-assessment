@@ -4,7 +4,7 @@
 @functions {
     private bool IsInGroup(List<Choice> groupCheckboxChoices, Choice checkboxChoice)
     {
-        return groupCheckboxChoices.Any(x => x.ChoiceGroup?.GroupIdentifier == checkboxChoice.ChoiceGroup?.GroupIdentifier);
+        return groupCheckboxChoices.Any(x => x.QuestionChoiceGroup?.GroupIdentifier == checkboxChoice.QuestionChoiceGroup?.GroupIdentifier);
     }
 }
 @{
@@ -21,9 +21,14 @@
     @await Html.PartialAsync("_QuestionText", Model.QuestionText)
     @await Html.PartialAsync("_QuestionHint", Model.QuestionHint)
 
-    @foreach (var group in Model.Checkbox.Choices.Select(x => x.ChoiceGroup?.GroupIdentifier).Distinct())
+
+    @{
+        var distinctGroups = Model.Checkbox.Choices.Select(x => x.QuestionChoiceGroup?.GroupIdentifier).Distinct().ToList();
+    }
+    @foreach (var group in distinctGroups)
     {
-        var groupCheckboxChoices = Model.Checkbox.Choices.Where(x => x.ChoiceGroup?.GroupIdentifier == group).ToList();
+        var groupName = (group ?? "no-group") + Model.Index;
+        var groupCheckboxChoices = Model.Checkbox.Choices.Where(x => x.QuestionChoiceGroup?.GroupIdentifier == group).ToList();
         <div class="govuk-checkboxes" data-module="govuk-checkboxes" id="@itemName">
             @{
                 var exclusiveChoices = groupCheckboxChoices.Where(c => c.IsSingle).ToArray();
@@ -33,13 +38,15 @@
             {
                 if (IsInGroup(groupCheckboxChoices, Model.Checkbox.Choices[i]))
                 {
-                    var hiddenItemNameId = "Data.Questions[" + Model.Index + "].Checkbox.Choices[" + i + "].Id";
-                    var hiddenItemNameAnswer = "Data.Questions[" + Model.Index + "].Checkbox.Choices[" + i + "].Answer";
-                    var hiddenItemNameIsSingle = "Data.Questions[" + Model.Index + "].Checkbox.Choices[" + i + "].IsSingle";
+                    var hiddenItemId = "Data.Questions[" + Model.Index + "].Checkbox.Choices[" + i + "].Id";
+                    var hiddenItemAnswer = "Data.Questions[" + Model.Index + "].Checkbox.Choices[" + i + "].Answer";
+                    var hiddenItemIsSingle = "Data.Questions[" + Model.Index + "].Checkbox.Choices[" + i + "].IsSingle";
+                    var hiddenItemGroup = "Data.Questions[" + Model.Index + "].Checkbox.Choices[" + i + "].QuestionChoiceGroup.GroupIdentifier";
 
-                    <input type="hidden" name="@hiddenItemNameId" value="@Model.Checkbox.Choices[i].Id" />
-                    <input type="hidden" name="@hiddenItemNameAnswer" value="@Model.Checkbox.Choices[i].Answer" />
-                    <input type="hidden" name="@hiddenItemNameIsSingle" value="@Model.Checkbox.Choices[i].IsSingle.ToString()" />
+                    <input type="hidden" name="@hiddenItemId" value="@Model.Checkbox.Choices[i].Id" />
+                    <input type="hidden" name="@hiddenItemAnswer" value="@Model.Checkbox.Choices[i].Answer" />
+                    <input type="hidden" name="@hiddenItemIsSingle" value="@Model.Checkbox.Choices[i].IsSingle.ToString()" />
+                    <input type="hidden" name="@hiddenItemGroup" value="@Model.Checkbox.Choices[i].QuestionChoiceGroup?.GroupIdentifier" />
                 }
             }
             @for (int i = 0; i < nonExclusiveChoices.Count(); i++)
@@ -58,6 +65,7 @@
                             <input asp-for="@isSelected"
                                    value="@nonExclusiveChoices[i].Id"
                                    name="@itemName"
+                                   group="@groupName"
                                    type="checkbox" class="govuk-checkboxes__input">
                         }
                         else
@@ -65,6 +73,7 @@
                             <input asp-for="@isSelected"
                                    value="@nonExclusiveChoices[i].Id"
                                    name="@itemName"
+                                   group="@groupName"
                                    type="checkbox" class="govuk-checkboxes__input" disabled="@isReadOnly">
 
                         }
@@ -78,7 +87,7 @@
             }
             @for (int i = 0; i < exclusiveChoices.Count(); i++)
             {
-                if (IsInGroup(groupCheckboxChoices, nonExclusiveChoices[i]))
+                if (IsInGroup(groupCheckboxChoices, exclusiveChoices[i]))
                 {
                     int answerId = exclusiveChoices[i].Id;
                     List<int> selectedChoices = Model.Checkbox.SelectedChoices;
@@ -96,13 +105,15 @@
                             <input asp-for="@isSelected"
                                    value="@exclusiveChoices[i].Id"
                                    name="@itemName"
-                                   type="checkbox" class="govuk-checkboxes__input" data-behaviour="exclusive">
+                                   group="@groupName"
+                                   type="checkbox" class="govuk-checkboxes__input" group-data-behaviour="exclusive">
                         }
                         else
                         {
                             <input asp-for="@isSelected"
                                    value="@exclusiveChoices[i].Id"
                                    name="@itemName"
+                                   group="@groupName"
                                    type="checkbox" class="govuk-checkboxes__input" disabled="@isReadOnly">
 
                         }
@@ -116,6 +127,10 @@
                 
             }
         </div>
+        @if (distinctGroups.IndexOf(group) != distinctGroups.Count - 1)
+        {
+            <hr />
+        }
     }
 
  

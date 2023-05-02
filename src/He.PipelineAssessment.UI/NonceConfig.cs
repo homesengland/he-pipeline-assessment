@@ -11,6 +11,7 @@ namespace He.PipelineAssessment.UI
         private const string GovUkSetupKey = "GovUkSetup";
         private const string DataTablesSetupKey = "DataTablesSetup";
         private const string JQuerySetupKey = "JQuerySetup";
+        private const string SiteSetupKey = "SiteSetupKey";
 
         private static RandomNumberGenerator randomNumberGenerator = RandomNumberGenerator.Create();
         private Dictionary<string, string> nonces = new Dictionary<string, string>();
@@ -23,6 +24,7 @@ namespace He.PipelineAssessment.UI
             this.Add(GovUkSetupKey);
             this.Add(DataTablesSetupKey);
             this.Add(JQuerySetupKey);
+            this.Add(SiteSetupKey);
         }
 
         /// <summary>
@@ -31,6 +33,7 @@ namespace He.PipelineAssessment.UI
         public string GovUkSetup => this.Get(GovUkSetupKey);
         public string DataTablesSetup => this.Get(DataTablesSetupKey);
         public string JQuerySetup => this.Get(JQuerySetupKey);
+        public string SiteSetup => this.Get(SiteSetupKey);
 
         /// <summary>
         /// Adds a nonce.
