@@ -33,12 +33,14 @@ namespace Elsa.Dashboard
 
       try
       {
+        _logger.LogDebug("Catch All Request", requestPath);
         var elsaServer = _configuration["Urls:ElsaServer"];
 
         var newServerRequest = new HttpRequestMessage();
         newServerRequest.Method = GetHttpMethod(oldServerRequest.Method);
         var relativeUri = requestPath.Value!.Replace("/ElsaServer", "");
-        var uriString = $"{elsaServer}{relativeUri}"; 
+        var uriString = $"{elsaServer}{relativeUri}";
+        _logger.LogDebug("Catch All Request new URI String", uriString);
         //var uriBuilder = new UriBuilder();
         //uriBuilder.Scheme = "https";
         //uriBuilder.Host = "localhost:7227";
