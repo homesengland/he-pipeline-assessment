@@ -13,12 +13,14 @@ namespace Elsa.Dashboard
   {
 
     private readonly ILogger<ElsaServerController> _logger;
-    private readonly IHttpClientFactory _httpClientfactory;
+    private readonly IHttpClientFactory _httpClientFactory;
+    private readonly IConfiguration _configuration;
 
-    public ElsaServerController(IHttpClientFactory httpClientfactory, ILogger<ElsaServerController> logger)
+    public ElsaServerController(IHttpClientFactory httpClientFactory, ILogger<ElsaServerController> logger, IConfiguration configuration)
     {
       _logger = logger;
-      _httpClientfactory = httpClientfactory;
+      _configuration = configuration;
+      _httpClientFactory = httpClientFactory;
     }
 
     [Route("{**catchall}")]
@@ -31,10 +33,12 @@ namespace Elsa.Dashboard
 
       try
       {
+        var elsaServer = _configuration["Urls:ElsaServer"];
+
         var newServerRequest = new HttpRequestMessage();
         newServerRequest.Method = GetHttpMethod(oldServerRequest.Method);
-        var relativeUri = requestPath.Value.Replace("/ElsaServer", "");
-        var uriString = $"https://localhost:7227{relativeUri}"; 
+        var relativeUri = requestPath.Value!.Replace("/ElsaServer", "");
+        var uriString = $"{elsaServer}{relativeUri}"; 
         //var uriBuilder = new UriBuilder();
         //uriBuilder.Scheme = "https";
         //uriBuilder.Host = "localhost:7227";
@@ -42,12 +46,10 @@ namespace Elsa.Dashboard
         
         newServerRequest.RequestUri = new Uri(uriString);
 
-
-        var client = _httpClientfactory.CreateClient("ElsaServerClient");
+        var client = _httpClientFactory.CreateClient("ElsaServerClient");
         var accessToken = await GetAccessToken();
         client.DefaultRequestHeaders.Authorization =
             new AuthenticationHeaderValue("Bearer", accessToken);
-
 
       using (var response = await client
            .GetAsync(relativeUri)
@@ -56,8 +58,7 @@ namespace Elsa.Dashboard
           var data = await response.Content.ReadAsStringAsync().ConfigureAwait(false);
           return Ok(data) ; // response
       }
-
-        return Ok();
+       
       }
       catch (Exception ex)
       {
