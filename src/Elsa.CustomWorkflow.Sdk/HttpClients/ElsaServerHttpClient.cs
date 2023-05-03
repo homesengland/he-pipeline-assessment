@@ -73,7 +73,11 @@ namespace Elsa.CustomWorkflow.Sdk.HttpClients
             var content = JsonSerializer.Serialize(model);
             request.Content = new StringContent(content, Encoding.UTF8, "application/json");
 
-            using (var response = await _httpClientFactory.CreateClient("ElsaServerClient")
+            var client = _httpClientFactory.CreateClient("ElsaServerClient");
+            var accessToken = await GetAccessToken();
+            client.DefaultRequestHeaders.Authorization =
+                new AuthenticationHeaderValue("Bearer", accessToken);
+            using (var response = await client
                        .SendAsync(request)
                        .ConfigureAwait(false))
             {
@@ -100,7 +104,11 @@ namespace Elsa.CustomWorkflow.Sdk.HttpClients
             var content = JsonSerializer.Serialize(model);
             request.Content = new StringContent(content, Encoding.UTF8, "application/json");
 
-            using (var response = await _httpClientFactory.CreateClient("ElsaServerClient")
+            var client = _httpClientFactory.CreateClient("ElsaServerClient");
+            var accessToken = await GetAccessToken();
+            client.DefaultRequestHeaders.Authorization =
+                new AuthenticationHeaderValue("Bearer", accessToken);
+            using (var response = await client
                        .SendAsync(request)
                        .ConfigureAwait(false))
             {
@@ -123,7 +131,11 @@ namespace Elsa.CustomWorkflow.Sdk.HttpClients
             string data;
             string relativeUri = $"workflow/LoadQuestionScreen?workflowInstanceId={model.WorkflowInstanceId}&activityId={model.ActivityId}";
 
-            using (var response = await _httpClientFactory.CreateClient("ElsaServerClient")
+            var client = _httpClientFactory.CreateClient("ElsaServerClient");
+            var accessToken = await GetAccessToken();
+            client.DefaultRequestHeaders.Authorization =
+                new AuthenticationHeaderValue("Bearer", accessToken);
+            using (var response = await client
                        .GetAsync(relativeUri)
                        .ConfigureAwait(false))
             {
@@ -146,7 +158,11 @@ namespace Elsa.CustomWorkflow.Sdk.HttpClients
             string data;
             string relativeUri = $"workflow/LoadCheckYourAnswersScreen?workflowInstanceId={model.WorkflowInstanceId}&activityId={model.ActivityId}";
 
-            using (var response = await _httpClientFactory.CreateClient("ElsaServerClient")
+            var client = _httpClientFactory.CreateClient("ElsaServerClient");
+            var accessToken = await GetAccessToken();
+            client.DefaultRequestHeaders.Authorization =
+                new AuthenticationHeaderValue("Bearer", accessToken);
+            using (var response = await client
                        .GetAsync(relativeUri)
                        .ConfigureAwait(false))
             {
@@ -169,7 +185,11 @@ namespace Elsa.CustomWorkflow.Sdk.HttpClients
             string data;
             string relativeUri = $"workflow/LoadConfirmationScreen?workflowInstanceId={model.WorkflowInstanceId}&activityId={model.ActivityId}";
 
-            using (var response = await _httpClientFactory.CreateClient("ElsaServerClient")
+            var client = _httpClientFactory.CreateClient("ElsaServerClient");
+            var accessToken = await GetAccessToken();
+            client.DefaultRequestHeaders.Authorization =
+                new AuthenticationHeaderValue("Bearer", accessToken);
+            using (var response = await client
                        .GetAsync(relativeUri)
                        .ConfigureAwait(false))
             {
@@ -215,7 +235,7 @@ namespace Elsa.CustomWorkflow.Sdk.HttpClients
             {
                 var credential = new ManagedIdentityCredential();
 
-                _logger.LogInformation("AzureIdentity - Getting access token");
+                _logger.LogDebug("AzureIdentity - Getting access token");
 
                 var accessTokenRequest = await credential.GetTokenAsync(
                     new TokenRequestContext(scopes: new string[] { $"api://52068069-9f62-48a9-a8a8-0a94f7da27ba/.default" }) { }
@@ -225,7 +245,7 @@ namespace Elsa.CustomWorkflow.Sdk.HttpClients
 
                 _logger.LogError((String)accessToken);
 
-                _logger.LogInformation("AzureIdentity - Got access token");
+                _logger.LogDebug("AzureIdentity - Got access token");
 
                 return accessToken;
             }
