@@ -68,6 +68,15 @@ namespace Elsa.CustomActivities.Handlers.Syntax
                 decimal result = await property.EvaluateFromExpressions<decimal>(evaluator, context, _logger, CancellationToken.None);
                 return result;
             }
+            if (propertyType != null && (propertyType == typeof(List<decimal>) || propertyType == typeof(List<decimal?>)))
+            {
+                var result = await property.EvaluateFromExpressionsExplicit<List<decimal>>(evaluator,
+                    context, _logger,
+                    property.Expressions![SyntaxNames.Json],
+                    SyntaxNames.Json,
+                    CancellationToken.None);
+                return result;
+            }
             if (propertyType != null && propertyType == typeof(CheckboxModel))
             {
                 CheckboxModel result = new CheckboxModel();

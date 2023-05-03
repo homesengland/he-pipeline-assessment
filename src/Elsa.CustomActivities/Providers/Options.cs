@@ -1,4 +1,4 @@
-﻿namespace Elsa.CustomActivities.OptionsProviders
+﻿namespace Elsa.CustomActivities.Providers
 {
     public interface IOptions
     {

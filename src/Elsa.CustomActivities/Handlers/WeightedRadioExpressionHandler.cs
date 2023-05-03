@@ -89,7 +89,7 @@ namespace Elsa.CustomActivities.Handlers
                     CancellationToken.None);
                 return score;
             }
-            return -1;
+            return 0;
         }
 
         private List<ElsaProperty> TryDeserializeExpression(string expression)

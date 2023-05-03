@@ -1,7 +1,7 @@
 ﻿
 using Elsa.CustomActivities.Activities;
-using Elsa.CustomActivities.OptionsProviders;
 using Elsa.CustomActivities.PropertyDecorator;
+using Elsa.CustomActivities.Providers;
 using Elsa.CustomActivities.Resolver;
 using Humanizer;
 using Microsoft.Extensions.DependencyInjection;

@@ -16,7 +16,7 @@ namespace Elsa.CustomActivities.Activities.Common
         public string GroupIdentifier { get; set; } = null!;
         public ICollection<WeightedCheckboxRecord> Choices { get; set; } = new List<WeightedCheckboxRecord>();
         public int? MaxGroupScore { get; set; }
-        public List<int>? GroupArrayScore { get; set; }
+        public List<decimal>? GroupArrayScore { get; set; }
 
     }
 

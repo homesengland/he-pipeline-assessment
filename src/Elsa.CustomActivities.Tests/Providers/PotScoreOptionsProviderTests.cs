@@ -1,14 +1,13 @@
 ﻿using AutoFixture.Xunit2;
-using Elsa.CustomActivities.OptionsProviders;
+using Elsa.CustomActivities.Providers;
 using Elsa.CustomInfrastructure.Data.Repository;
 using Elsa.CustomModels;
 using He.PipelineAssessment.Tests.Common;
 using Moq;
 using Newtonsoft.Json;
-using System.Threading;
 using Xunit;
 
-namespace Elsa.CustomActivities.Tests.OptionsProvider;
+namespace Elsa.CustomActivities.Tests.Providers;
 public class PotScoreOptionsProviderTests
 {
 

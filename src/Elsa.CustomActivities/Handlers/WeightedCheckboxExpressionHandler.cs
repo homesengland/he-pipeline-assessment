@@ -42,7 +42,7 @@ namespace Elsa.CustomActivities.Handlers
         {
             string groupName = property.Name;
             int? maxGroupScore = await EvaluateMaxGroupScore(property, evaluator, context);
-            List<int>? groupArrayScore = EvaluateGroupArrayScore(property, evaluator, context);
+            List<decimal>? groupArrayScore = EvaluateGroupArrayScore(property, evaluator, context);
             List<WeightedCheckboxRecord> records = await EvaluateCheckboxRecords(property, evaluator, context);
 
             return new WeightedCheckboxGroup
@@ -71,14 +71,14 @@ namespace Elsa.CustomActivities.Handlers
 
         public async Task<int?> EvaluateMaxGroupScore(ElsaProperty property, IExpressionEvaluator evaluator, ActivityExecutionContext context)
         {
-            if (property.Expressions!.ContainsKey(ScoringSyntaxNames.MaxScore))
+            if (property.Expressions!.ContainsKey(ScoringSyntaxNames.MaxGroupScore))
             {
-                string expression = property.Expressions[ScoringSyntaxNames.MaxScore] ?? "-1";
+                string expression = property.Expressions[ScoringSyntaxNames.MaxGroupScore] ?? "0";
                 int? maxScore = await property.EvaluateFromExpressionsExplicit<int>(evaluator, 
                     context, 
                     _logger, 
                     expression, 
-                    ScoringSyntaxNames.MaxScore);
+                    SyntaxNames.Literal);
                 return maxScore ?? null;
             }
             return null;
@@ -96,13 +96,16 @@ namespace Elsa.CustomActivities.Handlers
 
         }
 
-        public List<int>? EvaluateGroupArrayScore(ElsaProperty property, IExpressionEvaluator evaluator, ActivityExecutionContext context)
+        public List<decimal>? EvaluateGroupArrayScore(ElsaProperty property, IExpressionEvaluator evaluator, ActivityExecutionContext context)
         {
-            if (property.Expressions!.ContainsKey(ScoringSyntaxNames.ScoreArray) && property.Expressions[ScoringSyntaxNames.ScoreArray]!= null)
+            if (property.Expressions!.ContainsKey(ScoringSyntaxNames.GroupArrayScore))
             {
-                string arrayString = property.Expressions![ScoringSyntaxNames.ScoreArray];
-                List<int>? array = JsonConvert.DeserializeObject<List<int>>(arrayString);
-                return array;
+                ElsaProperty? elsaProperty = JsonConvert.DeserializeObject<ElsaProperty>(property.Expressions![ScoringSyntaxNames.GroupArrayScore]);
+                if (elsaProperty != null)
+                {
+                    List<decimal>? array = JsonConvert.DeserializeObject<List<decimal>>(elsaProperty.Expressions![SyntaxNames.Json]);
+                    return array;
+                }
             }
             return null;
         }
@@ -136,7 +139,7 @@ namespace Elsa.CustomActivities.Handlers
         {
             if (property.Expressions!.ContainsKey(ScoringSyntaxNames.Score))
             {
-                string expression = property.Expressions[ScoringSyntaxNames.Score] ?? "-1";
+                string expression = property.Expressions[ScoringSyntaxNames.Score] ?? "0";
                 int score = await property.EvaluateFromExpressionsExplicit<int>(evaluator,
                     context, _logger,
                     expression,
@@ -144,7 +147,7 @@ namespace Elsa.CustomActivities.Handlers
                     CancellationToken.None);
                 return score;
             }
-            return -1;
+            return 0;
         }
 
         private List<ElsaProperty> TryDeserializeExpression(string expression)
