@@ -12,7 +12,7 @@ namespace Elsa.CustomWorkflow.Sdk.Models.Workflow.Validators
 
             RuleFor(x => x.Radio)
                 .SetValidator(new RadioValidator())
-            .When(x => x.QuestionType == QuestionTypeConstants.RadioQuestion || x.QuestionType == QuestionTypeConstants.PotScoreRadioQuestion);
+            .When(x => x.QuestionType == QuestionTypeConstants.RadioQuestion || x.QuestionType == QuestionTypeConstants.PotScoreRadioQuestion || x.QuestionType == QuestionTypeConstants.WeightedRadioQuestion);
             RuleFor(x => x.Date)
             .SetValidator(new DateValidator())
             .When(x => x.QuestionType == QuestionTypeConstants.DateQuestion);

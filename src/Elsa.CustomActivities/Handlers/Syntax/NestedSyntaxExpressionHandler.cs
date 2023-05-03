@@ -124,8 +124,8 @@ namespace Elsa.CustomActivities.Handlers.Syntax
                 var parsedProperties = ParseToList(property);
                 if (parsedProperties != null)
                 {
-                    Dictionary<string, WeightedRadioGroup> records = await _weightedRadioExpressionHandler.ElsaPropertiesToWeightedRadioGroup(parsedProperties, evaluator, context);
-                    result.Groups = records;
+                    List<WeightedRadioRecord> records = await _weightedRadioExpressionHandler.ElsaPropertiesToWeightedRadioRecordList(parsedProperties, evaluator, context);
+                    result.Choices = records;
                 }
                 return result;
 

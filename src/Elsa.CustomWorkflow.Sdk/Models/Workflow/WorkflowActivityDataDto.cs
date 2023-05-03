@@ -169,7 +169,7 @@ namespace Elsa.CustomWorkflow.Sdk.Models.Workflow
 
         public void SetRadio(Radio value)
         {
-            if (QuestionType == QuestionTypeConstants.RadioQuestion || QuestionType == QuestionTypeConstants.PotScoreRadioQuestion)
+            if (QuestionType == QuestionTypeConstants.RadioQuestion || QuestionType == QuestionTypeConstants.PotScoreRadioQuestion || QuestionType == QuestionTypeConstants.WeightedRadioQuestion)
             {
                 _radio = value;
                 Answers = new List<QuestionActivityAnswer>();

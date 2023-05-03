@@ -164,7 +164,7 @@ namespace Elsa.Server.Features.Workflow.LoadQuestionScreen
                 }
             }
 
-            if (item.QuestionType == QuestionTypeConstants.RadioQuestion || item.QuestionType == QuestionTypeConstants.PotScoreRadioQuestion)
+            if (item.QuestionType == QuestionTypeConstants.RadioQuestion || item.QuestionType == QuestionTypeConstants.PotScoreRadioQuestion || item.QuestionType == QuestionTypeConstants.WeightedRadioQuestion)
             {
                 if (dbQuestion.Choices != null)
                 {

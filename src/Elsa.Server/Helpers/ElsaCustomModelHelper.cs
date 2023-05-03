@@ -80,6 +80,17 @@ namespace Elsa.Server.Helpers
                     })
                         .ToList();
                     break;
+                case QuestionTypeConstants.WeightedRadioQuestion:
+                    choices = question.WeightedRadio.Choices.Select(x => new QuestionChoice()
+                    {
+                        Identifier = x.Identifier,
+                        Answer = x.Answer,
+                        IsSingle = false,
+                        IsPrePopulated = x.IsPrePopulated,
+                        NumericScore = x.Score
+                    })
+                        .ToList();
+                    break;
                 case QuestionTypeConstants.PotScoreRadioQuestion:
                     choices = question.PotScoreRadio.Choices.Select(x => new QuestionChoice()
                     {
@@ -105,7 +116,8 @@ namespace Elsa.Server.Helpers
                                 Answer = x.Answer,
                                 IsSingle = x.IsSingle,
                                 IsPrePopulated = x.IsPrePopulated,
-                                QuestionChoiceGroup = group
+                                QuestionChoiceGroup = group,
+                                NumericScore = x.Score
                             }).ToList());
 
                         }

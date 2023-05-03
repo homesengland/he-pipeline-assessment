@@ -16,13 +16,13 @@ namespace Elsa.CustomWorkflow.Sdk.Models.Workflow.Validators
                                 if (multipleChoice.SelectedChoices!.Count() <= 1) return true;
                                 var distinctSelectedGroups = multipleChoice.Choices
                                     .Where(x => multipleChoice.SelectedChoices.Contains(x.Id))
-                                    .Select(x => x.QuestionChoiceGroup).Distinct().ToList();
+                                    .Select(x => x.QuestionChoiceGroup).DistinctBy(x => x.GroupIdentifier).ToList();
 
                                 if (distinctSelectedGroups.Any())
                                 {
                                     foreach (var distinctSelectedGroup in distinctSelectedGroups)
                                     {
-                                        var choicesForGroup = multipleChoice.Choices.Where(x => x.QuestionChoiceGroup == distinctSelectedGroup).ToList();
+                                        var choicesForGroup = multipleChoice.Choices.Where(x => x.QuestionChoiceGroup?.GroupIdentifier == distinctSelectedGroup.GroupIdentifier).ToList();
                                         var selectedChoicesForGroup =
                                             multipleChoice.SelectedChoices.Where(x =>
                                                 choicesForGroup.Select(y => y.Id).Contains(x));
@@ -44,13 +44,13 @@ namespace Elsa.CustomWorkflow.Sdk.Models.Workflow.Validators
                                 var validationMessage = "";
                                 var distinctSelectedGroups = multipleChoice.Choices
                                     .Where(x => multipleChoice.SelectedChoices.Contains(x.Id))
-                                    .Select(x => x.QuestionChoiceGroup).Distinct().ToList();
+                                    .Select(x => x.QuestionChoiceGroup).DistinctBy(x => x.GroupIdentifier).ToList();
                                 if (distinctSelectedGroups.Any())
                                 {
                                     foreach (var distinctSelectedGroup in distinctSelectedGroups)
                                     {
                                         var groupValidation = true;
-                                        var choicesForGroup = multipleChoice.Choices.Where(x => x.QuestionChoiceGroup == distinctSelectedGroup).ToList();
+                                        var choicesForGroup = multipleChoice.Choices.Where(x => x.QuestionChoiceGroup?.GroupIdentifier == distinctSelectedGroup.GroupIdentifier).ToList();
                                         var selectedAnswers =
                                             multipleChoice.SelectedChoices.Where(x =>
                                                 choicesForGroup.Select(y => y.Id).Contains(x)).ToList();
@@ -69,6 +69,10 @@ namespace Elsa.CustomWorkflow.Sdk.Models.Workflow.Validators
                                             .Where(c => c.IsSingle && selectedAnswers!.Contains(c.Id)).Select(c => c.Answer)
                                             .ToList();
 
+                                        if (!string.IsNullOrEmpty(validationMessage))
+                                        {
+                                            validationMessage += "\r\n";
+                                        }
                                         if (exclusiveAnswers.Count() > 1)
                                         {
                                             var finalInvalidAnswer = exclusiveAnswers.Last();

@@ -63,13 +63,13 @@ namespace Elsa.CustomActivities.Activities.QuestionScreen
         public double QuestionWeighting { get; set; }
 
         [HeActivityInput(Hint = "Maximum available score for any combination of answers.", Name = "Max Question Score",  
-            ConditionalActivityTypes = new[]{ QuestionTypeConstants.WeightedRadioQuestion, QuestionTypeConstants.WeightedCheckboxQuestion })]
+            ConditionalActivityTypes = new[]{ QuestionTypeConstants.WeightedCheckboxQuestion })]
         public int? MaxScore { get; set; }
 
         [HeActivityInput(UIHint = HePropertyUIHints.MultiText,
             Hint = "The score for the question, based on the corresponding number of questions answered in all groups.  This is not compatable with Group Score Array, and this will always take precedence.", 
             Name = "Score Array", 
-            ConditionalActivityTypes = new[] { QuestionTypeConstants.WeightedRadioQuestion, QuestionTypeConstants.WeightedCheckboxQuestion }
+            ConditionalActivityTypes = new[] { QuestionTypeConstants.WeightedCheckboxQuestion }
             )]
         public ISet<string>? ScoreArray { get; set; }
 
@@ -79,7 +79,7 @@ namespace Elsa.CustomActivities.Activities.QuestionScreen
             UIHint = HePropertyUIHints.MultiLine,
             SupportedSyntaxes = new[] { SyntaxNames.JavaScript },
             DefaultSyntax = SyntaxNames.JavaScript,
-            ConditionalActivityTypes = new[] { QuestionTypeConstants.WeightedRadioQuestion, QuestionTypeConstants.WeightedCheckboxQuestion },
+            ConditionalActivityTypes = new[] { QuestionTypeConstants.WeightedCheckboxQuestion },
             IsDesignerCritical = true)]
         public decimal? Score { get; set; } = null!;
 

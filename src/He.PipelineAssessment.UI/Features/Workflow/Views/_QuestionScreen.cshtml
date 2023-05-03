@@ -188,7 +188,7 @@
                        }
                    })
         }
-        @if (Model.Data.Questions![i].QuestionType == QuestionTypeConstants.RadioQuestion || Model.Data.Questions![i].QuestionType == QuestionTypeConstants.PotScoreRadioQuestion)
+                    @if (Model.Data.Questions![i].QuestionType == QuestionTypeConstants.RadioQuestion || Model.Data.Questions![i].QuestionType == QuestionTypeConstants.PotScoreRadioQuestion || Model.Data.Questions![i].QuestionType == QuestionTypeConstants.WeightedRadioQuestion)
         {
 
             @await Html.PartialAsync("_RadioQuestion",new Question()

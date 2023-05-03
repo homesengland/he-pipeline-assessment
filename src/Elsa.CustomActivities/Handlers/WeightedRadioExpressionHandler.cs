@@ -13,7 +13,7 @@ namespace Elsa.CustomActivities.Handlers
     {
         private readonly IContentSerializer _contentSerializer;
         private readonly ILogger<IExpressionHandler> _logger;
-        public string Syntax => CustomSyntaxNames.CheckboxList;
+        public string Syntax => CustomSyntaxNames.RadioList;
 
 
         public WeightedRadioExpressionHandler(ILogger<IExpressionHandler> logger, IContentSerializer contentSerializer)
@@ -27,33 +27,16 @@ namespace Elsa.CustomActivities.Handlers
             var evaluator = context.GetService<IExpressionEvaluator>();
             WeightedRadioModel result = new WeightedRadioModel();
             var checkboxProperties = TryDeserializeExpression(expression);
-            var radioGroups = await ElsaPropertiesToWeightedRadioGroup(checkboxProperties, evaluator, context);
-            result.Groups = radioGroups;
+            var checkboxRecords = await ElsaPropertiesToWeightedRadioRecordList(checkboxProperties, evaluator, context);
+            result.Choices = checkboxRecords;
             return result;
         }
 
-        public async Task<Dictionary<string, WeightedRadioGroup>> ElsaPropertiesToWeightedRadioGroup(List<ElsaProperty> properties, IExpressionEvaluator evaluator, ActivityExecutionContext context)
+        public async Task<List<WeightedRadioRecord>> ElsaPropertiesToWeightedRadioRecordList(List<ElsaProperty> properties, IExpressionEvaluator evaluator, ActivityExecutionContext context)
         {
-            WeightedRadioGroup[] resultArray = await Task.WhenAll(properties.Select(x => ElsaPropertyToWeightedRadioGroup(x, evaluator, context)));
-            return resultArray.ToDictionary(x => x.GroupIdentifier);
+            WeightedRadioRecord[] resultArray = await Task.WhenAll(properties.Select(x => ElsaPropertyToWeightedRadioRecord(x, evaluator, context)));
+            return resultArray.ToList();
         }
-
-        private async Task<WeightedRadioGroup> ElsaPropertyToWeightedRadioGroup(ElsaProperty property, IExpressionEvaluator evaluator, ActivityExecutionContext context)
-        {
-            string groupName = property.Name;
-            int? maxGroupScore = await EvaluateMaxGroupScore(property, evaluator, context);
-            List<int>? groupArrayScore = EvaluateGroupArrayScore(property, evaluator, context);
-            List<WeightedRadioRecord> records = await EvaluateRadioRecords(property, evaluator, context);
-
-            return new WeightedRadioGroup
-            {
-                GroupIdentifier = groupName,
-                MaxGroupScore = maxGroupScore,
-                Choices = records
-            };
-        }
-
-
 
         public async Task<List<WeightedRadioRecord>> EvaluateRadioRecords(ElsaProperty property, IExpressionEvaluator evaluator, ActivityExecutionContext context)
         {
@@ -68,21 +51,6 @@ namespace Elsa.CustomActivities.Handlers
             return new List<WeightedRadioRecord>();
         }
 
-        public async Task<int?> EvaluateMaxGroupScore(ElsaProperty property, IExpressionEvaluator evaluator, ActivityExecutionContext context)
-        {
-            if (property.Expressions!.ContainsKey(ScoringSyntaxNames.MaxScore))
-            {
-                string expression = property.Expressions[ScoringSyntaxNames.MaxScore] ?? "-1";
-                int? maxScore = await property.EvaluateFromExpressionsExplicit<int>(evaluator, 
-                    context, 
-                    _logger, 
-                    expression, 
-                    ScoringSyntaxNames.MaxScore);
-                return maxScore ?? null;
-            }
-            return null;
-        }
-
         private async Task<WeightedRadioRecord> ElsaPropertyToWeightedRadioRecord(ElsaProperty property, IExpressionEvaluator evaluator, ActivityExecutionContext context)
         {
             string identifier = property.Name;
@@ -92,17 +60,6 @@ namespace Elsa.CustomActivities.Handlers
 
             return new WeightedRadioRecord(identifier, value, score, isPrePopulated);
 
-        }
-
-        public List<int>? EvaluateGroupArrayScore(ElsaProperty property, IExpressionEvaluator evaluator, ActivityExecutionContext context)
-        {
-            if (property.Expressions!.ContainsKey(ScoringSyntaxNames.ScoreArray) && property.Expressions[ScoringSyntaxNames.ScoreArray]!= null)
-            {
-                string arrayString = property.Expressions![ScoringSyntaxNames.ScoreArray];
-                List<int>? array = JsonConvert.DeserializeObject<List<int>>(arrayString);
-                return array;
-            }
-            return null;
         }
 
         public async Task<bool> EvaluatePrePopulated(ElsaProperty property, IExpressionEvaluator evaluator, ActivityExecutionContext context)

@@ -97,6 +97,11 @@ export namespace Components {
         "propertyDescriptor": ActivityPropertyDescriptor;
         "propertyModel": ActivityDefinitionProperty;
     }
+    interface HeWeightedRadioPropertyOld {
+        "activityModel": ActivityModel;
+        "propertyDescriptor": ActivityPropertyDescriptor;
+        "propertyModel": ActivityDefinitionProperty;
+    }
     interface NestedPropertyList {
         "activityModel": ActivityModel;
         "nestedDescriptors": Array<HeActivityPropertyDescriptor>;
@@ -181,6 +186,10 @@ export interface HeWeightedRadioOptionGroupPropertyCustomEvent<T> extends Custom
 export interface HeWeightedRadioPropertyCustomEvent<T> extends CustomEvent<T> {
     detail: T;
     target: HTMLHeWeightedRadioPropertyElement;
+}
+export interface HeWeightedRadioPropertyOldCustomEvent<T> extends CustomEvent<T> {
+    detail: T;
+    target: HTMLHeWeightedRadioPropertyOldElement;
 }
 export interface NestedPropertyListCustomEvent<T> extends CustomEvent<T> {
     detail: T;
@@ -299,6 +308,12 @@ declare global {
         prototype: HTMLHeWeightedRadioPropertyElement;
         new (): HTMLHeWeightedRadioPropertyElement;
     };
+    interface HTMLHeWeightedRadioPropertyOldElement extends Components.HeWeightedRadioPropertyOld, HTMLStencilElement {
+    }
+    var HTMLHeWeightedRadioPropertyOldElement: {
+        prototype: HTMLHeWeightedRadioPropertyOldElement;
+        new (): HTMLHeWeightedRadioPropertyOldElement;
+    };
     interface HTMLNestedPropertyListElement extends Components.NestedPropertyList, HTMLStencilElement {
     }
     var HTMLNestedPropertyListElement: {
@@ -342,6 +357,7 @@ declare global {
         "he-weighted-checkbox-property": HTMLHeWeightedCheckboxPropertyElement;
         "he-weighted-radio-option-group-property": HTMLHeWeightedRadioOptionGroupPropertyElement;
         "he-weighted-radio-property": HTMLHeWeightedRadioPropertyElement;
+        "he-weighted-radio-property-old": HTMLHeWeightedRadioPropertyOldElement;
         "nested-property-list": HTMLNestedPropertyListElement;
         "question-property": HTMLQuestionPropertyElement;
         "question-screen-property": HTMLQuestionScreenPropertyElement;
@@ -453,6 +469,12 @@ declare namespace LocalJSX {
         "propertyDescriptor"?: ActivityPropertyDescriptor;
         "propertyModel"?: ActivityDefinitionProperty;
     }
+    interface HeWeightedRadioPropertyOld {
+        "activityModel"?: ActivityModel;
+        "onExpressionChanged"?: (event: HeWeightedRadioPropertyOldCustomEvent<string>) => void;
+        "propertyDescriptor"?: ActivityPropertyDescriptor;
+        "propertyModel"?: ActivityDefinitionProperty;
+    }
     interface NestedPropertyList {
         "activityModel"?: ActivityModel;
         "nestedDescriptors"?: Array<HeActivityPropertyDescriptor>;
@@ -494,6 +516,7 @@ declare namespace LocalJSX {
         "he-weighted-checkbox-property": HeWeightedCheckboxProperty;
         "he-weighted-radio-option-group-property": HeWeightedRadioOptionGroupProperty;
         "he-weighted-radio-property": HeWeightedRadioProperty;
+        "he-weighted-radio-property-old": HeWeightedRadioPropertyOld;
         "nested-property-list": NestedPropertyList;
         "question-property": QuestionProperty;
         "question-screen-property": QuestionScreenProperty;
@@ -522,6 +545,7 @@ declare module "@stencil/core" {
             "he-weighted-checkbox-property": LocalJSX.HeWeightedCheckboxProperty & JSXBase.HTMLAttributes<HTMLHeWeightedCheckboxPropertyElement>;
             "he-weighted-radio-option-group-property": LocalJSX.HeWeightedRadioOptionGroupProperty & JSXBase.HTMLAttributes<HTMLHeWeightedRadioOptionGroupPropertyElement>;
             "he-weighted-radio-property": LocalJSX.HeWeightedRadioProperty & JSXBase.HTMLAttributes<HTMLHeWeightedRadioPropertyElement>;
+            "he-weighted-radio-property-old": LocalJSX.HeWeightedRadioPropertyOld & JSXBase.HTMLAttributes<HTMLHeWeightedRadioPropertyOldElement>;
             "nested-property-list": LocalJSX.NestedPropertyList & JSXBase.HTMLAttributes<HTMLNestedPropertyListElement>;
             "question-property": LocalJSX.QuestionProperty & JSXBase.HTMLAttributes<HTMLQuestionPropertyElement>;
             "question-screen-property": LocalJSX.QuestionScreenProperty & JSXBase.HTMLAttributes<HTMLQuestionScreenPropertyElement>;
