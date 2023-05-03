@@ -33,6 +33,7 @@ builder.Services.AddHttpClient("ElsaServerClient", client =>
   client.BaseAddress = new Uri(serverURl);
 });
 
+
 builder.Services.AddScoped<IElsaServerHttpClient, ElsaServerHttpClient>();
 
 // For Authentication

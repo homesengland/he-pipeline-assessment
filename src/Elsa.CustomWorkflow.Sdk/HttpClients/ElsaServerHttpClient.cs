@@ -211,7 +211,10 @@ namespace Elsa.CustomWorkflow.Sdk.HttpClients
         {
             string data;
             string fullUri = $"{elsaServer}/activities/properties";
-            var client = _httpClientFactory.CreateClient();
+            var client = _httpClientFactory.CreateClient("ElsaServerClient");
+            var accessToken = await GetAccessToken();
+            client.DefaultRequestHeaders.Authorization =
+    new AuthenticationHeaderValue("Bearer", accessToken);
             using (var response = await client
                        .GetAsync(fullUri)
                        .ConfigureAwait(false))
