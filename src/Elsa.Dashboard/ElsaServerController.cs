@@ -50,11 +50,12 @@ namespace Elsa.Dashboard
         newServerRequest.RequestUri = new Uri(uriString);
 
         var client = _httpClientFactory.CreateClient("ElsaServerClient");
+
         var accessToken = await GetAccessToken();
         client.DefaultRequestHeaders.Authorization =
             new AuthenticationHeaderValue("Bearer", accessToken);
 
-      using (var response = await client
+        using (var response = await client
            .GetAsync(relativeUri)
            .ConfigureAwait(false))
       {
