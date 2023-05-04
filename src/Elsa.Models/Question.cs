@@ -11,6 +11,7 @@
         public string? QuestionType { get; set; }
         public double? Weighting { get; set; }
         public string? Comments { get; set; }
+        public decimal? Score { get; set; }
 
         public virtual List<QuestionChoice>? Choices { get; set; }
         public virtual List<Answer>? Answers { get; set; } = new();

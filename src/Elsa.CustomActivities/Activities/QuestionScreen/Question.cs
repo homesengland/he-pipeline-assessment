@@ -64,7 +64,7 @@ namespace Elsa.CustomActivities.Activities.QuestionScreen
 
         [HeActivityInput(Hint = "Maximum available score for any combination of answers.", Name = "Max Question Score",  
             ConditionalActivityTypes = new[]{ QuestionTypeConstants.WeightedCheckboxQuestion })]
-        public int? MaxScore { get; set; }
+        public decimal? MaxScore { get; set; }
 
         [HeActivityInput(UIHint = HePropertyUIHints.MultiText,
             Hint = "The score for the question, based on the corresponding number of questions answered in all groups.  This is not compatible with Group Score Array, and this will always take precedence.", 

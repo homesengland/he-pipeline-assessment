@@ -65,7 +65,7 @@ namespace Elsa.CustomActivities.Handlers.Syntax
             }
             if (propertyType != null && (propertyType == typeof(decimal) || propertyType == typeof(decimal?)))
             {
-                decimal result = await property.EvaluateFromExpressions<decimal>(evaluator, context, _logger, CancellationToken.None);
+                decimal? result = await property.EvaluateFromExpressions<decimal?>(evaluator, context, _logger, CancellationToken.None);
                 return result;
             }
             if (propertyType != null && (propertyType == typeof(List<decimal>) || propertyType == typeof(List<decimal?>)))

@@ -68,6 +68,12 @@ namespace Elsa.CustomInfrastructure.Data.Repository
             return result;
         }
 
+        public async Task<Question?> GetQuestionById(int id)
+        {
+            var result = await _dbContext.Set<Question>().FirstOrDefaultAsync(x => x.Id == id);
+            return result;
+        }
+
         public async Task SaveChanges(CancellationToken cancellationToken)
         {
             await _dbContext.SaveChangesAsync(cancellationToken);

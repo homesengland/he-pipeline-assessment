@@ -41,7 +41,7 @@ namespace Elsa.CustomActivities.Handlers
         private async Task<WeightedCheckboxGroup> ElsaPropertyToWeightedCheckboxGroup(ElsaProperty property, IExpressionEvaluator evaluator, ActivityExecutionContext context)
         {
             string groupName = property.Name;
-            int? maxGroupScore = await EvaluateMaxGroupScore(property, evaluator, context);
+            decimal? maxGroupScore = await EvaluateMaxGroupScore(property, evaluator, context);
             List<decimal>? groupArrayScore = EvaluateGroupArrayScore(property, evaluator, context);
             List<WeightedCheckboxRecord> records = await EvaluateCheckboxRecords(property, evaluator, context);
 

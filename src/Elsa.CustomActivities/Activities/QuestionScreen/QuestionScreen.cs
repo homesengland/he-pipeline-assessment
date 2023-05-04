@@ -7,6 +7,7 @@ using Elsa.Expressions;
 using Elsa.Services;
 using Elsa.Services.Models;
 using Elsa.CustomActivities.Providers;
+using Elsa.CustomInfrastructure.Data.Repository;
 
 namespace Elsa.CustomActivities.Activities.QuestionScreen
 {
@@ -19,10 +20,12 @@ namespace Elsa.CustomActivities.Activities.QuestionScreen
     public class QuestionScreen : Activity
     {
         private readonly IScoreProvider _scoreProvider;
+        private readonly IElsaCustomRepository _elsaCustomRepository;
 
-        public QuestionScreen(IScoreProvider scoreProvider)
+        public QuestionScreen(IScoreProvider scoreProvider, IElsaCustomRepository elsaCustomRepository)
         {
             _scoreProvider = scoreProvider;
+            _elsaCustomRepository = elsaCustomRepository;
         }
 
         [ActivityInput]
@@ -78,11 +81,22 @@ namespace Elsa.CustomActivities.Activities.QuestionScreen
         {
             var questions = context.GetInput<List<CustomModels.Question>>();
 
-            foreach (var answeredQuestion in questions)
+            if (questions != null)
             {
-                var questionDefinition = GetQuestionFromActivityData(context, answeredQuestion.QuestionId);
-                var score = await CalculateQuestionScore(answeredQuestion, questionDefinition);
+                foreach (var answeredQuestion in questions)
+                {
+                    var questionDefinition = GetQuestionFromActivityData(context, answeredQuestion.QuestionId);
+                    var score = CalculateQuestionScore(answeredQuestion, questionDefinition);
+
+                    var dbQuestion = await _elsaCustomRepository.GetQuestionById(answeredQuestion.Id);
+                    if (dbQuestion != null)
+                    {
+                        dbQuestion.Score = score;
+                        await _elsaCustomRepository.UpdateQuestion(dbQuestion);
+                    }
+                }
             }
+
         }
 
         private Question? GetQuestionFromActivityData(ActivityExecutionContext context, string? questionId)
@@ -97,12 +111,12 @@ namespace Elsa.CustomActivities.Activities.QuestionScreen
             return null;
         }
 
-        private async Task<decimal> CalculateQuestionScore(CustomModels.Question answeredQuestion, Question? questionDefinition)
+        private decimal CalculateQuestionScore(CustomModels.Question answeredQuestion, Question? questionDefinition)
         {
             if (questionDefinition == null)
                 return 0;
 
-            var score = await _scoreProvider.CalculateScore(answeredQuestion, questionDefinition);
+            var score = _scoreProvider.CalculateScore(answeredQuestion, questionDefinition);
             return score;
         }
     }
