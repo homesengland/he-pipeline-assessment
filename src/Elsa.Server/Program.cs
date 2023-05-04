@@ -79,6 +79,7 @@ builder.Services.AddDbContext<ElsaCustomContext>(config =>
 
 builder.Services.AddScoped<DbContext>(provider => provider.GetRequiredService<ElsaCustomContext>());
 builder.Services.AddDataProtection().PersistKeysToDbContext<ElsaCustomContext>();
+builder.Services.AddApplicationInsightsTelemetry();
 
 // Elsa API endpoints.
 builder.Services.AddElsaApiEndpoints();
