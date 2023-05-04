@@ -58,7 +58,7 @@ namespace Elsa.CustomActivities.Activities.QuestionScreen
 
         protected override async ValueTask<IActivityExecutionResult> OnResumeAsync(ActivityExecutionContext context)
         {
-            UpdateQuestionScores(context);
+            await UpdateQuestionScores(context);
             var response = context.GetInput<List<CustomModels.Question>>();
             Output = response;
             var matches = Cases.Where(x => x.Condition).Select(x => x.Name).ToList();
@@ -74,14 +74,14 @@ namespace Elsa.CustomActivities.Activities.QuestionScreen
             }));
         }
 
-        private void UpdateQuestionScores(ActivityExecutionContext context)
+        private async Task UpdateQuestionScores(ActivityExecutionContext context)
         {
             var questions = context.GetInput<List<CustomModels.Question>>();
 
             foreach (var answeredQuestion in questions)
             {
                 var questionDefinition = GetQuestionFromActivityData(context, answeredQuestion.QuestionId);
-                var score = CalculateQuestionScore(answeredQuestion, questionDefinition);
+                var score = await CalculateQuestionScore(answeredQuestion, questionDefinition);
             }
         }
 
@@ -97,12 +97,12 @@ namespace Elsa.CustomActivities.Activities.QuestionScreen
             return null;
         }
 
-        private decimal CalculateQuestionScore(CustomModels.Question answeredQuestion, Question? questionDefinition)
+        private async Task<decimal> CalculateQuestionScore(CustomModels.Question answeredQuestion, Question? questionDefinition)
         {
             if (questionDefinition == null)
                 return 0;
 
-            var score = _scoreProvider.CalculateScore(answeredQuestion, questionDefinition);
+            var score = await _scoreProvider.CalculateScore(answeredQuestion, questionDefinition);
             return score;
         }
     }

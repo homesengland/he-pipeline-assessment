@@ -17,7 +17,7 @@ namespace Elsa.CustomModels
         public bool IsSingle { get; set; }
         public bool IsPrePopulated { get; set; }
         public string? PotScoreCategory { get; set; }
-        public double? NumericScore { get; set; }
+        public decimal? NumericScore { get; set; }
 
 
     }
