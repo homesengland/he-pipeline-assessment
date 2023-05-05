@@ -56,7 +56,6 @@ builder.Services
         .AddActivity<ConfirmationScreen>()
         .AddActivity<FinishWorkflow>()
         .AddActivity<ScoringCalculation>()
-        .AddActivity<WeightedScore>()
         .AddActivity<RunEconomicCalculations>()
         .AddActivity<SetVariable>()
         .AddConsoleActivities()
