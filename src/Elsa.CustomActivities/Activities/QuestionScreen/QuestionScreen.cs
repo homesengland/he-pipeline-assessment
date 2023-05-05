@@ -101,12 +101,17 @@ namespace Elsa.CustomActivities.Activities.QuestionScreen
 
         private Question? GetQuestionFromActivityData(ActivityExecutionContext context, string? questionId)
         {
-            var activityData = context.GetActivityData(context.ActivityId).FirstOrDefault(x => x.Key == "Questions");
-            var assessmentQuestions = (AssessmentQuestions?)activityData.Value;
-            if (assessmentQuestions != null)
+            var dictionary = context.GetActivityData(context.ActivityId);
+            if (dictionary.ContainsKey("Questions"))
             {
-                var questionDefinition = assessmentQuestions.Questions.FirstOrDefault(x => x.Id == questionId);
-                return questionDefinition;
+                var activityData = dictionary.FirstOrDefault(x => x.Key == "Questions");
+                var assessmentQuestions = (AssessmentQuestions?)activityData.Value;
+                if (assessmentQuestions != null)
+                {
+                    var questionDefinition = assessmentQuestions.Questions.FirstOrDefault(x => x.Id == questionId);
+                    return questionDefinition;
+                }
+
             }
             return null;
         }

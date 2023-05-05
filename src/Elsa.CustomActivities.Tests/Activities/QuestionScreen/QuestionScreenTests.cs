@@ -3,6 +3,7 @@ using Elsa.ActivityResults;
 using Elsa.CustomModels;
 using Elsa.Services.Models;
 using He.PipelineAssessment.Tests.Common;
+using Microsoft.Extensions.DependencyInjection;
 using Xunit;
 
 namespace Elsa.CustomActivities.Tests.Activities.QuestionScreen
@@ -13,13 +14,14 @@ namespace Elsa.CustomActivities.Tests.Activities.QuestionScreen
         [AutoMoqData]
         public async Task OnResumeAsyncReturnsCombinedResultWithDefaultOutcomeAndSuspendResult_GivenCorrectContextWithNoMatches(
             List<Question> assessmentQuestion,
+            ActivityBlueprint activityBlueprint,
+            [WithAutofixtureResolution] WorkflowExecutionContext workflowExecutionContext,
             CustomActivities.Activities.QuestionScreen.QuestionScreen sut)
         {
             //Arrange
-            var context = new ActivityExecutionContext(default!, default!, default!, assessmentQuestion, default, default);
-
+            var context = new ActivityExecutionContext(default!, workflowExecutionContext!, activityBlueprint, assessmentQuestion, default, default);
             sut.Cases = new List<SwitchCase>();
-
+            
             //Act
             var result = await sut.ResumeAsync(context);
 
@@ -36,10 +38,12 @@ namespace Elsa.CustomActivities.Tests.Activities.QuestionScreen
         [AutoMoqData]
         public async Task OnResumeAsyncReturnsCombinedResultWithMatchedOutcomeAndSuspendResult_GivenCorrectContextWithMatches(
             List<Question> assessmentQuestion,
+            ActivityBlueprint activityBlueprint,
+            [WithAutofixtureResolution] WorkflowExecutionContext workflowExecutionContext,
             CustomActivities.Activities.QuestionScreen.QuestionScreen sut)
         {
             //Arrange
-            var context = new ActivityExecutionContext(default!, default!, default!, assessmentQuestion, default, default);
+            var context = new ActivityExecutionContext(default!, workflowExecutionContext!, activityBlueprint!, assessmentQuestion, default, default);
             sut.Cases = new List<SwitchCase>();
             sut.Cases.Add(new SwitchCase("Test", true));
 

@@ -5,9 +5,9 @@
  * It contains typing information for all components that exist in this project.
  */
 import { HTMLStencilElement, JSXBase } from "@stencil/core/internal";
-import { ActivityDefinitionProperty, ActivityModel, ActivityPropertyDescriptor, IntellisenseContext } from "./models/elsa-interfaces";
-import { DataDictionaryGroup, HeActivityPropertyDescriptor, NestedActivityDefinitionProperty, ITextProperty, NestedPropertyModel } from "./models/custom-component-models";
+import { ActivityDefinitionProperty, ActivityModel, ActivityPropertyDescriptor } from "./models/elsa-interfaces";
 import { VNode } from "@stencil/core";
+import { DataDictionaryGroup, HeActivityPropertyDescriptor, NestedActivityDefinitionProperty, NestedPropertyModel } from "./models/custom-component-models";
 export namespace Components {
     interface CustomTextProperty {
         "activityModel": ActivityModel;
