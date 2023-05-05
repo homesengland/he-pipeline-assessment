@@ -24,7 +24,7 @@ namespace Elsa.Dashboard
     }
 
     [Route("{**catchall}")]
-    [Authorize]
+    [Authorize(Policy = Elsa.Dashboard.Authorization.Constants.AuthorizationPolicies.AssignmentToElsaDashboardAdminRoleRequired)]
     public async Task<IActionResult> CatchAll()
     {
       var requestPath = HttpContext.Request.Path;
