@@ -56,7 +56,7 @@ namespace Elsa.Dashboard
             new AuthenticationHeaderValue("Bearer", accessToken);
 
         using (var response = await client
-           .GetAsync(relativeUri)
+           .GetAsync(uriString)
            .ConfigureAwait(false))
       {
           var data = await response.Content.ReadAsStringAsync().ConfigureAwait(false);
