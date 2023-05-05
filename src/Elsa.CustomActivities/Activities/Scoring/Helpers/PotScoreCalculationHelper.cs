@@ -25,7 +25,7 @@ namespace Elsa.CustomActivities.Activities.Scoring.Helpers
         {
             try
             {
-                double failedResult = -1;
+                double failedResult = 0;
                 List<double> totalSelectedScores = new List<double>();
 
                 var workflowQuestions = await _elsaCustomRepository.GetWorkflowInstanceQuestions(workflowInstanceId, CancellationToken.None);

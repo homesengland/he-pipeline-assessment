@@ -24,7 +24,7 @@ namespace Elsa.CustomActivities.Tests.Activities.Scoring.Helpers
             var result = await sut.GetTotalPotValue(workflowInstanceId, "test");
 
             //Assert
-            Assert.Equal(-1, result);
+            Assert.Equal(0, result);
         }
 
         [Theory]
