@@ -8,13 +8,13 @@ namespace Elsa.CustomActivities.Activities.Common
     public class RadioModel
     {
         [HeActivityInput(HasCollectedProperties = true,
-            CollectedPropertyType = typeof(RadioTest))]
+            CollectedPropertyType = typeof(RadioProperty))]
         public ICollection<RadioRecord> Choices { get; set; } = new List<RadioRecord>();
     }
 
     public record RadioRecord(string Identifier, string Answer, bool IsPrePopulated);
 
-    public class RadioTest
+    public class RadioProperty
     {
         [HeActivityInput(Hint = "Identifier", UIHint = HePropertyUIHints.SingleLine)]
         public string Identifier { get; set; } = null!;
