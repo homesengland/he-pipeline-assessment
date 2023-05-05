@@ -17,7 +17,19 @@
                         {
                             @foreach (var answer in question.Answers)
                             {
-                                <p>@answer.AnswerText</p>
+                                if (question.QuestionType == QuestionTypeConstants.PercentageQuestion)
+                                {
+                                    <p>@answer.AnswerText %</p>
+                                }
+                                else if (question.QuestionType == QuestionTypeConstants.CurrencyQuestion)
+                                {
+                                    <p>£ @answer.AnswerText</p>
+                                }
+                                else
+                                {
+                                    <p>@answer.AnswerText</p>
+
+                                }
                             }
                         }
                     </dd>

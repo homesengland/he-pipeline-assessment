@@ -109,7 +109,10 @@ namespace Elsa.CustomWorkflow.Sdk.Models.Workflow
 
         private decimal? GetDecimal()
         {
-            if (QuestionType == QuestionTypeConstants.CurrencyQuestion && HasAnswers())
+            if (QuestionType == QuestionTypeConstants.CurrencyQuestion && HasAnswers() ||
+                QuestionType == QuestionTypeConstants.DecimalQuestion && HasAnswers() ||
+                QuestionType == QuestionTypeConstants.IntegerQuestion && HasAnswers() ||
+                QuestionType == QuestionTypeConstants.PercentageQuestion && HasAnswers())
             {
                 try
                 {
@@ -210,7 +213,10 @@ namespace Elsa.CustomWorkflow.Sdk.Models.Workflow
 
         private void SetDecimal(decimal? value)
         {
-            if (QuestionType == QuestionTypeConstants.CurrencyQuestion)
+            if (QuestionType == QuestionTypeConstants.CurrencyQuestion ||
+                QuestionType == QuestionTypeConstants.DecimalQuestion ||
+                QuestionType == QuestionTypeConstants.IntegerQuestion ||
+                QuestionType == QuestionTypeConstants.PercentageQuestion)
             {
                 SetAnswerString(value.ToString());
             }

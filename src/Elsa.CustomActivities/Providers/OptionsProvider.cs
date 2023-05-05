@@ -19,4 +19,5 @@ namespace Elsa.CustomActivities.Providers
             return JsonConvert.SerializeObject(potScoreOptions);
         }
     }
+   
 }

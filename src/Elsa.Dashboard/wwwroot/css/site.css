@@ -11,13 +11,17 @@
   transition: 0.4s;
 }
 
-  .accordion > * {
-    cursor: auto;
-  }
+.accordion > * {
+  cursor: auto;
+}
 
-  .active, .accordion:hover {
-    background-color: #ccc;
-  }
+.accordion-paragraph {
+  cursor: pointer !important;
+}
+
+.active, .accordion:hover {
+  background-color: #ccc;
+}
 
 .trashcan-icon:hover {
   background-color: #bbb;
@@ -94,13 +98,9 @@ elsa-modal-dialog > div > div > div:first-child {
   elsa-modal-dialog > div[aria-modal*="true"] {
     max-width: 75%;
   }
-
   .elsa-justify-content {
-      display: flex;
-      justify-content: start;
-  }
-
-  .elsa-grid-spacing-y {
-
+    display: flex;
+    justify-content: start;
   }
 }
+

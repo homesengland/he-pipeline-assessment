@@ -159,6 +159,90 @@
                 @Html.HiddenFor(m => m.Data.Questions![i].Decimal)
             }
         }
+        @if (Model.Data.Questions![i].QuestionType == QuestionTypeConstants.DecimalQuestion)
+                    {
+                        @await Html.PartialAsync("_DecimalQuestion",new Question()
+                               {
+                                   Index = i,
+                                   IsValid = isValidItem,
+                                   Answers = Model.Data.Questions[i].Answers.Select(x => new QuestionActivityAnswer
+                                   {
+                                       Answer = x.AnswerText,
+                                       ChoiceId = x.ChoiceId,
+                                       Score = x.Score
+                                   }).ToList(),
+                                   IsReadOnly = Model.Data.Questions[i].IsReadOnly,
+                                   Comments = Model.Data.Questions[i].Comments,
+                                   DisplayComments = Model.Data.Questions[i].DisplayComments,
+                                   QuestionText = Model.Data.Questions[i].Question,
+                                   QuestionGuidance = Model.Data.Questions[i].QuestionGuidance,
+                                   QuestionHint = Model.Data.Questions[i].QuestionHint,
+                                   QuestionId = Model.Data.Questions[i].QuestionId,
+                                   QuestionType = Model.Data.Questions[i].QuestionType,
+                                   Title = Model.Data.Questions[i].Title,
+                                   Decimal = Model.Data.Questions[i].Decimal
+                               })
+                        if (Model.Data.Questions![i].IsReadOnly)
+                        {
+                            @Html.HiddenFor(m => m.Data.Questions![i].Decimal)
+                        }
+                    }
+                    @if (Model.Data.Questions![i].QuestionType == QuestionTypeConstants.IntegerQuestion)
+                    {
+                        @await Html.PartialAsync("_IntegerQuestion",new Question()
+                               {
+                                   Index = i,
+                                   IsValid = isValidItem,
+                                   Answers = Model.Data.Questions[i].Answers.Select(x => new QuestionActivityAnswer
+                                   {
+                                       Answer = x.AnswerText,
+                                       ChoiceId = x.ChoiceId,
+                                       Score = x.Score
+                                   }).ToList(),
+                                   IsReadOnly = Model.Data.Questions[i].IsReadOnly,
+                                   Comments = Model.Data.Questions[i].Comments,
+                                   DisplayComments = Model.Data.Questions[i].DisplayComments,
+                                   QuestionText = Model.Data.Questions[i].Question,
+                                   QuestionGuidance = Model.Data.Questions[i].QuestionGuidance,
+                                   QuestionHint = Model.Data.Questions[i].QuestionHint,
+                                   QuestionId = Model.Data.Questions[i].QuestionId,
+                                   QuestionType = Model.Data.Questions[i].QuestionType,
+                                   Title = Model.Data.Questions[i].Title,
+                                   Decimal = Model.Data.Questions[i].Decimal
+                               })
+                        if (Model.Data.Questions![i].IsReadOnly)
+                        {
+                            @Html.HiddenFor(m => m.Data.Questions![i].Decimal)
+                        }
+                    }
+                    @if (Model.Data.Questions![i].QuestionType == QuestionTypeConstants.PercentageQuestion)
+                    {
+                        @await Html.PartialAsync("_PercentageQuestion",new Question()
+                               {
+                                   Index = i,
+                                   IsValid = isValidItem,
+                                   Answers = Model.Data.Questions[i].Answers.Select(x => new QuestionActivityAnswer
+                                   {
+                                       Answer = x.AnswerText,
+                                       ChoiceId = x.ChoiceId,
+                                       Score = x.Score
+                                   }).ToList(),
+                                   IsReadOnly = Model.Data.Questions[i].IsReadOnly,
+                                   Comments = Model.Data.Questions[i].Comments,
+                                   DisplayComments = Model.Data.Questions[i].DisplayComments,
+                                   QuestionText = Model.Data.Questions[i].Question,
+                                   QuestionGuidance = Model.Data.Questions[i].QuestionGuidance,
+                                   QuestionHint = Model.Data.Questions[i].QuestionHint,
+                                   QuestionId = Model.Data.Questions[i].QuestionId,
+                                   QuestionType = Model.Data.Questions[i].QuestionType,
+                                   Title = Model.Data.Questions[i].Title,
+                                   Decimal = Model.Data.Questions[i].Decimal
+                               })
+                        if (Model.Data.Questions![i].IsReadOnly)
+                        {
+                            @Html.HiddenFor(m => m.Data.Questions![i].Decimal)
+                        }
+                    }
         @if (Model.Data.Questions![i].QuestionType == QuestionTypeConstants.CheckboxQuestion || Model.Data.Questions![i].QuestionType == QuestionTypeConstants.WeightedCheckboxQuestion)
         {
 
