@@ -310,7 +310,6 @@ export class HeWeightedCheckboxOptionGroupProperty {
 
     let multiTextDescriptor = this.multiTextPropertyDescriptor();
     let multiTextModel = this.multiTextModel();
-    console.log("logging multi text...");
 
 
     return (
