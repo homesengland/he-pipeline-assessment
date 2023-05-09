@@ -14,11 +14,11 @@ using Xunit;
 
 namespace Elsa.CustomActivities.Tests.Handlers
 {
-    public class CheckboxListExpressionHandlerTests
+    public class WeightedCheckboxExpressionHandlerTests
     {
 
         [Theory, AutoMoqData]
-        public void CheckboxListExpressionHandlerInheritsFromCorrectBaseClass(CheckboxExpressionHandler sut)
+        public void WeightedCheckboxExpressionHandlerInheritsFromCorrectBaseClass(WeightedCheckboxExpressionHandler sut)
         {
             //Arrange
 
@@ -30,7 +30,7 @@ namespace Elsa.CustomActivities.Tests.Handlers
         }
 
         [Theory, AutoMoqData]
-        public void ExpressionHandlerUsesCorrectSyntax_GivenDefaultValuesUsed(CheckboxExpressionHandler sut)
+        public void ExpressionHandlerUsesCorrectSyntax_GivenDefaultValuesUsed(WeightedCheckboxExpressionHandler sut)
         {
             //Arrange
 
@@ -54,14 +54,21 @@ namespace Elsa.CustomActivities.Tests.Handlers
             string sampleElsaText2 = "'A piece of text '+ RandomJavascriptExpression";
             string sampleElsaText2Actual = "A piece of text 2";
             string sampleElsaText3 = "This test should not display";
+            string maxGroupScore = "20";
+            string groupScoreArray = "[1,3,5]";
 
-            var sampleElsaProperty1 = SampleElsaProperty(GetDictionary(SyntaxNames.Literal, sampleElsaText1), SyntaxNames.Literal, "Text A");
-            var sampleElsaProperty2 = SampleElsaProperty(GetDictionary(SyntaxNames.JavaScript, sampleElsaText2), SyntaxNames.JavaScript, "Text B");
-            var sampleElsaProperty3 = SampleElsaProperty(GetDictionary(SyntaxNames.Literal, sampleElsaText3, prePopulatedValue: "true"), SyntaxNames.Literal, "Text C");
+            var sampleElsaProperty1 = SampleElsaProperty(GetDictionary(SyntaxNames.Literal, sampleElsaText1), SyntaxNames.Literal, "Group A");
+            var sampleElsaProperty2 = SampleElsaProperty(GetDictionary(SyntaxNames.JavaScript, sampleElsaText2), SyntaxNames.JavaScript, "Group B");
+            var sampleElsaProperty3 = SampleElsaProperty(GetDictionary(SyntaxNames.Literal, sampleElsaText3, prePopulatedValue: "true"), SyntaxNames.Literal, "Group C");
+            var sampleElsaProperty4 = SampleElsaProperty(
+                GetDictionary(SyntaxNames.Json,
+                    JsonConvert.SerializeObject(new List<ElsaProperty> { sampleElsaProperty2, sampleElsaProperty3 }),
+                    prePopulatedValue: "true", maxGroupScore: maxGroupScore, groupArrayScore: groupScoreArray), SyntaxNames.Json, "Group D");
 
             CheckboxListProperties.Add(sampleElsaProperty1);
             CheckboxListProperties.Add(sampleElsaProperty2);
             CheckboxListProperties.Add(sampleElsaProperty3);
+            CheckboxListProperties.Add(sampleElsaProperty4);
 
             string expressionString = JsonConvert.SerializeObject(CheckboxListProperties);
 
@@ -79,24 +86,32 @@ namespace Elsa.CustomActivities.Tests.Handlers
             evaluator.Setup(x => x.TryEvaluateAsync<string>(sampleElsaProperty3.Expressions![sampleElsaProperty3.Syntax!],
                 sampleElsaProperty3.Syntax!, context, CancellationToken.None)).Returns(Task.FromResult(Models.Result.Success<string?>(sampleElsaText3)));
 
+            evaluator.Setup(x => x.TryEvaluateAsync<ElsaProperty>(sampleElsaProperty4.Expressions![sampleElsaProperty4.Syntax!],
+                sampleElsaProperty4.Syntax!, context, CancellationToken.None)).Returns(Task.FromResult(Models.Result.Success<ElsaProperty?>(sampleElsaProperty3)));
+
             evaluator.Setup(x => x.TryEvaluateAsync<bool>("true", SyntaxNames.JavaScript
                 , context, CancellationToken.None)).Returns(Task.FromResult(Models.Result.Success<bool>(true)));
 
             evaluator.Setup(x => x.TryEvaluateAsync<bool>("false", SyntaxNames.JavaScript
                 , context, CancellationToken.None)).Returns(Task.FromResult(Models.Result.Success<bool>(false)));
 
-            CheckboxExpressionHandler sut = new CheckboxExpressionHandler(logger.Object, serialiser.Object);
+            WeightedCheckboxExpressionHandler sut = new WeightedCheckboxExpressionHandler(logger.Object, serialiser.Object);
 
             //Act
 
             var results = await sut.EvaluateAsync(expressionString, typeof(TextModel), context, CancellationToken.None);
-            CheckboxModel? expectedResults = results.ConvertTo<CheckboxModel>();
+            WeightedCheckboxModel? expectedResults = results.ConvertTo<WeightedCheckboxModel>();
 
             //Assert
-            Assert.True(!expectedResults!.Choices.IsNullOrEmpty());
-            Assert.Equal(CheckboxListProperties.Count(), expectedResults!.Choices.Count());
-            Assert.Contains(sampleElsaText1, expectedResults!.Choices.Select(x => x.Answer));
-            Assert.Contains(sampleElsaText2Actual, expectedResults!.Choices.Select(x => x.Answer));
+            Assert.True(!expectedResults!.Groups.IsNullOrEmpty());
+            Assert.Equal(CheckboxListProperties.Count(), expectedResults!.Groups.Count());
+            var groupD = expectedResults.Groups.FirstOrDefault(x => x.Key == "Group D").Value;
+            Assert.Equal(new List<decimal> {1, 3, 5}, groupD.GroupArrayScore!.Select(x => x));
+            Assert.Equal(20, groupD.MaxGroupScore);
+            Assert.Contains("Group B", groupD!.Choices.Select(x => x.Identifier));
+            Assert.Contains("Group C", groupD!.Choices.Select(x => x.Identifier));
+            var groupBNested = groupD!.Choices.First(x => x.Identifier == "Group B");
+            Assert.Equal(sampleElsaText2Actual, groupBNested.Answer);
         }
 
         [Theory, AutoMoqData]
@@ -110,7 +125,7 @@ namespace Elsa.CustomActivities.Tests.Handlers
             //Arrange
             var context = new ActivityExecutionContext(provider.Object, default!, default!, default!, default, default);
 
-            CheckboxExpressionHandler handler = new CheckboxExpressionHandler(logger.Object, serializer.Object);
+            WeightedCheckboxExpressionHandler handler = new WeightedCheckboxExpressionHandler(logger.Object, serializer.Object);
 
             ElsaProperty property = SampleElsaProperty(GetDictionary(SyntaxNames.Literal, "Sample Text", prePopulatedValue: prePopulatedValue.ToString().ToLower()), SyntaxNames.Literal, "Checkbox Text");
 
@@ -135,7 +150,7 @@ namespace Elsa.CustomActivities.Tests.Handlers
             //Arrange
             var context = new ActivityExecutionContext(provider.Object, default!, default!, default!, default, default);
 
-            CheckboxExpressionHandler handler = new CheckboxExpressionHandler(logger.Object, serializer.Object);
+            WeightedCheckboxExpressionHandler handler = new WeightedCheckboxExpressionHandler(logger.Object, serializer.Object);
 
             ElsaProperty propertyWithNoKey = SampleElsaProperty(GetDictionary(SyntaxNames.Literal, "Sample Text", isSingle: string.Empty), SyntaxNames.Literal, "Checkbox Text");
             ElsaProperty propertyWithInvalidValue = SampleElsaProperty(GetDictionary(SyntaxNames.Literal, "Sample Text", isSingle: "Abc123"), SyntaxNames.Literal, "Checkbox Text 2");
@@ -163,7 +178,7 @@ namespace Elsa.CustomActivities.Tests.Handlers
             //Arrange
             var context = new ActivityExecutionContext(provider.Object, default!, default!, default!, default, default);
 
-            CheckboxExpressionHandler handler = new CheckboxExpressionHandler(logger.Object, serializer.Object);
+            WeightedCheckboxExpressionHandler handler = new WeightedCheckboxExpressionHandler(logger.Object, serializer.Object);
 
             ElsaProperty property = SampleElsaProperty(GetDictionary(SyntaxNames.Literal, "Sample Text", isSingle: isSingleValue.ToString()), SyntaxNames.Literal, "Checkbox Text");
 
@@ -188,7 +203,7 @@ namespace Elsa.CustomActivities.Tests.Handlers
             //Arrange
             var context = new ActivityExecutionContext(provider.Object, default!, default!, default!, default, default);
 
-            CheckboxExpressionHandler handler = new CheckboxExpressionHandler(logger.Object, serializer.Object);
+            WeightedCheckboxExpressionHandler handler = new WeightedCheckboxExpressionHandler(logger.Object, serializer.Object);
 
             ElsaProperty propertyWithNoKey = SampleElsaProperty(GetDictionary(SyntaxNames.Literal, "Sample Text", prePopulatedValue: string.Empty), SyntaxNames.Literal, "Checkbox Text");
             ElsaProperty propertyWithInvalidValue = SampleElsaProperty(GetDictionary(SyntaxNames.Literal, "Sample Text", prePopulatedValue: "Abc123"), SyntaxNames.Literal, "Checkbox Text 2");
@@ -211,14 +226,23 @@ namespace Elsa.CustomActivities.Tests.Handlers
         private Dictionary<string, string> GetDictionary(string defaultSyntax,
             string defaultValue,
             string prePopulatedValue = "false",
-            string isSingle = "false")
+            string isSingle = "false",
+            string maxGroupScore = "0",
+            string groupArrayScore = "")
         {
 
             return new Dictionary<string, string>()
             {
-                {defaultSyntax, defaultValue},
-                {CheckboxSyntaxNames.PrePopulated, prePopulatedValue },
-                {CheckboxSyntaxNames.Single, isSingle}
+                { defaultSyntax, defaultValue },
+                { CheckboxSyntaxNames.PrePopulated, prePopulatedValue },
+                { CheckboxSyntaxNames.Single, isSingle },
+                { ScoringSyntaxNames.MaxGroupScore, maxGroupScore },
+                {
+                    ScoringSyntaxNames.GroupArrayScore,
+                    JsonConvert.SerializeObject(
+                        SampleElsaProperty(new Dictionary<string, string> { { SyntaxNames.Json, groupArrayScore } },
+                        SyntaxNames.Json, "GroupArrayScore"))
+                }
             };
         }
 
