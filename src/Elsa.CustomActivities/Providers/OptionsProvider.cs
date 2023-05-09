@@ -1,7 +1,7 @@
 ﻿using Elsa.CustomInfrastructure.Data.Repository;
 using Newtonsoft.Json;
 
-namespace Elsa.CustomActivities.OptionsProviders
+namespace Elsa.CustomActivities.Providers
 {
     public interface IOptionsProvider
     {

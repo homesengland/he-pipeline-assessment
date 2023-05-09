@@ -10,7 +10,7 @@ import {
 } from '../../models/elsa-interfaces';
 
 import {
-    HeActivityPropertyDescriptor,
+  HeActivityPropertyDescriptor,
   //QuestionModel,
   NestedPropertyModel,
   QuestionScreenProperty
@@ -26,7 +26,7 @@ import {
   QuestionProvider
 } from '../providers/question-provider/question-provider';
 import TrashCanIcon from '../../icons/trash-can';
-import { SyntaxNames } from '../../constants/constants';
+import { QuestionCategories, SyntaxNames } from '../../constants/constants';
 import { filterPropertiesByType, parseJson } from '../../utils/utils';
 
 @Component({
@@ -44,6 +44,7 @@ export class QuestionScreen {
   @State() questionModel: QuestionScreenProperty = new QuestionScreenProperty();
   @State() iconProvider = new IconProvider();
   @State() questionProvider = new QuestionProvider(Object.values(QuestionLibrary));
+  @State() questionDropdownDisplay = QuestionCategories.None;
 
   supportedSyntaxes: Array<string> = [SyntaxNames.JavaScript, SyntaxNames.Liquid];
   multiExpressionEditor: HTMLElsaMultiExpressionEditorElement;
@@ -109,13 +110,36 @@ export class QuestionScreen {
   };
 
   handleAddQuestion(e: Event) {
+    console.log("Adding Question...");
     let value = (e.currentTarget as HTMLSelectElement).value.trim();
+    console.log("value", value);
     let data: IActivityData = JSON.parse((e.currentTarget as HTMLSelectElement).selectedOptions[0].dataset.type)
+    console.log("Data", data);
     if (value != null && value != "") {
       this.onAddQuestion(data);
       let element = e.currentTarget as HTMLSelectElement;
       element.selectedIndex = 0;
     }
+  }
+
+  handleFilterQuestions(e: Event) {
+    let value = (e.currentTarget as HTMLSelectElement).value.trim();
+    let data: string = (e.currentTarget as HTMLSelectElement).selectedOptions[0].dataset.type
+    if (value != null && value != "") {
+      this.onToggleDropdownFilter(data);
+    }
+  }
+
+  onToggleDropdownFilter(toggleValue: string) {
+    this.questionDropdownDisplay = toggleValue;
+  }
+
+  displayDropdowns(categoryType: string) {
+    if (categoryType == this.questionDropdownDisplay) {
+      return true;
+    }
+    return false;
+
   }
 
   newQuestionValue(name: string, id: string) {
@@ -132,7 +156,7 @@ export class QuestionScreen {
     let propertyDescriptors = filterPropertiesByType(this.questionProperties, questionType.nameConstant);
     let newQuestion: NestedPropertyModel = { value: newValue, descriptor: propertyDescriptors, ActivityType: questionType }
     this.questionModel = { ...this.questionModel, activities: [...this.questionModel.activities, newQuestion] };
-    
+
     this.updatePropertyModel();
   }
 
@@ -173,6 +197,8 @@ export class QuestionScreen {
       propertyName: this.propertyDescriptor.name
     };
     const json = JSON.stringify(this.questionModel, null, 2);
+    const displayScoringQuestions = this.displayDropdowns(QuestionCategories.Scoring) ? "inline-block" : "none";
+    const displayStandardQuestions = this.displayDropdowns(QuestionCategories.Question) ? "inline-block" : "none";
 
     return (
       <div>
@@ -189,15 +215,39 @@ export class QuestionScreen {
           onExpressionChanged={e => this.onMultiExpressionEditorValueChanged(e)}
           onSyntaxChanged={e => this.onMultiExpressionEditorSyntaxChanged(e)}
         >
+          <div class="elsa-justify-content">
+            <div class="elsa-pr-5 elsa-mt-1 elsa-w-full sm:elsa-max-w-xs sm:elsa-text-sm elsa-border-gray-300 elsa-rounded-md">
+              <select id="toggleCategoryDropdown"
+                onChange={(e) => this.handleFilterQuestions.bind(this)(e)}
+                name="toggleCategoryDropdown"
+                class="elsa-inline-block focus:elsa-ring-blue-500 px-6 focus:elsa-border-blue-500 elsa-w-full elsa-shadow-sm sm:elsa-max-w-xs sm:elsa-text-sm elsa-border-gray-300 elsa-rounded-md">
+                {this.questionProvider.displayDropdownToggleOptions()}
+              </select>
+            </div>
 
-
-        <select id="addQuestionDropdown"
-          onChange={ (e) => this.handleAddQuestion.bind(this)(e) }
-          name="addQuestionDropdown"
-          class="elsa-mt-1 elsa-block focus:elsa-ring-blue-500 focus:elsa-border-blue-500 elsa-w-full elsa-shadow-sm sm:elsa-max-w-xs sm:elsa-text-sm elsa-border-gray-300 elsa-rounded-md">
-          <option value="">Add a Question...</option>
-          {this.questionProvider.displayOptions()}
-          </select>
+            <div
+              class="elsa-mt-1 elsa-w-full sm:elsa-max-w-xs sm:elsa-text-sm elsa-border-gray-300 elsa-rounded-md"
+              style={{ display: displayStandardQuestions }}            >
+              <select id="addQuestionDropdown"
+                onChange={(e) => this.handleAddQuestion.bind(this)(e)}
+                name="addQuestionDropdown"
+                class="elsa-inline-block focus:elsa-ring-blue-500 focus:elsa-border-blue-500 elsa-w-full elsa-shadow-sm sm:elsa-max-w-xs sm:elsa-text-sm elsa-border-gray-300 elsa-rounded-md">
+                <option value="">Add a Question...</option>
+                {this.questionProvider.displayOptions()}
+              </select>
+            </div>
+            <div
+              class="elsa-mt-1 elsa-w-full sm:elsa-max-w-xs sm:elsa-text-sm elsa-border-gray-300 elsa-rounded-md"
+              style={{ display: displayScoringQuestions }}>
+              <select id="addScoringQuestionDropdown"
+                onChange={(e) => this.handleAddQuestion.bind(this)(e)}
+                name="addScoringQuestionDropdown"
+                class="elsa-inline-block focus:elsa-ring-blue-500 focus:elsa-border-blue-500 elsa-w-full elsa-shadow-sm sm:elsa-max-w-xs sm:elsa-text-sm elsa-border-gray-300 elsa-rounded-md">
+                <option value="">Add a Scoring Question...</option>
+                {this.questionProvider.displayScoringOptions()}
+              </select>
+            </div>
+          </div>
         </elsa-multi-expression-editor>
       </div>
     );

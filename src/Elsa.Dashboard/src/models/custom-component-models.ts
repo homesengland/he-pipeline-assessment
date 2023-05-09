@@ -19,6 +19,9 @@ export interface HeActivityPropertyDescriptor extends ActivityPropertyDescriptor
   displayInDesigner: boolean;
   conditionalActivityTypes?: Array<string>;
   expectedOutputType: string;
+  hasNestedProperties: boolean;
+  hasColletedProperties: boolean;
+  nestedProperties: Array<HeActivityPropertyDescriptor>;
 }
 
 //Outcome Screens
@@ -52,7 +55,7 @@ export class QuestionScreenProperty implements INestedActivityListProperty {
 
 export class NestedProperty
 {
-  value: ActivityDefinitionProperty;
+  value: NestedActivityDefinitionProperty;
   descriptor: HeActivityPropertyDescriptor;
 }
 
@@ -62,19 +65,17 @@ export class NestedPropertyModel {
   ActivityType: IActivityData;
 }
 
-
-//export class QuestionModel {
-//  value: ActivityDefinitionProperty;
-//  descriptor: Array<HeActivityPropertyDescriptor> = [];
-//  questionType: IQuestionData;
-//}
-
 export interface Dictionary<T> {
   [Key: string]: T;
 }
 
 export interface NestedActivityDefinitionProperty extends ActivityDefinitionProperty {
   type: string;
+}
+
+export interface NestedActivityDefinitionPropertyAlt extends ActivityDefinitionProperty {
+  type: string | null
+  propertyDescriptors: Array<HeActivityPropertyDescriptor> | null
 }
 
 export interface PotScoreNestedActivityDefinitionProperty extends NestedActivityDefinitionProperty {

@@ -1,9 +1,12 @@
-﻿using Elsa.CustomActivities.Activities.Common;
+﻿using Elsa.Attributes;
+using Elsa.CustomActivities.Activities.Common;
 using Elsa.CustomActivities.Constants;
-using Elsa.CustomActivities.OptionsProviders;
 using Elsa.CustomActivities.PropertyDecorator;
+using Elsa.CustomActivities.Providers;
 using Elsa.CustomWorkflow.Sdk;
+using Elsa.Design;
 using Elsa.Expressions;
+using Parlot.Fluent;
 
 namespace Elsa.CustomActivities.Activities.QuestionScreen
 {
@@ -29,7 +32,9 @@ namespace Elsa.CustomActivities.Activities.QuestionScreen
                 QuestionTypeConstants.PotScoreRadioQuestion,
                 QuestionTypeConstants.DateQuestion,
                 QuestionTypeConstants.TextQuestion,
-                QuestionTypeConstants.TextAreaQuestion
+                QuestionTypeConstants.TextAreaQuestion,
+                QuestionTypeConstants.WeightedCheckboxQuestion, 
+                QuestionTypeConstants.WeightedRadioQuestion
             })]
         public string QuestionText { get; set; } = null!;
 
@@ -46,7 +51,9 @@ namespace Elsa.CustomActivities.Activities.QuestionScreen
                 QuestionTypeConstants.PotScoreRadioQuestion, 
                 QuestionTypeConstants.DateQuestion, 
                 QuestionTypeConstants.TextQuestion, 
-                QuestionTypeConstants.TextAreaQuestion
+                QuestionTypeConstants.TextAreaQuestion,
+                QuestionTypeConstants.WeightedCheckboxQuestion,
+                QuestionTypeConstants.WeightedRadioQuestion
             })]
         public string QuestionHint { get; set; } = null!;
 
@@ -62,7 +69,9 @@ namespace Elsa.CustomActivities.Activities.QuestionScreen
                     QuestionTypeConstants.PotScoreRadioQuestion, 
                     QuestionTypeConstants.DateQuestion, 
                     QuestionTypeConstants.TextQuestion, 
-                    QuestionTypeConstants.TextAreaQuestion
+                    QuestionTypeConstants.TextAreaQuestion,
+                    QuestionTypeConstants.WeightedCheckboxQuestion,
+                    QuestionTypeConstants.WeightedRadioQuestion
                 })]
         public string QuestionGuidance { get; set; } = null!;
 
@@ -83,10 +92,34 @@ namespace Elsa.CustomActivities.Activities.QuestionScreen
             ExpectedOutputType = ExpectedOutputHints.Double)]
         public double QuestionWeighting { get; set; }
 
+        [HeActivityInput(Hint = "Maximum available score for any combination of answers.", Name = "Max Question Score",  
+            ConditionalActivityTypes = new[]{ QuestionTypeConstants.WeightedCheckboxQuestion })]
+        public decimal? MaxScore { get; set; }
+
+        [HeActivityInput(UIHint = HePropertyUIHints.MultiText,
+            Hint = "The score for the question, based on the corresponding number of questions answered in all groups.  This is not compatible with Group Score Array, and this will always take precedence.", 
+            Name = "Score Array", 
+            ConditionalActivityTypes = new[] { QuestionTypeConstants.WeightedCheckboxQuestion }
+            )]
+        public List<decimal>? ScoreArray { get; set; }
+
+        [HeActivityInput(
+            Hint = "Set the formula for how the calculation is worked out for the Question.  This overrides all other scoring.",
+            Name = "Override standard scoring calculations",
+            UIHint = HePropertyUIHints.MultiLine,
+            SupportedSyntaxes = new[] { SyntaxNames.JavaScript },
+            DefaultSyntax = SyntaxNames.JavaScript,
+            ConditionalActivityTypes = new[] { QuestionTypeConstants.WeightedCheckboxQuestion },
+            IsDesignerCritical = true)]
+        public decimal? Score { get; set; } = null!;
+
         [HeActivityInput(UIHint = HePropertyUIHints.CheckboxOptions, ConditionalActivityTypes = new[] { QuestionTypeConstants.CheckboxQuestion }, ExpectedOutputType = ExpectedOutputHints.Checkbox)]
         public CheckboxModel Checkbox { get; set; } = new CheckboxModel();
 
-        [HeActivityInput(UIHint = HePropertyUIHints.RadioOptions, ConditionalActivityTypes = new[] { QuestionTypeConstants.RadioQuestion }, ExpectedOutputType = ExpectedOutputHints.Radio)]
+        [HeActivityInput(UIHint = HePropertyUIHints.RadioOptions, 
+            ConditionalActivityTypes = new[] { QuestionTypeConstants.RadioQuestion }, 
+            ExpectedOutputType = ExpectedOutputHints.Radio,
+            HasNestedProperties = true)]
         public RadioModel Radio { get; set; } = new RadioModel();
 
         [HeActivityInput(UIHint = HePropertyUIHints.PotScoreRadioOptions, ConditionalActivityTypes = new[] { QuestionTypeConstants.PotScoreRadioQuestion }, ExpectedOutputType = ExpectedOutputHints.Radio, OptionsProvider = typeof(PotScoreOptionsProvider))]
@@ -150,6 +183,8 @@ namespace Elsa.CustomActivities.Activities.QuestionScreen
                 QuestionTypeConstants.PercentageQuestion,
                 QuestionTypeConstants.RadioQuestion,
                 QuestionTypeConstants.PotScoreRadioQuestion,
+                QuestionTypeConstants.WeightedRadioQuestion,
+                QuestionTypeConstants.WeightedCheckboxQuestion,
                 QuestionTypeConstants.CheckboxQuestion
             })]
         public bool IsReadOnly { get; set; } = false;

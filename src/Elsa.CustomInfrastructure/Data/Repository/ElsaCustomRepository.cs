@@ -49,7 +49,7 @@ namespace Elsa.CustomInfrastructure.Data.Repository
         {
             var list = await _dbContext.Set<Question>()
                 .Where(x => x.ActivityId == activityId && x.WorkflowInstanceId == workflowInstanceId && x.QuestionId != null)
-                .Include(x => x.Choices)
+                .Include(x => x.Choices)!.ThenInclude(y => y.QuestionChoiceGroup)
                 .Include(x => x.Answers)
                 .ToListAsync(cancellationToken);
             return list;
@@ -65,6 +65,12 @@ namespace Elsa.CustomInfrastructure.Data.Repository
                 .OrderByDescending(x => x.CreatedDateTime)
                 .FirstOrDefaultAsync(cancellationToken: cancellationToken);
            
+            return result;
+        }
+
+        public async Task<Question?> GetQuestionById(int id)
+        {
+            var result = await _dbContext.Set<Question>().FirstOrDefaultAsync(x => x.Id == id);
             return result;
         }
 

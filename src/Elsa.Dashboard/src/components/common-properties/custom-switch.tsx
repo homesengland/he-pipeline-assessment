@@ -16,11 +16,10 @@ import ExpandIcon from '../../icons/expand_icon';
 import { SyntaxNames } from '../../constants/constants';
 
 @Component({
-  tag: 'switch-options-property',
+  tag: 'switch-answers-property',
   shadow: false,
 })
-  //Copy of Elsa Switch Case
-  //Copied to allow us control over how the expression editor is displayed.
+
 export class CustomElsaSwitchCasesProperty {
 
   @Prop() activityModel: ActivityModel;
@@ -91,7 +90,7 @@ export class CustomElsaSwitchCasesProperty {
     if (!Array.isArray(parsed))
       return;
 
-    this.propertyModel.expressions['Switch'] = json;
+    this.propertyModel.expressions[SyntaxNames.Switch] = json;
     this.cases = parsed;
   }
 

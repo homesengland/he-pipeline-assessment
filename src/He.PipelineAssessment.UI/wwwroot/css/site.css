@@ -30,3 +30,7 @@ body {
 .pull-left {
     float:left;
 }
+
+.govuk-checkboxes {
+    margin-bottom: 10px !important;
+}

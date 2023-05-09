@@ -1,13 +1,13 @@
-import { Component, EventEmitter, Event, Prop, State } from '@stencil/core';
+import { Component, EventEmitter, Event, Prop, State, h } from '@stencil/core';
 import { DataDictionaryGroup } from '../../models/custom-component-models';
 import {
     ActivityModel,
   HTMLElsaMultiExpressionEditorElement,
-  ActivityDefinitionProperty
 } from '../../models/elsa-interfaces';
 
 import {
     HeActivityPropertyDescriptor,
+  NestedActivityDefinitionProperty,
   NestedProperty,
   NestedPropertyModel,
 } from '../../models/custom-component-models';
@@ -66,16 +66,17 @@ export class QuestionProperty {
   }
 
   createQuestionProperty(descriptor: HeActivityPropertyDescriptor): NestedProperty {
-    let propertyValue: ActivityDefinitionProperty = {
+    let propertyValue: NestedActivityDefinitionProperty = {
       syntax: descriptor.defaultSyntax,
       value: descriptor.expectedOutputType,
       name: descriptor.name,
-      expressions: this.getExpressionMap(descriptor.supportedSyntaxes)
+      expressions: this.getExpressionMap(descriptor.supportedSyntaxes),
+      type: ''
     }
     if (descriptor.name.toLowerCase() == 'id') {
       propertyValue.expressions[SyntaxNames.Literal] = this.questionModel.value.value;
     }
-    let property: NestedProperty = { value: propertyValue, descriptor: descriptor }
+    let property: NestedProperty = { value: propertyValue, descriptor: descriptor, }
     return property;
   }
 
@@ -111,12 +112,21 @@ export class QuestionProperty {
 
     const renderPropertyEditor = (property: NestedProperty) => {
 
-       var content = displayManager.displayNested(this.activityModel, property, this.onPropertyExpressionChange.bind(this));
-      return content;
+      var content = displayManager.displayNested(this.activityModel, property, this.onPropertyExpressionChange.bind(this));
+      let id = property.descriptor.name + "Category";
+      return (
+        <he-elsa-control id={id} content={content} class="sm:elsa-col-span-6 hydrated"/>
+        );
     }
 
     return (
-      this.nestedQuestionProperties.map(renderPropertyEditor)
+      <div class="elsa-grid elsa-grid-cols-1 elsa-gap-y-6 elsa-gap-x-4 sm:elsa-grid-cols-6">
+
+        {this.nestedQuestionProperties.map(renderPropertyEditor)}
+
+      </div>
+      
+      
     )
     
   }

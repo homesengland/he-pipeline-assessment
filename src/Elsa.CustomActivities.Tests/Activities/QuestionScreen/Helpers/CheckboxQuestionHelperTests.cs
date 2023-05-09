@@ -516,7 +516,7 @@ namespace Elsa.CustomActivities.Tests.Activities.QuestionScreen.Helpers
             var result = await sut.AnswerCount(correlationId, workflowName, activityName, questionId);
 
             //Assert
-            Assert.Equal(-1, result);
+            Assert.Equal(0, result);
         }
 
         [Theory]
@@ -541,7 +541,7 @@ namespace Elsa.CustomActivities.Tests.Activities.QuestionScreen.Helpers
             var result = await sut.AnswerCount(correlationId, workflowName, activityName, questionId);
 
             //Assert
-            Assert.Equal(-1, result);
+            Assert.Equal(0, result);
         }
 
         [Theory]
@@ -572,7 +572,7 @@ namespace Elsa.CustomActivities.Tests.Activities.QuestionScreen.Helpers
             var result = await sut.AnswerCount(correlationId, workflowName, activityName, questionId);
 
             //Assert
-            Assert.Equal(-1, result);
+            Assert.Equal(0, result);
         }
 
         [Theory]
@@ -605,7 +605,7 @@ namespace Elsa.CustomActivities.Tests.Activities.QuestionScreen.Helpers
             var result = await sut.AnswerCount(correlationId, workflowName, activityName, questionId);
 
             //Assert
-            Assert.Equal(-1, result);
+            Assert.Equal(0, result);
         }
 
         [Theory]
@@ -640,7 +640,7 @@ namespace Elsa.CustomActivities.Tests.Activities.QuestionScreen.Helpers
             var result = await sut.AnswerCount(correlationId, workflowName, activityName, questionId);
 
             //Assert
-            Assert.Equal(-1, result);
+            Assert.Equal(0, result);
         }
 
         [Theory]

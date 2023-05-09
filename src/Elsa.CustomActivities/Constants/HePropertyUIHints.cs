@@ -18,8 +18,8 @@ namespace Elsa.CustomActivities.Constants
         public const string RadioOptions = "he-radio-options";
         public const string PotScoreRadioOptions = "he-potscore-radio-options";
         public const string QuestionDataDictionary = "he-question-data-dictionary";
-        public const string WeightedRadioOptions = "he-weighted-radio-options";
-        public const string WeightedCheckboxOptions = "he-weighted-checkbox-options";
+        public const string WeightedRadioOptions = "he-weighted-radio";
+        public const string WeightedCheckboxOptions = "he-weighted-checkbox";
         public const string CheckboxOptions = "he-checkbox-options";
         public const string TextActivity = "he-text-activity";
     }

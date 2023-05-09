@@ -2,12 +2,12 @@
 using Elsa.ActivityResults;
 using Elsa.Attributes;
 using Elsa.CustomActivities.Constants;
-using Elsa.CustomModels;
 using Elsa.Design;
 using Elsa.Expressions;
 using Elsa.Services;
 using Elsa.Services.Models;
-using System.ComponentModel;
+using Elsa.CustomActivities.Providers;
+using Elsa.CustomInfrastructure.Data.Repository;
 
 namespace Elsa.CustomActivities.Activities.QuestionScreen
 {
@@ -19,6 +19,15 @@ namespace Elsa.CustomActivities.Activities.QuestionScreen
     )]
     public class QuestionScreen : Activity
     {
+        private readonly IScoreProvider _scoreProvider;
+        private readonly IElsaCustomRepository _elsaCustomRepository;
+
+        public QuestionScreen(IScoreProvider scoreProvider, IElsaCustomRepository elsaCustomRepository)
+        {
+            _scoreProvider = scoreProvider;
+            _elsaCustomRepository = elsaCustomRepository;
+        }
+
         [ActivityInput]
         public string PageTitle { get; set; } = null!;
 
@@ -52,6 +61,7 @@ namespace Elsa.CustomActivities.Activities.QuestionScreen
 
         protected override async ValueTask<IActivityExecutionResult> OnResumeAsync(ActivityExecutionContext context)
         {
+            await UpdateQuestionScores(context);
             var response = context.GetInput<List<CustomModels.Question>>();
             Output = response;
             var matches = Cases.Where(x => x.Condition).Select(x => x.Name).ToList();
@@ -65,6 +75,54 @@ namespace Elsa.CustomActivities.Activities.QuestionScreen
                 Outcomes(outcomes),
                 new SuspendResult()
             }));
+        }
+
+        private async Task UpdateQuestionScores(ActivityExecutionContext context)
+        {
+            var questions = context.GetInput<List<CustomModels.Question>>();
+
+            if (questions != null)
+            {
+                foreach (var answeredQuestion in questions)
+                {
+                    var questionDefinition = GetQuestionFromActivityData(context, answeredQuestion.QuestionId);
+                    var score = CalculateQuestionScore(answeredQuestion, questionDefinition);
+
+                    var dbQuestion = await _elsaCustomRepository.GetQuestionById(answeredQuestion.Id);
+                    if (dbQuestion != null)
+                    {
+                        dbQuestion.Score = score;
+                        await _elsaCustomRepository.UpdateQuestion(dbQuestion);
+                    }
+                }
+            }
+
+        }
+
+        private Question? GetQuestionFromActivityData(ActivityExecutionContext context, string? questionId)
+        {
+            var dictionary = context.GetActivityData(context.ActivityId);
+            if (dictionary.ContainsKey("Questions"))
+            {
+                var activityData = dictionary.FirstOrDefault(x => x.Key == "Questions");
+                var assessmentQuestions = (AssessmentQuestions?)activityData.Value;
+                if (assessmentQuestions != null)
+                {
+                    var questionDefinition = assessmentQuestions.Questions.FirstOrDefault(x => x.Id == questionId);
+                    return questionDefinition;
+                }
+
+            }
+            return null;
+        }
+
+        private decimal CalculateQuestionScore(CustomModels.Question answeredQuestion, Question? questionDefinition)
+        {
+            if (questionDefinition == null)
+                return 0;
+
+            var score = _scoreProvider.CalculateScore(answeredQuestion, questionDefinition);
+            return score;
         }
     }
 

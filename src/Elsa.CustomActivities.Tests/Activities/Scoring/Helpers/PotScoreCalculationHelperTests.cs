@@ -24,7 +24,7 @@ namespace Elsa.CustomActivities.Tests.Activities.Scoring.Helpers
             var result = await sut.GetTotalPotValue(workflowInstanceId, "test");
 
             //Assert
-            Assert.Equal(-1, result);
+            Assert.Equal(0, result);
         }
 
         [Theory]
@@ -307,7 +307,7 @@ namespace Elsa.CustomActivities.Tests.Activities.Scoring.Helpers
             elsaCustomRepository.Setup(x => x.GetQuestionWorkflowInstance(workflowInstanceId, CancellationToken.None)).ReturnsAsync((QuestionWorkflowInstance?)null);
 
             //Act
-            var result = await sut.GetPotScore(workflowInstanceId);
+            var result = await sut.GetWorkflowScore(workflowInstanceId);
 
             //Assert
             Assert.Equal(string.Empty, result);
@@ -326,7 +326,7 @@ namespace Elsa.CustomActivities.Tests.Activities.Scoring.Helpers
             elsaCustomRepository.Setup(x => x.GetQuestionWorkflowInstance(workflowInstanceId, CancellationToken.None)).ReturnsAsync(instance);
 
             //Act
-            var result = await sut.GetPotScore(workflowInstanceId);
+            var result = await sut.GetWorkflowScore(workflowInstanceId);
 
             //Assert
             Assert.Equal(string.Empty, result);
@@ -344,7 +344,7 @@ namespace Elsa.CustomActivities.Tests.Activities.Scoring.Helpers
             elsaCustomRepository.Setup(x => x.GetQuestionWorkflowInstance(workflowInstanceId, CancellationToken.None)).ReturnsAsync(instance);
 
             //Act
-            var result = await sut.GetPotScore(workflowInstanceId);
+            var result = await sut.GetWorkflowScore(workflowInstanceId);
 
             //Assert
             Assert.Equal(instance.Score, result);

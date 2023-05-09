@@ -58,19 +58,76 @@ namespace Elsa.Server.Helpers
 
         private List<QuestionChoice>? MapChoices(CustomActivities.Activities.QuestionScreen.Question question)
         {
-            var choices = question.QuestionType switch
+            List<QuestionChoice>? choices = new List<QuestionChoice>();
+            switch (question.QuestionType)
             {
-                QuestionTypeConstants.CheckboxQuestion => question.Checkbox.Choices
-                    .Select(x => new QuestionChoice() { Identifier = x.Identifier, Answer = x.Answer, IsSingle = x.IsSingle, IsPrePopulated = x.IsPrePopulated })
-                    .ToList(),
-                QuestionTypeConstants.RadioQuestion => question.Radio.Choices
-                    .Select(x => new QuestionChoice() { Identifier = x.Identifier, Answer = x.Answer, IsSingle = false, IsPrePopulated = x.IsPrePopulated })
-                    .ToList(),
-                QuestionTypeConstants.PotScoreRadioQuestion => question.PotScoreRadio.Choices
-                    .Select(x => new QuestionChoice() { Identifier = x.Identifier, Answer = x.Answer, IsSingle = false, IsPrePopulated = x.IsPrePopulated, PotScoreCategory = x.PotScore })
-                    .ToList(),
-                _ => null
-            };
+                case QuestionTypeConstants.CheckboxQuestion:
+                    choices = question.Checkbox.Choices.Select(x => new QuestionChoice()
+                    {
+                        Identifier = x.Identifier,
+                        Answer = x.Answer,
+                        IsSingle = x.IsSingle,
+                        IsPrePopulated = x.IsPrePopulated
+                    })
+                        .ToList();
+                    break;
+                case QuestionTypeConstants.RadioQuestion:
+                    choices = question.Radio.Choices.Select(x => new QuestionChoice()
+                    {
+                        Identifier = x.Identifier,
+                        Answer = x.Answer,
+                        IsSingle = false,
+                        IsPrePopulated = x.IsPrePopulated
+                    })
+                        .ToList();
+                    break;
+                case QuestionTypeConstants.WeightedRadioQuestion:
+                    choices = question.WeightedRadio.Choices.Select(x => new QuestionChoice()
+                    {
+                        Identifier = x.Identifier,
+                        Answer = x.Answer,
+                        IsSingle = false,
+                        IsPrePopulated = x.IsPrePopulated,
+                        NumericScore = x.Score
+                    })
+                        .ToList();
+                    break;
+                case QuestionTypeConstants.PotScoreRadioQuestion:
+                    choices = question.PotScoreRadio.Choices.Select(x => new QuestionChoice()
+                    {
+                        Identifier = x.Identifier,
+                        Answer = x.Answer,
+                        IsSingle = false,
+                        IsPrePopulated = x.IsPrePopulated,
+                        PotScoreCategory = x.PotScore
+                    })
+                        .ToList();
+                    break;
+                case QuestionTypeConstants.WeightedCheckboxQuestion:
+                    {
+                        var groups = question.WeightedCheckbox.Groups.Select(x => new QuestionChoiceGroup()
+                        { GroupIdentifier = x.Key, CreatedDateTime = _dateTimeProvider.UtcNow() });
+                        foreach (var weightedCheckboxGroup in question.WeightedCheckbox.Groups)
+                        {
+                            var group = groups.FirstOrDefault(y =>
+                                y.GroupIdentifier == weightedCheckboxGroup.Value.GroupIdentifier);
+                            choices.AddRange(weightedCheckboxGroup.Value.Choices.Select(x => new QuestionChoice()
+                            {
+                                Identifier = x.Identifier,
+                                Answer = x.Answer,
+                                IsSingle = x.IsSingle,
+                                IsPrePopulated = x.IsPrePopulated,
+                                QuestionChoiceGroup = group,
+                                NumericScore = x.Score
+                            }).ToList());
+
+                        }
+                        break;
+                    }
+                default:
+                    choices = null;
+                    break;
+            }
 
             return choices;
         }

@@ -34,7 +34,7 @@ namespace Elsa.CustomActivities.Activities.QuestionScreen.Helpers
                     var question = await _elsaCustomRepository.GetQuestionByCorrelationId(activity.Id,
                         correlationId, questionId, CancellationToken.None);
                     if (question != null &&
-                        (question.QuestionType == QuestionTypeConstants.RadioQuestion || question.QuestionType == QuestionTypeConstants.PotScoreRadioQuestion))
+                        (question.QuestionType == QuestionTypeConstants.RadioQuestion || question.QuestionType == QuestionTypeConstants.PotScoreRadioQuestion || question.QuestionType == QuestionTypeConstants.WeightedRadioQuestion))
                     {
                         if (question.Answers != null && question.Answers.Count == 1)
                         {
@@ -64,7 +64,7 @@ namespace Elsa.CustomActivities.Activities.QuestionScreen.Helpers
                     var question = await _elsaCustomRepository.GetQuestionByCorrelationId(activity.Id,
                         correlationId, questionId, CancellationToken.None);
                     if (question != null &&
-                        (question.QuestionType == QuestionTypeConstants.RadioQuestion || question.QuestionType == QuestionTypeConstants.PotScoreRadioQuestion))
+                        (question.QuestionType == QuestionTypeConstants.RadioQuestion || question.QuestionType == QuestionTypeConstants.PotScoreRadioQuestion || question.QuestionType == QuestionTypeConstants.WeightedRadioQuestion))
                     {
                         var choices = question.Choices;
 

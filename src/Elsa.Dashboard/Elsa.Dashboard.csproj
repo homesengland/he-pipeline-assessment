@@ -29,8 +29,12 @@
 
   <ItemGroup>
     <None Remove="src\components\common-properties\he-text-activity-property.tsx" />
+    <None Remove="src\components\common-properties\nested-properties\nested-property-list.tsx" />
     <None Remove="src\constants\Constants.ts" />
+    <None Remove="src\functions\multiExpressionEditorUpdate.tsx" />
+    <None Remove="src\functions\updateModel.tsx" />
     <None Remove="src\models\display-manager.ts" />
+    <None Remove="src\models\display-toggle.tsx" />
     <None Remove="src\nested-drivers\he-text-activity-driver.tsx" />
     <None Remove="wwwroot\Scripts\CustomElsa.js" />
     <None Remove="wwwroot\Scripts\Drivers\ConditionalTextListPropertyDriver.js" />
@@ -57,6 +61,14 @@
 
   <ItemGroup>
     <TypeScriptCompile Include="src\components\common-properties\he-text-activity-property.tsx" />
+    <TypeScriptCompile Include="src\components\common-properties\nested-properties\nested-property-list.tsx" />
+    <TypeScriptCompile Include="src\functions\multiExpressionEditorUpdate.tsx">
+      <SubType>Code</SubType>
+    </TypeScriptCompile>
+    <TypeScriptCompile Include="src\functions\updateModel.tsx">
+      <SubType>Code</SubType>
+    </TypeScriptCompile>
+    <TypeScriptCompile Include="src\functions\display-toggle.tsx" />
     <TypeScriptCompile Include="src\nested-drivers\he-text-activity-driver.tsx" />
     <TypeScriptCompile Include="src\nested-drivers\he-checkbox-options-driver.tsx" />
     <TypeScriptCompile Include="src\nested-drivers\he-script-driver.tsx" />
@@ -81,9 +93,11 @@
     <TypeScriptCompile Include="wwwroot\Scripts\Drivers\TextActivityPropertyDriver.js" />
     <TypeScriptCompile Include="wwwroot\Scripts\Drivers\QuestionPropertyDriver.js" />
     <TypeScriptCompile Include="wwwroot\Scripts\Plugins\CustomPlugins.js" />
-    <TypeScriptCompile Include="src\components\common-properties\custom-input-property.tsx" />
-    <TypeScriptCompile Include="src\components\common-properties\conditional_text_list_property.tsx" />
     <TypeScriptCompile Include="src\components\providers\question-provider\question-provider.tsx" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="src\components\interfaces\" />
   </ItemGroup>
 
 </Project>

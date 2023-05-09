@@ -1,7 +1,7 @@
 ﻿
 using Elsa.CustomActivities.Activities;
-using Elsa.CustomActivities.OptionsProviders;
 using Elsa.CustomActivities.PropertyDecorator;
+using Elsa.CustomActivities.Providers;
 using Elsa.CustomActivities.Resolver;
 using Humanizer;
 using Microsoft.Extensions.DependencyInjection;
@@ -76,7 +76,11 @@ namespace Elsa.CustomActivities.Describers
                     activityPropertyAttribute.DisableWorkflowProviderSelection,
                     activityPropertyAttribute.ConsiderValuesAsOutcomes,
                     activityPropertyAttribute.DisplayInDesigner,
-                    activityPropertyAttribute.ConditionalActivityTypes
+                    activityPropertyAttribute.ConditionalActivityTypes,
+                    activityPropertyAttribute.HasNestedProperties,
+                    activityPropertyAttribute.HasCollectedProperties,
+                    TryGetNestedProperties(activityPropertyAttribute, propertyInfo.PropertyType)
+
 
                 );
             }
@@ -91,6 +95,27 @@ namespace Elsa.CustomActivities.Describers
                 return task.Result;
             }
             return null;
+        }
+
+        private IEnumerable<HeActivityInputDescriptor>? TryGetNestedProperties(HeActivityInputAttribute? attribute, Type propertyType)
+        {
+
+            if (attribute == null)
+            {
+                return null;
+            }
+            else
+            {
+                if (attribute.HasNestedProperties)
+                {
+                    return DescribeInputProperties(propertyType);
+                }
+                else if (attribute.HasCollectedProperties && attribute.CollectedPropertyType != null)
+                {
+                    return DescribeInputProperties(attribute.CollectedPropertyType);
+                }
+                return null;
+            }
         }
 
 
