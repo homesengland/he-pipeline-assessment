@@ -9,6 +9,7 @@ using He.PipelineAssessment.Tests.Common;
 using Microsoft.Extensions.Logging;
 using Moq;
 using Newtonsoft.Json;
+using System;
 using Xunit;
 
 namespace Elsa.CustomActivities.Tests.Handlers.Syntax
@@ -312,10 +313,10 @@ namespace Elsa.CustomActivities.Tests.Handlers.Syntax
 
         [Theory, AutoMoqData]
         public async void EvaluateFromExpression_ReturnsDoubleModel_GivenDoubleType(
-   Mock<IServiceProvider> provider,
-   Mock<IExpressionEvaluator> evaluator,
-   ILogger<IExpressionHandler> logger,
-    IContentSerializer serializer)
+        Mock<IServiceProvider> provider,
+        Mock<IExpressionEvaluator> evaluator,
+        ILogger<IExpressionHandler> logger,
+        IContentSerializer serializer)
         {
             //Arrange
             double value = 2.0;
@@ -345,13 +346,47 @@ namespace Elsa.CustomActivities.Tests.Handlers.Syntax
             Assert.Equal(type, parsedJavascriptOutput!.GetType());
         }
 
+        [Theory, AutoMoqData]
+        public async void EvaluateFromExpression_ReturnsDecimalModel_GivenDecimalType(
+       Mock<IServiceProvider> provider,
+       Mock<IExpressionEvaluator> evaluator,
+       ILogger<IExpressionHandler> logger,
+       IContentSerializer serializer)
+        {
+            //Arrange
+            decimal value = new Decimal(2.0);
+            string javascriptQuery = "activities[x].Output()";
+            Type type = typeof(decimal);
+            ElsaProperty sampleProperty = SampleProperty(SyntaxNames.Literal, type, value.ToString());
+            ElsaProperty javascriptProperty = SampleProperty(SyntaxNames.JavaScript, type, javascriptQuery);
+
+            var context = new ActivityExecutionContext(provider.Object, default!, default!, default!, default, default);
+
+            string result = value.ToString();
+            evaluator.Setup(x => x.TryEvaluateAsync<string>(sampleProperty.Expressions![sampleProperty.Syntax!],
+                sampleProperty.Syntax!, context, CancellationToken.None)).Returns(Task.FromResult(Models.Result.Success<string?>(value.ToString())));
+
+            evaluator.Setup(x => x.TryEvaluateAsync<string>(javascriptProperty.Expressions![javascriptProperty.Syntax!],
+                javascriptProperty.Syntax!, context, CancellationToken.None)).Returns(Task.FromResult(Models.Result.Success<string?>(value.ToString())));
+
+            NestedSyntaxExpressionHandler handler = new NestedSyntaxExpressionHandler(logger, serializer);
+
+            //Act
+
+            var output = await handler.EvaluateModel(sampleProperty!, evaluator.Object, context, type);
+            var parsedJavascriptOutput = await handler.EvaluateModel(javascriptProperty!, evaluator.Object, context, type);
+
+            //Assert
+            Assert.Equal(type, output!.GetType());
+            Assert.Equal(type, parsedJavascriptOutput!.GetType());
+        }
 
         [Theory, AutoMoqData]
         public async void EvaluateFromExpression_ReturnsPotScoreRadioData_GivenPotScoreRadioType(
-    Mock<IServiceProvider> provider,
-    Mock<IExpressionEvaluator> evaluator,
-    ILogger<IExpressionHandler> logger,
-    IContentSerializer serializer)
+        Mock<IServiceProvider> provider,
+        Mock<IExpressionEvaluator> evaluator,
+        ILogger<IExpressionHandler> logger,
+        IContentSerializer serializer)
         {
             //Arrange
             var javascriptValue = "First Value";
@@ -401,6 +436,155 @@ namespace Elsa.CustomActivities.Tests.Handlers.Syntax
                 var expectedOutput = JsonConvert.DeserializeObject<List<PotScoreRadioRecord>>(value);
                 Assert.Equal(type, output!.GetType());
                 Assert.Equal(expectedOutput, output.Choices);
+            }
+            else
+            {
+                Assert.True(false, "Output did not produce a non-null object");
+            }
+
+        }
+
+        [Theory, AutoMoqData]
+        public async void EvaluateFromExpression_ReturnsWeighedScoreRadioData_GivenWeighedScoreRadioType(
+        Mock<IServiceProvider> provider,
+        Mock<IExpressionEvaluator> evaluator,
+        ILogger<IExpressionHandler> logger,
+        IContentSerializer serializer)
+        {
+            //Arrange
+            var javascriptValue = "First Value";
+            var stringValue = "Second Value";
+            var scoreValue = 10;
+            string value = WeightedScoreRadioJson(javascriptValue, stringValue, scoreValue);
+            Type type = typeof(WeightedRadioModel);
+
+            var context = new ActivityExecutionContext(provider.Object, default!, default!, default!, default, default);
+
+
+
+            var propertyDictionary = new Dictionary<string, string>()
+            {
+                {SyntaxNames.JavaScript, javascriptValue },
+                {SyntaxNames.Literal, stringValue },
+                {RadioSyntaxNames.PrePopulated, "false" },
+                {ScoringSyntaxNames.Score, "10" },
+            };
+            var firstProperty = SampleElsaProperty(propertyDictionary, SyntaxNames.JavaScript, "A");
+            var secondProperty = SampleElsaProperty(propertyDictionary, SyntaxNames.Literal, "B");
+
+            var propertyList = new List<ElsaProperty>()
+            {
+                firstProperty,
+                secondProperty
+            };
+
+            ElsaProperty sampleProperty = SampleProperty(SyntaxNames.Json, type, JsonConvert.SerializeObject(propertyList));
+
+            List<PotScoreRadioRecord>? result = JsonConvert.DeserializeObject<List<PotScoreRadioRecord>>(value);
+            evaluator.Setup(x => x.TryEvaluateAsync<string>(firstProperty.Expressions![firstProperty.Syntax!],
+                firstProperty.Syntax!, context, CancellationToken.None)).Returns(Task.FromResult(Models.Result.Success<string?>(javascriptValue)));
+
+            evaluator.Setup(x => x.TryEvaluateAsync<string>(secondProperty.Expressions![secondProperty.Syntax!],
+                secondProperty.Syntax!, context, CancellationToken.None)).Returns(Task.FromResult(Models.Result.Success<string?>(stringValue)));
+
+            evaluator.Setup(x => x.TryEvaluateAsync<int>("10", SyntaxNames.Literal, context, CancellationToken.None)).Returns(Task.FromResult(Models.Result.Success(10)));
+
+            NestedSyntaxExpressionHandler handler = new NestedSyntaxExpressionHandler(logger, serializer);
+
+            //Act
+            WeightedRadioModel? output = (WeightedRadioModel?)await handler.EvaluateModel(sampleProperty!, evaluator.Object, context, type);
+
+
+            //Assert
+            if (output != null)
+            {
+                var expectedOutput = JsonConvert.DeserializeObject<List<WeightedRadioRecord>>(value);
+                Assert.Equal(type, output!.GetType());
+                Assert.Equal(expectedOutput, output.Choices);
+            }
+            else
+            {
+                Assert.True(false, "Output did not produce a non-null object");
+            }
+
+        }
+
+        [Theory, AutoMoqData]
+        public async void EvaluateFromExpression_ReturnsWeighedCheckboxData_GivenWeighedCheckboxType(
+        Mock<IServiceProvider> provider,
+        Mock<IExpressionEvaluator> evaluator,
+        ILogger<IExpressionHandler> logger,
+        IContentSerializer serializer)
+        {
+            //Arrange
+            var javascriptValue = "First Value";
+            var stringValue = "Second Value";
+            var maxScoreValue = 10;
+            var choiceScoreValue = 4;
+            string value = WeightedScoreCheckboxJson(javascriptValue, stringValue, false, maxScoreValue, choiceScoreValue);
+            Type type = typeof(WeightedCheckboxModel);
+            Type choiceType = typeof(WeightedCheckboxRecord);
+
+            var context = new ActivityExecutionContext(provider.Object, default!, default!, default!, default, default);
+
+            var choicesPropertyDictionary = new Dictionary<string, string>()
+            {
+                {SyntaxNames.JavaScript, javascriptValue },
+                {SyntaxNames.Literal, stringValue },
+                {RadioSyntaxNames.PrePopulated, "false" },
+                {ScoringSyntaxNames.Score, "4" },
+            };
+            var firstChoiceProperty = SampleElsaProperty(choicesPropertyDictionary, SyntaxNames.JavaScript, "A");
+            var secondChoiceProperty = SampleElsaProperty(choicesPropertyDictionary, SyntaxNames.Literal, "B");
+
+            var choicesPropertyList = new List<ElsaProperty>()
+            {
+                firstChoiceProperty,
+                secondChoiceProperty
+            };
+
+            var propertyDictionary = new Dictionary<string, string>()
+            {
+                {SyntaxNames.JavaScript, javascriptValue },
+                {SyntaxNames.Literal, stringValue },
+                {ScoringSyntaxNames.MaxScore, "10" },
+                {ScoringSyntaxNames.ScoreArray, "[1, 2, 3]" },
+                {SyntaxNames.Json, JsonConvert.SerializeObject(choicesPropertyList) }
+            };
+
+            var firstProperty = SampleElsaProperty(propertyDictionary, SyntaxNames.JavaScript, "GroupA");
+            var propertyList = new List<ElsaProperty>()
+            {
+                firstProperty
+            };
+
+            ElsaProperty sampleProperty = SampleProperty(SyntaxNames.Json, type, JsonConvert.SerializeObject(propertyList));
+
+            List<PotScoreRadioRecord>? result = JsonConvert.DeserializeObject<List<PotScoreRadioRecord>>(value);
+            evaluator.Setup(x => x.TryEvaluateAsync<string>(firstChoiceProperty.Expressions![firstChoiceProperty.Syntax!],
+                firstChoiceProperty.Syntax!, context, CancellationToken.None)).Returns(Task.FromResult(Models.Result.Success<string?>(javascriptValue)));
+
+            evaluator.Setup(x => x.TryEvaluateAsync<string>(secondChoiceProperty.Expressions![secondChoiceProperty.Syntax!],
+                secondChoiceProperty.Syntax!, context, CancellationToken.None)).Returns(Task.FromResult(Models.Result.Success<string?>(stringValue)));
+
+            evaluator.Setup(x => x.TryEvaluateAsync<int>("4", SyntaxNames.Literal, context, CancellationToken.None)).Returns(Task.FromResult(Models.Result.Success(4)));
+            evaluator.Setup(x => x.TryEvaluateAsync<int>("10", ScoringSyntaxNames.MaxScore, context, CancellationToken.None)).Returns(Task.FromResult(Models.Result.Success(10)));
+
+            NestedSyntaxExpressionHandler handler = new NestedSyntaxExpressionHandler(logger, serializer);
+
+            //Act
+            WeightedCheckboxModel? output = (WeightedCheckboxModel?)await handler.EvaluateModel(sampleProperty!, evaluator.Object, context, type);
+
+
+            //Assert
+            if (output != null)
+            {
+                var expectedOutput = JsonConvert.DeserializeObject<List<WeightedCheckboxGroup>>(value);
+                Assert.Equal(type, output!.GetType());
+                Assert.Equal(expectedOutput![0].MaxGroupScore, output.Groups["GroupA"].MaxGroupScore);
+                Assert.Equal(expectedOutput![0].GroupIdentifier, output.Groups["GroupA"].GroupIdentifier);
+                Assert.Equal(expectedOutput![0].Choices, output.Groups["GroupA"].Choices);
+                Assert.Equal(expectedOutput![0].GroupArrayScore, output.Groups["GroupA"].GroupArrayScore);
             }
             else
             {
@@ -496,6 +680,36 @@ namespace Elsa.CustomActivities.Tests.Handlers.Syntax
             };
 
             return JsonConvert.SerializeObject(records);
+        }
+
+
+        private string WeightedScoreRadioJson(string firstValue, string secondValue, int score)
+        {
+            var records = new List<WeightedRadioRecord>()
+                {
+                     new WeightedRadioRecord("A", firstValue, score, false) ,
+                     new WeightedRadioRecord("B", secondValue, score, false)
+            };
+
+            return JsonConvert.SerializeObject(records);
+        }
+
+        private string WeightedScoreCheckboxJson(string firstValue, string secondValue, bool isSingle, int score, double choiceScore)
+        {
+            var groups = new List<WeightedCheckboxGroup>();
+            var group = new WeightedCheckboxGroup();
+            group.Choices = new List<WeightedCheckboxRecord>()
+            {
+                     new WeightedCheckboxRecord("A", firstValue, isSingle,choiceScore, false) ,
+                     new WeightedCheckboxRecord("B", secondValue, isSingle,choiceScore , false)
+            };
+            group.MaxGroupScore = score;
+            group.GroupIdentifier = "GroupA";
+            group.GroupArrayScore = new List<int>() { 1, 2, 3 };
+            groups.Add(group);
+
+
+            return JsonConvert.SerializeObject(groups);
         }
 
         private string SampleCheckboxJson()
