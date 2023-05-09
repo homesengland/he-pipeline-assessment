@@ -78,6 +78,38 @@ namespace Elsa.Server.Tests.Features.Workflow.Helpers
 
         [Theory]
         [AutoMoqData]
+        public void CreateQuestion_ShouldReturnQuestionForWeightedCheckbox(
+            [Frozen] Mock<IDateTimeProvider> mockDateTimeProvider,
+            string nextActivityId,
+            string nextActivityType,
+            WorkflowInstance workflowInstance,
+            CustomActivities.Activities.QuestionScreen.Question question,
+            ElsaCustomModelHelper sut
+        )
+        {
+            //Arrange
+            question.QuestionType = QuestionTypeConstants.WeightedCheckboxQuestion;
+            var currentTimeUtc = DateTime.UtcNow;
+            mockDateTimeProvider.Setup(x => x.UtcNow()).Returns(currentTimeUtc);
+            var expectedChoices = question.WeightedCheckbox.Groups.Values.SelectMany(x=>x.Choices);
+            //Act
+            var result = sut.CreateQuestion(nextActivityId, nextActivityType, question, workflowInstance);
+
+            //Assert
+            Assert.IsType<Question>(result);
+            Assert.Equal(nextActivityId, result!.ActivityId);
+            Assert.Equal(workflowInstance.Id, result.WorkflowInstanceId);
+            Assert.Equal(currentTimeUtc, result.CreatedDateTime);
+            Assert.Equal(question.Id, result.QuestionId);
+            Assert.Equal(question.QuestionType, result.QuestionType);
+            Assert.Equal(question.QuestionText, result.QuestionText);
+
+
+            Assert.Equal(expectedChoices, result.Choices!.Select(x => new WeightedCheckboxRecord(x.Identifier, x.Answer, x.IsSingle,x.NumericScore!.Value, x.IsPrePopulated)));
+        }
+
+        [Theory]
+        [AutoMoqData]
         public void CreateQuestion_ShouldReturnQuestionForRadio(
             [Frozen] Mock<IDateTimeProvider> mockDateTimeProvider,
             string nextActivityId,
@@ -104,6 +136,67 @@ namespace Elsa.Server.Tests.Features.Workflow.Helpers
             Assert.Equal(question.QuestionType, result.QuestionType);
             Assert.Equal(question.QuestionText, result.QuestionText);
             Assert.Equal(question.Radio.Choices, result.Choices!.Select(x => new RadioRecord(x.Identifier, x.Answer, x.IsPrePopulated)));
+        }
+
+
+        [Theory]
+        [AutoMoqData]
+        public void CreateQuestion_ShouldReturnQuestionForWeightedRadio(
+            [Frozen] Mock<IDateTimeProvider> mockDateTimeProvider,
+            string nextActivityId,
+            string nextActivityType,
+            WorkflowInstance workflowInstance,
+            CustomActivities.Activities.QuestionScreen.Question question,
+            ElsaCustomModelHelper sut
+        )
+        {
+            //Arrange
+            question.QuestionType = QuestionTypeConstants.WeightedRadioQuestion;
+            var currentTimeUtc = DateTime.UtcNow;
+            mockDateTimeProvider.Setup(x => x.UtcNow()).Returns(currentTimeUtc);
+
+            //Act
+            var result = sut.CreateQuestion(nextActivityId, nextActivityType, question, workflowInstance);
+
+            //Assert
+            Assert.IsType<Question>(result);
+            Assert.Equal(nextActivityId, result!.ActivityId);
+            Assert.Equal(workflowInstance.Id, result.WorkflowInstanceId);
+            Assert.Equal(currentTimeUtc, result.CreatedDateTime);
+            Assert.Equal(question.Id, result.QuestionId);
+            Assert.Equal(question.QuestionType, result.QuestionType);
+            Assert.Equal(question.QuestionText, result.QuestionText);
+            Assert.Equal(question.WeightedRadio.Choices, result.Choices!.Select(x => new WeightedRadioRecord(x.Identifier, x.Answer, x.NumericScore!.Value,x.IsPrePopulated)));
+        }
+
+        [Theory]
+        [AutoMoqData]
+        public void CreateQuestion_ShouldReturnQuestionForPotScoreRadio(
+            [Frozen] Mock<IDateTimeProvider> mockDateTimeProvider,
+            string nextActivityId,
+            string nextActivityType,
+            WorkflowInstance workflowInstance,
+            CustomActivities.Activities.QuestionScreen.Question question,
+            ElsaCustomModelHelper sut
+        )
+        {
+            //Arrange
+            question.QuestionType = QuestionTypeConstants.PotScoreRadioQuestion;
+            var currentTimeUtc = DateTime.UtcNow;
+            mockDateTimeProvider.Setup(x => x.UtcNow()).Returns(currentTimeUtc);
+
+            //Act
+            var result = sut.CreateQuestion(nextActivityId, nextActivityType, question, workflowInstance);
+
+            //Assert
+            Assert.IsType<Question>(result);
+            Assert.Equal(nextActivityId, result!.ActivityId);
+            Assert.Equal(workflowInstance.Id, result.WorkflowInstanceId);
+            Assert.Equal(currentTimeUtc, result.CreatedDateTime);
+            Assert.Equal(question.Id, result.QuestionId);
+            Assert.Equal(question.QuestionType, result.QuestionType);
+            Assert.Equal(question.QuestionText, result.QuestionText);
+            Assert.Equal(question.PotScoreRadio.Choices, result.Choices!.Select(x => new PotScoreRadioRecord(x.Identifier, x.Answer, x.PotScoreCategory!, x.IsPrePopulated)));
         }
 
         [Theory]
