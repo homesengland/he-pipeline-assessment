@@ -56,7 +56,7 @@ namespace Elsa.CustomActivities.Handlers
             string identifier = property.Name;
             string value = await property.EvaluateFromExpressions<string>(evaluator, context, _logger, CancellationToken.None);
             bool isPrePopulated = await EvaluatePrePopulated(property, evaluator, context);
-            int score = await EvaluateScore(property, evaluator, context);
+            decimal score = await EvaluateScore(property, evaluator, context);
 
             return new WeightedRadioRecord(identifier, value, score, isPrePopulated);
 
@@ -77,12 +77,12 @@ namespace Elsa.CustomActivities.Handlers
             return false;
         }
 
-        public async Task<int> EvaluateScore(ElsaProperty property, IExpressionEvaluator evaluator, ActivityExecutionContext context)
+        public async Task<decimal> EvaluateScore(ElsaProperty property, IExpressionEvaluator evaluator, ActivityExecutionContext context)
         {
             if (property.Expressions!.ContainsKey(ScoringSyntaxNames.Score))
             {
                 string expression = property.Expressions[ScoringSyntaxNames.Score] ?? "-1";
-                int score = await property.EvaluateFromExpressionsExplicit<int>(evaluator,
+                decimal score = await property.EvaluateFromExpressionsExplicit<decimal>(evaluator,
                     context, _logger,
                     expression,
                     SyntaxNames.Literal,

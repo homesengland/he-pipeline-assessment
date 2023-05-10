@@ -228,7 +228,7 @@ public class WeightedRadioExpressionHandlerTests
             SyntaxNames.JavaScript, It.IsAny<ActivityExecutionContext>(), It.IsAny<CancellationToken>())).Returns(Task.FromResult(Models.Result.Success(prePopulatedValue)));
 
         //Act
-        int actualPrePopulatedValue = await handler.EvaluateScore(property, evaluator.Object, context);
+        decimal actualPrePopulatedValue = await handler.EvaluateScore(property, evaluator.Object, context);
 
         ////Assert
         //Assert.Equal(prePopulatedValue, actualPrePopulatedValue);

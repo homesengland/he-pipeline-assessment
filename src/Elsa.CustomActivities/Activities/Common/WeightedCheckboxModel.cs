@@ -20,5 +20,5 @@ namespace Elsa.CustomActivities.Activities.Common
 
     }
 
-    public record WeightedCheckboxRecord(string Identifier, string Answer, bool IsSingle, double Score, bool IsPrePopulated);
+    public record WeightedCheckboxRecord(string Identifier, string Answer, bool IsSingle, decimal Score, bool IsPrePopulated);
 }

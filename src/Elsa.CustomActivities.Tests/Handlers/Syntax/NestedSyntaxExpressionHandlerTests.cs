@@ -683,7 +683,7 @@ namespace Elsa.CustomActivities.Tests.Handlers.Syntax
         }
 
 
-        private string WeightedScoreRadioJson(string firstValue, string secondValue, int score)
+        private string WeightedScoreRadioJson(string firstValue, string secondValue, decimal score)
         {
             var records = new List<WeightedRadioRecord>()
                 {
@@ -694,7 +694,7 @@ namespace Elsa.CustomActivities.Tests.Handlers.Syntax
             return JsonConvert.SerializeObject(records);
         }
 
-        private string WeightedScoreCheckboxJson(string firstValue, string secondValue, bool isSingle, int score, double choiceScore)
+        private string WeightedScoreCheckboxJson(string firstValue, string secondValue, bool isSingle, decimal score, decimal choiceScore)
         {
             var groups = new List<WeightedCheckboxGroup>();
             var group = new WeightedCheckboxGroup();
@@ -705,7 +705,7 @@ namespace Elsa.CustomActivities.Tests.Handlers.Syntax
             };
             group.MaxGroupScore = score;
             group.GroupIdentifier = "GroupA";
-            group.GroupArrayScore = new List<int>() { 1, 2, 3 };
+            group.GroupArrayScore = new List<decimal>() { 1, 2, 3 };
             groups.Add(group);
 
 
