@@ -103,8 +103,16 @@ namespace Elsa.CustomActivities.Handlers
                 ElsaProperty? elsaProperty = JsonConvert.DeserializeObject<ElsaProperty>(property.Expressions![ScoringSyntaxNames.GroupArrayScore]);
                 if (elsaProperty != null)
                 {
-                    List<decimal>? array = JsonConvert.DeserializeObject<List<decimal>>(elsaProperty.Expressions![SyntaxNames.Json]);
-                    return array;
+                    try
+                    {
+                        List<decimal>? array =
+                            JsonConvert.DeserializeObject<List<decimal>>(elsaProperty.Expressions![SyntaxNames.Json]);
+                        return array;
+                    }
+                    catch
+                    {
+                        return null;
+                    }
                 }
             }
             return null;
