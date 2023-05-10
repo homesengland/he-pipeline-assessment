@@ -7,11 +7,9 @@ using Elsa.Expressions;
 using Elsa.Serialization;
 using Elsa.Services.Models;
 using He.PipelineAssessment.Tests.Common;
-using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging;
 using Moq;
 using Newtonsoft.Json;
-using System.Collections.Generic;
 using Xunit;
 
 namespace Elsa.CustomActivities.Tests.Handlers;
@@ -152,6 +150,61 @@ public class WeightedRadioExpressionHandlerTests
     }
 
     [Theory, AutoMoqData]
+    public async Task EvaluateAsync_ReturnsEmptyRadioListData_GivenCannotDeserializeElsaToProperty(
+        Mock<IServiceProvider> provider,
+        Mock<IExpressionEvaluator> evaluator,
+        Mock<IContentSerializer> serialiser,
+        Mock<ILogger<IExpressionHandler>> logger)
+    {
+        //Arrange
+        List<ElsaProperty> radioListProperties = new List<ElsaProperty>();
+
+        string expressionString = "InvalidElsaProperty";
+
+        var context = new ActivityExecutionContext(provider.Object, default!, default!, default!, default, default);
+
+        serialiser.Setup(x => x.Deserialize<List<ElsaProperty>>(expressionString)).Throws(new Exception());
+
+        provider.Setup(x => x.GetService(typeof(IExpressionEvaluator))).Returns(evaluator.Object);
+
+        WeightedRadioExpressionHandler sut = new WeightedRadioExpressionHandler(logger.Object, serialiser.Object);
+
+        //Act
+
+        var results = await sut.EvaluateAsync(expressionString, typeof(WeightedRadioModel), context, CancellationToken.None);
+        WeightedRadioModel? expectedResults = results.ConvertTo<WeightedRadioModel>();
+
+        //Assert
+        Assert.Equal(0, expectedResults!.Choices.Count);
+    }
+
+    [Theory, AutoMoqData]
+    public async Task EvaluateIsPrePopulated_ReturnsExpectedData_whenCorrectDataIsProvided(
+        Mock<IContentSerializer> serializer,
+        Mock<IServiceProvider> provider,
+        bool prePopulatedValue,
+        Mock<IExpressionEvaluator> evaluator,
+        Mock<ILogger<IExpressionHandler>> logger)
+    {
+        //Arrange
+        var context = new ActivityExecutionContext(provider.Object, default!, default!, default!, default, default);
+
+        WeightedRadioExpressionHandler handler = new WeightedRadioExpressionHandler(logger.Object, serializer.Object);
+
+        ElsaProperty property = SampleElsaProperty(GetDictionary(SyntaxNames.Literal, "Sample Text", prePopulatedValue: prePopulatedValue.ToString().ToLower()), SyntaxNames.Literal, "Checkbox Text");
+
+        evaluator.Setup(x => x.TryEvaluateAsync<bool>(property.Expressions![CheckboxSyntaxNames.PrePopulated].ToLower(),
+            SyntaxNames.JavaScript, It.IsAny<ActivityExecutionContext>(), It.IsAny<CancellationToken>())).Returns(Task.FromResult(Models.Result.Success<bool>(prePopulatedValue)));
+
+        //Act
+        bool actualPrePopulatedValue = await handler.EvaluatePrePopulated(property, evaluator.Object, context);
+
+        //Assert
+        Assert.Equal(prePopulatedValue, actualPrePopulatedValue);
+
+    }
+
+    [Theory, AutoMoqData]
     public async void EvaluateIsPrePopulated_ReturnsFalse_WhenNoDataOrFalseDataIsProvided(
             Mock<IContentSerializer> serializer,
             Mock<IServiceProvider> provider,
@@ -168,8 +221,6 @@ public class WeightedRadioExpressionHandlerTests
 
         propertyWithNoKey.Expressions!.Remove(RadioSyntaxNames.PrePopulated);
 
-
-
         //Act
         bool actualPrePopulatedValueNoKey = await handler.EvaluatePrePopulated(propertyWithNoKey, evaluator.Object, context);
         bool actualPrePopulatedValueInvalidData = await handler.EvaluatePrePopulated(propertyWithInvalidValue, evaluator.Object, context);
@@ -180,17 +231,70 @@ public class WeightedRadioExpressionHandlerTests
 
     }
 
+    [Theory, AutoMoqData]
+    public async Task EvaluateScore_ReturnsExpectedData_whenCorrectDataIsProvided(
+                Mock<IContentSerializer> serializer,
+                Mock<IServiceProvider> provider,
+                decimal score,
+                Mock<IExpressionEvaluator> evaluator,
+                Mock<ILogger<IExpressionHandler>> logger)
+    {
+        //Arrange
+        var context = new ActivityExecutionContext(provider.Object, default!, default!, default!, default, default);
+
+        WeightedRadioExpressionHandler handler = new WeightedRadioExpressionHandler(logger.Object, serializer.Object);
+
+        ElsaProperty property = SampleElsaProperty(GetDictionary(SyntaxNames.Literal, "Sample Text", score: score.ToString()), SyntaxNames.Literal, "Checkbox Text");
+
+        evaluator.Setup(x => x.TryEvaluateAsync<decimal>(property.Expressions![ScoringSyntaxNames.Score].ToLower(),
+            SyntaxNames.Literal, It.IsAny<ActivityExecutionContext>(), It.IsAny<CancellationToken>())).Returns(Task.FromResult(Models.Result.Success(score)));
+
+        //Act
+        decimal actualScoreValue = await handler.EvaluateScore(property, evaluator.Object, context);
+
+        //Assert
+        Assert.Equal(score, actualScoreValue);
+
+    }
+
+    [Theory, AutoMoqData]
+    public async void EvaluateScore_ReturnsZero_WhenNoDataOrFalseDataIsProvided(
+        Mock<IContentSerializer> serializer,
+        Mock<IServiceProvider> provider,
+        Mock<IExpressionEvaluator> evaluator,
+        Mock<ILogger<IExpressionHandler>> logger)
+    {
+        //Arrange
+        var context = new ActivityExecutionContext(provider.Object, default!, default!, default!, default, default);
+
+        WeightedRadioExpressionHandler handler = new WeightedRadioExpressionHandler(logger.Object, serializer.Object);
+
+        ElsaProperty propertyWithNoKey = SampleElsaProperty(GetDictionary(SyntaxNames.Literal, "Sample Text", score: string.Empty), SyntaxNames.Literal, "Checkbox Text");
+        ElsaProperty propertyWithInvalidValue = SampleElsaProperty(GetDictionary(SyntaxNames.Literal, "Sample Text", score: "Abc123"), SyntaxNames.Literal, "Checkbox Text 2");
+
+        propertyWithNoKey.Expressions!.Remove(ScoringSyntaxNames.Score);
+
+        //Act
+        decimal actualScoreValue = await handler.EvaluateScore(propertyWithNoKey, evaluator.Object, context);
+        decimal actualScoreValueInvalidData = await handler.EvaluateScore(propertyWithInvalidValue, evaluator.Object, context);
+
+        //Assert
+        Assert.Equal(0, actualScoreValue);
+        Assert.Equal(0, actualScoreValueInvalidData);
+
+    }
+
     private Dictionary<string, string> GetDictionary(string defaultSyntax,
            string defaultValue,
            string prePopulatedValue = "false",
-           string potScoreValue = "")
+           string score = "")
     {
 
         return new Dictionary<string, string>()
             {
                 {defaultSyntax, defaultValue},
                 {RadioSyntaxNames.PrePopulated, prePopulatedValue },
-                {CustomSyntaxNames.PotScore, potScoreValue}
+                {ScoringSyntaxNames.Score, score}
             };
     }
 

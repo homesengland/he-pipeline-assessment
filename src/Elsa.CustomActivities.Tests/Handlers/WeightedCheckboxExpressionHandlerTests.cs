@@ -136,7 +136,7 @@ namespace Elsa.CustomActivities.Tests.Handlers
 
             var context = new ActivityExecutionContext(provider.Object, default!, default!, default!, default, default);
 
-            serialiser.Setup(x => x.Deserialize<List<ElsaProperty>>(expressionString)).Returns(checkboxListProperties);
+            serialiser.Setup(x => x.Deserialize<List<ElsaProperty>>(expressionString)).Throws(new Exception());
 
             provider.Setup(x => x.GetService(typeof(IExpressionEvaluator))).Returns(evaluator.Object);
 
@@ -247,8 +247,6 @@ namespace Elsa.CustomActivities.Tests.Handlers
 
             propertyWithNoKey.Expressions!.Remove(CheckboxSyntaxNames.Single);
 
-
-
             //Act
             bool actualIsSingleValue = handler.EvaluateIsSingle(propertyWithNoKey, evaluator.Object, context);
             bool actualIsSingleInvalidData = handler.EvaluateIsSingle(propertyWithInvalidValue, evaluator.Object, context);
@@ -301,8 +299,6 @@ namespace Elsa.CustomActivities.Tests.Handlers
             ElsaProperty propertyWithInvalidValue = SampleElsaProperty(GetDictionary(SyntaxNames.Literal, "Sample Text", score: "Abc123"), SyntaxNames.Literal, "Checkbox Text 2");
 
             propertyWithNoKey.Expressions!.Remove(ScoringSyntaxNames.Score);
-
-
 
             //Act
             decimal actualScoreValue = await handler.EvaluateScore(propertyWithNoKey, evaluator.Object, context);
