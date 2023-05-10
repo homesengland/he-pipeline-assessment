@@ -11,6 +11,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging;
 using Moq;
 using Newtonsoft.Json;
+using System.Collections.Generic;
 using Xunit;
 
 namespace Elsa.CustomActivities.Tests.Handlers;
@@ -18,7 +19,7 @@ public class WeightedRadioExpressionHandlerTests
 {
 
     [Theory, AutoMoqData]
-    public void WeightedRadioListExpressionHandlerInheritsFromCorrectBaseClass(PotScoreRadioExpressionHandler sut)
+    public void WeightedRadioListExpressionHandlerInheritsFromCorrectBaseClass(WeightedRadioExpressionHandler sut)
     {
         //Arrange
 
@@ -30,7 +31,7 @@ public class WeightedRadioExpressionHandlerTests
     }
 
     [Theory, AutoMoqData]
-    public void ExpressionHandlerUsesCorrectSyntax_GivenDefaultValuesUsed(PotScoreRadioExpressionHandler sut)
+    public void ExpressionHandlerUsesCorrectSyntax_GivenDefaultValuesUsed(WeightedRadioExpressionHandler sut)
     {
         //Arrange
 
@@ -41,7 +42,6 @@ public class WeightedRadioExpressionHandlerTests
     }
 
     [Theory, AutoMoqData]
-
     public async void EvaluateAsync_ReturnsWeightedRadioModelData(
         Mock<IServiceProvider> provider,
         Mock<IExpressionEvaluator> evaluator,
@@ -100,7 +100,7 @@ public class WeightedRadioExpressionHandlerTests
            Mock<ILogger<IExpressionHandler>> logger)
     {
         //Arrange
-        List<ElsaProperty> PotScoreRadioListProperties = new List<ElsaProperty>();
+        List<ElsaProperty> WeightedRadioListProperties = new List<ElsaProperty>();
 
         string sampleElsaText1 = "A piece of text 1";
         string sampleElsaText2 = "'A piece of text '+ RandomJavascriptExpression";
@@ -111,15 +111,15 @@ public class WeightedRadioExpressionHandlerTests
         var sampleElsaProperty2 = SampleElsaProperty(GetDictionary(SyntaxNames.JavaScript, sampleElsaText2), SyntaxNames.JavaScript, "Text B");
         var sampleElsaProperty3 = SampleElsaProperty(GetDictionary(SyntaxNames.Literal, sampleElsaText3, prePopulatedValue: "true"), SyntaxNames.Literal, "Text C");
 
-        PotScoreRadioListProperties.Add(sampleElsaProperty1);
-        PotScoreRadioListProperties.Add(sampleElsaProperty2);
-        PotScoreRadioListProperties.Add(sampleElsaProperty3);
+        WeightedRadioListProperties.Add(sampleElsaProperty1);
+        WeightedRadioListProperties.Add(sampleElsaProperty2);
+        WeightedRadioListProperties.Add(sampleElsaProperty3);
 
-        string expressionString = JsonConvert.SerializeObject(PotScoreRadioListProperties);
+        string expressionString = JsonConvert.SerializeObject(WeightedRadioListProperties);
 
         var context = new ActivityExecutionContext(provider.Object, default!, default!, default!, default, default);
 
-        serialiser.Setup(x => x.Deserialize<List<ElsaProperty>>(expressionString)).Returns(PotScoreRadioListProperties);
+        serialiser.Setup(x => x.Deserialize<List<ElsaProperty>>(expressionString)).Returns(WeightedRadioListProperties);
 
         provider.Setup(x => x.GetService(typeof(IExpressionEvaluator))).Returns(evaluator.Object);
         evaluator.Setup(x => x.TryEvaluateAsync<string>(sampleElsaProperty1.Expressions![sampleElsaProperty1.Syntax!],
@@ -146,37 +146,9 @@ public class WeightedRadioExpressionHandlerTests
 
         //Assert
         Assert.True(!expectedResults!.Choices.IsNullOrEmpty());
-        Assert.Equal(PotScoreRadioListProperties.Count(), expectedResults!.Choices.Count());
+        Assert.Equal(WeightedRadioListProperties.Count(), expectedResults!.Choices.Count());
         Assert.Contains(sampleElsaText1, expectedResults!.Choices.Select(x => x.Answer));
         Assert.Contains(sampleElsaText2Actual, expectedResults!.Choices.Select(x => x.Answer));
-    }
-
-
-
-    [Theory, AutoMoqData]
-    public async void EvaluateIsPrePopulated_ReturnsExpectedData_whenCorrectDataIsProvided(
-          Mock<IContentSerializer> serializer,
-          Mock<IServiceProvider> provider,
-          bool prePopulatedValue,
-          Mock<IExpressionEvaluator> evaluator,
-          Mock<ILogger<IExpressionHandler>> logger)
-    {
-        //Arrange
-        var context = new ActivityExecutionContext(provider.Object, default!, default!, default!, default, default);
-
-        WeightedRadioExpressionHandler handler = new WeightedRadioExpressionHandler(logger.Object, serializer.Object);
-
-        ElsaProperty property = SampleElsaProperty(GetDictionary(SyntaxNames.Literal, "Sample Text", prePopulatedValue: prePopulatedValue.ToString().ToLower()), SyntaxNames.Literal, "Checkbox Text");
-
-        evaluator.Setup(x => x.TryEvaluateAsync<bool>(property.Expressions![RadioSyntaxNames.PrePopulated].ToLower(),
-            SyntaxNames.JavaScript, It.IsAny<ActivityExecutionContext>(), It.IsAny<CancellationToken>())).Returns(Task.FromResult(Models.Result.Success<bool>(prePopulatedValue)));
-
-        //Act
-        bool actualPrePopulatedValue = await handler.EvaluatePrePopulated(property, evaluator.Object, context);
-
-        //Assert
-        Assert.Equal(prePopulatedValue, actualPrePopulatedValue);
-
     }
 
     [Theory, AutoMoqData]
@@ -207,64 +179,6 @@ public class WeightedRadioExpressionHandlerTests
         Assert.False(actualPrePopulatedValueInvalidData);
 
     }
-
-
-    [Theory, AutoMoqData]
-    public async void EvaluateScore_ReturnsExpectedData_whenCorrectDataIsProvided(
-          Mock<IContentSerializer> serializer,
-          Mock<IServiceProvider> provider,
-          int prePopulatedValue,
-          Mock<IExpressionEvaluator> evaluator,
-          Mock<ILogger<IExpressionHandler>> logger)
-    {
-        //Arrange
-        var context = new ActivityExecutionContext(provider.Object, default!, default!, default!, default, default);
-
-        WeightedRadioExpressionHandler handler = new WeightedRadioExpressionHandler(logger.Object, serializer.Object);
-
-        ElsaProperty property = SampleElsaProperty(GetDictionary(SyntaxNames.Literal, "Sample Text", prePopulatedValue: prePopulatedValue.ToString().ToLower()), SyntaxNames.Literal, "Checkbox Text");
-
-        evaluator.Setup(x => x.TryEvaluateAsync<int>(property.Expressions![RadioSyntaxNames.PrePopulated],
-            SyntaxNames.JavaScript, It.IsAny<ActivityExecutionContext>(), It.IsAny<CancellationToken>())).Returns(Task.FromResult(Models.Result.Success(prePopulatedValue)));
-
-        //Act
-        decimal actualPrePopulatedValue = await handler.EvaluateScore(property, evaluator.Object, context);
-
-        ////Assert
-        //Assert.Equal(prePopulatedValue, actualPrePopulatedValue);
-
-    }
-
-
-    [Theory, AutoMoqData]
-    public async void EvaluateScore_ReturnsFalse_WhenNoDataOrFalseDataIsProvided(
-            Mock<IContentSerializer> serializer,
-            Mock<IServiceProvider> provider,
-            Mock<IExpressionEvaluator> evaluator,
-            Mock<ILogger<IExpressionHandler>> logger)
-    {
-        //Arrange
-        var context = new ActivityExecutionContext(provider.Object, default!, default!, default!, default, default);
-
-        WeightedRadioExpressionHandler handler = new WeightedRadioExpressionHandler(logger.Object, serializer.Object);
-
-        ElsaProperty propertyWithNoKey = SampleElsaProperty(GetDictionary(SyntaxNames.Literal, "Sample Text", prePopulatedValue: string.Empty), SyntaxNames.Literal, "Radio Text");
-        ElsaProperty propertyWithInvalidValue = SampleElsaProperty(GetDictionary(SyntaxNames.Literal, "Sample Text", prePopulatedValue: "Abc123"), SyntaxNames.Literal, "Radio Text 2");
-
-        propertyWithNoKey.Expressions!.Remove(RadioSyntaxNames.PrePopulated);
-
-
-
-        //Act
-        bool actualPrePopulatedValueNoKey = await handler.EvaluatePrePopulated(propertyWithNoKey, evaluator.Object, context);
-        bool actualPrePopulatedValueInvalidData = await handler.EvaluatePrePopulated(propertyWithInvalidValue, evaluator.Object, context);
-
-        //Assert
-        Assert.False(actualPrePopulatedValueNoKey);
-        Assert.False(actualPrePopulatedValueInvalidData);
-
-    }
-
 
     private Dictionary<string, string> GetDictionary(string defaultSyntax,
            string defaultValue,

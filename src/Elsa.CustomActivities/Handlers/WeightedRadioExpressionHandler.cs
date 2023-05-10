@@ -38,19 +38,6 @@ namespace Elsa.CustomActivities.Handlers
             return resultArray.ToList();
         }
 
-        public async Task<List<WeightedRadioRecord>> EvaluateRadioRecords(ElsaProperty property, IExpressionEvaluator evaluator, ActivityExecutionContext context)
-        {
-            if (property.Expressions!.ContainsKey(SyntaxNames.Json))
-            {
-                var elsaCheckboxProperties = JsonConvert.DeserializeObject<List<ElsaProperty>>(property.Expressions[SyntaxNames.Json]);
-                List<ElsaProperty> propertiesToEvaluate = elsaCheckboxProperties != null ? elsaCheckboxProperties : new List<ElsaProperty>();
-                WeightedRadioRecord[] weightedRecords = await Task.WhenAll(propertiesToEvaluate
-                    .Select(x => ElsaPropertyToWeightedRadioRecord(x, evaluator, context)));
-                return weightedRecords.ToList();
-            }
-            return new List<WeightedRadioRecord>();
-        }
-
         private async Task<WeightedRadioRecord> ElsaPropertyToWeightedRadioRecord(ElsaProperty property, IExpressionEvaluator evaluator, ActivityExecutionContext context)
         {
             string identifier = property.Name;
