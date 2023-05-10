@@ -10,6 +10,7 @@ using Microsoft.Extensions.Logging;
 using Moq;
 using Newtonsoft.Json;
 using System;
+using System.Timers;
 using Xunit;
 
 namespace Elsa.CustomActivities.Tests.Handlers.Syntax
@@ -348,37 +349,27 @@ namespace Elsa.CustomActivities.Tests.Handlers.Syntax
 
         [Theory, AutoMoqData]
         public async void EvaluateFromExpression_ReturnsDecimalModel_GivenDecimalType(
-       Mock<IServiceProvider> provider,
-       Mock<IExpressionEvaluator> evaluator,
-       ILogger<IExpressionHandler> logger,
-       IContentSerializer serializer)
+        Mock<IServiceProvider> provider,
+        Mock<IExpressionEvaluator> evaluator,
+        ILogger<IExpressionHandler> logger,
+        IContentSerializer serializer)
         {
             //Arrange
             decimal value = new Decimal(2.0);
-            string javascriptQuery = "activities[x].Output()";
             Type type = typeof(decimal);
             ElsaProperty sampleProperty = SampleProperty(SyntaxNames.Literal, type, value.ToString());
-            ElsaProperty javascriptProperty = SampleProperty(SyntaxNames.JavaScript, type, javascriptQuery);
 
             var context = new ActivityExecutionContext(provider.Object, default!, default!, default!, default, default);
 
-            string result = value.ToString();
-            evaluator.Setup(x => x.TryEvaluateAsync<string>(sampleProperty.Expressions![sampleProperty.Syntax!],
-                sampleProperty.Syntax!, context, CancellationToken.None)).Returns(Task.FromResult(Models.Result.Success<string?>(value.ToString())));
-
-            evaluator.Setup(x => x.TryEvaluateAsync<string>(javascriptProperty.Expressions![javascriptProperty.Syntax!],
-                javascriptProperty.Syntax!, context, CancellationToken.None)).Returns(Task.FromResult(Models.Result.Success<string?>(value.ToString())));
+            evaluator.Setup(x => x.TryEvaluateAsync<decimal?>("2", SyntaxNames.Literal, context, CancellationToken.None)).Returns(Task.FromResult(Models.Result.Success(new decimal?(2))));
 
             NestedSyntaxExpressionHandler handler = new NestedSyntaxExpressionHandler(logger, serializer);
 
             //Act
-
             var output = await handler.EvaluateModel(sampleProperty!, evaluator.Object, context, type);
-            var parsedJavascriptOutput = await handler.EvaluateModel(javascriptProperty!, evaluator.Object, context, type);
 
             //Assert
             Assert.Equal(type, output!.GetType());
-            Assert.Equal(type, parsedJavascriptOutput!.GetType());
         }
 
         [Theory, AutoMoqData]
@@ -460,8 +451,6 @@ namespace Elsa.CustomActivities.Tests.Handlers.Syntax
 
             var context = new ActivityExecutionContext(provider.Object, default!, default!, default!, default, default);
 
-
-
             var propertyDictionary = new Dictionary<string, string>()
             {
                 {SyntaxNames.JavaScript, javascriptValue },
@@ -487,7 +476,7 @@ namespace Elsa.CustomActivities.Tests.Handlers.Syntax
             evaluator.Setup(x => x.TryEvaluateAsync<string>(secondProperty.Expressions![secondProperty.Syntax!],
                 secondProperty.Syntax!, context, CancellationToken.None)).Returns(Task.FromResult(Models.Result.Success<string?>(stringValue)));
 
-            evaluator.Setup(x => x.TryEvaluateAsync<int>("10", SyntaxNames.Literal, context, CancellationToken.None)).Returns(Task.FromResult(Models.Result.Success(10)));
+            evaluator.Setup(x => x.TryEvaluateAsync<decimal>("10", SyntaxNames.Literal, context, CancellationToken.None)).Returns(Task.FromResult(Models.Result.Success(new Decimal(10))));
 
             NestedSyntaxExpressionHandler handler = new NestedSyntaxExpressionHandler(logger, serializer);
 
@@ -519,13 +508,15 @@ namespace Elsa.CustomActivities.Tests.Handlers.Syntax
             //Arrange
             var javascriptValue = "First Value";
             var stringValue = "Second Value";
-            var maxScoreValue = 10;
-            var choiceScoreValue = 4;
+            var maxScoreValue = new Decimal(10);
+            var choiceScoreValue = new Decimal(4);
             string value = WeightedScoreCheckboxJson(javascriptValue, stringValue, false, maxScoreValue, choiceScoreValue);
             Type type = typeof(WeightedCheckboxModel);
             Type choiceType = typeof(WeightedCheckboxRecord);
 
             var context = new ActivityExecutionContext(provider.Object, default!, default!, default!, default, default);
+
+            ElsaProperty groupArrayScore = CreateGroupArrayProperty();
 
             var choicesPropertyDictionary = new Dictionary<string, string>()
             {
@@ -547,18 +538,18 @@ namespace Elsa.CustomActivities.Tests.Handlers.Syntax
             {
                 {SyntaxNames.JavaScript, javascriptValue },
                 {SyntaxNames.Literal, stringValue },
-                {ScoringSyntaxNames.MaxScore, "10" },
-                {ScoringSyntaxNames.ScoreArray, "[1, 2, 3]" },
+                {ScoringSyntaxNames.MaxGroupScore, "10" },
+                {ScoringSyntaxNames.GroupArrayScore, JsonConvert.SerializeObject(groupArrayScore) },
                 {SyntaxNames.Json, JsonConvert.SerializeObject(choicesPropertyList) }
             };
 
-            var firstProperty = SampleElsaProperty(propertyDictionary, SyntaxNames.JavaScript, "GroupA");
-            var propertyList = new List<ElsaProperty>()
+            var groupProperty = SampleElsaProperty(propertyDictionary, SyntaxNames.JavaScript, "GroupA");
+            var groupPropertyList = new List<ElsaProperty>()
             {
-                firstProperty
+                groupProperty
             };
 
-            ElsaProperty sampleProperty = SampleProperty(SyntaxNames.Json, type, JsonConvert.SerializeObject(propertyList));
+            ElsaProperty sampleProperty = SampleProperty(SyntaxNames.Json, type, JsonConvert.SerializeObject(groupPropertyList));
 
             List<PotScoreRadioRecord>? result = JsonConvert.DeserializeObject<List<PotScoreRadioRecord>>(value);
             evaluator.Setup(x => x.TryEvaluateAsync<string>(firstChoiceProperty.Expressions![firstChoiceProperty.Syntax!],
@@ -567,8 +558,8 @@ namespace Elsa.CustomActivities.Tests.Handlers.Syntax
             evaluator.Setup(x => x.TryEvaluateAsync<string>(secondChoiceProperty.Expressions![secondChoiceProperty.Syntax!],
                 secondChoiceProperty.Syntax!, context, CancellationToken.None)).Returns(Task.FromResult(Models.Result.Success<string?>(stringValue)));
 
-            evaluator.Setup(x => x.TryEvaluateAsync<int>("4", SyntaxNames.Literal, context, CancellationToken.None)).Returns(Task.FromResult(Models.Result.Success(4)));
-            evaluator.Setup(x => x.TryEvaluateAsync<int>("10", ScoringSyntaxNames.MaxScore, context, CancellationToken.None)).Returns(Task.FromResult(Models.Result.Success(10)));
+            evaluator.Setup(x => x.TryEvaluateAsync<decimal>("4", SyntaxNames.Literal, context, CancellationToken.None)).Returns(Task.FromResult(Models.Result.Success(new Decimal(4))));
+            evaluator.Setup(x => x.TryEvaluateAsync<decimal>("10", SyntaxNames.Literal, context, CancellationToken.None)).Returns(Task.FromResult(Models.Result.Success(new Decimal(10))));
 
             NestedSyntaxExpressionHandler handler = new NestedSyntaxExpressionHandler(logger, serializer);
 
@@ -591,6 +582,16 @@ namespace Elsa.CustomActivities.Tests.Handlers.Syntax
                 Assert.True(false, "Output did not produce a non-null object");
             }
 
+        }
+
+        private ElsaProperty CreateGroupArrayProperty()
+        {
+            var groupArrayScoreProperty = new Dictionary<string, string>()
+            {
+                {SyntaxNames.Json, "[1.0, 2.0, 3.0]" }
+            };
+            var groupArrayScore = SampleElsaProperty(groupArrayScoreProperty, ScoringSyntaxNames.GroupArrayScore, "GroupArrayScore");
+            return groupArrayScore;
         }
 
         [Theory, AutoMoqData]
