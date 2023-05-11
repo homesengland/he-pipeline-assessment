@@ -74,7 +74,7 @@ namespace Elsa.CustomActivities.Handlers
             if (property.Expressions!.ContainsKey(ScoringSyntaxNames.MaxGroupScore))
             {
                 string expression = property.Expressions[ScoringSyntaxNames.MaxGroupScore] ?? "0";
-                decimal? maxScore = await property.EvaluateFromExpressionsExplicit<decimal>(evaluator, 
+                decimal? maxScore = await property.EvaluateFromExpressionsExplicit<decimal?>(evaluator, 
                     context, 
                     _logger, 
                     expression, 
