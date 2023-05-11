@@ -38,25 +38,12 @@ namespace Elsa.CustomActivities.Handlers
             return resultArray.ToList();
         }
 
-        public async Task<List<WeightedRadioRecord>> EvaluateRadioRecords(ElsaProperty property, IExpressionEvaluator evaluator, ActivityExecutionContext context)
-        {
-            if (property.Expressions!.ContainsKey(SyntaxNames.Json))
-            {
-                var elsaCheckboxProperties = JsonConvert.DeserializeObject<List<ElsaProperty>>(property.Expressions[SyntaxNames.Json]);
-                List<ElsaProperty> propertiesToEvaluate = elsaCheckboxProperties != null ? elsaCheckboxProperties : new List<ElsaProperty>();
-                WeightedRadioRecord[] weightedRecords = await Task.WhenAll(propertiesToEvaluate
-                    .Select(x => ElsaPropertyToWeightedRadioRecord(x, evaluator, context)));
-                return weightedRecords.ToList();
-            }
-            return new List<WeightedRadioRecord>();
-        }
-
         private async Task<WeightedRadioRecord> ElsaPropertyToWeightedRadioRecord(ElsaProperty property, IExpressionEvaluator evaluator, ActivityExecutionContext context)
         {
             string identifier = property.Name;
             string value = await property.EvaluateFromExpressions<string>(evaluator, context, _logger, CancellationToken.None);
             bool isPrePopulated = await EvaluatePrePopulated(property, evaluator, context);
-            int score = await EvaluateScore(property, evaluator, context);
+            decimal score = await EvaluateScore(property, evaluator, context);
 
             return new WeightedRadioRecord(identifier, value, score, isPrePopulated);
 
@@ -77,12 +64,12 @@ namespace Elsa.CustomActivities.Handlers
             return false;
         }
 
-        public async Task<int> EvaluateScore(ElsaProperty property, IExpressionEvaluator evaluator, ActivityExecutionContext context)
+        public async Task<decimal> EvaluateScore(ElsaProperty property, IExpressionEvaluator evaluator, ActivityExecutionContext context)
         {
             if (property.Expressions!.ContainsKey(ScoringSyntaxNames.Score))
             {
                 string expression = property.Expressions[ScoringSyntaxNames.Score] ?? "-1";
-                int score = await property.EvaluateFromExpressionsExplicit<int>(evaluator,
+                decimal score = await property.EvaluateFromExpressionsExplicit<decimal>(evaluator,
                     context, _logger,
                     expression,
                     SyntaxNames.Literal,
