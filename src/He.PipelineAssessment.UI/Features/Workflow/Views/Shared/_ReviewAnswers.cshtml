@@ -25,6 +25,10 @@
                                 {
                                     <p>£ @answer.AnswerText</p>
                                 }
+                                else if (question.QuestionType == QuestionTypeConstants.Information)
+                                {
+                                  
+                                }
                                 else
                                 {
                                     <p>@answer.AnswerText</p>
@@ -33,7 +37,7 @@
                             }
                         }
                     </dd>
-                    @if (Model.RenderChangeLinks && Model.WorkflowInstanceId != null)
+                    @if (Model.RenderChangeLinks && Model.WorkflowInstanceId != null && question.QuestionType!=QuestionTypeConstants.Information)
                     {
                         <dd class="govuk-summary-list__actions">
                             @Html.ActionLink("Change", "LoadWorkflowActivity", "Workflow", new { WorkflowInstanceId = Model.WorkflowInstanceId, ActivityId = @question.ActivityId, ActivityType = ActivityTypeConstants.QuestionScreen }, new { @class = "govuk-link" })

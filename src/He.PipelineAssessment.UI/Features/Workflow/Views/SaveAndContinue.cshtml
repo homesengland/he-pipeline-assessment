@@ -24,12 +24,12 @@
 
         @Html.HiddenFor(m => Model.Data.ActivityType)
         <br />
-        @*  if (Model.Data.ActivityType == ActivityTypeConstants.QuestionScreen)
+          if (Model.Data.ActivityType == ActivityTypeConstants.QuestionScreen)
     {
     @await Html.PartialAsync("_QuestionScreen",Model)
-    }*@
+    }
 
-
+        <h1>Vertical Table</h1>
         <div class="govuk-grid-row">
             <div class="govuk-grid-column-two-thirds-from-desktop">
                 <dl class="govuk-summary-list govuk-!-margin-bottom-9">
@@ -37,14 +37,15 @@
                     {
                         <div class="govuk-summary-list__row">
                             <dt class="govuk-summary-list__key">
-                            @if (question.QuestionType != QuestionTypeConstants.Information)
-                            {
-                                @question.Question
-                            }
-                            else
-                            {
-                                @string.Join("/r/n", question.Information.InformationTextList.Where(x=>x.IsGuidance==false && x.IsHyperlink ==false && x.Text!=null).Select(x=>x.Text).ToList());
-                            }
+                                @if (question.QuestionType != QuestionTypeConstants.Information)
+                                {
+                                    @question.Question
+                                }
+                                else
+                                {
+                                    @string.Join(System.Environment.NewLine, question.Information.InformationTextList.Where(x=>x.IsGuidance==false && x.IsHyperlink ==false && x.Text!=null).Select(x=>x.Text).ToList())
+                                    ;
+                                }
 
                             </dt>
                             <dd class="govuk-summary-list__value">
@@ -65,6 +66,33 @@
                 </dl>
             </div>
         </div>
+
+        <h1>Horizontal Table <small> </small></h1>
+        <table class="govuk-table">
+            <thead class="govuk-table__head">
+            <tr class="govuk-table__row">
+                @foreach (var question in Model.Data.Questions)
+                {
+                    @if (question.QuestionType != QuestionTypeConstants.Information)
+                    {
+                            <th scope="col" class="govuk-table__header">@question.Question</th>
+                    }
+                }
+            </tr>
+            </thead>
+            <tbody class="govuk-table__body">
+            @foreach (var question in Model.Data.Questions)
+                {
+                    @if (question.QuestionType != QuestionTypeConstants.Information)
+                    {
+                        <td class="govuk-table__cell">
+                            <div class="govuk-input__prefix" aria-hidden="true">£</div>
+                            <input type="text" class="govuk-input govuk-input--width-5" />
+                        </td>
+                    }
+                }
+            </tbody>
+        </table>
     }
 </div>
 
