@@ -699,8 +699,8 @@ namespace Elsa.CustomActivities.Tests.Handlers.Syntax
             var group = new WeightedCheckboxGroup();
             group.Choices = new List<WeightedCheckboxRecord>()
             {
-                     new WeightedCheckboxRecord("A", firstValue, isSingle,choiceScore, false) ,
-                     new WeightedCheckboxRecord("B", secondValue, isSingle,choiceScore , false)
+                new WeightedCheckboxRecord("A", firstValue, isSingle,choiceScore, false) ,
+                new WeightedCheckboxRecord("B", secondValue, isSingle,choiceScore , false)
             };
             group.MaxGroupScore = maxGroupScore;
             group.GroupIdentifier = "GroupA";
