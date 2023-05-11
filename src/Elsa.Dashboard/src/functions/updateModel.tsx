@@ -18,6 +18,7 @@ export function UpdateCheckbox(e: Event, property: NestedActivityDefinitionPrope
   const checkboxElement = (e.currentTarget as HTMLInputElement);
   property.expressions[syntax] = checkboxElement.checked.toString();
   this.updatePropertyModel();
+  console.table(property)
 }
 
 export function UpdateName(e: Event, property: NestedActivityDefinitionProperty) {

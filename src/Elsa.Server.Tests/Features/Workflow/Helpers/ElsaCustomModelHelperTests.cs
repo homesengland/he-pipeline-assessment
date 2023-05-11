@@ -74,7 +74,7 @@ namespace Elsa.Server.Tests.Features.Workflow.Helpers
             Assert.Equal(question.QuestionType, result.QuestionType);
             Assert.Equal(question.QuestionText, result.QuestionText);
             Assert.Equal(question.DataDictionary, result.QuestionDataDictionaryId);
-            Assert.Equal(question.Checkbox.Choices, result.Choices!.Select(x => new CheckboxRecord(x.Identifier, x.Answer, x.IsSingle, x.IsPrePopulated)));
+            Assert.Equal(question.Checkbox.Choices, result.Choices!.Select(x => new CheckboxRecord(x.Identifier, x.Answer, x.IsSingle, x.IsPrePopulated, x.IsExclusiveToQuestion)));
         }
 
         [Theory]

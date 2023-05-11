@@ -502,8 +502,8 @@ namespace Elsa.CustomActivities.Tests.Handlers.Syntax
         {
             var records = new List<CheckboxRecord>()
                 {
-                     new CheckboxRecord("A", "First Value", false,false) ,
-                     new CheckboxRecord("B", "Second Value", true,false)
+                     new CheckboxRecord("A", "First Value", false,false, false) ,
+                     new CheckboxRecord("B", "Second Value", true,false, true)
             };
 
             return JsonConvert.SerializeObject(records);

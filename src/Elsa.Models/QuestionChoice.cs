@@ -18,7 +18,7 @@ namespace Elsa.CustomModels
         public bool IsPrePopulated { get; set; }
         public string? PotScoreCategory { get; set; }
         public decimal? NumericScore { get; set; }
-
+        public bool IsExclusiveToQuestion { get; set; }
 
     }
 }
