@@ -96,8 +96,8 @@ namespace Elsa.CustomActivities.Tests.Handlers
             evaluator.Setup(x => x.TryEvaluateAsync<bool>("false", SyntaxNames.JavaScript
                 , context, CancellationToken.None)).Returns(Task.FromResult(Models.Result.Success<bool>(false)));
 
-            evaluator.Setup(x => x.TryEvaluateAsync<decimal>(maxGroupScore, SyntaxNames.Literal
-                , context, CancellationToken.None)).Returns(Task.FromResult(Models.Result.Success<decimal>(20)));            
+            evaluator.Setup(x => x.TryEvaluateAsync<decimal?>(maxGroupScore, SyntaxNames.Literal
+                , context, CancellationToken.None)).Returns(Task.FromResult(Models.Result.Success<decimal?>(20)));            
             
             evaluator.Setup(x => x.TryEvaluateAsync<decimal>(score, SyntaxNames.Literal
                 , context, CancellationToken.None)).Returns(Task.FromResult(Models.Result.Success<decimal>(345)));
@@ -314,7 +314,7 @@ namespace Elsa.CustomActivities.Tests.Handlers
         public async Task EvaluateMaxGroupScore_ReturnsExpectedData_whenCorrectDataIsProvided(
                 Mock<IContentSerializer> serializer,
                 Mock<IServiceProvider> provider,
-                decimal maxGroupScore,
+                decimal? maxGroupScore,
                 Mock<IExpressionEvaluator> evaluator,
                 Mock<ILogger<IExpressionHandler>> logger)
         {
@@ -325,7 +325,7 @@ namespace Elsa.CustomActivities.Tests.Handlers
 
             ElsaProperty property = SampleElsaProperty(GetDictionary(SyntaxNames.Literal, "Sample Text", maxGroupScore: maxGroupScore.ToString()), SyntaxNames.Literal, "Checkbox Text");
 
-            evaluator.Setup(x => x.TryEvaluateAsync<decimal>(property.Expressions![ScoringSyntaxNames.MaxGroupScore].ToLower(),
+            evaluator.Setup(x => x.TryEvaluateAsync<decimal?>(property.Expressions![ScoringSyntaxNames.MaxGroupScore].ToLower(),
                 SyntaxNames.Literal, It.IsAny<ActivityExecutionContext>(), It.IsAny<CancellationToken>())).Returns(Task.FromResult(Models.Result.Success(maxGroupScore)));
 
             //Act
@@ -359,7 +359,7 @@ namespace Elsa.CustomActivities.Tests.Handlers
 
             //Assert
             Assert.Null(actualMaxGroupScoreValue);
-            Assert.Equal(0, actualMaxGroupScoreValueInvalidData);
+            Assert.Null(actualMaxGroupScoreValueInvalidData);
 
         }
 
