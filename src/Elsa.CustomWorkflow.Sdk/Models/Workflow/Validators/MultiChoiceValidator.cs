@@ -13,6 +13,7 @@ namespace Elsa.CustomWorkflow.Sdk.Models.Workflow.Validators
                     {
                         RuleFor(x => x).Must(multipleChoice =>
                             {
+                                var validationResult = true;
                                 if (multipleChoice.SelectedChoices!.Count() <= 1) return true;
                                 var distinctSelectedGroups = multipleChoice.Choices
                                     .Where(x => multipleChoice.SelectedChoices.Contains(x.Id))
@@ -26,7 +27,10 @@ namespace Elsa.CustomWorkflow.Sdk.Models.Workflow.Validators
                                         var selectedChoicesForGroup =
                                             multipleChoice.SelectedChoices.Where(x =>
                                                 choicesForGroup.Select(y => y.Id).Contains(x));
-                                        if (selectedChoicesForGroup.Count() <= 1) return true;
+                                        if (selectedChoicesForGroup.Count() <= 1)
+                                        {
+                                            validationResult = true;
+                                        }
                                         foreach (var choice in choicesForGroup)
                                         {
                                             if (choice.IsSingle && multipleChoice.SelectedChoices!.Contains(choice.Id))
@@ -35,9 +39,26 @@ namespace Elsa.CustomWorkflow.Sdk.Models.Workflow.Validators
                                             }
                                         }
                                     }
+
+                                    var allChoices = multipleChoice.Choices.ToList();
+                                    var selectedChoices = multipleChoice.SelectedChoices.Where(x =>
+                                        allChoices.Select(y => y.Id).Contains(x));
+
+                                    if (selectedChoices.Count() <= 1)
+                                    {
+                                        return validationResult;
+                                    }
+
+                                    foreach (var choice in allChoices)
+                                    {
+                                        if (choice.IsExclusiveToQuestion && multipleChoice.SelectedChoices!.Contains(choice.Id))
+                                        {
+                                            return false;
+                                        }
+                                    }
                                 }
 
-                                return true;
+                                return validationResult;
                             })
                             .WithMessage(multipleChoice =>
                             {
@@ -86,7 +107,24 @@ namespace Elsa.CustomWorkflow.Sdk.Models.Workflow.Validators
                                         {
                                             validationMessage += $"{exclusiveAnswers.First()} cannot be selected with any other answer in the group.";
                                         }
-                                        
+                                    }
+
+                                    var allChoices = multipleChoice.Choices
+                                        .Where(x => x.IsExclusiveToQuestion).ToList();
+                                    var selectedChoices = multipleChoice.SelectedChoices.Where(x =>
+                                        allChoices.Select(y => y.Id).Contains(x));
+
+                                    var exclusiveAnswersToQuestion = allChoices
+                                        .Where(c => c.IsExclusiveToQuestion && selectedChoices!.Contains(c.Id)).Select(c => c.Answer)
+                                        .ToList();
+                                    if (exclusiveAnswersToQuestion.Count() > 1)
+                                    {
+                                        var finalInvalidAnswer = exclusiveAnswersToQuestion.Last();
+
+                                        var invalidAnswers = string.Join(", ",
+                                            exclusiveAnswersToQuestion.Take(exclusiveAnswersToQuestion.Count() - 1));
+                                        validationMessage =
+                                            $"{invalidAnswers} and {finalInvalidAnswer} cannot be selected with any other answer in the question.";
                                     }
                                 }
 
