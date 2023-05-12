@@ -8,6 +8,7 @@ let enabledSettings = []
 // Use Array.forEach to add an event listener to each checkbox.
 groupCheckboxes.forEach(function (checkbox) {
     checkbox.addEventListener('change', function () {
+        var hasBehaviourExclusiveToQuestion = (checkbox.getAttribute('group-data-behaviour') === 'exclusivetoquestion');
         var hasBehaviourExclusive = (checkbox.getAttribute('group-data-behaviour') === 'exclusivetogroup');
         if (hasBehaviourExclusive) {
             unCheckAllInputsExcept(checkbox);
