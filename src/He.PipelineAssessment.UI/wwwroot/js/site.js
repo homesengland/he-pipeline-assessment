@@ -8,7 +8,7 @@ let enabledSettings = []
 // Use Array.forEach to add an event listener to each checkbox.
 groupCheckboxes.forEach(function (checkbox) {
     checkbox.addEventListener('change', function () {
-        var hasBehaviourExclusive = (checkbox.getAttribute('group-data-behaviour') === 'exclusive');
+        var hasBehaviourExclusive = (checkbox.getAttribute('group-data-behaviour') === 'exclusivetogroup');
         if (hasBehaviourExclusive) {
             unCheckAllInputsExcept(checkbox);
         } else {
@@ -29,7 +29,7 @@ unCheckAllInputsExcept = function ($input) {
 
 unCheckExclusiveInputs = function ($input) {
     var allInputsWithSameGroupAndExclusiveBehaviour = document.querySelectorAll(
-        'input[group="' + $input.getAttribute("group") + '"][group-data-behaviour="exclusive"][type="checkbox"]'
+        'input[group="' + $input.getAttribute("group") + '"][group-data-behaviour="exclusivetogroup"][type="checkbox"]'
     );
 
     nodeListForEach(allInputsWithSameGroupAndExclusiveBehaviour, function ($exclusiveInput) {

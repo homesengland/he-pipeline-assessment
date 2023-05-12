@@ -92,6 +92,7 @@
                     int answerId = exclusiveChoices[i].Id;
                     List<int> selectedChoices = Model.Checkbox.SelectedChoices;
                     bool isSelected = selectedChoices.Contains(answerId);
+                    string groupDataBehavior = exclusiveChoices[i].IsExclusiveToQuestion ? "exclusivetoquestion" : "exclusivetogroup";
 
                     @if (nonExclusiveChoices.Any() || i > 0)
                     {
@@ -106,7 +107,7 @@
                                    value="@exclusiveChoices[i].Id"
                                    name="@itemName"
                                    group="@groupName"
-                                   type="checkbox" class="govuk-checkboxes__input" group-data-behaviour="exclusive">
+                                   type="checkbox" class="govuk-checkboxes__input" group-data-behaviour=@groupDataBehavior>
                         }
                         else
                         {

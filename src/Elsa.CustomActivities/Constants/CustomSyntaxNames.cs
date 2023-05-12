@@ -17,6 +17,7 @@ namespace Elsa.CustomActivities.Constants
     {
         public const string Single = "Single";
         public const string PrePopulated = "PrePopulated";
+        public const string ExclusiveToQuestion = "ExclusiveToQuestion";
     }
 
     public class RadioSyntaxNames

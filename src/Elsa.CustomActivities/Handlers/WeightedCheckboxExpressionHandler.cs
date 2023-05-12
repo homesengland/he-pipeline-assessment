@@ -123,9 +123,9 @@ namespace Elsa.CustomActivities.Handlers
 
         public bool EvaluateExclusiveToQuestion(ElsaProperty property, IExpressionEvaluator evaluator, ActivityExecutionContext context)
         {
-            if (property.Expressions!.ContainsKey(CheckboxSyntaxNames.Single))
+            if (property.Expressions!.ContainsKey(CheckboxSyntaxNames.ExclusiveToQuestion))
             {
-                bool isExclusiveToQuestion = property.Expressions?[CheckboxSyntaxNames.Single].ToLower() == "true";
+                bool isExclusiveToQuestion = property.Expressions?[CheckboxSyntaxNames.ExclusiveToQuestion].ToLower() == "true";
                 return isExclusiveToQuestion;
             }
             return false;
