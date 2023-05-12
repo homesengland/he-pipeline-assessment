@@ -552,7 +552,6 @@ namespace Elsa.CustomWorkflow.Sdk.Tests.Workflow.Validators
         [Fact]
         public void Should_Not_Have_Error_When_Single_ExclusiveToQuestion_Choice_Selected_Within_Question()
         {
-            //TODO
             //Arrange
             MultiChoiceValidator validator = new MultiChoiceValidator();
             Checkbox multiChoice = new Checkbox();
