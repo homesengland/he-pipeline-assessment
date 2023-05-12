@@ -147,13 +147,7 @@ namespace Elsa.Server.Features.Workflow.LoadQuestionScreen
                     questionActivityData.Checkbox = new Checkbox
                     {
                         Choices = dbQuestion.Choices.Select(x => new QuestionChoice()
-                        { Answer = x.Answer, IsSingle = x.IsSingle, Id = x.Id, QuestionChoiceGroup = x.QuestionChoiceGroup}).ToArray()
-                    };
-
-                    questionActivityData.Checkbox = new Checkbox
-                    {
-                        Choices = dbQuestion.Choices.Select(x => new QuestionChoice()
-                        { Answer = x.Answer, IsExclusiveToQuestion = x.IsExclusiveToQuestion, Id = x.Id, QuestionChoiceGroup = x.QuestionChoiceGroup }).ToArray()
+                        { Answer = x.Answer, IsSingle = x.IsSingle, IsExclusiveToQuestion = x.IsExclusiveToQuestion, Id = x.Id, QuestionChoiceGroup = x.QuestionChoiceGroup}).ToArray()
                     };
 
                     List<int> answerList;
