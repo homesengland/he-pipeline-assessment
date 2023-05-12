@@ -23,7 +23,7 @@ export class QuestionCategories {
 
 export class CheckboxOptionsSyntax {
   static readonly Single = "Single";
-  static readonly IsExclusiveToQuestion = "IsExclusiveToQuestion";
+  static readonly ExclusiveToQuestion = "ExclusiveToQuestion";
   static readonly PrePopulated = "PrePopulated";
   static readonly Score = "Score";
 }

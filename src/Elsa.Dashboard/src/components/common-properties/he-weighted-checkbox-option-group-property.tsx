@@ -155,7 +155,7 @@ export class HeWeightedCheckboxOptionGroupProperty {
       const prePopulatedExpression = checkboxAnswer.expressions[CheckboxOptionsSyntax.PrePopulated];
       const scoreExpression = checkboxAnswer.expressions[CheckboxOptionsSyntax.Score];
       const isSingleChecked = checkboxAnswer.expressions[CheckboxOptionsSyntax.Single] == 'true';
-      const isGlobalChecked = checkboxAnswer.expressions[CheckboxOptionsSyntax.Global] == 'true';
+      const isGlobalChecked = checkboxAnswer.expressions[CheckboxOptionsSyntax.ExclusiveToQuestion] == 'true';
 
       const prePopulatedLanguage = mapSyntaxToLanguage(prePopulatedSyntax);
 
@@ -271,7 +271,7 @@ export class HeWeightedCheckboxOptionGroupProperty {
             <th class="elsa-py-3 elsa-text-left elsa-text-xs elsa-font-medium elsa-text-gray-500 elsa-tracking-wider elsa-w-2/12">IsGlobal</th>
             <td class="elsa-py-0">
               <input name="choice_input" type="checkbox" checked={isGlobalChecked} value={'true'}
-                onChange={e => this.UpdateCheckbox(e, checkboxAnswer, CheckboxOptionsSyntax.IsExclusiveToQuestion)}
+                onChange={e => this.UpdateCheckbox(e, checkboxAnswer, CheckboxOptionsSyntax.ExclusiveToQuestion)}
                 class="focus:elsa-ring-blue-500 elsa-h-8 elsa-w-8 elsa-text-blue-600 elsa-border-gray-300 elsa-rounded" />
             </td>
 
