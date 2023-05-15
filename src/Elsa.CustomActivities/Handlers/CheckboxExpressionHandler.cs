@@ -43,8 +43,7 @@ namespace Elsa.CustomActivities.Handlers
             string value = await property.EvaluateFromExpressions<string>(evaluator, context, _logger, CancellationToken.None);
             bool isSingle = EvaluateIsSingle(property, evaluator, context);
             bool isPrePopulated = await EvaluatePrePopulated(property, evaluator, context);
-            bool isExclusiveToQuestion = EvaluateExclusiveToQuestion(property, evaluator, context);
-            return new CheckboxRecord(identifier, value, isSingle, isPrePopulated, isExclusiveToQuestion);
+            return new CheckboxRecord(identifier, value, isSingle, isPrePopulated);
         }
 
         public bool EvaluateIsSingle(ElsaProperty property, IExpressionEvaluator evaluator, ActivityExecutionContext context)
@@ -53,16 +52,6 @@ namespace Elsa.CustomActivities.Handlers
             {
                 bool isSingle = property.Expressions?[CheckboxSyntaxNames.Single].ToLower() == "true";
                 return isSingle;
-            }
-            return false;
-        }
-
-        public bool EvaluateExclusiveToQuestion(ElsaProperty property, IExpressionEvaluator evaluator, ActivityExecutionContext context)
-        {
-            if (property.Expressions!.ContainsKey(CheckboxSyntaxNames.Single))
-            {
-                bool isExclusiveToQuestion = property.Expressions?[CheckboxSyntaxNames.Single].ToLower() == "true";
-                return isExclusiveToQuestion;
             }
             return false;
         }

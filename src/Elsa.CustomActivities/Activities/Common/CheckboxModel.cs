@@ -5,5 +5,5 @@
         public ICollection<CheckboxRecord> Choices { get; set; } = new List<CheckboxRecord>();
     }
 
-    public record CheckboxRecord(string Identifier, string Answer, bool IsSingle, bool IsPrePopulated, bool IsExclusiveToQuestion);
+    public record CheckboxRecord(string Identifier, string Answer, bool IsSingle, bool IsPrePopulated);
 }

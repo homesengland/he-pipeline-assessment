@@ -67,8 +67,7 @@ namespace Elsa.Server.Helpers
                         Identifier = x.Identifier,
                         Answer = x.Answer,
                         IsSingle = x.IsSingle,
-                        IsPrePopulated = x.IsPrePopulated,
-                        IsExclusiveToQuestion = x.IsExclusiveToQuestion
+                        IsPrePopulated = x.IsPrePopulated
                     })
                         .ToList();
                     break;
