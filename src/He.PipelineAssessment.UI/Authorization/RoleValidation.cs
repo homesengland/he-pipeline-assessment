@@ -5,24 +5,30 @@ namespace He.PipelineAssessment.UI.Authorization;
 
 public interface IRoleValidation
 {
-    Task<bool> ValidateRole(int assessmentId);
+    Task<bool> ValidateRole(int assessmentId, string workflowDefinitionId);
 
 }
 public class RoleValidation : IRoleValidation
 {
     private readonly IAssessmentRepository _assessmentRepository;
+    private readonly IAdminAssessmentToolRepository _adminAssessmentToolRepository;
     private readonly IUserProvider _userProvider;
 
-    public RoleValidation(IAssessmentRepository assessmentRepository, IUserProvider userProvider)
+    public RoleValidation(IAssessmentRepository assessmentRepository, IAdminAssessmentToolRepository adminAssessmentToolRepository, IUserProvider userProvider)
     {
         _assessmentRepository = assessmentRepository;
+        _adminAssessmentToolRepository = adminAssessmentToolRepository;
         _userProvider = userProvider;
     }
-    public async Task<bool> ValidateRole(int assessmentId)
+    public async Task<bool> ValidateRole(int assessmentId, string workflowDefinitionId)
     {
         bool isRoleExist = false;
 
+        var assessmentToolWorkflow = await _adminAssessmentToolRepository.GetAssessmentToolByWorkflowDefinitionId(workflowDefinitionId);
+        var isEconomistWorkflow = assessmentToolWorkflow.IsEconomistWorkflow;
+
         var assessment = await _assessmentRepository.GetAssessment(assessmentId);
+
 
         if (assessment != null)
         {

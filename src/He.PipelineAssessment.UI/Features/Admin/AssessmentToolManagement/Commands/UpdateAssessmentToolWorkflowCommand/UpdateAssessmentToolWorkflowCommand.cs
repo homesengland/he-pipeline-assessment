@@ -15,6 +15,7 @@ namespace He.PipelineAssessment.UI.Features.Admin.AssessmentToolManagement.Comma
         public string Name { get; set; } = string.Empty;
         public string WorkflowDefinitionId { get; set; } = string.Empty;
         public bool IsFirstWorkflow { get; set; }
+        public bool IsEconomistWorkflow { get; set; }
         public int AssessmentToolId { get; set; }
         public int Version { get; set; } = 1;
         public bool IsLatest { get; set; } = true;
