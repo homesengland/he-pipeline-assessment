@@ -109,14 +109,17 @@ namespace Elsa.CustomWorkflow.Sdk.Models.Workflow.Validators
                                         }
                                     }
 
-                                    var allChoices = multipleChoice.Choices
+                                    var allIsExclusiveToQuestionChoices = multipleChoice.Choices
                                         .Where(x => x.IsExclusiveToQuestion).ToList();
-                                    var selectedChoices = multipleChoice.SelectedChoices.Where(x =>
-                                        allChoices.Select(y => y.Id).Contains(x));
+                                    var selectedIsExclusiveToQuestionChoices = multipleChoice.SelectedChoices.Where(x =>
+                                        allIsExclusiveToQuestionChoices.Select(y => y.Id).Contains(x));
 
-                                    var exclusiveAnswersToQuestion = allChoices
-                                        .Where(c => c.IsExclusiveToQuestion && selectedChoices!.Contains(c.Id)).Select(c => c.Answer)
+                                    var exclusiveAnswersToQuestion = allIsExclusiveToQuestionChoices
+                                        .Where(c => c.IsExclusiveToQuestion && selectedIsExclusiveToQuestionChoices!.Contains(c.Id)).Select(c => c.Answer)
                                         .ToList();
+
+
+
                                     if (exclusiveAnswersToQuestion.Count() > 1)
                                     {
                                         var finalInvalidAnswer = exclusiveAnswersToQuestion.Last();
@@ -126,6 +129,13 @@ namespace Elsa.CustomWorkflow.Sdk.Models.Workflow.Validators
                                         validationMessage =
                                             $"{invalidAnswers} and {finalInvalidAnswer} cannot be selected with any other answer in the question.";
                                     }
+                                    else if (exclusiveAnswersToQuestion.Count() == 1 && multipleChoice.SelectedChoices.Count() > 1 )
+                                    {
+                                        var invalidAnswer = exclusiveAnswersToQuestion.First();
+
+                                        validationMessage =
+                                          $"{invalidAnswer} cannot be selected with any other answer in the question.";
+                                    } 
                                 }
 
                                 return validationMessage;
