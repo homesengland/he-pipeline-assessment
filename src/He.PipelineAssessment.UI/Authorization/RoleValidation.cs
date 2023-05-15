@@ -25,11 +25,21 @@ public class RoleValidation : IRoleValidation
         bool isRoleExist = false;
 
         var assessmentToolWorkflow = await _adminAssessmentToolRepository.GetAssessmentToolByWorkflowDefinitionId(workflowDefinitionId);
-        var isEconomistWorkflow = assessmentToolWorkflow.IsEconomistWorkflow;
+        if (assessmentToolWorkflow != null)
+        {
+            var isEconomistWorkflow = assessmentToolWorkflow.IsEconomistWorkflow;
+            if (isEconomistWorkflow)
+            {
+                bool isEconomistRoleExist = (_userProvider.CheckUserRole(Constants.AppRole.PipelineEconomist) || _userProvider.CheckUserRole(Constants.AppRole.PipelineAdminOperations));
 
+                if (!isEconomistRoleExist)
+                {
+                    return isEconomistRoleExist;
+                }
+            }
+        }
         var assessment = await _assessmentRepository.GetAssessment(assessmentId);
-
-
+        
         if (assessment != null)
         {
             switch (assessment?.BusinessArea)

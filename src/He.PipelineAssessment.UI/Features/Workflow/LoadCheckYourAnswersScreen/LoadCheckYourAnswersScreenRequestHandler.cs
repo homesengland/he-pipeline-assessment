@@ -34,7 +34,7 @@ namespace He.PipelineAssessment.UI.Features.Workflow.LoadCheckYourAnswersScreen
             {
                 var assessmentWorkflowInstance = await _assessmentRepository.GetAssessmentToolWorkflowInstance(request.WorkflowInstanceId);
 
-                var isRoleExist = await _roleValidation.ValidateRole(assessmentWorkflowInstance!.AssessmentId);
+                var isRoleExist = await _roleValidation.ValidateRole(assessmentWorkflowInstance!.AssessmentId, assessmentWorkflowInstance.WorkflowDefinitionId);
 
                 if (!isRoleExist && !request.IsReadOnly)
                 {
@@ -64,6 +64,7 @@ namespace He.PipelineAssessment.UI.Features.Workflow.LoadCheckYourAnswersScreen
                             result.AssessmentId = entity.AssessmentId;
                             result.CorrelationId = entity.Assessment.SpId.ToString();
                             result.IsCorrectBusinessArea = true;
+                            result.WorkflowDefinitionId= entity.WorkflowDefinitionId;
                         }
 
                         return await Task.FromResult(result);

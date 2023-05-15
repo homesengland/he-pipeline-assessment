@@ -30,7 +30,7 @@ namespace He.PipelineAssessment.UI.Features.Workflow.CheckYourAnswersSaveAndCont
         {
             try
             {
-                if (!await _roleValidation.ValidateRole(request.AssessmentId))
+                if (!await _roleValidation.ValidateRole(request.AssessmentId, request.WorkflowDefinitionId))
                 {
                     return new CheckYourAnswersSaveAndContinueCommandResponse()
                     {
