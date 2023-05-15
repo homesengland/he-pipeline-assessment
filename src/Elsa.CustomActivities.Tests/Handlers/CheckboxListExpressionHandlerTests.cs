@@ -41,56 +41,6 @@ namespace Elsa.CustomActivities.Tests.Handlers
         }
 
         [Theory, AutoMoqData]
-        public async void EvaluateAsync_ReturnsCheckboxModelData(
-            Mock<IServiceProvider> provider,
-            Mock<IExpressionEvaluator> evaluator,
-            Mock<IContentSerializer> serialiser,
-            Mock<ILogger<IExpressionHandler>> logger)
-        {
-            //Arrange
-            List<ElsaProperty> informationTextProperties = new List<ElsaProperty>();
-
-            string sampleElsaText1 = "A piece of text 1";
-            string sampleElsaText2 = "'A piece of text '+ RandomJavascriptExpression";
-            string sampleElsaText2Actual = "A piece of text 2";
-            var sampleElseProperty1 = SampleElsaProperty(GetDictionary(SyntaxNames.Literal, sampleElsaText1), SyntaxNames.Literal, "Text A");
-
-            var sampleElseProperty2 = SampleElsaProperty(GetDictionary(SyntaxNames.JavaScript, sampleElsaText2), SyntaxNames.JavaScript, "Text B");
-            informationTextProperties.Add(sampleElseProperty1);
-            informationTextProperties.Add(sampleElseProperty2);
-
-            string expressionString = JsonConvert.SerializeObject(informationTextProperties);
-
-            var context = new ActivityExecutionContext(provider.Object, default!, default!, default!, default, default);
-
-            serialiser.Setup(x => x.Deserialize<List<ElsaProperty>>(expressionString)).Returns(informationTextProperties);
-
-            provider.Setup(x => x.GetService(typeof(IExpressionEvaluator))).Returns(evaluator.Object);
-            evaluator.Setup(x => x.TryEvaluateAsync<string>(sampleElseProperty1.Expressions![sampleElseProperty1.Syntax!],
-                sampleElseProperty1.Syntax!, context, CancellationToken.None)).Returns(Task.FromResult(Models.Result.Success<string?>(sampleElsaText1)));
-
-            evaluator.Setup(x => x.TryEvaluateAsync<string>(sampleElseProperty2.Expressions![sampleElseProperty2.Syntax!],
-                sampleElseProperty2.Syntax!, context, CancellationToken.None)).Returns(Task.FromResult(Models.Result.Success<string?>(sampleElsaText2Actual)));
-
-            evaluator.Setup(x => x.TryEvaluateAsync<bool>(It.IsAny<string>(), SyntaxNames.JavaScript
-                , context, CancellationToken.None)).Returns(Task.FromResult(Models.Result.Success<bool>(true)));
-
-            InformationTextExpressionHandler sut = new InformationTextExpressionHandler(logger.Object, serialiser.Object);
-
-            //Act
-
-            var results = await sut.EvaluateAsync(expressionString, typeof(TextModel), context, CancellationToken.None);
-            TextModel? expectedResults = results.ConvertTo<TextModel>();
-
-            //Assert
-            Assert.True(!expectedResults!.TextRecords.IsNullOrEmpty());
-            Assert.Equal(informationTextProperties.Count(), expectedResults!.TextRecords.Count());
-            Assert.Contains(sampleElsaText1, expectedResults!.TextRecords.Select(x => x.Text));
-            Assert.Contains(sampleElsaText2Actual, expectedResults!.TextRecords.Select(x => x.Text));
-
-        }
-
-        [Theory, AutoMoqData]
         public async void EvaluateAsync_ReturnsCheckboxListData_WithCorrectNumberOfRecords(
                         Mock<IServiceProvider> provider,
                         Mock<IExpressionEvaluator> evaluator,

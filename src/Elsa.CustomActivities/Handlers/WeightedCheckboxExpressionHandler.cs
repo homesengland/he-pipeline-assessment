@@ -69,12 +69,12 @@ namespace Elsa.CustomActivities.Handlers
             return new List<WeightedCheckboxRecord>();
         }
 
-        public async Task<int?> EvaluateMaxGroupScore(ElsaProperty property, IExpressionEvaluator evaluator, ActivityExecutionContext context)
+        public async Task<decimal?> EvaluateMaxGroupScore(ElsaProperty property, IExpressionEvaluator evaluator, ActivityExecutionContext context)
         {
             if (property.Expressions!.ContainsKey(ScoringSyntaxNames.MaxGroupScore))
             {
                 string expression = property.Expressions[ScoringSyntaxNames.MaxGroupScore] ?? "0";
-                int? maxScore = await property.EvaluateFromExpressionsExplicit<int>(evaluator, 
+                decimal? maxScore = await property.EvaluateFromExpressionsExplicit<decimal?>(evaluator, 
                     context, 
                     _logger, 
                     expression, 
@@ -104,8 +104,16 @@ namespace Elsa.CustomActivities.Handlers
                 ElsaProperty? elsaProperty = JsonConvert.DeserializeObject<ElsaProperty>(property.Expressions![ScoringSyntaxNames.GroupArrayScore]);
                 if (elsaProperty != null)
                 {
-                    List<decimal>? array = JsonConvert.DeserializeObject<List<decimal>>(elsaProperty.Expressions![SyntaxNames.Json]);
-                    return array;
+                    try
+                    {
+                        List<decimal>? array =
+                            JsonConvert.DeserializeObject<List<decimal>>(elsaProperty.Expressions![SyntaxNames.Json]);
+                        return array;
+                    }
+                    catch
+                    {
+                        return null;
+                    }
                 }
             }
             return null;
