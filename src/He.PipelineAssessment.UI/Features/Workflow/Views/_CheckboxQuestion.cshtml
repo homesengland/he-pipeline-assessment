@@ -41,11 +41,13 @@
                     var hiddenItemId = "Data.Questions[" + Model.Index + "].Checkbox.Choices[" + i + "].Id";
                     var hiddenItemAnswer = "Data.Questions[" + Model.Index + "].Checkbox.Choices[" + i + "].Answer";
                     var hiddenItemIsSingle = "Data.Questions[" + Model.Index + "].Checkbox.Choices[" + i + "].IsSingle";
+                    var hiddenItemIsExclusiveToQuestion = "Data.Questions[" + Model.Index + "].Checkbox.Choices[" + i + "].IsExclusiveToQuestion";
                     var hiddenItemGroup = "Data.Questions[" + Model.Index + "].Checkbox.Choices[" + i + "].QuestionChoiceGroup.GroupIdentifier";
 
                     <input type="hidden" name="@hiddenItemId" value="@Model.Checkbox.Choices[i].Id" />
                     <input type="hidden" name="@hiddenItemAnswer" value="@Model.Checkbox.Choices[i].Answer" />
                     <input type="hidden" name="@hiddenItemIsSingle" value="@Model.Checkbox.Choices[i].IsSingle.ToString()" />
+                    <input type="hidden" name="@hiddenItemIsExclusiveToQuestion" value="@Model.Checkbox.Choices[i].IsExclusiveToQuestion.ToString()" />
                     <input type="hidden" name="@hiddenItemGroup" value="@Model.Checkbox.Choices[i].QuestionChoiceGroup?.GroupIdentifier" />
                 }
             }
