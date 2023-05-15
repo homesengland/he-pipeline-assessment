@@ -14,6 +14,7 @@ namespace Elsa.CustomInfrastructure.Config
             builder.Property(p => p.Id).HasColumnOrder(0);
             builder.Property(x => x.QuestionId).HasMaxLength(EntityConfigurationConstants.MaxLength);
             builder.HasOne(x => x.Question).WithMany(x => x.Choices).HasForeignKey(x => x.QuestionId);
+            builder.HasOne(x => x.QuestionChoiceGroup).WithMany(x => x.QuestionGroupChoices).HasForeignKey(x => x.QuestionChoiceGroupId);
         }
     }
 }

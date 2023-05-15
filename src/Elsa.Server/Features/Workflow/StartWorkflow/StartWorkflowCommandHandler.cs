@@ -56,7 +56,8 @@ namespace Elsa.Server.Features.Workflow.StartWorkflow
                         WorkflowInstanceId = workflowInstance.Id,
                         WorkflowDefinitionId = workflowInstance.DefinitionId,
                         CorrelationId = request.CorrelationId,
-                        WorkflowName = workflowName
+                        WorkflowName = workflowName,
+                        CreatedDateTime = _dateTimeProvider.UtcNow()
                     };
 
                     await _elsaCustomRepository.CreateQuestionWorkflowInstance(questionWorkflowInstance, cancellationToken);

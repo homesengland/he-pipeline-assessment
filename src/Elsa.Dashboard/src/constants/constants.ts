@@ -15,14 +15,28 @@ export class SyntaxNames {
   static Output: string;
 }
 
+export class QuestionCategories {
+  static readonly None = "None";
+  static readonly Question = "Question";
+  static readonly Scoring = "Scoring";
+}
+
 export class CheckboxOptionsSyntax {
   static readonly Single = "Single";
   static readonly PrePopulated = "PrePopulated";
+  static readonly Score = "Score";
 }
 
 export class RadioOptionsSyntax {
   static readonly PrePopulated = "PrePopulated";
   static readonly PotScore = "PotScore";
+  static readonly Score = "Score";
+}
+
+export class WeightedScoringSyntax {
+  static readonly MaxGroupScore = "MaxGroupScore";
+  static readonly QuestionArrayScore = "QuestionArrayScore";
+  static readonly GroupArrayScore = "GroupArrayScore";
 }
 
 export class TextActivityOptionsSyntax {
@@ -40,10 +54,13 @@ export class QuestionTypeConstants {
   static readonly IntegerQuestion = "IntegerQuestion";
   static readonly CheckboxQuestion = "CheckboxQuestion";
   static readonly RadioQuestion = "RadioQuestion";
-  static readonly PotScoreRadioQuestion = "PotScoreRadioQuestion";
   static readonly DateQuestion = "DateQuestion";
   static readonly TextQuestion = "TextQuestion";
   static readonly TextAreaQuestion = "TextAreaQuestion";
+
+  static readonly PotScoreRadioQuestion = "PotScoreRadioQuestion";
+  static readonly WeightedRadioQuestion = "WeightedRadioQuestion";
+  static readonly WeightedCheckboxQuestion = "WeightedCheckboxQuestion";
 
 }
 
@@ -60,6 +77,8 @@ export class PropertyOutputTypes {
   static readonly Boolean = "bool";
   static readonly Number = "int";
   static readonly Checkbox = "checkbox";
+  static readonly CheckboxGroup = "checkboxGroup";
   static readonly Radio = "radio";
+  static readonly RadioGroup = "radioGroup";
   static readonly Information = "information";
 }

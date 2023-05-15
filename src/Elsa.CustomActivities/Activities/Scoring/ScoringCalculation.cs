@@ -7,8 +7,12 @@ using Elsa.CustomModels;
 using Elsa.CustomWorkflow.Sdk.Providers;
 using Elsa.Design;
 using Elsa.Expressions;
+using Elsa.Persistence;
 using Elsa.Services;
 using Elsa.Services.Models;
+using He.PipelineAssessment.Data.PCSProfile;
+using Microsoft.AspNetCore.Mvc.Rendering;
+using System.ComponentModel.DataAnnotations;
 
 namespace Elsa.CustomActivities.Activities.Scoring
 {
@@ -22,10 +26,12 @@ namespace Elsa.CustomActivities.Activities.Scoring
     {
 
         private readonly IElsaCustomRepository _elsaCustomRepository;
+        private readonly IDateTimeProvider _dateTimeProvider;
 
-        public ScoringCalculation(IElsaCustomRepository elsaCustomRepository)
+        public ScoringCalculation(IElsaCustomRepository elsaCustomRepository, IDateTimeProvider dateTimeProvider)
         {
             _elsaCustomRepository = elsaCustomRepository;
+            _dateTimeProvider = dateTimeProvider;
         }
 
         [ActivityInput(
@@ -54,6 +60,7 @@ namespace Elsa.CustomActivities.Activities.Scoring
 
                     var workflowInstance = await
                         _elsaCustomRepository.GetQuestionWorkflowInstanceByDefinitionId(context.WorkflowInstance.DefinitionId, context.WorkflowInstance.CorrelationId, CancellationToken.None);
+                    var utcNow = _dateTimeProvider.UtcNow();
                     if (workflowInstance == null)
                     {
                         var questionWorkflowInstance = new QuestionWorkflowInstance()
@@ -62,7 +69,8 @@ namespace Elsa.CustomActivities.Activities.Scoring
                             WorkflowDefinitionId = context.WorkflowInstance.DefinitionId,
                             CorrelationId = context.WorkflowInstance.CorrelationId,
                             WorkflowName = context.WorkflowExecutionContext.WorkflowBlueprint.Name ?? context.WorkflowInstance.DefinitionId,
-                            Score = Calculation
+                            Score = Calculation,
+                            CreatedDateTime = utcNow
                         };
                         await _elsaCustomRepository.CreateQuestionWorkflowInstance(questionWorkflowInstance, CancellationToken.None);
                     }
@@ -72,6 +80,7 @@ namespace Elsa.CustomActivities.Activities.Scoring
                         workflowInstance.Score = Calculation;
                         workflowInstance.WorkflowName = context.WorkflowExecutionContext.WorkflowBlueprint.Name ??
                                                         context.WorkflowInstance.DefinitionId;
+                        workflowInstance.LastModifiedDateTime = utcNow;
                         await _elsaCustomRepository.SaveChanges(CancellationToken.None);
                     }
                 }

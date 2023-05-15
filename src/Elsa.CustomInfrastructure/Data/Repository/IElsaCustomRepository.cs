@@ -18,6 +18,7 @@ namespace Elsa.CustomInfrastructure.Data.Repository
         Task CreateQuestionsAsync(List<Question> assessments, CancellationToken cancellationToken);
         Task<List<Question>> GetActivityQuestions(string activityId, string workflowInstanceId, CancellationToken cancellationToken);
         Task<Question?> GetQuestionByCorrelationId(string activityId, string correlationId, string questionID, CancellationToken cancellationToken);
+        Task<Question?> GetQuestionById(int id);
         Task SaveChanges(CancellationToken cancellationToken);
         Task<List<Question>> GetWorkflowInstanceQuestions(string workflowInstanceId, CancellationToken cancellationToken);
         Task<CustomActivityNavigation?> GetChangedPathNavigation(string workflowInstanceId, string currentActivityId,
@@ -34,6 +35,5 @@ namespace Elsa.CustomInfrastructure.Data.Repository
         Task<QuestionWorkflowInstance?> GetQuestionWorkflowInstanceByDefinitionId(string workflowInstanceDefinitionId, string correlationId, CancellationToken cancellationToken = default);
         Task SetWorkflowInstanceResult(string workflowInstanceId, string result, CancellationToken cancellationToken = default);
         Task SetWorkflowInstanceScore(string workflowInstanceId, string score, CancellationToken cancellationToken = default);
-
     }
 }

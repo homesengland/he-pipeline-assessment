@@ -1,5 +1,5 @@
 import { SyntaxNames } from "../constants/constants";
-import { HeActivityPropertyDescriptor } from "../models/custom-component-models";
+import { HeActivityPropertyDescriptor, NestedActivityDefinitionProperty } from "../models/custom-component-models";
 import { ActivityDefinitionProperty, ActivityModel } from "../models/elsa-interfaces";
 
 export type Map<T> = {
@@ -63,11 +63,19 @@ export function mapSyntaxToLanguage(syntax: string): any {
 }
 
 export function filterPropertiesByType(questionProperties: Array<HeActivityPropertyDescriptor>, questionType: string) {
+
   const propertiesJson: string = JSON.stringify(questionProperties);
   const properties: Array<HeActivityPropertyDescriptor> = JSON.parse(propertiesJson);
+
+
   properties.forEach(p => {
-    if (p.conditionalActivityTypes != null && p.conditionalActivityTypes.length > 0 && !p.conditionalActivityTypes.includes(questionType))
-      p.displayInDesigner = false;
+
+    if (p.conditionalActivityTypes != null && p.conditionalActivityTypes.length > 0) {
+      if (!p.conditionalActivityTypes.includes(questionType)) {
+        p.displayInDesigner = false;
+      }
+    }
+
   });
   const filteredProperties: Array<HeActivityPropertyDescriptor> = properties.filter(property => property.displayInDesigner == true);
   return filteredProperties;
@@ -78,4 +86,9 @@ export async function awaitElement(selector) {
     await new Promise(resolve => requestAnimationFrame(resolve))
   }
   return document.querySelector(selector);
+}
+
+export function onUpdateCustomExpression(event: CustomEvent<string>, property: NestedActivityDefinitionProperty, syntax: string, update: Function) {
+  property.expressions[syntax] = (event.currentTarget as HTMLInputElement).value.trim();
+  update();
 }

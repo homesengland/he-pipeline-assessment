@@ -1,6 +1,6 @@
 ﻿namespace Elsa.CustomModels
 {
-    public class QuestionWorkflowInstance
+    public class QuestionWorkflowInstance : AuditableEntity
     {
         public int Id { get; set; }
         public string WorkflowInstanceId { get; set; } = null!;

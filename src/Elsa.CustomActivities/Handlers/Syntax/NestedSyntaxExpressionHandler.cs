@@ -26,6 +26,8 @@ namespace Elsa.CustomActivities.Handlers.Syntax
         private CheckboxExpressionHandler _checkboxExpressionHandler;
         private RadioExpressionHandler _radioExpressionHandler;
         private PotScoreRadioExpressionHandler _potScoreRadioExpressionHandler;
+        private WeightedRadioExpressionHandler _weightedRadioExpressionHandler;
+        private WeightedCheckboxExpressionHandler _weightedCheckboxExpressionHandler;
         public NestedSyntaxExpressionHandler(ILogger<IExpressionHandler> logger, IContentSerializer serializer)
         {
             _logger = logger;
@@ -33,6 +35,8 @@ namespace Elsa.CustomActivities.Handlers.Syntax
             _radioExpressionHandler = new RadioExpressionHandler(logger, serializer);
             _checkboxExpressionHandler = new CheckboxExpressionHandler(logger, serializer);
             _potScoreRadioExpressionHandler = new PotScoreRadioExpressionHandler(logger, serializer);
+            _weightedRadioExpressionHandler = new WeightedRadioExpressionHandler(logger, serializer);
+            _weightedCheckboxExpressionHandler = new WeightedCheckboxExpressionHandler(logger, serializer);
 
         }
 
@@ -58,6 +62,26 @@ namespace Elsa.CustomActivities.Handlers.Syntax
             {
                 double result = await property.EvaluateFromExpressions<double>(evaluator, context, _logger, CancellationToken.None);
                 return result;
+            }
+            if (propertyType != null && (propertyType == typeof(decimal) || propertyType == typeof(decimal?)))
+            {
+                decimal? result = await property.EvaluateFromExpressions<decimal?>(evaluator, context, _logger, CancellationToken.None);
+                return result;
+            }
+            if (propertyType != null && (propertyType == typeof(List<decimal>) || propertyType == typeof(List<decimal?>)))
+            {
+                if (property.Expressions!.ContainsKey(SyntaxNames.Json))
+                {
+                    var result = await property.EvaluateFromExpressionsExplicit<List<decimal>>(evaluator,
+                        context, _logger,
+                        property.Expressions![SyntaxNames.Json],
+                        SyntaxNames.Json,
+                        CancellationToken.None);
+
+                    return result;
+                }
+
+                return new List<decimal>();
             }
             if (propertyType != null && propertyType == typeof(CheckboxModel))
             {
@@ -90,6 +114,32 @@ namespace Elsa.CustomActivities.Handlers.Syntax
                 if (parsedProperties != null)
                 {
                     List<PotScoreRadioRecord> records = await _potScoreRadioExpressionHandler.ElsaPropertiesToPotScoreRadioRecordList(parsedProperties, evaluator, context);
+                    result.Choices = records;
+                }
+                return result;
+
+            }
+
+            if (propertyType != null && propertyType == typeof(WeightedCheckboxModel))
+            {
+                WeightedCheckboxModel result = new WeightedCheckboxModel();
+                var parsedProperties = ParseToList(property);
+                if (parsedProperties != null)
+                {
+                    Dictionary<string, WeightedCheckboxGroup> records = await _weightedCheckboxExpressionHandler.ElsaPropertiesToWeightedCheckboxGroup(parsedProperties, evaluator, context);
+                    result.Groups = records;
+                }
+                return result;
+
+            }
+
+            if (propertyType != null && propertyType == typeof(WeightedRadioModel))
+            {
+                WeightedRadioModel result = new WeightedRadioModel();
+                var parsedProperties = ParseToList(property);
+                if (parsedProperties != null)
+                {
+                    List<WeightedRadioRecord> records = await _weightedRadioExpressionHandler.ElsaPropertiesToWeightedRadioRecordList(parsedProperties, evaluator, context);
                     result.Choices = records;
                 }
                 return result;

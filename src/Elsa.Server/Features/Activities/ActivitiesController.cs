@@ -21,7 +21,7 @@ namespace Elsa.Server.Features.Activities
         {
             try
             {
-                Dictionary<string, List<HeActivityInputDescriptor>> results = await _mediator.Send(new CustomPropertyCommand());
+                Dictionary<string, string> results = await _mediator.Send(new CustomPropertyCommand());
                 return Ok(results);
                 
             }

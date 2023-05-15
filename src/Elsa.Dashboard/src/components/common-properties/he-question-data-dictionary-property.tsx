@@ -1,4 +1,5 @@
 import { Component, h, Event, EventEmitter, Prop, State } from '@stencil/core';
+import state from '../../stores/dataDictionaryStore';
 
 import { SyntaxNames } from '../../constants/constants';
 import { DataDictionary, DataDictionaryGroup } from '../../models/custom-component-models';
@@ -9,7 +10,7 @@ import {
 } from "../../models/elsa-interfaces";
 
 //import { mapSyntaxToLanguage, parseJson, Map } from "../../utils/utils";
-import { parseJson } from "../../utils/utils";
+
 
 @Component({
   tag: 'he-question-data-dictionary-property',
@@ -22,21 +23,23 @@ export class HEQuestionDataDictionaryProperty {
   @Prop() activityModel: ActivityModel;
   @Prop() propertyDescriptor: ActivityPropertyDescriptor;
   @Prop() propertyModel: ActivityDefinitionProperty;
+
   @Event() expressionChanged: EventEmitter<string>;
   @State() dataDictionary: Array<DataDictionary> = [];
   @State() selectedDataDictionaryItem: number;
 
-  groupDictionary: Array<DataDictionaryGroup> = [];
+  dataDictionaryGroup: Array<DataDictionaryGroup> = state.dictionaryGroups;
+
   selectedGroupDictionaryId: number;
   selectedGroup: DataDictionaryGroup;
   dataDictionaryDisplayToggle: boolean = false;
 
   async componentWillLoad() {
-    this.groupDictionary = parseJson(this.propertyDescriptor.options);
+    
     this.dataDictionary = [];
     this.selectedDataDictionaryItem = parseInt(this.propertyModel.expressions[SyntaxNames.Literal]);
   
-    this.selectedGroup = this.groupDictionary.filter(x => x.QuestionDataDictionaryList.filter(y => y.Id == this.selectedDataDictionaryItem)[0])[0];
+    this.selectedGroup = this.dataDictionaryGroup.filter(x => x.QuestionDataDictionaryList.filter(y => y.Id == this.selectedDataDictionaryItem)[0])[0];
     if (this.selectedGroup != undefined) {
       this.dataDictionaryDisplayToggle = true;
       this.dataDictionary = [...this.selectedGroup.QuestionDataDictionaryList];
@@ -52,7 +55,7 @@ export class HEQuestionDataDictionaryProperty {
   onGroupDictionaryOptionChanged(e: Event) {
     const select = e.currentTarget as HTMLSelectElement;
     this.selectedGroupDictionaryId = parseInt(select.value);
-    let selectedGroup = this.groupDictionary.filter(x => x.Id === this.selectedGroupDictionaryId)[0];
+    let selectedGroup = this.dataDictionaryGroup.filter(x => x.Id === this.selectedGroupDictionaryId)[0];
     if (selectedGroup != undefined) {
       this.selectedDataDictionaryItem = 0;
       this.selectedGroup = selectedGroup;
@@ -81,7 +84,7 @@ export class HEQuestionDataDictionaryProperty {
     const clearSelection = selectedDataDictionaryItem == 0;
     let selectedGroup = this.selectedGroup;
     if (selectedGroup == undefined) {
-      selectedGroup = this.groupDictionary.filter(x => x.QuestionDataDictionaryList.filter(y => y.Id == selectedDataDictionaryItem)[0])[0];
+      selectedGroup = this.dataDictionaryGroup.filter(x => x.QuestionDataDictionaryList.filter(y => y.Id == selectedDataDictionaryItem)[0])[0];
     }
 
     return (
@@ -92,7 +95,7 @@ export class HEQuestionDataDictionaryProperty {
         <select onChange={e => this.onGroupDictionaryOptionChanged(e)}
           class="elsa-mt-1 elsa-inline-block focus:elsa-ring-blue-500 focus:elsa-border-blue-500 elsa-w-full elsa-shadow-sm sm:elsa-max-w-xs sm:elsa-text-sm elsa-border-gray-300 elsa-rounded-md">
           <option value="0">Choose Group</option>
-          {this.groupDictionary.map(data => {
+              {this.dataDictionaryGroup.map(data => {
             const selected = data == selectedGroup;
           return <option selected={selected} value={data.Id}>{data.Name}</option>;
         })}

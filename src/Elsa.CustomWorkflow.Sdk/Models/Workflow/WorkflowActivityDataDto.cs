@@ -161,7 +161,7 @@ namespace Elsa.CustomWorkflow.Sdk.Models.Workflow
 
         public void SetCheckbox(Checkbox value)
         {
-            if (QuestionType == QuestionTypeConstants.CheckboxQuestion)
+            if (QuestionType == QuestionTypeConstants.CheckboxQuestion || QuestionType == QuestionTypeConstants.WeightedCheckboxQuestion)
             {
                 _checkbox = value;
                 Answers = new List<QuestionActivityAnswer>();
@@ -172,7 +172,7 @@ namespace Elsa.CustomWorkflow.Sdk.Models.Workflow
 
         public void SetRadio(Radio value)
         {
-            if (QuestionType == QuestionTypeConstants.RadioQuestion || QuestionType == QuestionTypeConstants.PotScoreRadioQuestion)
+            if (QuestionType == QuestionTypeConstants.RadioQuestion || QuestionType == QuestionTypeConstants.PotScoreRadioQuestion || QuestionType == QuestionTypeConstants.WeightedRadioQuestion)
             {
                 _radio = value;
                 Answers = new List<QuestionActivityAnswer>();
@@ -290,6 +290,13 @@ namespace Elsa.CustomWorkflow.Sdk.Models.Workflow
         public string Answer { get; set; } = null!;
         public bool IsSingle { get; set; }
         public string? Value { get; set; }
+        public ChoiceGroup? QuestionChoiceGroup { get; set; }
+    }
+
+    public class ChoiceGroup
+    {
+        public string GroupIdentifier { get; set; } = null!;
+
     }
 
     public class Date

@@ -1,7 +1,7 @@
 ﻿using Elsa.CustomInfrastructure.Data.Repository;
 using Newtonsoft.Json;
 
-namespace Elsa.CustomActivities.OptionsProviders
+namespace Elsa.CustomActivities.Providers
 {
     public interface IOptionsProvider
     {
@@ -19,16 +19,5 @@ namespace Elsa.CustomActivities.OptionsProviders
             return JsonConvert.SerializeObject(potScoreOptions);
         }
     }
-
-    public class QuestionDataDictionaryOptionsProvider : IOptionsProvider
-    {
-        private readonly IElsaCustomRepository _elsaCustomRepository;
-        public QuestionDataDictionaryOptionsProvider(IElsaCustomRepository elsaCustomRepository) => _elsaCustomRepository = elsaCustomRepository;
-
-        public async Task<string> GetOptions(CancellationToken cancellationToken = default)
-        {
-            var result = (await _elsaCustomRepository.GetQuestionDataDictionaryGroupsAsync(cancellationToken)).ToList();
-            return JsonConvert.SerializeObject(result);
-        }
-    }
+   
 }

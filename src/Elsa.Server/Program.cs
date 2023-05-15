@@ -14,7 +14,7 @@ using Elsa.CustomActivities.Describers;
 using Elsa.CustomActivities.Handlers;
 using Elsa.CustomActivities.Handlers.Scoring;
 using Elsa.CustomActivities.Handlers.Syntax;
-using Elsa.CustomActivities.OptionsProviders;
+using Elsa.CustomActivities.Providers;
 using Elsa.CustomInfrastructure.Data;
 using Elsa.CustomInfrastructure.Data.Repository;
 using Elsa.CustomWorkflow.Sdk.Extensions;
@@ -56,7 +56,6 @@ builder.Services
         .AddActivity<ConfirmationScreen>()
         .AddActivity<FinishWorkflow>()
         .AddActivity<ScoringCalculation>()
-        .AddActivity<WeightedScore>()
         .AddActivity<RunEconomicCalculations>()
         .AddActivity<SetVariable>()
         .AddConsoleActivities()
@@ -97,7 +96,7 @@ builder.Services.AddScoped<IWorkflowInstanceProvider, WorkflowInstanceProvider>(
 builder.Services.AddScoped<IWorkflowPathProvider, WorkflowPathProvider>();
 builder.Services.AddScoped<IWorkflowNextActivityProvider, WorkflowNextActivityProvider>();
 builder.Services.AddScoped(typeof(PotScoreOptionsProvider));
-builder.Services.AddScoped(typeof(QuestionDataDictionaryOptionsProvider));
+builder.Services.AddScoped<IScoreProvider, ScoreProvider>();
 
 builder.Services.AddScoped<IElsaCustomModelHelper, ElsaCustomModelHelper>();
 

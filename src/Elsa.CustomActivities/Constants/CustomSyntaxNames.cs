@@ -36,6 +36,12 @@ namespace Elsa.CustomActivities.Constants
     public class ScoringSyntaxNames
     {
         public const string ScoringCalculation = "ScoringCalculation";
+        public const string Score = "Score";
+        public const string ScoreArray = "ScoreArray";
+        public const string ScoreOverride = "ScoreOverride";
+        public const string MaxScore = "MaxScore";
+        public const string MaxGroupScore = "MaxGroupScore";
+        public const string GroupArrayScore = "GroupArrayScore";
         //public const string PotScore = "CalculatePotScore";
         //public const string Radio = "WeightedRadio";
         //public const string Checkbox = "WeightedCheckbox";

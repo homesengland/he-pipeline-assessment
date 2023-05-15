@@ -7,5 +7,6 @@ export const CustomPropertyUIHints = {
 };
 
 export const PropertyDescriberHints = {
-  QuestionScreenBuilder: "QuestionProperties"
+  QuestionScreenBuilder: "QuestionProperties",
+  DataDictionaryGroup: "DataDictionaryGroup"
 }

@@ -3,7 +3,6 @@ import {
   ActivityDefinitionProperty,
   ActivityModel,
   ActivityPropertyDescriptor,
-  HTMLElsaExpressionEditorElement,
   HTMLElsaMultiExpressionEditorElement,
   IntellisenseContext
 } from "../../models/elsa-interfaces";
@@ -14,13 +13,14 @@ import TrashCanIcon from '../../icons/trash-can';
 import ExpandIcon from '../../icons/expand_icon';
 import { PropertyOutputTypes, RadioOptionsSyntax, SyntaxNames } from '../../constants/constants';
 import { NestedActivityDefinitionProperty } from '../../models/custom-component-models';
+import { ToggleDictionaryDisplay } from '../../functions/display-toggle'
+import { UpdateCheckbox, CustomUpdateExpression, UpdateName, UpdateSyntax } from '../../functions/updateModel';
 
 @Component({
   tag: 'he-potscore-radio-options-property',
   shadow: false,
 })
-//Copy of Elsa Switch Case
-//Copied to allow us control over how the expression editor is displayed.
+
 export class HePotScoreRadioOptionProperty {
 
   @Prop() activityModel: ActivityModel;
@@ -31,7 +31,10 @@ export class HePotScoreRadioOptionProperty {
   @Event() expressionChanged: EventEmitter<string>;
   @State() optionsDisplayToggle: Map<string> = {};
 
-
+  UpdateExpression: Function = CustomUpdateExpression.bind(this);
+  UpdateName: Function = UpdateName.bind(this);
+  UpdateCheckbox: Function = UpdateCheckbox.bind(this);
+  UpdateSyntax: Function = UpdateSyntax.bind(this);
 
   @State() switchTextHeight: string = "";
 
@@ -80,34 +83,6 @@ export class HePotScoreRadioOptionProperty {
     this.updatePropertyModel();
   }
 
-  onOptionNameChanged(e: Event, radioOption: NestedActivityDefinitionProperty) {
-    radioOption.name = (e.currentTarget as HTMLInputElement).value.trim();
-    this.updatePropertyModel();
-  }
-
-  onOptionExpressionChanged(e: CustomEvent<string>, radioOption: NestedActivityDefinitionProperty) {
-    radioOption.expressions[radioOption.syntax] = e.detail;
-    this.updatePropertyModel();
-  }
-
-  onOptionSyntaxChanged(e: Event, switchCase: NestedActivityDefinitionProperty, expressionEditor: HTMLElsaExpressionEditorElement) {
-    const select = e.currentTarget as HTMLSelectElement;
-    switchCase.syntax = select.value;
-    expressionEditor.language = mapSyntaxToLanguage(switchCase.syntax);
-    this.updatePropertyModel();
-  }
-
-  onPotScoreChanged(e: Event, property: NestedActivityDefinitionProperty) {
-    const select = e.currentTarget as HTMLSelectElement;
-    property.expressions[RadioOptionsSyntax.PotScore] = select.value;
-    this.updatePropertyModel();
-  }
-
-  onPrePopulatedChanged(e: CustomEvent<string>, radio: NestedActivityDefinitionProperty) {
-    radio.expressions[RadioOptionsSyntax.PrePopulated] = e.detail;
-    this.updatePropertyModel();
-  }
-
   onMultiExpressionEditorValueChanged(e: CustomEvent<string>) {
     const json = e.detail;
     const parsed = parseJson(json);
@@ -132,13 +107,7 @@ export class HePotScoreRadioOptionProperty {
   }
 
   onToggleOptions(index: number) {
-    let tempValue = Object.assign(this.optionsDisplayToggle);
-    let tableRowClass = this.optionsDisplayToggle[index];
-    if (tableRowClass == null) {
-      tempValue[index] = "table-row";
-    } else {
-      this.optionsDisplayToggle[index] == "none" ? tempValue[index] = "table-row" : tempValue[index] = "none";
-    }
+    let tempValue = ToggleDictionaryDisplay(index, this.optionsDisplayToggle)
     this.optionsDisplayToggle = { ... this.optionsDisplayToggle, tempValue }
   }
 
@@ -169,7 +138,7 @@ export class HePotScoreRadioOptionProperty {
               class="elsa-py-3 elsa-text-left elsa-text-xs elsa-font-medium elsa-text-gray-500 elsa-tracking-wider elsa-w-2/12">Identifier
             </th>
             <td class="elsa-py-2 elsa-pr-5" style={{ width: colWidth }}>
-              <input type="text" value={radioOption.name} onChange={e => this.onOptionNameChanged(e, radioOption)}
+              <input type="text" value={radioOption.name} onChange={e => this.UpdateName(e, radioOption)}
                 class="focus:elsa-ring-blue-500 focus:elsa-border-blue-500 elsa-block elsa-w-full elsa-min-w-0 elsa-rounded-md sm:elsa-text-sm elsa-border-gray-300" />
             </td>
             <td class="elsa-pt-1 elsa-pr-2 elsa-text-right">
@@ -196,10 +165,10 @@ export class HePotScoreRadioOptionProperty {
                   single-line={false}
                   editorHeight={this.editorHeight}
                   padding="elsa-pt-1.5 elsa-pl-1 elsa-pr-28"
-                  onExpressionChanged={e => this.onOptionExpressionChanged(e, radioOption)}
+                  onExpressionChanged={e => this.UpdateExpression(e, radioOption, radioOption.syntax)}
                 />
                 <div class="elsa-absolute elsa-inset-y-0 elsa-right-0 elsa-flex elsa-items-center">
-                  <select onChange={e => this.onOptionSyntaxChanged(e, radioOption, expressionEditor)}
+                  <select onChange={e => this.UpdateSyntax(e, radioOption, expressionEditor)}
                     class="focus:elsa-ring-blue-500 focus:elsa-border-blue-500 elsa-h-full elsa-py-0 elsa-pl-2 elsa-pr-7 elsa-border-transparent elsa-bg-transparent elsa-text-gray-500 sm:elsa-text-sm elsa-rounded-md">
                     {supportedSyntaxes.map(supportedSyntax => {
                       const selected = supportedSyntax == syntax;
@@ -223,7 +192,7 @@ export class HePotScoreRadioOptionProperty {
               Pot Score
             </th>
             <td class="elsa-py-2 elsa-pr-5" style={{ width: colWidth }}>
-              <select onChange={e => this.onPotScoreChanged(e, radioOption)}
+              <select onChange={e => this.UpdateExpression(e, radioOption, RadioOptionsSyntax.PotScore)}
                 class="elsa-mt-1 elsa-block focus:elsa-ring-blue-500 focus:elsa-border-blue-500 elsa-w-full elsa-shadow-sm sm:elsa-max-w-xs sm:elsa-text-sm elsa-border-gray-300 elsa-rounded-md">
                 {this.potScoreOptions.map(potScore => {
                   const selected = potScore.trim() === selectedScore;
@@ -254,10 +223,10 @@ export class HePotScoreRadioOptionProperty {
                   single-line={false}
                   editorHeight="2.75em"
                   padding="elsa-pt-1.5 elsa-pl-1 elsa-pr-28"
-                  onExpressionChanged={e => this.onPrePopulatedChanged(e, radioOption)}
+                  onExpressionChanged={e => this.UpdateExpression(e, radioOption, RadioOptionsSyntax.PrePopulated)}
                 />
                 <div class="elsa-absolute elsa-inset-y-0 elsa-right-0 elsa-flex elsa-items-center">
-                  <select onChange={e => this.onOptionSyntaxChanged(e, radioOption, prePopulatedExpressionEditor)}
+                  <select onChange={e => this.UpdateSyntax(e, radioOption, prePopulatedExpressionEditor)}
                     class="focus:elsa-ring-blue-500 focus:elsa-border-blue-500 elsa-h-full elsa-py-0 elsa-pl-2 elsa-pr-7 elsa-border-transparent elsa-bg-transparent elsa-text-gray-500 sm:elsa-text-sm elsa-rounded-md">
                     {this.supportedSyntaxes.filter(x => x == SyntaxNames.JavaScript).map(supportedSyntax => {
                       const selected = supportedSyntax == SyntaxNames.JavaScript;

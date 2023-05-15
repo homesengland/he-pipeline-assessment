@@ -18,7 +18,7 @@ namespace Elsa.Server.Tests.Features.Activities
         [Theory]
         [AutoData]
         public async Task ActvityController_GetCustomActivityProperties_ShouldReturnOK_WhenCommandHandlerIsSuccessful(
-            Dictionary<string, List<HeActivityInputDescriptor>> response,
+            Dictionary<string, string> response,
             Mock<IMediator> mediatorMock)
         {
             //Arrange
