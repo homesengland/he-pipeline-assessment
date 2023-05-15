@@ -41,11 +41,13 @@
                     var hiddenItemId = "Data.Questions[" + Model.Index + "].Checkbox.Choices[" + i + "].Id";
                     var hiddenItemAnswer = "Data.Questions[" + Model.Index + "].Checkbox.Choices[" + i + "].Answer";
                     var hiddenItemIsSingle = "Data.Questions[" + Model.Index + "].Checkbox.Choices[" + i + "].IsSingle";
+                    var hiddenItemIsExclusiveToQuestion = "Data.Questions[" + Model.Index + "].Checkbox.Choices[" + i + "].IsExclusiveToQuestion";
                     var hiddenItemGroup = "Data.Questions[" + Model.Index + "].Checkbox.Choices[" + i + "].QuestionChoiceGroup.GroupIdentifier";
 
                     <input type="hidden" name="@hiddenItemId" value="@Model.Checkbox.Choices[i].Id" />
                     <input type="hidden" name="@hiddenItemAnswer" value="@Model.Checkbox.Choices[i].Answer" />
                     <input type="hidden" name="@hiddenItemIsSingle" value="@Model.Checkbox.Choices[i].IsSingle.ToString()" />
+                    <input type="hidden" name="@hiddenItemIsExclusiveToQuestion" value="@Model.Checkbox.Choices[i].IsExclusiveToQuestion.ToString()" />
                     <input type="hidden" name="@hiddenItemGroup" value="@Model.Checkbox.Choices[i].QuestionChoiceGroup?.GroupIdentifier" />
                 }
             }
@@ -56,6 +58,7 @@
                     int answerId = nonExclusiveChoices[i].Id;
                     List<int> selectedChoices = Model.Checkbox.SelectedChoices;
                     bool isSelected = selectedChoices.Contains(answerId);
+                    string groupDataBehavior = nonExclusiveChoices[i].IsExclusiveToQuestion ? "exclusivetoquestion" : "";
 
                     <div class="govuk-checkboxes__item">
                         @*Must use the input tag helper as opposed to htmlcheckbox, as all checkboxes need the same name property, which cannot be overridden easily in HtmlCheckboxFor*@
@@ -66,7 +69,7 @@
                                    value="@nonExclusiveChoices[i].Id"
                                    name="@itemName"
                                    group="@groupName"
-                                   type="checkbox" class="govuk-checkboxes__input">
+                                   type="checkbox" class="govuk-checkboxes__input" group-data-behaviour=@groupDataBehavior>
                         }
                         else
                         {
@@ -92,7 +95,8 @@
                     int answerId = exclusiveChoices[i].Id;
                     List<int> selectedChoices = Model.Checkbox.SelectedChoices;
                     bool isSelected = selectedChoices.Contains(answerId);
-
+                    string groupDataBehavior = exclusiveChoices[i].IsExclusiveToQuestion ? "exclusivetoquestion" : "exclusivetogroup";
+                    
                     @if (nonExclusiveChoices.Any() || i > 0)
                     {
                         <div class="govuk-checkboxes__divider">or</div>
@@ -106,7 +110,7 @@
                                    value="@exclusiveChoices[i].Id"
                                    name="@itemName"
                                    group="@groupName"
-                                   type="checkbox" class="govuk-checkboxes__input" group-data-behaviour="exclusive">
+                                   type="checkbox" class="govuk-checkboxes__input" group-data-behaviour=@groupDataBehavior>
                         }
                         else
                         {

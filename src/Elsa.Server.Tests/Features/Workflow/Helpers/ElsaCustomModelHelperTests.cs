@@ -106,7 +106,7 @@ namespace Elsa.Server.Tests.Features.Workflow.Helpers
             Assert.Equal(question.QuestionText, result.QuestionText);
 
 
-            Assert.Equal(expectedChoices, result.Choices!.Select(x => new WeightedCheckboxRecord(x.Identifier, x.Answer, x.IsSingle,x.NumericScore!.Value, x.IsPrePopulated)));
+            Assert.Equal(expectedChoices, result.Choices!.Select(x => new WeightedCheckboxRecord(x.Identifier, x.Answer, x.IsSingle,x.NumericScore!.Value, x.IsPrePopulated, x.IsExclusiveToQuestion)));
         }
 
         [Theory]

@@ -8,16 +8,22 @@ let enabledSettings = []
 // Use Array.forEach to add an event listener to each checkbox.
 groupCheckboxes.forEach(function (checkbox) {
     checkbox.addEventListener('change', function () {
-        var hasBehaviourExclusive = (checkbox.getAttribute('group-data-behaviour') === 'exclusive');
-        if (hasBehaviourExclusive) {
-            unCheckAllInputsExcept(checkbox);
+        var hasBehaviourExclusiveToQuestion = (checkbox.getAttribute('group-data-behaviour') === 'exclusivetoquestion');
+        if (hasBehaviourExclusiveToQuestion) {
+            unCheckAllInputsInQuestionExcept(checkbox);
         } else {
-            unCheckExclusiveInputs(checkbox);
+            unCheckExclusiveInputsInQuestion(checkbox);
+            var hasBehaviourExclusiveToGroup = (checkbox.getAttribute('group-data-behaviour') === 'exclusivetogroup');
+            if (hasBehaviourExclusiveToGroup) {
+                unCheckAllInputsInGroupExcept(checkbox);
+            } else {
+                unCheckExclusiveInputsInGroup(checkbox);
+            }
         }
     });
 });
 
-unCheckAllInputsExcept = function ($input) {
+unCheckAllInputsInGroupExcept = function ($input) {
     var allInputsWithSameGroup = document.querySelectorAll('input[group="' + $input.getAttribute("group") + '"][type="checkbox"]');
     nodeListForEach(allInputsWithSameGroup, function ($inputWithSameGroup) {
         var hasSameFormOwner = ($input.form === $inputWithSameGroup.form);
@@ -27,9 +33,32 @@ unCheckAllInputsExcept = function ($input) {
     });
 };
 
-unCheckExclusiveInputs = function ($input) {
+unCheckAllInputsInQuestionExcept = function ($input) {
+    var allInputsWithSameGroup = document.querySelectorAll('input[name="' + $input.getAttribute("name") + '"][type="checkbox"]');
+    nodeListForEach(allInputsWithSameGroup, function ($inputWithSameGroup) {
+        var hasSameFormOwner = ($input.form === $inputWithSameGroup.form);
+        if (hasSameFormOwner && $inputWithSameGroup !== $input) {
+            $inputWithSameGroup.checked = false;
+        }
+    });
+};
+
+unCheckExclusiveInputsInGroup = function ($input) {
     var allInputsWithSameGroupAndExclusiveBehaviour = document.querySelectorAll(
-        'input[group="' + $input.getAttribute("group") + '"][group-data-behaviour="exclusive"][type="checkbox"]'
+        'input[group="' + $input.getAttribute("group") + '"][group-data-behaviour="exclusivetogroup"][type="checkbox"]'
+    );
+
+    nodeListForEach(allInputsWithSameGroupAndExclusiveBehaviour, function ($exclusiveInput) {
+        var hasSameFormOwner = ($input.form === $exclusiveInput.form);
+        if (hasSameFormOwner) {
+            $exclusiveInput.checked = false;
+        }
+    });
+};
+
+unCheckExclusiveInputsInQuestion = function ($input) {
+    var allInputsWithSameGroupAndExclusiveBehaviour = document.querySelectorAll(
+        'input[name="' + $input.getAttribute("name") + '"][group-data-behaviour="exclusivetoquestion"][type="checkbox"]'
     );
 
     nodeListForEach(allInputsWithSameGroupAndExclusiveBehaviour, function ($exclusiveInput) {

@@ -289,6 +289,7 @@ namespace Elsa.CustomWorkflow.Sdk.Models.Workflow
         public int Id { get; set; }
         public string Answer { get; set; } = null!;
         public bool IsSingle { get; set; }
+        public bool IsExclusiveToQuestion { get; set; }
         public string? Value { get; set; }
         public ChoiceGroup? QuestionChoiceGroup { get; set; }
     }
