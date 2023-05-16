@@ -36,7 +36,7 @@ namespace He.PipelineAssessment.UI.Features.Workflow
             {
                 var result = await _mediator.Send(command);
 
-                if (result.IsCorrectBusinessArea)
+                if (result.IsAuthorised)
                 {
 
                     return RedirectToAction("LoadWorkflowActivity",
@@ -81,7 +81,7 @@ namespace He.PipelineAssessment.UI.Features.Workflow
                             };
                             var result = await this._mediator.Send(questionScreenRequest);
 
-                            if (result.IsCorrectBusinessArea)
+                            if (result.IsAuthorised)
                             {
                                 return View("SaveAndContinue", result);
                             }
@@ -102,7 +102,7 @@ namespace He.PipelineAssessment.UI.Features.Workflow
 
                             var result = await this._mediator.Send(checkYourAnswersScreenRequest);
 
-                            if (result.IsCorrectBusinessArea)
+                            if (result.IsAuthorised)
                             {
                                 return View("CheckYourAnswers", result);
                             }
@@ -124,7 +124,7 @@ namespace He.PipelineAssessment.UI.Features.Workflow
 
                             var result = await this._mediator.Send(checkYourAnswersScreenRequest);
 
-                            if (result.IsCorrectBusinessArea)
+                            if (result.IsAuthorised)
                             {
                                 return View("Confirmation", result);
                             }
@@ -202,7 +202,7 @@ namespace He.PipelineAssessment.UI.Features.Workflow
                 {
                     var result = await this._mediator.Send(command);
 
-                    if (result.IsCorrectBusinessArea)
+                    if (result.IsAuthorised)
                     {
 
                         return RedirectToAction("LoadWorkflowActivity",
@@ -242,7 +242,7 @@ namespace He.PipelineAssessment.UI.Features.Workflow
             {
                 var result = await _mediator.Send(command);
 
-                if (result.IsCorrectBusinessArea)
+                if (result.IsAuthorised)
                 {
 
                     return RedirectToAction("LoadWorkflowActivity",

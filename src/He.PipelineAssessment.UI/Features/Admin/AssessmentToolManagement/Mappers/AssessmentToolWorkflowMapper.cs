@@ -15,6 +15,7 @@ namespace He.PipelineAssessment.UI.Features.Admin.AssessmentToolManagement.Mappe
             {
                 AssessmentToolId = assessmentToolWorkflowCommand.AssessmentToolId,
                 IsFirstWorkflow = assessmentToolWorkflowCommand.IsFirstWorkflow,
+                IsEconomistWorkflow = assessmentToolWorkflowCommand.IsEconomistWorkflow,
                 Version = assessmentToolWorkflowCommand.Version,
                 IsLatest = assessmentToolWorkflowCommand.IsLatest,
                 WorkflowDefinitionId = assessmentToolWorkflowCommand.WorkflowDefinitionId,

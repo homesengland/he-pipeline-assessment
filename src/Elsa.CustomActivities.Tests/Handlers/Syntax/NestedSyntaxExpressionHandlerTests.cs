@@ -508,7 +508,9 @@ namespace Elsa.CustomActivities.Tests.Handlers.Syntax
             var stringValue = "Second Value";
             var maxScoreValue = new Decimal?(10);
             var choiceScoreValue = new Decimal(4);
-            string value = WeightedScoreCheckboxJson(javascriptValue, stringValue, false, maxScoreValue, choiceScoreValue);
+            bool isPrepopulated = false;
+            bool isExclusiveToquestion = false;
+            string value = WeightedScoreCheckboxJson(javascriptValue, stringValue, false, maxScoreValue, choiceScoreValue, isPrepopulated, isExclusiveToquestion);
             Type type = typeof(WeightedCheckboxModel);
             Type choiceType = typeof(WeightedCheckboxRecord);
 
@@ -693,14 +695,14 @@ namespace Elsa.CustomActivities.Tests.Handlers.Syntax
             return JsonConvert.SerializeObject(records);
         }
 
-        private string WeightedScoreCheckboxJson(string firstValue, string secondValue, bool isSingle, decimal? maxGroupScore, decimal choiceScore)
+        private string WeightedScoreCheckboxJson(string firstValue, string secondValue, bool isSingle, decimal? maxGroupScore, decimal choiceScore, bool IsPrepopulated, bool IsExclusiveToQuestion)
         {
             var groups = new List<WeightedCheckboxGroup>();
             var group = new WeightedCheckboxGroup();
             group.Choices = new List<WeightedCheckboxRecord>()
             {
-                new WeightedCheckboxRecord("A", firstValue, isSingle,choiceScore, false) ,
-                new WeightedCheckboxRecord("B", secondValue, isSingle,choiceScore , false)
+                new WeightedCheckboxRecord("A", firstValue, isSingle,choiceScore, IsPrepopulated, IsExclusiveToQuestion) ,
+                new WeightedCheckboxRecord("B", secondValue, isSingle,choiceScore , IsPrepopulated, IsExclusiveToQuestion)
             };
             group.MaxGroupScore = maxGroupScore;
             group.GroupIdentifier = "GroupA";

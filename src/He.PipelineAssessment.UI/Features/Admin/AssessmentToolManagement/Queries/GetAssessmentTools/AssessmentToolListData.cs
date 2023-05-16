@@ -23,6 +23,7 @@ namespace He.PipelineAssessment.UI.Features.Admin.AssessmentToolManagement.Queri
         public int AssessmentToolId { get; set; }
         public string WorkflowDefinitionId { get; set; } = string.Empty;
         public bool IsFirstWorkflow { get; set; }
+        public bool IsEconomistWorkflow { get; set; }
         public int Version { get; set; }
         public bool IsLatest { get; set; }
 

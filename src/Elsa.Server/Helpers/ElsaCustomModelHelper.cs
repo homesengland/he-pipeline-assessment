@@ -77,7 +77,8 @@ namespace Elsa.Server.Helpers
                         Identifier = x.Identifier,
                         Answer = x.Answer,
                         IsSingle = false,
-                        IsPrePopulated = x.IsPrePopulated
+                        IsPrePopulated = x.IsPrePopulated,
+                        IsExclusiveToQuestion = false
                     })
                         .ToList();
                     break;
@@ -88,7 +89,8 @@ namespace Elsa.Server.Helpers
                         Answer = x.Answer,
                         IsSingle = false,
                         IsPrePopulated = x.IsPrePopulated,
-                        NumericScore = x.Score
+                        NumericScore = x.Score,
+                        IsExclusiveToQuestion = false
                     })
                         .ToList();
                     break;
@@ -99,7 +101,8 @@ namespace Elsa.Server.Helpers
                         Answer = x.Answer,
                         IsSingle = false,
                         IsPrePopulated = x.IsPrePopulated,
-                        PotScoreCategory = x.PotScore
+                        PotScoreCategory = x.PotScore,
+                        IsExclusiveToQuestion = false
                     })
                         .ToList();
                     break;
@@ -118,7 +121,8 @@ namespace Elsa.Server.Helpers
                                 IsSingle = x.IsSingle,
                                 IsPrePopulated = x.IsPrePopulated,
                                 QuestionChoiceGroup = group,
-                                NumericScore = x.Score
+                                NumericScore = x.Score,
+                                IsExclusiveToQuestion = x.IsExclusiveToQuestion
                             }).ToList());
 
                         }

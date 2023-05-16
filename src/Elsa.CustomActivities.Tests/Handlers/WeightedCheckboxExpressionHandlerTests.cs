@@ -258,6 +258,61 @@ namespace Elsa.CustomActivities.Tests.Handlers
         }
 
         [Theory, AutoMoqData]
+        public void EvaluateIsExclusiveToQuestion_ReturnsExpectedData_whenCorrectDataIsProvided(
+              Mock<IContentSerializer> serializer,
+              Mock<IServiceProvider> provider,
+              bool isExclusiveToQuestionValue,
+              Mock<IExpressionEvaluator> evaluator,
+              Mock<ILogger<IExpressionHandler>> logger)
+        {
+            //Arrange
+            var context = new ActivityExecutionContext(provider.Object, default!, default!, default!, default, default);
+
+            WeightedCheckboxExpressionHandler handler = new WeightedCheckboxExpressionHandler(logger.Object, serializer.Object);
+
+            ElsaProperty property = SampleElsaProperty(GetDictionary(SyntaxNames.Literal, "Sample Text", isExclusiveToQuestion: isExclusiveToQuestionValue.ToString()), SyntaxNames.Literal, "Checkbox Text");
+
+            evaluator.Setup(x => x.TryEvaluateAsync<bool>(property.Expressions![CheckboxSyntaxNames.ExclusiveToQuestion].ToLower(),
+                SyntaxNames.JavaScript, It.IsAny<ActivityExecutionContext>(), It.IsAny<CancellationToken>())).Returns(Task.FromResult(Models.Result.Success(isExclusiveToQuestionValue)));
+
+            //Act
+            bool actualIsExclusinveToQuestionValue = handler.EvaluateExclusiveToQuestion(property, evaluator.Object, context);
+
+            //Assert
+            Assert.Equal(isExclusiveToQuestionValue, actualIsExclusinveToQuestionValue);
+
+        }
+
+        [Theory, AutoMoqData]
+        public void EvaluateIsExcusliveToQuestion_ReturnsFalse_WhenNoDataOrFalseDataIsProvided(
+        Mock<IContentSerializer> serializer,
+        Mock<IServiceProvider> provider,
+        Mock<IExpressionEvaluator> evaluator,
+        Mock<ILogger<IExpressionHandler>> logger)
+        {
+            //Arrange
+            var context = new ActivityExecutionContext(provider.Object, default!, default!, default!, default, default);
+
+            WeightedCheckboxExpressionHandler handler = new WeightedCheckboxExpressionHandler(logger.Object, serializer.Object);
+
+            ElsaProperty propertyWithNoKey = SampleElsaProperty(GetDictionary(SyntaxNames.Literal, "Sample Text", isExclusiveToQuestion: string.Empty), SyntaxNames.Literal, "Checkbox Text");
+            ElsaProperty propertyWithInvalidValue = SampleElsaProperty(GetDictionary(SyntaxNames.Literal, "Sample Text", isExclusiveToQuestion: "Abc123"), SyntaxNames.Literal, "Checkbox Text 2");
+
+            propertyWithNoKey.Expressions!.Remove(CheckboxSyntaxNames.ExclusiveToQuestion);
+
+            //Act
+            bool actualIsExclusiveToQuestionleValue = handler.EvaluateExclusiveToQuestion(propertyWithNoKey, evaluator.Object, context);
+            bool actualIsExclusiveToQuestionInvalidData = handler.EvaluateExclusiveToQuestion(propertyWithInvalidValue, evaluator.Object, context);
+
+            //Assert
+            Assert.False(actualIsExclusiveToQuestionleValue);
+            Assert.False(actualIsExclusiveToQuestionInvalidData);
+
+        }
+
+
+
+        [Theory, AutoMoqData]
         public async Task EvaluateScore_ReturnsExpectedData_whenCorrectDataIsProvided(
                 Mock<IContentSerializer> serializer,
                 Mock<IServiceProvider> provider,
@@ -418,7 +473,8 @@ namespace Elsa.CustomActivities.Tests.Handlers
             string isSingle = "false",
             string maxGroupScore = "0",
             string score = "0",
-            string groupArrayScore = "")
+            string groupArrayScore = "",
+            string isExclusiveToQuestion = "false")
         {
 
             return new Dictionary<string, string>()
@@ -433,7 +489,8 @@ namespace Elsa.CustomActivities.Tests.Handlers
                     JsonConvert.SerializeObject(
                         SampleElsaProperty(new Dictionary<string, string> { { SyntaxNames.Json, groupArrayScore } },
                         SyntaxNames.Json, "GroupArrayScore"))
-                }
+                },
+                {CheckboxSyntaxNames.ExclusiveToQuestion, isExclusiveToQuestion}
             };
         }
 

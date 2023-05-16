@@ -43,7 +43,7 @@
 
                 @if (assessmentTool.ValidationResult != null && !assessmentTool.ValidationResult.IsValid)
                 {
-                    @await Html.PartialAsync("~/Features/Workflow/Views/Shared/_MultiValidationSummary.cshtml", assessmentTool.ValidationResult)
+                    @await Html.PartialAsync("~/Features/Workflow/Views/Shared/_ValidationSummary.cshtml", assessmentTool.ValidationResult)
                 }
                 <tr class="govuk-table__row @errorFormClass">
                     @using (Html.BeginForm("UpdateAssessmentTool", "Admin", FormMethod.Post))

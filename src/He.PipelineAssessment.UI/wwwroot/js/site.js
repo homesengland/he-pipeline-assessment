@@ -3,21 +3,47 @@
 
 // Write your JavaScript code.
 var groupCheckboxes = document.querySelectorAll('input[group][type="checkbox"]');
+
 let enabledSettings = []
+
+var currencyInputs = document.querySelectorAll('input[currency-formatter="true"]');
 
 // Use Array.forEach to add an event listener to each checkbox.
 groupCheckboxes.forEach(function (checkbox) {
     checkbox.addEventListener('change', function () {
-        var hasBehaviourExclusive = (checkbox.getAttribute('group-data-behaviour') === 'exclusive');
-        if (hasBehaviourExclusive) {
-            unCheckAllInputsExcept(checkbox);
+        var hasBehaviourExclusiveToQuestion = (checkbox.getAttribute('group-data-behaviour') === 'exclusivetoquestion');
+        if (hasBehaviourExclusiveToQuestion) {
+            unCheckAllInputsInQuestionExcept(checkbox);
         } else {
-            unCheckExclusiveInputs(checkbox);
+            unCheckExclusiveInputsInQuestion(checkbox);
+            var hasBehaviourExclusiveToGroup = (checkbox.getAttribute('group-data-behaviour') === 'exclusivetogroup');
+            if (hasBehaviourExclusiveToGroup) {
+                unCheckAllInputsInGroupExcept(checkbox);
+            } else {
+                unCheckExclusiveInputsInGroup(checkbox);
+            }
         }
     });
 });
 
-unCheckAllInputsExcept = function ($input) {
+currencyInputs.forEach(function (input) {
+    input.addEventListener('keyup', function (event) {
+        // skip for arrow keys
+        if (event.which >= 37 && event.which <= 40) return;
+        // format number
+        input.value = input.value
+            .replace(/,/g, '');
+        input.value =  numberWithCommas(input.value);
+    })
+})
+
+function numberWithCommas(x) {
+    var parts = x.toString().split(".");
+    parts[0] = parts[0].replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+    return parts.join(".");
+}
+
+unCheckAllInputsInGroupExcept = function ($input) {
     var allInputsWithSameGroup = document.querySelectorAll('input[group="' + $input.getAttribute("group") + '"][type="checkbox"]');
     nodeListForEach(allInputsWithSameGroup, function ($inputWithSameGroup) {
         var hasSameFormOwner = ($input.form === $inputWithSameGroup.form);
@@ -27,9 +53,32 @@ unCheckAllInputsExcept = function ($input) {
     });
 };
 
-unCheckExclusiveInputs = function ($input) {
+unCheckAllInputsInQuestionExcept = function ($input) {
+    var allInputsWithSameGroup = document.querySelectorAll('input[name="' + $input.getAttribute("name") + '"][type="checkbox"]');
+    nodeListForEach(allInputsWithSameGroup, function ($inputWithSameGroup) {
+        var hasSameFormOwner = ($input.form === $inputWithSameGroup.form);
+        if (hasSameFormOwner && $inputWithSameGroup !== $input) {
+            $inputWithSameGroup.checked = false;
+        }
+    });
+};
+
+unCheckExclusiveInputsInGroup = function ($input) {
     var allInputsWithSameGroupAndExclusiveBehaviour = document.querySelectorAll(
-        'input[group="' + $input.getAttribute("group") + '"][group-data-behaviour="exclusive"][type="checkbox"]'
+        'input[group="' + $input.getAttribute("group") + '"][group-data-behaviour="exclusivetogroup"][type="checkbox"]'
+    );
+
+    nodeListForEach(allInputsWithSameGroupAndExclusiveBehaviour, function ($exclusiveInput) {
+        var hasSameFormOwner = ($input.form === $exclusiveInput.form);
+        if (hasSameFormOwner) {
+            $exclusiveInput.checked = false;
+        }
+    });
+};
+
+unCheckExclusiveInputsInQuestion = function ($input) {
+    var allInputsWithSameGroupAndExclusiveBehaviour = document.querySelectorAll(
+        'input[name="' + $input.getAttribute("name") + '"][group-data-behaviour="exclusivetoquestion"][type="checkbox"]'
     );
 
     nodeListForEach(allInputsWithSameGroupAndExclusiveBehaviour, function ($exclusiveInput) {
@@ -48,3 +97,10 @@ function nodeListForEach(nodes, callback) {
         callback.call(window, nodes[i], i, nodes);
     }
 }
+
+
+
+
+
+
+
