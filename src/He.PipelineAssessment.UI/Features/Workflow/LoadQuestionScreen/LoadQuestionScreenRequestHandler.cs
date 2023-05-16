@@ -40,7 +40,7 @@ namespace He.PipelineAssessment.UI.Features.Workflow.LoadQuestionScreen
                 {
                     return new QuestionScreenSaveAndContinueCommand()
                     {
-                        IsCorrectBusinessArea = false
+                        IsAuthorised = false
                     };
                 }
                 else
@@ -57,7 +57,7 @@ namespace He.PipelineAssessment.UI.Features.Workflow.LoadQuestionScreen
                     {
                         string jsonResponse = JsonSerializer.Serialize(response);
                         QuestionScreenSaveAndContinueCommand? result = JsonSerializer.Deserialize<QuestionScreenSaveAndContinueCommand>(jsonResponse);
-                        result!.IsCorrectBusinessArea = true;
+                        result!.IsAuthorised = true;
                         result!.AssessmentId = assessmentWorkflowInstance.AssessmentId;
                         result!.WorkflowDefinitionId = assessmentWorkflowInstance.WorkflowDefinitionId;
                         return await Task.FromResult(result);

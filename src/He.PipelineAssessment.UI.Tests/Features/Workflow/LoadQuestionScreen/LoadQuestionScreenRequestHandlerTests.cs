@@ -92,7 +92,7 @@ namespace He.PipelineAssessment.UI.Tests.Features.Workflow.LoadQuestionScreen
             var result = await sut.Handle(loadWorkflowActivityRequest, CancellationToken.None);
 
             //Assert
-            Assert.False(result!.IsCorrectBusinessArea);
+            Assert.False(result!.IsAuthorised);
         }
 
         [Theory]

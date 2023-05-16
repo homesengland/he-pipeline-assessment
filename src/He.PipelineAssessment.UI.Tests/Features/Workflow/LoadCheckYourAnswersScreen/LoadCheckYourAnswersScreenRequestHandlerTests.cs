@@ -63,7 +63,7 @@ namespace He.PipelineAssessment.UI.Tests.Features.Workflow.LoadCheckYourAnswersS
 
             //Assert
             Assert.NotNull(result);
-            Assert.True(result!.IsCorrectBusinessArea);
+            Assert.True(result!.IsAuthorised);
             Assert.IsType<QuestionScreenSaveAndContinueCommand>(result);
             Assert.Equal(assessmentToolWorkflowInstance.Assessment.SpId.ToString(), result!.CorrelationId);
             Assert.Equal(assessmentToolWorkflowInstance.AssessmentId, result.AssessmentId);
@@ -109,7 +109,7 @@ namespace He.PipelineAssessment.UI.Tests.Features.Workflow.LoadCheckYourAnswersS
             var result = await sut.Handle(loadCheckYourAnswersScreenRequest, CancellationToken.None);
 
             //Assert
-            Assert.False(result!.IsCorrectBusinessArea);
+            Assert.False(result!.IsAuthorised);
         }
 
     }

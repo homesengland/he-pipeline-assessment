@@ -63,7 +63,7 @@ namespace He.PipelineAssessment.UI.Tests.Features.Workflow.CheckYourAnswersSaveA
 
             //Assert
             Assert.NotNull(result);
-            Assert.True(result!.IsCorrectBusinessArea);
+            Assert.True(result!.IsAuthorised);
             Assert.Equal(workflowNextActivityDataDto.Data.NextActivityId, result!.ActivityId);
             Assert.Equal(workflowNextActivityDataDto.Data.WorkflowInstanceId, result.WorkflowInstanceId);
             assessmentRepository.Verify(x => x.SaveChanges(), Times.Once);
@@ -87,7 +87,7 @@ namespace He.PipelineAssessment.UI.Tests.Features.Workflow.CheckYourAnswersSaveA
             var result = await sut.Handle(saveAndContinueCommand, CancellationToken.None);
 
             //Assert
-            Assert.False(result!.IsCorrectBusinessArea);
+            Assert.False(result!.IsAuthorised);
         }
 
 

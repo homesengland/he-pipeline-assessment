@@ -96,7 +96,7 @@ namespace He.PipelineAssessment.UI.Tests.Features.Workflow.SaveAndContinue
             var result = await sut.Handle(saveAndContinueCommand, CancellationToken.None);
 
             //Assert
-            Assert.False(result!.IsCorrectBusinessArea);
+            Assert.False(result!.IsAuthorised);
         }
 
 

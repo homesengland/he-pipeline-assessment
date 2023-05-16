@@ -40,7 +40,7 @@ namespace He.PipelineAssessment.UI.Features.Workflow.LoadCheckYourAnswersScreen
                 {
                     return new QuestionScreenSaveAndContinueCommand()
                     {
-                        IsCorrectBusinessArea = false
+                        IsAuthorised = false
                     };
                 }
                 else
@@ -63,7 +63,7 @@ namespace He.PipelineAssessment.UI.Features.Workflow.LoadCheckYourAnswersScreen
                         {
                             result.AssessmentId = entity.AssessmentId;
                             result.CorrelationId = entity.Assessment.SpId.ToString();
-                            result.IsCorrectBusinessArea = true;
+                            result.IsAuthorised = true;
                             result.WorkflowDefinitionId= entity.WorkflowDefinitionId;
                         }
 

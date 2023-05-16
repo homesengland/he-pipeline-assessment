@@ -69,7 +69,7 @@ namespace He.PipelineAssessment.UI.Tests.Features.Workflow.StartWorkflow
 
             //Assert
             Assert.NotNull(result);
-            Assert.False(result!.IsCorrectBusinessArea);
+            Assert.False(result!.IsAuthorised);
         }
 
         [Theory]
