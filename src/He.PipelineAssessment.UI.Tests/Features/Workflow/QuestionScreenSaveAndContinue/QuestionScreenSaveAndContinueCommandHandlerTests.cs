@@ -28,7 +28,7 @@ namespace He.PipelineAssessment.UI.Tests.Features.Workflow.SaveAndContinue
         )
         {
             //Arrange
-            roleValidation.Setup(x => x.ValidateRole(saveAndContinueCommand.AssessmentId)).ReturnsAsync(true);
+            roleValidation.Setup(x => x.ValidateRole(saveAndContinueCommand.AssessmentId, saveAndContinueCommand.WorkflowDefinitionId)).ReturnsAsync(true);
 
             saveAndContinueMapper
                 .Setup(x => x.SaveAndContinueCommandToMultiSaveAndContinueCommandDto(saveAndContinueCommand))
@@ -59,7 +59,7 @@ namespace He.PipelineAssessment.UI.Tests.Features.Workflow.SaveAndContinue
         )
         {
             //Arrange
-            roleValidation.Setup(x => x.ValidateRole(saveAndContinueCommand.AssessmentId)).ReturnsAsync(true);
+            roleValidation.Setup(x => x.ValidateRole(saveAndContinueCommand.AssessmentId, saveAndContinueCommand.WorkflowDefinitionId)).ReturnsAsync(true);
 
             saveAndContinueMapper
                 .Setup(x => x.SaveAndContinueCommandToMultiSaveAndContinueCommandDto(saveAndContinueCommand))
@@ -110,7 +110,7 @@ namespace He.PipelineAssessment.UI.Tests.Features.Workflow.SaveAndContinue
       )
         {
             //Arrange
-            roleValidation.Setup(x => x.ValidateRole(saveAndContinueCommand.AssessmentId)).ThrowsAsync(new Exception());
+            roleValidation.Setup(x => x.ValidateRole(saveAndContinueCommand.AssessmentId, saveAndContinueCommand.WorkflowDefinitionId)).ThrowsAsync(new Exception());
 
             //Act
             var result = await sut.Handle(saveAndContinueCommand, CancellationToken.None);

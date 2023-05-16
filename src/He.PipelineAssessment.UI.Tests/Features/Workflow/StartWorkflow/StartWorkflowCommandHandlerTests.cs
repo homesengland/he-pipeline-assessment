@@ -20,7 +20,7 @@ namespace He.PipelineAssessment.UI.Tests.Features.Workflow.StartWorkflow
             StartWorkflowCommandHandler sut)
         {
             //Arrange
-            roleValidation.Setup(x => x.ValidateRole(command.AssessmentId)).ReturnsAsync(true);
+            roleValidation.Setup(x => x.ValidateRole(command.AssessmentId, command.WorkflowDefinitionId)).ReturnsAsync(true);
 
             elsaServerHttpClient.Setup(x => x.PostStartWorkflow(It.IsAny<StartWorkflowCommandDto>()))
                 .ReturnsAsync((WorkflowNextActivityDataDto?)null);
@@ -42,7 +42,7 @@ namespace He.PipelineAssessment.UI.Tests.Features.Workflow.StartWorkflow
             StartWorkflowCommandHandler sut)
         {
             //Arrange
-            roleValidation.Setup(x => x.ValidateRole(command.AssessmentId)).ReturnsAsync(true);
+            roleValidation.Setup(x => x.ValidateRole(command.AssessmentId, command.WorkflowDefinitionId)).ReturnsAsync(true);
 
             elsaServerHttpClient.Setup(x => x.PostStartWorkflow(It.IsAny<StartWorkflowCommandDto>()))
                 .ReturnsAsync(workflowNextActivityDataDto);
@@ -80,7 +80,7 @@ namespace He.PipelineAssessment.UI.Tests.Features.Workflow.StartWorkflow
             StartWorkflowCommandHandler sut)
         {
             //Arrange
-            roleValidation.Setup(x => x.ValidateRole(command.AssessmentId)).ThrowsAsync(new Exception());
+            roleValidation.Setup(x => x.ValidateRole(command.AssessmentId, command.WorkflowDefinitionId)).ThrowsAsync(new Exception());
 
             //Act
             var result = await sut.Handle(command, CancellationToken.None);

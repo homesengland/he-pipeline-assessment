@@ -28,7 +28,7 @@ namespace He.PipelineAssessment.UI.Tests.Features.Workflow.LoadCheckYourAnswersS
             assessmentRepository.Setup(x => x.GetAssessmentToolWorkflowInstance(loadCheckYourAnswersScreenRequest.WorkflowInstanceId))
                .ReturnsAsync(assessmentToolWorkflowInstance);
 
-            roleValidation.Setup(x => x.ValidateRole(assessmentToolWorkflowInstance.AssessmentId)).ReturnsAsync(true);
+            roleValidation.Setup(x => x.ValidateRole(assessmentToolWorkflowInstance.AssessmentId, assessmentToolWorkflowInstance.WorkflowDefinitionId)).ReturnsAsync(true);
 
             elsaServerHttpClient.Setup(x => x.LoadCheckYourAnswersScreen(It.IsAny<LoadWorkflowActivityDto>()))
                 .ReturnsAsync((WorkflowActivityDataDto?)null);
@@ -103,7 +103,7 @@ namespace He.PipelineAssessment.UI.Tests.Features.Workflow.LoadCheckYourAnswersS
             assessmentRepository.Setup(x => x.GetAssessmentToolWorkflowInstance(loadCheckYourAnswersScreenRequest.WorkflowInstanceId))
               .ReturnsAsync(assessmentToolWorkflowInstance);
 
-            roleValidation.Setup(x => x.ValidateRole(assessmentToolWorkflowInstance.AssessmentId)).ReturnsAsync(false);
+            roleValidation.Setup(x => x.ValidateRole(assessmentToolWorkflowInstance.AssessmentId, assessmentToolWorkflowInstance.WorkflowDefinitionId)).ReturnsAsync(false);
            
             //Act
             var result = await sut.Handle(loadCheckYourAnswersScreenRequest, CancellationToken.None);
