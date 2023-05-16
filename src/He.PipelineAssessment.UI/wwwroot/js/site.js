@@ -3,7 +3,10 @@
 
 // Write your JavaScript code.
 var groupCheckboxes = document.querySelectorAll('input[group][type="checkbox"]');
+
 let enabledSettings = []
+
+var currencyInputs = document.querySelectorAll('input[currency-formatter="true"]');
 
 // Use Array.forEach to add an event listener to each checkbox.
 groupCheckboxes.forEach(function (checkbox) {
@@ -22,6 +25,18 @@ groupCheckboxes.forEach(function (checkbox) {
         }
     });
 });
+
+currencyInputs.forEach(function (input) {
+    input.addEventListener('keyup', function (event) {
+        // skip for arrow keys
+        if (event.which >= 37 && event.which <= 40) return;
+        // format number
+        input.value = input.value
+            .replace(/\D/g, "")
+            .replace(/\B(?=(\d{3})+(?!\d))/g, ",")
+            ;
+    })
+})
 
 unCheckAllInputsInGroupExcept = function ($input) {
     var allInputsWithSameGroup = document.querySelectorAll('input[group="' + $input.getAttribute("group") + '"][type="checkbox"]');
@@ -77,3 +92,6 @@ function nodeListForEach(nodes, callback) {
         callback.call(window, nodes[i], i, nodes);
     }
 }
+
+
+

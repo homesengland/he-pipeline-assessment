@@ -23,7 +23,8 @@
                                 }
                                 else if (question.QuestionType == QuestionTypeConstants.CurrencyQuestion)
                                 {
-                                    <p>£ @answer.AnswerText</p>
+
+                                    <p>@CommaSeparatedCurrency(answer.AnswerText)</p>
                                 }
                                 else
                                 {
@@ -45,3 +46,11 @@
         </dl>
     </div>
 </div>
+
+@functions {
+    string CommaSeparatedCurrency(string answerText)
+    {
+        var result = "£" + String.Format("{0:#,##0.##}", Convert.ToDecimal(answerText));
+        return result;
+    }
+} 
