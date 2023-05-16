@@ -24,20 +24,12 @@ public class RoleValidation : IRoleValidation
     {
         bool isRoleExist = false;
 
-        var assessmentToolWorkflow = await _adminAssessmentToolRepository.GetAssessmentToolByWorkflowDefinitionId(workflowDefinitionId);
-        if (assessmentToolWorkflow != null)
+        var isValidForEconomistRole = ValidateForEconomistRole(workflowDefinitionId);
+        if(!isValidForEconomistRole.Result)
         {
-            var isEconomistWorkflow = assessmentToolWorkflow.IsEconomistWorkflow;
-            if (isEconomistWorkflow)
-            {
-                bool isEconomistRoleExist = (_userProvider.CheckUserRole(Constants.AppRole.PipelineEconomist) || _userProvider.CheckUserRole(Constants.AppRole.PipelineAdminOperations));
-
-                if (!isEconomistRoleExist)
-                {
-                    return isEconomistRoleExist;
-                }
-            }
+            return false;
         }
+
         var assessment = await _assessmentRepository.GetAssessment(assessmentId);
         
         if (assessment != null)
@@ -58,6 +50,22 @@ public class RoleValidation : IRoleValidation
         }
 
         return isRoleExist;
+    }
+
+    private async Task<bool> ValidateForEconomistRole(string workflowDefinitionId)
+    {
+        var assessmentToolWorkflow = await _adminAssessmentToolRepository.GetAssessmentToolByWorkflowDefinitionId(workflowDefinitionId);
+        if (assessmentToolWorkflow != null)
+        {
+            if (assessmentToolWorkflow.IsEconomistWorkflow)
+            {
+                bool isEconomistRoleExist = (_userProvider.CheckUserRole(Constants.AppRole.PipelineEconomist) || _userProvider.CheckUserRole(Constants.AppRole.PipelineAdminOperations));
+
+                return isEconomistRoleExist;
+            }
+            return true;
+        }
+        return true;
     }
 }
 
