@@ -22,16 +22,24 @@ public class RoleValidation : IRoleValidation
     }
     public async Task<bool> ValidateRole(int assessmentId, string workflowDefinitionId)
     {
-        bool isRoleExist = false;
-
-        var isValidForEconomistRole = ValidateForEconomistRole(workflowDefinitionId);
-        if(!isValidForEconomistRole.Result)
+        var assessmentToolWorkflow = await _adminAssessmentToolRepository.GetAssessmentToolByWorkflowDefinitionId(workflowDefinitionId);
+        if (assessmentToolWorkflow != null)
         {
-            return false;
+            if (assessmentToolWorkflow.IsEconomistWorkflow)
+            {
+                bool isEconomistRoleExist = (_userProvider.CheckUserRole(Constants.AppRole.PipelineEconomist) || _userProvider.CheckUserRole(Constants.AppRole.PipelineAdminOperations));
+                return isEconomistRoleExist;
+            }
         }
 
+        var isValidForBusinessArea = ValidateForBusinessArea(assessmentId);
+        return isValidForBusinessArea.Result;
+    }
+
+    private async Task<bool> ValidateForBusinessArea(int assessmentId)
+    {
+        bool isRoleExist = false;
         var assessment = await _assessmentRepository.GetAssessment(assessmentId);
-        
         if (assessment != null)
         {
             switch (assessment?.BusinessArea)
@@ -48,24 +56,8 @@ public class RoleValidation : IRoleValidation
                 default: return isRoleExist;
             }
         }
-
-        return isRoleExist;
+        return false;
     }
 
-    private async Task<bool> ValidateForEconomistRole(string workflowDefinitionId)
-    {
-        var assessmentToolWorkflow = await _adminAssessmentToolRepository.GetAssessmentToolByWorkflowDefinitionId(workflowDefinitionId);
-        if (assessmentToolWorkflow != null)
-        {
-            if (assessmentToolWorkflow.IsEconomistWorkflow)
-            {
-                bool isEconomistRoleExist = (_userProvider.CheckUserRole(Constants.AppRole.PipelineEconomist) || _userProvider.CheckUserRole(Constants.AppRole.PipelineAdminOperations));
-
-                return isEconomistRoleExist;
-            }
-            return true;
-        }
-        return true;
-    }
 }
 
