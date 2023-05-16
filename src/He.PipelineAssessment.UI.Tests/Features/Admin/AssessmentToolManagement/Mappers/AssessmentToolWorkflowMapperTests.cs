@@ -24,6 +24,7 @@ namespace He.PipelineAssessment.UI.Tests.Features.Admin.AssessmentToolManagement
             Assert.NotNull(result);
             Assert.Equal(assessmentToolWorkflowCommand.AssessmentToolId, result.AssessmentToolId);
             Assert.Equal(assessmentToolWorkflowCommand.IsFirstWorkflow, result.IsFirstWorkflow);
+            Assert.Equal(assessmentToolWorkflowCommand.IsEconomistWorkflow, result.IsEconomistWorkflow);
             Assert.Equal(assessmentToolWorkflowCommand.Version, result.Version);
             Assert.Equal(assessmentToolWorkflowCommand.IsLatest, result.IsLatest);
             Assert.Equal(assessmentToolWorkflowCommand.WorkflowDefinitionId, result.WorkflowDefinitionId);
