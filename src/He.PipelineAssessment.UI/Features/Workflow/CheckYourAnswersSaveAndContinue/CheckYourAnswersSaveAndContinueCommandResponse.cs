@@ -8,7 +8,7 @@ namespace He.PipelineAssessment.UI.Features.Workflow.CheckYourAnswersSaveAndCont
         public string ActivityId { get; set; } = null!;
         public string ActivityType { get; set; } = null!;
 
-        public bool IsCorrectBusinessArea { get; set; }
+        public bool IsAuthorised { get; set; }
     }
 
 }

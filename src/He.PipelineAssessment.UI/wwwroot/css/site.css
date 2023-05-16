@@ -34,3 +34,11 @@ body {
 .govuk-checkboxes {
     margin-bottom: 10px !important;
 }
+
+.govuk-\!-width-one-fifth {
+    width: 20% !important;
+}
+
+.govuk-radios--inline .govuk-radios__item.radio-no-margin {
+    margin-right: 0;
+}

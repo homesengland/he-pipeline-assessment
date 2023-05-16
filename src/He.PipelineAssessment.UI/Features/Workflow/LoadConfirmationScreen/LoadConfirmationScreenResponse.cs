@@ -7,6 +7,6 @@ namespace He.PipelineAssessment.UI.Features.Workflow.LoadConfirmationScreen
     {
         public int AssessmentId { get; set; }
         public string CorrelationId { get; set; } = null!;
-        public bool IsCorrectBusinessArea { get; set; }
+        public bool IsAuthorised { get; set; }
     }
 }

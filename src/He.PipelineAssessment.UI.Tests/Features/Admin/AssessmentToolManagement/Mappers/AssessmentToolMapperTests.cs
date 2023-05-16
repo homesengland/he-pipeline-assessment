@@ -57,6 +57,7 @@ namespace He.PipelineAssessment.UI.Tests.Features.Admin.AssessmentToolManagement
                     Assert.Equal(assessmentTools[i].AssessmentToolWorkflows![j].Name, result.AssessmentTools[i].AssessmentToolWorkFlows[j].Name);
                     Assert.Equal(assessmentTools[i].AssessmentToolWorkflows![j].AssessmentToolId, result.AssessmentTools[i].AssessmentToolWorkFlows[j].AssessmentToolId);
                     Assert.Equal(assessmentTools[i].AssessmentToolWorkflows![j].IsFirstWorkflow, result.AssessmentTools[i].AssessmentToolWorkFlows[j].IsFirstWorkflow);
+                    Assert.Equal(assessmentTools[i].AssessmentToolWorkflows![j].IsEconomistWorkflow, result.AssessmentTools[i].AssessmentToolWorkFlows[j].IsEconomistWorkflow);
                     Assert.Equal(assessmentTools[i].AssessmentToolWorkflows![j].IsLatest, result.AssessmentTools[i].AssessmentToolWorkFlows[j].IsLatest);
                     Assert.Equal(assessmentTools[i].AssessmentToolWorkflows![j].WorkflowDefinitionId, result.AssessmentTools[i].AssessmentToolWorkFlows[j].WorkflowDefinitionId);
                     Assert.Equal(assessmentTools[i].AssessmentToolWorkflows![j].Version, result.AssessmentTools[i].AssessmentToolWorkFlows[j].Version);

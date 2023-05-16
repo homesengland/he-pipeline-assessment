@@ -34,13 +34,13 @@ namespace He.PipelineAssessment.UI.Features.Workflow.LoadQuestionScreen
             {
                 var assessmentWorkflowInstance = await _assessmentRepository.GetAssessmentToolWorkflowInstance(request.WorkflowInstanceId);
 
-                var isRoleExist = await _roleValidation.ValidateRole(assessmentWorkflowInstance!.AssessmentId);
+                var isRoleExist = await _roleValidation.ValidateRole(assessmentWorkflowInstance!.AssessmentId, assessmentWorkflowInstance!.WorkflowDefinitionId);
 
                 if (!isRoleExist && !request.IsReadOnly)
                 {
                     return new QuestionScreenSaveAndContinueCommand()
                     {
-                        IsCorrectBusinessArea = false
+                        IsAuthorised = false
                     };
                 }
                 else
@@ -57,8 +57,9 @@ namespace He.PipelineAssessment.UI.Features.Workflow.LoadQuestionScreen
                     {
                         string jsonResponse = JsonSerializer.Serialize(response);
                         QuestionScreenSaveAndContinueCommand? result = JsonSerializer.Deserialize<QuestionScreenSaveAndContinueCommand>(jsonResponse);
-                        result!.IsCorrectBusinessArea = true;
+                        result!.IsAuthorised = true;
                         result!.AssessmentId = assessmentWorkflowInstance.AssessmentId;
+                        result!.WorkflowDefinitionId = assessmentWorkflowInstance.WorkflowDefinitionId;
                         return await Task.FromResult(result);
                     }
                     else

@@ -27,11 +27,11 @@ namespace He.PipelineAssessment.UI.Features.Workflow.StartWorkflow
         {
             try
             {
-                if (!await _roleValidation.ValidateRole(request.AssessmentId))
+                if (!await _roleValidation.ValidateRole(request.AssessmentId, request.WorkflowDefinitionId))
                 {
                     return new LoadQuestionScreenRequest()
                     {
-                        IsCorrectBusinessArea = false
+                        IsAuthorised = false
                     };
                 }
 
@@ -49,7 +49,7 @@ namespace He.PipelineAssessment.UI.Features.Workflow.StartWorkflow
                         ActivityId = response.Data.NextActivityId,
                         WorkflowInstanceId = response.Data.WorkflowInstanceId,
                         ActivityType = response.Data.ActivityType,
-                        IsCorrectBusinessArea = true
+                        IsAuthorised = true
                     };
 
                     var assessmentStage = AssessmentStage(request, response);

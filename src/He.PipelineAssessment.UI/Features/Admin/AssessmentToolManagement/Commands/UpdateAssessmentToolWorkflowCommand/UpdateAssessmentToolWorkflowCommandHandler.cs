@@ -19,6 +19,7 @@ namespace He.PipelineAssessment.UI.Features.Admin.AssessmentToolManagement.Comma
             entity.WorkflowDefinitionId = request.WorkflowDefinitionId;
             entity.Name = request.Name;
             entity.IsFirstWorkflow = request.IsFirstWorkflow;
+            entity.IsEconomistWorkflow = request.IsEconomistWorkflow;
             return await _adminAssessmentToolWorkflowRepository.UpdateAssessmentToolWorkflow(entity);
         }
     }

@@ -28,6 +28,7 @@ namespace He.PipelineAssessment.UI.Features.Admin.AssessmentToolManagement.Mappe
                         Name = y.Name,
                         AssessmentToolId = y.AssessmentToolId,
                         IsFirstWorkflow = y.IsFirstWorkflow,
+                        IsEconomistWorkflow = y.IsEconomistWorkflow,
                         IsLatest = y.IsLatest,
                         WorkflowDefinitionId = y.WorkflowDefinitionId,
                         Version = y.Version,
@@ -55,6 +56,7 @@ namespace He.PipelineAssessment.UI.Features.Admin.AssessmentToolManagement.Mappe
                 Name = x.Name,
                 AssessmentToolId = x.AssessmentToolId,
                 IsFirstWorkflow = x.IsFirstWorkflow,
+                IsEconomistWorkflow = x.IsEconomistWorkflow,
                 IsLatest = x.IsLatest,
                 Version = x.Version,
                 WorkflowDefinitionId = x.WorkflowDefinitionId
