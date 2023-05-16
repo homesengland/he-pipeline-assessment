@@ -1,11 +1,29 @@
 ﻿@using He.PipelineAssessment.UI
 @using Elsa.CustomWorkflow.Sdk
 @using Microsoft.CodeAnalysis.CSharp.Syntax
+@using Elsa.CustomWorkflow.Sdk.Models.Workflow
 @model He.PipelineAssessment.UI.Features.Workflow.QuestionScreenSaveAndContinue.QuestionScreenSaveAndContinueCommand
 
 @{
     ViewData["Title"] = "Pipeline Assessment";
     Layout = "_Layout";
+
+    var tableList = new List<List<QuestionActivityData>>();
+    int currentIndex = 0;
+    foreach (var question in Model.Data.Questions)
+    {
+        if (question.QuestionType==QuestionTypeConstants.Information)
+        {
+            var questionList = new List<QuestionActivityData>();
+            questionList.Add(question);
+            tableList.Add(questionList);
+            currentIndex++;
+        }
+        else
+        {
+            tableList[currentIndex-1].Add(question);
+        }
+    }
 }
 <div class="text-center">
     @if (Model.Data.ActivityId != Model.Data.PreviousActivityId)
@@ -24,13 +42,12 @@
 
         @Html.HiddenFor(m => Model.Data.ActivityType)
         <br />
-          if (Model.Data.ActivityType == ActivityTypeConstants.QuestionScreen)
+@*          if (Model.Data.ActivityType == ActivityTypeConstants.QuestionScreen)
     {
     @await Html.PartialAsync("_QuestionScreen",Model)
-    }
+    }*@
 
-        <h1>Vertical Table</h1>
-        <div class="govuk-grid-row">
+@*        <div class="govuk-grid-row">
             <div class="govuk-grid-column-two-thirds-from-desktop">
                 <dl class="govuk-summary-list govuk-!-margin-bottom-9">
                     @foreach (var question in Model.Data.Questions!)
@@ -43,8 +60,11 @@
                                 }
                                 else
                                 {
-                                    @string.Join(System.Environment.NewLine, question.Information.InformationTextList.Where(x=>x.IsGuidance==false && x.IsHyperlink ==false && x.Text!=null).Select(x=>x.Text).ToList())
-                                    ;
+                                    @string.Join(System.Environment.NewLine, question.Information.InformationTextList
+                                        .Where(x=>x.IsGuidance==false && x.IsHyperlink ==false && x.Text!=null)
+                                        .Select(x=>x.Text)
+                                        .ToList());
+                                    
                                 }
 
                             </dt>
@@ -66,33 +86,66 @@
                 </dl>
             </div>
         </div>
+        <input id="Next" type="submit" value="Save and continue" name="Next" class="govuk-button" />*@
 
-        <h1>Horizontal Table <small> </small></h1>
-        <table class="govuk-table">
+  @*      <table class="govuk-table">
             <thead class="govuk-table__head">
             <tr class="govuk-table__row">
                 @foreach (var question in Model.Data.Questions)
                 {
                     @if (question.QuestionType != QuestionTypeConstants.Information)
                     {
-                            <th scope="col" class="govuk-table__header">@question.Question</th>
+                        <th scope="col" class="govuk-table__header">@question.Question</th>
                     }
                 }
             </tr>
             </thead>
             <tbody class="govuk-table__body">
             @foreach (var question in Model.Data.Questions)
+            {
+                @if (question.QuestionType != QuestionTypeConstants.Information)
+                {
+                    <td class="govuk-table__cell">
+                        <input type="text" class="govuk-input govuk-input--width-5" />
+                    </td>
+                }
+            }
+            </tbody>
+        </table>*@
+        
+        @foreach (var item in tableList)
+        {
+            <div class="scroll-table">
+            <h2 class="govuk-heading-m">@item[0].Information.InformationTextList[0].Text</h2>
+            <table class="govuk-table">
+                <thead class="govuk-table__head">
+                <tr class="govuk-table__row">
+                    @foreach (var question in item)
+                    {
+                        @if (question.QuestionType != QuestionTypeConstants.Information)
+                        {
+                            <th scope="col" class="govuk-table__header">@question.Question</th>
+                        }
+                    }
+                </tr>
+                </thead>
+                <tbody class="govuk-table__body">
+                @foreach (var question in item)
                 {
                     @if (question.QuestionType != QuestionTypeConstants.Information)
                     {
                         <td class="govuk-table__cell">
-                            <div class="govuk-input__prefix" aria-hidden="true">£</div>
-                            <input type="text" class="govuk-input govuk-input--width-5" />
+                                <input type="text" class="govuk-input govuk-input--width-scroll-table" />
                         </td>
                     }
                 }
-            </tbody>
-        </table>
+                </tbody>
+            </table>
+        </div>
+
+
+        }
+        <input id="Next" type="submit" value="Save and continue" name="Next" class="govuk-button" />
     }
 </div>
 
