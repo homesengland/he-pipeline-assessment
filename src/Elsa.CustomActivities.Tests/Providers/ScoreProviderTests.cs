@@ -669,7 +669,7 @@ namespace Elsa.CustomActivities.Tests.Providers
             var result = sut.CalculateScore(answeredQuestion, questionDefinition);
 
             //Assert
-            Assert.Equal((groupExpectedResult + 500)*10, result);
+            Assert.Equal((500 + groupExpectedResult)*10, result);
         }
 
         [Theory]
@@ -828,6 +828,57 @@ namespace Elsa.CustomActivities.Tests.Providers
 
             //Assert
             Assert.Equal(117, result);
+        }
+
+        [Theory]
+        [AutoMoqData]
+        public void GetScore_ShouldNotReturnIndividual_GivenWeightedCheckboxWithGroupArrayScores(
+            CustomModels.Question answeredQuestion,
+            Question questionDefinition,
+            ScoreProvider sut)
+        {
+            //Arrange
+            int numberOfQuestions = 3;
+            double[] groupScoreArray = { 4, 5, 6, 7, 8 };
+            questionDefinition.QuestionType = QuestionTypeConstants.WeightedCheckboxQuestion;
+            questionDefinition.Score = null;
+            questionDefinition.MaxScore = null;
+            questionDefinition.ScoreArray = null;
+            questionDefinition.WeightedCheckbox.Groups = new Dictionary<string, WeightedCheckboxGroup>()
+            {
+                { "Group A", new WeightedCheckboxGroup() { GroupIdentifier = "Group A", GroupArrayScore = groupScoreArray.Select(Convert.ToDecimal).ToList(), MaxGroupScore = null} },
+                { "Group B", new WeightedCheckboxGroup() { GroupIdentifier = "Group B", GroupArrayScore = null, MaxGroupScore = null} }
+            };
+            answeredQuestion.Answers = new List<Answer>()
+            {
+                new Answer()
+                {
+                    Choice = new QuestionChoice()
+                    {
+                        NumericScore = 500,
+                        QuestionChoiceGroup = new QuestionChoiceGroup
+                        {
+                            GroupIdentifier = "Group A"
+                        }
+                    }
+                }
+            };
+            for (int i = 0; i < numberOfQuestions; i++)
+            {
+                answeredQuestion.Answers.Add(new Answer()
+                {
+                    Choice = new QuestionChoice()
+                        { QuestionChoiceGroup = new QuestionChoiceGroup() { GroupIdentifier = "Group A" }, NumericScore = 1000}
+                });
+            }
+
+            answeredQuestion.Weighting = null;
+
+            //Act
+            var result = sut.CalculateScore(answeredQuestion, questionDefinition);
+
+            //Assert
+            Assert.Equal(7, result);
         }
 
         [Theory]

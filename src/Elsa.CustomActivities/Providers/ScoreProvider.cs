@@ -50,12 +50,14 @@ namespace Elsa.CustomActivities.Providers
                                 {
                                     groupScore += GetScoreFromScoreArray(groupAnswers, groupDefinition.GroupArrayScore);
                                 }
-
-                                foreach (var answer in groupAnswers)
+                                else
                                 {
-                                    if (answer.Choice != null && answer.Choice.NumericScore.HasValue)
+                                    foreach (var answer in groupAnswers)
                                     {
-                                        groupScore += answer.Choice.NumericScore.Value;
+                                        if (answer.Choice != null && answer.Choice.NumericScore.HasValue)
+                                        {
+                                            groupScore += answer.Choice.NumericScore.Value;
+                                        }
                                     }
                                 }
 
