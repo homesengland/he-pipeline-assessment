@@ -32,11 +32,16 @@ currencyInputs.forEach(function (input) {
         if (event.which >= 37 && event.which <= 40) return;
         // format number
         input.value = input.value
-            .replace(/\D/g, "")
-            .replace(/\B(?=(\d{3})+(?!\d))/g, ",")
-            ;
+            .replace(/,/g, '');
+        input.value =  numberWithCommas(input.value);
     })
 })
+
+function numberWithCommas(x) {
+    var parts = x.toString().split(".");
+    parts[0] = parts[0].replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+    return parts.join(".");
+}
 
 unCheckAllInputsInGroupExcept = function ($input) {
     var allInputsWithSameGroup = document.querySelectorAll('input[group="' + $input.getAttribute("group") + '"][type="checkbox"]');
@@ -92,6 +97,10 @@ function nodeListForEach(nodes, callback) {
         callback.call(window, nodes[i], i, nodes);
     }
 }
+
+
+
+
 
 
 
