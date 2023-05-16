@@ -669,7 +669,7 @@ namespace Elsa.CustomActivities.Tests.Providers
             var result = sut.CalculateScore(answeredQuestion, questionDefinition);
 
             //Assert
-            Assert.Equal((500 + groupExpectedResult)*10, result);
+            Assert.Equal((groupExpectedResult + 500) *10, result);
         }
 
         [Theory]
