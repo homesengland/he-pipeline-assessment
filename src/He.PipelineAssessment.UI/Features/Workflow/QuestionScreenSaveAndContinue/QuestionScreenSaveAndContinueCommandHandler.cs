@@ -31,11 +31,11 @@ namespace He.PipelineAssessment.UI.Features.Workflow.QuestionScreenSaveAndContin
         {
             try
             {
-                if (!await _roleValidation.ValidateRole(request.AssessmentId))
+                if (!await _roleValidation.ValidateRole(request.AssessmentId, request.WorkflowDefinitionId))
                 {
                     return new QuestionScreenSaveAndContinueCommandResponse()
                     {
-                        IsCorrectBusinessArea = false
+                        IsAuthorised = false
                     };
                 }
 
@@ -49,7 +49,7 @@ namespace He.PipelineAssessment.UI.Features.Workflow.QuestionScreenSaveAndContin
                         ActivityId = response.Data.NextActivityId,
                         WorkflowInstanceId = response.Data.WorkflowInstanceId,
                         ActivityType = response.Data.ActivityType,
-                        IsCorrectBusinessArea = true
+                        IsAuthorised = true
 
                     };
                     var currentAssessmentToolWorkflowInstance = await _assessmentRepository.GetAssessmentToolWorkflowInstance(response.Data.WorkflowInstanceId);

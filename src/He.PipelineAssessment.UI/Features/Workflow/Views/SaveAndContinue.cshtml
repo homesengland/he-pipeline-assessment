@@ -20,7 +20,7 @@
         @Html.HiddenFor(m => Model.Data.PreviousActivityId)
         @Html.HiddenFor(m => Model.Data.PreviousActivityType)
         @Html.HiddenFor(m => Model.AssessmentId)
-
+        @Html.HiddenFor(m=> Model.WorkflowDefinitionId)
         @Html.HiddenFor(m => Model.Data.ActivityType)
         <br/>
         if (Model.Data.ActivityType == ActivityTypeConstants.QuestionScreen)

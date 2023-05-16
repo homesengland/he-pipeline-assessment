@@ -9,6 +9,7 @@ namespace He.PipelineAssessment.Infrastructure.Repository
     {
         Task<IEnumerable<AssessmentTool>> GetAssessmentTools();
         Task<AssessmentTool?> GetAssessmentToolById(int assessmentToolId);
+        Task<AssessmentToolWorkflow?> GetAssessmentToolByWorkflowDefinitionId(string workflowDefinitionId);
         Task<IEnumerable<AssessmentToolWorkflow>> GetAssessmentToolWorkflows(int assessmentToolId);
 
         Task<int> CreateAssessmentTool(AssessmentTool assessmentTool);
@@ -60,5 +61,9 @@ namespace He.PipelineAssessment.Infrastructure.Repository
             return await _context.SaveChangesAsync();
         }
 
+        public async Task<AssessmentToolWorkflow?> GetAssessmentToolByWorkflowDefinitionId(string workflowDefinitionId)
+        {
+            return await _context.Set<AssessmentToolWorkflow>().Include(x => x.AssessmentTool).FirstOrDefaultAsync(x => x.WorkflowDefinitionId == workflowDefinitionId);
+        }
     }
 }

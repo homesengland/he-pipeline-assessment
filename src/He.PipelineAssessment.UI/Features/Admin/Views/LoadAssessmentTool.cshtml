@@ -23,7 +23,7 @@
 
         @if (Model.ValidationResult != null && !Model.ValidationResult.IsValid)
         {
-            @await Html.PartialAsync("~/Features/Workflow/Views/Shared/_MultiValidationSummary.cshtml", Model.ValidationResult)
+            @await Html.PartialAsync("~/Features/Workflow/Views/Shared/_ValidationSummary.cshtml", Model.ValidationResult)
         }
         @using (Html.BeginForm("CreateAssessmentTool", "Admin", FormMethod.Post))
         {

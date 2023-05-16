@@ -84,7 +84,7 @@ namespace He.PipelineAssessment.UI.Tests.Features.Workflow
            WorkflowController sut)
         {
             //Arrange
-            loadWorkflowActivityRequest.IsCorrectBusinessArea = false;
+            loadWorkflowActivityRequest.IsAuthorised = false;
             mediator.Setup(x => x.Send(command, CancellationToken.None)).ReturnsAsync(loadWorkflowActivityRequest);
 
             //Act
@@ -190,7 +190,7 @@ namespace He.PipelineAssessment.UI.Tests.Features.Workflow
            WorkflowController sut)
         {
             //Arrange
-            saveAndContinueCommandResponse.IsCorrectBusinessArea = false;
+            saveAndContinueCommandResponse.IsAuthorised = false;
             mediator.Setup(x => x.Send(command, CancellationToken.None)).ReturnsAsync(saveAndContinueCommandResponse);
 
             //Act
@@ -275,7 +275,7 @@ namespace He.PipelineAssessment.UI.Tests.Features.Workflow
             WorkflowController sut)
         {
             //Arrange
-            saveAndContinueCommand.IsCorrectBusinessArea = true;
+            saveAndContinueCommand.IsAuthorised = true;
             saveAndContinueCommandResponse.ActivityType = ActivityTypeConstants.CheckYourAnswersScreen;
 
             mediator.Setup(x =>
@@ -335,7 +335,7 @@ namespace He.PipelineAssessment.UI.Tests.Features.Workflow
             WorkflowController sut)
         {
             //Arrange
-            response.IsCorrectBusinessArea = true;
+            response.IsAuthorised = true;
             saveAndContinueCommandResponse.ActivityType = ActivityTypeConstants.ConfirmationScreen;
 
             mediator.Setup(x =>
@@ -394,7 +394,7 @@ namespace He.PipelineAssessment.UI.Tests.Features.Workflow
             WorkflowController sut)
         {
             //Arrange
-            saveAndContinueCommand.IsCorrectBusinessArea = true;
+            saveAndContinueCommand.IsAuthorised = true;
             saveAndContinueCommandResponse.ActivityType = ActivityTypeConstants.QuestionScreen;
 
             mediator.Setup(x =>
@@ -595,7 +595,7 @@ namespace He.PipelineAssessment.UI.Tests.Features.Workflow
             WorkflowController sut)
         {
             //Arrange
-            response.IsCorrectBusinessArea = true;
+            response.IsAuthorised = true;
             mediator.Setup(x => x.Send(command, CancellationToken.None)).ReturnsAsync(response);
 
             //AcT

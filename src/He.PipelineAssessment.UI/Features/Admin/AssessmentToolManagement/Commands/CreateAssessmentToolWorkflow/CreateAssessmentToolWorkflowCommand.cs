@@ -1,5 +1,8 @@
 ﻿using FluentValidation.Results;
 using MediatR;
+using System.ComponentModel;
+using System.ComponentModel.DataAnnotations;
+using ValidationResult = FluentValidation.Results.ValidationResult;
 
 namespace He.PipelineAssessment.UI.Features.Admin.AssessmentToolManagement.Commands.CreateAssessmentToolWorkflow
 {
@@ -15,7 +18,10 @@ namespace He.PipelineAssessment.UI.Features.Admin.AssessmentToolManagement.Comma
     {
         public string Name { get; set; } = string.Empty;
         public string WorkflowDefinitionId { get; set; } = string.Empty;
+        [Display(Name = "Is first workflow?")]
         public bool IsFirstWorkflow { get; set; } = false;
+        [Display(Name = "Is economist workflow?")]
+        public bool IsEconomistWorkflow { get; set; } = false;
         public int AssessmentToolId { get; set; }
         public int Version { get; set; } = 1;
         public bool IsLatest { get; set; } = true;
