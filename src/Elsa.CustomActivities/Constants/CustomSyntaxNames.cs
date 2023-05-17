@@ -1,5 +1,7 @@
 ﻿
 
+using Microsoft.AspNetCore.Components.Forms;
+
 namespace Elsa.CustomActivities.Constants
 {
     public class CustomSyntaxNames
@@ -11,6 +13,7 @@ namespace Elsa.CustomActivities.Constants
         public const string CheckboxList = "CheckboxList";
         public const string RadioList = "RadioList";
         public const string PotScore = "PotScore";
+        public const string DataTable = "DataTable";
     }
 
     public class CheckboxSyntaxNames
@@ -23,6 +26,13 @@ namespace Elsa.CustomActivities.Constants
     public class RadioSyntaxNames
     {
         public const string PrePopulated = "PrePopulated";
+    }
+
+    public class DataTableSyntaxNames
+    {
+        public const string Title = "Title";
+        public const string TableHeader = "TableHeader";
+        public const string InputType = "InputType";
     }
 
     public class TextActivitySyntaxNames

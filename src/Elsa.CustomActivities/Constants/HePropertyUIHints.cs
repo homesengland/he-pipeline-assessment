@@ -22,5 +22,6 @@ namespace Elsa.CustomActivities.Constants
         public const string WeightedCheckboxOptions = "he-weighted-checkbox";
         public const string CheckboxOptions = "he-checkbox-options";
         public const string TextActivity = "he-text-activity";
+        public const string DataTable = "he-data-table";
     }
 }

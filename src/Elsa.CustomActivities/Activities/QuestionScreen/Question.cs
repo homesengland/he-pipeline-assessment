@@ -113,6 +113,12 @@ namespace Elsa.CustomActivities.Activities.QuestionScreen
             IsDesignerCritical = true)]
         public decimal? Score { get; set; } = null!;
 
+        [HeActivityInput(UIHint = HePropertyUIHints.DataTable,
+            ConditionalActivityTypes = new[] { QuestionTypeConstants.DataTable },
+            ExpectedOutputType = ExpectedOutputHints.DataTable,
+            HasNestedProperties = true)]
+        public DataTable DataTable { get; set; } = new DataTable();
+
         [HeActivityInput(UIHint = HePropertyUIHints.CheckboxOptions, ConditionalActivityTypes = new[] { QuestionTypeConstants.CheckboxQuestion }, ExpectedOutputType = ExpectedOutputHints.Checkbox)]
         public CheckboxModel Checkbox { get; set; } = new CheckboxModel();
 

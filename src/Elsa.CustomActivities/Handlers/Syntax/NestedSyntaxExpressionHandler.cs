@@ -23,6 +23,7 @@ namespace Elsa.CustomActivities.Handlers.Syntax
     {
         private ILogger<IExpressionHandler> _logger;
         private InformationTextExpressionHandler _informationExpressionHandler;
+        private DataTableExpressionHandler _dataTableExpressionHandler;
         private CheckboxExpressionHandler _checkboxExpressionHandler;
         private RadioExpressionHandler _radioExpressionHandler;
         private PotScoreRadioExpressionHandler _potScoreRadioExpressionHandler;
@@ -37,6 +38,7 @@ namespace Elsa.CustomActivities.Handlers.Syntax
             _potScoreRadioExpressionHandler = new PotScoreRadioExpressionHandler(logger, serializer);
             _weightedRadioExpressionHandler = new WeightedRadioExpressionHandler(logger, serializer);
             _weightedCheckboxExpressionHandler = new WeightedCheckboxExpressionHandler(logger, serializer);
+            _dataTableExpressionHandler = new DataTableExpressionHandler(logger, serializer);
 
         }
 
@@ -153,6 +155,22 @@ namespace Elsa.CustomActivities.Handlers.Syntax
                 {
                     List<TextRecord> records = await _informationExpressionHandler.ElsaPropertiesToTextRecordList(parsedProperties, evaluator, context);
                     result.TextRecords = records;
+                }
+                return result;
+
+            }
+            if (propertyType != null && propertyType == typeof(DataTable))
+            {
+                DataTable result = new DataTable();
+                var tableInputType = property.Expressions?[DataTableSyntaxNames.InputType] ?? "string";
+                Type inputType = _dataTableExpressionHandler.InputTypeStringToType(tableInputType);
+                result.TypeOfInput = inputType;
+
+                var parsedProperties = ParseToList(property);
+                if (parsedProperties != null)
+                {
+                    List<TableInput> records = await _dataTableExpressionHandler.ElsaPropertiesToDataTableInputList(parsedProperties, evaluator, context);
+                    result.Inputs = records;
                 }
                 return result;
 
