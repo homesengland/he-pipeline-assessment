@@ -1,0 +1,109 @@
+﻿@using He.PipelineAssessment.UI.Features.Economist.AssessmentToolManagement.Queries.GetAssessmentTools;
+@model AssessmentToolListData;
+
+@{
+    ViewData["Title"] = "Assessment Tools";
+    Layout = "_Layout";
+}
+
+<div>Hello! Economist.</div>
+<div class="govuk-grid-row">
+    <div class="govuk-grid-column-two-thirds">
+        @Html.ActionLink("Back","Index","Assessment", null,new{ @class="govuk-back-link"})
+    </div>
+    <div class="govuk-grid-column-one-third pull-right">
+        @Html.ActionLink("Create Assessment Tool", "LoadAssessmentTool","Admin", null, new {@class = "govuk-link"})
+    </div>
+</div>
+<div class="text-center">
+    <table class="govuk-table">
+        <caption class="govuk-table__caption govuk-table__caption--m">Assessment Tools</caption>
+        <thead class="govuk-table__head">
+            <tr class="govuk-table__row">
+                <th scope="col" class="govuk-table__header">Name</th>
+                <th scope="col" class="govuk-table__header">Order</th>
+                <th scope="col" class="govuk-table__header">Update</th>
+                <th scope="col" class="govuk-table__header">Remove</th>
+                <th scope="col" class="govuk-table__header">Assessment Tool Workflows</th>
+            </tr>
+        </thead>
+        <tbody class="govuk-table__body">
+            @foreach (var assessmentTool in Model.AssessmentTools)
+            {
+                var nameErrorClass = "";
+                var orderErrorClass = "";
+                var errorFormClass = "";
+                if (assessmentTool.ValidationResult != null)
+                {
+                    errorFormClass = !assessmentTool.ValidationResult.IsValid ? "govuk-form-group--error" : "";
+                    var nameInvalid = assessmentTool.ValidationResult.Errors.Any(x => x.PropertyName == "Name");
+                    var orderInvalid = assessmentTool.ValidationResult.Errors.Any(x => x.PropertyName == "Order");
+                    nameErrorClass = nameInvalid ? "govuk-input--error" : "";
+                    orderErrorClass = orderInvalid ? "govuk-input--error" : "";
+                }
+
+                @if (assessmentTool.ValidationResult != null && !assessmentTool.ValidationResult.IsValid)
+                {
+                    @await Html.PartialAsync("~/Features/Workflow/Views/Shared/_ValidationSummary.cshtml", assessmentTool.ValidationResult)
+                }
+                <tr class="govuk-table__row @errorFormClass">
+                    @using (Html.BeginForm("UpdateAssessmentTool", "Admin", FormMethod.Post))
+                    {
+                        <td class="govuk-table__cell">
+                            <div class="govuk-form-group">
+                                <input type="text" value="@assessmentTool.Name" name="UpdateAssessmentToolCommand.Name" class="govuk-input @nameErrorClass" />
+                                @if (assessmentTool.ValidationResult != null)
+                                {
+                                    @foreach (var error in assessmentTool.ValidationResult.Errors.Where(x => x.PropertyName == "Name"))
+                                    {
+                                        @Html.ValidationMessageFor(model => assessmentTool.Order, error.ErrorMessage, new { @class = "govuk-error-message" })
+                                    }
+                                }
+                            </div>
+                        </td>
+                        <td class="govuk-table__cell">
+                            <div class="govuk-form-group">
+                                <input type="text" value="@assessmentTool.Order" name="UpdateAssessmentToolCommand.Order" class="govuk-input @orderErrorClass" />
+                                @if (assessmentTool.ValidationResult != null)
+                                {
+                                    @foreach (var error in assessmentTool.ValidationResult.Errors.Where(x => x.PropertyName == "Order"))
+                                    {
+                                        @Html.ValidationMessageFor(model => assessmentTool.Order, error.ErrorMessage, new { @class = "govuk-error-message" })
+                                    }
+                                }
+                            </div>
+                        </td>
+                        <td class="govuk-table__cell">
+                            @Html.AntiForgeryToken()
+                            @Html.Hidden("UpdateAssessmentToolCommand.Id", assessmentTool.Id)
+                            <input class="govuk-button govuk-!-margin-0" data-module="govuk-button" id="Update" type="submit" value="Update" />
+                        </td>
+                    }
+                    <td class="govuk-table__cell">
+                        @Html.ActionLink("Remove", "GetAssessmentToolById", "Admin", new { assessmentToolId = assessmentTool.Id })
+                    </td>
+                    <td class="govuk-table__cell">
+                        <table class="govuk-table" style="margin-bottom: 0">
+                            <tbody class="govuk-table__body">
+                                @foreach (var assessmentToolWorkflow in assessmentTool.AssessmentToolWorkFlows)
+                                {
+                                    <tr class="govuk-table__row">
+                                        <td class="govuk-table__cell">
+                                            @assessmentToolWorkflow.WorkflowDefinitionId
+                                        </td>
+                                        <td class="govuk-table__cell">
+                                            @if (assessmentToolWorkflow.IsFirstWorkflow)
+                                            {
+                                                @:First workflow
+                                            }
+                                        </td>
+                                    </tr>
+                                }
+                        </table>
+                        @Html.ActionLink("Manage Assessmenttool Workflow", "AssessmentToolWorkflow", "Admin", new { assessmentToolId = assessmentTool.Id })
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
