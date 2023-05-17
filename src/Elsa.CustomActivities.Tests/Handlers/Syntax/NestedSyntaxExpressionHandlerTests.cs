@@ -9,8 +9,6 @@ using He.PipelineAssessment.Tests.Common;
 using Microsoft.Extensions.Logging;
 using Moq;
 using Newtonsoft.Json;
-using System;
-using System.Timers;
 using Xunit;
 
 namespace Elsa.CustomActivities.Tests.Handlers.Syntax
@@ -508,9 +506,11 @@ namespace Elsa.CustomActivities.Tests.Handlers.Syntax
             //Arrange
             var javascriptValue = "First Value";
             var stringValue = "Second Value";
-            var maxScoreValue = new Decimal(10);
+            var maxScoreValue = new Decimal?(10);
             var choiceScoreValue = new Decimal(4);
-            string value = WeightedScoreCheckboxJson(javascriptValue, stringValue, false, maxScoreValue, choiceScoreValue);
+            bool isPrepopulated = false;
+            bool isExclusiveToquestion = false;
+            string value = WeightedScoreCheckboxJson(javascriptValue, stringValue, false, maxScoreValue, choiceScoreValue, isPrepopulated, isExclusiveToquestion);
             Type type = typeof(WeightedCheckboxModel);
             Type choiceType = typeof(WeightedCheckboxRecord);
 
@@ -559,7 +559,7 @@ namespace Elsa.CustomActivities.Tests.Handlers.Syntax
                 secondChoiceProperty.Syntax!, context, CancellationToken.None)).Returns(Task.FromResult(Models.Result.Success<string?>(stringValue)));
 
             evaluator.Setup(x => x.TryEvaluateAsync<decimal>("4", SyntaxNames.Literal, context, CancellationToken.None)).Returns(Task.FromResult(Models.Result.Success(new Decimal(4))));
-            evaluator.Setup(x => x.TryEvaluateAsync<decimal>("10", SyntaxNames.Literal, context, CancellationToken.None)).Returns(Task.FromResult(Models.Result.Success(new Decimal(10))));
+            evaluator.Setup(x => x.TryEvaluateAsync<decimal?>("10", SyntaxNames.Literal, context, CancellationToken.None)).Returns(Task.FromResult(Models.Result.Success(new Decimal?(10))));
 
             NestedSyntaxExpressionHandler handler = new NestedSyntaxExpressionHandler(logger, serializer);
 
@@ -695,16 +695,16 @@ namespace Elsa.CustomActivities.Tests.Handlers.Syntax
             return JsonConvert.SerializeObject(records);
         }
 
-        private string WeightedScoreCheckboxJson(string firstValue, string secondValue, bool isSingle, decimal score, decimal choiceScore)
+        private string WeightedScoreCheckboxJson(string firstValue, string secondValue, bool isSingle, decimal? maxGroupScore, decimal choiceScore, bool IsPrepopulated, bool IsExclusiveToQuestion)
         {
             var groups = new List<WeightedCheckboxGroup>();
             var group = new WeightedCheckboxGroup();
             group.Choices = new List<WeightedCheckboxRecord>()
             {
-                     new WeightedCheckboxRecord("A", firstValue, isSingle,choiceScore, false) ,
-                     new WeightedCheckboxRecord("B", secondValue, isSingle,choiceScore , false)
+                new WeightedCheckboxRecord("A", firstValue, isSingle,choiceScore, IsPrepopulated, IsExclusiveToQuestion) ,
+                new WeightedCheckboxRecord("B", secondValue, isSingle,choiceScore , IsPrepopulated, IsExclusiveToQuestion)
             };
-            group.MaxGroupScore = score;
+            group.MaxGroupScore = maxGroupScore;
             group.GroupIdentifier = "GroupA";
             group.GroupArrayScore = new List<decimal>() { 1, 2, 3 };
             groups.Add(group);

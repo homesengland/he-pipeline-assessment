@@ -1,4 +1,5 @@
 ﻿@using He.PipelineAssessment.UI.Features.Workflow.ViewModels
+@using He.PipelineAssessment.UI.Helper
 @model He.PipelineAssessment.UI.Features.Workflow.ViewModels.Question
 @{
     var itemName = "Data.Questions[" + Model.Index + "].Decimal";
@@ -16,11 +17,11 @@
     
     <div class="govuk-input__wrapper">
         <div class="govuk-input__prefix" aria-hidden="true">£</div>
-       
-        <input id="@answerName" type="text" name="@itemName" class="govuk-input govuk-input--width-5 @errorFieldClass" @isReadOnly value="@Model.Decimal" />
+        <input id="@answerName" type="text" name="@itemName" class="govuk-input govuk-input--width-5 @errorFieldClass" @isReadOnly value="@Model.Decimal.ToCommaSeparatedNumber()" currency-formatter="true" />
     </div>
 
  
     @await Html.PartialAsync("_QuestionGuidance", Model.QuestionGuidance)
     @await Html.PartialAsync("_Comments", new Comment(){Index = Model.Index, CommentText = Model.Comments,DisplayComments = Model.DisplayComments})
 </div>
+

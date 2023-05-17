@@ -77,7 +77,8 @@ namespace He.PipelineAssessment.UI.Tests.Features.Admin.AssessmentToolManagement
                 x => x.UpdateAssessmentToolWorkflow(It.Is<AssessmentToolWorkflow>(y =>
                     y.WorkflowDefinitionId == updateAssessmentToolWorkflowCommand.WorkflowDefinitionId &&
                     y.IsFirstWorkflow == updateAssessmentToolWorkflowCommand.IsFirstWorkflow &&
-                    y.Name == updateAssessmentToolWorkflowCommand.Name)), Times.Once);
+                    y.Name == updateAssessmentToolWorkflowCommand.Name && 
+                    y.IsEconomistWorkflow == updateAssessmentToolWorkflowCommand.IsEconomistWorkflow)), Times.Once);
             Assert.Equal(2, result);
         }
     }

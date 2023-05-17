@@ -29,7 +29,7 @@ namespace He.PipelineAssessment.UI.Tests.Features.Workflow.LoadQuestionScreen
             assessmentRepository.Setup(x => x.GetAssessmentToolWorkflowInstance(loadWorkflowActivityRequest.WorkflowInstanceId))
                 .ReturnsAsync(assessmentToolWorkflowInstance);
 
-            roleValidation.Setup(x => x.ValidateRole(assessmentToolWorkflowInstance.AssessmentId)).ReturnsAsync(true);
+            roleValidation.Setup(x => x.ValidateRole(assessmentToolWorkflowInstance.AssessmentId, assessmentToolWorkflowInstance.WorkflowDefinitionId)).ReturnsAsync(true);
 
             elsaServerHttpClient.Setup(x => x.LoadQuestionScreen(It.IsAny<LoadWorkflowActivityDto>()))
                 .ReturnsAsync((WorkflowActivityDataDto?)null);
@@ -58,7 +58,7 @@ namespace He.PipelineAssessment.UI.Tests.Features.Workflow.LoadQuestionScreen
             assessmentRepository.Setup(x => x.GetAssessmentToolWorkflowInstance(loadWorkflowActivityRequest.WorkflowInstanceId))
                .ReturnsAsync(assessmentToolWorkflowInstance);
 
-            roleValidation.Setup(x => x.ValidateRole(assessmentToolWorkflowInstance.AssessmentId)).ReturnsAsync(true);
+            roleValidation.Setup(x => x.ValidateRole(assessmentToolWorkflowInstance.AssessmentId, assessmentToolWorkflowInstance.WorkflowDefinitionId)).ReturnsAsync(true);
 
             elsaServerHttpClient.Setup(x => x.LoadQuestionScreen(It.IsAny<LoadWorkflowActivityDto>()))
                 .ReturnsAsync(workflowActivityDataDto);
@@ -86,13 +86,13 @@ namespace He.PipelineAssessment.UI.Tests.Features.Workflow.LoadQuestionScreen
             assessmentRepository.Setup(x => x.GetAssessmentToolWorkflowInstance(loadWorkflowActivityRequest.WorkflowInstanceId))
                .ReturnsAsync(assessmentToolWorkflowInstance);
 
-            roleValidation.Setup(x => x.ValidateRole(assessmentToolWorkflowInstance.AssessmentId)).ReturnsAsync(false);
+            roleValidation.Setup(x => x.ValidateRole(assessmentToolWorkflowInstance.AssessmentId, assessmentToolWorkflowInstance.WorkflowDefinitionId)).ReturnsAsync(false);
 
             //Act
             var result = await sut.Handle(loadWorkflowActivityRequest, CancellationToken.None);
 
             //Assert
-            Assert.False(result!.IsCorrectBusinessArea);
+            Assert.False(result!.IsAuthorised);
         }
 
         [Theory]
@@ -111,7 +111,7 @@ namespace He.PipelineAssessment.UI.Tests.Features.Workflow.LoadQuestionScreen
 
             loadWorkflowActivityRequest.IsReadOnly = true;
 
-            roleValidation.Setup(x => x.ValidateRole(assessmentToolWorkflowInstance.AssessmentId)).ReturnsAsync(false);
+            roleValidation.Setup(x => x.ValidateRole(assessmentToolWorkflowInstance.AssessmentId, assessmentToolWorkflowInstance.WorkflowDefinitionId)).ReturnsAsync(false);
 
             //Act
             var result = await sut.Handle(loadWorkflowActivityRequest, CancellationToken.None);

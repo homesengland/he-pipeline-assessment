@@ -30,11 +30,11 @@ namespace He.PipelineAssessment.UI.Features.Workflow.CheckYourAnswersSaveAndCont
         {
             try
             {
-                if (!await _roleValidation.ValidateRole(request.AssessmentId))
+                if (!await _roleValidation.ValidateRole(request.AssessmentId, request.WorkflowDefinitionId))
                 {
                     return new CheckYourAnswersSaveAndContinueCommandResponse()
                     {
-                        IsCorrectBusinessArea = false
+                        IsAuthorised = false
                     };
                 }
                 else
@@ -65,7 +65,7 @@ namespace He.PipelineAssessment.UI.Features.Workflow.CheckYourAnswersSaveAndCont
                                 ActivityId = response.Data.NextActivityId,
                                 ActivityType = response.Data.ActivityType,
                                 WorkflowInstanceId = response.Data.WorkflowInstanceId,
-                                IsCorrectBusinessArea = true
+                                IsAuthorised = true
                             };
                             return await Task.FromResult(result);
                         }
