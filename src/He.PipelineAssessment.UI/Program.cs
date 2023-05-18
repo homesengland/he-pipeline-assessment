@@ -16,7 +16,6 @@ using He.PipelineAssessment.UI.Features.Admin.AssessmentToolManagement.Commands.
 using He.PipelineAssessment.UI.Features.Admin.AssessmentToolManagement.Commands.UpdateAssessmentToolWorkflowCommand;
 using He.PipelineAssessment.UI.Features.Admin.AssessmentToolManagement.Mappers;
 using He.PipelineAssessment.UI.Features.Admin.AssessmentToolManagement.Validators;
-using He.PipelineAssessment.UI.Features.Economist.AssessmentToolManagement.Mappers;
 using He.PipelineAssessment.UI.Features.SinglePipeline.Sync;
 using He.PipelineAssessment.UI.Features.Workflow.QuestionScreenSaveAndContinue;
 using MediatR;
@@ -53,7 +52,6 @@ builder.Services.AddHttpClient("ElsaServerClient", client =>
 builder.Services.AddScoped<IElsaServerHttpClient, ElsaServerHttpClient>();
 builder.Services.AddScoped<IQuestionScreenSaveAndContinueMapper, QuestionScreenSaveAndContinueMapper>();
 builder.Services.AddScoped<IAssessmentToolMapper, AssessmentToolMapper>();
-builder.Services.AddScoped<IEconomistAssessmentToolMapper, EconomistAssessmentToolMapper>();
 builder.Services.AddScoped<IAssessmentToolWorkflowMapper, AssessmentToolWorkflowMapper>();
 builder.Services.AddScoped<NonceConfig>();
 

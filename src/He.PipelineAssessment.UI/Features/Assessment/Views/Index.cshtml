@@ -20,26 +20,24 @@
 
     @if ((await AuthorizationService.AuthorizeAsync(User, Constants.AuthorizationPolicies.AssignmentToPipelineAdminRoleRequired)).Succeeded)
     {
-        if (User.IsInRole(Constants.AppRole.PipelineEconomist))
-        {
-            // Here we have to return
-            <div class="govuk-grid-column-one-quarter">
-                <div class="govuk-grid-row">
-                    @Html.ActionLink("Economist", "AssessmentTool","Economist", null, new{@class="govuk-link pull-right govuk-grid-column-one-half govuk-!-font-size-24"})
-                    @Html.ActionLink("Sync", "Sync", "SinglePipeline",null,new{@class="govuk-button pull-right govuk-grid-column-one-half"})
-                </div>
-            </div>
-        }
-        else
-        {
 
-            <div class="govuk-grid-column-one-quarter">
-                <div class="govuk-grid-row">
-                    @Html.ActionLink("Admin", "AssessmentTool","Admin", null, new{@class="govuk-link pull-right govuk-grid-column-one-half govuk-!-font-size-24"})
-                    @Html.ActionLink("Sync", "Sync", "SinglePipeline",null,new{@class="govuk-button pull-right govuk-grid-column-one-half"})
-                </div>
+        <div class="govuk-grid-column-one-quarter">
+            <div class="govuk-grid-row">
+                @Html.ActionLink("Admin", "AssessmentTool","Admin", null, new{@class="govuk-link pull-right govuk-grid-column-one-half govuk-!-font-size-24"})
+                @Html.ActionLink("Sync", "Sync", "SinglePipeline",null,new{@class="govuk-button pull-right govuk-grid-column-one-half"})
             </div>
-        }
+        </div>
+    }
+
+    @if ((await AuthorizationService.AuthorizeAsync(User, Constants.AuthorizationPolicies.AssignmentToWorkflowEconomistRoleRequired)).Succeeded)
+    {
+        // Here we have to return
+        <div class="govuk-grid-column-one-quarter">
+            <div class="govuk-grid-row">
+                @Html.ActionLink("Economist", "GetEconomistList","Economist", null, new{@class="govuk-link pull-right govuk-grid-column-one-half govuk-!-font-size-24"})
+            </div>
+        </div>
+
     }
 
 </div>
