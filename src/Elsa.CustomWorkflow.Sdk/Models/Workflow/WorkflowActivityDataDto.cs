@@ -1,5 +1,6 @@
 ﻿using Elsa.CustomModels;
 using FluentValidation.Results;
+using System.Data;
 using System.Globalization;
 
 namespace Elsa.CustomWorkflow.Sdk.Models.Workflow
@@ -76,6 +77,8 @@ namespace Elsa.CustomWorkflow.Sdk.Models.Workflow
         public Date Date { get { return GetDate(); } set { SetDate(value); } }
 
         public Information Information { get; set; } = new Information();
+
+        public DataTableInput DataTable { get; set; } = new DataTableInput();
 
         #region Getters
         public Date GetDate()
@@ -319,6 +322,18 @@ namespace Elsa.CustomWorkflow.Sdk.Models.Workflow
         public bool IsGuidance { get; set; } = false;
         public bool IsHyperlink { get; set; } = false;
         public string? Url { get; set; }
+    }
+
+    public class DataTableInput
+    {
+        public List<TableInput> Inputs { get; set; } = new List<TableInput>();
+        public Type InputType { get; set; } = typeof(string);
+    }
+
+    public class TableInput
+    {
+        public string Title { get; set; } = null!;
+        public string? Input { get; set; }
     }
 }
 

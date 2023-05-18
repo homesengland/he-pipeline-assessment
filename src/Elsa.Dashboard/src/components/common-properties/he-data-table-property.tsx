@@ -185,25 +185,6 @@ export class HeDataTableProperty {
     const selectedType = this.propertyModel.expressions[DataTableSyntax.InputType];
     return (
       <div>
-
-        <div class="elsa-mb-1">
-          <div class="elsa-flex">
-            <div class="elsa-flex-1">
-              <label class="elsa-block elsa-text-sm elsa-font-medium elsa-text-gray-700">Table Header</label>
-            </div>
-          </div>
-        </div>
-
-        <div>
-          <div>
-            <input type="text" value={this.propertyModel.expressions[DataTableSyntax.TableHeader]} onChange={e => this.UpdateInput(e, this.propertyModel, DataTableSyntax.TableHeader)}
-              class="focus:elsa-ring-blue-500 focus:elsa-border-bue-500 elsa-block elsa-w-full elsa-min-w-0 elsa-rounded-md sm:elsa-text-sm elsa-border-gray-300" />
-          </div>
-          <p class="elsa-mt-2 elsa-text-sm elsa-text-gray-500">The header for the table as displayed in the assessment.</p>
-        </div>
-
-        <br/>
-
         <div class="elsa-mb-1">
           <div class="elsa-flex">
             <div class="elsa-flex-1">

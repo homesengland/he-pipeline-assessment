@@ -33,6 +33,7 @@ namespace Elsa.CustomActivities.Activities.QuestionScreen
                 QuestionTypeConstants.DateQuestion,
                 QuestionTypeConstants.TextQuestion,
                 QuestionTypeConstants.TextAreaQuestion,
+                QuestionTypeConstants.DataTable,
                 QuestionTypeConstants.WeightedCheckboxQuestion, 
                 QuestionTypeConstants.WeightedRadioQuestion
             })]
@@ -52,6 +53,7 @@ namespace Elsa.CustomActivities.Activities.QuestionScreen
                 QuestionTypeConstants.DateQuestion, 
                 QuestionTypeConstants.TextQuestion, 
                 QuestionTypeConstants.TextAreaQuestion,
+                QuestionTypeConstants.DataTable,
                 QuestionTypeConstants.WeightedCheckboxQuestion,
                 QuestionTypeConstants.WeightedRadioQuestion
             })]

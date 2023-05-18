@@ -25,6 +25,7 @@ export class QuestionCategories {
 export class DataTableSyntax {
   static readonly InputType = "InputType";
   static readonly TableHeader = "TableHeader";
+  static readonly Title = "Title";
 }
 
 export class CheckboxOptionsSyntax {

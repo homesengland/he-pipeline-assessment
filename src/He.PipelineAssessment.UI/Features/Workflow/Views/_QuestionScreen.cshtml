@@ -349,6 +349,38 @@
                        }
                    })
         }
+                    @if (Model.Data.Questions![i].QuestionType == QuestionTypeConstants.DataTable)
+                    {
+
+                        @await Html.PartialAsync("_DataTableQuestion",new Question()
+            {
+            Index = i,
+            IsValid = isValidItem,
+            Answers = Model.Data.Questions[i].Answers.Select(x => new QuestionActivityAnswer
+            {
+            Answer = x.AnswerText,
+            ChoiceId = x.ChoiceId,
+            Score = x.Score
+            }).ToList(),
+            IsReadOnly = Model.Data.Questions[i].IsReadOnly,
+            Comments = Model.Data.Questions[i].Comments,
+            DisplayComments = Model.Data.Questions[i].DisplayComments,
+            QuestionText = Model.Data.Questions[i].Question,
+            QuestionGuidance = Model.Data.Questions[i].QuestionGuidance,
+            QuestionHint = Model.Data.Questions[i].QuestionHint,
+            QuestionId = Model.Data.Questions[i].QuestionId,
+            QuestionType = Model.Data.Questions[i].QuestionType,
+            Title = Model.Data.Questions[i].Title,
+            DataTable = new DataTable{
+            InputType = Model.Data.Questions[i].DataTable.InputType,
+            Inputs = Model.Data.Questions[i].DataTable.Inputs.Select(x => 
+            new TableInput{
+                InputHeading = x.Title,
+                Input = x.Input
+            }).ToList()
+            }
+            })
+            }
     }
 }
 </fieldset>

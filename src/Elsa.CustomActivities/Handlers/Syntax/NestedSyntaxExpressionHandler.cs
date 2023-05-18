@@ -162,7 +162,7 @@ namespace Elsa.CustomActivities.Handlers.Syntax
             if (propertyType != null && propertyType == typeof(DataTable))
             {
                 DataTable result = new DataTable();
-                var tableInputType = property.Expressions?[DataTableSyntaxNames.InputType] ?? "string";
+                var tableInputType = property.Expressions?[DataTableSyntaxNames.InputType] ?? "text";
                 Type inputType = _dataTableExpressionHandler.InputTypeStringToType(tableInputType);
                 result.TypeOfInput = inputType;
 

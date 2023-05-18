@@ -1,4 +1,5 @@
-﻿using Elsa.CustomModels;
+﻿using Elsa.CustomActivities.Activities.Common;
+using Elsa.CustomModels;
 
 namespace Elsa.Server.Features.Workflow.LoadQuestionScreen
 {
@@ -34,6 +35,7 @@ namespace Elsa.Server.Features.Workflow.LoadQuestionScreen
         public Checkbox Checkbox { get; set; } = null!;
         public Radio Radio { get; set; } = null!;
         public Information Information { get; set; } = null!;
+        public DataTableInput DataTable { get; set; } = null!;
         public bool IsReadOnly { get; set; }
         public List<Answer> Answers { get; set; } = new();
 
@@ -60,6 +62,12 @@ namespace Elsa.Server.Features.Workflow.LoadQuestionScreen
     public class Information
     {
         public InformationText[] InformationTextList { get; set; } = new List<InformationText>().ToArray();
+    }
+
+    public class DataTableInput
+    {
+        public Type InputType { get; set; } = null!;
+        public TableInput[] Inputs { get; set; } = new List<TableInput>().ToArray();
     }
 
 }

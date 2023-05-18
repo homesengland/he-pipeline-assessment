@@ -196,6 +196,12 @@ namespace Elsa.Server.Features.Workflow.LoadQuestionScreen
                     .Select(x => new InformationText() { Text = x.Text, IsGuidance = x.IsGuidance, IsParagraph = x.IsParagraph, IsHyperlink = x.IsHyperlink, Url = x.Url })
                     .ToArray();
             }
+            if(item.QuestionType == QuestionTypeConstants.DataTable)
+            {
+                questionActivityData.DataTable = new DataTableInput();
+                questionActivityData.DataTable.Inputs = item.DataTable.Inputs.ToArray();
+                questionActivityData.DataTable.InputType = item.DataTable.TypeOfInput;
+            }
 
             return questionActivityData;
         }

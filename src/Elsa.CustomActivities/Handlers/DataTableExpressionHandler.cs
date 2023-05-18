@@ -39,7 +39,7 @@ namespace Elsa.CustomActivities.Handlers
 
         private async Task<TableInput> ElsaPropertyToTableInput(ElsaProperty property, IExpressionEvaluator evaluator, ActivityExecutionContext context)
         {
-            string title = property.Expressions[DataTableSyntaxNames.Title];
+            string title = property.Name;
             string? input = await property.EvaluateFromExpressions<string?>(evaluator, context, _logger, CancellationToken.None);
             return new TableInput(title, input);
         }
@@ -58,7 +58,7 @@ namespace Elsa.CustomActivities.Handlers
 
         public Type InputTypeStringToType(string inputTypeText)
         {
-            switch (inputTypeText)
+            switch (inputTypeText.ToLower())
             {
                 case "currency":  case "decimal":
                     return typeof(decimal);

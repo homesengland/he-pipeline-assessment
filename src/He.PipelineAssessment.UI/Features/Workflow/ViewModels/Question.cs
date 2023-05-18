@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using System.Data;
 
 namespace He.PipelineAssessment.UI.Features.Workflow.ViewModels
 {
@@ -22,6 +23,9 @@ namespace He.PipelineAssessment.UI.Features.Workflow.ViewModels
         public Radio Radio { get; set; } = new Radio();
         public Checkbox Checkbox { get; set; } = new Checkbox();
         public Information Information { get; set; } = new Information();
+
+        public DataTable DataTable { get; set; } = new DataTable();
+
         public int? CharacterLimit { get; set; }
     }
 
@@ -42,6 +46,12 @@ namespace He.PipelineAssessment.UI.Features.Workflow.ViewModels
         public int? SelectedAnswer { get; set; }
     }
 
+    public class DataTable
+    {
+        public List<TableInput> Inputs { get; set; } = new List<TableInput>();
+        public Type InputType { get; set; } = typeof(string)!;
+    }
+
     public class InformationText
     {
         public string Text { get; set; } = null!;
@@ -49,6 +59,12 @@ namespace He.PipelineAssessment.UI.Features.Workflow.ViewModels
         public bool IsGuidance { get; set; } = false;
         public bool IsHyperlink { get; set; } = false;
         public string? Url { get; set; }
+    }
+
+    public class TableInput
+    {
+        public string InputHeading { get; set; } = null!;
+        public string? Input { get; set; }
     }
 
 
