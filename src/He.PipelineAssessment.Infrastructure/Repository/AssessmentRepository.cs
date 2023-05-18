@@ -11,6 +11,8 @@ namespace He.PipelineAssessment.Infrastructure.Repository
         Task<AssessmentToolWorkflowInstance?> GetAssessmentToolWorkflowInstance(string workflowInstance);
        
         Task<AssessmentToolInstanceNextWorkflow?> GetAssessmentToolInstanceNextWorkflow(int assessmentToolWorkflowInstanceId, string workflowDefinitionId);
+        Task<AssessmentToolInstanceNextWorkflow?> GetNonStartedAssessmentToolInstanceNextWorkflow(int assessmentToolWorkflowInstanceId, string workflowDefinitionId);
+        Task<AssessmentToolInstanceNextWorkflow?> GetNonStartedAssessmentToolInstanceNextWorkflowByAssessmentId(int assessmentId, string workflowDefinitionId);
         Task<IEnumerable<AssessmentToolWorkflowInstance>> GetAssessmentToolWorkflowInstances(int assessmentId);
 
         Task<int> CreateAssessments(List<Assessment> assessments);
@@ -52,6 +54,22 @@ namespace He.PipelineAssessment.Infrastructure.Repository
             return await context.Set<AssessmentToolInstanceNextWorkflow>().FirstOrDefaultAsync(x =>
                 x.AssessmentToolWorkflowInstanceId == assessmentToolWorkflowInstanceId &&
                 x.NextWorkflowDefinitionId == workflowDefinitionId);
+        }
+
+        public async Task<AssessmentToolInstanceNextWorkflow?> GetNonStartedAssessmentToolInstanceNextWorkflow(int assessmentToolWorkflowInstanceId, string workflowDefinitionId)
+        {
+            return await context.Set<AssessmentToolInstanceNextWorkflow>().FirstOrDefaultAsync(x =>
+                x.AssessmentToolWorkflowInstanceId == assessmentToolWorkflowInstanceId &&
+                x.NextWorkflowDefinitionId == workflowDefinitionId &&
+                x.IsStarted == false);
+        }
+
+        public async Task<AssessmentToolInstanceNextWorkflow?> GetNonStartedAssessmentToolInstanceNextWorkflowByAssessmentId(int assessmentId, string workflowDefinitionId)
+        {
+            return await context.Set<AssessmentToolInstanceNextWorkflow>().FirstOrDefaultAsync(x =>
+                x.AssessmentId == assessmentId &&
+                x.NextWorkflowDefinitionId == workflowDefinitionId &&
+                x.IsStarted == false);
         }
 
         public async Task<IEnumerable<AssessmentToolWorkflowInstance>> GetAssessmentToolWorkflowInstances(int assessmentId)

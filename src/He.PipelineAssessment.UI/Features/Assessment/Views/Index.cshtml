@@ -16,31 +16,27 @@
 
 <div class="govuk-grid-row">
 
-    <h1 class="govuk-heading-l govuk-grid-column-three-quarters pull-left" for="event-name">Assessment Search</h1>
+    <h1 class="govuk-heading-l govuk-grid-column-one-quarter pull-left" for="event-name">Assessment Search</h1>
+    <div class="govuk-grid-column-three-quarters pull-right">
 
-    @if ((await AuthorizationService.AuthorizeAsync(User, Constants.AuthorizationPolicies.AssignmentToPipelineAdminRoleRequired)).Succeeded)
-    {
+        @if ((await AuthorizationService.AuthorizeAsync(User, Constants.AuthorizationPolicies.AssignmentToPipelineAdminRoleRequired)).Succeeded)
+        {
+            @Html.ActionLink("Sync", "Sync", "SinglePipeline", null, new { @class = "govuk-button pull-right govuk-!-padding-right-2" })
+        }
+        @if ((await AuthorizationService.AuthorizeAsync(User, Constants.AuthorizationPolicies.AssignmentToPipelineAdminRoleRequired)).Succeeded)
+        {
+            @Html.ActionLink("Admin", "AssessmentTool", "Admin", null, new { @class = "govuk-link pull-right  govuk-!-font-size-24 govuk-!-padding-right-2" })
+        }
+        @if ((await AuthorizationService.AuthorizeAsync(User, Constants.AuthorizationPolicies.AssignmentToWorkflowEconomistRoleRequired)).Succeeded)
+        {
+            @Html.ActionLink("Economist", "GetEconomistList","Economist", null, new{@class="govuk-link pull-right  govuk-!-font-size-24 govuk-!-padding-right-2"})
+        }
 
-        <div class="govuk-grid-column-one-quarter">
-            <div class="govuk-grid-row">
-                @Html.ActionLink("Admin", "AssessmentTool","Admin", null, new{@class="govuk-link pull-right govuk-grid-column-one-half govuk-!-font-size-24"})
-                @Html.ActionLink("Sync", "Sync", "SinglePipeline",null,new{@class="govuk-button pull-right govuk-grid-column-one-half"})
-            </div>
-        </div>
-    }
 
-    @if ((await AuthorizationService.AuthorizeAsync(User, Constants.AuthorizationPolicies.AssignmentToWorkflowEconomistRoleRequired)).Succeeded)
-    {
-        // Here we have to return
-        <div class="govuk-grid-column-one-quarter">
-            <div class="govuk-grid-row">
-                @Html.ActionLink("Economist", "GetEconomistList","Economist", null, new{@class="govuk-link pull-right govuk-grid-column-one-half govuk-!-font-size-24"})
-            </div>
-        </div>
 
-    }
-
+    </div>
 </div>
+
 <br />
 
 <div class="text-center">
