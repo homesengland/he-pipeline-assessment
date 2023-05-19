@@ -4,6 +4,10 @@
 @model QuestionScreenSaveAndContinueCommand
 @inject NonceConfig nonceConfig
 
+@{
+    List<string?> usedDisplayGroupIds = new List<string?>();
+}
+
 <div class="govuk-form-group">
 <div class="govuk-!-padding-bottom-6">
 <fieldset class="govuk-fieldset" aria-describedby="waste-hint">
@@ -352,36 +356,46 @@
                     @if (Model.Data.Questions![i].QuestionType == QuestionTypeConstants.DataTable)
                     {
 
-                        @await Html.PartialAsync("_DataTableQuestion",new Question()
-            {
-            Index = i,
-            IsValid = isValidItem,
-            Answers = Model.Data.Questions[i].Answers.Select(x => new QuestionActivityAnswer
-            {
-            Answer = x.AnswerText,
-            ChoiceId = x.ChoiceId,
-            Score = x.Score
-            }).ToList(),
-            IsReadOnly = Model.Data.Questions[i].IsReadOnly,
-            Comments = Model.Data.Questions[i].Comments,
-            DisplayComments = Model.Data.Questions[i].DisplayComments,
-            QuestionText = Model.Data.Questions[i].Question,
-            QuestionGuidance = Model.Data.Questions[i].QuestionGuidance,
-            QuestionHint = Model.Data.Questions[i].QuestionHint,
-            QuestionId = Model.Data.Questions[i].QuestionId,
-            QuestionType = Model.Data.Questions[i].QuestionType,
-            Title = Model.Data.Questions[i].Title,
-            DataTable = new DataTable{
-                DisplayGroupId = Model.Data.Questions[i].DataTable.DisplayGroupId,
-            InputType = Model.Data.Questions[i].DataTable.InputType,
-            Inputs = Model.Data.Questions[i].DataTable.Inputs.Select(x => 
-            new TableInput{
-                InputHeading = x.Title,
-                Input = x.Input
-            }).ToList()
-            }
-            })
-            }
+                        Question dataTableQuestion = new Question()
+                        {
+                            Index = i,
+                            IsValid = isValidItem,
+                            Answers = Model.Data.Questions[i].Answers.Select(x => new QuestionActivityAnswer
+                            {
+                                Answer = x.AnswerText,
+                                ChoiceId = x.ChoiceId,
+                                Score = x.Score
+                            }).ToList(),
+                            IsReadOnly = Model.Data.Questions[i].IsReadOnly,
+                            Comments = Model.Data.Questions[i].Comments,
+                            DisplayComments = Model.Data.Questions[i].DisplayComments,
+                            QuestionText = Model.Data.Questions[i].Question,
+                            QuestionGuidance = Model.Data.Questions[i].QuestionGuidance,
+                            QuestionHint = Model.Data.Questions[i].QuestionHint,
+                            QuestionId = Model.Data.Questions[i].QuestionId,
+                            QuestionType = Model.Data.Questions[i].QuestionType,
+                            Title = Model.Data.Questions[i].Title,
+                            DataTable = Model.Data.Questions.Where(q => q.QuestionType == QuestionTypeConstants.DataTable
+                            && !usedDisplayGroupIds.Contains(q.DataTable.DisplayGroupId)
+                            && q.DataTable.DisplayGroupId == Model.Data.Questions[i].DataTable.DisplayGroupId)
+                        .Select(x => new DataTable
+                        {
+                            QuestionIndex = Model.Data.Questions.FindIndex(l => l.QuestionId == x.QuestionId),
+                            DisplayGroupId = x.DataTable.DisplayGroupId,
+                            InputType = x.DataTable.InputType,
+                            Inputs = x.DataTable.Inputs.Select(y =>
+                new TableInput
+                {
+                    InputHeading = y.Title,
+                    Input = y.Input
+                }).ToList()
+                        }).ToList(),
+                        };
+
+                        usedDisplayGroupIds.Add(Model.Data.Questions[i].DataTable.DisplayGroupId);
+                                    @await Html.PartialAsync("_DataTableQuestion", dataTableQuestion )
+                        }
+                    }
     }
 }
 </fieldset>

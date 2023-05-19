@@ -15,67 +15,46 @@
 
     @{
         var dataTable = Model.DataTable;
-        var hiddenInputType = "Data.Questions[" + Model.Index + "].DataTable.InputType";
+        
     }
 
-    <input type="hidden" name="@hiddenInputType" value="@Model.DataTable.InputType" />
-
-    @for (int i = 0; i < Model.DataTable.Inputs.Count(); i++)
+    @for(int i = 0; i < Model.DataTable.Count(); i++)
     {
-        var hiddenItemNameAnswer = "Data.Questions[" + Model.Index + "].DataTable.Inputs[" + i + "].Input";
-        var hiddenItemNameId = "Data.Questions[" + Model.Index + "].DataTable.Inputs[" + i + "].Title";
-@*        <input type="hidden" name="@hiddenItemNameAnswer" value="@Model.DataTable.Inputs[i].Input" />*@
-        <input type="hidden" name="@hiddenItemNameId" value="@Model.DataTable.Inputs[i].InputHeading" />
+        var hiddenInputType = "Data.Questions[" + Model.DataTable[i].QuestionIndex + "].DataTable.InputType";
+        var hiddenGroupingId = "Data.Questions[" + Model.DataTable[i].QuestionIndex + "].DataTable.DisplayGroupId";
+
+        <input type = "hidden" name = "@hiddenInputType" value = "@Model.DataTable[i].InputType" />
+        <input type="hidden" name="@hiddenGroupingId" value="@Model.DataTable[i].DisplayGroupId" />
+        
+
+        @for (int h = 0; h < Model.DataTable[i].Inputs.Count(); h++)
+        {
+            var hiddenItemNameId = "Data.Questions[" + Model.DataTable[i].QuestionIndex + "].DataTable.Inputs[" + i + "].Title";
+            <input type="hidden" name="@hiddenItemNameId" value="@Model.DataTable[i].Inputs[h].InputHeading" />
+        }
     }
-@*
-    <div class="scroll-table">
-        <h2 class="govuk-heading-m">@Model.QuestionText</h2>
-        <table class="govuk-table">
-            <thead class="govuk-table__head">
-                <tr class="govuk-table__row">
-                    @foreach (var input in dataTable.Inputs)
-                    {
-                        <th scope="col" class="govuk-table__header">@input.InputHeading</th>
-                    }
-                </tr>
-            </thead>
-            <tbody>
-                <tr>
-                    @for(int i = 0; i < Model.DataTable.Inputs.Count(); i++)
-                    {
-                        var specificItemName = itemName + "[" + i + "].Input";
-                        <td class="govuk-table__cell">
 
-                            <input id="@specificItemName"
-                               type="text"
-                               name="@specificItemName"
-                               class="govuk-input govuk-input--width-scroll-table"
-                               @errorFormClass
-                               @isReadOnly
-                               value="@Model.DataTable.Inputs[i].Input" />
-                        </td>
-                    }
-                </tr>
-            </tbody>
-            </table>
-        @await Html.PartialAsync("_QuestionHint", Model.QuestionHint)
-        </div>
-
-
-        <br />*@
+    @{
+         DataTable largestDataTable = Model.DataTable.OrderByDescending(x => x.Inputs.Count()).FirstOrDefault()!;
+    }
 
     <div class="govuk-grid-row">
         <div class="govuk-grid-column-two-thirds-from-desktop">
             <dl class="govuk-summary-list govuk-!-margin-bottom-9">
-                @for (int i = 0; i < Model.DataTable.Inputs.Count(); i++)
+                @for (int i = 0; i < largestDataTable.Inputs.Count(); i++)
                 {
                     var specificItemName = itemName + "[" + i + "].Input";
                     <div class="govuk-summary-list__row">
                         <dt class="govuk-summary-list__key">
-                            @Model.DataTable.Inputs[i].InputHeading
-  
+                            @largestDataTable.Inputs[i].InputHeading
                         </dt>
-                        <dd class="govuk-summary-list__value">
+                        @for(int q = 0; q < Model.DataTable.Count(); q++)
+                        {
+                            var input = Model.DataTable[q].Inputs.ElementAtOrDefault(i);
+                            bool hasNullInput = input == null;
+                            var inputValue = hasNullInput ? "" : Model.DataTable[q].Inputs[i].Input;
+                            bool disableInput = Model.IsReadOnly || hasNullInput;
+                            <dd class="govuk-summary-list__value">
                             <div class="govuk-input__wrapper">
 
                                 <div class="govuk-input__prefix" aria-hidden="true">£</div>
@@ -84,11 +63,12 @@
                                    name="@specificItemName"
                                    class="govuk-input govuk-input--width-5"
                                    @errorFormClass
-                                   @isReadOnly
-                                   value="@Model.DataTable.Inputs[i].Input" />
+                                   @disableInput
+                                   value="@inputValue" />
 
                             </div>
                         </dd>
+                        }
                     </div>
                 }
             </dl>

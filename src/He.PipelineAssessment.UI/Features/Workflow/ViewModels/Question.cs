@@ -25,7 +25,7 @@ namespace He.PipelineAssessment.UI.Features.Workflow.ViewModels
         public Checkbox Checkbox { get; set; } = new Checkbox();
         public Information Information { get; set; } = new Information();
 
-        public DataTable DataTable { get; set; } = new DataTable();
+        public List<DataTable> DataTable { get; set; } = new List<DataTable>();
 
         public int? CharacterLimit { get; set; }
     }
@@ -49,6 +49,7 @@ namespace He.PipelineAssessment.UI.Features.Workflow.ViewModels
 
     public class DataTable
     {
+        public int QuestionIndex { get; set; }
         public List<TableInput> Inputs { get; set; } = new List<TableInput>();
         public Type InputType { get; set; } = typeof(string)!;
 
