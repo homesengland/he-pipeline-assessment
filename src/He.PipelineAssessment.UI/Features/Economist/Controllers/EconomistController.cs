@@ -5,16 +5,10 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace He.PipelineAssessment.UI.Features.Economist.Controllers;
+[Authorize(Policy = Constants.AuthorizationPolicies.AssignmentToWorkflowEconomistRoleRequired)]
 public class EconomistController : BaseController<EconomistController>
 {
     public EconomistController(IMediator mediator, ILogger<EconomistController> logger) : base(mediator, logger){}
-
-    [Authorize(Policy = Constants.AuthorizationPolicies.AssignmentToWorkflowEconomistRoleRequired)]
-    public IActionResult Index()
-    {
-        return View();
-    }
-
 
     [Authorize(Policy = Constants.AuthorizationPolicies.AssignmentToWorkflowEconomistRoleRequired)]
     public async Task<IActionResult> GetEconomistList()
