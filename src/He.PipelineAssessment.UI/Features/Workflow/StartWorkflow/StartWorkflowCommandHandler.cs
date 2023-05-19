@@ -56,6 +56,17 @@ namespace He.PipelineAssessment.UI.Features.Workflow.StartWorkflow
 
                     await _assessmentRepository.CreateAssessmentToolWorkflowInstance(assessmentStage);
 
+                    //if there is a next workflow record for the current set it to started
+                    var nextWorkflow =
+                        await _assessmentRepository.GetNonStartedAssessmentToolInstanceNextWorkflowByAssessmentId(request.AssessmentId,
+                            request.WorkflowDefinitionId);
+
+                    if (nextWorkflow!=null)
+                    {
+                        nextWorkflow.IsStarted = true;
+                        await _assessmentRepository.SaveChanges();
+                    }
+
                     return await Task.FromResult(result);
                 }
                 else
