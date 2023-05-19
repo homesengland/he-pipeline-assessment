@@ -44,7 +44,7 @@ namespace He.PipelineAssessment.Infrastructure.Repository.StoredProcedure
         public async Task<List<AssessmentDataViewModel>> GetEconomistAssessments()
         {
             var assessmentData = await _storeProcContext.AssessmentDataViewModel
-                .FromSqlRaw(sp_AssessmentData).ToListAsync();
+                .FromSqlRaw(sp_EconomistAssessmentData).ToListAsync();
             return new List<AssessmentDataViewModel>(assessmentData);
         }
 
