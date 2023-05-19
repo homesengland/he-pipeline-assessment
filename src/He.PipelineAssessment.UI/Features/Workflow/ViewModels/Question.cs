@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using Microsoft.Extensions.Diagnostics.HealthChecks;
+using System.ComponentModel.DataAnnotations;
 using System.Data;
 
 namespace He.PipelineAssessment.UI.Features.Workflow.ViewModels
@@ -50,6 +51,8 @@ namespace He.PipelineAssessment.UI.Features.Workflow.ViewModels
     {
         public List<TableInput> Inputs { get; set; } = new List<TableInput>();
         public Type InputType { get; set; } = typeof(string)!;
+
+        public string? DisplayGroupId { get; set; }
     }
 
     public class InformationText

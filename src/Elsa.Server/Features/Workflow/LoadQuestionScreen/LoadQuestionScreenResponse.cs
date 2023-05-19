@@ -66,6 +66,7 @@ namespace Elsa.Server.Features.Workflow.LoadQuestionScreen
 
     public class DataTableInput
     {
+        public string? DisplayGroupId { get; set; }
         public Type InputType { get; set; } = null!;
         public TableInput[] Inputs { get; set; } = new List<TableInput>().ToArray();
     }

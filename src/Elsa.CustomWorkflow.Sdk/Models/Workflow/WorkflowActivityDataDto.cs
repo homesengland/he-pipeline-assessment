@@ -78,7 +78,9 @@ namespace Elsa.CustomWorkflow.Sdk.Models.Workflow
 
         public Information Information { get; set; } = new Information();
 
-        public DataTableInput DataTable { get; set; } = new DataTableInput();
+        private DataTableInput _dataTable = new DataTableInput();
+
+        public DataTableInput DataTable { get { return _dataTable; } set { SetDataTable(value); } }
 
         #region Getters
         public Date GetDate()
@@ -170,6 +172,14 @@ namespace Elsa.CustomWorkflow.Sdk.Models.Workflow
                 Answers = new List<QuestionActivityAnswer>();
                 List<Choice> selectedChoices = _checkbox.Choices.Where(c => _checkbox.SelectedChoices.Contains(c.Id)).ToList();
                 SetChoiceAnswers(selectedChoices);
+            }
+        }
+
+        public void SetDataTable(DataTableInput value)
+        {
+            if (QuestionType == QuestionTypeConstants.DataTable || QuestionType == QuestionTypeConstants.DataTable)
+            {
+                _dataTable = value;
             }
         }
 
@@ -328,6 +338,7 @@ namespace Elsa.CustomWorkflow.Sdk.Models.Workflow
     {
         public List<TableInput> Inputs { get; set; } = new List<TableInput>();
         public Type InputType { get; set; } = typeof(string);
+        public string? DisplayGroupId { get; set; }
     }
 
     public class TableInput

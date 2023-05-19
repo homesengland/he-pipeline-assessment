@@ -26,6 +26,7 @@ export class DataTableSyntax {
   static readonly InputType = "InputType";
   static readonly TableHeader = "TableHeader";
   static readonly Title = "Title";
+  static readonly DisplayGroupId = "DisplayGroupId";
 }
 
 export class CheckboxOptionsSyntax {

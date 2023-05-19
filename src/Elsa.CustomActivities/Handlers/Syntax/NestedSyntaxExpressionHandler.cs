@@ -164,8 +164,13 @@ namespace Elsa.CustomActivities.Handlers.Syntax
                 DataTable result = new DataTable();
                 var tableInputType = property.Expressions?[DataTableSyntaxNames.InputType] ?? "text";
                 Type inputType = _dataTableExpressionHandler.InputTypeStringToType(tableInputType);
+                if (property.Expressions!.ContainsKey(DataTableSyntaxNames.DisplayGroupId))
+                {
+                    string? displayGroupId = property.Expressions?[DataTableSyntaxNames.DisplayGroupId] ?? null;
+                    result.DisplayGroupId = displayGroupId;
+                }
+                
                 result.TypeOfInput = inputType;
-
                 var parsedProperties = ParseToList(property);
                 if (parsedProperties != null)
                 {

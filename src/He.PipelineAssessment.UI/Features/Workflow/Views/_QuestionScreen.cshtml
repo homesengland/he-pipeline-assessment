@@ -372,6 +372,7 @@
             QuestionType = Model.Data.Questions[i].QuestionType,
             Title = Model.Data.Questions[i].Title,
             DataTable = new DataTable{
+                DisplayGroupId = Model.Data.Questions[i].DataTable.DisplayGroupId,
             InputType = Model.Data.Questions[i].DataTable.InputType,
             Inputs = Model.Data.Questions[i].DataTable.Inputs.Select(x => 
             new TableInput{

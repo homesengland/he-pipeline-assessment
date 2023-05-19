@@ -1,29 +1,33 @@
 ﻿@using He.PipelineAssessment.UI.Features.Workflow.ViewModels
 @model He.PipelineAssessment.UI.Features.Workflow.ViewModels.Question
 
-@functions {
-    private bool IsInGroup(List<Choice> groupCheckboxChoices, Choice checkboxChoice)
-    {
-        return groupCheckboxChoices.Any(x => x.QuestionChoiceGroup?.GroupIdentifier == checkboxChoice.QuestionChoiceGroup?.GroupIdentifier);
-    }
-}
 @{
-    var itemName = "Data.Questions[" + Model.Index + "].Checkbox.SelectedChoices";
-    var formItemName = "Data.Questions[" + Model.Index + "].Checkbox";
+    var itemName = "Data.Questions[" + Model.Index + "].DataTable.Inputs";
+    var formItemName = "Data.Questions[" + Model.Index + "].DataTable";
 
     var errorFormClass = !Model.IsValid ? "govuk-form-group--error" : "";
     var isReadOnly = Model.IsReadOnly ? "disabled" : "";
-}
+    }
+
 
 <div class="govuk-form-group @errorFormClass" id="@formItemName">
     @await Html.PartialAsync("_QuestionTitle", Model.Title)
 
-    @await Html.PartialAsync("_QuestionHint", Model.QuestionHint)
-
-
     @{
         var dataTable = Model.DataTable;
+        var hiddenInputType = "Data.Questions[" + Model.Index + "].DataTable.InputType";
     }
+
+    <input type="hidden" name="@hiddenInputType" value="@Model.DataTable.InputType" />
+
+    @for (int i = 0; i < Model.DataTable.Inputs.Count(); i++)
+    {
+        var hiddenItemNameAnswer = "Data.Questions[" + Model.Index + "].DataTable.Inputs[" + i + "].Input";
+        var hiddenItemNameId = "Data.Questions[" + Model.Index + "].DataTable.Inputs[" + i + "].Title";
+@*        <input type="hidden" name="@hiddenItemNameAnswer" value="@Model.DataTable.Inputs[i].Input" />*@
+        <input type="hidden" name="@hiddenItemNameId" value="@Model.DataTable.Inputs[i].InputHeading" />
+    }
+@*
     <div class="scroll-table">
         <h2 class="govuk-heading-m">@Model.QuestionText</h2>
         <table class="govuk-table">
@@ -37,35 +41,51 @@
             </thead>
             <tbody>
                 <tr>
-                    @foreach (var input in dataTable.Inputs)
+                    @for(int i = 0; i < Model.DataTable.Inputs.Count(); i++)
                     {
+                        var specificItemName = itemName + "[" + i + "].Input";
                         <td class="govuk-table__cell">
-                            <input type="text" class="govuk-input govuk-input--width-scroll-table" value="@input.Input" />
+
+                            <input id="@specificItemName"
+                               type="text"
+                               name="@specificItemName"
+                               class="govuk-input govuk-input--width-scroll-table"
+                               @errorFormClass
+                               @isReadOnly
+                               value="@Model.DataTable.Inputs[i].Input" />
                         </td>
                     }
                 </tr>
             </tbody>
             </table>
-
+        @await Html.PartialAsync("_QuestionHint", Model.QuestionHint)
         </div>
 
-        <br />
+
+        <br />*@
 
     <div class="govuk-grid-row">
         <div class="govuk-grid-column-two-thirds-from-desktop">
             <dl class="govuk-summary-list govuk-!-margin-bottom-9">
-                @foreach (var dataInput in dataTable.Inputs)
+                @for (int i = 0; i < Model.DataTable.Inputs.Count(); i++)
                 {
+                    var specificItemName = itemName + "[" + i + "].Input";
                     <div class="govuk-summary-list__row">
                         <dt class="govuk-summary-list__key">
-                            @dataInput.InputHeading
+                            @Model.DataTable.Inputs[i].InputHeading
   
                         </dt>
                         <dd class="govuk-summary-list__value">
                             <div class="govuk-input__wrapper">
 
                                 <div class="govuk-input__prefix" aria-hidden="true">£</div>
-                                <input type="text" class="govuk-input govuk-input--width-5" value="@dataInput.Input"/>
+                                <input id="@specificItemName"
+                                   type="text"
+                                   name="@specificItemName"
+                                   class="govuk-input govuk-input--width-5"
+                                   @errorFormClass
+                                   @isReadOnly
+                                   value="@Model.DataTable.Inputs[i].Input" />
 
                             </div>
                         </dd>
@@ -74,6 +94,7 @@
             </dl>
         </div>
     </div>
+    @await Html.PartialAsync("_QuestionHint", Model.QuestionHint)
         
 
     @await Html.PartialAsync("_Comments", new Comment(){Index = Model.Index, CommentText = Model.Comments,DisplayComments = Model.DisplayComments})
