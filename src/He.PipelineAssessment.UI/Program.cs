@@ -82,7 +82,6 @@ builder.Services.AddScoped<IAssessmentRepository, AssessmentRepository>();
 builder.Services.AddScoped<IStoredProcedureRepository, StoredProcedureRepository>();
 builder.Services.AddScoped<IAdminAssessmentToolRepository, AdminAssessmentToolRepository>();
 builder.Services.AddScoped<IAdminAssessmentToolWorkflowRepository, AdminAssessmentToolWorkflowRepository>();
-builder.Services.AddScoped<IEconomistAssessmentToolRepository, EconomistAssessmentToolRepository>();
 builder.Services.AddScoped<ISyncCommandHandlerHelper, SyncCommandHandlerHelper>();
 builder.Services.AddScoped<IUserProvider, UserProvider>();
 builder.Services.AddScoped<IRoleValidation, RoleValidation>();
