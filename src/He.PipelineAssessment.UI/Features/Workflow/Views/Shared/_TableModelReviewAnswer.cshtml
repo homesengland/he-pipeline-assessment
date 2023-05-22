@@ -1,0 +1,16 @@
+﻿@model He.PipelineAssessment.UI.Helper.DataTableHelper.DataTableModel
+
+@foreach (var row in Model.DataTableRows)
+{
+    <div class="govuk-summary-list__row">
+        <dt>
+            @row.Title
+        </dt>
+        <dd class="govuk-summary-list__value">
+            @row.Input
+        </dd>
+    </div>
+}
+<div class="govuk-!-margin-bottom-5">
+</div>
+
