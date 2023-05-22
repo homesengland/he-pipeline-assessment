@@ -1,6 +1,7 @@
 ﻿@using Elsa.CustomWorkflow.Sdk
 @using He.PipelineAssessment.UI.Features.Workflow.QuestionScreenSaveAndContinue
 @using He.PipelineAssessment.UI.Features.Workflow.ViewModels
+@using He.PipelineAssessment.UI.Extensions;
 @model QuestionScreenSaveAndContinueCommand
 @inject NonceConfig nonceConfig
 
@@ -375,22 +376,7 @@
                             QuestionId = Model.Data.Questions[i].QuestionId,
                             QuestionType = Model.Data.Questions[i].QuestionType,
                             Title = Model.Data.Questions[i].Title,
-                            DataTable = Model.Data.Questions.Where(q => q.QuestionType == QuestionTypeConstants.DataTable
-                            && !usedDisplayGroupIds.Contains(q.DataTable.DisplayGroupId)
-                            && q.DataTable.DisplayGroupId == Model.Data.Questions[i].DataTable.DisplayGroupId)
-                        .Select(x => new DataTable
-                        {
-                            QuestionText = Model.Data.Questions.FirstOrDefault(l => l.QuestionId == x.QuestionId)?.Question,
-                            QuestionIndex = Model.Data.Questions.FindIndex(l => l.QuestionId == x.QuestionId),
-                            DisplayGroupId = x.DataTable.DisplayGroupId,
-                            InputType = x.DataTable.InputType,
-                            Inputs = x.DataTable.Inputs.Select(y =>
-                new TableInput
-                {
-                    InputHeading = y.Title,
-                    Input = y.Input
-                }).ToList()
-                        }).ToList(),
+                            DataTable = Model.Data.ToDataTableList(i, usedDisplayGroupIds)
                         };
 
                         usedDisplayGroupIds.Add(Model.Data.Questions[i].DataTable.DisplayGroupId);
