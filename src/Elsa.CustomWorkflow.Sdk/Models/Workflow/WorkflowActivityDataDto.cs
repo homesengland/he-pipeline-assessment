@@ -2,6 +2,8 @@
 using FluentValidation.Results;
 using System.Data;
 using System.Globalization;
+using System.Text.Json;
+using System.Text.Json.Serialization;
 
 namespace Elsa.CustomWorkflow.Sdk.Models.Workflow
 {
@@ -180,6 +182,13 @@ namespace Elsa.CustomWorkflow.Sdk.Models.Workflow
             if (QuestionType == QuestionTypeConstants.DataTable || QuestionType == QuestionTypeConstants.DataTable)
             {
                 _dataTable = value;
+                Answers = new List<QuestionActivityAnswer>();
+                if (value != null)
+                {
+                    var answerJson = JsonSerializer.Serialize(_dataTable.Inputs);
+                    var answer = new QuestionActivityAnswer() { AnswerText = answerJson, ChoiceId = null, Score = null };
+                    Answers.Add(answer);
+                }
             }
         }
 

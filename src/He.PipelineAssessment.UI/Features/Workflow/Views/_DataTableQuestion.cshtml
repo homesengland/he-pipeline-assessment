@@ -2,12 +2,10 @@
 @model He.PipelineAssessment.UI.Features.Workflow.ViewModels.Question
 
 @{
-    var itemName = "Data.Questions[" + Model.Index + "].DataTable.Inputs";
-    var formItemName = "Data.Questions[" + Model.Index + "].DataTable";
-
+                            var formItemName = "Data.Questions[" + Model.Index + "].DataTable";
     var errorFormClass = !Model.IsValid ? "govuk-form-group--error" : "";
     var isReadOnly = Model.IsReadOnly ? "disabled" : "";
-    }
+}
 
 
 <div class="govuk-form-group @errorFormClass" id="@formItemName">
@@ -15,59 +13,68 @@
 
     @{
         var dataTable = Model.DataTable;
-        
+
     }
 
-    @for(int i = 0; i < Model.DataTable.Count(); i++)
+    @for (int i = 0; i < Model.DataTable.Count(); i++)
     {
         var hiddenInputType = "Data.Questions[" + Model.DataTable[i].QuestionIndex + "].DataTable.InputType";
         var hiddenGroupingId = "Data.Questions[" + Model.DataTable[i].QuestionIndex + "].DataTable.DisplayGroupId";
 
-        <input type = "hidden" name = "@hiddenInputType" value = "@Model.DataTable[i].InputType" />
+        <input type="hidden" name="@hiddenInputType" value="@Model.DataTable[i].InputType" />
         <input type="hidden" name="@hiddenGroupingId" value="@Model.DataTable[i].DisplayGroupId" />
-        
-
-        @for (int h = 0; h < Model.DataTable[i].Inputs.Count(); h++)
-        {
-            var hiddenItemNameId = "Data.Questions[" + Model.DataTable[i].QuestionIndex + "].DataTable.Inputs[" + i + "].Title";
-            <input type="hidden" name="@hiddenItemNameId" value="@Model.DataTable[i].Inputs[h].InputHeading" />
-        }
     }
 
     @{
-         DataTable largestDataTable = Model.DataTable.OrderByDescending(x => x.Inputs.Count()).FirstOrDefault()!;
+        DataTable largestDataTable = Model.DataTable.OrderByDescending(x => x.Inputs.Count()).FirstOrDefault()!;
     }
 
     <div class="govuk-grid-row">
         <div class="govuk-grid-column-two-thirds-from-desktop">
             <dl class="govuk-summary-list govuk-!-margin-bottom-9">
+                <div class="govuk-summary-list__row">
+                    <dt class="govuk-summary-list__key">
+                        
+                    </dt>
+                    @foreach (var question in Model.DataTable)
+                    {
+                        <dt class="govuk-summary-list__key">
+                            @question.QuestionText
+                        </dt>
+                    }
+                </div>
+
                 @for (int i = 0; i < largestDataTable.Inputs.Count(); i++)
                 {
-                    var specificItemName = itemName + "[" + i + "].Input";
                     <div class="govuk-summary-list__row">
                         <dt class="govuk-summary-list__key">
                             @largestDataTable.Inputs[i].InputHeading
                         </dt>
-                        @for(int q = 0; q < Model.DataTable.Count(); q++)
+                        @for (int q = 0; q < Model.DataTable.Count(); q++)
                         {
+                            var itemName = "Data.Questions[" + Model.DataTable[q].QuestionIndex + "].DataTable.Inputs[" + i + "].Input";
+                            var hiddenTitleName = "Data.Questions[" + Model.DataTable[q].QuestionIndex + "].DataTable.Inputs[" + i + "].Title";
+
+                            <input type="hidden" name="@hiddenTitleName" value="@Model.DataTable[q].Inputs[i].InputHeading" />
+
                             var input = Model.DataTable[q].Inputs.ElementAtOrDefault(i);
                             bool hasNullInput = input == null;
                             var inputValue = hasNullInput ? "" : Model.DataTable[q].Inputs[i].Input;
                             bool disableInput = Model.IsReadOnly || hasNullInput;
                             <dd class="govuk-summary-list__value">
-                            <div class="govuk-input__wrapper">
+                                <div class="govuk-input__wrapper">
 
-                                <div class="govuk-input__prefix" aria-hidden="true">£</div>
-                                <input id="@specificItemName"
-                                   type="text"
-                                   name="@specificItemName"
-                                   class="govuk-input govuk-input--width-5"
-                                   @errorFormClass
-                                   @disableInput
-                                   value="@inputValue" />
+                                    <div class="govuk-input__prefix" aria-hidden="true">£</div>
+                                    <input id="@itemName"
+                                           type="text"
+                                           name="@itemName"
+                                           class="govuk-input govuk-input--width-5"
+                                    @errorFormClass
+                                    @disableInput
+                                           value="@inputValue" />
 
-                            </div>
-                        </dd>
+                                </div>
+                            </dd>
                         }
                     </div>
                 }
@@ -75,7 +82,7 @@
         </div>
     </div>
     @await Html.PartialAsync("_QuestionHint", Model.QuestionHint)
-        
+
 
     @await Html.PartialAsync("_Comments", new Comment(){Index = Model.Index, CommentText = Model.Comments,DisplayComments = Model.DisplayComments})
 </div>

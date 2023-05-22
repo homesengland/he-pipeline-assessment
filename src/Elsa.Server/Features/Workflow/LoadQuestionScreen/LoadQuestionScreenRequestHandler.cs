@@ -1,4 +1,6 @@
-﻿using Elsa.CustomActivities.Activities.QuestionScreen;
+﻿using System.Text.Json;
+using Elsa.CustomActivities.Activities.Common;
+using Elsa.CustomActivities.Activities.QuestionScreen;
 using Elsa.CustomInfrastructure.Data.Repository;
 using Elsa.CustomModels;
 using Elsa.CustomWorkflow.Sdk;
@@ -199,7 +201,22 @@ namespace Elsa.Server.Features.Workflow.LoadQuestionScreen
             if(item.QuestionType == QuestionTypeConstants.DataTable)
             {
                 questionActivityData.DataTable = new DataTableInput();
-                questionActivityData.DataTable.Inputs = item.DataTable.Inputs.ToArray();
+                if (dbQuestion.Answers != null && dbQuestion.Answers.Any() && dbQuestion.Answers.FirstOrDefault() !=null)
+                {
+                    var tableInputList = JsonSerializer.Deserialize<TableInput[]>(dbQuestion.Answers.First().AnswerText);
+                    if (tableInputList != null) 
+                    {
+                         questionActivityData.DataTable.Inputs = tableInputList;
+                    }
+                    else
+                    {
+                        questionActivityData.DataTable.Inputs = item.DataTable.Inputs.ToArray();
+                    }
+                }
+                else
+                {
+                    questionActivityData.DataTable.Inputs = item.DataTable.Inputs.ToArray();
+                }
                 questionActivityData.DataTable.InputType = item.DataTable.TypeOfInput;
                 questionActivityData.DataTable.DisplayGroupId = item.DataTable.DisplayGroupId;
             }
