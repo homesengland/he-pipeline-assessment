@@ -393,11 +393,14 @@
                         };
 
                         usedDisplayGroupIds.Add(Model.Data.Questions[i].DataTable.DisplayGroupId);
-                                    @await Html.PartialAsync("_DataTableQuestion", dataTableQuestion )
+                        if (dataTableQuestion.DataTable.Count > 0)
+                        {
+                            @await Html.PartialAsync("_DataTableQuestion", dataTableQuestion)
                         }
                     }
+                    }
     }
-}
+
 </fieldset>
 </div>
 <input id="Next" type="submit" value="Save and continue" name="Next" class="govuk-button" />
