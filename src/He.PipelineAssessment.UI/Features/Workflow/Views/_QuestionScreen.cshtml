@@ -380,7 +380,8 @@
                             && q.DataTable.DisplayGroupId == Model.Data.Questions[i].DataTable.DisplayGroupId)
                         .Select(x => new DataTable
                         {
-                            QuestionIndex = Model.Data.Questions.FindIndex(l => l.QuestionId == x.QuestionId),
+                            QuestionText = Model.Data.Questions.FirstOrDefault(x => x.QuestionId),
+                        QuestionIndex = Model.Data.Questions.FindIndex(l => l.QuestionId == x.QuestionId),
                             DisplayGroupId = x.DataTable.DisplayGroupId,
                             InputType = x.DataTable.InputType,
                             Inputs = x.DataTable.Inputs.Select(y =>

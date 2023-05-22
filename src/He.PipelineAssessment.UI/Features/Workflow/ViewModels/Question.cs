@@ -54,6 +54,7 @@ namespace He.PipelineAssessment.UI.Features.Workflow.ViewModels
         public Type InputType { get; set; } = typeof(string)!;
 
         public string? DisplayGroupId { get; set; }
+        public string? QuestionText { get; set; }
     }
 
     public class InformationText
