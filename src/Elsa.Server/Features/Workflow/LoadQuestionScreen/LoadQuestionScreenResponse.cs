@@ -1,5 +1,6 @@
 ﻿using Elsa.CustomActivities.Activities.Common;
 using Elsa.CustomModels;
+using Elsa.CustomWorkflow.Sdk;
 
 namespace Elsa.Server.Features.Workflow.LoadQuestionScreen
 {
@@ -67,7 +68,7 @@ namespace Elsa.Server.Features.Workflow.LoadQuestionScreen
     public class DataTableInput
     {
         public string? DisplayGroupId { get; set; }
-        public Type InputType { get; set; } = null!;
+        public string InputType { get; set; } = DataTableInputTypeConstants.CurrencyDataTableInput;
         public TableInput[] Inputs { get; set; } = new List<TableInput>().ToArray();
     }
 

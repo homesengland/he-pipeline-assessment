@@ -162,8 +162,7 @@ namespace Elsa.CustomActivities.Handlers.Syntax
             if (propertyType != null && propertyType == typeof(DataTable))
             {
                 DataTable result = new DataTable();
-                var tableInputType = property.Expressions?[DataTableSyntaxNames.InputType] ?? "text";
-                Type inputType = _dataTableExpressionHandler.InputTypeStringToType(tableInputType);
+                string inputType = property.Expressions?[DataTableSyntaxNames.InputType] ?? "currency";
                 if (property.Expressions!.ContainsKey(DataTableSyntaxNames.DisplayGroupId))
                 {
                     string? displayGroupId = property.Expressions?[DataTableSyntaxNames.DisplayGroupId] ?? null;

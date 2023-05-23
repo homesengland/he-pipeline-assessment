@@ -52,13 +52,12 @@ export class HeDataTableProperty {
     const propertyModel = this.propertyModel;
     const optionsJson = propertyModel.expressions[SyntaxNames.Json]
     this.inputs = parseJson(optionsJson) || [];
-    this.inputOptions = ["Currency", "Decimal", "Number", "Text"];
+    this.inputOptions = ["Currency", "Decimal", "Integer", "Text"];
 
     if (propertyModel.expressions[DataTableSyntax.InputType] == null)
     {
       this.propertyModel.expressions[DataTableSyntax.InputType] = "Currency";
 
-      console.log("after init property model", this.propertyModel)
     }
 
   }
