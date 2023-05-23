@@ -30,11 +30,14 @@ namespace Elsa.CustomActivities.Constants
 
     public class DataTableSyntaxNames
     {
+        public const string IsReadOnly = "ReadOnly";
+        public const string SummaryTotalColumn = "SummaryTotalColumn";
         public const string Identifier = "Identifier";
         public const string Title = "Title";
         public const string TableHeader = "TableHeader";
         public const string InputType = "InputType";
         public const string DisplayGroupId = "DisplayGroupId";
+        public const string Input = "Input";
     }
 
     public class TextActivitySyntaxNames

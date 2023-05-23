@@ -1,10 +1,13 @@
 ﻿using Elsa.CustomActivities.Activities.Common;
 using Elsa.CustomActivities.Constants;
 using Elsa.CustomActivities.Handlers.Models;
+using Elsa.Events;
 using Elsa.Expressions;
 using Elsa.Serialization;
 using Elsa.Services.Models;
+using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Microsoft.Extensions.Logging;
+using System.Text;
 
 namespace Elsa.CustomActivities.Handlers
 {
@@ -38,12 +41,40 @@ namespace Elsa.CustomActivities.Handlers
         }
 
         private async Task<TableInput> ElsaPropertyToTableInput(ElsaProperty property, IExpressionEvaluator evaluator, ActivityExecutionContext context)
+        {   
+            bool isReadOnly = IsReadOnly(property);
+            bool isSummaryColumn = IsSummaryTotal(property);
+            string? rowHeader = await property.EvaluateFromExpressions<string?>(evaluator, context, _logger, CancellationToken.None);
+            string? prePopulatedInput = await PrePopulated(property, evaluator, context);
+            string? identifier = Identifier(property);
+            return new TableInput(identifier, rowHeader, isReadOnly, isSummaryColumn, prePopulatedInput);
+        }
+
+        private async Task<string?> PrePopulated(ElsaProperty property, IExpressionEvaluator evaluator, ActivityExecutionContext context)
         {
-            string title = property.Name;
-            string? input = await property.EvaluateFromExpressions<string?>(evaluator, context, _logger, CancellationToken.None);
-            bool hasIdentifier = property.Expressions.TryGetValue(DataTableSyntaxNames.Identifier,out string? identifier);
-            identifier = hasIdentifier ? identifier : string.Empty;
-            return new TableInput(identifier, title, input);
+            bool hasInput = property.Expressions!.TryGetValue(DataTableSyntaxNames.Input, out string? input);
+            string? prePopulatedInput = hasInput ? await property.EvaluateFromExpressionsExplicit<string?>(evaluator, context, _logger, input!, SyntaxNames.JavaScript) : string.Empty;
+            return prePopulatedInput;
+        }
+
+        private string? Identifier(ElsaProperty property)
+        {
+            bool hasIdentifier = property.Expressions!.TryGetValue(DataTableSyntaxNames.Identifier, out string? identifier);
+            return hasIdentifier ? identifier : string.Empty;
+        }
+
+        private bool IsReadOnly(ElsaProperty property)
+        {
+            bool hasReadOnly = property.Expressions.TryGetValue(DataTableSyntaxNames.IsReadOnly, out string? readOnly);
+            bool isReadOnly = hasReadOnly ? readOnly == "true" : false;
+            return isReadOnly;
+        }
+
+        private bool IsSummaryTotal(ElsaProperty property)
+        {
+            bool hasSumColumn = property.Expressions.TryGetValue(DataTableSyntaxNames.SummaryTotalColumn, out string? sumTotal);
+            bool isSumColumn = hasSumColumn ? sumTotal == "true" : false;
+            return isSumColumn;
         }
 
         private List<ElsaProperty> TryDeserializeExpression(string expression)

@@ -30,6 +30,7 @@ export class HeDataTableProperty {
   @State() iconProvider = new IconProvider();
   @Event() expressionChanged: EventEmitter<string>;
   @State() optionsDisplayToggle: Map<string> = {};
+  @State() summaryDisplayToggle: Map<string> = {};
 
   @State() switchTextHeight: string = "";
 
@@ -37,7 +38,7 @@ export class HeDataTableProperty {
 
   @State() inputOptions: Array<string> = [];
 
-  supportedSyntaxes: Array<string> = [SyntaxNames.JavaScript, SyntaxNames.Liquid, SyntaxNames.Literal];
+  supportedSyntaxes: Array<string> = [SyntaxNames.JavaScript, SyntaxNames.Literal];
   multiExpressionEditor: HTMLElsaMultiExpressionEditorElement;
   syntaxSwitchCount: number = 0;
 
@@ -72,7 +73,7 @@ export class HeDataTableProperty {
     this.inputs = e.detail;
   }
 
-  onAddInputClick() {
+  onAddRowClick() {
     const optionName = ToLetter(this.inputs.length + 1);
     const newOption: NestedActivityDefinitionProperty = { name: optionName, syntax: SyntaxNames.Literal, expressions: { [SyntaxNames.Literal]: '', [DataTableSyntax.Identifier]: optionName }, type: PropertyOutputTypes.TableInput };
     this.inputs = [...this.inputs, newOption];
@@ -112,6 +113,11 @@ export class HeDataTableProperty {
     this.optionsDisplayToggle = { ... this.optionsDisplayToggle, tempValue }
   }
 
+  onToggleSummary(index: number) {
+    let tempValue = ToggleDictionaryDisplay(index, this.summaryDisplayToggle)
+    this.summaryDisplayToggle = { ... this.summaryDisplayToggle, tempValue }
+  }
+
   render() {
     const cases = this.inputs;
     const supportedSyntaxes = this.supportedSyntaxes;
@@ -122,8 +128,18 @@ export class HeDataTableProperty {
       const syntax = tableInput.syntax;
       const monacoLanguage = mapSyntaxToLanguage(syntax);
 
+      const sumTotalColumn = tableInput.expressions[DataTableSyntax.SumTotalColumn] == 'true';
+      const readOnly = tableInput.expressions[DataTableSyntax.Readonly] == 'true';
+
       let expressionEditor = null;
       let colWidth = "100%";
+
+      const optionsDisplay = this.optionsDisplayToggle[index] ?? "none";
+      const summaryDisplay = this.summaryDisplayToggle[index] ?? "none";
+      //const urlDisplay =
+      //  this.urlDisplayToggle[index] != null && this.optionsDisplayToggle[index] != null && this.optionsDisplayToggle[index] != "none"
+      //    ? this.urlDisplayToggle[index]
+      //    : "none";
 
       return (
         <tbody>
@@ -145,19 +161,83 @@ export class HeDataTableProperty {
           </tr>
           <tr key={`case-${index}`}>
             <th
-              class="elsa-py-3 elsa-text-left elsa-text-xs elsa-font-medium elsa-text-gray-500 elsa-tracking-wider elsa-w-2/12">Title
+              class="elsa-py-3 elsa-text-left elsa-text-xs elsa-font-medium elsa-text-gray-500 elsa-tracking-wider elsa-w-2/12">Row Heading
             </th>
-            <td class="elsa-py-2 elsa-pr-5" style={{ width: colWidth }}>
-              <input type="text" value={tableInput.name} onChange={e => this.UpdateName(e, tableInput)}
-              class="focus:elsa-ring-blue-500 focus:elsa-border-blue-500 elsa-block elsa-w-full elsa-min-w-0 elsa-rounded-md sm:elsa-text-sm elsa-border-gray-300" />
+            <td class="elsa-py-2 pl-5" style={{ width: colWidth }}>
+              <div class="elsa-mt-1 elsa-relative elsa-rounded-md elsa-shadow-sm">
+                <elsa-expression-editor
+                  key={`expression-editor-${index}-${this.syntaxSwitchCount}`}
+                  ref={el => expressionEditor = el}
+                  expression={expression}
+                  language={monacoLanguage}
+                  single-line={false}
+                  editorHeight={this.editorHeight}
+                  padding="elsa-pt-1.5 elsa-pl-1 elsa-pr-28"
+                  onExpressionChanged={e => this.UpdateExpression(e, tableInput, tableInput.syntax)}
+                />
+                <div class="elsa-absolute elsa-inset-y-0 elsa-right-0 elsa-flex elsa-items-center">
+                  <select onChange={e => this.UpdateSyntax(e, tableInput, expressionEditor)}
+                    class="focus:elsa-ring-blue-500 focus:elsa-border-blue-500 elsa-h-full elsa-py-0 elsa-pl-2 elsa-pr-7 elsa-border-transparent elsa-bg-transparent elsa-text-gray-500 sm:elsa-text-sm elsa-rounded-md">
+                    {supportedSyntaxes.map(supportedSyntax => {
+                      const selected = supportedSyntax == syntax;
+                      return <option selected={selected}>{supportedSyntax}</option>;
+                    })}
+                  </select>
+                </div>
+              </div>
             </td>
-            <td class="elsa-pt-1 elsa-pr-2 elsa-text-right">
-    
+            <td
+              class="elsa-py-3 elsa-text-left elsa-text-xs elsa-font-medium elsa-text-gray-500 elsa-tracking-wider elsa-w-2/12">
+              <button type="button" onClick={() => this.onExpandSwitchArea()}
+                class="elsa-h-5 elsa-w-5 elsa-mx-auto elsa-outline-none focus:elsa-outline-none">
+                <ExpandIcon options={this.iconProvider.getOptions()}></ExpandIcon>
+              </button>
             </td>
 
-        </tr>
+          </tr>
 
-        <tr>
+
+          <tr onClick={() => this.onToggleOptions(index)}>
+            <th
+              class="elsa-px-6 elsa-py-3 elsa-text-left elsa-text-xs elsa-font-medium elsa-text-gray-500 elsa-text-left elsa-tracking-wider elsa-w-1/12" colSpan={3} style={{ cursor: "zoom-in" }}> Options
+            </th>
+          </tr>
+
+          <tr style={{ display: optionsDisplay }}>
+            <th colSpan={2}
+              class="elsa-px-6 elsa-py-3 elsa-text-left elsa-text-xs elsa-font-medium elsa-text-gray-500 elsa-tracking-wider elsa-w-2/12">Is <br />Is read-only?
+            </th>
+            <td class="elsa-py-0">
+              <input name="choice_input" type="checkbox" checked={readOnly} value={tableInput.expressions[DataTableSyntax.Readonly]}
+                onChange={e => this.UpdateCheckbox(e, tableInput, DataTableSyntax.Readonly)}
+                class="focus:elsa-ring-blue-500 elsa-h-8 elsa-w-8 elsa-text-blue-600 elsa-border-gray-300 elsa-rounded" />
+            </td>
+          </tr>
+
+
+          <tr style={{ display: optionsDisplay }}>
+            <th colSpan={2}
+              class="elsa-px-6 elsa-py-3 elsa-text-left elsa-text-xs elsa-font-medium elsa-text-gray-500 elsa-tracking-wider elsa-w-2/12">Is <br />Is Summary Column?
+            </th>
+            <td class="elsa-py-0">
+              <input name="choice_input" type="checkbox"
+                onChange={() => this.onToggleSummary(index)}
+                class="focus:elsa-ring-blue-500 elsa-h-8 elsa-w-8 elsa-text-blue-600 elsa-border-gray-300 elsa-rounded" />
+            </td>
+          </tr>
+
+          <tr style={{ display: summaryDisplay }}>
+            <th colSpan={2}
+              class="elsa-px-6 elsa-py-3 elsa-text-left elsa-text-xs elsa-font-medium elsa-text-gray-500 elsa-tracking-wider elsa-w-2/12">Is <br />Apply Sum Total Summary
+            </th>
+            <td class="elsa-py-0">
+              <input name="choice_input" type="checkbox" checked={sumTotalColumn} value={tableInput.expressions[DataTableSyntax.SumTotalColumn]}
+                onChange={e => this.UpdateCheckbox(e, tableInput, DataTableSyntax.SumTotalColumn)}
+                class="focus:elsa-ring-blue-500 elsa-h-8 elsa-w-8 elsa-text-blue-600 elsa-border-gray-300 elsa-rounded" />
+            </td>
+          </tr>
+
+          <tr style={{ display: optionsDisplay }} >
        
               <th
                 class="elsa-py-3 elsa-text-left elsa-text-xs elsa-font-medium elsa-text-gray-500 elsa-tracking-wider elsa-w-2/12">Pre-Populated Input
@@ -172,13 +252,13 @@ export class HeDataTableProperty {
                 single-line={false}
                 editorHeight={this.editorHeight}
                   padding="elsa-pt-1.5 elsa-pl-1 elsa-pr-28"
-                  onExpressionChanged={e => this.UpdateExpression(e, tableInput, tableInput.syntax)}
+                  onExpressionChanged={e => this.UpdateExpression(e, tableInput, DataTableSyntax.Input)}
               />
               <div class="elsa-absolute elsa-inset-y-0 elsa-right-0 elsa-flex elsa-items-center">
                   <select onChange={e => this.UpdateSyntax(e, tableInput, expressionEditor)}
-                  class="focus:elsa-ring-blue-500 focus:elsa-border-blue-500 elsa-h-full elsa-py-0 elsa-pl-2 elsa-pr-7 elsa-border-transparent elsa-bg-transparent elsa-text-gray-500 sm:elsa-text-sm elsa-rounded-md">
-                  {supportedSyntaxes.map(supportedSyntax => {
-                    const selected = supportedSyntax == syntax;
+                    class="focus:elsa-ring-blue-500 focus:elsa-border-blue-500 elsa-h-full elsa-py-0 elsa-pl-2 elsa-pr-7 elsa-border-transparent elsa-bg-transparent elsa-text-gray-500 sm:elsa-text-sm elsa-rounded-md">
+                    {supportedSyntaxes.filter(x => x == SyntaxNames.JavaScript).map(supportedSyntax => {
+                      const selected = supportedSyntax == SyntaxNames.JavaScript;
                     return <option selected={selected}>{supportedSyntax}</option>;
                   })}
                 </select>
@@ -247,7 +327,6 @@ export class HeDataTableProperty {
           <p class="elsa-mt-2 elsa-text-sm elsa-text-gray-500">This allows you to display this table as a column of a shared table with all matching Group Id's of Tables on this Question Screen..</p>
         </div>
 
-
         <br />
 
         <elsa-multi-expression-editor
@@ -265,10 +344,10 @@ export class HeDataTableProperty {
             {cases.map(renderCaseEditor)}
           </table>
         
-          <button type="button" onClick={() => this.onAddInputClick()}
+          <button type="button" onClick={() => this.onAddRowClick()}
             class="elsa-inline-flex elsa-items-center elsa-px-4 elsa-py-2 elsa-border elsa-border-transparent elsa-shadow-sm elsa-text-sm elsa-font-medium elsa-rounded-md elsa-text-white elsa-bg-blue-600 hover:elsa-bg-blue-700 focus:elsa-outline-none focus:elsa-ring-2 focus:elsa-ring-offset-2 focus:elsa-ring-blue-500 elsa-mt-2">
             <PlusIcon options={this.iconProvider.getOptions()}></PlusIcon>
-            Add Table Entry
+            Add Table Row
           </button>
         </elsa-multi-expression-editor>
       </div>
