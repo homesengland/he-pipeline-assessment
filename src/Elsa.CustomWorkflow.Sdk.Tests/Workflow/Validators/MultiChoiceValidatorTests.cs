@@ -2,6 +2,7 @@
 using Elsa.CustomWorkflow.Sdk.Models.Workflow;
 using Elsa.CustomWorkflow.Sdk.Models.Workflow.Validators;
 using FluentValidation.TestHelper;
+using System.Text.RegularExpressions;
 using Xunit;
 
 namespace Elsa.CustomWorkflow.Sdk.Tests.Workflow.Validators
@@ -590,5 +591,80 @@ namespace Elsa.CustomWorkflow.Sdk.Tests.Workflow.Validators
             result.ShouldNotHaveValidationErrorFor(c => c);
             result.ShouldNotHaveValidationErrorFor(c => c.SelectedChoices);
         }
+
+        [Fact]
+        public void Should_Not_Have_Error_When__Single_Choice_SelectedFromDifferentGroup_Within_Question()
+        {
+            //Arrange
+            MultiChoiceValidator validator = new MultiChoiceValidator();
+            Checkbox multiChoice = new Checkbox();
+            var groupA = new ChoiceGroup() { GroupIdentifier = "A" };
+            var groupB = new ChoiceGroup() { GroupIdentifier = "B" };
+
+            multiChoice.Choices = new List<Choice>
+            {
+                new Choice
+                {
+                    Answer = "Test 1",
+                    IsSingle = true,
+                    IsExclusiveToQuestion = false,
+                    QuestionChoiceGroup = groupA
+                },
+                new Choice
+                {
+                    Answer = "Test 2",
+                    IsSingle = true,
+                    IsExclusiveToQuestion = false,
+                    QuestionChoiceGroup = groupB
+                }
+            };
+
+            multiChoice.SelectedChoices = new List<int>() { 1, 2 };
+
+            //Act
+            var result = validator.TestValidate(multiChoice);
+
+            //Assert
+            result.ShouldNotHaveValidationErrorFor(c => c);
+            result.ShouldNotHaveValidationErrorFor(c => c.SelectedChoices);
+        }
+
+        [Fact]
+        public void Should_Not_Have_Error_When_Single_Choice_SelectedOneGroup_Within_Question()
+        {
+            //Arrange
+            MultiChoiceValidator validator = new MultiChoiceValidator();
+            Checkbox multiChoice = new Checkbox();
+            var groupA = new ChoiceGroup() { GroupIdentifier = "A" };
+            var groupB = new ChoiceGroup() { GroupIdentifier = "B" };
+
+            multiChoice.Choices = new List<Choice>
+            {
+                new Choice
+                {
+                    Answer = "Test 1",
+                    IsSingle = true,
+                    IsExclusiveToQuestion = false,
+                    QuestionChoiceGroup = groupA
+                },
+                new Choice
+                {
+                    Answer = "Test 2",
+                    IsSingle = false,
+                    IsExclusiveToQuestion = false,
+                    QuestionChoiceGroup = groupB
+                }
+            };
+
+            multiChoice.SelectedChoices = new List<int>() { 1, 2 };
+
+            //Act
+            var result = validator.TestValidate(multiChoice);
+
+            //Assert
+            result.ShouldNotHaveValidationErrorFor(c => c);
+            result.ShouldNotHaveValidationErrorFor(c => c.SelectedChoices);
+        }
+
     }
 }
