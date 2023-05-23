@@ -14,5 +14,5 @@ namespace Elsa.CustomActivities.Activities.Common
         public string? DisplayGroupId { get; set; }
     }
 
-    public record TableInput(string Title, string? Input = null);
+    public record TableInput(string? Identifier,string Title, string? Input = null);
 }

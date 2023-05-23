@@ -23,6 +23,7 @@ export class QuestionCategories {
 }
 
 export class DataTableSyntax {
+  static readonly Identifier = "Identifier";
   static readonly InputType = "InputType";
   static readonly TableHeader = "TableHeader";
   static readonly Title = "Title";

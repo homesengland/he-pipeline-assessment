@@ -74,7 +74,7 @@ export class HeDataTableProperty {
 
   onAddInputClick() {
     const optionName = ToLetter(this.inputs.length + 1);
-    const newOption: NestedActivityDefinitionProperty = { name: optionName, syntax: SyntaxNames.Literal, expressions: { [SyntaxNames.Literal]: '' }, type: PropertyOutputTypes.TableInput };
+    const newOption: NestedActivityDefinitionProperty = { name: optionName, syntax: SyntaxNames.Literal, expressions: { [SyntaxNames.Literal]: '', [DataTableSyntax.Identifier]: optionName }, type: PropertyOutputTypes.TableInput };
     this.inputs = [...this.inputs, newOption];
     this.updatePropertyModel();
   }
@@ -129,6 +129,22 @@ export class HeDataTableProperty {
         <tbody>
           <tr key={`case-${index}`}>
             <th
+              class="elsa-py-3 elsa-text-left elsa-text-xs elsa-font-medium elsa-text-gray-500 elsa-tracking-wider elsa-w-2/12">Identifier
+            </th>
+            <td class="elsa-py-2 elsa-pr-5" style={{ width: colWidth }}>
+              <input type="text" value={tableInput.expressions[DataTableSyntax.Identifier]} onChange={e => this.UpdateInput(e, tableInput, DataTableSyntax.Identifier)}
+                class="focus:elsa-ring-blue-500 focus:elsa-border-blue-500 elsa-block elsa-w-full elsa-min-w-0 elsa-rounded-md sm:elsa-text-sm elsa-border-gray-300" />
+            </td>
+            <td class="elsa-pt-1 elsa-pr-2 elsa-text-right">
+              <button type="button" onClick={() => this.onDeleteInputClick(tableInput)}
+                class="elsa-h-5 elsa-w-5 elsa-mx-auto elsa-outline-none focus:elsa-outline-none">
+                <TrashCanIcon options={this.iconProvider.getOptions()}></TrashCanIcon>
+              </button>
+            </td>
+
+          </tr>
+          <tr key={`case-${index}`}>
+            <th
               class="elsa-py-3 elsa-text-left elsa-text-xs elsa-font-medium elsa-text-gray-500 elsa-tracking-wider elsa-w-2/12">Title
             </th>
             <td class="elsa-py-2 elsa-pr-5" style={{ width: colWidth }}>
@@ -136,10 +152,7 @@ export class HeDataTableProperty {
               class="focus:elsa-ring-blue-500 focus:elsa-border-blue-500 elsa-block elsa-w-full elsa-min-w-0 elsa-rounded-md sm:elsa-text-sm elsa-border-gray-300" />
             </td>
             <td class="elsa-pt-1 elsa-pr-2 elsa-text-right">
-              <button type="button" onClick={() => this.onDeleteInputClick(tableInput)}
-                class="elsa-h-5 elsa-w-5 elsa-mx-auto elsa-outline-none focus:elsa-outline-none">
-                <TrashCanIcon options={this.iconProvider.getOptions()}></TrashCanIcon>
-              </button>
+    
             </td>
 
         </tr>
