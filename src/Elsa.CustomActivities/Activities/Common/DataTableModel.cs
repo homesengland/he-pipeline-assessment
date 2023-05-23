@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Elsa.CustomWorkflow.Sdk;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -9,7 +10,7 @@ namespace Elsa.CustomActivities.Activities.Common
     public class DataTable
     {
         public ICollection<TableInput> Inputs { get; set; } = new List<TableInput>();
-        public Type TypeOfInput { get; set; } = typeof(string);
+        public string TypeOfInput { get; set; } = DataTableInputTypeConstants.CurrencyDataTableInput;
         public string? DisplayGroupId { get; set; }
     }
 

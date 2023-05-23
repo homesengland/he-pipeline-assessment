@@ -52,7 +52,7 @@ export class HeDataTableProperty {
     const propertyModel = this.propertyModel;
     const optionsJson = propertyModel.expressions[SyntaxNames.Json]
     this.inputs = parseJson(optionsJson) || [];
-    this.inputOptions = ["Currency", "Decimal", "Number", "Text"];
+    this.inputOptions = ["Currency", "Decimal", "Integer", "Text"];
   }
 
   updatePropertyModel() {

@@ -1,4 +1,5 @@
-﻿using Elsa.CustomWorkflow.Sdk.Models.Workflow;
+﻿using Elsa.CustomWorkflow.Sdk;
+using Elsa.CustomWorkflow.Sdk.Models.Workflow;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.Extensions.Diagnostics.HealthChecks;
 using System.ComponentModel.DataAnnotations;
@@ -53,7 +54,7 @@ namespace He.PipelineAssessment.UI.Features.Workflow.ViewModels
     {
         public int QuestionIndex { get; set; }
         public List<TableInput> Inputs { get; set; } = new List<TableInput>();
-        public Type InputType { get; set; } = typeof(string)!;
+        public string InputType { get; set; } = DataTableInputTypeConstants.CurrencyDataTableInput;
 
         public string? DisplayGroupId { get; set; }
         public string? QuestionText { get; set; }

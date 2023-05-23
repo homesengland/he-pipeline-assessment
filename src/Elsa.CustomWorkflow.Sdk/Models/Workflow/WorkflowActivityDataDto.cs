@@ -346,7 +346,7 @@ namespace Elsa.CustomWorkflow.Sdk.Models.Workflow
     public class DataTableInput
     {
         public List<TableInput> Inputs { get; set; } = new List<TableInput>();
-        public Type InputType { get; set; } = typeof(string);
+        public string InputType { get; set; } = DataTableInputTypeConstants.CurrencyDataTableInput;
         public string? DisplayGroupId { get; set; }
     }
 

@@ -26,4 +26,13 @@
         public const string WeightedRadioQuestion = "WeightedRadioQuestion";
         public const string WeightedCheckboxQuestion = "WeightedCheckboxQuestion";
     }
+
+    public class DataTableInputTypeConstants
+    {
+        public const string CurrencyDataTableInput = "Currency";
+        public const string DecimalDataTableInput = "Decimal";
+        public const string IntegerDataTableInput = "Integer";
+        public const string TextDataTableInput = "Text";
+    }
+    
 }
