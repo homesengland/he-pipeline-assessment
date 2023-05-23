@@ -1,8 +1,6 @@
-﻿using Elsa.CustomModels;
-using Elsa.CustomWorkflow.Sdk.Models.Workflow;
+﻿using Elsa.CustomWorkflow.Sdk.Models.Workflow;
 using Elsa.CustomWorkflow.Sdk.Models.Workflow.Validators;
 using FluentValidation.TestHelper;
-using System.Text.RegularExpressions;
 using Xunit;
 
 namespace Elsa.CustomWorkflow.Sdk.Tests.Workflow.Validators
