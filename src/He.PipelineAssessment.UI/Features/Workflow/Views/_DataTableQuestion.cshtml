@@ -1,8 +1,11 @@
 ﻿@using He.PipelineAssessment.UI.Features.Workflow.ViewModels
+@using He.PipelineAssessment.UI.Helper
+@using Elsa.CustomWorkflow.Sdk
 @model He.PipelineAssessment.UI.Features.Workflow.ViewModels.Question
 
+
 @{
-                            var formItemName = "Data.Questions[" + Model.Index + "].DataTable";
+    var formItemName = "Data.Questions[" + Model.Index + "].DataTable";
     var errorFormClass = !Model.IsValid ? "govuk-form-group--error" : "";
     var isReadOnly = Model.IsReadOnly ? "disabled" : "";
 }
@@ -34,7 +37,7 @@
             <dl class="govuk-summary-list govuk-!-margin-bottom-9">
                 <div class="govuk-summary-list__row">
                     <dt class="govuk-summary-list__key">
-                        
+
                     </dt>
                     @foreach (var question in Model.DataTable)
                     {
@@ -55,7 +58,7 @@
                             int countOfColumnIndex = Model.DataTable[q].Inputs.Count();
                             if (i < countOfColumnIndex)
                             {
-                                
+
                                 var itemName = "Data.Questions[" + Model.DataTable[q].QuestionIndex + "].DataTable.Inputs[" + i + "].Input";
                                 var hiddenTitleName = "Data.Questions[" + Model.DataTable[q].QuestionIndex + "].DataTable.Inputs[" + i + "].Title";
                                 var hiddenIdentifierName = "Data.Questions[" + Model.DataTable[q].QuestionIndex + "].DataTable.Inputs[" + i + "].Identifier";
@@ -69,24 +72,40 @@
                                 bool disableInput = Model.IsReadOnly || hasNullInput;
                                 <dd class="govuk-summary-list__value">
                                     <div class="govuk-input__wrapper">
-
-                                        <div class="govuk-input__prefix" aria-hidden="true">£</div>
-                                        <input id="@itemName"
-                                   type="text"
-                                   name="@itemName"
-                                   class="govuk-input govuk-input--width-5"
-                                   @errorFormClass
-                                   @disableInput
-                                   value="@inputValue" />
-
+                                        @if (Model.DataTable[q].InputType == DataTableInputTypeConstants.CurrencyDataTableInput)
+                                        {
+                                            var succes = Decimal.TryParse(inputValue, out decimal tempCurrencyInputDecimal);
+                                            decimal? currencyInputDecimal = succes ? tempCurrencyInputDecimal: null;
+                                            <div class="govuk-input__prefix" aria-hidden="true">£</div>
+                                            <input id="@itemName"
+                                            type="text"
+                                            name="@itemName"
+                                            class="govuk-input govuk-input--width-5"
+                                            @errorFormClass
+                                            @disableInput
+                                            value="@currencyInputDecimal.ToCommaSeparatedNumber()" 
+                                            currency-formatter="true" />
+                                        }
+                                        @if (Model.DataTable[q].InputType == DataTableInputTypeConstants.DecimalDataTableInput
+                                            || Model.DataTable[q].InputType == DataTableInputTypeConstants.IntegerDataTableInput
+                                            || Model.DataTable[q].InputType == DataTableInputTypeConstants.TextDataTableInput
+                                        )
+                                        {
+                                            <input id="@itemName"
+                                            type="text"
+                                            name="@itemName"
+                                            class="govuk-input govuk-input--width-5"
+                                            @errorFormClass
+                                            @disableInput
+                                            value="@inputValue" />
+                                        }                                       
                                     </div>
                                 </dd>
                             }
-                            else{
+                            else
+                            {
                                 <dd class="govuk-summary-list__value">
-                                    <div class="govuk-input__wrapper"> 
-   
-
+                                    <div class="govuk-input__wrapper">
                                     </div>
                                 </dd>
                             }
