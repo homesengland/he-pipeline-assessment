@@ -1,4 +1,5 @@
 ﻿@using He.PipelineAssessment.UI.Features.Workflow.ViewModels
+@using Elsa.CustomWorkflow.Sdk
 @model He.PipelineAssessment.UI.Features.Workflow.ViewModels.Question
 
 @{
@@ -66,18 +67,22 @@
                                 var inputValue = hasNullInput ? "" : Model.DataTable[q].Inputs[i].Input;
                                 bool disableInput = Model.IsReadOnly || hasNullInput;
                                 <dd class="govuk-summary-list__value">
-                                    <div class="govuk-input__wrapper">
-
-                                        <div class="govuk-input__prefix" aria-hidden="true">£</div>
-                                        <input id="@itemName"
-                                   type="text"
-                                   name="@itemName"
-                                   class="govuk-input govuk-input--width-5"
-                                   @errorFormClass
-                                   @disableInput
-                                   value="@inputValue" />
-
-                                    </div>
+                                    @if (Model.DataTable[q].InputType == DataTableInputTypeConstants.CurrencyDataTableInput)
+                                    {
+                                        @await Html.PartialAsync("_CurrencyInput", Model)
+                                    }
+                                    @if (Model.DataTable[q].InputType == DataTableInputTypeConstants.DecimalDataTableInput)
+                                    {
+                                        @await Html.PartialAsync("_DecimalInput", Model)
+                                    }
+                                    @if (Model.DataTable[q].InputType == DataTableInputTypeConstants.IntegerDataTableInput)
+                                    {
+                                        @await Html.PartialAsync("_IntegerInput", Model)
+                                    }
+                                    @if (Model.DataTable[q].InputType == DataTableInputTypeConstants.TextDataTableInput)
+                                    {
+                                        @await Html.PartialAsync("_TextInput", Model)
+                                    }
                                 </dd>
                             }
                             else{

@@ -1,0 +1,11 @@
+﻿@model He.PipelineAssessment.UI.Features.Workflow.ViewModels.Question
+@{
+    var itemName = "Data.Questions[" + Model.Index + "].Text";
+    var answerName = "Data.Questions[" + Model.Index + "].Answers[0]";
+    var errorFieldClass = !Model.IsValid ? "govuk-input--error" : "";
+    var isReadOnly = Model.IsReadOnly ? "disabled" : "";
+}
+
+<div class="govuk-input__wrapper">
+    <input id="@answerName" type="text" name="@itemName" class="govuk-input govuk-input--width-6 @errorFieldClass" @isReadOnly value="@Model.Text"/>
+</div>
