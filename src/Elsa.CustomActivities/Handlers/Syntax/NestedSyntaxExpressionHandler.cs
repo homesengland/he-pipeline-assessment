@@ -169,7 +169,7 @@ namespace Elsa.CustomActivities.Handlers.Syntax
                     result.DisplayGroupId = displayGroupId;
                 }
                 
-                result.TypeOfInput = inputType;
+                result.InputType = inputType;
                 var parsedProperties = ParseToList(property);
                 if (parsedProperties != null)
                 {
