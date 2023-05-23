@@ -124,7 +124,7 @@ namespace Elsa.CustomWorkflow.Sdk.Models.Workflow
                 try
                 {
                     decimal decimalAnswer = default;
-                    if(decimal.TryParse(Answers.FirstOrDefault()!.AnswerText, out decimalAnswer))
+                    if (decimal.TryParse(Answers.FirstOrDefault()!.AnswerText, out decimalAnswer))
                     {
                         return decimalAnswer;
                     }
@@ -347,7 +347,23 @@ namespace Elsa.CustomWorkflow.Sdk.Models.Workflow
     {
         public List<TableInput> Inputs { get; set; } = new List<TableInput>();
         public Type InputType { get; set; } = typeof(string);
-        public string? DisplayGroupId { get; set; }
+
+        private string _displayGroupId { get; set; } 
+        public string DisplayGroupId
+        {
+            get
+            {
+                return _displayGroupId;
+            }
+            set
+            {
+                if (string.IsNullOrEmpty(value))
+                {
+                    value = Guid.NewGuid().ToString();
+                }
+                _displayGroupId = value;
+            }
+        }
     }
 
     public class TableInput

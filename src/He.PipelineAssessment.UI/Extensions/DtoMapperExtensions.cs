@@ -14,6 +14,7 @@ namespace He.PipelineAssessment.UI.Extensions
             {
                 tables = @this.Questions.Where(q => q.QuestionType == QuestionTypeConstants.DataTable
                && !usedDisplayGroupIds.Contains(q.DataTable.DisplayGroupId)
+               //&& q.DataTable.DisplayGroupId !=null
                && q.DataTable.DisplayGroupId == @this.Questions[index].DataTable.DisplayGroupId)
                .Select(x => new DataTable
                {
