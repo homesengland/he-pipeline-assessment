@@ -179,13 +179,13 @@ namespace Elsa.CustomWorkflow.Sdk.Models.Workflow
 
         public void SetDataTable(DataTableInput value)
         {
-            if (QuestionType == QuestionTypeConstants.DataTable || QuestionType == QuestionTypeConstants.DataTable)
+            if (QuestionType == QuestionTypeConstants.DataTable)
             {
                 _dataTable = value;
                 Answers = new List<QuestionActivityAnswer>();
                 if (value != null)
                 {
-                    var answerJson = JsonSerializer.Serialize(_dataTable.Inputs);
+                    var answerJson = JsonSerializer.Serialize(_dataTable);
                     var answer = new QuestionActivityAnswer() { AnswerText = answerJson, ChoiceId = null, Score = null };
                     Answers.Add(answer);
                 }
@@ -346,7 +346,7 @@ namespace Elsa.CustomWorkflow.Sdk.Models.Workflow
     public class DataTableInput
     {
         public List<TableInput> Inputs { get; set; } = new List<TableInput>();
-        public string InputType { get; set; } = DataTableInputTypeConstants.CurrencyDataTableInput;
+        public string InputType { get; set; } = null!;
         public string? DisplayGroupId { get; set; }
     }
 

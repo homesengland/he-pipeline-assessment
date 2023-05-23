@@ -6,18 +6,14 @@ public static class DataTableHelper
 {
     public static DataTableModel ToTableModel(this string jsonModel)
     {
-        var dataTableModel = new DataTableModel();
-        var dataTableRows = JsonSerializer.Deserialize<List<DataTableRow>>(jsonModel);
-        if(dataTableRows != null)
-        {
-            dataTableModel.DataTableRows.AddRange(dataTableRows);
-        }
-        return dataTableModel;
+        var dataTableModel = JsonSerializer.Deserialize<DataTableModel>(jsonModel);
+        return dataTableModel ?? new DataTableModel();
     }
 
     public class DataTableModel
     {
-        public List<DataTableRow> DataTableRows { get; set; } = new List<DataTableRow>();
+        public string InputType { get; set; } = null!;
+        public List<DataTableRow> Inputs { get; set; } = new List<DataTableRow>();
     }
     public class DataTableRow
     {
