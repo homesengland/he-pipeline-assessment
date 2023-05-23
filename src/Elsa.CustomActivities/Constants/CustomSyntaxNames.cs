@@ -30,6 +30,7 @@ namespace Elsa.CustomActivities.Constants
 
     public class DataTableSyntaxNames
     {
+        public const string Identifier = "Identifier";
         public const string Title = "Title";
         public const string TableHeader = "TableHeader";
         public const string InputType = "InputType";

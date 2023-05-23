@@ -25,6 +25,7 @@ namespace He.PipelineAssessment.UI.Extensions
                    Inputs = x.DataTable.Inputs.Select(y =>
                            new TableInput
                            {
+                               Identifier = y.Identifier,
                                InputHeading = y.Title,
                                Input = y.Input
                            }).ToList()

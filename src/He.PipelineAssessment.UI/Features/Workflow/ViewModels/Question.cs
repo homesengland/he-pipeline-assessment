@@ -71,6 +71,7 @@ namespace He.PipelineAssessment.UI.Features.Workflow.ViewModels
 
     public class TableInput
     {
+        public string Identifier { get; set; } = null!;
         public string InputHeading { get; set; } = null!;
         public string? Input { get; set; }
     }

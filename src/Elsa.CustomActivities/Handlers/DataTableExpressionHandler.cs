@@ -41,7 +41,9 @@ namespace Elsa.CustomActivities.Handlers
         {
             string title = property.Name;
             string? input = await property.EvaluateFromExpressions<string?>(evaluator, context, _logger, CancellationToken.None);
-            return new TableInput(title, input);
+            bool hasIdentifier = property.Expressions.TryGetValue(DataTableSyntaxNames.Identifier,out string? identifier);
+            identifier = hasIdentifier ? identifier : string.Empty;
+            return new TableInput(identifier, title, input);
         }
 
         private List<ElsaProperty> TryDeserializeExpression(string expression)
@@ -62,7 +64,7 @@ namespace Elsa.CustomActivities.Handlers
             {
                 case "currency":  case "decimal":
                     return typeof(decimal);
-                case "number":
+                case "integer":
                     return typeof(int);
                 default:
                     return typeof(string);

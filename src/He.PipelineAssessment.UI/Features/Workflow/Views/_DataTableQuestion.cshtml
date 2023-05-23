@@ -61,8 +61,10 @@
 
                                 var itemName = "Data.Questions[" + Model.DataTable[q].QuestionIndex + "].DataTable.Inputs[" + i + "].Input";
                                 var hiddenTitleName = "Data.Questions[" + Model.DataTable[q].QuestionIndex + "].DataTable.Inputs[" + i + "].Title";
+                                var hiddenIdentifierName = "Data.Questions[" + Model.DataTable[q].QuestionIndex + "].DataTable.Inputs[" + i + "].Identifier";
 
                                 <input type="hidden" name="@hiddenTitleName" value="@Model.DataTable[q].Inputs[i].InputHeading" />
+                                <input type="hidden" name="@hiddenIdentifierName" value="@Model.DataTable[q].Inputs[i].Identifier" />
 
                                 var input = Model.DataTable[q].Inputs.ElementAtOrDefault(i);
                                 bool hasNullInput = input == null;
