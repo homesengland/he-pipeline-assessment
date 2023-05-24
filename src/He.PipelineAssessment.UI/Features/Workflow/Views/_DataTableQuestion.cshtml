@@ -54,11 +54,11 @@
                             @largestDataTable.Inputs[i].InputHeading
                         </dt>
                         @for (int q = 0; q < Model.DataTable.Count(); q++)
+                        
                         {
                             int countOfColumnIndex = Model.DataTable[q].Inputs.Count();
                             if (i < countOfColumnIndex)
                             {
-
                                 var itemName = "Data.Questions[" + Model.DataTable[q].QuestionIndex + "].DataTable.Inputs[" + i + "].Input";
                                 var hiddenTitleName = "Data.Questions[" + Model.DataTable[q].QuestionIndex + "].DataTable.Inputs[" + i + "].Title";
                                 var hiddenIdentifierName = "Data.Questions[" + Model.DataTable[q].QuestionIndex + "].DataTable.Inputs[" + i + "].Identifier";
@@ -69,7 +69,7 @@
                                 var input = Model.DataTable[q].Inputs.ElementAtOrDefault(i);
                                 bool hasNullInput = input == null;
                                 var inputValue = hasNullInput ? "" : Model.DataTable[q].Inputs[i].Input;
-                                bool disableInput = Model.IsReadOnly || Model.DataTable[q].Inputs[i].IsReadOnly || hasNullInput;
+                                var disableInput = Model.DataTable[q].Inputs[i].IsReadOnly? "disabled":"";
                                 string dataFlag = Model.DataTable[q].Inputs[i].IsSummaryTotal ? "total__" + q : "input__" + q;
                                 <dd class="govuk-summary-list__value">
                                     <div class="govuk-input__wrapper">

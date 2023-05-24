@@ -8,14 +8,17 @@ namespace Elsa.CustomWorkflow.Sdk.Models.Workflow.Validators
     {
         public DataTableValidator()
         {
-            RuleFor(x => x).NotEmpty().WithMessage("TO DO");
-            RuleFor(x => x.Inputs).NotEmpty().WithMessage("TO DO");
             RuleFor(x => x.Inputs).SetValidator(new DataTableDecimalValidator())
                 .When(x => x.InputType == DataTableInputTypeConstants.CurrencyDataTableInput);
+
             RuleFor(x => x.Inputs).SetValidator(new DataTableDecimalValidator())
-            .When(x => x.InputType == DataTableInputTypeConstants.DecimalDataTableInput);
+                .When(x => x.InputType == DataTableInputTypeConstants.DecimalDataTableInput);
+
             RuleFor(x => x.Inputs).SetValidator(new DataTableIntegerValidator())
-            .When(x => x.InputType == DataTableInputTypeConstants.IntegerDataTableInput);
+                .When(x => x.InputType == DataTableInputTypeConstants.IntegerDataTableInput);
+
+            RuleFor(x => x.Inputs).SetValidator(new DataTableTextValidator())
+                .When(x => x.InputType == DataTableInputTypeConstants.TextDataTableInput);
         }
     }
 }
