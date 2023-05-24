@@ -31,7 +31,7 @@ namespace Elsa.CustomActivities.Constants
     public class DataTableSyntaxNames
     {
         public const string IsReadOnly = "ReadOnly";
-        public const string SummaryTotalColumn = "SummaryTotalColumn";
+        public const string SummaryTotalColumn = "SumTotalColumn";
         public const string Identifier = "Identifier";
         public const string Title = "Title";
         public const string TableHeader = "TableHeader";
