@@ -1,5 +1,6 @@
 ﻿using Elsa.CustomWorkflow.Sdk;
 using Elsa.CustomWorkflow.Sdk.Models.Workflow;
+using He.PipelineAssessment.UI.Features.Workflow.QuestionScreenSaveAndContinue;
 using He.PipelineAssessment.UI.Features.Workflow.ViewModels;
 using TableInput = He.PipelineAssessment.UI.Features.Workflow.ViewModels.TableInput;
 
@@ -30,11 +31,29 @@ namespace He.PipelineAssessment.UI.Extensions
                                Input = y.Input,
                                IsReadOnly = y.IsReadOnly,
                                IsSummaryTotal = y.IsSummaryTotal
-                               
+
                            }).ToList()
                }).ToList();
             }
             return tables;
+        }
+
+        public static bool IsDataTableValid(this WorkflowActivityData @this, List<DataTable> dataTablesForGroup,
+            QuestionScreenSaveAndContinueCommand model)
+        {
+            bool isValidItem = true;
+            if (!model.IsValid && model.ValidationMessages != null && model.ValidationMessages.Errors != null)
+            {
+                foreach (var dataTable in dataTablesForGroup)
+                {
+                    if (model.ValidationMessages.Errors.Any(x => x.PropertyName.Contains("Data.Questions[" + dataTable.QuestionIndex + "]")))
+                    {
+                        isValidItem = false;
+                    }
+                }
+            }
+
+            return isValidItem;
         }
     }
 }

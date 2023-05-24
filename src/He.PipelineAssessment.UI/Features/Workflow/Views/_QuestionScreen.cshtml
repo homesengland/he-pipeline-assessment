@@ -356,11 +356,11 @@
         }
                     @if (Model.Data.Questions![i].QuestionType == QuestionTypeConstants.DataTable)
                     {
-
+                        var tableListForGroup = Model.Data.ToDataTableList(i, usedDisplayGroupIds);
                         Question dataTableQuestion = new Question()
                         {
                             Index = i,
-                            IsValid = isValidItem,
+                            IsValid = Model.Data.IsDataTableValid(tableListForGroup, Model),
                             Answers = Model.Data.Questions[i].Answers.Select(x => new QuestionActivityAnswer
                             {
                                 Answer = x.AnswerText,
@@ -376,7 +376,7 @@
                             QuestionId = Model.Data.Questions[i].QuestionId,
                             QuestionType = Model.Data.Questions[i].QuestionType,
                             Title = Model.Data.Questions[i].Title,
-                            DataTable = Model.Data.ToDataTableList(i, usedDisplayGroupIds)
+                            DataTable = tableListForGroup
                         };
 
                         usedDisplayGroupIds.Add(Model.Data.Questions[i].DataTable.DisplayGroupId);

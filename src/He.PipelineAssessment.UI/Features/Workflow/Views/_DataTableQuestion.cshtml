@@ -39,10 +39,11 @@
                     <dt class="govuk-summary-list__key">
 
                     </dt>
-                    @foreach (var question in Model.DataTable)
+                    @for (int q = 0; q < Model.DataTable.Count(); q++)
                     {
-                        <dt class="govuk-summary-list__key">
-                            @question.QuestionText
+                        var inputItemName = "Data.Questions[" + Model.DataTable[q].QuestionIndex + "].DataTable.Inputs";
+                        <dt class="govuk-summary-list__key" id="@inputItemName">
+                            @Model.DataTable[q].QuestionText
                         </dt>
                     }
                 </div>
@@ -59,9 +60,10 @@
                             int countOfColumnIndex = Model.DataTable[q].Inputs.Count();
                             if (i < countOfColumnIndex)
                             {
-                                var itemName = "Data.Questions[" + Model.DataTable[q].QuestionIndex + "].DataTable.Inputs[" + i + "].Input";
-                                var hiddenTitleName = "Data.Questions[" + Model.DataTable[q].QuestionIndex + "].DataTable.Inputs[" + i + "].Title";
-                                var hiddenIdentifierName = "Data.Questions[" + Model.DataTable[q].QuestionIndex + "].DataTable.Inputs[" + i + "].Identifier";
+                                var itemId = "Data.Questions[" + Model.DataTable[q].QuestionIndex + "].DataTable.Inputs[" + i + "]";
+                                var itemName = itemId + ".Input";
+                                var hiddenTitleName = itemId + ".Title";
+                                var hiddenIdentifierName = itemId + ".Identifier";
 
                                 <input type="hidden" name="@hiddenTitleName" value="@Model.DataTable[q].Inputs[i].InputHeading" />
                                 <input type="hidden" name="@hiddenIdentifierName" value="@Model.DataTable[q].Inputs[i].Identifier" />
@@ -75,17 +77,18 @@
                                     <div class="govuk-input__wrapper">
                                         @if (Model.DataTable[q].InputType == DataTableInputTypeConstants.CurrencyDataTableInput)
                                         {
-                                            var succes = Decimal.TryParse(inputValue, out decimal tempCurrencyInputDecimal);
-                                            decimal? currencyInputDecimal = succes ? tempCurrencyInputDecimal: null;
+                                            var success = Decimal.TryParse(inputValue, out decimal tempCurrencyInputDecimal);
+                                            decimal? currencyInputDecimal = success ? tempCurrencyInputDecimal: null;
+                                            var currencyInputValue = success ? currencyInputDecimal.ToCommaSeparatedNumber() : inputValue;
                                             <div class="govuk-input__prefix" aria-hidden="true">£</div>
-                                            <input id="@itemName"
+                                            <input id="@itemId"
                                             type="text"
                                             name="@itemName"
                                             class="govuk-input govuk-input--width-5"
                                             @errorFormClass
                                             @disableInput
                                             data_summary=@dataFlag
-                                            value="@currencyInputDecimal.ToCommaSeparatedNumber()" 
+                                            value="@currencyInputValue"
                                             currency-formatter="true" />
                                         }
                                         @if (Model.DataTable[q].InputType == DataTableInputTypeConstants.DecimalDataTableInput
@@ -93,7 +96,7 @@
                                             || Model.DataTable[q].InputType == DataTableInputTypeConstants.TextDataTableInput
                                         )
                                         {
-                                            <input id="@itemName"
+                                            <input id="@itemId"
                                             type="text"
                                             name="@itemName"
                                             class="govuk-input govuk-input--width-5"
