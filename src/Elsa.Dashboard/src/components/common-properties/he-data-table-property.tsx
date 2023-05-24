@@ -118,7 +118,8 @@ export class HeDataTableProperty {
     const json = JSON.stringify(cases, null, 2);
 
     const renderCaseEditor = (tableInput: NestedActivityDefinitionProperty, index: number) => {
-      const expression = tableInput.expressions[tableInput.syntax];
+      const headerExpression = tableInput.expressions[tableInput.syntax]
+      const inputExpression = tableInput.expressions[DataTableSyntax.Input];
       const syntax = tableInput.syntax;
       const monacoLanguage = mapSyntaxToLanguage(syntax);
 
@@ -157,7 +158,7 @@ export class HeDataTableProperty {
                 <elsa-expression-editor
                   key={`expression-editor-${index}-${this.syntaxSwitchCount}`}
                   ref={el => expressionEditor = el}
-                  expression={expression}
+                  expression={headerExpression}
                   language={monacoLanguage}
                   single-line={false}
                   editorHeight={this.editorHeight}
@@ -226,8 +227,8 @@ export class HeDataTableProperty {
             <div class="elsa-mt-1 elsa-relative elsa-rounded-md elsa-shadow-sm">
               <elsa-expression-editor
                 key={`expression-editor-${index}-${this.syntaxSwitchCount}`}
-                ref={el => expressionEditor = el}
-                expression={expression}
+                  ref={el => expressionEditor = el}
+                  expression={inputExpression}
                 language={monacoLanguage}
                 single-line={false}
                 editorHeight={this.editorHeight}

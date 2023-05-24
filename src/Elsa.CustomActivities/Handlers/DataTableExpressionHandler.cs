@@ -72,7 +72,7 @@ namespace Elsa.CustomActivities.Handlers
 
         private bool IsSummaryTotal(ElsaProperty property)
         {
-            bool hasSumColumn = property.Expressions.TryGetValue(DataTableSyntaxNames.SummaryTotalColumn, out string? sumTotal);
+            bool hasSumColumn = property.Expressions!.TryGetValue(DataTableSyntaxNames.SummaryTotalColumn, out string? sumTotal);
             bool isSumColumn = hasSumColumn ? sumTotal == "true" : false;
             return isSumColumn;
         }
