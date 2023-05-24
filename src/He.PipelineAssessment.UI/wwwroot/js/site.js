@@ -41,11 +41,9 @@ currencyInputs.forEach(function (input) {
 
 summaryInputs.forEach(function (summaryInput) {
 
-    var selector = 'input[data-column="' + summaryInput.dataset.column + '"]';
-    var tablecolumns = document.querySelectorAll(selector);
-    //var inputsToTotal = tablecolumns.filter(x => x.dataset.summary=='false');
-
-    tablecolumns.forEach(function (input) {
+    var selector = 'input[data-column="' + summaryInput.dataset.column + '"][data-summary="false"]';
+    var inputsToTotal = document.querySelectorAll(selector);
+    inputsToTotal.forEach(function (input) {
 
         if (input.dataset.summary == 'false') {
             input.addEventListener('keyup', function (event) {
@@ -66,7 +64,7 @@ summaryInputs.forEach(function (summaryInput) {
 function getTotalColumnValue(inputsToTotal) {
     var total = 0;
     inputsToTotal.forEach(function (input) {
-        total += input.value;
+        total += Number(input.value);
     });
 
     return total;
