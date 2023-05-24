@@ -8,6 +8,8 @@ let enabledSettings = []
 
 var currencyInputs = document.querySelectorAll('input[currency-formatter="true"]');
 
+var summaryInputs = document.querySelectorAll('input[data-summary="true"]');
+
 // Use Array.forEach to add an event listener to each checkbox.
 groupCheckboxes.forEach(function (checkbox) {
     checkbox.addEventListener('change', function () {
@@ -33,9 +35,42 @@ currencyInputs.forEach(function (input) {
         // format number
         input.value = input.value
             .replace(/,/g, '');
-        input.value =  numberWithCommas(input.value);
+        input.value = numberWithCommas(input.value);
     })
 })
+
+summaryInputs.forEach(function (summaryInput) {
+
+    var selector = 'input[data-column="' + summaryInput.dataset.column + '"]';
+    var tablecolumns = document.querySelectorAll(selector);
+    //var inputsToTotal = tablecolumns.filter(x => x.dataset.summary=='false');
+
+    tablecolumns.forEach(function (input) {
+
+        if (input.dataset.summary == 'false') {
+            input.addEventListener('keyup', function (event) {
+                // skip for arrow keys
+                if (event.which >= 37 && event.which <= 40) return;
+
+                summaryInput.value = getTotalColumnValue(inputsToTotal);
+
+                // format number
+                summaryInput.value = summaryInput.value
+                    .replace(/,/g, '');
+            });
+        }
+
+    });
+})
+
+function getTotalColumnValue(inputsToTotal) {
+    var total = 0;
+    inputsToTotal.forEach(function (input) {
+        total += input.value;
+    });
+
+    return total;
+}
 
 function numberWithCommas(x) {
     var parts = x.toString().split(".");
