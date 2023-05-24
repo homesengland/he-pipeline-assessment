@@ -131,10 +131,8 @@ namespace Elsa.CustomWorkflow.Sdk.HttpClients
                     return default;
                 }
             }
-            var jsonSerializerSettings = new JsonSerializerSettings { TypeNameHandling = TypeNameHandling.Auto };
-            var result = Newtonsoft.Json.JsonConvert.DeserializeObject<WorkflowActivityDataDto>(data, jsonSerializerSettings);
-            return result;
-            //return JsonSerializer.Deserialize<WorkflowActivityDataDto>(data, new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
+            var deserializedResult = JsonSerializer.Deserialize<WorkflowActivityDataDto>(data, new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
+            return deserializedResult;
         }
 
         public async Task<WorkflowActivityDataDto?> LoadCheckYourAnswersScreen(LoadWorkflowActivityDto model)

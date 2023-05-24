@@ -69,7 +69,8 @@
                                 var input = Model.DataTable[q].Inputs.ElementAtOrDefault(i);
                                 bool hasNullInput = input == null;
                                 var inputValue = hasNullInput ? "" : Model.DataTable[q].Inputs[i].Input;
-                                bool disableInput = Model.IsReadOnly || hasNullInput;
+                                bool disableInput = Model.IsReadOnly || Model.DataTable[q].Inputs[i].IsReadOnly || hasNullInput;
+                                string dataFlag = Model.DataTable[q].Inputs[i].IsSummaryTotal ? "total__" + q : "input__" + q;
                                 <dd class="govuk-summary-list__value">
                                     <div class="govuk-input__wrapper">
                                         @if (Model.DataTable[q].InputType == DataTableInputTypeConstants.CurrencyDataTableInput)
@@ -83,6 +84,7 @@
                                             class="govuk-input govuk-input--width-5"
                                             @errorFormClass
                                             @disableInput
+                                            data_summary=@dataFlag
                                             value="@currencyInputDecimal.ToCommaSeparatedNumber()" 
                                             currency-formatter="true" />
                                         }
@@ -97,6 +99,7 @@
                                             class="govuk-input govuk-input--width-5"
                                             @errorFormClass
                                             @disableInput
+                                            data_summary = @dataFlag
                                             value="@inputValue" />
                                         }                                       
                                     </div>

@@ -27,7 +27,10 @@ namespace He.PipelineAssessment.UI.Extensions
                            {
                                Identifier = y.Identifier,
                                InputHeading = y.Title,
-                               Input = y.Input
+                               Input = y.Input,
+                               IsReadOnly = y.IsReadOnly,
+                               IsSummaryTotal = y.IsSummaryTotal
+                               
                            }).ToList()
                }).ToList();
             }

@@ -369,9 +369,12 @@ namespace Elsa.CustomWorkflow.Sdk.Models.Workflow
 
     public class TableInput
     {
-        public string Identifier { get; set; }
+        public string? Identifier { get; set; }
         public string Title { get; set; } = null!;
         public string? Input { get; set; }
+        public bool IsReadOnly { get; set; } = false;
+        public bool IsSummaryTotal { get; set; } = false;
+
     }
 }
 

@@ -237,6 +237,7 @@ namespace Elsa.Server.Features.Workflow.LoadQuestionScreen
                         Inputs = item.DataTable.Inputs.ToArray(),
                         InputType = item.DataTable.InputType,
                         DisplayGroupId = item.DataTable.DisplayGroupId
+
                     };
                 }
 
