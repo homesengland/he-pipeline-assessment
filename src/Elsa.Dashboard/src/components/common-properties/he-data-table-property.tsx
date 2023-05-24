@@ -30,7 +30,6 @@ export class HeDataTableProperty {
   @State() iconProvider = new IconProvider();
   @Event() expressionChanged: EventEmitter<string>;
   @State() optionsDisplayToggle: Map<string> = {};
-  @State() summaryDisplayToggle: Map<string> = {};
 
   @State() switchTextHeight: string = "";
 
@@ -113,11 +112,6 @@ export class HeDataTableProperty {
     this.optionsDisplayToggle = { ... this.optionsDisplayToggle, tempValue }
   }
 
-  onToggleSummary(index: number) {
-    let tempValue = ToggleDictionaryDisplay(index, this.summaryDisplayToggle)
-    this.summaryDisplayToggle = { ... this.summaryDisplayToggle, tempValue }
-  }
-
   render() {
     const cases = this.inputs;
     const supportedSyntaxes = this.supportedSyntaxes;
@@ -135,11 +129,6 @@ export class HeDataTableProperty {
       let colWidth = "100%";
 
       const optionsDisplay = this.optionsDisplayToggle[index] ?? "none";
-      const summaryDisplay = this.summaryDisplayToggle[index] ?? "none";
-      //const urlDisplay =
-      //  this.urlDisplayToggle[index] != null && this.optionsDisplayToggle[index] != null && this.optionsDisplayToggle[index] != "none"
-      //    ? this.urlDisplayToggle[index]
-      //    : "none";
 
       return (
         <tbody>
@@ -214,21 +203,12 @@ export class HeDataTableProperty {
             </td>
           </tr>
 
-
           <tr style={{ display: optionsDisplay }}>
             <th colSpan={2}
-              class="elsa-px-6 elsa-py-3 elsa-text-left elsa-text-xs elsa-font-medium elsa-text-gray-500 elsa-tracking-wider elsa-w-2/12">Is <br />Is Summary Column?
-            </th>
-            <td class="elsa-py-0">
-              <input name="choice_input" type="checkbox"
-                onChange={() => this.onToggleSummary(index)}
-                class="focus:elsa-ring-blue-500 elsa-h-8 elsa-w-8 elsa-text-blue-600 elsa-border-gray-300 elsa-rounded" />
-            </td>
-          </tr>
+              class="elsa-px-6 elsa-py-3 elsa-text-left elsa-text-xs elsa-font-medium elsa-text-gray-500 elsa-tracking-wider elsa-w-2/12">Is <br />Apply Sum Total?
+              <p class="elsa-mt-2 elsa-text-sm elsa-text-gray-500">Indicates that this cell should be used to indicate the total value of all other rows of this column's rows.
+                This will be picked up by the front end, and automatically calculated if Javascript is enabled..</p>
 
-          <tr style={{ display: summaryDisplay }}>
-            <th colSpan={2}
-              class="elsa-px-6 elsa-py-3 elsa-text-left elsa-text-xs elsa-font-medium elsa-text-gray-500 elsa-tracking-wider elsa-w-2/12">Is <br />Apply Sum Total Summary
             </th>
             <td class="elsa-py-0">
               <input name="choice_input" type="checkbox" checked={sumTotalColumn} value={tableInput.expressions[DataTableSyntax.SumTotalColumn]}

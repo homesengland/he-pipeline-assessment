@@ -65,7 +65,7 @@ namespace Elsa.CustomActivities.Handlers
 
         private bool IsReadOnly(ElsaProperty property)
         {
-            bool hasReadOnly = property.Expressions.TryGetValue(DataTableSyntaxNames.IsReadOnly, out string? readOnly);
+            bool hasReadOnly = property.Expressions!.TryGetValue(DataTableSyntaxNames.IsReadOnly, out string? readOnly);
             bool isReadOnly = hasReadOnly ? readOnly == "true" : false;
             return isReadOnly;
         }
