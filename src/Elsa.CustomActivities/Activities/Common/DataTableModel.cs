@@ -7,5 +7,5 @@
         public string? DisplayGroupId { get; set; }
     }
 
-    public record TableInput(string? Identifier,string Title, string? Input = null);
+    public record TableInput(string? Identifier,string? Title, bool isReadOnly, bool isSummaryTotal, string? Input = null);
 }

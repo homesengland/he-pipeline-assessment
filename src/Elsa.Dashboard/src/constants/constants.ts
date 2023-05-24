@@ -23,11 +23,15 @@ export class QuestionCategories {
 }
 
 export class DataTableSyntax {
+  static readonly Readonly = "ReadOnly";
   static readonly Identifier = "Identifier";
   static readonly InputType = "InputType";
+  static readonly Input = "Input"
   static readonly TableHeader = "TableHeader";
+  static readonly InputHeader = "InputHeader"
   static readonly Title = "Title";
   static readonly DisplayGroupId = "DisplayGroupId";
+  static readonly SumTotalColumn = "SumTotalColumn";
 }
 
 export class CheckboxOptionsSyntax {
