@@ -29,43 +29,54 @@ namespace Elsa.CustomActivities.Activities.QuestionScreen.Helpers
 
         public async Task<decimal?> GetDecimalAnswer(string correlationId, string workflowName, string activityName, string questionId, string tableCellIdentifier)
         {
-            var workflowBlueprint = await _workflowRegistry.FindByNameAsync(workflowName, Models.VersionOptions.Published);
-
-            if (workflowBlueprint != null)
+            try
             {
-                var activity = workflowBlueprint.Activities.FirstOrDefault(x => x.Name == activityName);
-                if (activity != null)
+                var workflowBlueprint =
+                    await _workflowRegistry.FindByNameAsync(workflowName, Models.VersionOptions.Published);
+
+                if (workflowBlueprint != null)
                 {
-                    var question = await _elsaCustomRepository.GetQuestionByCorrelationId(activity.Id,
-                        correlationId, questionId, CancellationToken.None);
-
-                    if (question != null && question.Answers != null && question.QuestionType == QuestionTypeConstants.DataTable)
+                    var activity = workflowBlueprint.Activities.FirstOrDefault(x => x.Name == activityName);
+                    if (activity != null)
                     {
-                        var answer = question.Answers.FirstOrDefault();
-                        if (answer != null)
+                        var question = await _elsaCustomRepository.GetQuestionByCorrelationId(activity.Id,
+                            correlationId, questionId, CancellationToken.None);
+
+                        if (question != null && question.Answers != null &&
+                            question.QuestionType == QuestionTypeConstants.DataTable)
                         {
-                            var dataTable = JsonSerializer.Deserialize<DataTable>(answer.AnswerText);
-                            if (dataTable != null &&
-                                (dataTable.InputType == DataTableInputTypeConstants.CurrencyDataTableInput ||
-                                dataTable.InputType == DataTableInputTypeConstants.IntegerDataTableInput ||
-                                dataTable.InputType == DataTableInputTypeConstants.DecimalDataTableInput))
+                            var answer = question.Answers.FirstOrDefault();
+                            if (answer != null)
                             {
-                                var input = dataTable.Inputs.FirstOrDefault(x => x.Identifier == tableCellIdentifier);
-
-                                if (input != null && input.Input != null)
+                                var dataTable = JsonSerializer.Deserialize<DataTable>(answer.AnswerText);
+                                if (dataTable != null &&
+                                    (dataTable.InputType == DataTableInputTypeConstants.CurrencyDataTableInput ||
+                                     dataTable.InputType == DataTableInputTypeConstants.IntegerDataTableInput ||
+                                     dataTable.InputType == DataTableInputTypeConstants.DecimalDataTableInput))
                                 {
-                                    var answerText = decimal.Parse(input.Input);
-                                    return answerText;
-                                }
-                            }
+                                    var input = dataTable.Inputs.FirstOrDefault(
+                                        x => x.Identifier == tableCellIdentifier);
 
+                                    if (input != null && input.Input != null)
+                                    {
+                                        var answerText = decimal.Parse(input.Input);
+                                        return answerText;
+                                    }
+                                }
+
+                            }
                         }
                     }
                 }
             }
+            catch (Exception e)
+            {
+                return null;
+            }
 
             return null;
         }
+
         public async Task<string> GetStringAnswer(string correlationId, string workflowName, string activityName, string questionId, string tableCellIdentifier)
         {
             try
@@ -104,7 +115,7 @@ namespace Elsa.CustomActivities.Activities.QuestionScreen.Helpers
             {
                 return string.Empty;
             }
-            
+
             return string.Empty;
         }
 
