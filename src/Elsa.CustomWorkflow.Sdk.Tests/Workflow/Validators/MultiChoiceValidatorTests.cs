@@ -590,5 +590,63 @@ namespace Elsa.CustomWorkflow.Sdk.Tests.Workflow.Validators
             result.ShouldNotHaveValidationErrorFor(c => c);
             result.ShouldNotHaveValidationErrorFor(c => c.SelectedChoices);
         }
+
+
+        [Fact]
+        public void Should_Have_Append_New_Line_When_Multiple_ValidationMessages_Return_Within_Question()
+        {
+            //Arrange
+            MultiChoiceValidator validator = new MultiChoiceValidator();
+            Checkbox multiChoice = new Checkbox();
+            var groupA = new ChoiceGroup() { GroupIdentifier = "A" };
+            var groupB = new ChoiceGroup() { GroupIdentifier = "B" };
+            var groupC = new ChoiceGroup() { GroupIdentifier = "C" };
+
+            multiChoice.Choices = new List<Choice>
+            {
+                new Choice
+                {
+                    Id = 1,
+                    Answer = "Test 1",
+                    IsSingle = true,
+                    IsExclusiveToQuestion = false,
+                    QuestionChoiceGroup = groupA
+                },
+                new Choice
+                {
+                    Id = 2,
+                    Answer = "Test 2",
+                    IsSingle = true,
+                    IsExclusiveToQuestion = false,
+                    QuestionChoiceGroup = groupA
+                },
+                new Choice
+                {
+                    Id = 3,
+                    Answer = "Test 3",
+                    IsSingle = true,
+                    IsExclusiveToQuestion = false,
+                    QuestionChoiceGroup = groupB
+                },
+                 new Choice
+                {
+                    Id = 4,
+                    Answer = "Test 4",
+                    IsSingle = true,
+                    IsExclusiveToQuestion = false,
+                    QuestionChoiceGroup = groupB
+                },
+            };
+            multiChoice.SelectedChoices = new List<int>() { 1, 2, 3, 4 };
+
+            var result = validator.TestValidate(multiChoice);
+
+            //Assert
+            result.ShouldHaveValidationErrorFor(c => c)
+                .WithErrorMessage("Test 1 and Test 2 cannot be selected with any other answer in the group.\r\nTest 3 and Test 4 cannot be selected with any other answer in the group.");
+
+            result.ShouldNotHaveValidationErrorFor(c => c.SelectedChoices);
+        }
+
     }
 }
