@@ -13,7 +13,6 @@
 
 
 <div class="govuk-form-group @errorFormClass" id="@formItemName">
-    @await Html.PartialAsync("_QuestionTitle", Model.Title)
 
     @{
         var dataTable = Model.DataTable;
@@ -138,16 +137,11 @@
                                     </div>
                                 </dd>
                             }
-
-
                         }
                     </div>
                 }
             </dl>
         </div>
     </div>
-    @await Html.PartialAsync("_QuestionHint", Model.QuestionHint)
 
-
-    @await Html.PartialAsync("_Comments", new Comment(){Index = Model.Index, CommentText = Model.Comments,DisplayComments = Model.DisplayComments})
 </div>
