@@ -73,7 +73,7 @@
                                 var inputValue = hasNullInput ? "" : Model.DataTable[q].Inputs[i].Input;
                                 var disableInput = Model.DataTable[q].Inputs[i].IsReadOnly? "disabled":"";
                                 string dataFlagIsSummary = Model.DataTable[q].Inputs[i].IsSummaryTotal ? "true" : "false";
-                                string dataColumn =  q.ToString() ;
+                                string dataColumn =  Model.DataTable[q].DisplayGroupId+"_"+q.ToString();
                                 <dd class="govuk-summary-list__value">
                                     <div class="govuk-input__wrapper">
                                         @if (Model.DataTable[q].InputType == DataTableInputTypeConstants.CurrencyDataTableInput)
