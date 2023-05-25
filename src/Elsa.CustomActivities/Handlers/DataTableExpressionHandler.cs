@@ -66,14 +66,14 @@ namespace Elsa.CustomActivities.Handlers
         private bool IsReadOnly(ElsaProperty property)
         {
             bool hasReadOnly = property.Expressions!.TryGetValue(DataTableSyntaxNames.IsReadOnly, out string? readOnly);
-            bool isReadOnly = hasReadOnly ? readOnly == "true" : false;
+            bool isReadOnly = hasReadOnly ? readOnly.ToLower() == "true" : false;
             return isReadOnly;
         }
 
         private bool IsSummaryTotal(ElsaProperty property)
         {
             bool hasSumColumn = property.Expressions!.TryGetValue(DataTableSyntaxNames.SummaryTotalColumn, out string? sumTotal);
-            bool isSumColumn = hasSumColumn ? sumTotal == "true" : false;
+            bool isSumColumn = hasSumColumn ? sumTotal.ToLower() == "true" : false;
             return isSumColumn;
         }
 
