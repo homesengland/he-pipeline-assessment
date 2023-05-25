@@ -2,8 +2,8 @@
 
 namespace He.PipelineAssessment.UI.Features.Intervention.InterventionManagement.Commands.CreateAssessmentIntervention
 {
-    public class CreateAssessmentInterventionRequest : IRequest
+    public class CreateAssessmentInterventionRequest : IRequest<CreateAssessmentInterventionDto>
     {
-        public int AssessmentWorkflowInstanceId { get; set; }
+        public string WorkflowInstanceId { get; set; } = null!;
     }
 }

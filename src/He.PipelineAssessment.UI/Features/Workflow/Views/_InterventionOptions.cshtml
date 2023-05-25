@@ -1,0 +1,20 @@
+﻿@model string;
+@using He.PipelineAssessment.UI.Authorization;
+@using He.PipelineAssessment.UI.Extensions;
+@using System.Security.Claims;
+@using Microsoft.AspNetCore.Authorization
+
+<h2 class="govuk-heading-m">
+    Request an intervention
+</h2>
+
+<div class="govuk-button-group">
+    @if ((await AuthorizationService.AuthorizeAsync(User, Constants.AuthorizationPolicies.AssignmentToPipelineAdminRoleRequired)).Succeeded)
+    {
+        @Html.ActionLink("Override", "Override", "Intervention", new { workflowInstanceId = Model }, new { @class = "govuk-button", data_module="govuk-button" })
+    }
+
+    @Html.ActionLink("Rollback", "Rollback", "Intervention", new { workflowInstanceId = Model }, new { @class = "govuk-button", data_module="govuk-button" })
+
+    @Html.ActionLink("Variation", "Variation", "Intervention", new { workflowInstanceId = Model }, new { @class = "govuk-button", data_module="govuk-button" })
+</div>

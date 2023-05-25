@@ -17,13 +17,30 @@
                             Decision for Override
                         </h1>
                     </legend>
+
                     <dl class="govuk-summary-list govuk-summary-list--no-border">
                         <div class="govuk-summary-list__row">
                             <dt class="govuk-summary-list__key">
                                 Name
                             </dt>
                             <dd class="govuk-summary-list__value">
-                                Sarah Philips
+                                @Model.CreateAssessmentInterventionCommand.RequestedBy
+                            </dd>
+                        </div>
+                        <div class="govuk-summary-list__row">
+                            <dt class="govuk-summary-list__key">
+                                Assessment Stage
+                            </dt>
+                            <dd class="govuk-summary-list__value">
+                                @Model.CreateAssessmentInterventionCommand.AssessmentName
+                            </dd>
+                        </div>
+                        <div class="govuk-summary-list__row">
+                            <dt class="govuk-summary-list__key">
+                                Result
+                            </dt>
+                            <dd class="govuk-summary-list__value">
+                                @Model.CreateAssessmentInterventionCommand.AssessmentResult
                             </dd>
                         </div>
                     </dl>
@@ -34,7 +51,7 @@
                                 Attach Sign off document
                             </label>
                         </h1>
-                        <input class="govuk-input" id="signoff-document" name="event-name" type="text">
+                        <input class="govuk-input" id="signoff-document" name="event-name" value="@Model.CreateAssessmentInterventionCommand.SignOffDocument" type="text">
                     </div>
 
                     <dl class="govuk-summary-list govuk-summary-list--no-border">
@@ -43,7 +60,7 @@
                                 Decision Type
                             </dt>
                             <dd class="govuk-summary-list__value">
-                                Override
+                                @Model.CreateAssessmentInterventionCommand.DecisionType
                             </dd>
                         </div>
                     </dl>
@@ -54,7 +71,7 @@
                                 Rationale
                             </label>
                         </h1>
-                        <textarea class="govuk-textarea" id="rationale" name="rationale" rows="5" aria-describedby="rationale"></textarea>
+                        <textarea class="govuk-textarea" id="rationale" name="rationale" @Model.CreateAssessmentInterventionCommand.AssessorRationale rows="5" aria-describedby="rationale"></textarea>
                     </div>
 
 
@@ -64,7 +81,7 @@
                                 Date Submitted
                             </dt>
                             <dd class="govuk-summary-list__value">
-                                12/01/2222 12:23:45
+                                @DateTime.Now.ToString("dd/mm/yyyy HH.MM/ss")
                             </dd>
                         </div>
                     </dl>

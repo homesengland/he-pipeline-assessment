@@ -15,11 +15,10 @@ namespace He.PipelineAssessment.UI.Features.Intervention.Controllers
             _mediator = mediator;
         }
 
-        public async Task<IActionResult> Override(CreateAssessmentInterventionRequest request)
+        public async Task<IActionResult> Override(string workflowInstanceId)
         {
-            var dto = new CreateAssessmentInterventionDto();
-            //var dto = await _mediator.Send(request);
-            // populate info from the db - mediator
+            var dto = await _mediator.Send(new CreateAssessmentInterventionRequest { WorkflowInstanceId = workflowInstanceId});
+            
             return View(dto);
         }
 
