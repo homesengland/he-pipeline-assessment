@@ -20,20 +20,4 @@ namespace Elsa.CustomActivities.Providers
             return JsonConvert.SerializeObject(potScoreOptions);
         }
     }
-
-    public class TableInputProvider : IOptionsProvider
-    {
-        public async Task<string> GetOptions(CancellationToken cancellationToken)
-        {
-            
-            List<string> typeList = await Task.FromResult(new List<string>());
-            typeList.Add("Text");
-            typeList.Add("Number");
-            typeList.Add("Currency");
-            typeList.Add("Decimal");
-
-            return JsonConvert.SerializeObject(typeList);        }
-        
-    }
-
 }
