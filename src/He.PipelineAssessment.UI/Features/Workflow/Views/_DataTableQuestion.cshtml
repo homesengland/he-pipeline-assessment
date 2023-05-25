@@ -7,6 +7,7 @@
 @{
     var formItemName = "Data.Questions[" + Model.Index + "].DataTable";
     var errorFormClass = !Model.IsValid ? "govuk-form-group--error" : "";
+    //var errorFieldClass = !Model.IsValid ? "govuk-input--error" : "";
     var isReadOnly = Model.IsReadOnly ? "disabled" : "";
 }
 
@@ -60,7 +61,8 @@
                             int countOfColumnIndex = Model.DataTable[q].Inputs.Count();
                             if (i < countOfColumnIndex)
                             {
-                                var itemId = "Data.Questions[" + Model.DataTable[q].QuestionIndex + "].DataTable.Inputs[" + i + "]";
+                                var inputs = "Data.Questions[" + Model.DataTable[q].QuestionIndex + "].DataTable.Inputs";
+                                var itemId = inputs + "[" + i + "]";
                                 var itemName = itemId + ".Input";
                                 var hiddenTitleName = itemId + ".Title";
                                 var hiddenIdentifierName = itemId + ".Identifier";
@@ -74,6 +76,8 @@
                                 var disableInput = Model.DataTable[q].Inputs[i].IsReadOnly? "disabled":"";
                                 string dataFlagIsSummary = Model.DataTable[q].Inputs[i].IsSummaryTotal ? "true" : "false";
                                 string dataColumn =  q.ToString() ;
+                                string questionNotAnswered = Model.ValidationMessages != null && Model.ValidationMessages.Errors.Any(x => x.PropertyName == @inputs) ? "govuk-input--error" : "";
+                                string errorFieldClass = Model.ValidationMessages != null && Model.ValidationMessages.Errors.Any(x => x.PropertyName == @itemId) ? "govuk-input--error" : "";
                                 <dd class="govuk-summary-list__value">
                                     <div class="govuk-input__wrapper">
                                         @if (Model.DataTable[q].InputType == DataTableInputTypeConstants.CurrencyDataTableInput)
@@ -83,36 +87,44 @@
                                             var currencyInputValue = success ? currencyInputDecimal.ToCommaSeparatedNumber() : inputValue;
                                             <div class="govuk-input__prefix" aria-hidden="true">£</div>
                                             <input id="@itemId"
-                                            type="number"
+                                            type="text"
                                             name="@itemName"
-                                            class="govuk-input govuk-input--width-5"
-                                            @errorFormClass
+                                            class="govuk-input govuk-input--width-5 @errorFieldClass @questionNotAnswered"
                                             @disableInput
                                             data-summary=@dataFlagIsSummary
                                             data-column=@dataColumn
                                             value="@currencyInputValue" 
                                             currency-formatter="true" />
                                         }
-                                        @if (Model.DataTable[q].InputType == DataTableInputTypeConstants.DecimalDataTableInput
-                                            || Model.DataTable[q].InputType == DataTableInputTypeConstants.IntegerDataTableInput)
+                                        @if (Model.DataTable[q].InputType == DataTableInputTypeConstants.DecimalDataTableInput)
                                         {
                                             <input id="@itemName"
                                             type="number"
+                                            step="any"
                                             name="@itemName"
-                                            class="govuk-input govuk-input--width-5"
-                                            @errorFormClass
+                                            class="govuk-input govuk-input--width-5 @errorFieldClass @questionNotAnswered"
                                             @disableInput
                                             data-summary=@dataFlagIsSummary
                                             data-column=@dataColumn
                                             value="@inputValue" />
-                                        }         
+                                        }  
+                                        @if (Model.DataTable[q].InputType == DataTableInputTypeConstants.IntegerDataTableInput)
+                                        {
+                                            <input id="@itemName"
+                                            type="number"
+                                            name="@itemName"
+                                            class="govuk-input govuk-input--width-5 @errorFieldClass @questionNotAnswered"
+                                            @disableInput
+                                            data-summary=@dataFlagIsSummary
+                                            data-column=@dataColumn
+                                            value="@inputValue" />
+                                        } 
                                         @if (Model.DataTable[q].InputType == DataTableInputTypeConstants.TextDataTableInput)
                                         {
                                             <input id="@itemId"
                                             type="text"
                                             name="@itemName"
-                                            class="govuk-input govuk-input--width-5"
-                                            @errorFormClass
+                                            class="govuk-input govuk-input--width-5 @errorFieldClass @questionNotAnswered"
                                             @disableInput
                                             value="@inputValue" />
                                         }                                       
