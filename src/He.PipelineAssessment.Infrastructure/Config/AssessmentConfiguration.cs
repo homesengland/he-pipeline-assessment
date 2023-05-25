@@ -15,25 +15,25 @@ namespace He.PipelineAssessment.Infrastructure.Config
             builder.Property(x => x.SpId);
 
             builder.Property(x => x.Counterparty)
-                .HasMaxLength(500);
+                .HasMaxLength(EntityConfigurationConstants.MaxLength);
 
             builder.Property(x => x.Reference)
-                .HasMaxLength(100);
+                .HasMaxLength(EntityConfigurationConstants.StandardLength);
 
             builder.Property(x => x.SiteName)
-                .HasMaxLength(500);
+                .HasMaxLength(EntityConfigurationConstants.MaxLength);
 
             builder.Property(x => x.ProjectManager)
-                .HasMaxLength(100);
+                .HasMaxLength(EntityConfigurationConstants.StandardLength);
 
             builder.Property(x => x.ProjectManagerEmail)
-                .HasMaxLength(100);
+                .HasMaxLength(EntityConfigurationConstants.StandardLength);
 
             builder.Property(x => x.Status)
-                .HasMaxLength(50);
+                .HasMaxLength(EntityConfigurationConstants.ShortLength);
 
             builder.Property(x => x.LocalAuthority)
-                .HasMaxLength(500);
+                .HasMaxLength(EntityConfigurationConstants.MaxLength);
 
             builder.Property(x => x.CreatedBy)
                 .HasMaxLength(EntityConfigurationConstants.MaxLength);
