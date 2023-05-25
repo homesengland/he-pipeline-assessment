@@ -25,6 +25,8 @@
 
             public const string AssignmentToWorkflowExecuteRoleRequired = "AssignmentToWorkflowExecuteRoleRequired";
 
+            public const string AssignmentToWorkflowEconomistRoleRequired = "AssignmentToWorkflowEconomistRoleRequired";
+
         }
     }
 }

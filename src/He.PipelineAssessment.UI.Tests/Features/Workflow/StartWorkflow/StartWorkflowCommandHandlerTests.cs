@@ -1,6 +1,8 @@
 ﻿using AutoFixture.Xunit2;
 using Elsa.CustomWorkflow.Sdk.HttpClients;
 using Elsa.CustomWorkflow.Sdk.Models.Workflow;
+using He.PipelineAssessment.Infrastructure.Repository;
+using He.PipelineAssessment.Models;
 using He.PipelineAssessment.Tests.Common;
 using He.PipelineAssessment.UI.Authorization;
 using He.PipelineAssessment.UI.Features.Workflow.StartWorkflow;
@@ -37,7 +39,9 @@ namespace He.PipelineAssessment.UI.Tests.Features.Workflow.StartWorkflow
         public async Task Handle_ReturnsLoadWorkflowActivityRequest_GivenNoErrorsOccur(
             [Frozen] Mock<IElsaServerHttpClient> elsaServerHttpClient,
             [Frozen] Mock<IRoleValidation> roleValidation,
+            [Frozen] Mock<IAssessmentRepository> assessmentRepository,
             StartWorkflowCommand command,
+            AssessmentToolInstanceNextWorkflow assessmentToolInstanceNextWorkflow,
             WorkflowNextActivityDataDto workflowNextActivityDataDto,
             StartWorkflowCommandHandler sut)
         {
@@ -46,6 +50,9 @@ namespace He.PipelineAssessment.UI.Tests.Features.Workflow.StartWorkflow
 
             elsaServerHttpClient.Setup(x => x.PostStartWorkflow(It.IsAny<StartWorkflowCommandDto>()))
                 .ReturnsAsync(workflowNextActivityDataDto);
+
+            assessmentRepository.Setup(x => x.GetNonStartedAssessmentToolInstanceNextWorkflowByAssessmentId(command.AssessmentId, command.WorkflowDefinitionId))
+                .ReturnsAsync(assessmentToolInstanceNextWorkflow);
 
             //Act
             var result = await sut.Handle(command, CancellationToken.None);

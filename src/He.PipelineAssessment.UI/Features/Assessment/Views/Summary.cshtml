@@ -76,35 +76,36 @@
                                 }
                             </strong>
                         </td>
+                        
+                        <td class="govuk-table__cell">
+                            @if (@assessmentStage.CreatedDateTime.HasValue)
+                            {
+                                @assessmentStage.CreatedDateTime.Value.Date.ToLongDateString()
+                            }
+                            else
+                            {
+
+                                if ((await AuthorizationService.AuthorizeAsync(User, Constants.AuthorizationPolicies.AssignmentToWorkflowExecuteRoleRequired)).Succeeded)
+                                {
+                                    if (!string.IsNullOrEmpty(assessmentStage.WorkflowDefinitionId))
+                                    {
+                                        @using (Html.BeginForm("StartWorkflow", "Workflow", FormMethod.Post))
+                                        {
+                                            @Html.AntiForgeryToken()
+                                            @Html.HiddenFor(x => x.AssessmentId)
+                                            @Html.HiddenFor(x => x.CorrelationId)
+                                            <input type="hidden" name="WorkflowDefinitionId" value="@assessmentStage.WorkflowDefinitionId" />
+                                            <input class="govuk-button govuk-!-margin-0" data-module="govuk-button" id="Submit" type="submit" value="Start now" />
+                                        }
+                                    }
+                                }
+                            }
+                        </td>
                         <td class="govuk-table__cell">
                             @if (@assessmentStage.SubmittedDateTime.HasValue)
                             {
                                 @assessmentStage.SubmittedDateTime.Value.Date.ToLongDateString()
                             }
-
-                        <td class="govuk-table__cell">
-                                @if (@assessmentStage.CreatedDateTime.HasValue)
-                                {
-                                    @assessmentStage.CreatedDateTime.Value.Date.ToLongDateString()
-                                }
-                                else
-                                {
-
-                                    if ((await AuthorizationService.AuthorizeAsync(User, Constants.AuthorizationPolicies.AssignmentToWorkflowExecuteRoleRequired)).Succeeded)
-                                    {
-                                        if (!string.IsNullOrEmpty(assessmentStage.WorkflowDefinitionId))
-                                        {
-                                            @using (Html.BeginForm("StartWorkflow", "Workflow", FormMethod.Post))
-                                            {
-                                                @Html.AntiForgeryToken()
-                                                @Html.HiddenFor(x => x.AssessmentId)
-                                                @Html.HiddenFor(x => x.CorrelationId)
-                                            <input type="hidden" name="WorkflowDefinitionId" value="@assessmentStage.WorkflowDefinitionId" />
-                                            <input class="govuk-button govuk-!-margin-0" data-module="govuk-button" id="Submit" type="submit" value="Start now" />
-                                            }
-                                        }
-                                    }
-                                }
                         </td>
                         <td class="govuk-table__cell">
                                 @assessmentStage.SubmittedBy
@@ -112,7 +113,6 @@
                         <td class="govuk-table__cell">
                                 @assessmentStage.Result
                         </td>
-                        <td class="govuk-table__cell"> </td>
                     </tr>
                 }
             </tbody>

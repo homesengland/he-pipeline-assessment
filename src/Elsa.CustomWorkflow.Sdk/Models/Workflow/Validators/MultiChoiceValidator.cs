@@ -1,5 +1,4 @@
 ﻿using FluentValidation;
-using System.Linq;
 
 namespace Elsa.CustomWorkflow.Sdk.Models.Workflow.Validators
 {
@@ -14,10 +13,11 @@ namespace Elsa.CustomWorkflow.Sdk.Models.Workflow.Validators
                         RuleFor(x => x).Must(multipleChoice =>
                             {
                                 var validationResult = true;
-                                if (multipleChoice.SelectedChoices!.Count() <= 1)
+                                if (multipleChoice.SelectedChoices!.Count() <= 1) 
                                 {
                                     return true;
                                 }
+
                                 var distinctSelectedGroups = multipleChoice.Choices
                                     .Where(x => multipleChoice.SelectedChoices.Contains(x.Id))
                                     .Select(x => x.QuestionChoiceGroup?.GroupIdentifier).Distinct().ToList();
@@ -31,14 +31,14 @@ namespace Elsa.CustomWorkflow.Sdk.Models.Workflow.Validators
                                             multipleChoice.SelectedChoices.Where(x =>
                                                 choicesForGroup.Select(y => y.Id).Contains(x));
 
-
-                                        if (selectedChoicesForGroup.Count() <= 1)
+                                        if (selectedChoicesForGroup.Count() <= 1) 
                                         {
-                                            validationResult = true;
+                                            continue;
                                         }
+
                                         foreach (var choice in choicesForGroup)
                                         {
-                                            if (choice.IsSingle && multipleChoice.SelectedChoices!.Contains(choice.Id))
+                                            if (choice.IsSingle && selectedChoicesForGroup!.Contains(choice.Id))
                                             {
                                                 return false;
                                             }
@@ -83,13 +83,17 @@ namespace Elsa.CustomWorkflow.Sdk.Models.Workflow.Validators
                                         if (selectedAnswers.Count() <= 1) continue;
                                         foreach (var choice in choicesForGroup)
                                         {
-                                            if (choice.IsSingle && multipleChoice.SelectedChoices!.Contains(choice.Id))
+                                            if (choice.IsSingle && selectedAnswers!.Contains(choice.Id))
                                             {
                                                 groupValidation = false;
                                                 break;
                                             }
                                         }
-                                        if(groupValidation) continue;
+
+                                        if (groupValidation) 
+                                        { 
+                                            continue; 
+                                        }
 
                                         var exclusiveAnswers = choicesForGroup
                                             .Where(c => c.IsSingle && selectedAnswers!.Contains(c.Id)).Select(c => c.Answer)
@@ -113,17 +117,16 @@ namespace Elsa.CustomWorkflow.Sdk.Models.Workflow.Validators
                                         {
                                             validationMessage += $"{exclusiveAnswers.First()} cannot be selected with any other answer in the group.";
                                         }
+
                                     }
 
                                     var allIsExclusiveToQuestionChoices = multipleChoice.Choices
                                         .Where(x => x.IsExclusiveToQuestion).ToList();
                                     var selectedIsExclusiveToQuestionChoices = multipleChoice.SelectedChoices.Where(x =>
                                         allIsExclusiveToQuestionChoices.Select(y => y.Id).Contains(x));
-
                                     var exclusiveAnswersToQuestion = allIsExclusiveToQuestionChoices
                                         .Where(c => c.IsExclusiveToQuestion && selectedIsExclusiveToQuestionChoices!.Contains(c.Id)).Select(c => c.Answer)
                                         .ToList();
-
 
 
                                     if (exclusiveAnswersToQuestion.Count() > 1)
