@@ -53,7 +53,6 @@ namespace Elsa.CustomActivities.Activities.QuestionScreen
                 QuestionTypeConstants.DateQuestion, 
                 QuestionTypeConstants.TextQuestion, 
                 QuestionTypeConstants.TextAreaQuestion,
-                QuestionTypeConstants.DataTable,
                 QuestionTypeConstants.WeightedCheckboxQuestion,
                 QuestionTypeConstants.WeightedRadioQuestion
             })]
@@ -77,7 +76,23 @@ namespace Elsa.CustomActivities.Activities.QuestionScreen
                 })]
         public string QuestionGuidance { get; set; } = null!;
 
-        [HeActivityInput(Hint = "Include comments box", UIHint = HePropertyUIHints.Checkbox)]
+        [HeActivityInput(Hint = "Include comments box", 
+            UIHint = HePropertyUIHints.Checkbox,
+            ConditionalActivityTypes = new[]
+            {
+                QuestionTypeConstants.CurrencyQuestion,
+                QuestionTypeConstants.DecimalQuestion,
+                QuestionTypeConstants.IntegerQuestion,
+                QuestionTypeConstants.PercentageQuestion,
+                QuestionTypeConstants.CheckboxQuestion,
+                QuestionTypeConstants.RadioQuestion,
+                QuestionTypeConstants.PotScoreRadioQuestion,
+                QuestionTypeConstants.DateQuestion,
+                QuestionTypeConstants.TextQuestion,
+                QuestionTypeConstants.TextAreaQuestion,
+                QuestionTypeConstants.WeightedCheckboxQuestion,
+                QuestionTypeConstants.WeightedRadioQuestion
+            })]
         public bool DisplayComments { get; set; }
 
         [HeActivityInput(Hint = "Character limit", UIHint = HePropertyUIHints.SingleLine, ConditionalActivityTypes = new[] { QuestionTypeConstants.TextAreaQuestion }, ExpectedOutputType = ExpectedOutputHints.Number)]
@@ -149,7 +164,8 @@ namespace Elsa.CustomActivities.Activities.QuestionScreen
                 QuestionTypeConstants.PotScoreRadioQuestion,
                 QuestionTypeConstants.CheckboxQuestion,
                 QuestionTypeConstants.WeightedCheckboxQuestion,
-                QuestionTypeConstants.WeightedRadioQuestion
+                QuestionTypeConstants.WeightedRadioQuestion,
+                QuestionTypeConstants.DataTable
             })]
         public int? DataDictionary { get; set; }
 
