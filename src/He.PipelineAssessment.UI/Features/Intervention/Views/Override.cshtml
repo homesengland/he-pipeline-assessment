@@ -1,0 +1,76 @@
+﻿@model He.PipelineAssessment.UI.Features.Intervention.InterventionManagement.Commands.CreateAssessmentIntervention.CreateAssessmentInterventionDto;
+
+@{
+    ViewData["Title"] = "Create Assessment Override";
+    Layout = "_Layout";
+}
+<div class="text-center">
+@using (Html.BeginForm("CreateAssessmentIntervention", "Intervention", FormMethod.Post))
+{
+    @Html.AntiForgeryToken()
+        <div class="govuk-form-group">
+            <div class="govuk-!-padding-bottom-6">
+                <fieldset class="govuk-fieldset" aria-describedby="waste-hint">
+                    <legend class="govuk-fieldset__legend govuk-fieldset__legend--l">
+                        <h1 class="govuk-heading-l">
+                            Decision for Override
+                        </h1>
+                    </legend>
+                    <dl class="govuk-summary-list govuk-summary-list--no-border">
+                        <div class="govuk-summary-list__row">
+                            <dt class="govuk-summary-list__key">
+                                Name
+                            </dt>
+                            <dd class="govuk-summary-list__value">
+                                Sarah Philips
+                            </dd>
+                        </div>
+                    </dl>
+
+                    <div class="govuk-form-group">
+                        <h1 class="govuk-label-wrapper">
+                            <label class="govuk-label govuk-label--m" for="signoff-document">
+                                Attach Sign off document
+                            </label>
+                        </h1>
+                        <input class="govuk-input" id="signoff-document" name="event-name" type="text">
+                    </div>
+
+                    <dl class="govuk-summary-list govuk-summary-list--no-border">
+                        <div class="govuk-summary-list__row">
+                            <dt class="govuk-summary-list__key">
+                                Decision Type
+                            </dt>
+                            <dd class="govuk-summary-list__value">
+                                Override
+                            </dd>
+                        </div>
+                    </dl>
+
+                    <div class="govuk-form-group">
+                        <h1 class="govuk-label-wrapper">
+                            <label class="govuk-label govuk-label--m" for="rationale">
+                                Rationale
+                            </label>
+                        </h1>
+                        <textarea class="govuk-textarea" id="rationale" name="rationale" rows="5" aria-describedby="rationale"></textarea>
+                    </div>
+
+
+                    <dl class="govuk-summary-list govuk-summary-list--no-border">
+                        <div class="govuk-summary-list__row">
+                            <dt class="govuk-summary-list__key">
+                                Date Submitted
+                            </dt>
+                            <dd class="govuk-summary-list__value">
+                                12/01/2222 12:23:45
+                            </dd>
+                        </div>
+                    </dl>
+                </fieldset>
+            </div>
+
+            <input id="Next" type="submit" value="Save and continue" name="Next" class="govuk-button" />
+        </div>
+}
+</div>
