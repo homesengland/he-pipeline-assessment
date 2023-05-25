@@ -347,7 +347,7 @@ namespace Elsa.CustomWorkflow.Sdk.Models.Workflow
     {
         public List<TableInput> Inputs { get; set; } = new List<TableInput>();
 
-        private string _displayGroupId { get; set; } 
+        private string _displayGroupId { get; set; } = null!;
         public string DisplayGroupId
         {
             get

@@ -69,7 +69,7 @@ namespace Elsa.CustomActivities.Activities.QuestionScreen.Helpers
                     }
                 }
             }
-            catch (Exception e)
+            catch (Exception)
             {
                 return null;
             }
@@ -111,7 +111,7 @@ namespace Elsa.CustomActivities.Activities.QuestionScreen.Helpers
                     }
                 }
             }
-            catch (Exception e)
+            catch (Exception)
             {
                 return string.Empty;
             }

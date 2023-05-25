@@ -618,13 +618,13 @@ namespace Elsa.CustomActivities.Tests.Handlers.Syntax
 
             ElsaProperty sampleProperty = SampleProperty(SyntaxNames.Json, type, JsonConvert.SerializeObject(inputs));
 
-            sampleProperty.Expressions.Add(DataTableSyntaxNames.DisplayGroupId, "123");
+            sampleProperty.Expressions!.Add(DataTableSyntaxNames.DisplayGroupId, "123");
             sampleProperty.Expressions.Add(DataTableSyntaxNames.InputType, DataTableInputTypeConstants.DecimalDataTableInput);
 
             foreach (var input in inputs)
             {
                 evaluator.Setup(x => x.TryEvaluateAsync<string>(input.Expressions![input.Syntax!],
-                    input.Syntax!, context, CancellationToken.None)).Returns(Task.FromResult(Models.Result.Success<string?>(input.Expressions![input.Syntax])));
+                    input.Syntax!, context, CancellationToken.None)).Returns(Task.FromResult(Models.Result.Success<string?>(input.Expressions![input.Syntax!])));
 
                 evaluator.Setup(x => x.TryEvaluateAsync<string>(input.Expressions![DataTableSyntaxNames.Input!],
                     SyntaxNames.JavaScript, context, CancellationToken.None)).Returns(Task.FromResult(Models.Result.Success<string?>(input.Expressions![DataTableSyntaxNames.Input])));
