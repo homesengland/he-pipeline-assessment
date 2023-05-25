@@ -2,7 +2,7 @@
 {
     public class DataTable
     {
-        public ICollection<TableInput> Inputs { get; set; } = new List<TableInput>();
+        public List<TableInput> Inputs { get; set; } = new List<TableInput>();
         public string InputType { get; set; } = null!;
         public string? DisplayGroupId { get; set; }
     }

@@ -15,13 +15,13 @@ using Elsa.CustomActivities.Activities.Common;
 namespace Elsa.CustomActivities.Activities.QuestionScreen.Helpers
 {
 
-    public class DataTableQuestionHelpers : INotificationHandler<EvaluatingJavaScriptExpression>, INotificationHandler<RenderingTypeScriptDefinitions>
+    public class DataTableQuestionHelper : INotificationHandler<EvaluatingJavaScriptExpression>, INotificationHandler<RenderingTypeScriptDefinitions>
     {
 
         private readonly IElsaCustomRepository _elsaCustomRepository;
         private readonly IWorkflowRegistry _workflowRegistry;
 
-        public DataTableQuestionHelpers(IElsaCustomRepository elsaCustomRepository, IWorkflowRegistry workflowRegistry)
+        public DataTableQuestionHelper(IElsaCustomRepository elsaCustomRepository, IWorkflowRegistry workflowRegistry)
         {
             _elsaCustomRepository = elsaCustomRepository;
             _workflowRegistry = workflowRegistry;
@@ -68,36 +68,43 @@ namespace Elsa.CustomActivities.Activities.QuestionScreen.Helpers
         }
         public async Task<string> GetStringAnswer(string correlationId, string workflowName, string activityName, string questionId, string tableCellIdentifier)
         {
-            var workflowBlueprint = await _workflowRegistry.FindByNameAsync(workflowName, Models.VersionOptions.Published);
-
-            if (workflowBlueprint != null)
+            try
             {
-                var activity = workflowBlueprint.Activities.FirstOrDefault(x => x.Name == activityName);
-                if (activity != null)
+                var workflowBlueprint = await _workflowRegistry.FindByNameAsync(workflowName, Models.VersionOptions.Published);
+
+                if (workflowBlueprint != null)
                 {
-                    var question = await _elsaCustomRepository.GetQuestionByCorrelationId(activity.Id, correlationId, questionId, CancellationToken.None);
-
-                    if (question != null && question.Answers != null && question.QuestionType == QuestionTypeConstants.DataTable)
+                    var activity = workflowBlueprint.Activities.FirstOrDefault(x => x.Name == activityName);
+                    if (activity != null)
                     {
-                        var answer = question.Answers.FirstOrDefault();
-                        if (answer != null)
+                        var question = await _elsaCustomRepository.GetQuestionByCorrelationId(activity.Id, correlationId, questionId, CancellationToken.None);
+
+                        if (question != null && question.Answers != null && question.QuestionType == QuestionTypeConstants.DataTable)
                         {
-                            var dataTable = JsonSerializer.Deserialize<DataTable>(answer.AnswerText);
-                            if (dataTable != null)
+                            var answer = question.Answers.FirstOrDefault();
+                            if (answer != null)
                             {
-                                var input = dataTable.Inputs.FirstOrDefault(x => x.Identifier == tableCellIdentifier);
-
-                                if (input != null && input.Input != null)
+                                var dataTable = JsonSerializer.Deserialize<DataTable>(answer.AnswerText);
+                                if (dataTable != null)
                                 {
-                                    return input.Input;
-                                }
-                            }
+                                    var input = dataTable.Inputs.FirstOrDefault(x => x.Identifier == tableCellIdentifier);
 
+                                    if (input != null && input.Input != null)
+                                    {
+                                        return input.Input;
+                                    }
+                                }
+
+                            }
                         }
                     }
                 }
-
             }
+            catch (Exception e)
+            {
+                return string.Empty;
+            }
+            
             return string.Empty;
         }
 
