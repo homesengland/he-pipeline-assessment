@@ -74,7 +74,7 @@
                                 var inputValue = hasNullInput ? "" : Model.DataTable[q].Inputs[i].Input;
                                 var disableInput = Model.DataTable[q].Inputs[i].IsReadOnly? "disabled":"";
                                 string dataFlagIsSummary = Model.DataTable[q].Inputs[i].IsSummaryTotal ? "true" : "false";
-                                string dataColumn =  q.ToString() ;
+                                string dataColumn =  Model.DataTable[q].DisplayGroupId+"_"+q.ToString();
                                 string questionNotAnswered = Model.ValidationMessages != null && Model.ValidationMessages.Errors.Any(x => x.PropertyName == @inputs) ? "govuk-input--error" : "";
                                 string errorFieldClass = Model.ValidationMessages != null && Model.ValidationMessages.Errors.Any(x => x.PropertyName == @itemId) ? "govuk-input--error" : "";
                                 <dd class="govuk-summary-list__value">
