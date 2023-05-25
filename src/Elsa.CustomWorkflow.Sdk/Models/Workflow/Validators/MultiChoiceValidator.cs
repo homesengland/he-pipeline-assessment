@@ -14,7 +14,10 @@ namespace Elsa.CustomWorkflow.Sdk.Models.Workflow.Validators
                         RuleFor(x => x).Must(multipleChoice =>
                             {
                                 var validationResult = true;
-                                if (multipleChoice.SelectedChoices!.Count() <= 1) return true;
+                                if (multipleChoice.SelectedChoices!.Count() <= 1)
+                                {
+                                    return true;
+                                }
                                 var distinctSelectedGroups = multipleChoice.Choices
                                     .Where(x => multipleChoice.SelectedChoices.Contains(x.Id))
                                     .Select(x => x.QuestionChoiceGroup?.GroupIdentifier).Distinct().ToList();
@@ -27,6 +30,8 @@ namespace Elsa.CustomWorkflow.Sdk.Models.Workflow.Validators
                                         var selectedChoicesForGroup =
                                             multipleChoice.SelectedChoices.Where(x =>
                                                 choicesForGroup.Select(y => y.Id).Contains(x));
+
+
                                         if (selectedChoicesForGroup.Count() <= 1)
                                         {
                                             validationResult = true;
@@ -94,6 +99,7 @@ namespace Elsa.CustomWorkflow.Sdk.Models.Workflow.Validators
                                         {
                                             validationMessage += "\r\n";
                                         }
+
                                         if (exclusiveAnswers.Count() > 1)
                                         {
                                             var finalInvalidAnswer = exclusiveAnswers.Last();
