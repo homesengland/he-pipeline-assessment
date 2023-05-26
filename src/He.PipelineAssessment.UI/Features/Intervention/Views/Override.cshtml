@@ -59,7 +59,7 @@
                                 Attach Sign off document
                             </label>
                         </h1>
-                        <input class="govuk-input" id="signoff-document" name="CreateOverrideCommand.SignOffDocument" value="@Model.CreateAssessmentInterventionCommand.SignOffDocument" type="text">
+                        <input class="govuk-input" id="signoff-document" name="CreateAssessmentInterventionCommand.SignOffDocument" value="@Model.CreateAssessmentInterventionCommand.SignOffDocument" type="text">
                     </div>
 
                     <div class="govuk-form-group">
@@ -68,7 +68,7 @@
                                 Rationale
                             </label>
                         </h1>
-                        <textarea class="govuk-textarea" id="rationale" name="CreateOverrideCommand.AdministratorRationale" @Model.CreateAssessmentInterventionCommand.AdministratorRationale rows="5" aria-describedby="rationale"></textarea>
+                        <textarea class="govuk-textarea" id="rationale" name="CreateAssessmentInterventionCommand.AdministratorRationale" @Model.CreateAssessmentInterventionCommand.AdministratorRationale rows="5" aria-describedby="rationale"></textarea>
                     </div>
                     <div class="govuk-form-group">
                         <label class="govuk-label" for="workflow-definitions">
@@ -93,9 +93,11 @@
                 </dd>
                 </div>
                 </dl>*@
+                    @Html.HiddenFor(x => Model.CreateAssessmentInterventionCommand.AssessmentToolWorkflowInstanceId)
                     @Html.HiddenFor(x => Model.CreateAssessmentInterventionCommand.WorkflowInstanceId)
                     @Html.HiddenFor(x => Model.CreateAssessmentInterventionCommand.AssessmentResult)
                     @Html.HiddenFor(x => Model.CreateAssessmentInterventionCommand.AssessmentName)
+                    @Html.HiddenFor(x => Model.CreateAssessmentInterventionCommand.AssessorRationale)
                     @Html.HiddenFor(x => Model.CreateAssessmentInterventionCommand.RequestedBy)
                     @Html.HiddenFor(x => Model.CreateAssessmentInterventionCommand.RequestedByEmail)
                     @Html.HiddenFor(x => Model.CreateAssessmentInterventionCommand.Administrator)

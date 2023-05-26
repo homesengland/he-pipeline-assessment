@@ -12,6 +12,7 @@ namespace He.PipelineAssessment.UI.Features.Intervention.InterventionManagement
 
     public class CreateAssessmentInterventionCommand : IRequest<int>
     {
+        public int AssessmentToolWorkflowInstanceId { get; set; }
         public string WorkflowInstanceId { get; set; } = null!;
         public string AssessmentName { get; set; } = null!;
         public string? AssessmentResult { get; set; }

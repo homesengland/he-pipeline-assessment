@@ -59,6 +59,7 @@ namespace He.PipelineAssessment.UI.Features.Intervention.InterventionManagement.
             {
                 CreateAssessmentInterventionCommand = new CreateOverrideCommand()
                 {
+                    AssessmentToolWorkflowInstanceId = instance.Id,
                     WorkflowInstanceId = instance.WorkflowInstanceId,
                     AssessmentResult = instance.Result,
                     AssessmentName = instance.WorkflowName,
