@@ -49,14 +49,14 @@ public class CurrencyHelperTests
     }
 
     [Theory]
-    [InlineData("2001.233", "£2,001.23")]
-    [InlineData("200.111", "£200.11")]
-    [InlineData("20.33", "£20.33")]
-    [InlineData("2000000.23", "£2,000,000.23")]
-    [InlineData("2000000", "£2,000,000")]
-    [InlineData("20", "£20")]
-    [InlineData("200", "£200")]
-    [InlineData("2001", "£2,001")]
+    [InlineData("2001.233", "2,001.23")]
+    [InlineData("200.111", "200.11")]
+    [InlineData("20.33", "20.33")]
+    [InlineData("2000000.23", "2,000,000.23")]
+    [InlineData("2000000", "2,000,000")]
+    [InlineData("20", "20")]
+    [InlineData("200", "200")]
+    [InlineData("2001", "2,001")]
     public void ToCommaSeparatedNumber_ShouldFormateString_AsCurrency(
     string inputCurrency, string formatedExpectedResult
     )
