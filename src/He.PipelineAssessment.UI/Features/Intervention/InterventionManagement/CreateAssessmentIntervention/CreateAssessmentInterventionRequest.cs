@@ -1,6 +1,6 @@
 ﻿using MediatR;
 
-namespace He.PipelineAssessment.UI.Features.Intervention.InterventionManagement.Commands.CreateAssessmentIntervention
+namespace He.PipelineAssessment.UI.Features.Intervention.InterventionManagement.CreateAssessmentIntervention
 {
     public class CreateAssessmentInterventionRequest : IRequest<CreateAssessmentInterventionDto>
     {

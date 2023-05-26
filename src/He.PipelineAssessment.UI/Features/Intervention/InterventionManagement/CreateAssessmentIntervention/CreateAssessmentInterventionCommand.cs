@@ -1,7 +1,7 @@
 ﻿using FluentValidation.Results;
 using MediatR;
 
-namespace He.PipelineAssessment.UI.Features.Intervention.InterventionManagement.Commands.CreateAssessmentIntervention
+namespace He.PipelineAssessment.UI.Features.Intervention.InterventionManagement.CreateAssessmentIntervention
 {
     public class CreateAssessmentInterventionDto
     {
@@ -10,7 +10,7 @@ namespace He.PipelineAssessment.UI.Features.Intervention.InterventionManagement.
         public List<TargetWorkflowDefinition> TargetWorkflowDefinitions { get; set; }
     }
 
-    public class CreateAssessmentInterventionCommand : IRequest
+    public class CreateAssessmentInterventionCommand : IRequest<CreateAssessmentInterventionDto>, IRequest<int>
     {
         public string WorkflowInstanceId { get; set; } = null!;
         public string AssessmentName { get; set; } = null!;

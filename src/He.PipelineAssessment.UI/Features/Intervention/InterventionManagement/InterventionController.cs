@@ -1,8 +1,8 @@
-﻿using He.PipelineAssessment.UI.Features.Intervention.InterventionManagement.Commands.CreateAssessmentIntervention;
+﻿using He.PipelineAssessment.UI.Features.Intervention.InterventionManagement.CreateAssessmentIntervention;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 
-namespace He.PipelineAssessment.UI.Features.Intervention.Controllers
+namespace He.PipelineAssessment.UI.Features.Intervention.InterventionManagement
 {
     public class InterventionController : Controller
     {
@@ -17,8 +17,7 @@ namespace He.PipelineAssessment.UI.Features.Intervention.Controllers
 
         public async Task<IActionResult> Override(string workflowInstanceId)
         {
-            var dto = await _mediator.Send(new CreateAssessmentInterventionRequest { WorkflowInstanceId = workflowInstanceId});
-            
+            var dto = await _mediator.Send(new CreateAssessmentInterventionRequest { WorkflowInstanceId = workflowInstanceId });
             return View(dto);
         }
 
@@ -34,10 +33,9 @@ namespace He.PipelineAssessment.UI.Features.Intervention.Controllers
         {
             try
             {
-                //mediator send
-
-                //redirect somewhere
-                return View("Override", createAssessmentInterventionDto);
+                //do some validation of the command
+                var interventionId = await _mediator.Send(createAssessmentInterventionDto.CreateAssessmentInterventionCommand);
+                return View("OverrideCheckYourAnswers", interventionId);
             }
             catch (Exception e)
             {

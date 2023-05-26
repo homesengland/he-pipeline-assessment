@@ -1,4 +1,5 @@
 ﻿using He.PipelineAssessment.Infrastructure.Data;
+using He.PipelineAssessment.Infrastructure.Migrations;
 using He.PipelineAssessment.Models;
 using Microsoft.EntityFrameworkCore;
 
@@ -18,6 +19,7 @@ namespace He.PipelineAssessment.Infrastructure.Repository
         Task<int> CreateAssessments(List<Assessment> assessments);
         Task<int> CreateAssessmentToolWorkflowInstance(AssessmentToolWorkflowInstance assessmentStage);
         Task CreateAssessmentToolInstanceNextWorkflows(List<AssessmentToolInstanceNextWorkflow> nextWorkflows);
+        Task<int> CreateAssessmentIntervention(AssessmentIntervention assessmentIntervention);
 
         Task<int> SaveChanges();
 
@@ -86,7 +88,6 @@ namespace He.PipelineAssessment.Infrastructure.Repository
         public async Task<int> CreateAssessmentToolWorkflowInstance(AssessmentToolWorkflowInstance assessmentStage)
         {
             await context.Set<AssessmentToolWorkflowInstance>().AddAsync(assessmentStage);
-            await context.SaveChangesAsync();
 
             return await context.SaveChangesAsync();
         }
@@ -95,6 +96,13 @@ namespace He.PipelineAssessment.Infrastructure.Repository
         {
             await context.Set<AssessmentToolInstanceNextWorkflow>().AddRangeAsync(nextWorkflows);
             await context.SaveChangesAsync();
+        }
+
+        public async Task<int> CreateAssessmentIntervention(AssessmentIntervention assessmentIntervention)
+        {
+            await context.Set<AssessmentIntervention>().AddAsync(assessmentIntervention);
+
+            return await context.SaveChangesAsync();
         }
 
         public async Task<int> SaveChanges()

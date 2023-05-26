@@ -54,6 +54,7 @@
 
   <ItemGroup>
     <Folder Include="Features\Economist\Views\" />
+    <Folder Include="Features\Intervention\Controllers\" />
   </ItemGroup>
 
 </Project>

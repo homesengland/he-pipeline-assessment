@@ -4,7 +4,7 @@ using He.PipelineAssessment.Models;
 using He.PipelineAssessment.UI.Features.Intervention.Constants;
 using MediatR;
 
-namespace He.PipelineAssessment.UI.Features.Intervention.InterventionManagement.Commands.CreateAssessmentIntervention
+namespace He.PipelineAssessment.UI.Features.Intervention.InterventionManagement.CreateAssessmentIntervention
 {
     public class CreateAssessmentInterventionRequestHandler : IRequestHandler<CreateAssessmentInterventionRequest, CreateAssessmentInterventionDto>
     {
@@ -31,11 +31,11 @@ namespace He.PipelineAssessment.UI.Features.Intervention.InterventionManagement.
                 dto.TargetWorkflowDefinitions = TargetWorkflowDefinitionsFromAssessmentToolWorkflows(assessmentToolWorkflows);
                 return dto;
             }
-            catch(Exception e)
+            catch (Exception e)
             {
                 return new CreateAssessmentInterventionDto
                 {
-                    
+
                 };
 
             }
