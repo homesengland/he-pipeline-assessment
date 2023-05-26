@@ -4,6 +4,7 @@
     {
         public int Id { get; set; }
         public int AssessmentToolWorkflowInstanceId { get; set; }
+        public int TargetWorkflowDefinitionId { get; set; }
         public string RequestedBy { get; set; }
         public string RequestedByEmail { get; set; }
         public string? Administrator { get; set; }
@@ -14,6 +15,8 @@
         public string? AdministratorRationale { get; set; }
         public DateTime DateSubmitted { get; set; }
         public string Status { get; set; }
+
+        public virtual AssessmentToolWorkflow AssessmentToolWorkflow { get; set; } = null!;
 
         public virtual AssessmentToolWorkflowInstance AssessmentToolWorkflowInstance { get; set; } = null!;
     }

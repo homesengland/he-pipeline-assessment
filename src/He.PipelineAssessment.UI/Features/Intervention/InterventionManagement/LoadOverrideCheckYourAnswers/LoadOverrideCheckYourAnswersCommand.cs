@@ -1,12 +1,12 @@
-﻿namespace He.PipelineAssessment.UI.Features.Intervention.InterventionManagement.CreateOverride
+﻿namespace He.PipelineAssessment.UI.Features.Intervention.InterventionManagement.LoadOverrideCheckYourAnswers
 {
-    public class CreateOverrideCommand : AssessmentInterventionCommand
+    public class LoadOverrideCheckYourAnswersCommand : AssessmentInterventionCommand
     {
-        public CreateOverrideCommand()
+        public LoadOverrideCheckYourAnswersCommand()
         {
-            
+
         }
-        public CreateOverrideCommand(AssessmentInterventionCommand command)
+        public LoadOverrideCheckYourAnswersCommand(AssessmentInterventionCommand command)
         {
             RequestedBy = command.RequestedBy;
             Administrator = command.Administrator;

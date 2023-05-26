@@ -28,7 +28,7 @@ namespace He.PipelineAssessment.UI.Features.Intervention.InterventionManagement
             {
                 //do some validation of the command
                 var interventionId = await _mediator.Send(new CreateOverrideCommand(createAssessmentInterventionDto.CreateAssessmentInterventionCommand));
-                return View("OverrideCheckYourAnswers", interventionId);
+                return View("~/Features/Intervention/Views/OverrideCheckYourAnswers", interventionId);
             }
             catch (Exception e)
             {
