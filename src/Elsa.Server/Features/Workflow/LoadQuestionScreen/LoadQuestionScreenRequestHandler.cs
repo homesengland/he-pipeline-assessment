@@ -1,4 +1,6 @@
-﻿using Elsa.CustomActivities.Activities.QuestionScreen;
+﻿using System.Text.Json;
+using Elsa.CustomActivities.Activities.Common;
+using Elsa.CustomActivities.Activities.QuestionScreen;
 using Elsa.CustomInfrastructure.Data.Repository;
 using Elsa.CustomModels;
 using Elsa.CustomWorkflow.Sdk;
@@ -121,10 +123,12 @@ namespace Elsa.Server.Features.Workflow.LoadQuestionScreen
             return await Task.FromResult(result);
         }
 
-        private static QuestionActivityData CreateQuestionActivityData(Question dbQuestion, CustomActivities.Activities.QuestionScreen.Question item)
+        private static QuestionActivityData CreateQuestionActivityData(Question dbQuestion,
+            CustomActivities.Activities.QuestionScreen.Question item)
         {
-            List<Answer> answers = dbQuestion.Answers!.Any() ?
-                dbQuestion.Answers! : new List<Answer> { new Answer { AnswerText = item.Answer ?? string.Empty } };
+            List<Answer> answers = dbQuestion.Answers!.Any()
+                ? dbQuestion.Answers!
+                : new List<Answer> { new Answer { AnswerText = item.Answer ?? string.Empty } };
             //assign the values
             var questionActivityData = new QuestionActivityData();
             questionActivityData.ActivityId = dbQuestion.ActivityId;
@@ -140,14 +144,18 @@ namespace Elsa.Server.Features.Workflow.LoadQuestionScreen
             questionActivityData.CharacterLimit = item.CharacterLimit;
             questionActivityData.IsReadOnly = item.IsReadOnly;
 
-            if (item.QuestionType == QuestionTypeConstants.CheckboxQuestion || item.QuestionType == QuestionTypeConstants.WeightedCheckboxQuestion)
+            if (item.QuestionType == QuestionTypeConstants.CheckboxQuestion ||
+                item.QuestionType == QuestionTypeConstants.WeightedCheckboxQuestion)
             {
                 if (dbQuestion.Choices != null)
                 {
                     questionActivityData.Checkbox = new Checkbox
                     {
                         Choices = dbQuestion.Choices.Select(x => new QuestionChoice()
-                        { Answer = x.Answer, IsSingle = x.IsSingle, IsExclusiveToQuestion = x.IsExclusiveToQuestion, Id = x.Id, QuestionChoiceGroup = x.QuestionChoiceGroup}).ToArray()
+                        {
+                            Answer = x.Answer, IsSingle = x.IsSingle, IsExclusiveToQuestion = x.IsExclusiveToQuestion,
+                            Id = x.Id, QuestionChoiceGroup = x.QuestionChoiceGroup
+                        }).ToArray()
                     };
 
                     List<int> answerList;
@@ -164,7 +172,9 @@ namespace Elsa.Server.Features.Workflow.LoadQuestionScreen
                 }
             }
 
-            if (item.QuestionType == QuestionTypeConstants.RadioQuestion || item.QuestionType == QuestionTypeConstants.PotScoreRadioQuestion || item.QuestionType == QuestionTypeConstants.WeightedRadioQuestion)
+            if (item.QuestionType == QuestionTypeConstants.RadioQuestion ||
+                item.QuestionType == QuestionTypeConstants.PotScoreRadioQuestion ||
+                item.QuestionType == QuestionTypeConstants.WeightedRadioQuestion)
             {
                 if (dbQuestion.Choices != null)
                 {
@@ -193,8 +203,45 @@ namespace Elsa.Server.Features.Workflow.LoadQuestionScreen
             {
                 questionActivityData.Information = new Information();
                 questionActivityData.Information.InformationTextList = item.Text.TextRecords
-                    .Select(x => new InformationText() { Text = x.Text, IsGuidance = x.IsGuidance, IsParagraph = x.IsParagraph, IsHyperlink = x.IsHyperlink, Url = x.Url })
+                    .Select(x => new InformationText()
+                    {
+                        Text = x.Text, IsGuidance = x.IsGuidance, IsParagraph = x.IsParagraph,
+                        IsHyperlink = x.IsHyperlink, Url = x.Url
+                    })
                     .ToArray();
+            }
+
+            if (item.QuestionType == QuestionTypeConstants.DataTable)
+            {
+                questionActivityData.DataTable = new DataTableInput();
+                DataTableInput? dataTableInput = null;
+                if (dbQuestion.Answers != null && dbQuestion.Answers.Any() &&
+                    dbQuestion.Answers.FirstOrDefault() != null)
+                {
+                    var dataTable = JsonSerializer.Deserialize<DataTable>(dbQuestion.Answers.First().AnswerText);
+                    if (dataTable != null)
+                    {
+                        dataTableInput = new DataTableInput
+                        {
+                            Inputs = dataTable.Inputs.ToArray(),
+                            InputType = dataTable.InputType,
+                            DisplayGroupId = dataTable.DisplayGroupId
+                        };
+                    }
+                }
+
+                if (dataTableInput == null)
+                {
+                    dataTableInput = new DataTableInput
+                    {
+                        Inputs = item.DataTable.Inputs.ToArray(),
+                        InputType = item.DataTable.InputType,
+                        DisplayGroupId = item.DataTable.DisplayGroupId
+
+                    };
+                }
+
+                questionActivityData.DataTable = dataTableInput;
             }
 
             return questionActivityData;

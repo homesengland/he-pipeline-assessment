@@ -1,5 +1,7 @@
 ﻿@using He.PipelineAssessment.UI
 @using Elsa.CustomWorkflow.Sdk
+@using Microsoft.CodeAnalysis.CSharp.Syntax
+@using Elsa.CustomWorkflow.Sdk.Models.Workflow
 @model He.PipelineAssessment.UI.Features.Workflow.QuestionScreenSaveAndContinue.QuestionScreenSaveAndContinueCommand
 
 @{
@@ -22,11 +24,13 @@
         @Html.HiddenFor(m => Model.AssessmentId)
         @Html.HiddenFor(m=> Model.WorkflowDefinitionId)
         @Html.HiddenFor(m => Model.Data.ActivityType)
-        <br/>
+        <br />
+
         if (Model.Data.ActivityType == ActivityTypeConstants.QuestionScreen)
         {
             @await Html.PartialAsync("_QuestionScreen",Model)
         }
+
     }
 </div>
 

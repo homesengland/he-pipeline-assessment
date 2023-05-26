@@ -31,6 +31,11 @@ export namespace Components {
         "propertyDescriptor": ActivityPropertyDescriptor;
         "propertyModel": ActivityDefinitionProperty;
     }
+    interface HeDataTableProperty {
+        "activityModel": ActivityModel;
+        "propertyDescriptor": ActivityPropertyDescriptor;
+        "propertyModel": ActivityDefinitionProperty;
+    }
     interface HeElsaControl {
         "content": VNode | string | Element;
     }
@@ -142,6 +147,10 @@ export interface HeCheckboxPropertyCustomEvent<T> extends CustomEvent<T> {
     detail: T;
     target: HTMLHeCheckboxPropertyElement;
 }
+export interface HeDataTablePropertyCustomEvent<T> extends CustomEvent<T> {
+    detail: T;
+    target: HTMLHeDataTablePropertyElement;
+}
 export interface HeJsonPropertyCustomEvent<T> extends CustomEvent<T> {
     detail: T;
     target: HTMLHeJsonPropertyElement;
@@ -234,6 +243,12 @@ declare global {
     var HTMLHeCheckboxPropertyElement: {
         prototype: HTMLHeCheckboxPropertyElement;
         new (): HTMLHeCheckboxPropertyElement;
+    };
+    interface HTMLHeDataTablePropertyElement extends Components.HeDataTableProperty, HTMLStencilElement {
+    }
+    var HTMLHeDataTablePropertyElement: {
+        prototype: HTMLHeDataTablePropertyElement;
+        new (): HTMLHeDataTablePropertyElement;
     };
     interface HTMLHeElsaControlElement extends Components.HeElsaControl, HTMLStencilElement {
     }
@@ -360,6 +375,7 @@ declare global {
         "he-check-list-property": HTMLHeCheckListPropertyElement;
         "he-checkbox-options-property": HTMLHeCheckboxOptionsPropertyElement;
         "he-checkbox-property": HTMLHeCheckboxPropertyElement;
+        "he-data-table-property": HTMLHeDataTablePropertyElement;
         "he-elsa-control": HTMLHeElsaControlElement;
         "he-json-property": HTMLHeJsonPropertyElement;
         "he-multi-line-property": HTMLHeMultiLinePropertyElement;
@@ -405,6 +421,12 @@ declare namespace LocalJSX {
     interface HeCheckboxProperty {
         "activityModel"?: ActivityModel;
         "onExpressionChanged"?: (event: HeCheckboxPropertyCustomEvent<string>) => void;
+        "propertyDescriptor"?: ActivityPropertyDescriptor;
+        "propertyModel"?: ActivityDefinitionProperty;
+    }
+    interface HeDataTableProperty {
+        "activityModel"?: ActivityModel;
+        "onExpressionChanged"?: (event: HeDataTablePropertyCustomEvent<string>) => void;
         "propertyDescriptor"?: ActivityPropertyDescriptor;
         "propertyModel"?: ActivityDefinitionProperty;
     }
@@ -528,6 +550,7 @@ declare namespace LocalJSX {
         "he-check-list-property": HeCheckListProperty;
         "he-checkbox-options-property": HeCheckboxOptionsProperty;
         "he-checkbox-property": HeCheckboxProperty;
+        "he-data-table-property": HeDataTableProperty;
         "he-elsa-control": HeElsaControl;
         "he-json-property": HeJsonProperty;
         "he-multi-line-property": HeMultiLineProperty;
@@ -558,6 +581,7 @@ declare module "@stencil/core" {
             "he-check-list-property": LocalJSX.HeCheckListProperty & JSXBase.HTMLAttributes<HTMLHeCheckListPropertyElement>;
             "he-checkbox-options-property": LocalJSX.HeCheckboxOptionsProperty & JSXBase.HTMLAttributes<HTMLHeCheckboxOptionsPropertyElement>;
             "he-checkbox-property": LocalJSX.HeCheckboxProperty & JSXBase.HTMLAttributes<HTMLHeCheckboxPropertyElement>;
+            "he-data-table-property": LocalJSX.HeDataTableProperty & JSXBase.HTMLAttributes<HTMLHeDataTablePropertyElement>;
             "he-elsa-control": LocalJSX.HeElsaControl & JSXBase.HTMLAttributes<HTMLHeElsaControlElement>;
             "he-json-property": LocalJSX.HeJsonProperty & JSXBase.HTMLAttributes<HTMLHeJsonPropertyElement>;
             "he-multi-line-property": LocalJSX.HeMultiLineProperty & JSXBase.HTMLAttributes<HTMLHeMultiLinePropertyElement>;

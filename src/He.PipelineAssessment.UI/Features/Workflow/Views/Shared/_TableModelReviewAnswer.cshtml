@@ -1,0 +1,29 @@
+﻿@using Elsa.CustomWorkflow.Sdk
+@using He.PipelineAssessment.UI.Helper
+@model He.PipelineAssessment.UI.Helper.DataTableHelper.DataTableModel
+
+@foreach (var row in Model.Inputs)
+{
+    <div class="govuk-summary-list__row">
+        <dt>
+            @row.Title
+        </dt>
+        <dd class="govuk-summary-list__value">
+            @if (Model.InputType == DataTableInputTypeConstants.CurrencyDataTableInput)
+            {
+                if (row.Input != null)
+                {
+                    @row.Input.ToCommaSeparatedNumber()
+                }
+            }
+            else
+            {
+                @row.Input
+            }
+
+        </dd>
+    </div>
+}
+<div class="govuk-!-margin-bottom-5">
+</div>
+

@@ -11,5 +11,6 @@
         public const string WeightedRadio = "weightedRadio";
         public const string WeightedCheckbox = "weightedCheckbox";
         public const string TextActivity = "text-activity";
+        public const string DataTable = "dataTable";
     }
 }

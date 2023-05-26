@@ -14,6 +14,13 @@ export function StandardUpdateExpression(e: Event, property: NestedActivityDefin
   this.updatePropertyModel();
 }
 
+export function UpdateExpressionFromInput(e: Event, property: NestedActivityDefinitionProperty, syntax: string) {
+  let elementToUpdate = e.currentTarget as HTMLInputElement;
+  let valueToUpdate = elementToUpdate.value.trim();
+  property.expressions[syntax] = valueToUpdate;
+  this.updatePropertyModel();
+}
+
 export function UpdateCheckbox(e: Event, property: NestedActivityDefinitionProperty, syntax: string) {
   const checkboxElement = (e.currentTarget as HTMLInputElement);
   property.expressions[syntax] = checkboxElement.checked.toString();

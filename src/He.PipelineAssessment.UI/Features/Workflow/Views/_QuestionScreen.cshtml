@@ -1,8 +1,13 @@
 ﻿@using Elsa.CustomWorkflow.Sdk
 @using He.PipelineAssessment.UI.Features.Workflow.QuestionScreenSaveAndContinue
 @using He.PipelineAssessment.UI.Features.Workflow.ViewModels
+@using He.PipelineAssessment.UI.Extensions;
 @model QuestionScreenSaveAndContinueCommand
 @inject NonceConfig nonceConfig
+
+@{
+    List<string?> usedDisplayGroupIds = new List<string?>();
+}
 
 <div class="govuk-form-group">
 <div class="govuk-!-padding-bottom-6">
@@ -349,8 +354,29 @@
                        }
                    })
         }
+                    @if (Model.Data.Questions![i].QuestionType == QuestionTypeConstants.DataTable)
+                    {
+                        var tableListForGroup = Model.Data.ToDataTableList(i, usedDisplayGroupIds);
+                        Question dataTableQuestion = new Question()
+                        {
+                            Index = i,
+                            IsValid = Model.Data.IsDataTableValid(tableListForGroup, Model),
+                            QuestionText = Model.Data.Questions[i].Question,
+                            QuestionId = Model.Data.Questions[i].QuestionId,
+                            QuestionType = Model.Data.Questions[i].QuestionType,
+                            DataTable = tableListForGroup,
+                            ValidationMessages = Model.ValidationMessages
+                        };
+
+                        usedDisplayGroupIds.Add(Model.Data.Questions[i].DataTable.DisplayGroupId);
+                        if (dataTableQuestion.DataTable.Count > 0)
+                        {
+                            @await Html.PartialAsync("_DataTableQuestion", dataTableQuestion)
+                        }
+                    }
+                    }
     }
-}
+
 </fieldset>
 </div>
 <input id="Next" type="submit" value="Save and continue" name="Next" class="govuk-button" />

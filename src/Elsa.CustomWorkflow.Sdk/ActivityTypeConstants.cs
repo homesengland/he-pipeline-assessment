@@ -17,6 +17,7 @@
         public const string IntegerQuestion = "IntegerQuestion";
         public const string CheckboxQuestion = "CheckboxQuestion";
         public const string RadioQuestion = "RadioQuestion";
+        public const string DataTable = "DataTable";
         public const string DateQuestion = "DateQuestion";
         public const string TextQuestion = "TextQuestion";
         public const string TextAreaQuestion = "TextAreaQuestion";
@@ -25,4 +26,13 @@
         public const string WeightedRadioQuestion = "WeightedRadioQuestion";
         public const string WeightedCheckboxQuestion = "WeightedCheckboxQuestion";
     }
+
+    public class DataTableInputTypeConstants
+    {
+        public const string CurrencyDataTableInput = "Currency";
+        public const string DecimalDataTableInput = "Decimal";
+        public const string IntegerDataTableInput = "Integer";
+        public const string TextDataTableInput = "Text";
+    }
+    
 }
