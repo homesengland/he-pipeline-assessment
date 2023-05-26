@@ -20,12 +20,20 @@
                             {
                                 if (question.QuestionType == QuestionTypeConstants.PercentageQuestion)
                                 {
-                                    <p>@answer.AnswerText %</p>
+                                    <p>@answer.AnswerText.ToCommaSeparatedNumber() %</p>
+                                }
+                                else if (question.QuestionType == QuestionTypeConstants.IntegerQuestion)
+                                {
+                                    <p>@answer.AnswerText.ToCommaSeparatedNumber() </p>
+                                }
+                                else if (question.QuestionType == QuestionTypeConstants.DecimalQuestion)
+                                {
+                                    <p>@answer.AnswerText.ToCommaSeparatedNumber() </p>
                                 }
                                 else if (question.QuestionType == QuestionTypeConstants.CurrencyQuestion)
                                 {
 
-                                    <p>@answer.AnswerText.ToCommaSeparatedNumber()</p>
+                                    <p>£ @answer.AnswerText.ToCommaSeparatedNumber()</p>
                                 }
                                 else if (question.QuestionType == QuestionTypeConstants.Information)
                                 {
