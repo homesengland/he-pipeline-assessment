@@ -17,7 +17,7 @@ namespace Elsa.CustomWorkflow.Sdk.Models.Workflow.Validators
                 {
                     if (!string.IsNullOrEmpty(decimalInput.Input) && !string.IsNullOrWhiteSpace(decimalInput.Input))
                     {
-                        var isNumeric = decimal.TryParse(decimalInput.Input, out _);
+                        var isNumeric = decimal.TryParse(decimalInput.Input.Replace(",", ""), out _);
                         return isNumeric;
                     }
                     return true;

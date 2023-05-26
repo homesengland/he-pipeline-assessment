@@ -53,8 +53,7 @@ summaryInputs.forEach(function (summaryInput) {
                 summaryInput.value = getTotalColumnValue(inputsToTotal);
 
                 // format number
-                summaryInput.value = summaryInput.value
-                    .replace(/,/g, '');
+                summaryInput.value = numberWithCommas(summaryInput.value);
             });
         }
 
@@ -64,7 +63,8 @@ summaryInputs.forEach(function (summaryInput) {
 function getTotalColumnValue(inputsToTotal) {
     var total = 0;
     inputsToTotal.forEach(function (input) {
-        total += Number(input.value);
+        var cleansedInput = input.value.replace(/,/g, "");
+        total += Number(cleansedInput);
     });
 
     return total;

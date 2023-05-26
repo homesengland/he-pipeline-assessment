@@ -167,7 +167,7 @@ namespace Elsa.CustomActivities.Tests.Activities.QuestionScreen.Helpers
             workflowRegistry.Setup(x => x.FindByNameAsync(workflowName!, VersionOptions.Published, null, default)).ReturnsAsync(workflowBlueprint);
 
             question.QuestionType = QuestionTypeConstants.DataTable;
-            question.Answers[0] = null;
+            question.Answers![0] = null!;
 
             //Act
             var result = await sut.GetStringAnswer(correlationId, workflowName, activityName, questionId, tableCellIdentifier);
@@ -203,7 +203,7 @@ namespace Elsa.CustomActivities.Tests.Activities.QuestionScreen.Helpers
             workflowRegistry.Setup(x => x.FindByNameAsync(workflowName!, VersionOptions.Published, null, default)).ReturnsAsync(workflowBlueprint);
 
             question.QuestionType = QuestionTypeConstants.DataTable;
-            question.Answers[0].AnswerText = JsonSerializer.Serialize(question.Answers[0].AnswerText);
+            question.Answers![0].AnswerText = JsonSerializer.Serialize(question.Answers[0].AnswerText);
 
             //Act
             var result = await sut.GetStringAnswer(correlationId, workflowName, activityName, questionId, tableCellIdentifier);
@@ -242,7 +242,7 @@ namespace Elsa.CustomActivities.Tests.Activities.QuestionScreen.Helpers
             question.QuestionType = QuestionTypeConstants.DataTable;
             TableInput input = new TableInput(tableCellIdentifier, null, true, true, null);
             datable.Inputs[0] = input;
-            question.Answers[0].AnswerText = JsonSerializer.Serialize(datable);
+            question.Answers![0].AnswerText = JsonSerializer.Serialize(datable);
 
             //Act
             var result = await sut.GetStringAnswer(correlationId, workflowName, activityName, questionId, tableCellIdentifier);
@@ -282,7 +282,7 @@ namespace Elsa.CustomActivities.Tests.Activities.QuestionScreen.Helpers
             question.QuestionType = QuestionTypeConstants.DataTable;
             TableInput input = new TableInput(tableCellIdentifier, null, true, true, answerText);
             datable.Inputs[0] = input;
-            question.Answers[0].AnswerText = JsonSerializer.Serialize(datable);
+            question.Answers![0].AnswerText = JsonSerializer.Serialize(datable);
 
             //Act
             var result = await sut.GetStringAnswer(correlationId, workflowName, activityName, questionId, tableCellIdentifier);
@@ -439,7 +439,7 @@ namespace Elsa.CustomActivities.Tests.Activities.QuestionScreen.Helpers
             workflowRegistry.Setup(x => x.FindByNameAsync(workflowName!, VersionOptions.Published, null, default)).ReturnsAsync(workflowBlueprint);
 
             question.QuestionType = QuestionTypeConstants.DataTable;
-            question.Answers[0].AnswerText = JsonSerializer.Serialize(question.Answers[0].AnswerText);
+            question.Answers![0].AnswerText = JsonSerializer.Serialize(question.Answers[0].AnswerText);
 
             //Act
             var result = await sut.GetDecimalAnswer(correlationId, workflowName, activityName, questionId, tableCellIdentifier);
@@ -478,7 +478,7 @@ namespace Elsa.CustomActivities.Tests.Activities.QuestionScreen.Helpers
             question.QuestionType = QuestionTypeConstants.DataTable;
             TableInput input = new TableInput(tableCellIdentifier, null, true, true, null);
             datable.Inputs[0] = input;
-            question.Answers[0].AnswerText = JsonSerializer.Serialize(datable);
+            question.Answers![0].AnswerText = JsonSerializer.Serialize(datable);
 
             //Act
             var result = await sut.GetDecimalAnswer(correlationId, workflowName, activityName, questionId, tableCellIdentifier);
@@ -518,7 +518,7 @@ namespace Elsa.CustomActivities.Tests.Activities.QuestionScreen.Helpers
             TableInput input = new TableInput(tableCellIdentifier, null, true, true, null);
             datable.InputType = DataTableInputTypeConstants.DecimalDataTableInput;
             datable.Inputs[0] = input;
-            question.Answers[0].AnswerText = JsonSerializer.Serialize(datable);
+            question.Answers![0].AnswerText = JsonSerializer.Serialize(datable);
 
             //Act
             var result = await sut.GetDecimalAnswer(correlationId, workflowName, activityName, questionId, tableCellIdentifier);
@@ -558,7 +558,7 @@ namespace Elsa.CustomActivities.Tests.Activities.QuestionScreen.Helpers
             TableInput input = new TableInput(tableCellIdentifier, null, true, true, "123.45");
             datable.InputType = DataTableInputTypeConstants.DecimalDataTableInput;
             datable.Inputs[0] = input;
-            question.Answers[0].AnswerText = JsonSerializer.Serialize(datable);
+            question.Answers![0].AnswerText = JsonSerializer.Serialize(datable);
 
             //Act
             var result = await sut.GetDecimalAnswer(correlationId, workflowName, activityName, questionId, tableCellIdentifier);
