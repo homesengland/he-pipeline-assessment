@@ -13,7 +13,7 @@ namespace Elsa.CustomWorkflow.Sdk.Models.Workflow.Validators
                         RuleForEach(x => x.Answers).NotEmpty().WithMessage("The answer must be a number");
                         RuleForEach(x => x.Answers).Must(answer => 
                         {
-                            var isNumeric = decimal.TryParse(answer.AnswerText, out _);
+                            var isNumeric = decimal.TryParse(answer.AnswerText.Replace(",", ""), out _);
                             return isNumeric;
                         }).WithMessage("The answer must be a number");
                     }

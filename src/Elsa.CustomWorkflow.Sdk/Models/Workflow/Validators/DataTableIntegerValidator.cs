@@ -19,7 +19,7 @@ namespace Elsa.CustomWorkflow.Sdk.Models.Workflow.Validators
                     {
                         if (!string.IsNullOrEmpty(integerInput.Input) && !string.IsNullOrWhiteSpace(integerInput.Input))
                         {
-                            var isNumeric = int.TryParse(integerInput.Input, out _);
+                            var isNumeric = int.TryParse(integerInput.Input.Replace(",",""), out _);
                             return isNumeric;
                         }
 
