@@ -1,11 +1,11 @@
-﻿@model He.PipelineAssessment.UI.Features.Intervention.InterventionManagement.CreateOverride.CreateAssessmentInterventionDto;
+﻿@model He.PipelineAssessment.UI.Features.Intervention.InterventionManagement.CreateAssessmentInterventionDto;
 
 @{
     ViewData["Title"] = "Create Assessment Override";
     Layout = "_Layout";
 }
 <div class="text-center">
-    @using (Html.BeginForm("CreateAssessmentIntervention", "Intervention", FormMethod.Post))
+    @using (Html.BeginForm("CreateOverride", "Override", FormMethod.Post))
     {
         @Html.AntiForgeryToken()
         <div class="govuk-form-group">
@@ -59,7 +59,7 @@
                                 Attach Sign off document
                             </label>
                         </h1>
-                        <input class="govuk-input" id="signoff-document" name="CreateAssessmentInterventionCommand.SignOffDocument" value="@Model.CreateAssessmentInterventionCommand.SignOffDocument" type="text">
+                        <input class="govuk-input" id="signoff-document" name="CreateOverrideCommand.SignOffDocument" value="@Model.CreateAssessmentInterventionCommand.SignOffDocument" type="text">
                     </div>
 
                     <div class="govuk-form-group">
@@ -68,7 +68,7 @@
                                 Rationale
                             </label>
                         </h1>
-                        <textarea class="govuk-textarea" id="rationale" name="CreateAssessmentInterventionCommand.AdministratorRationale" @Model.CreateAssessmentInterventionCommand.AdministratorRationale rows="5" aria-describedby="rationale"></textarea>
+                        <textarea class="govuk-textarea" id="rationale" name="CreateOverrideCommand.AdministratorRationale" @Model.CreateAssessmentInterventionCommand.AdministratorRationale rows="5" aria-describedby="rationale"></textarea>
                     </div>
                     <div class="govuk-form-group">
                         <label class="govuk-label" for="workflow-definitions">
@@ -77,9 +77,9 @@
                         <div id="subject-hint" class="govuk-hint">
                             This is the workflow definition, which will be available to start after this intervention request has been approved. All workflows created after '@Model.CreateAssessmentInterventionCommand.AssessmentName' will be deleted.
                         </div>
-                        @Html.DropDownListFor(x => 
-                            Model.CreateAssessmentInterventionCommand.TargetWorkflowDefinitionId, 
-                            new SelectList(Model.TargetWorkflowDefinitions, "Id", "DisplayName"),
+                        @Html.DropDownListFor(x =>
+                    Model.CreateAssessmentInterventionCommand.TargetWorkflowDefinitionId,
+                    new SelectList(Model.TargetWorkflowDefinitions, "Id", "DisplayName"),
                     "Choose target workflow definition", new {@class = "govuk-select", id="workflow-definitions"})
                     </div>
 

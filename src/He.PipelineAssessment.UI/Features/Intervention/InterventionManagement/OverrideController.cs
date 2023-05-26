@@ -4,12 +4,12 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace He.PipelineAssessment.UI.Features.Intervention.InterventionManagement
 {
-    public class InterventionController : Controller
+    public class OverrideController : Controller
     {
-        private readonly ILogger<InterventionController> _logger;
+        private readonly ILogger<OverrideController> _logger;
         private readonly IMediator _mediator;
 
-        public InterventionController(ILogger<InterventionController> logger, IMediator mediator)
+        public OverrideController(ILogger<OverrideController> logger, IMediator mediator)
         {
             _logger = logger;
             _mediator = mediator;
@@ -18,18 +18,11 @@ namespace He.PipelineAssessment.UI.Features.Intervention.InterventionManagement
         public async Task<IActionResult> Override(string workflowInstanceId)
         {
             var dto = await _mediator.Send(new CreateOverrideRequest { WorkflowInstanceId = workflowInstanceId });
-            return View(dto);
-        }
-
-        public IActionResult Rollback(int assessmentWorkflowInstanceId)
-        {
-            var dto = new CreateAssessmentInterventionDto();
-            // populate info from the db - mediator
-            return View(dto);
+            return View("~/Features/Intervention/Views/Override.cshtml", dto);
         }
 
         [HttpPost]
-        public async Task<IActionResult> CreateAssessmentIntervention([FromForm] CreateAssessmentInterventionDto createAssessmentInterventionDto)
+        public async Task<IActionResult> CreateOverride([FromForm] CreateAssessmentInterventionDto createAssessmentInterventionDto)
         {
             try
             {
