@@ -30,16 +30,16 @@ namespace He.PipelineAssessment.UI.Features.Intervention.InterventionManagement.
                 AdministratorEmail = command.AdministratorEmail,
                 AssessmentToolWorkflowInstanceId = 1, //TODO
                 AssessorRationale = command.AssessorRationale,
-                CreatedBy = command.RequestedBy,
+                CreatedBy = command.RequestedBy ?? "",
                 DateSubmitted = createdDateTime,
                 DecisionType = command.DecisionType,
                 LastModifiedBy = command.RequestedBy,
                 LastModifiedDateTime = createdDateTime,
-                RequestedBy = command.RequestedBy,
-                RequestedByEmail = command.RequestedByEmail,
+                RequestedBy = command.RequestedBy ?? "",
+                RequestedByEmail = command.RequestedByEmail ?? "",
                 SignOffDocument = command.SignOffDocument,
                 Status = InterventionStatus.NotSubmitted
-            }
+            };
         }
     }
 }

@@ -10,7 +10,7 @@ namespace He.PipelineAssessment.UI.Features.Intervention.InterventionManagement.
         public List<TargetWorkflowDefinition> TargetWorkflowDefinitions { get; set; }
     }
 
-    public class CreateAssessmentInterventionCommand : IRequest<CreateAssessmentInterventionDto>, IRequest<int>
+    public class CreateAssessmentInterventionCommand : IRequest<int>
     {
         public string WorkflowInstanceId { get; set; } = null!;
         public string AssessmentName { get; set; } = null!;

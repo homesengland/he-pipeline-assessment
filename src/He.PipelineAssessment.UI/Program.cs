@@ -9,6 +9,7 @@ using He.PipelineAssessment.Infrastructure.Repository;
 using He.PipelineAssessment.Infrastructure.Repository.StoredProcedure;
 using He.PipelineAssessment.UI;
 using He.PipelineAssessment.UI.Authorization;
+using He.PipelineAssessment.UI.Common.Utility;
 using He.PipelineAssessment.UI.Extensions;
 using He.PipelineAssessment.UI.Features.Admin.AssessmentToolManagement.Commands.CreateAssessmentTool;
 using He.PipelineAssessment.UI.Features.Admin.AssessmentToolManagement.Commands.CreateAssessmentToolWorkflow;
@@ -51,6 +52,7 @@ builder.Services.AddHttpClient("ElsaServerClient", client =>
 });
 
 builder.Services.AddScoped<IElsaServerHttpClient, ElsaServerHttpClient>();
+builder.Services.AddScoped<IDateTimeProvider, DateTimeProvider>();
 builder.Services.AddScoped<IQuestionScreenSaveAndContinueMapper, QuestionScreenSaveAndContinueMapper>();
 builder.Services.AddScoped<IAssessmentToolMapper, AssessmentToolMapper>();
 builder.Services.AddScoped<IAssessmentToolWorkflowMapper, AssessmentToolWorkflowMapper>();
