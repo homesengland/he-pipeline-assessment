@@ -1,16 +1,16 @@
 ﻿using FluentValidation.Results;
 using MediatR;
 
-namespace He.PipelineAssessment.UI.Features.Intervention.InterventionManagement.CreateAssessmentIntervention
+namespace He.PipelineAssessment.UI.Features.Intervention.InterventionManagement.CreateOverride
 {
     public class CreateAssessmentInterventionDto
     {
-        public CreateAssessmentInterventionCommand CreateAssessmentInterventionCommand { get; set; } = new();
+        public CreateOverrideCommand CreateAssessmentInterventionCommand { get; set; } = new();
         public ValidationResult? ValidationResult { get; set; }
         public List<TargetWorkflowDefinition> TargetWorkflowDefinitions { get; set; }
     }
 
-    public class CreateAssessmentInterventionCommand : IRequest<int>
+    public class CreateOverrideCommand : IRequest<int>
     {
         public string WorkflowInstanceId { get; set; } = null!;
         public string AssessmentName { get; set; } = null!;

@@ -4,23 +4,23 @@ using He.PipelineAssessment.Models;
 using He.PipelineAssessment.UI.Features.Intervention.Constants;
 using MediatR;
 
-namespace He.PipelineAssessment.UI.Features.Intervention.InterventionManagement.CreateAssessmentIntervention
+namespace He.PipelineAssessment.UI.Features.Intervention.InterventionManagement.CreateOverride
 {
-    public class CreateAssessmentInterventionRequestHandler : IRequestHandler<CreateAssessmentInterventionRequest, CreateAssessmentInterventionDto>
+    public class CreateOverrideRequestHandler : IRequestHandler<CreateOverrideRequest, CreateAssessmentInterventionDto>
     {
 
         private readonly IAssessmentRepository _assessmentRepository;
         private readonly IAdminAssessmentToolWorkflowRepository _adminAssessmentToolWorkflowRepository;
         private readonly IUserProvider _userProvider;
 
-        public CreateAssessmentInterventionRequestHandler(IAssessmentRepository assessmentRepository, IUserProvider userProvider, IAdminAssessmentToolWorkflowRepository adminAssessmentToolWorkflowRepository)
+        public CreateOverrideRequestHandler(IAssessmentRepository assessmentRepository, IUserProvider userProvider, IAdminAssessmentToolWorkflowRepository adminAssessmentToolWorkflowRepository)
         {
             _assessmentRepository = assessmentRepository;
             _userProvider = userProvider;
             _adminAssessmentToolWorkflowRepository = adminAssessmentToolWorkflowRepository;
         }
 
-        public async Task<CreateAssessmentInterventionDto> Handle(CreateAssessmentInterventionRequest request, CancellationToken cancellationToken)
+        public async Task<CreateAssessmentInterventionDto> Handle(CreateOverrideRequest request, CancellationToken cancellationToken)
         {
             try
             {
@@ -57,7 +57,7 @@ namespace He.PipelineAssessment.UI.Features.Intervention.InterventionManagement.
 
             CreateAssessmentInterventionDto dto = new CreateAssessmentInterventionDto()
             {
-                CreateAssessmentInterventionCommand = new CreateAssessmentInterventionCommand()
+                CreateAssessmentInterventionCommand = new CreateOverrideCommand()
                 {
                     WorkflowInstanceId = instance.WorkflowInstanceId,
                     AssessmentResult = instance.Result,

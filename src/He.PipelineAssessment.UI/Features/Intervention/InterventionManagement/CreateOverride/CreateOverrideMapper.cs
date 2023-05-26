@@ -2,24 +2,24 @@
 using He.PipelineAssessment.UI.Common.Utility;
 using He.PipelineAssessment.UI.Features.Intervention.Constants;
 
-namespace He.PipelineAssessment.UI.Features.Intervention.InterventionManagement.CreateAssessmentIntervention
+namespace He.PipelineAssessment.UI.Features.Intervention.InterventionManagement.CreateOverride
 {
     public interface ICreateAssessmentInterventionMapper
     {
-        AssessmentIntervention CreateAssessmentInterventionCommandToAssessmentIntervention(CreateAssessmentInterventionCommand command);
+        AssessmentIntervention CreateAssessmentInterventionCommandToAssessmentIntervention(CreateOverrideCommand command);
     }
 
-    public class CreateAssessmentInterventionMapper : ICreateAssessmentInterventionMapper
+    public class CreateOverrideMapper : ICreateAssessmentInterventionMapper
     {
         private readonly IDateTimeProvider _dateTimeProvider;
 
-        public CreateAssessmentInterventionMapper(IDateTimeProvider dateTimeProvider)
+        public CreateOverrideMapper(IDateTimeProvider dateTimeProvider)
         {
             _dateTimeProvider = dateTimeProvider;
         }
 
         public AssessmentIntervention CreateAssessmentInterventionCommandToAssessmentIntervention(
-            CreateAssessmentInterventionCommand command)
+            CreateOverrideCommand command)
         {
             var createdDateTime = _dateTimeProvider.UtcNow();
             return new AssessmentIntervention

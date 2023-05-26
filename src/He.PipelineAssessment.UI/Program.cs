@@ -17,7 +17,7 @@ using He.PipelineAssessment.UI.Features.Admin.AssessmentToolManagement.Commands.
 using He.PipelineAssessment.UI.Features.Admin.AssessmentToolManagement.Commands.UpdateAssessmentToolWorkflowCommand;
 using He.PipelineAssessment.UI.Features.Admin.AssessmentToolManagement.Mappers;
 using He.PipelineAssessment.UI.Features.Admin.AssessmentToolManagement.Validators;
-using He.PipelineAssessment.UI.Features.Intervention.InterventionManagement.CreateAssessmentIntervention;
+using He.PipelineAssessment.UI.Features.Intervention.InterventionManagement.CreateOverride;
 using He.PipelineAssessment.UI.Features.SinglePipeline.Sync;
 using He.PipelineAssessment.UI.Features.Workflow.QuestionScreenSaveAndContinue;
 using MediatR;
@@ -56,7 +56,7 @@ builder.Services.AddScoped<IDateTimeProvider, DateTimeProvider>();
 builder.Services.AddScoped<IQuestionScreenSaveAndContinueMapper, QuestionScreenSaveAndContinueMapper>();
 builder.Services.AddScoped<IAssessmentToolMapper, AssessmentToolMapper>();
 builder.Services.AddScoped<IAssessmentToolWorkflowMapper, AssessmentToolWorkflowMapper>();
-builder.Services.AddScoped<ICreateAssessmentInterventionMapper, CreateAssessmentInterventionMapper>();
+builder.Services.AddScoped<ICreateAssessmentInterventionMapper, CreateOverrideMapper>();
 builder.Services.AddScoped<NonceConfig>();
 
 

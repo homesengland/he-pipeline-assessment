@@ -1,4 +1,4 @@
-﻿using He.PipelineAssessment.UI.Features.Intervention.InterventionManagement.CreateAssessmentIntervention;
+﻿using He.PipelineAssessment.UI.Features.Intervention.InterventionManagement.CreateOverride;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 
@@ -17,7 +17,7 @@ namespace He.PipelineAssessment.UI.Features.Intervention.InterventionManagement
 
         public async Task<IActionResult> Override(string workflowInstanceId)
         {
-            var dto = await _mediator.Send(new CreateAssessmentInterventionRequest { WorkflowInstanceId = workflowInstanceId });
+            var dto = await _mediator.Send(new CreateOverrideRequest { WorkflowInstanceId = workflowInstanceId });
             return View(dto);
         }
 
