@@ -1,8 +1,7 @@
 ﻿@model string;
 @using He.PipelineAssessment.UI.Authorization;
-@using He.PipelineAssessment.UI.Extensions;
-@using System.Security.Claims;
 @using Microsoft.AspNetCore.Authorization
+@inject IAuthorizationService AuthorizationService
 
 <h2 class="govuk-heading-m">
     Request an intervention

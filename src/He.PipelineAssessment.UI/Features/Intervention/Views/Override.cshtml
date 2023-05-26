@@ -5,20 +5,28 @@
     Layout = "_Layout";
 }
 <div class="text-center">
-@using (Html.BeginForm("CreateAssessmentIntervention", "Intervention", FormMethod.Post))
-{
-    @Html.AntiForgeryToken()
+    @using (Html.BeginForm("CreateAssessmentIntervention", "Intervention", FormMethod.Post))
+    {
+        @Html.AntiForgeryToken()
         <div class="govuk-form-group">
             <div class="govuk-!-padding-bottom-6">
                 <fieldset class="govuk-fieldset" aria-describedby="waste-hint">
                     <legend class="govuk-fieldset__legend govuk-fieldset__legend--l">
-                        <span class="govuk-caption-l">ESR_632767</span>
+                        <span class="govuk-caption-l">@Model.CreateAssessmentInterventionCommand.ProjectReference</span>
                         <h1 class="govuk-heading-l">
                             Decision for Override
                         </h1>
                     </legend>
 
                     <dl class="govuk-summary-list govuk-summary-list--no-border">
+                        <div class="govuk-summary-list__row">
+                            <dt class="govuk-summary-list__key">
+                                Decision Type
+                            </dt>
+                            <dd class="govuk-summary-list__value">
+                                @Model.CreateAssessmentInterventionCommand.DecisionType
+                            </dd>
+                        </div>
                         <div class="govuk-summary-list__row">
                             <dt class="govuk-summary-list__key">
                                 Name
@@ -51,19 +59,8 @@
                                 Attach Sign off document
                             </label>
                         </h1>
-                        <input class="govuk-input" id="signoff-document" name="event-name" value="@Model.CreateAssessmentInterventionCommand.SignOffDocument" type="text">
+                        <input class="govuk-input" id="signoff-document" name="CreateAssessmentInterventionCommand.SignOffDocument" value="@Model.CreateAssessmentInterventionCommand.SignOffDocument" type="text">
                     </div>
-
-                    <dl class="govuk-summary-list govuk-summary-list--no-border">
-                        <div class="govuk-summary-list__row">
-                            <dt class="govuk-summary-list__key">
-                                Decision Type
-                            </dt>
-                            <dd class="govuk-summary-list__value">
-                                @Model.CreateAssessmentInterventionCommand.DecisionType
-                            </dd>
-                        </div>
-                    </dl>
 
                     <div class="govuk-form-group">
                         <h1 class="govuk-label-wrapper">
@@ -71,24 +68,45 @@
                                 Rationale
                             </label>
                         </h1>
-                        <textarea class="govuk-textarea" id="rationale" name="rationale" @Model.CreateAssessmentInterventionCommand.AssessorRationale rows="5" aria-describedby="rationale"></textarea>
+                        <textarea class="govuk-textarea" id="rationale" name="CreateAssessmentInterventionCommand.AdministratorRationale" @Model.CreateAssessmentInterventionCommand.AdministratorRationale rows="5" aria-describedby="rationale"></textarea>
+                    </div>
+                    <div class="govuk-form-group">
+                        <label class="govuk-label" for="workflow-definitions">
+                            Target workflow definition
+                        </label>
+                        <div id="subject-hint" class="govuk-hint">
+                            This is the workflow definition, which will be available to start after this intervention request has been approved. All workflows created after '@Model.CreateAssessmentInterventionCommand.AssessmentName' will be deleted.
+                        </div>
+                        @Html.DropDownListFor(x => 
+                            Model.CreateAssessmentInterventionCommand.TargetWorkflowDefinitionId, 
+                            new SelectList(Model.TargetWorkflowDefinitions, "Id", "DisplayName"),
+                    "Choose target workflow definition", new {@class = "govuk-select", id="workflow-definitions"})
                     </div>
 
-
-                    <dl class="govuk-summary-list govuk-summary-list--no-border">
-                        <div class="govuk-summary-list__row">
-                            <dt class="govuk-summary-list__key">
-                                Date Submitted
-                            </dt>
-                            <dd class="govuk-summary-list__value">
-                                @DateTime.Now.ToString("dd/mm/yyyy HH.MM/ss")
-                            </dd>
-                        </div>
-                    </dl>
+                    @*                    <dl class="govuk-summary-list govuk-summary-list--no-border">
+                <div class="govuk-summary-list__row">
+                <dt class="govuk-summary-list__key">
+                Date Submitted
+                </dt>
+                <dd class="govuk-summary-list__value">
+                @DateTime.Now.ToString("dd/mm/yyyy HH.MM/ss")
+                </dd>
+                </div>
+                </dl>*@
+                    @Html.HiddenFor(x => Model.CreateAssessmentInterventionCommand.WorkflowInstanceId)
+                    @Html.HiddenFor(x => Model.CreateAssessmentInterventionCommand.AssessmentResult)
+                    @Html.HiddenFor(x => Model.CreateAssessmentInterventionCommand.AssessmentName)
+                    @Html.HiddenFor(x => Model.CreateAssessmentInterventionCommand.RequestedBy)
+                    @Html.HiddenFor(x => Model.CreateAssessmentInterventionCommand.RequestedByEmail)
+                    @Html.HiddenFor(x => Model.CreateAssessmentInterventionCommand.Administrator)
+                    @Html.HiddenFor(x => Model.CreateAssessmentInterventionCommand.AdministratorEmail)
+                    @Html.HiddenFor(x => Model.CreateAssessmentInterventionCommand.DecisionType)
+                    @Html.HiddenFor(x => Model.CreateAssessmentInterventionCommand.Status)
+                    @Html.HiddenFor(x => Model.CreateAssessmentInterventionCommand.ProjectReference)
                 </fieldset>
             </div>
 
             <input id="Next" type="submit" value="Save and continue" name="Next" class="govuk-button" />
         </div>
-}
+    }
 </div>
