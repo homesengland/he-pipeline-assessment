@@ -7,7 +7,7 @@ namespace He.PipelineAssessment.UI.Features.Intervention.InterventionManagement.
     public class CreateAssessmentInterventionRequestHandler : IRequestHandler<LoadOverrideCheckYourAnswersRequest, LoadOverrideCheckYourAnswersCommand>
     {
 
-        private readonly Infrastructure.Repository.IAssessmentRepository _assessmentRepository;
+        private readonly IAssessmentRepository _assessmentRepository;
 
         public CreateAssessmentInterventionRequestHandler(IAssessmentRepository assessmentRepository)
         {
@@ -26,6 +26,7 @@ namespace He.PipelineAssessment.UI.Features.Intervention.InterventionManagement.
         {
             return new LoadOverrideCheckYourAnswersCommand
             {
+                AssessmentInterventionId = intervention.Id,
                 AssessmentName = intervention.AssessmentToolWorkflowInstance.WorkflowName,
                 WorkflowInstanceId = intervention.AssessmentToolWorkflowInstance.WorkflowInstanceId,
                 DateSubmitted = intervention.DateSubmitted,
@@ -36,7 +37,9 @@ namespace He.PipelineAssessment.UI.Features.Intervention.InterventionManagement.
                 RequestedBy = intervention.RequestedBy,
                 RequestedByEmail = intervention.RequestedByEmail,
                 SignOffDocument = intervention.SignOffDocument,
-                TargetWorkflowDefinitionId = intervention.AssessmentToolWorkflowInstanceId
+                TargetWorkflowDefinitionId = intervention.TargetAssessmentToolWorkflow.WorkflowDefinitionId,
+                TargetWorkflowDefinitionName = intervention.TargetAssessmentToolWorkflow.Name
+
 
             };
         }

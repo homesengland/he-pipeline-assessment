@@ -1,0 +1,172 @@
+﻿@model He.PipelineAssessment.UI.Features.Intervention.InterventionManagement.LoadOverrideCheckYourAnswers.LoadOverrideCheckYourAnswersCommand
+
+@{
+    ViewData["Title"] = "Create Assessment Override";
+    Layout = "_Layout";
+}
+<div class="text-center">
+    @using (Html.BeginForm("SubmitOverride", "Override", FormMethod.Post))
+    {
+        @Html.AntiForgeryToken()
+        <div class="govuk-form-group">
+            <div class="govuk-!-padding-bottom-6">
+                <fieldset class="govuk-fieldset" aria-describedby="waste-hint">
+                    <legend class="govuk-fieldset__legend govuk-fieldset__legend--l">
+                        <span class="govuk-caption-l">@Model.ProjectReference</span>
+                        <h1 class="govuk-heading-l">
+                            Decision for Override
+                        </h1>
+                    </legend>
+
+
+                    <div class="govuk-grid-row">
+                        <div class="govuk-grid-column-two-thirds-from-desktop">
+                            <dl class="govuk-summary-list govuk-!-margin-bottom-9">
+
+                                    <div class="govuk-summary-list__row">
+                                        <dt class="govuk-summary-list__key">
+                                            Decision Type
+                                        </dt>
+                                        <dd class="govuk-summary-list__value">
+                                            <p>@Model.DecisionType</p>
+                                        </dd>
+                                    </div>
+                            </dl>
+                        </div>
+                    </div>
+                    <div class="govuk-grid-row">
+                        <div class="govuk-grid-column-two-thirds-from-desktop">
+                            <dl class="govuk-summary-list govuk-!-margin-bottom-9">
+
+                                <div class="govuk-summary-list__row">
+                                    <dt class="govuk-summary-list__key">
+                                        Name
+                                    </dt>
+                                    <dd class="govuk-summary-list__value">
+                                        <p>@Model.RequestedBy</p>
+                                    </dd>
+                                </div>
+                            </dl>
+                        </div>
+                    </div>
+                    <div class="govuk-grid-row">
+                        <div class="govuk-grid-column-two-thirds-from-desktop">
+                            <dl class="govuk-summary-list govuk-!-margin-bottom-9">
+
+                                <div class="govuk-summary-list__row">
+                                    <dt class="govuk-summary-list__key">
+                                        Assessment Stage
+                                    </dt>
+                                    <dd class="govuk-summary-list__value">
+                                        <p>@Model.AssessmentName</p>
+                                    </dd>
+                                </div>
+                            </dl>
+                        </div>
+                    </div>
+
+                    <div class="govuk-grid-row">
+                        <div class="govuk-grid-column-two-thirds-from-desktop">
+                            <dl class="govuk-summary-list govuk-!-margin-bottom-9">
+
+                                <div class="govuk-summary-list__row">
+                                    <dt class="govuk-summary-list__key">
+                                        Result
+                                    </dt>
+                                    <dd class="govuk-summary-list__value">
+                                        <p>@Model.AssessmentResult</p>
+                                    </dd>
+                                </div>
+                            </dl>
+                        </div>
+                    </div>
+
+                    <div class="govuk-grid-row">
+                        <div class="govuk-grid-column-two-thirds-from-desktop">
+                            <dl class="govuk-summary-list govuk-!-margin-bottom-9">
+
+                                <div class="govuk-summary-list__row">
+                                    <dt class="govuk-summary-list__key">
+                                        Sign off document
+                                    </dt>
+                                    <dd class="govuk-summary-list__value">
+                                        <a class="govuk-link" href="@Model.SignOffDocument">@Model.SignOffDocument</a>
+                                    </dd>
+                                    <dd class="govuk-summary-list__actions">
+                                        @Html.ActionLink("Change", "Override", "Override", new { WorkflowInstanceId = Model.WorkflowInstanceId }, new { @class = "govuk-link" })
+                                    </dd>
+                                </div>
+                            </dl>
+                        </div>
+                    </div>
+
+                    <div class="govuk-grid-row">
+                        <div class="govuk-grid-column-two-thirds-from-desktop">
+                            <dl class="govuk-summary-list govuk-!-margin-bottom-9">
+
+                                <div class="govuk-summary-list__row">
+                                    <dt class="govuk-summary-list__key">
+                                        Rationale
+                                    </dt>
+                                    <dd class="govuk-summary-list__value">                                    
+                                        <p>@Model.AdministratorRationale</p>
+                                    </dd>
+                                    <dd class="govuk-summary-list__actions">
+                                        @Html.ActionLink("Change", "Override", "Override", new { WorkflowInstanceId = Model.WorkflowInstanceId }, new { @class = "govuk-link" })
+                                    </dd>
+                                </div>
+                            </dl>
+                        </div>
+                    </div>
+
+                    <div class="govuk-grid-row">
+                        <div class="govuk-grid-column-two-thirds-from-desktop">
+                            <dl class="govuk-summary-list govuk-!-margin-bottom-9">
+
+                                <div class="govuk-summary-list__row">
+                                    <dt class="govuk-summary-list__key">
+                                        Target Workflow Definition
+                                    </dt>
+                                    <dd class="govuk-summary-list__value">
+                                        <p>@Model.TargetWorkflowDefinitionName</p>
+                                        <p class="govuk-hint">
+                                            @Model.TargetWorkflowDefinitionId
+                                        </p>
+                                    </dd>
+                                    <dd class="govuk-summary-list__actions">
+                                        @Html.ActionLink("Change", "Override", "Override", new { WorkflowInstanceId = Model.WorkflowInstanceId }, new { @class = "govuk-link" })
+                                    </dd>
+                                </div>
+                            </dl>
+                        </div>
+                    </div>
+
+                    @Html.HiddenFor(x => Model.AssessmentInterventionId)
+                    @Html.HiddenFor(x => Model.AssessmentToolWorkflowInstanceId)
+                    @Html.HiddenFor(x => Model.WorkflowInstanceId)
+                    @Html.HiddenFor(x => Model.AssessmentName)
+                    @Html.HiddenFor(x => Model.AssessmentResult)
+                    @Html.HiddenFor(x => Model.ProjectReference)
+                    @Html.HiddenFor(x => Model.RequestedBy)
+                    @Html.HiddenFor(x => Model.RequestedByEmail)
+                    @Html.HiddenFor(x => Model.Administrator)
+                    @Html.HiddenFor(x => Model.AdministratorEmail)
+                    @Html.HiddenFor(x => Model.SignOffDocument)
+                    @Html.HiddenFor(x => Model.DecisionType)
+                    @Html.HiddenFor(x => Model.AssessorRationale)
+                    @Html.HiddenFor(x => Model.AdministratorRationale)
+                    @Html.HiddenFor(x => Model.DateSubmitted)
+                    @Html.HiddenFor(x => Model.Status)
+                    @Html.HiddenFor(x => Model.TargetWorkflowDefinitionId)
+                    @Html.HiddenFor(x => Model.TargetWorkflowDefinitionName)
+                    @Html.HiddenFor(x => Model.TargetWorkflowId)
+
+
+
+                </fieldset>
+            </div>
+
+            <input id="Submit" type="submit" value="Submit" name="Submit" class="govuk-button" />
+        </div>
+    }
+</div>

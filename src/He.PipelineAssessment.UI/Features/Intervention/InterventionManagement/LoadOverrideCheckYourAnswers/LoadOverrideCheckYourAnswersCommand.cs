@@ -24,6 +24,7 @@
             TargetWorkflowDefinitionId = command.TargetWorkflowDefinitionId;
             WorkflowInstanceId = command.WorkflowInstanceId;
             AssessmentToolWorkflowInstanceId = command.AssessmentToolWorkflowInstanceId;
+            TargetWorkflowDefinitionName = command.TargetWorkflowDefinitionName;
         }
     }
 }

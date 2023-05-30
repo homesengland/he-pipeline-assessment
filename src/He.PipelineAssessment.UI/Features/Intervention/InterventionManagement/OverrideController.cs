@@ -1,4 +1,6 @@
 ﻿using He.PipelineAssessment.UI.Features.Intervention.InterventionManagement.CreateOverride;
+using He.PipelineAssessment.UI.Features.Intervention.InterventionManagement.LoadOverrideCheckYourAnswers;
+using He.PipelineAssessment.UI.Features.Intervention.InterventionManagement.SubmitOverride;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 
@@ -28,7 +30,54 @@ namespace He.PipelineAssessment.UI.Features.Intervention.InterventionManagement
             {
                 //do some validation of the command
                 var interventionId = await _mediator.Send(new CreateOverrideCommand(createAssessmentInterventionDto.CreateAssessmentInterventionCommand));
-                return View("~/Features/Intervention/Views/OverrideCheckYourAnswers", interventionId);
+                return RedirectToAction("CheckYourDetails", interventionId);
+            }
+            catch (Exception e)
+            {
+                _logger.LogError(e.Message);
+                return RedirectToAction("Index", "Error", new { message = e.Message });
+            }
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> EditOverride(int interventionId)
+        {
+            try
+            {
+                //do some validation of the command
+                LoadOverrideCheckYourAnswersCommand model = await _mediator.Send(new LoadOverrideCheckYourAnswersRequest() { InterventionId = interventionId });
+                return View("~/Features/Intervention/Views/EditOverride", model);
+            }
+            catch (Exception e)
+            {
+                _logger.LogError(e.Message);
+                return RedirectToAction("Index", "Error", new { message = e.Message });
+            }
+        }
+
+
+        [HttpPost]
+        public async Task<IActionResult> CheckYourDetails(int interventionId)
+        {
+            try
+            {
+                LoadOverrideCheckYourAnswersCommand model = await _mediator.Send(new LoadOverrideCheckYourAnswersRequest() { InterventionId = interventionId });
+                return View("~/Features/Intervention/Views/OverrideCheckYourAnswers", model);
+            }
+            catch (Exception e)
+            {
+                _logger.LogError(e.Message);
+                return RedirectToAction("Index", "Error", new { message = e.Message });
+            }
+        }
+        [HttpPost]
+        public async Task<IActionResult> SubmitOverride(SubmitOverrideCommand model)
+        {
+            try
+            {
+
+                var result = _mediator.Send(model);
+                return View("~/Features/Intervention/Views/OverrideCheckYourAnswers", model);
             }
             catch (Exception e)
             {

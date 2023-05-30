@@ -29,6 +29,7 @@ namespace He.PipelineAssessment.UI.Features.Intervention.InterventionManagement.
                 AdministratorRationale = command.AdministratorRationale,
                 AdministratorEmail = command.AdministratorEmail,
                 AssessmentToolWorkflowInstanceId = command.AssessmentToolWorkflowInstanceId,
+                TargetAssessmentToolWorkflowId = command.TargetWorkflowId,
                 AssessorRationale = command.AssessorRationale,
                 CreatedBy = command.RequestedBy ?? "",
                 DateSubmitted = createdDateTime,

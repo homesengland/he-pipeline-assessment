@@ -21,6 +21,7 @@ namespace He.PipelineAssessment.Infrastructure.Repository
         Task CreateAssessmentToolInstanceNextWorkflows(List<AssessmentToolInstanceNextWorkflow> nextWorkflows);
         Task<int> CreateAssessmentIntervention(AssessmentIntervention assessmentIntervention);
         Task<AssessmentIntervention?> GetAssessmentIntervention(int interventionId);
+        Task<int> UpdateAssessmentIntervention(AssessmentIntervention assessmentIntervention);
 
         Task<int> SaveChanges();
 
@@ -114,6 +115,13 @@ namespace He.PipelineAssessment.Infrastructure.Repository
         public async Task<AssessmentIntervention?> GetAssessmentIntervention(int interventionId)
         {
             return await context.Set<AssessmentIntervention>().FirstOrDefaultAsync(x => x.Id == interventionId);
+        }
+
+        public async Task<int> UpdateAssessmentIntervention(AssessmentIntervention assessmentIntervention)
+        {
+            context.Set<AssessmentIntervention>().Update(assessmentIntervention);
+            return await context.SaveChangesAsync();
+            
         }
     }
 }
