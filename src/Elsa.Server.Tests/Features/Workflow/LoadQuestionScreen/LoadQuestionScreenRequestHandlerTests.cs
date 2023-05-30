@@ -284,6 +284,7 @@ public class LoadQuestionScreenRequestHandlerTests
         {
             var questionId = assessmentQuestions[i].QuestionId;
             elsaAssessmentQuestions.Questions[i].Id = questionId!;
+            elsaAssessmentQuestions.Questions[i].ReevaluatePrePopulatedAnswers = false!;
         }
 
         elsaAssessmentQuestions.Questions[0].QuestionType = QuestionTypeConstants.CheckboxQuestion;
@@ -338,6 +339,7 @@ public class LoadQuestionScreenRequestHandlerTests
         {
             var questionId = assessmentQuestions[i].QuestionId;
             elsaAssessmentQuestions.Questions[i].Id = questionId!;
+            elsaAssessmentQuestions.Questions[i].ReevaluatePrePopulatedAnswers = false!;
         }
 
         elsaAssessmentQuestions.Questions[0].QuestionType = QuestionTypeConstants.RadioQuestion;
@@ -391,6 +393,7 @@ public class LoadQuestionScreenRequestHandlerTests
         {
             var questionId = assessmentQuestions[i].QuestionId;
             elsaAssessmentQuestions.Questions[i].Id = questionId!;
+            elsaAssessmentQuestions.Questions[i].ReevaluatePrePopulatedAnswers = false!;
         }
 
         elsaAssessmentQuestions.Questions[0].QuestionType = QuestionTypeConstants.PotScoreRadioQuestion;
@@ -728,6 +731,7 @@ public class LoadQuestionScreenRequestHandlerTests
         {
             var questionId = assessmentQuestions[i].QuestionId;
             elsaAssessmentQuestions.Questions[i].Id = questionId!;
+            elsaAssessmentQuestions.Questions[i].ReevaluatePrePopulatedAnswers = false!;
         }
 
         elsaAssessmentQuestions.Questions[0].Answer = "PrepopulatedAnswer";

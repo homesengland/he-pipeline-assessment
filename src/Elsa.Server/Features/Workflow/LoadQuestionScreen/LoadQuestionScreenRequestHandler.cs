@@ -126,7 +126,9 @@ namespace Elsa.Server.Features.Workflow.LoadQuestionScreen
         private static QuestionActivityData CreateQuestionActivityData(Question dbQuestion,
             CustomActivities.Activities.QuestionScreen.Question item)
         {
-            List<Answer> answers = dbQuestion.Answers!.Any()
+            var reevaluatePrepopulatedAnswers = item.ReevaluatePrePopulatedAnswers;
+
+            List<Answer> answers = dbQuestion.Answers!.Any() && !reevaluatePrepopulatedAnswers
                 ? dbQuestion.Answers!
                 : new List<Answer> { new Answer { AnswerText = item.Answer ?? string.Empty } };
             //assign the values
@@ -159,7 +161,7 @@ namespace Elsa.Server.Features.Workflow.LoadQuestionScreen
                     };
 
                     List<int> answerList;
-                    if (dbQuestion.Answers != null && dbQuestion.Answers.Any())
+                    if (dbQuestion.Answers != null && dbQuestion.Answers.Any() && !reevaluatePrepopulatedAnswers)
                     {
                         answerList = dbQuestion.Answers.Select(x => x.Choice!.Id).ToList();
                     }
@@ -184,7 +186,7 @@ namespace Elsa.Server.Features.Workflow.LoadQuestionScreen
                             .Select(x => new QuestionChoice() { Answer = x.Answer, Id = x.Id })
                             .ToArray()
                     };
-                    if (dbQuestion.Answers != null && dbQuestion.Answers.Any())
+                    if (dbQuestion.Answers != null && dbQuestion.Answers.Any() && !reevaluatePrepopulatedAnswers)
                     {
                         questionActivityData.Radio.SelectedAnswer = dbQuestion.Answers.First().Choice!.Id;
                     }
@@ -215,7 +217,7 @@ namespace Elsa.Server.Features.Workflow.LoadQuestionScreen
             {
                 questionActivityData.DataTable = new DataTableInput();
                 DataTableInput? dataTableInput = null;
-                if (dbQuestion.Answers != null && dbQuestion.Answers.Any() &&
+                if (dbQuestion.Answers != null && dbQuestion.Answers.Any() && !reevaluatePrepopulatedAnswers &&
                     dbQuestion.Answers.FirstOrDefault() != null)
                 {
                     var dataTable = JsonSerializer.Deserialize<DataTable>(dbQuestion.Answers.First().AnswerText);
