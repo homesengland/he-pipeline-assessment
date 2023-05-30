@@ -8,7 +8,7 @@
 
     var errorFormClass = !Model.IsValid ? "govuk-form-group--error" : "";
     var errorFieldClass = !Model.IsValid ? "govuk-input--error" : "";
-    var questionTextModel = new QuestionText() { Text = Model.Text, ReevaluatePrepopulatedAnswers = Model.ReevaluatePrePopulatedAnswers };
+    var questionTextModel = new QuestionText() { Text = Model.QuestionText, ReevaluatePrepopulatedAnswers = Model.ReevaluatePrePopulatedAnswers };
 }
 
 <div class="govuk-form-group @errorFormClass" id="@formItemName">

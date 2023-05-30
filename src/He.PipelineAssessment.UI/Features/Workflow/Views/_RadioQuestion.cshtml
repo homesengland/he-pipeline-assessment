@@ -7,7 +7,7 @@
     var itemId = Model.Index + "radio_multi_select_";
     var errorFormClass = !Model.IsValid ? "govuk-form-group--error" : "";
     var isReadOnly = Model.IsReadOnly ? "disabled" : "";
-    var questionTextModel = new QuestionText() { Text = Model.Text, ReevaluatePrepopulatedAnswers = Model.ReevaluatePrePopulatedAnswers };
+    var questionTextModel = new QuestionText() { Text = Model.QuestionText, ReevaluatePrepopulatedAnswers = Model.ReevaluatePrePopulatedAnswers };
 }
 
 <div class="govuk-form-group @errorFormClass" id="@formItemName">

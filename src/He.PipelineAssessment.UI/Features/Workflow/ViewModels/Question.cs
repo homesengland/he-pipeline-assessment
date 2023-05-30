@@ -61,6 +61,7 @@ namespace He.PipelineAssessment.UI.Features.Workflow.ViewModels
 
         public string? DisplayGroupId { get; set; }
         public string? QuestionText { get; set; }
+        public bool ReEvaluatePrePopulatedAnswers { get; set; }
     }
 
     public class InformationText
