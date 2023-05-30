@@ -26,6 +26,7 @@ namespace He.PipelineAssessment.UI.Features.Intervention.InterventionManagement.
             TargetWorkflowDefinitionId = command.TargetWorkflowDefinitionId;
             WorkflowInstanceId = command.WorkflowInstanceId;
             AssessmentToolWorkflowInstanceId = command.AssessmentToolWorkflowInstanceId;
+            TargetWorkflowId = command.TargetWorkflowId;
         }
     }
 }

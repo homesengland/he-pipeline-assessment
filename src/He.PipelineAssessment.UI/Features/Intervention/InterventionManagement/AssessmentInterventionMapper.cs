@@ -1,20 +1,21 @@
 ﻿using He.PipelineAssessment.Models;
-using He.PipelineAssessment.UI.Common.Utility;
-using He.PipelineAssessment.UI.Features.Intervention.Constants;
 
-namespace He.PipelineAssessment.UI.Features.Intervention.InterventionManagement.CreateOverride
+namespace He.PipelineAssessment.UI.Features.Intervention.InterventionManagement
 {
     public interface IAssessmentInterventionMapper
     {
-        AssessmentIntervention FromAssessmentInterventionCommand(AssessmentInterventionCommand command);
+        AssessmentIntervention AssessmentInterventionFromAssessmentInterventionCommand(AssessmentInterventionCommand command);
 
-        AssessmentInterventionCommand ToAssessmentInterventionCommand(AssessmentIntervention intervention);
+        AssessmentInterventionCommand AssessmentInterventionCommandFromAssessmentIntervention(AssessmentIntervention intervention);
+
+        List<TargetWorkflowDefinition> TargetWorkflowDefinitionsFromAssessmentToolWorkflows(
+            List<AssessmentToolWorkflow> assessmentToolWorkflows);
     }
 
     public class AssessmentInterventionMapper : IAssessmentInterventionMapper
     {
 
-        public AssessmentIntervention FromAssessmentInterventionCommand(AssessmentInterventionCommand command)
+        public AssessmentIntervention AssessmentInterventionFromAssessmentInterventionCommand(AssessmentInterventionCommand command)
         {
             AssessmentIntervention intervention = new AssessmentIntervention()
             {
@@ -36,7 +37,7 @@ namespace He.PipelineAssessment.UI.Features.Intervention.InterventionManagement.
             return intervention;
         }
 
-        public AssessmentInterventionCommand ToAssessmentInterventionCommand(AssessmentIntervention intervention)
+        public AssessmentInterventionCommand AssessmentInterventionCommandFromAssessmentIntervention(AssessmentIntervention intervention)
         {
             AssessmentInterventionCommand command = new AssessmentInterventionCommand()
             {
@@ -61,6 +62,16 @@ namespace He.PipelineAssessment.UI.Features.Intervention.InterventionManagement.
             };
 
             return command;
+        }
+
+        public List<TargetWorkflowDefinition> TargetWorkflowDefinitionsFromAssessmentToolWorkflows(List<AssessmentToolWorkflow> assessmentToolWorkflows)
+        {
+            return assessmentToolWorkflows.Select(x => new TargetWorkflowDefinition
+            {
+                Id = x.Id,
+                WorkflowDefinitionId = x.WorkflowDefinitionId,
+                Name = x.Name
+            }).ToList();
         }
     }
 }

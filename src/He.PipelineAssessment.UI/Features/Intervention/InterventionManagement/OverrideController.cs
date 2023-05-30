@@ -1,4 +1,6 @@
-﻿using He.PipelineAssessment.UI.Features.Intervention.InterventionManagement.CreateOverride;
+﻿using He.PipelineAssessment.UI.Features.Intervention.Constants;
+using He.PipelineAssessment.UI.Features.Intervention.InterventionManagement.CreateOverride;
+using He.PipelineAssessment.UI.Features.Intervention.InterventionManagement.EditOverride;
 using He.PipelineAssessment.UI.Features.Intervention.InterventionManagement.LoadOverrideCheckYourAnswers;
 using He.PipelineAssessment.UI.Features.Intervention.InterventionManagement.SubmitOverride;
 using MediatR;
@@ -24,13 +26,13 @@ namespace He.PipelineAssessment.UI.Features.Intervention.InterventionManagement
         }
 
         [HttpPost]
-        public async Task<IActionResult> CreateOverride([FromForm] CreateAssessmentInterventionDto createAssessmentInterventionDto)
+        public async Task<IActionResult> CreateOverride([FromForm] AssessmentInterventionDto createAssessmentInterventionDto)
         {
             try
             {
                 //do some validation of the command
-                var interventionId = await _mediator.Send(new CreateOverrideCommand(createAssessmentInterventionDto.CreateAssessmentInterventionCommand));
-                return RedirectToAction("CheckYourDetails", interventionId);
+                var interventionId = await _mediator.Send(new CreateOverrideCommand(createAssessmentInterventionDto.AssessmentInterventionCommand));
+                return RedirectToAction("CheckYourDetails", new { interventionId });
             }
             catch (Exception e)
             {
@@ -39,14 +41,13 @@ namespace He.PipelineAssessment.UI.Features.Intervention.InterventionManagement
             }
         }
 
-        [HttpPost]
+        [HttpGet]
         public async Task<IActionResult> EditOverride(int interventionId)
         {
             try
             {
-                //do some validation of the command
-                LoadOverrideCheckYourAnswersCommand model = await _mediator.Send(new LoadOverrideCheckYourAnswersRequest() { InterventionId = interventionId });
-                return View("~/Features/Intervention/Views/EditOverride", model);
+                AssessmentInterventionDto dto = await _mediator.Send(new EditOverrideRequest() { InterventionId = interventionId });
+                return View("~/Features/Intervention/Views/EditOverride.cshtml", dto);
             }
             catch (Exception e)
             {
@@ -56,13 +57,13 @@ namespace He.PipelineAssessment.UI.Features.Intervention.InterventionManagement
         }
 
 
-        [HttpPost]
+        [HttpGet]
         public async Task<IActionResult> CheckYourDetails(int interventionId)
         {
             try
             {
                 LoadOverrideCheckYourAnswersCommand model = await _mediator.Send(new LoadOverrideCheckYourAnswersRequest() { InterventionId = interventionId });
-                return View("~/Features/Intervention/Views/OverrideCheckYourAnswers", model);
+                return View("~/Features/Intervention/Views/OverrideCheckYourDetails.cshtml", model);
             }
             catch (Exception e)
             {
@@ -70,14 +71,27 @@ namespace He.PipelineAssessment.UI.Features.Intervention.InterventionManagement
                 return RedirectToAction("Index", "Error", new { message = e.Message });
             }
         }
+
         [HttpPost]
-        public async Task<IActionResult> SubmitOverride(SubmitOverrideCommand model)
+        public async Task<IActionResult> SubmitOverride(SubmitOverrideCommand model, string submitButton)
         {
             try
             {
-
+                switch (submitButton)
+                {
+                    case "Submit":
+                        model.Status = InterventionStatus.Approved;
+                        break;
+                    case "Reject":
+                        model.Status = InterventionStatus.Rejected;
+                        break;
+                    default:
+                        model.Status = InterventionStatus.NotSubmitted;
+                        break;
+                }
                 var result = _mediator.Send(model);
-                return View("~/Features/Intervention/Views/OverrideCheckYourAnswers", model);
+                //redirect to some other view, which lists all interventions
+                return RedirectToAction("CheckYourDetails", new { model.AssessmentInterventionId });
             }
             catch (Exception e)
             {
@@ -85,5 +99,6 @@ namespace He.PipelineAssessment.UI.Features.Intervention.InterventionManagement
                 return RedirectToAction("Index", "Error", new { message = e.Message });
             }
         }
+
     }
 }

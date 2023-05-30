@@ -22,22 +22,14 @@
                     <div class="govuk-grid-row">
                         <div class="govuk-grid-column-two-thirds-from-desktop">
                             <dl class="govuk-summary-list govuk-!-margin-bottom-9">
-
-                                    <div class="govuk-summary-list__row">
-                                        <dt class="govuk-summary-list__key">
-                                            Decision Type
-                                        </dt>
-                                        <dd class="govuk-summary-list__value">
-                                            <p>@Model.DecisionType</p>
-                                        </dd>
-                                    </div>
-                            </dl>
-                        </div>
-                    </div>
-                    <div class="govuk-grid-row">
-                        <div class="govuk-grid-column-two-thirds-from-desktop">
-                            <dl class="govuk-summary-list govuk-!-margin-bottom-9">
-
+                                <div class="govuk-summary-list__row">
+                                    <dt class="govuk-summary-list__key">
+                                        Decision Type
+                                    </dt>
+                                    <dd class="govuk-summary-list__value">
+                                        <p>@Model.DecisionType</p>
+                                    </dd>
+                                </div>
                                 <div class="govuk-summary-list__row">
                                     <dt class="govuk-summary-list__key">
                                         Name
@@ -46,13 +38,6 @@
                                         <p>@Model.RequestedBy</p>
                                     </dd>
                                 </div>
-                            </dl>
-                        </div>
-                    </div>
-                    <div class="govuk-grid-row">
-                        <div class="govuk-grid-column-two-thirds-from-desktop">
-                            <dl class="govuk-summary-list govuk-!-margin-bottom-9">
-
                                 <div class="govuk-summary-list__row">
                                     <dt class="govuk-summary-list__key">
                                         Assessment Stage
@@ -61,14 +46,6 @@
                                         <p>@Model.AssessmentName</p>
                                     </dd>
                                 </div>
-                            </dl>
-                        </div>
-                    </div>
-
-                    <div class="govuk-grid-row">
-                        <div class="govuk-grid-column-two-thirds-from-desktop">
-                            <dl class="govuk-summary-list govuk-!-margin-bottom-9">
-
                                 <div class="govuk-summary-list__row">
                                     <dt class="govuk-summary-list__key">
                                         Result
@@ -77,14 +54,6 @@
                                         <p>@Model.AssessmentResult</p>
                                     </dd>
                                 </div>
-                            </dl>
-                        </div>
-                    </div>
-
-                    <div class="govuk-grid-row">
-                        <div class="govuk-grid-column-two-thirds-from-desktop">
-                            <dl class="govuk-summary-list govuk-!-margin-bottom-9">
-
                                 <div class="govuk-summary-list__row">
                                     <dt class="govuk-summary-list__key">
                                         Sign off document
@@ -93,36 +62,20 @@
                                         <a class="govuk-link" href="@Model.SignOffDocument">@Model.SignOffDocument</a>
                                     </dd>
                                     <dd class="govuk-summary-list__actions">
-                                        @Html.ActionLink("Change", "Override", "Override", new { WorkflowInstanceId = Model.WorkflowInstanceId }, new { @class = "govuk-link" })
+                                        @Html.ActionLink("Change", "EditOverride", "Override", new { InterventionId = Model.AssessmentInterventionId }, new { @class = "govuk-link" })
                                     </dd>
                                 </div>
-                            </dl>
-                        </div>
-                    </div>
-
-                    <div class="govuk-grid-row">
-                        <div class="govuk-grid-column-two-thirds-from-desktop">
-                            <dl class="govuk-summary-list govuk-!-margin-bottom-9">
-
                                 <div class="govuk-summary-list__row">
                                     <dt class="govuk-summary-list__key">
                                         Rationale
                                     </dt>
-                                    <dd class="govuk-summary-list__value">                                    
+                                    <dd class="govuk-summary-list__value">
                                         <p>@Model.AdministratorRationale</p>
                                     </dd>
                                     <dd class="govuk-summary-list__actions">
-                                        @Html.ActionLink("Change", "Override", "Override", new { WorkflowInstanceId = Model.WorkflowInstanceId }, new { @class = "govuk-link" })
+                                        @Html.ActionLink("Change", "EditOverride", "Override", new { InterventionId = Model.AssessmentInterventionId }, new { @class = "govuk-link" })
                                     </dd>
                                 </div>
-                            </dl>
-                        </div>
-                    </div>
-
-                    <div class="govuk-grid-row">
-                        <div class="govuk-grid-column-two-thirds-from-desktop">
-                            <dl class="govuk-summary-list govuk-!-margin-bottom-9">
-
                                 <div class="govuk-summary-list__row">
                                     <dt class="govuk-summary-list__key">
                                         Target Workflow Definition
@@ -134,7 +87,15 @@
                                         </p>
                                     </dd>
                                     <dd class="govuk-summary-list__actions">
-                                        @Html.ActionLink("Change", "Override", "Override", new { WorkflowInstanceId = Model.WorkflowInstanceId }, new { @class = "govuk-link" })
+                                        @Html.ActionLink("Change", "EditOverride", "Override", new { InterventionId = Model.AssessmentInterventionId }, new { @class = "govuk-link" })
+                                    </dd>
+                                </div>
+                                <div class="govuk-summary-list__row">
+                                    <dt class="govuk-summary-list__key">
+                                        Status
+                                    </dt>
+                                    <dd class="govuk-summary-list__value">
+                                        <p>@Model.Status</p>
                                     </dd>
                                 </div>
                             </dl>
@@ -142,7 +103,7 @@
                     </div>
 
                     @Html.HiddenFor(x => Model.AssessmentInterventionId)
-                    @Html.HiddenFor(x => Model.AssessmentToolWorkflowInstanceId)
+@*                    @Html.HiddenFor(x => Model.AssessmentToolWorkflowInstanceId)
                     @Html.HiddenFor(x => Model.WorkflowInstanceId)
                     @Html.HiddenFor(x => Model.AssessmentName)
                     @Html.HiddenFor(x => Model.AssessmentResult)
@@ -159,14 +120,20 @@
                     @Html.HiddenFor(x => Model.Status)
                     @Html.HiddenFor(x => Model.TargetWorkflowDefinitionId)
                     @Html.HiddenFor(x => Model.TargetWorkflowDefinitionName)
-                    @Html.HiddenFor(x => Model.TargetWorkflowId)
+                    @Html.HiddenFor(x => Model.TargetWorkflowId)*@
 
 
 
                 </fieldset>
             </div>
+            <div class="govuk-button-group">                
+@*                @Html.ActionLink("Submit", "SubmitOverride", "Override", new { InterventionId = Model.AssessmentInterventionId, Status = "Accepted" }, new { @class = "govuk-button" })
+                @Html.ActionLink("Submit", "SubmitOverride", "Override", new { InterventionId = Model.AssessmentInterventionId, Status = "Rejected" }, new { @class = "govuk-button govuk-button--warning" })
+*@
+                <input id="Submit" type="submit" value="Submit" name="submitButton" class="govuk-button" />
+                <input id="Reject" type="submit" value="Reject" name="submitButton" class="govuk-button govuk-button--warning" />
+            </div>
 
-            <input id="Submit" type="submit" value="Submit" name="Submit" class="govuk-button" />
         </div>
     }
 </div>

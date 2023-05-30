@@ -114,7 +114,8 @@ namespace He.PipelineAssessment.Infrastructure.Repository
 
         public async Task<AssessmentIntervention?> GetAssessmentIntervention(int interventionId)
         {
-            return await context.Set<AssessmentIntervention>().FirstOrDefaultAsync(x => x.Id == interventionId);
+            return await context.Set<AssessmentIntervention>().Include(x => x.AssessmentToolWorkflowInstance.Assessment)
+                .Include(x => x.TargetAssessmentToolWorkflow).FirstOrDefaultAsync(x => x.Id == interventionId);
         }
 
         public async Task<int> UpdateAssessmentIntervention(AssessmentIntervention assessmentIntervention)

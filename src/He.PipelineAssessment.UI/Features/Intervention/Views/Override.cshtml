@@ -1,4 +1,4 @@
-﻿@model He.PipelineAssessment.UI.Features.Intervention.InterventionManagement.CreateAssessmentInterventionDto;
+﻿@model He.PipelineAssessment.UI.Features.Intervention.InterventionManagement.AssessmentInterventionDto;
 
 @{
     ViewData["Title"] = "Create Assessment Override";
@@ -12,7 +12,7 @@
             <div class="govuk-!-padding-bottom-6">
                 <fieldset class="govuk-fieldset" aria-describedby="waste-hint">
                     <legend class="govuk-fieldset__legend govuk-fieldset__legend--l">
-                        <span class="govuk-caption-l">@Model.CreateAssessmentInterventionCommand.ProjectReference</span>
+                        <span class="govuk-caption-l">@Model.AssessmentInterventionCommand.ProjectReference</span>
                         <h1 class="govuk-heading-l">
                             Decision for Override
                         </h1>
@@ -24,7 +24,7 @@
                                 Decision Type
                             </dt>
                             <dd class="govuk-summary-list__value">
-                                @Model.CreateAssessmentInterventionCommand.DecisionType
+                                @Model.AssessmentInterventionCommand.DecisionType
                             </dd>
                         </div>
                         <div class="govuk-summary-list__row">
@@ -32,7 +32,7 @@
                                 Name
                             </dt>
                             <dd class="govuk-summary-list__value">
-                                @Model.CreateAssessmentInterventionCommand.RequestedBy
+                                @Model.AssessmentInterventionCommand.RequestedBy
                             </dd>
                         </div>
                         <div class="govuk-summary-list__row">
@@ -40,7 +40,7 @@
                                 Assessment Stage
                             </dt>
                             <dd class="govuk-summary-list__value">
-                                @Model.CreateAssessmentInterventionCommand.AssessmentName
+                                @Model.AssessmentInterventionCommand.AssessmentName
                             </dd>
                         </div>
                         <div class="govuk-summary-list__row">
@@ -48,7 +48,7 @@
                                 Result
                             </dt>
                             <dd class="govuk-summary-list__value">
-                                @Model.CreateAssessmentInterventionCommand.AssessmentResult
+                                @Model.AssessmentInterventionCommand.AssessmentResult
                             </dd>
                         </div>
                     </dl>
@@ -59,7 +59,7 @@
                                 Attach Sign off document
                             </label>
                         </h1>
-                        <input class="govuk-input" id="signoff-document" name="CreateAssessmentInterventionCommand.SignOffDocument" value="@Model.CreateAssessmentInterventionCommand.SignOffDocument" type="text">
+                        <input class="govuk-input" id="signoff-document" name="AssessmentInterventionCommand.SignOffDocument" value="@Model.AssessmentInterventionCommand.SignOffDocument" type="text">
                     </div>
 
                     <div class="govuk-form-group">
@@ -68,17 +68,17 @@
                                 Rationale
                             </label>
                         </h1>
-                        <textarea class="govuk-textarea" id="rationale" name="CreateAssessmentInterventionCommand.AdministratorRationale" @Model.CreateAssessmentInterventionCommand.AdministratorRationale rows="5" aria-describedby="rationale"></textarea>
+                        <textarea class="govuk-textarea" id="rationale" name="AssessmentInterventionCommand.AdministratorRationale" @Model.AssessmentInterventionCommand.AdministratorRationale rows="5" aria-describedby="rationale"></textarea>
                     </div>
                     <div class="govuk-form-group">
                         <label class="govuk-label" for="workflow-definitions">
                             Target workflow definition
                         </label>
                         <div id="subject-hint" class="govuk-hint">
-                            This is the workflow definition, which will be available to start after this intervention request has been approved. All workflows created after '@Model.CreateAssessmentInterventionCommand.AssessmentName' will be deleted.
+                            This is the workflow definition, which will be available to start after this intervention request has been approved. All workflows created after '@Model.AssessmentInterventionCommand.AssessmentName' will be deleted.
                         </div>
                         @Html.DropDownListFor(x =>
-                    Model.CreateAssessmentInterventionCommand.TargetWorkflowDefinitionId,
+                    Model.AssessmentInterventionCommand.TargetWorkflowId,
                     new SelectList(Model.TargetWorkflowDefinitions, "Id", "DisplayName"),
                     "Choose target workflow definition", new {@class = "govuk-select", id="workflow-definitions"})
                     </div>
@@ -93,18 +93,18 @@
                 </dd>
                 </div>
                 </dl>*@
-                    @Html.HiddenFor(x => Model.CreateAssessmentInterventionCommand.AssessmentToolWorkflowInstanceId)
-                    @Html.HiddenFor(x => Model.CreateAssessmentInterventionCommand.WorkflowInstanceId)
-                    @Html.HiddenFor(x => Model.CreateAssessmentInterventionCommand.AssessmentResult)
-                    @Html.HiddenFor(x => Model.CreateAssessmentInterventionCommand.AssessmentName)
-                    @Html.HiddenFor(x => Model.CreateAssessmentInterventionCommand.AssessorRationale)
-                    @Html.HiddenFor(x => Model.CreateAssessmentInterventionCommand.RequestedBy)
-                    @Html.HiddenFor(x => Model.CreateAssessmentInterventionCommand.RequestedByEmail)
-                    @Html.HiddenFor(x => Model.CreateAssessmentInterventionCommand.Administrator)
-                    @Html.HiddenFor(x => Model.CreateAssessmentInterventionCommand.AdministratorEmail)
-                    @Html.HiddenFor(x => Model.CreateAssessmentInterventionCommand.DecisionType)
-                    @Html.HiddenFor(x => Model.CreateAssessmentInterventionCommand.Status)
-                    @Html.HiddenFor(x => Model.CreateAssessmentInterventionCommand.ProjectReference)
+                    @Html.HiddenFor(x => Model.AssessmentInterventionCommand.AssessmentToolWorkflowInstanceId)
+                    @Html.HiddenFor(x => Model.AssessmentInterventionCommand.WorkflowInstanceId)
+                    @Html.HiddenFor(x => Model.AssessmentInterventionCommand.AssessmentResult)
+                    @Html.HiddenFor(x => Model.AssessmentInterventionCommand.AssessmentName)
+                    @Html.HiddenFor(x => Model.AssessmentInterventionCommand.AssessorRationale)
+                    @Html.HiddenFor(x => Model.AssessmentInterventionCommand.RequestedBy)
+                    @Html.HiddenFor(x => Model.AssessmentInterventionCommand.RequestedByEmail)
+                    @Html.HiddenFor(x => Model.AssessmentInterventionCommand.Administrator)
+                    @Html.HiddenFor(x => Model.AssessmentInterventionCommand.AdministratorEmail)
+                    @Html.HiddenFor(x => Model.AssessmentInterventionCommand.DecisionType)
+                    @Html.HiddenFor(x => Model.AssessmentInterventionCommand.Status)
+                    @Html.HiddenFor(x => Model.AssessmentInterventionCommand.ProjectReference)
                 </fieldset>
             </div>
 

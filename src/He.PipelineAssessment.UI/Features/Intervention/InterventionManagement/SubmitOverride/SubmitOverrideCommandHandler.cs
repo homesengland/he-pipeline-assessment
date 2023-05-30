@@ -1,41 +1,47 @@
 ﻿using He.PipelineAssessment.Infrastructure.Repository;
-using He.PipelineAssessment.Models;
+using He.PipelineAssessment.UI.Common.Utility;
+using He.PipelineAssessment.UI.Features.Intervention.Constants;
 using MediatR;
 
 namespace He.PipelineAssessment.UI.Features.Intervention.InterventionManagement.SubmitOverride
 {
     public class SubmitOverrideCommandHandler : IRequestHandler<SubmitOverrideCommand, Unit>
     {
-
-
         private readonly IAssessmentRepository _assessmentRepository;
+        private readonly IDateTimeProvider _dateTimeProvider;
 
-        public SubmitOverrideCommandHandler(IAssessmentRepository assessmentRepository)
+        public SubmitOverrideCommandHandler(IAssessmentRepository assessmentRepository, IDateTimeProvider dateTimeProvider)
         {
             _assessmentRepository = assessmentRepository;
+            _dateTimeProvider = dateTimeProvider;
         }
 
-        public async Task<Unit> Handle(SubmitOverrideCommand request, CancellationToken cancellationToken)
+        public async Task<Unit> Handle(SubmitOverrideCommand command, CancellationToken cancellationToken)
         {
             try
             {
-                AssessmentIntervention intervention = InterventionFromCommand(request);
+                var intervention =
+                    await _assessmentRepository.GetAssessmentIntervention(command.AssessmentInterventionId);
+                if (intervention == null)
+                {
+                    throw new ApplicationException(
+                        $"Unable to find intervention with Id: {command.AssessmentInterventionId}");
+                }
+                intervention.DateSubmitted = _dateTimeProvider.UtcNow();
                 await _assessmentRepository.UpdateAssessmentIntervention(intervention);
+
+                if (command.Status == InterventionStatus.Approved)
+                {
+                    // do something to delete all workflow instances created after the date of workflow instance which we started the override for
+                    // insert AssessmentToolInstanceNextWorkflow record
+                }
             }
             catch(Exception e)
             {
-
+               
             }
 
-            
-        }
-
-        private AssessmentIntervention InterventionFromCommand(SubmitOverrideCommand command)
-        {
-            return new AssessmentIntervention()
-            {
-                Id = command.AssessmentInterventionId,
-            };
+            return Unit.Value;
         }
     }
 }

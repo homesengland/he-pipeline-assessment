@@ -27,7 +27,7 @@ namespace He.PipelineAssessment.Infrastructure.Config
                 .WithMany(x => x.AssessmentInterventions)
                 .HasForeignKey(x => x.AssessmentToolWorkflowInstanceId);
 
-            builder.HasOne(x => x.AssessmentToolWorkflow)
+            builder.HasOne(x => x.TargetAssessmentToolWorkflow)
                 .WithMany(x => x.AssessmentInterventions)
                 .HasForeignKey(x => x.TargetAssessmentToolWorkflowId);
         }

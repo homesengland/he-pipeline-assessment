@@ -20,7 +20,7 @@ namespace He.PipelineAssessment.UI.Features.Intervention.InterventionManagement
         public string? AdministratorRationale { get; set; }
         public DateTime DateSubmitted { get; set; }
         public string? Status { get; set; }
-        public int TargetWorkflowId { get; set; }
+        public int? TargetWorkflowId { get; set; }
         public string? TargetWorkflowDefinitionId { get; set; }
         public string? TargetWorkflowDefinitionName { get; set; }
     }

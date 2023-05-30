@@ -19,9 +19,9 @@ namespace He.PipelineAssessment.UI.Features.Intervention.InterventionManagement.
         {
             var assessmentIntervention = _mapper.CreateOverrideCommandToAssessmentIntervention(command);
 
-            var interventionId = await _assessmentRepository.CreateAssessmentIntervention(assessmentIntervention);
+            await _assessmentRepository.CreateAssessmentIntervention(assessmentIntervention);
 
-            return interventionId;
+            return assessmentIntervention.Id;
         }
     }
 }

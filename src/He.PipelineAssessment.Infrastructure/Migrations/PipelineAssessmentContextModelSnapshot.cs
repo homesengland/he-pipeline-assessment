@@ -139,9 +139,6 @@ namespace He.PipelineAssessment.Infrastructure.Migrations
                     b.Property<string>("AdministratorRationale")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("AssessmentToolWorkflowId")
-                        .HasColumnType("int");
-
                     b.Property<int>("AssessmentToolWorkflowInstanceId")
                         .HasColumnType("int");
 
@@ -197,14 +194,14 @@ namespace He.PipelineAssessment.Infrastructure.Migrations
                         .HasMaxLength(50)
                         .HasColumnType("nvarchar(50)");
 
-                    b.Property<int>("TargetWorkflowDefinitionId")
+                    b.Property<int?>("TargetAssessmentToolWorkflowId")
                         .HasColumnType("int");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("AssessmentToolWorkflowId");
-
                     b.HasIndex("AssessmentToolWorkflowInstanceId");
+
+                    b.HasIndex("TargetAssessmentToolWorkflowId");
 
                     b.ToTable("AssessmentIntervention");
 
@@ -537,21 +534,19 @@ namespace He.PipelineAssessment.Infrastructure.Migrations
 
             modelBuilder.Entity("He.PipelineAssessment.Models.AssessmentIntervention", b =>
                 {
-                    b.HasOne("He.PipelineAssessment.Models.AssessmentToolWorkflow", "AssessmentToolWorkflow")
-                        .WithMany()
-                        .HasForeignKey("AssessmentToolWorkflowId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
                     b.HasOne("He.PipelineAssessment.Models.AssessmentToolWorkflowInstance", "AssessmentToolWorkflowInstance")
                         .WithMany("AssessmentInterventions")
                         .HasForeignKey("AssessmentToolWorkflowInstanceId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("AssessmentToolWorkflow");
+                    b.HasOne("He.PipelineAssessment.Models.AssessmentToolWorkflow", "TargetAssessmentToolWorkflow")
+                        .WithMany("AssessmentInterventions")
+                        .HasForeignKey("TargetAssessmentToolWorkflowId");
 
                     b.Navigation("AssessmentToolWorkflowInstance");
+
+                    b.Navigation("TargetAssessmentToolWorkflow");
                 });
 
             modelBuilder.Entity("He.PipelineAssessment.Models.AssessmentToolInstanceNextWorkflow", b =>
@@ -595,6 +590,11 @@ namespace He.PipelineAssessment.Infrastructure.Migrations
             modelBuilder.Entity("He.PipelineAssessment.Models.AssessmentTool", b =>
                 {
                     b.Navigation("AssessmentToolWorkflows");
+                });
+
+            modelBuilder.Entity("He.PipelineAssessment.Models.AssessmentToolWorkflow", b =>
+                {
+                    b.Navigation("AssessmentInterventions");
                 });
 
             modelBuilder.Entity("He.PipelineAssessment.Models.AssessmentToolWorkflowInstance", b =>

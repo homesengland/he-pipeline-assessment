@@ -2,8 +2,8 @@
 
 namespace He.PipelineAssessment.UI.Features.Intervention.InterventionManagement.EditOverride
 {
-    public class EditOverrideRequest
+    public class EditOverrideRequest : IRequest<AssessmentInterventionDto>
     {
-        public int InterventionId { get; set; } IRequestHandler<AssessmentInterventionCommand>
+        public int InterventionId { get; set; }
     }
 }

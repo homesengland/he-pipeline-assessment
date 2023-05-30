@@ -37,8 +37,9 @@ namespace He.PipelineAssessment.UI.Features.Intervention.InterventionManagement.
                 RequestedBy = intervention.RequestedBy,
                 RequestedByEmail = intervention.RequestedByEmail,
                 SignOffDocument = intervention.SignOffDocument,
-                TargetWorkflowDefinitionId = intervention.TargetAssessmentToolWorkflow.WorkflowDefinitionId,
-                TargetWorkflowDefinitionName = intervention.TargetAssessmentToolWorkflow.Name
+                TargetWorkflowDefinitionId = intervention.TargetAssessmentToolWorkflow?.WorkflowDefinitionId,
+                TargetWorkflowDefinitionName = intervention.TargetAssessmentToolWorkflow?.Name,
+                ProjectReference = intervention.AssessmentToolWorkflowInstance.Assessment.Reference
 
 
             };
