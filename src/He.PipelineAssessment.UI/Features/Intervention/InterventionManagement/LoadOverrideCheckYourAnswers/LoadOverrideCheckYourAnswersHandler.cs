@@ -9,7 +9,7 @@ namespace He.PipelineAssessment.UI.Features.Intervention.InterventionManagement.
 
         private readonly Infrastructure.Repository.IAssessmentRepository _assessmentRepository;
 
-        public CreateAssessmentInterventionRequestHandler(IAssessmentRepository assessmentRepository
+        public CreateAssessmentInterventionRequestHandler(IAssessmentRepository assessmentRepository)
         {
             _assessmentRepository = assessmentRepository;
         }
@@ -38,7 +38,7 @@ namespace He.PipelineAssessment.UI.Features.Intervention.InterventionManagement.
                 SignOffDocument = intervention.SignOffDocument,
                 TargetWorkflowDefinitionId = intervention.AssessmentToolWorkflowInstanceId
 
-            }
+            };
         }
     }
 }
