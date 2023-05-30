@@ -7,7 +7,7 @@
 
 @{
     List<string?> usedDisplayGroupIds = new List<string?>();
-    var questionsWithReevaluatedPrePopulatedAnswers = Model.Data.Questions.Any(question => question.ReevaluatePrePopulatedAnswers);
+    var questionsWithReevaluatedPrePopulatedAnswers = Model.Data.Questions!.Any(question => question.ReevaluatePrePopulatedAnswers);
 }
 
 <div class="govuk-form-group">
