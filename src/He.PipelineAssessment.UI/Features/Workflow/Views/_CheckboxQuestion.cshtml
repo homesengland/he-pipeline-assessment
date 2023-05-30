@@ -17,10 +17,9 @@
 
 <div class="govuk-form-group @errorFormClass" id="@formItemName">
     @await Html.PartialAsync("_QuestionTitle", Model.Title)
-
     @await Html.PartialAsync("_QuestionText", Model.QuestionText)
     @await Html.PartialAsync("_QuestionHint", Model.QuestionHint)
-
+    @await Html.PartialAsync("_ReevaluatePrePopulatedAnswersText", Model.ReevaluatePrePopulatedAnswers)
 
     @{
         var distinctGroups = Model.Checkbox.Choices.Select(x => x.QuestionChoiceGroup?.GroupIdentifier).Distinct().ToList();
