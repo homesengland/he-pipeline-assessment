@@ -19,7 +19,7 @@
 
     }
 
-    @await Html.PartialAsync("_ReevaluatePrePopulatedAnswersText", Model.ReevaluatePrePopulatedAnswers)
+
     @for (int i = 0; i < Model.DataTable.Count(); i++)
     {
         var hiddenInputType = "Data.Questions[" + Model.DataTable[i].QuestionIndex + "].DataTable.InputType";

@@ -8,12 +8,13 @@
 
     var errorFormClass = !Model.IsValid ? "govuk-form-group--error" : "";
     var errorFieldClass = !Model.IsValid ? "govuk-input--error" : "";
+    var questionTextModel = new QuestionText() { Text = Model.Text, ReevaluatePrepopulatedAnswers = Model.ReevaluatePrePopulatedAnswers };
 }
 
 <div class="govuk-form-group @errorFormClass" id="@formItemName">
     @await Html.PartialAsync("_QuestionTitle", Model.Title)
 
-    @await Html.PartialAsync("_QuestionText", Model.QuestionText)
+    @await Html.PartialAsync("_QuestionText", questionTextModel)
     @await Html.PartialAsync("_QuestionHint", Model.QuestionHint)
     @await Html.PartialAsync("_ReevaluatePrePopulatedAnswersText", Model.ReevaluatePrePopulatedAnswers)
 
