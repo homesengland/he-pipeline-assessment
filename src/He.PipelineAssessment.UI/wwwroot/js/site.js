@@ -42,7 +42,9 @@ currencyInputs.forEach(function (input) {
 summaryInputs.forEach(function (summaryInput) {
 
     var selector = 'input[data-column="' + summaryInput.dataset.column + '"][data-summary="false"]';
+    var hiddenInputSelector = 'input[type="hidden"][name="' + summaryInput.name + '"][data-summary="true"]'
     var inputsToTotal = document.querySelectorAll(selector);
+    var hiddenTotalInputs = document.querySelectorAll(hiddenInputSelector);
     inputsToTotal.forEach(function (input) {
 
         if (input.dataset.summary == 'false') {
@@ -54,6 +56,12 @@ summaryInputs.forEach(function (summaryInput) {
 
                 // format number
                 summaryInput.value = numberWithCommas(summaryInput.value);
+                hiddenTotalInputs.forEach(hiddenInput => {
+                    hiddenInput.value = getTotalColumnValue(inputsToTotal);
+
+                    // format number
+                    hiddenInput.value = numberWithCommas(summaryInput.value);
+                })
             });
         }
 
