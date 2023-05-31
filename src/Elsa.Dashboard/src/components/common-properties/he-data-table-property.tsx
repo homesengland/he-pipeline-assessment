@@ -36,6 +36,7 @@ export class HeDataTableProperty {
   @State() editorHeight: string = "2.75em"
 
   @State() inputOptions: Array<string> = [];
+  @State() selectedInputType: string = "Currency";
 
   supportedSyntaxes: Array<string> = [SyntaxNames.JavaScript, SyntaxNames.Literal];
   multiExpressionEditor: HTMLElsaMultiExpressionEditorElement;
@@ -112,10 +113,16 @@ export class HeDataTableProperty {
     this.optionsDisplayToggle = { ... this.optionsDisplayToggle, tempValue }
   }
 
+  onInputTypeChange(e: Event) {
+    this.StandardUpdateExpression(e, this.propertyModel, DataTableSyntax.InputType);
+    this.selectedInputType = this.propertyModel.expressions[DataTableSyntax.InputType];
+  }
+
   render() {
     const cases = this.inputs;
     const supportedSyntaxes = this.supportedSyntaxes;
     const json = JSON.stringify(cases, null, 2);
+    const selectedType = this.propertyModel.expressions[DataTableSyntax.InputType];
 
     const renderCaseEditor = (tableInput: NestedActivityDefinitionProperty, index: number) => {
       const headerExpression = tableInput.expressions[tableInput.syntax]
@@ -128,9 +135,8 @@ export class HeDataTableProperty {
 
       let expressionEditor = null;
       let colWidth = "100%";
-
       const optionsDisplay = this.optionsDisplayToggle[index] ?? "none";
-
+      const sumTotalDisplay = (this.optionsDisplayToggle[index] && this.selectedInputType != "Text") ? this.optionsDisplayToggle[index]:  "none";
       return (
         <tbody>
           <tr key={`case-${index}`}>
@@ -204,7 +210,7 @@ export class HeDataTableProperty {
             </td>
           </tr>
 
-          <tr style={{ display: optionsDisplay }}>
+          <tr style={{ display: sumTotalDisplay }}>
             <th colSpan={2}
               class="elsa-px-6 elsa-py-3 elsa-text-left elsa-text-xs elsa-font-medium elsa-text-gray-500 elsa-tracking-wider elsa-w-2/12">Is <br />Apply Sum Total?
               <p class="elsa-mt-2 elsa-text-sm elsa-text-gray-500">Indicates that this cell should be used to indicate the total value of all other rows of this column's rows.
@@ -263,7 +269,7 @@ export class HeDataTableProperty {
       propertyName: this.propertyDescriptor.name
     };
 
-    const selectedType = this.propertyModel.expressions[DataTableSyntax.InputType];
+
     return (
       <div>
 
@@ -279,7 +285,7 @@ export class HeDataTableProperty {
 
         <div>
           <div>
-            <select onChange={e => this.StandardUpdateExpression(e, this.propertyModel, DataTableSyntax.InputType)}
+            <select onChange={e => this.onInputTypeChange(e)}
               class="elsa-mt-1 elsa-block focus:elsa-ring-blue-500 StandardUpdateExpression:elsa-border-blue-500 elsa-w-full elsa-shadow-sm sm:elsa-max-w-xs sm:elsa-text-sm elsa-border-gray-300 elsa-rounded-md">
               {this.inputOptions.map(inputType => {
                 const selected = inputType === selectedType;
