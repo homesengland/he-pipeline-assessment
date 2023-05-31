@@ -32,8 +32,8 @@ namespace He.PipelineAssessment.UI.Features.Intervention.InterventionManagement.
 
                 if (command.Status == InterventionStatus.Approved)
                 {
-                    // do something to delete all workflow instances created after the date of workflow instance which we started the override for
-                    // insert AssessmentToolInstanceNextWorkflow record
+                    await _assessmentRepository.DeleteSubsequentWorkflowInstances(command.WorkflowInstanceId);
+                    await StartNextWorkflow(command);
                 }
             }
             catch(Exception e)
@@ -42,6 +42,21 @@ namespace He.PipelineAssessment.UI.Features.Intervention.InterventionManagement.
             }
 
             return Unit.Value;
+        }
+
+        private async Task StartNextWorkflow(SubmitOverrideCommand command)
+        {
+            var previousWorkflow = await _assessmentRepository
+            var nextWorkflow = await _assessmentRepository.GetNonStartedAssessmentToolInstanceNextWorkflow(command.AssessmentToolWorkflowInstanceId,
+                                    command.TargetWorkflowDefinitionId);
+
+            if (nextWorkflow == null)
+            {
+                var assessmentToolInstanceNextWorkflow =
+                    AssessmentToolInstanceNextWorkflow(currentAssessmentToolWorkflowInstance.AssessmentId,
+                        currentAssessmentToolWorkflowInstance.Id, workflowDefinitionId);
+                nextWorkflows.Add(assessmentToolInstanceNextWorkflow);
+            }
         }
     }
 }
