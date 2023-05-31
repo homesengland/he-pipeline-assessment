@@ -7,14 +7,15 @@
     var errorFormClass = !Model.IsValid ? "govuk-form-group--error" : "";
     var errorFieldClass = !Model.IsValid ? "govuk-input--error" : "";
     var isReadOnly = Model.IsReadOnly ? "disabled" : "";
+    var questionTextModel = new QuestionText() { Text = Model.QuestionText, ReevaluatePrepopulatedAnswers = Model.ReevaluatePrePopulatedAnswers };
 }
 
 <div class="govuk-form-group @errorFormClass">
     @await Html.PartialAsync("_QuestionTitle", Model.Title)
 
-    @await Html.PartialAsync("_QuestionText", Model.QuestionText)
+    @await Html.PartialAsync("_QuestionText", questionTextModel)
     @await Html.PartialAsync("_QuestionHint", Model.QuestionHint)
-    
+
     <div class="govuk-input__wrapper">
         <input id="@answerName" type="text" name="@itemName" class="govuk-input govuk-input--width-5 @errorFieldClass" @isReadOnly value="@Model.Decimal.ToCommaSeparatedNumber()" currency-formatter="true" />
     </div>

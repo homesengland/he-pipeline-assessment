@@ -12,6 +12,7 @@ using He.PipelineAssessment.Tests.Common;
 using Moq;
 using Xunit;
 using Question = Elsa.CustomModels.Question;
+using System.Text.Json;
 
 namespace Elsa.Server.Tests.Features.Workflow.LoadQuestionScreen;
 
@@ -266,7 +267,7 @@ public class LoadQuestionScreenRequestHandlerTests
     [Theory]
     [AutoMoqData]
     public async Task
-        Handle_ReturnMultiQuestionActivityDataWithMultiChoiceOptionsCorrectlySelected_GivenActivityIsQuestionScreenAndNoErrorsEncountered(
+        Handle_ReturnMultiQuestionActivityDataWithMultiChoiceOptionsCorrectlySelectedFromDatabase_GivenActivityIsQuestionScreenAndNoErrorsEncountered(
             [Frozen] Mock<IWorkflowInstanceStore> workflowInstanceStore,
             [Frozen] Mock<IElsaCustomRepository> elsaCustomRepository,
             LoadQuestionScreenRequest loadWorkflowActivityRequest,
@@ -284,6 +285,7 @@ public class LoadQuestionScreenRequestHandlerTests
         {
             var questionId = assessmentQuestions[i].QuestionId;
             elsaAssessmentQuestions.Questions[i].Id = questionId!;
+            elsaAssessmentQuestions.Questions[i].ReevaluatePrePopulatedAnswers = false!;
         }
 
         elsaAssessmentQuestions.Questions[0].QuestionType = QuestionTypeConstants.CheckboxQuestion;
@@ -338,6 +340,7 @@ public class LoadQuestionScreenRequestHandlerTests
         {
             var questionId = assessmentQuestions[i].QuestionId;
             elsaAssessmentQuestions.Questions[i].Id = questionId!;
+            elsaAssessmentQuestions.Questions[i].ReevaluatePrePopulatedAnswers = false!;
         }
 
         elsaAssessmentQuestions.Questions[0].QuestionType = QuestionTypeConstants.RadioQuestion;
@@ -391,6 +394,7 @@ public class LoadQuestionScreenRequestHandlerTests
         {
             var questionId = assessmentQuestions[i].QuestionId;
             elsaAssessmentQuestions.Questions[i].Id = questionId!;
+            elsaAssessmentQuestions.Questions[i].ReevaluatePrePopulatedAnswers = false!;
         }
 
         elsaAssessmentQuestions.Questions[0].QuestionType = QuestionTypeConstants.PotScoreRadioQuestion;
@@ -539,6 +543,65 @@ public class LoadQuestionScreenRequestHandlerTests
     [Theory]
     [AutoMoqData]
     public async Task
+        Handle_ReturnMultiQuestionActivityDataWithRadioChoiceOptionsCorrectlySelected_GivenActivityIsQuestionScreenPrepopulatedIsSelectedDatabaseAnswerExistsAndReevaluatePrepopulatedSelectedAndNoErrorsEncountered(
+            [Frozen] Mock<IWorkflowInstanceStore> workflowInstanceStore,
+            [Frozen] Mock<IElsaCustomRepository> elsaCustomRepository,
+            LoadQuestionScreenRequest loadWorkflowActivityRequest,
+            WorkflowInstance workflowInstance,
+            CustomActivityNavigation customActivityNavigation,
+            List<Question> assessmentQuestions,
+            AssessmentQuestions elsaAssessmentQuestions,
+            LoadQuestionScreenRequestHandler sut)
+    {
+        //Arrange
+        customActivityNavigation.ActivityType = ActivityTypeConstants.QuestionScreen;
+        assessmentQuestions[0].Answers =  new List<Answer> {
+            new() { AnswerText = "", Choice = new QuestionChoice { Id = 1, Identifier = "A" } } };
+        for (var i = 0; i < assessmentQuestions.Count; i++)
+        {
+            var questionId = assessmentQuestions[i].QuestionId;
+            elsaAssessmentQuestions.Questions[i].Id = questionId!;
+            elsaAssessmentQuestions.Questions[i].ReevaluatePrePopulatedAnswers= true;
+        }
+
+        assessmentQuestions[0].Choices = new List<QuestionChoice>()
+        {
+            new QuestionChoice { Id = 1, Answer = "Choice1", IsPrePopulated = false },
+            new QuestionChoice { Id = 2, Answer = "Choice2", IsPrePopulated = true }
+        };
+
+        elsaAssessmentQuestions.Questions[0].QuestionType = QuestionTypeConstants.RadioQuestion;
+
+        workflowInstanceStore.Setup(x =>
+                x.FindAsync(It.IsAny<WorkflowInstanceIdSpecification>(), CancellationToken.None))
+            .ReturnsAsync(workflowInstance);
+
+        elsaCustomRepository.Setup(x => x.GetCustomActivityNavigation(loadWorkflowActivityRequest.ActivityId,
+                loadWorkflowActivityRequest.WorkflowInstanceId, CancellationToken.None))
+            .ReturnsAsync(customActivityNavigation);
+
+        elsaCustomRepository.Setup(x => x.GetActivityQuestions(loadWorkflowActivityRequest.ActivityId,
+                loadWorkflowActivityRequest.WorkflowInstanceId, CancellationToken.None))
+            .ReturnsAsync(assessmentQuestions);
+
+        var assessmentQuestionsDictionary = new Dictionary<string, object?>();
+        assessmentQuestionsDictionary.Add("Questions", elsaAssessmentQuestions);
+
+        workflowInstance.ActivityData.Add(loadWorkflowActivityRequest.ActivityId, assessmentQuestionsDictionary);
+
+        //Act
+        var result = await sut.Handle(loadWorkflowActivityRequest, CancellationToken.None);
+
+        //Assert
+        Assert.NotNull(result.Data!.Questions);
+        Assert.Equal(assessmentQuestions.Count(), result.Data!.Questions.Count());
+        Assert.Empty(result.ErrorMessages);
+        Assert.Equal(2, result.Data.Questions[0].Radio.SelectedAnswer);
+    }
+
+    [Theory]
+    [AutoMoqData]
+    public async Task
         Handle_ReturnMultiQuestionActivityDataWithCheckboxChoiceOptionsCorrectlySelected_GivenActivityIsQuestionScreenPrepopulatedIsSelectedAndNoErrorsEncountered(
             [Frozen] Mock<IWorkflowInstanceStore> workflowInstanceStore,
             [Frozen] Mock<IElsaCustomRepository> elsaCustomRepository,
@@ -556,6 +619,68 @@ public class LoadQuestionScreenRequestHandlerTests
         {
             var questionId = assessmentQuestions[i].QuestionId;
             elsaAssessmentQuestions.Questions[i].Id = questionId!;
+        }
+
+        assessmentQuestions[0].Choices = new List<QuestionChoice>()
+        {
+            new QuestionChoice { Id = 1, Answer = "Choice1", IsPrePopulated = true },
+            new QuestionChoice { Id = 2, Answer = "Choice2", IsPrePopulated = true },
+            new QuestionChoice { Id = 3, Answer = "Choice3", IsPrePopulated = false }
+        };
+
+        elsaAssessmentQuestions.Questions[0].QuestionType = QuestionTypeConstants.CheckboxQuestion;
+
+        workflowInstanceStore.Setup(x =>
+                x.FindAsync(It.IsAny<WorkflowInstanceIdSpecification>(), CancellationToken.None))
+            .ReturnsAsync(workflowInstance);
+
+        elsaCustomRepository.Setup(x => x.GetCustomActivityNavigation(loadWorkflowActivityRequest.ActivityId,
+                loadWorkflowActivityRequest.WorkflowInstanceId, CancellationToken.None))
+            .ReturnsAsync(customActivityNavigation);
+
+        elsaCustomRepository.Setup(x => x.GetActivityQuestions(loadWorkflowActivityRequest.ActivityId,
+                loadWorkflowActivityRequest.WorkflowInstanceId, CancellationToken.None))
+            .ReturnsAsync(assessmentQuestions);
+
+        var assessmentQuestionsDictionary = new Dictionary<string, object?>();
+        assessmentQuestionsDictionary.Add("Questions", elsaAssessmentQuestions);
+
+        workflowInstance.ActivityData.Add(loadWorkflowActivityRequest.ActivityId, assessmentQuestionsDictionary);
+
+        //Act
+        var result = await sut.Handle(loadWorkflowActivityRequest, CancellationToken.None);
+
+        //Assert
+        Assert.NotNull(result.Data!.Questions);
+        Assert.Equal(assessmentQuestions.Count, result.Data!.Questions.Count);
+        Assert.Empty(result.ErrorMessages);
+        Assert.Equal(2, result.Data.Questions[0].Checkbox.SelectedChoices.Count);
+        Assert.Equal(1, result.Data.Questions[0].Checkbox.SelectedChoices[0]);
+        Assert.Equal(2, result.Data.Questions[0].Checkbox.SelectedChoices[1]);
+    }
+
+    [Theory]
+    [AutoMoqData]
+    public async Task
+        Handle_ReturnMultiQuestionActivityDataWithCheckboxChoiceOptionsCorrectlySelected_GivenActivityIsQuestionScreenPrepopulatedIsSelectedDatabaseAnswerExistsandReevaluatePrepopulatedSelectedAndNoErrorsEncountered(
+            [Frozen] Mock<IWorkflowInstanceStore> workflowInstanceStore,
+            [Frozen] Mock<IElsaCustomRepository> elsaCustomRepository,
+            LoadQuestionScreenRequest loadWorkflowActivityRequest,
+            WorkflowInstance workflowInstance,
+            CustomActivityNavigation customActivityNavigation,
+            List<Question> assessmentQuestions,
+            AssessmentQuestions elsaAssessmentQuestions,
+            LoadQuestionScreenRequestHandler sut)
+    {
+        //Arrange
+        customActivityNavigation.ActivityType = ActivityTypeConstants.QuestionScreen;
+        assessmentQuestions[0].Answers = new List<Answer> {
+            new() { AnswerText = "", Choice = new QuestionChoice { Id = 1, Identifier = "A" } } };
+        for (var i = 0; i < assessmentQuestions.Count; i++)
+        {
+            var questionId = assessmentQuestions[i].QuestionId;
+            elsaAssessmentQuestions.Questions[i].Id = questionId!;
+            elsaAssessmentQuestions.Questions[i].ReevaluatePrePopulatedAnswers = true;
         }
 
         assessmentQuestions[0].Choices = new List<QuestionChoice>()
@@ -728,6 +853,7 @@ public class LoadQuestionScreenRequestHandlerTests
         {
             var questionId = assessmentQuestions[i].QuestionId;
             elsaAssessmentQuestions.Questions[i].Id = questionId!;
+            elsaAssessmentQuestions.Questions[i].ReevaluatePrePopulatedAnswers = false!;
         }
 
         elsaAssessmentQuestions.Questions[0].Answer = "PrepopulatedAnswer";
@@ -762,5 +888,275 @@ public class LoadQuestionScreenRequestHandlerTests
         Assert.False(result.Data.Questions[0].IsReadOnly);
     }
 
+    [Theory]
+    [AutoMoqData]
+    public async Task
+       Handle_ReturnMultiQuestionActivityDataWithDatabaseAnswers_GivenBothDatabaseAndPrepopulatedAnswerAreProvidedAndReevaluatePrepopulatedSelected(
+           [Frozen] Mock<IWorkflowInstanceStore> workflowInstanceStore,
+           [Frozen] Mock<IElsaCustomRepository> elsaCustomRepository,
+           LoadQuestionScreenRequest loadWorkflowActivityRequest,
+           WorkflowInstance workflowInstance,
+           CustomActivityNavigation customActivityNavigation,
+           List<Question> assessmentQuestions,
+           AssessmentQuestions elsaAssessmentQuestions,
+           LoadQuestionScreenRequestHandler sut)
+    {
+        //Arrange
+        customActivityNavigation.ActivityType = ActivityTypeConstants.QuestionScreen;
+        assessmentQuestions[0].Answers = new List<Answer> { new() { AnswerText = "DatabaseAnswer" } };
+        for (var i = 0; i < assessmentQuestions.Count; i++)
+        {
+            var questionId = assessmentQuestions[i].QuestionId;
+            elsaAssessmentQuestions.Questions[i].Id = questionId!;
+            elsaAssessmentQuestions.Questions[i].ReevaluatePrePopulatedAnswers = true!;
+        }
+
+        elsaAssessmentQuestions.Questions[0].Answer = "PrepopulatedAnswer";
+        elsaAssessmentQuestions.Questions[0].IsReadOnly = false;
+        elsaAssessmentQuestions.Questions[0].QuestionType = QuestionTypeConstants.TextAreaQuestion;
+
+        workflowInstanceStore.Setup(x =>
+                x.FindAsync(It.IsAny<WorkflowInstanceIdSpecification>(), CancellationToken.None))
+            .ReturnsAsync(workflowInstance);
+
+        elsaCustomRepository.Setup(x => x.GetCustomActivityNavigation(loadWorkflowActivityRequest.ActivityId,
+                loadWorkflowActivityRequest.WorkflowInstanceId, CancellationToken.None))
+            .ReturnsAsync(customActivityNavigation);
+
+        elsaCustomRepository.Setup(x => x.GetActivityQuestions(loadWorkflowActivityRequest.ActivityId,
+                loadWorkflowActivityRequest.WorkflowInstanceId, CancellationToken.None))
+            .ReturnsAsync(assessmentQuestions);
+
+        var assessmentQuestionsDictionary = new Dictionary<string, object?>();
+        assessmentQuestionsDictionary.Add("Questions", elsaAssessmentQuestions);
+
+        workflowInstance.ActivityData.Add(loadWorkflowActivityRequest.ActivityId, assessmentQuestionsDictionary);
+
+        //Act
+        var result = await sut.Handle(loadWorkflowActivityRequest, CancellationToken.None);
+
+        //Assert
+        Assert.NotNull(result.Data!.Questions);
+        Assert.Equal(assessmentQuestions.Count(), result.Data!.Questions.Count());
+        Assert.Empty(result.ErrorMessages);
+        Assert.Equal("PrepopulatedAnswer", result.Data.Questions[0].Answers.FirstOrDefault()?.AnswerText);
+        Assert.False(result.Data.Questions[0].IsReadOnly);
+    }
+
+    [Theory]
+    [AutoMoqData]
+    public async Task
+    Handle_ReturnMultiQuestionActivityDataWithDataTableAnswers_GivenOnlyPrepopulatedTableAnswerAreProvided(
+        [Frozen] Mock<IWorkflowInstanceStore> workflowInstanceStore,
+        [Frozen] Mock<IElsaCustomRepository> elsaCustomRepository,
+        LoadQuestionScreenRequest loadWorkflowActivityRequest,
+        WorkflowInstance workflowInstance,
+        CustomActivityNavigation customActivityNavigation,
+        List<Question> assessmentQuestions,
+        AssessmentQuestions elsaAssessmentQuestions,
+        LoadQuestionScreenRequestHandler sut)
+    {
+        //Arrange
+        customActivityNavigation.ActivityType = ActivityTypeConstants.QuestionScreen;
+        for (var i = 0; i < assessmentQuestions.Count; i++)
+        {
+            var questionId = assessmentQuestions[i].QuestionId;
+            elsaAssessmentQuestions.Questions[i].Id = questionId!;
+            assessmentQuestions[i].Answers = new List<Answer>();
+        }
+
+        var dataTableAnswer = new DataTable()
+        {
+
+            InputType = "Integer",
+            Inputs = new List<TableInput>(){
+            new TableInput("1", "TableInput1", false, false, "Prepopulated Answer 1"),
+            new TableInput("2", "TableInput1", false, false, "Prepopulated Answer 2"),
+        }
+        };
+
+        elsaAssessmentQuestions.Questions[0].Answer = JsonSerializer.Serialize(dataTableAnswer);
+        elsaAssessmentQuestions.Questions[0].QuestionType = QuestionTypeConstants.DataTable;
+
+        var assessmentQuestionsDictionary = new Dictionary<string, object?>();
+        assessmentQuestionsDictionary.Add("Questions", elsaAssessmentQuestions);
+
+        workflowInstance.ActivityData.Add(loadWorkflowActivityRequest.ActivityId, assessmentQuestionsDictionary);
+
+        workflowInstanceStore.Setup(x =>
+        x.FindAsync(It.IsAny<WorkflowInstanceIdSpecification>(), CancellationToken.None))
+    .ReturnsAsync(workflowInstance);
+
+        elsaCustomRepository.Setup(x => x.GetCustomActivityNavigation(loadWorkflowActivityRequest.ActivityId,
+                loadWorkflowActivityRequest.WorkflowInstanceId, CancellationToken.None))
+            .ReturnsAsync(customActivityNavigation);
+
+        elsaCustomRepository.Setup(x => x.GetActivityQuestions(loadWorkflowActivityRequest.ActivityId,
+                loadWorkflowActivityRequest.WorkflowInstanceId, CancellationToken.None))
+            .ReturnsAsync(assessmentQuestions);
+
+        //Act
+        var result = await sut.Handle(loadWorkflowActivityRequest, CancellationToken.None);
+        var answerResult = JsonSerializer.Deserialize<DataTable>(result.Data.Questions[0].Answers.FirstOrDefault().AnswerText);
+
+        //Assert
+        Assert.NotNull(result.Data!.Questions);
+        Assert.Equal(assessmentQuestions.Count(), result.Data!.Questions.Count());
+        Assert.Empty(result.ErrorMessages);
+        Assert.Equal("Prepopulated Answer 1", answerResult.Inputs[0].Input);
+        Assert.Equal("Prepopulated Answer 2", answerResult.Inputs[1].Input);
+    }
+
+    [Theory]
+    [AutoMoqData]
+    public async Task
+    Handle_ReturnMultiQuestionActivityDataWithDataTableAnswers_GivenPrepopulatedAndDatabaseTableAnswerAreProvided(
+    [Frozen] Mock<IWorkflowInstanceStore> workflowInstanceStore,
+    [Frozen] Mock<IElsaCustomRepository> elsaCustomRepository,
+    LoadQuestionScreenRequest loadWorkflowActivityRequest,
+    WorkflowInstance workflowInstance,
+    CustomActivityNavigation customActivityNavigation,
+    List<Question> assessmentQuestions,
+    AssessmentQuestions elsaAssessmentQuestions,
+    LoadQuestionScreenRequestHandler sut)
+    {
+        //Arrange
+        customActivityNavigation.ActivityType = ActivityTypeConstants.QuestionScreen;
+
+        var databaseDataTableAnswer = new DataTable()
+        {
+
+            InputType = "Integer",
+            Inputs = new List<TableInput>(){
+            new TableInput("1", "TableInput1", false, false, "Database Answer 1"),
+            new TableInput("2", "TableInput1", false, false, "Database Answer 2"),
+        }
+        };
+
+        for (var i = 0; i < assessmentQuestions.Count; i++)
+        {
+            var questionId = assessmentQuestions[i].QuestionId;
+            elsaAssessmentQuestions.Questions[i].Id = questionId!;
+            assessmentQuestions[i].Answers = new List<Answer> { new() { AnswerText = JsonSerializer.Serialize(databaseDataTableAnswer) } };
+            elsaAssessmentQuestions.Questions[i].ReevaluatePrePopulatedAnswers = false;
+        }
+
+        var dataTableAnswer = new DataTable()
+        {
+
+            InputType = "Integer",
+            Inputs = new List<TableInput>(){
+            new TableInput("1", "TableInput1", false, false, "Prepopulated Answer 1"),
+            new TableInput("2", "TableInput1", false, false, "Prepopulated Answer 2"),
+        }
+        };
+
+        elsaAssessmentQuestions.Questions[0].Answer = JsonSerializer.Serialize(dataTableAnswer);
+        elsaAssessmentQuestions.Questions[0].QuestionType = QuestionTypeConstants.DataTable;
+
+        var assessmentQuestionsDictionary = new Dictionary<string, object?>();
+        assessmentQuestionsDictionary.Add("Questions", elsaAssessmentQuestions);
+
+        workflowInstance.ActivityData.Add(loadWorkflowActivityRequest.ActivityId, assessmentQuestionsDictionary);
+
+        workflowInstanceStore.Setup(x =>
+        x.FindAsync(It.IsAny<WorkflowInstanceIdSpecification>(), CancellationToken.None))
+    .ReturnsAsync(workflowInstance);
+
+        elsaCustomRepository.Setup(x => x.GetCustomActivityNavigation(loadWorkflowActivityRequest.ActivityId,
+                loadWorkflowActivityRequest.WorkflowInstanceId, CancellationToken.None))
+            .ReturnsAsync(customActivityNavigation);
+
+        elsaCustomRepository.Setup(x => x.GetActivityQuestions(loadWorkflowActivityRequest.ActivityId,
+                loadWorkflowActivityRequest.WorkflowInstanceId, CancellationToken.None))
+            .ReturnsAsync(assessmentQuestions);
+
+        //Act
+        var result = await sut.Handle(loadWorkflowActivityRequest, CancellationToken.None);
+        var answerResult = JsonSerializer.Deserialize<DataTable>(result.Data.Questions[0].Answers.FirstOrDefault().AnswerText);
+
+        //Assert
+        Assert.NotNull(result.Data!.Questions);
+        Assert.Equal(assessmentQuestions.Count(), result.Data!.Questions.Count());
+        Assert.Empty(result.ErrorMessages);
+        Assert.Equal("Database Answer 1", answerResult.Inputs[0].Input);
+        Assert.Equal("Database Answer 2", answerResult.Inputs[1].Input);
+    }
+
+    [Theory]
+    [AutoMoqData]
+    public async Task
+Handle_ReturnMultiQuestionActivityDataWithDataTableAnswers_GivenPrepopulatedAndDatabaseTableAnswerAreProvidedAndReevelatedPrepopulatedSelected(
+   [Frozen] Mock<IWorkflowInstanceStore> workflowInstanceStore,
+   [Frozen] Mock<IElsaCustomRepository> elsaCustomRepository,
+   LoadQuestionScreenRequest loadWorkflowActivityRequest,
+   WorkflowInstance workflowInstance,
+   CustomActivityNavigation customActivityNavigation,
+   List<Question> assessmentQuestions,
+   AssessmentQuestions elsaAssessmentQuestions,
+   LoadQuestionScreenRequestHandler sut)
+    {
+        //Arrange
+        customActivityNavigation.ActivityType = ActivityTypeConstants.QuestionScreen;
+
+        var databaseDataTableAnswer = new DataTable()
+        {
+
+            InputType = "Integer",
+            Inputs = new List<TableInput>(){
+            new TableInput("1", "TableInput1", false, false, "Database Answer 1"),
+            new TableInput("2", "TableInput1", false, false, "Database Answer 2"),
+        }
+        };
+
+        for (var i = 0; i < assessmentQuestions.Count; i++)
+        {
+            var questionId = assessmentQuestions[i].QuestionId;
+            elsaAssessmentQuestions.Questions[i].Id = questionId!;
+            assessmentQuestions[i].Answers = new List<Answer> { new() { AnswerText = JsonSerializer.Serialize(databaseDataTableAnswer) } };
+            elsaAssessmentQuestions.Questions[i].ReevaluatePrePopulatedAnswers = true;
+        }
+
+        var dataTableAnswer = new DataTable()
+        {
+
+            InputType = "Integer",
+            Inputs = new List<TableInput>(){
+            new TableInput("1", "TableInput1", false, false, "Prepopulated Answer 1"),
+            new TableInput("2", "TableInput1", false, false, "Prepopulated Answer 2"),
+        }
+        };
+
+        elsaAssessmentQuestions.Questions[0].Answer = JsonSerializer.Serialize(dataTableAnswer);
+        elsaAssessmentQuestions.Questions[0].QuestionType = QuestionTypeConstants.DataTable;
+
+        var assessmentQuestionsDictionary = new Dictionary<string, object?>();
+        assessmentQuestionsDictionary.Add("Questions", elsaAssessmentQuestions);
+
+        workflowInstance.ActivityData.Add(loadWorkflowActivityRequest.ActivityId, assessmentQuestionsDictionary);
+
+        workflowInstanceStore.Setup(x =>
+        x.FindAsync(It.IsAny<WorkflowInstanceIdSpecification>(), CancellationToken.None))
+    .ReturnsAsync(workflowInstance);
+
+        elsaCustomRepository.Setup(x => x.GetCustomActivityNavigation(loadWorkflowActivityRequest.ActivityId,
+                loadWorkflowActivityRequest.WorkflowInstanceId, CancellationToken.None))
+            .ReturnsAsync(customActivityNavigation);
+
+        elsaCustomRepository.Setup(x => x.GetActivityQuestions(loadWorkflowActivityRequest.ActivityId,
+                loadWorkflowActivityRequest.WorkflowInstanceId, CancellationToken.None))
+            .ReturnsAsync(assessmentQuestions);
+
+        //Act
+        var result = await sut.Handle(loadWorkflowActivityRequest, CancellationToken.None);
+        var answerResult = JsonSerializer.Deserialize<DataTable>(result.Data.Questions[0].Answers.FirstOrDefault().AnswerText);
+
+        //Assert
+        Assert.NotNull(result.Data!.Questions);
+        Assert.Equal(assessmentQuestions.Count(), result.Data!.Questions.Count());
+        Assert.Empty(result.ErrorMessages);
+        Assert.Equal("Prepopulated Answer 1", answerResult.Inputs[0].Input);
+        Assert.Equal("Prepopulated Answer 2", answerResult.Inputs[1].Input);
+    }
 
 }

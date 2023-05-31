@@ -7,6 +7,7 @@
 
 @{
     List<string?> usedDisplayGroupIds = new List<string?>();
+    var questionsWithReevaluatedPrePopulatedAnswers = Model.Data.Questions!.Any(question => question.ReevaluatePrePopulatedAnswers);
 }
 
 <div class="govuk-form-group">
@@ -16,6 +17,12 @@
     <h1 class="govuk-heading-l">
         @Html.DisplayTextFor(m => m.Data.PageTitle)
     </h1>
+    @if(questionsWithReevaluatedPrePopulatedAnswers)
+                {
+                    <div class="govuk-inset-text">
+                        Questions with a * have a pre-populated answer which will be re-evaluated each time the page is loaded.
+                    </div>
+                }
 </legend>
         
 @if (!Model.IsValid && Model.ValidationMessages !=null)
@@ -70,7 +77,8 @@
                        QuestionId = Model.Data.Questions[i].QuestionId,
                        QuestionType = Model.Data.Questions[i].QuestionType,
                        Title = Model.Data.Questions[i].Title,
-                       Text =  Model.Data.Questions[i].Text
+                       Text =  Model.Data.Questions[i].Text,
+                       ReevaluatePrePopulatedAnswers = Model.Data.Questions[i].ReevaluatePrePopulatedAnswers
                    })
             if (Model.Data.Questions![i].IsReadOnly)
             {
@@ -100,7 +108,8 @@
                        QuestionType = Model.Data.Questions[i].QuestionType,
                        Title = Model.Data.Questions[i].Title,
                        CharacterLimit = Model.Data.Questions[i].CharacterLimit,
-                       Text =  Model.Data.Questions[i].Text
+                       Text =  Model.Data.Questions[i].Text, 
+                       ReevaluatePrePopulatedAnswers = Model.Data.Questions[i].ReevaluatePrePopulatedAnswers
 
                    })
             if (Model.Data.Questions![i].IsReadOnly)
@@ -157,7 +166,8 @@
                        QuestionId = Model.Data.Questions[i].QuestionId,
                        QuestionType = Model.Data.Questions[i].QuestionType,
                        Title = Model.Data.Questions[i].Title,
-                       Decimal = Model.Data.Questions[i].Decimal
+                       Decimal = Model.Data.Questions[i].Decimal,
+                       ReevaluatePrePopulatedAnswers = Model.Data.Questions[i].ReevaluatePrePopulatedAnswers 
                    })
             if (Model.Data.Questions![i].IsReadOnly)
             {
@@ -185,7 +195,8 @@
                        QuestionId = Model.Data.Questions[i].QuestionId,
                        QuestionType = Model.Data.Questions[i].QuestionType,
                        Title = Model.Data.Questions[i].Title,
-                       Decimal = Model.Data.Questions[i].Decimal
+                       Decimal = Model.Data.Questions[i].Decimal,
+                       ReevaluatePrePopulatedAnswers = Model.Data.Questions[i].ReevaluatePrePopulatedAnswers
                    })
             if (Model.Data.Questions![i].IsReadOnly)
             {
@@ -213,7 +224,8 @@
                        QuestionId = Model.Data.Questions[i].QuestionId,
                        QuestionType = Model.Data.Questions[i].QuestionType,
                        Title = Model.Data.Questions[i].Title,
-                       Decimal = Model.Data.Questions[i].Decimal
+                       Decimal = Model.Data.Questions[i].Decimal,
+                       ReevaluatePrePopulatedAnswers = Model.Data.Questions[i].ReevaluatePrePopulatedAnswers
                    })
             if (Model.Data.Questions![i].IsReadOnly)
             {
@@ -241,7 +253,8 @@
                        QuestionId = Model.Data.Questions[i].QuestionId,
                        QuestionType = Model.Data.Questions[i].QuestionType,
                        Title = Model.Data.Questions[i].Title,
-                       Decimal = Model.Data.Questions[i].Decimal
+                       Decimal = Model.Data.Questions[i].Decimal,
+            ReevaluatePrePopulatedAnswers = Model.Data.Questions[i].ReevaluatePrePopulatedAnswers
                    })
             if (Model.Data.Questions![i].IsReadOnly)
             {
@@ -279,7 +292,8 @@
                                QuestionChoiceGroup = x.QuestionChoiceGroup != null ? new ChoiceGroup() 
                            {
                            GroupIdentifier = x.QuestionChoiceGroup.GroupIdentifier} : null}).ToList()
-                       }
+                       },
+                       ReevaluatePrePopulatedAnswers = Model.Data.Questions[i].ReevaluatePrePopulatedAnswers
                    })
         }
         @if (Model.Data.Questions![i].QuestionType == QuestionTypeConstants.RadioQuestion || Model.Data.Questions![i].QuestionType == QuestionTypeConstants.PotScoreRadioQuestion || Model.Data.Questions![i].QuestionType == QuestionTypeConstants.WeightedRadioQuestion)
@@ -309,7 +323,8 @@
                            SelectedAnswer = Model.Data.Questions[i].Radio.SelectedAnswer,
                            Choices = Model.Data.Questions[i].Radio.Choices
                                .Select(x=> new Choice(){Answer = x.Answer,IsSingle = x.IsSingle, Id = x.Id}).ToList()
-                       }
+                       },
+                       ReevaluatePrePopulatedAnswers = Model.Data.Questions[i].ReevaluatePrePopulatedAnswers
                    })
 
             if (Model.Data.Questions![i].IsReadOnly)
@@ -365,7 +380,8 @@
                             QuestionId = Model.Data.Questions[i].QuestionId,
                             QuestionType = Model.Data.Questions[i].QuestionType,
                             DataTable = tableListForGroup,
-                            ValidationMessages = Model.ValidationMessages
+                            ValidationMessages = Model.ValidationMessages,
+                            ReevaluatePrePopulatedAnswers = Model.Data.Questions[i].ReevaluatePrePopulatedAnswers,
                         };
 
                         usedDisplayGroupIds.Add(Model.Data.Questions[i].DataTable.DisplayGroupId);

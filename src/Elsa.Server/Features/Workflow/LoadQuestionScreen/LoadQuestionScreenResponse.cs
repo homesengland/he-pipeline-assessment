@@ -38,6 +38,8 @@ namespace Elsa.Server.Features.Workflow.LoadQuestionScreen
         public Information Information { get; set; } = null!;
         public DataTableInput DataTable { get; set; } = null!;
         public bool IsReadOnly { get; set; }
+
+        public bool ReevaluatePrepopulatedAnswers { get; set; }
         public List<Answer> Answers { get; set; } = new();
 
         public bool HasAnswers()

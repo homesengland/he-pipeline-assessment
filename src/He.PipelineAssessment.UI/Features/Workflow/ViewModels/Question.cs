@@ -22,6 +22,7 @@ namespace He.PipelineAssessment.UI.Features.Workflow.ViewModels
         public string? Comments { get; set; }
         public List<QuestionActivityAnswer> Answers { get; set; } = new();
         public bool IsReadOnly { get; set; }
+        public bool ReevaluatePrePopulatedAnswers { get; set; }
         public Date? Date { get; set; }
         public decimal? Decimal { get; set; }
         public string? Text { get; set; }
@@ -60,6 +61,7 @@ namespace He.PipelineAssessment.UI.Features.Workflow.ViewModels
 
         public string? DisplayGroupId { get; set; }
         public string? QuestionText { get; set; }
+        public bool ReEvaluatePrePopulatedAnswers { get; set; }
     }
 
     public class InformationText

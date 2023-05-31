@@ -213,5 +213,24 @@ namespace Elsa.CustomActivities.Activities.QuestionScreen
             })]
         public bool IsReadOnly { get; set; } = false;
 
+        [HeActivityInput(Hint = "Tick if the pre-populated answer should always be re-evaluated",
+    UIHint = HePropertyUIHints.Checkbox,
+    ConditionalActivityTypes = new[]
+    {
+                QuestionTypeConstants.TextQuestion,
+                QuestionTypeConstants.TextAreaQuestion,
+                QuestionTypeConstants.CurrencyQuestion,
+                QuestionTypeConstants.DecimalQuestion,
+                QuestionTypeConstants.IntegerQuestion,
+                QuestionTypeConstants.PercentageQuestion,
+                QuestionTypeConstants.RadioQuestion,
+                QuestionTypeConstants.PotScoreRadioQuestion,
+                QuestionTypeConstants.WeightedRadioQuestion,
+                QuestionTypeConstants.WeightedCheckboxQuestion,
+                QuestionTypeConstants.CheckboxQuestion,
+                QuestionTypeConstants.DataTable
+    })]
+        public bool ReevaluatePrePopulatedAnswers { get; set; } = false;
+
     }
 }

@@ -59,6 +59,7 @@ namespace Elsa.CustomWorkflow.Sdk.Models.Workflow
         public object Output { get; set; } = null!;
         public List<QuestionActivityAnswer> Answers { get; set; } = new List<QuestionActivityAnswer>();
         public bool IsReadOnly { get; set; }
+        public bool ReevaluatePrePopulatedAnswers { get; set; }
         public string? Text { get { return GetText(); } set { SetText(value); } }
         public decimal? Decimal { get { return GetDecimal(); } set { SetDecimal(value); } }
 

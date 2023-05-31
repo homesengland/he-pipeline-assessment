@@ -17,22 +17,27 @@ namespace He.PipelineAssessment.UI.Extensions
                && !usedDisplayGroupIds.Contains(q.DataTable.DisplayGroupId)
                //&& q.DataTable.DisplayGroupId !=null
                && q.DataTable.DisplayGroupId == @this.Questions[index].DataTable.DisplayGroupId)
-               .Select(x => new DataTable
+               .Select(x =>
                {
-                   QuestionText = @this.Questions.FirstOrDefault(l => l.QuestionId == x.QuestionId)?.Question,
-                   QuestionIndex = @this.Questions.FindIndex(l => l.QuestionId == x.QuestionId),
-                   DisplayGroupId = x.DataTable.DisplayGroupId,
-                   InputType = x.DataTable.InputType,
-                   Inputs = x.DataTable.Inputs.Select(y =>
-                           new TableInput
-                           {
-                               Identifier = y.Identifier,
-                               InputHeading = y.Title,
-                               Input = y.Input,
-                               IsReadOnly = y.IsReadOnly,
-                               IsSummaryTotal = y.IsSummaryTotal
+                   var question = @this.Questions.FirstOrDefault(l => l.QuestionId == x.QuestionId);
+                   return new DataTable
+                   {
+                       QuestionText = @this.Questions.FirstOrDefault(l => l.QuestionId == x.QuestionId)?.Question,
+                       QuestionIndex = @this.Questions.FindIndex(l => l.QuestionId == x.QuestionId),
+                       DisplayGroupId = x.DataTable.DisplayGroupId,
+                       InputType = x.DataTable.InputType,
+                       Inputs = x.DataTable.Inputs.Select(y =>
+                               new TableInput
+                               {
+                                   Identifier = y.Identifier,
+                                   InputHeading = y.Title,
+                                   Input = y.Input,
+                                   IsReadOnly = y.IsReadOnly,
+                                   IsSummaryTotal = y.IsSummaryTotal
 
-                           }).ToList()
+                               }).ToList(),
+                       ReEvaluatePrePopulatedAnswers = question != null ? question.ReevaluatePrePopulatedAnswers : false
+                   };
                }).ToList();
             }
             return tables;
