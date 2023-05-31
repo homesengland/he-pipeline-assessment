@@ -1,4 +1,5 @@
 ﻿using He.PipelineAssessment.Infrastructure.Repository;
+using He.PipelineAssessment.Models;
 using He.PipelineAssessment.UI.Common.Utility;
 using He.PipelineAssessment.UI.Features.Intervention.Constants;
 using MediatR;
@@ -46,17 +47,48 @@ namespace He.PipelineAssessment.UI.Features.Intervention.InterventionManagement.
 
         private async Task StartNextWorkflow(SubmitOverrideCommand command)
         {
-            var previousWorkflow = await _assessmentRepository
+
+
             var nextWorkflow = await _assessmentRepository.GetNonStartedAssessmentToolInstanceNextWorkflow(command.AssessmentToolWorkflowInstanceId,
-                                    command.TargetWorkflowDefinitionId);
+                                    command.TargetWorkflowDefinitionId!);
 
             if (nextWorkflow == null)
             {
-                var assessmentToolInstanceNextWorkflow =
-                    AssessmentToolInstanceNextWorkflow(currentAssessmentToolWorkflowInstance.AssessmentId,
-                        currentAssessmentToolWorkflowInstance.Id, workflowDefinitionId);
-                nextWorkflows.Add(assessmentToolInstanceNextWorkflow);
+                var previousWorkflows =
+                    await _assessmentRepository.GetPreviousAssessmentToolWorkflowInstances(command.WorkflowInstanceId);
+
+                if (previousWorkflows != null && previousWorkflows.Any())
+                {
+                    var lastWorkflowInstance = previousWorkflows.OrderByDescending(x => x.CreatedDateTime).First();
+                    nextWorkflow =
+                        AssessmentToolInstanceNextWorkflow(lastWorkflowInstance.AssessmentId,
+                            lastWorkflowInstance.Id, command.TargetWorkflowDefinitionId!);
+
+                    await _assessmentRepository.CreateAssessmentToolInstanceNextWorkflows(
+                        new List<AssessmentToolInstanceNextWorkflow>() { nextWorkflow });
+                }
+                else
+                {
+                    //something has gone wrong
+                }
             }
+            else
+            {
+                nextWorkflow.IsStarted = false;
+                await _assessmentRepository.SaveChanges();
+            }
+            await _assessmentRepository.DeleteSubsequentNextWorkflows(nextWorkflow);
+        }
+
+        private AssessmentToolInstanceNextWorkflow AssessmentToolInstanceNextWorkflow(int assessmentId, int assessmentToolWorkflowInstanceId, string workflowDefinitionId)
+        {
+            return new AssessmentToolInstanceNextWorkflow
+            {
+                AssessmentId = assessmentId,
+                AssessmentToolWorkflowInstanceId = assessmentToolWorkflowInstanceId,
+                NextWorkflowDefinitionId = workflowDefinitionId,
+                IsStarted = false
+            };
         }
     }
 }
