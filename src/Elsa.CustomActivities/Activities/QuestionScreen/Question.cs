@@ -228,7 +228,8 @@ namespace Elsa.CustomActivities.Activities.QuestionScreen
                 QuestionTypeConstants.WeightedRadioQuestion,
                 QuestionTypeConstants.WeightedCheckboxQuestion,
                 QuestionTypeConstants.CheckboxQuestion,
-                QuestionTypeConstants.DataTable
+                QuestionTypeConstants.DataTable,
+                QuestionTypeConstants.Information
     })]
         public bool ReevaluatePrePopulatedAnswers { get; set; } = false;
 
