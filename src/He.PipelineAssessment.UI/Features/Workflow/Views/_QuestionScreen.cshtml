@@ -7,7 +7,17 @@
 
 @{
     List<string?> usedDisplayGroupIds = new List<string?>();
-    var questionsWithReevaluatedPrePopulatedAnswers = Model.Data.Questions!.Any(question => question.ReevaluatePrePopulatedAnswers);
+    var questionsWithReevaluatedPrePopulatedAnswers = Model.Data.Questions!.Any(question => {
+        if (question.QuestionType == QuestionTypeConstants.DataTable)
+        {
+            return question.ReevaluatePrePopulatedAnswers && !question.DataTable.Inputs.All(x=> x.IsReadOnly);
+        }
+        if(question.QuestionType == QuestionTypeConstants.Information)
+        {
+            return false;
+        }
+        return question.ReevaluatePrePopulatedAnswers && !question.IsReadOnly;
+    });
 }
 
 <div class="govuk-form-group">
@@ -366,7 +376,7 @@
                                    IsParagraph = x.IsParagraph,
                                    Url = x.Url
                                }).ToList()
-                       }
+                       },
                    })
         }
                     @if (Model.Data.Questions![i].QuestionType == QuestionTypeConstants.DataTable)
