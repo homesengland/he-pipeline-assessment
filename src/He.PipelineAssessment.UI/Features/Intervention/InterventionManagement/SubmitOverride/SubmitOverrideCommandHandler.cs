@@ -49,7 +49,7 @@ namespace He.PipelineAssessment.UI.Features.Intervention.InterventionManagement.
                     }
 
                     await _assessmentRepository.SaveChanges();
-                    await StartNextWorkflow(intervention);
+                    await CreateNextWorkflow(intervention);
                 }
             }
             catch(Exception e)
@@ -60,7 +60,7 @@ namespace He.PipelineAssessment.UI.Features.Intervention.InterventionManagement.
             return Unit.Value;
         }
 
-        private async Task StartNextWorkflow(AssessmentIntervention intervention)
+        private async Task CreateNextWorkflow(AssessmentIntervention intervention)
         {
 
 
