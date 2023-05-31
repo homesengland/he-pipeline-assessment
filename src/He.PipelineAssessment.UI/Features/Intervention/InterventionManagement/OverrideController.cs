@@ -89,9 +89,9 @@ namespace He.PipelineAssessment.UI.Features.Intervention.InterventionManagement
                         model.Status = InterventionStatus.NotSubmitted;
                         break;
                 }
-                var result = _mediator.Send(model);
+                var result = await _mediator.Send(model);
                 //redirect to some other view, which lists all interventions
-                return RedirectToAction("CheckYourDetails", new { model.AssessmentInterventionId });
+                return RedirectToAction("CheckYourDetails", new { InterventionId = model.AssessmentInterventionId });
             }
             catch (Exception e)
             {

@@ -4,6 +4,8 @@ namespace He.PipelineAssessment.UI.Features.Intervention.InterventionManagement
 {
     public class AssessmentInterventionCommand
     {
+        public int AssessmentId { get; set; }
+        public int CorrelationId { get; set; }
         public int AssessmentInterventionId { get; set; }
         public int AssessmentToolWorkflowInstanceId { get; set; }
         public string WorkflowInstanceId { get; set; } = null!;

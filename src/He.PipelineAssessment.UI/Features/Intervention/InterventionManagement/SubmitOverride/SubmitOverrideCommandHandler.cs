@@ -6,7 +6,7 @@ using MediatR;
 
 namespace He.PipelineAssessment.UI.Features.Intervention.InterventionManagement.SubmitOverride
 {
-    public class SubmitOverrideCommandHandler : IRequestHandler<SubmitOverrideCommand, Unit>
+    public class SubmitOverrideCommandHandler : IRequestHandler<SubmitOverrideCommand>
     {
         private readonly IAssessmentRepository _assessmentRepository;
         private readonly IDateTimeProvider _dateTimeProvider;
@@ -28,41 +28,56 @@ namespace He.PipelineAssessment.UI.Features.Intervention.InterventionManagement.
                     throw new ApplicationException(
                         $"Unable to find intervention with Id: {command.AssessmentInterventionId}");
                 }
+
+                if (command.Status != null)
+                {
+                    intervention.Status = command.Status;
+                }
                 intervention.DateSubmitted = _dateTimeProvider.UtcNow();
                 await _assessmentRepository.UpdateAssessmentIntervention(intervention);
 
-                if (command.Status == InterventionStatus.Approved)
+                if (intervention.Status == InterventionStatus.Approved)
                 {
-                    await _assessmentRepository.DeleteSubsequentWorkflowInstances(command.WorkflowInstanceId);
-                    await StartNextWorkflow(command);
+                    var workflowsToDelete =
+                        await _assessmentRepository.GetSubsequentWorkflowInstances(intervention
+                            .AssessmentToolWorkflowInstance.WorkflowInstanceId);
+                    var currentWorkflow = workflowsToDelete.First(x => x.Id == intervention.AssessmentToolWorkflowInstanceId);
+                    workflowsToDelete.Remove(currentWorkflow);
+                    foreach (var workflowInstance in workflowsToDelete)
+                    {
+                        workflowInstance.Status = AssessmentToolWorkflowInstanceConstants.Deleted;
+                    }
+
+                    await _assessmentRepository.SaveChanges();
+                    await StartNextWorkflow(intervention);
                 }
             }
             catch(Exception e)
             {
-               
+                
             }
 
             return Unit.Value;
         }
 
-        private async Task StartNextWorkflow(SubmitOverrideCommand command)
+        private async Task StartNextWorkflow(AssessmentIntervention intervention)
         {
 
 
-            var nextWorkflow = await _assessmentRepository.GetNonStartedAssessmentToolInstanceNextWorkflow(command.AssessmentToolWorkflowInstanceId,
-                                    command.TargetWorkflowDefinitionId!);
+            var nextWorkflow = await _assessmentRepository.GetAssessmentToolInstanceNextWorkflow(intervention.AssessmentToolWorkflowInstanceId,
+                                    intervention.TargetAssessmentToolWorkflow!.WorkflowDefinitionId);
 
             if (nextWorkflow == null)
             {
                 var previousWorkflows =
-                    await _assessmentRepository.GetPreviousAssessmentToolWorkflowInstances(command.WorkflowInstanceId);
+                    await _assessmentRepository.GetPreviousAssessmentToolWorkflowInstances(intervention.AssessmentToolWorkflowInstance.WorkflowInstanceId);
 
                 if (previousWorkflows != null && previousWorkflows.Any())
                 {
                     var lastWorkflowInstance = previousWorkflows.OrderByDescending(x => x.CreatedDateTime).First();
                     nextWorkflow =
                         AssessmentToolInstanceNextWorkflow(lastWorkflowInstance.AssessmentId,
-                            lastWorkflowInstance.Id, command.TargetWorkflowDefinitionId!);
+                            lastWorkflowInstance.Id, intervention.TargetAssessmentToolWorkflow!.WorkflowDefinitionId);
 
                     await _assessmentRepository.CreateAssessmentToolInstanceNextWorkflows(
                         new List<AssessmentToolInstanceNextWorkflow>() { nextWorkflow });
