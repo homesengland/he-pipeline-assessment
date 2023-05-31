@@ -43,7 +43,7 @@
                     @for (int q = 0; q < Model.DataTable.Count(); q++)
                     {
                         var inputItemName = "Data.Questions[" + Model.DataTable[q].QuestionIndex + "].DataTable.Inputs";
-                        var questionText = Model.DataTable[q].ReEvaluatePrePopulatedAnswers ? $"{@Model.DataTable[q].QuestionText}*" : @Model.DataTable[q].QuestionText;
+                        var questionText = Model.DataTable[q].ReEvaluatePrePopulatedAnswers && !Model.DataTable[q].Inputs.All(x=>x.IsReadOnly)? $"{@Model.DataTable[q].QuestionText}*" : @Model.DataTable[q].QuestionText;
                         <dt class="govuk-summary-list__key" id="@inputItemName">
                             @questionText
                         </dt>

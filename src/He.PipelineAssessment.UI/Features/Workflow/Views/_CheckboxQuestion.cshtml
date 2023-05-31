@@ -13,7 +13,7 @@
 
     var errorFormClass = !Model.IsValid ? "govuk-form-group--error" : "";
     var isReadOnly = Model.IsReadOnly ? "disabled" : "";
-    var questionTextModel = new QuestionText() { Text = Model.QuestionText, ReevaluatePrepopulatedAnswers = Model.ReevaluatePrePopulatedAnswers};
+    var questionTextModel = new QuestionText() { Text = Model.QuestionText, ReevaluatePrepopulatedAnswers = Model.ReevaluatePrePopulatedAnswers, IsReadOnly = Model.IsReadOnly};
 }
 
 <div class="govuk-form-group @errorFormClass" id="@formItemName">
