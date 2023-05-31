@@ -34,7 +34,7 @@ namespace He.PipelineAssessment.UI.Features.Intervention.InterventionManagement.
                 if (command.Status == InterventionStatus.Approved)
                 {
                     await _assessmentRepository.DeleteSubsequentWorkflowInstances(command.WorkflowInstanceId);
-                    await StartNextWorkflow(command);
+                    await CreateNextWorkflow(command);
                 }
             }
             catch(Exception e)
@@ -45,7 +45,7 @@ namespace He.PipelineAssessment.UI.Features.Intervention.InterventionManagement.
             return Unit.Value;
         }
 
-        private async Task StartNextWorkflow(SubmitOverrideCommand command)
+        private async Task CreateNextWorkflow(SubmitOverrideCommand command)
         {
 
 
