@@ -1,6 +1,5 @@
 ﻿using He.PipelineAssessment.Models;
 using He.PipelineAssessment.UI.Common.Utility;
-using He.PipelineAssessment.UI.Features.Intervention.Constants;
 
 namespace He.PipelineAssessment.UI.Features.Intervention.InterventionManagement.CreateOverride
 {

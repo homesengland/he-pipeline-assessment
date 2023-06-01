@@ -17,6 +17,7 @@
     <None Remove="Migrations\20230519075758_EconomistStoredProcChanges\GetAssessmentStagesByAssessmentId.sql" />
     <None Remove="Migrations\20230519075758_EconomistStoredProcChanges\GetEconomistAssessments.sql" />
     <None Remove="Migrations\20230601081949_UpdateGetAssessmentsSPToNotReturnDeleteds\GetAssessmentStagesByAssessmentId.sql" />
+    <None Remove="Migrations\20230601152316_InterventionListStoredProc\GetInterventionList.sql" />
   </ItemGroup>
 
   <ItemGroup>
@@ -30,6 +31,7 @@
     <EmbeddedResource Include="Migrations\20230519075758_EconomistStoredProcChanges\GetAssessmentStagesByAssessmentId.sql" />
     <EmbeddedResource Include="Migrations\20230519075758_EconomistStoredProcChanges\GetEconomistAssessments.sql" />
     <EmbeddedResource Include="Migrations\20230601081949_UpdateGetAssessmentsSPToNotReturnDeleteds\GetAssessmentStagesByAssessmentId.sql" />
+    <EmbeddedResource Include="Migrations\20230601152316_InterventionListStoredProc\GetInterventionList.sql" />
   </ItemGroup>
 
   <ItemGroup>

@@ -1,7 +1,6 @@
 ﻿using He.PipelineAssessment.Infrastructure.Repository;
 using He.PipelineAssessment.Models;
 using He.PipelineAssessment.UI.Common.Utility;
-using He.PipelineAssessment.UI.Features.Intervention.Constants;
 using MediatR;
 
 namespace He.PipelineAssessment.UI.Features.Intervention.InterventionManagement.SubmitOverride
