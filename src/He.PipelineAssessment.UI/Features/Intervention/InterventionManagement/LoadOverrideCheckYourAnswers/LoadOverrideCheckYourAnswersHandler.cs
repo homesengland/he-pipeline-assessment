@@ -41,7 +41,8 @@ namespace He.PipelineAssessment.UI.Features.Intervention.InterventionManagement.
                 TargetWorkflowDefinitionName = intervention.TargetAssessmentToolWorkflow?.Name,
                 ProjectReference = intervention.AssessmentToolWorkflowInstance.Assessment.Reference,
                 AssessmentId = intervention.AssessmentToolWorkflowInstance.AssessmentId,
-                CorrelationId = intervention.AssessmentToolWorkflowInstance.Assessment.SpId
+                CorrelationId = intervention.AssessmentToolWorkflowInstance.Assessment.SpId,
+                AssessmentResult = intervention.AssessmentResult
             };
         }
     }

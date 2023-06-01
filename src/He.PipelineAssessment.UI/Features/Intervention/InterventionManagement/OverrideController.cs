@@ -1,6 +1,4 @@
 ﻿using FluentValidation;
-using He.PipelineAssessment.UI.Features.Admin.AssessmentToolManagement.Commands.CreateAssessmentTool;
-using He.PipelineAssessment.UI.Features.Admin.AssessmentToolManagement.Validators;
 using He.PipelineAssessment.UI.Features.Intervention.Constants;
 using He.PipelineAssessment.UI.Features.Intervention.InterventionManagement.CreateOverride;
 using He.PipelineAssessment.UI.Features.Intervention.InterventionManagement.EditOverride;
@@ -9,6 +7,7 @@ using He.PipelineAssessment.UI.Features.Intervention.InterventionManagement.Subm
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Newtonsoft.Json;
 
 namespace He.PipelineAssessment.UI.Features.Intervention.InterventionManagement
 {
@@ -17,13 +16,13 @@ namespace He.PipelineAssessment.UI.Features.Intervention.InterventionManagement
     {
         private readonly ILogger<OverrideController> _logger;
         private readonly IMediator _mediator;
-        private readonly IValidator<CreateOverrideCommand> _createOverrideCommandValidator;
+        private readonly IValidator<AssessmentInterventionCommand> _validator;
 
-        public OverrideController(ILogger<OverrideController> logger, IMediator mediator, IValidator<CreateOverrideCommand> createOverrideCommandValidator)
+        public OverrideController(ILogger<OverrideController> logger, IMediator mediator, IValidator<AssessmentInterventionCommand> validator)
         {
             _logger = logger;
             _mediator = mediator;
-            _createOverrideCommandValidator = createOverrideCommandValidator;
+            _validator = validator;
         }
 
         public async Task<IActionResult> Override(string workflowInstanceId)
@@ -37,8 +36,9 @@ namespace He.PipelineAssessment.UI.Features.Intervention.InterventionManagement
         {
             try
             {
-                var createOverrideCommand = new CreateOverrideCommand(dto.AssessmentInterventionCommand);
-                var validationResult = await _createOverrideCommandValidator.ValidateAsync(createOverrideCommand);
+                var serializedCommand = JsonConvert.SerializeObject(dto.AssessmentInterventionCommand);
+                var createOverrideCommand = JsonConvert.DeserializeObject<CreateOverrideCommand>(serializedCommand);
+                var validationResult = await _validator.ValidateAsync(createOverrideCommand);
                 if (validationResult.IsValid)
                 {
                     
@@ -65,7 +65,41 @@ namespace He.PipelineAssessment.UI.Features.Intervention.InterventionManagement
             try
             {
                 AssessmentInterventionDto dto = await _mediator.Send(new EditOverrideRequest() { InterventionId = interventionId });
-                return View("~/Features/Intervention/Views/EditOverride.cshtml", dto);
+                if (dto.AssessmentInterventionCommand.Status == InterventionStatus.NotSubmitted)
+                {
+                    return View("~/Features/Intervention/Views/EditOverride.cshtml", dto);
+                }
+                else
+                {
+                    return RedirectToAction("CheckYourDetails", new { interventionId });
+                }
+            }
+            catch (Exception e)
+            {
+                _logger.LogError(e.Message);
+                return RedirectToAction("Index", "Error", new { message = e.Message });
+            }
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> EditOverride([FromForm] AssessmentInterventionDto dto)
+        {
+            try
+            {
+                var serializedCommand = JsonConvert.SerializeObject(dto.AssessmentInterventionCommand);
+                var editOverrideCommand = JsonConvert.DeserializeObject<EditOverrideCommand>(serializedCommand);
+                var validationResult = await _validator.ValidateAsync(editOverrideCommand);
+                if (validationResult.IsValid)
+                {
+
+                    var interventionId = await _mediator.Send(editOverrideCommand);
+                    return RedirectToAction("CheckYourDetails", new { interventionId });
+                }
+                else
+                {
+                    dto.ValidationResult = validationResult;
+                    return View("~/Features/Intervention/Views/EditOverride.cshtml", dto);
+                }
             }
             catch (Exception e)
             {

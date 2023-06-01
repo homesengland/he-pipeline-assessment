@@ -1,10 +1,11 @@
 ﻿using FluentValidation;
+using He.PipelineAssessment.UI.Features.Intervention.InterventionManagement.CreateOverride;
 
-namespace He.PipelineAssessment.UI.Features.Intervention.InterventionManagement.CreateOverride
+namespace He.PipelineAssessment.UI.Features.Intervention.InterventionManagement
 {
-    public class CreateOverrideCommandValidator : AbstractValidator<CreateOverrideCommand>
+    public class AssessmentInterventionCommandValidator : AbstractValidator<AssessmentInterventionCommand>
     {
-        public CreateOverrideCommandValidator()
+        public AssessmentInterventionCommandValidator()
         {
             RuleFor(c => c.SignOffDocument).NotEmpty().WithMessage("The {PropertyName} cannot be empty");
             RuleFor(c => c.AdministratorRationale).NotEmpty().WithMessage("The {PropertyName} cannot be empty");

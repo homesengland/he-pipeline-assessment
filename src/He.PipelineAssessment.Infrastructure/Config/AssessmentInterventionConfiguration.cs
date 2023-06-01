@@ -22,6 +22,8 @@ namespace He.PipelineAssessment.Infrastructure.Config
                 .HasMaxLength(EntityConfigurationConstants.ShortLength);
             builder.Property(x => x.Status)
                 .HasMaxLength(EntityConfigurationConstants.ShortLength);
+            builder.Property(x => x.AssessmentResult)
+                .HasMaxLength(EntityConfigurationConstants.StandardLength);
 
             builder.HasOne(x => x.AssessmentToolWorkflowInstance)
                 .WithMany(x => x.AssessmentInterventions)
