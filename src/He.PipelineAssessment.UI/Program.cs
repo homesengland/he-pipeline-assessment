@@ -81,6 +81,7 @@ builder.Services.AddScoped<IValidator<CreateAssessmentToolCommand>, CreateAssess
 builder.Services.AddScoped<IValidator<CreateAssessmentToolWorkflowCommand>, CreateAssessmentToolWorkflowCommandValidator>();
 builder.Services.AddScoped<IValidator<UpdateAssessmentToolCommand>, UpdateAssessmentToolCommandValidator>();
 builder.Services.AddScoped<IValidator<UpdateAssessmentToolWorkflowCommand>, UpdateAssessmentToolWorkflowCommandValidator>();
+builder.Services.AddScoped<IValidator<CreateOverrideCommand>, CreateOverrideCommandValidator>();
 builder.Services.AddScoped<ISinglePipelineProvider, SinglePipelineProvider>();
 
 builder.Services.AddDataProtection().PersistKeysToDbContext<PipelineAssessmentContext>();

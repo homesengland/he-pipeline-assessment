@@ -1,22 +1,29 @@
-﻿using He.PipelineAssessment.UI.Features.Intervention.Constants;
+﻿using FluentValidation;
+using He.PipelineAssessment.UI.Features.Admin.AssessmentToolManagement.Commands.CreateAssessmentTool;
+using He.PipelineAssessment.UI.Features.Admin.AssessmentToolManagement.Validators;
+using He.PipelineAssessment.UI.Features.Intervention.Constants;
 using He.PipelineAssessment.UI.Features.Intervention.InterventionManagement.CreateOverride;
 using He.PipelineAssessment.UI.Features.Intervention.InterventionManagement.EditOverride;
 using He.PipelineAssessment.UI.Features.Intervention.InterventionManagement.LoadOverrideCheckYourAnswers;
 using He.PipelineAssessment.UI.Features.Intervention.InterventionManagement.SubmitOverride;
 using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace He.PipelineAssessment.UI.Features.Intervention.InterventionManagement
 {
+    [Authorize(Policy = Authorization.Constants.AuthorizationPolicies.AssignmentToPipelineAdminRoleRequired)]
     public class OverrideController : Controller
     {
         private readonly ILogger<OverrideController> _logger;
         private readonly IMediator _mediator;
+        private readonly IValidator<CreateOverrideCommand> _createOverrideCommandValidator;
 
-        public OverrideController(ILogger<OverrideController> logger, IMediator mediator)
+        public OverrideController(ILogger<OverrideController> logger, IMediator mediator, IValidator<CreateOverrideCommand> createOverrideCommandValidator)
         {
             _logger = logger;
             _mediator = mediator;
+            _createOverrideCommandValidator = createOverrideCommandValidator;
         }
 
         public async Task<IActionResult> Override(string workflowInstanceId)
@@ -26,13 +33,24 @@ namespace He.PipelineAssessment.UI.Features.Intervention.InterventionManagement
         }
 
         [HttpPost]
-        public async Task<IActionResult> CreateOverride([FromForm] AssessmentInterventionDto createAssessmentInterventionDto)
+        public async Task<IActionResult> CreateOverride([FromForm] AssessmentInterventionDto dto)
         {
             try
             {
-                //do some validation of the command
-                var interventionId = await _mediator.Send(new CreateOverrideCommand(createAssessmentInterventionDto.AssessmentInterventionCommand));
-                return RedirectToAction("CheckYourDetails", new { interventionId });
+                var createOverrideCommand = new CreateOverrideCommand(dto.AssessmentInterventionCommand);
+                var validationResult = await _createOverrideCommandValidator.ValidateAsync(createOverrideCommand);
+                if (validationResult.IsValid)
+                {
+                    
+                    var interventionId = await _mediator.Send(createOverrideCommand);
+                    return RedirectToAction("CheckYourDetails", new { interventionId });
+                }
+                else
+                {
+                    dto.ValidationResult = validationResult;
+                    return View("~/Features/Intervention/Views/Override.cshtml", dto);
+                }
+
             }
             catch (Exception e)
             {
