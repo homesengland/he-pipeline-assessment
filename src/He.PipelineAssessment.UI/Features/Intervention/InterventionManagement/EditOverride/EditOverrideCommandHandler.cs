@@ -1,4 +1,5 @@
 ﻿using He.PipelineAssessment.Infrastructure.Repository;
+using He.PipelineAssessment.UI.Common.Exceptions;
 using MediatR;
 
 namespace He.PipelineAssessment.UI.Features.Intervention.InterventionManagement.EditOverride
@@ -16,6 +17,10 @@ namespace He.PipelineAssessment.UI.Features.Intervention.InterventionManagement.
         {
             var assessmentIntervention =
                 await _assessmentRepository.GetAssessmentIntervention(command.AssessmentInterventionId);
+            if (assessmentIntervention == null)
+            {
+                throw new NotFoundException($"Assessment Intervention with Id {command.AssessmentInterventionId} not found");
+            }
             assessmentIntervention.SignOffDocument = command.SignOffDocument;
             assessmentIntervention.AdministratorRationale = command.AdministratorRationale;
             assessmentIntervention.TargetAssessmentToolWorkflowId = command.TargetWorkflowId;
