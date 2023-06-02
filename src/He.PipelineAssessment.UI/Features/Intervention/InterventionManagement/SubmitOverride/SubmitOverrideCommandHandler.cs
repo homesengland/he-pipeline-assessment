@@ -1,5 +1,6 @@
 ﻿using He.PipelineAssessment.Infrastructure.Repository;
 using He.PipelineAssessment.Models;
+using He.PipelineAssessment.UI.Common.Exceptions;
 using He.PipelineAssessment.UI.Common.Utility;
 using MediatR;
 
@@ -18,51 +19,41 @@ namespace He.PipelineAssessment.UI.Features.Intervention.InterventionManagement.
 
         public async Task<Unit> Handle(SubmitOverrideCommand command, CancellationToken cancellationToken)
         {
-            try
+            var intervention =
+                await _assessmentRepository.GetAssessmentIntervention(command.AssessmentInterventionId);
+            if (intervention == null)
             {
-                var intervention =
-                    await _assessmentRepository.GetAssessmentIntervention(command.AssessmentInterventionId);
-                if (intervention == null)
-                {
-                    throw new ApplicationException(
-                        $"Unable to find intervention with Id: {command.AssessmentInterventionId}");
-                }
-
-                if (command.Status != null)
-                {
-                    intervention.Status = command.Status;
-                }
-                intervention.DateSubmitted = _dateTimeProvider.UtcNow();
-                await _assessmentRepository.UpdateAssessmentIntervention(intervention);
-
-                if (intervention.Status == InterventionStatus.Approved)
-                {
-                    var workflowsToDelete =
-                        await _assessmentRepository.GetSubsequentWorkflowInstances(intervention
-                            .AssessmentToolWorkflowInstance.WorkflowInstanceId);
-                    var currentWorkflow = workflowsToDelete.First(x => x.Id == intervention.AssessmentToolWorkflowInstanceId);
-                    workflowsToDelete.Remove(currentWorkflow);
-                    foreach (var workflowInstance in workflowsToDelete)
-                    {
-                        workflowInstance.Status = AssessmentToolWorkflowInstanceConstants.Deleted;
-                    }
-
-                    await _assessmentRepository.SaveChanges();
-                    await CreateNextWorkflow(intervention);
-                }
-            }
-            catch(Exception e)
-            {
-                
+                throw new NotFoundException($"Assessment Intervention with Id {command.AssessmentInterventionId} not found");
             }
 
+            if (command.Status != null)
+            {
+                intervention.Status = command.Status;
+            }
+            intervention.DateSubmitted = _dateTimeProvider.UtcNow();
+            await _assessmentRepository.UpdateAssessmentIntervention(intervention);
+
+            if (intervention.Status == InterventionStatus.Approved)
+            {
+                var workflowsToDelete =
+                    await _assessmentRepository.GetSubsequentWorkflowInstances(intervention
+                        .AssessmentToolWorkflowInstance.WorkflowInstanceId);
+                var currentWorkflow = workflowsToDelete.First(x => x.Id == intervention.AssessmentToolWorkflowInstanceId);
+                workflowsToDelete.Remove(currentWorkflow);
+                foreach (var workflowInstance in workflowsToDelete)
+                {
+                    workflowInstance.Status = AssessmentToolWorkflowInstanceConstants.Deleted;
+                }
+
+                await _assessmentRepository.SaveChanges();
+                await CreateNextWorkflow(intervention);
+            }
+            
             return Unit.Value;
         }
 
         private async Task CreateNextWorkflow(AssessmentIntervention intervention)
         {
-
-
             var nextWorkflow = await _assessmentRepository.GetAssessmentToolInstanceNextWorkflow(intervention.AssessmentToolWorkflowInstanceId,
                                     intervention.TargetAssessmentToolWorkflow!.WorkflowDefinitionId);
 
@@ -80,10 +71,6 @@ namespace He.PipelineAssessment.UI.Features.Intervention.InterventionManagement.
 
                     await _assessmentRepository.CreateAssessmentToolInstanceNextWorkflows(
                         new List<AssessmentToolInstanceNextWorkflow>() { nextWorkflow });
-                }
-                else
-                {
-                    //something has gone wrong
                 }
             }
             else
