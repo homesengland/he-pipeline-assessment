@@ -114,7 +114,7 @@ namespace He.PipelineAssessment.UI.Features.Intervention.InterventionManagement
         {
             try
             {
-                LoadOverrideCheckYourAnswersCommand model = await _mediator.Send(new LoadOverrideCheckYourAnswersRequest() { InterventionId = interventionId });
+                SubmitOverrideCommand model = await _mediator.Send(new LoadOverrideCheckYourAnswersRequest() { InterventionId = interventionId });
                 return View("~/Features/Intervention/Views/OverrideCheckYourDetails.cshtml", model);
             }
             catch (Exception e)
