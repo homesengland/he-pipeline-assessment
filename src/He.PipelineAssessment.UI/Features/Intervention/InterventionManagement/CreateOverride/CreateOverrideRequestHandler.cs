@@ -31,7 +31,7 @@ namespace He.PipelineAssessment.UI.Features.Intervention.InterventionManagement.
             {
                 AssessmentToolWorkflowInstance? workflowInstance =
                     await _assessmentRepository.GetAssessmentToolWorkflowInstance(request.WorkflowInstanceId);
-                var dto = DtoFromWorkflowInstance(workflowInstance);
+                var dto = _mapper.DtoFromWorkflowInstance(workflowInstance!, _userProvider.GetUserName()!, _userProvider.GetUserEmail()!);
 
                 var assessmentToolWorkflows = await _adminAssessmentToolWorkflowRepository.GetAssessmentToolWorkflows();
                 dto.TargetWorkflowDefinitions =
@@ -46,31 +46,6 @@ namespace He.PipelineAssessment.UI.Features.Intervention.InterventionManagement.
                 };
 
             }
-        }
-
-        public AssessmentInterventionDto DtoFromWorkflowInstance(AssessmentToolWorkflowInstance instance)
-        {
-            string? adminName = _userProvider.GetUserName();
-            string? adminEmail = _userProvider.GetUserEmail();
-
-            AssessmentInterventionDto dto = new AssessmentInterventionDto()
-            {
-                AssessmentInterventionCommand = new CreateOverrideCommand()
-                {
-                    AssessmentToolWorkflowInstanceId = instance.Id,
-                    WorkflowInstanceId = instance.WorkflowInstanceId,
-                    AssessmentResult = instance.Result,
-                    AssessmentName = instance.WorkflowName,
-                    RequestedBy = adminName,
-                    RequestedByEmail = adminEmail,
-                    Administrator = adminName,
-                    AdministratorEmail = adminEmail,
-                    DecisionType = InterventionDecisionTypes.Override,
-                    Status = InterventionStatus.NotSubmitted,
-                    ProjectReference = instance.Assessment.Reference
-                }
-            };
-            return dto;
         }
     }
 }

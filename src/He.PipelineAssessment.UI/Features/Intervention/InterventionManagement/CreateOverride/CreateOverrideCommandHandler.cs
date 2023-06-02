@@ -7,21 +7,33 @@ namespace He.PipelineAssessment.UI.Features.Intervention.InterventionManagement.
     {
         private readonly ICreateOverrideMapper _mapper;
         private readonly IAssessmentRepository _assessmentRepository;
+        private readonly ILogger<CreateOverrideCommandHandler> _logger;
 
-        public CreateOverrideCommandHandler(IAssessmentRepository assessmentRepository, ICreateOverrideMapper mapper)
+        public CreateOverrideCommandHandler(IAssessmentRepository assessmentRepository, ICreateOverrideMapper mapper, ILogger<CreateOverrideCommandHandler> logger)
         {
             _assessmentRepository = assessmentRepository;
             _mapper = mapper;
+            _logger = logger;
         }
 
 
         public async Task<int> Handle(CreateOverrideCommand command, CancellationToken cancellationToken)
         {
-            var assessmentIntervention = _mapper.CreateOverrideCommandToAssessmentIntervention(command);
+            try
+            {
+                var assessmentIntervention = _mapper.CreateOverrideCommandToAssessmentIntervention(command);
 
-            await _assessmentRepository.CreateAssessmentIntervention(assessmentIntervention);
+                await _assessmentRepository.CreateAssessmentIntervention(assessmentIntervention);
 
-            return assessmentIntervention.Id;
+                return assessmentIntervention.Id;
+            }
+            catch(Exception e)
+            {
+                _logger.LogError(e.Message);
+                return -1;
+            }
+            
+
         }
     }
 }

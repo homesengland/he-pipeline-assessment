@@ -42,7 +42,11 @@ namespace He.PipelineAssessment.UI.Features.Intervention.InterventionManagement
                 if (validationResult.IsValid)
                 {
                     
-                    var interventionId = await _mediator.Send(createOverrideCommand);
+                    int interventionId = await _mediator.Send(createOverrideCommand);
+                    if(interventionId > 0)
+                    {
+                        return RedirectToAction("Index", "Error", new { message = "There has been an error whilst attempting to save this request.  Please try again." });
+                    }
                     return RedirectToAction("CheckYourDetails", new { interventionId });
                 }
                 else
@@ -93,7 +97,15 @@ namespace He.PipelineAssessment.UI.Features.Intervention.InterventionManagement
                 {
 
                     var interventionId = await _mediator.Send(editOverrideCommand);
-                    return RedirectToAction("CheckYourDetails", new { interventionId });
+                    if(interventionId > 0)
+                    {
+                        return RedirectToAction("CheckYourDetails", new { interventionId });
+                    }
+                    else
+                    {
+                        return View("~/Features/Intervention/Views/EditOverride.cshtml", dto);
+                    }
+                    
                 }
                 else
                 {
