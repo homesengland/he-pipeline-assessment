@@ -169,7 +169,7 @@ namespace He.PipelineAssessment.Infrastructure.Repository
         public async Task DeleteSubsequentNextWorkflows(AssessmentToolInstanceNextWorkflow? nextWorkflow)
         {
             List<AssessmentToolInstanceNextWorkflow> nextWorkflows = await context.Set<AssessmentToolInstanceNextWorkflow>()
-                .Where(x => x.CreatedDateTime > nextWorkflow.CreatedDateTime
+                .Where(x => x.CreatedDateTime > nextWorkflow!.CreatedDateTime
                 && x.AssessmentId == nextWorkflow.AssessmentId).ToListAsync();
 
             context.Set<AssessmentToolInstanceNextWorkflow>().RemoveRange(nextWorkflows);

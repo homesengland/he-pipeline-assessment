@@ -25,7 +25,7 @@ namespace He.PipelineAssessment.UI.Tests.Features.Intervention.InterventionManag
         public async Task Handle_ReturnsNull_GivenEmptryResponseFromRepo(
                      [Frozen] Mock<IAssessmentRepository> assessmentRepository,
                      LoadOverrideCheckYourAnswersRequest request,
-                     AssessmentIntervention intervention,
+                     AssessmentIntervention? intervention,
                      LoadOverrideCheckYourAnswersRequestHandler sut
                  )
         {
@@ -46,14 +46,11 @@ namespace He.PipelineAssessment.UI.Tests.Features.Intervention.InterventionManag
         public async Task Handle_ReturnsNull_GivenRepoThrowsException(
                      [Frozen] Mock<IAssessmentRepository> assessmentRepository,
                      LoadOverrideCheckYourAnswersRequest request,
-                     AssessmentIntervention intervention,
                      Exception exception,
                      LoadOverrideCheckYourAnswersRequestHandler sut
                  )
         {
             //Arrange
-            intervention = null;
-
             assessmentRepository.Setup(x => x.GetAssessmentIntervention(request.InterventionId)).Throws(exception);
 
             //Act
@@ -95,7 +92,6 @@ namespace He.PipelineAssessment.UI.Tests.Features.Intervention.InterventionManag
           [Frozen] Mock<IAssessmentInterventionMapper> mapper,
           AssessmentInterventionCommand command,
           List<AssessmentToolWorkflow> workflows,
-          List<TargetWorkflowDefinition> targetWorkflowDefinitions,
           AssessmentIntervention intervention,
           LoadOverrideCheckYourAnswersRequest request,
           LoadOverrideCheckYourAnswersRequestHandler sut
@@ -111,7 +107,7 @@ namespace He.PipelineAssessment.UI.Tests.Features.Intervention.InterventionManag
             var result = await sut.Handle(request, CancellationToken.None);
 
             //Assert
-            Assert.Equal(submitOverrideCommand.ToString(), result.ToString());
+            Assert.Equal(submitOverrideCommand!.ToString(), result!.ToString());
         }
     }
 }

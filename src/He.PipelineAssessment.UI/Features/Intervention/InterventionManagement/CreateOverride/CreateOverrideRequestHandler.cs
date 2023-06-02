@@ -12,16 +12,18 @@ namespace He.PipelineAssessment.UI.Features.Intervention.InterventionManagement.
         private readonly IAdminAssessmentToolWorkflowRepository _adminAssessmentToolWorkflowRepository;
         private readonly IUserProvider _userProvider;
         private readonly IAssessmentInterventionMapper _mapper;
+        private readonly ILogger<CreateOverrideRequestHandler> _logger;
 
         public CreateOverrideRequestHandler(IAssessmentRepository assessmentRepository, 
             IUserProvider userProvider, 
             IAdminAssessmentToolWorkflowRepository adminAssessmentToolWorkflowRepository, 
-            IAssessmentInterventionMapper mapper)
+            IAssessmentInterventionMapper mapper, ILogger<CreateOverrideRequestHandler> logger)
         {
             _assessmentRepository = assessmentRepository;
             _userProvider = userProvider;
             _adminAssessmentToolWorkflowRepository = adminAssessmentToolWorkflowRepository;
             _mapper = mapper;
+            _logger = logger;
         }
 
         public async Task<AssessmentInterventionDto> Handle(CreateOverrideRequest request,
@@ -40,6 +42,7 @@ namespace He.PipelineAssessment.UI.Features.Intervention.InterventionManagement.
             }
             catch (Exception e)
             {
+                _logger.LogError(e.Message);
                 return new AssessmentInterventionDto
                 {
 

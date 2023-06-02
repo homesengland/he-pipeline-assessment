@@ -38,22 +38,26 @@ namespace He.PipelineAssessment.UI.Features.Intervention.InterventionManagement
             {
                 var serializedCommand = JsonConvert.SerializeObject(dto.AssessmentInterventionCommand);
                 var createOverrideCommand = JsonConvert.DeserializeObject<CreateOverrideCommand>(serializedCommand);
-                var validationResult = await _validator.ValidateAsync(createOverrideCommand);
-                if (validationResult.IsValid)
+                if(createOverrideCommand != null)
                 {
-                    
-                    int interventionId = await _mediator.Send(createOverrideCommand);
-                    if(interventionId > 0)
+                    var validationResult = await _validator.ValidateAsync(createOverrideCommand);
+                    if (validationResult.IsValid)
                     {
-                        return RedirectToAction("Index", "Error", new { message = "There has been an error whilst attempting to save this request.  Please try again." });
+
+                        int interventionId = await _mediator.Send(createOverrideCommand);
+                        if (interventionId > 0)
+                        {
+                            return RedirectToAction("Index", "Error", new { message = "There has been an error whilst attempting to save this request.  Please try again." });
+                        }
+                        return RedirectToAction("CheckYourDetails", new { interventionId });
                     }
-                    return RedirectToAction("CheckYourDetails", new { interventionId });
+                    else
+                    {
+                        dto.ValidationResult = validationResult;
+                        return View("~/Features/Intervention/Views/Override.cshtml", dto);
+                    }
                 }
-                else
-                {
-                    dto.ValidationResult = validationResult;
-                    return View("~/Features/Intervention/Views/Override.cshtml", dto);
-                }
+                return View("~/Features/Intervention/Views/Override.cshtml", dto);
 
             }
             catch (Exception e)
@@ -92,26 +96,34 @@ namespace He.PipelineAssessment.UI.Features.Intervention.InterventionManagement
             {
                 var serializedCommand = JsonConvert.SerializeObject(dto.AssessmentInterventionCommand);
                 var editOverrideCommand = JsonConvert.DeserializeObject<EditOverrideCommand>(serializedCommand);
-                var validationResult = await _validator.ValidateAsync(editOverrideCommand);
-                if (validationResult.IsValid)
+                if(editOverrideCommand != null)
                 {
-
-                    var interventionId = await _mediator.Send(editOverrideCommand);
-                    if(interventionId > 0)
+                    var validationResult = await _validator.ValidateAsync(editOverrideCommand);
+                    if (validationResult.IsValid)
                     {
-                        return RedirectToAction("CheckYourDetails", new { interventionId });
+
+                        var interventionId = await _mediator.Send(editOverrideCommand);
+                        if (interventionId > 0)
+                        {
+                            return RedirectToAction("CheckYourDetails", new { interventionId });
+                        }
+                        else
+                        {
+                            return View("~/Features/Intervention/Views/EditOverride.cshtml", dto);
+                        }
+
                     }
                     else
                     {
+                        dto.ValidationResult = validationResult;
                         return View("~/Features/Intervention/Views/EditOverride.cshtml", dto);
                     }
-                    
                 }
                 else
                 {
-                    dto.ValidationResult = validationResult;
                     return View("~/Features/Intervention/Views/EditOverride.cshtml", dto);
                 }
+               
             }
             catch (Exception e)
             {

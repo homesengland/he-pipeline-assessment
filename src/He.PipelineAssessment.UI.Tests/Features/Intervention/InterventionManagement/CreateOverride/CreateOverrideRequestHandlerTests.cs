@@ -18,8 +18,6 @@ namespace He.PipelineAssessment.UI.Tests.Features.Intervention.InterventionManag
         [AutoMoqData]
         public async Task Handle_ReturnsEmptyDto_GivenRepoThrowsError(
                   [Frozen] Mock<IAssessmentRepository> assessmentRepository,
-                  [Frozen] Mock<ICreateOverrideMapper> mapper,
-                  AssessmentToolWorkflowInstance workflowInstance,
                   CreateOverrideRequest request,
                   Exception exception,
                   CreateOverrideRequestHandler sut
@@ -42,7 +40,6 @@ namespace He.PipelineAssessment.UI.Tests.Features.Intervention.InterventionManag
         public async Task Handle_ReturnsEmptyDto_GivenAdminRepoThrowsError(
           [Frozen] Mock<IAssessmentRepository> assessmentRepository,
           [Frozen] Mock<IAdminAssessmentToolWorkflowRepository> adminRepository,
-          [Frozen] Mock<ICreateOverrideMapper> mapper,
           AssessmentToolWorkflowInstance workflowInstance,
           CreateOverrideRequest request,
           Exception exception,

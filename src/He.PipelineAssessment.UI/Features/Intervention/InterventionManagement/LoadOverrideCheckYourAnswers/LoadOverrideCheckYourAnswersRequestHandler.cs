@@ -6,7 +6,7 @@ using Newtonsoft.Json;
 
 namespace He.PipelineAssessment.UI.Features.Intervention.InterventionManagement.LoadOverrideCheckYourAnswers
 {
-    public class LoadOverrideCheckYourAnswersRequestHandler : IRequestHandler<LoadOverrideCheckYourAnswersRequest, SubmitOverrideCommand>
+    public class LoadOverrideCheckYourAnswersRequestHandler : IRequestHandler<LoadOverrideCheckYourAnswersRequest, SubmitOverrideCommand?>
     {
 
         private readonly IAssessmentRepository _assessmentRepository;
@@ -40,7 +40,8 @@ namespace He.PipelineAssessment.UI.Features.Intervention.InterventionManagement.
             {
                 _logger.LogError(e.Message);
             }
-            return null;
+            SubmitOverrideCommand? nullCommand = null;
+            return await Task.FromResult(nullCommand);
 
 
         }

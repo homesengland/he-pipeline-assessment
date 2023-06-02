@@ -100,7 +100,6 @@ namespace He.PipelineAssessment.UI.Tests.Features.Intervention.InterventionManag
           List<TargetWorkflowDefinition> targetWorkflowDefinitions,
           AssessmentIntervention intervention,
           EditOverrideRequest request,
-          Exception exception,
           EditOverrideRequestHandler sut
     )
         {

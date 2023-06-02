@@ -62,7 +62,7 @@ namespace He.PipelineAssessment.UI.Features.Intervention.InterventionManagement
                 DateSubmitted = intervention.DateSubmitted,
                 Status = intervention.Status,
                 TargetWorkflowId = intervention.TargetAssessmentToolWorkflowId,
-                TargetWorkflowDefinitionId = intervention.TargetAssessmentToolWorkflow.WorkflowDefinitionId,
+                TargetWorkflowDefinitionId = intervention!.TargetAssessmentToolWorkflow!.WorkflowDefinitionId,
                 TargetWorkflowDefinitionName = intervention.TargetAssessmentToolWorkflow.Name,
                 AssessmentId = intervention.AssessmentToolWorkflowInstance.Id,
                 CorrelationId = intervention.AssessmentToolWorkflowInstance.Assessment.SpId

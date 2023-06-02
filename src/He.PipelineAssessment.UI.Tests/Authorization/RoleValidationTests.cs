@@ -266,7 +266,7 @@ public class RoleValidationTests
         assessmentTool.IsEconomistWorkflow = false;
         assessment.BusinessArea = "";
         assessmentToolRepository.Setup(x => x.GetAssessmentToolByWorkflowDefinitionId(workflowDefinitionId)).ReturnsAsync(assessmentTool);
-        assessmentRepository.Setup(x => x.GetAssessment(assessmentId)).ReturnsAsync((Assessment)null);
+        assessmentRepository.Setup(x => x.GetAssessment(assessmentId)).ReturnsAsync((Assessment?)null);
         userProvider.Setup(x => x.CheckUserRole(Constants.AppRole.PipelineEconomist)).Returns(false);
 
         //Act

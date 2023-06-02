@@ -10,18 +10,26 @@ namespace He.PipelineAssessment.UI.Features.Intervention.InterventionManagement.
         private readonly IAssessmentInterventionMapper _mapper;
         private readonly IAssessmentRepository _repository;
         private readonly IAdminAssessmentToolWorkflowRepository _adminAssessmentToolWorkflowRepository;
+        private readonly ILogger<EditOverrideRequestHandler> _logger;
 
-        public EditOverrideRequestHandler(IAssessmentInterventionMapper mapper, IAssessmentRepository repo, IAdminAssessmentToolWorkflowRepository adminAssessmentToolWorkflowRepository)
+        public EditOverrideRequestHandler(IAssessmentInterventionMapper mapper, 
+            IAssessmentRepository repo, IAdminAssessmentToolWorkflowRepository adminAssessmentToolWorkflowRepository, 
+            ILogger<EditOverrideRequestHandler> logger)
         {
             _mapper = mapper;
             _repository = repo;
             _adminAssessmentToolWorkflowRepository = adminAssessmentToolWorkflowRepository;
+            _logger = logger;
         }
         public async Task<AssessmentInterventionDto> Handle(EditOverrideRequest request, CancellationToken cancellationToken)
         {
             try
             {
                 AssessmentIntervention? intervention = await _repository.GetAssessmentIntervention(request.InterventionId);
+                if(intervention == null)
+                {
+                    return new AssessmentInterventionDto();
+                }
                 AssessmentInterventionCommand command = _mapper.AssessmentInterventionCommandFromAssessmentIntervention(intervention);
                 var assessmentToolWorkflows = await _adminAssessmentToolWorkflowRepository.GetAssessmentToolWorkflows();
                 var dto = new AssessmentInterventionDto
@@ -34,6 +42,7 @@ namespace He.PipelineAssessment.UI.Features.Intervention.InterventionManagement.
             }
             catch(Exception e)
             {
+                _logger.LogError(e.Message);
                 return new AssessmentInterventionDto();
             }
         }
