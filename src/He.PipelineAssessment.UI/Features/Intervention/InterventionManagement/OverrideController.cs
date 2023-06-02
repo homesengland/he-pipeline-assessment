@@ -127,6 +127,10 @@ namespace He.PipelineAssessment.UI.Features.Intervention.InterventionManagement
             try
             {
                 SubmitOverrideCommand model = await _mediator.Send(new LoadOverrideCheckYourAnswersRequest() { InterventionId = interventionId });
+                if(model == null)
+                {
+                    return RedirectToAction("EditOverride", new { interventionId });
+                }
                 return View("~/Features/Intervention/Views/OverrideCheckYourDetails.cshtml", model);
             }
             catch (Exception e)
