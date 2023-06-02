@@ -1,4 +1,5 @@
 ﻿using He.PipelineAssessment.Infrastructure.Repository;
+using He.PipelineAssessment.UI.Common.Exceptions;
 using MediatR;
 
 namespace He.PipelineAssessment.UI.Features.Intervention.InterventionManagement.EditOverride
@@ -16,30 +17,17 @@ namespace He.PipelineAssessment.UI.Features.Intervention.InterventionManagement.
 
         public async Task<int> Handle(EditOverrideCommand command, CancellationToken cancellationToken)
         {
-            try
+            var assessmentIntervention =
+                await _assessmentRepository.GetAssessmentIntervention(command.AssessmentInterventionId);
+            if (assessmentIntervention == null)
             {
-                var assessmentIntervention =
-                    await _assessmentRepository.GetAssessmentIntervention(command.AssessmentInterventionId);
-                if (assessmentIntervention != null)
-                {
-                    assessmentIntervention.SignOffDocument = command.SignOffDocument;
-                    assessmentIntervention.AdministratorRationale = command.AdministratorRationale;
-                    assessmentIntervention.TargetAssessmentToolWorkflowId = command.TargetWorkflowId;
-                    await _assessmentRepository.SaveChanges();
-                    return assessmentIntervention.Id;
-                }
-                else
-                {
-                    return -1;
-                }
+                throw new NotFoundException($"Assessment Intervention with Id {command.AssessmentInterventionId} not found");
             }
-            catch(Exception e)
-            {
-                _logger.LogError(e.Message);
-                //TODO Tech Debt Item in backlog to align our exception handling in controllers/handlers. 
-                throw new Exception(e.Message, e.InnerException);
-            }
-
+            assessmentIntervention.SignOffDocument = command.SignOffDocument;
+            assessmentIntervention.AdministratorRationale = command.AdministratorRationale;
+            assessmentIntervention.TargetAssessmentToolWorkflowId = command.TargetWorkflowId;
+            await _assessmentRepository.SaveChanges();
+            return assessmentIntervention.Id;
         }
     }
 }
