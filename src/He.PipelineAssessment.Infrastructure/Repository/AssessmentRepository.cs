@@ -24,7 +24,7 @@ namespace He.PipelineAssessment.Infrastructure.Repository
         Task<int> UpdateAssessmentIntervention(AssessmentIntervention assessmentIntervention);
 
         Task<List<AssessmentToolWorkflowInstance>> GetSubsequentWorkflowInstances(string workflowInstanceId);
-        Task DeleteSubsequentNextWorkflows(AssessmentToolInstanceNextWorkflow nextWorkflow);
+        Task DeleteSubsequentNextWorkflows(AssessmentToolInstanceNextWorkflow? nextWorkflow);
 
 
 
@@ -166,7 +166,7 @@ namespace He.PipelineAssessment.Infrastructure.Repository
             return workflowsToRemove;
         }
 
-        public async Task DeleteSubsequentNextWorkflows(AssessmentToolInstanceNextWorkflow nextWorkflow)
+        public async Task DeleteSubsequentNextWorkflows(AssessmentToolInstanceNextWorkflow? nextWorkflow)
         {
             List<AssessmentToolInstanceNextWorkflow> nextWorkflows = await context.Set<AssessmentToolInstanceNextWorkflow>()
                 .Where(x => x.CreatedDateTime > nextWorkflow.CreatedDateTime
