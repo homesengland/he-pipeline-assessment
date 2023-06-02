@@ -19,21 +19,11 @@ namespace He.PipelineAssessment.UI.Features.Intervention.InterventionManagement.
 
         public async Task<int> Handle(CreateOverrideCommand command, CancellationToken cancellationToken)
         {
-            try
-            {
-                var assessmentIntervention = _mapper.CreateOverrideCommandToAssessmentIntervention(command);
+            var assessmentIntervention = _mapper.CreateOverrideCommandToAssessmentIntervention(command);
 
-                await _assessmentRepository.CreateAssessmentIntervention(assessmentIntervention);
+            await _assessmentRepository.CreateAssessmentIntervention(assessmentIntervention);
 
-                return assessmentIntervention.Id;
-            }
-            catch(Exception e)
-            {
-                _logger.LogError(e.Message);
-                return -1;
-            }
-            
-
+            return assessmentIntervention.Id;
         }
     }
 }
