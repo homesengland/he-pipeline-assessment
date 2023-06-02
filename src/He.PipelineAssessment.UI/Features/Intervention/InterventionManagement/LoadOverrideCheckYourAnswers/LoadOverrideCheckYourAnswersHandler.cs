@@ -4,12 +4,12 @@ using MediatR;
 
 namespace He.PipelineAssessment.UI.Features.Intervention.InterventionManagement.LoadOverrideCheckYourAnswers
 {
-    public class CreateAssessmentInterventionRequestHandler : IRequestHandler<LoadOverrideCheckYourAnswersRequest, LoadOverrideCheckYourAnswersCommand>
+    public class LoadOverrideCheckYourAnswersHandler : IRequestHandler<LoadOverrideCheckYourAnswersRequest, LoadOverrideCheckYourAnswersCommand>
     {
 
         private readonly IAssessmentRepository _assessmentRepository;
 
-        public CreateAssessmentInterventionRequestHandler(IAssessmentRepository assessmentRepository)
+        public LoadOverrideCheckYourAnswersHandler(IAssessmentRepository assessmentRepository)
         {
             _assessmentRepository = assessmentRepository;
         }
