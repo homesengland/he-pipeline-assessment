@@ -16,10 +16,10 @@
 
 <div class="text-center">
     <div class="govuk-grid-row">
-        <div class="govuk-grid-column-one-half">
+        <div class="govuk-grid-column-three-quarters">
             <div id="search-div" class="header-select override-header-select"></div>
         </div>
-        <div class="govuk-grid-column-one-half">
+        <div class="govuk-grid-column-one-quarter">
             <div id="filter-div" class="float-right"></div>
         </div>
     </div>
@@ -30,12 +30,12 @@
             <tr class="govuk-table__row">
                 <th scope="col" class="govuk-table__header">Reference</th>
                 <th scope="col" class="govuk-table__header">Stage</th>
-                <th scope="col" class="govuk-table__header">Requested By</th>
-                <th scope="col" class="govuk-table__header">Administrator</th>
-                <th scope="col" class="govuk-table__header">Status</th>
+                <th scope="col" class="govuk-table__header" data-searchable="true">Requested By</th>
+                <th scope="col" class="govuk-table__header" data-searchable="true">Administrator</th>
+                <th scope="col" class="govuk-table__header" data-searchable="true">Status</th>
                 <th scope="col" class="govuk-table__header">Created</th>
                 <th scope="col" class="govuk-table__header">Last Updated</th>
-                <th scope="col" class="govuk-table__header">Decision Type</th>
+                <th scope="col" class="govuk-table__header" data-searchable="true">Decision Type</th>
             </tr>
         </thead>
         <tbody class="govuk-table__body">
@@ -48,7 +48,7 @@
                 var created = intervention.CreatedDateTime.HasValue ? intervention.CreatedDateTime.Value.Date.ToLongDateString() : "";
 
                 <tr class="govuk-table__row">
-                    <td class="govuk-table__cell"><a asp-controller="Override" asp-action="SubmitOverride" asp-route-assessmentid="@intervention.Id" class="govuk-link">@intervention.Reference</a> </td>
+                    <td class="govuk-table__cell"><a asp-controller="Override" asp-action="CheckYourDetails" asp-route-interventionId="@intervention.Id" class="govuk-link">@intervention.Reference</a> </td>
                     <td class="govuk-table__cell">@intervention.WorkflowName</td>
                     <td class="govuk-table__cell">@intervention.RequestedBy</td>
                     <td class="govuk-table__cell">@intervention.Administrator</td>
@@ -68,7 +68,7 @@
     <script nonce="@nonceConfig.DataTablesSetup" src="~/js/gov_dataTable.js"></script>
     <script nonce="@nonceConfig.DataTablesSetup">
         $(document).ready(function () {
-            initInterventionDataTable('interventionListTable', 0, "search-div")
+            initInterventionDataTable('interventionListTable', 4, "search-div")
         });
     </script>
 }

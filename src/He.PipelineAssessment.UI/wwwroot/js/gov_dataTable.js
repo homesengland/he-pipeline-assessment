@@ -66,7 +66,7 @@
 function initInterventionDataTable(tableId, columnNumberToSort, searchElementId) {
     $('#' + tableId).DataTable({
         "bLengthChange": false,
-        order: [[columnNumberToSort, 'asc']],
+        order: [[columnNumberToSort, 'desc']],
         "columnDefs": [
             { "width": "5%", "targets": 0 },
             { "width": "15%", "targets": 1 },
@@ -80,7 +80,16 @@ function initInterventionDataTable(tableId, columnNumberToSort, searchElementId)
         "oLanguage": {
             "sSearch": "Search"
         },
-
+        //"oSearch": {
+        //    "sSearch": "Pending"
+        //},
+        "searchCols": [
+            null,
+            null,
+            null,
+            null,
+            { "search": "(Pending|Not)", "regex": true }
+        ],
         initComplete: function () {
             $('#' + tableId).removeAttr("hidden");
             $('#' + tableId).removeAttr("style");
