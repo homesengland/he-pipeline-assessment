@@ -1380,14 +1380,14 @@ public class LoadQuestionScreenRequestHandlerTests
 
         //Act
         var result = await sut.Handle(loadWorkflowActivityRequest, CancellationToken.None);
-        var answerResult = JsonSerializer.Deserialize<DataTable>(result.Data.Questions[0].Answers.FirstOrDefault().AnswerText);
+        var answerResult = JsonSerializer.Deserialize<DataTable>(result.Data!.Questions[0].Answers.FirstOrDefault()!.AnswerText);
 
         //Assert
         Assert.NotNull(result.Data!.Questions);
         Assert.Equal(assessmentQuestions.Count(), result.Data!.Questions.Count());
         Assert.Empty(result.ErrorMessages);
-        Assert.Equal("Prepopulated Answer 1", answerResult.Inputs[0].Input);
-        Assert.Equal("Prepopulated Answer 2", answerResult.Inputs[1].Input);
+        Assert.Equal("Prepopulated Answer 1", answerResult!.Inputs[0].Input);
+        Assert.Equal("Prepopulated Answer 2", answerResult!.Inputs[1].Input);
     }
 
     [Theory]
@@ -1456,14 +1456,14 @@ public class LoadQuestionScreenRequestHandlerTests
 
         //Act
         var result = await sut.Handle(loadWorkflowActivityRequest, CancellationToken.None);
-        var answerResult = JsonSerializer.Deserialize<DataTable>(result.Data.Questions[0].Answers.FirstOrDefault().AnswerText);
+        var answerResult = JsonSerializer.Deserialize<DataTable>(result.Data!.Questions[0].Answers.FirstOrDefault()!.AnswerText);
 
         //Assert
         Assert.NotNull(result.Data!.Questions);
         Assert.Equal(assessmentQuestions.Count(), result.Data!.Questions.Count());
         Assert.Empty(result.ErrorMessages);
-        Assert.Equal("Database Answer 1", answerResult.Inputs[0].Input);
-        Assert.Equal("Database Answer 2", answerResult.Inputs[1].Input);
+        Assert.Equal("Database Answer 1", answerResult!.Inputs[0].Input);
+        Assert.Equal("Database Answer 2", answerResult!.Inputs[1].Input);
     }
 
     [Theory]
@@ -1532,14 +1532,14 @@ Handle_ReturnMultiQuestionActivityDataWithDataTableAnswers_GivenPrepopulatedAndD
 
         //Act
         var result = await sut.Handle(loadWorkflowActivityRequest, CancellationToken.None);
-        var answerResult = JsonSerializer.Deserialize<DataTable>(result.Data.Questions[0].Answers.FirstOrDefault().AnswerText);
+        var answerResult = JsonSerializer.Deserialize<DataTable>(result.Data!.Questions[0].Answers.FirstOrDefault()!.AnswerText);
 
         //Assert
         Assert.NotNull(result.Data!.Questions);
         Assert.Equal(assessmentQuestions.Count(), result.Data!.Questions.Count());
         Assert.Empty(result.ErrorMessages);
-        Assert.Equal("Prepopulated Answer 1", answerResult.Inputs[0].Input);
-        Assert.Equal("Prepopulated Answer 2", answerResult.Inputs[1].Input);
+        Assert.Equal("Prepopulated Answer 1", answerResult!.Inputs[0].Input);
+        Assert.Equal("Prepopulated Answer 2", answerResult!.Inputs[1].Input);
     }
 
 }

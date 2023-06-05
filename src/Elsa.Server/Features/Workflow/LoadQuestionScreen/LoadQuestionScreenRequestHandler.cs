@@ -182,7 +182,7 @@ namespace Elsa.Server.Features.Workflow.LoadQuestionScreen
                             var groups = dbQuestion.Choices.Select(x => x.QuestionChoiceGroup);
                             
                             answerList = dbQuestion.Choices.Where(x => prepopulatedAnswerListIdentifiers.Any(y => {
-                                var g = groups.Where(z => z.Id == x.QuestionChoiceGroupId).FirstOrDefault();
+                                var g = groups.FirstOrDefault(z => z!.Id == x.QuestionChoiceGroupId);
                                 return y.Id == x.Identifier && g != null && g.GroupIdentifier == y.GroupId;
                             })).Select(x => x.Id).ToList(); ;
                         } 
