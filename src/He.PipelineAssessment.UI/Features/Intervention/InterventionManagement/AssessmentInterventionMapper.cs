@@ -18,7 +18,7 @@ namespace He.PipelineAssessment.UI.Features.Intervention.InterventionManagement
     {
         private readonly ILogger<AssessmentInterventionMapper> _logger;
 
-        AssessmentInterventionMapper(ILogger<AssessmentInterventionMapper> logger)
+        public AssessmentInterventionMapper(ILogger<AssessmentInterventionMapper> logger)
         {
             _logger = logger;
         }
