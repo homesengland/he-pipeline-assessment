@@ -9,6 +9,7 @@ using Xunit;
 using He.PipelineAssessment.UI.Features.Intervention.InterventionManagement.CreateOverride;
 using He.PipelineAssessment.Models;
 using He.PipelineAssessment.UI.Features.Intervention.InterventionManagement;
+using He.PipelineAssessment.UI.Common.Exceptions;
 
 namespace He.PipelineAssessment.UI.Tests.Features.Intervention.InterventionManagement.CreateOverride
 {
@@ -16,47 +17,47 @@ namespace He.PipelineAssessment.UI.Tests.Features.Intervention.InterventionManag
     {
         [Theory]
         [AutoMoqData]
-        public async Task Handle_ReturnsEmptyDto_GivenRepoThrowsError(
+        public async Task Handle_ThrowsException_GivenRepoReturnsNoWorkflowInstance(
                   [Frozen] Mock<IAssessmentRepository> assessmentRepository,
                   CreateOverrideRequest request,
                   Exception exception,
+                  AssessmentToolWorkflowInstance? workflowInstance,
                   CreateOverrideRequestHandler sut
               )
         {
             //Arrange
-            var emptyDto = new AssessmentInterventionDto();
+            workflowInstance = null;
 
-            assessmentRepository.Setup(x => x.GetAssessmentToolWorkflowInstance(request.WorkflowInstanceId)).Throws(exception);
+            assessmentRepository.Setup(x => x.GetAssessmentToolWorkflowInstance(request.WorkflowInstanceId)).ReturnsAsync(workflowInstance);
 
             //Act
-            var result = await sut.Handle(request, CancellationToken.None);
+            var ex = await Assert.ThrowsAsync<NotFoundException>(() => sut.Handle(request, CancellationToken.None));
 
             //Assert
-            Assert.Equal(emptyDto.ToString(), result.ToString());
+            Assert.Equal(($"Assessment Tool Workflow Instance with Id {request.WorkflowInstanceId} not found"), ex.Message);
         }
 
         [Theory]
         [AutoMoqData]
-        public async Task Handle_ReturnsEmptyDto_GivenAdminRepoThrowsError(
+        public async Task HandleThrowsException_GivenAdminRepoReturnsNoAssessmentToolWorkflows(
           [Frozen] Mock<IAssessmentRepository> assessmentRepository,
           [Frozen] Mock<IAdminAssessmentToolWorkflowRepository> adminRepository,
           AssessmentToolWorkflowInstance workflowInstance,
           CreateOverrideRequest request,
-          Exception exception,
           CreateOverrideRequestHandler sut
       )
         {
             //Arrange
-            var emptyDto = new AssessmentInterventionDto();
+            List<AssessmentToolWorkflow> emptyListOfWorkflow = new List<AssessmentToolWorkflow>();
 
             assessmentRepository.Setup(x => x.GetAssessmentToolWorkflowInstance(request.WorkflowInstanceId)).ReturnsAsync(workflowInstance);
-            adminRepository.Setup(x => x.GetAssessmentToolWorkflows()).Throws(exception);
+            adminRepository.Setup(x => x.GetAssessmentToolWorkflows()).ReturnsAsync(emptyListOfWorkflow);
 
             //Act
-            var result = await sut.Handle(request, CancellationToken.None);
+            var ex = await Assert.ThrowsAsync<NotFoundException>(() => sut.Handle(request, CancellationToken.None));
 
             //Assert
-            Assert.Equal(emptyDto.ToString(), result.ToString());
+            Assert.Equal(($"No Assessment tool workflows found"), ex.Message);
         }
 
         [Theory]
@@ -68,7 +69,7 @@ namespace He.PipelineAssessment.UI.Tests.Features.Intervention.InterventionManag
           AssessmentToolWorkflowInstance workflowInstance,
           CreateOverrideRequest request,
           List<AssessmentToolWorkflow> workflows,
-          Exception exception,
+          ArgumentException exception,
           CreateOverrideRequestHandler sut
 )
         {
@@ -79,11 +80,10 @@ namespace He.PipelineAssessment.UI.Tests.Features.Intervention.InterventionManag
             adminRepository.Setup(x => x.GetAssessmentToolWorkflows()).ReturnsAsync(workflows);
             mapper.Setup(x => x.TargetWorkflowDefinitionsFromAssessmentToolWorkflows(workflows)).Throws(exception);
 
-            //Act
-            var result = await sut.Handle(request, CancellationToken.None);
+            var ex = await Assert.ThrowsAsync<ArgumentException>(() => sut.Handle(request, CancellationToken.None));
 
             //Assert
-            Assert.Equal(emptyDto.ToString(), result.ToString());
+            Assert.Equal(($"No Assessment tool workflows found"), ex.Message);
         }
 
         [Theory]

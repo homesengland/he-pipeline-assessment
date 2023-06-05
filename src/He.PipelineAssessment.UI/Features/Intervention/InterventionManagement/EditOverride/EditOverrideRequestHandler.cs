@@ -1,6 +1,8 @@
 ﻿using He.PipelineAssessment.Infrastructure.Repository;
 using He.PipelineAssessment.Models;
+using He.PipelineAssessment.UI.Common.Exceptions;
 using MediatR;
+using static Microsoft.EntityFrameworkCore.DbLoggerCategory.Database;
 
 namespace He.PipelineAssessment.UI.Features.Intervention.InterventionManagement.EditOverride
 {
@@ -23,28 +25,24 @@ namespace He.PipelineAssessment.UI.Features.Intervention.InterventionManagement.
         }
         public async Task<AssessmentInterventionDto> Handle(EditOverrideRequest request, CancellationToken cancellationToken)
         {
-            try
+            AssessmentIntervention? intervention = await _repository.GetAssessmentIntervention(request.InterventionId);
+            if (intervention == null)
             {
-                AssessmentIntervention? intervention = await _repository.GetAssessmentIntervention(request.InterventionId);
-                if(intervention == null)
-                {
-                    return new AssessmentInterventionDto();
-                }
-                AssessmentInterventionCommand command = _mapper.AssessmentInterventionCommandFromAssessmentIntervention(intervention);
-                var assessmentToolWorkflows = await _adminAssessmentToolWorkflowRepository.GetAssessmentToolWorkflows();
-                var dto = new AssessmentInterventionDto
-                {
-                    AssessmentInterventionCommand = command,
-                    TargetWorkflowDefinitions =
-                        _mapper.TargetWorkflowDefinitionsFromAssessmentToolWorkflows(assessmentToolWorkflows)
-                };
-                return dto;
+                throw new NotFoundException($"Assessment Intervention with Id {request.InterventionId} not found");
             }
-            catch(Exception e)
+            AssessmentInterventionCommand command = _mapper.AssessmentInterventionCommandFromAssessmentIntervention(intervention);
+            var assessmentToolWorkflows = await _adminAssessmentToolWorkflowRepository.GetAssessmentToolWorkflows();
+            if(assessmentToolWorkflows == null || !assessmentToolWorkflows.Any())
             {
-                _logger.LogError(e.Message);
-                return new AssessmentInterventionDto();
+                throw new NotFoundException($"No Assessment tool workflows found");
             }
+            var dto = new AssessmentInterventionDto
+            {
+                AssessmentInterventionCommand = command,
+                TargetWorkflowDefinitions =
+                    _mapper.TargetWorkflowDefinitionsFromAssessmentToolWorkflows(assessmentToolWorkflows)
+            };
+            return dto;
         }
     }
 }

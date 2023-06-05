@@ -12,6 +12,7 @@ using He.PipelineAssessment.UI.Features.Intervention.InterventionManagement.Edit
 using He.PipelineAssessment.UI.Features.Intervention.InterventionManagement;
 using AutoMapper;
 using static Microsoft.EntityFrameworkCore.DbLoggerCategory.Database;
+using He.PipelineAssessment.UI.Common.Exceptions;
 
 namespace He.PipelineAssessment.UI.Tests.Features.Intervention.InterventionManagement.EditOverride
 {
@@ -19,28 +20,28 @@ namespace He.PipelineAssessment.UI.Tests.Features.Intervention.InterventionManag
     {
         [Theory]
         [AutoMoqData]
-        public async Task Handle_ReturnsEmptyDto_GivenRepoThrowsError(
+        public async Task HandleThrowsError_GivenRepoReturnsNullResponse(
                      [Frozen] Mock<IAssessmentRepository> assessmentRepository,
                      EditOverrideRequest request,
-                     Exception exception,
+                     AssessmentIntervention? intervention,
                      EditOverrideRequestHandler sut
                  )
         {
             //Arrange
-            var emptyDto = new AssessmentInterventionDto();
+            intervention = null;
 
-            assessmentRepository.Setup(x => x.GetAssessmentIntervention(request.InterventionId)).Throws(exception);
+            assessmentRepository.Setup(x => x.GetAssessmentIntervention(request.InterventionId)).ReturnsAsync(intervention);
 
             //Act
-            var result = await sut.Handle(request, CancellationToken.None);
+            var ex = await Assert.ThrowsAsync<NotFoundException>(() => sut.Handle(request, CancellationToken.None));
 
             //Assert
-            Assert.Equal(emptyDto.ToString(), result.ToString());
+            Assert.Equal(($"Assessment Intervention with Id {request.InterventionId} not found"), ex.Message);
         }
 
         [Theory]
         [AutoMoqData]
-        public async Task Handle_ReturnsEmptyDto_GivenAdminRepoThrowsError(
+        public async Task Handle_ThrowsException_GivenAdminRepoReturnsEmptyList(
           [Frozen] Mock<IAssessmentRepository> assessmentRepository,
           [Frozen] Mock<IAdminAssessmentToolWorkflowRepository> adminRepository,
           [Frozen] Mock<IAssessmentInterventionMapper> mapper,
@@ -53,40 +54,17 @@ namespace He.PipelineAssessment.UI.Tests.Features.Intervention.InterventionManag
         {
             //Arrange
             var emptyDto = new AssessmentInterventionDto();
+            var emptyListOfWorkflows = new List<AssessmentToolWorkflow>();
 
             assessmentRepository.Setup(x => x.GetAssessmentIntervention(request.InterventionId)).ReturnsAsync(intervention);
             mapper.Setup(x => x.AssessmentInterventionCommandFromAssessmentIntervention(intervention)).Returns(command);
-            adminRepository.Setup(x => x.GetAssessmentToolWorkflows()).Throws(exception);
+            adminRepository.Setup(x => x.GetAssessmentToolWorkflows()).ReturnsAsync(emptyListOfWorkflows);
 
             //Act
-            var result = await sut.Handle(request, CancellationToken.None);
+            var ex = await Assert.ThrowsAsync<NotFoundException>(() => sut.Handle(request, CancellationToken.None));
 
             //Assert
-            Assert.Equal(emptyDto.ToString(), result.ToString());
-        }
-
-        [Theory]
-        [AutoMoqData]
-        public async Task Handle_ReturnsEmptyDto_GivenMapperThrowsError(
-          [Frozen] Mock<IAssessmentRepository> assessmentRepository,
-          [Frozen] Mock<IAssessmentInterventionMapper> mapper,
-          AssessmentIntervention intervention,
-          EditOverrideRequest request,
-          Exception exception,
-          EditOverrideRequestHandler sut
-    )
-        {
-            //Arrange
-            var emptyDto = new AssessmentInterventionDto();
-
-            assessmentRepository.Setup(x => x.GetAssessmentIntervention(request.InterventionId)).ReturnsAsync(intervention);
-            mapper.Setup(x => x.AssessmentInterventionCommandFromAssessmentIntervention(intervention)).Throws(exception);
-
-            //Act
-            var result = await sut.Handle(request, CancellationToken.None);
-
-            //Assert
-            Assert.Equal(emptyDto.ToString(), result.ToString());
+            Assert.Equal(($"No Assessment tool workflows found"), ex.Message);
         }
 
         [Theory]
