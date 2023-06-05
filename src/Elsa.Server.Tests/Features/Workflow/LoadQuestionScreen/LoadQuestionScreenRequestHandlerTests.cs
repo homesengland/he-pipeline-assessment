@@ -429,7 +429,7 @@ public class LoadQuestionScreenRequestHandlerTests
     [Theory]
     [AutoMoqData]
     public async Task
-        Handle_ReturnMultiQuestionActivityDataWithPotScoreChoiceOptionsCorrectlySelected_GivenActivityIsQuestionScreenPrepopulatedIsSelectedAndNoErrorsEncountered(
+        Handle_ReturnMultiQuestionActivityDataWithPotScoreChoiceOptionsCorrectlySelected_GivenActivityIsQuestionScreenPrepopulatedIsSelectedAndNoDatabaseAnswerExistsAndNoErrorsEncountered(
             [Frozen] Mock<IWorkflowInstanceStore> workflowInstanceStore,
             [Frozen] Mock<IElsaCustomRepository> elsaCustomRepository,
             LoadQuestionScreenRequest loadWorkflowActivityRequest,
@@ -446,12 +446,17 @@ public class LoadQuestionScreenRequestHandlerTests
         {
             var questionId = assessmentQuestions[i].QuestionId;
             elsaAssessmentQuestions.Questions[i].Id = questionId!;
+            elsaAssessmentQuestions.Questions[i].PotScoreRadio.Choices = new List<PotScoreRadioRecord>()
+        {
+            new PotScoreRadioRecord("A", "Answer A","High", true),
+            new PotScoreRadioRecord("B", "Answer B","Medium", false),
+        };
         }
 
         assessmentQuestions[0].Choices = new List<QuestionChoice>()
         {
-            new QuestionChoice { Id = 1, Answer = "Choice1", IsPrePopulated = true },
-            new QuestionChoice { Id = 2, Answer = "Choice2", IsPrePopulated = false }
+            new QuestionChoice { Id = 1, Answer = "Choice1", IsPrePopulated = false, Identifier = "A"},
+            new QuestionChoice { Id = 2, Answer = "Choice2", IsPrePopulated = false, Identifier = "B" }
         };
 
         elsaAssessmentQuestions.Questions[0].QuestionType = QuestionTypeConstants.PotScoreRadioQuestion;
@@ -486,6 +491,70 @@ public class LoadQuestionScreenRequestHandlerTests
     [Theory]
     [AutoMoqData]
     public async Task
+        Handle_ReturnMultiQuestionActivityDataWithPotScoreChoiceOptionsCorrectlySelected_GivenActivityIsQuestionScreenPrepopulatedIsSelectedDatabaseAnswerExistsAndReevaluatePrepoluatedSelectedAndNoErrorsEncountered(
+            [Frozen] Mock<IWorkflowInstanceStore> workflowInstanceStore,
+            [Frozen] Mock<IElsaCustomRepository> elsaCustomRepository,
+            LoadQuestionScreenRequest loadWorkflowActivityRequest,
+            WorkflowInstance workflowInstance,
+            CustomActivityNavigation customActivityNavigation,
+            List<Question> assessmentQuestions,
+            AssessmentQuestions elsaAssessmentQuestions,
+            LoadQuestionScreenRequestHandler sut)
+    {
+        //Arrange
+        customActivityNavigation.ActivityType = ActivityTypeConstants.QuestionScreen;
+        assessmentQuestions[0].Answers = new List<Answer>(){
+            new() { AnswerText = "", Choice = new QuestionChoice { Id = 1, Identifier = "A" } } }; ;
+        for (var i = 0; i < assessmentQuestions.Count; i++)
+        {
+            var questionId = assessmentQuestions[i].QuestionId;
+            elsaAssessmentQuestions.Questions[i].Id = questionId!;
+            elsaAssessmentQuestions.Questions[i].ReevaluatePrePopulatedAnswers= true;
+            elsaAssessmentQuestions.Questions[i].PotScoreRadio.Choices = new List<PotScoreRadioRecord>()
+        {
+            new PotScoreRadioRecord("A", "Answer A","High", false),
+            new PotScoreRadioRecord("B", "Answer B","Medium", true),
+        };
+        }
+
+        assessmentQuestions[0].Choices = new List<QuestionChoice>()
+        {
+            new QuestionChoice { Id = 1, Answer = "Choice1", IsPrePopulated = false, Identifier = "A"},
+            new QuestionChoice { Id = 2, Answer = "Choice2", IsPrePopulated = false, Identifier = "B" }
+        };
+
+        elsaAssessmentQuestions.Questions[0].QuestionType = QuestionTypeConstants.PotScoreRadioQuestion;
+
+        workflowInstanceStore.Setup(x =>
+                x.FindAsync(It.IsAny<WorkflowInstanceIdSpecification>(), CancellationToken.None))
+            .ReturnsAsync(workflowInstance);
+
+        elsaCustomRepository.Setup(x => x.GetCustomActivityNavigation(loadWorkflowActivityRequest.ActivityId,
+                loadWorkflowActivityRequest.WorkflowInstanceId, CancellationToken.None))
+            .ReturnsAsync(customActivityNavigation);
+
+        elsaCustomRepository.Setup(x => x.GetActivityQuestions(loadWorkflowActivityRequest.ActivityId,
+                loadWorkflowActivityRequest.WorkflowInstanceId, CancellationToken.None))
+            .ReturnsAsync(assessmentQuestions);
+
+        var assessmentQuestionsDictionary = new Dictionary<string, object?>();
+        assessmentQuestionsDictionary.Add("Questions", elsaAssessmentQuestions);
+
+        workflowInstance.ActivityData.Add(loadWorkflowActivityRequest.ActivityId, assessmentQuestionsDictionary);
+
+        //Act
+        var result = await sut.Handle(loadWorkflowActivityRequest, CancellationToken.None);
+
+        //Assert
+        Assert.NotNull(result.Data!.Questions);
+        Assert.Equal(assessmentQuestions.Count(), result.Data!.Questions.Count());
+        Assert.Empty(result.ErrorMessages);
+        Assert.Equal(2, result.Data.Questions[0].Radio.SelectedAnswer);
+    }
+
+    [Theory]
+    [AutoMoqData]
+    public async Task
         Handle_ReturnMultiQuestionActivityDataWithRadioChoiceOptionsCorrectlySelected_GivenActivityIsQuestionScreenPrepopulatedIsSelectedAndNoErrorsEncountered(
             [Frozen] Mock<IWorkflowInstanceStore> workflowInstanceStore,
             [Frozen] Mock<IElsaCustomRepository> elsaCustomRepository,
@@ -503,12 +572,17 @@ public class LoadQuestionScreenRequestHandlerTests
         {
             var questionId = assessmentQuestions[i].QuestionId;
             elsaAssessmentQuestions.Questions[i].Id = questionId!;
+            elsaAssessmentQuestions.Questions[i].Radio.Choices = new List<RadioRecord>()
+        {
+            new RadioRecord("A", "Answer A", true),
+            new RadioRecord("B", "Answer B",false),
+        };
         }
 
         assessmentQuestions[0].Choices = new List<QuestionChoice>()
         {
-            new QuestionChoice { Id = 1, Answer = "Choice1", IsPrePopulated = true },
-            new QuestionChoice { Id = 2, Answer = "Choice2", IsPrePopulated = false }
+            new QuestionChoice { Id = 1, Answer = "Choice1", IsPrePopulated = false , Identifier="A"},
+            new QuestionChoice { Id = 2, Answer = "Choice2", IsPrePopulated = false , Identifier="B"}
         };
 
         elsaAssessmentQuestions.Questions[0].QuestionType = QuestionTypeConstants.RadioQuestion;
@@ -562,12 +636,17 @@ public class LoadQuestionScreenRequestHandlerTests
             var questionId = assessmentQuestions[i].QuestionId;
             elsaAssessmentQuestions.Questions[i].Id = questionId!;
             elsaAssessmentQuestions.Questions[i].ReevaluatePrePopulatedAnswers= true;
+            elsaAssessmentQuestions.Questions[i].Radio.Choices = new List<RadioRecord>()
+        {
+            new RadioRecord("A", "Answer A", false),
+            new RadioRecord("B", "Answer B",true),
+        };
         }
 
         assessmentQuestions[0].Choices = new List<QuestionChoice>()
         {
-            new QuestionChoice { Id = 1, Answer = "Choice1", IsPrePopulated = false },
-            new QuestionChoice { Id = 2, Answer = "Choice2", IsPrePopulated = true }
+            new QuestionChoice { Id = 1, Answer = "Choice1", IsPrePopulated = false , Identifier = "A"},
+            new QuestionChoice { Id = 2, Answer = "Choice2", IsPrePopulated = false, Identifier = "B" }
         };
 
         elsaAssessmentQuestions.Questions[0].QuestionType = QuestionTypeConstants.RadioQuestion;
@@ -619,13 +698,19 @@ public class LoadQuestionScreenRequestHandlerTests
         {
             var questionId = assessmentQuestions[i].QuestionId;
             elsaAssessmentQuestions.Questions[i].Id = questionId!;
+            elsaAssessmentQuestions.Questions[i].Checkbox.Choices = new List<CheckboxRecord>()
+        {
+            new CheckboxRecord("A", "Answer A", false,true),
+            new CheckboxRecord("B", "Answer B",false,true),
+            new CheckboxRecord("C", "Answer C",false,false),
+        };
         }
 
         assessmentQuestions[0].Choices = new List<QuestionChoice>()
         {
-            new QuestionChoice { Id = 1, Answer = "Choice1", IsPrePopulated = true },
-            new QuestionChoice { Id = 2, Answer = "Choice2", IsPrePopulated = true },
-            new QuestionChoice { Id = 3, Answer = "Choice3", IsPrePopulated = false }
+            new QuestionChoice { Id = 1, Answer = "Choice1", IsPrePopulated = false , Identifier= "A"},
+            new QuestionChoice { Id = 2, Answer = "Choice2", IsPrePopulated = false , Identifier="B"},
+            new QuestionChoice { Id = 3, Answer = "Choice3", IsPrePopulated = false , Identifier="C"}
         };
 
         elsaAssessmentQuestions.Questions[0].QuestionType = QuestionTypeConstants.CheckboxQuestion;
@@ -681,13 +766,19 @@ public class LoadQuestionScreenRequestHandlerTests
             var questionId = assessmentQuestions[i].QuestionId;
             elsaAssessmentQuestions.Questions[i].Id = questionId!;
             elsaAssessmentQuestions.Questions[i].ReevaluatePrePopulatedAnswers = true;
+            elsaAssessmentQuestions.Questions[i].Checkbox.Choices = new List<CheckboxRecord>()
+        {
+            new CheckboxRecord("A", "Answer A", false,true),
+            new CheckboxRecord("B", "Answer B",false,true),
+            new CheckboxRecord("C", "Answer C",false,false),
+        };
         }
 
         assessmentQuestions[0].Choices = new List<QuestionChoice>()
         {
-            new QuestionChoice { Id = 1, Answer = "Choice1", IsPrePopulated = true },
-            new QuestionChoice { Id = 2, Answer = "Choice2", IsPrePopulated = true },
-            new QuestionChoice { Id = 3, Answer = "Choice3", IsPrePopulated = false }
+            new QuestionChoice { Id = 1, Answer = "Choice1", IsPrePopulated = false, Identifier="A" },
+            new QuestionChoice { Id = 2, Answer = "Choice2", IsPrePopulated = false, Identifier="B" },
+            new QuestionChoice { Id = 3, Answer = "Choice3", IsPrePopulated = false, Identifier="C" }
         };
 
         elsaAssessmentQuestions.Questions[0].QuestionType = QuestionTypeConstants.CheckboxQuestion;
