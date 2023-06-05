@@ -11,7 +11,8 @@ namespace He.PipelineAssessment.UI.Features.Intervention.InterventionManagement
         List<TargetWorkflowDefinition> TargetWorkflowDefinitionsFromAssessmentToolWorkflows(
             List<AssessmentToolWorkflow> assessmentToolWorkflows);
 
-        AssessmentInterventionDto AssessmentInterventionDtoFromWorkflowInstance(AssessmentToolWorkflowInstance instance, string userName, string userEmail);
+        AssessmentInterventionDto AssessmentInterventionDtoFromWorkflowInstance(AssessmentToolWorkflowInstance instance,
+            string userName, string userEmail, string rollback);
     }
 
     public class AssessmentInterventionMapper : IAssessmentInterventionMapper
@@ -112,7 +113,8 @@ namespace He.PipelineAssessment.UI.Features.Intervention.InterventionManagement
             }
         }
 
-        public AssessmentInterventionDto AssessmentInterventionDtoFromWorkflowInstance(AssessmentToolWorkflowInstance instance, string userName, string email)
+        public AssessmentInterventionDto AssessmentInterventionDtoFromWorkflowInstance(
+            AssessmentToolWorkflowInstance instance, string userName, string email, string decisionType)
         {
             try
             {
@@ -128,7 +130,7 @@ namespace He.PipelineAssessment.UI.Features.Intervention.InterventionManagement
                         RequestedByEmail = email,
                         Administrator = userName,
                         AdministratorEmail = email,
-                        DecisionType = InterventionDecisionTypes.Override,
+                        DecisionType = decisionType,
                         Status = InterventionStatus.NotSubmitted,
                         ProjectReference = instance.Assessment.Reference
                     }
