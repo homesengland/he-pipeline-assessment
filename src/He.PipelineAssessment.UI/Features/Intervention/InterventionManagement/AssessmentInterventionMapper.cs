@@ -112,7 +112,7 @@ namespace He.PipelineAssessment.UI.Features.Intervention.InterventionManagement
             }
         }
 
-        public AssessmentInterventionDto DtoFromWorkflowInstance(AssessmentToolWorkflowInstance instance, string userName, string email)
+        public AssessmentInterventionDto AssessmentInterventionDtoFromWorkflowInstance(AssessmentToolWorkflowInstance instance, string userName, string email)
         {
             try
             {

@@ -10,6 +10,7 @@ using He.PipelineAssessment.UI.Features.Intervention.InterventionManagement.Crea
 using He.PipelineAssessment.Models;
 using He.PipelineAssessment.UI.Features.Intervention.InterventionManagement;
 using He.PipelineAssessment.UI.Common.Exceptions;
+using He.PipelineAssessment.Infrastructure;
 
 namespace He.PipelineAssessment.UI.Tests.Features.Intervention.InterventionManagement.CreateOverride
 {
@@ -62,11 +63,13 @@ namespace He.PipelineAssessment.UI.Tests.Features.Intervention.InterventionManag
 
         [Theory]
         [AutoMoqData]
-        public async Task Handle_ReturnsEmptyDto_GivenMapperThrowsError(
+        public async Task Handle_DoesNotHandleError_GivenMapperThrowsError(
           [Frozen] Mock<IAssessmentRepository> assessmentRepository,
           [Frozen] Mock<IAdminAssessmentToolWorkflowRepository> adminRepository,
           [Frozen] Mock<IAssessmentInterventionMapper> mapper,
           AssessmentToolWorkflowInstance workflowInstance,
+          string userName,
+          string email,
           CreateOverrideRequest request,
           List<AssessmentToolWorkflow> workflows,
           ArgumentException exception,
@@ -79,11 +82,12 @@ namespace He.PipelineAssessment.UI.Tests.Features.Intervention.InterventionManag
             assessmentRepository.Setup(x => x.GetAssessmentToolWorkflowInstance(request.WorkflowInstanceId)).ReturnsAsync(workflowInstance);
             adminRepository.Setup(x => x.GetAssessmentToolWorkflows()).ReturnsAsync(workflows);
             mapper.Setup(x => x.TargetWorkflowDefinitionsFromAssessmentToolWorkflows(workflows)).Throws(exception);
+            mapper.Setup(x => x.AssessmentInterventionDtoFromWorkflowInstance(workflowInstance, userName, email)).Throws(exception);
 
             var ex = await Assert.ThrowsAsync<ArgumentException>(() => sut.Handle(request, CancellationToken.None));
 
             //Assert
-            Assert.Equal(($"No Assessment tool workflows found"), ex.Message);
+            Assert.Equal(exception.Message, ex.Message);
         }
 
         [Theory]
@@ -92,30 +96,29 @@ namespace He.PipelineAssessment.UI.Tests.Features.Intervention.InterventionManag
           [Frozen] Mock<IAssessmentRepository> assessmentRepository,
           [Frozen] Mock<IAdminAssessmentToolWorkflowRepository> adminRepository,
           [Frozen] Mock<IAssessmentInterventionMapper> mapper,
+          [Frozen] Mock<IUserProvider> userProvider,
           AssessmentToolWorkflowInstance workflowInstance,
-          string userName,
-          string email,
           CreateOverrideRequest request,
           List<AssessmentToolWorkflow> workflows,
           List<TargetWorkflowDefinition> targetDefinitions,
           AssessmentInterventionDto dto,
-          Exception exception,
-          CreateOverrideRequestHandler sut
-)
+          CreateOverrideRequestHandler sut)
         {
             //Arrange
             dto.TargetWorkflowDefinitions = targetDefinitions;
-
+            userProvider.Setup(x => x.GetUserName()).Returns(dto.AssessmentInterventionCommand.RequestedBy);
+            userProvider.Setup(x => x.GetUserEmail()).Returns(dto.AssessmentInterventionCommand.RequestedByEmail);
             assessmentRepository.Setup(x => x.GetAssessmentToolWorkflowInstance(request.WorkflowInstanceId)).ReturnsAsync(workflowInstance);
             adminRepository.Setup(x => x.GetAssessmentToolWorkflows()).ReturnsAsync(workflows);
-            mapper.Setup(x => x.TargetWorkflowDefinitionsFromAssessmentToolWorkflows(workflows)).Throws(exception);
-            mapper.Setup(x => x.AssessmentInterventionDtoFromWorkflowInstance(workflowInstance, userName, email)).Returns(dto);
-
+            mapper.Setup(x => x.TargetWorkflowDefinitionsFromAssessmentToolWorkflows(workflows)).Returns(targetDefinitions);
+            mapper.Setup(x => x.AssessmentInterventionDtoFromWorkflowInstance(workflowInstance, 
+                dto.AssessmentInterventionCommand.RequestedBy, 
+                dto.AssessmentInterventionCommand.RequestedByEmail)).Returns(dto);
             //Act
-            var result = await sut.Handle(request, CancellationToken.None);
+            AssessmentInterventionDto result = await sut.Handle(request, CancellationToken.None);
 
             //Assert
-            Assert.Equal(dto.ToString(), result.ToString());
+            Assert.Equal(dto, result);
         }
     }
 }
