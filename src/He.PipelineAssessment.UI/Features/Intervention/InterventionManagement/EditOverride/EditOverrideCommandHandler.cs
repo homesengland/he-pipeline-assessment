@@ -7,12 +7,10 @@ namespace He.PipelineAssessment.UI.Features.Intervention.InterventionManagement.
     public class EditOverrideCommandHandler : IRequestHandler<EditOverrideCommand, int>
     {
         private readonly IAssessmentRepository _assessmentRepository;
-        private readonly ILogger<EditOverrideCommandHandler> _logger;
 
-        public EditOverrideCommandHandler(IAssessmentRepository assessmentRepository, ILogger<EditOverrideCommandHandler> logger)
+        public EditOverrideCommandHandler(IAssessmentRepository assessmentRepository)
         {
             _assessmentRepository = assessmentRepository;
-            _logger = logger;
         }
 
         public async Task<int> Handle(EditOverrideCommand command, CancellationToken cancellationToken)
