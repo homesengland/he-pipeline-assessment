@@ -1,6 +1,11 @@
 ﻿using FluentValidation;
+using He.PipelineAssessment.Models;
+using He.PipelineAssessment.UI.Features.Intervention.InterventionManagement.ConfirmRollback;
 using He.PipelineAssessment.UI.Features.Intervention.InterventionManagement.CreateRollback;
+using He.PipelineAssessment.UI.Features.Intervention.InterventionManagement.EditOverride;
+using He.PipelineAssessment.UI.Features.Intervention.InterventionManagement.EditRollbackAssessor;
 using He.PipelineAssessment.UI.Features.Intervention.InterventionManagement.LoadOverrideCheckYourAnswers;
+using He.PipelineAssessment.UI.Features.Intervention.InterventionManagement.LoadRollbackCheckYourAnswersAssessor;
 using He.PipelineAssessment.UI.Features.Intervention.InterventionManagement.SubmitOverride;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
@@ -47,7 +52,7 @@ namespace He.PipelineAssessment.UI.Features.Intervention.InterventionManagement
                         {
                             return RedirectToAction("Index", "Error", new { message = "There has been an error whilst attempting to save this request.  Please try again." });
                         }
-                        return RedirectToAction("CheckYourDetails", new { interventionId });
+                        return RedirectToAction("CheckYourDetailsAssessor", new { interventionId });
                     }
                     else
                     {
@@ -132,19 +137,83 @@ namespace He.PipelineAssessment.UI.Features.Intervention.InterventionManagement
             //}
         }
 
-
         [HttpGet]
-        public async Task<IActionResult> CheckYourDetails(int interventionId)
+        public async Task<IActionResult> EditRollbackAssessor(int interventionId)
         {
-            throw new NotImplementedException();
             try
             {
-                SubmitOverrideCommand model = await _mediator.Send(new LoadOverrideCheckYourAnswersRequest() { InterventionId = interventionId });
+                AssessmentInterventionDto dto = await _mediator.Send(new EditRollbackAssessorRequest() { InterventionId = interventionId });
+                if (dto.AssessmentInterventionCommand.Status == InterventionStatus.Pending)
+                {
+                    return View("~/Features/Intervention/Views/EditRollbackAssessor.cshtml", dto);
+                }
+                else
+                {
+                    return RedirectToAction("CheckYourDetailsAssessor", new { interventionId });
+                }
+            }
+            catch (Exception e)
+            {
+                _logger.LogError(e.Message);
+                return RedirectToAction("Index", "Error", new { message = e.Message });
+            }
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> EditRollbackAssessor([FromForm] AssessmentInterventionDto dto)
+        {
+            try
+            {
+                var serializedCommand = JsonConvert.SerializeObject(dto.AssessmentInterventionCommand);
+                var editRollbackAssessorCommand = JsonConvert.DeserializeObject<EditRollbackAssessorCommand>(serializedCommand);
+                if (editRollbackAssessorCommand != null)
+                {
+                    var validationResult = await _validator.ValidateAsync(editRollbackAssessorCommand);
+                    if (validationResult.IsValid)
+                    {
+
+                        var interventionId = await _mediator.Send(editRollbackAssessorCommand);
+                        if (interventionId > 0)
+                        {
+                            return RedirectToAction("CheckYourDetailsAssessor", new { interventionId });
+                        }
+                        else
+                        {
+                            return View("~/Features/Intervention/Views/EditRollbackAssessor.cshtml", dto);
+                        }
+
+                    }
+                    else
+                    {
+                        dto.ValidationResult = validationResult;
+                        return View("~/Features/Intervention/Views/EditRollbackAssessor.cshtml", dto);
+                    }
+                }
+                else
+                {
+                    return View("~/Features/Intervention/Views/EditRollbackAssessor.cshtml", dto);
+                }
+
+            }
+            catch (Exception e)
+            {
+                _logger.LogError(e.Message);
+                return RedirectToAction("Index", "Error", new { message = e.Message });
+            }
+        }
+
+
+        [HttpGet]
+        public async Task<IActionResult> CheckYourDetailsAssessor(int interventionId)
+        {
+            try
+            {
+                ConfirmRollbackCommand model = await _mediator.Send(new LoadRollbackCheckYourAnswersAssessorRequest() { InterventionId = interventionId });
                 if(model == null)
                 {
-                    return RedirectToAction("EditOverride", new { interventionId });
+                    return RedirectToAction("EditRollbackAssessor", new { interventionId });
                 }
-                return View("~/Features/Intervention/Views/OverrideCheckYourDetails.cshtml", model);
+                return View("~/Features/Intervention/Views/RollbackCheckYourDetailsAssessor.cshtml", model);
             }
             catch (Exception e)
             {
@@ -155,6 +224,35 @@ namespace He.PipelineAssessment.UI.Features.Intervention.InterventionManagement
 
         [HttpPost]
         public async Task<IActionResult> SubmitRollback(SubmitOverrideCommand model, string submitButton)
+        {
+            throw new NotImplementedException();
+            //try
+            //{
+            //    switch (submitButton)
+            //    {
+            //        case "Submit":
+            //            model.Status = InterventionStatus.Approved;
+            //            break;
+            //        case "Reject":
+            //            model.Status = InterventionStatus.Rejected;
+            //            break;
+            //        default:
+            //            model.Status = InterventionStatus.NotSubmitted;
+            //            break;
+            //    }
+            //    var result = await _mediator.Send(model);
+            //    //redirect to some other view, which lists all interventions
+            //    return RedirectToAction("CheckYourDetails", new { InterventionId = model.AssessmentInterventionId });
+            //}
+            //catch (Exception e)
+            //{
+            //    _logger.LogError(e.Message);
+            //    return RedirectToAction("Index", "Error", new { message = e.Message });
+            //}
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> ConfirmRollback(ConfirmRollbackCommand model, string submitButton)
         {
             throw new NotImplementedException();
             //try

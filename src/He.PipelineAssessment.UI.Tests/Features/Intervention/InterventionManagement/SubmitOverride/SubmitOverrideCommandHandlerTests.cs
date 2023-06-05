@@ -3,6 +3,7 @@ using He.PipelineAssessment.Infrastructure.Repository;
 using He.PipelineAssessment.Models;
 using He.PipelineAssessment.Tests.Common;
 using He.PipelineAssessment.UI.Common.Exceptions;
+using He.PipelineAssessment.UI.Features.Intervention.InterventionManagement.ConfirmRollback;
 using He.PipelineAssessment.UI.Features.Intervention.InterventionManagement.SubmitOverride;
 using MediatR;
 using Moq;
@@ -18,7 +19,7 @@ namespace He.PipelineAssessment.UI.Tests.Features.Intervention.InterventionManag
             [Frozen] Mock<IAssessmentRepository> repo,
             SubmitOverrideCommand command,
             Exception exception,
-            SubmitOverrideCommandHandler sut
+            ConfirmRollbackCommandHandler sut
         )
         {
             //Arrange
@@ -36,7 +37,7 @@ namespace He.PipelineAssessment.UI.Tests.Features.Intervention.InterventionManag
         public async Task Handle_Throws_GivenAssessmentInterventionNotFound(
             [Frozen] Mock<IAssessmentRepository> repo,
             SubmitOverrideCommand command,
-            SubmitOverrideCommandHandler sut
+            ConfirmRollbackCommandHandler sut
         )
         {
             //Arrange
@@ -58,7 +59,7 @@ namespace He.PipelineAssessment.UI.Tests.Features.Intervention.InterventionManag
             [Frozen] Mock<IAssessmentRepository> repo,
             SubmitOverrideCommand command,
             AssessmentIntervention intervention,
-            SubmitOverrideCommandHandler sut
+            ConfirmRollbackCommandHandler sut
         )
         {
             //Arrange
@@ -80,7 +81,7 @@ namespace He.PipelineAssessment.UI.Tests.Features.Intervention.InterventionManag
             SubmitOverrideCommand command,
             AssessmentIntervention intervention,
             List<AssessmentToolWorkflowInstance> allWorkflowInstances,
-            SubmitOverrideCommandHandler sut
+            ConfirmRollbackCommandHandler sut
         )
         {
             //Arrange
@@ -110,7 +111,7 @@ namespace He.PipelineAssessment.UI.Tests.Features.Intervention.InterventionManag
             AssessmentIntervention intervention,
             List<AssessmentToolWorkflowInstance> allWorkflowInstances,
             AssessmentToolInstanceNextWorkflow nextWorkflow,
-            SubmitOverrideCommandHandler sut
+            ConfirmRollbackCommandHandler sut
         )
         {
             //Arrange
@@ -140,7 +141,7 @@ namespace He.PipelineAssessment.UI.Tests.Features.Intervention.InterventionManag
             AssessmentIntervention intervention,
             List<AssessmentToolWorkflowInstance> allWorkflowInstances,
             List<AssessmentToolWorkflowInstance> previousWorkflowInstances,
-            SubmitOverrideCommandHandler sut
+            ConfirmRollbackCommandHandler sut
         )
         {
             //Arrange

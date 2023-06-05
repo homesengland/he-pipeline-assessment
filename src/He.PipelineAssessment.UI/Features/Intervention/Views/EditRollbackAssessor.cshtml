@@ -16,12 +16,15 @@
         {
             @await Html.PartialAsync("~/Features/Workflow/Views/Shared/_ValidationSummary.cshtml", Model.ValidationResult)
         }
-        using (Html.BeginForm("CreateRollback", "Rollback", FormMethod.Post))
+
+        using (Html.BeginForm("EditRollbackAssessor", "Rollback", FormMethod.Post))
         {
             @Html.AntiForgeryToken()
             <div class="govuk-form-group @errorFormClass">
                 <div class="govuk-!-padding-bottom-6">
-                    @await Html.PartialAsync("_CreateOrEditRollbackAssessor.cshtml", Model)
+                    <div class="govuk-!-padding-bottom-6">
+                        @await Html.PartialAsync("_CreateOrEditRollbackAssessor.cshtml", Model)
+                    </div>
                 </div>
 
                 <input id="Next" type="submit" value="Save and continue" name="Next" class="govuk-button"/>
