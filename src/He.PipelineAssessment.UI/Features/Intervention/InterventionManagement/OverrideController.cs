@@ -28,6 +28,11 @@ namespace He.PipelineAssessment.UI.Features.Intervention.InterventionManagement
         public async Task<IActionResult> Override(string workflowInstanceId)
         {
             var dto = await _mediator.Send(new CreateOverrideRequest { WorkflowInstanceId = workflowInstanceId });
+            if(dto == null)
+            {
+                _logger.LogError(string.Format("Unable to Open Create Override View for WorkflowInstanceId: {0}", workflowInstanceId));
+                return RedirectToAction("Index", "Error", new { message = "There has been an error whilst attempting to create this request.  Please try again." });
+            }
             return View("~/Features/Intervention/Views/Override.cshtml", dto);
         }
 
