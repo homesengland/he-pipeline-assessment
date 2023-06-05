@@ -87,7 +87,7 @@
                                     <div class="govuk-input__wrapper">
                                         @if (!String.IsNullOrEmpty(disableInput))
                                         {
-                                            <input type="hidden" name="@itemName" value="@Model.DataTable[q].Inputs[i].Input" />
+                                            <input type="hidden" name="@itemName" value="@Model.DataTable[q].Inputs[i].Input" data-summary="true" />
                                         }
                                         @if (Model.DataTable[q].InputType == DataTableInputTypeConstants.CurrencyDataTableInput)
                                         {
