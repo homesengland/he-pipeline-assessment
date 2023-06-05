@@ -1,8 +1,6 @@
-﻿using AutoFixture.Xunit2;
-using He.PipelineAssessment.Models;
+﻿using He.PipelineAssessment.Models;
 using He.PipelineAssessment.Tests.Common;
-using He.PipelineAssessment.UI.Features.Intervention.InterventionManagement.CreateOverride;
-using Moq;
+using He.PipelineAssessment.UI.Features.Intervention.InterventionManagement;
 using Xunit;
 
 namespace He.PipelineAssessment.UI.Tests.Features.Intervention
@@ -11,54 +9,110 @@ namespace He.PipelineAssessment.UI.Tests.Features.Intervention
     {
         [Theory]
         [AutoMoqData]
-        public void CreateOverrideCommandToAssessmentIntervention_ReturnsCorrectAssessmentInterventionObject(
-            CreateOverrideCommand createOverrideCommand,
-            CreateOverrideMapper sut
+        public void AssessmentInterventionCommandFromAssessmentIntervention_ReturnsCorrectAssessmentInterventionCommandObject(
+            AssessmentIntervention assessmentIntervention,
+            AssessmentInterventionMapper sut
         )
         {
             //Arrange
 
             //Act
-            var result = sut.CreateOverrideCommandToAssessmentIntervention(createOverrideCommand);
+            var result = sut.AssessmentInterventionCommandFromAssessmentIntervention(assessmentIntervention);
 
             //Assert
-            Assert.Equal(date, result.CreatedDateTime);
-            Assert.Equal(createOverrideCommand.Administrator, result.Administrator);
-            Assert.Equal(createOverrideCommand.AdministratorRationale, result.AdministratorRationale);
-            Assert.Equal(createOverrideCommand.AdministratorEmail, result.AdministratorEmail);
-            Assert.Equal(createOverrideCommand.AssessmentToolWorkflowInstanceId, result.AssessmentToolWorkflowInstanceId);
-            Assert.Equal(createOverrideCommand.AssessorRationale, result.AssessorRationale);
-            Assert.Equal(createOverrideCommand.RequestedBy, result.CreatedBy);
-            Assert.Equal(date, result.DateSubmitted);
-            Assert.Equal(createOverrideCommand.DecisionType, result.DecisionType);
-            Assert.Equal(createOverrideCommand.RequestedBy, result.LastModifiedBy);
-            Assert.Equal(createOverrideCommand.RequestedByEmail, result.RequestedByEmail);
-            Assert.Equal(createOverrideCommand.SignOffDocument, result.SignOffDocument);
-            Assert.Equal(InterventionStatus.NotSubmitted, result.Status);
-            Assert.Equal(createOverrideCommand.AssessmentResult, result.AssessmentResult);
+            Assert.IsType<AssessmentInterventionCommand>(result);
+            Assert.Equal(assessmentIntervention.Id, result.AssessmentInterventionId);
+            Assert.Equal(assessmentIntervention.AssessmentToolWorkflowInstanceId, result.AssessmentToolWorkflowInstanceId);
+            Assert.Equal(assessmentIntervention.AssessmentToolWorkflowInstanceId, result.AssessmentToolWorkflowInstanceId);
+            Assert.Equal(assessmentIntervention.AssessmentToolWorkflowInstance.WorkflowInstanceId, result.WorkflowInstanceId);
+            Assert.Equal(assessmentIntervention.AssessmentToolWorkflowInstance.WorkflowName, result.AssessmentName);
+            Assert.Equal(assessmentIntervention.AssessmentResult, result.AssessmentResult);
+            Assert.Equal(assessmentIntervention.AssessmentToolWorkflowInstance.Assessment.Reference, result.ProjectReference);
+            Assert.Equal(assessmentIntervention.RequestedBy, result.RequestedBy);
+            Assert.Equal(assessmentIntervention.RequestedByEmail, result.RequestedByEmail);
+            Assert.Equal(assessmentIntervention.Administrator, result.Administrator);
+            Assert.Equal(assessmentIntervention.AdministratorEmail, result.AdministratorEmail);
+            Assert.Equal(assessmentIntervention.AdministratorRationale, result.AdministratorRationale);
+            Assert.Equal(assessmentIntervention.SignOffDocument, result.SignOffDocument);
+            Assert.Equal(assessmentIntervention.DecisionType, result.DecisionType);
+            Assert.Equal(assessmentIntervention.AssessorRationale, result.AssessorRationale);
+            Assert.Equal(assessmentIntervention.DateSubmitted, result.DateSubmitted);
+            Assert.Equal(assessmentIntervention.Status, result.Status);
+            Assert.Equal(assessmentIntervention.TargetAssessmentToolWorkflowId, result.TargetWorkflowId);
+            Assert.Equal(assessmentIntervention.TargetAssessmentToolWorkflow!.WorkflowDefinitionId, result.TargetWorkflowDefinitionId);
+            Assert.Equal(assessmentIntervention.TargetAssessmentToolWorkflow!.Name, result.TargetWorkflowDefinitionName);
+            Assert.Equal(assessmentIntervention.AssessmentToolWorkflowInstance.Id, result.AssessmentId);
+            Assert.Equal(assessmentIntervention.AssessmentToolWorkflowInstance.Assessment.SpId, result.CorrelationId);
         }
 
         [Theory]
         [AutoMoqData]
-        public void CreateOverrideCommandToAssessmentIntervention_ReturnsCorrectAssessmentInterventionObjectWithDefaultValues(
-            [Frozen] Mock<IDateTimeProvider> dateTimeProvider,
-            CreateOverrideCommand createOverrideCommand,
-            CreateOverrideMapper sut
+        public void AssessmentInterventionCommandFromAssessmentIntervention_DoesNotThrow_GivenTargetAssessmentToolWorkflowNull(
+            AssessmentIntervention assessmentIntervention,
+            AssessmentInterventionMapper sut
         )
         {
             //Arrange
-            var date = new DateTime(2024, 6, 5);
-            dateTimeProvider.Setup(x => x.UtcNow()).Returns(date);
-            createOverrideCommand.RequestedBy = null;
-            createOverrideCommand.RequestedByEmail = null;
+            assessmentIntervention.TargetAssessmentToolWorkflow = null;
 
             //Act
-            var result = sut.CreateOverrideCommandToAssessmentIntervention(createOverrideCommand);
+            var result = sut.AssessmentInterventionCommandFromAssessmentIntervention(assessmentIntervention);
 
             //Assert
-            Assert.Equal(string.Empty, result.CreatedBy);
-            Assert.Equal(string.Empty, result.RequestedBy);
-            Assert.Equal(string.Empty, result.RequestedByEmail);
+            Assert.Null(result.TargetWorkflowDefinitionId);
+            Assert.Null(result.TargetWorkflowDefinitionName);
+        }
+
+        [Theory]
+        [AutoMoqData]
+        public void TargetWorkflowDefinitionsFromAssessmentToolWorkflows_ReturnsCorrectTargetWorkflowDefinitionList(
+            List<AssessmentToolWorkflow> assessmentToolWorkflows,
+            AssessmentInterventionMapper sut
+        )
+        {
+            //Arrange
+
+            //Act
+            var result = sut.TargetWorkflowDefinitionsFromAssessmentToolWorkflows(assessmentToolWorkflows);
+
+            //Assert
+            Assert.Equal(assessmentToolWorkflows.Count, result.Count);
+            for (int i = 0; i < assessmentToolWorkflows.Count; i++)
+            {
+                Assert.Equal(assessmentToolWorkflows[i].Id, result[i].Id);
+                Assert.Equal(assessmentToolWorkflows[i].WorkflowDefinitionId, result[i].WorkflowDefinitionId);
+                Assert.Equal(assessmentToolWorkflows[i].Name, result[i].Name);
+                Assert.Equal($"{assessmentToolWorkflows[i].Name} ({ assessmentToolWorkflows[i].WorkflowDefinitionId})", result[i].DisplayName);
+            }
+        }
+
+        [Theory]
+        [AutoMoqData]
+        public void AssessmentInterventionDtoFromWorkflowInstance_ReturnsCorrectDtoObject(
+            AssessmentToolWorkflowInstance assessmentToolWorkflowInstance,
+            string userName,
+            string email,
+            AssessmentInterventionMapper sut
+        )
+        {
+            //Arrange
+
+            //Act
+            var result = sut.AssessmentInterventionDtoFromWorkflowInstance(assessmentToolWorkflowInstance, userName, email);
+
+            //Assert
+            Assert.IsType<AssessmentInterventionCommand>(result.AssessmentInterventionCommand);
+            Assert.Equal(assessmentToolWorkflowInstance.Id, result.AssessmentInterventionCommand.AssessmentToolWorkflowInstanceId);
+            Assert.Equal(assessmentToolWorkflowInstance.WorkflowInstanceId, result.AssessmentInterventionCommand.WorkflowInstanceId);
+            Assert.Equal(assessmentToolWorkflowInstance.Result, result.AssessmentInterventionCommand.AssessmentResult);
+            Assert.Equal(assessmentToolWorkflowInstance.WorkflowName, result.AssessmentInterventionCommand.AssessmentName);
+            Assert.Equal(userName, result.AssessmentInterventionCommand.RequestedBy);
+            Assert.Equal(email, result.AssessmentInterventionCommand.RequestedByEmail);
+            Assert.Equal(userName, result.AssessmentInterventionCommand.Administrator);
+            Assert.Equal(email, result.AssessmentInterventionCommand.AdministratorEmail);
+            Assert.Equal(InterventionDecisionTypes.Override, result.AssessmentInterventionCommand.DecisionType);
+            Assert.Equal(InterventionStatus.NotSubmitted, result.AssessmentInterventionCommand.Status);
+            Assert.Equal(assessmentToolWorkflowInstance.Assessment.Reference, result.AssessmentInterventionCommand.ProjectReference);
         }
     }
 }

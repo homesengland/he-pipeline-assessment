@@ -33,7 +33,7 @@ namespace He.PipelineAssessment.UI.Features.Intervention.InterventionManagement.
             {
                 AssessmentToolWorkflowInstance? workflowInstance =
                     await _assessmentRepository.GetAssessmentToolWorkflowInstance(request.WorkflowInstanceId);
-                var dto = _mapper.DtoFromWorkflowInstance(workflowInstance!, _userProvider.GetUserName()!, _userProvider.GetUserEmail()!);
+                var dto = _mapper.AssessmentInterventionDtoFromWorkflowInstance(workflowInstance!, _userProvider.GetUserName()!, _userProvider.GetUserEmail()!);
 
                 var assessmentToolWorkflows = await _adminAssessmentToolWorkflowRepository.GetAssessmentToolWorkflows();
                 dto.TargetWorkflowDefinitions =
