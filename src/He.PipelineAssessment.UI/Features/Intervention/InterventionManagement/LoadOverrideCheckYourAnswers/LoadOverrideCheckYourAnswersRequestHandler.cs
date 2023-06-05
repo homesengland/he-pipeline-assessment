@@ -30,12 +30,16 @@ namespace He.PipelineAssessment.UI.Features.Intervention.InterventionManagement.
             {
                 throw new NotFoundException($"Assessment Intervention with Id {request.InterventionId} not found");
             }
-            var command = _mapper.AssessmentInterventionCommandFromAssessmentIntervention(intervention);
+            AssessmentInterventionCommand command = _mapper.AssessmentInterventionCommandFromAssessmentIntervention(intervention);
+            if(command == null)
+            {
+                throw new ArgumentException($"Unable to map AssessmentInterventionCommand from intervention: {JsonConvert.SerializeObject(intervention)} from mapper");
+            }
             var serializedCommand = JsonConvert.SerializeObject(command);
             var submitOverrideCommand = JsonConvert.DeserializeObject<SubmitOverrideCommand>(serializedCommand);
             if(submitOverrideCommand == null)
             {
-                throw new ArgumentException($"Unable to deserialise AssessmentInterventionCommand: {JsonConvert.SerializeObject(command)} from mapper");
+                throw new ArgumentException($"Unable to deserialise SubmitOverrideCommand: {serializedCommand} from serialized AssessmentInterventionCommand");
             }
             return submitOverrideCommand;
         }

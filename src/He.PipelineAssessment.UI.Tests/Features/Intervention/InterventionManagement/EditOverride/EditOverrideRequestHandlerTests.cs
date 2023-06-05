@@ -69,6 +69,30 @@ namespace He.PipelineAssessment.UI.Tests.Features.Intervention.InterventionManag
 
         [Theory]
         [AutoMoqData]
+        public async Task Handle_ThrowsError_GivenMapperReturnsNull(
+              [Frozen] Mock<IAssessmentRepository> assessmentRepository,
+              [Frozen] Mock<IAssessmentInterventionMapper> mapper,
+              AssessmentIntervention intervention,
+              EditOverrideRequest request,
+              ArgumentException exception,
+              EditOverrideRequestHandler sut
+)
+        {
+            //Arrange
+            var emptyDto = new AssessmentInterventionDto();
+
+            assessmentRepository.Setup(x => x.GetAssessmentIntervention(request.InterventionId)).ReturnsAsync(intervention);
+            mapper.Setup(x => x.AssessmentInterventionCommandFromAssessmentIntervention(intervention)).Throws(exception);
+
+            //Act
+            ArgumentException ex = await Assert.ThrowsAsync<ArgumentException>(() => sut.Handle(request, CancellationToken.None));
+
+            //Assert
+            Assert.Equal(exception.Message, ex.Message);
+        }
+
+        [Theory]
+        [AutoMoqData]
         public async Task Handle_DoesNotHandleError_GivenMapperThrowsError(
           [Frozen] Mock<IAssessmentRepository> assessmentRepository,
           [Frozen] Mock<IAssessmentInterventionMapper> mapper,
