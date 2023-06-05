@@ -11,6 +11,7 @@ export class SyntaxNames {
   static readonly ConditionalTextList = 'ConditionalTextList';
   static readonly TextActivity = 'TextActivity';
   static readonly DataDictionary = 'DataDictionary';
+  static readonly DataTable = 'DataTable';
   static Variable: string;
   static Output: string;
 }
@@ -19,6 +20,18 @@ export class QuestionCategories {
   static readonly None = "None";
   static readonly Question = "Question";
   static readonly Scoring = "Scoring";
+}
+
+export class DataTableSyntax {
+  static readonly Readonly = "ReadOnly";
+  static readonly Identifier = "Identifier";
+  static readonly InputType = "InputType";
+  static readonly Input = "Input"
+  static readonly TableHeader = "TableHeader";
+  static readonly InputHeader = "InputHeader"
+  static readonly Title = "Title";
+  static readonly DisplayGroupId = "DisplayGroupId";
+  static readonly SumTotalColumn = "SumTotalColumn";
 }
 
 export class CheckboxOptionsSyntax {
@@ -58,6 +71,7 @@ export class QuestionTypeConstants {
   static readonly DateQuestion = "DateQuestion";
   static readonly TextQuestion = "TextQuestion";
   static readonly TextAreaQuestion = "TextAreaQuestion";
+  static readonly DataTable = "DataTable";
 
   static readonly PotScoreRadioQuestion = "PotScoreRadioQuestion";
   static readonly WeightedRadioQuestion = "WeightedRadioQuestion";
@@ -80,6 +94,7 @@ export class PropertyOutputTypes {
   static readonly Checkbox = "checkbox";
   static readonly CheckboxGroup = "checkboxGroup";
   static readonly Radio = "radio";
+  static readonly TableInput = "tableInput";
   static readonly RadioGroup = "radioGroup";
   static readonly Information = "information";
 }

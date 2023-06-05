@@ -1,7 +1,9 @@
 ﻿using Elsa.CustomWorkflow.Sdk.Models.Workflow;
 using Microsoft.Extensions.Logging;
+using Newtonsoft.Json;
 using System.Text;
 using System.Text.Json;
+using JsonSerializer = System.Text.Json.JsonSerializer;
 
 namespace Elsa.CustomWorkflow.Sdk.HttpClients
 {
@@ -129,8 +131,8 @@ namespace Elsa.CustomWorkflow.Sdk.HttpClients
                     return default;
                 }
             }
-
-            return JsonSerializer.Deserialize<WorkflowActivityDataDto>(data, new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
+            var deserializedResult = JsonSerializer.Deserialize<WorkflowActivityDataDto>(data, new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
+            return deserializedResult;
         }
 
         public async Task<WorkflowActivityDataDto?> LoadCheckYourAnswersScreen(LoadWorkflowActivityDto model)

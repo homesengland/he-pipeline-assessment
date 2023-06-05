@@ -1,4 +1,5 @@
 ﻿using Elsa.CustomInfrastructure.Data.Repository;
+using Esprima.Ast;
 using Newtonsoft.Json;
 
 namespace Elsa.CustomActivities.Providers
@@ -19,5 +20,4 @@ namespace Elsa.CustomActivities.Providers
             return JsonConvert.SerializeObject(potScoreOptions);
         }
     }
-   
 }

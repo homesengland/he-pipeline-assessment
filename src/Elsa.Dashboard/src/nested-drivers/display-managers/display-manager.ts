@@ -14,6 +14,7 @@ import { HeScriptDriver } from "../he-script-driver";
 import { HeSingleLineDriver } from "../he-single-line-driver";
 import { HeSwitchCaseDriver } from "../he-switch-cases-driver";
 import { HeTextActivityDriver } from "../he-text-activity-driver";
+import { HeDataTableDriver } from "../he-data-table-driver";
 import {  Dictionary, NestedProperty } from "../../models/custom-component-models";
 import { ActivityModel, ActivityPropertyDescriptor } from "../../models/elsa-interfaces";
 import { HeQuestionDataDictionaryDriver } from "../he-question-data-dictionary-driver";
@@ -47,6 +48,7 @@ export class DefaultDriversFactory {
     this.drivers["he-question-data-dictionary"] = new HeQuestionDataDictionaryDriver();
     this.drivers["he-weighted-radio"] = new HeWeightedRadioDriver();
     this.drivers["he-weighted-checkbox"] = new HeWeightedCheckboxDriver();
+    this.drivers["he-data-table"] = new HeDataTableDriver();
   }
   drivers: Dictionary<HePropertyDisplayDriver> = {};
 }
