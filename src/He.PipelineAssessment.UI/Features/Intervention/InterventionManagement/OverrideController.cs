@@ -27,13 +27,17 @@ namespace He.PipelineAssessment.UI.Features.Intervention.InterventionManagement
 
         public async Task<IActionResult> Override(string workflowInstanceId)
         {
-            var dto = await _mediator.Send(new CreateOverrideRequest { WorkflowInstanceId = workflowInstanceId });
-            if(dto == null)
+            try
             {
-                _logger.LogError(string.Format("Unable to Open Create Override View for WorkflowInstanceId: {0}", workflowInstanceId));
-                return RedirectToAction("Index", "Error", new { message = "There has been an error whilst attempting to create this request.  Please try again." });
+                AssessmentInterventionDto dto = await _mediator.Send(new CreateOverrideRequest { WorkflowInstanceId = workflowInstanceId });
+                return View("~/Features/Intervention/Views/Override.cshtml", dto);
             }
-            return View("~/Features/Intervention/Views/Override.cshtml", dto);
+            catch (Exception e)
+            {
+                _logger.LogError(e.Message);
+                return RedirectToAction("Index", "Error", new { message = e.Message });
+            }
+
         }
 
         [HttpPost]
@@ -108,7 +112,7 @@ namespace He.PipelineAssessment.UI.Features.Intervention.InterventionManagement
                     {
 
                         var interventionId = await _mediator.Send(editOverrideCommand);
-                        if (interventionId > 0)
+                        if (interventionId < 1)
                         {
                             return RedirectToAction("CheckYourDetails", new { interventionId });
                         }
@@ -144,10 +148,6 @@ namespace He.PipelineAssessment.UI.Features.Intervention.InterventionManagement
             try
             {
                 SubmitOverrideCommand model = await _mediator.Send(new LoadOverrideCheckYourAnswersRequest() { InterventionId = interventionId });
-                if(model == null)
-                {
-                    return RedirectToAction("EditOverride", new { interventionId });
-                }
                 return View("~/Features/Intervention/Views/OverrideCheckYourDetails.cshtml", model);
             }
             catch (Exception e)
