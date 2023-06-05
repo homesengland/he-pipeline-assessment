@@ -223,7 +223,7 @@ namespace He.PipelineAssessment.UI.Features.Intervention.InterventionManagement
         }
 
         [HttpPost]
-        public async Task<IActionResult> SubmitRollback(SubmitOverrideCommand model, string submitButton)
+        public async Task<IActionResult> SubmitRollback(ConfirmRollbackCommand model, string submitButton)
         {
             throw new NotImplementedException();
             //try
@@ -252,32 +252,18 @@ namespace He.PipelineAssessment.UI.Features.Intervention.InterventionManagement
         }
 
         [HttpPost]
-        public async Task<IActionResult> ConfirmRollback(ConfirmRollbackCommand model, string submitButton)
+        public async Task<IActionResult> ConfirmRollback(ConfirmRollbackCommand model)
         {
-            throw new NotImplementedException();
-            //try
-            //{
-            //    switch (submitButton)
-            //    {
-            //        case "Submit":
-            //            model.Status = InterventionStatus.Approved;
-            //            break;
-            //        case "Reject":
-            //            model.Status = InterventionStatus.Rejected;
-            //            break;
-            //        default:
-            //            model.Status = InterventionStatus.NotSubmitted;
-            //            break;
-            //    }
-            //    var result = await _mediator.Send(model);
-            //    //redirect to some other view, which lists all interventions
-            //    return RedirectToAction("CheckYourDetails", new { InterventionId = model.AssessmentInterventionId });
-            //}
-            //catch (Exception e)
-            //{
-            //    _logger.LogError(e.Message);
-            //    return RedirectToAction("Index", "Error", new { message = e.Message });
-            //}
+            try
+            {
+                var result = await _mediator.Send(model);
+                return RedirectToAction("CheckYourDetailsAssessor", new { InterventionId = model.AssessmentInterventionId });
+            }
+            catch (Exception e)
+            {
+                _logger.LogError(e.Message);
+                return RedirectToAction("Index", "Error", new { message = e.Message });
+            }
         }
 
     }
