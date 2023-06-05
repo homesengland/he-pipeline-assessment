@@ -136,7 +136,7 @@ public class OverrideControllerTests
     )
     {
         //Arrange
-        assessmentInterventionDto.AssessmentInterventionCommand = null;
+        assessmentInterventionDto.AssessmentInterventionCommand = null!;
 
         //Act
         var overrideController = new OverrideController(_loggerMock.Object, _mediatorMock.Object, _validatorMock.Object);
@@ -279,10 +279,9 @@ public class OverrideControllerTests
 
         // Assert
         Assert.NotNull(actionResult);
-        Assert.IsType<RedirectToActionResult>(actionResult);
-        var redirectToActionResult = (RedirectToActionResult)actionResult;
-        Assert.Equal("CheckYourDetails", redirectToActionResult.ActionName);
-        Assert.Null(assessmentInterventionDto.ValidationResult);
+        Assert.IsType<ViewResult>(actionResult);
+        var viewResult = (ViewResult)actionResult;
+        Assert.Equal("~/Features/Intervention/Views/EditOverride.cshtml", viewResult.ViewName);
     }
 
     [Theory]
@@ -292,7 +291,7 @@ public class OverrideControllerTests
     )
     {
         //Arrange
-        assessmentInterventionDto.AssessmentInterventionCommand = null;
+        assessmentInterventionDto.AssessmentInterventionCommand = null!;
 
         //Act
         var overrideController = new OverrideController(_loggerMock.Object, _mediatorMock.Object, _validatorMock.Object);

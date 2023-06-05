@@ -1,6 +1,7 @@
 ﻿using He.PipelineAssessment.Models;
 using He.PipelineAssessment.Tests.Common;
 using He.PipelineAssessment.UI.Features.Intervention.InterventionManagement;
+using He.PipelineAssessment.UI.Features.Intervention.InterventionManagement.CreateOverride;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -106,7 +107,7 @@ namespace He.PipelineAssessment.UI.Tests.Features.Intervention
             var result = sut.AssessmentInterventionDtoFromWorkflowInstance(assessmentToolWorkflowInstance, userName, email);
 
             //Assert
-            Assert.IsType<AssessmentInterventionCommand>(result.AssessmentInterventionCommand);
+            Assert.IsType<CreateOverrideCommand>(result.AssessmentInterventionCommand);
             Assert.Equal(assessmentToolWorkflowInstance.Id, result.AssessmentInterventionCommand.AssessmentToolWorkflowInstanceId);
             Assert.Equal(assessmentToolWorkflowInstance.WorkflowInstanceId, result.AssessmentInterventionCommand.WorkflowInstanceId);
             Assert.Equal(assessmentToolWorkflowInstance.Result, result.AssessmentInterventionCommand.AssessmentResult);
