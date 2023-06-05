@@ -100,7 +100,7 @@
     @Html.HiddenFor(x => Model.AssessmentInterventionCommand.DecisionType)
     @Html.HiddenFor(x => Model.AssessmentInterventionCommand.Status)
     @Html.HiddenFor(x => Model.AssessmentInterventionCommand.ProjectReference)
-    @for (int i = 0; i < Model.TargetWorkflowDefinitions.Count; i++)
+    @for (int i = 0; i < Model.TargetWorkflowDefinitions!.Count; i++)
     {
         @Html.HiddenFor(model => Model.TargetWorkflowDefinitions[i].Id)
         @Html.HiddenFor(model => Model.TargetWorkflowDefinitions[i].Name)
