@@ -1,6 +1,5 @@
 ﻿using He.PipelineAssessment.Infrastructure.Repository;
 using He.PipelineAssessment.UI.Common.Exceptions;
-using He.PipelineAssessment.UI.Common.Utility;
 using MediatR;
 
 namespace He.PipelineAssessment.UI.Features.Intervention.InterventionManagement.ConfirmRollback
@@ -9,7 +8,7 @@ namespace He.PipelineAssessment.UI.Features.Intervention.InterventionManagement.
     {
         private readonly IAssessmentRepository _assessmentRepository;
 
-        public ConfirmRollbackCommandHandler(IAssessmentRepository assessmentRepository, IDateTimeProvider dateTimeProvider)
+        public ConfirmRollbackCommandHandler(IAssessmentRepository assessmentRepository)
         {
             _assessmentRepository = assessmentRepository;
         }
