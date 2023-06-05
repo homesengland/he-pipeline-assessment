@@ -3,7 +3,7 @@ using He.PipelineAssessment.UI.Features.Intervention.InterventionManagement;
 using Xunit;
 using He.PipelineAssessment.Tests.Common;
 
-namespace He.PipelineAssessment.UI.Tests.Features.Intervention.InterventionManagement
+namespace He.PipelineAssessment.UI.Tests.Features.Intervention
 {
     public class AssessmentInterventionCommandValidatorTests
     {

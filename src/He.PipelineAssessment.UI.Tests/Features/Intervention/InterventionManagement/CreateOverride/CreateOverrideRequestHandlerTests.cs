@@ -109,7 +109,7 @@ namespace He.PipelineAssessment.UI.Tests.Features.Intervention.InterventionManag
             assessmentRepository.Setup(x => x.GetAssessmentToolWorkflowInstance(request.WorkflowInstanceId)).ReturnsAsync(workflowInstance);
             adminRepository.Setup(x => x.GetAssessmentToolWorkflows()).ReturnsAsync(workflows);
             mapper.Setup(x => x.TargetWorkflowDefinitionsFromAssessmentToolWorkflows(workflows)).Throws(exception);
-            mapper.Setup(x => x.DtoFromWorkflowInstance(workflowInstance, userName, email)).Returns(dto);
+            mapper.Setup(x => x.AssessmentInterventionDtoFromWorkflowInstance(workflowInstance, userName, email)).Returns(dto);
 
             //Act
             var result = await sut.Handle(request, CancellationToken.None);

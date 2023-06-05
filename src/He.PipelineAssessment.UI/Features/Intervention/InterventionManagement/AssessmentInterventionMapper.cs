@@ -1,5 +1,4 @@
-﻿using Azure.Identity;
-using He.PipelineAssessment.Models;
+﻿using He.PipelineAssessment.Models;
 using He.PipelineAssessment.UI.Features.Intervention.InterventionManagement.CreateOverride;
 using Newtonsoft.Json;
 
@@ -7,14 +6,12 @@ namespace He.PipelineAssessment.UI.Features.Intervention.InterventionManagement
 {
     public interface IAssessmentInterventionMapper
     {
-        AssessmentIntervention AssessmentInterventionFromAssessmentInterventionCommand(AssessmentInterventionCommand command);
-
         AssessmentInterventionCommand AssessmentInterventionCommandFromAssessmentIntervention(AssessmentIntervention intervention);
 
         List<TargetWorkflowDefinition> TargetWorkflowDefinitionsFromAssessmentToolWorkflows(
             List<AssessmentToolWorkflow> assessmentToolWorkflows);
 
-        AssessmentInterventionDto DtoFromWorkflowInstance(AssessmentToolWorkflowInstance instance, string userName, string userEmail);
+        AssessmentInterventionDto AssessmentInterventionDtoFromWorkflowInstance(AssessmentToolWorkflowInstance instance, string userName, string userEmail);
     }
 
     public class AssessmentInterventionMapper : IAssessmentInterventionMapper
@@ -80,8 +77,8 @@ namespace He.PipelineAssessment.UI.Features.Intervention.InterventionManagement
                     DateSubmitted = intervention.DateSubmitted,
                     Status = intervention.Status,
                     TargetWorkflowId = intervention.TargetAssessmentToolWorkflowId,
-                    TargetWorkflowDefinitionId = intervention!.TargetAssessmentToolWorkflow!.WorkflowDefinitionId,
-                    TargetWorkflowDefinitionName = intervention.TargetAssessmentToolWorkflow.Name,
+                    TargetWorkflowDefinitionId = intervention.TargetAssessmentToolWorkflow?.WorkflowDefinitionId,
+                    TargetWorkflowDefinitionName = intervention.TargetAssessmentToolWorkflow?.Name,
                     AssessmentId = intervention.AssessmentToolWorkflowInstance.Id,
                     CorrelationId = intervention.AssessmentToolWorkflowInstance.Assessment.SpId
                 };
