@@ -12,5 +12,7 @@
         public bool IsEconomistWorkflow { get; set; }
 
         public virtual AssessmentTool AssessmentTool { get; set; } = null!;
+
+        public virtual List<AssessmentIntervention>? AssessmentInterventions { get; set; }
     }
 }

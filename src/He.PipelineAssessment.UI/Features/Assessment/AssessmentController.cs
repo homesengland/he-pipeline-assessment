@@ -1,7 +1,7 @@
 ﻿using He.PipelineAssessment.UI.Authorization;
+using He.PipelineAssessment.UI.Features.Assessment.AssessmentList;
 using He.PipelineAssessment.UI.Features.Assessment.AssessmentSummary;
 using He.PipelineAssessment.UI.Features.Assessment.TestAssessmentSummary;
-using He.PipelineAssessment.UI.Features.Assessments.AssessmentList;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;

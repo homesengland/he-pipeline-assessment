@@ -1,8 +1,5 @@
 ﻿@using He.PipelineAssessment.UI
-@using System.Globalization;
 @using He.PipelineAssessment.UI.Authorization;
-@using He.PipelineAssessment.UI.Extensions;
-@using System.Security.Claims;
 @using Microsoft.AspNetCore.Authorization
 @inject IAuthorizationService AuthorizationService
 @addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
@@ -21,10 +18,8 @@
         @if ((await AuthorizationService.AuthorizeAsync(User, Constants.AuthorizationPolicies.AssignmentToPipelineAdminRoleRequired)).Succeeded)
         {
             @Html.ActionLink("Sync", "Sync", "SinglePipeline", null, new { @class = "govuk-button pull-right govuk-!-padding-right-2" })
-        }
-        @if ((await AuthorizationService.AuthorizeAsync(User, Constants.AuthorizationPolicies.AssignmentToPipelineAdminRoleRequired)).Succeeded)
-        {
             @Html.ActionLink("Admin", "AssessmentTool", "Admin", null, new { @class = "govuk-link pull-right  govuk-!-font-size-24 govuk-!-padding-right-2" })
+            @Html.ActionLink("Assessment Interventions", "Index", "Intervention", null, new { @class = "govuk-link pull-right  govuk-!-font-size-24 govuk-!-padding-right-2" })
         }
         @if ((await AuthorizationService.AuthorizeAsync(User, Constants.AuthorizationPolicies.AssignmentToWorkflowEconomistRoleRequired)).Succeeded)
         {

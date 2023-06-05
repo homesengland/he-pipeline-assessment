@@ -10,6 +10,13 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="Features\Intervention\Controllers\**" />
+    <Content Remove="Features\Intervention\Controllers\**" />
+    <EmbeddedResource Remove="Features\Intervention\Controllers\**" />
+    <None Remove="Features\Intervention\Controllers\**" />
+  </ItemGroup>
+
+  <ItemGroup>
     <Content Remove="bundleconfig.json" />
   </ItemGroup>
 
