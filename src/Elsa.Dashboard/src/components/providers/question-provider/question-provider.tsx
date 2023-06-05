@@ -32,6 +32,7 @@ export const QuestionLibrary = {
   Radio: new QuestionData(QuestionTypeConstants.RadioQuestion, "Radio Question", "A question that provides a user with a number of options presented as radio buttons.  A user may only select a single value."),
   Text: new QuestionData(QuestionTypeConstants.TextQuestion, "Text Question", "A question that provides a user with a free form, one-line text box."),
   TextArea: new QuestionData(QuestionTypeConstants.TextAreaQuestion, "Text Area Question", "A question that provides a user with a free form, multi-line text box."),
+  DataTable: new QuestionData(QuestionTypeConstants.DataTable, "Data Table", "A question that allows a user to display a list of inputs in a table format."),
   Information: new QuestionData(ActivityTypeConstants.Information, "Information Text", "A text to display additional information about the given screen."),
 
   PotScoreRadio: new QuestionData(QuestionTypeConstants.PotScoreRadioQuestion, "PotScore Radio Question", "A question that provides a user with a number of options presented as radio buttons with a score associated with each option.  A user may only select a single value.", true),

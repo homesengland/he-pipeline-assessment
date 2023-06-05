@@ -377,9 +377,8 @@ namespace Elsa.CustomActivities.Tests.Handlers
             var context = new ActivityExecutionContext(provider.Object, default!, default!, default!, default, default);
 
             WeightedCheckboxExpressionHandler handler = new WeightedCheckboxExpressionHandler(logger.Object, serializer.Object);
-            
 
-            ElsaProperty property = SampleElsaProperty(GetDictionary(defaultSyntax: SyntaxNames.Literal, defaultValue: "Sample Text", maxGroupScore: maxGroupScore.ToString()!), SyntaxNames.Literal, "Checkbox Text");
+            ElsaProperty property = SampleElsaProperty(GetDictionary(SyntaxNames.Literal, "Sample Text", maxGroupScore: maxGroupScore!.Value!.ToString()), SyntaxNames.Literal, "Checkbox Text");
 
             evaluator.Setup(x => x.TryEvaluateAsync<decimal?>(property.Expressions![ScoringSyntaxNames.MaxGroupScore].ToLower(),
                 SyntaxNames.Literal, It.IsAny<ActivityExecutionContext>(), It.IsAny<CancellationToken>())).Returns(Task.FromResult(Models.Result.Success(maxGroupScore)));

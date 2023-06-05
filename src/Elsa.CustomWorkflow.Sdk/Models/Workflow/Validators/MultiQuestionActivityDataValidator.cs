@@ -40,6 +40,9 @@ namespace Elsa.CustomWorkflow.Sdk.Models.Workflow.Validators
             RuleFor(x => x)
                 .SetValidator(new TextValidator())
                 .When(x => x.QuestionType == QuestionTypeConstants.TextAreaQuestion);
+            RuleFor(x => x.DataTable)
+                .SetValidator(new DataTableValidator())
+                .When(x => x.QuestionType == QuestionTypeConstants.DataTable);
         }
     }
 }

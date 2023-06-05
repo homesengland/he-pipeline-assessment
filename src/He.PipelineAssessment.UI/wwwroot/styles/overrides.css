@@ -18,3 +18,12 @@
 .margin-right-10 {
     margin-right: 10px;
 }
+
+.scroll-table{
+    overflow-x:auto !important;
+    width:100% !important;
+}
+
+.govuk-input--width-scroll-table {
+    width: 100px !important;
+}
