@@ -6,7 +6,7 @@ using Newtonsoft.Json;
 
 namespace He.PipelineAssessment.UI.Features.Intervention.InterventionManagement.LoadOverrideCheckYourAnswers
 {
-    public class LoadOverrideCheckYourAnswersRequestHandler : IRequestHandler<LoadOverrideCheckYourAnswersRequest, SubmitOverrideCommand?>
+    public class LoadOverrideCheckYourAnswersRequestHandler : IRequestHandler<LoadOverrideCheckYourAnswersRequest, SubmitOverrideCommand>
     {
 
         private readonly IAssessmentRepository _assessmentRepository;
@@ -22,28 +22,22 @@ namespace He.PipelineAssessment.UI.Features.Intervention.InterventionManagement.
             _mapper = mapper;
         }
 
-        public async Task<SubmitOverrideCommand?> Handle(LoadOverrideCheckYourAnswersRequest request, CancellationToken cancellationToken)
+        public async Task<SubmitOverrideCommand> Handle(LoadOverrideCheckYourAnswersRequest request, CancellationToken cancellationToken)
         {
-            try
-            {
-                var intervention = await _assessmentRepository.GetAssessmentIntervention(request.InterventionId);
-                if (intervention == null)
-                {
-                    return null;
-                }
-                var command = _mapper.AssessmentInterventionCommandFromAssessmentIntervention(intervention);
-                var serializedCommand = JsonConvert.SerializeObject(command);
-                var submitOverrideCommand = JsonConvert.DeserializeObject<SubmitOverrideCommand>(serializedCommand);
-                return submitOverrideCommand;
-            }
-            catch(Exception e)
-            {
-                _logger.LogError(e.Message);
-            }
-            SubmitOverrideCommand? nullCommand = null;
-            return await Task.FromResult(nullCommand);
 
-
+            var intervention = await _assessmentRepository.GetAssessmentIntervention(request.InterventionId);
+            if (intervention == null)
+            {
+                throw new NotFoundException($"Assessment Intervention with Id {request.InterventionId} not found");
+            }
+            var command = _mapper.AssessmentInterventionCommandFromAssessmentIntervention(intervention);
+            var serializedCommand = JsonConvert.SerializeObject(command);
+            var submitOverrideCommand = JsonConvert.DeserializeObject<SubmitOverrideCommand>(serializedCommand);
+            if(submitOverrideCommand == null)
+            {
+                throw new ArgumentException($"Unable to deserialise AssessmentInterventionCommand: {JsonConvert.SerializeObject(command)} from mapper");
+            }
+            return submitOverrideCommand;
         }
     }
 }
