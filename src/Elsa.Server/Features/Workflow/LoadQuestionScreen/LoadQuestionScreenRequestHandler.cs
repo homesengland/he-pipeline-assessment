@@ -8,6 +8,7 @@ using Elsa.Persistence;
 using Elsa.Persistence.Specifications.WorkflowInstances;
 using Elsa.Server.Models;
 using MediatR;
+using NetBox.Extensions;
 using Question = Elsa.CustomModels.Question;
 
 namespace Elsa.Server.Features.Workflow.LoadQuestionScreen
@@ -168,7 +169,23 @@ namespace Elsa.Server.Features.Workflow.LoadQuestionScreen
                     }
                     else
                     {
-                        answerList = dbQuestion.Choices.Where(x => x.IsPrePopulated).Select(x => x.Id).ToList();
+                        if (item.QuestionType == QuestionTypeConstants.CheckboxQuestion)
+                        {
+                            var prepopulatedAnswerListIdentifiers = item.Checkbox.Choices.Where(x => x.IsPrePopulated).Select(x => x.Identifier).ToList();
+                            answerList = dbQuestion.Choices.Where(x => prepopulatedAnswerListIdentifiers.Contains(x.Identifier)).Select(x => x.Id).ToList();
+                        }
+                        else
+                        {
+                            var prepopulatedAnswerListIdentifiers = item.WeightedCheckbox.Groups.Values.SelectMany(x => x.Choices.Where(y => y.IsPrePopulated)
+                            .Select(z => new { Id = z.Identifier, GroupId = x.GroupIdentifier})).ToList();
+                            
+                            var groups = dbQuestion.Choices.Select(x => x.QuestionChoiceGroup);
+                            
+                            answerList = dbQuestion.Choices.Where(x => prepopulatedAnswerListIdentifiers.Any(y => {
+                                var g = groups.FirstOrDefault(z => z!.Id == x.QuestionChoiceGroupId);
+                                return y.Id == x.Identifier && g != null && g.GroupIdentifier == y.GroupId;
+                            })).Select(x => x.Id).ToList(); ;
+                        } 
                     }
 
                     questionActivityData.Checkbox.SelectedChoices = answerList;
@@ -193,10 +210,41 @@ namespace Elsa.Server.Features.Workflow.LoadQuestionScreen
                     }
                     else
                     {
-                        var prepopulatedAnswer = dbQuestion.Choices.FirstOrDefault(x => x.IsPrePopulated);
-                        if (prepopulatedAnswer != null)
+                        if (item.QuestionType == QuestionTypeConstants.RadioQuestion)
                         {
-                            questionActivityData.Radio.SelectedAnswer = prepopulatedAnswer.Id;
+                            var prepopulatedAnswer = item.Radio.Choices.FirstOrDefault(x => x.IsPrePopulated);
+                            if (prepopulatedAnswer != null)
+                            {
+                                var databaseChoiceAnswer = dbQuestion.Choices.Where(x => x.Identifier == prepopulatedAnswer.Identifier).FirstOrDefault();
+                                if (databaseChoiceAnswer != null)
+                                {
+                                    questionActivityData.Radio.SelectedAnswer = databaseChoiceAnswer.Id;
+                                }
+                            }
+                        }
+                        else if (item.QuestionType == QuestionTypeConstants.PotScoreRadioQuestion)
+                        {
+                            var prepopulatedAnswer = item.PotScoreRadio.Choices.FirstOrDefault(x => x.IsPrePopulated);
+                            if (prepopulatedAnswer != null)
+                            {
+                                var databaseChoiceAnswer = dbQuestion.Choices.Where(x => x.Identifier == prepopulatedAnswer.Identifier).FirstOrDefault();
+                                if (databaseChoiceAnswer != null)
+                                {
+                                    questionActivityData.Radio.SelectedAnswer = databaseChoiceAnswer.Id;
+                                }
+                            }
+                        }
+                        else if(item.QuestionType == QuestionTypeConstants.WeightedRadioQuestion)
+                        {
+                            var prepopulatedAnswer = item.WeightedRadio.Choices.FirstOrDefault(x => x.IsPrePopulated);
+                            if (prepopulatedAnswer != null)
+                            {
+                                var databaseChoiceAnswer = dbQuestion.Choices.Where(x => x.Identifier == prepopulatedAnswer.Identifier).FirstOrDefault();
+                                if (databaseChoiceAnswer != null)
+                                {
+                                    questionActivityData.Radio.SelectedAnswer = databaseChoiceAnswer.Id;
+                                }
+                            }
                         }
                     }
                 }
