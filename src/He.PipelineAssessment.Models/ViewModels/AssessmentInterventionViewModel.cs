@@ -3,12 +3,12 @@
 public class AssessmentInterventionViewModel : AuditableEntityViewModel
 {
     public int Id { get; set; }
-    public string Reference { get; set; }
-    public string WorkflowName { get; set; }
-    public string RequestedBy { get; set; }
-    public string Administrator { get; set; }
-    public string Status { get; set; }
-    public string DecisionType { get; set; }
+    public string Reference { get; set; } = null!;
+    public string WorkflowName { get; set; } = null!;
+    public string RequestedBy { get; set; } = null!; 
+    public string? Administrator { get; set; }
+    public string Status { get; set; } = null!;
+    public string DecisionType { get; set; } = null!;
 
     public string StatusDisplayTag()
     {

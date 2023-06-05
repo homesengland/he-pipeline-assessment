@@ -7,7 +7,7 @@ namespace He.PipelineAssessment.UI.Features.Intervention.InterventionManagement
     {
         public AssessmentInterventionCommand AssessmentInterventionCommand { get; set; } = new();
         public ValidationResult? ValidationResult { get; set; }
-        public List<TargetWorkflowDefinition> TargetWorkflowDefinitions { get; set; }
+        public List<TargetWorkflowDefinition>? TargetWorkflowDefinitions { get; set; }
     }
 
 
@@ -15,8 +15,8 @@ namespace He.PipelineAssessment.UI.Features.Intervention.InterventionManagement
     public class TargetWorkflowDefinition
     {
         public int Id { get; set; }
-        public string WorkflowDefinitionId { get; set; }
-        public string Name { get; set; }
+        public string WorkflowDefinitionId { get; set; } = null!;
+        public string Name { get; set; } = null!;
 
         public string DisplayName => $"{Name} ({WorkflowDefinitionId})";
     }

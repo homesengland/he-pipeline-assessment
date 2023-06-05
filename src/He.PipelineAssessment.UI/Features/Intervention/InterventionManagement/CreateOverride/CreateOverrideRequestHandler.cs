@@ -12,16 +12,18 @@ namespace He.PipelineAssessment.UI.Features.Intervention.InterventionManagement.
         private readonly IAdminAssessmentToolWorkflowRepository _adminAssessmentToolWorkflowRepository;
         private readonly IUserProvider _userProvider;
         private readonly IAssessmentInterventionMapper _mapper;
+        private readonly ILogger<CreateOverrideRequestHandler> _logger;
 
         public CreateOverrideRequestHandler(IAssessmentRepository assessmentRepository, 
             IUserProvider userProvider, 
             IAdminAssessmentToolWorkflowRepository adminAssessmentToolWorkflowRepository, 
-            IAssessmentInterventionMapper mapper)
+            IAssessmentInterventionMapper mapper, ILogger<CreateOverrideRequestHandler> logger)
         {
             _assessmentRepository = assessmentRepository;
             _userProvider = userProvider;
             _adminAssessmentToolWorkflowRepository = adminAssessmentToolWorkflowRepository;
             _mapper = mapper;
+            _logger = logger;
         }
 
         public async Task<AssessmentInterventionDto> Handle(CreateOverrideRequest request,
@@ -31,7 +33,7 @@ namespace He.PipelineAssessment.UI.Features.Intervention.InterventionManagement.
             {
                 AssessmentToolWorkflowInstance? workflowInstance =
                     await _assessmentRepository.GetAssessmentToolWorkflowInstance(request.WorkflowInstanceId);
-                var dto = DtoFromWorkflowInstance(workflowInstance);
+                var dto = _mapper.DtoFromWorkflowInstance(workflowInstance!, _userProvider.GetUserName()!, _userProvider.GetUserEmail()!);
 
                 var assessmentToolWorkflows = await _adminAssessmentToolWorkflowRepository.GetAssessmentToolWorkflows();
                 dto.TargetWorkflowDefinitions =
@@ -40,37 +42,13 @@ namespace He.PipelineAssessment.UI.Features.Intervention.InterventionManagement.
             }
             catch (Exception e)
             {
+                _logger.LogError(e.Message);
                 return new AssessmentInterventionDto
                 {
 
                 };
 
             }
-        }
-
-        public AssessmentInterventionDto DtoFromWorkflowInstance(AssessmentToolWorkflowInstance instance)
-        {
-            string? adminName = _userProvider.GetUserName();
-            string? adminEmail = _userProvider.GetUserEmail();
-
-            AssessmentInterventionDto dto = new AssessmentInterventionDto()
-            {
-                AssessmentInterventionCommand = new CreateOverrideCommand()
-                {
-                    AssessmentToolWorkflowInstanceId = instance.Id,
-                    WorkflowInstanceId = instance.WorkflowInstanceId,
-                    AssessmentResult = instance.Result,
-                    AssessmentName = instance.WorkflowName,
-                    RequestedBy = adminName,
-                    RequestedByEmail = adminEmail,
-                    Administrator = adminName,
-                    AdministratorEmail = adminEmail,
-                    DecisionType = InterventionDecisionTypes.Override,
-                    Status = InterventionStatus.NotSubmitted,
-                    ProjectReference = instance.Assessment.Reference
-                }
-            };
-            return dto;
         }
     }
 }

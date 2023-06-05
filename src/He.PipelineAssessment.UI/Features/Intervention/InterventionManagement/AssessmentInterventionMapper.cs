@@ -1,4 +1,6 @@
-﻿using He.PipelineAssessment.Models;
+﻿using Azure.Identity;
+using He.PipelineAssessment.Models;
+using He.PipelineAssessment.UI.Features.Intervention.InterventionManagement.CreateOverride;
 
 namespace He.PipelineAssessment.UI.Features.Intervention.InterventionManagement
 {
@@ -10,6 +12,8 @@ namespace He.PipelineAssessment.UI.Features.Intervention.InterventionManagement
 
         List<TargetWorkflowDefinition> TargetWorkflowDefinitionsFromAssessmentToolWorkflows(
             List<AssessmentToolWorkflow> assessmentToolWorkflows);
+
+        AssessmentInterventionDto DtoFromWorkflowInstance(AssessmentToolWorkflowInstance instance, string userName, string userEmail);
     }
 
     public class AssessmentInterventionMapper : IAssessmentInterventionMapper
@@ -58,7 +62,7 @@ namespace He.PipelineAssessment.UI.Features.Intervention.InterventionManagement
                 DateSubmitted = intervention.DateSubmitted,
                 Status = intervention.Status,
                 TargetWorkflowId = intervention.TargetAssessmentToolWorkflowId,
-                TargetWorkflowDefinitionId = intervention.TargetAssessmentToolWorkflow.WorkflowDefinitionId,
+                TargetWorkflowDefinitionId = intervention!.TargetAssessmentToolWorkflow!.WorkflowDefinitionId,
                 TargetWorkflowDefinitionName = intervention.TargetAssessmentToolWorkflow.Name,
                 AssessmentId = intervention.AssessmentToolWorkflowInstance.Id,
                 CorrelationId = intervention.AssessmentToolWorkflowInstance.Assessment.SpId
@@ -75,6 +79,29 @@ namespace He.PipelineAssessment.UI.Features.Intervention.InterventionManagement
                 WorkflowDefinitionId = x.WorkflowDefinitionId,
                 Name = x.Name
             }).ToList();
+        }
+
+        public AssessmentInterventionDto DtoFromWorkflowInstance(AssessmentToolWorkflowInstance instance, string userName, string email)
+        {
+
+            AssessmentInterventionDto dto = new AssessmentInterventionDto()
+            {
+                AssessmentInterventionCommand = new CreateOverrideCommand()
+                {
+                    AssessmentToolWorkflowInstanceId = instance.Id,
+                    WorkflowInstanceId = instance.WorkflowInstanceId,
+                    AssessmentResult = instance.Result,
+                    AssessmentName = instance.WorkflowName,
+                    RequestedBy = userName,
+                    RequestedByEmail = email,
+                    Administrator = userName,
+                    AdministratorEmail = email,
+                    DecisionType = InterventionDecisionTypes.Override,
+                    Status = InterventionStatus.NotSubmitted,
+                    ProjectReference = instance.Assessment.Reference
+                }
+            };
+            return dto;
         }
     }
 }

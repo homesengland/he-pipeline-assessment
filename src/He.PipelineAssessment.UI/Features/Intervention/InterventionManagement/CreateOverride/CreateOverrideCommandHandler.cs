@@ -7,11 +7,13 @@ namespace He.PipelineAssessment.UI.Features.Intervention.InterventionManagement.
     {
         private readonly ICreateOverrideMapper _mapper;
         private readonly IAssessmentRepository _assessmentRepository;
+        private readonly ILogger<CreateOverrideCommandHandler> _logger;
 
-        public CreateOverrideCommandHandler(IAssessmentRepository assessmentRepository, ICreateOverrideMapper mapper)
+        public CreateOverrideCommandHandler(IAssessmentRepository assessmentRepository, ICreateOverrideMapper mapper, ILogger<CreateOverrideCommandHandler> logger)
         {
             _assessmentRepository = assessmentRepository;
             _mapper = mapper;
+            _logger = logger;
         }
 
 
