@@ -20,6 +20,8 @@ namespace He.PipelineAssessment.UI.Features.Workflow.ViewModels
         public string? QuestionGuidance { get; set; }
         public bool DisplayComments { get; set; }
         public string? Comments { get; set; }
+        public bool DisplayEvidenceBox{ get; set; }
+        public string? DocumentEvidenceLink { get; set; }
         public List<QuestionActivityAnswer> Answers { get; set; } = new();
         public bool IsReadOnly { get; set; }
         public bool ReevaluatePrePopulatedAnswers { get; set; }

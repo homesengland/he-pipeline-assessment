@@ -22,4 +22,5 @@
     @await Html.PartialAsync("_QuestionGuidance", Model.QuestionGuidance)
 
     @await Html.PartialAsync("_Comments", new Comment(){Index = Model.Index, CommentText = Model.Comments,DisplayComments = Model.DisplayComments})
+    @await Html.PartialAsync("_Evidence", new Evidence(){Index = Model.Index, DocumentLink = Model.DocumentEvidenceLink ,DisplayEvidenceBox = Model.DisplayEvidenceBox})
 </div>
