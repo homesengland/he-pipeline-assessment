@@ -122,7 +122,7 @@
                     <input id="Submit" type="submit" value="Submit" name="submitButton" class="govuk-button"/>
                     <input id="Reject" type="submit" value="Reject" name="submitButton" class="govuk-button govuk-button--warning"/>
                 }
-                @Html.ActionLink("Go to Assessment Summary", "Summary", "Assessment", new { Model.AssessmentId, Model.CorrelationId }, new { @class = "govuk-button" })
+                @Html.ActionLink("Go to Assessment Summary", "Summary", "Assessment", new { AssessmentId = Model.AssessmentId, CorrelationId = Model.CorrelationId }, new { @class = "govuk-button" })
             </div>
 
         </div>

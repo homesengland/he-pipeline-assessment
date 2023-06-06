@@ -109,7 +109,7 @@ namespace He.PipelineAssessment.UI.Features.Intervention.InterventionManagement
 
                         var interventionId = await _mediator.Send(editOverrideCommand);
 
-                        return View("~/Features/Intervention/Views/EditOverride.cshtml", dto);
+                        return RedirectToAction("CheckYourDetails", new { InterventionId = dto.AssessmentInterventionCommand.AssessmentInterventionId });
 
                     }
                     else
@@ -120,7 +120,7 @@ namespace He.PipelineAssessment.UI.Features.Intervention.InterventionManagement
                 }
                 else
                 {
-                    return View("~/Features/Intervention/Views/EditOverride.cshtml", dto);
+                    return RedirectToAction("Index", "Error", new { message = "There has been an error whilst attempting to save this request." });
                 }
 
             }

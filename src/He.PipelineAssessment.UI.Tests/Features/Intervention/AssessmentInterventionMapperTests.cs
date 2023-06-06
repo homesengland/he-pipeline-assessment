@@ -47,7 +47,7 @@ namespace He.PipelineAssessment.UI.Tests.Features.Intervention
             Assert.Equal(assessmentIntervention.TargetAssessmentToolWorkflowId, result.TargetWorkflowId);
             Assert.Equal(assessmentIntervention.TargetAssessmentToolWorkflow!.WorkflowDefinitionId, result.TargetWorkflowDefinitionId);
             Assert.Equal(assessmentIntervention.TargetAssessmentToolWorkflow!.Name, result.TargetWorkflowDefinitionName);
-            Assert.Equal(assessmentIntervention.AssessmentToolWorkflowInstance.Id, result.AssessmentId);
+            Assert.Equal(assessmentIntervention.AssessmentToolWorkflowInstance.AssessmentId, result.AssessmentId);
             Assert.Equal(assessmentIntervention.AssessmentToolWorkflowInstance.Assessment.SpId, result.CorrelationId);
         }
 
