@@ -74,36 +74,6 @@ public class OverrideControllerTests
 
     }
 
-    //[Theory]
-    //[AutoMoqData]
-    //public async Task CreateOverride_ShouldRedirectToView_WhenInterventionIdIsGreaterThanZero(
-    //     int interventionId,
-    //    ValidationResult validationResult
-    //   )
-    //{
-    //    //Arrange
-    //    validationResult.Errors = new List<ValidationFailure>();
-
-    //    var assessmentInterventionDto = new AssessmentInterventionDto { ValidationResult = null };
-
-    //    var serializedCommand = JsonConvert.SerializeObject(assessmentInterventionDto.AssessmentInterventionCommand);
-    //    var createOverrideCommand = JsonConvert.DeserializeObject<CreateOverrideCommand>(serializedCommand);
-
-    //    _validatorMock.Setup(x => x.ValidateAsync(It.IsAny<CreateOverrideCommand>(), CancellationToken.None)).ReturnsAsync(validationResult);
-
-    //    _mediatorMock.Setup(x => x.Send(It.IsAny<CreateOverrideCommand>(), CancellationToken.None)).ReturnsAsync(interventionId);
-
-    //    //Act
-    //    var overrideController = new OverrideController(_loggerMock.Object, _mediatorMock.Object, _validatorMock.Object);
-    //    var actionResult = await overrideController.CreateOverride(assessmentInterventionDto);
-
-    //    //Assert
-    //    Assert.IsType<RedirectToActionResult>(actionResult);
-    //    var redirectToActionResult = (RedirectToActionResult)actionResult;
-    //    Assert.Equal("Error", redirectToActionResult.ControllerName);
-    //    Assert.Equal("Index", redirectToActionResult.ActionName);
-    //}
-
     [Theory]
     [AutoMoqData]
     public async Task CreateOverride_ShouldRedirectToView_WhenGivenValidationResultIsInvalid(
