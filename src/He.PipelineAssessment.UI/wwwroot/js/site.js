@@ -51,9 +51,9 @@ summaryInputs.forEach(function (summaryInput) {
             input.addEventListener('keyup', function (event) {
                 // skip for arrow keys
                 if (event.which >= 37 && event.which <= 40) return;
-
+                
                 summaryInput.value = getTotalColumnValue(inputsToTotal);
-
+                
                 // format number
                 summaryInput.value = numberWithCommas(summaryInput.value);
                 hiddenTotalInputs.forEach(hiddenInput => {
@@ -74,8 +74,9 @@ function getTotalColumnValue(inputsToTotal) {
         var cleansedInput = input.value.replace(/,/g, "");
         total += Number(cleansedInput);
     });
-
-    return total;
+    var roundedTotal = total.toFixed(2);
+    var formattedRoundedTotal = roundedTotal.replace(/.00/, "")
+    return formattedRoundedTotal;
 }
 
 function numberWithCommas(x) {
