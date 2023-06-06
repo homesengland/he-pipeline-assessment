@@ -104,7 +104,16 @@ namespace He.PipelineAssessment.UI.Tests.Features.Intervention
             //Arrange
 
             //Act
-            var result = sut.AssessmentInterventionDtoFromWorkflowInstance(assessmentToolWorkflowInstance, userName, email, InterventionDecisionTypes.Override);
+            var dtoConfig = new DtoConfig()
+            {
+                AdministratorName = userName,
+                UserName = userName,
+                AdministratorEmail = email,
+                UserEmail = email,
+                DecisionType = InterventionDecisionTypes.Override,
+                Status = InterventionStatus.Pending
+            };
+            var result = sut.AssessmentInterventionDtoFromWorkflowInstance(assessmentToolWorkflowInstance, dtoConfig);
 
             //Assert
             Assert.IsType<AssessmentInterventionCommand>(result.AssessmentInterventionCommand);
@@ -117,7 +126,7 @@ namespace He.PipelineAssessment.UI.Tests.Features.Intervention
             Assert.Equal(userName, result.AssessmentInterventionCommand.Administrator);
             Assert.Equal(email, result.AssessmentInterventionCommand.AdministratorEmail);
             Assert.Equal(InterventionDecisionTypes.Override, result.AssessmentInterventionCommand.DecisionType);
-            Assert.Equal(InterventionStatus.NotSubmitted, result.AssessmentInterventionCommand.Status);
+            Assert.Equal(InterventionStatus.Pending, result.AssessmentInterventionCommand.Status);
             Assert.Equal(assessmentToolWorkflowInstance.Assessment.Reference, result.AssessmentInterventionCommand.ProjectReference);
         }
     }

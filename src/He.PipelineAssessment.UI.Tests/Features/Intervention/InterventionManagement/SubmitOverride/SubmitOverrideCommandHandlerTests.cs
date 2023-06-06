@@ -52,7 +52,6 @@ namespace He.PipelineAssessment.UI.Tests.Features.Intervention.InterventionManag
 
         [Theory]
         [InlineAutoMoqData(InterventionStatus.Rejected)]
-        [InlineAutoMoqData(InterventionStatus.NotSubmitted)]
         [InlineAutoMoqData(InterventionStatus.Pending)]
         public async Task Handle_UpdatesRepositoryAndReturns_GivenAssessmentInterventionStatusIsNotApproved(
             string status,

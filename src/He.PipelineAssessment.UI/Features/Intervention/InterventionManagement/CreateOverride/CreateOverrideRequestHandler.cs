@@ -1,4 +1,5 @@
-﻿using He.PipelineAssessment.Infrastructure;
+﻿using Auth0.ManagementApi.Models;
+using He.PipelineAssessment.Infrastructure;
 using He.PipelineAssessment.Infrastructure.Repository;
 using He.PipelineAssessment.Models;
 using He.PipelineAssessment.UI.Common.Exceptions;
@@ -35,7 +36,19 @@ namespace He.PipelineAssessment.UI.Features.Intervention.InterventionManagement.
                 throw new NotFoundException($"Assessment Tool Workflow Instance with Id {request.WorkflowInstanceId} not found");
             }
 
-            var dto = _mapper.AssessmentInterventionDtoFromWorkflowInstance(workflowInstance, _userProvider.GetUserName()!, _userProvider.GetUserEmail()!, InterventionDecisionTypes.Override);
+            var userName = _userProvider.GetUserName()!;
+            var email = _userProvider.GetUserEmail()!;
+
+            var dtoConfig = new DtoConfig()
+            {
+                AdministratorName = userName,
+                UserName = userName,
+                AdministratorEmail = email,
+                UserEmail = email,
+                DecisionType = InterventionDecisionTypes.Override,
+                Status = InterventionStatus.Pending
+            };
+            var dto = _mapper.AssessmentInterventionDtoFromWorkflowInstance(workflowInstance, dtoConfig);
             List<AssessmentToolWorkflow> assessmentToolWorkflows = await _adminAssessmentToolWorkflowRepository.GetAssessmentToolWorkflows();
 
             if (assessmentToolWorkflows == null || !assessmentToolWorkflows.Any())

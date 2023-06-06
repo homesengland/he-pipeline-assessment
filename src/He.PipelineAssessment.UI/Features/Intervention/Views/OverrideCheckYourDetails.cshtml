@@ -1,4 +1,5 @@
-﻿@model He.PipelineAssessment.UI.Features.Intervention.InterventionManagement.SubmitOverride.SubmitOverrideCommand
+﻿@using He.PipelineAssessment.Models
+@model He.PipelineAssessment.UI.Features.Intervention.InterventionManagement.SubmitOverride.SubmitOverrideCommand
 
 @{
     ViewData["Title"] = "Create Assessment Override";
@@ -6,7 +7,7 @@
 }
 <div class="text-center">
     @{
-        var isEditable = Model.Status == "Not Submitted";
+        var isEditable = Model.Status == InterventionStatus.Pending;
     }
     @using (Html.BeginForm("SubmitOverride", "Override", FormMethod.Post))
     {

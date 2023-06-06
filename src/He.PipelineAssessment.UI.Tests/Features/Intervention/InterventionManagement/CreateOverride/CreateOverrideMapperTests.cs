@@ -38,7 +38,7 @@ namespace He.PipelineAssessment.UI.Tests.Features.Intervention.InterventionManag
             Assert.Equal(createOverrideCommand.RequestedBy, result.LastModifiedBy);
             Assert.Equal(createOverrideCommand.RequestedByEmail, result.RequestedByEmail);
             Assert.Equal(createOverrideCommand.SignOffDocument, result.SignOffDocument);
-            Assert.Equal(InterventionStatus.NotSubmitted, result.Status);
+            Assert.Equal(InterventionStatus.Pending, result.Status);
             Assert.Equal(createOverrideCommand.AssessmentResult, result.AssessmentResult);
         }
 

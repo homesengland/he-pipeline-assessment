@@ -165,7 +165,7 @@ public class OverrideControllerTests
      )
         {
         //Arrange
-        assessmentInterventionDto.AssessmentInterventionCommand.Status = InterventionStatus.NotSubmitted;
+        assessmentInterventionDto.AssessmentInterventionCommand.Status = InterventionStatus.Pending;
 
         _mediatorMock.Setup(x => x.Send(It.IsAny<EditOverrideRequest>(), CancellationToken.None)).ReturnsAsync(assessmentInterventionDto);
 
@@ -176,7 +176,7 @@ public class OverrideControllerTests
         //Assert
         Assert.NotNull(actionResult);
         Assert.IsType<ViewResult>(actionResult);
-        Assert.Equal(InterventionStatus.NotSubmitted, assessmentInterventionDto.AssessmentInterventionCommand.Status);
+        Assert.Equal(InterventionStatus.Pending, assessmentInterventionDto.AssessmentInterventionCommand.Status);
 
     }
 
@@ -384,7 +384,6 @@ public class OverrideControllerTests
       )
     {
         //Arrange
-        submitOverrideCommand = null;
 
         _mediatorMock.Setup(x => x.Send(It.IsAny<LoadOverrideCheckYourAnswersRequest>(), CancellationToken.None)).ThrowsAsync(exception);
 

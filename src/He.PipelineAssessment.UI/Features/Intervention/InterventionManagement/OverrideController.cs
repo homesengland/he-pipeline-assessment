@@ -82,7 +82,7 @@ namespace He.PipelineAssessment.UI.Features.Intervention.InterventionManagement
             try
             {
                 AssessmentInterventionDto dto = await _mediator.Send(new EditOverrideRequest() { InterventionId = interventionId });
-                if (dto.AssessmentInterventionCommand.Status == InterventionStatus.NotSubmitted)
+                if (dto.AssessmentInterventionCommand.Status == InterventionStatus.Pending)
                 {
                     return View("~/Features/Intervention/Views/EditOverride.cshtml", dto);
                 }
@@ -165,7 +165,7 @@ namespace He.PipelineAssessment.UI.Features.Intervention.InterventionManagement
                         model.Status = InterventionStatus.Rejected;
                         break;
                     default:
-                        model.Status = InterventionStatus.NotSubmitted;
+                        model.Status = InterventionStatus.Pending;
                         break;
                 }
                 var result = await _mediator.Send(model);

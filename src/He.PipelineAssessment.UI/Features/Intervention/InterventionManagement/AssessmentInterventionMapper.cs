@@ -12,7 +12,7 @@ namespace He.PipelineAssessment.UI.Features.Intervention.InterventionManagement
             List<AssessmentToolWorkflow> assessmentToolWorkflows);
 
         AssessmentInterventionDto AssessmentInterventionDtoFromWorkflowInstance(AssessmentToolWorkflowInstance instance,
-            string userName, string userEmail, string rollback);
+            DtoConfig dtoConfig);
     }
 
     public class AssessmentInterventionMapper : IAssessmentInterventionMapper
@@ -112,6 +112,8 @@ namespace He.PipelineAssessment.UI.Features.Intervention.InterventionManagement
             }
         }
 
+        public AssessmentInterventionDto AssessmentInterventionDtoFromWorkflowInstance(AssessmentToolWorkflowInstance instance,
+            DtoConfig dtoConfig)
         {
             try
             {
@@ -123,12 +125,13 @@ namespace He.PipelineAssessment.UI.Features.Intervention.InterventionManagement
                         WorkflowInstanceId = instance.WorkflowInstanceId,
                         AssessmentResult = instance.Result,
                         AssessmentName = instance.WorkflowName,
-                        RequestedBy = userName,
-                        RequestedByEmail = email,
-                        Administrator = userName,
-                        AdministratorEmail = email,
-                        Status = InterventionStatus.NotSubmitted,
-                        ProjectReference = instance.Assessment.Reference
+                        RequestedBy = dtoConfig.UserName,
+                        RequestedByEmail = dtoConfig.UserEmail,
+                        Administrator = dtoConfig.AdministratorName,
+                        AdministratorEmail = dtoConfig.AdministratorEmail,
+                        Status = dtoConfig.Status,
+                        ProjectReference = instance.Assessment.Reference,
+                        DecisionType = dtoConfig.DecisionType,
                     }
                 };
                 return dto;
@@ -139,8 +142,6 @@ namespace He.PipelineAssessment.UI.Features.Intervention.InterventionManagement
 
                 throw new ArgumentException($"Unable to map AssessmentToolWorkflowInstance:  {JsonConvert.SerializeObject(instance)} to AssessmentInterventionDto");
             }
-
-
         }
     }
 }
