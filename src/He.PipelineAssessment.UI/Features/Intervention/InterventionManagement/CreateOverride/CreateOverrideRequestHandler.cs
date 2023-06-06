@@ -35,7 +35,7 @@ namespace He.PipelineAssessment.UI.Features.Intervention.InterventionManagement.
                 throw new NotFoundException($"Assessment Tool Workflow Instance with Id {request.WorkflowInstanceId} not found");
             }
 
-            var dto = _mapper.AssessmentInterventionDtoFromWorkflowInstance(workflowInstance, _userProvider.GetUserName()!, _userProvider.GetUserEmail()!);
+            var dto = _mapper.AssessmentInterventionDtoFromWorkflowInstance(workflowInstance, _userProvider.GetUserName()!, _userProvider.GetUserEmail()!, InterventionDecisionTypes.Override);
             List<AssessmentToolWorkflow> assessmentToolWorkflows = await _adminAssessmentToolWorkflowRepository.GetAssessmentToolWorkflows();
 
             if (assessmentToolWorkflows == null || !assessmentToolWorkflows.Any())

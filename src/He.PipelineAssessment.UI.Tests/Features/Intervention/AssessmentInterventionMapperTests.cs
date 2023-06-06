@@ -104,10 +104,10 @@ namespace He.PipelineAssessment.UI.Tests.Features.Intervention
             //Arrange
 
             //Act
-            var result = sut.AssessmentInterventionDtoFromWorkflowInstance(assessmentToolWorkflowInstance, userName, email);
+            var result = sut.AssessmentInterventionDtoFromWorkflowInstance(assessmentToolWorkflowInstance, userName, email, InterventionDecisionTypes.Override);
 
             //Assert
-            Assert.IsType<CreateOverrideCommand>(result.AssessmentInterventionCommand);
+            Assert.IsType<AssessmentInterventionCommand>(result.AssessmentInterventionCommand);
             Assert.Equal(assessmentToolWorkflowInstance.Id, result.AssessmentInterventionCommand.AssessmentToolWorkflowInstanceId);
             Assert.Equal(assessmentToolWorkflowInstance.WorkflowInstanceId, result.AssessmentInterventionCommand.WorkflowInstanceId);
             Assert.Equal(assessmentToolWorkflowInstance.Result, result.AssessmentInterventionCommand.AssessmentResult);

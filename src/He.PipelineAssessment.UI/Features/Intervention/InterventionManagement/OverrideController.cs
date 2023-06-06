@@ -54,6 +54,10 @@ namespace He.PipelineAssessment.UI.Features.Intervention.InterventionManagement
                     {
 
                         int interventionId = await _mediator.Send(createOverrideCommand);
+                        if (interventionId < 1)
+                        {
+                            return RedirectToAction("Index", "Error", new { message = "There has been an error whilst attempting to save this request.  Please try again." });
+                        }
                         return RedirectToAction("CheckYourDetails", new { interventionId });
                     }
                     else
@@ -122,7 +126,7 @@ namespace He.PipelineAssessment.UI.Features.Intervention.InterventionManagement
                 {
                     return RedirectToAction("Index", "Error", new { message = "There has been an error whilst attempting to save this request." });
                 }
-
+               
             }
             catch (Exception e)
             {

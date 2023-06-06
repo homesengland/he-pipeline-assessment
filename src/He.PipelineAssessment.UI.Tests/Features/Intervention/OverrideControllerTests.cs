@@ -282,6 +282,7 @@ public class OverrideControllerTests
         Assert.IsType<RedirectToActionResult>(actionResult);
         var redirectToActionResult = (RedirectToActionResult)actionResult;
         Assert.Equal("CheckYourDetails", redirectToActionResult.ActionName);
+        Assert.Null(assessmentInterventionDto.ValidationResult);
     }
 
     [Theory]
@@ -305,7 +306,37 @@ public class OverrideControllerTests
 
     }
 
-   
+    [Theory]
+    [AutoMoqData]
+    public async Task EditOverride_ShouldRedirectToView_WhenInterventionIdIsLessOrEqualToZero(
+      int interventionId,
+      AssessmentInterventionDto assessmentInterventionDto,
+      ValidationResult validationResult
+    )
+    {
+        //Arrange
+        interventionId = 0;
+        validationResult.Errors = new List<ValidationFailure>();
+
+        assessmentInterventionDto.ValidationResult = null;
+
+        var serializedCommand = JsonConvert.SerializeObject(assessmentInterventionDto.AssessmentInterventionCommand);
+        var editOverrideCommand = JsonConvert.DeserializeObject<EditOverrideCommand>(serializedCommand);
+
+        _validatorMock.Setup(x => x.ValidateAsync(It.IsAny<EditOverrideCommand>(), CancellationToken.None)).ReturnsAsync(validationResult);
+
+        _mediatorMock.Setup(x => x.Send(It.IsAny<EditOverrideCommand>(), CancellationToken.None)).ReturnsAsync(interventionId);
+
+        //Act
+        var overrideController = new OverrideController(_loggerMock.Object, _mediatorMock.Object, _validatorMock.Object);
+        var actionResult = await overrideController.EditOverride(assessmentInterventionDto);
+
+        // Assert
+        Assert.IsType<ViewResult>(actionResult);
+        var viewResult = (ViewResult)actionResult;
+        Assert.Equal("~/Features/Intervention/Views/EditOverride.cshtml", viewResult.ViewName);
+    }
+
     [Theory]
     [AutoMoqData]
     public async Task EditOverride_ShouldRedirectToView_WhenGivenValidationResultIsInValid(
@@ -383,6 +414,7 @@ public class OverrideControllerTests
       )
     {
         //Arrange
+        submitOverrideCommand = null;
 
         _mediatorMock.Setup(x => x.Send(It.IsAny<LoadOverrideCheckYourAnswersRequest>(), CancellationToken.None)).ThrowsAsync(exception);
 

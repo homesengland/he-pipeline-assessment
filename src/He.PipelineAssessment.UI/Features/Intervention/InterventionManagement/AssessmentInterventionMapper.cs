@@ -11,7 +11,8 @@ namespace He.PipelineAssessment.UI.Features.Intervention.InterventionManagement
         List<TargetWorkflowDefinition> TargetWorkflowDefinitionsFromAssessmentToolWorkflows(
             List<AssessmentToolWorkflow> assessmentToolWorkflows);
 
-        AssessmentInterventionDto AssessmentInterventionDtoFromWorkflowInstance(AssessmentToolWorkflowInstance instance, string userName, string userEmail);
+        AssessmentInterventionDto AssessmentInterventionDtoFromWorkflowInstance(AssessmentToolWorkflowInstance instance,
+            string userName, string userEmail, string rollback);
     }
 
     public class AssessmentInterventionMapper : IAssessmentInterventionMapper
@@ -79,7 +80,6 @@ namespace He.PipelineAssessment.UI.Features.Intervention.InterventionManagement
                     TargetWorkflowId = intervention.TargetAssessmentToolWorkflowId,
                     TargetWorkflowDefinitionId = intervention.TargetAssessmentToolWorkflow?.WorkflowDefinitionId,
                     TargetWorkflowDefinitionName = intervention.TargetAssessmentToolWorkflow?.Name,
-                    AssessmentId = intervention.AssessmentToolWorkflowInstance.AssessmentId,
                     CorrelationId = intervention.AssessmentToolWorkflowInstance.Assessment.SpId
                 };
 
@@ -112,7 +112,6 @@ namespace He.PipelineAssessment.UI.Features.Intervention.InterventionManagement
             }
         }
 
-        public AssessmentInterventionDto AssessmentInterventionDtoFromWorkflowInstance(AssessmentToolWorkflowInstance instance, string userName, string email)
         {
             try
             {
@@ -128,7 +127,6 @@ namespace He.PipelineAssessment.UI.Features.Intervention.InterventionManagement
                         RequestedByEmail = email,
                         Administrator = userName,
                         AdministratorEmail = email,
-                        DecisionType = InterventionDecisionTypes.Override,
                         Status = InterventionStatus.NotSubmitted,
                         ProjectReference = instance.Assessment.Reference
                     }

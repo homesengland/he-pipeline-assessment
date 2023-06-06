@@ -72,7 +72,7 @@ namespace He.PipelineAssessment.UI.Tests.Features.Intervention.InterventionManag
           LoadOverrideCheckYourAnswersRequest request,
           ArgumentException exception,
           LoadOverrideCheckYourAnswersRequestHandler sut
-)
+    )
         {
             //Arrange
             var emptyDto = new AssessmentInterventionDto();
@@ -114,8 +114,10 @@ namespace He.PipelineAssessment.UI.Tests.Features.Intervention.InterventionManag
         [AutoMoqData]
         public async Task Handle_ReturnsValidResult_GivenNoErrors(
           [Frozen] Mock<IAssessmentRepository> assessmentRepository,
+          [Frozen] Mock<IAdminAssessmentToolWorkflowRepository> adminRepository,
           [Frozen] Mock<IAssessmentInterventionMapper> mapper,
           AssessmentInterventionCommand command,
+          List<AssessmentToolWorkflow> workflows,
           AssessmentIntervention intervention,
           LoadOverrideCheckYourAnswersRequest request,
           LoadOverrideCheckYourAnswersRequestHandler sut
@@ -125,6 +127,7 @@ namespace He.PipelineAssessment.UI.Tests.Features.Intervention.InterventionManag
             var submitOverrideCommand = JsonConvert.DeserializeObject<SubmitOverrideCommand>(serializedCommand);
             assessmentRepository.Setup(x => x.GetAssessmentIntervention(request.InterventionId)).ReturnsAsync(intervention);
             mapper.Setup(x => x.AssessmentInterventionCommandFromAssessmentIntervention(intervention)).Returns(command);
+            adminRepository.Setup(x => x.GetAssessmentToolWorkflows()).ReturnsAsync(workflows);
 
             //Act
             var result = await sut.Handle(request, CancellationToken.None);
