@@ -1,4 +1,5 @@
 ﻿using He.PipelineAssessment.Infrastructure.Repository;
+using He.PipelineAssessment.Models;
 using He.PipelineAssessment.UI.Common.Exceptions;
 using MediatR;
 
@@ -22,8 +23,7 @@ namespace He.PipelineAssessment.UI.Features.Intervention.InterventionManagement.
                 throw new NotFoundException($"Assessment Intervention with Id {command.AssessmentInterventionId} not found");
             }
 
-            // we might need to update the status to something different? otherwise this command is not doing anything
-
+            intervention.Status = InterventionStatus.Pending;
             await _assessmentRepository.UpdateAssessmentIntervention(intervention);
 
             return Unit.Value;

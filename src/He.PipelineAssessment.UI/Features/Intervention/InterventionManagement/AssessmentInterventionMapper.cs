@@ -80,7 +80,8 @@ namespace He.PipelineAssessment.UI.Features.Intervention.InterventionManagement
                     TargetWorkflowId = intervention.TargetAssessmentToolWorkflowId,
                     TargetWorkflowDefinitionId = intervention.TargetAssessmentToolWorkflow?.WorkflowDefinitionId,
                     TargetWorkflowDefinitionName = intervention.TargetAssessmentToolWorkflow?.Name,
-                    CorrelationId = intervention.AssessmentToolWorkflowInstance.Assessment.SpId
+                    CorrelationId = intervention.AssessmentToolWorkflowInstance.Assessment.SpId,
+                    AssessmentId = intervention.AssessmentToolWorkflowInstance.AssessmentId
                 };
 
                 return command;

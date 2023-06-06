@@ -38,7 +38,7 @@ namespace He.PipelineAssessment.UI.Features.Intervention.InterventionManagement.
                 RequestedBy = command.RequestedBy ?? "",
                 RequestedByEmail = command.RequestedByEmail ?? "",
                 SignOffDocument = command.SignOffDocument,
-                Status = InterventionStatus.Pending,
+                Status = InterventionStatus.Draft,
                 AssessmentResult = command.AssessmentResult
             };
         }

@@ -1,4 +1,5 @@
-﻿@model He.PipelineAssessment.UI.Features.Intervention.InterventionManagement.ConfirmRollback.ConfirmRollbackCommand
+﻿@using He.PipelineAssessment.Models
+@model He.PipelineAssessment.UI.Features.Intervention.InterventionManagement.ConfirmRollback.ConfirmRollbackCommand
 
 @{
     ViewData["Title"] = "Create Assessment Rollback";
@@ -6,7 +7,7 @@
 }
 <div class="text-center">
     @{
-        var isEditable = Model.Status == "Pending";
+        var isEditable = Model.Status == InterventionStatus.Draft;
     }
     @using (Html.BeginForm("ConfirmRollback", "Rollback", FormMethod.Post))
     {
@@ -17,7 +18,7 @@
                     <legend class="govuk-fieldset__legend govuk-fieldset__legend--l">
                         <span class="govuk-caption-l">@Model.ProjectReference</span>
                         <h1 class="govuk-heading-l">
-                            Decision for Override
+                            Request for Rollback
                         </h1>
                     </legend>
                     <div class="govuk-grid-row">

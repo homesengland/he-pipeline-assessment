@@ -143,7 +143,7 @@ namespace He.PipelineAssessment.UI.Features.Intervention.InterventionManagement
             try
             {
                 AssessmentInterventionDto dto = await _mediator.Send(new EditRollbackAssessorRequest() { InterventionId = interventionId });
-                if (dto.AssessmentInterventionCommand.Status == InterventionStatus.Pending)
+                if (dto.AssessmentInterventionCommand.Status == InterventionStatus.Draft)
                 {
                     return View("~/Features/Intervention/Views/EditRollbackAssessor.cshtml", dto);
                 }
