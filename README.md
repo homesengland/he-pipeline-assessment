@@ -45,7 +45,7 @@ To apply EF migrations to the Pipeline Assessment database in Package manager co
 1. He.PipelineAssessment.UI needs to be set as Startup Project
 1. Then run the following command in Package manager consolse window 
 ```
-Add-Migration AddesdStatusToAssessmentToolsAndAssessmentToolWorkflows -Project He.PipelineAssessment.Infrastructure -Context He.PipelineAssessment.Infrastructure.Data.PipelineAssessmentContext
+Add-Migration [MigrationName] -Project He.PipelineAssessment.Infrastructure -Context He.PipelineAssessment.Infrastructure.Data.PipelineAssessmentContext
 ```
 
 ## Elsa Custom Workflow SDK
