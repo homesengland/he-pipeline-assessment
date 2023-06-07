@@ -14,6 +14,8 @@ namespace He.PipelineAssessment.Infrastructure.Repository
         Task<int> DeleteAssessmentToolWorkflow(AssessmentToolWorkflow assessmentToolWorkflow);
 
         Task<List<AssessmentToolWorkflow>> GetAssessmentToolWorkflows();
+        Task<int> SaveChanges();
+
     }
     public class AdminAssessmentToolWorkflowRepository : IAdminAssessmentToolWorkflowRepository
     {
@@ -43,7 +45,13 @@ namespace He.PipelineAssessment.Infrastructure.Repository
 
         public async Task<List<AssessmentToolWorkflow>> GetAssessmentToolWorkflows()
         {
-            return await _context.Set<AssessmentToolWorkflow>().OrderBy(x => x.AssessmentTool.Order).ToListAsync();
+            return await _context.Set<AssessmentToolWorkflow>().Where(x => x.Status != AssessmentToolStatus.Deleted)
+                .OrderBy(x => x.AssessmentTool.Order).ToListAsync();
+        }
+
+        public async Task<int> SaveChanges()
+        {
+            return await _context.SaveChangesAsync();
         }
 
         public async Task<int> UpdateAssessmentToolWorkflow(AssessmentToolWorkflow assessmentToolWorkflow)

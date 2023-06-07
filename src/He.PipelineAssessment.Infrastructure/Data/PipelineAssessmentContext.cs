@@ -44,6 +44,8 @@ namespace He.PipelineAssessment.Infrastructure.Data
                     case EntityState.Added:
                         entry.Entity.CreatedBy = userName;
                         entry.Entity.CreatedDateTime = DateTime.UtcNow;
+                        entry.Entity.LastModifiedBy = userName;
+                        entry.Entity.LastModifiedDateTime = DateTime.UtcNow;
 
                         break;
 

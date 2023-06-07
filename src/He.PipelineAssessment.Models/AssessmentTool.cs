@@ -6,6 +6,7 @@
         public string Name { get; set; } = null!;
         public bool IsVisible { get; set; }
         public int Order { get; set; }
+        public string? Status { get; set; }
 
         public virtual List<AssessmentToolWorkflow>? AssessmentToolWorkflows { get; set; }
     }
