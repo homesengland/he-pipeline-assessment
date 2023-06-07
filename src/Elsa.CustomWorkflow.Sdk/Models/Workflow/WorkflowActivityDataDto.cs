@@ -56,6 +56,8 @@ namespace Elsa.CustomWorkflow.Sdk.Models.Workflow
         public string? QuestionGuidance { get; set; }
         public bool DisplayComments { get; set; }
         public string? Comments { get; set; }
+        public bool DisplayEvidenceBox { get; set; }
+        public string? DocumentEvidenceLink { get; set; }
         public object Output { get; set; } = null!;
         public List<QuestionActivityAnswer> Answers { get; set; } = new List<QuestionActivityAnswer>();
         public bool IsReadOnly { get; set; }

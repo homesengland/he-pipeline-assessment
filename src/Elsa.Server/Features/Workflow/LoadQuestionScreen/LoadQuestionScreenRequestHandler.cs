@@ -137,11 +137,13 @@ namespace Elsa.Server.Features.Workflow.LoadQuestionScreen
             questionActivityData.ActivityId = dbQuestion.ActivityId;
             questionActivityData.Answers = answers;
             questionActivityData.Comments = dbQuestion.Comments;
+            questionActivityData.DocumentEvidenceLink = dbQuestion.DocumentEvidenceLink;
             questionActivityData.QuestionId = dbQuestion.QuestionId;
             questionActivityData.QuestionType = dbQuestion.QuestionType;
 
             questionActivityData.Question = item.QuestionText;
             questionActivityData.DisplayComments = item.DisplayComments;
+            questionActivityData.DisplayEvidenceBox = item.DisplayEvidenceBox;
             questionActivityData.QuestionGuidance = item.QuestionGuidance;
             questionActivityData.QuestionHint = item.QuestionHint;
             questionActivityData.CharacterLimit = item.CharacterLimit;

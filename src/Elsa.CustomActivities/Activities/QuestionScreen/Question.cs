@@ -95,6 +95,25 @@ namespace Elsa.CustomActivities.Activities.QuestionScreen
             })]
         public bool DisplayComments { get; set; }
 
+        [HeActivityInput(Hint = "Includes evidence box to allow user to provide a link to evidence documents",
+    UIHint = HePropertyUIHints.Checkbox,
+    ConditionalActivityTypes = new[]
+    {
+                QuestionTypeConstants.CurrencyQuestion,
+                QuestionTypeConstants.DecimalQuestion,
+                QuestionTypeConstants.IntegerQuestion,
+                QuestionTypeConstants.PercentageQuestion,
+                QuestionTypeConstants.CheckboxQuestion,
+                QuestionTypeConstants.RadioQuestion,
+                QuestionTypeConstants.PotScoreRadioQuestion,
+                QuestionTypeConstants.DateQuestion,
+                QuestionTypeConstants.TextQuestion,
+                QuestionTypeConstants.TextAreaQuestion,
+                QuestionTypeConstants.WeightedCheckboxQuestion,
+                QuestionTypeConstants.WeightedRadioQuestion
+    })]
+        public bool DisplayEvidenceBox{ get; set; }
+
         [HeActivityInput(Hint = "Character limit", UIHint = HePropertyUIHints.SingleLine, ConditionalActivityTypes = new[] { QuestionTypeConstants.TextAreaQuestion }, ExpectedOutputType = ExpectedOutputHints.Number)]
         public int? CharacterLimit { get; set; }
 
