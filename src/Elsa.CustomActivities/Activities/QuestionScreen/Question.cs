@@ -95,7 +95,7 @@ namespace Elsa.CustomActivities.Activities.QuestionScreen
             })]
         public bool DisplayComments { get; set; }
 
-        [HeActivityInput(Hint = "Provide text box to allow user to insert a link to evidence documents",
+        [HeActivityInput(Hint = "Includes evidence box to allow user to provide a link to evidence documents",
     UIHint = HePropertyUIHints.Checkbox,
     ConditionalActivityTypes = new[]
     {
