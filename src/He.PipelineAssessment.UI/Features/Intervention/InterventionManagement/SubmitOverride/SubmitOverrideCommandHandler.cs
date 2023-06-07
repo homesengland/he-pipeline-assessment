@@ -77,8 +77,10 @@ namespace He.PipelineAssessment.UI.Features.Intervention.InterventionManagement.
             {
                 nextWorkflow.IsStarted = false;
                 await _assessmentRepository.SaveChanges();
+
+                await _assessmentRepository.DeleteSubsequentNextWorkflows(nextWorkflow);
             }
-            await _assessmentRepository.DeleteSubsequentNextWorkflows(nextWorkflow);
+
         }
 
         private AssessmentToolInstanceNextWorkflow AssessmentToolInstanceNextWorkflow(int assessmentId, int assessmentToolWorkflowInstanceId, string workflowDefinitionId)

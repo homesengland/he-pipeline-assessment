@@ -171,9 +171,7 @@ namespace He.PipelineAssessment.UI.Tests.Features.Intervention.InterventionManag
                 It.Is<List<AssessmentToolInstanceNextWorkflow>>(y => y.Count == 1 && nextWorkflowPredicate(y.Single())
                 )));
             repo.Verify(x => x.SaveChanges(), Times.Exactly(1));
-            repo.Verify(x => x.DeleteSubsequentNextWorkflows(It.Is<AssessmentToolInstanceNextWorkflow?>(y => nextWorkflowPredicate(y!))), Times.Exactly(1));
         }
-
 
     }
 }
