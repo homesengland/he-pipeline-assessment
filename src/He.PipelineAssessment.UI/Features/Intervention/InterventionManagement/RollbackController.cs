@@ -2,11 +2,9 @@
 using He.PipelineAssessment.Models;
 using He.PipelineAssessment.UI.Features.Intervention.InterventionManagement.ConfirmRollback;
 using He.PipelineAssessment.UI.Features.Intervention.InterventionManagement.CreateRollback;
-using He.PipelineAssessment.UI.Features.Intervention.InterventionManagement.EditOverride;
+using He.PipelineAssessment.UI.Features.Intervention.InterventionManagement.DeleteRollback;
 using He.PipelineAssessment.UI.Features.Intervention.InterventionManagement.EditRollbackAssessor;
-using He.PipelineAssessment.UI.Features.Intervention.InterventionManagement.LoadOverrideCheckYourAnswers;
 using He.PipelineAssessment.UI.Features.Intervention.InterventionManagement.LoadRollbackCheckYourAnswersAssessor;
-using He.PipelineAssessment.UI.Features.Intervention.InterventionManagement.SubmitOverride;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -262,11 +260,11 @@ namespace He.PipelineAssessment.UI.Features.Intervention.InterventionManagement
                         model.Status = InterventionStatus.Pending;
                         break;
                     case "Cancel":
-                        //await _mediator.Send(new DeleteInterventionCommand
-                        //{
-                        //    InterventionId = model.AssessmentInterventionId
-                        //});
-                        break;
+                        await _mediator.Send(new DeleteRollbackCommand
+                        {
+                            AssessmentInterventionId = model.AssessmentInterventionId
+                        });
+                        return RedirectToAction("Summary", "Assessment", new { AssessmentId = model.AssessmentId, CorrelationId = model.CorrelationId });
                     default:
                         model.Status = InterventionStatus.Draft;
                         break;

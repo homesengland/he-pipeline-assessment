@@ -1,5 +1,4 @@
 ﻿using He.PipelineAssessment.Infrastructure.Data;
-using He.PipelineAssessment.Infrastructure.Migrations;
 using He.PipelineAssessment.Models;
 using Microsoft.EntityFrameworkCore;
 
@@ -30,6 +29,7 @@ namespace He.PipelineAssessment.Infrastructure.Repository
 
         Task<int> SaveChanges();
 
+        Task<int> DeleteIntervention(AssessmentIntervention intervention);
     }
 
     public class AssessmentRepository : IAssessmentRepository
@@ -134,6 +134,12 @@ namespace He.PipelineAssessment.Infrastructure.Repository
         public async Task<int> SaveChanges()
         {
             return await context.SaveChangesAsync();
+        }
+
+        public async Task<int> DeleteIntervention(AssessmentIntervention intervention)
+        {
+            context.Remove(intervention);
+            return await SaveChanges();
         }
 
         public async Task<AssessmentIntervention?> GetAssessmentIntervention(int interventionId)
