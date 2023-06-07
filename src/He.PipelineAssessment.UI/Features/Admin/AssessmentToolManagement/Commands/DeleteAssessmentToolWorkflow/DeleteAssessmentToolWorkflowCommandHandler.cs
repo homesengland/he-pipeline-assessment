@@ -1,4 +1,5 @@
 ﻿using He.PipelineAssessment.Infrastructure.Repository;
+using He.PipelineAssessment.Models;
 using MediatR;
 
 namespace He.PipelineAssessment.UI.Features.Admin.AssessmentToolManagement.Commands.DeleteAssessmentToolWorkflow
@@ -16,8 +17,8 @@ namespace He.PipelineAssessment.UI.Features.Admin.AssessmentToolManagement.Comma
         {
             var entity = await _adminAssessmentToolWorkflowRepository.GetAssessmentToolWorkflowById(request.Id);
             ArgumentNullException.ThrowIfNull(entity, "Assessment Tool Workflow not found");
-
-            return await _adminAssessmentToolWorkflowRepository.DeleteAssessmentToolWorkflow(entity);
+            entity.Status = AssessmentToolStatus.Deleted;
+            return await _adminAssessmentToolWorkflowRepository.SaveChanges();
         }
     }
 }

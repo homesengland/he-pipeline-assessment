@@ -953,8 +953,7 @@ public class LoadQuestionScreenRequestHandlerTests
     {
         //Arrange
         customActivityNavigation.ActivityType = ActivityTypeConstants.QuestionScreen;
-        assessmentQuestions[0].Answers = new List<Answer>(){
-            new() { AnswerText = "", Choice = new QuestionChoice { Id = 1, Identifier = "A" } } }; 
+        assessmentQuestions[0].Answers = new List<Answer>(); 
         for (var i = 0; i < assessmentQuestions.Count; i++)
         {
             var questionId = assessmentQuestions[i].QuestionId;

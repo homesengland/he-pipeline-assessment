@@ -10,9 +10,11 @@
         public bool IsLatest { get; set; }
         public string Name { get; set; } = null!;
         public bool IsEconomistWorkflow { get; set; }
+        public string? Status { get; set; }
 
         public virtual AssessmentTool AssessmentTool { get; set; } = null!;
 
         public virtual List<AssessmentIntervention>? AssessmentInterventions { get; set; }
+        
     }
 }

@@ -33,7 +33,7 @@ namespace He.PipelineAssessment.UI.Tests.Features.Admin.AssessmentToolManagement
 
         [Theory]
         [AutoMoqData]
-        public async Task Handle_CallsDeleteAssessmentWorkflowRepositoryWithCorrectValues
+        public async Task Handle_SetsAssessmentToolWorkflowStatusToDeleted
         (
           [Frozen] Mock<IAdminAssessmentToolWorkflowRepository> adminAssessmentToolWorkflowRepository,
           DeleteAssessmentToolWorkflowCommand deleteAssessmentToolWorkflowCommand,
@@ -44,14 +44,16 @@ namespace He.PipelineAssessment.UI.Tests.Features.Admin.AssessmentToolManagement
             //Arrange
             adminAssessmentToolWorkflowRepository.Setup(x => x.GetAssessmentToolWorkflowById(deleteAssessmentToolWorkflowCommand.Id))
                .ReturnsAsync(assessmentToolWorkflow);
-            adminAssessmentToolWorkflowRepository.Setup(y =>  y.DeleteAssessmentToolWorkflow(assessmentToolWorkflow)).ReturnsAsync(6);
+            adminAssessmentToolWorkflowRepository.Setup(x => x.SaveChanges())
+               .ReturnsAsync(34);
 
             //Act
             var result = await sut.Handle(deleteAssessmentToolWorkflowCommand, CancellationToken.None);
 
             //Assert          
-            adminAssessmentToolWorkflowRepository.Verify(x => x.DeleteAssessmentToolWorkflow(assessmentToolWorkflow), Times.Once);
-            Assert.Equal(6, result);
+            Assert.Equal(AssessmentToolStatus.Deleted, assessmentToolWorkflow.Status);
+            adminAssessmentToolWorkflowRepository.Verify(x => x.SaveChanges(), Times.Once);
+            Assert.Equal(34, result);
         }
 
         [Theory]

@@ -21,4 +21,9 @@
         public const string Approved = "Approved";
         public const string Draft = "Draft";
     }
+
+    public class AssessmentToolStatus
+    {
+        public const string Deleted = "Deleted";
+    }
 }

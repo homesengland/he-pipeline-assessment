@@ -109,6 +109,7 @@ namespace Elsa.Server.Features.Workflow.QuestionScreenSaveAndContinue
                             Choice = question.Choices?.FirstOrDefault(y => y.Id == x.ChoiceId)
                         }).ToList();
                         question.Comments = answers.First().Comments;
+                        question.DocumentEvidenceLink= answers.First().DocumentEvidenceLink;
                         question.LastModifiedDateTime = now;
                     }
                 }
