@@ -252,11 +252,26 @@ namespace He.PipelineAssessment.UI.Features.Intervention.InterventionManagement
         }
 
         [HttpPost]
-        public async Task<IActionResult> ConfirmRollback(ConfirmRollbackCommand model)
+        public async Task<IActionResult> ConfirmRollback(ConfirmRollbackCommand model, string submitButton)
         {
             try
             {
-                var result = await _mediator.Send(model);
+                switch (submitButton)
+                {
+                    case "Submit":
+                        model.Status = InterventionStatus.Pending;
+                        break;
+                    case "Cancel":
+                        //await _mediator.Send(new DeleteInterventionCommand
+                        //{
+                        //    InterventionId = model.AssessmentInterventionId
+                        //});
+                        break;
+                    default:
+                        model.Status = InterventionStatus.Draft;
+                        break;
+                }
+                await _mediator.Send(model);
                 return RedirectToAction("CheckYourDetailsAssessor", new { InterventionId = model.AssessmentInterventionId });
             }
             catch (Exception e)
