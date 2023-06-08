@@ -14,7 +14,7 @@ import ExpandIcon from '../../icons/expand_icon';
 import { PropertyOutputTypes, RadioOptionsSyntax, SyntaxNames } from '../../constants/constants';
 import { NestedActivityDefinitionProperty } from '../../models/custom-component-models';
 import { ToggleDictionaryDisplay } from '../../functions/display-toggle'
-import { UpdateCheckbox, CustomUpdateExpression, UpdateName, UpdateSyntax } from '../../functions/updateModel';
+import { UpdateCheckbox, CustomUpdateExpression, UpdateDropdown, UpdateName, UpdateSyntax } from '../../functions/updateModel';
 
 @Component({
   tag: 'he-potscore-radio-options-property',
@@ -35,6 +35,7 @@ export class HePotScoreRadioOptionProperty {
   UpdateName: Function = UpdateName.bind(this);
   UpdateCheckbox: Function = UpdateCheckbox.bind(this);
   UpdateSyntax: Function = UpdateSyntax.bind(this);
+  UpdateDropdown: Function = UpdateDropdown.bind(this);
 
   @State() switchTextHeight: string = "";
 
@@ -192,7 +193,7 @@ export class HePotScoreRadioOptionProperty {
               Pot Score
             </th>
             <td class="elsa-py-2 elsa-pr-5" style={{ width: colWidth }}>
-              <select onChange={e => this.UpdateExpression(e, radioOption, RadioOptionsSyntax.PotScore)}
+              <select onChange={e => this.UpdateDropdown(e, radioOption, RadioOptionsSyntax.PotScore)}
                 class="elsa-mt-1 elsa-block focus:elsa-ring-blue-500 focus:elsa-border-blue-500 elsa-w-full elsa-shadow-sm sm:elsa-max-w-xs sm:elsa-text-sm elsa-border-gray-300 elsa-rounded-md">
                 {this.potScoreOptions.map(potScore => {
                   const selected = potScore.trim() === selectedScore;
