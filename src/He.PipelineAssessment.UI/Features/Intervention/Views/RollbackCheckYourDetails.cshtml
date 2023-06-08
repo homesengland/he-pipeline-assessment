@@ -1,15 +1,14 @@
 ﻿@using He.PipelineAssessment.Models
-@model He.PipelineAssessment.UI.Features.Intervention.InterventionManagement.SubmitOverride.SubmitOverrideCommand
-
+@model He.PipelineAssessment.UI.Features.Intervention.InterventionManagement.SubmitRollback.SubmitRollbackCommand
 @{
-    ViewData["Title"] = "Create Assessment Override";
+    ViewData["Title"] = "Submit Assessment Rollback";
     Layout = "_Layout";
 }
 <div class="text-center">
     @{
         var isEditable = Model.Status == InterventionStatus.Pending;
     }
-    @using (Html.BeginForm("SubmitOverride", "Override", FormMethod.Post))
+    @using (Html.BeginForm("SubmitRollback", "Rollback", FormMethod.Post))
     {
         @Html.AntiForgeryToken()
         <div class="govuk-form-group">
@@ -54,6 +53,14 @@
                                     </dt>
                                     <dd class="govuk-summary-list__value">
                                         <p>@Model.AssessmentResult</p>
+                                    </dd>
+                                </div>
+                                <div class="govuk-summary-list__row">
+                                    <dt class="govuk-summary-list__key">
+                                        Assessor Rationale
+                                    </dt>
+                                    <dd class="govuk-summary-list__value">
+                                        <p>@Model.AssessorRationale</p>
                                     </dd>
                                 </div>
                                 <div class="govuk-summary-list__row">
