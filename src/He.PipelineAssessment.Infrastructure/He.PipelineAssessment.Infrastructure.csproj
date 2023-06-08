@@ -20,6 +20,7 @@
     <None Remove="Migrations\20230601152316_InterventionListStoredProc\GetInterventionList.sql" />
     <None Remove="Migrations\20230607140525_StoredProceduresToHandleDeletedStatus\GetAssessmentStagesByAssessmentId.sql" />
     <None Remove="Migrations\20230607140525_StoredProceduresToHandleDeletedStatus\GetStartableToolsByAssessmentId.sql" />
+    <None Remove="Migrations\20230608123140_FixOverwrittenGetAssessmentStagesSP\GetAssessmentStagesByAssessmentId.sql" />
   </ItemGroup>
 
   <ItemGroup>
@@ -36,6 +37,7 @@
     <EmbeddedResource Include="Migrations\20230601152316_InterventionListStoredProc\GetInterventionList.sql" />
     <EmbeddedResource Include="Migrations\20230607140525_StoredProceduresToHandleDeletedStatus\GetAssessmentStagesByAssessmentId.sql" />
     <EmbeddedResource Include="Migrations\20230607140525_StoredProceduresToHandleDeletedStatus\GetStartableToolsByAssessmentId.sql" />
+    <EmbeddedResource Include="Migrations\20230608123140_FixOverwrittenGetAssessmentStagesSP\GetAssessmentStagesByAssessmentId.sql" />
   </ItemGroup>
 
   <ItemGroup>
