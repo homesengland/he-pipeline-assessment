@@ -121,12 +121,7 @@ if (app.Environment.IsDevelopment())
     context.Database.Migrate();
 }
 
-// Configure the HTTP request pipeline.
-if (!app.Environment.IsDevelopment())
-{
-    app.UseExceptionHandler("/Error/Index");
-    // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
-}
+app.UseExceptionHandler("/Error/Index");
 
 app.Use((context, next) =>
 {

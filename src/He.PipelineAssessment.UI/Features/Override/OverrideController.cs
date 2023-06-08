@@ -80,8 +80,8 @@ namespace He.PipelineAssessment.UI.Features.Override
         [HttpGet]
         public async Task<IActionResult> EditOverride(int interventionId)
         {
-            //try
-            //{
+            try
+            {
                 AssessmentInterventionDto dto = await _mediator.Send(new EditOverrideRequest() { InterventionId = interventionId });
                 if (dto.AssessmentInterventionCommand.Status == InterventionStatus.Pending)
                 {
@@ -91,12 +91,12 @@ namespace He.PipelineAssessment.UI.Features.Override
                 {
                     return RedirectToAction("CheckYourDetails", new { interventionId });
                 }
-            //}
-            //catch (Exception e)
-            //{
-            //    _logger.LogError(e.Message);
-            //    return RedirectToAction("Index", "Error", new { message = e.Message });
-            //}
+            }
+            catch (Exception e)
+            {
+                _logger.LogError(e.Message);
+                return RedirectToAction("Index", "Error", new { message = e.Message });
+            }
         }
 
         [HttpPost]
