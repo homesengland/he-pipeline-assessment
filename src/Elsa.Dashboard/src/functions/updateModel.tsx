@@ -33,6 +33,12 @@ export function UpdateName(e: Event, property: NestedActivityDefinitionProperty)
   this.updatePropertyModel();
 }
 
+export function UpdateDropdown(e: Event, property: NestedActivityDefinitionProperty, syntax: string) {
+  const select = e.currentTarget as HTMLSelectElement;
+  property.expressions[syntax] = select.value;
+  this.updatePropertyModel();
+}
+
 export function UpdateSyntax(e: Event, property: NestedActivityDefinitionProperty, expressionEditor: HTMLElsaExpressionEditorElement) {
   const select = e.currentTarget as HTMLSelectElement;
   property.syntax = select.value;
