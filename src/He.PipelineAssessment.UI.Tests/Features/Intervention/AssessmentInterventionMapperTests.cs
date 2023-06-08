@@ -1,12 +1,6 @@
 ﻿using He.PipelineAssessment.Models;
 using He.PipelineAssessment.Tests.Common;
-using He.PipelineAssessment.UI.Features.Intervention.InterventionManagement;
-using He.PipelineAssessment.UI.Features.Intervention.InterventionManagement.CreateOverride;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using He.PipelineAssessment.UI.Features.Intervention;
 using Xunit;
 
 namespace He.PipelineAssessment.UI.Tests.Features.Intervention

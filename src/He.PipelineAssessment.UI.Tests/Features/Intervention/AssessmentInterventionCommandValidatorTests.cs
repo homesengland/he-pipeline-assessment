@@ -1,7 +1,7 @@
 ﻿using FluentValidation.TestHelper;
-using He.PipelineAssessment.UI.Features.Intervention.InterventionManagement;
 using Xunit;
 using He.PipelineAssessment.Tests.Common;
+using He.PipelineAssessment.UI.Features.Intervention;
 
 namespace He.PipelineAssessment.UI.Tests.Features.Intervention
 {

@@ -1,23 +1,15 @@
 ﻿using AutoFixture.Xunit2;
-using He.PipelineAssessment.Infrastructure.Repository.StoredProcedure;
 using He.PipelineAssessment.Infrastructure.Repository;
-using He.PipelineAssessment.Models.ViewModels;
 using He.PipelineAssessment.Tests.Common;
-using He.PipelineAssessment.UI.Features.Assessment.AssessmentSummary;
 using Moq;
 using Xunit;
-using He.PipelineAssessment.UI.Features.Intervention.InterventionManagement.CreateOverride;
 using He.PipelineAssessment.Models;
-using He.PipelineAssessment.UI.Features.Intervention.InterventionManagement.EditOverride;
-using He.PipelineAssessment.UI.Features.Intervention.InterventionManagement;
-using AutoMapper;
-using static Microsoft.EntityFrameworkCore.DbLoggerCategory.Database;
-using He.PipelineAssessment.UI.Features.Intervention.InterventionManagement.LoadOverrideCheckYourAnswers;
-using He.PipelineAssessment.UI.Features.Intervention.InterventionManagement.SubmitOverride;
 using Newtonsoft.Json;
 using He.PipelineAssessment.UI.Common.Exceptions;
 using Microsoft.EntityFrameworkCore;
-using System;
+using He.PipelineAssessment.UI.Features.Override.LoadOverrideCheckYourAnswers;
+using He.PipelineAssessment.UI.Features.Override.SubmitOverride;
+using He.PipelineAssessment.UI.Features.Intervention;
 
 namespace He.PipelineAssessment.UI.Tests.Features.Intervention.InterventionManagement.LoadOverrideCheckYourAnswers
 {

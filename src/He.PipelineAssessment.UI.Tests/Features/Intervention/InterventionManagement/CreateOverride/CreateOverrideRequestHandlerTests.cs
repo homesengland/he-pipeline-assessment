@@ -6,12 +6,12 @@ using He.PipelineAssessment.Tests.Common;
 using He.PipelineAssessment.UI.Features.Assessment.AssessmentSummary;
 using Moq;
 using Xunit;
-using He.PipelineAssessment.UI.Features.Intervention.InterventionManagement.CreateOverride;
 using He.PipelineAssessment.Models;
-using He.PipelineAssessment.UI.Features.Intervention.InterventionManagement;
 using He.PipelineAssessment.UI.Common.Exceptions;
 using He.PipelineAssessment.Infrastructure;
 using Auth0.ManagementApi.Models;
+using He.PipelineAssessment.UI.Features.Override.CreateOverride;
+using He.PipelineAssessment.UI.Features.Intervention;
 
 namespace He.PipelineAssessment.UI.Tests.Features.Intervention.InterventionManagement.CreateOverride
 {
