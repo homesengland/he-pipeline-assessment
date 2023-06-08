@@ -1,4 +1,6 @@
-﻿using Elsa.CustomModels;
+﻿using Elsa.CustomActivities.Activities.Common;
+using Elsa.CustomModels;
+using Elsa.CustomWorkflow.Sdk;
 
 namespace Elsa.Server.Features.Workflow.LoadQuestionScreen
 {
@@ -26,7 +28,9 @@ namespace Elsa.Server.Features.Workflow.LoadQuestionScreen
         public string? QuestionHint { get; set; }
         public string? QuestionGuidance { get; set; }
         public bool DisplayComments { get; set; }
+        public bool DisplayEvidenceBox { get; set; }
         public string? Comments { get; set; }
+        public string? DocumentEvidenceLink { get; set; }
         public object? Output { get; set; }
 
         public string? QuestionType { get; set; } = null!;
@@ -34,7 +38,10 @@ namespace Elsa.Server.Features.Workflow.LoadQuestionScreen
         public Checkbox Checkbox { get; set; } = null!;
         public Radio Radio { get; set; } = null!;
         public Information Information { get; set; } = null!;
+        public DataTableInput DataTable { get; set; } = null!;
         public bool IsReadOnly { get; set; }
+
+        public bool ReevaluatePrepopulatedAnswers { get; set; }
         public List<Answer> Answers { get; set; } = new();
 
         public bool HasAnswers()
@@ -60,6 +67,13 @@ namespace Elsa.Server.Features.Workflow.LoadQuestionScreen
     public class Information
     {
         public InformationText[] InformationTextList { get; set; } = new List<InformationText>().ToArray();
+    }
+
+    public class DataTableInput
+    {
+        public string? DisplayGroupId { get; set; }
+        public string InputType { get; set; } = DataTableInputTypeConstants.CurrencyDataTableInput;
+        public TableInput[] Inputs { get; set; } = new List<TableInput>().ToArray();
     }
 
 }

@@ -9,6 +9,7 @@ using He.PipelineAssessment.Infrastructure.Repository;
 using He.PipelineAssessment.Infrastructure.Repository.StoredProcedure;
 using He.PipelineAssessment.UI;
 using He.PipelineAssessment.UI.Authorization;
+using He.PipelineAssessment.UI.Common.Utility;
 using He.PipelineAssessment.UI.Extensions;
 using He.PipelineAssessment.UI.Features.Admin.AssessmentToolManagement.Commands.CreateAssessmentTool;
 using He.PipelineAssessment.UI.Features.Admin.AssessmentToolManagement.Commands.CreateAssessmentToolWorkflow;
@@ -16,6 +17,8 @@ using He.PipelineAssessment.UI.Features.Admin.AssessmentToolManagement.Commands.
 using He.PipelineAssessment.UI.Features.Admin.AssessmentToolManagement.Commands.UpdateAssessmentToolWorkflowCommand;
 using He.PipelineAssessment.UI.Features.Admin.AssessmentToolManagement.Mappers;
 using He.PipelineAssessment.UI.Features.Admin.AssessmentToolManagement.Validators;
+using He.PipelineAssessment.UI.Features.Intervention.InterventionManagement;
+using He.PipelineAssessment.UI.Features.Intervention.InterventionManagement.CreateOverride;
 using He.PipelineAssessment.UI.Features.SinglePipeline.Sync;
 using He.PipelineAssessment.UI.Features.Workflow.QuestionScreenSaveAndContinue;
 using MediatR;
@@ -50,9 +53,12 @@ builder.Services.AddHttpClient("ElsaServerClient", client =>
 });
 
 builder.Services.AddScoped<IElsaServerHttpClient, ElsaServerHttpClient>();
+builder.Services.AddScoped<IDateTimeProvider, DateTimeProvider>();
 builder.Services.AddScoped<IQuestionScreenSaveAndContinueMapper, QuestionScreenSaveAndContinueMapper>();
 builder.Services.AddScoped<IAssessmentToolMapper, AssessmentToolMapper>();
 builder.Services.AddScoped<IAssessmentToolWorkflowMapper, AssessmentToolWorkflowMapper>();
+builder.Services.AddScoped<ICreateOverrideMapper, CreateOverrideMapper>();
+builder.Services.AddScoped<IAssessmentInterventionMapper, AssessmentInterventionMapper>();
 builder.Services.AddScoped<NonceConfig>();
 
 
@@ -75,6 +81,7 @@ builder.Services.AddScoped<IValidator<CreateAssessmentToolCommand>, CreateAssess
 builder.Services.AddScoped<IValidator<CreateAssessmentToolWorkflowCommand>, CreateAssessmentToolWorkflowCommandValidator>();
 builder.Services.AddScoped<IValidator<UpdateAssessmentToolCommand>, UpdateAssessmentToolCommandValidator>();
 builder.Services.AddScoped<IValidator<UpdateAssessmentToolWorkflowCommand>, UpdateAssessmentToolWorkflowCommandValidator>();
+builder.Services.AddScoped<IValidator<AssessmentInterventionCommand>, AssessmentInterventionCommandValidator>();
 builder.Services.AddScoped<ISinglePipelineProvider, SinglePipelineProvider>();
 
 builder.Services.AddDataProtection().PersistKeysToDbContext<PipelineAssessmentContext>();

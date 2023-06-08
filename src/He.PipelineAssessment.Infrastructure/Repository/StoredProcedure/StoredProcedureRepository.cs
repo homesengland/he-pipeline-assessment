@@ -11,6 +11,8 @@ namespace He.PipelineAssessment.Infrastructure.Repository.StoredProcedure
         Task<List<AssessmentStageViewModel>> GetAssessmentStages(int assessmentId);
         Task<List<StartableToolViewModel>> GetStartableTools(int assessmentId);
         Task<List<AssessmentDataViewModel>> GetAssessments();
+        Task<List<AssessmentDataViewModel>> GetEconomistAssessments();
+        Task<List<AssessmentInterventionViewModel>> GetInterventionList();
     }
     public class StoredProcedureRepository : IStoredProcedureRepository
     {
@@ -18,6 +20,8 @@ namespace He.PipelineAssessment.Infrastructure.Repository.StoredProcedure
         private readonly string sp_GetAssessmentStagesByAssessmentId = @"exec GetAssessmentStagesByAssessmentId @assessmentId";
         private readonly string sp_GetStartableToolsByAssessmentId = @"exec GetStartableToolsByAssessmentId @assessmentId";
         private readonly string sp_AssessmentData = @"exec GetAssessments";
+        private readonly string sp_EconomistAssessmentData = @"exec GetEconomistAssessments";
+        private readonly string sp_InterventionData = @"exec GetInterventionList";
         public StoredProcedureRepository(PipelineAssessmentStoreProcContext storeProcContext)
         {
             _storeProcContext = storeProcContext;
@@ -37,6 +41,21 @@ namespace He.PipelineAssessment.Infrastructure.Repository.StoredProcedure
             var stages = await _storeProcContext.AssessmentStageViewModel
                 .FromSqlRaw(sp_GetAssessmentStagesByAssessmentId, assessmentIdParameter).ToListAsync();
             return new List<AssessmentStageViewModel>(stages);
+        }
+
+        public async Task<List<AssessmentDataViewModel>> GetEconomistAssessments()
+        {
+            var assessmentData = await _storeProcContext.AssessmentDataViewModel
+                .FromSqlRaw(sp_EconomistAssessmentData).ToListAsync();
+            return new List<AssessmentDataViewModel>(assessmentData);
+        }
+
+        public async Task<List<AssessmentInterventionViewModel>> GetInterventionList()
+        {
+            var interventionData = await _storeProcContext.AssessmentInterventionViewModel
+                .FromSqlRaw(sp_InterventionData).ToListAsync();
+            return new List<AssessmentInterventionViewModel>(interventionData);
+
         }
 
         public async Task<List<StartableToolViewModel>> GetStartableTools(int assessmentId)

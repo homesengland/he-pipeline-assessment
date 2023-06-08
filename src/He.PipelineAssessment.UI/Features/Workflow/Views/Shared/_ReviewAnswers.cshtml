@@ -8,7 +8,7 @@
         <dl class="govuk-summary-list govuk-!-margin-bottom-9">
             @foreach (var question in Model.Questions!)
             {
-           
+
                 <div class="govuk-summary-list__row">
                     <dt class="govuk-summary-list__key">
                         @question.QuestionText
@@ -20,12 +20,28 @@
                             {
                                 if (question.QuestionType == QuestionTypeConstants.PercentageQuestion)
                                 {
-                                    <p>@answer.AnswerText %</p>
+                                    <p>@answer.AnswerText.ToCommaSeparatedNumber() %</p>
+                                }
+                                else if (question.QuestionType == QuestionTypeConstants.IntegerQuestion)
+                                {
+                                    <p>@answer.AnswerText.ToCommaSeparatedNumber() </p>
+                                }
+                                else if (question.QuestionType == QuestionTypeConstants.DecimalQuestion)
+                                {
+                                    <p>@answer.AnswerText.ToCommaSeparatedNumber() </p>
                                 }
                                 else if (question.QuestionType == QuestionTypeConstants.CurrencyQuestion)
                                 {
 
-                                    <p>@answer.AnswerText.ToCommaSeparatedNumber()</p>
+                                    <p>£ @answer.AnswerText.ToCommaSeparatedNumber()</p>
+                                }
+                                else if (question.QuestionType == QuestionTypeConstants.Information)
+                                {
+
+                                }
+                                else if (question.QuestionType == QuestionTypeConstants.DataTable)
+                                {
+
                                 }
                                 else
                                 {
@@ -35,14 +51,27 @@
                             }
                         }
                     </dd>
-                    @if (Model.RenderChangeLinks && Model.WorkflowInstanceId != null)
+                    @if (Model.RenderChangeLinks && Model.WorkflowInstanceId != null && question.QuestionType != QuestionTypeConstants.Information)
                     {
                         <dd class="govuk-summary-list__actions">
                             @Html.ActionLink("Change", "LoadWorkflowActivity", "Workflow", new { WorkflowInstanceId = Model.WorkflowInstanceId, ActivityId = @question.ActivityId, ActivityType = ActivityTypeConstants.QuestionScreen }, new { @class = "govuk-link" })
                         </dd>
                     }
                 </div>
-          
+                if (question.QuestionType == QuestionTypeConstants.DataTable)
+                {
+                    @if (question.Answers != null)
+                    {
+                        @foreach (var answer in question.Answers)
+                        {
+                            var tableModel = answer.AnswerText.ToTableModel();
+                            if (tableModel.Inputs.Any())
+                            {
+                                @await Html.PartialAsync("_TableModelReviewAnswer", tableModel);
+                            }
+                        }
+                    }
+                }
             }
         </dl>
     </div>

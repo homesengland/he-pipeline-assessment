@@ -52,9 +52,20 @@ namespace He.PipelineAssessment.UI.Features.Workflow.StartWorkflow
                         IsAuthorised = true
                     };
 
-                    var assessmentStage = AssessmentStage(request, response);
+                    var assessmentToolWorkflowInstance = AssessmentToolWorkflowInstance(request, response);
 
-                    await _assessmentRepository.CreateAssessmentToolWorkflowInstance(assessmentStage);
+                    await _assessmentRepository.CreateAssessmentToolWorkflowInstance(assessmentToolWorkflowInstance);
+
+                    //if there is a next workflow record for the current set it to started
+                    var nextWorkflow =
+                        await _assessmentRepository.GetNonStartedAssessmentToolInstanceNextWorkflowByAssessmentId(request.AssessmentId,
+                            request.WorkflowDefinitionId);
+
+                    if (nextWorkflow!=null)
+                    {
+                        nextWorkflow.IsStarted = true;
+                        await _assessmentRepository.SaveChanges();
+                    }
 
                     return await Task.FromResult(result);
                 }
@@ -71,17 +82,17 @@ namespace He.PipelineAssessment.UI.Features.Workflow.StartWorkflow
 
         }
 
-        private static AssessmentToolWorkflowInstance AssessmentStage(StartWorkflowCommand request, WorkflowNextActivityDataDto response)
+        private static AssessmentToolWorkflowInstance AssessmentToolWorkflowInstance(StartWorkflowCommand request, WorkflowNextActivityDataDto response)
         {
-            var assessmentStage = new AssessmentToolWorkflowInstance();
-            assessmentStage.WorkflowInstanceId = response.Data.WorkflowInstanceId;
-            assessmentStage.AssessmentId = request.AssessmentId;
-            assessmentStage.Status = AssessmentStageConstants.Draft;
-            assessmentStage.WorkflowName = response.Data.WorkflowName;
-            assessmentStage.WorkflowDefinitionId = request.WorkflowDefinitionId;
-            assessmentStage.CurrentActivityId = response.Data.NextActivityId;
-            assessmentStage.CurrentActivityType = response.Data.ActivityType;
-            return assessmentStage;
+            var assessmentToolWorkflowInstance = new AssessmentToolWorkflowInstance();
+            assessmentToolWorkflowInstance.WorkflowInstanceId = response.Data.WorkflowInstanceId;
+            assessmentToolWorkflowInstance.AssessmentId = request.AssessmentId;
+            assessmentToolWorkflowInstance.Status = AssessmentToolWorkflowInstanceConstants.Draft;
+            assessmentToolWorkflowInstance.WorkflowName = response.Data.WorkflowName;
+            assessmentToolWorkflowInstance.WorkflowDefinitionId = request.WorkflowDefinitionId;
+            assessmentToolWorkflowInstance.CurrentActivityId = response.Data.NextActivityId;
+            assessmentToolWorkflowInstance.CurrentActivityType = response.Data.ActivityType;
+            return assessmentToolWorkflowInstance;
         }
     }
 }

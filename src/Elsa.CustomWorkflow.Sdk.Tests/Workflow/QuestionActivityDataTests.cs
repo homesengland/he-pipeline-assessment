@@ -403,7 +403,7 @@ namespace Elsa.CustomWorkflow.Sdk.Tests.Workflow
                      IsSingle = true,
                 },
             };
-            var answerList = new List<Answer>{ new Answer("0", "Test 1", null, 1)};
+            var answerList = new List<Answer>{ new Answer("0", "Test 1", null, null,1)};
             var selectedChoices = new List<int> { 1 };
             sut.QuestionType = QuestionTypeConstants.CheckboxQuestion;
 

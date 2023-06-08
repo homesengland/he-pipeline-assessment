@@ -133,11 +133,10 @@ namespace He.PipelineAssessment.UI.Tests.Features.Workflow
             WorkflowController sut)
         {
             //Arrange
-
-
             mediator.Setup(x => x.Send(command, CancellationToken.None)).ReturnsAsync(saveAndContinueCommandResponse);
             validator.Setup(x => x.Validate(It.IsAny<QuestionScreenSaveAndContinueCommand>()))
                 .Returns(validationResult);
+            
             //Act
             var result = await sut.QuestionScreenSaveAndContinue(command);
 
@@ -159,8 +158,9 @@ namespace He.PipelineAssessment.UI.Tests.Features.Workflow
             WorkflowController sut)
         {
             //Arrange
+            saveAndContinueCommandResponse.IsAuthorised = true;
             mediator.Setup(x => x.Send(command, CancellationToken.None)).ReturnsAsync(saveAndContinueCommandResponse);
-
+            
             //Act
             var result = await sut.QuestionScreenSaveAndContinue(command);
 
@@ -627,6 +627,7 @@ namespace He.PipelineAssessment.UI.Tests.Features.Workflow
            WorkflowController sut)
         {
             //Arrange
+            response.IsAuthorised = false;
             mediator.Setup(x => x.Send(command, CancellationToken.None)).ReturnsAsync(response);
 
             //AcT

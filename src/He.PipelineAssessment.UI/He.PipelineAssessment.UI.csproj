@@ -10,6 +10,13 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="Features\Intervention\Controllers\**" />
+    <Content Remove="Features\Intervention\Controllers\**" />
+    <EmbeddedResource Remove="Features\Intervention\Controllers\**" />
+    <None Remove="Features\Intervention\Controllers\**" />
+  </ItemGroup>
+
+  <ItemGroup>
     <Content Remove="bundleconfig.json" />
   </ItemGroup>
 
@@ -50,6 +57,10 @@
     <ProjectReference Include="..\Elsa.CustomWorkflow.Sdk\Elsa.CustomWorkflow.Sdk.csproj" />
     <ProjectReference Include="..\He.PipelineAssessment.Data\He.PipelineAssessment.Data.csproj" />
     <ProjectReference Include="..\He.PipelineAssessment.Infrastructure\He.PipelineAssessment.Infrastructure.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Features\Economist\Views\" />
   </ItemGroup>
 
 </Project>

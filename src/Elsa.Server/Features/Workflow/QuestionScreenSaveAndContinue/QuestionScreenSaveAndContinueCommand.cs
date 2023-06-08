@@ -12,5 +12,5 @@ namespace Elsa.Server.Features.Workflow.QuestionScreenSaveAndContinue
         public List<Answer>? Answers { get; set; }
     }
 
-    public record Answer(string WorkflowQuestionId, string? AnswerText, string? Comments, int? ChoiceId = null);
+    public record Answer(string WorkflowQuestionId, string? AnswerText, string? Comments, string? DocumentEvidenceLink,  int? ChoiceId = null);
 }

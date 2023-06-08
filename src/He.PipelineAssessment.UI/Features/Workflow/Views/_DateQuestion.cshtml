@@ -8,14 +8,14 @@
 
     var errorFormClass = !Model.IsValid ? "govuk-form-group--error" : "";
     var errorFieldClass = !Model.IsValid ? "govuk-input--error" : "";
+    var questionTextModel = new QuestionText() { Text = Model.QuestionText, ReevaluatePrepopulatedAnswers = Model.ReevaluatePrePopulatedAnswers, IsReadOnly=Model.IsReadOnly};
 }
 
 <div class="govuk-form-group @errorFormClass" id="@formItemName">
     @await Html.PartialAsync("_QuestionTitle", Model.Title)
 
-    @await Html.PartialAsync("_QuestionText", Model.QuestionText)
+    @await Html.PartialAsync("_QuestionText", questionTextModel)
     @await Html.PartialAsync("_QuestionHint", Model.QuestionHint)
-
     <div class="govuk-date-input__item">
         <div class="govuk-form-group">
             <label class="govuk-label govuk-date-input__label" for="date-day">
@@ -42,4 +42,5 @@
     </div>
     @await Html.PartialAsync("_QuestionGuidance", Model.QuestionGuidance)
     @await Html.PartialAsync("_Comments", new Comment(){Index = Model.Index, CommentText = Model.Comments,DisplayComments = Model.DisplayComments})
+    @await Html.PartialAsync("_Evidence", new Evidence(){Index = Model.Index, DocumentLink = Model.DocumentEvidenceLink ,DisplayEvidenceBox = Model.DisplayEvidenceBox})
 </div>

@@ -2,6 +2,7 @@
 using Elsa.CustomWorkflow.Sdk.Models.Workflow;
 using He.PipelineAssessment.Infrastructure;
 using He.PipelineAssessment.Infrastructure.Repository;
+using He.PipelineAssessment.Models;
 using He.PipelineAssessment.UI.Authorization;
 using MediatR;
 
@@ -49,11 +50,11 @@ namespace He.PipelineAssessment.UI.Features.Workflow.CheckYourAnswersSaveAndCont
                     if (response != null)
                     {
                         var currentAssessmentToolWorkflowInstance = await _assessmentRepository.GetAssessmentToolWorkflowInstance(response.Data.WorkflowInstanceId);
-                        if (currentAssessmentToolWorkflowInstance != null && currentAssessmentToolWorkflowInstance.Status != AssessmentStageConstants.Submitted)
+                        if (currentAssessmentToolWorkflowInstance != null && currentAssessmentToolWorkflowInstance.Status != AssessmentToolWorkflowInstanceConstants.Submitted)
                         {
 
                             var submittedTime = DateTime.UtcNow;
-                            currentAssessmentToolWorkflowInstance.Status = AssessmentStageConstants.Submitted;
+                            currentAssessmentToolWorkflowInstance.Status = AssessmentToolWorkflowInstanceConstants.Submitted;
                             currentAssessmentToolWorkflowInstance.SubmittedDateTime = submittedTime;
                             currentAssessmentToolWorkflowInstance.CurrentActivityId = response.Data.NextActivityId;
                             currentAssessmentToolWorkflowInstance.CurrentActivityType = response.Data.ActivityType;

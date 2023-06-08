@@ -33,6 +33,7 @@ namespace Elsa.CustomActivities.Activities.QuestionScreen
                 QuestionTypeConstants.DateQuestion,
                 QuestionTypeConstants.TextQuestion,
                 QuestionTypeConstants.TextAreaQuestion,
+                QuestionTypeConstants.DataTable,
                 QuestionTypeConstants.WeightedCheckboxQuestion, 
                 QuestionTypeConstants.WeightedRadioQuestion
             })]
@@ -75,8 +76,43 @@ namespace Elsa.CustomActivities.Activities.QuestionScreen
                 })]
         public string QuestionGuidance { get; set; } = null!;
 
-        [HeActivityInput(Hint = "Include comments box", UIHint = HePropertyUIHints.Checkbox)]
+        [HeActivityInput(Hint = "Include comments box", 
+            UIHint = HePropertyUIHints.Checkbox,
+            ConditionalActivityTypes = new[]
+            {
+                QuestionTypeConstants.CurrencyQuestion,
+                QuestionTypeConstants.DecimalQuestion,
+                QuestionTypeConstants.IntegerQuestion,
+                QuestionTypeConstants.PercentageQuestion,
+                QuestionTypeConstants.CheckboxQuestion,
+                QuestionTypeConstants.RadioQuestion,
+                QuestionTypeConstants.PotScoreRadioQuestion,
+                QuestionTypeConstants.DateQuestion,
+                QuestionTypeConstants.TextQuestion,
+                QuestionTypeConstants.TextAreaQuestion,
+                QuestionTypeConstants.WeightedCheckboxQuestion,
+                QuestionTypeConstants.WeightedRadioQuestion
+            })]
         public bool DisplayComments { get; set; }
+
+        [HeActivityInput(Hint = "Includes evidence box to allow user to provide a link to evidence documents",
+    UIHint = HePropertyUIHints.Checkbox,
+    ConditionalActivityTypes = new[]
+    {
+                QuestionTypeConstants.CurrencyQuestion,
+                QuestionTypeConstants.DecimalQuestion,
+                QuestionTypeConstants.IntegerQuestion,
+                QuestionTypeConstants.PercentageQuestion,
+                QuestionTypeConstants.CheckboxQuestion,
+                QuestionTypeConstants.RadioQuestion,
+                QuestionTypeConstants.PotScoreRadioQuestion,
+                QuestionTypeConstants.DateQuestion,
+                QuestionTypeConstants.TextQuestion,
+                QuestionTypeConstants.TextAreaQuestion,
+                QuestionTypeConstants.WeightedCheckboxQuestion,
+                QuestionTypeConstants.WeightedRadioQuestion
+    })]
+        public bool DisplayEvidenceBox{ get; set; }
 
         [HeActivityInput(Hint = "Character limit", UIHint = HePropertyUIHints.SingleLine, ConditionalActivityTypes = new[] { QuestionTypeConstants.TextAreaQuestion }, ExpectedOutputType = ExpectedOutputHints.Number)]
         public int? CharacterLimit { get; set; }
@@ -113,6 +149,12 @@ namespace Elsa.CustomActivities.Activities.QuestionScreen
             IsDesignerCritical = true)]
         public decimal? Score { get; set; } = null!;
 
+        [HeActivityInput(UIHint = HePropertyUIHints.DataTable,
+            ConditionalActivityTypes = new[] { QuestionTypeConstants.DataTable },
+            ExpectedOutputType = ExpectedOutputHints.DataTable,
+            HasNestedProperties = true)]
+        public DataTable DataTable { get; set; } = new DataTable();
+
         [HeActivityInput(UIHint = HePropertyUIHints.CheckboxOptions, ConditionalActivityTypes = new[] { QuestionTypeConstants.CheckboxQuestion }, ExpectedOutputType = ExpectedOutputHints.Checkbox)]
         public CheckboxModel Checkbox { get; set; } = new CheckboxModel();
 
@@ -141,7 +183,8 @@ namespace Elsa.CustomActivities.Activities.QuestionScreen
                 QuestionTypeConstants.PotScoreRadioQuestion,
                 QuestionTypeConstants.CheckboxQuestion,
                 QuestionTypeConstants.WeightedCheckboxQuestion,
-                QuestionTypeConstants.WeightedRadioQuestion
+                QuestionTypeConstants.WeightedRadioQuestion,
+                QuestionTypeConstants.DataTable
             })]
         public int? DataDictionary { get; set; }
 
@@ -188,6 +231,26 @@ namespace Elsa.CustomActivities.Activities.QuestionScreen
                 QuestionTypeConstants.CheckboxQuestion
             })]
         public bool IsReadOnly { get; set; } = false;
+
+        [HeActivityInput(Hint = "Tick if the pre-populated answer should always be re-evaluated",
+    UIHint = HePropertyUIHints.Checkbox,
+    ConditionalActivityTypes = new[]
+    {
+                QuestionTypeConstants.TextQuestion,
+                QuestionTypeConstants.TextAreaQuestion,
+                QuestionTypeConstants.CurrencyQuestion,
+                QuestionTypeConstants.DecimalQuestion,
+                QuestionTypeConstants.IntegerQuestion,
+                QuestionTypeConstants.PercentageQuestion,
+                QuestionTypeConstants.RadioQuestion,
+                QuestionTypeConstants.PotScoreRadioQuestion,
+                QuestionTypeConstants.WeightedRadioQuestion,
+                QuestionTypeConstants.WeightedCheckboxQuestion,
+                QuestionTypeConstants.CheckboxQuestion,
+                QuestionTypeConstants.DataTable,
+                QuestionTypeConstants.Information
+    })]
+        public bool ReevaluatePrePopulatedAnswers { get; set; } = false;
 
     }
 }

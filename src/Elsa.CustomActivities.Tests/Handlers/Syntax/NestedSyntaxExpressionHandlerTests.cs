@@ -2,6 +2,7 @@
 using Elsa.CustomActivities.Constants;
 using Elsa.CustomActivities.Handlers.Models;
 using Elsa.CustomActivities.Handlers.Syntax;
+using Elsa.CustomWorkflow.Sdk;
 using Elsa.Expressions;
 using Elsa.Serialization;
 using Elsa.Services.Models;
@@ -15,6 +16,8 @@ namespace Elsa.CustomActivities.Tests.Handlers.Syntax
 {
     public class NestedSyntaxExpressionHandlerTests
     {
+
+
         [Theory, AutoMoqData]
         public async void EvaluateFromExpression_ReturnsIntData_GivenIntType(
             Mock<IServiceProvider> provider,
@@ -467,7 +470,6 @@ namespace Elsa.CustomActivities.Tests.Handlers.Syntax
 
             ElsaProperty sampleProperty = SampleProperty(SyntaxNames.Json, type, JsonConvert.SerializeObject(propertyList));
 
-            List<PotScoreRadioRecord>? result = JsonConvert.DeserializeObject<List<PotScoreRadioRecord>>(value);
             evaluator.Setup(x => x.TryEvaluateAsync<string>(firstProperty.Expressions![firstProperty.Syntax!],
                 firstProperty.Syntax!, context, CancellationToken.None)).Returns(Task.FromResult(Models.Result.Success<string?>(javascriptValue)));
 
@@ -584,6 +586,61 @@ namespace Elsa.CustomActivities.Tests.Handlers.Syntax
 
         }
 
+        [Theory, AutoMoqData]
+        public async void EvaluateFromExpression_ReturnsDataTableData_GivenDataTableType(
+           Mock<IServiceProvider> provider,
+           Mock<IExpressionEvaluator> evaluator,
+           ILogger<IExpressionHandler> logger,
+           DataTable datatable,
+           IContentSerializer serializer)
+        {
+            //Arrange
+            Type type = typeof(DataTable);
+
+            var context = new ActivityExecutionContext(provider.Object, default!, default!, default!, default, default);
+
+            List<ElsaProperty> inputs = new List<ElsaProperty>();
+            foreach (var item in datatable.Inputs)
+            {
+                var dict = new Dictionary<string, string>()
+                {
+                    { DataTableSyntaxNames.IsReadOnly, item.IsReadOnly.ToString() },
+                    { DataTableSyntaxNames.SummaryTotalColumn, item.IsSummaryTotal.ToString() },
+                    { DataTableSyntaxNames.Input, item.Input! },
+                    { DataTableSyntaxNames.Identifier, item.Identifier! },
+                    { SyntaxNames.Literal, item.Title! },
+                };
+
+                var input = new ElsaProperty(dict, SyntaxNames.Literal, "", "");
+
+                inputs.Add(input);
+            }
+
+            ElsaProperty sampleProperty = SampleProperty(SyntaxNames.Json, type, JsonConvert.SerializeObject(inputs));
+
+            sampleProperty.Expressions!.Add(DataTableSyntaxNames.DisplayGroupId, "123");
+            sampleProperty.Expressions.Add(DataTableSyntaxNames.InputType, DataTableInputTypeConstants.DecimalDataTableInput);
+
+            foreach (var input in inputs)
+            {
+                evaluator.Setup(x => x.TryEvaluateAsync<string>(input.Expressions![input.Syntax!],
+                    input.Syntax!, context, CancellationToken.None)).Returns(Task.FromResult(Models.Result.Success<string?>(input.Expressions![input.Syntax!])));
+
+                evaluator.Setup(x => x.TryEvaluateAsync<string>(input.Expressions![DataTableSyntaxNames.Input!],
+                    SyntaxNames.JavaScript, context, CancellationToken.None)).Returns(Task.FromResult(Models.Result.Success<string?>(input.Expressions![DataTableSyntaxNames.Input])));
+
+            }
+
+            NestedSyntaxExpressionHandler handler = new NestedSyntaxExpressionHandler(logger, serializer);
+
+            //Act
+            DataTable? output = (DataTable?)await handler.EvaluateModel(sampleProperty!, evaluator.Object, context, type);
+
+            //Assert
+            Assert.Equal(type, output!.GetType());
+            Assert.Equal(datatable.Inputs, output.Inputs);
+        }
+
         private ElsaProperty CreateGroupArrayProperty()
         {
             var groupArrayScoreProperty = new Dictionary<string, string>()
@@ -670,6 +727,20 @@ namespace Elsa.CustomActivities.Tests.Handlers.Syntax
             };
 
             return JsonConvert.SerializeObject(records);
+        }
+
+        private string SampleDataTableJson()
+        {
+            var dataTable = new DataTable();
+            dataTable.DisplayGroupId = "123";
+            dataTable.InputType = DataTableInputTypeConstants.DecimalDataTableInput;
+            dataTable.Inputs = new List<TableInput>()
+            {
+                new TableInput("Identifier1", "Title", false, false, "Input123"),
+                new TableInput("Identifier2", "Title", false, false, "Input123"),
+            };
+
+            return JsonConvert.SerializeObject(dataTable);
         }
 
         private string PotScoreRadioJson(string firstValue, string secondValue, string potScore)

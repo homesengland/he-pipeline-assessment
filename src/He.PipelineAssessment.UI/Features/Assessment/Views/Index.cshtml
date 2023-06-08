@@ -1,8 +1,5 @@
 ﻿@using He.PipelineAssessment.UI
-@using System.Globalization;
 @using He.PipelineAssessment.UI.Authorization;
-@using He.PipelineAssessment.UI.Extensions;
-@using System.Security.Claims;
 @using Microsoft.AspNetCore.Authorization
 @inject IAuthorizationService AuthorizationService
 @addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
@@ -16,23 +13,24 @@
 
 <div class="govuk-grid-row">
 
-    <h1 class="govuk-heading-l govuk-grid-column-three-quarters pull-left" for="event-name">Assessment Search</h1>
-
-    @if ((await AuthorizationService.AuthorizeAsync(User, Constants.AuthorizationPolicies.AssignmentToPipelineAdminRoleRequired)).Succeeded)
-    {
-        <div class="govuk-grid-column-one-quarter">
-            <div class="govuk-grid-row">
-                @Html.ActionLink("Admin", "AssessmentTool","Admin", null, new{@class="govuk-link pull-right govuk-grid-column-one-half govuk-!-font-size-24"})
-                @Html.ActionLink("Sync", "Sync", "SinglePipeline",null,new{@class="govuk-button pull-right govuk-grid-column-one-half"})
-            </div>
-        </div>
-    }
-
+    <h1 class="govuk-heading-l govuk-grid-column-one-quarter pull-left" for="event-name">Assessment Search</h1>
+    <div class="govuk-grid-column-three-quarters pull-right">
+        @if ((await AuthorizationService.AuthorizeAsync(User, Constants.AuthorizationPolicies.AssignmentToPipelineAdminRoleRequired)).Succeeded)
+        {
+            @Html.ActionLink("Sync", "Sync", "SinglePipeline", null, new { @class = "govuk-button pull-right govuk-!-padding-right-2" })
+            @Html.ActionLink("Admin", "AssessmentTool", "Admin", null, new { @class = "govuk-link pull-right  govuk-!-font-size-24 govuk-!-padding-right-2" })
+            @Html.ActionLink("Assessment Interventions", "Index", "Intervention", null, new { @class = "govuk-link pull-right  govuk-!-font-size-24 govuk-!-padding-right-2" })
+        }
+        @if ((await AuthorizationService.AuthorizeAsync(User, Constants.AuthorizationPolicies.AssignmentToWorkflowEconomistRoleRequired)).Succeeded)
+        {
+            @Html.ActionLink("Economist", "GetEconomistList","Economist", null, new{@class="govuk-link pull-right  govuk-!-font-size-24 govuk-!-padding-right-2"})
+        }
+    </div>
 </div>
+
 <br />
 
 <div class="text-center">
-
     <div class="govuk-grid-row">
         <div class="govuk-grid-column-one-half">
             <div id="search-div" class="header-select override-header-select"></div>
@@ -55,30 +53,28 @@
                 <th scope="col" class="govuk-table__header">Funding Ask</th>
                 <th scope="col" class="govuk-table__header">Homes</th>
                 <th scope="col" class="govuk-table__header" data-searchable="true">Project Manager</th>
-                <th scope="col" class="govuk-table__header">Date Created</th>
                 <th scope="col" class="govuk-table__header">Last Updated</th>
                 <th scope="col" class="govuk-table__header" data-searchable="true">Status</th>
             </tr>
         </thead>
         <tbody class="govuk-table__body">
-        @foreach (var assessment in Model)
-{
-            var lastModified = assessment.LastModifiedDateTime.HasValue ? assessment.LastModifiedDateTime.Value.Date.ToLongDateString() : "";
-                var created = assessment.CreatedDateTime.HasValue ? assessment.CreatedDateTime.Value.Date.ToLongDateString() : "";
+            @foreach (var assessment in Model)
+            {
+                var lastModifiedDate = assessment.LastModifiedDateTime.HasValue ? assessment.LastModifiedDateTime.Value.Date.ToString("yyyyMMdd"):"";
+                var lastModified = assessment.LastModifiedDateTime.HasValue ? assessment.LastModifiedDateTime.Value.Date.ToLongDateString() : "";
 
-            <tr class="govuk-table__row">
-                <td class="govuk-table__cell"><a asp-controller="Assessment" asp-action="Summary" asp-route-assessmentid="@assessment.Id" asp-route-correlationId="@assessment.SpId" class="govuk-link">@assessment.Reference</a> </td>
-                <td class="govuk-table__cell">@assessment.SiteName</td>
-                <td class="govuk-table__cell">@assessment.Counterparty</td>
-                <td class="govuk-table__cell">@assessment.LocalAuthority</td>
-                <td class="govuk-table__cell">@assessment.FundingAskCurrency</td>
-                <td class="govuk-table__cell">@assessment.NumberOfHomesFormatted</td>
-                <td class="govuk-table__cell">@assessment.ProjectManager</td>
-                <td class="govuk-table__cell">@created</td>
-                <td class="govuk-table__cell">@lastModified </td>
-                <td class="govuk-table__cell"><strong class="govuk-tag govuk-tag--@assessment.StatusDisplayTag()">@assessment.Status</strong></td>
-            </tr>
-        }
+                <tr class="govuk-table__row">
+                    <td class="govuk-table__cell"><a asp-controller="Assessment" asp-action="Summary" asp-route-assessmentid="@assessment.Id" asp-route-correlationId="@assessment.SpId" class="govuk-link">@assessment.Reference</a> </td>
+                    <td class="govuk-table__cell">@assessment.SiteName</td>
+                    <td class="govuk-table__cell">@assessment.Counterparty</td>
+                    <td class="govuk-table__cell">@assessment.LocalAuthority</td>
+                    <td class="govuk-table__cell">@assessment.FundingAskCurrency</td>
+                    <td class="govuk-table__cell">@assessment.NumberOfHomesFormatted</td>
+                    <td class="govuk-table__cell">@assessment.ProjectManager</td>
+                    <td class="govuk-table__cell"> <span hidden>@lastModifiedDate</span> @lastModified </td>
+                    <td class="govuk-table__cell"><strong class="govuk-tag govuk-tag--@assessment.StatusDisplayTag()">@assessment.Status</strong></td>
+                </tr>
+            }
         </tbody>
 
     </table>

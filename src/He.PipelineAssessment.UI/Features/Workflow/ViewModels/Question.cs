@@ -1,4 +1,10 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using Elsa.CustomWorkflow.Sdk;
+using Elsa.CustomWorkflow.Sdk.Models.Workflow;
+using Microsoft.CodeAnalysis.CSharp.Syntax;
+using Microsoft.Extensions.Diagnostics.HealthChecks;
+using System.ComponentModel.DataAnnotations;
+using System.Data;
+using ValidationResult = FluentValidation.Results.ValidationResult;
 
 namespace He.PipelineAssessment.UI.Features.Workflow.ViewModels
 {
@@ -14,15 +20,22 @@ namespace He.PipelineAssessment.UI.Features.Workflow.ViewModels
         public string? QuestionGuidance { get; set; }
         public bool DisplayComments { get; set; }
         public string? Comments { get; set; }
+        public bool DisplayEvidenceBox{ get; set; }
+        public string? DocumentEvidenceLink { get; set; }
         public List<QuestionActivityAnswer> Answers { get; set; } = new();
         public bool IsReadOnly { get; set; }
+        public bool ReevaluatePrePopulatedAnswers { get; set; }
         public Date? Date { get; set; }
         public decimal? Decimal { get; set; }
         public string? Text { get; set; }
         public Radio Radio { get; set; } = new Radio();
         public Checkbox Checkbox { get; set; } = new Checkbox();
         public Information Information { get; set; } = new Information();
+
+        public List<DataTable> DataTable { get; set; } = new List<DataTable>();
+
         public int? CharacterLimit { get; set; }
+        public ValidationResult? ValidationMessages { get; set; } = new ValidationResult();
     }
 
     public class Information
@@ -42,6 +55,17 @@ namespace He.PipelineAssessment.UI.Features.Workflow.ViewModels
         public int? SelectedAnswer { get; set; }
     }
 
+    public class DataTable
+    {
+        public int QuestionIndex { get; set; }
+        public List<TableInput> Inputs { get; set; } = new List<TableInput>();
+        public string InputType { get; set; } = DataTableInputTypeConstants.CurrencyDataTableInput;
+
+        public string? DisplayGroupId { get; set; }
+        public string? QuestionText { get; set; }
+        public bool ReEvaluatePrePopulatedAnswers { get; set; }
+    }
+
     public class InformationText
     {
         public string Text { get; set; } = null!;
@@ -49,6 +73,15 @@ namespace He.PipelineAssessment.UI.Features.Workflow.ViewModels
         public bool IsGuidance { get; set; } = false;
         public bool IsHyperlink { get; set; } = false;
         public string? Url { get; set; }
+    }
+
+    public class TableInput
+    {
+        public string? Identifier { get; set; }
+        public string InputHeading { get; set; } = null!;
+        public string? Input { get; set; }
+        public bool IsReadOnly { get; set; } = false;
+        public bool IsSummaryTotal { get; set; } = false;
     }
 
 

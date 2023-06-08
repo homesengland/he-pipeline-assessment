@@ -5,7 +5,7 @@ using He.PipelineAssessment.Infrastructure.Repository;
 using He.PipelineAssessment.UI.Authorization;
 using He.PipelineAssessment.UI.Features.Workflow.QuestionScreenSaveAndContinue;
 using MediatR;
-using System.Text.Json;
+using Newtonsoft.Json;
 
 namespace He.PipelineAssessment.UI.Features.Workflow.LoadQuestionScreen
 {
@@ -55,8 +55,9 @@ namespace He.PipelineAssessment.UI.Features.Workflow.LoadQuestionScreen
 
                     if (response != null)
                     {
-                        string jsonResponse = JsonSerializer.Serialize(response);
-                        QuestionScreenSaveAndContinueCommand? result = JsonSerializer.Deserialize<QuestionScreenSaveAndContinueCommand>(jsonResponse);
+                        var jsonSerializerSettings = new JsonSerializerSettings { TypeNameHandling = TypeNameHandling.Auto };
+                        string jsonResponse = JsonConvert.SerializeObject(response, jsonSerializerSettings);
+                        QuestionScreenSaveAndContinueCommand? result = JsonConvert.DeserializeObject<QuestionScreenSaveAndContinueCommand>(jsonResponse, jsonSerializerSettings);
                         result!.IsAuthorised = true;
                         result!.AssessmentId = assessmentWorkflowInstance.AssessmentId;
                         result!.WorkflowDefinitionId = assessmentWorkflowInstance.WorkflowDefinitionId;

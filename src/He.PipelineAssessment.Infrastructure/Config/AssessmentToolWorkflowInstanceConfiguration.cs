@@ -12,32 +12,32 @@ namespace He.PipelineAssessment.Infrastructure.Config
             builder.HasKey(x => x.Id);
 
             builder.Property(x => x.WorkflowDefinitionId)
-                .HasMaxLength(50);
+                .HasMaxLength(EntityConfigurationConstants.MaxLength);
 
             builder.Property(x => x.WorkflowInstanceId)
-                .HasMaxLength(50);
+                .HasMaxLength(EntityConfigurationConstants.MaxLength);
 
             builder.Property(x => x.WorkflowName)
-                .HasMaxLength(100);
+                .HasMaxLength(EntityConfigurationConstants.StandardLength);
 
             builder.Property(x => x.CurrentActivityId)
-                .HasMaxLength(50);
+                .HasMaxLength(EntityConfigurationConstants.MaxLength);
 
             builder.Property(x => x.CurrentActivityType)
-                .HasMaxLength(50);
+                .HasMaxLength(EntityConfigurationConstants.ShortLength);
 
             builder.Property(x => x.Status)
-                .HasMaxLength(50);
+                .HasMaxLength(EntityConfigurationConstants.ShortLength);
 
             builder.HasOne(x => x.Assessment)
                 .WithMany(x => x.AssessmentToolWorkflowInstances)
                 .HasForeignKey(x => x.AssessmentId);
 
             builder.Property(x => x.Result)
-               .HasMaxLength(100);
+               .HasMaxLength(EntityConfigurationConstants.StandardLength);
 
             builder.Property(x => x.SubmittedBy)
-               .HasMaxLength(250);
+               .HasMaxLength(EntityConfigurationConstants.StandardLength);
 
             builder.Property(x => x.CreatedBy)
                .HasMaxLength(EntityConfigurationConstants.MaxLength);

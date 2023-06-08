@@ -42,3 +42,7 @@ body {
 .govuk-radios--inline .govuk-radios__item.radio-no-margin {
     margin-right: 0;
 }
+
+.govuk-select--error {
+    border-color: #d4351c
+}

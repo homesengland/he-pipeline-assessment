@@ -221,6 +221,9 @@ namespace Elsa.CustomInfrastructure.Migrations
                     b.Property<DateTime>("CreatedDateTime")
                         .HasColumnType("datetime2");
 
+                    b.Property<string>("DocumentEvidenceLink")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<DateTime?>("LastModifiedDateTime")
                         .HasColumnType("datetime2");
 

@@ -1,10 +1,11 @@
 ﻿using He.PipelineAssessment.Infrastructure.Repository;
+using He.PipelineAssessment.Models;
 using He.PipelineAssessment.UI.Common.Exceptions;
 using MediatR;
 
 namespace He.PipelineAssessment.UI.Features.Admin.AssessmentToolManagement.Commands.DeleteAssessmentTool
 {
-    public class DeleteAssessmentToolCommandHandler : IRequestHandler<DeleteAssessmentToolCommand>
+    public class DeleteAssessmentToolCommandHandler : IRequestHandler<DeleteAssessmentToolCommand, int>
     {
         private readonly IAdminAssessmentToolRepository _adminAssessmentToolRepository;
 
@@ -13,7 +14,7 @@ namespace He.PipelineAssessment.UI.Features.Admin.AssessmentToolManagement.Comma
             _adminAssessmentToolRepository = adminAssessmentToolRepository;
         }
 
-        public async Task<Unit> Handle(DeleteAssessmentToolCommand request, CancellationToken cancellationToken)
+        public async Task<int> Handle(DeleteAssessmentToolCommand request, CancellationToken cancellationToken)
         {
             var entity = await _adminAssessmentToolRepository.GetAssessmentToolById(request.Id);
             if (entity == null)
@@ -21,8 +22,17 @@ namespace He.PipelineAssessment.UI.Features.Admin.AssessmentToolManagement.Comma
                 throw new NotFoundException($"Assessment Tool with Id {request.Id} not found");
             }
 
-            await _adminAssessmentToolRepository.DeleteAssessmentTool(entity);
-            return Unit.Value;
+            if (entity.AssessmentToolWorkflows != null)
+            {
+                foreach (var assessmentToolWorkflow in entity.AssessmentToolWorkflows)
+                {
+                    assessmentToolWorkflow.Status = AssessmentToolStatus.Deleted;
+                }
+            }
+
+            entity.Status = AssessmentToolStatus.Deleted;
+
+            return await _adminAssessmentToolRepository.SaveChanges();
         }
     }
 }

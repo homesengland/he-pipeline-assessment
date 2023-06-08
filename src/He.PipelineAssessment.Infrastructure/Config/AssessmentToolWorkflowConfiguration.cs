@@ -11,9 +11,9 @@ namespace He.PipelineAssessment.Infrastructure.Config
             builder.ToTable(x => x.IsTemporal());
             builder.HasKey(x => x.Id);
             builder.Property(x => x.WorkflowDefinitionId)
-                .HasMaxLength(450);
+                .HasMaxLength(EntityConfigurationConstants.MaxLength);
             builder.Property(x => x.Name)
-                .HasMaxLength(100);
+                .HasMaxLength(EntityConfigurationConstants.StandardLength);
 
             builder.HasOne(x => x.AssessmentTool)
                 .WithMany(x => x.AssessmentToolWorkflows)
@@ -24,6 +24,9 @@ namespace He.PipelineAssessment.Infrastructure.Config
 
             builder.Property(x => x.LastModifiedBy)
                 .HasMaxLength(EntityConfigurationConstants.MaxLength);
+            builder.Property(x => x.Status)
+                .HasMaxLength(EntityConfigurationConstants.ShortLength);
+
         }
     }
 }

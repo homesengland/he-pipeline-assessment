@@ -1,6 +1,9 @@
 ﻿using Elsa.CustomModels;
 using FluentValidation.Results;
+using System.Data;
 using System.Globalization;
+using System.Text.Json;
+using System.Text.Json.Serialization;
 
 namespace Elsa.CustomWorkflow.Sdk.Models.Workflow
 {
@@ -53,9 +56,12 @@ namespace Elsa.CustomWorkflow.Sdk.Models.Workflow
         public string? QuestionGuidance { get; set; }
         public bool DisplayComments { get; set; }
         public string? Comments { get; set; }
+        public bool DisplayEvidenceBox { get; set; }
+        public string? DocumentEvidenceLink { get; set; }
         public object Output { get; set; } = null!;
         public List<QuestionActivityAnswer> Answers { get; set; } = new List<QuestionActivityAnswer>();
         public bool IsReadOnly { get; set; }
+        public bool ReevaluatePrePopulatedAnswers { get; set; }
         public string? Text { get { return GetText(); } set { SetText(value); } }
         public decimal? Decimal { get { return GetDecimal(); } set { SetDecimal(value); } }
 
@@ -76,6 +82,10 @@ namespace Elsa.CustomWorkflow.Sdk.Models.Workflow
         public Date Date { get { return GetDate(); } set { SetDate(value); } }
 
         public Information Information { get; set; } = new Information();
+
+        private DataTableInput _dataTable = new DataTableInput();
+
+        public DataTableInput DataTable { get { return _dataTable; } set { SetDataTable(value); } }
 
         #region Getters
         public Date GetDate()
@@ -117,7 +127,7 @@ namespace Elsa.CustomWorkflow.Sdk.Models.Workflow
                 try
                 {
                     decimal decimalAnswer = default;
-                    if(decimal.TryParse(Answers.FirstOrDefault()!.AnswerText, out decimalAnswer))
+                    if (decimal.TryParse(Answers.FirstOrDefault()!.AnswerText, out decimalAnswer))
                     {
                         return decimalAnswer;
                     }
@@ -167,6 +177,21 @@ namespace Elsa.CustomWorkflow.Sdk.Models.Workflow
                 Answers = new List<QuestionActivityAnswer>();
                 List<Choice> selectedChoices = _checkbox.Choices.Where(c => _checkbox.SelectedChoices.Contains(c.Id)).ToList();
                 SetChoiceAnswers(selectedChoices);
+            }
+        }
+
+        public void SetDataTable(DataTableInput value)
+        {
+            if (QuestionType == QuestionTypeConstants.DataTable)
+            {
+                _dataTable = value;
+                Answers = new List<QuestionActivityAnswer>();
+                if (value != null)
+                {
+                    var answerJson = JsonSerializer.Serialize(_dataTable);
+                    var answer = new QuestionActivityAnswer() { AnswerText = answerJson, ChoiceId = null, Score = null };
+                    Answers.Add(answer);
+                }
             }
         }
 
@@ -319,6 +344,40 @@ namespace Elsa.CustomWorkflow.Sdk.Models.Workflow
         public bool IsGuidance { get; set; } = false;
         public bool IsHyperlink { get; set; } = false;
         public string? Url { get; set; }
+    }
+
+    public class DataTableInput
+    {
+        public List<TableInput> Inputs { get; set; } = new List<TableInput>();
+
+        private string _displayGroupId { get; set; } = null!;
+        public string DisplayGroupId
+        {
+            get
+            {
+                return _displayGroupId;
+            }
+            set
+            {
+                if (string.IsNullOrEmpty(value))
+                {
+                    value = Guid.NewGuid().ToString();
+                }
+                _displayGroupId = value;
+            }
+        }
+
+        public string InputType { get; set; } = null!;
+    }
+
+    public class TableInput
+    {
+        public string? Identifier { get; set; }
+        public string Title { get; set; } = null!;
+        public string? Input { get; set; }
+        public bool IsReadOnly { get; set; } = false;
+        public bool IsSummaryTotal { get; set; } = false;
+
     }
 }
 

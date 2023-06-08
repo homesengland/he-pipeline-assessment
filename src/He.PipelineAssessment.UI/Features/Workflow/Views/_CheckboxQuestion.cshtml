@@ -13,14 +13,13 @@
 
     var errorFormClass = !Model.IsValid ? "govuk-form-group--error" : "";
     var isReadOnly = Model.IsReadOnly ? "disabled" : "";
+    var questionTextModel = new QuestionText() { Text = Model.QuestionText, ReevaluatePrepopulatedAnswers = Model.ReevaluatePrePopulatedAnswers, IsReadOnly = Model.IsReadOnly};
 }
 
 <div class="govuk-form-group @errorFormClass" id="@formItemName">
     @await Html.PartialAsync("_QuestionTitle", Model.Title)
-
-    @await Html.PartialAsync("_QuestionText", Model.QuestionText)
+    @await Html.PartialAsync("_QuestionText", questionTextModel)
     @await Html.PartialAsync("_QuestionHint", Model.QuestionHint)
-
 
     @{
         var distinctGroups = Model.Checkbox.Choices.Select(x => x.QuestionChoiceGroup?.GroupIdentifier).Distinct().ToList();
@@ -140,4 +139,5 @@
  
     @await Html.PartialAsync("_QuestionGuidance", Model.QuestionGuidance)
     @await Html.PartialAsync("_Comments", new Comment(){Index = Model.Index, CommentText = Model.Comments,DisplayComments = Model.DisplayComments})
+    @await Html.PartialAsync("_Evidence", new Evidence(){Index = Model.Index, DocumentLink = Model.DocumentEvidenceLink ,DisplayEvidenceBox = Model.DisplayEvidenceBox})
 </div>

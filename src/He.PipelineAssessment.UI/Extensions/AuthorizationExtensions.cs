@@ -55,6 +55,11 @@ namespace He.PipelineAssessment.UI.Extensions
                 options.AddPolicy(Constants.AuthorizationPolicies.AssignmentToPipelineAdminRoleRequired,
                 policy => policy.RequireRole(Constants.AppRole.PipelineAdminOperations));
 
+                options.AddPolicy(Constants.AuthorizationPolicies.AssignmentToWorkflowEconomistRoleRequired,
+               policy => policy.RequireRole(
+                                Constants.AppRole.PipelineAdminOperations,
+                                Constants.AppRole.PipelineEconomist));
+
                 options.AddPolicy(Constants.AuthorizationPolicies.AssignmentToPipelineViewAssessmentRoleRequired,
                     policy => policy.RequireRole(
                                 Constants.AppRole.PipelineAssessorMPP,

@@ -19,6 +19,7 @@ namespace He.PipelineAssessment.Infrastructure.Data
         public DbSet<AssessmentTool> AssessmentTool { get; set; } = default!;
         public DbSet<AssessmentToolInstanceNextWorkflow> AssessmentToolInstanceNextWorkflow { get; set; } = default!;
         public DbSet<AssessmentToolWorkflow> AssessmentToolWorkflow { get; set; } = default!;
+        public DbSet<AssessmentIntervention> AssessmentIntervention { get; set; } = default!;
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -43,6 +44,8 @@ namespace He.PipelineAssessment.Infrastructure.Data
                     case EntityState.Added:
                         entry.Entity.CreatedBy = userName;
                         entry.Entity.CreatedDateTime = DateTime.UtcNow;
+                        entry.Entity.LastModifiedBy = userName;
+                        entry.Entity.LastModifiedDateTime = DateTime.UtcNow;
 
                         break;
 

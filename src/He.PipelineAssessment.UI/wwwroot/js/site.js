@@ -8,6 +8,8 @@ let enabledSettings = []
 
 var currencyInputs = document.querySelectorAll('input[currency-formatter="true"]');
 
+var summaryInputs = document.querySelectorAll('input[data-summary="true"]');
+
 // Use Array.forEach to add an event listener to each checkbox.
 groupCheckboxes.forEach(function (checkbox) {
     checkbox.addEventListener('change', function () {
@@ -33,9 +35,49 @@ currencyInputs.forEach(function (input) {
         // format number
         input.value = input.value
             .replace(/,/g, '');
-        input.value =  numberWithCommas(input.value);
+        input.value = numberWithCommas(input.value);
     })
 })
+
+summaryInputs.forEach(function (summaryInput) {
+
+    var selector = 'input[data-column="' + summaryInput.dataset.column + '"][data-summary="false"]';
+    var hiddenInputSelector = 'input[type="hidden"][name="' + summaryInput.name + '"][data-summary="true"]'
+    var inputsToTotal = document.querySelectorAll(selector);
+    var hiddenTotalInputs = document.querySelectorAll(hiddenInputSelector);
+    inputsToTotal.forEach(function (input) {
+
+        if (input.dataset.summary == 'false') {
+            input.addEventListener('keyup', function (event) {
+                // skip for arrow keys
+                if (event.which >= 37 && event.which <= 40) return;
+                
+                summaryInput.value = getTotalColumnValue(inputsToTotal);
+                
+                // format number
+                summaryInput.value = numberWithCommas(summaryInput.value);
+                hiddenTotalInputs.forEach(hiddenInput => {
+                    hiddenInput.value = getTotalColumnValue(inputsToTotal);
+
+                    // format number
+                    hiddenInput.value = numberWithCommas(summaryInput.value);
+                })
+            });
+        }
+
+    });
+})
+
+function getTotalColumnValue(inputsToTotal) {
+    var total = 0;
+    inputsToTotal.forEach(function (input) {
+        var cleansedInput = input.value.replace(/,/g, "");
+        total += Number(cleansedInput);
+    });
+    var roundedTotal = total.toFixed(2);
+    var formattedRoundedTotal = roundedTotal.replace(/.00/, "")
+    return formattedRoundedTotal;
+}
 
 function numberWithCommas(x) {
     var parts = x.toString().split(".");

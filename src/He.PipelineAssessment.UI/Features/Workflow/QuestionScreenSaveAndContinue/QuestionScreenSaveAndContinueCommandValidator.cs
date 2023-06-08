@@ -14,7 +14,7 @@ namespace He.PipelineAssessment.UI.Features.Workflow.QuestionScreenSaveAndContin
                 {
                     x.SetValidator(new MultiQuestionActivityDataValidator());
                 })
-                .When(x => x.Data.ActivityType == ActivityTypeConstants.QuestionScreen); ;
+                .When(x => x.Data.ActivityType == ActivityTypeConstants.QuestionScreen);
         }
     }
 }
