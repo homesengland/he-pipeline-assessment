@@ -70,7 +70,7 @@ public class OverrideControllerTests
         //Assert
         Assert.IsType<RedirectToActionResult>(actionResult);
         var redirectToActionResult = (RedirectToActionResult)actionResult;
-        Assert.Equal("CheckYourDetails", redirectToActionResult.ActionName);
+        Assert.Equal("Index", redirectToActionResult.ActionName);
         Assert.Null(assessmentInterventionDto.ValidationResult);
 
     }
@@ -95,7 +95,7 @@ public class OverrideControllerTests
         //Assert
         Assert.IsType<ViewResult>(actionResult);
         var viewResult = (ViewResult)actionResult;
-        Assert.Equal("~/Features/Intervention/Views/Override.cshtml", viewResult.ViewName);
+        Assert.Equal("Override", viewResult.ViewName);
         Assert.Equal(validationResult, assessmentInterventionDto.ValidationResult);
 
     }
@@ -116,7 +116,7 @@ public class OverrideControllerTests
         //Assert
         Assert.IsType<ViewResult>(actionResult);
         var viewResult = (ViewResult)actionResult;
-        Assert.Equal("~/Features/Intervention/Views/Override.cshtml", viewResult.ViewName);
+        Assert.Equal("Override", viewResult.ViewName);
     }
 
     [Theory]
@@ -198,9 +198,9 @@ public class OverrideControllerTests
         var actionResult = await overrideController.EditOverride(interventionId);
 
         // Assert
-        Assert.IsType<RedirectToActionResult>(actionResult);
-        var redirectToActionResult = (RedirectToActionResult)actionResult;
-        Assert.Equal("CheckYourDetails", redirectToActionResult.ActionName);
+        Assert.IsType<ViewResult>(actionResult);
+        var viewResult = (ViewResult)actionResult;
+        Assert.Equal("EditOverride", viewResult.ViewName);
 
     }
 
@@ -303,9 +303,9 @@ public class OverrideControllerTests
         var actionResult = await overrideController.EditOverride(assessmentInterventionDto);
 
         // Assert
-        Assert.IsType<ViewResult>(actionResult);
-        var viewResult = (ViewResult)actionResult;
-        Assert.Equal("~/Features/Intervention/Views/EditOverride.cshtml", viewResult.ViewName);
+        Assert.IsType<RedirectToActionResult>(actionResult);
+        var redirectToActionResult = (RedirectToActionResult)actionResult;
+        Assert.Equal("CheckYourDetails", redirectToActionResult.ActionName);
     }
 
     [Theory]
@@ -328,7 +328,7 @@ public class OverrideControllerTests
         // Assert
         Assert.IsType<ViewResult>(actionResult);
         var viewResult = (ViewResult)actionResult;
-        Assert.Equal("~/Features/Intervention/Views/EditOverride.cshtml", viewResult.ViewName);
+        Assert.Equal("EditOverride", viewResult.ViewName);
         Assert.Equal(validationResult, assessmentInterventionDto.ValidationResult);
 
     }

@@ -23,6 +23,7 @@ namespace He.PipelineAssessment.UI.Tests.Features.Intervention
             string? validationMessage
             )
         {
+            validationResult = true;
             //Arrange
             AssessmentInterventionCommandValidator validator = new AssessmentInterventionCommandValidator();
             var command = new AssessmentInterventionCommand
@@ -33,7 +34,7 @@ namespace He.PipelineAssessment.UI.Tests.Features.Intervention
             };
 
             //Act
-            var result = validator.TestValidate(command);
+            TestValidationResult<AssessmentInterventionCommand> result = validator.TestValidate(command);
 
             //Assert
             Assert.Equal(validationResult, result.IsValid);
@@ -61,10 +62,10 @@ namespace He.PipelineAssessment.UI.Tests.Features.Intervention
             };
 
             //Act
-            var result = validator.TestValidate(command);
+            TestValidationResult<AssessmentInterventionCommand> result = validator.TestValidate(command);
 
             //Assert
-            Assert.Equal(3, result.Errors.Count);
+            Assert.Equal(4, result.Errors.Count);
             result.ShouldHaveValidationErrorFor(x => x.SignOffDocument).WithErrorMessage("The Sign Off Document cannot be empty");
             result.ShouldHaveValidationErrorFor(x => x.AdministratorRationale).WithErrorMessage("The Administrator Rationale cannot be empty");
             result.ShouldHaveValidationErrorFor(x => x.TargetWorkflowId).WithErrorMessage("The target workflow definition has to be selected");

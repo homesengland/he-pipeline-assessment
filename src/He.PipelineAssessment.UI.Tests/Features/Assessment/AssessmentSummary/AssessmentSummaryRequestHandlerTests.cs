@@ -45,6 +45,7 @@ namespace He.PipelineAssessment.UI.Tests.Features.Assessment.AssessmentSummary
             var emptyList = new List<AssessmentStageViewModel>();
             assessmentRepository.Setup(x => x.GetAssessment(It.IsAny<int>())).ReturnsAsync(assessment);
             storeProcRepository.Setup(x => x.GetAssessmentStages(It.IsAny<int>())).ReturnsAsync(emptyList);
+            storeProcRepository.Setup(x => x.GetAssessmentInterventionList(It.IsAny<int>())).ReturnsAsync(new List<AssessmentInterventionViewModel>());
 
             //Act
             var result = await sut.Handle(request, CancellationToken.None);
@@ -68,12 +69,15 @@ namespace He.PipelineAssessment.UI.Tests.Features.Assessment.AssessmentSummary
             Models.Assessment assessment,
             List<AssessmentStageViewModel> stages,
             AssessmentSummaryRequest request,
+            List<StartableToolViewModel> startableToolViewModels,
             AssessmentSummaryRequestHandler sut
         )
         {
             //Arrange
             assessmentRepository.Setup(x => x.GetAssessment(It.IsAny<int>())).ReturnsAsync(assessment);
+            storeProcRepository.Setup(x => x.GetStartableTools(request.AssessmentId)).ReturnsAsync(startableToolViewModels);
             storeProcRepository.Setup(x => x.GetAssessmentStages(It.IsAny<int>())).ReturnsAsync(stages);
+            storeProcRepository.Setup(x => x.GetAssessmentInterventionList(It.IsAny<int>())).ReturnsAsync(new List<AssessmentInterventionViewModel>());
 
             //Act
             var result = await sut.Handle(request, CancellationToken.None);
@@ -120,6 +124,7 @@ namespace He.PipelineAssessment.UI.Tests.Features.Assessment.AssessmentSummary
             assessmentRepository.Setup(x => x.GetAssessment(request.AssessmentId)).ReturnsAsync(assessment);
             storeProcRepository.Setup(x => x.GetAssessmentStages(request.AssessmentId)).ReturnsAsync(stages);
             storeProcRepository.Setup(x => x.GetStartableTools(request.AssessmentId)).ReturnsAsync(startableToolViewModels);
+            storeProcRepository.Setup(x => x.GetAssessmentInterventionList(It.IsAny<int>())).ReturnsAsync(new List<AssessmentInterventionViewModel>());
 
 
             //Act
@@ -160,6 +165,7 @@ namespace He.PipelineAssessment.UI.Tests.Features.Assessment.AssessmentSummary
             assessmentRepository.Setup(x => x.GetAssessment(request.AssessmentId)).ReturnsAsync(assessment);
             storeProcRepository.Setup(x => x.GetAssessmentStages(request.AssessmentId)).ReturnsAsync(stages);
             storeProcRepository.Setup(x => x.GetStartableTools(request.AssessmentId)).ReturnsAsync(startableToolViewModels);
+            storeProcRepository.Setup(x => x.GetAssessmentInterventionList(It.IsAny<int>())).ReturnsAsync(new List<AssessmentInterventionViewModel>());
 
 
             //Act
@@ -205,6 +211,7 @@ namespace He.PipelineAssessment.UI.Tests.Features.Assessment.AssessmentSummary
             assessmentRepository.Setup(x => x.GetAssessment(request.AssessmentId)).ReturnsAsync(assessment);
             storeProcRepository.Setup(x => x.GetAssessmentStages(request.AssessmentId)).ReturnsAsync(stages);
             storeProcRepository.Setup(x => x.GetStartableTools(request.AssessmentId)).ReturnsAsync(startableToolViewModels);
+            storeProcRepository.Setup(x => x.GetAssessmentInterventionList(It.IsAny<int>())).ReturnsAsync(new List<AssessmentInterventionViewModel>());
 
             //Act
             var result = await sut.Handle(request, CancellationToken.None);
@@ -216,5 +223,60 @@ namespace He.PipelineAssessment.UI.Tests.Features.Assessment.AssessmentSummary
             Assert.Equal(stage.AssessmentToolWorkflowInstanceId, result.Stages.First().AssessmentToolWorkflowInstanceId);
         }
 
+
+        [Theory]
+        [AutoMoqData]
+        public async Task Handle_ReturnsAssessmentSummaryResponseWithEmptyInterventionsList_GivenNoInterventionsExist(
+        [Frozen] Mock<IAssessmentRepository> assessmentRepository,
+         [Frozen] Mock<IStoredProcedureRepository> storeProcRepository,
+        Models.Assessment assessment,
+        List<AssessmentStageViewModel> stages,
+        AssessmentSummaryRequest request,
+        AssessmentSummaryRequestHandler sut
+    )
+        {
+            //Arrange
+            assessmentRepository.Setup(x => x.GetAssessment(It.IsAny<int>())).ReturnsAsync(assessment);
+            storeProcRepository.Setup(x => x.GetAssessmentStages(It.IsAny<int>())).ReturnsAsync(stages);
+            storeProcRepository.Setup(x => x.GetAssessmentInterventionList(It.IsAny<int>())).ReturnsAsync(new List<AssessmentInterventionViewModel>());
+
+            //Act
+            var result = await sut.Handle(request, CancellationToken.None);
+
+            //Assert
+            Assert.NotNull(result);
+            Assert.Empty(result!.Interventions);
+
+        }
+
+        [Theory]
+        [AutoMoqData]
+        public async Task Handle_ReturnsAssessmentSummaryResponseInterventionsList_GivenAnyInterventionsExist(
+            [Frozen] Mock<IAssessmentRepository> assessmentRepository,
+             [Frozen] Mock<IStoredProcedureRepository> storeProcRepository,
+            Models.Assessment assessment,
+            List<AssessmentStageViewModel> stages,
+            List<AssessmentInterventionViewModel> interventions,
+            AssessmentSummaryRequest request,
+            AssessmentSummaryRequestHandler sut
+)
+        {
+            //Arrange
+            assessmentRepository.Setup(x => x.GetAssessment(It.IsAny<int>())).ReturnsAsync(assessment);
+            storeProcRepository.Setup(x => x.GetAssessmentStages(It.IsAny<int>())).ReturnsAsync(stages);
+            storeProcRepository.Setup(x => x.GetAssessmentInterventionList(It.IsAny<int>())).ReturnsAsync(interventions);
+
+            //Act
+            var result = await sut.Handle(request, CancellationToken.None);
+
+            //Assert
+            Assert.NotNull(result);
+            Assert.NotEmpty(result!.Interventions);
+            Assert.Equal(interventions.Count(), result!.Interventions.Count());
+
+
+        }
+
     }
+
 }

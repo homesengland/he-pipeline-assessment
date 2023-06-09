@@ -12,13 +12,13 @@ namespace He.PipelineAssessment.UI.Features.Intervention
         {
 
             RuleFor(c => c.SignOffDocument).NotEmpty().WithMessage("The {PropertyName} cannot be empty")
-                .When(x => x.GetType() == typeof(CreateOverrideCommand) || x.GetType() == typeof(EditOverrideCommand));
+                .When(x => x.GetType() == typeof(CreateOverrideCommand) || x.GetType() == typeof(EditOverrideCommand) || x.GetType() == typeof(AssessmentInterventionCommand));
             RuleFor(c => c.AdministratorRationale).NotEmpty().WithMessage("The {PropertyName} cannot be empty")
-                .When(x => x.GetType() == typeof(CreateOverrideCommand) || x.GetType() == typeof(EditOverrideCommand));
+                .When(x => x.GetType() == typeof(CreateOverrideCommand) || x.GetType() == typeof(EditOverrideCommand) || x.GetType() == typeof(AssessmentInterventionCommand));
             RuleFor(c => c.TargetWorkflowId).NotEmpty().WithMessage("The target workflow definition has to be selected")
-                .When(x => x.GetType() == typeof(CreateOverrideCommand) || x.GetType() == typeof(EditOverrideCommand));
+                .When(x => x.GetType() == typeof(CreateOverrideCommand) || x.GetType() == typeof(EditOverrideCommand) || x.GetType() == typeof(AssessmentInterventionCommand));
             RuleFor(c => c.AssessorRationale).NotEmpty().WithMessage("The {PropertyName} cannot be empty")
-                .When(x => x.GetType() == typeof(CreateRollbackCommand) || x.GetType() == typeof(EditRollbackAssessorCommand));
+                .When(x => x.GetType() == typeof(CreateRollbackCommand) || x.GetType() == typeof(EditRollbackAssessorCommand) || x.GetType() == typeof(AssessmentInterventionCommand));
         }
     }
 }

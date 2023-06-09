@@ -153,6 +153,7 @@ namespace He.PipelineAssessment.UI.Tests.Features.Intervention.InterventionManag
                 .AssessmentToolWorkflowInstance.WorkflowInstanceId)).ReturnsAsync(previousWorkflowInstances);
             repo.Setup(x => x.GetAssessmentToolInstanceNextWorkflow(intervention.AssessmentToolWorkflowInstanceId,
                 intervention.TargetAssessmentToolWorkflow!.WorkflowDefinitionId)).ReturnsAsync((AssessmentToolInstanceNextWorkflow?)null);
+            repo.Setup(x => x.CreateAssessmentToolInstanceNextWorkflows(null!));
 
             //Act
             var result = await sut.Handle(command, CancellationToken.None);
