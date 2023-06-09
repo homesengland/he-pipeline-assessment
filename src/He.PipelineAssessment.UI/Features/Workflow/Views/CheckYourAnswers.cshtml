@@ -1,6 +1,8 @@
 ﻿@model QuestionScreenSaveAndContinueCommand;
 @using He.PipelineAssessment.UI.Features.Workflow.QuestionScreenSaveAndContinue
 @using He.PipelineAssessment.UI.Features.Workflow.ViewModels
+@inject NonceConfig nonceConfig
+
 @{
     ViewData["Title"] = "Pipeline Assessment";
     Layout = "_Layout";
@@ -32,3 +34,5 @@
         }
     </div>
     }
+    
+<script nonce="@nonceConfig.SiteSetup" src="~/js/site.js"></script>

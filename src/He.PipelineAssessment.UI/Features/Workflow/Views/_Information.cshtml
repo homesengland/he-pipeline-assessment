@@ -4,3 +4,18 @@
 @foreach(var text in Model.Information.Text){
      @await Html.PartialAsync("_InformationTextWrapper", text)
 }
+
+@for (int i = 0; i < Model.Information!.Text.Count; i++)
+{
+    var hiddenItemText = "Data.Questions[" + Model.Index + "].Information.InformationTextList[" + i + "].Text";
+    var hiddenItemIsParagraph = "Data.Questions[" + Model.Index + "].Information.InformationTextList[" + i + "].IsParagraph";
+    var hiddenItemIsGuidance = "Data.Questions[" + Model.Index + "].Information.InformationTextList[" + i + "].IsGuidance";
+    var hiddenItemIsHyperlink = "Data.Questions[" + Model.Index + "].Information.InformationTextList[" + i + "].IsHyperlink";
+    var hiddenItemUrl = "Data.Questions[" + Model.Index + "].Information.InformationTextList[" + i + "].Url";
+
+    <input type="hidden" name="@hiddenItemText" value="@Model.Information.Text[i].Text" />
+    <input type="hidden" name="@hiddenItemIsParagraph" value="@Model.Information.Text[i].IsParagraph.ToString()" />
+    <input type="hidden" name="@hiddenItemIsGuidance" value="@Model.Information.Text[i].IsGuidance.ToString()" />
+    <input type="hidden" name="@hiddenItemIsHyperlink" value="@Model.Information.Text[i].IsHyperlink.ToString()" />
+    <input type="hidden" name="@hiddenItemUrl" value="@Model.Information.Text[i].Url" />
+}

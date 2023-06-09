@@ -3,6 +3,7 @@
 @using System.Security.Claims;
 @using Microsoft.AspNetCore.Authorization
 @inject IAuthorizationService AuthorizationService
+@inject NonceConfig nonceConfig
 @model He.PipelineAssessment.UI.Features.Assessment.AssessmentSummary.AssessmentSummaryResponse;
 
 @{
@@ -120,3 +121,4 @@
     </div>
 </div>
 
+<script nonce="@nonceConfig.SiteSetup" src="~/js/site.js"></script>
