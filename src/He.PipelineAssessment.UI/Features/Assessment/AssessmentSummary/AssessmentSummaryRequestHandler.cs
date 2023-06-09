@@ -38,6 +38,14 @@ namespace He.PipelineAssessment.UI.Features.Assessment.AssessmentSummary
                         }
                     }
 
+                    var interventions = new List<AssessmentInterventionViewModel>();
+
+                    var dbInterventions = await _storedProcedureRepository.GetAssessmentInterventionList(request.AssessmentId);
+                    if (dbInterventions.Any())
+                    {
+                        interventions = dbInterventions;
+                    }
+
                     return new AssessmentSummaryResponse()
                     {
                         CorrelationId = request.CorrelationId,
@@ -47,8 +55,8 @@ namespace He.PipelineAssessment.UI.Features.Assessment.AssessmentSummary
                         Reference = dbAssessment.Reference,
                         Stages = stages,
                         LocalAuthority = dbAssessment.LocalAuthority,
-                        ProjectManager = dbAssessment.ProjectManager
-
+                        ProjectManager = dbAssessment.ProjectManager,
+                        Interventions = interventions
                     };
                 }
             }

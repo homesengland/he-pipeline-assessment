@@ -22,7 +22,6 @@ namespace He.PipelineAssessment.UI.Tests.Features.Intervention.InterventionManag
         public async Task Handle_ThrowsException_GivenRepoReturnsNoWorkflowInstance(
                   [Frozen] Mock<IAssessmentRepository> assessmentRepository,
                   CreateOverrideRequest request,
-                  Exception exception,
                   AssessmentToolWorkflowInstance? workflowInstance,
                   CreateOverrideRequestHandler sut
               )

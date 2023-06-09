@@ -12,6 +12,7 @@ namespace He.PipelineAssessment.UI.Features.Assessment.AssessmentSummary
         public string? LocalAuthority { get; set; }
         public string? ProjectManager { get; set; }   
         public IEnumerable<AssessmentSummaryStage> Stages { get; set; } = null!;
+        public IEnumerable<AssessmentInterventionViewModel> Interventions { get; set; } = null!;
 
     }
 

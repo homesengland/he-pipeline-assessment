@@ -9,6 +9,7 @@ namespace He.PipelineAssessment.Infrastructure.Repository.StoredProcedure
     public interface IStoredProcedureRepository
     {
         Task<List<AssessmentStageViewModel>> GetAssessmentStages(int assessmentId);
+        Task<List<AssessmentInterventionViewModel>> GetAssessmentInterventionList(int assessmentId);
         Task<List<StartableToolViewModel>> GetStartableTools(int assessmentId);
         Task<List<AssessmentDataViewModel>> GetAssessments();
         Task<List<AssessmentDataViewModel>> GetEconomistAssessments();
@@ -18,6 +19,7 @@ namespace He.PipelineAssessment.Infrastructure.Repository.StoredProcedure
     {
         private readonly PipelineAssessmentStoreProcContext _storeProcContext;
         private readonly string sp_GetAssessmentStagesByAssessmentId = @"exec GetAssessmentStagesByAssessmentId @assessmentId";
+        private readonly string sp_GetAssessmentInterventionListByAssessmentId = @"exec GetAssessmentInterventionListByAssessmentId @assessmentId";
         private readonly string sp_GetStartableToolsByAssessmentId = @"exec GetStartableToolsByAssessmentId @assessmentId";
         private readonly string sp_AssessmentData = @"exec GetAssessments";
         private readonly string sp_EconomistAssessmentData = @"exec GetEconomistAssessments";
@@ -41,6 +43,14 @@ namespace He.PipelineAssessment.Infrastructure.Repository.StoredProcedure
             var stages = await _storeProcContext.AssessmentStageViewModel
                 .FromSqlRaw(sp_GetAssessmentStagesByAssessmentId, assessmentIdParameter).ToListAsync();
             return new List<AssessmentStageViewModel>(stages);
+        }
+
+        public async Task<List<AssessmentInterventionViewModel>> GetAssessmentInterventionList(int assessmentId)
+        {
+            var assessmentIdParameter = new SqlParameter("@assessmentId", assessmentId);
+            var result = await _storeProcContext.AssessmentInterventionViewModel
+                .FromSqlRaw(sp_GetAssessmentInterventionListByAssessmentId, assessmentIdParameter).ToListAsync();
+            return new List<AssessmentInterventionViewModel>(result);
         }
 
         public async Task<List<AssessmentDataViewModel>> GetEconomistAssessments()
