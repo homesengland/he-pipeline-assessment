@@ -1,6 +1,18 @@
 ﻿// Please see documentation at https://docs.microsoft.com/aspnet/core/client-side/bundling-and-minification
 // for details on configuring this project to bundle and minify static web assets.
 
+
+var forms = document.querySelectorAll('form');
+
+forms.forEach(function (form) {
+    form.addEventListener('submit', function (event) {
+        //trying to disable the button that is inside the current form only on submit
+
+        var submitBtn = document.querySelector('input[type="submit"]')
+        submitBtn.setAttribute('disabled', true);
+    });
+});
+
 // Write your JavaScript code.
 var groupCheckboxes = document.querySelectorAll('input[group][type="checkbox"]');
 
@@ -51,9 +63,9 @@ summaryInputs.forEach(function (summaryInput) {
             input.addEventListener('keyup', function (event) {
                 // skip for arrow keys
                 if (event.which >= 37 && event.which <= 40) return;
-                
+
                 summaryInput.value = getTotalColumnValue(inputsToTotal);
-                
+
                 // format number
                 summaryInput.value = numberWithCommas(summaryInput.value);
                 hiddenTotalInputs.forEach(hiddenInput => {
