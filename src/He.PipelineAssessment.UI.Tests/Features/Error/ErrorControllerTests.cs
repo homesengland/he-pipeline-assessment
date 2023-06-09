@@ -15,7 +15,7 @@ namespace He.PipelineAssessment.UI.Tests.Features.Error
             //Arrange
 
             //Act
-            var result = sut.Index("");
+            var result = sut.Index();
 
             //Assert
             Assert.IsAssignableFrom<IActionResult>(result);

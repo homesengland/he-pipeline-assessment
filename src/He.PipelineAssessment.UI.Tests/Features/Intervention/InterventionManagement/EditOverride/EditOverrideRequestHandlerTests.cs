@@ -42,7 +42,6 @@ namespace He.PipelineAssessment.UI.Tests.Features.Intervention.InterventionManag
           AssessmentInterventionCommand command,
           AssessmentIntervention intervention,
           EditOverrideRequest request,
-          Exception exception,
           EditOverrideRequestHandler sut
       )
         {

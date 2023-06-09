@@ -53,8 +53,8 @@ namespace He.PipelineAssessment.UI.Tests.Features.Intervention.InterventionManag
             //Arrange
             var date = new DateTime(2024, 6, 5);
             dateTimeProvider.Setup(x => x.UtcNow()).Returns(date);
-            createOverrideCommand.RequestedBy = null;
-            createOverrideCommand.RequestedByEmail = null;
+            createOverrideCommand.RequestedBy = null!;
+            createOverrideCommand.RequestedByEmail = null!;
 
             //Act
             var result = sut.CreateOverrideCommandToAssessmentIntervention(createOverrideCommand);
