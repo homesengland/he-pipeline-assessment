@@ -87,7 +87,7 @@ function getTotalColumnValue(inputsToTotal) {
         total += Number(cleansedInput);
     });
     var roundedTotal = total.toFixed(2);
-    var formattedRoundedTotal = roundedTotal.replace(/.00/, "")
+    var formattedRoundedTotal = roundedTotal.replace(/(\.00)/, "")
     return formattedRoundedTotal;
 }
 
