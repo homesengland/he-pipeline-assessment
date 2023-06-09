@@ -69,7 +69,7 @@ namespace He.PipelineAssessment.UI.Tests.Features.Intervention.InterventionManag
 
             //Assert
             Assert.Equal(Unit.Value, result);
-            repo.Verify(x => x.GetSubsequentWorkflowInstances(intervention.AssessmentToolWorkflowInstance.WorkflowInstanceId), Times.Never);
+            repo.Verify(x => x.GetSubsequentWorkflowInstancesForOverride(intervention.AssessmentToolWorkflowInstance.WorkflowInstanceId), Times.Never);
         }
 
         [Theory]
@@ -87,7 +87,7 @@ namespace He.PipelineAssessment.UI.Tests.Features.Intervention.InterventionManag
             var allWorkflowInstancesCount = allWorkflowInstances.Count();
             command.Status = InterventionStatus.Approved;
             repo.Setup(x => x.GetAssessmentIntervention(command.AssessmentInterventionId)).ReturnsAsync(intervention);
-            repo.Setup(x => x.GetSubsequentWorkflowInstances(intervention
+            repo.Setup(x => x.GetSubsequentWorkflowInstancesForOverride(intervention
                 .AssessmentToolWorkflowInstance.WorkflowInstanceId)).ReturnsAsync(allWorkflowInstances);
 
             //Act
@@ -117,7 +117,7 @@ namespace He.PipelineAssessment.UI.Tests.Features.Intervention.InterventionManag
             allWorkflowInstances.First().Id = intervention.AssessmentToolWorkflowInstanceId;
             command.Status = InterventionStatus.Approved;
             repo.Setup(x => x.GetAssessmentIntervention(command.AssessmentInterventionId)).ReturnsAsync(intervention);
-            repo.Setup(x => x.GetSubsequentWorkflowInstances(intervention
+            repo.Setup(x => x.GetSubsequentWorkflowInstancesForOverride(intervention
                 .AssessmentToolWorkflowInstance.WorkflowInstanceId)).ReturnsAsync(allWorkflowInstances);
             repo.Setup(x => x.GetAssessmentToolInstanceNextWorkflow(intervention.AssessmentToolWorkflowInstanceId,
                 intervention.TargetAssessmentToolWorkflow!.WorkflowDefinitionId)).ReturnsAsync(nextWorkflow);
@@ -147,7 +147,7 @@ namespace He.PipelineAssessment.UI.Tests.Features.Intervention.InterventionManag
             allWorkflowInstances.First().Id = intervention.AssessmentToolWorkflowInstanceId;
             command.Status = InterventionStatus.Approved;
             repo.Setup(x => x.GetAssessmentIntervention(command.AssessmentInterventionId)).ReturnsAsync(intervention);
-            repo.Setup(x => x.GetSubsequentWorkflowInstances(intervention
+            repo.Setup(x => x.GetSubsequentWorkflowInstancesForOverride(intervention
                 .AssessmentToolWorkflowInstance.WorkflowInstanceId)).ReturnsAsync(allWorkflowInstances);
             repo.Setup(x => x.GetPreviousAssessmentToolWorkflowInstances(intervention
                 .AssessmentToolWorkflowInstance.WorkflowInstanceId)).ReturnsAsync(previousWorkflowInstances);

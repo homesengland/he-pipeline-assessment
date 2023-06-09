@@ -26,20 +26,16 @@ namespace He.PipelineAssessment.UI.Features.Override.SubmitOverride
                 throw new NotFoundException($"Assessment Intervention with Id {command.AssessmentInterventionId} not found");
             }
 
-            if (command.Status != null)
-            {
-                intervention.Status = command.Status;
-            }
+            intervention.Status = command.Status;
             intervention.DateSubmitted = _dateTimeProvider.UtcNow();
             await _assessmentRepository.UpdateAssessmentIntervention(intervention);
 
             if (intervention.Status == InterventionStatus.Approved)
             {
                 var workflowsToDelete =
-                    await _assessmentRepository.GetSubsequentWorkflowInstances(intervention
+                    await _assessmentRepository.GetSubsequentWorkflowInstancesForOverride(intervention
                         .AssessmentToolWorkflowInstance.WorkflowInstanceId);
-                var currentWorkflow = workflowsToDelete.First(x => x.Id == intervention.AssessmentToolWorkflowInstanceId);
-                workflowsToDelete.Remove(currentWorkflow);
+
                 foreach (var workflowInstance in workflowsToDelete)
                 {
                     workflowInstance.Status = AssessmentToolWorkflowInstanceConstants.Deleted;
@@ -58,20 +54,12 @@ namespace He.PipelineAssessment.UI.Features.Override.SubmitOverride
                                     intervention.TargetAssessmentToolWorkflow!.WorkflowDefinitionId);
 
             if (nextWorkflow == null)
-            {
-                var previousWorkflows =
-                    await _assessmentRepository.GetPreviousAssessmentToolWorkflowInstances(intervention.AssessmentToolWorkflowInstance.WorkflowInstanceId);
+            { 
+                nextWorkflow = AssessmentToolInstanceNextWorkflow(intervention.AssessmentToolWorkflowInstance.AssessmentId,
+                            intervention.AssessmentToolWorkflowInstanceId, intervention.TargetAssessmentToolWorkflow!.WorkflowDefinitionId);
 
-                if (previousWorkflows != null && previousWorkflows.Any())
-                {
-                    var lastWorkflowInstance = previousWorkflows.OrderByDescending(x => x.CreatedDateTime).First();
-                    nextWorkflow =
-                        AssessmentToolInstanceNextWorkflow(lastWorkflowInstance.AssessmentId,
-                            lastWorkflowInstance.Id, intervention.TargetAssessmentToolWorkflow!.WorkflowDefinitionId);
-
-                    await _assessmentRepository.CreateAssessmentToolInstanceNextWorkflows(
-                        new List<AssessmentToolInstanceNextWorkflow>() { nextWorkflow });
-                }
+                await _assessmentRepository.CreateAssessmentToolInstanceNextWorkflows(
+                    new List<AssessmentToolInstanceNextWorkflow>() { nextWorkflow });
             }
             else
             {
