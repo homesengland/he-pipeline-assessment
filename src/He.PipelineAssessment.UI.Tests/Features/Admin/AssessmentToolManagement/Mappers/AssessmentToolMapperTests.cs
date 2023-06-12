@@ -103,5 +103,30 @@ namespace He.PipelineAssessment.UI.Tests.Features.Admin.AssessmentToolManagement
                 Assert.Equal(assessmentToolWorkflows[i].WorkflowDefinitionId, result[i].WorkflowDefinitionId);
             }
         }
+
+        [Theory]
+        [AutoMoqData]
+        public void AssessmentToolWorkflowsToAssessmentToolDto_ShouldOnlyReturnNotDeletedAssessmentToolWorkflows(
+            List<AssessmentToolWorkflow> assessmentToolWorkflows,
+            AssessmentToolMapper sut
+        )
+        {
+            //Act
+            assessmentToolWorkflows[0].Status = AssessmentToolStatus.Deleted;
+            var result = sut.AssessmentToolWorkflowsToAssessmentToolDto(assessmentToolWorkflows);
+
+            //Assert
+            Assert.Equal(assessmentToolWorkflows.Count - 1, result.Count);
+            Assert.Null(result.FirstOrDefault(x => x.Id == assessmentToolWorkflows[0].Id));
+            for (var i = 1; i < result.Count; i++)
+            {
+                Assert.Equal(assessmentToolWorkflows[i].Id, result[i - 1].Id);
+                Assert.Equal(assessmentToolWorkflows[i].Name, result[i - 1].Name);
+                Assert.Equal(assessmentToolWorkflows[i].IsFirstWorkflow, result[i - 1].IsFirstWorkflow);
+                Assert.Equal(assessmentToolWorkflows[i].IsLatest, result[i - 1].IsLatest);
+                Assert.Equal(assessmentToolWorkflows[i].Version, result[i - 1].Version);
+                Assert.Equal(assessmentToolWorkflows[i].WorkflowDefinitionId, result[i - 1].WorkflowDefinitionId);
+            }
+        }
     }
 }

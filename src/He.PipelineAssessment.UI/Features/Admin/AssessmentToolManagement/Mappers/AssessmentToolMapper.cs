@@ -50,17 +50,18 @@ namespace He.PipelineAssessment.UI.Features.Admin.AssessmentToolManagement.Mappe
 
         public List<Queries.GetAssessmentToolWorkflows.AssessmentToolWorkflowDto> AssessmentToolWorkflowsToAssessmentToolDto(List<AssessmentToolWorkflow> assessmentToolWorkflows)
         {
-            return assessmentToolWorkflows.Select(x => new Queries.GetAssessmentToolWorkflows.AssessmentToolWorkflowDto
-            {
-                Id = x.Id,
-                Name = x.Name,
-                AssessmentToolId = x.AssessmentToolId,
-                IsFirstWorkflow = x.IsFirstWorkflow,
-                IsEconomistWorkflow = x.IsEconomistWorkflow,
-                IsLatest = x.IsLatest,
-                Version = x.Version,
-                WorkflowDefinitionId = x.WorkflowDefinitionId
-            }).ToList();
+            return assessmentToolWorkflows.Where(x => x.Status != AssessmentToolStatus.Deleted).Select(x =>
+                new Queries.GetAssessmentToolWorkflows.AssessmentToolWorkflowDto
+                {
+                    Id = x.Id,
+                    Name = x.Name,
+                    AssessmentToolId = x.AssessmentToolId,
+                    IsFirstWorkflow = x.IsFirstWorkflow,
+                    IsEconomistWorkflow = x.IsEconomistWorkflow,
+                    IsLatest = x.IsLatest,
+                    Version = x.Version,
+                    WorkflowDefinitionId = x.WorkflowDefinitionId
+                }).ToList();
         }
     }
 
