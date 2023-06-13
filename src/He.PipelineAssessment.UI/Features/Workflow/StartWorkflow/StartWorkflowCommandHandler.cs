@@ -92,6 +92,7 @@ namespace He.PipelineAssessment.UI.Features.Workflow.StartWorkflow
             assessmentToolWorkflowInstance.WorkflowDefinitionId = request.WorkflowDefinitionId;
             assessmentToolWorkflowInstance.CurrentActivityId = response.Data.NextActivityId;
             assessmentToolWorkflowInstance.CurrentActivityType = response.Data.ActivityType;
+            assessmentToolWorkflowInstance.AssessmentToolWorkflowId = request.AssessmentToolWorkflowId;
             return assessmentToolWorkflowInstance;
         }
     }

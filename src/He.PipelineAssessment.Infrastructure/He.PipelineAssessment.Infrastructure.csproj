@@ -22,6 +22,8 @@
     <None Remove="Migrations\20230607140525_StoredProceduresToHandleDeletedStatus\GetStartableToolsByAssessmentId.sql" />
     <None Remove="Migrations\20230608123140_FixOverwrittenGetAssessmentStagesSP\GetAssessmentStagesByAssessmentId.sql" />
     <None Remove="Migrations\20230609131017_GetAssessmentInterventionList\GetAssessmentInterventionListByAssessmentId.sql" />
+    <None Remove="Migrations\20230613124443_IncludeWorkflowToolIdOnStartableSP\GetAssessmentStagesByAssessmentId.sql" />
+    <None Remove="Migrations\20230613124443_IncludeWorkflowToolIdOnStartableSP\GetStartableToolsByAssessmentId.sql" />
   </ItemGroup>
 
   <ItemGroup>
@@ -40,6 +42,8 @@
     <EmbeddedResource Include="Migrations\20230607140525_StoredProceduresToHandleDeletedStatus\GetStartableToolsByAssessmentId.sql" />
     <EmbeddedResource Include="Migrations\20230608123140_FixOverwrittenGetAssessmentStagesSP\GetAssessmentStagesByAssessmentId.sql" />
     <EmbeddedResource Include="Migrations\20230609131017_GetAssessmentInterventionList\GetAssessmentInterventionListByAssessmentId.sql" />
+    <EmbeddedResource Include="Migrations\20230613124443_IncludeWorkflowToolIdOnStartableSP\GetAssessmentStagesByAssessmentId.sql" />
+    <EmbeddedResource Include="Migrations\20230613124443_IncludeWorkflowToolIdOnStartableSP\GetStartableToolsByAssessmentId.sql" />
   </ItemGroup>
 
   <ItemGroup>

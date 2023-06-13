@@ -30,6 +30,7 @@ namespace He.PipelineAssessment.UI.Features.Assessment.AssessmentSummary
         public DateTime? CreatedDateTime { get; set; }
         public DateTime? SubmittedDateTime { get; set; }
         public int? AssessmentToolId { get; set; }
+        public int? AssessmentToolWorkflowId { get; set; }
         public int? AssessmentToolWorkflowInstanceId { get; set; }
         public bool? IsFirstWorkflow { get; set; }
         public string? Result { get; set; } = null;

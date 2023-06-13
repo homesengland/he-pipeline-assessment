@@ -1,5 +1,6 @@
 ﻿using He.PipelineAssessment.Infrastructure.Repository;
 using He.PipelineAssessment.Infrastructure.Repository.StoredProcedure;
+using He.PipelineAssessment.Models;
 using He.PipelineAssessment.Models.ViewModels;
 using MediatR;
 
@@ -94,7 +95,8 @@ namespace He.PipelineAssessment.UI.Features.Assessment.AssessmentSummary
                 IsFirstWorkflow = item.IsFirstWorkflow ?? startableToolViewModel?.IsFirstWorkflow,
                 AssessmentToolWorkflowInstanceId = item.AssessmentToolWorkflowInstanceId,
                 Result = item.Result,
-                SubmittedBy = item.SubmittedBy
+                SubmittedBy = item.SubmittedBy,
+                AssessmentToolWorkflowId = startableToolViewModel?.AssessmentToolWorkflowId
             };
             return stage;
         }

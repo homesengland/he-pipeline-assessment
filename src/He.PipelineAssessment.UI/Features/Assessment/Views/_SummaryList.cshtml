@@ -78,6 +78,7 @@
                                     @Html.HiddenFor(x => x.AssessmentId)
                                     @Html.HiddenFor(x => x.CorrelationId)
                                     <input type="hidden" name="WorkflowDefinitionId" value="@assessmentStage.WorkflowDefinitionId" />
+                                    <input type="hidden" name="AssessmentToolWorkflowId" value="@assessmentStage.AssessmentToolWorkflowId" />
                                     <input class="govuk-button govuk-!-margin-0" data-module="govuk-button" id="Submit" type="submit" value="Start now" />
                                 }
                             }

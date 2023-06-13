@@ -204,7 +204,7 @@ namespace He.PipelineAssessment.Infrastructure.Repository
             return workflow;
         }
 
-        public async Task<AssessmentToolWorkflowInstance?> GetSameStageAssessmentToolWorkflowInstanceForRollback(AssessmentIntervention intervention)
+        public Task<AssessmentToolWorkflowInstance?> GetSameStageAssessmentToolWorkflowInstanceForRollback(AssessmentIntervention intervention)
         {
             //might need to write a SP for this
             throw new NotImplementedException();
