@@ -11,8 +11,10 @@ BEGIN
 
     UNION ALL
 
-    SELECT AssessmentToolId, Id as AssessmentToolWorkflowId, WorkflowDefinitionId, IsFirstWorkflow 
-    FROM AssessmentToolWorkflow 
-    WHERE IsFirstWorkflow = 1 AND 
-    (Status IS NULL OR Status != ''Deleted'')
+    SELECT ATW.AssessmentToolId, ATW.Id as AssessmentToolWorkflowId, ATW.WorkflowDefinitionId, ATW.IsFirstWorkflow 
+    FROM AssessmentToolWorkflow ATW
+	LEFT JOIN AssessmentToolWorkflowInstance ATWI on ATW.Id = ATWI.AssessmentToolWorkflowId and ATWI.AssessmentId = @assessmentId
+    WHERE ATW.IsFirstWorkflow = 1 AND 
+    (ATW.Status IS NULL OR ATW.Status != ''Deleted'') AND
+	ATWI.Id is null
 END
