@@ -1,6 +1,9 @@
-﻿using He.PipelineAssessment.Tests.Common;
+﻿using He.PipelineAssessment.Infrastructure.Repository;
+using He.PipelineAssessment.Models;
+using He.PipelineAssessment.Tests.Common;
 using He.PipelineAssessment.UI.Features.Admin.AssessmentToolManagement.Commands.CreateAssessmentToolWorkflow;
 using He.PipelineAssessment.UI.Features.Admin.AssessmentToolManagement.Validators;
+using Moq;
 using Xunit;
 
 namespace He.PipelineAssessment.UI.Tests.Features.Admin.AssessmentToolManagement.Validators
@@ -11,10 +14,17 @@ namespace He.PipelineAssessment.UI.Tests.Features.Admin.AssessmentToolManagement
         [InlineAutoMoqData("", "The Name cannot be empty")]
         [InlineAutoMoqData("", "The Name cannot be empty")]
         [InlineAutoMoqData("Name_that_is_over_100_characters_long.............................................................123", "The length of 'Name' must be 100 characters or fewer. You entered 101 characters.")]
-        public void MultipleValidator_Should_ReturnValidationMessage_WhenPropertyIsInvalid(string name, string expectedValidationMessage)
+        public void Should_ReturnValidationMessage_WhenPropertyIsInvalid(
+            string name, 
+            string expectedValidationMessage, 
+            Mock<IAssessmentRepository> repository)
         {
             //Arrange
-            var validator = new CreateAssessmentToolWorkflowCommandValidator();
+            var validator = new CreateAssessmentToolWorkflowCommandValidator(repository.Object);
+
+
+            repository.Setup(x => x.GetAssessmentToolWorkflowByDefinitionId(It.IsAny<string>())).Returns((AssessmentToolWorkflow?)null);
+
             var command = new CreateAssessmentToolWorkflowCommand
             {
                 Name = name,
@@ -33,6 +43,35 @@ namespace He.PipelineAssessment.UI.Tests.Features.Admin.AssessmentToolManagement
             Assert.NotEqual("The Name can be empty",
                 result.Errors.First(x => x.PropertyName == "Name").ErrorMessage);
             Assert.NotEqual("The Workflow Definition Id can be empty.",
+                result.Errors.First(x => x.PropertyName == "WorkflowDefinitionId").ErrorMessage);
+        }
+
+
+        [Theory]
+        [AutoMoqData]
+        public void Should_ReturnValidationMessage_WhenAssessmentIdIsNotUnique(
+            string name,
+            string workflowDefinitionId,
+            Mock<IAssessmentRepository> repository,
+            AssessmentToolWorkflow assessmentToolWorkflow)
+        {
+            //Arrange
+            var validator = new CreateAssessmentToolWorkflowCommandValidator(repository.Object);
+
+            repository.Setup(x => x.GetAssessmentToolWorkflowByDefinitionId(It.IsAny<string>())).Returns(assessmentToolWorkflow);
+
+            var command = new CreateAssessmentToolWorkflowCommand
+            {
+                Name = name,
+                WorkflowDefinitionId = workflowDefinitionId
+            };
+
+            //Act
+            var result = validator.Validate(command);
+
+            //Assert
+            Assert.Single(result.Errors);
+            Assert.NotEqual("The WorkflowDefinitionId must be unique and not used in another Assessment Tool Workflow",
                 result.Errors.First(x => x.PropertyName == "WorkflowDefinitionId").ErrorMessage);
         }
     }
