@@ -51,28 +51,17 @@ namespace He.PipelineAssessment.UI.Features.Rollback.SubmitRollback
 
         private async Task CreateNextWorkflow(AssessmentIntervention intervention)
         {
-            var nextWorkflow = await _assessmentRepository.GetAssessmentToolInstanceNextWorkflow(intervention.AssessmentToolWorkflowInstanceId,
-                                    intervention.TargetAssessmentToolWorkflow!.WorkflowDefinitionId);
 
-            if (nextWorkflow == null)
-            {
-                await _assessmentRepository.DeleteAllNextWorkflows(intervention.AssessmentToolWorkflowInstance.AssessmentId);
+            await _assessmentRepository.DeleteAllNextWorkflows(intervention.AssessmentToolWorkflowInstance
+                .AssessmentId);
 
-                nextWorkflow =
-                    AssessmentToolInstanceNextWorkflow(intervention.AssessmentToolWorkflowInstance.AssessmentId,
-                        intervention.AssessmentToolWorkflowInstanceId, intervention.TargetAssessmentToolWorkflow!.WorkflowDefinitionId);
+            var nextWorkflow =
+                AssessmentToolInstanceNextWorkflow(intervention.AssessmentToolWorkflowInstance.AssessmentId,
+                    intervention.AssessmentToolWorkflowInstanceId,
+                    intervention.TargetAssessmentToolWorkflow!.WorkflowDefinitionId);
 
-                await _assessmentRepository.CreateAssessmentToolInstanceNextWorkflows(
-                    new List<AssessmentToolInstanceNextWorkflow>() { nextWorkflow });
-            }
-            else
-            {
-                nextWorkflow.IsStarted = false;
-                await _assessmentRepository.SaveChanges();
-
-                await _assessmentRepository.DeleteSubsequentNextWorkflows(nextWorkflow);
-            }
-
+            await _assessmentRepository.CreateAssessmentToolInstanceNextWorkflows(
+                new List<AssessmentToolInstanceNextWorkflow>() { nextWorkflow });
         }
 
         private AssessmentToolInstanceNextWorkflow AssessmentToolInstanceNextWorkflow(int assessmentId, int assessmentToolWorkflowInstanceId, string workflowDefinitionId)
@@ -81,8 +70,7 @@ namespace He.PipelineAssessment.UI.Features.Rollback.SubmitRollback
             {
                 AssessmentId = assessmentId,
                 AssessmentToolWorkflowInstanceId = assessmentToolWorkflowInstanceId,
-                NextWorkflowDefinitionId = workflowDefinitionId,
-                IsStarted = false
+                NextWorkflowDefinitionId = workflowDefinitionId
             };
         }
     }

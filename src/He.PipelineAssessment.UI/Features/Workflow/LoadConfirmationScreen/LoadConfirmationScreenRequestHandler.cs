@@ -53,7 +53,7 @@ namespace He.PipelineAssessment.UI.Features.Workflow.LoadConfirmationScreen
                             foreach (var workflowDefinitionId in workflowDefinitionIds)
                             {
                                 var nextWorkflow =
-                                    await _assessmentRepository.GetNonStartedAssessmentToolInstanceNextWorkflow(currentAssessmentToolWorkflowInstance.Id,
+                                    await _assessmentRepository.GetAssessmentToolInstanceNextWorkflow(currentAssessmentToolWorkflowInstance.Id,
                                         workflowDefinitionId);
 
                                 if (nextWorkflow == null)
@@ -85,8 +85,7 @@ namespace He.PipelineAssessment.UI.Features.Workflow.LoadConfirmationScreen
             {
                 AssessmentId = assessmentId,
                 AssessmentToolWorkflowInstanceId = assessmentToolWorkflowInstanceId,
-                NextWorkflowDefinitionId = workflowDefinitionId,
-                IsStarted = false
+                NextWorkflowDefinitionId = workflowDefinitionId
             };
         }
     }

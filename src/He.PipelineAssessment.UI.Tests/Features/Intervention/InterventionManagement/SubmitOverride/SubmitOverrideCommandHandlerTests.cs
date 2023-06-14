@@ -113,7 +113,6 @@ namespace He.PipelineAssessment.UI.Tests.Features.Intervention.InterventionManag
         )
         {
             //Arrange
-            nextWorkflow.IsStarted = true;
             allWorkflowInstances.First().Id = intervention.AssessmentToolWorkflowInstanceId;
             command.Status = InterventionStatus.Approved;
             repo.Setup(x => x.GetAssessmentIntervention(command.AssessmentInterventionId)).ReturnsAsync(intervention);
@@ -127,7 +126,6 @@ namespace He.PipelineAssessment.UI.Tests.Features.Intervention.InterventionManag
 
             //Assert
             Assert.Equal(Unit.Value, result);
-            Assert.False(nextWorkflow.IsStarted);
             repo.Verify(x => x.SaveChanges(), Times.Exactly(2));
         }
 
@@ -161,7 +159,7 @@ namespace He.PipelineAssessment.UI.Tests.Features.Intervention.InterventionManag
             //Assert
             Assert.Equal(Unit.Value, result);
 
-            var nextWorkflowPredicate = (AssessmentToolInstanceNextWorkflow x) => x.IsStarted == false &&
+            var nextWorkflowPredicate = (AssessmentToolInstanceNextWorkflow x) => 
                                                                x.AssessmentId == lastWorkflowInstance.AssessmentId &&
                                                                x.AssessmentToolWorkflowInstanceId ==
                                                                lastWorkflowInstance.Id && x.NextWorkflowDefinitionId ==

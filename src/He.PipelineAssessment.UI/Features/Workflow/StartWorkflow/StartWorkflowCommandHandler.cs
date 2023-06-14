@@ -58,13 +58,12 @@ namespace He.PipelineAssessment.UI.Features.Workflow.StartWorkflow
 
                     //if there is a next workflow record for the current set it to started
                     var nextWorkflow =
-                        await _assessmentRepository.GetNonStartedAssessmentToolInstanceNextWorkflowByAssessmentId(request.AssessmentId,
+                        await _assessmentRepository.GetAssessmentToolInstanceNextWorkflowByAssessmentId(request.AssessmentId,
                             request.WorkflowDefinitionId);
 
                     if (nextWorkflow!=null)
                     {
-                        nextWorkflow.IsStarted = true;
-                        await _assessmentRepository.SaveChanges();
+                        await _assessmentRepository.DeleteNextWorkflow(nextWorkflow);
                     }
 
                     return await Task.FromResult(result);
