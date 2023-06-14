@@ -63,6 +63,8 @@ namespace He.PipelineAssessment.UI.Features.Assessment.AssessmentSummary
                     return "blue";
                 case "Submitted":
                     return "green";
+                case "Deleted":
+                    return "red";
             }
             return "grey";
         }

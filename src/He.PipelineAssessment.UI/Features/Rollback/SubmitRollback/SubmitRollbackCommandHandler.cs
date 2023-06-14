@@ -21,6 +21,8 @@ namespace He.PipelineAssessment.UI.Features.Rollback.SubmitRollback
         {
             var intervention =
                 await _assessmentRepository.GetAssessmentIntervention(command.AssessmentInterventionId);
+
+
             if (intervention == null)
             {
                 throw new NotFoundException($"Assessment Intervention with Id {command.AssessmentInterventionId} not found");
@@ -32,18 +34,8 @@ namespace He.PipelineAssessment.UI.Features.Rollback.SubmitRollback
 
             if (intervention.Status == InterventionStatus.Approved)
             {
-                //get instance for rollback
-                var instance = await _assessmentRepository.GetAssessmentToolWorkflowInstanceForRollback(intervention);
-                if (instance == null)
-                {
-                    instance = await _assessmentRepository.GetSameStageAssessmentToolWorkflowInstanceForRollback(intervention);
-                }
-
-                if (instance == null)
-                    throw new NotFoundException("Unable to found workflow instance to roll back to");
-
                 var workflowsToDelete =
-                    await _assessmentRepository.GetSubsequentWorkflowInstancesForRollback(instance);
+                    await _assessmentRepository.GetWorkflowInstancesToDeleteForRollback(intervention.AssessmentToolWorkflowInstance.AssessmentId, intervention.TargetAssessmentToolWorkflow!.AssessmentTool.Order);
 
                 foreach (var workflowInstance in workflowsToDelete)
                 {
@@ -51,41 +43,36 @@ namespace He.PipelineAssessment.UI.Features.Rollback.SubmitRollback
                 }
 
                 await _assessmentRepository.SaveChanges();
-                await CreateNextWorkflow(intervention, instance);
+                await CreateNextWorkflow(intervention);
             }
 
             return Unit.Value;
         }
 
-        private async Task CreateNextWorkflow(AssessmentIntervention intervention, AssessmentToolWorkflowInstance instance)
+        private async Task CreateNextWorkflow(AssessmentIntervention intervention)
         {
-            var previousWorkflows =
-                await _assessmentRepository.GetPreviousAssessmentToolWorkflowInstances(instance);
+            var nextWorkflow = await _assessmentRepository.GetAssessmentToolInstanceNextWorkflow(intervention.AssessmentToolWorkflowInstanceId,
+                                    intervention.TargetAssessmentToolWorkflow!.WorkflowDefinitionId);
 
-            if (previousWorkflows != null && previousWorkflows.Any())
+            if (nextWorkflow == null)
             {
-                var lastWorkflowInstance = previousWorkflows.OrderByDescending(x => x.CreatedDateTime).First();
+                await _assessmentRepository.DeleteAllNextWorkflows(intervention.AssessmentToolWorkflowInstance.AssessmentId);
 
-                var nextWorkflow = await _assessmentRepository.GetAssessmentToolInstanceNextWorkflow(lastWorkflowInstance.Id,
-                                        intervention.TargetAssessmentToolWorkflow!.WorkflowDefinitionId);
+                nextWorkflow =
+                    AssessmentToolInstanceNextWorkflow(intervention.AssessmentToolWorkflowInstance.AssessmentId,
+                        intervention.AssessmentToolWorkflowInstanceId, intervention.TargetAssessmentToolWorkflow!.WorkflowDefinitionId);
 
-                if (nextWorkflow == null)
-                {
-                    nextWorkflow =
-                        AssessmentToolInstanceNextWorkflow(lastWorkflowInstance.AssessmentId,
-                            lastWorkflowInstance.Id, intervention.TargetAssessmentToolWorkflow!.WorkflowDefinitionId);
-
-                    await _assessmentRepository.CreateAssessmentToolInstanceNextWorkflows(
-                        new List<AssessmentToolInstanceNextWorkflow>() { nextWorkflow });
-                }
-                else
-                {
-                    nextWorkflow.IsStarted = false;
-                    await _assessmentRepository.SaveChanges();
-
-                    await _assessmentRepository.DeleteSubsequentNextWorkflows(nextWorkflow);
-                }
+                await _assessmentRepository.CreateAssessmentToolInstanceNextWorkflows(
+                    new List<AssessmentToolInstanceNextWorkflow>() { nextWorkflow });
             }
+            else
+            {
+                nextWorkflow.IsStarted = false;
+                await _assessmentRepository.SaveChanges();
+
+                await _assessmentRepository.DeleteSubsequentNextWorkflows(nextWorkflow);
+            }
+
         }
 
         private AssessmentToolInstanceNextWorkflow AssessmentToolInstanceNextWorkflow(int assessmentId, int assessmentToolWorkflowInstanceId, string workflowDefinitionId)

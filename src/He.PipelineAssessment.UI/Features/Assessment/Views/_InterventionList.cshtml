@@ -28,7 +28,7 @@
                     {
                         if (isAdmin)
                         {
-                            <a asp-controller="Override" asp-action="CheckYourDetails" asp-route-interventionId="@intervention.Id" class="govuk-link">@intervention.WorkflowName</a>
+                            <a asp-controller="Override" asp-action="EditOverride" asp-route-interventionId="@intervention.Id" class="govuk-link">@intervention.WorkflowName</a>
                         }
                         else
                         {
@@ -39,7 +39,7 @@
                     {
                         if (isAdmin)
                         {
-                            <a asp-controller="Rollback" asp-action="CheckYourDetails" asp-route-interventionId="@intervention.Id" class="govuk-link">@intervention.WorkflowName</a>
+                            <a asp-controller="Rollback" asp-action="EditRollback" asp-route-interventionId="@intervention.Id" class="govuk-link">@intervention.WorkflowName</a>
                         }
                         else
                         {
