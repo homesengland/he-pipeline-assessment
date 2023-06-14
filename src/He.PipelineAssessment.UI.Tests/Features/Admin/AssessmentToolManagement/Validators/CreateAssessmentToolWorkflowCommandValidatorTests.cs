@@ -74,5 +74,31 @@ namespace He.PipelineAssessment.UI.Tests.Features.Admin.AssessmentToolManagement
             Assert.Equal("The Workflow Definition Id must be unique and not used in another Assessment Tool Workflow",
                 result.Errors.First(x => x.PropertyName == "WorkflowDefinitionId").ErrorMessage);
         }
+
+        [Theory]
+        [AutoMoqData]
+        public void Should_ReturnNoValidationMessage_WhenValidationPasses(
+            string name,
+            string workflowDefinitionId,
+            Mock<IAssessmentRepository> repository)
+        {
+            //Arrange
+            var validator = new CreateAssessmentToolWorkflowCommandValidator(repository.Object);
+
+            repository.Setup(x => x.GetAssessmentToolWorkflowByDefinitionId(It.IsAny<string>())).Returns((AssessmentToolWorkflow?)null);
+
+            var command = new CreateAssessmentToolWorkflowCommand
+            {
+                Name = name,
+                WorkflowDefinitionId = workflowDefinitionId
+            };
+
+            //Act
+            var result = validator.Validate(command);
+
+            //Assert
+            Assert.Empty(result.Errors);
+    
+        }
     }
 }
