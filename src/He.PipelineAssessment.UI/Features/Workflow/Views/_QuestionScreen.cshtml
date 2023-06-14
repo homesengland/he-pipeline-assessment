@@ -58,6 +58,9 @@
         @Html.HiddenFor(m => m.Data.Questions![i].DisplayEvidenceBox)
         @Html.HiddenFor(m => m.Data.Questions![i].IsReadOnly)
 
+
+       
+
         bool isValidItem = true;
         if (!Model.IsValid && Model.ValidationMessages != null && Model.ValidationMessages.Errors != null)
         {
@@ -368,24 +371,6 @@
             @await Html.PartialAsync("_Information",new Question()
                    {
                        Index = i,
-                       IsValid = isValidItem,
-                       Answers = Model.Data.Questions[i].Answers.Select(x => new QuestionActivityAnswer
-                       {
-                           Answer = x.AnswerText,
-                           ChoiceId = x.ChoiceId,
-                           Score = x.Score
-                       }).ToList(),
-                       IsReadOnly = Model.Data.Questions[i].IsReadOnly,
-                       Comments = Model.Data.Questions[i].Comments,
-                       DisplayComments = Model.Data.Questions[i].DisplayComments,
-                       DocumentEvidenceLink = Model.Data.Questions[i].DocumentEvidenceLink,
-                       DisplayEvidenceBox = Model.Data.Questions[i].DisplayEvidenceBox,
-                       QuestionText = Model.Data.Questions[i].Question,
-                       QuestionGuidance = Model.Data.Questions[i].QuestionGuidance,
-                       QuestionHint = Model.Data.Questions[i].QuestionHint,
-                       QuestionId = Model.Data.Questions[i].QuestionId,
-                       QuestionType = Model.Data.Questions[i].QuestionType,
-                       Title = Model.Data.Questions[i].Title,
                        Information = new Information
                        {
                            Text = Model.Data.Questions[i].Information.InformationTextList.
