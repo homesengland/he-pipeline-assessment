@@ -71,7 +71,7 @@ namespace He.PipelineAssessment.UI.Tests.Features.Admin.AssessmentToolManagement
 
             //Assert
             Assert.Single(result.Errors);
-            Assert.NotEqual("The WorkflowDefinitionId must be unique and not used in another Assessment Tool Workflow",
+            Assert.Equal("The Workflow Definition Id must be unique and not used in another Assessment Tool Workflow",
                 result.Errors.First(x => x.PropertyName == "WorkflowDefinitionId").ErrorMessage);
         }
     }
