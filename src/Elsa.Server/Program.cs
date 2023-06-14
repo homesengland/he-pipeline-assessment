@@ -30,9 +30,13 @@ using Elsa.Server.Services;
 using Elsa.Server.StartupTasks;
 using He.PipelineAssessment.Data.Auth;
 using MediatR;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.DataProtection;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection.Extensions;
+using Microsoft.Extensions.Options;
+using Microsoft.Identity;
+using Microsoft.Identity.Web;
 
 
 var builder = WebApplication.CreateBuilder(args);
@@ -127,6 +131,16 @@ builder.Services.AddOptions<IdentityClientConfig>()
     configuration.GetSection("IdentityClientConfig").Bind(settings);
 });
 
+//builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+//    .AddMicrosoftIdentityWebApi(builder.Configuration.GetSection("AzureAd"));
+
+builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+    .AddJwtBearer(options =>
+    {
+        options.Audience = "api://52068069-9f62-48a9-a8a8-0a94f7da27ba";
+        options.Authority = $"https://login.microsoftonline.com/faa8e269-0811-4538-82e7-4d29009219bf";
+    });
+
 builder.Services.AddEsriHttpClients(builder.Configuration, builder.Environment.IsDevelopment());
 
 var app = builder.Build();
@@ -143,13 +157,16 @@ app
     .UseHttpsRedirection()
     .UseStaticFiles() // For Dashboard.
     .UseRouting()
+    .UseAuthentication()
+    .UseAuthorization()
     .UseEndpoints(endpoints =>
     {
         // Elsa API Endpoints are implemented as regular ASP.NET Core API controllers.
-        endpoints.MapControllers();
+        endpoints.MapControllers().RequireAuthorization(); // locks down elsa server end points
         endpoints.MapControllerRoute(
             name: "default",
             pattern: "{controller=Home}/{action=Index}");
+        
     });
 
 

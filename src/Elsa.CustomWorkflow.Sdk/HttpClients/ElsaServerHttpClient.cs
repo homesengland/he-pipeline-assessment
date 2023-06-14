@@ -3,6 +3,10 @@ using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 using System.Text;
 using System.Text.Json;
+using Azure.Core;
+using Azure.Identity;
+using System.Runtime;
+using System.Net.Http.Headers;
 using JsonSerializer = System.Text.Json.JsonSerializer;
 
 namespace Elsa.CustomWorkflow.Sdk.HttpClients
@@ -38,7 +42,11 @@ namespace Elsa.CustomWorkflow.Sdk.HttpClients
             var content = JsonSerializer.Serialize(model);
             request.Content = new StringContent(content, Encoding.UTF8, "application/json");
 
-            using (var response = await _httpClientFactory.CreateClient("ElsaServerClient")
+            var client = _httpClientFactory.CreateClient("ElsaServerClient");
+            var accessToken = await GetAccessToken();
+            client.DefaultRequestHeaders.Authorization =
+                new AuthenticationHeaderValue("Bearer", accessToken);
+            using (var response = await client
                        .SendAsync(request)
                        .ConfigureAwait(false))
             {
@@ -67,7 +75,11 @@ namespace Elsa.CustomWorkflow.Sdk.HttpClients
             var content = JsonSerializer.Serialize(model);
             request.Content = new StringContent(content, Encoding.UTF8, "application/json");
 
-            using (var response = await _httpClientFactory.CreateClient("ElsaServerClient")
+            var client = _httpClientFactory.CreateClient("ElsaServerClient");
+            var accessToken = await GetAccessToken();
+            client.DefaultRequestHeaders.Authorization =
+                new AuthenticationHeaderValue("Bearer", accessToken);
+            using (var response = await client
                        .SendAsync(request)
                        .ConfigureAwait(false))
             {
@@ -94,7 +106,11 @@ namespace Elsa.CustomWorkflow.Sdk.HttpClients
             var content = JsonSerializer.Serialize(model);
             request.Content = new StringContent(content, Encoding.UTF8, "application/json");
 
-            using (var response = await _httpClientFactory.CreateClient("ElsaServerClient")
+            var client = _httpClientFactory.CreateClient("ElsaServerClient");
+            var accessToken = await GetAccessToken();
+            client.DefaultRequestHeaders.Authorization =
+                new AuthenticationHeaderValue("Bearer", accessToken);
+            using (var response = await client
                        .SendAsync(request)
                        .ConfigureAwait(false))
             {
@@ -117,7 +133,11 @@ namespace Elsa.CustomWorkflow.Sdk.HttpClients
             string data;
             string relativeUri = $"workflow/LoadQuestionScreen?workflowInstanceId={model.WorkflowInstanceId}&activityId={model.ActivityId}";
 
-            using (var response = await _httpClientFactory.CreateClient("ElsaServerClient")
+            var client = _httpClientFactory.CreateClient("ElsaServerClient");
+            var accessToken = await GetAccessToken();
+            client.DefaultRequestHeaders.Authorization =
+                new AuthenticationHeaderValue("Bearer", accessToken);
+            using (var response = await client
                        .GetAsync(relativeUri)
                        .ConfigureAwait(false))
             {
@@ -140,7 +160,11 @@ namespace Elsa.CustomWorkflow.Sdk.HttpClients
             string data;
             string relativeUri = $"workflow/LoadCheckYourAnswersScreen?workflowInstanceId={model.WorkflowInstanceId}&activityId={model.ActivityId}";
 
-            using (var response = await _httpClientFactory.CreateClient("ElsaServerClient")
+            var client = _httpClientFactory.CreateClient("ElsaServerClient");
+            var accessToken = await GetAccessToken();
+            client.DefaultRequestHeaders.Authorization =
+                new AuthenticationHeaderValue("Bearer", accessToken);
+            using (var response = await client
                        .GetAsync(relativeUri)
                        .ConfigureAwait(false))
             {
@@ -163,7 +187,11 @@ namespace Elsa.CustomWorkflow.Sdk.HttpClients
             string data;
             string relativeUri = $"workflow/LoadConfirmationScreen?workflowInstanceId={model.WorkflowInstanceId}&activityId={model.ActivityId}";
 
-            using (var response = await _httpClientFactory.CreateClient("ElsaServerClient")
+            var client = _httpClientFactory.CreateClient("ElsaServerClient");
+            var accessToken = await GetAccessToken();
+            client.DefaultRequestHeaders.Authorization =
+                new AuthenticationHeaderValue("Bearer", accessToken);
+            using (var response = await client
                        .GetAsync(relativeUri)
                        .ConfigureAwait(false))
             {
@@ -185,7 +213,10 @@ namespace Elsa.CustomWorkflow.Sdk.HttpClients
         {
             string data;
             string fullUri = $"{elsaServer}/activities/properties";
-            var client = _httpClientFactory.CreateClient();
+            var client = _httpClientFactory.CreateClient("ElsaServerClient");
+            var accessToken = await GetAccessToken();
+            client.DefaultRequestHeaders.Authorization =
+    new AuthenticationHeaderValue("Bearer", accessToken);
             using (var response = await client
                        .GetAsync(fullUri)
                        .ConfigureAwait(false))
@@ -201,6 +232,34 @@ namespace Elsa.CustomWorkflow.Sdk.HttpClients
                 }
             }
             return data;
+        }
+
+        private async Task<string?> GetAccessToken()
+        {
+            try
+            {
+                var credential = new ManagedIdentityCredential();
+
+                _logger.LogDebug("AzureIdentity - Getting access token");
+
+                var accessTokenRequest = await credential.GetTokenAsync(
+                    new TokenRequestContext(scopes: new string[] { $"api://52068069-9f62-48a9-a8a8-0a94f7da27ba/.default" }) { }
+                );
+
+                var accessToken = accessTokenRequest.Token;
+
+                _logger.LogError((String)accessToken);
+
+                _logger.LogDebug("AzureIdentity - Got access token");
+
+                return accessToken;
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError("Auth - error getting access token");
+                _logger.LogError(ex.Message);
+                return null;
+            }
         }
     }
 }

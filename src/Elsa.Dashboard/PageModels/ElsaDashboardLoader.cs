@@ -30,6 +30,7 @@ namespace Elsa.Dashboard.PageModels
       if (!string.IsNullOrEmpty(_serverUrl))
       {
         JsonResponse = await _client.LoadCustomActivities(_serverUrl);
+        _logger.LogDebug("ElsaDashboardLoader - LoadCustomActivities - Response", JsonResponse);
       }
       else
       {
