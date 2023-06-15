@@ -81,7 +81,7 @@ namespace He.PipelineAssessment.UI.Features.Workflow
                             };
                             var result = await this._mediator.Send(questionScreenRequest);
 
-                            if (result.IsAuthorised)
+                            if (result.IsAuthorised && !result.IsReadOnly)
                             {
                                 return View("SaveAndContinue", result);
                             }
@@ -102,7 +102,7 @@ namespace He.PipelineAssessment.UI.Features.Workflow
 
                             var result = await this._mediator.Send(checkYourAnswersScreenRequest);
 
-                            if (result.IsAuthorised)
+                            if (result.IsAuthorised && !result.IsReadOnly)
                             {
                                 return View("CheckYourAnswers", result);
                             }
