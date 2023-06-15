@@ -57,7 +57,9 @@ namespace He.PipelineAssessment.Infrastructure.Repository
 
         public async Task<AssessmentToolWorkflow?> GetAssessmentToolByWorkflowDefinitionId(string workflowDefinitionId)
         {
-            return await _context.Set<AssessmentToolWorkflow>().Include(x => x.AssessmentTool).FirstOrDefaultAsync(x => x.WorkflowDefinitionId == workflowDefinitionId);
+            return await _context.Set<AssessmentToolWorkflow>()
+                .Include(x => x.AssessmentTool)
+                .FirstOrDefaultAsync(x => x.WorkflowDefinitionId == workflowDefinitionId && x.Status != AssessmentToolStatus.Deleted);
         }
 
         public async Task<int> SaveChanges()

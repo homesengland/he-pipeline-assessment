@@ -1,4 +1,5 @@
 ﻿using He.PipelineAssessment.Infrastructure.Repository;
+using He.PipelineAssessment.UI.Authorization;
 using He.PipelineAssessment.UI.Common.Exceptions;
 using MediatR;
 
@@ -7,10 +8,12 @@ namespace He.PipelineAssessment.UI.Features.Rollback.EditRollback
     public class EditRollbackCommandHandler : IRequestHandler<EditRollbackCommand, int>
     {
         private readonly IAssessmentRepository _assessmentRepository;
+        private readonly IRoleValidation _roleValidation;
 
-        public EditRollbackCommandHandler(IAssessmentRepository assessmentRepository)
+        public EditRollbackCommandHandler(IAssessmentRepository assessmentRepository, IRoleValidation roleValidation)
         {
             _assessmentRepository = assessmentRepository;
+            _roleValidation = roleValidation;
         }
 
         public async Task<int> Handle(EditRollbackCommand command, CancellationToken cancellationToken)
@@ -21,6 +24,13 @@ namespace He.PipelineAssessment.UI.Features.Rollback.EditRollback
             {
                 throw new NotFoundException($"Assessment Intervention with Id {command.AssessmentInterventionId} not found");
             }
+
+            var isAuthorised = await _roleValidation.ValidateRole(assessmentIntervention.AssessmentToolWorkflowInstance.AssessmentId, assessmentIntervention.AssessmentToolWorkflowInstance.WorkflowDefinitionId);
+            if (!isAuthorised)
+            {
+                throw new UnauthorizedAccessException($"You do not have permission to access this resource.");
+            }
+
             assessmentIntervention.SignOffDocument = command.SignOffDocument;
             assessmentIntervention.AdministratorRationale = command.AdministratorRationale;
             assessmentIntervention.TargetAssessmentToolWorkflowId = command.TargetWorkflowId;

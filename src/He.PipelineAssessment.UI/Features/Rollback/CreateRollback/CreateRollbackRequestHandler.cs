@@ -2,6 +2,7 @@
 using He.PipelineAssessment.Infrastructure;
 using He.PipelineAssessment.Infrastructure.Repository;
 using He.PipelineAssessment.Models;
+using He.PipelineAssessment.UI.Authorization;
 using He.PipelineAssessment.UI.Common.Exceptions;
 using He.PipelineAssessment.UI.Common.Utility;
 using He.PipelineAssessment.UI.Features.Intervention;
@@ -17,17 +18,19 @@ namespace He.PipelineAssessment.UI.Features.Rollback.CreateRollback
         private readonly IAssessmentInterventionMapper _mapper;
         private readonly ILogger<CreateRollbackRequestHandler> _logger;
         private readonly IAssessmentToolWorkflowInstanceHelpers _assessmentToolWorkflowInstanceHelpers;
+        private readonly IRoleValidation _roleValidation;
 
         public CreateRollbackRequestHandler(IAssessmentRepository assessmentRepository,
             IUserProvider userProvider,
             IAssessmentInterventionMapper mapper,
-            ILogger<CreateRollbackRequestHandler> logger, IAssessmentToolWorkflowInstanceHelpers assessmentToolWorkflowInstanceHelpers)
+            ILogger<CreateRollbackRequestHandler> logger, IAssessmentToolWorkflowInstanceHelpers assessmentToolWorkflowInstanceHelpers, IRoleValidation roleValidation)
         {
             _assessmentRepository = assessmentRepository;
             _userProvider = userProvider;
             _mapper = mapper;
             _logger = logger;
             _assessmentToolWorkflowInstanceHelpers = assessmentToolWorkflowInstanceHelpers;
+            _roleValidation = roleValidation;
         }
 
         public async Task<AssessmentInterventionDto> Handle(CreateRollbackRequest request, CancellationToken cancellationToken)
@@ -36,6 +39,12 @@ namespace He.PipelineAssessment.UI.Features.Rollback.CreateRollback
             if (workflowInstance == null)
             {
                 throw new NotFoundException($"Assessment Tool Workflow Instance with Id {request.WorkflowInstanceId} not found");
+            }
+
+            var isAuthorised = await _roleValidation.ValidateRole(workflowInstance.AssessmentId, workflowInstance.WorkflowDefinitionId);
+            if (!isAuthorised)
+            {
+                throw new UnauthorizedAccessException($"You do not have permission to access this resource.");
             }
 
             var isLatest = _assessmentToolWorkflowInstanceHelpers.IsLatestSubmittedWorkflow(workflowInstance);
