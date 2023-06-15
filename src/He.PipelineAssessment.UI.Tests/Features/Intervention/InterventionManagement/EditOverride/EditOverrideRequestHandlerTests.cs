@@ -51,7 +51,7 @@ namespace He.PipelineAssessment.UI.Tests.Features.Intervention.InterventionManag
 
             assessmentRepository.Setup(x => x.GetAssessmentIntervention(request.InterventionId)).ReturnsAsync(intervention);
             mapper.Setup(x => x.AssessmentInterventionCommandFromAssessmentIntervention(intervention)).Returns(command);
-            adminRepository.Setup(x => x.GetAssessmentToolWorkflows()).ReturnsAsync(emptyListOfWorkflows);
+            adminRepository.Setup(x => x.GetAssessmentToolWorkflowsForOverride()).ReturnsAsync(emptyListOfWorkflows);
 
             //Act
             var ex = await Assert.ThrowsAsync<NotFoundException>(() => sut.Handle(request, CancellationToken.None));
@@ -130,7 +130,7 @@ namespace He.PipelineAssessment.UI.Tests.Features.Intervention.InterventionManag
             assessmentRepository.Setup(x => x.GetAssessmentIntervention(request.InterventionId)).ReturnsAsync(intervention);
             mapper.Setup(x => x.AssessmentInterventionCommandFromAssessmentIntervention(intervention)).Returns(command);
             mapper.Setup(x => x.TargetWorkflowDefinitionsFromAssessmentToolWorkflows(workflows)).Returns(targetWorkflowDefinitions);
-            adminRepository.Setup(x => x.GetAssessmentToolWorkflows()).ReturnsAsync(workflows);
+            adminRepository.Setup(x => x.GetAssessmentToolWorkflowsForOverride()).ReturnsAsync(workflows);
 
             //Act
             var result = await sut.Handle(request, CancellationToken.None);

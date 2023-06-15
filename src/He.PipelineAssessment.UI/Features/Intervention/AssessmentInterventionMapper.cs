@@ -63,7 +63,7 @@ namespace He.PipelineAssessment.UI.Features.Intervention
                     AssessmentInterventionId = intervention.Id,
                     AssessmentToolWorkflowInstanceId = intervention.AssessmentToolWorkflowInstanceId,
                     WorkflowInstanceId = intervention.AssessmentToolWorkflowInstance.WorkflowInstanceId,
-                    AssessmentName = intervention.AssessmentToolWorkflowInstance.WorkflowName,
+                    AssessmentName = $"{intervention.AssessmentToolWorkflowInstance.AssessmentToolWorkflow.AssessmentTool.Name} - {intervention.AssessmentToolWorkflowInstance.AssessmentToolWorkflow.Name}",
                     AssessmentResult = intervention.AssessmentResult,
                     ProjectReference = intervention.AssessmentToolWorkflowInstance.Assessment.Reference,
                     RequestedBy = intervention.RequestedBy,
@@ -78,7 +78,7 @@ namespace He.PipelineAssessment.UI.Features.Intervention
                     Status = intervention.Status,
                     TargetWorkflowId = intervention.TargetAssessmentToolWorkflowId,
                     TargetWorkflowDefinitionId = intervention.TargetAssessmentToolWorkflow?.WorkflowDefinitionId,
-                    TargetWorkflowDefinitionName = intervention.TargetAssessmentToolWorkflow?.Name,
+                    TargetWorkflowDefinitionName = $"{intervention.TargetAssessmentToolWorkflow?.AssessmentTool.Name} - {intervention.TargetAssessmentToolWorkflow?.Name}",
                     CorrelationId = intervention.AssessmentToolWorkflowInstance.Assessment.SpId,
                     AssessmentId = intervention.AssessmentToolWorkflowInstance.AssessmentId
                 };
@@ -101,7 +101,7 @@ namespace He.PipelineAssessment.UI.Features.Intervention
                 {
                     Id = x.Id,
                     WorkflowDefinitionId = x.WorkflowDefinitionId,
-                    Name = x.Name
+                    Name = $"{x.AssessmentTool.Name} - {x.Name}"
                 }).ToList();
             }
 

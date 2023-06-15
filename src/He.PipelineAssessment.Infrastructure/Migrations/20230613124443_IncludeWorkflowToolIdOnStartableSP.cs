@@ -15,7 +15,12 @@ namespace He.PipelineAssessment.Infrastructure.Migrations
                 file.Contains(
                     "20230613124443_IncludeWorkflowToolIdOnStartableSP.GetStartableToolsByAssessmentId.sql") ||
                 file.Contains(
-                    "20230613124443_IncludeWorkflowToolIdOnStartableSP.GetAssessmentStagesByAssessmentId.sql"));
+                    "20230613124443_IncludeWorkflowToolIdOnStartableSP.GetAssessmentStagesByAssessmentId.sql") ||
+                file.Contains(
+                    "20230613124443_IncludeWorkflowToolIdOnStartableSP.GetAssessmentInterventionListByAssessmentId.sql") ||
+                file.Contains(
+                    "20230613124443_IncludeWorkflowToolIdOnStartableSP.GetInterventionList.sql")
+                );
             foreach (var sqlFile in sqlFiles)
             {
                 using (Stream stream = assembly.GetManifestResourceStream(sqlFile))

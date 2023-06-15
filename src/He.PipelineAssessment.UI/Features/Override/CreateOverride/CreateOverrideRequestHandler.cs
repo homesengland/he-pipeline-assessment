@@ -50,11 +50,13 @@ namespace He.PipelineAssessment.UI.Features.Override.CreateOverride
                 Status = InterventionStatus.Pending
             };
             var dto = _mapper.AssessmentInterventionDtoFromWorkflowInstance(workflowInstance, dtoConfig);
-            List<AssessmentToolWorkflow> assessmentToolWorkflows = await _adminAssessmentToolWorkflowRepository.GetAssessmentToolWorkflows();
+            List<AssessmentToolWorkflow> assessmentToolWorkflows =
+                await _adminAssessmentToolWorkflowRepository.GetAssessmentToolWorkflowsForOverride(workflowInstance
+                    .AssessmentToolWorkflow.AssessmentTool.Order);
 
             if (assessmentToolWorkflows == null || !assessmentToolWorkflows.Any())
             {
-                throw new NotFoundException($"No Assessment tool workflows found");
+                throw new NotFoundException($"No suitable assessment tool workflows found for override");
             }
 
             dto.TargetWorkflowDefinitions = _mapper.TargetWorkflowDefinitionsFromAssessmentToolWorkflows(assessmentToolWorkflows);

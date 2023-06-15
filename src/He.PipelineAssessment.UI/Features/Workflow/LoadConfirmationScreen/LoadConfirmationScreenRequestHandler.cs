@@ -3,10 +3,10 @@ using Elsa.CustomWorkflow.Sdk.HttpClients;
 using Elsa.CustomWorkflow.Sdk.Models.Workflow;
 using He.PipelineAssessment.Infrastructure.Repository;
 using He.PipelineAssessment.Models;
-using He.PipelineAssessment.UI.Authorization;
-using He.PipelineAssessment.UI.Features.Workflow.CheckYourAnswersSaveAndContinue;
 using MediatR;
 using System.Text.Json;
+using He.PipelineAssessment.Infrastructure;
+using He.PipelineAssessment.UI.Common.Utility;
 
 namespace He.PipelineAssessment.UI.Features.Workflow.LoadConfirmationScreen
 {
@@ -14,11 +14,15 @@ namespace He.PipelineAssessment.UI.Features.Workflow.LoadConfirmationScreen
     {
         private readonly IElsaServerHttpClient _elsaServerHttpClient;
         private readonly IAssessmentRepository _assessmentRepository;
+        private readonly IUserProvider _userProvider;
+        private readonly IDateTimeProvider _dateTimeProvider;
 
-        public LoadConfirmationScreenRequestHandler(IElsaServerHttpClient elsaServerHttpClient, IAssessmentRepository assessmentRepository)
+        public LoadConfirmationScreenRequestHandler(IElsaServerHttpClient elsaServerHttpClient, IAssessmentRepository assessmentRepository, IUserProvider userProvider, IDateTimeProvider dateTimeProvider)
         {
             _elsaServerHttpClient = elsaServerHttpClient;
             _assessmentRepository = assessmentRepository;
+            _userProvider = userProvider;
+            _dateTimeProvider = dateTimeProvider;
         }
 
         public async Task<LoadConfirmationScreenResponse?> Handle(LoadConfirmationScreenRequest request, CancellationToken cancellationToken)
@@ -43,6 +47,10 @@ namespace He.PipelineAssessment.UI.Features.Workflow.LoadConfirmationScreen
                     {
                         var data = response.Data.ConfirmationTitle;
                         currentAssessmentToolWorkflowInstance.Result = data;
+                        var submittedTime = _dateTimeProvider.UtcNow();
+                        currentAssessmentToolWorkflowInstance.Status = AssessmentToolWorkflowInstanceConstants.Submitted;
+                        currentAssessmentToolWorkflowInstance.SubmittedDateTime = submittedTime;
+                        currentAssessmentToolWorkflowInstance.SubmittedBy = _userProvider.GetUserName();
                         await _assessmentRepository.SaveChanges();
 
 

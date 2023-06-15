@@ -80,15 +80,18 @@ function initInterventionDataTable(tableId, columnNumberToSort, searchElementId)
         "oLanguage": {
             "sSearch": "Search"
         },
-        //"oSearch": {
-        //    "sSearch": "Pending"
-        //},
+        searchPanes: {
+            preSelect: [{
+                rows: ['Pending'],
+                column: 4
+            }]
+        },
         "searchCols": [
             null,
             null,
             null,
             null,
-            { "search": "(Pending|Not)", "regex": true }
+            { "search": "Pending" }
         ],
         initComplete: function () {
             $('#' + tableId).removeAttr("hidden");
@@ -101,8 +104,9 @@ function initInterventionDataTable(tableId, columnNumberToSort, searchElementId)
                 .columns($('[data-searchable]'))
 
                 .every(function () {
-                    var column = this;
 
+                    var column = this;
+                    console.log(column);
                     var label = $('<div class="govuk-input__item"><div id="' + column.header().textContent.replaceAll(/\s/g, '') + '" class="govuk-form-group"><label class="govuk-label govuk-date-input__label">' + column.header().textContent + ' </label></div></div>')
                         .appendTo('#' + searchElementId);
 
@@ -123,7 +127,8 @@ function initInterventionDataTable(tableId, columnNumberToSort, searchElementId)
                             var dom_nodes = $($.parseHTML(d));
                             var node = dom_nodes[0];
                             if (node.innerText != null) {
-                                select.append('<option value="' + node.innerText + '">' + node.innerText + '</option>');
+                                var selected = node.innerText == 'Pending' ? 'selected' : '';
+                                select.append('<option value="' + node.innerText + '"' + selected + '>' + node.innerText + '</option>');
                             }
                             else {
                                 select.append('<option value="' + d + '">' + d + '</option>');

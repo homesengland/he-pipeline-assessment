@@ -58,7 +58,7 @@ namespace He.PipelineAssessment.Infrastructure.Repository
 
         public async Task<AssessmentToolWorkflowInstance?> GetAssessmentToolWorkflowInstance(string workflowInstance)
         {
-            return await context.Set<AssessmentToolWorkflowInstance>().Include(x => x.Assessment).FirstOrDefaultAsync(x => x.WorkflowInstanceId == workflowInstance);
+            return await context.Set<AssessmentToolWorkflowInstance>().Include(x => x.Assessment).Include(x => x.AssessmentToolWorkflow.AssessmentTool).FirstOrDefaultAsync(x => x.WorkflowInstanceId == workflowInstance);
         }
 
         public async Task<List<AssessmentToolWorkflowInstance>?> GetPreviousAssessmentToolWorkflowInstances(
@@ -147,6 +147,7 @@ namespace He.PipelineAssessment.Infrastructure.Repository
         {
             return await context.Set<AssessmentIntervention>()
                 .Include(x => x.AssessmentToolWorkflowInstance.Assessment)
+                .Include(x => x.AssessmentToolWorkflowInstance.AssessmentToolWorkflow.AssessmentTool)
                 .Include(x => x.TargetAssessmentToolWorkflow)
                 .ThenInclude(x=>x!.AssessmentTool)
                 .FirstOrDefaultAsync(x => x.Id == interventionId);

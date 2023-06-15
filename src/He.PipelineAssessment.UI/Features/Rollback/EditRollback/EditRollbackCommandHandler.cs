@@ -24,6 +24,8 @@ namespace He.PipelineAssessment.UI.Features.Rollback.EditRollback
             assessmentIntervention.SignOffDocument = command.SignOffDocument;
             assessmentIntervention.AdministratorRationale = command.AdministratorRationale;
             assessmentIntervention.TargetAssessmentToolWorkflowId = command.TargetWorkflowId;
+            assessmentIntervention.Administrator = command.Administrator;
+            assessmentIntervention.AdministratorEmail = command.AdministratorEmail;
             await _assessmentRepository.SaveChanges();
             return assessmentIntervention.Id;
         }

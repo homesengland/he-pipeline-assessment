@@ -32,10 +32,12 @@ namespace He.PipelineAssessment.UI.Features.Override.EditOverride
                 throw new NotFoundException($"Assessment Intervention with Id {request.InterventionId} not found");
             }
             AssessmentInterventionCommand command = _mapper.AssessmentInterventionCommandFromAssessmentIntervention(intervention);
-            var assessmentToolWorkflows = await _adminAssessmentToolWorkflowRepository.GetAssessmentToolWorkflows();
+            List<AssessmentToolWorkflow> assessmentToolWorkflows =
+                await _adminAssessmentToolWorkflowRepository.GetAssessmentToolWorkflowsForOverride(intervention.AssessmentToolWorkflowInstance
+                    .AssessmentToolWorkflow.AssessmentTool.Order);
             if (assessmentToolWorkflows == null || !assessmentToolWorkflows.Any())
             {
-                throw new NotFoundException($"No Assessment tool workflows found");
+                throw new NotFoundException($"No suitable assessment tool workflows found for override");
             }
             var dto = new AssessmentInterventionDto
             {
