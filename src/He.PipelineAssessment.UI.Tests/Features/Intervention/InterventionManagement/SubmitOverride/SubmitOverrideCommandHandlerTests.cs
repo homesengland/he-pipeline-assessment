@@ -147,8 +147,6 @@ namespace He.PipelineAssessment.UI.Tests.Features.Intervention.InterventionManag
             repo.Setup(x => x.GetAssessmentIntervention(command.AssessmentInterventionId)).ReturnsAsync(intervention);
             repo.Setup(x => x.GetSubsequentWorkflowInstancesForOverride(intervention
                 .AssessmentToolWorkflowInstance.WorkflowInstanceId)).ReturnsAsync(allWorkflowInstances);
-            repo.Setup(x => x.GetPreviousAssessmentToolWorkflowInstances(intervention
-                .AssessmentToolWorkflowInstance)).ReturnsAsync(previousWorkflowInstances);
             repo.Setup(x => x.GetAssessmentToolInstanceNextWorkflow(intervention.AssessmentToolWorkflowInstanceId,
                 intervention.TargetAssessmentToolWorkflow!.WorkflowDefinitionId)).ReturnsAsync((AssessmentToolInstanceNextWorkflow?)null);
             repo.Setup(x => x.CreateAssessmentToolInstanceNextWorkflows(null!));

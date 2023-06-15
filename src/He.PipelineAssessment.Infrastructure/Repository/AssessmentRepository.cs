@@ -1,6 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using He.PipelineAssessment.Infrastructure.Data;
+﻿using He.PipelineAssessment.Infrastructure.Data;
 using He.PipelineAssessment.Models;
 using Microsoft.EntityFrameworkCore;
 
@@ -11,8 +9,6 @@ namespace He.PipelineAssessment.Infrastructure.Repository
         Task<Assessment?> GetAssessment(int assessmentId);
         Task<List<Assessment>> GetAssessments();
         Task<AssessmentToolWorkflowInstance?> GetAssessmentToolWorkflowInstance(string workflowInstance);
-        Task<List<AssessmentToolWorkflowInstance>?> GetPreviousAssessmentToolWorkflowInstances(
-            AssessmentToolWorkflowInstance instance);
         Task<AssessmentToolInstanceNextWorkflow?> GetAssessmentToolInstanceNextWorkflow(int assessmentToolWorkflowInstanceId, string workflowDefinitionId);
         Task<AssessmentToolInstanceNextWorkflow?> GetAssessmentToolInstanceNextWorkflowByAssessmentId(int assessmentId, string workflowDefinitionId);
         Task<IEnumerable<AssessmentToolWorkflowInstance>> GetAssessmentToolWorkflowInstances(int assessmentId);
@@ -59,23 +55,6 @@ namespace He.PipelineAssessment.Infrastructure.Repository
         public async Task<AssessmentToolWorkflowInstance?> GetAssessmentToolWorkflowInstance(string workflowInstance)
         {
             return await context.Set<AssessmentToolWorkflowInstance>().Include(x => x.Assessment).Include(x => x.AssessmentToolWorkflow.AssessmentTool).FirstOrDefaultAsync(x => x.WorkflowInstanceId == workflowInstance);
-        }
-
-        public async Task<List<AssessmentToolWorkflowInstance>?> GetPreviousAssessmentToolWorkflowInstances(
-            AssessmentToolWorkflowInstance instance)
-        {
-            List<AssessmentToolWorkflowInstance> previousAssessmentToolInstances = new List<AssessmentToolWorkflowInstance>();
-  
-            previousAssessmentToolInstances = await context.Set<AssessmentToolWorkflowInstance>()
-                .Include(x => x.Assessment)
-                .Where(x => x.CreatedDateTime < instance.CreatedDateTime
-                && x.Assessment.Id == instance.AssessmentId
-                && x.Assessment.SpId == instance.Assessment.SpId
-                && x.Status != AssessmentToolWorkflowInstanceConstants.Deleted
-                ).ToListAsync();
-
-            return previousAssessmentToolInstances;
-
         }
 
         public async Task<AssessmentToolInstanceNextWorkflow?> GetAssessmentToolInstanceNextWorkflow(int assessmentToolWorkflowInstanceId, string workflowDefinitionId)
