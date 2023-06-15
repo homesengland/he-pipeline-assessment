@@ -139,8 +139,9 @@ namespace He.PipelineAssessment.Infrastructure.Repository
 
         public AssessmentToolWorkflow? GetAssessmentToolWorkflowByDefinitionId(string workflowDefinitionId)
         {
-            return  context.Set<AssessmentToolWorkflow>()
-                .FirstOrDefault(x => x.WorkflowDefinitionId == workflowDefinitionId);
+            return context.Set<AssessmentToolWorkflow>()
+                .FirstOrDefault(x =>
+                    x.WorkflowDefinitionId == workflowDefinitionId && x.Status != AssessmentToolStatus.Deleted);
         }
 
         public async Task<AssessmentIntervention?> GetAssessmentIntervention(int interventionId)
