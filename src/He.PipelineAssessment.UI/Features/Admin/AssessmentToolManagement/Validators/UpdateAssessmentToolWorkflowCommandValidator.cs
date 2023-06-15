@@ -20,14 +20,16 @@ namespace He.PipelineAssessment.UI.Features.Admin.AssessmentToolManagement.Valid
                 .NotEmpty()
                 .WithMessage("The {PropertyName} cannot be empty");
 
-            RuleFor(c => c.WorkflowDefinitionId)
-                .Must(BeUnique)
-                .WithMessage("The {PropertyName} must be unique and not used in another Assessment Tool Workflow");
+            RuleFor(c => c)
+                .Must((c) => BeUnique(c.WorkflowDefinitionId, c.Id))
+                .WithMessage("The Workflow Definition Id must be unique and not used in another Assessment Tool Workflow");
         }
 
-        private bool BeUnique(string workflowDefinitionId)
+        private bool BeUnique(string workflowDefinitionId, int id)
         {
-            if (_assessmentRepository.GetAssessmentToolWorkflowByDefinitionId(workflowDefinitionId) == null)
+            var assessmentToolWorkflow =
+                _assessmentRepository.GetAssessmentToolWorkflowByDefinitionId(workflowDefinitionId);
+            if (assessmentToolWorkflow == null || assessmentToolWorkflow.Id == id)
                 return true;
             return false;
         }
