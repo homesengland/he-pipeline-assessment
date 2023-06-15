@@ -54,7 +54,11 @@ namespace He.PipelineAssessment.Infrastructure.Repository
 
         public async Task<AssessmentToolWorkflowInstance?> GetAssessmentToolWorkflowInstance(string workflowInstance)
         {
-            return await context.Set<AssessmentToolWorkflowInstance>().Include(x => x.Assessment).Include(x => x.AssessmentToolWorkflow.AssessmentTool).FirstOrDefaultAsync(x => x.WorkflowInstanceId == workflowInstance);
+            return await context.Set<AssessmentToolWorkflowInstance>()
+                .Include(x => x.Assessment)
+                .Include(x => x.Assessment.AssessmentToolWorkflowInstances)
+                .Include(x => x.AssessmentToolWorkflow.AssessmentTool)
+                .FirstOrDefaultAsync(x => x.WorkflowInstanceId == workflowInstance);
         }
 
         public async Task<AssessmentToolInstanceNextWorkflow?> GetAssessmentToolInstanceNextWorkflow(int assessmentToolWorkflowInstanceId, string workflowDefinitionId)

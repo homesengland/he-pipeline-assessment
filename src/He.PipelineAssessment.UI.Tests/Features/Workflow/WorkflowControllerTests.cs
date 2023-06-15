@@ -335,7 +335,7 @@ namespace He.PipelineAssessment.UI.Tests.Features.Workflow
             WorkflowController sut)
         {
             //Arrange
-            response.IsAuthorised = true;
+
             saveAndContinueCommandResponse.ActivityType = ActivityTypeConstants.ConfirmationScreen;
 
             mediator.Setup(x =>

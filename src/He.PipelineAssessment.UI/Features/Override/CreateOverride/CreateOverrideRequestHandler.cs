@@ -3,6 +3,7 @@ using He.PipelineAssessment.Infrastructure;
 using He.PipelineAssessment.Infrastructure.Repository;
 using He.PipelineAssessment.Models;
 using He.PipelineAssessment.UI.Common.Exceptions;
+using He.PipelineAssessment.UI.Common.Utility;
 using He.PipelineAssessment.UI.Features.Intervention;
 using MediatR;
 
@@ -16,17 +17,19 @@ namespace He.PipelineAssessment.UI.Features.Override.CreateOverride
         private readonly IUserProvider _userProvider;
         private readonly IAssessmentInterventionMapper _mapper;
         private readonly ILogger<CreateOverrideRequestHandler> _logger;
+        private readonly IAssessmentToolWorkflowInstanceHelpers _assessmentToolWorkflowInstanceHelpers;
 
         public CreateOverrideRequestHandler(IAssessmentRepository assessmentRepository,
             IUserProvider userProvider,
             IAdminAssessmentToolWorkflowRepository adminAssessmentToolWorkflowRepository,
-            IAssessmentInterventionMapper mapper, ILogger<CreateOverrideRequestHandler> logger)
+            IAssessmentInterventionMapper mapper, ILogger<CreateOverrideRequestHandler> logger, IAssessmentToolWorkflowInstanceHelpers assessmentToolWorkflowInstanceHelpers)
         {
             _assessmentRepository = assessmentRepository;
             _userProvider = userProvider;
             _adminAssessmentToolWorkflowRepository = adminAssessmentToolWorkflowRepository;
             _mapper = mapper;
             _logger = logger;
+            _assessmentToolWorkflowInstanceHelpers = assessmentToolWorkflowInstanceHelpers;
         }
 
         public async Task<AssessmentInterventionDto> Handle(CreateOverrideRequest request, CancellationToken cancellationToken)
@@ -35,6 +38,13 @@ namespace He.PipelineAssessment.UI.Features.Override.CreateOverride
             if (workflowInstance == null)
             {
                 throw new NotFoundException($"Assessment Tool Workflow Instance with Id {request.WorkflowInstanceId} not found");
+            }
+
+            var isLatest = _assessmentToolWorkflowInstanceHelpers.IsLatestSubmittedWorkflow(workflowInstance);
+            if (!isLatest)
+            {
+                throw new Exception(
+                    $"Unable to create override for Assessment Tool Workflow Instance as this is not the latest submitted Workflow Instance for this Assessment.");
             }
 
             var userName = _userProvider.GetUserName()!;

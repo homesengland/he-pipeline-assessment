@@ -16,13 +16,15 @@ namespace He.PipelineAssessment.UI.Features.Workflow.LoadConfirmationScreen
         private readonly IAssessmentRepository _assessmentRepository;
         private readonly IUserProvider _userProvider;
         private readonly IDateTimeProvider _dateTimeProvider;
+        private readonly IAssessmentToolWorkflowInstanceHelpers _assessmentToolWorkflowInstanceHelpers;
 
-        public LoadConfirmationScreenRequestHandler(IElsaServerHttpClient elsaServerHttpClient, IAssessmentRepository assessmentRepository, IUserProvider userProvider, IDateTimeProvider dateTimeProvider)
+        public LoadConfirmationScreenRequestHandler(IElsaServerHttpClient elsaServerHttpClient, IAssessmentRepository assessmentRepository, IUserProvider userProvider, IDateTimeProvider dateTimeProvider, IAssessmentToolWorkflowInstanceHelpers assessmentToolWorkflowInstanceHelpers)
         {
             _elsaServerHttpClient = elsaServerHttpClient;
             _assessmentRepository = assessmentRepository;
             _userProvider = userProvider;
             _dateTimeProvider = dateTimeProvider;
+            _assessmentToolWorkflowInstanceHelpers = assessmentToolWorkflowInstanceHelpers;
         }
 
         public async Task<LoadConfirmationScreenResponse?> Handle(LoadConfirmationScreenRequest request, CancellationToken cancellationToken)
@@ -77,9 +79,9 @@ namespace He.PipelineAssessment.UI.Features.Workflow.LoadConfirmationScreen
                                 await _assessmentRepository.CreateAssessmentToolInstanceNextWorkflows(nextWorkflows);
                         }
                     }
-
                     result.CorrelationId = currentAssessmentToolWorkflowInstance.Assessment.SpId.ToString();
                     result.AssessmentId = currentAssessmentToolWorkflowInstance.AssessmentId;
+                    result.IsLatestSubmittedWorkflow = _assessmentToolWorkflowInstanceHelpers.IsLatestSubmittedWorkflow(currentAssessmentToolWorkflowInstance);
                     return await Task.FromResult(result);
                 }
 

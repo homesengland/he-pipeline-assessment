@@ -28,17 +28,8 @@ namespace He.PipelineAssessment.UI.Features.Override
 
         public async Task<IActionResult> Override(string workflowInstanceId)
         {
-            try
-            {
-                AssessmentInterventionDto dto = await _mediator.Send(new CreateOverrideRequest { WorkflowInstanceId = workflowInstanceId });
-                return View("Override", dto);
-            }
-            catch (Exception e)
-            {
-                _logger.LogError(e.Message);
-                return RedirectToAction("Index", "Error", new { message = e.Message });
-            }
-
+            AssessmentInterventionDto dto = await _mediator.Send(new CreateOverrideRequest { WorkflowInstanceId = workflowInstanceId });
+            return View("Override", dto);
         }
 
         [HttpPost]

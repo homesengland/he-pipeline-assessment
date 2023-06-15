@@ -15,7 +15,7 @@ namespace He.PipelineAssessment.UI.Features.Error
 
             var errorMessage = $"An error occurred while processing your request {exception.Error.Message}";
 
-            return View("Index", exception);
+            return View("Index", exception.Error);
         }
 
         [Route("access-denied")]
