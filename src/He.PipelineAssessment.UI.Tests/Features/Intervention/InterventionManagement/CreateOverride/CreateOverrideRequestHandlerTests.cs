@@ -52,7 +52,7 @@ namespace He.PipelineAssessment.UI.Tests.Features.Intervention.InterventionManag
             List<AssessmentToolWorkflow> emptyListOfWorkflow = new List<AssessmentToolWorkflow>();
 
             assessmentRepository.Setup(x => x.GetAssessmentToolWorkflowInstance(request.WorkflowInstanceId)).ReturnsAsync(workflowInstance);
-            adminRepository.Setup(x => x.GetAssessmentToolWorkflowsForOverride()).ReturnsAsync(emptyListOfWorkflow);
+            adminRepository.Setup(x => x.GetAssessmentToolWorkflowsForOverride(workflowInstance.AssessmentToolWorkflow.AssessmentTool.Order)).ReturnsAsync(emptyListOfWorkflow);
 
             //Act
             var ex = await Assert.ThrowsAsync<NotFoundException>(() => sut.Handle(request, CancellationToken.None));
@@ -87,7 +87,8 @@ namespace He.PipelineAssessment.UI.Tests.Features.Intervention.InterventionManag
                 Status = InterventionStatus.Pending
             };
             assessmentRepository.Setup(x => x.GetAssessmentToolWorkflowInstance(request.WorkflowInstanceId)).ReturnsAsync(workflowInstance);
-            adminRepository.Setup(x => x.GetAssessmentToolWorkflowsForOverride()).ReturnsAsync(workflows);
+            adminRepository.Setup(x => x.GetAssessmentToolWorkflowsForOverride(workflowInstance
+                .AssessmentToolWorkflow.AssessmentTool.Order)).ReturnsAsync(workflows);
             mapper.Setup(x => x.TargetWorkflowDefinitionsFromAssessmentToolWorkflows(workflows)).Throws(exception);
             mapper.Setup(x => x.AssessmentInterventionDtoFromWorkflowInstance(workflowInstance, dtoConfig)).Throws(exception);
 
@@ -126,7 +127,7 @@ namespace He.PipelineAssessment.UI.Tests.Features.Intervention.InterventionManag
             userProvider.Setup(x => x.GetUserName()).Returns(dto.AssessmentInterventionCommand.RequestedBy);
             userProvider.Setup(x => x.GetUserEmail()).Returns(dto.AssessmentInterventionCommand.RequestedByEmail);
             assessmentRepository.Setup(x => x.GetAssessmentToolWorkflowInstance(request.WorkflowInstanceId)).ReturnsAsync(workflowInstance);
-            adminRepository.Setup(x => x.GetAssessmentToolWorkflowsForOverride()).ReturnsAsync(workflows);
+            adminRepository.Setup(x => x.GetAssessmentToolWorkflowsForOverride(workflowInstance.AssessmentToolWorkflow.AssessmentTool.Order)).ReturnsAsync(workflows);
             mapper.Setup(x => x.TargetWorkflowDefinitionsFromAssessmentToolWorkflows(workflows)).Returns(targetDefinitions);
             mapper.Setup(x => x.AssessmentInterventionDtoFromWorkflowInstance(workflowInstance, dtoConfig)).Returns(dto);
             //Act

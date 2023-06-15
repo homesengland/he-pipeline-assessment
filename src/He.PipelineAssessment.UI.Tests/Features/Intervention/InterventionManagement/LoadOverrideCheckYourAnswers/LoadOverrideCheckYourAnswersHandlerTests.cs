@@ -119,7 +119,7 @@ namespace He.PipelineAssessment.UI.Tests.Features.Intervention.InterventionManag
             var submitOverrideCommand = JsonConvert.DeserializeObject<SubmitOverrideCommand>(serializedCommand);
             assessmentRepository.Setup(x => x.GetAssessmentIntervention(request.InterventionId)).ReturnsAsync(intervention);
             mapper.Setup(x => x.AssessmentInterventionCommandFromAssessmentIntervention(intervention)).Returns(command);
-            adminRepository.Setup(x => x.GetAssessmentToolWorkflowsForOverride()).ReturnsAsync(workflows);
+            adminRepository.Setup(x => x.GetAssessmentToolWorkflowsForOverride(intervention.AssessmentToolWorkflowInstance.AssessmentToolWorkflow.AssessmentTool.Order)).ReturnsAsync(workflows);
 
             //Act
             var result = await sut.Handle(request, CancellationToken.None);
