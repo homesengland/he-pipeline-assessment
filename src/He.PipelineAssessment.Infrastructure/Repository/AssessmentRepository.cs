@@ -30,6 +30,7 @@ namespace He.PipelineAssessment.Infrastructure.Repository
 
         Task<int> SaveChanges();
 
+        AssessmentToolWorkflow? GetAssessmentToolWorkflowByDefinitionId(string workflowDefinitionId);
         Task<int> DeleteIntervention(AssessmentIntervention intervention);
     }
 
@@ -118,6 +119,13 @@ namespace He.PipelineAssessment.Infrastructure.Repository
         public async Task<int> SaveChanges()
         {
             return await context.SaveChangesAsync();
+        }
+
+        public AssessmentToolWorkflow? GetAssessmentToolWorkflowByDefinitionId(string workflowDefinitionId)
+        {
+            return context.Set<AssessmentToolWorkflow>()
+                .FirstOrDefault(x =>
+                    x.WorkflowDefinitionId == workflowDefinitionId && x.Status != AssessmentToolStatus.Deleted);
         }
 
         public async Task<int> DeleteIntervention(AssessmentIntervention intervention)
