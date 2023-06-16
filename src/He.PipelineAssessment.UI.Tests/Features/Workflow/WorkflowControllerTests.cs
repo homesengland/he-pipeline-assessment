@@ -276,6 +276,7 @@ namespace He.PipelineAssessment.UI.Tests.Features.Workflow
         {
             //Arrange
             saveAndContinueCommand.IsAuthorised = true;
+            saveAndContinueCommand.IsReadOnly = false;
             saveAndContinueCommandResponse.ActivityType = ActivityTypeConstants.CheckYourAnswersScreen;
 
             mediator.Setup(x =>
@@ -448,7 +449,7 @@ namespace He.PipelineAssessment.UI.Tests.Features.Workflow
 
         [Theory]
         [AutoMoqData]
-        public async Task LoadReadOnlyWorkflowActivity_ShouldRedirectToConfirmationView_GivenConfirmationScreenAndNoExceptionsThrow(
+        public async Task LoadReadOnlyWorkflowActivity_ShouldRedirectToCheckYourAnswersView_GivenConfirmationScreenAndNoExceptionsThrow(
           [Frozen] Mock<IMediator> mediator,
           QuestionScreenSaveAndContinueCommandResponse saveAndContinueCommandResponse,
           LoadConfirmationScreenResponse response,
@@ -472,7 +473,7 @@ namespace He.PipelineAssessment.UI.Tests.Features.Workflow
             Assert.IsType<ViewResult>(result);
 
             var viewResult = (ViewResult)result;
-            Assert.Equal("Confirmation", viewResult.ViewName);
+            Assert.Equal("CheckYourAnswersReadOnly", viewResult.ViewName);
             Assert.IsType<LoadConfirmationScreenResponse>(viewResult.Model);
         }
 

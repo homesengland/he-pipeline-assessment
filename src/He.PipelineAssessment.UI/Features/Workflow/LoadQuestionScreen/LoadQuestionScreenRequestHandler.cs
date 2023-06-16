@@ -45,7 +45,7 @@ namespace He.PipelineAssessment.UI.Features.Workflow.LoadQuestionScreen
                     };
                 }
 
-                if (assessmentWorkflowInstance.Status != AssessmentToolWorkflowInstanceConstants.Draft)
+                if (assessmentWorkflowInstance.Status != AssessmentToolWorkflowInstanceConstants.Draft && request.IsReadOnly)
                 {
                     return new QuestionScreenSaveAndContinueCommand()
                     {
