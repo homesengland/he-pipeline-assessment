@@ -1,4 +1,5 @@
-﻿using AutoFixture.Xunit2;
+﻿using System.Net;
+using AutoFixture.Xunit2;
 using He.PipelineAssessment.Tests.Common;
 using He.PipelineAssessment.UI.Features.Error;
 using Microsoft.AspNetCore.Diagnostics;
@@ -14,28 +15,39 @@ namespace He.PipelineAssessment.UI.Tests.Features.Error
     {
         [Theory]
         [AutoMoqData]
-        public void Index_ShouldReturn(
-            ErrorController sut,
-            [Frozen]Mock<IExceptionHandlerFeature> handler,
-            [Frozen]Mock<HttpContext> httpContextMock,
-            Mock<IFeatureCollection> mockIFeatureCollection,
-            Exception e)
+        public void Index_ShouldReturn_ErrorView_GivenErrorOccurs(
+            [Frozen]Mock<IErrorHelper> errorHelper,
+            Exception exception,
+            ErrorController sut
+            )
         {
             //Arrange
-            httpContextMock.Setup(p => p.Features).Returns(mockIFeatureCollection.Object);
-            handler.SetupGet(x => x.Error).Returns(e);
-            mockIFeatureCollection.Setup(p => p.Get<IExceptionHandlerFeature>())
-                .Returns(handler.Object);
-            httpContextMock.Setup(p => p.Features).Returns(mockIFeatureCollection.Object);
+            errorHelper.Setup(x => x.ExceptionHandlerFeatureGetException(It.IsAny<HttpContext>())).Returns(exception);
 
-            sut.ControllerContext = new ControllerContext() { HttpContext = httpContextMock.Object };
+             //Act
+             var result = sut.Index();
+
+            //Assert
+            Assert.IsAssignableFrom<IActionResult>(result);
+            Assert.IsType<ViewResult>(result);
+        }
+
+        [Theory]
+        [AutoMoqData]
+        public void Index_ShouldReturn_NoContent_GivenNoErrorOccurs(
+            [Frozen] Mock<IErrorHelper> errorHelper,
+            ErrorController sut
+        )
+        {
+            //Arrange
+            errorHelper.Setup(x => x.ExceptionHandlerFeatureGetException(It.IsAny<HttpContext>())).Returns((Exception?)null);
 
             //Act
             var result = sut.Index();
 
             //Assert
             Assert.IsAssignableFrom<IActionResult>(result);
-            Assert.IsType<ViewResult>(result);
+            Assert.IsType<NoContentResult>(result);
         }
     }
 }
