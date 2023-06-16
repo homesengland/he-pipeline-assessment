@@ -58,7 +58,7 @@ namespace He.PipelineAssessment.UI.Tests.Features.Intervention.InterventionManag
             var ex = await Assert.ThrowsAsync<NotFoundException>(() => sut.Handle(request, CancellationToken.None));
 
             //Assert
-            Assert.Equal(($"No Assessment tool workflows found"), ex.Message);
+            Assert.Equal($"No suitable assessment tool workflows found for override", ex.Message);
         }
 
         [Theory]

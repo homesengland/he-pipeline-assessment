@@ -8,29 +8,37 @@ namespace He.PipelineAssessment.UI.Tests.Features.Intervention
     public class AssessmentInterventionCommandValidatorTests
     {
         [Theory]
-        [InlineAutoMoqData("", "CorrectValue", 1, false, "SignOffDocument", "The Sign Off Document cannot be empty")]
-        [InlineAutoMoqData(null, "CorrectValue", 2, false, "SignOffDocument", "The Sign Off Document cannot be empty")]
-        [InlineAutoMoqData("CorrectValue", "", 3, false, "AdministratorRationale", "The Administrator Rationale cannot be empty")]
-        [InlineAutoMoqData("CorrectValue", null, 4, false, "AdministratorRationale", "The Administrator Rationale cannot be empty")]
-        [InlineAutoMoqData("CorrectValue", "CorrectValue", null, false, "TargetWorkflowId", "The target workflow definition has to be selected")]
-        [InlineAutoMoqData("CorrectValue", "CorrectValue", 5, true, null, null)]
+        [InlineAutoMoqData("CorrectValue", "CorrectValue", "CorrectValue", null, false, "TargetWorkflowId", "The target workflow definition has to be selected")]
+
+        [InlineAutoMoqData("", "CorrectValue", "CorrectValue", 1, false, "SignOffDocument", "The Sign Off Document cannot be empty")]
+        [InlineAutoMoqData(null, "CorrectValue", "CorrectValue", 2, false, "SignOffDocument", "The Sign Off Document cannot be empty")]
+
+        [InlineAutoMoqData("CorrectValue", "", "CorrectValue", 3, false, "AdministratorRationale", "The Administrator Rationale cannot be empty")]
+        [InlineAutoMoqData("CorrectValue", null, "CorrectValue", 4, false, "AdministratorRationale", "The Administrator Rationale cannot be empty")]
+
+        [InlineAutoMoqData("CorrectValue", "CorrectValue", "", 5, false, "AssessorRationale", "The Assessor Rationale cannot be empty")]
+        [InlineAutoMoqData("CorrectValue", "CorrectValue", null, 6, false, "AssessorRationale", "The Assessor Rationale cannot be empty")]
+
+        [InlineAutoMoqData("CorrectValue", "CorrectValue", "CorrectValue", 8, true, null, null)]
         public void AssessmentInterventionCommandValidator_ShouldValidateSingleField_GivenValidationScenarios(
             string? signOffDocument,
             string? administratorRationale,
+            string? assessorRationale,
             int? targetWorkflowId,
             bool validationResult,
             string? errorPropertyName,
             string? validationMessage
             )
         {
-            validationResult = true;
-            //Arrange
+            
+            //Arrange 
             AssessmentInterventionCommandValidator validator = new AssessmentInterventionCommandValidator();
             var command = new AssessmentInterventionCommand
             {
                 SignOffDocument = signOffDocument,
                 AdministratorRationale = administratorRationale,
-                TargetWorkflowId = targetWorkflowId
+                TargetWorkflowId = targetWorkflowId,
+                AssessorRationale = assessorRationale
             };
 
             //Act
