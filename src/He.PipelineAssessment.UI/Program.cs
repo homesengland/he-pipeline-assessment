@@ -17,8 +17,9 @@ using He.PipelineAssessment.UI.Features.Admin.AssessmentToolManagement.Commands.
 using He.PipelineAssessment.UI.Features.Admin.AssessmentToolManagement.Commands.UpdateAssessmentToolWorkflowCommand;
 using He.PipelineAssessment.UI.Features.Admin.AssessmentToolManagement.Mappers;
 using He.PipelineAssessment.UI.Features.Admin.AssessmentToolManagement.Validators;
-using He.PipelineAssessment.UI.Features.Intervention.InterventionManagement;
-using He.PipelineAssessment.UI.Features.Intervention.InterventionManagement.CreateOverride;
+using He.PipelineAssessment.UI.Features.Intervention;
+using He.PipelineAssessment.UI.Features.Override.CreateOverride;
+using He.PipelineAssessment.UI.Features.Rollback.CreateRollback;
 using He.PipelineAssessment.UI.Features.SinglePipeline.Sync;
 using He.PipelineAssessment.UI.Features.Workflow.QuestionScreenSaveAndContinue;
 using MediatR;
@@ -58,6 +59,7 @@ builder.Services.AddScoped<IQuestionScreenSaveAndContinueMapper, QuestionScreenS
 builder.Services.AddScoped<IAssessmentToolMapper, AssessmentToolMapper>();
 builder.Services.AddScoped<IAssessmentToolWorkflowMapper, AssessmentToolWorkflowMapper>();
 builder.Services.AddScoped<ICreateOverrideMapper, CreateOverrideMapper>();
+builder.Services.AddScoped<ICreateRollbackMapper, CreateRollbackMapper>();
 builder.Services.AddScoped<IAssessmentInterventionMapper, AssessmentInterventionMapper>();
 builder.Services.AddScoped<NonceConfig>();
 
@@ -90,6 +92,7 @@ builder.Services.AddScoped<IStoredProcedureRepository, StoredProcedureRepository
 builder.Services.AddScoped<IAdminAssessmentToolRepository, AdminAssessmentToolRepository>();
 builder.Services.AddScoped<IAdminAssessmentToolWorkflowRepository, AdminAssessmentToolWorkflowRepository>();
 builder.Services.AddScoped<ISyncCommandHandlerHelper, SyncCommandHandlerHelper>();
+builder.Services.AddScoped<IAssessmentToolWorkflowInstanceHelpers, AssessmentToolWorkflowInstanceHelpers>();
 builder.Services.AddScoped<IUserProvider, UserProvider>();
 builder.Services.AddScoped<IRoleValidation, RoleValidation>();
 
@@ -119,12 +122,7 @@ if (app.Environment.IsDevelopment())
     context.Database.Migrate();
 }
 
-// Configure the HTTP request pipeline.
-if (!app.Environment.IsDevelopment())
-{
-    app.UseExceptionHandler("/Error/Index");
-    // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
-}
+app.UseExceptionHandler("/Error/Index");
 
 app.Use((context, next) =>
 {

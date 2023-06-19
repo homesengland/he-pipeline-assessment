@@ -1,18 +1,12 @@
 ﻿using AutoFixture.Xunit2;
-using He.PipelineAssessment.Infrastructure.Repository.StoredProcedure;
 using He.PipelineAssessment.Infrastructure.Repository;
-using He.PipelineAssessment.Models.ViewModels;
 using He.PipelineAssessment.Tests.Common;
-using He.PipelineAssessment.UI.Features.Assessment.AssessmentSummary;
 using Moq;
 using Xunit;
-using He.PipelineAssessment.UI.Features.Intervention.InterventionManagement.CreateOverride;
 using He.PipelineAssessment.Models;
-using He.PipelineAssessment.UI.Features.Intervention.InterventionManagement.EditOverride;
-using He.PipelineAssessment.UI.Features.Intervention.InterventionManagement;
-using AutoMapper;
-using static Microsoft.EntityFrameworkCore.DbLoggerCategory.Database;
 using He.PipelineAssessment.UI.Common.Exceptions;
+using He.PipelineAssessment.UI.Features.Override.EditOverride;
+using He.PipelineAssessment.UI.Features.Intervention;
 
 namespace He.PipelineAssessment.UI.Tests.Features.Intervention.InterventionManagement.EditOverride
 {
@@ -48,23 +42,23 @@ namespace He.PipelineAssessment.UI.Tests.Features.Intervention.InterventionManag
           AssessmentInterventionCommand command,
           AssessmentIntervention intervention,
           EditOverrideRequest request,
-          Exception exception,
           EditOverrideRequestHandler sut
       )
         {
             //Arrange
-            var emptyDto = new AssessmentInterventionDto();
             var emptyListOfWorkflows = new List<AssessmentToolWorkflow>();
 
             assessmentRepository.Setup(x => x.GetAssessmentIntervention(request.InterventionId)).ReturnsAsync(intervention);
             mapper.Setup(x => x.AssessmentInterventionCommandFromAssessmentIntervention(intervention)).Returns(command);
-            adminRepository.Setup(x => x.GetAssessmentToolWorkflows()).ReturnsAsync(emptyListOfWorkflows);
+            adminRepository
+                .Setup(x => x.GetAssessmentToolWorkflowsForOverride(intervention.AssessmentToolWorkflowInstance
+                    .AssessmentToolWorkflow.AssessmentTool.Order)).ReturnsAsync(emptyListOfWorkflows);
 
             //Act
             var ex = await Assert.ThrowsAsync<NotFoundException>(() => sut.Handle(request, CancellationToken.None));
 
             //Assert
-            Assert.Equal(($"No Assessment tool workflows found"), ex.Message);
+            Assert.Equal($"No suitable assessment tool workflows found for override", ex.Message);
         }
 
         [Theory]
@@ -137,7 +131,9 @@ namespace He.PipelineAssessment.UI.Tests.Features.Intervention.InterventionManag
             assessmentRepository.Setup(x => x.GetAssessmentIntervention(request.InterventionId)).ReturnsAsync(intervention);
             mapper.Setup(x => x.AssessmentInterventionCommandFromAssessmentIntervention(intervention)).Returns(command);
             mapper.Setup(x => x.TargetWorkflowDefinitionsFromAssessmentToolWorkflows(workflows)).Returns(targetWorkflowDefinitions);
-            adminRepository.Setup(x => x.GetAssessmentToolWorkflows()).ReturnsAsync(workflows);
+            adminRepository
+                .Setup(x => x.GetAssessmentToolWorkflowsForOverride(intervention.AssessmentToolWorkflowInstance
+                    .AssessmentToolWorkflow.AssessmentTool.Order)).ReturnsAsync(workflows);
 
             //Act
             var result = await sut.Handle(request, CancellationToken.None);

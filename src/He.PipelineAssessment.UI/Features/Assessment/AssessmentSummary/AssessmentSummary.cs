@@ -12,6 +12,7 @@ namespace He.PipelineAssessment.UI.Features.Assessment.AssessmentSummary
         public string? LocalAuthority { get; set; }
         public string? ProjectManager { get; set; }   
         public IEnumerable<AssessmentSummaryStage> Stages { get; set; } = null!;
+        public IEnumerable<AssessmentInterventionViewModel> Interventions { get; set; } = null!;
 
     }
 
@@ -29,6 +30,7 @@ namespace He.PipelineAssessment.UI.Features.Assessment.AssessmentSummary
         public DateTime? CreatedDateTime { get; set; }
         public DateTime? SubmittedDateTime { get; set; }
         public int? AssessmentToolId { get; set; }
+        public int? AssessmentToolWorkflowId { get; set; }
         public int? AssessmentToolWorkflowInstanceId { get; set; }
         public bool? IsFirstWorkflow { get; set; }
         public string? Result { get; set; } = null;
@@ -61,6 +63,8 @@ namespace He.PipelineAssessment.UI.Features.Assessment.AssessmentSummary
                     return "blue";
                 case "Submitted":
                     return "green";
+                case "Deleted":
+                    return "red";
             }
             return "grey";
         }

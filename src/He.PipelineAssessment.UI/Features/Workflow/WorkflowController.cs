@@ -81,7 +81,7 @@ namespace He.PipelineAssessment.UI.Features.Workflow
                             };
                             var result = await this._mediator.Send(questionScreenRequest);
 
-                            if (result.IsAuthorised)
+                            if (result.IsAuthorised && !result.IsReadOnly)
                             {
                                 return View("SaveAndContinue", result);
                             }
@@ -102,7 +102,7 @@ namespace He.PipelineAssessment.UI.Features.Workflow
 
                             var result = await this._mediator.Send(checkYourAnswersScreenRequest);
 
-                            if (result.IsAuthorised)
+                            if (result.IsAuthorised && !result.IsReadOnly)
                             {
                                 return View("CheckYourAnswers", result);
                             }
@@ -116,22 +116,15 @@ namespace He.PipelineAssessment.UI.Features.Workflow
                         }
                     case ActivityTypeConstants.ConfirmationScreen:
                         {
-                            var checkYourAnswersScreenRequest = new LoadConfirmationScreenRequest
+                            var confirmationScreenRequest = new LoadConfirmationScreenRequest
                             {
                                 WorkflowInstanceId = request.WorkflowInstanceId,
                                 ActivityId = request.ActivityId
                             };
 
-                            var result = await this._mediator.Send(checkYourAnswersScreenRequest);
+                            var result = await this._mediator.Send(confirmationScreenRequest);
+                            return View("Confirmation", result);
 
-                            if (result.IsAuthorised)
-                            {
-                                return View("Confirmation", result);
-                            }
-                            else
-                            {
-                                return RedirectToAction("LoadReadOnlyWorkflowActivity", request);
-                            }
                         }
                     default:
                         throw new ApplicationException(
@@ -156,17 +149,6 @@ namespace He.PipelineAssessment.UI.Features.Workflow
                 }
                 switch (request.ActivityType)
                 {
-                    case ActivityTypeConstants.ConfirmationScreen:
-                        {
-                            var checkYourAnswersScreenRequest = new LoadConfirmationScreenRequest
-                            {
-                                WorkflowInstanceId = request.WorkflowInstanceId,
-                                ActivityId = request.ActivityId
-                            };
-                            var result = await this._mediator.Send(checkYourAnswersScreenRequest);
-
-                            return View("Confirmation", result);
-                        }
 
                     default:
                         {
@@ -180,7 +162,6 @@ namespace He.PipelineAssessment.UI.Features.Workflow
 
                             return View("CheckYourAnswersReadOnly", result);
                         }
-
                 }
             }
             catch (Exception e)

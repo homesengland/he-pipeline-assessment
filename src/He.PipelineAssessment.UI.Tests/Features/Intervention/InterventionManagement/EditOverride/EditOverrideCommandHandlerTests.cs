@@ -3,7 +3,7 @@ using He.PipelineAssessment.Infrastructure.Repository;
 using He.PipelineAssessment.Models;
 using He.PipelineAssessment.Tests.Common;
 using He.PipelineAssessment.UI.Common.Exceptions;
-using He.PipelineAssessment.UI.Features.Intervention.InterventionManagement.EditOverride;
+using He.PipelineAssessment.UI.Features.Override.EditOverride;
 using Moq;
 using Xunit;
 

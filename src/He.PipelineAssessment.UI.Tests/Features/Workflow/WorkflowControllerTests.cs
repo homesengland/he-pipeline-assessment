@@ -276,6 +276,7 @@ namespace He.PipelineAssessment.UI.Tests.Features.Workflow
         {
             //Arrange
             saveAndContinueCommand.IsAuthorised = true;
+            saveAndContinueCommand.IsReadOnly = false;
             saveAndContinueCommandResponse.ActivityType = ActivityTypeConstants.CheckYourAnswersScreen;
 
             mediator.Setup(x =>
@@ -335,7 +336,7 @@ namespace He.PipelineAssessment.UI.Tests.Features.Workflow
             WorkflowController sut)
         {
             //Arrange
-            response.IsAuthorised = true;
+
             saveAndContinueCommandResponse.ActivityType = ActivityTypeConstants.ConfirmationScreen;
 
             mediator.Setup(x =>
@@ -362,15 +363,16 @@ namespace He.PipelineAssessment.UI.Tests.Features.Workflow
         public async Task LoadWorkflowActivity_ShouldRedirectToLoadReadOnlyWorkflowActivity_GivenIncorrectBusinessArea(
            [Frozen] Mock<IMediator> mediator,
            QuestionScreenSaveAndContinueCommandResponse saveAndContinueCommandResponse,
-           LoadConfirmationScreenResponse response,
+           QuestionScreenSaveAndContinueCommand response,
            WorkflowController sut)
         {
             //Arrange
-            saveAndContinueCommandResponse.ActivityType = ActivityTypeConstants.ConfirmationScreen;
+            saveAndContinueCommandResponse.ActivityType = ActivityTypeConstants.QuestionScreen;
+            response.IsAuthorised = false;
 
             mediator.Setup(x =>
                     x.Send(
-                        It.Is<LoadConfirmationScreenRequest>(y =>
+                        It.Is<LoadQuestionScreenRequest>(y =>
                             y.ActivityId == saveAndContinueCommandResponse.ActivityId && y.WorkflowInstanceId ==
                             saveAndContinueCommandResponse.WorkflowInstanceId), CancellationToken.None))
                 .ReturnsAsync(response);
@@ -387,7 +389,7 @@ namespace He.PipelineAssessment.UI.Tests.Features.Workflow
 
         [Theory]
         [AutoMoqData]
-        public async Task LoadWorkflowActivity_ShouldRedirectToMultiSaveAndContinueView_GivenQuestionScreenAndNoExceptionsThrow(
+        public async Task LoadWorkflowActivity_ShouldRedirectToSaveAndContinueView_GivenQuestionScreenAndNoExceptionsThrow(
             [Frozen] Mock<IMediator> mediator,
             QuestionScreenSaveAndContinueCommandResponse saveAndContinueCommandResponse,
             QuestionScreenSaveAndContinueCommand saveAndContinueCommand,
@@ -395,6 +397,7 @@ namespace He.PipelineAssessment.UI.Tests.Features.Workflow
         {
             //Arrange
             saveAndContinueCommand.IsAuthorised = true;
+            saveAndContinueCommand.IsReadOnly = false;
             saveAndContinueCommandResponse.ActivityType = ActivityTypeConstants.QuestionScreen;
 
             mediator.Setup(x =>
@@ -448,9 +451,10 @@ namespace He.PipelineAssessment.UI.Tests.Features.Workflow
 
         [Theory]
         [AutoMoqData]
-        public async Task LoadReadOnlyWorkflowActivity_ShouldRedirectToConfirmationView_GivenConfirmationScreenAndNoExceptionsThrow(
+        public async Task LoadReadOnlyWorkflowActivity_ShouldRedirectToCheckYourAnswersView_GivenConfirmationScreenAndNoExceptionsThrow(
           [Frozen] Mock<IMediator> mediator,
           QuestionScreenSaveAndContinueCommandResponse saveAndContinueCommandResponse,
+          QuestionScreenSaveAndContinueCommand saveAndContinueCommand,
           LoadConfirmationScreenResponse response,
           WorkflowController sut)
         {
@@ -459,10 +463,10 @@ namespace He.PipelineAssessment.UI.Tests.Features.Workflow
 
             mediator.Setup(x =>
                     x.Send(
-                        It.Is<LoadConfirmationScreenRequest>(y =>
+                        It.Is<LoadCheckYourAnswersScreenRequest>(y =>
                             y.ActivityId == saveAndContinueCommandResponse.ActivityId && y.WorkflowInstanceId ==
                             saveAndContinueCommandResponse.WorkflowInstanceId), CancellationToken.None))
-                .ReturnsAsync(response);
+                .ReturnsAsync(saveAndContinueCommand);
 
             //Act
             var result = await sut.LoadReadOnlyWorkflowActivity(saveAndContinueCommandResponse);
@@ -472,8 +476,8 @@ namespace He.PipelineAssessment.UI.Tests.Features.Workflow
             Assert.IsType<ViewResult>(result);
 
             var viewResult = (ViewResult)result;
-            Assert.Equal("Confirmation", viewResult.ViewName);
-            Assert.IsType<LoadConfirmationScreenResponse>(viewResult.Model);
+            Assert.Equal("CheckYourAnswersReadOnly", viewResult.ViewName);
+            Assert.IsType<QuestionScreenSaveAndContinueCommand>(viewResult.Model);
         }
 
         [Theory]

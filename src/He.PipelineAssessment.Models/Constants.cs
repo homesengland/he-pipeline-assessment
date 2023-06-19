@@ -17,9 +17,9 @@
     public class InterventionStatus
     {
         public const string Pending = "Pending";
-        public const string NotSubmitted = "Not Submitted";
         public const string Rejected = "Rejected";
         public const string Approved = "Approved";
+        public const string Draft = "Draft";
     }
 
     public class AssessmentToolStatus

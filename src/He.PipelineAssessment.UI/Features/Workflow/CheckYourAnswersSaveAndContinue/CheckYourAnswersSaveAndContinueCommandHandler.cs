@@ -52,13 +52,8 @@ namespace He.PipelineAssessment.UI.Features.Workflow.CheckYourAnswersSaveAndCont
                         var currentAssessmentToolWorkflowInstance = await _assessmentRepository.GetAssessmentToolWorkflowInstance(response.Data.WorkflowInstanceId);
                         if (currentAssessmentToolWorkflowInstance != null && currentAssessmentToolWorkflowInstance.Status != AssessmentToolWorkflowInstanceConstants.Submitted)
                         {
-
-                            var submittedTime = DateTime.UtcNow;
-                            currentAssessmentToolWorkflowInstance.Status = AssessmentToolWorkflowInstanceConstants.Submitted;
-                            currentAssessmentToolWorkflowInstance.SubmittedDateTime = submittedTime;
                             currentAssessmentToolWorkflowInstance.CurrentActivityId = response.Data.NextActivityId;
                             currentAssessmentToolWorkflowInstance.CurrentActivityType = response.Data.ActivityType;
-                            currentAssessmentToolWorkflowInstance.SubmittedBy = _userProvider.GetUserName();
                             await _assessmentRepository.SaveChanges();
 
                             CheckYourAnswersSaveAndContinueCommandResponse result = new CheckYourAnswersSaveAndContinueCommandResponse()

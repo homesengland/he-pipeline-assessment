@@ -1,4 +1,5 @@
 ﻿using AutoFixture.Xunit2;
+using Azure;
 using Elsa.CustomWorkflow.Sdk.HttpClients;
 using Elsa.CustomWorkflow.Sdk.Models.Workflow;
 using He.PipelineAssessment.Infrastructure.Repository;
@@ -54,6 +55,8 @@ namespace He.PipelineAssessment.UI.Tests.Features.Workflow.LoadQuestionScreen
             LoadQuestionScreenRequestHandler sut)
         {
             //Arrange
+            loadWorkflowActivityRequest.IsReadOnly = false;
+            assessmentToolWorkflowInstance.Status = AssessmentToolWorkflowInstanceConstants.Draft;
 
             assessmentRepository.Setup(x => x.GetAssessmentToolWorkflowInstance(loadWorkflowActivityRequest.WorkflowInstanceId))
                .ReturnsAsync(assessmentToolWorkflowInstance);
