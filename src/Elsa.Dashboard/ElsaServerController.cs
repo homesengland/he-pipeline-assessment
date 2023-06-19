@@ -1,9 +1,11 @@
 using Azure.Core;
 using Azure.Identity;
+using He.AspNetCore.Mvc.Gds.Components.Extensions;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Net.Http.Headers;
 using System.Net.Http.Headers;
+using System.Text;
 using System.Text.Json;
 
 namespace Elsa.Dashboard
@@ -38,36 +40,62 @@ namespace Elsa.Dashboard
         var elsaServer = _configuration["Urls:ElsaServer"];
 
         var newServerRequest = new HttpRequestMessage();
-        newServerRequest.Method = GetHttpMethod(oldServerRequest.Method);
         var relativeUri = requestPath.Value!.Replace("/ElsaServer", "");
         var uriString = $"{elsaServer}{relativeUri}";
         _logger.LogDebug("Catch All Request new URI String", uriString);
-        //var uriBuilder = new UriBuilder();
-        //uriBuilder.Scheme = "https";
-        //uriBuilder.Host = "localhost:7227";
-        //uriBuilder.Path= relativeUri;
         
         newServerRequest.RequestUri = new Uri(uriString);
-
         var client = _httpClientFactory.CreateClient("ElsaServerClient");
 
         var accessToken = await GetAccessToken();
         client.DefaultRequestHeaders.Authorization =
             new AuthenticationHeaderValue("Bearer", accessToken);
-
-        using (var response = await client
-           .GetAsync(uriString)
-           .ConfigureAwait(false))
-      {
-          var data = await response.Content.ReadAsStringAsync().ConfigureAwait(false);
-          return Ok(data) ; // response
-      }
-       
+        if (newServerRequest.Method == HttpMethod.Get)
+        {
+          return await SendGetRequest(uriString, client).ConfigureAwait(false);
+        }
+        else if(newServerRequest.Method == HttpMethod.Post)
+        {
+          return await SendPostRequest(oldServerRequest, uriString, client).ConfigureAwait(false);
+        }
+        return BadRequest();
       }
       catch (Exception ex)
       {
         var e = ex;
         return BadRequest();
+      }
+    }
+
+    private async Task<IActionResult> SendPostRequest(HttpRequest oldServerRequest, string uriString, HttpClient client)
+    {
+      _logger.LogDebug("Catch All Request method", "POST");
+      var body = oldServerRequest.Body;
+      StringContent content = new StringContent(String.Empty);
+      if (body.ToString().IsNotNullOrEmpty())
+      {
+        content = new StringContent(body.ToString()!, Encoding.UTF8, oldServerRequest.ContentType);
+      }
+      _logger.LogDebug("Catch All Request new content", content);
+    
+          using (var response = await client
+          .PostAsync(uriString, content)
+          .ConfigureAwait(false))
+      {
+        var data = await response.Content.ReadAsStringAsync().ConfigureAwait(false);
+        return Ok(data); // response
+      }
+    }
+
+    private async Task<IActionResult> SendGetRequest(string uriString, HttpClient client)
+    {
+      _logger.LogDebug("Catch All Request method", "GET");
+      using (var response = await client
+         .GetAsync(uriString)
+         .ConfigureAwait(false))
+      {
+        var data = await response.Content.ReadAsStringAsync().ConfigureAwait(false);
+        return Ok(data); // response
       }
     }
 
@@ -77,7 +105,10 @@ namespace Elsa.Dashboard
       {
         case "GET"
         : return HttpMethod.Get;
-          default: return HttpMethod.Get;
+        case "POST"
+        : return HttpMethod.Post;
+
+        default: return HttpMethod.Get;
       }
     }
 
