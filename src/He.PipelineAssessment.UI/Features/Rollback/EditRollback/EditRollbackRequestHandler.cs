@@ -39,18 +39,18 @@ namespace He.PipelineAssessment.UI.Features.Rollback.EditRollback
             {
                 throw new UnauthorizedAccessException($"You do not have permission to access this resource.");
             }
-
-            AssessmentInterventionCommand command = _mapper.AssessmentInterventionCommandFromAssessmentIntervention(intervention);
+           
             List<AssessmentToolWorkflow> assessmentToolWorkflows =
                 await _adminAssessmentToolWorkflowRepository.GetAssessmentToolWorkflowsForRollback(intervention.AssessmentToolWorkflowInstance
                     .AssessmentToolWorkflow.AssessmentTool.Order);
-
-
 
             if (assessmentToolWorkflows == null || !assessmentToolWorkflows.Any())
             {
                 throw new NotFoundException($"No suitable assessment tool workflows found for rollback");
             }
+
+            AssessmentInterventionCommand command = _mapper.AssessmentInterventionCommandFromAssessmentIntervention(intervention);
+
             var dto = new AssessmentInterventionDto
             {
                 AssessmentInterventionCommand = command,
