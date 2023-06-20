@@ -2,6 +2,7 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.AspNetCore.Authorization;
+using Elsa.Dashboard.Exceptions;
 
 namespace Elsa.Dashboard.PageModels
 {
@@ -50,6 +51,20 @@ namespace Elsa.Dashboard.PageModels
         AdditionalMessage = "Please wait a few moments and try again.";
         SuggestRetry = true;
       }
+    }
+    public void OnDelete()
+    {
+      var exceptionHandlerPathFeature =
+      HttpContext.Features.Get<IExceptionHandlerPathFeature>();
+
+      if (exceptionHandlerPathFeature?.Error is DeleteWorkflowException)
+      {
+        _logger.LogInformation(exceptionHandlerPathFeature?.Error, "Delete workflow stopped");
+        ErrorMessage = "You do not have permission to delete a workflow.";
+        AdditionalMessage = "";
+        SuggestRetry = true;
+      }
+
     }
   }
 }

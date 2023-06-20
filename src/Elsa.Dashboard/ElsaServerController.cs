@@ -1,12 +1,11 @@
 using Azure.Core;
 using Azure.Identity;
-using He.AspNetCore.Mvc.Gds.Components.Extensions;
+using Elsa.CustomInfrastructure.Extensions;
+using Elsa.Dashboard.Exceptions;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Net.Http.Headers;
 using System.Net.Http.Headers;
 using System.Text;
-using System.Text.Json;
 
 namespace Elsa.Dashboard
 {
@@ -29,73 +28,72 @@ namespace Elsa.Dashboard
     [Authorize(Policy = Elsa.Dashboard.Authorization.Constants.AuthorizationPolicies.AssignmentToElsaDashboardAdminRoleRequired)]
     public async Task<IActionResult> CatchAll()
     {
-      var requestPath = HttpContext.Request.Path;
-      var requestHeaders = HttpContext.Request.Headers;
-      var routeValues = HttpContext.Request.RouteValues;
-      var oldServerRequest = HttpContext.Request;
-
-      try
-      {
-        _logger.LogDebug("Catch All Request", requestPath);
         var elsaServer = _configuration["Urls:ElsaServer"];
+        var newRequest = HttpContext.Request.ToHttpRequestMessage(elsaServer);
 
-        var newServerRequest = new HttpRequestMessage();
-        var relativeUri = requestPath.Value!.Replace("/ElsaServer", "");
-        var uriString = $"{elsaServer}{relativeUri}";
-        _logger.LogDebug("Catch All Request new URI String", uriString);
-        
-        newServerRequest.RequestUri = new Uri(uriString);
         var client = _httpClientFactory.CreateClient("ElsaServerClient");
 
         var accessToken = await GetAccessToken();
         client.DefaultRequestHeaders.Authorization =
-            new AuthenticationHeaderValue("Bearer", accessToken);
-        if (newServerRequest.Method == HttpMethod.Get)
+        new AuthenticationHeaderValue("Bearer", accessToken);
+
+        if (HttpContext.Request.Method == HttpMethod.Get.ToString())
         {
-          return await SendGetRequest(uriString, client).ConfigureAwait(false);
+          return await SendGetRequest(newRequest, client).ConfigureAwait(false);
         }
-        else if(newServerRequest.Method == HttpMethod.Post)
+        else if(HttpContext.Request.Method == HttpMethod.Post.ToString())
         {
-          return await SendPostRequest(oldServerRequest, uriString, client).ConfigureAwait(false);
+          return await SendPostRequest(newRequest, client).ConfigureAwait(false);
         }
+        else if (HttpContext.Request.Method == HttpMethod.Delete.ToString())
+        {
+          return await SendDeleteRequest(newRequest, client, elsaServer).ConfigureAwait(false);
+        }
+
         return BadRequest();
-      }
-      catch (Exception ex)
-      {
-        var e = ex;
-        return BadRequest();
-      }
     }
 
-    private async Task<IActionResult> SendPostRequest(HttpRequest oldServerRequest, string uriString, HttpClient client)
+    private async Task<IActionResult> SendPostRequest(HttpRequestMessage newRequestMessage, HttpClient client)
     {
-      _logger.LogDebug("Catch All Request method", "POST");
-      var body = oldServerRequest.Body;
-      StringContent content = new StringContent(String.Empty);
-      if (body.ToString().IsNotNullOrEmpty())
-      {
-        content = new StringContent(body.ToString()!, Encoding.UTF8, oldServerRequest.ContentType);
-      }
-      _logger.LogDebug("Catch All Request new content", content);
-    
+  
           using (var response = await client
-          .PostAsync(uriString, content)
+          .PostAsync(newRequestMessage.RequestUri, newRequestMessage.Content)
           .ConfigureAwait(false))
       {
         var data = await response.Content.ReadAsStringAsync().ConfigureAwait(false);
-        return Ok(data); // response
+        return Ok(data);
       }
     }
 
-    private async Task<IActionResult> SendGetRequest(string uriString, HttpClient client)
+    private async Task<IActionResult> SendGetRequest(HttpRequestMessage newRequestMessage, HttpClient client)
     {
-      _logger.LogDebug("Catch All Request method", "GET");
       using (var response = await client
-         .GetAsync(uriString)
+         .GetAsync(newRequestMessage.RequestUri)
          .ConfigureAwait(false))
       {
         var data = await response.Content.ReadAsStringAsync().ConfigureAwait(false);
-        return Ok(data); // response
+        return Ok(data);
+      }
+    }
+
+    private async Task<IActionResult> SendDeleteRequest(HttpRequestMessage newRequestMessage, HttpClient client, string elsaServer)
+    {
+      var deleteWorkflowUri = $"{elsaServer}/v1/workflow-definitions";
+      if (newRequestMessage.RequestUri != null)
+      {
+        string absoluteUri = newRequestMessage.RequestUri.AbsoluteUri;
+        if (absoluteUri != null && absoluteUri.StartsWith(deleteWorkflowUri))
+        {
+          throw new DeleteWorkflowException();
+        }
+      }
+
+      using (var response = await client
+         .DeleteAsync(newRequestMessage.RequestUri)
+         .ConfigureAwait(false))
+      {
+        var data = await response.Content.ReadAsStringAsync().ConfigureAwait(false);
+        return Ok(data); 
       }
     }
 
@@ -118,8 +116,6 @@ namespace Elsa.Dashboard
       {
         var credential = new ManagedIdentityCredential();
 
-        _logger.LogDebug("AzureIdentity - Getting access token");
-
         var accessTokenRequest = await credential.GetTokenAsync(
             new TokenRequestContext(scopes: new string[] { $"api://52068069-9f62-48a9-a8a8-0a94f7da27ba/.default" }) { }
         );
@@ -127,8 +123,6 @@ namespace Elsa.Dashboard
         var accessToken = accessTokenRequest.Token;
 
         _logger.LogError((String)accessToken);
-
-        _logger.LogDebug("AzureIdentity - Got access token");
 
         return accessToken;
       }

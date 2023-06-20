@@ -84,5 +84,4 @@ app.UseStaticFiles().UseStaticFiles(new StaticFileOptions
     // For Dashboard.
     endpoints.MapFallbackToPage("/_Host");
   });
-
 app.Run();
