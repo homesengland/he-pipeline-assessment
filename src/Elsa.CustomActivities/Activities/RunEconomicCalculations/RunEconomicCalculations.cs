@@ -20,7 +20,7 @@ namespace Elsa.CustomActivities.Activities.RunEconomicCalculations
                 CorrelationId = context.CorrelationId;
             }
 
-            Input = context.WorkflowInstance.Id;
+           
 
             var result = await base.OnExecuteAsync(context);
 

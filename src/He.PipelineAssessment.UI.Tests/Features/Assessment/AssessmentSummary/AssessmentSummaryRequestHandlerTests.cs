@@ -45,6 +45,7 @@ namespace He.PipelineAssessment.UI.Tests.Features.Assessment.AssessmentSummary
             var emptyList = new List<AssessmentStageViewModel>();
             assessmentRepository.Setup(x => x.GetAssessment(It.IsAny<int>())).ReturnsAsync(assessment);
             storeProcRepository.Setup(x => x.GetAssessmentStages(It.IsAny<int>())).ReturnsAsync(emptyList);
+            storeProcRepository.Setup(x => x.GetAssessmentInterventionList(It.IsAny<int>())).ReturnsAsync(new List<AssessmentInterventionViewModel>());
 
             //Act
             var result = await sut.Handle(request, CancellationToken.None);
@@ -68,12 +69,15 @@ namespace He.PipelineAssessment.UI.Tests.Features.Assessment.AssessmentSummary
             Models.Assessment assessment,
             List<AssessmentStageViewModel> stages,
             AssessmentSummaryRequest request,
+            List<StartableToolViewModel> startableToolViewModels,
             AssessmentSummaryRequestHandler sut
         )
         {
             //Arrange
             assessmentRepository.Setup(x => x.GetAssessment(It.IsAny<int>())).ReturnsAsync(assessment);
+            storeProcRepository.Setup(x => x.GetStartableTools(request.AssessmentId)).ReturnsAsync(startableToolViewModels);
             storeProcRepository.Setup(x => x.GetAssessmentStages(It.IsAny<int>())).ReturnsAsync(stages);
+            storeProcRepository.Setup(x => x.GetAssessmentInterventionList(It.IsAny<int>())).ReturnsAsync(new List<AssessmentInterventionViewModel>());
 
             //Act
             var result = await sut.Handle(request, CancellationToken.None);
@@ -120,6 +124,7 @@ namespace He.PipelineAssessment.UI.Tests.Features.Assessment.AssessmentSummary
             assessmentRepository.Setup(x => x.GetAssessment(request.AssessmentId)).ReturnsAsync(assessment);
             storeProcRepository.Setup(x => x.GetAssessmentStages(request.AssessmentId)).ReturnsAsync(stages);
             storeProcRepository.Setup(x => x.GetStartableTools(request.AssessmentId)).ReturnsAsync(startableToolViewModels);
+            storeProcRepository.Setup(x => x.GetAssessmentInterventionList(It.IsAny<int>())).ReturnsAsync(new List<AssessmentInterventionViewModel>());
 
 
             //Act
@@ -135,86 +140,63 @@ namespace He.PipelineAssessment.UI.Tests.Features.Assessment.AssessmentSummary
 
         }
 
+        [Theory]
+        [AutoMoqData]
+        public async Task Handle_ReturnsAssessmentSummaryResponseWithEmptyInterventionsList_GivenNoInterventionsExist(
+        [Frozen] Mock<IAssessmentRepository> assessmentRepository,
+         [Frozen] Mock<IStoredProcedureRepository> storeProcRepository,
+        Models.Assessment assessment,
+        List<AssessmentStageViewModel> stages,
+        List<StartableToolViewModel> startableTools,
+        AssessmentSummaryRequest request,
+        AssessmentSummaryRequestHandler sut
+    )
+        {
+            //Arrange
+            assessmentRepository.Setup(x => x.GetAssessment(It.IsAny<int>())).ReturnsAsync(assessment);
+            storeProcRepository.Setup(x => x.GetAssessmentStages(It.IsAny<int>())).ReturnsAsync(stages);
+            storeProcRepository.Setup(x => x.GetStartableTools(It.IsAny<int>())).ReturnsAsync(startableTools);
+            storeProcRepository.Setup(x => x.GetAssessmentInterventionList(It.IsAny<int>())).ReturnsAsync(new List<AssessmentInterventionViewModel>());
+
+            //Act
+            var result = await sut.Handle(request, CancellationToken.None);
+
+            //Assert
+            Assert.NotNull(result);
+            Assert.Empty(result!.Interventions);
+
+        }
 
         [Theory]
         [AutoMoqData]
-        public async Task Handle_ReturnsAssessmentStageWithOutDataFromStartableTools_GivenStageCanNotbeStarted
-            (
+        public async Task Handle_ReturnsAssessmentSummaryResponseInterventionsList_GivenAnyInterventionsExist(
             [Frozen] Mock<IAssessmentRepository> assessmentRepository,
             [Frozen] Mock<IStoredProcedureRepository> storeProcRepository,
             Models.Assessment assessment,
-            AssessmentStageViewModel stage,
+            List<AssessmentStageViewModel> stages,
+            List<StartableToolViewModel> startableTools,
+            List<AssessmentInterventionViewModel> interventions,
             AssessmentSummaryRequest request,
-            List<StartableToolViewModel> startableToolViewModels,
-            AssessmentSummaryRequestHandler sut)
-        {
-
-            //Arrange
-            stage.WorkflowDefinitionId = null;
-            stage.IsFirstWorkflow = null;
-            stage.AssessmentToolWorkflowInstanceId = null;
-            var stages = new List<AssessmentStageViewModel>()
-            {
-                stage
-            };
-            assessmentRepository.Setup(x => x.GetAssessment(request.AssessmentId)).ReturnsAsync(assessment);
-            storeProcRepository.Setup(x => x.GetAssessmentStages(request.AssessmentId)).ReturnsAsync(stages);
-            storeProcRepository.Setup(x => x.GetStartableTools(request.AssessmentId)).ReturnsAsync(startableToolViewModels);
-
-
-            //Act
-            var result = await sut.Handle(request, CancellationToken.None);
-
-
-            //Assert
-            Assert.NotNull(result);
-            Assert.Equal(stage.WorkflowDefinitionId, result!.Stages.First().WorkflowDefinitionId);
-            Assert.Equal(stage.IsFirstWorkflow, result.Stages.First().IsFirstWorkflow);
-            Assert.Null(result.Stages.First().AssessmentToolWorkflowInstanceId);
-
-        }
-
-        [Theory]
-        [AutoMoqData]
-        public async Task Handle_ReturnsAssessmentStageWithOutDataFromStartableTools_GivenStageHasBeenStarted(
-           [Frozen] Mock<IAssessmentRepository> assessmentRepository,
-           [Frozen] Mock<IStoredProcedureRepository> storeProcRepository,
-            Models.Assessment assessment,
-            AssessmentStageViewModel stage,
-            AssessmentSummaryRequest request,
-            string workflowDefinitionId,
-            List<StartableToolViewModel> startableToolViewModels,
-            AssessmentSummaryRequestHandler sut)
+            AssessmentSummaryRequestHandler sut
+)
         {
             //Arrange
-            stage.WorkflowDefinitionId = null;
-            stage.IsFirstWorkflow = null;
-            var randomInt = 1111111;
-            stage.AssessmentToolWorkflowInstanceId = randomInt;
-            var stages = new List<AssessmentStageViewModel>()
-            {
-                stage
-            };
-            var startableToolViewModel = new StartableToolViewModel()
-            {
-                AssessmentToolId = stage.AssessmentToolId!.Value,
-                WorkflowDefinitionId = workflowDefinitionId,
-                IsFirstWorkflow = true
-            };
-            startableToolViewModels.Add(startableToolViewModel);
-            assessmentRepository.Setup(x => x.GetAssessment(request.AssessmentId)).ReturnsAsync(assessment);
-            storeProcRepository.Setup(x => x.GetAssessmentStages(request.AssessmentId)).ReturnsAsync(stages);
-            storeProcRepository.Setup(x => x.GetStartableTools(request.AssessmentId)).ReturnsAsync(startableToolViewModels);
+            assessmentRepository.Setup(x => x.GetAssessment(It.IsAny<int>())).ReturnsAsync(assessment);
+            storeProcRepository.Setup(x => x.GetAssessmentStages(It.IsAny<int>())).ReturnsAsync(stages);
+            storeProcRepository.Setup(x => x.GetStartableTools(It.IsAny<int>())).ReturnsAsync(startableTools);
+            storeProcRepository.Setup(x => x.GetAssessmentInterventionList(It.IsAny<int>())).ReturnsAsync(interventions);
 
             //Act
             var result = await sut.Handle(request, CancellationToken.None);
 
             //Assert
             Assert.NotNull(result);
-            Assert.Equal(stage.WorkflowDefinitionId, result!.Stages.First().WorkflowDefinitionId);
-            Assert.Equal(false, result.Stages.First().IsFirstWorkflow);
-            Assert.Equal(stage.AssessmentToolWorkflowInstanceId, result.Stages.First().AssessmentToolWorkflowInstanceId);
+            Assert.NotEmpty(result!.Interventions);
+            Assert.Equal(interventions.Count(), result!.Interventions.Count());
+
+
         }
 
     }
+
 }

@@ -40,4 +40,7 @@
     @Html.ActionLink("Go to Assessment Summary", "Summary", "Assessment", new { Model.AssessmentId, Model.CorrelationId }, new { @class = "govuk-button" })
 </div>
 
-@await Html.PartialAsync("_InterventionOptions.cshtml", Model.Data.WorkflowInstanceId)
+@if (Model.IsLatestSubmittedWorkflow)
+{
+    @await Html.PartialAsync("_InterventionOptions.cshtml", Model.Data.WorkflowInstanceId)
+}

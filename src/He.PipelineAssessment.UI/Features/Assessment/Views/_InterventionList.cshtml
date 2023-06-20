@@ -1,0 +1,57 @@
+﻿@using He.PipelineAssessment.UI.Authorization
+@using Microsoft.AspNetCore.Authorization
+@inject IAuthorizationService AuthorizationService
+@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+@model He.PipelineAssessment.UI.Features.Assessment.AssessmentSummary.AssessmentSummaryResponse;
+@{
+    bool isAdmin = (await AuthorizationService.AuthorizeAsync(User, Constants.AuthorizationPolicies.AssignmentToPipelineAdminRoleRequired)).Succeeded;
+}
+<table class="govuk-table">
+    <caption class="govuk-table__caption govuk-table__caption--m">Interventions</caption>
+    <thead class="govuk-table__head">
+        <tr class="govuk-table__row">
+            <th scope="col" class="govuk-table__header">Stage</th>
+            <th scope="col" class="govuk-table__header">Status</th>
+            <th scope="col" class="govuk-table__header">Created</th>
+            <th scope="col" class="govuk-table__header">Requested By</th>
+            <th scope="col" class="govuk-table__header">Decision Type</th>
+        </tr>
+    </thead>
+    <tbody class="govuk-table__body">
+        @foreach (var intervention in Model.Interventions)
+        {
+            var created = intervention.CreatedDateTime.HasValue ? intervention.CreatedDateTime.Value.Date.ToLongDateString() : "";
+
+            <tr class="govuk-table__row">
+                <td class="govuk-table__cell">
+                    @if (@intervention.DecisionType == "Override")
+                    {
+                        if (isAdmin)
+                        {
+                            <a asp-controller="Override" asp-action="EditOverride" asp-route-interventionId="@intervention.Id" class="govuk-link">@intervention.WorkflowName</a>
+                        }
+                        else
+                        {
+                            @intervention.WorkflowName
+                        }
+                    }
+                    @if (@intervention.DecisionType == "Rollback")
+                    {
+                        if (isAdmin)
+                        {
+                            <a asp-controller="Rollback" asp-action="EditRollback" asp-route-interventionId="@intervention.Id" class="govuk-link">@intervention.WorkflowName</a>
+                        }
+                        else
+                        {
+                            <a asp-controller="Rollback" asp-action="CheckYourDetailsAssessor" asp-route-interventionId="@intervention.Id" class="govuk-link">@intervention.WorkflowName</a>
+                        }
+                    }
+                </td>
+                <td class="govuk-table__cell"><strong class="govuk-tag govuk-tag--@intervention.StatusDisplayTag()">@intervention.Status</strong></td>
+                <td class="govuk-table__cell"> @created </td>
+                <td class="govuk-table__cell">@intervention.RequestedBy</td>
+                <td class="govuk-table__cell">@intervention.DecisionType</td>
+            </tr>
+        }
+    </tbody>
+</table>

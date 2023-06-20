@@ -2,6 +2,7 @@
 using Elsa.CustomWorkflow.Sdk.HttpClients;
 using Elsa.CustomWorkflow.Sdk.Models.Workflow;
 using He.PipelineAssessment.Infrastructure.Repository;
+using He.PipelineAssessment.Models;
 using He.PipelineAssessment.UI.Authorization;
 using He.PipelineAssessment.UI.Features.Workflow.QuestionScreenSaveAndContinue;
 using MediatR;
@@ -43,37 +44,35 @@ namespace He.PipelineAssessment.UI.Features.Workflow.LoadCheckYourAnswersScreen
                         IsAuthorised = false
                     };
                 }
+
+                var response = await _elsaServerHttpClient.LoadCheckYourAnswersScreen(new LoadWorkflowActivityDto
+                {
+                    WorkflowInstanceId = request.WorkflowInstanceId,
+                    ActivityId = request.ActivityId,
+                    ActivityType = ActivityTypeConstants.CheckYourAnswersScreen
+                });
+
+                if (response != null)
+                {
+                    string jsonResponse = JsonSerializer.Serialize(response);
+                    QuestionScreenSaveAndContinueCommand? result = JsonSerializer.Deserialize<QuestionScreenSaveAndContinueCommand>(jsonResponse);
+                    var entity = await _assessmentRepository.GetAssessmentToolWorkflowInstance(request.WorkflowInstanceId);
+
+                    if (entity != null && result != null)
+                    {
+                        result.AssessmentId = entity.AssessmentId;
+                        result.CorrelationId = entity.Assessment.SpId.ToString();
+                        result.IsAuthorised = true;
+                        result.WorkflowDefinitionId= entity.WorkflowDefinitionId;
+                        result.IsReadOnly = assessmentWorkflowInstance.Status !=
+                                            AssessmentToolWorkflowInstanceConstants.Draft;
+                    }
+
+                    return await Task.FromResult(result);
+                }
                 else
                 {
-
-                    var response = await _elsaServerHttpClient.LoadCheckYourAnswersScreen(new LoadWorkflowActivityDto
-                    {
-                        WorkflowInstanceId = request.WorkflowInstanceId,
-                        ActivityId = request.ActivityId,
-                        ActivityType = ActivityTypeConstants.CheckYourAnswersScreen
-                    });
-
-                    if (response != null)
-                    {
-                        string jsonResponse = JsonSerializer.Serialize(response);
-                        QuestionScreenSaveAndContinueCommand? result = JsonSerializer.Deserialize<QuestionScreenSaveAndContinueCommand>(jsonResponse);
-                        var entity = await _assessmentRepository.GetAssessmentToolWorkflowInstance(request.WorkflowInstanceId);
-
-                        if (entity != null && result != null)
-                        {
-                            result.AssessmentId = entity.AssessmentId;
-                            result.CorrelationId = entity.Assessment.SpId.ToString();
-                            result.IsAuthorised = true;
-                            result.WorkflowDefinitionId= entity.WorkflowDefinitionId;
-                        }
-
-                        return await Task.FromResult(result);
-                    }
-                    else
-                    {
-                        return null;
-                    }
-
+                    return null;
                 }
             }
             catch (Exception e)

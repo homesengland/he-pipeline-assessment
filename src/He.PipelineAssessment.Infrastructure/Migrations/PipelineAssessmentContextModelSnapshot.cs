@@ -307,9 +307,6 @@ namespace He.PipelineAssessment.Infrastructure.Migrations
                     b.Property<DateTime>("CreatedDateTime")
                         .HasColumnType("datetime2");
 
-                    b.Property<bool>("IsStarted")
-                        .HasColumnType("bit");
-
                     b.Property<string>("LastModifiedBy")
                         .HasMaxLength(500)
                         .HasColumnType("nvarchar(500)");
@@ -441,6 +438,9 @@ namespace He.PipelineAssessment.Infrastructure.Migrations
                     b.Property<int>("AssessmentId")
                         .HasColumnType("int");
 
+                    b.Property<int?>("AssessmentToolWorkflowId")
+                        .HasColumnType("int");
+
                     b.Property<string>("CreatedBy")
                         .IsRequired()
                         .HasMaxLength(500)
@@ -510,6 +510,8 @@ namespace He.PipelineAssessment.Infrastructure.Migrations
                     b.HasKey("Id");
 
                     b.HasIndex("AssessmentId");
+
+                    b.HasIndex("AssessmentToolWorkflowId");
 
                     b.ToTable("AssessmentToolWorkflowInstance");
 
@@ -591,7 +593,13 @@ namespace He.PipelineAssessment.Infrastructure.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
+                    b.HasOne("He.PipelineAssessment.Models.AssessmentToolWorkflow", "AssessmentToolWorkflow")
+                        .WithMany()
+                        .HasForeignKey("AssessmentToolWorkflowId");
+
                     b.Navigation("Assessment");
+
+                    b.Navigation("AssessmentToolWorkflow");
                 });
 
             modelBuilder.Entity("He.PipelineAssessment.Models.Assessment", b =>

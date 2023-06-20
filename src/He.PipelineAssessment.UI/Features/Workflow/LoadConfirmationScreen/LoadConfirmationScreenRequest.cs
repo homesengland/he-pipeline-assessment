@@ -6,6 +6,6 @@ namespace He.PipelineAssessment.UI.Features.Workflow.LoadConfirmationScreen
     {
         public string WorkflowInstanceId { get; set; } = null!;
         public string ActivityId { get; set; } = null!;
-        public bool IsAuthorised { get; set; }
+
     }
 }

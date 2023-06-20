@@ -14,7 +14,6 @@ public class AssessmentInterventionViewModel : AuditableEntityViewModel
     {
         switch (Status)
         {
-            case InterventionStatus.NotSubmitted:
             case InterventionStatus.Pending:
                 return "blue";
             case InterventionStatus.Approved:

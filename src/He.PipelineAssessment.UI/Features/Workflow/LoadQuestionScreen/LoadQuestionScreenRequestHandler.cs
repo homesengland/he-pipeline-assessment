@@ -2,6 +2,7 @@
 using Elsa.CustomWorkflow.Sdk.HttpClients;
 using Elsa.CustomWorkflow.Sdk.Models.Workflow;
 using He.PipelineAssessment.Infrastructure.Repository;
+using He.PipelineAssessment.Models;
 using He.PipelineAssessment.UI.Authorization;
 using He.PipelineAssessment.UI.Features.Workflow.QuestionScreenSaveAndContinue;
 using MediatR;
@@ -43,30 +44,35 @@ namespace He.PipelineAssessment.UI.Features.Workflow.LoadQuestionScreen
                         IsAuthorised = false
                     };
                 }
+
+                if (assessmentWorkflowInstance.Status != AssessmentToolWorkflowInstanceConstants.Draft || request.IsReadOnly)
+                {
+                    return new QuestionScreenSaveAndContinueCommand()
+                    {
+                        IsReadOnly = true
+                    };
+                }
+
+                var response = await _elsaServerHttpClient.LoadQuestionScreen(new LoadWorkflowActivityDto
+                {
+                    WorkflowInstanceId = request.WorkflowInstanceId,
+                    ActivityId = request.ActivityId,
+                    ActivityType = ActivityTypeConstants.QuestionScreen
+                });
+
+                if (response != null)
+                {
+                    var jsonSerializerSettings = new JsonSerializerSettings { TypeNameHandling = TypeNameHandling.Auto };
+                    string jsonResponse = JsonConvert.SerializeObject(response, jsonSerializerSettings);
+                    QuestionScreenSaveAndContinueCommand? result = JsonConvert.DeserializeObject<QuestionScreenSaveAndContinueCommand>(jsonResponse, jsonSerializerSettings);
+                    result!.IsAuthorised = true;
+                    result!.AssessmentId = assessmentWorkflowInstance.AssessmentId;
+                    result!.WorkflowDefinitionId = assessmentWorkflowInstance.WorkflowDefinitionId;
+                    return await Task.FromResult(result);
+                }
                 else
                 {
-
-                    var response = await _elsaServerHttpClient.LoadQuestionScreen(new LoadWorkflowActivityDto
-                    {
-                        WorkflowInstanceId = request.WorkflowInstanceId,
-                        ActivityId = request.ActivityId,
-                        ActivityType = ActivityTypeConstants.QuestionScreen
-                    });
-
-                    if (response != null)
-                    {
-                        var jsonSerializerSettings = new JsonSerializerSettings { TypeNameHandling = TypeNameHandling.Auto };
-                        string jsonResponse = JsonConvert.SerializeObject(response, jsonSerializerSettings);
-                        QuestionScreenSaveAndContinueCommand? result = JsonConvert.DeserializeObject<QuestionScreenSaveAndContinueCommand>(jsonResponse, jsonSerializerSettings);
-                        result!.IsAuthorised = true;
-                        result!.AssessmentId = assessmentWorkflowInstance.AssessmentId;
-                        result!.WorkflowDefinitionId = assessmentWorkflowInstance.WorkflowDefinitionId;
-                        return await Task.FromResult(result);
-                    }
-                    else
-                    {
-                        return null;
-                    }
+                    return null;
                 }
 
             }

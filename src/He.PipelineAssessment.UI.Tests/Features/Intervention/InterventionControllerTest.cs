@@ -1,8 +1,6 @@
-﻿using FluentValidation;
-using He.PipelineAssessment.Models.ViewModels;
+﻿using He.PipelineAssessment.Models.ViewModels;
 using He.PipelineAssessment.Tests.Common;
 using He.PipelineAssessment.UI.Features.Intervention.InterventionList;
-using He.PipelineAssessment.UI.Features.Intervention.InterventionManagement;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;

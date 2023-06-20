@@ -8,5 +8,6 @@ namespace He.PipelineAssessment.UI.Features.Workflow.StartWorkflow
         public string WorkflowDefinitionId { get; set; } = null!;
         public string CorrelationId { get; set; } = null!;
         public int AssessmentId { get; set; }
+        public int? AssessmentToolWorkflowId { get; set; }
     }
 }

@@ -1,12 +1,6 @@
 ﻿using He.PipelineAssessment.Models;
 using He.PipelineAssessment.Tests.Common;
-using He.PipelineAssessment.UI.Features.Intervention.InterventionManagement;
-using He.PipelineAssessment.UI.Features.Intervention.InterventionManagement.CreateOverride;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using He.PipelineAssessment.UI.Features.Intervention;
 using Xunit;
 
 namespace He.PipelineAssessment.UI.Tests.Features.Intervention
@@ -31,7 +25,7 @@ namespace He.PipelineAssessment.UI.Tests.Features.Intervention
             Assert.Equal(assessmentIntervention.AssessmentToolWorkflowInstanceId, result.AssessmentToolWorkflowInstanceId);
             Assert.Equal(assessmentIntervention.AssessmentToolWorkflowInstanceId, result.AssessmentToolWorkflowInstanceId);
             Assert.Equal(assessmentIntervention.AssessmentToolWorkflowInstance.WorkflowInstanceId, result.WorkflowInstanceId);
-            Assert.Equal(assessmentIntervention.AssessmentToolWorkflowInstance.WorkflowName, result.AssessmentName);
+            Assert.Equal($"{assessmentIntervention.AssessmentToolWorkflowInstance.AssessmentToolWorkflow.AssessmentTool.Name} - {assessmentIntervention.AssessmentToolWorkflowInstance.AssessmentToolWorkflow.Name}", result.AssessmentName);
             Assert.Equal(assessmentIntervention.AssessmentResult, result.AssessmentResult);
             Assert.Equal(assessmentIntervention.AssessmentToolWorkflowInstance.Assessment.Reference, result.ProjectReference);
             Assert.Equal(assessmentIntervention.RequestedBy, result.RequestedBy);
@@ -46,7 +40,7 @@ namespace He.PipelineAssessment.UI.Tests.Features.Intervention
             Assert.Equal(assessmentIntervention.Status, result.Status);
             Assert.Equal(assessmentIntervention.TargetAssessmentToolWorkflowId, result.TargetWorkflowId);
             Assert.Equal(assessmentIntervention.TargetAssessmentToolWorkflow!.WorkflowDefinitionId, result.TargetWorkflowDefinitionId);
-            Assert.Equal(assessmentIntervention.TargetAssessmentToolWorkflow!.Name, result.TargetWorkflowDefinitionName);
+            Assert.Equal($"{assessmentIntervention.TargetAssessmentToolWorkflow?.AssessmentTool.Name} - {assessmentIntervention.TargetAssessmentToolWorkflow?.Name}", result.TargetWorkflowDefinitionName);
             Assert.Equal(assessmentIntervention.AssessmentToolWorkflowInstance.AssessmentId, result.AssessmentId);
             Assert.Equal(assessmentIntervention.AssessmentToolWorkflowInstance.Assessment.SpId, result.CorrelationId);
         }
@@ -66,7 +60,6 @@ namespace He.PipelineAssessment.UI.Tests.Features.Intervention
 
             //Assert
             Assert.Null(result.TargetWorkflowDefinitionId);
-            Assert.Null(result.TargetWorkflowDefinitionName);
         }
 
         [Theory]
@@ -87,8 +80,8 @@ namespace He.PipelineAssessment.UI.Tests.Features.Intervention
             {
                 Assert.Equal(assessmentToolWorkflows[i].Id, result[i].Id);
                 Assert.Equal(assessmentToolWorkflows[i].WorkflowDefinitionId, result[i].WorkflowDefinitionId);
-                Assert.Equal(assessmentToolWorkflows[i].Name, result[i].Name);
-                Assert.Equal($"{assessmentToolWorkflows[i].Name} ({ assessmentToolWorkflows[i].WorkflowDefinitionId})", result[i].DisplayName);
+                Assert.Equal($"{assessmentToolWorkflows[i].AssessmentTool.Name} - {assessmentToolWorkflows[i].Name}", result[i].Name);
+                Assert.Equal($"{assessmentToolWorkflows[i].AssessmentTool.Name} - {assessmentToolWorkflows[i].Name} ({ assessmentToolWorkflows[i].WorkflowDefinitionId})", result[i].DisplayName);
             }
         }
 
@@ -104,10 +97,19 @@ namespace He.PipelineAssessment.UI.Tests.Features.Intervention
             //Arrange
 
             //Act
-            var result = sut.AssessmentInterventionDtoFromWorkflowInstance(assessmentToolWorkflowInstance, userName, email);
+            var dtoConfig = new DtoConfig()
+            {
+                AdministratorName = userName,
+                UserName = userName,
+                AdministratorEmail = email,
+                UserEmail = email,
+                DecisionType = InterventionDecisionTypes.Override,
+                Status = InterventionStatus.Pending
+            };
+            var result = sut.AssessmentInterventionDtoFromWorkflowInstance(assessmentToolWorkflowInstance, dtoConfig);
 
             //Assert
-            Assert.IsType<CreateOverrideCommand>(result.AssessmentInterventionCommand);
+            Assert.IsType<AssessmentInterventionCommand>(result.AssessmentInterventionCommand);
             Assert.Equal(assessmentToolWorkflowInstance.Id, result.AssessmentInterventionCommand.AssessmentToolWorkflowInstanceId);
             Assert.Equal(assessmentToolWorkflowInstance.WorkflowInstanceId, result.AssessmentInterventionCommand.WorkflowInstanceId);
             Assert.Equal(assessmentToolWorkflowInstance.Result, result.AssessmentInterventionCommand.AssessmentResult);
@@ -117,8 +119,37 @@ namespace He.PipelineAssessment.UI.Tests.Features.Intervention
             Assert.Equal(userName, result.AssessmentInterventionCommand.Administrator);
             Assert.Equal(email, result.AssessmentInterventionCommand.AdministratorEmail);
             Assert.Equal(InterventionDecisionTypes.Override, result.AssessmentInterventionCommand.DecisionType);
-            Assert.Equal(InterventionStatus.NotSubmitted, result.AssessmentInterventionCommand.Status);
+            Assert.Equal(InterventionStatus.Pending, result.AssessmentInterventionCommand.Status);
             Assert.Equal(assessmentToolWorkflowInstance.Assessment.Reference, result.AssessmentInterventionCommand.ProjectReference);
+        }
+
+        [Theory]
+        [AutoMoqData]
+        public void AssessmentInterventionFromAssessmentInterventionCommand_ReturnsCorrectDtoObject(
+            AssessmentInterventionCommand command,
+          AssessmentInterventionMapper sut
+      )
+        {
+            //Arrange
+
+            //Act
+            var result = sut.AssessmentInterventionFromAssessmentInterventionCommand(command);
+
+            //Assert
+            Assert.NotNull(result);
+            Assert.IsType<AssessmentIntervention>(result);
+            Assert.Equal(command.AssessmentInterventionId, result.Id);
+            Assert.Equal(command.AssessmentToolWorkflowInstanceId, result.AssessmentToolWorkflowInstanceId);
+            Assert.Equal(command.TargetWorkflowId, result.TargetAssessmentToolWorkflowId);
+            Assert.Equal(command.RequestedBy, result.RequestedBy);
+            Assert.Equal(command.RequestedByEmail, result.RequestedByEmail);
+            Assert.Equal(command.Administrator, result.Administrator);
+            Assert.Equal(command.AdministratorEmail, result.AdministratorEmail);
+            Assert.Equal(command.SignOffDocument, result.SignOffDocument);
+            Assert.Equal(command.DecisionType, result.DecisionType);
+            Assert.Equal(command.AssessorRationale, result.AssessorRationale);
+            Assert.Equal(command.DateSubmitted, result.DateSubmitted);
+            Assert.Equal(command.Status, result.Status);
         }
     }
 }
