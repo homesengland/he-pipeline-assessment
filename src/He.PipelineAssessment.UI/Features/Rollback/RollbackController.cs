@@ -83,6 +83,10 @@ namespace He.PipelineAssessment.UI.Features.Rollback
                 {
                     return View("EditRollback", dto);
                 }
+                if (dto.AssessmentInterventionCommand.Status == InterventionStatus.Draft)
+                {
+                    return RedirectToAction("CheckYourDetailsAssessor", new { interventionId }); 
+                }
                 else
                 {
                     return RedirectToAction("CheckYourDetails", new { interventionId });

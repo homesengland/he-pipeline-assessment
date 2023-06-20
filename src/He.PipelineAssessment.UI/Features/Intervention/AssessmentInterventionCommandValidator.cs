@@ -3,6 +3,7 @@ using He.PipelineAssessment.UI.Features.Override.CreateOverride;
 using He.PipelineAssessment.UI.Features.Override.EditOverride;
 using He.PipelineAssessment.UI.Features.Rollback.CreateRollback;
 using He.PipelineAssessment.UI.Features.Rollback.EditRollbackAssessor;
+using He.PipelineAssessment.UI.Features.Rollback.SubmitRollback;
 
 namespace He.PipelineAssessment.UI.Features.Intervention
 {
@@ -22,6 +23,15 @@ namespace He.PipelineAssessment.UI.Features.Intervention
 
             RuleFor(c => c.AssessorRationale).NotEmpty().WithMessage("The {PropertyName} cannot be empty")
                 .When(x => x.GetType() == typeof(CreateRollbackCommand) || x.GetType() == typeof(EditRollbackAssessorCommand) || x.GetType() == typeof(AssessmentInterventionCommand));
+           
+            RuleFor(c => c.SignOffDocument).NotEmpty().WithMessage("The {PropertyName} cannot be empty")
+                .When(x => x.GetType() == typeof(SubmitRollbackCommand));
+
+            RuleFor(c => c.AdministratorRationale).NotEmpty().WithMessage("The {PropertyName} cannot be empty")
+                .When(x => x.GetType() == typeof(SubmitRollbackCommand));
+
+            RuleFor(c => c.TargetWorkflowDefinitionId).NotEmpty().WithMessage("The {PropertyName} cannot be empty")
+                .When(x => x.GetType() == typeof(SubmitRollbackCommand));
         }
     }
 }

@@ -128,6 +128,7 @@ function initInterventionDataTable(tableId, columnNumberToSort, searchElementId)
                             var node = dom_nodes[0];
                             if (node.innerText != null) {
                                 var selected = node.innerText == 'Pending' ? 'selected' : '';
+
                                 select.append('<option value="' + node.innerText + '"' + selected + '>' + node.innerText + '</option>');
                             }
                             else {
