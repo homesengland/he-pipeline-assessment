@@ -36,17 +36,22 @@ namespace He.PipelineAssessment.UI.Features.Assessment.AssessmentSummary
                     if (assessmentStages.Any())
                     {
                         var uniqueTools = assessmentStages.Select(x => new { x.AssessmentToolId, x.Name, x.Order })
-                            .Distinct();
+                            .Distinct().ToList();
 
                         foreach (var assessmentTool in uniqueTools)
                         {
                             var assessmentStagesForCurrentTool = assessmentStages.Where(x => x.AssessmentToolId == assessmentTool.AssessmentToolId);
-                            var workflowInstances = AssessmentSummaryStage(assessmentStagesForCurrentTool);
+                            var workflowInstances = AssessmentSummaryStage(assessmentStagesForCurrentTool).ToList();
                             stages.AddRange(workflowInstances);
 
                             var startableWorkflowForCurrentTool = startableWorkflows.Where(x => x.AssessmentToolId == assessmentTool.AssessmentToolId);
-                            var startableList = AssessmentSummaryStage(startableWorkflowForCurrentTool,assessmentTool.Name,assessmentTool.Order);
+                            var startableList = AssessmentSummaryStage(startableWorkflowForCurrentTool,assessmentTool.Name,assessmentTool.Order).ToList();
                             stages.AddRange(startableList);
+
+                            if (!workflowInstances.Any() && !startableList.Any())
+                            {
+                                stages.Add(AssessmentSummaryStage(assessmentTool.Name, assessmentTool.Order));
+                            }
                         }
                     }
 
@@ -77,6 +82,18 @@ namespace He.PipelineAssessment.UI.Features.Assessment.AssessmentSummary
                 _logger.LogError(e.Message);
             }
             return null;
+        }
+
+        private AssessmentSummaryStage AssessmentSummaryStage( string name, int order)
+        {
+                var stage = new AssessmentSummaryStage
+                {
+                    Name = name,
+                    Order = order
+                   
+                };
+           
+            return stage;
         }
 
         private IEnumerable<AssessmentSummaryStage> AssessmentSummaryStage(IEnumerable<StartableToolViewModel> startableWorkflowForCurrentTool, string name, int order)
