@@ -48,6 +48,8 @@
                 var createdDate = intervention.CreatedDateTime.HasValue ? intervention.CreatedDateTime.Value.Date.ToString("yyyyMMdd") : "";
                 var created = intervention.CreatedDateTime.HasValue ? intervention.CreatedDateTime.Value.Date.ToLongDateString() : "";
 
+                var admin = String.IsNullOrEmpty(intervention.Administrator) ? "-" : intervention.Administrator;
+
                 <tr class="govuk-table__row">
                     <td class="govuk-table__cell">
                         @if (@intervention.DecisionType == "Override")
@@ -61,7 +63,7 @@
                     </td>
                     <td class="govuk-table__cell">@intervention.WorkflowName</td>
                     <td class="govuk-table__cell">@intervention.RequestedBy</td>
-                    <td class="govuk-table__cell">@intervention.Administrator</td>
+                    <td class="govuk-table__cell">@admin</td>
                     <td class="govuk-table__cell"><strong class="govuk-tag govuk-tag--@intervention.StatusDisplayTag()">@intervention.Status</strong></td>
                     <td class="govuk-table__cell"> <span hidden>@createdDate</span> @created </td>
                     <td class="govuk-table__cell"> <span hidden>@lastModifiedDate</span> @lastModified </td>
