@@ -18,7 +18,7 @@ namespace He.PipelineAssessment.UI.Tests.Features.Rollback.CreateRollback
     {
         [Theory]
         [AutoMoqData]
-        public async Task CreateRollbackCommandToAssessmentIntervention_MapsCorrectly(
+        public void CreateRollbackCommandToAssessmentIntervention_MapsCorrectly(
             [Frozen] Mock<IDateTimeProvider> dateTimeProvider,
             CreateRollbackCommand command,
             CreateRollbackMapper sut
