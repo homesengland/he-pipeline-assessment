@@ -72,7 +72,7 @@ namespace He.PipelineAssessment.UI.Tests.Features.Workflow.LoadQuestionScreen
 
             //Assert
             Assert.NotNull(result);
-           Assert.True(result.IsReadOnly);
+           Assert.True(result!.IsReadOnly);
         }
 
         [Theory]

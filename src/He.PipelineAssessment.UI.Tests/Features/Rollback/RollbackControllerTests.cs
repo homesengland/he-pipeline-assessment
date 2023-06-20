@@ -270,6 +270,55 @@ namespace He.PipelineAssessment.UI.Tests.Features.Rollback
             Assert.Equal("Index", redirectToActionResult.ActionName);
         }
 
+
+        [Theory]
+        [AutoMoqData]
+        public async Task EditRollbackAssessor_ShouldRedirectToView_WhenGivenStatusIsDraft(
+          int interventionId,
+          AssessmentInterventionDto assessmentInterventionDto
+      )
+        {
+            //Arrange
+            assessmentInterventionDto.AssessmentInterventionCommand.Status = InterventionStatus.Draft;
+
+            _mediatorMock.Setup(x => x.Send(It.IsAny<EditRollbackAssessorRequest>(), CancellationToken.None)).ReturnsAsync(assessmentInterventionDto);
+
+            //Act
+            var controller = new RollbackController(_loggerMock.Object, _mediatorMock.Object, _validatorMock.Object);
+            var actionResult = await controller.EditRollbackAssessor(interventionId);
+
+            //Assert
+            Assert.NotNull(actionResult);
+            Assert.IsType<ViewResult>(actionResult);
+            var result = (ViewResult)actionResult;
+            Assert.Equal("EditRollbackAssessor", result.ViewName);
+
+        }
+
+        [Theory]
+        [AutoMoqData]
+        public async Task EditRollbackAssessor_ShouldRedirectToCheckYourDetails_WhenGivenStatusIsNotPending(
+            int interventionId,
+            AssessmentInterventionDto assessmentInterventionDto
+        )
+        {
+            //Arrange
+            assessmentInterventionDto.AssessmentInterventionCommand.Status = InterventionStatus.Pending;
+
+            _mediatorMock.Setup(x => x.Send(It.IsAny<EditRollbackAssessorRequest>(), CancellationToken.None)).ReturnsAsync(assessmentInterventionDto);
+
+            //Act
+            var controller = new RollbackController(_loggerMock.Object, _mediatorMock.Object, _validatorMock.Object);
+            var actionResult = await controller.EditRollbackAssessor(interventionId);
+
+            //Assert
+            Assert.NotNull(actionResult);
+            Assert.IsType<RedirectToActionResult>(actionResult);
+            var result = (RedirectToActionResult)actionResult;
+            Assert.Equal("CheckYourDetailsAssessor", result.ActionName);
+
+        }
+
         [Theory]
         [AutoMoqData]
         public async Task EditRollbackAssessor_ShouldRedirectToCheckYourDetails_GivenValidationResultIsValid(
@@ -282,6 +331,7 @@ namespace He.PipelineAssessment.UI.Tests.Features.Rollback
             validationResult.Errors = new List<ValidationFailure>();
 
             assessmentInterventionDto.ValidationResult = null;
+            assessmentInterventionDto.AssessmentInterventionCommand.Status = InterventionStatus.Approved;
 
             _validatorMock.Setup(x => x.ValidateAsync(It.IsAny<EditRollbackAssessorCommand>(), CancellationToken.None))
                 .ReturnsAsync(validationResult);
