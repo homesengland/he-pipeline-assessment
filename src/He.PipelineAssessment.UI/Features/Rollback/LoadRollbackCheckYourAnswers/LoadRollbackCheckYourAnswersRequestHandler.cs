@@ -32,10 +32,14 @@ namespace He.PipelineAssessment.UI.Features.Rollback.LoadRollbackCheckYourAnswer
                 throw new NotFoundException($"Assessment Intervention with Id {request.InterventionId} not found");
             }
             AssessmentInterventionCommand command = _mapper.AssessmentInterventionCommandFromAssessmentIntervention(intervention);
-            if (command == null)
-            {
-                throw new ArgumentException($"Unable to map AssessmentInterventionCommand from intervention: {JsonConvert.SerializeObject(intervention)} from mapper");
-            }
+           
+            var submitRollbackCommand = SerializedCommand(command);
+            
+            return submitRollbackCommand;
+        }
+
+        private SubmitRollbackCommand SerializedCommand(AssessmentInterventionCommand command)
+        {
             var serializedCommand = JsonConvert.SerializeObject(command);
             var submitRollbackCommand = JsonConvert.DeserializeObject<SubmitRollbackCommand>(serializedCommand);
             if (submitRollbackCommand == null)
