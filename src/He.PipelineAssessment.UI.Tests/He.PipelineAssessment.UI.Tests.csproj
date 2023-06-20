@@ -34,11 +34,4 @@
     <ProjectReference Include="..\He.PipelineAssessment.UI\He.PipelineAssessment.UI.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="Features\Rollback\EditRollbackAssessor\" />
-    <Folder Include="Features\Rollback\LoadRollbackCheckYourAnswers\" />
-    <Folder Include="Features\Rollback\LoadRollbackCheckYourAnswersAssessor\" />
-    <Folder Include="Features\Rollback\SubmitRollback\" />
-  </ItemGroup>
-
 </Project>

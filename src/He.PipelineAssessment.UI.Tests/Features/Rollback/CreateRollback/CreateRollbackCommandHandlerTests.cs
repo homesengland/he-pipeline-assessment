@@ -99,11 +99,10 @@ namespace He.PipelineAssessment.UI.Tests.Features.Rollback.CreateRollback
             assessmentToolWorkflowInstanceHelpers.Setup(x => x.IsLatestSubmittedWorkflow(instance)).Returns(true);
 
             //Act
-            var result = sut.Handle(command, CancellationToken.None);
+            var result = await sut.Handle(command, CancellationToken.None);
 
             //Assert
             repository.Verify(x=>x.CreateAssessmentIntervention(It.IsAny<AssessmentIntervention>()),Times.Once);
-            Assert.NotNull(result);
         }
     }
 }

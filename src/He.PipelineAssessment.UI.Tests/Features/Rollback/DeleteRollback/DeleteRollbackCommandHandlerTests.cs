@@ -68,10 +68,9 @@ namespace He.PipelineAssessment.UI.Tests.Features.Rollback.DeleteRollback
                 .ReturnsAsync(true);
 
             //Act
-            var result = sut.Handle(command, CancellationToken.None);
+            var result = await sut.Handle(command, CancellationToken.None);
 
             //Assert
-            Assert.NotNull(result);
             repository.Verify(x=>x.DeleteIntervention(intervention),Times.Once);
 
         }
