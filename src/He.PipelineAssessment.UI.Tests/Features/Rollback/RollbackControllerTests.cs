@@ -129,7 +129,7 @@ namespace He.PipelineAssessment.UI.Tests.Features.Rollback
 
         [Theory]
         [AutoMoqData]
-        public async Task EditRollback_ShouldRedirectToView_WhenGivenStatusNotPending(
+        public async Task EditRollback_ShouldRedirectToView_WhenGivenStatusISPending(
             int interventionId,
             AssessmentInterventionDto assessmentInterventionDto
         )
@@ -153,7 +153,7 @@ namespace He.PipelineAssessment.UI.Tests.Features.Rollback
 
         [Theory]
         [AutoMoqData]
-        public async Task EditRollback_ShouldRedirectToView_WhenGivenStatusIsPending(
+        public async Task EditRollback_ShouldRedirectToView_WhenGivenStatusIsApproved(
             int interventionId,
             AssessmentInterventionDto assessmentInterventionDto
         )
@@ -172,6 +172,30 @@ namespace He.PipelineAssessment.UI.Tests.Features.Rollback
             Assert.IsType<RedirectToActionResult>(actionResult);
             var result = (RedirectToActionResult)actionResult;
             Assert.Equal("CheckYourDetails", result.ActionName);
+
+        }
+
+        [Theory]
+        [AutoMoqData]
+        public async Task EditRollback_ShouldRedirectToView_WhenGivenStatusIsDraft(
+            int interventionId,
+            AssessmentInterventionDto assessmentInterventionDto
+        )
+        {
+            //Arrange
+            assessmentInterventionDto.AssessmentInterventionCommand.Status = InterventionStatus.Draft;
+
+            _mediatorMock.Setup(x => x.Send(It.IsAny<EditRollbackRequest>(), CancellationToken.None)).ReturnsAsync(assessmentInterventionDto);
+
+            //Act
+            var controller = new RollbackController(_loggerMock.Object, _mediatorMock.Object, _validatorMock.Object);
+            var actionResult = await controller.EditRollback(interventionId);
+
+            //Assert
+            Assert.NotNull(actionResult);
+            Assert.IsType<RedirectToActionResult>(actionResult);
+            var result = (RedirectToActionResult)actionResult;
+            Assert.Equal("CheckYourDetailsAssessor", result.ActionName);
 
         }
 
