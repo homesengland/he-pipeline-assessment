@@ -2,6 +2,7 @@
 using He.PipelineAssessment.UI.Common.Exceptions;
 using He.PipelineAssessment.UI.Features.Intervention;
 using He.PipelineAssessment.UI.Features.Rollback.ConfirmRollback;
+using He.PipelineAssessment.UI.Features.Rollback.SubmitRollback;
 using MediatR;
 using Newtonsoft.Json;
 
@@ -32,6 +33,12 @@ namespace He.PipelineAssessment.UI.Features.Rollback.LoadRollbackCheckYourAnswer
                 throw new NotFoundException($"Assessment Intervention with Id {request.InterventionId} not found");
             }
             var command = _mapper.AssessmentInterventionCommandFromAssessmentIntervention(intervention);
+            var confirmRollbackCommand = SerializedCommand(command);
+            return confirmRollbackCommand;
+        }
+
+        private ConfirmRollbackCommand SerializedCommand(AssessmentInterventionCommand command)
+        {
             var serializedCommand = JsonConvert.SerializeObject(command);
             var confirmRollbackCommand = JsonConvert.DeserializeObject<ConfirmRollbackCommand>(serializedCommand);
             if (confirmRollbackCommand == null)

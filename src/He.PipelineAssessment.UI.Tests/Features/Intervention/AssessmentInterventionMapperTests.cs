@@ -122,5 +122,34 @@ namespace He.PipelineAssessment.UI.Tests.Features.Intervention
             Assert.Equal(InterventionStatus.Pending, result.AssessmentInterventionCommand.Status);
             Assert.Equal(assessmentToolWorkflowInstance.Assessment.Reference, result.AssessmentInterventionCommand.ProjectReference);
         }
+
+        [Theory]
+        [AutoMoqData]
+        public void AssessmentInterventionFromAssessmentInterventionCommand_ReturnsCorrectDtoObject(
+            AssessmentInterventionCommand command,
+          AssessmentInterventionMapper sut
+      )
+        {
+            //Arrange
+
+            //Act
+            var result = sut.AssessmentInterventionFromAssessmentInterventionCommand(command);
+
+            //Assert
+            Assert.NotNull(result);
+            Assert.IsType<AssessmentIntervention>(result);
+            Assert.Equal(command.AssessmentInterventionId, result.Id);
+            Assert.Equal(command.AssessmentToolWorkflowInstanceId, result.AssessmentToolWorkflowInstanceId);
+            Assert.Equal(command.TargetWorkflowId, result.TargetAssessmentToolWorkflowId);
+            Assert.Equal(command.RequestedBy, result.RequestedBy);
+            Assert.Equal(command.RequestedByEmail, result.RequestedByEmail);
+            Assert.Equal(command.Administrator, result.Administrator);
+            Assert.Equal(command.AdministratorEmail, result.AdministratorEmail);
+            Assert.Equal(command.SignOffDocument, result.SignOffDocument);
+            Assert.Equal(command.DecisionType, result.DecisionType);
+            Assert.Equal(command.AssessorRationale, result.AssessorRationale);
+            Assert.Equal(command.DateSubmitted, result.DateSubmitted);
+            Assert.Equal(command.Status, result.Status);
+        }
     }
 }
