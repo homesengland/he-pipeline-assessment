@@ -64,8 +64,7 @@ namespace He.PipelineAssessment.UI.Features.Rollback
         [Authorize(Policy = Authorization.Constants.AuthorizationPolicies.AssignmentToPipelineAdminRoleRequired)]
         public async Task<IActionResult> EditRollback(int interventionId)
         {
-            try
-            {
+           
                 AssessmentInterventionDto dto = await _mediator.Send(new EditRollbackRequest() { InterventionId = interventionId });
                 if (dto.AssessmentInterventionCommand.Status == InterventionStatus.Pending)
                 {
@@ -79,12 +78,6 @@ namespace He.PipelineAssessment.UI.Features.Rollback
                 {
                     return RedirectToAction("CheckYourDetails", new { interventionId });
                 }
-            }
-            catch (Exception e)
-            {
-                _logger.LogError(e.Message);
-                return RedirectToAction("Index", "Error", new { message = e.Message });
-            }
         }
 
         [HttpPost]
