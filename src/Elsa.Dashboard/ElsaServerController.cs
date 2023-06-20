@@ -97,19 +97,6 @@ namespace Elsa.Dashboard
       }
     }
 
-    private HttpMethod GetHttpMethod(string httpMethod)
-    {
-      switch(httpMethod)
-      {
-        case "GET"
-        : return HttpMethod.Get;
-        case "POST"
-        : return HttpMethod.Post;
-
-        default: return HttpMethod.Get;
-      }
-    }
-
     private async Task<string?> GetAccessToken()
     {
       try

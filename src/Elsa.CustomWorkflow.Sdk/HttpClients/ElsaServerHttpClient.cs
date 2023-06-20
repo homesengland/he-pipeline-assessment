@@ -240,7 +240,7 @@ namespace Elsa.CustomWorkflow.Sdk.HttpClients
             {
                 var credential = new ManagedIdentityCredential();
 
-                _logger.LogDebug("AzureIdentity - Getting access token");
+                _logger.LogError("AzureIdentity - Getting access token");
 
                 var accessTokenRequest = await credential.GetTokenAsync(
                     new TokenRequestContext(scopes: new string[] { $"api://52068069-9f62-48a9-a8a8-0a94f7da27ba/.default" }) { }
