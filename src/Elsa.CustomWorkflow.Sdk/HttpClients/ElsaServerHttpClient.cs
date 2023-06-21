@@ -9,6 +9,7 @@ using System.Runtime;
 using System.Net.Http.Headers;
 using JsonSerializer = System.Text.Json.JsonSerializer;
 using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Hosting;
 
 namespace Elsa.CustomWorkflow.Sdk.HttpClients
 {
@@ -28,12 +29,14 @@ namespace Elsa.CustomWorkflow.Sdk.HttpClients
         private readonly IHttpClientFactory _httpClientFactory;
         private readonly ILogger<ElsaServerHttpClient> _logger;
         private readonly IConfiguration _configuration;
+        private readonly IHostEnvironment _hostEnvironment;
 
-        public ElsaServerHttpClient(IHttpClientFactory httpClientFactoryFactory, ILogger<ElsaServerHttpClient> logger, IConfiguration configuration)
+        public ElsaServerHttpClient(IHttpClientFactory httpClientFactoryFactory, ILogger<ElsaServerHttpClient> logger, IConfiguration configuration, IHostEnvironment hostEnvironment)
         {
             _httpClientFactory = httpClientFactoryFactory;
             _logger = logger;
             _configuration = configuration;
+            _hostEnvironment = hostEnvironment;
         }
 
         public async Task<WorkflowNextActivityDataDto?> PostStartWorkflow(StartWorkflowCommandDto model)
@@ -46,9 +49,7 @@ namespace Elsa.CustomWorkflow.Sdk.HttpClients
             request.Content = new StringContent(content, Encoding.UTF8, "application/json");
 
             var client = _httpClientFactory.CreateClient("ElsaServerClient");
-            var accessToken = await GetAccessToken();
-            client.DefaultRequestHeaders.Authorization =
-                new AuthenticationHeaderValue("Bearer", accessToken);
+            await AddAccessTokenToRequest(client);
             using (var response = await client
                        .SendAsync(request)
                        .ConfigureAwait(false))
@@ -67,7 +68,15 @@ namespace Elsa.CustomWorkflow.Sdk.HttpClients
             return JsonSerializer.Deserialize<WorkflowNextActivityDataDto>(data, new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
         }
 
-
+        private async Task AddAccessTokenToRequest(HttpClient client)
+        {
+            if (!_hostEnvironment.IsDevelopment())
+            {
+                var accessToken = await GetAccessToken();
+                client.DefaultRequestHeaders.Authorization =
+                    new AuthenticationHeaderValue("Bearer", accessToken);
+            }
+        }
 
         public async Task<WorkflowNextActivityDataDto?> QuestionScreenSaveAndContinue(QuestionScreenSaveAndContinueCommandDto model)
         {
@@ -79,9 +88,7 @@ namespace Elsa.CustomWorkflow.Sdk.HttpClients
             request.Content = new StringContent(content, Encoding.UTF8, "application/json");
 
             var client = _httpClientFactory.CreateClient("ElsaServerClient");
-            var accessToken = await GetAccessToken();
-            client.DefaultRequestHeaders.Authorization =
-                new AuthenticationHeaderValue("Bearer", accessToken);
+            await AddAccessTokenToRequest(client);
             using (var response = await client
                        .SendAsync(request)
                        .ConfigureAwait(false))
@@ -110,9 +117,7 @@ namespace Elsa.CustomWorkflow.Sdk.HttpClients
             request.Content = new StringContent(content, Encoding.UTF8, "application/json");
 
             var client = _httpClientFactory.CreateClient("ElsaServerClient");
-            var accessToken = await GetAccessToken();
-            client.DefaultRequestHeaders.Authorization =
-                new AuthenticationHeaderValue("Bearer", accessToken);
+            await AddAccessTokenToRequest(client);
             using (var response = await client
                        .SendAsync(request)
                        .ConfigureAwait(false))
@@ -137,9 +142,7 @@ namespace Elsa.CustomWorkflow.Sdk.HttpClients
             string relativeUri = $"workflow/LoadQuestionScreen?workflowInstanceId={model.WorkflowInstanceId}&activityId={model.ActivityId}";
 
             var client = _httpClientFactory.CreateClient("ElsaServerClient");
-            var accessToken = await GetAccessToken();
-            client.DefaultRequestHeaders.Authorization =
-                new AuthenticationHeaderValue("Bearer", accessToken);
+            await AddAccessTokenToRequest(client);
             using (var response = await client
                        .GetAsync(relativeUri)
                        .ConfigureAwait(false))
@@ -164,9 +167,7 @@ namespace Elsa.CustomWorkflow.Sdk.HttpClients
             string relativeUri = $"workflow/LoadCheckYourAnswersScreen?workflowInstanceId={model.WorkflowInstanceId}&activityId={model.ActivityId}";
 
             var client = _httpClientFactory.CreateClient("ElsaServerClient");
-            var accessToken = await GetAccessToken();
-            client.DefaultRequestHeaders.Authorization =
-                new AuthenticationHeaderValue("Bearer", accessToken);
+            await AddAccessTokenToRequest(client);
             using (var response = await client
                        .GetAsync(relativeUri)
                        .ConfigureAwait(false))
@@ -191,9 +192,7 @@ namespace Elsa.CustomWorkflow.Sdk.HttpClients
             string relativeUri = $"workflow/LoadConfirmationScreen?workflowInstanceId={model.WorkflowInstanceId}&activityId={model.ActivityId}";
 
             var client = _httpClientFactory.CreateClient("ElsaServerClient");
-            var accessToken = await GetAccessToken();
-            client.DefaultRequestHeaders.Authorization =
-                new AuthenticationHeaderValue("Bearer", accessToken);
+            await AddAccessTokenToRequest(client);
             using (var response = await client
                        .GetAsync(relativeUri)
                        .ConfigureAwait(false))
@@ -217,8 +216,7 @@ namespace Elsa.CustomWorkflow.Sdk.HttpClients
             string data;
             string fullUri = $"{elsaServer}/activities/properties";
             var client = _httpClientFactory.CreateClient("ElsaServerClient");
-            var accessToken = await GetAccessToken();
-            client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", accessToken);
+            await AddAccessTokenToRequest(client);
             using (var response = await client
                        .GetAsync(fullUri)
                        .ConfigureAwait(false))

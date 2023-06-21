@@ -7,7 +7,6 @@ using Microsoft.AspNetCore.Mvc;
 namespace Elsa.Server.Features.Activities
 {
     [Route("activities")]
-    [Authorize]
     public class ActivitiesController : Controller
     {
 

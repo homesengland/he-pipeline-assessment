@@ -15,12 +15,14 @@ namespace Elsa.Dashboard
     private readonly ILogger<ElsaServerController> _logger;
     private readonly IHttpClientFactory _httpClientFactory;
     private readonly IConfiguration _configuration;
+    private readonly IHostEnvironment _hostEnvironment;
 
-    public ElsaServerController(IHttpClientFactory httpClientFactory, ILogger<ElsaServerController> logger, IConfiguration configuration)
+    public ElsaServerController(IHttpClientFactory httpClientFactory, ILogger<ElsaServerController> logger, IConfiguration configuration, IHostEnvironment environment)
     {
       _logger = logger;
       _configuration = configuration;
       _httpClientFactory = httpClientFactory;
+      _hostEnvironment = environment;
     }
 
     [Route("{**catchall}")]
@@ -32,10 +34,12 @@ namespace Elsa.Dashboard
 
       var client = _httpClientFactory.CreateClient("ElsaServerClient");
 
-      var accessToken = await GetAccessToken();
-      client.DefaultRequestHeaders.Authorization =
-      new AuthenticationHeaderValue("Bearer", accessToken);
-
+      if (!_hostEnvironment.IsDevelopment())
+      {
+        var accessToken = await GetAccessToken();
+        client.DefaultRequestHeaders.Authorization =
+        new AuthenticationHeaderValue("Bearer", accessToken);
+      }
       if (HttpContext.Request.Method == HttpMethod.Get.ToString())
       {
         return await SendGetRequest(newRequestMsg, client).ConfigureAwait(false);

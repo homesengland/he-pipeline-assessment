@@ -11,7 +11,6 @@ using Microsoft.AspNetCore.Mvc;
 namespace Elsa.Server.Features.Workflow
 {
     [Route("workflow")]
-    [Authorize]
     public class WorkflowController : Controller
     {
         private readonly IMediator _mediator;
