@@ -8,6 +8,7 @@ using Azure.Identity;
 using System.Runtime;
 using System.Net.Http.Headers;
 using JsonSerializer = System.Text.Json.JsonSerializer;
+using Microsoft.Extensions.Configuration;
 
 namespace Elsa.CustomWorkflow.Sdk.HttpClients
 {
@@ -26,11 +27,13 @@ namespace Elsa.CustomWorkflow.Sdk.HttpClients
     {
         private readonly IHttpClientFactory _httpClientFactory;
         private readonly ILogger<ElsaServerHttpClient> _logger;
+        private readonly IConfiguration _configuration;
 
-        public ElsaServerHttpClient(IHttpClientFactory httpClientFactoryFactory, ILogger<ElsaServerHttpClient> logger)
+        public ElsaServerHttpClient(IHttpClientFactory httpClientFactoryFactory, ILogger<ElsaServerHttpClient> logger, IConfiguration configuration)
         {
             _httpClientFactory = httpClientFactoryFactory;
             _logger = logger;
+            _configuration = configuration;
         }
 
         public async Task<WorkflowNextActivityDataDto?> PostStartWorkflow(StartWorkflowCommandDto model)
@@ -215,8 +218,7 @@ namespace Elsa.CustomWorkflow.Sdk.HttpClients
             string fullUri = $"{elsaServer}/activities/properties";
             var client = _httpClientFactory.CreateClient("ElsaServerClient");
             var accessToken = await GetAccessToken();
-            client.DefaultRequestHeaders.Authorization =
-    new AuthenticationHeaderValue("Bearer", accessToken);
+            client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", accessToken);
             using (var response = await client
                        .GetAsync(fullUri)
                        .ConfigureAwait(false))
@@ -240,23 +242,19 @@ namespace Elsa.CustomWorkflow.Sdk.HttpClients
             {
                 var credential = new ManagedIdentityCredential();
 
-                _logger.LogError("AzureIdentity - Getting access token");
-
+                var ccflowApplicationIdUri = _configuration["AzureManagedIdentityConfig:ElsaServerAzureApplicationIdUri"];
                 var accessTokenRequest = await credential.GetTokenAsync(
-                    new TokenRequestContext(scopes: new string[] { $"api://52068069-9f62-48a9-a8a8-0a94f7da27ba/.default" }) { }
+                    new TokenRequestContext(scopes: new string[] { ccflowApplicationIdUri }) { }
                 );
 
                 var accessToken = accessTokenRequest.Token;
 
-                _logger.LogError((String)accessToken);
-
-                _logger.LogDebug("AzureIdentity - Got access token");
+                _logger.LogError("Access Token: ", (String)accessToken);
 
                 return accessToken;
             }
             catch (Exception ex)
             {
-                _logger.LogError("Auth - error getting access token");
                 _logger.LogError(ex.Message);
                 return null;
             }

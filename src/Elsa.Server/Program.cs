@@ -137,8 +137,8 @@ builder.Services.AddOptions<IdentityClientConfig>()
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
     .AddJwtBearer(options =>
     {
-        options.Audience = "api://52068069-9f62-48a9-a8a8-0a94f7da27ba";
-        options.Authority = $"https://login.microsoftonline.com/faa8e269-0811-4538-82e7-4d29009219bf";
+        options.Audience = builder.Configuration["AzureManagedIdentityConfig:Audience"];
+        options.Authority = builder.Configuration["AzureManagedIdentityConfig:Authority"];
     });
 
 builder.Services.AddEsriHttpClients(builder.Configuration, builder.Environment.IsDevelopment());

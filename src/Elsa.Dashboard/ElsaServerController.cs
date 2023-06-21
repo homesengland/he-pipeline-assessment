@@ -5,7 +5,6 @@ using Elsa.Dashboard.Exceptions;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Net.Http.Headers;
-using System.Text;
 
 namespace Elsa.Dashboard
 {
@@ -28,37 +27,37 @@ namespace Elsa.Dashboard
     [Authorize(Policy = Elsa.Dashboard.Authorization.Constants.AuthorizationPolicies.AssignmentToElsaDashboardAdminRoleRequired)]
     public async Task<IActionResult> CatchAll()
     {
-        var elsaServer = _configuration["Urls:ElsaServer"];
-        var newRequest = HttpContext.Request.ToHttpRequestMessage(elsaServer);
+      var elsaServer = _configuration["Urls:ElsaServer"];
+      var newRequestMsg = HttpContext.Request.ToHttpRequestMessage(elsaServer);
 
-        var client = _httpClientFactory.CreateClient("ElsaServerClient");
+      var client = _httpClientFactory.CreateClient("ElsaServerClient");
 
-        var accessToken = await GetAccessToken();
-        client.DefaultRequestHeaders.Authorization =
-        new AuthenticationHeaderValue("Bearer", accessToken);
+      var accessToken = await GetAccessToken();
+      client.DefaultRequestHeaders.Authorization =
+      new AuthenticationHeaderValue("Bearer", accessToken);
 
-        if (HttpContext.Request.Method == HttpMethod.Get.ToString())
-        {
-          return await SendGetRequest(newRequest, client).ConfigureAwait(false);
-        }
-        else if(HttpContext.Request.Method == HttpMethod.Post.ToString())
-        {
-          return await SendPostRequest(newRequest, client).ConfigureAwait(false);
-        }
-        else if (HttpContext.Request.Method == HttpMethod.Delete.ToString())
-        {
-          return await SendDeleteRequest(newRequest, client, elsaServer).ConfigureAwait(false);
-        }
-
-        return BadRequest();
+      if (HttpContext.Request.Method == HttpMethod.Get.ToString())
+      {
+        return await SendGetRequest(newRequestMsg, client).ConfigureAwait(false);
+      }
+      else if (HttpContext.Request.Method == HttpMethod.Post.ToString())
+      {
+        return await SendPostRequest(newRequestMsg, client).ConfigureAwait(false);
+      }
+      else if (HttpContext.Request.Method == HttpMethod.Delete.ToString())
+      {
+        return await SendDeleteRequest(newRequestMsg, client, elsaServer).ConfigureAwait(false);
+      }
+      _logger.LogError("Request method not supported by Dashboard pass through controller.");
+      return BadRequest("Request method not supported by Dashboard pass through controller.");
     }
 
     private async Task<IActionResult> SendPostRequest(HttpRequestMessage newRequestMessage, HttpClient client)
     {
-  
-          using (var response = await client
-          .PostAsync(newRequestMessage.RequestUri, newRequestMessage.Content)
-          .ConfigureAwait(false))
+
+      using (var response = await client
+        .PostAsync(newRequestMessage.RequestUri, newRequestMessage.Content)
+        .ConfigureAwait(false))
       {
         var data = await response.Content.ReadAsStringAsync().ConfigureAwait(false);
         return Ok(data);
@@ -93,7 +92,7 @@ namespace Elsa.Dashboard
          .ConfigureAwait(false))
       {
         var data = await response.Content.ReadAsStringAsync().ConfigureAwait(false);
-        return Ok(data); 
+        return Ok(data);
       }
     }
 
@@ -102,9 +101,9 @@ namespace Elsa.Dashboard
       try
       {
         var credential = new ManagedIdentityCredential();
-
+        var ccflowApplicationIdUri = _configuration["AzureManagedIdentityConfig:ElsaServerAzureApplicationIdUri"];
         var accessTokenRequest = await credential.GetTokenAsync(
-            new TokenRequestContext(scopes: new string[] { $"api://52068069-9f62-48a9-a8a8-0a94f7da27ba/.default" }) { }
+            new TokenRequestContext(scopes: new string[] { ccflowApplicationIdUri }) { }
         );
 
         var accessToken = accessTokenRequest.Token;
@@ -115,8 +114,7 @@ namespace Elsa.Dashboard
       }
       catch (Exception ex)
       {
-        _logger.LogError("Auth - error getting access token");
-        _logger.LogError(ex.Message);
+        _logger.LogError("Error getting access token: ", ex.Message);
         return null;
       }
     }
