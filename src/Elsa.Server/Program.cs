@@ -30,9 +30,13 @@ using Elsa.Server.Services;
 using Elsa.Server.StartupTasks;
 using He.PipelineAssessment.Data.Auth;
 using MediatR;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.DataProtection;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection.Extensions;
+using Microsoft.Extensions.Options;
+using Microsoft.Identity;
+using Microsoft.Identity.Web;
 
 
 var builder = WebApplication.CreateBuilder(args);
@@ -127,6 +131,16 @@ builder.Services.AddOptions<IdentityClientConfig>()
     configuration.GetSection("IdentityClientConfig").Bind(settings);
 });
 
+
+if (!builder.Environment.IsDevelopment())
+{
+    builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+        .AddJwtBearer(options =>
+        {
+            options.Audience = builder.Configuration["AzureManagedIdentityConfig:Audience"];
+            options.Authority = builder.Configuration["AzureManagedIdentityConfig:Authority"];
+        });
+}
 builder.Services.AddEsriHttpClients(builder.Configuration, builder.Environment.IsDevelopment());
 
 var app = builder.Build();
@@ -138,7 +152,28 @@ if (!app.Environment.IsDevelopment())
     app.UseHsts();
 }
 
-app
+if (!app.Environment.IsDevelopment())
+{
+    app
+    .UseCors()
+    .UseHttpsRedirection()
+    .UseStaticFiles() // For Dashboard.
+    .UseRouting()
+    .UseAuthentication()
+    .UseAuthorization()
+    .UseEndpoints(endpoints =>
+    {
+        // Elsa API Endpoints are implemented as regular ASP.NET Core API controllers.
+        endpoints.MapControllers().RequireAuthorization(); // locks down elsa server end points
+        endpoints.MapControllerRoute(
+            name: "default",
+            pattern: "{controller=Home}/{action=Index}");
+
+    });
+}
+else
+{
+    app
     .UseCors()
     .UseHttpsRedirection()
     .UseStaticFiles() // For Dashboard.
@@ -146,11 +181,13 @@ app
     .UseEndpoints(endpoints =>
     {
         // Elsa API Endpoints are implemented as regular ASP.NET Core API controllers.
-        endpoints.MapControllers();
+       // endpoints.MapControllers(); // locks down elsa server end points
         endpoints.MapControllerRoute(
             name: "default",
             pattern: "{controller=Home}/{action=Index}");
-    });
+
+});
+}
 
 
 app.Run();

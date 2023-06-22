@@ -1,6 +1,7 @@
 ﻿using Elsa.CustomActivities.Describers;
 using Elsa.Server.Features.Activities.CustomActivityProperties;
 using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Elsa.Server.Features.Activities
