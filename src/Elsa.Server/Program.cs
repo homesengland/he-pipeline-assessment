@@ -131,8 +131,7 @@ builder.Services.AddOptions<IdentityClientConfig>()
     configuration.GetSection("IdentityClientConfig").Bind(settings);
 });
 
-//builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
-//    .AddMicrosoftIdentityWebApi(builder.Configuration.GetSection("AzureAd"));
+
 if (!builder.Environment.IsDevelopment())
 {
     builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)

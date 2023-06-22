@@ -247,7 +247,10 @@ namespace Elsa.CustomWorkflow.Sdk.HttpClients
 
                 var accessToken = accessTokenRequest.Token;
 
-                _logger.LogError("Access Token: ", (String)accessToken);
+                if (String.IsNullOrEmpty(accessToken))
+                {
+                    _logger.LogError("Failed to get Access Token, Access Token is empty");
+                }
 
                 return accessToken;
             }

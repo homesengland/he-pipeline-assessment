@@ -112,7 +112,10 @@ namespace Elsa.Dashboard
 
         var accessToken = accessTokenRequest.Token;
 
-        _logger.LogError((String)accessToken);
+        if (String.IsNullOrEmpty(accessToken))
+        {
+          _logger.LogError("Failed to get Access Token, Access Token is empty");
+        }
 
         return accessToken;
       }
