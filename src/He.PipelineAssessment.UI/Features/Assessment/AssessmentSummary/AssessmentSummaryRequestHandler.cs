@@ -48,6 +48,13 @@ namespace He.PipelineAssessment.UI.Features.Assessment.AssessmentSummary
                             var startableList = AssessmentSummaryStage(startableWorkflowForCurrentTool,assessmentTool.Name,assessmentTool.Order).ToList();
                             stages.AddRange(startableList);
 
+                            if (workflowInstances.Any() &&
+                                workflowInstances.Count(x => x.Status ==AssessmentToolWorkflowInstanceConstants.Deleted) == workflowInstances.Count() &&
+                                !startableList.Any(x=>x.Name == assessmentTool.Name && x.Order==assessmentTool.Order))
+                            {
+                                stages.Add(AssessmentSummaryStage(assessmentTool.Name, assessmentTool.Order));
+                            }
+
                             if (!workflowInstances.Any() && !startableList.Any())
                             {
                                 stages.Add(AssessmentSummaryStage(assessmentTool.Name, assessmentTool.Order));
