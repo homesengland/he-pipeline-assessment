@@ -16,7 +16,7 @@ namespace Elsa.CustomInfrastructure.Extensions
     private static HttpRequestMessage SetAbsoluteUri(this HttpRequestMessage newRequestMsg, HttpRequest oldRequest, string elsaServer)
     {
       var relativeUri = oldRequest.Path.Value!.Replace("/ElsaServer", "");
-      var uriString = $"{elsaServer}{relativeUri}";
+      var uriString = $"{elsaServer}{relativeUri}{oldRequest.QueryString}";
       newRequestMsg.RequestUri = new Uri(uriString);
       return newRequestMsg;
     }
