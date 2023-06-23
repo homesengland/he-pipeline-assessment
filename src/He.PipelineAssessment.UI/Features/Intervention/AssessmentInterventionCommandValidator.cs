@@ -14,7 +14,7 @@ namespace He.PipelineAssessment.UI.Features.Intervention
         {
 
             RuleFor(c => c.SignOffDocument).NotEmpty().WithMessage("The {PropertyName} cannot be empty")
-                .When(x => x.GetType() == typeof(CreateOverrideCommand) || x.GetType() == typeof(EditOverrideCommand) ||  x.GetType() == typeof(EditRollbackCommand) || x.GetType() == typeof(AssessmentInterventionCommand));
+                .When(x => x.GetType() == typeof(CreateOverrideCommand) || x.GetType() == typeof(EditOverrideCommand) || x.GetType() == typeof(AssessmentInterventionCommand));
 
             RuleFor(c => c.AdministratorRationale).NotEmpty().WithMessage("The {PropertyName} cannot be empty")
                 .When(x => x.GetType() == typeof(CreateOverrideCommand) || x.GetType() == typeof(EditOverrideCommand) || x.GetType() == typeof(EditRollbackCommand) || x.GetType() == typeof(AssessmentInterventionCommand));

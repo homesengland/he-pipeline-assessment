@@ -29,22 +29,26 @@
                 Assessment Summary
             </a>
         </li>
+        <li class="govuk-tabs__list-item govuk-tabs__list-item--selected">
+            <a class="govuk-tabs__tab" href="#history">
+                Assessment History
+            </a>
+        </li>
         <li class="govuk-tabs__list-item">
-            <a class="govuk-tabs__tab" href="#interventions">
-                Interventions
+            <a class="govuk-tabs__tab" href="#requests">
+                Requests
             </a>
         </li>
     </ul>
     <div class="govuk-tabs__panel" id="summary">
         @await Html.PartialAsync("_SummaryList",Model)
     </div>
-    <div class="govuk-tabs__panel govuk-tabs__panel--hidden" id="interventions">
+    <div class="govuk-tabs__panel" id="history">
+        @await Html.PartialAsync("_SummaryList",Model)
+    </div>
+    <div class="govuk-tabs__panel govuk-tabs__panel--hidden" id="requests">
         @await Html.PartialAsync("_InterventionList",Model)
     </div>
 </div>
-
-
-
-
 
 <script nonce="@nonceConfig.SiteSetup" src="~/js/site.js"></script>

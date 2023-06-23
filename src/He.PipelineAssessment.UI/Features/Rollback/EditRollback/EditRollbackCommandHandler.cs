@@ -31,7 +31,6 @@ namespace He.PipelineAssessment.UI.Features.Rollback.EditRollback
                 throw new UnauthorizedAccessException($"You do not have permission to access this resource.");
             }
 
-            assessmentIntervention.SignOffDocument = command.SignOffDocument;
             assessmentIntervention.AdministratorRationale = command.AdministratorRationale;
             assessmentIntervention.TargetAssessmentToolWorkflowId = command.TargetWorkflowId;
             assessmentIntervention.Administrator = command.Administrator;
