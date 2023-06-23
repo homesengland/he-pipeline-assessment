@@ -39,7 +39,7 @@ namespace He.PipelineAssessment.UI.Features.Rollback.SubmitRollback
 
                 foreach (var workflowInstance in workflowsToDelete)
                 {
-                    workflowInstance.Status = AssessmentToolWorkflowInstanceConstants.Deleted;
+                    workflowInstance.Status = AssessmentToolWorkflowInstanceConstants.SuspendedRollBack;
                 }
 
                 await _assessmentRepository.SaveChanges();

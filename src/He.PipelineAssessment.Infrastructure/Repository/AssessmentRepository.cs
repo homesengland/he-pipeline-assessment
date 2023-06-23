@@ -79,7 +79,7 @@ namespace He.PipelineAssessment.Infrastructure.Repository
         public async Task<IEnumerable<AssessmentToolWorkflowInstance>> GetAssessmentToolWorkflowInstances(int assessmentId)
         {
             return await context.Set<AssessmentToolWorkflowInstance>().Where(x =>
-                    x.AssessmentId == assessmentId && x.Status != AssessmentToolWorkflowInstanceConstants.Deleted)
+                    x.AssessmentId == assessmentId && x.Status != AssessmentToolWorkflowInstanceConstants.SuspendedRollBack)
                 .ToListAsync();
         }
 
@@ -163,7 +163,7 @@ namespace He.PipelineAssessment.Infrastructure.Repository
                     .Where(x => x.CreatedDateTime > workflow.CreatedDateTime 
                     && x.Assessment.SpId == workflow.Assessment.SpId
                     && x.Assessment.Id == workflow.Assessment.Id
-                    && x.Status != AssessmentToolWorkflowInstanceConstants.Deleted).ToListAsync();
+                    && x.Status != AssessmentToolWorkflowInstanceConstants.SuspendedRollBack).ToListAsync();
             }
             return workflowsToRemove;
         }
@@ -174,7 +174,7 @@ namespace He.PipelineAssessment.Infrastructure.Repository
             List<AssessmentToolWorkflowInstance> workflowsToRemove = await context.Set<AssessmentToolWorkflowInstance>()
                 .Where(x =>
                             x.Assessment.Id == assessmentId
-                            && x.Status != AssessmentToolWorkflowInstanceConstants.Deleted
+                            && x.Status != AssessmentToolWorkflowInstanceConstants.SuspendedRollBack
                             && x.AssessmentToolWorkflow.AssessmentTool.Order >= assessmentToolOrder).ToListAsync();
 
             return workflowsToRemove;
