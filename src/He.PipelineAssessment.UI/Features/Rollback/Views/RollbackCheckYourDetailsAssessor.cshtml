@@ -58,6 +58,20 @@
                                 </div>
                                 <div class="govuk-summary-list__row">
                                     <dt class="govuk-summary-list__key">
+                                        Request Reason
+                                    </dt>
+                                    <dd class="govuk-summary-list__value">
+                                        <p>@Model.InterventionReasonName</p>
+                                    </dd>
+                                    <dd class="govuk-summary-list__actions">
+                                        @if (isEditable)
+                                        {
+                                            @Html.ActionLink("Change", "EditRollbackAssessor", "Rollback", new { InterventionId = Model.AssessmentInterventionId }, new { @class = "govuk-link" })
+                                        }
+                                    </dd>
+                                </div>
+                                <div class="govuk-summary-list__row">
+                                    <dt class="govuk-summary-list__key">
                                         Rationale
                                     </dt>
                                     <dd class="govuk-summary-list__value">

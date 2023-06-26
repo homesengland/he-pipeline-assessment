@@ -1,4 +1,5 @@
 ﻿using FluentValidation.Results;
+using He.PipelineAssessment.Models;
 
 namespace He.PipelineAssessment.UI.Features.Intervention
 {
@@ -7,6 +8,7 @@ namespace He.PipelineAssessment.UI.Features.Intervention
         public AssessmentInterventionCommand AssessmentInterventionCommand { get; set; } = new();
         public ValidationResult? ValidationResult { get; set; }
         public List<TargetWorkflowDefinition>? TargetWorkflowDefinitions { get; set; }
+        public List<InterventionReason>? InterventionReasons { get; set; }
     }
 
 

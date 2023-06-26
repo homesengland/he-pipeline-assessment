@@ -32,6 +32,7 @@ namespace He.PipelineAssessment.Infrastructure.Repository
 
         AssessmentToolWorkflow? GetAssessmentToolWorkflowByDefinitionId(string workflowDefinitionId);
         Task<int> DeleteIntervention(AssessmentIntervention intervention);
+        Task<List<InterventionReason>> GetInterventionReasons();
     }
 
     public class AssessmentRepository : IAssessmentRepository
@@ -134,10 +135,20 @@ namespace He.PipelineAssessment.Infrastructure.Repository
             return await SaveChanges();
         }
 
+        public async Task<List<InterventionReason>> GetInterventionReasons()
+        {
+            var list = await context.Set<InterventionReason>().Where(x => x.Status != InterventionReasonStatus.Deleted)
+                .OrderBy(x => x.Order)
+                .ToListAsync();
+
+            return list;
+        }
+
         public async Task<AssessmentIntervention?> GetAssessmentIntervention(int interventionId)
         {
             return await context.Set<AssessmentIntervention>()
                 .Include(x => x.AssessmentToolWorkflowInstance.Assessment)
+                .Include(x=>x.InterventionReason)
                 .Include(x => x.AssessmentToolWorkflowInstance.AssessmentToolWorkflow.AssessmentTool)
                 .Include(x => x.TargetAssessmentToolWorkflow)
                 .ThenInclude(x=>x!.AssessmentTool)

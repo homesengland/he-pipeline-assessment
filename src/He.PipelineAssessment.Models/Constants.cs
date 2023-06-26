@@ -26,4 +26,9 @@
     {
         public const string Deleted = "Deleted";
     }
+
+    public class InterventionReasonStatus
+    {
+        public const string Deleted = "Deleted";
+    }
 }

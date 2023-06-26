@@ -29,6 +29,7 @@
     <None Remove="Migrations\20230613124443_IncludeWorkflowToolIdOnStartableSP\GetStartableToolsByAssessmentId.sql" />
     <None Remove="Migrations\20230623142447_RollbackPHase2SPChanges\GetAssessmentHistoryByAssessmentId.sql" />
     <None Remove="Migrations\20230623142447_RollbackPHase2SPChanges\GetAssessmentStagesByAssessmentId.sql" />
+    <None Remove="Migrations\20230626101426_InterventionReasonPopulate\PopulateInterventionReason.sql" />
   </ItemGroup>
 
   <ItemGroup>
@@ -54,6 +55,7 @@
     <EmbeddedResource Include="Migrations\20230613090638_GetAssessmentsUpdateDeleted\GetAssessments.sql" />
     <EmbeddedResource Include="Migrations\20230623142447_RollbackPHase2SPChanges\GetAssessmentHistoryByAssessmentId.sql" />
     <EmbeddedResource Include="Migrations\20230623142447_RollbackPHase2SPChanges\GetAssessmentStagesByAssessmentId.sql" />
+    <EmbeddedResource Include="Migrations\20230626101426_InterventionReasonPopulate\PopulateInterventionReason.sql" />
   </ItemGroup>
 
   <ItemGroup>

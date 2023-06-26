@@ -30,9 +30,12 @@ namespace He.PipelineAssessment.UI.Features.Rollback.EditRollbackAssessor
             }
             AssessmentInterventionCommand command = _mapper.AssessmentInterventionCommandFromAssessmentIntervention(intervention);
 
+            var interventionReasons = await _repository.GetInterventionReasons();
+
             var dto = new AssessmentInterventionDto
             {
-                AssessmentInterventionCommand = command
+                AssessmentInterventionCommand = command,
+                InterventionReasons = interventionReasons
             };
             return dto;
         }

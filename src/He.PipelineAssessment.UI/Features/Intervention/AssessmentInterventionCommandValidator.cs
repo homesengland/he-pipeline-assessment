@@ -23,8 +23,11 @@ namespace He.PipelineAssessment.UI.Features.Intervention
                 .When(x => x.GetType() == typeof(CreateOverrideCommand) || x.GetType() == typeof(EditOverrideCommand) || x.GetType() == typeof(EditRollbackCommand) || x.GetType() == typeof(AssessmentInterventionCommand));
 
             RuleFor(c => c.AssessorRationale).NotEmpty().WithMessage("The {PropertyName} cannot be empty")
-                .When(x => x.GetType() == typeof(CreateRollbackCommand) || x.GetType() == typeof(EditRollbackAssessorCommand) || x.GetType() == typeof(EditRollbackAssessorCommand) || x.GetType() == typeof(AssessmentInterventionCommand));
-            
+                .When(x => x.GetType() == typeof(CreateRollbackCommand) || x.GetType() == typeof(EditRollbackAssessorCommand) || x.GetType() == typeof(AssessmentInterventionCommand));
+
+            RuleFor(c => c.InterventionReasonId).NotEmpty().WithMessage("The request reason cannot be empty")
+                .When(x => x.GetType() == typeof(CreateRollbackCommand) || x.GetType() == typeof(EditRollbackAssessorCommand) || x.GetType() == typeof(AssessmentInterventionCommand));
+
         }
     }
 }
