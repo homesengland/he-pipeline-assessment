@@ -9,6 +9,7 @@ namespace He.PipelineAssessment.Infrastructure.Config
         public void Configure(EntityTypeBuilder<AssessmentToolWorkflowInstance> builder)
         {
             builder.ToTable(x => x.IsTemporal());
+            
             builder.HasKey(x => x.Id);
 
             builder.Property(x => x.WorkflowDefinitionId)

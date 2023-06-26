@@ -4,6 +4,7 @@ using He.PipelineAssessment.Infrastructure.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,10 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace He.PipelineAssessment.Infrastructure.Migrations
 {
     [DbContext(typeof(PipelineAssessmentContext))]
-    partial class PipelineAssessmentContextModelSnapshot : ModelSnapshot
+    [Migration("20230623142447_RollbackPHase2SPChanges")]
+    partial class RollbackPHase2SPChanges
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -164,9 +166,6 @@ namespace He.PipelineAssessment.Infrastructure.Migrations
                         .HasMaxLength(50)
                         .HasColumnType("nvarchar(50)");
 
-                    b.Property<int?>("InterventionReasonId")
-                        .HasColumnType("int");
-
                     b.Property<string>("LastModifiedBy")
                         .HasColumnType("nvarchar(max)");
 
@@ -207,8 +206,6 @@ namespace He.PipelineAssessment.Infrastructure.Migrations
                     b.HasKey("Id");
 
                     b.HasIndex("AssessmentToolWorkflowInstanceId");
-
-                    b.HasIndex("InterventionReasonId");
 
                     b.HasIndex("TargetAssessmentToolWorkflowId");
 
@@ -532,67 +529,6 @@ namespace He.PipelineAssessment.Infrastructure.Migrations
                     ));
                 });
 
-            modelBuilder.Entity("He.PipelineAssessment.Models.InterventionReason", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
-
-                    b.Property<string>("CreatedBy")
-                        .IsRequired()
-                        .HasMaxLength(500)
-                        .HasColumnType("nvarchar(500)");
-
-                    b.Property<DateTime>("CreatedDateTime")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("LastModifiedBy")
-                        .HasMaxLength(500)
-                        .HasColumnType("nvarchar(500)");
-
-                    b.Property<DateTime?>("LastModifiedDateTime")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasMaxLength(100)
-                        .HasColumnType("nvarchar(100)");
-
-                    b.Property<int>("Order")
-                        .HasColumnType("int");
-
-                    b.Property<DateTime>("PeriodEnd")
-                        .ValueGeneratedOnAddOrUpdate()
-                        .HasColumnType("datetime2")
-                        .HasColumnName("PeriodEnd");
-
-                    b.Property<DateTime>("PeriodStart")
-                        .ValueGeneratedOnAddOrUpdate()
-                        .HasColumnType("datetime2")
-                        .HasColumnName("PeriodStart");
-
-                    b.Property<string>("Status")
-                        .HasMaxLength(50)
-                        .HasColumnType("nvarchar(50)");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("InterventionReason");
-
-                    b.ToTable(tb => tb.IsTemporal(ttb =>
-                        {
-                            ttb
-                                .HasPeriodStart("PeriodStart")
-                                .HasColumnName("PeriodStart");
-                            ttb
-                                .HasPeriodEnd("PeriodEnd")
-                                .HasColumnName("PeriodEnd");
-                        }
-                    ));
-                });
-
             modelBuilder.Entity("Microsoft.AspNetCore.DataProtection.EntityFrameworkCore.DataProtectionKey", b =>
                 {
                     b.Property<int>("Id")
@@ -620,17 +556,11 @@ namespace He.PipelineAssessment.Infrastructure.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("He.PipelineAssessment.Models.InterventionReason", "InterventionReason")
-                        .WithMany()
-                        .HasForeignKey("InterventionReasonId");
-
                     b.HasOne("He.PipelineAssessment.Models.AssessmentToolWorkflow", "TargetAssessmentToolWorkflow")
                         .WithMany("AssessmentInterventions")
                         .HasForeignKey("TargetAssessmentToolWorkflowId");
 
                     b.Navigation("AssessmentToolWorkflowInstance");
-
-                    b.Navigation("InterventionReason");
 
                     b.Navigation("TargetAssessmentToolWorkflow");
                 });

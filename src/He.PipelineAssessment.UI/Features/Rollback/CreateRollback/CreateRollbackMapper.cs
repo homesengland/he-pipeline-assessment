@@ -39,7 +39,8 @@ namespace He.PipelineAssessment.UI.Features.Rollback.CreateRollback
                 RequestedByEmail = command.RequestedByEmail ?? "",
                 SignOffDocument = command.SignOffDocument,
                 Status = InterventionStatus.Draft,
-                AssessmentResult = command.AssessmentResult
+                AssessmentResult = command.AssessmentResult,
+                InterventionReasonId = command.InterventionReasonId
             };
         }
     }

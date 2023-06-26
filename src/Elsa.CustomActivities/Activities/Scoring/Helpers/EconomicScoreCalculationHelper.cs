@@ -44,11 +44,38 @@ namespace Elsa.CustomActivities.Activities.Scoring.Helpers
             }
         }
 
+        public async Task<string> GetEconomicCalculationAsString(string correlationId, string name)
+        {
+            try
+            {
+                string result = string.Empty;
+
+                var workflowInstances = await _elsaCustomRepository.GetQuestionWorkflowInstancesByName(correlationId, name, CancellationToken.None);
+
+                if (workflowInstances.Any())
+                {
+                    var latestCalculation = workflowInstances.OrderByDescending(x => x.CreatedDateTime).First();
+                    if (latestCalculation.Score != null)
+                    {
+                        result = latestCalculation.Score;
+                    }
+                }
+                return result;
+            }
+            catch (Exception e)
+            {
+                _logger.LogError(
+                    $"Error whilst retrieving Economic Calculation: '{name}' for Correlation Id {correlationId}", e);
+                throw (new Exception(e.Message, e.InnerException));
+            }
+        }
+
         public Task Handle(EvaluatingJavaScriptExpression notification, CancellationToken cancellationToken)
         {
             var activityExecutionContext = notification.ActivityExecutionContext;
             var engine = notification.Engine;
             engine.SetValue("getEconomicCalculation", (Func<string, double>)((name) => GetEconomicCalculation(activityExecutionContext.CorrelationId, name).Result));
+            engine.SetValue("getEconomicCalculationAsString", (Func<string, string>)((name) => GetEconomicCalculationAsString(activityExecutionContext.CorrelationId, name).Result));
             return Task.CompletedTask;
         }
 
@@ -56,6 +83,7 @@ namespace Elsa.CustomActivities.Activities.Scoring.Helpers
         {
             var output = notification.Output;
             output.AppendLine("declare function getEconomicCalculation(name:string): number;");
+            output.AppendLine("declare function getEconomicCalculationAsString(name:string): string;");
             return Task.CompletedTask;
         }
     }

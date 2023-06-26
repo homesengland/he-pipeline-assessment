@@ -65,20 +65,6 @@
                                 </div>
                                 <div class="govuk-summary-list__row">
                                     <dt class="govuk-summary-list__key">
-                                        Sign off document
-                                    </dt>
-                                    <dd class="govuk-summary-list__value">
-                                        <a class="govuk-link" href="@Model.SignOffDocument">@Model.SignOffDocument</a>
-                                    </dd>
-                                    <dd class="govuk-summary-list__actions">
-                                        @if (isEditable)
-                                        {
-                                            @Html.ActionLink("Change", "EditRollback", "Rollback", new { InterventionId = Model.AssessmentInterventionId }, new { @class = "govuk-link" })
-                                        }
-                                    </dd>
-                                </div>
-                                <div class="govuk-summary-list__row">
-                                    <dt class="govuk-summary-list__key">
                                         Rationale
                                     </dt>
                                     <dd class="govuk-summary-list__value">

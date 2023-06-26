@@ -37,6 +37,7 @@ namespace He.PipelineAssessment.UI.Tests.Features.Assessment.AssessmentSummary
             [Frozen] Mock<IStoredProcedureRepository> storeProcRepository,
             Models.Assessment assessment,
             AssessmentSummaryRequest request,
+            List<AssessmentStageViewModel> historyStages,
             AssessmentSummaryRequestHandler sut
         )
         {
@@ -46,6 +47,7 @@ namespace He.PipelineAssessment.UI.Tests.Features.Assessment.AssessmentSummary
             assessmentRepository.Setup(x => x.GetAssessment(It.IsAny<int>())).ReturnsAsync(assessment);
             storeProcRepository.Setup(x => x.GetAssessmentStages(It.IsAny<int>())).ReturnsAsync(emptyList);
             storeProcRepository.Setup(x => x.GetAssessmentInterventionList(It.IsAny<int>())).ReturnsAsync(new List<AssessmentInterventionViewModel>());
+            storeProcRepository.Setup(x => x.GetAssessmentHistory(request.AssessmentId)).ReturnsAsync(historyStages);
 
             //Act
             var result = await sut.Handle(request, CancellationToken.None);
@@ -68,6 +70,7 @@ namespace He.PipelineAssessment.UI.Tests.Features.Assessment.AssessmentSummary
              [Frozen] Mock<IStoredProcedureRepository> storeProcRepository,
             Models.Assessment assessment,
             List<AssessmentStageViewModel> stages,
+            List<AssessmentStageViewModel> historyStages,
             AssessmentSummaryRequest request,
             List<StartableToolViewModel> startableToolViewModels,
             AssessmentSummaryRequestHandler sut
@@ -78,6 +81,7 @@ namespace He.PipelineAssessment.UI.Tests.Features.Assessment.AssessmentSummary
             storeProcRepository.Setup(x => x.GetStartableTools(request.AssessmentId)).ReturnsAsync(startableToolViewModels);
             storeProcRepository.Setup(x => x.GetAssessmentStages(It.IsAny<int>())).ReturnsAsync(stages);
             storeProcRepository.Setup(x => x.GetAssessmentInterventionList(It.IsAny<int>())).ReturnsAsync(new List<AssessmentInterventionViewModel>());
+            storeProcRepository.Setup(x => x.GetAssessmentHistory(request.AssessmentId)).ReturnsAsync(historyStages);
 
             //Act
             var result = await sut.Handle(request, CancellationToken.None);
@@ -100,6 +104,7 @@ namespace He.PipelineAssessment.UI.Tests.Features.Assessment.AssessmentSummary
             [Frozen] Mock<IStoredProcedureRepository> storeProcRepository,
             Models.Assessment assessment,
             AssessmentStageViewModel stage,
+            List<AssessmentStageViewModel> historyStages,
             AssessmentSummaryRequest request,
             string workflowDefinitionId,
             List<StartableToolViewModel> startableToolViewModels,
@@ -124,6 +129,7 @@ namespace He.PipelineAssessment.UI.Tests.Features.Assessment.AssessmentSummary
             assessmentRepository.Setup(x => x.GetAssessment(request.AssessmentId)).ReturnsAsync(assessment);
             storeProcRepository.Setup(x => x.GetAssessmentStages(request.AssessmentId)).ReturnsAsync(stages);
             storeProcRepository.Setup(x => x.GetStartableTools(request.AssessmentId)).ReturnsAsync(startableToolViewModels);
+            storeProcRepository.Setup(x => x.GetAssessmentHistory(request.AssessmentId)).ReturnsAsync(historyStages);
             storeProcRepository.Setup(x => x.GetAssessmentInterventionList(It.IsAny<int>())).ReturnsAsync(new List<AssessmentInterventionViewModel>());
 
 
@@ -148,6 +154,7 @@ namespace He.PipelineAssessment.UI.Tests.Features.Assessment.AssessmentSummary
         Models.Assessment assessment,
         List<AssessmentStageViewModel> stages,
         List<StartableToolViewModel> startableTools,
+        List<AssessmentStageViewModel> historyStages,
         AssessmentSummaryRequest request,
         AssessmentSummaryRequestHandler sut
     )
@@ -157,6 +164,7 @@ namespace He.PipelineAssessment.UI.Tests.Features.Assessment.AssessmentSummary
             storeProcRepository.Setup(x => x.GetAssessmentStages(It.IsAny<int>())).ReturnsAsync(stages);
             storeProcRepository.Setup(x => x.GetStartableTools(It.IsAny<int>())).ReturnsAsync(startableTools);
             storeProcRepository.Setup(x => x.GetAssessmentInterventionList(It.IsAny<int>())).ReturnsAsync(new List<AssessmentInterventionViewModel>());
+            storeProcRepository.Setup(x => x.GetAssessmentHistory(request.AssessmentId)).ReturnsAsync(historyStages);
 
             //Act
             var result = await sut.Handle(request, CancellationToken.None);
@@ -176,6 +184,7 @@ namespace He.PipelineAssessment.UI.Tests.Features.Assessment.AssessmentSummary
             List<AssessmentStageViewModel> stages,
             List<StartableToolViewModel> startableTools,
             List<AssessmentInterventionViewModel> interventions,
+            List<AssessmentStageViewModel> historyStages,
             AssessmentSummaryRequest request,
             AssessmentSummaryRequestHandler sut
 )
@@ -185,6 +194,7 @@ namespace He.PipelineAssessment.UI.Tests.Features.Assessment.AssessmentSummary
             storeProcRepository.Setup(x => x.GetAssessmentStages(It.IsAny<int>())).ReturnsAsync(stages);
             storeProcRepository.Setup(x => x.GetStartableTools(It.IsAny<int>())).ReturnsAsync(startableTools);
             storeProcRepository.Setup(x => x.GetAssessmentInterventionList(It.IsAny<int>())).ReturnsAsync(interventions);
+            storeProcRepository.Setup(x => x.GetAssessmentHistory(request.AssessmentId)).ReturnsAsync(historyStages);
 
             //Act
             var result = await sut.Handle(request, CancellationToken.None);

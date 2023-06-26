@@ -1,0 +1,84 @@
+﻿@using He.PipelineAssessment.UI.Authorization
+@using Microsoft.AspNetCore.Authorization
+@inject IAuthorizationService AuthorizationService
+@model He.PipelineAssessment.UI.Features.Assessment.AssessmentSummary.AssessmentSummaryResponse;
+
+<table class="govuk-table">
+    <caption class="govuk-table__caption govuk-table__caption--m">Assessment History</caption>
+    <thead class="govuk-table__head">
+        <tr class="govuk-table__row">
+            <th scope="col" class="govuk-table__header">Stage</th>
+            <th scope="col" class="govuk-table__header">Status</th>
+            <th scope="col" class="govuk-table__header">Date Started</th>
+            <th scope="col" class="govuk-table__header">Date Submitted</th>
+            <th scope="col" class="govuk-table__header">Submitted By</th>
+            <th scope="col" class="govuk-table__header">Result</th>
+        </tr>
+    </thead>
+    <tbody class="govuk-table__body">
+        @foreach (var assessmentStage in Model.StagesHistory)
+        {
+            <tr class="govuk-table__row">
+                <td class="govuk-table__cell">
+                    @if (assessmentStage.AssessmentToolWorkflowInstanceId != null)
+                    {
+                        @if ((await AuthorizationService.AuthorizeAsync(User, Constants.AuthorizationPolicies.AssignmentToWorkflowExecuteRoleRequired)).Succeeded)
+                        {
+
+                            @Html.ActionLink(assessmentStage.Name, "LoadWorkflowActivity", "Workflow", new { WorkflowInstanceId = assessmentStage.WorkflowInstanceId, ActivityId = assessmentStage.CurrentActivityId, ActivityType = assessmentStage.CurrentActivityType })
+
+                        }
+                        else
+                        {
+                            @Html.ActionLink(assessmentStage.Name, "LoadReadOnlyWorkflowActivity", "Workflow", new { WorkflowInstanceId = assessmentStage.WorkflowInstanceId, ActivityId = assessmentStage.CurrentActivityId, ActivityType = assessmentStage.CurrentActivityType })
+
+                        }
+                    }
+                    else
+                    {
+                        @assessmentStage.Name
+                    }
+                </td>
+
+                <td class="govuk-table__cell">
+                    <strong class="govuk-tag govuk-tag--@assessmentStage.StatusDisplayTag()">
+                        @if (string.IsNullOrEmpty(assessmentStage.Status))
+                        {
+                            if (string.IsNullOrEmpty(assessmentStage.WorkflowDefinitionId))
+                            {
+                                @:Cannot Start
+                            }
+                            else
+                            {
+                                @:Start Stage
+                            }
+                        }
+                        else
+                        {
+                            @assessmentStage.Status
+                        }
+                    </strong>
+                </td>
+
+                <td class="govuk-table__cell">
+                    @if (@assessmentStage.CreatedDateTime.HasValue)
+                    {
+                        @assessmentStage.CreatedDateTime.Value.Date.ToLongDateString()
+                    }
+                </td>
+                <td class="govuk-table__cell">
+                    @if (@assessmentStage.SubmittedDateTime.HasValue)
+                    {
+                        @assessmentStage.SubmittedDateTime.Value.Date.ToLongDateString()
+                    }
+                </td>
+                <td class="govuk-table__cell">
+                    @assessmentStage.SubmittedBy
+                </td>
+                <td class="govuk-table__cell">
+                    @assessmentStage.Result
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

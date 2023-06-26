@@ -23,5 +23,8 @@
         public int? TargetWorkflowId { get; set; }
         public string? TargetWorkflowDefinitionId { get; set; }
         public string? TargetWorkflowDefinitionName { get; set; }
+
+        public int? InterventionReasonId { get; set; }
+        public string? InterventionReasonName { get; set; }
     }
 }

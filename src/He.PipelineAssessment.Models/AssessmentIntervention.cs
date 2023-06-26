@@ -20,5 +20,8 @@
 
         public virtual AssessmentToolWorkflowInstance AssessmentToolWorkflowInstance { get; set; } = null!;
         public string? AssessmentResult { get; set; }
+
+        public virtual InterventionReason? InterventionReason { get; set; }
+        public int? InterventionReasonId { get; set; }
     }
 }

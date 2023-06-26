@@ -38,7 +38,7 @@ namespace He.PipelineAssessment.UI.Features.Override.SubmitOverride
 
                 foreach (var workflowInstance in workflowsToDelete)
                 {
-                    workflowInstance.Status = AssessmentToolWorkflowInstanceConstants.Deleted;
+                    workflowInstance.Status = AssessmentToolWorkflowInstanceConstants.SuspendedRollBack;
                 }
 
                 await _assessmentRepository.SaveChanges();

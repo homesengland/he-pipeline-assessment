@@ -19,11 +19,12 @@ namespace He.PipelineAssessment.UI.Features.Rollback.CreateRollback
         private readonly ILogger<CreateRollbackRequestHandler> _logger;
         private readonly IAssessmentToolWorkflowInstanceHelpers _assessmentToolWorkflowInstanceHelpers;
         private readonly IRoleValidation _roleValidation;
+        private readonly IAssessmentRepository _repository;
 
         public CreateRollbackRequestHandler(IAssessmentRepository assessmentRepository,
             IUserProvider userProvider,
             IAssessmentInterventionMapper mapper,
-            ILogger<CreateRollbackRequestHandler> logger, IAssessmentToolWorkflowInstanceHelpers assessmentToolWorkflowInstanceHelpers, IRoleValidation roleValidation)
+            ILogger<CreateRollbackRequestHandler> logger, IAssessmentToolWorkflowInstanceHelpers assessmentToolWorkflowInstanceHelpers, IRoleValidation roleValidation, IAssessmentRepository repository)
         {
             _assessmentRepository = assessmentRepository;
             _userProvider = userProvider;
@@ -31,6 +32,7 @@ namespace He.PipelineAssessment.UI.Features.Rollback.CreateRollback
             _logger = logger;
             _assessmentToolWorkflowInstanceHelpers = assessmentToolWorkflowInstanceHelpers;
             _roleValidation = roleValidation;
+            _repository = repository;
         }
 
         public async Task<AssessmentInterventionDto> Handle(CreateRollbackRequest request, CancellationToken cancellationToken)
@@ -65,7 +67,9 @@ namespace He.PipelineAssessment.UI.Features.Rollback.CreateRollback
                 Status = InterventionStatus.Draft
             };
 
-            var dto = _mapper.AssessmentInterventionDtoFromWorkflowInstance(workflowInstance, dtoConfig);
+            var interventionReasons = await _repository.GetInterventionReasons();
+
+            var dto = _mapper.AssessmentInterventionDtoFromWorkflowInstance(workflowInstance, interventionReasons, dtoConfig);
 
             return dto;
         }

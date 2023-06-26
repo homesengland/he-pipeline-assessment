@@ -10,7 +10,9 @@ namespace He.PipelineAssessment.UI.Features.Intervention
         List<TargetWorkflowDefinition> TargetWorkflowDefinitionsFromAssessmentToolWorkflows(
             List<AssessmentToolWorkflow> assessmentToolWorkflows);
 
-        AssessmentInterventionDto AssessmentInterventionDtoFromWorkflowInstance(AssessmentToolWorkflowInstance instance,
+        AssessmentInterventionDto AssessmentInterventionDtoFromWorkflowInstance(AssessmentToolWorkflowInstance instance, 
+            DtoConfig dtoConfig);
+        AssessmentInterventionDto AssessmentInterventionDtoFromWorkflowInstance(AssessmentToolWorkflowInstance instance,List<InterventionReason> reasons,
             DtoConfig dtoConfig);
     }
 
@@ -80,7 +82,9 @@ namespace He.PipelineAssessment.UI.Features.Intervention
                     TargetWorkflowDefinitionId = intervention.TargetAssessmentToolWorkflow?.WorkflowDefinitionId,
                     TargetWorkflowDefinitionName = $"{intervention.TargetAssessmentToolWorkflow?.AssessmentTool.Name} - {intervention.TargetAssessmentToolWorkflow?.Name}",
                     CorrelationId = intervention.AssessmentToolWorkflowInstance.Assessment.SpId,
-                    AssessmentId = intervention.AssessmentToolWorkflowInstance.AssessmentId
+                    AssessmentId = intervention.AssessmentToolWorkflowInstance.AssessmentId,
+                    InterventionReasonId = intervention.InterventionReasonId,
+                    InterventionReasonName = intervention.InterventionReason?.Name,
                 };
 
                 return command;
@@ -115,6 +119,43 @@ namespace He.PipelineAssessment.UI.Features.Intervention
         public AssessmentInterventionDto AssessmentInterventionDtoFromWorkflowInstance(AssessmentToolWorkflowInstance instance,
             DtoConfig dtoConfig)
         {
+            {
+                try
+                {
+                    AssessmentInterventionDto dto = new AssessmentInterventionDto()
+                    {
+                        AssessmentInterventionCommand = new AssessmentInterventionCommand()
+                        {
+                            AssessmentToolWorkflowInstanceId = instance.Id,
+                            WorkflowInstanceId = instance.WorkflowInstanceId,
+                            AssessmentResult = instance.Result,
+                            AssessmentName = instance.WorkflowName,
+                            RequestedBy = dtoConfig.UserName,
+                            RequestedByEmail = dtoConfig.UserEmail,
+                            Administrator = dtoConfig.AdministratorName,
+                            AdministratorEmail = dtoConfig.AdministratorEmail,
+                            Status = dtoConfig.Status,
+                            ProjectReference = instance.Assessment.Reference,
+                            DecisionType = dtoConfig.DecisionType,
+
+                        }
+
+                    };
+                    return dto;
+                }
+                catch (Exception e)
+                {
+                    _logger.LogError(e.Message);
+
+                    throw new ArgumentException($"Unable to map AssessmentToolWorkflowInstance:  {JsonConvert.SerializeObject(instance)} to AssessmentInterventionDto");
+                }
+            }
+        }
+
+        public AssessmentInterventionDto AssessmentInterventionDtoFromWorkflowInstance(AssessmentToolWorkflowInstance instance,
+            List<InterventionReason> reasons,
+            DtoConfig dtoConfig)
+        {
             try
             {
                 AssessmentInterventionDto dto = new AssessmentInterventionDto()
@@ -132,7 +173,10 @@ namespace He.PipelineAssessment.UI.Features.Intervention
                         Status = dtoConfig.Status,
                         ProjectReference = instance.Assessment.Reference,
                         DecisionType = dtoConfig.DecisionType,
-                    }
+                        
+                    },
+                    InterventionReasons = reasons
+                    
                 };
                 return dto;
             }

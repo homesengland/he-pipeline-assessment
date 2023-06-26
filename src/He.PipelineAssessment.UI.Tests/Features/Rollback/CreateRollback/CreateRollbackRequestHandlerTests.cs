@@ -91,6 +91,7 @@ namespace He.PipelineAssessment.UI.Tests.Features.Rollback.CreateRollback
             [Frozen] Mock<IAssessmentInterventionMapper> mapper,
             AssessmentToolWorkflowInstance instance,
             CreateRollbackRequest request,
+            List<InterventionReason> reasons,
             AssessmentInterventionDto dto,
             CreateRollbackRequestHandler sut)
         {
@@ -98,13 +99,16 @@ namespace He.PipelineAssessment.UI.Tests.Features.Rollback.CreateRollback
             repository.Setup(x => x.GetAssessmentToolWorkflowInstance(request.WorkflowInstanceId))
                 .ReturnsAsync(instance);
 
+            repository.Setup(x => x.GetInterventionReasons())
+                .ReturnsAsync(reasons);
+
             roleValidation.Setup(x => x.ValidateRole(It.IsAny<int>(), It.IsAny<string>())).ReturnsAsync(true);
 
             assessmentToolWorkflowInstanceHelpers.Setup(x => x.IsLatestSubmittedWorkflow(instance)).Returns(true);
             userProvider.Setup(x => x.GetUserEmail()).Returns("");
             userProvider.Setup(x => x.GetUserName()).Returns("");
 
-            mapper.Setup(x => x.AssessmentInterventionDtoFromWorkflowInstance(instance, It.IsAny<DtoConfig>()))
+            mapper.Setup(x => x.AssessmentInterventionDtoFromWorkflowInstance(instance, reasons,It.IsAny<DtoConfig>()))
                 .Returns(dto);
 
             //Act

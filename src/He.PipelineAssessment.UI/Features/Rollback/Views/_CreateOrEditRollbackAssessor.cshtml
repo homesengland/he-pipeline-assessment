@@ -51,6 +51,19 @@
             </dd>
         </div>
     </dl>
+    
+    <div class="govuk-form-group">
+        <label class="govuk-label" for="InterventionReasonId">
+            Request reason
+        </label>
+        <div id="subject-hint" class="govuk-hint">
+            Please select a reason for the rollback request.
+        </div>
+        @Html.DropDownListFor(x =>
+            Model.AssessmentInterventionCommand.InterventionReasonId,
+            new SelectList(Model.InterventionReasons, "Id", "Name"),
+        "Choose rollback request reason", new { @class = "govuk-select "+@assessorRationaleErrorClass, id = "InterventionReasonId" })
+    </div>
 
     <div class="govuk-form-group">
         <h1 class="govuk-label-wrapper">
@@ -74,5 +87,11 @@
     @Html.HiddenFor(x => Model.AssessmentInterventionCommand.DecisionType)
     @Html.HiddenFor(x => Model.AssessmentInterventionCommand.Status)
     @Html.HiddenFor(x => Model.AssessmentInterventionCommand.ProjectReference)
+    
+    @for (int i = 0; i < Model.InterventionReasons!.Count; i++)
+    {
+        @Html.HiddenFor(model => Model.InterventionReasons[i].Id)
+        @Html.HiddenFor(model => Model.InterventionReasons[i].Name)
+    }
 
 </fieldset>
