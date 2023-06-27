@@ -22,6 +22,7 @@ namespace He.PipelineAssessment.UI.Features.Rollback.EditRollbackAssessor
                 throw new NotFoundException($"Assessment Intervention with Id {command.AssessmentInterventionId} not found");
             }
             assessmentIntervention.AssessorRationale = command.AssessorRationale;
+            assessmentIntervention.InterventionReasonId = command.InterventionReasonId;
             await _assessmentRepository.SaveChanges();
             return assessmentIntervention.Id;
         }
