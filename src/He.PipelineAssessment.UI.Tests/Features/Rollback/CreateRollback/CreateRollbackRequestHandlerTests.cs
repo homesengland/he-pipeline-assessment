@@ -81,6 +81,35 @@ namespace He.PipelineAssessment.UI.Tests.Features.Rollback.CreateRollback
             Assert.Equal($"Unable to create rollback for Assessment Tool Workflow Instance as this is not the latest submitted Workflow Instance for this Assessment.", ex.Message);
         }
 
+
+        [Theory]
+        [AutoMoqData]
+        public async Task Handle_ShouldError_GivenOpenRequestAlreadyExistsForAssessmnet(
+            [Frozen] Mock<IAssessmentRepository> repository,
+            [Frozen] Mock<IRoleValidation> roleValidation,
+            [Frozen] Mock<IAssessmentToolWorkflowInstanceHelpers> assessmentToolWorkflowInstanceHelpers,
+            AssessmentToolWorkflowInstance instance,
+            CreateRollbackRequest request,
+            CreateRollbackRequestHandler sut,
+            List<AssessmentIntervention> assessmentInterventions)
+        {
+            //Arrange
+            repository.Setup(x => x.GetAssessmentToolWorkflowInstance(request.WorkflowInstanceId))
+                .ReturnsAsync(instance);
+            repository.Setup(x => x.GetOpenAssessmentInterventions(instance.AssessmentId))
+            .ReturnsAsync(assessmentInterventions);
+
+            roleValidation.Setup(x => x.ValidateRole(It.IsAny<int>(), It.IsAny<string>())).ReturnsAsync(true);
+
+            assessmentToolWorkflowInstanceHelpers.Setup(x => x.IsLatestSubmittedWorkflow(instance)).Returns(true);
+
+            //Act
+            var ex = await Assert.ThrowsAsync<Exception>(() => sut.Handle(request, CancellationToken.None));
+
+            //Assert
+            Assert.Equal($"Unable to create request as an open request already exists for this assessment.", ex.Message);
+        }
+
         [Theory]
         [AutoMoqData]
         public async Task Handle_ShouldReturnAssessmentInterventionDto(
@@ -98,7 +127,7 @@ namespace He.PipelineAssessment.UI.Tests.Features.Rollback.CreateRollback
             //Arrange
             repository.Setup(x => x.GetAssessmentToolWorkflowInstance(request.WorkflowInstanceId))
                 .ReturnsAsync(instance);
-
+            repository.Setup(x => x.GetOpenAssessmentInterventions(instance.AssessmentId)).ReturnsAsync(new List<AssessmentIntervention>());
             repository.Setup(x => x.GetInterventionReasons())
                 .ReturnsAsync(reasons);
 
@@ -119,5 +148,7 @@ namespace He.PipelineAssessment.UI.Tests.Features.Rollback.CreateRollback
             Assert.IsType<AssessmentInterventionDto>(result);
 
         }
+
+
     }
 }

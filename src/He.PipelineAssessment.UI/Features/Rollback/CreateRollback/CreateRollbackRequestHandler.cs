@@ -56,6 +56,13 @@ namespace He.PipelineAssessment.UI.Features.Rollback.CreateRollback
                     $"Unable to create rollback for Assessment Tool Workflow Instance as this is not the latest submitted Workflow Instance for this Assessment.");
             }
 
+            var activeInterventionsForAssessment = await _assessmentRepository.GetOpenAssessmentInterventions(workflowInstance.AssessmentId);
+            if (activeInterventionsForAssessment.Any())
+            {
+                throw new Exception(
+                    $"Unable to create request as an open request already exists for this assessment.");
+            }
+
             var userName = _userProvider.GetUserName()!;
             var email = _userProvider.GetUserEmail()!;
 

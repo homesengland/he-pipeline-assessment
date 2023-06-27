@@ -13,6 +13,8 @@ using Auth0.ManagementApi.Models;
 using He.PipelineAssessment.UI.Common.Utility;
 using He.PipelineAssessment.UI.Features.Override.CreateOverride;
 using He.PipelineAssessment.UI.Features.Intervention;
+using He.PipelineAssessment.UI.Authorization;
+using He.PipelineAssessment.UI.Features.Rollback.CreateRollback;
 
 namespace He.PipelineAssessment.UI.Tests.Features.Intervention.InterventionManagement.CreateOverride
 {
@@ -83,7 +85,7 @@ namespace He.PipelineAssessment.UI.Tests.Features.Intervention.InterventionManag
             List<AssessmentToolWorkflow> emptyListOfWorkflow = new List<AssessmentToolWorkflow>();
 
             assessmentRepository.Setup(x => x.GetAssessmentToolWorkflowInstance(request.WorkflowInstanceId)).ReturnsAsync(workflowInstance);
-
+            assessmentRepository.Setup(x => x.GetOpenAssessmentInterventions(workflowInstance.AssessmentId)).ReturnsAsync(new List<AssessmentIntervention>());
             assessmentToolWorkflowHelper
                 .Setup(x => x.IsLatestSubmittedWorkflow(workflowInstance)).Returns(true);
 
@@ -125,7 +127,7 @@ namespace He.PipelineAssessment.UI.Tests.Features.Intervention.InterventionManag
             };
 
             assessmentRepository.Setup(x => x.GetAssessmentToolWorkflowInstance(request.WorkflowInstanceId)).ReturnsAsync(workflowInstance);
-
+            assessmentRepository.Setup(x => x.GetOpenAssessmentInterventions(workflowInstance.AssessmentId)).ReturnsAsync(new List<AssessmentIntervention>());
             assessmentToolWorkflowHelper
                 .Setup(x => x.IsLatestSubmittedWorkflow(workflowInstance)).Returns(true);
 
@@ -139,6 +141,34 @@ namespace He.PipelineAssessment.UI.Tests.Features.Intervention.InterventionManag
 
             //Assert
             Assert.Equal(exception.Message, ex.Message);
+        }
+
+        [Theory]
+        [AutoMoqData]
+        public async Task Handle_ShouldError_GivenOpenRequestAlreadyExistsForAssessmnet(
+    [Frozen] Mock<IAssessmentRepository> repository,
+    [Frozen] Mock<IRoleValidation> roleValidation,
+    [Frozen] Mock<IAssessmentToolWorkflowInstanceHelpers> assessmentToolWorkflowInstanceHelpers,
+    AssessmentToolWorkflowInstance instance,
+    CreateOverrideRequest request,
+    CreateOverrideRequestHandler sut,
+    List<AssessmentIntervention> assessmentInterventions)
+        {
+            //Arrange
+            repository.Setup(x => x.GetAssessmentToolWorkflowInstance(request.WorkflowInstanceId))
+                .ReturnsAsync(instance);
+            repository.Setup(x => x.GetOpenAssessmentInterventions(instance.AssessmentId))
+            .ReturnsAsync(assessmentInterventions);
+
+            roleValidation.Setup(x => x.ValidateRole(It.IsAny<int>(), It.IsAny<string>())).ReturnsAsync(true);
+
+            assessmentToolWorkflowInstanceHelpers.Setup(x => x.IsLatestSubmittedWorkflow(instance)).Returns(true);
+
+            //Act
+            var ex = await Assert.ThrowsAsync<Exception>(() => sut.Handle(request, CancellationToken.None));
+
+            //Assert
+            Assert.Equal($"Unable to create request as an open request already exists for this assessment.", ex.Message);
         }
 
         [Theory]
@@ -169,7 +199,7 @@ namespace He.PipelineAssessment.UI.Tests.Features.Intervention.InterventionManag
             };
 
             assessmentRepository.Setup(x => x.GetAssessmentToolWorkflowInstance(request.WorkflowInstanceId)).ReturnsAsync(workflowInstance);
-
+            assessmentRepository.Setup(x => x.GetOpenAssessmentInterventions(workflowInstance.AssessmentId)).ReturnsAsync(new List<AssessmentIntervention>());
             assessmentToolWorkflowHelper
                 .Setup(x => x.IsLatestSubmittedWorkflow(workflowInstance)).Returns(true);
 
