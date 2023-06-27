@@ -127,7 +127,7 @@ namespace He.PipelineAssessment.UI.Tests.Features.Rollback.CreateRollback
             //Arrange
             repository.Setup(x => x.GetAssessmentToolWorkflowInstance(request.WorkflowInstanceId))
                 .ReturnsAsync(instance);
-
+            repository.Setup(x => x.GetOpenAssessmentInterventions(instance.AssessmentId)).ReturnsAsync(new List<AssessmentIntervention>());
             repository.Setup(x => x.GetInterventionReasons())
                 .ReturnsAsync(reasons);
 

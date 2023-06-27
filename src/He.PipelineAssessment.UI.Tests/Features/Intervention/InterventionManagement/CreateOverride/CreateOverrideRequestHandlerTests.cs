@@ -85,7 +85,7 @@ namespace He.PipelineAssessment.UI.Tests.Features.Intervention.InterventionManag
             List<AssessmentToolWorkflow> emptyListOfWorkflow = new List<AssessmentToolWorkflow>();
 
             assessmentRepository.Setup(x => x.GetAssessmentToolWorkflowInstance(request.WorkflowInstanceId)).ReturnsAsync(workflowInstance);
-
+            assessmentRepository.Setup(x => x.GetOpenAssessmentInterventions(workflowInstance.AssessmentId)).ReturnsAsync(new List<AssessmentIntervention>());
             assessmentToolWorkflowHelper
                 .Setup(x => x.IsLatestSubmittedWorkflow(workflowInstance)).Returns(true);
 
@@ -127,7 +127,7 @@ namespace He.PipelineAssessment.UI.Tests.Features.Intervention.InterventionManag
             };
 
             assessmentRepository.Setup(x => x.GetAssessmentToolWorkflowInstance(request.WorkflowInstanceId)).ReturnsAsync(workflowInstance);
-
+            assessmentRepository.Setup(x => x.GetOpenAssessmentInterventions(workflowInstance.AssessmentId)).ReturnsAsync(new List<AssessmentIntervention>());
             assessmentToolWorkflowHelper
                 .Setup(x => x.IsLatestSubmittedWorkflow(workflowInstance)).Returns(true);
 
@@ -199,7 +199,7 @@ namespace He.PipelineAssessment.UI.Tests.Features.Intervention.InterventionManag
             };
 
             assessmentRepository.Setup(x => x.GetAssessmentToolWorkflowInstance(request.WorkflowInstanceId)).ReturnsAsync(workflowInstance);
-
+            assessmentRepository.Setup(x => x.GetOpenAssessmentInterventions(workflowInstance.AssessmentId)).ReturnsAsync(new List<AssessmentIntervention>());
             assessmentToolWorkflowHelper
                 .Setup(x => x.IsLatestSubmittedWorkflow(workflowInstance)).Returns(true);
 
