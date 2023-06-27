@@ -17,6 +17,7 @@ using He.PipelineAssessment.UI.Features.Admin.AssessmentToolManagement.Commands.
 using He.PipelineAssessment.UI.Features.Admin.AssessmentToolManagement.Commands.UpdateAssessmentToolWorkflowCommand;
 using He.PipelineAssessment.UI.Features.Admin.AssessmentToolManagement.Mappers;
 using He.PipelineAssessment.UI.Features.Admin.AssessmentToolManagement.Validators;
+using He.PipelineAssessment.UI.Features.Error;
 using He.PipelineAssessment.UI.Features.Intervention;
 using He.PipelineAssessment.UI.Features.Override.CreateOverride;
 using He.PipelineAssessment.UI.Features.Rollback.CreateRollback;
@@ -95,6 +96,7 @@ builder.Services.AddScoped<ISyncCommandHandlerHelper, SyncCommandHandlerHelper>(
 builder.Services.AddScoped<IAssessmentToolWorkflowInstanceHelpers, AssessmentToolWorkflowInstanceHelpers>();
 builder.Services.AddScoped<IUserProvider, UserProvider>();
 builder.Services.AddScoped<IRoleValidation, RoleValidation>();
+builder.Services.AddScoped<IErrorHelper, ErrorHelper>();
 
 builder.Services.AddHttpContextAccessor();
 
