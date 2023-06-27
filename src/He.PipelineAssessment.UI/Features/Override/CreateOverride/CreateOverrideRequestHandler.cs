@@ -47,6 +47,10 @@ namespace He.PipelineAssessment.UI.Features.Override.CreateOverride
                     $"Unable to create override for Assessment Tool Workflow Instance as this is not the latest submitted Workflow Instance for this Assessment.");
             }
 
+            //TODO
+            //look for intervention record set to status of pending or draft for a particular assessment
+            //if exists then throw exception "Unable to create request as an open request already exists for this assessment."
+
             var userName = _userProvider.GetUserName()!;
             var email = _userProvider.GetUserEmail()!;
 
