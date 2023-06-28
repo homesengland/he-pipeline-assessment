@@ -4,6 +4,7 @@ using Elsa.Expressions;
 using Elsa.Services;
 using Elsa.Services.Models;
 using He.PipelineAssessment.Data.SinglePipeline;
+using Microsoft.AspNetCore.Mvc;
 
 namespace Elsa.CustomActivities.Activities.SinglePipelineDataSource
 {
@@ -29,23 +30,22 @@ namespace Elsa.CustomActivities.Activities.SinglePipelineDataSource
 
         protected override async ValueTask<IActivityExecutionResult> OnExecuteAsync(ActivityExecutionContext context)
         {
-            context.JournalData.Add(nameof(SpId), SpId);
+                context.JournalData.Add(nameof(SpId), SpId);
 
-            var data = await _singlePipelineClient.GetSinglePipelineData(SpId);
+                var data = await _singlePipelineClient.GetSinglePipelineData(SpId);
 
-            if (data != null)
-            {
-                var dataResult = _jsonHelper.JsonToSinglePipelineData(data);
-                this.Output = dataResult;
+                if (data != null)
+                {
+                    var dataResult = _jsonHelper.JsonToSinglePipelineData(data);
+                    this.Output = dataResult;
+                }
+                else
+                {
+                    context.JournalData.Add("Error", "Call to GetSinglePipelineData returned null");
+                    return new SuspendResult();
+                }
 
+                return Done();
             }
-            else
-            {
-                context.JournalData.Add("Error", "Call to GetSinglePipelineData returned null");
-                return new SuspendResult();
-            }
-
-            return Done();
         }
     }
-}

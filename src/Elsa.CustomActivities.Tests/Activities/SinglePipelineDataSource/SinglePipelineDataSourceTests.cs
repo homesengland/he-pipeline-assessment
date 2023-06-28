@@ -25,7 +25,7 @@ namespace Elsa.CustomActivities.Tests.Activities.SinglePipelineDataSource
 
             jsonHelperMock.Setup(x => x.JsonToSinglePipelineData(singlePipelineString))
                 .Returns(singlePipelineData);
-
+            singlePipelineData.multi_local_authority = "[{\"la_name\":\"Bedford\",\"la_homes\":\"333\"},{\"la_name\":\"Milton Keynes\",\"la_homes\":\"333\"}]";
             var context = new ActivityExecutionContext(default!, default!, default!, sut.SpId, default, default);
 
             //Act

@@ -12,6 +12,7 @@ namespace Elsa.Server.Extensions
         public override IEnumerable<Type> CollectTypes(TypeDefinitionContext context) => new[]
         {
             typeof(SinglePipelineData),
+            typeof(LocalAuthority),
             typeof(LaHouseNeedData),
             typeof(PCSProfileData),
             typeof(VFMCalculationData),
