@@ -1,4 +1,6 @@
-﻿namespace He.PipelineAssessment.Data.SinglePipeline
+﻿using System.Text.Json;
+
+namespace He.PipelineAssessment.Data.SinglePipeline
 {
     public class SinglePipelineData
     {
@@ -65,6 +67,17 @@
         public string? project_owner { get; set; }
         public string? project_owner_email { get; set; }
 
+        public List<LocalAuthority>? multi_local_authority_list { 
+            get {
+                var multi_local_authority_list = new List<LocalAuthority>();
+                if (this.multi_local_authority != null)
+                {
+                    multi_local_authority_list = JsonSerializer.Deserialize<List<LocalAuthority>>(this.multi_local_authority);
+                }
+                return multi_local_authority_list;
+            } }
+
+        public string? multi_local_authority { get; set; }
     }
 
     public class Feature
@@ -95,4 +108,20 @@
         public bool ExceededTransferLimit { get; set; }
 
     }
+
+    public class LocalAuthority
+    {
+        public string? la_name { get; set; }
+        public string? la_homes { get; set; }
+        public int? number_of_la_homes {
+            get { 
+                if (la_homes != null)
+                {
+                    return int.Parse(this.la_homes);
+                }
+                return null!;
+            } 
+        }
+    }
+
 }
