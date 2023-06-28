@@ -28,8 +28,6 @@ namespace Elsa.CustomActivities.Activities.SinglePipelineDataSource
 
         [ActivityOutput] public SinglePipelineData? Output { get; set; }
 
-        [ActivityOutput] public List<LocalAuthority>? LaOutput { get; set; }
-
         protected override async ValueTask<IActivityExecutionResult> OnExecuteAsync(ActivityExecutionContext context)
         {
                 context.JournalData.Add(nameof(SpId), SpId);
@@ -40,7 +38,6 @@ namespace Elsa.CustomActivities.Activities.SinglePipelineDataSource
                 {
                     var dataResult = _jsonHelper.JsonToSinglePipelineData(data);
                     this.Output = dataResult;
-                    this.LaOutput = dataResult.multi_local_authority_list;
                 }
                 else
                 {
