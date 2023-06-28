@@ -65,6 +65,7 @@
         public string? project_owner { get; set; }
         public string? project_owner_email { get; set; }
 
+        public List<LocalAuthority>? multi_local_authority { get; set; }
     }
 
     public class Feature
@@ -95,4 +96,11 @@
         public bool ExceededTransferLimit { get; set; }
 
     }
+
+    public class LocalAuthority
+    {
+        public string? la_name { get; set; }
+        public string? la_homes { get; set; }
+    }
+
 }
