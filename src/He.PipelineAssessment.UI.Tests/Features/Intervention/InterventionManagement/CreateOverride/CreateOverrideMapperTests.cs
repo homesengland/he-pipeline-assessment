@@ -1,10 +1,10 @@
 ﻿using AutoFixture.Xunit2;
 using He.PipelineAssessment.Models;
 using He.PipelineAssessment.Tests.Common;
-using He.PipelineAssessment.UI.Features.Intervention.InterventionManagement.CreateOverride;
 using Moq;
 using He.PipelineAssessment.UI.Common.Utility;
 using Xunit;
+using He.PipelineAssessment.UI.Features.Override.CreateOverride;
 
 namespace He.PipelineAssessment.UI.Tests.Features.Intervention.InterventionManagement.CreateOverride
 {
@@ -38,7 +38,7 @@ namespace He.PipelineAssessment.UI.Tests.Features.Intervention.InterventionManag
             Assert.Equal(createOverrideCommand.RequestedBy, result.LastModifiedBy);
             Assert.Equal(createOverrideCommand.RequestedByEmail, result.RequestedByEmail);
             Assert.Equal(createOverrideCommand.SignOffDocument, result.SignOffDocument);
-            Assert.Equal(InterventionStatus.NotSubmitted, result.Status);
+            Assert.Equal(InterventionStatus.Pending, result.Status);
             Assert.Equal(createOverrideCommand.AssessmentResult, result.AssessmentResult);
         }
 
@@ -53,8 +53,8 @@ namespace He.PipelineAssessment.UI.Tests.Features.Intervention.InterventionManag
             //Arrange
             var date = new DateTime(2024, 6, 5);
             dateTimeProvider.Setup(x => x.UtcNow()).Returns(date);
-            createOverrideCommand.RequestedBy = null;
-            createOverrideCommand.RequestedByEmail = null;
+            createOverrideCommand.RequestedBy = null!;
+            createOverrideCommand.RequestedByEmail = null!;
 
             //Act
             var result = sut.CreateOverrideCommandToAssessmentIntervention(createOverrideCommand);

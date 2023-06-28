@@ -51,7 +51,7 @@ namespace He.PipelineAssessment.UI.Tests.Features.Workflow.StartWorkflow
             elsaServerHttpClient.Setup(x => x.PostStartWorkflow(It.IsAny<StartWorkflowCommandDto>()))
                 .ReturnsAsync(workflowNextActivityDataDto);
 
-            assessmentRepository.Setup(x => x.GetNonStartedAssessmentToolInstanceNextWorkflowByAssessmentId(command.AssessmentId, command.WorkflowDefinitionId))
+            assessmentRepository.Setup(x => x.GetAssessmentToolInstanceNextWorkflowByAssessmentId(command.AssessmentId, command.WorkflowDefinitionId))
                 .ReturnsAsync(assessmentToolInstanceNextWorkflow);
 
             //Act

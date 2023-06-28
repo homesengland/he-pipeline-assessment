@@ -23,6 +23,7 @@ public class RoleValidation : IRoleValidation
     public async Task<bool> ValidateRole(int assessmentId, string workflowDefinitionId)
     {
         var assessmentToolWorkflow = await _adminAssessmentToolRepository.GetAssessmentToolByWorkflowDefinitionId(workflowDefinitionId);
+
         if (assessmentToolWorkflow != null)
         {
             if (assessmentToolWorkflow.IsEconomistWorkflow)

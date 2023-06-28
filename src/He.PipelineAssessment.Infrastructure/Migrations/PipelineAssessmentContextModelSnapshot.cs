@@ -164,6 +164,9 @@ namespace He.PipelineAssessment.Infrastructure.Migrations
                         .HasMaxLength(50)
                         .HasColumnType("nvarchar(50)");
 
+                    b.Property<int?>("InterventionReasonId")
+                        .HasColumnType("int");
+
                     b.Property<string>("LastModifiedBy")
                         .HasColumnType("nvarchar(max)");
 
@@ -204,6 +207,8 @@ namespace He.PipelineAssessment.Infrastructure.Migrations
                     b.HasKey("Id");
 
                     b.HasIndex("AssessmentToolWorkflowInstanceId");
+
+                    b.HasIndex("InterventionReasonId");
 
                     b.HasIndex("TargetAssessmentToolWorkflowId");
 
@@ -306,9 +311,6 @@ namespace He.PipelineAssessment.Infrastructure.Migrations
 
                     b.Property<DateTime>("CreatedDateTime")
                         .HasColumnType("datetime2");
-
-                    b.Property<bool>("IsStarted")
-                        .HasColumnType("bit");
 
                     b.Property<string>("LastModifiedBy")
                         .HasMaxLength(500)
@@ -441,6 +443,9 @@ namespace He.PipelineAssessment.Infrastructure.Migrations
                     b.Property<int>("AssessmentId")
                         .HasColumnType("int");
 
+                    b.Property<int?>("AssessmentToolWorkflowId")
+                        .HasColumnType("int");
+
                     b.Property<string>("CreatedBy")
                         .IsRequired()
                         .HasMaxLength(500)
@@ -511,7 +516,70 @@ namespace He.PipelineAssessment.Infrastructure.Migrations
 
                     b.HasIndex("AssessmentId");
 
+                    b.HasIndex("AssessmentToolWorkflowId");
+
                     b.ToTable("AssessmentToolWorkflowInstance");
+
+                    b.ToTable(tb => tb.IsTemporal(ttb =>
+                        {
+                            ttb
+                                .HasPeriodStart("PeriodStart")
+                                .HasColumnName("PeriodStart");
+                            ttb
+                                .HasPeriodEnd("PeriodEnd")
+                                .HasColumnName("PeriodEnd");
+                        }
+                    ));
+                });
+
+            modelBuilder.Entity("He.PipelineAssessment.Models.InterventionReason", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+
+                    b.Property<string>("CreatedBy")
+                        .IsRequired()
+                        .HasMaxLength(500)
+                        .HasColumnType("nvarchar(500)");
+
+                    b.Property<DateTime>("CreatedDateTime")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("LastModifiedBy")
+                        .HasMaxLength(500)
+                        .HasColumnType("nvarchar(500)");
+
+                    b.Property<DateTime?>("LastModifiedDateTime")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
+
+                    b.Property<int>("Order")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime>("PeriodEnd")
+                        .ValueGeneratedOnAddOrUpdate()
+                        .HasColumnType("datetime2")
+                        .HasColumnName("PeriodEnd");
+
+                    b.Property<DateTime>("PeriodStart")
+                        .ValueGeneratedOnAddOrUpdate()
+                        .HasColumnType("datetime2")
+                        .HasColumnName("PeriodStart");
+
+                    b.Property<string>("Status")
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("InterventionReason");
 
                     b.ToTable(tb => tb.IsTemporal(ttb =>
                         {
@@ -552,11 +620,17 @@ namespace He.PipelineAssessment.Infrastructure.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
+                    b.HasOne("He.PipelineAssessment.Models.InterventionReason", "InterventionReason")
+                        .WithMany()
+                        .HasForeignKey("InterventionReasonId");
+
                     b.HasOne("He.PipelineAssessment.Models.AssessmentToolWorkflow", "TargetAssessmentToolWorkflow")
                         .WithMany("AssessmentInterventions")
                         .HasForeignKey("TargetAssessmentToolWorkflowId");
 
                     b.Navigation("AssessmentToolWorkflowInstance");
+
+                    b.Navigation("InterventionReason");
 
                     b.Navigation("TargetAssessmentToolWorkflow");
                 });
@@ -591,7 +665,13 @@ namespace He.PipelineAssessment.Infrastructure.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
+                    b.HasOne("He.PipelineAssessment.Models.AssessmentToolWorkflow", "AssessmentToolWorkflow")
+                        .WithMany()
+                        .HasForeignKey("AssessmentToolWorkflowId");
+
                     b.Navigation("Assessment");
+
+                    b.Navigation("AssessmentToolWorkflow");
                 });
 
             modelBuilder.Entity("He.PipelineAssessment.Models.Assessment", b =>

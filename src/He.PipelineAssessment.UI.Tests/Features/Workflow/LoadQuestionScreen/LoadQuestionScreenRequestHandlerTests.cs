@@ -1,4 +1,5 @@
 ﻿using AutoFixture.Xunit2;
+using Azure;
 using Elsa.CustomWorkflow.Sdk.HttpClients;
 using Elsa.CustomWorkflow.Sdk.Models.Workflow;
 using He.PipelineAssessment.Infrastructure.Repository;
@@ -34,12 +35,44 @@ namespace He.PipelineAssessment.UI.Tests.Features.Workflow.LoadQuestionScreen
             elsaServerHttpClient.Setup(x => x.LoadQuestionScreen(It.IsAny<LoadWorkflowActivityDto>()))
                 .ReturnsAsync((WorkflowActivityDataDto?)null);
 
+            assessmentToolWorkflowInstance.Status = AssessmentToolWorkflowInstanceConstants.Draft;
+
             //Act
             var result = await sut.Handle(loadWorkflowActivityRequest, CancellationToken.None);
 
             //Assert
             Assert.Null(result);
             elsaServerHttpClient.Verify(x => x.LoadQuestionScreen(It.IsAny<LoadWorkflowActivityDto>()), Times.Once);
+        }
+
+        [Theory]
+        [AutoMoqData]
+        public async Task Handle_ReturnsReadonly_GivenStatusIsNotDraft(
+            [Frozen] Mock<IElsaServerHttpClient> elsaServerHttpClient,
+            [Frozen] Mock<IAssessmentRepository> assessmentRepository,
+            [Frozen] Mock<IRoleValidation> roleValidation,
+            LoadQuestionScreenRequest loadWorkflowActivityRequest,
+            AssessmentToolWorkflowInstance assessmentToolWorkflowInstance,
+            LoadQuestionScreenRequestHandler sut)
+        {
+            //Arrange
+
+            assessmentRepository.Setup(x => x.GetAssessmentToolWorkflowInstance(loadWorkflowActivityRequest.WorkflowInstanceId))
+                .ReturnsAsync(assessmentToolWorkflowInstance);
+
+            roleValidation.Setup(x => x.ValidateRole(assessmentToolWorkflowInstance.AssessmentId, assessmentToolWorkflowInstance.WorkflowDefinitionId)).ReturnsAsync(true);
+
+            elsaServerHttpClient.Setup(x => x.LoadQuestionScreen(It.IsAny<LoadWorkflowActivityDto>()))
+                .ReturnsAsync((WorkflowActivityDataDto?)null);
+
+            assessmentToolWorkflowInstance.Status = AssessmentToolWorkflowInstanceConstants.Submitted;
+
+            //Act
+            var result = await sut.Handle(loadWorkflowActivityRequest, CancellationToken.None);
+
+            //Assert
+            Assert.NotNull(result);
+           Assert.True(result!.IsReadOnly);
         }
 
         [Theory]
@@ -54,6 +87,8 @@ namespace He.PipelineAssessment.UI.Tests.Features.Workflow.LoadQuestionScreen
             LoadQuestionScreenRequestHandler sut)
         {
             //Arrange
+            loadWorkflowActivityRequest.IsReadOnly = false;
+            assessmentToolWorkflowInstance.Status = AssessmentToolWorkflowInstanceConstants.Draft;
 
             assessmentRepository.Setup(x => x.GetAssessmentToolWorkflowInstance(loadWorkflowActivityRequest.WorkflowInstanceId))
                .ReturnsAsync(assessmentToolWorkflowInstance);

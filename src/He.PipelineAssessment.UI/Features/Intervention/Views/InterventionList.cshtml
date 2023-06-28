@@ -1,15 +1,16 @@
 ﻿@using He.PipelineAssessment.UI
+@using He.PipelineAssessment.UI.Features.Intervention.InterventionList
 @addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
 @model List<He.PipelineAssessment.Models.ViewModels.AssessmentInterventionViewModel>
 @inject NonceConfig nonceConfig
 
 @{
-    ViewData["Title"] = "Assessment Interventions";
+    ViewData["Title"] = "Assessment Requests";
     Layout = "_LayoutFullWidth";
 }
 
 <div class="govuk-grid-row">
-    <h1 class="govuk-heading-l govuk-grid-column-one-quarter pull-left" for="event-name">Assessment Interventions</h1>
+    <h1 class="govuk-heading-l govuk-grid-column-one-quarter pull-left" for="event-name">Assessment Requests</h1>
 </div>
 
 <br />
@@ -47,11 +48,22 @@
                 var createdDate = intervention.CreatedDateTime.HasValue ? intervention.CreatedDateTime.Value.Date.ToString("yyyyMMdd") : "";
                 var created = intervention.CreatedDateTime.HasValue ? intervention.CreatedDateTime.Value.Date.ToLongDateString() : "";
 
+                var admin = String.IsNullOrEmpty(intervention.Administrator) ? "-" : intervention.Administrator;
+
                 <tr class="govuk-table__row">
-                    <td class="govuk-table__cell"><a asp-controller="Override" asp-action="CheckYourDetails" asp-route-interventionId="@intervention.Id" class="govuk-link">@intervention.Reference</a> </td>
+                    <td class="govuk-table__cell">
+                        @if (@intervention.DecisionType == "Override")
+                        {
+                            <a asp-controller="Override" asp-action="EditOverride" asp-route-interventionId="@intervention.Id" class="govuk-link">@intervention.Reference</a>
+                        }
+                        @if (@intervention.DecisionType == "Rollback")
+                        {
+                            <a asp-controller="Rollback" asp-action="EditRollback" asp-route-interventionId="@intervention.Id" class="govuk-link">@intervention.Reference</a>
+                        }
+                    </td>
                     <td class="govuk-table__cell">@intervention.WorkflowName</td>
                     <td class="govuk-table__cell">@intervention.RequestedBy</td>
-                    <td class="govuk-table__cell">@intervention.Administrator</td>
+                    <td class="govuk-table__cell">@admin</td>
                     <td class="govuk-table__cell"><strong class="govuk-tag govuk-tag--@intervention.StatusDisplayTag()">@intervention.Status</strong></td>
                     <td class="govuk-table__cell"> <span hidden>@createdDate</span> @created </td>
                     <td class="govuk-table__cell"> <span hidden>@lastModifiedDate</span> @lastModified </td>

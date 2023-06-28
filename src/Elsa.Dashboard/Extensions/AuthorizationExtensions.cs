@@ -53,6 +53,9 @@ namespace Elsa.CustomInfrastructure.Extensions
       {
         options.DefaultPolicy = new AuthorizationPolicyBuilder().RequireRole(Constants.AppRole.ElsaDashboardAdmin).Build();
 
+        options.AddPolicy(Constants.AuthorizationPolicies.AssignmentToElsaDashboardAdminRoleRequired,
+          policy => policy.RequireRole(Constants.AppRole.ElsaDashboardAdmin));
+
         options.FallbackPolicy = new AuthorizationPolicyBuilder()
                   .RequireAuthenticatedUser()
                   .Build();

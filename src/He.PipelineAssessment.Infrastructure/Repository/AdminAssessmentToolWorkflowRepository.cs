@@ -13,7 +13,8 @@ namespace He.PipelineAssessment.Infrastructure.Repository
 
         Task<int> DeleteAssessmentToolWorkflow(AssessmentToolWorkflow assessmentToolWorkflow);
 
-        Task<List<AssessmentToolWorkflow>> GetAssessmentToolWorkflows();
+        Task<List<AssessmentToolWorkflow>> GetAssessmentToolWorkflowsForOverride(int order);
+        Task<List<AssessmentToolWorkflow>> GetAssessmentToolWorkflowsForRollback(int order);
         Task<int> SaveChanges();
 
     }
@@ -43,10 +44,20 @@ namespace He.PipelineAssessment.Infrastructure.Repository
             return await _context.SaveChangesAsync();
         }
 
-        public async Task<List<AssessmentToolWorkflow>> GetAssessmentToolWorkflows()
+        public async Task<List<AssessmentToolWorkflow>> GetAssessmentToolWorkflowsForOverride(int order)
         {
-            return await _context.Set<AssessmentToolWorkflow>().Where(x => x.Status != AssessmentToolStatus.Deleted)
-                .OrderBy(x => x.AssessmentTool.Order).ToListAsync();
+            return await _context.Set<AssessmentToolWorkflow>().Where(x => x.Status != AssessmentToolStatus.Deleted && x.AssessmentTool.Order > order)
+                .OrderBy(x => x.AssessmentTool.Order).Include(x => x.AssessmentTool).ToListAsync();
+        }
+
+        public async Task<List<AssessmentToolWorkflow>> GetAssessmentToolWorkflowsForRollback(int order)
+        {
+            return await _context.Set<AssessmentToolWorkflow>()
+                .Where(x => x.Status != AssessmentToolStatus.Deleted && 
+                    x.AssessmentTool.Order <= order)
+                .OrderBy(x => x.AssessmentTool.Order)
+                .Include(x => x.AssessmentTool)
+                .ToListAsync();
         }
 
         public async Task<int> SaveChanges()

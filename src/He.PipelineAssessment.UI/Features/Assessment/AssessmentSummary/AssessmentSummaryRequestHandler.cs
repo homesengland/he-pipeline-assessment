@@ -1,7 +1,9 @@
 ﻿using He.PipelineAssessment.Infrastructure.Repository;
 using He.PipelineAssessment.Infrastructure.Repository.StoredProcedure;
+using He.PipelineAssessment.Models;
 using He.PipelineAssessment.Models.ViewModels;
 using MediatR;
+using System.Diagnostics;
 
 namespace He.PipelineAssessment.UI.Features.Assessment.AssessmentSummary
 {
@@ -27,15 +29,46 @@ namespace He.PipelineAssessment.UI.Features.Assessment.AssessmentSummary
                 if (dbAssessment != null)
                 {
                     var assessmentStages = await _storedProcedureRepository.GetAssessmentStages(request.AssessmentId);
-                    var startableTools = await _storedProcedureRepository.GetStartableTools(request.AssessmentId);
+                    var startableWorkflows = await _storedProcedureRepository.GetStartableTools(request.AssessmentId);
+
                     var stages = new List<AssessmentSummaryStage>();
+                    
                     if (assessmentStages.Any())
                     {
-                        foreach (var item in assessmentStages)
+                        //Get distinct list of tools
+                        var uniqueTools = assessmentStages.Select(x => new { x.AssessmentToolId, x.Name, x.Order })
+                            .Distinct().ToList();
+
+                        foreach (var assessmentTool in uniqueTools)
                         {
-                            var stage = AssessmentSummaryStage(item, startableTools);
-                            stages.Add(stage);
+                            //Add All Current Workflow Instances in Draft or Submitted
+                            var assessmentStagesForCurrentTool = assessmentStages.Where(x => x.AssessmentToolId == assessmentTool.AssessmentToolId);
+                            var workflowInstances = AssessmentSummaryStage(assessmentStagesForCurrentTool).ToList();
+                            stages.AddRange(workflowInstances);
+
+                            //Add All Startable Tools
+                            var startableWorkflowForCurrentTool = startableWorkflows.Where(x => x.AssessmentToolId == assessmentTool.AssessmentToolId);
+                            var startableList = AssessmentSummaryStage(startableWorkflowForCurrentTool,assessmentTool.Name,assessmentTool.Order).ToList();
+                            stages.AddRange(startableList);
+                            
+                            //If there is nothing add the current stage as a non startable item
+                            if (!workflowInstances.Any() && !startableList.Any())
+                            {
+                                stages.Add(AssessmentSummaryStage(assessmentTool.Name, assessmentTool.Order));
+                            }
                         }
+                    }
+
+                    var dbHistory = await _storedProcedureRepository.GetAssessmentHistory(request.AssessmentId);
+
+                    var stagesHistory = AssessmentSummaryStage(dbHistory).ToList();
+
+                    var interventions = new List<AssessmentInterventionViewModel>();
+
+                    var dbInterventions = await _storedProcedureRepository.GetAssessmentInterventionList(request.AssessmentId);
+                    if (dbInterventions.Any())
+                    {
+                        interventions = dbInterventions;
                     }
 
                     return new AssessmentSummaryResponse()
@@ -46,9 +79,10 @@ namespace He.PipelineAssessment.UI.Features.Assessment.AssessmentSummary
                         CounterParty = dbAssessment.Counterparty,
                         Reference = dbAssessment.Reference,
                         Stages = stages,
+                        StagesHistory = stagesHistory,
                         LocalAuthority = dbAssessment.LocalAuthority,
-                        ProjectManager = dbAssessment.ProjectManager
-
+                        ProjectManager = dbAssessment.ProjectManager,
+                        Interventions = interventions
                     };
                 }
             }
@@ -59,36 +93,70 @@ namespace He.PipelineAssessment.UI.Features.Assessment.AssessmentSummary
             return null;
         }
 
-        private static AssessmentSummaryStage AssessmentSummaryStage(AssessmentStageViewModel item,
-            List<StartableToolViewModel> startableToolViewModels)
+        private AssessmentSummaryStage AssessmentSummaryStage( string name, int order)
         {
-            StartableToolViewModel? startableToolViewModel = new StartableToolViewModel();
-            if (!item.AssessmentToolWorkflowInstanceId.HasValue)
-            {
-                startableToolViewModel = startableToolViewModels
-                    .FirstOrDefault(x => x.AssessmentToolId == item.AssessmentToolId);
-            }
-
-            var stage = new AssessmentSummaryStage
-            {
-                Name = item.Name,
-                IsVisible = item.IsVisible,
-                Order = item.Order,
-                WorkflowName = item.WorkflowName,
-                WorkflowDefinitionId = item.WorkflowDefinitionId ?? startableToolViewModel?.WorkflowDefinitionId,
-                WorkflowInstanceId = item.WorkflowInstanceId,
-                CurrentActivityId = item.CurrentActivityId,
-                CurrentActivityType = item.CurrentActivityType,
-                Status = item.Status,
-                CreatedDateTime = item.CreatedDateTime,
-                SubmittedDateTime = item.SubmittedDateTime,
-                AssessmentToolId = item.AssessmentToolId,
-                IsFirstWorkflow = item.IsFirstWorkflow ?? startableToolViewModel?.IsFirstWorkflow,
-                AssessmentToolWorkflowInstanceId = item.AssessmentToolWorkflowInstanceId,
-                Result = item.Result,
-                SubmittedBy = item.SubmittedBy
-            };
+                var stage = new AssessmentSummaryStage
+                {
+                    Name = name,
+                    Order = order
+                   
+                };
+           
             return stage;
+        }
+
+        private IEnumerable<AssessmentSummaryStage> AssessmentSummaryStage(IEnumerable<StartableToolViewModel> startableWorkflowForCurrentTool, string name, int order)
+        {
+            var stageList = new List<AssessmentSummaryStage>();
+
+            foreach (var startableAssessmentTool in startableWorkflowForCurrentTool)
+            {
+                var stage = new AssessmentSummaryStage
+                {
+                    Name = name,
+                    Order = order,
+                    WorkflowDefinitionId = startableAssessmentTool?.WorkflowDefinitionId,
+                    AssessmentToolId = startableAssessmentTool?.AssessmentToolId,
+                    IsFirstWorkflow = startableAssessmentTool?.IsFirstWorkflow,
+                    AssessmentToolWorkflowId = startableAssessmentTool?.AssessmentToolWorkflowId
+                };
+                stageList.Add(stage);
+            }
+            return stageList;
+        }
+
+        private IEnumerable<AssessmentSummaryStage> AssessmentSummaryStage(IEnumerable<AssessmentStageViewModel> assessmentStagesForCurrentTool)
+        {
+            var stageList = new List<AssessmentSummaryStage>();
+
+            foreach (var item in assessmentStagesForCurrentTool)
+            {
+                if (item.AssessmentToolWorkflowInstanceId.HasValue)
+                {
+                    var inFlightStage = new AssessmentSummaryStage
+                    {
+                        Name = item.Name,
+                        IsVisible = item.IsVisible,
+                        Order = item.Order,
+                        WorkflowName = item.WorkflowName,
+                        WorkflowDefinitionId = item.WorkflowDefinitionId,
+                        WorkflowInstanceId = item.WorkflowInstanceId,
+                        CurrentActivityId = item.CurrentActivityId,
+                        CurrentActivityType = item.CurrentActivityType,
+                        Status = item.Status,
+                        CreatedDateTime = item.CreatedDateTime,
+                        SubmittedDateTime = item.SubmittedDateTime,
+                        AssessmentToolId = item.AssessmentToolId,
+                        IsFirstWorkflow = item.IsFirstWorkflow,
+                        AssessmentToolWorkflowInstanceId = item.AssessmentToolWorkflowInstanceId,
+                        Result = item.Result,
+                        SubmittedBy = item.SubmittedBy,
+                        AssessmentToolWorkflowId = null
+                    };
+                    stageList.Add(inFlightStage);
+                }
+            }
+            return stageList;
         }
     }
 }

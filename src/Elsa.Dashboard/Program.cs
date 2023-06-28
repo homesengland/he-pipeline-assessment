@@ -23,6 +23,7 @@ builder.Services.AddDbContext<ElsaCustomContext>(config =>
 
 builder.Services.AddScoped<DbContext>(provider => provider.GetRequiredService<ElsaCustomContext>());
 builder.Services.AddDataProtection().PersistKeysToDbContext<ElsaCustomContext>();
+builder.Services.AddApplicationInsightsTelemetry();
 
 builder.Services.Configure<Urls>(
             builder.Configuration.GetSection("Urls"));
@@ -32,6 +33,7 @@ builder.Services.AddHttpClient("ElsaServerClient", client =>
 {
   client.BaseAddress = new Uri(serverURl);
 });
+
 
 builder.Services.AddScoped<IElsaServerHttpClient, ElsaServerHttpClient>();
 
@@ -78,9 +80,8 @@ app.UseStaticFiles().UseStaticFiles(new StaticFileOptions
   {
     // Elsa API Endpoints are implemented as regular ASP.NET Core API controllers.
     endpoints
-      .MapControllers();
+      .MapControllers().RequireAuthorization();
     // For Dashboard.
     endpoints.MapFallbackToPage("/_Host");
   });
-
 app.Run();
