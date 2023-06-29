@@ -6,8 +6,6 @@ import {
 } from '../../models/elsa-interfaces';
 
 import {
-    HeActivityPropertyDescriptor,
-  NestedActivityDefinitionProperty,
   NestedProperty,
   NestedPropertyModel,
 } from '../../models/custom-component-models';
@@ -16,7 +14,7 @@ import {
   IconProvider,
 } from '../providers/icon-provider/icon-provider'
 import { HePropertyDisplayManager } from '../../nested-drivers/display-managers/display-manager';
-import { parseJson, Map } from '../../utils/utils';
+import { parseJson, UpdateNestedActivitiesByDescriptors, createQuestionProperty } from '../../utils/utils';
 import { SyntaxNames } from '../../constants/constants';
 
 @Component({
@@ -48,7 +46,8 @@ export class QuestionProperty {
     const model = this.questionModel;
     const propertyJson = model.value.expressions[SyntaxNames.QuestionList];
     if (propertyJson != null && propertyJson != undefined && parseJson(propertyJson).length > 0) {
-      this.nestedQuestionProperties = parseJson(propertyJson);
+      const nestedProperties = parseJson(propertyJson)
+      this.nestedQuestionProperties = UpdateNestedActivitiesByDescriptors(this.questionModel.descriptor, nestedProperties, this.questionModel);
     }
     else {
       this.nestedQuestionProperties = this.createQuestionProperties();
@@ -59,25 +58,10 @@ export class QuestionProperty {
     let propertyArray: Array<NestedProperty> = [];
     const descriptor = this.questionModel.descriptor;
     descriptor.forEach(d => {
-      var prop = this.createQuestionProperty(d);
+      var prop = createQuestionProperty(d, this.questionModel);
       propertyArray.push(prop);
     });
     return propertyArray;
-  }
-
-  createQuestionProperty(descriptor: HeActivityPropertyDescriptor): NestedProperty {
-    let propertyValue: NestedActivityDefinitionProperty = {
-      syntax: descriptor.defaultSyntax,
-      value: descriptor.expectedOutputType,
-      name: descriptor.name,
-      expressions: this.getExpressionMap(descriptor.supportedSyntaxes),
-      type: ''
-    }
-    if (descriptor.name.toLowerCase() == 'id') {
-      propertyValue.expressions[SyntaxNames.Literal] = this.questionModel.value.value;
-    }
-    let property: NestedProperty = { value: propertyValue, descriptor: descriptor, }
-    return property;
   }
 
   onPropertyExpressionChange(event: Event, property: NestedProperty) {
@@ -92,20 +76,6 @@ export class QuestionProperty {
     this.updateQuestionScreen.emit(JSON.stringify(this.questionModel));
   }
 
-  getExpressionMap(syntaxes: Array<string>): Map<string> {
-    if (syntaxes.length > 0) {
-      var value: Map<string> = { };
-      syntaxes.forEach(s => {
-        value[s] = "";
-      })
-      return value;
-    }
-    else {
-      let value: Map<string> = {};
-      //value[SyntaxNames.Literal] = '';
-      return value;
-    }
-  }
 
   render() {
     const displayManager = this.displayManager;

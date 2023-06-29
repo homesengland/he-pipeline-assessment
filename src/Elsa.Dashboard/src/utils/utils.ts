@@ -1,5 +1,5 @@
 import { SyntaxNames } from "../constants/constants";
-import { HeActivityPropertyDescriptor, NestedActivityDefinitionProperty } from "../models/custom-component-models";
+import { HeActivityPropertyDescriptor, NestedActivityDefinitionProperty, NestedProperty, NestedPropertyModel } from "../models/custom-component-models";
 import { ActivityDefinitionProperty, ActivityModel } from "../models/elsa-interfaces";
 
 export type Map<T> = {
@@ -80,6 +80,51 @@ export function filterPropertiesByType(questionProperties: Array<HeActivityPrope
   const filteredProperties: Array<HeActivityPropertyDescriptor> = properties.filter(property => property.displayInDesigner == true);
   return filteredProperties;
 }
+
+export function UpdateNestedActivitiesByDescriptors(descriptors: Array<HeActivityPropertyDescriptor>, properties: Array<NestedProperty>, questionModel: NestedPropertyModel): Array<NestedProperty> {
+  let newProperties: Array<NestedProperty> = [];
+  descriptors.forEach(x => newProperties.push(createQuestionProperty(x, questionModel)));
+  const result = newProperties.map(x => {
+    const existingValue = properties.filter(y => x.descriptor.name == y.descriptor.name)[0];
+    if (existingValue != null) {
+      x.value = existingValue.value;
+    }
+    return x;
+  });
+  console.log("Result", result);
+  return result;
+
+}
+
+export function createQuestionProperty(descriptor: HeActivityPropertyDescriptor, questionModel: NestedPropertyModel): NestedProperty {
+  let propertyValue: NestedActivityDefinitionProperty = {
+    syntax: descriptor.defaultSyntax,
+    value: descriptor.expectedOutputType,
+    name: descriptor.name,
+    expressions: getExpressionMap(descriptor.supportedSyntaxes),
+    type: ''
+  }
+  if (descriptor.name.toLowerCase() == 'id') {
+    propertyValue.expressions[SyntaxNames.Literal] = questionModel.value.value;
+  }
+  let property: NestedProperty = { value: propertyValue, descriptor: descriptor, }
+  return property;
+}
+
+export function getExpressionMap(syntaxes: Array<string>): Map < string > {
+  if(syntaxes.length > 0) {
+  var value: Map<string> = {};
+  syntaxes.forEach(s => {
+    value[s] = "";
+  })
+  return value;
+}
+    else {
+  let value: Map<string> = {};
+  //value[SyntaxNames.Literal] = '';
+  return value;
+}
+  }
 
 export async function awaitElement(selector) {
   while (document.querySelector(selector) === null) {

@@ -15,6 +15,9 @@ namespace Elsa.CustomActivities.Activities.QuestionScreen
         [HeActivityInput(Hint = "Question Identifier")]
         public string Id { get; set; } = null!;
 
+        [HeActivityInput(Hint = "Test")]
+        public string Test { get; set; } = null!;
+
         public string QuestionType { get; set; } = null!;
 
         [HeActivityInput(
