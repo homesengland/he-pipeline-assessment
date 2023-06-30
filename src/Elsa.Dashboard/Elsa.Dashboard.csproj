@@ -29,6 +29,13 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Compile Remove="src\components\interfaces\**" />
+    <Content Remove="src\components\interfaces\**" />
+    <EmbeddedResource Remove="src\components\interfaces\**" />
+    <None Remove="src\components\interfaces\**" />
+  </ItemGroup>
+
+  <ItemGroup>
     <Compile Remove="RequestHelper.cs" />
   </ItemGroup>
 
@@ -108,7 +115,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="src\components\interfaces\" />
     <Folder Include="Views\" />
   </ItemGroup>
 
