@@ -14,7 +14,7 @@ import {
   IconProvider,
 } from '../providers/icon-provider/icon-provider'
 import { HePropertyDisplayManager } from '../../nested-drivers/display-managers/display-manager';
-import { parseJson, UpdateNestedActivitiesByDescriptors, createQuestionProperty } from '../../utils/utils';
+import { parseJson, UpdateNestedActivitiesByDescriptors, filterPropertiesByType, createQuestionProperty } from '../../utils/utils';
 import { SyntaxNames } from '../../constants/constants';
 
 @Component({
@@ -44,6 +44,7 @@ export class QuestionProperty {
 
   getOrCreateQuestionProperties() {
     const model = this.questionModel;
+    this.questionModel.descriptor = filterPropertiesByType(this.questionModel.descriptor, this.questionModel.ActivityType.nameConstant)
     const propertyJson = model.value.expressions[SyntaxNames.QuestionList];
     if (propertyJson != null && propertyJson != undefined && parseJson(propertyJson).length > 0) {
       const nestedProperties = parseJson(propertyJson)
