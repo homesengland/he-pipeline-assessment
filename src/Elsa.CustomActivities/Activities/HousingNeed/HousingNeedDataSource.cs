@@ -24,28 +24,40 @@ namespace Elsa.CustomActivities.Activities.HousingNeed
             _jsonHelper = jsonHelper;
         }
 
-        [ActivityInput(Hint = "Gss Code of the record to get",  SupportedSyntaxes = new[] { SyntaxNames.Literal, SyntaxNames.Json, SyntaxNames.JavaScript })]
-        public string? GssCode { get; set; }
+        [ActivityInput(Hint = "Gss Codes of the record to get",  SupportedSyntaxes = new[] { SyntaxNames.Literal, SyntaxNames.Json, SyntaxNames.JavaScript })]
+        public string? GssCodes { get; set; }
         [ActivityInput(Hint = "Name of Local Authority", SupportedSyntaxes = new[] { SyntaxNames.Literal, SyntaxNames.Json, SyntaxNames.JavaScript })]
-        public string? LocalAuthority { get; set; }
+        public string? LocalAuthorities { get; set; }
         [ActivityInput(Hint = "Alternative Name of Local Authority", SupportedSyntaxes = new[] { SyntaxNames.Literal, SyntaxNames.Json, SyntaxNames.JavaScript })]
-        public string? LocalAuthorityAlt { get; set; }
+        public string? LocalAuthoritiesAlt { get; set; }
 
         [ActivityOutput] public LaHouseNeedData? Output { get; set; }
+        [ActivityOutput] public List<LaHouseNeedData>? OutputList { get; set; }
 
         protected override async ValueTask<IActivityExecutionResult> OnExecuteAsync(ActivityExecutionContext context)
         {
-            context.JournalData.Add(nameof(GssCode), GssCode);
-            context.JournalData.Add(nameof(LocalAuthority), LocalAuthority);
-            context.JournalData.Add(nameof(LocalAuthorityAlt), LocalAuthorityAlt);
+            context.JournalData.Add(nameof(GssCodes), GssCodes);
+            context.JournalData.Add(nameof(LocalAuthorities), LocalAuthorities);
+            context.JournalData.Add(nameof(LocalAuthoritiesAlt), LocalAuthoritiesAlt);
 
-            var data = await _client.GetLaHouseNeedData(GssCode, LocalAuthority, LocalAuthorityAlt);
+            var data = await _client.GetLaHouseNeedData(GssCodes, LocalAuthorities, LocalAuthoritiesAlt);
 
             if (data != null)
             {
                 var dataResult = _jsonHelper.JsonToLAHouseNeedData(data);
-                this.Output = dataResult;
-
+                if(dataResult != null && dataResult.Count == 1)
+                {
+                    this.Output = dataResult.First();
+                }
+                else if(dataResult != null && dataResult.Count > 1)
+                {
+                    this.OutputList = dataResult;
+                }
+                else
+                {
+                    context.JournalData.Add("Error", "Call to GetLAHouseNeedData returned null");
+                    return new SuspendResult();
+                }
             }
             else
             {
