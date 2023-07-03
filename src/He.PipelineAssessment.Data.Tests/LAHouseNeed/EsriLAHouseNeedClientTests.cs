@@ -1,4 +1,5 @@
-﻿using AutoFixture.Xunit2;
+﻿using AutoFixture.Kernel;
+using AutoFixture.Xunit2;
 using He.PipelineAssessment.Data.LaHouseNeed;
 using He.PipelineAssessment.Tests.Common;
 using Moq;
