@@ -21,6 +21,7 @@ namespace He.PipelineAssessment.Data.Tests.LAHouseNeed
 
             //Assert
             Assert.NotNull(result);
+            Assert.Equal(inputData.features.Count(), result!.Count());
         }
 
         [Theory]
@@ -39,7 +40,7 @@ namespace He.PipelineAssessment.Data.Tests.LAHouseNeed
 
         [Theory]
         [AutoMoqData]
-        public void ProperInputDataButNoFeatures_To_JsonToSinglePipelineData_ReturnsNull(
+        public void ProperInputDataButNoFeatures_To_JsonToSinglePipelineData_ReturnsEmptyList(
             EsriLAHouseNeedResponse inputData,
             EsriLAHouseNeedDataJsonHelper helper)
         {
@@ -50,7 +51,7 @@ namespace He.PipelineAssessment.Data.Tests.LAHouseNeed
             var result = helper.JsonToLAHouseNeedData(strData);
 
             //Assert
-            Assert.Null(result);
+            Assert.Empty(result);
         }
     }
 }
