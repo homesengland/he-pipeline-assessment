@@ -13,26 +13,25 @@ import TrashCanIcon from '../../icons/trash-can';
 import { PropertyOutputTypes, SyntaxNames, WeightedScoringSyntax } from '../../constants/constants';
 import { NestedActivityDefinitionProperty } from '../../models/custom-component-models';
 import { ToggleDictionaryDisplay } from '../../functions/display-toggle'
+import { BaseComponent, ISharedComponent } from '../base-component';
 
 @Component({
   tag: 'he-weighted-checkbox-property',
   shadow: false,
 })
 
-export class HeWeightedCheckboxProperty {
+export class HeWeightedCheckboxProperty implements ISharedComponent {
 
   @Prop() activityModel: ActivityModel;
   @Prop() propertyDescriptor: ActivityPropertyDescriptor;
   @Prop() propertyModel: ActivityDefinitionProperty;
-  @State() groups: Array<NestedActivityDefinitionProperty> = [];
+  @Prop() modelSyntax: string = SyntaxNames.Json;
+  @State() properties: Array<NestedActivityDefinitionProperty> = [];
+  
   @State() iconProvider = new IconProvider();
   @Event() expressionChanged: EventEmitter<string>;
   @State() optionsDisplayToggle: Map<string> = {};
-
-
-
   @State() switchTextHeight: string = "";
-
   @State() editorHeight: string = "2.75em"
 
   supportedSyntaxes: Array<string> = [SyntaxNames.JavaScript, SyntaxNames.Liquid, SyntaxNames.Literal];
@@ -40,25 +39,27 @@ export class HeWeightedCheckboxProperty {
   syntaxSwitchCount: number = 0;
   scoreSyntaxSwitchCount: number = 0;
 
+  private _base: BaseComponent;
+
+  constructor() {
+    this._base = new BaseComponent(this);
+  }
+
   async componentWillLoad() {
-    const propertyModel = this.propertyModel;
-    const optionsJson = propertyModel.expressions[SyntaxNames.Json];
-    this.groups = parseJson(optionsJson) || [];
+    this._base.componentWillLoad();
   }
 
 
   updatePropertyModel() {
-    this.propertyModel.expressions[SyntaxNames.Json] = JSON.stringify(this.groups);
-    this.multiExpressionEditor.expressions[SyntaxNames.Json] = JSON.stringify(this.groups, null, 2);
-    this.expressionChanged.emit(JSON.stringify(this.propertyModel))
+    this._base.updatePropertyModel();
   }
 
   onDefaultSyntaxValueChanged(e: CustomEvent) {
-    this.groups = e.detail;
+    this.properties = e.detail;
   }
 
   onAddGroupClick() {
-    const groupName = ToLetter(this.groups.length + 1);
+    const groupName = ToLetter(this.properties.length + 1);
     const newGroup: NestedActivityDefinitionProperty = {
       name: groupName,
       syntax: SyntaxNames.Json,
@@ -67,13 +68,13 @@ export class HeWeightedCheckboxProperty {
         [WeightedScoringSyntax.GroupArrayScore]: ''
       }, type: PropertyOutputTypes.CheckboxGroup
     };
-    this.groups = [... this.groups, newGroup];
+    this.properties = [... this.properties, newGroup];
     this.updatePropertyModel();
     console.log("Added Group, property Updated");
   }
 
   onDeleteGroupClick(checkboxGroup: NestedActivityDefinitionProperty) {
-    this.groups = this.groups.filter(x => x != checkboxGroup);
+    this.properties = this.properties.filter(x => x != checkboxGroup);
     this.updatePropertyModel();
   }
 
@@ -94,7 +95,7 @@ export class HeWeightedCheckboxProperty {
       return;
 
     this.propertyModel.expressions[SyntaxNames.Json] = json;
-    this.groups = parsed;
+    this.properties = parsed;
   }
 
   onMultiExpressionEditorSyntaxChanged(e: CustomEvent<string>) {
@@ -112,7 +113,7 @@ export class HeWeightedCheckboxProperty {
   }
 
   render() {
-    const answerGroups = this.groups;
+    const answerGroups = this.properties;
     const json = JSON.stringify(answerGroups, null, 2);
 
     const renderCheckboxGroups = (checkboxGroup: NestedActivityDefinitionProperty) => {

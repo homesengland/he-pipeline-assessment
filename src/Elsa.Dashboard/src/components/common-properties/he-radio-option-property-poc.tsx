@@ -11,51 +11,50 @@ import { PropertyOutputTypes, RadioOptionsSyntax, SyntaxNames } from '../../cons
 import { HeActivityPropertyDescriptor, NestedActivityDefinitionProperty, NestedActivityDefinitionPropertyAlt } from '../../models/custom-component-models';
 import TrashCanIcon from '../../icons/trash-can';
 import { OnMultiExpressionEditorValueChanged } from './../../functions/multiExpressionEditorUpdate'
+import { BaseComponent, ISharedComponent } from '../base-component';
 
 @Component({
   tag: 'he-radio-options-property-poc',
   shadow: false,
 })
 
-export class HeRadioOptionPropertyPOC {
+export class HeRadioOptionPropertyPOC implements ISharedComponent {
 
   @Prop() activityModel: ActivityModel;
   @Prop() propertyDescriptor: HeActivityPropertyDescriptor;
   @Prop() propertyModel: NestedActivityDefinitionProperty;
-  @State() answers: Array<NestedActivityDefinitionPropertyAlt> = [];
+  @Prop() modelSyntax: string = SyntaxNames.Json;
+  @State() properties: Array<NestedActivityDefinitionPropertyAlt> = [];
   @State() iconProvider = new IconProvider();
   @Event() expressionChanged: EventEmitter<string>;
   @State() optionsDisplayToggle: Map<string> = {};
-
   @State() switchTextHeight: string = "";
-
   @State() editorHeight: string = "2.75em"
 
   supportedSyntaxes: Array<string> = [SyntaxNames.JavaScript, SyntaxNames.Liquid, SyntaxNames.Literal];
   multiExpressionEditor: HTMLElsaMultiExpressionEditorElement;
   syntaxSwitchCount: number = 0;
+  private _base: BaseComponent;
 
-  OnMultiExpressionEditorValueChanged = OnMultiExpressionEditorValueChanged.bind(this);
+  constructor() {
+    this._base = new BaseComponent(this);
+  }
 
   async componentWillLoad() {
-    const propertyModel = this.propertyModel;
-    const answersJson = propertyModel.expressions[SyntaxNames.Json]
-    this.answers = parseJson(answersJson) || [];
+    this._base.componentWillLoad();
   }
 
   updatePropertyModel() {
-    this.propertyModel.expressions[SyntaxNames.Json] = JSON.stringify(this.answers);
-    this.multiExpressionEditor.expressions[SyntaxNames.Json] = JSON.stringify(this.answers, null, 2);
-    this.expressionChanged.emit(JSON.stringify(this.propertyModel))
+    this._base.updatePropertyModel();
   }
 
   onDefaultSyntaxValueChanged(e: CustomEvent) {
-    this.answers = e.detail;
+    this.properties = e.detail;
   }
 
   onAddOptionClick() {
     console.log("Adding Radio");
-    const optionName = ToLetter(this.answers.length + 1);
+    const optionName = ToLetter(this.properties.length + 1);
     const newAnswer: NestedActivityDefinitionPropertyAlt = {
       name: optionName,
       syntax: SyntaxNames.Literal,
@@ -66,8 +65,8 @@ export class HeRadioOptionPropertyPOC {
       propertyDescriptors: this.getPropertyDescriptors()
     };
 
-    this.answers = [...this.answers, newAnswer];
-    console.log("Answers", this.answers);
+    this.properties = [...this.properties, newAnswer];
+    console.log("Answers", this.properties);
     this.updatePropertyModel();
   }
 
@@ -76,7 +75,7 @@ export class HeRadioOptionPropertyPOC {
   }
 
   onDeleteOptionClick(property: NestedActivityDefinitionPropertyAlt) {
-    this.answers = this.answers.filter(x => x != property);
+    this.properties = this.properties.filter(x => x != property);
     this.updatePropertyModel();
   }
 
@@ -95,7 +94,7 @@ export class HeRadioOptionPropertyPOC {
   //}
 
   updateNestedExpressions(parsed: Array<NestedActivityDefinitionPropertyAlt>) {
-    this.answers = parsed
+    this.properties = parsed
   }
 
   onMultiExpressionEditorSyntaxChanged(e: CustomEvent<string>) {
@@ -113,7 +112,7 @@ export class HeRadioOptionPropertyPOC {
   }
 
   render() {
-    const answers = this.answers;
+    const answers = this.properties;
     const json = JSON.stringify(answers, null, 2);
 
 
@@ -164,7 +163,7 @@ export class HeRadioOptionPropertyPOC {
           context={context}
           expressions={{ 'Json': json }}
           editor-height="20rem"
-          onExpressionChanged={e => this.OnMultiExpressionEditorValueChanged(e)}
+          onExpressionChanged={e => this._base.OnMultiExpressionEditorValueChanged(e)}
           onSyntaxChanged={e => this.onMultiExpressionEditorSyntaxChanged(e)}
         >
           <div class="elsa-min-w-full elsa-divide-y elsa-divide-gray-200">

@@ -40,6 +40,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <None Remove="src\components\base-component.ts" />
     <None Remove="src\components\common-properties\he-text-activity-property.tsx" />
     <None Remove="src\components\common-properties\nested-properties\nested-property-list.tsx" />
     <None Remove="src\constants\Constants.ts" />
@@ -79,6 +80,7 @@
   <ItemGroup>
     <TypeScriptCompile Include="src\components\common-properties\he-text-activity-property.tsx" />
     <TypeScriptCompile Include="src\components\common-properties\nested-properties\nested-property-list.tsx" />
+    <TypeScriptCompile Include="src\components\base-component.ts" />
     <TypeScriptCompile Include="src\functions\multiExpressionEditorUpdate.tsx">
       <SubType>Code</SubType>
     </TypeScriptCompile>

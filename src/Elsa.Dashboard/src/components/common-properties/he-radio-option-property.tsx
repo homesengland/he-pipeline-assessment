@@ -1,8 +1,8 @@
-import { Component, h, Event, EventEmitter, Prop, State } from '@stencil/core';
+import { Component, h, Event, EventEmitter, State, Prop } from '@stencil/core';
 import {
-  ActivityDefinitionProperty,
-  ActivityModel,
-  ActivityPropertyDescriptor,
+    ActivityDefinitionProperty,
+    ActivityModel,
+    ActivityPropertyDescriptor,
   HTMLElsaMultiExpressionEditorElement,
   IntellisenseContext
 } from "../../models/elsa-interfaces";
@@ -14,19 +14,21 @@ import ExpandIcon from '../../icons/expand_icon';
 import { PropertyOutputTypes, RadioOptionsSyntax, SyntaxNames } from '../../constants/constants';
 import { NestedActivityDefinitionProperty } from '../../models/custom-component-models';
 import { ToggleDictionaryDisplay } from '../../functions/display-toggle'
-import { UpdateCheckbox, CustomUpdateExpression, UpdateName, UpdateSyntax } from '../../functions/updateModel';
+import { BaseComponent, ISharedComponent } from '../base-component';
 
 @Component({
   tag: 'he-radio-options-property',
   shadow: false,
 })
 
-export class HeRadioOptionProperty {
-
+export class HeRadioOptionProperty implements ISharedComponent {
   @Prop() activityModel: ActivityModel;
   @Prop() propertyDescriptor: ActivityPropertyDescriptor;
   @Prop() propertyModel: ActivityDefinitionProperty;
-  @State() options: Array<NestedActivityDefinitionProperty> = [];
+  @Prop() modelSyntax: string = SyntaxNames.Json;
+  @State() properties: NestedActivityDefinitionProperty[];
+  private _base: BaseComponent;
+
   @State() iconProvider = new IconProvider();
   @Event() expressionChanged: EventEmitter<string>;
   @State() optionsDisplayToggle: Map<string> = {};
@@ -39,37 +41,29 @@ export class HeRadioOptionProperty {
   multiExpressionEditor: HTMLElsaMultiExpressionEditorElement;
   syntaxSwitchCount: number = 0;
 
-  UpdateExpression: Function = CustomUpdateExpression.bind(this);
-  UpdateName: Function = UpdateName.bind(this);
-  UpdateCheckbox: Function = UpdateCheckbox.bind(this);
-  UpdateSyntax: Function = UpdateSyntax.bind(this);
 
-  async componentWillLoad() {
-    const propertyModel = this.propertyModel;
-    const optionsJson = propertyModel.expressions[SyntaxNames.Json]
-    this.options = parseJson(optionsJson) || [];
+  constructor() {
+    this._base = new BaseComponent(this);
   }
 
-  updatePropertyModel() {
-    this.propertyModel.expressions[SyntaxNames.Json] = JSON.stringify(this.options);
-    this.multiExpressionEditor.expressions[SyntaxNames.Json] = JSON.stringify(this.options, null, 2);
-    this.expressionChanged.emit(JSON.stringify(this.propertyModel))
+  async componentWillLoad() {
+    this._base.componentWillLoad();
   }
 
   onDefaultSyntaxValueChanged(e: CustomEvent) {
-    this.options = e.detail;
+    this.properties = e.detail;
   }
 
   onAddOptionClick() {
-    const optionName = ToLetter(this.options.length + 1);
+    const optionName = ToLetter(this.properties.length + 1);
     const newOption: NestedActivityDefinitionProperty = { name: optionName, syntax: SyntaxNames.Literal, expressions: { [SyntaxNames.Literal]: '', [RadioOptionsSyntax.PrePopulated]:'false' }, type: PropertyOutputTypes.Radio };
-    this.options = [...this.options, newOption];
-    this.updatePropertyModel();
+    this.properties = [...this.properties, newOption];
+    this._base.updatePropertyModel();
   }
 
   onDeleteOptionClick(switchCase: NestedActivityDefinitionProperty) {
-    this.options = this.options.filter(x => x != switchCase);
-    this.updatePropertyModel();
+    this.properties = this.properties.filter(x => x != switchCase);
+    this._base.updatePropertyModel();
   }
 
   onMultiExpressionEditorValueChanged(e: CustomEvent<string>) {
@@ -83,7 +77,7 @@ export class HeRadioOptionProperty {
       return;
 
     this.propertyModel.expressions[SyntaxNames.Json] = json;
-    this.options = parsed;
+    this.properties = parsed;
   }
 
   onMultiExpressionEditorSyntaxChanged(e: CustomEvent<string>) {
@@ -101,7 +95,7 @@ export class HeRadioOptionProperty {
   }
 
   render() {
-    const cases = this.options;
+    const cases = this.properties;
     const supportedSyntaxes = this.supportedSyntaxes;
     const json = JSON.stringify(cases, null, 2);
 
@@ -126,7 +120,7 @@ export class HeRadioOptionProperty {
               class="elsa-py-3 elsa-text-left elsa-text-xs elsa-font-medium elsa-text-gray-500 elsa-tracking-wider elsa-w-2/12">Identifier
             </th>
             <td class="elsa-py-2 elsa-pr-5" style={{ width: colWidth }}>
-              <input type="text" value={radioOption.name} onChange={e => this.UpdateName(e, radioOption)}
+              <input type="text" value={radioOption.name} onChange={e => this._base.UpdateName(e, radioOption)}
               class="focus:elsa-ring-blue-500 focus:elsa-border-blue-500 elsa-block elsa-w-full elsa-min-w-0 elsa-rounded-md sm:elsa-text-sm elsa-border-gray-300" />
             </td>
             <td class="elsa-pt-1 elsa-pr-2 elsa-text-right">
@@ -153,10 +147,10 @@ export class HeRadioOptionProperty {
                 single-line={false}
                 editorHeight={this.editorHeight}
                   padding="elsa-pt-1.5 elsa-pl-1 elsa-pr-28"
-                  onExpressionChanged={e => this.UpdateExpression(e, radioOption, radioOption.syntax)}
+                  onExpressionChanged={e => this._base.CustomUpdateExpression(e, radioOption, radioOption.syntax)}
               />
               <div class="elsa-absolute elsa-inset-y-0 elsa-right-0 elsa-flex elsa-items-center">
-                <select onChange={e => this.UpdateSyntax(e, radioOption, expressionEditor)}
+                <select onChange={e => this._base.UpdateSyntax(e, radioOption, expressionEditor)}
                   class="focus:elsa-ring-blue-500 focus:elsa-border-blue-500 elsa-h-full elsa-py-0 elsa-pl-2 elsa-pr-7 elsa-border-transparent elsa-bg-transparent elsa-text-gray-500 sm:elsa-text-sm elsa-rounded-md">
                   {supportedSyntaxes.map(supportedSyntax => {
                     const selected = supportedSyntax == syntax;
@@ -195,10 +189,10 @@ export class HeRadioOptionProperty {
                   single-line={false}
                   editorHeight="2.75em"
                   padding="elsa-pt-1.5 elsa-pl-1 elsa-pr-28"
-                  onExpressionChanged={e => this.UpdateExpression(e, radioOption, RadioOptionsSyntax.PrePopulated)}
+                  onExpressionChanged={e => this._base.CustomUpdateExpression(e, radioOption, RadioOptionsSyntax.PrePopulated)}
                 />
                 <div class="elsa-absolute elsa-inset-y-0 elsa-right-0 elsa-flex elsa-items-center">
-                  <select onChange={e => this.UpdateSyntax(e, radioOption, prePopulatedExpressionEditor)}
+                  <select onChange={e => this._base.UpdateSyntax(e, radioOption, prePopulatedExpressionEditor)}
                     class="focus:elsa-ring-blue-500 focus:elsa-border-blue-500 elsa-h-full elsa-py-0 elsa-pl-2 elsa-pr-7 elsa-border-transparent elsa-bg-transparent elsa-text-gray-500 sm:elsa-text-sm elsa-rounded-md">
                     {this.supportedSyntaxes.filter(x => x == SyntaxNames.JavaScript).map(supportedSyntax => {
                       const selected = supportedSyntax == SyntaxNames.JavaScript;

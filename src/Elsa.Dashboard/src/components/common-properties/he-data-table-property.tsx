@@ -1,6 +1,5 @@
 import { Component, h, Event, EventEmitter, Prop, State } from '@stencil/core';
 import {
-  ActivityDefinitionProperty,
   ActivityModel,
   ActivityPropertyDescriptor,
   HTMLElsaMultiExpressionEditorElement,
@@ -14,19 +13,20 @@ import ExpandIcon from '../../icons/expand_icon';
 import { DataTableSyntax, PropertyOutputTypes, SyntaxNames } from '../../constants/constants';
 import { NestedActivityDefinitionProperty } from '../../models/custom-component-models';
 import { ToggleDictionaryDisplay } from '../../functions/display-toggle'
-import { UpdateCheckbox, CustomUpdateExpression, UpdateExpressionFromInput, StandardUpdateExpression, UpdateName, UpdateSyntax } from '../../functions/updateModel';
+import { BaseComponent, ISharedComponent } from '../base-component';
 
 @Component({
   tag: 'he-data-table-property',
   shadow: false,
 })
 
-export class HeDataTableProperty {
+export class HeDataTableProperty implements ISharedComponent {
 
   @Prop() activityModel: ActivityModel;
   @Prop() propertyDescriptor: ActivityPropertyDescriptor;
-  @Prop() propertyModel: ActivityDefinitionProperty;
-  @State() inputs: Array<NestedActivityDefinitionProperty> = [];
+  @Prop() propertyModel: NestedActivityDefinitionProperty;
+  @Prop() modelSyntax: string = SyntaxNames.Json;
+  @State() properties: Array<NestedActivityDefinitionProperty> = [];
   @State() iconProvider = new IconProvider();
   @Event() expressionChanged: EventEmitter<string>;
   @State() optionsDisplayToggle: Map<string> = {};
@@ -37,25 +37,21 @@ export class HeDataTableProperty {
 
   @State() inputOptions: Array<string> = [];
   @State() selectedInputType: string = "Currency";
+  private _base: BaseComponent;
 
   supportedSyntaxes: Array<string> = [SyntaxNames.JavaScript, SyntaxNames.Literal];
   multiExpressionEditor: HTMLElsaMultiExpressionEditorElement;
   syntaxSwitchCount: number = 0;
 
-  UpdateExpression: Function = CustomUpdateExpression.bind(this);
-  UpdateInput: Function = UpdateExpressionFromInput.bind(this);
-  StandardUpdateExpression: Function = StandardUpdateExpression.bind(this);
-  UpdateName: Function = UpdateName.bind(this);
-  UpdateCheckbox: Function = UpdateCheckbox.bind(this);
-  UpdateSyntax: Function = UpdateSyntax.bind(this);
+  constructor() {
+    this._base = new BaseComponent(this);
+  }
 
   async componentWillLoad() {
-    const propertyModel = this.propertyModel;
-    const optionsJson = propertyModel.expressions[SyntaxNames.Json]
-    this.inputs = parseJson(optionsJson) || [];
+    this._base.componentWillLoad();
     this.inputOptions = ["Currency", "Decimal", "Integer", "Text"];
 
-    if (propertyModel.expressions[DataTableSyntax.InputType] == null)
+    if (this.propertyModel.expressions[DataTableSyntax.InputType] == null)
     {
       this.propertyModel.expressions[DataTableSyntax.InputType] = "Currency";
 
@@ -64,24 +60,24 @@ export class HeDataTableProperty {
   }
 
   updatePropertyModel() {
-    this.propertyModel.expressions[SyntaxNames.Json] = JSON.stringify(this.inputs);
-    this.multiExpressionEditor.expressions[SyntaxNames.Json] = JSON.stringify(this.inputs, null, 2);
+    this.propertyModel.expressions[SyntaxNames.Json] = JSON.stringify(this.properties);
+    this.multiExpressionEditor.expressions[SyntaxNames.Json] = JSON.stringify(this.properties, null, 2);
     this.expressionChanged.emit(JSON.stringify(this.propertyModel))
   }
 
   onDefaultSyntaxValueChanged(e: CustomEvent) {
-    this.inputs = e.detail;
+    this.properties = e.detail;
   }
 
   onAddRowClick() {
-    const optionName = ToLetter(this.inputs.length + 1);
+    const optionName = ToLetter(this.properties.length + 1);
     const newOption: NestedActivityDefinitionProperty = { name: optionName, syntax: SyntaxNames.Literal, expressions: { [SyntaxNames.Literal]: '', [DataTableSyntax.Identifier]: optionName }, type: PropertyOutputTypes.TableInput };
-    this.inputs = [...this.inputs, newOption];
+    this.properties = [...this.properties, newOption];
     this.updatePropertyModel();
   }
 
   onDeleteInputClick(input: NestedActivityDefinitionProperty) {
-    this.inputs = this.inputs.filter(x => x != input);
+    this.properties = this.properties.filter(x => x != input);
     this.updatePropertyModel();
   }
 
@@ -96,7 +92,7 @@ export class HeDataTableProperty {
       return;
 
     this.propertyModel.expressions[SyntaxNames.Json] = json;
-    this.inputs = parsed;
+    this.properties = parsed;
   }
 
   onMultiExpressionEditorSyntaxChanged(e: CustomEvent<string>) {
@@ -114,12 +110,12 @@ export class HeDataTableProperty {
   }
 
   onInputTypeChange(e: Event) {
-    this.StandardUpdateExpression(e, this.propertyModel, DataTableSyntax.InputType);
+    this._base.StandardUpdateExpression(e, this.propertyModel, DataTableSyntax.InputType);
     this.selectedInputType = this.propertyModel.expressions[DataTableSyntax.InputType];
   }
 
   render() {
-    const cases = this.inputs;
+    const cases = this.properties;
     const supportedSyntaxes = this.supportedSyntaxes;
     const json = JSON.stringify(cases, null, 2);
     const selectedType = this.propertyModel.expressions[DataTableSyntax.InputType];
@@ -144,7 +140,7 @@ export class HeDataTableProperty {
               class="elsa-py-3 elsa-text-left elsa-text-xs elsa-font-medium elsa-text-gray-500 elsa-tracking-wider elsa-w-2/12">Identifier
             </th>
             <td class="elsa-py-2 elsa-pr-5" style={{ width: colWidth }}>
-              <input type="text" value={tableInput.expressions[DataTableSyntax.Identifier]} onChange={e => this.UpdateInput(e, tableInput, DataTableSyntax.Identifier)}
+              <input type="text" value={tableInput.expressions[DataTableSyntax.Identifier]} onChange={e => this._base.UpdateExpressionFromInput(e, tableInput, DataTableSyntax.Identifier)}
                 class="focus:elsa-ring-blue-500 focus:elsa-border-blue-500 elsa-block elsa-w-full elsa-min-w-0 elsa-rounded-md sm:elsa-text-sm elsa-border-gray-300" />
             </td>
             <td class="elsa-pt-1 elsa-pr-2 elsa-text-right">
@@ -169,10 +165,10 @@ export class HeDataTableProperty {
                   single-line={false}
                   editorHeight={this.editorHeight}
                   padding="elsa-pt-1.5 elsa-pl-1 elsa-pr-28"
-                  onExpressionChanged={e => this.UpdateExpression(e, tableInput, tableInput.syntax)}
+                  onExpressionChanged={e => this._base.CustomUpdateExpression(e, tableInput, tableInput.syntax)}
                 />
                 <div class="elsa-absolute elsa-inset-y-0 elsa-right-0 elsa-flex elsa-items-center">
-                  <select onChange={e => this.UpdateSyntax(e, tableInput, expressionEditor)}
+                  <select onChange={e => this._base.UpdateSyntax(e, tableInput, expressionEditor)}
                     class="focus:elsa-ring-blue-500 focus:elsa-border-blue-500 elsa-h-full elsa-py-0 elsa-pl-2 elsa-pr-7 elsa-border-transparent elsa-bg-transparent elsa-text-gray-500 sm:elsa-text-sm elsa-rounded-md">
                     {supportedSyntaxes.map(supportedSyntax => {
                       const selected = supportedSyntax == syntax;
@@ -205,7 +201,7 @@ export class HeDataTableProperty {
             </th>
             <td class="elsa-py-0">
               <input name="choice_input" type="checkbox" checked={readOnly} value={tableInput.expressions[DataTableSyntax.Readonly]}
-                onChange={e => this.UpdateCheckbox(e, tableInput, DataTableSyntax.Readonly)}
+                onChange={e => this._base.UpdateCheckbox(e, tableInput, DataTableSyntax.Readonly)}
                 class="focus:elsa-ring-blue-500 elsa-h-8 elsa-w-8 elsa-text-blue-600 elsa-border-gray-300 elsa-rounded" />
             </td>
           </tr>
@@ -219,7 +215,7 @@ export class HeDataTableProperty {
             </th>
             <td class="elsa-py-0">
               <input name="choice_input" type="checkbox" checked={sumTotalColumn} value={tableInput.expressions[DataTableSyntax.SumTotalColumn]}
-                onChange={e => this.UpdateCheckbox(e, tableInput, DataTableSyntax.SumTotalColumn)}
+                onChange={e => this._base.UpdateCheckbox(e, tableInput, DataTableSyntax.SumTotalColumn)}
                 class="focus:elsa-ring-blue-500 elsa-h-8 elsa-w-8 elsa-text-blue-600 elsa-border-gray-300 elsa-rounded" />
             </td>
           </tr>
@@ -239,10 +235,10 @@ export class HeDataTableProperty {
                 single-line={false}
                 editorHeight={this.editorHeight}
                   padding="elsa-pt-1.5 elsa-pl-1 elsa-pr-28"
-                  onExpressionChanged={e => this.UpdateExpression(e, tableInput, DataTableSyntax.Input)}
+                  onExpressionChanged={e => this._base.CustomUpdateExpression(e, tableInput, DataTableSyntax.Input)}
               />
               <div class="elsa-absolute elsa-inset-y-0 elsa-right-0 elsa-flex elsa-items-center">
-                  <select onChange={e => this.UpdateSyntax(e, tableInput, expressionEditor)}
+                  <select onChange={e => this._base.UpdateSyntax(e, tableInput, expressionEditor)}
                     class="focus:elsa-ring-blue-500 focus:elsa-border-blue-500 elsa-h-full elsa-py-0 elsa-pl-2 elsa-pr-7 elsa-border-transparent elsa-bg-transparent elsa-text-gray-500 sm:elsa-text-sm elsa-rounded-md">
                     {supportedSyntaxes.filter(x => x == SyntaxNames.JavaScript).map(supportedSyntax => {
                       const selected = supportedSyntax == SyntaxNames.JavaScript;
@@ -308,7 +304,7 @@ export class HeDataTableProperty {
 
         <div>
           <div>
-            <input type="text" value={this.propertyModel.expressions[DataTableSyntax.DisplayGroupId]} onChange={e => this.UpdateInput(e, this.propertyModel, DataTableSyntax.DisplayGroupId)}
+            <input type="text" value={this.propertyModel.expressions[DataTableSyntax.DisplayGroupId]} onChange={e => this._base.UpdateExpressionFromInput(e, this.propertyModel, DataTableSyntax.DisplayGroupId)}
               class="focus:elsa-ring-blue-500 focus:elsa-border-bue-500 elsa-block elsa-w-full elsa-min-w-0 elsa-rounded-md sm:elsa-text-sm elsa-border-gray-300" />
           </div>
           <p class="elsa-mt-2 elsa-text-sm elsa-text-gray-500">This allows you to display this table as a column of a shared table with all matching Group Id's of Tables on this Question Screen..</p>
