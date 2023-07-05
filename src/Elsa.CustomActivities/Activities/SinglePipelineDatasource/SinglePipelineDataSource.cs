@@ -48,7 +48,6 @@ namespace Elsa.CustomActivities.Activities.SinglePipelineDataSource
             else
             {
                 context.JournalData.Add("Error", "Call to GetSinglePipelineData returned null");
-                return new SuspendResult();
             }
 
             return await Task.FromResult(new CombinedResult(new List<IActivityExecutionResult>

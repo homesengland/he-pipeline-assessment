@@ -62,13 +62,11 @@ namespace Elsa.CustomActivities.Activities.HousingNeed
                 else
                 {
                     context.JournalData.Add("Error", "Call to GetLAHouseNeedData returned null");
-                    return new SuspendResult();
                 }
             }
             else
             {
                 context.JournalData.Add("Error", "Call to GetLAHouseNeedData returned null");
-                return new SuspendResult();
             }
 
             return await Task.FromResult(new CombinedResult(new List<IActivityExecutionResult>

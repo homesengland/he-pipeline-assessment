@@ -33,10 +33,7 @@ namespace Elsa.CustomActivities.Activities.VFMDataSource
 
         protected override async ValueTask<IActivityExecutionResult> OnExecuteAsync(ActivityExecutionContext context)
         {
-
             return new SuspendResult();
-
-           
         }
 
         protected override async ValueTask<IActivityExecutionResult> OnResumeAsync(ActivityExecutionContext context)
@@ -51,12 +48,10 @@ namespace Elsa.CustomActivities.Activities.VFMDataSource
             {
                 var dataResult = _jsonHelper.JsonToVFMCalculationData(data);
                 this.Output = dataResult;
-
             }
             else
             {
                 context.JournalData.Add("Error", "Call to GetVFMCalculationData returned null");
-                return new SuspendResult();
             }
 
             return await Task.FromResult(new CombinedResult(new List<IActivityExecutionResult>

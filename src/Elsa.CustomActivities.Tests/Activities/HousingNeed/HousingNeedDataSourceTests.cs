@@ -109,8 +109,11 @@ namespace Elsa.CustomActivities.Tests.Activities.HousingNeed
 
             //Assert
             Assert.NotNull(result);
-            var outcomeResult = (SuspendResult)result;
-            Assert.IsType<SuspendResult>(outcomeResult);
+            var combinedResult = (CombinedResult)result;
+            Assert.Equal(2, combinedResult.Results.Count);
+            var outcomeResult = (OutcomeResult)combinedResult.Results.First(x => x.GetType() == typeof(OutcomeResult));
+            Assert.Equal("Done", outcomeResult.Outcomes.First());
+            Assert.Contains(combinedResult.Results, x => x.GetType() == typeof(SuspendResult));
         }
 
         [Theory]
@@ -128,8 +131,11 @@ namespace Elsa.CustomActivities.Tests.Activities.HousingNeed
 
             //Assert
             Assert.NotNull(result);
-            var outcomeResult = (SuspendResult)result;
-            Assert.IsType<SuspendResult>(outcomeResult);
+            var combinedResult = (CombinedResult)result;
+            Assert.Equal(2, combinedResult.Results.Count);
+            var outcomeResult = (OutcomeResult)combinedResult.Results.First(x => x.GetType() == typeof(OutcomeResult));
+            Assert.Equal("Done", outcomeResult.Outcomes.First());
+            Assert.Contains(combinedResult.Results, x => x.GetType() == typeof(SuspendResult));
         }
     }
 }

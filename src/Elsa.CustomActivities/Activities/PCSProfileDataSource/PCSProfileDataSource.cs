@@ -33,33 +33,23 @@ namespace Elsa.CustomActivities.Activities.PCSProfileDataSource
 
             return new SuspendResult();
 
-           
+
         }
 
         protected override async ValueTask<IActivityExecutionResult> OnResumeAsync(ActivityExecutionContext context)
         {
-            try
+            context.JournalData.Add(nameof(ProjectIdentified), ProjectIdentified);
+
+            var data = await _client.GetPCSProfileData(ProjectIdentified);
+
+            if (data != null)
             {
-                context.JournalData.Add(nameof(ProjectIdentified), ProjectIdentified);
-
-                var data = await _client.GetPCSProfileData(ProjectIdentified);
-
-                if (data != null)
-                {
-                    var dataResult = _jsonHelper.JsonToPCSProfileData(data);
-                    this.Output = dataResult;
-
-                }
-                else
-                {
-                    context.JournalData.Add("Error", "Call to GetPCSProfileData returned null");
-                    return new SuspendResult();
-                }
+                var dataResult = _jsonHelper.JsonToPCSProfileData(data);
+                this.Output = dataResult;
             }
-            catch (Exception e)
+            else
             {
-                context.JournalData.Add("Error", e.Message);
-                return new SuspendResult();
+                context.JournalData.Add("Error", "Call to GetPCSProfileData returned null");
             }
 
             return await Task.FromResult(new CombinedResult(new List<IActivityExecutionResult>
