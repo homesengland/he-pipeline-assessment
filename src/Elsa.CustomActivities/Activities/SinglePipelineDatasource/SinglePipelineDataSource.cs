@@ -5,6 +5,7 @@ using Elsa.Services;
 using Elsa.Services.Models;
 using He.PipelineAssessment.Data.SinglePipeline;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
 
 namespace Elsa.CustomActivities.Activities.SinglePipelineDataSource
 {
@@ -30,22 +31,48 @@ namespace Elsa.CustomActivities.Activities.SinglePipelineDataSource
 
         protected override async ValueTask<IActivityExecutionResult> OnExecuteAsync(ActivityExecutionContext context)
         {
-                context.JournalData.Add(nameof(SpId), SpId);
+            //context.JournalData.Add(nameof(SpId), SpId);
 
-                var data = await _singlePipelineClient.GetSinglePipelineData(SpId);
+            //var data = await _singlePipelineClient.GetSinglePipelineData(SpId);
 
-                if (data != null)
-                {
-                    var dataResult = _jsonHelper.JsonToSinglePipelineData(data);
-                    this.Output = dataResult;
-                }
-                else
-                {
-                    context.JournalData.Add("Error", "Call to GetSinglePipelineData returned null");
-                    return new SuspendResult();
-                }
+            //if (data != null)
+            //{
+            //    var dataResult = _jsonHelper.JsonToSinglePipelineData(data);
+            //    this.Output = dataResult;
+            //}
+            //else
+            //{
+            //    context.JournalData.Add("Error", "Call to GetSinglePipelineData returned null");
+            //    return new SuspendResult();
+            //}
 
-                return Done();
+            return new SuspendResult();
+        }
+
+        protected override async ValueTask<IActivityExecutionResult> OnResumeAsync(ActivityExecutionContext context)
+        {
+            context.JournalData.Add(nameof(SpId), SpId);
+
+            var data = await _singlePipelineClient.GetSinglePipelineData(SpId);
+
+            if (data != null)
+            {
+                var dataResult = _jsonHelper.JsonToSinglePipelineData(data);
+                this.Output = dataResult;
             }
+            else
+            {
+                context.JournalData.Add("Error", "Call to GetSinglePipelineData returned null");
+                return new SuspendResult();
+            }
+
+            return await Task.FromResult(new CombinedResult(new List<IActivityExecutionResult>
+            {
+                Outcomes("Done"),
+                new SuspendResult()
+            }));
         }
     }
+}
+
+

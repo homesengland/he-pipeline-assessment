@@ -33,6 +33,14 @@ namespace Elsa.CustomActivities.Activities.VFMDataSource
 
         protected override async ValueTask<IActivityExecutionResult> OnExecuteAsync(ActivityExecutionContext context)
         {
+
+            return new SuspendResult();
+
+           
+        }
+
+        protected override async ValueTask<IActivityExecutionResult> OnResumeAsync(ActivityExecutionContext context)
+        {
             context.JournalData.Add(nameof(GssCode), GssCode);
             context.JournalData.Add(nameof(LocalAuthority), LocalAuthority);
             context.JournalData.Add(nameof(LocalAuthorityAlt), LocalAuthorityAlt);
@@ -51,7 +59,11 @@ namespace Elsa.CustomActivities.Activities.VFMDataSource
                 return new SuspendResult();
             }
 
-            return Done();
+            return await Task.FromResult(new CombinedResult(new List<IActivityExecutionResult>
+            {
+                Outcomes("Done"),
+                new SuspendResult()
+            }));
         }
     }
 }

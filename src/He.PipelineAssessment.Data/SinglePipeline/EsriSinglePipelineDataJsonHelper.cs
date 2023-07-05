@@ -19,6 +19,8 @@ namespace He.PipelineAssessment.Data.SinglePipeline
                 var result = JsonSerializer.Deserialize<EsriSinglePipelineResponse>(data);
                 if (result != null && result.features.FirstOrDefault() != null)
                 {
+                    var rand = new Random();
+                    result.features.ForEach(x => x.attributes.sp_id = rand.Next());
                     var dataResult = result.features.FirstOrDefault()!.attributes;
                     return dataResult;
                 }

@@ -4,6 +4,7 @@ using Elsa.Expressions;
 using Elsa.Services;
 using Elsa.Services.Models;
 using He.PipelineAssessment.Data.PCSProfile;
+using He.PipelineAssessment.Data.SinglePipeline;
 
 namespace Elsa.CustomActivities.Activities.PCSProfileDataSource
 {
@@ -29,6 +30,14 @@ namespace Elsa.CustomActivities.Activities.PCSProfileDataSource
 
         protected override async ValueTask<IActivityExecutionResult> OnExecuteAsync(ActivityExecutionContext context)
         {
+
+            return new SuspendResult();
+
+           
+        }
+
+        protected override async ValueTask<IActivityExecutionResult> OnResumeAsync(ActivityExecutionContext context)
+        {
             try
             {
                 context.JournalData.Add(nameof(ProjectIdentified), ProjectIdentified);
@@ -47,13 +56,17 @@ namespace Elsa.CustomActivities.Activities.PCSProfileDataSource
                     return new SuspendResult();
                 }
             }
-            catch(Exception e)
+            catch (Exception e)
             {
                 context.JournalData.Add("Error", e.Message);
                 return new SuspendResult();
             }
 
-            return Done();
+            return await Task.FromResult(new CombinedResult(new List<IActivityExecutionResult>
+            {
+                Outcomes("Done"),
+                new SuspendResult()
+            }));
         }
     }
 }
