@@ -31,21 +31,6 @@ namespace Elsa.CustomActivities.Activities.SinglePipelineDataSource
 
         protected override async ValueTask<IActivityExecutionResult> OnExecuteAsync(ActivityExecutionContext context)
         {
-            //context.JournalData.Add(nameof(SpId), SpId);
-
-            //var data = await _singlePipelineClient.GetSinglePipelineData(SpId);
-
-            //if (data != null)
-            //{
-            //    var dataResult = _jsonHelper.JsonToSinglePipelineData(data);
-            //    this.Output = dataResult;
-            //}
-            //else
-            //{
-            //    context.JournalData.Add("Error", "Call to GetSinglePipelineData returned null");
-            //    return new SuspendResult();
-            //}
-
             return new SuspendResult();
         }
 

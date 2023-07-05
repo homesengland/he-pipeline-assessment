@@ -122,8 +122,8 @@ namespace He.PipelineAssessment.UI.Tests.Features.Workflow.StartWorkflow
 
             //Assert
             assessmentRepository.Verify(x => x.CreateAssessmentToolWorkflowInstance(It.Is<AssessmentToolWorkflowInstance>(y =>
-            y.FirstActivityId == workflowNextActivityDataDto.Data.NextActivityId
-            && y.FirstActivityType == workflowNextActivityDataDto.Data.ActivityType
+            y.FirstActivityId == workflowNextActivityDataDto.Data.FirstActivityId
+            && y.FirstActivityType == workflowNextActivityDataDto.Data.FirstActivityType
             && y.CurrentActivityId == workflowNextActivityDataDto.Data.NextActivityId
             && y.CurrentActivityType == workflowNextActivityDataDto.Data.ActivityType
             && y.WorkflowInstanceId == workflowNextActivityDataDto.Data.WorkflowInstanceId
