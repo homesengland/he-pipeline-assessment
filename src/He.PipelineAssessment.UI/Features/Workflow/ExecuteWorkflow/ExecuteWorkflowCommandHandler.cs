@@ -19,23 +19,20 @@ namespace He.PipelineAssessment.UI.Features.Workflow.ExecuteWorkflow
             _elsaServerHttpClient = elsaServerHttpClient;
         }
 
-        public async Task<LoadQuestionScreenRequest?> Handle(ExecuteWorkflowCommand request, CancellationToken cancellationToken)
+        public async Task<LoadQuestionScreenRequest?> Handle(ExecuteWorkflowCommand command, CancellationToken cancellationToken)
         {
-            var assessmentWorkflowInstance = await _assessmentRepository.GetAssessmentToolWorkflowInstance(request.WorkflowInstanceId);
+            var assessmentWorkflowInstance = await _assessmentRepository.GetAssessmentToolWorkflowInstance(command.WorkflowInstanceId);
 
             if (!await _roleValidation.ValidateRole(assessmentWorkflowInstance!.AssessmentId, assessmentWorkflowInstance!.WorkflowDefinitionId))
             {
-                return new LoadQuestionScreenRequest()
-                {
-                    IsAuthorised = false
-                };
+                throw new UnauthorizedAccessException($"You do not have permission to access this resource.");
             }
 
             var dto = new ExecuteWorkflowCommandDto()
             {
-                WorkflowInstanceId = request.WorkflowInstanceId,
-                ActivityType = request.ActivityType,
-                ActivityId = request.ActivityId
+                WorkflowInstanceId = command.WorkflowInstanceId,
+                ActivityType = command.ActivityType,
+                ActivityId = command.ActivityId
             };
 
             var response = await _elsaServerHttpClient.PostExecuteWorkflow(dto);

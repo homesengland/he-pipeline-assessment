@@ -91,7 +91,7 @@ namespace Elsa.CustomWorkflow.Sdk.HttpClients
                                      $"\n Message= '{data}'," +
                                      $"\n Url='{request.RequestUri}'");
 
-                    throw new ApplicationException("Failed to start workflow");
+                    throw new ApplicationException("Failed to execute workflow");
                 }
             }
 

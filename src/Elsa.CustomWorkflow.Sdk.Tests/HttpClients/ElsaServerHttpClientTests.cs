@@ -56,7 +56,50 @@ namespace Elsa.CustomWorkflow.Sdk.Tests.HttpClients
         }
 
 
+        [Theory]
+        [AutoMoqData]
+        public async Task PostExecuteWorkflow_ReturnsNull_GivenHttpClientGivesBackNonSuccessResponse(
+            [Frozen] Mock<IHttpClientFactory> httpClientFactoryMock,
+            [Frozen] Mock<HttpMessageHandler> httpMessageHandlerMock,
+            ExecuteWorkflowCommandDto commandDto,
+            WorkflowNextActivityDataDto workflowNextActivityDataDto,
+            ElsaServerHttpClient sut)
+        {
+            //Arrange
+            HttpClientTestHelpers.SetupHttpClientWithExpectedStatusCode(workflowNextActivityDataDto,
+                HttpStatusCode.BadRequest,
+                httpClientFactoryMock,
+                httpMessageHandlerMock);
 
+            //Act
+            var exception = await Assert.ThrowsAsync<ApplicationException>(() => sut.PostExecuteWorkflow(commandDto));
+
+            //Assert
+            Assert.Equal("Failed to execute workflow", exception.Message);
+        }
+
+        [Theory]
+        [AutoMoqData]
+        public async Task PostExecuteWorkflow_ReturnsWorkflowNextActivityDataDto_GivenHttpClientGivesBackNonSuccessResponse(
+            [Frozen] Mock<IHttpClientFactory> httpClientFactoryMock,
+            [Frozen] Mock<HttpMessageHandler> httpMessageHandlerMock,
+            ExecuteWorkflowCommandDto commandDto,
+            WorkflowNextActivityDataDto workflowNextActivityDataDto,
+            ElsaServerHttpClient sut)
+        {
+            //Arrange
+            HttpClientTestHelpers.SetupHttpClientWithExpectedStatusCode(workflowNextActivityDataDto,
+                HttpStatusCode.OK,
+                httpClientFactoryMock,
+                httpMessageHandlerMock);
+
+            //Act
+            var result = await sut.PostExecuteWorkflow(commandDto);
+
+            //Assert
+            Assert.NotNull(result);
+            Assert.IsType<WorkflowNextActivityDataDto>(result);
+        }
 
 
         [Theory]
