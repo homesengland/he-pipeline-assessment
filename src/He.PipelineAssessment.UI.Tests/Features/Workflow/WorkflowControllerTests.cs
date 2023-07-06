@@ -412,6 +412,37 @@ namespace He.PipelineAssessment.UI.Tests.Features.Workflow
             Assert.IsType<QuestionScreenSaveAndContinueCommand>(viewResult.Model); // this will change
         }
 
+        [Theory]
+        [AutoMoqData]
+        public async Task LoadWorkflowActivity_ShouldRedirectToLoadWorkflowActivity_GivenDataScourceActivityType(
+            [Frozen] Mock<IMediator> mediator,
+            QuestionScreenSaveAndContinueCommandResponse saveAndContinueCommandResponse,
+            QuestionScreenSaveAndContinueCommand saveAndContinueCommand,
+            WorkflowController sut)
+        {
+            //Arrange
+            saveAndContinueCommand.IsAuthorised = true;
+            saveAndContinueCommand.IsReadOnly = false;
+            saveAndContinueCommandResponse.ActivityType = ActivityTypeConstants.SinglePipelineDataSource;
+
+            mediator.Setup(x =>
+                    x.Send(
+                        It.Is<LoadQuestionScreenRequest>(y =>
+                            y.ActivityId == saveAndContinueCommandResponse.ActivityId && y.WorkflowInstanceId ==
+                            saveAndContinueCommandResponse.WorkflowInstanceId), CancellationToken.None))
+                .ReturnsAsync(saveAndContinueCommand);
+
+            //Act
+            var result = await sut.LoadWorkflowActivity(saveAndContinueCommandResponse);
+
+            //Assert
+            Assert.NotNull(result);
+            Assert.IsType<RedirectToActionResult>(result);
+
+            var viewResult = (RedirectToActionResult)result;
+            Assert.Equal("LoadWorkflowActivity", viewResult.ActionName);
+
+        }
 
         [Theory]
         [AutoMoqData]
