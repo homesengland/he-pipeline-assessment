@@ -55,7 +55,7 @@ namespace Elsa.Server.Features.Workflow.LoadQuestionScreen
                     var dbAssessmentQuestionList =
                         await _elsaCustomRepository.GetActivityQuestions(activityRequest.ActivityId, activityRequest.WorkflowInstanceId,
                             cancellationToken);
-                    if (dbAssessmentQuestionList.SelectMany(x => x.Answers).Any())
+                    if (dbAssessmentQuestionList.SelectMany(x => x.Answers!).Any())
                     {
                         await _invoker.ExecuteWorkflowsAsync(activityRequest.ActivityId,
                             customActivityNavigation.ActivityType,

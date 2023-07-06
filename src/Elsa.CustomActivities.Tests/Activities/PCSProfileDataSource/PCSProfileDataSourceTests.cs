@@ -65,9 +65,6 @@ namespace Elsa.CustomActivities.Tests.Activities.PCSProfileDataSource
         [AutoMoqData]
         public async Task ResumeAsync_ReturnsOutcomeResult_GivenClientReturnsNull(
             [Frozen] Mock<IEsriPCSProfileClient> client,
-            [Frozen] Mock<IEsriPCSProfileDataJsonHelper> jsonHelperMock,
-            string dataString,
-            PCSProfileData data,
             CustomActivities.Activities.PCSProfileDataSource.PCSProfileDataSource sut)
         {
             //Arrange

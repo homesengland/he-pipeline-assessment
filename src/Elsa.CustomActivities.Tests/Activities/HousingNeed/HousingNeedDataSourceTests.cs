@@ -14,8 +14,6 @@ namespace Elsa.CustomActivities.Tests.Activities.HousingNeed
         [Theory]
         [AutoMoqData]
         public async Task OnExecute_ReturnsSuspendResult(
-            [Frozen] Mock<IEsriLaHouseNeedClient> laHouseNeedClient,
-            [Frozen] Mock<IEsriLaHouseNeedDataJsonHelper> jsonHelperMock,
             CustomActivities.Activities.HousingNeed.HousingNeedDataSource sut)
         {
             //Arrange

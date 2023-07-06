@@ -354,7 +354,6 @@ namespace He.PipelineAssessment.UI.Tests.Features.Workflow
           [Frozen] Mock<IMediator> mediator,
           QuestionScreenSaveAndContinueCommandResponse saveAndContinueCommandResponse,
           QuestionScreenSaveAndContinueCommand saveAndContinueCommand,
-          LoadConfirmationScreenResponse response,
           WorkflowController sut)
         {
             //Arrange
