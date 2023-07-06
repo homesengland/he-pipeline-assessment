@@ -28,12 +28,9 @@ namespace Elsa.CustomActivities.Activities.PCSProfileDataSource
 
         [ActivityOutput] public PCSProfileData? Output { get; set; }
 
-        protected override async ValueTask<IActivityExecutionResult> OnExecuteAsync(ActivityExecutionContext context)
+        protected override IActivityExecutionResult OnExecute(ActivityExecutionContext context)
         {
-
-            return new SuspendResult();
-
-
+            return Suspend();
         }
 
         protected override async ValueTask<IActivityExecutionResult> OnResumeAsync(ActivityExecutionContext context)
