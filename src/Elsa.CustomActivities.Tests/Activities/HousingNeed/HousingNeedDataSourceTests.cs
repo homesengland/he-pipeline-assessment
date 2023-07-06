@@ -13,7 +13,23 @@ namespace Elsa.CustomActivities.Tests.Activities.HousingNeed
     {
         [Theory]
         [AutoMoqData]
-        public async Task OnExecute_WithMultiLaData_ReturnsOutcomeResult(
+        public async Task OnExecute_ReturnsSuspendResult(
+            CustomActivities.Activities.HousingNeed.HousingNeedDataSource sut)
+        {
+            //Arrange
+            var context = new ActivityExecutionContext(default!, default!, default!, sut.Id, default, default);
+            //Act
+            var result = await sut.ExecuteAsync(context);
+
+            //Assert
+            Assert.NotNull(result);
+            Assert.IsType<SuspendResult>(result);
+
+        }
+
+        [Theory]
+        [AutoMoqData]
+        public async Task ResumeAsync_WithMultiLaData_ReturnsOutcomeResult(
         [Frozen] Mock<IEsriLaHouseNeedClient> laHouseNeedClient,
         [Frozen] Mock<IEsriLaHouseNeedDataJsonHelper> jsonHelperMock,
         string dataString,
@@ -28,19 +44,24 @@ namespace Elsa.CustomActivities.Tests.Activities.HousingNeed
             jsonHelperMock.Setup(x => x.JsonToLAHouseNeedData(dataString)).Returns(laHouseNeedDataList);
 
             //Act
-            var result = await sut.ExecuteAsync(context);
+            var result = await sut.ResumeAsync(context);
 
             //Assert
             Assert.NotNull(result);
-            var outcomeResult = (OutcomeResult)result;
-            Assert.IsType<OutcomeResult>(outcomeResult);
+
+            var combinedResult = (CombinedResult)result;
+            Assert.Equal(2, combinedResult.Results.Count);
+            var outcomeResult = (OutcomeResult)combinedResult.Results.First(x => x.GetType() == typeof(OutcomeResult));
+            Assert.Equal("Done", outcomeResult.Outcomes.First());
+            Assert.Contains(combinedResult.Results, x => x.GetType() == typeof(SuspendResult));
+
             Assert.Equal(laHouseNeedDataList, sut.OutputList);
             Assert.Null(sut.Output);
         }
 
         [Theory]
         [AutoMoqData]
-        public async Task OnExecute_WithSingleLaData_ReturnsOutcomeResult(
+        public async Task ResumeAsync_WithSingleLaData_ReturnsOutcomeResult(
         [Frozen] Mock<IEsriLaHouseNeedClient> laHouseNeedClient,
         [Frozen] Mock<IEsriLaHouseNeedDataJsonHelper> jsonHelperMock,
         string dataString,
@@ -55,19 +76,22 @@ namespace Elsa.CustomActivities.Tests.Activities.HousingNeed
             jsonHelperMock.Setup(x => x.JsonToLAHouseNeedData(dataString)).Returns(new List<LaHouseNeedData>() { laHouseNeedData });
 
             //Act
-            var result = await sut.ExecuteAsync(context);
+            var result = await sut.ResumeAsync(context);
 
             //Assert
             Assert.NotNull(result);
-            var outcomeResult = (OutcomeResult)result;
-            Assert.IsType<OutcomeResult>(outcomeResult);
+            var combinedResult = (CombinedResult)result;
+            Assert.Equal(2, combinedResult.Results.Count);
+            var outcomeResult = (OutcomeResult)combinedResult.Results.First(x => x.GetType() == typeof(OutcomeResult));
+            Assert.Equal("Done", outcomeResult.Outcomes.First());
+            Assert.Contains(combinedResult.Results, x => x.GetType() == typeof(SuspendResult));
             Assert.Equal(laHouseNeedData, sut.Output);
             Assert.Null(sut.OutputList);
         }
 
         [Theory]
         [AutoMoqData]
-        public async Task OnExecute_WithEmptyLaDataList_ReturnsSuspendedResult(
+        public async Task ResumeAsync_WithEmptyLaDataList_ReturnsSuspendedResult(
         [Frozen] Mock<IEsriLaHouseNeedClient> laHouseNeedClient,
         [Frozen] Mock<IEsriLaHouseNeedDataJsonHelper> jsonHelperMock,
         string dataString,
@@ -79,17 +103,20 @@ namespace Elsa.CustomActivities.Tests.Activities.HousingNeed
             jsonHelperMock.Setup(x => x.JsonToLAHouseNeedData(dataString)).Returns(new List<LaHouseNeedData>() {});
 
             //Act
-            var result = await sut.ExecuteAsync(context);
+            var result = await sut.ResumeAsync(context);
 
             //Assert
             Assert.NotNull(result);
-            var outcomeResult = (SuspendResult)result;
-            Assert.IsType<SuspendResult>(outcomeResult);
+            var combinedResult = (CombinedResult)result;
+            Assert.Equal(2, combinedResult.Results.Count);
+            var outcomeResult = (OutcomeResult)combinedResult.Results.First(x => x.GetType() == typeof(OutcomeResult));
+            Assert.Equal("Done", outcomeResult.Outcomes.First());
+            Assert.Contains(combinedResult.Results, x => x.GetType() == typeof(SuspendResult));
         }
 
         [Theory]
         [AutoMoqData]
-        public async Task OnExecute_WhenClientReturnsNull_ReturnsSuspendedResult(
+        public async Task ResumeAsync_WhenClientReturnsNull_ReturnsSuspendedResult(
         [Frozen] Mock<IEsriLaHouseNeedClient> laHouseNeedClient,
         CustomActivities.Activities.HousingNeed.HousingNeedDataSource sut)
         {
@@ -98,12 +125,15 @@ namespace Elsa.CustomActivities.Tests.Activities.HousingNeed
             laHouseNeedClient.Setup(x => x.GetLaHouseNeedData(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>())).ReturnsAsync((string?)null);
 
             //Act
-            var result = await sut.ExecuteAsync(context);
+            var result = await sut.ResumeAsync(context);
 
             //Assert
             Assert.NotNull(result);
-            var outcomeResult = (SuspendResult)result;
-            Assert.IsType<SuspendResult>(outcomeResult);
+            var combinedResult = (CombinedResult)result;
+            Assert.Equal(2, combinedResult.Results.Count);
+            var outcomeResult = (OutcomeResult)combinedResult.Results.First(x => x.GetType() == typeof(OutcomeResult));
+            Assert.Equal("Done", outcomeResult.Outcomes.First());
+            Assert.Contains(combinedResult.Results, x => x.GetType() == typeof(SuspendResult));
         }
     }
 }

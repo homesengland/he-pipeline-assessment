@@ -1,6 +1,7 @@
 ﻿using Elsa.CustomWorkflow.Sdk;
 using FluentValidation;
 using He.PipelineAssessment.UI.Features.Workflow.CheckYourAnswersSaveAndContinue;
+using He.PipelineAssessment.UI.Features.Workflow.ExecuteWorkflow;
 using He.PipelineAssessment.UI.Features.Workflow.LoadCheckYourAnswersScreen;
 using He.PipelineAssessment.UI.Features.Workflow.LoadConfirmationScreen;
 using He.PipelineAssessment.UI.Features.Workflow.LoadQuestionScreen;
@@ -32,143 +33,147 @@ namespace He.PipelineAssessment.UI.Features.Workflow
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> StartWorkflow([FromForm] StartWorkflowCommand command)
         {
-            try
+
+            var result = await _mediator.Send(command);
+
+            if (result.IsAuthorised)
             {
-                var result = await _mediator.Send(command);
 
-                if (result.IsAuthorised)
-                {
-
-                    return RedirectToAction("LoadWorkflowActivity",
-                        new
-                        {
-                            WorkflowInstanceId = result?.WorkflowInstanceId,
-                            ActivityId = result?.ActivityId,
-                            ActivityType = result?.ActivityType
-                        });
-                }
-                else
-                {
-                    return RedirectToAction("AccessDenied", "Error");
-                }
-
+                return RedirectToAction("LoadWorkflowActivity",
+                    new
+                    {
+                        WorkflowInstanceId = result?.WorkflowInstanceId,
+                        ActivityId = result?.ActivityId,
+                        ActivityType = result?.ActivityType
+                    });
             }
-            catch (Exception e)
+            else
             {
-                _logger.LogError(e.Message);
-                return RedirectToAction("Index", "Error", new { message = e.Message });
+                return RedirectToAction("AccessDenied", "Error");
             }
+
+
         }
 
         [Authorize(Policy = Authorization.Constants.AuthorizationPolicies.AssignmentToWorkflowExecuteRoleRequired)]
         public async Task<IActionResult> LoadWorkflowActivity(QuestionScreenSaveAndContinueCommandResponse request)
         {
-            try
+
+            if (string.IsNullOrEmpty(request.ActivityType))
             {
-                if (string.IsNullOrEmpty(request.ActivityType))
-                {
-                    //try to get activity type from the server?
-                }
-                switch (request.ActivityType)
-                {
-                    case ActivityTypeConstants.QuestionScreen:
-                        {
-                            var questionScreenRequest = new LoadQuestionScreenRequest
-                            {
-                                WorkflowInstanceId = request.WorkflowInstanceId,
-                                ActivityId = request.ActivityId,
-                                IsReadOnly = false
-                            };
-                            var result = await this._mediator.Send(questionScreenRequest);
-
-                            if (result.IsAuthorised && !result.IsReadOnly)
-                            {
-                                return View("SaveAndContinue", result);
-                            }
-                            else
-                            {
-                                return RedirectToAction("LoadReadOnlyWorkflowActivity", request);
-
-                            }
-                        }
-                    case ActivityTypeConstants.CheckYourAnswersScreen:
-                        {
-                            var checkYourAnswersScreenRequest = new LoadCheckYourAnswersScreenRequest
-                            {
-                                WorkflowInstanceId = request.WorkflowInstanceId,
-                                ActivityId = request.ActivityId,
-                                IsReadOnly = false,
-                            };
-
-                            var result = await this._mediator.Send(checkYourAnswersScreenRequest);
-
-                            if (result.IsAuthorised && !result.IsReadOnly)
-                            {
-                                return View("CheckYourAnswers", result);
-                            }
-                            else
-                            {
-
-                                return RedirectToAction("LoadReadOnlyWorkflowActivity", request);
-
-                            }
-
-                        }
-                    case ActivityTypeConstants.ConfirmationScreen:
-                        {
-                            var confirmationScreenRequest = new LoadConfirmationScreenRequest
-                            {
-                                WorkflowInstanceId = request.WorkflowInstanceId,
-                                ActivityId = request.ActivityId
-                            };
-
-                            var result = await this._mediator.Send(confirmationScreenRequest);
-                            return View("Confirmation", result);
-
-                        }
-                    default:
-                        throw new ApplicationException(
-                            $"Attempted to load unsupported activity type: {request.ActivityType}");
-                }
+                //try to get activity type from the server?
             }
-            catch (Exception e)
+            switch (request.ActivityType)
             {
-                _logger.LogError(e.Message);
-                return RedirectToAction("Index", "Error", new { message = e.Message });
+                case ActivityTypeConstants.QuestionScreen:
+                    {
+                        var questionScreenRequest = new LoadQuestionScreenRequest
+                        {
+                            WorkflowInstanceId = request.WorkflowInstanceId,
+                            ActivityId = request.ActivityId,
+                            IsReadOnly = false
+                        };
+                        var result = await this._mediator.Send(questionScreenRequest);
+
+                        if (result.IsAuthorised && !result.IsReadOnly)
+                        {
+                            return View("SaveAndContinue", result);
+                        }
+                        else
+                        {
+                            return RedirectToAction("LoadReadOnlyWorkflowActivity", request);
+
+                        }
+                    }
+                case ActivityTypeConstants.CheckYourAnswersScreen:
+                    {
+                        var checkYourAnswersScreenRequest = new LoadCheckYourAnswersScreenRequest
+                        {
+                            WorkflowInstanceId = request.WorkflowInstanceId,
+                            ActivityId = request.ActivityId,
+                            IsReadOnly = false,
+                        };
+
+                        var result = await this._mediator.Send(checkYourAnswersScreenRequest);
+
+                        if (result.IsAuthorised && !result.IsReadOnly)
+                        {
+                            return View("CheckYourAnswers", result);
+                        }
+                        else
+                        {
+
+                            return RedirectToAction("LoadReadOnlyWorkflowActivity", request);
+
+                        }
+
+                    }
+                case ActivityTypeConstants.ConfirmationScreen:
+                    {
+                        var confirmationScreenRequest = new LoadConfirmationScreenRequest
+                        {
+                            WorkflowInstanceId = request.WorkflowInstanceId,
+                            ActivityId = request.ActivityId
+                        };
+
+                        var result = await this._mediator.Send(confirmationScreenRequest);
+                        return View("Confirmation", result);
+
+                    }
+                case ActivityTypeConstants.HousingNeedDataSource:
+                case ActivityTypeConstants.PCSProfileDataSource:
+                case ActivityTypeConstants.SinglePipelineDataSource:
+                case ActivityTypeConstants.VFMDataSource:
+                    {
+                        var executeWorkflowRequest = new ExecuteWorkflowCommand
+                        {
+                            WorkflowInstanceId = request.WorkflowInstanceId,
+                            ActivityId = request.ActivityId,
+                            ActivityType = request.ActivityType,
+                        };
+
+                        var result = await this._mediator.Send(executeWorkflowRequest);
+
+                        return RedirectToAction("LoadWorkflowActivity",
+                            new
+                            {
+                                WorkflowInstanceId = result?.WorkflowInstanceId,
+                                ActivityId = result?.ActivityId,
+                                ActivityType = result?.ActivityType
+                            });
+
+                    }
+                default:
+                    throw new ApplicationException(
+                        $"Attempted to load unsupported activity type: {request.ActivityType}");
             }
         }
 
         [Authorize(Policy = Authorization.Constants.AuthorizationPolicies.AssignmentToPipelineViewAssessmentRoleRequired)]
         public async Task<IActionResult> LoadReadOnlyWorkflowActivity(QuestionScreenSaveAndContinueCommandResponse request)
         {
-            try
-            {
-                if (string.IsNullOrEmpty(request.ActivityType))
-                {
-                    //try to get activity type from the server?
-                }
-                switch (request.ActivityType)
-                {
 
-                    default:
+            if (string.IsNullOrEmpty(request.ActivityType))
+            {
+                //try to get activity type from the server?
+            }
+            switch (request.ActivityType)
+            {
+
+                default:
+                    {
+                        var checkYourAnswersScreenRequest = new LoadCheckYourAnswersScreenRequest
                         {
-                            var checkYourAnswersScreenRequest = new LoadCheckYourAnswersScreenRequest
-                            {
-                                WorkflowInstanceId = request.WorkflowInstanceId,
-                                ActivityId = request.ActivityId,
-                                IsReadOnly = true
-                            };
-                            var result = await this._mediator.Send(checkYourAnswersScreenRequest);
+                            WorkflowInstanceId = request.WorkflowInstanceId,
+                            ActivityId = request.ActivityId,
+                            IsReadOnly = true
+                        };
+                        var result = await this._mediator.Send(checkYourAnswersScreenRequest);
 
-                            return View("CheckYourAnswersReadOnly", result);
-                        }
-                }
+                        return View("CheckYourAnswersReadOnly", result);
+                    }
             }
-            catch (Exception e)
-            {
-                _logger.LogError(e.Message);
-                return RedirectToAction("Index", "Error", new { message = e.Message });
-            }
+
         }
 
         [Authorize(Policy = Authorization.Constants.AuthorizationPolicies.AssignmentToWorkflowExecuteRoleRequired)]
@@ -176,42 +181,36 @@ namespace He.PipelineAssessment.UI.Features.Workflow
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> QuestionScreenSaveAndContinue([FromForm] QuestionScreenSaveAndContinueCommand command)
         {
-            try
+
+            var validationResult = _validator.Validate(command);
+            if (validationResult.IsValid)
             {
-                var validationResult = _validator.Validate(command);
-                if (validationResult.IsValid)
+                var result = await this._mediator.Send(command);
+
+                if (result.IsAuthorised)
                 {
-                    var result = await this._mediator.Send(command);
 
-                    if (result.IsAuthorised)
+                    return RedirectToAction("LoadWorkflowActivity",
+                    new
                     {
-
-                        return RedirectToAction("LoadWorkflowActivity",
-                        new
-                        {
-                            WorkflowInstanceId = result?.WorkflowInstanceId,
-                            ActivityId = result?.ActivityId,
-                            ActivityType = result?.ActivityType
-                        });
-                    }
-                    else
-                    {
-                        return RedirectToAction("AccessDenied", "Error");
-                    }
-
+                        WorkflowInstanceId = result?.WorkflowInstanceId,
+                        ActivityId = result?.ActivityId,
+                        ActivityType = result?.ActivityType
+                    });
                 }
                 else
                 {
-                    command.ValidationMessages = validationResult;
-
-                    return View("SaveAndContinue", command);
+                    return RedirectToAction("AccessDenied", "Error");
                 }
+
             }
-            catch (Exception e)
+            else
             {
-                _logger.LogError(e.Message);
-                return RedirectToAction("Index", "Error", new { message = e.Message });
+                command.ValidationMessages = validationResult;
+
+                return View("SaveAndContinue", command);
             }
+
         }
 
         [Authorize(Policy = Authorization.Constants.AuthorizationPolicies.AssignmentToWorkflowExecuteRoleRequired)]
@@ -219,31 +218,25 @@ namespace He.PipelineAssessment.UI.Features.Workflow
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> CheckYourAnswerScreenSaveAndContinue([FromForm] CheckYourAnswersSaveAndContinueCommand command)
         {
-            try
-            {
-                var result = await _mediator.Send(command);
 
-                if (result.IsAuthorised)
-                {
+            var result = await _mediator.Send(command);
 
-                    return RedirectToAction("LoadWorkflowActivity",
-                        new
-                        {
-                            WorkflowInstanceId = result?.WorkflowInstanceId,
-                            ActivityId = result?.ActivityId,
-                            ActivityType = result?.ActivityType
-                        });
-                }
-                else
-                {
-                    return RedirectToAction("AccessDenied", "Error");
-                }
-            }
-            catch (Exception e)
+            if (result.IsAuthorised)
             {
-                _logger.LogError(e.Message);
-                return RedirectToAction("Index", "Error", new { message = e.Message });
+
+                return RedirectToAction("LoadWorkflowActivity",
+                    new
+                    {
+                        WorkflowInstanceId = result?.WorkflowInstanceId,
+                        ActivityId = result?.ActivityId,
+                        ActivityType = result?.ActivityType
+                    });
             }
+            else
+            {
+                return RedirectToAction("AccessDenied", "Error");
+            }
+
         }
 
     }

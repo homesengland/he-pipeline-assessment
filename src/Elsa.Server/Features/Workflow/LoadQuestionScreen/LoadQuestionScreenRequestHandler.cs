@@ -1,6 +1,7 @@
 ﻿using System.Text.Json;
 using Elsa.CustomActivities.Activities.Common;
 using Elsa.CustomActivities.Activities.QuestionScreen;
+using Elsa.CustomActivities.Activities.Shared;
 using Elsa.CustomInfrastructure.Data.Repository;
 using Elsa.CustomModels;
 using Elsa.CustomWorkflow.Sdk;
@@ -8,7 +9,6 @@ using Elsa.Persistence;
 using Elsa.Persistence.Specifications.WorkflowInstances;
 using Elsa.Server.Models;
 using MediatR;
-using NetBox.Extensions;
 using Question = Elsa.CustomModels.Question;
 
 namespace Elsa.Server.Features.Workflow.LoadQuestionScreen
@@ -17,11 +17,13 @@ namespace Elsa.Server.Features.Workflow.LoadQuestionScreen
     {
         private readonly IWorkflowInstanceStore _workflowInstanceStore;
         private readonly IElsaCustomRepository _elsaCustomRepository;
+        private readonly IQuestionInvoker _invoker;
 
-        public LoadQuestionScreenRequestHandler(IWorkflowInstanceStore workflowInstanceStore, IElsaCustomRepository elsaCustomRepository)
+        public LoadQuestionScreenRequestHandler(IWorkflowInstanceStore workflowInstanceStore, IElsaCustomRepository elsaCustomRepository, IQuestionInvoker invoker)
         {
             _workflowInstanceStore = workflowInstanceStore;
             _elsaCustomRepository = elsaCustomRepository;
+            _invoker = invoker;
         }
 
         public async Task<OperationResult<LoadQuestionScreenResponse>> Handle(LoadQuestionScreenRequest activityRequest, CancellationToken cancellationToken)
@@ -49,10 +51,20 @@ namespace Elsa.Server.Features.Workflow.LoadQuestionScreen
 
                     var workflowSpecification =
                         new WorkflowInstanceIdSpecification(activityRequest.WorkflowInstanceId);
+
+                    var dbAssessmentQuestionList =
+                        await _elsaCustomRepository.GetActivityQuestions(activityRequest.ActivityId, activityRequest.WorkflowInstanceId,
+                            cancellationToken);
+                    if (dbAssessmentQuestionList.SelectMany(x => x.Answers!).Any())
+                    {
+                        await _invoker.ExecuteWorkflowsAsync(activityRequest.ActivityId,
+                            customActivityNavigation.ActivityType,
+                            activityRequest.WorkflowInstanceId, dbAssessmentQuestionList, cancellationToken);
+                    }
+
                     var workflowInstance = await _workflowInstanceStore.FindAsync(workflowSpecification, cancellationToken: cancellationToken);
                     if (workflowInstance != null)
                     {
-
                         if (!workflowInstance.ActivityData.ContainsKey(activityRequest.ActivityId))
                         {
                             result.ErrorMessages.Add(
@@ -71,10 +83,6 @@ namespace Elsa.Server.Features.Workflow.LoadQuestionScreen
                             var title = (string?)activityDataDictionary.FirstOrDefault(x => x.Key == "PageTitle").Value;
                             result.Data.PageTitle = title;
 
-                            var dbQuestions = await _elsaCustomRepository.GetActivityQuestions(
-                                activityRequest.ActivityId, activityRequest.WorkflowInstanceId,
-                                cancellationToken);
-
                             var elsaActivityAssessmentQuestions =
                                 (AssessmentQuestions?)activityDataDictionary
                                     .FirstOrDefault(x => x.Key == "Questions").Value;
@@ -88,7 +96,7 @@ namespace Elsa.Server.Features.Workflow.LoadQuestionScreen
                                 {
                                     //get me the item
                                     var dbQuestion =
-                                        dbQuestions.FirstOrDefault(x => x.QuestionId == item.Id);
+                                        dbAssessmentQuestionList.FirstOrDefault(x => x.QuestionId == item.Id);
                                     if (dbQuestion != null)
                                     {
                                         var questionActivityData = CreateQuestionActivityData(dbQuestion, item);

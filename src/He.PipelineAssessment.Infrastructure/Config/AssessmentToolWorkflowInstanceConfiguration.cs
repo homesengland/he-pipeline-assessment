@@ -27,6 +27,12 @@ namespace He.PipelineAssessment.Infrastructure.Config
             builder.Property(x => x.CurrentActivityType)
                 .HasMaxLength(EntityConfigurationConstants.ShortLength);
 
+            builder.Property(x => x.FirstActivityId)
+                .HasMaxLength(EntityConfigurationConstants.MaxLength);
+
+            builder.Property(x => x.FirstActivityType)
+                .HasMaxLength(EntityConfigurationConstants.ShortLength);
+
             builder.Property(x => x.Status)
                 .HasMaxLength(EntityConfigurationConstants.ShortLength);
 

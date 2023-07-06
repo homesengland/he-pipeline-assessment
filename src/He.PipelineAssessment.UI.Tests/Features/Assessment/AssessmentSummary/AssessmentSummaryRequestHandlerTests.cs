@@ -94,7 +94,45 @@ namespace He.PipelineAssessment.UI.Tests.Features.Assessment.AssessmentSummary
             Assert.Equal(assessment.Counterparty, result.CounterParty);
             Assert.Equal(assessment.Reference, result.Reference);
             Assert.NotEmpty(result.Stages);
+            Assert.Equal(stages.First().FirstActivityId, result.Stages.First().FirstActivityId);
+            Assert.Equal(stages.First().FirstActivityType, result.Stages.First().FirstActivityType);
+        }
 
+        [Theory]
+        [AutoMoqData]
+        public async Task Handle_StageFirstActivitySetToCurrentActivity_GivenFirstActivityIsNullOrEmpty(
+            [Frozen] Mock<IAssessmentRepository> assessmentRepository,
+            [Frozen] Mock<IStoredProcedureRepository> storeProcRepository,
+            Models.Assessment assessment,
+            List<AssessmentStageViewModel> stages,
+            List<AssessmentStageViewModel> historyStages,
+            AssessmentSummaryRequest request,
+            List<StartableToolViewModel> startableToolViewModels,
+            AssessmentSummaryRequestHandler sut
+        )
+        {
+            //Arrange
+            stages.ForEach(x => x.FirstActivityId = String.Empty);
+            stages.ForEach(x => x.FirstActivityType = String.Empty);
+            assessmentRepository.Setup(x => x.GetAssessment(It.IsAny<int>())).ReturnsAsync(assessment);
+            storeProcRepository.Setup(x => x.GetStartableTools(request.AssessmentId)).ReturnsAsync(startableToolViewModels);
+            storeProcRepository.Setup(x => x.GetAssessmentStages(It.IsAny<int>())).ReturnsAsync(stages);
+            storeProcRepository.Setup(x => x.GetAssessmentInterventionList(It.IsAny<int>())).ReturnsAsync(new List<AssessmentInterventionViewModel>());
+            storeProcRepository.Setup(x => x.GetAssessmentHistory(request.AssessmentId)).ReturnsAsync(historyStages);
+
+            //Act
+            var result = await sut.Handle(request, CancellationToken.None);
+
+            //Assert
+            Assert.NotNull(result);
+            Assert.Equal(request.CorrelationId, result!.CorrelationId);
+            Assert.Equal(request.AssessmentId, result.AssessmentId);
+            Assert.Equal(assessment.SiteName, result.SiteName);
+            Assert.Equal(assessment.Counterparty, result.CounterParty);
+            Assert.Equal(assessment.Reference, result.Reference);
+            Assert.NotEmpty(result.Stages);
+            Assert.Equal(stages.First().CurrentActivityId, result.Stages.First().FirstActivityId);
+            Assert.Equal(stages.First().CurrentActivityType, result.Stages.First().FirstActivityType);
         }
 
         [Theory]

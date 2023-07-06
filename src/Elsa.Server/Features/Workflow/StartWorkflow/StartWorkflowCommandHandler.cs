@@ -81,7 +81,9 @@ namespace Elsa.Server.Features.Workflow.StartWorkflow
                             WorkflowInstanceId = workflowInstance.Id,
                             NextActivityId = workflowNextActivityModel.NextActivity.Id,
                             ActivityType = workflowNextActivityModel.NextActivity.Type,
-                            WorkflowName = workflowName
+                            WorkflowName = workflowName,
+                            FirstActivityId = workflowInstance.BlockingActivities.First().ActivityId,//Unsure if this will always be the first item executed
+                            FirstActivityType = workflowInstance.BlockingActivities.First().ActivityType
                         };
                     }
                     else

@@ -17,8 +17,7 @@ namespace Elsa.Dashboard.Tests.Pages
 {
     public class RequestHelperTests
     {
-        [Theory]
-        [AutoMoqData]
+        [Fact]
         public async void RequestHelper_ReturnsHttpRequestMessageWithCorrectParameters_FromHttpRequest()
         {
             // Arrange

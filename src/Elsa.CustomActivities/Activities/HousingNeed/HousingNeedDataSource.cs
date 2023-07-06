@@ -34,7 +34,12 @@ namespace Elsa.CustomActivities.Activities.HousingNeed
         [ActivityOutput] public LaHouseNeedData? Output { get; set; }
         [ActivityOutput] public List<LaHouseNeedData>? OutputList { get; set; }
 
-        protected override async ValueTask<IActivityExecutionResult> OnExecuteAsync(ActivityExecutionContext context)
+        protected override IActivityExecutionResult OnExecute(ActivityExecutionContext context)
+        {
+            return Suspend();
+        }
+
+        protected override async ValueTask<IActivityExecutionResult> OnResumeAsync(ActivityExecutionContext context)
         {
             context.JournalData.Add(nameof(GssCodes), GssCodes);
             context.JournalData.Add(nameof(LocalAuthorities), LocalAuthorities);
@@ -45,29 +50,29 @@ namespace Elsa.CustomActivities.Activities.HousingNeed
             if (data != null)
             {
                 var dataResult = _jsonHelper.JsonToLAHouseNeedData(data);
-                if(dataResult != null && dataResult.Count == 1)
+                if (dataResult != null && dataResult.Count == 1)
                 {
                     this.Output = dataResult.First();
                 }
-                else if(dataResult != null && dataResult.Count > 1)
+                else if (dataResult != null && dataResult.Count > 1)
                 {
                     this.OutputList = dataResult;
                 }
                 else
                 {
                     context.JournalData.Add("Error", "Call to GetLAHouseNeedData returned null");
-                    return new SuspendResult();
                 }
             }
             else
             {
                 context.JournalData.Add("Error", "Call to GetLAHouseNeedData returned null");
-                return new SuspendResult();
             }
 
-            return Done();
+            return await Task.FromResult(new CombinedResult(new List<IActivityExecutionResult>
+            {
+                Outcomes("Done"),
+                new SuspendResult()
+            }));
         }
-
-
     }
 }

@@ -143,6 +143,8 @@ namespace He.PipelineAssessment.UI.Features.Assessment.AssessmentSummary
                         WorkflowInstanceId = item.WorkflowInstanceId,
                         CurrentActivityId = item.CurrentActivityId,
                         CurrentActivityType = item.CurrentActivityType,
+                        FirstActivityId = !string.IsNullOrEmpty(item.FirstActivityId) ? item.FirstActivityId : item.CurrentActivityId,
+                        FirstActivityType = !string.IsNullOrEmpty(item.FirstActivityType) ? item.FirstActivityType : item.CurrentActivityType,
                         Status = item.Status,
                         CreatedDateTime = item.CreatedDateTime,
                         SubmittedDateTime = item.SubmittedDateTime,

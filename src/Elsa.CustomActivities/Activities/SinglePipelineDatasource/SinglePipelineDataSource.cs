@@ -5,6 +5,7 @@ using Elsa.Services;
 using Elsa.Services.Models;
 using He.PipelineAssessment.Data.SinglePipeline;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
 
 namespace Elsa.CustomActivities.Activities.SinglePipelineDataSource
 {
@@ -28,24 +29,34 @@ namespace Elsa.CustomActivities.Activities.SinglePipelineDataSource
 
         [ActivityOutput] public SinglePipelineData? Output { get; set; }
 
-        protected override async ValueTask<IActivityExecutionResult> OnExecuteAsync(ActivityExecutionContext context)
+        protected override IActivityExecutionResult OnExecute(ActivityExecutionContext context)
         {
-                context.JournalData.Add(nameof(SpId), SpId);
+            return Suspend();
+        }
 
-                var data = await _singlePipelineClient.GetSinglePipelineData(SpId);
+        protected override async ValueTask<IActivityExecutionResult> OnResumeAsync(ActivityExecutionContext context)
+        {
+            context.JournalData.Add(nameof(SpId), SpId);
 
-                if (data != null)
-                {
-                    var dataResult = _jsonHelper.JsonToSinglePipelineData(data);
-                    this.Output = dataResult;
-                }
-                else
-                {
-                    context.JournalData.Add("Error", "Call to GetSinglePipelineData returned null");
-                    return new SuspendResult();
-                }
+            var data = await _singlePipelineClient.GetSinglePipelineData(SpId);
 
-                return Done();
+            if (data != null)
+            {
+                var dataResult = _jsonHelper.JsonToSinglePipelineData(data);
+                this.Output = dataResult;
             }
+            else
+            {
+                context.JournalData.Add("Error", "Call to GetSinglePipelineData returned null");
+            }
+
+            return await Task.FromResult(new CombinedResult(new List<IActivityExecutionResult>
+            {
+                Outcomes("Done"),
+                new SuspendResult()
+            }));
         }
     }
+}
+
+
