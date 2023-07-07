@@ -42,11 +42,11 @@ namespace Elsa.CustomActivities.Activities.QuestionScreen.Helpers
 
         }
 
-        public async Task<string> WriteJournalData(string key, string message,ActivityExecutionContext context)
+        public  Task<string> WriteJournalData(string key, string message,ActivityExecutionContext context)
         {
             context.JournalData.Add(key,message);
 
-            return string.Empty;
+            return Task.FromResult(string.Empty);
         }
 
         public Task Handle(EvaluatingJavaScriptExpression notification, CancellationToken cancellationToken)
