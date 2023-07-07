@@ -8,6 +8,10 @@ namespace Elsa.CustomInfrastructure.Data.Repository
             string workflowInstanceId,
             CancellationToken cancellationToken = default);
 
+        Task<CustomActivityNavigation?> GetLatestCustomActivityNavigation(
+            string workflowInstanceId,
+            CancellationToken cancellationToken = default);
+
         ValueTask<int?> CreateCustomActivityNavigationAsync(CustomActivityNavigation model,
             CancellationToken cancellationToken = default);
 

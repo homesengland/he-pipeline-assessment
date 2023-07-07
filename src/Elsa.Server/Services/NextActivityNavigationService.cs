@@ -30,7 +30,11 @@ namespace Elsa.Server.Services
         public async Task CreateNextActivityNavigation(string previousActivityId,
             CustomActivityNavigation? nextActivityRecord, IActivityBlueprint nextActivity, WorkflowInstance workflowInstance, CancellationToken cancellationToken)
         {
-            if (nextActivityRecord == null)
+            if (nextActivityRecord == null &&
+                (nextActivity.Type != ActivityTypeConstants.VFMDataSource &&
+                 nextActivity.Type != ActivityTypeConstants.SinglePipelineDataSource &&
+                 nextActivity.Type != ActivityTypeConstants.HousingNeedDataSource &&
+                 nextActivity.Type != ActivityTypeConstants.PCSProfileDataSource))
             {
                 var customActivityNavigation =
                     _elsaCustomModelHelper.CreateNextCustomActivityNavigation(previousActivityId,
@@ -46,7 +50,7 @@ namespace Elsa.Server.Services
                     await _elsaCustomRepository.CreateQuestionsAsync(questions, cancellationToken);
                 }
             }
-            else
+            else if(nextActivityRecord != null)
             {
                 nextActivityRecord.LastModifiedDateTime = _dateTimeProvider.UtcNow();
                 await _elsaCustomRepository.UpdateCustomActivityNavigation(nextActivityRecord, cancellationToken);
