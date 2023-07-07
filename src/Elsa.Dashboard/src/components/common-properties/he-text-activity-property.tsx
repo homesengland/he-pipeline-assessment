@@ -14,14 +14,14 @@ import ExpandIcon from '../../icons/expand_icon';
 import { mapSyntaxToLanguage, parseJson, ToLetter, Map } from '../../utils/utils';
 import { PropertyOutputTypes, SyntaxNames, TextActivityOptionsSyntax } from '../../constants/constants';
 import { ToggleDictionaryDisplay } from '../../functions/display-toggle';
-import { UpdateCheckbox, CustomUpdateExpression, UpdateName, UpdateSyntax } from '../../functions/updateModel';
-import { BaseComponent, ISharedComponent } from '../base-component';
+import { SortableComponent, ISortableSharedComponent } from '../base-component';
+import SortIcon from '../../icons/sort_icon';
 
 @Component({
   tag: 'he-text-activity-property',
   shadow: false,
 })
-export class TextActivityProperty implements ISharedComponent {
+export class TextActivityProperty implements ISortableSharedComponent {
 
   @Prop() activityModel: ActivityModel;
   @Prop() propertyDescriptor: ActivityPropertyDescriptor;
@@ -36,17 +36,22 @@ export class TextActivityProperty implements ISharedComponent {
   @State() conditionDisplayHeightMap: Map<string> = {};
   @State() optionsDisplayToggle: Map<string> = {};
   @State() urlDisplayToggle: Map<string> = {};
-  private _base: BaseComponent;
+  private _base: SortableComponent;
+  container: HTMLElement;
 
   multiExpressionEditor: HTMLElsaMultiExpressionEditorElement;
   syntaxSwitchCount: number = 0;
 
   constructor() {
-    this._base = new BaseComponent(this);
+    this._base = new SortableComponent(this);
   }
 
   async componentWillLoad() {
     this._base.componentWillLoad();
+  }
+
+  async componentDidLoad() {
+    this._base.componentDidLoad();
   }
 
   updatePropertyModel() {
@@ -149,7 +154,12 @@ export class TextActivityProperty implements ISharedComponent {
 
       return (
         <tbody>
-          
+          <tr>
+            <th class="sortablejs-custom-handle"><SortIcon options={this.iconProvider.getOptions()}></SortIcon>
+            </th>
+            <td></td>
+            <td></td>
+          </tr>
           <tr>
             <th
               class="elsa-px-6 elsa-py-3 elsa-text-left elsa-text-xs elsa-font-medium elsa-text-gray-500 elsa-tracking-wider elsa-w-2/12">Text
@@ -306,7 +316,7 @@ export class TextActivityProperty implements ISharedComponent {
           onSyntaxChanged={e => this.onMultiExpressionEditorSyntaxChanged(e)}
         >
 
-          <table class="elsa-min-w-full elsa-divide-y elsa-divide-gray-200 elsa-table-striped">
+          <table class="elsa-min-w-full elsa-divide-y elsa-divide-gray-200 elsa-table-striped" ref={el => (this.container = el as HTMLElement)}>
              {textElements.map(renderCaseEditor) }
 
           </table>

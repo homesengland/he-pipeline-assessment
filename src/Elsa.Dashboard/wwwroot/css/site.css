@@ -40,65 +40,100 @@
 }
 
 
-@media (min-width: 640px) {
-  .elsa-modal-dialog > div[aria-modal*="true"] {
-    max-width: 75%;
+@media screen and (min-width: 1024px) {
+  .modal-content {
+    width: 100% !important;
+    max-width: 60rem !important;
+    min-width: 60rem !important;
+    --tw-bg-opacity: 1;
+    background-color: rgb(255 255 255);
+    position: relative;
+    left: 50%;
+    margin-left: -30rem;
+  }
+  div > .elsa-bg-gray-50.elsa-px-4.elsa-py-3.sm\:elsa-px-6.sm\:elsa-flex.sm\:elsa-flex-row-reverse {
+    width: 100% !important;
+    max-width: 60rem !important;
+    min-width: 60rem !important;
+    --tw-bg-opacity: 1;
+    background-color: rgb(255 255 255);
+    position: relative;
+    left: 50%;
+    margin-left: -30rem;
   }
 }
 
-@media (min-width: 768px) {
-  .elsa-modal-dialog > div[aria-modal*="true"] {
-    max-width: 75%;
+@media screen and (min-width: 1280px) {
+  .modal-content {
+    width: 100% !important;
+    max-width: 70rem !important;
+    min-width: 70rem !important;
+    --tw-bg-opacity: 1;
+    background-color: rgb(255 255 255);
+    position: relative;
+    left: 50%;
+    margin-left: -35rem;
+  }
+  div > .elsa-bg-gray-50.elsa-px-4.elsa-py-3.sm\:elsa-px-6.sm\:elsa-flex.sm\:elsa-flex-row-reverse {
+    width: 100% !important;
+    max-width: 70rem !important;
+    min-width: 70rem !important;
+    --tw-bg-opacity: 1;
+    background-color: rgb(255 255 255);
+    position: relative;
+    left: 50%;
+    margin-left: -35rem;
   }
 }
 
-@media (min-width: 1024px) {
-  .elsa-modal-dialog > div[aria-modal*="true"] {
-    max-width: 75%;
+@media only screen and (min-width: 1536px) {
+  .modal-content {
+    width: 100% !important;
+    max-width: 90 !important;
+    min-width: 90 !important;
+    --tw-bg-opacity: 1;
+    background-color: rgb(255 255 255);
+    position: relative;
+    left: 50%;
+    margin-left: -45rem;
+  }
+  div > .elsa-bg-gray-50.elsa-px-4.elsa-py-3.sm\:elsa-px-6.sm\:elsa-flex.sm\:elsa-flex-row-reverse {
+    width: 100% !important;
+    max-width: 90 !important;
+    min-width: 90 !important;
+    --tw-bg-opacity: 1;
+    background-color: rgb(255 255 255);
+    position: relative;
+    left: 50%;
+    margin-left: -45rem;
   }
 }
 
-@media (min-width: 1280px) {
-  .elsa-modal-dialog > div[aria-modal*="true"] {
-    max-width: 75%;
+@media only screen and (min-width: 1800px) {
+  .modal-content {
+    width: 100% !important;
+    max-width: 100rem !important;
+    min-width: 100rem !important;
+    --tw-bg-opacity: 1;
+    background-color: rgb(255 255 255);
+    position: relative;
+    left: 50%;
+    margin-left: -50rem;
+  }
+  div > .elsa-bg-gray-50.elsa-px-4.elsa-py-3.sm\:elsa-px-6.sm\:elsa-flex.sm\:elsa-flex-row-reverse {
+    width: 100% !important;
+    max-width: 100rem !important;
+    min-width: 100rem !important;
+    --tw-bg-opacity: 1;
+    background-color: rgb(255 255 255);
+    position: relative;
+    left: 50%;
+    margin-left: -50rem;
   }
 }
 
-@media (min-width: 1536px) {
-  .elsa-modal-dialog][=======================================] > div[aria-modal*="true"] {
-    max-width: 75%;
-  }
-}
 
-@media (min-width: 640px) {
-  .elsa-modal-dialog > div[aria-modal*="true"] {
-    max-width: 75%;
-  }
-}
-
-@media (min-width: 768px) {
-  .elsa-modal-dialog > div[aria-modal*="true"] {
-    max-width: 75%;
-  }
-}
-
-@media (min-width: 1024px) {
-  .elsa-modal-dialog > div[aria-modal*="true"] {
-    max-width: 75%;
-  }
-}
-
-@media (min-width: 1280px) {
-  .elsa-modal-dialog > div[aria-modal*="true"] {
-    max-width: 75%;
-  }
-}
-
-@media (min-width: 1536px) {
-  .elsa-modal-dialog > div[aria-modal*="true"] {
-    max-width: 75%;
-  }
-  .elsa-justify-content {
+  div.elsa-justify-content {
     display: flex;
     justify-content: start;
   }
@@ -109,3 +144,39 @@ elsa-monaco {
   overflow: auto;
 }
 
+
+.sortablejs-custom-handle {
+  cursor: grab;
+}
+.sortablejs-custom-handle:focus{
+    cursor:grabbing;
+}
+
+.list-group-icon {
+  display: inline-block;
+  color: #677788;
+  width: 2rem;
+  text-align: center;
+  margin-right: 0.5rem;
+}
+
+.bi-grip-horizontal::before {
+  content: "\f3fd";
+}
+
+.bi::before, [class*=" bi-"]::before, [class^=bi-]::before {
+  display: inline-block;
+  font-family: bootstrap-icons !important;
+  font-style: normal;
+  font-weight: 400 !important;
+  font-variant: normal;
+  text-transform: none;
+  line-height: 1;
+  vertical-align: -0.125em;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+.inline{
+    display:inline-block;
+}

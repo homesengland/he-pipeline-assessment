@@ -4,13 +4,12 @@ import {
   HTMLElsaMultiExpressionEditorElement,
   IntellisenseContext
 } from "../../models/elsa-interfaces";
-import { parseJson, ToLetter,Map } from "../../utils/utils";
+import { ToLetter,Map } from "../../utils/utils";
 import { IconProvider } from "../providers/icon-provider/icon-provider";
 import PlusIcon from '../../icons/plus_icon';
 import { PropertyOutputTypes, RadioOptionsSyntax, SyntaxNames } from '../../constants/constants';
 import { HeActivityPropertyDescriptor, NestedActivityDefinitionProperty, NestedActivityDefinitionPropertyAlt } from '../../models/custom-component-models';
 import TrashCanIcon from '../../icons/trash-can';
-import { OnMultiExpressionEditorValueChanged } from './../../functions/multiExpressionEditorUpdate'
 import { BaseComponent, ISharedComponent } from '../base-component';
 
 @Component({
@@ -105,9 +104,16 @@ export class HeRadioOptionPropertyPOC implements ISharedComponent {
   onNestedPropertyChange(e: CustomEvent<string>, property: NestedActivityDefinitionPropertyAlt) {
     e = e;
     property = property;
-    console.log("Updating property", property);
-    console.log("Update Radio Event", e);
-    this.propertyModel.expressions[property.value.syntax] = e.detail;
+    //console.log("Updating property", property);
+    //console.log("Update Radio Event", e);
+    //let eventProperty = JSON.parse(e.detail);
+    //console.log("Event property", eventProperty);
+    //let filteredProperties = this.properties.filter(x => x.value.name != property.name)
+    //let propertyToUpdate = this.properties.filter(x => x.value.name == property.name)[0];
+    //propertyToUpdate.value = eventProperty;
+    //this.properties = [...filteredProperties, eventProperty]
+    //console.log("Properties after update", this.properties);
+    ////this.propertyModel.expressions[property.value.syntax] = e.detail;
     this.updatePropertyModel();
   }
 
@@ -137,7 +143,7 @@ export class HeRadioOptionPropertyPOC implements ISharedComponent {
 
           <nested-property-list
             activityModel={this.activityModel}
-            propertyModel={this.propertyModel}
+            propertyModel={property}
             nestedDescriptors={property.propertyDescriptors}
             onExpressionChanged={e => this.onNestedPropertyChange(e, property)}
           >

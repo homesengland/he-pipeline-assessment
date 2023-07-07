@@ -3,6 +3,7 @@ import { CheckboxOptionsSyntax, PropertyOutputTypes, SyntaxNames } from '../../c
 import { ToggleDictionaryDisplay } from '../../functions/display-toggle';
 import ExpandIcon from '../../icons/expand_icon';
 import PlusIcon from '../../icons/plus_icon';
+import SortIcon from '../../icons/sort_icon';
 import TrashCanIcon from '../../icons/trash-can';
 import { NestedActivityDefinitionProperty } from '../../models/custom-component-models';
 import {
@@ -13,7 +14,7 @@ import {
   IntellisenseContext
 } from "../../models/elsa-interfaces";
 import { mapSyntaxToLanguage, parseJson, ToLetter, Map } from "../../utils/utils";
-import { BaseComponent, ISharedComponent } from '../base-component';
+import { ISortableSharedComponent, SortableComponent } from '../base-component';
 import { IconProvider } from "../providers/icon-provider/icon-provider";
 
 @Component({
@@ -21,7 +22,7 @@ import { IconProvider } from "../providers/icon-provider/icon-provider";
   shadow: false,
 })
 
-export class HeCheckboxOptionProperty implements ISharedComponent {
+export class HeCheckboxOptionProperty implements ISortableSharedComponent {
 
   @Prop() activityModel: ActivityModel;
   @Prop() propertyDescriptor: ActivityPropertyDescriptor;
@@ -35,19 +36,25 @@ export class HeCheckboxOptionProperty implements ISharedComponent {
   @State() switchTextHeight: string = "";
 
   @State() editorHeight: string = "2.75em"
+  container: HTMLElement;
 
-  private _base: BaseComponent;
+  private _base: SortableComponent;
 
   supportedSyntaxes: Array<string> = [SyntaxNames.JavaScript, SyntaxNames.Liquid, SyntaxNames.Literal];
   multiExpressionEditor: HTMLElsaMultiExpressionEditorElement;
   syntaxSwitchCount: number = 0;
 
   constructor() {
-    this._base = new BaseComponent(this);
+    this._base = new SortableComponent(this);
   }
+
 
   async componentWillLoad() {
     this._base.componentWillLoad();
+  }
+
+  async componentDidLoad() {
+    this._base.componentDidLoad();
   }
   
 
@@ -118,6 +125,12 @@ export class HeCheckboxOptionProperty implements ISharedComponent {
 
       return (
         <tbody>
+          <tr>
+            <th class="sortablejs-custom-handle"><SortIcon options={this.iconProvider.getOptions()}></SortIcon>
+            </th>
+            <td></td>
+            <td></td>
+          </tr>
           <tr key={`case-${index}`}>
             <th class="elsa-py-3 elsa-text-left elsa-text-xs elsa-font-medium elsa-text-gray-500 elsa-tracking-wider elsa-w-2/12">Identifier</th>
 
@@ -242,7 +255,7 @@ export class HeCheckboxOptionProperty implements ISharedComponent {
           onSyntaxChanged={e => this.onMultiExpressionEditorSyntaxChanged(e)}
         >
 
-          <table class="elsa-min-w-full elsa-divide-y elsa-divide-gray-200">
+          <table class="elsa-min-w-full elsa-divide-y elsa-divide-gray-200" ref={el => (this.container = el as HTMLElement)}>
           {cases.map(renderCaseEditor)}
           </table>
           <button type="button" onClick={() => this.onAddOptionClick()}

@@ -1,5 +1,6 @@
 import { Component, h, Event, EventEmitter, Prop, State } from '@stencil/core';
 import {
+    ActivityDefinitionProperty,
   ActivityModel,
   ActivityPropertyDescriptor,
   HTMLElsaMultiExpressionEditorElement,
@@ -13,18 +14,19 @@ import ExpandIcon from '../../icons/expand_icon';
 import { DataTableSyntax, PropertyOutputTypes, SyntaxNames } from '../../constants/constants';
 import { NestedActivityDefinitionProperty } from '../../models/custom-component-models';
 import { ToggleDictionaryDisplay } from '../../functions/display-toggle'
-import { BaseComponent, ISharedComponent } from '../base-component';
+import { ISortableSharedComponent, SortableComponent } from '../base-component';
+import SortIcon from '../../icons/sort_icon';
 
 @Component({
   tag: 'he-data-table-property',
   shadow: false,
 })
 
-export class HeDataTableProperty implements ISharedComponent {
+export class HeDataTableProperty implements ISortableSharedComponent {
 
   @Prop() activityModel: ActivityModel;
   @Prop() propertyDescriptor: ActivityPropertyDescriptor;
-  @Prop() propertyModel: NestedActivityDefinitionProperty;
+  @Prop() propertyModel: ActivityDefinitionProperty;
   @Prop() modelSyntax: string = SyntaxNames.Json;
   @State() properties: Array<NestedActivityDefinitionProperty> = [];
   @State() iconProvider = new IconProvider();
@@ -37,14 +39,16 @@ export class HeDataTableProperty implements ISharedComponent {
 
   @State() inputOptions: Array<string> = [];
   @State() selectedInputType: string = "Currency";
-  private _base: BaseComponent;
+  private _base: SortableComponent;
 
   supportedSyntaxes: Array<string> = [SyntaxNames.JavaScript, SyntaxNames.Literal];
   multiExpressionEditor: HTMLElsaMultiExpressionEditorElement;
   syntaxSwitchCount: number = 0;
+  container: HTMLElement;
+
 
   constructor() {
-    this._base = new BaseComponent(this);
+    this._base = new SortableComponent(this);
   }
 
   async componentWillLoad() {
@@ -59,10 +63,12 @@ export class HeDataTableProperty implements ISharedComponent {
 
   }
 
+  async componentDidLoad() {
+    this._base.componentDidLoad();
+  }
+
   updatePropertyModel() {
-    this.propertyModel.expressions[SyntaxNames.Json] = JSON.stringify(this.properties);
-    this.multiExpressionEditor.expressions[SyntaxNames.Json] = JSON.stringify(this.properties, null, 2);
-    this.expressionChanged.emit(JSON.stringify(this.propertyModel))
+    this._base.updatePropertyModel();
   }
 
   onDefaultSyntaxValueChanged(e: CustomEvent) {
@@ -110,7 +116,7 @@ export class HeDataTableProperty implements ISharedComponent {
   }
 
   onInputTypeChange(e: Event) {
-    this._base.StandardUpdateExpression(e, this.propertyModel, DataTableSyntax.InputType);
+    this._base.StandardUpdateExpression(e, this.propertyModel as NestedActivityDefinitionProperty, DataTableSyntax.InputType);
     this.selectedInputType = this.propertyModel.expressions[DataTableSyntax.InputType];
   }
 
@@ -135,6 +141,12 @@ export class HeDataTableProperty implements ISharedComponent {
       const sumTotalDisplay = (this.optionsDisplayToggle[index] && this.selectedInputType != "Text") ? this.optionsDisplayToggle[index]:  "none";
       return (
         <tbody>
+          <tr>
+            <th class="sortablejs-custom-handle"><SortIcon options={this.iconProvider.getOptions()}></SortIcon>
+            </th>
+            <td></td>
+            <td></td>
+          </tr>
           <tr key={`case-${index}`}>
             <th
               class="elsa-py-3 elsa-text-left elsa-text-xs elsa-font-medium elsa-text-gray-500 elsa-tracking-wider elsa-w-2/12">Identifier
@@ -268,9 +280,6 @@ export class HeDataTableProperty implements ISharedComponent {
 
     return (
       <div>
-
-
-
         <div class="elsa-mb-1">
           <div class="elsa-flex">
             <div class="elsa-flex-1">
@@ -282,7 +291,7 @@ export class HeDataTableProperty implements ISharedComponent {
         <div>
           <div>
             <select onChange={e => this.onInputTypeChange(e)}
-              class="elsa-mt-1 elsa-block focus:elsa-ring-blue-500 StandardUpdateExpression:elsa-border-blue-500 elsa-w-full elsa-shadow-sm sm:elsa-max-w-xs sm:elsa-text-sm elsa-border-gray-300 elsa-rounded-md">
+              class="elsa-mt-1 elsa-block focus:elsa-ring-blue-500 elsa-border-blue-500 elsa-w-full elsa-shadow-sm sm:elsa-max-w-xs sm:elsa-text-sm elsa-border-gray-300 elsa-rounded-md">
               {this.inputOptions.map(inputType => {
                 const selected = inputType === selectedType;
                 return <option selected={selected} value={inputType}>{inputType}</option>;
@@ -304,7 +313,7 @@ export class HeDataTableProperty implements ISharedComponent {
 
         <div>
           <div>
-            <input type="text" value={this.propertyModel.expressions[DataTableSyntax.DisplayGroupId]} onChange={e => this._base.UpdateExpressionFromInput(e, this.propertyModel, DataTableSyntax.DisplayGroupId)}
+            <input type="text" value={this.propertyModel.expressions[DataTableSyntax.DisplayGroupId]} onChange={e => this._base.UpdateExpressionFromInput(e, this.propertyModel as NestedActivityDefinitionProperty, DataTableSyntax.DisplayGroupId)}
               class="focus:elsa-ring-blue-500 focus:elsa-border-bue-500 elsa-block elsa-w-full elsa-min-w-0 elsa-rounded-md sm:elsa-text-sm elsa-border-gray-300" />
           </div>
           <p class="elsa-mt-2 elsa-text-sm elsa-text-gray-500">This allows you to display this table as a column of a shared table with all matching Group Id's of Tables on this Question Screen..</p>
@@ -323,7 +332,7 @@ export class HeDataTableProperty implements ISharedComponent {
           onExpressionChanged={e => this.onMultiExpressionEditorValueChanged(e)}
           onSyntaxChanged={e => this.onMultiExpressionEditorSyntaxChanged(e)}
         >
-          <table class="elsa-min-w-full elsa-divide-y elsa-divide-gray-200">
+          <table class="elsa-min-w-full elsa-divide-y elsa-divide-gray-200" ref={el => (this.container = el as HTMLElement)}>
             {cases.map(renderCaseEditor)}
           </table>
         

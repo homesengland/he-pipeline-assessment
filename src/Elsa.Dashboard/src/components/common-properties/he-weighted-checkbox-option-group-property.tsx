@@ -14,14 +14,15 @@ import ExpandIcon from '../../icons/expand_icon';
 import { CheckboxOptionsSyntax, PropertyOutputTypes, SyntaxNames, WeightedScoringSyntax } from '../../constants/constants';
 import { NestedActivityDefinitionProperty } from '../../models/custom-component-models';
 import { ToggleDictionaryDisplay } from '../../functions/display-toggle'
-import { BaseComponent, ISharedComponent } from '../base-component';
+import { SortableComponent, ISortableSharedComponent } from '../base-component';
+import SortIcon from '../../icons/sort_icon';
 
 @Component({
   tag: 'he-weighted-checkbox-option-group-property',
   shadow: false,
 })
 
-export class HeWeightedCheckboxOptionGroupProperty implements ISharedComponent {
+export class HeWeightedCheckboxOptionGroupProperty implements ISortableSharedComponent {
 
   @Prop() activityModel: ActivityModel;
   @Prop() propertyModel: NestedActivityDefinitionProperty;
@@ -33,7 +34,8 @@ export class HeWeightedCheckboxOptionGroupProperty implements ISharedComponent {
   @State() optionsDisplayToggle: Map<string> = {};
   @State() switchTextHeight: string = "";
   @State() editorHeight: string = "2.75em"
-  private _base: BaseComponent;
+  private _base: SortableComponent;
+  container: HTMLElement;
 
   supportedSyntaxes: Array<string> = [SyntaxNames.JavaScript, SyntaxNames.Liquid, SyntaxNames.Literal];
   multiExpressionEditor: HTMLElsaMultiExpressionEditorElement;
@@ -41,11 +43,16 @@ export class HeWeightedCheckboxOptionGroupProperty implements ISharedComponent {
   scoreSyntaxSwitchCount: number = 0;
 
   constructor() {
-    this._base = new BaseComponent(this);
+    this._base = new SortableComponent(this);
   }
+    
 
   async componentWillLoad() {
     this._base.componentWillLoad();
+  }
+
+  async componentDidLoad() {
+    this._base.componentDidLoad();
   }
 
 
@@ -164,6 +171,11 @@ export class HeWeightedCheckboxOptionGroupProperty implements ISharedComponent {
 
       return (
         <tbody>
+          <tr>
+            <th class="sortablejs-custom-handle"><SortIcon options={this.iconProvider.getOptions() }></SortIcon></th>
+            <td></td>
+            <td></td>
+          </tr>
           <tr key={`case-${index}`}>
             <th
               class="elsa-py-3 elsa-text-left elsa-text-xs elsa-font-medium elsa-text-gray-500 elsa-tracking-wider elsa-w-2/12">Identifier
@@ -377,7 +389,7 @@ export class HeWeightedCheckboxOptionGroupProperty implements ISharedComponent {
           onExpressionChanged={e => this.onMultiExpressionEditorValueChanged(e)}
           onSyntaxChanged={e => this.onMultiExpressionEditorSyntaxChanged(e)}
         >
-          <table class="elsa-min-w-full elsa-divide-y elsa-divide-gray-600">
+          <table class="elsa-min-w-full elsa-divide-y elsa-divide-gray-600" ref={el => (this.container = el as HTMLElement)}>
             {answers.map(renderCaseEditor)}
           </table>
 

@@ -2,13 +2,13 @@ import { ActivityModel, ActivityPropertyDescriptor } from "../models/elsa-interf
 import { h } from "@stencil/core";
 import { getOrCreateProperty } from "../utils/utils";
 import { HePropertyDisplayDriver } from "./display-managers/display-manager";
-import { NestedProperty } from "../models/custom-component-models";
+import { HeActivityPropertyDescriptor, NestedActivityDefinitionProperty, NestedProperty } from "../models/custom-component-models";
 
 export class HeRadioOptionsDriver implements HePropertyDisplayDriver {
 
   display(activity: ActivityModel, property: ActivityPropertyDescriptor) {
     const prop = getOrCreateProperty(activity, property.name);
-    return <he-radio-options-property activityModel={activity} propertyDescriptor={property} propertyModel={prop} />;
+    return <he-radio-options-property activityModel={activity} propertyDescriptor={property as HeActivityPropertyDescriptor} propertyModel={prop as NestedActivityDefinitionProperty} />;
   }
 
   displayNested(activity: ActivityModel, property: NestedProperty, onExpressionChanged: Function) {

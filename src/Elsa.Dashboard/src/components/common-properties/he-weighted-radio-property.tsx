@@ -14,14 +14,15 @@ import ExpandIcon from '../../icons/expand_icon';
 import { PropertyOutputTypes, RadioOptionsSyntax, SyntaxNames } from '../../constants/constants';
 import { NestedActivityDefinitionProperty } from '../../models/custom-component-models';
 import { ToggleDictionaryDisplay } from '../../functions/display-toggle'
-import { BaseComponent, ISharedComponent } from '../base-component';
+import { SortableComponent, ISortableSharedComponent } from '../base-component';
+import SortIcon from '../../icons/sort_icon';
 
 @Component({
   tag: 'he-weighted-radio-property',
   shadow: false,
 })
 
-export class HeWeightedRadioProperty implements ISharedComponent {
+export class HeWeightedRadioProperty implements ISortableSharedComponent {
 
   @Prop() activityModel: ActivityModel;
   @Prop() propertyDescriptor: ActivityPropertyDescriptor;
@@ -38,16 +39,21 @@ export class HeWeightedRadioProperty implements ISharedComponent {
   multiExpressionEditor: HTMLElsaMultiExpressionEditorElement;
   syntaxSwitchCount: number = 0;
   scoreSyntaxSwitchCount: number = 0;
-
-  private _base: BaseComponent;
+  container: HTMLElement;
+  private _base: SortableComponent;
 
   constructor() {
-    this._base = new BaseComponent(this);
+    this._base = new SortableComponent(this);
   }
+
 
 
   async componentWillLoad() {
     this._base.componentWillLoad();
+  }
+
+  async componentDidLoad() {
+    this._base.componentDidLoad();
   }
 
   updatePropertyModel() {
@@ -121,6 +127,12 @@ export class HeWeightedRadioProperty implements ISharedComponent {
 
       return (
         <tbody>
+          <tr>
+            <th class="sortablejs-custom-handle"><SortIcon options={this.iconProvider.getOptions()}></SortIcon>
+            </th>
+            <td></td>
+            <td></td>
+          </tr>
           <tr key={`case-${index}`}>
             <th
               class="elsa-py-3 elsa-text-left elsa-text-xs elsa-font-medium elsa-text-gray-500 elsa-tracking-wider elsa-w-2/12">Identifier
@@ -261,7 +273,7 @@ export class HeWeightedRadioProperty implements ISharedComponent {
           onExpressionChanged={e => this.onMultiExpressionEditorValueChanged(e)}
           onSyntaxChanged={e => this.onMultiExpressionEditorSyntaxChanged(e)}
         >
-          <table class="elsa-min-w-full elsa-divide-y elsa-divide-gray-200">
+          <table class="elsa-min-w-full elsa-divide-y elsa-divide-gray-200" ref={el => (this.container = el as HTMLElement)}>
             {cases.map(renderCaseEditor)}
           </table>
 

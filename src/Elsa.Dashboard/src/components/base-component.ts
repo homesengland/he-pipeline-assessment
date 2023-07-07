@@ -1,4 +1,5 @@
 import { EventEmitter } from "@stencil/core";
+import Sortable from "sortablejs";
 import { SyntaxNames } from "../constants/constants";
 import { NestedActivityDefinitionProperty } from "../models/custom-component-models";
 import { ActivityDefinitionProperty, ActivityModel, ActivityPropertyDescriptor, HTMLElsaExpressionEditorElement, HTMLElsaMultiExpressionEditorElement } from "../models/elsa-interfaces";
@@ -14,6 +15,10 @@ modelSyntax: string;
 properties: Array<NestedActivityDefinitionProperty>;
 expressionChanged: EventEmitter<string>;
 multiExpressionEditor: HTMLElsaMultiExpressionEditorElement;
+}
+
+export interface ISortableSharedComponent extends ISharedComponent {
+  container: HTMLElement;
 }
 
 
@@ -102,3 +107,33 @@ export class BaseComponent {
 
 }
 
+export class SortableComponent extends BaseComponent {
+
+  constructor(public component: ISortableSharedComponent) {
+      super(component);
+  }
+
+  componentDidLoad() {
+    super.componentDidLoad();
+
+    const dragEventHandler = this.onDragActivity.bind(this);
+    //creates draggable area
+    Sortable.create(this.component.container, {
+      animation: 150,
+      handle: ".sortablejs-custom-handle",
+
+      onChange(evt) {
+        console.log("Dragging event", evt);
+        console.log("Item", evt.item);
+        dragEventHandler(evt.oldIndex, evt.newIndex);
+      }
+    });
+  }
+
+  onDragActivity(oldIndex: number, newIndex: number) {
+    console.log("Event handler triggered")
+    const activity = this.component.properties.splice(oldIndex, 1)[0];
+    this.component.properties.splice(newIndex, 0, activity);
+    this.updatePropertyModel();
+  }
+}

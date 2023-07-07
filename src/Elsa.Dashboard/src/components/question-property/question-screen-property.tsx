@@ -1,4 +1,5 @@
 import { Component, h, Prop, State } from '@stencil/core';
+import Sortable from 'sortablejs';
 import { DataDictionaryGroup } from '../../models/custom-component-models';
 import state  from '../../stores/dataDictionaryStore';
 import {
@@ -28,6 +29,7 @@ import {
 import TrashCanIcon from '../../icons/trash-can';
 import { QuestionCategories, SyntaxNames } from '../../constants/constants';
 import { filterPropertiesByType, parseJson } from '../../utils/utils';
+import SortIcon from '../../icons/sort_icon';
 
 @Component({
   tag: 'question-screen-property',
@@ -50,6 +52,8 @@ export class QuestionScreen {
   multiExpressionEditor: HTMLElsaMultiExpressionEditorElement;
   syntaxMultiChoiceCount: number = 0;
 
+  private container: HTMLElement;
+
 
   async componentWillLoad() {
     const propertyModel = this.propertyModel;
@@ -58,6 +62,28 @@ export class QuestionScreen {
     this.questionModel.activities.forEach(x => x.descriptor = this.questionProperties);
     console.log(this.questionModel);
     state.dictionaryGroups = this.dataDictionaryGroup;
+  }
+
+  async componentDidLoad() {
+    const dragEventHandler = this.onDragActivity.bind(this);
+    //creates draggable area
+    Sortable.create(this.container, {
+      animation: 150,
+      handle: ".sortablejs-custom-handle",
+
+      onChange(evt) {
+        console.log("Dragging event", evt);
+        console.log("Item", evt.item);
+        dragEventHandler(evt.oldIndex, evt.newIndex);
+      }
+    });
+  }
+
+  onDragActivity(oldIndex: number, newIndex: number) {
+    console.log("Event handler triggered")
+    const activity = this.questionModel.activities.splice(oldIndex, 1)[0];
+    this.questionModel.activities.splice(newIndex, 0, activity);
+    this.updatePropertyModel();
   }
 
   defaultActivityModel() {
@@ -100,13 +126,19 @@ export class QuestionScreen {
     const field = `question-${index}`;
     return (
       <div id={`${field}-id`} class="accordion elsa-mb-4 elsa-rounded" onClick={this.onAccordionQuestionClick}>
-        <p class="elsa-mt-1 elsa-text-base elsa-text-gray-900 accordion-paragraph">{question.value.name}</p>
-        <button type="button" onClick={e => this.onDeleteQuestionClick(e, question)}
-          class="elsa-h-5 elsa-w-5 elsa-mx-auto elsa-outline-none focus:elsa-outline-none trashcan-icon" style={{ float: "right" }}>
-          <TrashCanIcon options={this.iconProvider.getOptions()}></TrashCanIcon>
-        </button>
-        <p class="elsa-mt-1 elsa-text-sm elsa-text-gray-900 accordion-paragraph">{question.ActivityType.displayName}</p>
-        {this.renderQuestionComponent(question)}
+        <div class="elsa-w-1 sortablejs-custom-handle">
+        <SortIcon options={this.iconProvider.getOptions()}></SortIcon>
+        </div>
+        <div>
+          <p class="elsa-mt-1 elsa-text-base elsa-text-gray-900 accordion-paragraph">{question.value.name}</p>
+          <button type="button" onClick={e => this.onDeleteQuestionClick(e, question)}
+            class="elsa-h-5 elsa-w-5 elsa-mx-auto elsa-outline-none focus:elsa-outline-none trashcan-icon" style={{ float: "right" }}>
+            <TrashCanIcon options={this.iconProvider.getOptions()}></TrashCanIcon>
+          </button>
+          <p class="elsa-mt-1 elsa-text-sm elsa-text-gray-900 accordion-paragraph">{question.ActivityType.displayName}</p>
+          {this.renderQuestionComponent(question)}
+        </div>
+
       </div>
     );
   };
@@ -204,7 +236,10 @@ export class QuestionScreen {
 
     return (
       <div>
-        {this.renderQuestions(this.questionModel)}
+        <div ref={el => (this.container = el as HTMLElement) }>
+          {this.renderQuestions(this.questionModel)}
+        </div>
+        
 
         <elsa-multi-expression-editor
           ref={el => this.multiExpressionEditor = el}

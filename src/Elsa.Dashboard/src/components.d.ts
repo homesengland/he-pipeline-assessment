@@ -6,8 +6,8 @@
  */
 import { HTMLStencilElement, JSXBase } from "@stencil/core/internal";
 import { ActivityDefinitionProperty, ActivityModel, ActivityPropertyDescriptor } from "./models/elsa-interfaces";
-import { DataDictionaryGroup, HeActivityPropertyDescriptor, NestedActivityDefinitionProperty, NestedPropertyModel } from "./models/custom-component-models";
 import { VNode } from "@stencil/core";
+import { DataDictionaryGroup, HeActivityPropertyDescriptor, NestedActivityDefinitionProperty, NestedPropertyModel } from "./models/custom-component-models";
 export namespace Components {
     interface HeCheckListProperty {
         "activityModel": ActivityModel;
@@ -29,7 +29,7 @@ export namespace Components {
         "activityModel": ActivityModel;
         "modelSyntax": string;
         "propertyDescriptor": ActivityPropertyDescriptor;
-        "propertyModel": NestedActivityDefinitionProperty;
+        "propertyModel": ActivityDefinitionProperty;
     }
     interface HeElsaControl {
         "content": VNode | string | Element;
@@ -404,7 +404,7 @@ declare namespace LocalJSX {
         "modelSyntax"?: string;
         "onExpressionChanged"?: (event: HeDataTablePropertyCustomEvent<string>) => void;
         "propertyDescriptor"?: ActivityPropertyDescriptor;
-        "propertyModel"?: NestedActivityDefinitionProperty;
+        "propertyModel"?: ActivityDefinitionProperty;
     }
     interface HeElsaControl {
         "content"?: VNode | string | Element;

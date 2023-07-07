@@ -14,58 +14,62 @@ import ExpandIcon from '../../icons/expand_icon';
 import { PropertyOutputTypes, RadioOptionsSyntax, SyntaxNames } from '../../constants/constants';
 import { NestedActivityDefinitionProperty } from '../../models/custom-component-models';
 import { ToggleDictionaryDisplay } from '../../functions/display-toggle'
-import { BaseComponent, ISharedComponent } from '../base-component';
+import { SortableComponent, ISortableSharedComponent } from '../base-component';
+import SortIcon from '../../icons/sort_icon';
 
 @Component({
   tag: 'he-potscore-radio-options-property',
   shadow: false,
 })
 
-export class HePotScoreRadioOptionProperty implements ISharedComponent {
+export class HePotScoreRadioOptionProperty implements ISortableSharedComponent {
 
   @Prop() activityModel: ActivityModel;
   @Prop() propertyDescriptor: ActivityPropertyDescriptor;
   @Prop() propertyModel: ActivityDefinitionProperty;
-  @State() options: Array<NestedActivityDefinitionProperty> = [];
+  @State() properties: Array<NestedActivityDefinitionProperty> = [];
   @State() iconProvider = new IconProvider();
   @Event() expressionChanged: EventEmitter<string>;
   @State() optionsDisplayToggle: Map<string> = {};
   @State() switchTextHeight: string = "";
   @State() editorHeight: string = "2.75em"
 
-  _base: BaseComponent;
-
-
-
+  _base: SortableComponent;
+  modelSyntax: string = SyntaxNames.Json;
   supportedSyntaxes: Array<string> = [SyntaxNames.JavaScript, SyntaxNames.Liquid, SyntaxNames.Literal];
   potScoreOptions: Array<string> = [];
   multiExpressionEditor: HTMLElsaMultiExpressionEditorElement;
   syntaxSwitchCount: number = 0;
 
+  container: HTMLElement;
+
   constructor() {
-    this._base = new BaseComponent(this);
+    this._base = new SortableComponent(this);
   }
-    modelSyntax: string;
-    properties: NestedActivityDefinitionProperty[];
+
 
   async componentWillLoad() {
     this._base.componentWillLoad();
     this.potScoreOptions = parseJson(this.propertyDescriptor.options);
   }
 
+  async componentDidLoad() {
+    this._base.componentDidLoad();
+  }
+
 
   updatePropertyModel() {
-    this.propertyModel.expressions[SyntaxNames.Json] = JSON.stringify(this.options);
-    this.multiExpressionEditor.expressions[SyntaxNames.Json] = JSON.stringify(this.options, null, 2);
+    this.propertyModel.expressions[SyntaxNames.Json] = JSON.stringify(this.properties);
+    this.multiExpressionEditor.expressions[SyntaxNames.Json] = JSON.stringify(this.properties, null, 2);
     this.expressionChanged.emit(JSON.stringify(this.propertyModel))
   }
 
   onDefaultSyntaxValueChanged(e: CustomEvent) {
-    this.options = e.detail;
+    this.properties = e.detail;
   }
 
   onAddOptionClick() {
-    const optionName = ToLetter(this.options.length + 1);
+    const optionName = ToLetter(this.properties.length + 1);
     const newOption: NestedActivityDefinitionProperty = {
       name: optionName,
       syntax: SyntaxNames.Literal,
@@ -75,12 +79,12 @@ export class HePotScoreRadioOptionProperty implements ISharedComponent {
         [RadioOptionsSyntax.PotScore]: this.potScoreOptions[0]
       }, type: PropertyOutputTypes.Radio
     };
-    this.options = [...this.options, newOption];
+    this.properties = [...this.properties, newOption];
     this.updatePropertyModel();
   }
 
   onDeleteOptionClick(switchCase: NestedActivityDefinitionProperty) {
-    this.options = this.options.filter(x => x != switchCase);
+    this.properties = this.properties.filter(x => x != switchCase);
     this.updatePropertyModel();
   }
 
@@ -95,7 +99,7 @@ export class HePotScoreRadioOptionProperty implements ISharedComponent {
       return;
 
     this.propertyModel.expressions[SyntaxNames.Json] = json;
-    this.options = parsed;
+    this.properties = parsed;
   }
 
   onMultiExpressionEditorSyntaxChanged(e: CustomEvent<string>) {
@@ -113,7 +117,7 @@ export class HePotScoreRadioOptionProperty implements ISharedComponent {
   }
 
   render() {
-    const cases = this.options;
+    const cases = this.properties;
     const supportedSyntaxes = this.supportedSyntaxes;
     const json = JSON.stringify(cases, null, 2);
 
@@ -134,6 +138,12 @@ export class HePotScoreRadioOptionProperty implements ISharedComponent {
 
       return (
         <tbody>
+          <tr>
+            <th class="sortablejs-custom-handle"><SortIcon options={this.iconProvider.getOptions()}></SortIcon>
+            </th>
+            <td></td>
+            <td></td>
+          </tr>
           <tr key={`case-${index}`}>
             <th
               class="elsa-py-3 elsa-text-left elsa-text-xs elsa-font-medium elsa-text-gray-500 elsa-tracking-wider elsa-w-2/12">Identifier
@@ -262,7 +272,7 @@ export class HePotScoreRadioOptionProperty implements ISharedComponent {
           onExpressionChanged={e => this.onMultiExpressionEditorValueChanged(e)}
           onSyntaxChanged={e => this.onMultiExpressionEditorSyntaxChanged(e)}
         >
-          <table class="elsa-min-w-full elsa-divide-y elsa-divide-gray-200">
+          <table class="elsa-min-w-full elsa-divide-y elsa-divide-gray-200" ref={el => (this.container = el as HTMLElement) }>
             {cases.map(renderCaseEditor)}
           </table>
 

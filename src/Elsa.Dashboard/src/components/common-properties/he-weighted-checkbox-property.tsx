@@ -13,14 +13,15 @@ import TrashCanIcon from '../../icons/trash-can';
 import { PropertyOutputTypes, SyntaxNames, WeightedScoringSyntax } from '../../constants/constants';
 import { NestedActivityDefinitionProperty } from '../../models/custom-component-models';
 import { ToggleDictionaryDisplay } from '../../functions/display-toggle'
-import { BaseComponent, ISharedComponent } from '../base-component';
+import { SortableComponent, ISortableSharedComponent } from '../base-component';
+import SortIcon from '../../icons/sort_icon';
 
 @Component({
   tag: 'he-weighted-checkbox-property',
   shadow: false,
 })
 
-export class HeWeightedCheckboxProperty implements ISharedComponent {
+export class HeWeightedCheckboxProperty implements ISortableSharedComponent {
 
   @Prop() activityModel: ActivityModel;
   @Prop() propertyDescriptor: ActivityPropertyDescriptor;
@@ -38,15 +39,19 @@ export class HeWeightedCheckboxProperty implements ISharedComponent {
   multiExpressionEditor: HTMLElsaMultiExpressionEditorElement;
   syntaxSwitchCount: number = 0;
   scoreSyntaxSwitchCount: number = 0;
-
-  private _base: BaseComponent;
+  container: HTMLElement;
+  private _base: SortableComponent;
 
   constructor() {
-    this._base = new BaseComponent(this);
+    this._base = new SortableComponent(this);
   }
 
   async componentWillLoad() {
     this._base.componentWillLoad();
+  }
+
+  async componentDidLoad() {
+    this._base.componentDidLoad();
   }
 
 
@@ -125,6 +130,9 @@ export class HeWeightedCheckboxProperty implements ISharedComponent {
           <br />
           <div class="elsa-mb-1">
             <div class="elsa-flex">
+              <div class="elsa-flex-1 sortablejs-custom-handle">
+                <SortIcon options={this.iconProvider.getOptions()}></SortIcon>
+              </div>
               <div class="elsa-flex-1 elsa-mx-auto">
                 <h3>Group: {checkboxGroup.name}</h3>
               </div>
@@ -169,7 +177,7 @@ export class HeWeightedCheckboxProperty implements ISharedComponent {
           onSyntaxChanged={e => this.onMultiExpressionEditorSyntaxChanged(e)}
         >
           <hr />
-          <div class="elsa-min-w-full elsa-divide-y elsa-divide-gray-200">
+          <div class="elsa-min-w-full elsa-divide-y elsa-divide-gray-200" ref={el =>(this.container = el as HTMLElement)}>
             {answerGroups.map(renderCheckboxGroups)}
           </div>
 
