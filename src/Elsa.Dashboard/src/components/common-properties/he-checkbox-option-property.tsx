@@ -13,7 +13,7 @@ import {
   HTMLElsaMultiExpressionEditorElement,
   IntellisenseContext
 } from "../../models/elsa-interfaces";
-import { mapSyntaxToLanguage, parseJson, ToLetter, Map } from "../../utils/utils";
+import { mapSyntaxToLanguage, parseJson, NewOptionLetter, Map } from "../../utils/utils";
 import { ISortableSharedComponent, SortableComponent } from '../base-component';
 import { IconProvider } from "../providers/icon-provider/icon-provider";
 
@@ -63,7 +63,7 @@ export class HeCheckboxOptionProperty implements ISortableSharedComponent {
   }
 
   onAddOptionClick() {
-    const optionName = ToLetter(this.properties.length + 1);
+    const optionName = NewOptionLetter(this._base.IdentifierArray());
     const newOption: NestedActivityDefinitionProperty = { name: optionName, syntax: SyntaxNames.Literal, expressions: { [SyntaxNames.Literal]: '', [CheckboxOptionsSyntax.Single]: 'false', [CheckboxOptionsSyntax.PrePopulated]: 'false' }, type: PropertyOutputTypes.Checkbox };
     this.properties = [...this.properties, newOption];
     this._base.updatePropertyModel();

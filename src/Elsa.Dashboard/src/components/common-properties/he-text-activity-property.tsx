@@ -11,7 +11,7 @@ import { NestedActivityDefinitionProperty } from "../../models/custom-component-
 import PlusIcon from '../../icons/plus_icon';
 import TrashCanIcon from '../../icons/trash-can';
 import ExpandIcon from '../../icons/expand_icon';
-import { mapSyntaxToLanguage, parseJson, ToLetter, Map } from '../../utils/utils';
+import { mapSyntaxToLanguage, parseJson, NewOptionLetter, Map } from '../../utils/utils';
 import { PropertyOutputTypes, SyntaxNames, TextActivityOptionsSyntax } from '../../constants/constants';
 import { ToggleDictionaryDisplay } from '../../functions/display-toggle';
 import { SortableComponent, ISortableSharedComponent } from '../base-component';
@@ -77,7 +77,7 @@ export class TextActivityProperty implements ISortableSharedComponent {
   }
 
   onAddElementClick() {
-    const textName = ToLetter(this.properties.length + 1);
+    const textName = NewOptionLetter(this._base.IdentifierArray());
     const newTextElement: NestedActivityDefinitionProperty = {
       syntax: SyntaxNames.Literal,
       expressions: { [SyntaxNames.Literal]: '', [TextActivityOptionsSyntax.Paragraph]: 'true', [TextActivityOptionsSyntax.Condition]: 'true' },

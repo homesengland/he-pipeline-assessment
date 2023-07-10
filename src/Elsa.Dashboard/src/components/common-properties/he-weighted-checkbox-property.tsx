@@ -6,7 +6,7 @@ import {
   HTMLElsaMultiExpressionEditorElement,
   IntellisenseContext
 } from "../../models/elsa-interfaces";
-import {  parseJson, ToLetter, Map } from "../../utils/utils";
+import { parseJson, NewOptionLetter, Map } from "../../utils/utils";
 import { IconProvider } from "../providers/icon-provider/icon-provider";
 import PlusIcon from '../../icons/plus_icon';
 import TrashCanIcon from '../../icons/trash-can';
@@ -64,7 +64,7 @@ export class HeWeightedCheckboxProperty implements ISortableSharedComponent {
   }
 
   onAddGroupClick() {
-    const groupName = ToLetter(this.properties.length + 1);
+    const groupName = NewOptionLetter(this._base.IdentifierArray());
     const newGroup: NestedActivityDefinitionProperty = {
       name: groupName,
       syntax: SyntaxNames.Json,

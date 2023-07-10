@@ -28,7 +28,7 @@ import {
 } from '../providers/question-provider/question-provider';
 import TrashCanIcon from '../../icons/trash-can';
 import { QuestionCategories, SyntaxNames } from '../../constants/constants';
-import { filterPropertiesByType, parseJson } from '../../utils/utils';
+import { filterPropertiesByType, parseJson, NewOptionNumber } from '../../utils/utils';
 import SortIcon from '../../icons/sort_icon';
 
 @Component({
@@ -73,17 +73,12 @@ export class QuestionScreen {
       ghostClass: "dragTarget",
 
       onEnd(evt) {
-        console.log("Dragging event", evt);
-        console.log("Item", evt.item);
         dragEventHandler(evt.oldIndex, evt.newIndex);
       }
     });
   }
 
   onDragActivity(oldIndex: number, newIndex: number) {
-    console.log("Event handler triggered")
-    console.log("Old Index:", oldIndex);
-    console.log("new Index", newIndex);
     const activity = this.questionModel.activities.splice(oldIndex, 1)[0];
     this.questionModel.activities.splice(newIndex, 0, activity);
     this.updatePropertyModel();
@@ -147,11 +142,8 @@ export class QuestionScreen {
   };
 
   handleAddQuestion(e: Event) {
-    console.log("Adding Question...");
     let value = (e.currentTarget as HTMLSelectElement).value.trim();
-    console.log("value", value);
     let data: IActivityData = JSON.parse((e.currentTarget as HTMLSelectElement).selectedOptions[0].dataset.type)
-    console.log("Data", data);
     if (value != null && value != "") {
       this.onAddQuestion(data);
       let element = e.currentTarget as HTMLSelectElement;
@@ -186,8 +178,18 @@ export class QuestionScreen {
     return expression;
   }
 
+  activityIds(): Array<number> {
+    let activityIds: Array<number> = [];
+    if (this.questionModel.activities.length > 0) {
+      activityIds = this.questionModel.activities.map(function (v) {
+        return parseInt(v.value.value);
+      });
+    }
+    return activityIds;
+  }
+
   onAddQuestion(questionType: IActivityData) {
-    let id = (this.questionModel.activities.length + 1).toString();
+    let id = NewOptionNumber(this.activityIds());
     const questionName = `Question ${id}`;
     const newValue = this.newQuestionValue(questionName, id);
     let propertyDescriptors = filterPropertiesByType(this.questionProperties, questionType.nameConstant);

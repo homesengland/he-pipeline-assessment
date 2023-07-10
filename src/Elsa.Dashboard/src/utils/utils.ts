@@ -6,12 +6,22 @@ export type Map<T> = {
   [key: string]: T
 };
 
-export function NewOptionNumber(options: Array<number>) : number {
-  let highestValue: number = 1;
+export function NewOptionNumber(options: Array<number>) : string {
+  let highestValue: number = 0;
   if (options != null && options.length > 0) {
     highestValue = options.sort().pop();
   }
+  return (highestValue+1).toString();
+}
+
+export function NewOptionLetter(options: Array<string>): string {
+  let highestValue: string = "A";
+  if (options != null && options.length > 0) {
+    highestValue = options.sort().pop();
+    return IncrementString(highestValue);
+  }
   return highestValue;
+  
 }
 
 export function ToLetter(num: number) {
@@ -21,6 +31,33 @@ export function ToLetter(num: number) {
     out = mod ? String.fromCharCode(64 + mod) : (--pow, 'Z');
   return pow ? ToLetter(pow) + out : out;
 };
+
+function IncrementString(value: string) : string {
+  let carry: number = 1;
+  let res: string = '';
+
+  for (let i = value.length - 1; i >= 0; i--) {
+    let char = value.toUpperCase().charCodeAt(i);
+    char += carry;
+    if (char > 90) {
+      char = 65;
+      carry = 1;
+    } else {
+      carry = 0;
+    }
+
+    res = String.fromCharCode(char) + res;
+
+    if (!carry) {
+      res = value.substring(0, i) + res;
+      break;
+    }
+  }
+  if (carry) {
+    res = 'A' + res;
+  }
+  return res;
+}
 
 export function getOrCreateProperty(activity: ActivityModel, name: string, defaultExpression?: () => string, defaultSyntax?: () => string): ActivityDefinitionProperty {
   let property: ActivityDefinitionProperty = activity.properties.find(x => x.name == name);

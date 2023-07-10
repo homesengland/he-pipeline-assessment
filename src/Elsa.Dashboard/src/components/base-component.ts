@@ -86,6 +86,16 @@ export class BaseComponent {
     this.updatePropertyModel();
   }
 
+  IdentifierArray(): Array<string> {
+    let propertyIdentifiers: Array<string> = [];
+    if (this.component.properties.length > 0) {
+      propertyIdentifiers = this.component.properties.map(function (v) {
+        return v.name;
+      });
+    }
+    return propertyIdentifiers;
+  }
+
   UpdateProperties(parsed: Array<NestedActivityDefinitionProperty>) {
     this.component.properties = parsed
   }
@@ -124,17 +134,12 @@ export class SortableComponent extends BaseComponent {
       ghostClass: 'dragTarget',
 
       onEnd(evt) {
-        console.log("Dragging event", evt);
-        console.log("Item", evt.item);
         dragEventHandler(evt.oldIndex, evt.newIndex);
       }
     });
   }
 
   onDragActivity(oldIndex: number, newIndex: number) {
-    console.log("Event handler triggered");
-    console.log("Old Index:", oldIndex);
-    console.log("new Index", newIndex);
     const activity = this.component.properties.splice(oldIndex, 1)[0];
     this.component.properties.splice(newIndex, 0, activity);
     this.updatePropertyModel();

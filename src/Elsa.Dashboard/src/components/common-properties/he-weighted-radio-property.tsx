@@ -6,7 +6,7 @@ import {
   HTMLElsaMultiExpressionEditorElement,
   IntellisenseContext
 } from "../../models/elsa-interfaces";
-import { mapSyntaxToLanguage, parseJson, ToLetter, Map } from "../../utils/utils";
+import { mapSyntaxToLanguage, parseJson, NewOptionLetter, Map } from "../../utils/utils";
 import { IconProvider } from "../providers/icon-provider/icon-provider";
 import PlusIcon from '../../icons/plus_icon';
 import TrashCanIcon from '../../icons/trash-can';
@@ -65,7 +65,7 @@ export class HeWeightedRadioProperty implements ISortableSharedComponent {
   }
 
   onAddOptionClick() {
-    const optionName = ToLetter(this.properties.length + 1);
+    const optionName = NewOptionLetter(this._base.IdentifierArray());
     const newOption: NestedActivityDefinitionProperty = { name: optionName, syntax: SyntaxNames.Literal, expressions: { [SyntaxNames.Literal]: '', [RadioOptionsSyntax.PrePopulated]: 'false' }, type: PropertyOutputTypes.Radio };
     this.properties = [...this.properties, newOption];
     this.updatePropertyModel();
