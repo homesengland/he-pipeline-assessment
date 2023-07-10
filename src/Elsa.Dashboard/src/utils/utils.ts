@@ -6,6 +6,14 @@ export type Map<T> = {
   [key: string]: T
 };
 
+export function NewOptionNumber(options: Array<number>) : number {
+  let highestValue: number = 1;
+  if (options != null && options.length > 0) {
+    highestValue = options.sort().pop();
+  }
+  return highestValue;
+}
+
 export function ToLetter(num: number) {
   "use strict";
   var mod = num % 26,

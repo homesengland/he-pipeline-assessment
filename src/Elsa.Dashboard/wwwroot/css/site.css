@@ -180,3 +180,7 @@ elsa-monaco {
 .inline{
     display:inline-block;
 }
+
+:host(.dragTarget) {
+  background: rgba(76, 72, 255, 0.75);
+}

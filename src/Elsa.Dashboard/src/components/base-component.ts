@@ -121,8 +121,9 @@ export class SortableComponent extends BaseComponent {
     Sortable.create(this.component.container, {
       animation: 150,
       handle: ".sortablejs-custom-handle",
+      ghostClass: 'dragTarget',
 
-      onChange(evt) {
+      onEnd(evt) {
         console.log("Dragging event", evt);
         console.log("Item", evt.item);
         dragEventHandler(evt.oldIndex, evt.newIndex);
