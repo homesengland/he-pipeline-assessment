@@ -59,8 +59,4 @@
     <ProjectReference Include="..\He.PipelineAssessment.Infrastructure\He.PipelineAssessment.Infrastructure.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="Features\Economist\Views\" />
-  </ItemGroup>
-
 </Project>

@@ -13,7 +13,8 @@ public class EconomistController : BaseController<EconomistController>
     [Authorize(Policy = Constants.AuthorizationPolicies.AssignmentToWorkflowEconomistRoleRequired)]
     public async Task<IActionResult> GetEconomistList()
     {
-        var listModel = await _mediator.Send(new EconomistAssessmentListCommand());
-        return View("~/Features/Assessment/Views/Index.cshtml", listModel);
+            var listModel = await _mediator.Send(new EconomistAssessmentListCommand());
+            return View("Features/Economist/Views/EconomistAssessmentList.cshtml", listModel);
+
     }
 }

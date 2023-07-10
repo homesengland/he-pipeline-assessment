@@ -1,0 +1,33 @@
+﻿@using He.PipelineAssessment.UI
+@using He.PipelineAssessment.UI.Authorization;
+@using Microsoft.AspNetCore.Authorization
+@inject IAuthorizationService AuthorizationService
+@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+@model List<He.PipelineAssessment.Models.ViewModels.AssessmentDataViewModel>
+@inject NonceConfig nonceConfig
+
+@{
+    ViewData["Title"] = "Pipeline Assessment";
+    Layout = "_LayoutFullWidth";
+}
+    <div class="govuk-grid-row">
+    <div class="govuk-grid-column-two-thirds">
+        @Html.ActionLink("Back","Index","Assessment", null,new{ @class="govuk-back-link"})
+    </div>
+    </div>
+<div class="govuk-grid-row">
+    <h1 class="govuk-heading-l govuk-grid-column-one-quarter pull-left" for="event-name">Assessment Search</h1>
+</div>
+
+<br />
+
+@await Html.PartialAsync("_AssessmentListTable",Model)
+@section Scripts
+    {
+        <script nonce="@nonceConfig.DataTablesSetup" src="~/js/gov_dataTable.js"></script>
+        <script nonce="@nonceConfig.DataTablesSetup">
+            $(document).ready(function () {
+                initDataTable('assessmentListTable', 3, "search-div")
+            });
+        </script>
+}
