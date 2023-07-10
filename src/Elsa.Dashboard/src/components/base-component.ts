@@ -131,7 +131,9 @@ export class SortableComponent extends BaseComponent {
   }
 
   onDragActivity(oldIndex: number, newIndex: number) {
-    console.log("Event handler triggered")
+    console.log("Event handler triggered");
+    console.log("Old Index:", oldIndex);
+    console.log("new Index", newIndex);
     const activity = this.component.properties.splice(oldIndex, 1)[0];
     this.component.properties.splice(newIndex, 0, activity);
     this.updatePropertyModel();

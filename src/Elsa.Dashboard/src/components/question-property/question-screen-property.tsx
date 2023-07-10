@@ -81,6 +81,8 @@ export class QuestionScreen {
 
   onDragActivity(oldIndex: number, newIndex: number) {
     console.log("Event handler triggered")
+    console.log("Old Index:", oldIndex);
+    console.log("new Index", newIndex);
     const activity = this.questionModel.activities.splice(oldIndex, 1)[0];
     this.questionModel.activities.splice(newIndex, 0, activity);
     this.updatePropertyModel();
