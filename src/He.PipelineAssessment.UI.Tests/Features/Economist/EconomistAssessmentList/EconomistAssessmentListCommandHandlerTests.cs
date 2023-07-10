@@ -21,11 +21,8 @@ public class EconomistAssessmentListCommandHandlerTests
         //Arrange
         repo.Setup(x => x.GetEconomistAssessments()).Throws(exception);
 
-        //Act
-        var result = await sut.Handle(economistAssessmentListCommand, CancellationToken.None);
-
         //Assert
-        Assert.Empty(result);
+        await Assert.ThrowsAsync<Exception>(() => sut.Handle(economistAssessmentListCommand, CancellationToken.None));
     }
 
     [Theory]
