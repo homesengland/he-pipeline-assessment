@@ -29,6 +29,13 @@ export class HeSingleLineProperty {
   }
 
   componentWillLoad() {
+    console.log("he single line property loaded")
+    const defaultSyntax = this.propertyDescriptor.defaultSyntax || SyntaxNames.Literal;
+    this.currentValue = this.propertyModel.expressions[defaultSyntax] || undefined;
+  }
+
+  componentWillRender() {
+    console.log("Component will render - single line property");
     const defaultSyntax = this.propertyDescriptor.defaultSyntax || SyntaxNames.Literal;
     this.currentValue = this.propertyModel.expressions[defaultSyntax] || undefined;
   }
@@ -45,7 +52,8 @@ export class HeSingleLineProperty {
     const fieldId = propertyName;
     const fieldName = propertyName;
     let value = this.currentValue;
-
+    console.log("Rerendering single line property", fieldName)
+    console.log("Value", value)
     if (value == undefined) {
       const defaultValue = this.propertyDescriptor.defaultValue;
       value = defaultValue ? defaultValue.toString() : undefined;

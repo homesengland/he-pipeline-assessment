@@ -42,16 +42,25 @@ export class QuestionProperty {
    
   }
 
+  async componentWillRender() {
+    console.log("Component will render - question property");
+    this.getOrCreateQuestionProperties();
+  }
+
   getOrCreateQuestionProperties() {
+    console.log("getOrCreateQuestionProperties")
     const model = this.questionModel;
     this.questionModel.descriptor = filterPropertiesByType(this.questionModel.descriptor, this.questionModel.ActivityType.nameConstant)
     const propertyJson = model.value.expressions[SyntaxNames.QuestionList];
     if (propertyJson != null && propertyJson != undefined && parseJson(propertyJson).length > 0) {
+      console.log("update nested question properties")
       const nestedProperties = parseJson(propertyJson)
       this.nestedQuestionProperties = UpdateNestedActivitiesByDescriptors(this.questionModel.descriptor, nestedProperties, this.questionModel);
     }
     else {
+      console.log("create question properties")
       this.nestedQuestionProperties = this.createQuestionProperties();
+      console.log(this.nestedQuestionProperties)
     }
   }
 
@@ -79,10 +88,11 @@ export class QuestionProperty {
 
 
   render() {
+    console.log("Re-rendering question", this.questionModel);
     const displayManager = this.displayManager;
 
     const renderPropertyEditor = (property: NestedProperty) => {
-
+      console.log(property.value)
       var content = displayManager.displayNested(this.activityModel, property, this.onPropertyExpressionChange.bind(this));
       let id = property.descriptor.name + "Category";
       return (
