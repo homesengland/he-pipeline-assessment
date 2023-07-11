@@ -56,6 +56,7 @@ export class QuestionScreen {
 
 
   async componentWillLoad() {
+    console.log("Component will load");
     console.log("Screen load");
     const propertyModel = this.propertyModel;
     const choicesJson = propertyModel.expressions[SyntaxNames.QuestionList]

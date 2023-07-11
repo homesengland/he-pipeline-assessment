@@ -294,6 +294,7 @@ export class HeWeightedCheckboxOptionGroupProperty implements ISortableSharedCom
               <div class="elsa-mt-1 elsa-relative elsa-rounded-md elsa-shadow-sm">
 
                 <elsa-multi-expression-editor
+                  key={checkboxAnswer.name}
                   onSyntaxChanged={e => console.log(e)}
                   onExpressionChanged={e => this._base.CustomUpdateExpression(e, checkboxAnswer, CheckboxOptionsSyntax.PrePopulated)}
                   fieldName={"Pre Populated"}
