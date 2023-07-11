@@ -9,9 +9,12 @@ export type Map<T> = {
 export function NewOptionNumber(options: Array<number>) : string {
   let highestValue: number = 0;
   if (options != null && options.length > 0) {
-    highestValue = options.sort().pop();
+    highestValue = options.sort(function (a, b) {
+      return a - b;
+    }).pop();
   }
-  return (highestValue+1).toString();
+  highestValue = highestValue + 1;
+  return highestValue.toString();
 }
 
 export function NewOptionLetter(options: Array<string>): string {
