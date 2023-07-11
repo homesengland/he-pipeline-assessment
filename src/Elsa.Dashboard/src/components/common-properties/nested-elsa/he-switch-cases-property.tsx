@@ -45,9 +45,20 @@ export class HeSwitchCasesProperty {
     this.cases = parseJson(casesJson) || [];
   }
 
+  async componentWillRender() {
+    console.log("component will render - switch case")
+    const propertyModel = this.propertyModel;
+    const casesJson = propertyModel.expressions[SyntaxNames.Switch]
+    console.log("cases - ", casesJson);
+    this.cases = parseJson(casesJson) || [];
+    console.log("cases - ", this.cases);
+  }
+
   updatePropertyModel() {
+    console.log("switch case - update property model")
     this.propertyModel.expressions[SyntaxNames.Switch] = JSON.stringify(this.cases);
     this.multiExpressionEditor.expressions[SyntaxNames.Json] = JSON.stringify(this.cases, null, 2);
+    console.log("cases - ", this.propertyModel.expressions[SyntaxNames.Switch])
   }
 
   onDefaultSyntaxValueChanged(e: CustomEvent) {
@@ -110,9 +121,11 @@ export class HeSwitchCasesProperty {
     const cases = this.cases;
     const supportedSyntaxes = this.supportedSyntaxes;
     const json = JSON.stringify(cases, null, 2);
-
+    console.log("Render switch case", json);
     const renderCaseEditor = (switchCase: SwitchCase, index: number) => {
+
       const expression = switchCase.expressions[switchCase.syntax];
+      console.log("Render switch case- expression", expression);
       const syntax = switchCase.syntax;
       const monacoLanguage = mapSyntaxToLanguage(syntax);
       let expressionEditor = null;
