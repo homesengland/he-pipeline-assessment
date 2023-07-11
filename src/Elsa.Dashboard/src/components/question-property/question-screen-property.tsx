@@ -56,6 +56,7 @@ export class QuestionScreen {
 
 
   async componentWillLoad() {
+    console.log("Screen load");
     const propertyModel = this.propertyModel;
     const choicesJson = propertyModel.expressions[SyntaxNames.QuestionList]
     this.questionModel = parseJson(choicesJson) || this.defaultActivityModel();
