@@ -305,7 +305,9 @@ export class HeWeightedCheckboxOptionGroupProperty implements ISortableSharedCom
                   supportedSyntaxes={[SyntaxNames.JavaScript]}
                   editor-height={this.editorHeight}
                   context={context}>
-                  <slot />
+                  <input type="text" id={"123"} name={"prePop123"} value={checkboxAnswer.expressions[CheckboxOptionsSyntax.PrePopulated]} onChange={e => this._base.UpdateExpressionFromInput(e, checkboxAnswer, CheckboxOptionsSyntax.PrePopulated)}
+                    class="disabled:elsa-opacity-50 disabled:elsa-cursor-not-allowed focus:elsa-ring-blue-500 focus:elsa-border-blue-500 elsa-block elsa-w-full elsa-min-w-0 elsa-rounded-md sm:elsa-text-sm elsa-border-gray-300"
+                    disabled={false} />
                 </elsa-multi-expression-editor>
 
                 {/*<elsa-expression-editor*/}
