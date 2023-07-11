@@ -77,6 +77,64 @@ namespace Elsa.CustomActivities.Activities.QuestionScreen.Helpers
             return null;
         }
 
+        public async Task<decimal?[]> GetDecimalAnswerArray(string correlationId, string workflowName, string activityName, string questionId)
+        {
+            try
+            {
+                var workflowBlueprint =
+                    await _workflowRegistry.FindByNameAsync(workflowName, Models.VersionOptions.Published);
+
+                if (workflowBlueprint != null)
+                {
+                    var activity = workflowBlueprint.Activities.FirstOrDefault(x => x.Name == activityName);
+                    if (activity != null)
+                    {
+                        var question = await _elsaCustomRepository.GetQuestionByCorrelationId(activity.Id,
+                            correlationId, questionId, CancellationToken.None);
+
+                        if (question != null && question.Answers != null &&
+                            question.QuestionType == QuestionTypeConstants.DataTable)
+                        {
+                            var answer = question.Answers.FirstOrDefault();
+                            if (answer != null)
+                            {
+                                var dataTable = JsonSerializer.Deserialize<DataTable>(answer.AnswerText);
+                                if (dataTable != null &&
+                                    (dataTable.InputType == DataTableInputTypeConstants.CurrencyDataTableInput ||
+                                     dataTable.InputType == DataTableInputTypeConstants.IntegerDataTableInput ||
+                                     dataTable.InputType == DataTableInputTypeConstants.DecimalDataTableInput))
+                                {
+                                    var input = dataTable.Inputs.Select(x => x.Input);
+
+                                    var returnList = new List<decimal?>();
+                                    foreach (var item in input)
+                                    {
+                                        if (item != null)
+                                        {
+                                            var answerDecimal = decimal.Parse(item);
+                                            returnList.Add(answerDecimal);
+                                        }
+                                        else
+                                        {
+                                            returnList.Add(null);
+                                        }
+                                    }
+
+                                    return returnList.ToArray();
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+            catch (Exception)
+            {
+                return new List<decimal?>().ToArray();
+            }
+
+            return new List<decimal?>().ToArray();
+        }
+
         public async Task<string> GetStringAnswer(string correlationId, string workflowName, string activityName, string questionId, string tableCellIdentifier)
         {
             try
@@ -119,24 +177,79 @@ namespace Elsa.CustomActivities.Activities.QuestionScreen.Helpers
             return string.Empty;
         }
 
+        public async Task<string?[]> GetStringAnswerArray(string correlationId, string workflowName, string activityName, string questionId)
+        {
+            try
+            {
+                var workflowBlueprint = await _workflowRegistry.FindByNameAsync(workflowName, Models.VersionOptions.Published);
+
+                if (workflowBlueprint != null)
+                {
+                    var activity = workflowBlueprint.Activities.FirstOrDefault(x => x.Name == activityName);
+                    if (activity != null)
+                    {
+                        var question = await _elsaCustomRepository.GetQuestionByCorrelationId(activity.Id, correlationId, questionId, CancellationToken.None);
+
+                        if (question != null && question.Answers != null && question.QuestionType == QuestionTypeConstants.DataTable)
+                        {
+                            var answer = question.Answers.FirstOrDefault();
+                            if (answer != null)
+                            {
+                                var dataTable = JsonSerializer.Deserialize<DataTable>(answer.AnswerText);
+                                if (dataTable != null)
+                                {
+                                    var input = dataTable.Inputs.Select(x => x.Input).ToArray();
+                                    return input;
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+            catch (Exception)
+            {
+                return new string[] { };
+            }
+
+            return new string[] { };
+        }
+
         public Task Handle(EvaluatingJavaScriptExpression notification, CancellationToken cancellationToken)
         {
             var activityExecutionContext = notification.ActivityExecutionContext;
             var engine = notification.Engine;
+
             engine.SetValue("dataTableQuestionGetStringAnswer", (Func<string, string, string, string, string?>)((workflowName, activityName, questionId, tableCellIdentifier) => GetStringAnswer(activityExecutionContext.CorrelationId, workflowName, activityName, questionId, tableCellIdentifier).Result));
+            engine.SetValue("dataTableQuestionGetStringAnswerArray", (Func<string, string, string, string?[]>)((workflowName, activityName, questionId) => GetStringAnswerArray(activityExecutionContext.CorrelationId, workflowName, activityName, questionId).Result));
+
+            engine.SetValue("dataTableQuestionGetCurrencyAnswerArray", (Func<string, string, string,  decimal?[]>)((workflowName, activityName, questionId) => GetDecimalAnswerArray(activityExecutionContext.CorrelationId, workflowName, activityName, questionId).Result));
             engine.SetValue("dataTableQuestionGetCurrencyAnswer", (Func<string, string, string, string, decimal?>)((workflowName, activityName, questionId, tableCellIdentifier) => GetDecimalAnswer(activityExecutionContext.CorrelationId, workflowName, activityName, questionId, tableCellIdentifier).Result));
+
+            engine.SetValue("dataTableQuestionGetIntegerAnswerArray", (Func<string, string, string, decimal?[]>)((workflowName, activityName, questionId) => GetDecimalAnswerArray(activityExecutionContext.CorrelationId, workflowName, activityName, questionId).Result));
             engine.SetValue("dataTableQuestionGetIntegerAnswer", (Func<string, string, string, string, decimal?>)((workflowName, activityName, questionId, tableCellIdentifier) => GetDecimalAnswer(activityExecutionContext.CorrelationId, workflowName, activityName, questionId, tableCellIdentifier).Result));
+
+            engine.SetValue("dataTableQuestionGetDecimalAnswerArray", (Func<string, string, string, decimal?[]>)((workflowName, activityName, questionId) => GetDecimalAnswerArray(activityExecutionContext.CorrelationId, workflowName, activityName, questionId).Result));
             engine.SetValue("dataTableQuestionGetDecimalAnswer", (Func<string, string, string, string, decimal?>)((workflowName, activityName, questionId, tableCellIdentifier) => GetDecimalAnswer(activityExecutionContext.CorrelationId, workflowName, activityName, questionId, tableCellIdentifier).Result));
+            
             return Task.CompletedTask;
         }
 
         public Task Handle(RenderingTypeScriptDefinitions notification, CancellationToken cancellationToken)
         {
             var output = notification.Output;
+
+            output.AppendLine("declare function dataTableQuestionGetStringAnswerArray(workflowName: string, activityName:string, questionId:string): [];");
             output.AppendLine("declare function dataTableQuestionGetStringAnswer(workflowName: string, activityName:string, questionId:string, tableCellIdentifier:string ): string;");
+
+            output.AppendLine("declare function dataTableQuestionGetCurrencyAnswerArray(workflowName: string, activityName:string, questionId:string ): [];");
             output.AppendLine("declare function dataTableQuestionGetCurrencyAnswer(workflowName: string, activityName:string, questionId:string, tableCellIdentifier:string ): number;");
+
+            output.AppendLine("declare function dataTableQuestionGetCurrencyAnswerArray(workflowName: string, activityName:string, questionId:string ): [];");
             output.AppendLine("declare function dataTableQuestionGetIntegerAnswer(workflowName: string, activityName:string, questionId:string, tableCellIdentifier:string ): number;");
+
+            output.AppendLine("declare function dataTableQuestionGetCurrencyAnswerArray(workflowName: string, activityName:string, questionId:string ): [];");
             output.AppendLine("declare function dataTableQuestionGetDecimalAnswer(workflowName: string, activityName:string, questionId:string, tableCellIdentifier:string ): number;");
+
             return Task.CompletedTask;
         }
     }
