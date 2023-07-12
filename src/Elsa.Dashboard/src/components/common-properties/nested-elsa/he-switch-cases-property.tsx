@@ -7,13 +7,14 @@ import {
   HTMLElsaMultiExpressionEditorElement,
   IntellisenseContext
 } from "../../../models/elsa-interfaces";
-import { mapSyntaxToLanguage, parseJson } from "../../../utils/utils";
+import { mapSyntaxToLanguage, parseJson, NewOptionNumber } from "../../../utils/utils";
 import { SwitchCase } from "../../../models/elsa-interfaces";
 import { IconProvider } from "../../providers/icon-provider/icon-provider";
 import PlusIcon from '../../../icons/plus_icon';
 import TrashCanIcon from '../../../icons/trash-can';
 import ExpandIcon from '../../../icons/expand_icon';
 import { SyntaxNames } from '../../../constants/constants';
+import { getUniversalUniqueId } from '../../../utils/utils';
 
 @Component({
   tag: 'he-switch-answers-property',
@@ -26,6 +27,7 @@ export class HeSwitchCasesProperty {
   @Prop() activityModel: ActivityModel;
   @Prop() propertyDescriptor: ActivityPropertyDescriptor;
   @Prop() propertyModel: ActivityDefinitionProperty;
+  @Prop() keyId: string;
   @State() cases: Array<SwitchCase> = [];
   @State() iconProvider = new IconProvider();
   @Event() expressionChanged: EventEmitter<string>;
@@ -46,19 +48,15 @@ export class HeSwitchCasesProperty {
   }
 
   async componentWillRender() {
-    console.log("component will render - switch case")
     const propertyModel = this.propertyModel;
     const casesJson = propertyModel.expressions[SyntaxNames.Switch]
-    console.log("cases - ", casesJson);
     this.cases = parseJson(casesJson) || [];
-    console.log("cases - ", this.cases);
+    this.keyId = getUniversalUniqueId();
   }
 
   updatePropertyModel() {
-    console.log("switch case - update property model")
     this.propertyModel.expressions[SyntaxNames.Switch] = JSON.stringify(this.cases);
     this.multiExpressionEditor.expressions[SyntaxNames.Json] = JSON.stringify(this.cases, null, 2);
-    console.log("cases - ", this.propertyModel.expressions[SyntaxNames.Switch])
   }
 
   onDefaultSyntaxValueChanged(e: CustomEvent) {
@@ -66,10 +64,27 @@ export class HeSwitchCasesProperty {
   }
 
   onAddCaseClick() {
-    const caseName = `Case ${this.cases.length + 1}`;
+    const caseIds = this.caseIds();
+    const id = NewOptionNumber(caseIds);
+    const caseName = `Case ${id}`;
     const newCase = { name: caseName, syntax: SyntaxNames.JavaScript, expressions: { [SyntaxNames.JavaScript]: '' } };
     this.cases = [...this.cases, newCase];
     this.updatePropertyModel();
+  }
+
+  caseIds(): Array<number> {
+    let activityIds: Array<number> = [];
+    if (this.cases.length > 0) {
+      activityIds = this.cases.map(function (v) {
+        const caseNumberMatch = v.name.match(/^Case\s(\d+$)/);
+        console.log("match", caseNumberMatch);
+        if (caseNumberMatch != null) {
+           return parseInt(caseNumberMatch[1]);
+        }
+        return 0;
+      });
+    }
+    return activityIds;
   }
 
   onDeleteCaseClick(switchCase: SwitchCase) {
@@ -121,11 +136,8 @@ export class HeSwitchCasesProperty {
     const cases = this.cases;
     const supportedSyntaxes = this.supportedSyntaxes;
     const json = JSON.stringify(cases, null, 2);
-    console.log("Render switch case", json);
     const renderCaseEditor = (switchCase: SwitchCase, index: number) => {
-
       const expression = switchCase.expressions[switchCase.syntax];
-      console.log("Render switch case- expression", expression);
       const syntax = switchCase.syntax;
       const monacoLanguage = mapSyntaxToLanguage(syntax);
       let expressionEditor = null;
@@ -140,7 +152,7 @@ export class HeSwitchCasesProperty {
 
             <div class="elsa-mt-1 elsa-relative elsa-rounded-md elsa-shadow-sm">
               <elsa-expression-editor
-                key={`expression-editor-${index}-${this.syntaxSwitchCount}`}
+                key={`expression-editor-${index}-${this.syntaxSwitchCount}-${this.keyId}`}
                 ref={el => expressionEditor = el}
                 expression={expression}
                 language={monacoLanguage}

@@ -6,7 +6,7 @@ import {
   HTMLElsaMultiExpressionEditorElement,
   IntellisenseContext
 } from "../../models/elsa-interfaces";
-import { mapSyntaxToLanguage, parseJson, Map, NewOptionLetter } from "../../utils/utils";
+import { mapSyntaxToLanguage, parseJson, Map, NewOptionLetter, getUniversalUniqueId } from "../../utils/utils";
 import { IconProvider } from "../providers/icon-provider/icon-provider";
 import PlusIcon from '../../icons/plus_icon';
 import TrashCanIcon from '../../icons/trash-can';
@@ -27,6 +27,7 @@ export class HeRadioOptionProperty implements ISortableSharedComponent {
   @Prop() propertyDescriptor: ActivityPropertyDescriptor;
   @Prop() propertyModel: ActivityDefinitionProperty;
   @Prop() modelSyntax: string = SyntaxNames.Json;
+  @Prop() keyId: string;
   @State() properties: NestedActivityDefinitionProperty[];
   private _base: SortableComponent;
 
@@ -101,6 +102,10 @@ export class HeRadioOptionProperty implements ISortableSharedComponent {
     this.optionsDisplayToggle = { ... this.optionsDisplayToggle, tempValue }
   }
 
+  async componentWillRender() {
+     this.keyId = getUniversalUniqueId();
+  }
+
   render() {
     const cases = this.properties;
     const supportedSyntaxes = this.supportedSyntaxes;
@@ -153,7 +158,7 @@ export class HeRadioOptionProperty implements ISortableSharedComponent {
             <td class="elsa-py-2 pl-5" style={{ width: colWidth }}>
             <div class="elsa-mt-1 elsa-relative elsa-rounded-md elsa-shadow-sm">
               <elsa-expression-editor
-                key={`expression-editor-${index}-${this.syntaxSwitchCount}`}
+                key={`expression-editor-${index}-${this.syntaxSwitchCount}-${this.keyId}`}
                 ref={el => expressionEditor = el}
                 expression={expression}
                 language={monacoLanguage}
@@ -195,7 +200,7 @@ export class HeRadioOptionProperty implements ISortableSharedComponent {
             <td class="elsa-py-2 pl-5" style={{ width: colWidth }}>
               <div class="elsa-mt-1 elsa-relative elsa-rounded-md elsa-shadow-sm">
                 <elsa-expression-editor
-                  key={`expression-editor-${index}-${this.syntaxSwitchCount}`}
+                  key={`expression-editor-${index}-${this.syntaxSwitchCount}-${this.keyId}`}
                   ref={el => prePopulatedExpressionEditor = el}
                   expression={prePopulatedExpression}
                   language={prePopulatedLanguage}

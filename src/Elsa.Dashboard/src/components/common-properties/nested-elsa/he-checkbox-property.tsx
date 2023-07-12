@@ -1,5 +1,6 @@
 import { Component, h, Event, EventEmitter, Prop, State } from '@stencil/core';
 import { SyntaxNames } from '../../../constants/constants';
+import { getUniversalUniqueId } from '../../../utils/utils';
 import {
   ActivityDefinitionProperty,
   ActivityModel,
@@ -18,6 +19,7 @@ export class HECheckboxProperty {
   @Prop() activityModel: ActivityModel;
   @Prop() propertyDescriptor: ActivityPropertyDescriptor;
   @Prop() propertyModel: ActivityDefinitionProperty;
+  @Prop() keyId: string;
   @Event() expressionChanged: EventEmitter<string>;
 
   @State() isChecked: boolean
@@ -38,6 +40,12 @@ export class HECheckboxProperty {
     this.isChecked = (e.detail || '').toLowerCase() == 'true';
   }
 
+
+  componentWillRender() {
+    this.isChecked = (this.propertyModel.expressions[SyntaxNames.Literal] || this.propertyDescriptor.defaultValue?.toString() || '').toLowerCase() == 'true';
+    this.keyId = getUniversalUniqueId();
+  }
+
   render() {
     const propertyDescriptor = this.propertyDescriptor;
     const propertyModel = this.propertyModel;
@@ -49,6 +57,7 @@ export class HECheckboxProperty {
 
     return (
       <elsa-property-editor
+        key={`property-editor-${fieldId}-${this.keyId}`}
         activityModel={this.activityModel}
         propertyDescriptor={propertyDescriptor}
         propertyModel={propertyModel}

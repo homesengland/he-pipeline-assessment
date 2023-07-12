@@ -6,7 +6,7 @@ import {
   HTMLElsaMultiExpressionEditorElement,
   IntellisenseContext
 } from "../../models/elsa-interfaces";
-import { mapSyntaxToLanguage, parseJson, NewOptionLetter, Map } from "../../utils/utils";
+import { mapSyntaxToLanguage, parseJson, NewOptionLetter, Map, getUniversalUniqueId } from "../../utils/utils";
 import { IconProvider } from "../providers/icon-provider/icon-provider";
 import PlusIcon from '../../icons/plus_icon';
 import TrashCanIcon from '../../icons/trash-can';
@@ -27,6 +27,7 @@ export class HePotScoreRadioOptionProperty implements ISortableSharedComponent {
   @Prop() activityModel: ActivityModel;
   @Prop() propertyDescriptor: ActivityPropertyDescriptor;
   @Prop() propertyModel: ActivityDefinitionProperty;
+  @Prop() keyId: string;
   @State() properties: Array<NestedActivityDefinitionProperty> = [];
   @State() iconProvider = new IconProvider();
   @Event() expressionChanged: EventEmitter<string>;
@@ -116,6 +117,10 @@ export class HePotScoreRadioOptionProperty implements ISortableSharedComponent {
     this.optionsDisplayToggle = { ... this.optionsDisplayToggle, tempValue }
   }
 
+  async componentWillRender() {
+    this.keyId = getUniversalUniqueId();
+  }
+
   render() {
     const cases = this.properties;
     const supportedSyntaxes = this.supportedSyntaxes;
@@ -169,7 +174,7 @@ export class HePotScoreRadioOptionProperty implements ISortableSharedComponent {
             <td class="elsa-py-2 pl-5" style={{ width: colWidth }}>
               <div class="elsa-mt-1 elsa-relative elsa-rounded-md elsa-shadow-sm">
                 <elsa-expression-editor
-                  key={`expression-editor-${index}-${this.syntaxSwitchCount}`}
+                  key={`expression-editor-${index}-${this.syntaxSwitchCount}-${this.keyId}`}
                   ref={el => expressionEditor = el}
                   expression={expression}
                   language={monacoLanguage}
@@ -227,7 +232,7 @@ export class HePotScoreRadioOptionProperty implements ISortableSharedComponent {
             <td class="elsa-py-2 pl-5" style={{ width: colWidth }}>
               <div class="elsa-mt-1 elsa-relative elsa-rounded-md elsa-shadow-sm">
                 <elsa-expression-editor
-                  key={`expression-editor-${index}-${this.syntaxSwitchCount}`}
+                  key={`expression-editor-${index}-${this.syntaxSwitchCount}-${this.keyId}`}
                   ref={el => prePopulatedExpressionEditor = el}
                   expression={prePopulatedExpression}
                   language={prePopulatedLanguage}

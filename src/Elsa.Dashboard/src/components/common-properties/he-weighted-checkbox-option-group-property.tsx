@@ -1,4 +1,5 @@
 import { Component, h, Event, EventEmitter, Prop, State } from '@stencil/core';
+import { getUniversalUniqueId } from "../../utils/utils";
 import {
     ActivityDefinitionProperty,
   ActivityModel,
@@ -28,6 +29,7 @@ export class HeWeightedCheckboxOptionGroupProperty implements ISortableSharedCom
   @Prop() propertyModel: NestedActivityDefinitionProperty;
   @Prop() propertyDescriptor: ActivityPropertyDescriptor;
   @Prop() modelSyntax: string = SyntaxNames.Json;
+  @Prop() keyId: string;
   @State() properties: Array<NestedActivityDefinitionProperty> = [];
   @State() iconProvider = new IconProvider();
   @Event() expressionChanged: EventEmitter<string>;
@@ -145,6 +147,10 @@ export class HeWeightedCheckboxOptionGroupProperty implements ISortableSharedCom
     }
   }
 
+  async componentWillRender() {
+    this.keyId = getUniversalUniqueId();
+  }
+
   render() {
     const answers = this.properties;
     const supportedSyntaxes = this.supportedSyntaxes;
@@ -201,7 +207,7 @@ export class HeWeightedCheckboxOptionGroupProperty implements ISortableSharedCom
             <td class="elsa-py-2 pl-5" style={{ width: colWidth }}>
               <div class="elsa-mt-1 elsa-relative elsa-rounded-md elsa-shadow-sm">
                 <elsa-expression-editor
-                  key={`expression-editor-${index}-${this.syntaxSwitchCount}`}
+                  key={`expression-editor-${index}-${this.syntaxSwitchCount}-${this.keyId}`}
                   ref={el => expressionEditor = el}
                   expression={expression}
                   language={monacoLanguage}
@@ -237,7 +243,7 @@ export class HeWeightedCheckboxOptionGroupProperty implements ISortableSharedCom
             <td class="elsa-py-2 pl-5" style={{ width: colWidth }}>
               <div class="elsa-mt-1 elsa-relative elsa-rounded-md elsa-shadow-sm">
                 <elsa-expression-editor
-                  key={`expression-editor-${index}-${this.scoreSyntaxSwitchCount}`}
+                  key={`expression-editor-${index}-${this.scoreSyntaxSwitchCount}-${this.keyId}`}
                   ref={el => scoreExpressionEditor = el}
                   expression={scoreExpression}
                   language={monacoLanguage}
@@ -293,7 +299,7 @@ export class HeWeightedCheckboxOptionGroupProperty implements ISortableSharedCom
             <td class="elsa-py-2 pl-5" style={{ width: colWidth }}>
               <div class="elsa-mt-1 elsa-relative elsa-rounded-md elsa-shadow-sm">
                 <elsa-expression-editor
-                  key={`expression-editor-${index}-${this.syntaxSwitchCount}`}
+                  key={`expression-editor-${index}-${this.syntaxSwitchCount}-${this.keyId}`}
                   ref={el => prePopulatedExpressionEditor = el}
                   expression={prePopulatedExpression}
                   language={prePopulatedLanguage}

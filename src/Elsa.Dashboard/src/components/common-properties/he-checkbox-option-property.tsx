@@ -108,6 +108,7 @@ export class HeCheckboxOptionProperty implements ISortableSharedComponent {
     const json = JSON.stringify(cases, null, 2);
 
     const renderCaseEditor = (checkboxOption: NestedActivityDefinitionProperty, index: number) => {
+      
       const expression = checkboxOption.expressions[checkboxOption.syntax];
       const syntax = checkboxOption.syntax;
       const monacoLanguage = mapSyntaxToLanguage(syntax);
@@ -156,7 +157,7 @@ export class HeCheckboxOptionProperty implements ISortableSharedComponent {
             <td class="elsa-py-2 pl-5" style={{ width: colWidth }}>
               <div class="elsa-mt-1 elsa-relative elsa-rounded-md elsa-shadow-sm">
                 <elsa-expression-editor
-                  key={`expression-editor-${index}-${this.syntaxSwitchCount}`}
+                  key={`expression-editor-${checkboxOption.name}-${index}-${this.syntaxSwitchCount}`}
                   ref={el => expressionEditor = el}
                   expression={expression}
                   language={monacoLanguage}

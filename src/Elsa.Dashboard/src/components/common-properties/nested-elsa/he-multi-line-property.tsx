@@ -1,5 +1,6 @@
 import { Component, h, Event, EventEmitter, Prop, State } from '@stencil/core';
 import { SyntaxNames } from '../../../constants/constants';
+import { getUniversalUniqueId } from '../../../utils/utils';
 import {
   ActivityDefinitionProperty,
   ActivityModel,
@@ -18,6 +19,7 @@ export class HEMultiLineProperty {
   @Prop() activityModel: ActivityModel;
   @Prop() propertyDescriptor: ActivityPropertyDescriptor;
   @Prop() propertyModel: ActivityDefinitionProperty;
+  @Prop() keyId: string;
   @State() currentValue: string;
   @Event() expressionChanged: EventEmitter<string>;
 
@@ -47,6 +49,14 @@ export class HEMultiLineProperty {
     this.currentValue = e.detail;
   }
 
+  componentWillRender() {
+    const defaultSyntax = this.propertyDescriptor.defaultSyntax || SyntaxNames.Literal;
+    this.currentValue = this.propertyModel.expressions[defaultSyntax] || undefined;
+    console.log("propertyModel", this.propertyModel);
+    console.log("currentvalue", this.currentValue);
+    this.keyId = getUniversalUniqueId();
+  }
+
   render() {
     const propertyDescriptor = this.propertyDescriptor;
     const propertyModel = this.propertyModel;
@@ -65,6 +75,7 @@ export class HEMultiLineProperty {
 
     return (
       <elsa-property-editor
+        key={`property-editor-${this.keyId}`}
         activityModel={this.activityModel}
         propertyDescriptor={propertyDescriptor}
         propertyModel={propertyModel}

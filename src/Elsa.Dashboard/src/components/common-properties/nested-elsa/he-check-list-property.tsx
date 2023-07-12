@@ -7,7 +7,7 @@ import {
   HTMLElsaMultiExpressionEditorElement,
   IntellisenseContext,
 } from "../../../models/elsa-interfaces";
-import { mapSyntaxToLanguage, parseJson } from "../../../utils/utils";
+import { mapSyntaxToLanguage, parseJson, getUniversalUniqueId } from "../../../utils/utils";
 import { SwitchCase } from "../../../models/elsa-interfaces";
 import { IconProvider } from "../../providers/icon-provider/icon-provider";
 import PlusIcon from '../../../icons/plus_icon';
@@ -27,6 +27,7 @@ export class HEChecklistProperty {
   @Prop() activityModel: ActivityModel;
   @Prop() propertyDescriptor: ActivityPropertyDescriptor;
   @Prop() propertyModel: ActivityDefinitionProperty;
+  @Prop() keyId: string;
   @State() cases: Array<SwitchCase> = [];
   @State() iconProvider = new IconProvider();
   @Event() expressionChanged: EventEmitter<string>;
@@ -107,6 +108,10 @@ export class HEChecklistProperty {
     this.editorHeight == "2.75em" ? this.editorHeight = "8em" : this.editorHeight = "2.75em"
   }
 
+  componentWillRender() {
+    this.keyId = getUniversalUniqueId();
+  }
+
   render() {
     const cases = this.cases;
     const supportedSyntaxes = this.supportedSyntaxes;
@@ -128,7 +133,7 @@ export class HEChecklistProperty {
 
             <div class="elsa-mt-1 elsa-relative elsa-rounded-md elsa-shadow-sm">
               <elsa-expression-editor
-                key={`expression-editor-${index}-${this.syntaxSwitchCount}`}
+                key={`expression-editor-${index}-${this.syntaxSwitchCount}-${this.keyId}`}
                 ref={el => expressionEditor = el}
                 expression={expression}
                 language={monacoLanguage}

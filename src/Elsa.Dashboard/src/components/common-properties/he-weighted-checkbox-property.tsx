@@ -1,4 +1,5 @@
 import { Component, h, Event, EventEmitter, Prop, State } from '@stencil/core';
+import { getUniversalUniqueId } from "../../utils/utils";
 import {
   ActivityDefinitionProperty,
   ActivityModel,
@@ -27,6 +28,7 @@ export class HeWeightedCheckboxProperty implements ISortableSharedComponent {
   @Prop() propertyDescriptor: ActivityPropertyDescriptor;
   @Prop() propertyModel: ActivityDefinitionProperty;
   @Prop() modelSyntax: string = SyntaxNames.Json;
+  @Prop() keyId: string;
   @State() properties: Array<NestedActivityDefinitionProperty> = [];
   
   @State() iconProvider = new IconProvider();
@@ -115,6 +117,10 @@ export class HeWeightedCheckboxProperty implements ISortableSharedComponent {
   onToggleOptions(index: number) {
     let tempValue = ToggleDictionaryDisplay(index, this.optionsDisplayToggle)
     this.optionsDisplayToggle = { ... this.optionsDisplayToggle, tempValue }
+  }
+
+  async componentWillRender() {
+    this.keyId = getUniversalUniqueId();
   }
 
   render() {

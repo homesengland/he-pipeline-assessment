@@ -11,6 +11,7 @@ import { DataDictionaryGroup, HeActivityPropertyDescriptor, NestedActivityDefini
 export namespace Components {
     interface HeCheckListProperty {
         "activityModel": ActivityModel;
+        "keyId": string;
         "propertyDescriptor": ActivityPropertyDescriptor;
         "propertyModel": ActivityDefinitionProperty;
     }
@@ -22,6 +23,7 @@ export namespace Components {
     }
     interface HeCheckboxProperty {
         "activityModel": ActivityModel;
+        "keyId": string;
         "propertyDescriptor": ActivityPropertyDescriptor;
         "propertyModel": ActivityDefinitionProperty;
     }
@@ -36,21 +38,25 @@ export namespace Components {
     }
     interface HeJsonProperty {
         "activityModel": ActivityModel;
+        "keyId": string;
         "propertyDescriptor": ActivityPropertyDescriptor;
         "propertyModel": ActivityDefinitionProperty;
     }
     interface HeMultiLineProperty {
         "activityModel": ActivityModel;
+        "keyId": string;
         "propertyDescriptor": ActivityPropertyDescriptor;
         "propertyModel": ActivityDefinitionProperty;
     }
     interface HeMultiTextProperty {
         "activityModel": ActivityModel;
+        "keyId": string;
         "propertyDescriptor": ActivityPropertyDescriptor;
         "propertyModel": ActivityDefinitionProperty;
     }
     interface HePotscoreRadioOptionsProperty {
         "activityModel": ActivityModel;
+        "keyId": string;
         "propertyDescriptor": ActivityPropertyDescriptor;
         "propertyModel": ActivityDefinitionProperty;
     }
@@ -61,17 +67,20 @@ export namespace Components {
     }
     interface HeRadioOptionsProperty {
         "activityModel": ActivityModel;
+        "keyId": string;
         "modelSyntax": string;
         "propertyDescriptor": ActivityPropertyDescriptor;
         "propertyModel": ActivityDefinitionProperty;
     }
     interface HeSingleLineProperty {
         "activityModel": ActivityModel;
+        "keyId": string;
         "propertyDescriptor": ActivityPropertyDescriptor;
         "propertyModel": ActivityDefinitionProperty;
     }
     interface HeSwitchAnswersProperty {
         "activityModel": ActivityModel;
+        "keyId": string;
         "propertyDescriptor": ActivityPropertyDescriptor;
         "propertyModel": ActivityDefinitionProperty;
     }
@@ -83,12 +92,14 @@ export namespace Components {
     }
     interface HeWeightedCheckboxOptionGroupProperty {
         "activityModel": ActivityModel;
+        "keyId": string;
         "modelSyntax": string;
         "propertyDescriptor": ActivityPropertyDescriptor;
         "propertyModel": NestedActivityDefinitionProperty;
     }
     interface HeWeightedCheckboxProperty {
         "activityModel": ActivityModel;
+        "keyId": string;
         "modelSyntax": string;
         "propertyDescriptor": ActivityPropertyDescriptor;
         "propertyModel": ActivityDefinitionProperty;
@@ -365,6 +376,7 @@ declare global {
 declare namespace LocalJSX {
     interface HeCheckListProperty {
         "activityModel"?: ActivityModel;
+        "keyId"?: string;
         "onExpressionChanged"?: (event: HeCheckListPropertyCustomEvent<string>) => void;
         "propertyDescriptor"?: ActivityPropertyDescriptor;
         "propertyModel"?: ActivityDefinitionProperty;
@@ -378,6 +390,7 @@ declare namespace LocalJSX {
     }
     interface HeCheckboxProperty {
         "activityModel"?: ActivityModel;
+        "keyId"?: string;
         "onExpressionChanged"?: (event: HeCheckboxPropertyCustomEvent<string>) => void;
         "propertyDescriptor"?: ActivityPropertyDescriptor;
         "propertyModel"?: ActivityDefinitionProperty;
@@ -394,24 +407,28 @@ declare namespace LocalJSX {
     }
     interface HeJsonProperty {
         "activityModel"?: ActivityModel;
+        "keyId"?: string;
         "onExpressionChanged"?: (event: HeJsonPropertyCustomEvent<string>) => void;
         "propertyDescriptor"?: ActivityPropertyDescriptor;
         "propertyModel"?: ActivityDefinitionProperty;
     }
     interface HeMultiLineProperty {
         "activityModel"?: ActivityModel;
+        "keyId"?: string;
         "onExpressionChanged"?: (event: HeMultiLinePropertyCustomEvent<string>) => void;
         "propertyDescriptor"?: ActivityPropertyDescriptor;
         "propertyModel"?: ActivityDefinitionProperty;
     }
     interface HeMultiTextProperty {
         "activityModel"?: ActivityModel;
+        "keyId"?: string;
         "onExpressionChanged"?: (event: HeMultiTextPropertyCustomEvent<string>) => void;
         "propertyDescriptor"?: ActivityPropertyDescriptor;
         "propertyModel"?: ActivityDefinitionProperty;
     }
     interface HePotscoreRadioOptionsProperty {
         "activityModel"?: ActivityModel;
+        "keyId"?: string;
         "onExpressionChanged"?: (event: HePotscoreRadioOptionsPropertyCustomEvent<string>) => void;
         "propertyDescriptor"?: ActivityPropertyDescriptor;
         "propertyModel"?: ActivityDefinitionProperty;
@@ -424,6 +441,7 @@ declare namespace LocalJSX {
     }
     interface HeRadioOptionsProperty {
         "activityModel"?: ActivityModel;
+        "keyId"?: string;
         "modelSyntax"?: string;
         "onExpressionChanged"?: (event: HeRadioOptionsPropertyCustomEvent<string>) => void;
         "propertyDescriptor"?: ActivityPropertyDescriptor;
@@ -431,12 +449,14 @@ declare namespace LocalJSX {
     }
     interface HeSingleLineProperty {
         "activityModel"?: ActivityModel;
+        "keyId"?: string;
         "onExpressionChanged"?: (event: HeSingleLinePropertyCustomEvent<string>) => void;
         "propertyDescriptor"?: ActivityPropertyDescriptor;
         "propertyModel"?: ActivityDefinitionProperty;
     }
     interface HeSwitchAnswersProperty {
         "activityModel"?: ActivityModel;
+        "keyId"?: string;
         "onExpressionChanged"?: (event: HeSwitchAnswersPropertyCustomEvent<string>) => void;
         "propertyDescriptor"?: ActivityPropertyDescriptor;
         "propertyModel"?: ActivityDefinitionProperty;
@@ -450,6 +470,7 @@ declare namespace LocalJSX {
     }
     interface HeWeightedCheckboxOptionGroupProperty {
         "activityModel"?: ActivityModel;
+        "keyId"?: string;
         "modelSyntax"?: string;
         "onExpressionChanged"?: (event: HeWeightedCheckboxOptionGroupPropertyCustomEvent<string>) => void;
         "propertyDescriptor"?: ActivityPropertyDescriptor;
@@ -457,6 +478,7 @@ declare namespace LocalJSX {
     }
     interface HeWeightedCheckboxProperty {
         "activityModel"?: ActivityModel;
+        "keyId"?: string;
         "modelSyntax"?: string;
         "onExpressionChanged"?: (event: HeWeightedCheckboxPropertyCustomEvent<string>) => void;
         "propertyDescriptor"?: ActivityPropertyDescriptor;
