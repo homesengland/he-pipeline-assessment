@@ -299,9 +299,14 @@ export class HeWeightedCheckboxOptionGroupProperty implements ISortableSharedCom
             <td class="elsa-py-2 pl-5" style={{ width: colWidth }}>
               <div class="elsa-mt-1 elsa-relative elsa-rounded-md elsa-shadow-sm">
 
-                <elsa-multi-expression-editor
-                  key={`expression-editor-${index}-${this.syntaxSwitchCount}-${this.keyId}`}
-                  onSyntaxChanged={e => console.log(e)}
+                <elsa-expression-editor
+                  key={`expression-editor-${index}-${this.syntaxSwitchCount}`}
+                  ref={el => prePopulatedExpressionEditor = el}
+                  expression={prePopulatedExpression}
+                  language={prePopulatedLanguage}
+                  single-line={false}
+                  editorHeight="2.75em"
+                  padding="elsa-pt-1.5 elsa-pl-1 elsa-pr-28"
                   onExpressionChanged={e => this._base.CustomUpdateExpression(e, checkboxAnswer, CheckboxOptionsSyntax.PrePopulated)}
                 />
                 <div class="elsa-absolute elsa-inset-y-0 elsa-right-0 elsa-flex elsa-items-center">

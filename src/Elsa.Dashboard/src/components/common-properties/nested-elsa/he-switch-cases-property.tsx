@@ -7,7 +7,7 @@ import {
   HTMLElsaMultiExpressionEditorElement,
   IntellisenseContext
 } from "../../../models/elsa-interfaces";
-import { mapSyntaxToLanguage, parseJson, NewOptionNumber } from "../../../utils/utils";
+import { mapSyntaxToLanguage, parseJson, newOptionNumber } from "../../../utils/utils";
 import { SwitchCase } from "../../../models/elsa-interfaces";
 import { IconProvider } from "../../providers/icon-provider/icon-provider";
 import PlusIcon from '../../../icons/plus_icon';
@@ -65,7 +65,7 @@ export class HeSwitchCasesProperty {
 
   onAddCaseClick() {
     const caseIds = this.caseIds();
-    const id = NewOptionNumber(caseIds);
+    const id = newOptionNumber(caseIds);
     const caseName = `Case ${id}`;
     const newCase = { name: caseName, syntax: SyntaxNames.JavaScript, expressions: { [SyntaxNames.JavaScript]: '' } };
     this.cases = [...this.cases, newCase];
