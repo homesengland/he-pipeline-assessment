@@ -10,7 +10,6 @@ import { IconProvider } from "../providers/icon-provider/icon-provider";
 import { NestedActivityDefinitionProperty } from "../../models/custom-component-models";
 import PlusIcon from '../../icons/plus_icon';
 import TrashCanIcon from '../../icons/trash-can';
-import ExpandIcon from '../../icons/expand_icon';
 import { mapSyntaxToLanguage, parseJson, newOptionLetter, Map } from '../../utils/utils';
 import { PropertyOutputTypes, SyntaxNames, TextActivityOptionsSyntax } from '../../constants/constants';
 import { toggleDictionaryDisplay } from '../../functions/display-toggle';
@@ -93,17 +92,6 @@ export class TextActivityProperty implements ISortableSharedComponent {
     this.updatePropertyModel();
   }
 
-  onExpandConditionArea(index: number) {
-    let tempValue = Object.assign(this.conditionDisplayHeightMap);
-    let height = this.conditionDisplayHeightMap[index];
-    if (height == null) {
-      tempValue[index] = "6em";
-    } else {
-      this.conditionDisplayHeightMap[index] == "2.75em" ? tempValue[index] = "6em" : tempValue[index] = "2.75em";
-    }
-    this.conditionDisplayHeightMap = { ... this.conditionDisplayHeightMap, tempValue }
-  }
-
   onToggleOptions(index: number) {
     let tempValue = toggleDictionaryDisplay(index, this.optionsDisplayToggle)
     this.optionsDisplayToggle = { ... this.optionsDisplayToggle, tempValue }
@@ -158,13 +146,18 @@ export class TextActivityProperty implements ISortableSharedComponent {
             <th class="sortablejs-custom-handle"><SortIcon options={this.iconProvider.getOptions()}></SortIcon>
             </th>
             <td></td>
-            <td></td>
+            <td class="elsa-pt-1 elsa-pr-2 elsa-text-right">
+              <button type="button" onClick={() => this.onHandleDelete(nestedTextActivity)}
+                class="elsa-h-5 elsa-w-5 elsa-mx-auto elsa-outline-none focus:elsa-outline-none">
+                <TrashCanIcon options={this.iconProvider.getOptions()}></TrashCanIcon>
+              </button>
+            </td>
           </tr>
           <tr>
             <th
               class="elsa-px-6 elsa-py-3 elsa-text-left elsa-text-xs elsa-font-medium elsa-text-gray-500 elsa-tracking-wider elsa-w-2/12">Text
             </th>
-            <td class="elsa-py-2 pl-5" style={{ width: colWidth }}>
+            <td class="elsa-py-2 pl-5" colSpan={2} style={{ width: colWidth }}>
               <div class="elsa-mt-1 elsa-relative elsa-rounded-md elsa-shadow-sm">
               <elsa-expression-editor
                 key={`expression-editor-${index}-${this.syntaxSwitchCount}`}
@@ -187,12 +180,6 @@ export class TextActivityProperty implements ISortableSharedComponent {
                 </div>
               </div>
             </td>
-            <td class="elsa-pt-1 elsa-pr-2 elsa-text-right">
-              <button type="button" onClick={() => this.onHandleDelete(nestedTextActivity)}
-                class="elsa-h-5 elsa-w-5 elsa-mx-auto elsa-outline-none focus:elsa-outline-none">
-                <TrashCanIcon options={this.iconProvider.getOptions()}></TrashCanIcon>
-              </button>
-            </td>
           </tr>
 
           <tr onClick={() => this.onToggleOptions(index)}>
@@ -203,8 +190,8 @@ export class TextActivityProperty implements ISortableSharedComponent {
           <tr style={{ display: optionsDisplay }} >
               <th
                 class="elsa-px-6 elsa-py-3 elsa-text-left elsa-text-xs elsa-font-medium elsa-text-gray-500 elsa-tracking-wider elsa-w-2/12">Display on Page
-              </th>
-              <td class="elsa-py-2 pl-5" style={{ width: colWidth }}>
+            </th>
+            <td class="elsa-py-2 pl-5" colSpan={2} style={{ width: colWidth }}>
                 <div class="elsa-mt-1 elsa-relative elsa-rounded-md elsa-shadow-sm">
                   <elsa-expression-editor
                     key={`expression-editor-${index}-${this.syntaxSwitchCount}`}
@@ -226,12 +213,6 @@ export class TextActivityProperty implements ISortableSharedComponent {
                     </select>
                   </div>
                 </div>
-              </td>
-              <td class="elsa-pt-1 elsa-pr-2 elsa-text-right">
-                <button type="button" onClick={() => this.onExpandConditionArea(index)}
-                  class="elsa-h-5 elsa-w-5 elsa-mx-auto elsa-outline-none focus:elsa-outline-none">
-                  <ExpandIcon options={this.iconProvider.getOptions()}></ExpandIcon>
-                </button>
               </td>
             </tr>
           <tr style={{ display: optionsDisplay }}>

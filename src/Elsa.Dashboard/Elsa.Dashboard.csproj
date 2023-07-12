@@ -43,6 +43,7 @@
     <None Remove="src\components\base-component.ts" />
     <None Remove="src\components\common-properties\he-text-activity-property.tsx" />
     <None Remove="src\components\common-properties\nested-properties\nested-property-list.tsx" />
+    <None Remove="src\components\display-toggle-component.ts" />
     <None Remove="src\constants\Constants.ts" />
     <None Remove="src\functions\multiExpressionEditorUpdate.tsx" />
     <None Remove="src\functions\updateModel.tsx" />
@@ -78,6 +79,9 @@
   </ItemGroup>
 
   <ItemGroup>
+    <TypeScriptCompile Include="src\components\display-toggle-component.ts">
+      <SubType>Code</SubType>
+    </TypeScriptCompile>
     <TypeScriptCompile Include="src\components\common-properties\he-text-activity-property.tsx" />
     <TypeScriptCompile Include="src\components\common-properties\nested-properties\nested-property-list.tsx" />
     <TypeScriptCompile Include="src\components\base-component.ts" />

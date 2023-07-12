@@ -89,8 +89,8 @@
 @media only screen and (min-width: 1536px) {
   .modal-content {
     width: 100% !important;
-    max-width: 90 !important;
-    min-width: 90 !important;
+    max-width: 90rem !important;
+    min-width: 90rem !important;
     --tw-bg-opacity: 1;
     background-color: rgb(255 255 255);
     position: relative;
@@ -99,8 +99,8 @@
   }
   div > .elsa-bg-gray-50.elsa-px-4.elsa-py-3.sm\:elsa-px-6.sm\:elsa-flex.sm\:elsa-flex-row-reverse {
     width: 100% !important;
-    max-width: 90 !important;
-    min-width: 90 !important;
+    max-width: 90rem !important;
+    min-width: 90rem !important;
     --tw-bg-opacity: 1;
     background-color: rgb(255 255 255);
     position: relative;
