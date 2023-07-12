@@ -42,10 +42,6 @@ export class CustomElsaSwitchCasesProperty {
     this.cases = parseJson(casesJson) || [];
   }
 
-  async componentWillRender() {
-    this.componentWillLoad();
-  }
-
   updatePropertyModel() {
     this.propertyModel.expressions['Switch'] = JSON.stringify(this.cases);
     this.multiExpressionEditor.expressions[SyntaxNames.Json] = JSON.stringify(this.cases, null, 2);

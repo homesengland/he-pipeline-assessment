@@ -1,6 +1,7 @@
 import { SyntaxNames } from "../constants/constants";
 import { HeActivityPropertyDescriptor, NestedActivityDefinitionProperty, NestedProperty, NestedPropertyModel } from "../models/custom-component-models";
 import { ActivityDefinitionProperty, ActivityModel } from "../models/elsa-interfaces";
+import { v4 as uuidv4 } from 'uuid';
 
 export type Map<T> = {
   [key: string]: T
@@ -184,4 +185,8 @@ export async function awaitElement(selector) {
 export function onUpdateCustomExpression(event: CustomEvent<string>, property: NestedActivityDefinitionProperty, syntax: string, update: Function) {
   property.expressions[syntax] = (event.currentTarget as HTMLInputElement).value.trim();
   update();
+}
+
+export function getUniversalUniqueId() {
+  return uuidv4();
 }

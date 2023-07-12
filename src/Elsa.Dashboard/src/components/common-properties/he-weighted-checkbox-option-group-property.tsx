@@ -1,4 +1,5 @@
 import { Component, h, Event, EventEmitter, Prop, State } from '@stencil/core';
+import { getUniversalUniqueId } from "../../utils/utils";
 import {
     ActivityDefinitionProperty,
   ActivityModel,
@@ -28,6 +29,7 @@ export class HeWeightedCheckboxOptionGroupProperty implements ISortableSharedCom
   @Prop() propertyModel: NestedActivityDefinitionProperty;
   @Prop() propertyDescriptor: ActivityPropertyDescriptor;
   @Prop() modelSyntax: string = SyntaxNames.Json;
+  @Prop() keyId: string;
   @State() properties: Array<NestedActivityDefinitionProperty> = [];
   @State() iconProvider = new IconProvider();
   @Event() expressionChanged: EventEmitter<string>;
@@ -145,6 +147,10 @@ export class HeWeightedCheckboxOptionGroupProperty implements ISortableSharedCom
     }
   }
 
+  async componentWillRender() {
+    this.keyId = getUniversalUniqueId();
+  }
+
   render() {
     const answers = this.properties;
     const supportedSyntaxes = this.supportedSyntaxes;
@@ -201,7 +207,7 @@ export class HeWeightedCheckboxOptionGroupProperty implements ISortableSharedCom
             <td class="elsa-py-2 pl-5" style={{ width: colWidth }}>
               <div class="elsa-mt-1 elsa-relative elsa-rounded-md elsa-shadow-sm">
                 <elsa-expression-editor
-                  key={`expression-editor-${index}-${this.syntaxSwitchCount}`}
+                  key={`expression-editor-${index}-${this.syntaxSwitchCount}-${this.keyId}`}
                   ref={el => expressionEditor = el}
                   expression={expression}
                   language={monacoLanguage}
@@ -237,7 +243,7 @@ export class HeWeightedCheckboxOptionGroupProperty implements ISortableSharedCom
             <td class="elsa-py-2 pl-5" style={{ width: colWidth }}>
               <div class="elsa-mt-1 elsa-relative elsa-rounded-md elsa-shadow-sm">
                 <elsa-expression-editor
-                  key={`expression-editor-${index}-${this.scoreSyntaxSwitchCount}`}
+                  key={`expression-editor-${index}-${this.scoreSyntaxSwitchCount}-${this.keyId}`}
                   ref={el => scoreExpressionEditor = el}
                   expression={scoreExpression}
                   language={monacoLanguage}
@@ -293,32 +299,9 @@ export class HeWeightedCheckboxOptionGroupProperty implements ISortableSharedCom
             <td class="elsa-py-2 pl-5" style={{ width: colWidth }}>
               <div class="elsa-mt-1 elsa-relative elsa-rounded-md elsa-shadow-sm">
 
-                {/*<elsa-multi-expression-editor*/}
-                {/*  key={checkboxAnswer.name}*/}
-                {/*  onSyntaxChanged={e => console.log(e)}*/}
-                {/*  onExpressionChanged={e => this._base.CustomUpdateExpression(e, checkboxAnswer, CheckboxOptionsSyntax.PrePopulated)}*/}
-                {/*  fieldName={"Pre Populated"}*/}
-                {/*  label={"Pre Populated"}*/}
-                {/*  syntax={SyntaxNames.JavaScript}*/}
-                {/*  defaultSyntax={SyntaxNames.JavaScript}*/}
-                {/*  isReadOnly={false}*/}
-                {/*  expressions={checkboxAnswer.expressions}*/}
-                {/*  supportedSyntaxes={[SyntaxNames.JavaScript]}*/}
-                {/*  editor-height={this.editorHeight}*/}
-                {/*  context={context}>*/}
-                {/*  <input type="text" id={"123"} name={"prePop123"} value={checkboxAnswer.expressions[CheckboxOptionsSyntax.PrePopulated]} onChange={e => this._base.UpdateExpressionFromInput(e, checkboxAnswer, CheckboxOptionsSyntax.PrePopulated)}*/}
-                {/*    class="disabled:elsa-opacity-50 disabled:elsa-cursor-not-allowed focus:elsa-ring-blue-500 focus:elsa-border-blue-500 elsa-block elsa-w-full elsa-min-w-0 elsa-rounded-md sm:elsa-text-sm elsa-border-gray-300"*/}
-                {/*    disabled={false} />*/}
-                {/*</elsa-multi-expression-editor>*/}
-
-                <elsa-expression-editor
-                  key={`expression-editor-${index}-${this.syntaxSwitchCount}`}
-                  ref={el => prePopulatedExpressionEditor = el}
-                  expression={prePopulatedExpression}
-                  language={prePopulatedLanguage}
-                  single-line={false}
-                  editorHeight="2.75em"
-                  padding="elsa-pt-1.5 elsa-pl-1 elsa-pr-28"
+                <elsa-multi-expression-editor
+                  key={`expression-editor-${index}-${this.syntaxSwitchCount}-${this.keyId}`}
+                  onSyntaxChanged={e => console.log(e)}
                   onExpressionChanged={e => this._base.CustomUpdateExpression(e, checkboxAnswer, CheckboxOptionsSyntax.PrePopulated)}
                 />
                 <div class="elsa-absolute elsa-inset-y-0 elsa-right-0 elsa-flex elsa-items-center">

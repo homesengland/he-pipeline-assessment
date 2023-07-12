@@ -1,5 +1,6 @@
 import { Component, h, EventEmitter, Event, Prop, State } from '@stencil/core';
 import { SyntaxNames } from '../../../constants/constants';
+import { getUniversalUniqueId } from '../../../utils/utils';
 import {
   ActivityDefinitionProperty,
   ActivityModel,
@@ -17,6 +18,7 @@ export class HeSingleLineProperty {
   @Prop() activityModel: ActivityModel;
   @Prop() propertyDescriptor: ActivityPropertyDescriptor;
   @Prop() propertyModel: ActivityDefinitionProperty;
+  @Prop() keyId: string;
   @State() currentValue: string;
   @Event() expressionChanged: EventEmitter<string>;
 
@@ -29,15 +31,14 @@ export class HeSingleLineProperty {
   }
 
   componentWillLoad() {
-    console.log("he single line property loaded")
     const defaultSyntax = this.propertyDescriptor.defaultSyntax || SyntaxNames.Literal;
     this.currentValue = this.propertyModel.expressions[defaultSyntax] || undefined;
   }
 
   componentWillRender() {
-    console.log("Component will render - single line property");
     const defaultSyntax = this.propertyDescriptor.defaultSyntax || SyntaxNames.Literal;
     this.currentValue = this.propertyModel.expressions[defaultSyntax] || undefined;
+    this.keyId = getUniversalUniqueId();
   }
 
   onDefaultSyntaxValueChanged(e: CustomEvent) {
@@ -52,8 +53,6 @@ export class HeSingleLineProperty {
     const fieldId = propertyName;
     const fieldName = propertyName;
     let value = this.currentValue;
-    console.log("Rerendering single line property", fieldName)
-    console.log("Value", value)
     if (value == undefined) {
       const defaultValue = this.propertyDescriptor.defaultValue;
       value = defaultValue ? defaultValue.toString() : undefined;
@@ -66,6 +65,7 @@ export class HeSingleLineProperty {
 
     return (
       <elsa-property-editor
+        key={`property-editor-${fieldId}-${this.keyId}`}
         activityModel={this.activityModel}
         propertyDescriptor={propertyDescriptor}
         propertyModel={propertyModel}

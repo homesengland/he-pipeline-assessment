@@ -1,5 +1,6 @@
 import { Component, h, Event, EventEmitter, Prop, State } from '@stencil/core';
 import { SyntaxNames } from '../../../constants/constants';
+import { getUniversalUniqueId } from '../../../utils/utils';
 import {
   ActivityDefinitionProperty,
   ActivityModel,
@@ -18,6 +19,7 @@ export class HEJsonProperty {
   @Prop() activityModel: ActivityModel;
   @Prop() propertyDescriptor: ActivityPropertyDescriptor;
   @Prop() propertyModel: ActivityDefinitionProperty;
+  @Prop() keyId: string;
   @Event() expressionChanged: EventEmitter<string>;
 
   @State() currentValue: string;
@@ -47,6 +49,10 @@ export class HEJsonProperty {
     this.currentValue = e.detail;
   }
 
+  componentWillRender() {
+    this.keyId = getUniversalUniqueId();
+  }
+
   render() {
     const propertyDescriptor = this.propertyDescriptor;
     const propertyModel = this.propertyModel;
@@ -62,6 +68,7 @@ export class HEJsonProperty {
 
     return (
       <elsa-property-editor
+        key={`property-editor-${this.keyId}`}
         activityModel={this.activityModel}
         propertyDescriptor={propertyDescriptor}
         propertyModel={propertyModel}
