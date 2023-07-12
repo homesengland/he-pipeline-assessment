@@ -146,6 +146,8 @@ export function UpdateNestedActivitiesByDescriptors(descriptors: Array<HeActivit
 }
 
 export function createQuestionProperty(descriptor: HeActivityPropertyDescriptor, questionModel: NestedPropertyModel): NestedProperty {
+  console.log("descriptor", descriptor);
+
   let propertyValue: NestedActivityDefinitionProperty = {
     syntax: descriptor.defaultSyntax,
     value: descriptor.expectedOutputType,
