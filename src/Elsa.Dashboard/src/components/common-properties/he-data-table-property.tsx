@@ -1,4 +1,5 @@
 import { Component, h, Event, EventEmitter, Prop, State } from '@stencil/core';
+import { getUniversalUniqueId } from '../../utils/utils';
 import {
     ActivityDefinitionProperty,
   ActivityModel,
@@ -27,6 +28,7 @@ export class HeDataTableProperty implements ISortableSharedComponent {
   @Prop() propertyDescriptor: ActivityPropertyDescriptor;
   @Prop() propertyModel: ActivityDefinitionProperty;
   @Prop() modelSyntax: string = SyntaxNames.Json;
+  @Prop() keyId: string;
   @State() properties: Array<NestedActivityDefinitionProperty> = [];
   @State() iconProvider = new IconProvider();
   @Event() expressionChanged: EventEmitter<string>;
@@ -51,15 +53,14 @@ export class HeDataTableProperty implements ISortableSharedComponent {
   }
 
   async componentWillLoad() {
+    console.log("Data table - component will load")
     this._base.componentWillLoad();
     this.inputOptions = ["Currency", "Decimal", "Integer", "Text"];
 
-    if (this.propertyModel.expressions[DataTableSyntax.InputType] == null)
-    {
+    if (this.propertyModel.expressions[DataTableSyntax.InputType] == null) {
       this.propertyModel.expressions[DataTableSyntax.InputType] = "Currency";
 
     }
-
   }
 
   async componentDidLoad() {
@@ -115,6 +116,10 @@ export class HeDataTableProperty implements ISortableSharedComponent {
     this.selectedInputType = this.propertyModel.expressions[DataTableSyntax.InputType];
   }
 
+  componentWillRender() {
+    this.keyId = getUniversalUniqueId();
+  }
+
   render() {
     const cases = this.properties;
     const supportedSyntaxes = this.supportedSyntaxes;
@@ -165,7 +170,7 @@ export class HeDataTableProperty implements ISortableSharedComponent {
             <td class="elsa-py-2 pl-5" colSpan={2} style={{ width: colWidth }}>
               <div class="elsa-mt-1 elsa-relative elsa-rounded-md elsa-shadow-sm">
                 <elsa-expression-editor
-                  key={`expression-editor-${index}-${this.syntaxSwitchCount}`}
+                  key={`expression-editor-${index}-${this.syntaxSwitchCount}-${this.keyId}`}
                   ref={el => expressionEditor = el}
                   expression={headerExpression}
                   language={monacoLanguage}
@@ -227,7 +232,7 @@ export class HeDataTableProperty implements ISortableSharedComponent {
             <td class="elsa-py-2 pl-5 elsa-w-10/12" colSpan={2} style={{ width: colWidth }}>
             <div class="elsa-mt-1 elsa-relative elsa-rounded-md elsa-shadow-sm">
               <elsa-expression-editor
-                key={`expression-editor-${index}-${this.syntaxSwitchCount}`}
+                  key={`expression-editor-${index}-${this.syntaxSwitchCount}-${this.keyId}`}
                   ref={el => expressionEditor = el}
                   expression={inputExpression}
                 language={monacoLanguage}
@@ -256,7 +261,6 @@ export class HeDataTableProperty implements ISortableSharedComponent {
       activityTypeName: this.activityModel.type,
       propertyName: this.propertyDescriptor.name
     };
-
 
     return (
       <div>

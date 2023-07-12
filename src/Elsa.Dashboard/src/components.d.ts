@@ -29,6 +29,7 @@ export namespace Components {
     }
     interface HeDataTableProperty {
         "activityModel": ActivityModel;
+        "keyId": string;
         "modelSyntax": string;
         "propertyDescriptor": ActivityPropertyDescriptor;
         "propertyModel": ActivityDefinitionProperty;
@@ -397,6 +398,7 @@ declare namespace LocalJSX {
     }
     interface HeDataTableProperty {
         "activityModel"?: ActivityModel;
+        "keyId"?: string;
         "modelSyntax"?: string;
         "onExpressionChanged"?: (event: HeDataTablePropertyCustomEvent<string>) => void;
         "propertyDescriptor"?: ActivityPropertyDescriptor;

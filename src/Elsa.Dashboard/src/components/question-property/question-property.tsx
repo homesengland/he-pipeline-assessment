@@ -56,7 +56,6 @@ export class QuestionProperty {
     }
     else {
       this.nestedQuestionProperties = this.createQuestionProperties();
-      console.log(this.nestedQuestionProperties)
     }
   }
 
@@ -88,7 +87,6 @@ export class QuestionProperty {
     const displayManager = this.displayManager;
 
     const renderPropertyEditor = (property: NestedProperty) => {
-      console.log(property.value)
       var content = displayManager.displayNested(this.activityModel, property, this.onPropertyExpressionChange.bind(this));
       let id = property.descriptor.name + "Category";
       return (
