@@ -1,6 +1,6 @@
 import { Component, Event, EventEmitter, h, Prop, State } from '@stencil/core';
 import { CheckboxOptionsSyntax, PropertyOutputTypes, SyntaxNames } from '../../constants/constants';
-import { ToggleDictionaryDisplay } from '../../functions/display-toggle';
+import { toggleDictionaryDisplay } from '../../functions/display-toggle';
 import ExpandIcon from '../../icons/expand_icon';
 import PlusIcon from '../../icons/plus_icon';
 import SortIcon from '../../icons/sort_icon';
@@ -13,7 +13,7 @@ import {
   HTMLElsaMultiExpressionEditorElement,
   IntellisenseContext
 } from "../../models/elsa-interfaces";
-import { mapSyntaxToLanguage, parseJson, NewOptionLetter, Map } from "../../utils/utils";
+import { mapSyntaxToLanguage, parseJson, newOptionLetter, Map } from "../../utils/utils";
 import { ISortableSharedComponent, SortableComponent } from '../base-component';
 import { IconProvider } from "../providers/icon-provider/icon-provider";
 
@@ -63,7 +63,7 @@ export class HeCheckboxOptionProperty implements ISortableSharedComponent {
   }
 
   onAddOptionClick() {
-    const optionName = NewOptionLetter(this._base.IdentifierArray());
+    const optionName = newOptionLetter(this._base.IdentifierArray());
     const newOption: NestedActivityDefinitionProperty = { name: optionName, syntax: SyntaxNames.Literal, expressions: { [SyntaxNames.Literal]: '', [CheckboxOptionsSyntax.Single]: 'false', [CheckboxOptionsSyntax.PrePopulated]: 'false' }, type: PropertyOutputTypes.Checkbox };
     this.properties = [...this.properties, newOption];
     this._base.updatePropertyModel();
@@ -98,7 +98,7 @@ export class HeCheckboxOptionProperty implements ISortableSharedComponent {
   }
 
   onToggleOptions(index: number) {
-    let tempValue = ToggleDictionaryDisplay(index, this.optionsDisplayToggle)
+    let tempValue = toggleDictionaryDisplay(index, this.optionsDisplayToggle)
     this.optionsDisplayToggle = { ... this.optionsDisplayToggle, tempValue }
   }
 

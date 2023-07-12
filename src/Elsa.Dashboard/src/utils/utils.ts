@@ -6,7 +6,7 @@ export type Map<T> = {
   [key: string]: T
 };
 
-export function NewOptionNumber(options: Array<number>) : string {
+export function newOptionNumber(options: Array<number>) : string {
   let highestValue: number = 0;
   if (options != null && options.length > 0) {
     highestValue = options.sort(function (a, b) {
@@ -17,25 +17,25 @@ export function NewOptionNumber(options: Array<number>) : string {
   return highestValue.toString();
 }
 
-export function NewOptionLetter(options: Array<string>): string {
+export function newOptionLetter(options: Array<string>): string {
   let highestValue: string = "A";
   if (options != null && options.length > 0) {
     highestValue = options.sort().pop();
-    return IncrementString(highestValue);
+    return incrementString(highestValue);
   }
   return highestValue;
   
 }
 
-export function ToLetter(num: number) {
+export function toLetter(num: number) {
   "use strict";
   var mod = num % 26,
     pow = num / 26 | 0,
     out = mod ? String.fromCharCode(64 + mod) : (--pow, 'Z');
-  return pow ? ToLetter(pow) + out : out;
+  return pow ? toLetter(pow) + out : out;
 };
 
-function IncrementString(value: string) : string {
+function incrementString(value: string) : string {
   let carry: number = 1;
   let res: string = '';
 
@@ -129,7 +129,7 @@ export function filterPropertiesByType(questionProperties: Array<HeActivityPrope
   return filteredProperties;
 }
 
-export function UpdateNestedActivitiesByDescriptors(descriptors: Array<HeActivityPropertyDescriptor>, properties: Array<NestedProperty>, questionModel: NestedPropertyModel): Array<NestedProperty> {
+export function updateNestedActivitiesByDescriptors(descriptors: Array<HeActivityPropertyDescriptor>, properties: Array<NestedProperty>, questionModel: NestedPropertyModel): Array<NestedProperty> {
   let newProperties: Array<NestedProperty> = [];
   descriptors.forEach(x => newProperties.push(createQuestionProperty(x, questionModel)));
   const result = newProperties.map(x => {

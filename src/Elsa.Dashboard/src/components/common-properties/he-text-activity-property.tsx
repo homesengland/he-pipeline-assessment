@@ -11,9 +11,9 @@ import { NestedActivityDefinitionProperty } from "../../models/custom-component-
 import PlusIcon from '../../icons/plus_icon';
 import TrashCanIcon from '../../icons/trash-can';
 import ExpandIcon from '../../icons/expand_icon';
-import { mapSyntaxToLanguage, parseJson, NewOptionLetter, Map } from '../../utils/utils';
+import { mapSyntaxToLanguage, parseJson, newOptionLetter, Map } from '../../utils/utils';
 import { PropertyOutputTypes, SyntaxNames, TextActivityOptionsSyntax } from '../../constants/constants';
-import { ToggleDictionaryDisplay } from '../../functions/display-toggle';
+import { toggleDictionaryDisplay } from '../../functions/display-toggle';
 import { SortableComponent, ISortableSharedComponent } from '../base-component';
 import SortIcon from '../../icons/sort_icon';
 
@@ -77,7 +77,7 @@ export class TextActivityProperty implements ISortableSharedComponent {
   }
 
   onAddElementClick() {
-    const textName = NewOptionLetter(this._base.IdentifierArray());
+    const textName = newOptionLetter(this._base.IdentifierArray());
     const newTextElement: NestedActivityDefinitionProperty = {
       syntax: SyntaxNames.Literal,
       expressions: { [SyntaxNames.Literal]: '', [TextActivityOptionsSyntax.Paragraph]: 'true', [TextActivityOptionsSyntax.Condition]: 'true' },
@@ -105,12 +105,12 @@ export class TextActivityProperty implements ISortableSharedComponent {
   }
 
   onToggleOptions(index: number) {
-    let tempValue = ToggleDictionaryDisplay(index, this.optionsDisplayToggle)
+    let tempValue = toggleDictionaryDisplay(index, this.optionsDisplayToggle)
     this.optionsDisplayToggle = { ... this.optionsDisplayToggle, tempValue }
   }
 
   onDisplayUrl(index: number) {
-    let tempValue = ToggleDictionaryDisplay(index, this.urlDisplayToggle)
+    let tempValue = toggleDictionaryDisplay(index, this.urlDisplayToggle)
     this.urlDisplayToggle = { ... this.urlDisplayToggle, tempValue }
   }
 

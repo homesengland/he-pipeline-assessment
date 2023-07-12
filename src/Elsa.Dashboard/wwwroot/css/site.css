@@ -140,7 +140,7 @@
 
 elsa-monaco {
   resize: vertical;
-  overflow: auto;
+  overflow: hidden;
 }
 
 
