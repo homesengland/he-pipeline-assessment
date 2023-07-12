@@ -10,7 +10,6 @@ import { mapSyntaxToLanguage, parseJson, newOptionLetter, Map } from "../../util
 import { IconProvider } from "../providers/icon-provider/icon-provider";
 import PlusIcon from '../../icons/plus_icon';
 import TrashCanIcon from '../../icons/trash-can';
-import ExpandIcon from '../../icons/expand_icon';
 import { DataTableSyntax, PropertyOutputTypes, SyntaxNames } from '../../constants/constants';
 import { NestedActivityDefinitionProperty } from '../../models/custom-component-models';
 import { toggleDictionaryDisplay } from '../../functions/display-toggle'
@@ -106,10 +105,6 @@ export class HeDataTableProperty implements ISortableSharedComponent {
     this.syntaxSwitchCount++;
   }
 
-  onExpandSwitchArea() {
-    this.editorHeight == "2.75em" ? this.editorHeight = "8em" : this.editorHeight = "2.75em"
-  }
-
   onToggleOptions(index: number) {
     let tempValue = toggleDictionaryDisplay(index, this.optionsDisplayToggle)
     this.optionsDisplayToggle = { ... this.optionsDisplayToggle, tempValue }
@@ -145,29 +140,29 @@ export class HeDataTableProperty implements ISortableSharedComponent {
             <th class="sortablejs-custom-handle"><SortIcon options={this.iconProvider.getOptions()}></SortIcon>
             </th>
             <td></td>
-            <td></td>
-          </tr>
-          <tr key={`case-${index}`}>
-            <th
-              class="elsa-py-3 elsa-text-left elsa-text-xs elsa-font-medium elsa-text-gray-500 elsa-tracking-wider elsa-w-2/12">Identifier
-            </th>
-            <td class="elsa-py-2 elsa-pr-5" style={{ width: colWidth }}>
-              <input type="text" value={tableInput.expressions[DataTableSyntax.Identifier]} onChange={e => this._base.UpdateExpressionFromInput(e, tableInput, DataTableSyntax.Identifier)}
-                class="focus:elsa-ring-blue-500 focus:elsa-border-blue-500 elsa-block elsa-w-full elsa-min-w-0 elsa-rounded-md sm:elsa-text-sm elsa-border-gray-300" />
-            </td>
             <td class="elsa-pt-1 elsa-pr-2 elsa-text-right">
               <button type="button" onClick={() => this.onDeleteInputClick(tableInput)}
                 class="elsa-h-5 elsa-w-5 elsa-mx-auto elsa-outline-none focus:elsa-outline-none">
                 <TrashCanIcon options={this.iconProvider.getOptions()}></TrashCanIcon>
               </button>
             </td>
+          </tr>
+          <tr key={`case-${index}`}>
+            <th
+              class="elsa-py-3 elsa-text-left elsa-text-xs elsa-font-medium elsa-text-gray-500 elsa-tracking-wider elsa-w-2/12">Identifier
+            </th>
+            <td class="elsa-py-2 pl-5" colSpan={2} style={{ width: colWidth }}>
+              <input type="text" value={tableInput.expressions[DataTableSyntax.Identifier]} onChange={e => this._base.UpdateExpressionFromInput(e, tableInput, DataTableSyntax.Identifier)}
+                class="focus:elsa-ring-blue-500 focus:elsa-border-blue-500 elsa-block elsa-w-full elsa-min-w-0 elsa-rounded-md sm:elsa-text-sm elsa-border-gray-300" />
+            </td>
+
 
           </tr>
           <tr key={`case-${index}`}>
             <th
               class="elsa-py-3 elsa-text-left elsa-text-xs elsa-font-medium elsa-text-gray-500 elsa-tracking-wider elsa-w-2/12">Row Heading
             </th>
-            <td class="elsa-py-2 pl-5" style={{ width: colWidth }}>
+            <td class="elsa-py-2 pl-5" colSpan={2} style={{ width: colWidth }}>
               <div class="elsa-mt-1 elsa-relative elsa-rounded-md elsa-shadow-sm">
                 <elsa-expression-editor
                   key={`expression-editor-${index}-${this.syntaxSwitchCount}`}
@@ -190,20 +185,12 @@ export class HeDataTableProperty implements ISortableSharedComponent {
                 </div>
               </div>
             </td>
-            <td
-              class="elsa-py-3 elsa-text-left elsa-text-xs elsa-font-medium elsa-text-gray-500 elsa-tracking-wider elsa-w-2/12">
-              <button type="button" onClick={() => this.onExpandSwitchArea()}
-                class="elsa-h-5 elsa-w-5 elsa-mx-auto elsa-outline-none focus:elsa-outline-none">
-                <ExpandIcon options={this.iconProvider.getOptions()}></ExpandIcon>
-              </button>
-            </td>
-
           </tr>
 
 
           <tr onClick={() => this.onToggleOptions(index)}>
             <th
-              class="elsa-px-6 elsa-py-3 elsa-text-left elsa-text-xs elsa-font-medium elsa-text-gray-500 elsa-text-left elsa-tracking-wider elsa-w-1/12" colSpan={3} style={{ cursor: "zoom-in" }}> Options
+              class="elsa-py-3 elsa-text-left elsa-text-xs elsa-font-medium elsa-text-gray-500 elsa-text-left elsa-tracking-wider elsa-w-1/12" colSpan={3} style={{ cursor: "zoom-in" }}> Options
             </th>
           </tr>
 
@@ -237,7 +224,7 @@ export class HeDataTableProperty implements ISortableSharedComponent {
               <th
                 class="elsa-py-3 elsa-text-left elsa-text-xs elsa-font-medium elsa-text-gray-500 elsa-tracking-wider elsa-w-2/12">Pre-Populated Input
             </th>
-            <td class="elsa-py-2 pl-5" style={{ width: colWidth }}>
+            <td class="elsa-py-2 pl-5 elsa-w-10/12" colSpan={2} style={{ width: colWidth }}>
             <div class="elsa-mt-1 elsa-relative elsa-rounded-md elsa-shadow-sm">
               <elsa-expression-editor
                 key={`expression-editor-${index}-${this.syntaxSwitchCount}`}
@@ -259,13 +246,6 @@ export class HeDataTableProperty implements ISortableSharedComponent {
                 </select>
               </div>
             </div>
-            </td>
-            <td
-              class="elsa-py-3 elsa-text-left elsa-text-xs elsa-font-medium elsa-text-gray-500 elsa-tracking-wider elsa-w-2/12">
-              <button type="button" onClick={() => this.onExpandSwitchArea()}
-                class="elsa-h-5 elsa-w-5 elsa-mx-auto elsa-outline-none focus:elsa-outline-none">
-                <ExpandIcon options={this.iconProvider.getOptions()}></ExpandIcon>
-              </button>
             </td>
           </tr>
         </tbody>

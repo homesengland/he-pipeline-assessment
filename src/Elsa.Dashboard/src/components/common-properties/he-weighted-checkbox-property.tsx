@@ -109,10 +109,6 @@ export class HeWeightedCheckboxProperty implements ISortableSharedComponent {
     this.syntaxSwitchCount++;
   }
 
-  onExpandSwitchArea() {
-    this.editorHeight == "2.75em" ? this.editorHeight = "8em" : this.editorHeight = "2.75em"
-  }
-
   onToggleOptions(index: number) {
     let tempValue = toggleDictionaryDisplay(index, this.optionsDisplayToggle)
     this.optionsDisplayToggle = { ... this.optionsDisplayToggle, tempValue }

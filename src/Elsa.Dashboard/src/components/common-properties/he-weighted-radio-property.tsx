@@ -10,19 +10,18 @@ import { mapSyntaxToLanguage, parseJson, newOptionLetter, Map } from "../../util
 import { IconProvider } from "../providers/icon-provider/icon-provider";
 import PlusIcon from '../../icons/plus_icon';
 import TrashCanIcon from '../../icons/trash-can';
-import ExpandIcon from '../../icons/expand_icon';
 import { PropertyOutputTypes, RadioOptionsSyntax, SyntaxNames } from '../../constants/constants';
 import { NestedActivityDefinitionProperty } from '../../models/custom-component-models';
-import { toggleDictionaryDisplay } from '../../functions/display-toggle'
 import { SortableComponent, ISortableSharedComponent } from '../base-component';
 import SortIcon from '../../icons/sort_icon';
+import { DisplayToggle, IDisplayToggle } from '../display-toggle-component';
 
 @Component({
   tag: 'he-weighted-radio-property',
   shadow: false,
 })
 
-export class HeWeightedRadioProperty implements ISortableSharedComponent {
+export class HeWeightedRadioProperty implements ISortableSharedComponent, IDisplayToggle {
 
   @Prop() activityModel: ActivityModel;
   @Prop() propertyDescriptor: ActivityPropertyDescriptor;
@@ -31,21 +30,26 @@ export class HeWeightedRadioProperty implements ISortableSharedComponent {
   @State() properties: Array<NestedActivityDefinitionProperty> = [];
   @State() iconProvider = new IconProvider();
   @Event() expressionChanged: EventEmitter<string>;
-  @State() optionsDisplayToggle: Map<string> = {};
   @State() switchTextHeight: string = "";
   @State() editorHeight: string = "2.75em"
+  @State() dictionary: Map<string>;
 
   supportedSyntaxes: Array<string> = [SyntaxNames.JavaScript, SyntaxNames.Liquid, SyntaxNames.Literal];
   multiExpressionEditor: HTMLElsaMultiExpressionEditorElement;
   syntaxSwitchCount: number = 0;
   scoreSyntaxSwitchCount: number = 0;
   container: HTMLElement;
+  
+  displayValue: string = "table-row";
+  hiddenValue: string = "none";
+
+  private _toggle: DisplayToggle;
   private _base: SortableComponent;
 
   constructor() {
     this._base = new SortableComponent(this);
+    this._toggle = new DisplayToggle(this);
   }
-
 
 
   async componentWillLoad() {
@@ -71,8 +75,8 @@ export class HeWeightedRadioProperty implements ISortableSharedComponent {
     this.updatePropertyModel();
   }
 
-  onDeleteOptionClick(switchCase: NestedActivityDefinitionProperty) {
-    this.properties = this.properties.filter(x => x != switchCase);
+  onDeleteOptionClick(property: NestedActivityDefinitionProperty) {
+    this.properties = this.properties.filter(x => x != property);
     this.updatePropertyModel();
   }
 
@@ -95,13 +99,8 @@ export class HeWeightedRadioProperty implements ISortableSharedComponent {
     this.syntaxSwitchCount++;
   }
 
-  onExpandSwitchArea() {
-    this.editorHeight == "2.75em" ? this.editorHeight = "8em" : this.editorHeight = "2.75em"
-  }
-
   onToggleOptions(index: number) {
-    let tempValue = toggleDictionaryDisplay(index, this.optionsDisplayToggle)
-    this.optionsDisplayToggle = { ... this.optionsDisplayToggle, tempValue }
+    this._toggle.onToggleDisplay(index);
   }
 
   render() {
@@ -123,7 +122,7 @@ export class HeWeightedRadioProperty implements ISortableSharedComponent {
       let scoreExpressionEditor = null;
       let prePopulatedExpressionEditor = null;
       let colWidth = "100%";
-      const optionsDisplay = this.optionsDisplayToggle[index] ?? "none";
+      const optionsDisplay = this._toggle.component.dictionary[index] ?? "none";
 
       return (
         <tbody>
@@ -131,31 +130,28 @@ export class HeWeightedRadioProperty implements ISortableSharedComponent {
             <th class="sortablejs-custom-handle"><SortIcon options={this.iconProvider.getOptions()}></SortIcon>
             </th>
             <td></td>
-            <td></td>
-          </tr>
-          <tr key={`case-${index}`}>
-            <th
-              class="elsa-py-3 elsa-text-left elsa-text-xs elsa-font-medium elsa-text-gray-500 elsa-tracking-wider elsa-w-2/12">Identifier
-            </th>
-            <td class="elsa-py-2 elsa-pr-5" style={{ width: colWidth }}>
-              <input type="text" value={radioOption.name} onChange={e => this._base.UpdateName(e, radioOption)}
-                class="focus:elsa-ring-blue-500 focus:elsa-border-blue-500 elsa-block elsa-w-full elsa-min-w-0 elsa-rounded-md sm:elsa-text-sm elsa-border-gray-300" />
-            </td>
             <td class="elsa-pt-1 elsa-pr-2 elsa-text-right">
               <button type="button" onClick={() => this.onDeleteOptionClick(radioOption)}
                 class="elsa-h-5 elsa-w-5 elsa-mx-auto elsa-outline-none focus:elsa-outline-none">
                 <TrashCanIcon options={this.iconProvider.getOptions()}></TrashCanIcon>
               </button>
             </td>
-
+          </tr>
+          <tr key={`case-${index}`}>
+            <th
+              class="elsa-py-3 elsa-text-left elsa-text-xs elsa-font-medium elsa-text-gray-500 elsa-tracking-wider elsa-w-2/12">Identifier
+            </th>
+            <td class="elsa-py-2 elsa-pr-5" colSpan={2} style={{ width: colWidth }}>
+              <input type="text" value={radioOption.name} onChange={e => this._base.UpdateName(e, radioOption)}
+                class="focus:elsa-ring-blue-500 focus:elsa-border-blue-500 elsa-block elsa-w-full elsa-min-w-0 elsa-rounded-md sm:elsa-text-sm elsa-border-gray-300" />
+            </td>
           </tr>
 
           <tr>
-
             <th
               class="elsa-py-3 elsa-text-left elsa-text-xs elsa-font-medium elsa-text-gray-500 elsa-tracking-wider elsa-w-2/12">Answer
             </th>
-            <td class="elsa-py-2 pl-5" style={{ width: colWidth }}>
+            <td class="elsa-py-2 pl-5" colSpan={2} style={{ width: colWidth }}>
               <div class="elsa-mt-1 elsa-relative elsa-rounded-md elsa-shadow-sm">
                 <elsa-expression-editor
                   key={`expression-editor-${index}-${this.syntaxSwitchCount}`}
@@ -178,19 +174,12 @@ export class HeWeightedRadioProperty implements ISortableSharedComponent {
                 </div>
               </div>
             </td>
-            <td
-              class="elsa-py-3 elsa-text-left elsa-text-xs elsa-font-medium elsa-text-gray-500 elsa-tracking-wider elsa-w-2/12">
-              <button type="button" onClick={() => this.onExpandSwitchArea()}
-                class="elsa-h-5 elsa-w-5 elsa-mx-auto elsa-outline-none focus:elsa-outline-none">
-                <ExpandIcon options={this.iconProvider.getOptions()}></ExpandIcon>
-              </button>
-            </td>
           </tr>
           <tr>
             <th class="elsa-py-3 elsa-text-left elsa-text-xs elsa-font-medium elsa-text-gray-500 elsa-tracking-wider elsa-w-2/12">
               Score
             </th>
-            <td class="elsa-py-2 pl-5" style={{ width: colWidth }}>
+            <td class="elsa-py-2 pl-5" colSpan={2} style={{ width: colWidth }}>
               <div class="elsa-mt-1 elsa-relative elsa-rounded-md elsa-shadow-sm">
                 <elsa-expression-editor
                   key={`expression-editor-${index}-${this.scoreSyntaxSwitchCount}`}
@@ -219,13 +208,11 @@ export class HeWeightedRadioProperty implements ISortableSharedComponent {
             <th
               class="elsa-py-3 elsa-text-left elsa-text-xs elsa-font-medium elsa-text-gray-500 elsa-text-left elsa-tracking-wider elsa-w-2/12" colSpan={3} style={{ cursor: "zoom-in" }}> Options
             </th>
-            <td></td>
-            <td></td>
           </tr>
 
           <tr style={{ display: optionsDisplay }}>
             <th class="elsa-py-3 elsa-text-left elsa-text-xs elsa-font-medium elsa-text-gray-500 elsa-tracking-wider elsa-w-2/12">Pre Populated</th>
-            <td class="elsa-py-2 pl-5" style={{ width: colWidth }}>
+            <td class="elsa-py-2 pl-5" colSpan={2} style={{ width: colWidth }}>
               <div class="elsa-mt-1 elsa-relative elsa-rounded-md elsa-shadow-sm">
                 <elsa-expression-editor
                   key={`expression-editor-${index}-${this.syntaxSwitchCount}`}
@@ -248,7 +235,6 @@ export class HeWeightedRadioProperty implements ISortableSharedComponent {
                 </div>
               </div>
             </td>
-            <td></td>
           </tr>
         </tbody>
       );

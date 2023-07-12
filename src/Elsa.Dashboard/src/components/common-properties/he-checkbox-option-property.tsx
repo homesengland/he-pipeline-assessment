@@ -1,7 +1,6 @@
 import { Component, Event, EventEmitter, h, Prop, State } from '@stencil/core';
 import { CheckboxOptionsSyntax, PropertyOutputTypes, SyntaxNames } from '../../constants/constants';
 import { toggleDictionaryDisplay } from '../../functions/display-toggle';
-import ExpandIcon from '../../icons/expand_icon';
 import PlusIcon from '../../icons/plus_icon';
 import SortIcon from '../../icons/sort_icon';
 import TrashCanIcon from '../../icons/trash-can';
@@ -93,10 +92,6 @@ export class HeCheckboxOptionProperty implements ISortableSharedComponent {
     this.syntaxSwitchCount++;
   }
 
-  onExpandSwitchArea() {
-    this.editorHeight == "2.75em" ? this.editorHeight = "8em" : this.editorHeight = "2.75em"
-  }
-
   onToggleOptions(index: number) {
     let tempValue = toggleDictionaryDisplay(index, this.optionsDisplayToggle)
     this.optionsDisplayToggle = { ... this.optionsDisplayToggle, tempValue }
@@ -130,23 +125,20 @@ export class HeCheckboxOptionProperty implements ISortableSharedComponent {
             <th class="sortablejs-custom-handle"><SortIcon options={this.iconProvider.getOptions()}></SortIcon>
             </th>
             <td></td>
-            <td></td>
+            <td class="elsa-pt-1 elsa-pr-2 elsa-text-right">
+              <button type="button" onClick={() => this.onDeleteOptionClick(checkboxOption)}
+              class="elsa-h-5 elsa-w-5 elsa-mx-auto elsa-outline-none focus:elsa-outline-none">
+              <TrashCanIcon options={this.iconProvider.getOptions()}></TrashCanIcon>
+            </button></td>
           </tr>
           <tr key={`case-${index}`}>
             <th class="elsa-py-3 elsa-text-left elsa-text-xs elsa-font-medium elsa-text-gray-500 elsa-tracking-wider elsa-w-2/12">Identifier</th>
 
-            <td class="elsa-py-2 pl-5" style={{ width: colWidth }}>
+            <td class="elsa-py-2 pl-5" colSpan={2} style={{ width: colWidth }}>
               <div>
                 <input type="text" value={checkboxOption.name} onChange={e => this._base.UpdateName(e, checkboxOption)}
                   class="focus:elsa-ring-blue-500 focus:elsa-border-blue-500 elsa-block elsa-w-full elsa-min-w-0 elsa-rounded-md sm:elsa-text-sm elsa-border-gray-300" />
               </div>
-            </td>
-
-            <td class="elsa-pt-1 elsa-pr-2 elsa-text-right">
-              <button type="button" onClick={() => this.onDeleteOptionClick(checkboxOption)}
-                class="elsa-h-5 elsa-w-5 elsa-mx-auto elsa-outline-none focus:elsa-outline-none">
-                <TrashCanIcon options={this.iconProvider.getOptions()}></TrashCanIcon>
-              </button>
             </td>
 
           </tr>
@@ -154,7 +146,7 @@ export class HeCheckboxOptionProperty implements ISortableSharedComponent {
           <tr>
             <th class="elsa-py-3 elsa-text-left elsa-text-xs elsa-font-medium elsa-text-gray-500 elsa-tracking-wider elsa-w-2/12">Answer</th>
 
-            <td class="elsa-py-2 pl-5" style={{ width: colWidth }}>
+            <td class="elsa-py-2 pl-5" colSpan={ 2 } style={{ width: colWidth }}>
               <div class="elsa-mt-1 elsa-relative elsa-rounded-md elsa-shadow-sm">
                 <elsa-expression-editor
                   key={`expression-editor-${checkboxOption.name}-${index}-${this.syntaxSwitchCount}`}
@@ -176,12 +168,6 @@ export class HeCheckboxOptionProperty implements ISortableSharedComponent {
                   </select>
                 </div>
               </div>
-            </td>
-            <td class="elsa-pt-1 elsa-pr-2 elsa-text-right">
-              <button type="button" onClick={() => this.onExpandSwitchArea()}
-                class="elsa-h-5 elsa-w-5 elsa-mx-auto elsa-outline-none focus:elsa-outline-none">
-                <ExpandIcon options={this.iconProvider.getOptions()}></ExpandIcon>
-              </button>
             </td>
           </tr>
 
