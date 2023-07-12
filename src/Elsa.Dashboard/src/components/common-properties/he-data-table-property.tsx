@@ -7,14 +7,14 @@ import {
   HTMLElsaMultiExpressionEditorElement,
   IntellisenseContext
 } from "../../models/elsa-interfaces";
-import { mapSyntaxToLanguage, parseJson, NewOptionLetter, Map } from "../../utils/utils";
+import { mapSyntaxToLanguage, parseJson, newOptionLetter, Map } from "../../utils/utils";
 import { IconProvider } from "../providers/icon-provider/icon-provider";
 import PlusIcon from '../../icons/plus_icon';
 import TrashCanIcon from '../../icons/trash-can';
 import ExpandIcon from '../../icons/expand_icon';
 import { DataTableSyntax, PropertyOutputTypes, SyntaxNames } from '../../constants/constants';
 import { NestedActivityDefinitionProperty } from '../../models/custom-component-models';
-import { ToggleDictionaryDisplay } from '../../functions/display-toggle'
+import { toggleDictionaryDisplay } from '../../functions/display-toggle'
 import { ISortableSharedComponent, SortableComponent } from '../base-component';
 import SortIcon from '../../icons/sort_icon';
 
@@ -77,7 +77,7 @@ export class HeDataTableProperty implements ISortableSharedComponent {
   }
 
   onAddRowClick() {
-    const optionName = NewOptionLetter(this._base.IdentifierArray());
+    const optionName = newOptionLetter(this._base.IdentifierArray());
     const newOption: NestedActivityDefinitionProperty = { name: optionName, syntax: SyntaxNames.Literal, expressions: { [SyntaxNames.Literal]: '', [DataTableSyntax.Identifier]: optionName }, type: PropertyOutputTypes.TableInput };
     this.properties = [...this.properties, newOption];
     this.updatePropertyModel();
@@ -112,7 +112,7 @@ export class HeDataTableProperty implements ISortableSharedComponent {
   }
 
   onToggleOptions(index: number) {
-    let tempValue = ToggleDictionaryDisplay(index, this.optionsDisplayToggle)
+    let tempValue = toggleDictionaryDisplay(index, this.optionsDisplayToggle)
     this.optionsDisplayToggle = { ... this.optionsDisplayToggle, tempValue }
   }
 

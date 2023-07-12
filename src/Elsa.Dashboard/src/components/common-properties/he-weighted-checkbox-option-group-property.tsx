@@ -7,14 +7,14 @@ import {
   HTMLElsaMultiExpressionEditorElement,
   IntellisenseContext
 } from "../../models/elsa-interfaces";
-import { mapSyntaxToLanguage, parseJson, NewOptionLetter, Map } from "../../utils/utils";
+import { mapSyntaxToLanguage, parseJson, newOptionLetter, Map } from "../../utils/utils";
 import { IconProvider } from "../providers/icon-provider/icon-provider";
 import PlusIcon from '../../icons/plus_icon';
 import TrashCanIcon from '../../icons/trash-can';
 import ExpandIcon from '../../icons/expand_icon';
 import { CheckboxOptionsSyntax, PropertyOutputTypes, SyntaxNames, WeightedScoringSyntax } from '../../constants/constants';
 import { NestedActivityDefinitionProperty } from '../../models/custom-component-models';
-import { ToggleDictionaryDisplay } from '../../functions/display-toggle'
+import { toggleDictionaryDisplay } from '../../functions/display-toggle'
 import { SortableComponent, ISortableSharedComponent } from '../base-component';
 import SortIcon from '../../icons/sort_icon';
 
@@ -67,7 +67,7 @@ export class HeWeightedCheckboxOptionGroupProperty implements ISortableSharedCom
   }
 
   onAddAnswerClick() {
-    const optionName = NewOptionLetter(this._base.IdentifierArray());
+    const optionName = newOptionLetter(this._base.IdentifierArray());
     const newAnswer: NestedActivityDefinitionProperty = {
       name: optionName,
       syntax: SyntaxNames.Literal,
@@ -109,7 +109,7 @@ export class HeWeightedCheckboxOptionGroupProperty implements ISortableSharedCom
   }
 
   onToggleOptions(index: number) {
-    let tempValue = ToggleDictionaryDisplay(index, this.optionsDisplayToggle)
+    let tempValue = toggleDictionaryDisplay(index, this.optionsDisplayToggle)
     this.optionsDisplayToggle = { ... this.optionsDisplayToggle, tempValue }
   }
 
@@ -160,17 +160,17 @@ export class HeWeightedCheckboxOptionGroupProperty implements ISortableSharedCom
       const expression = checkboxAnswer.expressions[checkboxAnswer.syntax];
       const syntax = checkboxAnswer.syntax;
       const monacoLanguage = mapSyntaxToLanguage(syntax);
-      //const prePopulatedSyntax = SyntaxNames.JavaScript;
-      //const prePopulatedExpression = checkboxAnswer.expressions[CheckboxOptionsSyntax.PrePopulated];
+      const prePopulatedSyntax = SyntaxNames.JavaScript;
+      const prePopulatedExpression = checkboxAnswer.expressions[CheckboxOptionsSyntax.PrePopulated];
       const scoreExpression = checkboxAnswer.expressions[CheckboxOptionsSyntax.Score];
       const isSingleChecked = checkboxAnswer.expressions[CheckboxOptionsSyntax.Single] == 'true';
       const isGlobalChecked = checkboxAnswer.expressions[CheckboxOptionsSyntax.ExclusiveToQuestion] == 'true';
 
-      //const prePopulatedLanguage = mapSyntaxToLanguage(prePopulatedSyntax);
+      const prePopulatedLanguage = mapSyntaxToLanguage(prePopulatedSyntax);
 
 
       let expressionEditor = null;
-      //let prePopulatedExpressionEditor = null;
+      let prePopulatedExpressionEditor = null;
       let scoreExpressionEditor = null;
       let colWidth = "100%";
       const optionsDisplay = this.optionsDisplayToggle[index] ?? "none";
@@ -299,43 +299,25 @@ export class HeWeightedCheckboxOptionGroupProperty implements ISortableSharedCom
             <td class="elsa-py-2 pl-5" style={{ width: colWidth }}>
               <div class="elsa-mt-1 elsa-relative elsa-rounded-md elsa-shadow-sm">
 
-                <elsa-multi-expression-editor
-                  key={`expression-editor-${index}-${this.syntaxSwitchCount}-${this.keyId}`}
-                  onSyntaxChanged={e => console.log(e)}
+                <elsa-expression-editor
+                  key={`expression-editor-${index}-${this.syntaxSwitchCount}`}
+                  ref={el => prePopulatedExpressionEditor = el}
+                  expression={prePopulatedExpression}
+                  language={prePopulatedLanguage}
+                  single-line={false}
+                  editorHeight="2.75em"
+                  padding="elsa-pt-1.5 elsa-pl-1 elsa-pr-28"
                   onExpressionChanged={e => this._base.CustomUpdateExpression(e, checkboxAnswer, CheckboxOptionsSyntax.PrePopulated)}
-                  fieldName={"Pre Populated"}
-                  label={"Pre Populated"}
-                  syntax={SyntaxNames.JavaScript}
-                  defaultSyntax={SyntaxNames.JavaScript}
-                  isReadOnly={false}
-                  expressions={checkboxAnswer.expressions}
-                  supportedSyntaxes={[SyntaxNames.JavaScript]}
-                  editor-height={this.editorHeight}
-                  context={context}>
-                  <input type="text" id={"123"} name={"prePop123"} value={checkboxAnswer.expressions[CheckboxOptionsSyntax.PrePopulated]} onChange={e => this._base.UpdateExpressionFromInput(e, checkboxAnswer, CheckboxOptionsSyntax.PrePopulated)}
-                    class="disabled:elsa-opacity-50 disabled:elsa-cursor-not-allowed focus:elsa-ring-blue-500 focus:elsa-border-blue-500 elsa-block elsa-w-full elsa-min-w-0 elsa-rounded-md sm:elsa-text-sm elsa-border-gray-300"
-                    disabled={false} />
-                </elsa-multi-expression-editor>
-
-                {/*<elsa-expression-editor*/}
-                {/*  key={`expression-editor-${index}-${this.syntaxSwitchCount}`}*/}
-                {/*  ref={el => prePopulatedExpressionEditor = el}*/}
-                {/*  expression={prePopulatedExpression}*/}
-                {/*  language={prePopulatedLanguage}*/}
-                {/*  single-line={false}*/}
-                {/*  editorHeight="2.75em"*/}
-                {/*  padding="elsa-pt-1.5 elsa-pl-1 elsa-pr-28"*/}
-                {/*  onExpressionChanged={e => this._base.CustomUpdateExpression(e, checkboxAnswer, CheckboxOptionsSyntax.PrePopulated)}*/}
-                {/*/>*/}
-                {/*<div class="elsa-absolute elsa-inset-y-0 elsa-right-0 elsa-flex elsa-items-center">*/}
-                {/*  <select onChange={e => this._base.UpdateSyntax(e, checkboxAnswer, prePopulatedExpressionEditor)}*/}
-                {/*    class="focus:elsa-ring-blue-500 focus:elsa-border-blue-500 elsa-h-full elsa-py-0 elsa-pl-2 elsa-pr-7 elsa-border-transparent elsa-bg-transparent elsa-text-gray-500 sm:elsa-text-sm elsa-rounded-md">*/}
-                {/*    {this.supportedSyntaxes.filter(x => x == SyntaxNames.JavaScript).map(supportedSyntax => {*/}
-                {/*      const selected = supportedSyntax == SyntaxNames.JavaScript;*/}
-                {/*      return <option selected={selected}>{supportedSyntax}</option>;*/}
-                {/*    })}*/}
-                {/*  </select>*/}
-                {/*</div>*/}
+                />
+                <div class="elsa-absolute elsa-inset-y-0 elsa-right-0 elsa-flex elsa-items-center">
+                  <select onChange={e => this._base.UpdateSyntax(e, checkboxAnswer, prePopulatedExpressionEditor)}
+                    class="focus:elsa-ring-blue-500 focus:elsa-border-blue-500 elsa-h-full elsa-py-0 elsa-pl-2 elsa-pr-7 elsa-border-transparent elsa-bg-transparent elsa-text-gray-500 sm:elsa-text-sm elsa-rounded-md">
+                    {this.supportedSyntaxes.filter(x => x == SyntaxNames.JavaScript).map(supportedSyntax => {
+                      const selected = supportedSyntax == SyntaxNames.JavaScript;
+                      return <option selected={selected}>{supportedSyntax}</option>;
+                    })}
+                  </select>
+                </div>
               </div>
             </td>
             <td></td>

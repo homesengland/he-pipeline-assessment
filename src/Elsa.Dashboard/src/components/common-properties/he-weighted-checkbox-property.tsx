@@ -7,13 +7,13 @@ import {
   HTMLElsaMultiExpressionEditorElement,
   IntellisenseContext
 } from "../../models/elsa-interfaces";
-import { parseJson, NewOptionLetter, Map } from "../../utils/utils";
+import { parseJson, newOptionLetter, Map } from "../../utils/utils";
 import { IconProvider } from "../providers/icon-provider/icon-provider";
 import PlusIcon from '../../icons/plus_icon';
 import TrashCanIcon from '../../icons/trash-can';
 import { PropertyOutputTypes, SyntaxNames, WeightedScoringSyntax } from '../../constants/constants';
 import { NestedActivityDefinitionProperty } from '../../models/custom-component-models';
-import { ToggleDictionaryDisplay } from '../../functions/display-toggle'
+import { toggleDictionaryDisplay } from '../../functions/display-toggle'
 import { SortableComponent, ISortableSharedComponent } from '../base-component';
 import SortIcon from '../../icons/sort_icon';
 
@@ -66,7 +66,7 @@ export class HeWeightedCheckboxProperty implements ISortableSharedComponent {
   }
 
   onAddGroupClick() {
-    const groupName = NewOptionLetter(this._base.IdentifierArray());
+    const groupName = newOptionLetter(this._base.IdentifierArray());
     const newGroup: NestedActivityDefinitionProperty = {
       name: groupName,
       syntax: SyntaxNames.Json,
@@ -77,7 +77,6 @@ export class HeWeightedCheckboxProperty implements ISortableSharedComponent {
     };
     this.properties = [... this.properties, newGroup];
     this.updatePropertyModel();
-    console.log("Added Group, property Updated");
   }
 
   onDeleteGroupClick(checkboxGroup: NestedActivityDefinitionProperty) {
@@ -115,7 +114,7 @@ export class HeWeightedCheckboxProperty implements ISortableSharedComponent {
   }
 
   onToggleOptions(index: number) {
-    let tempValue = ToggleDictionaryDisplay(index, this.optionsDisplayToggle)
+    let tempValue = toggleDictionaryDisplay(index, this.optionsDisplayToggle)
     this.optionsDisplayToggle = { ... this.optionsDisplayToggle, tempValue }
   }
 

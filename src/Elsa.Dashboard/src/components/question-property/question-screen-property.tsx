@@ -28,7 +28,7 @@ import {
 } from '../providers/question-provider/question-provider';
 import TrashCanIcon from '../../icons/trash-can';
 import { QuestionCategories, SyntaxNames } from '../../constants/constants';
-import { filterPropertiesByType, parseJson, NewOptionNumber } from '../../utils/utils';
+import { filterPropertiesByType, parseJson, newOptionNumber } from '../../utils/utils';
 import SortIcon from '../../icons/sort_icon';
 
 @Component({
@@ -189,7 +189,7 @@ export class QuestionScreen {
   }
 
   onAddQuestion(questionType: IActivityData) {
-    let id = NewOptionNumber(this.activityIds());
+    let id = newOptionNumber(this.activityIds());
     const questionName = `Question ${id}`;
     const newValue = this.newQuestionValue(questionName, id);
     let propertyDescriptors = filterPropertiesByType(this.questionProperties, questionType.nameConstant);

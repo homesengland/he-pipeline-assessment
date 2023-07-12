@@ -6,14 +6,14 @@ import {
   HTMLElsaMultiExpressionEditorElement,
   IntellisenseContext
 } from "../../models/elsa-interfaces";
-import { mapSyntaxToLanguage, parseJson, NewOptionLetter, Map, getUniversalUniqueId } from "../../utils/utils";
+import { mapSyntaxToLanguage, parseJson, newOptionLetter, Map, getUniversalUniqueId } from "../../utils/utils";
 import { IconProvider } from "../providers/icon-provider/icon-provider";
 import PlusIcon from '../../icons/plus_icon';
 import TrashCanIcon from '../../icons/trash-can';
 import ExpandIcon from '../../icons/expand_icon';
 import { PropertyOutputTypes, RadioOptionsSyntax, SyntaxNames } from '../../constants/constants';
 import { NestedActivityDefinitionProperty } from '../../models/custom-component-models';
-import { ToggleDictionaryDisplay } from '../../functions/display-toggle'
+import { toggleDictionaryDisplay } from '../../functions/display-toggle'
 import { SortableComponent, ISortableSharedComponent } from '../base-component';
 import SortIcon from '../../icons/sort_icon';
 
@@ -70,7 +70,7 @@ export class HePotScoreRadioOptionProperty implements ISortableSharedComponent {
   }
 
   onAddOptionClick() {
-    const optionName = NewOptionLetter(this._base.IdentifierArray());
+    const optionName = newOptionLetter(this._base.IdentifierArray());
     const newOption: NestedActivityDefinitionProperty = {
       name: optionName,
       syntax: SyntaxNames.Literal,
@@ -113,7 +113,7 @@ export class HePotScoreRadioOptionProperty implements ISortableSharedComponent {
   }
 
   onToggleOptions(index: number) {
-    let tempValue = ToggleDictionaryDisplay(index, this.optionsDisplayToggle)
+    let tempValue = toggleDictionaryDisplay(index, this.optionsDisplayToggle)
     this.optionsDisplayToggle = { ... this.optionsDisplayToggle, tempValue }
   }
 
