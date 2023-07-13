@@ -11,7 +11,7 @@ import {
   HTMLElsaMultiExpressionEditorElement,
   IntellisenseContext
 } from "../../models/elsa-interfaces";
-import { mapSyntaxToLanguage, parseJson, newOptionLetter, Map } from "../../utils/utils";
+import { mapSyntaxToLanguage, parseJson, newOptionLetter, Map, getUniversalUniqueId } from "../../utils/utils";
 import { ISortableSharedComponent, SortableComponent } from '../base-component';
 import { DisplayToggle, IDisplayToggle } from '../display-toggle-component';
 import { IconProvider } from "../providers/icon-provider/icon-provider";
@@ -26,6 +26,7 @@ export class HeCheckboxOptionProperty implements ISortableSharedComponent, IDisp
   @Prop() activityModel: ActivityModel;
   @Prop() propertyDescriptor: ActivityPropertyDescriptor;
   @Prop() propertyModel: ActivityDefinitionProperty;
+  @Prop() keyId: string;
   @Prop() modelSyntax: string = SyntaxNames.Json;
   @State() properties: Array<NestedActivityDefinitionProperty> = [];
   @State() iconProvider = new IconProvider();
@@ -99,6 +100,10 @@ export class HeCheckboxOptionProperty implements ISortableSharedComponent, IDisp
     this._toggle.onToggleDisplay(index);
   }
 
+  async componentWillRender() {
+    this.keyId = getUniversalUniqueId();
+  }
+
   render() {
     const cases = this.properties;
     const supportedSyntaxes = this.supportedSyntaxes;
@@ -151,7 +156,7 @@ export class HeCheckboxOptionProperty implements ISortableSharedComponent, IDisp
             <td class="elsa-py-2 pl-5" colSpan={ 2 } style={{ width: colWidth }}>
               <div class="elsa-mt-1 elsa-relative elsa-rounded-md elsa-shadow-sm">
                 <elsa-expression-editor
-                  key={`expression-editor-${checkboxOption.name}-${index}-${this.syntaxSwitchCount}`}
+                  key={`expression-editor-${checkboxOption.name}-${index}-${this.syntaxSwitchCount}-${this.keyId}`}
                   ref={el => expressionEditor = el}
                   expression={expression}
                   language={monacoLanguage}
@@ -197,7 +202,7 @@ export class HeCheckboxOptionProperty implements ISortableSharedComponent, IDisp
             <td class="elsa-py-2 pl-5" style={{ width: colWidth }}>
               <div class="elsa-mt-1 elsa-relative elsa-rounded-md elsa-shadow-sm">
                 <elsa-expression-editor
-                  key={`expression-editor-${index}-${this.syntaxSwitchCount}`}
+                  key={`expression-editor-${index}-${this.syntaxSwitchCount}-${this.keyId}`}
                   ref={el => prePopulatedExpressionEditor = el}
                   expression={prePopulatedExpression}
                   language={prePopulatedLanguage}

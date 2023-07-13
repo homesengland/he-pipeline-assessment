@@ -17,6 +17,7 @@ export namespace Components {
     }
     interface HeCheckboxOptionsProperty {
         "activityModel": ActivityModel;
+        "keyId": string;
         "modelSyntax": string;
         "propertyDescriptor": ActivityPropertyDescriptor;
         "propertyModel": ActivityDefinitionProperty;
@@ -384,6 +385,7 @@ declare namespace LocalJSX {
     }
     interface HeCheckboxOptionsProperty {
         "activityModel"?: ActivityModel;
+        "keyId"?: string;
         "modelSyntax"?: string;
         "onExpressionChanged"?: (event: HeCheckboxOptionsPropertyCustomEvent<string>) => void;
         "propertyDescriptor"?: ActivityPropertyDescriptor;
