@@ -1,6 +1,5 @@
 import { Component, Event, EventEmitter, h, Prop, State } from '@stencil/core';
 import { CheckboxOptionsSyntax, PropertyOutputTypes, SyntaxNames } from '../../constants/constants';
-import { toggleDictionaryDisplay } from '../../functions/display-toggle';
 import PlusIcon from '../../icons/plus_icon';
 import SortIcon from '../../icons/sort_icon';
 import TrashCanIcon from '../../icons/trash-can';
@@ -14,6 +13,7 @@ import {
 } from "../../models/elsa-interfaces";
 import { mapSyntaxToLanguage, parseJson, newOptionLetter, Map } from "../../utils/utils";
 import { ISortableSharedComponent, SortableComponent } from '../base-component';
+import { DisplayToggle, IDisplayToggle } from '../display-toggle-component';
 import { IconProvider } from "../providers/icon-provider/icon-provider";
 
 @Component({
@@ -21,7 +21,7 @@ import { IconProvider } from "../providers/icon-provider/icon-provider";
   shadow: false,
 })
 
-export class HeCheckboxOptionProperty implements ISortableSharedComponent {
+export class HeCheckboxOptionProperty implements ISortableSharedComponent, IDisplayToggle{
 
   @Prop() activityModel: ActivityModel;
   @Prop() propertyDescriptor: ActivityPropertyDescriptor;
@@ -30,14 +30,16 @@ export class HeCheckboxOptionProperty implements ISortableSharedComponent {
   @State() properties: Array<NestedActivityDefinitionProperty> = [];
   @State() iconProvider = new IconProvider();
   @Event() expressionChanged: EventEmitter<string>;
-  @State() optionsDisplayToggle: Map<string> = {};
+  @State() dictionary: Map<string> = {};
 
   @State() switchTextHeight: string = "";
-
   @State() editorHeight: string = "2.75em"
+  displayValue: string = "table-row";
+  hiddenValue: string = "none";
   container: HTMLElement;
 
   private _base: SortableComponent;
+  private _toggle: DisplayToggle;
 
   supportedSyntaxes: Array<string> = [SyntaxNames.JavaScript, SyntaxNames.Liquid, SyntaxNames.Literal];
   multiExpressionEditor: HTMLElsaMultiExpressionEditorElement;
@@ -45,6 +47,7 @@ export class HeCheckboxOptionProperty implements ISortableSharedComponent {
 
   constructor() {
     this._base = new SortableComponent(this);
+    this._toggle = new DisplayToggle(this);
   }
 
 
@@ -93,8 +96,7 @@ export class HeCheckboxOptionProperty implements ISortableSharedComponent {
   }
 
   onToggleOptions(index: number) {
-    let tempValue = toggleDictionaryDisplay(index, this.optionsDisplayToggle)
-    this.optionsDisplayToggle = { ... this.optionsDisplayToggle, tempValue }
+    this._toggle.onToggleDisplay(index);
   }
 
   render() {
@@ -117,7 +119,7 @@ export class HeCheckboxOptionProperty implements ISortableSharedComponent {
       let prePopulatedExpressionEditor = null;
       let colWidth = "100%";
 
-      const optionsDisplay = this.optionsDisplayToggle[index] ?? "none";
+      const optionsDisplay = this.dictionary[index] ?? "none";
 
       return (
         <tbody>

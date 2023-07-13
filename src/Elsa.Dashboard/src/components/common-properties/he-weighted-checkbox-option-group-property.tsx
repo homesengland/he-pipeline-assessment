@@ -13,16 +13,16 @@ import PlusIcon from '../../icons/plus_icon';
 import TrashCanIcon from '../../icons/trash-can';
 import { CheckboxOptionsSyntax, PropertyOutputTypes, SyntaxNames, WeightedScoringSyntax } from '../../constants/constants';
 import { NestedActivityDefinitionProperty } from '../../models/custom-component-models';
-import { toggleDictionaryDisplay } from '../../functions/display-toggle'
 import { SortableComponent, ISortableSharedComponent } from '../base-component';
 import SortIcon from '../../icons/sort_icon';
+import { DisplayToggle, IDisplayToggle } from '../display-toggle-component';
 
 @Component({
   tag: 'he-weighted-checkbox-option-group-property',
   shadow: false,
 })
 
-export class HeWeightedCheckboxOptionGroupProperty implements ISortableSharedComponent {
+export class HeWeightedCheckboxOptionGroupProperty implements ISortableSharedComponent, IDisplayToggle {
 
   @Prop() activityModel: ActivityModel;
   @Prop() propertyModel: NestedActivityDefinitionProperty;
@@ -32,19 +32,23 @@ export class HeWeightedCheckboxOptionGroupProperty implements ISortableSharedCom
   @State() properties: Array<NestedActivityDefinitionProperty> = [];
   @State() iconProvider = new IconProvider();
   @Event() expressionChanged: EventEmitter<string>;
-  @State() optionsDisplayToggle: Map<string> = {};
+  @State() dictionary: Map<string> = {};
   @State() switchTextHeight: string = "";
   @State() editorHeight: string = "2.75em"
   private _base: SortableComponent;
+  private _toggle: DisplayToggle;
   container: HTMLElement;
 
   supportedSyntaxes: Array<string> = [SyntaxNames.JavaScript, SyntaxNames.Liquid, SyntaxNames.Literal];
   multiExpressionEditor: HTMLElsaMultiExpressionEditorElement;
   syntaxSwitchCount: number = 0;
   scoreSyntaxSwitchCount: number = 0;
+  displayValue: string = "table-row";
+  hiddenValue: string = "none";
 
   constructor() {
     this._base = new SortableComponent(this);
+    this._toggle = new DisplayToggle(this);
   }
     
 
@@ -104,8 +108,7 @@ export class HeWeightedCheckboxOptionGroupProperty implements ISortableSharedCom
   }
 
   onToggleOptions(index: number) {
-    let tempValue = toggleDictionaryDisplay(index, this.optionsDisplayToggle)
-    this.optionsDisplayToggle = { ... this.optionsDisplayToggle, tempValue }
+    this._toggle.onToggleDisplay(index);
   }
 
   multiTextPropertyDescriptor(): ActivityPropertyDescriptor {
@@ -168,7 +171,7 @@ export class HeWeightedCheckboxOptionGroupProperty implements ISortableSharedCom
       let prePopulatedExpressionEditor = null;
       let scoreExpressionEditor = null;
       let colWidth = "100%";
-      const optionsDisplay = this.optionsDisplayToggle[index] ?? "none";
+      const optionsDisplay = this.dictionary[index] ?? "none";
 
       return (
         <tbody>

@@ -13,12 +13,12 @@ export class DisplayToggle {
     component.dictionary = {};
   }
 
-  onToggleDisplay(index: number) {
+  onToggleDisplay(index: any) {
     let tempValue = this.toggleDictionaryDisplay(index, this.component.dictionary)
     this.component.dictionary = { ... this.component.dictionary, tempValue }
   }
 
-  private toggleDictionaryDisplay(index: number, dict: Map<string>): any {
+  private toggleDictionaryDisplay(index: any, dict: Map<string>): any {
     let tempValue = Object.assign(dict);
     let tableRowClass = dict[index];
     if (tableRowClass == null) {

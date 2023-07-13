@@ -13,16 +13,18 @@ import PlusIcon from '../../icons/plus_icon';
 import TrashCanIcon from '../../icons/trash-can';
 import { PropertyOutputTypes, SyntaxNames, WeightedScoringSyntax } from '../../constants/constants';
 import { NestedActivityDefinitionProperty } from '../../models/custom-component-models';
-import { toggleDictionaryDisplay } from '../../functions/display-toggle'
 import { SortableComponent, ISortableSharedComponent } from '../base-component';
 import SortIcon from '../../icons/sort_icon';
+import { DisplayToggle, IDisplayToggle } from '../display-toggle-component';
+import MaximiseIcon from '../../icons/maximise_icon';
+import MinimiseIcon from '../../icons/minimise_icon';
 
 @Component({
   tag: 'he-weighted-checkbox-property',
   shadow: false,
 })
 
-export class HeWeightedCheckboxProperty implements ISortableSharedComponent {
+export class HeWeightedCheckboxProperty implements ISortableSharedComponent, IDisplayToggle {
 
   @Prop() activityModel: ActivityModel;
   @Prop() propertyDescriptor: ActivityPropertyDescriptor;
@@ -33,7 +35,7 @@ export class HeWeightedCheckboxProperty implements ISortableSharedComponent {
   
   @State() iconProvider = new IconProvider();
   @Event() expressionChanged: EventEmitter<string>;
-  @State() optionsDisplayToggle: Map<string> = {};
+  @State() dictionary: Map<string> = {};
   @State() switchTextHeight: string = "";
   @State() editorHeight: string = "2.75em"
 
@@ -42,10 +44,14 @@ export class HeWeightedCheckboxProperty implements ISortableSharedComponent {
   syntaxSwitchCount: number = 0;
   scoreSyntaxSwitchCount: number = 0;
   container: HTMLElement;
+  displayValue: string = "table-row";
+  hiddenValue: string = "none";
   private _base: SortableComponent;
+  private _toggle: DisplayToggle;
 
   constructor() {
     this._base = new SortableComponent(this);
+    this._toggle = new DisplayToggle(this);
   }
 
   async componentWillLoad() {
@@ -109,9 +115,8 @@ export class HeWeightedCheckboxProperty implements ISortableSharedComponent {
     this.syntaxSwitchCount++;
   }
 
-  onToggleOptions(index: number) {
-    let tempValue = toggleDictionaryDisplay(index, this.optionsDisplayToggle)
-    this.optionsDisplayToggle = { ... this.optionsDisplayToggle, tempValue }
+  onToggleOptions(index: any) {
+    this._toggle.onToggleDisplay(index);
   }
 
   async componentWillRender() {
@@ -124,7 +129,15 @@ export class HeWeightedCheckboxProperty implements ISortableSharedComponent {
 
     const renderCheckboxGroups = (checkboxGroup: NestedActivityDefinitionProperty) => {
 
+
       const eventHandler = this.onPropertyExpressionChange.bind(this);
+      const groupKey = "group_" + checkboxGroup.name;
+      const isMinimised = this.dictionary[groupKey] != null && this.dictionary[groupKey] == this.displayValue;
+
+      let minimiseIconStyle = isMinimised ? this.hiddenValue : this.displayValue;
+      let maximiseIconStyle = !isMinimised ? this.hiddenValue : this.displayValue;
+      let displayGroupStyle = isMinimised ? this.hiddenValue : "";
+
 
       return (
         <div>
@@ -134,8 +147,18 @@ export class HeWeightedCheckboxProperty implements ISortableSharedComponent {
               <div class="elsa-flex-1 sortablejs-custom-handle">
                 <SortIcon options={this.iconProvider.getOptions()}></SortIcon>
               </div>
-              <div class="elsa-flex-1 elsa-mx-auto">
-                <h3>Group: {checkboxGroup.name}</h3>
+              <div class="elsa-flex-1 elsa-text-left elsa-mx-auto">
+                <h2 class="inline">Group: {checkboxGroup.name}</h2>
+                <button type="button" onClick={() => this.onToggleOptions(groupKey)}
+                  class="elsa-h-5 inline float-right elsa-px-5 elsa-w-5 elsa-mx-auto elsa-outline-none focus:elsa-outline-none"
+                  style={{ display: minimiseIconStyle }}>
+                  <MinimiseIcon options={this.iconProvider.getOptions()}></MinimiseIcon>
+              </button>
+                <button type="button" onClick={() => this.onToggleOptions(groupKey)}
+                  class="elsa-h-5 float-right inline elsa-px-5 elsa-w-5 elsa-mx-auto elsa-outline-none focus:elsa-outline-none"
+                  style={{ display: maximiseIconStyle }}                >
+                  <MaximiseIcon options={this.iconProvider.getOptions()}></MaximiseIcon>
+                </button>
               </div>
               <div>
                 <button type="button" onClick={() => this.onDeleteGroupClick(checkboxGroup)}
@@ -150,7 +173,8 @@ export class HeWeightedCheckboxProperty implements ISortableSharedComponent {
           <he-weighted-checkbox-option-group-property
             activityModel={this.activityModel}
             propertyModel={checkboxGroup}
-            onExpressionChanged={e => eventHandler(e, checkboxGroup)}>
+            onExpressionChanged={e => eventHandler(e, checkboxGroup)}
+            style={{ display: displayGroupStyle }}>
           </he-weighted-checkbox-option-group-property>
           <br />
           <hr />

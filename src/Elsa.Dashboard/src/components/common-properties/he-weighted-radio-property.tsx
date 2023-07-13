@@ -122,7 +122,7 @@ export class HeWeightedRadioProperty implements ISortableSharedComponent, IDispl
       let scoreExpressionEditor = null;
       let prePopulatedExpressionEditor = null;
       let colWidth = "100%";
-      const optionsDisplay = this._toggle.component.dictionary[index] ?? "none";
+      const optionsDisplay = this.dictionary[index] ?? "none";
 
       return (
         <tbody>

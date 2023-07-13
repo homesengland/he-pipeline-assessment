@@ -12,16 +12,16 @@ import PlusIcon from '../../icons/plus_icon';
 import TrashCanIcon from '../../icons/trash-can';
 import { PropertyOutputTypes, RadioOptionsSyntax, SyntaxNames } from '../../constants/constants';
 import { NestedActivityDefinitionProperty } from '../../models/custom-component-models';
-import { toggleDictionaryDisplay } from '../../functions/display-toggle'
 import { ISortableSharedComponent, SortableComponent } from '../base-component';
 import SortIcon from '../../icons/sort_icon';
+import { DisplayToggle, IDisplayToggle } from '../display-toggle-component';
 
 @Component({
   tag: 'he-radio-options-property',
   shadow: false,
 })
 
-export class HeRadioOptionProperty implements ISortableSharedComponent {
+export class HeRadioOptionProperty implements ISortableSharedComponent, IDisplayToggle {
   @Prop() activityModel: ActivityModel;
   @Prop() propertyDescriptor: ActivityPropertyDescriptor;
   @Prop() propertyModel: ActivityDefinitionProperty;
@@ -29,10 +29,11 @@ export class HeRadioOptionProperty implements ISortableSharedComponent {
   @Prop() keyId: string;
   @State() properties: NestedActivityDefinitionProperty[];
   private _base: SortableComponent;
+  private _toggle: DisplayToggle;
 
   @State() iconProvider = new IconProvider();
   @Event() expressionChanged: EventEmitter<string>;
-  @State() optionsDisplayToggle: Map<string> = {};
+  @State() dictionary: Map<string> = {};
 
   @State() switchTextHeight: string = "";
 
@@ -42,10 +43,13 @@ export class HeRadioOptionProperty implements ISortableSharedComponent {
   multiExpressionEditor: HTMLElsaMultiExpressionEditorElement;
   syntaxSwitchCount: number = 0;
   container: HTMLElement;
+  displayValue: string = "table-row";
+  hiddenValue: string = "none";
 
 
   constructor() {
     this._base = new SortableComponent(this);
+    this._toggle = new DisplayToggle(this);
   }
 
 
@@ -93,8 +97,7 @@ export class HeRadioOptionProperty implements ISortableSharedComponent {
   }
 
   onToggleOptions(index: number) {
-    let tempValue = toggleDictionaryDisplay(index, this.optionsDisplayToggle)
-    this.optionsDisplayToggle = { ... this.optionsDisplayToggle, tempValue }
+    this._toggle.onToggleDisplay(index);
   }
 
   async componentWillRender() {
@@ -118,7 +121,7 @@ export class HeRadioOptionProperty implements ISortableSharedComponent {
       let expressionEditor = null;
       let prePopulatedExpressionEditor = null;
       let colWidth = "100%";
-      const optionsDisplay = this.optionsDisplayToggle[index] ?? "none";
+      const optionsDisplay = this._toggle.component.dictionary[index] ?? "none";
 
       return (
         <tbody>

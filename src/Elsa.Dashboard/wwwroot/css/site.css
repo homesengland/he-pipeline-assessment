@@ -180,6 +180,14 @@ elsa-monaco {
     display:inline-block;
 }
 
+.float-right {
+    float:right;
+}
+
+.float-left {
+    float:left;
+}
+
 :host(.dragTarget) {
   background: rgba(76, 72, 255, 0.75);
 }

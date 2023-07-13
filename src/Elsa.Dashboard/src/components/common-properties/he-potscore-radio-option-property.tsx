@@ -12,16 +12,16 @@ import PlusIcon from '../../icons/plus_icon';
 import TrashCanIcon from '../../icons/trash-can';
 import { PropertyOutputTypes, RadioOptionsSyntax, SyntaxNames } from '../../constants/constants';
 import { NestedActivityDefinitionProperty } from '../../models/custom-component-models';
-import { toggleDictionaryDisplay } from '../../functions/display-toggle'
 import { SortableComponent, ISortableSharedComponent } from '../base-component';
 import SortIcon from '../../icons/sort_icon';
+import { DisplayToggle, IDisplayToggle } from '../display-toggle-component';
 
 @Component({
   tag: 'he-potscore-radio-options-property',
   shadow: false,
 })
 
-export class HePotScoreRadioOptionProperty implements ISortableSharedComponent {
+export class HePotScoreRadioOptionProperty implements ISortableSharedComponent, IDisplayToggle {
 
   @Prop() activityModel: ActivityModel;
   @Prop() propertyDescriptor: ActivityPropertyDescriptor;
@@ -30,11 +30,14 @@ export class HePotScoreRadioOptionProperty implements ISortableSharedComponent {
   @State() properties: Array<NestedActivityDefinitionProperty> = [];
   @State() iconProvider = new IconProvider();
   @Event() expressionChanged: EventEmitter<string>;
-  @State() optionsDisplayToggle: Map<string> = {};
+  @State() dictionary: Map<string> = {};
   @State() switchTextHeight: string = "";
   @State() editorHeight: string = "2.75em"
+  displayValue: string = "table-row";
+  hiddenValue: string = "none";
 
-  _base: SortableComponent;
+  private _base: SortableComponent;
+  private _toggle: DisplayToggle;
   modelSyntax: string = SyntaxNames.Json;
   supportedSyntaxes: Array<string> = [SyntaxNames.JavaScript, SyntaxNames.Liquid, SyntaxNames.Literal];
   potScoreOptions: Array<string> = [];
@@ -45,6 +48,7 @@ export class HePotScoreRadioOptionProperty implements ISortableSharedComponent {
 
   constructor() {
     this._base = new SortableComponent(this);
+    this._toggle = new DisplayToggle(this);
   }
 
 
@@ -108,8 +112,7 @@ export class HePotScoreRadioOptionProperty implements ISortableSharedComponent {
   }
 
   onToggleOptions(index: number) {
-    let tempValue = toggleDictionaryDisplay(index, this.optionsDisplayToggle)
-    this.optionsDisplayToggle = { ... this.optionsDisplayToggle, tempValue }
+    this._toggle.onToggleDisplay(index);
   }
 
   async componentWillRender() {
@@ -134,7 +137,7 @@ export class HePotScoreRadioOptionProperty implements ISortableSharedComponent {
       let expressionEditor = null;
       let prePopulatedExpressionEditor = null;
       let colWidth = "100%";
-      const optionsDisplay = this.optionsDisplayToggle[index] ?? "none";
+      const optionsDisplay = this.dictionary[index] ?? "none";
 
       return (
         <tbody>

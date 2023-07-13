@@ -13,16 +13,16 @@ import PlusIcon from '../../icons/plus_icon';
 import TrashCanIcon from '../../icons/trash-can';
 import { DataTableSyntax, PropertyOutputTypes, SyntaxNames } from '../../constants/constants';
 import { NestedActivityDefinitionProperty } from '../../models/custom-component-models';
-import { toggleDictionaryDisplay } from '../../functions/display-toggle'
 import { ISortableSharedComponent, SortableComponent } from '../base-component';
 import SortIcon from '../../icons/sort_icon';
+import { DisplayToggle, IDisplayToggle } from '../display-toggle-component';
 
 @Component({
   tag: 'he-data-table-property',
   shadow: false,
 })
 
-export class HeDataTableProperty implements ISortableSharedComponent {
+export class HeDataTableProperty implements ISortableSharedComponent, IDisplayToggle {
 
   @Prop() activityModel: ActivityModel;
   @Prop() propertyDescriptor: ActivityPropertyDescriptor;
@@ -32,15 +32,17 @@ export class HeDataTableProperty implements ISortableSharedComponent {
   @State() properties: Array<NestedActivityDefinitionProperty> = [];
   @State() iconProvider = new IconProvider();
   @Event() expressionChanged: EventEmitter<string>;
-  @State() optionsDisplayToggle: Map<string> = {};
+  @State() dictionary: Map<string> = {};
 
   @State() switchTextHeight: string = "";
-
   @State() editorHeight: string = "2.75em"
+  displayValue: string = "table-row";
+  hiddenValue: string = "none";
 
   @State() inputOptions: Array<string> = [];
   @State() selectedInputType: string = "Currency";
   private _base: SortableComponent;
+  private _toggle: DisplayToggle;
 
   supportedSyntaxes: Array<string> = [SyntaxNames.JavaScript, SyntaxNames.Literal];
   multiExpressionEditor: HTMLElsaMultiExpressionEditorElement;
@@ -50,6 +52,7 @@ export class HeDataTableProperty implements ISortableSharedComponent {
 
   constructor() {
     this._base = new SortableComponent(this);
+    this._toggle = new DisplayToggle(this);
   }
 
   async componentWillLoad() {
@@ -107,8 +110,7 @@ export class HeDataTableProperty implements ISortableSharedComponent {
   }
 
   onToggleOptions(index: number) {
-    let tempValue = toggleDictionaryDisplay(index, this.optionsDisplayToggle)
-    this.optionsDisplayToggle = { ... this.optionsDisplayToggle, tempValue }
+    this._toggle.onToggleDisplay(index);
   }
 
   onInputTypeChange(e: Event) {
@@ -137,8 +139,8 @@ export class HeDataTableProperty implements ISortableSharedComponent {
 
       let expressionEditor = null;
       let colWidth = "100%";
-      const optionsDisplay = this.optionsDisplayToggle[index] ?? "none";
-      const sumTotalDisplay = (this.optionsDisplayToggle[index] && this.selectedInputType != "Text") ? this.optionsDisplayToggle[index]:  "none";
+      const optionsDisplay = this.dictionary[index] ?? "none";
+      const sumTotalDisplay = (this.dictionary[index] && this.selectedInputType != "Text") ? this.dictionary[index]:  "none";
       return (
         <tbody>
           <tr>

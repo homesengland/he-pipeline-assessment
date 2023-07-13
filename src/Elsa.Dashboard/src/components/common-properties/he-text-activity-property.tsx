@@ -12,15 +12,15 @@ import PlusIcon from '../../icons/plus_icon';
 import TrashCanIcon from '../../icons/trash-can';
 import { mapSyntaxToLanguage, parseJson, newOptionLetter, Map } from '../../utils/utils';
 import { PropertyOutputTypes, SyntaxNames, TextActivityOptionsSyntax } from '../../constants/constants';
-import { toggleDictionaryDisplay } from '../../functions/display-toggle';
 import { SortableComponent, ISortableSharedComponent } from '../base-component';
 import SortIcon from '../../icons/sort_icon';
+import { DisplayToggle, IDisplayToggle } from '../display-toggle-component';
 
 @Component({
   tag: 'he-text-activity-property',
   shadow: false,
 })
-export class TextActivityProperty implements ISortableSharedComponent {
+export class TextActivityProperty implements ISortableSharedComponent, IDisplayToggle {
 
   @Prop() activityModel: ActivityModel;
   @Prop() propertyDescriptor: ActivityPropertyDescriptor;
@@ -32,17 +32,20 @@ export class TextActivityProperty implements ISortableSharedComponent {
 
   supportedSyntaxes: Array<string> = [SyntaxNames.Literal, SyntaxNames.JavaScript];
 
-  @State() conditionDisplayHeightMap: Map<string> = {};
-  @State() optionsDisplayToggle: Map<string> = {};
-  @State() urlDisplayToggle: Map<string> = {};
+  @State() dictionary: Map<string> = {};
   private _base: SortableComponent;
+  private _toggle: DisplayToggle;
   container: HTMLElement;
+
 
   multiExpressionEditor: HTMLElsaMultiExpressionEditorElement;
   syntaxSwitchCount: number = 0;
+  displayValue: string = "table-row";
+  hiddenValue: string = "none";
 
   constructor() {
     this._base = new SortableComponent(this);
+    this._toggle = new DisplayToggle(this);
   }
 
   async componentWillLoad() {
@@ -92,14 +95,8 @@ export class TextActivityProperty implements ISortableSharedComponent {
     this.updatePropertyModel();
   }
 
-  onToggleOptions(index: number) {
-    let tempValue = toggleDictionaryDisplay(index, this.optionsDisplayToggle)
-    this.optionsDisplayToggle = { ... this.optionsDisplayToggle, tempValue }
-  }
-
-  onDisplayUrl(index: number) {
-    let tempValue = toggleDictionaryDisplay(index, this.urlDisplayToggle)
-    this.urlDisplayToggle = { ... this.urlDisplayToggle, tempValue }
+  onToggleOptions(index: any) {
+    this._toggle.onToggleDisplay(index);
   }
 
   render() {
@@ -119,19 +116,21 @@ export class TextActivityProperty implements ISortableSharedComponent {
       const textLanguage = mapSyntaxToLanguage(textSyntax);
       const conditionLanguage = mapSyntaxToLanguage(conditionSyntax);
       const urlLanguage = mapSyntaxToLanguage(SyntaxNames.Literal)
+      const urlIndex: string = index + "_url";
 
-      const conditionEditorHeight = this.conditionDisplayHeightMap[index] ?? "2.75em";
-      if (this.optionsDisplayToggle[index] == null && (guidanceChecked || hyperlinkChecked)) {
-        this.optionsDisplayToggle[index] = "table-row";
-        if (this.urlDisplayToggle[index] == null && hyperlinkChecked) {
-          this.urlDisplayToggle[index] = "table-row";
+      const conditionEditorHeight = "2.75em";
+
+      if (this.dictionary[index] == null && (guidanceChecked || hyperlinkChecked)) {
+        this.dictionary[index] = "table-row";
+        if (this.dictionary[urlIndex] == null && hyperlinkChecked) {
+          this.dictionary[urlIndex] = "table-row";
         }
       }
 
-      const optionsDisplay = this.optionsDisplayToggle[index] ?? "none";
+      const optionsDisplay = this._toggle.component.dictionary[index] ?? "none";
       const urlDisplay =
-        this.urlDisplayToggle[index] != null && this.optionsDisplayToggle[index] != null && this.optionsDisplayToggle[index] != "none"
-          ? this.urlDisplayToggle[index]
+        this.dictionary[urlIndex] != null && this.dictionary[index] != null && this.dictionary[index] != "none"
+          ? this.dictionary[urlIndex]
           : "none";
 
       let textExpressionEditor = null;
@@ -245,7 +244,7 @@ export class TextActivityProperty implements ISortableSharedComponent {
             </th>
             <td class="elsa-py-0">
               <input name="choice_input" type="checkbox" checked={hyperlinkChecked} value={nestedTextActivity.expressions[TextActivityOptionsSyntax.Hyperlink]}
-                onChange={e => [this._base.UpdateCheckbox(e, nestedTextActivity, TextActivityOptionsSyntax.Hyperlink), this.onDisplayUrl(index)]}
+                onChange={e => [this._base.UpdateCheckbox(e, nestedTextActivity, TextActivityOptionsSyntax.Hyperlink), this.onToggleOptions(urlIndex)]}
                 class="focus:elsa-ring-blue-500 elsa-h-8 elsa-w-8 elsa-text-blue-600 elsa-border-gray-300 elsa-rounded" />
             </td>
             <td>

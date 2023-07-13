@@ -11,16 +11,16 @@ import PlusIcon from '../../icons/plus_icon';
 import TrashCanIcon from '../../icons/trash-can';
 import { PropertyOutputTypes, RadioOptionsSyntax, SyntaxNames, WeightedScoringSyntax } from '../../constants/constants';
 import { NestedActivityDefinitionProperty } from '../../models/custom-component-models';
-import { toggleDictionaryDisplay } from '../../functions/display-toggle'
 import { SortableComponent, ISortableSharedComponent } from '../base-component';
 import SortIcon from '../../icons/sort_icon';
+import { DisplayToggle, IDisplayToggle } from '../display-toggle-component';
 
 @Component({
   tag: 'he-weighted-radio-option-group-property',
   shadow: false,
 })
 
-export class HeWeightedRadioOptionGroupProperty implements ISortableSharedComponent {
+export class HeWeightedRadioOptionGroupProperty implements ISortableSharedComponent, IDisplayToggle {
   
   @Prop() activityModel: ActivityModel;
   @Prop() propertyModel: NestedActivityDefinitionProperty;
@@ -29,9 +29,11 @@ export class HeWeightedRadioOptionGroupProperty implements ISortableSharedCompon
   @State() properties: Array<NestedActivityDefinitionProperty> = [];
   @State() iconProvider = new IconProvider();
   @Event() expressionChanged: EventEmitter<string>;
-  @State() optionsDisplayToggle: Map<string> = {};
+  @State() dictionary: Map<string> = {};
   @State() switchTextHeight: string = "";
   @State() editorHeight: string = "2.75em"
+  displayValue: string = "table-row";
+  hiddenValue: string = "none";
 
   supportedSyntaxes: Array<string> = [SyntaxNames.JavaScript, SyntaxNames.Liquid, SyntaxNames.Literal];
   multiExpressionEditor: HTMLElsaMultiExpressionEditorElement;
@@ -39,11 +41,15 @@ export class HeWeightedRadioOptionGroupProperty implements ISortableSharedCompon
   scoreSyntaxSwitchCount: number = 0;
   container: HTMLElement;
 
+
   private _base: SortableComponent;
+  private _toggle: DisplayToggle;
 
   constructor() {
     this._base = new SortableComponent(this);
+    this._toggle = new DisplayToggle(this);
   }
+
 
 
   async componentWillLoad() {
@@ -102,8 +108,7 @@ export class HeWeightedRadioOptionGroupProperty implements ISortableSharedCompon
   }
 
   onToggleOptions(index: number) {
-    let tempValue = toggleDictionaryDisplay(index, this.optionsDisplayToggle)
-    this.optionsDisplayToggle = { ... this.optionsDisplayToggle, tempValue }
+    this._toggle.onToggleDisplay(index);
   }
 
   render() {
@@ -126,7 +131,7 @@ export class HeWeightedRadioOptionGroupProperty implements ISortableSharedCompon
       let prePopulatedExpressionEditor = null;
       let scoreExpressionEditor = null;
       let colWidth = "100%";
-      const optionsDisplay = this.optionsDisplayToggle[index] ?? "none";
+      const optionsDisplay = this.dictionary[index] ?? "none";
 
       return (
         <tbody>
