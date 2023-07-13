@@ -150,16 +150,17 @@ export class HeWeightedCheckboxProperty implements ISortableSharedComponent, IDi
               <div class="elsa-flex-1 elsa-text-left elsa-mx-auto">
                 <h2 class="inline">Group: {checkboxGroup.name}</h2>
                 <button type="button" onClick={() => this.onToggleOptions(groupKey)}
-                  class="elsa-h-5 inline float-right elsa-px-5 elsa-w-5 elsa-mx-auto elsa-outline-none focus:elsa-outline-none"
+                  class="elsa-h-5 inline float-right elsa-w-5 elsa-mx-auto elsa-outline-none focus:elsa-outline-none"
                   style={{ display: minimiseIconStyle }}>
                   <MinimiseIcon options={this.iconProvider.getOptions()}></MinimiseIcon>
               </button>
                 <button type="button" onClick={() => this.onToggleOptions(groupKey)}
-                  class="elsa-h-5 float-right inline elsa-px-5 elsa-w-5 elsa-mx-auto elsa-outline-none focus:elsa-outline-none"
+                  class="elsa-h-5 float-right inline elsa-w-5 elsa-mx-auto elsa-outline-none focus:elsa-outline-none"
                   style={{ display: maximiseIconStyle }}                >
                   <MaximiseIcon options={this.iconProvider.getOptions()}></MaximiseIcon>
                 </button>
               </div>
+              <div class="px-3 inline"></div>
               <div>
                 <button type="button" onClick={() => this.onDeleteGroupClick(checkboxGroup)}
                   class="elsa-h-5 elsa-w-5 elsa-mx-auto elsa-outline-none focus:elsa-outline-none">
