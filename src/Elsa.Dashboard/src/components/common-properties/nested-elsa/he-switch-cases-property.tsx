@@ -76,7 +76,6 @@ export class HeSwitchCasesProperty {
     if (this.cases.length > 0) {
       activityIds = this.cases.map(function (v) {
         const caseNumberMatch = v.name.match(/^Case\s(\d+$)/);
-        console.log("match", caseNumberMatch);
         if (caseNumberMatch != null) {
            return parseInt(caseNumberMatch[1]);
         }

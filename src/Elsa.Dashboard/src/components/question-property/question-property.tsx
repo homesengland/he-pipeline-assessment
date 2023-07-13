@@ -83,7 +83,6 @@ export class QuestionProperty {
 
 
   render() {
-    console.log("Re-rendering question", this.questionModel);
     const displayManager = this.displayManager;
 
     const renderPropertyEditor = (property: NestedProperty) => {

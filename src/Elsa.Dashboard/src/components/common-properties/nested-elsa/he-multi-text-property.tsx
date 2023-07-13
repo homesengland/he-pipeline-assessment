@@ -62,8 +62,6 @@ export class HEMultiTextProperty {
   componentWillRender() {
     this.currentValue = this.propertyModel.expressions[SyntaxNames.Json] || '[]';
     this.keyId = getUniversalUniqueId();
-    console.log("propertyModel", this.propertyModel);
-    console.log("currentvalue", this.currentValue);
   }
 
   render() {

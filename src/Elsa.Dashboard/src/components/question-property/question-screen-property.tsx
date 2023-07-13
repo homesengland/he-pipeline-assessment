@@ -60,7 +60,6 @@ export class QuestionScreen {
     const choicesJson = propertyModel.expressions[SyntaxNames.QuestionList]
     this.questionModel = parseJson(choicesJson) || this.defaultActivityModel();
     this.questionModel.activities.forEach(x => x.descriptor = this.questionProperties);
-    console.log(this.questionModel);
     state.dictionaryGroups = this.dataDictionaryGroup;
   }
 

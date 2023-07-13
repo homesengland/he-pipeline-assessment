@@ -24,13 +24,10 @@ export class NestedPropertyList {
   }
 
   async componentWillLoad() {
-    console.log("Loading nested property list");
     this.nestedDescriptors.length > 0;
     let propertyJson = this.propertyModel.expressions[this.modelSyntax];
-    console.log("property  json", propertyJson)
     if (propertyJson != null && propertyJson != '') {
       this.properties = JSON.parse(propertyJson);
-      console.log("Properties after parse:", this.properties);
     }
     else {
       this.initPropertyModel();
@@ -38,7 +35,6 @@ export class NestedPropertyList {
   }
 
   initPropertyModel() {
-    console.log("Creating property model");
     var properties = this.nestedDescriptors.map(x => this.getOrCreateNestedProperty(x));
     this.properties = properties;
   }
@@ -63,7 +59,6 @@ export class NestedPropertyList {
   }
 
   updateQuestionModel() {
-    console.log("Updating question Model:", this.propertyModel);
     this.propertyModel.expressions[this.modelSyntax] = JSON.stringify(this.properties);
 /*    this.expressionChanged.emit(this.propertyModel.expressions[this.propertyModel.syntax])*/
   }
@@ -72,12 +67,10 @@ export class NestedPropertyList {
     event = event;
     property = property;
     let eventProperty = JSON.parse(event.detail);
-    console.log("Event property", eventProperty);
     let filteredProperties = this.properties.filter(x => x.value.name != eventProperty.name);
     let propertyToUpdate = this.properties.filter(x => x.value.name == eventProperty.name)[0];
     propertyToUpdate.value = eventProperty;
     this.properties = [...filteredProperties, propertyToUpdate];
-    console.log("Properties on Change", this.properties);
     this.updateQuestionModel();
   }
 
@@ -87,8 +80,6 @@ export class NestedPropertyList {
     const displayManager = this.displayManager;
 
     const renderPropertyEditor = (property: NestedProperty) => {
-      console.log("Properties whilst mapping", this.properties);
-      console.log("And the specific property in question", property);
 
       let content = displayManager.displayNested(this.activityModel, property, this.onPropertyChange.bind(this));
       let id = this.propertyModel.name+'_'+property.descriptor.name + "Category";

@@ -56,7 +56,6 @@ export class HeDataTableProperty implements ISortableSharedComponent, IDisplayTo
   }
 
   async componentWillLoad() {
-    console.log("Data table - component will load")
     this._base.componentWillLoad();
     this.inputOptions = ["Currency", "Decimal", "Integer", "Text"];
 

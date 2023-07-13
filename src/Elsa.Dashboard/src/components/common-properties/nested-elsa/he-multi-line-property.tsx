@@ -52,8 +52,6 @@ export class HEMultiLineProperty {
   componentWillRender() {
     const defaultSyntax = this.propertyDescriptor.defaultSyntax || SyntaxNames.Literal;
     this.currentValue = this.propertyModel.expressions[defaultSyntax] || undefined;
-    console.log("propertyModel", this.propertyModel);
-    console.log("currentvalue", this.currentValue);
     this.keyId = getUniversalUniqueId();
   }
 
