@@ -28,6 +28,7 @@ export class HeRadioOptionProperty implements ISortableSharedComponent, IDisplay
   @Prop() modelSyntax: string = SyntaxNames.Json;
   @Prop() keyId: string;
   @State() properties: NestedActivityDefinitionProperty[];
+
   private _base: SortableComponent;
   private _toggle: DisplayToggle;
 
@@ -59,6 +60,11 @@ export class HeRadioOptionProperty implements ISortableSharedComponent, IDisplay
 
   async componentDidLoad() {
     this._base.componentDidLoad();
+  }
+
+  async componentWillRender() {
+    console.log("Re rendering");
+    this.keyId = getUniversalUniqueId();
   }
 
   onDefaultSyntaxValueChanged(e: CustomEvent) {
@@ -100,9 +106,7 @@ export class HeRadioOptionProperty implements ISortableSharedComponent, IDisplay
     this._toggle.onToggleDisplay(index);
   }
 
-  async componentWillRender() {
-     this.keyId = getUniversalUniqueId();
-  }
+
 
   render() {
     const cases = this.properties;
@@ -124,7 +128,7 @@ export class HeRadioOptionProperty implements ISortableSharedComponent, IDisplay
       const optionsDisplay = this._toggle.component.dictionary[index] ?? "none";
 
       return (
-        <tbody>
+        <tbody key={this.keyId}>
           <tr>
             <th class="sortablejs-custom-handle"><SortIcon options={this.iconProvider.getOptions()}></SortIcon>
             </th>
@@ -140,7 +144,7 @@ export class HeRadioOptionProperty implements ISortableSharedComponent, IDisplay
             <th
               class="elsa-py-3 elsa-text-left elsa-text-xs elsa-font-medium elsa-text-gray-500 elsa-tracking-wider elsa-w-2/12">Identifier
             </th>
-            <td class="elsa-py-2 elsa-pr-5" colSpan={2} style={{ width: colWidth }}>
+            <td class="elsa-py-2" colSpan={2} style={{ width: colWidth }}>
               <input type="text" value={radioOption.name} onChange={e => this._base.UpdateName(e, radioOption)}
               class="focus:elsa-ring-blue-500 focus:elsa-border-blue-500 elsa-block elsa-w-full elsa-min-w-0 elsa-rounded-md sm:elsa-text-sm elsa-border-gray-300" />
             </td>
@@ -151,7 +155,7 @@ export class HeRadioOptionProperty implements ISortableSharedComponent, IDisplay
               <th
                 class="elsa-py-3 elsa-text-left elsa-text-xs elsa-font-medium elsa-text-gray-500 elsa-tracking-wider elsa-w-2/12">Answer
             </th>
-            <td class="elsa-py-2 pl-5" colSpan={2} style={{ width: colWidth }}>
+            <td class="elsa-py-2" colSpan={2} style={{ width: colWidth }}>
             <div class="elsa-mt-1 elsa-relative elsa-rounded-md elsa-shadow-sm">
               <elsa-expression-editor
                 key={`expression-editor-${index}-${this.syntaxSwitchCount}-${this.keyId}`}

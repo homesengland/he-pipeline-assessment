@@ -127,7 +127,7 @@ export class HeCheckboxOptionProperty implements ISortableSharedComponent, IDisp
       const optionsDisplay = this.dictionary[index] ?? "none";
 
       return (
-        <tbody>
+        <tbody key={this.keyId}>
           <tr>
             <th class="sortablejs-custom-handle"><SortIcon options={this.iconProvider.getOptions()}></SortIcon>
             </th>
