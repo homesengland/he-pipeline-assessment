@@ -9,30 +9,27 @@ import { ActivityDefinitionProperty, ActivityModel, ActivityPropertyDescriptor }
 import { VNode } from "@stencil/core";
 import { DataDictionaryGroup, HeActivityPropertyDescriptor, NestedActivityDefinitionProperty, NestedPropertyModel } from "./models/custom-component-models";
 export namespace Components {
-    interface CustomTextProperty {
-        "activityModel": ActivityModel;
-        "editorHeight": string;
-        "propertyDescriptor": ActivityPropertyDescriptor;
-        "propertyModel": ActivityDefinitionProperty;
-        "singleLine": boolean;
-    }
     interface HeCheckListProperty {
         "activityModel": ActivityModel;
+        "keyId": string;
         "propertyDescriptor": ActivityPropertyDescriptor;
         "propertyModel": ActivityDefinitionProperty;
     }
     interface HeCheckboxOptionsProperty {
         "activityModel": ActivityModel;
+        "modelSyntax": string;
         "propertyDescriptor": ActivityPropertyDescriptor;
         "propertyModel": ActivityDefinitionProperty;
     }
     interface HeCheckboxProperty {
         "activityModel": ActivityModel;
+        "keyId": string;
         "propertyDescriptor": ActivityPropertyDescriptor;
         "propertyModel": ActivityDefinitionProperty;
     }
     interface HeDataTableProperty {
         "activityModel": ActivityModel;
+        "modelSyntax": string;
         "propertyDescriptor": ActivityPropertyDescriptor;
         "propertyModel": ActivityDefinitionProperty;
     }
@@ -41,16 +38,19 @@ export namespace Components {
     }
     interface HeJsonProperty {
         "activityModel": ActivityModel;
+        "keyId": string;
         "propertyDescriptor": ActivityPropertyDescriptor;
         "propertyModel": ActivityDefinitionProperty;
     }
     interface HeMultiLineProperty {
         "activityModel": ActivityModel;
+        "keyId": string;
         "propertyDescriptor": ActivityPropertyDescriptor;
         "propertyModel": ActivityDefinitionProperty;
     }
     interface HeMultiTextProperty {
         "activityModel": ActivityModel;
+        "keyId": string;
         "propertyDescriptor": ActivityPropertyDescriptor;
         "propertyModel": ActivityDefinitionProperty;
     }
@@ -66,49 +66,50 @@ export namespace Components {
     }
     interface HeRadioOptionsProperty {
         "activityModel": ActivityModel;
+        "modelSyntax": string;
         "propertyDescriptor": ActivityPropertyDescriptor;
         "propertyModel": ActivityDefinitionProperty;
     }
-    interface HeRadioOptionsPropertyPoc {
-        "activityModel": ActivityModel;
-        "propertyDescriptor": HeActivityPropertyDescriptor;
-        "propertyModel": NestedActivityDefinitionProperty;
-    }
     interface HeSingleLineProperty {
         "activityModel": ActivityModel;
+        "keyId": string;
         "propertyDescriptor": ActivityPropertyDescriptor;
         "propertyModel": ActivityDefinitionProperty;
     }
     interface HeSwitchAnswersProperty {
         "activityModel": ActivityModel;
+        "keyId": string;
         "propertyDescriptor": ActivityPropertyDescriptor;
         "propertyModel": ActivityDefinitionProperty;
     }
     interface HeTextActivityProperty {
         "activityModel": ActivityModel;
+        "modelSyntax": string;
         "propertyDescriptor": ActivityPropertyDescriptor;
         "propertyModel": ActivityDefinitionProperty;
     }
     interface HeWeightedCheckboxOptionGroupProperty {
         "activityModel": ActivityModel;
+        "keyId": string;
+        "modelSyntax": string;
+        "propertyDescriptor": ActivityPropertyDescriptor;
         "propertyModel": NestedActivityDefinitionProperty;
     }
     interface HeWeightedCheckboxProperty {
         "activityModel": ActivityModel;
+        "modelSyntax": string;
         "propertyDescriptor": ActivityPropertyDescriptor;
         "propertyModel": ActivityDefinitionProperty;
     }
     interface HeWeightedRadioOptionGroupProperty {
         "activityModel": ActivityModel;
+        "modelSyntax": string;
+        "propertyDescriptor": ActivityPropertyDescriptor;
         "propertyModel": NestedActivityDefinitionProperty;
     }
     interface HeWeightedRadioProperty {
         "activityModel": ActivityModel;
-        "propertyDescriptor": ActivityPropertyDescriptor;
-        "propertyModel": ActivityDefinitionProperty;
-    }
-    interface HeWeightedRadioPropertyOld {
-        "activityModel": ActivityModel;
+        "modelSyntax": string;
         "propertyDescriptor": ActivityPropertyDescriptor;
         "propertyModel": ActivityDefinitionProperty;
     }
@@ -175,10 +176,6 @@ export interface HeRadioOptionsPropertyCustomEvent<T> extends CustomEvent<T> {
     detail: T;
     target: HTMLHeRadioOptionsPropertyElement;
 }
-export interface HeRadioOptionsPropertyPocCustomEvent<T> extends CustomEvent<T> {
-    detail: T;
-    target: HTMLHeRadioOptionsPropertyPocElement;
-}
 export interface HeSingleLinePropertyCustomEvent<T> extends CustomEvent<T> {
     detail: T;
     target: HTMLHeSingleLinePropertyElement;
@@ -207,10 +204,6 @@ export interface HeWeightedRadioPropertyCustomEvent<T> extends CustomEvent<T> {
     detail: T;
     target: HTMLHeWeightedRadioPropertyElement;
 }
-export interface HeWeightedRadioPropertyOldCustomEvent<T> extends CustomEvent<T> {
-    detail: T;
-    target: HTMLHeWeightedRadioPropertyOldElement;
-}
 export interface NestedPropertyListCustomEvent<T> extends CustomEvent<T> {
     detail: T;
     target: HTMLNestedPropertyListElement;
@@ -220,12 +213,6 @@ export interface QuestionPropertyCustomEvent<T> extends CustomEvent<T> {
     target: HTMLQuestionPropertyElement;
 }
 declare global {
-    interface HTMLCustomTextPropertyElement extends Components.CustomTextProperty, HTMLStencilElement {
-    }
-    var HTMLCustomTextPropertyElement: {
-        prototype: HTMLCustomTextPropertyElement;
-        new (): HTMLCustomTextPropertyElement;
-    };
     interface HTMLHeCheckListPropertyElement extends Components.HeCheckListProperty, HTMLStencilElement {
     }
     var HTMLHeCheckListPropertyElement: {
@@ -292,12 +279,6 @@ declare global {
         prototype: HTMLHeRadioOptionsPropertyElement;
         new (): HTMLHeRadioOptionsPropertyElement;
     };
-    interface HTMLHeRadioOptionsPropertyPocElement extends Components.HeRadioOptionsPropertyPoc, HTMLStencilElement {
-    }
-    var HTMLHeRadioOptionsPropertyPocElement: {
-        prototype: HTMLHeRadioOptionsPropertyPocElement;
-        new (): HTMLHeRadioOptionsPropertyPocElement;
-    };
     interface HTMLHeSingleLinePropertyElement extends Components.HeSingleLineProperty, HTMLStencilElement {
     }
     var HTMLHeSingleLinePropertyElement: {
@@ -340,12 +321,6 @@ declare global {
         prototype: HTMLHeWeightedRadioPropertyElement;
         new (): HTMLHeWeightedRadioPropertyElement;
     };
-    interface HTMLHeWeightedRadioPropertyOldElement extends Components.HeWeightedRadioPropertyOld, HTMLStencilElement {
-    }
-    var HTMLHeWeightedRadioPropertyOldElement: {
-        prototype: HTMLHeWeightedRadioPropertyOldElement;
-        new (): HTMLHeWeightedRadioPropertyOldElement;
-    };
     interface HTMLNestedPropertyListElement extends Components.NestedPropertyList, HTMLStencilElement {
     }
     var HTMLNestedPropertyListElement: {
@@ -371,7 +346,6 @@ declare global {
         new (): HTMLSwitchAnswersPropertyElement;
     };
     interface HTMLElementTagNameMap {
-        "custom-text-property": HTMLCustomTextPropertyElement;
         "he-check-list-property": HTMLHeCheckListPropertyElement;
         "he-checkbox-options-property": HTMLHeCheckboxOptionsPropertyElement;
         "he-checkbox-property": HTMLHeCheckboxPropertyElement;
@@ -383,7 +357,6 @@ declare global {
         "he-potscore-radio-options-property": HTMLHePotscoreRadioOptionsPropertyElement;
         "he-question-data-dictionary-property": HTMLHeQuestionDataDictionaryPropertyElement;
         "he-radio-options-property": HTMLHeRadioOptionsPropertyElement;
-        "he-radio-options-property-poc": HTMLHeRadioOptionsPropertyPocElement;
         "he-single-line-property": HTMLHeSingleLinePropertyElement;
         "he-switch-answers-property": HTMLHeSwitchAnswersPropertyElement;
         "he-text-activity-property": HTMLHeTextActivityPropertyElement;
@@ -391,7 +364,6 @@ declare global {
         "he-weighted-checkbox-property": HTMLHeWeightedCheckboxPropertyElement;
         "he-weighted-radio-option-group-property": HTMLHeWeightedRadioOptionGroupPropertyElement;
         "he-weighted-radio-property": HTMLHeWeightedRadioPropertyElement;
-        "he-weighted-radio-property-old": HTMLHeWeightedRadioPropertyOldElement;
         "nested-property-list": HTMLNestedPropertyListElement;
         "question-property": HTMLQuestionPropertyElement;
         "question-screen-property": HTMLQuestionScreenPropertyElement;
@@ -399,33 +371,30 @@ declare global {
     }
 }
 declare namespace LocalJSX {
-    interface CustomTextProperty {
-        "activityModel"?: ActivityModel;
-        "editorHeight"?: string;
-        "propertyDescriptor"?: ActivityPropertyDescriptor;
-        "propertyModel"?: ActivityDefinitionProperty;
-        "singleLine"?: boolean;
-    }
     interface HeCheckListProperty {
         "activityModel"?: ActivityModel;
+        "keyId"?: string;
         "onExpressionChanged"?: (event: HeCheckListPropertyCustomEvent<string>) => void;
         "propertyDescriptor"?: ActivityPropertyDescriptor;
         "propertyModel"?: ActivityDefinitionProperty;
     }
     interface HeCheckboxOptionsProperty {
         "activityModel"?: ActivityModel;
+        "modelSyntax"?: string;
         "onExpressionChanged"?: (event: HeCheckboxOptionsPropertyCustomEvent<string>) => void;
         "propertyDescriptor"?: ActivityPropertyDescriptor;
         "propertyModel"?: ActivityDefinitionProperty;
     }
     interface HeCheckboxProperty {
         "activityModel"?: ActivityModel;
+        "keyId"?: string;
         "onExpressionChanged"?: (event: HeCheckboxPropertyCustomEvent<string>) => void;
         "propertyDescriptor"?: ActivityPropertyDescriptor;
         "propertyModel"?: ActivityDefinitionProperty;
     }
     interface HeDataTableProperty {
         "activityModel"?: ActivityModel;
+        "modelSyntax"?: string;
         "onExpressionChanged"?: (event: HeDataTablePropertyCustomEvent<string>) => void;
         "propertyDescriptor"?: ActivityPropertyDescriptor;
         "propertyModel"?: ActivityDefinitionProperty;
@@ -435,18 +404,21 @@ declare namespace LocalJSX {
     }
     interface HeJsonProperty {
         "activityModel"?: ActivityModel;
+        "keyId"?: string;
         "onExpressionChanged"?: (event: HeJsonPropertyCustomEvent<string>) => void;
         "propertyDescriptor"?: ActivityPropertyDescriptor;
         "propertyModel"?: ActivityDefinitionProperty;
     }
     interface HeMultiLineProperty {
         "activityModel"?: ActivityModel;
+        "keyId"?: string;
         "onExpressionChanged"?: (event: HeMultiLinePropertyCustomEvent<string>) => void;
         "propertyDescriptor"?: ActivityPropertyDescriptor;
         "propertyModel"?: ActivityDefinitionProperty;
     }
     interface HeMultiTextProperty {
         "activityModel"?: ActivityModel;
+        "keyId"?: string;
         "onExpressionChanged"?: (event: HeMultiTextPropertyCustomEvent<string>) => void;
         "propertyDescriptor"?: ActivityPropertyDescriptor;
         "propertyModel"?: ActivityDefinitionProperty;
@@ -465,59 +437,58 @@ declare namespace LocalJSX {
     }
     interface HeRadioOptionsProperty {
         "activityModel"?: ActivityModel;
+        "modelSyntax"?: string;
         "onExpressionChanged"?: (event: HeRadioOptionsPropertyCustomEvent<string>) => void;
         "propertyDescriptor"?: ActivityPropertyDescriptor;
         "propertyModel"?: ActivityDefinitionProperty;
     }
-    interface HeRadioOptionsPropertyPoc {
-        "activityModel"?: ActivityModel;
-        "onExpressionChanged"?: (event: HeRadioOptionsPropertyPocCustomEvent<string>) => void;
-        "propertyDescriptor"?: HeActivityPropertyDescriptor;
-        "propertyModel"?: NestedActivityDefinitionProperty;
-    }
     interface HeSingleLineProperty {
         "activityModel"?: ActivityModel;
+        "keyId"?: string;
         "onExpressionChanged"?: (event: HeSingleLinePropertyCustomEvent<string>) => void;
         "propertyDescriptor"?: ActivityPropertyDescriptor;
         "propertyModel"?: ActivityDefinitionProperty;
     }
     interface HeSwitchAnswersProperty {
         "activityModel"?: ActivityModel;
+        "keyId"?: string;
         "onExpressionChanged"?: (event: HeSwitchAnswersPropertyCustomEvent<string>) => void;
         "propertyDescriptor"?: ActivityPropertyDescriptor;
         "propertyModel"?: ActivityDefinitionProperty;
     }
     interface HeTextActivityProperty {
         "activityModel"?: ActivityModel;
+        "modelSyntax"?: string;
         "onExpressionChanged"?: (event: HeTextActivityPropertyCustomEvent<string>) => void;
         "propertyDescriptor"?: ActivityPropertyDescriptor;
         "propertyModel"?: ActivityDefinitionProperty;
     }
     interface HeWeightedCheckboxOptionGroupProperty {
         "activityModel"?: ActivityModel;
+        "keyId"?: string;
+        "modelSyntax"?: string;
         "onExpressionChanged"?: (event: HeWeightedCheckboxOptionGroupPropertyCustomEvent<string>) => void;
+        "propertyDescriptor"?: ActivityPropertyDescriptor;
         "propertyModel"?: NestedActivityDefinitionProperty;
     }
     interface HeWeightedCheckboxProperty {
         "activityModel"?: ActivityModel;
+        "modelSyntax"?: string;
         "onExpressionChanged"?: (event: HeWeightedCheckboxPropertyCustomEvent<string>) => void;
         "propertyDescriptor"?: ActivityPropertyDescriptor;
         "propertyModel"?: ActivityDefinitionProperty;
     }
     interface HeWeightedRadioOptionGroupProperty {
         "activityModel"?: ActivityModel;
+        "modelSyntax"?: string;
         "onExpressionChanged"?: (event: HeWeightedRadioOptionGroupPropertyCustomEvent<string>) => void;
+        "propertyDescriptor"?: ActivityPropertyDescriptor;
         "propertyModel"?: NestedActivityDefinitionProperty;
     }
     interface HeWeightedRadioProperty {
         "activityModel"?: ActivityModel;
+        "modelSyntax"?: string;
         "onExpressionChanged"?: (event: HeWeightedRadioPropertyCustomEvent<string>) => void;
-        "propertyDescriptor"?: ActivityPropertyDescriptor;
-        "propertyModel"?: ActivityDefinitionProperty;
-    }
-    interface HeWeightedRadioPropertyOld {
-        "activityModel"?: ActivityModel;
-        "onExpressionChanged"?: (event: HeWeightedRadioPropertyOldCustomEvent<string>) => void;
         "propertyDescriptor"?: ActivityPropertyDescriptor;
         "propertyModel"?: ActivityDefinitionProperty;
     }
@@ -546,7 +517,6 @@ declare namespace LocalJSX {
         "propertyModel"?: ActivityDefinitionProperty;
     }
     interface IntrinsicElements {
-        "custom-text-property": CustomTextProperty;
         "he-check-list-property": HeCheckListProperty;
         "he-checkbox-options-property": HeCheckboxOptionsProperty;
         "he-checkbox-property": HeCheckboxProperty;
@@ -558,7 +528,6 @@ declare namespace LocalJSX {
         "he-potscore-radio-options-property": HePotscoreRadioOptionsProperty;
         "he-question-data-dictionary-property": HeQuestionDataDictionaryProperty;
         "he-radio-options-property": HeRadioOptionsProperty;
-        "he-radio-options-property-poc": HeRadioOptionsPropertyPoc;
         "he-single-line-property": HeSingleLineProperty;
         "he-switch-answers-property": HeSwitchAnswersProperty;
         "he-text-activity-property": HeTextActivityProperty;
@@ -566,7 +535,6 @@ declare namespace LocalJSX {
         "he-weighted-checkbox-property": HeWeightedCheckboxProperty;
         "he-weighted-radio-option-group-property": HeWeightedRadioOptionGroupProperty;
         "he-weighted-radio-property": HeWeightedRadioProperty;
-        "he-weighted-radio-property-old": HeWeightedRadioPropertyOld;
         "nested-property-list": NestedPropertyList;
         "question-property": QuestionProperty;
         "question-screen-property": QuestionScreenProperty;
@@ -577,7 +545,6 @@ export { LocalJSX as JSX };
 declare module "@stencil/core" {
     export namespace JSX {
         interface IntrinsicElements {
-            "custom-text-property": LocalJSX.CustomTextProperty & JSXBase.HTMLAttributes<HTMLCustomTextPropertyElement>;
             "he-check-list-property": LocalJSX.HeCheckListProperty & JSXBase.HTMLAttributes<HTMLHeCheckListPropertyElement>;
             "he-checkbox-options-property": LocalJSX.HeCheckboxOptionsProperty & JSXBase.HTMLAttributes<HTMLHeCheckboxOptionsPropertyElement>;
             "he-checkbox-property": LocalJSX.HeCheckboxProperty & JSXBase.HTMLAttributes<HTMLHeCheckboxPropertyElement>;
@@ -589,7 +556,6 @@ declare module "@stencil/core" {
             "he-potscore-radio-options-property": LocalJSX.HePotscoreRadioOptionsProperty & JSXBase.HTMLAttributes<HTMLHePotscoreRadioOptionsPropertyElement>;
             "he-question-data-dictionary-property": LocalJSX.HeQuestionDataDictionaryProperty & JSXBase.HTMLAttributes<HTMLHeQuestionDataDictionaryPropertyElement>;
             "he-radio-options-property": LocalJSX.HeRadioOptionsProperty & JSXBase.HTMLAttributes<HTMLHeRadioOptionsPropertyElement>;
-            "he-radio-options-property-poc": LocalJSX.HeRadioOptionsPropertyPoc & JSXBase.HTMLAttributes<HTMLHeRadioOptionsPropertyPocElement>;
             "he-single-line-property": LocalJSX.HeSingleLineProperty & JSXBase.HTMLAttributes<HTMLHeSingleLinePropertyElement>;
             "he-switch-answers-property": LocalJSX.HeSwitchAnswersProperty & JSXBase.HTMLAttributes<HTMLHeSwitchAnswersPropertyElement>;
             "he-text-activity-property": LocalJSX.HeTextActivityProperty & JSXBase.HTMLAttributes<HTMLHeTextActivityPropertyElement>;
@@ -597,7 +563,6 @@ declare module "@stencil/core" {
             "he-weighted-checkbox-property": LocalJSX.HeWeightedCheckboxProperty & JSXBase.HTMLAttributes<HTMLHeWeightedCheckboxPropertyElement>;
             "he-weighted-radio-option-group-property": LocalJSX.HeWeightedRadioOptionGroupProperty & JSXBase.HTMLAttributes<HTMLHeWeightedRadioOptionGroupPropertyElement>;
             "he-weighted-radio-property": LocalJSX.HeWeightedRadioProperty & JSXBase.HTMLAttributes<HTMLHeWeightedRadioPropertyElement>;
-            "he-weighted-radio-property-old": LocalJSX.HeWeightedRadioPropertyOld & JSXBase.HTMLAttributes<HTMLHeWeightedRadioPropertyOldElement>;
             "nested-property-list": LocalJSX.NestedPropertyList & JSXBase.HTMLAttributes<HTMLNestedPropertyListElement>;
             "question-property": LocalJSX.QuestionProperty & JSXBase.HTMLAttributes<HTMLQuestionPropertyElement>;
             "question-screen-property": LocalJSX.QuestionScreenProperty & JSXBase.HTMLAttributes<HTMLQuestionScreenPropertyElement>;

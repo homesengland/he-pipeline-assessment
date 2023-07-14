@@ -1,8 +1,8 @@
 import { ActivityModel, ActivityPropertyDescriptor } from "../models/elsa-interfaces";
 import { h } from "@stencil/core";
-import { getOrCreateProperty } from "../utils/utils";
 import { HePropertyDisplayDriver } from "./display-managers/display-manager";
 import { NestedProperty } from "../models/custom-component-models";
+import { getOrCreateProperty } from "../utils/utils";
 
 export class HeCheckboxOptionsDriver implements HePropertyDisplayDriver {
 

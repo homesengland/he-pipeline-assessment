@@ -29,12 +29,21 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Compile Remove="src\components\interfaces\**" />
+    <Content Remove="src\components\interfaces\**" />
+    <EmbeddedResource Remove="src\components\interfaces\**" />
+    <None Remove="src\components\interfaces\**" />
+  </ItemGroup>
+
+  <ItemGroup>
     <Compile Remove="RequestHelper.cs" />
   </ItemGroup>
 
   <ItemGroup>
+    <None Remove="src\components\base-component.ts" />
     <None Remove="src\components\common-properties\he-text-activity-property.tsx" />
     <None Remove="src\components\common-properties\nested-properties\nested-property-list.tsx" />
+    <None Remove="src\components\display-toggle-component.ts" />
     <None Remove="src\constants\Constants.ts" />
     <None Remove="src\functions\multiExpressionEditorUpdate.tsx" />
     <None Remove="src\functions\updateModel.tsx" />
@@ -70,8 +79,12 @@
   </ItemGroup>
 
   <ItemGroup>
+    <TypeScriptCompile Include="src\components\display-toggle-component.ts">
+      <SubType>Code</SubType>
+    </TypeScriptCompile>
     <TypeScriptCompile Include="src\components\common-properties\he-text-activity-property.tsx" />
     <TypeScriptCompile Include="src\components\common-properties\nested-properties\nested-property-list.tsx" />
+    <TypeScriptCompile Include="src\components\base-component.ts" />
     <TypeScriptCompile Include="src\functions\multiExpressionEditorUpdate.tsx">
       <SubType>Code</SubType>
     </TypeScriptCompile>
@@ -108,7 +121,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="src\components\interfaces\" />
     <Folder Include="Views\" />
   </ItemGroup>
 

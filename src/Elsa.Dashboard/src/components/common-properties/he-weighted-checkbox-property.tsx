@@ -6,59 +6,76 @@ import {
   HTMLElsaMultiExpressionEditorElement,
   IntellisenseContext
 } from "../../models/elsa-interfaces";
-import {  parseJson, ToLetter, Map } from "../../utils/utils";
+import { parseJson, newOptionLetter, Map } from "../../utils/utils";
 import { IconProvider } from "../providers/icon-provider/icon-provider";
 import PlusIcon from '../../icons/plus_icon';
 import TrashCanIcon from '../../icons/trash-can';
 import { PropertyOutputTypes, SyntaxNames, WeightedScoringSyntax } from '../../constants/constants';
 import { NestedActivityDefinitionProperty } from '../../models/custom-component-models';
-import { ToggleDictionaryDisplay } from '../../functions/display-toggle'
+import { SortableComponent, ISortableSharedComponent } from '../base-component';
+import SortIcon from '../../icons/sort_icon';
+import { DisplayToggle, IDisplayToggle } from '../display-toggle-component';
+import MaximiseIcon from '../../icons/maximise_icon';
+import MinimiseIcon from '../../icons/minimise_icon';
 
 @Component({
   tag: 'he-weighted-checkbox-property',
   shadow: false,
 })
 
-export class HeWeightedCheckboxProperty {
+export class HeWeightedCheckboxProperty implements ISortableSharedComponent, IDisplayToggle {
 
   @Prop() activityModel: ActivityModel;
   @Prop() propertyDescriptor: ActivityPropertyDescriptor;
   @Prop() propertyModel: ActivityDefinitionProperty;
-  @State() groups: Array<NestedActivityDefinitionProperty> = [];
+  @Prop() modelSyntax: string = SyntaxNames.Json;
+  @State() keyId: string;
+  @State() properties: Array<NestedActivityDefinitionProperty> = [];
+  
   @State() iconProvider = new IconProvider();
   @Event() expressionChanged: EventEmitter<string>;
-  @State() optionsDisplayToggle: Map<string> = {};
-
-
-
+  @State() dictionary: Map<string> = {};
   @State() switchTextHeight: string = "";
-
   @State() editorHeight: string = "2.75em"
 
   supportedSyntaxes: Array<string> = [SyntaxNames.JavaScript, SyntaxNames.Liquid, SyntaxNames.Literal];
   multiExpressionEditor: HTMLElsaMultiExpressionEditorElement;
   syntaxSwitchCount: number = 0;
   scoreSyntaxSwitchCount: number = 0;
+  container: HTMLElement;
+  displayValue: string = "table-row";
+  hiddenValue: string = "none";
+  private _base: SortableComponent;
+  private _toggle: DisplayToggle;
+
+  constructor() {
+    this._base = new SortableComponent(this);
+    this._toggle = new DisplayToggle(this);
+  }
 
   async componentWillLoad() {
-    const propertyModel = this.propertyModel;
-    const optionsJson = propertyModel.expressions[SyntaxNames.Json];
-    this.groups = parseJson(optionsJson) || [];
+    this._base.componentWillLoad();
+  }
+
+  async componentDidLoad() {
+    this._base.componentDidLoad();
+  }
+
+  async componentWillRender() {
+    this._base.componentWillRender();
   }
 
 
   updatePropertyModel() {
-    this.propertyModel.expressions[SyntaxNames.Json] = JSON.stringify(this.groups);
-    this.multiExpressionEditor.expressions[SyntaxNames.Json] = JSON.stringify(this.groups, null, 2);
-    this.expressionChanged.emit(JSON.stringify(this.propertyModel))
+    this._base.updatePropertyModel();
   }
 
   onDefaultSyntaxValueChanged(e: CustomEvent) {
-    this.groups = e.detail;
+    this.properties = e.detail;
   }
 
   onAddGroupClick() {
-    const groupName = ToLetter(this.groups.length + 1);
+    const groupName = newOptionLetter(this._base.IdentifierArray());
     const newGroup: NestedActivityDefinitionProperty = {
       name: groupName,
       syntax: SyntaxNames.Json,
@@ -67,13 +84,12 @@ export class HeWeightedCheckboxProperty {
         [WeightedScoringSyntax.GroupArrayScore]: ''
       }, type: PropertyOutputTypes.CheckboxGroup
     };
-    this.groups = [... this.groups, newGroup];
+    this.properties = [... this.properties, newGroup];
     this.updatePropertyModel();
-    console.log("Added Group, property Updated");
   }
 
   onDeleteGroupClick(checkboxGroup: NestedActivityDefinitionProperty) {
-    this.groups = this.groups.filter(x => x != checkboxGroup);
+    this.properties = this.properties.filter(x => x != checkboxGroup);
     this.updatePropertyModel();
   }
 
@@ -94,7 +110,7 @@ export class HeWeightedCheckboxProperty {
       return;
 
     this.propertyModel.expressions[SyntaxNames.Json] = json;
-    this.groups = parsed;
+    this.properties = parsed;
   }
 
   onMultiExpressionEditorSyntaxChanged(e: CustomEvent<string>) {
@@ -102,31 +118,48 @@ export class HeWeightedCheckboxProperty {
     this.syntaxSwitchCount++;
   }
 
-  onExpandSwitchArea() {
-    this.editorHeight == "2.75em" ? this.editorHeight = "8em" : this.editorHeight = "2.75em"
-  }
-
-  onToggleOptions(index: number) {
-    let tempValue = ToggleDictionaryDisplay(index, this.optionsDisplayToggle)
-    this.optionsDisplayToggle = { ... this.optionsDisplayToggle, tempValue }
+  onToggleOptions(index: any) {
+    this._toggle.onToggleDisplay(index);
   }
 
   render() {
-    const answerGroups = this.groups;
+    const answerGroups = this.properties;
     const json = JSON.stringify(answerGroups, null, 2);
 
     const renderCheckboxGroups = (checkboxGroup: NestedActivityDefinitionProperty) => {
 
+
       const eventHandler = this.onPropertyExpressionChange.bind(this);
+      const groupKey = "group_" + checkboxGroup.name;
+      const isMinimised = this.dictionary[groupKey] != null && this.dictionary[groupKey] == this.displayValue;
+
+      let minimiseIconStyle = isMinimised ? this.hiddenValue : this.displayValue;
+      let maximiseIconStyle = !isMinimised ? this.hiddenValue : this.displayValue;
+      let displayGroupStyle = isMinimised ? this.hiddenValue : "";
+
 
       return (
-        <div>
+        <div key={this.keyId}>
           <br />
           <div class="elsa-mb-1">
             <div class="elsa-flex">
-              <div class="elsa-flex-1 elsa-mx-auto">
-                <h3>Group: {checkboxGroup.name}</h3>
+              <div class="elsa-flex-1 sortablejs-custom-handle">
+                <SortIcon options={this.iconProvider.getOptions()}></SortIcon>
               </div>
+              <div class="elsa-flex-1 elsa-text-left elsa-mx-auto">
+                <h2 class="inline">Group: {checkboxGroup.name}</h2>
+                <button type="button" onClick={() => this.onToggleOptions(groupKey)}
+                  class="elsa-h-5 inline float-right elsa-w-5 elsa-mx-auto elsa-outline-none focus:elsa-outline-none"
+                  style={{ display: minimiseIconStyle }}>
+                  <MinimiseIcon options={this.iconProvider.getOptions()}></MinimiseIcon>
+              </button>
+                <button type="button" onClick={() => this.onToggleOptions(groupKey)}
+                  class="elsa-h-5 float-right inline elsa-w-5 elsa-mx-auto elsa-outline-none focus:elsa-outline-none"
+                  style={{ display: maximiseIconStyle }}                >
+                  <MaximiseIcon options={this.iconProvider.getOptions()}></MaximiseIcon>
+                </button>
+              </div>
+              <div class="px-3 inline"></div>
               <div>
                 <button type="button" onClick={() => this.onDeleteGroupClick(checkboxGroup)}
                   class="elsa-h-5 elsa-w-5 elsa-mx-auto elsa-outline-none focus:elsa-outline-none">
@@ -140,7 +173,8 @@ export class HeWeightedCheckboxProperty {
           <he-weighted-checkbox-option-group-property
             activityModel={this.activityModel}
             propertyModel={checkboxGroup}
-            onExpressionChanged={e => eventHandler(e, checkboxGroup)}>
+            onExpressionChanged={e => eventHandler(e, checkboxGroup)}
+            style={{ display: displayGroupStyle }}>
           </he-weighted-checkbox-option-group-property>
           <br />
           <hr />
@@ -168,7 +202,7 @@ export class HeWeightedCheckboxProperty {
           onSyntaxChanged={e => this.onMultiExpressionEditorSyntaxChanged(e)}
         >
           <hr />
-          <div class="elsa-min-w-full elsa-divide-y elsa-divide-gray-200">
+          <div class="elsa-min-w-full elsa-divide-y elsa-divide-gray-200" ref={el =>(this.container = el as HTMLElement)}>
             {answerGroups.map(renderCheckboxGroups)}
           </div>
 

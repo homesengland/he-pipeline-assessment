@@ -1,4 +1,5 @@
 import { Component, h, Prop, State } from '@stencil/core';
+import Sortable from 'sortablejs';
 import { DataDictionaryGroup } from '../../models/custom-component-models';
 import state  from '../../stores/dataDictionaryStore';
 import {
@@ -27,7 +28,8 @@ import {
 } from '../providers/question-provider/question-provider';
 import TrashCanIcon from '../../icons/trash-can';
 import { QuestionCategories, SyntaxNames } from '../../constants/constants';
-import { filterPropertiesByType, parseJson } from '../../utils/utils';
+import { filterPropertiesByType, parseJson, newOptionNumber, getUniversalUniqueId } from '../../utils/utils';
+import SortIcon from '../../icons/sort_icon';
 
 @Component({
   tag: 'question-screen-property',
@@ -45,17 +47,45 @@ export class QuestionScreen {
   @State() iconProvider = new IconProvider();
   @State() questionProvider = new QuestionProvider(Object.values(QuestionLibrary));
   @State() questionDropdownDisplay = QuestionCategories.None;
+  @State() keyId: string;
 
   supportedSyntaxes: Array<string> = [SyntaxNames.JavaScript, SyntaxNames.Liquid];
   multiExpressionEditor: HTMLElsaMultiExpressionEditorElement;
   syntaxMultiChoiceCount: number = 0;
+
+  private container: HTMLElement;
 
 
   async componentWillLoad() {
     const propertyModel = this.propertyModel;
     const choicesJson = propertyModel.expressions[SyntaxNames.QuestionList]
     this.questionModel = parseJson(choicesJson) || this.defaultActivityModel();
+    this.questionModel.activities.forEach(x => x.descriptor = this.questionProperties);
     state.dictionaryGroups = this.dataDictionaryGroup;
+  }
+
+  async componentDidLoad() {
+    const dragEventHandler = this.onDragActivity.bind(this);
+    //creates draggable area
+    Sortable.create(this.container, {
+      animation: 150,
+      handle: ".sortablejs-custom-handle",
+      ghostClass: "dragTarget",
+
+      onEnd(evt) {
+        dragEventHandler(evt.oldIndex, evt.newIndex);
+      }
+    });
+  }
+
+  async componentWillRender() {
+    this.keyId = getUniversalUniqueId();
+  }
+
+  onDragActivity(oldIndex: number, newIndex: number) {
+    const activity = this.questionModel.activities.splice(oldIndex, 1)[0];
+    this.questionModel.activities.splice(newIndex, 0, activity);
+    this.updatePropertyModel();
   }
 
   defaultActivityModel() {
@@ -98,23 +128,26 @@ export class QuestionScreen {
     const field = `question-${index}`;
     return (
       <div id={`${field}-id`} class="accordion elsa-mb-4 elsa-rounded" onClick={this.onAccordionQuestionClick}>
-        <p class="elsa-mt-1 elsa-text-base elsa-text-gray-900 accordion-paragraph">{question.value.name}</p>
-        <button type="button" onClick={e => this.onDeleteQuestionClick(e, question)}
-          class="elsa-h-5 elsa-w-5 elsa-mx-auto elsa-outline-none focus:elsa-outline-none trashcan-icon" style={{ float: "right" }}>
-          <TrashCanIcon options={this.iconProvider.getOptions()}></TrashCanIcon>
-        </button>
-        <p class="elsa-mt-1 elsa-text-sm elsa-text-gray-900 accordion-paragraph">{question.ActivityType.displayName}</p>
-        {this.renderQuestionComponent(question)}
+        <div class="elsa-w-1 sortablejs-custom-handle">
+        <SortIcon options={this.iconProvider.getOptions()}></SortIcon>
+        </div>
+        <div>
+          <p class="elsa-mt-1 elsa-text-base elsa-text-gray-900 accordion-paragraph">{question.value.name}</p>
+          <button type="button" onClick={e => this.onDeleteQuestionClick(e, question)}
+            class="elsa-h-5 elsa-w-5 elsa-mx-auto elsa-outline-none focus:elsa-outline-none trashcan-icon" style={{ float: "right" }}>
+            <TrashCanIcon options={this.iconProvider.getOptions()}></TrashCanIcon>
+          </button>
+          <p class="elsa-mt-1 elsa-text-sm elsa-text-gray-900 accordion-paragraph">{question.ActivityType.displayName}</p>
+          {this.renderQuestionComponent(question)}
+        </div>
+
       </div>
     );
   };
 
   handleAddQuestion(e: Event) {
-    console.log("Adding Question...");
     let value = (e.currentTarget as HTMLSelectElement).value.trim();
-    console.log("value", value);
     let data: IActivityData = JSON.parse((e.currentTarget as HTMLSelectElement).selectedOptions[0].dataset.type)
-    console.log("Data", data);
     if (value != null && value != "") {
       this.onAddQuestion(data);
       let element = e.currentTarget as HTMLSelectElement;
@@ -149,8 +182,18 @@ export class QuestionScreen {
     return expression;
   }
 
+  activityIds(): Array<number> {
+    let activityIds: Array<number> = [];
+    if (this.questionModel.activities.length > 0) {
+      activityIds = this.questionModel.activities.map(function (v) {
+        return parseInt(v.value.value);
+      });
+    }
+    return activityIds;
+  }
+
   onAddQuestion(questionType: IActivityData) {
-    let id = (this.questionModel.activities.length + 1).toString();
+    let id = newOptionNumber(this.activityIds());
     const questionName = `Question ${id}`;
     const newValue = this.newQuestionValue(questionName, id);
     let propertyDescriptors = filterPropertiesByType(this.questionProperties, questionType.nameConstant);
@@ -182,6 +225,7 @@ export class QuestionScreen {
 
   renderQuestionComponent(question: NestedPropertyModel) {
     return <question-property
+      key={this.keyId }
       class="panel elsa-rounded"
       activityModel={this.activityModel}
       questionModel={question}
@@ -202,7 +246,10 @@ export class QuestionScreen {
 
     return (
       <div>
-        {this.renderQuestions(this.questionModel)}
+        <div ref={el => (this.container = el as HTMLElement) }>
+          {this.renderQuestions(this.questionModel)}
+        </div>
+        
 
         <elsa-multi-expression-editor
           ref={el => this.multiExpressionEditor = el}

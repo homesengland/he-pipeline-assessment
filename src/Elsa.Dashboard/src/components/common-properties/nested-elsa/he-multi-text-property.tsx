@@ -1,5 +1,6 @@
 import { Component, EventEmitter, Event, h, Prop, State } from '@stencil/core';
 import { SyntaxNames } from '../../../constants/constants';
+import { getUniversalUniqueId } from '../../../utils/utils';
 import {
   ActivityDefinitionProperty,
   ActivityModel,
@@ -22,6 +23,7 @@ export class HEMultiTextProperty {
   @Prop() activityModel: ActivityModel;
   @Prop() propertyDescriptor: ActivityPropertyDescriptor;
   @Prop() propertyModel: ActivityDefinitionProperty;
+  @Prop() keyId: string;
   @State() currentValue?: string;
   @Event() expressionChanged: EventEmitter<string>;
 
@@ -42,7 +44,6 @@ export class HEMultiTextProperty {
 
     this.currentValue = JSON.stringify(newValues);
     this.propertyModel.expressions[SyntaxNames.Json] = this.currentValue;
-    console.log(this.currentValue);
     this.expressionChanged.emit(JSON.stringify(this.propertyModel));
   }
 
@@ -57,8 +58,9 @@ export class HEMultiTextProperty {
     return options.map(option => typeof option === 'string' ? { text: option, value: option } : option);
   }
 
-  async componentWillRender() {
-    /*this.selectList = await getSelectListItems(this.serverUrl, this.propertyDescriptor);*/
+  componentWillRender() {
+    this.currentValue = this.propertyModel.expressions[SyntaxNames.Json] || '[]';
+    this.keyId = getUniversalUniqueId();
   }
 
   render() {
@@ -81,6 +83,7 @@ export class HEMultiTextProperty {
 
     return (
       <elsa-property-editor
+        key={`property-editor-${this.keyId}`}
         activityModel={this.activityModel}
         propertyDescriptor={propertyDescriptor}
         propertyModel={propertyModel}

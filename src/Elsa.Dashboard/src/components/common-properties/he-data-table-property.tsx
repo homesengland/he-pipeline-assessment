@@ -1,87 +1,94 @@
 import { Component, h, Event, EventEmitter, Prop, State } from '@stencil/core';
 import {
-  ActivityDefinitionProperty,
+    ActivityDefinitionProperty,
   ActivityModel,
   ActivityPropertyDescriptor,
   HTMLElsaMultiExpressionEditorElement,
   IntellisenseContext
 } from "../../models/elsa-interfaces";
-import { mapSyntaxToLanguage, parseJson, ToLetter,Map } from "../../utils/utils";
+import { mapSyntaxToLanguage, parseJson, newOptionLetter, Map } from "../../utils/utils";
 import { IconProvider } from "../providers/icon-provider/icon-provider";
 import PlusIcon from '../../icons/plus_icon';
 import TrashCanIcon from '../../icons/trash-can';
-import ExpandIcon from '../../icons/expand_icon';
 import { DataTableSyntax, PropertyOutputTypes, SyntaxNames } from '../../constants/constants';
 import { NestedActivityDefinitionProperty } from '../../models/custom-component-models';
-import { ToggleDictionaryDisplay } from '../../functions/display-toggle'
-import { UpdateCheckbox, CustomUpdateExpression, UpdateExpressionFromInput, StandardUpdateExpression, UpdateName, UpdateSyntax } from '../../functions/updateModel';
+import { ISortableSharedComponent, SortableComponent } from '../base-component';
+import SortIcon from '../../icons/sort_icon';
+import { DisplayToggle, IDisplayToggle } from '../display-toggle-component';
 
 @Component({
   tag: 'he-data-table-property',
   shadow: false,
 })
 
-export class HeDataTableProperty {
+export class HeDataTableProperty implements ISortableSharedComponent, IDisplayToggle {
 
   @Prop() activityModel: ActivityModel;
   @Prop() propertyDescriptor: ActivityPropertyDescriptor;
   @Prop() propertyModel: ActivityDefinitionProperty;
-  @State() inputs: Array<NestedActivityDefinitionProperty> = [];
+  @Prop() modelSyntax: string = SyntaxNames.Json;
+  @State() keyId: string;
+  @State() properties: Array<NestedActivityDefinitionProperty> = [];
   @State() iconProvider = new IconProvider();
   @Event() expressionChanged: EventEmitter<string>;
-  @State() optionsDisplayToggle: Map<string> = {};
+  @State() dictionary: Map<string> = {};
 
   @State() switchTextHeight: string = "";
-
   @State() editorHeight: string = "2.75em"
+  displayValue: string = "table-row";
+  hiddenValue: string = "none";
 
   @State() inputOptions: Array<string> = [];
   @State() selectedInputType: string = "Currency";
+  private _base: SortableComponent;
+  private _toggle: DisplayToggle;
 
   supportedSyntaxes: Array<string> = [SyntaxNames.JavaScript, SyntaxNames.Literal];
   multiExpressionEditor: HTMLElsaMultiExpressionEditorElement;
   syntaxSwitchCount: number = 0;
+  container: HTMLElement;
 
-  UpdateExpression: Function = CustomUpdateExpression.bind(this);
-  UpdateInput: Function = UpdateExpressionFromInput.bind(this);
-  StandardUpdateExpression: Function = StandardUpdateExpression.bind(this);
-  UpdateName: Function = UpdateName.bind(this);
-  UpdateCheckbox: Function = UpdateCheckbox.bind(this);
-  UpdateSyntax: Function = UpdateSyntax.bind(this);
+
+  constructor() {
+    this._base = new SortableComponent(this);
+    this._toggle = new DisplayToggle(this);
+  }
 
   async componentWillLoad() {
-    const propertyModel = this.propertyModel;
-    const optionsJson = propertyModel.expressions[SyntaxNames.Json]
-    this.inputs = parseJson(optionsJson) || [];
+    this._base.componentWillLoad();
     this.inputOptions = ["Currency", "Decimal", "Integer", "Text"];
 
-    if (propertyModel.expressions[DataTableSyntax.InputType] == null)
-    {
+    if (this.propertyModel.expressions[DataTableSyntax.InputType] == null) {
       this.propertyModel.expressions[DataTableSyntax.InputType] = "Currency";
 
     }
+  }
 
+  async componentDidLoad() {
+    this._base.componentDidLoad();
   }
 
   updatePropertyModel() {
-    this.propertyModel.expressions[SyntaxNames.Json] = JSON.stringify(this.inputs);
-    this.multiExpressionEditor.expressions[SyntaxNames.Json] = JSON.stringify(this.inputs, null, 2);
-    this.expressionChanged.emit(JSON.stringify(this.propertyModel))
+    this._base.updatePropertyModel();
+  }
+
+  async componentWillRender() {
+    this._base.componentWillRender();
   }
 
   onDefaultSyntaxValueChanged(e: CustomEvent) {
-    this.inputs = e.detail;
+    this.properties = e.detail;
   }
 
   onAddRowClick() {
-    const optionName = ToLetter(this.inputs.length + 1);
+    const optionName = newOptionLetter(this._base.IdentifierArray());
     const newOption: NestedActivityDefinitionProperty = { name: optionName, syntax: SyntaxNames.Literal, expressions: { [SyntaxNames.Literal]: '', [DataTableSyntax.Identifier]: optionName }, type: PropertyOutputTypes.TableInput };
-    this.inputs = [...this.inputs, newOption];
+    this.properties = [...this.properties, newOption];
     this.updatePropertyModel();
   }
 
   onDeleteInputClick(input: NestedActivityDefinitionProperty) {
-    this.inputs = this.inputs.filter(x => x != input);
+    this.properties = this.properties.filter(x => x != input);
     this.updatePropertyModel();
   }
 
@@ -96,7 +103,7 @@ export class HeDataTableProperty {
       return;
 
     this.propertyModel.expressions[SyntaxNames.Json] = json;
-    this.inputs = parsed;
+    this.properties = parsed;
   }
 
   onMultiExpressionEditorSyntaxChanged(e: CustomEvent<string>) {
@@ -104,22 +111,17 @@ export class HeDataTableProperty {
     this.syntaxSwitchCount++;
   }
 
-  onExpandSwitchArea() {
-    this.editorHeight == "2.75em" ? this.editorHeight = "8em" : this.editorHeight = "2.75em"
-  }
-
   onToggleOptions(index: number) {
-    let tempValue = ToggleDictionaryDisplay(index, this.optionsDisplayToggle)
-    this.optionsDisplayToggle = { ... this.optionsDisplayToggle, tempValue }
+    this._toggle.onToggleDisplay(index);
   }
 
   onInputTypeChange(e: Event) {
-    this.StandardUpdateExpression(e, this.propertyModel, DataTableSyntax.InputType);
+    this._base.StandardUpdateExpression(e, this.propertyModel as NestedActivityDefinitionProperty, DataTableSyntax.InputType);
     this.selectedInputType = this.propertyModel.expressions[DataTableSyntax.InputType];
   }
 
   render() {
-    const cases = this.inputs;
+    const cases = this.properties;
     const supportedSyntaxes = this.supportedSyntaxes;
     const json = JSON.stringify(cases, null, 2);
     const selectedType = this.propertyModel.expressions[DataTableSyntax.InputType];
@@ -135,44 +137,52 @@ export class HeDataTableProperty {
 
       let expressionEditor = null;
       let colWidth = "100%";
-      const optionsDisplay = this.optionsDisplayToggle[index] ?? "none";
-      const sumTotalDisplay = (this.optionsDisplayToggle[index] && this.selectedInputType != "Text") ? this.optionsDisplayToggle[index]:  "none";
+      const optionsDisplay = this.dictionary[index] ?? "none";
+      const sumTotalDisplay = (this.dictionary[index] && this.selectedInputType != "Text") ? this.dictionary[index]:  "none";
+
       return (
-        <tbody>
-          <tr key={`case-${index}`}>
-            <th
-              class="elsa-py-3 elsa-text-left elsa-text-xs elsa-font-medium elsa-text-gray-500 elsa-tracking-wider elsa-w-2/12">Identifier
+        <tbody key={this.keyId}>
+          <tr>
+            <th class="sortablejs-custom-handle"><SortIcon options={this.iconProvider.getOptions()}></SortIcon>
             </th>
-            <td class="elsa-py-2 elsa-pr-5" style={{ width: colWidth }}>
-              <input type="text" value={tableInput.expressions[DataTableSyntax.Identifier]} onChange={e => this.UpdateInput(e, tableInput, DataTableSyntax.Identifier)}
-                class="focus:elsa-ring-blue-500 focus:elsa-border-blue-500 elsa-block elsa-w-full elsa-min-w-0 elsa-rounded-md sm:elsa-text-sm elsa-border-gray-300" />
-            </td>
+            <td></td>
             <td class="elsa-pt-1 elsa-pr-2 elsa-text-right">
               <button type="button" onClick={() => this.onDeleteInputClick(tableInput)}
                 class="elsa-h-5 elsa-w-5 elsa-mx-auto elsa-outline-none focus:elsa-outline-none">
                 <TrashCanIcon options={this.iconProvider.getOptions()}></TrashCanIcon>
               </button>
             </td>
+          </tr>
+          <tr key={`case-${index}`}>
+            <th
+              class="elsa-py-3 elsa-text-left elsa-text-xs elsa-font-medium elsa-text-gray-500 elsa-tracking-wider elsa-w-2/12">Identifier
+            </th>
+            <td class="elsa-py-2" colSpan={2} style={{ width: colWidth }}>
+              <input type="text" value={tableInput.expressions[DataTableSyntax.Identifier]} onChange={e => this._base.UpdateExpressionFromInput(e, tableInput, DataTableSyntax.Identifier)}
+                class="focus:elsa-ring-blue-500 focus:elsa-border-blue-500 elsa-block elsa-w-full elsa-min-w-0 elsa-rounded-md sm:elsa-text-sm elsa-border-gray-300" />
+            </td>
+
 
           </tr>
           <tr key={`case-${index}`}>
             <th
               class="elsa-py-3 elsa-text-left elsa-text-xs elsa-font-medium elsa-text-gray-500 elsa-tracking-wider elsa-w-2/12">Row Heading
             </th>
-            <td class="elsa-py-2 pl-5" style={{ width: colWidth }}>
+            <td class="elsa-py-2" colSpan={2} style={{ width: colWidth }}>
               <div class="elsa-mt-1 elsa-relative elsa-rounded-md elsa-shadow-sm">
+
                 <elsa-expression-editor
-                  key={`expression-editor-${index}-${this.syntaxSwitchCount}`}
+                  key={`expression-editor-${index}-${this.syntaxSwitchCount}-${this.keyId}`}
                   ref={el => expressionEditor = el}
                   expression={headerExpression}
                   language={monacoLanguage}
                   single-line={false}
                   editorHeight={this.editorHeight}
                   padding="elsa-pt-1.5 elsa-pl-1 elsa-pr-28"
-                  onExpressionChanged={e => this.UpdateExpression(e, tableInput, tableInput.syntax)}
+                  onExpressionChanged={e => this._base.CustomUpdateExpression(e, tableInput, tableInput.syntax)}
                 />
                 <div class="elsa-absolute elsa-inset-y-0 elsa-right-0 elsa-flex elsa-items-center">
-                  <select onChange={e => this.UpdateSyntax(e, tableInput, expressionEditor)}
+                  <select onChange={e => this._base.UpdateSyntax(e, tableInput, expressionEditor)}
                     class="focus:elsa-ring-blue-500 focus:elsa-border-blue-500 elsa-h-full elsa-py-0 elsa-pl-2 elsa-pr-7 elsa-border-transparent elsa-bg-transparent elsa-text-gray-500 sm:elsa-text-sm elsa-rounded-md">
                     {supportedSyntaxes.map(supportedSyntax => {
                       const selected = supportedSyntax == syntax;
@@ -182,45 +192,41 @@ export class HeDataTableProperty {
                 </div>
               </div>
             </td>
-            <td
-              class="elsa-py-3 elsa-text-left elsa-text-xs elsa-font-medium elsa-text-gray-500 elsa-tracking-wider elsa-w-2/12">
-              <button type="button" onClick={() => this.onExpandSwitchArea()}
-                class="elsa-h-5 elsa-w-5 elsa-mx-auto elsa-outline-none focus:elsa-outline-none">
-                <ExpandIcon options={this.iconProvider.getOptions()}></ExpandIcon>
-              </button>
-            </td>
-
           </tr>
 
 
           <tr onClick={() => this.onToggleOptions(index)}>
             <th
-              class="elsa-px-6 elsa-py-3 elsa-text-left elsa-text-xs elsa-font-medium elsa-text-gray-500 elsa-text-left elsa-tracking-wider elsa-w-1/12" colSpan={3} style={{ cursor: "zoom-in" }}> Options
+              class="elsa-py-3 elsa-text-left elsa-text-xs elsa-font-medium elsa-text-gray-500 elsa-text-left elsa-tracking-wider elsa-w-1/12" colSpan={3} style={{ cursor: "zoom-in" }}> Options
             </th>
           </tr>
 
           <tr style={{ display: optionsDisplay }}>
-            <th colSpan={2}
+            <th
               class="elsa-px-6 elsa-py-3 elsa-text-left elsa-text-xs elsa-font-medium elsa-text-gray-500 elsa-tracking-wider elsa-w-2/12">Is <br />Is read-only?
             </th>
             <td class="elsa-py-0">
               <input name="choice_input" type="checkbox" checked={readOnly} value={tableInput.expressions[DataTableSyntax.Readonly]}
-                onChange={e => this.UpdateCheckbox(e, tableInput, DataTableSyntax.Readonly)}
+                onChange={e => this._base.UpdateCheckbox(e, tableInput, DataTableSyntax.Readonly)}
                 class="focus:elsa-ring-blue-500 elsa-h-8 elsa-w-8 elsa-text-blue-600 elsa-border-gray-300 elsa-rounded" />
             </td>
+            <td></td>
           </tr>
 
           <tr style={{ display: sumTotalDisplay }}>
-            <th colSpan={2}
-              class="elsa-px-6 elsa-py-3 elsa-text-left elsa-text-xs elsa-font-medium elsa-text-gray-500 elsa-tracking-wider elsa-w-2/12">Is <br />Apply Sum Total?
-              <p class="elsa-mt-2 elsa-text-sm elsa-text-gray-500">Indicates that this cell should be used to indicate the total value of all other rows of this column's rows.
-                This will be picked up by the front end, and automatically calculated if Javascript is enabled..</p>
-
+            <th
+              class="elsa-px-6 elsa-py-3 elsa-text-left elsa-text-xs elsa-font-medium elsa-text-gray-500 elsa-tracking-wider elsa-w-2/12">
+              Is <br />Apply Sum Total?
             </th>
             <td class="elsa-py-0">
               <input name="choice_input" type="checkbox" checked={sumTotalColumn} value={tableInput.expressions[DataTableSyntax.SumTotalColumn]}
-                onChange={e => this.UpdateCheckbox(e, tableInput, DataTableSyntax.SumTotalColumn)}
+                onChange={e => this._base.UpdateCheckbox(e, tableInput, DataTableSyntax.SumTotalColumn)}
                 class="focus:elsa-ring-blue-500 elsa-h-8 elsa-w-8 elsa-text-blue-600 elsa-border-gray-300 elsa-rounded" />
+            </td>
+            <td>
+              <p class="elsa-mt-2 elsa-text-sm elsa-text-gray-500">
+                Indicates that this cell should be used to display the total value of all other rows for this column or table.
+                This will be picked up by the front end, and automatically calculated if Javascript is enabled.</p>
             </td>
           </tr>
 
@@ -229,20 +235,20 @@ export class HeDataTableProperty {
               <th
                 class="elsa-py-3 elsa-text-left elsa-text-xs elsa-font-medium elsa-text-gray-500 elsa-tracking-wider elsa-w-2/12">Pre-Populated Input
             </th>
-            <td class="elsa-py-2 pl-5" style={{ width: colWidth }}>
+            <td class="elsa-py-2 elsa-w-10/12" colSpan={2} style={{ width: colWidth }}>
             <div class="elsa-mt-1 elsa-relative elsa-rounded-md elsa-shadow-sm">
               <elsa-expression-editor
-                key={`expression-editor-${index}-${this.syntaxSwitchCount}`}
+                  key={`expression-editor-${index}-${this.syntaxSwitchCount}-${this.keyId}`}
                   ref={el => expressionEditor = el}
                   expression={inputExpression}
                 language={monacoLanguage}
                 single-line={false}
                 editorHeight={this.editorHeight}
                   padding="elsa-pt-1.5 elsa-pl-1 elsa-pr-28"
-                  onExpressionChanged={e => this.UpdateExpression(e, tableInput, DataTableSyntax.Input)}
+                  onExpressionChanged={e => this._base.CustomUpdateExpression(e, tableInput, DataTableSyntax.Input)}
               />
               <div class="elsa-absolute elsa-inset-y-0 elsa-right-0 elsa-flex elsa-items-center">
-                  <select onChange={e => this.UpdateSyntax(e, tableInput, expressionEditor)}
+                  <select onChange={e => this._base.UpdateSyntax(e, tableInput, expressionEditor)}
                     class="focus:elsa-ring-blue-500 focus:elsa-border-blue-500 elsa-h-full elsa-py-0 elsa-pl-2 elsa-pr-7 elsa-border-transparent elsa-bg-transparent elsa-text-gray-500 sm:elsa-text-sm elsa-rounded-md">
                     {supportedSyntaxes.filter(x => x == SyntaxNames.JavaScript).map(supportedSyntax => {
                       const selected = supportedSyntax == SyntaxNames.JavaScript;
@@ -251,13 +257,6 @@ export class HeDataTableProperty {
                 </select>
               </div>
             </div>
-            </td>
-            <td
-              class="elsa-py-3 elsa-text-left elsa-text-xs elsa-font-medium elsa-text-gray-500 elsa-tracking-wider elsa-w-2/12">
-              <button type="button" onClick={() => this.onExpandSwitchArea()}
-                class="elsa-h-5 elsa-w-5 elsa-mx-auto elsa-outline-none focus:elsa-outline-none">
-                <ExpandIcon options={this.iconProvider.getOptions()}></ExpandIcon>
-              </button>
             </td>
           </tr>
         </tbody>
@@ -269,12 +268,8 @@ export class HeDataTableProperty {
       propertyName: this.propertyDescriptor.name
     };
 
-
     return (
       <div>
-
-
-
         <div class="elsa-mb-1">
           <div class="elsa-flex">
             <div class="elsa-flex-1">
@@ -286,7 +281,7 @@ export class HeDataTableProperty {
         <div>
           <div>
             <select onChange={e => this.onInputTypeChange(e)}
-              class="elsa-mt-1 elsa-block focus:elsa-ring-blue-500 StandardUpdateExpression:elsa-border-blue-500 elsa-w-full elsa-shadow-sm sm:elsa-max-w-xs sm:elsa-text-sm elsa-border-gray-300 elsa-rounded-md">
+              class="elsa-mt-1 elsa-block focus:elsa-ring-blue-500 elsa-border-blue-500 elsa-w-full elsa-shadow-sm sm:elsa-max-w-xs sm:elsa-text-sm elsa-border-gray-300 elsa-rounded-md">
               {this.inputOptions.map(inputType => {
                 const selected = inputType === selectedType;
                 return <option selected={selected} value={inputType}>{inputType}</option>;
@@ -308,7 +303,7 @@ export class HeDataTableProperty {
 
         <div>
           <div>
-            <input type="text" value={this.propertyModel.expressions[DataTableSyntax.DisplayGroupId]} onChange={e => this.UpdateInput(e, this.propertyModel, DataTableSyntax.DisplayGroupId)}
+            <input type="text" value={this.propertyModel.expressions[DataTableSyntax.DisplayGroupId]} onChange={e => this._base.UpdateExpressionFromInput(e, this.propertyModel as NestedActivityDefinitionProperty, DataTableSyntax.DisplayGroupId)}
               class="focus:elsa-ring-blue-500 focus:elsa-border-bue-500 elsa-block elsa-w-full elsa-min-w-0 elsa-rounded-md sm:elsa-text-sm elsa-border-gray-300" />
           </div>
           <p class="elsa-mt-2 elsa-text-sm elsa-text-gray-500">This allows you to display this table as a column of a shared table with all matching Group Id's of Tables on this Question Screen..</p>
@@ -327,7 +322,7 @@ export class HeDataTableProperty {
           onExpressionChanged={e => this.onMultiExpressionEditorValueChanged(e)}
           onSyntaxChanged={e => this.onMultiExpressionEditorSyntaxChanged(e)}
         >
-          <table class="elsa-min-w-full elsa-divide-y elsa-divide-gray-200">
+          <table class="elsa-min-w-full elsa-divide-y elsa-divide-gray-200" ref={el => (this.container = el as HTMLElement)}>
             {cases.map(renderCaseEditor)}
           </table>
         
