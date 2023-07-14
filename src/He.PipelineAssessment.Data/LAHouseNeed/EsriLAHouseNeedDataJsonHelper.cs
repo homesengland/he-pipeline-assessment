@@ -5,29 +5,33 @@ namespace He.PipelineAssessment.Data.LaHouseNeed
 {
     public interface IEsriLaHouseNeedDataJsonHelper
     {
-        LaHouseNeedData? JsonToLAHouseNeedData(string data);
+        List<LaHouseNeedData>? JsonToLAHouseNeedData(string data);
     }
 
     public class EsriLAHouseNeedDataJsonHelper : IEsriLaHouseNeedDataJsonHelper
     {
-        public LaHouseNeedData? JsonToLAHouseNeedData(string data)
+        public List<LaHouseNeedData>? JsonToLAHouseNeedData(string data)
         {
             try
             {
+                var laHouseNeedDataList = new List<LaHouseNeedData>();
                 var result = JsonSerializer.Deserialize<EsriLAHouseNeedResponse>(data);
-                if (result != null && result.features.FirstOrDefault() != null)
+                if (result != null)
                 {
-                    var dataResult = result.features.FirstOrDefault()!.attributes;
-                    return dataResult;
+
+                    foreach (var feature in result.features)
+                    {
+                        laHouseNeedDataList.Add(feature.attributes);
+                    }
                 }
+                
+                return laHouseNeedDataList;
             }
             catch (Exception)
             {
 
                 return null;
             }
-
-            return null;
         }
     }
 }

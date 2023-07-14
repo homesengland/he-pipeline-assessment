@@ -19,6 +19,7 @@ namespace He.PipelineAssessment.Data.SinglePipeline
                 var result = JsonSerializer.Deserialize<EsriSinglePipelineResponse>(data);
                 if (result != null && result.features.FirstOrDefault() != null)
                 {
+                    
                     var dataResult = result.features.FirstOrDefault()!.attributes;
                     return dataResult;
                 }

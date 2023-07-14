@@ -19,18 +19,10 @@ namespace He.PipelineAssessment.UI.Features.Economist.EconomistAssessmentList
         }
         public async Task<List<AssessmentDataViewModel>> Handle(EconomistAssessmentListCommand request, CancellationToken cancellationToken)
         {
-            try
-            {
-                var dbAssessment = await _storedProcedureRepository.GetEconomistAssessments();
+            var dbAssessment = await _storedProcedureRepository.GetEconomistAssessments();
 
-                return dbAssessment;
-            }
-            catch (Exception e)
-            {
-                _logger.LogError(e.Message);
+            return dbAssessment;
 
-            }
-            return new List<AssessmentDataViewModel>();
         }
     }
 }

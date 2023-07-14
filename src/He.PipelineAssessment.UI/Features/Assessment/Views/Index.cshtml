@@ -10,7 +10,6 @@
     ViewData["Title"] = "Pipeline Assessment";
     Layout = "_LayoutFullWidth";
 }
-
 <div class="govuk-grid-row">
 
     <h1 class="govuk-heading-l govuk-grid-column-one-quarter pull-left" for="event-name">Assessment Search</h1>
@@ -22,64 +21,14 @@
             @Html.ActionLink("Assessment Requests", "Index", "Intervention", null, new { @class = "govuk-link pull-right  govuk-!-font-size-24 govuk-!-padding-right-2" })
         }
         @if ((await AuthorizationService.AuthorizeAsync(User, Constants.AuthorizationPolicies.AssignmentToWorkflowEconomistRoleRequired)).Succeeded)
-        {
-            @Html.ActionLink("Economist", "GetEconomistList","Economist", null, new{@class="govuk-link pull-right  govuk-!-font-size-24 govuk-!-padding-right-2"})
-        }
+            {
+                @Html.ActionLink("Economist", "GetEconomistList","Economist", null, new{@class="govuk-link pull-right  govuk-!-font-size-24 govuk-!-padding-right-2"})
+            }   
     </div>
 </div>
 
 <br />
-
-<div class="text-center">
-    <div class="govuk-grid-row">
-        <div class="govuk-grid-column-one-half">
-            <div id="search-div" class="header-select override-header-select"></div>
-        </div>
-        <div class="govuk-grid-column-one-half">
-            <div id="filter-div" class="float-right"></div>
-        </div>
-    </div>
-
-    <br />
-
-    <table class="govuk-table" id="assessmentListTable" hidden="hidden">
-
-        <thead class="govuk-table__head">
-            <tr class="govuk-table__row">
-                <th scope="col" class="govuk-table__header">Reference</th>
-                <th scope="col" class="govuk-table__header">Project</th>
-                <th scope="col" class="govuk-table__header">Partner</th>
-                <th scope="col" class="govuk-table__header">Local Authority</th>
-                <th scope="col" class="govuk-table__header">Funding Ask</th>
-                <th scope="col" class="govuk-table__header">Homes</th>
-                <th scope="col" class="govuk-table__header" data-searchable="true">Project Manager</th>
-                <th scope="col" class="govuk-table__header">Last Updated</th>
-                <th scope="col" class="govuk-table__header" data-searchable="true">Status</th>
-            </tr>
-        </thead>
-        <tbody class="govuk-table__body">
-            @foreach (var assessment in Model)
-            {
-                var lastModifiedDate = assessment.LastModifiedDateTime.HasValue ? assessment.LastModifiedDateTime.Value.Date.ToString("yyyyMMdd"):"";
-                var lastModified = assessment.LastModifiedDateTime.HasValue ? assessment.LastModifiedDateTime.Value.Date.ToLongDateString() : "";
-
-                <tr class="govuk-table__row">
-                    <td class="govuk-table__cell"><a asp-controller="Assessment" asp-action="Summary" asp-route-assessmentid="@assessment.Id" asp-route-correlationId="@assessment.SpId" class="govuk-link">@assessment.Reference</a> </td>
-                    <td class="govuk-table__cell">@assessment.SiteName</td>
-                    <td class="govuk-table__cell">@assessment.Counterparty</td>
-                    <td class="govuk-table__cell">@assessment.LocalAuthority</td>
-                    <td class="govuk-table__cell">@assessment.FundingAskCurrency</td>
-                    <td class="govuk-table__cell">@assessment.NumberOfHomesFormatted</td>
-                    <td class="govuk-table__cell">@assessment.ProjectManager</td>
-                    <td class="govuk-table__cell"> <span hidden>@lastModifiedDate</span> @lastModified </td>
-                    <td class="govuk-table__cell"><strong class="govuk-tag govuk-tag--@assessment.StatusDisplayTag()">@assessment.Status</strong></td>
-                </tr>
-            }
-        </tbody>
-
-    </table>
-</div>
-
+@await Html.PartialAsync("_AssessmentListTable",Model)
 @section Scripts
     {
     <script nonce="@nonceConfig.DataTablesSetup" src="~/js/gov_dataTable.js"></script>
@@ -89,3 +38,4 @@
         });
     </script>
 }
+

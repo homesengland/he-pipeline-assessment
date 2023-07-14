@@ -16,6 +16,7 @@ namespace Elsa.CustomWorkflow.Sdk.HttpClients
     public interface IElsaServerHttpClient
     {
         Task<WorkflowNextActivityDataDto?> PostStartWorkflow(StartWorkflowCommandDto model);
+        Task<WorkflowNextActivityDataDto?> PostExecuteWorkflow(ExecuteWorkflowCommandDto model);
         Task<WorkflowNextActivityDataDto?> QuestionScreenSaveAndContinue(QuestionScreenSaveAndContinueCommandDto model);
         Task<WorkflowNextActivityDataDto?> CheckYourAnswersSaveAndContinue(CheckYourAnswersSaveAndContinueCommandDto model);
         Task<WorkflowActivityDataDto?> LoadQuestionScreen(LoadWorkflowActivityDto model);
@@ -62,6 +63,35 @@ namespace Elsa.CustomWorkflow.Sdk.HttpClients
                                                                       $"\n Url='{request.RequestUri}'");
 
                     throw new ApplicationException("Failed to start workflow");
+                }
+            }
+
+            return JsonSerializer.Deserialize<WorkflowNextActivityDataDto>(data, new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
+        }
+
+        public async Task<WorkflowNextActivityDataDto?> PostExecuteWorkflow(ExecuteWorkflowCommandDto model)
+        {
+            string data;
+            var relativeUri = "workflow/executeworkflow";
+
+            using var request = new HttpRequestMessage(HttpMethod.Post, relativeUri);
+            var content = JsonSerializer.Serialize(model);
+            request.Content = new StringContent(content, Encoding.UTF8, "application/json");
+
+            var client = _httpClientFactory.CreateClient("ElsaServerClient");
+            await AddAccessTokenToRequest(client);
+            using (var response = await client
+                       .SendAsync(request)
+                       .ConfigureAwait(false))
+            {
+                data = await response.Content.ReadAsStringAsync().ConfigureAwait(false);
+                if (!response.IsSuccessStatusCode)
+                {
+                    _logger.LogError($"StatusCode='{response.StatusCode}'," +
+                                     $"\n Message= '{data}'," +
+                                     $"\n Url='{request.RequestUri}'");
+
+                    throw new ApplicationException("Failed to execute workflow");
                 }
             }
 

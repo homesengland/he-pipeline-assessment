@@ -14,5 +14,7 @@
         public string NextActivityId { get; set; } = null!;
         public string ActivityType { get; set; } = null!;
         public string? NextWorkflowDefinitionIds { get; set; }
+        public string FirstActivityId { get; set; } = null!;
+        public string FirstActivityType { get; set; } = null!;
     }
 }

@@ -14,6 +14,10 @@ namespace He.PipelineAssessment.Data.Tests.SinglePipeline
             EsriSinglePipelineDataJsonHelper helper)
         {
             //Arrange
+            inputData.features.ForEach(feature =>
+            {
+                feature.attributes.multi_local_authority =  "[{\"la_name\":\"Bedford\",\"la_homes\":\"333\"},{\"la_name\":\"Milton Keynes\",\"la_homes\":\"333\"}]";
+            });
             var strData = JsonSerializer.Serialize(inputData);
 
             //Act
@@ -60,6 +64,10 @@ namespace He.PipelineAssessment.Data.Tests.SinglePipeline
             EsriSinglePipelineDataJsonHelper helper)
         {
             //Arrange
+            inputData.features.ForEach(feature =>
+            {
+                feature.attributes.multi_local_authority =  "[{\"la_name\":\"Bedford\",\"la_homes\":\"333\"},{\"la_name\":\"Milton Keynes\",\"la_homes\":\"333\"}]";
+            });
             var strData = JsonSerializer.Serialize(inputData);
 
             //Act

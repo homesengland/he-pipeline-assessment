@@ -11,6 +11,8 @@
         public string? WorkflowInstanceId { get; set; }
         public string? CurrentActivityId { get; set; }
         public string? CurrentActivityType { get; set; }
+        public string? FirstActivityId { get; set; }
+        public string? FirstActivityType { get; set; }
         public string? Status { get; set; }
         public DateTime? SubmittedDateTime { get; set; }
         public int? AssessmentToolId { get; set; }

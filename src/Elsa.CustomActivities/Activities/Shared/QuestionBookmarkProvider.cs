@@ -43,7 +43,11 @@ namespace Elsa.CustomActivities.Activities.Shared
             {
                 ActivityTypeConstants.QuestionScreen,
                 ActivityTypeConstants.CheckYourAnswersScreen,
-                ActivityTypeConstants.ConfirmationScreen
+                ActivityTypeConstants.ConfirmationScreen,
+                ActivityTypeConstants.SinglePipelineDataSource,
+                ActivityTypeConstants.HousingNeedDataSource,
+                ActivityTypeConstants.PCSProfileDataSource,
+                ActivityTypeConstants.VFMDataSource
             };
         }
     }

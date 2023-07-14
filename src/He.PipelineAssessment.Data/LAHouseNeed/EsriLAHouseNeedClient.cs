@@ -1,11 +1,13 @@
-﻿using Microsoft.Extensions.Logging;
+﻿using He.PipelineAssessment.Data.SinglePipeline;
+using Microsoft.Extensions.Logging;
 using System.Text;
+using System.Text.Json;
 
 namespace He.PipelineAssessment.Data.LaHouseNeed
 {
     public interface IEsriLaHouseNeedClient
     {
-        Task<string?> GetLaHouseNeedData(string? gssCode, string? localAuthorityName, string? altLocalAuthorityName);
+        Task<string?> GetLaHouseNeedData(string? gssCodes, string? localAuthorityNames, string? altLocalAuthorityNames);
     }
     public class EsriLAHouseNeedClient : IEsriLaHouseNeedClient
     {
@@ -18,11 +20,11 @@ namespace He.PipelineAssessment.Data.LaHouseNeed
             _logger = logger;
         }
 
-        public async Task<string?> GetLaHouseNeedData(string? gssCode, string? localAuthorityName, string? altLocalAuthorityName)
+        public async Task<string?> GetLaHouseNeedData(string? gssCodes, string? localAuthorityNames, string? altLocalAuthorityNames)
         {
             string? data = null;
-            string whereClause = GetWhereClause(gssCode, localAuthorityName, altLocalAuthorityName);  //Need to query the logic here.
-            string recordCount = "1";
+            string whereClause = GetWhereClause(gssCodes, localAuthorityNames, altLocalAuthorityNames);  //Need to query the logic here.
+            string recordCount = "*";
             string outFields = "*";
 
             var relativeUri = $"query?where={whereClause}&resultRecordCount={recordCount}&outFields={outFields}&returnGeometry=false&f=json";//potentially needs a token on the end also
@@ -32,6 +34,7 @@ namespace He.PipelineAssessment.Data.LaHouseNeed
                        .ConfigureAwait(false))
             {
                 data = await response.Content.ReadAsStringAsync().ConfigureAwait(false);
+
                 if (!response.IsSuccessStatusCode)
                 {
                     _logger.LogError($"StatusCode='{response.StatusCode}'," +
@@ -45,28 +48,31 @@ namespace He.PipelineAssessment.Data.LaHouseNeed
             return data;
         }
 
-        private string GetWhereClause(string? gssCode, string? localAuthorityName, string? altLocalAuthorityName)
-        {
+        private string GetWhereClause(string? gssCodes, string? localAuthorityNames, string? altLocalAuthorityNames)
+        {          
             var whereClauseBuilder = new StringBuilder();
-            if (gssCode != null)
+            if (gssCodes != null)
             {
-                whereClauseBuilder.Append($"gss_code='{gssCode}'");
+                var formattedGssCodes = gssCodes.Replace(",", "','").Replace("' ", "'");
+                whereClauseBuilder.Append($"gss_code IN ('{formattedGssCodes}')");
             }
-            if (localAuthorityName != null)
+            if (localAuthorityNames != null)
             {
-                if (gssCode != null)
+                if (gssCodes != null)
                 {
                     whereClauseBuilder.Append(" OR ");
                 }
-                whereClauseBuilder.Append($"la_name = '{localAuthorityName}'");
+                var formattedLocalAuthoritynames = localAuthorityNames.Replace(",", "','").Replace("' ", "'");
+                whereClauseBuilder.Append($"la_name IN ('{formattedLocalAuthoritynames}')");
             }
-            if (altLocalAuthorityName != null)
+            if (altLocalAuthorityNames != null)
             {
-                if (gssCode != null || localAuthorityName != null)
+                if (gssCodes != null || localAuthorityNames != null)
                 {
                     whereClauseBuilder.Append(" OR ");
                 }
-                whereClauseBuilder.Append($"alt_name = '{altLocalAuthorityName}'");
+                var formattedAltLocalAuthorityNames = altLocalAuthorityNames.Replace(",", "','").Replace("' ", "'");
+                whereClauseBuilder.Append($"alt_name IN ('{formattedAltLocalAuthorityNames}')");
             }
 
             return whereClauseBuilder.ToString();
