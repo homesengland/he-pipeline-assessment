@@ -139,8 +139,9 @@ export class HeDataTableProperty implements ISortableSharedComponent, IDisplayTo
       let colWidth = "100%";
       const optionsDisplay = this.dictionary[index] ?? "none";
       const sumTotalDisplay = (this.dictionary[index] && this.selectedInputType != "Text") ? this.dictionary[index]:  "none";
+
       return (
-        <tbody>
+        <tbody key={this.keyId}>
           <tr>
             <th class="sortablejs-custom-handle"><SortIcon options={this.iconProvider.getOptions()}></SortIcon>
             </th>
@@ -156,7 +157,7 @@ export class HeDataTableProperty implements ISortableSharedComponent, IDisplayTo
             <th
               class="elsa-py-3 elsa-text-left elsa-text-xs elsa-font-medium elsa-text-gray-500 elsa-tracking-wider elsa-w-2/12">Identifier
             </th>
-            <td class="elsa-py-2 pl-5" colSpan={2} style={{ width: colWidth }}>
+            <td class="elsa-py-2" colSpan={2} style={{ width: colWidth }}>
               <input type="text" value={tableInput.expressions[DataTableSyntax.Identifier]} onChange={e => this._base.UpdateExpressionFromInput(e, tableInput, DataTableSyntax.Identifier)}
                 class="focus:elsa-ring-blue-500 focus:elsa-border-blue-500 elsa-block elsa-w-full elsa-min-w-0 elsa-rounded-md sm:elsa-text-sm elsa-border-gray-300" />
             </td>
@@ -167,8 +168,9 @@ export class HeDataTableProperty implements ISortableSharedComponent, IDisplayTo
             <th
               class="elsa-py-3 elsa-text-left elsa-text-xs elsa-font-medium elsa-text-gray-500 elsa-tracking-wider elsa-w-2/12">Row Heading
             </th>
-            <td class="elsa-py-2 pl-5" colSpan={2} style={{ width: colWidth }}>
+            <td class="elsa-py-2" colSpan={2} style={{ width: colWidth }}>
               <div class="elsa-mt-1 elsa-relative elsa-rounded-md elsa-shadow-sm">
+
                 <elsa-expression-editor
                   key={`expression-editor-${index}-${this.syntaxSwitchCount}-${this.keyId}`}
                   ref={el => expressionEditor = el}
@@ -200,7 +202,7 @@ export class HeDataTableProperty implements ISortableSharedComponent, IDisplayTo
           </tr>
 
           <tr style={{ display: optionsDisplay }}>
-            <th colSpan={2}
+            <th
               class="elsa-px-6 elsa-py-3 elsa-text-left elsa-text-xs elsa-font-medium elsa-text-gray-500 elsa-tracking-wider elsa-w-2/12">Is <br />Is read-only?
             </th>
             <td class="elsa-py-0">
@@ -208,19 +210,23 @@ export class HeDataTableProperty implements ISortableSharedComponent, IDisplayTo
                 onChange={e => this._base.UpdateCheckbox(e, tableInput, DataTableSyntax.Readonly)}
                 class="focus:elsa-ring-blue-500 elsa-h-8 elsa-w-8 elsa-text-blue-600 elsa-border-gray-300 elsa-rounded" />
             </td>
+            <td></td>
           </tr>
 
           <tr style={{ display: sumTotalDisplay }}>
-            <th colSpan={2}
-              class="elsa-px-6 elsa-py-3 elsa-text-left elsa-text-xs elsa-font-medium elsa-text-gray-500 elsa-tracking-wider elsa-w-2/12">Is <br />Apply Sum Total?
-              <p class="elsa-mt-2 elsa-text-sm elsa-text-gray-500">Indicates that this cell should be used to indicate the total value of all other rows of this column's rows.
-                This will be picked up by the front end, and automatically calculated if Javascript is enabled..</p>
-
+            <th
+              class="elsa-px-6 elsa-py-3 elsa-text-left elsa-text-xs elsa-font-medium elsa-text-gray-500 elsa-tracking-wider elsa-w-2/12">
+              Is <br />Apply Sum Total?
             </th>
             <td class="elsa-py-0">
               <input name="choice_input" type="checkbox" checked={sumTotalColumn} value={tableInput.expressions[DataTableSyntax.SumTotalColumn]}
                 onChange={e => this._base.UpdateCheckbox(e, tableInput, DataTableSyntax.SumTotalColumn)}
                 class="focus:elsa-ring-blue-500 elsa-h-8 elsa-w-8 elsa-text-blue-600 elsa-border-gray-300 elsa-rounded" />
+            </td>
+            <td>
+              <p class="elsa-mt-2 elsa-text-sm elsa-text-gray-500">
+                Indicates that this cell should be used to display the total value of all other rows for this column or table.
+                This will be picked up by the front end, and automatically calculated if Javascript is enabled.</p>
             </td>
           </tr>
 
@@ -229,7 +235,7 @@ export class HeDataTableProperty implements ISortableSharedComponent, IDisplayTo
               <th
                 class="elsa-py-3 elsa-text-left elsa-text-xs elsa-font-medium elsa-text-gray-500 elsa-tracking-wider elsa-w-2/12">Pre-Populated Input
             </th>
-            <td class="elsa-py-2 pl-5 elsa-w-10/12" colSpan={2} style={{ width: colWidth }}>
+            <td class="elsa-py-2 elsa-w-10/12" colSpan={2} style={{ width: colWidth }}>
             <div class="elsa-mt-1 elsa-relative elsa-rounded-md elsa-shadow-sm">
               <elsa-expression-editor
                   key={`expression-editor-${index}-${this.syntaxSwitchCount}-${this.keyId}`}

@@ -28,7 +28,7 @@ import {
 } from '../providers/question-provider/question-provider';
 import TrashCanIcon from '../../icons/trash-can';
 import { QuestionCategories, SyntaxNames } from '../../constants/constants';
-import { filterPropertiesByType, parseJson, newOptionNumber } from '../../utils/utils';
+import { filterPropertiesByType, parseJson, newOptionNumber, getUniversalUniqueId } from '../../utils/utils';
 import SortIcon from '../../icons/sort_icon';
 
 @Component({
@@ -47,6 +47,7 @@ export class QuestionScreen {
   @State() iconProvider = new IconProvider();
   @State() questionProvider = new QuestionProvider(Object.values(QuestionLibrary));
   @State() questionDropdownDisplay = QuestionCategories.None;
+  @State() keyId: string;
 
   supportedSyntaxes: Array<string> = [SyntaxNames.JavaScript, SyntaxNames.Liquid];
   multiExpressionEditor: HTMLElsaMultiExpressionEditorElement;
@@ -75,6 +76,10 @@ export class QuestionScreen {
         dragEventHandler(evt.oldIndex, evt.newIndex);
       }
     });
+  }
+
+  async componentWillRender() {
+    this.keyId = getUniversalUniqueId();
   }
 
   onDragActivity(oldIndex: number, newIndex: number) {
@@ -220,6 +225,7 @@ export class QuestionScreen {
 
   renderQuestionComponent(question: NestedPropertyModel) {
     return <question-property
+      key={this.keyId }
       class="panel elsa-rounded"
       activityModel={this.activityModel}
       questionModel={question}

@@ -42,7 +42,6 @@ export class BaseComponent {
   render() { }
 
   updatePropertyModel() {
-    console.log("The actual property model method");
     this.component.propertyModel.expressions[this.component.modelSyntax] = JSON.stringify(this.component.properties);
     this.component.multiExpressionEditor.expressions[SyntaxNames.Json] = JSON.stringify(this.component.properties, null, 2);
     this.component.expressionChanged.emit(JSON.stringify(this.component.propertyModel))
@@ -154,6 +153,5 @@ export class SortableComponent extends BaseComponent {
     propertiesClone.splice(newIndex, 0, activity);
     this.component.properties = propertiesClone;
     this.updatePropertyModel();
-    console.log("Updating property model", this.component.properties);
   }
 }
