@@ -11,7 +11,7 @@ import {
   HTMLElsaMultiExpressionEditorElement,
   IntellisenseContext
 } from "../../models/elsa-interfaces";
-import { mapSyntaxToLanguage, parseJson, newOptionLetter, Map, getUniversalUniqueId } from "../../utils/utils";
+import { mapSyntaxToLanguage, parseJson, newOptionLetter, Map } from "../../utils/utils";
 import { ISortableSharedComponent, SortableComponent } from '../base-component';
 import { DisplayToggle, IDisplayToggle } from '../display-toggle-component';
 import { IconProvider } from "../providers/icon-provider/icon-provider";
@@ -26,7 +26,7 @@ export class HeCheckboxOptionProperty implements ISortableSharedComponent, IDisp
   @Prop() activityModel: ActivityModel;
   @Prop() propertyDescriptor: ActivityPropertyDescriptor;
   @Prop() propertyModel: ActivityDefinitionProperty;
-  @Prop() keyId: string;
+  @State() keyId: string;
   @Prop() modelSyntax: string = SyntaxNames.Json;
   @State() properties: Array<NestedActivityDefinitionProperty> = [];
   @State() iconProvider = new IconProvider();
@@ -58,6 +58,10 @@ export class HeCheckboxOptionProperty implements ISortableSharedComponent, IDisp
 
   async componentDidLoad() {
     this._base.componentDidLoad();
+  }
+
+  async componentWillRender() {
+    this._base.componentWillRender();
   }
   
 
@@ -98,10 +102,6 @@ export class HeCheckboxOptionProperty implements ISortableSharedComponent, IDisp
 
   onToggleOptions(index: number) {
     this._toggle.onToggleDisplay(index);
-  }
-
-  async componentWillRender() {
-    this.keyId = getUniversalUniqueId();
   }
 
   render() {

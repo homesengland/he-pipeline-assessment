@@ -6,7 +6,7 @@ import {
   HTMLElsaMultiExpressionEditorElement,
   IntellisenseContext
 } from "../../models/elsa-interfaces";
-import { mapSyntaxToLanguage, parseJson, Map, newOptionLetter, getUniversalUniqueId } from "../../utils/utils";
+import { mapSyntaxToLanguage, parseJson, Map, newOptionLetter } from "../../utils/utils";
 import { IconProvider } from "../providers/icon-provider/icon-provider";
 import PlusIcon from '../../icons/plus_icon';
 import TrashCanIcon from '../../icons/trash-can';
@@ -26,7 +26,7 @@ export class HeRadioOptionProperty implements ISortableSharedComponent, IDisplay
   @Prop() propertyDescriptor: ActivityPropertyDescriptor;
   @Prop() propertyModel: ActivityDefinitionProperty;
   @Prop() modelSyntax: string = SyntaxNames.Json;
-  @Prop() keyId: string;
+  @State() keyId: string;
   @State() properties: NestedActivityDefinitionProperty[];
 
   private _base: SortableComponent;
@@ -63,8 +63,7 @@ export class HeRadioOptionProperty implements ISortableSharedComponent, IDisplay
   }
 
   async componentWillRender() {
-    console.log("Re rendering");
-    this.keyId = getUniversalUniqueId();
+    this._base.componentWillRender();
   }
 
   onDefaultSyntaxValueChanged(e: CustomEvent) {
@@ -140,7 +139,7 @@ export class HeRadioOptionProperty implements ISortableSharedComponent, IDisplay
               </button>
             </td>
           </tr>
-          <tr key={`case-${index}`}>
+          <tr>
             <th
               class="elsa-py-3 elsa-text-left elsa-text-xs elsa-font-medium elsa-text-gray-500 elsa-tracking-wider elsa-w-2/12">Identifier
             </th>
@@ -150,7 +149,7 @@ export class HeRadioOptionProperty implements ISortableSharedComponent, IDisplay
             </td>
         </tr>
 
-        <tr>
+          <tr>
        
               <th
                 class="elsa-py-3 elsa-text-left elsa-text-xs elsa-font-medium elsa-text-gray-500 elsa-tracking-wider elsa-w-2/12">Answer
@@ -238,7 +237,7 @@ export class HeRadioOptionProperty implements ISortableSharedComponent, IDisplay
           onExpressionChanged={e => this.onMultiExpressionEditorValueChanged(e)}
           onSyntaxChanged={e => this.onMultiExpressionEditorSyntaxChanged(e)}
         >
-            <table class="elsa-min-w-full elsa-divide-y elsa-divide-gray-200" ref={el => (this.container = el as HTMLElement)}>
+          <table class="elsa-min-w-full elsa-divide-y elsa-divide-gray-200" ref={el => (this.container = el as HTMLElement)}>
               {cases.map(renderCaseEditor)}
             </table>
 

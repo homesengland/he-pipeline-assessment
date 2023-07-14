@@ -28,6 +28,7 @@ export class TextActivityProperty implements ISortableSharedComponent, IDisplayT
   @Prop() modelSyntax: string = SyntaxNames.Json;
   @State() properties: Array<NestedActivityDefinitionProperty> = [];
   @State() iconProvider = new IconProvider();
+  @State() keyId: string;
   @Event() expressionChanged: EventEmitter<string>;
 
   supportedSyntaxes: Array<string> = [SyntaxNames.Literal, SyntaxNames.JavaScript];
@@ -54,6 +55,10 @@ export class TextActivityProperty implements ISortableSharedComponent, IDisplayT
 
   async componentDidLoad() {
     this._base.componentDidLoad();
+  }
+
+  async componentWillRender() {
+    this._base.componentWillRender();
   }
 
   updatePropertyModel() {
@@ -140,7 +145,7 @@ export class TextActivityProperty implements ISortableSharedComponent, IDisplayT
 
 
       return (
-        <tbody>
+        <tbody key={this.keyId}>
           <tr>
             <th class="sortablejs-custom-handle"><SortIcon options={this.iconProvider.getOptions()}></SortIcon>
             </th>

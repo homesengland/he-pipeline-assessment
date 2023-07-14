@@ -1,5 +1,4 @@
 import { Component, h, Event, EventEmitter, Prop, State } from '@stencil/core';
-import { getUniversalUniqueId } from '../../utils/utils';
 import {
     ActivityDefinitionProperty,
   ActivityModel,
@@ -28,7 +27,7 @@ export class HeDataTableProperty implements ISortableSharedComponent, IDisplayTo
   @Prop() propertyDescriptor: ActivityPropertyDescriptor;
   @Prop() propertyModel: ActivityDefinitionProperty;
   @Prop() modelSyntax: string = SyntaxNames.Json;
-  @Prop() keyId: string;
+  @State() keyId: string;
   @State() properties: Array<NestedActivityDefinitionProperty> = [];
   @State() iconProvider = new IconProvider();
   @Event() expressionChanged: EventEmitter<string>;
@@ -73,6 +72,10 @@ export class HeDataTableProperty implements ISortableSharedComponent, IDisplayTo
     this._base.updatePropertyModel();
   }
 
+  async componentWillRender() {
+    this._base.componentWillRender();
+  }
+
   onDefaultSyntaxValueChanged(e: CustomEvent) {
     this.properties = e.detail;
   }
@@ -115,10 +118,6 @@ export class HeDataTableProperty implements ISortableSharedComponent, IDisplayTo
   onInputTypeChange(e: Event) {
     this._base.StandardUpdateExpression(e, this.propertyModel as NestedActivityDefinitionProperty, DataTableSyntax.InputType);
     this.selectedInputType = this.propertyModel.expressions[DataTableSyntax.InputType];
-  }
-
-  componentWillRender() {
-    this.keyId = getUniversalUniqueId();
   }
 
   render() {

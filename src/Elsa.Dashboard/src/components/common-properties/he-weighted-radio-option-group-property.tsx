@@ -32,6 +32,7 @@ export class HeWeightedRadioOptionGroupProperty implements ISortableSharedCompon
   @State() dictionary: Map<string> = {};
   @State() switchTextHeight: string = "";
   @State() editorHeight: string = "2.75em"
+  @State() keyId: string;
   displayValue: string = "table-row";
   hiddenValue: string = "none";
 
@@ -58,6 +59,10 @@ export class HeWeightedRadioOptionGroupProperty implements ISortableSharedCompon
 
   async componentDidLoad() {
     this._base.componentDidLoad();
+  }
+
+  async componentWillRender() {
+    this._base.componentWillRender();
   }
 
 
@@ -134,7 +139,7 @@ export class HeWeightedRadioOptionGroupProperty implements ISortableSharedCompon
       const optionsDisplay = this.dictionary[index] ?? "none";
 
       return (
-        <tbody>
+        <tbody key={this.keyId}>
           <tr>
             <th class="sortablejs-custom-handle"><SortIcon options={this.iconProvider.getOptions()}></SortIcon></th>
             <td></td>

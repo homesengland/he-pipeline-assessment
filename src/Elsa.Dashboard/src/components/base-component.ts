@@ -3,7 +3,7 @@ import Sortable from "sortablejs";
 import { SyntaxNames } from "../constants/constants";
 import { NestedActivityDefinitionProperty } from "../models/custom-component-models";
 import { ActivityDefinitionProperty, ActivityModel, ActivityPropertyDescriptor, HTMLElsaExpressionEditorElement, HTMLElsaMultiExpressionEditorElement } from "../models/elsa-interfaces";
-import { mapSyntaxToLanguage, parseJson } from "../utils/utils";
+import { getUniversalUniqueId, mapSyntaxToLanguage, parseJson } from "../utils/utils";
 
 
 
@@ -15,6 +15,7 @@ modelSyntax: string;
 properties: Array<NestedActivityDefinitionProperty>;
 expressionChanged: EventEmitter<string>;
 multiExpressionEditor: HTMLElsaMultiExpressionEditorElement;
+keyId: string;
 }
 
 export interface ISortableSharedComponent extends ISharedComponent {
@@ -35,7 +36,7 @@ export class BaseComponent {
   componentDidLoad() { }
 
   componentWillRender() {
-    console.log("Re-rendering")
+    this.component.keyId = getUniversalUniqueId();
   }
 
   render() { }

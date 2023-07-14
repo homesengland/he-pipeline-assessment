@@ -1,5 +1,4 @@
 import { Component, h, Event, EventEmitter, Prop, State } from '@stencil/core';
-import { getUniversalUniqueId } from "../../utils/utils";
 import {
   ActivityDefinitionProperty,
   ActivityModel,
@@ -30,7 +29,7 @@ export class HeWeightedCheckboxProperty implements ISortableSharedComponent, IDi
   @Prop() propertyDescriptor: ActivityPropertyDescriptor;
   @Prop() propertyModel: ActivityDefinitionProperty;
   @Prop() modelSyntax: string = SyntaxNames.Json;
-  @Prop() keyId: string;
+  @State() keyId: string;
   @State() properties: Array<NestedActivityDefinitionProperty> = [];
   
   @State() iconProvider = new IconProvider();
@@ -60,6 +59,10 @@ export class HeWeightedCheckboxProperty implements ISortableSharedComponent, IDi
 
   async componentDidLoad() {
     this._base.componentDidLoad();
+  }
+
+  async componentWillRender() {
+    this._base.componentWillRender();
   }
 
 
@@ -119,10 +122,6 @@ export class HeWeightedCheckboxProperty implements ISortableSharedComponent, IDi
     this._toggle.onToggleDisplay(index);
   }
 
-  async componentWillRender() {
-    this.keyId = getUniversalUniqueId();
-  }
-
   render() {
     const answerGroups = this.properties;
     const json = JSON.stringify(answerGroups, null, 2);
@@ -140,7 +139,7 @@ export class HeWeightedCheckboxProperty implements ISortableSharedComponent, IDi
 
 
       return (
-        <div>
+        <div key={this.keyId}>
           <br />
           <div class="elsa-mb-1">
             <div class="elsa-flex">

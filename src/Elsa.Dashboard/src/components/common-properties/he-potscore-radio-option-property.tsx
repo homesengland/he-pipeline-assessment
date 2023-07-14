@@ -6,7 +6,7 @@ import {
   HTMLElsaMultiExpressionEditorElement,
   IntellisenseContext
 } from "../../models/elsa-interfaces";
-import { mapSyntaxToLanguage, parseJson, newOptionLetter, Map, getUniversalUniqueId } from "../../utils/utils";
+import { mapSyntaxToLanguage, parseJson, newOptionLetter, Map } from "../../utils/utils";
 import { IconProvider } from "../providers/icon-provider/icon-provider";
 import PlusIcon from '../../icons/plus_icon';
 import TrashCanIcon from '../../icons/trash-can';
@@ -26,7 +26,7 @@ export class HePotScoreRadioOptionProperty implements ISortableSharedComponent, 
   @Prop() activityModel: ActivityModel;
   @Prop() propertyDescriptor: ActivityPropertyDescriptor;
   @Prop() propertyModel: ActivityDefinitionProperty;
-  @Prop() keyId: string;
+  @State() keyId: string;
   @State() properties: Array<NestedActivityDefinitionProperty> = [];
   @State() iconProvider = new IconProvider();
   @Event() expressionChanged: EventEmitter<string>;
@@ -59,6 +59,10 @@ export class HePotScoreRadioOptionProperty implements ISortableSharedComponent, 
 
   async componentDidLoad() {
     this._base.componentDidLoad();
+  }
+
+  async componentWillRender() {
+    this._base.componentWillRender();
   }
 
 
@@ -115,10 +119,6 @@ export class HePotScoreRadioOptionProperty implements ISortableSharedComponent, 
     this._toggle.onToggleDisplay(index);
   }
 
-  async componentWillRender() {
-    this.keyId = getUniversalUniqueId();
-  }
-
   render() {
     const cases = this.properties;
     const supportedSyntaxes = this.supportedSyntaxes;
@@ -140,7 +140,7 @@ export class HePotScoreRadioOptionProperty implements ISortableSharedComponent, 
       const optionsDisplay = this.dictionary[index] ?? "none";
 
       return (
-        <tbody>
+        <tbody key={this.keyId}>
           <tr>
             <th class="sortablejs-custom-handle"><SortIcon options={this.iconProvider.getOptions()}></SortIcon>
             </th>
@@ -152,11 +152,11 @@ export class HePotScoreRadioOptionProperty implements ISortableSharedComponent, 
               </button>
             </td>
           </tr>
-          <tr key={`case-${index}`}>
+          <tr>
             <th
               class="elsa-py-3 elsa-text-left elsa-text-xs elsa-font-medium elsa-text-gray-500 elsa-tracking-wider elsa-w-2/12">Identifier
             </th>
-            <td class="elsa-py-2 elsa-pr-5" colSpan={2} style={{ width: colWidth }}>
+            <td class="elsa-py-2" colSpan={2} style={{ width: colWidth }}>
               <input type="text" value={radioOption.name} onChange={e => this._base.UpdateName(e, radioOption)}
                 class="focus:elsa-ring-blue-500 focus:elsa-border-blue-500 elsa-block elsa-w-full elsa-min-w-0 elsa-rounded-md sm:elsa-text-sm elsa-border-gray-300" />
             </td>
@@ -167,7 +167,7 @@ export class HePotScoreRadioOptionProperty implements ISortableSharedComponent, 
             <th
               class="elsa-py-3 elsa-text-left elsa-text-xs elsa-font-medium elsa-text-gray-500 elsa-tracking-wider elsa-w-2/12">Answer
             </th>
-            <td class="elsa-py-2 pl-5" colSpan={2} style={{ width: colWidth }}>
+            <td class="elsa-py-2" colSpan={2} style={{ width: colWidth }}>
               <div class="elsa-mt-1 elsa-relative elsa-rounded-md elsa-shadow-sm">
                 <elsa-expression-editor
                   key={`expression-editor-${index}-${this.syntaxSwitchCount}-${this.keyId}`}
@@ -196,7 +196,7 @@ export class HePotScoreRadioOptionProperty implements ISortableSharedComponent, 
             <th class="elsa-py-3 elsa-text-left elsa-text-xs elsa-font-medium elsa-text-gray-500 elsa-tracking-wider elsa-w-2/12">
               Pot Score
             </th>
-            <td class="elsa-py-2 elsa-pr-5" style={{ width: colWidth }}>
+            <td class="elsa-py-2" style={{ width: colWidth }}>
               <select onChange={e => this._base.UpdateDropdown(e, radioOption, RadioOptionsSyntax.PotScore)}
                 class="elsa-mt-1 elsa-block focus:elsa-ring-blue-500 focus:elsa-border-blue-500 elsa-w-full elsa-shadow-sm sm:elsa-max-w-xs sm:elsa-text-sm elsa-border-gray-300 elsa-rounded-md">
                 {this.potScoreOptions.map(potScore => {
@@ -218,7 +218,7 @@ export class HePotScoreRadioOptionProperty implements ISortableSharedComponent, 
 
           <tr style={{ display: optionsDisplay }}>
             <th class="elsa-py-3 elsa-text-left elsa-text-xs elsa-font-medium elsa-text-gray-500 elsa-tracking-wider elsa-w-2/12">Pre Populated</th>
-            <td class="elsa-py-2 pl-5" style={{ width: colWidth }}>
+            <td class="elsa-py-2" style={{ width: colWidth }}>
               <div class="elsa-mt-1 elsa-relative elsa-rounded-md elsa-shadow-sm">
                 <elsa-expression-editor
                   key={`expression-editor-${index}-${this.syntaxSwitchCount}-${this.keyId}`}

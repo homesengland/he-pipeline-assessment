@@ -33,6 +33,7 @@ export class HeWeightedRadioProperty implements ISortableSharedComponent, IDispl
   @State() switchTextHeight: string = "";
   @State() editorHeight: string = "2.75em"
   @State() dictionary: Map<string>;
+  @State() keyId: string;
 
   supportedSyntaxes: Array<string> = [SyntaxNames.JavaScript, SyntaxNames.Liquid, SyntaxNames.Literal];
   multiExpressionEditor: HTMLElsaMultiExpressionEditorElement;
@@ -58,6 +59,10 @@ export class HeWeightedRadioProperty implements ISortableSharedComponent, IDispl
 
   async componentDidLoad() {
     this._base.componentDidLoad();
+  }
+
+  async componentWillRender() {
+    this._base.componentWillRender();
   }
 
   updatePropertyModel() {
@@ -125,7 +130,7 @@ export class HeWeightedRadioProperty implements ISortableSharedComponent, IDispl
       const optionsDisplay = this.dictionary[index] ?? "none";
 
       return (
-        <tbody>
+        <tbody key={this.keyId }>
           <tr>
             <th class="sortablejs-custom-handle"><SortIcon options={this.iconProvider.getOptions()}></SortIcon>
             </th>
@@ -141,7 +146,7 @@ export class HeWeightedRadioProperty implements ISortableSharedComponent, IDispl
             <th
               class="elsa-py-3 elsa-text-left elsa-text-xs elsa-font-medium elsa-text-gray-500 elsa-tracking-wider elsa-w-2/12">Identifier
             </th>
-            <td class="elsa-py-2 elsa-pr-5" colSpan={2} style={{ width: colWidth }}>
+            <td class="elsa-py-2" colSpan={2} style={{ width: colWidth }}>
               <input type="text" value={radioOption.name} onChange={e => this._base.UpdateName(e, radioOption)}
                 class="focus:elsa-ring-blue-500 focus:elsa-border-blue-500 elsa-block elsa-w-full elsa-min-w-0 elsa-rounded-md sm:elsa-text-sm elsa-border-gray-300" />
             </td>
@@ -151,7 +156,7 @@ export class HeWeightedRadioProperty implements ISortableSharedComponent, IDispl
             <th
               class="elsa-py-3 elsa-text-left elsa-text-xs elsa-font-medium elsa-text-gray-500 elsa-tracking-wider elsa-w-2/12">Answer
             </th>
-            <td class="elsa-py-2 pl-5" colSpan={2} style={{ width: colWidth }}>
+            <td class="elsa-py-2" colSpan={2} style={{ width: colWidth }}>
               <div class="elsa-mt-1 elsa-relative elsa-rounded-md elsa-shadow-sm">
                 <elsa-expression-editor
                   key={`expression-editor-${index}-${this.syntaxSwitchCount}`}
@@ -179,7 +184,7 @@ export class HeWeightedRadioProperty implements ISortableSharedComponent, IDispl
             <th class="elsa-py-3 elsa-text-left elsa-text-xs elsa-font-medium elsa-text-gray-500 elsa-tracking-wider elsa-w-2/12">
               Score
             </th>
-            <td class="elsa-py-2 pl-5" colSpan={2} style={{ width: colWidth }}>
+            <td class="elsa-py-2" colSpan={2} style={{ width: colWidth }}>
               <div class="elsa-mt-1 elsa-relative elsa-rounded-md elsa-shadow-sm">
                 <elsa-expression-editor
                   key={`expression-editor-${index}-${this.scoreSyntaxSwitchCount}`}
