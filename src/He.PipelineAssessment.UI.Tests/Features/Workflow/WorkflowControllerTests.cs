@@ -55,30 +55,7 @@ namespace He.PipelineAssessment.UI.Tests.Features.Workflow
             Assert.Contains(activityTypeRouteValue, redirectToActionResult.RouteValues!);
         }
 
-        [Theory]
-        [AutoMoqData]
-        public async Task StartWorkflow_ShouldRedirectToAction_GivenIncorrectBusinessArea(
-           [Frozen] Mock<IMediator> mediator,
-           StartWorkflowCommand command,
-           LoadQuestionScreenRequest loadWorkflowActivityRequest,
-           WorkflowController sut)
-        {
-            //Arrange
-            loadWorkflowActivityRequest.IsAuthorised = false;
-            mediator.Setup(x => x.Send(command, CancellationToken.None)).ReturnsAsync(loadWorkflowActivityRequest);
-
-            //Act
-            var result = await sut.StartWorkflow(command);
-
-            //Assert
-            Assert.NotNull(result);
-            Assert.IsType<RedirectToActionResult>(result);
-
-            var redirectToActionResult = (RedirectToActionResult)result;
-            Assert.Equal("AccessDenied", redirectToActionResult.ActionName);
-        }
-
-      
+     
         [Theory]
         [AutoMoqData]
         public async Task QuestionScreenSaveAndContinue_ShouldRedirectToAction_GivenValidationIssuesAreFound(

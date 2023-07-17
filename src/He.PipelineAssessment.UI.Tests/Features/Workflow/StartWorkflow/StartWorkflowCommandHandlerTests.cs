@@ -73,11 +73,10 @@ namespace He.PipelineAssessment.UI.Tests.Features.Workflow.StartWorkflow
             //Arrange
            
             //Act
-            var result = await sut.Handle(command, CancellationToken.None);
+            var exceptionThrown = await Assert.ThrowsAsync<UnauthorizedAccessException>(() => sut.Handle(command, CancellationToken.None));
 
             //Assert
-            Assert.NotNull(result);
-            Assert.False(result!.IsAuthorised);
+            Assert.Equal("You do not have permission to access this resource.", exceptionThrown.Message);
         }
 
         [Theory]
