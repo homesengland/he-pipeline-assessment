@@ -76,7 +76,7 @@ namespace He.PipelineAssessment.UI.Features.Workflow.LoadCheckYourAnswersScreen
             catch (Exception e)
             {
                 _logger.LogError(e, e.Message);
-                throw;
+                throw new ApplicationException("Failed to load check your answers screen activity");
             }
 
         }

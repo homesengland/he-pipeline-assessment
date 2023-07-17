@@ -17,9 +17,9 @@ namespace He.PipelineAssessment.UI.Features.Workflow.LoadConfirmationScreen
         private readonly IUserProvider _userProvider;
         private readonly IDateTimeProvider _dateTimeProvider;
         private readonly IAssessmentToolWorkflowInstanceHelpers _assessmentToolWorkflowInstanceHelpers;
-        private readonly ILogger<LoadQuestionScreenRequestHandler> _logger;
+        private readonly ILogger<LoadConfirmationScreenRequestHandler> _logger;
 
-        public LoadConfirmationScreenRequestHandler(IElsaServerHttpClient elsaServerHttpClient, IAssessmentRepository assessmentRepository, IUserProvider userProvider, IDateTimeProvider dateTimeProvider, IAssessmentToolWorkflowInstanceHelpers assessmentToolWorkflowInstanceHelpers, ILogger logger)
+        public LoadConfirmationScreenRequestHandler(IElsaServerHttpClient elsaServerHttpClient, IAssessmentRepository assessmentRepository, IUserProvider userProvider, IDateTimeProvider dateTimeProvider, IAssessmentToolWorkflowInstanceHelpers assessmentToolWorkflowInstanceHelpers, ILogger<LoadConfirmationScreenRequestHandler> logger)
         {
             _elsaServerHttpClient = elsaServerHttpClient;
             _assessmentRepository = assessmentRepository;

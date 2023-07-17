@@ -19,6 +19,7 @@ namespace Elsa.Server.Features.Workflow.QuestionScreenSaveAndContinue
         private readonly IWorkflowNextActivityProvider _workflowNextActivityProvider;
         private readonly INextActivityNavigationService _nextActivityNavigationService;
         private readonly IDeleteChangedWorkflowPathService _deleteChangedWorkflowPathService;
+        private readonly ILogger<QuestionScreenSaveAndContinueCommandHandler> _logger;
 
 
         public QuestionScreenSaveAndContinueCommandHandler(
@@ -27,7 +28,7 @@ namespace Elsa.Server.Features.Workflow.QuestionScreenSaveAndContinue
             IDateTimeProvider dateTimeProvider,
             IWorkflowNextActivityProvider workflowNextActivityProvider,
             INextActivityNavigationService nextActivityNavigationService,
-            IDeleteChangedWorkflowPathService deleteChangedWorkflowPathService)
+            IDeleteChangedWorkflowPathService deleteChangedWorkflowPathService, ILogger<QuestionScreenSaveAndContinueCommandHandler> logger)
         {
             _elsaCustomRepository = elsaCustomRepository;
             _workflowInstanceProvider = workflowInstanceProvider;
@@ -35,6 +36,7 @@ namespace Elsa.Server.Features.Workflow.QuestionScreenSaveAndContinue
             _workflowNextActivityProvider = workflowNextActivityProvider;
             _nextActivityNavigationService = nextActivityNavigationService;
             _deleteChangedWorkflowPathService = deleteChangedWorkflowPathService;
+            _logger = logger;
         }
 
         public async Task<OperationResult<QuestionScreenSaveAndContinueResponse>> Handle(QuestionScreenSaveAndContinueCommand command,
@@ -84,6 +86,7 @@ namespace Elsa.Server.Features.Workflow.QuestionScreenSaveAndContinue
 
             catch (Exception e)
             {
+                _logger.LogError(e,e.Message);
                 result.ErrorMessages.Add(e.Message);
             }
 
