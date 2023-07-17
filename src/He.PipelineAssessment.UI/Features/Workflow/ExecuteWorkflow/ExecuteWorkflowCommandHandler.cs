@@ -12,11 +12,13 @@ namespace He.PipelineAssessment.UI.Features.Workflow.ExecuteWorkflow
         private readonly IRoleValidation _roleValidation;
         private readonly IAssessmentRepository _assessmentRepository;
         private readonly IElsaServerHttpClient _elsaServerHttpClient;
-        public ExecuteWorkflowCommandHandler(IRoleValidation roleValidation, IAssessmentRepository assessmentRepository, IElsaServerHttpClient elsaServerHttpClient)
+        private readonly ILogger<ExecuteWorkflowCommandHandler> _logger;
+        public ExecuteWorkflowCommandHandler(IRoleValidation roleValidation, IAssessmentRepository assessmentRepository, IElsaServerHttpClient elsaServerHttpClient, ILogger<ExecuteWorkflowCommandHandler> logger)
         {
             _roleValidation = roleValidation;
             _assessmentRepository = assessmentRepository;
             _elsaServerHttpClient = elsaServerHttpClient;
+            _logger = logger;
         }
 
         public async Task<LoadQuestionScreenRequest?> Handle(ExecuteWorkflowCommand command, CancellationToken cancellationToken)
@@ -50,7 +52,9 @@ namespace He.PipelineAssessment.UI.Features.Workflow.ExecuteWorkflow
             }
             else
             {
-                return null;
+                _logger.LogError($"Cannot Execute Workflow. ActivityId: {command.ActivityId} WorkflowInstanceId:{command.WorkflowInstanceId}");
+
+                throw new ApplicationException ($"Cannot Execute Workflow. ActivityId: {command.ActivityId} WorkflowInstanceId:{command.WorkflowInstanceId}");
             }
         }
     }

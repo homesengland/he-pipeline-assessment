@@ -62,14 +62,16 @@ namespace He.PipelineAssessment.UI.Features.Workflow.QuestionScreenSaveAndContin
                 }
                 else
                 {
-                    return null;
+                    throw new ApplicationException(
+                        $"Unable to save and continue. AssessmentId: {request.AssessmentId} WorkflowInstanceId:{request.Data.WorkflowInstanceId}");
                 }
 
             }
             catch (Exception e)
             {
-                _logger.LogError(e.Message);
-                return null;
+                _logger.LogError(e,e.Message);
+                throw new ApplicationException(
+                    $"Unable to save and continue. AssessmentId: {request.AssessmentId} WorkflowInstanceId:{request.Data.WorkflowInstanceId}");
             }
 
         }
