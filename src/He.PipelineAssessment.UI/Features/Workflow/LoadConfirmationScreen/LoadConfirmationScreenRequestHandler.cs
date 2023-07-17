@@ -90,7 +90,8 @@ namespace He.PipelineAssessment.UI.Features.Workflow.LoadConfirmationScreen
                     }
 
                 }
-                return null;
+                _logger.LogError($"Failed to load confirmation screen response from elsa server client is null. ActivityId: {request.ActivityId} WorkflowInstanceId: {request.WorkflowInstanceId}");
+                throw new ApplicationException("Failed to load confirmation screen activity");
             }
             catch(Exception e)
             {
