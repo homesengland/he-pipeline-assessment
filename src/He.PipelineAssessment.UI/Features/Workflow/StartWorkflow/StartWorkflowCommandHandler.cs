@@ -25,50 +25,57 @@ namespace He.PipelineAssessment.UI.Features.Workflow.StartWorkflow
 
         public async Task<LoadQuestionScreenRequest?> Handle(StartWorkflowCommand request, CancellationToken cancellationToken)
         {
-            
-            if (!await _roleValidation.ValidateRole(request.AssessmentId, request.WorkflowDefinitionId))
+            try
             {
-                throw new UnauthorizedAccessException($"You do not have permission to access this resource.");
-            }
-
-            var dto = new StartWorkflowCommandDto()
-            {
-                WorkflowDefinitionId = request.WorkflowDefinitionId,
-                CorrelationId = request.CorrelationId
-            };
-            var response = await _elsaServerHttpClient.PostStartWorkflow(dto);
-
-            if (response != null)
-            {
-                var result = new LoadQuestionScreenRequest()
+                if (!await _roleValidation.ValidateRole(request.AssessmentId, request.WorkflowDefinitionId))
                 {
-                    ActivityId = response.Data.NextActivityId,
-                    WorkflowInstanceId = response.Data.WorkflowInstanceId,
-                    ActivityType = response.Data.ActivityType,
-                };
-
-                var assessmentToolWorkflowInstance = AssessmentToolWorkflowInstance(request, response);
-
-                await _assessmentRepository.CreateAssessmentToolWorkflowInstance(assessmentToolWorkflowInstance);
-
-                //if there is a next workflow record for the current set it to started
-                var nextWorkflow =
-                    await _assessmentRepository.GetAssessmentToolInstanceNextWorkflowByAssessmentId(request.AssessmentId,
-                        request.WorkflowDefinitionId);
-
-                if (nextWorkflow != null)
-                {
-                    await _assessmentRepository.DeleteNextWorkflow(nextWorkflow);
+                    throw new UnauthorizedAccessException($"You do not have permission to access this resource.");
                 }
 
-                return await Task.FromResult(result);
-            }
-            else
-            {
-                
-                throw new ApplicationException("Failed to start workflow, response is null");
-            }
+                var dto = new StartWorkflowCommandDto()
+                {
+                    WorkflowDefinitionId = request.WorkflowDefinitionId,
+                    CorrelationId = request.CorrelationId
+                };
 
+                var response = await _elsaServerHttpClient.PostStartWorkflow(dto);
+
+                if (response != null)
+                {
+                    var result = new LoadQuestionScreenRequest()
+                    {
+                        ActivityId = response.Data.NextActivityId,
+                        WorkflowInstanceId = response.Data.WorkflowInstanceId,
+                        ActivityType = response.Data.ActivityType,
+                    };
+
+                    var assessmentToolWorkflowInstance = AssessmentToolWorkflowInstance(request, response);
+
+                    await _assessmentRepository.CreateAssessmentToolWorkflowInstance(assessmentToolWorkflowInstance);
+
+                    //if there is a next workflow record for the current set it to started
+                    var nextWorkflow =
+                        await _assessmentRepository.GetAssessmentToolInstanceNextWorkflowByAssessmentId(request.AssessmentId,
+                            request.WorkflowDefinitionId);
+
+                    if (nextWorkflow != null)
+                    {
+                        await _assessmentRepository.DeleteNextWorkflow(nextWorkflow);
+                    }
+
+                    return await Task.FromResult(result);
+                }
+                else
+                {
+                    _logger.LogError($"Failed to start workflow, response from elsa server client is null AssessmentId: {request.AssessmentId} WorkflowDefinitionId: {request.WorkflowDefinitionId}");
+                    throw new ApplicationException("Failed to start workflow");
+                }
+            }
+            catch (Exception e)
+            {
+                _logger.LogError(e,e.Message);
+                throw;
+            }
         }
 
         private static AssessmentToolWorkflowInstance AssessmentToolWorkflowInstance(StartWorkflowCommand request, WorkflowNextActivityDataDto response)

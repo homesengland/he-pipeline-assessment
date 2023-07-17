@@ -6,6 +6,7 @@ using Elsa.Server.Models;
 using Elsa.Server.Providers;
 using Elsa.Server.Services;
 using Elsa.Services;
+using Humanizer;
 using MediatR;
 
 
@@ -19,6 +20,7 @@ namespace Elsa.Server.Features.Workflow.StartWorkflow
         private readonly IWorkflowNextActivityProvider _workflowNextActivityProvider;
         private readonly INextActivityNavigationService _nextActivityNavigationService;
         private readonly IDateTimeProvider _dateTimeProvider;
+        private readonly ILogger <StartWorkflowCommandHandler> _logger;
 
 
         public StartWorkflowCommandHandler(IWorkflowRegistry workflowRegistry,
@@ -26,7 +28,7 @@ namespace Elsa.Server.Features.Workflow.StartWorkflow
             IElsaCustomRepository elsaCustomRepository,
             IWorkflowNextActivityProvider workflowNextActivityProvider,
             INextActivityNavigationService nextActivityNavigationService,
-            IDateTimeProvider dateTimeProvider)
+            IDateTimeProvider dateTimeProvider, ILogger<StartWorkflowCommandHandler> logger)
         {
             _workflowRegistry = workflowRegistry;
             _startsWorkflow = startsWorkflow;
@@ -34,6 +36,7 @@ namespace Elsa.Server.Features.Workflow.StartWorkflow
             _workflowNextActivityProvider = workflowNextActivityProvider;
             _nextActivityNavigationService = nextActivityNavigationService;
             _dateTimeProvider = dateTimeProvider;
+            _logger = logger;
         }
 
         public async Task<OperationResult<StartWorkflowResponse>> Handle(StartWorkflowCommand request, CancellationToken cancellationToken)
@@ -88,16 +91,19 @@ namespace Elsa.Server.Features.Workflow.StartWorkflow
                     }
                     else
                     {
+                        _logger.LogError($"Failed to get last executed activity. CorrelationId: {request.CorrelationId} WorkflowDefinitionId: {request.WorkflowDefinitionId}");
                         result.ErrorMessages.Add("Failed to get activity");
                     }
                 }
                 else
                 {
+                    _logger.LogError($"Workflow instance is null. CorrelationId: {request.CorrelationId} WorkflowDefinitionId: {request.WorkflowDefinitionId}");
                     result.ErrorMessages.Add("Workflow instance is null");
                 }
             }
             catch (Exception e)
             {
+                _logger.LogError(e,e.Message);
                 result.ErrorMessages.Add(e.Message);
             }
 

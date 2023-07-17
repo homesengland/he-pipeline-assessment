@@ -61,6 +61,7 @@ namespace Elsa.CustomWorkflow.Sdk.HttpClients
                     _logger.LogError($"StatusCode='{response.StatusCode}'," +
                                                                       $"\n Message= '{data}'," +
                                                                       $"\n Url='{request.RequestUri}'");
+                    
 
                     throw new ApplicationException("Failed to start workflow");
                 }
