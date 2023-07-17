@@ -7,6 +7,7 @@ using MediatR;
 using System.Text.Json;
 using He.PipelineAssessment.Infrastructure;
 using He.PipelineAssessment.UI.Common.Utility;
+using Auth0.ManagementApi.Models;
 
 namespace He.PipelineAssessment.UI.Features.Workflow.LoadConfirmationScreen
 {
@@ -90,13 +91,13 @@ namespace He.PipelineAssessment.UI.Features.Workflow.LoadConfirmationScreen
                     }
 
                 }
-                _logger.LogError($"Failed to load confirmation screen response from elsa server client is null. ActivityId: {request.ActivityId} WorkflowInstanceId: {request.WorkflowInstanceId}");
-                throw new ApplicationException("Failed to load confirmation screen activity");
+                _logger.LogError($"Failed to load Confirmation Screen, response from elsa server client is null. ActivityId: {request.ActivityId} WorkflowInstanceId: {request.WorkflowInstanceId}");
+                throw new ApplicationException("Failed to load Confirmation Screen, response from elsa server client is null. ActivityId: { request.ActivityId } WorkflowInstanceId: { request.WorkflowInstanceId");
             }
             catch(Exception e)
             {
-                _logger.LogError(e, e.Message);
-                throw;
+                _logger.LogError($"Failed to load Confirmation Screen. ActivityId: {request.ActivityId} WorkflowInstanceId: {request.WorkflowInstanceId}");
+                throw new ApplicationException("Failed to load Confirmation Screen. ActivityId: { request.ActivityId } WorkflowInstanceId: { request.WorkflowInstanceId");
             }
         }
 

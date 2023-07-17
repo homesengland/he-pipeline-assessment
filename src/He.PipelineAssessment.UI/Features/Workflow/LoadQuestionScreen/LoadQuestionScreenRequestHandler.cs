@@ -69,15 +69,15 @@ namespace He.PipelineAssessment.UI.Features.Workflow.LoadQuestionScreen
                 }
                 else
                 {
-                    _logger.LogError($"Failed to load activity response from elsa server client is null. ActivityId: {request.ActivityId} WorkflowInstanceId: {request.WorkflowInstanceId}");
-                    throw new ApplicationException("Failed to load activity");
+                    _logger.LogError($"Failed to load Question Screen activity, response from elsa server client is null. ActivityId: {request.ActivityId} WorkflowInstanceId: {request.WorkflowInstanceId}");
+                    throw new ApplicationException("Failed to load Question Screen activity, response from elsa server client is null. ActivityId: {request.ActivityId} WorkflowInstanceId: {request.WorkflowInstanceId}");
                 }
 
             }
             catch (Exception e)
             {
                 _logger.LogError(e, e.Message);
-                throw;
+                throw new ApplicationException("Failed to load Question Screen activity. ActivityId: {request.ActivityId} WorkflowInstanceId: {request.WorkflowInstanceId}");
             }
         }
 
