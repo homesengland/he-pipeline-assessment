@@ -16,12 +16,14 @@ namespace Elsa.Server.Features.Workflow.LoadConfirmationScreen
         private readonly IElsaCustomRepository _elsaCustomRepository;
         private readonly IActivityDataProvider _activityDataProvider;
         private readonly IQuestionInvoker _questionInvoker;
+        private readonly ILogger _logger;
 
-        public LoadConfirmationScreenRequestHandler(IElsaCustomRepository elsaCustomRepository, IActivityDataProvider activityDataProvider, IQuestionInvoker questionInvoker)
+        public LoadConfirmationScreenRequestHandler(IElsaCustomRepository elsaCustomRepository, IActivityDataProvider activityDataProvider, IQuestionInvoker questionInvoker, ILogger logger)
         {
             _elsaCustomRepository = elsaCustomRepository;
             _activityDataProvider = activityDataProvider;
             _questionInvoker = questionInvoker;
+            _logger = logger;
         }
 
         public async Task<OperationResult<LoadConfirmationScreenResponse>> Handle(LoadConfirmationScreenRequest request, CancellationToken cancellationToken)
@@ -62,6 +64,7 @@ namespace Elsa.Server.Features.Workflow.LoadConfirmationScreen
                 }
                 else
                 {
+                    _logger.LogError($"Unable to find activity navigation with Workflow Id: {request.WorkflowInstanceId} and Activity Id: {request.ActivityId} in Elsa Custom database");
                     result.ErrorMessages.Add(
                         $"Unable to find activity navigation with Workflow Id: {request.WorkflowInstanceId} and Activity Id: {request.ActivityId} in Elsa Custom database");
                 }
@@ -74,6 +77,7 @@ namespace Elsa.Server.Features.Workflow.LoadConfirmationScreen
             }
             catch (Exception e)
             {
+                _logger.LogError(e, e.Message);
                 result.ErrorMessages.Add(e.Message);
             }
 
