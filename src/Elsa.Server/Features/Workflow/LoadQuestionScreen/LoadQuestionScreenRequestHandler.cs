@@ -1,4 +1,5 @@
 ﻿using System.Text.Json;
+using Azure.Core;
 using Elsa.CustomActivities.Activities.Common;
 using Elsa.CustomActivities.Activities.QuestionScreen;
 using Elsa.CustomActivities.Activities.Shared;
@@ -18,12 +19,14 @@ namespace Elsa.Server.Features.Workflow.LoadQuestionScreen
         private readonly IWorkflowInstanceStore _workflowInstanceStore;
         private readonly IElsaCustomRepository _elsaCustomRepository;
         private readonly IQuestionInvoker _invoker;
+        private readonly ILogger<LoadQuestionScreenRequestHandler> _logger;
 
-        public LoadQuestionScreenRequestHandler(IWorkflowInstanceStore workflowInstanceStore, IElsaCustomRepository elsaCustomRepository, IQuestionInvoker invoker)
+        public LoadQuestionScreenRequestHandler(IWorkflowInstanceStore workflowInstanceStore, IElsaCustomRepository elsaCustomRepository, IQuestionInvoker invoker, ILogger<LoadQuestionScreenRequestHandler> logger)
         {
             _workflowInstanceStore = workflowInstanceStore;
             _elsaCustomRepository = elsaCustomRepository;
             _invoker = invoker;
+            _logger = logger;
         }
 
         public async Task<OperationResult<LoadQuestionScreenResponse>> Handle(LoadQuestionScreenRequest activityRequest, CancellationToken cancellationToken)
@@ -45,10 +48,13 @@ namespace Elsa.Server.Features.Workflow.LoadQuestionScreen
                 {
                     if (customActivityNavigation.ActivityType != ActivityTypeConstants.QuestionScreen)
                     {
-                        throw new ApplicationException(
+                        result.ErrorMessages.Add(
                             $"Attempted to load question screen with {customActivityNavigation.ActivityType} activity type");
-                    }
 
+                        _logger.LogError($"Attempted to load question screen with {customActivityNavigation.ActivityType} activity type");
+
+                        return await Task.FromResult(result);
+                    }
                     var workflowSpecification =
                         new WorkflowInstanceIdSpecification(activityRequest.WorkflowInstanceId);
 
@@ -67,6 +73,8 @@ namespace Elsa.Server.Features.Workflow.LoadQuestionScreen
                     {
                         if (!workflowInstance.ActivityData.ContainsKey(activityRequest.ActivityId))
                         {
+                            _logger.LogError($"Cannot find activity Id {activityRequest.ActivityId} in the workflow activity data dictionary");
+
                             result.ErrorMessages.Add(
                                 $"Cannot find activity Id {activityRequest.ActivityId} in the workflow activity data dictionary");
                         }
@@ -107,6 +115,8 @@ namespace Elsa.Server.Features.Workflow.LoadQuestionScreen
                             }
                             else
                             {
+                                _logger.LogError($"Failed to map activity data to Questions WorkflowInstanceId: {activityRequest.WorkflowInstanceId}");
+
                                 result.ErrorMessages.Add(
                                     $"Failed to map activity data to Questions");
                             }
@@ -114,18 +124,23 @@ namespace Elsa.Server.Features.Workflow.LoadQuestionScreen
                     }
                     else
                     {
+                        _logger.LogError($"Unable to find workflow instance with Id: {activityRequest.WorkflowInstanceId} in Elsa database");
+
                         result.ErrorMessages.Add(
                             $"Unable to find workflow instance with Id: {activityRequest.WorkflowInstanceId} in Elsa database");
                     }
                 }
                 else
                 {
+                    _logger.LogError($"Unable to find activity navigation with Workflow Id: {activityRequest.WorkflowInstanceId} and Activity Id: {activityRequest.ActivityId} in Elsa Custom database");
+
                     result.ErrorMessages.Add(
                         $"Unable to find activity navigation with Workflow Id: {activityRequest.WorkflowInstanceId} and Activity Id: {activityRequest.ActivityId} in Elsa Custom database");
                 }
             }
             catch (Exception e)
             {
+                _logger.LogError(e,e.Message);
                 result.ErrorMessages.Add(e.Message);
             }
 

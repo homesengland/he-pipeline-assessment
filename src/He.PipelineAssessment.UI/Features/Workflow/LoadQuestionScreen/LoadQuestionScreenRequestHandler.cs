@@ -69,15 +69,15 @@ namespace He.PipelineAssessment.UI.Features.Workflow.LoadQuestionScreen
                 }
                 else
                 {
-                    return null;
+                    _logger.LogError($"Failed to load activity response from elsa server client is null. ActivityId: {request.ActivityId} WorkflowInstanceId: {request.WorkflowInstanceId}");
+                    throw new ApplicationException("Failed to load activity");
                 }
 
             }
             catch (Exception e)
             {
-                _logger.LogError(e.Message);
-
-                return null;
+                _logger.LogError(e, e.Message);
+                throw;
             }
         }
 

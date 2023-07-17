@@ -67,7 +67,7 @@ namespace He.PipelineAssessment.UI.Features.Workflow.StartWorkflow
                 }
                 else
                 {
-                    _logger.LogError($"Failed to start workflow, response from elsa server client is null AssessmentId: {request.AssessmentId} WorkflowDefinitionId: {request.WorkflowDefinitionId}");
+                    _logger.LogError($"Failed to start workflow, response from elsa server client is null. AssessmentId: {request.AssessmentId} WorkflowDefinitionId: {request.WorkflowDefinitionId}");
                     throw new ApplicationException("Failed to start workflow");
                 }
             }
