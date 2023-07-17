@@ -11,9 +11,9 @@ namespace Elsa.Server.Features.Workflow.LoadCheckYourAnswersScreen
     {
         private readonly IElsaCustomRepository _elsaCustomRepository;
         private readonly IActivityDataProvider _activityDataProvider;
-        private readonly ILogger _logger;
+        private readonly ILogger<LoadCheckYourAnswersScreenRequestHandler> _logger;
 
-        public LoadCheckYourAnswersScreenRequestHandler(IElsaCustomRepository elsaCustomRepository, IActivityDataProvider activityDataProvider, ILogger logger)
+        public LoadCheckYourAnswersScreenRequestHandler(IElsaCustomRepository elsaCustomRepository, IActivityDataProvider activityDataProvider, ILogger<LoadCheckYourAnswersScreenRequestHandler> logger)
         {
             _elsaCustomRepository = elsaCustomRepository;
             _activityDataProvider = activityDataProvider;
