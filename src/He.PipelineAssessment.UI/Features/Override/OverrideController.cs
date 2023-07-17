@@ -35,95 +35,73 @@ namespace He.PipelineAssessment.UI.Features.Override
         [HttpPost]
         public async Task<IActionResult> CreateOverride([FromForm] AssessmentInterventionDto dto)
         {
-            try
+
+            var serializedCommand = JsonConvert.SerializeObject(dto.AssessmentInterventionCommand);
+            var createOverrideCommand = JsonConvert.DeserializeObject<CreateOverrideCommand>(serializedCommand);
+            if (createOverrideCommand != null)
             {
-                var serializedCommand = JsonConvert.SerializeObject(dto.AssessmentInterventionCommand);
-                var createOverrideCommand = JsonConvert.DeserializeObject<CreateOverrideCommand>(serializedCommand);
-                if (createOverrideCommand != null)
+                var validationResult = await _validator.ValidateAsync(createOverrideCommand);
+                if (validationResult.IsValid)
                 {
-                    var validationResult = await _validator.ValidateAsync(createOverrideCommand);
-                    if (validationResult.IsValid)
-                    {
 
-                        int interventionId = await _mediator.Send(createOverrideCommand);
-                        if (interventionId < 1)
-                        {
-                            return RedirectToAction("Index", "Error", new { message = "There has been an error whilst attempting to save this request.  Please try again." });
-                        }
-                        return RedirectToAction("CheckYourDetails", new { interventionId });
-                    }
-                    else
+                    int interventionId = await _mediator.Send(createOverrideCommand);
+                    if (interventionId < 1)
                     {
-                        dto.ValidationResult = validationResult;
-                        return View("Override", dto);
+                        return RedirectToAction("Index", "Error", new { message = "There has been an error whilst attempting to save this request.  Please try again." });
                     }
+                    return RedirectToAction("CheckYourDetails", new { interventionId });
                 }
-                return View("Override", dto);
-
+                else
+                {
+                    dto.ValidationResult = validationResult;
+                    return View("Override", dto);
+                }
             }
-            catch (Exception e)
-            {
-                _logger.LogError(e.Message);
-                return RedirectToAction("Index", "Error", new { message = e.Message });
-            }
+            return View("Override", dto);
         }
 
         [HttpGet]
         public async Task<IActionResult> EditOverride(int interventionId)
         {
-            try
+
+            AssessmentInterventionDto dto = await _mediator.Send(new EditOverrideRequest() { InterventionId = interventionId });
+            if (dto.AssessmentInterventionCommand.Status == InterventionStatus.Pending)
             {
-                AssessmentInterventionDto dto = await _mediator.Send(new EditOverrideRequest() { InterventionId = interventionId });
-                if (dto.AssessmentInterventionCommand.Status == InterventionStatus.Pending)
-                {
-                    return View("EditOverride", dto);
-                }
-                else
-                {
-                    return RedirectToAction("CheckYourDetails", new { interventionId });
-                }
+                return View("EditOverride", dto);
             }
-            catch (Exception e)
+            else
             {
-                _logger.LogError(e.Message);
-                return RedirectToAction("Index", "Error", new { message = e.Message });
+                return RedirectToAction("CheckYourDetails", new { interventionId });
             }
+
         }
 
         [HttpPost]
         public async Task<IActionResult> EditOverride([FromForm] AssessmentInterventionDto dto)
         {
-            try
+
+            var serializedCommand = JsonConvert.SerializeObject(dto.AssessmentInterventionCommand);
+            var editOverrideCommand = JsonConvert.DeserializeObject<EditOverrideCommand>(serializedCommand);
+            if (editOverrideCommand != null)
             {
-                var serializedCommand = JsonConvert.SerializeObject(dto.AssessmentInterventionCommand);
-                var editOverrideCommand = JsonConvert.DeserializeObject<EditOverrideCommand>(serializedCommand);
-                if (editOverrideCommand != null)
+                var validationResult = await _validator.ValidateAsync(editOverrideCommand);
+                if (validationResult.IsValid)
                 {
-                    var validationResult = await _validator.ValidateAsync(editOverrideCommand);
-                    if (validationResult.IsValid)
-                    {
 
-                        var interventionId = await _mediator.Send(editOverrideCommand);
+                    var interventionId = await _mediator.Send(editOverrideCommand);
 
-                        return RedirectToAction("CheckYourDetails", new { InterventionId = dto.AssessmentInterventionCommand.AssessmentInterventionId });
+                    return RedirectToAction("CheckYourDetails", new { InterventionId = dto.AssessmentInterventionCommand.AssessmentInterventionId });
 
-                    }
-                    else
-                    {
-                        dto.ValidationResult = validationResult;
-                        return View("EditOverride", dto);
-                    }
                 }
                 else
                 {
-                    return RedirectToAction("Index", "Error", new { message = "There has been an error whilst attempting to save this request." });
+                    dto.ValidationResult = validationResult;
+                    return View("EditOverride", dto);
                 }
-
             }
-            catch (Exception e)
+            else
             {
-                _logger.LogError(e.Message);
-                return RedirectToAction("Index", "Error", new { message = e.Message });
+                return RedirectToAction("Index", "Error", new { message = "There has been an error whilst attempting to save this request." });
             }
         }
 
@@ -131,43 +109,31 @@ namespace He.PipelineAssessment.UI.Features.Override
         [HttpGet]
         public async Task<IActionResult> CheckYourDetails(int interventionId)
         {
-            try
-            {
-                SubmitOverrideCommand model = await _mediator.Send(new LoadOverrideCheckYourAnswersRequest() { InterventionId = interventionId });
-                return View("OverrideCheckYourDetails", model);
-            }
-            catch (Exception e)
-            {
-                _logger.LogError(e.Message);
-                return RedirectToAction("Index", "Error", new { message = e.Message });
-            }
+
+            SubmitOverrideCommand model = await _mediator.Send(new LoadOverrideCheckYourAnswersRequest() { InterventionId = interventionId });
+            return View("OverrideCheckYourDetails", model);
+
         }
 
         [HttpPost]
         public async Task<IActionResult> SubmitOverride(SubmitOverrideCommand model, string submitButton)
         {
-            try
+
+            switch (submitButton)
             {
-                switch (submitButton)
-                {
-                    case "Submit":
-                        model.Status = InterventionStatus.Approved;
-                        break;
-                    case "Reject":
-                        model.Status = InterventionStatus.Rejected;
-                        break;
-                    default:
-                        model.Status = InterventionStatus.Pending;
-                        break;
-                }
-                var result = await _mediator.Send(model);
-                return RedirectToAction("CheckYourDetails", new { InterventionId = model.AssessmentInterventionId });
+                case "Submit":
+                    model.Status = InterventionStatus.Approved;
+                    break;
+                case "Reject":
+                    model.Status = InterventionStatus.Rejected;
+                    break;
+                default:
+                    model.Status = InterventionStatus.Pending;
+                    break;
             }
-            catch (Exception e)
-            {
-                _logger.LogError(e.Message);
-                return RedirectToAction("Index", "Error", new { message = e.Message });
-            }
+            var result = await _mediator.Send(model);
+            return RedirectToAction("CheckYourDetails", new { InterventionId = model.AssessmentInterventionId });
+
         }
 
     }

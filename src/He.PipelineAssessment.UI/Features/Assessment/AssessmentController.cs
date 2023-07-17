@@ -27,32 +27,16 @@ namespace He.PipelineAssessment.UI.Features.Assessments
         [Authorize(Policy = Constants.AuthorizationPolicies.AssignmentToPipelineViewAssessmentRoleRequired)]
         public async Task<IActionResult> Index()
         {
-            try
-            {
-                var listModel = await _mediator.Send(new AssessmentListCommand());
-                return View("Index", listModel);
-            }
-            catch (Exception e)
-            {
-                _logger.LogError(e.Message);
-                return RedirectToAction("Index", "Error", new { message = e.Message });
-            }
+            var listModel = await _mediator.Send(new AssessmentListCommand());
+            return View("Index", listModel);
         }
 
         [Authorize(Policy = Constants.AuthorizationPolicies.AssignmentToPipelineViewAssessmentRoleRequired)]
         [ResponseCache(NoStore = true)]
         public async Task<IActionResult> Summary(int assessmentid, int correlationId)
         {
-            try
-            {
-                var overviewModel = await _mediator.Send(new AssessmentSummaryRequest(assessmentid, correlationId));
-                return View("Summary", overviewModel);
-            }
-            catch (Exception e)
-            {
-                _logger.LogError(e.Message);
-                return RedirectToAction("Index", "Error", new { message = e.Message });
-            }
+            var overviewModel = await _mediator.Send(new AssessmentSummaryRequest(assessmentid, correlationId));
+            return View("Summary", overviewModel);
         }
 
         [Authorize(Policy = Constants.AuthorizationPolicies.AssignmentToPipelineViewAssessmentRoleRequired)]
@@ -68,7 +52,6 @@ namespace He.PipelineAssessment.UI.Features.Assessments
             {
                 return RedirectToAction("Summary", new { assessmentid = assessmentid, correlationId = correlationId });
             }
-
         }
     }
 }
