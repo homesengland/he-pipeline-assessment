@@ -25,58 +25,48 @@ namespace He.PipelineAssessment.UI.Features.Workflow.StartWorkflow
 
         public async Task<LoadQuestionScreenRequest?> Handle(StartWorkflowCommand request, CancellationToken cancellationToken)
         {
-            try
+            
+            if (!await _roleValidation.ValidateRole(request.AssessmentId, request.WorkflowDefinitionId))
             {
-                if (!await _roleValidation.ValidateRole(request.AssessmentId, request.WorkflowDefinitionId))
-                {
-                    return new LoadQuestionScreenRequest()
-                    {
-                        IsAuthorised = false
-                    };
-                }
-
-                var dto = new StartWorkflowCommandDto()
-                {
-                    WorkflowDefinitionId = request.WorkflowDefinitionId,
-                    CorrelationId = request.CorrelationId
-                };
-                var response = await _elsaServerHttpClient.PostStartWorkflow(dto);
-
-                if (response != null)
-                {
-                    var result = new LoadQuestionScreenRequest()
-                    {
-                        ActivityId = response.Data.NextActivityId,
-                        WorkflowInstanceId = response.Data.WorkflowInstanceId,
-                        ActivityType = response.Data.ActivityType,
-                        IsAuthorised = true
-                    };
-
-                    var assessmentToolWorkflowInstance = AssessmentToolWorkflowInstance(request, response);
-
-                    await _assessmentRepository.CreateAssessmentToolWorkflowInstance(assessmentToolWorkflowInstance);
-
-                    //if there is a next workflow record for the current set it to started
-                    var nextWorkflow =
-                        await _assessmentRepository.GetAssessmentToolInstanceNextWorkflowByAssessmentId(request.AssessmentId,
-                            request.WorkflowDefinitionId);
-
-                    if (nextWorkflow!=null)
-                    {
-                        await _assessmentRepository.DeleteNextWorkflow(nextWorkflow);
-                    }
-
-                    return await Task.FromResult(result);
-                }
-                else
-                {
-                    return null;
-                }
+                throw new UnauthorizedAccessException($"You do not have permission to access this resource.");
             }
-            catch (Exception e)
+
+            var dto = new StartWorkflowCommandDto()
             {
-                _logger.LogError(e.Message);
-                return null;
+                WorkflowDefinitionId = request.WorkflowDefinitionId,
+                CorrelationId = request.CorrelationId
+            };
+            var response = await _elsaServerHttpClient.PostStartWorkflow(dto);
+
+            if (response != null)
+            {
+                var result = new LoadQuestionScreenRequest()
+                {
+                    ActivityId = response.Data.NextActivityId,
+                    WorkflowInstanceId = response.Data.WorkflowInstanceId,
+                    ActivityType = response.Data.ActivityType,
+                };
+
+                var assessmentToolWorkflowInstance = AssessmentToolWorkflowInstance(request, response);
+
+                await _assessmentRepository.CreateAssessmentToolWorkflowInstance(assessmentToolWorkflowInstance);
+
+                //if there is a next workflow record for the current set it to started
+                var nextWorkflow =
+                    await _assessmentRepository.GetAssessmentToolInstanceNextWorkflowByAssessmentId(request.AssessmentId,
+                        request.WorkflowDefinitionId);
+
+                if (nextWorkflow != null)
+                {
+                    await _assessmentRepository.DeleteNextWorkflow(nextWorkflow);
+                }
+
+                return await Task.FromResult(result);
+            }
+            else
+            {
+                
+                throw new ApplicationException("Failed to start workflow, response is null");
             }
 
         }

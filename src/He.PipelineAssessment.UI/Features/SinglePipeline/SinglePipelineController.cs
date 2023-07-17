@@ -20,16 +20,8 @@ namespace He.PipelineAssessment.UI.Features.SinglePipeline
 
         public async Task<IActionResult> Sync()
         {
-            try
-            {
-                await _mediator.Send(new SyncCommand());
-                return RedirectToAction("Index", "Assessment");
-            }
-            catch (Exception e)
-            {
-                _logger.LogError(e.Message);
-                return RedirectToAction("Index", "Error", new { message = e.Message });
-            }
+            await _mediator.Send(new SyncCommand());
+            return RedirectToAction("Index", "Assessment");
         }
     }
 }

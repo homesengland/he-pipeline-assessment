@@ -39,10 +39,7 @@ namespace He.PipelineAssessment.UI.Features.Workflow.LoadQuestionScreen
 
                 if (!isRoleExist && !request.IsReadOnly)
                 {
-                    return new QuestionScreenSaveAndContinueCommand()
-                    {
-                        IsAuthorised = false
-                    };
+                    throw new UnauthorizedAccessException($"You do not have permission to access this resource.");
                 }
 
                 if (assessmentWorkflowInstance.Status != AssessmentToolWorkflowInstanceConstants.Draft || request.IsReadOnly)

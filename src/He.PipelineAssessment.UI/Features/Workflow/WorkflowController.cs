@@ -36,23 +36,13 @@ namespace He.PipelineAssessment.UI.Features.Workflow
 
             var result = await _mediator.Send(command);
 
-            if (result.IsAuthorised)
-            {
-
-                return RedirectToAction("LoadWorkflowActivity",
-                    new
-                    {
-                        WorkflowInstanceId = result?.WorkflowInstanceId,
-                        ActivityId = result?.ActivityId,
-                        ActivityType = result?.ActivityType
-                    });
-            }
-            else
-            {
-                return RedirectToAction("AccessDenied", "Error");
-            }
-
-
+            return RedirectToAction("LoadWorkflowActivity",
+                new
+                {
+                    WorkflowInstanceId = result?.WorkflowInstanceId,
+                    ActivityId = result?.ActivityId,
+                    ActivityType = result?.ActivityType
+                });
         }
 
         [Authorize(Policy = Authorization.Constants.AuthorizationPolicies.AssignmentToWorkflowExecuteRoleRequired)]

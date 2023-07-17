@@ -44,7 +44,6 @@ namespace He.PipelineAssessment.UI.Features.Workflow.ExecuteWorkflow
                     ActivityId = response.Data.NextActivityId,
                     WorkflowInstanceId = response.Data.WorkflowInstanceId,
                     ActivityType = response.Data.ActivityType,
-                    IsAuthorised = true
                 };
 
                 return await Task.FromResult(result);
