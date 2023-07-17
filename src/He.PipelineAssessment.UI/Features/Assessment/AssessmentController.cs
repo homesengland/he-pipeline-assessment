@@ -5,6 +5,7 @@ using He.PipelineAssessment.UI.Features.Assessment.TestAssessmentSummary;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Configuration;
 
 namespace He.PipelineAssessment.UI.Features.Assessments
 {
@@ -13,12 +14,14 @@ namespace He.PipelineAssessment.UI.Features.Assessments
     {
         private readonly ILogger<AssessmentController> _logger;
         private readonly IMediator _mediator;
+        private readonly IConfiguration _configuration;
 
 
-        public AssessmentController(ILogger<AssessmentController> logger, IMediator mediator)
+        public AssessmentController(ILogger<AssessmentController> logger, IMediator mediator, IConfiguration configuration)
         {
             _logger = logger;
             _mediator = mediator;
+            _configuration = configuration;
         }
 
         [Authorize(Policy = Constants.AuthorizationPolicies.AssignmentToPipelineViewAssessmentRoleRequired)]
@@ -55,16 +58,17 @@ namespace He.PipelineAssessment.UI.Features.Assessments
         [Authorize(Policy = Constants.AuthorizationPolicies.AssignmentToPipelineViewAssessmentRoleRequired)]
         public async Task<IActionResult> TestSummary(int assessmentid, int correlationId)
         {
-            try
+            var enableTestSummaryPage = _configuration["Environment:EnableTestSummaryPage"];
+            if (bool.Parse(enableTestSummaryPage))
             {
                 var overviewModel = await _mediator.Send(new TestAssessmentSummaryRequest(assessmentid, correlationId));
                 return View("TestSummary", overviewModel);
             }
-            catch (Exception e)
+            else
             {
-                _logger.LogError(e.Message);
-                return RedirectToAction("Index", "Error", new { message = e.Message });
+                return RedirectToAction("Summary", new { assessmentid = assessmentid, correlationId = correlationId });
             }
+
         }
     }
 }
