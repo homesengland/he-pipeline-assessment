@@ -12,9 +12,9 @@ namespace He.PipelineAssessment.UI.Features.Override.CreateOverride
         private readonly ICreateOverrideMapper _mapper;
         private readonly IAssessmentRepository _assessmentRepository;
         private readonly IAssessmentToolWorkflowInstanceHelpers _assessmentToolWorkflowInstanceHelpers;
-        private readonly ILogger _logger;
+        private readonly ILogger<CreateOverrideCommandHandler> _logger;
 
-        public CreateOverrideCommandHandler(IAssessmentRepository assessmentRepository, ICreateOverrideMapper mapper, ILogger<CreateOverrideCommandHandler> logger, IAssessmentToolWorkflowInstanceHelpers assessmentToolWorkflowInstanceHelpers, ILogger logger)
+        public CreateOverrideCommandHandler(IAssessmentRepository assessmentRepository, ICreateOverrideMapper mapper, ILogger<CreateOverrideCommandHandler> logger, IAssessmentToolWorkflowInstanceHelpers assessmentToolWorkflowInstanceHelpers)
         {
             _assessmentRepository = assessmentRepository;
             _mapper = mapper;

@@ -55,7 +55,7 @@ namespace He.PipelineAssessment.UI.Features.Rollback.CreateRollback
                 var isLatest = _assessmentToolWorkflowInstanceHelpers.IsLatestSubmittedWorkflow(workflowInstance);
                 if (!isLatest)
                 {
-                    throw new ApplicationException((
+                    throw new ApplicationException(
                         $"Unable to create rollback for Assessment Tool Workflow Instance as this is not the latest submitted Workflow Instance for this Assessment.");
                 }
 
