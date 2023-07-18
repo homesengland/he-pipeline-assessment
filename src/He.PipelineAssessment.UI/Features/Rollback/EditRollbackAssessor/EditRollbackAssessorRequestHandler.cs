@@ -3,6 +3,7 @@ using He.PipelineAssessment.Models;
 using He.PipelineAssessment.UI.Common.Exceptions;
 using He.PipelineAssessment.UI.Features.Intervention;
 using MediatR;
+using static Microsoft.EntityFrameworkCore.DbLoggerCategory.Database;
 
 namespace He.PipelineAssessment.UI.Features.Rollback.EditRollbackAssessor
 {
@@ -23,21 +24,30 @@ namespace He.PipelineAssessment.UI.Features.Rollback.EditRollbackAssessor
         }
         public async Task<AssessmentInterventionDto> Handle(EditRollbackAssessorRequest request, CancellationToken cancellationToken)
         {
-            AssessmentIntervention? intervention = await _repository.GetAssessmentIntervention(request.InterventionId);
-            if (intervention == null)
+            try
             {
-                throw new NotFoundException($"Assessment Intervention with Id {request.InterventionId} not found");
+                AssessmentIntervention? intervention = await _repository.GetAssessmentIntervention(request.InterventionId);
+                if (intervention == null)
+                {
+                    throw new NotFoundException($"Assessment Intervention with Id {request.InterventionId} not found");
+                }
+                AssessmentInterventionCommand command = _mapper.AssessmentInterventionCommandFromAssessmentIntervention(intervention);
+
+                var interventionReasons = await _repository.GetInterventionReasons();
+
+                var dto = new AssessmentInterventionDto
+                {
+                    AssessmentInterventionCommand = command,
+                    InterventionReasons = interventionReasons
+                };
+                return dto;
             }
-            AssessmentInterventionCommand command = _mapper.AssessmentInterventionCommandFromAssessmentIntervention(intervention);
-
-            var interventionReasons = await _repository.GetInterventionReasons();
-
-            var dto = new AssessmentInterventionDto
+            catch (Exception e)
             {
-                AssessmentInterventionCommand = command,
-                InterventionReasons = interventionReasons
-            };
-            return dto;
+                _logger.LogError(e, e.Message);
+                throw new ApplicationException($"Unable to edit rollback. InterventionId: {request.InterventionId}");
+            }
+
         }
     }
 }

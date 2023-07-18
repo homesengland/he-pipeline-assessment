@@ -4,6 +4,7 @@ using He.PipelineAssessment.UI.Features.Intervention;
 using He.PipelineAssessment.UI.Features.Rollback.SubmitRollback;
 using MediatR;
 using Newtonsoft.Json;
+using static Microsoft.EntityFrameworkCore.DbLoggerCategory.Database;
 
 namespace He.PipelineAssessment.UI.Features.Rollback.LoadRollbackCheckYourAnswers
 {
@@ -25,17 +26,26 @@ namespace He.PipelineAssessment.UI.Features.Rollback.LoadRollbackCheckYourAnswer
 
         public async Task<SubmitRollbackCommand> Handle(LoadRollbackCheckYourAnswersRequest request, CancellationToken cancellationToken)
         {
-
-            var intervention = await _assessmentRepository.GetAssessmentIntervention(request.InterventionId);
-            if (intervention == null)
+            try
             {
-                throw new NotFoundException($"Assessment Intervention with Id {request.InterventionId} not found");
+                var intervention = await _assessmentRepository.GetAssessmentIntervention(request.InterventionId);
+                if (intervention == null)
+                {
+                    throw new NotFoundException($"Assessment Intervention with Id {request.InterventionId} not found");
+                }
+                AssessmentInterventionCommand command = _mapper.AssessmentInterventionCommandFromAssessmentIntervention(intervention);
+
+                var submitRollbackCommand = SerializedCommand(command);
+
+                return submitRollbackCommand;
             }
-            AssessmentInterventionCommand command = _mapper.AssessmentInterventionCommandFromAssessmentIntervention(intervention);
-           
-            var submitRollbackCommand = SerializedCommand(command);
-            
-            return submitRollbackCommand;
+            catch (Exception e)
+            {
+                _logger.LogError(e, e.Message);
+                throw new ApplicationException($"Unable to load rollback. InterventionId: {request.InterventionId}");
+            }
+
+
         }
 
         private SubmitRollbackCommand SerializedCommand(AssessmentInterventionCommand command)

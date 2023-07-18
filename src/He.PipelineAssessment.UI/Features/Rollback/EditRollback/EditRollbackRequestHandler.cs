@@ -28,36 +28,49 @@ namespace He.PipelineAssessment.UI.Features.Rollback.EditRollback
         }
         public async Task<AssessmentInterventionDto> Handle(EditRollbackRequest request, CancellationToken cancellationToken)
         {
-            AssessmentIntervention? intervention = await _repository.GetAssessmentIntervention(request.InterventionId);
-            if (intervention == null)
+            try
             {
-                throw new NotFoundException($"Assessment Intervention with Id {request.InterventionId} not found");
+                AssessmentIntervention? intervention = await _repository.GetAssessmentIntervention(request.InterventionId);
+                if (intervention == null)
+                {
+                    throw new NotFoundException($"Assessment Intervention with Id {request.InterventionId} not found");
+                }
+
+                var isAuthorised = await _roleValidation.ValidateRole(intervention.AssessmentToolWorkflowInstance.AssessmentId, intervention.AssessmentToolWorkflowInstance.WorkflowDefinitionId);
+                if (!isAuthorised)
+                {
+                    throw new UnauthorizedAccessException($"You do not have permission to access this resource.");
+                }
+
+                List<AssessmentToolWorkflow> assessmentToolWorkflows =
+                    await _adminAssessmentToolWorkflowRepository.GetAssessmentToolWorkflowsForRollback(intervention.AssessmentToolWorkflowInstance
+                        .AssessmentToolWorkflow.AssessmentTool.Order);
+
+                if (assessmentToolWorkflows == null || !assessmentToolWorkflows.Any())
+                {
+                    throw new NotFoundException($"No suitable assessment tool workflows found for rollback");
+                }
+
+                AssessmentInterventionCommand command = _mapper.AssessmentInterventionCommandFromAssessmentIntervention(intervention);
+
+                var dto = new AssessmentInterventionDto
+                {
+                    AssessmentInterventionCommand = command,
+                    TargetWorkflowDefinitions =
+                        _mapper.TargetWorkflowDefinitionsFromAssessmentToolWorkflows(assessmentToolWorkflows)
+                };
+                return dto;
+            }
+            catch (UnauthorizedAccessException)
+            {
+                throw;
+            }
+            catch (Exception e)
+            {
+                _logger.LogError(e, e.Message);
+                throw new ApplicationException($"Unable to edit rollback. InterventionId: {request.InterventionId}");
             }
 
-            var isAuthorised = await _roleValidation.ValidateRole(intervention.AssessmentToolWorkflowInstance.AssessmentId, intervention.AssessmentToolWorkflowInstance.WorkflowDefinitionId);
-            if (!isAuthorised)
-            {
-                throw new UnauthorizedAccessException($"You do not have permission to access this resource.");
-            }
-           
-            List<AssessmentToolWorkflow> assessmentToolWorkflows =
-                await _adminAssessmentToolWorkflowRepository.GetAssessmentToolWorkflowsForRollback(intervention.AssessmentToolWorkflowInstance
-                    .AssessmentToolWorkflow.AssessmentTool.Order);
-
-            if (assessmentToolWorkflows == null || !assessmentToolWorkflows.Any())
-            {
-                throw new NotFoundException($"No suitable assessment tool workflows found for rollback");
-            }
-
-            AssessmentInterventionCommand command = _mapper.AssessmentInterventionCommandFromAssessmentIntervention(intervention);
-
-            var dto = new AssessmentInterventionDto
-            {
-                AssessmentInterventionCommand = command,
-                TargetWorkflowDefinitions =
-                    _mapper.TargetWorkflowDefinitionsFromAssessmentToolWorkflows(assessmentToolWorkflows)
-            };
-            return dto;
         }
     }
 }
