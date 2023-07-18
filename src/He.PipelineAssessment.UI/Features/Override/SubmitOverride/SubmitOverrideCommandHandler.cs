@@ -3,6 +3,7 @@ using He.PipelineAssessment.Models;
 using He.PipelineAssessment.UI.Common.Exceptions;
 using He.PipelineAssessment.UI.Common.Utility;
 using MediatR;
+using Microsoft.CodeAnalysis.CSharp.Syntax;
 
 namespace He.PipelineAssessment.UI.Features.Override.SubmitOverride
 {
@@ -10,42 +11,52 @@ namespace He.PipelineAssessment.UI.Features.Override.SubmitOverride
     {
         private readonly IAssessmentRepository _assessmentRepository;
         private readonly IDateTimeProvider _dateTimeProvider;
+        private readonly ILogger _logger;
 
-        public SubmitOverrideCommandHandler(IAssessmentRepository assessmentRepository, IDateTimeProvider dateTimeProvider)
+        public SubmitOverrideCommandHandler(IAssessmentRepository assessmentRepository, IDateTimeProvider dateTimeProvider, ILogger logger)
         {
             _assessmentRepository = assessmentRepository;
             _dateTimeProvider = dateTimeProvider;
+            _logger = logger;
         }
 
         public async Task<Unit> Handle(SubmitOverrideCommand command, CancellationToken cancellationToken)
         {
-            var intervention =
-                await _assessmentRepository.GetAssessmentIntervention(command.AssessmentInterventionId);
-            if (intervention == null)
+            try
             {
-                throw new NotFoundException($"Assessment Intervention with Id {command.AssessmentInterventionId} not found");
-            }
-
-            intervention.Status = command.Status;
-            intervention.DateSubmitted = _dateTimeProvider.UtcNow();
-            await _assessmentRepository.UpdateAssessmentIntervention(intervention);
-
-            if (intervention.Status == InterventionStatus.Approved)
-            {
-                var workflowsToDelete =
-                    await _assessmentRepository.GetSubsequentWorkflowInstancesForOverride(intervention
-                        .AssessmentToolWorkflowInstance.WorkflowInstanceId);
-
-                foreach (var workflowInstance in workflowsToDelete)
+                var intervention =
+                    await _assessmentRepository.GetAssessmentIntervention(command.AssessmentInterventionId);
+                if (intervention == null)
                 {
-                    workflowInstance.Status = AssessmentToolWorkflowInstanceConstants.SuspendedRollBack;
+                    throw new NotFoundException($"Assessment Intervention with Id {command.AssessmentInterventionId} not found");
                 }
 
-                await _assessmentRepository.SaveChanges();
-                await CreateNextWorkflow(intervention);
-            }
+                intervention.Status = command.Status;
+                intervention.DateSubmitted = _dateTimeProvider.UtcNow();
+                await _assessmentRepository.UpdateAssessmentIntervention(intervention);
 
-            return Unit.Value;
+                if (intervention.Status == InterventionStatus.Approved)
+                {
+                    var workflowsToDelete =
+                        await _assessmentRepository.GetSubsequentWorkflowInstancesForOverride(intervention
+                            .AssessmentToolWorkflowInstance.WorkflowInstanceId);
+
+                    foreach (var workflowInstance in workflowsToDelete)
+                    {
+                        workflowInstance.Status = AssessmentToolWorkflowInstanceConstants.SuspendedRollBack;
+                    }
+
+                    await _assessmentRepository.SaveChanges();
+                    await CreateNextWorkflow(intervention);
+                }
+
+                return Unit.Value;
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, ex.Message);
+                throw new ApplicationException($"Unalbe to submit override. AssessmentInterventionId: {command.AssessmentInterventionId}.");
+            }
         }
 
         private async Task CreateNextWorkflow(AssessmentIntervention intervention)
