@@ -40,7 +40,7 @@ namespace He.PipelineAssessment.UI.Features.Rollback.LoadRollbackCheckYourAnswer
             catch (Exception e)
             {
                 _logger.LogError(e, e.Message);
-                throw new ApplicationException($"Unable to load rollback. InterventionId: {request.InterventionId}");
+                throw new ApplicationException($"Unable to load rollback check your answers. InterventionId: {request.InterventionId}");
             }
         }
 

@@ -1,6 +1,7 @@
 ﻿using He.PipelineAssessment.Infrastructure.Repository;
 using He.PipelineAssessment.UI.Features.Admin.AssessmentToolManagement.Mappers;
 using MediatR;
+using static Microsoft.EntityFrameworkCore.DbLoggerCategory.Database;
 
 namespace He.PipelineAssessment.UI.Features.Admin.AssessmentToolManagement.Commands.CreateAssessmentToolWorkflow
 {
@@ -8,21 +9,30 @@ namespace He.PipelineAssessment.UI.Features.Admin.AssessmentToolManagement.Comma
     {
         private readonly IAdminAssessmentToolWorkflowRepository _adminAssessmentToolWorkflowRepository;
         private readonly IAssessmentToolWorkflowMapper _assessmentToolWorkflowMapper;
+        private readonly ILogger<CreateAssessmentToolWorkflowCommandHandler> _logger;
 
         public CreateAssessmentToolWorkflowCommandHandler(IAdminAssessmentToolWorkflowRepository adminAssessmentToolWorkflowRepository,
-                                                          IAssessmentToolWorkflowMapper assessmentToolWorkflowMapper)
+                                                          IAssessmentToolWorkflowMapper assessmentToolWorkflowMapper, ILogger<CreateAssessmentToolWorkflowCommandHandler> logger)
         {
             _adminAssessmentToolWorkflowRepository = adminAssessmentToolWorkflowRepository;
             _assessmentToolWorkflowMapper = assessmentToolWorkflowMapper;
-
+            _logger = logger;
         }
 
         public async Task<int> Handle(CreateAssessmentToolWorkflowCommand request, CancellationToken cancellationToken)
         {
-            var entity = _assessmentToolWorkflowMapper.CreateAssessmentToolWorkflowCommandToAssessmentToolWorkflow(request);
-            await _adminAssessmentToolWorkflowRepository.CreateAssessmentToolWorkflow(entity);
+            try
+            {
+                var entity = _assessmentToolWorkflowMapper.CreateAssessmentToolWorkflowCommandToAssessmentToolWorkflow(request);
+                await _adminAssessmentToolWorkflowRepository.CreateAssessmentToolWorkflow(entity);
 
-            return entity.Id;
+                return entity.Id;
+            }
+            catch (Exception e)
+            {
+                _logger.LogError(e, e.Message);
+                throw new ApplicationException($"Unable to create assessment tool workflow.");
+            }
         }
     }
 }
