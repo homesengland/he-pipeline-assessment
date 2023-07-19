@@ -8,6 +8,9 @@ using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Moq;
 using Xunit;
+using Microsoft.Extensions.Configuration;
+using Castle.Core.Configuration;
+using IConfiguration = Microsoft.Extensions.Configuration.IConfiguration;
 
 namespace He.PipelineAssessment.UI.Tests.Features.SinglePipeline
 {
@@ -101,6 +104,55 @@ namespace He.PipelineAssessment.UI.Tests.Features.SinglePipeline
             Assert.NotNull(result);
             Assert.IsType<ViewResult>(result);
 
+        }
+
+        [Theory]
+        [AutoMoqData]
+        public async Task TestSummary_ShouldRedirectToSummary_EnableTestSummaryPageIsFalse(
+            [Frozen] Mock<IMediator> mediator,
+            [Frozen] Mock<IConfiguration> configuration,
+            AssessmentListCommand command,
+            List<AssessmentDataViewModel> response,
+            AssessmentController sut,
+            int correlationId,
+            int assessmentId)
+        {
+            //Arrange
+            configuration.Setup(x => x["Environment:EnableTestSummaryPage"]).Returns("false");
+
+            mediator.Setup(x => x.Send(command, CancellationToken.None)).ReturnsAsync(response);
+
+
+
+            //Act
+            var result = await sut.TestSummary(assessmentId, correlationId);
+
+            //Assert
+            var redirectToActionResult = (RedirectToActionResult)result;
+            Assert.Equal("Summary", redirectToActionResult.ActionName);
+        }
+
+        [Theory]
+        [AutoMoqData]
+        public async Task TestSummary_ShouldDirectToTestSummaryView_EnableTestSummaryPageIsTrue(
+        [Frozen] Mock<IMediator> mediator,
+        [Frozen] Mock<IConfiguration> configuration,
+        AssessmentListCommand command,
+        List<AssessmentDataViewModel> response,
+        AssessmentController sut,
+        int correlationId,
+        int assessmentId)
+        {
+            //Arrange
+            configuration.Setup(x => x["Environment:EnableTestSummaryPage"]).Returns("true");
+            mediator.Setup(x => x.Send(command, CancellationToken.None)).ReturnsAsync(response);
+
+            //Act
+            var result = await sut.TestSummary(assessmentId, correlationId);
+
+            //Assert
+            var viewResult = (ViewResult)result;
+            Assert.Equal("TestSummary", viewResult.ViewName);
         }
     }
 }
