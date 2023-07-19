@@ -28,10 +28,10 @@ namespace He.PipelineAssessment.UI.Tests.Features.Admin.AssessmentToolManagement
 
             //Act
             var result =
-                await Assert.ThrowsAsync<Exception>(() => sut.Handle(createAssessmentToolWorkflowCommand, CancellationToken.None));
+                await Assert.ThrowsAsync<ApplicationException>(() => sut.Handle(createAssessmentToolWorkflowCommand, CancellationToken.None));
 
             //Assert          
-            Assert.Equal(exception.Message, result.Message);
+            Assert.Equal("Unable to create assessment tool workflow.", result.Message);
         }
 
         [Theory]

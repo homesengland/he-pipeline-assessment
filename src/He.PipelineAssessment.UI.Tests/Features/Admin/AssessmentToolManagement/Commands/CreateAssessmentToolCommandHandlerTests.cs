@@ -28,10 +28,10 @@ public class CreateAssessmentToolCommandHandlerTests
 
         //Act
         var result =
-            await Assert.ThrowsAsync<Exception>(() => sut.Handle(createAssessmentToolCommand, CancellationToken.None));
+            await Assert.ThrowsAsync<ApplicationException>(() => sut.Handle(createAssessmentToolCommand, CancellationToken.None));
 
         //Assert          
-        Assert.Equal(exception.Message, result.Message);
+        Assert.Equal("Unable to create assessment tool.", result.Message);
     }
 
     [Theory]

@@ -1,4 +1,5 @@
 ﻿using AutoFixture.Xunit2;
+using Azure.Core;
 using He.PipelineAssessment.Infrastructure.Repository;
 using He.PipelineAssessment.Models;
 using He.PipelineAssessment.Tests.Common;
@@ -28,10 +29,10 @@ namespace He.PipelineAssessment.UI.Tests.Features.Admin.AssessmentToolManagement
 
             //Act
             var result =
-                await Assert.ThrowsAsync<Exception>(() => sut.Handle(updateAssessmentToolCommand, CancellationToken.None));
+                await Assert.ThrowsAsync<ApplicationException>(() => sut.Handle(updateAssessmentToolCommand, CancellationToken.None));
 
             //Assert          
-            Assert.Equal(exception.Message, result.Message);
+            Assert.Equal($"Unable to update assessment tool. AssessmentToolID: {updateAssessmentToolCommand.Id}", result.Message);
         }
 
         [Theory]
@@ -77,10 +78,10 @@ namespace He.PipelineAssessment.UI.Tests.Features.Admin.AssessmentToolManagement
                 .ReturnsAsync((AssessmentTool?)null);
 
             //Act
-            var result = await Assert.ThrowsAsync<NotFoundException>(() => sut.Handle(updateAssessmentToolCommand, CancellationToken.None));
+            var result = await Assert.ThrowsAsync<ApplicationException>(() => sut.Handle(updateAssessmentToolCommand, CancellationToken.None));
 
             //Assert          
-            Assert.Equal(exceptionMessage, result.Message);
+            Assert.Equal($"Unable to update assessment tool. AssessmentToolID: {updateAssessmentToolCommand.Id}", result.Message);
         }
     }
 

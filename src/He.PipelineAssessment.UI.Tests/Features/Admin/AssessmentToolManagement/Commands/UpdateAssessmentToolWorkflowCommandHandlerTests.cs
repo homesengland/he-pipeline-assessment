@@ -5,6 +5,7 @@ using He.PipelineAssessment.Models;
 using He.PipelineAssessment.UI.Features.Admin.AssessmentToolManagement.Commands.UpdateAssessmentToolWorkflowCommand;
 using Moq;
 using Xunit;
+using Azure.Core;
 
 namespace He.PipelineAssessment.UI.Tests.Features.Admin.AssessmentToolManagement.Commands
 {
@@ -26,10 +27,10 @@ namespace He.PipelineAssessment.UI.Tests.Features.Admin.AssessmentToolManagement
 
             //Act
             var result =
-                await Assert.ThrowsAsync<Exception>(() => sut.Handle(updateAssessmentToolWorkflowCommand, CancellationToken.None));
+                await Assert.ThrowsAsync<ApplicationException>(() => sut.Handle(updateAssessmentToolWorkflowCommand, CancellationToken.None));
 
             //Assert          
-            Assert.Equal(exception.Message, result.Message);
+            Assert.Equal($"Unable to update assessment tool workflow. AssessmentToolWoirkflowId: {updateAssessmentToolWorkflowCommand.Id}", result.Message);
         }
 
         [Theory]
@@ -47,10 +48,11 @@ namespace He.PipelineAssessment.UI.Tests.Features.Admin.AssessmentToolManagement
 
             //Act
             var result =
-                await Assert.ThrowsAsync<ArgumentNullException>(() => sut.Handle(updateAssessmentToolWorkflowCommand, CancellationToken.None));
+                await Assert.ThrowsAsync<ApplicationException>(() => sut.Handle(updateAssessmentToolWorkflowCommand, CancellationToken.None));
 
             //Assert          
-            Assert.Equal("Value cannot be null. (Parameter 'Assessment Tool Workflow not found')", result.Message);
+            //Assert          
+            Assert.Equal($"Unable to update assessment tool workflow. AssessmentToolWoirkflowId: {updateAssessmentToolWorkflowCommand.Id}", result.Message);
         }
 
         [Theory]
