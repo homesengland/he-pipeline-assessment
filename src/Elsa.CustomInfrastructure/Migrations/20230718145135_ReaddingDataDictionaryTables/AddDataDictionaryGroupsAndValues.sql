@@ -40,7 +40,7 @@ insert into #tempgroup
         Target.Id	= Source.Id,
         Target.Name	= Source.Name,
         Target.LastModifiedDateTime	= Source.LastModifiedDateTime;
-go
+
 
 
 IF OBJECT_ID(''tempdb..#temp'') IS NOT NULL DROP TABLE #temp
@@ -448,4 +448,3 @@ Insert into #temp values (362,12,''end_note3'',''note'')
         Target.Type	= Source.Type,
         Target.Description	= Source.Type;
 
-GO
