@@ -1,5 +1,6 @@
 ﻿using Elsa.Activities.Workflows;
 using Elsa.ActivityResults;
+using Elsa.Attributes;
 using Elsa.Persistence;
 using Elsa.Services;
 using Elsa.Services.Models;
@@ -9,6 +10,9 @@ namespace Elsa.CustomActivities.Activities.RunEconomicCalculations
 {
     public class RunEconomicCalculations : RunWorkflow
     {
+        [ActivityOutput] public decimal? NumericScoreOutput { get; set; }
+        [ActivityOutput] public string? StringScoreOutput { get; set; }
+
         public RunEconomicCalculations(IStartsWorkflow startsWorkflow, IWorkflowRegistry workflowRegistry, IWorkflowStorageService workflowStorageService, IWorkflowReviver workflowReviver, IWorkflowInstanceStore workflowInstanceStore) : base(startsWorkflow, workflowRegistry, workflowStorageService, workflowReviver, workflowInstanceStore)
         {
         }
@@ -20,9 +24,26 @@ namespace Elsa.CustomActivities.Activities.RunEconomicCalculations
                 CorrelationId = context.CorrelationId;
             }
 
-           
-
             var result = await base.OnExecuteAsync(context);
+
+            var outputWorkflow = Output?.WorkflowOutput;
+
+            if (outputWorkflow != null)
+            {
+                StringScoreOutput = (string)outputWorkflow;
+                context.JournalData.Add("StringScoreOutput", StringScoreOutput);
+
+                decimal numericScore = 0;
+                var canParse = decimal.TryParse(StringScoreOutput,out numericScore);
+                if (canParse)
+                {
+                    NumericScoreOutput = numericScore;
+                    context.JournalData.Add("NumericScoreOutput", NumericScoreOutput);
+                }
+            }
+
+            
+
 
             return result;
         }

@@ -7,13 +7,13 @@ import {
   HTMLElsaMultiExpressionEditorElement,
   IntellisenseContext
 } from "../../../models/elsa-interfaces";
-import { mapSyntaxToLanguage, parseJson } from "../../../utils/utils";
+import { mapSyntaxToLanguage, parseJson, newOptionNumber } from "../../../utils/utils";
 import { SwitchCase } from "../../../models/elsa-interfaces";
 import { IconProvider } from "../../providers/icon-provider/icon-provider";
 import PlusIcon from '../../../icons/plus_icon';
 import TrashCanIcon from '../../../icons/trash-can';
-import ExpandIcon from '../../../icons/expand_icon';
 import { SyntaxNames } from '../../../constants/constants';
+import { getUniversalUniqueId } from '../../../utils/utils';
 
 @Component({
   tag: 'he-switch-answers-property',
@@ -26,6 +26,7 @@ export class HeSwitchCasesProperty {
   @Prop() activityModel: ActivityModel;
   @Prop() propertyDescriptor: ActivityPropertyDescriptor;
   @Prop() propertyModel: ActivityDefinitionProperty;
+  @Prop() keyId: string;
   @State() cases: Array<SwitchCase> = [];
   @State() iconProvider = new IconProvider();
   @Event() expressionChanged: EventEmitter<string>;
@@ -45,6 +46,13 @@ export class HeSwitchCasesProperty {
     this.cases = parseJson(casesJson) || [];
   }
 
+  async componentWillRender() {
+    const propertyModel = this.propertyModel;
+    const casesJson = propertyModel.expressions[SyntaxNames.Switch]
+    this.cases = parseJson(casesJson) || [];
+    this.keyId = getUniversalUniqueId();
+  }
+
   updatePropertyModel() {
     this.propertyModel.expressions[SyntaxNames.Switch] = JSON.stringify(this.cases);
     this.multiExpressionEditor.expressions[SyntaxNames.Json] = JSON.stringify(this.cases, null, 2);
@@ -55,10 +63,26 @@ export class HeSwitchCasesProperty {
   }
 
   onAddCaseClick() {
-    const caseName = `Case ${this.cases.length + 1}`;
+    const caseIds = this.caseIds();
+    const id = newOptionNumber(caseIds);
+    const caseName = `Case ${id}`;
     const newCase = { name: caseName, syntax: SyntaxNames.JavaScript, expressions: { [SyntaxNames.JavaScript]: '' } };
     this.cases = [...this.cases, newCase];
     this.updatePropertyModel();
+  }
+
+  caseIds(): Array<number> {
+    let activityIds: Array<number> = [];
+    if (this.cases.length > 0) {
+      activityIds = this.cases.map(function (v) {
+        const caseNumberMatch = v.name.match(/^Case\s(\d+$)/);
+        if (caseNumberMatch != null) {
+           return parseInt(caseNumberMatch[1]);
+        }
+        return 0;
+      });
+    }
+    return activityIds;
   }
 
   onDeleteCaseClick(switchCase: SwitchCase) {
@@ -102,15 +126,10 @@ export class HeSwitchCasesProperty {
     this.syntaxSwitchCount++;
   }
 
-  onExpandSwitchArea() {
-    this.editorHeight == "2.75em" ? this.editorHeight = "8em" : this.editorHeight = "2.75em"
-  }
-
   render() {
     const cases = this.cases;
     const supportedSyntaxes = this.supportedSyntaxes;
     const json = JSON.stringify(cases, null, 2);
-
     const renderCaseEditor = (switchCase: SwitchCase, index: number) => {
       const expression = switchCase.expressions[switchCase.syntax];
       const syntax = switchCase.syntax;
@@ -127,7 +146,7 @@ export class HeSwitchCasesProperty {
 
             <div class="elsa-mt-1 elsa-relative elsa-rounded-md elsa-shadow-sm">
               <elsa-expression-editor
-                key={`expression-editor-${index}-${this.syntaxSwitchCount}`}
+                key={`expression-editor-${index}-${this.syntaxSwitchCount}-${this.keyId}`}
                 ref={el => expressionEditor = el}
                 expression={expression}
                 language={monacoLanguage}
@@ -181,17 +200,13 @@ export class HeSwitchCasesProperty {
             <thead class="elsa-bg-gray-50">
               <tr>
                 <th
-                  class="elsa-px-6 elsa-py-3 elsa-text-left elsa-text-xs elsa-font-medium elsa-text-gray-500 elsa-text-right elsa-tracking-wider elsa-w-3/12">Name
+                  class="elsa-px-6 elsa-py-3 elsa-text-left elsa-text-xs elsa-font-medium elsa-text-gray-500 elsa-tracking-wider elsa-w-3/12">Name
                 </th>
                 <th
-                  class="elsa-px-6 elsa-py-3 elsa-text-left elsa-text-xs elsa-font-medium elsa-text-gray-500 elsa-text-right elsa-tracking-wider elsa-w-8/12">Expression
+                  class="elsa-px-6 elsa-py-3 elsa-text-left elsa-text-xs elsa-font-medium elsa-text-gray-500 elsa-tracking-wider elsa-w-8/12">Expression
                 </th>
                 <th
                   class="elsa-px-6 elsa-py-3 elsa-text-left elsa-text-xs elsa-font-medium elsa-text-gray-500 elsa-text-right elsa-tracking-wider elsa-w-1/12">
-                  <button type="button" onClick={() => this.onExpandSwitchArea()}
-                    class="elsa-h-5 elsa-w-5 elsa-mx-auto elsa-outline-none focus:elsa-outline-none">
-                    <ExpandIcon options={this.iconProvider.getOptions()}></ExpandIcon>
-                  </button>
                 </th>
               </tr>
             </thead>

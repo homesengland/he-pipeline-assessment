@@ -57,6 +57,7 @@ namespace Elsa.CustomActivities.Activities.Scoring
                 {
                     Calculation = TruncateCalculation(Calculation);
                     Output = Calculation;
+                    context.JournalData.Add("Output", Output);
 
                     var workflowInstance = await
                         _elsaCustomRepository.GetQuestionWorkflowInstanceByDefinitionId(context.WorkflowInstance.DefinitionId, context.WorkflowInstance.CorrelationId, CancellationToken.None);

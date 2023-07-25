@@ -30,6 +30,9 @@
     <None Remove="Migrations\20230623142447_RollbackPHase2SPChanges\GetAssessmentHistoryByAssessmentId.sql" />
     <None Remove="Migrations\20230623142447_RollbackPHase2SPChanges\GetAssessmentStagesByAssessmentId.sql" />
     <None Remove="Migrations\20230626101426_InterventionReasonPopulate\PopulateInterventionReason.sql" />
+    <None Remove="Migrations\20230704103432_AddFirstActivityInfoToWorkflowInstance\GetAssessmentHistoryByAssessmentId.sql" />
+    <None Remove="Migrations\20230704103432_AddFirstActivityInfoToWorkflowInstance\GetAssessmentStagesByAssessmentId.sql" />
+    <None Remove="Migrations\20230710082154_EconomistListBugFix\GetEconomistAssessments.sql" />
   </ItemGroup>
 
   <ItemGroup>
@@ -56,6 +59,9 @@
     <EmbeddedResource Include="Migrations\20230623142447_RollbackPHase2SPChanges\GetAssessmentHistoryByAssessmentId.sql" />
     <EmbeddedResource Include="Migrations\20230623142447_RollbackPHase2SPChanges\GetAssessmentStagesByAssessmentId.sql" />
     <EmbeddedResource Include="Migrations\20230626101426_InterventionReasonPopulate\PopulateInterventionReason.sql" />
+    <EmbeddedResource Include="Migrations\20230704103432_AddFirstActivityInfoToWorkflowInstance\GetAssessmentHistoryByAssessmentId.sql" />
+    <EmbeddedResource Include="Migrations\20230704103432_AddFirstActivityInfoToWorkflowInstance\GetAssessmentStagesByAssessmentId.sql" />
+    <EmbeddedResource Include="Migrations\20230710082154_EconomistListBugFix\GetEconomistAssessments.sql" />
   </ItemGroup>
 
   <ItemGroup>

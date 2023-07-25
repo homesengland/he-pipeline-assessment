@@ -10,6 +10,8 @@
         public int? AssessmentToolWorkflowId { get; set; } = null!;
         public string CurrentActivityId { get; set; } = null!;
         public string CurrentActivityType { get; set; } = null!;
+        public string FirstActivityId { get; set; } = null!;
+        public string FirstActivityType { get; set; } = null!;
         public string Status { get; set; } = null!;
         public DateTime? SubmittedDateTime { get; set; }
         public string? Result { get; set; }

@@ -1,9 +1,7 @@
 import { Component, Event, EventEmitter, h, Prop, State } from '@stencil/core';
 import { CheckboxOptionsSyntax, PropertyOutputTypes, SyntaxNames } from '../../constants/constants';
-import { ToggleDictionaryDisplay } from '../../functions/display-toggle';
-import { CustomUpdateExpression, UpdateCheckbox, UpdateName, UpdateSyntax } from '../../functions/updateModel';
-import ExpandIcon from '../../icons/expand_icon';
 import PlusIcon from '../../icons/plus_icon';
+import SortIcon from '../../icons/sort_icon';
 import TrashCanIcon from '../../icons/trash-can';
 import { NestedActivityDefinitionProperty } from '../../models/custom-component-models';
 import {
@@ -13,7 +11,9 @@ import {
   HTMLElsaMultiExpressionEditorElement,
   IntellisenseContext
 } from "../../models/elsa-interfaces";
-import { mapSyntaxToLanguage, parseJson, ToLetter, Map } from "../../utils/utils";
+import { mapSyntaxToLanguage, parseJson, newOptionLetter, Map } from "../../utils/utils";
+import { ISortableSharedComponent, SortableComponent } from '../base-component';
+import { DisplayToggle, IDisplayToggle } from '../display-toggle-component';
 import { IconProvider } from "../providers/icon-provider/icon-provider";
 
 @Component({
@@ -21,56 +21,64 @@ import { IconProvider } from "../providers/icon-provider/icon-provider";
   shadow: false,
 })
 
-export class HeCheckboxOptionProperty {
+export class HeCheckboxOptionProperty implements ISortableSharedComponent, IDisplayToggle{
 
   @Prop() activityModel: ActivityModel;
   @Prop() propertyDescriptor: ActivityPropertyDescriptor;
   @Prop() propertyModel: ActivityDefinitionProperty;
-  @State() options: Array<NestedActivityDefinitionProperty> = [];
+  @State() keyId: string;
+  @Prop() modelSyntax: string = SyntaxNames.Json;
+  @State() properties: Array<NestedActivityDefinitionProperty> = [];
   @State() iconProvider = new IconProvider();
   @Event() expressionChanged: EventEmitter<string>;
-  @State() optionsDisplayToggle: Map<string> = {};
+  @State() dictionary: Map<string> = {};
 
   @State() switchTextHeight: string = "";
-
   @State() editorHeight: string = "2.75em"
+  displayValue: string = "table-row";
+  hiddenValue: string = "none";
+  container: HTMLElement;
 
-  UpdateExpression: Function = CustomUpdateExpression.bind(this);
-  UpdateName: Function = UpdateName.bind(this);
-  UpdateCheckbox: Function = UpdateCheckbox.bind(this);
-  UpdateSyntax: Function = UpdateSyntax.bind(this);
+  private _base: SortableComponent;
+  private _toggle: DisplayToggle;
 
   supportedSyntaxes: Array<string> = [SyntaxNames.JavaScript, SyntaxNames.Liquid, SyntaxNames.Literal];
   multiExpressionEditor: HTMLElsaMultiExpressionEditorElement;
   syntaxSwitchCount: number = 0;
 
-  async componentWillLoad() {
-    const propertyModel = this.propertyModel;
-    const optionsJson = propertyModel.expressions[SyntaxNames.Json]
-    this.options = parseJson(optionsJson) || [];
+  constructor() {
+    this._base = new SortableComponent(this);
+    this._toggle = new DisplayToggle(this);
   }
 
-  updatePropertyModel() {
-    this.propertyModel.expressions[SyntaxNames.Json] = JSON.stringify(this.options);
-    this.multiExpressionEditor.expressions[SyntaxNames.Json] = JSON.stringify(this.options, null, 2);
-    this.expressionChanged.emit(JSON.stringify(this.propertyModel))
+
+  async componentWillLoad() {
+    this._base.componentWillLoad();
+  }
+
+  async componentDidLoad() {
+    this._base.componentDidLoad();
+  }
+
+  async componentWillRender() {
+    this._base.componentWillRender();
   }
   
 
   onDefaultSyntaxValueChanged(e: CustomEvent) {
-    this.options = e.detail;
+    this.properties = e.detail;
   }
 
   onAddOptionClick() {
-    const optionName = ToLetter(this.options.length + 1);
-    const newOption: NestedActivityDefinitionProperty = { name: optionName, syntax: SyntaxNames.Literal, expressions: { [SyntaxNames.Literal]: '', [CheckboxOptionsSyntax.Single]: 'false', [CheckboxOptionsSyntax.PrePopulated]:'false' }, type: PropertyOutputTypes.Checkbox };
-    this.options = [...this.options, newOption];
-    this.updatePropertyModel();
+    const optionName = newOptionLetter(this._base.IdentifierArray());
+    const newOption: NestedActivityDefinitionProperty = { name: optionName, syntax: SyntaxNames.Literal, expressions: { [SyntaxNames.Literal]: '', [CheckboxOptionsSyntax.Single]: 'false', [CheckboxOptionsSyntax.PrePopulated]: 'false' }, type: PropertyOutputTypes.Checkbox };
+    this.properties = [...this.properties, newOption];
+    this._base.updatePropertyModel();
   }
 
   onDeleteOptionClick(checkbox: NestedActivityDefinitionProperty) {
-    this.options = this.options.filter(x => x != checkbox);
-    this.updatePropertyModel();
+    this.properties = this.properties.filter(x => x != checkbox);
+    this._base.updatePropertyModel();
   }
 
   onMultiExpressionEditorValueChanged(e: CustomEvent<string>) {
@@ -84,7 +92,7 @@ export class HeCheckboxOptionProperty {
       return;
 
     this.propertyModel.expressions[SyntaxNames.Json] = json;
-    this.options = parsed;
+    this.properties = parsed;
   }
 
   onMultiExpressionEditorSyntaxChanged(e: CustomEvent<string>) {
@@ -92,21 +100,17 @@ export class HeCheckboxOptionProperty {
     this.syntaxSwitchCount++;
   }
 
-  onExpandSwitchArea() {
-    this.editorHeight == "2.75em" ? this.editorHeight = "8em" : this.editorHeight = "2.75em"
-  }
-
   onToggleOptions(index: number) {
-    let tempValue = ToggleDictionaryDisplay(index, this.optionsDisplayToggle)
-    this.optionsDisplayToggle = { ... this.optionsDisplayToggle, tempValue }
+    this._toggle.onToggleDisplay(index);
   }
 
   render() {
-    const cases = this.options;
+    const cases = this.properties;
     const supportedSyntaxes = this.supportedSyntaxes;
     const json = JSON.stringify(cases, null, 2);
 
     const renderCaseEditor = (checkboxOption: NestedActivityDefinitionProperty, index: number) => {
+      
       const expression = checkboxOption.expressions[checkboxOption.syntax];
       const syntax = checkboxOption.syntax;
       const monacoLanguage = mapSyntaxToLanguage(syntax);
@@ -120,25 +124,28 @@ export class HeCheckboxOptionProperty {
       let prePopulatedExpressionEditor = null;
       let colWidth = "100%";
 
-      const optionsDisplay = this.optionsDisplayToggle[index] ?? "none";
+      const optionsDisplay = this.dictionary[index] ?? "none";
 
       return (
-        <tbody>
+        <tbody key={this.keyId}>
+          <tr>
+            <th class="sortablejs-custom-handle"><SortIcon options={this.iconProvider.getOptions()}></SortIcon>
+            </th>
+            <td></td>
+            <td class="elsa-pt-1 elsa-pr-2 elsa-text-right">
+              <button type="button" onClick={() => this.onDeleteOptionClick(checkboxOption)}
+              class="elsa-h-5 elsa-w-5 elsa-mx-auto elsa-outline-none focus:elsa-outline-none">
+              <TrashCanIcon options={this.iconProvider.getOptions()}></TrashCanIcon>
+            </button></td>
+          </tr>
           <tr key={`case-${index}`}>
             <th class="elsa-py-3 elsa-text-left elsa-text-xs elsa-font-medium elsa-text-gray-500 elsa-tracking-wider elsa-w-2/12">Identifier</th>
 
-            <td class="elsa-py-2 pl-5" style={{ width: colWidth }}>
+            <td class="elsa-py-2 pl-5" colSpan={2} style={{ width: colWidth }}>
               <div>
-                <input type="text" value={checkboxOption.name} onChange={e => this.UpdateName(e, checkboxOption)}
+                <input type="text" value={checkboxOption.name} onChange={e => this._base.UpdateName(e, checkboxOption)}
                   class="focus:elsa-ring-blue-500 focus:elsa-border-blue-500 elsa-block elsa-w-full elsa-min-w-0 elsa-rounded-md sm:elsa-text-sm elsa-border-gray-300" />
               </div>
-            </td>
-
-            <td class="elsa-pt-1 elsa-pr-2 elsa-text-right">
-              <button type="button" onClick={() => this.onDeleteOptionClick(checkboxOption)}
-                class="elsa-h-5 elsa-w-5 elsa-mx-auto elsa-outline-none focus:elsa-outline-none">
-                <TrashCanIcon options={this.iconProvider.getOptions()}></TrashCanIcon>
-              </button>
             </td>
 
           </tr>
@@ -146,20 +153,20 @@ export class HeCheckboxOptionProperty {
           <tr>
             <th class="elsa-py-3 elsa-text-left elsa-text-xs elsa-font-medium elsa-text-gray-500 elsa-tracking-wider elsa-w-2/12">Answer</th>
 
-            <td class="elsa-py-2 pl-5" style={{ width: colWidth }}>
+            <td class="elsa-py-2 pl-5" colSpan={ 2 } style={{ width: colWidth }}>
               <div class="elsa-mt-1 elsa-relative elsa-rounded-md elsa-shadow-sm">
                 <elsa-expression-editor
-                  key={`expression-editor-${index}-${this.syntaxSwitchCount}`}
+                  key={`expression-editor-${checkboxOption.name}-${index}-${this.syntaxSwitchCount}-${this.keyId}`}
                   ref={el => expressionEditor = el}
                   expression={expression}
                   language={monacoLanguage}
                   single-line={false}
                   editorHeight={this.editorHeight}
                   padding="elsa-pt-1.5 elsa-pl-1 elsa-pr-28"
-                  onExpressionChanged={e => this.UpdateExpression(e, checkboxOption, checkboxOption.syntax)}
+                  onExpressionChanged={e => this._base.CustomUpdateExpression(e, checkboxOption, checkboxOption.syntax)}
                 />
                 <div class="elsa-absolute elsa-inset-y-0 elsa-right-0 elsa-flex elsa-items-center">
-                  <select onChange={e => this.UpdateSyntax(e, checkboxOption, expressionEditor)}
+                  <select onChange={e => this._base.UpdateSyntax(e, checkboxOption, expressionEditor)}
                     class="focus:elsa-ring-blue-500 focus:elsa-border-blue-500 elsa-h-full elsa-py-0 elsa-pl-2 elsa-pr-7 elsa-border-transparent elsa-bg-transparent elsa-text-gray-500 sm:elsa-text-sm elsa-rounded-md">
                     {supportedSyntaxes.map(supportedSyntax => {
                       const selected = supportedSyntax == syntax;
@@ -168,12 +175,6 @@ export class HeCheckboxOptionProperty {
                   </select>
                 </div>
               </div>
-            </td>
-            <td class="elsa-pt-1 elsa-pr-2 elsa-text-right">
-              <button type="button" onClick={() => this.onExpandSwitchArea()}
-                class="elsa-h-5 elsa-w-5 elsa-mx-auto elsa-outline-none focus:elsa-outline-none">
-                <ExpandIcon options={this.iconProvider.getOptions()}></ExpandIcon>
-              </button>
             </td>
           </tr>
 
@@ -189,7 +190,7 @@ export class HeCheckboxOptionProperty {
             <th class="elsa-py-3 elsa-text-left elsa-text-xs elsa-font-medium elsa-text-gray-500 elsa-tracking-wider elsa-w-2/12">IsSingle</th>
             <td class="elsa-py-0">
               <input name="choice_input" type="checkbox" checked={checked} value={'true'}
-                onChange={e => this.UpdateCheckbox(e, checkboxOption, CheckboxOptionsSyntax.Single)}
+                onChange={e => this._base.UpdateCheckbox(e, checkboxOption, CheckboxOptionsSyntax.Single)}
                 class="focus:elsa-ring-blue-500 elsa-h-8 elsa-w-8 elsa-text-blue-600 elsa-border-gray-300 elsa-rounded" />
             </td>
             <td></td>
@@ -201,17 +202,17 @@ export class HeCheckboxOptionProperty {
             <td class="elsa-py-2 pl-5" style={{ width: colWidth }}>
               <div class="elsa-mt-1 elsa-relative elsa-rounded-md elsa-shadow-sm">
                 <elsa-expression-editor
-                  key={`expression-editor-${index}-${this.syntaxSwitchCount}`}
+                  key={`expression-editor-${index}-${this.syntaxSwitchCount}-${this.keyId}`}
                   ref={el => prePopulatedExpressionEditor = el}
                   expression={prePopulatedExpression}
                   language={prePopulatedLanguage}
                   single-line={false}
                   editorHeight="2.75em"
                   padding="elsa-pt-1.5 elsa-pl-1 elsa-pr-28"
-                  onExpressionChanged={e => this.UpdateExpression(e, checkboxOption, CheckboxOptionsSyntax.PrePopulated)}
+                  onExpressionChanged={e => this._base.CustomUpdateExpression(e, checkboxOption, CheckboxOptionsSyntax.PrePopulated)}
                 />
                 <div class="elsa-absolute elsa-inset-y-0 elsa-right-0 elsa-flex elsa-items-center">
-                  <select onChange={e => this.UpdateCheckbox(e, checkboxOption, prePopulatedExpressionEditor)}
+                  <select onChange={e => this._base.UpdateCheckbox(e, checkboxOption, prePopulatedExpressionEditor)}
                     class="focus:elsa-ring-blue-500 focus:elsa-border-blue-500 elsa-h-full elsa-py-0 elsa-pl-2 elsa-pr-7 elsa-border-transparent elsa-bg-transparent elsa-text-gray-500 sm:elsa-text-sm elsa-rounded-md">
                     {this.supportedSyntaxes.filter(x => x == SyntaxNames.JavaScript).map(supportedSyntax => {
                       const selected = supportedSyntax == SyntaxNames.JavaScript;
@@ -248,7 +249,7 @@ export class HeCheckboxOptionProperty {
           onSyntaxChanged={e => this.onMultiExpressionEditorSyntaxChanged(e)}
         >
 
-          <table class="elsa-min-w-full elsa-divide-y elsa-divide-gray-200">
+          <table class="elsa-min-w-full elsa-divide-y elsa-divide-gray-200" ref={el => (this.container = el as HTMLElement)}>
           {cases.map(renderCaseEditor)}
           </table>
           <button type="button" onClick={() => this.onAddOptionClick()}

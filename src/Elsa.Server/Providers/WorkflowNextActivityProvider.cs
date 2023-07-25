@@ -107,7 +107,7 @@ namespace Elsa.Server.Providers
                 nextActivityId = nextActivity.Id;
                 var nextActivityData =
                     await _activityDataProvider.GetActivityData(workflowInstanceId, nextActivityId, cancellationToken);
-                if (nextActivityData != null)
+                if (nextActivityData != null && nextActivityData.HasKey("Condition"))
                 {
                     bool? condition = (bool?)nextActivityData["Condition"];
                     if (condition.HasValue && condition.Value)

@@ -31,7 +31,12 @@ namespace Elsa.CustomActivities.Activities.VFMDataSource
 
         [ActivityOutput] public VFMCalculationData? Output { get; set; }
 
-        protected override async ValueTask<IActivityExecutionResult> OnExecuteAsync(ActivityExecutionContext context)
+        protected override IActivityExecutionResult OnExecute(ActivityExecutionContext context)
+        {
+            return Suspend();
+        }
+
+        protected override async ValueTask<IActivityExecutionResult> OnResumeAsync(ActivityExecutionContext context)
         {
             context.JournalData.Add(nameof(GssCode), GssCode);
             context.JournalData.Add(nameof(LocalAuthority), LocalAuthority);
@@ -43,15 +48,17 @@ namespace Elsa.CustomActivities.Activities.VFMDataSource
             {
                 var dataResult = _jsonHelper.JsonToVFMCalculationData(data);
                 this.Output = dataResult;
-
             }
             else
             {
                 context.JournalData.Add("Error", "Call to GetVFMCalculationData returned null");
-                return new SuspendResult();
             }
 
-            return Done();
+            return await Task.FromResult(new CombinedResult(new List<IActivityExecutionResult>
+            {
+                Outcomes("Done"),
+                new SuspendResult()
+            }));
         }
     }
 }

@@ -28,6 +28,8 @@ namespace He.PipelineAssessment.UI.Features.Assessment.AssessmentSummary
         public string? WorkflowInstanceId { get; set; } = null!;
         public string? CurrentActivityId { get; set; } = null!;
         public string? CurrentActivityType { get; set; } = null!;
+        public string? FirstActivityId { get; set; } = null!;
+        public string? FirstActivityType { get; set; } = null!;
         public string? Status { get; set; } = null!;
         public DateTime? CreatedDateTime { get; set; }
         public DateTime? SubmittedDateTime { get; set; }

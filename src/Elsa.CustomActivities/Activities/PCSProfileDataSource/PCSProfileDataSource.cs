@@ -4,6 +4,7 @@ using Elsa.Expressions;
 using Elsa.Services;
 using Elsa.Services.Models;
 using He.PipelineAssessment.Data.PCSProfile;
+using He.PipelineAssessment.Data.SinglePipeline;
 
 namespace Elsa.CustomActivities.Activities.PCSProfileDataSource
 {
@@ -27,33 +28,32 @@ namespace Elsa.CustomActivities.Activities.PCSProfileDataSource
 
         [ActivityOutput] public PCSProfileData? Output { get; set; }
 
-        protected override async ValueTask<IActivityExecutionResult> OnExecuteAsync(ActivityExecutionContext context)
+        protected override IActivityExecutionResult OnExecute(ActivityExecutionContext context)
         {
-            try
+            return Suspend();
+        }
+
+        protected override async ValueTask<IActivityExecutionResult> OnResumeAsync(ActivityExecutionContext context)
+        {
+            context.JournalData.Add(nameof(ProjectIdentified), ProjectIdentified);
+
+            var data = await _client.GetPCSProfileData(ProjectIdentified);
+
+            if (data != null)
             {
-                context.JournalData.Add(nameof(ProjectIdentified), ProjectIdentified);
-
-                var data = await _client.GetPCSProfileData(ProjectIdentified);
-
-                if (data != null)
-                {
-                    var dataResult = _jsonHelper.JsonToPCSProfileData(data);
-                    this.Output = dataResult;
-
-                }
-                else
-                {
-                    context.JournalData.Add("Error", "Call to GetPCSProfileData returned null");
-                    return new SuspendResult();
-                }
+                var dataResult = _jsonHelper.JsonToPCSProfileData(data);
+                this.Output = dataResult;
             }
-            catch(Exception e)
+            else
             {
-                context.JournalData.Add("Error", e.Message);
-                return new SuspendResult();
+                context.JournalData.Add("Error", "Call to GetPCSProfileData returned null");
             }
 
-            return Done();
+            return await Task.FromResult(new CombinedResult(new List<IActivityExecutionResult>
+            {
+                Outcomes("Done"),
+                new SuspendResult()
+            }));
         }
     }
 }

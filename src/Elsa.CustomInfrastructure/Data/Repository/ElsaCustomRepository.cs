@@ -180,5 +180,12 @@ namespace Elsa.CustomInfrastructure.Data.Repository
             _dbContext.UpdateRange(workflowInstance);
             await SaveChanges(cancellationToken);
         }
+
+        public async Task<CustomActivityNavigation?> GetLatestCustomActivityNavigation(string workflowInstanceId, CancellationToken cancellationToken = default)
+        {
+            return await _dbContext.Set<CustomActivityNavigation>()
+                .OrderByDescending(x=>x.Id)
+                .FirstOrDefaultAsync(x=>x.WorkflowInstanceId == workflowInstanceId, cancellationToken);
+        }
     }
 }

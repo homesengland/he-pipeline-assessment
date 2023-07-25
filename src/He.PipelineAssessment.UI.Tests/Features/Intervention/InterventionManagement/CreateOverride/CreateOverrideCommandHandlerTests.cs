@@ -104,10 +104,7 @@ namespace He.PipelineAssessment.UI.Tests.Features.Intervention.InterventionManag
         [AutoMoqData]
         public async Task Handle_ThrowsException_GivenWorkflowInstanceNotFound(
             [Frozen] Mock<IAssessmentRepository> repo,
-            [Frozen] Mock<ICreateOverrideMapper> mapper,
-            [Frozen] Mock<IAssessmentToolWorkflowInstanceHelpers> assessmentToolWorkflowHelper,
             CreateOverrideCommand command,
-            AssessmentToolWorkflowInstance instance,
             CreateOverrideCommandHandler sut
         )
         {

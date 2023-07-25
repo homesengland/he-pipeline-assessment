@@ -111,6 +111,7 @@ namespace He.PipelineAssessment.Data.SinglePipeline
 
     public class LocalAuthority
     {
+        public string? gss_code { get; set; }
         public string? la_name { get; set; }
         public string? la_homes { get; set; }
         public int? number_of_la_homes {

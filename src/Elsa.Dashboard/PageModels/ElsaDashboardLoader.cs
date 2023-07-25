@@ -26,6 +26,7 @@ namespace Elsa.Dashboard.PageModels
     }
 
     public async Task OnGetAsync()
+
     {
       if (!string.IsNullOrEmpty(_serverUrl))
       {

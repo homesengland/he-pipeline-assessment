@@ -12,7 +12,6 @@ import { SwitchCase } from "../../models/elsa-interfaces";
 import { IconProvider } from "../providers/icon-provider/icon-provider";
 import PlusIcon from '../../icons/plus_icon';
 import TrashCanIcon from '../../icons/trash-can';
-import ExpandIcon from '../../icons/expand_icon';
 import { SyntaxNames } from '../../constants/constants';
 
 @Component({
@@ -99,10 +98,6 @@ export class CustomElsaSwitchCasesProperty {
     this.syntaxSwitchCount++;
   }
 
-  onExpandSwitchArea() {
-    this.editorHeight == "2.75em" ? this.editorHeight = "8em" : this.editorHeight = "2.75em"
-  }
-
   render() {
     const cases = this.cases;
     const supportedSyntaxes = this.supportedSyntaxes;
@@ -178,17 +173,14 @@ export class CustomElsaSwitchCasesProperty {
             <thead class="elsa-bg-gray-50">
               <tr>
                 <th
-                  class="elsa-px-6 elsa-py-3 elsa-text-left elsa-text-xs elsa-font-medium elsa-text-gray-500 elsa-text-right elsa-tracking-wider elsa-w-3/12">Name
+                  class="elsa-px-6 elsa-py-3 elsa-text-left elsa-text-xs elsa-font-medium elsa-text-gray-500 elsa-tracking-wider elsa-w-3/12">Name
                 </th>
                 <th
-                  class="elsa-px-6 elsa-py-3 elsa-text-left elsa-text-xs elsa-font-medium elsa-text-gray-500 elsa-text-right elsa-tracking-wider elsa-w-8/12">Expression
+                  class="elsa-px-6 elsa-py-3 elsa-text-left elsa-text-xs elsa-font-medium elsa-text-gray-500 elsa-tracking-wider elsa-w-8/12">Expression
                 </th>
                 <th
                   class="elsa-px-6 elsa-py-3 elsa-text-left elsa-text-xs elsa-font-medium elsa-text-gray-500 elsa-text-right elsa-tracking-wider elsa-w-1/12">
-                    <button type="button" onClick={() => this.onExpandSwitchArea()}
-                    class="elsa-h-5 elsa-w-5 elsa-mx-auto elsa-outline-none focus:elsa-outline-none">
-                      <ExpandIcon options={this.iconProvider.getOptions()}></ExpandIcon>
-                    </button>
+
                 </th>
               </tr>
             </thead>
