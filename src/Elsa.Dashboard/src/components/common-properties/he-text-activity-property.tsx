@@ -25,7 +25,7 @@ export class TextActivityProperty implements ISortableSharedComponent, IDisplayT
   @Prop() activityModel: ActivityModel;
   @Prop() propertyDescriptor: ActivityPropertyDescriptor;
   @Prop() propertyModel: ActivityDefinitionProperty;
-  @Prop() modelSyntax: string = SyntaxNames.Json;
+  @Prop() modelSyntax: string = SyntaxNames.TextActivity;
   @State() properties: Array<NestedActivityDefinitionProperty> = [];
   @State() iconProvider = new IconProvider();
   @State() keyId: string;
@@ -45,11 +45,15 @@ export class TextActivityProperty implements ISortableSharedComponent, IDisplayT
   hiddenValue: string = "none";
 
   constructor() {
+    if (this.propertyDescriptor.defaultSyntax != null && this.propertyDescriptor.defaultSyntax != undefined) {
+      this.modelSyntax = this.propertyDescriptor.defaultSyntax;
+    }
     this._base = new SortableComponent(this);
     this._toggle = new DisplayToggle(this);
   }
 
   async componentWillLoad() {
+    console.log("Syntax", this.propertyDescriptor.defaultSyntax);
     this._base.componentWillLoad();
   }
 

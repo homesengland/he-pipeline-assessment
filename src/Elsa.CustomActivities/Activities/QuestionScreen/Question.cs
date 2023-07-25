@@ -198,7 +198,10 @@ namespace Elsa.CustomActivities.Activities.QuestionScreen
             ExpectedOutputType = ExpectedOutputHints.WeightedCheckbox)]
         public WeightedCheckboxModel WeightedCheckbox { get; set; } = new WeightedCheckboxModel();
 
-        [HeActivityInput(UIHint = HePropertyUIHints.TextActivity, ConditionalActivityTypes = new[] { QuestionTypeConstants.Information }, ExpectedOutputType = ExpectedOutputHints.TextActivity)]
+        [HeActivityInput(UIHint = HePropertyUIHints.TextActivity, 
+            DefaultSyntax = TextActivitySyntaxNames.TextActivity,
+            ConditionalActivityTypes = new[] { QuestionTypeConstants.Information }, 
+            ExpectedOutputType = ExpectedOutputHints.TextActivity)]
         public TextModel Text { get; set; } = new TextModel();
 
         [HeActivityInput(Hint = "Fill in to display a pre-populated value", UIHint = HePropertyUIHints.SingleLine,
