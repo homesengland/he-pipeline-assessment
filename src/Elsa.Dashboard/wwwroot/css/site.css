@@ -35,7 +35,7 @@
   overflow: hidden;
 }
 
-.elsa-modal-dialog > div > div > div:first-child {
+elsa-modal-dialog > div > div > div:first-child {
   pointer-events: none;
 }
 
