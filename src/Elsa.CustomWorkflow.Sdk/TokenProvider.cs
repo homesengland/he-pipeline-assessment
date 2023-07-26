@@ -13,7 +13,7 @@ namespace Elsa.CustomWorkflow.Sdk
 
     public interface ITokenProvider
     {
-
+        public Token? GetToken(bool forceRefresh = false);
     }
     public class TokenProvider : ITokenProvider
     {

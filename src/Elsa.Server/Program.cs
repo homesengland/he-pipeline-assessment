@@ -132,15 +132,12 @@ builder.Services.AddOptions<IdentityClientConfig>()
 });
 
 
-if (!builder.Environment.IsDevelopment())
-{
-    builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
-        .AddJwtBearer(options =>
-        {
-            options.Audience = builder.Configuration["AzureManagedIdentityConfig:Audience"];
-            options.Authority = builder.Configuration["AzureManagedIdentityConfig:Authority"];
-        });
-}
+builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+    .AddJwtBearer(options =>
+    {
+        options.Audience = builder.Configuration["AzureManagedIdentityConfig:Audience"];
+        options.Authority = builder.Configuration["AzureManagedIdentityConfig:Authority"];
+    });
 builder.Services.AddEsriHttpClients(builder.Configuration, builder.Environment.IsDevelopment());
 
 var app = builder.Build();

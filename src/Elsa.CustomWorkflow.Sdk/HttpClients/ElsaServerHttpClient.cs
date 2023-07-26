@@ -31,13 +31,15 @@ namespace Elsa.CustomWorkflow.Sdk.HttpClients
         private readonly ILogger<ElsaServerHttpClient> _logger;
         private readonly IConfiguration _configuration;
         private readonly IHostEnvironment _hostEnvironment;
+        private readonly ITokenProvider _tokenProvider;
 
-        public ElsaServerHttpClient(IHttpClientFactory httpClientFactoryFactory, ILogger<ElsaServerHttpClient> logger, IConfiguration configuration, IHostEnvironment hostEnvironment)
+        public ElsaServerHttpClient(IHttpClientFactory httpClientFactoryFactory, ILogger<ElsaServerHttpClient> logger, IConfiguration configuration, IHostEnvironment hostEnvironment, ITokenProvider provider)
         {
             _httpClientFactory = httpClientFactoryFactory;
             _logger = logger;
             _configuration = configuration;
             _hostEnvironment = hostEnvironment;
+            _tokenProvider = provider;
         }
 
         public async Task<WorkflowNextActivityDataDto?> PostStartWorkflow(StartWorkflowCommandDto model)
@@ -262,6 +264,33 @@ namespace Elsa.CustomWorkflow.Sdk.HttpClients
                 }
             }
             return data;
+        }
+
+        private async Task<string> GetAuth0AccessToken()
+        {
+            try
+            {
+                var credential = new ManagedIdentityCredential();
+
+                var ccflowApplicationIdUri = _configuration["AzureManagedIdentityConfig:ElsaServerAzureApplicationIdUri"];
+                var accessTokenRequest = await credential.GetTokenAsync(
+                    new TokenRequestContext(scopes: new string[] { ccflowApplicationIdUri }) { }
+                );
+
+                var accessToken = accessTokenRequest.Token;
+
+                if (String.IsNullOrEmpty(accessToken))
+                {
+                    _logger.LogError("Failed to get Access Token, Access Token is empty");
+                }
+
+                return accessToken;
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex.Message);
+                return null;
+            }
         }
 
         private async Task<string?> GetAccessToken()
