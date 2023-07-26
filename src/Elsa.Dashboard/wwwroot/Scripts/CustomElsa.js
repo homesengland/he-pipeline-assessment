@@ -11,7 +11,8 @@ export function InitCustomElsa(elsaStudioRoot, customProperties) {
 
   elsaStudioRoot.addEventListener('initializing', e => {
     var elsaStudio = e.detail;
-    RegisterPlugins(elsaStudio);
+    elsaStudio.plu
+    elsaStudio.pluginManager.registerPlugin(RegisterCustomPlugins);
     RegisterDrivers(elsaStudio, customProperties);
   });
 
