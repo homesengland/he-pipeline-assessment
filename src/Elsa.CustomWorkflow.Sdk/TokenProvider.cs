@@ -20,15 +20,15 @@ namespace Elsa.CustomWorkflow.Sdk
         private readonly string domain;
         private readonly string clientId;
         private readonly string clientSecret;
-        private readonly string apiIdentifier;
+        private readonly string audience;
         private Token? currentToken;
 
-        public TokenProvider(string domain, string clientId, string clientSecret, string apiIdentifier)
+        public TokenProvider(string domain, string clientId, string clientSecret, string audience)
         {
             this.domain = domain;
             this.clientId = clientId;
             this.clientSecret = clientSecret;
-            this.apiIdentifier = apiIdentifier;
+            this.audience = audience;
         }
 
         public string Domain => this.domain;
@@ -37,7 +37,7 @@ namespace Elsa.CustomWorkflow.Sdk
 
         public string ClientSecret => this.clientSecret;
 
-        public string ApiIdentifier => this.apiIdentifier;
+        public string Audience => this.audience;
 
 
         public Token? GetToken(bool forceRefresh = false)
@@ -47,7 +47,7 @@ namespace Elsa.CustomWorkflow.Sdk
                 var client = new RestClient($"https://{this.Domain}/oauth/token");
                 var request = new RestRequest("", Method.Post);
                 request.AddHeader("content-type", "application/x-www-form-urlencoded");
-                request.AddParameter("application/x-www-form-urlencoded", $"grant_type=client_credentials&client_id={this.ClientId}&client_secret={this.ClientSecret}&audience={this.apiIdentifier}", ParameterType.RequestBody);
+                request.AddParameter("application/x-www-form-urlencoded", $"grant_type=client_credentials&client_id={this.ClientId}&client_secret={this.ClientSecret}&audience={this.audience}", ParameterType.RequestBody);
                 RestResponse response = client.Execute(request);
                 if(response != null && response.Content != null)
                 {

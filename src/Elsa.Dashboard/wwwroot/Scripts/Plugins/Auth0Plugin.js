@@ -15,7 +15,6 @@ export class Auth0Plugin {
   }
 
   initialize = async () => {
-    console.log("Initialize Auth0 Function");
     const options = this.options;
     const { domain } = options;
 
@@ -60,11 +59,9 @@ export class Auth0Plugin {
   configureAuthMiddleware = async (e) => {
 
     let service = new Service();
-    console.log("Service", service);
     if (e != null && e != undefined && e.service != null && e.service != undefined) {
       service = e.service;
     }
-    console.log("Service setup", service);
     const auth0 = this.auth0;
 
     service.register({

@@ -80,8 +80,8 @@ builder.Services.AddScoped<DbContext>(provider => provider.GetRequiredService<Pi
 builder.Services.AddScoped<DbContext>(provider => provider.GetRequiredService<PipelineAssessmentStoreProcContext>());
 
 var domain = builder.Configuration["Auth0Config:Domain"];
-var clientId = builder.Configuration["Auth0Config:ClientId"];
-var clientSecret = builder.Configuration["Auth0Config:ClientSecret"];
+var clientId = builder.Configuration["Auth0Config:MachineToMachineClientId"];
+var clientSecret = builder.Configuration["Auth0Config:MachineToMachineClientSecret"];
 var apiIdentifier = builder.Configuration["Auth0Config:Audience"];
 var tokenService = new TokenProvider(domain, clientId, clientSecret, apiIdentifier);
 builder.Services.AddSingleton<ITokenProvider>(tokenService);

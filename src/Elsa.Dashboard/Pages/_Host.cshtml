@@ -6,7 +6,7 @@
 @inject IConfiguration Configuration
 @{
     var serverUrl = Configuration["Urls:ElsaServer"];
-    var clientId = Configuration["Auth0Config:ClientId"];
+    var clientId = Configuration["Auth0Config:SpaClientId"];
     var domain = Configuration["Auth0Config:Domain"];
     var audience = Configuration["Auth0Config:Audience"];
 }
