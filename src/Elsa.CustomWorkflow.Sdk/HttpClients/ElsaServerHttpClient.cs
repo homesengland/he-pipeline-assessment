@@ -266,30 +266,21 @@ namespace Elsa.CustomWorkflow.Sdk.HttpClients
             return data;
         }
 
-        private async Task<string> GetAuth0AccessToken()
+        private string GetAuth0AccessToken()
         {
             try
             {
-                var credential = new ManagedIdentityCredential();
-
-                var ccflowApplicationIdUri = _configuration["AzureManagedIdentityConfig:ElsaServerAzureApplicationIdUri"];
-                var accessTokenRequest = await credential.GetTokenAsync(
-                    new TokenRequestContext(scopes: new string[] { ccflowApplicationIdUri }) { }
-                );
-
-                var accessToken = accessTokenRequest.Token;
-
-                if (String.IsNullOrEmpty(accessToken))
+                var token = _tokenProvider.GetToken(true);
+                if (token != null)
                 {
-                    _logger.LogError("Failed to get Access Token, Access Token is empty");
+                    return token.AccessToken;
                 }
-
-                return accessToken;
+                else return string.Empty;
             }
             catch (Exception ex)
             {
                 _logger.LogError(ex.Message);
-                return null;
+                return string.Empty;
             }
         }
 
