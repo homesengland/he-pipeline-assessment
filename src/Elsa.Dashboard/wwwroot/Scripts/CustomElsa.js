@@ -1,4 +1,5 @@
 import { RegisterCustomPlugins } from './Plugins/CustomPlugins.js';
+import { Auth0Plugin } from './Plugins/Auth0Plugin.js';
 import { CustomPropertyUIHints } from './Constants/CustomPropertyUiHints.js';
 import { CustomComponentTags } from './Constants/CustomComponentTags.js';
 import { QuestionDriver } from './Drivers/QuestionPropertyDriver.js';
@@ -7,7 +8,7 @@ import { CustomTextDriver } from './Drivers/CustomTextPropertyDriver.js';
 import { ConditionalTextListDriver } from './Drivers/ConditionalTextListPropertyDriver.js';
 import { TextActivityDriver } from './Drivers/TextActivityPropertyDriver.js';
 
-export function InitCustomElsa(elsaStudioRoot, customProperties) {
+export function InitCustomElsa(elsaStudioRoot, customProperties, auth0ClientOptions) {
 
   elsaStudioRoot.addEventListener('initializing', e => {
     var elsaStudio = e.detail;
@@ -32,10 +33,6 @@ export function InitCustomElsa(elsaStudioRoot, customProperties) {
     elsaStudio.propertyDisplayManager.addDriver(CustomPropertyUIHints.CustomSwitchBuilder,
       () => new CustomSwitchDriver(elsaStudio, CustomComponentTags.CustomSwitch));
     
-  }
-
-  function RegisterPlugins(elsaStudio) {
-    elsaStudio.pluginManager.registerPlugin(RegisterCustomPlugins);
   }
 
  }
