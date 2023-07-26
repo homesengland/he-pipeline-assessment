@@ -25,7 +25,7 @@ export class TextActivityProperty implements ISortableSharedComponent, IDisplayT
   @Prop() activityModel: ActivityModel;
   @Prop() propertyDescriptor: ActivityPropertyDescriptor;
   @Prop() propertyModel: ActivityDefinitionProperty;
-  @Prop() modelSyntax: string = SyntaxNames.Json;
+  @Prop() modelSyntax: string = SyntaxNames.TextActivity;
   @State() properties: Array<NestedActivityDefinitionProperty> = [];
   @State() iconProvider = new IconProvider();
   @State() keyId: string;
@@ -50,6 +50,7 @@ export class TextActivityProperty implements ISortableSharedComponent, IDisplayT
   }
 
   async componentWillLoad() {
+    console.log("Syntax", this.propertyDescriptor.defaultSyntax);
     this._base.componentWillLoad();
   }
 
