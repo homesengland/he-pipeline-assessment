@@ -1,3 +1,4 @@
+using Elsa.CustomWorkflow.Sdk;
 using Elsa.CustomWorkflow.Sdk.Extensions;
 using Elsa.CustomWorkflow.Sdk.HttpClients;
 using FluentValidation;
@@ -77,6 +78,13 @@ builder.Services.AddDbContext<PipelineAssessmentStoreProcContext>(config =>
 
 builder.Services.AddScoped<DbContext>(provider => provider.GetRequiredService<PipelineAssessmentContext>());
 builder.Services.AddScoped<DbContext>(provider => provider.GetRequiredService<PipelineAssessmentStoreProcContext>());
+
+var domain = builder.Configuration["Auth0Config:Domain"];
+var clientId = builder.Configuration["Auth0Config:ClientId"];
+var clientSecret = builder.Configuration["Auth0Config:ClientSecret"];
+var apiIdentifier = builder.Configuration["Auth0Config:Audience"];
+var tokenService = new TokenProvider(domain, clientId, clientSecret, apiIdentifier);
+builder.Services.AddSingleton<ITokenProvider>(tokenService);
 
 //Validators
 builder.Services.AddScoped<IValidator<QuestionScreenSaveAndContinueCommand>, SaveAndContinueCommandValidator>();
