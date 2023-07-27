@@ -28,7 +28,7 @@ namespace Elsa.Dashboard
     {
       var elsaSetupNonce = $"nonce-{nonceConfig.ElsaSetup}";
       var elsaServer = _configuration["Urls:ElsaServer"];
-      var oAuthToken = "https://*.auth0.com";
+      var oAuthToken = "https://*.homesengland.org.uk";
       var auth0Script = "https://unpkg.com/@auth0/auth0-spa-js@1.1.1/dist/auth0-spa-js.production.esm.js";
       var axios = "https://cdn.jsdelivr.net/npm/axios-middleware@0.3.1/dist/axios-middleware.esm.js";
 
