@@ -164,12 +164,12 @@ export class TextActivityProperty implements ISortableSharedComponent, IDisplayT
             </th>
             <td class="elsa-py-2 pl-5" colSpan={2} style={{ width: colWidth }}>
               <div class="elsa-mt-1 elsa-relative elsa-rounded-md elsa-shadow-sm">
-              <elsa-expression-editor
+              <he-expression-editor
                 key={`expression-editor-${index}-${this.syntaxSwitchCount}`}
                 ref={el => textExpressionEditor = el}
                 expression={textExpression}
                 language={textLanguage}
-                single-line={false}
+                  single-line={false}
                 editorHeight="2.75em"
                   padding="elsa-pt-1.5 elsa-pl-1 elsa-pr-28"
                   onExpressionChanged={e => this._base.CustomUpdateExpression(e, nestedTextActivity, nestedTextActivity.syntax)}

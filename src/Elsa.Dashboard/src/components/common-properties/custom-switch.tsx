@@ -36,6 +36,7 @@ export class CustomElsaSwitchCasesProperty {
   syntaxSwitchCount: number = 0;
 
   async componentWillLoad() {
+    console.log("Custom switch loading");
     const propertyModel = this.propertyModel;
     const casesJson = propertyModel.expressions['Switch']
     this.cases = parseJson(casesJson) || [];
@@ -118,7 +119,7 @@ export class CustomElsaSwitchCasesProperty {
           <td class="elsa-py-2 pl-5">
 
             <div class="elsa-mt-1 elsa-relative elsa-rounded-md elsa-shadow-sm">
-              <elsa-expression-editor
+              <he-expression-editor
                 key={`expression-editor-${index}-${this.syntaxSwitchCount}`}
                 ref={el => expressionEditor = el}
                 expression={expression}
@@ -126,6 +127,7 @@ export class CustomElsaSwitchCasesProperty {
                 single-line={false}
                 editorHeight={this.editorHeight}
                 padding="elsa-pt-1.5 elsa-pl-1 elsa-pr-28"
+                serverUrl="https://localhost:7227"
                 onExpressionChanged={e => this.onCaseExpressionChanged(e, switchCase)}
               />
               <div class="elsa-absolute elsa-inset-y-0 elsa-right-0 elsa-flex elsa-items-center">

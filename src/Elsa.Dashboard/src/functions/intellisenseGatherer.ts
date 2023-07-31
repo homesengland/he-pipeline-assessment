@@ -6,7 +6,7 @@ export class IntellisenseGatherer {
   private _httpClient: AxiosInstance = null;
   private _baseUrl: string = null;
 
-  private constructor(serverUrl: string) {
+  constructor(serverUrl: string) {
     this._baseUrl = serverUrl;
   }
 
@@ -25,6 +25,7 @@ export class IntellisenseGatherer {
 
   async getJavaScriptTypeDefinitions(workflowDefinitionId: string, context?: IntellisenseContext): Promise<string> {
     let httpClient = await this.createHttpClient();
+    console.log("HttpClient", httpClient);
     const response = await httpClient.post<string>(`v1/scripting/javascript/type-definitions/${workflowDefinitionId}?t=${new Date().getTime()}`, context);
     return response.data;
 }

@@ -1,6 +1,6 @@
 import { Component, EventEmitter, h, Method, Prop, State, Watch, Event } from '@stencil/core';
-import { createElsaClient } from "../../../services";
-import Tunnel from '../../../data/workflow-editor';
+import { IntellisenseGatherer } from "../../functions/intellisenseGatherer.js";
+import Tunnel from '../tunnel/workflow-editor';
 import { IntellisenseContext, MonacoValueChangedArgs, HTMLElsaMonacoElement } from "../../models/elsa-interfaces";
 import { Uri } from "../../constants/constants";
 
@@ -21,6 +21,7 @@ export class HEExpressionEditor {
   @Prop({ mutable: true }) workflowDefinitionId: string;
   @State() currentExpression?: string
 
+  intellisenseGatherer: IntellisenseGatherer;
   monacoEditor: HTMLElsaMonacoElement;
 
   @Watch("expression")
@@ -34,12 +35,16 @@ export class HEExpressionEditor {
   }
 
   async componentWillLoad() {
-    this.currentExpression = this.expression;
+    console.log("loading custom editor");
   }
 
   async componentDidLoad() {
-    const elsaClient = await createElsaClient(this.serverUrl);
-    const libSource = await elsaClient.scriptingApi.getJavaScriptTypeDefinitions(this.workflowDefinitionId, this.context);
+    console.log("ServerUrl Next");
+    console.log("ServerUrl", this.serverUrl);
+    console.log("WorkflowDefinitionId", this.workflowDefinitionId);
+    this.currentExpression = this.expression;
+    this.intellisenseGatherer = new IntellisenseGatherer(this.serverUrl);
+    const libSource = await this.intellisenseGatherer.getJavaScriptTypeDefinitions(this.workflowDefinitionId, this.context);
     const libUri = Uri.LibUri;
     await this.monacoEditor.addJavaScriptLib(libSource, libUri);
   }
@@ -65,4 +70,4 @@ export class HEExpressionEditor {
   }
 }
 
-Tunnel.injectProps(ElsaExpressionEditor, ['serverUrl', 'workflowDefinitionId']);
+Tunnel.injectProps(HEExpressionEditor, ['serverUrl', 'workflowDefinitionId']);
