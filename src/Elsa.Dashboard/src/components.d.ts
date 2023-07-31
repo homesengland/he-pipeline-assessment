@@ -5,7 +5,7 @@
  * It contains typing information for all components that exist in this project.
  */
 import { HTMLStencilElement, JSXBase } from "@stencil/core/internal";
-import { ActivityDefinitionProperty, ActivityModel, ActivityPropertyDescriptor } from "./models/elsa-interfaces";
+import { ActivityDefinitionProperty, ActivityModel, ActivityPropertyDescriptor, IntellisenseContext } from "./models/elsa-interfaces";
 import { VNode } from "@stencil/core";
 import { DataDictionaryGroup, HeActivityPropertyDescriptor, NestedActivityDefinitionProperty, NestedPropertyModel } from "./models/custom-component-models";
 export namespace Components {
@@ -35,6 +35,17 @@ export namespace Components {
     }
     interface HeElsaControl {
         "content": VNode | string | Element;
+    }
+    interface HeExpressionEditor {
+        "context"?: IntellisenseContext;
+        "editorHeight": string;
+        "expression": string;
+        "language": string;
+        "padding": string;
+        "serverUrl": string;
+        "setExpression": (value: string) => Promise<void>;
+        "singleLineMode": boolean;
+        "workflowDefinitionId": string;
     }
     interface HeJsonProperty {
         "activityModel": ActivityModel;
@@ -152,6 +163,10 @@ export interface HeDataTablePropertyCustomEvent<T> extends CustomEvent<T> {
     detail: T;
     target: HTMLHeDataTablePropertyElement;
 }
+export interface HeExpressionEditorCustomEvent<T> extends CustomEvent<T> {
+    detail: T;
+    target: HTMLHeExpressionEditorElement;
+}
 export interface HeJsonPropertyCustomEvent<T> extends CustomEvent<T> {
     detail: T;
     target: HTMLHeJsonPropertyElement;
@@ -242,6 +257,12 @@ declare global {
     var HTMLHeElsaControlElement: {
         prototype: HTMLHeElsaControlElement;
         new (): HTMLHeElsaControlElement;
+    };
+    interface HTMLHeExpressionEditorElement extends Components.HeExpressionEditor, HTMLStencilElement {
+    }
+    var HTMLHeExpressionEditorElement: {
+        prototype: HTMLHeExpressionEditorElement;
+        new (): HTMLHeExpressionEditorElement;
     };
     interface HTMLHeJsonPropertyElement extends Components.HeJsonProperty, HTMLStencilElement {
     }
@@ -351,6 +372,7 @@ declare global {
         "he-checkbox-property": HTMLHeCheckboxPropertyElement;
         "he-data-table-property": HTMLHeDataTablePropertyElement;
         "he-elsa-control": HTMLHeElsaControlElement;
+        "he-expression-editor": HTMLHeExpressionEditorElement;
         "he-json-property": HTMLHeJsonPropertyElement;
         "he-multi-line-property": HTMLHeMultiLinePropertyElement;
         "he-multi-text-property": HTMLHeMultiTextPropertyElement;
@@ -401,6 +423,17 @@ declare namespace LocalJSX {
     }
     interface HeElsaControl {
         "content"?: VNode | string | Element;
+    }
+    interface HeExpressionEditor {
+        "context"?: IntellisenseContext;
+        "editorHeight"?: string;
+        "expression"?: string;
+        "language"?: string;
+        "onExpressionChanged"?: (event: HeExpressionEditorCustomEvent<string>) => void;
+        "padding"?: string;
+        "serverUrl"?: string;
+        "singleLineMode"?: boolean;
+        "workflowDefinitionId"?: string;
     }
     interface HeJsonProperty {
         "activityModel"?: ActivityModel;
@@ -522,6 +555,7 @@ declare namespace LocalJSX {
         "he-checkbox-property": HeCheckboxProperty;
         "he-data-table-property": HeDataTableProperty;
         "he-elsa-control": HeElsaControl;
+        "he-expression-editor": HeExpressionEditor;
         "he-json-property": HeJsonProperty;
         "he-multi-line-property": HeMultiLineProperty;
         "he-multi-text-property": HeMultiTextProperty;
@@ -550,6 +584,7 @@ declare module "@stencil/core" {
             "he-checkbox-property": LocalJSX.HeCheckboxProperty & JSXBase.HTMLAttributes<HTMLHeCheckboxPropertyElement>;
             "he-data-table-property": LocalJSX.HeDataTableProperty & JSXBase.HTMLAttributes<HTMLHeDataTablePropertyElement>;
             "he-elsa-control": LocalJSX.HeElsaControl & JSXBase.HTMLAttributes<HTMLHeElsaControlElement>;
+            "he-expression-editor": LocalJSX.HeExpressionEditor & JSXBase.HTMLAttributes<HTMLHeExpressionEditorElement>;
             "he-json-property": LocalJSX.HeJsonProperty & JSXBase.HTMLAttributes<HTMLHeJsonPropertyElement>;
             "he-multi-line-property": LocalJSX.HeMultiLineProperty & JSXBase.HTMLAttributes<HTMLHeMultiLinePropertyElement>;
             "he-multi-text-property": LocalJSX.HeMultiTextProperty & JSXBase.HTMLAttributes<HTMLHeMultiTextPropertyElement>;

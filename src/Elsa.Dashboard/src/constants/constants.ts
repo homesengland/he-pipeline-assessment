@@ -1,3 +1,7 @@
+export class Uri {
+  static readonly LibUri = "'defaultLib:lib.es6.d.ts'";
+}
+
 export class SyntaxNames {
   static readonly Literal = "Literal";
   static readonly JavaScript = "JavaScript";
