@@ -14,7 +14,7 @@ namespace He.PipelineAssessment.UI.Tests.Features.Workflow.LoadConfirmationScree
     {
         [Theory]
         [AutoMoqData]
-        public async Task Handle_ReturnsNull_GivenHttpClientResponseIsNull(
+        public async Task Handle_ThrowsApplicationException_GivenHttpClientResponseIsNull(
             [Frozen] Mock<IElsaServerHttpClient> elsaServerHttpClient,
             LoadConfirmationScreenRequest request,
             LoadConfirmationScreenRequestHandler sut)
@@ -25,16 +25,16 @@ namespace He.PipelineAssessment.UI.Tests.Features.Workflow.LoadConfirmationScree
                 .ReturnsAsync((WorkflowActivityDataDto?)null);
 
             //Act
-            var result = await sut.Handle(request, CancellationToken.None);
+            var ex = await Assert.ThrowsAsync<ApplicationException>(()=>sut.Handle(request, CancellationToken.None));
 
             //Assert
-            Assert.Null(result);
             elsaServerHttpClient.Verify(x => x.LoadConfirmationScreen(It.IsAny<LoadWorkflowActivityDto>()), Times.Once);
+            Assert.Equal("Failed to load Confirmation Screen activity.", ex.Message);
         }
 
         [Theory]
         [AutoMoqData]
-        public async Task Handle_ReturnsNull_GivenNoAssessmentToolWorkflowInstanceFound(
+        public async Task Handle_ThrowsApplicationException_GivenNoAssessmentToolWorkflowInstanceFound(
             [Frozen] Mock<IElsaServerHttpClient> elsaServerHttpClient,
             [Frozen] Mock<IAssessmentRepository> assessmentRepository,
             LoadConfirmationScreenRequest request,
@@ -50,10 +50,10 @@ namespace He.PipelineAssessment.UI.Tests.Features.Workflow.LoadConfirmationScree
                 .ReturnsAsync((AssessmentToolWorkflowInstance?)null);
 
             //Act
-            var result = await sut.Handle(request, CancellationToken.None);
+            var ex = await Assert.ThrowsAsync<ApplicationException>(()=>sut.Handle(request, CancellationToken.None));
 
             //Assert
-            Assert.Null(result);
+            Assert.Equal("Failed to load Confirmation Screen activity.", ex.Message);
             elsaServerHttpClient.Verify(x => x.LoadConfirmationScreen(It.IsAny<LoadWorkflowActivityDto>()), Times.Once);
         }
 

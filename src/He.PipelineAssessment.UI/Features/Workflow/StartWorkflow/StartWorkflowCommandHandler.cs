@@ -74,7 +74,7 @@ namespace He.PipelineAssessment.UI.Features.Workflow.StartWorkflow
             catch (Exception e)
             {
                 _logger.LogError(e,e.Message);
-                throw;
+                throw new ApplicationException("Failed to start workflow");
             }
         }
 

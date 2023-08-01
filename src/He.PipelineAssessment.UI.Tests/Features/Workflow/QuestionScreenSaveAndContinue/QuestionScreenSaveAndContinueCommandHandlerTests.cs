@@ -10,6 +10,7 @@ using Moq;
 using Xunit;
 using He.PipelineAssessment.UI.Authorization;
 using static Microsoft.EntityFrameworkCore.DbLoggerCategory.Database;
+using Azure.Core;
 
 namespace He.PipelineAssessment.UI.Tests.Features.Workflow.SaveAndContinue
 {
@@ -18,7 +19,7 @@ namespace He.PipelineAssessment.UI.Tests.Features.Workflow.SaveAndContinue
 
         [Theory]
         [AutoMoqData]
-        public async Task Handle_ReturnsNull_GivenHttpClientResponseIsNull(
+        public async Task Handle_ThrowsApplicationException_GivenHttpClientResponseIsNull(
             [Frozen] Mock<IElsaServerHttpClient> elsaServerHttpClient,
             [Frozen] Mock<IQuestionScreenSaveAndContinueMapper> saveAndContinueMapper,
             [Frozen] Mock<IRoleValidation> roleValidation,
@@ -38,10 +39,10 @@ namespace He.PipelineAssessment.UI.Tests.Features.Workflow.SaveAndContinue
                 .ReturnsAsync((WorkflowNextActivityDataDto?)null);
 
             //Act
-            var result = await sut.Handle(saveAndContinueCommand, CancellationToken.None);
+            var ex = await Assert.ThrowsAsync<ApplicationException>(()=>sut.Handle(saveAndContinueCommand, CancellationToken.None));
 
             //Assert
-            Assert.Null(result);
+            Assert.Equal($"Unable to save and continue. AssessmentId: {saveAndContinueCommand.AssessmentId} WorkflowInstanceId:{saveAndContinueCommand.Data.WorkflowInstanceId}", ex.Message);
         }
 
         [Theory]
@@ -84,7 +85,7 @@ namespace He.PipelineAssessment.UI.Tests.Features.Workflow.SaveAndContinue
 
         [Theory]
         [AutoMoqData]
-        public async Task Handle_ReturnsLoadWorkflowActivityRequest_GivenIncorrectRole(
+        public async Task Handle_ApplicationException_GivenIncorrectRole(
           QuestionScreenSaveAndContinueCommand saveAndContinueCommand,
           QuestionScreenSaveAndContinueCommandHandler sut
       )
@@ -93,17 +94,17 @@ namespace He.PipelineAssessment.UI.Tests.Features.Workflow.SaveAndContinue
            
 
             //Act
-            var result = await sut.Handle(saveAndContinueCommand, CancellationToken.None);
+            var ex = await Assert.ThrowsAsync<ApplicationException>(()=>sut.Handle(saveAndContinueCommand, CancellationToken.None));
 
             //Assert
-            Assert.False(result!.IsAuthorised);
+            Assert.Equal($"Unable to save and continue. AssessmentId: {saveAndContinueCommand.AssessmentId} WorkflowInstanceId:{saveAndContinueCommand.Data.WorkflowInstanceId}",ex.Message);
         }
 
 
 
         [Theory]
         [AutoMoqData]
-        public async Task Handle_ReturnsLoadWorkflowActivityRequest_ErrorsOccur(
+        public async Task Handle_ThrowsApplicationException_ErrorsOccur(
           [Frozen] Mock<IRoleValidation> roleValidation,
           QuestionScreenSaveAndContinueCommand saveAndContinueCommand,
           QuestionScreenSaveAndContinueCommandHandler sut
@@ -113,10 +114,10 @@ namespace He.PipelineAssessment.UI.Tests.Features.Workflow.SaveAndContinue
             roleValidation.Setup(x => x.ValidateRole(saveAndContinueCommand.AssessmentId, saveAndContinueCommand.WorkflowDefinitionId)).ThrowsAsync(new Exception());
 
             //Act
-            var result = await sut.Handle(saveAndContinueCommand, CancellationToken.None);
+            var ex = await Assert.ThrowsAsync<ApplicationException>(()=>sut.Handle(saveAndContinueCommand, CancellationToken.None));
 
             //Assert
-            Assert.Null(result);
+            Assert.Equal($"Unable to save and continue. AssessmentId: {saveAndContinueCommand.AssessmentId} WorkflowInstanceId:{saveAndContinueCommand.Data.WorkflowInstanceId}", ex.Message);
         }
 
     }
