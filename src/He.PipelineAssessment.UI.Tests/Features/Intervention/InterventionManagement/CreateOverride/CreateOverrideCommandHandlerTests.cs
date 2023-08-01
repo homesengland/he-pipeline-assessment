@@ -34,10 +34,10 @@ namespace He.PipelineAssessment.UI.Tests.Features.Intervention.InterventionManag
             mapper.Setup(x => x.CreateOverrideCommandToAssessmentIntervention(command)).Throws(exception);
 
             //Act
-            var ex = await Assert.ThrowsAsync<Exception>(() => sut.Handle(command, CancellationToken.None));
+            var ex = await Assert.ThrowsAsync<ApplicationException>(() => sut.Handle(command, CancellationToken.None));
 
             //Assert
-            Assert.Equal(exception, ex);
+            Assert.Equal($"Unable to create override for Assessment Tool Workflow Instance. WorkflowInstanceId: {command.WorkflowInstanceId}.", ex.Message);
         }
 
         [Theory]
@@ -63,10 +63,10 @@ namespace He.PipelineAssessment.UI.Tests.Features.Intervention.InterventionManag
             repo.Setup(x => x.CreateAssessmentIntervention(intervention)).Throws(exception);
 
             //Act
-            var ex = await Assert.ThrowsAsync<Exception>(() => sut.Handle(command, CancellationToken.None));
+            var ex = await Assert.ThrowsAsync<ApplicationException>(() => sut.Handle(command, CancellationToken.None));
 
             //Assert
-            Assert.Equal(exception, ex);
+            Assert.Equal($"Unable to create override for Assessment Tool Workflow Instance. WorkflowInstanceId: {command.WorkflowInstanceId}.", ex.Message);
         }
 
         [Theory]
@@ -111,12 +111,11 @@ namespace He.PipelineAssessment.UI.Tests.Features.Intervention.InterventionManag
             //Arrange
             repo.Setup(x => x.GetAssessmentToolWorkflowInstance(command.WorkflowInstanceId)).ReturnsAsync((AssessmentToolWorkflowInstance?)null);
 
-            var exception = new NotFoundException($"Assessment Tool Workflow Instance with Id {command.WorkflowInstanceId} not found");
             //Act
-            var ex = await Assert.ThrowsAsync<NotFoundException>(() => sut.Handle(command, CancellationToken.None));
+            var ex = await Assert.ThrowsAsync<ApplicationException>(() => sut.Handle(command, CancellationToken.None));
 
             //Assert
-            Assert.Equal(exception.Message, ex.Message);
+            Assert.Equal($"Unable to create override for Assessment Tool Workflow Instance. WorkflowInstanceId: {command.WorkflowInstanceId}.", ex.Message);
         }
 
         [Theory]
@@ -144,10 +143,10 @@ namespace He.PipelineAssessment.UI.Tests.Features.Intervention.InterventionManag
             var exception =  new Exception(
                 $"Unable to create override for Assessment Tool Workflow Instance as this is not the latest submitted Workflow Instance for this Assessment.");
             //Act
-            var ex = await Assert.ThrowsAsync<Exception>(() => sut.Handle(command, CancellationToken.None));
+            var ex = await Assert.ThrowsAsync<ApplicationException>(() => sut.Handle(command, CancellationToken.None));
 
             //Assert
-            Assert.Equal(exception.Message, ex.Message);
+            Assert.Equal($"Unable to create override for Assessment Tool Workflow Instance. WorkflowInstanceId: {command.WorkflowInstanceId}.", ex.Message);
         }
     }
 }

@@ -1,9 +1,11 @@
-﻿using AutoFixture.Xunit2;
+﻿using Auth0.ManagementApi.Models;
+using AutoFixture.Xunit2;
 using He.PipelineAssessment.Infrastructure.Repository;
 using He.PipelineAssessment.Models;
 using He.PipelineAssessment.Tests.Common;
 using He.PipelineAssessment.UI.Common.Exceptions;
 using He.PipelineAssessment.UI.Features.Override.EditOverride;
+using Microsoft.Extensions.Logging;
 using Moq;
 using Xunit;
 
@@ -24,10 +26,10 @@ namespace He.PipelineAssessment.UI.Tests.Features.Intervention.InterventionManag
             repo.Setup(x => x.GetAssessmentIntervention(command.AssessmentInterventionId)).Throws(exception);
 
             //Act
-            var ex = await Assert.ThrowsAsync<Exception>(() => sut.Handle(command, CancellationToken.None));
+            var ex = await Assert.ThrowsAsync<ApplicationException>(() => sut.Handle(command, CancellationToken.None));
 
             //Assert
-            Assert.Equal(exception, ex);
+            Assert.Equal($"Unalbe to edit override. WorkflowInstanceId: {command.WorkflowInstanceId} AssessmentInterventionId: {command.AssessmentInterventionId}.", ex.Message);
         }
 
         [Theory]
@@ -42,10 +44,10 @@ namespace He.PipelineAssessment.UI.Tests.Features.Intervention.InterventionManag
             repo.Setup(x => x.GetAssessmentIntervention(command.AssessmentInterventionId)).ReturnsAsync((AssessmentIntervention?)null);
 
             //Act
-            var ex = await Assert.ThrowsAsync<NotFoundException>(() => sut.Handle(command, CancellationToken.None));
+            var ex = await Assert.ThrowsAsync<ApplicationException>(() => sut.Handle(command, CancellationToken.None));
 
             //Assert
-            Assert.Equal($"Assessment Intervention with Id {command.AssessmentInterventionId} not found", ex.Message);
+            Assert.Equal($"Unalbe to edit override. WorkflowInstanceId: {command.WorkflowInstanceId} AssessmentInterventionId: {command.AssessmentInterventionId}.", ex.Message);
         }
 
         [Theory]
@@ -63,10 +65,10 @@ namespace He.PipelineAssessment.UI.Tests.Features.Intervention.InterventionManag
             repo.Setup(x => x.SaveChanges()).Throws(exception);
 
             //Act
-            var ex = await Assert.ThrowsAsync<Exception>(() => sut.Handle(command, CancellationToken.None));
+            var ex = await Assert.ThrowsAsync<ApplicationException>(() => sut.Handle(command, CancellationToken.None));
 
             //Assert
-            Assert.Equal(exception, ex);
+            Assert.Equal($"Unalbe to edit override. WorkflowInstanceId: {command.WorkflowInstanceId} AssessmentInterventionId: {command.AssessmentInterventionId}.", ex.Message);
         }
 
         [Theory]
