@@ -1,4 +1,4 @@
-import { Component, EventEmitter, h, Method, Prop, State, Watch, Event, Listen } from '@stencil/core';
+import { Component, EventEmitter, h, Method, Prop, State, Watch, Event } from '@stencil/core';
 import { IntellisenseGatherer } from "../../functions/intellisenseGatherer.js";
 import Tunnel from '../tunnel/workflow-editor';
 import { IntellisenseContext, MonacoValueChangedArgs, HTMLElsaMonacoElement } from "../../models/elsa-interfaces";
