@@ -1,13 +1,7 @@
 ﻿using He.PipelineAssessment.UI.Features.Rollback.ConfirmRollback;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using AutoFixture.Xunit2;
 using He.PipelineAssessment.Tests.Common;
 using Xunit;
-using He.PipelineAssessment.UI.Common.Exceptions;
 using He.PipelineAssessment.Infrastructure.Repository;
 using He.PipelineAssessment.Models;
 using Moq;
@@ -20,19 +14,16 @@ namespace He.PipelineAssessment.UI.Tests.Features.Rollback.ConfirmRollback
         [Theory]
         [AutoMoqData]
         public async Task Handle_ShouldReturnErrorMessage_GivenInterventionRecordCannotBeFound(
-           
             ConfirmRollbackCommand command,
             ConfirmRollbackCommandHandler sut)
         {
             //Arrange
 
             //Act
-
-            var ex = await Assert.ThrowsAsync<NotFoundException>(() => sut.Handle(command, CancellationToken.None));
+            var ex = await Assert.ThrowsAsync<ApplicationException>(() => sut.Handle(command, CancellationToken.None));
 
             //Assert
-            Assert.Equal($"Assessment Intervention with Id {command.AssessmentInterventionId} not found", ex.Message);
-
+            Assert.Equal($"Confirm rollback failed. AssessmentInterventionId: {command.AssessmentInterventionId}", ex.Message);
         }
 
         [Theory]

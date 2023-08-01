@@ -1,17 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using AutoFixture.Xunit2;
+﻿using AutoFixture.Xunit2;
 using He.PipelineAssessment.Infrastructure.Repository;
 using He.PipelineAssessment.Models;
 using He.PipelineAssessment.Tests.Common;
-using He.PipelineAssessment.UI.Common.Exceptions;
 using He.PipelineAssessment.UI.Features.Intervention;
 using He.PipelineAssessment.UI.Features.Rollback.ConfirmRollback;
 using He.PipelineAssessment.UI.Features.Rollback.LoadRollbackCheckYourAnswersAssessor;
-using He.PipelineAssessment.UI.Features.Rollback.SubmitRollback;
 using Moq;
 using Xunit;
 
@@ -26,10 +19,10 @@ namespace He.PipelineAssessment.UI.Tests.Features.Rollback.LoadRollbackCheckYour
             LoadRollbackCheckYourAnswersAssessorRequestHandler sut)
         {
             //Act
-            var ex = await Assert.ThrowsAsync<NotFoundException>(() => sut.Handle(request, CancellationToken.None));
+            var ex = await Assert.ThrowsAsync<ApplicationException>(() => sut.Handle(request, CancellationToken.None));
 
             //Assert
-            Assert.Equal($"Assessment Intervention with Id {request.InterventionId} not found", ex.Message);
+            Assert.Equal($"Unable to load rollback check your answers. InterventionId: {request.InterventionId}", ex.Message);
         }
 
         [Theory]

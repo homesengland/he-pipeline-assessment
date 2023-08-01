@@ -45,7 +45,7 @@ namespace He.PipelineAssessment.UI.Features.Rollback.CreateRollback
                 if (!isLatest)
                 {
                     throw new Exception(
-                        $"Unable to create  for Assessment Tool Workflow Instance as this is not the latest submitted Workflow Instance for this Assessment. WorkflowInstanceId: {command.WorkflowInstanceId}");
+                        $"Unable to create rollback for Assessment Tool Workflow Instance as this is not the latest submitted Workflow Instance for this Assessment. WorkflowInstanceId: {command.WorkflowInstanceId}");
                 }
 
                 var assessmentIntervention = _mapper.CreateRollbackCommandToAssessmentIntervention(command);
@@ -54,8 +54,9 @@ namespace He.PipelineAssessment.UI.Features.Rollback.CreateRollback
 
                 return assessmentIntervention.Id;
             }
-            catch (UnauthorizedAccessException)
+            catch (UnauthorizedAccessException e)
             {
+                _logger.LogError(e, e.Message);
                 throw;
             }
             catch (Exception e)

@@ -1,5 +1,4 @@
-﻿using Auth0.ManagementApi.Models;
-using He.PipelineAssessment.Infrastructure;
+﻿using He.PipelineAssessment.Infrastructure;
 using He.PipelineAssessment.Infrastructure.Repository;
 using He.PipelineAssessment.Models;
 using He.PipelineAssessment.UI.Authorization;
@@ -7,7 +6,6 @@ using He.PipelineAssessment.UI.Common.Exceptions;
 using He.PipelineAssessment.UI.Common.Utility;
 using He.PipelineAssessment.UI.Features.Intervention;
 using MediatR;
-using static Microsoft.EntityFrameworkCore.DbLoggerCategory.Database;
 
 namespace He.PipelineAssessment.UI.Features.Rollback.CreateRollback
 {
@@ -83,12 +81,14 @@ namespace He.PipelineAssessment.UI.Features.Rollback.CreateRollback
 
                 return dto;
             }
-            catch (UnauthorizedAccessException)
+            catch (UnauthorizedAccessException e)
             {
+                _logger.LogError(e, e.Message);
                 throw;
             }
-            catch (ApplicationException)
+            catch (ApplicationException e)
             {
+                _logger.LogError(e, e.Message);
                 throw;
             }
             catch (Exception e)

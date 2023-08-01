@@ -1,14 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using AutoFixture.Xunit2;
+﻿using AutoFixture.Xunit2;
 using He.PipelineAssessment.Infrastructure.Repository;
 using He.PipelineAssessment.Models;
 using He.PipelineAssessment.Tests.Common;
-using He.PipelineAssessment.UI.Common.Exceptions;
-using He.PipelineAssessment.UI.Features.Rollback.EditRollback;
 using He.PipelineAssessment.UI.Features.Rollback.EditRollbackAssessor;
 using Moq;
 using Xunit;
@@ -24,10 +17,10 @@ namespace He.PipelineAssessment.UI.Tests.Features.Rollback.EditRollbackAssessor
             EditRollbackAssessorCommandHandler sut)
         {
             //Act
-            var ex = await Assert.ThrowsAsync<NotFoundException>(() => sut.Handle(command, CancellationToken.None));
+            var ex = await Assert.ThrowsAsync<ApplicationException>(() => sut.Handle(command, CancellationToken.None));
 
             //Assert
-            Assert.Equal($"Assessment Intervention with Id {command.AssessmentInterventionId} not found", ex.Message);
+            Assert.Equal($"Unable to edit rollback. AssessmentInterventionId: {command.AssessmentInterventionId}", ex.Message);
         }
 
         [Theory]

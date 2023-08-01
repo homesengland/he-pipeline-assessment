@@ -37,8 +37,9 @@ namespace He.PipelineAssessment.UI.Features.Rollback.DeleteRollback
 
                 return await _assessmentRepository.DeleteIntervention(intervention);
             }
-            catch (UnauthorizedAccessException)
+            catch (UnauthorizedAccessException e)
             {
+                _logger.LogError(e, e.Message);
                 throw;
             }
             catch (Exception e)
