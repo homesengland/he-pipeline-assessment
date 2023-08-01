@@ -1,4 +1,5 @@
 import { Component, EventEmitter, h, Method, Prop, State, Watch, Event } from '@stencil/core';
+import state from '../../stores/store';
 import { IntellisenseGatherer } from "../../functions/intellisenseGatherer.js";
 import Tunnel from '../tunnel/workflow-editor';
 import { IntellisenseContext, MonacoValueChangedArgs, HTMLElsaMonacoElement } from "../../models/elsa-interfaces";
@@ -39,21 +40,9 @@ export class HEExpressionEditor {
   }
 
   async componentDidLoad() {
-    console.log("Tunnel Provider", Tunnel.Provider);
-    console.log("Tunnel Consumer", Tunnel.Consumer);
-    console.log("ServerUrl Next");
-    console.log("ServerUrl", this.serverUrl);
-    console.log("WorkflowDefinitionId", this.workflowDefinitionId);
-
-    var url_string = document.URL;
-    var n = url_string.lastIndexOf('/');
-    var workflowDef = url_string.substring(n + 1);
-    this.workflowDefinitionId = workflowDef;
-    console.log("WorkflowDefinitionId", this.workflowDefinitionId);
-
-
+    this.workflowDefinitionId = state.workflowDefinitionId;
     this.currentExpression = this.expression;
-    this.intellisenseGatherer = new IntellisenseGatherer();
+    this.intellisenseGatherer = new IntellisenseGatherer(state.serverUrl, state.domain, state.audience, state.clientId, state.useRefreshToken);
     const libSource = await this.intellisenseGatherer.getJavaScriptTypeDefinitions(this.workflowDefinitionId, this.context);
     const libUri = Uri.LibUri;
     await this.monacoEditor.addJavaScriptLib(libSource, libUri);

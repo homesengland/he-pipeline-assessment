@@ -9,22 +9,22 @@ export class IntellisenseGatherer {
   private auth0: Auth0Client;
   private options: Auth0ClientOptions;
 
-  constructor() {
+  constructor(url: string, domain: string, audience: string, clientId: string, useRefreshTokens: boolean) {
 
     let auth0Params: AuthorizationParams = {
-      audience: 'replace-me',
+      audience: audience,
     };
 
     let auth0Options: Auth0ClientOptions = {
       authorizationParams: auth0Params,
-      clientId: 'replace-me',
-      domain: 'replace-me',
-      useRefreshTokens: true
+      clientId: clientId,
+      domain: domain,
+      useRefreshTokens: useRefreshTokens
     };
 
     this.options = auth0Options;
 
-    this._baseUrl = "https://localhost:7227/";
+    this._baseUrl = url;
   }
 
   initialize = async () => {
@@ -40,51 +40,21 @@ export class IntellisenseGatherer {
     // Nothing to do if authenticated.
     if (isAuthenticated)
       return;
-
-    // Are we in a redirect back from Auth0 receiving a code?
-    //const query = window.location.search;
-    //const hasCode = query.includes("code=");
-
-    //if (hasCode) {
-    //  try {
-    //    // Let auth0 SDK handle the code parsing.
-    //    await this.auth0.handleRedirectCallback();
-
-    //    // Update address to remove code query string.
-    //    window.history.replaceState({}, document.title, "/");
-    //    return;
-    //  } catch (err) {
-    //    console.log("Error parsing redirect:", err);
-    //    return;
-    //  }
-    //}
-
-    // Redirect to Auth0 for the user to authenticate themselves.
-    //const origin = window.location.origin;
-
-    //let redirectParams: AuthorizationParams = {
-    //  redirect_uri: origin
-    //};
-    //const redirectOptions: RedirectLoginOptions = {
-    //  authorizationParams: redirectParams,
-    //};
-
-    //await this.auth0.loginWithRedirect(redirectOptions);
   };
 
   private async createHttpClient(): Promise<AxiosInstance> {
-    this.initialize();
-    if (!!this._httpClient)
+
+    await this.initialize();
+
+    if (!!this._httpClient) {
       return this._httpClient;
+    }
+
+
+    console.log("Auth0 Client", this.auth0);
 
     const token = await this.auth0.getTokenSilently();
 
-    //if (request.data == null) {
-    //  request.data = "{}";
-    //}
-    //if (!!token) {
-    //  request.headers = { ...request.headers, 'Authorization': `Bearer ${token}`, 'Content-Type': `application/json; charset=UTF-8` };
-    //}
     let config: AxiosRequestConfig;
     if (!!token) {
       config = {

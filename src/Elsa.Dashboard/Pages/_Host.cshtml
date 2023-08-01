@@ -52,7 +52,16 @@
             audience: '@audience',
             useRefreshTokens: true
         }
-        InitCustomElsa(elsaStudioRoot, customActivities, auth0ClientOptions,'@serverUrl')
+
+        const storeConfig = {
+            serverUrl: '@serverUrl',
+            audience: '@audience',
+            client: '@clientId',
+            domain: '@domain',
+            useRefreshTokens: true
+        }
+
+        InitCustomElsa(elsaStudioRoot, customActivities, auth0ClientOptions,storeConfig)
     </script>
 
 </body>

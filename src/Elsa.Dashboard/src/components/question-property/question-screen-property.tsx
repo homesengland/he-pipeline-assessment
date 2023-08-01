@@ -12,7 +12,6 @@ import {
 
 import {
   HeActivityPropertyDescriptor,
-  //QuestionModel,
   NestedPropertyModel,
   QuestionScreenProperty
 } from '../../models/custom-component-models';
@@ -28,8 +27,9 @@ import {
 } from '../providers/question-provider/question-provider';
 import TrashCanIcon from '../../icons/trash-can';
 import { QuestionCategories, SyntaxNames } from '../../constants/constants';
-import { filterPropertiesByType, parseJson, newOptionNumber, getUniversalUniqueId } from '../../utils/utils';
+import { filterPropertiesByType, parseJson, newOptionNumber, getUniversalUniqueId, getWorkflowDefinitionIdFromUrl } from '../../utils/utils';
 import SortIcon from '../../icons/sort_icon';
+import { StoreConfig } from '../../models/StoreConfig';
 
 @Component({
   tag: 'question-screen-property',
@@ -43,6 +43,7 @@ export class QuestionScreen {
   @Prop() propertyModel: ActivityDefinitionProperty;
   @Prop() questionProperties: Array<HeActivityPropertyDescriptor>;
   @Prop() dataDictionaryGroup: Array<DataDictionaryGroup>;
+  @Prop() storeConfig: StoreConfig;
   @State() questionModel: QuestionScreenProperty = new QuestionScreenProperty();
   @State() iconProvider = new IconProvider();
   @State() questionProvider = new QuestionProvider(Object.values(QuestionLibrary));
@@ -55,6 +56,15 @@ export class QuestionScreen {
 
   private container: HTMLElement;
 
+  constructor() {
+    if (this.storeConfig != null) {
+      state.audience = this.storeConfig.audience;
+      state.serverUrl = this.storeConfig.serverUrl;
+      state.clientId = this.storeConfig.client;
+      state.domain = this.storeConfig.domain;
+      state.workflowDefinitionId = getWorkflowDefinitionIdFromUrl();
+    }
+  }
 
   async componentWillLoad() {
     const propertyModel = this.propertyModel;

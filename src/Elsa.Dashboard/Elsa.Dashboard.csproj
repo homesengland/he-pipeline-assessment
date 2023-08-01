@@ -50,6 +50,7 @@
     <None Remove="src\functions\updateModel.tsx" />
     <None Remove="src\models\display-manager.ts" />
     <None Remove="src\models\display-toggle.tsx" />
+    <None Remove="src\models\StoreConfig.ts" />
     <None Remove="src\nested-drivers\display-managers\he-data-table-driver.tsx" />
     <None Remove="src\nested-drivers\he-text-activity-driver.tsx" />
     <None Remove="wwwroot\Scripts\CustomElsa.js" />
@@ -94,6 +95,7 @@
       <SubType>Code</SubType>
     </TypeScriptCompile>
     <TypeScriptCompile Include="src\functions\display-toggle.tsx" />
+    <TypeScriptCompile Include="src\models\StoreConfig.ts" />
     <TypeScriptCompile Include="src\nested-drivers\he-data-table-driver.tsx" />
     <TypeScriptCompile Include="src\nested-drivers\he-text-activity-driver.tsx" />
     <TypeScriptCompile Include="src\nested-drivers\he-checkbox-options-driver.tsx" />

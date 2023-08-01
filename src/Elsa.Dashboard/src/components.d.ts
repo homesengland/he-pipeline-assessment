@@ -8,6 +8,7 @@ import { HTMLStencilElement, JSXBase } from "@stencil/core/internal";
 import { ActivityDefinitionProperty, ActivityModel, ActivityPropertyDescriptor, IntellisenseContext } from "./models/elsa-interfaces";
 import { VNode } from "@stencil/core";
 import { DataDictionaryGroup, HeActivityPropertyDescriptor, NestedActivityDefinitionProperty, NestedPropertyModel } from "./models/custom-component-models";
+import { StoreConfig } from "./models/StoreConfig";
 export namespace Components {
     interface HeCheckListProperty {
         "activityModel": ActivityModel;
@@ -140,6 +141,7 @@ export namespace Components {
         "propertyDescriptor": ActivityPropertyDescriptor;
         "propertyModel": ActivityDefinitionProperty;
         "questionProperties": Array<HeActivityPropertyDescriptor>;
+        "storeConfig": StoreConfig;
     }
     interface SwitchAnswersProperty {
         "activityModel": ActivityModel;
@@ -543,6 +545,7 @@ declare namespace LocalJSX {
         "propertyDescriptor"?: ActivityPropertyDescriptor;
         "propertyModel"?: ActivityDefinitionProperty;
         "questionProperties"?: Array<HeActivityPropertyDescriptor>;
+        "storeConfig"?: StoreConfig;
     }
     interface SwitchAnswersProperty {
         "activityModel"?: ActivityModel;
