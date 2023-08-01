@@ -5,7 +5,6 @@ using He.PipelineAssessment.Models;
 using He.PipelineAssessment.UI.Features.Admin.AssessmentToolManagement.Commands.UpdateAssessmentToolWorkflowCommand;
 using Moq;
 using Xunit;
-using Azure.Core;
 
 namespace He.PipelineAssessment.UI.Tests.Features.Admin.AssessmentToolManagement.Commands
 {
