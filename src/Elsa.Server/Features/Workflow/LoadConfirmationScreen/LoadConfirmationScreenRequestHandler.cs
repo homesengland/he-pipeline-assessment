@@ -7,7 +7,6 @@ using Elsa.Server.Extensions;
 using Elsa.Server.Models;
 using Elsa.Server.Providers;
 using MediatR;
-using static Elsa.CustomActivities.Activities.ConfirmationScreen.ConfirmationScreen;
 
 namespace Elsa.Server.Features.Workflow.LoadConfirmationScreen
 {

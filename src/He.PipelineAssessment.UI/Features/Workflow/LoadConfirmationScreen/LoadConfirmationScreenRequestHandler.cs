@@ -7,7 +7,6 @@ using MediatR;
 using System.Text.Json;
 using He.PipelineAssessment.Infrastructure;
 using He.PipelineAssessment.UI.Common.Utility;
-using Auth0.ManagementApi.Models;
 
 namespace He.PipelineAssessment.UI.Features.Workflow.LoadConfirmationScreen
 {
@@ -96,6 +95,7 @@ namespace He.PipelineAssessment.UI.Features.Workflow.LoadConfirmationScreen
             }
             catch(Exception e)
             {
+                _logger.LogError(e, e.Message);
                 _logger.LogError($"Failed to load Confirmation Screen. ActivityId: {request.ActivityId} WorkflowInstanceId: {request.WorkflowInstanceId}");
                 throw new ApplicationException("Failed to load Confirmation Screen activity.");
             }
