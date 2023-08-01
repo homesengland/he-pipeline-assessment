@@ -44,8 +44,16 @@ export class HEExpressionEditor {
     console.log("ServerUrl Next");
     console.log("ServerUrl", this.serverUrl);
     console.log("WorkflowDefinitionId", this.workflowDefinitionId);
+
+    var url_string = document.URL;
+    var n = url_string.lastIndexOf('/');
+    var workflowDef = url_string.substring(n + 1);
+    this.workflowDefinitionId = workflowDef;
+    console.log("WorkflowDefinitionId", this.workflowDefinitionId);
+
+
     this.currentExpression = this.expression;
-    this.intellisenseGatherer = new IntellisenseGatherer(this.serverUrl);
+    this.intellisenseGatherer = new IntellisenseGatherer();
     const libSource = await this.intellisenseGatherer.getJavaScriptTypeDefinitions(this.workflowDefinitionId, this.context);
     const libUri = Uri.LibUri;
     await this.monacoEditor.addJavaScriptLib(libSource, libUri);
@@ -71,5 +79,7 @@ export class HEExpressionEditor {
     )
   }
 }
+
+
 
 Tunnel.injectProps(HEExpressionEditor, ['serverUrl', 'workflowDefinitionId']);

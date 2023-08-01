@@ -8,7 +8,7 @@ import { CustomTextDriver } from './Drivers/CustomTextPropertyDriver.js';
 import { ConditionalTextListDriver } from './Drivers/ConditionalTextListPropertyDriver.js';
 import { TextActivityDriver } from './Drivers/TextActivityPropertyDriver.js';
 
-export function InitCustomElsa(elsaStudioRoot, customProperties, auth0ClientOptions) {
+export function InitCustomElsa(elsaStudioRoot, customProperties, auth0ClientOptions,serverUrl) {
 
   elsaStudioRoot.addEventListener('initializing', e => {
     var elsaStudio = e.detail;
