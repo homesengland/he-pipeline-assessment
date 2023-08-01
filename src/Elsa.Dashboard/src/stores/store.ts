@@ -1,5 +1,5 @@
 import { createStore } from "@stencil/store";
-import StoreStatus from '../constants';
+import { StoreStatus } from '../constants/constants';
 
 const { state, onChange } = createStore({
   dictionaryGroups: [],

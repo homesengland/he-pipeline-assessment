@@ -77,10 +77,10 @@ export class IntellisenseGatherer {
       return this._httpClient;
 
     const config: AxiosRequestConfig = {
-      baseURL: this._baseUrl
+      baseURL: this._baseUrl,
     };
     this._httpClient = axios.create(config);
-
+    
     return this._httpClient;
   }
 
