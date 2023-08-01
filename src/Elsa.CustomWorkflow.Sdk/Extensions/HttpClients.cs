@@ -1,4 +1,5 @@
-﻿using He.PipelineAssessment.Data;
+﻿using Elsa.CustomWorkflow.Sdk.HttpClients;
+using He.PipelineAssessment.Data;
 using He.PipelineAssessment.Data.Auth;
 using He.PipelineAssessment.Data.LaHouseNeed;
 using He.PipelineAssessment.Data.PCSProfile;
@@ -20,7 +21,6 @@ namespace Elsa.CustomWorkflow.Sdk.Extensions
             services.AddPCSClient(config, isDevelopmentEnvironment);
             
         }
-
         public static void AddSinglePipelineClient(this IServiceCollection services, IConfiguration config, bool isDevelopmentEnvironment)
         {
             string serviceUrl = config["Datasources:SinglePipeline"];
