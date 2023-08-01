@@ -1,7 +1,7 @@
 import { Component, h, Prop, State } from '@stencil/core';
 import Sortable from 'sortablejs';
 import { DataDictionaryGroup } from '../../models/custom-component-models';
-import state  from '../../stores/dataDictionaryStore';
+import state  from '../../stores/store';
 import {
   ActivityDefinitionProperty,
   ActivityModel,
