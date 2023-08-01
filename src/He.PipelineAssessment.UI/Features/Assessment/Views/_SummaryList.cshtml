@@ -1,5 +1,7 @@
-﻿@using He.PipelineAssessment.UI.Authorization
+﻿@using He.PipelineAssessment.Models
+@using He.PipelineAssessment.UI.Authorization
 @using Microsoft.AspNetCore.Authorization
+@using Microsoft.CodeAnalysis.CSharp.Syntax
 @inject IAuthorizationService AuthorizationService
 @model He.PipelineAssessment.UI.Features.Assessment.AssessmentSummary.AssessmentSummaryResponse;
 
@@ -24,8 +26,16 @@
                     {
                         @if ((await AuthorizationService.AuthorizeAsync(User, Constants.AuthorizationPolicies.AssignmentToWorkflowExecuteRoleRequired)).Succeeded)
                         {
+                            if (assessmentStage.Status == AssessmentToolWorkflowInstanceConstants.Submitted)
+                            {
+                            @Html.ActionLink(assessmentStage.Name, "LoadWorkflowActivity", "Workflow", new { WorkflowInstanceId = assessmentStage.WorkflowInstanceId, ActivityId = assessmentStage.CurrentActivityId, ActivityType = assessmentStage.CurrentActivityType })
 
+                            }
+                            else
+                            {
                             @Html.ActionLink(assessmentStage.Name, "LoadWorkflowActivity", "Workflow", new { WorkflowInstanceId = assessmentStage.WorkflowInstanceId, ActivityId = assessmentStage.FirstActivityId, ActivityType = assessmentStage.FirstActivityType })
+
+                            }
 
                         }
                         else
