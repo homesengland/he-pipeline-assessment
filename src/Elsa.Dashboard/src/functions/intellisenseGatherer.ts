@@ -58,7 +58,7 @@ export class IntellisenseGatherer {
     if (!!token) {
       config = {
         baseURL: this._baseUrl,
-        headers: { 'Authorization': `Bearer ${token}`, 'Content-Type': `application/json; charset=UTF-8` },
+        headers: { 'Authorization': `Bearer ${token}`, 'Content-Type': `application/json; charset=UTF-8` }
       };
     } else {
       config = {
