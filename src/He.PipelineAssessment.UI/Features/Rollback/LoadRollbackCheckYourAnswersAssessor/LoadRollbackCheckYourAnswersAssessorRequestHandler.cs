@@ -2,7 +2,6 @@
 using He.PipelineAssessment.UI.Common.Exceptions;
 using He.PipelineAssessment.UI.Features.Intervention;
 using He.PipelineAssessment.UI.Features.Rollback.ConfirmRollback;
-using He.PipelineAssessment.UI.Features.Rollback.SubmitRollback;
 using MediatR;
 using Newtonsoft.Json;
 

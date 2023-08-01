@@ -1,5 +1,4 @@
-﻿using Azure.Core;
-using He.PipelineAssessment.Infrastructure.Repository;
+﻿using He.PipelineAssessment.Infrastructure.Repository;
 using He.PipelineAssessment.Models;
 using He.PipelineAssessment.UI.Common.Exceptions;
 using He.PipelineAssessment.UI.Common.Utility;

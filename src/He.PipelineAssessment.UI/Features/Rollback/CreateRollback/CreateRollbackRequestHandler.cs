@@ -83,12 +83,14 @@ namespace He.PipelineAssessment.UI.Features.Rollback.CreateRollback
 
                 return dto;
             }
-            catch (UnauthorizedAccessException)
+            catch (UnauthorizedAccessException e)
             {
+                _logger.LogError(e, e.Message);
                 throw;
             }
-            catch (ApplicationException)
+            catch (ApplicationException e)
             {
+                _logger.LogError(e, e.Message);
                 throw;
             }
             catch (Exception e)
