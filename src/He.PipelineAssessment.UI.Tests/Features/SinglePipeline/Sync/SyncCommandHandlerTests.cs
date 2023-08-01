@@ -21,11 +21,10 @@ namespace He.PipelineAssessment.UI.Tests.Features.SinglePipeline.Sync
             singlePipelineService.Setup(x => x.GetSinglePipelineData()).Throws(exception);
 
             //Act
-            var result = await sut.Handle(It.IsAny<SyncCommand>(), CancellationToken.None);
+            var exceptionThrown = await Assert.ThrowsAsync<ApplicationException>(() => sut.Handle(It.IsAny<SyncCommand>(), CancellationToken.None));
 
-            //Assert
-            Assert.NotNull(result);
-            Assert.Equal(1, result.ErrorMessages.Count);
+            //Assert 
+            Assert.Equal("Single Pipeline Data failed to sync", exceptionThrown.Message);
         }
 
         [Theory]
@@ -35,15 +34,13 @@ namespace He.PipelineAssessment.UI.Tests.Features.SinglePipeline.Sync
             SyncCommandHandler sut)
         {
             //Arrange
-            singlePipelineService.Setup(x => x.GetSinglePipelineData()).ReturnsAsync(new List<SinglePipelineData>()); 
+            singlePipelineService.Setup(x => x.GetSinglePipelineData()).ReturnsAsync(new List<SinglePipelineData>());
 
             //Act
-            var result = await sut.Handle(It.IsAny<SyncCommand>(), CancellationToken.None);
+            var exceptionThrown = await Assert.ThrowsAsync<ApplicationException>(() => sut.Handle(It.IsAny<SyncCommand>(), CancellationToken.None));
 
             //Assert
-            Assert.NotNull(result);
-            Assert.Equal(1, result.ErrorMessages.Count);
-            Assert.Equal("Single Pipeline Response data returned null", result.ErrorMessages.First());
+            Assert.Equal("Single Pipeline Data failed to sync", exceptionThrown.Message);
         }       
 
         [Theory]
@@ -79,7 +76,7 @@ namespace He.PipelineAssessment.UI.Tests.Features.SinglePipeline.Sync
 
             //Assert
             Assert.NotNull(result);
-            Assert.Equal(0, result.ErrorMessages.Count);
+            Assert.IsType<SyncResponse>(result);
         }
 
     }

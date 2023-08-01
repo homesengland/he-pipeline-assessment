@@ -16,7 +16,7 @@ namespace He.PipelineAssessment.UI.Tests.Features.Workflow.StartWorkflow
     {
         [Theory]
         [AutoMoqData]
-        public async Task Handle_ReturnsNull_GivenHttpClientResponseIsNull(
+        public async Task Handle_ThrowsApplicationException_GivenHttpClientResponseIsNull(
             [Frozen] Mock<IElsaServerHttpClient> elsaServerHttpClient,
             [Frozen] Mock<IRoleValidation> roleValidation,
             StartWorkflowCommand command,
@@ -29,10 +29,10 @@ namespace He.PipelineAssessment.UI.Tests.Features.Workflow.StartWorkflow
                 .ReturnsAsync((WorkflowNextActivityDataDto?)null);
 
             //Act
-            var result = await sut.Handle(command, CancellationToken.None);
+            var ex = await Assert.ThrowsAsync<ApplicationException>(()=>sut.Handle(command, CancellationToken.None));
 
             //Assert
-            Assert.Null(result);
+            Assert.Equal("Failed to start workflow",ex.Message);
         }
 
         [Theory]
@@ -73,16 +73,15 @@ namespace He.PipelineAssessment.UI.Tests.Features.Workflow.StartWorkflow
             //Arrange
            
             //Act
-            var result = await sut.Handle(command, CancellationToken.None);
+            var exceptionThrown = await Assert.ThrowsAsync<ApplicationException>(() => sut.Handle(command, CancellationToken.None));
 
             //Assert
-            Assert.NotNull(result);
-            Assert.False(result!.IsAuthorised);
+            Assert.Equal("Failed to start workflow", exceptionThrown.Message);
         }
 
         [Theory]
         [AutoMoqData]
-        public async Task Handle_ReturnsLoadWorkflowActivityRequest_ErrorsOccur(
+        public async Task Handle_ThrowsApplicationException_ErrorsOccur(
             [Frozen] Mock<IRoleValidation> roleValidation,
             StartWorkflowCommand command,
             StartWorkflowCommandHandler sut)
@@ -91,10 +90,10 @@ namespace He.PipelineAssessment.UI.Tests.Features.Workflow.StartWorkflow
             roleValidation.Setup(x => x.ValidateRole(command.AssessmentId, command.WorkflowDefinitionId)).ThrowsAsync(new Exception());
 
             //Act
-            var result = await sut.Handle(command, CancellationToken.None);
+            var ex = await Assert.ThrowsAsync<ApplicationException>(()=>sut.Handle(command, CancellationToken.None));
 
             //Assert
-            Assert.Null(result);
+            Assert.Equal("Failed to start workflow", ex.Message);
         }
 
         [Theory]

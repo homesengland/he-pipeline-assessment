@@ -39,10 +39,7 @@ namespace He.PipelineAssessment.UI.Features.Workflow.LoadQuestionScreen
 
                 if (!isRoleExist && !request.IsReadOnly)
                 {
-                    return new QuestionScreenSaveAndContinueCommand()
-                    {
-                        IsAuthorised = false
-                    };
+                    throw new UnauthorizedAccessException($"You do not have permission to access this resource.");
                 }
 
                 if (assessmentWorkflowInstance.Status != AssessmentToolWorkflowInstanceConstants.Draft || request.IsReadOnly)
@@ -72,15 +69,15 @@ namespace He.PipelineAssessment.UI.Features.Workflow.LoadQuestionScreen
                 }
                 else
                 {
-                    return null;
+                    _logger.LogError($"Failed to load Question Screen activity, response from elsa server client is null. ActivityId: {request.ActivityId} WorkflowInstanceId: {request.WorkflowInstanceId}");
+                    throw new ApplicationException("Failed to load Question Screen activity.");
                 }
 
             }
             catch (Exception e)
             {
-                _logger.LogError(e.Message);
-
-                return null;
+                _logger.LogError(e, e.Message);
+                throw new ApplicationException("Failed to load Question Screen activity.");
             }
         }
 

@@ -24,10 +24,9 @@ namespace He.PipelineAssessment.UI.Features.Assessment.AssessmentList
             }
             catch (Exception e)
             {
-                _logger.LogError(e.Message);
-
+                _logger.LogError(e, e.Message);
+                throw new ApplicationException("Unable to get list of assessments.");
             }
-            return new List<AssessmentDataViewModel>();
         }
     }
 }

@@ -1,5 +1,4 @@
-﻿using Auth0.ManagementApi.Models;
-using He.PipelineAssessment.Infrastructure;
+﻿using He.PipelineAssessment.Infrastructure;
 using He.PipelineAssessment.Infrastructure.Repository;
 using He.PipelineAssessment.Models;
 using He.PipelineAssessment.UI.Authorization;
@@ -37,48 +36,67 @@ namespace He.PipelineAssessment.UI.Features.Rollback.CreateRollback
 
         public async Task<AssessmentInterventionDto> Handle(CreateRollbackRequest request, CancellationToken cancellationToken)
         {
-            AssessmentToolWorkflowInstance? workflowInstance = await _assessmentRepository.GetAssessmentToolWorkflowInstance(request.WorkflowInstanceId);
-            if (workflowInstance == null)
+            try
             {
-                throw new NotFoundException($"Assessment Tool Workflow Instance with Id {request.WorkflowInstanceId} not found");
+                AssessmentToolWorkflowInstance? workflowInstance = await _assessmentRepository.GetAssessmentToolWorkflowInstance(request.WorkflowInstanceId);
+                if (workflowInstance == null)
+                {
+                    throw new NotFoundException($"Assessment Tool Workflow Instance with Id {request.WorkflowInstanceId} not found");
+                }
+
+                var isAuthorised = await _roleValidation.ValidateRole(workflowInstance.AssessmentId, workflowInstance.WorkflowDefinitionId);
+                if (!isAuthorised)
+                {
+                    throw new UnauthorizedAccessException($"You do not have permission to access this resource.");
+                }
+
+                var isLatest = _assessmentToolWorkflowInstanceHelpers.IsLatestSubmittedWorkflow(workflowInstance);
+                if (!isLatest)
+                {
+                    throw new ApplicationException(
+                        $"Unable to create rollback for Assessment Tool Workflow Instance as this is not the latest submitted Workflow Instance for this Assessment.");
+                }
+
+                var activeInterventionsForAssessment = await _assessmentRepository.GetOpenAssessmentInterventions(workflowInstance.AssessmentId);
+                if (activeInterventionsForAssessment.Any())
+                {
+                    throw new ApplicationException(
+                        $"Unable to create request as an open request already exists for this assessment.");
+                }
+
+                var userName = _userProvider.GetUserName()!;
+                var email = _userProvider.GetUserEmail()!;
+
+                var dtoConfig = new DtoConfig()
+                {
+                    UserName = userName,
+                    UserEmail = email,
+                    DecisionType = InterventionDecisionTypes.Rollback,
+                    Status = InterventionStatus.Draft
+                };
+
+                var interventionReasons = await _repository.GetInterventionReasons();
+
+                var dto = _mapper.AssessmentInterventionDtoFromWorkflowInstance(workflowInstance, interventionReasons, dtoConfig);
+
+                return dto;
+            }
+            catch (UnauthorizedAccessException e)
+            {
+                _logger.LogError(e, e.Message);
+                throw;
+            }
+            catch (ApplicationException e)
+            {
+                _logger.LogError(e, e.Message);
+                throw;
+            }
+            catch (Exception e)
+            {
+                _logger.LogError(e, e.Message);
+                throw new ApplicationException($"Unable to create rollback request. WorkflowInstanceId: {request.WorkflowInstanceId}");
             }
 
-            var isAuthorised = await _roleValidation.ValidateRole(workflowInstance.AssessmentId, workflowInstance.WorkflowDefinitionId);
-            if (!isAuthorised)
-            {
-                throw new UnauthorizedAccessException($"You do not have permission to access this resource.");
-            }
-
-            var isLatest = _assessmentToolWorkflowInstanceHelpers.IsLatestSubmittedWorkflow(workflowInstance);
-            if (!isLatest)
-            {
-                throw new Exception(
-                    $"Unable to create rollback for Assessment Tool Workflow Instance as this is not the latest submitted Workflow Instance for this Assessment.");
-            }
-
-            var activeInterventionsForAssessment = await _assessmentRepository.GetOpenAssessmentInterventions(workflowInstance.AssessmentId);
-            if (activeInterventionsForAssessment.Any())
-            {
-                throw new Exception(
-                    $"Unable to create request as an open request already exists for this assessment.");
-            }
-
-            var userName = _userProvider.GetUserName()!;
-            var email = _userProvider.GetUserEmail()!;
-
-            var dtoConfig = new DtoConfig()
-            {
-                UserName = userName,
-                UserEmail = email,
-                DecisionType = InterventionDecisionTypes.Rollback,
-                Status = InterventionStatus.Draft
-            };
-
-            var interventionReasons = await _repository.GetInterventionReasons();
-
-            var dto = _mapper.AssessmentInterventionDtoFromWorkflowInstance(workflowInstance, interventionReasons, dtoConfig);
-
-            return dto;
         }
     }
 }

@@ -47,7 +47,7 @@ namespace He.PipelineAssessment.UI.Tests.Features.Workflow.ExecuteWorkflow
 
         [Theory]
         [AutoMoqData]
-        public async Task Handle_ShouldReturnNull_GivenHttpClientResponseIsNull(
+        public async Task Handle_ShouldThrowException_GivenHttpClientResponseIsNull(
             [Frozen] Mock<IRoleValidation> roleValidation,
             [Frozen] Mock<IAssessmentRepository> repository,
             ExecuteWorkflowCommand command,
@@ -62,10 +62,10 @@ namespace He.PipelineAssessment.UI.Tests.Features.Workflow.ExecuteWorkflow
                 .ReturnsAsync(true);
 
             //Act
-            var result =  await sut.Handle(command, CancellationToken.None);
+            var exceptionThrown =  await Assert.ThrowsAsync<ApplicationException>(() => sut.Handle(command, CancellationToken.None));
 
             //Assert
-            Assert.Null(result);
+            Assert.Equal($"Cannot Execute Workflow. ActivityId: {command.ActivityId} WorkflowInstanceId:{command.WorkflowInstanceId}", exceptionThrown.Message);
         }
 
         [Theory]

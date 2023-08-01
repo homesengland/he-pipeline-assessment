@@ -17,7 +17,7 @@ namespace He.PipelineAssessment.UI.Tests.Features.Workflow.LoadQuestionScreen
     {
         [Theory]
         [AutoMoqData]
-        public async Task Handle_ReturnsNull_GivenHttpClientResponseIsNull(
+        public async Task Handle_ThrowsApplicationException_GivenHttpClientResponseIsNull(
            [Frozen] Mock<IElsaServerHttpClient> elsaServerHttpClient,
            [Frozen] Mock<IAssessmentRepository> assessmentRepository,
            [Frozen] Mock<IRoleValidation> roleValidation,
@@ -36,12 +36,12 @@ namespace He.PipelineAssessment.UI.Tests.Features.Workflow.LoadQuestionScreen
                 .ReturnsAsync((WorkflowActivityDataDto?)null);
 
             assessmentToolWorkflowInstance.Status = AssessmentToolWorkflowInstanceConstants.Draft;
-
+            loadWorkflowActivityRequest.IsReadOnly = false;
             //Act
-            var result = await sut.Handle(loadWorkflowActivityRequest, CancellationToken.None);
+            var ex = await Assert.ThrowsAsync<ApplicationException>(()=>sut.Handle(loadWorkflowActivityRequest, CancellationToken.None));
 
             //Assert
-            Assert.Null(result);
+            Assert.Equal("Failed to load Question Screen activity.", ex.Message);
             elsaServerHttpClient.Verify(x => x.LoadQuestionScreen(It.IsAny<LoadWorkflowActivityDto>()), Times.Once);
         }
 
@@ -132,7 +132,7 @@ namespace He.PipelineAssessment.UI.Tests.Features.Workflow.LoadQuestionScreen
 
         [Theory]
         [AutoMoqData]
-        public async Task Handle_ReturnsSaveAndContinueCommand_GivenException(
+        public async Task Handle_ThrowsApplicationException_GivenException(
            [Frozen] Mock<IAssessmentRepository> assessmentRepository,
            [Frozen] Mock<IRoleValidation> roleValidation,
            LoadQuestionScreenRequest loadWorkflowActivityRequest,
@@ -149,10 +149,10 @@ namespace He.PipelineAssessment.UI.Tests.Features.Workflow.LoadQuestionScreen
             roleValidation.Setup(x => x.ValidateRole(assessmentToolWorkflowInstance.AssessmentId, assessmentToolWorkflowInstance.WorkflowDefinitionId)).ReturnsAsync(false);
 
             //Act
-            var result = await sut.Handle(loadWorkflowActivityRequest, CancellationToken.None);
+            var ex = await Assert.ThrowsAsync<ApplicationException>(()=>sut.Handle(loadWorkflowActivityRequest, CancellationToken.None));
 
             //Assert
-            Assert.Null(result);
+            Assert.Equal("Failed to load Question Screen activity.", ex.Message);
         }
     }
 }

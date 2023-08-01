@@ -121,41 +121,21 @@ public class OverrideControllerTests
 
     [Theory]
     [AutoMoqData]
-    public async Task CreateOverride_ShouldRedirectToView_WhenGivenFakeDynamicResult(
-        int interventionId,
-        AssessmentInterventionDto createAssessmentInterventionDto
+    public async Task CreateOverride_ShouldThrowException_AfterThrowingException(
+        ValidationResult validationResult
         )
     {
         // Arrange
-
-        _mediatorMock.Setup(x => x.Send(It.IsAny<CreateOverrideCommand>(), CancellationToken.None)).ReturnsAsync(interventionId);
-
-        // Act
-        var overrideController = new OverrideController(_loggerMock.Object, _mediatorMock.Object, _validatorMock.Object);
-        var actionResult = await overrideController.CreateOverride(createAssessmentInterventionDto);
-
-        // Assert
-        Assert.NotNull(actionResult);
-        Assert.IsType<RedirectToActionResult>(actionResult);
-    }
-
-    [Fact]
-    public async Task CreateOverride_ShouldRedirectOverridView_AfterThrowingException()
-    {
-        // Arrange
         AssessmentInterventionDto createAssessmentInterventionDto = new AssessmentInterventionDto();
-
         _mediatorMock.Setup(x => x.Send(It.IsAny<CreateOverrideCommand>(), CancellationToken.None)).Throws(new Exception());
+        validationResult.Errors = new List<ValidationFailure>();
+        _validatorMock.Setup(x => x.ValidateAsync(It.IsAny<CreateOverrideCommand>(), CancellationToken.None)).ReturnsAsync(validationResult);
 
         // Act
         var overrideController = new OverrideController(_loggerMock.Object, _mediatorMock.Object, _validatorMock.Object);
-        var actionResult = await overrideController.CreateOverride(createAssessmentInterventionDto);
 
-        // Assert
-        Assert.IsType<RedirectToActionResult>(actionResult);
-        var redirectToActionResult = (RedirectToActionResult)actionResult;
-        Assert.Equal("Error", redirectToActionResult.ControllerName);
-        Assert.Equal("Index", redirectToActionResult.ActionName);
+        // Assert 
+        await Assert.ThrowsAsync<Exception>(() => overrideController.CreateOverride(createAssessmentInterventionDto));
     }
 
     [Theory]
@@ -206,20 +186,19 @@ public class OverrideControllerTests
 
     [Theory]
     [AutoMoqData]
-    public async Task EditOverride_ShouldRedirectToView_AfterThrowingException(int interventionId)
+    public async Task EditOverride_ShouldThrownException_AfterThrowingException(int interventionId,
+        ValidationResult validationResult)
     {
         //Arrange
         _mediatorMock.Setup(x => x.Send(It.IsAny<EditOverrideRequest>(), CancellationToken.None)).Throws(new Exception());
+        validationResult.Errors = new List<ValidationFailure>();
+        _validatorMock.Setup(x => x.ValidateAsync(It.IsAny<CreateOverrideCommand>(), CancellationToken.None)).ReturnsAsync(validationResult);
 
         //Act
         var overrideController = new OverrideController(_loggerMock.Object, _mediatorMock.Object, _validatorMock.Object);
-        var actionResult = await overrideController.EditOverride(interventionId);
 
         // Assert
-        Assert.IsType<RedirectToActionResult>(actionResult);
-        var redirectToActionResult = (RedirectToActionResult)actionResult;
-        Assert.Equal("Error", redirectToActionResult.ControllerName);
-        Assert.Equal("Index", redirectToActionResult.ActionName);
+        await Assert.ThrowsAsync<Exception>(() => overrideController.EditOverride(interventionId));
 
     }
 
@@ -335,7 +314,7 @@ public class OverrideControllerTests
 
     [Theory]
     [AutoMoqData]
-    public async Task EditOverride_ShouldRedirectToView_AfterThrowException(AssessmentInterventionDto assessmentInterventionDto)
+    public async Task EditOverride_ThrowException_AfterThrowException(AssessmentInterventionDto assessmentInterventionDto)
     {
         //Arrang
         var serializedCommand = JsonConvert.SerializeObject(assessmentInterventionDto.AssessmentInterventionCommand);
@@ -345,13 +324,9 @@ public class OverrideControllerTests
 
         //Act
         var overrideController = new OverrideController(_loggerMock.Object, _mediatorMock.Object, _validatorMock.Object);
-        var actionResult = await overrideController.EditOverride(assessmentInterventionDto);
 
         // Assert
-        Assert.IsType<RedirectToActionResult>(actionResult);
-        var redirectToActionResult = (RedirectToActionResult)actionResult;
-        Assert.Equal("Error", redirectToActionResult.ControllerName);
-        Assert.Equal("Index", redirectToActionResult.ActionName);
+        await Assert.ThrowsAsync<Exception>(() => overrideController.EditOverride(assessmentInterventionDto));
 
     }
 
@@ -379,7 +354,7 @@ public class OverrideControllerTests
 
     [Theory]
     [AutoMoqData]
-    public async Task CheckYourDetails_ShouldRedirectToErrorView_WhenRequestThrowsException(
+    public async Task CheckYourDetails_ShouldThrowException_WhenRequestThrowsException(
       int interventionId,
       NotFoundException exception
       )
@@ -390,35 +365,11 @@ public class OverrideControllerTests
 
         //Act
         var overrideController = new OverrideController(_loggerMock.Object, _mediatorMock.Object, _validatorMock.Object);
-        var actionResult = await overrideController.CheckYourDetails(interventionId);
 
         // Assert
-        Assert.IsType<RedirectToActionResult>(actionResult);
-        var redirectToActionResult = (RedirectToActionResult)actionResult;
-        Assert.Equal("Index", redirectToActionResult.ActionName);
-        Assert.Equal("Error", redirectToActionResult.ControllerName);
-
+        await Assert.ThrowsAsync<NotFoundException>(() => overrideController.CheckYourDetails(interventionId));
     }
 
-    [Theory]
-    [AutoMoqData]
-    public async Task CheckYourDetails_ShouldRedirectToView_AfterThrowingException(int interventionId)
-    {
-        //Arrange
-        _mediatorMock.Setup(x => x.Send(It.IsAny<LoadOverrideCheckYourAnswersRequest>(), CancellationToken.None)).ThrowsAsync(new Exception());
-
-
-        //Act
-        var overrideController = new OverrideController(_loggerMock.Object, _mediatorMock.Object, _validatorMock.Object);
-        var actionResult = await overrideController.CheckYourDetails(interventionId);
-
-        // Assert
-        Assert.IsType<RedirectToActionResult>(actionResult);
-        var redirectToActionResult = (RedirectToActionResult)actionResult;
-        Assert.Equal("Error", redirectToActionResult.ControllerName);
-        Assert.Equal("Index", redirectToActionResult.ActionName);
-
-    }
 
 
     [Theory]
@@ -501,16 +452,11 @@ public class OverrideControllerTests
         _mediatorMock.Setup(x => x.Send(submitOverrideCommand, CancellationToken.None)).Throws(new Exception());
 
         //Act
-        //Act
         var overrideController = new OverrideController(_loggerMock.Object, _mediatorMock.Object, _validatorMock.Object);
-        var actionResult = await overrideController.SubmitOverride(submitOverrideCommand, submitButton);
 
 
         // Assert
-        Assert.IsType<RedirectToActionResult>(actionResult);
-        var redirectToActionResult = (RedirectToActionResult)actionResult;
-        Assert.Equal("Error", redirectToActionResult.ControllerName);
-        Assert.Equal("Index", redirectToActionResult.ActionName);
+        await Assert.ThrowsAsync<Exception>(() => overrideController.SubmitOverride(submitOverrideCommand, submitButton));
 
     }
 
