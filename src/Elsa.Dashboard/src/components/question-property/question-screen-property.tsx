@@ -56,17 +56,14 @@ export class QuestionScreen {
 
   private container: HTMLElement;
 
-  constructor() {
-    if (this.storeConfig != null) {
-      state.audience = this.storeConfig.audience;
-      state.serverUrl = this.storeConfig.serverUrl;
-      state.clientId = this.storeConfig.client;
-      state.domain = this.storeConfig.domain;
-      state.workflowDefinitionId = getWorkflowDefinitionIdFromUrl();
-    }
-  }
-
   async componentWillLoad() {
+      if (this.storeConfig != null) {
+        state.audience = this.storeConfig.audience;
+        state.serverUrl = this.storeConfig.serverUrl;
+        state.clientId = this.storeConfig.clientId;
+        state.domain = this.storeConfig.domain;
+        state.workflowDefinitionId = getWorkflowDefinitionIdFromUrl();
+      }
     const propertyModel = this.propertyModel;
     const choicesJson = propertyModel.expressions[SyntaxNames.QuestionList]
     this.questionModel = parseJson(choicesJson) || this.defaultActivityModel();

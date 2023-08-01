@@ -42,6 +42,7 @@ export class HEExpressionEditor {
   async componentDidLoad() {
     this.workflowDefinitionId = state.workflowDefinitionId;
     this.currentExpression = this.expression;
+    console.log("State", state);
     this.intellisenseGatherer = new IntellisenseGatherer(state.serverUrl, state.domain, state.audience, state.clientId, state.useRefreshToken);
     const libSource = await this.intellisenseGatherer.getJavaScriptTypeDefinitions(this.workflowDefinitionId, this.context);
     const libUri = Uri.LibUri;

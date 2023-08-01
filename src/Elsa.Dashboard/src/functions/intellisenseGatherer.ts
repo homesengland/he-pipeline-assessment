@@ -19,7 +19,8 @@ export class IntellisenseGatherer {
       authorizationParams: auth0Params,
       clientId: clientId,
       domain: domain,
-      useRefreshTokens: useRefreshTokens
+      useRefreshTokens: useRefreshTokens,
+      useRefreshTokensFallback: true,
     };
 
     this.options = auth0Options;
@@ -51,8 +52,6 @@ export class IntellisenseGatherer {
     }
 
 
-    console.log("Auth0 Client", this.auth0);
-
     const token = await this.auth0.getTokenSilently();
 
     let config: AxiosRequestConfig;
@@ -75,7 +74,6 @@ export class IntellisenseGatherer {
 
   async getJavaScriptTypeDefinitions(workflowDefinitionId: string, context?: IntellisenseContext): Promise<string> {
     let httpClient = await this.createHttpClient();
-    console.log("HttpClient", httpClient);
     const response = await httpClient.post<string>(`v1/scripting/javascript/type-definitions/${workflowDefinitionId}?t=${new Date().getTime()}`, context);
     return response.data;
   }

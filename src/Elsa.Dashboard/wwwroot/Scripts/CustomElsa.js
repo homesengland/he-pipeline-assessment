@@ -14,7 +14,7 @@ export function InitCustomElsa(elsaStudioRoot, customProperties, auth0ClientOpti
     var elsaStudio = e.detail;
     elsaStudio.pluginManager.registerPluginFactory(() => new Auth0Plugin(auth0ClientOptions, elsaStudio))
     elsaStudio.pluginManager.registerPlugin(RegisterCustomPlugins);
-    RegisterDrivers(elsaStudio, customProperties);
+    RegisterDrivers(elsaStudio, customProperties, storeConfig);
   });
 
   function RegisterDrivers(elsaStudio, customProperties, storeConfig) {
