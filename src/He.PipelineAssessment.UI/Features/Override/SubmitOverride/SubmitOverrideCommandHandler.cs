@@ -3,7 +3,6 @@ using He.PipelineAssessment.Models;
 using He.PipelineAssessment.UI.Common.Exceptions;
 using He.PipelineAssessment.UI.Common.Utility;
 using MediatR;
-using Microsoft.CodeAnalysis.CSharp.Syntax;
 
 namespace He.PipelineAssessment.UI.Features.Override.SubmitOverride
 {
@@ -11,9 +10,9 @@ namespace He.PipelineAssessment.UI.Features.Override.SubmitOverride
     {
         private readonly IAssessmentRepository _assessmentRepository;
         private readonly IDateTimeProvider _dateTimeProvider;
-        private readonly ILogger _logger;
+        private readonly ILogger<SubmitOverrideCommandHandler> _logger;
 
-        public SubmitOverrideCommandHandler(IAssessmentRepository assessmentRepository, IDateTimeProvider dateTimeProvider, ILogger logger)
+        public SubmitOverrideCommandHandler(IAssessmentRepository assessmentRepository, IDateTimeProvider dateTimeProvider, ILogger<SubmitOverrideCommandHandler> logger)
         {
             _assessmentRepository = assessmentRepository;
             _dateTimeProvider = dateTimeProvider;

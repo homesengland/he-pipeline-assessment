@@ -1,11 +1,8 @@
-﻿using Auth0.ManagementApi.Models;
-using AutoFixture.Xunit2;
+﻿using AutoFixture.Xunit2;
 using He.PipelineAssessment.Infrastructure.Repository;
 using He.PipelineAssessment.Models;
 using He.PipelineAssessment.Tests.Common;
-using He.PipelineAssessment.UI.Common.Exceptions;
 using He.PipelineAssessment.UI.Features.Override.EditOverride;
-using Microsoft.Extensions.Logging;
 using Moq;
 using Xunit;
 
@@ -29,7 +26,7 @@ namespace He.PipelineAssessment.UI.Tests.Features.Intervention.InterventionManag
             var ex = await Assert.ThrowsAsync<ApplicationException>(() => sut.Handle(command, CancellationToken.None));
 
             //Assert
-            Assert.Equal($"Unalbe to edit override. WorkflowInstanceId: {command.WorkflowInstanceId} AssessmentInterventionId: {command.AssessmentInterventionId}.", ex.Message);
+            Assert.Equal($"Unable to edit override. WorkflowInstanceId: {command.WorkflowInstanceId} AssessmentInterventionId: {command.AssessmentInterventionId}.", ex.Message);
         }
 
         [Theory]
@@ -47,7 +44,7 @@ namespace He.PipelineAssessment.UI.Tests.Features.Intervention.InterventionManag
             var ex = await Assert.ThrowsAsync<ApplicationException>(() => sut.Handle(command, CancellationToken.None));
 
             //Assert
-            Assert.Equal($"Unalbe to edit override. WorkflowInstanceId: {command.WorkflowInstanceId} AssessmentInterventionId: {command.AssessmentInterventionId}.", ex.Message);
+            Assert.Equal($"Unable to edit override. WorkflowInstanceId: {command.WorkflowInstanceId} AssessmentInterventionId: {command.AssessmentInterventionId}.", ex.Message);
         }
 
         [Theory]
@@ -68,7 +65,7 @@ namespace He.PipelineAssessment.UI.Tests.Features.Intervention.InterventionManag
             var ex = await Assert.ThrowsAsync<ApplicationException>(() => sut.Handle(command, CancellationToken.None));
 
             //Assert
-            Assert.Equal($"Unalbe to edit override. WorkflowInstanceId: {command.WorkflowInstanceId} AssessmentInterventionId: {command.AssessmentInterventionId}.", ex.Message);
+            Assert.Equal($"Unable to edit override. WorkflowInstanceId: {command.WorkflowInstanceId} AssessmentInterventionId: {command.AssessmentInterventionId}.", ex.Message);
         }
 
         [Theory]

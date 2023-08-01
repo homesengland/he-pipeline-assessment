@@ -7,9 +7,9 @@ namespace He.PipelineAssessment.UI.Features.Override.EditOverride
     public class EditOverrideCommandHandler : IRequestHandler<EditOverrideCommand, int>
     {
         private readonly IAssessmentRepository _assessmentRepository;
-        private readonly ILogger _logger;
+        private readonly ILogger<EditOverrideCommandHandler> _logger;
 
-        public EditOverrideCommandHandler(IAssessmentRepository assessmentRepository, ILogger logger)
+        public EditOverrideCommandHandler(IAssessmentRepository assessmentRepository, ILogger<EditOverrideCommandHandler> logger)
         {
             _assessmentRepository = assessmentRepository;
             _logger = logger;
@@ -34,7 +34,7 @@ namespace He.PipelineAssessment.UI.Features.Override.EditOverride
             catch (Exception ex)
             {
                 _logger.LogError(ex, ex.Message);
-                throw new ApplicationException($"Unalbe to edit override. WorkflowInstanceId: {command.WorkflowInstanceId} AssessmentInterventionId: {command.AssessmentInterventionId}.");
+                throw new ApplicationException($"Unable to edit override. WorkflowInstanceId: {command.WorkflowInstanceId} AssessmentInterventionId: {command.AssessmentInterventionId}.");
             }
         }
     }
