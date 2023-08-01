@@ -144,6 +144,10 @@ export class TextActivityProperty implements ISortableSharedComponent, IDisplayT
 
       let colWidth = "100%";
 
+      let textContext: IntellisenseContext = {
+        activityTypeName: this.activityModel.type,
+        propertyName: this.propertyDescriptor.name
+      };
 
       return (
         <tbody key={this.keyId}>
@@ -168,7 +172,8 @@ export class TextActivityProperty implements ISortableSharedComponent, IDisplayT
                 key={`expression-editor-${index}-${this.syntaxSwitchCount}`}
                 ref={el => textExpressionEditor = el}
                 expression={textExpression}
-                language={textLanguage}
+                  language={textLanguage}
+                  context={textContext}
                   single-line={false}
                 editorHeight="2.75em"
                   padding="elsa-pt-1.5 elsa-pl-1 elsa-pr-28"
