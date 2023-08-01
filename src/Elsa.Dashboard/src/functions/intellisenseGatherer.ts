@@ -1,6 +1,6 @@
 import { IntellisenseContext } from "../models/elsa-interfaces";
 import axios, { AxiosInstance, AxiosRequestConfig } from "axios";
-import  { createAuth0Client,Auth0Client, Auth0ClientOptions, AuthorizationParams } from '@auth0/auth0-spa-js';
+import  { createAuth0Client,Auth0Client, Auth0ClientOptions, AuthorizationParams, RedirectLoginOptions } from '@auth0/auth0-spa-js';
 
 
 export class IntellisenseGatherer {
@@ -12,7 +12,7 @@ export class IntellisenseGatherer {
   constructor() {
 
     let auth0Params: AuthorizationParams = {
-      audience: '@audience'
+      audience: '@audience',
     };
 
     let auth0Options: Auth0ClientOptions = {
@@ -62,8 +62,11 @@ export class IntellisenseGatherer {
     // Redirect to Auth0 for the user to authenticate themselves.
     const origin = window.location.origin;
 
-    const redirectOptions = {
+    let redirectParams: AuthorizationParams = {
       redirect_uri: origin
+    };
+    const redirectOptions: RedirectLoginOptions = {
+      authorizationParams: redirectParams,
     };
 
     await this.auth0.loginWithRedirect(redirectOptions);
