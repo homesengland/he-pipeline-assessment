@@ -1,5 +1,5 @@
 export class Uri {
-  static readonly LibUri = "'defaultLib:lib.es6.d.ts'";
+  static readonly LibUri = "defaultLib:lib.es6.d.ts";
 }
 
 export class StoreStatus {

@@ -53,15 +53,16 @@ export class HEExpressionEditor {
     else {
 
       state.javaScriptTypeDefinitionsFetchStatus = StoreStatus.Fetching;
-      console.log("fetching libSource")
+      console.log("fetching libSource");
 
       libSource = await this.intellisenseGatherer.getJavaScriptTypeDefinitions(this.workflowDefinitionId, this.context);
       state.javaScriptTypeDefinitions = libSource;
-      console.log("libSource fetched")
+      console.log("libSource fetched");
+      console.log("State", state);
       state.javaScriptTypeDefinitionsFetchStatus = StoreStatus.Available;
     }
-
     const libUri = Uri.LibUri;
+
     await this.monacoEditor.addJavaScriptLib(libSource, libUri);
   }
 
