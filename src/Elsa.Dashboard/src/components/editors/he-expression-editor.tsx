@@ -3,7 +3,7 @@ import state from '../../stores/store';
 import { IntellisenseGatherer } from "../../functions/intellisenseGatherer.js";
 import Tunnel from '../tunnel/workflow-editor';
 import { IntellisenseContext, MonacoValueChangedArgs, HTMLElsaMonacoElement } from "../../models/elsa-interfaces";
-import { Uri } from "../../constants/constants";
+import { Uri, StoreStatus } from "../../constants/constants";
 
 @Component({
   tag: 'he-expression-editor',
@@ -44,8 +44,25 @@ export class HEExpressionEditor {
     this.currentExpression = this.expression;
     console.log("State", state);
     this.intellisenseGatherer = new IntellisenseGatherer(state.serverUrl, state.domain, state.audience, state.clientId, state.useRefreshToken);
-    const libSource = await this.intellisenseGatherer.getJavaScriptTypeDefinitions(this.workflowDefinitionId, this.context);
+
+    let libSource: string;
+    if (state.javaScriptTypeDefinitions != null && state.javaScriptTypeDefinitions.trim.length>0) {
+      libSource = state.javaScriptTypeDefinitions;
+      console.log("libSource retrieved from existing state")
+    }
+    else {
+
+      state.javaScriptTypeDefinitionsFetchStatus = StoreStatus.Fetching;
+      console.log("fetching libSource");
+
+      libSource = await this.intellisenseGatherer.getJavaScriptTypeDefinitions(this.workflowDefinitionId, this.context);
+      state.javaScriptTypeDefinitions = libSource;
+      console.log("libSource fetched");
+      console.log("State", state);
+      state.javaScriptTypeDefinitionsFetchStatus = StoreStatus.Available;
+    }
     const libUri = Uri.LibUri;
+
     await this.monacoEditor.addJavaScriptLib(libSource, libUri);
   }
 

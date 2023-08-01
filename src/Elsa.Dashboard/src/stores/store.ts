@@ -9,7 +9,9 @@ const { state, onChange } = createStore({
   clientId: '',
   useRefreshToken: true,
   workflowDefinitionId: '',
-  workflowDefinitionFetchStatus: StoreStatus.Empty
+  workflowDefinitionFetchStatus: StoreStatus.Empty,
+  javaScriptTypeDefinitions:'',
+  javaScriptTypeDefinitionsFetchStatus: StoreStatus.Empty
 });
 
 onChange("dictionaryGroups", value => { state.dictionaryGroups = value });
@@ -25,6 +27,8 @@ onChange("audience", value => { state.audience = value });
 onChange("domain", value => { state.domain = value });
 
 onChange("clientId", value => { state.clientId = value });
+
+onChange("javaScriptTypeDefinitions", value => { state.javaScriptTypeDefinitions = value });
 
 onChange("useRefreshToken", value => { state.useRefreshToken = value });
 

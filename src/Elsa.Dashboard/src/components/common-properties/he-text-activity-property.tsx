@@ -149,7 +149,6 @@ export class TextActivityProperty implements ISortableSharedComponent, IDisplayT
         propertyName: this.propertyDescriptor.name
       };
 
-
       return (
         <tbody key={this.keyId}>
           <tr>
@@ -174,7 +173,7 @@ export class TextActivityProperty implements ISortableSharedComponent, IDisplayT
                 ref={el => textExpressionEditor = el}
                 expression={textExpression}
                   language={textLanguage}
-                  context={textContext }
+                  context={textContext}
                   single-line={false}
                 editorHeight="2.75em"
                   padding="elsa-pt-1.5 elsa-pl-1 elsa-pr-28"
