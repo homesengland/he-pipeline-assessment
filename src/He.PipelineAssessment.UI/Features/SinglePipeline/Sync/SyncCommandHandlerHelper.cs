@@ -118,10 +118,6 @@ namespace He.PipelineAssessment.UI.Features.SinglePipeline.Sync
                 {
                     count++;
                 }
-                if (updateFlag)
-                {
-                    count++;
-                }
             }
 
             return count;
