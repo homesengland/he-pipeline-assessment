@@ -43,6 +43,9 @@ namespace He.PipelineAssessment.UI.Features.SinglePipeline.Sync
                     NumberOfHomes = item.units_or_homes,
                     BusinessArea = string.IsNullOrEmpty(item.sp_business_area)
                          ? "-" : item.sp_business_area,
+                    LandType = string.IsNullOrEmpty(item.land_type)
+                        ? "-"
+                        : item.land_type,
                 };
 
                 assessmentsToBeAdded.Add(assessment);
@@ -103,6 +106,11 @@ namespace He.PipelineAssessment.UI.Features.SinglePipeline.Sync
                     if (source.units_or_homes.HasValue && destination.NumberOfHomes != source.units_or_homes)
                     {
                         destination.NumberOfHomes = source.units_or_homes!;
+                        updateFlag = true;
+                    }
+                    if (!string.IsNullOrEmpty(source.land_type) && destination.LandType != source.land_type)
+                    {
+                        destination.LandType = source.land_type!;
                         updateFlag = true;
                     }
                 }
