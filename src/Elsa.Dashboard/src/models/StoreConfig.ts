@@ -4,4 +4,5 @@ export class StoreConfig {
   clientId: string = "";
   domain: string = "";
   useRefreshTokens: boolean = true;
+  UseRefreshTokensFallback: boolean = true;
 }

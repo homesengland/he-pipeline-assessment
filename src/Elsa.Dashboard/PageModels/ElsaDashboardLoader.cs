@@ -11,18 +11,21 @@ namespace Elsa.Dashboard.PageModels
   public class ElsaDashboardLoader : PageModel
   {
     public string _serverUrl { get; set; }
+    private IConfiguration _config { get; set; }
     private IElsaServerHttpClient _client { get; set; }
 
     private ILogger<ElsaDashboardLoader> _logger { get; set; }
+    public StoreConfig? StoreConfig { get; set; }
 
     public string? JsonResponse { get; set; }
 
-    public ElsaDashboardLoader(IElsaServerHttpClient client, IOptions<Urls> options, ILogger<ElsaDashboardLoader> logger)
+    public ElsaDashboardLoader(IElsaServerHttpClient client, IOptions<Urls> options, ILogger<ElsaDashboardLoader> logger, IConfiguration config)
     {
 
       _serverUrl = options.Value.ElsaServer ?? string.Empty;
       _client = client;
       _logger = logger;
+      _config = config;
     }
 
     public async Task OnGetAsync()
@@ -32,6 +35,15 @@ namespace Elsa.Dashboard.PageModels
       {
         JsonResponse = await _client.LoadCustomActivities(_serverUrl);
         _logger.LogDebug("ElsaDashboardLoader - LoadCustomActivities - Response", JsonResponse);
+        StoreConfig = new StoreConfig
+        {
+          ServerUrl = _config["Urls:ElsaServer"],
+          Audience = _config["Auth0Config:Audience"],
+          Domain = _config["Auth0Config:Domain"],
+          ClientId = _config["Auth0Config:ClientId"],
+          UseRefreshTokens = true,
+          UseRefreshTokensFallback = true,
+        };
       }
       else
       {

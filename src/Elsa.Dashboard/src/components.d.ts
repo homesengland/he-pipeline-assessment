@@ -6,9 +6,9 @@
  */
 import { HTMLStencilElement, JSXBase } from "@stencil/core/internal";
 import { ActivityDefinitionProperty, ActivityModel, ActivityPropertyDescriptor, IntellisenseContext } from "./models/elsa-interfaces";
-import { VNode } from "@stencil/core";
 import { DataDictionaryGroup, HeActivityPropertyDescriptor, NestedActivityDefinitionProperty, NestedPropertyModel } from "./models/custom-component-models";
 import { StoreConfig } from "./models/StoreConfig";
+import { VNode } from "@stencil/core";
 export namespace Components {
     interface HeCheckListProperty {
         "activityModel": ActivityModel;
@@ -27,6 +27,10 @@ export namespace Components {
         "keyId": string;
         "propertyDescriptor": ActivityPropertyDescriptor;
         "propertyModel": ActivityDefinitionProperty;
+    }
+    interface HeDashboard {
+        "dataDictionaryGroup": Array<DataDictionaryGroup>;
+        "storeConfig": StoreConfig;
     }
     interface HeDataTableProperty {
         "activityModel": ActivityModel;
@@ -248,6 +252,12 @@ declare global {
         prototype: HTMLHeCheckboxPropertyElement;
         new (): HTMLHeCheckboxPropertyElement;
     };
+    interface HTMLHeDashboardElement extends Components.HeDashboard, HTMLStencilElement {
+    }
+    var HTMLHeDashboardElement: {
+        prototype: HTMLHeDashboardElement;
+        new (): HTMLHeDashboardElement;
+    };
     interface HTMLHeDataTablePropertyElement extends Components.HeDataTableProperty, HTMLStencilElement {
     }
     var HTMLHeDataTablePropertyElement: {
@@ -372,6 +382,7 @@ declare global {
         "he-check-list-property": HTMLHeCheckListPropertyElement;
         "he-checkbox-options-property": HTMLHeCheckboxOptionsPropertyElement;
         "he-checkbox-property": HTMLHeCheckboxPropertyElement;
+        "he-dashboard": HTMLHeDashboardElement;
         "he-data-table-property": HTMLHeDataTablePropertyElement;
         "he-elsa-control": HTMLHeElsaControlElement;
         "he-expression-editor": HTMLHeExpressionEditorElement;
@@ -415,6 +426,10 @@ declare namespace LocalJSX {
         "onExpressionChanged"?: (event: HeCheckboxPropertyCustomEvent<string>) => void;
         "propertyDescriptor"?: ActivityPropertyDescriptor;
         "propertyModel"?: ActivityDefinitionProperty;
+    }
+    interface HeDashboard {
+        "dataDictionaryGroup"?: Array<DataDictionaryGroup>;
+        "storeConfig"?: StoreConfig;
     }
     interface HeDataTableProperty {
         "activityModel"?: ActivityModel;
@@ -556,6 +571,7 @@ declare namespace LocalJSX {
         "he-check-list-property": HeCheckListProperty;
         "he-checkbox-options-property": HeCheckboxOptionsProperty;
         "he-checkbox-property": HeCheckboxProperty;
+        "he-dashboard": HeDashboard;
         "he-data-table-property": HeDataTableProperty;
         "he-elsa-control": HeElsaControl;
         "he-expression-editor": HeExpressionEditor;
@@ -585,6 +601,7 @@ declare module "@stencil/core" {
             "he-check-list-property": LocalJSX.HeCheckListProperty & JSXBase.HTMLAttributes<HTMLHeCheckListPropertyElement>;
             "he-checkbox-options-property": LocalJSX.HeCheckboxOptionsProperty & JSXBase.HTMLAttributes<HTMLHeCheckboxOptionsPropertyElement>;
             "he-checkbox-property": LocalJSX.HeCheckboxProperty & JSXBase.HTMLAttributes<HTMLHeCheckboxPropertyElement>;
+            "he-dashboard": LocalJSX.HeDashboard & JSXBase.HTMLAttributes<HTMLHeDashboardElement>;
             "he-data-table-property": LocalJSX.HeDataTableProperty & JSXBase.HTMLAttributes<HTMLHeDataTablePropertyElement>;
             "he-elsa-control": LocalJSX.HeElsaControl & JSXBase.HTMLAttributes<HTMLHeElsaControlElement>;
             "he-expression-editor": LocalJSX.HeExpressionEditor & JSXBase.HTMLAttributes<HTMLHeExpressionEditorElement>;

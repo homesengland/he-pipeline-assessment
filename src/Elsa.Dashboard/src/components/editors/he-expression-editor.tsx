@@ -46,7 +46,7 @@ export class HEExpressionEditor {
     this.intellisenseGatherer = new IntellisenseGatherer(state.serverUrl, state.domain, state.audience, state.clientId, state.useRefreshToken);
 
     let libSource: string;
-    if (state.javaScriptTypeDefinitions != null && state.javaScriptTypeDefinitions.trim.length>0) {
+    if (state.javaScriptTypeDefinitions != null && state.javaScriptTypeDefinitions.trim().length>0) {
       libSource = state.javaScriptTypeDefinitions;
       console.log("libSource retrieved from existing state")
     }

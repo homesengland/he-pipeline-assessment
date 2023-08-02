@@ -1,6 +1,7 @@
 @page "/"
 @using Elsa.Dashboard.PageModels
 @using Microsoft.Extensions.Configuration
+@using System.Text.Json
 @model ElsaDashboardLoader
 @inject NonceConfig nonceConfig
 @inject IConfiguration Configuration
@@ -9,6 +10,8 @@
     var clientId = Configuration["Auth0Config:ClientId"];
     var domain = Configuration["Auth0Config:Domain"];
     var audience = Configuration["Auth0Config:Audience"];
+    var config = JsonSerializer.Serialize(Model.StoreConfig);
+
 }
 <!DOCTYPE html>
 <html lang="en">
@@ -37,9 +40,11 @@
     </style>
 </head>
 <body>
+    <he-dashboard store-config=@config>
     <elsa-studio-root server-url="@serverUrl" monaco-lib-path="_content/Elsa.Designer.Components.Web/monaco-editor/min">
         <elsa-studio-dashboard></elsa-studio-dashboard>
     </elsa-studio-root>
+    </he-dashboard>
 
     <script nonce="@nonceConfig.ElsaSetup" type="module">
         import { InitCustomElsa } from "InitCustomElsa"
