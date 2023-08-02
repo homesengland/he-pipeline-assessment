@@ -5,6 +5,7 @@ using He.PipelineAssessment.Infrastructure.Repository;
 using He.PipelineAssessment.UI.Features.SinglePipeline.Sync;
 using Moq;
 using Xunit;
+using He.PipelineAssessment.Models.ViewModels;
 
 namespace He.PipelineAssessment.UI.Tests.Features.SinglePipeline.Sync
 {
@@ -68,15 +69,18 @@ namespace He.PipelineAssessment.UI.Tests.Features.SinglePipeline.Sync
 
             var existingAssessments = destinationAssessmentSpIds.Intersect(sourceAssessmentSpIds).ToList();
 
-            assessmentRepository.Setup(x => x.CreateAssessments(assessmentsTobeAdded)).ReturnsAsync(It.IsAny<int>());
-            syncCommandHandlerHelper.Setup(x => x.UpdateAssessments(assessments, existingAssessments, singlePipelineDataResponse)).Returns(It.IsAny<List<Models.Assessment>>());
+            syncCommandHandlerHelper.Setup(x => x.UpdateAssessments(assessments, existingAssessments, singlePipelineDataResponse)).Returns(6);
 
             //Act
             var result = await sut.Handle(It.IsAny<SyncCommand>(), CancellationToken.None);
 
             //Assert
+            assessmentRepository.Verify(x => x.CreateAssessments(assessmentsTobeAdded), Times.Once);
             Assert.NotNull(result);
-            Assert.IsType<SyncResponse>(result);
+            Assert.IsType<SyncModel>(result);
+            Assert.Equal(assessmentsTobeAdded.Count, result.NewAssessmentCount);
+            Assert.True(result.Synced);
+            Assert.Equal(6, result.UpdatedAssessmentCount);
         }
 
     }
