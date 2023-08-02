@@ -14,7 +14,7 @@ namespace He.PipelineAssessment.UI.Tests.Features.SinglePipeline
     {
         [Theory]
         [AutoMoqData]
-        public async Task StartWorkflow_ShouldRedirectToAction_GivenNoExceptionsThrow(
+        public async Task Sync_ShouldReturnView_GivenNoExceptionsThrow(
             [Frozen] Mock<IMediator> mediator,
             SyncCommand command,
             SyncModel response,
@@ -30,7 +30,31 @@ namespace He.PipelineAssessment.UI.Tests.Features.SinglePipeline
             Assert.NotNull(result);
             Assert.IsType<ViewResult>(result);
             Assert.Equal("Sync", result.ViewName);
+        }
 
+        [Theory]
+        [AutoMoqData]
+        public async Task Index_ShouldReturnView_GivenNoExceptionsThrow(
+    [Frozen] Mock<IMediator> mediator,
+    SyncCommand command,
+    SyncModel response,
+    SinglePipelineController sut)
+        {
+            //Arrange
+            mediator.Setup(x => x.Send(command, CancellationToken.None)).ReturnsAsync(response);
+
+            //Act
+            ViewResult result = (ViewResult)sut.Index();
+            SyncModel? model = (SyncModel?)result.Model;
+            
+            //Assert
+            Assert.NotNull(result);
+            Assert.IsType<ViewResult>(result);
+            Assert.Equal("Sync", result.ViewName);
+            Assert.NotNull(model);
+            Assert.False( model!.Synced);
+            Assert.Equal(0, model.NewAssessmentCount);
+            Assert.Equal(0, model.UpdatedAssessmentCount);
         }
     }
 }

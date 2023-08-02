@@ -19,7 +19,7 @@ namespace He.PipelineAssessment.UI.Features.SinglePipeline
             _mediator = mediator;
         }
 
-        public async Task<IActionResult> Index()
+        public IActionResult Index()
         {
             var model = new SyncModel();
             return View("Sync", model);
