@@ -44,7 +44,7 @@ namespace He.PipelineAssessment.UI.Tests.Features.SinglePipeline
             mediator.Setup(x => x.Send(command, CancellationToken.None)).ReturnsAsync(response);
 
             //Act
-            ViewResult result = (ViewResult)await sut.Index();
+            ViewResult result = (ViewResult)sut.Index();
             SyncModel? model = (SyncModel?)result.Model;
             
             //Assert
