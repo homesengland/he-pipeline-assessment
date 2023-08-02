@@ -16,7 +16,7 @@
     <div class="govuk-grid-column-three-quarters pull-right">
         @if ((await AuthorizationService.AuthorizeAsync(User, Constants.AuthorizationPolicies.AssignmentToPipelineAdminRoleRequired)).Succeeded)
         {
-            @Html.ActionLink("Sync", "Sync", "SinglePipeline", null, new { @class = "govuk-button pull-right govuk-!-padding-right-2" })
+            @Html.ActionLink("Sync", "Index", "SinglePipeline", null, new { @class =  "govuk-link pull-right  govuk-!-font-size-24 govuk-!-padding-right-2"})
             @Html.ActionLink("Admin", "AssessmentTool", "Admin", null, new { @class = "govuk-link pull-right  govuk-!-font-size-24 govuk-!-padding-right-2" })
             @Html.ActionLink("Assessment Requests", "Index", "Intervention", null, new { @class = "govuk-link pull-right  govuk-!-font-size-24 govuk-!-padding-right-2" })
         }

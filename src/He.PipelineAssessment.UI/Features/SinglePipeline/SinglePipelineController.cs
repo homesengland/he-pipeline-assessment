@@ -1,4 +1,5 @@
-﻿using He.PipelineAssessment.UI.Authorization;
+﻿using He.PipelineAssessment.Models.ViewModels;
+using He.PipelineAssessment.UI.Authorization;
 using He.PipelineAssessment.UI.Features.SinglePipeline.Sync;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
@@ -18,10 +19,16 @@ namespace He.PipelineAssessment.UI.Features.SinglePipeline
             _mediator = mediator;
         }
 
+        public async Task<IActionResult> Index()
+        {
+            var model = new SyncModel();
+            return View("Sync", model);
+        }
+
         public async Task<IActionResult> Sync()
         {
-            await _mediator.Send(new SyncCommand());
-            return RedirectToAction("Index", "Assessment");
+            var model = await _mediator.Send(new SyncCommand());
+            return View("Sync", model);
         }
     }
 }

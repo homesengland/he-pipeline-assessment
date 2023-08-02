@@ -1,10 +1,11 @@
 ﻿using He.PipelineAssessment.Data.SinglePipeline;
 using He.PipelineAssessment.Infrastructure.Repository;
+using He.PipelineAssessment.Models.ViewModels;
 using MediatR;
 
 namespace He.PipelineAssessment.UI.Features.SinglePipeline.Sync
 {
-    public class SyncCommandHandler : IRequestHandler<SyncCommand, SyncResponse>
+    public class SyncCommandHandler : IRequestHandler<SyncCommand, SyncModel>
     {
         private readonly IAssessmentRepository _assessmentRepository;
         private readonly ISinglePipelineProvider _singlePipelineProvider;
@@ -19,8 +20,9 @@ namespace He.PipelineAssessment.UI.Features.SinglePipeline.Sync
             _logger = logger;
         }
 
-        public async Task<SyncResponse> Handle(SyncCommand request, CancellationToken cancellationToken)
+        public async Task<SyncModel> Handle(SyncCommand request, CancellationToken cancellationToken)
         {
+            var syncModel = new SyncModel();
             try
             {
                 var data = await _singlePipelineProvider.GetSinglePipelineData();
@@ -35,9 +37,11 @@ namespace He.PipelineAssessment.UI.Features.SinglePipeline.Sync
                     await _assessmentRepository.CreateAssessments(assessmentsToBeAdded);
 
                     var existingAssessments = destinationAssessmentSpIds.Intersect(sourceAssessmentSpIds).ToList();
-                    _syncCommandHandlerHelper.UpdateAssessments(destinationAssessments, existingAssessments, data);
+                    var updatedAssessmentCount = _syncCommandHandlerHelper.UpdateAssessments(destinationAssessments, existingAssessments, data);
                     await _assessmentRepository.SaveChanges();
-
+                    syncModel.NewAssessmentCount = assessmentsToBeAdded.Count;
+                    syncModel.UpdatedAssessmentCount = updatedAssessmentCount;
+                    syncModel.Synced = true;
                 }
                 else
                 {
@@ -51,7 +55,7 @@ namespace He.PipelineAssessment.UI.Features.SinglePipeline.Sync
                 throw new ApplicationException("Single Pipeline Data failed to sync");
             }
 
-            return new SyncResponse();
+            return syncModel;
         }
     }
 }
