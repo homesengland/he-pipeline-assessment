@@ -20,6 +20,8 @@ namespace Elsa.Dashboard.PageModels
 
     public string? JsonResponse { get; set; }
 
+    public string? DictionaryResponse { get; set; }
+
     public ElsaDashboardLoader(IElsaServerHttpClient client, IOptions<Urls> options, ILogger<ElsaDashboardLoader> logger, IConfiguration config)
     {
 
@@ -35,23 +37,30 @@ namespace Elsa.Dashboard.PageModels
       if (!string.IsNullOrEmpty(_serverUrl))
       {
         JsonResponse = await _client.LoadCustomActivities(_serverUrl);
-        _logger.LogDebug("ElsaDashboardLoader - LoadCustomActivities - Response", JsonResponse);
-        StoreConfig config = new StoreConfig
-        {
-          ServerUrl = _config["Urls:ElsaServer"],
-          Audience = _config["Auth0Config:Audience"],
-          Domain = _config["Auth0Config:Domain"],
-          ClientId = _config["Auth0Config:ClientId"],
-          UseRefreshTokens = true,
-          UseRefreshTokensFallback = true,
-        };
-        StoreConfig = JsonSerializer.Serialize(config);
+        DictionaryResponse = await _client.LoadDataDictionary(_serverUrl);
+        StoreConfig = SetStoreConfig();
+
       }
       else
       {
         HttpContext.Response.StatusCode = (int)HttpStatusCode.FailedDependency;
         throw new NullReferenceException("No Configuration value found for Urls:ElsaServer");
       }
+    }
+
+    private string? SetStoreConfig()
+    {
+      StoreConfig config = new StoreConfig
+      {
+        ServerUrl = _config["Urls:ElsaServer"],
+        Audience = _config["Auth0Config:Audience"],
+        Domain = _config["Auth0Config:Domain"],
+        ClientId = _config["Auth0Config:ClientId"],
+        UseRefreshTokens = true,
+        UseRefreshTokensFallback = true,
+      };
+      var configJson = JsonSerializer.Serialize(config);
+      return configJson;
     }
   }
 }

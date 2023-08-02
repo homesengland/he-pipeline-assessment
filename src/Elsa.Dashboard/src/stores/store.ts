@@ -8,8 +8,8 @@ const { state, onChange } = createStore({
   domain: '',
   clientId: '',
   useRefreshToken: true,
+  useRefreshTokenFallback: true,
   workflowDefinitionId: '',
-  workflowDefinitionFetchStatus: StoreStatus.Empty,
   javaScriptTypeDefinitions:'',
   javaScriptTypeDefinitionsFetchStatus: StoreStatus.Empty
 });
@@ -31,6 +31,8 @@ onChange("clientId", value => { state.clientId = value });
 onChange("javaScriptTypeDefinitions", value => { state.javaScriptTypeDefinitions = value });
 
 onChange("useRefreshToken", value => { state.useRefreshToken = value });
+
+onChange("useRefreshTokenFallback", value => { state.useRefreshTokenFallback = value });
 
 export default state;
 

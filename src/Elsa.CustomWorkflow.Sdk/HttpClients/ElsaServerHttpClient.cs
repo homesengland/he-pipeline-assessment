@@ -23,6 +23,7 @@ namespace Elsa.CustomWorkflow.Sdk.HttpClients
         Task<WorkflowActivityDataDto?> LoadCheckYourAnswersScreen(LoadWorkflowActivityDto model);
         Task<WorkflowActivityDataDto?> LoadConfirmationScreen(LoadWorkflowActivityDto model);
         Task<string?> LoadCustomActivities(string elsaServer);
+        Task<string?> LoadDataDictionary(string elsaServer);
     }
 
     public class ElsaServerHttpClient : IElsaServerHttpClient
@@ -237,6 +238,29 @@ namespace Elsa.CustomWorkflow.Sdk.HttpClients
         {
             string data;
             string fullUri = $"{elsaServer}/activities/properties";
+            var client = _httpClientFactory.CreateClient("ElsaServerClient");
+            AddAccessTokenToRequest(client);
+            using (var response = await client
+                       .GetAsync(fullUri)
+                       .ConfigureAwait(false))
+            {
+                data = await response.Content.ReadAsStringAsync().ConfigureAwait(false);
+                if (!response.IsSuccessStatusCode)
+                {
+                    _logger.LogError($"StatusCode='{response.StatusCode}'," +
+                                     $"\n Message= '{data}'," +
+                                     $"\n Url='{fullUri}'");
+
+                    return default;
+                }
+            }
+            return data;
+        }
+
+        public async Task<string?> LoadDataDictionary(string elsaServer)
+        {
+            string data;
+            string fullUri = $"{elsaServer}/activities/dictionary";
             var client = _httpClientFactory.CreateClient("ElsaServerClient");
             AddAccessTokenToRequest(client);
             using (var response = await client
