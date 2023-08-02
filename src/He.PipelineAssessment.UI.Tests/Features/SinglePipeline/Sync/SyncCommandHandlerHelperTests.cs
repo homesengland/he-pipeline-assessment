@@ -112,16 +112,7 @@ namespace He.PipelineAssessment.UI.Tests.Features.SinglePipeline.Sync
             var result = sut.UpdateAssessments(destinationAssessments, existingAssessments, singlePipelineDataList);
 
             //Assert
-            Assert.NotEmpty(result);
-            Assert.Equal(singlePipelineData.applicant_1, result[0].Counterparty);
-            Assert.Equal(singlePipelineData.internal_reference, result[0].Reference);
-            Assert.Equal(singlePipelineData.pipeline_opportunity_site_name, result[0].SiteName);
-            Assert.Equal(singlePipelineData.project_owner, result[0].ProjectManager);
-            Assert.Equal(singlePipelineData.project_owner_email, result[0].ProjectManagerEmail);
-            Assert.Equal(singlePipelineData.local_authority, result[0].LocalAuthority);
-            Assert.Equal(singlePipelineData.funding_ask, result[0].FundingAsk);
-            Assert.Equal(singlePipelineData.units_or_homes, result[0].NumberOfHomes);
-            Assert.Equal(singlePipelineData.sp_business_area, result[0].BusinessArea);
+            Assert.Equal(0, result);
         }
 
         [Theory]
@@ -168,18 +159,7 @@ namespace He.PipelineAssessment.UI.Tests.Features.SinglePipeline.Sync
             var result = sut.UpdateAssessments(destinationAssessments, existingAssessments, singlePipelineDataList);
 
             //Assert
-            Assert.NotEmpty(result);
-            Assert.Equal(singlePipelineData.applicant_1, result[0].Counterparty);
-            Assert.Equal(singlePipelineData.internal_reference, result[0].Reference);
-            Assert.Equal(singlePipelineData.pipeline_opportunity_site_name, result[0].SiteName);
-            Assert.Equal(singlePipelineData.project_owner, result[0].ProjectManager);
-            Assert.Equal(singlePipelineData.project_owner_email, result[0].ProjectManagerEmail);
-            Assert.Equal(singlePipelineData.local_authority, result[0].LocalAuthority);
-            Assert.Equal(singlePipelineData.funding_ask, result[0].FundingAsk);
-            Assert.Equal(singlePipelineData.units_or_homes, result[0].NumberOfHomes);
-            Assert.Equal(singlePipelineData.sp_business_area, result[0].BusinessArea);
-
-
+            Assert.Equal(1, result);
         }
     }
 }

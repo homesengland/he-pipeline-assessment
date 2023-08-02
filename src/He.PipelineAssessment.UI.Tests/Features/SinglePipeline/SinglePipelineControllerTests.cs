@@ -1,4 +1,5 @@
 ﻿using AutoFixture.Xunit2;
+using He.PipelineAssessment.Models.ViewModels;
 using He.PipelineAssessment.Tests.Common;
 using He.PipelineAssessment.UI.Features.SinglePipeline;
 using He.PipelineAssessment.UI.Features.SinglePipeline.Sync;
@@ -16,18 +17,19 @@ namespace He.PipelineAssessment.UI.Tests.Features.SinglePipeline
         public async Task StartWorkflow_ShouldRedirectToAction_GivenNoExceptionsThrow(
             [Frozen] Mock<IMediator> mediator,
             SyncCommand command,
-            SyncResponse response,
+            SyncModel response,
             SinglePipelineController sut)
         {
             //Arrange
             mediator.Setup(x => x.Send(command, CancellationToken.None)).ReturnsAsync(response);
 
             //Act
-            var result = await sut.Sync();
+            ViewResult result = (ViewResult) await sut.Sync();
 
             //Assert
             Assert.NotNull(result);
-            Assert.IsType<RedirectToActionResult>(result);
+            Assert.IsType<ViewResult>(result);
+            Assert.Equal("Sync", result.ViewName);
 
         }
     }
