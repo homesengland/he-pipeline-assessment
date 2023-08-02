@@ -10,7 +10,6 @@
     var clientId = Configuration["Auth0Config:ClientId"];
     var domain = Configuration["Auth0Config:Domain"];
     var audience = Configuration["Auth0Config:Audience"];
-    var config = JsonSerializer.Serialize(Model.StoreConfig);
 
 }
 <!DOCTYPE html>
@@ -40,7 +39,7 @@
     </style>
 </head>
 <body>
-    <he-dashboard store-config=@config>
+    <he-dashboard store-config="@Model.StoreConfig">
     <elsa-studio-root server-url="@serverUrl" monaco-lib-path="_content/Elsa.Designer.Components.Web/monaco-editor/min">
         <elsa-studio-dashboard></elsa-studio-dashboard>
     </elsa-studio-root>

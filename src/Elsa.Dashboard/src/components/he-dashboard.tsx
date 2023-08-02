@@ -10,21 +10,27 @@ import { StoreStatus } from '../constants/constants';
   shadow: false,
 })
 
-export class QuestionScreen {
+export class HeDashboard {
 
   @Prop() dataDictionaryGroup: Array<DataDictionaryGroup>;
-  @Prop({ attribute: 'store-config', reflect: true }) storeConfig: StoreConfig;
+  @Prop({ attribute: 'store-config', reflect: true }) storeConfig: string;
+  config: StoreConfig;
 
   async componentWillLoad() {
     console.log("The Dashboard is Loading");
-    console.log("Store Config", this.storeConfig);
-      if (this.storeConfig != null) {
-        state.audience = this.storeConfig.audience;
-        state.serverUrl = this.storeConfig.serverUrl;
-        state.clientId = this.storeConfig.clientId;
-        state.domain = this.storeConfig.domain;
+    console.log("Store Config string", this.storeConfig);
+    if (this.storeConfig != null) {
+      this.config = JSON.parse(this.storeConfig);
+      console.log("Config", this.config);
+      if (this.config != null) {
+        state.audience = this.config.audience;
+        state.serverUrl = this.config.serverUrl;
+        state.clientId = this.config.clientId;
+        state.domain = this.config.domain;
         state.workflowDefinitionId = getWorkflowDefinitionIdFromUrl();
       }
+    }
+
     state.dictionaryGroups = this.dataDictionaryGroup;
   }
 

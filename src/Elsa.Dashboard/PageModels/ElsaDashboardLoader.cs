@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.Extensions.Options;
 using System.Net;
+using System.Text.Json;
 
 namespace Elsa.Dashboard.PageModels
 {
@@ -15,7 +16,7 @@ namespace Elsa.Dashboard.PageModels
     private IElsaServerHttpClient _client { get; set; }
 
     private ILogger<ElsaDashboardLoader> _logger { get; set; }
-    public StoreConfig? StoreConfig { get; set; }
+    public string? StoreConfig { get; set; }
 
     public string? JsonResponse { get; set; }
 
@@ -35,7 +36,7 @@ namespace Elsa.Dashboard.PageModels
       {
         JsonResponse = await _client.LoadCustomActivities(_serverUrl);
         _logger.LogDebug("ElsaDashboardLoader - LoadCustomActivities - Response", JsonResponse);
-        StoreConfig = new StoreConfig
+        StoreConfig config = new StoreConfig
         {
           ServerUrl = _config["Urls:ElsaServer"],
           Audience = _config["Auth0Config:Audience"],
@@ -44,6 +45,7 @@ namespace Elsa.Dashboard.PageModels
           UseRefreshTokens = true,
           UseRefreshTokensFallback = true,
         };
+        StoreConfig = JsonSerializer.Serialize(config);
       }
       else
       {

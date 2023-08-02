@@ -7,8 +7,8 @@
 import { HTMLStencilElement, JSXBase } from "@stencil/core/internal";
 import { ActivityDefinitionProperty, ActivityModel, ActivityPropertyDescriptor, IntellisenseContext } from "./models/elsa-interfaces";
 import { DataDictionaryGroup, HeActivityPropertyDescriptor, NestedActivityDefinitionProperty, NestedPropertyModel } from "./models/custom-component-models";
-import { StoreConfig } from "./models/StoreConfig";
 import { VNode } from "@stencil/core";
+import { StoreConfig } from "./models/StoreConfig";
 export namespace Components {
     interface HeCheckListProperty {
         "activityModel": ActivityModel;
@@ -30,7 +30,7 @@ export namespace Components {
     }
     interface HeDashboard {
         "dataDictionaryGroup": Array<DataDictionaryGroup>;
-        "storeConfig": StoreConfig;
+        "storeConfig": string;
     }
     interface HeDataTableProperty {
         "activityModel": ActivityModel;
@@ -429,7 +429,7 @@ declare namespace LocalJSX {
     }
     interface HeDashboard {
         "dataDictionaryGroup"?: Array<DataDictionaryGroup>;
-        "storeConfig"?: StoreConfig;
+        "storeConfig"?: string;
     }
     interface HeDataTableProperty {
         "activityModel"?: ActivityModel;
