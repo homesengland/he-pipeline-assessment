@@ -59,6 +59,7 @@ export class HeDashboard {
     state.javaScriptTypeDefinitions = '';
     state.javaScriptTypeDefinitionsFetchStatus = StoreStatus.Empty;
     console.log("clearing intellisense on hide");
+    await this.getIntellisense();
   }
 
   async getIntellisense() {
@@ -85,6 +86,7 @@ export class HeDashboard {
         state.domain = this.config.domain;
         state.useRefreshToken = this.config.useRefreshTokens;
         state.useRefreshTokenFallback = this.config.useRefreshTokensFallback;
+        state.monacoLibPath = this.config.monacoLibPath;
       }
     }
   }

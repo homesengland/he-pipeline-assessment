@@ -5,4 +5,5 @@ export class StoreConfig {
   domain: string = "";
   useRefreshTokens: boolean = true;
   useRefreshTokensFallback: boolean = true;
+  monacoLibPath: string = "";
 }

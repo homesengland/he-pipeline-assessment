@@ -11,7 +11,8 @@ const { state, onChange } = createStore({
   useRefreshTokenFallback: true,
   workflowDefinitionId: '',
   javaScriptTypeDefinitions:'',
-  javaScriptTypeDefinitionsFetchStatus: StoreStatus.Empty
+  javaScriptTypeDefinitionsFetchStatus: StoreStatus.Empty,
+  monacoLibPath: '',
 });
 
 onChange("dictionaryGroups", value => { state.dictionaryGroups = value });
@@ -33,6 +34,8 @@ onChange("javaScriptTypeDefinitions", value => { state.javaScriptTypeDefinitions
 onChange("useRefreshToken", value => { state.useRefreshToken = value });
 
 onChange("useRefreshTokenFallback", value => { state.useRefreshTokenFallback = value });
+
+onChange("monacoLibPath", value => { state.monacoLibPath = value });
 
 export default state;
 

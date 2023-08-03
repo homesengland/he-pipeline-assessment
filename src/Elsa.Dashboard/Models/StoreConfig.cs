@@ -16,5 +16,7 @@ namespace Elsa.Dashboard.Models
     public bool UseRefreshTokens { get; set; }
     [JsonPropertyName("useRefreshTokensFallback")]
     public bool UseRefreshTokensFallback { get; set; }
+    [JsonPropertyName("monacoLibPath")]
+    public string MonacoLibPath { get; set; } = null!;
   }
 }

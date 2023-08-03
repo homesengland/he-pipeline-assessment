@@ -44,6 +44,7 @@
     <None Remove="src\components\common-properties\he-text-activity-property.tsx" />
     <None Remove="src\components\common-properties\nested-properties\nested-property-list.tsx" />
     <None Remove="src\components\display-toggle-component.ts" />
+    <None Remove="src\components\editors\he-monaco\he-monaco-utils.ts" />
     <None Remove="src\constants\Constants.ts" />
     <None Remove="src\functions\intellisenseGatherer.ts" />
     <None Remove="src\functions\multiExpressionEditorUpdate.tsx" />
@@ -87,6 +88,7 @@
     <TypeScriptCompile Include="src\components\common-properties\he-text-activity-property.tsx" />
     <TypeScriptCompile Include="src\components\common-properties\nested-properties\nested-property-list.tsx" />
     <TypeScriptCompile Include="src\components\base-component.ts" />
+    <TypeScriptCompile Include="src\components\editors\he-monaco\he-monaco-utils.ts" />
     <TypeScriptCompile Include="src\utils\intellisenseGatherer.ts" />
     <TypeScriptCompile Include="src\functions\multiExpressionEditorUpdate.tsx">
       <SubType>Code</SubType>

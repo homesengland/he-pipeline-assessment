@@ -58,6 +58,7 @@ namespace Elsa.Dashboard.PageModels
         ClientId = _config["Auth0Config:ClientId"],
         UseRefreshTokens = true,
         UseRefreshTokensFallback = true,
+        MonacoLibPath = "_content/Elsa.Designer.Components.Web/monaco-editor/min"
       };
       var configJson = JsonSerializer.Serialize(config);
       return configJson;

@@ -63,7 +63,7 @@ export class HEExpressionEditor {
     const value = this.currentExpression;
 
     return (
-      <elsa-monaco value={value}
+      <he-monaco value={value}
         language={language}
         editor-height={this.editorHeight}
         single-line={this.singleLineMode}

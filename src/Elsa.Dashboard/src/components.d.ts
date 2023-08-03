@@ -7,6 +7,7 @@
 import { HTMLStencilElement, JSXBase } from "@stencil/core/internal";
 import { ActivityDefinitionProperty, ActivityModel, ActivityPropertyDescriptor, IntellisenseContext } from "./models/elsa-interfaces";
 import { VNode } from "@stencil/core";
+import { MonacoValueChangedArgs } from "./components/editors/he-monaco/he-monaco";
 import { Map } from "./utils/utils";
 import { DataDictionaryGroup, HeActivityPropertyDescriptor, NestedActivityDefinitionProperty, NestedPropertyModel } from "./models/custom-component-models";
 import { StoreConfig } from "./models/StoreConfig";
@@ -58,6 +59,16 @@ export namespace Components {
         "keyId": string;
         "propertyDescriptor": ActivityPropertyDescriptor;
         "propertyModel": ActivityDefinitionProperty;
+    }
+    interface HeMonaco {
+        "addJavaScriptLib": (libSource: string, libUri: string) => Promise<void>;
+        "editorHeight": string;
+        "language": string;
+        "monacoLibPath": string;
+        "padding": string;
+        "setValue": (value: string) => Promise<void>;
+        "singleLineMode": boolean;
+        "value": string;
     }
     interface HeMultiExpressionEditor {
         "context"?: IntellisenseContext;
@@ -199,6 +210,10 @@ export interface HeJsonPropertyCustomEvent<T> extends CustomEvent<T> {
     detail: T;
     target: HTMLHeJsonPropertyElement;
 }
+export interface HeMonacoCustomEvent<T> extends CustomEvent<T> {
+    detail: T;
+    target: HTMLHeMonacoElement;
+}
 export interface HeMultiExpressionEditorCustomEvent<T> extends CustomEvent<T> {
     detail: T;
     target: HTMLHeMultiExpressionEditorElement;
@@ -311,6 +326,12 @@ declare global {
     var HTMLHeJsonPropertyElement: {
         prototype: HTMLHeJsonPropertyElement;
         new (): HTMLHeJsonPropertyElement;
+    };
+    interface HTMLHeMonacoElement extends Components.HeMonaco, HTMLStencilElement {
+    }
+    var HTMLHeMonacoElement: {
+        prototype: HTMLHeMonacoElement;
+        new (): HTMLHeMonacoElement;
     };
     interface HTMLHeMultiExpressionEditorElement extends Components.HeMultiExpressionEditor, HTMLStencilElement {
     }
@@ -429,6 +450,7 @@ declare global {
         "he-elsa-control": HTMLHeElsaControlElement;
         "he-expression-editor": HTMLHeExpressionEditorElement;
         "he-json-property": HTMLHeJsonPropertyElement;
+        "he-monaco": HTMLHeMonacoElement;
         "he-multi-expression-editor": HTMLHeMultiExpressionEditorElement;
         "he-multi-line-property": HTMLHeMultiLinePropertyElement;
         "he-multi-text-property": HTMLHeMultiTextPropertyElement;
@@ -502,6 +524,15 @@ declare namespace LocalJSX {
         "onExpressionChanged"?: (event: HeJsonPropertyCustomEvent<string>) => void;
         "propertyDescriptor"?: ActivityPropertyDescriptor;
         "propertyModel"?: ActivityDefinitionProperty;
+    }
+    interface HeMonaco {
+        "editorHeight"?: string;
+        "language"?: string;
+        "monacoLibPath"?: string;
+        "onValueChanged"?: (event: HeMonacoCustomEvent<MonacoValueChangedArgs>) => void;
+        "padding"?: string;
+        "singleLineMode"?: boolean;
+        "value"?: string;
     }
     interface HeMultiExpressionEditor {
         "context"?: IntellisenseContext;
@@ -644,6 +675,7 @@ declare namespace LocalJSX {
         "he-elsa-control": HeElsaControl;
         "he-expression-editor": HeExpressionEditor;
         "he-json-property": HeJsonProperty;
+        "he-monaco": HeMonaco;
         "he-multi-expression-editor": HeMultiExpressionEditor;
         "he-multi-line-property": HeMultiLineProperty;
         "he-multi-text-property": HeMultiTextProperty;
@@ -676,6 +708,7 @@ declare module "@stencil/core" {
             "he-elsa-control": LocalJSX.HeElsaControl & JSXBase.HTMLAttributes<HTMLHeElsaControlElement>;
             "he-expression-editor": LocalJSX.HeExpressionEditor & JSXBase.HTMLAttributes<HTMLHeExpressionEditorElement>;
             "he-json-property": LocalJSX.HeJsonProperty & JSXBase.HTMLAttributes<HTMLHeJsonPropertyElement>;
+            "he-monaco": LocalJSX.HeMonaco & JSXBase.HTMLAttributes<HTMLHeMonacoElement>;
             "he-multi-expression-editor": LocalJSX.HeMultiExpressionEditor & JSXBase.HTMLAttributes<HTMLHeMultiExpressionEditorElement>;
             "he-multi-line-property": LocalJSX.HeMultiLineProperty & JSXBase.HTMLAttributes<HTMLHeMultiLinePropertyElement>;
             "he-multi-text-property": LocalJSX.HeMultiTextProperty & JSXBase.HTMLAttributes<HTMLHeMultiTextPropertyElement>;
