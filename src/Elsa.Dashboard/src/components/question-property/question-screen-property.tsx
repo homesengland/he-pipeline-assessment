@@ -1,7 +1,6 @@
 import { Component, h, Prop, State } from '@stencil/core';
 import Sortable from 'sortablejs';
-import { DataDictionaryGroup } from '../../models/custom-component-models';
-import state  from '../../stores/store';
+
 import {
   ActivityDefinitionProperty,
   ActivityModel,
@@ -27,9 +26,8 @@ import {
 } from '../providers/question-provider/question-provider';
 import TrashCanIcon from '../../icons/trash-can';
 import { QuestionCategories, SyntaxNames } from '../../constants/constants';
-import { filterPropertiesByType, parseJson, newOptionNumber, getUniversalUniqueId, getWorkflowDefinitionIdFromUrl } from '../../utils/utils';
+import { filterPropertiesByType, parseJson, newOptionNumber, getUniversalUniqueId } from '../../utils/utils';
 import SortIcon from '../../icons/sort_icon';
-import { StoreConfig } from '../../models/StoreConfig';
 
 @Component({
   tag: 'question-screen-property',
@@ -42,8 +40,8 @@ export class QuestionScreen {
   @Prop() propertyDescriptor: ActivityPropertyDescriptor;
   @Prop() propertyModel: ActivityDefinitionProperty;
   @Prop() questionProperties: Array<HeActivityPropertyDescriptor>;
-  @Prop() dataDictionaryGroup: Array<DataDictionaryGroup>;
-  @Prop() storeConfig: StoreConfig;
+
+
   @State() questionModel: QuestionScreenProperty = new QuestionScreenProperty();
   @State() iconProvider = new IconProvider();
   @State() questionProvider = new QuestionProvider(Object.values(QuestionLibrary));
@@ -57,18 +55,12 @@ export class QuestionScreen {
   private container: HTMLElement;
 
   async componentWillLoad() {
-      if (this.storeConfig != null) {
-        state.audience = this.storeConfig.audience;
-        state.serverUrl = this.storeConfig.serverUrl;
-        state.clientId = this.storeConfig.clientId;
-        state.domain = this.storeConfig.domain;
-        state.workflowDefinitionId = getWorkflowDefinitionIdFromUrl();
-      }
+
     const propertyModel = this.propertyModel;
     const choicesJson = propertyModel.expressions[SyntaxNames.QuestionList]
     this.questionModel = parseJson(choicesJson) || this.defaultActivityModel();
     this.questionModel.activities.forEach(x => x.descriptor = this.questionProperties);
-    state.dictionaryGroups = this.dataDictionaryGroup;
+
   }
 
   async componentDidLoad() {
@@ -236,7 +228,6 @@ export class QuestionScreen {
       class="panel elsa-rounded"
       activityModel={this.activityModel}
       questionModel={question}
-      dataDictionaryGroup={this.dataDictionaryGroup}
       onClick={(e) => e.stopPropagation()}
       onUpdateQuestionScreen={e => this.onUpdateQuestion(e)}
     ></question-property>

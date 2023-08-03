@@ -30,26 +30,14 @@ export class HeDashboard {
   async componentWillRender() {
   }
 
-  //@Listen('workflowSaved')
-  //async savedHandler(event: CustomEvent<any>) {
-  //  state.workflowDefinitionId = event.detail.definitionId;
-  //  state.javaScriptTypeDefinitions = '';
-  //  state.javaScriptTypeDefinitionsFetchStatus = StoreStatus.Empty;
-  //  console.log("clearing intellisense on Saved");
-  //  await this.getIntellisense();
-  //}
-
   @Listen('shown', { target: 'window' })
   async modalHandlerShow(event: CustomEvent<any>) {
-
+    event = event;
     var url_string = document.URL;
     var n = url_string.lastIndexOf('/');
     var workflowDef = url_string.substring(n + 1);
-    console.log("WorkflowDefinitionId", workflowDef);
     state.workflowDefinitionId = workflowDef;
 
-    console.log("Modal is appearing", event);
-    console.log("state.workflowDefinitionId", state.workflowDefinitionId);
     await this.getIntellisense();
   }
 
@@ -58,7 +46,6 @@ export class HeDashboard {
     event = event;
     state.javaScriptTypeDefinitions = '';
     state.javaScriptTypeDefinitionsFetchStatus = StoreStatus.Empty;
-    console.log("clearing intellisense on hide");
     await this.getIntellisense();
   }
 
@@ -73,12 +60,12 @@ export class HeDashboard {
         state.dictionaryGroups = this.dictionary;
       }
     }
+    this.dataDictionaryGroup = null;
   }
 
   setStoreConfig() {
     if (this.storeConfig != null) {
       this.config = JSON.parse(this.storeConfig);
-      console.log("Config", this.config);
       if (this.config != null) {
         state.audience = this.config.audience;
         state.serverUrl = this.config.serverUrl;
@@ -89,6 +76,7 @@ export class HeDashboard {
         state.monacoLibPath = this.config.monacoLibPath;
       }
     }
+    this.storeConfig = null;
   }
 
   render() {

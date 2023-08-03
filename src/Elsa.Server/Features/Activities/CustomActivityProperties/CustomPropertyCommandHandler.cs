@@ -23,15 +23,11 @@ namespace Elsa.Server.Features.Activities.CustomActivityProperties
         {
             try
             {
-                var dataDictionaryResult = (await _elsaCustomRepository.GetQuestionDataDictionaryGroupsAsync(cancellationToken)).ToList();
-                var dataDictionaryJsonResult =  JsonConvert.SerializeObject(dataDictionaryResult);
-
                 var propertiesResult = _describer.DescribeInputProperties(typeof(Question)); 
                 var propertiesJsonResult = JsonConvert.SerializeObject(propertiesResult, new JsonSerializerSettings{ContractResolver = new CamelCasePropertyNamesContractResolver()});
 
                 Dictionary<string, string> propertyResponses = new Dictionary<string, string>();
                 propertyResponses.Add("QuestionProperties", propertiesJsonResult);
-                propertyResponses.Add("DataDictionaryGroup", dataDictionaryJsonResult);
                 
                 return await Task.FromResult(propertyResponses);
             }
