@@ -45,7 +45,7 @@ namespace Elsa.CustomWorkflow.Sdk.HttpClients
         public async Task<WorkflowNextActivityDataDto?> PostStartWorkflow(StartWorkflowCommandDto model)
         {
             string data;
-            var relativeUri = "workflow/startworkflow";
+            var relativeUri = "workflow/startworkflow" + "?t=" + DateTime.UtcNow.Ticks;
 
             using var request = new HttpRequestMessage(HttpMethod.Post, relativeUri);
             var content = JsonSerializer.Serialize(model);
@@ -75,7 +75,7 @@ namespace Elsa.CustomWorkflow.Sdk.HttpClients
         public async Task<WorkflowNextActivityDataDto?> PostExecuteWorkflow(ExecuteWorkflowCommandDto model)
         {
             string data;
-            var relativeUri = "workflow/executeworkflow";
+            var relativeUri = "workflow/executeworkflow" + "?t=" + DateTime.UtcNow.Ticks;
 
             using var request = new HttpRequestMessage(HttpMethod.Post, relativeUri);
             var content = JsonSerializer.Serialize(model);
@@ -104,7 +104,7 @@ namespace Elsa.CustomWorkflow.Sdk.HttpClients
         public async Task<WorkflowNextActivityDataDto?> QuestionScreenSaveAndContinue(QuestionScreenSaveAndContinueCommandDto model)
         {
             string data;
-            var relativeUri = "workflow/QuestionScreenSaveAndContinue";
+            var relativeUri = "workflow/QuestionScreenSaveAndContinue" + "?t=" + DateTime.UtcNow.Ticks;
 
             using var request = new HttpRequestMessage(HttpMethod.Post, relativeUri);
             var content = JsonSerializer.Serialize(model);
@@ -133,7 +133,7 @@ namespace Elsa.CustomWorkflow.Sdk.HttpClients
         public async Task<WorkflowNextActivityDataDto?> CheckYourAnswersSaveAndContinue(CheckYourAnswersSaveAndContinueCommandDto model)
         {
             string data;
-            var relativeUri = "workflow/CheckYourAnswersSaveAndContinue";
+            var relativeUri = "workflow/CheckYourAnswersSaveAndContinue" + "?t=" + DateTime.UtcNow.Ticks;
 
             using var request = new HttpRequestMessage(HttpMethod.Post, relativeUri);
             var content = JsonSerializer.Serialize(model);
@@ -162,7 +162,7 @@ namespace Elsa.CustomWorkflow.Sdk.HttpClients
         public async Task<WorkflowActivityDataDto?> LoadQuestionScreen(LoadWorkflowActivityDto model)
         {
             string data;
-            string relativeUri = $"workflow/LoadQuestionScreen?workflowInstanceId={model.WorkflowInstanceId}&activityId={model.ActivityId}";
+            string relativeUri = $"workflow/LoadQuestionScreen?workflowInstanceId={model.WorkflowInstanceId}&activityId={model.ActivityId}" + "&t=" + DateTime.UtcNow.Ticks;
 
             var client = _httpClientFactory.CreateClient("ElsaServerClient");
             AddAccessTokenToRequest(client);
@@ -187,7 +187,7 @@ namespace Elsa.CustomWorkflow.Sdk.HttpClients
         public async Task<WorkflowActivityDataDto?> LoadCheckYourAnswersScreen(LoadWorkflowActivityDto model)
         {
             string data;
-            string relativeUri = $"workflow/LoadCheckYourAnswersScreen?workflowInstanceId={model.WorkflowInstanceId}&activityId={model.ActivityId}";
+            string relativeUri = $"workflow/LoadCheckYourAnswersScreen?workflowInstanceId={model.WorkflowInstanceId}&activityId={model.ActivityId}" + "&t=" + DateTime.UtcNow.Ticks;
 
             var client = _httpClientFactory.CreateClient("ElsaServerClient");
             AddAccessTokenToRequest(client);
@@ -212,7 +212,7 @@ namespace Elsa.CustomWorkflow.Sdk.HttpClients
         public async Task<WorkflowActivityDataDto?> LoadConfirmationScreen(LoadWorkflowActivityDto model)
         {
             string data;
-            string relativeUri = $"workflow/LoadConfirmationScreen?workflowInstanceId={model.WorkflowInstanceId}&activityId={model.ActivityId}";
+            string relativeUri = $"workflow/LoadConfirmationScreen?workflowInstanceId={model.WorkflowInstanceId}&activityId={model.ActivityId}" + "&t=" + DateTime.UtcNow.Ticks;
 
             var client = _httpClientFactory.CreateClient("ElsaServerClient");
             AddAccessTokenToRequest(client);
@@ -237,7 +237,7 @@ namespace Elsa.CustomWorkflow.Sdk.HttpClients
         public async Task<string?> LoadCustomActivities(string elsaServer)
         {
             string data;
-            string fullUri = $"{elsaServer}/activities/properties";
+            string fullUri = $"{elsaServer}/activities/properties" + "?t=" + DateTime.UtcNow.Ticks;
             var client = _httpClientFactory.CreateClient("ElsaServerClient");
             AddAccessTokenToRequest(client);
             using (var response = await client
