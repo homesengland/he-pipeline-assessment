@@ -200,7 +200,7 @@ export class HeWeightedCheckboxOptionGroupProperty implements ISortableSharedCom
             </th>
             <td class="elsa-py-2" colSpan={2} style={{ width: colWidth }}>
               <div class="elsa-mt-1 elsa-relative elsa-rounded-md elsa-shadow-sm">
-                <elsa-expression-editor
+                <he-expression-editor
                   key={`expression-editor-${index}-${this.syntaxSwitchCount}-${this.keyId}`}
                   ref={el => expressionEditor = el}
                   expression={expression}
@@ -229,7 +229,7 @@ export class HeWeightedCheckboxOptionGroupProperty implements ISortableSharedCom
             </th>
             <td class="elsa-py-2" colSpan={2} style={{ width: colWidth }}>
               <div class="elsa-mt-1 elsa-relative elsa-rounded-md elsa-shadow-sm">
-                <elsa-expression-editor
+                <he-expression-editor
                   key={`expression-editor-${index}-${this.scoreSyntaxSwitchCount}-${this.keyId}`}
                   ref={el => scoreExpressionEditor = el}
                   expression={scoreExpression}
@@ -286,7 +286,7 @@ export class HeWeightedCheckboxOptionGroupProperty implements ISortableSharedCom
             <td class="elsa-py-2" colSpan={2} style={{ width: colWidth }}>
               <div class="elsa-mt-1 elsa-relative elsa-rounded-md elsa-shadow-sm">
 
-                <elsa-expression-editor
+                <he-expression-editor
                   key={`expression-editor-${index}-${this.syntaxSwitchCount}`}
                   ref={el => prePopulatedExpressionEditor = el}
                   expression={prePopulatedExpression}
@@ -372,7 +372,7 @@ export class HeWeightedCheckboxOptionGroupProperty implements ISortableSharedCom
 
         <br />
 
-        <elsa-multi-expression-editor
+        <he-multi-expression-editor
           ref={el => this.multiExpressionEditor = el}
           label={groupName}
           defaultSyntax={SyntaxNames.Json}
@@ -392,7 +392,7 @@ export class HeWeightedCheckboxOptionGroupProperty implements ISortableSharedCom
             <PlusIcon options={this.iconProvider.getOptions()}></PlusIcon>
             Add Answer
           </button>
-        </elsa-multi-expression-editor>
+        </he-multi-expression-editor>
       </div>
     );
   }

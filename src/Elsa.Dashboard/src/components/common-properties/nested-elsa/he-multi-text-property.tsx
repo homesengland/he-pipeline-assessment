@@ -82,7 +82,7 @@ export class HEMultiTextProperty {
         onValueChanged={e => this.onValueChanged(e.detail)} />
 
     return (
-      <elsa-property-editor
+      <he-property-editor
         key={`property-editor-${this.keyId}`}
         activityModel={this.activityModel}
         propertyDescriptor={propertyDescriptor}
@@ -90,7 +90,7 @@ export class HEMultiTextProperty {
         onDefaultSyntaxValueChanged={e => this.onDefaultSyntaxValueChanged(e)}
         single-line={true}>
         {elsaInputTags}
-      </elsa-property-editor>
+      </he-property-editor>
     )
   }
 }

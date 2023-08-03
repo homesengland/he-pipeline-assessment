@@ -67,7 +67,7 @@ export class HEJsonProperty {
     }
 
     return (
-      <elsa-property-editor
+      <he-property-editor
         key={`property-editor-${this.keyId}`}
         activityModel={this.activityModel}
         propertyDescriptor={propertyDescriptor}
@@ -80,7 +80,7 @@ export class HEJsonProperty {
           editor-height={editorHeight}
           onValueChanged={e => this.onMonacoValueChanged(e.detail)}
         />
-      </elsa-property-editor>
+      </he-property-editor>
     );
   }
 }

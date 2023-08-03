@@ -64,7 +64,7 @@ export class HeSingleLineProperty {
     }
 
     return (
-      <elsa-property-editor
+      <he-property-editor
         key={`property-editor-${fieldId}-${this.keyId}`}
         activityModel={this.activityModel}
         propertyDescriptor={propertyDescriptor}
@@ -75,7 +75,7 @@ export class HeSingleLineProperty {
         <input type="text" id={fieldId} name={fieldName} value={value} onChange={e => this.onChange(e)}
           class="disabled:elsa-opacity-50 disabled:elsa-cursor-not-allowed focus:elsa-ring-blue-500 focus:elsa-border-blue-500 elsa-block elsa-w-full elsa-min-w-0 elsa-rounded-md sm:elsa-text-sm elsa-border-gray-300"
           disabled={isReadOnly} />
-      </elsa-property-editor>
+      </he-property-editor>
     );
   }
 }

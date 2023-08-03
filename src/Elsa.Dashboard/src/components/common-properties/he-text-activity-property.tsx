@@ -203,7 +203,7 @@ export class TextActivityProperty implements ISortableSharedComponent, IDisplayT
             </th>
             <td class="elsa-py-2 pl-5" colSpan={2} style={{ width: colWidth }}>
                 <div class="elsa-mt-1 elsa-relative elsa-rounded-md elsa-shadow-sm">
-                  <elsa-expression-editor
+                  <he-expression-editor
                     key={`expression-editor-${index}-${this.syntaxSwitchCount}`}
                     ref={el => conditionExpressionEditor = el}
                     expression={conditionExpression}
@@ -268,7 +268,7 @@ export class TextActivityProperty implements ISortableSharedComponent, IDisplayT
             <td class="elsa-py-2 pl-5" style={{ width: colWidth }}>
 
               <div class="elsa-mt-1 elsa-relative elsa-rounded-md elsa-shadow-sm">
-                <elsa-expression-editor
+                <he-expression-editor
                   key={`expression-editor-${index}-${this.syntaxSwitchCount}`}
                   ref={el => conditionExpressionEditor = el}
                   expression={urlExpression}
@@ -295,7 +295,7 @@ export class TextActivityProperty implements ISortableSharedComponent, IDisplayT
     return (
       <div>
 
-        <elsa-multi-expression-editor
+        <he-multi-expression-editor
           ref={el => this.multiExpressionEditor = el}
           label={this.propertyDescriptor.label}
           defaultSyntax={SyntaxNames.Json}
@@ -316,7 +316,7 @@ export class TextActivityProperty implements ISortableSharedComponent, IDisplayT
             <PlusIcon options={this.iconProvider.getOptions()}></PlusIcon>
             Add Paragraph
           </button>
-        </elsa-multi-expression-editor>
+        </he-multi-expression-editor>
       </div>
     );
   }
