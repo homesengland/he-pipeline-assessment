@@ -28,6 +28,8 @@ using MediatR;
 using Microsoft.AspNetCore.DataProtection;
 using Microsoft.AspNetCore.Mvc.Razor;
 using Microsoft.EntityFrameworkCore;
+using System.Net.Http;
+using System.Net.Http.Headers;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -52,7 +54,10 @@ string serverURl = builder.Configuration["Urls:ElsaServer"];
 builder.Services.AddHttpClient("ElsaServerClient", client =>
 {
     client.BaseAddress = new Uri(serverURl);
-
+    client.DefaultRequestHeaders.CacheControl = new CacheControlHeaderValue
+    {
+        NoCache = true
+    };
 });
 
 builder.Services.AddScoped<IElsaServerHttpClient, ElsaServerHttpClient>();
