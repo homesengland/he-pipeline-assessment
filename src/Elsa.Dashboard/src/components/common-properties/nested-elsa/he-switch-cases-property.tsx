@@ -145,7 +145,7 @@ export class HeSwitchCasesProperty {
           <td class="elsa-py-2 pl-5">
 
             <div class="elsa-mt-1 elsa-relative elsa-rounded-md elsa-shadow-sm">
-              <elsa-expression-editor
+              <he-expression-editor
                 key={`expression-editor-${index}-${this.syntaxSwitchCount}-${this.keyId}`}
                 ref={el => expressionEditor = el}
                 expression={expression}
@@ -184,7 +184,7 @@ export class HeSwitchCasesProperty {
     return (
       <div>
 
-        <elsa-multi-expression-editor
+        <he-multi-expression-editor
           ref={el => this.multiExpressionEditor = el}
           label={this.propertyDescriptor.label}
           defaultSyntax={SyntaxNames.Json}
@@ -219,7 +219,7 @@ export class HeSwitchCasesProperty {
             <PlusIcon options={this.iconProvider.getOptions()}></PlusIcon>
             Add Case
           </button>
-        </elsa-multi-expression-editor>
+        </he-multi-expression-editor>
       </div>
     );
   }

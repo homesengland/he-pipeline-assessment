@@ -30,19 +30,35 @@ export class HeDashboard {
   async componentWillRender() {
   }
 
-  @Listen('workflowSaved')
-  async savedHandler(event: CustomEvent<any>) {
-    state.workflowDefinitionId = event.detail.definitionId;
-    state.javaScriptTypeDefinitions = '';
-    state.javaScriptTypeDefinitionsFetchStatus = StoreStatus.Empty;
-    console.log("clearing intellisense on Saved");
+  //@Listen('workflowSaved')
+  //async savedHandler(event: CustomEvent<any>) {
+  //  state.workflowDefinitionId = event.detail.definitionId;
+  //  state.javaScriptTypeDefinitions = '';
+  //  state.javaScriptTypeDefinitionsFetchStatus = StoreStatus.Empty;
+  //  console.log("clearing intellisense on Saved");
+  //  await this.getIntellisense();
+  //}
+
+  @Listen('shown', { target: 'window' })
+  async modalHandlerShow(event: CustomEvent<any>) {
+
+    var url_string = document.URL;
+    var n = url_string.lastIndexOf('/');
+    var workflowDef = url_string.substring(n + 1);
+    console.log("WorkflowDefinitionId", workflowDef);
+    state.workflowDefinitionId = workflowDef;
+
+    console.log("Modal is appearing", event);
+    console.log("state.workflowDefinitionId", state.workflowDefinitionId);
     await this.getIntellisense();
   }
 
-  @Listen('shown', { target: 'window' })
-  async modalHandleralt(event: CustomEvent<any>) {
-    console.log("Modal is appearing", event);
-    await this.getIntellisense();
+  @Listen('hidden', { target: 'window' })
+  async modalHandlerHidden(event: CustomEvent<any>) {
+    event = event;
+    state.javaScriptTypeDefinitions = '';
+    state.javaScriptTypeDefinitionsFetchStatus = StoreStatus.Empty;
+    console.log("clearing intellisense on hide");
   }
 
   async getIntellisense() {

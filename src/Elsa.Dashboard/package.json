@@ -32,6 +32,7 @@
     "@auth0/auth0-spa-js": "^2.1.1",
     "axios": "^0.26.1",
     "construe": "^0.4.1",
+    "el-transition": "^0.0.7",
     "sortablejs": "^1.15.0"
   },
   "devDependencies": {
