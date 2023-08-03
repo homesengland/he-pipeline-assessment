@@ -36,6 +36,7 @@ export class HEExpressionEditor {
   }
 
   async componentWillLoad() {
+    this.currentExpression = this.expression;
     console.log("loading custom editor");
   }
 
