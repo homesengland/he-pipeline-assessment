@@ -29,10 +29,7 @@ namespace He.PipelineAssessment.UI.Features.Workflow.StartWorkflow
             {
                 if (!await _roleValidation.ValidateRole(request.AssessmentId, request.WorkflowDefinitionId))
                 {
-                    return new LoadQuestionScreenRequest()
-                    {
-                        IsAuthorised = false
-                    };
+                    throw new UnauthorizedAccessException($"You do not have permission to access this resource.");
                 }
 
                 var dto = new StartWorkflowCommandDto()
@@ -40,6 +37,7 @@ namespace He.PipelineAssessment.UI.Features.Workflow.StartWorkflow
                     WorkflowDefinitionId = request.WorkflowDefinitionId,
                     CorrelationId = request.CorrelationId
                 };
+
                 var response = await _elsaServerHttpClient.PostStartWorkflow(dto);
 
                 if (response != null)
@@ -49,7 +47,6 @@ namespace He.PipelineAssessment.UI.Features.Workflow.StartWorkflow
                         ActivityId = response.Data.NextActivityId,
                         WorkflowInstanceId = response.Data.WorkflowInstanceId,
                         ActivityType = response.Data.ActivityType,
-                        IsAuthorised = true
                     };
 
                     var assessmentToolWorkflowInstance = AssessmentToolWorkflowInstance(request, response);
@@ -61,7 +58,7 @@ namespace He.PipelineAssessment.UI.Features.Workflow.StartWorkflow
                         await _assessmentRepository.GetAssessmentToolInstanceNextWorkflowByAssessmentId(request.AssessmentId,
                             request.WorkflowDefinitionId);
 
-                    if (nextWorkflow!=null)
+                    if (nextWorkflow != null)
                     {
                         await _assessmentRepository.DeleteNextWorkflow(nextWorkflow);
                     }
@@ -70,15 +67,15 @@ namespace He.PipelineAssessment.UI.Features.Workflow.StartWorkflow
                 }
                 else
                 {
-                    return null;
+                    _logger.LogError($"Failed to start workflow, response from elsa server client is null. AssessmentId: {request.AssessmentId} WorkflowDefinitionId: {request.WorkflowDefinitionId}");
+                    throw new ApplicationException("Failed to start workflow");
                 }
             }
             catch (Exception e)
             {
-                _logger.LogError(e.Message);
-                return null;
+                _logger.LogError(e,e.Message);
+                throw new ApplicationException("Failed to start workflow");
             }
-
         }
 
         private static AssessmentToolWorkflowInstance AssessmentToolWorkflowInstance(StartWorkflowCommand request, WorkflowNextActivityDataDto response)

@@ -30,15 +30,15 @@ namespace He.PipelineAssessment.UI.Tests.Features.Intervention.InterventionManag
             assessmentRepository.Setup(x => x.GetAssessmentIntervention(request.InterventionId)).ReturnsAsync(intervention);
 
             //Act
-            var ex = await Assert.ThrowsAsync<NotFoundException>(() => sut.Handle(request, CancellationToken.None));
+            var ex = await Assert.ThrowsAsync<ApplicationException>(() => sut.Handle(request, CancellationToken.None));
 
             //Assert
-            Assert.Equal(($"Assessment Intervention with Id {request.InterventionId} not found"), ex.Message);
+            Assert.Equal($"Unable to load override's check details page. InterventionId: {request.InterventionId}. ", ex.Message);
         }
 
         [Theory]
         [AutoMoqData]
-        public async Task Handle_DoesNotHandleError_GivenRepoThrowsException(
+        public async Task Handle_ThrowsApplicationException_GivenRepoThrowsException(
                      [Frozen] Mock<IAssessmentRepository> assessmentRepository,
                      LoadOverrideCheckYourAnswersRequest request,
                      DbUpdateException exception,
@@ -49,15 +49,15 @@ namespace He.PipelineAssessment.UI.Tests.Features.Intervention.InterventionManag
             assessmentRepository.Setup(x => x.GetAssessmentIntervention(request.InterventionId)).ThrowsAsync(exception);
 
             //Act
-            var ex = await Assert.ThrowsAsync<DbUpdateException>(() => sut.Handle(request, CancellationToken.None));
+            var ex = await Assert.ThrowsAsync<ApplicationException>(() => sut.Handle(request, CancellationToken.None));
 
             //Assert
-            Assert.Equal(exception.Message, ex.Message);
+            Assert.Equal($"Unable to load override's check details page. InterventionId: {request.InterventionId}. ", ex.Message);
         }
 
         [Theory]
         [AutoMoqData]
-        public async Task Handle_DoesNotHandleError_GivenMapperThrowsError(
+        public async Task Handle_ThrowsApplicatoinException_GivenMapperThrowsError(
           [Frozen] Mock<IAssessmentRepository> assessmentRepository,
           [Frozen] Mock<IAssessmentInterventionMapper> mapper,
           AssessmentIntervention intervention,
@@ -73,15 +73,15 @@ namespace He.PipelineAssessment.UI.Tests.Features.Intervention.InterventionManag
             mapper.Setup(x => x.AssessmentInterventionCommandFromAssessmentIntervention(intervention)).Throws(exception);
 
             //Act
-            ArgumentException ex = await Assert.ThrowsAsync<ArgumentException>(() => sut.Handle(request, CancellationToken.None));
+            var ex = await Assert.ThrowsAsync<ApplicationException>(() => sut.Handle(request, CancellationToken.None));
 
             //Assert
-            Assert.Equal(exception.Message, ex.Message);
+            Assert.Equal($"Unable to load override's check details page. InterventionId: {request.InterventionId}. ", ex.Message);
         }
 
         [Theory]
         [AutoMoqData]
-        public async Task Handle_ThrowsArgumentException_GivenMapperReturnsNull(
+        public async Task Handle_ThrowsApplicationException_GivenMapperReturnsNull(
               [Frozen] Mock<IAssessmentRepository> assessmentRepository,
               [Frozen] Mock<IAssessmentInterventionMapper> mapper,
               AssessmentInterventionCommand command,
@@ -96,10 +96,10 @@ namespace He.PipelineAssessment.UI.Tests.Features.Intervention.InterventionManag
             mapper.Setup(x => x.AssessmentInterventionCommandFromAssessmentIntervention(intervention)).Returns((AssessmentInterventionCommand)null!);
 
             //Act
-            ArgumentException ex = await Assert.ThrowsAsync<ArgumentException>(() => sut.Handle(request, CancellationToken.None));
+            var ex = await Assert.ThrowsAsync<ApplicationException>(() => sut.Handle(request, CancellationToken.None));
 
             //Assert
-            Assert.Equal(($"Unable to map AssessmentInterventionCommand from intervention: {JsonConvert.SerializeObject(intervention)} from mapper"), ex.Message);
+            Assert.Equal($"Unable to load override's check details page. InterventionId: {request.InterventionId}. ", ex.Message);
         }
 
         [Theory]

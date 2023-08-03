@@ -13,7 +13,7 @@ namespace He.PipelineAssessment.UI.Tests.Features.Assessment.AssessmentSummary
     {
         [Theory]
         [AutoMoqData]
-        public async Task Handle_ReturnsNull_GivenRepoThrowsError(
+        public async Task Handle_ReturnsError_GivenRepoThrowsError(
             [Frozen] Mock<IAssessmentRepository> assessmentRepository,
             AssessmentSummaryRequest request,
             Exception exception,
@@ -24,10 +24,10 @@ namespace He.PipelineAssessment.UI.Tests.Features.Assessment.AssessmentSummary
             assessmentRepository.Setup(x => x.GetAssessment(It.IsAny<int>())).Throws(exception);
 
             //Act
-            var result = await sut.Handle(request, CancellationToken.None);
+            var result = await Assert.ThrowsAsync<ApplicationException>(()=>sut.Handle(request, CancellationToken.None));
 
             //Assert
-            Assert.Null(result);
+            Assert.Equal($"Unable to get the assessment summary. AssessmentId: {request.AssessmentId}", result.Message);
         }
 
         [Theory]

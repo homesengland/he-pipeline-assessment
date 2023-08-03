@@ -2,8 +2,6 @@
 {
     public class SyncResponse
     {
-        public bool IsSuccess => !ErrorMessages.Any();
-
-        public IList<string> ErrorMessages { get; set; } = new List<string>();
+       
     }
 }

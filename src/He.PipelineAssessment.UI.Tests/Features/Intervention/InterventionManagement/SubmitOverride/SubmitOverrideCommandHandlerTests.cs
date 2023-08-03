@@ -26,10 +26,10 @@ namespace He.PipelineAssessment.UI.Tests.Features.Intervention.InterventionManag
             repo.Setup(x => x.GetAssessmentIntervention(command.AssessmentInterventionId)).Throws(exception);
 
             //Act
-            var ex = await Assert.ThrowsAsync<Exception>(() => sut.Handle(command, CancellationToken.None));
+            var ex = await Assert.ThrowsAsync<ApplicationException>(() => sut.Handle(command, CancellationToken.None));
 
             //Assert
-            Assert.Equal(exception, ex);
+            Assert.Equal($"Unalbe to submit override. AssessmentInterventionId: {command.AssessmentInterventionId}.", ex.Message);
         }
 
         [Theory]
@@ -44,10 +44,10 @@ namespace He.PipelineAssessment.UI.Tests.Features.Intervention.InterventionManag
             repo.Setup(x => x.GetAssessmentIntervention(command.AssessmentInterventionId)).ReturnsAsync((AssessmentIntervention?)null);
 
             //Act
-            var ex = await Assert.ThrowsAsync<NotFoundException>(() => sut.Handle(command, CancellationToken.None));
+            var ex = await Assert.ThrowsAsync<ApplicationException>(() => sut.Handle(command, CancellationToken.None));
 
             //Assert
-            Assert.Equal($"Assessment Intervention with Id {command.AssessmentInterventionId} not found", ex.Message);
+            Assert.Equal($"Unalbe to submit override. AssessmentInterventionId: {command.AssessmentInterventionId}.", ex.Message);
         }
 
         [Theory]

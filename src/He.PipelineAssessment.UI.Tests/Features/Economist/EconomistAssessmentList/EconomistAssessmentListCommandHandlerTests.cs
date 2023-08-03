@@ -22,7 +22,7 @@ public class EconomistAssessmentListCommandHandlerTests
         repo.Setup(x => x.GetEconomistAssessments()).Throws(exception);
 
         //Assert
-        await Assert.ThrowsAsync<Exception>(() => sut.Handle(economistAssessmentListCommand, CancellationToken.None));
+        await Assert.ThrowsAsync<ApplicationException>(() => sut.Handle(economistAssessmentListCommand, CancellationToken.None));
     }
 
     [Theory]

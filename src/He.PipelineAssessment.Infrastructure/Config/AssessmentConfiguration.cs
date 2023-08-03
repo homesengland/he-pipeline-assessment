@@ -43,6 +43,9 @@ namespace He.PipelineAssessment.Infrastructure.Config
 
             builder.Property(x => x.BusinessArea)
                 .HasMaxLength(EntityConfigurationConstants.MaxLength);
+
+            builder.Property(x => x.LandType)
+                .HasMaxLength(EntityConfigurationConstants.StandardLength);
         }
     }
 }

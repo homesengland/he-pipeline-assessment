@@ -2,7 +2,6 @@
 using He.PipelineAssessment.UI.Common.Exceptions;
 using He.PipelineAssessment.UI.Features.Intervention;
 using He.PipelineAssessment.UI.Features.Rollback.ConfirmRollback;
-using He.PipelineAssessment.UI.Features.Rollback.SubmitRollback;
 using MediatR;
 using Newtonsoft.Json;
 
@@ -26,15 +25,22 @@ namespace He.PipelineAssessment.UI.Features.Rollback.LoadRollbackCheckYourAnswer
 
         public async Task<ConfirmRollbackCommand> Handle(LoadRollbackCheckYourAnswersAssessorRequest request, CancellationToken cancellationToken)
         {
-
-            var intervention = await _assessmentRepository.GetAssessmentIntervention(request.InterventionId);
-            if (intervention == null)
+            try
             {
-                throw new NotFoundException($"Assessment Intervention with Id {request.InterventionId} not found");
+                var intervention = await _assessmentRepository.GetAssessmentIntervention(request.InterventionId);
+                if (intervention == null)
+                {
+                    throw new NotFoundException($"Assessment Intervention with Id {request.InterventionId} not found");
+                }
+                var command = _mapper.AssessmentInterventionCommandFromAssessmentIntervention(intervention);
+                var confirmRollbackCommand = SerializedCommand(command);
+                return confirmRollbackCommand;
             }
-            var command = _mapper.AssessmentInterventionCommandFromAssessmentIntervention(intervention);
-            var confirmRollbackCommand = SerializedCommand(command);
-            return confirmRollbackCommand;
+            catch (Exception e)
+            {
+                _logger.LogError(e, e.Message);
+                throw new ApplicationException($"Unable to load rollback check your answers. InterventionId: {request.InterventionId}");
+            }
         }
 
         private ConfirmRollbackCommand SerializedCommand(AssessmentInterventionCommand command)

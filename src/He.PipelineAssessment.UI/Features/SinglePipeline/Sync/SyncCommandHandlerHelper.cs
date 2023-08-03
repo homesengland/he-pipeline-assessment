@@ -5,7 +5,7 @@ namespace He.PipelineAssessment.UI.Features.SinglePipeline.Sync
     public interface ISyncCommandHandlerHelper
     {
         List<Models.Assessment> AssessmentsToBeAdded(List<int> sourceAssessmentSpIds, List<int> destinationAssessmentSpIds, List<SinglePipelineData> sourcSinglePipelineData);
-        List<Models.Assessment> UpdateAssessments(List<Models.Assessment> destinationAssessments, List<int> existingAssessments, List<SinglePipelineData> data);
+        int UpdateAssessments(List<Models.Assessment> destinationAssessments, List<int> existingAssessments, List<SinglePipelineData> data);
     }
 
     public class SyncCommandHandlerHelper : ISyncCommandHandlerHelper
@@ -43,6 +43,9 @@ namespace He.PipelineAssessment.UI.Features.SinglePipeline.Sync
                     NumberOfHomes = item.units_or_homes,
                     BusinessArea = string.IsNullOrEmpty(item.sp_business_area)
                          ? "-" : item.sp_business_area,
+                    LandType = string.IsNullOrEmpty(item.land_type)
+                        ? "-"
+                        : item.land_type,
                 };
 
                 assessmentsToBeAdded.Add(assessment);
@@ -50,55 +53,74 @@ namespace He.PipelineAssessment.UI.Features.SinglePipeline.Sync
 
             return assessmentsToBeAdded;
         }
-        public List<Models.Assessment> UpdateAssessments(List<Models.Assessment> destinationAssessments, List<int> existingAssessments, List<SinglePipelineData> data)
+        public int UpdateAssessments(List<Models.Assessment> destinationAssessments, List<int> existingAssessments, List<SinglePipelineData> data)
         {
+            var count = 0;
             foreach (var spId in existingAssessments)
             {
                 var destination = destinationAssessments.FirstOrDefault(x => x.SpId == spId);
                 var source = data.FirstOrDefault(x => x.sp_id == spId);
-
+                bool updateFlag = false;
                 if (destination != null && source != null)
                 {
                     if (!string.IsNullOrEmpty(source.applicant_1) && destination.Counterparty != source.applicant_1)
                     {
                         destination.Counterparty = source.applicant_1!;
+                        updateFlag = true;
                     }
                     if (!string.IsNullOrEmpty(source.internal_reference) && destination.Reference != source.internal_reference)
                     {
                         destination.Reference = source.internal_reference!;
+                        updateFlag = true;
                     }
                     if (!string.IsNullOrEmpty(source.pipeline_opportunity_site_name) && destination.SiteName != source.pipeline_opportunity_site_name)
                     {
                         destination.SiteName = source.pipeline_opportunity_site_name!;
+                        updateFlag = true;
                     }
                     if (!string.IsNullOrEmpty(source.project_owner) && destination.ProjectManager != source.project_owner)
                     {
                         destination.ProjectManager = source.project_owner;
+                        updateFlag = true;
                     }
                     if (!string.IsNullOrEmpty(source.project_owner_email) && destination.ProjectManagerEmail != source.project_owner_email)
                     {
                         destination.ProjectManagerEmail = source.project_owner_email!;
+                        updateFlag = true;
                     }
                     if (!string.IsNullOrEmpty(source.local_authority) && destination.LocalAuthority != source.local_authority)
                     {
                         destination.LocalAuthority = source.local_authority!;
+                        updateFlag = true;
                     }
                     if (!string.IsNullOrEmpty(source.sp_business_area) && destination.BusinessArea != source.sp_business_area)
                     {
                         destination.BusinessArea = source.sp_business_area!;
+                        updateFlag = true;
                     }
                     if (source.funding_ask.HasValue && destination.FundingAsk != source.funding_ask)
                     {
                         destination.FundingAsk = source.funding_ask!;
+                        updateFlag = true;
                     }
                     if (source.units_or_homes.HasValue && destination.NumberOfHomes != source.units_or_homes)
                     {
                         destination.NumberOfHomes = source.units_or_homes!;
+                        updateFlag = true;
                     }
+                    if (!string.IsNullOrEmpty(source.land_type) && destination.LandType != source.land_type)
+                    {
+                        destination.LandType = source.land_type!;
+                        updateFlag = true;
+                    }
+                }
+                if (updateFlag)
+                {
+                    count++;
                 }
             }
 
-            return destinationAssessments;
+            return count;
         }
     }
 }

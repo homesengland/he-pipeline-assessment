@@ -25,10 +25,10 @@ namespace He.PipelineAssessment.UI.Tests.Features.Admin.AssessmentToolManagement
                 .Throws(exception);
 
             //Act
-            var result = await Assert.ThrowsAsync<Exception>(() => sut.Handle(deleteAssessmentToolWorkflowCommand, CancellationToken.None));
+            var result = await Assert.ThrowsAsync<ApplicationException>(() => sut.Handle(deleteAssessmentToolWorkflowCommand, CancellationToken.None));
 
             //Assert          
-            Assert.Equal(exception.Message, result.Message);
+            Assert.Equal("Unable to delete assessment tool workflow.", result.Message);
         }
 
         [Theory]
@@ -72,10 +72,10 @@ namespace He.PipelineAssessment.UI.Tests.Features.Admin.AssessmentToolManagement
                 .ReturnsAsync((AssessmentToolWorkflow?)null);
 
             //Act
-            var result = await Assert.ThrowsAsync<ArgumentNullException>(() => sut.Handle(deleteAssessmentToolWorkflowCommand, CancellationToken.None));
+            var result = await Assert.ThrowsAsync<ApplicationException>(() => sut.Handle(deleteAssessmentToolWorkflowCommand, CancellationToken.None));
 
             //Assert          
-            Assert.Equal(exceptionMessage, result.Message);
+            Assert.Equal("Unable to delete assessment tool workflow.", result.Message);
         }
     }
 }

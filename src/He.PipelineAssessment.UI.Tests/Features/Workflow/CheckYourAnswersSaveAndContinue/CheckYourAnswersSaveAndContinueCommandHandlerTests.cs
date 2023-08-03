@@ -1,4 +1,5 @@
 ﻿using AutoFixture.Xunit2;
+using Azure.Core;
 using Elsa.CustomWorkflow.Sdk.HttpClients;
 using Elsa.CustomWorkflow.Sdk.Models.Workflow;
 using He.PipelineAssessment.Infrastructure.Repository;
@@ -15,7 +16,7 @@ namespace He.PipelineAssessment.UI.Tests.Features.Workflow.CheckYourAnswersSaveA
     {
         [Theory]
         [AutoMoqData]
-        public async Task Handle_ReturnsNull_GivenHttpClientResponseIsNull(
+        public async Task Handle_ThrowsApplicationException_GivenHttpClientResponseIsNull(
             [Frozen] Mock<IElsaServerHttpClient> elsaServerHttpClient,
             [Frozen] Mock<IRoleValidation> roleValidation,
             CheckYourAnswersSaveAndContinueCommand saveAndContinueCommand,
@@ -23,17 +24,17 @@ namespace He.PipelineAssessment.UI.Tests.Features.Workflow.CheckYourAnswersSaveA
         )
         {
             //Arrange
-
             roleValidation.Setup(x => x.ValidateRole(saveAndContinueCommand.AssessmentId, saveAndContinueCommand.WorkflowDefinitionId)).ReturnsAsync(true);
 
             elsaServerHttpClient.Setup(x => x.CheckYourAnswersSaveAndContinue(It.IsAny<CheckYourAnswersSaveAndContinueCommandDto>()))
                 .ReturnsAsync((WorkflowNextActivityDataDto?)null);
-
+            saveAndContinueCommand.AssessmentId = 1;
+            saveAndContinueCommand.WorkflowDefinitionId = "Test Workflow Id";
             //Act
-            var result = await sut.Handle(saveAndContinueCommand, CancellationToken.None);
+            var exceptionThrown = await Assert.ThrowsAsync<ApplicationException>(()=> sut.Handle(saveAndContinueCommand, CancellationToken.None));
 
             //Assert
-            Assert.Null(result);
+            Assert.Equal("Unable to submit workflow. AssessmentId: 1 WorkflowDefinitionId:Test Workflow Id", exceptionThrown.Message);
         }
 
         [Theory]
@@ -84,10 +85,10 @@ namespace He.PipelineAssessment.UI.Tests.Features.Workflow.CheckYourAnswersSaveA
 
 
             //Act
-            var result = await sut.Handle(saveAndContinueCommand, CancellationToken.None);
+            var exceptionThrown = await Assert.ThrowsAsync<ApplicationException>(()=> sut.Handle(saveAndContinueCommand, CancellationToken.None));
 
             //Assert
-            Assert.False(result!.IsAuthorised);
+            Assert.Equal($"Unable to submit workflow. AssessmentId: {saveAndContinueCommand.AssessmentId} WorkflowDefinitionId:{saveAndContinueCommand.WorkflowDefinitionId}", exceptionThrown.Message);
         }
 
 
@@ -97,7 +98,7 @@ namespace He.PipelineAssessment.UI.Tests.Features.Workflow.CheckYourAnswersSaveA
           [Frozen] Mock<IRoleValidation> roleValidation,
           CheckYourAnswersSaveAndContinueCommand saveAndContinueCommand,
           CheckYourAnswersSaveAndContinueCommandHandler sut
-      )
+        )
         {
             //Arrange
 
@@ -105,10 +106,10 @@ namespace He.PipelineAssessment.UI.Tests.Features.Workflow.CheckYourAnswersSaveA
 
 
             //Act
-            var result = await sut.Handle(saveAndContinueCommand, CancellationToken.None);
+            var exceptionThrown = await Assert.ThrowsAsync<ApplicationException>(() => sut.Handle(saveAndContinueCommand, CancellationToken.None));
 
             //Assert
-            Assert.Null(result);
+            Assert.Equal($"Unable to submit workflow. AssessmentId: {saveAndContinueCommand.AssessmentId} WorkflowDefinitionId:{saveAndContinueCommand.WorkflowDefinitionId}", exceptionThrown.Message);
         }
 
     }

@@ -1,25 +1,28 @@
 ﻿using He.PipelineAssessment.Data.SinglePipeline;
 using He.PipelineAssessment.Infrastructure.Repository;
+using He.PipelineAssessment.Models.ViewModels;
 using MediatR;
 
 namespace He.PipelineAssessment.UI.Features.SinglePipeline.Sync
 {
-    public class SyncCommandHandler : IRequestHandler<SyncCommand, SyncResponse>
+    public class SyncCommandHandler : IRequestHandler<SyncCommand, SyncModel>
     {
         private readonly IAssessmentRepository _assessmentRepository;
         private readonly ISinglePipelineProvider _singlePipelineProvider;
         private readonly ISyncCommandHandlerHelper _syncCommandHandlerHelper;
+        private readonly ILogger<SyncCommandHandler> _logger;
 
-        public SyncCommandHandler(IAssessmentRepository assessmentRepository, ISinglePipelineProvider singlePipelineProvider, ISyncCommandHandlerHelper syncCommandHandlerHelper)
+        public SyncCommandHandler(IAssessmentRepository assessmentRepository, ISinglePipelineProvider singlePipelineProvider, ISyncCommandHandlerHelper syncCommandHandlerHelper, ILogger<SyncCommandHandler> logger)
         {
             _assessmentRepository = assessmentRepository;
             _singlePipelineProvider = singlePipelineProvider;
             _syncCommandHandlerHelper = syncCommandHandlerHelper;
+            _logger = logger;
         }
 
-        public async Task<SyncResponse> Handle(SyncCommand request, CancellationToken cancellationToken)
+        public async Task<SyncModel> Handle(SyncCommand request, CancellationToken cancellationToken)
         {
-            var errorMessages = new List<string>();
+            var syncModel = new SyncModel();
             try
             {
                 var data = await _singlePipelineProvider.GetSinglePipelineData();
@@ -34,25 +37,25 @@ namespace He.PipelineAssessment.UI.Features.SinglePipeline.Sync
                     await _assessmentRepository.CreateAssessments(assessmentsToBeAdded);
 
                     var existingAssessments = destinationAssessmentSpIds.Intersect(sourceAssessmentSpIds).ToList();
-                    _syncCommandHandlerHelper.UpdateAssessments(destinationAssessments, existingAssessments, data);
+                    var updatedAssessmentCount = _syncCommandHandlerHelper.UpdateAssessments(destinationAssessments, existingAssessments, data);
                     await _assessmentRepository.SaveChanges();
-
+                    syncModel.NewAssessmentCount = assessmentsToBeAdded.Count;
+                    syncModel.UpdatedAssessmentCount = updatedAssessmentCount;
+                    syncModel.Synced = true;
                 }
                 else
                 {
-                    errorMessages.Add("Single Pipeline Response data returned null");
+                    _logger.LogError("Single Pipeline Response data returned null");
+                    throw new ApplicationException("Single Pipeline Response data returned null");
                 }
-
             }
             catch (Exception e)
             {
-                errorMessages.Add(e.Message);
+                _logger.LogError(e,e.Message);
+                throw new ApplicationException("Single Pipeline Data failed to sync");
             }
 
-            return new SyncResponse()
-            {
-                ErrorMessages = errorMessages
-            };
+            return syncModel;
         }
     }
 }

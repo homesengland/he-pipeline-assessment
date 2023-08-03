@@ -26,71 +26,71 @@ namespace He.PipelineAssessment.UI.Features.Assessment.AssessmentSummary
             try
             {
                 var dbAssessment = await _repository.GetAssessment(request.AssessmentId);
-                if (dbAssessment != null)
+                if (dbAssessment == null)
                 {
-                    var assessmentStages = await _storedProcedureRepository.GetAssessmentStages(request.AssessmentId);
-                    var startableWorkflows = await _storedProcedureRepository.GetStartableTools(request.AssessmentId);
+                    throw new ApplicationException($"Assessment with id {request.AssessmentId} not found.");
+                }
+                var assessmentStages = await _storedProcedureRepository.GetAssessmentStages(request.AssessmentId);
+                var startableWorkflows = await _storedProcedureRepository.GetStartableTools(request.AssessmentId);
 
-                    var stages = new List<AssessmentSummaryStage>();
-                    
-                    if (assessmentStages.Any())
+                var stages = new List<AssessmentSummaryStage>();
+                   
+                if (assessmentStages.Any())
+                {
+                    //Get distinct list of tools
+                    var uniqueTools = assessmentStages.Select(x => new { x.AssessmentToolId, x.Name, x.Order })
+                      .Distinct().ToList();
+                    foreach (var assessmentTool in uniqueTools)
                     {
-                        //Get distinct list of tools
-                        var uniqueTools = assessmentStages.Select(x => new { x.AssessmentToolId, x.Name, x.Order })
-                            .Distinct().ToList();
+                       //Add All Current Workflow Instances in Draft or Submitted
+                       var assessmentStagesForCurrentTool = assessmentStages.Where(x => x.AssessmentToolId == assessmentTool.AssessmentToolId);
+                       var workflowInstances = AssessmentSummaryStage(assessmentStagesForCurrentTool).ToList();
+                       stages.AddRange(workflowInstances);
 
-                        foreach (var assessmentTool in uniqueTools)
-                        {
-                            //Add All Current Workflow Instances in Draft or Submitted
-                            var assessmentStagesForCurrentTool = assessmentStages.Where(x => x.AssessmentToolId == assessmentTool.AssessmentToolId);
-                            var workflowInstances = AssessmentSummaryStage(assessmentStagesForCurrentTool).ToList();
-                            stages.AddRange(workflowInstances);
-
-                            //Add All Startable Tools
-                            var startableWorkflowForCurrentTool = startableWorkflows.Where(x => x.AssessmentToolId == assessmentTool.AssessmentToolId);
-                            var startableList = AssessmentSummaryStage(startableWorkflowForCurrentTool,assessmentTool.Name,assessmentTool.Order).ToList();
-                            stages.AddRange(startableList);
+                        //Add All Startable Tools
+                        var startableWorkflowForCurrentTool = startableWorkflows.Where(x => x.AssessmentToolId == assessmentTool.AssessmentToolId);
+                        var startableList = AssessmentSummaryStage(startableWorkflowForCurrentTool,assessmentTool.Name,assessmentTool.Order).ToList();
+                        stages.AddRange(startableList);
                             
-                            //If there is nothing add the current stage as a non startable item
-                            if (!workflowInstances.Any() && !startableList.Any())
-                            {
-                                stages.Add(AssessmentSummaryStage(assessmentTool.Name, assessmentTool.Order));
-                            }
+                        //If there is nothing add the current stage as a non startable item
+                        if (!workflowInstances.Any() && !startableList.Any())
+                        {
+                            stages.Add(AssessmentSummaryStage(assessmentTool.Name, assessmentTool.Order));
                         }
                     }
-
-                    var dbHistory = await _storedProcedureRepository.GetAssessmentHistory(request.AssessmentId);
-
-                    var stagesHistory = AssessmentSummaryStage(dbHistory).ToList();
-
-                    var interventions = new List<AssessmentInterventionViewModel>();
-
-                    var dbInterventions = await _storedProcedureRepository.GetAssessmentInterventionList(request.AssessmentId);
-                    if (dbInterventions.Any())
-                    {
-                        interventions = dbInterventions;
-                    }
-
-                    return new AssessmentSummaryResponse()
-                    {
-                        CorrelationId = request.CorrelationId,
-                        AssessmentId = request.AssessmentId,
-                        SiteName = dbAssessment!.SiteName,
-                        CounterParty = dbAssessment.Counterparty,
-                        Reference = dbAssessment.Reference,
-                        Stages = stages,
-                        StagesHistory = stagesHistory,
-                        LocalAuthority = dbAssessment.LocalAuthority,
-                        ProjectManager = dbAssessment.ProjectManager,
-                        Interventions = interventions
-                    };
                 }
+
+                var dbHistory = await _storedProcedureRepository.GetAssessmentHistory(request.AssessmentId);
+
+                var stagesHistory = AssessmentSummaryStage(dbHistory).ToList();
+
+                var interventions = new List<AssessmentInterventionViewModel>();
+
+                var dbInterventions = await _storedProcedureRepository.GetAssessmentInterventionList(request.AssessmentId);
+                if (dbInterventions.Any())
+                {
+                    interventions = dbInterventions;
+                }
+
+                return new AssessmentSummaryResponse()
+                {
+                    CorrelationId = request.CorrelationId,
+                    AssessmentId = request.AssessmentId,
+                    SiteName = dbAssessment!.SiteName,
+                    CounterParty = dbAssessment.Counterparty,
+                    Reference = dbAssessment.Reference,
+                    Stages = stages,
+                    StagesHistory = stagesHistory,
+                    LocalAuthority = dbAssessment.LocalAuthority,
+                    ProjectManager = dbAssessment.ProjectManager,
+                    Interventions = interventions
+                };
             }
             catch (Exception e)
             {
-                _logger.LogError(e.Message);
+                _logger.LogError(e, e.Message);
+                throw new ApplicationException($"Unable to get the assessment summary. AssessmentId: {request.AssessmentId}");
             }
-            return null;
         }
 
         private AssessmentSummaryStage AssessmentSummaryStage( string name, int order)

@@ -1,7 +1,7 @@
 ﻿using AutoFixture.Xunit2;
 using He.PipelineAssessment.Models.ViewModels;
 using He.PipelineAssessment.Tests.Common;
-using He.PipelineAssessment.UI.Features.Economist.Controllers;
+using He.PipelineAssessment.UI.Features.Economist;
 using He.PipelineAssessment.UI.Features.Economist.EconomistAssessmentList;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;

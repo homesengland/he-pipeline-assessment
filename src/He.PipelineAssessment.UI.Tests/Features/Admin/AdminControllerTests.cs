@@ -2,6 +2,7 @@
 using FluentValidation;
 using FluentValidation.Results;
 using He.PipelineAssessment.Tests.Common;
+using He.PipelineAssessment.UI.Features.Admin;
 using He.PipelineAssessment.UI.Features.Admin.AssessmentToolManagement.Commands.CreateAssessmentTool;
 using He.PipelineAssessment.UI.Features.Admin.AssessmentToolManagement.Commands.CreateAssessmentToolWorkflow;
 using He.PipelineAssessment.UI.Features.Admin.AssessmentToolManagement.Commands.DeleteAssessmentTool;
@@ -10,7 +11,6 @@ using He.PipelineAssessment.UI.Features.Admin.AssessmentToolManagement.Commands.
 using He.PipelineAssessment.UI.Features.Admin.AssessmentToolManagement.Commands.UpdateAssessmentToolWorkflowCommand;
 using He.PipelineAssessment.UI.Features.Admin.AssessmentToolManagement.Queries.GetAssessmentTools;
 using He.PipelineAssessment.UI.Features.Admin.AssessmentToolManagement.Queries.GetAssessmentToolWorkflows;
-using He.PipelineAssessment.UI.Features.Admin.Controllers;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Moq;
@@ -58,29 +58,6 @@ namespace He.PipelineAssessment.UI.Tests.Features.Admin
 
         [Theory]
         [AutoMoqData]
-        public async Task AssessmentTool_ShouldRedirectToErrorPage_GivenInnerExceptionIsCaught(
-         [Frozen] Mock<IMediator> mediator,
-            Exception exception,
-            AdminController sut)
-        {
-            //Arrange
-            mediator.Setup(x => x.Send(It.IsAny<AssessmentToolQuery>(), CancellationToken.None)).Throws(exception);
-
-            //Act
-            var result = await sut.AssessmentTool();
-
-            //Assert
-            mediator.Verify(x => x.Send(It.IsAny<AssessmentToolQuery>(), CancellationToken.None), Times.Once);
-            await Assert.ThrowsAsync<Exception>(() => mediator.Object.Send(It.IsAny<AssessmentToolQuery>()));
-            Assert.IsType<RedirectToActionResult>(result);
-            var redirectToActionResult = (RedirectToActionResult)result;
-            Assert.Equal("Error", redirectToActionResult.ControllerName);
-            Assert.Equal("Index", redirectToActionResult.ActionName);
-
-        }
-
-        [Theory]
-        [AutoMoqData]
         public async Task AssessmentToolWorkflow_ShouldRedirectToView_GivenNoExceptionsThrow(
            [Frozen] Mock<IMediator> mediator,
            AssessmentToolQuery query,
@@ -101,30 +78,6 @@ namespace He.PipelineAssessment.UI.Tests.Features.Admin
 
         [Theory]
         [AutoMoqData]
-        public async Task AssessmentToolWorkflow_ShouldRedirectToErrorPage_GivenInnerExceptionIsCaught(
-         [Frozen] Mock<IMediator> mediator,
-         Exception exception,
-         AdminController sut,
-         int assessmentToolId)
-        {
-            //Arrange
-            mediator.Setup(x => x.Send(It.IsAny<AssessmentToolWorkflowQuery>(), CancellationToken.None)).Throws(exception);
-
-            //Act
-            var result = await sut.AssessmentToolWorkflow(assessmentToolId);
-
-            //Assert
-            mediator.Verify(x => x.Send(It.IsAny<AssessmentToolWorkflowQuery>(), CancellationToken.None), Times.Once);
-            await Assert.ThrowsAsync<Exception>(() => mediator.Object.Send(It.IsAny<AssessmentToolWorkflowQuery>()));
-
-            Assert.IsType<RedirectToActionResult>(result);
-            var redirectToActionResult = (RedirectToActionResult)result;
-            Assert.Equal("Error", redirectToActionResult.ControllerName);
-            Assert.Equal("Index", redirectToActionResult.ActionName);
-        }
-
-        [Theory]
-        [AutoMoqData]
         public async Task GetAssessmentToolById_ShouldRedirectToView_GivenNoExceptionsThrow(
          [Frozen] Mock<IMediator> mediator,
          AssessmentToolWorkflowQuery query,
@@ -141,30 +94,6 @@ namespace He.PipelineAssessment.UI.Tests.Features.Admin
             //Assert
             Assert.NotNull(result);
             Assert.IsType<ViewResult>(result);
-        }
-
-        [Theory]
-        [AutoMoqData]
-        public async Task GetAssessmentToolById_ShouldRedirectToErrorPage_GivenInnerExceptionIsCaught(
-         [Frozen] Mock<IMediator> mediator,
-         Exception exception,
-         AdminController sut,
-         int assessmentToolId)
-        {
-            //Arrange
-            mediator.Setup(x => x.Send(It.IsAny<AssessmentToolWorkflowQuery>(), CancellationToken.None)).Throws(exception);
-
-            //Act
-            var result = await sut.GetAssessmentToolById(assessmentToolId);
-
-            //Assert
-            mediator.Verify(x => x.Send(It.IsAny<AssessmentToolWorkflowQuery>(), CancellationToken.None), Times.Once);
-            await Assert.ThrowsAsync<Exception>(() => mediator.Object.Send(It.IsAny<AssessmentToolWorkflowQuery>()));
-
-            Assert.IsType<RedirectToActionResult>(result);
-            var redirectToActionResult = (RedirectToActionResult)result;
-            Assert.Equal("Error", redirectToActionResult.ControllerName);
-            Assert.Equal("Index", redirectToActionResult.ActionName);
         }
 
         [Theory]
@@ -218,27 +147,6 @@ namespace He.PipelineAssessment.UI.Tests.Features.Admin
             Assert.NotNull(result);
             Assert.IsType<RedirectToActionResult>(result);
         }
-        [Theory]
-        [AutoMoqData]
-        public async Task DeleteAssessmentTool_ShouldRedirectToErrorPage_GivenInnerExceptionIsCaught(
-      [Frozen] Mock<IMediator> mediator,
-      Exception exception,
-      AdminController sut,
-      int assessmentToolId)
-        {
-            //Arrange
-            mediator.Setup(x => x.Send(It.IsAny<DeleteAssessmentToolCommand>(), CancellationToken.None)).Throws(exception);
-
-            //Act
-            var result = await sut.DeleteAssessmentTool(assessmentToolId);
-
-            //Assert           
-            Assert.IsType<RedirectToActionResult>(result);
-            var redirectToActionResult = (RedirectToActionResult)result;
-            Assert.Equal("Error", redirectToActionResult.ControllerName);
-            Assert.Equal("Index", redirectToActionResult.ActionName);
-        }
-
 
         [Theory]
         [AutoMoqData]
@@ -258,28 +166,6 @@ namespace He.PipelineAssessment.UI.Tests.Features.Admin
             //Assert
             Assert.NotNull(result);
             Assert.IsType<RedirectToActionResult>(result);
-        }
-
-        [Theory]
-        [AutoMoqData]
-        public async Task DeleteAssessmentToolWorkflow_ShouldRedirectToErrorPage_GivenInnerExceptionIsCaught(
-        [Frozen] Mock<IMediator> mediator,
-        Exception exception,
-        AdminController sut,
-        int assessmentToolWorkflowId,
-        int assessmentToolId)
-        {
-            //Arrange
-            mediator.Setup(x => x.Send(It.IsAny<DeleteAssessmentToolWorkflowCommand>(), CancellationToken.None)).Throws(exception);
-
-            //Act
-            var result = await sut.DeleteAssessmentToolWorkflow(assessmentToolWorkflowId, assessmentToolId);
-
-            //Assert           
-            Assert.IsType<RedirectToActionResult>(result);
-            var redirectToActionResult = (RedirectToActionResult)result;
-            Assert.Equal("Error", redirectToActionResult.ControllerName);
-            Assert.Equal("Index", redirectToActionResult.ActionName);
         }
 
         [Theory]

@@ -10,43 +10,53 @@ namespace He.PipelineAssessment.UI.Features.Rollback.SubmitRollback
     {
         private readonly IAssessmentRepository _assessmentRepository;
         private readonly IDateTimeProvider _dateTimeProvider;
+        private readonly ILogger<SubmitRollbackCommandHandler> _logger;
 
-        public SubmitRollbackCommandHandler(IAssessmentRepository assessmentRepository, IDateTimeProvider dateTimeProvider)
+        public SubmitRollbackCommandHandler(IAssessmentRepository assessmentRepository, IDateTimeProvider dateTimeProvider, ILogger<SubmitRollbackCommandHandler> logger)
         {
             _assessmentRepository = assessmentRepository;
             _dateTimeProvider = dateTimeProvider;
+            _logger = logger;
         }
 
         public async Task<Unit> Handle(SubmitRollbackCommand command, CancellationToken cancellationToken)
         {
-            var intervention =
-                await _assessmentRepository.GetAssessmentIntervention(command.AssessmentInterventionId);
-
-
-            if (intervention == null)
+            try
             {
-                throw new NotFoundException($"Assessment Intervention with Id {command.AssessmentInterventionId} not found");
-            }
+                var intervention =
+                    await _assessmentRepository.GetAssessmentIntervention(command.AssessmentInterventionId);
 
-            intervention.Status = command.Status;
-            intervention.DateSubmitted = _dateTimeProvider.UtcNow();
-            await _assessmentRepository.UpdateAssessmentIntervention(intervention);
-
-            if (intervention.Status == InterventionStatus.Approved)
-            {
-                var workflowsToDelete =
-                    await _assessmentRepository.GetWorkflowInstancesToDeleteForRollback(intervention.AssessmentToolWorkflowInstance.AssessmentId, intervention.TargetAssessmentToolWorkflow!.AssessmentTool.Order);
-
-                foreach (var workflowInstance in workflowsToDelete)
+                if (intervention == null)
                 {
-                    workflowInstance.Status = AssessmentToolWorkflowInstanceConstants.SuspendedRollBack;
+                    throw new NotFoundException($"Assessment Intervention with Id {command.AssessmentInterventionId} not found");
                 }
 
-                await _assessmentRepository.SaveChanges();
-                await CreateNextWorkflow(intervention);
+                intervention.Status = command.Status;
+                intervention.DateSubmitted = _dateTimeProvider.UtcNow();
+                await _assessmentRepository.UpdateAssessmentIntervention(intervention);
+
+                if (intervention.Status == InterventionStatus.Approved)
+                {
+                    var workflowsToDelete =
+                        await _assessmentRepository.GetWorkflowInstancesToDeleteForRollback(intervention.AssessmentToolWorkflowInstance.AssessmentId, intervention.TargetAssessmentToolWorkflow!.AssessmentTool.Order);
+
+                    foreach (var workflowInstance in workflowsToDelete)
+                    {
+                        workflowInstance.Status = AssessmentToolWorkflowInstanceConstants.SuspendedRollBack;
+                    }
+
+                    await _assessmentRepository.SaveChanges();
+                    await CreateNextWorkflow(intervention);
+                }
+
+                return Unit.Value;
+            }
+            catch (Exception e)
+            {
+                _logger.LogError(e, e.Message);
+                throw new ApplicationException($"Unable to submit rollback. AssessmentInterventionId: {command.AssessmentInterventionId}");
             }
 
-            return Unit.Value;
         }
 
         private async Task CreateNextWorkflow(AssessmentIntervention intervention)
