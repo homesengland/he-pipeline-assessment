@@ -29,6 +29,9 @@ builder.Services.AddApplicationInsightsTelemetry();
 builder.Services.Configure<Urls>(
             builder.Configuration.GetSection("Urls"));
 
+builder.Services.Configure<Auth0Config>(
+  builder.Configuration.GetSection("Auth0Config"));
+
 var domain = builder.Configuration["Auth0Config:Domain"];
 var clientId = builder.Configuration["Auth0Config:MachineToMachineClientId"];
 var clientSecret = builder.Configuration["Auth0Config:MachineToMachineClientSecret"];

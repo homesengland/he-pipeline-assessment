@@ -36,7 +36,6 @@ export class IntellisenseGatherer {
 
   initialize = async () => {
     const options = this.options;
-    console.log("initializing http client", this.options)
     const { domain } = options;
 
     if (!domain || domain.trim().length == 0)
@@ -54,7 +53,6 @@ export class IntellisenseGatherer {
 
   async getIntellisense(): Promise<string> {
     if (state.javaScriptTypeDefinitionsFetchStatus == StoreStatus.Available && this.hasDefinitions) {
-        console.log("Fetched from Store");
         return state.javaScriptTypeDefinitions;
     }
     else {
@@ -64,7 +62,6 @@ export class IntellisenseGatherer {
   }
 
   private async tryFetchDefinitions() {
-    console.log("Try fetch definitions called");
     state.javaScriptTypeDefinitionsFetchStatus = StoreStatus.Fetching;
     let definitions = await this.getJavaScriptTypeDefinitions(state.workflowDefinitionId, this.context);
     state.javaScriptTypeDefinitions = definitions;

@@ -1,4 +1,5 @@
 import { Component, EventEmitter, Event, Prop, State, h } from '@stencil/core';
+import state from '../../stores/store'
 import { DataDictionaryGroup } from '../../models/custom-component-models';
 import {
     ActivityModel,
@@ -26,7 +27,7 @@ export class QuestionProperty {
 
   @Prop() activityModel: ActivityModel;
   @Prop() questionModel: NestedPropertyModel;
-  @Prop() dataDictionaryGroup: Array<DataDictionaryGroup> = [];
+
   @State() iconProvider = new IconProvider();
   @State() currentValue: string;
   @State() nestedQuestionProperties: Array<NestedProperty>;
@@ -35,11 +36,11 @@ export class QuestionProperty {
 
   multiExpressionEditor: HTMLElsaMultiExpressionEditorElement;
   syntaxMultiChoiceCount: number = 0;
-  
+  dataDictionaryGroup: Array<DataDictionaryGroup> = [];
 
   async componentWillLoad() {
     this.getOrCreateQuestionProperties();
-   
+    this.dataDictionaryGroup = state.dictionaryGroups;
   }
 
   async componentWillRender() {

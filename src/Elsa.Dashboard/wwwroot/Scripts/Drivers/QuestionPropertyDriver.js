@@ -1,7 +1,7 @@
 import { getOrCreateProperty } from '../Activities/GetOrCreateProperty.js'
 import { PropertyDescriberHints } from '../Constants/CustomPropertyUiHints.js';
 
-export function QuestionDriver(elementName, customProperties, storeConfig) {
+export function QuestionDriver(elementName, customProperties) {
   this.display = (activity, property) => {
     var prop = (0, getOrCreateProperty)(activity, property.name);
     var questionActivity = document.createElement(elementName);
@@ -9,8 +9,6 @@ export function QuestionDriver(elementName, customProperties, storeConfig) {
     questionActivity.propertyDescriptor = property;
     questionActivity.propertyModel = prop;
     questionActivity.questionProperties = JSON.parse(customProperties[PropertyDescriberHints.QuestionScreenBuilder]);
-    questionActivity.dataDictionaryGroup = JSON.parse(customProperties[PropertyDescriberHints.DataDictionaryGroup]);
-    questionActivity.storeConfig = storeConfig;
     return questionActivity;
   }
 }

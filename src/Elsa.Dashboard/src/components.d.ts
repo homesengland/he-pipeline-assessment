@@ -9,8 +9,7 @@ import { ActivityDefinitionProperty, ActivityModel, ActivityPropertyDescriptor, 
 import { VNode } from "@stencil/core";
 import { MonacoValueChangedArgs } from "./components/editors/he-monaco/he-monaco";
 import { Map } from "./utils/utils";
-import { DataDictionaryGroup, HeActivityPropertyDescriptor, NestedActivityDefinitionProperty, NestedPropertyModel } from "./models/custom-component-models";
-import { StoreConfig } from "./models/StoreConfig";
+import { HeActivityPropertyDescriptor, NestedActivityDefinitionProperty, NestedPropertyModel } from "./models/custom-component-models";
 export namespace Components {
     interface HeCheckListProperty {
         "activityModel": ActivityModel;
@@ -169,16 +168,13 @@ export namespace Components {
     }
     interface QuestionProperty {
         "activityModel": ActivityModel;
-        "dataDictionaryGroup": Array<DataDictionaryGroup>;
         "questionModel": NestedPropertyModel;
     }
     interface QuestionScreenProperty {
         "activityModel": ActivityModel;
-        "dataDictionaryGroup": Array<DataDictionaryGroup>;
         "propertyDescriptor": ActivityPropertyDescriptor;
         "propertyModel": ActivityDefinitionProperty;
         "questionProperties": Array<HeActivityPropertyDescriptor>;
-        "storeConfig": StoreConfig;
     }
     interface SwitchAnswersProperty {
         "activityModel": ActivityModel;
@@ -649,17 +645,14 @@ declare namespace LocalJSX {
     }
     interface QuestionProperty {
         "activityModel"?: ActivityModel;
-        "dataDictionaryGroup"?: Array<DataDictionaryGroup>;
         "onUpdateQuestionScreen"?: (event: QuestionPropertyCustomEvent<string>) => void;
         "questionModel"?: NestedPropertyModel;
     }
     interface QuestionScreenProperty {
         "activityModel"?: ActivityModel;
-        "dataDictionaryGroup"?: Array<DataDictionaryGroup>;
         "propertyDescriptor"?: ActivityPropertyDescriptor;
         "propertyModel"?: ActivityDefinitionProperty;
         "questionProperties"?: Array<HeActivityPropertyDescriptor>;
-        "storeConfig"?: StoreConfig;
     }
     interface SwitchAnswersProperty {
         "activityModel"?: ActivityModel;

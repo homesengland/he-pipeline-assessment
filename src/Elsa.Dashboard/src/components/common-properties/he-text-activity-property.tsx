@@ -50,7 +50,6 @@ export class TextActivityProperty implements ISortableSharedComponent, IDisplayT
   }
 
   async componentWillLoad() {
-    console.log("Syntax", this.propertyDescriptor.defaultSyntax);
     this._base.componentWillLoad();
   }
 

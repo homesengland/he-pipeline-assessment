@@ -1,5 +1,6 @@
 using Elsa.CustomWorkflow.Sdk.HttpClients;
 using Elsa.Dashboard.Models;
+using Microsoft.AspNetCore.Authentication.OAuth;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.Extensions.Options;
@@ -12,7 +13,7 @@ namespace Elsa.Dashboard.PageModels
   public class ElsaDashboardLoader : PageModel
   {
     public string _serverUrl { get; set; }
-    private IConfiguration _config { get; set; }
+    private Auth0Config _auth0Options { get; set; }
     private IElsaServerHttpClient _client { get; set; }
 
     private ILogger<ElsaDashboardLoader> _logger { get; set; }
@@ -22,13 +23,12 @@ namespace Elsa.Dashboard.PageModels
 
     public string? DictionaryResponse { get; set; }
 
-    public ElsaDashboardLoader(IElsaServerHttpClient client, IOptions<Urls> options, ILogger<ElsaDashboardLoader> logger, IConfiguration config)
+    public ElsaDashboardLoader(IElsaServerHttpClient client, IOptions<Urls> options, ILogger<ElsaDashboardLoader> logger, IOptions<Auth0Config> auth0Options)
     {
-
+      _auth0Options = auth0Options.Value;
       _serverUrl = options.Value.ElsaServer ?? string.Empty;
       _client = client;
       _logger = logger;
-      _config = config;
     }
 
     public async Task OnGetAsync()
@@ -52,10 +52,10 @@ namespace Elsa.Dashboard.PageModels
     {
       StoreConfig config = new StoreConfig
       {
-        ServerUrl = _config["Urls:ElsaServer"],
-        Audience = _config["Auth0Config:Audience"],
-        Domain = _config["Auth0Config:Domain"],
-        ClientId = _config["Auth0Config:ClientId"],
+        ServerUrl = _serverUrl,
+        Audience = _auth0Options.Audience,
+        Domain = _auth0Options.Domain,
+        ClientId = _auth0Options.ClientId,
         UseRefreshTokens = true,
         UseRefreshTokensFallback = true,
         MonacoLibPath = "_content/Elsa.Designer.Components.Web/monaco-editor/min"

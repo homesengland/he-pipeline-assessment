@@ -37,16 +37,13 @@ export class HEExpressionEditor {
 
   async componentWillLoad() {
     this.currentExpression = this.expression;
-    console.log("loading custom editor");
   }
 
   async componentDidLoad() {
     this.workflowDefinitionId = state.workflowDefinitionId;
     this.currentExpression = this.expression;
-    console.log("State", state);
     this.intellisenseGatherer = new IntellisenseGatherer();
 
-    //let libSource: string = await this.intellisenseGatherer.fetchIntellisense();
     let libSource: string = state.javaScriptTypeDefinitions;
     const libUri = Uri.LibUri;
 

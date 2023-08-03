@@ -8,18 +8,18 @@ import { CustomTextDriver } from './Drivers/CustomTextPropertyDriver.js';
 import { ConditionalTextListDriver } from './Drivers/ConditionalTextListPropertyDriver.js';
 import { TextActivityDriver } from './Drivers/TextActivityPropertyDriver.js';
 
-export function InitCustomElsa(elsaStudioRoot, customProperties, auth0ClientOptions, storeConfig) {
+export function InitCustomElsa(elsaStudioRoot, customProperties, auth0ClientOptions) {
 
   elsaStudioRoot.addEventListener('initializing', e => {
     var elsaStudio = e.detail;
     elsaStudio.pluginManager.registerPluginFactory(() => new Auth0Plugin(auth0ClientOptions, elsaStudio))
     elsaStudio.pluginManager.registerPlugin(RegisterCustomPlugins);
-    RegisterDrivers(elsaStudio, customProperties, storeConfig);
+    RegisterDrivers(elsaStudio, customProperties);
   });
 
-  function RegisterDrivers(elsaStudio, customProperties, storeConfig) {
+  function RegisterDrivers(elsaStudio, customProperties) {
     elsaStudio.propertyDisplayManager.addDriver(CustomPropertyUIHints.QuestionScreenBuilder,
-      () => new QuestionDriver(CustomComponentTags.QuestionScreen, customProperties, storeConfig));
+      () => new QuestionDriver(CustomComponentTags.QuestionScreen, customProperties));
 
     elsaStudio.propertyDisplayManager.addDriver(CustomPropertyUIHints.TextActivityBuilder,
       () => new TextActivityDriver(elsaStudio, CustomComponentTags.TextActivity));
