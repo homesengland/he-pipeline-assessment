@@ -138,10 +138,10 @@ elsa-modal-dialog > div > div > div:first-child {
     justify-content: start;
   }
 
-/*he-monaco {
+he-monaco {
   resize: vertical;
   overflow: hidden;
-}*/
+}
 
 
 .sortablejs-custom-handle {

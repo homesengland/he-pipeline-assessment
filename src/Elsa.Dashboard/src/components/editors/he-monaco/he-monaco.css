@@ -2,8 +2,6 @@
   display: block;
   position: relative;
   min-height: 6em;
-  resize: vertical;
-  overflow: hidden;
 }
 
 .elsa-monaco-editor-container {
@@ -15,12 +13,10 @@
   max-height: 100% !important;
   margin: 0;
   padding: 0;
-  overflow:visible;
 }
 
 .elsa-monaco-editor {
   border-radius: 0.25rem;
-  overflow: visible;
 }
 
   .elsa-monaco-editor .overflow-guard {
@@ -30,5 +26,4 @@
   .elsa-monaco-editor .suggest-widget div.tree {
     white-space: unset;
     padding-bottom: 0;
-
   }
