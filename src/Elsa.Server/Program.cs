@@ -138,22 +138,8 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
     {
         options.Audience = builder.Configuration["Auth0Config:Audience"];
         options.Authority = builder.Configuration["Auth0Config:Authority"];
-    })
-    .AddJwtBearer("Auth0 EU",options =>
-    {
-        options.Audience = builder.Configuration["Auth0Config:Audience"];
-        options.Authority = builder.Configuration["Auth0Config:AdditionalAuthority"];
     });
 
-builder.Services.AddAuthorization(options =>
-{
-    var defaultAuthorizationPolicyBuilder = new AuthorizationPolicyBuilder(
-        JwtBearerDefaults.AuthenticationScheme,
-        "Auth0 EU");
-    defaultAuthorizationPolicyBuilder =
-        defaultAuthorizationPolicyBuilder.RequireAuthenticatedUser();
-    options.DefaultPolicy = defaultAuthorizationPolicyBuilder.Build();
-});
 builder.Services.AddEsriHttpClients(builder.Configuration, builder.Environment.IsDevelopment());
 
 var app = builder.Build();
