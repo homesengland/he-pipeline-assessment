@@ -190,7 +190,7 @@ export class HeWeightedCheckboxProperty implements ISortableSharedComponent, IDi
     return (
       <div>
 
-        <elsa-multi-expression-editor
+        <he-multi-expression-editor
           ref={el => this.multiExpressionEditor = el}
           label={this.propertyDescriptor.label}
           defaultSyntax={SyntaxNames.Json}
@@ -211,7 +211,7 @@ export class HeWeightedCheckboxProperty implements ISortableSharedComponent, IDi
             <PlusIcon options={this.iconProvider.getOptions()}></PlusIcon>
             Add Answer Group
           </button>
-        </elsa-multi-expression-editor>
+        </he-multi-expression-editor>
       </div>
     );
   }

@@ -158,7 +158,7 @@ export class HeWeightedRadioProperty implements ISortableSharedComponent, IDispl
             </th>
             <td class="elsa-py-2" colSpan={2} style={{ width: colWidth }}>
               <div class="elsa-mt-1 elsa-relative elsa-rounded-md elsa-shadow-sm">
-                <elsa-expression-editor
+                <he-expression-editor
                   key={`expression-editor-${index}-${this.syntaxSwitchCount}`}
                   ref={el => expressionEditor = el}
                   expression={expression}
@@ -186,7 +186,7 @@ export class HeWeightedRadioProperty implements ISortableSharedComponent, IDispl
             </th>
             <td class="elsa-py-2" colSpan={2} style={{ width: colWidth }}>
               <div class="elsa-mt-1 elsa-relative elsa-rounded-md elsa-shadow-sm">
-                <elsa-expression-editor
+                <he-expression-editor
                   key={`expression-editor-${index}-${this.scoreSyntaxSwitchCount}`}
                   ref={el => scoreExpressionEditor = el}
                   expression={scoreExpression}
@@ -219,7 +219,7 @@ export class HeWeightedRadioProperty implements ISortableSharedComponent, IDispl
             <th class="elsa-py-3 elsa-text-left elsa-text-xs elsa-font-medium elsa-text-gray-500 elsa-tracking-wider elsa-w-2/12">Pre Populated</th>
             <td class="elsa-py-2 pl-5" colSpan={2} style={{ width: colWidth }}>
               <div class="elsa-mt-1 elsa-relative elsa-rounded-md elsa-shadow-sm">
-                <elsa-expression-editor
+                <he-expression-editor
                   key={`expression-editor-${index}-${this.syntaxSwitchCount}`}
                   ref={el => prePopulatedExpressionEditor = el}
                   expression={prePopulatedExpression}
@@ -253,7 +253,7 @@ export class HeWeightedRadioProperty implements ISortableSharedComponent, IDispl
     return (
       <div>
 
-        <elsa-multi-expression-editor
+        <he-multi-expression-editor
           ref={el => this.multiExpressionEditor = el}
           label={this.propertyDescriptor.label}
           defaultSyntax={SyntaxNames.Json}
@@ -273,7 +273,7 @@ export class HeWeightedRadioProperty implements ISortableSharedComponent, IDispl
             <PlusIcon options={this.iconProvider.getOptions()}></PlusIcon>
             Add Answer
           </button>
-        </elsa-multi-expression-editor>
+        </he-multi-expression-editor>
       </div>
     );
   }

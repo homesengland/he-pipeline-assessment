@@ -1,7 +1,6 @@
 import { Component, h, Prop, State } from '@stencil/core';
 import Sortable from 'sortablejs';
-import { DataDictionaryGroup } from '../../models/custom-component-models';
-import state  from '../../stores/dataDictionaryStore';
+
 import {
   ActivityDefinitionProperty,
   ActivityModel,
@@ -12,7 +11,6 @@ import {
 
 import {
   HeActivityPropertyDescriptor,
-  //QuestionModel,
   NestedPropertyModel,
   QuestionScreenProperty
 } from '../../models/custom-component-models';
@@ -42,7 +40,8 @@ export class QuestionScreen {
   @Prop() propertyDescriptor: ActivityPropertyDescriptor;
   @Prop() propertyModel: ActivityDefinitionProperty;
   @Prop() questionProperties: Array<HeActivityPropertyDescriptor>;
-  @Prop() dataDictionaryGroup: Array<DataDictionaryGroup>;
+
+
   @State() questionModel: QuestionScreenProperty = new QuestionScreenProperty();
   @State() iconProvider = new IconProvider();
   @State() questionProvider = new QuestionProvider(Object.values(QuestionLibrary));
@@ -55,13 +54,13 @@ export class QuestionScreen {
 
   private container: HTMLElement;
 
-
   async componentWillLoad() {
+
     const propertyModel = this.propertyModel;
     const choicesJson = propertyModel.expressions[SyntaxNames.QuestionList]
     this.questionModel = parseJson(choicesJson) || this.defaultActivityModel();
     this.questionModel.activities.forEach(x => x.descriptor = this.questionProperties);
-    state.dictionaryGroups = this.dataDictionaryGroup;
+
   }
 
   async componentDidLoad() {
@@ -229,7 +228,6 @@ export class QuestionScreen {
       class="panel elsa-rounded"
       activityModel={this.activityModel}
       questionModel={question}
-      dataDictionaryGroup={this.dataDictionaryGroup}
       onClick={(e) => e.stopPropagation()}
       onUpdateQuestionScreen={e => this.onUpdateQuestion(e)}
     ></question-property>

@@ -5,9 +5,11 @@
  * It contains typing information for all components that exist in this project.
  */
 import { HTMLStencilElement, JSXBase } from "@stencil/core/internal";
-import { ActivityDefinitionProperty, ActivityModel, ActivityPropertyDescriptor } from "./models/elsa-interfaces";
+import { ActivityDefinitionProperty, ActivityModel, ActivityPropertyDescriptor, IntellisenseContext } from "./models/elsa-interfaces";
 import { VNode } from "@stencil/core";
-import { DataDictionaryGroup, HeActivityPropertyDescriptor, NestedActivityDefinitionProperty, NestedPropertyModel } from "./models/custom-component-models";
+import { MonacoValueChangedArgs } from "./components/editors/he-monaco/he-monaco";
+import { Map } from "./utils/utils";
+import { HeActivityPropertyDescriptor, NestedActivityDefinitionProperty, NestedPropertyModel } from "./models/custom-component-models";
 export namespace Components {
     interface HeCheckListProperty {
         "activityModel": ActivityModel;
@@ -27,6 +29,10 @@ export namespace Components {
         "propertyDescriptor": ActivityPropertyDescriptor;
         "propertyModel": ActivityDefinitionProperty;
     }
+    interface HeDashboard {
+        "dataDictionaryGroup": string;
+        "storeConfig": string;
+    }
     interface HeDataTableProperty {
         "activityModel": ActivityModel;
         "modelSyntax": string;
@@ -36,11 +42,44 @@ export namespace Components {
     interface HeElsaControl {
         "content": VNode | string | Element;
     }
+    interface HeExpressionEditor {
+        "context"?: IntellisenseContext;
+        "editorHeight": string;
+        "expression": string;
+        "language": string;
+        "padding": string;
+        "serverUrl": string;
+        "setExpression": (value: string) => Promise<void>;
+        "singleLineMode": boolean;
+        "workflowDefinitionId": string;
+    }
     interface HeJsonProperty {
         "activityModel": ActivityModel;
         "keyId": string;
         "propertyDescriptor": ActivityPropertyDescriptor;
         "propertyModel": ActivityDefinitionProperty;
+    }
+    interface HeMonaco {
+        "addJavaScriptLib": (libSource: string, libUri: string) => Promise<void>;
+        "editorHeight": string;
+        "language": string;
+        "monacoLibPath": string;
+        "padding": string;
+        "setValue": (value: string) => Promise<void>;
+        "singleLineMode": boolean;
+        "value": string;
+    }
+    interface HeMultiExpressionEditor {
+        "context"?: IntellisenseContext;
+        "defaultSyntax": string;
+        "editorHeight": string;
+        "expressions": Map<string>;
+        "fieldName"?: string;
+        "isReadOnly"?: boolean;
+        "label": string;
+        "singleLineMode": boolean;
+        "supportedSyntaxes": Array<string>;
+        "syntax"?: string;
     }
     interface HeMultiLineProperty {
         "activityModel": ActivityModel;
@@ -58,6 +97,15 @@ export namespace Components {
         "activityModel": ActivityModel;
         "propertyDescriptor": ActivityPropertyDescriptor;
         "propertyModel": ActivityDefinitionProperty;
+    }
+    interface HePropertyEditor {
+        "activityModel": ActivityModel;
+        "context"?: string;
+        "editorHeight": string;
+        "propertyDescriptor": ActivityPropertyDescriptor;
+        "propertyModel": ActivityDefinitionProperty;
+        "showLabel": boolean;
+        "singleLineMode": boolean;
     }
     interface HeQuestionDataDictionaryProperty {
         "activityModel": ActivityModel;
@@ -120,12 +168,10 @@ export namespace Components {
     }
     interface QuestionProperty {
         "activityModel": ActivityModel;
-        "dataDictionaryGroup": Array<DataDictionaryGroup>;
         "questionModel": NestedPropertyModel;
     }
     interface QuestionScreenProperty {
         "activityModel": ActivityModel;
-        "dataDictionaryGroup": Array<DataDictionaryGroup>;
         "propertyDescriptor": ActivityPropertyDescriptor;
         "propertyModel": ActivityDefinitionProperty;
         "questionProperties": Array<HeActivityPropertyDescriptor>;
@@ -152,9 +198,21 @@ export interface HeDataTablePropertyCustomEvent<T> extends CustomEvent<T> {
     detail: T;
     target: HTMLHeDataTablePropertyElement;
 }
+export interface HeExpressionEditorCustomEvent<T> extends CustomEvent<T> {
+    detail: T;
+    target: HTMLHeExpressionEditorElement;
+}
 export interface HeJsonPropertyCustomEvent<T> extends CustomEvent<T> {
     detail: T;
     target: HTMLHeJsonPropertyElement;
+}
+export interface HeMonacoCustomEvent<T> extends CustomEvent<T> {
+    detail: T;
+    target: HTMLHeMonacoElement;
+}
+export interface HeMultiExpressionEditorCustomEvent<T> extends CustomEvent<T> {
+    detail: T;
+    target: HTMLHeMultiExpressionEditorElement;
 }
 export interface HeMultiLinePropertyCustomEvent<T> extends CustomEvent<T> {
     detail: T;
@@ -167,6 +225,10 @@ export interface HeMultiTextPropertyCustomEvent<T> extends CustomEvent<T> {
 export interface HePotscoreRadioOptionsPropertyCustomEvent<T> extends CustomEvent<T> {
     detail: T;
     target: HTMLHePotscoreRadioOptionsPropertyElement;
+}
+export interface HePropertyEditorCustomEvent<T> extends CustomEvent<T> {
+    detail: T;
+    target: HTMLHePropertyEditorElement;
 }
 export interface HeQuestionDataDictionaryPropertyCustomEvent<T> extends CustomEvent<T> {
     detail: T;
@@ -231,6 +293,12 @@ declare global {
         prototype: HTMLHeCheckboxPropertyElement;
         new (): HTMLHeCheckboxPropertyElement;
     };
+    interface HTMLHeDashboardElement extends Components.HeDashboard, HTMLStencilElement {
+    }
+    var HTMLHeDashboardElement: {
+        prototype: HTMLHeDashboardElement;
+        new (): HTMLHeDashboardElement;
+    };
     interface HTMLHeDataTablePropertyElement extends Components.HeDataTableProperty, HTMLStencilElement {
     }
     var HTMLHeDataTablePropertyElement: {
@@ -243,11 +311,29 @@ declare global {
         prototype: HTMLHeElsaControlElement;
         new (): HTMLHeElsaControlElement;
     };
+    interface HTMLHeExpressionEditorElement extends Components.HeExpressionEditor, HTMLStencilElement {
+    }
+    var HTMLHeExpressionEditorElement: {
+        prototype: HTMLHeExpressionEditorElement;
+        new (): HTMLHeExpressionEditorElement;
+    };
     interface HTMLHeJsonPropertyElement extends Components.HeJsonProperty, HTMLStencilElement {
     }
     var HTMLHeJsonPropertyElement: {
         prototype: HTMLHeJsonPropertyElement;
         new (): HTMLHeJsonPropertyElement;
+    };
+    interface HTMLHeMonacoElement extends Components.HeMonaco, HTMLStencilElement {
+    }
+    var HTMLHeMonacoElement: {
+        prototype: HTMLHeMonacoElement;
+        new (): HTMLHeMonacoElement;
+    };
+    interface HTMLHeMultiExpressionEditorElement extends Components.HeMultiExpressionEditor, HTMLStencilElement {
+    }
+    var HTMLHeMultiExpressionEditorElement: {
+        prototype: HTMLHeMultiExpressionEditorElement;
+        new (): HTMLHeMultiExpressionEditorElement;
     };
     interface HTMLHeMultiLinePropertyElement extends Components.HeMultiLineProperty, HTMLStencilElement {
     }
@@ -266,6 +352,12 @@ declare global {
     var HTMLHePotscoreRadioOptionsPropertyElement: {
         prototype: HTMLHePotscoreRadioOptionsPropertyElement;
         new (): HTMLHePotscoreRadioOptionsPropertyElement;
+    };
+    interface HTMLHePropertyEditorElement extends Components.HePropertyEditor, HTMLStencilElement {
+    }
+    var HTMLHePropertyEditorElement: {
+        prototype: HTMLHePropertyEditorElement;
+        new (): HTMLHePropertyEditorElement;
     };
     interface HTMLHeQuestionDataDictionaryPropertyElement extends Components.HeQuestionDataDictionaryProperty, HTMLStencilElement {
     }
@@ -349,12 +441,17 @@ declare global {
         "he-check-list-property": HTMLHeCheckListPropertyElement;
         "he-checkbox-options-property": HTMLHeCheckboxOptionsPropertyElement;
         "he-checkbox-property": HTMLHeCheckboxPropertyElement;
+        "he-dashboard": HTMLHeDashboardElement;
         "he-data-table-property": HTMLHeDataTablePropertyElement;
         "he-elsa-control": HTMLHeElsaControlElement;
+        "he-expression-editor": HTMLHeExpressionEditorElement;
         "he-json-property": HTMLHeJsonPropertyElement;
+        "he-monaco": HTMLHeMonacoElement;
+        "he-multi-expression-editor": HTMLHeMultiExpressionEditorElement;
         "he-multi-line-property": HTMLHeMultiLinePropertyElement;
         "he-multi-text-property": HTMLHeMultiTextPropertyElement;
         "he-potscore-radio-options-property": HTMLHePotscoreRadioOptionsPropertyElement;
+        "he-property-editor": HTMLHePropertyEditorElement;
         "he-question-data-dictionary-property": HTMLHeQuestionDataDictionaryPropertyElement;
         "he-radio-options-property": HTMLHeRadioOptionsPropertyElement;
         "he-single-line-property": HTMLHeSingleLinePropertyElement;
@@ -392,6 +489,10 @@ declare namespace LocalJSX {
         "propertyDescriptor"?: ActivityPropertyDescriptor;
         "propertyModel"?: ActivityDefinitionProperty;
     }
+    interface HeDashboard {
+        "dataDictionaryGroup"?: string;
+        "storeConfig"?: string;
+    }
     interface HeDataTableProperty {
         "activityModel"?: ActivityModel;
         "modelSyntax"?: string;
@@ -402,12 +503,46 @@ declare namespace LocalJSX {
     interface HeElsaControl {
         "content"?: VNode | string | Element;
     }
+    interface HeExpressionEditor {
+        "context"?: IntellisenseContext;
+        "editorHeight"?: string;
+        "expression"?: string;
+        "language"?: string;
+        "onExpressionChanged"?: (event: HeExpressionEditorCustomEvent<string>) => void;
+        "padding"?: string;
+        "serverUrl"?: string;
+        "singleLineMode"?: boolean;
+        "workflowDefinitionId"?: string;
+    }
     interface HeJsonProperty {
         "activityModel"?: ActivityModel;
         "keyId"?: string;
         "onExpressionChanged"?: (event: HeJsonPropertyCustomEvent<string>) => void;
         "propertyDescriptor"?: ActivityPropertyDescriptor;
         "propertyModel"?: ActivityDefinitionProperty;
+    }
+    interface HeMonaco {
+        "editorHeight"?: string;
+        "language"?: string;
+        "monacoLibPath"?: string;
+        "onValueChanged"?: (event: HeMonacoCustomEvent<MonacoValueChangedArgs>) => void;
+        "padding"?: string;
+        "singleLineMode"?: boolean;
+        "value"?: string;
+    }
+    interface HeMultiExpressionEditor {
+        "context"?: IntellisenseContext;
+        "defaultSyntax"?: string;
+        "editorHeight"?: string;
+        "expressions"?: Map<string>;
+        "fieldName"?: string;
+        "isReadOnly"?: boolean;
+        "label"?: string;
+        "onExpressionChanged"?: (event: HeMultiExpressionEditorCustomEvent<string>) => void;
+        "onSyntaxChanged"?: (event: HeMultiExpressionEditorCustomEvent<string>) => void;
+        "singleLineMode"?: boolean;
+        "supportedSyntaxes"?: Array<string>;
+        "syntax"?: string;
     }
     interface HeMultiLineProperty {
         "activityModel"?: ActivityModel;
@@ -428,6 +563,16 @@ declare namespace LocalJSX {
         "onExpressionChanged"?: (event: HePotscoreRadioOptionsPropertyCustomEvent<string>) => void;
         "propertyDescriptor"?: ActivityPropertyDescriptor;
         "propertyModel"?: ActivityDefinitionProperty;
+    }
+    interface HePropertyEditor {
+        "activityModel"?: ActivityModel;
+        "context"?: string;
+        "editorHeight"?: string;
+        "onDefaultSyntaxValueChanged"?: (event: HePropertyEditorCustomEvent<string>) => void;
+        "propertyDescriptor"?: ActivityPropertyDescriptor;
+        "propertyModel"?: ActivityDefinitionProperty;
+        "showLabel"?: boolean;
+        "singleLineMode"?: boolean;
     }
     interface HeQuestionDataDictionaryProperty {
         "activityModel"?: ActivityModel;
@@ -500,13 +645,11 @@ declare namespace LocalJSX {
     }
     interface QuestionProperty {
         "activityModel"?: ActivityModel;
-        "dataDictionaryGroup"?: Array<DataDictionaryGroup>;
         "onUpdateQuestionScreen"?: (event: QuestionPropertyCustomEvent<string>) => void;
         "questionModel"?: NestedPropertyModel;
     }
     interface QuestionScreenProperty {
         "activityModel"?: ActivityModel;
-        "dataDictionaryGroup"?: Array<DataDictionaryGroup>;
         "propertyDescriptor"?: ActivityPropertyDescriptor;
         "propertyModel"?: ActivityDefinitionProperty;
         "questionProperties"?: Array<HeActivityPropertyDescriptor>;
@@ -520,12 +663,17 @@ declare namespace LocalJSX {
         "he-check-list-property": HeCheckListProperty;
         "he-checkbox-options-property": HeCheckboxOptionsProperty;
         "he-checkbox-property": HeCheckboxProperty;
+        "he-dashboard": HeDashboard;
         "he-data-table-property": HeDataTableProperty;
         "he-elsa-control": HeElsaControl;
+        "he-expression-editor": HeExpressionEditor;
         "he-json-property": HeJsonProperty;
+        "he-monaco": HeMonaco;
+        "he-multi-expression-editor": HeMultiExpressionEditor;
         "he-multi-line-property": HeMultiLineProperty;
         "he-multi-text-property": HeMultiTextProperty;
         "he-potscore-radio-options-property": HePotscoreRadioOptionsProperty;
+        "he-property-editor": HePropertyEditor;
         "he-question-data-dictionary-property": HeQuestionDataDictionaryProperty;
         "he-radio-options-property": HeRadioOptionsProperty;
         "he-single-line-property": HeSingleLineProperty;
@@ -548,12 +696,17 @@ declare module "@stencil/core" {
             "he-check-list-property": LocalJSX.HeCheckListProperty & JSXBase.HTMLAttributes<HTMLHeCheckListPropertyElement>;
             "he-checkbox-options-property": LocalJSX.HeCheckboxOptionsProperty & JSXBase.HTMLAttributes<HTMLHeCheckboxOptionsPropertyElement>;
             "he-checkbox-property": LocalJSX.HeCheckboxProperty & JSXBase.HTMLAttributes<HTMLHeCheckboxPropertyElement>;
+            "he-dashboard": LocalJSX.HeDashboard & JSXBase.HTMLAttributes<HTMLHeDashboardElement>;
             "he-data-table-property": LocalJSX.HeDataTableProperty & JSXBase.HTMLAttributes<HTMLHeDataTablePropertyElement>;
             "he-elsa-control": LocalJSX.HeElsaControl & JSXBase.HTMLAttributes<HTMLHeElsaControlElement>;
+            "he-expression-editor": LocalJSX.HeExpressionEditor & JSXBase.HTMLAttributes<HTMLHeExpressionEditorElement>;
             "he-json-property": LocalJSX.HeJsonProperty & JSXBase.HTMLAttributes<HTMLHeJsonPropertyElement>;
+            "he-monaco": LocalJSX.HeMonaco & JSXBase.HTMLAttributes<HTMLHeMonacoElement>;
+            "he-multi-expression-editor": LocalJSX.HeMultiExpressionEditor & JSXBase.HTMLAttributes<HTMLHeMultiExpressionEditorElement>;
             "he-multi-line-property": LocalJSX.HeMultiLineProperty & JSXBase.HTMLAttributes<HTMLHeMultiLinePropertyElement>;
             "he-multi-text-property": LocalJSX.HeMultiTextProperty & JSXBase.HTMLAttributes<HTMLHeMultiTextPropertyElement>;
             "he-potscore-radio-options-property": LocalJSX.HePotscoreRadioOptionsProperty & JSXBase.HTMLAttributes<HTMLHePotscoreRadioOptionsPropertyElement>;
+            "he-property-editor": LocalJSX.HePropertyEditor & JSXBase.HTMLAttributes<HTMLHePropertyEditorElement>;
             "he-question-data-dictionary-property": LocalJSX.HeQuestionDataDictionaryProperty & JSXBase.HTMLAttributes<HTMLHeQuestionDataDictionaryPropertyElement>;
             "he-radio-options-property": LocalJSX.HeRadioOptionsProperty & JSXBase.HTMLAttributes<HTMLHeRadioOptionsPropertyElement>;
             "he-single-line-property": LocalJSX.HeSingleLineProperty & JSXBase.HTMLAttributes<HTMLHeSingleLinePropertyElement>;

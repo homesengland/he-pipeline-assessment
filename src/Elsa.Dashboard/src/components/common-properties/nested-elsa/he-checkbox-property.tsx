@@ -56,7 +56,7 @@ export class HECheckboxProperty {
     let isChecked = this.isChecked;
 
     return (
-      <elsa-property-editor
+      <he-property-editor
         key={`property-editor-${fieldId}-${this.keyId}`}
         activityModel={this.activityModel}
         propertyDescriptor={propertyDescriptor}
@@ -76,7 +76,7 @@ export class HECheckboxProperty {
             </div>
           </div>
         </div>
-      </elsa-property-editor>
+      </he-property-editor>
     )
   }
 }

@@ -190,3 +190,10 @@ export function onUpdateCustomExpression(event: CustomEvent<string>, property: N
 export function getUniversalUniqueId() {
   return uuidv4();
 }
+
+export function getWorkflowDefinitionIdFromUrl() {
+  var url_string = document.URL;
+  var n = url_string.lastIndexOf('/');
+  var workflowDef = url_string.substring(n + 1);
+  return workflowDef ?? '';
+}
