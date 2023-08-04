@@ -4,6 +4,7 @@ using Elsa.Scripting.JavaScript.Events;
 using Elsa.Scripting.JavaScript.Messages;
 using Elsa.Services;
 using MediatR;
+using Microsoft.Extensions.Logging;
 
 namespace Elsa.CustomActivities.Activities.QuestionScreen.Helpers
 {
@@ -12,11 +13,13 @@ namespace Elsa.CustomActivities.Activities.QuestionScreen.Helpers
 
         private readonly IElsaCustomRepository _elsaCustomRepository;
         private readonly IWorkflowRegistry _workflowRegistry;
+        private readonly ILogger<RadioQuestionHelper> _logger;
 
-        public RadioQuestionHelper(IElsaCustomRepository elsaCustomRepository, IWorkflowRegistry workflowRegistry)
+        public RadioQuestionHelper(IElsaCustomRepository elsaCustomRepository, IWorkflowRegistry workflowRegistry, ILogger<RadioQuestionHelper> logger)
         {
             _elsaCustomRepository = elsaCustomRepository;
             _workflowRegistry = workflowRegistry;
+            _logger = logger;
         }
 
 
@@ -27,24 +30,35 @@ namespace Elsa.CustomActivities.Activities.QuestionScreen.Helpers
 
             if (workflowBlueprint != null)
             {
+                _logger.LogTrace($"Running RadioQuestionAnswerEquals - CorrelationID: {correlationId}, WorkflowName: {workflowName}, ActivityName: {activityName}, QuestionID: {questionId}, ChoicesToCheck: {choiceIdToCheck}");
                 var activity = workflowBlueprint.Activities.FirstOrDefault(x => x.Name == activityName);
                 if (activity != null)
                 {
-
                     var question = await _elsaCustomRepository.GetQuestionByCorrelationId(activity.Id,
                         correlationId, questionId, CancellationToken.None);
                     if (question != null &&
                         (question.QuestionType == QuestionTypeConstants.RadioQuestion || question.QuestionType == QuestionTypeConstants.PotScoreRadioQuestion || question.QuestionType == QuestionTypeConstants.WeightedRadioQuestion))
                     {
+                        _logger.LogTrace($"RadioQuestionAnswerEquals Question Found - CorrelationID: {correlationId}, WorkflowName: {workflowName}, ActivityName: {activityName}, QuestionID: {questionId}, ChoicesToCheck: {choiceIdToCheck}, DBQuestionID: {question.Id}, DBInstanceID: {question.WorkflowInstanceId}");
+
                         if (question.Answers != null && question.Answers.Count == 1)
                         {
                             var singleAnswer = question.Answers.First();
+                            _logger.LogTrace($"RadioQuestionAnswerEquals Question Found - CorrelationID: {correlationId}, WorkflowName: {workflowName}, ActivityName: {activityName}, QuestionID: {questionId}, ChoicesToCheck: {choiceIdToCheck}, DBQuestionID: {question.Id}, DBInstanceID: {question.WorkflowInstanceId}, Answer: {question.Answers.First().AnswerText}, Choice: {question.Answers.First().Choice?.Identifier}");
 
                             return choiceIdToCheck == singleAnswer.Choice?.Identifier;
                         }
 
                         return false;
                     }
+                    else
+                    {
+                        _logger.LogTrace($"RadioQuestionAnswerEquals Question NULL possibly - CorrelationID: {correlationId}, WorkflowName: {workflowName}, ActivityName: {activityName}, QuestionID: {questionId}, ChoicesToCheck: {choiceIdToCheck}");
+                    }
+                }
+                else
+                {
+                    _logger.LogTrace($"RadioQuestionAnswerEquals Activity NULL - CorrelationID: {correlationId}, WorkflowName: {workflowName}, ActivityName: {activityName}, QuestionID: {questionId}, ChoicesToCheck: {choiceIdToCheck}");
                 }
             }
 
