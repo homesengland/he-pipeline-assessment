@@ -261,7 +261,7 @@ namespace Elsa.CustomWorkflow.Sdk.HttpClients
         public async Task<string?> LoadDataDictionary(string elsaServer)
         {
             string data;
-            string fullUri = $"{elsaServer}/activities/dictionary";
+            string fullUri = $"{elsaServer}/activities/dictionary" + "?t=" + DateTime.UtcNow.Ticks;
             var client = _httpClientFactory.CreateClient("ElsaServerClient");
             AddAccessTokenToRequest(client);
             using (var response = await client
