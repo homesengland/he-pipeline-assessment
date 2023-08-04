@@ -40,7 +40,7 @@ namespace Elsa.Dashboard
       var styleSrc = $"style-src 'self' 'unsafe-inline';";
       var imgSrc = $"img-src 'self' data: https://unpkg.com/benteststencil@0.0.16/;";
       var fontSrc = $"font-src 'self';";
-      var frameSrc = $"frame-src 'self' {oAuthToken} {oAuthToken2} {axios};";
+      var frameSrc = $"frame-src 'self' {oAuthToken} {axios} {oAuthToken2};";
 
       SetHeader(context, "Content-Security-Policy", $"{connectSrc} {defaultSrc} {scriptSrc} {styleSrcElem} {styleSrc} {imgSrc} {fontSrc} {frameSrc}");
       SetHeader(context, "X-Frame-Options", "DENY");

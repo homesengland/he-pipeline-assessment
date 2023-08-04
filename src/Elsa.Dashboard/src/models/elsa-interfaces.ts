@@ -82,6 +82,11 @@ export interface IntellisenseContext {
   propertyName: string;
 }
 
+export interface MonacoValueChangedArgs {
+  value: string;
+  markers: Array<any>;
+}
+
 export interface SwitchCase {
   name: string;
   expressions?: Map<string>;
@@ -118,5 +123,12 @@ export interface CustomMonacoElement {
   "singleLineMode": boolean;
   "value": string;
 }
+
+export interface HTMLElsaMonacoElement extends CustomMonacoElement, HTMLStencilElement {
+}
+var HTMLElsaMonacoElement: {
+  prototype: HTMLElsaMonacoElement;
+  new(): HTMLElsaMonacoElement;
+};
 
 

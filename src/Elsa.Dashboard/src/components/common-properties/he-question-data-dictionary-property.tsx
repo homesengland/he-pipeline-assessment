@@ -1,5 +1,5 @@
 import { Component, h, Event, EventEmitter, Prop, State } from '@stencil/core';
-import state from '../../stores/dataDictionaryStore';
+import state from '../../stores/store';
 
 import { SyntaxNames } from '../../constants/constants';
 import { DataDictionary, DataDictionaryGroup } from '../../models/custom-component-models';

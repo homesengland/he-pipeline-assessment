@@ -169,7 +169,7 @@ export class HePotScoreRadioOptionProperty implements ISortableSharedComponent, 
             </th>
             <td class="elsa-py-2" colSpan={2} style={{ width: colWidth }}>
               <div class="elsa-mt-1 elsa-relative elsa-rounded-md elsa-shadow-sm">
-                <elsa-expression-editor
+                <he-expression-editor
                   key={`expression-editor-${index}-${this.syntaxSwitchCount}-${this.keyId}`}
                   ref={el => expressionEditor = el}
                   expression={expression}
@@ -220,7 +220,7 @@ export class HePotScoreRadioOptionProperty implements ISortableSharedComponent, 
             <th class="elsa-py-3 elsa-text-left elsa-text-xs elsa-font-medium elsa-text-gray-500 elsa-tracking-wider elsa-w-2/12">Pre Populated</th>
             <td class="elsa-py-2" style={{ width: colWidth }}>
               <div class="elsa-mt-1 elsa-relative elsa-rounded-md elsa-shadow-sm">
-                <elsa-expression-editor
+                <he-expression-editor
                   key={`expression-editor-${index}-${this.syntaxSwitchCount}-${this.keyId}`}
                   ref={el => prePopulatedExpressionEditor = el}
                   expression={prePopulatedExpression}
@@ -255,7 +255,7 @@ export class HePotScoreRadioOptionProperty implements ISortableSharedComponent, 
     return (
       <div>
 
-        <elsa-multi-expression-editor
+        <he-multi-expression-editor
           ref={el => this.multiExpressionEditor = el}
           label={this.propertyDescriptor.label}
           defaultSyntax={SyntaxNames.Json}
@@ -275,7 +275,7 @@ export class HePotScoreRadioOptionProperty implements ISortableSharedComponent, 
             <PlusIcon options={this.iconProvider.getOptions()}></PlusIcon>
             Add Answer
           </button>
-        </elsa-multi-expression-editor>
+        </he-multi-expression-editor>
       </div>
     );
   }
