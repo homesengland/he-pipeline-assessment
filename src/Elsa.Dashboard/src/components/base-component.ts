@@ -28,6 +28,9 @@ export class BaseComponent {
   constructor(public component: ISharedComponent) { }
 
   componentWillLoad() {
+    if (this.component.propertyDescriptor.defaultSyntax != null && this.component.propertyDescriptor.defaultSyntax != undefined) {
+      this.component.modelSyntax = this.component.propertyDescriptor.defaultSyntax;
+    }
     const propertyModel = this.component.propertyModel;
     const modelJson = propertyModel.expressions[this.component.modelSyntax]
     this.component.properties = parseJson(modelJson) || [];

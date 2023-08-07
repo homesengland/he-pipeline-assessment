@@ -2,6 +2,7 @@
 using He.PipelineAssessment.Models;
 using He.PipelineAssessment.UI.Features.Assessment.AssessmentSummary;
 using MediatR;
+using Microsoft.CodeAnalysis.CSharp.Syntax;
 
 namespace He.PipelineAssessment.UI.Features.Assessment.TestAssessmentSummary
 {
@@ -22,37 +23,37 @@ namespace He.PipelineAssessment.UI.Features.Assessment.TestAssessmentSummary
             try
             {
                 var dbAssessment = await _repository.GetAssessment(request.AssessmentId);
-                if (dbAssessment != null)
+                if (dbAssessment == null)
                 {
-                    var dbStages = await _repository.GetAssessmentToolWorkflowInstances(request.AssessmentId);
-
-                    var stages = new List<AssessmentSummaryStage>();
-                    if (dbStages != null && dbStages.Any())
-                    {
-                        foreach (var item in dbStages)
-                        {
-                            var stage = AssessmentSummaryStage(item);
-                            stages.Add(stage);
-                        }
-                    }
-
-                    return new AssessmentSummaryResponse()
-                    {
-                        CorrelationId = request.CorrelationId,
-                        AssessmentId = request.AssessmentId,
-                        SiteName = dbAssessment!.SiteName,
-                        CounterParty = dbAssessment.Counterparty,
-                        Reference = dbAssessment.Reference,
-                        Stages = stages
-                    };
+                    throw new ApplicationException($"Assessment with id {request.AssessmentId} not found.");
                 }
+                var dbStages = await _repository.GetAssessmentToolWorkflowInstances(request.AssessmentId);
+
+                var stages = new List<AssessmentSummaryStage>();
+                if (dbStages != null && dbStages.Any())
+                {
+                    foreach (var item in dbStages)
+                    {
+                        var stage = AssessmentSummaryStage(item);
+                        stages.Add(stage);
+                    }
+                }
+                return new AssessmentSummaryResponse()
+                {
+                    CorrelationId = request.CorrelationId,
+                    AssessmentId = request.AssessmentId,
+                    SiteName = dbAssessment!.SiteName,
+                    CounterParty = dbAssessment.Counterparty,
+                    Reference = dbAssessment.Reference,
+                    Stages = stages
+                };
+                
             }
             catch (Exception e)
             {
-                string message = e.Message;
+                _logger.LogError(e, e.Message);
+                throw new ApplicationException($"Unable to get the assessment summary. AssessmentId: {request.AssessmentId}");
             }
-
-            return null;
         }
 
         private static AssessmentSummaryStage AssessmentSummaryStage(AssessmentToolWorkflowInstance item)

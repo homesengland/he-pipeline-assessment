@@ -31,6 +31,7 @@ using Elsa.Server.StartupTasks;
 using He.PipelineAssessment.Data.Auth;
 using MediatR;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.DataProtection;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection.Extensions;
@@ -132,15 +133,13 @@ builder.Services.AddOptions<IdentityClientConfig>()
 });
 
 
-if (!builder.Environment.IsDevelopment())
-{
-    builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
-        .AddJwtBearer(options =>
-        {
-            options.Audience = builder.Configuration["AzureManagedIdentityConfig:Audience"];
-            options.Authority = builder.Configuration["AzureManagedIdentityConfig:Authority"];
-        });
-}
+builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+    .AddJwtBearer(options =>
+    {
+        options.Audience = builder.Configuration["Auth0Config:Audience"];
+        options.Authority = builder.Configuration["Auth0Config:Authority"];
+    });
+
 builder.Services.AddEsriHttpClients(builder.Configuration, builder.Environment.IsDevelopment());
 
 var app = builder.Build();
@@ -152,8 +151,6 @@ if (!app.Environment.IsDevelopment())
     app.UseHsts();
 }
 
-if (!app.Environment.IsDevelopment())
-{
     app
     .UseCors()
     .UseHttpsRedirection()
@@ -170,24 +167,6 @@ if (!app.Environment.IsDevelopment())
             pattern: "{controller=Home}/{action=Index}");
 
     });
-}
-else
-{
-    app
-    .UseCors()
-    .UseHttpsRedirection()
-    .UseStaticFiles() // For Dashboard.
-    .UseRouting()
-    .UseEndpoints(endpoints =>
-    {
-        // Elsa API Endpoints are implemented as regular ASP.NET Core API controllers.
-       // endpoints.MapControllers(); // locks down elsa server end points
-        endpoints.MapControllerRoute(
-            name: "default",
-            pattern: "{controller=Home}/{action=Index}");
-
-});
-}
 
 
 app.Run();

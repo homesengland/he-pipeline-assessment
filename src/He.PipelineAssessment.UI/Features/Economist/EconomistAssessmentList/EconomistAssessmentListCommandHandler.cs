@@ -19,9 +19,17 @@ namespace He.PipelineAssessment.UI.Features.Economist.EconomistAssessmentList
         }
         public async Task<List<AssessmentDataViewModel>> Handle(EconomistAssessmentListCommand request, CancellationToken cancellationToken)
         {
-            var dbAssessment = await _storedProcedureRepository.GetEconomistAssessments();
+            try
+            {
+                var dbAssessment = await _storedProcedureRepository.GetEconomistAssessments();
 
-            return dbAssessment;
+                return dbAssessment;
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, ex.Message);
+                throw new ApplicationException($"Unable to get list of assessments for economists.");
+            }
 
         }
     }

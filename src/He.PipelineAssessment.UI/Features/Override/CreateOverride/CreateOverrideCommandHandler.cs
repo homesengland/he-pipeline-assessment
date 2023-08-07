@@ -12,35 +12,46 @@ namespace He.PipelineAssessment.UI.Features.Override.CreateOverride
         private readonly ICreateOverrideMapper _mapper;
         private readonly IAssessmentRepository _assessmentRepository;
         private readonly IAssessmentToolWorkflowInstanceHelpers _assessmentToolWorkflowInstanceHelpers;
+        private readonly ILogger<CreateOverrideCommandHandler> _logger;
 
         public CreateOverrideCommandHandler(IAssessmentRepository assessmentRepository, ICreateOverrideMapper mapper, ILogger<CreateOverrideCommandHandler> logger, IAssessmentToolWorkflowInstanceHelpers assessmentToolWorkflowInstanceHelpers)
         {
             _assessmentRepository = assessmentRepository;
             _mapper = mapper;
             _assessmentToolWorkflowInstanceHelpers = assessmentToolWorkflowInstanceHelpers;
+            _logger = logger;
         }
 
 
         public async Task<int> Handle(CreateOverrideCommand command, CancellationToken cancellationToken)
         {
-            AssessmentToolWorkflowInstance? workflowInstance = await _assessmentRepository.GetAssessmentToolWorkflowInstance(command.WorkflowInstanceId);
-            if (workflowInstance == null)
+            try
             {
-                throw new NotFoundException($"Assessment Tool Workflow Instance with Id {command.WorkflowInstanceId} not found");
-            }
 
-            var isLatest = _assessmentToolWorkflowInstanceHelpers.IsLatestSubmittedWorkflow(workflowInstance);
-            if (!isLatest)
+                AssessmentToolWorkflowInstance? workflowInstance = await _assessmentRepository.GetAssessmentToolWorkflowInstance(command.WorkflowInstanceId);
+                if (workflowInstance == null)
+                {
+                    throw new NotFoundException($"Assessment Tool Workflow Instance with Id {command.WorkflowInstanceId} not found");
+                }
+
+                var isLatest = _assessmentToolWorkflowInstanceHelpers.IsLatestSubmittedWorkflow(workflowInstance);
+                if (!isLatest)
+                {
+                    throw new Exception(
+                        $"Unable to create override for Assessment Tool Workflow Instance as this is not the latest submitted Workflow Instance for this Assessment.");
+                }
+
+                var assessmentIntervention = _mapper.CreateOverrideCommandToAssessmentIntervention(command);
+
+                await _assessmentRepository.CreateAssessmentIntervention(assessmentIntervention);
+
+                return assessmentIntervention.Id;
+            }
+            catch (Exception ex)
             {
-                throw new Exception(
-                    $"Unable to create override for Assessment Tool Workflow Instance as this is not the latest submitted Workflow Instance for this Assessment.");
+                _logger.LogError(ex, ex.Message);
+                throw new ApplicationException($"Unable to create override for Assessment Tool Workflow Instance. WorkflowInstanceId: {command.WorkflowInstanceId}.");
             }
-
-            var assessmentIntervention = _mapper.CreateOverrideCommandToAssessmentIntervention(command);
-
-            await _assessmentRepository.CreateAssessmentIntervention(assessmentIntervention);
-
-            return assessmentIntervention.Id;
         }
     }
 }

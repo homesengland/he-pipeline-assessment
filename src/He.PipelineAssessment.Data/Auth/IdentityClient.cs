@@ -12,7 +12,7 @@ namespace He.PipelineAssessment.Data.Auth
     public class IdentityClient : IIdentityClient
     {
         private readonly IdentityClientConfig _identityConfig;
-        private readonly ILogger _logger;
+        private readonly ILogger<IdentityClient> _logger;
         public IdentityClient(IOptions<IdentityClientConfig> identityConfig, ILogger<IdentityClient> logger)
         {
             _identityConfig = identityConfig.Value;

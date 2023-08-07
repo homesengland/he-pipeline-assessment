@@ -25,24 +25,32 @@ namespace He.PipelineAssessment.UI.Features.Override.LoadOverrideCheckYourAnswer
 
         public async Task<SubmitOverrideCommand> Handle(LoadOverrideCheckYourAnswersRequest request, CancellationToken cancellationToken)
         {
+            try
+            {
+                var intervention = await _assessmentRepository.GetAssessmentIntervention(request.InterventionId);
+                if (intervention == null)
+                {
+                    throw new NotFoundException($"Assessment Intervention with Id {request.InterventionId} not found");
+                }
+                AssessmentInterventionCommand command = _mapper.AssessmentInterventionCommandFromAssessmentIntervention(intervention);
+                if (command == null)
+                {
+                    throw new ArgumentException($"Unable to map AssessmentInterventionCommand from intervention: {JsonConvert.SerializeObject(intervention)} from mapper");
+                }
+                var serializedCommand = JsonConvert.SerializeObject(command);
+                var submitOverrideCommand = JsonConvert.DeserializeObject<SubmitOverrideCommand>(serializedCommand);
+                if (submitOverrideCommand == null)
+                {
+                    throw new ArgumentException($"Unable to deserialise SubmitOverrideCommand: {serializedCommand} from serialized AssessmentInterventionCommand");
+                }
+                return submitOverrideCommand;
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, ex.Message);
+                throw new ApplicationException($"Unable to load override's check details page. InterventionId: {request.InterventionId}. ");
 
-            var intervention = await _assessmentRepository.GetAssessmentIntervention(request.InterventionId);
-            if (intervention == null)
-            {
-                throw new NotFoundException($"Assessment Intervention with Id {request.InterventionId} not found");
             }
-            AssessmentInterventionCommand command = _mapper.AssessmentInterventionCommandFromAssessmentIntervention(intervention);
-            if (command == null)
-            {
-                throw new ArgumentException($"Unable to map AssessmentInterventionCommand from intervention: {JsonConvert.SerializeObject(intervention)} from mapper");
-            }
-            var serializedCommand = JsonConvert.SerializeObject(command);
-            var submitOverrideCommand = JsonConvert.DeserializeObject<SubmitOverrideCommand>(serializedCommand);
-            if (submitOverrideCommand == null)
-            {
-                throw new ArgumentException($"Unable to deserialise SubmitOverrideCommand: {serializedCommand} from serialized AssessmentInterventionCommand");
-            }
-            return submitOverrideCommand;
         }
     }
 }

@@ -16,7 +16,7 @@ namespace He.PipelineAssessment.UI.Tests.Features.Workflow.LoadCheckYourAnswersS
     {
         [Theory]
         [AutoMoqData]
-        public async Task Handle_ReturnsNull_GivenHttpClientResponseIsNull(
+        public async Task Handle_ThrowsApplicationException_GivenHttpClientResponseIsNull(
            [Frozen] Mock<IElsaServerHttpClient> elsaServerHttpClient,
            [Frozen] Mock<IAssessmentRepository> assessmentRepository,
            [Frozen] Mock<IRoleValidation> roleValidation,
@@ -34,11 +34,11 @@ namespace He.PipelineAssessment.UI.Tests.Features.Workflow.LoadCheckYourAnswersS
                 .ReturnsAsync((WorkflowActivityDataDto?)null);
 
             //Act
-            var result = await sut.Handle(loadCheckYourAnswersScreenRequest, CancellationToken.None);
+            var ex = await Assert.ThrowsAsync<ApplicationException>(()=> sut.Handle(loadCheckYourAnswersScreenRequest, CancellationToken.None));
 
             //Assert
-            Assert.Null(result);
             elsaServerHttpClient.Verify(x => x.LoadCheckYourAnswersScreen(It.IsAny<LoadWorkflowActivityDto>()), Times.Once);
+            Assert.Equal("Failed to load check your answers screen activity", ex.Message);
         }
 
         [Theory]
@@ -72,7 +72,7 @@ namespace He.PipelineAssessment.UI.Tests.Features.Workflow.LoadCheckYourAnswersS
 
         [Theory]
         [AutoMoqData]
-        public async Task Handle_ReturnsNull_GivenErrorsEncountered(
+        public async Task Handle_ThrowsApplicationException_GivenErrorsEncountered(
            [Frozen] Mock<IElsaServerHttpClient> elsaServerHttpClient,
            LoadCheckYourAnswersScreenRequest loadCheckYourAnswersScreenRequest,
            LoadCheckYourAnswersScreenRequestHandler sut)
@@ -82,15 +82,15 @@ namespace He.PipelineAssessment.UI.Tests.Features.Workflow.LoadCheckYourAnswersS
                 .Throws(new Exception("There is an issue"));
 
             //Act
-            var result = await sut.Handle(loadCheckYourAnswersScreenRequest, CancellationToken.None);
+            var ex = await Assert.ThrowsAsync<ApplicationException>(() => sut.Handle(loadCheckYourAnswersScreenRequest, CancellationToken.None));
 
             //Assert
-            Assert.Null(result);
+            Assert.Equal("Failed to load check your answers screen activity", ex.Message);
         }
 
         [Theory]
         [AutoMoqData]
-        public async Task Handle_ReturnsNull_GivenIncorrectBusinessArea(
+        public async Task Handle_ThrowsApplicationException_GivenIncorrectBusinessArea(
            [Frozen] Mock<IAssessmentRepository> assessmentRepository,
            [Frozen] Mock<IRoleValidation> roleValidation,
            LoadCheckYourAnswersScreenRequest loadCheckYourAnswersScreenRequest,
@@ -104,12 +104,12 @@ namespace He.PipelineAssessment.UI.Tests.Features.Workflow.LoadCheckYourAnswersS
               .ReturnsAsync(assessmentToolWorkflowInstance);
 
             roleValidation.Setup(x => x.ValidateRole(assessmentToolWorkflowInstance.AssessmentId, assessmentToolWorkflowInstance.WorkflowDefinitionId)).ReturnsAsync(false);
-           
+
             //Act
-            var result = await sut.Handle(loadCheckYourAnswersScreenRequest, CancellationToken.None);
+            var ex = await Assert.ThrowsAsync<ApplicationException>(() => sut.Handle(loadCheckYourAnswersScreenRequest, CancellationToken.None));
 
             //Assert
-            Assert.False(result!.IsAuthorised);
+            Assert.Equal("Failed to load check your answers screen activity", ex.Message);
         }
 
     }

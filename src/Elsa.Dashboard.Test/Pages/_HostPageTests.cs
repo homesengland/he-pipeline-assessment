@@ -20,6 +20,7 @@ namespace Elsa.Dashboard.Tests.Pages
         public async void OnGetRequestsDataOnce_GivenPageLoad(
         Mock<IElsaServerHttpClient> httpClient,
         Mock<IOptions<Urls>> config,
+        Mock<IOptions<Auth0Config>> auth0Config,
         Mock<Urls> urlMock,
         ILogger<ElsaDashboardLoader> logger,
         Dictionary<string, HeActivityInputDescriptorDTO> data,
@@ -32,7 +33,7 @@ namespace Elsa.Dashboard.Tests.Pages
             config.SetupGet(o => o.Value).Returns(urlMock.Object);
             urlMock.SetupGet(u => u.ElsaServer).Returns(mockUrl);
             httpClient.Setup(c => c.LoadCustomActivities(mockUrl)).ReturnsAsync(dataJson);
-            var pageModel = new ElsaDashboardLoader(httpClient.Object, config.Object, logger);
+            var pageModel = new ElsaDashboardLoader(httpClient.Object, config.Object, logger, auth0Config.Object);
 
             // Act
             await pageModel.OnGetAsync();
@@ -46,6 +47,7 @@ namespace Elsa.Dashboard.Tests.Pages
         public async void OnGetSetsPageData_GivenValuesReturnedWithoutError(
         Mock<IElsaServerHttpClient> httpClient,
         Mock<IOptions<Urls>> config,
+        Mock<IOptions<Auth0Config>> auth0Config,
         Mock<Urls> urlMock,
         Dictionary<string, HeActivityInputDescriptorDTO> data,
         ILogger<ElsaDashboardLoader> logger,
@@ -58,7 +60,7 @@ namespace Elsa.Dashboard.Tests.Pages
             config.SetupGet(o => o.Value).Returns(urlMock.Object);
             urlMock.SetupGet(u => u.ElsaServer).Returns(mockUrl);
             httpClient.Setup(c => c.LoadCustomActivities(mockUrl)).ReturnsAsync(dataJson);
-            var pageModel = new ElsaDashboardLoader(httpClient.Object, config.Object, logger);
+            var pageModel = new ElsaDashboardLoader(httpClient.Object, config.Object, logger, auth0Config.Object);
 
             // Act
             await pageModel.OnGetAsync();
@@ -72,23 +74,21 @@ namespace Elsa.Dashboard.Tests.Pages
         public async void OnGetThrowsNullValueError_GivenConfigDoesNotContainValueForUrl(
                         Mock<IElsaServerHttpClient> httpClient,
                         Mock<IOptions<Urls>> config,
+                        Mock<IOptions<Auth0Config>> auth0Config,
                         Mock<Urls> urlMock,
                         ILogger<ElsaDashboardLoader> logger
                 )
         {
-
             // Arrange
             string value = string.Empty;
             config.SetupGet(o => o.Value).Returns(urlMock.Object);
             urlMock.SetupGet(u => u.ElsaServer).Returns(string.Empty);
-            var pageModel = new ElsaDashboardLoader(httpClient.Object, config.Object, logger);
+            var pageModel = new ElsaDashboardLoader(httpClient.Object, config.Object, logger, auth0Config.Object);
 
             // Act
-
 
             // Assert
             await Assert.ThrowsAsync<NullReferenceException>(pageModel.OnGetAsync);
         }
-
     }
 }

@@ -5,6 +5,8 @@ using He.PipelineAssessment.Models.ViewModels;
 using He.PipelineAssessment.UI.Features.Assessment.AssessmentList;
 using Moq;
 using Xunit;
+using He.PipelineAssessment.Models;
+using System.Collections.Generic;
 
 namespace He.PipelineAssessment.UI.Tests.Features.Assessment.AssessmentList
 {
@@ -24,10 +26,10 @@ namespace He.PipelineAssessment.UI.Tests.Features.Assessment.AssessmentList
             repo.Setup(x => x.GetAssessments()).Throws(exception);
 
             //Act
-            var result = await sut.Handle(assessmentListCommand, CancellationToken.None);
+            var result = await Assert.ThrowsAsync<ApplicationException>(()=>sut.Handle(assessmentListCommand, CancellationToken.None));
 
             //Assert
-            Assert.Empty(result);
+            Assert.Equal("Unable to get list of assessments.", result.Message);
         }
 
         [Theory]

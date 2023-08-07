@@ -1,3 +1,13 @@
+export class Uri {
+  static readonly LibUri = "defaultLib:lib.es6.d.ts";
+}
+
+export class StoreStatus {
+  static readonly Fetching: string = "fetching";
+  static readonly Available: string = "available";
+  static readonly Empty: string = "empty";
+}
+
 export class SyntaxNames {
   static readonly Literal = "Literal";
   static readonly JavaScript = "JavaScript";
@@ -12,6 +22,7 @@ export class SyntaxNames {
   static readonly TextActivity = 'TextActivity';
   static readonly DataDictionary = 'DataDictionary';
   static readonly DataTable = 'DataTable';
+  static readonly InformationText = 'TextActivity';
   static Variable: string;
   static Output: string;
 }

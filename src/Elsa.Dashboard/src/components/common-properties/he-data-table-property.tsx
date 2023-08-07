@@ -171,7 +171,7 @@ export class HeDataTableProperty implements ISortableSharedComponent, IDisplayTo
             <td class="elsa-py-2" colSpan={2} style={{ width: colWidth }}>
               <div class="elsa-mt-1 elsa-relative elsa-rounded-md elsa-shadow-sm">
 
-                <elsa-expression-editor
+                <he-expression-editor
                   key={`expression-editor-${index}-${this.syntaxSwitchCount}-${this.keyId}`}
                   ref={el => expressionEditor = el}
                   expression={headerExpression}
@@ -237,7 +237,7 @@ export class HeDataTableProperty implements ISortableSharedComponent, IDisplayTo
             </th>
             <td class="elsa-py-2 elsa-w-10/12" colSpan={2} style={{ width: colWidth }}>
             <div class="elsa-mt-1 elsa-relative elsa-rounded-md elsa-shadow-sm">
-              <elsa-expression-editor
+              <he-expression-editor
                   key={`expression-editor-${index}-${this.syntaxSwitchCount}-${this.keyId}`}
                   ref={el => expressionEditor = el}
                   expression={inputExpression}
@@ -311,7 +311,7 @@ export class HeDataTableProperty implements ISortableSharedComponent, IDisplayTo
 
         <br />
 
-        <elsa-multi-expression-editor
+        <he-multi-expression-editor
           ref={el => this.multiExpressionEditor = el}
           label={this.propertyDescriptor.label}
           defaultSyntax={SyntaxNames.Json}
@@ -331,7 +331,7 @@ export class HeDataTableProperty implements ISortableSharedComponent, IDisplayTo
             <PlusIcon options={this.iconProvider.getOptions()}></PlusIcon>
             Add Table Row
           </button>
-        </elsa-multi-expression-editor>
+        </he-multi-expression-editor>
       </div>
     );
   }

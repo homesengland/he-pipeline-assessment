@@ -25,7 +25,7 @@ export class TextActivityProperty implements ISortableSharedComponent, IDisplayT
   @Prop() activityModel: ActivityModel;
   @Prop() propertyDescriptor: ActivityPropertyDescriptor;
   @Prop() propertyModel: ActivityDefinitionProperty;
-  @Prop() modelSyntax: string = SyntaxNames.Json;
+  @Prop() modelSyntax: string = SyntaxNames.TextActivity;
   @State() properties: Array<NestedActivityDefinitionProperty> = [];
   @State() iconProvider = new IconProvider();
   @State() keyId: string;
@@ -143,6 +143,10 @@ export class TextActivityProperty implements ISortableSharedComponent, IDisplayT
 
       let colWidth = "100%";
 
+      let textContext: IntellisenseContext = {
+        activityTypeName: this.activityModel.type,
+        propertyName: this.propertyDescriptor.name
+      };
 
       return (
         <tbody key={this.keyId}>
@@ -163,12 +167,13 @@ export class TextActivityProperty implements ISortableSharedComponent, IDisplayT
             </th>
             <td class="elsa-py-2 pl-5" colSpan={2} style={{ width: colWidth }}>
               <div class="elsa-mt-1 elsa-relative elsa-rounded-md elsa-shadow-sm">
-              <elsa-expression-editor
+              <he-expression-editor
                 key={`expression-editor-${index}-${this.syntaxSwitchCount}`}
                 ref={el => textExpressionEditor = el}
                 expression={textExpression}
-                language={textLanguage}
-                single-line={false}
+                  language={textLanguage}
+                  context={textContext}
+                  single-line={false}
                 editorHeight="2.75em"
                   padding="elsa-pt-1.5 elsa-pl-1 elsa-pr-28"
                   onExpressionChanged={e => this._base.CustomUpdateExpression(e, nestedTextActivity, nestedTextActivity.syntax)}
@@ -197,7 +202,7 @@ export class TextActivityProperty implements ISortableSharedComponent, IDisplayT
             </th>
             <td class="elsa-py-2 pl-5" colSpan={2} style={{ width: colWidth }}>
                 <div class="elsa-mt-1 elsa-relative elsa-rounded-md elsa-shadow-sm">
-                  <elsa-expression-editor
+                  <he-expression-editor
                     key={`expression-editor-${index}-${this.syntaxSwitchCount}`}
                     ref={el => conditionExpressionEditor = el}
                     expression={conditionExpression}
@@ -262,7 +267,7 @@ export class TextActivityProperty implements ISortableSharedComponent, IDisplayT
             <td class="elsa-py-2 pl-5" style={{ width: colWidth }}>
 
               <div class="elsa-mt-1 elsa-relative elsa-rounded-md elsa-shadow-sm">
-                <elsa-expression-editor
+                <he-expression-editor
                   key={`expression-editor-${index}-${this.syntaxSwitchCount}`}
                   ref={el => conditionExpressionEditor = el}
                   expression={urlExpression}
@@ -289,7 +294,7 @@ export class TextActivityProperty implements ISortableSharedComponent, IDisplayT
     return (
       <div>
 
-        <elsa-multi-expression-editor
+        <he-multi-expression-editor
           ref={el => this.multiExpressionEditor = el}
           label={this.propertyDescriptor.label}
           defaultSyntax={SyntaxNames.Json}
@@ -310,7 +315,7 @@ export class TextActivityProperty implements ISortableSharedComponent, IDisplayT
             <PlusIcon options={this.iconProvider.getOptions()}></PlusIcon>
             Add Paragraph
           </button>
-        </elsa-multi-expression-editor>
+        </he-multi-expression-editor>
       </div>
     );
   }

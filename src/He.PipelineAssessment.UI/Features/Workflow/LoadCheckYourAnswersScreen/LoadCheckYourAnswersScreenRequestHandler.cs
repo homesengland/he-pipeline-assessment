@@ -39,10 +39,7 @@ namespace He.PipelineAssessment.UI.Features.Workflow.LoadCheckYourAnswersScreen
 
                 if (!isRoleExist && !request.IsReadOnly)
                 {
-                    return new QuestionScreenSaveAndContinueCommand()
-                    {
-                        IsAuthorised = false
-                    };
+                    throw new UnauthorizedAccessException($"You do not have permission to access this resource.");
                 }
 
                 var response = await _elsaServerHttpClient.LoadCheckYourAnswersScreen(new LoadWorkflowActivityDto
@@ -72,14 +69,14 @@ namespace He.PipelineAssessment.UI.Features.Workflow.LoadCheckYourAnswersScreen
                 }
                 else
                 {
-                    return null;
+                    _logger.LogError($"Failed to load check your answers screen activity response from elsa server client is null. ActivityId: {request.ActivityId} WorkflowInstanceId: {request.WorkflowInstanceId}");
+                    throw new ApplicationException("Failed to load check your answers screen activity");
                 }
             }
             catch (Exception e)
             {
-                _logger.LogError(e.Message);
-
-                return null;
+                _logger.LogError(e, e.Message);
+                throw new ApplicationException("Failed to load check your answers screen activity");
             }
 
         }

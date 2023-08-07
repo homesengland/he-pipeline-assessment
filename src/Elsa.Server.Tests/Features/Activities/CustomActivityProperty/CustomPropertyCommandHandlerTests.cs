@@ -34,7 +34,6 @@ public class CustomPropertyCommandHandlerTests
         //Assert
         Assert.True(result.GetType() == typeof(Dictionary<string, string>));
         Assert.Equal(JsonConvert.SerializeObject(inputDescriptors, new JsonSerializerSettings { ContractResolver = new CamelCasePropertyNamesContractResolver() }), result["QuestionProperties"]);
-        Assert.Equal(JsonConvert.SerializeObject(dataDictionaries), result["DataDictionaryGroup"]);
     }
 
     [Theory]

@@ -11,11 +11,13 @@ namespace Elsa.Server.Features.Workflow.LoadCheckYourAnswersScreen
     {
         private readonly IElsaCustomRepository _elsaCustomRepository;
         private readonly IActivityDataProvider _activityDataProvider;
+        private readonly ILogger<LoadCheckYourAnswersScreenRequestHandler> _logger;
 
-        public LoadCheckYourAnswersScreenRequestHandler(IElsaCustomRepository elsaCustomRepository, IActivityDataProvider activityDataProvider)
+        public LoadCheckYourAnswersScreenRequestHandler(IElsaCustomRepository elsaCustomRepository, IActivityDataProvider activityDataProvider, ILogger<LoadCheckYourAnswersScreenRequestHandler> logger)
         {
             _elsaCustomRepository = elsaCustomRepository;
             _activityDataProvider = activityDataProvider;
+            _logger = logger;
         }
 
         public async Task<OperationResult<LoadCheckYourAnswersScreenResponse>> Handle(LoadCheckYourAnswersScreenRequest activityScreenRequest, CancellationToken cancellationToken)
@@ -51,12 +53,14 @@ namespace Elsa.Server.Features.Workflow.LoadCheckYourAnswersScreen
                 }
                 else
                 {
+                    _logger.LogError($"Unable to find activity navigation with Workflow Id: {activityScreenRequest.WorkflowInstanceId} and Activity Id: {activityScreenRequest.ActivityId} in Elsa Custom database");
                     result.ErrorMessages.Add(
                         $"Unable to find activity navigation with Workflow Id: {activityScreenRequest.WorkflowInstanceId} and Activity Id: {activityScreenRequest.ActivityId} in Elsa Custom database");
                 }
             }
             catch (Exception e)
             {
+                _logger.LogError(e, e.Message);
                 result.ErrorMessages.Add(e.Message);
             }
 

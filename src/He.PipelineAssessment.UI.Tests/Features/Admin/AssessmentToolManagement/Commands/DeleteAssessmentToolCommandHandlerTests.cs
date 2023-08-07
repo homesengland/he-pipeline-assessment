@@ -28,10 +28,10 @@ namespace He.PipelineAssessment.UI.Tests.Features.Admin.AssessmentToolManagement
 
             //Act
             var result =
-                await Assert.ThrowsAsync<Exception>(() => sut.Handle(deleteAssessmentToolCommand, CancellationToken.None));
+                await Assert.ThrowsAsync<ApplicationException>(() => sut.Handle(deleteAssessmentToolCommand, CancellationToken.None));
 
             //Assert          
-            Assert.Equal(exception.Message, result.Message);
+            Assert.Equal("Unable to delete assessment tool.", result.Message);
         }
 
         [Theory]
@@ -78,10 +78,10 @@ namespace He.PipelineAssessment.UI.Tests.Features.Admin.AssessmentToolManagement
                 .ReturnsAsync((AssessmentTool?) null);
 
             //Act
-            var result = await Assert.ThrowsAsync<NotFoundException>(() => sut.Handle(deleteAssessmentToolCommand, CancellationToken.None));
+            var result = await Assert.ThrowsAsync<ApplicationException>(() => sut.Handle(deleteAssessmentToolCommand, CancellationToken.None));
 
             //Assert          
-            Assert.Equal(exceptionMessage, result.Message);
+            Assert.Equal("Unable to delete assessment tool.", result.Message);
         }
     }
 }

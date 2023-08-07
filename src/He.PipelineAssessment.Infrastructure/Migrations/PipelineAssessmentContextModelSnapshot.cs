@@ -51,6 +51,11 @@ namespace He.PipelineAssessment.Infrastructure.Migrations
                     b.Property<decimal?>("FundingAsk")
                         .HasColumnType("decimal(18,2)");
 
+                    b.Property<string>("LandType")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
+
                     b.Property<string>("LastModifiedBy")
                         .HasMaxLength(500)
                         .HasColumnType("nvarchar(500)");

@@ -155,7 +155,7 @@ export class HeCheckboxOptionProperty implements ISortableSharedComponent, IDisp
 
             <td class="elsa-py-2 pl-5" colSpan={ 2 } style={{ width: colWidth }}>
               <div class="elsa-mt-1 elsa-relative elsa-rounded-md elsa-shadow-sm">
-                <elsa-expression-editor
+                <he-expression-editor
                   key={`expression-editor-${checkboxOption.name}-${index}-${this.syntaxSwitchCount}-${this.keyId}`}
                   ref={el => expressionEditor = el}
                   expression={expression}
@@ -201,7 +201,7 @@ export class HeCheckboxOptionProperty implements ISortableSharedComponent, IDisp
             <th class="elsa-py-3 elsa-text-left elsa-text-xs elsa-font-medium elsa-text-gray-500 elsa-tracking-wider elsa-w-2/12">Pre Populated</th>
             <td class="elsa-py-2 pl-5" style={{ width: colWidth }}>
               <div class="elsa-mt-1 elsa-relative elsa-rounded-md elsa-shadow-sm">
-                <elsa-expression-editor
+                <he-expression-editor
                   key={`expression-editor-${index}-${this.syntaxSwitchCount}-${this.keyId}`}
                   ref={el => prePopulatedExpressionEditor = el}
                   expression={prePopulatedExpression}
@@ -237,7 +237,7 @@ export class HeCheckboxOptionProperty implements ISortableSharedComponent, IDisp
     return (
       <div>
 
-        <elsa-multi-expression-editor
+        <he-multi-expression-editor
           ref={el => this.multiExpressionEditor = el}
           label={this.propertyDescriptor.label}
           defaultSyntax={SyntaxNames.Json}
@@ -257,7 +257,7 @@ export class HeCheckboxOptionProperty implements ISortableSharedComponent, IDisp
             <PlusIcon options={this.iconProvider.getOptions()}></PlusIcon>
             Add Answer
           </button>
-        </elsa-multi-expression-editor>
+        </he-multi-expression-editor>
       </div >
     );
   }

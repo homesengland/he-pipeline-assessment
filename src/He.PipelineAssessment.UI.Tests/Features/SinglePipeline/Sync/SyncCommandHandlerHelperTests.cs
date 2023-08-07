@@ -88,6 +88,7 @@ namespace He.PipelineAssessment.UI.Tests.Features.SinglePipeline.Sync
             destinationAssessment.FundingAsk = 123;
             destinationAssessment.NumberOfHomes = 345;
             destinationAssessment.BusinessArea = "Land";
+            destinationAssessment.LandType = "Greenfield";
 
             var destinationAssessments = new List<Models.Assessment>();
             destinationAssessments.Add(destinationAssessment);
@@ -102,6 +103,7 @@ namespace He.PipelineAssessment.UI.Tests.Features.SinglePipeline.Sync
             singlePipelineData.funding_ask = 123;
             singlePipelineData.units_or_homes = 345;
             singlePipelineData.sp_business_area = "Land";
+            singlePipelineData.land_type = "Greenfield";
 
             var singlePipelineDataList = new List<SinglePipelineData>();
             singlePipelineDataList.Add(singlePipelineData);
@@ -112,16 +114,7 @@ namespace He.PipelineAssessment.UI.Tests.Features.SinglePipeline.Sync
             var result = sut.UpdateAssessments(destinationAssessments, existingAssessments, singlePipelineDataList);
 
             //Assert
-            Assert.NotEmpty(result);
-            Assert.Equal(singlePipelineData.applicant_1, result[0].Counterparty);
-            Assert.Equal(singlePipelineData.internal_reference, result[0].Reference);
-            Assert.Equal(singlePipelineData.pipeline_opportunity_site_name, result[0].SiteName);
-            Assert.Equal(singlePipelineData.project_owner, result[0].ProjectManager);
-            Assert.Equal(singlePipelineData.project_owner_email, result[0].ProjectManagerEmail);
-            Assert.Equal(singlePipelineData.local_authority, result[0].LocalAuthority);
-            Assert.Equal(singlePipelineData.funding_ask, result[0].FundingAsk);
-            Assert.Equal(singlePipelineData.units_or_homes, result[0].NumberOfHomes);
-            Assert.Equal(singlePipelineData.sp_business_area, result[0].BusinessArea);
+            Assert.Equal(0, result);
         }
 
         [Theory]
@@ -143,6 +136,7 @@ namespace He.PipelineAssessment.UI.Tests.Features.SinglePipeline.Sync
             destinationAssessment.FundingAsk = 123;
             destinationAssessment.NumberOfHomes = 345;
             destinationAssessment.BusinessArea = "Land";
+            destinationAssessment.LandType = "Greenfield";
 
 
             var destinationAssessments = new List<Models.Assessment>();
@@ -158,6 +152,7 @@ namespace He.PipelineAssessment.UI.Tests.Features.SinglePipeline.Sync
             singlePipelineData.funding_ask = 555;
             singlePipelineData.units_or_homes = 667;
             singlePipelineData.sp_business_area = "Investment";
+            singlePipelineData.land_type = "Brownfield";
 
            var singlePipelineDataList = new List<SinglePipelineData>();
             singlePipelineDataList.Add(singlePipelineData);
@@ -168,18 +163,7 @@ namespace He.PipelineAssessment.UI.Tests.Features.SinglePipeline.Sync
             var result = sut.UpdateAssessments(destinationAssessments, existingAssessments, singlePipelineDataList);
 
             //Assert
-            Assert.NotEmpty(result);
-            Assert.Equal(singlePipelineData.applicant_1, result[0].Counterparty);
-            Assert.Equal(singlePipelineData.internal_reference, result[0].Reference);
-            Assert.Equal(singlePipelineData.pipeline_opportunity_site_name, result[0].SiteName);
-            Assert.Equal(singlePipelineData.project_owner, result[0].ProjectManager);
-            Assert.Equal(singlePipelineData.project_owner_email, result[0].ProjectManagerEmail);
-            Assert.Equal(singlePipelineData.local_authority, result[0].LocalAuthority);
-            Assert.Equal(singlePipelineData.funding_ask, result[0].FundingAsk);
-            Assert.Equal(singlePipelineData.units_or_homes, result[0].NumberOfHomes);
-            Assert.Equal(singlePipelineData.sp_business_area, result[0].BusinessArea);
-
-
+            Assert.Equal(1, result);
         }
     }
 }

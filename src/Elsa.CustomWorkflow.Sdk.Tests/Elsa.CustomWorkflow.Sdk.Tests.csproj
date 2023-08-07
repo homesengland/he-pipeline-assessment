@@ -34,4 +34,8 @@
     <ProjectReference Include="..\He.PipelineAssessment.Tests.Common\He.PipelineAssessment.Tests.Common.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="BearerTokenProvider\" />
+  </ItemGroup>
+
 </Project>

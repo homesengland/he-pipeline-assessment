@@ -1,11 +1,5 @@
 ﻿using He.PipelineAssessment.Tests.Common;
-using He.PipelineAssessment.UI.Common.Exceptions;
 using He.PipelineAssessment.UI.Features.Rollback.CreateRollback;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using AutoFixture.Xunit2;
 using He.PipelineAssessment.Infrastructure.Repository;
 using He.PipelineAssessment.Models;
@@ -28,10 +22,10 @@ namespace He.PipelineAssessment.UI.Tests.Features.Rollback.CreateRollback
             CreateRollbackRequestHandler sut)
         {
             //Act
-            var ex = await Assert.ThrowsAsync<NotFoundException>(() => sut.Handle(request, CancellationToken.None));
+            var ex = await Assert.ThrowsAsync<ApplicationException>(() => sut.Handle(request, CancellationToken.None));
 
             //Assert
-            Assert.Equal($"Assessment Tool Workflow Instance with Id {request.WorkflowInstanceId} not found", ex.Message);
+            Assert.Equal($"Unable to create rollback request. WorkflowInstanceId: {request.WorkflowInstanceId}", ex.Message);
         }
 
         [Theory]
@@ -75,7 +69,7 @@ namespace He.PipelineAssessment.UI.Tests.Features.Rollback.CreateRollback
             assessmentToolWorkflowInstanceHelpers.Setup(x => x.IsLatestSubmittedWorkflow(instance)).Returns(false);
 
             //Act
-            var ex = await Assert.ThrowsAsync<Exception>(() => sut.Handle(request, CancellationToken.None));
+            var ex = await Assert.ThrowsAsync<ApplicationException>(() => sut.Handle(request, CancellationToken.None));
 
             //Assert
             Assert.Equal($"Unable to create rollback for Assessment Tool Workflow Instance as this is not the latest submitted Workflow Instance for this Assessment.", ex.Message);
@@ -84,7 +78,7 @@ namespace He.PipelineAssessment.UI.Tests.Features.Rollback.CreateRollback
 
         [Theory]
         [AutoMoqData]
-        public async Task Handle_ShouldError_GivenOpenRequestAlreadyExistsForAssessmnet(
+        public async Task Handle_ShouldError_GivenOpenRequestAlreadyExistsForAssessment(
             [Frozen] Mock<IAssessmentRepository> repository,
             [Frozen] Mock<IRoleValidation> roleValidation,
             [Frozen] Mock<IAssessmentToolWorkflowInstanceHelpers> assessmentToolWorkflowInstanceHelpers,
@@ -104,7 +98,7 @@ namespace He.PipelineAssessment.UI.Tests.Features.Rollback.CreateRollback
             assessmentToolWorkflowInstanceHelpers.Setup(x => x.IsLatestSubmittedWorkflow(instance)).Returns(true);
 
             //Act
-            var ex = await Assert.ThrowsAsync<Exception>(() => sut.Handle(request, CancellationToken.None));
+            var ex = await Assert.ThrowsAsync<ApplicationException>(() => sut.Handle(request, CancellationToken.None));
 
             //Assert
             Assert.Equal($"Unable to create request as an open request already exists for this assessment.", ex.Message);
