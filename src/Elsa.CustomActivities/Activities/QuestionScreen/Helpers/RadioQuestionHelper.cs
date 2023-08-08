@@ -15,6 +15,7 @@ namespace Elsa.CustomActivities.Activities.QuestionScreen.Helpers
         private readonly IElsaCustomRepository _elsaCustomRepository;
         private readonly IWorkflowRegistry _workflowRegistry;
         private readonly ILogger<RadioQuestionHelper> _logger;
+        private readonly Random random= new Random();
 
         public RadioQuestionHelper(IElsaCustomRepository elsaCustomRepository, IWorkflowRegistry workflowRegistry, ILogger<RadioQuestionHelper> logger)
         {
@@ -24,15 +25,15 @@ namespace Elsa.CustomActivities.Activities.QuestionScreen.Helpers
         }
 
 
-        public async Task<bool> AnswerEquals(ActivityExecutionContext activityExecutionContext, string workflowName, string activityName, string questionId, string choiceIdToCheck)
+        public async Task<bool> AnswerEquals(ActivityExecutionContext activityExecutionContext,  string workflowName, string activityName, string questionId, string choiceIdToCheck)
         {
             bool result = false;
             var workflowBlueprint = await _workflowRegistry.FindByNameAsync(workflowName, Models.VersionOptions.Published);
-
+            var randomId = random.Next();
             if (workflowBlueprint != null)
             {
-                activityExecutionContext.JournalData.Add("Running RadioQuestionAnswerEquals", $"CorrelationID: {activityExecutionContext.CorrelationId}, WorkflowName: {workflowName}, ActivityName: {activityName}, QuestionID: {questionId}, ChoicesToCheck: {choiceIdToCheck}");
-                _logger.LogTrace($"Running RadioQuestionAnswerEquals - CorrelationID: {activityExecutionContext.CorrelationId}, WorkflowName: {workflowName}, ActivityName: {activityName}, QuestionID: {questionId}, ChoicesToCheck: {choiceIdToCheck}");
+                activityExecutionContext.JournalData.Add($"Running RadioQuestionAnswerEquals for choice {choiceIdToCheck}. (random id - {randomId})", $"CorrelationID: {activityExecutionContext.CorrelationId}, WorkflowName: {workflowName}, ActivityName: {activityName}, QuestionID: {questionId}, ChoicesToCheck: {choiceIdToCheck}");
+                _logger.LogWarning($"Running RadioQuestionAnswerEquals - CorrelationID: {activityExecutionContext.CorrelationId}, WorkflowName: {workflowName}, ActivityName: {activityName}, QuestionID: {questionId}, ChoicesToCheck: {choiceIdToCheck}");
                 var activity = workflowBlueprint.Activities.FirstOrDefault(x => x.Name == activityName);
                 if (activity != null)
                 {
@@ -41,14 +42,14 @@ namespace Elsa.CustomActivities.Activities.QuestionScreen.Helpers
                     if (question != null &&
                         (question.QuestionType == QuestionTypeConstants.RadioQuestion || question.QuestionType == QuestionTypeConstants.PotScoreRadioQuestion || question.QuestionType == QuestionTypeConstants.WeightedRadioQuestion))
                     {
-                        activityExecutionContext.JournalData.Add("RadioQuestionAnswerEquals Question Found", $"CorrelationID: {activityExecutionContext.CorrelationId}, WorkflowName: {workflowName}, ActivityName: {activityName}, QuestionID: {questionId}, ChoicesToCheck: {choiceIdToCheck}, DBQuestionID: {question.Id}, DBInstanceID: {question.WorkflowInstanceId}");
-                        _logger.LogTrace($"RadioQuestionAnswerEquals Question Found - CorrelationID: {activityExecutionContext.CorrelationId}, WorkflowName: {workflowName}, ActivityName: {activityName}, QuestionID: {questionId}, ChoicesToCheck: {choiceIdToCheck}, DBQuestionID: {question.Id}, DBInstanceID: {question.WorkflowInstanceId}");
+                        activityExecutionContext.JournalData.Add($"RadioQuestionAnswerEquals Question Found for choice {choiceIdToCheck}. (random id - {randomId})", $"CorrelationID: {activityExecutionContext.CorrelationId}, WorkflowName: {workflowName}, ActivityName: {activityName}, QuestionID: {questionId}, ChoicesToCheck: {choiceIdToCheck}, DBQuestionID: {question.Id}, DBInstanceID: {question.WorkflowInstanceId}");
+                        _logger.LogWarning($"RadioQuestionAnswerEquals Question Found - CorrelationID: {activityExecutionContext.CorrelationId}, WorkflowName: {workflowName}, ActivityName: {activityName}, QuestionID: {questionId}, ChoicesToCheck: {choiceIdToCheck}, DBQuestionID: {question.Id}, DBInstanceID: {question.WorkflowInstanceId}");
 
                         if (question.Answers != null && question.Answers.Count == 1)
                         {
                             var singleAnswer = question.Answers.First();
-                            activityExecutionContext.JournalData.Add("RadioQuestionAnswerEquals Answers Found", $"CorrelationID: {activityExecutionContext.CorrelationId}, WorkflowName: {workflowName}, ActivityName: {activityName}, QuestionID: {questionId}, ChoicesToCheck: {choiceIdToCheck}, DBQuestionID: {question.Id}, DBInstanceID: {question.WorkflowInstanceId}, Answer: {question.Answers.First().AnswerText}, Choice: {question.Answers.First().Choice?.Identifier}");
-                            _logger.LogTrace($"RadioQuestionAnswerEquals Answers Found - CorrelationID: {activityExecutionContext.CorrelationId}, WorkflowName: {workflowName}, ActivityName: {activityName}, QuestionID: {questionId}, ChoicesToCheck: {choiceIdToCheck}, DBQuestionID: {question.Id}, DBInstanceID: {question.WorkflowInstanceId}, Answer: {question.Answers.First().AnswerText}, Choice: {question.Answers.First().Choice?.Identifier}");
+                            activityExecutionContext.JournalData.Add($"RadioQuestionAnswerEquals Answers Found for choice {choiceIdToCheck}. (random id - {randomId})", $"CorrelationID: {activityExecutionContext.CorrelationId}, WorkflowName: {workflowName}, ActivityName: {activityName}, QuestionID: {questionId}, ChoicesToCheck: {choiceIdToCheck}, DBQuestionID: {question.Id}, DBInstanceID: {question.WorkflowInstanceId}, Answer: {question.Answers.First().AnswerText}, Choice: {question.Answers.First().Choice?.Identifier}");
+                            _logger.LogWarning($"RadioQuestionAnswerEquals Answers Found - CorrelationID: {activityExecutionContext.CorrelationId}, WorkflowName: {workflowName}, ActivityName: {activityName}, QuestionID: {questionId}, ChoicesToCheck: {choiceIdToCheck}, DBQuestionID: {question.Id}, DBInstanceID: {question.WorkflowInstanceId}, Answer: {question.Answers.First().AnswerText}, Choice: {question.Answers.First().Choice?.Identifier}");
 
                             return choiceIdToCheck == singleAnswer.Choice?.Identifier;
                         }
@@ -57,13 +58,13 @@ namespace Elsa.CustomActivities.Activities.QuestionScreen.Helpers
                     }
                     else
                     {
-                        activityExecutionContext.JournalData.Add("RadioQuestionAnswerEquals Question NULL", $"CorrelationID: {activityExecutionContext.CorrelationId}, WorkflowName: {workflowName}, ActivityName: {activityName}, QuestionID: {questionId}, ChoicesToCheck: {choiceIdToCheck}");
-                        _logger.LogTrace($"RadioQuestionAnswerEquals Question NULL possibly - CorrelationID: {activityExecutionContext.CorrelationId}, WorkflowName: {workflowName}, ActivityName: {activityName}, QuestionID: {questionId}, ChoicesToCheck: {choiceIdToCheck}");
+                        activityExecutionContext.JournalData.Add($"RadioQuestionAnswerEquals Question NULL for choice {choiceIdToCheck}. (random id - {randomId})", $"CorrelationID: {activityExecutionContext.CorrelationId}, WorkflowName: {workflowName}, ActivityName: {activityName}, QuestionID: {questionId}, ChoicesToCheck: {choiceIdToCheck}");
+                        _logger.LogWarning($"RadioQuestionAnswerEquals Question NULL possibly - CorrelationID: {activityExecutionContext.CorrelationId}, WorkflowName: {workflowName}, ActivityName: {activityName}, QuestionID: {questionId}, ChoicesToCheck: {choiceIdToCheck}");
                     }
                 }
                 else
                 {
-                    activityExecutionContext.JournalData.Add("RadioQuestionAnswerEquals Activity NULL", $"CorrelationID: {activityExecutionContext.CorrelationId}, WorkflowName: {workflowName}, ActivityName: {activityName}, QuestionID: {questionId}, ChoicesToCheck: {choiceIdToCheck}");
+                    activityExecutionContext.JournalData.Add($"RadioQuestionAnswerEquals Activity NULL for choice {choiceIdToCheck}. (random id - {randomId})", $"CorrelationID: {activityExecutionContext.CorrelationId}, WorkflowName: {workflowName}, ActivityName: {activityName}, QuestionID: {questionId}, ChoicesToCheck: {choiceIdToCheck}");
                     _logger.LogTrace($"RadioQuestionAnswerEquals Activity NULL - CorrelationID: {activityExecutionContext.CorrelationId}, WorkflowName: {workflowName}, ActivityName: {activityName}, QuestionID: {questionId}, ChoicesToCheck: {choiceIdToCheck}");
                 }
             }
