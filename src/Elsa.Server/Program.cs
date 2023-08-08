@@ -1,3 +1,4 @@
+using AutoMapper;
 using Elsa.Activities.Primitives;
 using Elsa.CustomActivities.Activities.CheckYourAnswersScreen;
 using Elsa.CustomActivities.Activities.ConfirmationScreen;
@@ -22,12 +23,16 @@ using Elsa.CustomWorkflow.Sdk.Providers;
 using Elsa.Expressions;
 using Elsa.Persistence.EntityFramework.Core.Extensions;
 using Elsa.Persistence.EntityFramework.SqlServer;
+using Elsa.Providers.Workflows;
 using Elsa.Runtime;
+using Elsa.Server.Api.Endpoints.WorkflowRegistry;
 using Elsa.Server.Extensions;
 using Elsa.Server.Helpers;
 using Elsa.Server.Providers;
 using Elsa.Server.Services;
 using Elsa.Server.StartupTasks;
+using Elsa.Services;
+using Elsa.Services.Workflows;
 using He.PipelineAssessment.Data.Auth;
 using MediatR;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -96,6 +101,26 @@ builder.Services.AddMediatR(typeof(Program).Assembly);
 builder.Services.AddApplicationInsightsTelemetry();
 builder.Services.AddScoped<IDateTimeProvider, DateTimeProvider>();
 builder.Services.AddScoped<IActivityDataProvider, ActivityDataProvider>();
+builder.Services.AddScoped<IWorkflowRegistry, WorkflowRegistry>();
+builder.Services.AddScoped<IEnumerable<IWorkflowProvider>>(x =>
+{
+    var context = x.GetRequiredService<IHttpContextAccessor>();
+    if (context.HttpContext != null)
+    {
+        var path = context.HttpContext.Request.Path;
+        if (path.HasValue && path.Value == "/v1/workflow-registry")
+        {
+            return new List<IWorkflowProvider>();
+        }
+    }
+    var service = x.GetRequiredService<IWorkflowProvider>();
+    return new List<IWorkflowProvider>()
+    {
+        service
+    };
+});
+//builder.Services.add
+//builder.Services.AddScoped<IEnumerable<IWorkflowProvider>, List<DatabaseWorkflowProvider>>().Where(x => x.ServiceType == typeof(ListAll));
 builder.Services.AddScoped<IWorkflowRegistryProvider, WorkflowRegistryProvider>();
 builder.Services.AddScoped<IWorkflowInstanceProvider, WorkflowInstanceProvider>();
 builder.Services.AddScoped<IWorkflowPathProvider, WorkflowPathProvider>();

@@ -23,7 +23,6 @@ namespace Elsa.Server.Providers
                 throw new Exception($"No output found for workflow instance id {workflowInstance.Id}");
             }
 
-            var test = workflowInstance.Output;
             var nextActivityId = workflowInstance.Output.ActivityId;//workflowInstance.LastExecutedActivityId;
 
             var workflow =
