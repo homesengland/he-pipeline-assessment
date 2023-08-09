@@ -1,4 +1,3 @@
-using AutoMapper;
 using Elsa.Activities.Primitives;
 using Elsa.CustomActivities.Activities.CheckYourAnswersScreen;
 using Elsa.CustomActivities.Activities.ConfirmationScreen;
@@ -21,11 +20,11 @@ using Elsa.CustomInfrastructure.Data.Repository;
 using Elsa.CustomWorkflow.Sdk.Extensions;
 using Elsa.CustomWorkflow.Sdk.Providers;
 using Elsa.Expressions;
+using Elsa.Extensions;
 using Elsa.Persistence.EntityFramework.Core.Extensions;
 using Elsa.Persistence.EntityFramework.SqlServer;
 using Elsa.Providers.Workflows;
 using Elsa.Runtime;
-using Elsa.Server.Api.Endpoints.WorkflowRegistry;
 using Elsa.Server.Extensions;
 using Elsa.Server.Helpers;
 using Elsa.Server.Providers;
@@ -34,15 +33,13 @@ using Elsa.Server.StartupTasks;
 using Elsa.Services;
 using Elsa.Services.Workflows;
 using He.PipelineAssessment.Data.Auth;
+using Medallion.Threading.Redis;
 using MediatR;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.DataProtection;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection.Extensions;
-using Microsoft.Extensions.Options;
-using Microsoft.Identity;
-using Microsoft.Identity.Web;
+using StackExchange.Redis;
 
 
 var builder = WebApplication.CreateBuilder(args);
@@ -174,6 +171,15 @@ if (!app.Environment.IsDevelopment())
     app.UseExceptionHandler("/Error");
     // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
     app.UseHsts();
+
+    var redisConnectionString = builder.Configuration.GetConnectionString("Redis");
+    builder.Services.AddRedis($"{redisConnectionString},abortConnect=false");
+    builder.Services.AddElsa(elsa => elsa.UseRedisCacheSignal());
+    builder.Services.AddElsa(elsa => elsa.ConfigureDistributedLockProvider(options => options.UseProviderFactory(sp => name =>
+    {
+        var connection = sp.GetRequiredService<IConnectionMultiplexer>(); // `services.AddRedis` registers an `IConnectionMultiplexer` as a singleton. 
+        return new RedisDistributedLock(name, connection.GetDatabase());
+    })));
 }
 
     app
