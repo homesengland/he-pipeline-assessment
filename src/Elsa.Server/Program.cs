@@ -48,6 +48,8 @@ var elsaCustomConnectionString = builder.Configuration.GetConnectionString("Elsa
 
 
 
+var redisConnectionString = builder.Configuration.GetConnectionString("Redis");
+builder.Services.AddRedis($"{redisConnectionString},abortConnect=false");
 
 // Elsa services.
 builder.Services
@@ -66,6 +68,12 @@ builder.Services
         .AddActivity<RunEconomicCalculations>()
         .AddActivity<SetVariable>()
         .AddConsoleActivities()
+        .UseRedisCacheSignal()
+        .ConfigureDistributedLockProvider(options => options.UseProviderFactory(sp => name =>
+        {
+            var connection = sp.GetRequiredService<IConnectionMultiplexer>(); // `services.AddRedis` registers an `IConnectionMultiplexer` as a singleton. 
+            return new RedisDistributedLock(name, connection.GetDatabase());
+        }))
     );
 
 builder.Services.AddScoped<ICustomPropertyDescriber, CustomPropertyDescriber>();
@@ -98,7 +106,6 @@ builder.Services.AddMediatR(typeof(Program).Assembly);
 builder.Services.AddApplicationInsightsTelemetry();
 builder.Services.AddScoped<IDateTimeProvider, DateTimeProvider>();
 builder.Services.AddScoped<IActivityDataProvider, ActivityDataProvider>();
-builder.Services.AddScoped<IWorkflowRegistry, WorkflowRegistry>();
 builder.Services.AddScoped<IEnumerable<IWorkflowProvider>>(x =>
 {
     var context = x.GetRequiredService<IHttpContextAccessor>();
@@ -116,8 +123,6 @@ builder.Services.AddScoped<IEnumerable<IWorkflowProvider>>(x =>
         service
     };
 });
-//builder.Services.add
-//builder.Services.AddScoped<IEnumerable<IWorkflowProvider>, List<DatabaseWorkflowProvider>>().Where(x => x.ServiceType == typeof(ListAll));
 builder.Services.AddScoped<IWorkflowRegistryProvider, WorkflowRegistryProvider>();
 builder.Services.AddScoped<IWorkflowInstanceProvider, WorkflowInstanceProvider>();
 builder.Services.AddScoped<IWorkflowPathProvider, WorkflowPathProvider>();
@@ -172,17 +177,10 @@ if (!app.Environment.IsDevelopment())
     // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
     app.UseHsts();
 
-    var redisConnectionString = builder.Configuration.GetConnectionString("Redis");
-    builder.Services.AddRedis($"{redisConnectionString},abortConnect=false");
-    builder.Services.AddElsa(elsa => elsa.UseRedisCacheSignal());
-    builder.Services.AddElsa(elsa => elsa.ConfigureDistributedLockProvider(options => options.UseProviderFactory(sp => name =>
-    {
-        var connection = sp.GetRequiredService<IConnectionMultiplexer>(); // `services.AddRedis` registers an `IConnectionMultiplexer` as a singleton. 
-        return new RedisDistributedLock(name, connection.GetDatabase());
-    })));
+
 }
 
-    app
+app
     .UseCors()
     .UseHttpsRedirection()
     .UseStaticFiles() // For Dashboard.
