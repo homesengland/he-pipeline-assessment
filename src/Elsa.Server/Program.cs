@@ -98,32 +98,6 @@ else
         );
 }
 
-
-// Elsa services.
-builder.Services
-    .AddElsa(elsa => elsa
-        .UseEntityFrameworkPersistence(ef => ef.UseSqlServer(elsaConnectionString, typeof(Elsa.Persistence.EntityFramework.SqlServer.Migrations.Initial)))
-        .NoCoreActivities()
-        .AddActivity<SinglePipelineDataSource>()
-        .AddActivity<PCSProfileDataSource>()
-        .AddActivity<VFMDataSource>()
-        .AddActivity<HousingNeedDataSource>()
-        .AddActivity<QuestionScreen>()
-        .AddActivity<CheckYourAnswersScreen>()
-        .AddActivity<ConfirmationScreen>()
-        .AddActivity<FinishWorkflow>()
-        .AddActivity<ScoringCalculation>()
-        .AddActivity<RunEconomicCalculations>()
-        .AddActivity<SetVariable>()
-        .AddConsoleActivities()
-        .UseRedisCacheSignal()
-        .ConfigureDistributedLockProvider(options => options.UseProviderFactory(sp => name =>
-        {
-            var connection = sp.GetRequiredService<IConnectionMultiplexer>(); // `services.AddRedis` registers an `IConnectionMultiplexer` as a singleton. 
-            return new RedisDistributedLock(name, connection.GetDatabase());
-        }))
-    );
-
 builder.Services.AddScoped<ICustomPropertyDescriber, CustomPropertyDescriber>();
 
 builder.Services.TryAddProvider<IExpressionHandler, InformationTextExpressionHandler>(ServiceLifetime.Singleton);
