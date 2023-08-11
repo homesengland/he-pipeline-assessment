@@ -31,13 +31,11 @@ using Elsa.Server.Providers;
 using Elsa.Server.Services;
 using Elsa.Server.StartupTasks;
 using He.PipelineAssessment.Data.Auth;
-using Medallion.Threading.Redis;
 using MediatR;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.DataProtection;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection.Extensions;
-using StackExchange.Redis;
 
 
 var builder = WebApplication.CreateBuilder(args);
@@ -45,58 +43,28 @@ var elsaConnectionString = builder.Configuration.GetConnectionString("Elsa");
 var elsaCustomConnectionString = builder.Configuration.GetConnectionString("ElsaCustom");
 
 
-if (!builder.Environment.IsDevelopment())
-{
-    var redisConnectionString = builder.Configuration.GetConnectionString("Redis");
-    builder.Services.AddRedis($"{redisConnectionString},abortConnect=false");
+var redisConnectionString = builder.Configuration.GetConnectionString("Redis");
+builder.Services.AddRedis($"{redisConnectionString},abortConnect=false");
 
-    // Elsa services.
-    builder.Services
-        .AddElsa(elsa => elsa
-            .UseEntityFrameworkPersistence(ef => ef.UseSqlServer(elsaConnectionString, typeof(Elsa.Persistence.EntityFramework.SqlServer.Migrations.Initial)))
-            .NoCoreActivities()
-            .AddActivity<SinglePipelineDataSource>()
-            .AddActivity<PCSProfileDataSource>()
-            .AddActivity<VFMDataSource>()
-            .AddActivity<HousingNeedDataSource>()
-            .AddActivity<QuestionScreen>()
-            .AddActivity<CheckYourAnswersScreen>()
-            .AddActivity<ConfirmationScreen>()
-            .AddActivity<FinishWorkflow>()
-            .AddActivity<ScoringCalculation>()
-            .AddActivity<RunEconomicCalculations>()
-            .AddActivity<SetVariable>()
-            .AddConsoleActivities()
-            //.AddSomething()
-            .UseRedisCacheSignal()
-            .ConfigureDistributedLockProvider(options => options.UseProviderFactory(sp => name =>
-            {
-                var connection = sp.GetRequiredService<IConnectionMultiplexer>(); // `services.AddRedis` registers an `IConnectionMultiplexer` as a singleton. 
-                return new RedisDistributedLock(name, connection.GetDatabase());
-            }))
-        );
-}
-else
-{
-    // Elsa services.
-    builder.Services
-        .AddElsa(elsa => elsa
-            .UseEntityFrameworkPersistence(ef => ef.UseSqlServer(elsaConnectionString, typeof(Elsa.Persistence.EntityFramework.SqlServer.Migrations.Initial)))
-            .NoCoreActivities()
-            .AddActivity<SinglePipelineDataSource>()
-            .AddActivity<PCSProfileDataSource>()
-            .AddActivity<VFMDataSource>()
-            .AddActivity<HousingNeedDataSource>()
-            .AddActivity<QuestionScreen>()
-            .AddActivity<CheckYourAnswersScreen>()
-            .AddActivity<ConfirmationScreen>()
-            .AddActivity<FinishWorkflow>()
-            .AddActivity<ScoringCalculation>()
-            .AddActivity<RunEconomicCalculations>()
-            .AddActivity<SetVariable>()
-            .AddConsoleActivities()
-        );
-}
+// Elsa services.
+builder.Services
+    .AddElsa(elsa => elsa
+        .UseEntityFrameworkPersistence(ef => ef.UseSqlServer(elsaConnectionString, typeof(Elsa.Persistence.EntityFramework.SqlServer.Migrations.Initial)))
+        .NoCoreActivities()
+        .AddActivity<SinglePipelineDataSource>()
+        .AddActivity<PCSProfileDataSource>()
+        .AddActivity<VFMDataSource>()
+        .AddActivity<HousingNeedDataSource>()
+        .AddActivity<QuestionScreen>()
+        .AddActivity<CheckYourAnswersScreen>()
+        .AddActivity<ConfirmationScreen>()
+        .AddActivity<FinishWorkflow>()
+        .AddActivity<ScoringCalculation>()
+        .AddActivity<RunEconomicCalculations>()
+        .AddActivity<SetVariable>()
+        .AddConsoleActivities()
+        .AddRedisCache(!builder.Environment.IsDevelopment())
+    );
 
 builder.Services.AddScoped<ICustomPropertyDescriber, CustomPropertyDescriber>();
 

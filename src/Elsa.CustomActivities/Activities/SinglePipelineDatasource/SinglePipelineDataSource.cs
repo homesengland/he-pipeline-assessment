@@ -43,6 +43,10 @@ namespace Elsa.CustomActivities.Activities.SinglePipelineDataSource
             if (data != null)
             {
                 var dataResult = _jsonHelper.JsonToSinglePipelineData(data);
+                dataResult = new SinglePipelineData();
+                dataResult.local_authority = "Adur";
+                dataResult.funding_ask = 1000000;
+                dataResult.units_or_homes = 500;
                 this.Output = dataResult;
             }
             else
