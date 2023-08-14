@@ -360,3 +360,5 @@ pipelineassessment.db-wal
 
 appsettings.Development.json
 junit.xml
+/src/He.PipelineAssessment.UI/appsettings.json
+/src/Elsa.Server/appsettings.json
