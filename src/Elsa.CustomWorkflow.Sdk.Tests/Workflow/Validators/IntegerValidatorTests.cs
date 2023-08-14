@@ -96,5 +96,23 @@ namespace Elsa.CustomWorkflow.Sdk.Tests.Workflow.Validators
             //Assert
             result.ShouldHaveValidationErrorFor(c => c.Answers).WithErrorMessage("The answer must be a whole number"); ;
         }
+
+        [Fact]
+        public void Should_Not_Have_Errors_When_AnswerIsADecimalButAWholeNumber()
+        {
+            //Arrange
+            IntegerValidator validator = new IntegerValidator();
+            var questionActivityData = new QuestionActivityData
+            {
+                Answers = new List<QuestionActivityAnswer> { new QuestionActivityAnswer { AnswerText = "1234.000" } }
+            };
+
+            //Act
+            var result = validator.TestValidate(questionActivityData);
+
+            //
+            result.ShouldNotHaveValidationErrorFor(c => c);
+            result.ShouldNotHaveValidationErrorFor(c => c.Answers);
+        }
     }
 }
