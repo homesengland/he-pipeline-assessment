@@ -14,7 +14,6 @@
     @await Html.PartialAsync("_QuestionTitle", Model.Title)
     @await Html.PartialAsync("_QuestionText", questionTextModel)
     @await Html.PartialAsync("_QuestionHint", Model.QuestionHint)
-    @Html.HiddenFor(model => model.CharacterLimit);
 
     <div class="govuk-character-count" data-module="govuk-character-count" data-maxlength="@Model.CharacterLimit">
         <div class="govuk-form-group">
