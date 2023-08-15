@@ -127,6 +127,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Folder Include="www\" />
     <Folder Include="Views\" />
   </ItemGroup>
 
