@@ -1,0 +1,12 @@
+{
+  "profiles": {
+    "Elsa.CustomModels": {
+      "commandName": "Project",
+      "launchBrowser": true,
+      "environmentVariables": {
+        "ASPNETCORE_ENVIRONMENT": "Development"
+      },
+      "applicationUrl": "https://localhost:61788;http://localhost:61789"
+    }
+  }
+}

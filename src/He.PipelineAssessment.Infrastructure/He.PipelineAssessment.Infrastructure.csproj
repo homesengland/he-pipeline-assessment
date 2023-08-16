@@ -1,0 +1,84 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net6.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <None Remove="Deployment\CreateAndAssignExecutorRole.sql" />
+    <None Remove="Migrations\20230116150107_AddStoredProceduresForAssessmentSummaryPage\GetAssessmentStagesByAssessmentId.sql" />
+    <None Remove="Migrations\20230116150107_AddStoredProceduresForAssessmentSummaryPage\GetStartableToolsByAssessmentId.sql" />
+    <None Remove="Migrations\20230117092610_StoredProcRole\CreateAndAssignExecutorRole.sql" />
+    <None Remove="Migrations\20230208091930_AssessmentListStoredProc\GetAssessments.sql" />
+    <None Remove="Migrations\20230228101841_UpdatingGetAssessmentStagesByAssessmentId\GetAssessmentStagesByAssessmentId.sql" />
+    <None Remove="Migrations\20230309144017_UpdateGetAssessmentsByStageSP\GetAssessmentStagesByAssessmentId.sql" />
+    <None Remove="Migrations\20230519075758_EconomistStoredProcChanges\GetAssessmentStagesByAssessmentId.sql" />
+    <None Remove="Migrations\20230519075758_EconomistStoredProcChanges\GetEconomistAssessments.sql" />
+    <None Remove="Migrations\20230601081949_UpdateGetAssessmentsSPToNotReturnDeleteds\GetAssessmentStagesByAssessmentId.sql" />
+    <None Remove="Migrations\20230601152316_InterventionListStoredProc\GetInterventionList.sql" />
+    <None Remove="Migrations\20230607140525_StoredProceduresToHandleDeletedStatus\GetAssessmentStagesByAssessmentId.sql" />
+    <None Remove="Migrations\20230607140525_StoredProceduresToHandleDeletedStatus\GetStartableToolsByAssessmentId.sql" />
+    <None Remove="Migrations\20230608123140_FixOverwrittenGetAssessmentStagesSP\GetAssessmentStagesByAssessmentId.sql" />
+    <None Remove="Migrations\20230613090638_GetAssessmentsUpdateDeleted\GetAssessments.sql" />
+    <None Remove="Migrations\20230609131017_GetAssessmentInterventionList\GetAssessmentInterventionListByAssessmentId.sql" />
+    <None Remove="Migrations\20230613124443_IncludeWorkflowToolIdOnStartableSP\GetAssessmentInterventionListByAssessmentId.sql" />
+    <None Remove="Migrations\20230613124443_IncludeWorkflowToolIdOnStartableSP\GetAssessmentStagesByAssessmentId.sql" />
+    <None Remove="Migrations\20230613124443_IncludeWorkflowToolIdOnStartableSP\GetInterventionList.sql" />
+    <None Remove="Migrations\20230613124443_IncludeWorkflowToolIdOnStartableSP\GetStartableToolsByAssessmentId.sql" />
+    <None Remove="Migrations\20230623142447_RollbackPHase2SPChanges\GetAssessmentHistoryByAssessmentId.sql" />
+    <None Remove="Migrations\20230623142447_RollbackPHase2SPChanges\GetAssessmentStagesByAssessmentId.sql" />
+    <None Remove="Migrations\20230626101426_InterventionReasonPopulate\PopulateInterventionReason.sql" />
+    <None Remove="Migrations\20230704103432_AddFirstActivityInfoToWorkflowInstance\GetAssessmentHistoryByAssessmentId.sql" />
+    <None Remove="Migrations\20230704103432_AddFirstActivityInfoToWorkflowInstance\GetAssessmentStagesByAssessmentId.sql" />
+    <None Remove="Migrations\20230710082154_EconomistListBugFix\GetEconomistAssessments.sql" />
+    <None Remove="Migrations\20230815094129_IncludeDraftEconomistAssessmentStages\GetAssessmentStagesByAssessmentId.sql" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Include="Deployment\CreateAndAssignExecutorRole.sql" />
+    <EmbeddedResource Include="Migrations\20230116150107_AddStoredProceduresForAssessmentSummaryPage\GetStartableToolsByAssessmentId.sql" />
+    <EmbeddedResource Include="Migrations\20230116150107_AddStoredProceduresForAssessmentSummaryPage\GetAssessmentStagesByAssessmentId.sql" />
+    <EmbeddedResource Include="Migrations\20230117092610_StoredProcRole\CreateAndAssignExecutorRole.sql" />
+    <EmbeddedResource Include="Migrations\20230208091930_AssessmentListStoredProc\GetAssessments.sql" />
+    <EmbeddedResource Include="Migrations\20230228101841_UpdatingGetAssessmentStagesByAssessmentId\GetAssessmentStagesByAssessmentId.sql" />
+    <EmbeddedResource Include="Migrations\20230309144017_UpdateGetAssessmentsByStageSP\GetAssessmentStagesByAssessmentId.sql" />
+    <EmbeddedResource Include="Migrations\20230519075758_EconomistStoredProcChanges\GetAssessmentStagesByAssessmentId.sql" />
+    <EmbeddedResource Include="Migrations\20230519075758_EconomistStoredProcChanges\GetEconomistAssessments.sql" />
+    <EmbeddedResource Include="Migrations\20230601081949_UpdateGetAssessmentsSPToNotReturnDeleteds\GetAssessmentStagesByAssessmentId.sql" />
+    <EmbeddedResource Include="Migrations\20230601152316_InterventionListStoredProc\GetInterventionList.sql" />
+    <EmbeddedResource Include="Migrations\20230607140525_StoredProceduresToHandleDeletedStatus\GetAssessmentStagesByAssessmentId.sql" />
+    <EmbeddedResource Include="Migrations\20230607140525_StoredProceduresToHandleDeletedStatus\GetStartableToolsByAssessmentId.sql" />
+    <EmbeddedResource Include="Migrations\20230608123140_FixOverwrittenGetAssessmentStagesSP\GetAssessmentStagesByAssessmentId.sql" />
+    <EmbeddedResource Include="Migrations\20230609131017_GetAssessmentInterventionList\GetAssessmentInterventionListByAssessmentId.sql" />
+    <EmbeddedResource Include="Migrations\20230613124443_IncludeWorkflowToolIdOnStartableSP\GetAssessmentInterventionListByAssessmentId.sql" />
+    <EmbeddedResource Include="Migrations\20230613124443_IncludeWorkflowToolIdOnStartableSP\GetAssessmentStagesByAssessmentId.sql" />
+    <EmbeddedResource Include="Migrations\20230613124443_IncludeWorkflowToolIdOnStartableSP\GetInterventionList.sql" />
+    <EmbeddedResource Include="Migrations\20230613124443_IncludeWorkflowToolIdOnStartableSP\GetStartableToolsByAssessmentId.sql" />
+    <EmbeddedResource Include="Migrations\20230613090638_GetAssessmentsUpdateDeleted\GetAssessments.sql" />
+    <EmbeddedResource Include="Migrations\20230623142447_RollbackPHase2SPChanges\GetAssessmentHistoryByAssessmentId.sql" />
+    <EmbeddedResource Include="Migrations\20230623142447_RollbackPHase2SPChanges\GetAssessmentStagesByAssessmentId.sql" />
+    <EmbeddedResource Include="Migrations\20230626101426_InterventionReasonPopulate\PopulateInterventionReason.sql" />
+    <EmbeddedResource Include="Migrations\20230704103432_AddFirstActivityInfoToWorkflowInstance\GetAssessmentHistoryByAssessmentId.sql" />
+    <EmbeddedResource Include="Migrations\20230704103432_AddFirstActivityInfoToWorkflowInstance\GetAssessmentStagesByAssessmentId.sql" />
+    <EmbeddedResource Include="Migrations\20230710082154_EconomistListBugFix\GetEconomistAssessments.sql" />
+    <EmbeddedResource Include="Migrations\20230815094129_IncludeDraftEconomistAssessmentStages\GetAssessmentStagesByAssessmentId.sql" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.AspNetCore.DataProtection.EntityFrameworkCore" Version="6.0.9" />
+    <PackageReference Include="Microsoft.AspNetCore.Http.Abstractions" Version="2.2.0" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore" Version="6.0.9" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="6.0.9" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="6.0.9">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\He.PipelineAssessment.Models\He.PipelineAssessment.Models.csproj" />
+  </ItemGroup>
+
+</Project>

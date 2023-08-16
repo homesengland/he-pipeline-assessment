@@ -1,0 +1,41 @@
+﻿@using He.PipelineAssessment.UI
+@using He.PipelineAssessment.UI.Authorization;
+@using Microsoft.AspNetCore.Authorization
+@inject IAuthorizationService AuthorizationService
+@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+@model List<He.PipelineAssessment.Models.ViewModels.AssessmentDataViewModel>
+@inject NonceConfig nonceConfig
+
+@{
+    ViewData["Title"] = "Pipeline Assessment";
+    Layout = "_LayoutFullWidth";
+}
+<div class="govuk-grid-row">
+
+    <h1 class="govuk-heading-l govuk-grid-column-one-quarter pull-left" for="event-name">Assessment Search</h1>
+    <div class="govuk-grid-column-three-quarters pull-right">
+        @if ((await AuthorizationService.AuthorizeAsync(User, Constants.AuthorizationPolicies.AssignmentToPipelineAdminRoleRequired)).Succeeded)
+        {
+            @Html.ActionLink("Sync", "Index", "SinglePipeline", null, new { @class =  "govuk-link pull-right  govuk-!-font-size-24 govuk-!-padding-right-2"})
+            @Html.ActionLink("Admin", "AssessmentTool", "Admin", null, new { @class = "govuk-link pull-right  govuk-!-font-size-24 govuk-!-padding-right-2" })
+            @Html.ActionLink("Assessment Requests", "Index", "Intervention", null, new { @class = "govuk-link pull-right  govuk-!-font-size-24 govuk-!-padding-right-2" })
+        }
+        @if ((await AuthorizationService.AuthorizeAsync(User, Constants.AuthorizationPolicies.AssignmentToWorkflowEconomistRoleRequired)).Succeeded)
+            {
+                @Html.ActionLink("Economist", "GetEconomistList","Economist", null, new{@class="govuk-link pull-right  govuk-!-font-size-24 govuk-!-padding-right-2"})
+            }   
+    </div>
+</div>
+
+<br />
+@await Html.PartialAsync("_AssessmentListTable",Model)
+@section Scripts
+    {
+    <script nonce="@nonceConfig.DataTablesSetup" src="~/js/gov_dataTable.js"></script>
+    <script nonce="@nonceConfig.DataTablesSetup">
+        $(document).ready(function () {
+            initDataTable('assessmentListTable', 3, "search-div")
+        });
+    </script>
+}
+

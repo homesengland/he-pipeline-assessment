@@ -1,0 +1,418 @@
+﻿@using Elsa.CustomWorkflow.Sdk
+@using He.PipelineAssessment.UI.Features.Workflow.QuestionScreenSaveAndContinue
+@using He.PipelineAssessment.UI.Features.Workflow.ViewModels
+@using He.PipelineAssessment.UI.Extensions;
+@model QuestionScreenSaveAndContinueCommand
+@inject NonceConfig nonceConfig
+
+@{
+    List<string?> usedDisplayGroupIds = new List<string?>();
+    var questionsWithReevaluatedPrePopulatedAnswers = Model.Data.Questions!.Any(question => {
+        if (question.QuestionType == QuestionTypeConstants.DataTable)
+        {
+            return question.ReevaluatePrePopulatedAnswers && !question.DataTable.Inputs.All(x=> x.IsReadOnly);
+        }
+        if(question.QuestionType == QuestionTypeConstants.Information)
+        {
+            return false;
+        }
+        return question.ReevaluatePrePopulatedAnswers && !question.IsReadOnly;
+    });
+}
+
+<div class="govuk-form-group">
+<div class="govuk-!-padding-bottom-6">
+<fieldset class="govuk-fieldset" aria-describedby="waste-hint">
+<legend class="govuk-fieldset__legend govuk-fieldset__legend--l">
+    <h1 class="govuk-heading-l">
+        @Html.DisplayTextFor(m => m.Data.PageTitle)
+    </h1>
+    @if(questionsWithReevaluatedPrePopulatedAnswers)
+                {
+                    <div class="govuk-inset-text">
+                        Questions with a * have a pre-populated answer which will be re-evaluated each time the page is loaded.
+                    </div>
+                }
+</legend>
+        
+@if (!Model.IsValid && Model.ValidationMessages !=null)
+{
+    @await Html.PartialAsync("_ValidationSummary",Model.ValidationMessages)
+}
+
+@if (Model.Data.Questions != null)
+{
+    @for (int i = 0; i < Model.Data.Questions.Count; i++)
+    {
+        if (!Model.Data.Questions[i].Answers.Any())
+        {
+            Model.Data.Questions[i].Answers.Add(new Elsa.CustomWorkflow.Sdk.Models.Workflow.QuestionActivityAnswer());
+        }
+        @Html.HiddenFor(m => m.Data.Questions![i].QuestionId)
+        @Html.HiddenFor(m => m.Data.Questions![i].QuestionType)
+        @Html.HiddenFor(m => m.Data.Questions![i].QuestionGuidance)
+        @Html.HiddenFor(m => m.Data.Questions![i].Title)
+        @Html.HiddenFor(m => m.Data.Questions![i].Question)
+        @Html.HiddenFor(m => m.Data.Questions![i].QuestionHint)
+        @Html.HiddenFor(m => m.Data.Questions![i].DisplayComments)
+        @Html.HiddenFor(m => m.Data.Questions![i].DisplayEvidenceBox)
+        @Html.HiddenFor(m => m.Data.Questions![i].IsReadOnly)
+        @Html.HiddenFor(m => m.Data.Questions![i].CharacterLimit)
+
+
+       
+
+        bool isValidItem = true;
+        if (!Model.IsValid && Model.ValidationMessages != null && Model.ValidationMessages.Errors != null)
+        {
+            if (Model.ValidationMessages.Errors.Any(x => x.PropertyName.Contains("Data.Questions[" + i + "]")))
+            {
+                isValidItem = false;
+            }
+        }
+
+        @if (Model.Data.Questions![i].QuestionType == QuestionTypeConstants.TextQuestion)
+        {
+            @await Html.PartialAsync("_TextQuestion",new Question()
+                   {
+                       Index = i,
+                       IsValid = isValidItem,
+                       Answers = Model.Data.Questions[i].Answers.Select(x => new QuestionActivityAnswer
+                       {
+                           Answer = x.AnswerText,
+                           ChoiceId = x.ChoiceId,
+                           Score = x.Score
+                       }).ToList(),
+                       IsReadOnly = Model.Data.Questions[i].IsReadOnly,
+                       Comments = Model.Data.Questions[i].Comments,
+                       DisplayComments = Model.Data.Questions[i].DisplayComments,
+                       DocumentEvidenceLink = Model.Data.Questions[i].DocumentEvidenceLink,
+                       DisplayEvidenceBox = Model.Data.Questions[i].DisplayEvidenceBox,
+                       QuestionText = Model.Data.Questions[i].Question,
+                       QuestionGuidance = Model.Data.Questions[i].QuestionGuidance,
+                       QuestionHint = Model.Data.Questions[i].QuestionHint,
+                       QuestionId = Model.Data.Questions[i].QuestionId,
+                       QuestionType = Model.Data.Questions[i].QuestionType,
+                       Title = Model.Data.Questions[i].Title,
+                       Text =  Model.Data.Questions[i].Text,
+                       ReevaluatePrePopulatedAnswers = Model.Data.Questions[i].ReevaluatePrePopulatedAnswers
+                   })
+            if (Model.Data.Questions![i].IsReadOnly)
+            {
+                @Html.HiddenFor(m => m.Data.Questions![i].Text)
+            }
+        }
+
+        @if (Model.Data.Questions![i].QuestionType == QuestionTypeConstants.TextAreaQuestion)
+        {
+            @await Html.PartialAsync("_TextAreaQuestion",new Question()
+                   {
+                       Index = i,
+                       IsValid = isValidItem,
+                       Answers = Model.Data.Questions[i].Answers.Select(x => new QuestionActivityAnswer
+                       {
+                           Answer = x.AnswerText,
+                           ChoiceId = x.ChoiceId,
+                           Score = x.Score
+                       }).ToList(),
+                       IsReadOnly = Model.Data.Questions[i].IsReadOnly,
+                       Comments = Model.Data.Questions[i].Comments,
+                       DisplayComments = Model.Data.Questions[i].DisplayComments,
+                       DocumentEvidenceLink = Model.Data.Questions[i].DocumentEvidenceLink,
+                       DisplayEvidenceBox = Model.Data.Questions[i].DisplayEvidenceBox,
+                       QuestionText = Model.Data.Questions[i].Question,
+                       QuestionGuidance = Model.Data.Questions[i].QuestionGuidance,
+                       QuestionHint = Model.Data.Questions[i].QuestionHint,
+                       QuestionId = Model.Data.Questions[i].QuestionId,
+                       QuestionType = Model.Data.Questions[i].QuestionType,
+                       Title = Model.Data.Questions[i].Title,
+                       CharacterLimit = Model.Data.Questions[i].CharacterLimit,
+                       Text =  Model.Data.Questions[i].Text, 
+                       ReevaluatePrePopulatedAnswers = Model.Data.Questions[i].ReevaluatePrePopulatedAnswers
+
+                   })
+            if (Model.Data.Questions![i].IsReadOnly)
+            {
+                @Html.HiddenFor(m => m.Data.Questions![i].Text)
+            }
+        }
+        @if (Model.Data.Questions![i].QuestionType == QuestionTypeConstants.DateQuestion)
+        {
+            var dateModel = new Date();
+            dateModel.Day = Model.Data.Questions[i].Date.Day;
+            dateModel.Month = Model.Data.Questions[i].Date.Month;
+            dateModel.Year = Model.Data.Questions[i].Date.Year;
+            @await Html.PartialAsync("_DateQuestion",new Question()
+                   {
+                       Index = i,
+                       IsValid = isValidItem,
+                       Answers = Model.Data.Questions[i].Answers.Select(x => new QuestionActivityAnswer
+                       {
+                           Answer = x.AnswerText,
+                           ChoiceId = x.ChoiceId,
+                           Score = x.Score
+                       }).ToList(),
+                       IsReadOnly = Model.Data.Questions[i].IsReadOnly,
+                       Comments = Model.Data.Questions[i].Comments,
+                       DisplayComments = Model.Data.Questions[i].DisplayComments,
+                       DocumentEvidenceLink = Model.Data.Questions[i].DocumentEvidenceLink,
+                       DisplayEvidenceBox = Model.Data.Questions[i].DisplayEvidenceBox,
+                       QuestionText = Model.Data.Questions[i].Question,
+                       QuestionGuidance = Model.Data.Questions[i].QuestionGuidance,
+                       QuestionHint = Model.Data.Questions[i].QuestionHint,
+                       QuestionId = Model.Data.Questions[i].QuestionId,
+                       QuestionType = Model.Data.Questions[i].QuestionType,
+                       Title = Model.Data.Questions[i].Title, 
+                       Date = dateModel
+                   })
+        }
+        @if (Model.Data.Questions![i].QuestionType == QuestionTypeConstants.CurrencyQuestion)
+        {
+            @await Html.PartialAsync("_CurrencyQuestion",new Question()
+                   {
+                       Index = i,
+                       IsValid = isValidItem,
+                       Answers = Model.Data.Questions[i].Answers.Select(x => new QuestionActivityAnswer
+                       {
+                           Answer = x.AnswerText,
+                           ChoiceId = x.ChoiceId,
+                           Score = x.Score
+                       }).ToList(),
+                       IsReadOnly = Model.Data.Questions[i].IsReadOnly,
+                       Comments = Model.Data.Questions[i].Comments,
+                       DisplayComments = Model.Data.Questions[i].DisplayComments,
+                       DocumentEvidenceLink = Model.Data.Questions[i].DocumentEvidenceLink,
+                       DisplayEvidenceBox = Model.Data.Questions[i].DisplayEvidenceBox,
+                       QuestionText = Model.Data.Questions[i].Question,
+                       QuestionGuidance = Model.Data.Questions[i].QuestionGuidance,
+                       QuestionHint = Model.Data.Questions[i].QuestionHint,
+                       QuestionId = Model.Data.Questions[i].QuestionId,
+                       QuestionType = Model.Data.Questions[i].QuestionType,
+                       Title = Model.Data.Questions[i].Title,
+                       Decimal = Model.Data.Questions[i].Decimal,
+                       ReevaluatePrePopulatedAnswers = Model.Data.Questions[i].ReevaluatePrePopulatedAnswers 
+                   })
+            if (Model.Data.Questions![i].IsReadOnly)
+            {
+                @Html.HiddenFor(m => m.Data.Questions![i].Decimal)
+            }
+        }
+        @if (Model.Data.Questions![i].QuestionType == QuestionTypeConstants.DecimalQuestion)
+        {
+            @await Html.PartialAsync("_DecimalQuestion",new Question()
+                   {
+                       Index = i,
+                       IsValid = isValidItem,
+                       Answers = Model.Data.Questions[i].Answers.Select(x => new QuestionActivityAnswer
+                       {
+                           Answer = x.AnswerText,
+                           ChoiceId = x.ChoiceId,
+                           Score = x.Score
+                       }).ToList(),
+                       IsReadOnly = Model.Data.Questions[i].IsReadOnly,
+                       Comments = Model.Data.Questions[i].Comments,
+                       DisplayComments = Model.Data.Questions[i].DisplayComments,
+                       DocumentEvidenceLink = Model.Data.Questions[i].DocumentEvidenceLink,    
+                       DisplayEvidenceBox = Model.Data.Questions[i].DisplayEvidenceBox,
+                       QuestionText = Model.Data.Questions[i].Question,
+                       QuestionGuidance = Model.Data.Questions[i].QuestionGuidance,
+                       QuestionHint = Model.Data.Questions[i].QuestionHint,
+                       QuestionId = Model.Data.Questions[i].QuestionId,
+                       QuestionType = Model.Data.Questions[i].QuestionType,
+                       Title = Model.Data.Questions[i].Title,
+                       Decimal = Model.Data.Questions[i].Decimal,
+                       ReevaluatePrePopulatedAnswers = Model.Data.Questions[i].ReevaluatePrePopulatedAnswers
+                   })
+            if (Model.Data.Questions![i].IsReadOnly)
+            {
+                @Html.HiddenFor(m => m.Data.Questions![i].Decimal)
+            }
+        }
+        @if (Model.Data.Questions![i].QuestionType == QuestionTypeConstants.IntegerQuestion)
+        {
+            @await Html.PartialAsync("_IntegerQuestion",new Question()
+                   {
+                       Index = i,
+                       IsValid = isValidItem,
+                       Answers = Model.Data.Questions[i].Answers.Select(x => new QuestionActivityAnswer
+                       {
+                           Answer = x.AnswerText,
+                           ChoiceId = x.ChoiceId,
+                           Score = x.Score
+                       }).ToList(),
+                       IsReadOnly = Model.Data.Questions[i].IsReadOnly,
+                       Comments = Model.Data.Questions[i].Comments,
+                       DisplayComments = Model.Data.Questions[i].DisplayComments,
+                       DocumentEvidenceLink = Model.Data.Questions[i].DocumentEvidenceLink,
+                       DisplayEvidenceBox = Model.Data.Questions[i].DisplayEvidenceBox,
+                       QuestionText = Model.Data.Questions[i].Question,
+                       QuestionGuidance = Model.Data.Questions[i].QuestionGuidance,
+                       QuestionHint = Model.Data.Questions[i].QuestionHint,
+                       QuestionId = Model.Data.Questions[i].QuestionId,
+                       QuestionType = Model.Data.Questions[i].QuestionType,
+                       Title = Model.Data.Questions[i].Title,
+                       Decimal = Model.Data.Questions[i].Decimal,
+                       ReevaluatePrePopulatedAnswers = Model.Data.Questions[i].ReevaluatePrePopulatedAnswers
+                   })
+            if (Model.Data.Questions![i].IsReadOnly)
+            {
+                @Html.HiddenFor(m => m.Data.Questions![i].Decimal)
+            }
+        }
+        @if (Model.Data.Questions![i].QuestionType == QuestionTypeConstants.PercentageQuestion)
+        {
+            @await Html.PartialAsync("_PercentageQuestion",new Question()
+                   {
+                       Index = i,
+                       IsValid = isValidItem,
+                       Answers = Model.Data.Questions[i].Answers.Select(x => new QuestionActivityAnswer
+                       {
+                           Answer = x.AnswerText,
+                           ChoiceId = x.ChoiceId,
+                           Score = x.Score
+                       }).ToList(),
+                       IsReadOnly = Model.Data.Questions[i].IsReadOnly,
+                       Comments = Model.Data.Questions[i].Comments,
+                       DisplayComments = Model.Data.Questions[i].DisplayComments,
+                       DocumentEvidenceLink = Model.Data.Questions[i].DocumentEvidenceLink,
+                       DisplayEvidenceBox = Model.Data.Questions[i].DisplayEvidenceBox,
+                       QuestionText = Model.Data.Questions[i].Question,
+                       QuestionGuidance = Model.Data.Questions[i].QuestionGuidance,
+                       QuestionHint = Model.Data.Questions[i].QuestionHint,
+                       QuestionId = Model.Data.Questions[i].QuestionId,
+                       QuestionType = Model.Data.Questions[i].QuestionType,
+                       Title = Model.Data.Questions[i].Title,
+                       Decimal = Model.Data.Questions[i].Decimal,
+            ReevaluatePrePopulatedAnswers = Model.Data.Questions[i].ReevaluatePrePopulatedAnswers
+                   })
+            if (Model.Data.Questions![i].IsReadOnly)
+            {
+                @Html.HiddenFor(m => m.Data.Questions![i].Decimal)
+            }
+        }
+        @if (Model.Data.Questions![i].QuestionType == QuestionTypeConstants.CheckboxQuestion || Model.Data.Questions![i].QuestionType == QuestionTypeConstants.WeightedCheckboxQuestion)
+        {
+
+            @await Html.PartialAsync("_CheckboxQuestion", new Question()
+                   {
+                       Index = i,
+                       IsValid = isValidItem,
+                       Answers = Model.Data.Questions[i].Answers.Select(x => new QuestionActivityAnswer
+                       {
+                           Answer = x.AnswerText,
+                           ChoiceId = x.ChoiceId,
+                           Score = x.Score
+                       }).ToList(),
+                       IsReadOnly = Model.Data.Questions[i].IsReadOnly,
+                       Comments = Model.Data.Questions[i].Comments,
+                       DisplayComments = Model.Data.Questions[i].DisplayComments,
+                       DocumentEvidenceLink = Model.Data.Questions[i].DocumentEvidenceLink,
+                       DisplayEvidenceBox = Model.Data.Questions[i].DisplayEvidenceBox,
+                       QuestionText = Model.Data.Questions[i].Question,
+                       QuestionGuidance = Model.Data.Questions[i].QuestionGuidance,
+                       QuestionHint = Model.Data.Questions[i].QuestionHint,
+                       QuestionId = Model.Data.Questions[i].QuestionId,
+                       QuestionType = Model.Data.Questions[i].QuestionType,
+                       Title = Model.Data.Questions[i].Title,
+                       Checkbox = new Checkbox()
+                       {
+                           SelectedChoices = Model.Data.Questions[i].Checkbox.SelectedChoices,
+                           Choices = Model.Data.Questions[i].Checkbox.Choices.Select(x => new Choice() 
+                           { 
+                               Answer = x.Answer, IsSingle = x.IsSingle, IsExclusiveToQuestion = x.IsExclusiveToQuestion, Id = x.Id, 
+                               QuestionChoiceGroup = x.QuestionChoiceGroup != null ? new ChoiceGroup() 
+                           {
+                           GroupIdentifier = x.QuestionChoiceGroup.GroupIdentifier} : null}).ToList()
+                       },
+                       ReevaluatePrePopulatedAnswers = Model.Data.Questions[i].ReevaluatePrePopulatedAnswers
+                   })
+        }
+        @if (Model.Data.Questions![i].QuestionType == QuestionTypeConstants.RadioQuestion || Model.Data.Questions![i].QuestionType == QuestionTypeConstants.PotScoreRadioQuestion || Model.Data.Questions![i].QuestionType == QuestionTypeConstants.WeightedRadioQuestion)
+        {
+
+            @await Html.PartialAsync("_RadioQuestion",new Question()
+                   {
+                       Index = i,
+                       IsValid = isValidItem,
+                       Answers = Model.Data.Questions[i].Answers.Select(x => new QuestionActivityAnswer
+                       {
+                           Answer = x.AnswerText,
+                           ChoiceId = x.ChoiceId,
+                           Score = x.Score
+                       }).ToList(),
+                       IsReadOnly = Model.Data.Questions[i].IsReadOnly,
+                       Comments = Model.Data.Questions[i].Comments,
+                       DisplayComments = Model.Data.Questions[i].DisplayComments,
+                       DisplayEvidenceBox = Model.Data.Questions[i].DisplayEvidenceBox,
+                       DocumentEvidenceLink = Model.Data.Questions[i].DocumentEvidenceLink,
+                       QuestionText = Model.Data.Questions[i].Question,
+                       QuestionGuidance = Model.Data.Questions[i].QuestionGuidance,
+                       QuestionHint = Model.Data.Questions[i].QuestionHint,
+                       QuestionId = Model.Data.Questions[i].QuestionId,
+                       QuestionType = Model.Data.Questions[i].QuestionType,
+                       Title = Model.Data.Questions[i].Title,
+                       Radio = new Radio()
+                       {
+                           SelectedAnswer = Model.Data.Questions[i].Radio.SelectedAnswer,
+                           Choices = Model.Data.Questions[i].Radio.Choices
+                               .Select(x=> new Choice(){Answer = x.Answer,IsSingle = x.IsSingle, Id = x.Id}).ToList()
+                       },
+                       ReevaluatePrePopulatedAnswers = Model.Data.Questions[i].ReevaluatePrePopulatedAnswers
+                   })
+
+            if (Model.Data.Questions![i].IsReadOnly)
+            {
+                @Html.HiddenFor(m => m.Data.Questions![i].Radio.SelectedAnswer)
+            }
+        }
+
+        @if (Model.Data.Questions![i].QuestionType == QuestionTypeConstants.Information)
+        {
+
+            @await Html.PartialAsync("_Information",new Question()
+                   {
+                       Index = i,
+                       Information = new Information
+                       {
+                           Text = Model.Data.Questions[i].Information.InformationTextList.
+                               Select(x => new InformationText
+                               {
+                                   Text = x.Text,
+                                   IsHyperlink = x.IsHyperlink,
+                                   IsGuidance = x.IsGuidance,
+                                   IsParagraph = x.IsParagraph,
+                                   Url = x.Url
+                               }).ToList()
+                       },
+                   })
+        }
+                    @if (Model.Data.Questions![i].QuestionType == QuestionTypeConstants.DataTable)
+                    {
+                        var tableListForGroup = Model.Data.ToDataTableList(i, usedDisplayGroupIds);
+                        Question dataTableQuestion = new Question()
+                        {
+                            Index = i,
+                            IsValid = Model.Data.IsDataTableValid(tableListForGroup, Model),
+                            QuestionText = Model.Data.Questions[i].Question,
+                            QuestionId = Model.Data.Questions[i].QuestionId,
+                            QuestionType = Model.Data.Questions[i].QuestionType,
+                            DataTable = tableListForGroup,
+                            ValidationMessages = Model.ValidationMessages,
+                            ReevaluatePrePopulatedAnswers = Model.Data.Questions[i].ReevaluatePrePopulatedAnswers,
+                        };
+
+                        usedDisplayGroupIds.Add(Model.Data.Questions[i].DataTable.DisplayGroupId);
+                        if (dataTableQuestion.DataTable.Count > 0)
+                        {
+                            @await Html.PartialAsync("_DataTableQuestion", dataTableQuestion)
+                        }
+                    }
+                    }
+    }
+
+</fieldset>
+</div>
+<input id="Next" type="submit" value="Save and continue" name="Next" class="govuk-button" />
+</div>
+
+<script nonce="@nonceConfig.SiteSetup" src="~/js/site.js"></script>

@@ -1,0 +1,10 @@
+﻿@using He.PipelineAssessment.UI.Features.Workflow.ViewModels
+@model He.PipelineAssessment.UI.Features.Workflow.ViewModels.QuestionText
+@if (!string.IsNullOrEmpty(Model.Text))
+{
+    var questionText = Model.ReevaluatePrepopulatedAnswers && !Model.IsReadOnly  ? $"{Model.Text}*" : Model.Text;
+
+    <label class="govuk-label govuk-label--m">
+        @questionText
+    </label>
+}

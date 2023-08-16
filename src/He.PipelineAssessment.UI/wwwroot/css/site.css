@@ -1,0 +1,48 @@
+html {
+  font-size: 14px;
+}
+
+@media (min-width: 768px) {
+  html {
+    font-size: 16px;
+  }
+}
+
+html {
+  position: relative;
+  min-height: 100%;
+}
+
+body {
+  margin-bottom: 60px;
+}
+
+.header-select {
+    display: flex;
+    justify-content: space-between;
+    flex-wrap: wrap;
+}
+
+.pull-right {
+    float:right;
+}
+
+.pull-left {
+    float:left;
+}
+
+.govuk-checkboxes {
+    margin-bottom: 10px !important;
+}
+
+.govuk-\!-width-one-fifth {
+    width: 20% !important;
+}
+
+.govuk-radios--inline .govuk-radios__item.radio-no-margin {
+    margin-right: 0;
+}
+
+.govuk-select--error {
+    border-color: #d4351c
+}

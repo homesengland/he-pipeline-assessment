@@ -1,0 +1,38 @@
+﻿@model QuestionScreenSaveAndContinueCommand;
+@using He.PipelineAssessment.UI.Features.Workflow.QuestionScreenSaveAndContinue
+@using He.PipelineAssessment.UI.Features.Workflow.ViewModels
+@inject NonceConfig nonceConfig
+
+@{
+    ViewData["Title"] = "Pipeline Assessment";
+    Layout = "_Layout";
+}
+@if (Model.Data.ActivityId != Model.Data.PreviousActivityId)
+{
+    @Html.ActionLink("Back", "LoadWorkflowActivity", "Workflow", new {WorkflowInstanceId = Model.Data.WorkflowInstanceId, ActivityId = Model.Data.PreviousActivityId, ActivityType = Model.Data.PreviousActivityType}, new {@class = "govuk-back-link"})
+}
+@using (Html.BeginForm("CheckYourAnswerScreenSaveAndContinue", "Workflow", FormMethod.Post))
+{
+    @Html.HiddenFor(m => Model.Data.WorkflowInstanceId)
+    @Html.HiddenFor(m => Model.Data.ActivityId)
+    @Html.HiddenFor(m => Model.AssessmentId)
+    @Html.HiddenFor(m => Model.WorkflowDefinitionId)
+    <div class="govuk-form-group">
+        <h1 class="govuk-heading-l">
+            @Html.DisplayTextFor(m => m.Data.PageTitle)
+        </h1>
+
+        @await Html.PartialAsync("_ReviewAnswers",new ReviewAnswers{Questions = Model.Data.CheckQuestions, RenderChangeLinks = true, WorkflowInstanceId = Model.Data.WorkflowInstanceId})
+
+        <br/>
+        <div>
+          <h2 class="govuk-heading-m">@Html.DisplayTextFor(m => m.Data.FooterTitle)</h2>
+            <p class="govuk-body">@Html.DisplayTextFor(m => m.Data.FooterText)</p>
+        </div>
+        @{
+            <input id="Next" type="submit" value="Submit" name="Continue" class="govuk-button"/> 
+        }
+    </div>
+    }
+    
+<script nonce="@nonceConfig.SiteSetup" src="~/js/site.js"></script>

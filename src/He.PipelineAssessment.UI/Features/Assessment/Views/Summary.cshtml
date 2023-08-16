@@ -1,0 +1,54 @@
+﻿@using He.PipelineAssessment.UI
+@using He.PipelineAssessment.UI.Authorization;
+@using System.Security.Claims;
+@using Microsoft.AspNetCore.Authorization
+@inject IAuthorizationService AuthorizationService
+@inject NonceConfig nonceConfig
+@model He.PipelineAssessment.UI.Features.Assessment.AssessmentSummary.AssessmentSummaryResponse;
+
+@{
+    ViewData["Title"] = "Assessment Summary";
+    Layout = "_Layout";
+}
+
+@Html.ActionLink("Back","Index","Assessment", null,new{ @class="govuk-back-link"})
+<span class="govuk-caption-l">@Model.Reference</span>
+<h1 class="govuk-heading-l">@Model.SiteName</h1>
+
+<p class="govuk-body">@Model.LocalAuthority</p>
+<p class="govuk-body">@Model.CounterParty</p>
+<p class="govuk-body">@Model.ProjectManager</p>
+
+<div class="govuk-tabs" data-module="govuk-tabs">
+    <h2 class="govuk-tabs__title">
+        Contents
+    </h2>
+    <ul class="govuk-tabs__list">
+        <li class="govuk-tabs__list-item govuk-tabs__list-item--selected">
+            <a class="govuk-tabs__tab" href="#summary">
+                Assessment Summary
+            </a>
+        </li>
+        <li class="govuk-tabs__list-item govuk-tabs__list-item--selected">
+            <a class="govuk-tabs__tab" href="#history">
+                Assessment History
+            </a>
+        </li>
+        <li class="govuk-tabs__list-item">
+            <a class="govuk-tabs__tab" href="#requests">
+                Requests
+            </a>
+        </li>
+    </ul>
+    <div class="govuk-tabs__panel" id="summary">
+        @await Html.PartialAsync("_SummaryList",Model)
+    </div>
+    <div class="govuk-tabs__panel" id="history">
+        @await Html.PartialAsync("_HistoryList",Model)
+    </div>
+    <div class="govuk-tabs__panel govuk-tabs__panel--hidden" id="requests">
+        @await Html.PartialAsync("_InterventionList",Model)
+    </div>
+</div>
+
+<script nonce="@nonceConfig.SiteSetup" src="~/js/site.js"></script>

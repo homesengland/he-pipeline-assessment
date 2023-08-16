@@ -1,0 +1,30 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net6.0</TargetFramework>
+    <LangVersion>latest</LangVersion>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Remove="Activities\Helpers\**" />
+    <EmbeddedResource Remove="Activities\Helpers\**" />
+    <None Remove="Activities\Helpers\**" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Elsa" Version="2.9.3" />
+    <PackageReference Include="Elsa.Client" Version="2.9.3" />
+    <PackageReference Include="Elsa.Core" Version="2.9.3" />
+    <PackageReference Include="Elsa.Server.Api" Version="2.9.3" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Elsa.CustomInfrastructure\Elsa.CustomInfrastructure.csproj" />
+    <ProjectReference Include="..\Elsa.CustomWorkflow.Sdk\Elsa.CustomWorkflow.Sdk.csproj" />
+    <ProjectReference Include="..\Elsa.Models\Elsa.CustomModels.csproj" />
+    <ProjectReference Include="..\He.PipelineAssessment.Data\He.PipelineAssessment.Data.csproj" />
+  </ItemGroup>
+
+</Project>

@@ -1,0 +1,54 @@
+﻿@using He.PipelineAssessment.UI
+@using He.PipelineAssessment.UI.Authorization;
+@using Microsoft.AspNetCore.Authorization
+@model He.PipelineAssessment.Models.ViewModels.SyncModel
+@inject IAuthorizationService AuthorizationService
+@{
+    ViewData["Title"] = "Sync Single Pipeline Data";
+    Layout = "_LayoutFullWidth";
+}
+
+<div class="govuk-width-container">
+
+    <div class="text-center">
+        <h1 class="govuk-heading-m">Sync Single Pipeline Data</h1>
+        @if (Model.Synced)
+        {
+            <div class="govuk-notification-banner govuk-notification-banner--success" role="alert"
+             aria-labelledby="govuk-notification-banner-title"
+             data-module="govuk-notification-banner">
+                <div class="govuk-notification-banner__header">
+                    <h2 class="govuk-notification-banner__title" id="govuk-notification-banner-title">
+                        Success
+                    </h2>
+                </div>
+                <div class="govuk-notification-banner__content">
+                    <h3 class="govuk-notification-banner__heading">
+                        The Single Pipeline Data has been synced
+                    </h3>
+                    <p class="govuk-body">@Model.NewAssessmentCount new assessments have been imported, and @Model.UpdatedAssessmentCount have been updated.</p>
+                </div>
+            </div>
+        }
+
+    <p class="govuk-body">This single pipeline data returned will be filtered based on the following criteria:</p>
+    <ul class="govuk-list govuk-list--bullet">
+        <li>sp_business_area must be one of the following values- Investment, Development or MPP</li>  
+        <li>project_owner must have a value</li>
+        <li>units_or_homes must have a value </li>
+        <li>local_authority must have a value</li>
+        <li>funding_ask must have a value</li>
+        <li>pipeline_opportunity_site_name and applicant_1 must have values </li>
+        <li>land_type must have one of the following values - Greenfield, Brownfield or Mixed</li>
+    </ul>
+   @using (Html.BeginForm("Sync", "SinglePipeline", FormMethod.Post))
+    {
+    <div>
+        @if ((await AuthorizationService.AuthorizeAsync(User, Constants.AuthorizationPolicies.AssignmentToPipelineAdminRoleRequired)).Succeeded)
+        {
+            <input id="Sync" type="submit" value="Sync" name="Sync" class="govuk-button" />
+        }
+    </div>
+    }
+    </div>
+</div>

@@ -1,0 +1,47 @@
+﻿@using He.PipelineAssessment.UI.Features.Workflow.ViewModels
+@model He.PipelineAssessment.UI.Features.Workflow.ViewModels.Question
+@{
+    var itemName = "Data.Questions[" + Model.Index + "].Radio.SelectedAnswer";
+    var formItemName = "Data.Questions[" + Model.Index + "].Radio";
+
+    var itemId = Model.Index + "radio_multi_select_";
+    var errorFormClass = !Model.IsValid ? "govuk-form-group--error" : "";
+    var isReadOnly = Model.IsReadOnly ? "disabled" : "";
+    var questionTextModel = new QuestionText() { Text = Model.QuestionText, ReevaluatePrepopulatedAnswers = Model.ReevaluatePrePopulatedAnswers, IsReadOnly = Model.IsReadOnly};
+}
+
+<div class="govuk-form-group @errorFormClass" id="@formItemName">
+    @await Html.PartialAsync("_QuestionTitle", Model.Title)
+
+                @await Html.PartialAsync("_QuestionText", questionTextModel)
+    @await Html.PartialAsync("_QuestionHint", Model.QuestionHint)
+
+    <div class="govuk-radios" data-module="govuk-radios" id="@itemName">
+        @for (int i = 0; i < Model.Radio.Choices.Count(); i++)
+        {
+            var hiddenItemNameAnswer = "Data.Questions[" + Model.Index + "].Radio.Choices[" + i + "].Answer";
+            var hiddenItemNameId = "Data.Questions[" + Model.Index + "].Radio.Choices[" + i + "].Id";
+            <input type="hidden" name="@hiddenItemNameAnswer" value="@Model.Radio.Choices[i].Answer"/>
+            <input type="hidden" name="@hiddenItemNameId" value="@Model.Radio.Choices[i].Id" />
+        }
+        @foreach (var choice in Model.Radio.Choices)
+        {
+            int iterrator = 1;
+            string isChecked = "";
+            if (choice.Id == Model.Radio.SelectedAnswer)
+            {
+                isChecked = "checked";
+            }
+            <div class="govuk-radios__item">
+                <input class="govuk-radios__input" name="@itemName" type="radio" value="@choice.Id" id="@itemId@iterrator" @isChecked @isReadOnly>
+                <label class="govuk-label govuk-radios__label" for="@choice.Answer">@choice.Answer</label>
+            </div>
+            iterrator++;
+        }
+    </div>
+
+ 
+    @await Html.PartialAsync("_QuestionGuidance", Model.QuestionGuidance)
+    @await Html.PartialAsync("_Comments", new Comment(){Index = Model.Index, CommentText = Model.Comments,DisplayComments = Model.DisplayComments})
+    @await Html.PartialAsync("_Evidence", new Evidence(){Index = Model.Index, DocumentLink = Model.DocumentEvidenceLink ,DisplayEvidenceBox = Model.DisplayEvidenceBox})
+</div>

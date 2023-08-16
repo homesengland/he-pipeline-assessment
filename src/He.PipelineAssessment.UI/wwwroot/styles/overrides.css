@@ -1,0 +1,29 @@
+﻿.override-question-guidance {
+    margin-top: 5px !important;
+    margin-bottom: 0px !important;
+}
+.govuk-full-width-container {
+    max-width: 1800px;
+    margin-right: 50px;
+    margin-left: 50px;
+}
+.override-header-select {
+    float: left;
+}
+
+.float-right {
+    float: right;
+}
+
+.margin-right-10 {
+    margin-right: 10px;
+}
+
+.scroll-table{
+    overflow-x:auto !important;
+    width:100% !important;
+}
+
+.govuk-input--width-scroll-table {
+    width: 100px !important;
+}

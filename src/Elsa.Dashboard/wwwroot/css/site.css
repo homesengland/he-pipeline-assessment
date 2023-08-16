@@ -1,0 +1,209 @@
+.accordion {
+  background-color: #eee;
+  color: #444;
+  cursor: pointer;
+  padding: 18px;
+  width: 100%;
+  border: none;
+  text-align: left;
+  outline: none;
+  font-size: 15px;
+  transition: 0.4s;
+}
+
+.accordion > * {
+  cursor: auto;
+}
+
+.accordion-paragraph {
+  cursor: pointer !important;
+}
+
+.active, .accordion:hover {
+  background-color: #ccc;
+}
+
+.trashcan-icon:hover {
+  background-color: #bbb;
+  cursor: pointer;
+}
+
+.panel {
+  padding: 0.5rem 0.75rem;
+  display: none;
+  background-color: white;
+  overflow: hidden;
+}
+
+elsa-modal-dialog > div > div > div:first-child {
+  pointer-events: none;
+}
+
+
+@media screen and (min-width: 1024px) {
+  .modal-content {
+    width: 100% !important;
+    max-width: 60rem !important;
+    min-width: 60rem !important;
+    --tw-bg-opacity: 1;
+    background-color: rgb(255 255 255);
+    position: relative;
+    left: 50%;
+    margin-left: -30rem;
+  }
+  div > .elsa-bg-gray-50.elsa-px-4.elsa-py-3.sm\:elsa-px-6.sm\:elsa-flex.sm\:elsa-flex-row-reverse {
+    width: 100% !important;
+    max-width: 60rem !important;
+    min-width: 60rem !important;
+    --tw-bg-opacity: 1;
+    background-color: rgb(255 255 255);
+    position: relative;
+    left: 50%;
+    margin-left: -30rem;
+  }
+}
+
+@media screen and (min-width: 1280px) {
+  .modal-content {
+    width: 100% !important;
+    max-width: 70rem !important;
+    min-width: 70rem !important;
+    --tw-bg-opacity: 1;
+    background-color: rgb(255 255 255);
+    position: relative;
+    left: 50%;
+    margin-left: -35rem;
+  }
+  div > .elsa-bg-gray-50.elsa-px-4.elsa-py-3.sm\:elsa-px-6.sm\:elsa-flex.sm\:elsa-flex-row-reverse {
+    width: 100% !important;
+    max-width: 70rem !important;
+    min-width: 70rem !important;
+    --tw-bg-opacity: 1;
+    background-color: rgb(255 255 255);
+    position: relative;
+    left: 50%;
+    margin-left: -35rem;
+  }
+}
+
+@media only screen and (min-width: 1536px) {
+  .modal-content {
+    width: 100% !important;
+    max-width: 90rem !important;
+    min-width: 90rem !important;
+    --tw-bg-opacity: 1;
+    background-color: rgb(255 255 255);
+    position: relative;
+    left: 50%;
+    margin-left: -45rem;
+  }
+  div > .elsa-bg-gray-50.elsa-px-4.elsa-py-3.sm\:elsa-px-6.sm\:elsa-flex.sm\:elsa-flex-row-reverse {
+    width: 100% !important;
+    max-width: 90rem !important;
+    min-width: 90rem !important;
+    --tw-bg-opacity: 1;
+    background-color: rgb(255 255 255);
+    position: relative;
+    left: 50%;
+    margin-left: -45rem;
+  }
+}
+
+@media only screen and (min-width: 1800px) {
+  .modal-content {
+    width: 100% !important;
+    max-width: 100rem !important;
+    min-width: 100rem !important;
+    --tw-bg-opacity: 1;
+    background-color: rgb(255 255 255);
+    position: relative;
+    left: 50%;
+    margin-left: -50rem;
+  }
+  div > .elsa-bg-gray-50.elsa-px-4.elsa-py-3.sm\:elsa-px-6.sm\:elsa-flex.sm\:elsa-flex-row-reverse {
+    width: 100% !important;
+    max-width: 100rem !important;
+    min-width: 100rem !important;
+    --tw-bg-opacity: 1;
+    background-color: rgb(255 255 255);
+    position: relative;
+    left: 50%;
+    margin-left: -50rem;
+  }
+}
+
+
+  div.elsa-justify-content {
+    display: flex;
+    justify-content: start;
+  }
+
+/*he-monaco {
+  resize: vertical;
+  overflow: hidden;
+}*/
+
+
+.sortablejs-custom-handle {
+  cursor: grab;
+}
+.sortablejs-custom-handle:focus{
+    cursor:grabbing;
+}
+
+.list-group-icon {
+  display: inline-block;
+  color: #677788;
+  width: 2rem;
+  text-align: center;
+  margin-right: 0.5rem;
+}
+
+.bi-grip-horizontal::before {
+  content: "\f3fd";
+}
+
+.bi::before, [class*=" bi-"]::before, [class^=bi-]::before {
+  display: inline-block;
+  font-family: bootstrap-icons !important;
+  font-style: normal;
+  font-weight: 400 !important;
+  font-variant: normal;
+  text-transform: none;
+  line-height: 1;
+  vertical-align: -0.125em;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+.inline{
+    display:inline-block;
+}
+
+.float-right {
+    float:right;
+}
+
+.float-left {
+    float:left;
+}
+
+:host(.dragTarget) {
+  background: rgba(76, 72, 255, 0.75);
+}
+
+.px-5 {
+    padding-left: 5rem;
+    padding-right: 5rem;
+}
+.px-3 {
+  padding-left: 3rem;
+  padding-right: 3rem;
+}
+
+.pl-5 {
+    padding-left: 3rem;
+}
+.pl-3 {
+    padding-left: 3rem;
+}

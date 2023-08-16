@@ -1,0 +1,37 @@
+﻿@using He.PipelineAssessment.UI
+@using Elsa.CustomWorkflow.Sdk
+@using Microsoft.CodeAnalysis.CSharp.Syntax
+@using Elsa.CustomWorkflow.Sdk.Models.Workflow
+@model He.PipelineAssessment.UI.Features.Workflow.QuestionScreenSaveAndContinue.QuestionScreenSaveAndContinueCommand
+
+@{
+    ViewData["Title"] = "Pipeline Assessment";
+    Layout = "_Layout";
+}
+<div class="text-center">
+    @if (Model.Data.ActivityId != Model.Data.PreviousActivityId)
+    {
+        @Html.ActionLink("Back","LoadWorkflowActivity","Workflow", new {WorkflowInstanceId = Model.Data.WorkflowInstanceId, ActivityId = Model.Data.PreviousActivityId, ActivityType = Model.Data.PreviousActivityType},new{ @class="govuk-back-link"})
+    }
+
+    @using (Html.BeginForm("QuestionScreenSaveAndContinue", "Workflow", FormMethod.Post))
+    {
+        @Html.AntiForgeryToken()
+        @Html.HiddenFor(m => Model.Data.WorkflowInstanceId)
+        @Html.HiddenFor(m => Model.Data.ActivityId)
+        @Html.HiddenFor(m => Model.Data.PreviousActivityId)
+        @Html.HiddenFor(m => Model.Data.PreviousActivityType)
+        @Html.HiddenFor(m => Model.AssessmentId)
+        @Html.HiddenFor(m=> Model.WorkflowDefinitionId)
+        @Html.HiddenFor(m => Model.Data.ActivityType)
+        <br />
+
+        if (Model.Data.ActivityType == ActivityTypeConstants.QuestionScreen)
+        {
+            @await Html.PartialAsync("_QuestionScreen",Model)
+        }
+
+    }
+</div>
+
+

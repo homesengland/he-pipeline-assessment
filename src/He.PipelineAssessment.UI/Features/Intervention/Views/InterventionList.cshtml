@@ -1,0 +1,86 @@
+﻿@using He.PipelineAssessment.UI
+@using He.PipelineAssessment.UI.Features.Intervention.InterventionList
+@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+@model List<He.PipelineAssessment.Models.ViewModels.AssessmentInterventionViewModel>
+@inject NonceConfig nonceConfig
+
+@{
+    ViewData["Title"] = "Assessment Requests";
+    Layout = "_LayoutFullWidth";
+}
+
+<div class="govuk-grid-row">
+    <h1 class="govuk-heading-l govuk-grid-column-one-quarter pull-left" for="event-name">Assessment Requests</h1>
+</div>
+
+<br />
+
+<div class="text-center">
+    <div class="govuk-grid-row">
+        <div class="govuk-grid-column-three-quarters">
+            <div id="search-div" class="header-select override-header-select"></div>
+        </div>
+        <div class="govuk-grid-column-one-quarter">
+            <div id="filter-div" class="float-right"></div>
+        </div>
+    </div>
+    <br />
+    <table class="govuk-table" id="interventionListTable">
+
+        <thead class="govuk-table__head">
+            <tr class="govuk-table__row">
+                <th scope="col" class="govuk-table__header">Reference</th>
+                <th scope="col" class="govuk-table__header">Stage</th>
+                <th scope="col" class="govuk-table__header" data-searchable="true">Requested By</th>
+                <th scope="col" class="govuk-table__header" data-searchable="true">Administrator</th>
+                <th scope="col" class="govuk-table__header" data-searchable="true">Status</th>
+                <th scope="col" class="govuk-table__header">Created</th>
+                <th scope="col" class="govuk-table__header">Last Updated</th>
+                <th scope="col" class="govuk-table__header" data-searchable="true">Decision Type</th>
+            </tr>
+        </thead>
+        <tbody class="govuk-table__body">
+            @foreach (var intervention in Model)
+            {
+                var lastModifiedDate = intervention.LastModifiedDateTime.HasValue ? intervention.LastModifiedDateTime.Value.Date.ToString("yyyyMMdd") : "";
+                var lastModified = intervention.LastModifiedDateTime.HasValue ? intervention.LastModifiedDateTime.Value.Date.ToLongDateString() : "";
+
+                var createdDate = intervention.CreatedDateTime.HasValue ? intervention.CreatedDateTime.Value.Date.ToString("yyyyMMdd") : "";
+                var created = intervention.CreatedDateTime.HasValue ? intervention.CreatedDateTime.Value.Date.ToLongDateString() : "";
+
+                var admin = String.IsNullOrEmpty(intervention.Administrator) ? "-" : intervention.Administrator;
+
+                <tr class="govuk-table__row">
+                    <td class="govuk-table__cell">
+                        @if (@intervention.DecisionType == "Override")
+                        {
+                            <a asp-controller="Override" asp-action="EditOverride" asp-route-interventionId="@intervention.Id" class="govuk-link">@intervention.Reference</a>
+                        }
+                        @if (@intervention.DecisionType == "Rollback")
+                        {
+                            <a asp-controller="Rollback" asp-action="EditRollback" asp-route-interventionId="@intervention.Id" class="govuk-link">@intervention.Reference</a>
+                        }
+                    </td>
+                    <td class="govuk-table__cell">@intervention.WorkflowName</td>
+                    <td class="govuk-table__cell">@intervention.RequestedBy</td>
+                    <td class="govuk-table__cell">@admin</td>
+                    <td class="govuk-table__cell"><strong class="govuk-tag govuk-tag--@intervention.StatusDisplayTag()">@intervention.Status</strong></td>
+                    <td class="govuk-table__cell"> <span hidden>@createdDate</span> @created </td>
+                    <td class="govuk-table__cell"> <span hidden>@lastModifiedDate</span> @lastModified </td>
+                    <td class="govuk-table__cell">@intervention.DecisionType</td>
+                </tr>
+            }
+        </tbody>
+
+    </table>
+</div>
+
+@section Scripts
+    {
+    <script nonce="@nonceConfig.DataTablesSetup" src="~/js/gov_dataTable.js"></script>
+    <script nonce="@nonceConfig.DataTablesSetup">
+        $(document).ready(function () {
+            initInterventionDataTable('interventionListTable', 4, "search-div")
+        });
+    </script>
+}
