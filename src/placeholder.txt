@@ -1,1 +1,0 @@
-Source code for the project will go in this folder.
