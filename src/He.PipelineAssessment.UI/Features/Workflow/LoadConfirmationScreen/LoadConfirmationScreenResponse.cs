@@ -1,12 +1,9 @@
-﻿using Azure.Core;
-using Elsa.CustomWorkflow.Sdk.Models.Workflow;
+﻿using He.PipelineAssessment.UI.Features.Workflow.ViewModels;
 
 namespace He.PipelineAssessment.UI.Features.Workflow.LoadConfirmationScreen
 {
-    public class LoadConfirmationScreenResponse : WorkflowActivityDataDto
+    public class LoadConfirmationScreenResponse : PageHeaderInformation
     {
-        public int AssessmentId { get; set; }
-        public string CorrelationId { get; set; } = null!;
         public bool IsLatestSubmittedWorkflow { get; set; }
     }
 }

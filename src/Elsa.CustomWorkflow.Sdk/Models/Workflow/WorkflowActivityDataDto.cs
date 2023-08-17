@@ -1,9 +1,7 @@
 ﻿using Elsa.CustomModels;
 using FluentValidation.Results;
-using System.Data;
 using System.Globalization;
 using System.Text.Json;
-using System.Text.Json.Serialization;
 
 namespace Elsa.CustomWorkflow.Sdk.Models.Workflow
 {

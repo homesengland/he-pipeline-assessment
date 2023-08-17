@@ -4,7 +4,8 @@
     ViewData["Title"] = "Pipeline Assessment";
     Layout = "_Layout";
 }
-
+<span class="govuk-caption-l">@Model.Reference</span>
+<h2 class="govuk-heading-m">@Model.SiteName</h2>
 <div class="govuk-panel govuk-panel--confirmation">
     <h1 class="govuk-panel__title">
         @Model.Data.ConfirmationTitle
@@ -37,7 +38,7 @@
 @await Html.PartialAsync("_ReviewAnswers",new ReviewAnswers{Questions = Model.Data.CheckQuestions, RenderChangeLinks = false})
 
 <div>
-    @Html.ActionLink("Go to Assessment Summary", "Summary", "Assessment", new { Model.AssessmentId, Model.CorrelationId }, new { @class = "govuk-button" })
+    @Html.ActionLink("Exit to Assessment Summary", "Summary", "Assessment", new { Model.AssessmentId, Model.CorrelationId }, new { @class = "govuk-button govuk-button--secondary" })
 </div>
 
 @if (Model.IsLatestSubmittedWorkflow)
