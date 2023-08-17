@@ -20,7 +20,7 @@
     });
 
     string savebuttonText = "Save and continue";
-    if (Model.Data.Questions.All(f=>f.QuestionType == QuestionTypeConstants.Information))
+    if (Model.Data.Questions!.All(f=>f.QuestionType == QuestionTypeConstants.Information))
     {
         savebuttonText = "Continue";
     }
