@@ -18,7 +18,16 @@
         }
         return question.ReevaluatePrePopulatedAnswers && !question.IsReadOnly;
     });
+
+    string savebuttonText = "Save and continue";
+    if (Model.Data.Questions!.All(f=>f.QuestionType == QuestionTypeConstants.Information))
+    {
+        savebuttonText = "Continue";
+    }
 }
+
+<span class="govuk-caption-l">@Model.Reference</span>
+<h2 class="govuk-heading-m">@Model.SiteName</h2>
 
 <div class="govuk-form-group">
 <div class="govuk-!-padding-bottom-6">
@@ -39,6 +48,12 @@
 {
     @await Html.PartialAsync("_ValidationSummary",Model.ValidationMessages)
 }
+
+@Html.HiddenFor(m => m.Reference)
+@Html.HiddenFor(m => m.SiteName)
+@Html.HiddenFor(m => m.CounterParty)
+@Html.HiddenFor(m => m.LocalAuthority)
+@Html.HiddenFor(m => m.ProjectManager)
 
 @if (Model.Data.Questions != null)
 {
@@ -412,7 +427,10 @@
 
 </fieldset>
 </div>
-<input id="Next" type="submit" value="Save and continue" name="Next" class="govuk-button" />
+<div class="govuk-button-group">
+        <input id="Next" type="submit" value="@savebuttonText" name="Next" class="govuk-button" />
+    @Html.ActionLink("Exit to Assessment Summary", "Summary", "Assessment", new { Model.AssessmentId, Model.CorrelationId }, new { @class = "govuk-button govuk-button--secondary" })
+    </div>
 </div>
 
 <script nonce="@nonceConfig.SiteSetup" src="~/js/site.js"></script>

@@ -16,13 +16,13 @@ namespace Elsa.CustomActivities.Activities.ConfirmationScreen
     )]
     public class ConfirmationScreen : Activity
     {
-        [ActivityInput(Hint = "Confirmation title")]
+        [ActivityInput(Hint = "Confirmation Title", SupportedSyntaxes = new[] { SyntaxNames.Literal, SyntaxNames.Json, SyntaxNames.JavaScript })]
         public string ConfirmationTitle { get; set; } = null!;
-        [ActivityInput(Hint = "Confirmation Text")]
+        [ActivityInput(Hint = "Confirmation Text", SupportedSyntaxes = new[] { SyntaxNames.Literal, SyntaxNames.Json, SyntaxNames.JavaScript })]
         public string ConfirmationText { get; set; } = null!;
-        [ActivityInput(Hint = "Footer title")]
+        [ActivityInput(Hint = "Footer title", SupportedSyntaxes = new[] { SyntaxNames.Literal, SyntaxNames.Json, SyntaxNames.JavaScript })]
         public string FooterTitle { get; set; } = null!;
-        [ActivityInput(Hint = "Footer text")]
+        [ActivityInput(Hint = "Footer text", SupportedSyntaxes = new[] { SyntaxNames.Literal, SyntaxNames.Json, SyntaxNames.JavaScript })]
         public string FooterText { get; set; } = null!;
 
         [ActivityInput(Label = "Assessment Conditional Text", 
@@ -33,7 +33,7 @@ namespace Elsa.CustomActivities.Activities.ConfirmationScreen
             IsDesignerCritical = true)]
         public TextModel Text { get; set; } = new TextModel();
 
-        [ActivityInput(Hint = "Next workflow to run")]
+        [ActivityInput(Hint = "Next workflow to run. Comma separate for multiple workflows.", SupportedSyntaxes = new[] { SyntaxNames.Literal, SyntaxNames.Json, SyntaxNames.JavaScript })]
         public string NextWorkflowDefinitionIds { get; set; } = null!;
         [ActivityOutput] public string Output { get; set; } = null!;
 

@@ -65,7 +65,7 @@ namespace He.PipelineAssessment.UI.Tests.Features.Workflow.LoadCheckYourAnswersS
             Assert.NotNull(result);
             Assert.True(result!.IsAuthorised);
             Assert.IsType<QuestionScreenSaveAndContinueCommand>(result);
-            Assert.Equal(assessmentToolWorkflowInstance.Assessment.SpId.ToString(), result!.CorrelationId);
+            Assert.Equal(assessmentToolWorkflowInstance.Assessment.SpId, result!.CorrelationId);
             Assert.Equal(assessmentToolWorkflowInstance.AssessmentId, result.AssessmentId);
             elsaServerHttpClient.Verify(x => x.LoadCheckYourAnswersScreen(It.IsAny<LoadWorkflowActivityDto>()), Times.Once);
         }

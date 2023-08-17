@@ -24,6 +24,7 @@
         public string? hdt_check { get; set; }
         public decimal? bil_ft_mar_dev_disp { get; set; }
         public decimal? bil_ft_high_dem_disp { get; set; }
+        public string? region { get; set; }
         public decimal Shape__Area { get; set; }
         public decimal Shape__Length { get; set; }
     }

@@ -1,4 +1,3 @@
-using AutoMapper;
 using Elsa.Activities.Primitives;
 using Elsa.CustomActivities.Activities.CheckYourAnswersScreen;
 using Elsa.CustomActivities.Activities.ConfirmationScreen;
@@ -21,28 +20,22 @@ using Elsa.CustomInfrastructure.Data.Repository;
 using Elsa.CustomWorkflow.Sdk.Extensions;
 using Elsa.CustomWorkflow.Sdk.Providers;
 using Elsa.Expressions;
+using Elsa.Extensions;
 using Elsa.Persistence.EntityFramework.Core.Extensions;
 using Elsa.Persistence.EntityFramework.SqlServer;
 using Elsa.Providers.Workflows;
 using Elsa.Runtime;
-using Elsa.Server.Api.Endpoints.WorkflowRegistry;
 using Elsa.Server.Extensions;
 using Elsa.Server.Helpers;
 using Elsa.Server.Providers;
 using Elsa.Server.Services;
 using Elsa.Server.StartupTasks;
-using Elsa.Services;
-using Elsa.Services.Workflows;
 using He.PipelineAssessment.Data.Auth;
 using MediatR;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.DataProtection;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection.Extensions;
-using Microsoft.Extensions.Options;
-using Microsoft.Identity;
-using Microsoft.Identity.Web;
 
 
 var builder = WebApplication.CreateBuilder(args);
@@ -50,7 +43,8 @@ var elsaConnectionString = builder.Configuration.GetConnectionString("Elsa");
 var elsaCustomConnectionString = builder.Configuration.GetConnectionString("ElsaCustom");
 
 
-
+var redisConnectionString = builder.Configuration.GetConnectionString("Redis");
+builder.Services.AddRedis($"{redisConnectionString},abortConnect=false");
 
 // Elsa services.
 builder.Services
@@ -69,6 +63,7 @@ builder.Services
         .AddActivity<RunEconomicCalculations>()
         .AddActivity<SetVariable>()
         .AddConsoleActivities()
+        .AddRedisCache(!builder.Environment.IsDevelopment())
     );
 
 builder.Services.AddScoped<ICustomPropertyDescriber, CustomPropertyDescriber>();
@@ -101,7 +96,6 @@ builder.Services.AddMediatR(typeof(Program).Assembly);
 builder.Services.AddApplicationInsightsTelemetry();
 builder.Services.AddScoped<IDateTimeProvider, DateTimeProvider>();
 builder.Services.AddScoped<IActivityDataProvider, ActivityDataProvider>();
-builder.Services.AddScoped<IWorkflowRegistry, WorkflowRegistry>();
 builder.Services.AddScoped<IEnumerable<IWorkflowProvider>>(x =>
 {
     var context = x.GetRequiredService<IHttpContextAccessor>();
@@ -119,8 +113,6 @@ builder.Services.AddScoped<IEnumerable<IWorkflowProvider>>(x =>
         service
     };
 });
-//builder.Services.add
-//builder.Services.AddScoped<IEnumerable<IWorkflowProvider>, List<DatabaseWorkflowProvider>>().Where(x => x.ServiceType == typeof(ListAll));
 builder.Services.AddScoped<IWorkflowRegistryProvider, WorkflowRegistryProvider>();
 builder.Services.AddScoped<IWorkflowInstanceProvider, WorkflowInstanceProvider>();
 builder.Services.AddScoped<IWorkflowPathProvider, WorkflowPathProvider>();
@@ -174,9 +166,11 @@ if (!app.Environment.IsDevelopment())
     app.UseExceptionHandler("/Error");
     // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
     app.UseHsts();
+
+
 }
 
-    app
+app
     .UseCors()
     .UseHttpsRedirection()
     .UseStaticFiles() // For Dashboard.

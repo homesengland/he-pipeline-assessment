@@ -7,6 +7,7 @@ using MediatR;
 using System.Text.Json;
 using He.PipelineAssessment.Infrastructure;
 using He.PipelineAssessment.UI.Common.Utility;
+using He.PipelineAssessment.UI.Helper;
 
 namespace He.PipelineAssessment.UI.Features.Workflow.LoadConfirmationScreen
 {
@@ -83,9 +84,10 @@ namespace He.PipelineAssessment.UI.Features.Workflow.LoadConfirmationScreen
                                     await _assessmentRepository.CreateAssessmentToolInstanceNextWorkflows(nextWorkflows);
                             }
                         }
-                        result.CorrelationId = currentAssessmentToolWorkflowInstance.Assessment.SpId.ToString();
+                        result.CorrelationId = currentAssessmentToolWorkflowInstance.Assessment.SpId;
                         result.AssessmentId = currentAssessmentToolWorkflowInstance.AssessmentId;
                         result.IsLatestSubmittedWorkflow = _assessmentToolWorkflowInstanceHelpers.IsLatestSubmittedWorkflow(currentAssessmentToolWorkflowInstance);
+                        PageHeaderHelper.PopulatePageHeaderInformation(result, currentAssessmentToolWorkflowInstance);
                         return await Task.FromResult(result);
                     }
 
