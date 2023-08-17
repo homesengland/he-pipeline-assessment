@@ -18,6 +18,12 @@
         }
         return question.ReevaluatePrePopulatedAnswers && !question.IsReadOnly;
     });
+
+    string savebuttonText = "Save and continue";
+    if (Model.Data.Questions.All(f=>f.QuestionType == QuestionTypeConstants.Information))
+    {
+        savebuttonText = "Continue";
+    }
 }
 
 <span class="govuk-caption-l">@Model.Reference</span>
@@ -416,7 +422,7 @@
 </fieldset>
 </div>
 <div class="govuk-button-group">
-    <input id="Next" type="submit" value="Save and continue" name="Next" class="govuk-button" />
+        <input id="Next" type="submit" value="@savebuttonText" name="Next" class="govuk-button" />
     @Html.ActionLink("Exit to Assessment Summary", "Summary", "Assessment", new { Model.AssessmentId, Model.CorrelationId }, new { @class = "govuk-button govuk-button--secondary" })
     </div>
 </div>
