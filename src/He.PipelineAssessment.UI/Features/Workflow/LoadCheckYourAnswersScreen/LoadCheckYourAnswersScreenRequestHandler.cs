@@ -5,6 +5,7 @@ using He.PipelineAssessment.Infrastructure.Repository;
 using He.PipelineAssessment.Models;
 using He.PipelineAssessment.UI.Authorization;
 using He.PipelineAssessment.UI.Features.Workflow.QuestionScreenSaveAndContinue;
+using He.PipelineAssessment.UI.Helper;
 using MediatR;
 using System.Text.Json;
 
@@ -58,11 +59,13 @@ namespace He.PipelineAssessment.UI.Features.Workflow.LoadCheckYourAnswersScreen
                     if (entity != null && result != null)
                     {
                         result.AssessmentId = entity.AssessmentId;
-                        result.CorrelationId = entity.Assessment.SpId.ToString();
+                        result.CorrelationId = entity.Assessment.SpId;
                         result.IsAuthorised = true;
                         result.WorkflowDefinitionId= entity.WorkflowDefinitionId;
                         result.IsReadOnly = assessmentWorkflowInstance.Status !=
                                             AssessmentToolWorkflowInstanceConstants.Draft;
+
+                        PageHeaderHelper.PopulatePageHeaderInformation(result, assessmentWorkflowInstance);
                     }
 
                     return await Task.FromResult(result);
