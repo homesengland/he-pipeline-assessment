@@ -37,11 +37,11 @@
         @Html.DisplayTextFor(m => m.Data.PageTitle)
     </h1>
     @if(questionsWithReevaluatedPrePopulatedAnswers)
-    {
-        <div class="govuk-inset-text">
-            Questions with a * have a pre-populated answer which will be re-evaluated each time the page is loaded.
-        </div>
-    }
+                {
+                    <div class="govuk-inset-text">
+                        Questions with a * have a pre-populated answer which will be re-evaluated each time the page is loaded.
+                    </div>
+                }
 </legend>
         
 @if (!Model.IsValid && Model.ValidationMessages !=null)
@@ -73,7 +73,8 @@
         @Html.HiddenFor(m => m.Data.Questions![i].DisplayEvidenceBox)
         @Html.HiddenFor(m => m.Data.Questions![i].IsReadOnly)
         @Html.HiddenFor(m => m.Data.Questions![i].CharacterLimit)
-  
+
+
        
 
         bool isValidItem = true;
@@ -297,7 +298,7 @@
                        QuestionType = Model.Data.Questions[i].QuestionType,
                        Title = Model.Data.Questions[i].Title,
                        Decimal = Model.Data.Questions[i].Decimal,
-                       ReevaluatePrePopulatedAnswers = Model.Data.Questions[i].ReevaluatePrePopulatedAnswers
+            ReevaluatePrePopulatedAnswers = Model.Data.Questions[i].ReevaluatePrePopulatedAnswers
                    })
             if (Model.Data.Questions![i].IsReadOnly)
             {
@@ -335,8 +336,8 @@
                            { 
                                Answer = x.Answer, IsSingle = x.IsSingle, IsExclusiveToQuestion = x.IsExclusiveToQuestion, Id = x.Id, 
                                QuestionChoiceGroup = x.QuestionChoiceGroup != null ? new ChoiceGroup() 
-                               {
-                                   GroupIdentifier = x.QuestionChoiceGroup.GroupIdentifier} : null}).ToList()
+                           {
+                           GroupIdentifier = x.QuestionChoiceGroup.GroupIdentifier} : null}).ToList()
                        },
                        ReevaluatePrePopulatedAnswers = Model.Data.Questions[i].ReevaluatePrePopulatedAnswers
                    })
@@ -400,29 +401,29 @@
                        },
                    })
         }
-        @if (Model.Data.Questions![i].QuestionType == QuestionTypeConstants.DataTable)
-        {
-            var tableListForGroup = Model.Data.ToDataTableList(i, usedDisplayGroupIds);
-            Question dataTableQuestion = new Question()
-            {
-                Index = i,
-                IsValid = Model.Data.IsDataTableValid(tableListForGroup, Model),
-                QuestionText = Model.Data.Questions[i].Question,
-                QuestionId = Model.Data.Questions[i].QuestionId,
-                QuestionType = Model.Data.Questions[i].QuestionType,
-                DataTable = tableListForGroup,
-                ValidationMessages = Model.ValidationMessages,
-                ReevaluatePrePopulatedAnswers = Model.Data.Questions[i].ReevaluatePrePopulatedAnswers,
-            };
+                    @if (Model.Data.Questions![i].QuestionType == QuestionTypeConstants.DataTable)
+                    {
+                        var tableListForGroup = Model.Data.ToDataTableList(i, usedDisplayGroupIds);
+                        Question dataTableQuestion = new Question()
+                        {
+                            Index = i,
+                            IsValid = Model.Data.IsDataTableValid(tableListForGroup, Model),
+                            QuestionText = Model.Data.Questions[i].Question,
+                            QuestionId = Model.Data.Questions[i].QuestionId,
+                            QuestionType = Model.Data.Questions[i].QuestionType,
+                            DataTable = tableListForGroup,
+                            ValidationMessages = Model.ValidationMessages,
+                            ReevaluatePrePopulatedAnswers = Model.Data.Questions[i].ReevaluatePrePopulatedAnswers,
+                        };
 
-            usedDisplayGroupIds.Add(Model.Data.Questions[i].DataTable.DisplayGroupId);
-            if (dataTableQuestion.DataTable.Count > 0)
-            {
-                @await Html.PartialAsync("_DataTableQuestion", dataTableQuestion)
-            }
-        }
+                        usedDisplayGroupIds.Add(Model.Data.Questions[i].DataTable.DisplayGroupId);
+                        if (dataTableQuestion.DataTable.Count > 0)
+                        {
+                            @await Html.PartialAsync("_DataTableQuestion", dataTableQuestion)
+                        }
+                    }
+                    }
     }
-}
 
 </fieldset>
 </div>

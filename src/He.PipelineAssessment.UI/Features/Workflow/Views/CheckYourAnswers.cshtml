@@ -28,16 +28,16 @@
 
         <br/>
         <div>
-            <h2 class="govuk-heading-m">@Html.DisplayTextFor(m => m.Data.FooterTitle)</h2>
+          <h2 class="govuk-heading-m">@Html.DisplayTextFor(m => m.Data.FooterTitle)</h2>
             <p class="govuk-body">@Html.DisplayTextFor(m => m.Data.FooterText)</p>
         </div>
         @{
             <div class="govuk-button-group">
-                <input id="Next" type="submit" value="Submit" name="Continue" class="govuk-button"/>
+            <input id="Next" type="submit" value="Submit" name="Continue" class="govuk-button"/> 
                 @Html.ActionLink("Exit to Assessment Summary", "Summary", "Assessment", new { Model.AssessmentId, Model.CorrelationId }, new { @class = "govuk-button govuk-button--secondary" })
             </div>
         }
     </div>
     }
-
+    
 <script nonce="@nonceConfig.SiteSetup" src="~/js/site.js"></script>
