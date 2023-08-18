@@ -46,7 +46,7 @@
                             }
                         }
                     </dd>
-                    @if (Model.RenderChangeLinks && Model.WorkflowInstanceId != null)
+                    @if (Model.RenderChangeLinks && Model.WorkflowInstanceId != null && (!question.IsReadOnly.HasValue || !question.IsReadOnly.Value))
                     {
                         <dd class="govuk-summary-list__actions">
                             @Html.ActionLink("Change", "LoadWorkflowActivity", "Workflow", new { WorkflowInstanceId = Model.WorkflowInstanceId, ActivityId = @question.ActivityId, ActivityType = ActivityTypeConstants.QuestionScreen }, new { @class = "govuk-link" })
