@@ -31,7 +31,9 @@ namespace Elsa.CustomWorkflow.Sdk.Models.Workflow.Validators
                     {
                         if(data.Answers.FirstOrDefault()!.AnswerText != null)
                         {
-                            return data.Answers.FirstOrDefault()!.AnswerText!.ToCharArray().Length <= data.CharacterLimit;
+                            int lengthOfAnswer = data.Answers.FirstOrDefault()!.AnswerText!.ToCharArray().Length;
+                            bool result = lengthOfAnswer <= data.CharacterLimit;
+                            return result;
                         }
                     }
                     return false;
