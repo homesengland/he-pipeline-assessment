@@ -18,11 +18,13 @@
     @Html.HiddenFor(m => Model.AssessmentId)
     @Html.HiddenFor(m => Model.WorkflowDefinitionId)
     <div class="govuk-form-group">
+        <span class="govuk-caption-l">@Model.Reference</span>
+        <h2 class="govuk-heading-m">@Model.SiteName</h2>
         <h1 class="govuk-heading-l">
             @Html.DisplayTextFor(m => m.Data.PageTitle)
         </h1>
 
-        @await Html.PartialAsync("_ReviewAnswers",new ReviewAnswers{Questions = Model.Data.CheckQuestions, RenderChangeLinks = true, WorkflowInstanceId = Model.Data.WorkflowInstanceId})
+        @await Html.PartialAsync("_ReviewAnswers", new ReviewAnswers { Questions = Model.Data.CheckQuestions, RenderChangeLinks = true, WorkflowInstanceId = Model.Data.WorkflowInstanceId })
 
         <br/>
         <div>
@@ -30,7 +32,10 @@
             <p class="govuk-body">@Html.DisplayTextFor(m => m.Data.FooterText)</p>
         </div>
         @{
+            <div class="govuk-button-group">
             <input id="Next" type="submit" value="Submit" name="Continue" class="govuk-button"/> 
+                @Html.ActionLink("Exit to Assessment Summary", "Summary", "Assessment", new { Model.AssessmentId, Model.CorrelationId }, new { @class = "govuk-button govuk-button--secondary" })
+            </div>
         }
     </div>
     }

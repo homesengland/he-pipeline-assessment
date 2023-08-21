@@ -15,8 +15,13 @@
     @await Html.PartialAsync("_QuestionText", questionTextModel)
     @await Html.PartialAsync("_QuestionHint", Model.QuestionHint)
 
-    <div class="govuk-input__wrapper">
-        <textarea id="@answerName" name="@itemName" class="govuk-textarea govuk-textarea--width-6 @errorFieldClass" rows="5" maxlength="@Model.CharacterLimit" @isReadOnly>@Model.Text</textarea>
+    <div class="govuk-character-count" data-module="govuk-character-count" data-maxlength="@Model.CharacterLimit">
+        <div class="govuk-form-group">
+            <textarea class="govuk-textarea govuk-js-character-count" id="@answerName" @errorFieldClass @isReadOnly name="@itemName" rows="5">@Model.Text</textarea>
+        </div>
+        <div id="@answerName-info" class="govuk-hint govuk-character-count__message">
+            You can enter up to @Model.CharacterLimit characters
+        </div>
     </div>
 
     @await Html.PartialAsync("_QuestionGuidance", Model.QuestionGuidance)

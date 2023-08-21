@@ -33,6 +33,9 @@
     <None Remove="Migrations\20230704103432_AddFirstActivityInfoToWorkflowInstance\GetAssessmentHistoryByAssessmentId.sql" />
     <None Remove="Migrations\20230704103432_AddFirstActivityInfoToWorkflowInstance\GetAssessmentStagesByAssessmentId.sql" />
     <None Remove="Migrations\20230710082154_EconomistListBugFix\GetEconomistAssessments.sql" />
+    <None Remove="Migrations\20230818091947_FixEconomicQueries\GetAssessmentStagesByAssessmentId.sql" />
+    <None Remove="Migrations\20230815094129_IncludeDraftEconomistAssessmentStages\GetAssessmentStagesByAssessmentId.sql" />
+    <None Remove="Migrations\20230818091947_FixEconomicQueries\GetEconomistAssessments.sql" />
   </ItemGroup>
 
   <ItemGroup>
@@ -62,6 +65,9 @@
     <EmbeddedResource Include="Migrations\20230704103432_AddFirstActivityInfoToWorkflowInstance\GetAssessmentHistoryByAssessmentId.sql" />
     <EmbeddedResource Include="Migrations\20230704103432_AddFirstActivityInfoToWorkflowInstance\GetAssessmentStagesByAssessmentId.sql" />
     <EmbeddedResource Include="Migrations\20230710082154_EconomistListBugFix\GetEconomistAssessments.sql" />
+    <EmbeddedResource Include="Migrations\20230818091947_FixEconomicQueries\GetAssessmentStagesByAssessmentId.sql" />
+    <EmbeddedResource Include="Migrations\20230815094129_IncludeDraftEconomistAssessmentStages\GetAssessmentStagesByAssessmentId.sql" />
+    <EmbeddedResource Include="Migrations\20230818091947_FixEconomicQueries\GetEconomistAssessments.sql" />
   </ItemGroup>
 
   <ItemGroup>

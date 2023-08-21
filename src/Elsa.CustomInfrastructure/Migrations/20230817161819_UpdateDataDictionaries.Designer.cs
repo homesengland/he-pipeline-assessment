@@ -4,6 +4,7 @@ using Elsa.CustomInfrastructure.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,10 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Elsa.CustomInfrastructure.Migrations
 {
     [DbContext(typeof(ElsaCustomContext))]
-    partial class ElsaCustomContextModelSnapshot : ModelSnapshot
+    [Migration("20230817161819_UpdateDataDictionaries")]
+    partial class UpdateDataDictionaries
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -223,9 +225,6 @@ namespace Elsa.CustomInfrastructure.Migrations
 
                     b.Property<string>("DocumentEvidenceLink")
                         .HasColumnType("nvarchar(max)");
-
-                    b.Property<bool?>("IsReadOnly")
-                        .HasColumnType("bit");
 
                     b.Property<DateTime?>("LastModifiedDateTime")
                         .HasColumnType("datetime2");

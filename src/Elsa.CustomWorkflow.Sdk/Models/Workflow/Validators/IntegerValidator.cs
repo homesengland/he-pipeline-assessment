@@ -15,7 +15,8 @@ namespace Elsa.CustomWorkflow.Sdk.Models.Workflow.Validators
                         {
                             if (answer !=null && !String.IsNullOrEmpty(answer.AnswerText))
                             {
-                                var isNumeric = int.TryParse(answer!.AnswerText.Replace(",", ""), out _);
+                                var answerText = answer.AnswerText.Replace(",", "").TrimEnd('0').TrimEnd('.');
+                                var isNumeric = int.TryParse(answerText, out _);
                                 return isNumeric;
                             }
                             else

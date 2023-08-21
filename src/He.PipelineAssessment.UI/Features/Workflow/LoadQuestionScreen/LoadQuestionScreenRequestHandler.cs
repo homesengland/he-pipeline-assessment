@@ -5,6 +5,7 @@ using He.PipelineAssessment.Infrastructure.Repository;
 using He.PipelineAssessment.Models;
 using He.PipelineAssessment.UI.Authorization;
 using He.PipelineAssessment.UI.Features.Workflow.QuestionScreenSaveAndContinue;
+using He.PipelineAssessment.UI.Helper;
 using MediatR;
 using Newtonsoft.Json;
 
@@ -65,6 +66,8 @@ namespace He.PipelineAssessment.UI.Features.Workflow.LoadQuestionScreen
                     result!.IsAuthorised = true;
                     result!.AssessmentId = assessmentWorkflowInstance.AssessmentId;
                     result!.WorkflowDefinitionId = assessmentWorkflowInstance.WorkflowDefinitionId;
+
+                    PageHeaderHelper.PopulatePageHeaderInformation(result, assessmentWorkflowInstance);
                     return await Task.FromResult(result);
                 }
                 else
