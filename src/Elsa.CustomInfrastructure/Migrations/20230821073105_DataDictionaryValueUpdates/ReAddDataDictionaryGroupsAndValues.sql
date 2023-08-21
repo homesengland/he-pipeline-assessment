@@ -12,19 +12,18 @@ CREATE TABLE #tempgroup(
 
 insert into #tempgroup
     values
-           (1,''Eligibility'',GETDATE(), GETDATE()),
-           (2,''Hierarchy of Intervention'',GETDATE(), GETDATE()),
-           (3,''Market Failure Economics'',GETDATE(), GETDATE()),
-           (4,''Market Failure'',GETDATE(), GETDATE()),
-           (5,''Strat Fit 2'',GETDATE(), GETDATE()),
-           (6,''VFM Eco 2'',GETDATE(), GETDATE()),
-           (7,''VFM 2'',GETDATE(), GETDATE()),
-           (8,''SWOT Analysis'' ,GETDATE(), GETDATE()),
-           (9,''Del S4'',GETDATE(), GETDATE()),
-           (10,''Strat Fit 4'',GETDATE(), GETDATE()),
-           (11,''VFM EC S4'',GETDATE(), GETDATE()),
-                                (12,''VFM S4'',GETDATE(), GETDATE()),
-                                (13,''AssessSummary'',GETDATE(), GETDATE())
+           (1,''Eligibility S1'',GETDATE(), GETDATE()),
+           (3,''Market Failure Economics S1'',GETDATE(), GETDATE()),
+           (4,''Market Failure S1'',GETDATE(), GETDATE()),
+           (2,''Hierarchy of Intervention S2'',GETDATE(), GETDATE()),
+           (5,''Strategic Fit S2'',GETDATE(), GETDATE()),
+           (6,''Value For Money Economist S2'',GETDATE(), GETDATE()),
+           (7,''Value For Money S2'',GETDATE(), GETDATE()),
+           (8,''SWOT Analysis S3'' ,GETDATE(), GETDATE()),
+           (9,''Deliverability S4'',GETDATE(), GETDATE()),
+           (10,''Strategic Fit S4'',GETDATE(), GETDATE()),
+           (11,''Value For Money Economist S4'',GETDATE(), GETDATE()),
+           (12,''Value For Money S4'',GETDATE(), GETDATE())
 
 MERGE [dbo].[QuestionDataDictionaryGroup] AS Target
     USING #tempgroup    AS Source
@@ -42,8 +41,9 @@ MERGE [dbo].[QuestionDataDictionaryGroup] AS Target
     WHEN MATCHED THEN UPDATE SET
         Target.Id     = Source.Id,
         Target.Name            = Source.Name,
-        Target.LastModifiedDateTime           = Source.LastModifiedDateTime;
+        Target.LastModifiedDateTime           = Source.LastModifiedDateTime
 
+   WHEN NOT MATCHED BY SOURCE THEN DELETE;
 
 IF OBJECT_ID(''tempdb..#temp'') IS NOT NULL DROP TABLE #temp
 
@@ -61,8 +61,8 @@ Insert into #temp values (3,1,''ass_1_2_engalnd'',''Eligibility_Development_In_E
 Insert into #temp values (4,1,''ass_1_4_over_5'',''Eligibility_Over_5_Homes'','''')
 Insert into #temp values (5,1,''ass_1_6_noleaseholdhomes'',''Eligibility_No_Leasehold_Homes'','''')
 Insert into #temp values (6,1,''ass_1_7_uk_company'',''Eligibility_Registered_UK_Company'','''')
-Insert into #temp values (10,1,''Schemes must demonstrate that they will support the development of new housing (this includes development of mixed-use sites)'',''Eligibility_Support_New_Housing'','''')
-Insert into #temp values (11,1,''Units need to be uninhabitable at the point of application '',''Eligibility_Units_Currently_Uninhabitable'','''')
+Insert into #temp values (10,1,NULL,''Eligibility_Support_New_Housing'','''')
+Insert into #temp values (11,1,NULL,''Eligibility_Units_Currently_Uninhabitable'','''')
 Insert into #temp values (15,4,''ass_2_skip_reason'',''Market_Failure_Skip_Reason'','''')
 Insert into #temp values (16,4,''ass_2_2_pub_sect_more'',''Market_Failure_Public_Sector_Will_Deliver_More'','''')
 Insert into #temp values (17,4,''ass_2_3_mp'',''Market_Failure_Market_Power1_Other_Developers_Opportunity'','''')
@@ -92,9 +92,9 @@ Insert into #temp values (71,7,''ass_4_addition'',''VFM2_Additionality'','''')
 Insert into #temp values (72,7,''ass_4_npsv'',''VFM2_Do_Something_NPSV'','''')
 Insert into #temp values (73,7,''ass_4_don_npsv'',''VFM2_Do_Nothing_NPSV'','''')
 Insert into #temp values (74,7,''ass_4_result'',''VFM2_Social_Value_Result'','''')
-Insert into #temp values (81,7,''Is the Local housing market an area of high demand?'',''VFM2_Area_High_Demand'','''')
-Insert into #temp values (82,7,''What % of site is affordable housing '',''VFM2_Percentage_Affordable'','''')
-Insert into #temp values (83,7,''NPSV/C'',''VFM2_NPSV_C'','''')
+Insert into #temp values (81,7,NULL,''VFM2_Area_High_Demand'','''')
+Insert into #temp values (82,7,NULL,''VFM2_Percentage_Affordable'','''')
+Insert into #temp values (83,7,NULL,''VFM2_NPSV_C'','''')
 Insert into #temp values (87,6,''ass_4_eco_why'',''VFM2_Economics_Support_Reason'','''')
 Insert into #temp values (88,6,''ass_4_eco_homes'',''VFM2_Economics_Number_Homes'','''')
 Insert into #temp values (89,6,''ass_4_eco_afford_homes'',''VFM2_Economics_Number_Affordable_Homes'','''')
@@ -114,18 +114,16 @@ Insert into #temp values (102,6,''ass_4_eco_result'',''VFM2_Economics_Result'','
 Insert into #temp values (103,6,''ass_4_eco_commentray'',''VFM2_Economics_Commentary'','''')
 Insert into #temp values (110,5,''ass_3_1_hou_accel'',''Strategic_Fit2_Delivery_Housing_Unlocked_Or_Accelerated'','''')
 Insert into #temp values (111,5,''ass_3_2_unlo_hous'',''Strategic_Fit2_Delivery_Targets_Greatest_Need_Area'','''')
-Insert into #temp values (112,5,''ass_3_3_sme'',''Strategic_Fit2_Delivery_Supports_SME
-'','''')
+Insert into #temp values (112,5,''ass_3_3_sme'',''Strategic_Fit2_Delivery_Supports_SME'','''')
 Insert into #temp values (113,5,''ass_3_4_mmc'',''Strategic_Fit2_Design_Increases_MMC'','''')
 Insert into #temp values (114,5,''ass_3_5_design'',''Strategic_Fit2_Design_Promotes_High_Quality_Design'','''')
-Insert into #temp values (116,5,''ass_3_7_brownfield'',''Strategic_Fit2_Placemaking_Unlocks_Brownfield
-'','''')
+Insert into #temp values (116,5,''ass_3_7_brownfield'',''Strategic_Fit2_Placemaking_Unlocks_Brownfield'','''')
 Insert into #temp values (118,5,''ass_3_11_eco_gro_appr'',''Strategic_Fit2_Wider_Drives_Economic_Growth'','''')
 Insert into #temp values (120,5,''ass_3_13_pub_place'',''Strategic_Fit2_Placemaking_Targets_Priority_Place'','''')
 Insert into #temp values (121,5,''ass_3_14_pub_regen'',''Strategic_Fit2_Placemaking_Facilitates_Regeneration_Activity'','''')
 Insert into #temp values (122,5,''ass_3_15_pub_jobs'',''Strategic_Fit2_Placemaking_Job_Creation'','''')
 Insert into #temp values (124,5,''ass_3_17_pub_sec'',''Strategic_Fit2_Wider_Unlocks_Public_Sector_Land'','''')
-Insert into #temp values (130,5,''Increasing Supply. Enable the market to deliver a net increase of new homes, and the speed at which they are delivered. Intervention targeting an area of high demand / affordability pressures?'',''Strategic_Fit2_Intervention_Targets_High_Demand'','''')
+Insert into #temp values (130,5,NULL,''Strategic_Fit2_Intervention_Targets_High_Demand'','''')
 Insert into #temp values (136,9,''ass_6_1_type'',''Deliverability_Intervention_Product_Type'','''')
 Insert into #temp values (137,9,''ass_6_1_fac_amount'',''Deliverability_Investment_Amount'','''')
 Insert into #temp values (138,9,''ass_6_1_homes'',''Deliverability_Number_Of_Units'','''')
