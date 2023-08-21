@@ -195,8 +195,8 @@ MERGE [dbo].[QuestionDataDictionary] AS Target
        VALUES (
                  Source.Id,
                  Source.DataDictionaryGroupId,
-                 Source.LegacyName,
                  Source.Name,
+                 Source.LegacyName,
                  Source.Type,
                  Source.Type,
                  GETDATE(),
