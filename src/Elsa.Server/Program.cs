@@ -44,7 +44,7 @@ var elsaCustomConnectionString = builder.Configuration.GetConnectionString("Elsa
 
 
 var redisConnectionString = builder.Configuration.GetConnectionString("Redis");
-builder.Services.AddRedis($"{redisConnectionString},abortConnect=false");
+builder.Services.AddRedisNoSsl($"{redisConnectionString},abortConnect=false");
 
 // Elsa services.
 builder.Services

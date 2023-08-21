@@ -40,4 +40,17 @@ namespace Elsa.Server.Extensions
             return options;
         }
     }
+
+    public static class RedisServiceCollectionExtensions
+    {
+        public static IServiceCollection AddRedisNoSsl(
+            this IServiceCollection services,
+            string connectionString)
+        {
+            var configurationOptions = ConfigurationOptions.Parse(connectionString);
+            configurationOptions.Ssl = false;
+            var connectionMultiplexer = (IConnectionMultiplexer)ConnectionMultiplexer.Connect(configurationOptions);
+            return services.AddSingleton(connectionMultiplexer);
+        }
+    }
 }
