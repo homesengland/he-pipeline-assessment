@@ -9,11 +9,13 @@
   <ItemGroup>
     <None Remove="Migrations\20230718145135_ReaddingDataDictionaryTables\AddDataDictionaryGroupsAndValues.sql" />
     <None Remove="Migrations\20230718145135_ReaddingDataDictionaryTables\ReAddDataDictionaryGroupsAndValues.sql" />
+    <None Remove="Migrations\20230821073105_DataDictionaryValueUpdates\ReAddDataDictionaryGroupsAndValues.sql" />
   </ItemGroup>
 
   <ItemGroup>
     <EmbeddedResource Include="Migrations\20230718145135_ReaddingDataDictionaryTables\AddDataDictionaryGroupsAndValues.sql" />
     <EmbeddedResource Include="Migrations\20230817161819_UpdateDataDictionaries\ReAddDataDictionaryGroupsAndValues.sql" />
+    <EmbeddedResource Include="Migrations\20230821073105_DataDictionaryValueUpdates\ReAddDataDictionaryGroupsAndValues.sql" />
   </ItemGroup>
 
   <ItemGroup>

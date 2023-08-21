@@ -52,7 +52,8 @@ namespace Elsa.Server.Helpers
                 QuestionText = question.QuestionText,
                 Weighting = question.QuestionWeighting,
                 QuestionDataDictionaryId = question.DataDictionary == 0 ? null : question.DataDictionary,
-                Choices = MapChoices(question)
+                Choices = MapChoices(question),
+                IsReadOnly = question.IsReadOnly
             };
         }
 

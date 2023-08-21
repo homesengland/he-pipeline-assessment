@@ -6,9 +6,8 @@
 <div class="govuk-grid-row">
     <div class="govuk-grid-column-two-thirds-from-desktop">
         <dl class="govuk-summary-list govuk-!-margin-bottom-9">
-            @foreach (var question in Model.Questions!)
+            @foreach (var question in Model.Questions!.Where(x => x.QuestionType != QuestionTypeConstants.Information))
             {
-
                 <div class="govuk-summary-list__row">
                     <dt class="govuk-summary-list__key">
                         @question.QuestionText
@@ -35,10 +34,6 @@
 
                                     <p>£ @answer.AnswerText.ToCommaSeparatedNumber()</p>
                                 }
-                                else if (question.QuestionType == QuestionTypeConstants.Information)
-                                {
-
-                                }
                                 else if (question.QuestionType == QuestionTypeConstants.DataTable)
                                 {
 
@@ -51,7 +46,7 @@
                             }
                         }
                     </dd>
-                    @if (Model.RenderChangeLinks && Model.WorkflowInstanceId != null && question.QuestionType != QuestionTypeConstants.Information)
+                    @if (Model.RenderChangeLinks && Model.WorkflowInstanceId != null && (!question.IsReadOnly.HasValue || !question.IsReadOnly.Value))
                     {
                         <dd class="govuk-summary-list__actions">
                             @Html.ActionLink("Change", "LoadWorkflowActivity", "Workflow", new { WorkflowInstanceId = Model.WorkflowInstanceId, ActivityId = @question.ActivityId, ActivityType = ActivityTypeConstants.QuestionScreen }, new { @class = "govuk-link" })
