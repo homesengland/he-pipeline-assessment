@@ -1,4 +1,5 @@
 ﻿using FluentValidation;
+using System.Reflection.Metadata.Ecma335;
 
 namespace Elsa.CustomWorkflow.Sdk.Models.Workflow.Validators
 {
@@ -18,6 +19,25 @@ namespace Elsa.CustomWorkflow.Sdk.Models.Workflow.Validators
                         }).WithMessage("The question has not been answered");
                     }
                 );
+
+            RuleFor(x => x).Must(BeLessCharactersThanMaxLength).WithMessage("The text area has exceeded the maximum allowed characters");
+
+
+            bool BeLessCharactersThanMaxLength(QuestionActivityData data)
+            {
+                if (data.QuestionType == QuestionTypeConstants.TextAreaQuestion)
+                {
+                    if (data.CharacterLimit != null)
+                    {
+                        if(data.Answers.FirstOrDefault()!.AnswerText != null)
+                        {
+                            return data.Answers.FirstOrDefault()!.AnswerText!.ToCharArray().Length <= data.CharacterLimit;
+                        }
+                    }
+                    return false;
+                }
+                else return true;
+            }
         }
     }
 }

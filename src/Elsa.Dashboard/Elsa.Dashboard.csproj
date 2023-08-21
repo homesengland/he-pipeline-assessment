@@ -53,6 +53,7 @@
     <None Remove="src\models\display-toggle.tsx" />
     <None Remove="src\models\StoreConfig.ts" />
     <None Remove="src\nested-drivers\display-managers\he-data-table-driver.tsx" />
+    <None Remove="src\nested-drivers\he-numeric-driver.tsx" />
     <None Remove="src\nested-drivers\he-text-activity-driver.tsx" />
     <None Remove="wwwroot\Scripts\CustomElsa.js" />
     <None Remove="wwwroot\Scripts\Drivers\ConditionalTextListPropertyDriver.js" />
@@ -89,6 +90,7 @@
     <TypeScriptCompile Include="src\components\common-properties\nested-properties\nested-property-list.tsx" />
     <TypeScriptCompile Include="src\components\base-component.ts" />
     <TypeScriptCompile Include="src\components\editors\he-monaco\he-monaco-utils.ts" />
+    <TypeScriptCompile Include="src\nested-drivers\he-numeric-driver.tsx" />
     <TypeScriptCompile Include="src\utils\intellisenseGatherer.ts" />
     <TypeScriptCompile Include="src\functions\multiExpressionEditorUpdate.tsx">
       <SubType>Code</SubType>
