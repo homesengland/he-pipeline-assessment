@@ -51,8 +51,15 @@ namespace Elsa.Server.Extensions
         {
             var configurationOptions = ConfigurationOptions.Parse(connectionString);
             configurationOptions.CertificateValidation += CertificateValidationCallBack!;
+            configurationOptions.CertificateSelection += OptionsOnCertificateSelection;
             var connectionMultiplexer = (IConnectionMultiplexer)ConnectionMultiplexer.Connect(configurationOptions);
             return services.AddSingleton(connectionMultiplexer);
+        }
+
+        private static X509Certificate OptionsOnCertificateSelection(object sender, string targethost, X509CertificateCollection localcertificates, X509Certificate? remotecertificate, string[] acceptableissuers)
+        {
+            return new X509Certificate2("path to cert", "and maybe password?");
+            // or can we get something from localcertificates collection?
         }
 
         private static bool CertificateValidationCallBack(
