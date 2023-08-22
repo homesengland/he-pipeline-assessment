@@ -59,7 +59,7 @@ namespace Elsa.CustomWorkflow.Sdk.Tests.Workflow.Validators
 
             //Assert
             result.ShouldNotHaveValidationErrorFor(c => c);
-            result.ShouldHaveValidationErrorFor(c => c.Answers).WithErrorMessage("The answer must be a whole number");
+            result.ShouldHaveValidationErrorFor(c => c.Answers).WithErrorMessage("The answer MyAnswer must be a whole number");
         }
 
         [Fact]
@@ -94,7 +94,7 @@ namespace Elsa.CustomWorkflow.Sdk.Tests.Workflow.Validators
             var result = validator.TestValidate(questionActivityData);
 
             //Assert
-            result.ShouldHaveValidationErrorFor(c => c.Answers).WithErrorMessage("The answer must be a whole number"); ;
+            result.ShouldHaveValidationErrorFor(c => c.Answers).WithErrorMessage("The answer 1234.567 must be a whole number"); ;
         }
 
         [Fact]
@@ -105,6 +105,24 @@ namespace Elsa.CustomWorkflow.Sdk.Tests.Workflow.Validators
             var questionActivityData = new QuestionActivityData
             {
                 Answers = new List<QuestionActivityAnswer> { new QuestionActivityAnswer { AnswerText = "1234.000" } }
+            };
+
+            //Act
+            var result = validator.TestValidate(questionActivityData);
+
+            //
+            result.ShouldNotHaveValidationErrorFor(c => c);
+            result.ShouldNotHaveValidationErrorFor(c => c.Answers);
+        }
+
+        [Fact]
+        public void Should_Not_Have_Errors_When_AnswerIsZero()
+        {
+            //Arrange
+            IntegerValidator validator = new IntegerValidator();
+            var questionActivityData = new QuestionActivityData
+            {
+                Answers = new List<QuestionActivityAnswer> { new QuestionActivityAnswer { AnswerText = "0" } }
             };
 
             //Act
