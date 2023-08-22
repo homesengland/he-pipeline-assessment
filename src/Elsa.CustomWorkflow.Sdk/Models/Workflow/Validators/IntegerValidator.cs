@@ -13,6 +13,10 @@ namespace Elsa.CustomWorkflow.Sdk.Models.Workflow.Validators
                         RuleForEach(x => x.Answers).NotEmpty().WithMessage("The answer must be a whole number");
                         RuleForEach(x => x.Answers).Must(answer =>
                         {
+                            if (answer.AnswerText == "0")
+                            {
+                                return true;
+                            }
                             if (answer !=null && !String.IsNullOrEmpty(answer.AnswerText))
                             {
                                 var answerText = answer.AnswerText.Replace(",", "").TrimEnd('0').TrimEnd('.');

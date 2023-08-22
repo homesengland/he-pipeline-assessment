@@ -114,5 +114,23 @@ namespace Elsa.CustomWorkflow.Sdk.Tests.Workflow.Validators
             result.ShouldNotHaveValidationErrorFor(c => c);
             result.ShouldNotHaveValidationErrorFor(c => c.Answers);
         }
+
+        [Fact]
+        public void Should_Not_Have_Errors_When_AnswerIsZero()
+        {
+            //Arrange
+            IntegerValidator validator = new IntegerValidator();
+            var questionActivityData = new QuestionActivityData
+            {
+                Answers = new List<QuestionActivityAnswer> { new QuestionActivityAnswer { AnswerText = "0" } }
+            };
+
+            //Act
+            var result = validator.TestValidate(questionActivityData);
+
+            //
+            result.ShouldNotHaveValidationErrorFor(c => c);
+            result.ShouldNotHaveValidationErrorFor(c => c.Answers);
+        }
     }
 }
