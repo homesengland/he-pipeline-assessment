@@ -20,7 +20,7 @@ namespace Elsa.CustomWorkflow.Sdk.Models.Workflow.Validators
                                         return true;
                                     }
 
-                                    var answerText = answer.AnswerText.Replace(",", "").TrimEnd('0').TrimEnd('.');
+                                    var answerText = answer.AnswerText!.Replace(",", "").TrimEnd('0').TrimEnd('.');
                                     var isNumeric = int.TryParse(answerText, out _);
                                     return isNumeric;
 
