@@ -93,6 +93,12 @@ export namespace Components {
         "propertyDescriptor": ActivityPropertyDescriptor;
         "propertyModel": ActivityDefinitionProperty;
     }
+    interface HeNumericProperty {
+        "activityModel": ActivityModel;
+        "keyId": string;
+        "propertyDescriptor": ActivityPropertyDescriptor;
+        "propertyModel": ActivityDefinitionProperty;
+    }
     interface HePotscoreRadioOptionsProperty {
         "activityModel": ActivityModel;
         "propertyDescriptor": ActivityPropertyDescriptor;
@@ -222,6 +228,10 @@ export interface HeMultiTextPropertyCustomEvent<T> extends CustomEvent<T> {
     detail: T;
     target: HTMLHeMultiTextPropertyElement;
 }
+export interface HeNumericPropertyCustomEvent<T> extends CustomEvent<T> {
+    detail: T;
+    target: HTMLHeNumericPropertyElement;
+}
 export interface HePotscoreRadioOptionsPropertyCustomEvent<T> extends CustomEvent<T> {
     detail: T;
     target: HTMLHePotscoreRadioOptionsPropertyElement;
@@ -347,6 +357,12 @@ declare global {
         prototype: HTMLHeMultiTextPropertyElement;
         new (): HTMLHeMultiTextPropertyElement;
     };
+    interface HTMLHeNumericPropertyElement extends Components.HeNumericProperty, HTMLStencilElement {
+    }
+    var HTMLHeNumericPropertyElement: {
+        prototype: HTMLHeNumericPropertyElement;
+        new (): HTMLHeNumericPropertyElement;
+    };
     interface HTMLHePotscoreRadioOptionsPropertyElement extends Components.HePotscoreRadioOptionsProperty, HTMLStencilElement {
     }
     var HTMLHePotscoreRadioOptionsPropertyElement: {
@@ -450,6 +466,7 @@ declare global {
         "he-multi-expression-editor": HTMLHeMultiExpressionEditorElement;
         "he-multi-line-property": HTMLHeMultiLinePropertyElement;
         "he-multi-text-property": HTMLHeMultiTextPropertyElement;
+        "he-numeric-property": HTMLHeNumericPropertyElement;
         "he-potscore-radio-options-property": HTMLHePotscoreRadioOptionsPropertyElement;
         "he-property-editor": HTMLHePropertyEditorElement;
         "he-question-data-dictionary-property": HTMLHeQuestionDataDictionaryPropertyElement;
@@ -555,6 +572,13 @@ declare namespace LocalJSX {
         "activityModel"?: ActivityModel;
         "keyId"?: string;
         "onExpressionChanged"?: (event: HeMultiTextPropertyCustomEvent<string>) => void;
+        "propertyDescriptor"?: ActivityPropertyDescriptor;
+        "propertyModel"?: ActivityDefinitionProperty;
+    }
+    interface HeNumericProperty {
+        "activityModel"?: ActivityModel;
+        "keyId"?: string;
+        "onExpressionChanged"?: (event: HeNumericPropertyCustomEvent<string>) => void;
         "propertyDescriptor"?: ActivityPropertyDescriptor;
         "propertyModel"?: ActivityDefinitionProperty;
     }
@@ -672,6 +696,7 @@ declare namespace LocalJSX {
         "he-multi-expression-editor": HeMultiExpressionEditor;
         "he-multi-line-property": HeMultiLineProperty;
         "he-multi-text-property": HeMultiTextProperty;
+        "he-numeric-property": HeNumericProperty;
         "he-potscore-radio-options-property": HePotscoreRadioOptionsProperty;
         "he-property-editor": HePropertyEditor;
         "he-question-data-dictionary-property": HeQuestionDataDictionaryProperty;
@@ -705,6 +730,7 @@ declare module "@stencil/core" {
             "he-multi-expression-editor": LocalJSX.HeMultiExpressionEditor & JSXBase.HTMLAttributes<HTMLHeMultiExpressionEditorElement>;
             "he-multi-line-property": LocalJSX.HeMultiLineProperty & JSXBase.HTMLAttributes<HTMLHeMultiLinePropertyElement>;
             "he-multi-text-property": LocalJSX.HeMultiTextProperty & JSXBase.HTMLAttributes<HTMLHeMultiTextPropertyElement>;
+            "he-numeric-property": LocalJSX.HeNumericProperty & JSXBase.HTMLAttributes<HTMLHeNumericPropertyElement>;
             "he-potscore-radio-options-property": LocalJSX.HePotscoreRadioOptionsProperty & JSXBase.HTMLAttributes<HTMLHePotscoreRadioOptionsPropertyElement>;
             "he-property-editor": LocalJSX.HePropertyEditor & JSXBase.HTMLAttributes<HTMLHePropertyEditorElement>;
             "he-question-data-dictionary-property": LocalJSX.HeQuestionDataDictionaryProperty & JSXBase.HTMLAttributes<HTMLHeQuestionDataDictionaryPropertyElement>;
