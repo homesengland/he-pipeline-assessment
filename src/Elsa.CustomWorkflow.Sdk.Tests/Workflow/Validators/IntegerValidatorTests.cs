@@ -59,7 +59,7 @@ namespace Elsa.CustomWorkflow.Sdk.Tests.Workflow.Validators
 
             //Assert
             result.ShouldNotHaveValidationErrorFor(c => c);
-            result.ShouldHaveValidationErrorFor(c => c.Answers).WithErrorMessage("The answer must be a whole number");
+            result.ShouldHaveValidationErrorFor(c => c.Answers).WithErrorMessage("The answer MyAnswer must be a whole number");
         }
 
         [Fact]
@@ -94,7 +94,7 @@ namespace Elsa.CustomWorkflow.Sdk.Tests.Workflow.Validators
             var result = validator.TestValidate(questionActivityData);
 
             //Assert
-            result.ShouldHaveValidationErrorFor(c => c.Answers).WithErrorMessage("The answer must be a whole number"); ;
+            result.ShouldHaveValidationErrorFor(c => c.Answers).WithErrorMessage("The answer 1234.567 must be a whole number"); ;
         }
 
         [Fact]
