@@ -114,7 +114,7 @@ namespace Elsa.CustomActivities.Activities.QuestionScreen
     })]
         public bool DisplayEvidenceBox{ get; set; }
 
-        [HeActivityInput(Hint = "Character limit", UIHint = HePropertyUIHints.SingleLine, DefaultValue =1000, ConditionalActivityTypes = new[] { QuestionTypeConstants.TextAreaQuestion }, ExpectedOutputType = ExpectedOutputHints.Number)]
+        [HeActivityInput(Hint = "Character limit", UIHint = HePropertyUIHints.Numeric, DefaultValue=1000, ConditionalActivityTypes = new[] { QuestionTypeConstants.TextAreaQuestion }, ExpectedOutputType = ExpectedOutputHints.Number)]
         public int? CharacterLimit { get; set; } = 1000;
 
         [HeActivityInput(Hint = "Question Weighting",
