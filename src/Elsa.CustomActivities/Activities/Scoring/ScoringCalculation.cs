@@ -55,7 +55,6 @@ namespace Elsa.CustomActivities.Activities.Scoring
                 }
                 else
                 {
-                    Calculation = TruncateCalculation(Calculation);
                     Output = Calculation;
                     context.JournalData.Add("Output", Output);
 
@@ -93,17 +92,6 @@ namespace Elsa.CustomActivities.Activities.Scoring
             }
 
             return Done();
-        }
-
-        private string TruncateCalculation(string calculation)
-        {
-            var isDouble = double.TryParse(calculation, out var number);
-            if (isDouble)
-            {
-                number = Math.Round(number, 2);
-                return number.ToString(CultureInfo.InvariantCulture);
-            }
-            return calculation;
         }
     }
 }
