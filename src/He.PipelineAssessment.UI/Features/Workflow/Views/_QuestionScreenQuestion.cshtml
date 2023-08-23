@@ -74,7 +74,8 @@
     })
     if (Model.QuestionActivityData.IsReadOnly)
     {
-        @Html.HiddenFor(m => m.QuestionActivityData.Text)//these will liekly need updating to use the index OR or start all of hiddens into partials for each question type
+        var hidden = "Data.Questions[" + Model.Index + "].Text";
+        <input type="hidden" name="@hiddenHideQuestion" value="@Model.QuestionActivityData.Text" />
     }
 }
 
@@ -108,7 +109,8 @@
     })
     if (Model.QuestionActivityData.IsReadOnly)
     {
-        @Html.HiddenFor(m => m.QuestionActivityData.Text)
+        var hidden = "Data.Questions[" + Model.Index + "].Text";
+        <input type="hidden" name="@hiddenHideQuestion" value="@Model.QuestionActivityData.Text" />
     }
 }
 @if (Model.QuestionActivityData.QuestionType == QuestionTypeConstants.DateQuestion)
@@ -169,7 +171,8 @@
     })
     if (Model.QuestionActivityData.IsReadOnly)
     {
-        @Html.HiddenFor(m => m.QuestionActivityData.Decimal)
+        var hidden = "Data.Questions[" + Model.Index + "].Decimal";
+        <input type="hidden" name="@hiddenHideQuestion" value="@Model.QuestionActivityData.Decimal" />
     }
 }
 @if (Model.QuestionActivityData.QuestionType == QuestionTypeConstants.DecimalQuestion)
@@ -200,7 +203,8 @@
     })
     if (Model.QuestionActivityData.IsReadOnly)
     {
-        @Html.HiddenFor(m => m.QuestionActivityData.Decimal)
+        var hidden = "Data.Questions[" + Model.Index + "].Decimal";
+        <input type="hidden" name="@hiddenHideQuestion" value="@Model.QuestionActivityData.Decimal" />
     }
 }
 @if (Model.QuestionActivityData.QuestionType == QuestionTypeConstants.IntegerQuestion)
@@ -231,7 +235,8 @@
     })
     if (Model.QuestionActivityData.IsReadOnly)
     {
-        @Html.HiddenFor(m => m.QuestionActivityData.Decimal)
+        var hidden = "Data.Questions[" + Model.Index + "].Decimal";
+        <input type="hidden" name="@hiddenHideQuestion" value="@Model.QuestionActivityData.Decimal" />
     }
 }
 @if (Model.QuestionActivityData.QuestionType == QuestionTypeConstants.PercentageQuestion)
@@ -262,7 +267,8 @@
     })
     if (Model.QuestionActivityData.IsReadOnly)
     {
-        @Html.HiddenFor(m => m.QuestionActivityData.Decimal)
+        var hidden = "Data.Questions[" + Model.Index + "].Decimal";
+        <input type="hidden" name="@hiddenHideQuestion" value="@Model.QuestionActivityData.Decimal" />
     }
 }
 @if (Model.QuestionActivityData.QuestionType == QuestionTypeConstants.CheckboxQuestion || Model.QuestionActivityData.QuestionType == QuestionTypeConstants.WeightedCheckboxQuestion)
@@ -337,7 +343,8 @@
 
     if (Model.QuestionActivityData.IsReadOnly)
     {
-        @Html.HiddenFor(m => m.QuestionActivityData.Radio.SelectedAnswer)
+        var hidden = "Data.Questions[" + Model.Index + "].Radio.SelectedAnswer";
+        <input type="hidden" name="@hiddenHideQuestion" value="@Model.QuestionActivityData.Radio.SelectedAnswer" />
     }
 }
 
