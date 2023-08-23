@@ -73,6 +73,8 @@ namespace He.PipelineAssessment.UI.Features.Workflow.ViewModels
         public bool IsGuidance { get; set; } = false;
         public bool IsHyperlink { get; set; } = false;
         public string? Url { get; set; }
+        public bool IsBulletpoint { get; set; } = false;
+        public bool IsBold { get; set; } = false;
     }
 
     public class TableInput

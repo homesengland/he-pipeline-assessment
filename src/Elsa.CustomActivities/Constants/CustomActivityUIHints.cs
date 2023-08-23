@@ -10,5 +10,6 @@ namespace Elsa.CustomActivities.Constants
         public const string CheckboxQuestionProperty = "checkbox-question-builder";
         public const string RadioQuestionProperty = "radio-question-builder";
         public const string TextActivityProperty = "text-activity-builder";
+        public const string TextGroupProperty = "text-group-builder";
     }
 }

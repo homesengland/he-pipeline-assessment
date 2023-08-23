@@ -282,7 +282,7 @@ namespace Elsa.Server.Features.Workflow.LoadQuestionScreen
                     .Select(x => new InformationText()
                     {
                         Text = x.Text, IsGuidance = x.IsGuidance, IsParagraph = x.IsParagraph,
-                        IsHyperlink = x.IsHyperlink, Url = x.Url
+                        IsHyperlink = x.IsHyperlink, Url = x.Url, IsBold = x.IsBold, IsBulletpoint = x.isBullet
                     })
                     .ToArray();
             }

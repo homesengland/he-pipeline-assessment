@@ -71,6 +71,10 @@ export class TextActivityOptionsSyntax {
   static readonly Hyperlink = "Hyperlink";
   static readonly Url = "Url";
   static readonly Condition = "Condition";
+  static readonly Bold = "Bold";
+  static readonly Bulletpoints = "Bulletpoints";
+  static readonly Collapsed = "Collapsed";
+  static readonly Title = "Title";
 }
 
 export class QuestionTypeConstants {

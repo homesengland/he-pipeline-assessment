@@ -142,6 +142,13 @@ export namespace Components {
         "propertyDescriptor": ActivityPropertyDescriptor;
         "propertyModel": ActivityDefinitionProperty;
     }
+    interface HeTextGroupProperty {
+        "activityModel": ActivityModel;
+        "keyId": string;
+        "modelSyntax": string;
+        "propertyDescriptor": ActivityPropertyDescriptor;
+        "propertyModel": NestedActivityDefinitionProperty;
+    }
     interface HeWeightedCheckboxOptionGroupProperty {
         "activityModel": ActivityModel;
         "keyId": string;
@@ -259,6 +266,10 @@ export interface HeSwitchAnswersPropertyCustomEvent<T> extends CustomEvent<T> {
 export interface HeTextActivityPropertyCustomEvent<T> extends CustomEvent<T> {
     detail: T;
     target: HTMLHeTextActivityPropertyElement;
+}
+export interface HeTextGroupPropertyCustomEvent<T> extends CustomEvent<T> {
+    detail: T;
+    target: HTMLHeTextGroupPropertyElement;
 }
 export interface HeWeightedCheckboxOptionGroupPropertyCustomEvent<T> extends CustomEvent<T> {
     detail: T;
@@ -405,6 +416,12 @@ declare global {
         prototype: HTMLHeTextActivityPropertyElement;
         new (): HTMLHeTextActivityPropertyElement;
     };
+    interface HTMLHeTextGroupPropertyElement extends Components.HeTextGroupProperty, HTMLStencilElement {
+    }
+    var HTMLHeTextGroupPropertyElement: {
+        prototype: HTMLHeTextGroupPropertyElement;
+        new (): HTMLHeTextGroupPropertyElement;
+    };
     interface HTMLHeWeightedCheckboxOptionGroupPropertyElement extends Components.HeWeightedCheckboxOptionGroupProperty, HTMLStencilElement {
     }
     var HTMLHeWeightedCheckboxOptionGroupPropertyElement: {
@@ -474,6 +491,7 @@ declare global {
         "he-single-line-property": HTMLHeSingleLinePropertyElement;
         "he-switch-answers-property": HTMLHeSwitchAnswersPropertyElement;
         "he-text-activity-property": HTMLHeTextActivityPropertyElement;
+        "he-text-group-property": HTMLHeTextGroupPropertyElement;
         "he-weighted-checkbox-option-group-property": HTMLHeWeightedCheckboxOptionGroupPropertyElement;
         "he-weighted-checkbox-property": HTMLHeWeightedCheckboxPropertyElement;
         "he-weighted-radio-option-group-property": HTMLHeWeightedRadioOptionGroupPropertyElement;
@@ -632,6 +650,14 @@ declare namespace LocalJSX {
         "propertyDescriptor"?: ActivityPropertyDescriptor;
         "propertyModel"?: ActivityDefinitionProperty;
     }
+    interface HeTextGroupProperty {
+        "activityModel"?: ActivityModel;
+        "keyId"?: string;
+        "modelSyntax"?: string;
+        "onExpressionChanged"?: (event: HeTextGroupPropertyCustomEvent<string>) => void;
+        "propertyDescriptor"?: ActivityPropertyDescriptor;
+        "propertyModel"?: NestedActivityDefinitionProperty;
+    }
     interface HeWeightedCheckboxOptionGroupProperty {
         "activityModel"?: ActivityModel;
         "keyId"?: string;
@@ -704,6 +730,7 @@ declare namespace LocalJSX {
         "he-single-line-property": HeSingleLineProperty;
         "he-switch-answers-property": HeSwitchAnswersProperty;
         "he-text-activity-property": HeTextActivityProperty;
+        "he-text-group-property": HeTextGroupProperty;
         "he-weighted-checkbox-option-group-property": HeWeightedCheckboxOptionGroupProperty;
         "he-weighted-checkbox-property": HeWeightedCheckboxProperty;
         "he-weighted-radio-option-group-property": HeWeightedRadioOptionGroupProperty;
@@ -738,6 +765,7 @@ declare module "@stencil/core" {
             "he-single-line-property": LocalJSX.HeSingleLineProperty & JSXBase.HTMLAttributes<HTMLHeSingleLinePropertyElement>;
             "he-switch-answers-property": LocalJSX.HeSwitchAnswersProperty & JSXBase.HTMLAttributes<HTMLHeSwitchAnswersPropertyElement>;
             "he-text-activity-property": LocalJSX.HeTextActivityProperty & JSXBase.HTMLAttributes<HTMLHeTextActivityPropertyElement>;
+            "he-text-group-property": LocalJSX.HeTextGroupProperty & JSXBase.HTMLAttributes<HTMLHeTextGroupPropertyElement>;
             "he-weighted-checkbox-option-group-property": LocalJSX.HeWeightedCheckboxOptionGroupProperty & JSXBase.HTMLAttributes<HTMLHeWeightedCheckboxOptionGroupPropertyElement>;
             "he-weighted-checkbox-property": LocalJSX.HeWeightedCheckboxProperty & JSXBase.HTMLAttributes<HTMLHeWeightedCheckboxPropertyElement>;
             "he-weighted-radio-option-group-property": LocalJSX.HeWeightedRadioOptionGroupProperty & JSXBase.HTMLAttributes<HTMLHeWeightedRadioOptionGroupPropertyElement>;

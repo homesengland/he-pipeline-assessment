@@ -29,9 +29,9 @@ namespace Elsa.CustomActivities.Activities.ConfirmationScreen
             Hint = "Text to display on Outcome Screen.", 
             UIHint = CustomActivityUIHints.TextActivityProperty, 
             SupportedSyntaxes = new[] { SyntaxNames.Json }, 
-            DefaultSyntax = TextActivitySyntaxNames.TextActivity, 
+            DefaultSyntax = TextActivitySyntaxNames.TextGroup, 
             IsDesignerCritical = true)]
-        public TextModel Text { get; set; } = new TextModel();
+        public List<TextGroup> Text { get; set; } = new List<TextGroup>();
 
         [ActivityInput(Hint = "Next workflow to run. Comma separate for multiple workflows.", SupportedSyntaxes = new[] { SyntaxNames.Literal, SyntaxNames.Json, SyntaxNames.JavaScript })]
         public string NextWorkflowDefinitionIds { get; set; } = null!;

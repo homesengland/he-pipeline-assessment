@@ -11,11 +11,15 @@
     var hiddenItemIsParagraph = "Data.Questions[" + Model.Index + "].Information.InformationTextList[" + i + "].IsParagraph";
     var hiddenItemIsGuidance = "Data.Questions[" + Model.Index + "].Information.InformationTextList[" + i + "].IsGuidance";
     var hiddenItemIsHyperlink = "Data.Questions[" + Model.Index + "].Information.InformationTextList[" + i + "].IsHyperlink";
+    var hiddenItemIsBold = "Data.Questions[" + Model.Index + "].Information.InformationTextList[" + i + "].IsBold";
+    var hiddenItemIsBullet = "Data.Questions[" + Model.Index + "].Information.InformationTextList[" + i + "].IsBulletpoint";
     var hiddenItemUrl = "Data.Questions[" + Model.Index + "].Information.InformationTextList[" + i + "].Url";
 
     <input type="hidden" name="@hiddenItemText" value="@Model.Information.Text[i].Text" />
     <input type="hidden" name="@hiddenItemIsParagraph" value="@Model.Information.Text[i].IsParagraph.ToString()" />
     <input type="hidden" name="@hiddenItemIsGuidance" value="@Model.Information.Text[i].IsGuidance.ToString()" />
     <input type="hidden" name="@hiddenItemIsHyperlink" value="@Model.Information.Text[i].IsHyperlink.ToString()" />
+    <input type="hidden" name="@hiddenItemIsBold" value="@Model.Information.Text[i].IsBold.ToString()" />
+    <input type="hidden" name="@hiddenItemIsBullet" value="@Model.Information.Text[i].IsBulletpoint.ToString()" />
     <input type="hidden" name="@hiddenItemUrl" value="@Model.Information.Text[i].Url" />
 }

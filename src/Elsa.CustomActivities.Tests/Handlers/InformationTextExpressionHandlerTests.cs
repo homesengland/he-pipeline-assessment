@@ -164,7 +164,7 @@ namespace Elsa.CustomActivities.Tests.Handlers
             ElsaProperty property = SampleElsaProperty(GetDictionary(SyntaxNames.Literal, "Sample Text", paragraphValue: paragraphValue.ToString()), SyntaxNames.Literal, "Paragraph Text");
 
             //Act
-            bool actualParagraphValue = handler.EvaluateParagraph(property);
+            bool actualParagraphValue = handler.EvaluateBoolean(property, TextActivitySyntaxNames.Paragraph);
 
             //Assert
             Assert.Equal(paragraphValue, actualParagraphValue);
@@ -186,9 +186,9 @@ namespace Elsa.CustomActivities.Tests.Handlers
             missingKey.Expressions!.Remove(TextActivitySyntaxNames.Paragraph);
 
             //Act
-            bool actualParagraphValue = handler.EvaluateParagraph(property);
-            bool actualParagraphValueForEmptyProperty = handler.EvaluateParagraph(emptyProperty);
-            bool actualParagraphValueForMissingKey = handler.EvaluateParagraph(missingKey);
+            bool actualParagraphValue = handler.EvaluateBoolean(property, TextActivitySyntaxNames.Paragraph);
+            bool actualParagraphValueForEmptyProperty = handler.EvaluateBoolean(emptyProperty, TextActivitySyntaxNames.Paragraph);
+            bool actualParagraphValueForMissingKey = handler.EvaluateBoolean(missingKey, TextActivitySyntaxNames.Paragraph);
 
             //Assert
             Assert.False(actualParagraphValue);
@@ -209,7 +209,7 @@ namespace Elsa.CustomActivities.Tests.Handlers
             ElsaProperty property = SampleElsaProperty(GetDictionary(SyntaxNames.Literal, "Sample Text", hyperlinkValue: hyperlinkValue.ToString()), SyntaxNames.Literal, "Paragraph Text");
 
             //Act
-            bool actualHyperlinkValue = handler.EvaluateHyperlink(property);
+            bool actualHyperlinkValue = handler.EvaluateBoolean(property, TextActivitySyntaxNames.Hyperlink);
 
             //Assert
             Assert.Equal(hyperlinkValue, actualHyperlinkValue);
@@ -232,9 +232,9 @@ namespace Elsa.CustomActivities.Tests.Handlers
             missingKey.Expressions!.Remove(TextActivitySyntaxNames.Hyperlink);
 
             //Act
-            bool actualHyperlinkValue = handler.EvaluateHyperlink(property);
-            bool actualHyperlinkValueForEmptyString = handler.EvaluateHyperlink(emptyProperty);
-            bool actualHyperlinkValueForMissingKey = handler.EvaluateHyperlink(missingKey);
+            bool actualHyperlinkValue = handler.EvaluateBoolean(property, TextActivitySyntaxNames.Hyperlink);
+            bool actualHyperlinkValueForEmptyString = handler.EvaluateBoolean(emptyProperty, TextActivitySyntaxNames.Hyperlink);
+            bool actualHyperlinkValueForMissingKey = handler.EvaluateBoolean(missingKey, TextActivitySyntaxNames.Hyperlink);
 
             //Assert
             Assert.False(actualHyperlinkValue);
@@ -254,7 +254,7 @@ namespace Elsa.CustomActivities.Tests.Handlers
             ElsaProperty property = SampleElsaProperty(GetDictionary(SyntaxNames.Literal, "Sample Text", guidanceValue: guidanceValue.ToString()), SyntaxNames.Literal, "Paragraph Text");
 
             //Act
-            bool actualGuidanceValue = handler.EvaluateGuidance(property);
+            bool actualGuidanceValue = handler.EvaluateBoolean(property, TextActivitySyntaxNames.Guidance);
 
             //Assert
             Assert.Equal(guidanceValue, actualGuidanceValue);
@@ -276,14 +276,104 @@ namespace Elsa.CustomActivities.Tests.Handlers
 
             missingKey.Expressions!.Remove(TextActivitySyntaxNames.Guidance);
             //Act
-            bool actualGuidanceValue = handler.EvaluateGuidance(property);
-            bool actualGuidanceValueForEmptyString = handler.EvaluateGuidance(emptyProperty);
-            bool guidanceValueForMissingKey = handler.EvaluateGuidance(missingKey);
+            bool actualGuidanceValue = handler.EvaluateBoolean(property, TextActivitySyntaxNames.Guidance);
+            bool actualGuidanceValueForEmptyString = handler.EvaluateBoolean(emptyProperty, TextActivitySyntaxNames.Guidance);
+            bool guidanceValueForMissingKey = handler.EvaluateBoolean(missingKey, TextActivitySyntaxNames.Guidance);
 
             //Assert
             Assert.False(actualGuidanceValue);
             Assert.False(actualGuidanceValueForEmptyString);
             Assert.False(guidanceValueForMissingKey);
+        }
+
+        [Theory, AutoMoqData]
+        public void EvaluateBold_ReturnsTrue_WhenCorrectDataIsProvided(
+        Mock<IContentSerializer> serializer,
+        bool guidanceValue, 
+        Mock<ILogger<IExpressionHandler>> logger)
+        {
+            //Arrange
+
+            InformationTextExpressionHandler handler = new InformationTextExpressionHandler(logger.Object, serializer.Object);
+
+            ElsaProperty property = SampleElsaProperty(GetDictionary(SyntaxNames.Literal, "Sample Text", boldValue: guidanceValue.ToString()), SyntaxNames.Literal, "Paragraph Text");
+
+            //Act
+            bool actualBoldValue = handler.EvaluateBoolean(property, TextActivitySyntaxNames.Bold);
+
+            //Assert
+            Assert.Equal(guidanceValue, actualBoldValue);
+
+        }
+
+        [Theory, AutoMoqData]
+        public void EvaluateBold_ReturnsFalse_WhenNoDataOrFalseDataIsProvided(
+            Mock<IContentSerializer> serializer,
+            Mock<ILogger<IExpressionHandler>> logger)
+        {
+            //Arrange
+
+            InformationTextExpressionHandler handler = new InformationTextExpressionHandler(logger.Object, serializer.Object);
+
+            ElsaProperty property = SampleElsaProperty(GetDictionary(SyntaxNames.Literal, "Sample Text", boldValue: "false"), SyntaxNames.Literal, "Paragraph Text");
+            ElsaProperty emptyProperty = SampleElsaProperty(GetDictionary(SyntaxNames.Literal, "Sample Text", boldValue: ""), SyntaxNames.Literal, "Paragraph Text");
+            ElsaProperty missingKey = SampleElsaProperty(GetDictionary(SyntaxNames.Literal, "Sample Text", boldValue: ""), SyntaxNames.Literal, "Paragraph Text");
+
+            missingKey.Expressions!.Remove(TextActivitySyntaxNames.Bold);
+            //Act
+            bool actualBoldValue = handler.EvaluateBoolean(property, TextActivitySyntaxNames.Bold);
+            bool actualBoldValueForEmptyString = handler.EvaluateBoolean(emptyProperty, TextActivitySyntaxNames.Bold);
+            bool boldValueForMissingKey = handler.EvaluateBoolean(missingKey, TextActivitySyntaxNames.Bold);
+
+            //Assert
+            Assert.False(actualBoldValue);
+            Assert.False(actualBoldValueForEmptyString);
+            Assert.False(boldValueForMissingKey);
+        }
+
+        [Theory, AutoMoqData]
+        public void EvaluateBullet_ReturnsTrue_WhenCorrectDataIsProvided(
+                    Mock<IContentSerializer> serializer,
+                    bool bulletValue,
+                    Mock<ILogger<IExpressionHandler>> logger)
+        {
+            //Arrange
+
+            InformationTextExpressionHandler handler = new InformationTextExpressionHandler(logger.Object, serializer.Object);
+
+            ElsaProperty property = SampleElsaProperty(GetDictionary(SyntaxNames.Literal, "Sample Text", bulletValue: bulletValue.ToString()), SyntaxNames.Literal, "Paragraph Text");
+
+            //Act
+            bool actualBoldValue = handler.EvaluateBoolean(property, TextActivitySyntaxNames.Bulletpoint);
+
+            //Assert
+            Assert.Equal(bulletValue, actualBoldValue);
+
+        }
+
+        [Theory, AutoMoqData]
+        public void EvaluateBullet_ReturnsFalse_WhenNoDataOrFalseDataIsProvided(
+            Mock<IContentSerializer> serializer,
+            Mock<ILogger<IExpressionHandler>> logger)
+        {
+            //Arrange
+
+            InformationTextExpressionHandler handler = new InformationTextExpressionHandler(logger.Object, serializer.Object);
+
+            ElsaProperty property = SampleElsaProperty(GetDictionary(SyntaxNames.Literal, "Sample Text", bulletValue: "false"), SyntaxNames.Literal, "Paragraph Text");
+            ElsaProperty emptyProperty = SampleElsaProperty(GetDictionary(SyntaxNames.Literal, "Sample Text", bulletValue: ""), SyntaxNames.Literal, "Paragraph Text");
+            ElsaProperty missingKey = SampleElsaProperty(GetDictionary(SyntaxNames.Literal, "Sample Text", bulletValue: ""), SyntaxNames.Literal, "Paragraph Text");
+
+            missingKey.Expressions!.Remove(TextActivitySyntaxNames.Bold);
+            //Act
+            bool actualBulletValue = handler.EvaluateBoolean(property, TextActivitySyntaxNames.Bulletpoint);
+            bool actualBulletValueForEmptyString = handler.EvaluateBoolean(emptyProperty, TextActivitySyntaxNames.Bulletpoint);
+            bool bulletValueForMissingKey = handler.EvaluateBoolean(missingKey, TextActivitySyntaxNames.Bulletpoint);
+
+            //Assert
+            Assert.False(actualBulletValue);
+            Assert.False(actualBulletValueForEmptyString);
+            Assert.False(bulletValueForMissingKey);
         }
 
         [Theory, AutoMoqData]
@@ -300,7 +390,7 @@ namespace Elsa.CustomActivities.Tests.Handlers
                 hyperlinkValue: isHyperlink.ToString(), urlValue: urlValue.ToString()), SyntaxNames.Literal, "Url Text");
 
             //Act
-            string? actualUrlValue = handler.EvaluateUrl(property);
+            string? actualUrlValue = handler.EvaluateString(property, TextActivitySyntaxNames.Url);
 
             //Assert
             Assert.Equal(urlValue, actualUrlValue);
@@ -324,9 +414,9 @@ namespace Elsa.CustomActivities.Tests.Handlers
             elsaPropertyWithoutKey.Expressions!.Remove(TextActivitySyntaxNames.Url);
 
             //Act
-            string? actualUrlValue = handler.EvaluateUrl(emptyQuoteStringValue);
-            string? actualUrlValueForEmptyString = handler.EvaluateUrl(emptyStringValue);
-            string? actualUrlValueForNoKey = handler.EvaluateUrl(elsaPropertyWithoutKey);
+            string? actualUrlValue = handler.EvaluateString(emptyQuoteStringValue, TextActivitySyntaxNames.Url);
+            string? actualUrlValueForEmptyString = handler.EvaluateString(emptyStringValue, TextActivitySyntaxNames.Url);
+            string? actualUrlValueForNoKey = handler.EvaluateString(elsaPropertyWithoutKey, TextActivitySyntaxNames.Url);
 
             //Assert
             Assert.Equal(string.Empty, actualUrlValue);
@@ -341,7 +431,9 @@ namespace Elsa.CustomActivities.Tests.Handlers
             string urlValue = "",
             string paragraphValue = "true", 
             string guidanceValue = "false",
-            string conditionValue = "true")
+            string conditionValue = "true",
+            string boldValue = "false",
+            string bulletValue = "false")
         {
 
             return new Dictionary<string, string>()
@@ -352,6 +444,8 @@ namespace Elsa.CustomActivities.Tests.Handlers
                 {TextActivitySyntaxNames.Hyperlink, hyperlinkValue},
                 {TextActivitySyntaxNames.Guidance, guidanceValue},
                 {CustomSyntaxNames.Condition, conditionValue},
+                {TextActivitySyntaxNames.Bold, boldValue },
+                {TextActivitySyntaxNames.Bulletpoint, bulletValue},
             };
         }
 

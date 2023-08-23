@@ -80,6 +80,11 @@ export function getOrCreateProperty(activity: ActivityModel, name: string, defau
 
   return property;
 }
+export function getOrCreateNestedProperty(activity: ActivityModel, name: string, type: string, defaultExpression?: () => string, defaultSyntax?: () => string): NestedActivityDefinitionProperty {
+  var property = getOrCreateProperty(activity, name, defaultExpression, defaultSyntax) as NestedActivityDefinitionProperty;
+  property.type = type;
+  return property;
+}
 
 export function parseJson(json: string): any {
   if (!json)

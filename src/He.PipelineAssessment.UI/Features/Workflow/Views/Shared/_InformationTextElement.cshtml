@@ -1,10 +1,17 @@
 ﻿@using He.PipelineAssessment.UI.Features.Workflow.ViewModels
 @model He.PipelineAssessment.UI.Features.Workflow.ViewModels.InformationText
+@{
+    var bulletPoint = Model.IsBulletpoint ? "•  " : "";
+}
 
 @if(Model.IsHyperlink && !string.IsNullOrEmpty(Model.Url)){
-    <a class="govuk-body govuk-link" href="@Model.Url" target="_blank">@Model.Text</a>
+    @bulletPoint<a class="govuk-body govuk-link" href="@Model.Url" target="_blank">@Model.Text</a>
+}
+else if (Model.IsBold)
+{
+    <h3 class="govuk-heading-s">@bulletPoint@Model.Text</h3>
 }
 else{
-    <span class="govuk-body">@Model.Text</span>
+    <span class="govuk-body">@bulletPoint@Model.Text</span>
 }
 
