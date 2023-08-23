@@ -58,8 +58,7 @@ namespace Elsa.Server.Extensions
 
         private static X509Certificate OptionsOnCertificateSelection(object sender, string targethost, X509CertificateCollection localcertificates, X509Certificate? remotecertificate, string[] acceptableissuers)
         {
-            return new X509Certificate2("/mnt/secrets-store/ccflow-dev-01-redis-crt/ca.crt");
-            // or can we get something from localcertificates collection?
+            return new X509Certificate2("/mnt/redis-ca.crt");
         }
 
         private static bool CertificateValidationCallBack(
