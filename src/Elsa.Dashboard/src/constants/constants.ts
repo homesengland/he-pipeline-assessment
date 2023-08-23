@@ -23,6 +23,7 @@ export class SyntaxNames {
   static readonly DataDictionary = 'DataDictionary';
   static readonly DataTable = 'DataTable';
   static readonly InformationText = 'TextActivity';
+  static readonly GroupedInformationText = 'GroupedTextActivity';
   static Variable: string;
   static Output: string;
 }
@@ -108,4 +109,5 @@ export class PropertyOutputTypes {
   static readonly TableInput = "tableInput";
   static readonly RadioGroup = "radioGroup";
   static readonly Information = "information";
+  static readonly InformationGroup = "informationGroup";
 }
