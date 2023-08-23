@@ -1,5 +1,6 @@
 ﻿using System.Net.Security;
 using System.Runtime.InteropServices;
+using System.Security.Authentication;
 using System.Security.Cryptography.X509Certificates;
 using Elsa.CustomActivities.Activities.QuestionScreen.Helpers;
 using Elsa.Extensions;
@@ -46,20 +47,28 @@ namespace Elsa.Server.Extensions
 
     public static class RedisServiceCollectionExtensions
     {
-        public static IServiceCollection AddRedisNoSsl(
+        private static string _certificatePath = "";
+        private static string _certificateKeyPath = "";
+
+        public static IServiceCollection AddRedisWithSelfSignedSslCertificate(
             this IServiceCollection services,
-            string connectionString)
+            string connectionString, string certificatePath, string certificateKeyPath)
         {
+            _certificatePath = certificatePath;
+            _certificateKeyPath = certificateKeyPath;
             var configurationOptions = ConfigurationOptions.Parse(connectionString);
             configurationOptions.CertificateValidation += CertificateValidationCallBack!;
             configurationOptions.CertificateSelection += OptionsOnCertificateSelection;
+            configurationOptions.Ssl = true;
+            configurationOptions.SslProtocols = SslProtocols.Tls12;
+            configurationOptions.AbortOnConnectFail = false;
             var connectionMultiplexer = (IConnectionMultiplexer)ConnectionMultiplexer.Connect(configurationOptions);
             return services.AddSingleton(connectionMultiplexer);
         }
 
         private static X509Certificate OptionsOnCertificateSelection(object sender, string targethost, X509CertificateCollection localcertificates, X509Certificate? remotecertificate, string[] acceptableissuers)
         {
-            return CreateCertFromPemFile("/mnt/redis-tls.crt", "/mnt/redis-tls.key");
+            return CreateCertFromPemFile(_certificatePath, _certificateKeyPath);
         }
 
         static X509Certificate2 CreateCertFromPemFile(string certPath, string keyPath)
