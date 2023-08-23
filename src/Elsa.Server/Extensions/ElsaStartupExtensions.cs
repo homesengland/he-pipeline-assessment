@@ -1,4 +1,5 @@
 ﻿using System.Net.Security;
+using System.Runtime.InteropServices;
 using System.Security.Cryptography.X509Certificates;
 using Elsa.CustomActivities.Activities.QuestionScreen.Helpers;
 using Elsa.Extensions;
@@ -58,7 +59,16 @@ namespace Elsa.Server.Extensions
 
         private static X509Certificate OptionsOnCertificateSelection(object sender, string targethost, X509CertificateCollection localcertificates, X509Certificate? remotecertificate, string[] acceptableissuers)
         {
-            return new X509Certificate2("/mnt/redis-ca.crt");
+            return CreateCertFromPemFile("/mnt/redis-tls.crt", "/mnt/redis-tls.key");
+        }
+
+        static X509Certificate2 CreateCertFromPemFile(string certPath, string keyPath)
+        {
+            if (!RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+                return X509Certificate2.CreateFromPemFile(certPath, keyPath);
+
+            using var cert = X509Certificate2.CreateFromPemFile(certPath, keyPath);
+            return new X509Certificate2(cert.Export(X509ContentType.Pkcs12));
         }
 
         private static bool CertificateValidationCallBack(
