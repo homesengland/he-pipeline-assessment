@@ -271,13 +271,12 @@ namespace Elsa.CustomActivities.Activities.QuestionScreen
                 QuestionTypeConstants.DecimalQuestion,
                 QuestionTypeConstants.IntegerQuestion,
                 QuestionTypeConstants.PercentageQuestion,
+                QuestionTypeConstants.DateQuestion,
                 QuestionTypeConstants.RadioQuestion,
                 QuestionTypeConstants.PotScoreRadioQuestion,
                 QuestionTypeConstants.WeightedRadioQuestion,
                 QuestionTypeConstants.WeightedCheckboxQuestion,
-                QuestionTypeConstants.CheckboxQuestion,
-                QuestionTypeConstants.DataTable,
-                QuestionTypeConstants.Information
+                QuestionTypeConstants.CheckboxQuestion
             })]
         public bool HideQuestion { get; set; } = false;
     }
