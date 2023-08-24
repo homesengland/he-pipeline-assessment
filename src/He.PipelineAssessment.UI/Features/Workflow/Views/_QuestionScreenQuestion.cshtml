@@ -33,7 +33,6 @@
 <input type="hidden" name="@hiddenHideQuestion" value="@Model.QuestionActivityData.HideQuestion.ToString()" />
 
 @{
-    //should this be its own partial?
     bool isValidItem = true;
     if (!Model.IsValid && Model.ValidationMessages != null && Model.ValidationMessages.Errors != null)
     {
@@ -75,7 +74,7 @@
     if (Model.QuestionActivityData.IsReadOnly)
     {
         var hidden = "Data.Questions[" + Model.Index + "].Text";
-        <input type="hidden" name="@hiddenHideQuestion" value="@Model.QuestionActivityData.Text" />
+        <input type="hidden" name="@hidden" value="@Model.QuestionActivityData.Text" />
     }
 }
 
@@ -110,7 +109,7 @@
     if (Model.QuestionActivityData.IsReadOnly)
     {
         var hidden = "Data.Questions[" + Model.Index + "].Text";
-        <input type="hidden" name="@hiddenHideQuestion" value="@Model.QuestionActivityData.Text" />
+        <input type="hidden" name="@hidden" value="@Model.QuestionActivityData.Text" />
     }
 }
 @if (Model.QuestionActivityData.QuestionType == QuestionTypeConstants.DateQuestion)
@@ -172,7 +171,7 @@
     if (Model.QuestionActivityData.IsReadOnly)
     {
         var hidden = "Data.Questions[" + Model.Index + "].Decimal";
-        <input type="hidden" name="@hiddenHideQuestion" value="@Model.QuestionActivityData.Decimal" />
+        <input type="hidden" name="@hidden" value="@Model.QuestionActivityData.Decimal" />
     }
 }
 @if (Model.QuestionActivityData.QuestionType == QuestionTypeConstants.DecimalQuestion)
@@ -204,7 +203,7 @@
     if (Model.QuestionActivityData.IsReadOnly)
     {
         var hidden = "Data.Questions[" + Model.Index + "].Decimal";
-        <input type="hidden" name="@hiddenHideQuestion" value="@Model.QuestionActivityData.Decimal" />
+        <input type="hidden" name="@hidden" value="@Model.QuestionActivityData.Decimal" />
     }
 }
 @if (Model.QuestionActivityData.QuestionType == QuestionTypeConstants.IntegerQuestion)
@@ -236,7 +235,7 @@
     if (Model.QuestionActivityData.IsReadOnly)
     {
         var hidden = "Data.Questions[" + Model.Index + "].Decimal";
-        <input type="hidden" name="@hiddenHideQuestion" value="@Model.QuestionActivityData.Decimal" />
+        <input type="hidden" name="@hidden" value="@Model.QuestionActivityData.Decimal" />
     }
 }
 @if (Model.QuestionActivityData.QuestionType == QuestionTypeConstants.PercentageQuestion)
@@ -268,7 +267,7 @@
     if (Model.QuestionActivityData.IsReadOnly)
     {
         var hidden = "Data.Questions[" + Model.Index + "].Decimal";
-        <input type="hidden" name="@hiddenHideQuestion" value="@Model.QuestionActivityData.Decimal" />
+        <input type="hidden" name="@hidden" value="@Model.QuestionActivityData.Decimal" />
     }
 }
 @if (Model.QuestionActivityData.QuestionType == QuestionTypeConstants.CheckboxQuestion || Model.QuestionActivityData.QuestionType == QuestionTypeConstants.WeightedCheckboxQuestion)
@@ -344,7 +343,7 @@
     if (Model.QuestionActivityData.IsReadOnly)
     {
         var hidden = "Data.Questions[" + Model.Index + "].Radio.SelectedAnswer";
-        <input type="hidden" name="@hiddenHideQuestion" value="@Model.QuestionActivityData.Radio.SelectedAnswer" />
+        <input type="hidden" name="@hidden" value="@Model.QuestionActivityData.Radio.SelectedAnswer" />
     }
 }
 
