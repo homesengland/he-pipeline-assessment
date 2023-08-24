@@ -381,28 +381,28 @@
             }
         }
 
-        @if (Model.Data.Questions![i].QuestionType == QuestionTypeConstants.Information)
-        {
+                    @if (Model.Data.Questions![i].QuestionType == QuestionTypeConstants.Information)
+                    {
 
-            @await Html.PartialAsync("_Information",new Question()
-                   {
-                       Index = i,
-                       Information = new Information
-                       {
-                           Text = Model.Data.Questions[i].Information.InformationTextList.
-                               Select(x => new InformationText
-                               {
-                                   Text = x.Text,
-                                   IsHyperlink = x.IsHyperlink,
-                                   IsGuidance = x.IsGuidance,
-                                   IsParagraph = x.IsParagraph,
-                                   IsBold = x.IsBold,
-                                   IsBulletpoint = x.IsBulletpoint,
-                                   Url = x.Url
-                               }).ToList()
-                       },
-                   })
-        }
+                        @await Html.PartialAsync("_Information",new Question(){
+                            Index = i,
+                            Information = Model.Data.Questions[i].Information.Select(x => new Information{
+                            Title = x.Title,
+                            IsGuidance = x.IsGuidance,
+                            IsBullet = x.IsBullets,
+                            IsCollapsed = x.IsCollapsed,
+                            Text = x.InformationTextList.ConvertAll(y => new InformationText()
+                            {
+                            Text = y.Text,
+                            IsBold = y.IsBold,
+                            IsParagraph = y.IsParagraph,
+                            IsHyperlink = y.IsHyperlink,
+                            Url = y.Url,
+                            }).ToList()
+                            }).ToList(),
+
+                        })
+                    }
                     @if (Model.Data.Questions![i].QuestionType == QuestionTypeConstants.DataTable)
                     {
                         var tableListForGroup = Model.Data.ToDataTableList(i, usedDisplayGroupIds);

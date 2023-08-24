@@ -207,3 +207,9 @@ elsa-modal-dialog > div > div > div:first-child {
 .pl-3 {
     padding-left: 3rem;
 }
+
+.elsa-group-border {
+  border-width: 2px;
+  padding:5px;
+  margin-bottom: 5px;
+}

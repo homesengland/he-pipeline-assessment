@@ -14,7 +14,7 @@ namespace Elsa.CustomActivities.Handlers
         private readonly IContentSerializer _contentSerializer;
         private readonly ILogger<IExpressionHandler> _logger;
         private readonly InformationTextExpressionHandler _textHandler;
-        public string Syntax => TextActivitySyntaxNames.TextActivity;
+        public string Syntax => TextActivitySyntaxNames.TextGroup;
 
 
         public InformationTextGroupExpressionHandler(InformationTextExpressionHandler handler,ILogger<IExpressionHandler> logger, IContentSerializer contentSerializer)

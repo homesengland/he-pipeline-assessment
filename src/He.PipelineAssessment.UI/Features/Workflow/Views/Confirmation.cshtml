@@ -18,17 +18,9 @@
     <h2 class="govuk-heading-m">@Html.DisplayTextFor(m => m.Data.FooterTitle)</h2>
     <p class="govuk-body">@Html.DisplayTextFor(m => m.Data.FooterText)</p>
 
-    @foreach (var text in Model.Data.Text.InformationTextList.
-    Select(x => new InformationText
+    @foreach (var group in Model.Data.Text)
     {
-        Text = x.Text,
-       IsHyperlink = x.IsHyperlink,
-       IsGuidance = x.IsGuidance,
-        IsParagraph = x.IsParagraph,
-        Url = x.Url
-    }).ToList())
-    {
-        @await Html.PartialAsync("_InformationTextWrapper", text);
+        @await Html.PartialAsync("_InformationGroup", group);
     }
 </div>
 

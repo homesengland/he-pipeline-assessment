@@ -10,7 +10,7 @@ import { parseJson, newOptionLetter, Map } from "../../utils/utils";
 import { IconProvider } from "../providers/icon-provider/icon-provider";
 import PlusIcon from '../../icons/plus_icon';
 import TrashCanIcon from '../../icons/trash-can';
-import { PropertyOutputTypes, SyntaxNames, TextActivityOptionsSyntax, WeightedScoringSyntax } from '../../constants/constants';
+import { PropertyOutputTypes, SyntaxNames, TextActivityOptionsSyntax } from '../../constants/constants';
 import { NestedActivityDefinitionProperty } from '../../models/custom-component-models';
 import { SortableComponent, ISortableSharedComponent } from '../base-component';
 import SortIcon from '../../icons/sort_icon';
@@ -81,8 +81,8 @@ export class HeTextGroupProperty implements ISortableSharedComponent, IDisplayTo
       syntax: SyntaxNames.Json,
       expressions: {
         [SyntaxNames.Json]: '',
-        [WeightedScoringSyntax.GroupArrayScore]: ''
-      }, type: PropertyOutputTypes.CheckboxGroup
+        [SyntaxNames.TextActivity]: ''
+      }, type: PropertyOutputTypes.InformationGroup
     };
     this.properties = [... this.properties, newGroup];
     this.updatePropertyModel();
@@ -94,6 +94,8 @@ export class HeTextGroupProperty implements ISortableSharedComponent, IDisplayTo
   }
 
   onPropertyExpressionChange(event: Event, property: NestedActivityDefinitionProperty) {
+    console.log("Update event", event);
+    console.log("property updated:", property)
     event = event;
     property = property;
     this.updatePropertyModel();
@@ -122,12 +124,28 @@ export class HeTextGroupProperty implements ISortableSharedComponent, IDisplayTo
     this._toggle.onToggleDisplay(index);
   }
 
+  informationTextDescriptor(): ActivityPropertyDescriptor {
+    return {
+      uiHint: 'he-text-activity-property',
+      isReadOnly: false,
+      name: "Information text",
+      hint: "",
+      label: "Information Text",
+      supportedSyntaxes: [SyntaxNames.Json],
+      defaultSyntax: '',
+      considerValuesAsOutcomes: false,
+      disableWorkflowProviderSelection: true
+
+    } as ActivityPropertyDescriptor;
+  }
+
   render() {
     const textGroups = this.properties;
     const json = JSON.stringify(textGroups, null, 2);
 
     const renderCheckboxGroups = (textGroup: NestedActivityDefinitionProperty) => {
 
+      const descriptor = this.informationTextDescriptor();
 
       const title = textGroup.expressions[TextActivityOptionsSyntax.Title];
       const isCollapsedChecked = textGroup.expressions[TextActivityOptionsSyntax.Collapsed] == 'true';
@@ -144,7 +162,7 @@ export class HeTextGroupProperty implements ISortableSharedComponent, IDisplayTo
 
 
       return (
-        <div key={this.keyId}>
+        <div class="elsa-border-gray-300 elsa-rounded-md elsa-group-border" key={this.keyId}>
           <br />
           <div class="elsa-mb-1">
             <div class="elsa-flex">
@@ -174,6 +192,8 @@ export class HeTextGroupProperty implements ISortableSharedComponent, IDisplayTo
             </div>
             <br/>
 
+            <div style={{ display: displayGroupStyle }}>
+
             <div class="elsa-mb-1">
               <div class="elsa-flex">
                 <div class="elsa-flex-1">
@@ -201,7 +221,7 @@ export class HeTextGroupProperty implements ISortableSharedComponent, IDisplayTo
             <div>
               <div>
                 <input type="checkbox" checked={isGuidanceChecked} onChange={e => this._base.UpdateCheckbox(e, textGroup, TextActivityOptionsSyntax.Guidance)}
-                  class="focus:elsa-ring-blue-500 focus:elsa-border-bue-500 elsa-block elsa-w-full elsa-min-w-0 elsa-rounded-md sm:elsa-text-sm elsa-border-gray-300" />
+                  class="focus:elsa-ring-blue-500 elsa-h-8 elsa-w-8 elsa-text-blue-600 elsa-border-gray-300 elsa-rounded" />
               </div>
               <p class="elsa-mt-2 elsa-text-sm elsa-text-gray-500">Should the group of text be wrapped in a guidance block.</p>
             </div>
@@ -218,7 +238,7 @@ export class HeTextGroupProperty implements ISortableSharedComponent, IDisplayTo
             <div>
               <div>
                 <input type="checkbox" checked={isCollapsedChecked} onChange={e => this._base.UpdateCheckbox(e, textGroup, TextActivityOptionsSyntax.Collapsed)}
-                  class="focus:elsa-ring-blue-500 focus:elsa-border-bue-500 elsa-block elsa-w-full elsa-min-w-0 elsa-rounded-md sm:elsa-text-sm elsa-border-gray-300" />
+                  class="focus:elsa-ring-blue-500 elsa-h-8 elsa-w-8 elsa-text-blue-600 elsa-border-gray-300 elsa-rounded" />
               </div>
               <p class="elsa-mt-2 elsa-text-sm elsa-text-gray-500">Should the group of text be hidden by default, behind a collapseable element.
                 Users will still be able to see the text by clicking to view the hidden text.</p>
@@ -228,7 +248,7 @@ export class HeTextGroupProperty implements ISortableSharedComponent, IDisplayTo
             <div class="elsa-mb-1">
               <div class="elsa-flex">
                 <div class="elsa-flex-1">
-                  <label class="elsa-block elsa-text-sm elsa-font-medium elsa-text-gray-700">Is Bulletpoints</label>
+                  <label class="elsa-block elsa-text-sm elsa-font-medium elsa-text-gray-700">Is Bulletpointed</label>
                 </div>
               </div>
             </div>
@@ -236,18 +256,20 @@ export class HeTextGroupProperty implements ISortableSharedComponent, IDisplayTo
             <div>
               <div>
                 <input type="checkbox" checked={isBulletsChecked} onChange={e => this._base.UpdateCheckbox(e, textGroup, TextActivityOptionsSyntax.Bulletpoints)}
-                  class="focus:elsa-ring-blue-500 focus:elsa-border-bue-500 elsa-block elsa-w-full elsa-min-w-0 elsa-rounded-md sm:elsa-text-sm elsa-border-gray-300" />
+                  class="focus:elsa-ring-blue-500 elsa-h-8 elsa-w-8 elsa-text-blue-600 elsa-border-gray-300 elsa-rounded" />
               </div>
               <p class="elsa-mt-2 elsa-text-sm elsa-text-gray-500">Each paragraph of text will be displayed as a bullet-point list within this group.</p>
             </div>
-
+            </div>
           </div>
 
 
           <he-text-activity-property
             activityModel={this.activityModel}
             propertyModel={textGroup}
+            propertyDescriptor={descriptor}
             onExpressionChanged={e => eventHandler(e, textGroup)}
+            modelSyntax={SyntaxNames.TextActivity}
             style={{ display: displayGroupStyle }}>
           </he-text-activity-property>
           <br />
@@ -283,7 +305,7 @@ export class HeTextGroupProperty implements ISortableSharedComponent, IDisplayTo
           <button type="button" onClick={() => this.onAddGroupClick()}
             class="elsa-inline-flex elsa-items-center elsa-px-4 elsa-py-2 elsa-border elsa-border-transparent elsa-shadow-sm elsa-text-sm elsa-font-medium elsa-rounded-md elsa-text-white elsa-bg-blue-600 hover:elsa-bg-blue-700 focus:elsa-outline-none focus:elsa-ring-2 focus:elsa-ring-offset-2 focus:elsa-ring-blue-500 elsa-mt-2">
             <PlusIcon options={this.iconProvider.getOptions()}></PlusIcon>
-            Add Answer Group
+            Add Text Group
           </button>
         </he-multi-expression-editor>
       </div>

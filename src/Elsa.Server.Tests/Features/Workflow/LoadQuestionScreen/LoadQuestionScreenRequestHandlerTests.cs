@@ -1124,7 +1124,7 @@ public class LoadQuestionScreenRequestHandlerTests
             CustomActivityNavigation customActivityNavigation,
             List<Question> assessmentQuestions,
             AssessmentQuestions elsaAssessmentQuestions,
-            TextModel textModel,
+            GroupedTextModel textModel,
             LoadQuestionScreenRequestHandler sut)
     {
         //Arrange
@@ -1162,8 +1162,8 @@ public class LoadQuestionScreenRequestHandlerTests
         Assert.NotNull(result.Data!.Questions);
         Assert.Equal(assessmentQuestions.Count(), result.Data!.Questions.Count());
         Assert.Empty(result.ErrorMessages);
-        var textRecord = textModel.TextRecords.First();
-        var actualText = result.Data.Questions[0].Information.InformationTextList.First();
+        var textRecord = textModel.TextGroups.First().TextRecords.First();
+        var actualText = result.Data.Questions[0].Information.First().Text.First();
         Assert.Equal(textRecord.Text, actualText.Text);
         Assert.Equal(textRecord.IsHyperlink, actualText.IsHyperlink);
         Assert.Equal(textRecord.IsGuidance, actualText.IsGuidance);

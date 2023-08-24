@@ -23,6 +23,7 @@ namespace Elsa.CustomActivities.Handlers.Syntax
     {
         private ILogger<IExpressionHandler> _logger;
         private InformationTextExpressionHandler _informationExpressionHandler;
+        private InformationTextGroupExpressionHandler _informationGroupExpressionHandler;
         private DataTableExpressionHandler _dataTableExpressionHandler;
         private CheckboxExpressionHandler _checkboxExpressionHandler;
         private RadioExpressionHandler _radioExpressionHandler;
@@ -33,6 +34,7 @@ namespace Elsa.CustomActivities.Handlers.Syntax
         {
             _logger = logger;
             _informationExpressionHandler = new InformationTextExpressionHandler(logger, serializer);
+            _informationGroupExpressionHandler = new InformationTextGroupExpressionHandler(_informationExpressionHandler, logger, serializer);
             _radioExpressionHandler = new RadioExpressionHandler(logger, serializer);
             _checkboxExpressionHandler = new CheckboxExpressionHandler(logger, serializer);
             _potScoreRadioExpressionHandler = new PotScoreRadioExpressionHandler(logger, serializer);
@@ -146,6 +148,17 @@ namespace Elsa.CustomActivities.Handlers.Syntax
                 }
                 return result;
 
+            }
+            if(propertyType != null && propertyType == typeof(GroupedTextModel))
+            {
+                GroupedTextModel result = new GroupedTextModel();
+                var parsedProperties = ParseToList(property, TextActivitySyntaxNames.TextGroup);
+                if (parsedProperties != null)
+                {
+                    List<TextGroup> records = await _informationGroupExpressionHandler.ElsaPropertiesToGroupedTextList(parsedProperties, evaluator, context);
+                    result.TextGroups = records;
+                }
+                return result;
             }
             if (propertyType != null && propertyType == typeof(TextModel))
             {

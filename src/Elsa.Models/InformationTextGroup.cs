@@ -2,7 +2,7 @@
 {
     public class InformationTextGroup
     {
-        public string Title { get; set; } = null!;
+        public string? Title { get; set; }
         public bool Collapsed { get; set; } = false;
         public bool IsBullets { get; set; } = false;
         public bool IsGuidance { get; set; } = false;

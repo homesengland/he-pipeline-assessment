@@ -235,18 +235,7 @@ export class TextActivityProperty implements ISortableSharedComponent, IDisplayT
               <td>
               </td>
           </tr>
-          <tr style={{ display: optionsDisplay }}>
-            <th
-              class="elsa-px-6 elsa-py-3 elsa-text-left elsa-text-xs elsa-font-medium elsa-text-gray-500 elsa-tracking-wider elsa-w-2/12">Is <br/>Guidance
-            </th>
-            <td class="elsa-py-0">
-              <input name="choice_input" type="checkbox" checked={guidanceChecked} value={nestedTextActivity.expressions[TextActivityOptionsSyntax.Guidance]}
-                onChange={e => this._base.UpdateCheckbox(e, nestedTextActivity, TextActivityOptionsSyntax.Guidance)}
-                class="focus:elsa-ring-blue-500 elsa-h-8 elsa-w-8 elsa-text-blue-600 elsa-border-gray-300 elsa-rounded" />
-            </td>
-            <td>
-            </td>
-          </tr>
+
           <tr style={{ display: optionsDisplay }}>
             <th
               class="elsa-px-6 elsa-py-3 elsa-text-left elsa-text-xs elsa-font-medium elsa-text-gray-500 elsa-tracking-wider elsa-w-2/12">Is <br />Bold
@@ -254,18 +243,6 @@ export class TextActivityProperty implements ISortableSharedComponent, IDisplayT
             <td class="elsa-py-0">
               <input name="choice_input" type="checkbox" checked={guidanceChecked} value={nestedTextActivity.expressions[TextActivityOptionsSyntax.Bold]}
                 onChange={e => this._base.UpdateCheckbox(e, nestedTextActivity, TextActivityOptionsSyntax.Bold)}
-                class="focus:elsa-ring-blue-500 elsa-h-8 elsa-w-8 elsa-text-blue-600 elsa-border-gray-300 elsa-rounded" />
-            </td>
-            <td>
-            </td>
-          </tr>
-          <tr style={{ display: optionsDisplay }}>
-            <th
-              class="elsa-px-6 elsa-py-3 elsa-text-left elsa-text-xs elsa-font-medium elsa-text-gray-500 elsa-tracking-wider elsa-w-2/12">Is <br />Bulletpoint
-            </th>
-            <td class="elsa-py-0">
-              <input name="choice_input" type="checkbox" checked={guidanceChecked} value={nestedTextActivity.expressions[TextActivityOptionsSyntax.Bulletpoints]}
-                onChange={e => this._base.UpdateCheckbox(e, nestedTextActivity, TextActivityOptionsSyntax.Bulletpoints)}
                 class="focus:elsa-ring-blue-500 elsa-h-8 elsa-w-8 elsa-text-blue-600 elsa-border-gray-300 elsa-rounded" />
             </td>
             <td>

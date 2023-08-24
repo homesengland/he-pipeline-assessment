@@ -277,14 +277,24 @@ namespace Elsa.Server.Features.Workflow.LoadQuestionScreen
 
             if (item.QuestionType == QuestionTypeConstants.Information)
             {
-                questionActivityData.Information = new Information();
-                questionActivityData.Information.InformationTextList = item.Text.TextRecords
-                    .Select(x => new InformationText()
+                questionActivityData.Information = new List<InformationTextGroup>();
+                questionActivityData.Information = item.Text.TextGroups
+                    .Select(x => new InformationTextGroup()
                     {
-                        Text = x.Text, IsGuidance = x.IsGuidance, IsParagraph = x.IsParagraph,
-                        IsHyperlink = x.IsHyperlink, Url = x.Url, IsBold = x.IsBold, IsBulletpoint = x.isBullet
-                    })
-                    .ToArray();
+                        Title = x.Title,
+                        Collapsed = x.Collapsed,
+                        IsGuidance = x.Guidance,
+                        IsBullets = x.Bullets,
+                        Text = x.TextRecords.ConvertAll(y => new InformationText()
+                        {
+                            Text = y.Text,
+                            IsBold = y.IsBold,
+                            IsParagraph = y.IsParagraph,
+                            IsHyperlink = y.IsHyperlink,
+                            Url = y.Url,
+
+                        })
+                    }).ToList();
             }
 
             if (item.QuestionType == QuestionTypeConstants.DataTable)

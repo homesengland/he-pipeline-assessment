@@ -26,7 +26,7 @@ namespace Elsa.CustomWorkflow.Sdk.Models.Workflow
         public string? ConfirmationText { get; set; } = null!;
         public string FooterTitle { get; set; } = null!;
         public string FooterText { get; set; } = null!;
-        public Information Text { get; set; } = null!;
+        public List<Information> Text { get; set; } = new List<Information>();
 
         public string? NextWorkflowDefinitionIds { get; set; } = null!;
         public List<Question>? CheckQuestions { get; set; }
@@ -80,7 +80,7 @@ namespace Elsa.CustomWorkflow.Sdk.Models.Workflow
         private Date _date = new Date();
         public Date Date { get { return GetDate(); } set { SetDate(value); } }
 
-        public Information Information { get; set; } = new Information();
+        public List<Information> Information { get; set; } = new List<Information>();
 
         private DataTableInput _dataTable = new DataTableInput();
 
@@ -333,6 +333,10 @@ namespace Elsa.CustomWorkflow.Sdk.Models.Workflow
 
     public class Information
     {
+        public string? Title { get; set; }
+        public bool IsGuidance { get; set; } = false;
+        public bool IsCollapsed { get; set; } = false;
+        public bool IsBullets { get; set; } = false;
         public List<InformationText> InformationTextList { get; set; } = new List<InformationText>();
     }
 
@@ -340,11 +344,9 @@ namespace Elsa.CustomWorkflow.Sdk.Models.Workflow
     {
         public string Text { get; set; } = null!;
         public bool IsParagraph { get; set; } = true;
-        public bool IsGuidance { get; set; } = false;
         public bool IsHyperlink { get; set; } = false;
         public string? Url { get; set; }
         public bool IsBold { get; set; }    = false;
-        public bool IsBulletpoint { get; set; } = false;
     }
 
     public class DataTableInput
