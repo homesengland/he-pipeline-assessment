@@ -354,5 +354,50 @@ namespace Elsa.CustomWorkflow.Sdk.Tests.HttpClients
             Assert.NotNull(result);
             Assert.IsType<string>(result);
         }
+
+        [Theory]
+        [AutoMoqData]
+        public async Task LoadDataDictionary_ReturnsDataDictionary_GivenHttpClientGivesBackSuccessResponse(
+            [Frozen] Mock<IHttpClientFactory> httpClientFactoryMock,
+            [Frozen] Mock<HttpMessageHandler> httpMessageHandlerMock,
+            string elsaServer,
+            WorkflowNextActivityDataDto workflowNextActivityDataDto,
+            ElsaServerHttpClient sut)
+        {
+            //Arrange
+            HttpClientTestHelpers.SetupHttpClientWithExpectedStatusCode(workflowNextActivityDataDto,
+                HttpStatusCode.OK,
+                httpClientFactoryMock,
+                httpMessageHandlerMock);
+
+            //Act
+            var result = await sut.LoadDataDictionary(elsaServer);
+
+            //Assert
+            Assert.NotNull(result);
+            Assert.IsType<string>(result);
+        }
+
+        [Theory]
+        [AutoMoqData]
+        public async Task PostArchiveQuestions_ReturnsSuccess_GivenHttpClientGivesBackSuccessResponse(
+            [Frozen] Mock<IHttpClientFactory> httpClientFactoryMock,
+            [Frozen] Mock<HttpMessageHandler> httpMessageHandlerMock,
+            string[] workflowDefinitionIds,
+            WorkflowNextActivityDataDto workflowNextActivityDataDto,
+            ElsaServerHttpClient sut)
+        {
+            //Arrange
+            HttpClientTestHelpers.SetupHttpClientWithExpectedStatusCode(workflowNextActivityDataDto,
+                HttpStatusCode.OK,
+                httpClientFactoryMock,
+                httpMessageHandlerMock);
+
+            //Act
+            await sut.PostArchiveQuestions(workflowDefinitionIds);
+
+            //Assert
+            Assert.True(false); // what do we need to assert here?
+        }
     }
 }
