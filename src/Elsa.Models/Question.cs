@@ -19,6 +19,7 @@
         public virtual List<Answer>? Answers { get; set; } = new();
 
         public int? QuestionDataDictionaryId { get; set; }
-        public virtual QuestionDataDictionary? QuestionDataDictionary { get; set; } 
+        public virtual QuestionDataDictionary? QuestionDataDictionary { get; set; }
+        public bool? IsArchived { get; set; }
     }
 }
