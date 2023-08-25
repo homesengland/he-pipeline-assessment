@@ -172,6 +172,7 @@ namespace Elsa.Server.Features.Workflow.LoadQuestionScreen
             questionActivityData.CharacterLimit = item.CharacterLimit;
             questionActivityData.IsReadOnly = item.IsReadOnly;
             questionActivityData.ReevaluatePrepopulatedAnswers = item.ReevaluatePrePopulatedAnswers;
+            questionActivityData.HideQuestion = item.HideQuestion;
 
             if (item.QuestionType == QuestionTypeConstants.CheckboxQuestion ||
                 item.QuestionType == QuestionTypeConstants.WeightedCheckboxQuestion)

@@ -43,6 +43,7 @@ namespace Elsa.Server.Features.Workflow.LoadQuestionScreen
 
         public bool ReevaluatePrepopulatedAnswers { get; set; }
         public List<Answer> Answers { get; set; } = new();
+        public bool HideQuestion { get; set; }
 
         public bool HasAnswers()
         {
