@@ -397,7 +397,7 @@ namespace Elsa.CustomWorkflow.Sdk.Tests.HttpClients
             await sut.PostArchiveQuestions(workflowDefinitionIds);
 
             //Assert
-            Assert.True(false); // what do we need to assert here?
+            httpClientFactoryMock.Verify(x=>x.CreateClient("ElsaServerClient"),Times.Once); 
         }
     }
 }
