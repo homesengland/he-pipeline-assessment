@@ -1,16 +1,11 @@
 ﻿using Elsa.CustomWorkflow.Sdk.Models.Workflow;
 using Microsoft.Extensions.Logging;
-using Newtonsoft.Json;
 using System.Text;
 using System.Text.Json;
-using Azure.Core;
-using Azure.Identity;
-using System.Runtime;
 using System.Net.Http.Headers;
 using JsonSerializer = System.Text.Json.JsonSerializer;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Hosting;
-using System.Reflection;
 
 namespace Elsa.CustomWorkflow.Sdk.HttpClients
 {
