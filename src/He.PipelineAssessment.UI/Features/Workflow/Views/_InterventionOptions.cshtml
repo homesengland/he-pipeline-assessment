@@ -14,6 +14,9 @@
     }
 
     @Html.ActionLink("Rollback", "Rollback", "Rollback", new { workflowInstanceId = Model }, new { @class = "govuk-button", data_module="govuk-button" })
-
-    @Html.ActionLink("Variation", "Variation", "Intervention", new { workflowInstanceId = Model }, new { @class = "govuk-button", data_module="govuk-button" })
+    
+    <button disabled="disabled" aria-disabled="true" class="govuk-button govuk-button--disabled" data-module="govuk-button">
+        Variation
+    </button>
+    @*@Html.ActionLink("Variation", "Variation", "Intervention", new { workflowInstanceId = Model }, new { @class = "govuk-button", data_module="govuk-button" })*@
 </div>

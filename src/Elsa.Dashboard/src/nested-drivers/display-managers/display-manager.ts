@@ -20,6 +20,7 @@ import { ActivityModel, ActivityPropertyDescriptor } from "../../models/elsa-int
 import { HeQuestionDataDictionaryDriver } from "../he-question-data-dictionary-driver";
 import { HeWeightedRadioDriver } from "../he-weighted-radio-driver";
 import { HeWeightedCheckboxDriver } from "../he-weighted-checkbox-driver";
+import { HeNumericDriver } from "../he-numeric-driver";
 
 
 export interface HePropertyDisplayDriver {
@@ -49,6 +50,7 @@ export class DefaultDriversFactory {
     this.drivers["he-weighted-radio"] = new HeWeightedRadioDriver();
     this.drivers["he-weighted-checkbox"] = new HeWeightedCheckboxDriver();
     this.drivers["he-data-table"] = new HeDataTableDriver();
+    this.drivers["he-numeric"] = new HeNumericDriver();
   }
   drivers: Dictionary<HePropertyDisplayDriver> = {};
 }

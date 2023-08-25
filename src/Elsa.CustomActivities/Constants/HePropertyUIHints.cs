@@ -14,6 +14,7 @@ namespace Elsa.CustomActivities.Constants
         public const string RadioList = "he-radio-list";
         public const string ScriptEditor = "he-code-editor";
         public const string SingleLine = "he-single-line";
+        public const string Numeric = "he-numeric";
         public const string SwitchCase = "he-switch-case-builder";
         public const string RadioOptions = "he-radio-options";
         public const string PotScoreRadioOptions = "he-potscore-radio-options";
