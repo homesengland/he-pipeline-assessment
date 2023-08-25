@@ -39,5 +39,6 @@ namespace Elsa.CustomInfrastructure.Data.Repository
         Task<QuestionWorkflowInstance?> GetQuestionWorkflowInstanceByDefinitionId(string workflowInstanceDefinitionId, string correlationId, CancellationToken cancellationToken = default);
         Task SetWorkflowInstanceResult(string workflowInstanceId, string result, CancellationToken cancellationToken = default);
         Task SetWorkflowInstanceScore(string workflowInstanceId, string score, CancellationToken cancellationToken = default);
+        Task ArchiveQuestions(string[] requestWorkflowInstanceIds, CancellationToken cancellationToken = default);
     }
 }

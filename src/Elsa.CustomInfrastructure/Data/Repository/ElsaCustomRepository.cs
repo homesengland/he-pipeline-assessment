@@ -59,7 +59,11 @@ namespace Elsa.CustomInfrastructure.Data.Repository
             CancellationToken cancellationToken)
         {
             var result = await _dbContext.Set<Question>()
-                .Where(x => x.ActivityId == activityId && x.CorrelationId == correlationId && x.QuestionId == questionID)
+                .Where(x => 
+                    x.ActivityId == activityId && 
+                    x.CorrelationId == correlationId && 
+                    x.QuestionId == questionID && 
+                    (!x.IsArchived.HasValue || !x.IsArchived.Value))
                 .Include(x => x.Choices)!.ThenInclude(y => y.QuestionChoiceGroup)
                 .Include(x => x.Answers)
                 .OrderByDescending(x => x.CreatedDateTime)
@@ -178,6 +182,19 @@ namespace Elsa.CustomInfrastructure.Data.Repository
                 workflow.Score = score;
             }
             _dbContext.UpdateRange(workflowInstance);
+            await SaveChanges(cancellationToken);
+        }
+
+        public async Task ArchiveQuestions(string[] requestWorkflowInstanceIds, CancellationToken cancellationToken = default)
+        {
+            var questions = _dbContext.Set<Question>()
+                .Where(x => requestWorkflowInstanceIds.Contains(x.WorkflowInstanceId));
+
+            foreach (var question in questions)
+            {
+                question.IsArchived = true;
+            }
+            _dbContext.UpdateRange(questions);
             await SaveChanges(cancellationToken);
         }
 
