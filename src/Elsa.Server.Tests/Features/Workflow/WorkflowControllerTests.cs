@@ -1,6 +1,7 @@
 ﻿using AutoFixture;
 using AutoFixture.Xunit2;
 using Elsa.Server.Features.Workflow;
+using Elsa.Server.Features.Workflow.ArchiveQuestions;
 using Elsa.Server.Features.Workflow.CheckYourAnswersSaveAndContinue;
 using Elsa.Server.Features.Workflow.LoadCheckYourAnswersScreen;
 using Elsa.Server.Features.Workflow.LoadConfirmationScreen;
@@ -702,6 +703,119 @@ namespace Elsa.Server.Tests.Features.Workflow
 
             //Act
             var result = await controller.CheckYourAnswersSaveAndContinue(request);
+
+            //Assert
+            Assert.NotNull(result);
+            Assert.IsType<ObjectResult>(result);
+
+            var objectResult = (ObjectResult)result;
+
+            Assert.Equal(500, objectResult.StatusCode);
+            Assert.IsType<NullReferenceException>(objectResult.Value);
+        }
+
+        [Theory]
+        [AutoData]
+        public async Task WorkflowController_ArchiveQuestions_ShouldReturnOK_WhenCommandHandlerIsSuccessful(
+            ArchiveQuestionsCommand command,
+            Mock<IMediator> mediatorMock)
+        {
+            var operationResult = new OperationResult<ArchiveQuestionsCommandResponse>
+            {
+                ErrorMessages = new List<string>(),
+                ValidationMessages = null
+            };
+            //Arrange
+            mediatorMock.Setup(x => x.Send(command, CancellationToken.None)).ReturnsAsync(operationResult);
+
+            WorkflowController controller = new WorkflowController(mediatorMock.Object);
+
+            //Act
+            var result = await controller.ArchiveQuestions(command);
+
+            //Assert
+            Assert.NotNull(result);
+            Assert.IsType<OkResult>(result);
+        }
+
+        [Theory]
+        [AutoData]
+        public async Task WorkflowController_ArchiveQuestions_ShouldReturnBadRequest_WhenCommandHandlerReturnsErrors(
+            ArchiveQuestionsCommand command,
+            Mock<IMediator> mediatorMock)
+        {
+
+            //Arrange
+            var operationResult = new OperationResult<ArchiveQuestionsCommandResponse>
+            {
+                ErrorMessages = new List<string>(),
+                ValidationMessages = null
+            };
+            operationResult.ErrorMessages = new List<string> { "StandardErrorMessage" };
+
+
+            mediatorMock.Setup(x => x.Send(command, CancellationToken.None)).ReturnsAsync(operationResult);
+
+            WorkflowController controller = new WorkflowController(mediatorMock.Object);
+
+            //Act
+            var result = await controller.ArchiveQuestions(command);
+
+            //Assert
+            Assert.NotNull(result);
+            Assert.IsType<BadRequestObjectResult>(result);
+
+            var badResult = (BadRequestObjectResult)result;
+            var badResultValueData = (string)badResult.Value!;
+
+            Assert.Equal(string.Join(',', operationResult.ErrorMessages), badResultValueData);
+
+        }
+
+        [Theory]
+        [AutoData]
+        public async Task WorkflowController_ArchiveQuestions_ShouldReturn500_WhenCommandHandlerThrowsException(
+            ArchiveQuestionsCommand command,
+            Exception exception,
+            Mock<IMediator> mediatorMock)
+        {
+
+            //Arrange
+            mediatorMock.Setup(x => x.Send(command, CancellationToken.None)).ThrowsAsync(exception);
+
+            WorkflowController controller = new WorkflowController(mediatorMock.Object);
+
+            //Act
+            var result = await controller.ArchiveQuestions(command);
+
+            //Assert
+            Assert.NotNull(result);
+            Assert.IsType<ObjectResult>(result);
+
+            var objectResult = (ObjectResult)result;
+
+            Assert.Equal(500, objectResult.StatusCode);
+            Assert.IsType<Exception>(objectResult.Value);
+
+            var exceptionResult = (Exception)objectResult.Value!;
+
+            Assert.Equal(exception.Message, exceptionResult.Message);
+        }
+
+        [Theory]
+        [AutoData]
+        public async Task WorkflowController_ArchiveQuestions_ShouldReturn500_WhenCommandHandlerReturnsNull(
+            ArchiveQuestionsCommand command,
+            Mock<IMediator> mediatorMock)
+        {
+
+            //Arrange
+            mediatorMock.Setup(x => x.Send(command, CancellationToken.None)).ReturnsAsync((OperationResult<ArchiveQuestionsCommandResponse>)null!);
+
+            WorkflowController controller = new WorkflowController(mediatorMock.Object);
+
+            //Act
+            var result = await controller.ArchiveQuestions(command);
 
             //Assert
             Assert.NotNull(result);
