@@ -18,7 +18,6 @@
 
   <ItemGroup>
     <Content Remove="bundleconfig.json" />
-    <Content Remove="Features\Workflow\Views\_QuestionScreenQuestion.cshtml" />
   </ItemGroup>
 
   <ItemGroup>
@@ -28,7 +27,6 @@
 
   <ItemGroup>
     <None Include="bundleconfig.json" />
-    <None Include="Features\Workflow\Views\_QuestionScreenQuestion.cshtml" />
   </ItemGroup>
 
   <ItemGroup>
