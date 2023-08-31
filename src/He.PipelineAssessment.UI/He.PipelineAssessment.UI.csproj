@@ -18,14 +18,17 @@
 
   <ItemGroup>
     <Content Remove="bundleconfig.json" />
+    <Content Remove="Features\Workflow\Views\_QuestionScreenQuestion.cshtml" />
   </ItemGroup>
 
   <ItemGroup>
     <_ContentIncludedByDefault Remove="bundleconfig.json" />
+    <_ContentIncludedByDefault Remove="Features\Workflow\Views\_QuestionScreenQuestion.cshtml" />
   </ItemGroup>
 
   <ItemGroup>
     <None Include="bundleconfig.json" />
+    <None Include="Features\Workflow\Views\_QuestionScreenQuestion.cshtml" />
   </ItemGroup>
 
   <ItemGroup>
@@ -57,6 +60,10 @@
     <ProjectReference Include="..\Elsa.CustomWorkflow.Sdk\Elsa.CustomWorkflow.Sdk.csproj" />
     <ProjectReference Include="..\He.PipelineAssessment.Data\He.PipelineAssessment.Data.csproj" />
     <ProjectReference Include="..\He.PipelineAssessment.Infrastructure\He.PipelineAssessment.Infrastructure.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <UpToDateCheckInput Remove="Features\Workflow\Views\_QuestionScreenQuestion.cshtml" />
   </ItemGroup>
 
 </Project>

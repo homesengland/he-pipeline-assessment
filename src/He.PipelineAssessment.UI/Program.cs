@@ -127,6 +127,12 @@ builder.Services.AddSinglePipelineClient(builder.Configuration, builder.Environm
 builder.AddCustomAuth0Configuration();
 builder.Services.AddCustomAuthentication();
 
+builder.Services.AddAntiforgery(options =>
+{
+    options.Cookie.SecurePolicy = CookieSecurePolicy.Always;
+    options.Cookie.HttpOnly = true;
+});
+
 var app = builder.Build();
 
 
