@@ -60,7 +60,7 @@ namespace Elsa.Server.Extensions
             configurationOptions.CertificateValidation += CertificateValidationCallBack!;
             configurationOptions.CertificateSelection += OptionsOnCertificateSelection;
             configurationOptions.Ssl = true;
-            configurationOptions.SslProtocols = SslProtocols.Tls12;
+            configurationOptions.SslProtocols = SslProtocols.Tls13;
             configurationOptions.AbortOnConnectFail = false;
             var connectionMultiplexer = (IConnectionMultiplexer)ConnectionMultiplexer.Connect(configurationOptions);
             return services.AddSingleton(connectionMultiplexer);
