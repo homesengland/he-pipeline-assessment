@@ -108,7 +108,7 @@ namespace Elsa.Server.Extensions
             }
             catch(Exception ex)
             {
-                logger.LogError(ex, $"Error whilst performing smoke tests of Redis DB.  Error Type: {ex.GetType().Name}, Error Message: {ex.Message}.  Inner Message: {ex.InnerException}")
+                logger.LogError(ex, $"Error whilst performing smoke tests of Redis DB.  Error Type: {ex.GetType().Name}, Error Message: {ex.Message}.  Inner Message: {ex.InnerException}");
             }
         }
 
