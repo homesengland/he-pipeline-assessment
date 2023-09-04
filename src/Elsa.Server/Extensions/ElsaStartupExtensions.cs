@@ -95,6 +95,7 @@ namespace Elsa.Server.Extensions
             services.AddSingleton<IConnectionMultiplexer>(ConnectionMultiplexer.Connect(configurationOptions));
             //Code ahead for logging only.
             var connectionMultiplexer = (IConnectionMultiplexer)ConnectionMultiplexer.Connect(configurationOptions);
+            connectionMultiplexer.IncludeDetailInExceptions = true;
             logger.LogInformation($"Check SSL RedisConnection.  Is connected: {connectionMultiplexer.IsConnected}");
             if (connectionMultiplexer.IsConnected)
             {
