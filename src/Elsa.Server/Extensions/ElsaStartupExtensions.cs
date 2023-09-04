@@ -6,6 +6,7 @@ using Elsa.CustomActivities.Activities.QuestionScreen.Helpers;
 using Elsa.Extensions;
 using Elsa.Options;
 using Medallion.Threading.Redis;
+using Microsoft.Identity.Web;
 using StackExchange.Redis;
 
 namespace Elsa.Server.Extensions
@@ -27,18 +28,28 @@ namespace Elsa.Server.Extensions
     public static class ElsaOptionsBuilderExtensions
     {
         public static ElsaOptionsBuilder AddRedisCache(
-            this ElsaOptionsBuilder options, bool enableInEnvironment)
+            this ElsaOptionsBuilder options, bool enableInEnvironment, ILogger logger)
         {
+            logger.LogInformation("Should enable Redis?", enableInEnvironment);
             if (enableInEnvironment)
             {
-                options.UseRedisCacheSignal()
-                    .ConfigureDistributedLockProvider(o => o.UseProviderFactory(sp => name =>
-                    {
-                        var connection =
-                            sp.GetRequiredService<
-                                IConnectionMultiplexer>();
-                        return new RedisDistributedLock(name, connection.GetDatabase());
-                    }));
+                try
+                {
+                    options.UseRedisCacheSignal()
+                        .ConfigureDistributedLockProvider(o => o.UseProviderFactory(sp => name =>
+                        {
+                            var connection =
+                                sp.GetRequiredService<
+                                    IConnectionMultiplexer>();
+                            logger.LogInformation("Successful connection to Redis:", connection.IsConnected);
+                            return new RedisDistributedLock(name, connection.GetDatabase());
+                        }));
+                }
+                catch (Exception ex)
+                {
+                    logger.LogError(ex, "Exception thrown whilst setting up Redis ConnectionMultiplexer");
+                }
+
             }
 
             return options;
@@ -52,7 +63,7 @@ namespace Elsa.Server.Extensions
 
         public static IServiceCollection AddRedisWithSelfSignedSslCertificate(
             this IServiceCollection services,
-            string connectionString, string certificatePath, string certificateKeyPath)
+            string connectionString, string certificatePath, string certificateKeyPath, ILogger logger)
         {
             _certificatePath = certificatePath;
             _certificateKeyPath = certificateKeyPath;
@@ -63,6 +74,7 @@ namespace Elsa.Server.Extensions
             configurationOptions.SslProtocols = SslProtocols.Tls13;
             configurationOptions.AbortOnConnectFail = false;
             var connectionMultiplexer = (IConnectionMultiplexer)ConnectionMultiplexer.Connect(configurationOptions);
+            logger.LogInformation("Check SSL RedisConnection", connectionMultiplexer.IsConnected);
             return services.AddSingleton(connectionMultiplexer);
         }
 
