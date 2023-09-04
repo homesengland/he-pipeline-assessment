@@ -54,7 +54,7 @@ logger.LogInformation($"Redis Connection String: {redisConnectionString}");
 if (!builder.Environment.IsDevelopment())
 {
     logger.LogInformation("Attempting to set up Redis Connection.  Environment is not Development");
-    builder.Services.AddRedisWithSelfSignedSslCertificate(redisConnectionString, builder.Configuration["Redis:SslCertificatePath"], builder.Configuration["Redis:SslCertificateKeyPath"], logger);
+    await builder.Services.AddRedisWithSelfSignedSslCertificate(redisConnectionString, builder.Configuration["Redis:SslCertificatePath"], builder.Configuration["Redis:SslCertificateKeyPath"], logger);
 }
 
 // Elsa services.

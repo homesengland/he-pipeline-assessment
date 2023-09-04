@@ -41,6 +41,9 @@ namespace Elsa.Server.Extensions
                             var connection =
                                 sp.GetRequiredService<
                                     IConnectionMultiplexer>();
+                            logger.LogInformation("Using Singleton of ConnectionMultiplexer for Elsa Extension");
+                            logger.LogInformation($"Multiplexer Config: {connection.Configuration}");
+                            logger.LogInformation($"Multiplexer Client Name: {connection.ClientName}");
                             logger.LogInformation($"Successful connection to Redis: {connection.IsConnected}");
                             return new RedisDistributedLock(name, connection.GetDatabase());
                         }));
@@ -61,7 +64,7 @@ namespace Elsa.Server.Extensions
         private static string _certificatePath = "";
         private static string _certificateKeyPath = "";
 
-        public static IServiceCollection AddRedisWithSelfSignedSslCertificate(
+        public async static Task<IServiceCollection> AddRedisWithSelfSignedSslCertificate(
             this IServiceCollection services,
             string connectionString, string certificatePath, string certificateKeyPath, ILogger logger)
         {
@@ -74,11 +77,15 @@ namespace Elsa.Server.Extensions
             configurationOptions.SslProtocols = SslProtocols.Tls13;
             configurationOptions.AbortOnConnectFail = false;
             var connectionMultiplexer = (IConnectionMultiplexer)ConnectionMultiplexer.Connect(configurationOptions);
+            connectionMultiplexer.IncludeDetailInExceptions = true;
             logger.LogInformation($"Check SSL RedisConnection.  Is connected: {connectionMultiplexer.IsConnected}");
             if(connectionMultiplexer.IsConnected)
             {
-                RedisSmokeTest(connectionMultiplexer, logger);
+                await RedisSmokeTest(connectionMultiplexer, logger);
             }
+            logger.LogInformation("Adding Singleton for connection multiplexer");
+            logger.LogInformation($"Multiplexer Config: {connectionMultiplexer.Configuration}");
+            logger.LogInformation($"Multiplexer Client Name: {connectionMultiplexer.ClientName}");
             return services.AddSingleton(connectionMultiplexer);
         }
 
@@ -87,7 +94,7 @@ namespace Elsa.Server.Extensions
             return CreateCertFromPemFile(_certificatePath, _certificateKeyPath);
         }
 
-        private async static void RedisSmokeTest(IConnectionMultiplexer conn, ILogger logger)
+        private async static Task RedisSmokeTest(IConnectionMultiplexer conn, ILogger logger)
         {
             string sampleKey = "TestKey";
             string sampleValue = "SampleValue";
