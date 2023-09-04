@@ -30,7 +30,7 @@ namespace Elsa.Server.Extensions
         public static ElsaOptionsBuilder AddRedisCache(
             this ElsaOptionsBuilder options, bool enableInEnvironment, ILogger logger)
         {
-            logger.LogInformation("Should enable Redis?", enableInEnvironment);
+            logger.LogInformation($"Should enable Redis?: {enableInEnvironment}");
             if (enableInEnvironment)
             {
                 try
@@ -41,7 +41,7 @@ namespace Elsa.Server.Extensions
                             var connection =
                                 sp.GetRequiredService<
                                     IConnectionMultiplexer>();
-                            logger.LogInformation("Successful connection to Redis:", connection.IsConnected);
+                            logger.LogInformation($"Successful connection to Redis: {connection.IsConnected}");
                             return new RedisDistributedLock(name, connection.GetDatabase());
                         }));
                 }
@@ -74,13 +74,42 @@ namespace Elsa.Server.Extensions
             configurationOptions.SslProtocols = SslProtocols.Tls13;
             configurationOptions.AbortOnConnectFail = false;
             var connectionMultiplexer = (IConnectionMultiplexer)ConnectionMultiplexer.Connect(configurationOptions);
-            logger.LogInformation("Check SSL RedisConnection", connectionMultiplexer.IsConnected);
+            logger.LogInformation($"Check SSL RedisConnection.  Is connected: {connectionMultiplexer.IsConnected}");
+            if(connectionMultiplexer.IsConnected)
+            {
+                RedisSmokeTest(connectionMultiplexer, logger);
+            }
             return services.AddSingleton(connectionMultiplexer);
         }
 
         private static X509Certificate OptionsOnCertificateSelection(object sender, string targethost, X509CertificateCollection localcertificates, X509Certificate? remotecertificate, string[] acceptableissuers)
         {
             return CreateCertFromPemFile(_certificatePath, _certificateKeyPath);
+        }
+
+        private async static void RedisSmokeTest(IConnectionMultiplexer conn, ILogger logger)
+        {
+            string sampleKey = "TestKey";
+            string sampleValue = "SampleValue";
+            try {
+                var db = conn.GetDatabase();
+                logger.LogInformation("Setting Key in Redis DB");
+                await db.StringSetAsync(sampleKey, sampleValue);
+                logger.LogInformation($"Key successfully set: {sampleKey}");
+                logger.LogInformation($"Attempting to retrieve key from DB");
+                var result = await db.StringGetAsync(sampleKey);
+                logger.LogInformation($"Key retrieved from DB: {result}");
+                if(result.ToString() != sampleValue)
+                {
+                    throw new Exception($"Returned value from Smoke Test was not expected value:'{result.ToString()}' is not equal to '{sampleValue}'");
+                }
+                logger.LogInformation("Deleting Key from DB");
+                await db.KeyDeleteAsync(sampleKey);
+            }
+            catch(Exception ex)
+            {
+                logger.LogError(ex, $"Error whilst performing smoke tests of Redis DB.  Error Type: {ex.GetType().Name}, Error Message: {ex.Message}.  Inner Message: {ex.InnerException}")
+            }
         }
 
         static X509Certificate2 CreateCertFromPemFile(string certPath, string keyPath)
