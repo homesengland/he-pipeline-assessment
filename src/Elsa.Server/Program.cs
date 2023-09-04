@@ -36,17 +36,25 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.DataProtection;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection.Extensions;
-
+using Microsoft.Identity.Web;
 
 var builder = WebApplication.CreateBuilder(args);
 var elsaConnectionString = builder.Configuration.GetConnectionString("Elsa");
 var elsaCustomConnectionString = builder.Configuration.GetConnectionString("ElsaCustom");
 
+using var loggerFactory = LoggerFactory.Create(loggingBuilder => loggingBuilder
+    .SetMinimumLevel(LogLevel.Trace)
+    .AddConsole());
+
+ILogger logger = loggerFactory.CreateLogger<Program>();
+logger.LogInformation("Example log message");
 
 var redisConnectionString = builder.Configuration.GetConnectionString("Redis");
+logger.LogInformation("Redis Connection String", redisConnectionString);
 if (!builder.Environment.IsDevelopment())
 {
-    builder.Services.AddRedisWithSelfSignedSslCertificate(redisConnectionString, builder.Configuration["Redis:SslCertificatePath"], builder.Configuration["Redis:SslCertificateKeyPath"]);
+    logger.LogInformation("Attempting to set up Redis Connection");
+    builder.Services.AddRedisWithSelfSignedSslCertificate(redisConnectionString, builder.Configuration["Redis:SslCertificatePath"], builder.Configuration["Redis:SslCertificateKeyPath"], logger);
 }
 
 // Elsa services.
@@ -66,7 +74,7 @@ builder.Services
         .AddActivity<RunEconomicCalculations>()
         .AddActivity<SetVariable>()
         .AddConsoleActivities()
-        .AddRedisCache(!builder.Environment.IsDevelopment())
+        .AddRedisCache(!builder.Environment.IsDevelopment(), logger)
     );
 
 builder.Services.AddScoped<ICustomPropertyDescriber, CustomPropertyDescriber>();
