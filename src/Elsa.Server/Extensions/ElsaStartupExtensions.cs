@@ -5,8 +5,12 @@ using System.Security.Cryptography.X509Certificates;
 using Elsa.CustomActivities.Activities.QuestionScreen.Helpers;
 using Elsa.Extensions;
 using Elsa.Options;
+using Medallion.Threading;
 using Medallion.Threading.Redis;
 using Microsoft.Identity.Web;
+using RedLockNet.SERedis.Configuration;
+using RedLockNet.SERedis;
+using RedLockNet;
 using StackExchange.Redis;
 
 namespace Elsa.Server.Extensions
@@ -35,18 +39,9 @@ namespace Elsa.Server.Extensions
             {
                 try
                 {
-                    options.UseRedisCacheSignal()
-                        .ConfigureDistributedLockProvider(o => o.UseProviderFactory(sp => name =>
-                        {
-                            var connection =
-                                sp.GetRequiredService<
-                                    IConnectionMultiplexer>();
-                            logger.LogInformation("Using Singleton of ConnectionMultiplexer for Elsa Extension");
-                            logger.LogInformation($"Multiplexer Config: {connection.Configuration}");
-                            logger.LogInformation($"Multiplexer Client Name: {connection.ClientName}");
-                            logger.LogInformation($"Successful connection to Redis: {connection.IsConnected}");
-                            return new RedisDistributedLock(name, connection.GetDatabase());
-                        }));
+                    options
+                        .ConfigureDistributedLockProvider(o => o.UseRedisLockProvider());
+                    return options;
                 }
                 catch (Exception ex)
                 {
@@ -57,6 +52,27 @@ namespace Elsa.Server.Extensions
 
             return options;
         }
+
+        private static DistributedLockingOptionsBuilder UseRedisLockProvider(this DistributedLockingOptionsBuilder options)
+        {
+            options.Services.AddRedLockFactory();
+            options.UseProviderFactory(CreateRedisDistributedLockFactory);
+
+            return options;
+        }
+
+        private static Func<string, IDistributedLock> CreateRedisDistributedLockFactory(IServiceProvider services)
+        {
+            var multiplexer = services.GetRequiredService<IConnectionMultiplexer>();
+            return name => new RedisDistributedLock(name, multiplexer.GetDatabase());
+        }
+
+        private static IServiceCollection AddRedLockFactory(this IServiceCollection services) =>
+            services.AddSingleton<IDistributedLockFactory, RedLockFactory>(sp => RedLockFactory.Create(
+                new[]
+                {
+                    new RedLockMultiplexer(sp.GetRequiredService<IConnectionMultiplexer>())
+                }));
     }
 
     public static class RedisServiceCollectionExtensions
@@ -76,17 +92,18 @@ namespace Elsa.Server.Extensions
             configurationOptions.Ssl = true;
             configurationOptions.SslProtocols = SslProtocols.Tls13;
             configurationOptions.AbortOnConnectFail = false;
+            services.AddSingleton<IConnectionMultiplexer>(ConnectionMultiplexer.Connect(configurationOptions));
+            //Code ahead for logging only.
             var connectionMultiplexer = (IConnectionMultiplexer)ConnectionMultiplexer.Connect(configurationOptions);
-            connectionMultiplexer.IncludeDetailInExceptions = true;
             logger.LogInformation($"Check SSL RedisConnection.  Is connected: {connectionMultiplexer.IsConnected}");
-            if(connectionMultiplexer.IsConnected)
+            if (connectionMultiplexer.IsConnected)
             {
                 await RedisSmokeTest(connectionMultiplexer, logger);
             }
             logger.LogInformation("Adding Singleton for connection multiplexer");
             logger.LogInformation($"Multiplexer Config: {connectionMultiplexer.Configuration}");
             logger.LogInformation($"Multiplexer Client Name: {connectionMultiplexer.ClientName}");
-            return services.AddSingleton(connectionMultiplexer);
+            return services;
         }
 
         private static X509Certificate OptionsOnCertificateSelection(object sender, string targethost, X509CertificateCollection localcertificates, X509Certificate? remotecertificate, string[] acceptableissuers)
