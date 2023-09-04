@@ -50,10 +50,10 @@ ILogger logger = loggerFactory.CreateLogger<Program>();
 logger.LogInformation("Example log message");
 
 var redisConnectionString = builder.Configuration.GetConnectionString("Redis");
-logger.LogInformation("Redis Connection String", redisConnectionString);
+logger.LogInformation($"Redis Connection String: {redisConnectionString}");
 if (!builder.Environment.IsDevelopment())
 {
-    logger.LogInformation("Attempting to set up Redis Connection");
+    logger.LogInformation("Attempting to set up Redis Connection.  Environment is not Development");
     builder.Services.AddRedisWithSelfSignedSslCertificate(redisConnectionString, builder.Configuration["Redis:SslCertificatePath"], builder.Configuration["Redis:SslCertificateKeyPath"], logger);
 }
 
