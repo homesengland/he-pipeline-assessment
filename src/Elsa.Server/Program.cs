@@ -55,10 +55,11 @@ if (!builder.Environment.IsDevelopment())
     await builder.Services.AddRedisWithSelfSignedSslCertificate(redisConnectionString, builder.Configuration["Redis:SslCertificatePath"], builder.Configuration["Redis:SslCertificateKeyPath"], logger);
 }
 
+bool useCache = !builder.Environment.IsDevelopment();
 // Elsa services.
 builder.Services
     .AddElsa(elsa => elsa
-        .UseEntityFrameworkPersistence(ef => ef.UseSqlServer(elsaConnectionString, typeof(Elsa.Persistence.EntityFramework.SqlServer.Migrations.Initial)))
+        .UseEntityFrameworkPersistenceWithCache(ef => ef.UseSqlServer(elsaConnectionString!, typeof(Elsa.Persistence.EntityFramework.SqlServer.Migrations.Initial)), true, useCache)
         .NoCoreActivities()
         .AddActivity<SinglePipelineDataSource>()
         .AddActivity<PCSProfileDataSource>()
@@ -72,7 +73,6 @@ builder.Services
         .AddActivity<RunEconomicCalculations>()
         .AddActivity<SetVariable>()
         .AddConsoleActivities()
-        .AddRedisCache(!builder.Environment.IsDevelopment(), logger)
     );
 
 builder.Services.AddScoped<ICustomPropertyDescriber, CustomPropertyDescriber>();
