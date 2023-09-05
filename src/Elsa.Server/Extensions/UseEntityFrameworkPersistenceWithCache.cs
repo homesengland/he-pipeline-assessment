@@ -5,6 +5,7 @@ using Elsa.Options;
 using Elsa.Persistence.EntityFramework.Core.Services;
 using Elsa.Persistence.EntityFramework.Core.Stores;
 using Elsa.Persistence.EntityFramework.Core;
+using Elsa.Server.Stores;
 
 namespace Elsa.Server.Extensions
 {
@@ -213,23 +214,47 @@ namespace Elsa.Server.Extensions
             else
                 elsa.Services.AddDbContextFactory<TElsaContext>(configure, serviceLifetime);
 
-            elsa.Services
-                .AddSingleton<IElsaContextFactory, ElsaContextFactory<TElsaContext>>()
-                .AddScoped<EntityFrameworkWorkflowDefinitionStore>()
-                .AddScoped<EntityFrameworkWorkflowInstanceStore>()
-                .AddScoped<EntityFrameworkWorkflowExecutionLogRecordStore>()
-                .AddScoped<EntityFrameworkBookmarkStore>()
-                .AddScoped<EntityFrameworkTriggerStore>();
+            if (useCache)
+            {
+                elsa.Services
+                    .AddSingleton<IElsaContextFactory, ElsaContextFactory<TElsaContext>>()
+                    .AddScoped<CachedEntityFrameworkWorkflowDefinitionStore>()
+                    .AddScoped<CachedEntityFrameworkWorkflowInstanceStore>()
+                    .AddScoped<CachedEntityFrameworkWorkflowExecutionLogRecordStore>()
+                    .AddScoped<CachedEntityFrameworkBookmarkStore>()
+                    .AddScoped<CachedEntityFrameworkTriggerStore>();
 
-            if (autoRunMigrations)
-                elsa.Services.AddStartupTask<RunMigrations>();
+                if (autoRunMigrations)
+                    elsa.Services.AddStartupTask<RunMigrations>();
 
-            return elsa
-                .UseWorkflowDefinitionStore(sp => sp.GetRequiredService<EntityFrameworkWorkflowDefinitionStore>())
-                .UseWorkflowInstanceStore(sp => sp.GetRequiredService<EntityFrameworkWorkflowInstanceStore>())
-                .UseWorkflowExecutionLogStore(sp => sp.GetRequiredService<EntityFrameworkWorkflowExecutionLogRecordStore>())
-                .UseBookmarkStore(sp => sp.GetRequiredService<EntityFrameworkBookmarkStore>())
-                .UseTriggerStore(sp => sp.GetRequiredService<EntityFrameworkTriggerStore>());
+                return elsa
+                    .UseWorkflowDefinitionStore(sp => sp.GetRequiredService<CachedEntityFrameworkWorkflowDefinitionStore>())
+                    .UseWorkflowInstanceStore(sp => sp.GetRequiredService<CachedEntityFrameworkWorkflowInstanceStore>())
+                    .UseWorkflowExecutionLogStore(sp => sp.GetRequiredService<CachedEntityFrameworkWorkflowExecutionLogRecordStore>())
+                    .UseBookmarkStore(sp => sp.GetRequiredService<CachedEntityFrameworkBookmarkStore>())
+                    .UseTriggerStore(sp => sp.GetRequiredService<CachedEntityFrameworkTriggerStore>());
+            }
+            else
+            {
+                elsa.Services
+                    .AddSingleton<IElsaContextFactory, ElsaContextFactory<TElsaContext>>()
+                    .AddScoped<EntityFrameworkWorkflowDefinitionStore>()
+                    .AddScoped<EntityFrameworkWorkflowInstanceStore>()
+                    .AddScoped<EntityFrameworkWorkflowExecutionLogRecordStore>()
+                    .AddScoped<EntityFrameworkBookmarkStore>()
+                    .AddScoped<EntityFrameworkTriggerStore>();
+
+                if (autoRunMigrations)
+                    elsa.Services.AddStartupTask<RunMigrations>();
+
+                return elsa
+                    .UseWorkflowDefinitionStore(sp => sp.GetRequiredService<EntityFrameworkWorkflowDefinitionStore>())
+                    .UseWorkflowInstanceStore(sp => sp.GetRequiredService<EntityFrameworkWorkflowInstanceStore>())
+                    .UseWorkflowExecutionLogStore(sp => sp.GetRequiredService<EntityFrameworkWorkflowExecutionLogRecordStore>())
+                    .UseBookmarkStore(sp => sp.GetRequiredService<EntityFrameworkBookmarkStore>())
+                    .UseTriggerStore(sp => sp.GetRequiredService<EntityFrameworkTriggerStore>());
+            }
+
         }
     }
 }
