@@ -10,6 +10,7 @@ using RedLockNet.SERedis.Configuration;
 using RedLockNet.SERedis;
 using RedLockNet;
 using StackExchange.Redis;
+using Elsa.Extensions;
 
 namespace Elsa.Server.Extensions
 {
@@ -38,6 +39,7 @@ namespace Elsa.Server.Extensions
                 try
                 {
                     options
+                        .UseRedisCacheSignal()
                         .ConfigureDistributedLockProvider(o => o.UseRedisLockProvider());
                     return options;
                 }
