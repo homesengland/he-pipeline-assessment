@@ -128,8 +128,8 @@ namespace Elsa.Server.Extensions
                 {
                     throw new Exception($"Returned value from Smoke Test was not expected value:'{result.ToString()}' is not equal to '{sampleValue}'");
                 }
-                logger.LogInformation("Deleting Key from DB");
-                await db.KeyDeleteAsync(sampleKey);
+                //logger.LogInformation("Deleting Key from DB");
+                //await db.KeyDeleteAsync(sampleKey);
             }
             catch(Exception ex)
             {
