@@ -23,7 +23,7 @@ namespace Elsa.Server.Stores
         }
 
 
-        new public async Task<WorkflowDefinition?> FindAsync(ISpecification<WorkflowDefinition> specification, CancellationToken cancellationToken = default)
+        public new async Task<WorkflowDefinition?> FindAsync(ISpecification<WorkflowDefinition> specification, CancellationToken cancellationToken = default)
         {
             var db = _cache.GetDatabase();
             _logger.LogInformation($"Specification to map: {specification}");
