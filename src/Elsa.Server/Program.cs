@@ -65,7 +65,7 @@ logger.LogInformation($"Using Cache: {useCache}");
 // Elsa services.
 builder.Services
     .AddElsa(elsa => elsa
-        .UseEntityFrameworkPersistenceWithCache(ef => ef.UseSqlServer(elsaConnectionString!, typeof(Elsa.Persistence.EntityFramework.SqlServer.Migrations.Initial)), true, true)
+        .UseEntityFrameworkPersistenceWithCache(ef => ef.UseSqlServer(elsaConnectionString!, typeof(Elsa.Persistence.EntityFramework.SqlServer.Migrations.Initial)), true, useCache)
         .NoCoreActivities()
         .AddActivity<SinglePipelineDataSource>()
         .AddActivity<PCSProfileDataSource>()
