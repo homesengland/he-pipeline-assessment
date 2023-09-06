@@ -50,7 +50,9 @@ namespace Elsa.Server.Stores.ElsaStores
                     entity.Channel
                 };
 
-                var json = (string)dbContext.Entry(entity).Property("Data").CurrentValue;
+                string? json = (string?)dbContext.Entry(entity).Property("Data").CurrentValue;
+            if(json != null)
+            {
                 data = JsonConvert.DeserializeAnonymousType(json, data, DefaultContentSerializer.CreateDefaultJsonSerializationSettings())!;
 
                 entity.Activities = data.Activities;
@@ -59,6 +61,7 @@ namespace Elsa.Server.Stores.ElsaStores
                 entity.ContextOptions = data.ContextOptions;
                 entity.CustomAttributes = data.CustomAttributes;
                 entity.Channel = data.Channel;
+            }
             }
         }
     }
