@@ -12,7 +12,7 @@ using System.Text.Json;
 
 namespace Elsa.Server.Stores
 {
-    public class CachedEntityFrameworkWorkflowDefinitionStore : EntityFrameworkWorkflowDefinitionStore
+    public class CachedEntityFrameworkWorkflowDefinitionStore : ElsaStores.EntityFrameworkWorkflowDefinitionStore
     {
         private IConnectionMultiplexer _cache;
         private ILogger<CachedEntityFrameworkWorkflowDefinitionStore> _logger;
@@ -23,7 +23,7 @@ namespace Elsa.Server.Stores
         }
 
 
-        public new async Task<WorkflowDefinition?> FindAsync(ISpecification<WorkflowDefinition> specification, CancellationToken cancellationToken = default)
+        public override async Task<WorkflowDefinition?> FindAsync(ISpecification<WorkflowDefinition> specification, CancellationToken cancellationToken = default)
         {
             var db = _cache.GetDatabase();
             _logger.LogInformation($"Specification to map: {specification}");

@@ -55,10 +55,10 @@ if (!builder.Environment.IsDevelopment())
     logger.LogInformation("Attempting to set up Redis Connection.  Environment is not Development");
     await builder.Services.AddRedisWithSelfSignedSslCertificate(redisConnectionString!, builder.Configuration["Redis:SslCertificatePath"], builder.Configuration["Redis:SslCertificateKeyPath"], logger);
 }
-else
-{
-    builder.Services.AddSingleton<IConnectionMultiplexer>(ConnectionMultiplexer.Connect("127.0.0.1:6379"));
-}
+//else
+//{
+//    builder.Services.AddSingleton<IConnectionMultiplexer>(ConnectionMultiplexer.Connect("127.0.0.1:6379"));
+//}
 
 bool useCache = !builder.Environment.IsDevelopment();
 logger.LogInformation($"Using Cache: {useCache}");
