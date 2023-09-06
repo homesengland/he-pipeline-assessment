@@ -3,6 +3,7 @@ using Elsa.Models;
 using Elsa.Persistence.EntityFramework.Core.Services;
 using Elsa.Persistence.EntityFramework.Core.Stores;
 using Elsa.Persistence.Specifications;
+using Elsa.Persistence.Specifications.WorkflowDefinitions;
 using Elsa.Serialization;
 using He.AspNetCore.Mvc.Gds.Components.Interfaces;
 using Microsoft.EntityFrameworkCore;
@@ -25,7 +26,9 @@ namespace Elsa.Server.Stores
         new public async Task<WorkflowDefinition?> FindAsync(ISpecification<WorkflowDefinition> specification, CancellationToken cancellationToken = default)
         {
             var db = _cache.GetDatabase();
-            var workflowId = specification.ToString();
+            _logger.LogInformation($"Specification to map: {specification}");
+            WorkflowDefinitionIdSpecification spec = (WorkflowDefinitionIdSpecification)specification;
+            var workflowId = spec.Id;
             _logger.LogInformation($"Attempting to Retrieve Workflow From Cache: {workflowId}");
                 var result = await db.StringGetAsync(workflowId);
             if (string.IsNullOrEmpty(result))

@@ -56,6 +56,7 @@ if (!builder.Environment.IsDevelopment())
 }
 
 bool useCache = !builder.Environment.IsDevelopment();
+logger.LogInformation($"Using Cache: {useCache}");
 // Elsa services.
 builder.Services
     .AddElsa(elsa => elsa
