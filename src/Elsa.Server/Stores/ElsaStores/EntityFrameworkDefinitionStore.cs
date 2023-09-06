@@ -38,20 +38,20 @@ namespace Elsa.Server.Stores.ElsaStores
                 dbContext.Entry(entity).Property("Data").CurrentValue = json;
             }
 
-            protected override void OnLoading(ElsaContext dbContext, WorkflowDefinition entity)
+        protected override void OnLoading(ElsaContext dbContext, WorkflowDefinition entity)
+        {
+            var data = new
             {
-                var data = new
-                {
-                    entity.Activities,
-                    entity.Connections,
-                    entity.Variables,
-                    entity.ContextOptions,
-                    entity.CustomAttributes,
-                    entity.Channel
-                };
+                entity.Activities,
+                entity.Connections,
+                entity.Variables,
+                entity.ContextOptions,
+                entity.CustomAttributes,
+                entity.Channel
+            };
 
-                string? json = (string?)dbContext.Entry(entity).Property("Data").CurrentValue;
-            if(json != null)
+            string? json = (string?)dbContext.Entry(entity).Property("Data").CurrentValue;
+            if (json != null)
             {
                 data = JsonConvert.DeserializeAnonymousType(json, data, DefaultContentSerializer.CreateDefaultJsonSerializationSettings())!;
 
@@ -62,6 +62,6 @@ namespace Elsa.Server.Stores.ElsaStores
                 entity.CustomAttributes = data.CustomAttributes;
                 entity.Channel = data.Channel;
             }
-            }
         }
+    }
     }
