@@ -52,7 +52,7 @@ logger.LogInformation($"Redis Connection String: {redisConnectionString}");
 if (!builder.Environment.IsDevelopment())
 {
     logger.LogInformation("Attempting to set up Redis Connection.  Environment is not Development");
-    await builder.Services.AddRedisWithSelfSignedSslCertificate(redisConnectionString, builder.Configuration["Redis:SslCertificatePath"], builder.Configuration["Redis:SslCertificateKeyPath"], logger);
+    await builder.Services.AddRedisWithSelfSignedSslCertificate(redisConnectionString!, builder.Configuration["Redis:SslCertificatePath"], builder.Configuration["Redis:SslCertificateKeyPath"], logger);
 }
 
 bool useCache = !builder.Environment.IsDevelopment();
@@ -84,7 +84,7 @@ builder.Services.TryAddProvider<IExpressionHandler, ScoringCalculationExpression
 builder.Services.TryAddSingleton<INestedSyntaxExpressionHandler, NestedSyntaxExpressionHandler>();
 
 builder.Services.AddDbContext<ElsaCustomContext>(config =>
-    config.UseSqlServer(elsaCustomConnectionString,
+    config.UseSqlServer(elsaCustomConnectionString!,
         x => x.MigrationsAssembly("Elsa.CustomInfrastructure")));
 
 builder.Services.AddScoped<DbContext>(provider => provider.GetRequiredService<ElsaCustomContext>());
