@@ -25,27 +25,31 @@ namespace Elsa.Server.Stores
         new public async Task<WorkflowDefinition?> FindAsync(ISpecification<WorkflowDefinition> specification, CancellationToken cancellationToken = default)
         {
             var db = _cache.GetDatabase();
-            if (specification != null)
+            var workflowId = specification.ToString();
+            _logger.LogInformation($"Attempting to Retrieve Workflow From Cache: {workflowId}");
+                var result = await db.StringGetAsync(workflowId);
+            if (string.IsNullOrEmpty(result))
             {
-                var result = await db.StringGetAsync(specification.ToString());
-                if (string.IsNullOrEmpty(result))
+                _logger.LogInformation($"No workflow found for Id: {workflowId}");
+                _logger.LogInformation("Retrieving from Database");
+                WorkflowDefinition? workflowDefinition = await base.FindAsync(specification!, cancellationToken);
+                if (workflowDefinition != null)
                 {
-                    return await base.FindAsync(specification, cancellationToken);
+                    _logger.LogInformation($"Workflow retrieved from DB.  Setting cache value for Id: {workflowDefinition.Id}");
+                    string jsonWorkflowDefiniton = JsonSerializer.Serialize(workflowDefinition);
+                    await db.StringSetAsync(workflowDefinition.Id, jsonWorkflowDefiniton);
+                    _logger.LogInformation("Set In Cache");
+                    var valueSavedInCache = await db.StringGetAsync(workflowDefinition.Id);
+                    _logger.LogInformation($"Value stored in Cache: {valueSavedInCache}");
                 }
-                else
-                {
-                    WorkflowDefinition? parsedWorkflowDefinition = JsonSerializer.Deserialize<WorkflowDefinition>(result);
-                    return parsedWorkflowDefinition;
-                }
+                return workflowDefinition;
             }
-
-            WorkflowDefinition? workflowDefinition = await base.FindAsync(specification!, cancellationToken);
-            if(workflowDefinition != null)
+            else
             {
-                string jsonWorkflowDefiniton = JsonSerializer.Serialize(workflowDefinition);
-                await db.StringSetAsync(workflowDefinition.Id, jsonWorkflowDefiniton);
+                _logger.LogInformation($"Workflow found in cache for Id: {workflowId}");
+                WorkflowDefinition? parsedWorkflowDefinition = JsonSerializer.Deserialize<WorkflowDefinition>(result);
+                return parsedWorkflowDefinition;
             }
-            return workflowDefinition;
         }
     }
 }
