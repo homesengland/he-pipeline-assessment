@@ -50,11 +50,10 @@ namespace He.PipelineAssessment.UI.Tests.Features.Admin.AssessmentToolManagement
                 .ReturnsAsync(assessmentTool);
 
             //Act
-            var result = await sut.Handle(updateAssessmentToolCommand, CancellationToken.None);
+            await sut.Handle(updateAssessmentToolCommand, CancellationToken.None);
 
             //Assert          
             adminAssessmentToolRepository.Verify(x => x.UpdateAssessmentTool(assessmentTool), Times.Once);
-            Assert.Equal(Unit.Value, result);
             adminAssessmentToolRepository.Verify(
               x => x.UpdateAssessmentTool(It.Is<AssessmentTool>(y =>
                   y.Order == updateAssessmentToolCommand.Order &&

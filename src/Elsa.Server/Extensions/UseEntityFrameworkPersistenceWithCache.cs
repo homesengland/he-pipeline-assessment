@@ -1,5 +1,5 @@
 ﻿using Elsa.Runtime;
-using Elsa.WorkflowSettings.Persistence.EntityFramework.Core.StartupTasks;
+using Elsa.Persistence.EntityFramework.Core.StartupTasks;
 using Microsoft.EntityFrameworkCore;
 using Elsa.Options;
 using Elsa.Persistence.EntityFramework.Core.Services;

@@ -40,12 +40,10 @@ namespace He.PipelineAssessment.UI.Tests.Features.Rollback.ConfirmRollback
 
             //Act
 
-            var result = await sut.Handle(command, CancellationToken.None);
+            await sut.Handle(command, CancellationToken.None);
 
             //Assert
             assessmentRepository.Verify(x=>x.UpdateAssessmentIntervention(It.IsAny<AssessmentIntervention>()),Times.Once);
-            Assert.Equal(Unit.Value,result);
-
         }
     }
 }

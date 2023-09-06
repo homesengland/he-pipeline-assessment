@@ -16,7 +16,7 @@ namespace He.PipelineAssessment.UI.Features.Rollback.ConfirmRollback
             _logger = logger;
         }
 
-        public async Task<Unit> Handle(ConfirmRollbackCommand command, CancellationToken cancellationToken)
+        public async Task Handle(ConfirmRollbackCommand command, CancellationToken cancellationToken)
         {
             try
             {
@@ -29,8 +29,6 @@ namespace He.PipelineAssessment.UI.Features.Rollback.ConfirmRollback
 
                 intervention.Status = InterventionStatus.Pending;
                 await _assessmentRepository.UpdateAssessmentIntervention(intervention);
-
-                return Unit.Value;
             }
             catch (Exception e)
             {

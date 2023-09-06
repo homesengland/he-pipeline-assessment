@@ -17,7 +17,7 @@ namespace He.PipelineAssessment.UI.Features.Admin.AssessmentToolManagement.Comma
             _logger = logger;
         }
 
-        public async Task<Unit> Handle(CreateAssessmentToolCommand command, CancellationToken cancellationToken)
+        public async Task Handle(CreateAssessmentToolCommand command, CancellationToken cancellationToken)
         {
             try
             {
@@ -25,7 +25,6 @@ namespace He.PipelineAssessment.UI.Features.Admin.AssessmentToolManagement.Comma
 
 
                 await _adminAssessmentToolRepository.CreateAssessmentTool(assessmentTool);
-                return Unit.Value;
             }
             catch (Exception e)
             {

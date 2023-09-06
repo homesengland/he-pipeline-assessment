@@ -101,7 +101,9 @@ builder.Services.AddScoped<IQuestionInvoker, QuestionInvoker>();
 builder.Services.AddScoped<IElsaCustomRepository, ElsaCustomRepository>();
 
 
-builder.Services.AddMediatR(typeof(Program).Assembly);
+builder.Services.AddMediatR(cfg => {
+    cfg.RegisterServicesFromAssembly(typeof(Program).Assembly);
+});
 builder.Services.AddApplicationInsightsTelemetry();
 builder.Services.AddScoped<IDateTimeProvider, DateTimeProvider>();
 builder.Services.AddScoped<IActivityDataProvider, ActivityDataProvider>();
