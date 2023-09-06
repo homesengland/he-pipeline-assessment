@@ -12,7 +12,7 @@ using System.Text.Json;
 
 namespace Elsa.Server.Stores
 {
-    public class CachedEntityFrameworkWorkflowDefinitionStore : EntityFrameworkWorkflowDefinitionStore
+    public class CachedEntityFrameworkWorkflowDefinitionStore : ElsaStores.EntityFrameworkWorkflowDefinitionStore
     {
         private IConnectionMultiplexer _cache;
         private ILogger<CachedEntityFrameworkWorkflowDefinitionStore> _logger;
@@ -23,7 +23,7 @@ namespace Elsa.Server.Stores
         }
 
 
-        public new async Task<WorkflowDefinition?> FindAsync(ISpecification<WorkflowDefinition> specification, CancellationToken cancellationToken = default)
+        public override async Task<WorkflowDefinition?> FindAsync(ISpecification<WorkflowDefinition> specification, CancellationToken cancellationToken = default)
         {
             var db = _cache.GetDatabase();
             _logger.LogInformation($"Specification to map: {specification}");
@@ -40,9 +40,9 @@ namespace Elsa.Server.Stores
                 {
                     _logger.LogInformation($"Workflow retrieved from DB.  Setting cache value for Id: {workflowDefinition.Id}");
                     string jsonWorkflowDefiniton = JsonSerializer.Serialize(workflowDefinition);
-                    await db.StringSetAsync(workflowDefinition.Id, jsonWorkflowDefiniton);
+                    await db.StringSetAsync(workflowDefinition.DefinitionId, jsonWorkflowDefiniton);
                     _logger.LogInformation("Set In Cache");
-                    var valueSavedInCache = await db.StringGetAsync(workflowDefinition.Id);
+                    var valueSavedInCache = await db.StringGetAsync(workflowDefinition.DefinitionId);
                     _logger.LogInformation($"Value stored in Cache: {valueSavedInCache}");
                 }
                 return workflowDefinition;
