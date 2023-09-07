@@ -26,12 +26,12 @@ namespace Elsa.Server.Stores
             var db = _cache.GetDatabase();
             _logger.LogInformation($"Specification to map: {specification}");
             WorkflowDefinitionIdSpecification spec = (WorkflowDefinitionIdSpecification)specification;
-            var workflowId = spec.Id;
-            _logger.LogInformation($"Attempting to Retrieve Workflow From Cache: {workflowId}");
-                var result = await db.StringGetAsync(workflowId);
+            var cacheKey = CacheKey(spec);
+            _logger.LogInformation($"Attempting to Retrieve Workflow From Cache: {cacheKey}");
+                var result = await db.StringGetAsync(cacheKey);
             if (string.IsNullOrEmpty(result))
             {
-                _logger.LogInformation($"No workflow found for Id: {workflowId}");
+                _logger.LogInformation($"No workflow found for Id: {cacheKey}");
                 _logger.LogInformation("Retrieving from Database");
                 WorkflowDefinition? workflowDefinition = await base.FindAsync(specification!, cancellationToken);
                 if (workflowDefinition != null)
@@ -47,7 +47,7 @@ namespace Elsa.Server.Stores
             }
             else
             {
-                _logger.LogInformation($"Workflow found in cache for Id: {workflowId}");
+                _logger.LogInformation($"Workflow found in cache for Id: {spec.Id}");
                 WorkflowDefinition? parsedWorkflowDefinition = JsonSerializer.Deserialize<WorkflowDefinition>(result);
                 return parsedWorkflowDefinition;
             }
@@ -59,7 +59,7 @@ namespace Elsa.Server.Stores
             {
                 //Check if it's in the Cache
                 var db = _cache.GetDatabase();
-                string cacheKey = workflowDefinition.DefinitionId;
+                string cacheKey = CacheKey(workflowDefinition);
                 try
                 {
                     await base.UpdateAsync(workflowDefinition, cancellationToken);
@@ -81,7 +81,7 @@ namespace Elsa.Server.Stores
             {
                 //Check if it's in the Cache
                 var db = _cache.GetDatabase();
-                string cacheKey = workflowDefinition.DefinitionId;
+                string cacheKey = CacheKey(workflowDefinition);
                 await base.AddAsync(workflowDefinition, cancellationToken);
                 string workflowJson = JsonSerializer.Serialize(workflowDefinition);
                 await db.StringSetAsync(cacheKey, workflowJson);
@@ -94,7 +94,7 @@ namespace Elsa.Server.Stores
             {
                 //Check if it's in the Cache
                 var db = _cache.GetDatabase();
-                string cacheKey = workflowDefinition.DefinitionId;
+                string cacheKey = CacheKey(workflowDefinition); ;
                 await base.SaveAsync(workflowDefinition, cancellationToken);
                 string workflowJson = JsonSerializer.Serialize(workflowDefinition);
                 await db.StringSetAsync(cacheKey, workflowJson);
@@ -109,7 +109,7 @@ namespace Elsa.Server.Stores
         public override async Task DeleteAsync(WorkflowDefinition entity, CancellationToken cancellationToken = default)
         {
             var db = _cache.GetDatabase();
-            string cacheKey = entity.DefinitionId;
+            string cacheKey = CacheKey(entity);
             await base.DeleteAsync(entity, cancellationToken);
             await db.KeyDeleteAsync(cacheKey);
         }
@@ -128,12 +128,19 @@ namespace Elsa.Server.Stores
         {
             if(workflow.VersionOptions == null)
             {
-                return $"{_Key}:{workflow.Id}:Latest";
+                return $"{_Key}:{workflow.Id}:Published";
             }
             else
             {
                 return $"{_Key}:{workflow.Id}:{workflow.VersionOptions.ToString()}";
             }
+        }
+
+        private string CacheKey(WorkflowDefinition workflow)
+        {
+            string version = workflow.IsLatest ? "Latest": workflow.Version.ToString();
+            string key = $"{_Key}:{workflow.DefinitionId}:{version}";
+            return key;
         }
             
     }
