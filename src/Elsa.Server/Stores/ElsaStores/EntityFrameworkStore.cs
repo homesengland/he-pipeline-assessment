@@ -29,7 +29,7 @@ namespace Elsa.Server.Stores.ElsaStores
 
         protected IContextFactory<TContext> DbContextFactory { get; }
 
-        public async Task SaveAsync(T entity, CancellationToken cancellationToken)
+        public virtual async Task SaveAsync(T entity, CancellationToken cancellationToken)
         {
             await _semaphore.WaitAsync(cancellationToken);
 
@@ -69,7 +69,7 @@ namespace Elsa.Server.Stores.ElsaStores
         }
 
 
-        public async Task AddAsync(T entity, CancellationToken cancellationToken)
+        public virtual async Task AddAsync(T entity, CancellationToken cancellationToken)
         {
             await DoWork(async dbContext =>
             {
@@ -79,7 +79,7 @@ namespace Elsa.Server.Stores.ElsaStores
             }, cancellationToken);
         }
 
-        public async Task AddManyAsync(IEnumerable<T> entities, CancellationToken cancellationToken = default)
+        public virtual async Task AddManyAsync(IEnumerable<T> entities, CancellationToken cancellationToken = default)
         {
             var list = entities.ToList();
 
@@ -96,7 +96,7 @@ namespace Elsa.Server.Stores.ElsaStores
             }, cancellationToken);
         }
 
-        public async Task UpdateAsync(T entity, CancellationToken cancellationToken = default)
+        public virtual async Task UpdateAsync(T entity, CancellationToken cancellationToken = default)
         {
             await DoWork(dbContext =>
             {
@@ -136,7 +136,7 @@ namespace Elsa.Server.Stores.ElsaStores
             }, cancellationToken);
         }
 
-        public async Task<IEnumerable<T>> FindManyAsync(ISpecification<T> specification, IOrderBy<T>? orderBy = default, IPaging? paging = default, CancellationToken cancellationToken = default)
+        public virtual async Task<IEnumerable<T>> FindManyAsync(ISpecification<T> specification, IOrderBy<T>? orderBy = default, IPaging? paging = default, CancellationToken cancellationToken = default)
         {
             var filter = MapSpecification(specification);
 
