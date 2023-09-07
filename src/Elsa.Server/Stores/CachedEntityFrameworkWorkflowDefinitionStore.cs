@@ -13,6 +13,7 @@ namespace Elsa.Server.Stores
     {
         private IConnectionMultiplexer _cache;
         private ILogger<CachedEntityFrameworkWorkflowDefinitionStore> _logger;
+        private string _Key = "WorkflowDefinition";
         public CachedEntityFrameworkWorkflowDefinitionStore(IElsaContextFactory dbContextFactory, IMapper mapper, IContentSerializer contentSerializer, IConnectionMultiplexer connectionMultiplexer, ILogger<CachedEntityFrameworkWorkflowDefinitionStore> logger) : base(dbContextFactory, mapper, contentSerializer)
         {
             _cache = connectionMultiplexer;
@@ -122,5 +123,18 @@ namespace Elsa.Server.Stores
         {
             return await base.FindManyAsync(specification, orderBy, paging, cancellationToken);
         }
+
+        private string CacheKey(WorkflowDefinitionIdSpecification workflow)
+        {
+            if(workflow.VersionOptions == null)
+            {
+                return $"{_Key}:{workflow.Id}:Latest";
+            }
+            else
+            {
+                return $"{_Key}:{workflow.Id}:{workflow.VersionOptions.ToString()}";
+            }
+        }
+            
     }
 }
