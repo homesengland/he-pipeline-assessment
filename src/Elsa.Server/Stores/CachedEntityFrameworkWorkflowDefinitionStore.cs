@@ -14,6 +14,7 @@ namespace Elsa.Server.Stores
         private IConnectionMultiplexer _cache;
         private ILogger<CachedEntityFrameworkWorkflowDefinitionStore> _logger;
         private string _Key = "WorkflowDefinition";
+        private TimeSpan _expiryTime = TimeSpan.FromHours(1);
         public CachedEntityFrameworkWorkflowDefinitionStore(IElsaContextFactory dbContextFactory, IMapper mapper, IContentSerializer contentSerializer, IConnectionMultiplexer connectionMultiplexer, ILogger<CachedEntityFrameworkWorkflowDefinitionStore> logger) : base(dbContextFactory, mapper, contentSerializer)
         {
             _cache = connectionMultiplexer;
@@ -38,7 +39,7 @@ namespace Elsa.Server.Stores
                 {
                     _logger.LogInformation($"Workflow retrieved from DB.  Setting cache value for Id: {workflowDefinition.Id}");
                     string jsonWorkflowDefiniton = JsonSerializer.Serialize(workflowDefinition);
-                    await db.StringSetAsync(workflowDefinition.DefinitionId, jsonWorkflowDefiniton);
+                    await db.StringSetAsync(workflowDefinition.DefinitionId, jsonWorkflowDefiniton, _expiryTime);
                     _logger.LogInformation("Set In Cache");
                     var valueSavedInCache = await db.StringGetAsync(workflowDefinition.DefinitionId);
                     _logger.LogInformation($"Value stored in Cache: {valueSavedInCache}");
@@ -64,7 +65,7 @@ namespace Elsa.Server.Stores
                 {
                     await base.UpdateAsync(workflowDefinition, cancellationToken);
                     string workflowJson = JsonSerializer.Serialize(workflowDefinition);
-                    await db.StringSetAsync(cacheKey, workflowJson);
+                    await db.StringSetAsync(cacheKey, workflowJson, _expiryTime);
                 }
                 catch (Exception ex)
                 {
@@ -84,7 +85,7 @@ namespace Elsa.Server.Stores
                 string cacheKey = CacheKey(workflowDefinition);
                 await base.AddAsync(workflowDefinition, cancellationToken);
                 string workflowJson = JsonSerializer.Serialize(workflowDefinition);
-                await db.StringSetAsync(cacheKey, workflowJson);
+                await db.StringSetAsync(cacheKey, workflowJson, _expiryTime);
             }
         }
 
@@ -97,7 +98,7 @@ namespace Elsa.Server.Stores
                 string cacheKey = CacheKey(workflowDefinition); ;
                 await base.SaveAsync(workflowDefinition, cancellationToken);
                 string workflowJson = JsonSerializer.Serialize(workflowDefinition);
-                await db.StringSetAsync(cacheKey, workflowJson);
+                await db.StringSetAsync(cacheKey, workflowJson, _expiryTime);
             }
         }
 
