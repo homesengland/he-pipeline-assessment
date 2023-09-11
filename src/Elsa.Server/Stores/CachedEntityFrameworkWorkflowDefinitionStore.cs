@@ -26,31 +26,37 @@ namespace Elsa.Server.Stores
         {
             var db = _cache.GetDatabase();
             _logger.LogInformation($"Specification to map: {specification}");
-            WorkflowDefinitionIdSpecification spec = (WorkflowDefinitionIdSpecification)specification;
-            var cacheKey = CacheKey(spec);
-            _logger.LogInformation($"Attempting to Retrieve Workflow From Cache: {cacheKey}");
-                var result = await db.StringGetAsync(cacheKey);
-            if (string.IsNullOrEmpty(result))
+            bool shouldUseCache = TryGetCacheKeyFromSpecification(specification, out string cacheKey);
+            if (shouldUseCache)
             {
-                _logger.LogInformation($"No workflow found for Id: {cacheKey}");
-                _logger.LogInformation("Retrieving from Database");
-                WorkflowDefinition? workflowDefinition = await base.FindAsync(specification!, cancellationToken);
-                if (workflowDefinition != null)
+                _logger.LogInformation($"Attempting to Retrieve Workflow From Cache: {cacheKey}");
+                var result = await db.StringGetAsync(cacheKey);
+                if (string.IsNullOrEmpty(result))
                 {
-                    _logger.LogInformation($"Workflow retrieved from DB.  Setting cache value for Id: {workflowDefinition.Id}");
-                    string jsonWorkflowDefiniton = JsonSerializer.Serialize(workflowDefinition);
-                    await db.StringSetAsync(workflowDefinition.DefinitionId, jsonWorkflowDefiniton, _expiryTime);
-                    _logger.LogInformation("Set In Cache");
-                    var valueSavedInCache = await db.StringGetAsync(workflowDefinition.DefinitionId);
-                    _logger.LogInformation($"Value stored in Cache: {valueSavedInCache}");
+                    _logger.LogInformation($"No workflow found for Id: {cacheKey}");
+                    _logger.LogInformation("Retrieving from Database");
+                    WorkflowDefinition? workflowDefinition = await base.FindAsync(specification!, cancellationToken);
+                    if (workflowDefinition != null)
+                    {
+                        _logger.LogInformation($"Workflow retrieved from DB.  Setting cache value for Id: {workflowDefinition.Id}");
+                        string jsonWorkflowDefiniton = JsonSerializer.Serialize(workflowDefinition);
+                        await db.StringSetAsync(cacheKey, jsonWorkflowDefiniton, _expiryTime);
+                        _logger.LogInformation("Set In Cache");
+                        var valueSavedInCache = await db.StringGetAsync(workflowDefinition.DefinitionId);
+                        _logger.LogInformation($"Value stored in Cache: {valueSavedInCache}");
+                    }
+                    return workflowDefinition;
                 }
-                return workflowDefinition;
+                else
+                {
+                    _logger.LogInformation($"Workflow found in cache for Key: {cacheKey}");
+                    WorkflowDefinition? parsedWorkflowDefinition = JsonSerializer.Deserialize<WorkflowDefinition>(result);
+                    return parsedWorkflowDefinition;
+                }
             }
             else
             {
-                _logger.LogInformation($"Workflow found in cache for Id: {spec.Id}");
-                WorkflowDefinition? parsedWorkflowDefinition = JsonSerializer.Deserialize<WorkflowDefinition>(result);
-                return parsedWorkflowDefinition;
+                return await base.FindAsync(specification, cancellationToken);
             }
         }
 
@@ -125,16 +131,39 @@ namespace Elsa.Server.Stores
             return await base.FindManyAsync(specification, orderBy, paging, cancellationToken);
         }
 
+        private bool TryGetCacheKeyFromSpecification(ISpecification<WorkflowDefinition> specification, out string cacheKey)
+        {
+            cacheKey = string.Empty;
+            if(specification is WorkflowDefinitionIdSpecification)
+            {
+                WorkflowDefinitionIdSpecification spec = (WorkflowDefinitionIdSpecification)specification;
+                cacheKey = CacheKey(spec);
+                return true;
+            }
+            if(specification is LatestOrPublishedWorkflowDefinitionIdSpecification)
+            {
+                LatestOrPublishedWorkflowDefinitionIdSpecification spec = (LatestOrPublishedWorkflowDefinitionIdSpecification)specification;
+                cacheKey = CacheKey(spec);
+                return true;
+            }
+            return false;
+        }
+
         private string CacheKey(WorkflowDefinitionIdSpecification workflow)
         {
             if(workflow.VersionOptions == null)
             {
-                return $"{_Key}:{workflow.Id}:Published";
+                return $"{_Key}:{workflow.Id}:Latest";
             }
             else
             {
                 return $"{_Key}:{workflow.Id}:{workflow.VersionOptions.ToString()}";
             }
+        }
+
+        private string CacheKey(LatestOrPublishedWorkflowDefinitionIdSpecification workflow)
+        {
+            return $"{_Key}:{workflow.WorkflowDefinitionId}:Latest";
         }
 
         private string CacheKey(WorkflowDefinition workflow)

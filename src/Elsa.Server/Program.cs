@@ -20,15 +20,16 @@ using Elsa.CustomInfrastructure.Data.Repository;
 using Elsa.CustomWorkflow.Sdk.Extensions;
 using Elsa.CustomWorkflow.Sdk.Providers;
 using Elsa.Expressions;
-using Elsa.Persistence.EntityFramework.Core.Extensions;
 using Elsa.Persistence.EntityFramework.SqlServer;
 using Elsa.Providers.Workflows;
 using Elsa.Runtime;
 using Elsa.Server.Extensions;
 using Elsa.Server.Helpers;
 using Elsa.Server.Providers;
+using Elsa.Server.Publisher;
 using Elsa.Server.Services;
 using Elsa.Server.StartupTasks;
+using Elsa.Services;
 using He.PipelineAssessment.Data.Auth;
 using MediatR;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -61,6 +62,7 @@ if (!builder.Environment.IsDevelopment())
 //}
 
 bool useCache = !builder.Environment.IsDevelopment();
+//bool useCache = true;
 logger.LogInformation($"Using Cache: {useCache}");
 // Elsa services.
 builder.Services
@@ -82,6 +84,8 @@ builder.Services
     );
 
 builder.Services.AddScoped<ICustomPropertyDescriber, CustomPropertyDescriber>();
+
+builder.Services.AddScoped<IWorkflowPublisher, WorkflowPublisher>();
 
 builder.Services.TryAddProvider<IExpressionHandler, InformationTextExpressionHandler>(ServiceLifetime.Singleton);
 builder.Services.TryAddProvider<IExpressionHandler, QuestionListExpressionHandler>(ServiceLifetime.Singleton);
