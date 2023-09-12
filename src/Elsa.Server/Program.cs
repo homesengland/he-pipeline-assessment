@@ -34,9 +34,11 @@ using He.PipelineAssessment.Data.Auth;
 using MediatR;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.DataProtection;
+using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using StackExchange.Redis;
+using System.Globalization;
 
 var builder = WebApplication.CreateBuilder(args);
 var elsaConnectionString = builder.Configuration.GetConnectionString("Elsa");
@@ -198,10 +200,25 @@ app
     .UseRouting()
     .UseAuthentication()
     .UseAuthorization()
+    .Use(async (context, next) =>
+    {
+        if (context.Request.Path.ToString().Contains("/history"))
+        {
+            PathString newRoute = new PathString(context.Request.Path.ToString().Replace("history", "customHistory"));
+            context.Request.Path = newRoute;
+            context.Request.RouteValues.Remove("controller");
+            context.Request.RouteValues.Add("controller", "CustomHistory");
+            context.Response.Redirect(newRoute);
+
+        }
+
+        // Call the next delegate/middleware in the pipeline.
+        await next(context);
+    })
     .UseEndpoints(endpoints =>
     {
-        // Elsa API Endpoints are implemented as regular ASP.NET Core API controllers.
-        endpoints.MapControllers().RequireAuthorization(); // locks down elsa server end points
+    // Elsa API Endpoints are implemented as regular ASP.NET Core API controllers.
+    endpoints.MapControllers().RequireAuthorization(); // locks down elsa server end points
         endpoints.MapControllerRoute(
             name: "default",
             pattern: "{controller=Home}/{action=Index}");
