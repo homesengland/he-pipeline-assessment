@@ -4,6 +4,7 @@ using Elsa.Persistence.EntityFramework.Core.Services;
 using Elsa.Persistence.Specifications;
 using Elsa.Persistence.Specifications.WorkflowDefinitions;
 using Elsa.Serialization;
+using Elsa.Server.Features.Dashboard;
 using StackExchange.Redis;
 using System.Text.Json;
 
@@ -128,6 +129,10 @@ namespace Elsa.Server.Stores
 
         public override async Task<IEnumerable<WorkflowDefinition>> FindManyAsync(ISpecification<WorkflowDefinition> specification, IOrderBy<WorkflowDefinition>? orderBy = default, IPaging? paging = default, CancellationToken cancellationToken = default)
         {
+            if(specification is VersionHistorySpecification)
+            {
+                //Map from DB from here with Sproc or Dapper or Both.
+            }
             return await base.FindManyAsync(specification, orderBy, paging, cancellationToken);
         }
 

@@ -6,9 +6,11 @@ using Elsa.Persistence.Specifications.WorkflowDefinitions;
 using Elsa.Server.Api.Endpoints.WorkflowDefinitions;
 using Elsa.Server.Api.Helpers;
 using Elsa.Services;
+using LinqKit;
 using Microsoft.AspNetCore.Mvc;
 using NodaTime;
 using Swashbuckle.AspNetCore.Annotations;
+using System.Linq.Expressions;
 
 namespace Elsa.Server.Features.Dashboard
 {
@@ -40,7 +42,7 @@ namespace Elsa.Server.Features.Dashboard
         public async Task<IActionResult> Handle(string definitionId, CancellationToken cancellationToken = default)
         {
             var tenantId = await _tenantAccessor.GetTenantIdAsync(cancellationToken);
-            var specification = GetSpecification(definitionId).And(new TenantSpecification<WorkflowDefinition>(tenantId));
+            var specification = GetSpecification(definitionId, tenantId);
             var definitions = await _workflowDefinitionStore.FindManyAsync(specification, new OrderBy<WorkflowDefinition>(x => x.Version, SortDirection.Descending), cancellationToken: cancellationToken);
             var versionModels = _mapper.Map<IList<WorkflowDefinitionVersionModel>>(definitions);
 
@@ -52,13 +54,41 @@ namespace Elsa.Server.Features.Dashboard
             return Json(model, SerializationHelper.GetSettingsForWorkflowDefinition());
         }
 
-        private Specification<WorkflowDefinition> GetSpecification(string definitionId) => new WorkflowDefinitionIdSpecification(definitionId, VersionOptions.All);
+        private VersionHistorySpecification GetSpecification(string definitionId, string? tenantId) => new VersionHistorySpecification(definitionId, tenantId, VersionOptions.All);
 
-        public class CustomWorkflowDefinition : Entity
+
+    }
+
+    public class VersionHistorySpecification : Specification<WorkflowDefinition>
+    {
+        public VersionHistorySpecification(string workflowDefinitionId, string? tenantId, VersionOptions? options)
         {
-            public string? DisplayName { get; set; }
-            public int Version { get; set; }
-            public Instant CreatedAt { get; set; }
+            WorkflowDefinitionId = workflowDefinitionId;
+            TenantId = tenantId;
+            VersionOptions = options;
         }
+        public string WorkflowDefinitionId { get; set; }
+        public VersionOptions? VersionOptions { get; }
+        public string? TenantId { get; set; }
+
+        public override Expression<Func<WorkflowDefinition, bool>> ToExpression()
+        {
+            Expression<Func<WorkflowDefinition, bool>> predicate = x => x.DefinitionId == WorkflowDefinitionId;
+
+            if (!string.IsNullOrWhiteSpace(TenantId))
+                predicate = predicate.And(x => x.TenantId == TenantId);
+
+            if (VersionOptions != null)
+                predicate = predicate.WithVersion(VersionOptions.Value);
+
+            return predicate;
+        }
+    }
+
+    public class CustomWorkflowDefinition : Entity
+    {
+        public string? DisplayName { get; set; }
+        public int Version { get; set; }
+        public Instant CreatedAt { get; set; }
     }
 }
