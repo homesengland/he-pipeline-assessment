@@ -1,4 +1,5 @@
-﻿using AutoMapper;
+﻿using System.Diagnostics;
+using AutoMapper;
 using Elsa.Models;
 using Elsa.Persistence.EntityFramework.Core.Services;
 using Elsa.Persistence.Specifications;
@@ -8,7 +9,10 @@ using Microsoft.EntityFrameworkCore;
 using System.Linq.Expressions;
 using EFCore.BulkExtensions;
 using Elsa.Persistence.EntityFramework.Core.Extensions;
+using Elsa.Server.Features.Dashboard;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Esprima.Ast;
+using static Elsa.Server.Features.Dashboard.CustomHistory;
 
 namespace Elsa.Server.Stores.ElsaStores
 {
@@ -142,9 +146,19 @@ namespace Elsa.Server.Stores.ElsaStores
 
             return await DoQuery(async dbContext =>
             {
+                
                 var dbSet = dbContext.Set<T>();
                 var queryable = dbSet.Where(filter);
-
+                T checkType = default(T);
+                var x = new WorkflowDefinition();
+                if (typeof(T) == typeof(WorkflowDefinition))
+                {
+                    var wdSet = dbContext.Set<WorkflowDefinition>().FromSqlRaw("SELECT [Id], [DisplayName], [CreatedAt], [Version] FROM [Elsa].WorkflowDefinitions WHERE [DefinitionId] = 'eab9b6429ecd42f7ba35dbbe1a1e7fa3'");
+                    //var wdQueryable = wdSet.Where(filter);
+                    //var test = wdQueryable.Select(x => new { Id = x.Id, DisplayName = x.DisplayName, Version = x.Version})
+                    //var helper = dbContext.GetService<ISqlGenerationHelper>();
+                    //var test = await dbContext.Database.ExecuteSqlRawAsync($"SELECT [Id], [DisplayName], [Version] FROM {dbContext.Set<T>().EntityType.GetSchemaQualifiedTableNameWithQuotes(helper)} WHERE [DefinitionId] = 'eab9b6429ecd42f7ba35dbbe1a1e7fa3'", cancellationToken);
+                }
                 if (orderBy != null)
                 {
                     var orderByExpression = orderBy.OrderByExpression;
@@ -153,8 +167,11 @@ namespace Elsa.Server.Stores.ElsaStores
 
                 if (paging != null)
                     queryable = queryable.Skip(paging.Skip).Take(paging.Take);
-
-                return (await queryable.AsNoTracking().ToListAsync(cancellationToken)).Select(x => ReadShadowProperties(dbContext, x)).ToList();
+                var stopwatch = new Stopwatch();
+                stopwatch.Start();
+                var result = await queryable.AsNoTracking().ToListAsync(cancellationToken);
+                stopwatch.Stop();
+                return (result).Select(x => ReadShadowProperties(dbContext, x)).ToList();
             }, cancellationToken);
         }
 

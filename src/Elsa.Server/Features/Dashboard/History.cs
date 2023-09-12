@@ -1,18 +1,16 @@
-﻿using System.Collections.Generic;
-using System.Threading;
-using System.Threading.Tasks;
-using AutoMapper;
+﻿using AutoMapper;
 using Elsa.Models;
 using Elsa.Persistence;
 using Elsa.Persistence.Specifications;
 using Elsa.Persistence.Specifications.WorkflowDefinitions;
+using Elsa.Server.Api.Endpoints.WorkflowDefinitions;
 using Elsa.Server.Api.Helpers;
 using Elsa.Services;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using NodaTime;
 using Swashbuckle.AspNetCore.Annotations;
 
-namespace Elsa.Server.Api.Endpoints.WorkflowDefinitions
+namespace Elsa.Server.Features.Dashboard
 {
     [ApiController]
     [ApiVersion("1")]
@@ -55,5 +53,12 @@ namespace Elsa.Server.Api.Endpoints.WorkflowDefinitions
         }
 
         private Specification<WorkflowDefinition> GetSpecification(string definitionId) => new WorkflowDefinitionIdSpecification(definitionId, VersionOptions.All);
+
+        public class CustomWorkflowDefinition : Entity
+        {
+            public string? DisplayName { get; set; }
+            public int Version { get; set; }
+            public Instant CreatedAt { get; set; }
+        }
     }
 }

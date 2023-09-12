@@ -234,25 +234,45 @@ namespace Elsa.Server.Extensions
                     .UseBookmarkStore(sp => sp.GetRequiredService<CachedEntityFrameworkBookmarkStore>())
                     .UseTriggerStore(sp => sp.GetRequiredService<CachedEntityFrameworkTriggerStore>());
             }
+
             else
+
             {
+
                 elsa.Services
+
                     .AddSingleton<IElsaContextFactory, ElsaContextFactory<TElsaContext>>()
-                    .AddScoped<EntityFrameworkWorkflowDefinitionStore>()
+
+                    .AddScoped<Elsa.Server.Stores.ElsaStores.EntityFrameworkWorkflowDefinitionStore>()
+
                     .AddScoped<EntityFrameworkWorkflowInstanceStore>()
+
                     .AddScoped<EntityFrameworkWorkflowExecutionLogRecordStore>()
+
                     .AddScoped<EntityFrameworkBookmarkStore>()
+
                     .AddScoped<EntityFrameworkTriggerStore>();
 
+
+
                 if (autoRunMigrations)
+
                     elsa.Services.AddStartupTask<RunMigrations>();
 
+
+
                 return elsa
-                    .UseWorkflowDefinitionStore(sp => sp.GetRequiredService<EntityFrameworkWorkflowDefinitionStore>())
+
+                    .UseWorkflowDefinitionStore(sp => sp.GetRequiredService<Elsa.Server.Stores.ElsaStores.EntityFrameworkWorkflowDefinitionStore>())
+
                     .UseWorkflowInstanceStore(sp => sp.GetRequiredService<EntityFrameworkWorkflowInstanceStore>())
+
                     .UseWorkflowExecutionLogStore(sp => sp.GetRequiredService<EntityFrameworkWorkflowExecutionLogRecordStore>())
+
                     .UseBookmarkStore(sp => sp.GetRequiredService<EntityFrameworkBookmarkStore>())
+
                     .UseTriggerStore(sp => sp.GetRequiredService<EntityFrameworkTriggerStore>());
+
             }
 
         }
