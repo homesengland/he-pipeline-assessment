@@ -60,7 +60,11 @@ if (!builder.Environment.IsDevelopment())
 }
 else
 {
-    builder.Services.AddSingleton<IConnectionMultiplexer>(ConnectionMultiplexer.Connect("127.0.0.1:6379"));
+    var redisConfiguration = builder.Configuration["Redis:Configuration"];
+    if (!string.IsNullOrEmpty(redisConfiguration))
+    {
+        builder.Services.AddSingleton<IConnectionMultiplexer>(ConnectionMultiplexer.Connect(redisConfiguration));
+    }
 }
 
 //bool useCache = !builder.Environment.IsDevelopment();
