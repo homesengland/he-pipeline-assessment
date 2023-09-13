@@ -132,6 +132,7 @@ namespace Elsa.Server.Stores
             if(specification is VersionHistorySpecification)
             {
                 //Map from DB from here with Sproc or Dapper or Both.
+                return await base.GetHistory((VersionHistorySpecification)specification,cancellationToken);
             }
             return await base.FindManyAsync(specification, orderBy, paging, cancellationToken);
         }

@@ -20,7 +20,7 @@ namespace Elsa.Server.Stores.ElsaStores
 #if NET7_0_OR_GREATER
         [DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicConstructors | DynamicallyAccessedMemberTypes.NonPublicConstructors | DynamicallyAccessedMemberTypes.PublicFields | DynamicallyAccessedMemberTypes.NonPublicFields | DynamicallyAccessedMemberTypes.PublicProperties | DynamicallyAccessedMemberTypes.NonPublicProperties | DynamicallyAccessedMemberTypes.Interfaces)]
 #endif
-    T, TContext> : IStore<T> where T : class, IEntity where TContext : DbContext
+        T, TContext> : IStore<T> where T : class, IEntity where TContext : DbContext
     {
         private readonly IMapper _mapper;
         private readonly SemaphoreSlim _semaphore = new(1);
@@ -111,9 +111,12 @@ namespace Elsa.Server.Stores.ElsaStores
             }, cancellationToken);
         }
 
-        public virtual async Task DeleteAsync(T entity, CancellationToken cancellationToken = default) => await DoWork(async dbContext => await dbContext.Set<T>().AsQueryable().Where(x => x.Id == entity.Id).BatchDeleteWithWorkAroundAsync(dbContext, cancellationToken), cancellationToken);
+        public virtual async Task DeleteAsync(T entity, CancellationToken cancellationToken = default) => await DoWork(
+            async dbContext => await dbContext.Set<T>().AsQueryable().Where(x => x.Id == entity.Id)
+                .BatchDeleteWithWorkAroundAsync(dbContext, cancellationToken), cancellationToken);
 
-        public virtual async Task<int> DeleteManyAsync(ISpecification<T> specification, CancellationToken cancellationToken = default)
+        public virtual async Task<int> DeleteManyAsync(ISpecification<T> specification,
+            CancellationToken cancellationToken = default)
         {
             var filter = MapSpecification(specification);
             return await DoWork(async dbContext =>
@@ -135,7 +138,9 @@ namespace Elsa.Server.Stores.ElsaStores
                 }
 
                 var parameters = tuple.Item2.Select(x => x.Value).ToArray();
-                return await dbContext.Database.ExecuteSqlRawAsync($"DELETE FROM {dbContext.Set<T>().EntityType.GetSchemaQualifiedTableNameWithQuotes(helper)} {whereClause}", parameters, cancellationToken);
+                return await dbContext.Database.ExecuteSqlRawAsync(
+                    $"DELETE FROM {dbContext.Set<T>().EntityType.GetSchemaQualifiedTableNameWithQuotes(helper)} {whereClause}",
+                    parameters, cancellationToken);
 #endif
             }, cancellationToken);
         }
@@ -177,7 +182,8 @@ namespace Elsa.Server.Stores.ElsaStores
         //}
 
         //Original
-        public virtual async Task<IEnumerable<T>> FindManyAsync(ISpecification<T> specification, IOrderBy<T>? orderBy = default, IPaging? paging = default, CancellationToken cancellationToken = default)
+        public virtual async Task<IEnumerable<T>> FindManyAsync(ISpecification<T> specification,
+            IOrderBy<T>? orderBy = default, IPaging? paging = default, CancellationToken cancellationToken = default)
         {
             var filter = MapSpecification(specification);
 
@@ -189,13 +195,16 @@ namespace Elsa.Server.Stores.ElsaStores
                 if (orderBy != null)
                 {
                     var orderByExpression = orderBy.OrderByExpression;
-                    queryable = orderBy.SortDirection == SortDirection.Ascending ? queryable.OrderBy(orderByExpression) : queryable.OrderByDescending(orderByExpression);
+                    queryable = orderBy.SortDirection == SortDirection.Ascending
+                        ? queryable.OrderBy(orderByExpression)
+                        : queryable.OrderByDescending(orderByExpression);
                 }
 
                 if (paging != null)
                     queryable = queryable.Skip(paging.Skip).Take(paging.Take);
 
-                return (await queryable.AsNoTracking().ToListAsync(cancellationToken)).Select(x => ReadShadowProperties(dbContext, x)).ToList();
+                return (await queryable.AsNoTracking().ToListAsync(cancellationToken))
+                    .Select(x => ReadShadowProperties(dbContext, x)).ToList();
             }, cancellationToken);
         }
 
@@ -206,10 +215,14 @@ namespace Elsa.Server.Stores.ElsaStores
             return entity;
         }
 
-        public async Task<int> CountAsync(ISpecification<T> specification, CancellationToken cancellationToken = default) =>
-            await DoQueryOnSet(async dbSet => await dbSet.CountAsync(MapSpecification(specification), cancellationToken), cancellationToken);
+        public async Task<int> CountAsync(ISpecification<T> specification,
+            CancellationToken cancellationToken = default) =>
+            await DoQueryOnSet(
+                async dbSet => await dbSet.CountAsync(MapSpecification(specification), cancellationToken),
+                cancellationToken);
 
-        public virtual async Task<T?> FindAsync(ISpecification<T> specification, CancellationToken cancellationToken = default)
+        public virtual async Task<T?> FindAsync(ISpecification<T> specification,
+            CancellationToken cancellationToken = default)
         {
             var filter = MapSpecification(specification);
             return await DoQuery(async dbContext =>
@@ -220,10 +233,17 @@ namespace Elsa.Server.Stores.ElsaStores
             }, cancellationToken);
         }
 
-        protected ValueTask DoWorkOnSet(Func<DbSet<T>, ValueTask> work, CancellationToken cancellationToken) => DoWork(dbContext => work(dbContext.Set<T>()), cancellationToken);
-        protected ValueTask<TResult> DoWorkOnSet<TResult>(Func<DbSet<T>, ValueTask<TResult>> work, CancellationToken cancellationToken) => DoWork(dbContext => work(dbContext.Set<T>()), cancellationToken);
-        protected ValueTask DoWorkOnSet(Action<DbSet<T>> work, CancellationToken cancellationToken) => DoWork(dbContext => work(dbContext.Set<T>()), cancellationToken);
-        protected ValueTask<TResult> DoQueryOnSet<TResult>(Func<DbSet<T>, ValueTask<TResult>> work, CancellationToken cancellationToken) => DoQuery(dbContext => work(dbContext.Set<T>()), cancellationToken);
+        protected ValueTask DoWorkOnSet(Func<DbSet<T>, ValueTask> work, CancellationToken cancellationToken) =>
+            DoWork(dbContext => work(dbContext.Set<T>()), cancellationToken);
+
+        protected ValueTask<TResult> DoWorkOnSet<TResult>(Func<DbSet<T>, ValueTask<TResult>> work,
+            CancellationToken cancellationToken) => DoWork(dbContext => work(dbContext.Set<T>()), cancellationToken);
+
+        protected ValueTask DoWorkOnSet(Action<DbSet<T>> work, CancellationToken cancellationToken) =>
+            DoWork(dbContext => work(dbContext.Set<T>()), cancellationToken);
+
+        protected ValueTask<TResult> DoQueryOnSet<TResult>(Func<DbSet<T>, ValueTask<TResult>> work,
+            CancellationToken cancellationToken) => DoQuery(dbContext => work(dbContext.Set<T>()), cancellationToken);
 
         protected async ValueTask DoWork(Func<TContext, ValueTask> work, CancellationToken cancellationToken)
         {
@@ -232,7 +252,8 @@ namespace Elsa.Server.Stores.ElsaStores
             await dbContext.SaveChangesAsync(cancellationToken);
         }
 
-        protected async ValueTask<TResult> DoWork<TResult>(Func<TContext, ValueTask<TResult>> work, CancellationToken cancellationToken)
+        protected async ValueTask<TResult> DoWork<TResult>(Func<TContext, ValueTask<TResult>> work,
+            CancellationToken cancellationToken)
         {
             await using var dbContext = DbContextFactory.CreateDbContext();
             var result = await work(dbContext);
@@ -247,7 +268,8 @@ namespace Elsa.Server.Stores.ElsaStores
             await dbContext.SaveChangesAsync(cancellationToken);
         }
 
-        protected async ValueTask<TResult> DoQuery<TResult>(Func<TContext, ValueTask<TResult>> work, CancellationToken cancellationToken)
+        protected async ValueTask<TResult> DoQuery<TResult>(Func<TContext, ValueTask<TResult>> work,
+            CancellationToken cancellationToken)
         {
             await using var dbContext = DbContextFactory.CreateDbContext();
             var result = await work(dbContext);
@@ -268,9 +290,12 @@ namespace Elsa.Server.Stores.ElsaStores
 
         protected abstract Expression<Func<T, bool>> MapSpecification(ISpecification<T> specification);
 
-        protected Expression<Func<T, bool>> AutoMapSpecification(ISpecification<T> specification) => specification.ToExpression();
+        protected Expression<Func<T, bool>> AutoMapSpecification(ISpecification<T> specification) =>
+            specification.ToExpression();
 
-        public async Task<IEnumerable<TOut>> FindManyAsync<TOut>(ISpecification<T> specification, Expression<Func<T, TOut>> funcMapping, IOrderBy<T>? orderBy = null, IPaging? paging = null, CancellationToken cancellationToken = default) where TOut : class
+        public async Task<IEnumerable<TOut>> FindManyAsync<TOut>(ISpecification<T> specification,
+            Expression<Func<T, TOut>> funcMapping, IOrderBy<T>? orderBy = null, IPaging? paging = null,
+            CancellationToken cancellationToken = default) where TOut : class
         {
             var filter = MapSpecification(specification);
 
@@ -279,10 +304,27 @@ namespace Elsa.Server.Stores.ElsaStores
                 var dbSet = dbContext.Set<T>();
                 var queryable = dbSet.Where(filter);
 
+                T checkType = default(T);
+                var x = new WorkflowDefinition();
+                if (typeof(T) == typeof(WorkflowDefinition))
+                {
+                    var wdSet = dbContext.Set<WorkflowDefinition>().FromSqlRaw(
+                        "SELECT [Id], [DisplayName], [CreatedAt], [Version] FROM [Elsa].WorkflowDefinitions WHERE [DefinitionId] = 'eab9b6429ecd42f7ba35dbbe1a1e7fa3'");
+                    //var wdQueryable = wdSet.Where(filter);
+                    //var test = wdQueryable.Select(x => new { Id = x.Id, DisplayName = x.DisplayName, Version = x.Version})
+                    //var helper = dbContext.GetService<ISqlGenerationHelper>();
+                    //var test = await dbContext.Database.ExecuteSqlRawAsync($"SELECT [Id], [DisplayName], [Version] FROM {dbContext.Set<T>().EntityType.GetSchemaQualifiedTableNameWithQuotes(helper)} WHERE [DefinitionId] = 'eab9b6429ecd42f7ba35dbbe1a1e7fa3'", cancellationToken);
+
+
+
+                }
+
                 if (orderBy != null)
                 {
                     var orderByExpression = orderBy.OrderByExpression;
-                    queryable = orderBy.SortDirection == SortDirection.Ascending ? queryable.OrderBy(orderByExpression) : queryable.OrderByDescending(orderByExpression);
+                    queryable = orderBy.SortDirection == SortDirection.Ascending
+                        ? queryable.OrderBy(orderByExpression)
+                        : queryable.OrderByDescending(orderByExpression);
                 }
 
                 if (paging != null)
@@ -291,6 +333,33 @@ namespace Elsa.Server.Stores.ElsaStores
                 var queryableDto = queryable.Select(funcMapping).AsQueryable();
                 return await queryableDto.ToListAsync();
 
+            }, cancellationToken);
+        }
+
+        public async Task<IEnumerable<WorkflowDefinition>> GetHistory(VersionHistorySpecification specification,
+            CancellationToken cancellationToken = default)
+        {
+            return await DoWork(async dbContext =>
+            {
+                var dbSet = dbContext.Set<WorkflowDefinition>();
+
+                var queryable = dbSet
+                    .Where(x => x.DefinitionId == specification.WorkflowDefinitionId)
+                    .OrderByDescending(x=>x.Version)
+                    .Select(x => new WorkflowDefinition()
+                    {
+                        DefinitionId = x.DefinitionId,
+                        Name = x.Name,
+                        Version = x.Version,
+                        DisplayName = x.DisplayName,
+                        CreatedAt = x.CreatedAt,
+                        Id= x.Id,
+                        IsLatest = x.IsLatest,
+                        IsPublished = x.IsPublished
+
+                    });
+
+                return await queryable.ToListAsync();
             }, cancellationToken);
         }
     }
