@@ -67,7 +67,8 @@ else
     }
 }
 
-bool useCache = true;
+bool useCache = !builder.Environment.IsDevelopment();
+//bool useCache = true;
 logger.LogInformation($"Using Cache: {useCache}");
 // Elsa services.
 builder.Services
