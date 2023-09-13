@@ -209,7 +209,7 @@ app
             context.Request.RouteValues.Remove("controller");
             context.Request.RouteValues.Add("controller", "CustomHistory");
             context.Response.Redirect(newRoute);
-
+            return;
         }
 
         // Call the next delegate/middleware in the pipeline.
