@@ -68,10 +68,9 @@ namespace He.PipelineAssessment.UI.Tests.Features.Intervention.InterventionManag
             dateTimeProvider.Setup(x => x.UtcNow()).Returns(DateTime.UtcNow);
 
             //Act
-            var result = await sut.Handle(command, CancellationToken.None);
+            await sut.Handle(command, CancellationToken.None);
 
             //Assert
-            Assert.Equal(Unit.Value, result);
             repo.Verify(x => x.GetSubsequentWorkflowInstancesForOverride(intervention.AssessmentToolWorkflowInstance.WorkflowInstanceId), Times.Never);
         }
 
@@ -106,11 +105,9 @@ namespace He.PipelineAssessment.UI.Tests.Features.Intervention.InterventionManag
 
             dateTimeProvider.Setup(x => x.UtcNow()).Returns(DateTime.UtcNow);
             //Act
-            var result = await sut.Handle(command, CancellationToken.None);
+            await sut.Handle(command, CancellationToken.None);
 
-            //Assert
-            Assert.Equal(Unit.Value, result);
-           
+            //Assert      
             repo.Verify(x => x.SaveChanges(), Times.Exactly(1));
         }
 

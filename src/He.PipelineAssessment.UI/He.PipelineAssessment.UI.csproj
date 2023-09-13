@@ -38,7 +38,7 @@
     <PackageReference Include="He.Cookies.Mvc" Version="1.0.36" />
     <PackageReference Include="He.Identity.Auth0" Version="1.0.58" />
     <PackageReference Include="He.Identity.Mvc" Version="1.0.58" />
-    <PackageReference Include="MediatR" Version="10.0.1" />
+    <PackageReference Include="MediatR" Version="12.1.1" />
     <PackageReference Include="MediatR.Extensions.Microsoft.DependencyInjection" Version="10.0.1" />
     <PackageReference Include="Microsoft.ApplicationInsights.AspNetCore" Version="2.21.0" />
     <PackageReference Include="Microsoft.AspNetCore.Authentication.Cookies" Version="2.2.0" />

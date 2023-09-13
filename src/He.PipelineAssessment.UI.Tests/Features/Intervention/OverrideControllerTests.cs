@@ -380,8 +380,6 @@ public class OverrideControllerTests
       )
     {
         //Arrange
-        Unit unit;
-        _mediatorMock.Setup(x => x.Send(submitOverrideCommand, CancellationToken.None)).ReturnsAsync(unit);
 
 
         //Act
@@ -401,12 +399,8 @@ public class OverrideControllerTests
      )
     {
         //Arrange
-        Unit unit;
         string submitButton = "Submit";
         //submitOverrideCommand.Status = InterventionStatus.Approved;
-
-        _mediatorMock.Setup(x => x.Send(submitOverrideCommand, CancellationToken.None)).ReturnsAsync(unit);
-
 
         //Act
         var overrideController = new OverrideController(_loggerMock.Object, _mediatorMock.Object, _validatorMock.Object);
@@ -425,10 +419,7 @@ public class OverrideControllerTests
      )
     {
         //Arrange
-        Unit unit;
         string submitButton = "Reject";
- 
-                _mediatorMock.Setup(x => x.Send(submitOverrideCommand, CancellationToken.None)).ReturnsAsync(unit);
 
         //Act
         var overrideController = new OverrideController(_loggerMock.Object, _mediatorMock.Object, _validatorMock.Object);

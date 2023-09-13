@@ -19,7 +19,7 @@ namespace He.PipelineAssessment.UI.Features.Override.SubmitOverride
             _logger = logger;
         }
 
-        public async Task<Unit> Handle(SubmitOverrideCommand command, CancellationToken cancellationToken)
+        public async Task Handle(SubmitOverrideCommand command, CancellationToken cancellationToken)
         {
             try
             {
@@ -48,8 +48,6 @@ namespace He.PipelineAssessment.UI.Features.Override.SubmitOverride
                     await _assessmentRepository.SaveChanges();
                     await CreateNextWorkflow(intervention);
                 }
-
-                return Unit.Value;
             }
             catch (Exception ex)
             {
