@@ -1,5 +1,4 @@
-﻿using System.Diagnostics;
-using AutoMapper;
+﻿using AutoMapper;
 using Elsa.Models;
 using Elsa.Persistence.EntityFramework.Core.Services;
 using Elsa.Persistence.Specifications;
@@ -11,8 +10,6 @@ using EFCore.BulkExtensions;
 using Elsa.Persistence.EntityFramework.Core.Extensions;
 using Elsa.Server.Features.Dashboard;
 using Microsoft.EntityFrameworkCore.Infrastructure;
-using Esprima.Ast;
-using static Elsa.Server.Features.Dashboard.CustomHistory;
 
 namespace Elsa.Server.Stores.ElsaStores
 {
@@ -311,5 +308,48 @@ namespace Elsa.Server.Stores.ElsaStores
                 return await queryable.ToListAsync();
             }, cancellationToken);
         }
+
+        public async Task<IEnumerable<WorkflowDefinition>> GetWorkflowDefinitionList(
+            WorkflowDefinitionListSpecification specification, IOrderBy<WorkflowDefinition>? orderBy, IPaging? paging,
+            CancellationToken cancellationToken)
+        {
+            var filter = MapSpecification(specification);
+
+            return await DoWork(async dbContext =>
+            {
+                var dbSet = dbContext.Set<WorkflowDefinition>();
+
+                var queryable = dbSet
+                    .Where(filter)
+                    .Select(x => new WorkflowDefinition()
+                    {
+                        DefinitionId = x.DefinitionId,
+                        Name = x.Name,
+                        Version = x.Version,
+                        DisplayName = x.DisplayName,
+                        CreatedAt = x.CreatedAt,
+                        Id = x.Id,
+                        IsLatest = x.IsLatest,
+                        IsPublished = x.IsPublished
+
+                    });
+
+                if (orderBy != null)
+                {
+                    var orderByExpression = orderBy.OrderByExpression;
+                    queryable = orderBy.SortDirection == SortDirection.Ascending
+                        ? queryable.OrderBy(orderByExpression)
+                        : queryable.OrderByDescending(orderByExpression);
+                }
+
+                if (paging != null)
+                    queryable = queryable.Skip(paging.Skip).Take(paging.Take);
+
+                return await queryable.ToListAsync();
+            }, cancellationToken);
+        }
+
+        protected Expression<Func<WorkflowDefinition, bool>> MapSpecification(WorkflowDefinitionListSpecification specification) => AutoMapSpecification(specification);
+        protected Expression<Func<WorkflowDefinition, bool>> AutoMapSpecification(WorkflowDefinitionListSpecification specification) => specification.ToExpression();
     }
 }

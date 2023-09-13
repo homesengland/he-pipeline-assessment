@@ -67,8 +67,8 @@ else
     }
 }
 
-bool useCache = !builder.Environment.IsDevelopment();
-//bool useCache = true;
+bool useCache = !builder.Environment.IsDevelopment() || !string.IsNullOrWhiteSpace(builder.Configuration["Redis:Configuration"]);
+
 logger.LogInformation($"Using Cache: {useCache}");
 // Elsa services.
 builder.Services
@@ -213,6 +213,16 @@ app
             context.Request.RouteValues.Remove("controller");
             context.Request.RouteValues.Add("controller", "CustomHistory");
             context.Response.Redirect(newRoute);
+            return;
+        }
+
+        if (context.Request.Path.ToString().EndsWith("/workflow-definitions") && context.Request.Method == "GET")
+        {
+            PathString newRoute = new PathString(context.Request.Path.ToString().Replace("workflow-definitions", "custom-workflow-definitions"));
+            context.Request.Path = newRoute;
+            context.Request.RouteValues.Remove("controller");
+            context.Request.RouteValues.Add("controller", "CustomList");
+            context.Response.Redirect(newRoute + context.Request.QueryString);
             return;
         }
 
