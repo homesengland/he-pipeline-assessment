@@ -15,7 +15,7 @@ namespace He.PipelineAssessment.UI.Features.Admin.AssessmentToolManagement.Comma
             _logger = logger;
         }
 
-        public async Task<Unit> Handle(UpdateAssessmentToolCommand request, CancellationToken cancellationToken)
+        public async Task Handle(UpdateAssessmentToolCommand request, CancellationToken cancellationToken)
         {
             try
             {
@@ -27,7 +27,6 @@ namespace He.PipelineAssessment.UI.Features.Admin.AssessmentToolManagement.Comma
                 entity.Name = request.Name;
                 entity.Order = request.Order;
                 await _adminAssessmentToolRepository.UpdateAssessmentTool(entity);
-                return Unit.Value;
             }
             catch (Exception e)
             {

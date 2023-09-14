@@ -131,7 +131,7 @@ namespace He.PipelineAssessment.UI.Features.Override
                     model.Status = InterventionStatus.Pending;
                     break;
             }
-            var result = await _mediator.Send(model);
+            await _mediator.Send(model);
             return RedirectToAction("CheckYourDetails", new { InterventionId = model.AssessmentInterventionId });
 
         }

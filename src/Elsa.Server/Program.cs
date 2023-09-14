@@ -20,21 +20,26 @@ using Elsa.CustomInfrastructure.Data.Repository;
 using Elsa.CustomWorkflow.Sdk.Extensions;
 using Elsa.CustomWorkflow.Sdk.Providers;
 using Elsa.Expressions;
-using Elsa.Persistence.EntityFramework.Core.Extensions;
 using Elsa.Persistence.EntityFramework.SqlServer;
 using Elsa.Providers.Workflows;
 using Elsa.Runtime;
 using Elsa.Server.Extensions;
 using Elsa.Server.Helpers;
+using Elsa.Server.Middleware;
 using Elsa.Server.Providers;
+using Elsa.Server.Publisher;
 using Elsa.Server.Services;
 using Elsa.Server.StartupTasks;
+using Elsa.Services;
 using He.PipelineAssessment.Data.Auth;
 using MediatR;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.DataProtection;
+using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection.Extensions;
+using StackExchange.Redis;
+using System.Globalization;
 
 var builder = WebApplication.CreateBuilder(args);
 var elsaConnectionString = builder.Configuration.GetConnectionString("Elsa");
@@ -52,13 +57,24 @@ logger.LogInformation($"Redis Connection String: {redisConnectionString}");
 if (!builder.Environment.IsDevelopment())
 {
     logger.LogInformation("Attempting to set up Redis Connection.  Environment is not Development");
-    await builder.Services.AddRedisWithSelfSignedSslCertificate(redisConnectionString, builder.Configuration["Redis:SslCertificatePath"], builder.Configuration["Redis:SslCertificateKeyPath"], logger);
+    await builder.Services.AddRedisWithSelfSignedSslCertificate(redisConnectionString!, builder.Configuration["Redis:SslCertificatePath"], builder.Configuration["Redis:SslCertificateKeyPath"], logger);
+}
+else
+{
+    var redisConfiguration = builder.Configuration["Redis:Configuration"];
+    if (!string.IsNullOrEmpty(redisConfiguration))
+    {
+        builder.Services.AddSingleton<IConnectionMultiplexer>(ConnectionMultiplexer.Connect(redisConfiguration));
+    }
 }
 
+bool useCache = !builder.Environment.IsDevelopment() || !string.IsNullOrWhiteSpace(builder.Configuration["Redis:Configuration"]);
+
+logger.LogInformation($"Using Cache: {useCache}");
 // Elsa services.
 builder.Services
     .AddElsa(elsa => elsa
-        .UseEntityFrameworkPersistence(ef => ef.UseSqlServer(elsaConnectionString, typeof(Elsa.Persistence.EntityFramework.SqlServer.Migrations.Initial)))
+        .UseEntityFrameworkPersistenceWithCache(ef => ef.UseSqlServer(elsaConnectionString!, typeof(Elsa.Persistence.EntityFramework.SqlServer.Migrations.Initial)), true, useCache)
         .NoCoreActivities()
         .AddActivity<SinglePipelineDataSource>()
         .AddActivity<PCSProfileDataSource>()
@@ -72,10 +88,11 @@ builder.Services
         .AddActivity<RunEconomicCalculations>()
         .AddActivity<SetVariable>()
         .AddConsoleActivities()
-        .AddRedisCache(!builder.Environment.IsDevelopment(), logger)
     );
 
 builder.Services.AddScoped<ICustomPropertyDescriber, CustomPropertyDescriber>();
+
+builder.Services.AddScoped<IWorkflowPublisher, WorkflowPublisher>();
 
 builder.Services.TryAddProvider<IExpressionHandler, InformationTextExpressionHandler>(ServiceLifetime.Singleton);
 builder.Services.TryAddProvider<IExpressionHandler, QuestionListExpressionHandler>(ServiceLifetime.Singleton);
@@ -83,7 +100,7 @@ builder.Services.TryAddProvider<IExpressionHandler, ScoringCalculationExpression
 builder.Services.TryAddSingleton<INestedSyntaxExpressionHandler, NestedSyntaxExpressionHandler>();
 
 builder.Services.AddDbContext<ElsaCustomContext>(config =>
-    config.UseSqlServer(elsaCustomConnectionString,
+    config.UseSqlServer(elsaCustomConnectionString!,
         x => x.MigrationsAssembly("Elsa.CustomInfrastructure")));
 
 builder.Services.AddScoped<DbContext>(provider => provider.GetRequiredService<ElsaCustomContext>());
@@ -101,7 +118,9 @@ builder.Services.AddScoped<IQuestionInvoker, QuestionInvoker>();
 builder.Services.AddScoped<IElsaCustomRepository, ElsaCustomRepository>();
 
 
-builder.Services.AddMediatR(typeof(Program).Assembly);
+builder.Services.AddMediatR(cfg => {
+    cfg.RegisterServicesFromAssembly(typeof(Program).Assembly);
+});
 builder.Services.AddApplicationInsightsTelemetry();
 builder.Services.AddScoped<IDateTimeProvider, DateTimeProvider>();
 builder.Services.AddScoped<IActivityDataProvider, ActivityDataProvider>();
@@ -167,7 +186,7 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
     });
 
 builder.Services.AddEsriHttpClients(builder.Configuration, builder.Environment.IsDevelopment());
-
+//HibernatingRhinos.Profiler.Appender.EntityFramework.EntityFrameworkProfiler.Initialize();
 var app = builder.Build();
 
 if (!app.Environment.IsDevelopment())
@@ -186,10 +205,11 @@ app
     .UseRouting()
     .UseAuthentication()
     .UseAuthorization()
+    .UseCustomControllerOverrides(builder.Configuration["Elsa:ServerPrefix"])
     .UseEndpoints(endpoints =>
     {
-        // Elsa API Endpoints are implemented as regular ASP.NET Core API controllers.
-        endpoints.MapControllers().RequireAuthorization(); // locks down elsa server end points
+    // Elsa API Endpoints are implemented as regular ASP.NET Core API controllers.
+    endpoints.MapControllers().RequireAuthorization(); // locks down elsa server end points
         endpoints.MapControllerRoute(
             name: "default",
             pattern: "{controller=Home}/{action=Index}");

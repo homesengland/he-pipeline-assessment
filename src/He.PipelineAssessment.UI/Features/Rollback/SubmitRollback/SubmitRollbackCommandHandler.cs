@@ -22,7 +22,7 @@ namespace He.PipelineAssessment.UI.Features.Rollback.SubmitRollback
             _elsaServerHttpClient = elsaServerHttpClient;
         }
 
-        public async Task<Unit> Handle(SubmitRollbackCommand command, CancellationToken cancellationToken)
+        public async Task Handle(SubmitRollbackCommand command, CancellationToken cancellationToken)
         {
             try
             {
@@ -53,8 +53,6 @@ namespace He.PipelineAssessment.UI.Features.Rollback.SubmitRollback
 
                     await _elsaServerHttpClient.PostArchiveQuestions(workflowsToDelete.Select(x => x.WorkflowInstanceId).ToArray());
                 }
-
-                return Unit.Value;
             }
             catch (Exception e)
             {

@@ -50,12 +50,11 @@ public class CreateAssessmentToolCommandHandlerTests
             .Returns(assessmentTool);
 
         //Act
-        var result = await sut.Handle(createAssessmentToolCommand, CancellationToken.None);
+        await sut.Handle(createAssessmentToolCommand, CancellationToken.None);
 
         //Assert          
         adminAssessmentToolRepository.Verify(
             x => x.CreateAssessmentTool(It.Is<AssessmentTool>(y =>
                 y.Name == assessmentTool.Name)), Times.Once);
-        Assert.Equal(Unit.Value, result);
     }
 }

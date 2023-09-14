@@ -71,7 +71,9 @@ builder.Services.AddScoped<IAssessmentInterventionMapper, AssessmentIntervention
 builder.Services.AddScoped<NonceConfig>();
 
 
-builder.Services.AddMediatR(typeof(Program).Assembly);
+builder.Services.AddMediatR(cfg => {
+    cfg.RegisterServicesFromAssembly(typeof(Program).Assembly);
+});
 builder.Services.AddApplicationInsightsTelemetry();
 
 builder.Services.AddDbContext<PipelineAssessmentContext>(config =>
