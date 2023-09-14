@@ -205,7 +205,7 @@ app
     .UseRouting()
     .UseAuthentication()
     .UseAuthorization()
-    .UseCustomControllerOverrides()
+    .UseCustomControllerOverrides(builder.Configuration["Elsa:ServerPrefix"])
     .UseEndpoints(endpoints =>
     {
     // Elsa API Endpoints are implemented as regular ASP.NET Core API controllers.

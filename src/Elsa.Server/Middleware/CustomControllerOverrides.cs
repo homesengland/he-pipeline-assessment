@@ -5,10 +5,12 @@ namespace Elsa.Server.Middleware
     public class ControllerRoutingMiddleware
     {
         private readonly RequestDelegate _next;
+        private readonly string _serverPrefix;
 
-        public ControllerRoutingMiddleware(RequestDelegate next)
+        public ControllerRoutingMiddleware(RequestDelegate next, string serverPrefix)
         {
             _next = next;
+            _serverPrefix = serverPrefix;
         }
 
         public async Task InvokeAsync(HttpContext context)
@@ -19,7 +21,7 @@ namespace Elsa.Server.Middleware
                 context.Request.Path = newRoute;
                 context.Request.RouteValues.Remove("controller");
                 context.Request.RouteValues.Add("controller", "CustomHistory");
-                context.Response.Redirect(newRoute);
+                context.Response.Redirect(_serverPrefix + newRoute);
                 return;
             }
 
@@ -29,7 +31,7 @@ namespace Elsa.Server.Middleware
                 context.Request.Path = newRoute;
                 context.Request.RouteValues.Remove("controller");
                 context.Request.RouteValues.Add("controller", "CustomList");
-                context.Response.Redirect(newRoute + context.Request.QueryString);
+                context.Response.Redirect(_serverPrefix + newRoute + context.Request.QueryString);
                 return;
             }
 
@@ -40,10 +42,9 @@ namespace Elsa.Server.Middleware
 
     public static class ControllerRoutingMiddlewareExtensions
     {
-        public static IApplicationBuilder UseCustomControllerOverrides(
-            this IApplicationBuilder builder)
+        public static IApplicationBuilder UseCustomControllerOverrides(this IApplicationBuilder builder, string serverPrefix)
         {
-            return builder.UseMiddleware<ControllerRoutingMiddleware>();
+            return builder.UseMiddleware<ControllerRoutingMiddleware>(serverPrefix);
         }
     }
 }
