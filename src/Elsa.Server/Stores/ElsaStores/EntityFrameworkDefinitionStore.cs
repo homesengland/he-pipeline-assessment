@@ -1,6 +1,5 @@
 ﻿using AutoMapper;
 using Elsa.Persistence.EntityFramework.Core.Services;
-using Elsa.Persistence.EntityFramework.Core.Stores;
 using Elsa.Persistence.EntityFramework.Core;
 using Elsa.Persistence.Specifications;
 using Elsa.Persistence;
@@ -63,5 +62,5 @@ namespace Elsa.Server.Stores.ElsaStores
                 entity.Channel = data.Channel;
             }
         }
-    }
+        }
     }

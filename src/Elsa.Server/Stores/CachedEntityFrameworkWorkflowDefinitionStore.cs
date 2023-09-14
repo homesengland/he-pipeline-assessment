@@ -129,10 +129,13 @@ namespace Elsa.Server.Stores
 
         public override async Task<IEnumerable<WorkflowDefinition>> FindManyAsync(ISpecification<WorkflowDefinition> specification, IOrderBy<WorkflowDefinition>? orderBy = default, IPaging? paging = default, CancellationToken cancellationToken = default)
         {
-            if(specification is VersionHistorySpecification)
+            if(specification is VersionHistorySpecification historySpecification)
             {
-                //Map from DB from here with Sproc or Dapper or Both.
-                return await base.GetHistory((VersionHistorySpecification)specification,cancellationToken);
+                return await base.GetHistory(historySpecification,cancellationToken);
+            }
+            if (specification is WorkflowDefinitionListSpecification listSpecification)
+            {
+                return await base.GetWorkflowDefinitionList(listSpecification, orderBy, paging, cancellationToken);
             }
             return await base.FindManyAsync(specification, orderBy, paging, cancellationToken);
         }
