@@ -25,6 +25,7 @@ using Elsa.Providers.Workflows;
 using Elsa.Runtime;
 using Elsa.Server.Extensions;
 using Elsa.Server.Helpers;
+using Elsa.Server.Middleware;
 using Elsa.Server.Providers;
 using Elsa.Server.Publisher;
 using Elsa.Server.Services;
@@ -204,31 +205,7 @@ app
     .UseRouting()
     .UseAuthentication()
     .UseAuthorization()
-    .Use(async (context, next) =>
-    {
-        if (context.Request.Path.ToString().Contains("/history"))
-        {
-            PathString newRoute = new PathString(context.Request.Path.ToString().Replace("history", "customHistory"));
-            context.Request.Path = newRoute;
-            context.Request.RouteValues.Remove("controller");
-            context.Request.RouteValues.Add("controller", "CustomHistory");
-            context.Response.Redirect(newRoute);
-            return;
-        }
-
-        if (context.Request.Path.ToString().EndsWith("/workflow-definitions") && context.Request.Method == "GET")
-        {
-            PathString newRoute = new PathString(context.Request.Path.ToString().Replace("workflow-definitions", "custom-workflow-definitions"));
-            context.Request.Path = newRoute;
-            context.Request.RouteValues.Remove("controller");
-            context.Request.RouteValues.Add("controller", "CustomList");
-            context.Response.Redirect(newRoute + context.Request.QueryString);
-            return;
-        }
-
-        // Call the next delegate/middleware in the pipeline.
-        await next(context);
-    })
+    .UseCustomControllerOverrides()
     .UseEndpoints(endpoints =>
     {
     // Elsa API Endpoints are implemented as regular ASP.NET Core API controllers.
