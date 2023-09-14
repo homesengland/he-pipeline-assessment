@@ -1,37 +1,35 @@
-Begin tran
-
 ----UPDATES
-Update  [ElsaCustom].[dbo].[QuestionDataDictionary] Set LegacyName=''ass_1_2_england'' where Id=3
-Update  [ElsaCustom].[dbo].[QuestionDataDictionary] Set LegacyName=''ass_1_6_no_leasehold_homes'' where Id=5
-Update  [ElsaCustom].[dbo].[QuestionDataDictionary] Set LegacyName=''ass_2_7_coord_fail1'' where Id=21
-Update  [ElsaCustom].[dbo].[QuestionDataDictionary] Set LegacyName=''ass_3w_option_summary'' where Id=54
-Update  [ElsaCustom].[dbo].[QuestionDataDictionary] Set LegacyName=''ass_4_eco_land_type'' where Id=91
-Update  [ElsaCustom].[dbo].[QuestionDataDictionary] Set LegacyName=''ass_4_eco_commentary'' where Id=103
-Update  [ElsaCustom].[dbo].[QuestionDataDictionary] Set LegacyName=''ass_3_13_place'' where Id=120
-Update  [ElsaCustom].[dbo].[QuestionDataDictionary] Set LegacyName=''ass_3_14_regen'' where Id=121
-Update  [ElsaCustom].[dbo].[QuestionDataDictionary] Set LegacyName=''ass_3_15_jobs'' where Id=122
-Update  [ElsaCustom].[dbo].[QuestionDataDictionary] Set LegacyName=''ass_6_loan_inf_risk_assess'' where Id=139
-Update  [ElsaCustom].[dbo].[QuestionDataDictionary] Set LegacyName=''ass_8_land_desig'' where Id=207
-Update  [ElsaCustom].[dbo].[QuestionDataDictionary] Set LegacyName=''ass_8_social_val'' where Id=223
-Update  [ElsaCustom].[dbo].[QuestionDataDictionary] Set LegacyName=''ass_8_eco_land_type'' where Id=243
-Update  [ElsaCustom].[dbo].[QuestionDataDictionary] Set LegacyName=''ass_8_eco_multi_site'' where Id=244
-Update  [ElsaCustom].[dbo].[QuestionDataDictionary] Set LegacyName=''ass_8_eco_commentary'' where Id=254
+Update [QuestionDataDictionary] Set LegacyName=''ass_1_2_england'' where Id=3
+Update [QuestionDataDictionary] Set LegacyName=''ass_1_6_no_leasehold_homes'' where Id=5
+Update [QuestionDataDictionary] Set LegacyName=''ass_2_7_coord_fail1'' where Id=21
+Update [QuestionDataDictionary] Set LegacyName=''ass_3w_option_summary'' where Id=54
+Update [QuestionDataDictionary] Set LegacyName=''ass_4_eco_land_type'' where Id=91
+Update [QuestionDataDictionary] Set LegacyName=''ass_4_eco_commentary'' where Id=103
+Update [QuestionDataDictionary] Set LegacyName=''ass_3_13_place'' where Id=120
+Update [QuestionDataDictionary] Set LegacyName=''ass_3_14_regen'' where Id=121
+Update [QuestionDataDictionary] Set LegacyName=''ass_3_15_jobs'' where Id=122
+Update [QuestionDataDictionary] Set LegacyName=''ass_6_loan_inf_risk_assess'' where Id=139
+Update [QuestionDataDictionary] Set LegacyName=''ass_8_land_desig'' where Id=207
+Update [QuestionDataDictionary] Set LegacyName=''ass_8_social_val'' where Id=223
+Update [QuestionDataDictionary] Set LegacyName=''ass_8_eco_land_type'' where Id=243
+Update [QuestionDataDictionary] Set LegacyName=''ass_8_eco_multi_site'' where Id=244
+Update [QuestionDataDictionary] Set LegacyName=''ass_8_eco_commentary'' where Id=254
 
 ---Delete
-Delete FROM [ElsaCustom].[dbo].[QuestionDataDictionary] where Name= ''VFM2_Area_High_Demand''											--Remove from List	VFM2_Area_High_Demand
-Delete FROM [ElsaCustom].[dbo].[QuestionDataDictionary] where Name= ''Strategic_Fit2_Delivery_Targets_Greatest_Need_Area''			--Removed from List	Strategic_Fit2_Delivery_Targets_Greatest_Need_Area
-Delete FROM [ElsaCustom].[dbo].[QuestionDataDictionary] where Name= ''Strategic_Fit2_Design_Increases_MMC''							--Removed from List	Strategic_Fit2_Design_Increases_MMC
-Delete FROM [ElsaCustom].[dbo].[QuestionDataDictionary] where Name= ''Strategic_Fit2_Placemaking_Unlocks_Brownfield''					--Removed from List	Strategic_Fit2_Placemaking_Unlocks_Brownfield
-Delete FROM [ElsaCustom].[dbo].[QuestionDataDictionary] where Name= ''Strategic_Fit2_Supports_Tenure_Diversification''--COULD NOT FIND IN CURRENT LIST --Removed from List	Strategic_Fit2_Supports_Tenure_Diversification
-Delete FROM [ElsaCustom].[dbo].[QuestionDataDictionary] where Name= ''Strategic_Fit2_Wider_Drives_Economic_Growth''					--Removed from List	Strategic_Fit2_Wider_Drives_Economic_Growth
-Delete FROM [ElsaCustom].[dbo].[QuestionDataDictionary] where Name= ''Strategic_Fit2_Contributes_Target_1Million_Homes_May2024''--COULD NOT FIND IN CURRENT LIST --Removed from List	Strategic_Fit2_Contributes_Target_1Million_Homes_May2024
-Delete FROM [ElsaCustom].[dbo].[QuestionDataDictionary] where Name= ''Strategic_Fit2_Placemaking_Targets_Priority_Place''				--Removed from List	Strategic_Fit2_Placemaking_Targets_Priority_Place
-Delete FROM [ElsaCustom].[dbo].[QuestionDataDictionary] where Name= ''Strategic_Fit2_Placemaking_Job_Creation''						--Removed from List	Strategic_Fit2_Placemaking_Job_Creation
-Delete FROM [ElsaCustom].[dbo].[QuestionDataDictionary] where Name= ''Strategic_Fit2_Wider_Unlocks_Public_Sector_Land''				--Removed from List	Strategic_Fit2_Wider_Unlocks_Public_Sector_Land
-Delete FROM [ElsaCustom].[dbo].[QuestionDataDictionary] where Name= ''Strategic_Fit2_Intervention_Targets_High_Demand''				--Removed from List	Strategic_Fit2_Intervention_Targets_High_Demand
-Delete FROM [ElsaCustom].[dbo].[QuestionDataDictionary] where Name= ''VFM4_Land_Value_Uplift''										--Remove from List	Land_Value_Uplift
-Delete FROM [ElsaCustom].[dbo].[QuestionDataDictionary] where Name= ''VFM4_Health_Benefits''											--Remove from List	Health_Benefits
-Delete FROM [ElsaCustom].[dbo].[QuestionDataDictionary] where Name= ''VFM4_Negative_Amenity_Benefit_Gross''							--Remove from List	VFM4_Negative_Amenity_Benefit_Gross
+Delete FROM [QuestionDataDictionary] where Name= ''VFM2_Area_High_Demand''											--Remove from List	VFM2_Area_High_Demand
+Delete FROM [QuestionDataDictionary] where Name= ''Strategic_Fit2_Delivery_Targets_Greatest_Need_Area''			--Removed from List	Strategic_Fit2_Delivery_Targets_Greatest_Need_Area
+Delete FROM [QuestionDataDictionary] where Name= ''Strategic_Fit2_Design_Increases_MMC''							--Removed from List	Strategic_Fit2_Design_Increases_MMC
+Delete FROM [QuestionDataDictionary] where Name= ''Strategic_Fit2_Placemaking_Unlocks_Brownfield''					--Removed from List	Strategic_Fit2_Placemaking_Unlocks_Brownfield
+Delete FROM [QuestionDataDictionary] where Name= ''Strategic_Fit2_Supports_Tenure_Diversification''--COULD NOT FIND IN CURRENT LIST --Removed from List	Strategic_Fit2_Supports_Tenure_Diversification
+Delete FROM [QuestionDataDictionary] where Name= ''Strategic_Fit2_Wider_Drives_Economic_Growth''					--Removed from List	Strategic_Fit2_Wider_Drives_Economic_Growth
+Delete FROM [QuestionDataDictionary] where Name= ''Strategic_Fit2_Contributes_Target_1Million_Homes_May2024''--COULD NOT FIND IN CURRENT LIST --Removed from List	Strategic_Fit2_Contributes_Target_1Million_Homes_May2024
+Delete FROM [QuestionDataDictionary] where Name= ''Strategic_Fit2_Placemaking_Targets_Priority_Place''				--Removed from List	Strategic_Fit2_Placemaking_Targets_Priority_Place
+Delete FROM [QuestionDataDictionary] where Name= ''Strategic_Fit2_Placemaking_Job_Creation''						--Removed from List	Strategic_Fit2_Placemaking_Job_Creation
+Delete FROM [QuestionDataDictionary] where Name= ''Strategic_Fit2_Wider_Unlocks_Public_Sector_Land''				--Removed from List	Strategic_Fit2_Wider_Unlocks_Public_Sector_Land
+Delete FROM [QuestionDataDictionary] where Name= ''Strategic_Fit2_Intervention_Targets_High_Demand''				--Removed from List	Strategic_Fit2_Intervention_Targets_High_Demand
+Delete FROM [QuestionDataDictionary] where Name= ''VFM4_Land_Value_Uplift''										--Remove from List	Land_Value_Uplift
+Delete FROM [QuestionDataDictionary] where Name= ''VFM4_Health_Benefits''											--Remove from List	Health_Benefits
+Delete FROM [QuestionDataDictionary] where Name= ''VFM4_Negative_Amenity_Benefit_Gross''							--Remove from List	VFM4_Negative_Amenity_Benefit_Gross
 
 ---Add new ones to 5	Strategic Fit S2
 Insert into [QuestionDataDictionary] ([Id],[QuestionDataDictionaryGroupId],[LegacyName],[Name],[CreatedDateTime]) values (255,5,''ass_3_1_hou_accel'',''Strategic_Fit2_Delivery_Housing_Unlocked_Or_Accelerated'',GetDate());
@@ -98,5 +96,3 @@ Insert into [QuestionDataDictionary] ([Id],[QuestionDataDictionaryGroupId],[Lega
 Insert into [QuestionDataDictionary] ([Id],[QuestionDataDictionaryGroupId],[LegacyName],[Name],[CreatedDateTime]) values (312,12,''ass_8_don_health_pv'',''VFM4_Do_Nothing_Health_Benefits'',GetDate());
 Insert into [QuestionDataDictionary] ([Id],[QuestionDataDictionaryGroupId],[LegacyName],[Name],[CreatedDateTime]) values (313,12,''ass_8_neg_am_pv'',''VFM4_Do_Something_Negative_Amenity_Benefit_Gross'',GetDate());
 Insert into [QuestionDataDictionary] ([Id],[QuestionDataDictionaryGroupId],[LegacyName],[Name],[CreatedDateTime]) values (314,12,''ass_8_don_neg_am_pv'',''VFM4_Do_Nothing_Negative_Amenity_Benefit_Gross'',GetDate());
-
-Commit tran
