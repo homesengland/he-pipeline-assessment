@@ -4,6 +4,7 @@ using Elsa.Persistence.EntityFramework.Core.Services;
 using Elsa.Persistence.Specifications;
 using Elsa.Persistence.Specifications.WorkflowDefinitions;
 using Elsa.Serialization;
+using Elsa.Server.Extensions;
 using Elsa.Server.Features.Dashboard;
 using Elsa.Server.Helpers;
 using Newtonsoft.Json;
@@ -23,22 +24,12 @@ namespace Elsa.Server.Stores
         private ILogger<CachedEntityFrameworkWorkflowDefinitionStore> _logger;
         private string _Key = "WorkflowDefinition";
         private TimeSpan _expiryTime = TimeSpan.FromHours(1);
-        private JsonSerializerOptions _serializerOptions;
         private JsonSerializerSettings _serializerSettings;
         public CachedEntityFrameworkWorkflowDefinitionStore(IElsaContextFactory dbContextFactory, IMapper mapper, IContentSerializer contentSerializer, IConnectionMultiplexer connectionMultiplexer, ILogger<CachedEntityFrameworkWorkflowDefinitionStore> logger) : base(dbContextFactory, mapper, contentSerializer)
         {
             _cache = connectionMultiplexer;
             _logger = logger;
-            _serializerOptions = new JsonSerializerOptions();
-            _serializerSettings = new JsonSerializerSettings();
-
-            _serializerOptions.ConfigureForNodaTime(DateTimeZoneProviders.Tzdb);
-
-
-            _serializerSettings.DateParseHandling = DateParseHandling.None;
-            _serializerSettings.NullValueHandling = NullValueHandling.Ignore;
-            _serializerSettings.ConfigureForNodaTime(DateTimeZoneProviders.Tzdb);
-            //_serializerOptions.Converters.Add(new DateTimeConverterUsingDateTimeParse());
+            _serializerSettings = new JsonSerializerSettings().ConfigureForInstants();
         }
 
 
