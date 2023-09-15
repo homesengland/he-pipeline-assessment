@@ -54,17 +54,18 @@ logger.LogInformation("Example log message");
 
 var redisConnectionString = builder.Configuration.GetConnectionString("Redis");
 logger.LogInformation($"Redis Connection String: {redisConnectionString}");
+var clearCache = Convert.ToBoolean(builder.Configuration["Redis:ClearCache"]);
 if (!builder.Environment.IsDevelopment())
 {
     logger.LogInformation("Attempting to set up Redis Connection.  Environment is not Development");
-    await builder.Services.AddRedisWithSelfSignedSslCertificate(redisConnectionString!, builder.Configuration["Redis:SslCertificatePath"], builder.Configuration["Redis:SslCertificateKeyPath"], logger);
+    await builder.Services.AddRedisWithSelfSignedSslCertificate(redisConnectionString!, builder.Configuration["Redis:SslCertificatePath"], builder.Configuration["Redis:SslCertificateKeyPath"], logger, clearCache );
 }
 else
 {
     var redisConfiguration = builder.Configuration["Redis:Configuration"];
     if (!string.IsNullOrEmpty(redisConfiguration))
     {
-        builder.Services.AddSingleton<IConnectionMultiplexer>(ConnectionMultiplexer.Connect(redisConfiguration));
+        await builder.Services.AddRedisLocal(redisConfiguration, logger, clearCache);
     }
 }
 
