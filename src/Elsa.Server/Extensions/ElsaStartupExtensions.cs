@@ -77,18 +77,21 @@ namespace Elsa.Server.Extensions
 
     public static class RedisServiceCollectionExtensions
     {
-        private static string _certificatePath = "";
-        private static string _certificateKeyPath = "";
+        private static string? _certificatePath = "";
+        private static string? _certificateKeyPath = "";
 
-        public async static Task<IServiceCollection> AddRedisWithSelfSignedSslCertificate(
+        public static async Task<IServiceCollection> AddRedisWithSelfSignedSslCertificate(
             this IServiceCollection services,
-            string connectionString, string certificatePath, string certificateKeyPath, ILogger logger)
+            string connectionString, string? certificatePath, string? certificateKeyPath, ILogger logger)
         {
             _certificatePath = certificatePath;
             _certificateKeyPath = certificateKeyPath;
             var configurationOptions = ConfigurationOptions.Parse(connectionString);
             configurationOptions.CertificateValidation += CertificateValidationCallBack!;
-            configurationOptions.CertificateSelection += OptionsOnCertificateSelection;
+            if (!string.IsNullOrWhiteSpace(_certificatePath))
+            {
+                configurationOptions.CertificateSelection += OptionsOnCertificateSelection;
+            }
             configurationOptions.Ssl = true;
             configurationOptions.SslProtocols = SslProtocols.Tls13;
             configurationOptions.AbortOnConnectFail = false;
@@ -112,7 +115,7 @@ namespace Elsa.Server.Extensions
             return CreateCertFromPemFile(_certificatePath, _certificateKeyPath);
         }
 
-        private async static Task RedisSmokeTest(IConnectionMultiplexer conn, ILogger logger)
+        private static async Task RedisSmokeTest(IConnectionMultiplexer conn, ILogger logger)
         {
             string sampleKey = "TestKey";
             string sampleValue = "SampleValue";
@@ -137,12 +140,12 @@ namespace Elsa.Server.Extensions
             }
         }
 
-        static X509Certificate2 CreateCertFromPemFile(string certPath, string keyPath)
+        static X509Certificate2 CreateCertFromPemFile(string? certPath, string? keyPath)
         {
             if (!RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
-                return X509Certificate2.CreateFromPemFile(certPath, keyPath);
+                return X509Certificate2.CreateFromPemFile(certPath!, keyPath);
 
-            using var cert = X509Certificate2.CreateFromPemFile(certPath, keyPath);
+            using var cert = X509Certificate2.CreateFromPemFile(certPath!, keyPath);
             return new X509Certificate2(cert.Export(X509ContentType.Pkcs12));
         }
 
