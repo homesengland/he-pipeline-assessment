@@ -164,7 +164,7 @@ namespace Elsa.Server.Stores.ElsaStores
                 if (paging != null)
                     queryable = queryable.Skip(paging.Skip).Take(paging.Take);
 
-                return (await queryable.AsNoTracking().ToListAsync(cancellationToken))
+                return (await queryable.ToListAsync(cancellationToken))
                     .Select(x => ReadShadowProperties(dbContext, x)).ToList();
             }, cancellationToken);
         }
