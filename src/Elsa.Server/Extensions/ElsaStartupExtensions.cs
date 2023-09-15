@@ -125,11 +125,18 @@ namespace Elsa.Server.Extensions
         {
             logger.LogInformation("Clearing Cache");
 
-            var endPoints = connectionMultiplexer.GetEndPoints();
-            foreach (var endPoint in endPoints)
+            try
             {
-                var server = connectionMultiplexer.GetServer(endPoint);
-                await server.FlushAllDatabasesAsync();
+                var endPoints = connectionMultiplexer.GetEndPoints();
+                foreach (var endPoint in endPoints)
+                {
+                    var server = connectionMultiplexer.GetServer(endPoint);
+                    await server.FlushAllDatabasesAsync();
+                }
+            }
+            catch (Exception ex)
+            {
+                logger.LogError($"Failed to clear cache: {ex.Message}", ex);
             }
         }
 
