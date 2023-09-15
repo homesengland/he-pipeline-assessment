@@ -4,7 +4,15 @@ using Elsa.Persistence.EntityFramework.Core.Services;
 using Elsa.Persistence.Specifications;
 using Elsa.Persistence.Specifications.WorkflowDefinitions;
 using Elsa.Serialization;
+using Elsa.Server.Extensions;
 using Elsa.Server.Features.Dashboard;
+using Elsa.Server.Helpers;
+using Newtonsoft.Json;
+using NodaTime;
+using NodaTime.Extensions;
+using NodaTime.Serialization.JsonNet;
+using NodaTime.Serialization.SystemTextJson;
+using NodaTime.Xml;
 using StackExchange.Redis;
 using System.Text.Json;
 
@@ -16,49 +24,60 @@ namespace Elsa.Server.Stores
         private ILogger<CachedEntityFrameworkWorkflowDefinitionStore> _logger;
         private string _Key = "WorkflowDefinition";
         private TimeSpan _expiryTime = TimeSpan.FromHours(1);
+        private JsonSerializerSettings _serializerSettings;
         public CachedEntityFrameworkWorkflowDefinitionStore(IElsaContextFactory dbContextFactory, IMapper mapper, IContentSerializer contentSerializer, IConnectionMultiplexer connectionMultiplexer, ILogger<CachedEntityFrameworkWorkflowDefinitionStore> logger) : base(dbContextFactory, mapper, contentSerializer)
         {
             _cache = connectionMultiplexer;
             _logger = logger;
+            _serializerSettings = new JsonSerializerSettings().ConfigureForInstants();
         }
 
 
         public override async Task<WorkflowDefinition?> FindAsync(ISpecification<WorkflowDefinition> specification, CancellationToken cancellationToken = default)
         {
-            var db = _cache.GetDatabase();
-            _logger.LogInformation($"Specification to map: {specification}");
-            bool shouldUseCache = TryGetCacheKeyFromSpecification(specification, out string cacheKey);
-            if (shouldUseCache)
+            try
             {
-                _logger.LogInformation($"Attempting to Retrieve Workflow From Cache: {cacheKey}");
-                var result = await db.StringGetAsync(cacheKey);
-                if (string.IsNullOrEmpty(result))
+                var db = _cache.GetDatabase();
+                _logger.LogInformation($"Specification to map: {specification}");
+                bool shouldUseCache = TryGetCacheKeyFromSpecification(specification, out string cacheKey);
+                if (shouldUseCache)
                 {
-                    _logger.LogInformation($"No workflow found for Id: {cacheKey}");
-                    _logger.LogInformation("Retrieving from Database");
-                    WorkflowDefinition? workflowDefinition = await base.FindAsync(specification!, cancellationToken);
-                    if (workflowDefinition != null)
+                    _logger.LogInformation($"Attempting to Retrieve Workflow From Cache: {cacheKey}");
+                    var result = await db.StringGetAsync(cacheKey);
+                    if (string.IsNullOrEmpty(result))
                     {
-                        _logger.LogInformation($"Workflow retrieved from DB.  Setting cache value for Id: {workflowDefinition.Id}");
-                        string jsonWorkflowDefiniton = JsonSerializer.Serialize(workflowDefinition);
-                        await db.StringSetAsync(cacheKey, jsonWorkflowDefiniton, _expiryTime);
-                        _logger.LogInformation("Set In Cache");
-                        var valueSavedInCache = await db.StringGetAsync(workflowDefinition.DefinitionId);
-                        _logger.LogInformation($"Value stored in Cache: {valueSavedInCache}");
+                        _logger.LogInformation($"No workflow found for Id: {cacheKey}");
+                        _logger.LogInformation("Retrieving from Database");
+                        WorkflowDefinition? workflowDefinition = await base.FindAsync(specification!, cancellationToken);
+                        if (workflowDefinition != null)
+                        {
+                            _logger.LogInformation($"Workflow retrieved from DB.  Setting cache value for Id: {workflowDefinition.Id}");
+                            string jsonWorkflowDefiniton = JsonConvert.SerializeObject(workflowDefinition, _serializerSettings);
+                            await db.StringSetAsync(cacheKey, jsonWorkflowDefiniton, _expiryTime);
+                            _logger.LogInformation("Set In Cache");
+                            var valueSavedInCache = await db.StringGetAsync(workflowDefinition.DefinitionId);
+                            _logger.LogInformation($"Value stored in Cache: {valueSavedInCache}");
+                        }
+                        return workflowDefinition;
                     }
-                    return workflowDefinition;
+                    else
+                    {
+                        _logger.LogInformation($"Workflow found in cache for Key: {cacheKey}");
+                        WorkflowDefinition? parsedWorkflowDefinition = JsonConvert.DeserializeObject<WorkflowDefinition>(result, _serializerSettings);
+                        return parsedWorkflowDefinition;
+                    }
                 }
                 else
                 {
-                    _logger.LogInformation($"Workflow found in cache for Key: {cacheKey}");
-                    WorkflowDefinition? parsedWorkflowDefinition = JsonSerializer.Deserialize<WorkflowDefinition>(result);
-                    return parsedWorkflowDefinition;
+                    return await base.FindAsync(specification, cancellationToken);
                 }
             }
-            else
+            catch(Exception ex)
             {
-                return await base.FindAsync(specification, cancellationToken);
+                var errorString = ex.Message;
+                throw new Exception(errorString, ex);
             }
+
         }
 
         public override async Task UpdateAsync(WorkflowDefinition workflowDefinition, CancellationToken cancellationToken = default)
@@ -71,7 +90,7 @@ namespace Elsa.Server.Stores
                 try
                 {
                     await base.UpdateAsync(workflowDefinition, cancellationToken);
-                    string workflowJson = JsonSerializer.Serialize(workflowDefinition);
+                    string workflowJson = JsonConvert.SerializeObject(workflowDefinition, _serializerSettings);
                     await db.StringSetAsync(cacheKey, workflowJson, _expiryTime);
                 }
                 catch (Exception ex)
@@ -91,7 +110,7 @@ namespace Elsa.Server.Stores
                 var db = _cache.GetDatabase();
                 string cacheKey = CacheKey(workflowDefinition);
                 await base.AddAsync(workflowDefinition, cancellationToken);
-                string workflowJson = JsonSerializer.Serialize(workflowDefinition);
+                string workflowJson = JsonConvert.SerializeObject(workflowDefinition, _serializerSettings);
                 await db.StringSetAsync(cacheKey, workflowJson, _expiryTime);
             }
         }
@@ -104,7 +123,7 @@ namespace Elsa.Server.Stores
                 var db = _cache.GetDatabase();
                 string cacheKey = CacheKey(workflowDefinition); ;
                 await base.SaveAsync(workflowDefinition, cancellationToken);
-                string workflowJson = JsonSerializer.Serialize(workflowDefinition);
+                string workflowJson = JsonConvert.SerializeObject(workflowDefinition, _serializerSettings);
                 await db.StringSetAsync(cacheKey, workflowJson, _expiryTime);
             }
         }
