@@ -166,7 +166,7 @@ namespace Elsa.CustomActivities.Tests.Activities.Scoring
 
         [Theory]
         [AutoMoqData]
-        public async Task OnExecuteAsyncTruncatesCalculationToTwoDecimalPlaces_GivenCalculationWithMoreDecimalPlaces(
+        public async Task OnExecuteAsyncDoesNotTruncateCalculationToTwoDecimalPlaces_GivenCalculationWithMoreDecimalPlaces(
             [Frozen] Mock<IElsaCustomRepository> elsaCustomRepository,
             [WithAutofixtureResolution] WorkflowExecutionContext workflowExecutionContext,
             ScoringCalculation sut)
@@ -197,7 +197,7 @@ namespace Elsa.CustomActivities.Tests.Activities.Scoring
                     x.WorkflowDefinitionId == context.WorkflowInstance.DefinitionId &&
                     x.CorrelationId == context.WorkflowInstance.CorrelationId &&
                     x.WorkflowName == context.WorkflowInstance.DefinitionId &&
-                    x.Score == "123.46"), CancellationToken.None),
+                    x.Score == "123.456789"), CancellationToken.None),
                 Times.Once);
         }
     }

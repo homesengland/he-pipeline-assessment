@@ -8,7 +8,7 @@ namespace He.PipelineAssessment.UI.Extensions
 {
     public static class DtoMapperExtensions
     {
-        public static List<DataTable> ToDataTableList(this WorkflowActivityData @this, int index, List<string?> usedDisplayGroupIds)
+        public static List<DataTable> ToDataTableList(this WorkflowActivityData @this, string displayGroupId, List<string?> usedDisplayGroupIds)
         {
             List<DataTable> tables = new List<DataTable>();
             if (@this.Questions != null && @this.Questions.Count() > 0 && @this.Questions.Any(x => x.QuestionType == QuestionTypeConstants.DataTable))
@@ -16,7 +16,7 @@ namespace He.PipelineAssessment.UI.Extensions
                 tables = @this.Questions.Where(q => q.QuestionType == QuestionTypeConstants.DataTable
                && !usedDisplayGroupIds.Contains(q.DataTable.DisplayGroupId)
                //&& q.DataTable.DisplayGroupId !=null
-               && q.DataTable.DisplayGroupId == @this.Questions[index].DataTable.DisplayGroupId)
+               && q.DataTable.DisplayGroupId == displayGroupId)
                .Select(x =>
                {
                    var question = @this.Questions.FirstOrDefault(l => l.QuestionId == x.QuestionId);

@@ -1,11 +1,7 @@
 ﻿using Elsa.CustomWorkflow.Sdk.Models.Workflow;
 using Microsoft.Extensions.Logging;
-using Newtonsoft.Json;
 using System.Text;
 using System.Text.Json;
-using Azure.Core;
-using Azure.Identity;
-using System.Runtime;
 using System.Net.Http.Headers;
 using JsonSerializer = System.Text.Json.JsonSerializer;
 using Microsoft.Extensions.Configuration;
@@ -24,6 +20,7 @@ namespace Elsa.CustomWorkflow.Sdk.HttpClients
         Task<WorkflowActivityDataDto?> LoadConfirmationScreen(LoadWorkflowActivityDto model);
         Task<string?> LoadCustomActivities(string elsaServer);
         Task<string?> LoadDataDictionary(string elsaServer);
+        Task PostArchiveQuestions(string[] workflowInstanceIds);
     }
 
     public class ElsaServerHttpClient : IElsaServerHttpClient
@@ -279,6 +276,34 @@ namespace Elsa.CustomWorkflow.Sdk.HttpClients
                 }
             }
             return data;
+        }
+
+        public async Task PostArchiveQuestions(string[] workflowInstanceIds)
+        {
+            var relativeUri = "workflow/archivequestions" + "?t=" + DateTime.UtcNow.Ticks;
+
+            using var request = new HttpRequestMessage(HttpMethod.Post, relativeUri);
+            var content = JsonSerializer.Serialize(new
+            {
+                WorkflowInstanceIds = workflowInstanceIds
+            });
+            request.Content = new StringContent(content, Encoding.UTF8, "application/json");
+
+            var client = _httpClientFactory.CreateClient("ElsaServerClient");
+            AddAccessTokenToRequest(client);
+            using (var response = await client
+                       .SendAsync(request)
+                       .ConfigureAwait(false))
+            {
+                await response.Content.ReadAsStringAsync().ConfigureAwait(false);
+                if (!response.IsSuccessStatusCode)
+                {
+                    _logger.LogError($"StatusCode='{response.StatusCode}'," +
+                                     $"\n Url='{request.RequestUri}'");
+
+                    throw new ApplicationException("Failed to archive questions");
+                }
+            }
         }
 
 

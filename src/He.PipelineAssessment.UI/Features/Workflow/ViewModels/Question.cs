@@ -25,6 +25,7 @@ namespace He.PipelineAssessment.UI.Features.Workflow.ViewModels
         public List<QuestionActivityAnswer> Answers { get; set; } = new();
         public bool IsReadOnly { get; set; }
         public bool ReevaluatePrePopulatedAnswers { get; set; }
+        public bool HideQuestion { get; set; }
         public Date? Date { get; set; }
         public decimal? Decimal { get; set; }
         public string? Text { get; set; }

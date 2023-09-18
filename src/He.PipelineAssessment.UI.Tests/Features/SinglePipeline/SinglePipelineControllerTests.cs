@@ -34,7 +34,7 @@ namespace He.PipelineAssessment.UI.Tests.Features.SinglePipeline
 
         [Theory]
         [AutoMoqData]
-        public async Task Index_ShouldReturnView_GivenNoExceptionsThrow(
+        public void Index_ShouldReturnView_GivenNoExceptionsThrow(
     [Frozen] Mock<IMediator> mediator,
     SyncCommand command,
     SyncModel response,

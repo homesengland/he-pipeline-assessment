@@ -13,7 +13,7 @@ namespace Elsa.CustomActivities.Activities.RunEconomicCalculations
         [ActivityOutput] public decimal? NumericScoreOutput { get; set; }
         [ActivityOutput] public string? StringScoreOutput { get; set; }
 
-        public RunEconomicCalculations(IStartsWorkflow startsWorkflow, IWorkflowRegistry workflowRegistry, IWorkflowStorageService workflowStorageService, IWorkflowReviver workflowReviver, IWorkflowInstanceStore workflowInstanceStore) : base(startsWorkflow, workflowRegistry, workflowStorageService, workflowReviver, workflowInstanceStore)
+        public RunEconomicCalculations(IStartsWorkflow startsWorkflow, IWorkflowRegistry workflowRegistry, IWorkflowStorageService workflowStorageService, IWorkflowReviver workflowReviver, IWorkflowInstanceStore workflowInstanceStore, IWorkflowDefinitionDispatcher workflowDefinitionDispatcher) : base(startsWorkflow, workflowRegistry, workflowStorageService, workflowReviver, workflowInstanceStore, workflowDefinitionDispatcher)
         {
         }
 

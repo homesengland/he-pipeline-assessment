@@ -1,4 +1,5 @@
-﻿using He.PipelineAssessment.Infrastructure.Repository;
+﻿using Elsa.CustomWorkflow.Sdk.HttpClients;
+using He.PipelineAssessment.Infrastructure.Repository;
 using He.PipelineAssessment.Models;
 using He.PipelineAssessment.UI.Common.Exceptions;
 using He.PipelineAssessment.UI.Common.Utility;
@@ -11,15 +12,17 @@ namespace He.PipelineAssessment.UI.Features.Rollback.SubmitRollback
         private readonly IAssessmentRepository _assessmentRepository;
         private readonly IDateTimeProvider _dateTimeProvider;
         private readonly ILogger<SubmitRollbackCommandHandler> _logger;
+        private readonly IElsaServerHttpClient _elsaServerHttpClient;
 
-        public SubmitRollbackCommandHandler(IAssessmentRepository assessmentRepository, IDateTimeProvider dateTimeProvider, ILogger<SubmitRollbackCommandHandler> logger)
+        public SubmitRollbackCommandHandler(IAssessmentRepository assessmentRepository, IDateTimeProvider dateTimeProvider, ILogger<SubmitRollbackCommandHandler> logger, IElsaServerHttpClient elsaServerHttpClient)
         {
             _assessmentRepository = assessmentRepository;
             _dateTimeProvider = dateTimeProvider;
             _logger = logger;
+            _elsaServerHttpClient = elsaServerHttpClient;
         }
 
-        public async Task<Unit> Handle(SubmitRollbackCommand command, CancellationToken cancellationToken)
+        public async Task Handle(SubmitRollbackCommand command, CancellationToken cancellationToken)
         {
             try
             {
@@ -47,9 +50,9 @@ namespace He.PipelineAssessment.UI.Features.Rollback.SubmitRollback
 
                     await _assessmentRepository.SaveChanges();
                     await CreateNextWorkflow(intervention);
-                }
 
-                return Unit.Value;
+                    await _elsaServerHttpClient.PostArchiveQuestions(workflowsToDelete.Select(x => x.WorkflowInstanceId).ToArray());
+                }
             }
             catch (Exception e)
             {

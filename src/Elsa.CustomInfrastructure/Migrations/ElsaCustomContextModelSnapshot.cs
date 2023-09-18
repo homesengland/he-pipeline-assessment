@@ -224,6 +224,9 @@ namespace Elsa.CustomInfrastructure.Migrations
                     b.Property<string>("DocumentEvidenceLink")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<bool?>("IsArchived")
+                        .HasColumnType("bit");
+
                     b.Property<bool?>("IsReadOnly")
                         .HasColumnType("bit");
 

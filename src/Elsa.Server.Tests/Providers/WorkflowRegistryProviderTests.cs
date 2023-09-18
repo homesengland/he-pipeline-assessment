@@ -39,7 +39,8 @@ namespace Elsa.Server.Tests.Providers
             WorkflowRegistryProvider sut)
         {
             //Arrange
-            workflowRegistryMock.Setup(x => x.FindAsync(workflowInstance.DefinitionId, VersionOptions.Published, null, cancellationToken)).ReturnsAsync(workflowBlueprint);
+            VersionOptions options = VersionOptions.SpecificVersion(workflowInstance.Version);
+            workflowRegistryMock.Setup(x => x.FindAsync(workflowInstance.DefinitionId, options, null, cancellationToken)).ReturnsAsync(workflowBlueprint);
 
             workflowBlueprint.Activities.Add(new ActivityBlueprint()
             {
@@ -64,7 +65,8 @@ namespace Elsa.Server.Tests.Providers
             WorkflowRegistryProvider sut)
         {
             //Arrange
-            workflowRegistryMock.Setup(x => x.FindAsync(workflowInstance.DefinitionId, VersionOptions.Published, null, cancellationToken)).ReturnsAsync(workflowBlueprint);
+            VersionOptions options = VersionOptions.SpecificVersion(workflowInstance.Version);
+            workflowRegistryMock.Setup(x => x.FindAsync(workflowInstance.DefinitionId, options, null, cancellationToken)).ReturnsAsync(workflowBlueprint);
 
             workflowBlueprint.Activities.Add(new ActivityBlueprint()
             {

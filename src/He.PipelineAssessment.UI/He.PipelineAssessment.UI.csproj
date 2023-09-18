@@ -18,14 +18,17 @@
 
   <ItemGroup>
     <Content Remove="bundleconfig.json" />
+    <Content Remove="Features\Workflow\Views\_QuestionScreenQuestion.cshtml" />
   </ItemGroup>
 
   <ItemGroup>
     <_ContentIncludedByDefault Remove="bundleconfig.json" />
+    <_ContentIncludedByDefault Remove="Features\Workflow\Views\_QuestionScreenQuestion.cshtml" />
   </ItemGroup>
 
   <ItemGroup>
     <None Include="bundleconfig.json" />
+    <None Include="Features\Workflow\Views\_QuestionScreenQuestion.cshtml" />
   </ItemGroup>
 
   <ItemGroup>
@@ -35,7 +38,7 @@
     <PackageReference Include="He.Cookies.Mvc" Version="1.0.36" />
     <PackageReference Include="He.Identity.Auth0" Version="1.0.58" />
     <PackageReference Include="He.Identity.Mvc" Version="1.0.58" />
-    <PackageReference Include="MediatR" Version="10.0.1" />
+    <PackageReference Include="MediatR" Version="12.1.1" />
     <PackageReference Include="MediatR.Extensions.Microsoft.DependencyInjection" Version="10.0.1" />
     <PackageReference Include="Microsoft.ApplicationInsights.AspNetCore" Version="2.21.0" />
     <PackageReference Include="Microsoft.AspNetCore.Authentication.Cookies" Version="2.2.0" />
@@ -57,6 +60,10 @@
     <ProjectReference Include="..\Elsa.CustomWorkflow.Sdk\Elsa.CustomWorkflow.Sdk.csproj" />
     <ProjectReference Include="..\He.PipelineAssessment.Data\He.PipelineAssessment.Data.csproj" />
     <ProjectReference Include="..\He.PipelineAssessment.Infrastructure\He.PipelineAssessment.Infrastructure.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <UpToDateCheckInput Remove="Features\Workflow\Views\_QuestionScreenQuestion.cshtml" />
   </ItemGroup>
 
 </Project>
