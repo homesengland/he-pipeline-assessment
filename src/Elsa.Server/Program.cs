@@ -69,7 +69,7 @@ else
     }
 }
 
-bool useCache = !builder.Environment.IsDevelopment() || !string.IsNullOrWhiteSpace(builder.Configuration["Redis:Configuration"]);
+bool useCache = Convert.ToBoolean(builder.Configuration["Redis:UseCache"]); 
 
 logger.LogInformation($"Using Cache: {useCache}");
 // Elsa services.
