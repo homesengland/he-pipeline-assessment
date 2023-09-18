@@ -35,8 +35,6 @@ namespace He.PipelineAssessment.UI.Features.SinglePipeline.Sync
                     Status = "New",
                     ProjectManager = string.IsNullOrEmpty(item.project_owner)
                         ? "-" : item.project_owner,
-                    ProjectManagerEmail = string.IsNullOrEmpty(item.project_owner_email)
-                        ? "-" : item.project_owner_email,
                     LocalAuthority = string.IsNullOrEmpty(item.local_authority)
                         ? "-" : item.local_authority,
                     FundingAsk = item.funding_ask,
@@ -81,11 +79,6 @@ namespace He.PipelineAssessment.UI.Features.SinglePipeline.Sync
                     if (!string.IsNullOrEmpty(source.project_owner) && destination.ProjectManager != source.project_owner)
                     {
                         destination.ProjectManager = source.project_owner;
-                        updateFlag = true;
-                    }
-                    if (!string.IsNullOrEmpty(source.project_owner_email) && destination.ProjectManagerEmail != source.project_owner_email)
-                    {
-                        destination.ProjectManagerEmail = source.project_owner_email!;
                         updateFlag = true;
                     }
                     if (!string.IsNullOrEmpty(source.local_authority) && destination.LocalAuthority != source.local_authority)
