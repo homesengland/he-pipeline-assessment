@@ -81,23 +81,23 @@ export class HeTextGroupProperty implements ISortableSharedComponent, IDisplayTo
       syntax: SyntaxNames.Json,
       expressions: {
         [SyntaxNames.Json]: '',
-        [SyntaxNames.TextActivity]: ''
+        [SyntaxNames.GroupedInformationText]: ''
       }, type: PropertyOutputTypes.InformationGroup
     };
     this.properties = [... this.properties, newGroup];
     this.updatePropertyModel();
   }
 
-  onDeleteGroupClick(checkboxGroup: NestedActivityDefinitionProperty) {
-    this.properties = this.properties.filter(x => x != checkboxGroup);
+  onDeleteGroupClick(informationGroup: NestedActivityDefinitionProperty) {
+    this.properties = this.properties.filter(x => x != informationGroup);
     this.updatePropertyModel();
   }
 
   onPropertyExpressionChange(event: Event, property: NestedActivityDefinitionProperty) {
-    console.log("Update event", event);
-    console.log("property updated:", property)
     event = event;
     property = property;
+    console.log("Update to the Parent Component", property)
+    console.log("Current parent properties:", this.properties)
     this.updatePropertyModel();
   }
 
@@ -132,7 +132,7 @@ export class HeTextGroupProperty implements ISortableSharedComponent, IDisplayTo
       hint: "",
       label: "Information Text",
       supportedSyntaxes: [SyntaxNames.Json],
-      defaultSyntax: '',
+      defaultSyntax: SyntaxNames.Json,
       considerValuesAsOutcomes: false,
       disableWorkflowProviderSelection: true
 
@@ -269,7 +269,7 @@ export class HeTextGroupProperty implements ISortableSharedComponent, IDisplayTo
             propertyModel={textGroup}
             propertyDescriptor={descriptor}
             onExpressionChanged={e => eventHandler(e, textGroup)}
-            modelSyntax={SyntaxNames.TextActivity}
+            modelSyntax={SyntaxNames.TextActivityList}
             style={{ display: displayGroupStyle }}>
           </he-text-activity-property>
           <br />

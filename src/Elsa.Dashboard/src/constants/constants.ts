@@ -20,6 +20,7 @@ export class SyntaxNames {
   static readonly Checked = "Checked";
   static readonly ConditionalTextList = 'ConditionalTextList';
   static readonly TextActivity = 'TextActivity';
+  static readonly TextActivityList = 'TextActivityList';
   static readonly DataDictionary = 'DataDictionary';
   static readonly DataTable = 'DataTable';
   static readonly InformationText = 'TextActivity';

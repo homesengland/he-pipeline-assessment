@@ -25,7 +25,7 @@ export class TextActivityProperty implements ISortableSharedComponent, IDisplayT
   @Prop() activityModel: ActivityModel;
   @Prop() propertyDescriptor: ActivityPropertyDescriptor;
   @Prop() propertyModel: ActivityDefinitionProperty;
-  @Prop() modelSyntax: string = SyntaxNames.TextActivity;
+  @Prop() modelSyntax: string = SyntaxNames.TextActivityList;
   @State() properties: Array<NestedActivityDefinitionProperty> = [];
   @State() iconProvider = new IconProvider();
   @State() keyId: string;
@@ -64,6 +64,7 @@ export class TextActivityProperty implements ISortableSharedComponent, IDisplayT
   updatePropertyModel() {
     this._base.updatePropertyModel();
   }
+
   onMultiExpressionEditorValueChanged(e: CustomEvent<string>) {
     const json = e.detail;
     const parsed = parseJson(json);
@@ -86,7 +87,7 @@ export class TextActivityProperty implements ISortableSharedComponent, IDisplayT
   onAddElementClick() {
     const textName = newOptionLetter(this._base.IdentifierArray());
     const newTextElement: NestedActivityDefinitionProperty = {
-      syntax: SyntaxNames.Literal,
+      syntax: SyntaxNames.TextActivity,
       expressions: { [SyntaxNames.Literal]: '', [TextActivityOptionsSyntax.Paragraph]: 'true', [TextActivityOptionsSyntax.Condition]: 'true' },
       type: PropertyOutputTypes.Information,
       name: textName
