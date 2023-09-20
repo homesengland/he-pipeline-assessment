@@ -47,7 +47,7 @@ namespace Elsa.Server.Services
                 {
                     
                     var questions =
-                        _elsaCustomModelHelper.CreateQuestions(nextActivity.Id, workflowInstance, nextActivity.Name, workflowName);
+                        _elsaCustomModelHelper.CreateQuestions(nextActivity.Id, workflowInstance, nextActivity.Name!, workflowName);
                     await _elsaCustomRepository.CreateQuestionsAsync(questions, cancellationToken);
                 }
             }
