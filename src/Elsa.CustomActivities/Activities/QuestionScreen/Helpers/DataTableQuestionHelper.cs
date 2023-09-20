@@ -119,33 +119,25 @@ namespace Elsa.CustomActivities.Activities.QuestionScreen.Helpers
         {
             try
             {
-                var workflowBlueprint = await _workflowRegistry.FindByNameAsync(workflowName, Models.VersionOptions.Published);
+                var question = await _elsaCustomRepository.GetQuestionByWorkflowAndActivityName(activityName,
+                    workflowName, questionId, CancellationToken.None);
 
-                if (workflowBlueprint != null)
+                if (question != null && question.Answers != null && question.QuestionType == QuestionTypeConstants.DataTable)
                 {
-                    var activity = workflowBlueprint.Activities.FirstOrDefault(x => x.Name == activityName);
-                    if (activity != null)
+                    var answer = question.Answers.FirstOrDefault();
+                    if (answer != null)
                     {
-                        var question = await _elsaCustomRepository.GetQuestionByCorrelationId(activity.Id, correlationId, questionId, CancellationToken.None);
-
-                        if (question != null && question.Answers != null && question.QuestionType == QuestionTypeConstants.DataTable)
+                        var dataTable = JsonSerializer.Deserialize<DataTable>(answer.AnswerText);
+                        if (dataTable != null)
                         {
-                            var answer = question.Answers.FirstOrDefault();
-                            if (answer != null)
+                            var input = dataTable.Inputs.FirstOrDefault(x => x.Identifier == tableCellIdentifier);
+
+                            if (input != null && input.Input != null)
                             {
-                                var dataTable = JsonSerializer.Deserialize<DataTable>(answer.AnswerText);
-                                if (dataTable != null)
-                                {
-                                    var input = dataTable.Inputs.FirstOrDefault(x => x.Identifier == tableCellIdentifier);
-
-                                    if (input != null && input.Input != null)
-                                    {
-                                        return input.Input;
-                                    }
-                                }
-
+                                return input.Input;
                             }
                         }
+
                     }
                 }
             }
@@ -161,27 +153,19 @@ namespace Elsa.CustomActivities.Activities.QuestionScreen.Helpers
         {
             try
             {
-                var workflowBlueprint = await _workflowRegistry.FindByNameAsync(workflowName, Models.VersionOptions.Published);
+                var question = await _elsaCustomRepository.GetQuestionByWorkflowAndActivityName(activityName,
+                    workflowName, questionId, CancellationToken.None);
 
-                if (workflowBlueprint != null)
+                if (question != null && question.Answers != null && question.QuestionType == QuestionTypeConstants.DataTable)
                 {
-                    var activity = workflowBlueprint.Activities.FirstOrDefault(x => x.Name == activityName);
-                    if (activity != null)
+                    var answer = question.Answers.FirstOrDefault();
+                    if (answer != null)
                     {
-                        var question = await _elsaCustomRepository.GetQuestionByCorrelationId(activity.Id, correlationId, questionId, CancellationToken.None);
-
-                        if (question != null && question.Answers != null && question.QuestionType == QuestionTypeConstants.DataTable)
+                        var dataTable = JsonSerializer.Deserialize<DataTable>(answer.AnswerText);
+                        if (dataTable != null)
                         {
-                            var answer = question.Answers.FirstOrDefault();
-                            if (answer != null)
-                            {
-                                var dataTable = JsonSerializer.Deserialize<DataTable>(answer.AnswerText);
-                                if (dataTable != null)
-                                {
-                                    var input = dataTable.Inputs.Select(x => x.Input).ToArray();
-                                    return input;
-                                }
-                            }
+                            var input = dataTable.Inputs.Select(x => x.Input).ToArray();
+                            return input;
                         }
                     }
                 }
