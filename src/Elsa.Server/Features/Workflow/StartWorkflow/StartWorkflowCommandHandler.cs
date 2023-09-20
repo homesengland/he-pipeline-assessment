@@ -79,7 +79,7 @@ namespace Elsa.Server.Features.Workflow.StartWorkflow
 
                         var nextActivityRecord = await _elsaCustomRepository.GetCustomActivityNavigation(workflowNextActivityModel.NextActivity.Id, workflowInstance.Id, cancellationToken);
 
-                        await _nextActivityNavigationService.CreateNextActivityNavigation(workflowNextActivityModel.NextActivity.Id, nextActivityRecord, workflowNextActivityModel.NextActivity, workflowInstance, cancellationToken);
+                        await _nextActivityNavigationService.CreateNextActivityNavigation(workflowNextActivityModel.NextActivity.Id, nextActivityRecord, workflowNextActivityModel.NextActivity, workflowInstance, workflowName, cancellationToken);
 
                         result.Data = new StartWorkflowResponse
                         {

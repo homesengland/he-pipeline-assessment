@@ -71,7 +71,7 @@ public class QuestionScreenSaveAndContinueCommandHandlerTests
 
         nextActivityNavigationService.Setup(
                 x => x.CreateNextActivityNavigation(saveAndContinueCommand.ActivityId,
-                    nextAssessmentActivity, activityBlueprint, workflowInstance, CancellationToken.None))
+                    nextAssessmentActivity, activityBlueprint, workflowInstance, currentAssessmentQuestions.First().WorkflowName, CancellationToken.None))
             .Returns(Task.FromResult(true))
             .Callback(() => actualOrder.Add("Create"));
 
@@ -84,7 +84,7 @@ public class QuestionScreenSaveAndContinueCommandHandlerTests
 
         nextActivityNavigationService.Verify(
             x => x.CreateNextActivityNavigation(saveAndContinueCommand.ActivityId,
-                nextAssessmentActivity, activityBlueprint, workflowInstance, CancellationToken.None), Times.Once);
+                nextAssessmentActivity, activityBlueprint, workflowInstance, currentAssessmentQuestions.First().WorkflowName, CancellationToken.None), Times.Once);
 
         deleteChangedWorkflowPathService.Verify(
             x => x.DeleteChangedWorkflowPath(saveAndContinueCommand.WorkflowInstanceId, saveAndContinueCommand.ActivityId,
@@ -204,7 +204,7 @@ public class QuestionScreenSaveAndContinueCommandHandlerTests
 
         nextActivityNavigationService.Verify(
             x => x.CreateNextActivityNavigation(saveAndContinueCommand.ActivityId,
-                nextAssessmentActivity, activityBlueprint, workflowInstance, CancellationToken.None), Times.Never());
+                nextAssessmentActivity, activityBlueprint, workflowInstance, currentAssessmentQuestions.First().WorkflowName, CancellationToken.None), Times.Never());
 
         deleteChangedWorkflowPathService.Verify(
             x => x.DeleteChangedWorkflowPath(saveAndContinueCommand.WorkflowInstanceId, saveAndContinueCommand.ActivityId,
@@ -270,16 +270,16 @@ public class QuestionScreenSaveAndContinueCommandHandlerTests
         await sut.Handle(saveAndContinueCommand, CancellationToken.None);
 
         //Assert
-
+        var expectedWorkflowName = currentAssessmentQuestions.First().WorkflowName;
         nextActivityNavigationService.Verify(
             x => x.CreateNextActivityNavigation(saveAndContinueCommand.ActivityId,
-                nextAssessmentActivity, activityBlueprint, anotherWorkflowInstance, CancellationToken.None), Times.Once);
+                nextAssessmentActivity, activityBlueprint, anotherWorkflowInstance, expectedWorkflowName, CancellationToken.None), Times.Once);
         deleteChangedWorkflowPathService.Verify(
             x => x.DeleteChangedWorkflowPath(saveAndContinueCommand.WorkflowInstanceId, saveAndContinueCommand.ActivityId,
                 activityBlueprint, anotherWorkflowInstance, CancellationToken.None), Times.Once);
         nextActivityNavigationService.Verify(
             x => x.CreateNextActivityNavigation(saveAndContinueCommand.ActivityId,
-                nextAssessmentActivity, activityBlueprint, workflowInstance, CancellationToken.None), Times.Never);
+                nextAssessmentActivity, activityBlueprint, workflowInstance, expectedWorkflowName, CancellationToken.None), Times.Never);
         deleteChangedWorkflowPathService.Verify(
             x => x.DeleteChangedWorkflowPath(saveAndContinueCommand.WorkflowInstanceId, saveAndContinueCommand.ActivityId,
                 activityBlueprint, workflowInstance, CancellationToken.None), Times.Never);

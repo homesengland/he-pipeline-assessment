@@ -33,7 +33,7 @@ namespace Elsa.Server.Tests.Services
 
             //Act
             await sut.CreateNextActivityNavigation(previousActivityId, null, nextActivity,
-                workflowInstance, CancellationToken.None);
+                workflowInstance, "WorkflowName", CancellationToken.None);
 
             //Assert
             elsaCustomRepository.Verify(
@@ -58,12 +58,12 @@ namespace Elsa.Server.Tests.Services
                     ActivityTypeConstants.QuestionScreen, nextActivity.Id, nextActivity.Type, workflowInstance))
                 .Returns(customActivityNavigation);
 
-            elsaCustomModelHelper.Setup(x => x.CreateQuestions(nextActivity.Id, workflowInstance))
+            elsaCustomModelHelper.Setup(x => x.CreateQuestions(nextActivity.Id, workflowInstance, nextActivity.Name!, "WorkflowName"))
                 .Returns(questions);
 
             //Act
             await sut.CreateNextActivityNavigation(previousActivityId, null, nextActivity,
-                workflowInstance, CancellationToken.None);
+                workflowInstance, "WorkflowName", CancellationToken.None);
 
             //Assert
             elsaCustomRepository.Verify(
@@ -92,7 +92,7 @@ namespace Elsa.Server.Tests.Services
 
             //Act
             await sut.CreateNextActivityNavigation(previousActivityId, null, nextActivity,
-                workflowInstance, CancellationToken.None);
+                workflowInstance, "WorkflowName", CancellationToken.None);
 
             //Assert
             elsaCustomRepository.Verify(
@@ -117,7 +117,7 @@ namespace Elsa.Server.Tests.Services
 
             //Act
             await sut.CreateNextActivityNavigation(previousActivityId, nextActivityRecord, nextActivity,
-                workflowInstance, CancellationToken.None);
+                workflowInstance, "WorkflowName", CancellationToken.None);
 
             //Assert
             Assert.Equal(date, nextActivityRecord.LastModifiedDateTime);

@@ -11,7 +11,7 @@ namespace Elsa.Server.Helpers
     {
         CustomActivityNavigation CreateNextCustomActivityNavigation(string previousActivityId, string previousActivityType, string nextActivityId, string nextActivityType, WorkflowInstance workflowInstance);
 
-        List<Question> CreateQuestions(string activityId, WorkflowInstance workflowInstance);
+        List<Question> CreateQuestions(string activityId, WorkflowInstance workflowInstance, string activityName, string workflowName);
     }
 
     public class ElsaCustomModelHelper : IElsaCustomModelHelper
@@ -39,8 +39,9 @@ namespace Elsa.Server.Helpers
             };
         }
 
-        public Question CreateQuestion(string nextActivityId, string nextActivityType, CustomActivities.Activities.QuestionScreen.Question question, WorkflowInstance workflowInstance)
+        public Question CreateQuestion(string nextActivityId, string nextActivityType, CustomActivities.Activities.QuestionScreen.Question question, WorkflowInstance workflowInstance, string activityName, string workflowName)
         {
+            
             return new Question
             {
                 ActivityId = nextActivityId,
@@ -53,7 +54,9 @@ namespace Elsa.Server.Helpers
                 Weighting = question.QuestionWeighting,
                 QuestionDataDictionaryId = question.DataDictionary == 0 ? null : question.DataDictionary,
                 Choices = MapChoices(question),
-                IsReadOnly = question.IsReadOnly
+                IsReadOnly = question.IsReadOnly,
+                WorkflowName = workflowName,
+                ActivityName = activityName
             };
         }
 
@@ -137,7 +140,7 @@ namespace Elsa.Server.Helpers
             return choices;
         }
 
-        public List<Question> CreateQuestions(string activityId, WorkflowInstance workflowInstance)
+        public List<Question> CreateQuestions(string activityId, WorkflowInstance workflowInstance, string activityName, string workflowName)
         {
             var questions = new List<Question>();
             //create one for each question
@@ -155,7 +158,7 @@ namespace Elsa.Server.Helpers
                     {
                         foreach (var item in questionList!)
                         {
-                            questions.Add(this.CreateQuestion(activityId, ActivityTypeConstants.QuestionScreen, item, workflowInstance));
+                            questions.Add(this.CreateQuestion(activityId, ActivityTypeConstants.QuestionScreen, item, workflowInstance, activityName, workflowName));
                         }
                         return questions;
                     }
@@ -164,5 +167,6 @@ namespace Elsa.Server.Helpers
 
             return questions;
         }
+
     }
 }
