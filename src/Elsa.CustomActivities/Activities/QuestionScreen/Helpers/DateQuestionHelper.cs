@@ -24,7 +24,7 @@ namespace Elsa.CustomActivities.Activities.QuestionScreen.Helpers
         public async Task<bool> AnswerEqualToOrGreaterThan(string correlationId, string workflowName, string activityName, string questionId, int day, int month, int year)
         {
             var question = await _elsaCustomRepository.GetQuestionByWorkflowAndActivityName(activityName,
-                workflowName, questionId, CancellationToken.None);
+                workflowName, correlationId, questionId, CancellationToken.None);
 
             if (question != null && question.Answers != null &&
                         question.QuestionType == QuestionTypeConstants.DateQuestion)
@@ -53,7 +53,7 @@ namespace Elsa.CustomActivities.Activities.QuestionScreen.Helpers
         public async Task<bool> AnswerEqualToOrLessThan(string correlationId, string workflowName, string activityName, string questionId, int day, int month, int year)
         {
             var question = await _elsaCustomRepository.GetQuestionByWorkflowAndActivityName(activityName,
-                workflowName, questionId, CancellationToken.None);
+                workflowName, correlationId, questionId, CancellationToken.None);
 
             if (question != null && question.Answers != null &&
                         question.QuestionType == QuestionTypeConstants.DateQuestion)

@@ -36,7 +36,7 @@ namespace Elsa.CustomActivities.Activities.QuestionScreen.Helpers
 
 
             var question = await _elsaCustomRepository.GetQuestionByWorkflowAndActivityName(activityName,
-                workflowName, questionId, CancellationToken.None);
+                workflowName, activityExecutionContext.CorrelationId, questionId, CancellationToken.None);
 
             if (question != null &&
                         (question.QuestionType == QuestionTypeConstants.RadioQuestion || question.QuestionType == QuestionTypeConstants.PotScoreRadioQuestion || question.QuestionType == QuestionTypeConstants.WeightedRadioQuestion))
@@ -68,7 +68,7 @@ namespace Elsa.CustomActivities.Activities.QuestionScreen.Helpers
         {
             bool result = false;
             var question = await _elsaCustomRepository.GetQuestionByWorkflowAndActivityName(activityName,
-                workflowName, questionId, CancellationToken.None);
+                workflowName, correlationId, questionId, CancellationToken.None);
             if (question != null &&
                         (question.QuestionType == QuestionTypeConstants.RadioQuestion || question.QuestionType == QuestionTypeConstants.PotScoreRadioQuestion || question.QuestionType == QuestionTypeConstants.WeightedRadioQuestion))
             {

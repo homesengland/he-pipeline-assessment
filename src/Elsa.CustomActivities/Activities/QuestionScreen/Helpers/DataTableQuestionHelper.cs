@@ -32,7 +32,7 @@ namespace Elsa.CustomActivities.Activities.QuestionScreen.Helpers
             try
             {
                 var question = await _elsaCustomRepository.GetQuestionByWorkflowAndActivityName(activityName,
-                    workflowName, questionId, CancellationToken.None);
+                    workflowName, correlationId, questionId, CancellationToken.None);
 
                 if (question != null && question.Answers != null &&
                     question.QuestionType == QuestionTypeConstants.DataTable)
@@ -72,7 +72,7 @@ namespace Elsa.CustomActivities.Activities.QuestionScreen.Helpers
             try
             {
                 var question = await _elsaCustomRepository.GetQuestionByWorkflowAndActivityName(activityName,
-                    workflowName, questionId, CancellationToken.None);
+                    workflowName, correlationId, questionId, CancellationToken.None);
 
                 if (question != null && question.Answers != null &&
                     question.QuestionType == QuestionTypeConstants.DataTable)
@@ -120,7 +120,7 @@ namespace Elsa.CustomActivities.Activities.QuestionScreen.Helpers
             try
             {
                 var question = await _elsaCustomRepository.GetQuestionByWorkflowAndActivityName(activityName,
-                    workflowName, questionId, CancellationToken.None);
+                    workflowName, correlationId, questionId, CancellationToken.None);
 
                 if (question != null && question.Answers != null && question.QuestionType == QuestionTypeConstants.DataTable)
                 {
@@ -154,7 +154,7 @@ namespace Elsa.CustomActivities.Activities.QuestionScreen.Helpers
             try
             {
                 var question = await _elsaCustomRepository.GetQuestionByWorkflowAndActivityName(activityName,
-                    workflowName, questionId, CancellationToken.None);
+                    workflowName, correlationId, questionId, CancellationToken.None);
 
                 if (question != null && question.Answers != null && question.QuestionType == QuestionTypeConstants.DataTable)
                 {

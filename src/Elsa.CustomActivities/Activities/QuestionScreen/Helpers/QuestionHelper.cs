@@ -23,7 +23,7 @@ namespace Elsa.CustomActivities.Activities.QuestionScreen.Helpers
         public async Task<string> GetAnswer(string correlationId, string workflowName, string activityName, string questionId)
         {
             var result = await _elsaCustomRepository.GetQuestionByWorkflowAndActivityName(activityName,
-                workflowName, questionId, CancellationToken.None);
+                workflowName, correlationId, questionId, CancellationToken.None);
 
             if (result?.Answers != null)
             {

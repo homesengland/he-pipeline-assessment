@@ -24,7 +24,7 @@ namespace Elsa.CustomActivities.Activities.QuestionScreen.Helpers
         {
 
             var result = await _elsaCustomRepository.GetQuestionByWorkflowAndActivityName(activityName,
-                workflowName, questionId, CancellationToken.None);
+                workflowName, correlationId, questionId, CancellationToken.None);
 
             if (result != null && (result.QuestionType == QuestionTypeConstants.TextQuestion ||
                         result.QuestionType == QuestionTypeConstants.TextAreaQuestion) &&
@@ -39,7 +39,7 @@ namespace Elsa.CustomActivities.Activities.QuestionScreen.Helpers
         public async Task<bool> AnswerContains(string correlationId, string workflowName, string activityName, string questionId, string answerToCheck)
         {
             var result = await _elsaCustomRepository.GetQuestionByWorkflowAndActivityName(activityName,
-                workflowName, questionId, CancellationToken.None);
+                workflowName, correlationId, questionId, CancellationToken.None);
 
             if (result != null && (result.QuestionType == QuestionTypeConstants.TextQuestion ||
                         result.QuestionType == QuestionTypeConstants.TextAreaQuestion) &&

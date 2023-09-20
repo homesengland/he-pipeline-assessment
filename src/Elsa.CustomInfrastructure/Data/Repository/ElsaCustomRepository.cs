@@ -72,11 +72,13 @@ namespace Elsa.CustomInfrastructure.Data.Repository
             return result;
         }
 
-        public async Task<Question?> GetQuestionByWorkflowAndActivityName(string activityName, string workflowName, string questionID,
+        public async Task<Question?> GetQuestionByWorkflowAndActivityName(string activityName, string workflowName, string correlationId, string questionID,
     CancellationToken cancellationToken)
         {
             var result = await _dbContext.Set<Question>()
                 .Where(x =>
+                    x.CorrelationId == correlationId &&
+                    x.WorkflowName == activityName &&
                     x.ActivityName == activityName &&
                     x.WorkflowName == workflowName &&
                     x.QuestionId == questionID &&

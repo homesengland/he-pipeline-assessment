@@ -23,7 +23,7 @@ namespace Elsa.CustomActivities.Activities.QuestionScreen.Helpers
         {
             bool result = false;
             var question = await _elsaCustomRepository.GetQuestionByWorkflowAndActivityName(activityName,
-                workflowName, questionId, CancellationToken.None);
+                workflowName, correlationId, questionId, CancellationToken.None);
 
             if (question != null &&
                 question.QuestionType == QuestionTypeConstants.WeightedCheckboxQuestion &&
@@ -55,7 +55,7 @@ namespace Elsa.CustomActivities.Activities.QuestionScreen.Helpers
         {
             bool result = false;
             var question = await _elsaCustomRepository.GetQuestionByWorkflowAndActivityName(activityName,
-                workflowName, questionId, CancellationToken.None);
+                workflowName, correlationId, questionId, CancellationToken.None);
             if (question != null && question.QuestionType == QuestionTypeConstants.WeightedCheckboxQuestion)
             {
 

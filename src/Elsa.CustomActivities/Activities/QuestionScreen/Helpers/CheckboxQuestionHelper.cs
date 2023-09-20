@@ -25,7 +25,7 @@ namespace Elsa.CustomActivities.Activities.QuestionScreen.Helpers
         public async Task<string> GetAnswer(string correlationId, string workflowName, string activityName, string questionId)
         {
             var question = await _elsaCustomRepository.GetQuestionByWorkflowAndActivityName(activityName,
-                workflowName, questionId, CancellationToken.None);
+                workflowName, correlationId, questionId, CancellationToken.None);
 
             if (question != null && question.Answers != null &&
                         (question.QuestionType == QuestionTypeConstants.CheckboxQuestion || question.QuestionType == QuestionTypeConstants.WeightedCheckboxQuestion))
@@ -41,7 +41,7 @@ namespace Elsa.CustomActivities.Activities.QuestionScreen.Helpers
             var randomId = random.Next();
             var choiceIdsString = string.Join(", ", choiceIdsToCheck);
             var question = await _elsaCustomRepository.GetQuestionByWorkflowAndActivityName(activityName,
-                workflowName, questionId, CancellationToken.None);
+                workflowName, activityExecutionContext.CorrelationId, questionId, CancellationToken.None);
             if (question != null &&
                         (question.QuestionType == QuestionTypeConstants.CheckboxQuestion || question.QuestionType == QuestionTypeConstants.WeightedCheckboxQuestion) &&
                         question.Answers != null)
@@ -82,7 +82,7 @@ namespace Elsa.CustomActivities.Activities.QuestionScreen.Helpers
             var randomId = random.Next();
             var choiceIdsString = string.Join(", ", choiceIdsToCheck);
             var question = await _elsaCustomRepository.GetQuestionByWorkflowAndActivityName(activityName,
-                workflowName, questionId, CancellationToken.None);
+                workflowName, activityExecutionContext.CorrelationId, questionId, CancellationToken.None);
             if (question != null &&
                         (question.QuestionType == QuestionTypeConstants.CheckboxQuestion || question.QuestionType == QuestionTypeConstants.WeightedCheckboxQuestion))
             {
@@ -126,7 +126,7 @@ namespace Elsa.CustomActivities.Activities.QuestionScreen.Helpers
         {
             int result = 0;
             var question = await _elsaCustomRepository.GetQuestionByWorkflowAndActivityName(activityName,
-                workflowName, questionId, CancellationToken.None);
+                workflowName, correlationId, questionId, CancellationToken.None);
             if (question != null && (question.QuestionType == QuestionTypeConstants.CheckboxQuestion || question.QuestionType == QuestionTypeConstants.WeightedCheckboxQuestion))
             {
                 if (question.Answers != null)
