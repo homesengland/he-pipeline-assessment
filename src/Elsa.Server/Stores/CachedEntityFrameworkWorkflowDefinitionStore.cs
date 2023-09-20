@@ -15,6 +15,9 @@ using NodaTime.Serialization.SystemTextJson;
 using NodaTime.Xml;
 using StackExchange.Redis;
 using System.Text.Json;
+using Google.Protobuf;
+using Elsa.Activities.Workflows.Workflow;
+using System;
 
 namespace Elsa.Server.Stores
 {
@@ -121,10 +124,16 @@ namespace Elsa.Server.Stores
             {
                 //Check if it's in the Cache
                 var db = _cache.GetDatabase();
-                string cacheKey = CacheKey(workflowDefinition); ;
+                string cacheKey = CacheKey(workflowDefinition);
                 await base.SaveAsync(workflowDefinition, cancellationToken);
                 string workflowJson = JsonConvert.SerializeObject(workflowDefinition, _serializerSettings);
                 await db.StringSetAsync(cacheKey, workflowJson, _expiryTime);
+
+                if (workflowDefinition.IsPublished && workflowDefinition.IsLatest)
+                {
+                    string key = $"{_Key}:{workflowDefinition.DefinitionId}:Published";
+                    await db.StringSetAsync(key, workflowJson, _expiryTime);
+                }
             }
         }
 
