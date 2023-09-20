@@ -31,41 +31,31 @@ namespace Elsa.CustomActivities.Activities.QuestionScreen.Helpers
         {
             try
             {
-                var workflowBlueprint =
-                    await _workflowRegistry.FindByNameAsync(workflowName, Models.VersionOptions.Published);
+                var question = await _elsaCustomRepository.GetQuestionByWorkflowAndActivityName(activityName,
+                    workflowName, questionId, CancellationToken.None);
 
-                if (workflowBlueprint != null)
+                if (question != null && question.Answers != null &&
+                    question.QuestionType == QuestionTypeConstants.DataTable)
                 {
-                    var activity = workflowBlueprint.Activities.FirstOrDefault(x => x.Name == activityName);
-                    if (activity != null)
+                    var answer = question.Answers.FirstOrDefault();
+                    if (answer != null)
                     {
-                        var question = await _elsaCustomRepository.GetQuestionByCorrelationId(activity.Id,
-                            correlationId, questionId, CancellationToken.None);
-
-                        if (question != null && question.Answers != null &&
-                            question.QuestionType == QuestionTypeConstants.DataTable)
+                        var dataTable = JsonSerializer.Deserialize<DataTable>(answer.AnswerText);
+                        if (dataTable != null &&
+                            (dataTable.InputType == DataTableInputTypeConstants.CurrencyDataTableInput ||
+                             dataTable.InputType == DataTableInputTypeConstants.IntegerDataTableInput ||
+                             dataTable.InputType == DataTableInputTypeConstants.DecimalDataTableInput))
                         {
-                            var answer = question.Answers.FirstOrDefault();
-                            if (answer != null)
+                            var input = dataTable.Inputs.FirstOrDefault(
+                                x => x.Identifier == tableCellIdentifier);
+
+                            if (input != null && input.Input != null)
                             {
-                                var dataTable = JsonSerializer.Deserialize<DataTable>(answer.AnswerText);
-                                if (dataTable != null &&
-                                    (dataTable.InputType == DataTableInputTypeConstants.CurrencyDataTableInput ||
-                                     dataTable.InputType == DataTableInputTypeConstants.IntegerDataTableInput ||
-                                     dataTable.InputType == DataTableInputTypeConstants.DecimalDataTableInput))
-                                {
-                                    var input = dataTable.Inputs.FirstOrDefault(
-                                        x => x.Identifier == tableCellIdentifier);
-
-                                    if (input != null && input.Input != null)
-                                    {
-                                        var answerText = decimal.Parse(input.Input);
-                                        return answerText;
-                                    }
-                                }
-
+                                var answerText = decimal.Parse(input.Input);
+                                return answerText;
                             }
                         }
+
                     }
                 }
             }
@@ -81,48 +71,38 @@ namespace Elsa.CustomActivities.Activities.QuestionScreen.Helpers
         {
             try
             {
-                var workflowBlueprint =
-                    await _workflowRegistry.FindByNameAsync(workflowName, Models.VersionOptions.Published);
+                var question = await _elsaCustomRepository.GetQuestionByWorkflowAndActivityName(activityName,
+                    workflowName, questionId, CancellationToken.None);
 
-                if (workflowBlueprint != null)
+                if (question != null && question.Answers != null &&
+                    question.QuestionType == QuestionTypeConstants.DataTable)
                 {
-                    var activity = workflowBlueprint.Activities.FirstOrDefault(x => x.Name == activityName);
-                    if (activity != null)
+                    var answer = question.Answers.FirstOrDefault();
+                    if (answer != null)
                     {
-                        var question = await _elsaCustomRepository.GetQuestionByCorrelationId(activity.Id,
-                            correlationId, questionId, CancellationToken.None);
-
-                        if (question != null && question.Answers != null &&
-                            question.QuestionType == QuestionTypeConstants.DataTable)
+                        var dataTable = JsonSerializer.Deserialize<DataTable>(answer.AnswerText);
+                        if (dataTable != null &&
+                            (dataTable.InputType == DataTableInputTypeConstants.CurrencyDataTableInput ||
+                             dataTable.InputType == DataTableInputTypeConstants.IntegerDataTableInput ||
+                             dataTable.InputType == DataTableInputTypeConstants.DecimalDataTableInput))
                         {
-                            var answer = question.Answers.FirstOrDefault();
-                            if (answer != null)
+                            var input = dataTable.Inputs.Select(x => x.Input);
+
+                            var returnList = new List<decimal?>();
+                            foreach (var item in input)
                             {
-                                var dataTable = JsonSerializer.Deserialize<DataTable>(answer.AnswerText);
-                                if (dataTable != null &&
-                                    (dataTable.InputType == DataTableInputTypeConstants.CurrencyDataTableInput ||
-                                     dataTable.InputType == DataTableInputTypeConstants.IntegerDataTableInput ||
-                                     dataTable.InputType == DataTableInputTypeConstants.DecimalDataTableInput))
+                                if (item != null)
                                 {
-                                    var input = dataTable.Inputs.Select(x => x.Input);
-
-                                    var returnList = new List<decimal?>();
-                                    foreach (var item in input)
-                                    {
-                                        if (item != null)
-                                        {
-                                            var answerDecimal = decimal.Parse(item);
-                                            returnList.Add(answerDecimal);
-                                        }
-                                        else
-                                        {
-                                            returnList.Add(null);
-                                        }
-                                    }
-
-                                    return returnList.ToArray();
+                                    var answerDecimal = decimal.Parse(item);
+                                    returnList.Add(answerDecimal);
+                                }
+                                else
+                                {
+                                    returnList.Add(null);
                                 }
                             }
+
+                            return returnList.ToArray();
                         }
                     }
                 }
@@ -222,7 +202,7 @@ namespace Elsa.CustomActivities.Activities.QuestionScreen.Helpers
             engine.SetValue("dataTableQuestionGetStringAnswer", (Func<string, string, string, string, string?>)((workflowName, activityName, questionId, tableCellIdentifier) => GetStringAnswer(activityExecutionContext.CorrelationId, workflowName, activityName, questionId, tableCellIdentifier).Result));
             engine.SetValue("dataTableQuestionGetStringAnswerArray", (Func<string, string, string, string?[]>)((workflowName, activityName, questionId) => GetStringAnswerArray(activityExecutionContext.CorrelationId, workflowName, activityName, questionId).Result));
 
-            engine.SetValue("dataTableQuestionGetCurrencyAnswerArray", (Func<string, string, string,  decimal?[]>)((workflowName, activityName, questionId) => GetDecimalAnswerArray(activityExecutionContext.CorrelationId, workflowName, activityName, questionId).Result));
+            engine.SetValue("dataTableQuestionGetCurrencyAnswerArray", (Func<string, string, string, decimal?[]>)((workflowName, activityName, questionId) => GetDecimalAnswerArray(activityExecutionContext.CorrelationId, workflowName, activityName, questionId).Result));
             engine.SetValue("dataTableQuestionGetCurrencyAnswer", (Func<string, string, string, string, decimal?>)((workflowName, activityName, questionId, tableCellIdentifier) => GetDecimalAnswer(activityExecutionContext.CorrelationId, workflowName, activityName, questionId, tableCellIdentifier).Result));
 
             engine.SetValue("dataTableQuestionGetIntegerAnswerArray", (Func<string, string, string, decimal?[]>)((workflowName, activityName, questionId) => GetDecimalAnswerArray(activityExecutionContext.CorrelationId, workflowName, activityName, questionId).Result));
@@ -230,7 +210,7 @@ namespace Elsa.CustomActivities.Activities.QuestionScreen.Helpers
 
             engine.SetValue("dataTableQuestionGetDecimalAnswerArray", (Func<string, string, string, decimal?[]>)((workflowName, activityName, questionId) => GetDecimalAnswerArray(activityExecutionContext.CorrelationId, workflowName, activityName, questionId).Result));
             engine.SetValue("dataTableQuestionGetDecimalAnswer", (Func<string, string, string, string, decimal?>)((workflowName, activityName, questionId, tableCellIdentifier) => GetDecimalAnswer(activityExecutionContext.CorrelationId, workflowName, activityName, questionId, tableCellIdentifier).Result));
-            
+
             return Task.CompletedTask;
         }
 

@@ -12,7 +12,7 @@ namespace Elsa.Server.Services
     {
         Task CreateNextActivityNavigation(string previousActivityId,
             CustomActivityNavigation? nextActivityRecord, IActivityBlueprint nextActivity,
-            WorkflowInstance workflowInstance, CancellationToken cancellationToken);
+            WorkflowInstance workflowInstance, string workflowName, CancellationToken cancellationToken);
     }
 
     public class NextActivityNavigationService : INextActivityNavigationService
@@ -28,7 +28,7 @@ namespace Elsa.Server.Services
             _elsaCustomModelHelper = elsaCustomModelHelper;
         }
         public async Task CreateNextActivityNavigation(string previousActivityId,
-            CustomActivityNavigation? nextActivityRecord, IActivityBlueprint nextActivity, WorkflowInstance workflowInstance, CancellationToken cancellationToken)
+            CustomActivityNavigation? nextActivityRecord, IActivityBlueprint nextActivity, WorkflowInstance workflowInstance, string workflowName, CancellationToken cancellationToken)
         {
             if (nextActivityRecord == null &&
                 (nextActivity.Type != ActivityTypeConstants.VFMDataSource &&
@@ -45,8 +45,9 @@ namespace Elsa.Server.Services
 
                 if (customActivityNavigation.ActivityType == ActivityTypeConstants.QuestionScreen)
                 {
+                    
                     var questions =
-                        _elsaCustomModelHelper.CreateQuestions(nextActivity.Id, workflowInstance);
+                        _elsaCustomModelHelper.CreateQuestions(nextActivity.Id, workflowInstance, nextActivity.Name, workflowName);
                     await _elsaCustomRepository.CreateQuestionsAsync(questions, cancellationToken);
                 }
             }

@@ -72,6 +72,23 @@ namespace Elsa.CustomInfrastructure.Data.Repository
             return result;
         }
 
+        public async Task<Question?> GetQuestionByWorkflowAndActivityName(string activityName, string workflowName, string questionID,
+    CancellationToken cancellationToken)
+        {
+            var result = await _dbContext.Set<Question>()
+                .Where(x =>
+                    x.ActivityName == activityName &&
+                    x.WorkflowName == workflowName &&
+                    x.QuestionId == questionID &&
+                    (!x.IsArchived.HasValue || !x.IsArchived.Value))
+                .Include(x => x.Choices)!.ThenInclude(y => y.QuestionChoiceGroup)
+                .Include(x => x.Answers)
+                .OrderByDescending(x => x.CreatedDateTime)
+                .FirstOrDefaultAsync(cancellationToken: cancellationToken);
+
+            return result;
+        }
+
         public async Task<Question?> GetQuestionById(int id)
         {
             var result = await _dbContext.Set<Question>().FirstOrDefaultAsync(x => x.Id == id);

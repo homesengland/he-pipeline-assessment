@@ -48,7 +48,7 @@ namespace He.PipelineAssessment.UI.Features.Workflow
         [Authorize(Policy = Authorization.Constants.AuthorizationPolicies.AssignmentToWorkflowExecuteRoleRequired)]
         public async Task<IActionResult> LoadWorkflowActivity(QuestionScreenSaveAndContinueCommandResponse request)
         {
-
+            
             if (string.IsNullOrEmpty(request.ActivityType))
             {
                 //try to get activity type from the server?

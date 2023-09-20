@@ -32,6 +32,7 @@ namespace Elsa.Server.Tests.Features.Workflow.CheckYourAnswersSaveAndContinue
                 WorkflowInstance workflowInstance,
                 CustomActivityNavigation nextAssessmentActivity,
                 CheckYourAnswersSaveAndContinueCommand saveAndContinueCommand,
+                QuestionWorkflowInstance questionWorkflowInstance,
                 CheckYourAnswersSaveAndContinueCommandHandler sut)
         {
             //Arrange
@@ -58,6 +59,9 @@ namespace Elsa.Server.Tests.Features.Workflow.CheckYourAnswersSaveAndContinue
                     saveAndContinueCommand.WorkflowInstanceId, CancellationToken.None))
                 .ReturnsAsync(nextAssessmentActivity);
 
+            elsaCustomRepository.Setup(x => x.GetQuestionWorkflowInstance(workflowInstance.Id, CancellationToken.None))
+    .ReturnsAsync(questionWorkflowInstance);
+
             workflowInstanceProvider.Setup(x => x.GetWorkflowInstance(It.IsAny<string>(), CancellationToken.None))
                 .ReturnsAsync(workflowInstance);
 
@@ -75,7 +79,7 @@ namespace Elsa.Server.Tests.Features.Workflow.CheckYourAnswersSaveAndContinue
                 Times.Never);
             nextActivityNavigationService.Verify(
                 x => x.CreateNextActivityNavigation(saveAndContinueCommand.ActivityId, nextAssessmentActivity,
-                    workflowNextActivityModel.NextActivity, workflowInstance, CancellationToken.None), Times.Once);
+                    workflowNextActivityModel.NextActivity, workflowInstance, questionWorkflowInstance.WorkflowName, CancellationToken.None), Times.Once);
 
             Assert.Equal(opResult.Data.NextActivityId, result.Data!.NextActivityId);
             Assert.Equal(opResult.Data.WorkflowInstanceId, result.Data.WorkflowInstanceId);
@@ -96,6 +100,7 @@ namespace Elsa.Server.Tests.Features.Workflow.CheckYourAnswersSaveAndContinue
                 WorkflowInstance workflowInstance,
                 CustomActivityNavigation nextAssessmentActivity,
                 CheckYourAnswersSaveAndContinueCommand saveAndContinueCommand,
+                QuestionWorkflowInstance questionWorkflowInstance,
                 CheckYourAnswersSaveAndContinueCommandHandler sut
             )
         {
@@ -123,6 +128,10 @@ namespace Elsa.Server.Tests.Features.Workflow.CheckYourAnswersSaveAndContinue
                     saveAndContinueCommand.WorkflowInstanceId, CancellationToken.None))
                 .ReturnsAsync((CustomActivityNavigation?)null);
 
+
+            elsaCustomRepository.Setup(x => x.GetQuestionWorkflowInstance(workflowInstance.Id, CancellationToken.None))
+    .ReturnsAsync(questionWorkflowInstance);
+
             workflowInstanceProvider.Setup(x => x.GetWorkflowInstance(It.IsAny<string>(), CancellationToken.None))
                 .ReturnsAsync(workflowInstance);
 
@@ -137,7 +146,7 @@ namespace Elsa.Server.Tests.Features.Workflow.CheckYourAnswersSaveAndContinue
             //Assert
             nextActivityNavigationService.Verify(
                 x => x.CreateNextActivityNavigation(saveAndContinueCommand.ActivityId, null,
-                    workflowNextActivityModel.NextActivity, workflowInstance, CancellationToken.None), Times.Once);
+                    workflowNextActivityModel.NextActivity, workflowInstance, questionWorkflowInstance.WorkflowName, CancellationToken.None), Times.Once);
             Assert.Equal(opResult.Data.NextActivityId, result.Data!.NextActivityId);
             Assert.Equal(opResult.Data.WorkflowInstanceId, result.Data.WorkflowInstanceId);
             Assert.Equal(activityBlueprint.Type, result.Data.ActivityType);
@@ -158,6 +167,7 @@ namespace Elsa.Server.Tests.Features.Workflow.CheckYourAnswersSaveAndContinue
                 WorkflowInstance workflowInstance,
                 CustomActivityNavigation nextAssessmentActivity,
                 CheckYourAnswersSaveAndContinueCommand saveAndContinueCommand,
+                QuestionWorkflowInstance questionWorkflowInstance,
                 CheckYourAnswersSaveAndContinueCommandHandler sut
             )
         {
@@ -180,10 +190,13 @@ namespace Elsa.Server.Tests.Features.Workflow.CheckYourAnswersSaveAndContinue
 
             activityBlueprint.Id = workflowInstance.Output.ActivityId;
             workflowBlueprint.Activities.Add(activityBlueprint);
-            
+
             elsaCustomRepository.Setup(x => x.GetCustomActivityNavigation(workflowNextActivityModel.NextActivity.Id,
                     saveAndContinueCommand.WorkflowInstanceId, CancellationToken.None))
                 .ReturnsAsync((CustomActivityNavigation?)null);
+
+            elsaCustomRepository.Setup(x => x.GetQuestionWorkflowInstance(workflowInstance.Id, CancellationToken.None))
+.ReturnsAsync(questionWorkflowInstance);
 
             workflowInstanceProvider.Setup(x => x.GetWorkflowInstance(It.IsAny<string>(), CancellationToken.None))
                 .ReturnsAsync(workflowInstance);
@@ -199,7 +212,7 @@ namespace Elsa.Server.Tests.Features.Workflow.CheckYourAnswersSaveAndContinue
             //Assert
             nextActivityNavigationService.Verify(
                 x => x.CreateNextActivityNavigation(saveAndContinueCommand.ActivityId, null,
-                    workflowNextActivityModel.NextActivity, workflowInstance, CancellationToken.None), Times.Once);
+                    workflowNextActivityModel.NextActivity, workflowInstance, questionWorkflowInstance.WorkflowName, CancellationToken.None), Times.Once);
             Assert.Equal(opResult.Data.NextActivityId, result.Data!.NextActivityId);
             Assert.Equal(opResult.Data.WorkflowInstanceId, result.Data.WorkflowInstanceId);
             Assert.Equal(activityBlueprint.Type, result.Data.ActivityType);
@@ -220,6 +233,7 @@ namespace Elsa.Server.Tests.Features.Workflow.CheckYourAnswersSaveAndContinue
                 WorkflowInstance workflowInstance,
                 CustomActivityNavigation nextAssessmentActivity,
                 CheckYourAnswersSaveAndContinueCommand saveAndContinueCommand,
+                QuestionWorkflowInstance questionWorkflowInstance,
                 CheckYourAnswersSaveAndContinueCommandHandler sut
             )
         {
@@ -249,6 +263,9 @@ namespace Elsa.Server.Tests.Features.Workflow.CheckYourAnswersSaveAndContinue
                     saveAndContinueCommand.WorkflowInstanceId, CancellationToken.None))
                 .ReturnsAsync((CustomActivityNavigation?)null);
 
+            elsaCustomRepository.Setup(x => x.GetQuestionWorkflowInstance(workflowInstance.Id, CancellationToken.None))
+.ReturnsAsync(questionWorkflowInstance);
+
             workflowInstanceProvider.Setup(x => x.GetWorkflowInstance(It.IsAny<string>(), CancellationToken.None))
                 .ReturnsAsync(workflowInstance);
 
@@ -263,7 +280,7 @@ namespace Elsa.Server.Tests.Features.Workflow.CheckYourAnswersSaveAndContinue
             //Assert
             nextActivityNavigationService.Verify(
                 x => x.CreateNextActivityNavigation(saveAndContinueCommand.ActivityId, null,
-                    workflowNextActivityModel.NextActivity, workflowInstance, CancellationToken.None), Times.Once);
+                    workflowNextActivityModel.NextActivity, workflowInstance, questionWorkflowInstance.WorkflowName, CancellationToken.None), Times.Once);
             Assert.Equal(opResult.Data.NextActivityId, result.Data!.NextActivityId);
             Assert.Equal(opResult.Data.WorkflowInstanceId, result.Data.WorkflowInstanceId);
             Assert.Empty(result.ErrorMessages);
@@ -304,6 +321,7 @@ namespace Elsa.Server.Tests.Features.Workflow.CheckYourAnswersSaveAndContinue
                 WorkflowInstance workflowInstance,
                 CheckYourAnswersSaveAndContinueCommand saveAndContinueCommand,
                 CustomActivityNavigation customActivityNavigation,
+                QuestionWorkflowInstance questionWorkflowInstance,
                 CheckYourAnswersSaveAndContinueCommandHandler sut)
         {
             //Arrange
@@ -319,6 +337,9 @@ namespace Elsa.Server.Tests.Features.Workflow.CheckYourAnswersSaveAndContinue
             elsaCustomRepository.Setup(x => x.GetCustomActivityNavigation(workflowInstance.Output.ActivityId,
                     saveAndContinueCommand.WorkflowInstanceId, CancellationToken.None))
                 .ReturnsAsync((CustomActivityNavigation?)null);
+            elsaCustomRepository.Setup(x => x.GetQuestionWorkflowInstance(workflowInstance.Id, CancellationToken.None))
+                .ReturnsAsync(questionWorkflowInstance);
+
 
             workflowInstanceProvider.Setup(x => x.GetWorkflowInstance(It.IsAny<string>(), CancellationToken.None))
                 .ReturnsAsync(workflowInstance);
@@ -334,7 +355,7 @@ namespace Elsa.Server.Tests.Features.Workflow.CheckYourAnswersSaveAndContinue
             //Assert
             nextActivityNavigationService.Verify(
                 x => x.CreateNextActivityNavigation(saveAndContinueCommand.ActivityId, null,
-                    workflowNextActivityModel.NextActivity, workflowInstance, CancellationToken.None), Times.Once);
+                    workflowNextActivityModel.NextActivity, workflowInstance, questionWorkflowInstance.WorkflowName, CancellationToken.None), Times.Once);
         }
 
     }
