@@ -22,38 +22,31 @@ namespace Elsa.CustomActivities.Activities.QuestionScreen.Helpers
         public async Task<bool> AnswerEquals(string correlationId, string workflowName, string activityName, string questionId, string groupId, string[] choiceIdsToCheck)
         {
             bool result = false;
-            var workflowBlueprint = await _workflowRegistry.FindByNameAsync(workflowName, Models.VersionOptions.Published);
+            var question = await _elsaCustomRepository.GetQuestionByWorkflowAndActivityName(activityName,
+                workflowName, questionId, CancellationToken.None);
 
-            if (workflowBlueprint != null)
+            if (question != null &&
+                question.QuestionType == QuestionTypeConstants.WeightedCheckboxQuestion &&
+                question.Answers != null)
             {
-                var activity = workflowBlueprint.Activities.FirstOrDefault(x => x.Name == activityName);
-                if (activity != null)
+                var answers = question.Answers
+                    .Where(x => x.Choice?.QuestionChoiceGroup?.GroupIdentifier == groupId).ToList();
+                if (answers.Count != choiceIdsToCheck.Length)
+                    return false;
+                foreach (var item in choiceIdsToCheck)
                 {
-                    var question = await _elsaCustomRepository.GetQuestionByCorrelationId(activity.Id,
-                        correlationId, questionId, CancellationToken.None);
-                    if (question != null &&
-                        question.QuestionType == QuestionTypeConstants.WeightedCheckboxQuestion &&
-                        question.Answers != null)
+                    var answerFound = answers.FirstOrDefault(x => x.Choice?.Identifier == item);
+                    if (answerFound != null)
                     {
-                        var answers = question.Answers
-                            .Where(x => x.Choice?.QuestionChoiceGroup?.GroupIdentifier == groupId).ToList();
-                        if(answers.Count != choiceIdsToCheck.Length)
-                            return false;
-                        foreach (var item in choiceIdsToCheck)
-                        {
-                            var answerFound = answers.FirstOrDefault(x => x.Choice?.Identifier == item);
-                            if (answerFound != null)
-                            {
-                                result = true;
-                            }
-                            else
-                            {
-                                result = false;
-                            }
-                        }
+                        result = true;
+                    }
+                    else
+                    {
+                        result = false;
                     }
                 }
             }
+
             return result;
         }
 
@@ -61,44 +54,33 @@ namespace Elsa.CustomActivities.Activities.QuestionScreen.Helpers
             string questionId, string groupId, string[] choiceIdsToCheck, bool containsAny = false)
         {
             bool result = false;
-            var workflowBlueprint =
-                await _workflowRegistry.FindByNameAsync(workflowName, Models.VersionOptions.Published);
-
-            if (workflowBlueprint != null)
+            var question = await _elsaCustomRepository.GetQuestionByWorkflowAndActivityName(activityName,
+                workflowName, questionId, CancellationToken.None);
+            if (question != null && question.QuestionType == QuestionTypeConstants.WeightedCheckboxQuestion)
             {
-                var activity = workflowBlueprint.Activities.FirstOrDefault(x => x.Name == activityName);
-                if (activity != null)
+
+                if (question.Answers != null)
                 {
+                    var answers = question.Answers
+                        .Where(x => x.Choice?.QuestionChoiceGroup?.GroupIdentifier == groupId).ToList();
 
-                    var question = await _elsaCustomRepository.GetQuestionByCorrelationId(activity.Id, correlationId, questionId,
-                        CancellationToken.None);
-                    if (question != null && question.QuestionType == QuestionTypeConstants.WeightedCheckboxQuestion)
+                    foreach (var item in choiceIdsToCheck)
                     {
-
-                        if (question.Answers != null)
+                        var answerFound = answers.FirstOrDefault(x => x.Choice?.Identifier == item);
+                        if (answerFound != null)
                         {
-                            var answers = question.Answers
-                                .Where(x => x.Choice?.QuestionChoiceGroup?.GroupIdentifier == groupId).ToList();
-
-                            foreach (var item in choiceIdsToCheck)
+                            if (containsAny)
                             {
-                                var answerFound = answers.FirstOrDefault(x => x.Choice?.Identifier == item);
-                                if (answerFound != null)
-                                {
-                                    if (containsAny)
-                                    {
-                                        return true;
-                                    }
-                                    else
-                                    {
-                                        result = true;
-                                    }
-                                }
-                                else
-                                {
-                                    result = false;
-                                }
+                                return true;
                             }
+                            else
+                            {
+                                result = true;
+                            }
+                        }
+                        else
+                        {
+                            result = false;
                         }
                     }
                 }

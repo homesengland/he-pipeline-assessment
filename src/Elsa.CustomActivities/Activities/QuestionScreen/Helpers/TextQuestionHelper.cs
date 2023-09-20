@@ -23,48 +23,30 @@ namespace Elsa.CustomActivities.Activities.QuestionScreen.Helpers
         public async Task<bool> AnswerEquals(string correlationId, string workflowName, string activityName, string questionId, string answerToCheck)
         {
 
-            var workflowBlueprint = await _workflowRegistry.FindByNameAsync(workflowName, Models.VersionOptions.Published);
+            var result = await _elsaCustomRepository.GetQuestionByWorkflowAndActivityName(activityName,
+                workflowName, questionId, CancellationToken.None);
 
-            if (workflowBlueprint != null)
-            {
-                var activity = workflowBlueprint.Activities.FirstOrDefault(x => x.Name == activityName);
-                if (activity != null)
-                {
-                    var result = await _elsaCustomRepository.GetQuestionByCorrelationId(activity.Id,
-                        correlationId, questionId, CancellationToken.None);
-
-                    if (result != null && (result.QuestionType == QuestionTypeConstants.TextQuestion ||
+            if (result != null && (result.QuestionType == QuestionTypeConstants.TextQuestion ||
                         result.QuestionType == QuestionTypeConstants.TextAreaQuestion) &&
                         result.Answers != null && result.Answers.Count == 1 && result.Answers.First().AnswerText.ToLower() == answerToCheck.ToLower())
-                    {
-                        return true;
-                    }
-                }
+            {
+                return true;
             }
+
             return false;
         }
 
         public async Task<bool> AnswerContains(string correlationId, string workflowName, string activityName, string questionId, string answerToCheck)
         {
-            var workflowBlueprint = await _workflowRegistry.FindByNameAsync(workflowName, Models.VersionOptions.Published);
+            var result = await _elsaCustomRepository.GetQuestionByWorkflowAndActivityName(activityName,
+                workflowName, questionId, CancellationToken.None);
 
-            if (workflowBlueprint != null)
-            {
-                var activity = workflowBlueprint.Activities.FirstOrDefault(x => x.Name == activityName);
-                if (activity != null)
-                {
-                    var result = await _elsaCustomRepository.GetQuestionByCorrelationId(activity.Id,
-                        correlationId, questionId, CancellationToken.None);
-
-                    if (result != null && (result.QuestionType == QuestionTypeConstants.TextQuestion ||
+            if (result != null && (result.QuestionType == QuestionTypeConstants.TextQuestion ||
                         result.QuestionType == QuestionTypeConstants.TextAreaQuestion) &&
                         result.Answers != null && result.Answers.Count == 1 && result.Answers.First().AnswerText.ToLower().Contains(answerToCheck.ToLower()))
-                    {
-                        return true;
-                    }
-                }
+            {
+                return true;
             }
-
             return false;
         }
 
