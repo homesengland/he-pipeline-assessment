@@ -23,7 +23,7 @@ export class SyntaxNames {
   static readonly DataDictionary = 'DataDictionary';
   static readonly DataTable = 'DataTable';
   static readonly InformationText = 'TextActivity';
-  static readonly GroupedInformationText = 'GroupedTextActivity';
+  static readonly GroupedInformationText = 'TextGroupActivity';
   static Variable: string;
   static Output: string;
 }

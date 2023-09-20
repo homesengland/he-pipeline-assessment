@@ -15,7 +15,7 @@
                 @foreach (var text in @Model.Text)
                 {
                     <li>
-                        @await Html.PartialAsync("_InformationTextElement", text)
+                        @await Html.PartialAsync("_InformationTextWrapper", text)
                     </li>
                 }
 
@@ -24,7 +24,7 @@
             else{
                 @foreach (var text in Model.Text)
                 {
-                    @await Html.PartialAsync("_InformationTextElement", text)
+                    @await Html.PartialAsync("_InformationTextWrapper", text)
                 }
             }
         </div>
@@ -53,7 +53,7 @@
                         @foreach (var text in @Model.Text)
                         {
                             <li>
-                                @await Html.PartialAsync("_InformationTextElement", text)
+                                @await Html.PartialAsync("_InformationTextWrapper", text)
                             </li>
                         }
 
@@ -62,7 +62,7 @@
                 else{
                     @foreach (var text in Model.Text)
                     {
-                        @await Html.PartialAsync("_InformationTextElement", text)
+                        @await Html.PartialAsync("_InformationTextWrapper", text)
                     }
                 }
             </div>
@@ -79,7 +79,7 @@
                 @foreach (var text in @Model.Text)
                 {
                     <li>
-                        @await Html.PartialAsync("_InformationTextElement", text)
+                        @await Html.PartialAsync("_InformationTextWrapper", text)
                     </li>
                 }
 
@@ -88,7 +88,7 @@
         else{
             @foreach (var text in Model.Text)
             {
-                @await Html.PartialAsync("_InformationTextElement", text)
+                @await Html.PartialAsync("_InformationTextWrapper", text)
             }
         }
     }

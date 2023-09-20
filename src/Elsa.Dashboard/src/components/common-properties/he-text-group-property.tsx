@@ -131,8 +131,8 @@ export class HeTextGroupProperty implements ISortableSharedComponent, IDisplayTo
       name: "Information text",
       hint: "",
       label: "Information Text",
-      supportedSyntaxes: [SyntaxNames.Json],
-      defaultSyntax: '',
+      supportedSyntaxes: [SyntaxNames.GroupedInformationText, SyntaxNames.Json],
+      defaultSyntax: SyntaxNames.GroupedInformationText,
       considerValuesAsOutcomes: false,
       disableWorkflowProviderSelection: true
 

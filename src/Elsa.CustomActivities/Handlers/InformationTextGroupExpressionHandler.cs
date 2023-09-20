@@ -79,9 +79,19 @@ namespace Elsa.CustomActivities.Handlers
         {
             try
             {
-                if (property.Expressions!.ContainsKey(TextActivitySyntaxNames.TextActivity))
+                //if (property.Expressions!.ContainsKey(TextActivitySyntaxNames.TextActivity))
+                //{
+                //    var result = await _textHandler.EvaluateAsync(property.Expressions[TextActivitySyntaxNames.TextActivity], typeof(TextModel), context, CancellationToken.None);
+                //    if (result != null)
+                //    {
+                //        TextModel? modelResult = result as TextModel;
+                //        return modelResult != null ? modelResult : new TextModel();
+                //    }
+                //    return new TextModel();
+                //}
+                if (property.Expressions!.ContainsKey(TextActivitySyntaxNames.TextGroup))
                 {
-                    var result = await _textHandler.EvaluateAsync(property.Expressions[TextActivitySyntaxNames.TextActivity], typeof(TextModel), context, CancellationToken.None);
+                    var result = await _textHandler.EvaluateAsync(property.Expressions[TextActivitySyntaxNames.TextGroup], typeof(TextModel), context, CancellationToken.None);
                     if (result != null)
                     {
                         TextModel? modelResult = result as TextModel;
