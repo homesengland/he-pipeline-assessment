@@ -56,7 +56,7 @@ namespace Elsa.Server.Helpers
                 Choices = MapChoices(question),
                 IsReadOnly = question.IsReadOnly,
                 WorkflowName = workflowName,
-                ActivityName = activityName
+                ActivityName = string.IsNullOrEmpty(activityName) ? nextActivityId : activityName
             };
         }
 

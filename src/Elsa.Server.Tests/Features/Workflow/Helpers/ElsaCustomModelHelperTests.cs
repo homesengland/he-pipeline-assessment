@@ -232,6 +232,31 @@ namespace Elsa.Server.Tests.Features.Workflow.Helpers
         }
 
         [Theory]
+        [InlineAutoMoqData((string?)null)]
+        [InlineAutoMoqData("")]
+        public void CreateQuestion_ShouldDefaultToActivityId_GivenNullOrEmptyActivityName(
+            string? activityName,
+            [Frozen] Mock<IDateTimeProvider> mockDateTimeProvider,
+            string nextActivityId,
+            string nextActivityType,
+            WorkflowInstance workflowInstance,
+            CustomActivities.Activities.QuestionScreen.Question question,
+            ElsaCustomModelHelper sut
+        )
+        {
+            //Arrange
+            var currentTimeUtc = DateTime.UtcNow;
+            mockDateTimeProvider.Setup(x => x.UtcNow()).Returns(currentTimeUtc);
+
+            //Act
+            var result = sut.CreateQuestion(nextActivityId, nextActivityType, question, workflowInstance, activityName, "WorkflowName");
+
+            //Assert
+            Assert.IsType<Question>(result);
+            Assert.Equal(nextActivityId, result!.ActivityName);
+        }
+
+        [Theory]
         [AutoMoqData]
         public void CreateQuestion_ShouldReturnNullQuestionDataDictionary_GivenTheValueIsZero(
             [Frozen] Mock<IDateTimeProvider> mockDateTimeProvider,
