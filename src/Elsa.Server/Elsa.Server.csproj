@@ -14,6 +14,14 @@
   </ItemGroup>
 
   <ItemGroup>
+	<None Remove="System.Security.Cryptography.Pkcs" />
+	<None Remove="System.Drawing.Common" />
+	<None Remove="System.Text.RegularExpressions" />
+	<None Remove="System.Data.SqlClient" />
+	<None Remove="Azure.Storage.Blobs" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="Elsa" Version="2.12.0" />
     <PackageReference Include="Elsa.Activities.Http" Version="2.12.0" />
     <PackageReference Include="Elsa.Persistence.EntityFramework.SqlServer" Version="2.12.0" />
@@ -38,6 +46,11 @@
     </PackageReference>
     <PackageReference Include="Microsoft.Identity.Web" Version="2.9.0" />
     <PackageReference Include="Microsoft.VisualStudio.Azure.Containers.Tools.Targets" Version="1.17.0" />
+    <PackageReference Include="System.Security.Cryptography.Pkcs" Version="7.0.2" />
+    <PackageReference Include="System.Drawing.Common" Version="5.0.3" />
+    <PackageReference Include="System.Text.RegularExpressions" Version="4.3.1" />
+    <PackageReference Include="System.Data.SqlClient" Version="4.8.5" />
+    <PackageReference Include="Azure.Storage.Blobs" Version="12.13.0" />
   </ItemGroup>
 
   <ItemGroup>

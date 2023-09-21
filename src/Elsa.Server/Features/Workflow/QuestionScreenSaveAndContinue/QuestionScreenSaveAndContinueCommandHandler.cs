@@ -42,6 +42,7 @@ namespace Elsa.Server.Features.Workflow.QuestionScreenSaveAndContinue
         public async Task<OperationResult<QuestionScreenSaveAndContinueResponse>> Handle(QuestionScreenSaveAndContinueCommand command,
             CancellationToken cancellationToken)
         {
+
             var result = new OperationResult<QuestionScreenSaveAndContinueResponse>();
             try
             {
@@ -59,7 +60,7 @@ namespace Elsa.Server.Features.Workflow.QuestionScreenSaveAndContinue
                     {
                         throw new Exception($"Unable to save answers. Workflow status is: Finished");
                     }
-
+                    var workflowName = dbAssessmentQuestionList.First().WorkflowName;
                     await SetAnswers(command, cancellationToken, dbAssessmentQuestionList);
 
                     var workflowNextActivityModel = await _workflowNextActivityProvider.GetNextActivity(command.ActivityId, command.WorkflowInstanceId, dbAssessmentQuestionList, ActivityTypeConstants.QuestionScreen, cancellationToken);
@@ -69,7 +70,7 @@ namespace Elsa.Server.Features.Workflow.QuestionScreenSaveAndContinue
 
                     await _deleteChangedWorkflowPathService.DeleteChangedWorkflowPath(command.WorkflowInstanceId, command.ActivityId, workflowNextActivityModel.NextActivity, workflowInstance, cancellationToken);
 
-                    await _nextActivityNavigationService.CreateNextActivityNavigation(command.ActivityId, nextActivityRecord, workflowNextActivityModel.NextActivity, workflowInstance, cancellationToken);
+                    await _nextActivityNavigationService.CreateNextActivityNavigation(command.ActivityId, nextActivityRecord, workflowNextActivityModel.NextActivity, workflowInstance, workflowName, cancellationToken);
 
                     result.Data = new QuestionScreenSaveAndContinueResponse
                     {

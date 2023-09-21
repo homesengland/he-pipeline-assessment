@@ -29,26 +29,27 @@ namespace Elsa.Server.Features.Workflow.ExecuteWorkflow
         {
             try
             {
+                
                 var workflowNextActivityModel = await _nextActivityProvider.GetNextActivity(command.ActivityId, command.WorkflowInstanceId, null,
                     command.ActivityType, cancellationToken);
 
                 var nextActivityRecord = await _elsaCustomRepository.GetCustomActivityNavigation(workflowNextActivityModel.NextActivity.Id, command.WorkflowInstanceId, cancellationToken);
-
+                
                 await _deleteChangedWorkflowPathService.DeleteChangedWorkflowPath(command.WorkflowInstanceId, command.ActivityId, workflowNextActivityModel.NextActivity, workflowNextActivityModel.WorkflowInstance!, cancellationToken);
 
                 var latestCustomActivityNavigation = await _elsaCustomRepository.GetLatestCustomActivityNavigation(command.WorkflowInstanceId, cancellationToken);
-
+                
                 if (latestCustomActivityNavigation != null)
                 {
                     await _nextActivityNavigationService.CreateNextActivityNavigation(latestCustomActivityNavigation.ActivityId,
                         nextActivityRecord, workflowNextActivityModel.NextActivity,
-                        workflowNextActivityModel.WorkflowInstance!, cancellationToken);
+                        workflowNextActivityModel.WorkflowInstance!, command.WorkflowName, cancellationToken);
                 }
                 else
                 {
                     await _nextActivityNavigationService.CreateNextActivityNavigation(workflowNextActivityModel.NextActivity.Id,
                         nextActivityRecord, workflowNextActivityModel.NextActivity,
-                        workflowNextActivityModel.WorkflowInstance!, cancellationToken);
+                        workflowNextActivityModel.WorkflowInstance!, command.WorkflowName, cancellationToken);
                 }
 
                 return new OperationResult<ExecuteWorkflowResponse>()

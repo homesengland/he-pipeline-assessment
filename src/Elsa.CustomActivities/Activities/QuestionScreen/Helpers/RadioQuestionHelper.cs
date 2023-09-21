@@ -15,7 +15,7 @@ namespace Elsa.CustomActivities.Activities.QuestionScreen.Helpers
         private readonly IElsaCustomRepository _elsaCustomRepository;
         private readonly IWorkflowRegistry _workflowRegistry;
         private readonly ILogger<RadioQuestionHelper> _logger;
-        private readonly Random random= new Random();
+        private readonly Random random = new Random();
 
         public RadioQuestionHelper(IElsaCustomRepository elsaCustomRepository, IWorkflowRegistry workflowRegistry, ILogger<RadioQuestionHelper> logger)
         {
@@ -25,48 +25,40 @@ namespace Elsa.CustomActivities.Activities.QuestionScreen.Helpers
         }
 
 
-        public async Task<bool> AnswerEquals(ActivityExecutionContext activityExecutionContext,  string workflowName, string activityName, string questionId, string choiceIdToCheck)
+        public async Task<bool> AnswerEquals(ActivityExecutionContext activityExecutionContext, string workflowName, string activityName, string questionId, string choiceIdToCheck)
         {
             bool result = false;
-            var workflowBlueprint = await _workflowRegistry.FindByNameAsync(workflowName, Models.VersionOptions.Published);
+
             var randomId = random.Next();
-            if (workflowBlueprint != null)
-            {
-                activityExecutionContext.JournalData.Add($"Running RadioQuestionAnswerEquals for choice {choiceIdToCheck}. (random id - {randomId})", $"CorrelationID: {activityExecutionContext.CorrelationId}, WorkflowName: {workflowName}, ActivityName: {activityName}, QuestionID: {questionId}, ChoicesToCheck: {choiceIdToCheck}");
-                _logger.LogWarning($"Running RadioQuestionAnswerEquals - CorrelationID: {activityExecutionContext.CorrelationId}, WorkflowName: {workflowName}, ActivityName: {activityName}, QuestionID: {questionId}, ChoicesToCheck: {choiceIdToCheck}");
-                var activity = workflowBlueprint.Activities.FirstOrDefault(x => x.Name == activityName);
-                if (activity != null)
-                {
-                    var question = await _elsaCustomRepository.GetQuestionByCorrelationId(activity.Id,
-                        activityExecutionContext.CorrelationId, questionId, CancellationToken.None);
-                    if (question != null &&
+
+            activityExecutionContext.JournalData.Add($"Running RadioQuestionAnswerEquals for choice {choiceIdToCheck}. (random id - {randomId})", $"CorrelationID: {activityExecutionContext.CorrelationId}, WorkflowName: {workflowName}, ActivityName: {activityName}, QuestionID: {questionId}, ChoicesToCheck: {choiceIdToCheck}");
+            _logger.LogWarning($"Running RadioQuestionAnswerEquals - CorrelationID: {activityExecutionContext.CorrelationId}, WorkflowName: {workflowName}, ActivityName: {activityName}, QuestionID: {questionId}, ChoicesToCheck: {choiceIdToCheck}");
+
+
+            var question = await _elsaCustomRepository.GetQuestionByWorkflowAndActivityName(activityName,
+                workflowName, activityExecutionContext.CorrelationId, questionId, CancellationToken.None);
+
+            if (question != null &&
                         (question.QuestionType == QuestionTypeConstants.RadioQuestion || question.QuestionType == QuestionTypeConstants.PotScoreRadioQuestion || question.QuestionType == QuestionTypeConstants.WeightedRadioQuestion))
-                    {
-                        activityExecutionContext.JournalData.Add($"RadioQuestionAnswerEquals Question Found for choice {choiceIdToCheck}. (random id - {randomId})", $"CorrelationID: {activityExecutionContext.CorrelationId}, WorkflowName: {workflowName}, ActivityName: {activityName}, QuestionID: {questionId}, ChoicesToCheck: {choiceIdToCheck}, DBQuestionID: {question.Id}, DBInstanceID: {question.WorkflowInstanceId}");
-                        _logger.LogWarning($"RadioQuestionAnswerEquals Question Found - CorrelationID: {activityExecutionContext.CorrelationId}, WorkflowName: {workflowName}, ActivityName: {activityName}, QuestionID: {questionId}, ChoicesToCheck: {choiceIdToCheck}, DBQuestionID: {question.Id}, DBInstanceID: {question.WorkflowInstanceId}");
+            {
+                activityExecutionContext.JournalData.Add($"RadioQuestionAnswerEquals Question Found for choice {choiceIdToCheck}. (random id - {randomId})", $"CorrelationID: {activityExecutionContext.CorrelationId}, WorkflowName: {workflowName}, ActivityName: {activityName}, QuestionID: {questionId}, ChoicesToCheck: {choiceIdToCheck}, DBQuestionID: {question.Id}, DBInstanceID: {question.WorkflowInstanceId}");
+                _logger.LogWarning($"RadioQuestionAnswerEquals Question Found - CorrelationID: {activityExecutionContext.CorrelationId}, WorkflowName: {workflowName}, ActivityName: {activityName}, QuestionID: {questionId}, ChoicesToCheck: {choiceIdToCheck}, DBQuestionID: {question.Id}, DBInstanceID: {question.WorkflowInstanceId}");
 
-                        if (question.Answers != null && question.Answers.Count == 1)
-                        {
-                            var singleAnswer = question.Answers.First();
-                            activityExecutionContext.JournalData.Add($"RadioQuestionAnswerEquals Answers Found for choice {choiceIdToCheck}. (random id - {randomId})", $"CorrelationID: {activityExecutionContext.CorrelationId}, WorkflowName: {workflowName}, ActivityName: {activityName}, QuestionID: {questionId}, ChoicesToCheck: {choiceIdToCheck}, DBQuestionID: {question.Id}, DBInstanceID: {question.WorkflowInstanceId}, Answer: {question.Answers.First().AnswerText}, Choice: {question.Answers.First().Choice?.Identifier}");
-                            _logger.LogWarning($"RadioQuestionAnswerEquals Answers Found - CorrelationID: {activityExecutionContext.CorrelationId}, WorkflowName: {workflowName}, ActivityName: {activityName}, QuestionID: {questionId}, ChoicesToCheck: {choiceIdToCheck}, DBQuestionID: {question.Id}, DBInstanceID: {question.WorkflowInstanceId}, Answer: {question.Answers.First().AnswerText}, Choice: {question.Answers.First().Choice?.Identifier}");
-
-                            return choiceIdToCheck == singleAnswer.Choice?.Identifier;
-                        }
-
-                        return false;
-                    }
-                    else
-                    {
-                        activityExecutionContext.JournalData.Add($"RadioQuestionAnswerEquals Question NULL for choice {choiceIdToCheck}. (random id - {randomId})", $"CorrelationID: {activityExecutionContext.CorrelationId}, WorkflowName: {workflowName}, ActivityName: {activityName}, QuestionID: {questionId}, ChoicesToCheck: {choiceIdToCheck}");
-                        _logger.LogWarning($"RadioQuestionAnswerEquals Question NULL possibly - CorrelationID: {activityExecutionContext.CorrelationId}, WorkflowName: {workflowName}, ActivityName: {activityName}, QuestionID: {questionId}, ChoicesToCheck: {choiceIdToCheck}");
-                    }
-                }
-                else
+                if (question.Answers != null && question.Answers.Count == 1)
                 {
-                    activityExecutionContext.JournalData.Add($"RadioQuestionAnswerEquals Activity NULL for choice {choiceIdToCheck}. (random id - {randomId})", $"CorrelationID: {activityExecutionContext.CorrelationId}, WorkflowName: {workflowName}, ActivityName: {activityName}, QuestionID: {questionId}, ChoicesToCheck: {choiceIdToCheck}");
-                    _logger.LogTrace($"RadioQuestionAnswerEquals Activity NULL - CorrelationID: {activityExecutionContext.CorrelationId}, WorkflowName: {workflowName}, ActivityName: {activityName}, QuestionID: {questionId}, ChoicesToCheck: {choiceIdToCheck}");
+                    var singleAnswer = question.Answers.First();
+                    activityExecutionContext.JournalData.Add($"RadioQuestionAnswerEquals Answers Found for choice {choiceIdToCheck}. (random id - {randomId})", $"CorrelationID: {activityExecutionContext.CorrelationId}, WorkflowName: {workflowName}, ActivityName: {activityName}, QuestionID: {questionId}, ChoicesToCheck: {choiceIdToCheck}, DBQuestionID: {question.Id}, DBInstanceID: {question.WorkflowInstanceId}, Answer: {question.Answers.First().AnswerText}, Choice: {question.Answers.First().Choice?.Identifier}");
+                    _logger.LogWarning($"RadioQuestionAnswerEquals Answers Found - CorrelationID: {activityExecutionContext.CorrelationId}, WorkflowName: {workflowName}, ActivityName: {activityName}, QuestionID: {questionId}, ChoicesToCheck: {choiceIdToCheck}, DBQuestionID: {question.Id}, DBInstanceID: {question.WorkflowInstanceId}, Answer: {question.Answers.First().AnswerText}, Choice: {question.Answers.First().Choice?.Identifier}");
+
+                    return choiceIdToCheck == singleAnswer.Choice?.Identifier;
                 }
+
+                return false;
+            }
+            else
+            {
+                activityExecutionContext.JournalData.Add($"RadioQuestionAnswerEquals Question NULL for choice {choiceIdToCheck}. (random id - {randomId})", $"CorrelationID: {activityExecutionContext.CorrelationId}, WorkflowName: {workflowName}, ActivityName: {activityName}, QuestionID: {questionId}, ChoicesToCheck: {choiceIdToCheck}");
+                _logger.LogWarning($"RadioQuestionAnswerEquals Question NULL possibly - CorrelationID: {activityExecutionContext.CorrelationId}, WorkflowName: {workflowName}, ActivityName: {activityName}, QuestionID: {questionId}, ChoicesToCheck: {choiceIdToCheck}");
             }
 
             return result;
@@ -75,26 +67,17 @@ namespace Elsa.CustomActivities.Activities.QuestionScreen.Helpers
         public async Task<bool> AnswerIn(string correlationId, string workflowName, string activityName, string questionId, string[] choiceIdsToCheck)
         {
             bool result = false;
-            var workflowBlueprint = await _workflowRegistry.FindByNameAsync(workflowName, Models.VersionOptions.Published);
-
-            if (workflowBlueprint != null)
-            {
-                var activity = workflowBlueprint.Activities.FirstOrDefault(x => x.Name == activityName);
-                if (activity != null)
-                {
-                    var question = await _elsaCustomRepository.GetQuestionByCorrelationId(activity.Id,
-                        correlationId, questionId, CancellationToken.None);
-                    if (question != null &&
+            var question = await _elsaCustomRepository.GetQuestionByWorkflowAndActivityName(activityName,
+                workflowName, correlationId, questionId, CancellationToken.None);
+            if (question != null &&
                         (question.QuestionType == QuestionTypeConstants.RadioQuestion || question.QuestionType == QuestionTypeConstants.PotScoreRadioQuestion || question.QuestionType == QuestionTypeConstants.WeightedRadioQuestion))
-                    {
-                        var choices = question.Choices;
+            {
+                var choices = question.Choices;
 
-                        if (choices != null && question.Answers != null && question.Answers.Count == 1)
-                        {
-                            var singleAnswer = question.Answers.First();
-                            return choiceIdsToCheck.Contains(singleAnswer.Choice?.Identifier);
-                        }
-                    }
+                if (choices != null && question.Answers != null && question.Answers.Count == 1)
+                {
+                    var singleAnswer = question.Answers.First();
+                    return choiceIdsToCheck.Contains(singleAnswer.Choice?.Identifier);
                 }
             }
             return result;

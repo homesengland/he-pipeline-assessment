@@ -37,9 +37,12 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.DataProtection;
 using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using StackExchange.Redis;
 using System.Globalization;
+using Elsa.Decorators;
+using Elsa.Services.Workflows;
 
 var builder = WebApplication.CreateBuilder(args);
 var elsaConnectionString = builder.Configuration.GetConnectionString("Elsa");
@@ -54,21 +57,22 @@ logger.LogInformation("Example log message");
 
 var redisConnectionString = builder.Configuration.GetConnectionString("Redis");
 logger.LogInformation($"Redis Connection String: {redisConnectionString}");
+var clearCache = Convert.ToBoolean(builder.Configuration["Redis:ClearCache"]);
 if (!builder.Environment.IsDevelopment())
 {
     logger.LogInformation("Attempting to set up Redis Connection.  Environment is not Development");
-    await builder.Services.AddRedisWithSelfSignedSslCertificate(redisConnectionString!, builder.Configuration["Redis:SslCertificatePath"], builder.Configuration["Redis:SslCertificateKeyPath"], logger);
+    await builder.Services.AddRedisWithSelfSignedSslCertificate(redisConnectionString!, builder.Configuration["Redis:SslCertificatePath"], builder.Configuration["Redis:SslCertificateKeyPath"], logger, clearCache );
 }
 else
 {
     var redisConfiguration = builder.Configuration["Redis:Configuration"];
     if (!string.IsNullOrEmpty(redisConfiguration))
     {
-        builder.Services.AddSingleton<IConnectionMultiplexer>(ConnectionMultiplexer.Connect(redisConfiguration));
+        await builder.Services.AddRedisLocal(redisConfiguration, logger, clearCache);
     }
 }
 
-bool useCache = !builder.Environment.IsDevelopment() || !string.IsNullOrWhiteSpace(builder.Configuration["Redis:Configuration"]);
+bool useCache = (Convert.ToBoolean(builder.Configuration["Redis:UseCache"]) && !builder.Environment.IsDevelopment()) || !string.IsNullOrWhiteSpace(builder.Configuration["Redis:Configuration"]);
 
 logger.LogInformation($"Using Cache: {useCache}");
 // Elsa services.
@@ -90,9 +94,12 @@ builder.Services
         .AddConsoleActivities()
     );
 
+builder.Services.AddScoped<IWorkflowRegistry, WorkflowRegistry>();
+
+
 builder.Services.AddScoped<ICustomPropertyDescriber, CustomPropertyDescriber>();
 
-builder.Services.AddScoped<IWorkflowPublisher, WorkflowPublisher>();
+builder.Services.AddScoped<IWorkflowPublisher, Elsa.Server.Publisher.WorkflowPublisher>();
 
 builder.Services.TryAddProvider<IExpressionHandler, InformationTextExpressionHandler>(ServiceLifetime.Singleton);
 builder.Services.TryAddProvider<IExpressionHandler, QuestionListExpressionHandler>(ServiceLifetime.Singleton);
@@ -186,6 +193,8 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
     });
 
 builder.Services.AddEsriHttpClients(builder.Configuration, builder.Environment.IsDevelopment());
+
+
 //HibernatingRhinos.Profiler.Appender.EntityFramework.EntityFrameworkProfiler.Initialize();
 var app = builder.Build();
 
