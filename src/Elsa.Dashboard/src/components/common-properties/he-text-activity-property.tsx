@@ -87,7 +87,7 @@ export class TextActivityProperty implements ISortableSharedComponent, IDisplayT
   onAddElementClick() {
     const textName = newOptionLetter(this._base.IdentifierArray());
     const newTextElement: NestedActivityDefinitionProperty = {
-      syntax: SyntaxNames.TextActivity,
+      syntax: SyntaxNames.Literal,
       expressions: { [SyntaxNames.Literal]: '', [TextActivityOptionsSyntax.Paragraph]: 'true', [TextActivityOptionsSyntax.Condition]: 'true' },
       type: PropertyOutputTypes.Information,
       name: textName
