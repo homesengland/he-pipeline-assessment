@@ -17,12 +17,19 @@ namespace Elsa.CustomActivities.Handlers
         public string Syntax => TextActivitySyntaxNames.TextGroup;
 
 
-        public InformationTextGroupExpressionHandler(InformationTextExpressionHandler handler,ILogger<IExpressionHandler> logger, IContentSerializer contentSerializer)
+        public InformationTextGroupExpressionHandler(ILogger<IExpressionHandler> logger, IContentSerializer contentSerializer)
         {
-            _textHandler = handler;
+            _textHandler = new InformationTextExpressionHandler(logger, contentSerializer);
             _logger = logger;
             _contentSerializer = contentSerializer;
         }
+
+        //public InformationTextGroupExpressionHandler(InformationTextExpressionHandler handler,ILogger<IExpressionHandler> logger, IContentSerializer contentSerializer)
+        //{
+        //    _textHandler = handler;
+        //    _logger = logger;
+        //    _contentSerializer = contentSerializer;
+        //}
 
         public async Task<object?> EvaluateAsync(string expression, Type returnType, ActivityExecutionContext context, CancellationToken cancellationToken)
         {
@@ -31,7 +38,8 @@ namespace Elsa.CustomActivities.Handlers
             var textGroupProperties = TryDeserializeExpression(expression);
             var textGroups = await ElsaPropertiesToGroupedTextList(textGroupProperties, evaluator, context);
             result = textGroups;
-            return result;
+            GroupedTextModel textGroup = new GroupedTextModel() {  TextGroups = result };
+            return textGroup;
         }
 
         public async Task<List<TextGroup>> ElsaPropertiesToGroupedTextList(List<ElsaProperty> properties, IExpressionEvaluator evaluator, ActivityExecutionContext context)

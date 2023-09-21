@@ -16,13 +16,17 @@ namespace Elsa.Server.Features.Workflow.LoadConfirmationScreen
         public string? FooterTitle { get; set; } = null!;
         public string? FooterText { get; set; } = null!;
         //public List<string> Text { get; set; } = new List<string>();
-        public Information Text { get; set; } = null!;
+        public List<Information> Text { get; set; } = null!;
         public string? NextWorkflowDefinitionIds { get; set; } = null!;
         public List<Question>? CheckQuestions { get; set; }
     }
 
     public class Information
     {
-        public InformationTextGroup[] InformationTextList { get; set; } = new List<InformationTextGroup>().ToArray();
+        public string? Title { get; set; }
+        public bool IsGuidance { get; set; } = false;
+        public bool IsCollapsed { get; set; } = false;
+        public bool IsBullets { get; set; } = false;
+        public List<InformationText> InformationTextList { get; set; } = new List<InformationText>();
     }
 }

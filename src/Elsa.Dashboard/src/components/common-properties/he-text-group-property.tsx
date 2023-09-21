@@ -68,6 +68,7 @@ export class HeTextGroupProperty implements ISortableSharedComponent, IDisplayTo
 
   updatePropertyModel() {
     this._base.updatePropertyModel();
+    console.log("Property Model on save:", JSON.stringify(this.propertyModel));
   }
 
   onDefaultSyntaxValueChanged(e: CustomEvent) {

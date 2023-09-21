@@ -55,8 +55,7 @@ namespace Elsa.Server.Features.Workflow.LoadConfirmationScreen
                     result.Data.FooterTitle = (string?)activityDataDictionary.GetData("FooterTitle");
                     result.Data.FooterText = (string?)activityDataDictionary.GetData("FooterText");
                     var textModel = (GroupedTextModel)activityDataDictionary.GetData("Text")! ?? new GroupedTextModel();
-                    result.Data.Text = new Information();
-                    result.Data.Text.InformationTextList = textModel.TextGroups.Select(x => new InformationTextGroup()
+                    result.Data.Text = textModel.TextGroups.Select(x => new Information()
                     {
                         Title = x.Title,
                         IsCollapsed = x.Collapsed,
@@ -71,7 +70,7 @@ namespace Elsa.Server.Features.Workflow.LoadConfirmationScreen
                             Url = y.Url,
 
                         })
-                    }).ToList().ToArray();
+                    }).ToList();
 
                     result.Data.NextWorkflowDefinitionIds = (string?)activityDataDictionary.GetData("NextWorkflowDefinitionIds");
                 }

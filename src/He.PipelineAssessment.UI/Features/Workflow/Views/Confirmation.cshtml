@@ -18,10 +18,22 @@
     <h2 class="govuk-heading-m">@Html.DisplayTextFor(m => m.Data.FooterTitle)</h2>
     <p class="govuk-body">@Html.DisplayTextFor(m => m.Data.FooterText)</p>
 
-    @foreach (var group in Model.Data.Text)
+    @await Html.PartialAsync("_Information",new Question()
     {
-        @await Html.PartialAsync("_InformationGroup", group);
-    }
+    Index = 1,
+    Information = Model.Data.Text.Select(x => new Information{
+    Title = x.Title,
+    IsBullet = x.IsBullets,
+    IsGuidance = x.IsGuidance,
+    IsCollapsed = x.IsCollapsed,
+    Text = x.InformationTextList.Select(y => new InformationText {
+        Text = y.Text,
+        IsHyperlink = y.IsHyperlink,
+        IsParagraph = y.IsParagraph,
+        Url = y.Url
+        }).ToList()
+    }).ToList()
+    })
 </div>
 
 <h2 class="govuk-heading-m">

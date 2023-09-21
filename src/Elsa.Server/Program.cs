@@ -102,6 +102,7 @@ builder.Services.AddScoped<ICustomPropertyDescriber, CustomPropertyDescriber>();
 builder.Services.AddScoped<IWorkflowPublisher, Elsa.Server.Publisher.WorkflowPublisher>();
 
 builder.Services.TryAddProvider<IExpressionHandler, InformationTextExpressionHandler>(ServiceLifetime.Singleton);
+builder.Services.TryAddProvider<IExpressionHandler, InformationTextGroupExpressionHandler>(ServiceLifetime.Singleton);
 builder.Services.TryAddProvider<IExpressionHandler, QuestionListExpressionHandler>(ServiceLifetime.Singleton);
 builder.Services.TryAddProvider<IExpressionHandler, ScoringCalculationExpressionHandler>(ServiceLifetime.Singleton);
 builder.Services.TryAddSingleton<INestedSyntaxExpressionHandler, NestedSyntaxExpressionHandler>();

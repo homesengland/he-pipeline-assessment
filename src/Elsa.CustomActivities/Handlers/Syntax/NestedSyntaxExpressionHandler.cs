@@ -34,7 +34,8 @@ namespace Elsa.CustomActivities.Handlers.Syntax
         {
             _logger = logger;
             _informationExpressionHandler = new InformationTextExpressionHandler(logger, serializer);
-            _informationGroupExpressionHandler = new InformationTextGroupExpressionHandler(_informationExpressionHandler, logger, serializer);
+            //_informationGroupExpressionHandler = new InformationTextGroupExpressionHandler(_informationExpressionHandler, logger, serializer);
+            _informationGroupExpressionHandler = new InformationTextGroupExpressionHandler(logger, serializer);
             _radioExpressionHandler = new RadioExpressionHandler(logger, serializer);
             _checkboxExpressionHandler = new CheckboxExpressionHandler(logger, serializer);
             _potScoreRadioExpressionHandler = new PotScoreRadioExpressionHandler(logger, serializer);
