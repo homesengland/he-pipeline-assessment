@@ -1,69 +1,95 @@
-﻿@using He.PipelineAssessment.UI.Features.Workflow.ViewModels
-@model He.PipelineAssessment.UI.Features.Workflow.ViewModels.Information
+﻿@model He.PipelineAssessment.UI.Features.Workflow.ViewModels.Information
 @{
     bool hasTitle = !string.IsNullOrEmpty(Model.Title);
 }
-
-@if(Model.IsGuidance){
-    <div class="govuk-inset-text">
-        if(hasTitle)
-        {
-        <h2 class="govuk-heading-m">Model.Title</h2>
-        }
-        @foreach(var text in Model.Text)
-        {
-            @await Html.PartialAsync("_InformationTextElement", text)
-        }
-    </div>
-}
-else if(Model.IsBullet){
-    if(hasTitle)
+@{
+    if (Model.IsGuidance)
     {
-        <h2 class="govuk-heading-m">Model.Title</h2>
-    }
-    <ul>
-        @foreach(var text in Model.Text)
-        {
-            <li>
-                @await Html.PartialAsync("_InformationTextElement", text)
-            </li>
-        }
-
-    </ul>
-}
-else if(Model.IsCollapsed) {
-    <details class="govuk-details" data-module="govuk-details">
-        <summary class="govuk-details__summary">
-            <span class="govuk-details__summary-text">
-                if (hasTitle)
-                {
-                @Model.Title
-                }
-                else{
-                    Click to expand
-                }
-            </span>
-        </summary>
-        <div class="govuk-details__text">
-            if (hasTitle)
+        <div class="govuk-inset-text">
+            @if (hasTitle)
             {
-            <h2 class="govuk-heading-m">Model.Title</h2>
+                <h2 class="govuk-heading-m">@Model.Title</h2>
             }
-            @foreach (var text in Model.Text)
-            {
-                @await Html.PartialAsync("_InformationTextElement", text)
+            @if (@Model.IsBullet){
+            <ul>
+                @foreach (var text in @Model.Text)
+                {
+                    <li>
+                        @await Html.PartialAsync("_InformationTextWrapper", text)
+                    </li>
+                }
+
+            </ul>
+            }
+            else{
+                @foreach (var text in Model.Text)
+                {
+                    @await Html.PartialAsync("_InformationTextWrapper", text)
+                }
             }
         </div>
-    </details>
-}
-else
-{
-    if (hasTitle)
-    {
-        <h2 class="govuk-heading-m">Model.Title</h2>
     }
-    @foreach(var text in Model.Text)
+    else if (Model.IsCollapsed)
     {
-        @await Html.PartialAsync("_InformationTextElement", text)
+        <details class="govuk-details" data-module="govuk-details">
+            <summary class="govuk-details__summary">
+                <span class="govuk-details__summary-text">
+                    @if (hasTitle)
+                    {
+                    @Model.Title
+                    }
+                    else{
+                    @:Click to expand
+                    }
+                </span>
+            </summary>
+            <div class="govuk-details__text">
+                @if (hasTitle)
+                {
+                    <h2 class="govuk-heading-m">@Model.Title</h2>
+                }
+                @if (@Model.IsBullet){
+                    <ul>
+                        @foreach (var text in @Model.Text)
+                        {
+                            <li>
+                                @await Html.PartialAsync("_InformationTextWrapper", text)
+                            </li>
+                        }
+
+                    </ul>
+                }
+                else{
+                    @foreach (var text in Model.Text)
+                    {
+                        @await Html.PartialAsync("_InformationTextWrapper", text)
+                    }
+                }
+            </div>
+        </details>
+    }
+    else
+    {
+        if (hasTitle)
+        {
+            <h2 class="govuk-heading-m">@Model.Title</h2>
+        }
+        @if (@Model.IsBullet){
+            <ul>
+                @foreach (var text in @Model.Text)
+                {
+                    <li>
+                        @await Html.PartialAsync("_InformationTextWrapper", text)
+                    </li>
+                }
+
+            </ul>
+        }
+        else{
+            @foreach (var text in Model.Text)
+            {
+                @await Html.PartialAsync("_InformationTextWrapper", text)
+            }
+        }
     }
 }

@@ -96,8 +96,6 @@ export class HeTextGroupProperty implements ISortableSharedComponent, IDisplayTo
   onPropertyExpressionChange(event: Event, property: NestedActivityDefinitionProperty) {
     event = event;
     property = property;
-    console.log("Update to the Parent Component", property)
-    console.log("Current parent properties:", this.properties)
     this.updatePropertyModel();
   }
 
@@ -131,8 +129,8 @@ export class HeTextGroupProperty implements ISortableSharedComponent, IDisplayTo
       name: "Information text",
       hint: "",
       label: "Information Text",
-      supportedSyntaxes: [SyntaxNames.Json],
-      defaultSyntax: SyntaxNames.Json,
+      supportedSyntaxes: [SyntaxNames.GroupedInformationText, SyntaxNames.Json],
+      defaultSyntax: SyntaxNames.GroupedInformationText,
       considerValuesAsOutcomes: false,
       disableWorkflowProviderSelection: true
 
@@ -269,7 +267,7 @@ export class HeTextGroupProperty implements ISortableSharedComponent, IDisplayTo
             propertyModel={textGroup}
             propertyDescriptor={descriptor}
             onExpressionChanged={e => eventHandler(e, textGroup)}
-            modelSyntax={SyntaxNames.TextActivityList}
+            modelSyntax={SyntaxNames.TextActivity}
             style={{ display: displayGroupStyle }}>
           </he-text-activity-property>
           <br />

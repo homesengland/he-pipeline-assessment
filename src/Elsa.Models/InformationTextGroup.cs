@@ -3,9 +3,9 @@
     public class InformationTextGroup
     {
         public string? Title { get; set; }
-        public bool Collapsed { get; set; } = false;
+        public bool IsCollapsed { get; set; } = false;
         public bool IsBullets { get; set; } = false;
         public bool IsGuidance { get; set; } = false;
-        public List<InformationText> Text { get; set; } = new List<InformationText>();
+        public List<InformationText> InformationTextList { get; set; } = new List<InformationText>();
     }
 }

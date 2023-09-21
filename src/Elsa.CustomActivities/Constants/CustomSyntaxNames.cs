@@ -50,7 +50,7 @@ namespace Elsa.CustomActivities.Constants
         public const string Hyperlink = "Hyperlink";
         public const string Url = "Url";
         public const string Bold = "Bold";
-        public const string Bulletpoint = "Bulletpoint";
+        public const string Bulletpoint = "Bulletpoints";
         public const string Title = "Title";
         public const string Collapsed = "Collapsed";
     }

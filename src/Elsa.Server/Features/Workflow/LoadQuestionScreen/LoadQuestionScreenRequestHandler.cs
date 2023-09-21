@@ -283,10 +283,10 @@ namespace Elsa.Server.Features.Workflow.LoadQuestionScreen
                     .Select(x => new InformationTextGroup()
                     {
                         Title = x.Title,
-                        Collapsed = x.Collapsed,
+                        IsCollapsed = x.Collapsed,
                         IsGuidance = x.Guidance,
                         IsBullets = x.Bullets,
-                        Text = x.TextRecords.ConvertAll(y => new InformationText()
+                        InformationTextList = x.TextRecords.ConvertAll(y => new InformationText()
                         {
                             Text = y.Text,
                             IsBold = y.IsBold,
