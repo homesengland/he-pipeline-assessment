@@ -54,10 +54,24 @@ namespace Elsa.Server.Features.Workflow.LoadConfirmationScreen
                     result.Data.ConfirmationText = (string?)activityDataDictionary.GetData("ConfirmationText");
                     result.Data.FooterTitle = (string?)activityDataDictionary.GetData("FooterTitle");
                     result.Data.FooterText = (string?)activityDataDictionary.GetData("FooterText");
-                    var textModel = (TextModel)activityDataDictionary.GetData("Text")! ?? new TextModel();
+                    var textModel = (GroupedTextModel)activityDataDictionary.GetData("Text")! ?? new GroupedTextModel();
                     result.Data.Text = new Information();
-                    result.Data.Text.InformationTextList = textModel.TextRecords.Select(x => new InformationText() { Text = x.Text, IsGuidance = x.IsGuidance, IsParagraph = x.IsParagraph, IsHyperlink = x.IsHyperlink, Url = x.Url })
-                    .ToArray();
+                    result.Data.Text.InformationTextList = textModel.TextGroups.Select(x => new InformationTextGroup()
+                    {
+                        Title = x.Title,
+                        IsCollapsed = x.Collapsed,
+                        IsGuidance = x.Guidance,
+                        IsBullets = x.Bullets,
+                        InformationTextList = x.TextRecords.ConvertAll(y => new InformationText()
+                        {
+                            Text = y.Text,
+                            IsBold = y.IsBold,
+                            IsParagraph = y.IsParagraph,
+                            IsHyperlink = y.IsHyperlink,
+                            Url = y.Url,
+
+                        })
+                    }).ToList().ToArray();
 
                     result.Data.NextWorkflowDefinitionIds = (string?)activityDataDictionary.GetData("NextWorkflowDefinitionIds");
                 }

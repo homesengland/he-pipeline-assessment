@@ -23,6 +23,6 @@ namespace Elsa.Server.Features.Workflow.LoadConfirmationScreen
 
     public class Information
     {
-        public InformationText[] InformationTextList { get; set; } = new List<InformationText>().ToArray();
+        public InformationTextGroup[] InformationTextList { get; set; } = new List<InformationTextGroup>().ToArray();
     }
 }
