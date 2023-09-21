@@ -31,7 +31,6 @@ namespace Elsa.Server.Tests.Features.Workflow.StartWorkflow
             [Frozen] Mock<INextActivityNavigationService> nextActivityNavigationService,
             WorkflowBlueprint workflowBlueprint,
             ActivityBlueprint activityBlueprint,
-            RunWorkflowResult runWorkflowResult,
             StartWorkflowCommand startWorkflowCommand,
             CustomActivityNavigation customActivityNavigation,
             WorkflowInstance workflowInstance,
@@ -39,6 +38,7 @@ namespace Elsa.Server.Tests.Features.Workflow.StartWorkflow
         {
 
             //Arrange
+            var runWorkflowResult = new RunWorkflowResult(workflowInstance, "", null, false);
             var workflowNextActivityModel = new WorkflowNextActivityModel
             {
                 NextActivity = activityBlueprint,
@@ -87,7 +87,6 @@ namespace Elsa.Server.Tests.Features.Workflow.StartWorkflow
            [Frozen] Mock<INextActivityNavigationService> nextActivityNavigationService,
            WorkflowBlueprint workflowBlueprint,
            ActivityBlueprint activityBlueprint,
-           RunWorkflowResult runWorkflowResult,
            StartWorkflowCommand startWorkflowCommand,
            CustomActivityNavigation customActivityNavigation,
            List<Question> questions,
@@ -96,6 +95,7 @@ namespace Elsa.Server.Tests.Features.Workflow.StartWorkflow
         {
 
             //Arrange
+            var runWorkflowResult = new RunWorkflowResult(workflowInstance, "", null, false);
             var workflowNextActivityModel = new WorkflowNextActivityModel
             {
                 NextActivity = activityBlueprint,
@@ -153,7 +153,6 @@ namespace Elsa.Server.Tests.Features.Workflow.StartWorkflow
            WorkflowBlueprint workflowBlueprint,
            ActivityBlueprint activityBlueprint,
            ActivityBlueprint nextActivityBlueprint,
-           RunWorkflowResult runWorkflowResult,
            StartWorkflowCommand startWorkflowCommand,
            CustomActivityNavigation customActivityNavigation,
            List<Question> questions,
@@ -162,6 +161,7 @@ namespace Elsa.Server.Tests.Features.Workflow.StartWorkflow
         {
 
             //Arrange
+            var runWorkflowResult = new RunWorkflowResult(workflowInstance, "", null, false);
             var workflowNextActivityModel = new WorkflowNextActivityModel
             {
                 NextActivity = nextActivityBlueprint,
@@ -223,7 +223,6 @@ namespace Elsa.Server.Tests.Features.Workflow.StartWorkflow
            [Frozen] Mock<IWorkflowNextActivityProvider> workflowNextActivityProvider,
            WorkflowBlueprint workflowBlueprint,
            ActivityBlueprint activityBlueprint,
-           RunWorkflowResult runWorkflowResult,
            StartWorkflowCommand startWorkflowCommand,
            CustomActivityNavigation customActivityNavigation,
            List<Question> questions,
@@ -232,6 +231,7 @@ namespace Elsa.Server.Tests.Features.Workflow.StartWorkflow
         {
 
             //Arrange
+            var runWorkflowResult = new RunWorkflowResult(workflowInstance, "", null, false);
             var workflowNextActivityModel = new WorkflowNextActivityModel
             {
                 NextActivity = activityBlueprint,
@@ -288,14 +288,15 @@ namespace Elsa.Server.Tests.Features.Workflow.StartWorkflow
            [Frozen] Mock<IWorkflowNextActivityProvider> workflowNextActivityProvider,
            WorkflowBlueprint workflowBlueprint,
            ActivityBlueprint activityBlueprint,
-           RunWorkflowResult runWorkflowResult,
            StartWorkflowCommand startWorkflowCommand,
            CustomActivityNavigation customActivityNavigation,
+           WorkflowInstance workflowInstance,
            List<Question> questions,
            StartWorkflowCommandHandler sut)
         {
 
             //Arrange
+            var runWorkflowResult = new RunWorkflowResult(workflowInstance, "", null, false);
             var workflowNextActivityModel = new WorkflowNextActivityModel
             {
                 NextActivity = activityBlueprint,
@@ -402,11 +403,13 @@ namespace Elsa.Server.Tests.Features.Workflow.StartWorkflow
         [Frozen] Mock<IWorkflowRegistry> workflowRegistry,
         [Frozen] Mock<IStartsWorkflow> startsWorkflow,
         WorkflowBlueprint workflowBlueprint,
-        RunWorkflowResult runWorkflowResult,
         StartWorkflowCommand startWorkflowCommand,
+        WorkflowInstance workflowInstance,
         StartWorkflowCommandHandler sut)
         {
             //Arrange
+            var runWorkflowResult = new RunWorkflowResult(workflowInstance, "", null, false);
+
             workflowRegistry
                 .Setup(x => x.FindAsync(startWorkflowCommand.WorkflowDefinitionId, VersionOptions.Published, null, CancellationToken.None))
                 .ReturnsAsync(workflowBlueprint);
@@ -432,12 +435,12 @@ namespace Elsa.Server.Tests.Features.Workflow.StartWorkflow
             [Frozen] Mock<INextActivityNavigationService> nextActivityNavigationService,
             WorkflowBlueprint workflowBlueprint,
             ActivityBlueprint activityBlueprint,
-            RunWorkflowResult runWorkflowResult,
             StartWorkflowCommand startWorkflowCommand,
             WorkflowInstance workflowInstance,
             StartWorkflowCommandHandler sut)
         {
             //Arrange
+            var runWorkflowResult = new RunWorkflowResult(workflowInstance, "", null, false);
             var workflowNextActivityModel = new WorkflowNextActivityModel
             {
                 NextActivity = activityBlueprint,
@@ -474,6 +477,37 @@ namespace Elsa.Server.Tests.Features.Workflow.StartWorkflow
             Assert.Equal(workflowNextActivityModel.NextActivity.Type, result.Data.ActivityType);
             Assert.Empty(result.ErrorMessages);
             Assert.Null(result.ValidationMessages);
+        }
+
+        [Theory]
+        [AutoMoqData]
+        public async Task Handle_ShouldRethrownException_GivenRunWorkflowResultContainsExceptionObject(
+            [Frozen] Mock<IWorkflowRegistry> workflowRegistry,
+            [Frozen] Mock<IStartsWorkflow> startsWorkflow,
+            [Frozen] Mock<IElsaCustomRepository> elsaCustomRepository,
+            WorkflowBlueprint workflowBlueprint,
+            StartWorkflowCommand startWorkflowCommand,
+            WorkflowInstance workflowInstance,
+            Exception exception,
+            StartWorkflowCommandHandler sut)
+        {
+            //Arrange
+            var runWorkflowResult = new RunWorkflowResult(workflowInstance, "", exception, false);
+
+            workflowRegistry
+                .Setup(x => x.FindAsync(startWorkflowCommand.WorkflowDefinitionId, VersionOptions.Published, null, CancellationToken.None))
+                .ReturnsAsync(workflowBlueprint);
+
+            startsWorkflow.Setup(x => x.StartWorkflowAsync(workflowBlueprint, null, null, startWorkflowCommand.CorrelationId, null, null, CancellationToken.None))
+                .ReturnsAsync(runWorkflowResult);
+
+            //Act
+            var result = await sut.Handle(startWorkflowCommand, CancellationToken.None);
+
+            //Assert
+            elsaCustomRepository.Verify(x => x.CreateCustomActivityNavigationAsync(It.IsAny<CustomActivityNavigation>(), CancellationToken.None), Times.Never);
+            Assert.Null(result.Data);
+            Assert.Equal(exception.Message, result.ErrorMessages.Single());
         }
     }
 }
