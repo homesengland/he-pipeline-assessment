@@ -12,7 +12,6 @@
 }
 
 <div class="govuk-form-group @errorFormClass">
-    @await Html.PartialAsync("_QuestionTitle", Model.QuestionText)
     @await Html.PartialAsync("_QuestionText", questionTextModel)
     @await Html.PartialAsync("_QuestionHint", Model.QuestionHint)
 
