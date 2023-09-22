@@ -210,6 +210,7 @@ namespace Elsa.CustomActivities.Activities.QuestionScreen
             ExpectedOutputType = ExpectedOutputHints.TextGroup)]
         public GroupedTextModel Text { get; set; } = new GroupedTextModel();
 
+
         [HeActivityInput(Hint = "Fill in to display a pre-populated value", UIHint = HePropertyUIHints.SingleLine,
             SupportedSyntaxes = new[] { SyntaxNames.Literal, SyntaxNames.JavaScript },
             ConditionalActivityTypes = new[]

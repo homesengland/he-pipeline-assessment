@@ -5,6 +5,7 @@ using Elsa.CustomActivities.Resolver;
 using Elsa.Expressions;
 using Elsa.Serialization;
 using Elsa.Services.Models;
+using Microsoft.AspNetCore.Mvc.RazorPages.Infrastructure;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 
@@ -154,21 +155,46 @@ namespace Elsa.CustomActivities.Handlers.Syntax
             {
                 GroupedTextModel result = new GroupedTextModel();
                 var parsedProperties = ParseToList(property, TextActivitySyntaxNames.TextGroup);
-                if (parsedProperties != null)
+                if (parsedProperties != null  && property.Syntax == TextActivitySyntaxNames.TextGroup)
                 {
                     List<TextGroup> records = await _informationGroupExpressionHandler.ElsaPropertiesToGroupedTextList(parsedProperties, evaluator, context);
                     result.TextGroups = records;
+                }
+                else if (propertyType != null && property.Syntax == TextActivitySyntaxNames.TextActivity)
+                {
+                    List<TextRecord> records = await _informationExpressionHandler.ElsaPropertiesToTextRecordList(parsedProperties, evaluator, context);
+                    result.TextGroups = new List<TextGroup>
+                    {
+                        new TextGroup
+                        {
+                            Title = "",
+                            Bullets = false,
+                            Collapsed = false,
+                            Guidance = false,
+                            TextRecords = records,
+                        }
+                    };
                 }
                 return result;
             }
             if (propertyType != null && propertyType == typeof(TextModel))
             {
-                TextModel result = new TextModel();
+                GroupedTextModel result = new GroupedTextModel();
                 var parsedProperties = ParseToList(property, TextActivitySyntaxNames.TextActivity);
                 if (parsedProperties != null)
                 {
                     List<TextRecord> records = await _informationExpressionHandler.ElsaPropertiesToTextRecordList(parsedProperties, evaluator, context);
-                    result.TextRecords = records;
+                    result.TextGroups = new List<TextGroup>
+                    {
+                        new TextGroup
+                        {
+                            Title = "",
+                            Bullets = false,
+                            Collapsed = false,
+                            Guidance = false,
+                            TextRecords = records,
+                        }
+                    };
                 }
                 return result;
 
@@ -202,9 +228,17 @@ namespace Elsa.CustomActivities.Handlers.Syntax
 
         public List<ElsaProperty> ParseToList(ElsaProperty property, string defaultSyntax = SyntaxNames.Json)
         {
+            string? propertyExpression = "";
             if (property.Expressions != null)
             {
-                var propertyExpression = property.Expressions[defaultSyntax];
+                if (property.Expressions.ContainsKey(defaultSyntax))
+                {
+                    propertyExpression = property.Expressions[defaultSyntax];
+                }
+                else if(property.Syntax != null && property.Expressions.ContainsKey(property.Syntax))
+                {
+                    propertyExpression = property.Expressions[property.Syntax];
+                }
                 var elsaPropertyList = JsonConvert.DeserializeObject<List<ElsaProperty>>(propertyExpression);
                 return elsaPropertyList ?? new List<ElsaProperty>();
             }
