@@ -11,6 +11,8 @@
         public const string PCSProfileDataSource = "PCSProfileDataSource";
         public const string SinglePipelineDataSource = "SinglePipelineDataSource";
         public const string VFMDataSource = "VFMDataSource";
+        public const string RegionalIPUDataSource = "RegionalIPUDataSource";
+        public const string RegionalFigsDataSource = "RegionalFigsDataSource";
     }
 
     public class QuestionTypeConstants
