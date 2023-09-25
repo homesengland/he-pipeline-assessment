@@ -209,7 +209,9 @@ elsa-modal-dialog > div > div > div:first-child {
 }
 
 .elsa-group-border {
-  border-width: 2px;
-  padding:5px;
+  padding: 5px;
   margin-bottom: 5px;
+  /*Have to add the below in to counter Elsa's core feature to gradually reduce width and opacity of lists and borders*/
+  border-color: rgb(229 231 235) !important;
+  border-width: 2px !important;
 }
