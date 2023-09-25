@@ -20,4 +20,11 @@
     {
         public List<TextGroup> TextGroups { get; set; } = new List<TextGroup>();
     }
+
+    public class GroupedTextOptions
+    {
+        public bool Guidance { get; set; } = false;
+        public bool Collapsed { get; set; } = false;
+
+    }
 }
