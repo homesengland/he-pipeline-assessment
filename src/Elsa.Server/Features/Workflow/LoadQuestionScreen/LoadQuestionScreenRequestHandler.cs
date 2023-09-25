@@ -282,10 +282,10 @@ namespace Elsa.Server.Features.Workflow.LoadQuestionScreen
                 questionActivityData.Information = MapToInformationTextGroups(item.Text.TextGroups);
             }
 
-            if (!item.EnhancedGuidance.TextGroups.IsNullOrEmpty())
-            {
-                questionActivityData.EnhancedGuidance = MapToInformationTextGroups(item.EnhancedGuidance.TextGroups);
-            }
+            //if (!item.EnhancedGuidance.TextGroups.IsNullOrEmpty())
+            //{
+            //    questionActivityData.EnhancedGuidance = MapToInformationTextGroups(item.EnhancedGuidance.TextGroups);
+            //}
 
             if (item.QuestionType == QuestionTypeConstants.DataTable)
             {
