@@ -26,7 +26,7 @@
     }
     else
     {
-        @await Html.PartialAsync("_Information", Model.EnhancedGuidance)
+        @await Html.PartialAsync("_EnhancedGuidance", Model)
     }
 
     @await Html.PartialAsync("_Comments", new Comment() { Index = Model.Index, CommentText = Model.Comments, DisplayComments = Model.DisplayComments })
