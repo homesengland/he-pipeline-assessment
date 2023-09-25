@@ -18,6 +18,7 @@ namespace He.PipelineAssessment.UI.Features.Workflow.ViewModels
         public string QuestionText { get; set; } = null!;
         public string? QuestionHint { get; set; }
         public string? QuestionGuidance { get; set; }
+        public List<Information> EnhancedGuidance { get; set; } = new List<Information>();
         public bool DisplayComments { get; set; }
         public string? Comments { get; set; }
         public bool DisplayEvidenceBox{ get; set; }

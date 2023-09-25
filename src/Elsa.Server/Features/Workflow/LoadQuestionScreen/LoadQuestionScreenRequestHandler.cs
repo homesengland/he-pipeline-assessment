@@ -10,6 +10,7 @@ using Elsa.Persistence;
 using Elsa.Persistence.Specifications.WorkflowInstances;
 using Elsa.Server.Models;
 using MediatR;
+using Microsoft.IdentityModel.Tokens;
 using Question = Elsa.CustomModels.Question;
 
 namespace Elsa.Server.Features.Workflow.LoadQuestionScreen
@@ -278,24 +279,12 @@ namespace Elsa.Server.Features.Workflow.LoadQuestionScreen
 
             if (item.QuestionType == QuestionTypeConstants.Information)
             {
-                questionActivityData.Information = new List<InformationTextGroup>();
-                questionActivityData.Information = item.Text.TextGroups
-                    .Select(x => new InformationTextGroup()
-                    {
-                        Title = x.Title,
-                        IsCollapsed = x.Collapsed,
-                        IsGuidance = x.Guidance,
-                        IsBullets = x.Bullets,
-                        InformationTextList = x.TextRecords.ConvertAll(y => new InformationText()
-                        {
-                            Text = y.Text,
-                            IsBold = y.IsBold,
-                            IsParagraph = y.IsParagraph,
-                            IsHyperlink = y.IsHyperlink,
-                            Url = y.Url,
+                questionActivityData.Information = MapToInformationTextGroups(item.Text.TextGroups);
+            }
 
-                        })
-                    }).ToList();
+            if (!item.EnhancedGuidance.TextGroups.IsNullOrEmpty())
+            {
+                questionActivityData.EnhancedGuidance = MapToInformationTextGroups(item.EnhancedGuidance.TextGroups);
             }
 
             if (item.QuestionType == QuestionTypeConstants.DataTable)
@@ -332,6 +321,26 @@ namespace Elsa.Server.Features.Workflow.LoadQuestionScreen
             }
 
             return questionActivityData;
+        }
+
+        private static List<InformationTextGroup> MapToInformationTextGroups(List<TextGroup> textGroups)
+        {
+            return textGroups.Select(x => new InformationTextGroup()
+            {
+                Title = x.Title,
+                IsCollapsed = x.Collapsed,
+                IsGuidance = x.Guidance,
+                IsBullets = x.Bullets,
+                InformationTextList = x.TextRecords.ConvertAll(y => new InformationText()
+                {
+                    Text = y.Text,
+                    IsBold = y.IsBold,
+                    IsParagraph = y.IsParagraph,
+                    IsHyperlink = y.IsHyperlink,
+                    Url = y.Url,
+
+                })
+            }).ToList();
         }
     }
 }

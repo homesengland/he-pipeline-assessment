@@ -27,6 +27,7 @@ namespace Elsa.Server.Features.Workflow.LoadQuestionScreen
         public string Question { get; set; } = null!;
         public string? QuestionHint { get; set; }
         public string? QuestionGuidance { get; set; }
+        public List<InformationTextGroup>? EnhancedGuidance { get; set; } = null!;
         public bool DisplayComments { get; set; }
         public bool DisplayEvidenceBox { get; set; }
         public string? Comments { get; set; }
