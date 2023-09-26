@@ -242,7 +242,7 @@ namespace Elsa.CustomActivities.Tests.Handlers.Syntax
         }
 
         [Theory, AutoMoqData]
-        public async void EvaluateFromExpression_ReturnsTextModel_GivenTextType(
+        public async void EvaluateFromExpression_ReturnsGroupedTextModel_GivenTextType(
            Mock<IServiceProvider> provider,
            Mock<IExpressionEvaluator> evaluator,
            ILogger<IExpressionHandler> logger,
@@ -250,7 +250,8 @@ namespace Elsa.CustomActivities.Tests.Handlers.Syntax
         {
             //Arrange
             string value = SampleTextJson();
-            Type type = typeof(TextModel);
+            Type inputType = typeof(TextModel);
+            Type expectedType = typeof(GroupedTextModel);
 
             var context = new ActivityExecutionContext(provider.Object, default!, default!, default!, default, default);
 
@@ -285,7 +286,7 @@ namespace Elsa.CustomActivities.Tests.Handlers.Syntax
                 secondProperty
             };
 
-            ElsaProperty sampleProperty = SampleProperty(TextActivitySyntaxNames.TextActivity, type, JsonConvert.SerializeObject(propertyList));
+            ElsaProperty sampleProperty = SampleProperty(TextActivitySyntaxNames.TextActivity, inputType, JsonConvert.SerializeObject(propertyList));
 
             List<TextRecord>? result = JsonConvert.DeserializeObject<List<TextRecord>>(value);
             evaluator.Setup(x => x.TryEvaluateAsync<string>(firstProperty.Expressions![firstProperty.Syntax!],
@@ -297,20 +298,269 @@ namespace Elsa.CustomActivities.Tests.Handlers.Syntax
             NestedSyntaxExpressionHandler handler = new NestedSyntaxExpressionHandler(logger, serializer);
 
             //Act
-            TextModel? output = (TextModel?)await handler.EvaluateModel(sampleProperty!, evaluator.Object, context, type);
+            GroupedTextModel? output = (GroupedTextModel?)await handler.EvaluateModel(sampleProperty!, evaluator.Object, context, inputType);
 
 
             //Assert
             if (output != null)
             {
                 var expectedOutput = JsonConvert.DeserializeObject<List<TextRecord>>(value);
-                Assert.Equal(type, output!.GetType());
-                Assert.Equal(expectedOutput, output.TextRecords);
+                Assert.Equal(expectedType, output!.GetType());
+                var textGroup = output.TextGroups.Single();
+                Assert.Equal(expectedOutput, textGroup.TextRecords);
             }
             else
             {
                 Assert.True(false, "Output did not produce a non-null object");
             }
+        }
+
+        [Theory, AutoMoqData]
+        public async void EvaluateFromExpression_ReturnsGroupedTextModel_GivenGroupedTextType(
+           Mock<IServiceProvider> provider,
+           Mock<IExpressionEvaluator> evaluator,
+           ILogger<IExpressionHandler> logger,
+            IContentSerializer serializer)
+        {
+            //Arrange
+            string value = SampleTextJson();
+            Type inputType = typeof(GroupedTextModel);
+
+            var context = new ActivityExecutionContext(provider.Object, default!, default!, default!, default, default);
+
+            var javascriptValue = "First Text Value";
+            var stringValue = "Link Text Value";
+
+            var textJsParagraphPropertyDictionary = new Dictionary<string, string>()
+            {
+                {SyntaxNames.JavaScript, javascriptValue},
+                {SyntaxNames.Literal, stringValue },
+                {TextActivitySyntaxNames.Paragraph, "true"},
+                {TextActivitySyntaxNames.Guidance, "true"},
+                {TextActivitySyntaxNames.Hyperlink, "false"},
+                {TextActivitySyntaxNames.Url, ""},
+            };
+
+            var textLiteralNoParagraphPropertyDictionary = new Dictionary<string, string>()
+            {
+                {SyntaxNames.JavaScript, javascriptValue},
+                {SyntaxNames.Literal, stringValue },
+                {TextActivitySyntaxNames.Paragraph, "true"},
+                {TextActivitySyntaxNames.Guidance, "false"},
+                {TextActivitySyntaxNames.Hyperlink, "true"},
+                {TextActivitySyntaxNames.Url, "https://www.foo.bar"},
+            };
+
+            var firstProperty = SampleElsaProperty(textJsParagraphPropertyDictionary, SyntaxNames.JavaScript, "A");
+            var secondProperty = SampleElsaProperty(textLiteralNoParagraphPropertyDictionary, SyntaxNames.Literal, "B");
+
+            var propertyList = new List<ElsaProperty>()
+            {
+                firstProperty,
+                secondProperty
+            };
+
+            ElsaProperty sampleTextGroupProperty = SampleProperty(TextActivitySyntaxNames.TextGroup, inputType, JsonConvert.SerializeObject(propertyList));
+            var serializedTextGroup = JsonConvert.SerializeObject(propertyList);
+            var serializedTextGroupDictionary = JsonConvert.SerializeObject(new Dictionary<string, string>()
+            {
+                { TextActivitySyntaxNames.TextGroup, serializedTextGroup }
+            });
+            var textGroupPropertyDictionary = new Dictionary<string, string>()
+            {
+                { "Title", "Test Title" },
+                { TextActivitySyntaxNames.TextGroup, serializedTextGroupDictionary },
+            };
+            var textGroupPropertyDictionaryProperty = SampleElsaProperty(textGroupPropertyDictionary, TextActivitySyntaxNames.TextGroup, "Test Name");
+
+            var textGroupPropertyDictionaryList = new List<ElsaProperty>()
+            {
+                textGroupPropertyDictionaryProperty
+            };
+
+            ElsaProperty groupSampleProperty = SampleProperty(TextActivitySyntaxNames.TextGroup, inputType, JsonConvert.SerializeObject(textGroupPropertyDictionaryList));
+
+            List<TextRecord>? result = JsonConvert.DeserializeObject<List<TextRecord>>(value);
+            evaluator.Setup(x => x.TryEvaluateAsync<string>(firstProperty.Expressions![firstProperty.Syntax!],
+                firstProperty.Syntax!, context, CancellationToken.None)).Returns(Task.FromResult(Models.Result.Success<string?>(javascriptValue)));
+
+            evaluator.Setup(x => x.TryEvaluateAsync<string>(secondProperty.Expressions![secondProperty.Syntax!],
+                secondProperty.Syntax!, context, CancellationToken.None)).Returns(Task.FromResult(Models.Result.Success<string?>(stringValue)));
+
+            evaluator.Setup(x => x.TryEvaluateAsync<string>(sampleTextGroupProperty.Expressions![TextActivitySyntaxNames.TextGroup],
+                TextActivitySyntaxNames.TextGroup!, context, CancellationToken.None)).Returns(Task.FromResult(Models.Result.Success<string?>(JsonConvert.SerializeObject(textGroupPropertyDictionaryList))));
+
+
+            NestedSyntaxExpressionHandler handler = new NestedSyntaxExpressionHandler(logger, serializer);
+
+            //Act
+            GroupedTextModel? output = (GroupedTextModel?)await handler.EvaluateModel(groupSampleProperty!, evaluator.Object, context, inputType);
+
+
+            //Assert
+            if (output != null)
+            {
+                var expectedOutput = JsonConvert.DeserializeObject<List<TextRecord>>(value);
+                Assert.Equal(inputType, output!.GetType());
+                var textGroup = output.TextGroups.Select(x => x.TextRecords.First());
+                Assert.Equal(expectedOutput, textGroup.ToList());
+            }
+            else
+            {
+                Assert.True(false, "Output did not produce a non-null object");
+            }
+
+            Assert.True(false);
+        }
+
+        [Theory, AutoMoqData]
+        public async void EvaluateFromExpression_ReturnsTextModel_GivenGroupedTextTypeAndLegacyTextActivity(
+           Mock<IServiceProvider> provider,
+           Mock<IExpressionEvaluator> evaluator,
+           ILogger<IExpressionHandler> logger,
+            IContentSerializer serializer)
+        {
+            //Arrange
+            string value = SampleTextJson();
+            Type inputType = typeof(TextModel);
+            Type expectedType = typeof(GroupedTextModel);
+
+            var context = new ActivityExecutionContext(provider.Object, default!, default!, default!, default, default);
+
+            var javascriptValue = "First Text Value";
+            var stringValue = "Link Text Value";
+
+            var textJsParagraphPropertyDictionary = new Dictionary<string, string>()
+            {
+                {SyntaxNames.JavaScript, javascriptValue},
+                {SyntaxNames.Literal, stringValue },
+                {TextActivitySyntaxNames.Paragraph, "true"},
+                {TextActivitySyntaxNames.Guidance, "true"},
+                {TextActivitySyntaxNames.Hyperlink, "false"},
+                {TextActivitySyntaxNames.Url, ""},
+            };
+
+            var textLiteralNoParagraphPropertyDictionary = new Dictionary<string, string>()
+            {
+                {SyntaxNames.JavaScript, javascriptValue},
+                {SyntaxNames.Literal, stringValue },
+                {TextActivitySyntaxNames.Paragraph, "true"},
+                {TextActivitySyntaxNames.Guidance, "false"},
+                {TextActivitySyntaxNames.Hyperlink, "true"},
+                {TextActivitySyntaxNames.Url, "https://www.foo.bar"},
+            };
+            var firstProperty = SampleElsaProperty(textJsParagraphPropertyDictionary, SyntaxNames.JavaScript, "A");
+            var secondProperty = SampleElsaProperty(textLiteralNoParagraphPropertyDictionary, SyntaxNames.Literal, "B");
+
+            var propertyList = new List<ElsaProperty>()
+            {
+                firstProperty,
+                secondProperty
+            };
+
+            ElsaProperty sampleProperty = SampleProperty(TextActivitySyntaxNames.TextActivity, inputType, JsonConvert.SerializeObject(propertyList));
+
+            List<TextRecord>? result = JsonConvert.DeserializeObject<List<TextRecord>>(value);
+            evaluator.Setup(x => x.TryEvaluateAsync<string>(firstProperty.Expressions![firstProperty.Syntax!],
+                firstProperty.Syntax!, context, CancellationToken.None)).Returns(Task.FromResult(Models.Result.Success<string?>(javascriptValue)));
+
+            evaluator.Setup(x => x.TryEvaluateAsync<string>(secondProperty.Expressions![secondProperty.Syntax!],
+                secondProperty.Syntax!, context, CancellationToken.None)).Returns(Task.FromResult(Models.Result.Success<string?>(stringValue)));
+
+            NestedSyntaxExpressionHandler handler = new NestedSyntaxExpressionHandler(logger, serializer);
+
+            //Act
+            GroupedTextModel? output = (GroupedTextModel?)await handler.EvaluateModel(sampleProperty!, evaluator.Object, context, inputType);
+
+
+            //Assert
+            if (output != null)
+            {
+                var expectedOutput = JsonConvert.DeserializeObject<List<TextRecord>>(value);
+                Assert.Equal(expectedType, output!.GetType());
+                var textGroup = output.TextGroups.Single();
+                Assert.Equal(expectedOutput, textGroup.TextRecords);
+            }
+            else
+            {
+                Assert.True(false, "Output did not produce a non-null object");
+            }
+            Assert.True(false);
+        }
+
+        [Theory, AutoMoqData]
+        public async void EvaluateFromExpression_ReturnsGroupedTextModel_GivenGroupedTextTypeAndBothNewAndLegacyTextActivity(
+           Mock<IServiceProvider> provider,
+           Mock<IExpressionEvaluator> evaluator,
+           ILogger<IExpressionHandler> logger,
+            IContentSerializer serializer)
+        {
+            //Arrange
+            string value = SampleTextJson();
+            Type inputType = typeof(TextModel);
+            Type expectedType = typeof(GroupedTextModel);
+
+            var context = new ActivityExecutionContext(provider.Object, default!, default!, default!, default, default);
+
+            var javascriptValue = "First Text Value";
+            var stringValue = "Link Text Value";
+
+            var textJsParagraphPropertyDictionary = new Dictionary<string, string>()
+            {
+                {SyntaxNames.JavaScript, javascriptValue},
+                {SyntaxNames.Literal, stringValue },
+                {TextActivitySyntaxNames.Paragraph, "true"},
+                {TextActivitySyntaxNames.Guidance, "true"},
+                {TextActivitySyntaxNames.Hyperlink, "false"},
+                {TextActivitySyntaxNames.Url, ""},
+            };
+
+            var textLiteralNoParagraphPropertyDictionary = new Dictionary<string, string>()
+            {
+                {SyntaxNames.JavaScript, javascriptValue},
+                {SyntaxNames.Literal, stringValue },
+                {TextActivitySyntaxNames.Paragraph, "true"},
+                {TextActivitySyntaxNames.Guidance, "false"},
+                {TextActivitySyntaxNames.Hyperlink, "true"},
+                {TextActivitySyntaxNames.Url, "https://www.foo.bar"},
+            };
+            var firstProperty = SampleElsaProperty(textJsParagraphPropertyDictionary, SyntaxNames.JavaScript, "A");
+            var secondProperty = SampleElsaProperty(textLiteralNoParagraphPropertyDictionary, SyntaxNames.Literal, "B");
+
+            var propertyList = new List<ElsaProperty>()
+            {
+                firstProperty,
+                secondProperty
+            };
+
+            ElsaProperty sampleProperty = SampleProperty(TextActivitySyntaxNames.TextActivity, inputType, JsonConvert.SerializeObject(propertyList));
+
+            List<TextRecord>? result = JsonConvert.DeserializeObject<List<TextRecord>>(value);
+            evaluator.Setup(x => x.TryEvaluateAsync<string>(firstProperty.Expressions![firstProperty.Syntax!],
+                firstProperty.Syntax!, context, CancellationToken.None)).Returns(Task.FromResult(Models.Result.Success<string?>(javascriptValue)));
+
+            evaluator.Setup(x => x.TryEvaluateAsync<string>(secondProperty.Expressions![secondProperty.Syntax!],
+                secondProperty.Syntax!, context, CancellationToken.None)).Returns(Task.FromResult(Models.Result.Success<string?>(stringValue)));
+
+            NestedSyntaxExpressionHandler handler = new NestedSyntaxExpressionHandler(logger, serializer);
+
+            //Act
+            GroupedTextModel? output = (GroupedTextModel?)await handler.EvaluateModel(sampleProperty!, evaluator.Object, context, inputType);
+
+
+            //Assert
+            if (output != null)
+            {
+                var expectedOutput = JsonConvert.DeserializeObject<List<TextRecord>>(value);
+                Assert.Equal(expectedType, output!.GetType());
+                var textGroup = output.TextGroups.Single();
+                Assert.Equal(expectedOutput, textGroup.TextRecords);
+            }
+            else
+            {
+                Assert.True(false, "Output did not produce a non-null object");
+            }
+            Assert.True(false);
         }
 
         [Theory, AutoMoqData]
