@@ -1,14 +1,12 @@
-﻿@using He.PipelineAssessment.UI.Features.Workflow.ViewModels
-@model He.PipelineAssessment.UI.Features.Workflow.ViewModels.InformationText
+﻿@model He.PipelineAssessment.UI.Features.Workflow.ViewModels.InformationText
 
-@if(Model.IsHyperlink && !string.IsNullOrEmpty(Model.Url)){
-    <a class="govuk-body govuk-link" href="@Model.Url" target="_blank">@Model.Text</a>
+@{
+    var isBoldClass = Model.IsBold ? "govuk-!-font-weight-bold" : "";
 }
-else if (Model.IsBold)
-{
-    <span class="govuk-body govuk-!-font-weight-bold">@Model.Text</span>
+@if(Model.IsHyperlink && !string.IsNullOrEmpty(Model.Url)){
+    <a class="govuk-body govuk-link @isBoldClass" href="@Model.Url" target="_blank">@Model.Text</a>
 }
 else{
-    <span class="govuk-body">@Model.Text</span>
+    <span class="govuk-body @isBoldClass">@Model.Text</span>
 }
 
