@@ -5,7 +5,6 @@ using Elsa.CustomActivities.Resolver;
 using Elsa.Expressions;
 using Elsa.Serialization;
 using Elsa.Services.Models;
-using Microsoft.AspNetCore.Mvc.RazorPages.Infrastructure;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 
@@ -22,20 +21,19 @@ namespace Elsa.CustomActivities.Handlers.Syntax
 
     public class NestedSyntaxExpressionHandler : INestedSyntaxExpressionHandler
     {
-        private ILogger<IExpressionHandler> _logger;
-        private InformationTextExpressionHandler _informationExpressionHandler;
-        private InformationTextGroupExpressionHandler _informationGroupExpressionHandler;
-        private DataTableExpressionHandler _dataTableExpressionHandler;
-        private CheckboxExpressionHandler _checkboxExpressionHandler;
-        private RadioExpressionHandler _radioExpressionHandler;
-        private PotScoreRadioExpressionHandler _potScoreRadioExpressionHandler;
-        private WeightedRadioExpressionHandler _weightedRadioExpressionHandler;
-        private WeightedCheckboxExpressionHandler _weightedCheckboxExpressionHandler;
+        private readonly ILogger<IExpressionHandler> _logger;
+        private readonly InformationTextExpressionHandler _informationExpressionHandler;
+        private readonly InformationTextGroupExpressionHandler _informationGroupExpressionHandler;
+        private readonly DataTableExpressionHandler _dataTableExpressionHandler;
+        private readonly CheckboxExpressionHandler _checkboxExpressionHandler;
+        private readonly RadioExpressionHandler _radioExpressionHandler;
+        private readonly PotScoreRadioExpressionHandler _potScoreRadioExpressionHandler;
+        private readonly WeightedRadioExpressionHandler _weightedRadioExpressionHandler;
+        private readonly WeightedCheckboxExpressionHandler _weightedCheckboxExpressionHandler;
         public NestedSyntaxExpressionHandler(ILogger<IExpressionHandler> logger, IContentSerializer serializer)
         {
             _logger = logger;
             _informationExpressionHandler = new InformationTextExpressionHandler(logger, serializer);
-            //_informationGroupExpressionHandler = new InformationTextGroupExpressionHandler(_informationExpressionHandler, logger, serializer);
             _informationGroupExpressionHandler = new InformationTextGroupExpressionHandler(logger, serializer);
             _radioExpressionHandler = new RadioExpressionHandler(logger, serializer);
             _checkboxExpressionHandler = new CheckboxExpressionHandler(logger, serializer);
@@ -155,13 +153,14 @@ namespace Elsa.CustomActivities.Handlers.Syntax
             {
                 GroupedTextModel result = new GroupedTextModel();
                 var parsedProperties = ParseToList(property, TextActivitySyntaxNames.TextGroup);
-                if (parsedProperties != null  && property.Syntax == TextActivitySyntaxNames.TextGroup)
+                if(property.Expressions != null && property.Expressions.ContainsKey(TextActivitySyntaxNames.TextGroup))
                 {
                     List<TextGroup> records = await _informationGroupExpressionHandler.ElsaPropertiesToGroupedTextList(parsedProperties, evaluator, context);
                     result.TextGroups = records;
                 }
                 else if (propertyType != null && property.Syntax == TextActivitySyntaxNames.TextActivity)
                 {
+                    parsedProperties = ParseToList(property, TextActivitySyntaxNames.TextActivity);
                     List<TextRecord> records = await _informationExpressionHandler.ElsaPropertiesToTextRecordList(parsedProperties, evaluator, context);
                     result.TextGroups = new List<TextGroup>
                     {
