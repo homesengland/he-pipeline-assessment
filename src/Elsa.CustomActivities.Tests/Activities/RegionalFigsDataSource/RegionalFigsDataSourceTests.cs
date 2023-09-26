@@ -62,7 +62,7 @@ namespace Elsa.CustomActivities.Tests.Activities.RegionalFigsDataSource
             [Frozen] Mock<IEsriRegionalFigsJsonHelper> jsonHelperMock,
             string dataString,
             RegionalFigsData regionalFigsData,
-            CustomActivities.Activities.VFMDataSource.VFMDataSource sut)
+            CustomActivities.Activities.RegionalFigsDataSource.RegionalFigsDataSource sut)
         {
             //Arrange
             sut.Output = null;
