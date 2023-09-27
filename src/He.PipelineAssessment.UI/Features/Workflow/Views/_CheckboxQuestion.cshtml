@@ -61,10 +61,14 @@
 
                     <div class="govuk-checkboxes__item">
                         @*Must use the input tag helper as opposed to htmlcheckbox, as all checkboxes need the same name property, which cannot be overridden easily in HtmlCheckboxFor*@
-
+                        @{
+                            var choiceId = "choice" + nonExclusiveChoices[i].Id;
+                            var labelId = "label" + nonExclusiveChoices[i].Id;
                         @if (String.IsNullOrEmpty(isReadOnly))
                         {
                             <input asp-for="@isSelected"
+                   id=@choiceId
+                                   aria-labelledby=@labelId
                                    value="@nonExclusiveChoices[i].Id"
                                    name="@itemName"
                                    group="@groupName"
@@ -73,13 +77,16 @@
                         else
                         {
                             <input asp-for="@isSelected"
+                   id=@choiceId
+                                   aria-labelledby=@labelId
                                    value="@nonExclusiveChoices[i].Id"
                                    name="@itemName"
                                    group="@groupName"
                                    type="checkbox" class="govuk-checkboxes__input" disabled="@isReadOnly">
 
                         }
-                        @Html.Label(nonExclusiveChoices[i].Answer, nonExclusiveChoices[i].Answer, new {@class = "govuk-label govuk-checkboxes__label"})
+                            @Html.Label(nonExclusiveChoices[i].Answer, nonExclusiveChoices[i].Answer, new {@class = "govuk-label govuk-checkboxes__label", @id =labelId } )
+                        }
                     </div>
                     if (!String.IsNullOrEmpty(isReadOnly) && isSelected)
                     {
@@ -101,11 +108,15 @@
                         <div class="govuk-checkboxes__divider">or</div>
                     }
                     <div class="govuk-checkboxes__item">
-
-                        @if (String.IsNullOrEmpty(isReadOnly))
+                        @{
+                            var choiceId = "choice" + exclusiveChoices[i].Id;
+                            var labelId = "labelId" + exclusiveChoices[i].Id;
+                            @if (String.IsNullOrEmpty(isReadOnly))
                         {
                         @*Must use the input tag helper as opposed to htmlcheckbox, as all checkboxes need the same name property, which cannot be overridden easily in HtmlCheckboxFor*@
                             <input asp-for="@isSelected"
+                                               id=@choiceId
+                                   aria-labelledby=@labelId
                                    value="@exclusiveChoices[i].Id"
                                    name="@itemName"
                                    group="@groupName"
@@ -114,13 +125,16 @@
                         else
                         {
                             <input asp-for="@isSelected"
+                   id=@choiceId
+                                   aria-labelledby=@labelId
                                    value="@exclusiveChoices[i].Id"
                                    name="@itemName"
                                    group="@groupName"
                                    type="checkbox" class="govuk-checkboxes__input" disabled="@isReadOnly">
 
                         }
-                        @Html.Label(exclusiveChoices[i].Answer, exclusiveChoices[i].Answer, new {@class = "govuk-label govuk-checkboxes__label"})
+                            @Html.Label(exclusiveChoices[i].Answer, exclusiveChoices[i].Answer, new {@class = "govuk-label govuk-checkboxes__label", @id =labelId})
+                            }
                     </div>
                     if (!String.IsNullOrEmpty(isReadOnly) && isSelected)
                     {

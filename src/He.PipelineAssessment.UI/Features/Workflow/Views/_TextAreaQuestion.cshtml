@@ -17,7 +17,7 @@
 
     <div class="govuk-character-count" data-module="govuk-character-count" data-maxlength="@Model.CharacterLimit">
         <div class="govuk-form-group">
-            <textarea class="govuk-textarea govuk-js-character-count" id="@answerName" @errorFieldClass @isReadOnly name="@itemName" rows="5">@Model.Text</textarea>
+            <textarea class="govuk-textarea govuk-js-character-count" id="@answerName" @errorFieldClass @isReadOnly name="@itemName" rows="5" aria-labelledby=@questionTextModel.Text.Replace(" ", "") >@Model.Text</textarea>
         </div>
         <div id="@answerName-info" class="govuk-hint govuk-character-count__message">
             You can enter up to @Model.CharacterLimit characters

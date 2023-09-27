@@ -33,7 +33,7 @@
                     var label = $('<div class="govuk-input__item"><div id="' + column.header().textContent.replaceAll(/\s/g, '') + '" class="govuk-form-group"><label class="govuk-label govuk-date-input__label">' + column.header().textContent + ' </label></div></div>')
                         .appendTo('#'+searchElementId);
 
-                    var select = $('<select class="govuk-select margin-right-10"><option value=""></option></select>')
+                    var select = $('<select class="govuk-select margin-right-10" aria-labelledby="' + column.header().textContent.replaceAll(/\s/g, '') + '" ><option value=""></option></select>')
                         .appendTo('#' + column.header().textContent.replaceAll(/\s/g, ''))
                         .on('change', function () {
                             var val = $.fn.dataTable.util.escapeRegex($(this).val());
@@ -110,7 +110,7 @@ function initInterventionDataTable(tableId, columnNumberToSort, searchElementId)
                     var label = $('<div class="govuk-input__item"><div id="' + column.header().textContent.replaceAll(/\s/g, '') + '" class="govuk-form-group"><label class="govuk-label govuk-date-input__label">' + column.header().textContent + ' </label></div></div>')
                         .appendTo('#' + searchElementId);
 
-                    var select = $('<select class="govuk-select margin-right-10"><option value=""></option></select>')
+                    var select = $('<select class="govuk-select margin-right-10" aria-labelledby="' + column.header().textContent.replaceAll(/\s/g, '') +'"><option value=""></option></select>')
                         .appendTo('#' + column.header().textContent.replaceAll(/\s/g, ''))
                         .on('change', function () {
                             var val = $.fn.dataTable.util.escapeRegex($(this).val());

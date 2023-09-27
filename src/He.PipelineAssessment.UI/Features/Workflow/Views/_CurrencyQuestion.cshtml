@@ -15,10 +15,10 @@
 
     @await Html.PartialAsync("_QuestionText", questionTextModel)
     @await Html.PartialAsync("_QuestionHint", Model.QuestionHint)
-
+    
     <div class="govuk-input__wrapper">
         <div class="govuk-input__prefix" aria-hidden="true">£</div>
-        <input id="@answerName" type="text" name="@itemName" class="govuk-input govuk-input--width-10 @errorFieldClass" @isReadOnly value="@Model.Decimal.ToCommaSeparatedNumber()" currency-formatter="true" />
+        <input id="@answerName" type="text" name="@itemName" class="govuk-input govuk-input--width-10 @errorFieldClass" @isReadOnly aria-labelledby=@questionTextModel.Text.Replace(" ", "") value ="@Model.Decimal.ToCommaSeparatedNumber()" currency-formatter="true" />
     </div>
 
  
