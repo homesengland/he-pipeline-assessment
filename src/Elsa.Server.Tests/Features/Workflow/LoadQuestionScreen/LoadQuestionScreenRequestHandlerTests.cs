@@ -14,6 +14,7 @@ using Xunit;
 using Question = Elsa.CustomModels.Question;
 using System.Text.Json;
 using Elsa.CustomActivities.Activities.Shared;
+using Elsa.Server.Mappers;
 
 namespace Elsa.Server.Tests.Features.Workflow.LoadQuestionScreen;
 
@@ -1119,12 +1120,14 @@ public class LoadQuestionScreenRequestHandlerTests
         Handle_ReturnMultiQuestionActivityDataWithInformationObject_GivenActivityIsQuestionScreenAndNoErrorsEncountered(
             [Frozen] Mock<IWorkflowInstanceStore> workflowInstanceStore,
             [Frozen] Mock<IElsaCustomRepository> elsaCustomRepository,
+            [Frozen] Mock<ITextGroupMapper> textGroupMapper,
             LoadQuestionScreenRequest loadWorkflowActivityRequest,
             WorkflowInstance workflowInstance,
             CustomActivityNavigation customActivityNavigation,
             List<Question> assessmentQuestions,
             AssessmentQuestions elsaAssessmentQuestions,
             GroupedTextModel textModel,
+            List<InformationTextGroup> informationTextGroups,
             LoadQuestionScreenRequestHandler sut)
     {
         //Arrange
@@ -1150,6 +1153,9 @@ public class LoadQuestionScreenRequestHandlerTests
                 loadWorkflowActivityRequest.WorkflowInstanceId, CancellationToken.None))
             .ReturnsAsync(assessmentQuestions);
 
+        textGroupMapper.Setup(x => x.InformationTextGroupListFromTextGroups(textModel.TextGroups))
+            .Returns(informationTextGroups);
+
         var assessmentQuestionsDictionary = new Dictionary<string, object?>();
         assessmentQuestionsDictionary.Add("Questions", elsaAssessmentQuestions);
 
@@ -1162,7 +1168,7 @@ public class LoadQuestionScreenRequestHandlerTests
         Assert.NotNull(result.Data!.Questions);
         Assert.Equal(assessmentQuestions.Count(), result.Data!.Questions.Count());
         Assert.Empty(result.ErrorMessages);
-        var textRecord = textModel.TextGroups.First().TextRecords.First();
+        var textRecord = informationTextGroups.First().InformationTextList.First();
         var actualText = result.Data.Questions[0].Information.First().InformationTextList.First();
         Assert.Equal(textRecord.Text, actualText.Text);
         Assert.Equal(textRecord.IsHyperlink, actualText.IsHyperlink);

@@ -1,9 +1,9 @@
 ﻿using Elsa.CustomActivities.Activities.Common;
 using Elsa.CustomActivities.Activities.Shared;
 using Elsa.CustomInfrastructure.Data.Repository;
-using Elsa.CustomModels;
 using Elsa.CustomWorkflow.Sdk;
 using Elsa.Server.Extensions;
+using Elsa.Server.Mappers;
 using Elsa.Server.Models;
 using Elsa.Server.Providers;
 using MediatR;
@@ -15,14 +15,16 @@ namespace Elsa.Server.Features.Workflow.LoadConfirmationScreen
         private readonly IElsaCustomRepository _elsaCustomRepository;
         private readonly IActivityDataProvider _activityDataProvider;
         private readonly IQuestionInvoker _questionInvoker;
+        private readonly ITextGroupMapper _textGroupMapper;
         private readonly ILogger<LoadConfirmationScreenRequestHandler> _logger;
 
-        public LoadConfirmationScreenRequestHandler(IElsaCustomRepository elsaCustomRepository, IActivityDataProvider activityDataProvider, IQuestionInvoker questionInvoker, ILogger<LoadConfirmationScreenRequestHandler> logger)
+        public LoadConfirmationScreenRequestHandler(IElsaCustomRepository elsaCustomRepository, IActivityDataProvider activityDataProvider, IQuestionInvoker questionInvoker, ILogger<LoadConfirmationScreenRequestHandler> logger, ITextGroupMapper textGroupMapper)
         {
             _elsaCustomRepository = elsaCustomRepository;
             _activityDataProvider = activityDataProvider;
             _questionInvoker = questionInvoker;
             _logger = logger;
+            _textGroupMapper = textGroupMapper;
         }
 
         public async Task<OperationResult<LoadConfirmationScreenResponse>> Handle(LoadConfirmationScreenRequest request, CancellationToken cancellationToken)
@@ -55,7 +57,7 @@ namespace Elsa.Server.Features.Workflow.LoadConfirmationScreen
                     result.Data.FooterTitle = (string?)activityDataDictionary.GetData("FooterTitle");
                     result.Data.FooterText = (string?)activityDataDictionary.GetData("FooterText");
                     var textModel = (GroupedTextModel)activityDataDictionary.GetData("Text")! ?? new GroupedTextModel();
-                    result.Data.Text = InformationListFromTextGroups(textModel);
+                    result.Data.Text = _textGroupMapper.InformationListFromGroupedTextModel(textModel);
 
                     result.Data.NextWorkflowDefinitionIds = (string?)activityDataDictionary.GetData("NextWorkflowDefinitionIds");
                 }
@@ -79,26 +81,6 @@ namespace Elsa.Server.Features.Workflow.LoadConfirmationScreen
             }
 
             return await Task.FromResult(result);
-        }
-
-        public List<Information> InformationListFromTextGroups(GroupedTextModel textModel)
-        {
-            return textModel.TextGroups.Select(x => new Information()
-            {
-                Title = x.Title,
-                IsCollapsed = x.Collapsed,
-                IsGuidance = x.Guidance,
-                IsBullets = x.Bullets,
-                InformationTextList = x.TextRecords.ConvertAll(y => new InformationText()
-                {
-                    Text = y.Text,
-                    IsBold = y.IsBold,
-                    IsParagraph = y.IsParagraph,
-                    IsHyperlink = y.IsHyperlink,
-                    Url = y.Url,
-
-                })
-            }).ToList();
         }
     }
 }
