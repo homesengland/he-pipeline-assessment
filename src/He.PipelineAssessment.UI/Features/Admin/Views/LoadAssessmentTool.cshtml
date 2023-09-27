@@ -41,7 +41,7 @@
                     }
                 }
 
-                @Html.TextBoxFor(m => Model.CreateAssessmentToolCommand.Name, new { @class = $"govuk-input {nameErrorClass}", id = "Name"  })
+                @Html.TextBoxFor(m => Model.CreateAssessmentToolCommand.Name, new { @class = $"govuk-input {nameErrorClass}", id = "CreateAssessmentToolCommand_Name"  })
                 <h3 class="govuk-label-wrapper">
                     @Html.LabelFor(m => Model.CreateAssessmentToolCommand.Order, new { @class = "govuk-label govuk-label--s" })
                 </h3>
@@ -52,7 +52,7 @@
                         @Html.ValidationMessageFor(model => Model.CreateAssessmentToolCommand.Order, error.ErrorMessage, new { @class = "govuk-error-message" })
                     }
                 }
-                @Html.TextBoxFor(m => Model.CreateAssessmentToolCommand.Order, new { @class = $"govuk-input {orderErrorClass}", id = "Order" })
+                @Html.TextBoxFor(m => Model.CreateAssessmentToolCommand.Order, new { @class = $"govuk-input {orderErrorClass}", id = "CreateAssessmentToolCommand_Order" })
             </div>
 
             <input class="govuk-button" data-module="govuk-button" id="Submit" type="submit" value="Create AssessmentTool" />
