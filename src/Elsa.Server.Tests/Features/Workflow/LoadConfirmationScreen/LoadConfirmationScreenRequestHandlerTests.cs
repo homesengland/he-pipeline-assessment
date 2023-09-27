@@ -117,7 +117,7 @@ namespace Elsa.Server.Tests.Features.Workflow.LoadConfirmationScreen
         [Theory]
         [AutoMoqData]
 
-        public async Task InformationListFromTextGroups_MapsCorrectly(
+        public void InformationListFromTextGroups_MapsCorrectly(
             GroupedTextModel groupedTextModel,
             LoadConfirmationScreenRequestHandler sut)
         {
