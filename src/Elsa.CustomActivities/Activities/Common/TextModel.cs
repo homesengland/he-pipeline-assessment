@@ -5,7 +5,7 @@
         public List<TextRecord> TextRecords { get; set; } = new List<TextRecord>();
     }
 
-    public record TextRecord(string Text, bool IsParagraph, bool IsGuidance, bool IsHyperlink, string? Url, bool IsBold = false, bool isBullet = false);
+    public record TextRecord(string Text, bool IsParagraph, bool IsGuidance, bool IsHyperlink, string? Url, bool IsBold = false);
 
     public class TextGroup
     {

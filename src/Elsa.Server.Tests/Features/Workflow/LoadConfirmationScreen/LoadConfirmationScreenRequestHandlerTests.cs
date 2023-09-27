@@ -1,4 +1,5 @@
 ﻿using AutoFixture.Xunit2;
+using Elsa.CustomActivities.Activities.Common;
 using Elsa.CustomInfrastructure.Data.Repository;
 using Elsa.CustomModels;
 using Elsa.CustomWorkflow.Sdk;
@@ -6,6 +7,7 @@ using Elsa.Server.Features.Workflow.LoadConfirmationScreen;
 using Elsa.Server.Providers;
 using He.PipelineAssessment.Tests.Common;
 using Moq;
+using Newtonsoft.Json;
 using Xunit;
 
 namespace Elsa.Server.Tests.Features.Workflow.LoadConfirmationScreen
@@ -67,6 +69,7 @@ namespace Elsa.Server.Tests.Features.Workflow.LoadConfirmationScreen
             LoadConfirmationScreenRequest request,
             CustomActivityNavigation customActivityNavigation,
             List<Question> questions,
+            GroupedTextModel groupedTextModel,
             LoadConfirmationScreenRequestHandler sut)
         {
             //Arrange
@@ -83,8 +86,10 @@ namespace Elsa.Server.Tests.Features.Workflow.LoadConfirmationScreen
                 { "ConfirmationText", "MyConfirmationText" },
                 { "FooterText", "MyFooterText" },
                 { "FooterTitle", "MyFooterTitle" },
-                { "NextWorkflowDefinitionIds", "MyNextWorkflowDefinitionId" }
+                { "NextWorkflowDefinitionIds", "MyNextWorkflowDefinitionId" },
+                { "Text", groupedTextModel}
             };
+
             activityDataProvider
                 .Setup(x => x.GetActivityData(request.WorkflowInstanceId, request.ActivityId, CancellationToken.None))
                 .ReturnsAsync(dictionary);
@@ -105,7 +110,44 @@ namespace Elsa.Server.Tests.Features.Workflow.LoadConfirmationScreen
             //Assert.Equal(3, result.Data.Text.Count());
             //Assert.Equal("1", result.Data.Text.FirstOrDefault());
             Assert.Equal("MyNextWorkflowDefinitionId", result.Data.NextWorkflowDefinitionIds);
+            Assert.Equal(groupedTextModel.TextGroups.Count, result.Data.Text.Count);
             Assert.Empty(result.ErrorMessages);
+        }
+
+        [Theory]
+        [AutoMoqData]
+
+        public async Task InformationListFromTextGroups_MapsCorrectly(
+            GroupedTextModel groupedTextModel,
+            LoadConfirmationScreenRequestHandler sut)
+        {
+            //Arrange
+
+            //Act
+            var result = sut.InformationListFromTextGroups(groupedTextModel);
+
+            //Assert
+            Assert.Equal(groupedTextModel.TextGroups.Count, result.Count);
+            for (var i = 0; i < result.Count; i++)
+            {
+                var expected = groupedTextModel.TextGroups[i];
+                var actual = result[i];
+                Assert.Equal(expected.Bullets, actual.IsBullets);
+                Assert.Equal(expected.Collapsed, actual.IsCollapsed);
+                Assert.Equal(expected.Guidance, actual.IsGuidance);
+                Assert.Equal(expected.Title, actual.Title);
+                for (var j = 0; j < expected.TextRecords.Count; j++)
+                {
+                    var expectedTextRecord = expected.TextRecords[j];
+                    var actualInformationText = actual.InformationTextList[j];
+
+                    Assert.Equal(expectedTextRecord.IsBold, actualInformationText.IsBold);
+                    Assert.Equal(expectedTextRecord.IsHyperlink, actualInformationText.IsHyperlink);
+                    Assert.Equal(expectedTextRecord.IsParagraph, actualInformationText.IsParagraph);
+                    Assert.Equal(expectedTextRecord.Url, actualInformationText.Url);
+                    Assert.Equal(expectedTextRecord.Text, actualInformationText.Text);
+                }
+            }
         }
     }
 }

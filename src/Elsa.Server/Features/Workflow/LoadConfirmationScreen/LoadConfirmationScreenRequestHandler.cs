@@ -55,22 +55,7 @@ namespace Elsa.Server.Features.Workflow.LoadConfirmationScreen
                     result.Data.FooterTitle = (string?)activityDataDictionary.GetData("FooterTitle");
                     result.Data.FooterText = (string?)activityDataDictionary.GetData("FooterText");
                     var textModel = (GroupedTextModel)activityDataDictionary.GetData("Text")! ?? new GroupedTextModel();
-                    result.Data.Text = textModel.TextGroups.Select(x => new Information()
-                    {
-                        Title = x.Title,
-                        IsCollapsed = x.Collapsed,
-                        IsGuidance = x.Guidance,
-                        IsBullets = x.Bullets,
-                        InformationTextList = x.TextRecords.ConvertAll(y => new InformationText()
-                        {
-                            Text = y.Text,
-                            IsBold = y.IsBold,
-                            IsParagraph = y.IsParagraph,
-                            IsHyperlink = y.IsHyperlink,
-                            Url = y.Url,
-
-                        })
-                    }).ToList();
+                    result.Data.Text = InformationListFromTextGroups(textModel);
 
                     result.Data.NextWorkflowDefinitionIds = (string?)activityDataDictionary.GetData("NextWorkflowDefinitionIds");
                 }
@@ -94,6 +79,26 @@ namespace Elsa.Server.Features.Workflow.LoadConfirmationScreen
             }
 
             return await Task.FromResult(result);
+        }
+
+        public List<Information> InformationListFromTextGroups(GroupedTextModel textModel)
+        {
+            return textModel.TextGroups.Select(x => new Information()
+            {
+                Title = x.Title,
+                IsCollapsed = x.Collapsed,
+                IsGuidance = x.Guidance,
+                IsBullets = x.Bullets,
+                InformationTextList = x.TextRecords.ConvertAll(y => new InformationText()
+                {
+                    Text = y.Text,
+                    IsBold = y.IsBold,
+                    IsParagraph = y.IsParagraph,
+                    IsHyperlink = y.IsHyperlink,
+                    Url = y.Url,
+
+                })
+            }).ToList();
         }
     }
 }

@@ -50,10 +50,9 @@ namespace Elsa.CustomActivities.Handlers
             bool isGuidance = EvaluateBoolean(property, TextActivitySyntaxNames.Guidance);
             bool isHyperlink = EvaluateBoolean(property, TextActivitySyntaxNames.Hyperlink);
             bool isBold = EvaluateBoolean(property, TextActivitySyntaxNames.Bold);
-            bool isBulletpoint = EvaluateBoolean(property, TextActivitySyntaxNames.Bulletpoint);
             string? url = EvaluateString(property, TextActivitySyntaxNames.Url);
 
-            return new TextRecord(value, isParagraph, isGuidance, isHyperlink, url, isBold, isBulletpoint);
+            return new TextRecord(value, isParagraph, isGuidance, isHyperlink, url, isBold);
         }
 
         public bool EvaluateBoolean(ElsaProperty property, string key)

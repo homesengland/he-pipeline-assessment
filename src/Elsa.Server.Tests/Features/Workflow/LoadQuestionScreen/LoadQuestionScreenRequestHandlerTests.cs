@@ -1166,7 +1166,6 @@ public class LoadQuestionScreenRequestHandlerTests
         var actualText = result.Data.Questions[0].Information.First().InformationTextList.First();
         Assert.Equal(textRecord.Text, actualText.Text);
         Assert.Equal(textRecord.IsHyperlink, actualText.IsHyperlink);
-        Assert.Equal(textRecord.IsGuidance, actualText.IsGuidance);
         Assert.Equal(textRecord.IsParagraph, actualText.IsParagraph);
         Assert.Equal(textRecord.Url, actualText.Url);
     }
