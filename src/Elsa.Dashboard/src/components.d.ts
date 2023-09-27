@@ -75,6 +75,7 @@ export namespace Components {
         "editorHeight": string;
         "expressions": Map<string>;
         "fieldName"?: string;
+        "hint"?: string;
         "isReadOnly"?: boolean;
         "label": string;
         "singleLineMode": boolean;
@@ -570,6 +571,7 @@ declare namespace LocalJSX {
         "editorHeight"?: string;
         "expressions"?: Map<string>;
         "fieldName"?: string;
+        "hint"?: string;
         "isReadOnly"?: boolean;
         "label"?: string;
         "onExpressionChanged"?: (event: HeMultiExpressionEditorCustomEvent<string>) => void;

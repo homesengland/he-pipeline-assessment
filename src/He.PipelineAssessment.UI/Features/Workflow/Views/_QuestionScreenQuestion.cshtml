@@ -360,18 +360,24 @@
 
 @if (Model.QuestionActivityData.QuestionType == QuestionTypeConstants.Information)
 {
-
-    @await Html.PartialAsync("_Information",new Question()
+    var information = MapFromInformationList(Model.QuestionActivityData.Information);
+    if (information != null)
     {
-        Index = Model.Index,
-        Information = MapFromInformationList(Model.QuestionActivityData.Information)
-    })
+        @await Html.PartialAsync("_Information",new Question()
+               {
+                   Index = Model.Index,
+                   Information = information
+               })
+    }
+
 }
 
 @functions {
 
-    public List<Information> MapFromInformationList(List<Elsa.CustomWorkflow.Sdk.Models.Workflow.Information> informationToMap)
+    public List<Information>? MapFromInformationList(List<Elsa.CustomWorkflow.Sdk.Models.Workflow.Information>? informationToMap)
     {
+        if (informationToMap == null)
+            return null;
         return informationToMap.Select(x => new Information
             {
                 Title = x.Title,

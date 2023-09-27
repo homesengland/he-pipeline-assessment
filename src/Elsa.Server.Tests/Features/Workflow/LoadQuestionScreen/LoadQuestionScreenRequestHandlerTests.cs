@@ -1153,7 +1153,7 @@ public class LoadQuestionScreenRequestHandlerTests
                 loadWorkflowActivityRequest.WorkflowInstanceId, CancellationToken.None))
             .ReturnsAsync(assessmentQuestions);
 
-        textGroupMapper.Setup(x => x.InformationTextGroupListFromTextGroups(textModel.TextGroups))
+        textGroupMapper.Setup(x => x.InformationTextGroupListFromTextGroupsForInformation(textModel.TextGroups))
             .Returns(informationTextGroups);
 
         var assessmentQuestionsDictionary = new Dictionary<string, object?>();

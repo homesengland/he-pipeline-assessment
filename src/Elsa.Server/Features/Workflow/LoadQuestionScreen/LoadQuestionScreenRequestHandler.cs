@@ -279,12 +279,19 @@ namespace Elsa.Server.Features.Workflow.LoadQuestionScreen
 
             if (item.QuestionType == QuestionTypeConstants.Information)
             {
-                questionActivityData.Information = textGroupMapper.InformationTextGroupListFromTextGroups(item.Text.TextGroups);
+                questionActivityData.Information = textGroupMapper.InformationTextGroupListFromTextGroupsForInformation(item.Text.TextGroups);
             }
 
             if (item.EnhancedGuidance.TextGroups.Any())
             {
-                questionActivityData.EnhancedGuidance = textGroupMapper.InformationTextGroupListFromTextGroups(item.EnhancedGuidance.TextGroups);
+                questionActivityData.EnhancedGuidance = textGroupMapper.InformationTextGroupListFromTextGroupsForGuidance(item.EnhancedGuidance.TextGroups);
+            }
+            else
+            {
+                if (!string.IsNullOrEmpty(item.QuestionGuidance))
+                {
+                    questionActivityData.EnhancedGuidance = textGroupMapper.InformationTextGroupListFromGuidanceString(item.QuestionGuidance);
+                }
             }
 
             if (item.QuestionType == QuestionTypeConstants.DataTable)
