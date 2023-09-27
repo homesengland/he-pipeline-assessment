@@ -56,25 +56,6 @@ namespace Elsa.CustomActivities.Activities.QuestionScreen
         public string QuestionHint { get; set; } = null!;
 
         [HeActivityInput(Hint = "Question guidance",
-            UIHint = HePropertyUIHints.MultiLine,
-            ConditionalActivityTypes = new[]
-            {
-                QuestionTypeConstants.CurrencyQuestion,
-                QuestionTypeConstants.DecimalQuestion,
-                QuestionTypeConstants.IntegerQuestion,
-                QuestionTypeConstants.PercentageQuestion,
-                QuestionTypeConstants.CheckboxQuestion,
-                QuestionTypeConstants.RadioQuestion,
-                QuestionTypeConstants.PotScoreRadioQuestion,
-                QuestionTypeConstants.DateQuestion,
-                QuestionTypeConstants.TextQuestion,
-                QuestionTypeConstants.TextAreaQuestion,
-                QuestionTypeConstants.WeightedCheckboxQuestion,
-                QuestionTypeConstants.WeightedRadioQuestion
-            })]
-        public string QuestionGuidance { get; set; } = null!;
-
-        [HeActivityInput(Hint = "Question guidance",
             UIHint = HePropertyUIHints.TextGroup,
             DefaultSyntax = TextActivitySyntaxNames.TextGroup,
             ExpectedOutputType = ExpectedOutputHints.TextGroup,

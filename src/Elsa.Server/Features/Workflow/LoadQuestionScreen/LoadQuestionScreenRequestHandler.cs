@@ -169,7 +169,6 @@ namespace Elsa.Server.Features.Workflow.LoadQuestionScreen
             questionActivityData.Question = item.QuestionText;
             questionActivityData.DisplayComments = item.DisplayComments;
             questionActivityData.DisplayEvidenceBox = item.DisplayEvidenceBox;
-            //questionActivityData.QuestionGuidance = item.QuestionGuidance;
             questionActivityData.QuestionHint = item.QuestionHint;
             questionActivityData.CharacterLimit = item.CharacterLimit;
             questionActivityData.IsReadOnly = item.IsReadOnly;
