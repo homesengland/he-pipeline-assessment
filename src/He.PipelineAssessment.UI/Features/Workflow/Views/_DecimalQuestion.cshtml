@@ -18,8 +18,15 @@
         <input id="@answerName" type="text" name="@itemName" class="govuk-input govuk-input--width-10 @errorFieldClass" @isReadOnly value="@Model.Decimal.ToCommaSeparatedNumber()" currency-formatter="true" />
     </div>
 
- 
-    @await Html.PartialAsync("_QuestionGuidance", Model.QuestionGuidance)
+
+    @if (Model.EnhancedGuidance.Count() < 1 && !string.IsNullOrWhiteSpace(Model.QuestionGuidance))
+    {
+        @await Html.PartialAsync("_QuestionGuidance", Model.QuestionGuidance)
+    }
+    else
+    {
+        @await Html.PartialAsync("_EnhancedGuidance", Model)
+    }
     @await Html.PartialAsync("_Comments", new Comment(){Index = Model.Index, CommentText = Model.Comments,DisplayComments = Model.DisplayComments})
     @await Html.PartialAsync("_Evidence", new Evidence(){Index = Model.Index, DocumentLink = Model.DocumentEvidenceLink ,DisplayEvidenceBox = Model.DisplayEvidenceBox})
 </div>

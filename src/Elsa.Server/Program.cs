@@ -43,6 +43,7 @@ using StackExchange.Redis;
 using System.Globalization;
 using Elsa.Decorators;
 using Elsa.Services.Workflows;
+using Elsa.Server.Mappers;
 
 var builder = WebApplication.CreateBuilder(args);
 var elsaConnectionString = builder.Configuration.GetConnectionString("Elsa");
@@ -102,6 +103,7 @@ builder.Services.AddScoped<ICustomPropertyDescriber, CustomPropertyDescriber>();
 builder.Services.AddScoped<IWorkflowPublisher, Elsa.Server.Publisher.WorkflowPublisher>();
 
 builder.Services.TryAddProvider<IExpressionHandler, InformationTextExpressionHandler>(ServiceLifetime.Singleton);
+builder.Services.TryAddProvider<IExpressionHandler, InformationTextGroupExpressionHandler>(ServiceLifetime.Singleton);
 builder.Services.TryAddProvider<IExpressionHandler, QuestionListExpressionHandler>(ServiceLifetime.Singleton);
 builder.Services.TryAddProvider<IExpressionHandler, ScoringCalculationExpressionHandler>(ServiceLifetime.Singleton);
 builder.Services.TryAddSingleton<INestedSyntaxExpressionHandler, NestedSyntaxExpressionHandler>();
@@ -159,6 +161,8 @@ builder.Services.AddScoped<IElsaCustomModelHelper, ElsaCustomModelHelper>();
 
 builder.Services.AddScoped<IDeleteChangedWorkflowPathService, DeleteChangedWorkflowPathService>();
 builder.Services.AddScoped<INextActivityNavigationService, NextActivityNavigationService>();
+
+builder.Services.AddScoped<ITextGroupMapper, TextGroupMapper>();
 
 
 // Allow arbitrary client browser apps to access the API.

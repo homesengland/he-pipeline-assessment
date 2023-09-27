@@ -21,6 +21,7 @@ import { HeQuestionDataDictionaryDriver } from "../he-question-data-dictionary-d
 import { HeWeightedRadioDriver } from "../he-weighted-radio-driver";
 import { HeWeightedCheckboxDriver } from "../he-weighted-checkbox-driver";
 import { HeNumericDriver } from "../he-numeric-driver";
+import { HeTextGroupDriver } from "../he-text-group-driver";
 
 
 export interface HePropertyDisplayDriver {
@@ -51,6 +52,7 @@ export class DefaultDriversFactory {
     this.drivers["he-weighted-checkbox"] = new HeWeightedCheckboxDriver();
     this.drivers["he-data-table"] = new HeDataTableDriver();
     this.drivers["he-numeric"] = new HeNumericDriver();
+    this.drivers["he-text-group"] = new HeTextGroupDriver()
   }
   drivers: Dictionary<HePropertyDisplayDriver> = {};
 }

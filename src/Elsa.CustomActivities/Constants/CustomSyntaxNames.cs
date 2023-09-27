@@ -1,6 +1,7 @@
 ﻿
 
 using Microsoft.AspNetCore.Components.Forms;
+using System.Runtime.CompilerServices;
 
 namespace Elsa.CustomActivities.Constants
 {
@@ -42,11 +43,16 @@ namespace Elsa.CustomActivities.Constants
 
     public class TextActivitySyntaxNames
     {
+        public const string TextGroup = "TextGroupActivity";
         public const string TextActivity = "TextActivity";
         public const string Paragraph = "Paragraph";
         public const string Guidance = "Guidance";
         public const string Hyperlink = "Hyperlink";
         public const string Url = "Url";
+        public const string Bold = "Bold";
+        public const string Bulletpoint = "Bulletpoints";
+        public const string Title = "Title";
+        public const string Collapsed = "Collapsed";
     }
 
     public class ScoringSyntaxNames

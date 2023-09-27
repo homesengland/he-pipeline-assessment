@@ -18,6 +18,7 @@ namespace He.PipelineAssessment.UI.Features.Workflow.ViewModels
         public string QuestionText { get; set; } = null!;
         public string? QuestionHint { get; set; }
         public string? QuestionGuidance { get; set; }
+        public List<Information> EnhancedGuidance { get; set; } = new List<Information>();
         public bool DisplayComments { get; set; }
         public string? Comments { get; set; }
         public bool DisplayEvidenceBox{ get; set; }
@@ -31,7 +32,7 @@ namespace He.PipelineAssessment.UI.Features.Workflow.ViewModels
         public string? Text { get; set; }
         public Radio Radio { get; set; } = new Radio();
         public Checkbox Checkbox { get; set; } = new Checkbox();
-        public Information Information { get; set; } = new Information();
+        public List<Information> Information { get; set; } = new List<Information>();
 
         public List<DataTable> DataTable { get; set; } = new List<DataTable>();
 
@@ -41,6 +42,10 @@ namespace He.PipelineAssessment.UI.Features.Workflow.ViewModels
 
     public class Information
     {
+        public string? Title { get; set; }
+        public bool IsGuidance { get; set; } = false;
+        public bool IsBullet { get; set; } = false;
+        public bool IsCollapsed { get; set; } = false;
         public List<InformationText> Text { get; set; } = new List<InformationText>();
     }
 
@@ -71,9 +76,9 @@ namespace He.PipelineAssessment.UI.Features.Workflow.ViewModels
     {
         public string Text { get; set; } = null!;
         public bool IsParagraph { get; set; } = true;
-        public bool IsGuidance { get; set; } = false;
         public bool IsHyperlink { get; set; } = false;
         public string? Url { get; set; }
+        public bool IsBold { get; set; } = false;
     }
 
     public class TableInput
