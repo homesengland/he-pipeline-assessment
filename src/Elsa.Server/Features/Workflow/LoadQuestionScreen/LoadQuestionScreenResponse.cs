@@ -66,11 +66,6 @@ namespace Elsa.Server.Features.Workflow.LoadQuestionScreen
         public int? SelectedAnswer { get; set; }
     }
 
-    //public class Information
-    //{
-    //    public InformationTextGroup[] InformationTextList { get; set; } = new List<InformationTextGroup>().ToArray();
-    //}
-
     public class DataTableInput
     {
         public string? DisplayGroupId { get; set; }

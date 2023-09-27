@@ -1,5 +1,4 @@
 ﻿using Elsa.CustomModels;
-using static Elsa.CustomActivities.Activities.ConfirmationScreen.ConfirmationScreen;
 
 namespace Elsa.Server.Features.Workflow.LoadConfirmationScreen
 {
@@ -15,7 +14,6 @@ namespace Elsa.Server.Features.Workflow.LoadConfirmationScreen
         public string? ConfirmationText { get; set; } = null!;
         public string? FooterTitle { get; set; } = null!;
         public string? FooterText { get; set; } = null!;
-        //public List<string> Text { get; set; } = new List<string>();
         public List<Information> Text { get; set; } = null!;
         public string? NextWorkflowDefinitionIds { get; set; } = null!;
         public List<Question>? CheckQuestions { get; set; }
