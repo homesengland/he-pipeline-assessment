@@ -91,7 +91,7 @@ namespace Elsa.Server.Tests.Mappers
             //Arrange
 
             //Act
-            var result = sut.InformationTextGroupListFromTextGroupsForInformation(textGroups);
+            var result = sut.InformationTextGroupListFromTextGroupsForGuidance(textGroups);
 
             //Assert
             Assert.IsType<List<InformationTextGroup>>(result);
@@ -133,7 +133,7 @@ namespace Elsa.Server.Tests.Mappers
             Assert.IsType<List<InformationTextGroup>>(result);
             var actual = result.Single();
             Assert.False(actual.IsBullets);
-            Assert.True(actual.IsCollapsed);
+            Assert.False(actual.IsCollapsed);
             Assert.False(actual.IsGuidance);
             Assert.Equal("", actual.Title);
             var actualInformationText = actual.InformationTextList.Single();
