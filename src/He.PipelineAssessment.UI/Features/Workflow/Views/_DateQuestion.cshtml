@@ -38,7 +38,7 @@
             <input id="@itemYearName" name="@itemYearName" class="govuk-input govuk-date-input__input govuk-input--width-3 @errorFieldClass" type="number" inputmode="numeric" value="@Model.Date!.Year" />
         </div>
     </div>
-    @if (Model.EnhancedGuidance.Count() > 0)
+    @if (Model.EnhancedGuidance != null && Model.EnhancedGuidance.Any())
     {
         @await Html.PartialAsync("_EnhancedGuidance", Model)
     }
