@@ -138,7 +138,9 @@
     <TypeScriptCompile Include="wwwroot\Scripts\Drivers\ConditionalTextListPropertyDriver.js" />
     <TypeScriptCompile Include="wwwroot\Scripts\Drivers\CustomSwitchPropertyDriver.js" />
     <TypeScriptCompile Include="wwwroot\Scripts\Drivers\CustomTextPropertyDriver.js" />
-    <TypeScriptCompile Include="wwwroot\Scripts\Drivers\TextGroupDriver.js" />
+    <TypeScriptCompile Include="wwwroot\Scripts\Drivers\TextGroupDriver.js">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </TypeScriptCompile>
     <TypeScriptCompile Include="wwwroot\Scripts\Drivers\TextActivityPropertyDriver.js" />
     <TypeScriptCompile Include="wwwroot\Scripts\Drivers\QuestionPropertyDriver.js" />
     <TypeScriptCompile Include="wwwroot\Scripts\Plugins\CustomPlugins.js" />
