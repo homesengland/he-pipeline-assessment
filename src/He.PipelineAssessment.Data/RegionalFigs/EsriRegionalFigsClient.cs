@@ -9,7 +9,7 @@ namespace He.PipelineAssessment.Data.RegionalFigs
 {
     public interface IEsriRegionalFigsClient
     {
-        Task<string?> GetRegionalFigsData(string projectIdentifier);
+        Task<string?> GetRegionalFigsData(string region, string appraisalYear);
     }
     public class EsriRegionalFigsClient : IEsriRegionalFigsClient
 
@@ -23,10 +23,10 @@ namespace He.PipelineAssessment.Data.RegionalFigs
             _logger = logger;
         }
 
-        public async Task<string?> GetRegionalFigsData(string region)
+        public async Task<string?> GetRegionalFigsData(string region, string appraisalYear)
         {
             string? data = null;
-            string whereClause = $"region='{region}'";
+            string whereClause = $"region='{region}' AND appraisal_year='{appraisalYear}'";
             string outFields = "*";
 
             var relativeUri = $"query?where={whereClause}&outFields={outFields}&f=json";

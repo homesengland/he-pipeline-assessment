@@ -25,6 +25,9 @@ namespace Elsa.CustomActivities.Activities.RegionalIPUDataSource
         [ActivityInput(Hint = "Region of the record to get", SupportedSyntaxes = new[] { SyntaxNames.Literal, SyntaxNames.Json, SyntaxNames.JavaScript })]
         public string Region { get; set; } = null!;
 
+        [ActivityInput(Hint = "Product of the record to get", SupportedSyntaxes = new[] { SyntaxNames.Literal, SyntaxNames.Json, SyntaxNames.JavaScript })]
+        public string Product { get; set; } = null!;
+
         [ActivityOutput] public RegionalIPUData? Output { get; set; }
 
         protected override IActivityExecutionResult OnExecute(ActivityExecutionContext context)
@@ -35,8 +38,9 @@ namespace Elsa.CustomActivities.Activities.RegionalIPUDataSource
         protected override async ValueTask<IActivityExecutionResult> OnResumeAsync(ActivityExecutionContext context)
         {
             context.JournalData.Add(nameof(Region), Region);
+            context.JournalData.Add(nameof(Product), Product);
 
-            var data = await _client.GetRegionalIPUData(Region);
+            var data = await _client.GetRegionalIPUData(Region, Product);
 
             if (data != null)
             {

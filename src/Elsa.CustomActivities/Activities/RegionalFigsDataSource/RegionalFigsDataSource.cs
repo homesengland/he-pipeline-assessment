@@ -25,6 +25,9 @@ namespace Elsa.CustomActivities.Activities.RegionalFigsDataSource
         [ActivityInput(Hint = "Region of the record to get", SupportedSyntaxes = new[] { SyntaxNames.Literal, SyntaxNames.Json, SyntaxNames.JavaScript })]
         public string Region { get; set; } = null!;
 
+        [ActivityInput(Hint = "Appraisal year of the record to get", SupportedSyntaxes = new[] { SyntaxNames.Literal, SyntaxNames.Json, SyntaxNames.JavaScript })]
+        public string AppraisalYear { get; set; } = null!;
+
         [ActivityOutput] public RegionalFigsData? Output { get; set; }
 
         protected override IActivityExecutionResult OnExecute(ActivityExecutionContext context)
@@ -35,8 +38,9 @@ namespace Elsa.CustomActivities.Activities.RegionalFigsDataSource
         protected override async ValueTask<IActivityExecutionResult> OnResumeAsync(ActivityExecutionContext context)
         {
             context.JournalData.Add(nameof(Region), Region);
+            context.JournalData.Add(nameof(AppraisalYear), AppraisalYear);
 
-            var data = await _client.GetRegionalFigsData(Region);
+            var data = await _client.GetRegionalFigsData(Region, AppraisalYear);
 
             if (data != null)
             {

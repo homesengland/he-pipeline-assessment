@@ -9,7 +9,7 @@ namespace He.PipelineAssessment.Data.RegionalIPU
 {
     public interface IEsriRegionalIPUClient
     {
-        Task<string?> GetRegionalIPUData(string projectIdentifier);
+        Task<string?> GetRegionalIPUData(string region,string product);
     }
     public class EsriRegionalIPUClient : IEsriRegionalIPUClient
 
@@ -23,10 +23,10 @@ namespace He.PipelineAssessment.Data.RegionalIPU
             _logger = logger;
         }
 
-        public async Task<string?> GetRegionalIPUData(string region)
+        public async Task<string?> GetRegionalIPUData(string region, string product)
         {
             string? data = null;
-            string whereClause = $"region='{region}'";
+            string whereClause = $"region='{region}' AND product='{product}'";
             string outFields = "*";
 
             var relativeUri = $"query?where={whereClause}&outFields={outFields}&f=json";
