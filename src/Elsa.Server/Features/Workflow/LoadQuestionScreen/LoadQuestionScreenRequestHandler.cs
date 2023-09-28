@@ -288,10 +288,12 @@ namespace Elsa.Server.Features.Workflow.LoadQuestionScreen
             }
             else
             {
+                #pragma warning disable 0612, 0618
                 if (!string.IsNullOrEmpty(item.QuestionGuidance))
                 {
                     questionActivityData.EnhancedGuidance = textGroupMapper.InformationTextGroupListFromGuidanceString(item.QuestionGuidance);
                 }
+                #pragma warning restore 0612, 0618
             }
 
             if (item.QuestionType == QuestionTypeConstants.DataTable)
