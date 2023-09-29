@@ -31,13 +31,17 @@ namespace Elsa.CustomActivities.Tests.Activities.RegionalIPUDataSource
             [Frozen] Mock<IEsriRegionalIPUClient> client,
             [Frozen] Mock<IEsriRegionalIPUJsonHelper> jsonHelperMock,
             string dataString,
+            string region,
+            string product,
             RegionalIPUData regionalIPUData,
             CustomActivities.Activities.RegionalIPUDataSource.RegionalIPUDataSource sut)
         {
             //Arrange
             sut.Output = null;
+            sut.Region = region;
+            sut.Product = product;
             var context = new ActivityExecutionContext(default!, default!, default!, sut.Id, default, default);
-            client.Setup(x => x.GetRegionalIPUData(It.IsAny<string>())).ReturnsAsync(dataString);
+            client.Setup(x => x.GetRegionalIPUData(sut.Region, sut.Product)).ReturnsAsync(dataString);
             jsonHelperMock.Setup(x => x.JsonToRegionalIPUData(dataString)).Returns(regionalIPUData);
 
             //Act
@@ -58,17 +62,17 @@ namespace Elsa.CustomActivities.Tests.Activities.RegionalIPUDataSource
         [Theory]
         [AutoMoqData]
         public async Task ResumeAsync_ReturnsOutcomeResult_GivenClientDataIsNull(
-            [Frozen] Mock<IEsriRegionalIPUClient> laHouseNeedClient,
-            [Frozen] Mock<IEsriRegionalIPUJsonHelper> jsonHelperMock,
-            string dataString,
-            RegionalIPUData regionalIPUData,
+            [Frozen] Mock<IEsriRegionalIPUClient> client,
+            string region,
+            string product,
             CustomActivities.Activities.RegionalIPUDataSource.RegionalIPUDataSource sut)
         {
             //Arrange
             sut.Output = null;
+            sut.Region = region;
+            sut.Product = product;
             var context = new ActivityExecutionContext(default!, default!, default!, sut.Id, default, default);
-            laHouseNeedClient.Setup(x => x.GetRegionalIPUData(It.IsAny<string>())).ReturnsAsync((string?)null);
-            jsonHelperMock.Setup(x => x.JsonToRegionalIPUData(dataString)).Returns(regionalIPUData);
+            client.Setup(x => x.GetRegionalIPUData(sut.Region, sut.Product)).ReturnsAsync((string?)null);
 
             //Act
             var result = await sut.ResumeAsync(context);

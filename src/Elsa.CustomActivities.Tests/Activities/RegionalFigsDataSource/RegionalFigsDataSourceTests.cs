@@ -31,13 +31,17 @@ namespace Elsa.CustomActivities.Tests.Activities.RegionalFigsDataSource
             [Frozen] Mock<IEsriRegionalFigsClient> client,
             [Frozen] Mock<IEsriRegionalFigsJsonHelper> jsonHelperMock,
             string dataString,
+            string region,
+            string appraisalYear,
             RegionalFigsData regionalFigsData,
             CustomActivities.Activities.RegionalFigsDataSource.RegionalFigsDataSource sut)
         {
             //Arrange
             sut.Output = null;
+            sut.Region = region;
+            sut.AppraisalYear = appraisalYear;
             var context = new ActivityExecutionContext(default!, default!, default!, sut.Id, default, default);
-            client.Setup(x => x.GetRegionalFigsData(It.IsAny<string>())).ReturnsAsync(dataString);
+            client.Setup(x => x.GetRegionalFigsData(sut.Region, sut.AppraisalYear)).ReturnsAsync(dataString);
             jsonHelperMock.Setup(x => x.JsonToRegionalFigsData(dataString)).Returns(regionalFigsData);
 
             //Act
@@ -58,17 +62,17 @@ namespace Elsa.CustomActivities.Tests.Activities.RegionalFigsDataSource
         [Theory]
         [AutoMoqData]
         public async Task ResumeAsync_ReturnsOutcomeResult_GivenClientDataIsNull(
-            [Frozen] Mock<IEsriRegionalFigsClient> laHouseNeedClient,
-            [Frozen] Mock<IEsriRegionalFigsJsonHelper> jsonHelperMock,
-            string dataString,
-            RegionalFigsData regionalFigsData,
+            [Frozen] Mock<IEsriRegionalFigsClient> client,
+            string region,
+            string appraisalYear,
             CustomActivities.Activities.RegionalFigsDataSource.RegionalFigsDataSource sut)
         {
             //Arrange
             sut.Output = null;
+            sut.Region = region;
+            sut.AppraisalYear = appraisalYear;
             var context = new ActivityExecutionContext(default!, default!, default!, sut.Id, default, default);
-            laHouseNeedClient.Setup(x => x.GetRegionalFigsData(It.IsAny<string>())).ReturnsAsync((string?)null);
-            jsonHelperMock.Setup(x => x.JsonToRegionalFigsData(dataString)).Returns(regionalFigsData);
+            client.Setup(x => x.GetRegionalFigsData(sut.Region, sut.AppraisalYear)).ReturnsAsync((string?)null);
 
             //Act
             var result = await sut.ResumeAsync(context);

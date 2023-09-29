@@ -7,7 +7,7 @@ using He.PipelineAssessment.Data.RegionalFigs;
 
 namespace He.PipelineAssessment.Data.Tests.RegionalFigs
 {
-    public class EsriRegionslFigsClientTests
+    public class EsriRegionalFigsClientTests
     {
         [Theory]
         [AutoMoqData]
@@ -15,6 +15,7 @@ namespace He.PipelineAssessment.Data.Tests.RegionalFigs
             [Frozen] Mock<IHttpClientFactory> httpClientFactoryMock,
             [Frozen] Mock<HttpMessageHandler> httpMessageHandlerMock,
             string projectIdentifier,
+            string appraisalYear,
             string resp,
             EsriRegionalFigsClient sut)
         {
@@ -25,7 +26,7 @@ namespace He.PipelineAssessment.Data.Tests.RegionalFigs
                 httpMessageHandlerMock);
 
             //Act
-            var result = await sut.GetRegionalFigsData(projectIdentifier);
+            var result = await sut.GetRegionalFigsData(projectIdentifier, appraisalYear);
 
             //Assert
             Assert.Null(result);
@@ -37,6 +38,7 @@ namespace He.PipelineAssessment.Data.Tests.RegionalFigs
             [Frozen] Mock<IHttpClientFactory> httpClientFactoryMock,
             [Frozen] Mock<HttpMessageHandler> httpMessageHandlerMock,
             string projectIdentifier,
+            string appraisalYear,
             string resp,
             EsriRegionalFigsClient sut)
         {
@@ -47,7 +49,7 @@ namespace He.PipelineAssessment.Data.Tests.RegionalFigs
                 httpMessageHandlerMock);
 
             //Act
-            var result = await sut.GetRegionalFigsData(projectIdentifier);
+            var result = await sut.GetRegionalFigsData(projectIdentifier, appraisalYear);
 
             //Assert
             Assert.NotNull(result);

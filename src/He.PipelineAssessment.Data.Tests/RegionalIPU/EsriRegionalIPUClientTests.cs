@@ -15,6 +15,7 @@ namespace He.PipelineAssessment.Data.Tests.RegionalIPU
             [Frozen] Mock<IHttpClientFactory> httpClientFactoryMock,
             [Frozen] Mock<HttpMessageHandler> httpMessageHandlerMock,
             string projectIdentifier,
+            string product,
             string resp,
             EsriRegionalIPUClient sut)
         {
@@ -25,7 +26,7 @@ namespace He.PipelineAssessment.Data.Tests.RegionalIPU
                 httpMessageHandlerMock);
 
             //Act
-            var result = await sut.GetRegionalIPUData(projectIdentifier);
+            var result = await sut.GetRegionalIPUData(projectIdentifier, product);
 
             //Assert
             Assert.Null(result);
@@ -37,6 +38,7 @@ namespace He.PipelineAssessment.Data.Tests.RegionalIPU
             [Frozen] Mock<IHttpClientFactory> httpClientFactoryMock,
             [Frozen] Mock<HttpMessageHandler> httpMessageHandlerMock,
             string projectIdentifier,
+            string product,
             string resp,
             EsriRegionalIPUClient sut)
         {
@@ -47,7 +49,7 @@ namespace He.PipelineAssessment.Data.Tests.RegionalIPU
                 httpMessageHandlerMock);
 
             //Act
-            var result = await sut.GetRegionalIPUData(projectIdentifier);
+            var result = await sut.GetRegionalIPUData(projectIdentifier, product);
 
             //Assert
             Assert.NotNull(result);
