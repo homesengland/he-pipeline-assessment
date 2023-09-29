@@ -20,3 +20,7 @@ Insert into [QuestionDataDictionary] ([Id],[QuestionDataDictionaryGroupId],[Lega
 Insert into [QuestionDataDictionary] ([Id],[QuestionDataDictionaryGroupId],[LegacyName],[Name],[CreatedDateTime]) values (330,12,NULL,''VFM4_Affordable_Homes_Do_Nothing'',GetDate());
 Insert into [QuestionDataDictionary] ([Id],[QuestionDataDictionaryGroupId],[LegacyName],[Name],[CreatedDateTime]) values (331,12,NULL,''VFM4_Investment_PV'',GetDate());
 Insert into [QuestionDataDictionary] ([Id],[QuestionDataDictionaryGroupId],[LegacyName],[Name],[CreatedDateTime]) values (332,12,NULL,''VFM4_NPSV'',GetDate());
+
+---Add new ones to 5	Strategic Fit S2
+Insert into [QuestionDataDictionary] ([Id],[QuestionDataDictionaryGroupId],[LegacyName],[Name],[CreatedDateTime]) values (333,5,NULL,''Strategic_Fit2_Site_Alignment_With_Economic_Investment'',GetDate());
+Insert into [QuestionDataDictionary] ([Id],[QuestionDataDictionaryGroupId],[LegacyName],[Name],[CreatedDateTime]) values (334,5,NULL,''Strategic_Fit2_Partner_Alignment_With_Economic_Investment'',GetDate());
