@@ -1,0 +1,50 @@
+﻿@model He.PipelineAssessment.UI.Features.Workflow.ViewModels.Question
+
+
+<details class="override-question-guidance govuk-details" data-module="govuk-details">
+    <summary class="govuk-details__summary">
+        <span class="govuk-details__summary-text">
+            Question guidance
+        </span>
+    </summary>
+    <div class="govuk-details__text">
+        @if (Model.EnhancedGuidance != null && Model.EnhancedGuidance.Any())
+        {
+            @foreach (var text in Model.EnhancedGuidance)
+            {
+                @await Html.PartialAsync("_InformationGroup", text)
+            }
+        }
+    </div>
+</details>
+
+
+
+@for (int i = 0; i < Model.EnhancedGuidance!.Count; i++)
+{
+    var hiddenItemTitle = "Data.Questions[" + Model.Index + "].EnhancedGuidance[" + i + "].Title";
+    var hiddenItemIsGuidance = "Data.Questions[" + Model.Index + "].EnhancedGuidance[" + i + "].IsGuidance";
+    var hiddenItemIsCollapsed = "Data.Questions[" + Model.Index + "].EnhancedGuidance[" + i + "].IsCollapsed";
+
+    var hiddenItemIsBullet = "Data.Questions[" + Model.Index + "].EnhancedGuidance[" + i + "].IsBullets";
+
+
+    <input type="hidden" name="@hiddenItemTitle" value="@Model.EnhancedGuidance[i].Title" />
+    <input type="hidden" name="@hiddenItemIsGuidance" value="@Model.EnhancedGuidance[i].IsGuidance.ToString()" />
+    <input type="hidden" name="@hiddenItemIsBullet" value="@Model.EnhancedGuidance[i].IsBullet.ToString()" />
+    <input type="hidden" name="@hiddenItemIsCollapsed" value="@Model.EnhancedGuidance[i].IsCollapsed.ToString()" />
+    for (int j = 0; j < Model.EnhancedGuidance[i].Text.Count; j++)
+    {
+        var hiddenItemText = "Data.Questions[" + Model.Index + "].EnhancedGuidance[" + i + "].InformationTextList[" + j + "].Text";
+        var hiddenItemIsParagraph = "Data.Questions[" + Model.Index + "].EnhancedGuidance[" + i + "].InformationTextList[" + j + "].IsParagraph";
+        var hiddenItemIsHyperlink = "Data.Questions[" + Model.Index + "].EnhancedGuidance[" + i + "].InformationTextList[" + j + "].IsHyperlink";
+        var hiddenItemIsBold = "Data.Questions[" + Model.Index + "].EnhancedGuidance[" + i + "].InformationTextList[" + j + "].IsBold";
+        var hiddenItemUrl = "Data.Questions[" + Model.Index + "].EnhancedGuidance[" + i + "].InformationTextList[" + j + "].Url";
+
+        <input type="hidden" name="@hiddenItemText" value="@Model.EnhancedGuidance[i].Text[j].Text" />
+        <input type="hidden" name="@hiddenItemIsParagraph" value="@Model.EnhancedGuidance[i].Text[j].IsParagraph.ToString()" />
+        <input type="hidden" name="@hiddenItemIsBold" value="@Model.EnhancedGuidance[i].Text[j].IsBold.ToString()" />
+        <input type="hidden" name="@hiddenItemIsHyperlink" value="@Model.EnhancedGuidance[i].Text[j].IsHyperlink.ToString()" />
+        <input type="hidden" name="@hiddenItemUrl" value="@Model.EnhancedGuidance[i].Text[j].Url" />
+    }
+}

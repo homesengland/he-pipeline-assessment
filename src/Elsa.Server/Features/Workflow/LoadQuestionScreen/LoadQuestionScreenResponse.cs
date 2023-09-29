@@ -27,6 +27,7 @@ namespace Elsa.Server.Features.Workflow.LoadQuestionScreen
         public string Question { get; set; } = null!;
         public string? QuestionHint { get; set; }
         public string? QuestionGuidance { get; set; }
+        public List<InformationTextGroup>? EnhancedGuidance { get; set; } = null!;
         public bool DisplayComments { get; set; }
         public bool DisplayEvidenceBox { get; set; }
         public string? Comments { get; set; }
@@ -37,7 +38,7 @@ namespace Elsa.Server.Features.Workflow.LoadQuestionScreen
         public int? CharacterLimit { get; set; }
         public Checkbox Checkbox { get; set; } = null!;
         public Radio Radio { get; set; } = null!;
-        public Information Information { get; set; } = null!;
+        public List<InformationTextGroup> Information { get; set; } = null!;
         public DataTableInput DataTable { get; set; } = null!;
         public bool IsReadOnly { get; set; }
 
@@ -63,11 +64,6 @@ namespace Elsa.Server.Features.Workflow.LoadQuestionScreen
     {
         public QuestionChoice[] Choices { get; set; } = new List<QuestionChoice>().ToArray();
         public int? SelectedAnswer { get; set; }
-    }
-
-    public class Information
-    {
-        public InformationText[] InformationTextList { get; set; } = new List<InformationText>().ToArray();
     }
 
     public class DataTableInput

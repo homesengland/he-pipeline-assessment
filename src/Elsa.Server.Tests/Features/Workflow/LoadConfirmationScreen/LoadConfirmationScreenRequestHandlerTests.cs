@@ -1,11 +1,14 @@
 ﻿using AutoFixture.Xunit2;
+using Elsa.CustomActivities.Activities.Common;
 using Elsa.CustomInfrastructure.Data.Repository;
 using Elsa.CustomModels;
 using Elsa.CustomWorkflow.Sdk;
 using Elsa.Server.Features.Workflow.LoadConfirmationScreen;
+using Elsa.Server.Mappers;
 using Elsa.Server.Providers;
 using He.PipelineAssessment.Tests.Common;
 using Moq;
+using Newtonsoft.Json;
 using Xunit;
 
 namespace Elsa.Server.Tests.Features.Workflow.LoadConfirmationScreen
@@ -64,9 +67,12 @@ namespace Elsa.Server.Tests.Features.Workflow.LoadConfirmationScreen
         public async Task Handle_ReturnQuestions_GivenNoErrorsEncountered(
             [Frozen] Mock<IElsaCustomRepository> elsaCustomRepository,
             [Frozen] Mock<IActivityDataProvider> activityDataProvider,
+            [Frozen] Mock<ITextGroupMapper> textGroupMapper,
             LoadConfirmationScreenRequest request,
             CustomActivityNavigation customActivityNavigation,
             List<Question> questions,
+            GroupedTextModel groupedTextModel,
+            List<Information> informationList,
             LoadConfirmationScreenRequestHandler sut)
         {
             //Arrange
@@ -83,11 +89,14 @@ namespace Elsa.Server.Tests.Features.Workflow.LoadConfirmationScreen
                 { "ConfirmationText", "MyConfirmationText" },
                 { "FooterText", "MyFooterText" },
                 { "FooterTitle", "MyFooterTitle" },
-                { "NextWorkflowDefinitionIds", "MyNextWorkflowDefinitionId" }
+                { "NextWorkflowDefinitionIds", "MyNextWorkflowDefinitionId" },
+                { "Text", groupedTextModel}
             };
+
             activityDataProvider
                 .Setup(x => x.GetActivityData(request.WorkflowInstanceId, request.ActivityId, CancellationToken.None))
                 .ReturnsAsync(dictionary);
+            textGroupMapper.Setup(x => x.InformationListFromGroupedTextModel(groupedTextModel)).Returns(informationList);
 
             //Act
             var result = await sut.Handle(request, CancellationToken.None);
@@ -105,6 +114,7 @@ namespace Elsa.Server.Tests.Features.Workflow.LoadConfirmationScreen
             //Assert.Equal(3, result.Data.Text.Count());
             //Assert.Equal("1", result.Data.Text.FirstOrDefault());
             Assert.Equal("MyNextWorkflowDefinitionId", result.Data.NextWorkflowDefinitionIds);
+            Assert.Equal(informationList, result.Data.Text);
             Assert.Empty(result.ErrorMessages);
         }
     }

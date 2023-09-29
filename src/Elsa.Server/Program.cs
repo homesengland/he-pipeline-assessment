@@ -27,22 +27,18 @@ using Elsa.Server.Extensions;
 using Elsa.Server.Helpers;
 using Elsa.Server.Middleware;
 using Elsa.Server.Providers;
-using Elsa.Server.Publisher;
 using Elsa.Server.Services;
 using Elsa.Server.StartupTasks;
 using Elsa.Services;
 using He.PipelineAssessment.Data.Auth;
-using MediatR;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.DataProtection;
-using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.DependencyInjection.Extensions;
-using StackExchange.Redis;
-using System.Globalization;
-using Elsa.Decorators;
 using Elsa.Services.Workflows;
+using Elsa.Server.Mappers;
+using Elsa.CustomActivities.Activities.RegionalIPUDataSource;
+using Elsa.CustomActivities.Activities.RegionalFigsDataSource;
 
 var builder = WebApplication.CreateBuilder(args);
 var elsaConnectionString = builder.Configuration.GetConnectionString("Elsa");
@@ -52,11 +48,9 @@ using var loggerFactory = LoggerFactory.Create(loggingBuilder => loggingBuilder
     .SetMinimumLevel(LogLevel.Trace)
     .AddConsole());
 
-ILogger logger = loggerFactory.CreateLogger<Program>();
-logger.LogInformation("Example log message");
+ILogger logger = loggerFactory.CreateLogger<Program>(); ;
 
 var redisConnectionString = builder.Configuration.GetConnectionString("Redis");
-logger.LogInformation($"Redis Connection String: {redisConnectionString}");
 var clearCache = Convert.ToBoolean(builder.Configuration["Redis:ClearCache"]);
 if (!builder.Environment.IsDevelopment())
 {
@@ -91,6 +85,8 @@ builder.Services
         .AddActivity<ScoringCalculation>()
         .AddActivity<RunEconomicCalculations>()
         .AddActivity<SetVariable>()
+        .AddActivity<RegionalIPUDataSource>()
+        .AddActivity<RegionalFigsDataSource>()
         .AddConsoleActivities()
     );
 
@@ -102,6 +98,7 @@ builder.Services.AddScoped<ICustomPropertyDescriber, CustomPropertyDescriber>();
 builder.Services.AddScoped<IWorkflowPublisher, Elsa.Server.Publisher.WorkflowPublisher>();
 
 builder.Services.TryAddProvider<IExpressionHandler, InformationTextExpressionHandler>(ServiceLifetime.Singleton);
+builder.Services.TryAddProvider<IExpressionHandler, InformationTextGroupExpressionHandler>(ServiceLifetime.Singleton);
 builder.Services.TryAddProvider<IExpressionHandler, QuestionListExpressionHandler>(ServiceLifetime.Singleton);
 builder.Services.TryAddProvider<IExpressionHandler, ScoringCalculationExpressionHandler>(ServiceLifetime.Singleton);
 builder.Services.TryAddSingleton<INestedSyntaxExpressionHandler, NestedSyntaxExpressionHandler>();
@@ -159,6 +156,8 @@ builder.Services.AddScoped<IElsaCustomModelHelper, ElsaCustomModelHelper>();
 
 builder.Services.AddScoped<IDeleteChangedWorkflowPathService, DeleteChangedWorkflowPathService>();
 builder.Services.AddScoped<INextActivityNavigationService, NextActivityNavigationService>();
+
+builder.Services.AddScoped<ITextGroupMapper, TextGroupMapper>();
 
 
 // Allow arbitrary client browser apps to access the API.

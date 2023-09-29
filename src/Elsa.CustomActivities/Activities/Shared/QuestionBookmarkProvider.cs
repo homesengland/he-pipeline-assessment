@@ -47,7 +47,9 @@ namespace Elsa.CustomActivities.Activities.Shared
                 ActivityTypeConstants.SinglePipelineDataSource,
                 ActivityTypeConstants.HousingNeedDataSource,
                 ActivityTypeConstants.PCSProfileDataSource,
-                ActivityTypeConstants.VFMDataSource
+                ActivityTypeConstants.VFMDataSource,
+                ActivityTypeConstants.RegionalIPUDataSource,
+                ActivityTypeConstants.RegionalFigsDataSource,
             };
         }
     }

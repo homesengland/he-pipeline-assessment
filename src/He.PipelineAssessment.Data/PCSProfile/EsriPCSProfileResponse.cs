@@ -59,6 +59,7 @@
         public decimal? total_af_comp_fc { get; set; }
         public decimal? total_af_comp_fc_sr { get; set; }
         public decimal? total_af_comp_ac { get; set; }
+        public string? fund_recovery { get; set; }
     }
 
 

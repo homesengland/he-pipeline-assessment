@@ -114,10 +114,6 @@ namespace Elsa.Server.Extensions
             {
                 await ClearCache(logger, connectionMultiplexer);
             }
-            
-            logger.LogInformation("Adding Singleton for connection multiplexer");
-            logger.LogInformation($"Multiplexer Config: {connectionMultiplexer.Configuration}");
-            logger.LogInformation($"Multiplexer Client Name: {connectionMultiplexer.ClientName}");
             return services;
         }
 
