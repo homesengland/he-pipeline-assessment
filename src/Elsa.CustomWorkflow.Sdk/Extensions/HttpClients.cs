@@ -3,6 +3,8 @@ using He.PipelineAssessment.Data;
 using He.PipelineAssessment.Data.Auth;
 using He.PipelineAssessment.Data.LaHouseNeed;
 using He.PipelineAssessment.Data.PCSProfile;
+using He.PipelineAssessment.Data.RegionalFigs;
+using He.PipelineAssessment.Data.RegionalIPU;
 using He.PipelineAssessment.Data.SinglePipeline;
 using He.PipelineAssessment.Data.VFM;
 using Microsoft.Extensions.Configuration;
@@ -19,6 +21,8 @@ namespace Elsa.CustomWorkflow.Sdk.Extensions
             services.AddVFMClient(config, isDevelopmentEnvironment);
             services.AddHousingNeedClient(config, isDevelopmentEnvironment);
             services.AddPCSClient(config, isDevelopmentEnvironment);
+            services.AddRegionalIPUClient(config, isDevelopmentEnvironment);
+            services.AddRegionalFigsClient(config, isDevelopmentEnvironment);
             
         }
         public static void AddSinglePipelineClient(this IServiceCollection services, IConfiguration config, bool isDevelopmentEnvironment)
@@ -106,6 +110,52 @@ namespace Elsa.CustomWorkflow.Sdk.Extensions
             else
             {
                 services.AddHttpClient(ClientConstants.PCSClient, client =>
+                {
+                    client.BaseAddress = new Uri(serviceUrl);
+                }).AddHttpMessageHandler<BearerTokenHandler>();
+            }
+        }
+
+        public static void AddRegionalIPUClient(this IServiceCollection services, IConfiguration config, bool isDevelopmentEnvironment)
+        {
+            string serviceUrl = config["Datasources:RegionalIPU"];
+
+            services.AddScoped<IEsriRegionalIPUClient, EsriRegionalIPUClient>();
+            services.AddScoped<IEsriRegionalIPUJsonHelper, EsriRegionalIPUJsonHelper>();
+
+            if (isDevelopmentEnvironment)
+            {
+                services.AddHttpClient(ClientConstants.RegionalIPUClient, client =>
+                {
+                    client.BaseAddress = new Uri(serviceUrl);
+                });
+            }
+            else
+            {
+                services.AddHttpClient(ClientConstants.RegionalIPUClient, client =>
+                {
+                    client.BaseAddress = new Uri(serviceUrl);
+                }).AddHttpMessageHandler<BearerTokenHandler>();
+            }
+        }
+
+        public static void AddRegionalFigsClient(this IServiceCollection services, IConfiguration config, bool isDevelopmentEnvironment)
+        {
+            string serviceUrl = config["Datasources:RegionalFigs"];
+
+            services.AddScoped<IEsriRegionalFigsClient, EsriRegionalFigsClient>();
+            services.AddScoped<IEsriRegionalFigsJsonHelper, EsriRegionalFigsJsonHelper>();
+
+            if (isDevelopmentEnvironment)
+            {
+                services.AddHttpClient(ClientConstants.RegionalFigsClient, client =>
+                {
+                    client.BaseAddress = new Uri(serviceUrl);
+                });
+            }
+            else
+            {
+                services.AddHttpClient(ClientConstants.RegionalFigsClient, client =>
                 {
                     client.BaseAddress = new Uri(serviceUrl);
                 }).AddHttpMessageHandler<BearerTokenHandler>();

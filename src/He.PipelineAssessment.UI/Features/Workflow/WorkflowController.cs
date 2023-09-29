@@ -114,7 +114,10 @@ namespace He.PipelineAssessment.UI.Features.Workflow
                 case ActivityTypeConstants.PCSProfileDataSource:
                 case ActivityTypeConstants.SinglePipelineDataSource:
                 case ActivityTypeConstants.VFMDataSource:
-                    {
+                case ActivityTypeConstants.RegionalFigsDataSource:
+                case ActivityTypeConstants.RegionalIPUDataSource:
+
+                {
                         var executeWorkflowRequest = new ExecuteWorkflowCommand
                         {
                             WorkflowInstanceId = request.WorkflowInstanceId,

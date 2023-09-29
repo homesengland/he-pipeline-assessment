@@ -37,6 +37,8 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using Elsa.Services.Workflows;
 using Elsa.Server.Mappers;
+using Elsa.CustomActivities.Activities.RegionalIPUDataSource;
+using Elsa.CustomActivities.Activities.RegionalFigsDataSource;
 
 var builder = WebApplication.CreateBuilder(args);
 var elsaConnectionString = builder.Configuration.GetConnectionString("Elsa");
@@ -83,6 +85,8 @@ builder.Services
         .AddActivity<ScoringCalculation>()
         .AddActivity<RunEconomicCalculations>()
         .AddActivity<SetVariable>()
+        .AddActivity<RegionalIPUDataSource>()
+        .AddActivity<RegionalFigsDataSource>()
         .AddConsoleActivities()
     );
 
