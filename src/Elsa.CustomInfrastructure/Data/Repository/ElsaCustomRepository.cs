@@ -78,7 +78,6 @@ namespace Elsa.CustomInfrastructure.Data.Repository
             var result = await _dbContext.Set<Question>()
                 .Where(x =>
                     x.CorrelationId == correlationId &&
-                    x.WorkflowName == activityName &&
                     x.ActivityName == activityName &&
                     x.WorkflowName == workflowName &&
                     x.QuestionId == questionID &&

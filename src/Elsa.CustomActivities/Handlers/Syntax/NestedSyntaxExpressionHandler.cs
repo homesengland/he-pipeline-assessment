@@ -21,18 +21,20 @@ namespace Elsa.CustomActivities.Handlers.Syntax
 
     public class NestedSyntaxExpressionHandler : INestedSyntaxExpressionHandler
     {
-        private ILogger<IExpressionHandler> _logger;
-        private InformationTextExpressionHandler _informationExpressionHandler;
-        private DataTableExpressionHandler _dataTableExpressionHandler;
-        private CheckboxExpressionHandler _checkboxExpressionHandler;
-        private RadioExpressionHandler _radioExpressionHandler;
-        private PotScoreRadioExpressionHandler _potScoreRadioExpressionHandler;
-        private WeightedRadioExpressionHandler _weightedRadioExpressionHandler;
-        private WeightedCheckboxExpressionHandler _weightedCheckboxExpressionHandler;
+        private readonly ILogger<IExpressionHandler> _logger;
+        private readonly InformationTextExpressionHandler _informationExpressionHandler;
+        private readonly InformationTextGroupExpressionHandler _informationGroupExpressionHandler;
+        private readonly DataTableExpressionHandler _dataTableExpressionHandler;
+        private readonly CheckboxExpressionHandler _checkboxExpressionHandler;
+        private readonly RadioExpressionHandler _radioExpressionHandler;
+        private readonly PotScoreRadioExpressionHandler _potScoreRadioExpressionHandler;
+        private readonly WeightedRadioExpressionHandler _weightedRadioExpressionHandler;
+        private readonly WeightedCheckboxExpressionHandler _weightedCheckboxExpressionHandler;
         public NestedSyntaxExpressionHandler(ILogger<IExpressionHandler> logger, IContentSerializer serializer)
         {
             _logger = logger;
             _informationExpressionHandler = new InformationTextExpressionHandler(logger, serializer);
+            _informationGroupExpressionHandler = new InformationTextGroupExpressionHandler(logger, serializer);
             _radioExpressionHandler = new RadioExpressionHandler(logger, serializer);
             _checkboxExpressionHandler = new CheckboxExpressionHandler(logger, serializer);
             _potScoreRadioExpressionHandler = new PotScoreRadioExpressionHandler(logger, serializer);
@@ -147,14 +149,51 @@ namespace Elsa.CustomActivities.Handlers.Syntax
                 return result;
 
             }
+            if(propertyType != null && propertyType == typeof(GroupedTextModel))
+            {
+                GroupedTextModel result = new GroupedTextModel();
+                var parsedProperties = ParseToList(property, TextActivitySyntaxNames.TextGroup);
+                if(property.Expressions != null && property.Expressions.ContainsKey(TextActivitySyntaxNames.TextGroup))
+                {
+                    List<TextGroup> records = await _informationGroupExpressionHandler.ElsaPropertiesToGroupedTextList(parsedProperties, evaluator, context);
+                    result.TextGroups = records;
+                }
+                else if (propertyType != null && property.Syntax == TextActivitySyntaxNames.TextActivity)
+                {
+                    parsedProperties = ParseToList(property, TextActivitySyntaxNames.TextActivity);
+                    List<TextRecord> records = await _informationExpressionHandler.ElsaPropertiesToTextRecordList(parsedProperties, evaluator, context);
+                    result.TextGroups = new List<TextGroup>
+                    {
+                        new TextGroup
+                        {
+                            Title = "",
+                            Bullets = false,
+                            Collapsed = false,
+                            Guidance = false,
+                            TextRecords = records,
+                        }
+                    };
+                }
+                return result;
+            }
             if (propertyType != null && propertyType == typeof(TextModel))
             {
-                TextModel result = new TextModel();
+                GroupedTextModel result = new GroupedTextModel();
                 var parsedProperties = ParseToList(property, TextActivitySyntaxNames.TextActivity);
                 if (parsedProperties != null)
                 {
                     List<TextRecord> records = await _informationExpressionHandler.ElsaPropertiesToTextRecordList(parsedProperties, evaluator, context);
-                    result.TextRecords = records;
+                    result.TextGroups = new List<TextGroup>
+                    {
+                        new TextGroup
+                        {
+                            Title = "",
+                            Bullets = false,
+                            Collapsed = false,
+                            Guidance = false,
+                            TextRecords = records,
+                        }
+                    };
                 }
                 return result;
 
@@ -188,9 +227,17 @@ namespace Elsa.CustomActivities.Handlers.Syntax
 
         public List<ElsaProperty> ParseToList(ElsaProperty property, string defaultSyntax = SyntaxNames.Json)
         {
+            string? propertyExpression = "";
             if (property.Expressions != null)
             {
-                var propertyExpression = property.Expressions[defaultSyntax];
+                if (property.Expressions.ContainsKey(defaultSyntax))
+                {
+                    propertyExpression = property.Expressions[defaultSyntax];
+                }
+                else if(property.Syntax != null && property.Expressions.ContainsKey(property.Syntax))
+                {
+                    propertyExpression = property.Expressions[property.Syntax];
+                }
                 var elsaPropertyList = JsonConvert.DeserializeObject<List<ElsaProperty>>(propertyExpression);
                 return elsaPropertyList ?? new List<ElsaProperty>();
             }

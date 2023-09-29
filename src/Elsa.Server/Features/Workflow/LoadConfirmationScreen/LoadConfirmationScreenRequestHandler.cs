@@ -1,9 +1,9 @@
 ﻿using Elsa.CustomActivities.Activities.Common;
 using Elsa.CustomActivities.Activities.Shared;
 using Elsa.CustomInfrastructure.Data.Repository;
-using Elsa.CustomModels;
 using Elsa.CustomWorkflow.Sdk;
 using Elsa.Server.Extensions;
+using Elsa.Server.Mappers;
 using Elsa.Server.Models;
 using Elsa.Server.Providers;
 using MediatR;
@@ -15,14 +15,16 @@ namespace Elsa.Server.Features.Workflow.LoadConfirmationScreen
         private readonly IElsaCustomRepository _elsaCustomRepository;
         private readonly IActivityDataProvider _activityDataProvider;
         private readonly IQuestionInvoker _questionInvoker;
+        private readonly ITextGroupMapper _textGroupMapper;
         private readonly ILogger<LoadConfirmationScreenRequestHandler> _logger;
 
-        public LoadConfirmationScreenRequestHandler(IElsaCustomRepository elsaCustomRepository, IActivityDataProvider activityDataProvider, IQuestionInvoker questionInvoker, ILogger<LoadConfirmationScreenRequestHandler> logger)
+        public LoadConfirmationScreenRequestHandler(IElsaCustomRepository elsaCustomRepository, IActivityDataProvider activityDataProvider, IQuestionInvoker questionInvoker, ILogger<LoadConfirmationScreenRequestHandler> logger, ITextGroupMapper textGroupMapper)
         {
             _elsaCustomRepository = elsaCustomRepository;
             _activityDataProvider = activityDataProvider;
             _questionInvoker = questionInvoker;
             _logger = logger;
+            _textGroupMapper = textGroupMapper;
         }
 
         public async Task<OperationResult<LoadConfirmationScreenResponse>> Handle(LoadConfirmationScreenRequest request, CancellationToken cancellationToken)
@@ -54,10 +56,8 @@ namespace Elsa.Server.Features.Workflow.LoadConfirmationScreen
                     result.Data.ConfirmationText = (string?)activityDataDictionary.GetData("ConfirmationText");
                     result.Data.FooterTitle = (string?)activityDataDictionary.GetData("FooterTitle");
                     result.Data.FooterText = (string?)activityDataDictionary.GetData("FooterText");
-                    var textModel = (TextModel)activityDataDictionary.GetData("Text")! ?? new TextModel();
-                    result.Data.Text = new Information();
-                    result.Data.Text.InformationTextList = textModel.TextRecords.Select(x => new InformationText() { Text = x.Text, IsGuidance = x.IsGuidance, IsParagraph = x.IsParagraph, IsHyperlink = x.IsHyperlink, Url = x.Url })
-                    .ToArray();
+                    var textModel = (GroupedTextModel)activityDataDictionary.GetData("Text")! ?? new GroupedTextModel();
+                    result.Data.Text = _textGroupMapper.InformationListFromGroupedTextModel(textModel);
 
                     result.Data.NextWorkflowDefinitionIds = (string?)activityDataDictionary.GetData("NextWorkflowDefinitionIds");
                 }

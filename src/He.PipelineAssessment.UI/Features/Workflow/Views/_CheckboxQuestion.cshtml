@@ -17,7 +17,6 @@
 }
 
 <div class="govuk-form-group @errorFormClass" id="@formItemName">
-    @await Html.PartialAsync("_QuestionTitle", Model.Title)
     @await Html.PartialAsync("_QuestionText", questionTextModel)
     @await Html.PartialAsync("_QuestionHint", Model.QuestionHint)
 
@@ -136,8 +135,14 @@
         }
     }
 
- 
-    @await Html.PartialAsync("_QuestionGuidance", Model.QuestionGuidance)
+    @if (Model.EnhancedGuidance != null && Model.EnhancedGuidance.Any())
+    {
+        @await Html.PartialAsync("_EnhancedGuidance", Model)
+    }
+    else
+    {
+        @await Html.PartialAsync("_QuestionGuidance", Model.QuestionGuidance)
+    }
     @await Html.PartialAsync("_Comments", new Comment(){Index = Model.Index, CommentText = Model.Comments,DisplayComments = Model.DisplayComments})
     @await Html.PartialAsync("_Evidence", new Evidence(){Index = Model.Index, DocumentLink = Model.DocumentEvidenceLink ,DisplayEvidenceBox = Model.DisplayEvidenceBox})
 </div>

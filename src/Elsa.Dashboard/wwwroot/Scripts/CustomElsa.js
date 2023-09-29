@@ -7,6 +7,7 @@ import { CustomSwitchDriver } from './Drivers/CustomSwitchPropertyDriver.js';
 import { CustomTextDriver } from './Drivers/CustomTextPropertyDriver.js';
 import { ConditionalTextListDriver } from './Drivers/ConditionalTextListPropertyDriver.js';
 import { TextActivityDriver } from './Drivers/TextActivityPropertyDriver.js';
+import { TextGroupDriver } from './Drivers/TextGroupDriver.js';
 
 export function InitCustomElsa(elsaStudioRoot, customProperties, auth0ClientOptions) {
 
@@ -23,6 +24,9 @@ export function InitCustomElsa(elsaStudioRoot, customProperties, auth0ClientOpti
 
     elsaStudio.propertyDisplayManager.addDriver(CustomPropertyUIHints.TextActivityBuilder,
       () => new TextActivityDriver(elsaStudio, CustomComponentTags.TextActivity));
+
+    elsaStudio.propertyDisplayManager.addDriver(CustomPropertyUIHints.TextGroupBuilder,
+      () => new TextGroupDriver(elsaStudio, CustomComponentTags.TextGroup));
 
     elsaStudio.propertyDisplayManager.addDriver(CustomPropertyUIHints.ConditionalTextListBuilder,
       () => new ConditionalTextListDriver(elsaStudio, CustomComponentTags.ConditionalTextList));

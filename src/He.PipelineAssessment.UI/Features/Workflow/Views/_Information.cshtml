@@ -1,21 +1,34 @@
-﻿@using He.PipelineAssessment.UI.Features.Workflow.ViewModels
-@model He.PipelineAssessment.UI.Features.Workflow.ViewModels.Question
+﻿@model He.PipelineAssessment.UI.Features.Workflow.ViewModels.Question
 
-@foreach(var text in Model.Information.Text){
-     @await Html.PartialAsync("_InformationTextWrapper", text)
+@foreach(var text in Model.Information){
+     @await Html.PartialAsync("_InformationGroup", text)
 }
 
-@for (int i = 0; i < Model.Information!.Text.Count; i++)
+@for (int i = 0; i < Model.Information!.Count; i++)
 {
-    var hiddenItemText = "Data.Questions[" + Model.Index + "].Information.InformationTextList[" + i + "].Text";
-    var hiddenItemIsParagraph = "Data.Questions[" + Model.Index + "].Information.InformationTextList[" + i + "].IsParagraph";
-    var hiddenItemIsGuidance = "Data.Questions[" + Model.Index + "].Information.InformationTextList[" + i + "].IsGuidance";
-    var hiddenItemIsHyperlink = "Data.Questions[" + Model.Index + "].Information.InformationTextList[" + i + "].IsHyperlink";
-    var hiddenItemUrl = "Data.Questions[" + Model.Index + "].Information.InformationTextList[" + i + "].Url";
+    var hiddenItemTitle = "Data.Questions[" + Model.Index + "].Information[" + i + "].Title";
+    var hiddenItemIsGuidance = "Data.Questions[" + Model.Index + "].Information[" + i + "].IsGuidance";
+    var hiddenItemIsCollapsed = "Data.Questions[" + Model.Index + "].Information[" + i + "].IsCollapsed";
 
-    <input type="hidden" name="@hiddenItemText" value="@Model.Information.Text[i].Text" />
-    <input type="hidden" name="@hiddenItemIsParagraph" value="@Model.Information.Text[i].IsParagraph.ToString()" />
-    <input type="hidden" name="@hiddenItemIsGuidance" value="@Model.Information.Text[i].IsGuidance.ToString()" />
-    <input type="hidden" name="@hiddenItemIsHyperlink" value="@Model.Information.Text[i].IsHyperlink.ToString()" />
-    <input type="hidden" name="@hiddenItemUrl" value="@Model.Information.Text[i].Url" />
+    var hiddenItemIsBullet = "Data.Questions[" + Model.Index + "].Information[" + i + "].IsBullets";
+
+
+    <input type="hidden" name="@hiddenItemTitle" value="@Model.Information[i].Title" />
+    <input type="hidden" name="@hiddenItemIsGuidance" value="@Model.Information[i].IsGuidance.ToString()" />
+    <input type="hidden" name="@hiddenItemIsBullet" value="@Model.Information[i].IsBullet.ToString()" />
+    <input type="hidden" name="@hiddenItemIsCollapsed" value="@Model.Information[i].IsCollapsed.ToString()" />
+    for(int j = 0; j < Model.Information[i].Text.Count; j++)
+    {
+        var hiddenItemText = "Data.Questions[" + Model.Index + "].Information[" + i + "].InformationTextList[" + j + "].Text";
+        var hiddenItemIsParagraph = "Data.Questions[" + Model.Index + "].Information[" + i + "].InformationTextList[" + j + "].IsParagraph";
+        var hiddenItemIsHyperlink = "Data.Questions[" + Model.Index + "].Information[" + i + "].InformationTextList[" + j + "].IsHyperlink";
+        var hiddenItemIsBold = "Data.Questions[" + Model.Index + "].Information[" + i + "].InformationTextList[" + j + "].IsBold";
+        var hiddenItemUrl = "Data.Questions[" + Model.Index + "].Information[" + i + "].InformationTextList[" + j + "].Url";
+
+        <input type="hidden" name="@hiddenItemText" value="@Model.Information[i].Text[j].Text" />
+        <input type="hidden" name="@hiddenItemIsParagraph" value="@Model.Information[i].Text[j].IsParagraph.ToString()" />
+        <input type="hidden" name="@hiddenItemIsBold" value="@Model.Information[i].Text[j].IsBold.ToString()" />
+        <input type="hidden" name="@hiddenItemIsHyperlink" value="@Model.Information[i].Text[j].IsHyperlink.ToString()" />
+        <input type="hidden" name="@hiddenItemUrl" value="@Model.Information[i].Text[j].Url" />
+    }
 }

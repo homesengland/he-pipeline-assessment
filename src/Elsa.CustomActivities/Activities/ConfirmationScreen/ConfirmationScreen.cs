@@ -2,6 +2,8 @@
 using Elsa.Attributes;
 using Elsa.CustomActivities.Activities.Common;
 using Elsa.CustomActivities.Constants;
+using Elsa.CustomActivities.PropertyDecorator;
+using Elsa.CustomWorkflow.Sdk;
 using Elsa.Design;
 using Elsa.Expressions;
 using Elsa.Services;
@@ -25,13 +27,13 @@ namespace Elsa.CustomActivities.Activities.ConfirmationScreen
         [ActivityInput(Hint = "Footer text", SupportedSyntaxes = new[] { SyntaxNames.Literal, SyntaxNames.Json, SyntaxNames.JavaScript })]
         public string FooterText { get; set; } = null!;
 
-        [ActivityInput(Label = "Assessment Conditional Text", 
-            Hint = "Text to display on Outcome Screen.", 
-            UIHint = CustomActivityUIHints.TextActivityProperty, 
-            SupportedSyntaxes = new[] { SyntaxNames.Json }, 
-            DefaultSyntax = TextActivitySyntaxNames.TextActivity, 
+        [HeActivityInput(Label = "Assessment Conditional Text",
+            Hint = "Text to display on Outcome Screen.",
+            UIHint = CustomActivityUIHints.TextGroupProperty,
+            SupportedSyntaxes = new[] { SyntaxNames.Json, TextActivitySyntaxNames.TextGroup },
+            DefaultSyntax = TextActivitySyntaxNames.TextGroup,
             IsDesignerCritical = true)]
-        public TextModel Text { get; set; } = new TextModel();
+        public GroupedTextModel Text { get; set; } = new GroupedTextModel();
 
         [ActivityInput(Hint = "Next workflow to run. Comma separate for multiple workflows.", SupportedSyntaxes = new[] { SyntaxNames.Literal, SyntaxNames.Json, SyntaxNames.JavaScript })]
         public string NextWorkflowDefinitionIds { get; set; } = null!;

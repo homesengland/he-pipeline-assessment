@@ -1,5 +1,4 @@
 ﻿using System.Text.Json;
-using Azure.Core;
 using Elsa.CustomActivities.Activities.Common;
 using Elsa.CustomActivities.Activities.QuestionScreen;
 using Elsa.CustomActivities.Activities.Shared;
@@ -8,6 +7,7 @@ using Elsa.CustomModels;
 using Elsa.CustomWorkflow.Sdk;
 using Elsa.Persistence;
 using Elsa.Persistence.Specifications.WorkflowInstances;
+using Elsa.Server.Mappers;
 using Elsa.Server.Models;
 using MediatR;
 using Question = Elsa.CustomModels.Question;
@@ -19,14 +19,16 @@ namespace Elsa.Server.Features.Workflow.LoadQuestionScreen
         private readonly IWorkflowInstanceStore _workflowInstanceStore;
         private readonly IElsaCustomRepository _elsaCustomRepository;
         private readonly IQuestionInvoker _invoker;
+        private readonly ITextGroupMapper _textGroupMapper;
         private readonly ILogger<LoadQuestionScreenRequestHandler> _logger;
 
-        public LoadQuestionScreenRequestHandler(IWorkflowInstanceStore workflowInstanceStore, IElsaCustomRepository elsaCustomRepository, IQuestionInvoker invoker, ILogger<LoadQuestionScreenRequestHandler> logger)
+        public LoadQuestionScreenRequestHandler(IWorkflowInstanceStore workflowInstanceStore, IElsaCustomRepository elsaCustomRepository, IQuestionInvoker invoker, ILogger<LoadQuestionScreenRequestHandler> logger, ITextGroupMapper textGroupMapper)
         {
             _workflowInstanceStore = workflowInstanceStore;
             _elsaCustomRepository = elsaCustomRepository;
             _invoker = invoker;
             _logger = logger;
+            _textGroupMapper = textGroupMapper;
         }
 
         public async Task<OperationResult<LoadQuestionScreenResponse>> Handle(LoadQuestionScreenRequest activityRequest, CancellationToken cancellationToken)
@@ -107,7 +109,7 @@ namespace Elsa.Server.Features.Workflow.LoadQuestionScreen
                                         dbAssessmentQuestionList.FirstOrDefault(x => x.QuestionId == item.Id);
                                     if (dbQuestion != null)
                                     {
-                                        var questionActivityData = CreateQuestionActivityData(dbQuestion, item);
+                                        var questionActivityData = CreateQuestionActivityData(dbQuestion, item, _textGroupMapper);
 
                                         result.Data.Questions.Add(questionActivityData);
                                     }
@@ -148,7 +150,7 @@ namespace Elsa.Server.Features.Workflow.LoadQuestionScreen
         }
 
         private static QuestionActivityData CreateQuestionActivityData(Question dbQuestion,
-            CustomActivities.Activities.QuestionScreen.Question item)
+            CustomActivities.Activities.QuestionScreen.Question item, ITextGroupMapper textGroupMapper)
         {
             var reevaluatePrepopulatedAnswers = item.ReevaluatePrePopulatedAnswers;
 
@@ -167,7 +169,6 @@ namespace Elsa.Server.Features.Workflow.LoadQuestionScreen
             questionActivityData.Question = item.QuestionText;
             questionActivityData.DisplayComments = item.DisplayComments;
             questionActivityData.DisplayEvidenceBox = item.DisplayEvidenceBox;
-            questionActivityData.QuestionGuidance = item.QuestionGuidance;
             questionActivityData.QuestionHint = item.QuestionHint;
             questionActivityData.CharacterLimit = item.CharacterLimit;
             questionActivityData.IsReadOnly = item.IsReadOnly;
@@ -278,14 +279,21 @@ namespace Elsa.Server.Features.Workflow.LoadQuestionScreen
 
             if (item.QuestionType == QuestionTypeConstants.Information)
             {
-                questionActivityData.Information = new Information();
-                questionActivityData.Information.InformationTextList = item.Text.TextRecords
-                    .Select(x => new InformationText()
-                    {
-                        Text = x.Text, IsGuidance = x.IsGuidance, IsParagraph = x.IsParagraph,
-                        IsHyperlink = x.IsHyperlink, Url = x.Url
-                    })
-                    .ToArray();
+                questionActivityData.Information = textGroupMapper.InformationTextGroupListFromTextGroupsForInformation(item.Text.TextGroups);
+            }
+
+            if (item.EnhancedGuidance.TextGroups.Any())
+            {
+                questionActivityData.EnhancedGuidance = textGroupMapper.InformationTextGroupListFromTextGroupsForGuidance(item.EnhancedGuidance.TextGroups);
+            }
+            else
+            {
+                #pragma warning disable 0612, 0618
+                if (!string.IsNullOrEmpty(item.QuestionGuidance))
+                {
+                    questionActivityData.EnhancedGuidance = textGroupMapper.InformationTextGroupListFromGuidanceString(item.QuestionGuidance);
+                }
+                #pragma warning restore 0612, 0618
             }
 
             if (item.QuestionType == QuestionTypeConstants.DataTable)

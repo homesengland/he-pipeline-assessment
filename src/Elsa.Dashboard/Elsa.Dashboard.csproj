@@ -64,12 +64,14 @@
     <None Remove="src\nested-drivers\display-managers\he-data-table-driver.tsx" />
     <None Remove="src\nested-drivers\he-numeric-driver.tsx" />
     <None Remove="src\nested-drivers\he-text-activity-driver.tsx" />
+    <None Remove="src\nested-drivers\he-text-group-driver.tsx" />
     <None Remove="wwwroot\Scripts\CustomElsa.js" />
     <None Remove="wwwroot\Scripts\Drivers\ConditionalTextListPropertyDriver.js" />
     <None Remove="wwwroot\Scripts\Drivers\CustomSwitchPropertyDriver.js" />
     <None Remove="wwwroot\Scripts\Drivers\CustomTextPropertyDriver.js" />
     <None Remove="wwwroot\Scripts\Drivers\QuestionPropertyDriver.js" />
     <None Remove="wwwroot\Scripts\Drivers\TextActivityPropertyDriver.js" />
+    <None Remove="wwwroot\Scripts\Drivers\TextGroupDriver.js" />
     <None Remove="wwwroot\Scripts\Plugins\CustomPlugins.js" />
     <None Remove="src\components\custom-input-property.tsx" />
     <None Remove="src\components\custom-outcome-property.tsx" />
@@ -100,6 +102,7 @@
     <TypeScriptCompile Include="src\components\base-component.ts" />
     <TypeScriptCompile Include="src\components\editors\he-monaco\he-monaco-utils.ts" />
     <TypeScriptCompile Include="src\nested-drivers\he-numeric-driver.tsx" />
+    <TypeScriptCompile Include="src\nested-drivers\he-text-group-driver.tsx" />
     <TypeScriptCompile Include="src\utils\intellisenseGatherer.ts" />
     <TypeScriptCompile Include="src\functions\multiExpressionEditorUpdate.tsx">
       <SubType>Code</SubType>
@@ -131,6 +134,7 @@
     <TypeScriptCompile Include="wwwroot\Scripts\Drivers\ConditionalTextListPropertyDriver.js" />
     <TypeScriptCompile Include="wwwroot\Scripts\Drivers\CustomSwitchPropertyDriver.js" />
     <TypeScriptCompile Include="wwwroot\Scripts\Drivers\CustomTextPropertyDriver.js" />
+    <TypeScriptCompile Include="wwwroot\Scripts\Drivers\TextGroupDriver.js" />
     <TypeScriptCompile Include="wwwroot\Scripts\Drivers\TextActivityPropertyDriver.js" />
     <TypeScriptCompile Include="wwwroot\Scripts\Drivers\QuestionPropertyDriver.js" />
     <TypeScriptCompile Include="wwwroot\Scripts\Plugins\CustomPlugins.js" />

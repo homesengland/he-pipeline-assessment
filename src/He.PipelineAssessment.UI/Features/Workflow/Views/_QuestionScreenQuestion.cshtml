@@ -63,6 +63,7 @@
         DisplayEvidenceBox = Model.QuestionActivityData.DisplayEvidenceBox,
         QuestionText = Model.QuestionActivityData.Question,
         QuestionGuidance = Model.QuestionActivityData.QuestionGuidance,
+        EnhancedGuidance = MapFromInformationList(Model.QuestionActivityData.EnhancedGuidance),
         QuestionHint = Model.QuestionActivityData.QuestionHint,
         QuestionId = Model.QuestionActivityData.QuestionId,
         QuestionType = Model.QuestionActivityData.QuestionType,
@@ -97,6 +98,7 @@
         DisplayEvidenceBox = Model.QuestionActivityData.DisplayEvidenceBox,
         QuestionText = Model.QuestionActivityData.Question,
         QuestionGuidance = Model.QuestionActivityData.QuestionGuidance,
+        EnhancedGuidance = MapFromInformationList(Model.QuestionActivityData.EnhancedGuidance),
         QuestionHint = Model.QuestionActivityData.QuestionHint,
         QuestionId = Model.QuestionActivityData.QuestionId,
         QuestionType = Model.QuestionActivityData.QuestionType,
@@ -135,6 +137,7 @@
         DisplayEvidenceBox = Model.QuestionActivityData.DisplayEvidenceBox,
         QuestionText = Model.QuestionActivityData.Question,
         QuestionGuidance = Model.QuestionActivityData.QuestionGuidance,
+        EnhancedGuidance = MapFromInformationList(Model.QuestionActivityData.EnhancedGuidance),
         QuestionHint = Model.QuestionActivityData.QuestionHint,
         QuestionId = Model.QuestionActivityData.QuestionId,
         QuestionType = Model.QuestionActivityData.QuestionType,
@@ -161,6 +164,7 @@
         DisplayEvidenceBox = Model.QuestionActivityData.DisplayEvidenceBox,
         QuestionText = Model.QuestionActivityData.Question,
         QuestionGuidance = Model.QuestionActivityData.QuestionGuidance,
+        EnhancedGuidance = MapFromInformationList(Model.QuestionActivityData.EnhancedGuidance),
         QuestionHint = Model.QuestionActivityData.QuestionHint,
         QuestionId = Model.QuestionActivityData.QuestionId,
         QuestionType = Model.QuestionActivityData.QuestionType,
@@ -193,6 +197,7 @@
         DisplayEvidenceBox = Model.QuestionActivityData.DisplayEvidenceBox,
         QuestionText = Model.QuestionActivityData.Question,
         QuestionGuidance = Model.QuestionActivityData.QuestionGuidance,
+        EnhancedGuidance = MapFromInformationList(Model.QuestionActivityData.EnhancedGuidance),
         QuestionHint = Model.QuestionActivityData.QuestionHint,
         QuestionId = Model.QuestionActivityData.QuestionId,
         QuestionType = Model.QuestionActivityData.QuestionType,
@@ -225,6 +230,7 @@
         DisplayEvidenceBox = Model.QuestionActivityData.DisplayEvidenceBox,
         QuestionText = Model.QuestionActivityData.Question,
         QuestionGuidance = Model.QuestionActivityData.QuestionGuidance,
+        EnhancedGuidance = MapFromInformationList(Model.QuestionActivityData.EnhancedGuidance),
         QuestionHint = Model.QuestionActivityData.QuestionHint,
         QuestionId = Model.QuestionActivityData.QuestionId,
         QuestionType = Model.QuestionActivityData.QuestionType,
@@ -257,6 +263,7 @@
         DisplayEvidenceBox = Model.QuestionActivityData.DisplayEvidenceBox,
         QuestionText = Model.QuestionActivityData.Question,
         QuestionGuidance = Model.QuestionActivityData.QuestionGuidance,
+        EnhancedGuidance = MapFromInformationList(Model.QuestionActivityData.EnhancedGuidance),
         QuestionHint = Model.QuestionActivityData.QuestionHint,
         QuestionId = Model.QuestionActivityData.QuestionId,
         QuestionType = Model.QuestionActivityData.QuestionType,
@@ -290,6 +297,7 @@
         DisplayEvidenceBox = Model.QuestionActivityData.DisplayEvidenceBox,
         QuestionText = Model.QuestionActivityData.Question,
         QuestionGuidance = Model.QuestionActivityData.QuestionGuidance,
+        EnhancedGuidance = MapFromInformationList(Model.QuestionActivityData.EnhancedGuidance),
         QuestionHint = Model.QuestionActivityData.QuestionHint,
         QuestionId = Model.QuestionActivityData.QuestionId,
         QuestionType = Model.QuestionActivityData.QuestionType,
@@ -327,6 +335,7 @@
         DocumentEvidenceLink = Model.QuestionActivityData.DocumentEvidenceLink,
         QuestionText = Model.QuestionActivityData.Question,
         QuestionGuidance = Model.QuestionActivityData.QuestionGuidance,
+        EnhancedGuidance = MapFromInformationList(Model.QuestionActivityData.EnhancedGuidance),
         QuestionHint = Model.QuestionActivityData.QuestionHint,
         QuestionId = Model.QuestionActivityData.QuestionId,
         QuestionType = Model.QuestionActivityData.QuestionType,
@@ -349,22 +358,40 @@
 
 @if (Model.QuestionActivityData.QuestionType == QuestionTypeConstants.Information)
 {
-
-    @await Html.PartialAsync("_Information",new Question()
+    var information = MapFromInformationList(Model.QuestionActivityData.Information);
+    if (information != null)
     {
-        Index = Model.Index,
-        Information = new Information
-        {
-            Text = Model.QuestionActivityData.Information.InformationTextList.
-                Select(x => new InformationText
+        @await Html.PartialAsync("_Information",new Question()
+               {
+                   Index = Model.Index,
+                   Information = information
+               })
+    }
+
+}
+
+@functions {
+
+    public List<Information>? MapFromInformationList(List<Elsa.CustomWorkflow.Sdk.Models.Workflow.Information>? informationToMap)
+    {
+        if (informationToMap == null)
+            return null;
+        return informationToMap.Select(x => new Information
+            {
+                Title = x.Title,
+                IsBullet = x.IsBullets,
+                IsGuidance = x.IsGuidance,
+                IsCollapsed = x.IsCollapsed,
+                Text = x.InformationTextList.Select(y => new InformationText
                 {
-                    Text = x.Text,
-                    IsHyperlink = x.IsHyperlink,
-                    IsGuidance = x.IsGuidance,
-                    IsParagraph = x.IsParagraph,
-                    Url = x.Url
+                    Text = y.Text,
+                    IsHyperlink = y.IsHyperlink,
+                    IsParagraph = y.IsParagraph,
+                    Url = y.Url,
+                    IsBold = y.IsBold
                 }).ToList()
-        },
-    })
+            }).ToList();
+    }
+
 }
 

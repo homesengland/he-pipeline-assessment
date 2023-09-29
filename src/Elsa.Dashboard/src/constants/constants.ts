@@ -20,9 +20,11 @@ export class SyntaxNames {
   static readonly Checked = "Checked";
   static readonly ConditionalTextList = 'ConditionalTextList';
   static readonly TextActivity = 'TextActivity';
+  static readonly TextActivityList = 'TextActivityList';
   static readonly DataDictionary = 'DataDictionary';
   static readonly DataTable = 'DataTable';
   static readonly InformationText = 'TextActivity';
+  static readonly GroupedInformationText = 'TextGroupActivity';
   static Variable: string;
   static Output: string;
 }
@@ -70,6 +72,10 @@ export class TextActivityOptionsSyntax {
   static readonly Hyperlink = "Hyperlink";
   static readonly Url = "Url";
   static readonly Condition = "Condition";
+  static readonly Bold = "Bold";
+  static readonly Bulletpoints = "Bulletpoints";
+  static readonly Collapsed = "Collapsed";
+  static readonly Title = "Title";
 }
 
 export class QuestionTypeConstants {
@@ -108,4 +114,5 @@ export class PropertyOutputTypes {
   static readonly TableInput = "tableInput";
   static readonly RadioGroup = "radioGroup";
   static readonly Information = "information";
+  static readonly InformationGroup = "informationGroup";
 }

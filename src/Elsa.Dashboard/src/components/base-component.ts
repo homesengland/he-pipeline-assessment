@@ -29,7 +29,9 @@ export class BaseComponent {
 
   componentWillLoad() {
     if (this.component.propertyDescriptor != null) {
-      if (this.component.propertyDescriptor.defaultSyntax != null && this.component.propertyDescriptor.defaultSyntax != undefined) {
+      if (this.component.propertyDescriptor.defaultSyntax != null
+        && this.component.propertyDescriptor.defaultSyntax != undefined
+        && this.component.propertyDescriptor.defaultSyntax != "") {
         this.component.modelSyntax = this.component.propertyDescriptor.defaultSyntax;
       }
     }
