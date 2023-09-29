@@ -22,6 +22,7 @@ namespace Elsa.CustomInfrastructure.Migrations
                     migrationBuilder.Sql($"EXEC(N'{sqlScript}')");
                 }
             }
+
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
