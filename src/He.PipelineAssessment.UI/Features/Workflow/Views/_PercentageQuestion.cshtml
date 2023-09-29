@@ -22,7 +22,7 @@
 
     </div>
 
-    @if (Model.EnhancedGuidance.Count() > 0)
+    @if (Model.EnhancedGuidance != null && Model.EnhancedGuidance.Any())
     {
         @await Html.PartialAsync("_EnhancedGuidance", Model)
     }

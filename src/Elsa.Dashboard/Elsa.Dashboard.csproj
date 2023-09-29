@@ -49,10 +49,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Content Remove="wwwroot\Scripts\Drivers\TextGroupDriver.js" />
-  </ItemGroup>
-
-  <ItemGroup>
     <None Remove="src\components\base-component.ts" />
     <None Remove="src\components\common-properties\he-text-activity-property.tsx" />
     <None Remove="src\components\common-properties\nested-properties\nested-property-list.tsx" />
@@ -75,6 +71,7 @@
     <None Remove="wwwroot\Scripts\Drivers\CustomTextPropertyDriver.js" />
     <None Remove="wwwroot\Scripts\Drivers\QuestionPropertyDriver.js" />
     <None Remove="wwwroot\Scripts\Drivers\TextActivityPropertyDriver.js" />
+    <None Remove="wwwroot\Scripts\Drivers\TextGroupDriver.js" />
     <None Remove="wwwroot\Scripts\Plugins\CustomPlugins.js" />
     <None Remove="src\components\custom-input-property.tsx" />
     <None Remove="src\components\custom-outcome-property.tsx" />

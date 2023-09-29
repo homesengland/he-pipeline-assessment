@@ -55,8 +55,12 @@ namespace Elsa.CustomActivities.Activities.QuestionScreen
             })]
         public string QuestionHint { get; set; } = null!;
 
-        [HeActivityInput(Hint = "Question guidance",
+        [Obsolete("This is only used for backwards compatibility. Use Enhanced Guidance for any new workflows.")]
+        public string QuestionGuidance { get; set; } = null!;
+
+        [HeActivityInput(Hint = "New enhanced Question Guidance, which adds certain formatting features, overrides any legacy Question Guidance set for this question as plain text.",
             UIHint = HePropertyUIHints.TextGroup,
+            Label = "Question Guidance",
             DefaultSyntax = TextActivitySyntaxNames.TextGroup,
             ExpectedOutputType = ExpectedOutputHints.TextGroup,
             ConditionalActivityTypes = new[]

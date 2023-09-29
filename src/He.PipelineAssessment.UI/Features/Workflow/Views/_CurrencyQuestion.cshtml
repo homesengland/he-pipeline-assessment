@@ -19,7 +19,7 @@
         <input id="@answerName" type="text" name="@itemName" class="govuk-input govuk-input--width-10 @errorFieldClass" @isReadOnly value="@Model.Decimal.ToCommaSeparatedNumber()" currency-formatter="true" />
     </div>
 
-    @if (Model.EnhancedGuidance.Count() > 0)
+    @if (Model.EnhancedGuidance != null && Model.EnhancedGuidance.Any())
     {
         @await Html.PartialAsync("_EnhancedGuidance", Model)
     }

@@ -10,7 +10,6 @@
     var hiddenQuestionId = "Data.Questions[" + Model.Index + "].QuestionId";
     var hiddenQuestionType = "Data.Questions[" + Model.Index + "].QuestionType";
     var hiddenQuestionGuidance = "Data.Questions[" + Model.Index + "].QuestionGuidance";
-    var hiddenEnhancedGuidance = "Data.Questions[" + Model.Index + "].EnhancedGuidance";
     var hiddenTitle = "Data.Questions[" + Model.Index + "].Title";
     var hiddenQuestion = "Data.Questions[" + Model.Index + "].Question";
     var hiddenQuestionHint = "Data.Questions[" + Model.Index + "].QuestionHint";
@@ -24,7 +23,6 @@
 <input type="hidden" name="@hiddenQuestionId" value="@Model.QuestionActivityData.QuestionId" />
 <input type="hidden" name="@hiddenQuestionType" value="@Model.QuestionActivityData.QuestionType" />
 <input type="hidden" name="@hiddenQuestionGuidance" value="@Model.QuestionActivityData.QuestionGuidance" />
-<input type="hidden" name="@hiddenEnhancedGuidance" value="@Model.QuestionActivityData.EnhancedGuidance" />
 <input type="hidden" name="@hiddenTitle" value="@Model.QuestionActivityData.Title" />
 <input type="hidden" name="@hiddenQuestion" value="@Model.QuestionActivityData.Question" />
 <input type="hidden" name="@hiddenQuestionHint" value="@Model.QuestionActivityData.QuestionHint" />
@@ -360,18 +358,24 @@
 
 @if (Model.QuestionActivityData.QuestionType == QuestionTypeConstants.Information)
 {
-
-    @await Html.PartialAsync("_Information",new Question()
+    var information = MapFromInformationList(Model.QuestionActivityData.Information);
+    if (information != null)
     {
-        Index = Model.Index,
-        Information = MapFromInformationList(Model.QuestionActivityData.Information)
-    })
+        @await Html.PartialAsync("_Information",new Question()
+               {
+                   Index = Model.Index,
+                   Information = information
+               })
+    }
+
 }
 
 @functions {
 
-    public List<Information> MapFromInformationList(List<Elsa.CustomWorkflow.Sdk.Models.Workflow.Information> informationToMap)
+    public List<Information>? MapFromInformationList(List<Elsa.CustomWorkflow.Sdk.Models.Workflow.Information>? informationToMap)
     {
+        if (informationToMap == null)
+            return null;
         return informationToMap.Select(x => new Information
             {
                 Title = x.Title,

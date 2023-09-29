@@ -19,7 +19,7 @@
     </div>
 
 
-    @if (Model.EnhancedGuidance.Count() < 1 && !string.IsNullOrWhiteSpace(Model.QuestionGuidance))
+    @if (Model.EnhancedGuidance != null && Model.EnhancedGuidance.Any())
     {
         @await Html.PartialAsync("_QuestionGuidance", Model.QuestionGuidance)
     }
