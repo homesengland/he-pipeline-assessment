@@ -27,21 +27,14 @@ using Elsa.Server.Extensions;
 using Elsa.Server.Helpers;
 using Elsa.Server.Middleware;
 using Elsa.Server.Providers;
-using Elsa.Server.Publisher;
 using Elsa.Server.Services;
 using Elsa.Server.StartupTasks;
 using Elsa.Services;
 using He.PipelineAssessment.Data.Auth;
-using MediatR;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.DataProtection;
-using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.DependencyInjection.Extensions;
-using StackExchange.Redis;
-using System.Globalization;
-using Elsa.Decorators;
 using Elsa.Services.Workflows;
 using Elsa.Server.Mappers;
 
@@ -53,11 +46,9 @@ using var loggerFactory = LoggerFactory.Create(loggingBuilder => loggingBuilder
     .SetMinimumLevel(LogLevel.Trace)
     .AddConsole());
 
-ILogger logger = loggerFactory.CreateLogger<Program>();
-logger.LogInformation("Example log message");
+ILogger logger = loggerFactory.CreateLogger<Program>(); ;
 
 var redisConnectionString = builder.Configuration.GetConnectionString("Redis");
-logger.LogInformation($"Redis Connection String: {redisConnectionString}");
 var clearCache = Convert.ToBoolean(builder.Configuration["Redis:ClearCache"]);
 if (!builder.Environment.IsDevelopment())
 {
