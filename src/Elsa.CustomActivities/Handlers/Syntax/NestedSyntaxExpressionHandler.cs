@@ -158,7 +158,7 @@ namespace Elsa.CustomActivities.Handlers.Syntax
                     List<TextGroup> records = await _informationGroupExpressionHandler.ElsaPropertiesToGroupedTextList(parsedProperties, evaluator, context);
                     result.TextGroups = records;
                 }
-                else if (propertyType != null && property.Syntax == TextActivitySyntaxNames.TextActivity)
+                else if (property.Syntax == null || property.Syntax == TextActivitySyntaxNames.TextActivity)
                 {
                     parsedProperties = ParseToList(property, TextActivitySyntaxNames.TextActivity);
                     List<TextRecord> records = await _informationExpressionHandler.ElsaPropertiesToTextRecordList(parsedProperties, evaluator, context);
