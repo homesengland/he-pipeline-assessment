@@ -28,6 +28,7 @@ namespace Elsa.Server.Mappers
                     IsBold = y.IsBold,
                     IsParagraph = y.IsParagraph,
                     IsHyperlink = y.IsHyperlink,
+                    IsGuidance = y.IsGuidance,
                     Url = y.Url,
 
                 })
@@ -48,6 +49,7 @@ namespace Elsa.Server.Mappers
                     IsBold = y.IsBold,
                     IsParagraph = y.IsParagraph,
                     IsHyperlink = y.IsHyperlink,
+                    IsGuidance = y.IsGuidance,
                     Url = y.Url,
 
                 })
@@ -68,6 +70,7 @@ namespace Elsa.Server.Mappers
                     IsBold = y.IsBold,
                     IsParagraph = y.IsParagraph,
                     IsHyperlink = y.IsHyperlink,
+                    IsGuidance = y.IsGuidance,
                     Url = y.Url,
 
                 })

@@ -40,6 +40,7 @@ namespace Elsa.Server.Tests.Mappers
                     Assert.Equal(expectedTextRecord.IsBold, actualInformationText.IsBold);
                     Assert.Equal(expectedTextRecord.IsHyperlink, actualInformationText.IsHyperlink);
                     Assert.Equal(expectedTextRecord.IsParagraph, actualInformationText.IsParagraph);
+                    Assert.Equal(expectedTextRecord.IsGuidance, actualInformationText.IsGuidance);
                     Assert.Equal(expectedTextRecord.Url, actualInformationText.Url);
                     Assert.Equal(expectedTextRecord.Text, actualInformationText.Text);
                 }
@@ -76,6 +77,7 @@ namespace Elsa.Server.Tests.Mappers
                     Assert.Equal(expectedTextRecord.IsBold, actualInformationText.IsBold);
                     Assert.Equal(expectedTextRecord.IsHyperlink, actualInformationText.IsHyperlink);
                     Assert.Equal(expectedTextRecord.IsParagraph, actualInformationText.IsParagraph);
+                    Assert.Equal(expectedTextRecord.IsGuidance, actualInformationText.IsGuidance);
                     Assert.Equal(expectedTextRecord.Url, actualInformationText.Url);
                     Assert.Equal(expectedTextRecord.Text, actualInformationText.Text);
                 }
@@ -112,6 +114,7 @@ namespace Elsa.Server.Tests.Mappers
                     Assert.Equal(expectedTextRecord.IsBold, actualInformationText.IsBold);
                     Assert.Equal(expectedTextRecord.IsHyperlink, actualInformationText.IsHyperlink);
                     Assert.Equal(expectedTextRecord.IsParagraph, actualInformationText.IsParagraph);
+                    Assert.Equal(expectedTextRecord.IsGuidance, actualInformationText.IsGuidance);
                     Assert.Equal(expectedTextRecord.Url, actualInformationText.Url);
                     Assert.Equal(expectedTextRecord.Text, actualInformationText.Text);
                 }
