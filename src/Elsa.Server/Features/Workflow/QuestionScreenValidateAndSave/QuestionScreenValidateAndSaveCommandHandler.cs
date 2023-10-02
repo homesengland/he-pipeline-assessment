@@ -67,8 +67,7 @@ namespace Elsa.Server.Features.Workflow.QuestionScreenValidateAndSave
                 _logger.LogError($"An error was recorded when validating workflowInstance{command.Data.WorkflowInstanceId}", e);
                 return new OperationResult<QuestionScreenValidateAndSaveResponse>
                 {
-                    ErrorMessages = new List<string> { e.Message },
-                    ValidationMessages = 
+                    ErrorMessages = new List<string> { e.Message }
                 };
         }
         }

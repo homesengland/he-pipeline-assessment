@@ -39,6 +39,9 @@ using Elsa.Services.Workflows;
 using Elsa.Server.Mappers;
 using Elsa.CustomActivities.Activities.RegionalIPUDataSource;
 using Elsa.CustomActivities.Activities.RegionalFigsDataSource;
+using FluentValidation;
+using Elsa.CustomWorkflow.Sdk.Models.Workflow;
+using Elsa.Server.Features.Workflow.QuestionScreenValidateAndSave;
 
 var builder = WebApplication.CreateBuilder(args);
 var elsaConnectionString = builder.Configuration.GetConnectionString("Elsa");
@@ -159,6 +162,8 @@ builder.Services.AddScoped<INextActivityNavigationService, NextActivityNavigatio
 
 builder.Services.AddScoped<ITextGroupMapper, TextGroupMapper>();
 
+
+builder.Services.AddScoped<IValidator<WorkflowActivityDataDto>, QuestionScreenValidator>();
 
 // Allow arbitrary client browser apps to access the API.
 // In a production environment, make sure to allow only origins you trust.

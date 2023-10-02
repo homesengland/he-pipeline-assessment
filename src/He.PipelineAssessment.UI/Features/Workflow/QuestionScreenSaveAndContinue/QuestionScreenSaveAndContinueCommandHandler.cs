@@ -42,20 +42,23 @@ namespace He.PipelineAssessment.UI.Features.Workflow.QuestionScreenSaveAndContin
                 {
                     QuestionScreenSaveAndContinueCommandResponse result = new QuestionScreenSaveAndContinueCommandResponse()
                     {
-                        ActivityId = response.Data.NextActivityId,
-                        WorkflowInstanceId = response.Data.WorkflowInstanceId,
-                        ActivityType = response.Data.ActivityType,
+                        ActivityId = response.Data != null ? response.Data.NextActivityId : string.Empty,
+                        WorkflowInstanceId = response.Data != null ? response.Data.WorkflowInstanceId: string.Empty,
+                        ActivityType = response.Data != null ? response.Data.ActivityType : string.Empty,
                         IsAuthorised = true,
                         IsValid = response.IsValid,
                         ValidationMessages = response.ValidationMessages
 
                     };
-                    var currentAssessmentToolWorkflowInstance = await _assessmentRepository.GetAssessmentToolWorkflowInstance(response.Data.WorkflowInstanceId);
-                    if (currentAssessmentToolWorkflowInstance != null)
+                    if (response.IsValid && response.Data != null)
                     {
-                        currentAssessmentToolWorkflowInstance.CurrentActivityId = response.Data.NextActivityId;
-                        currentAssessmentToolWorkflowInstance.CurrentActivityType = response.Data.ActivityType;
-                        await _assessmentRepository.SaveChanges();
+                        var currentAssessmentToolWorkflowInstance = await _assessmentRepository.GetAssessmentToolWorkflowInstance(response.Data.WorkflowInstanceId);
+                        if (currentAssessmentToolWorkflowInstance != null)
+                        {
+                            currentAssessmentToolWorkflowInstance.CurrentActivityId = response.Data.NextActivityId;
+                            currentAssessmentToolWorkflowInstance.CurrentActivityType = response.Data.ActivityType;
+                            await _assessmentRepository.SaveChanges();
+                        }
                     }
 
                     return await Task.FromResult(result);
