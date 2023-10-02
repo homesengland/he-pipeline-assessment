@@ -5,7 +5,7 @@ using MediatR;
 
 namespace Elsa.Server.Features.Workflow.QuestionScreenValidateAndSave
 {
-    public class QuestionScreenValidateAndSaveCommand : WorkflowActivityDataDto, IRequest<OperationResult<QuestionScreenSaveAndContinueResponse>>
+    public class QuestionScreenValidateAndSaveCommand : WorkflowActivityDataDto, IRequest<OperationResult<QuestionScreenValidateAndSaveResponse>>
     {
 
     }

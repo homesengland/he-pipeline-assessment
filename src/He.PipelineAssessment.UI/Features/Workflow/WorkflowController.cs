@@ -174,12 +174,9 @@ namespace He.PipelineAssessment.UI.Features.Workflow
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> QuestionScreenSaveAndContinue([FromForm] QuestionScreenSaveAndContinueCommand command)
         {
-
-            var validationResult = _validator.Validate(command);
-            if (validationResult.IsValid)
+            var result = await this._mediator.Send(command);
+            if (result.IsValid)
             {
-                var result = await this._mediator.Send(command);
-
                 if (result.IsAuthorised)
                 {
 
@@ -199,7 +196,7 @@ namespace He.PipelineAssessment.UI.Features.Workflow
             }
             else
             {
-                command.ValidationMessages = validationResult;
+                command.ValidationMessages = result.ValidationMessages;
 
                 return View("SaveAndContinue", command);
             }

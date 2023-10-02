@@ -36,8 +36,7 @@ namespace He.PipelineAssessment.UI.Features.Workflow.QuestionScreenSaveAndContin
                     throw new UnauthorizedAccessException($"You do not have permission to access this resource.");
                 }
 
-                var saveAndContinueCommandDto = _saveAndContinueMapper.SaveAndContinueCommandToMultiSaveAndContinueCommandDto(request);
-                var response = await _elsaServerHttpClient.QuestionScreenSaveAndContinue(saveAndContinueCommandDto);
+                var response = await _elsaServerHttpClient.QuestionScreenSaveAndValidate(request);
 
                 if (response != null)
                 {
@@ -46,7 +45,9 @@ namespace He.PipelineAssessment.UI.Features.Workflow.QuestionScreenSaveAndContin
                         ActivityId = response.Data.NextActivityId,
                         WorkflowInstanceId = response.Data.WorkflowInstanceId,
                         ActivityType = response.Data.ActivityType,
-                        IsAuthorised = true
+                        IsAuthorised = true,
+                        IsValid = response.IsValid,
+                        ValidationMessages = response.ValidationMessages
 
                     };
                     var currentAssessmentToolWorkflowInstance = await _assessmentRepository.GetAssessmentToolWorkflowInstance(response.Data.WorkflowInstanceId);

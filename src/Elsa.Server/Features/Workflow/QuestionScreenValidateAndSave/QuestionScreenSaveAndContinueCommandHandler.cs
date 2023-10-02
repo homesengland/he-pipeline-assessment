@@ -15,7 +15,7 @@ using System.ComponentModel.DataAnnotations;
 namespace Elsa.Server.Features.Workflow.QuestionScreenValidateAndSave
 {
     public class QuestionScreenValidateAndSaveCommandHandler : IRequestHandler<QuestionScreenValidateAndSaveCommand,
-        OperationResult<QuestionScreenSaveAndContinueResponse>>
+        OperationResult<QuestionScreenValidateAndSaveResponse>>
     {
         private readonly ILogger<QuestionScreenValidateAndSaveCommand> _logger;
         private readonly IValidator<WorkflowActivityDataDto> _validator;
@@ -31,18 +31,29 @@ namespace Elsa.Server.Features.Workflow.QuestionScreenValidateAndSave
 
         }
 
-        public async Task<OperationResult<QuestionScreenSaveAndContinueResponse>> Handle(QuestionScreenValidateAndSaveCommand command,
+        public async Task<OperationResult<QuestionScreenValidateAndSaveResponse>> Handle(QuestionScreenValidateAndSaveCommand command,
             CancellationToken cancellationToken)
         {
 
-            var result = new OperationResult<QuestionScreenSaveAndContinueResponse>();
+            var result = new OperationResult<QuestionScreenValidateAndSaveResponse>();
             try
             {
                 var validationResult = _validator.Validate(command);
                 if (validationResult.IsValid)
                 {
                     var response = await _mediator.Send(FromQuestionScreenValidateAndSaveCommand(command));
-                    return response;
+                    return new OperationResult<QuestionScreenValidateAndSaveResponse>()
+                    {
+                        Data = new QuestionScreenValidateAndSaveResponse() {
+                            NextActivityId = response.Data.NextActivityId,
+                            ActivityType = response.Data.ActivityType,
+                            IsValid = response.Data.IsValid,
+                            ValidationMessages = response.Data.ValidationMessages,
+                            WorkflowInstanceId = response.Data.WorkflowInstanceId,
+                        },
+                        ValidationMessages = response.ValidationMessages,
+                        ErrorMessages = response.ErrorMessages
+                    };
                 }
                 else
                 {
@@ -54,9 +65,10 @@ namespace Elsa.Server.Features.Workflow.QuestionScreenValidateAndSave
             catch (Exception e)
             {
                 _logger.LogError($"An error was recorded when validating workflowInstance{command.Data.WorkflowInstanceId}", e);
-                return new OperationResult<QuestionScreenSaveAndContinueResponse>
+                return new OperationResult<QuestionScreenValidateAndSaveResponse>
                 {
                     ErrorMessages = new List<string> { e.Message },
+                    ValidationMessages = 
                 };
         }
         }
