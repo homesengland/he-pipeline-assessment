@@ -33,7 +33,16 @@ namespace Elsa.CustomActivities.Activities.ConfirmationScreen
             SupportedSyntaxes = new[] { SyntaxNames.Json, TextActivitySyntaxNames.TextGroup },
             DefaultSyntax = TextActivitySyntaxNames.TextGroup,
             IsDesignerCritical = true)]
-        public GroupedTextModel Text { get; set; } = new GroupedTextModel();
+        public GroupedTextModel EnhancedText { get; set; } = new GroupedTextModel();
+
+        [HeActivityInput(Label = "Assessment Conditional Text",
+            Hint = "Text to display on Outcome Screen.",
+            UIHint = CustomActivityUIHints.TextActivityProperty,
+            SupportedSyntaxes = new[] { SyntaxNames.Json, TextActivitySyntaxNames.TextActivity },
+            DefaultSyntax = TextActivitySyntaxNames.TextActivity,
+            IsDesignerCritical = true)]
+        [Obsolete]
+        public TextModel Text { get; set; } = new TextModel();
 
         [ActivityInput(Hint = "Next workflow to run. Comma separate for multiple workflows.", SupportedSyntaxes = new[] { SyntaxNames.Literal, SyntaxNames.Json, SyntaxNames.JavaScript })]
         public string NextWorkflowDefinitionIds { get; set; } = null!;
