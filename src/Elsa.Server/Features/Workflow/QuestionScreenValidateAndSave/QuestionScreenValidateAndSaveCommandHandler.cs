@@ -44,13 +44,7 @@ namespace Elsa.Server.Features.Workflow.QuestionScreenValidateAndSave
                     var response = await _mediator.Send(FromQuestionScreenValidateAndSaveCommand(command));
                     return new OperationResult<QuestionScreenValidateAndSaveResponse>()
                     {
-                        Data = new QuestionScreenValidateAndSaveResponse() {
-                            NextActivityId = response.Data.NextActivityId,
-                            ActivityType = response.Data.ActivityType,
-                            IsValid = response.Data.IsValid,
-                            ValidationMessages = response.Data.ValidationMessages,
-                            WorkflowInstanceId = response.Data.WorkflowInstanceId,
-                        },
+                        Data = FromSaveAndContinueResponse(response),
                         ValidationMessages = response.ValidationMessages,
                         ErrorMessages = response.ErrorMessages
                     };
@@ -70,6 +64,23 @@ namespace Elsa.Server.Features.Workflow.QuestionScreenValidateAndSave
                     ErrorMessages = new List<string> { e.Message }
                 };
         }
+        }
+
+        private QuestionScreenValidateAndSaveResponse? FromSaveAndContinueResponse(OperationResult<QuestionScreenSaveAndContinueResponse> response)
+        {
+            if(response != null && response.Data != null)
+            {
+                return new QuestionScreenValidateAndSaveResponse()
+                {
+                    NextActivityId = response.Data.NextActivityId,
+                    ActivityType = response.Data.ActivityType,
+                    IsValid = response.Data.IsValid,
+                    ValidationMessages = response.Data.ValidationMessages,
+                    WorkflowInstanceId = response.Data.WorkflowInstanceId,
+                };
+            }
+            else { return null; }
+
         }
 
         private QuestionScreenSaveAndContinueCommand FromQuestionScreenValidateAndSaveCommand(QuestionScreenValidateAndSaveCommand command)

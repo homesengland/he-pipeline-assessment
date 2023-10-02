@@ -78,6 +78,11 @@ export class TextActivityOptionsSyntax {
   static readonly Title = "Title";
 }
 
+export class ValidationSyntax {
+  static readonly UseValidation = "UseValidation";
+  static readonly ValidationRule = "ValidationRule";
+}
+
 export class QuestionTypeConstants {
   static readonly CurrencyQuestion = "CurrencyQuestion";
   static readonly PercentageQuestion = "PercentageQuestion";
