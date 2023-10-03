@@ -12,6 +12,6 @@ namespace Elsa.CustomActivities.Activities.Common
         public ICollection<Validation> Validations { get; set; } = new List<Validation>();
     }
 
-    public record Validation(string ErrorMessage, bool UseValidation, bool Rule);
+    public record Validation(string? ErrorMessage, bool UseValidation, bool Rule);
 
 }
