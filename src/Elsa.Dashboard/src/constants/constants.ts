@@ -120,4 +120,5 @@ export class PropertyOutputTypes {
   static readonly RadioGroup = "radioGroup";
   static readonly Information = "information";
   static readonly InformationGroup = "informationGroup";
+  static readonly Validation = "validation";
 }

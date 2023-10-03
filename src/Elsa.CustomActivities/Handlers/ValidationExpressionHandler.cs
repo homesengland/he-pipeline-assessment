@@ -13,7 +13,7 @@ using System.Threading.Tasks;
 
 namespace Elsa.CustomActivities.Handlers
 {
-    internal class ValidationExpressionHandler
+    internal class ValidationExpressionHandler : IExpressionHandler
     {
         private readonly IContentSerializer _contentSerializer;
         private readonly ILogger<IExpressionHandler> _logger;
@@ -24,6 +24,18 @@ namespace Elsa.CustomActivities.Handlers
             _contentSerializer = contentSerializer;
         }
 
+        public string Syntax => ValidationSyntaxNames.Validation;
+
+        public async Task<object?> EvaluateAsync(string expression, Type returnType, ActivityExecutionContext context, CancellationToken cancellationToken)
+        {
+            var evaluator = context.GetService<IExpressionEvaluator>();
+            ValidationModel result = new ValidationModel();
+            var validationChecks = TryDeserializeExpression(expression);
+            var validationList = await ElsaPropertyToValidationsList(validationChecks, evaluator, context);
+            result.Validations = validationList;
+            return result;
+        }
+
         public async Task<List<Validation>> ElsaPropertyToValidationsList(List<ElsaProperty> properties, IExpressionEvaluator evaluator, ActivityExecutionContext context)
         {
             Validation[] resultArray = await Task.WhenAll(properties.Select(x => ElsaPropertyToValidation(x, evaluator, context)));
@@ -32,31 +44,21 @@ namespace Elsa.CustomActivities.Handlers
 
         private async Task<Validation> ElsaPropertyToValidation(ElsaProperty property, IExpressionEvaluator evaluator, ActivityExecutionContext context)
         {
-            bool rule = await property.EvaluateFromExpressions<bool>(evaluator, context, _logger, CancellationToken.None);
-            bool useValidation = EvaluateBoolean(property, ValidationSyntaxNames.UseValidation);
-            string? errorMessage = EvaluateString(property, ValidationSyntaxNames.ErorMessage);
-
-            return new Validation(errorMessage, useValidation, rule);
+            string errorMessage = await property.EvaluateFromExpressions<string>(evaluator, context, _logger, CancellationToken.None);
+            bool validationRule = await property.EvaluateFromExpressionsExplicit<bool>(evaluator, context, _logger, property.Expressions![ValidationSyntaxNames.Rule], SyntaxNames.JavaScript);
+            return new Validation { IsValid = validationRule, ValidationMessage = errorMessage };
         }
 
-        private string? EvaluateString(ElsaProperty property, string key)
+        private List<ElsaProperty> TryDeserializeExpression(string expression)
         {
-            if (property.Expressions!.ContainsKey(key))
+            try
             {
-                string? value = property.Expressions?[key];
-                return value;
-            };
-            return string.Empty;
-        }
-
-        public bool EvaluateBoolean(ElsaProperty property, string key)
-        {
-            if (property.Expressions!.ContainsKey(key))
+                return _contentSerializer.Deserialize<List<ElsaProperty>>(expression);
+            }
+            catch
             {
-                bool value = property.Expressions?[key].ToLower() == "true";
-                return value;
-            };
-            return false;
+                return new List<ElsaProperty>();
+            }
         }
     }
 }

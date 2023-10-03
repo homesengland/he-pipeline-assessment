@@ -31,9 +31,7 @@ namespace Elsa.CustomActivities.Constants
 
     public class ValidationSyntaxNames
     {
-        public const string UseValidation = "UseValidation";
-        public const string ErorMessage = "ErrorMessage";
-        public const string Rule = "Rule";
+        public const string Rule = "ValidationRule";
         public const string Validation = "Validation";
     }
 

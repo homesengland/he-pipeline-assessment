@@ -88,8 +88,8 @@ export class HeValidationProperty implements ISortableSharedComponent, IDisplayT
     const textName = newOptionLetter(this._base.IdentifierArray());
     const newTextElement: NestedActivityDefinitionProperty = {
       syntax: SyntaxNames.Literal,
-      expressions: { [SyntaxNames.Literal]: '', [TextActivityOptionsSyntax.Paragraph]: 'true', [TextActivityOptionsSyntax.Condition]: 'true' },
-      type: PropertyOutputTypes.Information,
+      expressions: { [SyntaxNames.Literal]: '', [ValidationSyntax.ValidationRule]: ''},
+      type: PropertyOutputTypes.Validation,
       name: textName
     };
     this.properties = [...this.properties, newTextElement];

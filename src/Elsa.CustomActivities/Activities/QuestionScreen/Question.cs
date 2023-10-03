@@ -289,6 +289,7 @@ namespace Elsa.CustomActivities.Activities.QuestionScreen
 
         [HeActivityInput(Hint = "Set up the question validation rules",
     UIHint = HePropertyUIHints.Validation,
+            DefaultSyntax = ValidationSyntaxNames.Validation,
     ConditionalActivityTypes = new[]
     {
                 QuestionTypeConstants.TextQuestion,
