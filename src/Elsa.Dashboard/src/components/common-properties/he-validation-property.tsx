@@ -10,7 +10,7 @@ import { IconProvider } from "../providers/icon-provider/icon-provider";
 import { NestedActivityDefinitionProperty } from "../../models/custom-component-models";
 import PlusIcon from '../../icons/plus_icon';
 import { mapSyntaxToLanguage, parseJson, newOptionLetter, Map } from '../../utils/utils';
-import { PropertyOutputTypes, SyntaxNames, TextActivityOptionsSyntax, ValidationSyntax } from '../../constants/constants';
+import { PropertyOutputTypes, SyntaxNames, ValidationSyntax } from '../../constants/constants';
 import { BaseComponent, ISortableSharedComponent } from '../base-component';
 import { DisplayToggle, IDisplayToggle } from '../display-toggle-component';
 import SortIcon from '../../icons/sort_icon';
@@ -171,18 +171,14 @@ export class HeValidationProperty implements ISortableSharedComponent, IDisplayT
                   {/*</select>*/}
                 {/*</div>*/}
               </div>
-              <p class="elsa-mt-2 elsa-text-sm elsa-text-gray-500">The validation rule to evaluate for this question.</p>
+              <p class="elsa-mt-2 elsa-text-sm elsa-text-gray-500">The validation rule to evaluate for this question.  This must be written in Javascript, and will default to "true" if left blank.</p>
+              <p class="elsa-mt-2 elsa-text-sm elsa-text-gray-500">Rules that evaluate as true will pass validation, and rules that evaluate as false will fail, and display the validation message below.</p>
             </td>
           </tr>
 
-          <tr onClick={() => this.onToggleOptions(index)}>
-            <th
-              class="elsa-px-6 elsa-py-3 elsa-text-left elsa-text-xs elsa-font-medium elsa-text-gray-500 elsa-text-left elsa-tracking-wider elsa-w-1/12" colSpan={3} style={{ cursor: "zoom-in" }}> Options
-            </th>
-          </tr>
           <tr>
               <th
-                class="elsa-px-6 elsa-py-3 elsa-text-left elsa-text-xs elsa-font-medium elsa-text-gray-500 elsa-tracking-wider elsa-w-2/12">Error Message
+                class="elsa-px-6 elsa-py-3 elsa-text-left elsa-text-xs elsa-font-medium elsa-text-gray-500 elsa-tracking-wider elsa-w-2/12">Validation Message
             </th>
             <td class="elsa-py-2 pl-5" colSpan={2} style={{ width: colWidth }}>
                 <div class="elsa-mt-1 elsa-relative elsa-rounded-md elsa-shadow-sm">
@@ -196,7 +192,7 @@ export class HeValidationProperty implements ISortableSharedComponent, IDisplayT
                   padding="elsa-pt-1.5 elsa-pl-1 elsa-pr-28"
                   onExpressionChanged={e => this._base.CustomUpdateExpression(e, validationRule, errorMessageSyntax)}
                   />
-                <div class="elsa-absolute elsa-inset-y-0 elsa-right-0 elsa-flex elsa-items-center">
+                <div class="elsa-absolute elsa-inset-y-0 elsa-right-0 elsa-flex elsa-items-center elsa-select">
                   <select onChange={e => this._base.UpdateSyntax(e, validationRule, errorMessageExpressionEditor)}
                     class="focus:elsa-ring-blue-500 focus:elsa-border-blue-500 elsa-h-full elsa-py-0 elsa-pl-2 elsa-pr-7 elsa-border-transparent elsa-bg-transparent elsa-text-gray-500 sm:elsa-text-sm elsa-rounded-md">
                     {this.supportedSyntaxes.map(supportedSyntax => {
@@ -206,7 +202,7 @@ export class HeValidationProperty implements ISortableSharedComponent, IDisplayT
                   </select>
                   </div>
               </div>
-              <p class="elsa-mt-2 elsa-text-sm elsa-text-gray-500">The error message to display for this question in the front end, if the validation rule is broken.</p>
+              <p class="elsa-mt-2 elsa-text-sm elsa-text-gray-500">The error message to display for this question in the front end, if the validation rule returns "false".</p>
               </td>
             </tr>
         </tbody>
