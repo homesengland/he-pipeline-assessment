@@ -304,6 +304,6 @@ namespace Elsa.CustomActivities.Activities.QuestionScreen
                 QuestionTypeConstants.WeightedCheckboxQuestion,
                 QuestionTypeConstants.CheckboxQuestion
     })]
-        public ValidationModel Validation { get; set; } = new ValidationModel();
+        public ValidationModel Validations { get; set; } = new ValidationModel();
     }
 }

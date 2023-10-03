@@ -223,7 +223,13 @@ namespace Elsa.CustomActivities.Handlers.Syntax
             if (propertyType != null && propertyType == typeof(ValidationModel))
             {
                 ValidationModel result = new ValidationModel();
-                result = await _validationExpressionHandler.ElsaPropertyToValidationModel(property, evaluator, context);
+                var parsedProperties = ParseToList(property, ValidationSyntaxNames.Validation);
+                if (parsedProperties != null)
+                {
+                    List<Validation> validations = await _validationExpressionHandler.ElsaPropertyToValidationsList(parsedProperties, evaluator, context);
+                    result.Validations = validations;   
+                }
+                
                 return result;
             }
             else

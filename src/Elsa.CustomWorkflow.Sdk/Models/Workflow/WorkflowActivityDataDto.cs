@@ -88,7 +88,7 @@ namespace Elsa.CustomWorkflow.Sdk.Models.Workflow
 
         public DataTableInput DataTable { get { return _dataTable; } set { SetDataTable(value); } }
 
-        public Validation Validation { get; set; } = new Validation();
+        public List<Validation> Validations { get; set; } = new List<Validation>();
 
         #region Getters
         public Date GetDate()

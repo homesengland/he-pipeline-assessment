@@ -6,10 +6,12 @@ using System.Threading.Tasks;
 
 namespace Elsa.CustomActivities.Activities.Common
 {
+
     public class ValidationModel
     {
-        public bool UseValidation { get; set; }
-        public string? ErrorMessage { get; set; }
-        public string? Rule { get; set; }
+        public ICollection<Validation> Validations { get; set; } = new List<Validation>();
     }
+
+    public record Validation(string ErrorMessage, bool UseValidation, bool Rule);
+
 }

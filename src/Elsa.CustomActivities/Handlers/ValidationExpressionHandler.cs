@@ -24,9 +24,39 @@ namespace Elsa.CustomActivities.Handlers
             _contentSerializer = contentSerializer;
         }
 
-        internal Task<ValidationModel> ElsaPropertyToValidationModel(ElsaProperty property, IExpressionEvaluator evaluator, ActivityExecutionContext context)
+        public async Task<List<Validation>> ElsaPropertyToValidationsList(List<ElsaProperty> properties, IExpressionEvaluator evaluator, ActivityExecutionContext context)
         {
-            throw new NotImplementedException();
+            Validation[] resultArray = await Task.WhenAll(properties.Select(x => ElsaPropertyToValidation(x, evaluator, context)));
+            return resultArray.ToList();
+        }
+
+        private async Task<Validation> ElsaPropertyToValidation(ElsaProperty property, IExpressionEvaluator evaluator, ActivityExecutionContext context)
+        {
+            bool rule = await property.EvaluateFromExpressions<bool>(evaluator, context, _logger, CancellationToken.None);
+            bool useValidation = EvaluateBoolean(property, ValidationSyntaxNames.UseValidation);
+            string? errorMessage = EvaluateString(property, ValidationSyntaxNames.ErorMessage);
+
+            return new Validation(errorMessage, useValidation, rule);
+        }
+
+        private string? EvaluateString(ElsaProperty property, string key)
+        {
+            if (property.Expressions!.ContainsKey(key))
+            {
+                string? value = property.Expressions?[key];
+                return value;
+            };
+            return string.Empty;
+        }
+
+        public bool EvaluateBoolean(ElsaProperty property, string key)
+        {
+            if (property.Expressions!.ContainsKey(key))
+            {
+                bool value = property.Expressions?[key].ToLower() == "true";
+                return value;
+            };
+            return false;
         }
     }
 }
