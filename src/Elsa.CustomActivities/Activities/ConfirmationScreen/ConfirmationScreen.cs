@@ -35,13 +35,14 @@ namespace Elsa.CustomActivities.Activities.ConfirmationScreen
             IsDesignerCritical = true)]
         public GroupedTextModel EnhancedText { get; set; } = new GroupedTextModel();
 
-        [HeActivityInput(Label = "Assessment Conditional Text",
-            Hint = "Text to display on Outcome Screen.",
+        [HeActivityInput(Label = "Assessment Conditional Text (Obsolete)",
+            Hint = "This is only used for backwards compatibility. Use EnhancedText for any new workflows.",
             UIHint = CustomActivityUIHints.TextActivityProperty,
             SupportedSyntaxes = new[] { SyntaxNames.Json, TextActivitySyntaxNames.TextActivity },
             DefaultSyntax = TextActivitySyntaxNames.TextActivity,
-            IsDesignerCritical = true)]
-        [Obsolete]
+            IsDesignerCritical = true,
+            DisplayInDesigner = false)]
+        [Obsolete("This is only used for backwards compatibility. Use EnhancedText for any new workflows.")]
         public TextModel Text { get; set; } = new TextModel();
 
         [ActivityInput(Hint = "Next workflow to run. Comma separate for multiple workflows.", SupportedSyntaxes = new[] { SyntaxNames.Literal, SyntaxNames.Json, SyntaxNames.JavaScript })]
