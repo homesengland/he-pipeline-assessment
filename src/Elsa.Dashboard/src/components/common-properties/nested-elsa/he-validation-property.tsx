@@ -16,7 +16,7 @@ import { SyntaxNames, ValidationSyntax } from '../../../constants/constants';
 import { getUniversalUniqueId } from '../../../utils/utils';
 
 @Component({
-  tag: 'he-switch-answers-property',
+  tag: 'he-validation-property',
   shadow: false,
 })
 //Copy of Elsa Switch Case
