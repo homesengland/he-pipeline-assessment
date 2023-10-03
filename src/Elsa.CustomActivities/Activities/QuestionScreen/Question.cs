@@ -286,5 +286,24 @@ namespace Elsa.CustomActivities.Activities.QuestionScreen
                 QuestionTypeConstants.CheckboxQuestion
             })]
         public bool HideQuestion { get; set; } = false;
+
+        [HeActivityInput(Hint = "Set up the question validation",
+    UIHint = HePropertyUIHints.Validation,
+    ConditionalActivityTypes = new[]
+    {
+                QuestionTypeConstants.TextQuestion,
+                QuestionTypeConstants.TextAreaQuestion,
+                QuestionTypeConstants.CurrencyQuestion,
+                QuestionTypeConstants.DecimalQuestion,
+                QuestionTypeConstants.IntegerQuestion,
+                QuestionTypeConstants.PercentageQuestion,
+                QuestionTypeConstants.DateQuestion,
+                QuestionTypeConstants.RadioQuestion,
+                QuestionTypeConstants.PotScoreRadioQuestion,
+                QuestionTypeConstants.WeightedRadioQuestion,
+                QuestionTypeConstants.WeightedCheckboxQuestion,
+                QuestionTypeConstants.CheckboxQuestion
+    })]
+        public ValidationModel Validations { get; set; } = new ValidationModel();
     }
 }

@@ -88,6 +88,8 @@ namespace Elsa.CustomWorkflow.Sdk.Models.Workflow
 
         public DataTableInput DataTable { get { return _dataTable; } set { SetDataTable(value); } }
 
+        public List<Validation> Validations { get; set; } = new List<Validation>();
+
         #region Getters
         public Date GetDate()
         {
@@ -296,6 +298,14 @@ namespace Elsa.CustomWorkflow.Sdk.Models.Workflow
         }
         #endregion 
     }
+
+    public class Validation
+    {
+        public bool UseValidation { get; set; }
+        public string? ErrorMessage { get; set; }
+        public string? Rule { get; set; }
+    }
+
 
     public class Checkbox
     {
