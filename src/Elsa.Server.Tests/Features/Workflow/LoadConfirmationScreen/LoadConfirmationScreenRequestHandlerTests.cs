@@ -64,7 +64,7 @@ namespace Elsa.Server.Tests.Features.Workflow.LoadConfirmationScreen
 
         [Theory]
         [AutoMoqData]
-        public async Task Handle_ReturnQuestions_GivenNoErrorsEncountered(
+        public async Task Handle_ReturnConfirmationWithGroupedTextModel_GivenEnhancedTextExistsAndNoErrorsEncountered(
             [Frozen] Mock<IElsaCustomRepository> elsaCustomRepository,
             [Frozen] Mock<IActivityDataProvider> activityDataProvider,
             [Frozen] Mock<ITextGroupMapper> textGroupMapper,
@@ -90,7 +90,7 @@ namespace Elsa.Server.Tests.Features.Workflow.LoadConfirmationScreen
                 { "FooterText", "MyFooterText" },
                 { "FooterTitle", "MyFooterTitle" },
                 { "NextWorkflowDefinitionIds", "MyNextWorkflowDefinitionId" },
-                { "Text", groupedTextModel}
+                { "EnhancedText", groupedTextModel}
             };
 
             activityDataProvider
@@ -111,10 +111,170 @@ namespace Elsa.Server.Tests.Features.Workflow.LoadConfirmationScreen
             Assert.Equal("MyConfirmationText", result.Data.ConfirmationText);
             Assert.Equal("MyFooterText", result.Data.FooterText);
             Assert.Equal("MyFooterTitle", result.Data.FooterTitle);
-            //Assert.Equal(3, result.Data.Text.Count());
-            //Assert.Equal("1", result.Data.Text.FirstOrDefault());
             Assert.Equal("MyNextWorkflowDefinitionId", result.Data.NextWorkflowDefinitionIds);
             Assert.Equal(informationList, result.Data.Text);
+            Assert.Empty(result.ErrorMessages);
+        }
+
+        [Theory]
+        [AutoMoqData]
+        public async Task Handle_ReturnConfirmationWithTextModel_GivenTextExistsAndEnhancedTextDoesNotExistAndNoErrorsEncountered(
+            [Frozen] Mock<IElsaCustomRepository> elsaCustomRepository,
+            [Frozen] Mock<IActivityDataProvider> activityDataProvider,
+            [Frozen] Mock<ITextGroupMapper> textGroupMapper,
+            LoadConfirmationScreenRequest request,
+            CustomActivityNavigation customActivityNavigation,
+            List<Question> questions,
+            TextModel textModel,
+            List<Information> informationList,
+            LoadConfirmationScreenRequestHandler sut)
+        {
+            //Arrange
+            elsaCustomRepository.Setup(x => x.GetCustomActivityNavigation(request.ActivityId,
+                    request.WorkflowInstanceId, CancellationToken.None))
+                .ReturnsAsync(customActivityNavigation);
+
+            elsaCustomRepository.Setup(x => x.GetWorkflowInstanceQuestions(request.WorkflowInstanceId, CancellationToken.None))
+                .ReturnsAsync(questions);
+
+            var dictionary = new Dictionary<string, object?>()
+            {
+                { "ConfirmationTitle", "MyConfirmationTitle" },
+                { "ConfirmationText", "MyConfirmationText" },
+                { "FooterText", "MyFooterText" },
+                { "FooterTitle", "MyFooterTitle" },
+                { "NextWorkflowDefinitionIds", "MyNextWorkflowDefinitionId" },
+                { "Text", textModel}
+            };
+
+            activityDataProvider
+                .Setup(x => x.GetActivityData(request.WorkflowInstanceId, request.ActivityId, CancellationToken.None))
+                .ReturnsAsync(dictionary);
+            textGroupMapper.Setup(x => x.InformationListFromTextModel(textModel)).Returns(informationList);
+
+            //Act
+            var result = await sut.Handle(request, CancellationToken.None);
+
+            //Assert
+            Assert.NotNull(result.Data);
+            Assert.Equal(questions, result.Data!.CheckQuestions);
+            Assert.Equal(request.ActivityId, result.Data.ActivityId);
+            Assert.Equal(request.WorkflowInstanceId, result.Data.WorkflowInstanceId);
+            Assert.Equal(ActivityTypeConstants.ConfirmationScreen, result.Data.ActivityType);
+            Assert.Equal("MyConfirmationTitle", result.Data.ConfirmationTitle);
+            Assert.Equal("MyConfirmationText", result.Data.ConfirmationText);
+            Assert.Equal("MyFooterText", result.Data.FooterText);
+            Assert.Equal("MyFooterTitle", result.Data.FooterTitle);
+            Assert.Equal("MyNextWorkflowDefinitionId", result.Data.NextWorkflowDefinitionIds);
+            Assert.Equal(informationList, result.Data.Text);
+            Assert.Empty(result.ErrorMessages);
+        }
+
+        [Theory]
+        [AutoMoqData]
+        public async Task Handle_ReturnConfirmationWithGroupedTextModel_GivenBothTextAndEnhancedTextExistAndNoErrorsEncountered(
+            [Frozen] Mock<IElsaCustomRepository> elsaCustomRepository,
+            [Frozen] Mock<IActivityDataProvider> activityDataProvider,
+            [Frozen] Mock<ITextGroupMapper> textGroupMapper,
+            LoadConfirmationScreenRequest request,
+            CustomActivityNavigation customActivityNavigation,
+            List<Question> questions,
+            TextModel textModel,
+            GroupedTextModel groupedTextModel,
+            List<Information> informationList,
+            List<Information> informationListForGroupedModel,
+            LoadConfirmationScreenRequestHandler sut)
+        {
+            //Arrange
+            elsaCustomRepository.Setup(x => x.GetCustomActivityNavigation(request.ActivityId,
+                    request.WorkflowInstanceId, CancellationToken.None))
+                .ReturnsAsync(customActivityNavigation);
+
+            elsaCustomRepository.Setup(x => x.GetWorkflowInstanceQuestions(request.WorkflowInstanceId, CancellationToken.None))
+                .ReturnsAsync(questions);
+
+            var dictionary = new Dictionary<string, object?>()
+            {
+                { "ConfirmationTitle", "MyConfirmationTitle" },
+                { "ConfirmationText", "MyConfirmationText" },
+                { "FooterText", "MyFooterText" },
+                { "FooterTitle", "MyFooterTitle" },
+                { "NextWorkflowDefinitionIds", "MyNextWorkflowDefinitionId" },
+                { "EnhancedText", groupedTextModel},
+                { "Text", textModel}
+            };
+
+            activityDataProvider
+                .Setup(x => x.GetActivityData(request.WorkflowInstanceId, request.ActivityId, CancellationToken.None))
+                .ReturnsAsync(dictionary);
+            textGroupMapper.Setup(x => x.InformationListFromTextModel(textModel)).Returns(informationList);
+            textGroupMapper.Setup(x => x.InformationListFromGroupedTextModel(groupedTextModel)).Returns(informationListForGroupedModel);
+
+            //Act
+            var result = await sut.Handle(request, CancellationToken.None);
+
+            //Assert
+            Assert.NotNull(result.Data);
+            Assert.Equal(questions, result.Data!.CheckQuestions);
+            Assert.Equal(request.ActivityId, result.Data.ActivityId);
+            Assert.Equal(request.WorkflowInstanceId, result.Data.WorkflowInstanceId);
+            Assert.Equal(ActivityTypeConstants.ConfirmationScreen, result.Data.ActivityType);
+            Assert.Equal("MyConfirmationTitle", result.Data.ConfirmationTitle);
+            Assert.Equal("MyConfirmationText", result.Data.ConfirmationText);
+            Assert.Equal("MyFooterText", result.Data.FooterText);
+            Assert.Equal("MyFooterTitle", result.Data.FooterTitle);
+            Assert.Equal("MyNextWorkflowDefinitionId", result.Data.NextWorkflowDefinitionIds);
+            Assert.Equal(informationListForGroupedModel, result.Data.Text);
+            Assert.NotEqual(informationList, result.Data.Text);
+            Assert.Empty(result.ErrorMessages);
+        }
+
+        [Theory]
+        [AutoMoqData]
+        public async Task Handle_ReturnConfirmationWithEmptyTextModel_GivenNoTextOrEnhancedTexExistAndNoErrorsEncountered(
+            [Frozen] Mock<IElsaCustomRepository> elsaCustomRepository,
+            [Frozen] Mock<IActivityDataProvider> activityDataProvider,
+            LoadConfirmationScreenRequest request,
+            CustomActivityNavigation customActivityNavigation,
+            List<Question> questions,
+            LoadConfirmationScreenRequestHandler sut)
+        {
+            //Arrange
+            elsaCustomRepository.Setup(x => x.GetCustomActivityNavigation(request.ActivityId,
+                    request.WorkflowInstanceId, CancellationToken.None))
+                .ReturnsAsync(customActivityNavigation);
+
+            elsaCustomRepository.Setup(x => x.GetWorkflowInstanceQuestions(request.WorkflowInstanceId, CancellationToken.None))
+                .ReturnsAsync(questions);
+
+            var dictionary = new Dictionary<string, object?>()
+            {
+                { "ConfirmationTitle", "MyConfirmationTitle" },
+                { "ConfirmationText", "MyConfirmationText" },
+                { "FooterText", "MyFooterText" },
+                { "FooterTitle", "MyFooterTitle" },
+                { "NextWorkflowDefinitionIds", "MyNextWorkflowDefinitionId" }
+            };
+
+            activityDataProvider
+                .Setup(x => x.GetActivityData(request.WorkflowInstanceId, request.ActivityId, CancellationToken.None))
+                .ReturnsAsync(dictionary);
+
+            //Act
+            var result = await sut.Handle(request, CancellationToken.None);
+
+            //Assert
+            Assert.NotNull(result.Data);
+            Assert.Equal(questions, result.Data!.CheckQuestions);
+            Assert.Equal(request.ActivityId, result.Data.ActivityId);
+            Assert.Equal(request.WorkflowInstanceId, result.Data.WorkflowInstanceId);
+            Assert.Equal(ActivityTypeConstants.ConfirmationScreen, result.Data.ActivityType);
+            Assert.Equal("MyConfirmationTitle", result.Data.ConfirmationTitle);
+            Assert.Equal("MyConfirmationText", result.Data.ConfirmationText);
+            Assert.Equal("MyFooterText", result.Data.FooterText);
+            Assert.Equal("MyFooterTitle", result.Data.FooterTitle);
+            Assert.Equal("MyNextWorkflowDefinitionId", result.Data.NextWorkflowDefinitionIds);
+            Assert.Empty(result.Data.Text);
             Assert.Empty(result.ErrorMessages);
         }
     }

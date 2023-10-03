@@ -4,7 +4,6 @@ using Elsa.CustomActivities.Handlers.Models;
 using Elsa.Expressions;
 using Elsa.Serialization;
 using Elsa.Services.Models;
-using Microsoft.AspNetCore.Mvc.ModelBinding;
 using Microsoft.Extensions.Logging;
 
 namespace Elsa.CustomActivities.Handlers
@@ -23,13 +22,6 @@ namespace Elsa.CustomActivities.Handlers
             _logger = logger;
             _contentSerializer = contentSerializer;
         }
-
-        //public InformationTextGroupExpressionHandler(InformationTextExpressionHandler handler,ILogger<IExpressionHandler> logger, IContentSerializer contentSerializer)
-        //{
-        //    _textHandler = handler;
-        //    _logger = logger;
-        //    _contentSerializer = contentSerializer;
-        //}
 
         public async Task<object?> EvaluateAsync(string expression, Type returnType, ActivityExecutionContext context, CancellationToken cancellationToken)
         {
