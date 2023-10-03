@@ -151,7 +151,7 @@ export namespace Components {
     }
     interface HeValidationProperty {
         "activityModel": ActivityModel;
-        "keyId": string;
+        "modelSyntax": string;
         "propertyDescriptor": ActivityPropertyDescriptor;
         "propertyModel": ActivityDefinitionProperty;
     }
@@ -677,7 +677,7 @@ declare namespace LocalJSX {
     }
     interface HeValidationProperty {
         "activityModel"?: ActivityModel;
-        "keyId"?: string;
+        "modelSyntax"?: string;
         "onExpressionChanged"?: (event: HeValidationPropertyCustomEvent<string>) => void;
         "propertyDescriptor"?: ActivityPropertyDescriptor;
         "propertyModel"?: ActivityDefinitionProperty;

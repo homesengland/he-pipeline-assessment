@@ -287,7 +287,7 @@ namespace Elsa.CustomActivities.Activities.QuestionScreen
             })]
         public bool HideQuestion { get; set; } = false;
 
-        [HeActivityInput(Hint = "Set up the question validation",
+        [HeActivityInput(Hint = "Set up the question validation rules",
     UIHint = HePropertyUIHints.Validation,
     ConditionalActivityTypes = new[]
     {

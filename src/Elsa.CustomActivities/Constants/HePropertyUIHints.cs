@@ -25,6 +25,6 @@ namespace Elsa.CustomActivities.Constants
         public const string TextActivity = "he-text-activity";
         public const string TextGroup = "he-text-group";
         public const string DataTable = "he-data-table";
-        public const string Validation = "he-validation";
+        public const string Validation = "he-validation-property";
     }
 }
