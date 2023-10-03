@@ -9,6 +9,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="src\components\common-properties\he-validation-property.tsx" />
     <None Remove="System.Security.Cryptography.Pkcs" />
     <None Remove="System.Drawing.Common" />
     <None Remove="System.Text.RegularExpressions" />
@@ -94,6 +95,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <TypeScriptCompile Include="src\components\common-properties\he-validation-property.tsx" />
     <TypeScriptCompile Include="src\components\display-toggle-component.ts">
       <SubType>Code</SubType>
     </TypeScriptCompile>
