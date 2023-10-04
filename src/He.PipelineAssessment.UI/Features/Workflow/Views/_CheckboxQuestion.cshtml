@@ -1,4 +1,5 @@
-﻿@using He.PipelineAssessment.UI.Features.Workflow.ViewModels
+﻿@using Elsa.CustomWorkflow.Sdk.Providers;
+@using He.PipelineAssessment.UI.Features.Workflow.ViewModels
 @model He.PipelineAssessment.UI.Features.Workflow.ViewModels.Question
 
 @functions {
@@ -8,8 +9,8 @@
     }
 }
 @{
-    var itemName = "Data.Questions[" + Model.Index + "].Checkbox.SelectedChoices";
-    var formItemName = "Data.Questions[" + Model.Index + "].Checkbox";
+    var itemName = ValidationPropertyNameProvider.GetPropertyName(Model.QuestionType, Model.Index) + ".SelectedChoices";
+    var formItemName = ValidationPropertyNameProvider.GetPropertyName(Model.QuestionType, Model.Index);
 
     var errorFormClass = !Model.IsValid ? "govuk-form-group--error" : "";
     var isReadOnly = Model.IsReadOnly ? "disabled" : "";

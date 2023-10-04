@@ -28,6 +28,10 @@ namespace Elsa.CustomWorkflow.Sdk.Providers
             {
                 return GetRadioPropertyName(questionIndex);
             }
+            else if (questionType == QuestionTypeConstants.CheckboxQuestion)
+            {
+                return GetCheckboxPropertyName(questionIndex);
+            }
             return string.Empty;
         }
 
@@ -44,6 +48,10 @@ namespace Elsa.CustomWorkflow.Sdk.Providers
         private static string GetInputPropertyName(int questionIndex)
         {
             return "Data.Questions[" + questionIndex + "].Answers[0]";
+        }
+        private static string GetCheckboxPropertyName(int questionIndex)
+        {
+            return "Data.Questions[" + questionIndex + "].Checkbox";
         }
     }
 

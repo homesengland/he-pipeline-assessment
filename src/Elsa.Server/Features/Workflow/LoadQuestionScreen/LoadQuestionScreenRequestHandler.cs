@@ -117,6 +117,7 @@ namespace Elsa.Server.Features.Workflow.LoadQuestionScreen
                                     }
                                     questionIndex++;
                                 }
+                                result.ValidationMessages = MapValidationModelToValidationResults(elsaActivityAssessmentQuestions.Questions);
                             }
                             else
                             {
@@ -177,8 +178,6 @@ namespace Elsa.Server.Features.Workflow.LoadQuestionScreen
             questionActivityData.IsReadOnly = item.IsReadOnly;
             questionActivityData.ReevaluatePrepopulatedAnswers = item.ReevaluatePrePopulatedAnswers;
             questionActivityData.HideQuestion = item.HideQuestion;
-
-         //  questionActivityData.Validations = MapValidationModelToValidationResults(item, questionIndex);
             
             if (item.QuestionType == QuestionTypeConstants.CheckboxQuestion ||
                 item.QuestionType == QuestionTypeConstants.WeightedCheckboxQuestion)
@@ -337,19 +336,23 @@ namespace Elsa.Server.Features.Workflow.LoadQuestionScreen
             return questionActivityData;
         }
 
-        private static ValidationResult MapValidationModelToValidationResults(CustomActivities.Activities.QuestionScreen.Question item, int quIndex)
+        private ValidationResult MapValidationModelToValidationResults(List<CustomActivities.Activities.QuestionScreen.Question> items)
         {
             var validationFailures = new List<ValidationFailure>();
-            foreach (var validation in item.Validations.Validations)
+            for (int i = 0; i < items.Count; i++)
             {
-                if (!validation.IsValid)
+                foreach (var validation in items[i].Validations.Validations)
                 {
-                    var failure = new ValidationFailure()
+
+                    if (validation.IsInvalid && !string.IsNullOrEmpty(validation.ValidationMessage))
                     {
-                        PropertyName = ValidationPropertyNameProvider.GetPropertyName(item.QuestionType, quIndex),
-                        ErrorMessage = validation.ValidationMessage
-                    };
-                    validationFailures.Add(failure);
+                        var failure = new ValidationFailure()
+                        {
+                            PropertyName = ValidationPropertyNameProvider.GetPropertyName(items[i].QuestionType, i),
+                            ErrorMessage = validation.ValidationMessage
+                        };
+                        validationFailures.Add(failure);
+                    }
                 }
             }
             var validationResult = new ValidationResult(validationFailures);

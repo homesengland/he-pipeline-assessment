@@ -3,7 +3,7 @@
 @model He.PipelineAssessment.UI.Features.Workflow.ViewModels.Question
 @{
     var itemName = ValidationPropertyNameProvider.GetPropertyName(Model.QuestionType, Model.Index) + ".SelectedAnswer";
-    var formItemName = "Data.Questions[" + Model.Index + "].Radio";
+    var formItemName = ValidationPropertyNameProvider.GetPropertyName(Model.QuestionType, Model.Index);
 
     var itemId = Model.Index + "radio_multi_select_";
     var errorFormClass = !Model.IsValid ? "govuk-form-group--error" : "";

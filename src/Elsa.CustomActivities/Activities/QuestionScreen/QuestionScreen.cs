@@ -64,7 +64,7 @@ namespace Elsa.CustomActivities.Activities.QuestionScreen
         protected override async ValueTask<IActivityExecutionResult> OnResumeAsync(ActivityExecutionContext context)
         {
             List<ValidationModel> validationModels = Questions.Questions.Select(x => x.Validations).ToList();
-            List<Validation> invalidValidations = validationModels.SelectMany(x => x.Validations.Where(v => !v.IsValid)).ToList();
+            List<Validation> invalidValidations = validationModels.SelectMany(x => x.Validations.Where(v => v.IsInvalid)).ToList();
             if(invalidValidations.Any())
             {
                 return await Task.FromResult(new CombinedResult(new List<IActivityExecutionResult>
@@ -97,7 +97,7 @@ namespace Elsa.CustomActivities.Activities.QuestionScreen
             {
                 if(question.Validations != null && question.Validations.Validations.Count > 0)
                 {
-                    var failedValidation = question.Validations.Validations.Where(x => !x.IsValid);
+                    var failedValidation = question.Validations.Validations.Where(x => x.IsInvalid);
                     if(failedValidation.Any())
                     {
                         validationMap.Add(question.Id, failedValidation.Select(x => x.ValidationMessage).ToList());
