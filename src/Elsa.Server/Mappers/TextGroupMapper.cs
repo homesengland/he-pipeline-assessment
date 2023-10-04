@@ -7,6 +7,7 @@ namespace Elsa.Server.Mappers
     public interface ITextGroupMapper
     {
         List<Information> InformationListFromGroupedTextModel(GroupedTextModel textModel);
+        List<Information> InformationListFromTextModel(TextModel textModel);
         List<InformationTextGroup> InformationTextGroupListFromTextGroupsForInformation(List<TextGroup> textGroups);
         List<InformationTextGroup> InformationTextGroupListFromTextGroupsForGuidance(List<TextGroup> textGroups);
         List<InformationTextGroup> InformationTextGroupListFromGuidanceString(string text);
@@ -33,6 +34,25 @@ namespace Elsa.Server.Mappers
 
                 })
             }).ToList();
+        }
+
+        public List<Information> InformationListFromTextModel(TextModel textModel)
+        {
+            return textModel.TextRecords.Select(x => new Information()
+            {
+                InformationTextList = new List<InformationText>()
+                {
+                    new InformationText()
+                    {
+                        Text = x.Text,
+                        IsBold = x.IsBold,
+                        IsParagraph = x.IsParagraph,
+                        IsHyperlink = x.IsHyperlink,
+                        IsGuidance = x.IsGuidance,
+                        Url = x.Url,
+
+                    }
+                }}).ToList();
         }
 
         public List<InformationTextGroup> InformationTextGroupListFromTextGroupsForInformation(List<TextGroup> textGroups)
