@@ -1,7 +1,8 @@
 ﻿@using He.PipelineAssessment.UI.Features.Workflow.ViewModels
+@using Elsa.CustomWorkflow.Sdk.Providers;
 @model He.PipelineAssessment.UI.Features.Workflow.ViewModels.Question
 @{
-    var itemName = "Data.Questions[" + Model.Index + "].Radio.SelectedAnswer";
+    var itemName = ValidationPropertyNameProvider.GetPropertyName(Model.QuestionType, Model.Index) + ".SelectedAnswer";
     var formItemName = "Data.Questions[" + Model.Index + "].Radio";
 
     var itemId = Model.Index + "radio_multi_select_";
