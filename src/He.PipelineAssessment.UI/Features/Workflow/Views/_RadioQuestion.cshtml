@@ -27,14 +27,15 @@
             int iterrator = 1;
             @foreach (var choice in Model.Radio.Choices)
             {
+                string choiceId = @choice.Answer.Replace(" ", "") + "_" + Model.Index;
                 string isChecked = "";
                 if (choice.Id == Model.Radio.SelectedAnswer)
                 {
                     isChecked = "checked";
                 }
                 <div class="govuk-radios__item">
-                    <input class="govuk-radios__input" name="@itemName" type="radio" value="@choice.Id" id="@itemId@iterrator" @isChecked @isReadOnly aria-labelledby="@choice.Answer.Replace(" ","")">
-                    <label class="govuk-label govuk-radios__label" for="@choice.Answer" id="@choice.Answer.Replace(" ","")">@choice.Answer</label>
+                    <input class="govuk-radios__input" name="@itemName" type="radio" value="@choice.Id" id="@itemId@iterrator" @isChecked @isReadOnly aria-labelledby=@choiceId>
+                    <label class="govuk-label govuk-radios__label" for="@choice.Answer" id=@choiceId>@choice.Answer</label>
                 </div>
                 iterrator++;
             }
