@@ -7,7 +7,8 @@
     var errorFormClass = !Model.IsValid ? "govuk-form-group--error" : "";
     var errorFieldClass = !Model.IsValid ? "govuk-input--error" : "";
     var isReadOnly = Model.IsReadOnly ? "disabled" : "";
-    var questionTextModel = new QuestionText() { Text = Model.QuestionText, ReevaluatePrepopulatedAnswers = Model.ReevaluatePrePopulatedAnswers, IsReadOnly= Model.IsReadOnly };
+    var label = "Label-" + Model.QuestionText.Replace(" ", "");
+    var questionTextModel = new QuestionText() { Text = Model.QuestionText, ReevaluatePrepopulatedAnswers = Model.ReevaluatePrePopulatedAnswers, IsReadOnly= Model.IsReadOnly, Label=label };
 
 }
 
@@ -16,7 +17,7 @@
     @await Html.PartialAsync("_QuestionHint", Model.QuestionHint)
 
     <div class="govuk-input__wrapper">
-        <input id="@answerName" type="text" name="@itemName" class="govuk-input govuk-input--width-10 @errorFieldClass" @isReadOnly value="@Model.Decimal.ToCommaSeparatedInt()" currency-formatter="true" aria-labelledby=@questionTextModel.Text.Replace(" ", "") />
+        <input id="@answerName" type="text" name="@itemName" class="govuk-input govuk-input--width-10 @errorFieldClass" @isReadOnly value="@Model.Decimal.ToCommaSeparatedInt()" currency-formatter="true" aria-labelledby=@label />
     </div>
 
 

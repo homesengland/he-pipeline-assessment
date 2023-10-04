@@ -7,17 +7,19 @@
     var errorFormClass = !Model.IsValid ? "govuk-form-group--error" : "";
     var errorFieldClass = !Model.IsValid ? "govuk-input--error" : "";
     var isReadOnly = Model.IsReadOnly ? "disabled" : "";
-    var questionTextModel = new QuestionText() { Text = Model.QuestionText, ReevaluatePrepopulatedAnswers = Model.ReevaluatePrePopulatedAnswers, IsReadOnly = Model.IsReadOnly };
+    var label = "Label-" + Model.QuestionText.Replace(" ", "");
+    var questionTextModel = new QuestionText() { Text = Model.QuestionText, ReevaluatePrepopulatedAnswers = Model.ReevaluatePrePopulatedAnswers, IsReadOnly = Model.IsReadOnly, Label = label };
 }
 
 <div class="govuk-form-group @errorFormClass">
     @await Html.PartialAsync("_QuestionText", questionTextModel)
     @await Html.PartialAsync("_QuestionHint", Model.QuestionHint)
-    
+    @{
     <div class="govuk-input__wrapper">
         <div class="govuk-input__prefix" aria-hidden="true">£</div>
-        <input id="@answerName" type="text" name="@itemName" class="govuk-input govuk-input--width-10 @errorFieldClass" @isReadOnly aria-labelledby=@questionTextModel.Text.Replace(" ", "") value ="@Model.Decimal.ToCommaSeparatedNumber()" currency-formatter="true" />
+        <input id="@answerName" type="text" name="@itemName" class="govuk-input govuk-input--width-10 @errorFieldClass" @isReadOnly aria-labelledby=@label value ="@Model.Decimal.ToCommaSeparatedNumber()" currency-formatter="true" />
     </div>
+    }
 
     @if (Model.EnhancedGuidance != null && Model.EnhancedGuidance.Any())
     {
