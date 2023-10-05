@@ -46,7 +46,7 @@ namespace Elsa.CustomActivities.Handlers
         {
             string errorMessage = await property.EvaluateFromExpressions<string>(evaluator, context, _logger, CancellationToken.None);
             bool validationRule = await property.EvaluateFromExpressionsExplicit<bool>(evaluator, context, _logger, property.Expressions![ValidationSyntaxNames.Rule], SyntaxNames.JavaScript);
-            return new Validation { IsInvalid = validationRule, ValidationMessage = errorMessage };
+            return new Validation { IsValid = validationRule, ValidationMessage = errorMessage };
         }
 
         private List<ElsaProperty> TryDeserializeExpression(string expression)

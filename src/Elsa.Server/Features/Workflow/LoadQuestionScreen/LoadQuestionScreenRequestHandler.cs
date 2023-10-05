@@ -344,7 +344,7 @@ namespace Elsa.Server.Features.Workflow.LoadQuestionScreen
                 foreach (var validation in items[i].Validations.Validations)
                 {
 
-                    if (validation.IsInvalid && !string.IsNullOrEmpty(validation.ValidationMessage))
+                    if (!validation.IsValid && !string.IsNullOrEmpty(validation.ValidationMessage))
                     {
                         var failure = new ValidationFailure()
                         {
