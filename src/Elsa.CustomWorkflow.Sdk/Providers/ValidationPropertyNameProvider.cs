@@ -32,13 +32,13 @@ namespace Elsa.CustomWorkflow.Sdk.Providers
             {
                 return GetCheckboxPropertyName(questionIndex);
             }
+            else if(questionType == QuestionTypeConstants.DataTable)
+            {
+                return GetDataTablePropertyName(questionIndex);
+            }
             return string.Empty;
         }
 
-        private static string GetRadioPropertyName(int questionIndex)
-        {
-            return "Data.Questions[" + questionIndex + "].Radio";
-        }
 
         private static string GetDatePropertyName(int questionIndex)
         {
@@ -52,6 +52,17 @@ namespace Elsa.CustomWorkflow.Sdk.Providers
         private static string GetCheckboxPropertyName(int questionIndex)
         {
             return "Data.Questions[" + questionIndex + "].Checkbox";
+        }
+
+
+        private static string GetRadioPropertyName(int questionIndex)
+        {
+            return "Data.Questions[" + questionIndex + "].Radio";
+        }
+
+        private static string GetDataTablePropertyName(int questionIndex)
+        {
+            return "Data.Questions[" + questionIndex + "].DataTable";
         }
     }
 

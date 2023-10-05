@@ -17,6 +17,8 @@ namespace Elsa.CustomActivities.Activities.Common
         public string? ValidationMessage { get; set; }
 
         public bool IsValid { get; set; } = false;
+
+        public bool IsInvalid { get => !IsValid; }
     }
 
 }
