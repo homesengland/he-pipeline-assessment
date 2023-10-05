@@ -19,7 +19,7 @@
 
 <div class="govuk-form-group @errorFormClass" id="@formItemName">
     @await Html.PartialAsync("_QuestionText", questionTextModel)
-    @await Html.PartialAsync("_QuestionHint", Model.QuestionHint)
+    @await Html.PartialAsync("_QuestionHint", Model)
 
     @{
         var distinctGroups = Model.Checkbox.Choices.Select(x => x.QuestionChoiceGroup?.GroupIdentifier).Distinct().ToList();
