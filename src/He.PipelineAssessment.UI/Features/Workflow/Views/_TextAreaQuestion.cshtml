@@ -13,7 +13,7 @@
 
 <div class="govuk-form-group @errorFormClass">
     @await Html.PartialAsync("_QuestionText", questionTextModel)
-    @await Html.PartialAsync("_QuestionHint", Model.QuestionHint)
+    @await Html.PartialAsync("_QuestionHint", Model)
 
     <div class="govuk-character-count" data-module="govuk-character-count" data-maxlength="@Model.CharacterLimit">
         <div class="govuk-form-group">
