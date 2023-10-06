@@ -3,5 +3,6 @@ export const CustomComponentTags = {
   ConditionalTextList: "conditional-text-list-property",
   CustomSwitch: "he-switch-answers-property",
   CustomTextArea: "custom-text-property",
-  TextActivity: "he-text-activity-property"
+  TextActivity: "he-text-activity-property",
+  TextGroup: "he-text-group-property"
 };

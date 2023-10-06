@@ -466,10 +466,6 @@ namespace He.PipelineAssessment.UI.Tests.Features.Rollback
         )
         {
             //Arrange
-            Unit unit;
-            _mediatorMock.Setup(x => x.Send(submitOverrideCommand, CancellationToken.None))
-                .ReturnsAsync(unit);
-
 
             //Act
             var controller = new RollbackController(_loggerMock.Object, _mediatorMock.Object, _validatorMock.Object);
@@ -490,9 +486,6 @@ namespace He.PipelineAssessment.UI.Tests.Features.Rollback
         )
         {
             //Arrange
-            Unit unit;
-            _mediatorMock.Setup(x => x.Send(command, CancellationToken.None))
-                .ReturnsAsync(unit);
 
             //Act
             var controller = new RollbackController(_loggerMock.Object, _mediatorMock.Object, _validatorMock.Object);
@@ -512,10 +505,6 @@ namespace He.PipelineAssessment.UI.Tests.Features.Rollback
         )
         {
             //Arrange
-            Unit unit;
-            _mediatorMock.Setup(x => x.Send(command, CancellationToken.None))
-                .ReturnsAsync(unit);
-
 
             //Act
             var controller = new RollbackController(_loggerMock.Object, _mediatorMock.Object, _validatorMock.Object);

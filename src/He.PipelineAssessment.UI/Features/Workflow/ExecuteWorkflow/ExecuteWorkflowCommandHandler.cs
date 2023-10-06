@@ -34,7 +34,8 @@ namespace He.PipelineAssessment.UI.Features.Workflow.ExecuteWorkflow
             {
                 WorkflowInstanceId = command.WorkflowInstanceId,
                 ActivityType = command.ActivityType,
-                ActivityId = command.ActivityId
+                ActivityId = command.ActivityId, 
+                WorkflowName = assessmentWorkflowInstance.WorkflowName
             };
 
             var response = await _elsaServerHttpClient.PostExecuteWorkflow(dto);

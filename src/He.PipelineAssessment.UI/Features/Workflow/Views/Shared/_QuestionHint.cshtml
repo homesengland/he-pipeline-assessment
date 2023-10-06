@@ -1,8 +1,9 @@
-﻿@model string
+﻿@model He.PipelineAssessment.UI.Features.Workflow.ViewModels.Question
 
-@if (!string.IsNullOrEmpty(Model))
+@if (!string.IsNullOrEmpty(Model.QuestionHint))
 {
-    <div id="event-name-hint" class="govuk-hint">
-        @Model
+    var hintId = "hint-" + @Model.QuestionHint.Replace(" ", "") + "-" + Model.Index;
+    <div id=@hintId class="govuk-hint">
+        @Model.QuestionHint
     </div>
 }

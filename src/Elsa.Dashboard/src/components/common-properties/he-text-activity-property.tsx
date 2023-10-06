@@ -25,7 +25,7 @@ export class TextActivityProperty implements ISortableSharedComponent, IDisplayT
   @Prop() activityModel: ActivityModel;
   @Prop() propertyDescriptor: ActivityPropertyDescriptor;
   @Prop() propertyModel: ActivityDefinitionProperty;
-  @Prop() modelSyntax: string = SyntaxNames.TextActivity;
+  @Prop() modelSyntax: string = SyntaxNames.TextActivityList;
   @State() properties: Array<NestedActivityDefinitionProperty> = [];
   @State() iconProvider = new IconProvider();
   @State() keyId: string;
@@ -64,6 +64,7 @@ export class TextActivityProperty implements ISortableSharedComponent, IDisplayT
   updatePropertyModel() {
     this._base.updatePropertyModel();
   }
+
   onMultiExpressionEditorValueChanged(e: CustomEvent<string>) {
     const json = e.detail;
     const parsed = parseJson(json);
@@ -162,8 +163,7 @@ export class TextActivityProperty implements ISortableSharedComponent, IDisplayT
             </td>
           </tr>
           <tr>
-            <th
-              class="elsa-px-6 elsa-py-3 elsa-text-left elsa-text-xs elsa-font-medium elsa-text-gray-500 elsa-tracking-wider elsa-w-2/12">Text
+            <th class="elsa-px-6 elsa-py-3 elsa-text-left elsa-text-xs elsa-font-medium elsa-text-gray-500 elsa-tracking-wider elsa-w-2/12">Text
             </th>
             <td class="elsa-py-2 pl-5" colSpan={2} style={{ width: colWidth }}>
               <div class="elsa-mt-1 elsa-relative elsa-rounded-md elsa-shadow-sm">
@@ -236,13 +236,14 @@ export class TextActivityProperty implements ISortableSharedComponent, IDisplayT
               <td>
               </td>
           </tr>
+
           <tr style={{ display: optionsDisplay }}>
             <th
-              class="elsa-px-6 elsa-py-3 elsa-text-left elsa-text-xs elsa-font-medium elsa-text-gray-500 elsa-tracking-wider elsa-w-2/12">Is <br/>Guidance
+              class="elsa-px-6 elsa-py-3 elsa-text-left elsa-text-xs elsa-font-medium elsa-text-gray-500 elsa-tracking-wider elsa-w-2/12">Is <br />Bold
             </th>
             <td class="elsa-py-0">
-              <input name="choice_input" type="checkbox" checked={guidanceChecked} value={nestedTextActivity.expressions[TextActivityOptionsSyntax.Guidance]}
-                onChange={e => this._base.UpdateCheckbox(e, nestedTextActivity, TextActivityOptionsSyntax.Guidance)}
+              <input name="choice_input" type="checkbox" checked={guidanceChecked} value={nestedTextActivity.expressions[TextActivityOptionsSyntax.Bold]}
+                onChange={e => this._base.UpdateCheckbox(e, nestedTextActivity, TextActivityOptionsSyntax.Bold)}
                 class="focus:elsa-ring-blue-500 elsa-h-8 elsa-w-8 elsa-text-blue-600 elsa-border-gray-300 elsa-rounded" />
             </td>
             <td>
@@ -297,6 +298,7 @@ export class TextActivityProperty implements ISortableSharedComponent, IDisplayT
         <he-multi-expression-editor
           ref={el => this.multiExpressionEditor = el}
           label={this.propertyDescriptor.label}
+          hint={this.propertyDescriptor.hint}
           defaultSyntax={SyntaxNames.Json}
           supportedSyntaxes={[SyntaxNames.Json]}
           context={context}

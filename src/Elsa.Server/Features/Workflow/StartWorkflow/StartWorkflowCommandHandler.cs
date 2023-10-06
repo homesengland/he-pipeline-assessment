@@ -43,11 +43,19 @@ namespace Elsa.Server.Features.Workflow.StartWorkflow
             var result = new OperationResult<StartWorkflowResponse>();
             try
             {
+
+                VersionOptions options = VersionOptions.Published;
+
                 var workflow =
-                    await _workflowRegistry.FindAsync(request.WorkflowDefinitionId, VersionOptions.Published, cancellationToken: cancellationToken);
+                    await _workflowRegistry.FindAsync(request.WorkflowDefinitionId, options, cancellationToken: cancellationToken);
 
                 var workflowName = workflow!.Name != null ? workflow.Name : "undefined workflow";
                 var runWorkflowResult = await _startsWorkflow.StartWorkflowAsync(workflow, null, null, request.CorrelationId, cancellationToken: cancellationToken);
+
+                if (runWorkflowResult.Exception != null)
+                {
+                    throw runWorkflowResult.Exception;
+                }
 
                 if (runWorkflowResult.WorkflowInstance != null)
                 {
@@ -76,7 +84,7 @@ namespace Elsa.Server.Features.Workflow.StartWorkflow
 
                         var nextActivityRecord = await _elsaCustomRepository.GetCustomActivityNavigation(workflowNextActivityModel.NextActivity.Id, workflowInstance.Id, cancellationToken);
 
-                        await _nextActivityNavigationService.CreateNextActivityNavigation(workflowNextActivityModel.NextActivity.Id, nextActivityRecord, workflowNextActivityModel.NextActivity, workflowInstance, cancellationToken);
+                        await _nextActivityNavigationService.CreateNextActivityNavigation(workflowNextActivityModel.NextActivity.Id, nextActivityRecord, workflowNextActivityModel.NextActivity, workflowInstance, workflowName, cancellationToken);
 
                         result.Data = new StartWorkflowResponse
                         {

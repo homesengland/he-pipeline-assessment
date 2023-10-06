@@ -22,29 +22,19 @@ namespace Elsa.CustomActivities.Activities.QuestionScreen.Helpers
 
         public async Task<string> GetAnswer(string correlationId, string workflowName, string activityName, string questionId)
         {
-            var workflowBlueprint = await _workflowRegistry.FindByNameAsync(workflowName, Models.VersionOptions.Published);
+            var result = await _elsaCustomRepository.GetQuestionByWorkflowAndActivityName(activityName,
+                workflowName, correlationId, questionId, CancellationToken.None);
 
-            if (workflowBlueprint != null)
+            if (result?.Answers != null)
             {
-                var activity = workflowBlueprint.Activities.FirstOrDefault(x => x.Name == activityName);
-                if (activity != null)
-                {
-                    var result = await _elsaCustomRepository.GetQuestionByCorrelationId(activity.Id, correlationId, questionId, CancellationToken.None);
-
-                    if (result?.Answers != null)
-                    {
-                        return string.Join(',', result.Answers.Select(x => x.AnswerText));
-                    }
-                }
-
+                return string.Join(',', result.Answers.Select(x => x.AnswerText));
             }
             return string.Empty;
-
         }
 
-        public  Task<string> WriteJournalData(string key, string message,ActivityExecutionContext context)
+        public Task<string> WriteJournalData(string key, string message, ActivityExecutionContext context)
         {
-            context.JournalData.Add(key,message);
+            context.JournalData.Add(key, message);
 
             return Task.FromResult(string.Empty);
         }
@@ -54,7 +44,7 @@ namespace Elsa.CustomActivities.Activities.QuestionScreen.Helpers
             var activityExecutionContext = notification.ActivityExecutionContext;
             var engine = notification.Engine;
             engine.SetValue("questionGetAnswer", (Func<string, string, string, string?>)((workflowName, activityName, questionId) => GetAnswer(activityExecutionContext.CorrelationId, workflowName, activityName, questionId).Result));
-            engine.SetValue("writeJournalData", (Func<string,string, string>)((key, message) => WriteJournalData(key,message,activityExecutionContext).Result));
+            engine.SetValue("writeJournalData", (Func<string, string, string>)((key, message) => WriteJournalData(key, message, activityExecutionContext).Result));
             return Task.CompletedTask;
         }
 

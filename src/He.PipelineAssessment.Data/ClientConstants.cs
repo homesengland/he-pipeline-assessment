@@ -12,5 +12,7 @@ namespace He.PipelineAssessment.Data
         public const string VFMClient = "VFMCalculationsClient";
         public const string PCSClient = "PCSProfileClient";
         public const string SinglePipelineClient = "SinglePipelineClient";
+        public const string RegionalIPUClient = "RegionalIPUClient";
+        public const string RegionalFigsClient = "RegionalFigsClient";
     }
 }

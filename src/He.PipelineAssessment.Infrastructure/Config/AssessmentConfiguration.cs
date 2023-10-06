@@ -27,6 +27,7 @@ namespace He.PipelineAssessment.Infrastructure.Config
                 .HasMaxLength(EntityConfigurationConstants.StandardLength);
 
             builder.Property(x => x.ProjectManagerEmail)
+                .IsRequired(false)
                 .HasMaxLength(EntityConfigurationConstants.StandardLength);
 
             builder.Property(x => x.Status)

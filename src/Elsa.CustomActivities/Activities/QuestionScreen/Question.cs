@@ -55,24 +55,30 @@ namespace Elsa.CustomActivities.Activities.QuestionScreen
             })]
         public string QuestionHint { get; set; } = null!;
 
-        [HeActivityInput(Hint = "Question guidance",
-            UIHint = HePropertyUIHints.MultiLine,
+        [Obsolete("This is only used for backwards compatibility. Use Enhanced Guidance for any new workflows.")]
+        public string QuestionGuidance { get; set; } = null!;
+
+        [HeActivityInput(Hint = "New enhanced Question Guidance, which adds certain formatting features, overrides any legacy Question Guidance set for this question as plain text.",
+            UIHint = HePropertyUIHints.TextGroup,
+            Label = "Question Guidance",
+            DefaultSyntax = TextActivitySyntaxNames.TextGroup,
+            ExpectedOutputType = ExpectedOutputHints.TextGroup,
             ConditionalActivityTypes = new[]
             {
-                QuestionTypeConstants.CurrencyQuestion,
-                QuestionTypeConstants.DecimalQuestion,
-                QuestionTypeConstants.IntegerQuestion,
-                QuestionTypeConstants.PercentageQuestion,
-                QuestionTypeConstants.CheckboxQuestion,
-                QuestionTypeConstants.RadioQuestion,
-                QuestionTypeConstants.PotScoreRadioQuestion,
-                QuestionTypeConstants.DateQuestion,
-                QuestionTypeConstants.TextQuestion,
-                QuestionTypeConstants.TextAreaQuestion,
-                QuestionTypeConstants.WeightedCheckboxQuestion,
-                QuestionTypeConstants.WeightedRadioQuestion
+                        QuestionTypeConstants.CurrencyQuestion,
+                        QuestionTypeConstants.DecimalQuestion,
+                        QuestionTypeConstants.IntegerQuestion,
+                        QuestionTypeConstants.PercentageQuestion,
+                        QuestionTypeConstants.CheckboxQuestion,
+                        QuestionTypeConstants.RadioQuestion,
+                        QuestionTypeConstants.PotScoreRadioQuestion,
+                        QuestionTypeConstants.DateQuestion,
+                        QuestionTypeConstants.TextQuestion,
+                        QuestionTypeConstants.TextAreaQuestion,
+                        QuestionTypeConstants.WeightedCheckboxQuestion,
+                        QuestionTypeConstants.WeightedRadioQuestion
             })]
-        public string QuestionGuidance { get; set; } = null!;
+        public GroupedTextModel EnhancedGuidance { get; set; } = new GroupedTextModel()!;
 
         [HeActivityInput(Hint = "Include comments box",
             UIHint = HePropertyUIHints.Checkbox,
@@ -204,11 +210,12 @@ namespace Elsa.CustomActivities.Activities.QuestionScreen
             ExpectedOutputType = ExpectedOutputHints.WeightedCheckbox)]
         public WeightedCheckboxModel WeightedCheckbox { get; set; } = new WeightedCheckboxModel();
 
-        [HeActivityInput(UIHint = HePropertyUIHints.TextActivity,
-            DefaultSyntax = TextActivitySyntaxNames.TextActivity,
-            ConditionalActivityTypes = new[] { QuestionTypeConstants.Information },
-            ExpectedOutputType = ExpectedOutputHints.TextActivity)]
-        public TextModel Text { get; set; } = new TextModel();
+        [HeActivityInput(UIHint = HePropertyUIHints.TextGroup, 
+            DefaultSyntax = TextActivitySyntaxNames.TextGroup,
+            ConditionalActivityTypes = new[] { QuestionTypeConstants.Information }, 
+            ExpectedOutputType = ExpectedOutputHints.TextGroup)]
+        public GroupedTextModel Text { get; set; } = new GroupedTextModel();
+
 
         [HeActivityInput(Hint = "Fill in to display a pre-populated value", UIHint = HePropertyUIHints.SingleLine,
             SupportedSyntaxes = new[] { SyntaxNames.Literal, SyntaxNames.JavaScript },

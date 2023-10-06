@@ -8,7 +8,11 @@
     <DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
     <DockerComposeProjectPath>..\docker-compose.dcproj</DockerComposeProjectPath>
   </PropertyGroup>
-
+  <ItemGroup>
+	<None Remove="System.Security.Cryptography.Pkcs" />
+	<None Remove="System.Drawing.Common" />
+	<None Remove="System.Text.RegularExpressions" />
+  </ItemGroup>
   <ItemGroup>
     <Compile Remove="Features\Intervention\Controllers\**" />
     <Content Remove="Features\Intervention\Controllers\**" />
@@ -18,17 +22,14 @@
 
   <ItemGroup>
     <Content Remove="bundleconfig.json" />
-    <Content Remove="Features\Workflow\Views\_QuestionScreenQuestion.cshtml" />
   </ItemGroup>
 
   <ItemGroup>
     <_ContentIncludedByDefault Remove="bundleconfig.json" />
-    <_ContentIncludedByDefault Remove="Features\Workflow\Views\_QuestionScreenQuestion.cshtml" />
   </ItemGroup>
 
   <ItemGroup>
     <None Include="bundleconfig.json" />
-    <None Include="Features\Workflow\Views\_QuestionScreenQuestion.cshtml" />
   </ItemGroup>
 
   <ItemGroup>
@@ -38,7 +39,7 @@
     <PackageReference Include="He.Cookies.Mvc" Version="1.0.36" />
     <PackageReference Include="He.Identity.Auth0" Version="1.0.58" />
     <PackageReference Include="He.Identity.Mvc" Version="1.0.58" />
-    <PackageReference Include="MediatR" Version="10.0.1" />
+    <PackageReference Include="MediatR" Version="12.1.1" />
     <PackageReference Include="MediatR.Extensions.Microsoft.DependencyInjection" Version="10.0.1" />
     <PackageReference Include="Microsoft.ApplicationInsights.AspNetCore" Version="2.21.0" />
     <PackageReference Include="Microsoft.AspNetCore.Authentication.Cookies" Version="2.2.0" />
@@ -54,6 +55,9 @@
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
     <PackageReference Include="Microsoft.VisualStudio.Azure.Containers.Tools.Targets" Version="1.17.0" />
+    <PackageReference Include="System.Security.Cryptography.Pkcs" Version="6.0.3" />
+    <PackageReference Include="System.Drawing.Common" Version="5.0.3" />
+    <PackageReference Include="System.Text.RegularExpressions" Version="4.3.1" />
   </ItemGroup>
 
   <ItemGroup>
@@ -61,9 +65,4 @@
     <ProjectReference Include="..\He.PipelineAssessment.Data\He.PipelineAssessment.Data.csproj" />
     <ProjectReference Include="..\He.PipelineAssessment.Infrastructure\He.PipelineAssessment.Infrastructure.csproj" />
   </ItemGroup>
-
-  <ItemGroup>
-    <UpToDateCheckInput Remove="Features\Workflow\Views\_QuestionScreenQuestion.cshtml" />
-  </ItemGroup>
-
 </Project>

@@ -22,32 +22,23 @@ namespace Elsa.CustomActivities.Activities.QuestionScreen.Helpers
 
         public async Task<bool> AnswerEqualToOrGreaterThan(string correlationId, string workflowName, string activityName, string questionId, decimal answerToCheck)
         {
-            var workflowBlueprint = await _workflowRegistry.FindByNameAsync(workflowName, Models.VersionOptions.Published);
+            var question = await _elsaCustomRepository.GetQuestionByWorkflowAndActivityName(activityName,
+                workflowName, correlationId, questionId, CancellationToken.None);
 
-            if (workflowBlueprint != null)
-            {
-                var activity = workflowBlueprint.Activities.FirstOrDefault(x => x.Name == activityName);
-                if (activity != null)
-                {
-                    var question = await _elsaCustomRepository.GetQuestionByCorrelationId(activity.Id,
-                        correlationId, questionId, CancellationToken.None);
-
-                    if (question != null && question.Answers != null &&
+            if (question != null && question.Answers != null &&
                         (question.QuestionType == QuestionTypeConstants.CurrencyQuestion ||
                          question.QuestionType == QuestionTypeConstants.DecimalQuestion ||
                          question.QuestionType == QuestionTypeConstants.PercentageQuestion ||
                          question.QuestionType == QuestionTypeConstants.IntegerQuestion
                         ))
+            {
+                var answer = question.Answers.FirstOrDefault();
+                if (answer != null)
+                {
+                    var answerText = decimal.Parse(answer.AnswerText);
+                    if (answerText >= answerToCheck)
                     {
-                        var answer = question.Answers.FirstOrDefault();
-                        if (answer != null)
-                        {
-                            var answerText = decimal.Parse(answer.AnswerText);
-                            if (answerText >= answerToCheck)
-                            {
-                                return true;
-                            }
-                        }
+                        return true;
                     }
                 }
             }
@@ -57,32 +48,23 @@ namespace Elsa.CustomActivities.Activities.QuestionScreen.Helpers
 
         public async Task<bool> AnswerEqualToOrLessThan(string correlationId, string workflowName, string activityName, string questionId, decimal answerToCheck)
         {
-            var workflowBlueprint = await _workflowRegistry.FindByNameAsync(workflowName, Models.VersionOptions.Published);
+            var question = await _elsaCustomRepository.GetQuestionByWorkflowAndActivityName(activityName,
+                workflowName, correlationId, questionId, CancellationToken.None);
 
-            if (workflowBlueprint != null)
-            {
-                var activity = workflowBlueprint.Activities.FirstOrDefault(x => x.Name == activityName);
-                if (activity != null)
-                {
-                    var question = await _elsaCustomRepository.GetQuestionByCorrelationId(activity.Id,
-                        correlationId, questionId, CancellationToken.None);
-
-                    if (question != null && question.Answers != null &&
+            if (question != null && question.Answers != null &&
                         (
                         question.QuestionType == QuestionTypeConstants.CurrencyQuestion ||
                         question.QuestionType == QuestionTypeConstants.DecimalQuestion ||
                         question.QuestionType == QuestionTypeConstants.PercentageQuestion ||
                         question.QuestionType == QuestionTypeConstants.IntegerQuestion))
+            {
+                var answer = question.Answers.FirstOrDefault();
+                if (answer != null)
+                {
+                    var answerText = decimal.Parse(answer.AnswerText);
+                    if (answerText <= answerToCheck)
                     {
-                        var answer = question.Answers.FirstOrDefault();
-                        if (answer != null)
-                        {
-                            var answerText = decimal.Parse(answer.AnswerText);
-                            if (answerText <= answerToCheck)
-                            {
-                                return true;
-                            }
-                        }
+                        return true;
                     }
                 }
             }
@@ -92,37 +74,27 @@ namespace Elsa.CustomActivities.Activities.QuestionScreen.Helpers
 
         public async Task<decimal?> GetDecimalAnswer(string correlationId, string workflowName, string activityName, string questionId)
         {
-            var workflowBlueprint = await _workflowRegistry.FindByNameAsync(workflowName, Models.VersionOptions.Published);
+            var question = await _elsaCustomRepository.GetQuestionByWorkflowAndActivityName(activityName,
+                workflowName, correlationId, questionId, CancellationToken.None);
 
-            if (workflowBlueprint != null)
-            {
-                var activity = workflowBlueprint.Activities.FirstOrDefault(x => x.Name == activityName);
-                if (activity != null)
-                {
-                    var question = await _elsaCustomRepository.GetQuestionByCorrelationId(activity.Id,
-                        correlationId, questionId, CancellationToken.None);
-
-                    if (question != null && question.Answers != null &&
+            if (question != null && question.Answers != null &&
                         (
                             question.QuestionType == QuestionTypeConstants.CurrencyQuestion ||
                             question.QuestionType == QuestionTypeConstants.DecimalQuestion ||
                             question.QuestionType == QuestionTypeConstants.PercentageQuestion ||
                             question.QuestionType == QuestionTypeConstants.IntegerQuestion))
-                    {
-                        var answer = question.Answers.FirstOrDefault();
-                        if (answer != null)
-                        {
-                            var answerText = decimal.Parse(answer.AnswerText);
-                            return answerText;
-                        }
-                    }
+            {
+                var answer = question.Answers.FirstOrDefault();
+                if (answer != null)
+                {
+                    var answerText = decimal.Parse(answer.AnswerText);
+                    return answerText;
                 }
             }
-
             return null;
         }
 
-      
+
 
 
         public Task Handle(EvaluatingJavaScriptExpression notification, CancellationToken cancellationToken)

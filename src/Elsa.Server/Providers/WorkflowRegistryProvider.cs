@@ -25,9 +25,11 @@ namespace Elsa.Server.Providers
 
             var nextActivityId = workflowInstance.Output.ActivityId;//workflowInstance.LastExecutedActivityId;
 
+            VersionOptions options = VersionOptions.SpecificVersion(workflowInstance.Version);
+
             var workflow =
-                await _workflowRegistry.FindAsync(workflowInstance.DefinitionId, VersionOptions.Published,
-                    cancellationToken: cancellationToken);
+                await _workflowRegistry.FindAsync(workflowInstance.DefinitionId, options,
+                    cancellationToken: cancellationToken); 
 
             var nextActivity = workflow!.Activities.FirstOrDefault(x =>
                 x.Id == nextActivityId);

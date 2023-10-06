@@ -4,7 +4,7 @@
 {
     var questionText = Model.ReevaluatePrepopulatedAnswers && !Model.IsReadOnly  ? $"{Model.Text}*" : Model.Text;
 
-    <label class="govuk-label govuk-label--m">
+    <label class="govuk-label govuk-label--m" id="@Model.Label">
         @questionText
     </label>
 }
