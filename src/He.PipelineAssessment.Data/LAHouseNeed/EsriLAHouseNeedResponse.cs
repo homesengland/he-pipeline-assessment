@@ -12,6 +12,7 @@
         public string? hdt_test { get; set; }
         public string? deprived_third { get; set; }
         public string? high_demand { get; set; }
+        public string? he_priority_place { get; set; }
     }
 
 
