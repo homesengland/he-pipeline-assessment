@@ -41,10 +41,10 @@ namespace Elsa.Server.Features.Workflow.QuestionScreenValidateAndSave
                 var validationResult = _validator.Validate(command);
                 if (validationResult.IsValid)
                 {
-                    var response = await _mediator.Send(FromQuestionScreenValidateAndSaveCommand(command));
+                    var response = await _mediator.Send(command.ToQuestionScreenSaveAndContinueCommand(), cancellationToken);
                     return new OperationResult<QuestionScreenValidateAndSaveResponse>()
                     {
-                        Data = FromSaveAndContinueResponse(response),
+                        Data = response.ToValidateAndSaveResponse(),
                         ValidationMessages = response.ValidationMessages,
                         ErrorMessages = response.ErrorMessages
                     };
@@ -64,33 +64,6 @@ namespace Elsa.Server.Features.Workflow.QuestionScreenValidateAndSave
                     ErrorMessages = new List<string> { e.Message }
                 };
         }
-        }
-
-        private QuestionScreenValidateAndSaveResponse? FromSaveAndContinueResponse(OperationResult<QuestionScreenSaveAndContinueResponse> response)
-        {
-            if(response != null && response.Data != null)
-            {
-                return new QuestionScreenValidateAndSaveResponse()
-                {
-                    NextActivityId = response.Data.NextActivityId,
-                    ActivityType = response.Data.ActivityType,
-                    IsValid = response.Data.IsValid,
-                    ValidationMessages = response.Data.ValidationMessages,
-                    WorkflowInstanceId = response.Data.WorkflowInstanceId,
-                };
-            }
-            else { return null; }
-
-        }
-
-        private QuestionScreenSaveAndContinueCommand FromQuestionScreenValidateAndSaveCommand(QuestionScreenValidateAndSaveCommand command)
-        {
-            return new QuestionScreenSaveAndContinueCommand
-            {
-                Answers = command.Data.Questions?.SelectMany(x => x.Answers.Select(y => new QuestionScreenSaveAndContinue.Answer(x.QuestionId, y.AnswerText, x.Comments, x.DocumentEvidenceLink, y.ChoiceId))).ToList(),
-                WorkflowInstanceId = command.Data.WorkflowInstanceId,
-                ActivityId = command.Data.ActivityId
-            };
         }
 
     }

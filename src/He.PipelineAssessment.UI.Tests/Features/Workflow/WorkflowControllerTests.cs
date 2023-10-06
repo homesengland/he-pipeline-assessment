@@ -1,6 +1,8 @@
 ﻿using AutoFixture.Xunit2;
 using Azure.Core;
 using Elsa.CustomWorkflow.Sdk;
+using Elsa.CustomWorkflow.Sdk.HttpClients;
+using Elsa.CustomWorkflow.Sdk.Models.Workflow;
 using FluentValidation;
 using FluentValidation.Results;
 using He.PipelineAssessment.Tests.Common;
@@ -60,16 +62,17 @@ namespace He.PipelineAssessment.UI.Tests.Features.Workflow
         [AutoMoqData]
         public async Task QuestionScreenSaveAndContinue_ShouldRedirectToAction_GivenValidationIssuesAreFound(
             [Frozen] Mock<IMediator> mediator,
-            [Frozen] Mock<IValidator<QuestionScreenSaveAndContinueCommand>> validator,
+            [Frozen] Mock<IElsaServerHttpClient> http,
             QuestionScreenSaveAndContinueCommand command,
             QuestionScreenSaveAndContinueCommandResponse saveAndContinueCommandResponse,
+            WorkflowNextActivityDataDto httpResponse,
             ValidationResult validationResult,
             WorkflowController sut)
         {
             //Arrange
+            saveAndContinueCommandResponse.IsValid = false;
+            saveAndContinueCommandResponse.ValidationMessages = validationResult;
             mediator.Setup(x => x.Send(command, CancellationToken.None)).ReturnsAsync(saveAndContinueCommandResponse);
-            validator.Setup(x => x.Validate(It.IsAny<QuestionScreenSaveAndContinueCommand>()))
-                .Returns(validationResult);
             
             //Act
             var result = await sut.QuestionScreenSaveAndContinue(command);
@@ -184,6 +187,7 @@ namespace He.PipelineAssessment.UI.Tests.Features.Workflow
         {
             //Arrange
             saveAndContinueCommandResponse.ActivityType = ActivityTypeConstants.CheckYourAnswersScreen;
+            saveAndContinueCommand.IsAuthorised = false;
 
             mediator.Setup(x =>
                     x.Send(
@@ -306,6 +310,9 @@ namespace He.PipelineAssessment.UI.Tests.Features.Workflow
         {
             //Arrange
             saveAndContinueCommandResponse.ActivityType = ActivityTypeConstants.QuestionScreen;
+            saveAndContinueCommand.IsValid = false;
+            saveAndContinueCommand.IsReadOnly = true;
+
 
             mediator.Setup(x =>
                     x.Send(

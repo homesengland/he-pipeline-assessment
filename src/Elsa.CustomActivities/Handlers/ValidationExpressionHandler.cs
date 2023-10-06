@@ -5,15 +5,10 @@ using Elsa.Expressions;
 using Elsa.Serialization;
 using Elsa.Services.Models;
 using Microsoft.Extensions.Logging;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Elsa.CustomActivities.Handlers
 {
-    internal class ValidationExpressionHandler : IExpressionHandler
+    public class ValidationExpressionHandler : IExpressionHandler
     {
         private readonly IContentSerializer _contentSerializer;
         private readonly ILogger<IExpressionHandler> _logger;

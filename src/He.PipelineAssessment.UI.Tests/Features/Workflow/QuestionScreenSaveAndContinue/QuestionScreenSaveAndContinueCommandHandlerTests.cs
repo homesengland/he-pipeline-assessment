@@ -49,24 +49,19 @@ namespace He.PipelineAssessment.UI.Tests.Features.Workflow.SaveAndContinue
         [AutoMoqData]
         public async Task Handle_ReturnsLoadWorkflowActivityRequest_GivenNoErrorsEncountered(
             [Frozen] Mock<IElsaServerHttpClient> elsaServerHttpClient,
-            [Frozen] Mock<IQuestionScreenSaveAndContinueMapper> saveAndContinueMapper,
             [Frozen] Mock<IAssessmentRepository> assessmentRepository,
             [Frozen] Mock<IRoleValidation> roleValidation,
             AssessmentToolWorkflowInstance assessmentToolWorkflowInstance,
             QuestionScreenSaveAndContinueCommand saveAndContinueCommand,
-            QuestionScreenSaveAndContinueCommandDto saveAndContinueCommandDto,
             WorkflowNextActivityDataDto workflowNextActivityDataDto,
             QuestionScreenSaveAndContinueCommandHandler sut
         )
         {
             //Arrange
+            workflowNextActivityDataDto.IsValid = true;
             roleValidation.Setup(x => x.ValidateRole(saveAndContinueCommand.AssessmentId, saveAndContinueCommand.WorkflowDefinitionId)).ReturnsAsync(true);
 
-            saveAndContinueMapper
-                .Setup(x => x.SaveAndContinueCommandToMultiSaveAndContinueCommandDto(saveAndContinueCommand))
-                .Returns(saveAndContinueCommandDto);
-
-            elsaServerHttpClient.Setup(x => x.QuestionScreenSaveAndContinue(saveAndContinueCommandDto))
+            elsaServerHttpClient.Setup(x => x.QuestionScreenSaveAndValidate(saveAndContinueCommand))
                 .ReturnsAsync(workflowNextActivityDataDto);
 
             assessmentRepository.Setup(x => x.GetAssessmentToolWorkflowInstance(workflowNextActivityDataDto.Data.WorkflowInstanceId))
