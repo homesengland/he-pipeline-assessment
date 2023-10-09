@@ -9,12 +9,13 @@
 
     var errorFormClass = !Model.IsValid ? "govuk-form-group--error" : "";
     var errorFieldClass = !Model.IsValid ? "govuk-input--error" : "";
-    var questionTextModel = new QuestionText() { Text = Model.QuestionText, ReevaluatePrepopulatedAnswers = Model.ReevaluatePrePopulatedAnswers, IsReadOnly=Model.IsReadOnly};
+    var label = "Label-" + Model.QuestionText.Replace(" ", "");
+    var questionTextModel = new QuestionText() { Text = Model.QuestionText, ReevaluatePrepopulatedAnswers = Model.ReevaluatePrePopulatedAnswers, IsReadOnly=Model.IsReadOnly, Label=label};
 }
 
 <div class="govuk-form-group @errorFormClass" id="@formItemName">
     @await Html.PartialAsync("_QuestionText", questionTextModel)
-    @await Html.PartialAsync("_QuestionHint", Model.QuestionHint)
+    @await Html.PartialAsync("_QuestionHint", Model)
     <div class="govuk-date-input__item">
         <div class="govuk-form-group">
             @{

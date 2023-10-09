@@ -1,15 +1,16 @@
-﻿@using Microsoft.ApplicationInsights.Extensibility.Implementation
-@model He.PipelineAssessment.UI.Features.Workflow.ViewModels.Evidence
+﻿@model He.PipelineAssessment.UI.Features.Workflow.ViewModels.Evidence
 @{
     var itemName = "Data.Questions[" + Model.Index + "].DocumentEvidenceLink"; 
 }
 @if (Model.DisplayEvidenceBox)
 {
     <br />
+    var moreDetailEvidenceId = "more-detail-evidence " + Model.Index;
+    var labelEvidenceId = "Evidence " + Model.Index;
     <div class="govuk-form-group">
-        <label class="govuk-label" for="more-detail">
+        <label id="@labelEvidenceId" class="govuk-label" for="@moreDetailEvidenceId">
             Document Evidence
         </label>
-        <textarea id="more-detail" name="@itemName" class="govuk-textarea" maxlength=2000>@Model.DocumentLink</textarea>
+        <textarea id="@moreDetailEvidenceId" name="@itemName" class="govuk-textarea" maxlength=2000>@Model.DocumentLink</textarea>
     </div>
 }

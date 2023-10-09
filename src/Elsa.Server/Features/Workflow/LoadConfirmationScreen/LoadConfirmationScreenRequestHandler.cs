@@ -56,8 +56,20 @@ namespace Elsa.Server.Features.Workflow.LoadConfirmationScreen
                     result.Data.ConfirmationText = (string?)activityDataDictionary.GetData("ConfirmationText");
                     result.Data.FooterTitle = (string?)activityDataDictionary.GetData("FooterTitle");
                     result.Data.FooterText = (string?)activityDataDictionary.GetData("FooterText");
-                    var textModel = (GroupedTextModel)activityDataDictionary.GetData("Text")! ?? new GroupedTextModel();
-                    result.Data.Text = _textGroupMapper.InformationListFromGroupedTextModel(textModel);
+                    var groupedTextModel = (GroupedTextModel)activityDataDictionary.GetData("EnhancedText")! ?? new GroupedTextModel();
+                    var textModel = (TextModel)activityDataDictionary.GetData("Text")! ?? new TextModel();
+                    if (groupedTextModel.TextGroups.Any())
+                    {
+                        result.Data.Text = _textGroupMapper.InformationListFromGroupedTextModel(groupedTextModel);
+                    }
+                    else if (textModel.TextRecords.Any())
+                    {
+                        result.Data.Text = _textGroupMapper.InformationListFromTextModel(textModel);
+                    }
+                    else
+                    {
+                        result.Data.Text = new List<Information>();
+                    }
 
                     result.Data.NextWorkflowDefinitionIds = (string?)activityDataDictionary.GetData("NextWorkflowDefinitionIds");
                 }

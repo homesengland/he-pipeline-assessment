@@ -298,6 +298,7 @@ export class TextActivityProperty implements ISortableSharedComponent, IDisplayT
         <he-multi-expression-editor
           ref={el => this.multiExpressionEditor = el}
           label={this.propertyDescriptor.label}
+          hint={this.propertyDescriptor.hint}
           defaultSyntax={SyntaxNames.Json}
           supportedSyntaxes={[SyntaxNames.Json]}
           context={context}
