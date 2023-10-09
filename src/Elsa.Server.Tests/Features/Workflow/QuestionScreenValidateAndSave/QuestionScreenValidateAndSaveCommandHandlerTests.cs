@@ -1,15 +1,8 @@
 ﻿using AutoFixture.Xunit2;
 using MediatR;
-using Elsa.CustomInfrastructure.Data.Repository;
-using Elsa.CustomModels;
-using Elsa.CustomWorkflow.Sdk;
 using Elsa.CustomWorkflow.Sdk.Models.Workflow;
-using Elsa.Models;
 using Elsa.Server.Features.Workflow.QuestionScreenValidateAndSave;
 using Elsa.Server.Models;
-using Elsa.Server.Providers;
-using Elsa.Server.Services;
-using Elsa.Services.Models;
 using FluentValidation;
 using He.PipelineAssessment.Tests.Common;
 using Moq;
@@ -95,7 +88,48 @@ public class QuestionScreenValidateAndSaveCommandHandlerTests
                 Times.Never);
         Assert.NotNull(results);
         Assert.IsType<OperationResult<QuestionScreenValidateAndSaveResponse>>(results);
-        Assert.Equal(validationFailures.Count(), results.ValidationMessages?.Errors.Count());
+        Assert.Equal(validationFailures.Count(), results.ValidationMessages!.Errors.Count());
+        Assert.False(results.IsValid);
+
+    }
+
+    [Theory]
+    [AutoMoqData]
+    public async Task
+    Handle_ShouldReturnUnsuccessfulOperationResultCallMediator_WhenValidationHasNoErrorsButMediatorReturnsErrors(
+    [Frozen] Mock<IMediator> mediator,
+    [Frozen] Mock<ILogger<QuestionScreenValidateAndSaveCommand>> logger,
+    [Frozen] Mock<IValidator<WorkflowActivityDataDto>> validator,
+    QuestionScreenValidateAndSaveCommand validateAndSaveCommand,
+    OperationResult<QuestionScreenSaveAndContinueResponse> response,
+    List<ValidationFailure> validationFailures)
+    {
+        //Arrange
+        QuestionScreenSaveAndContinueCommand saveAndContinueCommand = validateAndSaveCommand.ToQuestionScreenSaveAndContinueCommand();
+        ValidationResult validationResult = new ValidationResult();
+        ValidationResult saveAndContinueValidationResult = new ValidationResult(validationFailures);
+        var errorList = validationResult.Errors.Count() > 0 ? validationResult.Errors.Select(x => x.ErrorMessage) : new List<string>();
+
+        response.ValidationMessages = saveAndContinueValidationResult;
+        validator.Setup(x => x.Validate(validateAndSaveCommand)).Returns(validationResult);
+        mediator.Setup(x => x.Send(It.IsAny<QuestionScreenSaveAndContinueCommand>(), It.IsAny<CancellationToken>())).ReturnsAsync(response);
+
+        QuestionScreenValidateAndSaveCommandHandler sut = new QuestionScreenValidateAndSaveCommandHandler(validator.Object, mediator.Object, logger.Object);
+
+        //Act
+
+        var results = await sut.Handle(validateAndSaveCommand, CancellationToken.None);
+
+        //Assert
+        validator.Verify(
+                x => x.Validate(validateAndSaveCommand),
+                Times.Once);
+        mediator.Verify(
+                x => x.Send(It.IsAny<QuestionScreenSaveAndContinueCommand>(), It.IsAny<CancellationToken>()),
+                Times.Once);
+        Assert.NotNull(results);
+        Assert.IsType<OperationResult<QuestionScreenValidateAndSaveResponse>>(results);
+        Assert.Equal(saveAndContinueValidationResult.Errors.Count(), results.ValidationMessages!.Errors.Count());
         Assert.False(results.IsValid);
 
     }
