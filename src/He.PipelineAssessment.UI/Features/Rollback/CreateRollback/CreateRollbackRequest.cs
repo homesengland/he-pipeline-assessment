@@ -3,8 +3,7 @@ using MediatR;
 
 namespace He.PipelineAssessment.UI.Features.Rollback.CreateRollback
 {
-    public class CreateRollbackRequest : IRequest<AssessmentInterventionDto>
+    public class CreateRollbackRequest : CreateInterventionRequest
     {
-        public string WorkflowInstanceId { get; set; } = null!;
     }
 }

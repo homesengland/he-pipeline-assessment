@@ -24,6 +24,7 @@ using He.PipelineAssessment.UI.Features.Override.CreateOverride;
 using He.PipelineAssessment.UI.Features.Rollback.CreateRollback;
 using He.PipelineAssessment.UI.Features.SinglePipeline.Sync;
 using He.PipelineAssessment.UI.Features.Workflow.QuestionScreenSaveAndContinue;
+using He.PipelineAssessment.UI.Services;
 using MediatR;
 using Microsoft.AspNetCore.DataProtection;
 using Microsoft.AspNetCore.Mvc.Razor;
@@ -112,6 +113,7 @@ builder.Services.AddScoped<IAssessmentToolWorkflowInstanceHelpers, AssessmentToo
 builder.Services.AddScoped<IUserProvider, UserProvider>();
 builder.Services.AddScoped<IRoleValidation, RoleValidation>();
 builder.Services.AddScoped<IErrorHelper, ErrorHelper>();
+builder.Services.AddScoped<IInterventionService, InterventionService>();
 
 builder.Services.AddHttpContextAccessor();
 

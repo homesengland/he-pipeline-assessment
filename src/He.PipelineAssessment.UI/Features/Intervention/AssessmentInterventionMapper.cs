@@ -1,4 +1,5 @@
-﻿using He.PipelineAssessment.Models;
+﻿using Elsa.CustomWorkflow.Sdk.Providers;
+using He.PipelineAssessment.Models;
 using Newtonsoft.Json;
 
 namespace He.PipelineAssessment.UI.Features.Intervention
@@ -6,6 +7,8 @@ namespace He.PipelineAssessment.UI.Features.Intervention
     public interface IAssessmentInterventionMapper
     {
         AssessmentInterventionCommand AssessmentInterventionCommandFromAssessmentIntervention(AssessmentIntervention intervention);
+
+        AssessmentIntervention AssessmentInterventionFromAssessmentInterventionCommand(AssessmentInterventionCommand command);
 
         List<TargetWorkflowDefinition> TargetWorkflowDefinitionsFromAssessmentToolWorkflows(
             List<AssessmentToolWorkflow> assessmentToolWorkflows);
@@ -19,34 +22,40 @@ namespace He.PipelineAssessment.UI.Features.Intervention
     public class AssessmentInterventionMapper : IAssessmentInterventionMapper
     {
         private readonly ILogger<AssessmentInterventionMapper> _logger;
+        private readonly IDateTimeProvider _dateTimeProvider;
 
-        public AssessmentInterventionMapper(ILogger<AssessmentInterventionMapper> logger)
+        public AssessmentInterventionMapper(ILogger<AssessmentInterventionMapper> logger, IDateTimeProvider dateTimeProvider)
         {
             _logger = logger;
+            _dateTimeProvider = dateTimeProvider;
         }
 
         public AssessmentIntervention AssessmentInterventionFromAssessmentInterventionCommand(AssessmentInterventionCommand command)
         {
             try
             {
-                AssessmentIntervention intervention = new AssessmentIntervention()
+                var createdDateTime = _dateTimeProvider.UtcNow();
+                return new AssessmentIntervention
                 {
-                    Id = command.AssessmentInterventionId,
+                    CreatedDateTime = createdDateTime,
+                    Administrator = command.Administrator,
+                    AdministratorRationale = command.AdministratorRationale,
+                    AdministratorEmail = command.AdministratorEmail,
                     AssessmentToolWorkflowInstanceId = command.AssessmentToolWorkflowInstanceId,
                     TargetAssessmentToolWorkflowId = command.TargetWorkflowId,
-                    RequestedBy = command.RequestedBy,
-                    RequestedByEmail = command.RequestedByEmail,
-                    Administrator = command.Administrator,
-                    AdministratorEmail = command.AdministratorEmail,
-                    SignOffDocument = command.SignOffDocument,
-                    DecisionType = command.DecisionType,
                     AssessorRationale = command.AssessorRationale,
-                    AdministratorRationale = command.AdministratorRationale,
-                    DateSubmitted = command.DateSubmitted,
-                    Status = command.Status
+                    CreatedBy = command.RequestedBy ?? "",
+                    DateSubmitted = createdDateTime,
+                    DecisionType = command.DecisionType,
+                    LastModifiedBy = command.RequestedBy,
+                    LastModifiedDateTime = createdDateTime,
+                    RequestedBy = command.RequestedBy ?? "",
+                    RequestedByEmail = command.RequestedByEmail ?? "",
+                    SignOffDocument = command.SignOffDocument,
+                    Status = InterventionStatus.Draft,
+                    AssessmentResult = command.AssessmentResult,
+                    InterventionReasonId = command.InterventionReasonId
                 };
-
-                return intervention;
             }
             catch (Exception e)
             {

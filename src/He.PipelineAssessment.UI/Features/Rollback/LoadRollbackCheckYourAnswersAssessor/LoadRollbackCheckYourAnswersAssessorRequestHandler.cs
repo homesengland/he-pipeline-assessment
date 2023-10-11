@@ -2,6 +2,7 @@
 using He.PipelineAssessment.UI.Common.Exceptions;
 using He.PipelineAssessment.UI.Features.Intervention;
 using He.PipelineAssessment.UI.Features.Rollback.ConfirmRollback;
+using He.PipelineAssessment.UI.Services;
 using MediatR;
 using Newtonsoft.Json;
 
@@ -10,37 +11,16 @@ namespace He.PipelineAssessment.UI.Features.Rollback.LoadRollbackCheckYourAnswer
     public class LoadRollbackCheckYourAnswersAssessorRequestHandler : IRequestHandler<LoadRollbackCheckYourAnswersAssessorRequest, ConfirmRollbackCommand>
     {
 
-        private readonly IAssessmentRepository _assessmentRepository;
-        private readonly IAssessmentInterventionMapper _mapper;
-        private readonly ILogger<LoadRollbackCheckYourAnswersAssessorRequest> _logger;
+        private readonly IInterventionService _interventionService;
 
-        public LoadRollbackCheckYourAnswersAssessorRequestHandler(IAssessmentRepository assessmentRepository,
-            IAssessmentInterventionMapper mapper,
-            ILogger<LoadRollbackCheckYourAnswersAssessorRequest> logger)
+        public LoadRollbackCheckYourAnswersAssessorRequestHandler( IInterventionSevice interventionSevice)
         {
-            _assessmentRepository = assessmentRepository;
-            _logger = logger;
-            _mapper = mapper;
+            _interventionService = interventionSevice;
         }
 
         public async Task<ConfirmRollbackCommand> Handle(LoadRollbackCheckYourAnswersAssessorRequest request, CancellationToken cancellationToken)
         {
-            try
-            {
-                var intervention = await _assessmentRepository.GetAssessmentIntervention(request.InterventionId);
-                if (intervention == null)
-                {
-                    throw new NotFoundException($"Assessment Intervention with Id {request.InterventionId} not found");
-                }
-                var command = _mapper.AssessmentInterventionCommandFromAssessmentIntervention(intervention);
-                var confirmRollbackCommand = SerializedCommand(command);
-                return confirmRollbackCommand;
-            }
-            catch (Exception e)
-            {
-                _logger.LogError(e, e.Message);
-                throw new ApplicationException($"Unable to load rollback check your answers. InterventionId: {request.InterventionId}");
-            }
+            return await _interventionService.LoadInterventionCheckYourAnswerAssessorRequest(request);
         }
 
         private ConfirmRollbackCommand SerializedCommand(AssessmentInterventionCommand command)

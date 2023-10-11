@@ -65,4 +65,16 @@
     <ProjectReference Include="..\He.PipelineAssessment.Data\He.PipelineAssessment.Data.csproj" />
     <ProjectReference Include="..\He.PipelineAssessment.Infrastructure\He.PipelineAssessment.Infrastructure.csproj" />
   </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Features\StandardVariation\ConfirmStandardVariation\" />
+    <Folder Include="Features\StandardVariation\CreateStandardVariation\" />
+    <Folder Include="Features\StandardVariation\DeleteStandardVariation\" />
+    <Folder Include="Features\StandardVariation\EditStandardVariation\" />
+    <Folder Include="Features\StandardVariation\EditStandardVariationAssessor\" />
+    <Folder Include="Features\StandardVariation\LoadStandardVariationCheckYourAnswers\" />
+    <Folder Include="Features\StandardVariation\LoadStandardVariationCheckYourAnswersAssessor\" />
+    <Folder Include="Features\StandardVariation\Views\" />
+    <Folder Include="Features\StandardVariation\SubmitStandardVariation\" />
+  </ItemGroup>
 </Project>
