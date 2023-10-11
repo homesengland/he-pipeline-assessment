@@ -8,26 +8,19 @@ using Newtonsoft.Json;
 
 namespace He.PipelineAssessment.UI.Features.Rollback.LoadRollbackCheckYourAnswers
 {
-    public class LoadRollbackCheckYourAnswersRequestHandler : IRequestHandler<LoadRollbackCheckYourAnswersRequest, SubmitRollbackCommand>
+    public class LoadRollbackCheckYourAnswersRequestHandler : IRequestHandler<LoadRollbackCheckYourAnswersRequest, AssessmentInterventionCommand>
     {
-
-        private readonly IAssessmentRepository _assessmentRepository;
-        private readonly IAssessmentInterventionMapper _mapper;
         private readonly IInterventionService _interventionService;
-        private readonly ILogger<LoadRollbackCheckYourAnswersRequestHandler> _logger;
 
         public LoadRollbackCheckYourAnswersRequestHandler(IAssessmentRepository assessmentRepository,
             IAssessmentInterventionMapper mapper,
             ILogger<LoadRollbackCheckYourAnswersRequestHandler> logger,
             IInterventionService interventionService)
         {
-            _assessmentRepository = assessmentRepository;
-            _logger = logger;
-            _mapper = mapper;
             _interventionService = interventionService;
         }
 
-        public async Task<SubmitRollbackCommand> Handle(LoadRollbackCheckYourAnswersRequest request, CancellationToken cancellationToken)
+        public async Task<AssessmentInterventionCommand> Handle(LoadRollbackCheckYourAnswersRequest request, CancellationToken cancellationToken)
         {
             var assessmentInterventionCommand = await _interventionService.LoadInterventionCheckYourAnswersRequest(request);
             return SerializedCommand(assessmentInterventionCommand);

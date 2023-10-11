@@ -154,7 +154,7 @@ namespace He.PipelineAssessment.UI.Features.Rollback
         [HttpGet]
         public async Task<IActionResult> CheckYourDetailsAssessor(int interventionId)
         {
-            ConfirmRollbackCommand model = await _mediator.Send(new LoadRollbackCheckYourAnswersAssessorRequest() { InterventionId = interventionId });
+            ConfirmRollbackCommand model = (ConfirmRollbackCommand)await _mediator.Send(new LoadRollbackCheckYourAnswersAssessorRequest() { InterventionId = interventionId });
             if (model == null)
             {
                 return RedirectToAction("EditRollbackAssessor", new { interventionId });
@@ -167,7 +167,7 @@ namespace He.PipelineAssessment.UI.Features.Rollback
         public async Task<IActionResult> CheckYourDetails(int interventionId)
         {
 
-            SubmitRollbackCommand model = await _mediator.Send(new LoadRollbackCheckYourAnswersRequest() { InterventionId = interventionId });
+            SubmitRollbackCommand model = (SubmitRollbackCommand)await _mediator.Send(new LoadRollbackCheckYourAnswersRequest() { InterventionId = interventionId });
             return View("RollbackCheckYourDetails", model);
 
         }

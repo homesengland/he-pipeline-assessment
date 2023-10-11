@@ -5,7 +5,7 @@ using MediatR;
 
 namespace He.PipelineAssessment.UI.Features.Rollback.LoadRollbackCheckYourAnswersAssessor
 {
-    public class LoadRollbackCheckYourAnswersAssessorRequest : LoadInterventionCheckYourAnswersRequest<SubmitRollbackCommand>
+    public class LoadRollbackCheckYourAnswersAssessorRequest : LoadInterventionCheckYourAnswersAssessorRequest
     {
     }
 }

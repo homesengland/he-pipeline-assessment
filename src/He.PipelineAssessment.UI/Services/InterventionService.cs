@@ -330,7 +330,7 @@ namespace He.PipelineAssessment.UI.Services
             }
         }
 
-        public async Task<AssessmentInterventionCommand> LoadInterventionCheckYourAnswerAssessorRequest(LoadRollbackCheckYourAnswersAssessorRequest request)
+        public async Task<AssessmentInterventionCommand> LoadInterventionCheckYourAnswerAssessorRequest(LoadInterventionCheckYourAnswersAssessorRequest request)
         {
             try
             {

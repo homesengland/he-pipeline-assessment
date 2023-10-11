@@ -23,34 +23,8 @@ namespace He.PipelineAssessment.UI.Features.Rollback.DeleteRollback
 
         public async Task<int> Handle(DeleteRollbackCommand command, CancellationToken cancellationToken)
         {
-            _interventionService.DeleteIntervention(command);
-            try
-            {
-                var intervention =
-                    await _assessmentRepository.GetAssessmentIntervention(command.AssessmentInterventionId);
-                if (intervention == null)
-                {
-                    throw new NotFoundException($"Assessment Intervention with Id {command.AssessmentInterventionId} not found");
-                }
-
-                var isAuthorised = await _roleValidation.ValidateRole(intervention.AssessmentToolWorkflowInstance.AssessmentId, intervention.AssessmentToolWorkflowInstance.WorkflowDefinitionId);
-                if (!isAuthorised)
-                {
-                    throw new UnauthorizedAccessException($"You do not have permission to access this resource.");
-                }
-
-                return await _assessmentRepository.DeleteIntervention(intervention);
-            }
-            catch (UnauthorizedAccessException e)
-            {
-                _logger.LogError(e, e.Message);
-                throw;
-            }
-            catch (Exception e)
-            {
-                _logger.LogError(e, e.Message);
-                throw new ApplicationException($"Unable to delete rollback. WorkflowInstanceId: {command.WorkflowInstanceId}");
-            }
+            return await _interventionService.DeleteIntervention(command);
+            
 
         }
     }
