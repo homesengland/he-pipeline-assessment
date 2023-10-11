@@ -215,3 +215,6 @@ elsa-modal-dialog > div > div > div:first-child {
   border-color: rgb(229 231 235) !important;
   border-width: 2px !important;
 }
+.elsa-select{
+    margin-right: 1em;
+}

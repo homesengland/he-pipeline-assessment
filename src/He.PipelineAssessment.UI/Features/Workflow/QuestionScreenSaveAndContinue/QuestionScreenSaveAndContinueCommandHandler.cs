@@ -36,25 +36,29 @@ namespace He.PipelineAssessment.UI.Features.Workflow.QuestionScreenSaveAndContin
                     throw new UnauthorizedAccessException($"You do not have permission to access this resource.");
                 }
 
-                var saveAndContinueCommandDto = _saveAndContinueMapper.SaveAndContinueCommandToMultiSaveAndContinueCommandDto(request);
-                var response = await _elsaServerHttpClient.QuestionScreenSaveAndContinue(saveAndContinueCommandDto);
+                var response = await _elsaServerHttpClient.QuestionScreenSaveAndValidate(request);
 
                 if (response != null)
                 {
                     QuestionScreenSaveAndContinueCommandResponse result = new QuestionScreenSaveAndContinueCommandResponse()
                     {
-                        ActivityId = response.Data.NextActivityId,
-                        WorkflowInstanceId = response.Data.WorkflowInstanceId,
-                        ActivityType = response.Data.ActivityType,
-                        IsAuthorised = true
+                        ActivityId = response.Data != null ? response.Data.NextActivityId : string.Empty,
+                        WorkflowInstanceId = response.Data != null ? response.Data.WorkflowInstanceId: string.Empty,
+                        ActivityType = response.Data != null ? response.Data.ActivityType : string.Empty,
+                        IsAuthorised = true,
+                        IsValid = response.IsValid,
+                        ValidationMessages = response.ValidationMessages
 
                     };
-                    var currentAssessmentToolWorkflowInstance = await _assessmentRepository.GetAssessmentToolWorkflowInstance(response.Data.WorkflowInstanceId);
-                    if (currentAssessmentToolWorkflowInstance != null)
+                    if (response.IsValid && response.Data != null)
                     {
-                        currentAssessmentToolWorkflowInstance.CurrentActivityId = response.Data.NextActivityId;
-                        currentAssessmentToolWorkflowInstance.CurrentActivityType = response.Data.ActivityType;
-                        await _assessmentRepository.SaveChanges();
+                        var currentAssessmentToolWorkflowInstance = await _assessmentRepository.GetAssessmentToolWorkflowInstance(response.Data.WorkflowInstanceId);
+                        if (currentAssessmentToolWorkflowInstance != null)
+                        {
+                            currentAssessmentToolWorkflowInstance.CurrentActivityId = response.Data.NextActivityId;
+                            currentAssessmentToolWorkflowInstance.CurrentActivityType = response.Data.ActivityType;
+                            await _assessmentRepository.SaveChanges();
+                        }
                     }
 
                     return await Task.FromResult(result);

@@ -178,7 +178,7 @@ export class TextActivityProperty implements ISortableSharedComponent, IDisplayT
                   padding="elsa-pt-1.5 elsa-pl-1 elsa-pr-28"
                   onExpressionChanged={e => this._base.CustomUpdateExpression(e, nestedTextActivity, nestedTextActivity.syntax)}
                 />
-                <div class="elsa-absolute elsa-inset-y-0 elsa-right-0 elsa-flex elsa-items-center">
+                <div class="elsa-absolute elsa-inset-y-0 elsa-right-0 elsa-flex elsa-items-center elsa-select">
                   <select onChange={e => this._base.UpdateSyntax(e, nestedTextActivity, textExpressionEditor)}
                     class="focus:elsa-ring-blue-500 focus:elsa-border-blue-500 elsa-h-full elsa-py-0 elsa-pl-2 elsa-pr-7 elsa-border-transparent elsa-bg-transparent elsa-text-gray-500 sm:elsa-text-sm elsa-rounded-md">
                     {this.supportedSyntaxes.map(supportedSyntax => {
@@ -212,7 +212,7 @@ export class TextActivityProperty implements ISortableSharedComponent, IDisplayT
                   padding="elsa-pt-1.5 elsa-pl-1 elsa-pr-28"
                   onExpressionChanged={e => this._base.CustomUpdateExpression(e, nestedTextActivity, TextActivityOptionsSyntax.Condition)}
                   />
-                <div class="elsa-absolute elsa-inset-y-0 elsa-right-0 elsa-flex elsa-items-center">
+                <div class="elsa-absolute elsa-inset-y-0 elsa-right-0 elsa-flex elsa-items-center elsa-select">
                   <select onChange={e => this._base.UpdateSyntax(e, nestedTextActivity, conditionExpressionEditor)}
                       class="focus:elsa-ring-blue-500 focus:elsa-border-blue-500 elsa-h-full elsa-py-0 elsa-pl-2 elsa-pr-7 elsa-border-transparent elsa-bg-transparent elsa-text-gray-500 sm:elsa-text-sm elsa-rounded-md">
                       {this.supportedSyntaxes.filter(x => x == SyntaxNames.JavaScript).map(supportedSyntax => {

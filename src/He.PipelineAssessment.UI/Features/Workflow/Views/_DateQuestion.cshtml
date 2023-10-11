@@ -1,10 +1,11 @@
 ﻿@using He.PipelineAssessment.UI.Features.Workflow.ViewModels
+@using Elsa.CustomWorkflow.Sdk.Providers;
 @model He.PipelineAssessment.UI.Features.Workflow.ViewModels.Question
 @{
-    var itemDayName = "Data.Questions[" + Model.Index + "].Date.Day";
-    var itemMonthName = "Data.Questions[" + Model.Index + "].Date.Month";
-    var itemYearName = "Data.Questions[" + Model.Index + "].Date.Year";
-    var formItemName = "Data.Questions[" + Model.Index + "].Date";
+    var itemDayName = ValidationPropertyNameProvider.GetPropertyName(Model.QuestionType, Model.Index) + ".Day";
+    var itemMonthName = ValidationPropertyNameProvider.GetPropertyName(Model.QuestionType, Model.Index) + ".Month";
+    var itemYearName = ValidationPropertyNameProvider.GetPropertyName(Model.QuestionType, Model.Index) + ".Year";
+    var formItemName = ValidationPropertyNameProvider.GetPropertyName(Model.QuestionType, Model.Index);
 
     var errorFormClass = !Model.IsValid ? "govuk-form-group--error" : "";
     var errorFieldClass = !Model.IsValid ? "govuk-input--error" : "";

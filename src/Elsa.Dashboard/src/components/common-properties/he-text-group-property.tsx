@@ -45,6 +45,8 @@ export class HeTextGroupProperty implements ISortableSharedComponent, IDisplayTo
   container: HTMLElement;
   displayValue: string = "table-row";
   hiddenValue: string = "none";
+  groupTextButton: string = "Add Text Group";
+
   private _base: SortableComponent;
   private _toggle: DisplayToggle;
 
@@ -54,6 +56,12 @@ export class HeTextGroupProperty implements ISortableSharedComponent, IDisplayTo
   }
 
   async componentWillLoad() {
+    //TODO - a little messy and we probably want to look to inject options into this
+    //but due to time constraints this should work as an initial check.
+    if (this.propertyDescriptor != null && this.propertyDescriptor.name != null) {
+      this.groupTextButton = this.propertyDescriptor.name.toLowerCase().includes('guidance')
+        ? "Add Guidance" : this.groupTextButton;
+    }
     this._base.componentWillLoad();
   }
 

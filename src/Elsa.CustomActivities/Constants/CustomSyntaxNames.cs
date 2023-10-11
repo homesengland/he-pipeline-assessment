@@ -29,6 +29,12 @@ namespace Elsa.CustomActivities.Constants
         public const string PrePopulated = "PrePopulated";
     }
 
+    public class ValidationSyntaxNames
+    {
+        public const string Rule = "ValidationRule";
+        public const string Validation = "Validation";
+    }
+
     public class DataTableSyntaxNames
     {
         public const string IsReadOnly = "ReadOnly";

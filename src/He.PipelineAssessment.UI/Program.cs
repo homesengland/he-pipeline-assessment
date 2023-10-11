@@ -1,6 +1,7 @@
 using Elsa.CustomWorkflow.Sdk;
 using Elsa.CustomWorkflow.Sdk.Extensions;
 using Elsa.CustomWorkflow.Sdk.HttpClients;
+using Elsa.CustomWorkflow.Sdk.Models.Workflow;
 using FluentValidation;
 using He.PipelineAssessment.Data.Auth;
 using He.PipelineAssessment.Data.SinglePipeline;
@@ -94,8 +95,10 @@ var tokenService = new TokenProvider(domain, clientId, clientSecret, apiIdentifi
 builder.Services.AddSingleton<ITokenProvider>(tokenService);
 
 //Validators
+
 builder.Services.AddScoped<IValidator<QuestionScreenSaveAndContinueCommand>, SaveAndContinueCommandValidator>();
-builder.Services.AddScoped<IValidator<CreateAssessmentToolCommand>, CreateAssessmentToolCommandValidator>();
+builder.Services.AddScoped<IValidator<QuestionScreenSaveAndContinueCommand>, SaveAndContinueCommandValidator>();
+builder.Services.AddScoped<IValidator<QuestionScreenSaveAndContinueCommand>, SaveAndContinueCommandValidator>(); 
 builder.Services.AddScoped<IValidator<CreateAssessmentToolWorkflowCommand>, CreateAssessmentToolWorkflowCommandValidator>();
 builder.Services.AddScoped<IValidator<UpdateAssessmentToolCommand>, UpdateAssessmentToolCommandValidator>();
 builder.Services.AddScoped<IValidator<UpdateAssessmentToolWorkflowCommand>, UpdateAssessmentToolWorkflowCommandValidator>();

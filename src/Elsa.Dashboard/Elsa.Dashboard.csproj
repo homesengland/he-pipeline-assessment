@@ -9,6 +9,8 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="src\components\common-properties\he-validation-property.tsx" />
+    <None Remove="src\nested-drivers\he-validation-driver.tsx" />
     <None Remove="System.Security.Cryptography.Pkcs" />
     <None Remove="System.Drawing.Common" />
     <None Remove="System.Text.RegularExpressions" />
@@ -94,6 +96,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <TypeScriptCompile Include="src\components\common-properties\he-validation-property.tsx" />
     <TypeScriptCompile Include="src\components\display-toggle-component.ts">
       <SubType>Code</SubType>
     </TypeScriptCompile>
@@ -102,6 +105,7 @@
     <TypeScriptCompile Include="src\components\base-component.ts" />
     <TypeScriptCompile Include="src\components\editors\he-monaco\he-monaco-utils.ts" />
     <TypeScriptCompile Include="src\nested-drivers\he-numeric-driver.tsx" />
+    <TypeScriptCompile Include="src\nested-drivers\he-validation-driver.tsx" />
     <TypeScriptCompile Include="src\nested-drivers\he-text-group-driver.tsx" />
     <TypeScriptCompile Include="src\utils\intellisenseGatherer.ts" />
     <TypeScriptCompile Include="src\functions\multiExpressionEditorUpdate.tsx">
