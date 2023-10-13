@@ -18,14 +18,12 @@ namespace He.PipelineAssessment.UI.Features.Workflow
     {
         private readonly ILogger<WorkflowController> _logger;
         private readonly IMediator _mediator;
-        private readonly IValidator<QuestionScreenSaveAndContinueCommand> _validator;
 
 
-        public WorkflowController(IValidator<QuestionScreenSaveAndContinueCommand> validator, ILogger<WorkflowController> logger, IMediator mediator)
+        public WorkflowController(ILogger<WorkflowController> logger, IMediator mediator)
         {
             _logger = logger;
             _mediator = mediator;
-            _validator = validator;
         }
 
         [Authorize(Policy = Authorization.Constants.AuthorizationPolicies.AssignmentToWorkflowExecuteRoleRequired)]
