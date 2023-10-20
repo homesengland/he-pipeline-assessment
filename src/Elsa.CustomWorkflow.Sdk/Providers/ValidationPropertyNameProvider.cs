@@ -32,6 +32,18 @@ namespace Elsa.CustomWorkflow.Sdk.Providers
             {
                 return GetCheckboxPropertyName(questionIndex);
             }
+            else if(questionType == QuestionTypeConstants.PotScoreRadioQuestion)
+            {
+                return GetRadioPropertyName(questionIndex);
+            }
+            else if(questionType == QuestionTypeConstants.WeightedRadioQuestion)
+            {
+                return GetRadioPropertyName(questionIndex);
+            }
+            else if (questionType == QuestionTypeConstants.WeightedCheckboxQuestion)
+            {
+                return GetCheckboxPropertyName(questionIndex);
+            }
             else if(questionType == QuestionTypeConstants.DataTable)
             {
                 return GetDataTablePropertyName(questionIndex);
