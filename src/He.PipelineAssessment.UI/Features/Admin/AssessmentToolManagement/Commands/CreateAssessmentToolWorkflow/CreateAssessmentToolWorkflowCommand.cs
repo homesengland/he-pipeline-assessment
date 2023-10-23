@@ -22,6 +22,8 @@ namespace He.PipelineAssessment.UI.Features.Admin.AssessmentToolManagement.Comma
         public bool IsFirstWorkflow { get; set; } = false;
         [Display(Name = "Is economist workflow?")]
         public bool IsEconomistWorkflow { get; set; } = false;
+        [Display(Name = "Is ammendable workflow?")]
+        public bool IsAmmendableWorkflow { get; set; } = false;
         public int AssessmentToolId { get; set; }
         public int Version { get; set; } = 1;
         public bool IsLatest { get; set; } = true;

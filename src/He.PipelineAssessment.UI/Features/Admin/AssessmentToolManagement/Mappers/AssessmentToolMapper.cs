@@ -32,6 +32,7 @@ namespace He.PipelineAssessment.UI.Features.Admin.AssessmentToolManagement.Mappe
                         IsLatest = y.IsLatest,
                         WorkflowDefinitionId = y.WorkflowDefinitionId,
                         Version = y.Version,
+                        IsAmmendableWorkflow = y.IsAmmendable,
 
                     }).ToList() : new List<AssessmentToolWorkflowDto> { }
                 }).ToList(),
@@ -58,6 +59,7 @@ namespace He.PipelineAssessment.UI.Features.Admin.AssessmentToolManagement.Mappe
                     AssessmentToolId = x.AssessmentToolId,
                     IsFirstWorkflow = x.IsFirstWorkflow,
                     IsEconomistWorkflow = x.IsEconomistWorkflow,
+                    IsAmmendableWorkflow = x.IsAmmendable,
                     IsLatest = x.IsLatest,
                     Version = x.Version,
                     WorkflowDefinitionId = x.WorkflowDefinitionId
