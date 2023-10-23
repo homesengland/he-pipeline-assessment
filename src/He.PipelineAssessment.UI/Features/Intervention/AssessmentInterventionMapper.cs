@@ -52,7 +52,7 @@ namespace He.PipelineAssessment.UI.Features.Intervention
                     RequestedBy = command.RequestedBy ?? "",
                     RequestedByEmail = command.RequestedByEmail ?? "",
                     SignOffDocument = command.SignOffDocument,
-                    Status = InterventionStatus.Draft,
+                    Status = command.DecisionType == "Override" ? InterventionStatus.Pending : InterventionStatus.Draft,
                     AssessmentResult = command.AssessmentResult,
                     InterventionReasonId = command.InterventionReasonId
                 };

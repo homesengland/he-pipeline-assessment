@@ -1,4 +1,5 @@
-﻿using He.PipelineAssessment.Infrastructure;
+﻿using Azure.Core;
+using He.PipelineAssessment.Infrastructure;
 using He.PipelineAssessment.Infrastructure.Repository;
 using He.PipelineAssessment.Models;
 using He.PipelineAssessment.UI.Authorization;
@@ -72,7 +73,7 @@ namespace He.PipelineAssessment.UI.Services
                 if (!isLatest)
                 {
                     throw new Exception(
-                        $"Unable to create rollback for Assessment Tool Workflow Instance as this is not the latest submitted Workflow Instance for this Assessment. WorkflowInstanceId: {command.WorkflowInstanceId}");
+                        $"Unable to create {command.DecisionType} for Assessment Tool Workflow Instance as this is not the latest submitted Workflow Instance for this Assessment. WorkflowInstanceId: {command.WorkflowInstanceId}");
                 }
 
                 var assessmentIntervention = _mapper.AssessmentInterventionFromAssessmentInterventionCommand(command);
@@ -89,7 +90,7 @@ namespace He.PipelineAssessment.UI.Services
             catch (Exception e)
             {
                 _logger.LogError(e, e.Message);
-                throw new ApplicationException($"Unable to create rollback. WorkflowInstanceId: {command.WorkflowInstanceId}");
+                throw new ApplicationException($"Unable to create {command.DecisionType}. WorkflowInstanceId: {command.WorkflowInstanceId}");
             }
         }
 
@@ -113,7 +114,7 @@ namespace He.PipelineAssessment.UI.Services
                 if (!isLatest)
                 {
                     throw new ApplicationException(
-                        $"Unable to create rollback for Assessment Tool Workflow Instance as this is not the latest submitted Workflow Instance for this Assessment.");
+                        $"Unable to create intervention for Assessment Tool Workflow Instance as this is not the latest submitted Workflow Instance for this Assessment.");
                 }
 
                 var activeInterventionsForAssessment = await _assessmentRepository.GetOpenAssessmentInterventions(workflowInstance.AssessmentId);
@@ -134,6 +135,17 @@ namespace He.PipelineAssessment.UI.Services
                     Status = InterventionStatus.Draft
                 };
 
+                //override
+                //var dtoConfig = new DtoConfig()
+                //{
+                //    AdministratorName = userName,
+                //    UserName = userName,
+                //    AdministratorEmail = email,
+                //    UserEmail = email,
+                //    DecisionType = InterventionDecisionTypes.Override,
+                //    Status = InterventionStatus.Pending
+                //};
+
                 var interventionReasons = await _assessmentRepository.GetInterventionReasons();
 
                 var dto = _mapper.AssessmentInterventionDtoFromWorkflowInstance(workflowInstance, interventionReasons, dtoConfig);
@@ -153,7 +165,7 @@ namespace He.PipelineAssessment.UI.Services
             catch (Exception e)
             {
                 _logger.LogError(e, e.Message);
-                throw new ApplicationException($"Unable to create rollback request. WorkflowInstanceId: {request.WorkflowInstanceId}");
+                throw new ApplicationException($"Unable to create intervention request. WorkflowInstanceId: {request.WorkflowInstanceId}");
             }
         }
 
@@ -360,5 +372,24 @@ namespace He.PipelineAssessment.UI.Services
             }
         }
 
+        public async Task<List<AssessmentToolWorkflow>> GetAssessmentToolWorkflowsForOverride(string workflowInstanceId)
+        {
+            AssessmentToolWorkflowInstance? workflowInstance = await _assessmentRepository.GetAssessmentToolWorkflowInstance(workflowInstanceId);
+            if (workflowInstance == null)
+            {
+                throw new NotFoundException($"Assessment Tool Workflow Instance with Id {workflowInstanceId} not found");
+            }
+
+            List<AssessmentToolWorkflow> assessmentToolWorkflows =
+                await _adminAssessmentToolWorkflowRepository.GetAssessmentToolWorkflowsForOverride(workflowInstance
+                    .AssessmentToolWorkflow.AssessmentTool.Order);
+
+            if (assessmentToolWorkflows == null || !assessmentToolWorkflows.Any())
+            {
+                throw new NotFoundException($"No suitable assessment tool workflows found for override");
+            }
+
+            return assessmentToolWorkflows;
+        }
     }
 }

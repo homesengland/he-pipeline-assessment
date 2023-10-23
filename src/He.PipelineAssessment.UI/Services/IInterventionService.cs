@@ -1,4 +1,5 @@
-﻿using He.PipelineAssessment.UI.Features.Intervention;
+﻿using He.PipelineAssessment.Models;
+using He.PipelineAssessment.UI.Features.Intervention;
 using He.PipelineAssessment.UI.Features.Rollback.ConfirmRollback;
 using He.PipelineAssessment.UI.Features.Rollback.CreateRollback;
 using He.PipelineAssessment.UI.Features.Rollback.DeleteRollback;
@@ -22,5 +23,6 @@ namespace He.PipelineAssessment.UI.Services
         Task<AssessmentInterventionDto> EditInterventionRequest(EditInterventionRequest request);
         Task<AssessmentInterventionCommand> LoadInterventionCheckYourAnswerAssessorRequest(LoadInterventionCheckYourAnswersAssessorRequest request);
         Task<AssessmentInterventionCommand> LoadInterventionCheckYourAnswersRequest(LoadInterventionCheckYourAnswersRequest request);
+        Task<List<AssessmentToolWorkflow>> GetAssessmentToolWorkflowsForOverride(string workflowInstanceId);
     }
 }

@@ -1,10 +1,4 @@
-﻿using He.PipelineAssessment.Infrastructure;
-using He.PipelineAssessment.Infrastructure.Repository;
-using He.PipelineAssessment.Models;
-using He.PipelineAssessment.UI.Authorization;
-using He.PipelineAssessment.UI.Common.Exceptions;
-using He.PipelineAssessment.UI.Common.Utility;
-using He.PipelineAssessment.UI.Features.Intervention;
+﻿using He.PipelineAssessment.UI.Features.Intervention;
 using He.PipelineAssessment.UI.Services;
 using MediatR;
 
