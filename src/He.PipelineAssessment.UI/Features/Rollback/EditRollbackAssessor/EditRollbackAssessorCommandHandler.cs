@@ -1,6 +1,4 @@
-﻿using He.PipelineAssessment.Infrastructure.Repository;
-using He.PipelineAssessment.UI.Common.Exceptions;
-using He.PipelineAssessment.UI.Services;
+﻿using He.PipelineAssessment.UI.Services;
 using MediatR;
 
 namespace He.PipelineAssessment.UI.Features.Rollback.EditRollbackAssessor

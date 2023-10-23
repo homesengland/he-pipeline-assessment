@@ -6,15 +6,6 @@ using He.PipelineAssessment.UI.Common.Exceptions;
 using He.PipelineAssessment.UI.Common.Utility;
 using He.PipelineAssessment.UI.Features.Intervention;
 using He.PipelineAssessment.UI.Features.Rollback.ConfirmRollback;
-using He.PipelineAssessment.UI.Features.Rollback.CreateRollback;
-using He.PipelineAssessment.UI.Features.Rollback.DeleteRollback;
-using He.PipelineAssessment.UI.Features.Rollback.EditRollback;
-using He.PipelineAssessment.UI.Features.Rollback.EditRollbackAssessor;
-using He.PipelineAssessment.UI.Features.Rollback.LoadRollbackCheckYourAnswers;
-using He.PipelineAssessment.UI.Features.Rollback.LoadRollbackCheckYourAnswersAssessor;
-using He.PipelineAssessment.UI.Features.Rollback.SubmitRollback;
-using Newtonsoft.Json;
-using static Microsoft.EntityFrameworkCore.DbLoggerCategory.Database;
 
 namespace He.PipelineAssessment.UI.Services
 {
@@ -139,7 +130,7 @@ namespace He.PipelineAssessment.UI.Services
                 {
                     UserName = userName,
                     UserEmail = email,
-                    DecisionType = InterventionDecisionTypes.Rollback,
+                    DecisionType = InterventionDecisionTypes.Rollback, //TODO: this needs to be different depending on intervention type
                     Status = InterventionStatus.Draft
                 };
 

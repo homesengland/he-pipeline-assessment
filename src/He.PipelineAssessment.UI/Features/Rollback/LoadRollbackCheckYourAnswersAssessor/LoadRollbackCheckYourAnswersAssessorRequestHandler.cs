@@ -1,6 +1,4 @@
-﻿using He.PipelineAssessment.Infrastructure.Repository;
-using He.PipelineAssessment.UI.Common.Exceptions;
-using He.PipelineAssessment.UI.Features.Intervention;
+﻿using He.PipelineAssessment.UI.Features.Intervention;
 using He.PipelineAssessment.UI.Features.Rollback.ConfirmRollback;
 using He.PipelineAssessment.UI.Services;
 using MediatR;
@@ -13,9 +11,9 @@ namespace He.PipelineAssessment.UI.Features.Rollback.LoadRollbackCheckYourAnswer
 
         private readonly IInterventionService _interventionService;
 
-        public LoadRollbackCheckYourAnswersAssessorRequestHandler( IInterventionService interventionSevice)
+        public LoadRollbackCheckYourAnswersAssessorRequestHandler(IInterventionService interventionService)
         {
-            _interventionService = interventionSevice;
+            _interventionService = interventionService;
         }
 
         public async Task<AssessmentInterventionCommand> Handle(LoadRollbackCheckYourAnswersAssessorRequest request, CancellationToken cancellationToken)

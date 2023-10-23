@@ -1,6 +1,4 @@
-﻿using He.PipelineAssessment.Infrastructure.Repository;
-using He.PipelineAssessment.UI.Common.Exceptions;
-using He.PipelineAssessment.UI.Features.Intervention;
+﻿using He.PipelineAssessment.UI.Features.Intervention;
 using He.PipelineAssessment.UI.Features.Rollback.SubmitRollback;
 using He.PipelineAssessment.UI.Services;
 using MediatR;
@@ -12,10 +10,7 @@ namespace He.PipelineAssessment.UI.Features.Rollback.LoadRollbackCheckYourAnswer
     {
         private readonly IInterventionService _interventionService;
 
-        public LoadRollbackCheckYourAnswersRequestHandler(IAssessmentRepository assessmentRepository,
-            IAssessmentInterventionMapper mapper,
-            ILogger<LoadRollbackCheckYourAnswersRequestHandler> logger,
-            IInterventionService interventionService)
+        public LoadRollbackCheckYourAnswersRequestHandler(IInterventionService interventionService)
         {
             _interventionService = interventionService;
         }
