@@ -78,6 +78,6 @@ namespace He.PipelineAssessment.UI.Tests.Features.Amendment.SubmitAmendment
     //        {
     //            Assert.Equal(AssessmentToolWorkflowInstanceConstants.SuspendedAmendment, workflowToDelete.Status);
     //        }
-        }
+       // }
     }
 }

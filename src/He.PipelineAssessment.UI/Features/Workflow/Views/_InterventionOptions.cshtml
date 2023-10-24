@@ -18,7 +18,7 @@
     <button disabled="disabled" aria-disabled="true" class="govuk-button govuk-button--disabled" data-module="govuk-button">
         Variation
     </button>
-    @if(Model.IsAmmendableWorkflow)
+    @if(Model.IsAmendableWorkflow)
     {
         @Html.ActionLink("Amendment", "Amendment", "Amendment", new { workflowInstanceId = Model.WorkflowInstanceId }, new { @class = "govuk-button", data_module="govuk-button" })
     }

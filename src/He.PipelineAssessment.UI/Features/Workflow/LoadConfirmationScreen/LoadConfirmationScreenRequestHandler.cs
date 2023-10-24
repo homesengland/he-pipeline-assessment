@@ -87,7 +87,7 @@ namespace He.PipelineAssessment.UI.Features.Workflow.LoadConfirmationScreen
                         result.CorrelationId = currentAssessmentToolWorkflowInstance.Assessment.SpId;
                         result.AssessmentId = currentAssessmentToolWorkflowInstance.AssessmentId;
                         result.IsLatestSubmittedWorkflow = _assessmentToolWorkflowInstanceHelpers.IsLatestSubmittedWorkflow(currentAssessmentToolWorkflowInstance);
-                        result.IsAmmendableWorkflow = currentAssessmentToolWorkflowInstance.AssessmentToolWorkflow.IsAmmendable;
+                        result.IsAmendableWorkflow = currentAssessmentToolWorkflowInstance.AssessmentToolWorkflow.IsAmendable;
                         PageHeaderHelper.PopulatePageHeaderInformation(result, currentAssessmentToolWorkflowInstance);
                         return await Task.FromResult(result);
                     }

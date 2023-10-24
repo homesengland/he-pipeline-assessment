@@ -19,6 +19,6 @@ namespace He.PipelineAssessment.UI.Features.Admin.AssessmentToolManagement.Comma
         public int AssessmentToolId { get; set; }
         public int Version { get; set; } = 1;
         public bool IsLatest { get; set; } = true;
-        public bool IsAmmendableWorkflow { get; set; } = true;
+        public bool IsAmendableWorkflow { get; set; } = true;
     }
 }
