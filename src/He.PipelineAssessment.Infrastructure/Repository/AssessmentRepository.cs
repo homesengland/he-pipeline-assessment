@@ -34,6 +34,7 @@ namespace He.PipelineAssessment.Infrastructure.Repository
         Task<int> DeleteIntervention(AssessmentIntervention intervention);
         Task<List<InterventionReason>> GetInterventionReasons();
         Task<List<AssessmentIntervention>> GetOpenAssessmentInterventions(int assessmentId);
+        Task<List<AssessmentToolWorkflowInstance>> GetWorkflowInstancesToDeleteForAmmendment(int assessmentId, int order);
     }
 
     public class AssessmentRepository : IAssessmentRepository
@@ -187,6 +188,7 @@ namespace He.PipelineAssessment.Infrastructure.Repository
                 .Where(x =>
                             x.Assessment.Id == assessmentId
                             && x.Status != AssessmentToolWorkflowInstanceConstants.SuspendedRollBack
+                            && x.Status != AssessmentToolWorkflowInstanceConstants.SuspendedAmmendment
                             && x.AssessmentToolWorkflow.AssessmentTool.Order >= assessmentToolOrder).ToListAsync();
 
             return workflowsToRemove;
@@ -220,6 +222,18 @@ namespace He.PipelineAssessment.Infrastructure.Repository
             .Where(x => x.AssessmentToolWorkflowInstance.AssessmentId == assessmentId 
             && (x.Status == InterventionStatus.Draft || x.Status == InterventionStatus.Pending))
             .ToListAsync();
+        }
+
+        public async Task<List<AssessmentToolWorkflowInstance>> GetWorkflowInstancesToDeleteForAmmendment(int assessmentId, int assessmentToolOrder)
+        {
+            List<AssessmentToolWorkflowInstance> workflowsToRemove = await context.Set<AssessmentToolWorkflowInstance>()
+                .Where(x =>
+                            x.Assessment.Id == assessmentId
+                            && x.Status != AssessmentToolWorkflowInstanceConstants.SuspendedRollBack 
+                            && x.Status != AssessmentToolWorkflowInstanceConstants.SuspendedAmmendment
+                            && x.AssessmentToolWorkflow.AssessmentTool.Order > assessmentToolOrder).ToListAsync();
+
+            return workflowsToRemove;
         }
     }
 }

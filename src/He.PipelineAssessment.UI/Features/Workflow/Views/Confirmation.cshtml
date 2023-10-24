@@ -48,5 +48,6 @@
 
 @if (Model.IsLatestSubmittedWorkflow)
 {
-    @await Html.PartialAsync("_InterventionOptions.cshtml", Model.Data.WorkflowInstanceId)
+
+    @await Html.PartialAsync("_InterventionOptions.cshtml", new InterventionOptionsModel() { WorkflowInstanceId = Model.Data.WorkflowInstanceId, IsAmmendableWorkflow = Model.IsAmmendableWorkflow})
 }
