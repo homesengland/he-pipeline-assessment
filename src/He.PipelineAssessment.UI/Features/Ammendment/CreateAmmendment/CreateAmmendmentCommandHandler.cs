@@ -63,7 +63,7 @@ namespace He.PipelineAssessment.UI.Features.Ammendment.CreateAmmendment
             catch (Exception e)
             {
                 _logger.LogError(e, e.Message);
-                throw new ApplicationException($"Unable to create rollback. WorkflowInstanceId: {command.WorkflowInstanceId}");
+                throw new ApplicationException($"Unable to create ammendment. WorkflowInstanceId: {command.WorkflowInstanceId}");
             }
 
         }

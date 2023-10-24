@@ -4,13 +4,8 @@ using He.PipelineAssessment.UI.Features.Ammendment.SubmitAmmendment;
 using He.PipelineAssessment.UI.Features.Ammendment.CreateAmmendment;
 using He.PipelineAssessment.UI.Features.Ammendment.DeleteAmmendment;
 using He.PipelineAssessment.UI.Features.Ammendment.EditAmmendment;
-using He.PipelineAssessment.UI.Features.Ammendment.LoadAmmendmentCheckYourAnswersAssessor;
+using He.PipelineAssessment.UI.Features.Ammendment.LoadAmmendmentCheckYourAnswers;
 using He.PipelineAssessment.UI.Features.Intervention;
-using He.PipelineAssessment.UI.Features.Rollback.ConfirmRollback;
-using He.PipelineAssessment.UI.Features.Rollback.CreateRollback;
-using He.PipelineAssessment.UI.Features.Rollback.DeleteRollback;
-using He.PipelineAssessment.UI.Features.Rollback.EditRollback;
-using He.PipelineAssessment.UI.Features.Rollback.LoadRollbackCheckYourAnswersAssessor;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -66,7 +61,7 @@ namespace He.PipelineAssessment.UI.Features.Ammendment
         [HttpGet]
         public async Task<IActionResult> CheckYourDetails(int interventionId)
         {
-            SubmitAmmendmentCommand model = await _mediator.Send(new LoadAmmendmentCheckYourAnswersAssessorRequest() { InterventionId = interventionId });
+            SubmitAmmendmentCommand model = await _mediator.Send(new LoadAmmendmentCheckYourAnswersRequest() { InterventionId = interventionId });
 
             return View("AmmendmentCheckYourDetails", model);
         }

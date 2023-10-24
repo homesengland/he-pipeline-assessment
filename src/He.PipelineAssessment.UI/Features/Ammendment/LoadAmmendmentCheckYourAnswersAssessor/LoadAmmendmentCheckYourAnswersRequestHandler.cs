@@ -5,25 +5,25 @@ using He.PipelineAssessment.UI.Features.Intervention;
 using MediatR;
 using Newtonsoft.Json;
 
-namespace He.PipelineAssessment.UI.Features.Ammendment.LoadAmmendmentCheckYourAnswersAssessor
+namespace He.PipelineAssessment.UI.Features.Ammendment.LoadAmmendmentCheckYourAnswers
 {
-    public class LoadAmmendmentCheckYourAnswersAssessorRequestHandler : IRequestHandler<LoadAmmendmentCheckYourAnswersAssessorRequest, SubmitAmmendmentCommand>
+    public class LoadAmmendmentCheckYourAnswersRequestHandler : IRequestHandler<LoadAmmendmentCheckYourAnswersRequest, SubmitAmmendmentCommand>
     {
 
         private readonly IAssessmentRepository _assessmentRepository;
         private readonly IAssessmentInterventionMapper _mapper;
-        private readonly ILogger<LoadAmmendmentCheckYourAnswersAssessorRequest> _logger;
+        private readonly ILogger<LoadAmmendmentCheckYourAnswersRequest> _logger;
 
-        public LoadAmmendmentCheckYourAnswersAssessorRequestHandler(IAssessmentRepository assessmentRepository,
+        public LoadAmmendmentCheckYourAnswersRequestHandler(IAssessmentRepository assessmentRepository,
             IAssessmentInterventionMapper mapper,
-            ILogger<LoadAmmendmentCheckYourAnswersAssessorRequest> logger)
+            ILogger<LoadAmmendmentCheckYourAnswersRequest> logger)
         {
             _assessmentRepository = assessmentRepository;
             _logger = logger;
             _mapper = mapper;
         }
 
-        public async Task<SubmitAmmendmentCommand> Handle(LoadAmmendmentCheckYourAnswersAssessorRequest request, CancellationToken cancellationToken)
+        public async Task<SubmitAmmendmentCommand> Handle(LoadAmmendmentCheckYourAnswersRequest request, CancellationToken cancellationToken)
         {
             try
             {
@@ -39,7 +39,7 @@ namespace He.PipelineAssessment.UI.Features.Ammendment.LoadAmmendmentCheckYourAn
             catch (Exception e)
             {
                 _logger.LogError(e, e.Message);
-                throw new ApplicationException($"Unable to load rollback check your answers. InterventionId: {request.InterventionId}");
+                throw new ApplicationException($"Unable to load ammendment check your answers. InterventionId: {request.InterventionId}");
             }
         }
 

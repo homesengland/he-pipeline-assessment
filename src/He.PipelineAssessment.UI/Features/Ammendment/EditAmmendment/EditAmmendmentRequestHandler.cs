@@ -42,22 +42,12 @@ namespace He.PipelineAssessment.UI.Features.Ammendment.EditAmmendment
                     throw new UnauthorizedAccessException($"You do not have permission to access this resource.");
                 }
 
-                List<AssessmentToolWorkflow> assessmentToolWorkflows =
-                    await _adminAssessmentToolWorkflowRepository.GetAssessmentToolWorkflowsForRollback(intervention.AssessmentToolWorkflowInstance
-                        .AssessmentToolWorkflow.AssessmentTool.Order);
-
-                if (assessmentToolWorkflows == null || !assessmentToolWorkflows.Any())
-                {
-                    throw new NotFoundException($"No suitable assessment tool workflows found for ammendment");
-                }
-
                 AssessmentInterventionCommand command = _mapper.AssessmentInterventionCommandFromAssessmentIntervention(intervention);
-
+                var interventionReasons = await _repository.GetInterventionReasons();
                 var dto = new AssessmentInterventionDto
                 {
                     AssessmentInterventionCommand = command,
-                    TargetWorkflowDefinitions =
-                        _mapper.TargetWorkflowDefinitionsFromAssessmentToolWorkflows(assessmentToolWorkflows)
+                    InterventionReasons = interventionReasons
                 };
                 return dto;
             }

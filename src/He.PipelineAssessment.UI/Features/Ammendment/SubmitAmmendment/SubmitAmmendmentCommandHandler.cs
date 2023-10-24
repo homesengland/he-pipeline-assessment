@@ -37,22 +37,18 @@ namespace He.PipelineAssessment.UI.Features.Ammendment.SubmitAmmendment
                 intervention.DateSubmitted = _dateTimeProvider.UtcNow();
                 await _assessmentRepository.UpdateAssessmentIntervention(intervention);
 
-                if (intervention.Status == InterventionStatus.Approved)
+                var workflowsToDelete =
+                await _assessmentRepository.GetWorkflowInstancesToDeleteForAmmendment(intervention.AssessmentToolWorkflowInstance.AssessmentId, intervention.AssessmentToolWorkflowInstance.AssessmentToolWorkflow.AssessmentTool.Order);
+
+
+                foreach (var workflowInstance in workflowsToDelete)
                 {
-                    var workflowsToDelete =
-                        await _assessmentRepository.GetWorkflowInstancesToDeleteForAmmendment(intervention.AssessmentToolWorkflowInstance.AssessmentId, intervention.AssessmentToolWorkflowInstance.AssessmentToolWorkflow.AssessmentTool.Order);
-
-
-                    foreach (var workflowInstance in workflowsToDelete)
-                    {
-                        workflowInstance.Status = AssessmentToolWorkflowInstanceConstants.SuspendedAmmendment;
-                    }
-                    intervention.AssessmentToolWorkflowInstance.Status = AssessmentToolWorkflowInstanceConstants.Draft;
-                    await _assessmentRepository.SaveChanges();
-                    await _assessmentRepository.DeleteAllNextWorkflows(intervention.AssessmentToolWorkflowInstance
-    .AssessmentId);
+                    workflowInstance.Status = AssessmentToolWorkflowInstanceConstants.SuspendedAmmendment;
                 }
 
+                intervention.AssessmentToolWorkflowInstance.Status = AssessmentToolWorkflowInstanceConstants.Draft;
+                await _assessmentRepository.SaveChanges();
+                await _assessmentRepository.DeleteAllNextWorkflows(intervention.AssessmentToolWorkflowInstance.AssessmentId);
             }
             catch (Exception e)
             {
