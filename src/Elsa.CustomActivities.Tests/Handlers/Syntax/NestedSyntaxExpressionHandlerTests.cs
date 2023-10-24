@@ -562,7 +562,7 @@ namespace Elsa.CustomActivities.Tests.Handlers.Syntax
             };
 
             ElsaProperty groupSampleProperty = SampleProperty(TextActivitySyntaxNames.TextGroup, inputType, JsonConvert.SerializeObject(textGroupPropertyDictionaryList));
-            groupSampleProperty.Expressions[TextActivitySyntaxNames.TextActivity] =
+            groupSampleProperty.Expressions![TextActivitySyntaxNames.TextActivity] =
                 JsonConvert.SerializeObject(textActivityPropertyDictionaryProperty);
             List<TextRecord>? result = JsonConvert.DeserializeObject<List<TextRecord>>(value);
             provider.Setup(x => x.GetService(typeof(IExpressionEvaluator))).Returns(evaluator.Object);
