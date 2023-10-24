@@ -18,7 +18,7 @@ using He.PipelineAssessment.UI.Features.Admin.AssessmentToolManagement.Commands.
 using He.PipelineAssessment.UI.Features.Admin.AssessmentToolManagement.Commands.UpdateAssessmentToolWorkflowCommand;
 using He.PipelineAssessment.UI.Features.Admin.AssessmentToolManagement.Mappers;
 using He.PipelineAssessment.UI.Features.Admin.AssessmentToolManagement.Validators;
-using He.PipelineAssessment.UI.Features.Ammendment.CreateAmmendment;
+using He.PipelineAssessment.UI.Features.Amendment.CreateAmendment;
 using He.PipelineAssessment.UI.Features.Error;
 using He.PipelineAssessment.UI.Features.Intervention;
 using He.PipelineAssessment.UI.Features.Override.CreateOverride;
@@ -68,7 +68,7 @@ builder.Services.AddScoped<IAssessmentToolMapper, AssessmentToolMapper>();
 builder.Services.AddScoped<IAssessmentToolWorkflowMapper, AssessmentToolWorkflowMapper>();
 builder.Services.AddScoped<ICreateOverrideMapper, CreateOverrideMapper>();
 builder.Services.AddScoped<ICreateRollbackMapper, CreateRollbackMapper>();
-builder.Services.AddScoped<ICreateAmmendmentMapper, CreateAmmendmentMapper>();
+builder.Services.AddScoped<ICreateAmendmentMapper, CreateAmendmentMapper>();
 builder.Services.AddScoped<IAssessmentInterventionMapper, AssessmentInterventionMapper>();
 builder.Services.AddScoped<NonceConfig>();
 

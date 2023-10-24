@@ -20,7 +20,7 @@
     </button>
     @if(Model.IsAmmendableWorkflow)
     {
-        @Html.ActionLink("Ammendment", "Ammendment", "Ammendment", new { workflowInstanceId = Model.WorkflowInstanceId }, new { @class = "govuk-button", data_module="govuk-button" })
+        @Html.ActionLink("Amendment", "Amendment", "Amendment", new { workflowInstanceId = Model.WorkflowInstanceId }, new { @class = "govuk-button", data_module="govuk-button" })
     }
     @*@Html.ActionLink("Variation", "Variation", "Intervention", new { workflowInstanceId = Model }, new { @class = "govuk-button", data_module="govuk-button" })*@
 </div>
