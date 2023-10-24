@@ -1,6 +1,6 @@
 ﻿using FluentValidation;
 using He.PipelineAssessment.Models;
-using He.PipelineAssessment.UI.Features.Ammendment.ConfirmAmmendment;
+using He.PipelineAssessment.UI.Features.Ammendment.SubmitAmmendment;
 using He.PipelineAssessment.UI.Features.Ammendment.CreateAmmendment;
 using He.PipelineAssessment.UI.Features.Ammendment.DeleteAmmendment;
 using He.PipelineAssessment.UI.Features.Ammendment.EditAmmendment;
@@ -66,7 +66,7 @@ namespace He.PipelineAssessment.UI.Features.Ammendment
         [HttpGet]
         public async Task<IActionResult> CheckYourDetails(int interventionId)
         {
-            ConfirmAmmendmentCommand model = await _mediator.Send(new LoadAmmendmentCheckYourAnswersAssessorRequest() { InterventionId = interventionId });
+            SubmitAmmendmentCommand model = await _mediator.Send(new LoadAmmendmentCheckYourAnswersAssessorRequest() { InterventionId = interventionId });
 
             return View("AmmendmentCheckYourDetails", model);
         }
@@ -113,7 +113,7 @@ namespace He.PipelineAssessment.UI.Features.Ammendment
         }
 
         [HttpPost]
-        public async Task<IActionResult> ConfirmAmmendment(ConfirmAmmendmentCommand model, string submitButton)
+        public async Task<IActionResult> SubmitAmmendment(SubmitAmmendmentCommand model, string submitButton)
         {
 
             switch (submitButton)

@@ -1,5 +1,5 @@
 ﻿@using He.PipelineAssessment.Models
-@model He.PipelineAssessment.UI.Features.Ammendment.ConfirmAmmendment.ConfirmAmmendmentCommand
+@model He.PipelineAssessment.UI.Features.Ammendment.SubmitAmmendment.SubmitAmmendmentCommand
 
 @{
     ViewData["Title"] = "Create Assessment Rollback";
@@ -14,7 +14,7 @@
             title = "Submitted " + @Model.DecisionType;
         }
     }
-    @using (Html.BeginForm("ConfirmAmmendment", "Ammendment", FormMethod.Post))
+    @using (Html.BeginForm("SubmitAmmendment", "Ammendment", FormMethod.Post))
     {
         @Html.AntiForgeryToken()
         <div class="govuk-form-group">

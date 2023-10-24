@@ -1,13 +1,13 @@
 ﻿using He.PipelineAssessment.Infrastructure.Repository;
 using He.PipelineAssessment.UI.Common.Exceptions;
-using He.PipelineAssessment.UI.Features.Ammendment.ConfirmAmmendment;
+using He.PipelineAssessment.UI.Features.Ammendment.SubmitAmmendment;
 using He.PipelineAssessment.UI.Features.Intervention;
 using MediatR;
 using Newtonsoft.Json;
 
 namespace He.PipelineAssessment.UI.Features.Ammendment.LoadAmmendmentCheckYourAnswersAssessor
 {
-    public class LoadAmmendmentCheckYourAnswersAssessorRequestHandler : IRequestHandler<LoadAmmendmentCheckYourAnswersAssessorRequest, ConfirmAmmendmentCommand>
+    public class LoadAmmendmentCheckYourAnswersAssessorRequestHandler : IRequestHandler<LoadAmmendmentCheckYourAnswersAssessorRequest, SubmitAmmendmentCommand>
     {
 
         private readonly IAssessmentRepository _assessmentRepository;
@@ -23,7 +23,7 @@ namespace He.PipelineAssessment.UI.Features.Ammendment.LoadAmmendmentCheckYourAn
             _mapper = mapper;
         }
 
-        public async Task<ConfirmAmmendmentCommand> Handle(LoadAmmendmentCheckYourAnswersAssessorRequest request, CancellationToken cancellationToken)
+        public async Task<SubmitAmmendmentCommand> Handle(LoadAmmendmentCheckYourAnswersAssessorRequest request, CancellationToken cancellationToken)
         {
             try
             {
@@ -33,8 +33,8 @@ namespace He.PipelineAssessment.UI.Features.Ammendment.LoadAmmendmentCheckYourAn
                     throw new NotFoundException($"Assessment Intervention with Id {request.InterventionId} not found");
                 }
                 var command = _mapper.AssessmentInterventionCommandFromAssessmentIntervention(intervention);
-                var confirmAmmendmentCommand = SerializedCommand(command);
-                return confirmAmmendmentCommand;
+                var submitAmmendmentCommand = SerializedCommand(command);
+                return submitAmmendmentCommand;
             }
             catch (Exception e)
             {
@@ -43,15 +43,15 @@ namespace He.PipelineAssessment.UI.Features.Ammendment.LoadAmmendmentCheckYourAn
             }
         }
 
-        private ConfirmAmmendmentCommand SerializedCommand(AssessmentInterventionCommand command)
+        private SubmitAmmendmentCommand SerializedCommand(AssessmentInterventionCommand command)
         {
             var serializedCommand = JsonConvert.SerializeObject(command);
-            var confirmAmmendmentCommand = JsonConvert.DeserializeObject<ConfirmAmmendmentCommand>(serializedCommand);
-            if (confirmAmmendmentCommand == null)
+            var submitAmmendmentCommand = JsonConvert.DeserializeObject<SubmitAmmendmentCommand>(serializedCommand);
+            if (submitAmmendmentCommand == null)
             {
                 throw new ArgumentException($"Unable to deserialise AssessmentInterventionCommand: {JsonConvert.SerializeObject(command)} from mapper");
             }
-            return confirmAmmendmentCommand;
+            return submitAmmendmentCommand;
         }
     }
 }

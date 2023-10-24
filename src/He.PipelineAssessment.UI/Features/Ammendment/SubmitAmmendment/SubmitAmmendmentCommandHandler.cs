@@ -3,19 +3,18 @@ using He.PipelineAssessment.Infrastructure.Repository;
 using He.PipelineAssessment.Models;
 using He.PipelineAssessment.UI.Common.Exceptions;
 using He.PipelineAssessment.UI.Common.Utility;
-using He.PipelineAssessment.UI.Features.Rollback.ConfirmRollback;
 using MediatR;
 
-namespace He.PipelineAssessment.UI.Features.Ammendment.ConfirmAmmendment
+namespace He.PipelineAssessment.UI.Features.Ammendment.SubmitAmmendment
 {
-    public class ConfirmAmmendmentCommandHandler : IRequestHandler<ConfirmAmmendmentCommand>
+    public class SubmitAmmendmentCommandHandler : IRequestHandler<SubmitAmmendmentCommand>
     {
         private readonly IAssessmentRepository _assessmentRepository;
-        private readonly ILogger<ConfirmAmmendmentCommandHandler> _logger;
+        private readonly ILogger<SubmitAmmendmentCommandHandler> _logger;
         private readonly IDateTimeProvider _dateTimeProvider;
         private readonly IElsaServerHttpClient _elsaServerHttpClient;
 
-        public ConfirmAmmendmentCommandHandler(IAssessmentRepository assessmentRepository, IDateTimeProvider dateTimeProvider, ILogger<ConfirmAmmendmentCommandHandler> logger, IElsaServerHttpClient elsaServerHttpClient)
+        public SubmitAmmendmentCommandHandler(IAssessmentRepository assessmentRepository, IDateTimeProvider dateTimeProvider, ILogger<SubmitAmmendmentCommandHandler> logger, IElsaServerHttpClient elsaServerHttpClient)
         {
             _assessmentRepository = assessmentRepository;
             _dateTimeProvider = dateTimeProvider;
@@ -23,7 +22,7 @@ namespace He.PipelineAssessment.UI.Features.Ammendment.ConfirmAmmendment
             _elsaServerHttpClient = elsaServerHttpClient;
         }
 
-        public async Task Handle(ConfirmAmmendmentCommand command, CancellationToken cancellationToken)
+        public async Task Handle(SubmitAmmendmentCommand command, CancellationToken cancellationToken)
         {
             try
             {
@@ -50,7 +49,8 @@ namespace He.PipelineAssessment.UI.Features.Ammendment.ConfirmAmmendment
                     }
                     intervention.AssessmentToolWorkflowInstance.Status = AssessmentToolWorkflowInstanceConstants.Draft;
                     await _assessmentRepository.SaveChanges();
-
+                    await _assessmentRepository.DeleteAllNextWorkflows(intervention.AssessmentToolWorkflowInstance
+    .AssessmentId);
                 }
 
             }
