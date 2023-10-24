@@ -218,6 +218,7 @@ namespace He.PipelineAssessment.UI.Services
                 }
 
                 assessmentIntervention.AdministratorRationale = command.AdministratorRationale;
+                assessmentIntervention.SignOffDocument = command.SignOffDocument;
                 assessmentIntervention.TargetAssessmentToolWorkflowId = command.TargetWorkflowId;
                 assessmentIntervention.Administrator = command.Administrator;
                 assessmentIntervention.AdministratorEmail = command.AdministratorEmail;
@@ -231,7 +232,7 @@ namespace He.PipelineAssessment.UI.Services
             catch (Exception e)
             {
                 _logger.LogError(e, e.Message);
-                throw new ApplicationException($"Unable to edit rollback. AssessmentInterventionId: {command.AssessmentInterventionId}");
+                throw new ApplicationException($"Unable to edit {command.DecisionType}. AssessmentInterventionId: {command.AssessmentInterventionId}");
             }
         }
 
@@ -254,7 +255,7 @@ namespace He.PipelineAssessment.UI.Services
             catch (Exception e)
             {
                 _logger.LogError(e, e.Message);
-                throw new ApplicationException($"Unable to edit rollback. AssessmentInterventionId: {command.AssessmentInterventionId}");
+                throw new ApplicationException($"Unable to edit {command.DecisionType}. AssessmentInterventionId: {command.AssessmentInterventionId}");
             }
         }
 
@@ -290,6 +291,7 @@ namespace He.PipelineAssessment.UI.Services
         {
             try
             {
+                //TODO: find decision type
                 AssessmentIntervention? intervention = await _assessmentRepository.GetAssessmentIntervention(request.InterventionId);
                 if (intervention == null)
                 {
@@ -302,22 +304,11 @@ namespace He.PipelineAssessment.UI.Services
                     throw new UnauthorizedAccessException($"You do not have permission to access this resource.");
                 }
 
-                List<AssessmentToolWorkflow> assessmentToolWorkflows =
-                    await _adminAssessmentToolWorkflowRepository.GetAssessmentToolWorkflowsForRollback(intervention.AssessmentToolWorkflowInstance
-                        .AssessmentToolWorkflow.AssessmentTool.Order);
-
-                if (assessmentToolWorkflows == null || !assessmentToolWorkflows.Any())
-                {
-                    throw new NotFoundException($"No suitable assessment tool workflows found for rollback");
-                }
-
                 AssessmentInterventionCommand command = _mapper.AssessmentInterventionCommandFromAssessmentIntervention(intervention);
 
                 var dto = new AssessmentInterventionDto
                 {
-                    AssessmentInterventionCommand = command,
-                    TargetWorkflowDefinitions =
-                        _mapper.TargetWorkflowDefinitionsFromAssessmentToolWorkflows(assessmentToolWorkflows)
+                    AssessmentInterventionCommand = command
                 };
                 return dto;
             }
@@ -329,7 +320,7 @@ namespace He.PipelineAssessment.UI.Services
             catch (Exception e)
             {
                 _logger.LogError(e, e.Message);
-                throw new ApplicationException($"Unable to edit rollback. InterventionId: {request.InterventionId}");
+                throw new ApplicationException($"Unable to edit intervention. InterventionId: {request.InterventionId}");
             }
         }
 
@@ -387,6 +378,26 @@ namespace He.PipelineAssessment.UI.Services
             if (assessmentToolWorkflows == null || !assessmentToolWorkflows.Any())
             {
                 throw new NotFoundException($"No suitable assessment tool workflows found for override");
+            }
+
+            return assessmentToolWorkflows;
+        }
+
+        public async Task<List<AssessmentToolWorkflow>> GetAssessmentToolWorkflowsForRollback(string workflowInstanceId)
+        {
+            AssessmentToolWorkflowInstance? workflowInstance = await _assessmentRepository.GetAssessmentToolWorkflowInstance(workflowInstanceId);
+            if (workflowInstance == null)
+            {
+                throw new NotFoundException($"Assessment Tool Workflow Instance with Id {workflowInstanceId} not found");
+            }
+
+            List<AssessmentToolWorkflow> assessmentToolWorkflows =
+                await _adminAssessmentToolWorkflowRepository.GetAssessmentToolWorkflowsForRollback(workflowInstance
+                    .AssessmentToolWorkflow.AssessmentTool.Order);
+
+            if (assessmentToolWorkflows == null || !assessmentToolWorkflows.Any())
+            {
+                throw new NotFoundException($"No suitable assessment tool workflows found for rollback");
             }
 
             return assessmentToolWorkflows;

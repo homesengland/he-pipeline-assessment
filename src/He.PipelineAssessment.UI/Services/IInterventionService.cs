@@ -1,13 +1,5 @@
 ﻿using He.PipelineAssessment.Models;
 using He.PipelineAssessment.UI.Features.Intervention;
-using He.PipelineAssessment.UI.Features.Rollback.ConfirmRollback;
-using He.PipelineAssessment.UI.Features.Rollback.CreateRollback;
-using He.PipelineAssessment.UI.Features.Rollback.DeleteRollback;
-using He.PipelineAssessment.UI.Features.Rollback.EditRollback;
-using He.PipelineAssessment.UI.Features.Rollback.EditRollbackAssessor;
-using He.PipelineAssessment.UI.Features.Rollback.LoadRollbackCheckYourAnswers;
-using He.PipelineAssessment.UI.Features.Rollback.LoadRollbackCheckYourAnswersAssessor;
-using He.PipelineAssessment.UI.Features.Rollback.SubmitRollback;
 
 namespace He.PipelineAssessment.UI.Services
 {
@@ -24,5 +16,6 @@ namespace He.PipelineAssessment.UI.Services
         Task<AssessmentInterventionCommand> LoadInterventionCheckYourAnswerAssessorRequest(LoadInterventionCheckYourAnswersAssessorRequest request);
         Task<AssessmentInterventionCommand> LoadInterventionCheckYourAnswersRequest(LoadInterventionCheckYourAnswersRequest request);
         Task<List<AssessmentToolWorkflow>> GetAssessmentToolWorkflowsForOverride(string workflowInstanceId);
+        Task<List<AssessmentToolWorkflow>> GetAssessmentToolWorkflowsForRollback(string workflowInstanceId);
     }
 }
