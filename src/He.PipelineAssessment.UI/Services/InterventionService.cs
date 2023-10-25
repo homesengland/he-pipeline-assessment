@@ -1,12 +1,10 @@
-﻿using Azure.Core;
-using He.PipelineAssessment.Infrastructure;
+﻿using He.PipelineAssessment.Infrastructure;
 using He.PipelineAssessment.Infrastructure.Repository;
 using He.PipelineAssessment.Models;
 using He.PipelineAssessment.UI.Authorization;
 using He.PipelineAssessment.UI.Common.Exceptions;
 using He.PipelineAssessment.UI.Common.Utility;
 using He.PipelineAssessment.UI.Features.Intervention;
-using He.PipelineAssessment.UI.Features.Rollback.ConfirmRollback;
 
 namespace He.PipelineAssessment.UI.Services
 {
@@ -14,7 +12,7 @@ namespace He.PipelineAssessment.UI.Services
     {
 
         private readonly IAssessmentRepository _assessmentRepository;
-        private readonly ILogger<ConfirmRollbackCommandHandler> _logger;
+        private readonly ILogger<InterventionService> _logger;
         private readonly IAssessmentToolWorkflowInstanceHelpers _assessmentToolWorkflowInstanceHelpers;
         private readonly IRoleValidation _roleValidation;
         private readonly IAssessmentInterventionMapper _mapper;
@@ -22,7 +20,15 @@ namespace He.PipelineAssessment.UI.Services
         private readonly IAdminAssessmentToolWorkflowRepository _adminAssessmentToolWorkflowRepository;
         private readonly IDateTimeProvider _dateTimeProvider;
 
-        public InterventionService(IAssessmentRepository assessmentRepository, IRoleValidation roleValidation, IAssessmentToolWorkflowInstanceHelpers assessmentToolWorkflowInstanceHelpers, IAssessmentInterventionMapper mapper, IUserProvider userProvider, ILogger<ConfirmRollbackCommandHandler> logger, IAdminAssessmentToolWorkflowRepository adminAssessmentToolWorkflowRepository, IDateTimeProvider dateTimeProvider)
+        public InterventionService(
+            IAssessmentRepository assessmentRepository, 
+            IRoleValidation roleValidation,
+            IAssessmentToolWorkflowInstanceHelpers assessmentToolWorkflowInstanceHelpers,
+            IAssessmentInterventionMapper mapper, 
+            IUserProvider userProvider, 
+            ILogger<InterventionService> logger,
+            IAdminAssessmentToolWorkflowRepository adminAssessmentToolWorkflowRepository,
+            IDateTimeProvider dateTimeProvider)
         {
             _assessmentRepository = assessmentRepository;
             _logger = logger;
@@ -51,7 +57,7 @@ namespace He.PipelineAssessment.UI.Services
             catch (Exception e)
             {
                 _logger.LogError(e, e.Message);
-                throw new ApplicationException($"Confirm rollback failed. AssessmentInterventionId: {command.AssessmentInterventionId}");
+                throw new ApplicationException($"Confirm {command.DecisionType} failed. AssessmentInterventionId: {command.AssessmentInterventionId}");
             }
         }
 
@@ -116,7 +122,7 @@ namespace He.PipelineAssessment.UI.Services
                 if (!isLatest)
                 {
                     throw new ApplicationException(
-                        $"Unable to create intervention for Assessment Tool Workflow Instance as this is not the latest submitted Workflow Instance for this Assessment.");
+                        $"Unable to create {request.DecisionType} for Assessment Tool Workflow Instance as this is not the latest submitted Workflow Instance for this Assessment.");
                 }
 
                 var activeInterventionsForAssessment = await _assessmentRepository.GetOpenAssessmentInterventions(workflowInstance.AssessmentId);
@@ -129,24 +135,15 @@ namespace He.PipelineAssessment.UI.Services
                 var userName = _userProvider.GetUserName()!;
                 var email = _userProvider.GetUserEmail()!;
 
-                var dtoConfig = new DtoConfig()
+                var dtoConfig = new DtoConfig
                 {
                     UserName = userName,
                     UserEmail = email,
-                    DecisionType = InterventionDecisionTypes.Rollback, //TODO: this needs to be different depending on intervention type
-                    Status = InterventionStatus.Draft
+                    DecisionType = request.DecisionType,
+                    Status = request.InitialStatus,
+                    AdministratorName = userName,
+                    AdministratorEmail = email,
                 };
-
-                //override
-                //var dtoConfig = new DtoConfig()
-                //{
-                //    AdministratorName = userName,
-                //    UserName = userName,
-                //    AdministratorEmail = email,
-                //    UserEmail = email,
-                //    DecisionType = InterventionDecisionTypes.Override,
-                //    Status = InterventionStatus.Pending
-                //};
 
                 var interventionReasons = await _assessmentRepository.GetInterventionReasons();
 
@@ -167,9 +164,10 @@ namespace He.PipelineAssessment.UI.Services
             catch (Exception e)
             {
                 _logger.LogError(e, e.Message);
-                throw new ApplicationException($"Unable to create intervention request. WorkflowInstanceId: {request.WorkflowInstanceId}");
+                throw new ApplicationException($"Unable to create {request.DecisionType} request. WorkflowInstanceId: {request.WorkflowInstanceId}");
             }
         }
+
 
         public async Task<int> DeleteIntervention(AssessmentInterventionCommand command)
         {
@@ -198,7 +196,7 @@ namespace He.PipelineAssessment.UI.Services
             catch (Exception e)
             {
                 _logger.LogError(e, e.Message);
-                throw new ApplicationException($"Unable to delete rollback. WorkflowInstanceId: {command.WorkflowInstanceId}");
+                throw new ApplicationException($"Unable to delete {command.DecisionType}. WorkflowInstanceId: {command.WorkflowInstanceId}");
             }
         }
 
@@ -285,7 +283,7 @@ namespace He.PipelineAssessment.UI.Services
             catch (Exception e)
             {
                 _logger.LogError(e, e.Message);
-                throw new ApplicationException($"Unable to edit rollback. InterventionId: {request.InterventionId}");
+                throw new ApplicationException($"Unable to edit intervention. InterventionId: {request.InterventionId}");
             }
         }
 
@@ -293,7 +291,6 @@ namespace He.PipelineAssessment.UI.Services
         {
             try
             {
-                //TODO: find decision type
                 AssessmentIntervention? intervention = await _assessmentRepository.GetAssessmentIntervention(request.InterventionId);
                 if (intervention == null)
                 {
@@ -341,7 +338,7 @@ namespace He.PipelineAssessment.UI.Services
             catch (Exception e)
             {
                 _logger.LogError(e, e.Message);
-                throw new ApplicationException($"Unable to load rollback check your answers. InterventionId: {request.InterventionId}");
+                throw new ApplicationException($"Unable to load check your answers. InterventionId: {request.InterventionId}");
             }
         }
 
@@ -422,16 +419,29 @@ namespace He.PipelineAssessment.UI.Services
 
                 if (intervention.Status == InterventionStatus.Approved)
                 {
-                    //TODO: grab these differently depending on intervention type
-                    var workflowsToDelete =
-                        await _assessmentRepository.GetSubsequentWorkflowInstancesForOverride(intervention
-                            .AssessmentToolWorkflowInstance.WorkflowInstanceId);
+                    List<AssessmentToolWorkflowInstance> workflowsToDelete = new();
+                    switch (command.DecisionType)
+                    {
+                        case InterventionDecisionTypes.Rollback:
+                        {
+                            workflowsToDelete =
+                                await _assessmentRepository.GetWorkflowInstancesToDeleteForRollback(
+                                    intervention.AssessmentToolWorkflowInstance.AssessmentId,
+                                    intervention.TargetAssessmentToolWorkflow!.AssessmentTool.Order);
+                            break;
+                        }
+                        case InterventionDecisionTypes.Override:
+                        {
+                            workflowsToDelete = await _assessmentRepository.GetSubsequentWorkflowInstancesForOverride(
+                                intervention
+                                    .AssessmentToolWorkflowInstance.WorkflowInstanceId);
+                            break;
+                        }
+                    }
 
                     foreach (var workflowInstance in workflowsToDelete)
                     {
-
-                        //TODO: status for override
-                        workflowInstance.Status = AssessmentToolWorkflowInstanceConstants.SuspendedRollBack;
+                        workflowInstance.Status = command.FinalInstanceStatus;
                     }
 
                     await _assessmentRepository.SaveChanges();
@@ -441,15 +451,17 @@ namespace He.PipelineAssessment.UI.Services
             catch (Exception ex)
             {
                 _logger.LogError(ex, ex.Message);
-                throw new ApplicationException($"Unable to submit override. AssessmentInterventionId: {command.AssessmentInterventionId}.");
+                throw new ApplicationException($"Unable to submit {command.DecisionType}. AssessmentInterventionId: {command.AssessmentInterventionId}.");
             }
         }
 
         private async Task CreateNextWorkflow(AssessmentIntervention intervention)
         {
-            //TODO: this was current logic for rollback, not sure if it is going to be an issue if we do it for override?
-            await _assessmentRepository.DeleteAllNextWorkflows(intervention.AssessmentToolWorkflowInstance
-                .AssessmentId);
+            if (intervention.DecisionType == InterventionDecisionTypes.Rollback)
+            {
+                await _assessmentRepository.DeleteAllNextWorkflows(intervention.AssessmentToolWorkflowInstance
+                    .AssessmentId);
+            }
 
             var nextWorkflow =
                 AssessmentToolInstanceNextWorkflow(intervention.AssessmentToolWorkflowInstance.AssessmentId,
