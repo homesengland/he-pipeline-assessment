@@ -20,8 +20,9 @@ namespace He.PipelineAssessment.UI.Services
         private readonly IAssessmentInterventionMapper _mapper;
         private readonly IUserProvider _userProvider;
         private readonly IAdminAssessmentToolWorkflowRepository _adminAssessmentToolWorkflowRepository;
+        private readonly IDateTimeProvider _dateTimeProvider;
 
-        public InterventionService(IAssessmentRepository assessmentRepository, IRoleValidation roleValidation, IAssessmentToolWorkflowInstanceHelpers assessmentToolWorkflowInstanceHelpers, IAssessmentInterventionMapper mapper, IUserProvider userProvider, ILogger<ConfirmRollbackCommandHandler> logger, IAdminAssessmentToolWorkflowRepository adminAssessmentToolWorkflowRepository)
+        public InterventionService(IAssessmentRepository assessmentRepository, IRoleValidation roleValidation, IAssessmentToolWorkflowInstanceHelpers assessmentToolWorkflowInstanceHelpers, IAssessmentInterventionMapper mapper, IUserProvider userProvider, ILogger<ConfirmRollbackCommandHandler> logger, IAdminAssessmentToolWorkflowRepository adminAssessmentToolWorkflowRepository, IDateTimeProvider dateTimeProvider)
         {
             _assessmentRepository = assessmentRepository;
             _logger = logger;
@@ -30,7 +31,8 @@ namespace He.PipelineAssessment.UI.Services
             _mapper = mapper;
             _userProvider = userProvider;
             _adminAssessmentToolWorkflowRepository = adminAssessmentToolWorkflowRepository;
-    }
+            _dateTimeProvider = dateTimeProvider;
+        }
 
         public async Task ConfirmIntervention(AssessmentInterventionCommand command)
         {
@@ -359,7 +361,7 @@ namespace He.PipelineAssessment.UI.Services
             catch (Exception e)
             {
                 _logger.LogError(e, e.Message);
-                throw new ApplicationException($"Unable to load rollback. InterventionId: {request.InterventionId}");
+                throw new ApplicationException($"Unable to load intervention. InterventionId: {request.InterventionId}");
             }
         }
 
@@ -401,6 +403,71 @@ namespace He.PipelineAssessment.UI.Services
             }
 
             return assessmentToolWorkflows;
+        }
+
+        public async Task SubmitIntervention(AssessmentInterventionCommand command)
+        {
+            try
+            {
+                var intervention =
+                    await _assessmentRepository.GetAssessmentIntervention(command.AssessmentInterventionId);
+                if (intervention == null)
+                {
+                    throw new NotFoundException($"Assessment Intervention with Id {command.AssessmentInterventionId} not found");
+                }
+
+                intervention.Status = command.Status;
+                intervention.DateSubmitted = _dateTimeProvider.UtcNow();
+                await _assessmentRepository.UpdateAssessmentIntervention(intervention);
+
+                if (intervention.Status == InterventionStatus.Approved)
+                {
+                    //TODO: grab these differently depending on intervention type
+                    var workflowsToDelete =
+                        await _assessmentRepository.GetSubsequentWorkflowInstancesForOverride(intervention
+                            .AssessmentToolWorkflowInstance.WorkflowInstanceId);
+
+                    foreach (var workflowInstance in workflowsToDelete)
+                    {
+
+                        //TODO: status for override
+                        workflowInstance.Status = AssessmentToolWorkflowInstanceConstants.SuspendedRollBack;
+                    }
+
+                    await _assessmentRepository.SaveChanges();
+                    await CreateNextWorkflow(intervention);
+                }
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, ex.Message);
+                throw new ApplicationException($"Unable to submit override. AssessmentInterventionId: {command.AssessmentInterventionId}.");
+            }
+        }
+
+        private async Task CreateNextWorkflow(AssessmentIntervention intervention)
+        {
+            //TODO: this was current logic for rollback, not sure if it is going to be an issue if we do it for override?
+            await _assessmentRepository.DeleteAllNextWorkflows(intervention.AssessmentToolWorkflowInstance
+                .AssessmentId);
+
+            var nextWorkflow =
+                AssessmentToolInstanceNextWorkflow(intervention.AssessmentToolWorkflowInstance.AssessmentId,
+                    intervention.AssessmentToolWorkflowInstanceId,
+                    intervention.TargetAssessmentToolWorkflow!.WorkflowDefinitionId);
+
+            await _assessmentRepository.CreateAssessmentToolInstanceNextWorkflows(
+                new List<AssessmentToolInstanceNextWorkflow>() { nextWorkflow });
+        }
+
+        private AssessmentToolInstanceNextWorkflow AssessmentToolInstanceNextWorkflow(int assessmentId, int assessmentToolWorkflowInstanceId, string workflowDefinitionId)
+        {
+            return new AssessmentToolInstanceNextWorkflow
+            {
+                AssessmentId = assessmentId,
+                AssessmentToolWorkflowInstanceId = assessmentToolWorkflowInstanceId,
+                NextWorkflowDefinitionId = workflowDefinitionId
+            };
         }
     }
 }

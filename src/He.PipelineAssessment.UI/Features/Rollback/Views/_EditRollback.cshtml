@@ -1,15 +1,12 @@
 ﻿@model He.PipelineAssessment.UI.Features.Intervention.AssessmentInterventionDto;
 
 @{
-    var signoffDocumentErrorClass = "";
     var adminRationaleErrorClass = "";
     var workflowDefinitionClass = "govuk-select";
     if (Model.ValidationResult != null)
     {
-        var signoffDocumentInvalid = Model.ValidationResult.Errors.Any(x => x.PropertyName == "SignOffDocument");
         var adminRationaleInvalid = Model.ValidationResult.Errors.Any(x => x.PropertyName == "AdministratorRationale");
         var workflowDefinitionInvalid = Model.ValidationResult.Errors.Any(x => x.PropertyName == "TargetWorkflowId");
-        signoffDocumentErrorClass = signoffDocumentInvalid ? "govuk-input--error" : "";
         adminRationaleErrorClass = adminRationaleInvalid ? "govuk-input--error" : "";
         workflowDefinitionClass = workflowDefinitionInvalid ? "govuk-select govuk-select--error" : "govuk-select";
     }

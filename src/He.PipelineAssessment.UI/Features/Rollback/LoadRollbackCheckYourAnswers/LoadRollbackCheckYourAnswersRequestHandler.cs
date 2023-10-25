@@ -27,7 +27,7 @@ namespace He.PipelineAssessment.UI.Features.Rollback.LoadRollbackCheckYourAnswer
             var submitRollbackCommand = JsonConvert.DeserializeObject<SubmitRollbackCommand>(serializedCommand);
             if (submitRollbackCommand == null)
             {
-                throw new ArgumentException($"Unable to deserialise SubmitOverrideCommand: {serializedCommand} from serialized AssessmentInterventionCommand");
+                throw new ArgumentException($"Unable to deserialise SubmitRollbackCommand: {serializedCommand} from serialized AssessmentInterventionCommand");
             }
             return submitRollbackCommand;
         }

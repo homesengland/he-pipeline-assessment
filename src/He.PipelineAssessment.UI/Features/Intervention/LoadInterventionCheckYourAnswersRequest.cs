@@ -1,5 +1,4 @@
-﻿using He.PipelineAssessment.UI.Features.Rollback.SubmitRollback;
-using MediatR;
+﻿using MediatR;
 
 namespace He.PipelineAssessment.UI.Features.Intervention
 {

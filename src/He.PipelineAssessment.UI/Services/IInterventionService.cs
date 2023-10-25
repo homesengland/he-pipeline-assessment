@@ -1,5 +1,6 @@
 ﻿using He.PipelineAssessment.Models;
 using He.PipelineAssessment.UI.Features.Intervention;
+using He.PipelineAssessment.UI.Features.Override.SubmitOverride;
 
 namespace He.PipelineAssessment.UI.Services
 {
@@ -17,5 +18,6 @@ namespace He.PipelineAssessment.UI.Services
         Task<AssessmentInterventionCommand> LoadInterventionCheckYourAnswersRequest(LoadInterventionCheckYourAnswersRequest request);
         Task<List<AssessmentToolWorkflow>> GetAssessmentToolWorkflowsForOverride(string workflowInstanceId);
         Task<List<AssessmentToolWorkflow>> GetAssessmentToolWorkflowsForRollback(string workflowInstanceId);
+        Task SubmitIntervention(AssessmentInterventionCommand command);
     }
 }
