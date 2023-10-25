@@ -71,6 +71,8 @@ namespace He.PipelineAssessment.UI.Features.Assessment.AssessmentSummary
                     return "red";
                 case AssessmentToolWorkflowInstanceConstants.SuspendedAmendment:
                     return "red";
+                case AssessmentToolWorkflowInstanceConstants.SuspendOverrides:
+                    return "red";
             }
             return "grey";
         }

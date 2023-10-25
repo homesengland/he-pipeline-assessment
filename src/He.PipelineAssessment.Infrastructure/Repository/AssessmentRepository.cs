@@ -84,6 +84,7 @@ namespace He.PipelineAssessment.Infrastructure.Repository
             return await context.Set<AssessmentToolWorkflowInstance>().Where(x =>
                     x.AssessmentId == assessmentId 
                     && x.Status != AssessmentToolWorkflowInstanceConstants.SuspendedRollBack
+                    && x.Status != AssessmentToolWorkflowInstanceConstants.SuspendOverrides
                     && x.Status != AssessmentToolWorkflowInstanceConstants.SuspendedAmendment)
                 .ToListAsync();
         }
@@ -179,6 +180,7 @@ namespace He.PipelineAssessment.Infrastructure.Repository
                     && x.Assessment.SpId == workflow.Assessment.SpId
                     && x.Assessment.Id == workflow.Assessment.Id
                     && x.Status != AssessmentToolWorkflowInstanceConstants.SuspendedRollBack
+                    && x.Status != AssessmentToolWorkflowInstanceConstants.SuspendOverrides
                     && x.Status != AssessmentToolWorkflowInstanceConstants.SuspendedAmendment).ToListAsync();
             }
             return workflowsToRemove;
@@ -191,6 +193,7 @@ namespace He.PipelineAssessment.Infrastructure.Repository
                 .Where(x =>
                             x.Assessment.Id == assessmentId
                             && x.Status != AssessmentToolWorkflowInstanceConstants.SuspendedRollBack
+                            && x.Status != AssessmentToolWorkflowInstanceConstants.SuspendOverrides
                             && x.Status != AssessmentToolWorkflowInstanceConstants.SuspendedAmendment
                             && x.AssessmentToolWorkflow.AssessmentTool.Order >= assessmentToolOrder).ToListAsync();
 
@@ -232,7 +235,8 @@ namespace He.PipelineAssessment.Infrastructure.Repository
             List<AssessmentToolWorkflowInstance> workflowsToRemove = await context.Set<AssessmentToolWorkflowInstance>()
                 .Where(x =>
                             x.Assessment.Id == assessmentId
-                            && x.Status != AssessmentToolWorkflowInstanceConstants.SuspendedRollBack 
+                            && x.Status != AssessmentToolWorkflowInstanceConstants.SuspendedRollBack
+                            && x.Status != AssessmentToolWorkflowInstanceConstants.SuspendOverrides
                             && x.Status != AssessmentToolWorkflowInstanceConstants.SuspendedAmendment
                             && x.AssessmentToolWorkflow.AssessmentTool.Order > assessmentToolOrder).ToListAsync();
 

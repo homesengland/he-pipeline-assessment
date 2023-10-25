@@ -6,6 +6,7 @@
         public const string Submitted = "Submitted";
         public const string SuspendedRollBack = "Suspended - RB";
         public const string SuspendedAmendment = "Suspended - A";
+        public const string SuspendOverrides = "Suspended - O";
     }
 
     public class InterventionDecisionTypes
