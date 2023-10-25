@@ -58,7 +58,7 @@ namespace He.PipelineAssessment.UI.Tests.Features.Intervention.InterventionManag
             assessmentRepository.Setup(x => x.GetAssessmentToolWorkflowInstance(request.WorkflowInstanceId)).ReturnsAsync(workflowInstance);
 
             assessmentToolWorkflowHelper
-                .Setup(x => x.IsOrderEqualToLatestSubmittedWorkflowOrder(workflowInstance)).Returns(false);
+                .Setup(x => x.IsOrderEqualToLatestSubmittedWorkflowOrder(workflowInstance)).ReturnsAsync(false);
 
             assessmentRepository.Setup(x => x.GetAssessmentToolWorkflowInstance(request.WorkflowInstanceId)).ReturnsAsync(workflowInstance);
             adminRepository.Setup(x => x.GetAssessmentToolWorkflowsForOverride(workflowInstance.AssessmentToolWorkflow.AssessmentTool.Order)).ReturnsAsync(emptyListOfWorkflow);
@@ -87,7 +87,7 @@ namespace He.PipelineAssessment.UI.Tests.Features.Intervention.InterventionManag
             assessmentRepository.Setup(x => x.GetAssessmentToolWorkflowInstance(request.WorkflowInstanceId)).ReturnsAsync(workflowInstance);
             assessmentRepository.Setup(x => x.GetOpenAssessmentInterventions(workflowInstance.AssessmentId)).ReturnsAsync(new List<AssessmentIntervention>());
             assessmentToolWorkflowHelper
-                .Setup(x => x.IsOrderEqualToLatestSubmittedWorkflowOrder(workflowInstance)).Returns(true);
+                .Setup(x => x.IsOrderEqualToLatestSubmittedWorkflowOrder(workflowInstance)).ReturnsAsync(true);
 
             assessmentRepository.Setup(x => x.GetAssessmentToolWorkflowInstance(request.WorkflowInstanceId)).ReturnsAsync(workflowInstance);
             adminRepository.Setup(x => x.GetAssessmentToolWorkflowsForOverride(workflowInstance.AssessmentToolWorkflow.AssessmentTool.Order)).ReturnsAsync(emptyListOfWorkflow);
@@ -129,7 +129,7 @@ namespace He.PipelineAssessment.UI.Tests.Features.Intervention.InterventionManag
             assessmentRepository.Setup(x => x.GetAssessmentToolWorkflowInstance(request.WorkflowInstanceId)).ReturnsAsync(workflowInstance);
             assessmentRepository.Setup(x => x.GetOpenAssessmentInterventions(workflowInstance.AssessmentId)).ReturnsAsync(new List<AssessmentIntervention>());
             assessmentToolWorkflowHelper
-                .Setup(x => x.IsOrderEqualToLatestSubmittedWorkflowOrder(workflowInstance)).Returns(true);
+                .Setup(x => x.IsOrderEqualToLatestSubmittedWorkflowOrder(workflowInstance)).ReturnsAsync(true);
 
             assessmentRepository.Setup(x => x.GetAssessmentToolWorkflowInstance(request.WorkflowInstanceId)).ReturnsAsync(workflowInstance);
             adminRepository.Setup(x => x.GetAssessmentToolWorkflowsForOverride(workflowInstance
@@ -162,7 +162,7 @@ namespace He.PipelineAssessment.UI.Tests.Features.Intervention.InterventionManag
 
             roleValidation.Setup(x => x.ValidateRole(It.IsAny<int>(), It.IsAny<string>())).ReturnsAsync(true);
 
-            assessmentToolWorkflowInstanceHelpers.Setup(x => x.IsOrderEqualToLatestSubmittedWorkflowOrder(instance)).Returns(true);
+            assessmentToolWorkflowInstanceHelpers.Setup(x => x.IsOrderEqualToLatestSubmittedWorkflowOrder(instance)).ReturnsAsync(true);
 
             //Act
             var ex = await Assert.ThrowsAsync<Exception>(() => sut.Handle(request, CancellationToken.None));
@@ -201,7 +201,7 @@ namespace He.PipelineAssessment.UI.Tests.Features.Intervention.InterventionManag
             assessmentRepository.Setup(x => x.GetAssessmentToolWorkflowInstance(request.WorkflowInstanceId)).ReturnsAsync(workflowInstance);
             assessmentRepository.Setup(x => x.GetOpenAssessmentInterventions(workflowInstance.AssessmentId)).ReturnsAsync(new List<AssessmentIntervention>());
             assessmentToolWorkflowHelper
-                .Setup(x => x.IsOrderEqualToLatestSubmittedWorkflowOrder(workflowInstance)).Returns(true);
+                .Setup(x => x.IsOrderEqualToLatestSubmittedWorkflowOrder(workflowInstance)).ReturnsAsync(true);
 
             userProvider.Setup(x => x.GetUserName()).Returns(dto.AssessmentInterventionCommand.RequestedBy);
             userProvider.Setup(x => x.GetUserEmail()).Returns(dto.AssessmentInterventionCommand.RequestedByEmail);

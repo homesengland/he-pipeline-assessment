@@ -70,7 +70,7 @@ namespace He.PipelineAssessment.UI.Tests.Features.Amendment.SubmitAmendment
             .ReturnsAsync(workflowsToDelete);
             
             //Act
-                await sut.Handle(command, CancellationToken.None);
+            await sut.Handle(command, CancellationToken.None);
 
             //Assert
             foreach (var workflowToDelete in workflowsToDelete)

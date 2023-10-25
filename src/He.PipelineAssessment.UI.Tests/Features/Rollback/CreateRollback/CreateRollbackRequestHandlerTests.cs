@@ -66,7 +66,7 @@ namespace He.PipelineAssessment.UI.Tests.Features.Rollback.CreateRollback
 
             roleValidation.Setup(x => x.ValidateRole(It.IsAny<int>(), It.IsAny<string>())).ReturnsAsync(true);
 
-            assessmentToolWorkflowInstanceHelpers.Setup(x => x.IsOrderEqualToLatestSubmittedWorkflowOrder(instance)).Returns(false);
+            assessmentToolWorkflowInstanceHelpers.Setup(x => x.IsOrderEqualToLatestSubmittedWorkflowOrder(instance)).ReturnsAsync(false);
 
             //Act
             var ex = await Assert.ThrowsAsync<ApplicationException>(() => sut.Handle(request, CancellationToken.None));
@@ -95,7 +95,7 @@ namespace He.PipelineAssessment.UI.Tests.Features.Rollback.CreateRollback
 
             roleValidation.Setup(x => x.ValidateRole(It.IsAny<int>(), It.IsAny<string>())).ReturnsAsync(true);
 
-            assessmentToolWorkflowInstanceHelpers.Setup(x => x.IsOrderEqualToLatestSubmittedWorkflowOrder(instance)).Returns(true);
+            assessmentToolWorkflowInstanceHelpers.Setup(x => x.IsOrderEqualToLatestSubmittedWorkflowOrder(instance)).ReturnsAsync(true);
 
             //Act
             var ex = await Assert.ThrowsAsync<ApplicationException>(() => sut.Handle(request, CancellationToken.None));
@@ -127,7 +127,7 @@ namespace He.PipelineAssessment.UI.Tests.Features.Rollback.CreateRollback
 
             roleValidation.Setup(x => x.ValidateRole(It.IsAny<int>(), It.IsAny<string>())).ReturnsAsync(true);
 
-            assessmentToolWorkflowInstanceHelpers.Setup(x => x.IsOrderEqualToLatestSubmittedWorkflowOrder(instance)).Returns(true);
+            assessmentToolWorkflowInstanceHelpers.Setup(x => x.IsOrderEqualToLatestSubmittedWorkflowOrder(instance)).ReturnsAsync(true);
             userProvider.Setup(x => x.GetUserEmail()).Returns("");
             userProvider.Setup(x => x.GetUserName()).Returns("");
 
