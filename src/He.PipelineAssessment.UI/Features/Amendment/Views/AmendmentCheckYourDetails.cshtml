@@ -9,7 +9,7 @@
     @{
         var isEditable = Model.Status == InterventionStatus.Draft;
         var title = "Decision for " + @Model.DecisionType;
-        if(Model.Status == InterventionStatus.Approved)
+        if (Model.Status == InterventionStatus.Approved)
         {
             title = "Submitted " + @Model.DecisionType;
         }
@@ -106,6 +106,16 @@
                     @Html.HiddenFor(x => Model.CorrelationId)
                 </fieldset>
             </div>
+            @if (isEditable)
+            {
+                <div class="govuk-warning-text">
+                    <span class="govuk-warning-text__icon" aria-hidden="true">!</span>
+                    <strong class="govuk-warning-text__text">
+                        <span class="govuk-warning-text__assistive">Warning</span>
+                        Submitting this amendment will delete all subsequent workflows currently in draft.
+                    </strong>
+                </div>
+            }
             <div class="govuk-button-group">
                 @if (isEditable)
                 {

@@ -50,6 +50,8 @@ namespace He.PipelineAssessment.UI.Features.Amendment.SubmitAmendment
                 intervention.AssessmentToolWorkflowInstance.Status = AssessmentToolWorkflowInstanceConstants.Draft;
                 await _assessmentRepository.SaveChanges();
                 await _assessmentRepository.DeleteAllNextWorkflows(intervention.AssessmentToolWorkflowInstance.AssessmentId);
+
+                await _elsaServerHttpClient.PostArchiveQuestions(workflowsToDelete.Select(x => x.WorkflowInstanceId).ToArray());
             }
             catch (Exception e)
             {

@@ -82,7 +82,9 @@ namespace He.PipelineAssessment.Infrastructure.Repository
         public async Task<IEnumerable<AssessmentToolWorkflowInstance>> GetAssessmentToolWorkflowInstances(int assessmentId)
         {
             return await context.Set<AssessmentToolWorkflowInstance>().Where(x =>
-                    x.AssessmentId == assessmentId && x.Status != AssessmentToolWorkflowInstanceConstants.SuspendedRollBack)
+                    x.AssessmentId == assessmentId 
+                    && x.Status != AssessmentToolWorkflowInstanceConstants.SuspendedRollBack
+                    && x.Status != AssessmentToolWorkflowInstanceConstants.SuspendedAmendment)
                 .ToListAsync();
         }
 
@@ -176,7 +178,8 @@ namespace He.PipelineAssessment.Infrastructure.Repository
                     .Where(x => x.CreatedDateTime > workflow.CreatedDateTime 
                     && x.Assessment.SpId == workflow.Assessment.SpId
                     && x.Assessment.Id == workflow.Assessment.Id
-                    && x.Status != AssessmentToolWorkflowInstanceConstants.SuspendedRollBack).ToListAsync();
+                    && x.Status != AssessmentToolWorkflowInstanceConstants.SuspendedRollBack
+                    && x.Status != AssessmentToolWorkflowInstanceConstants.SuspendedAmendment).ToListAsync();
             }
             return workflowsToRemove;
         }
