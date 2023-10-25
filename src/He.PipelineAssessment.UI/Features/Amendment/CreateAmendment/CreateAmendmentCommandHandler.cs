@@ -3,7 +3,6 @@ using He.PipelineAssessment.Models;
 using He.PipelineAssessment.UI.Authorization;
 using He.PipelineAssessment.UI.Common.Exceptions;
 using He.PipelineAssessment.UI.Common.Utility;
-using He.PipelineAssessment.UI.Features.Rollback.CreateRollback;
 using MediatR;
 
 namespace He.PipelineAssessment.UI.Features.Amendment.CreateAmendment

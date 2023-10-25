@@ -5,7 +5,6 @@ using He.PipelineAssessment.UI.Authorization;
 using He.PipelineAssessment.UI.Common.Exceptions;
 using He.PipelineAssessment.UI.Common.Utility;
 using He.PipelineAssessment.UI.Features.Intervention;
-using He.PipelineAssessment.UI.Features.Rollback.CreateRollback;
 using MediatR;
 
 namespace He.PipelineAssessment.UI.Features.Amendment.CreateAmendment
@@ -16,7 +15,7 @@ namespace He.PipelineAssessment.UI.Features.Amendment.CreateAmendment
         private readonly IAssessmentRepository _assessmentRepository;
         private readonly IUserProvider _userProvider;
         private readonly IAssessmentInterventionMapper _mapper;
-        private readonly ILogger<CreateRollbackRequestHandler> _logger;
+        private readonly ILogger<CreateAmendmentRequestHandler> _logger;
         private readonly IAssessmentToolWorkflowInstanceHelpers _assessmentToolWorkflowInstanceHelpers;
         private readonly IRoleValidation _roleValidation;
         private readonly IAssessmentRepository _repository;
@@ -24,7 +23,7 @@ namespace He.PipelineAssessment.UI.Features.Amendment.CreateAmendment
         public CreateAmendmentRequestHandler(IAssessmentRepository assessmentRepository,
             IUserProvider userProvider,
             IAssessmentInterventionMapper mapper,
-            ILogger<CreateRollbackRequestHandler> logger, IAssessmentToolWorkflowInstanceHelpers assessmentToolWorkflowInstanceHelpers, IRoleValidation roleValidation, IAssessmentRepository repository)
+            ILogger<CreateAmendmentRequestHandler> logger, IAssessmentToolWorkflowInstanceHelpers assessmentToolWorkflowInstanceHelpers, IRoleValidation roleValidation, IAssessmentRepository repository)
         {
             _assessmentRepository = assessmentRepository;
             _userProvider = userProvider;

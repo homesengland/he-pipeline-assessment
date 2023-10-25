@@ -35,6 +35,7 @@ namespace He.PipelineAssessment.UI.Features.Amendment.SubmitAmendment
 
                 intervention.Status = InterventionStatus.Approved;
                 intervention.DateSubmitted = _dateTimeProvider.UtcNow();
+                
                 await _assessmentRepository.UpdateAssessmentIntervention(intervention);
 
                 var workflowsToDelete =
@@ -56,16 +57,6 @@ namespace He.PipelineAssessment.UI.Features.Amendment.SubmitAmendment
                 throw new ApplicationException($"Confirm amendment failed. AssessmentInterventionId: {command.AssessmentInterventionId}");
             }
 
-        }
-
-        private AssessmentToolInstanceNextWorkflow AssessmentToolInstanceNextWorkflow(int assessmentId, int assessmentToolWorkflowInstanceId, string workflowDefinitionId)
-        {
-            return new AssessmentToolInstanceNextWorkflow
-            {
-                AssessmentId = assessmentId,
-                AssessmentToolWorkflowInstanceId = assessmentToolWorkflowInstanceId,
-                NextWorkflowDefinitionId = workflowDefinitionId
-            };
         }
     }
 }

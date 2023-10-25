@@ -52,32 +52,31 @@ namespace He.PipelineAssessment.UI.Tests.Features.Amendment.SubmitAmendment
             Assert.Equal(intervention.AssessmentToolWorkflowInstance.Status, AssessmentToolWorkflowInstanceConstants.Draft);
         }
 
-    //    [Theory]
-    //    [AutoMoqData]
-    //    public async Task Handle_DeletesAssessmentToolWorkflows_GivenInterventionRecordCanBeFound(
-    //[Frozen] Mock<IAssessmentRepository> assessmentRepository,
-    //SubmitAmendmentCommand command,
-    //AssessmentIntervention intervention,
-    //SubmitAmendmentCommandHandler sut,
-    //List<AssessmentToolWorkflowInstance> workflowsToDelete)
-    //    {
-    //        //Arrange
-    //        assessmentRepository.Setup(x => x.GetAssessmentIntervention(command.AssessmentInterventionId))
-    //            .ReturnsAsync(intervention);
+        [Theory]
+        [AutoMoqData]
+        public async Task Handle_DeletesAssessmentToolWorkflows_GivenInterventionRecordCanBeFound(
+        [Frozen] Mock<IAssessmentRepository> assessmentRepository,
+        SubmitAmendmentCommand command,
+        AssessmentIntervention intervention,
+        SubmitAmendmentCommandHandler sut,
+        List<AssessmentToolWorkflowInstance> workflowsToDelete)
+        {
+            //Arrange
+            assessmentRepository.Setup(x => x.GetAssessmentIntervention(command.AssessmentInterventionId))
+                .ReturnsAsync(intervention);
+            assessmentRepository.Setup(x => x.GetAssessmentIntervention(command.AssessmentInterventionId))
+            .ReturnsAsync(intervention);
+            assessmentRepository.Setup(x => x.GetWorkflowInstancesToDeleteForAmendment(intervention.AssessmentToolWorkflowInstance.AssessmentId, intervention.AssessmentToolWorkflowInstance.AssessmentToolWorkflow.AssessmentTool.Order))
+            .ReturnsAsync(workflowsToDelete);
+            
+            //Act
+                await sut.Handle(command, CancellationToken.None);
 
-    //        assessmentRepository.Setup(x => x.GetAssessmentIntervention(command.AssessmentInterventionId))
-    //        .ReturnsAsync(intervention);
-    //        assessmentRepository.Setup(x => x.GetWorkflowInstancesToDeleteForAmendment(intervention.AssessmentToolWorkflowInstance.AssessmentId, intervention.AssessmentToolWorkflowInstance.AssessmentToolWorkflow.AssessmentTool.Order))
-    //        .ReturnsAsync(workflowsToDelete);
-    //        //Act
-
-    //        await sut.Handle(command, CancellationToken.None);
-
-    //        //Assert
-    //        foreach (var workflowToDelete in workflowsToDelete)
-    //        {
-    //            Assert.Equal(AssessmentToolWorkflowInstanceConstants.SuspendedAmendment, workflowToDelete.Status);
-    //        }
-       // }
+            //Assert
+            foreach (var workflowToDelete in workflowsToDelete)
+            {
+                Assert.Equal(AssessmentToolWorkflowInstanceConstants.SuspendedAmendment, workflowToDelete.Status);
+            }
+        }
     }
 }

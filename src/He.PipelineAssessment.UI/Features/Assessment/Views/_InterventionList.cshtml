@@ -46,6 +46,17 @@
                             <a asp-controller="Rollback" asp-action="CheckYourDetailsAssessor" asp-route-interventionId="@intervention.Id" class="govuk-link">@intervention.WorkflowName</a>
                         }
                     }
+                    @if (@intervention.DecisionType == "Amendment")
+                    {
+                        if (isAdmin)
+                        {
+                            <a asp-controller="Amendment" asp-action="EditAmendment" asp-route-interventionId="@intervention.Id" class="govuk-link">@intervention.WorkflowName</a>
+                        }
+                        else
+                        {
+                            <a asp-controller="Amendment" asp-action="EditAmendment" asp-route-interventionId="@intervention.Id" class="govuk-link">@intervention.WorkflowName</a>
+                        }
+                    }
                 </td>
                 <td class="govuk-table__cell"><strong class="govuk-tag govuk-tag--@intervention.StatusDisplayTag()">@intervention.Status</strong></td>
                 <td class="govuk-table__cell"> @created </td>
