@@ -34,7 +34,7 @@ namespace He.PipelineAssessment.UI.Features.Override.CreateOverride
                     throw new NotFoundException($"Assessment Tool Workflow Instance with Id {command.WorkflowInstanceId} not found");
                 }
 
-                var isLatest = _assessmentToolWorkflowInstanceHelpers.IsLatestSubmittedWorkflow(workflowInstance);
+                var isLatest = await _assessmentToolWorkflowInstanceHelpers.IsOrderEqualToLatestSubmittedWorkflowOrder(workflowInstance);
                 if (!isLatest)
                 {
                     throw new Exception(

@@ -63,7 +63,7 @@ namespace He.PipelineAssessment.UI.Tests.Features.Amendment.CreateAmendment
 
                 roleValidation.Setup(x => x.ValidateRole(It.IsAny<int>(), It.IsAny<string>())).ReturnsAsync(true);
 
-                assessmentToolWorkflowInstanceHelpers.Setup(x => x.IsLatestSubmittedWorkflow(instance)).Returns(false);
+                assessmentToolWorkflowInstanceHelpers.Setup(x => x.IsOrderEqualToLatestSubmittedWorkflowOrder(instance)).Returns(false);
 
                 //Act
                 var ex = await Assert.ThrowsAsync<ApplicationException>(() => sut.Handle(command, CancellationToken.None));
@@ -88,7 +88,7 @@ namespace He.PipelineAssessment.UI.Tests.Features.Amendment.CreateAmendment
 
                 roleValidation.Setup(x => x.ValidateRole(It.IsAny<int>(), It.IsAny<string>())).ReturnsAsync(true);
 
-                assessmentToolWorkflowInstanceHelpers.Setup(x => x.IsLatestSubmittedWorkflow(instance)).Returns(true);
+                assessmentToolWorkflowInstanceHelpers.Setup(x => x.IsOrderEqualToLatestSubmittedWorkflowOrder(instance)).Returns(true);
 
                 //Act
                 var result = await sut.Handle(command, CancellationToken.None);

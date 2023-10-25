@@ -29,7 +29,7 @@ namespace He.PipelineAssessment.UI.Tests.Features.Intervention.InterventionManag
             repo.Setup(x => x.GetAssessmentToolWorkflowInstance(command.WorkflowInstanceId)).ReturnsAsync(instance);
 
             assessmentToolWorkflowHelper
-                .Setup(x => x.IsLatestSubmittedWorkflow(instance)).Returns(true);
+                .Setup(x => x.IsOrderEqualToLatestSubmittedWorkflowOrder(instance)).Returns(true);
 
             mapper.Setup(x => x.CreateOverrideCommandToAssessmentIntervention(command)).Throws(exception);
 
@@ -57,7 +57,7 @@ namespace He.PipelineAssessment.UI.Tests.Features.Intervention.InterventionManag
             repo.Setup(x => x.GetAssessmentToolWorkflowInstance(command.WorkflowInstanceId)).ReturnsAsync(instance);
 
             assessmentToolWorkflowHelper
-                .Setup(x => x.IsLatestSubmittedWorkflow(instance)).Returns(true);
+                .Setup(x => x.IsOrderEqualToLatestSubmittedWorkflowOrder(instance)).Returns(true);
 
             mapper.Setup(x => x.CreateOverrideCommandToAssessmentIntervention(command)).Returns(intervention);
             repo.Setup(x => x.CreateAssessmentIntervention(intervention)).Throws(exception);
@@ -85,7 +85,7 @@ namespace He.PipelineAssessment.UI.Tests.Features.Intervention.InterventionManag
             repo.Setup(x => x.GetAssessmentToolWorkflowInstance(command.WorkflowInstanceId)).ReturnsAsync(instance);
 
             assessmentToolWorkflowHelper
-                .Setup(x => x.IsLatestSubmittedWorkflow(instance)).Returns(true);
+                .Setup(x => x.IsOrderEqualToLatestSubmittedWorkflowOrder(instance)).Returns(true);
 
             mapper.Setup(x => x.CreateOverrideCommandToAssessmentIntervention(command)).Returns(intervention);
 
@@ -134,7 +134,7 @@ namespace He.PipelineAssessment.UI.Tests.Features.Intervention.InterventionManag
             repo.Setup(x => x.GetAssessmentToolWorkflowInstance(command.WorkflowInstanceId)).ReturnsAsync(instance);
 
             assessmentToolWorkflowHelper
-                .Setup(x => x.IsLatestSubmittedWorkflow(instance)).Returns(false);
+                .Setup(x => x.IsOrderEqualToLatestSubmittedWorkflowOrder(instance)).Returns(false);
 
             mapper.Setup(x => x.CreateOverrideCommandToAssessmentIntervention(command)).Returns(intervention);
 

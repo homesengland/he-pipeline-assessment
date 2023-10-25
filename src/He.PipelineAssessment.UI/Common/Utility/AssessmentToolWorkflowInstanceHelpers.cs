@@ -1,24 +1,35 @@
-﻿using He.PipelineAssessment.Models;
+﻿using He.PipelineAssessment.Infrastructure.Repository;
+using He.PipelineAssessment.Models;
 
 namespace He.PipelineAssessment.UI.Common.Utility
 {
     public interface IAssessmentToolWorkflowInstanceHelpers
     {
-        bool IsLatestSubmittedWorkflow(AssessmentToolWorkflowInstance currentAssessmentToolWorkflowInstance);
+        Task<bool> IsOrderEqualToLatestSubmittedWorkflowOrder(AssessmentToolWorkflowInstance currentAssessmentToolWorkflowInstance);
     }
 
     public class AssessmentToolWorkflowInstanceHelpers : IAssessmentToolWorkflowInstanceHelpers
     {
+        private IAssessmentRepository _repository;
 
-        public bool IsLatestSubmittedWorkflow(AssessmentToolWorkflowInstance currentAssessmentToolWorkflowInstance)
+        public AssessmentToolWorkflowInstanceHelpers(IAssessmentRepository repository)
+        {
+            _repository = repository;
+        }
+        public async Task<bool> IsOrderEqualToLatestSubmittedWorkflowOrder(AssessmentToolWorkflowInstance currentAssessmentToolWorkflowInstance)
         {
             var latestSubmittedWorkflowInstance = currentAssessmentToolWorkflowInstance.Assessment!.AssessmentToolWorkflowInstances!
                 .OrderByDescending(x => x.SubmittedDateTime)
                 .FirstOrDefault(x => x.Status == AssessmentToolWorkflowInstanceConstants.Submitted);
-
-            if (latestSubmittedWorkflowInstance != null && latestSubmittedWorkflowInstance.Id == currentAssessmentToolWorkflowInstance.Id)
+            if (latestSubmittedWorkflowInstance != null)
             {
-                return true;
+                var latestSubmittedWorkflowInstanceWithToolInfo = await _repository.GetAssessmentToolWorkflowInstance(latestSubmittedWorkflowInstance.WorkflowInstanceId);
+
+                if (latestSubmittedWorkflowInstanceWithToolInfo != null &&
+                    latestSubmittedWorkflowInstanceWithToolInfo.AssessmentToolWorkflow.AssessmentTool.Order == currentAssessmentToolWorkflowInstance.AssessmentToolWorkflow.AssessmentTool.Order)
+                {
+                    return true;
+                }
             }
 
             return false;
