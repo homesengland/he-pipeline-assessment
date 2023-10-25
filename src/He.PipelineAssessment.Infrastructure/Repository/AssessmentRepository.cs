@@ -26,6 +26,7 @@ namespace He.PipelineAssessment.Infrastructure.Repository
 
         Task DeleteSubsequentNextWorkflows(AssessmentToolInstanceNextWorkflow? nextWorkflow);
         Task DeleteAllNextWorkflows(int assessmentId);
+        Task DeleteAllNextWorkflowsByOrder(int assessmentId, int order);
         Task<int> DeleteNextWorkflow(AssessmentToolInstanceNextWorkflow nextWorkflow);
 
         Task<int> SaveChanges();
@@ -241,6 +242,18 @@ namespace He.PipelineAssessment.Infrastructure.Repository
                             && x.AssessmentToolWorkflow.AssessmentTool.Order > assessmentToolOrder).ToListAsync();
 
             return workflowsToRemove;
+        }
+
+        public async Task DeleteAllNextWorkflowsByOrder(int assessmentId, int order)
+        {
+            List<AssessmentToolInstanceNextWorkflow> nextWorkflows = await context.Set<AssessmentToolInstanceNextWorkflow>()
+                .Include(x=> x.AssessmentToolWorkflowInstance.AssessmentToolWorkflow.AssessmentTool)
+                .Where(x => x.AssessmentId == assessmentId
+                && x.AssessmentToolWorkflowInstance.AssessmentToolWorkflow.AssessmentTool.Order > order).ToListAsync();
+
+            context.Set<AssessmentToolInstanceNextWorkflow>().RemoveRange(nextWorkflows);
+
+            await context.SaveChangesAsync();
         }
     }
 }
