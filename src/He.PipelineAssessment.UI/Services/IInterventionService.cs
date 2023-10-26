@@ -18,6 +18,7 @@ namespace He.PipelineAssessment.UI.Services
         Task<AssessmentInterventionCommand> LoadInterventionCheckYourAnswersRequest(LoadInterventionCheckYourAnswersRequest request);
         Task<List<AssessmentToolWorkflow>> GetAssessmentToolWorkflowsForOverride(string workflowInstanceId);
         Task<List<AssessmentToolWorkflow>> GetAssessmentToolWorkflowsForRollback(string workflowInstanceId);
+        Task<List<AssessmentToolWorkflow>> GetAssessmentToolWorkflowsForVariation(string workflowInstanceId);
         Task SubmitIntervention(AssessmentInterventionCommand command);
     }
 }

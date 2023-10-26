@@ -30,7 +30,7 @@ namespace He.PipelineAssessment.UI.Features.Admin.AssessmentToolManagement.Mappe
                         IsFirstWorkflow = y.IsFirstWorkflow,
                         IsEconomistWorkflow = y.IsEconomistWorkflow,
                         IsLatest = y.IsLatest,
-                        IsStandardVariation = y.IsStandardVariation,
+                        IsVariation = y.IsVariation,
                         WorkflowDefinitionId = y.WorkflowDefinitionId,
                         Version = y.Version,
 
@@ -62,7 +62,7 @@ namespace He.PipelineAssessment.UI.Features.Admin.AssessmentToolManagement.Mappe
                     IsLatest = x.IsLatest,
                     Version = x.Version,
                     WorkflowDefinitionId = x.WorkflowDefinitionId,
-                    IsStandardVariation = x.IsStandardVariation
+                    IsVariation = x.IsVariation
                 }).ToList();
         }
     }

@@ -404,6 +404,19 @@ namespace He.PipelineAssessment.UI.Services
             return assessmentToolWorkflows;
         }
 
+        public async Task<List<AssessmentToolWorkflow>> GetAssessmentToolWorkflowsForVariation(string workflowInstanceId)
+        {
+            List<AssessmentToolWorkflow> assessmentToolWorkflows =
+                await _adminAssessmentToolWorkflowRepository.GetAssessmentToolWorkflowsForVariation();
+
+            if (assessmentToolWorkflows == null || !assessmentToolWorkflows.Any())
+            {
+                throw new NotFoundException($"No suitable assessment tool workflows found for variation");
+            }
+
+            return assessmentToolWorkflows;
+        }
+
         public async Task SubmitIntervention(AssessmentInterventionCommand command)
         {
             try

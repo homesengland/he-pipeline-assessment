@@ -61,7 +61,7 @@ namespace He.PipelineAssessment.UI.Tests.Features.Admin.AssessmentToolManagement
                     Assert.Equal(assessmentTools[i].AssessmentToolWorkflows![j].IsLatest, result.AssessmentTools[i].AssessmentToolWorkFlows[j].IsLatest);
                     Assert.Equal(assessmentTools[i].AssessmentToolWorkflows![j].WorkflowDefinitionId, result.AssessmentTools[i].AssessmentToolWorkFlows[j].WorkflowDefinitionId);
                     Assert.Equal(assessmentTools[i].AssessmentToolWorkflows![j].Version, result.AssessmentTools[i].AssessmentToolWorkFlows[j].Version);
-                    Assert.Equal(assessmentTools[i].AssessmentToolWorkflows![j].IsStandardVariation, result.AssessmentTools[i].AssessmentToolWorkFlows[j].IsStandardVariation);
+                    Assert.Equal(assessmentTools[i].AssessmentToolWorkflows![j].IsVariation, result.AssessmentTools[i].AssessmentToolWorkFlows[j].IsVariation);
                 }
             }
         }
@@ -102,7 +102,7 @@ namespace He.PipelineAssessment.UI.Tests.Features.Admin.AssessmentToolManagement
                 Assert.Equal(assessmentToolWorkflows[i].IsLatest, result[i].IsLatest);
                 Assert.Equal(assessmentToolWorkflows[i].Version, result[i].Version);
                 Assert.Equal(assessmentToolWorkflows[i].WorkflowDefinitionId, result[i].WorkflowDefinitionId);
-                Assert.Equal(assessmentToolWorkflows[i].IsStandardVariation, result[i].IsStandardVariation);
+                Assert.Equal(assessmentToolWorkflows[i].IsVariation, result[i].IsVariation);
                 Assert.Equal(assessmentToolWorkflows[i].IsEconomistWorkflow, result[i].IsEconomistWorkflow);
             }
         }
@@ -130,7 +130,7 @@ namespace He.PipelineAssessment.UI.Tests.Features.Admin.AssessmentToolManagement
                 Assert.Equal(assessmentToolWorkflows[i].Version, result[i - 1].Version);
                 Assert.Equal(assessmentToolWorkflows[i].WorkflowDefinitionId, result[i - 1].WorkflowDefinitionId);
                 Assert.Equal(assessmentToolWorkflows[i].IsEconomistWorkflow, result[i - 1].IsEconomistWorkflow);
-                Assert.Equal(assessmentToolWorkflows[i].IsStandardVariation, result[i - 1].IsStandardVariation);
+                Assert.Equal(assessmentToolWorkflows[i].IsVariation, result[i - 1].IsVariation);
             }
         }
     }

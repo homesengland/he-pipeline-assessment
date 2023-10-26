@@ -316,6 +316,9 @@ namespace He.PipelineAssessment.Infrastructure.Migrations
                     b.Property<DateTime>("CreatedDateTime")
                         .HasColumnType("datetime2");
 
+                    b.Property<bool>("IsVariation")
+                        .HasColumnType("bit");
+
                     b.Property<string>("LastModifiedBy")
                         .HasMaxLength(500)
                         .HasColumnType("nvarchar(500)");
@@ -384,7 +387,7 @@ namespace He.PipelineAssessment.Infrastructure.Migrations
                     b.Property<bool>("IsLatest")
                         .HasColumnType("bit");
 
-                    b.Property<bool>("IsStandardVariation")
+                    b.Property<bool>("IsVariation")
                         .HasColumnType("bit");
 
                     b.Property<string>("LastModifiedBy")
@@ -480,6 +483,9 @@ namespace He.PipelineAssessment.Infrastructure.Migrations
                         .IsRequired()
                         .HasMaxLength(50)
                         .HasColumnType("nvarchar(50)");
+
+                    b.Property<bool>("IsVariation")
+                        .HasColumnType("bit");
 
                     b.Property<string>("LastModifiedBy")
                         .HasMaxLength(500)

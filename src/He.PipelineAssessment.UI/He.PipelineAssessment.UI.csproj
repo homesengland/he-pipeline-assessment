@@ -15,9 +15,41 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Remove="Features\Intervention\Controllers\**" />
+    <Compile Remove="Features\Variation\ConfirmStandardVariation\**" />
+    <Compile Remove="Features\Variation\CreateStandardVariation\**" />
+    <Compile Remove="Features\Variation\DeleteStandardVariation\**" />
+    <Compile Remove="Features\Variation\EditStandardVariationAssessor\**" />
+    <Compile Remove="Features\Variation\EditStandardVariation\**" />
+    <Compile Remove="Features\Variation\LoadStandardVariationCheckYourAnswersAssessor\**" />
+    <Compile Remove="Features\Variation\LoadStandardVariationCheckYourAnswers\**" />
+    <Compile Remove="Features\Variation\SubmitStandardVariation\**" />
     <Content Remove="Features\Intervention\Controllers\**" />
+    <Content Remove="Features\Variation\ConfirmStandardVariation\**" />
+    <Content Remove="Features\Variation\CreateStandardVariation\**" />
+    <Content Remove="Features\Variation\DeleteStandardVariation\**" />
+    <Content Remove="Features\Variation\EditStandardVariationAssessor\**" />
+    <Content Remove="Features\Variation\EditStandardVariation\**" />
+    <Content Remove="Features\Variation\LoadStandardVariationCheckYourAnswersAssessor\**" />
+    <Content Remove="Features\Variation\LoadStandardVariationCheckYourAnswers\**" />
+    <Content Remove="Features\Variation\SubmitStandardVariation\**" />
     <EmbeddedResource Remove="Features\Intervention\Controllers\**" />
+    <EmbeddedResource Remove="Features\Variation\ConfirmStandardVariation\**" />
+    <EmbeddedResource Remove="Features\Variation\CreateStandardVariation\**" />
+    <EmbeddedResource Remove="Features\Variation\DeleteStandardVariation\**" />
+    <EmbeddedResource Remove="Features\Variation\EditStandardVariationAssessor\**" />
+    <EmbeddedResource Remove="Features\Variation\EditStandardVariation\**" />
+    <EmbeddedResource Remove="Features\Variation\LoadStandardVariationCheckYourAnswersAssessor\**" />
+    <EmbeddedResource Remove="Features\Variation\LoadStandardVariationCheckYourAnswers\**" />
+    <EmbeddedResource Remove="Features\Variation\SubmitStandardVariation\**" />
     <None Remove="Features\Intervention\Controllers\**" />
+    <None Remove="Features\Variation\ConfirmStandardVariation\**" />
+    <None Remove="Features\Variation\CreateStandardVariation\**" />
+    <None Remove="Features\Variation\DeleteStandardVariation\**" />
+    <None Remove="Features\Variation\EditStandardVariationAssessor\**" />
+    <None Remove="Features\Variation\EditStandardVariation\**" />
+    <None Remove="Features\Variation\LoadStandardVariationCheckYourAnswersAssessor\**" />
+    <None Remove="Features\Variation\LoadStandardVariationCheckYourAnswers\**" />
+    <None Remove="Features\Variation\SubmitStandardVariation\**" />
   </ItemGroup>
 
   <ItemGroup>
@@ -64,17 +96,5 @@
     <ProjectReference Include="..\Elsa.CustomWorkflow.Sdk\Elsa.CustomWorkflow.Sdk.csproj" />
     <ProjectReference Include="..\He.PipelineAssessment.Data\He.PipelineAssessment.Data.csproj" />
     <ProjectReference Include="..\He.PipelineAssessment.Infrastructure\He.PipelineAssessment.Infrastructure.csproj" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="Features\StandardVariation\ConfirmStandardVariation\" />
-    <Folder Include="Features\StandardVariation\CreateStandardVariation\" />
-    <Folder Include="Features\StandardVariation\DeleteStandardVariation\" />
-    <Folder Include="Features\StandardVariation\EditStandardVariation\" />
-    <Folder Include="Features\StandardVariation\EditStandardVariationAssessor\" />
-    <Folder Include="Features\StandardVariation\LoadStandardVariationCheckYourAnswers\" />
-    <Folder Include="Features\StandardVariation\LoadStandardVariationCheckYourAnswersAssessor\" />
-    <Folder Include="Features\StandardVariation\Views\" />
-    <Folder Include="Features\StandardVariation\SubmitStandardVariation\" />
   </ItemGroup>
 </Project>
