@@ -134,6 +134,8 @@ namespace He.PipelineAssessment.UI.Services
 
                 var userName = _userProvider.GetUserName()!;
                 var email = _userProvider.GetUserEmail()!;
+                var adminUserName = request.DecisionType == InterventionDecisionTypes.Override ? userName : null;
+                var adminEmail = request.DecisionType == InterventionDecisionTypes.Override ? email : null;
 
                 var dtoConfig = new DtoConfig
                 {
@@ -141,8 +143,8 @@ namespace He.PipelineAssessment.UI.Services
                     UserEmail = email,
                     DecisionType = request.DecisionType,
                     Status = request.InitialStatus,
-                    AdministratorName = userName,
-                    AdministratorEmail = email,
+                    AdministratorName = adminUserName,
+                    AdministratorEmail = adminEmail,
                 };
 
                 var interventionReasons = await _assessmentRepository.GetInterventionReasons();
@@ -420,7 +422,7 @@ namespace He.PipelineAssessment.UI.Services
                 if (intervention.Status == InterventionStatus.Approved)
                 {
                     List<AssessmentToolWorkflowInstance> workflowsToDelete = new();
-                    switch (command.DecisionType)
+                    switch (intervention.DecisionType)
                     {
                         case InterventionDecisionTypes.Rollback:
                         {
