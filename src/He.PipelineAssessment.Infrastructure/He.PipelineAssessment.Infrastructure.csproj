@@ -39,6 +39,7 @@
     <None Remove="Migrations\20231013132330_RewriteGetAssessmentStoredProcedure\GetAssessmentStagesByAssessmentId.sql" />
     <None Remove="Migrations\20231017124829_FifForIncorrectStatusOnAssessmentScreen\GetAssessments.sql" />
     <None Remove="Migrations\20231013160042_FixRewriteGetAssessmentStoredProcedure\GetAssessmentStagesByAssessmentId.sql" />
+    <None Remove="Migrations\20231026150046_FixToDisplayOutstandingAssessmnetsStatusOfEqualOrder\GetAssessments.sql" />
   </ItemGroup>
 
   <ItemGroup>
@@ -74,6 +75,7 @@
     <EmbeddedResource Include="Migrations\20231013132330_RewriteGetAssessmentStoredProcedure\GetAssessmentStagesByAssessmentId.sql" />
     <EmbeddedResource Include="Migrations\20231017124829_FifForIncorrectStatusOnAssessmentScreen\GetAssessments.sql" />
     <EmbeddedResource Include="Migrations\20231013160042_FixRewriteGetAssessmentStoredProcedure\GetAssessmentStagesByAssessmentId.sql" />
+    <EmbeddedResource Include="Migrations\20231026150046_FixToDisplayOutstandingAssessmnetsStatusOfEqualOrder\GetAssessments.sql" />
   </ItemGroup>
 
   <ItemGroup>

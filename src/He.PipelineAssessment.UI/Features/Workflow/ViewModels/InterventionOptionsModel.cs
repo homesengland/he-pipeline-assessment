@@ -2,7 +2,7 @@
 {
     public class InterventionOptionsModel
     {
-        public string WorkflowInstanceId { get; set; }
+        public string WorkflowInstanceId { get; set; } = null!;
         public bool IsAmendableWorkflow { get; set; }
     }
 }
