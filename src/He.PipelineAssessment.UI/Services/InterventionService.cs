@@ -492,7 +492,8 @@ namespace He.PipelineAssessment.UI.Services
                 AssessmentId = intervention.AssessmentToolWorkflowInstance.AssessmentId,
                 AssessmentToolWorkflowInstanceId = intervention.AssessmentToolWorkflowInstanceId,
                 NextWorkflowDefinitionId = intervention.TargetAssessmentToolWorkflow!.WorkflowDefinitionId,
-                IsVariation = intervention.DecisionType == InterventionDecisionTypes.Variation
+                IsVariation = intervention.DecisionType == InterventionDecisionTypes.Variation,
+                IsLast = intervention.TargetAssessmentToolWorkflow.IsLast
             };
         }
     }

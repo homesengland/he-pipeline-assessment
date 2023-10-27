@@ -7,6 +7,7 @@
         public string NextWorkflowDefinitionId { get; set; } = null!;
         public int AssessmentId { get; set; }
         public bool IsVariation { get; set; }
+        public bool IsLast { get; set; }
 
 
         public virtual AssessmentToolWorkflowInstance AssessmentToolWorkflowInstance { get; set; } = null!;

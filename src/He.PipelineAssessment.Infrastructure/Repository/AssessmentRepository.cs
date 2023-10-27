@@ -23,6 +23,9 @@ namespace He.PipelineAssessment.Infrastructure.Repository
         Task<List<AssessmentToolWorkflowInstance>> GetSubsequentWorkflowInstancesForOverride(string workflowInstanceId);
         Task<List<AssessmentToolWorkflowInstance>> GetWorkflowInstancesToDeleteForRollback(
             int assessmentId,int assessmentToolOrder);
+        Task<List<AssessmentToolWorkflowInstance>> GetLastInstancesByStatus(int assessmentId, string status);
+        Task<List<AssessmentToolInstanceNextWorkflow>> GetLastNextWorkflows(int assessmentId);
+
 
         Task DeleteSubsequentNextWorkflows(AssessmentToolInstanceNextWorkflow? nextWorkflow);
         Task DeleteAllNextWorkflows(int assessmentId);
@@ -190,6 +193,27 @@ namespace He.PipelineAssessment.Infrastructure.Repository
                             && x.AssessmentToolWorkflow.AssessmentTool.Order >= assessmentToolOrder).ToListAsync();
 
             return workflowsToRemove;
+        }
+
+        public async Task<List<AssessmentToolWorkflowInstance>> GetLastInstancesByStatus(int assessmentId, string status)
+        {
+            List<AssessmentToolWorkflowInstance> workflowInstances = await context.Set<AssessmentToolWorkflowInstance>()
+                .Where(x =>
+                    x.Assessment.Id == assessmentId
+                    && x.AssessmentToolWorkflow.IsLast
+                    && x.Status == status).ToListAsync();
+
+            return workflowInstances;
+        }
+
+        public async Task<List<AssessmentToolInstanceNextWorkflow>> GetLastNextWorkflows(int assessmentId)
+        {
+            List<AssessmentToolInstanceNextWorkflow> nextWorkflows = await context.Set<AssessmentToolInstanceNextWorkflow>()
+                .Where(x =>
+                    x.AssessmentId == assessmentId
+                    && x.IsLast).ToListAsync();
+
+            return nextWorkflows;
         }
 
         public async Task DeleteSubsequentNextWorkflows(AssessmentToolInstanceNextWorkflow? nextWorkflow)
