@@ -74,8 +74,7 @@ namespace He.PipelineAssessment.UI.Features.Workflow.LoadConfirmationScreen
                                     if (nextWorkflow == null)
                                     {
                                         var assessmentToolInstanceNextWorkflow =
-                                            AssessmentToolInstanceNextWorkflow(currentAssessmentToolWorkflowInstance.AssessmentId,
-                                                currentAssessmentToolWorkflowInstance.Id, workflowDefinitionId);
+                                            AssessmentToolInstanceNextWorkflow(currentAssessmentToolWorkflowInstance, workflowDefinitionId);
                                         nextWorkflows.Add(assessmentToolInstanceNextWorkflow);
                                     }
                                 }
@@ -104,13 +103,14 @@ namespace He.PipelineAssessment.UI.Features.Workflow.LoadConfirmationScreen
             }
         }
 
-        private AssessmentToolInstanceNextWorkflow AssessmentToolInstanceNextWorkflow(int assessmentId, int assessmentToolWorkflowInstanceId, string workflowDefinitionId)
+        private AssessmentToolInstanceNextWorkflow AssessmentToolInstanceNextWorkflow(AssessmentToolWorkflowInstance currentAssessmentToolWorkflowInstance, string workflowDefinitionId)
         {
             return new AssessmentToolInstanceNextWorkflow
             {
-                AssessmentId = assessmentId,
-                AssessmentToolWorkflowInstanceId = assessmentToolWorkflowInstanceId,
-                NextWorkflowDefinitionId = workflowDefinitionId
+                AssessmentId = currentAssessmentToolWorkflowInstance.AssessmentId,
+                AssessmentToolWorkflowInstanceId = currentAssessmentToolWorkflowInstance.Id,
+                NextWorkflowDefinitionId = workflowDefinitionId,
+                IsLast = currentAssessmentToolWorkflowInstance.AssessmentToolWorkflow.IsLast
             };
         }
     }

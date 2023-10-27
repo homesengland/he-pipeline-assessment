@@ -35,7 +35,7 @@ namespace He.PipelineAssessment.UI.Common.Utility
         public async Task<bool> IsVariationAllowed(AssessmentToolWorkflowInstance currentAssessmentToolWorkflowInstance)
         {
             if (!currentAssessmentToolWorkflowInstance.AssessmentToolWorkflow.IsLast &&
-                !currentAssessmentToolWorkflowInstance.AssessmentToolWorkflow.IsVariation)
+                !currentAssessmentToolWorkflowInstance.IsVariation)
             {
                 return false;
             }
