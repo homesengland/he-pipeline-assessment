@@ -7,7 +7,7 @@ using Newtonsoft.Json;
 
 namespace He.PipelineAssessment.UI.Features.Amendment.LoadAmendmentCheckYourAnswers
 {
-    public class LoadAmendmentCheckYourAnswersRequestHandler : IRequestHandler<LoadAmendmentCheckYourAnswersRequest, SubmitAmendmentCommand>
+    public class LoadAmendmentCheckYourAnswersRequestHandler : IRequestHandler<LoadAmendmentCheckYourAnswersRequest, AssessmentInterventionCommand>
     {
 
         private readonly IAssessmentRepository _assessmentRepository;
@@ -23,7 +23,7 @@ namespace He.PipelineAssessment.UI.Features.Amendment.LoadAmendmentCheckYourAnsw
             _mapper = mapper;
         }
 
-        public async Task<SubmitAmendmentCommand> Handle(LoadAmendmentCheckYourAnswersRequest request, CancellationToken cancellationToken)
+        public async Task<AssessmentInterventionCommand> Handle(LoadAmendmentCheckYourAnswersRequest request, CancellationToken cancellationToken)
         {
             try
             {

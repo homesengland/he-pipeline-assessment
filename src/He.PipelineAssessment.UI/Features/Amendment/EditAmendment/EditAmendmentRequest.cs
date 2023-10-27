@@ -3,8 +3,7 @@ using MediatR;
 
 namespace He.PipelineAssessment.UI.Features.Amendment.EditAmendment
 {
-    public class EditAmendmentRequest : IRequest<AssessmentInterventionDto>
+    public class EditAmendmentRequest : EditInterventionAssessorRequest
     {
-        public int InterventionId { get; set; }
     }
 }

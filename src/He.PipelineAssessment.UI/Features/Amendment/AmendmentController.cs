@@ -61,7 +61,7 @@ namespace He.PipelineAssessment.UI.Features.Amendment
         [HttpGet]
         public async Task<IActionResult> CheckYourDetails(int interventionId)
         {
-            SubmitAmendmentCommand model = await _mediator.Send(new LoadAmendmentCheckYourAnswersRequest() { InterventionId = interventionId });
+            SubmitAmendmentCommand model = (SubmitAmendmentCommand)await _mediator.Send(new LoadAmendmentCheckYourAnswersRequest() { InterventionId = interventionId });
 
             return View("AmendmentCheckYourDetails", model);
         }

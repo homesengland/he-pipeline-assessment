@@ -1,10 +1,11 @@
-﻿using He.PipelineAssessment.UI.Features.Intervention;
+﻿using He.PipelineAssessment.Models;
+using He.PipelineAssessment.UI.Features.Intervention;
 using MediatR;
 
 namespace He.PipelineAssessment.UI.Features.Amendment.CreateAmendment
 {
-    public class CreateAmendmentRequest : IRequest<AssessmentInterventionDto>
+    public class CreateAmendmentRequest : CreateInterventionRequest
     {
-        public string WorkflowInstanceId { get; set; } = null!;
+        public override string DecisionType => InterventionDecisionTypes.Amendment;
     }
 }
