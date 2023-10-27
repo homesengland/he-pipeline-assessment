@@ -61,7 +61,7 @@ namespace He.PipelineAssessment.UI.Features.Workflow.LoadConfirmationScreen
                             await _assessmentRepository.SaveChanges();
 
 
-                            if (!string.IsNullOrEmpty(response.Data.NextWorkflowDefinitionIds))
+                            if (!string.IsNullOrEmpty(response.Data.NextWorkflowDefinitionIds) && !currentAssessmentToolWorkflowInstance.IsVariation)
                             {
                                 var nextWorkflows = new List<AssessmentToolInstanceNextWorkflow>();
                                 var workflowDefinitionIds = response.Data.NextWorkflowDefinitionIds.Split(',', StringSplitOptions.TrimEntries);
