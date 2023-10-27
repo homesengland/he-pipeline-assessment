@@ -20,7 +20,8 @@ namespace He.PipelineAssessment.UI.Features.Admin.AssessmentToolManagement.Mappe
                 IsLatest = assessmentToolWorkflowCommand.IsLatest,
                 WorkflowDefinitionId = assessmentToolWorkflowCommand.WorkflowDefinitionId,
                 Name = assessmentToolWorkflowCommand.Name,
-                IsVariation = assessmentToolWorkflowCommand.IsVariation
+                IsVariation = assessmentToolWorkflowCommand.IsVariation,
+                IsLast = assessmentToolWorkflowCommand.IsLast
             };
         }
     }

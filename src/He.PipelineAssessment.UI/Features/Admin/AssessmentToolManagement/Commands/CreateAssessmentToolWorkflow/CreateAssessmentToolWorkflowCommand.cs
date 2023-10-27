@@ -27,5 +27,7 @@ namespace He.PipelineAssessment.UI.Features.Admin.AssessmentToolManagement.Comma
         public bool IsLatest { get; set; } = true;
         [Display(Name = "Is standard variation?")]
         public bool IsVariation { get; set; } = false;
+
+        public bool IsLast { get; set; }
     }
 }

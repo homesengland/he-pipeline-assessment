@@ -13,7 +13,7 @@ namespace He.PipelineAssessment.Infrastructure.Migrations
             var sqlFiles = assembly.GetManifestResourceNames().Where(file =>
 
                 file.Contains(
-                    "20231027101712_UpdateSPToReturnVariationsInOrderAtTheEnd.GetAssessmentStagesByAssessmentId.sql") ||
+                    "20231027101712_UpdateSPToReturnVariationsInOrderAtTheEnd.GetAssessmentStagesByAssessmentId.sql")
             );
             foreach (var sqlFile in sqlFiles)
             {

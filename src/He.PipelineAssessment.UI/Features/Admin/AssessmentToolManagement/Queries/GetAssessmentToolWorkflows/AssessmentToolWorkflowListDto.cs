@@ -22,5 +22,6 @@ namespace He.PipelineAssessment.UI.Features.Admin.AssessmentToolManagement.Queri
         public bool IsLatest { get; set; }
         public ValidationResult? ValidationResult { get; set; }
         public bool IsVariation { get; set; }
+        public bool IsLast { get; set; }
     }
 }

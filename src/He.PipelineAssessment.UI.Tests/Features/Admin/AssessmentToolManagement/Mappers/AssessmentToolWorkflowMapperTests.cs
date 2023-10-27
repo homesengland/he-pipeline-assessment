@@ -29,6 +29,7 @@ namespace He.PipelineAssessment.UI.Tests.Features.Admin.AssessmentToolManagement
             Assert.Equal(assessmentToolWorkflowCommand.WorkflowDefinitionId, result.WorkflowDefinitionId);
             Assert.Equal(assessmentToolWorkflowCommand.Name, result.Name);
             Assert.Equal(assessmentToolWorkflowCommand.IsVariation, result.IsVariation);
+            Assert.Equal(assessmentToolWorkflowCommand.IsLast, result.IsLast);
         }
     }
 }
