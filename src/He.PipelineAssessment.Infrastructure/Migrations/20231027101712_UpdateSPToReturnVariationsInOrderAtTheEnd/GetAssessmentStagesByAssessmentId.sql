@@ -1,4 +1,4 @@
-﻿﻿CREATE OR ALTER PROCEDURE [dbo].[GetAssessmentStagesByAssessmentId]
+﻿CREATE OR ALTER PROCEDURE [dbo].[GetAssessmentStagesByAssessmentId]
         @assessmentId int
     AS
     BEGIN
@@ -26,7 +26,7 @@
 		ATWI.Result, 
 		ATWI.SubmittedBy,
 		ATWI.WorkflowName,
-        ATWI.IsVariation
+		ATWI.IsVariation
 		INTO #INSTANCES 
 		FROM AssessmentToolWorkflowInstance ATWI
 		INNER JOIN AssessmentToolWorkflow ATW ON ATWI.AssessmentToolWorkflowId = ATW.Id AND (ATW.Status IS NULL OR ATW.Status != ''Deleted'')
@@ -55,7 +55,7 @@
 		#INSTANCES.Result, 
 		#INSTANCES.SubmittedBy,
 		#INSTANCES.WorkflowName,
-        #INSTANCES.IsVariation
+		#INSTANCES.IsVariation
 	FROM AssessmentTool AT
 	LEFT JOIN #INSTANCES ON AT.Id = #INSTANCES.AssessmentToolId
 	WHERE (AT.Status IS NULL OR AT.Status != ''Deleted'') 
@@ -84,7 +84,7 @@
 		#INSTANCES.Result, 
 		#INSTANCES.SubmittedBy,
 		#INSTANCES.WorkflowName,
-        ATINW.IsVariation
+	ATINW.IsVariation
 	FROM AssessmentToolInstanceNextWorkflow ATINW
 	INNER JOIN AssessmentToolWorkflow ATW ON ATINW.NextWorkflowDefinitionId = ATW.WorkflowDefinitionId AND (ATW.Status IS NULL OR ATW.Status != ''Deleted'')
 	INNER JOIN AssessmentTool AT ON ATW.AssessmentToolId = AT.Id AND (AT.Status IS NULL OR AT.Status != ''Deleted'')
@@ -114,7 +114,7 @@
 		#INSTANCES.Result, 
 		#INSTANCES.SubmittedBy,
 		#INSTANCES.WorkflowName,
-        #INSTANCES.IsVariation
+		#INSTANCES.IsVariation
 	FROM AssessmentTool AT
 	INNER JOIN #INSTANCES ON AT.Id = #INSTANCES.AssessmentToolId
 	WHERE (AT.Status IS NULL OR AT.Status != ''Deleted'') 
