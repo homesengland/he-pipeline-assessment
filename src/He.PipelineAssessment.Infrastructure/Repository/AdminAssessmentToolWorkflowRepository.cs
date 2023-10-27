@@ -15,6 +15,7 @@ namespace He.PipelineAssessment.Infrastructure.Repository
 
         Task<List<AssessmentToolWorkflow>> GetAssessmentToolWorkflowsForOverride(int order);
         Task<List<AssessmentToolWorkflow>> GetAssessmentToolWorkflowsForRollback(int order);
+        Task<List<AssessmentToolWorkflow>> GetAssessmentToolWorkflowsForVariation();
         Task<int> SaveChanges();
 
     }
@@ -55,6 +56,15 @@ namespace He.PipelineAssessment.Infrastructure.Repository
             return await _context.Set<AssessmentToolWorkflow>()
                 .Where(x => x.Status != AssessmentToolStatus.Deleted && 
                     x.AssessmentTool.Order <= order)
+                .OrderBy(x => x.AssessmentTool.Order)
+                .Include(x => x.AssessmentTool)
+                .ToListAsync();
+        }
+
+        public async Task<List<AssessmentToolWorkflow>> GetAssessmentToolWorkflowsForVariation()
+        {
+            return await _context.Set<AssessmentToolWorkflow>()
+                .Where(x => x.Status != AssessmentToolStatus.Deleted && x.IsVariation)
                 .OrderBy(x => x.AssessmentTool.Order)
                 .Include(x => x.AssessmentTool)
                 .ToListAsync();

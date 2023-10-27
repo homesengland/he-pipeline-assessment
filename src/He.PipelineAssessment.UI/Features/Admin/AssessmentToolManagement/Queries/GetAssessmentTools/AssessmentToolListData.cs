@@ -27,7 +27,7 @@ namespace He.PipelineAssessment.UI.Features.Admin.AssessmentToolManagement.Queri
         public bool IsAmendableWorkflow { get; set; }
         public int Version { get; set; }
         public bool IsLatest { get; set; }
-
+        public bool IsVariation { get; set; }
     }
 
 }

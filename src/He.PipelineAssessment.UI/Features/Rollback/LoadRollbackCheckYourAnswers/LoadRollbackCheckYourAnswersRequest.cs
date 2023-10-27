@@ -1,10 +1,8 @@
-﻿using He.PipelineAssessment.UI.Features.Rollback.SubmitRollback;
-using MediatR;
+﻿using He.PipelineAssessment.UI.Features.Intervention;
 
 namespace He.PipelineAssessment.UI.Features.Rollback.LoadRollbackCheckYourAnswers
 {
-    public class LoadRollbackCheckYourAnswersRequest : IRequest<SubmitRollbackCommand>
+    public class LoadRollbackCheckYourAnswersRequest : LoadInterventionCheckYourAnswersRequest
     {
-        public int InterventionId { get; set; }
     }
 }

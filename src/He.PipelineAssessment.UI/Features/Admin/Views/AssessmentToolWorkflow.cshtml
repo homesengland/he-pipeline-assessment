@@ -3,7 +3,7 @@
 
 @{
     ViewData["Title"] = "Assessment Tools";
-    Layout = "_Layout";
+    Layout = "_LayoutFullWidth";
 }
 <div class="govuk-grid-row">
     <div class="govuk-grid-column-two-thirds">
@@ -24,6 +24,7 @@
                 <th scope="col" class="govuk-table__header govuk-!-width-one-fifth">Name</th>
                 <th scope="col" class="govuk-table__header govuk-!-width-one-fifth">Is first workflow?</th>
                 <th scope="col" class="govuk-table__header govuk-!-width-one-fifth">Is economist workflow?</th>
+                <th scope="col" class="govuk-table__header govuk-!-width-one-fifth">Is standard variation?</th>
                                     <th scope="col" class="govuk-table__header govuk-!-width-one-fifth">Is ammendable workflow?</th>
                 <th scope="col" class="govuk-table__header">Update</th>
                 <th scope="col" class="govuk-table__header">Delete</th>
@@ -88,15 +89,27 @@
                             </div>
                         </td>
                         <td class="govuk-table__cell">
-                                <div class="govuk-radios--inline govuk-radios--small">
-                                    <div class="govuk-radios__item radio-no-margin">
-                                        @Html.RadioButton("UpdateAssessmentToolWorkflowCommand.IsEconomistWorkflow", "True", assessmentToolWorkflow.IsEconomistWorkflow, new { @class = "govuk-radios__input" })
-                                        <label class="govuk-label govuk-radios__label" for="@assessmentToolWorkflow.IsEconomistWorkflow">Yes</label>
-                                    </div>
-                                    <div class="govuk-radios__item radio-no-margin">
-                                        @Html.RadioButton("UpdateAssessmentToolWorkflowCommand.IsEconomistWorkflow", "False", !assessmentToolWorkflow.IsEconomistWorkflow, new { @class = "govuk-radios__input" })
-                                        <label class="govuk-label govuk-radios__label" for="@assessmentToolWorkflow.IsEconomistWorkflow">No</label>
-                                    </div>
+                            <div class="govuk-radios--inline govuk-radios--small">
+                                <div class="govuk-radios__item radio-no-margin">
+                                    @Html.RadioButton("UpdateAssessmentToolWorkflowCommand.IsEconomistWorkflow", "True", assessmentToolWorkflow.IsEconomistWorkflow, new { @class = "govuk-radios__input" })
+                                    <label class="govuk-label govuk-radios__label" for="@assessmentToolWorkflow.IsEconomistWorkflow">Yes</label>
+                                </div>
+                                <div class="govuk-radios__item radio-no-margin">
+                                    @Html.RadioButton("UpdateAssessmentToolWorkflowCommand.IsEconomistWorkflow", "False", !assessmentToolWorkflow.IsEconomistWorkflow, new { @class = "govuk-radios__input" })
+                                    <label class="govuk-label govuk-radios__label" for="@assessmentToolWorkflow.IsEconomistWorkflow">No</label>
+                                </div>
+                            </div>
+                        </td>
+                        <td class="govuk-table__cell">
+                            <div class="govuk-radios--inline govuk-radios--small">
+                                <div class="govuk-radios__item radio-no-margin">
+                                        @Html.RadioButton("UpdateAssessmentToolWorkflowCommand.IsVariation", "True", assessmentToolWorkflow.IsVariation, new { @class = "govuk-radios__input" })
+                                        <label class="govuk-label govuk-radios__label" for="@assessmentToolWorkflow.IsVariation">Yes</label>
+                                </div>
+                                <div class="govuk-radios__item radio-no-margin">
+                                        @Html.RadioButton("UpdateAssessmentToolWorkflowCommand.IsVariation", "False", !assessmentToolWorkflow.IsVariation, new { @class = "govuk-radios__input" })
+                                        <label class="govuk-label govuk-radios__label" for="@assessmentToolWorkflow.IsVariation">No</label>
+                                </div>
                             </div>
                         </td>
                         <td class="govuk-table__cell">

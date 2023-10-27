@@ -3,8 +3,7 @@ using MediatR;
 
 namespace He.PipelineAssessment.UI.Features.Rollback.EditRollback
 {
-    public class EditRollbackRequest : IRequest<AssessmentInterventionDto>
+    public class EditRollbackRequest : EditInterventionRequest
     {
-        public int InterventionId { get; set; }
     }
 }

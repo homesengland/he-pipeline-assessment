@@ -1,5 +1,7 @@
-﻿@using He.PipelineAssessment.UI
+﻿@using He.PipelineAssessment.Models
+@using He.PipelineAssessment.UI
 @using He.PipelineAssessment.UI.Features.Intervention.InterventionList
+@using Microsoft.AspNetCore.Mvc.TagHelpers
 @addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
 @model List<He.PipelineAssessment.Models.ViewModels.AssessmentInterventionViewModel>
 @inject NonceConfig nonceConfig
@@ -52,13 +54,17 @@
 
                 <tr class="govuk-table__row">
                     <td class="govuk-table__cell">
-                        @if (@intervention.DecisionType == "Override")
+                        @if (@intervention.DecisionType == InterventionDecisionTypes.Override)
                         {
                             <a asp-controller="Override" asp-action="EditOverride" asp-route-interventionId="@intervention.Id" class="govuk-link">@intervention.Reference</a>
                         }
-                        @if (@intervention.DecisionType == "Rollback")
+                        @if (@intervention.DecisionType == InterventionDecisionTypes.Rollback)
                         {
                             <a asp-controller="Rollback" asp-action="EditRollback" asp-route-interventionId="@intervention.Id" class="govuk-link">@intervention.Reference</a>
+                        }
+                        @if (@intervention.DecisionType == InterventionDecisionTypes.Variation)
+                        {
+                            <a asp-controller="Variation" asp-action="EditVariation" asp-route-interventionId="@intervention.Id" class="govuk-link">@intervention.Reference</a>
                         }
                     </td>
                     <td class="govuk-table__cell">@intervention.WorkflowName</td>

@@ -1,4 +1,6 @@
-﻿namespace He.PipelineAssessment.UI.Features.Intervention
+﻿using He.PipelineAssessment.Models;
+
+namespace He.PipelineAssessment.UI.Features.Intervention
 {
     public class AssessmentInterventionCommand
     {
@@ -26,5 +28,6 @@
 
         public int? InterventionReasonId { get; set; }
         public string? InterventionReasonName { get; set; }
+        public virtual string FinalInstanceStatus => AssessmentToolWorkflowInstanceConstants.Submitted;
     }
 }

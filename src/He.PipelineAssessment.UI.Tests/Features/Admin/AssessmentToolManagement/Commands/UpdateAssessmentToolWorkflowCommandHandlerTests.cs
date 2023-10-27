@@ -79,7 +79,9 @@ namespace He.PipelineAssessment.UI.Tests.Features.Admin.AssessmentToolManagement
                     y.WorkflowDefinitionId == updateAssessmentToolWorkflowCommand.WorkflowDefinitionId &&
                     y.IsFirstWorkflow == updateAssessmentToolWorkflowCommand.IsFirstWorkflow &&
                     y.Name == updateAssessmentToolWorkflowCommand.Name && 
-                    y.IsEconomistWorkflow == updateAssessmentToolWorkflowCommand.IsEconomistWorkflow)), Times.Once);
+                    y.IsEconomistWorkflow == updateAssessmentToolWorkflowCommand.IsEconomistWorkflow &&
+                    y.IsVariation == updateAssessmentToolWorkflowCommand.IsVariation
+                    )), Times.Once);
             Assert.Equal(2, result);
         }
     }
