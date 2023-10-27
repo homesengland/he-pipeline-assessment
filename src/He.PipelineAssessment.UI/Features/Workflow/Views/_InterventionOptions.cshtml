@@ -1,4 +1,4 @@
-﻿@model He.PipelineAssessment.UI.Features.Workflow.ViewModels.InterventionOptionsModel;
+﻿@model He.PipelineAssessment.UI.Features.Workflow.ViewModels.InterventionOptions;
 @using He.PipelineAssessment.UI.Authorization;
 @using Microsoft.AspNetCore.Authorization
 @inject IAuthorizationService AuthorizationService
@@ -22,5 +22,15 @@
     {
         @Html.ActionLink("Amendment", "Amendment", "Amendment", new { workflowInstanceId = Model.WorkflowInstanceId }, new { @class = "govuk-button", data_module="govuk-button" })
     }
-    @*@Html.ActionLink("Variation", "Variation", "Variation", new { workflowInstanceId = Model }, new { @class = "govuk-button", data_module="govuk-button" })*@
+    
+    @if (Model.IsVariationAllowed)
+    {
+        @Html.ActionLink("Variation", "Variation", "Variation", new { workflowInstanceId = Model.WorkflowInstanceId }, new { @class = "govuk-button", data_module="govuk-button" })
+    }
+    else
+    {
+        <button disabled="disabled" aria-disabled="true" class="govuk-button govuk-button--disabled" data-module="govuk-button">
+            Variation
+        </button>
+    }
 </div>

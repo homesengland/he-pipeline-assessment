@@ -26,6 +26,7 @@ namespace He.PipelineAssessment.UI.Features.Admin.AssessmentToolManagement.Comma
                 entity.IsEconomistWorkflow = request.IsEconomistWorkflow;
                 entity.IsVariation = request.IsVariation;
                 entity.IsAmendable = request.IsAmendableWorkflow;
+                entity.IsLast = request.IsLast;
                 return await _adminAssessmentToolWorkflowRepository.UpdateAssessmentToolWorkflow(entity);
             }
             catch (Exception e)

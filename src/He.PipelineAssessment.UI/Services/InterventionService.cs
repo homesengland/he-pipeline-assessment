@@ -479,21 +479,21 @@ namespace He.PipelineAssessment.UI.Services
             }
 
             var nextWorkflow =
-                AssessmentToolInstanceNextWorkflow(intervention.AssessmentToolWorkflowInstance.AssessmentId,
-                    intervention.AssessmentToolWorkflowInstanceId,
-                    intervention.TargetAssessmentToolWorkflow!.WorkflowDefinitionId);
+                AssessmentToolInstanceNextWorkflow(intervention);
 
             await _assessmentRepository.CreateAssessmentToolInstanceNextWorkflows(
                 new List<AssessmentToolInstanceNextWorkflow>() { nextWorkflow });
         }
 
-        private AssessmentToolInstanceNextWorkflow AssessmentToolInstanceNextWorkflow(int assessmentId, int assessmentToolWorkflowInstanceId, string workflowDefinitionId)
+        private AssessmentToolInstanceNextWorkflow AssessmentToolInstanceNextWorkflow(AssessmentIntervention intervention)
         {
             return new AssessmentToolInstanceNextWorkflow
             {
-                AssessmentId = assessmentId,
-                AssessmentToolWorkflowInstanceId = assessmentToolWorkflowInstanceId,
-                NextWorkflowDefinitionId = workflowDefinitionId
+                AssessmentId = intervention.AssessmentToolWorkflowInstance.AssessmentId,
+                AssessmentToolWorkflowInstanceId = intervention.AssessmentToolWorkflowInstanceId,
+                NextWorkflowDefinitionId = intervention.TargetAssessmentToolWorkflow!.WorkflowDefinitionId,
+                IsVariation = intervention.DecisionType == InterventionDecisionTypes.Variation,
+                IsLast = intervention.TargetAssessmentToolWorkflow.IsLast
             };
         }
     }

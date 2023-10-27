@@ -20,12 +20,13 @@
             <caption class="govuk-table__caption govuk-table__caption--m">Workflow Definitions for: @Model.AssessmentToolName</caption>
             <thead class="govuk-table__head">
             <tr class="govuk-table__row">
-                 <th scope="col" class="govuk-table__header govuk-!-width-one-fifth">WorkflowDefinitionId</th>
+                <th scope="col" class="govuk-table__header govuk-!-width-one-fifth">WorkflowDefinitionId</th>
                 <th scope="col" class="govuk-table__header govuk-!-width-one-fifth">Name</th>
                 <th scope="col" class="govuk-table__header govuk-!-width-one-fifth">Is first workflow?</th>
                 <th scope="col" class="govuk-table__header govuk-!-width-one-fifth">Is economist workflow?</th>
-                <th scope="col" class="govuk-table__header govuk-!-width-one-fifth">Is standard variation?</th>
-                                    <th scope="col" class="govuk-table__header govuk-!-width-one-fifth">Is ammendable workflow?</th>
+                <th scope="col" class="govuk-table__header govuk-!-width-one-fifth">Is variation?</th>
+                <th scope="col" class="govuk-table__header govuk-!-width-one-fifth">Is last?</th>
+                <th scope="col" class="govuk-table__header govuk-!-width-one-fifth">Is ammendable?</th>
                 <th scope="col" class="govuk-table__header">Update</th>
                 <th scope="col" class="govuk-table__header">Delete</th>
             </tr>
@@ -103,12 +104,24 @@
                         <td class="govuk-table__cell">
                             <div class="govuk-radios--inline govuk-radios--small">
                                 <div class="govuk-radios__item radio-no-margin">
-                                        @Html.RadioButton("UpdateAssessmentToolWorkflowCommand.IsVariation", "True", assessmentToolWorkflow.IsVariation, new { @class = "govuk-radios__input" })
-                                        <label class="govuk-label govuk-radios__label" for="@assessmentToolWorkflow.IsVariation">Yes</label>
+                                    @Html.RadioButton("UpdateAssessmentToolWorkflowCommand.IsVariation", "True", assessmentToolWorkflow.IsVariation, new { @class = "govuk-radios__input" })
+                                    <label class="govuk-label govuk-radios__label" for="@assessmentToolWorkflow.IsVariation">Yes</label>
                                 </div>
                                 <div class="govuk-radios__item radio-no-margin">
-                                        @Html.RadioButton("UpdateAssessmentToolWorkflowCommand.IsVariation", "False", !assessmentToolWorkflow.IsVariation, new { @class = "govuk-radios__input" })
-                                        <label class="govuk-label govuk-radios__label" for="@assessmentToolWorkflow.IsVariation">No</label>
+                                    @Html.RadioButton("UpdateAssessmentToolWorkflowCommand.IsVariation", "False", !assessmentToolWorkflow.IsVariation, new { @class = "govuk-radios__input" })
+                                    <label class="govuk-label govuk-radios__label" for="@assessmentToolWorkflow.IsVariation">No</label>
+                                </div>
+                            </div>
+                        </td>
+                        <td class="govuk-table__cell">
+                            <div class="govuk-radios--inline govuk-radios--small">
+                                <div class="govuk-radios__item radio-no-margin">
+                                        @Html.RadioButton("UpdateAssessmentToolWorkflowCommand.IsLast", "True", assessmentToolWorkflow.IsLast, new { @class = "govuk-radios__input" })
+                                        <label class="govuk-label govuk-radios__label" for="@assessmentToolWorkflow.IsLast">Yes</label>
+                                </div>
+                                <div class="govuk-radios__item radio-no-margin">
+                                        @Html.RadioButton("UpdateAssessmentToolWorkflowCommand.IsLast", "False", !assessmentToolWorkflow.IsLast, new { @class = "govuk-radios__input" })
+                                        <label class="govuk-label govuk-radios__label" for="@assessmentToolWorkflow.IsLast">No</label>
                                 </div>
                             </div>
                         </td>

@@ -80,7 +80,8 @@ namespace He.PipelineAssessment.UI.Tests.Features.Admin.AssessmentToolManagement
                     y.IsFirstWorkflow == updateAssessmentToolWorkflowCommand.IsFirstWorkflow &&
                     y.Name == updateAssessmentToolWorkflowCommand.Name && 
                     y.IsEconomistWorkflow == updateAssessmentToolWorkflowCommand.IsEconomistWorkflow &&
-                    y.IsVariation == updateAssessmentToolWorkflowCommand.IsVariation
+                    y.IsVariation == updateAssessmentToolWorkflowCommand.IsVariation &&
+                    y.IsLast == updateAssessmentToolWorkflowCommand.IsLast
                     )), Times.Once);
             Assert.Equal(2, result);
         }
