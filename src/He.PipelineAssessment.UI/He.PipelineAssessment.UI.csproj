@@ -96,5 +96,6 @@
     <ProjectReference Include="..\Elsa.CustomWorkflow.Sdk\Elsa.CustomWorkflow.Sdk.csproj" />
     <ProjectReference Include="..\He.PipelineAssessment.Data\He.PipelineAssessment.Data.csproj" />
     <ProjectReference Include="..\He.PipelineAssessment.Infrastructure\He.PipelineAssessment.Infrastructure.csproj" />
+    <ProjectReference Include="..\He.PipelineAssessment.Models\He.PipelineAssessment.Models.csproj" />
   </ItemGroup>
 </Project>

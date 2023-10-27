@@ -1,4 +1,5 @@
-﻿using He.PipelineAssessment.Infrastructure;
+﻿using Elsa.CustomWorkflow.Sdk.HttpClients;
+using He.PipelineAssessment.Infrastructure;
 using He.PipelineAssessment.Infrastructure.Repository;
 using He.PipelineAssessment.Models;
 using He.PipelineAssessment.UI.Authorization;
@@ -19,6 +20,7 @@ namespace He.PipelineAssessment.UI.Services
         private readonly IUserProvider _userProvider;
         private readonly IAdminAssessmentToolWorkflowRepository _adminAssessmentToolWorkflowRepository;
         private readonly IDateTimeProvider _dateTimeProvider;
+        private readonly IElsaServerHttpClient _elsaServerHttpClient;
 
         public InterventionService(
             IAssessmentRepository assessmentRepository, 
@@ -28,7 +30,8 @@ namespace He.PipelineAssessment.UI.Services
             IUserProvider userProvider, 
             ILogger<InterventionService> logger,
             IAdminAssessmentToolWorkflowRepository adminAssessmentToolWorkflowRepository,
-            IDateTimeProvider dateTimeProvider)
+            IDateTimeProvider dateTimeProvider,
+            IElsaServerHttpClient elsaServerHttpClient)
         {
             _assessmentRepository = assessmentRepository;
             _logger = logger;
@@ -38,6 +41,7 @@ namespace He.PipelineAssessment.UI.Services
             _userProvider = userProvider;
             _adminAssessmentToolWorkflowRepository = adminAssessmentToolWorkflowRepository;
             _dateTimeProvider = dateTimeProvider;
+            _elsaServerHttpClient = elsaServerHttpClient;
         }
 
         public async Task ConfirmIntervention(AssessmentInterventionCommand command)
@@ -438,35 +442,50 @@ namespace He.PipelineAssessment.UI.Services
                     switch (intervention.DecisionType)
                     {
                         case InterventionDecisionTypes.Rollback:
-                        {
-                            workflowsToDelete =
-                                await _assessmentRepository.GetWorkflowInstancesToDeleteForRollback(
-                                    intervention.AssessmentToolWorkflowInstance.AssessmentId,
-                                    intervention.TargetAssessmentToolWorkflow!.AssessmentTool.Order);
-                            break;
-                        }
+                            {
+                                workflowsToDelete =
+                                    await _assessmentRepository.GetWorkflowInstancesToDeleteForRollback(
+                                        intervention.AssessmentToolWorkflowInstance.AssessmentId,
+                                        intervention.TargetAssessmentToolWorkflow!.AssessmentTool.Order);
+                                break;
+                            }
                         case InterventionDecisionTypes.Override:
-                        {
-                            workflowsToDelete = await _assessmentRepository.GetSubsequentWorkflowInstancesForOverride(
-                                intervention
-                                    .AssessmentToolWorkflowInstance.WorkflowInstanceId);
-                            break;
-                        }
+                            {
+                                workflowsToDelete = await _assessmentRepository.GetSubsequentWorkflowInstancesForOverride(
+                                    intervention
+                                        .AssessmentToolWorkflowInstance.WorkflowInstanceId);
+                                break;
+                            }
+                        case InterventionDecisionTypes.Amendment:
+                            {
+                                workflowsToDelete =
+                                await _assessmentRepository.GetWorkflowInstancesToDeleteForAmendment(intervention.AssessmentToolWorkflowInstance.AssessmentId, 
+                                intervention.AssessmentToolWorkflowInstance.AssessmentToolWorkflow.AssessmentTool.Order);
+                                break;
+                            }
                     }
-
                     foreach (var workflowInstance in workflowsToDelete)
                     {
                         workflowInstance.Status = command.FinalInstanceStatus;
                     }
-
+                    intervention.AssessmentToolWorkflowInstance.Status = AssessmentToolWorkflowInstanceConstants.Draft;
                     await _assessmentRepository.SaveChanges();
-                    await CreateNextWorkflow(intervention);
+                    await ClearNextWorkflowsByOrder(intervention, workflowsToDelete);
                 }
             }
             catch (Exception ex)
             {
                 _logger.LogError(ex, ex.Message);
                 throw new ApplicationException($"Unable to submit {command.DecisionType}. AssessmentInterventionId: {command.AssessmentInterventionId}.");
+            }
+        }
+
+        private async Task ClearNextWorkflowsByOrder(AssessmentIntervention intervention, List<AssessmentToolWorkflowInstance> workflowsToDelete)
+        {
+            if (intervention.DecisionType == InterventionDecisionTypes.Amendment)
+            {
+                await _assessmentRepository.DeleteAllNextWorkflowsByOrder(intervention.AssessmentToolWorkflowInstance.AssessmentId, intervention.AssessmentToolWorkflowInstance.AssessmentToolWorkflow.AssessmentTool.Order);
+                await _elsaServerHttpClient.PostArchiveQuestions(workflowsToDelete.Select(x => x.WorkflowInstanceId).ToArray());
             }
         }
 

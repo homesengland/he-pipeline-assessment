@@ -3,6 +3,7 @@ using He.PipelineAssessment.Models;
 using He.PipelineAssessment.UI.Authorization;
 using He.PipelineAssessment.UI.Common.Exceptions;
 using He.PipelineAssessment.UI.Features.Intervention;
+using He.PipelineAssessment.UI.Services;
 using MediatR;
 
 namespace He.PipelineAssessment.UI.Features.Amendment.EditAmendment
@@ -15,53 +16,25 @@ namespace He.PipelineAssessment.UI.Features.Amendment.EditAmendment
         private readonly IAdminAssessmentToolWorkflowRepository _adminAssessmentToolWorkflowRepository;
         private readonly ILogger<EditAmendmentRequestHandler> _logger;
         private readonly IRoleValidation _roleValidation;
+        private readonly IInterventionService _interventionService;
 
         public EditAmendmentRequestHandler(IAssessmentInterventionMapper mapper,
             IAssessmentRepository repo, IAdminAssessmentToolWorkflowRepository adminAssessmentToolWorkflowRepository,
-            ILogger<EditAmendmentRequestHandler> logger, IRoleValidation roleValidation)
+            ILogger<EditAmendmentRequestHandler> logger, IRoleValidation roleValidation, IInterventionService interventionService)
         {
             _mapper = mapper;
             _repository = repo;
             _adminAssessmentToolWorkflowRepository = adminAssessmentToolWorkflowRepository;
             _logger = logger;
             _roleValidation = roleValidation;
+            _interventionService = interventionService;
         }
         public async Task<AssessmentInterventionDto> Handle(EditAmendmentRequest request, CancellationToken cancellationToken)
         {
-            try
-            {
-                AssessmentIntervention? intervention = await _repository.GetAssessmentIntervention(request.InterventionId);
-                if (intervention == null)
-                {
-                    throw new NotFoundException($"Assessment Intervention with Id {request.InterventionId} not found");
-                }
-
-                var isAuthorised = await _roleValidation.ValidateRole(intervention.AssessmentToolWorkflowInstance.AssessmentId, intervention.AssessmentToolWorkflowInstance.WorkflowDefinitionId);
-                if (!isAuthorised)
-                {
-                    throw new UnauthorizedAccessException($"You do not have permission to access this resource.");
-                }
-
-                AssessmentInterventionCommand command = _mapper.AssessmentInterventionCommandFromAssessmentIntervention(intervention);
-                var interventionReasons = await _repository.GetInterventionReasons();
-                var dto = new AssessmentInterventionDto
-                {
-                    AssessmentInterventionCommand = command,
-                    InterventionReasons = interventionReasons
-                };
-                return dto;
-            }
-            catch (UnauthorizedAccessException e)
-            {
-                _logger.LogError(e, e.Message);
-                throw;
-            }
-            catch (Exception e)
-            {
-                _logger.LogError(e, e.Message);
-                throw new ApplicationException($"Unable to edit amendment. InterventionId: {request.InterventionId}");
-            }
-
+            var dto = await _interventionService.EditInterventionRequest(request);
+            var interventionReasons = await _repository.GetInterventionReasons();
+            dto.InterventionReasons = interventionReasons;
+            return dto;
         }
     }
 }
