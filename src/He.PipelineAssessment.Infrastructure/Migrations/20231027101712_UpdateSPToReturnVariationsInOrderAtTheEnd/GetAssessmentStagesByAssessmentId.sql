@@ -68,27 +68,27 @@
 		AT.Name, 
 		AT.IsVisible, 
 		IIF(ATINW.IsVariation = 1, AT.[Order] + 500, AT.[Order]) AS [Order],
-		#INSTANCES.WorkflowDefinitionId, 
-		#INSTANCES.WorkflowInstanceId, 
-		#INSTANCES.CurrentActivityId, 
-		#INSTANCES.CurrentActivityType, 
-		#INSTANCES.FirstActivityId, 
-		#INSTANCES.FirstActivityType, 
-		#INSTANCES.[Status], 
-		#INSTANCES.CreatedDateTime, 
-		#INSTANCES.SubmittedDateTime, 
-		#INSTANCES.AssessmentToolWorkflowInstanceId, 
-		#INSTANCES.IsFirstWorkflow,  
-		#INSTANCES.IsEconomistWorkflow,
-		#INSTANCES.LastModifiedDateTime,
-		#INSTANCES.Result, 
-		#INSTANCES.SubmittedBy,
-		#INSTANCES.WorkflowName,
-	ATINW.IsVariation
+		ATINW.NextWorkflowDefinitionId, 
+		NULL AS WorkflowInstanceId, 
+		NULL AS CurrentActivityId, 
+		NULL AS CurrentActivityType, 
+		NULL AS FirstActivityId, 
+		NULL AS FirstActivityType, 
+		NULL AS [Status], 
+		NULL AS CreatedDateTime, 
+		NULL AS SubmittedDateTime, 
+		NULL AS AssessmentToolWorkflowInstanceId, 
+		NULL AS IsFirstWorkflow,  
+		NULL AS IsEconomistWorkflow,
+		NULL AS LastModifiedDateTime,
+		NULL AS Result, 
+		NULL AS SubmittedBy,
+		NULL AS WorkflowName,
+		ATINW.IsVariation
 	FROM AssessmentToolInstanceNextWorkflow ATINW
 	INNER JOIN AssessmentToolWorkflow ATW ON ATINW.NextWorkflowDefinitionId = ATW.WorkflowDefinitionId AND (ATW.Status IS NULL OR ATW.Status != ''Deleted'')
 	INNER JOIN AssessmentTool AT ON ATW.AssessmentToolId = AT.Id AND (AT.Status IS NULL OR AT.Status != ''Deleted'')
-	LEFT JOIN #INSTANCES ON AT.Id = #INSTANCES.AssessmentToolId
+	LEFT JOIN #INSTANCES ON AT.Id = #INSTANCES.AssessmentToolId AND AT.[Order] = #INSTANCES.[Order] 
 	WHERE ATINW.AssessmentId = @assessmentId
 
 	UNION
@@ -121,5 +121,5 @@
 		AND ((SELECT COUNT(*) FROM AssessmentToolWorkflow AST WHERE AST.AssessmentToolId = AT.Id AND AST.IsEconomistWorkflow = 1) > 0)
 	)
 
-    ORDER BY [Order]
+    ORDER BY [Order] ASC, [Status] DESC, [SubmittedDateTime] ASC
 END

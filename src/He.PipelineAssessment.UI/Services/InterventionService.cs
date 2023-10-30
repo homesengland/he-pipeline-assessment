@@ -147,7 +147,7 @@ namespace He.PipelineAssessment.UI.Services
                     AdministratorEmail = adminEmail,
                 };
 
-                var interventionReasons = await _assessmentRepository.GetInterventionReasons();
+                var interventionReasons = await _assessmentRepository.GetInterventionReasons(request.DecisionType == InterventionDecisionTypes.Variation);
 
                 var dto = _mapper.AssessmentInterventionDtoFromWorkflowInstance(workflowInstance, interventionReasons, dtoConfig);
 
@@ -273,7 +273,7 @@ namespace He.PipelineAssessment.UI.Services
                 }
                 AssessmentInterventionCommand command = _mapper.AssessmentInterventionCommandFromAssessmentIntervention(intervention);
 
-                var interventionReasons = await _assessmentRepository.GetInterventionReasons();
+                var interventionReasons = await _assessmentRepository.GetInterventionReasons(intervention.DecisionType == InterventionDecisionTypes.Variation);
 
                 var dto = new AssessmentInterventionDto
                 {
