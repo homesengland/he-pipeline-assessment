@@ -9,17 +9,11 @@ namespace He.PipelineAssessment.UI.Features.Amendment.EditAmendment
 {
     public class EditAmendmentCommandHandler : IRequestHandler<EditAmendmentCommand, int>
     {
-        private readonly IAssessmentRepository _assessmentRepository;
-        private readonly ILogger<EditAmendmentCommandHandler> _logger;
-        private readonly IRoleValidation _roleValidation;
         private readonly IInterventionService _interventionService;
 
 
-        public EditAmendmentCommandHandler(IAssessmentRepository assessmentRepository, ILogger<EditAmendmentCommandHandler> logger, IRoleValidation roleValidation, IInterventionService interventionService)
+        public EditAmendmentCommandHandler(IInterventionService interventionService)
         {
-            _assessmentRepository = assessmentRepository;
-            _logger = logger;
-            _roleValidation = roleValidation;
             _interventionService = interventionService;
         }
 

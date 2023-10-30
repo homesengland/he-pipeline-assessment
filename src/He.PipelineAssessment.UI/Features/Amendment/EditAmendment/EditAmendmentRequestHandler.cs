@@ -11,22 +11,12 @@ namespace He.PipelineAssessment.UI.Features.Amendment.EditAmendment
     public class EditAmendmentRequestHandler : IRequestHandler<EditAmendmentRequest, AssessmentInterventionDto>
     {
 
-        private readonly IAssessmentInterventionMapper _mapper;
         private readonly IAssessmentRepository _repository;
-        private readonly IAdminAssessmentToolWorkflowRepository _adminAssessmentToolWorkflowRepository;
-        private readonly ILogger<EditAmendmentRequestHandler> _logger;
-        private readonly IRoleValidation _roleValidation;
         private readonly IInterventionService _interventionService;
 
-        public EditAmendmentRequestHandler(IAssessmentInterventionMapper mapper,
-            IAssessmentRepository repo, IAdminAssessmentToolWorkflowRepository adminAssessmentToolWorkflowRepository,
-            ILogger<EditAmendmentRequestHandler> logger, IRoleValidation roleValidation, IInterventionService interventionService)
+        public EditAmendmentRequestHandler(IAssessmentRepository repo, IInterventionService interventionService)
         {
-            _mapper = mapper;
             _repository = repo;
-            _adminAssessmentToolWorkflowRepository = adminAssessmentToolWorkflowRepository;
-            _logger = logger;
-            _roleValidation = roleValidation;
             _interventionService = interventionService;
         }
         public async Task<AssessmentInterventionDto> Handle(EditAmendmentRequest request, CancellationToken cancellationToken)

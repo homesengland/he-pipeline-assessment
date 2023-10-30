@@ -11,19 +11,7 @@ namespace He.PipelineAssessment.UI.Features.Amendment.SubmitAmendment
     
     public class SubmitAmendmentCommandHandler : IRequestHandler<SubmitAmendmentCommand>
     {
-        private readonly IAssessmentRepository _assessmentRepository;
-        private readonly ILogger<SubmitAmendmentCommandHandler> _logger;
-        private readonly IDateTimeProvider _dateTimeProvider;
-        private readonly IElsaServerHttpClient _elsaServerHttpClient;
         private readonly IInterventionService _interventionService;
-
-        public SubmitAmendmentCommandHandler(IAssessmentRepository assessmentRepository, IDateTimeProvider dateTimeProvider, ILogger<SubmitAmendmentCommandHandler> logger, IElsaServerHttpClient elsaServerHttpClient)
-        {
-            _assessmentRepository = assessmentRepository;
-            _dateTimeProvider = dateTimeProvider;
-            _logger = logger;
-            _elsaServerHttpClient = elsaServerHttpClient;
-        }
 
         public SubmitAmendmentCommandHandler(IInterventionService interventionService)
         {

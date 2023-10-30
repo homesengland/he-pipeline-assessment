@@ -2,6 +2,7 @@
 using He.PipelineAssessment.UI.Common.Exceptions;
 using He.PipelineAssessment.UI.Features.Amendment.SubmitAmendment;
 using He.PipelineAssessment.UI.Features.Intervention;
+using He.PipelineAssessment.UI.Services;
 using MediatR;
 using Newtonsoft.Json;
 
@@ -9,38 +10,17 @@ namespace He.PipelineAssessment.UI.Features.Amendment.LoadAmendmentCheckYourAnsw
 {
     public class LoadAmendmentCheckYourAnswersRequestHandler : IRequestHandler<LoadAmendmentCheckYourAnswersRequest, AssessmentInterventionCommand>
     {
+        private readonly IInterventionService _interventionService;
 
-        private readonly IAssessmentRepository _assessmentRepository;
-        private readonly IAssessmentInterventionMapper _mapper;
-        private readonly ILogger<LoadAmendmentCheckYourAnswersRequest> _logger;
-
-        public LoadAmendmentCheckYourAnswersRequestHandler(IAssessmentRepository assessmentRepository,
-            IAssessmentInterventionMapper mapper,
-            ILogger<LoadAmendmentCheckYourAnswersRequest> logger)
+        public LoadAmendmentCheckYourAnswersRequestHandler(IInterventionService interventionService)
         {
-            _assessmentRepository = assessmentRepository;
-            _logger = logger;
-            _mapper = mapper;
+            _interventionService = interventionService;
         }
 
         public async Task<AssessmentInterventionCommand> Handle(LoadAmendmentCheckYourAnswersRequest request, CancellationToken cancellationToken)
         {
-            try
-            {
-                var intervention = await _assessmentRepository.GetAssessmentIntervention(request.InterventionId);
-                if (intervention == null)
-                {
-                    throw new NotFoundException($"Assessment Intervention with Id {request.InterventionId} not found");
-                }
-                var command = _mapper.AssessmentInterventionCommandFromAssessmentIntervention(intervention);
-                var submitAmendmentCommand = SerializedCommand(command);
-                return submitAmendmentCommand;
-            }
-            catch (Exception e)
-            {
-                _logger.LogError(e, e.Message);
-                throw new ApplicationException($"Unable to load amendment check your answers. InterventionId: {request.InterventionId}");
-            }
+            var command = await _interventionService.LoadInterventionCheckYourAnswerAssessorRequest(request);
+            return SerializedCommand(command);
         }
 
         private SubmitAmendmentCommand SerializedCommand(AssessmentInterventionCommand command)
