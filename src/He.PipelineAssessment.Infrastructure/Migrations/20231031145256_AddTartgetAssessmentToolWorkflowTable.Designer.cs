@@ -4,6 +4,7 @@ using He.PipelineAssessment.Infrastructure.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,10 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace He.PipelineAssessment.Infrastructure.Migrations
 {
     [DbContext(typeof(PipelineAssessmentContext))]
-    partial class PipelineAssessmentContextModelSnapshot : ModelSnapshot
+    [Migration("20231031145256_AddTartgetAssessmentToolWorkflowTable")]
+    partial class AddTartgetAssessmentToolWorkflowTable
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -751,7 +753,7 @@ namespace He.PipelineAssessment.Infrastructure.Migrations
                         .IsRequired();
 
                     b.HasOne("He.PipelineAssessment.Models.AssessmentToolWorkflow", "AssessmentToolWorkflow")
-                        .WithMany("TargetAssessmentToolWorkflows")
+                        .WithMany()
                         .HasForeignKey("AssessmentToolWorkflowId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -779,8 +781,6 @@ namespace He.PipelineAssessment.Infrastructure.Migrations
             modelBuilder.Entity("He.PipelineAssessment.Models.AssessmentToolWorkflow", b =>
                 {
                     b.Navigation("AssessmentInterventions");
-
-                    b.Navigation("TargetAssessmentToolWorkflows");
                 });
 
             modelBuilder.Entity("He.PipelineAssessment.Models.AssessmentToolWorkflowInstance", b =>

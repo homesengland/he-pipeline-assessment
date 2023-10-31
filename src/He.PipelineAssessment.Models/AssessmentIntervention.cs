@@ -17,6 +17,7 @@
         public string Status { get; set; } = null!;
 
         public virtual AssessmentToolWorkflow? TargetAssessmentToolWorkflow { get; set; } = null!;
+        public virtual List<TargetAssessmentToolWorkflow> TargetAssessmentToolWorkflows { get; set; } = new();
 
         public virtual AssessmentToolWorkflowInstance AssessmentToolWorkflowInstance { get; set; } = null!;
         public string? AssessmentResult { get; set; }

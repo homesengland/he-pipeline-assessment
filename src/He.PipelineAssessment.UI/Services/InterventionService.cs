@@ -224,6 +224,7 @@ namespace He.PipelineAssessment.UI.Services
                 assessmentIntervention.TargetAssessmentToolWorkflowId = command.TargetWorkflowId;
                 assessmentIntervention.Administrator = command.Administrator;
                 assessmentIntervention.AdministratorEmail = command.AdministratorEmail;
+                UpdateTargetAssessmentToolWorkflows(assessmentIntervention, command.TargetWorkflowDefinitions.Where(x => x.IsSelected).ToList()); 
                 await _assessmentRepository.SaveChanges();
                 return assessmentIntervention.Id;
             }
@@ -235,6 +236,26 @@ namespace He.PipelineAssessment.UI.Services
             {
                 _logger.LogError(e, e.Message);
                 throw new ApplicationException($"Unable to edit {command.DecisionType}. AssessmentInterventionId: {command.AssessmentInterventionId}");
+            }
+        }
+
+        private void UpdateTargetAssessmentToolWorkflows(AssessmentIntervention assessmentIntervention, List<TargetWorkflowDefinition> commandTargetWorkflowDefinitions)
+        {
+            assessmentIntervention.TargetAssessmentToolWorkflows.RemoveAll(x =>
+                !commandTargetWorkflowDefinitions.Where(y => y.IsSelected).Select(y => y.Id).Contains(x.Id));
+
+            foreach (var commandTargetWorkflowDefinition in commandTargetWorkflowDefinitions)
+            {
+                if (!assessmentIntervention.TargetAssessmentToolWorkflows.Select(x => x.Id)
+                    .Contains(commandTargetWorkflowDefinition.Id))
+                {
+                    var newTargetAssessmentToolWorkflow = new TargetAssessmentToolWorkflow
+                    {
+                        AssessmentInterventionId = assessmentIntervention.Id,
+                        AssessmentToolWorkflowId = commandTargetWorkflowDefinition.Id
+                    };
+                    assessmentIntervention.TargetAssessmentToolWorkflows.Add(newTargetAssessmentToolWorkflow);
+                }
             }
         }
 

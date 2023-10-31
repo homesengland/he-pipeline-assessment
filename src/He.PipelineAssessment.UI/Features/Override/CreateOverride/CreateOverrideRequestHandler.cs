@@ -20,7 +20,7 @@ namespace He.PipelineAssessment.UI.Features.Override.CreateOverride
             var dto = await _interventionService.CreateInterventionRequest(request);
             var assessmentToolWorkflows = await
                 _interventionService.GetAssessmentToolWorkflowsForOverride(request.WorkflowInstanceId);
-            dto.TargetWorkflowDefinitions = _mapper.TargetWorkflowDefinitionsFromAssessmentToolWorkflows(assessmentToolWorkflows);
+            dto.TargetWorkflowDefinitions = _mapper.TargetWorkflowDefinitionsFromAssessmentToolWorkflows(assessmentToolWorkflows, dto.AssessmentInterventionCommand.SelectedWorkflowDefinitions);
 
             return dto;
         }

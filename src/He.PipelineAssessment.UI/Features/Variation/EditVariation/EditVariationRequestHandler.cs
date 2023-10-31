@@ -19,7 +19,7 @@ namespace He.PipelineAssessment.UI.Features.Variation.EditVariation
             var dto = await _interventionService.EditInterventionRequest(request);
             var assessmentToolWorkflows = await
                 _interventionService.GetAssessmentToolWorkflowsForVariation(dto.AssessmentInterventionCommand.WorkflowInstanceId);
-            dto.TargetWorkflowDefinitions = _mapper.TargetWorkflowDefinitionsFromAssessmentToolWorkflows(assessmentToolWorkflows);
+            dto.TargetWorkflowDefinitions = _mapper.TargetWorkflowDefinitionsFromAssessmentToolWorkflows(assessmentToolWorkflows, dto.AssessmentInterventionCommand.SelectedWorkflowDefinitions);
             return dto;
         }
     }

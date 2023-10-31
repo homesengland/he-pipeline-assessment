@@ -88,6 +88,7 @@ namespace He.PipelineAssessment.UI.Features.Variation
             var editVariationCommand = JsonConvert.DeserializeObject<EditVariationCommand>(serializedCommand);
             if (editVariationCommand != null)
             {
+                editVariationCommand.TargetWorkflowDefinitions = dto.TargetWorkflowDefinitions;
                 var validationResult = await _validator.ValidateAsync(editVariationCommand);
                 if (validationResult.IsValid)
                 {

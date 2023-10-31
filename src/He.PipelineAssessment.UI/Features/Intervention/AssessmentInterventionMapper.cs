@@ -11,7 +11,8 @@ namespace He.PipelineAssessment.UI.Features.Intervention
         AssessmentIntervention AssessmentInterventionFromAssessmentInterventionCommand(AssessmentInterventionCommand command);
 
         List<TargetWorkflowDefinition> TargetWorkflowDefinitionsFromAssessmentToolWorkflows(
-            List<AssessmentToolWorkflow> assessmentToolWorkflows);
+            List<AssessmentToolWorkflow> assessmentToolWorkflows,
+            List<AssessmentToolWorkflow> selectedWorkflowDefinitions);
 
         AssessmentInterventionDto AssessmentInterventionDtoFromWorkflowInstance(AssessmentToolWorkflowInstance instance, 
             DtoConfig dtoConfig);
@@ -94,6 +95,7 @@ namespace He.PipelineAssessment.UI.Features.Intervention
                     AssessmentId = intervention.AssessmentToolWorkflowInstance.AssessmentId,
                     InterventionReasonId = intervention.InterventionReasonId,
                     InterventionReasonName = intervention.InterventionReason?.Name,
+                    SelectedWorkflowDefinitions = intervention.TargetAssessmentToolWorkflows.Select(x => x.AssessmentToolWorkflow).ToList()
                 };
 
                 return command;
@@ -106,7 +108,9 @@ namespace He.PipelineAssessment.UI.Features.Intervention
         }
 
 
-        public List<TargetWorkflowDefinition> TargetWorkflowDefinitionsFromAssessmentToolWorkflows(List<AssessmentToolWorkflow> assessmentToolWorkflows)
+        public List<TargetWorkflowDefinition> TargetWorkflowDefinitionsFromAssessmentToolWorkflows(
+            List<AssessmentToolWorkflow> assessmentToolWorkflows,
+            List<AssessmentToolWorkflow> selectedWorkflowDefinitions)
         {
             try
             {
@@ -114,7 +118,8 @@ namespace He.PipelineAssessment.UI.Features.Intervention
                 {
                     Id = x.Id,
                     WorkflowDefinitionId = x.WorkflowDefinitionId,
-                    Name = $"{x.AssessmentTool.Name} - {x.Name}"
+                    Name = $"{x.AssessmentTool.Name} - {x.Name}",
+                    IsSelected = selectedWorkflowDefinitions.Select(y => y.Id).Contains(x.Id)
                 }).ToList();
             }
 

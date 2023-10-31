@@ -29,13 +29,26 @@ namespace He.PipelineAssessment.UI.Features.Intervention
                     x.GetType() == typeof(EditVariationCommand) ||
                     x.GetType() == typeof(AssessmentInterventionCommand));
 
-            RuleFor(c => c.TargetWorkflowId).NotEmpty().WithMessage("The target workflow definition has to be selected")
-                .When(x =>
-                    x.GetType() == typeof(CreateOverrideCommand) ||
-                    x.GetType() == typeof(EditOverrideCommand) ||
-                    x.GetType() == typeof(EditRollbackCommand) ||
-                    x.GetType() == typeof(EditVariationCommand) ||
-                    x.GetType() == typeof(AssessmentInterventionCommand));
+            //RuleFor(c => c.TargetWorkflowId).NotEmpty().WithMessage("The target workflow definition has to be selected")
+            //    .When(x =>
+            //        x.GetType() == typeof(CreateOverrideCommand) ||
+            //        x.GetType() == typeof(EditOverrideCommand) ||
+            //        x.GetType() == typeof(EditRollbackCommand) ||
+            //        x.GetType() == typeof(EditVariationCommand) ||
+            //        x.GetType() == typeof(AssessmentInterventionCommand));
+
+
+            RuleFor(x => x.TargetWorkflowDefinitions).Must(
+                wd =>
+                {
+                    return wd.Count(y =>
+                        y.IsSelected) > 0;
+                }).WithMessage("At least one target workflow definition has to be selected").When(x =>
+                x.GetType() == typeof(CreateOverrideCommand) ||
+                x.GetType() == typeof(EditOverrideCommand) ||
+                x.GetType() == typeof(EditRollbackCommand) ||
+                x.GetType() == typeof(EditVariationCommand) ||
+                x.GetType() == typeof(AssessmentInterventionCommand));
 
             RuleFor(c => c.AssessorRationale).NotEmpty().WithMessage("The {PropertyName} cannot be empty")
                 .When(x =>

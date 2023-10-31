@@ -156,8 +156,9 @@ namespace He.PipelineAssessment.Infrastructure.Repository
                 .Include(x => x.AssessmentToolWorkflowInstance.Assessment)
                 .Include(x=>x.InterventionReason)
                 .Include(x => x.AssessmentToolWorkflowInstance.AssessmentToolWorkflow.AssessmentTool)
-                .Include(x => x.TargetAssessmentToolWorkflow)
-                .ThenInclude(x=>x!.AssessmentTool)
+                //.Include(x => x.TargetAssessmentToolWorkflow)
+                .Include(x => x.TargetAssessmentToolWorkflows)
+                .ThenInclude(x=>x!.AssessmentToolWorkflow)
                 .FirstOrDefaultAsync(x => x.Id == interventionId);
         }
 
