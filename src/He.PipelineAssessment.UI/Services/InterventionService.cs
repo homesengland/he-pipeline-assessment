@@ -44,6 +44,7 @@ namespace He.PipelineAssessment.UI.Services
             _elsaServerHttpClient = elsaServerHttpClient;
         }
 
+
         public async Task ConfirmIntervention(AssessmentInterventionCommand command)
         {
             try
@@ -57,6 +58,11 @@ namespace He.PipelineAssessment.UI.Services
 
                 intervention.Status = InterventionStatus.Pending;
                 await _assessmentRepository.UpdateAssessmentIntervention(intervention);
+            }
+            catch (NotFoundException e)
+            {
+                _logger.LogError(e, e.Message);
+                throw;
             }
             catch (Exception e)
             {
@@ -84,7 +90,7 @@ namespace He.PipelineAssessment.UI.Services
                 var isLatest = await _assessmentToolWorkflowInstanceHelpers.IsOrderEqualToLatestSubmittedWorkflowOrder(workflowInstance);
                 if (!isLatest)
                 {
-                    throw new Exception(
+                    throw new InvalidDataException(
                         $"Unable to create {command.DecisionType} for Assessment Tool Workflow Instance as this is not the latest submitted Workflow Instance for this Assessment. WorkflowInstanceId: {command.WorkflowInstanceId}");
                 }
 
@@ -94,7 +100,22 @@ namespace He.PipelineAssessment.UI.Services
 
                 return assessmentIntervention.Id;
             }
+            catch (NotFoundException e)
+            {
+                _logger.LogError(e, e.Message);
+                throw;
+            }
             catch (UnauthorizedAccessException e)
+            {
+                _logger.LogError(e, e.Message);
+                throw;
+            }
+            catch (InvalidDataException e)
+            {
+                _logger.LogError(e, e.Message);
+                throw;
+            }
+            catch(ArgumentException e)
             {
                 _logger.LogError(e, e.Message);
                 throw;
@@ -126,7 +147,7 @@ namespace He.PipelineAssessment.UI.Services
                 if (!isLatest)
                 {
                     throw new ApplicationException(
-                        $"Unable to create {request.DecisionType} for Assessment Tool Workflow Instance as this is not the latest submitted Workflow Instance for this Assessment.");
+                        $"Unable to create {request.DecisionType} for Assessment Tool Workflow Instance as this is not the latest submitted Workflow Instance for this Assessment. WorkflowInstanceId: {request.WorkflowInstanceId}");
                 }
 
                 var activeInterventionsForAssessment = await _assessmentRepository.GetOpenAssessmentInterventions(workflowInstance.AssessmentId);
@@ -156,6 +177,11 @@ namespace He.PipelineAssessment.UI.Services
                 var dto = _mapper.AssessmentInterventionDtoFromWorkflowInstance(workflowInstance, interventionReasons, dtoConfig);
 
                 return dto;
+            }
+            catch(NotFoundException e)
+            {
+                _logger.LogError(e, e.Message);
+                throw;
             }
             catch (UnauthorizedAccessException e)
             {
@@ -194,6 +220,11 @@ namespace He.PipelineAssessment.UI.Services
 
                 return await _assessmentRepository.DeleteIntervention(intervention);
             }
+            catch(NotFoundException e)
+            {
+                _logger.LogError(e, e.Message);
+                throw;
+            }
             catch (UnauthorizedAccessException e)
             {
                 _logger.LogError(e, e.Message);
@@ -231,8 +262,14 @@ namespace He.PipelineAssessment.UI.Services
                 await _assessmentRepository.SaveChanges();
                 return assessmentIntervention.Id;
             }
-            catch (UnauthorizedAccessException)
+            catch (NotFoundException e)
             {
+                _logger.LogError(e, e.Message);
+                    throw;
+            }
+            catch (UnauthorizedAccessException e)
+            {
+                _logger.LogError(e, e.Message);
                 throw;
             }
             catch (Exception e)
@@ -257,6 +294,11 @@ namespace He.PipelineAssessment.UI.Services
                 await _assessmentRepository.SaveChanges();
                 return assessmentIntervention.Id;
             }
+            catch(NotFoundException e)
+            {
+                _logger.LogError(e, e.Message);
+                throw;
+            }
 
             catch (Exception e)
             {
@@ -264,7 +306,6 @@ namespace He.PipelineAssessment.UI.Services
                 throw new ApplicationException($"Unable to edit {command.DecisionType}. AssessmentInterventionId: {command.AssessmentInterventionId}");
             }
         }
-
 
         public async Task<AssessmentInterventionDto> EditInterventionAssessorRequest(EditInterventionAssessorRequest request)
         {
@@ -285,6 +326,11 @@ namespace He.PipelineAssessment.UI.Services
                     InterventionReasons = interventionReasons
                 };
                 return dto;
+            }
+            catch(NotFoundException e)
+            {
+                _logger.LogError(e, e.Message);
+                throw;
             }
             catch (Exception e)
             {
@@ -317,6 +363,11 @@ namespace He.PipelineAssessment.UI.Services
                 };
                 return dto;
             }
+            catch(NotFoundException e)
+            {
+                _logger.LogError(e, e.Message);
+                throw;
+            }
             catch (UnauthorizedAccessException e)
             {
                 _logger.LogError(e, e.Message);
@@ -341,6 +392,11 @@ namespace He.PipelineAssessment.UI.Services
                 var command = _mapper.AssessmentInterventionCommandFromAssessmentIntervention(intervention);
                 return command;
             }
+            catch(NotFoundException e)
+            {
+                _logger.LogError(e.Message, e);
+                throw;
+            }
             catch (Exception e)
             {
                 _logger.LogError(e, e.Message);
@@ -360,6 +416,11 @@ namespace He.PipelineAssessment.UI.Services
                 AssessmentInterventionCommand command = _mapper.AssessmentInterventionCommandFromAssessmentIntervention(intervention);
 
                 return command;
+            }
+            catch(NotFoundException e)
+            {
+                _logger.LogError(e, e.Message);
+                throw;
             }
             catch (Exception e)
             {
@@ -463,15 +524,28 @@ namespace He.PipelineAssessment.UI.Services
                                 intervention.AssessmentToolWorkflowInstance.AssessmentToolWorkflow.AssessmentTool.Order);
                                 break;
                             }
+                        default:
+                            {
+                                throw new Exception($"No Decision Type set for intervention: {intervention.Id}");
+                                
+                            }
                     }
-                    foreach (var workflowInstance in workflowsToDelete)
+                    if(workflowsToDelete != null)
                     {
-                        workflowInstance.Status = command.FinalInstanceStatus;
+                        foreach (var workflowInstance in workflowsToDelete)
+                        {
+                            workflowInstance.Status = command.FinalInstanceStatus;
+                        }
+                        intervention.AssessmentToolWorkflowInstance.Status = AssessmentToolWorkflowInstanceConstants.Draft;
+                        await _assessmentRepository.SaveChanges();
+                        await ClearNextWorkflowsByOrder(intervention, workflowsToDelete);
                     }
-                    intervention.AssessmentToolWorkflowInstance.Status = AssessmentToolWorkflowInstanceConstants.Draft;
-                    await _assessmentRepository.SaveChanges();
-                    await ClearNextWorkflowsByOrder(intervention, workflowsToDelete);
                 }
+            }
+            catch (NotFoundException ex)
+            {
+                _logger.LogError(ex, ex.Message);
+                throw;
             }
             catch (Exception ex)
             {
