@@ -46,3 +46,9 @@ body {
 .govuk-select--error {
     border-color: #d4351c
 }
+
+#TargetWorkflowDefinitions {
+    max-height: 20vh;
+    overflow-y: scroll;
+    overflow-x: auto;
+}

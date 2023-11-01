@@ -6,7 +6,7 @@
     if (Model.ValidationResult != null)
     {
         var adminRationaleInvalid = Model.ValidationResult.Errors.Any(x => x.PropertyName == "AdministratorRationale");
-        var workflowDefinitionInvalid = Model.ValidationResult.Errors.Any(x => x.PropertyName == "TargetWorkflowId");
+        var workflowDefinitionInvalid = Model.ValidationResult.Errors.Any(x => x.PropertyName == "TargetWorkflowDefinitions");
         adminRationaleErrorClass = adminRationaleInvalid ? "govuk-input--error" : "";
         workflowDefinitionClass = workflowDefinitionInvalid ? "govuk-form-group--error" : "";
     }
@@ -80,20 +80,36 @@
         <textarea class="govuk-textarea @adminRationaleErrorClass" id="AdministratorRationale" name="AssessmentInterventionCommand.AdministratorRationale" rows="5" aria-describedby="AdministratorRationale">@Model.AssessmentInterventionCommand.AdministratorRationale</textarea>
     </div>
     <div class="govuk-form-group">
-        <label class="govuk-label" for="TargetWorkflowId">
-            Target workflow definition
+        <label class="govuk-label" for="TargetWorkflowDefinitions">
+            Target workflow definitions
         </label>
         <div id="subject-hint" class="govuk-hint">
             These are the workflow definitions, which will be available to start after this variation request has been approved.
         </div>
         
-        <div class="govuk-checkboxes @workflowDefinitionClass" data-module="govuk-checkboxes">
+        <div class="govuk-checkboxes @workflowDefinitionClass" data-module="govuk-checkboxes" id="TargetWorkflowDefinitions">
             @for (int i = 0; i < @Model.TargetWorkflowDefinitions.Count; i++)
             {
                 var targetWorkflow = @Model.TargetWorkflowDefinitions[i];
                 var choiceId = "choice" + targetWorkflow.Id;
                 var labelId = "label" + targetWorkflow.Id;
 
+                <div class="govuk-checkboxes__item">
+                    @Html.CheckBoxFor(x => @Model.TargetWorkflowDefinitions[i].IsSelected, new { @class = "govuk-checkboxes__input", @id=@choiceId, @aria_labelledby=@labelId })
+                    @Html.Label(Model.TargetWorkflowDefinitions[i].DisplayName, Model.TargetWorkflowDefinitions[i].DisplayName, new { @class = "govuk-label govuk-checkboxes__label", @id = @labelId })
+                </div>
+                <div class="govuk-checkboxes__item">
+                    @Html.CheckBoxFor(x => @Model.TargetWorkflowDefinitions[i].IsSelected, new { @class = "govuk-checkboxes__input", @id=@choiceId, @aria_labelledby=@labelId })
+                    @Html.Label(Model.TargetWorkflowDefinitions[i].DisplayName, Model.TargetWorkflowDefinitions[i].DisplayName, new { @class = "govuk-label govuk-checkboxes__label", @id = @labelId })
+                </div>
+                <div class="govuk-checkboxes__item">
+                    @Html.CheckBoxFor(x => @Model.TargetWorkflowDefinitions[i].IsSelected, new { @class = "govuk-checkboxes__input", @id=@choiceId, @aria_labelledby=@labelId })
+                    @Html.Label(Model.TargetWorkflowDefinitions[i].DisplayName, Model.TargetWorkflowDefinitions[i].DisplayName, new { @class = "govuk-label govuk-checkboxes__label", @id = @labelId })
+                </div>
+                <div class="govuk-checkboxes__item">
+                    @Html.CheckBoxFor(x => @Model.TargetWorkflowDefinitions[i].IsSelected, new { @class = "govuk-checkboxes__input", @id=@choiceId, @aria_labelledby=@labelId })
+                    @Html.Label(Model.TargetWorkflowDefinitions[i].DisplayName, Model.TargetWorkflowDefinitions[i].DisplayName, new { @class = "govuk-label govuk-checkboxes__label", @id = @labelId })
+                </div>
                 <div class="govuk-checkboxes__item">
                     @Html.CheckBoxFor(x => @Model.TargetWorkflowDefinitions[i].IsSelected, new { @class = "govuk-checkboxes__input", @id=@choiceId, @aria_labelledby=@labelId })
                     @Html.Label(Model.TargetWorkflowDefinitions[i].DisplayName, Model.TargetWorkflowDefinitions[i].DisplayName, new { @class = "govuk-label govuk-checkboxes__label", @id = @labelId })
