@@ -584,7 +584,7 @@ namespace He.PipelineAssessment.UI.Tests.Services
             assessmentRepository.Setup(x => x.GetOpenAssessmentInterventions(workflowInstance.AssessmentId)).ReturnsAsync(interventions);
             userProvider.Setup(x => x.GetUserEmail()).Returns(email);
             userProvider.Setup(x => x.GetUserName()).Returns(userName);
-            assessmentRepository.Setup(x => x.GetInterventionReasons()).ReturnsAsync(reasons);
+            assessmentRepository.Setup(x => x.GetInterventionReasons(false)).ReturnsAsync(reasons);
             mapper.Setup(x => x.AssessmentInterventionDtoFromWorkflowInstance(workflowInstance, reasons, It.IsAny<DtoConfig>())).Throws(exception);
 
             InterventionService service = new InterventionService(
@@ -634,7 +634,7 @@ namespace He.PipelineAssessment.UI.Tests.Services
             assessmentRepository.Setup(x => x.GetOpenAssessmentInterventions(workflowInstance.AssessmentId)).ReturnsAsync(interventions);
             userProvider.Setup(x => x.GetUserEmail()).Returns(email);
             userProvider.Setup(x => x.GetUserName()).Returns(userName);
-            assessmentRepository.Setup(x => x.GetInterventionReasons()).ReturnsAsync(reasons);
+            assessmentRepository.Setup(x => x.GetInterventionReasons(false)).ReturnsAsync(reasons);
             mapper.Setup(x => x.AssessmentInterventionDtoFromWorkflowInstance(workflowInstance, reasons, It.IsAny<DtoConfig>())).Returns(dto);
 
             InterventionService service = new InterventionService(
@@ -1207,7 +1207,7 @@ namespace He.PipelineAssessment.UI.Tests.Services
             //Arrange
             assessmentRepository.Setup(x => x.GetAssessmentIntervention(request.InterventionId)).ReturnsAsync(intervention);
             mapper.Setup(x => x.AssessmentInterventionCommandFromAssessmentIntervention(intervention)).Returns(command);
-            assessmentRepository.Setup(x => x.GetInterventionReasons()).ThrowsAsync(e);
+            assessmentRepository.Setup(x => x.GetInterventionReasons(false)).ThrowsAsync(e);
 
             InterventionService service = new InterventionService(
                 assessmentRepository.Object,
@@ -1248,7 +1248,7 @@ namespace He.PipelineAssessment.UI.Tests.Services
             //Arrange
             assessmentRepository.Setup(x => x.GetAssessmentIntervention(request.InterventionId)).ReturnsAsync(intervention);
             mapper.Setup(x => x.AssessmentInterventionCommandFromAssessmentIntervention(intervention)).Returns(command);
-            assessmentRepository.Setup(x => x.GetInterventionReasons()).ReturnsAsync(reasons);
+            assessmentRepository.Setup(x => x.GetInterventionReasons(false)).ReturnsAsync(reasons);
 
             InterventionService service = new InterventionService(
                 assessmentRepository.Object,
@@ -2083,7 +2083,7 @@ namespace He.PipelineAssessment.UI.Tests.Services
 
             //Assert
             assessmentRepository.Verify(x => x.GetWorkflowInstancesToDeleteForRollback(intervention.AssessmentToolWorkflowInstance.AssessmentId,
-                                        intervention.TargetAssessmentToolWorkflow!.AssessmentTool.Order), Times.Never);
+                                        intervention.TargetAssessmentToolWorkflows!.First().AssessmentToolWorkflow.AssessmentTool.Order), Times.Never);
             assessmentRepository.Verify(x => x.GetSubsequentWorkflowInstancesForOverride(intervention
                                         .AssessmentToolWorkflowInstance.WorkflowInstanceId), Times.Never);
             assessmentRepository.Verify(x => x.GetWorkflowInstancesToDeleteForAmendment(intervention.AssessmentToolWorkflowInstance.AssessmentId,
@@ -2155,7 +2155,7 @@ namespace He.PipelineAssessment.UI.Tests.Services
             intervention.DecisionType = InterventionDecisionTypes.Rollback;
             assessmentRepository.Setup(x => x.GetAssessmentIntervention(command.AssessmentInterventionId)).ReturnsAsync(intervention);
             assessmentRepository.Setup(x => x.GetWorkflowInstancesToDeleteForRollback(intervention.AssessmentToolWorkflowInstance.AssessmentId,
-                                        intervention.TargetAssessmentToolWorkflow!.AssessmentTool.Order)).ReturnsAsync(instances);
+                                        intervention.TargetAssessmentToolWorkflows!.First().AssessmentToolWorkflow.AssessmentTool.Order)).ReturnsAsync(instances);
 
 
 
@@ -2176,7 +2176,7 @@ namespace He.PipelineAssessment.UI.Tests.Services
 
             //Assert
             assessmentRepository.Verify(x => x.GetWorkflowInstancesToDeleteForRollback(intervention.AssessmentToolWorkflowInstance.AssessmentId,
-                                        intervention.TargetAssessmentToolWorkflow!.AssessmentTool.Order), Times.Once);
+                                        intervention.TargetAssessmentToolWorkflows!.First().AssessmentToolWorkflow.AssessmentTool.Order), Times.Once);
             assessmentRepository.Verify(x => x.GetSubsequentWorkflowInstancesForOverride(intervention
                                         .AssessmentToolWorkflowInstance.WorkflowInstanceId), Times.Never);
             assessmentRepository.Verify(x => x.GetWorkflowInstancesToDeleteForAmendment(intervention.AssessmentToolWorkflowInstance.AssessmentId,
@@ -2227,7 +2227,7 @@ namespace He.PipelineAssessment.UI.Tests.Services
 
             //Assert
             assessmentRepository.Verify(x => x.GetWorkflowInstancesToDeleteForRollback(intervention.AssessmentToolWorkflowInstance.AssessmentId,
-                                        intervention.TargetAssessmentToolWorkflow!.AssessmentTool.Order), Times.Never);
+                                        intervention.TargetAssessmentToolWorkflows!.First().AssessmentToolWorkflow.AssessmentTool.Order), Times.Never);
             assessmentRepository.Verify(x => x.GetSubsequentWorkflowInstancesForOverride(intervention
                                         .AssessmentToolWorkflowInstance.WorkflowInstanceId), Times.Once);
             assessmentRepository.Verify(x => x.GetWorkflowInstancesToDeleteForAmendment(intervention.AssessmentToolWorkflowInstance.AssessmentId,
@@ -2279,7 +2279,7 @@ namespace He.PipelineAssessment.UI.Tests.Services
 
             //Assert
             assessmentRepository.Verify(x => x.GetWorkflowInstancesToDeleteForRollback(intervention.AssessmentToolWorkflowInstance.AssessmentId,
-                                        intervention.TargetAssessmentToolWorkflow!.AssessmentTool.Order), Times.Never);
+                                        intervention.TargetAssessmentToolWorkflows!.First().AssessmentToolWorkflow.AssessmentTool.Order), Times.Never);
             assessmentRepository.Verify(x => x.GetSubsequentWorkflowInstancesForOverride(intervention
                                         .AssessmentToolWorkflowInstance.WorkflowInstanceId), Times.Never);
             assessmentRepository.Verify(x => x.GetWorkflowInstancesToDeleteForAmendment(intervention.AssessmentToolWorkflowInstance.AssessmentId,

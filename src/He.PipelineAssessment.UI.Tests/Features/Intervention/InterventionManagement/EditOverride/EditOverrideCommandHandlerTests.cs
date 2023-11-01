@@ -17,7 +17,6 @@ namespace He.PipelineAssessment.UI.Tests.Features.Intervention.InterventionManag
         public async Task Handle_IgnoresThrownException_GivenInterventionServiceThrowsException(
             [Frozen] Mock<IInterventionService> interventionService,
             EditOverrideCommand command,
-            AssessmentIntervention intervention,
             Exception e,
             EditOverrideCommandHandler sut
         )

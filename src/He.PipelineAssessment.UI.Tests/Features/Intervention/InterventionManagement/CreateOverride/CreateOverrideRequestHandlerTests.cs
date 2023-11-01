@@ -57,7 +57,7 @@ namespace He.PipelineAssessment.UI.Tests.Features.Intervention.InterventionManag
             interventionService.Setup(x => x.CreateInterventionRequest(request)).ReturnsAsync(dto);
             interventionService.Setup(x => x.GetAssessmentToolWorkflowsForOverride(request.WorkflowInstanceId)).ReturnsAsync(workflows);
 
-            mapper.Setup(x => x.TargetWorkflowDefinitionsFromAssessmentToolWorkflows(workflows)).Throws(exception);
+            mapper.Setup(x => x.TargetWorkflowDefinitionsFromAssessmentToolWorkflows(workflows, dto.AssessmentInterventionCommand.SelectedWorkflowDefinitions)).Throws(exception);
 
             var ex = await Assert.ThrowsAsync<ArgumentException>(() => sut.Handle(request, CancellationToken.None));
 
@@ -92,7 +92,7 @@ namespace He.PipelineAssessment.UI.Tests.Features.Intervention.InterventionManag
             interventionService.Setup(x => x.CreateInterventionRequest(request)).ReturnsAsync(dto);
             interventionService.Setup(x => x.GetAssessmentToolWorkflowsForOverride(request.WorkflowInstanceId)).ReturnsAsync(workflows);
 
-            mapper.Setup(x => x.TargetWorkflowDefinitionsFromAssessmentToolWorkflows(workflows)).Returns(targetDefinitions);
+            mapper.Setup(x => x.TargetWorkflowDefinitionsFromAssessmentToolWorkflows(workflows, dto.AssessmentInterventionCommand.SelectedWorkflowDefinitions)).Returns(targetDefinitions);
             mapper.Setup(x => x.AssessmentInterventionDtoFromWorkflowInstance(workflowInstance, dtoConfig)).Returns(dto);
             //Act
             AssessmentInterventionDto result = await sut.Handle(request, CancellationToken.None);

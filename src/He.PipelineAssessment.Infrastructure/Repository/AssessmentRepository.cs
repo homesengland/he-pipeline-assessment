@@ -36,7 +36,7 @@ namespace He.PipelineAssessment.Infrastructure.Repository
 
         AssessmentToolWorkflow? GetAssessmentToolWorkflowByDefinitionId(string workflowDefinitionId);
         Task<int> DeleteIntervention(AssessmentIntervention intervention);
-        Task<List<InterventionReason>> GetInterventionReasons(bool isVariation);
+        Task<List<InterventionReason>> GetInterventionReasons(bool isVariation = false);
         Task<List<AssessmentIntervention>> GetOpenAssessmentInterventions(int assessmentId);
         Task<List<AssessmentToolWorkflowInstance>> GetWorkflowInstancesToDeleteForAmendment(int assessmentId, int order);
     }

@@ -58,7 +58,6 @@ namespace He.PipelineAssessment.UI.Tests.Features.Rollback.SubmitRollback
             [Frozen] Mock<IDateTimeProvider> dateTimeProvider,
             [Frozen] Mock<IElsaServerHttpClient> httpClient,
             AssessmentIntervention intervention,
-            List<AssessmentToolWorkflowInstance> workflowsToDelete,
             SubmitRollbackCommand command,
             SubmitRollbackCommandHandler sut)
         {
