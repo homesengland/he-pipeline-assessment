@@ -1,6 +1,10 @@
-﻿using He.PipelineAssessment.Models;
+﻿using AutoFixture.Xunit2;
+using Elsa.CustomWorkflow.Sdk.Providers;
+using He.PipelineAssessment.Models;
 using He.PipelineAssessment.Tests.Common;
 using He.PipelineAssessment.UI.Features.Intervention;
+using Microsoft.Extensions.Logging;
+using Moq;
 using Xunit;
 
 namespace He.PipelineAssessment.UI.Tests.Features.Intervention
@@ -126,19 +130,21 @@ namespace He.PipelineAssessment.UI.Tests.Features.Intervention
         [Theory]
         [AutoMoqData]
         public void AssessmentInterventionFromAssessmentInterventionCommand_ReturnsCorrectDtoObject(
+            [Frozen] Mock<IDateTimeProvider> datetimeProvider,
+            [Frozen] Mock<ILogger<AssessmentInterventionMapper>> logger,
             AssessmentInterventionCommand command,
-          AssessmentInterventionMapper sut
-      )
+            DateTime dateTime)
         {
             //Arrange
-
+            //command.DateSubmitted = dateTime;
+            datetimeProvider.Setup(x => x.UtcNow()).Returns(dateTime);
+            AssessmentInterventionMapper sut = new AssessmentInterventionMapper(logger.Object, datetimeProvider.Object);
             //Act
             var result = sut.AssessmentInterventionFromAssessmentInterventionCommand(command);
 
             //Assert
             Assert.NotNull(result);
             Assert.IsType<AssessmentIntervention>(result);
-            Assert.Equal(command.AssessmentInterventionId, result.Id);
             Assert.Equal(command.AssessmentToolWorkflowInstanceId, result.AssessmentToolWorkflowInstanceId);
             Assert.Equal(command.TargetWorkflowId, result.TargetAssessmentToolWorkflowId);
             Assert.Equal(command.RequestedBy, result.RequestedBy);

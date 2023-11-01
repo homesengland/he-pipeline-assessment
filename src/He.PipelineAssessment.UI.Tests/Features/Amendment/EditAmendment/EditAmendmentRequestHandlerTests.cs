@@ -5,6 +5,7 @@ using He.PipelineAssessment.Tests.Common;
 using He.PipelineAssessment.UI.Authorization;
 using He.PipelineAssessment.UI.Features.Amendment.EditAmendment;
 using He.PipelineAssessment.UI.Features.Intervention;
+using He.PipelineAssessment.UI.Services;
 using Moq;
 using Xunit;
 
@@ -14,68 +15,40 @@ namespace He.PipelineAssessment.UI.Tests.Features.Amendment.EditAmendment
     {
         [Theory]
         [AutoMoqData]
-        public async Task Handle_ShouldError_GivenAssessmentToolWorkflowInstanceCannotBeFound(
+        public async Task Handle_ShouldIgnoreError_GivenAssessmentToolWorkflowInstanceCannotBeFound(
+                        [Frozen] Mock<IInterventionService> interventionService,
             EditAmendmentRequest request,
+            Exception e,
             EditAmendmentRequestHandler sut)
         {
+            //Arrange
+            interventionService.Setup(x => x.EditInterventionRequest(request))
+                .ThrowsAsync(e);
+
             //Act
-            var ex = await Assert.ThrowsAsync<ApplicationException>(() => sut.Handle(request, CancellationToken.None));
+            var ex = await Assert.ThrowsAsync<Exception>(() => sut.Handle(request, CancellationToken.None));
 
             //Assert
-            Assert.Equal($"Unable to edit amendment. InterventionId: {request.InterventionId}", ex.Message);
+            Assert.Equal(e.Message, ex.Message);
         }
+
 
         [Theory]
         [AutoMoqData]
-        public async Task Handle_ShouldError_GivenNotPermitted(
-            [Frozen] Mock<IAssessmentRepository> repository,
-            AssessmentIntervention intervention,
+        public async Task Handle_ShouldReturnInt_GivenSuccessfulEdit(
+            [Frozen] Mock<IInterventionService> interventionService,
             EditAmendmentRequest request,
+            AssessmentInterventionDto dto,
             EditAmendmentRequestHandler sut)
         {
             //Arrange
-            repository.Setup(x => x.GetAssessmentIntervention(request.InterventionId))
-                .ReturnsAsync(intervention);
-
-            //Act
-            var ex = await Assert.ThrowsAsync<UnauthorizedAccessException>(() => sut.Handle(request, CancellationToken.None));
-
-            //Assert
-            Assert.Equal($"You do not have permission to access this resource.", ex.Message);
-        }
-
-                [Theory]
-        [AutoMoqData]
-        public async Task Handle_ShouldReturn(
-            [Frozen] Mock<IAssessmentRepository> repository,
-            [Frozen] Mock<IRoleValidation> roleValidation,
-            [Frozen] Mock<IAssessmentInterventionMapper> interventionMapper,
-            AssessmentIntervention intervention,
-            AssessmentInterventionCommand command,
-            EditAmendmentRequest request,
-            EditAmendmentRequestHandler sut)
-        {
-            //Arrange
-            repository.Setup(x => x.GetAssessmentIntervention(request.InterventionId))
-                .ReturnsAsync(intervention);
-
-            roleValidation.Setup(x => x.ValidateRole(intervention.AssessmentToolWorkflowInstance.AssessmentId, intervention.AssessmentToolWorkflowInstance.WorkflowDefinitionId))
-                .ReturnsAsync(true);
-
-
-            interventionMapper.Setup(x => x.AssessmentInterventionCommandFromAssessmentIntervention(intervention))
-                .Returns(command);
-
+            interventionService.Setup(x => x.EditInterventionRequest(request)).ReturnsAsync(dto);
             //Act
             var result = await sut.Handle(request, CancellationToken.None);
 
             //Assert
-            Assert.NotNull(result);
+            Assert.Equal(dto, result);
             Assert.IsType<AssessmentInterventionDto>(result);
-            Assert.Equal(command, result.AssessmentInterventionCommand);
-
-
-            interventionMapper.Verify(x => x.AssessmentInterventionCommandFromAssessmentIntervention(intervention), Times.Once);
         }
     }
 }

@@ -2,7 +2,9 @@
 using He.PipelineAssessment.Infrastructure.Repository;
 using He.PipelineAssessment.Models;
 using He.PipelineAssessment.Tests.Common;
+using He.PipelineAssessment.UI.Features.Amendment.CreateAmendment;
 using He.PipelineAssessment.UI.Features.Amendment.SubmitAmendment;
+using He.PipelineAssessment.UI.Services;
 using Moq;
 using Xunit;
 
@@ -13,70 +15,20 @@ namespace He.PipelineAssessment.UI.Tests.Features.Amendment.SubmitAmendment
         [Theory]
         [AutoMoqData]
         public async Task Handle_ShouldReturnErrorMessage_GivenInterventionRecordCannotBeFound(
-           SubmitAmendmentCommand command,
-           SubmitAmendmentCommandHandler sut)
-        {
-            //Arrange
-
-            //Act
-            var ex = await Assert.ThrowsAsync<ApplicationException>(() => sut.Handle(command, CancellationToken.None));
-
-            //Assert
-            Assert.Equal($"Confirm amendment failed. AssessmentInterventionId: {command.AssessmentInterventionId}", ex.Message);
-        }
-
-        [Theory]
-        [AutoMoqData]
-        public async Task Handle_UpdatesIntervention_GivenInterventionRecordCanBeFound(
-            [Frozen] Mock<IAssessmentRepository> assessmentRepository,
+       [Frozen] Mock<IInterventionService> interventionService,
             SubmitAmendmentCommand command,
-            AssessmentIntervention intervention,
-            SubmitAmendmentCommandHandler sut,
-            List<AssessmentToolWorkflowInstance> workflowsToDelete)
+            Exception e,
+            SubmitAmendmentCommandHandler sut)
         {
             //Arrange
-            assessmentRepository.Setup(x => x.GetAssessmentIntervention(command.AssessmentInterventionId))
-                .ReturnsAsync(intervention);
+            interventionService.Setup(x => x.SubmitIntervention(command)).Throws(e);
 
-            assessmentRepository.Setup(x => x.GetAssessmentIntervention(command.AssessmentInterventionId))
-            .ReturnsAsync(intervention);
-            assessmentRepository.Setup(x => x.GetWorkflowInstancesToDeleteForAmendment(intervention.AssessmentToolWorkflowInstance.AssessmentId, intervention.AssessmentToolWorkflowInstance.AssessmentToolWorkflow.AssessmentTool.Order))
-            .ReturnsAsync(workflowsToDelete);
             //Act
-
-            await sut.Handle(command, CancellationToken.None);
+            var ex = await Assert.ThrowsAsync<Exception>(() => sut.Handle(command, CancellationToken.None));
 
             //Assert
-            assessmentRepository.Verify(x => x.UpdateAssessmentIntervention(It.IsAny<AssessmentIntervention>()), Times.Once);
-            Assert.Equal(intervention.Status, InterventionStatus.Approved);
-            Assert.Equal(intervention.AssessmentToolWorkflowInstance.Status, AssessmentToolWorkflowInstanceConstants.Draft);
+            Assert.Equal(e.Message, ex.Message);
         }
 
-        [Theory]
-        [AutoMoqData]
-        public async Task Handle_DeletesAssessmentToolWorkflows_GivenInterventionRecordCanBeFound(
-        [Frozen] Mock<IAssessmentRepository> assessmentRepository,
-        SubmitAmendmentCommand command,
-        AssessmentIntervention intervention,
-        SubmitAmendmentCommandHandler sut,
-        List<AssessmentToolWorkflowInstance> workflowsToDelete)
-        {
-            //Arrange
-            assessmentRepository.Setup(x => x.GetAssessmentIntervention(command.AssessmentInterventionId))
-                .ReturnsAsync(intervention);
-            assessmentRepository.Setup(x => x.GetAssessmentIntervention(command.AssessmentInterventionId))
-            .ReturnsAsync(intervention);
-            assessmentRepository.Setup(x => x.GetWorkflowInstancesToDeleteForAmendment(intervention.AssessmentToolWorkflowInstance.AssessmentId, intervention.AssessmentToolWorkflowInstance.AssessmentToolWorkflow.AssessmentTool.Order))
-            .ReturnsAsync(workflowsToDelete);
-            
-            //Act
-            await sut.Handle(command, CancellationToken.None);
-
-            //Assert
-            foreach (var workflowToDelete in workflowsToDelete)
-            {
-                Assert.Equal(AssessmentToolWorkflowInstanceConstants.SuspendedAmendment, workflowToDelete.Status);
-            }
-        }
     }
 }

@@ -15,6 +15,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Xunit;
 using He.PipelineAssessment.UI.Features.Amendment.CreateAmendment;
+using He.PipelineAssessment.UI.Services;
 
 namespace He.PipelineAssessment.UI.Tests.Features.Amendment.CreateAmendment
 {
@@ -22,122 +23,32 @@ namespace He.PipelineAssessment.UI.Tests.Features.Amendment.CreateAmendment
     {
         [Theory]
         [AutoMoqData]
-        public async Task Handle_ShouldError_GivenAssessmentToolWorkflowInstanceCannotBeFound(
-            CreateAmendmentRequest request,
-            CreateAmendmentRequestHandler sut)
-        {
-            //Act
-            var ex = await Assert.ThrowsAsync<ApplicationException>(() => sut.Handle(request, CancellationToken.None));
-
-            //Assert
-            Assert.Equal($"Unable to create amendment request. WorkflowInstanceId: {request.WorkflowInstanceId}", ex.Message);
-        }
-
-        [Theory]
-        [AutoMoqData]
-        public async Task Handle_ShouldError_GivenAssessmentNotAuthorised(
-            [Frozen] Mock<IAssessmentRepository> repository,
-            [Frozen] Mock<IRoleValidation> roleValidation,
-            AssessmentToolWorkflowInstance instance,
-            CreateAmendmentRequest request,
-            CreateAmendmentRequestHandler sut)
-        {
-            //Arrange
-            repository.Setup(x => x.GetAssessmentToolWorkflowInstance(request.WorkflowInstanceId))
-                .ReturnsAsync(instance);
-
-            roleValidation.Setup(x => x.ValidateRole(It.IsAny<int>(), It.IsAny<string>())).ReturnsAsync(false);
-
-            //Act
-            var ex = await Assert.ThrowsAsync<UnauthorizedAccessException>(() => sut.Handle(request, CancellationToken.None));
-
-            //Assert
-            Assert.Equal($"You do not have permission to access this resource.", ex.Message);
-        }
-
-        [Theory]
-        [AutoMoqData]
-        public async Task Handle_ShouldError_GivenAssessmentToolWorkflowInstanceIsNotLatestSubmitted(
-            [Frozen] Mock<IAssessmentRepository> repository,
-            [Frozen] Mock<IRoleValidation> roleValidation,
-            [Frozen] Mock<IAssessmentToolWorkflowInstanceHelpers> assessmentToolWorkflowInstanceHelpers,
-            AssessmentToolWorkflowInstance instance,
-            CreateAmendmentRequest request,
-            CreateAmendmentRequestHandler sut)
-        {
-            //Arrange
-            repository.Setup(x => x.GetAssessmentToolWorkflowInstance(request.WorkflowInstanceId))
-                .ReturnsAsync(instance);
-
-            roleValidation.Setup(x => x.ValidateRole(It.IsAny<int>(), It.IsAny<string>())).ReturnsAsync(true);
-
-            assessmentToolWorkflowInstanceHelpers.Setup(x => x.IsOrderEqualToLatestSubmittedWorkflowOrder(instance)).ReturnsAsync(false);
-
-            //Act
-            var ex = await Assert.ThrowsAsync<ApplicationException>(() => sut.Handle(request, CancellationToken.None));
-
-            //Assert
-            Assert.Equal($"Unable to create rollback for Assessment Tool Workflow Instance as this is not the latest submitted Workflow Instance for this Assessment.", ex.Message);
-        }
-
-
-        [Theory]
-        [AutoMoqData]
-        public async Task Handle_ShouldError_GivenOpenRequestAlreadyExistsForAssessment(
-            [Frozen] Mock<IAssessmentRepository> repository,
-            [Frozen] Mock<IRoleValidation> roleValidation,
-            [Frozen] Mock<IAssessmentToolWorkflowInstanceHelpers> assessmentToolWorkflowInstanceHelpers,
-            AssessmentToolWorkflowInstance instance,
+        public async Task Handle_ShouldIgnoreError_GivenInterventionServiceThrowsException(
+            [Frozen] Mock<IInterventionService> interventionService,
             CreateAmendmentRequest request,
             CreateAmendmentRequestHandler sut,
-            List<AssessmentIntervention> assessmentInterventions)
+            Exception e)
         {
             //Arrange
-            repository.Setup(x => x.GetAssessmentToolWorkflowInstance(request.WorkflowInstanceId))
-                .ReturnsAsync(instance);
-            repository.Setup(x => x.GetOpenAssessmentInterventions(instance.AssessmentId))
-            .ReturnsAsync(assessmentInterventions);
-
-            roleValidation.Setup(x => x.ValidateRole(It.IsAny<int>(), It.IsAny<string>())).ReturnsAsync(true);
-
-            assessmentToolWorkflowInstanceHelpers.Setup(x => x.IsOrderEqualToLatestSubmittedWorkflowOrder(instance)).ReturnsAsync(true);
+            interventionService.Setup(x => x.CreateInterventionRequest(request)).ThrowsAsync(e);
 
             //Act
-            var ex = await Assert.ThrowsAsync<ApplicationException>(() => sut.Handle(request, CancellationToken.None));
+            var ex = await Assert.ThrowsAsync<Exception>(() => sut.Handle(request, CancellationToken.None));
 
             //Assert
-            Assert.Equal($"Unable to create request as an open request already exists for this assessment.", ex.Message);
+            Assert.Equal(e.Message, ex.Message);
         }
 
         [Theory]
         [AutoMoqData]
         public async Task Handle_ShouldReturnAssessmentInterventionDto(
-            [Frozen] Mock<IAssessmentRepository> repository,
-            [Frozen] Mock<IRoleValidation> roleValidation,
-            [Frozen] Mock<IAssessmentToolWorkflowInstanceHelpers> assessmentToolWorkflowInstanceHelpers,
-            [Frozen] Mock<IUserProvider> userProvider,
-            [Frozen] Mock<IAssessmentInterventionMapper> mapper,
-            AssessmentToolWorkflowInstance instance,
+            [Frozen] Mock<IInterventionService> interventionService,
             CreateAmendmentRequest request,
-            List<InterventionReason> reasons,
             AssessmentInterventionDto dto,
             CreateAmendmentRequestHandler sut)
         {
             //Arrange
-            repository.Setup(x => x.GetAssessmentToolWorkflowInstance(request.WorkflowInstanceId))
-                .ReturnsAsync(instance);
-            repository.Setup(x => x.GetOpenAssessmentInterventions(instance.AssessmentId)).ReturnsAsync(new List<AssessmentIntervention>());
-            repository.Setup(x => x.GetInterventionReasons())
-                .ReturnsAsync(reasons);
-
-            roleValidation.Setup(x => x.ValidateRole(It.IsAny<int>(), It.IsAny<string>())).ReturnsAsync(true);
-
-            assessmentToolWorkflowInstanceHelpers.Setup(x => x.IsOrderEqualToLatestSubmittedWorkflowOrder(instance)).ReturnsAsync(true);
-            userProvider.Setup(x => x.GetUserEmail()).Returns("");
-            userProvider.Setup(x => x.GetUserName()).Returns("");
-
-            mapper.Setup(x => x.AssessmentInterventionDtoFromWorkflowInstance(instance, reasons, It.IsAny<DtoConfig>()))
-                .Returns(dto);
+            interventionService.Setup(x => x.CreateInterventionRequest(request)).ReturnsAsync(dto);
 
             //Act
             var result = await sut.Handle(request, CancellationToken.None);
