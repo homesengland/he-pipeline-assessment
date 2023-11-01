@@ -1,7 +1,7 @@
 ﻿using AutoFixture.Xunit2;
-using Elsa.CustomWorkflow.Sdk.Providers;
 using He.PipelineAssessment.Models;
 using He.PipelineAssessment.Tests.Common;
+using He.PipelineAssessment.UI.Common.Utility;
 using He.PipelineAssessment.UI.Features.Intervention;
 using Microsoft.Extensions.Logging;
 using Moq;
@@ -136,7 +136,9 @@ namespace He.PipelineAssessment.UI.Tests.Features.Intervention
             DateTime dateTime)
         {
             //Arrange
-            //command.DateSubmitted = dateTime;
+            command.DateSubmitted = dateTime;
+            command.DecisionType = InterventionDecisionTypes.Override;
+            command.Status = InterventionStatus.Pending;
             datetimeProvider.Setup(x => x.UtcNow()).Returns(dateTime);
             AssessmentInterventionMapper sut = new AssessmentInterventionMapper(logger.Object, datetimeProvider.Object);
             //Act

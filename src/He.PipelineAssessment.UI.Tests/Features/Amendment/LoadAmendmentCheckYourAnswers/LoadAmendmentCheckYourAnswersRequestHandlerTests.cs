@@ -36,7 +36,6 @@ namespace He.PipelineAssessment.UI.Tests.Features.Amendment.LoadAmendmentCheckYo
         public async Task Handle_ShouldReturnAmmendmentCommand_GivenNoErrorsInInterventionService(
             [Frozen] Mock<IInterventionService> interventionService,
             AssessmentInterventionCommand command,
-            AssessmentIntervention intervention,
             LoadAmendmentCheckYourAnswersRequest request,
             LoadAmendmentCheckYourAnswersRequestHandler sut)
         {

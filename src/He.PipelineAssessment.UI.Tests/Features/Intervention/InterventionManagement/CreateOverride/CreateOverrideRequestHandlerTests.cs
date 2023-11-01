@@ -15,6 +15,8 @@ using He.PipelineAssessment.UI.Features.Override.CreateOverride;
 using He.PipelineAssessment.UI.Features.Intervention;
 using He.PipelineAssessment.UI.Authorization;
 using He.PipelineAssessment.UI.Features.Rollback.CreateRollback;
+using He.PipelineAssessment.UI.Services;
+using System;
 
 namespace He.PipelineAssessment.UI.Tests.Features.Intervention.InterventionManagement.CreateOverride
 {
@@ -22,122 +24,18 @@ namespace He.PipelineAssessment.UI.Tests.Features.Intervention.InterventionManag
     {
         [Theory]
         [AutoMoqData]
-        public async Task Handle_ThrowsException_GivenRepoReturnsNoWorkflowInstance(
-                  [Frozen] Mock<IAssessmentRepository> assessmentRepository,
+        public async Task Handle_DoesNotHandleException_GivenInterventionServiceThrowsException(
+                  [Frozen] Mock<IInterventionService> interventionService,
                   CreateOverrideRequest request,
-                  AssessmentToolWorkflowInstance? workflowInstance,
+                  Exception exception,
                   CreateOverrideRequestHandler sut
               )
         {
             //Arrange
-            workflowInstance = null;
-
-            assessmentRepository.Setup(x => x.GetAssessmentToolWorkflowInstance(request.WorkflowInstanceId)).ReturnsAsync(workflowInstance);
-
-            //Act
-            var ex = await Assert.ThrowsAsync<NotFoundException>(() => sut.Handle(request, CancellationToken.None));
-
-            //Assert
-            Assert.Equal(($"Assessment Tool Workflow Instance with Id {request.WorkflowInstanceId} not found"), ex.Message);
-        }
-
-        [Theory]
-        [AutoMoqData]
-        public async Task HandleThrowsException_GivenIsNotLatestSubmittedWorkflow(
-            [Frozen] Mock<IAssessmentRepository> assessmentRepository,
-            [Frozen] Mock<IAdminAssessmentToolWorkflowRepository> adminRepository,
-            [Frozen] Mock<IAssessmentToolWorkflowInstanceHelpers> assessmentToolWorkflowHelper,
-            AssessmentToolWorkflowInstance workflowInstance,
-            CreateOverrideRequest request,
-            CreateOverrideRequestHandler sut
-        )
-        {
-            //Arrange
-            List<AssessmentToolWorkflow> emptyListOfWorkflow = new List<AssessmentToolWorkflow>();
-
-            assessmentRepository.Setup(x => x.GetAssessmentToolWorkflowInstance(request.WorkflowInstanceId)).ReturnsAsync(workflowInstance);
-
-            assessmentToolWorkflowHelper
-                .Setup(x => x.IsOrderEqualToLatestSubmittedWorkflowOrder(workflowInstance)).ReturnsAsync(false);
-
-            assessmentRepository.Setup(x => x.GetAssessmentToolWorkflowInstance(request.WorkflowInstanceId)).ReturnsAsync(workflowInstance);
-            adminRepository.Setup(x => x.GetAssessmentToolWorkflowsForOverride(workflowInstance.AssessmentToolWorkflow.AssessmentTool.Order)).ReturnsAsync(emptyListOfWorkflow);
+            interventionService.Setup(x => x.CreateInterventionRequest(request)).ThrowsAsync(exception);
 
             //Act
             var ex = await Assert.ThrowsAsync<Exception>(() => sut.Handle(request, CancellationToken.None));
-
-            //Assert
-            Assert.Equal(($"Unable to create override for Assessment Tool Workflow Instance as this is not the latest submitted Workflow Instance for this Assessment."), ex.Message);
-        }
-
-        [Theory]
-        [AutoMoqData]
-        public async Task HandleThrowsException_GivenAdminRepoReturnsNoAssessmentToolWorkflows(
-          [Frozen] Mock<IAssessmentRepository> assessmentRepository,
-          [Frozen] Mock<IAdminAssessmentToolWorkflowRepository> adminRepository,
-          [Frozen] Mock<IAssessmentToolWorkflowInstanceHelpers> assessmentToolWorkflowHelper,
-          AssessmentToolWorkflowInstance workflowInstance,
-          CreateOverrideRequest request,
-          CreateOverrideRequestHandler sut
-      )
-        {
-            //Arrange
-            List<AssessmentToolWorkflow> emptyListOfWorkflow = new List<AssessmentToolWorkflow>();
-
-            assessmentRepository.Setup(x => x.GetAssessmentToolWorkflowInstance(request.WorkflowInstanceId)).ReturnsAsync(workflowInstance);
-            assessmentRepository.Setup(x => x.GetOpenAssessmentInterventions(workflowInstance.AssessmentId)).ReturnsAsync(new List<AssessmentIntervention>());
-            assessmentToolWorkflowHelper
-                .Setup(x => x.IsOrderEqualToLatestSubmittedWorkflowOrder(workflowInstance)).ReturnsAsync(true);
-
-            assessmentRepository.Setup(x => x.GetAssessmentToolWorkflowInstance(request.WorkflowInstanceId)).ReturnsAsync(workflowInstance);
-            adminRepository.Setup(x => x.GetAssessmentToolWorkflowsForOverride(workflowInstance.AssessmentToolWorkflow.AssessmentTool.Order)).ReturnsAsync(emptyListOfWorkflow);
-
-            //Act
-            var ex = await Assert.ThrowsAsync<NotFoundException>(() => sut.Handle(request, CancellationToken.None));
-
-            //Assert
-            Assert.Equal(($"No suitable assessment tool workflows found for override"), ex.Message);
-        }
-
-        [Theory]
-        [AutoMoqData]
-        public async Task Handle_DoesNotHandleError_GivenMapperThrowsError(
-          [Frozen] Mock<IAssessmentRepository> assessmentRepository,
-          [Frozen] Mock<IAdminAssessmentToolWorkflowRepository> adminRepository,
-          [Frozen] Mock<IAssessmentInterventionMapper> mapper,
-          [Frozen] Mock<IAssessmentToolWorkflowInstanceHelpers> assessmentToolWorkflowHelper,
-          AssessmentToolWorkflowInstance workflowInstance,
-          string userName,
-          string email,
-          CreateOverrideRequest request,
-          List<AssessmentToolWorkflow> workflows,
-          ArgumentException exception,
-          CreateOverrideRequestHandler sut
-)
-        {
-            //Arrange
-            var dtoConfig = new DtoConfig()
-            {
-                AdministratorName = userName,
-                UserName = userName,
-                AdministratorEmail = email,
-                UserEmail = email,
-                DecisionType = InterventionDecisionTypes.Override,
-                Status = InterventionStatus.Pending
-            };
-
-            assessmentRepository.Setup(x => x.GetAssessmentToolWorkflowInstance(request.WorkflowInstanceId)).ReturnsAsync(workflowInstance);
-            assessmentRepository.Setup(x => x.GetOpenAssessmentInterventions(workflowInstance.AssessmentId)).ReturnsAsync(new List<AssessmentIntervention>());
-            assessmentToolWorkflowHelper
-                .Setup(x => x.IsOrderEqualToLatestSubmittedWorkflowOrder(workflowInstance)).ReturnsAsync(true);
-
-            assessmentRepository.Setup(x => x.GetAssessmentToolWorkflowInstance(request.WorkflowInstanceId)).ReturnsAsync(workflowInstance);
-            adminRepository.Setup(x => x.GetAssessmentToolWorkflowsForOverride(workflowInstance
-                .AssessmentToolWorkflow.AssessmentTool.Order)).ReturnsAsync(workflows);
-            mapper.Setup(x => x.TargetWorkflowDefinitionsFromAssessmentToolWorkflows(workflows)).Throws(exception);
-            mapper.Setup(x => x.AssessmentInterventionDtoFromWorkflowInstance(workflowInstance, dtoConfig)).Throws(exception);
-
-            var ex = await Assert.ThrowsAsync<ArgumentException>(() => sut.Handle(request, CancellationToken.None));
 
             //Assert
             Assert.Equal(exception.Message, ex.Message);
@@ -145,40 +43,34 @@ namespace He.PipelineAssessment.UI.Tests.Features.Intervention.InterventionManag
 
         [Theory]
         [AutoMoqData]
-        public async Task Handle_ShouldError_GivenOpenRequestAlreadyExistsForAssessmnet(
-    [Frozen] Mock<IAssessmentRepository> repository,
-    [Frozen] Mock<IRoleValidation> roleValidation,
-    [Frozen] Mock<IAssessmentToolWorkflowInstanceHelpers> assessmentToolWorkflowInstanceHelpers,
-    AssessmentToolWorkflowInstance instance,
-    CreateOverrideRequest request,
-    CreateOverrideRequestHandler sut,
-    List<AssessmentIntervention> assessmentInterventions)
+        public async Task Handle_DoesNotHandleError_GivenMapperThrowsError(
+              [Frozen] Mock<IInterventionService> interventionService,
+              [Frozen] Mock<IAssessmentInterventionMapper> mapper,
+              CreateOverrideRequest request,
+              List<AssessmentToolWorkflow> workflows,
+              ArgumentException exception,
+              AssessmentInterventionDto dto,
+              CreateOverrideRequestHandler sut
+)
         {
             //Arrange
-            repository.Setup(x => x.GetAssessmentToolWorkflowInstance(request.WorkflowInstanceId))
-                .ReturnsAsync(instance);
-            repository.Setup(x => x.GetOpenAssessmentInterventions(instance.AssessmentId))
-            .ReturnsAsync(assessmentInterventions);
+            interventionService.Setup(x => x.CreateInterventionRequest(request)).ReturnsAsync(dto);
+            interventionService.Setup(x => x.GetAssessmentToolWorkflowsForOverride(request.WorkflowInstanceId)).ReturnsAsync(workflows);
 
-            roleValidation.Setup(x => x.ValidateRole(It.IsAny<int>(), It.IsAny<string>())).ReturnsAsync(true);
+            mapper.Setup(x => x.TargetWorkflowDefinitionsFromAssessmentToolWorkflows(workflows)).Throws(exception);
 
-            assessmentToolWorkflowInstanceHelpers.Setup(x => x.IsOrderEqualToLatestSubmittedWorkflowOrder(instance)).ReturnsAsync(true);
-
-            //Act
-            var ex = await Assert.ThrowsAsync<Exception>(() => sut.Handle(request, CancellationToken.None));
+            var ex = await Assert.ThrowsAsync<ArgumentException>(() => sut.Handle(request, CancellationToken.None));
 
             //Assert
-            Assert.Equal($"Unable to create request as an open request already exists for this assessment.", ex.Message);
+            Assert.Equal(exception.Message, ex.Message);
         }
+
 
         [Theory]
         [AutoMoqData]
         public async Task Handle_ReturnsValidResult_GivenNoErrors(
-          [Frozen] Mock<IAssessmentRepository> assessmentRepository,
-          [Frozen] Mock<IAdminAssessmentToolWorkflowRepository> adminRepository,
+          [Frozen] Mock<IInterventionService> interventionService,
           [Frozen] Mock<IAssessmentInterventionMapper> mapper,
-          [Frozen] Mock<IUserProvider> userProvider,
-          [Frozen] Mock<IAssessmentToolWorkflowInstanceHelpers> assessmentToolWorkflowHelper,
           AssessmentToolWorkflowInstance workflowInstance,
           CreateOverrideRequest request,
           List<AssessmentToolWorkflow> workflows,
@@ -197,16 +89,9 @@ namespace He.PipelineAssessment.UI.Tests.Features.Intervention.InterventionManag
                 DecisionType = InterventionDecisionTypes.Override,
                 Status = InterventionStatus.Pending
             };
+            interventionService.Setup(x => x.CreateInterventionRequest(request)).ReturnsAsync(dto);
+            interventionService.Setup(x => x.GetAssessmentToolWorkflowsForOverride(request.WorkflowInstanceId)).ReturnsAsync(workflows);
 
-            assessmentRepository.Setup(x => x.GetAssessmentToolWorkflowInstance(request.WorkflowInstanceId)).ReturnsAsync(workflowInstance);
-            assessmentRepository.Setup(x => x.GetOpenAssessmentInterventions(workflowInstance.AssessmentId)).ReturnsAsync(new List<AssessmentIntervention>());
-            assessmentToolWorkflowHelper
-                .Setup(x => x.IsOrderEqualToLatestSubmittedWorkflowOrder(workflowInstance)).ReturnsAsync(true);
-
-            userProvider.Setup(x => x.GetUserName()).Returns(dto.AssessmentInterventionCommand.RequestedBy);
-            userProvider.Setup(x => x.GetUserEmail()).Returns(dto.AssessmentInterventionCommand.RequestedByEmail);
-            assessmentRepository.Setup(x => x.GetAssessmentToolWorkflowInstance(request.WorkflowInstanceId)).ReturnsAsync(workflowInstance);
-            adminRepository.Setup(x => x.GetAssessmentToolWorkflowsForOverride(workflowInstance.AssessmentToolWorkflow.AssessmentTool.Order)).ReturnsAsync(workflows);
             mapper.Setup(x => x.TargetWorkflowDefinitionsFromAssessmentToolWorkflows(workflows)).Returns(targetDefinitions);
             mapper.Setup(x => x.AssessmentInterventionDtoFromWorkflowInstance(workflowInstance, dtoConfig)).Returns(dto);
             //Act
