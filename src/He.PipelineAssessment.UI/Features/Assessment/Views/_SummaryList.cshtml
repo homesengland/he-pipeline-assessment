@@ -43,10 +43,23 @@
                             @Html.ActionLink(assessmentStage.Name, "LoadReadOnlyWorkflowActivity", "Workflow", new { WorkflowInstanceId = assessmentStage.WorkflowInstanceId, ActivityId = assessmentStage.CurrentActivityId, ActivityType = assessmentStage.CurrentActivityType })
 
                         }
+
+                        @if (assessmentStage.IsVariation.HasValue && assessmentStage.IsVariation.Value)
+                        {
+                            <strong class="govuk-tag govuk-tag--orange">
+                                Variation
+                            </strong>
+                        }
                     }
                     else
                     {
                         @assessmentStage.Name
+                        @if (assessmentStage.IsVariation.HasValue && assessmentStage.IsVariation.Value)
+                        {
+                            <strong class="govuk-tag govuk-tag--orange">
+                                Variation
+                            </strong>
+                        }
                     }
                 </td>
 

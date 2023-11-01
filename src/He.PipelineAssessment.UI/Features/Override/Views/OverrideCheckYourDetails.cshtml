@@ -89,10 +89,10 @@
                                         Target Workflow Definition
                                     </dt>
                                     <dd class="govuk-summary-list__value">
-                                        <p>@Model.TargetWorkflowDefinitionName</p>
-                                        <p class="govuk-hint">
-                                            @Model.TargetWorkflowDefinitionId
-                                        </p>
+                                        @foreach (var definition in Model.SelectedWorkflowDefinitions)
+                                        {
+                                            <p>@definition.DisplayName</p>
+                                        }
                                     </dd>
                                     <dd class="govuk-summary-list__actions">
                                         @if (isEditable)

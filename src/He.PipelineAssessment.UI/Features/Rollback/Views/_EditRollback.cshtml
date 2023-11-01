@@ -55,6 +55,14 @@
         </div>
         <div class="govuk-summary-list__row">
             <dt class="govuk-summary-list__key">
+                Reason
+            </dt>
+            <dd class="govuk-summary-list__value">
+                @Model.AssessmentInterventionCommand.InterventionReasonName
+            </dd>
+        </div>
+        <div class="govuk-summary-list__row">
+            <dt class="govuk-summary-list__key">
                 Assessor Rationale
             </dt>
             <dd class="govuk-summary-list__value">
@@ -76,7 +84,7 @@
             Target workflow definition
         </label>
         <div id="subject-hint" class="govuk-hint">
-            This is the workflow definition, which will be available to start after this intervention request has been approved. All workflows created after workflow represented by the selected choice (if any) will be deleted.
+            This is the workflow definition, which will be available to start after this rollback request has been approved. All workflows created after workflow represented by the selected choice (if any) will be deleted.
         </div>
         @Html.DropDownListFor(x =>
         Model.AssessmentInterventionCommand.TargetWorkflowId,
@@ -96,6 +104,7 @@
     @Html.HiddenFor(x => Model.AssessmentInterventionCommand.DecisionType)
     @Html.HiddenFor(x => Model.AssessmentInterventionCommand.Status)
     @Html.HiddenFor(x => Model.AssessmentInterventionCommand.ProjectReference)
+    @Html.HiddenFor(x => Model.AssessmentInterventionCommand.InterventionReasonName)
     @for (int i = 0; i < Model.TargetWorkflowDefinitions!.Count; i++)
     {
         @Html.HiddenFor(model => Model.TargetWorkflowDefinitions[i].Id)

@@ -36,7 +36,7 @@ namespace He.PipelineAssessment.Infrastructure.Repository
 
         AssessmentToolWorkflow? GetAssessmentToolWorkflowByDefinitionId(string workflowDefinitionId);
         Task<int> DeleteIntervention(AssessmentIntervention intervention);
-        Task<List<InterventionReason>> GetInterventionReasons();
+        Task<List<InterventionReason>> GetInterventionReasons(bool isVariation);
         Task<List<AssessmentIntervention>> GetOpenAssessmentInterventions(int assessmentId);
         Task<List<AssessmentToolWorkflowInstance>> GetWorkflowInstancesToDeleteForAmendment(int assessmentId, int order);
     }
@@ -144,9 +144,11 @@ namespace He.PipelineAssessment.Infrastructure.Repository
             return await SaveChanges();
         }
 
-        public async Task<List<InterventionReason>> GetInterventionReasons()
+        public async Task<List<InterventionReason>> GetInterventionReasons(bool isVariation)
         {
-            var list = await context.Set<InterventionReason>().Where(x => x.Status != InterventionReasonStatus.Deleted)
+            var list = await context.Set<InterventionReason>().Where(x =>
+                    x.Status != InterventionReasonStatus.Deleted &&
+                    x.IsVariation == isVariation)
                 .OrderBy(x => x.Order)
                 .ToListAsync();
 
@@ -159,8 +161,9 @@ namespace He.PipelineAssessment.Infrastructure.Repository
                 .Include(x => x.AssessmentToolWorkflowInstance.Assessment)
                 .Include(x=>x.InterventionReason)
                 .Include(x => x.AssessmentToolWorkflowInstance.AssessmentToolWorkflow.AssessmentTool)
-                .Include(x => x.TargetAssessmentToolWorkflow)
-                .ThenInclude(x=>x!.AssessmentTool)
+                .Include(x => x.TargetAssessmentToolWorkflows)
+                .ThenInclude(x=>x!.AssessmentToolWorkflow)
+                .ThenInclude(x => x.AssessmentTool)
                 .FirstOrDefaultAsync(x => x.Id == interventionId);
         }
 

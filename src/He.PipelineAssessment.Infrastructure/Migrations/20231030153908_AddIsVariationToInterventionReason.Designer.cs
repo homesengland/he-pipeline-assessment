@@ -4,6 +4,7 @@ using He.PipelineAssessment.Infrastructure.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,10 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace He.PipelineAssessment.Infrastructure.Migrations
 {
     [DbContext(typeof(PipelineAssessmentContext))]
-    partial class PipelineAssessmentContextModelSnapshot : ModelSnapshot
+    [Migration("20231030153908_AddIsVariationToInterventionReason")]
+    partial class AddIsVariationToInterventionReason
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -214,6 +216,8 @@ namespace He.PipelineAssessment.Infrastructure.Migrations
 
                     b.HasIndex("InterventionReasonId");
 
+                    b.HasIndex("TargetAssessmentToolWorkflowId");
+
                     b.ToTable("AssessmentIntervention");
 
                     b.ToTable(tb => tb.IsTemporal(ttb =>
@@ -378,9 +382,6 @@ namespace He.PipelineAssessment.Infrastructure.Migrations
 
                     b.Property<DateTime>("CreatedDateTime")
                         .HasColumnType("datetime2");
-
-                    b.Property<bool>("IsAmendable")
-                        .HasColumnType("bit");
 
                     b.Property<bool>("IsEconomistWorkflow")
                         .HasColumnType("bit");
@@ -626,42 +627,6 @@ namespace He.PipelineAssessment.Infrastructure.Migrations
                     ));
                 });
 
-            modelBuilder.Entity("He.PipelineAssessment.Models.TargetAssessmentToolWorkflow", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
-
-                    b.Property<int>("AssessmentInterventionId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("AssessmentToolWorkflowId")
-                        .HasColumnType("int");
-
-                    b.Property<string>("CreatedBy")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<DateTime>("CreatedDateTime")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("LastModifiedBy")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<DateTime?>("LastModifiedDateTime")
-                        .HasColumnType("datetime2");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("AssessmentInterventionId");
-
-                    b.HasIndex("AssessmentToolWorkflowId");
-
-                    b.ToTable("TargetAssessmentToolWorkflow");
-                });
-
             modelBuilder.Entity("Microsoft.AspNetCore.DataProtection.EntityFrameworkCore.DataProtectionKey", b =>
                 {
                     b.Property<int>("Id")
@@ -693,9 +658,15 @@ namespace He.PipelineAssessment.Infrastructure.Migrations
                         .WithMany()
                         .HasForeignKey("InterventionReasonId");
 
+                    b.HasOne("He.PipelineAssessment.Models.AssessmentToolWorkflow", "TargetAssessmentToolWorkflow")
+                        .WithMany("AssessmentInterventions")
+                        .HasForeignKey("TargetAssessmentToolWorkflowId");
+
                     b.Navigation("AssessmentToolWorkflowInstance");
 
                     b.Navigation("InterventionReason");
+
+                    b.Navigation("TargetAssessmentToolWorkflow");
                 });
 
             modelBuilder.Entity("He.PipelineAssessment.Models.AssessmentToolInstanceNextWorkflow", b =>
@@ -737,33 +708,9 @@ namespace He.PipelineAssessment.Infrastructure.Migrations
                     b.Navigation("AssessmentToolWorkflow");
                 });
 
-            modelBuilder.Entity("He.PipelineAssessment.Models.TargetAssessmentToolWorkflow", b =>
-                {
-                    b.HasOne("He.PipelineAssessment.Models.AssessmentIntervention", "AssessmentIntervention")
-                        .WithMany("TargetAssessmentToolWorkflows")
-                        .HasForeignKey("AssessmentInterventionId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("He.PipelineAssessment.Models.AssessmentToolWorkflow", "AssessmentToolWorkflow")
-                        .WithMany("TargetAssessmentToolWorkflows")
-                        .HasForeignKey("AssessmentToolWorkflowId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("AssessmentIntervention");
-
-                    b.Navigation("AssessmentToolWorkflow");
-                });
-
             modelBuilder.Entity("He.PipelineAssessment.Models.Assessment", b =>
                 {
                     b.Navigation("AssessmentToolWorkflowInstances");
-                });
-
-            modelBuilder.Entity("He.PipelineAssessment.Models.AssessmentIntervention", b =>
-                {
-                    b.Navigation("TargetAssessmentToolWorkflows");
                 });
 
             modelBuilder.Entity("He.PipelineAssessment.Models.AssessmentTool", b =>
@@ -773,7 +720,7 @@ namespace He.PipelineAssessment.Infrastructure.Migrations
 
             modelBuilder.Entity("He.PipelineAssessment.Models.AssessmentToolWorkflow", b =>
                 {
-                    b.Navigation("TargetAssessmentToolWorkflows");
+                    b.Navigation("AssessmentInterventions");
                 });
 
             modelBuilder.Entity("He.PipelineAssessment.Models.AssessmentToolWorkflowInstance", b =>

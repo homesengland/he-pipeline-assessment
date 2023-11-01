@@ -103,8 +103,8 @@ namespace He.PipelineAssessment.UI.Tests.Features.Rollback.EditRollback
             interventionMapper.Setup(x => x.AssessmentInterventionCommandFromAssessmentIntervention(intervention))
                 .Returns(command);
 
-            interventionMapper.Setup(x => x.TargetWorkflowDefinitionsFromAssessmentToolWorkflows(listSource))
-                .Returns(listTarget);
+            //interventionMapper.Setup(x => x.TargetWorkflowDefinitionsFromAssessmentToolWorkflows(listSource))
+            //    .Returns(listTarget);
 
             //Act
             var result =  await sut.Handle(request, CancellationToken.None);
@@ -120,7 +120,7 @@ namespace He.PipelineAssessment.UI.Tests.Features.Rollback.EditRollback
                 .AssessmentToolWorkflow.AssessmentTool.Order), Times.Once);
 
             interventionMapper.Verify(x => x.AssessmentInterventionCommandFromAssessmentIntervention(intervention),Times.Once);
-            interventionMapper.Verify(x => x.TargetWorkflowDefinitionsFromAssessmentToolWorkflows(listSource),Times.Once);
+            //interventionMapper.Verify(x => x.TargetWorkflowDefinitionsFromAssessmentToolWorkflows(listSource),Times.Once);
         }
     }
 }

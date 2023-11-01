@@ -19,7 +19,7 @@ namespace He.PipelineAssessment.UI.Features.Rollback.EditRollback
             var dto = await _interventionService.EditInterventionRequest(request);
             var assessmentToolWorkflows = await
                 _interventionService.GetAssessmentToolWorkflowsForRollback(dto.AssessmentInterventionCommand.WorkflowInstanceId);
-            dto.TargetWorkflowDefinitions = _mapper.TargetWorkflowDefinitionsFromAssessmentToolWorkflows(assessmentToolWorkflows);
+            dto.TargetWorkflowDefinitions = _mapper.TargetWorkflowDefinitionsFromAssessmentToolWorkflows(assessmentToolWorkflows, dto.AssessmentInterventionCommand.SelectedWorkflowDefinitions);
             return dto;
         }
     }

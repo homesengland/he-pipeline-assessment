@@ -20,5 +20,6 @@
         public bool? IsFirstWorkflow { get; set; }
         public string? Result { get; set; } = null;
         public string? SubmittedBy { get; set; } = null;
+        public bool? IsVariation { get; set; }
     }
 }

@@ -1,11 +1,11 @@
-﻿using System.Reflection;
-using Microsoft.EntityFrameworkCore.Migrations;
+﻿using Microsoft.EntityFrameworkCore.Migrations;
+using System.Reflection;
 
 #nullable disable
 
 namespace He.PipelineAssessment.Infrastructure.Migrations
 {
-    public partial class UpdateSPToReturnVariationsInOrderAtTheEnd : Migration
+    public partial class AddCompletedStatusToAssessmentsSP : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -13,12 +13,7 @@ namespace He.PipelineAssessment.Infrastructure.Migrations
             var sqlFiles = assembly.GetManifestResourceNames().Where(file =>
 
                 file.Contains(
-                    "20231027101712_UpdateSPToReturnVariationsInOrderAtTheEnd.GetAssessmentStagesByAssessmentId.sql") ||
-                file.Contains(
-                    "20231027101712_UpdateSPToReturnVariationsInOrderAtTheEnd.GetStartableToolsByAssessmentId.sql") ||
-                file.Contains(
-                    "20231027101712_UpdateSPToReturnVariationsInOrderAtTheEnd.GetAssessmentHistoryByAssessmentId.sql")
-            );
+                    "20231101164653_AddCompletedStatusToAssessmentsSP.GetAssessments.sql"));
             foreach (var sqlFile in sqlFiles)
             {
                 using (Stream stream = assembly.GetManifestResourceStream(sqlFile))

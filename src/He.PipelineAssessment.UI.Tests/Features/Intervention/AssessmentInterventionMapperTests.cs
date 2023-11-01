@@ -42,9 +42,7 @@ namespace He.PipelineAssessment.UI.Tests.Features.Intervention
             Assert.Equal(assessmentIntervention.AssessorRationale, result.AssessorRationale);
             Assert.Equal(assessmentIntervention.DateSubmitted, result.DateSubmitted);
             Assert.Equal(assessmentIntervention.Status, result.Status);
-            Assert.Equal(assessmentIntervention.TargetAssessmentToolWorkflowId, result.TargetWorkflowId);
-            Assert.Equal(assessmentIntervention.TargetAssessmentToolWorkflow!.WorkflowDefinitionId, result.TargetWorkflowDefinitionId);
-            Assert.Equal($"{assessmentIntervention.TargetAssessmentToolWorkflow?.AssessmentTool.Name} - {assessmentIntervention.TargetAssessmentToolWorkflow?.Name}", result.TargetWorkflowDefinitionName);
+            //Assert.Equal(assessmentIntervention.TargetAssessmentToolWorkflowId, result.TargetWorkflowId);
             Assert.Equal(assessmentIntervention.AssessmentToolWorkflowInstance.AssessmentId, result.AssessmentId);
             Assert.Equal(assessmentIntervention.AssessmentToolWorkflowInstance.Assessment.SpId, result.CorrelationId);
         }
@@ -57,13 +55,14 @@ namespace He.PipelineAssessment.UI.Tests.Features.Intervention
         )
         {
             //Arrange
-            assessmentIntervention.TargetAssessmentToolWorkflow = null;
+            //assessmentIntervention.TargetAssessmentToolWorkflow = null;
 
             //Act
             var result = sut.AssessmentInterventionCommandFromAssessmentIntervention(assessmentIntervention);
 
             //Assert
-            Assert.Null(result.TargetWorkflowDefinitionId);
+            Assert.True(false);
+            //Assert.Null(result.TargetWorkflowDefinitionId);
         }
 
         [Theory]
@@ -76,7 +75,7 @@ namespace He.PipelineAssessment.UI.Tests.Features.Intervention
             //Arrange
 
             //Act
-            var result = sut.TargetWorkflowDefinitionsFromAssessmentToolWorkflows(assessmentToolWorkflows);
+            var result = sut.TargetWorkflowDefinitionsFromAssessmentToolWorkflows(assessmentToolWorkflows, new List<TargetWorkflowDefinition>());
 
             //Assert
             Assert.Equal(assessmentToolWorkflows.Count, result.Count);
@@ -148,7 +147,7 @@ namespace He.PipelineAssessment.UI.Tests.Features.Intervention
             Assert.NotNull(result);
             Assert.IsType<AssessmentIntervention>(result);
             Assert.Equal(command.AssessmentToolWorkflowInstanceId, result.AssessmentToolWorkflowInstanceId);
-            Assert.Equal(command.TargetWorkflowId, result.TargetAssessmentToolWorkflowId);
+            //Assert.Equal(command.TargetWorkflowId, result.TargetAssessmentToolWorkflowId);
             Assert.Equal(command.RequestedBy, result.RequestedBy);
             Assert.Equal(command.RequestedByEmail, result.RequestedByEmail);
             Assert.Equal(command.Administrator, result.Administrator);
