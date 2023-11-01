@@ -12,7 +12,7 @@ namespace He.PipelineAssessment.UI.Features.Intervention
 
         List<TargetWorkflowDefinition> TargetWorkflowDefinitionsFromAssessmentToolWorkflows(
             List<AssessmentToolWorkflow> assessmentToolWorkflows,
-            List<AssessmentToolWorkflow> selectedWorkflowDefinitions);
+            List<TargetWorkflowDefinition> selectedWorkflowDefinitions);
 
         AssessmentInterventionDto AssessmentInterventionDtoFromWorkflowInstance(AssessmentToolWorkflowInstance instance, 
             DtoConfig dtoConfig);
@@ -43,7 +43,6 @@ namespace He.PipelineAssessment.UI.Features.Intervention
                     AdministratorRationale = command.AdministratorRationale,
                     AdministratorEmail = command.AdministratorEmail,
                     AssessmentToolWorkflowInstanceId = command.AssessmentToolWorkflowInstanceId,
-                    TargetAssessmentToolWorkflowId = command.TargetWorkflowId,
                     AssessorRationale = command.AssessorRationale,
                     CreatedBy = command.RequestedBy ?? "",
                     DateSubmitted = createdDateTime,
@@ -70,6 +69,12 @@ namespace He.PipelineAssessment.UI.Features.Intervention
         {
             try
             {
+                var selectedWorkflowDefinitions = intervention.TargetAssessmentToolWorkflows.Select(x => new TargetWorkflowDefinition
+                {
+                    Id = x.AssessmentToolWorkflowId,
+                    Name = $"{x.AssessmentToolWorkflow.AssessmentTool.Name} - {x.AssessmentToolWorkflow.Name}",
+                    WorkflowDefinitionId = x.AssessmentToolWorkflow.WorkflowDefinitionId
+                }).ToList();
                 AssessmentInterventionCommand command = new AssessmentInterventionCommand()
                 {
                     AssessmentInterventionId = intervention.Id,
@@ -88,14 +93,14 @@ namespace He.PipelineAssessment.UI.Features.Intervention
                     AssessorRationale = intervention.AssessorRationale,
                     DateSubmitted = intervention.DateSubmitted,
                     Status = intervention.Status,
-                    TargetWorkflowId = intervention.TargetAssessmentToolWorkflowId,
-                    TargetWorkflowDefinitionId = intervention.TargetAssessmentToolWorkflow?.WorkflowDefinitionId,
-                    TargetWorkflowDefinitionName = $"{intervention.TargetAssessmentToolWorkflow?.AssessmentTool.Name} - {intervention.TargetAssessmentToolWorkflow?.Name}",
+                    #pragma warning disable 0612, 0618
+                    TargetWorkflowId = selectedWorkflowDefinitions.Any() ? selectedWorkflowDefinitions[0].Id : intervention.TargetAssessmentToolWorkflowId,
+                    #pragma warning restore 0612, 0618
                     CorrelationId = intervention.AssessmentToolWorkflowInstance.Assessment.SpId,
                     AssessmentId = intervention.AssessmentToolWorkflowInstance.AssessmentId,
                     InterventionReasonId = intervention.InterventionReasonId,
                     InterventionReasonName = intervention.InterventionReason?.Name,
-                    SelectedWorkflowDefinitions = intervention.TargetAssessmentToolWorkflows.Select(x => x.AssessmentToolWorkflow).ToList()
+                    SelectedWorkflowDefinitions = selectedWorkflowDefinitions
                 };
 
                 return command;
@@ -110,7 +115,7 @@ namespace He.PipelineAssessment.UI.Features.Intervention
 
         public List<TargetWorkflowDefinition> TargetWorkflowDefinitionsFromAssessmentToolWorkflows(
             List<AssessmentToolWorkflow> assessmentToolWorkflows,
-            List<AssessmentToolWorkflow> selectedWorkflowDefinitions)
+            List<TargetWorkflowDefinition> selectedWorkflowDefinitions)
         {
             try
             {

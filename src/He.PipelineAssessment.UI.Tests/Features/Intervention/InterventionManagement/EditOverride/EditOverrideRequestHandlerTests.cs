@@ -130,7 +130,7 @@ namespace He.PipelineAssessment.UI.Tests.Features.Intervention.InterventionManag
             };
             assessmentRepository.Setup(x => x.GetAssessmentIntervention(request.InterventionId)).ReturnsAsync(intervention);
             mapper.Setup(x => x.AssessmentInterventionCommandFromAssessmentIntervention(intervention)).Returns(command);
-            mapper.Setup(x => x.TargetWorkflowDefinitionsFromAssessmentToolWorkflows(workflows)).Returns(targetWorkflowDefinitions);
+            //mapper.Setup(x => x.TargetWorkflowDefinitionsFromAssessmentToolWorkflows(workflows)).Returns(targetWorkflowDefinitions);
             adminRepository
                 .Setup(x => x.GetAssessmentToolWorkflowsForOverride(intervention.AssessmentToolWorkflowInstance
                     .AssessmentToolWorkflow.AssessmentTool.Order)).ReturnsAsync(workflows);

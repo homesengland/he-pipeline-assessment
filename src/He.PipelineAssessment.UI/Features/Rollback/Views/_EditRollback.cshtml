@@ -84,17 +84,13 @@
             Target workflow definition
         </label>
         <div id="subject-hint" class="govuk-hint">
-            This is the workflow definition, which will be available to start after this intervention request has been approved. All workflows created after workflow represented by the selected choice (if any) will be deleted.
+            This is the workflow definition, which will be available to start after this rollback request has been approved. All workflows created after workflow represented by the selected choice (if any) will be deleted.
         </div>
-        @Html.ListBoxFor(x =>
-        Model.AssessmentInterventionCommand.TargetWorkflowId,
-        new SelectList(Model.TargetWorkflowDefinitions, "Id", "DisplayName")
-        , new { @class = @workflowDefinitionClass, id = "TargetWorkflowId" })
-@*        @Html.DropDownListFor(x =>
+        @Html.DropDownListFor(x =>
         Model.AssessmentInterventionCommand.TargetWorkflowId,
         new SelectList(Model.TargetWorkflowDefinitions, "Id", "DisplayName"),
         "Choose target workflow definition", new { @class = @workflowDefinitionClass, id = "TargetWorkflowId" })
-*@    </div>
+    </div>
     @Html.HiddenFor(x => Model.AssessmentInterventionCommand.AssessmentInterventionId)
     @Html.HiddenFor(x => Model.AssessmentInterventionCommand.AssessmentToolWorkflowInstanceId)
     @Html.HiddenFor(x => Model.AssessmentInterventionCommand.WorkflowInstanceId)

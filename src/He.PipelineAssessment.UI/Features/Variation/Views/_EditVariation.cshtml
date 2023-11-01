@@ -2,13 +2,13 @@
 
 @{
     var adminRationaleErrorClass = "";
-    var workflowDefinitionClass = "govuk-select";
+    var workflowDefinitionClass = "";
     if (Model.ValidationResult != null)
     {
         var adminRationaleInvalid = Model.ValidationResult.Errors.Any(x => x.PropertyName == "AdministratorRationale");
         var workflowDefinitionInvalid = Model.ValidationResult.Errors.Any(x => x.PropertyName == "TargetWorkflowId");
         adminRationaleErrorClass = adminRationaleInvalid ? "govuk-input--error" : "";
-        workflowDefinitionClass = workflowDefinitionInvalid ? "govuk-select govuk-select--error" : "govuk-select";
+        workflowDefinitionClass = workflowDefinitionInvalid ? "govuk-form-group--error" : "";
     }
 }
 
@@ -84,41 +84,22 @@
             Target workflow definition
         </label>
         <div id="subject-hint" class="govuk-hint">
-            These are the workflow definition, which will be available to start after this variation request has been approved.
+            These are the workflow definitions, which will be available to start after this variation request has been approved.
         </div>
         
-        <div class="govuk-checkboxes" data-module="govuk-checkboxes">
+        <div class="govuk-checkboxes @workflowDefinitionClass" data-module="govuk-checkboxes">
             @for (int i = 0; i < @Model.TargetWorkflowDefinitions.Count; i++)
             {
-                var name = $"AssessmentInterventionCommand.TargetWorkflowDefinitions[{i}].IsSelected";
                 var targetWorkflow = @Model.TargetWorkflowDefinitions[i];
                 var choiceId = "choice" + targetWorkflow.Id;
                 var labelId = "label" + targetWorkflow.Id;
-                var isSelected = targetWorkflow.IsSelected;
 
                 <div class="govuk-checkboxes__item">
-                    <input checked=@isSelected
-                           id=@choiceId
-                           aria-labelledby=@labelId
-                           name="@name"
-                           type="checkbox" class="govuk-checkboxes__input" />
-                    @Html.Label(Model.TargetWorkflowDefinitions[i].DisplayName, Model.TargetWorkflowDefinitions[i].DisplayName, new { @class = "govuk-label govuk-checkboxes__label", @id=@labelId })
-
+                    @Html.CheckBoxFor(x => @Model.TargetWorkflowDefinitions[i].IsSelected, new { @class = "govuk-checkboxes__input", @id=@choiceId, @aria_labelledby=@labelId })
+                    @Html.Label(Model.TargetWorkflowDefinitions[i].DisplayName, Model.TargetWorkflowDefinitions[i].DisplayName, new { @class = "govuk-label govuk-checkboxes__label", @id = @labelId })
                 </div>
-                    @*@Html.CheckBoxFor(x => @Model.TargetWorkflowDefinitions[i].IsSelected, new { @class = "govuk-checkboxes__input", @Name = name })*@
-
-                /*@Html.TextBoxFor(x => targetWorkflow.DisplayName)*/
             }
         </div>
-
-        @*        @Html.ListBoxFor(x =>
-            Model.AssessmentInterventionCommand.TargetWorkflowIds,
-            new SelectList(Model.TargetWorkflowDefinitions, "Id", "DisplayName")
-            , new { @class = @workflowDefinitionClass, id = "TargetWorkflowId" })*@
-        @*@Html.DropDownListFor(x =>
-        Model.AssessmentInterventionCommand.TargetWorkflowId,
-        new SelectList(Model.TargetWorkflowDefinitions, "Id", "DisplayName"),
-        "Choose target workflow definition", new { @class = @workflowDefinitionClass, id = "TargetWorkflowId", multiple="multiple" })*@
     </div>
     @Html.HiddenFor(x => Model.AssessmentInterventionCommand.AssessmentInterventionId)
     @Html.HiddenFor(x => Model.AssessmentInterventionCommand.AssessmentToolWorkflowInstanceId)
@@ -140,6 +121,5 @@
         @Html.HiddenFor(model => Model.TargetWorkflowDefinitions[i].Name)
         @Html.HiddenFor(model => Model.TargetWorkflowDefinitions[i].WorkflowDefinitionId)
         @Html.HiddenFor(model => Model.TargetWorkflowDefinitions[i].DisplayName)
-        @Html.HiddenFor(model => Model.TargetWorkflowDefinitions[i].IsSelected)
     }
 </fieldset>

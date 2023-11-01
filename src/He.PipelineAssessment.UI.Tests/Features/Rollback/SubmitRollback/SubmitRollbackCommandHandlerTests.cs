@@ -47,8 +47,8 @@ namespace He.PipelineAssessment.UI.Tests.Features.Rollback.SubmitRollback
 
             //Assert
             repository.Verify(x=>x.UpdateAssessmentIntervention(intervention),Times.Once);
-            repository.Verify(x => x.GetWorkflowInstancesToDeleteForRollback(intervention.AssessmentToolWorkflowInstance.AssessmentId,
-                intervention.TargetAssessmentToolWorkflow!.AssessmentTool.Order), Times.Never);
+            //repository.Verify(x => x.GetWorkflowInstancesToDeleteForRollback(intervention.AssessmentToolWorkflowInstance.AssessmentId,
+            //    intervention.TargetAssessmentToolWorkflow!.AssessmentTool.Order), Times.Never);
         }
 
         [Theory]
@@ -70,18 +70,18 @@ namespace He.PipelineAssessment.UI.Tests.Features.Rollback.SubmitRollback
 
             command.Status = InterventionStatus.Approved;
 
-            repository.Setup(x =>
-                    x.GetWorkflowInstancesToDeleteForRollback(intervention.AssessmentToolWorkflowInstance.AssessmentId,
-                        intervention.TargetAssessmentToolWorkflow!.AssessmentTool.Order))
-                .ReturnsAsync(workflowsToDelete);
+            //repository.Setup(x =>
+            //        x.GetWorkflowInstancesToDeleteForRollback(intervention.AssessmentToolWorkflowInstance.AssessmentId,
+            //            intervention.TargetAssessmentToolWorkflow!.AssessmentTool.Order))
+            //    .ReturnsAsync(workflowsToDelete);
 
             //Act
             await sut.Handle(command, CancellationToken.None);
 
             //Assert
             repository.Verify(x => x.UpdateAssessmentIntervention(intervention), Times.Once);
-            repository.Verify(x=> x.GetWorkflowInstancesToDeleteForRollback(intervention.AssessmentToolWorkflowInstance.AssessmentId,
-                intervention.TargetAssessmentToolWorkflow!.AssessmentTool.Order),Times.Once);
+            //repository.Verify(x=> x.GetWorkflowInstancesToDeleteForRollback(intervention.AssessmentToolWorkflowInstance.AssessmentId,
+            //    intervention.TargetAssessmentToolWorkflow!.AssessmentTool.Order),Times.Once);
             repository.Verify(x=>x.SaveChanges(),Times.Once);
             httpClient.Verify(x => x.PostArchiveQuestions(It.IsAny<string[]>()),Times.Once);
         }

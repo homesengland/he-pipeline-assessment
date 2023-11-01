@@ -18,8 +18,6 @@ namespace He.PipelineAssessment.Models
 
         public virtual AssessmentTool AssessmentTool { get; set; } = null!;
         [JsonIgnore]
-        public virtual List<AssessmentIntervention>? AssessmentInterventions { get; set; }
-        [JsonIgnore]
         public virtual List<TargetAssessmentToolWorkflow>? TargetAssessmentToolWorkflows { get; set; }
 
     }

@@ -85,6 +85,11 @@ namespace He.PipelineAssessment.UI.Services
                 }
 
                 var assessmentIntervention = _mapper.AssessmentInterventionFromAssessmentInterventionCommand(command);
+                if (command.TargetWorkflowId.HasValue)
+                {
+                    UpdateTargetAssessmentToolWorkflows(assessmentIntervention,
+                        new List<int> { command.TargetWorkflowId.Value });
+                }
 
                 await _assessmentRepository.CreateAssessmentIntervention(assessmentIntervention);
 
@@ -221,10 +226,20 @@ namespace He.PipelineAssessment.UI.Services
 
                 assessmentIntervention.AdministratorRationale = command.AdministratorRationale;
                 assessmentIntervention.SignOffDocument = command.SignOffDocument;
-                assessmentIntervention.TargetAssessmentToolWorkflowId = command.TargetWorkflowId;
+                #pragma warning disable 0612, 0618
+                assessmentIntervention.TargetAssessmentToolWorkflowId = null;
+                #pragma warning restore 0612, 0618
+
                 assessmentIntervention.Administrator = command.Administrator;
                 assessmentIntervention.AdministratorEmail = command.AdministratorEmail;
-                UpdateTargetAssessmentToolWorkflows(assessmentIntervention, command.TargetWorkflowDefinitions.Where(x => x.IsSelected).ToList()); 
+                var targetAssessmentToolWorkflows = command.TargetWorkflowDefinitions.Where(x => x.IsSelected).Select(x => x.Id).ToList();
+
+                if (command.TargetWorkflowId.HasValue)
+                {
+                    targetAssessmentToolWorkflows = new List<int> { command.TargetWorkflowId.Value };
+                }
+
+                UpdateTargetAssessmentToolWorkflows(assessmentIntervention, targetAssessmentToolWorkflows); 
                 await _assessmentRepository.SaveChanges();
                 return assessmentIntervention.Id;
             }
@@ -239,20 +254,20 @@ namespace He.PipelineAssessment.UI.Services
             }
         }
 
-        private void UpdateTargetAssessmentToolWorkflows(AssessmentIntervention assessmentIntervention, List<TargetWorkflowDefinition> commandTargetWorkflowDefinitions)
+        private void UpdateTargetAssessmentToolWorkflows(AssessmentIntervention assessmentIntervention, List<int> commandTargetWorkflowDefinitions)
         {
             assessmentIntervention.TargetAssessmentToolWorkflows.RemoveAll(x =>
-                !commandTargetWorkflowDefinitions.Where(y => y.IsSelected).Select(y => y.Id).Contains(x.Id));
+                !commandTargetWorkflowDefinitions.Contains(x.AssessmentToolWorkflowId));
 
-            foreach (var commandTargetWorkflowDefinition in commandTargetWorkflowDefinitions)
+            foreach (var commandTargetWorkflowDefinitionId in commandTargetWorkflowDefinitions)
             {
-                if (!assessmentIntervention.TargetAssessmentToolWorkflows.Select(x => x.Id)
-                    .Contains(commandTargetWorkflowDefinition.Id))
+                if (!assessmentIntervention.TargetAssessmentToolWorkflows.Select(x => x.AssessmentToolWorkflowId)
+                    .Contains(commandTargetWorkflowDefinitionId))
                 {
                     var newTargetAssessmentToolWorkflow = new TargetAssessmentToolWorkflow
                     {
                         AssessmentInterventionId = assessmentIntervention.Id,
-                        AssessmentToolWorkflowId = commandTargetWorkflowDefinition.Id
+                        AssessmentToolWorkflowId = commandTargetWorkflowDefinitionId
                     };
                     assessmentIntervention.TargetAssessmentToolWorkflows.Add(newTargetAssessmentToolWorkflow);
                 }
@@ -463,7 +478,7 @@ namespace He.PipelineAssessment.UI.Services
                             workflowsToDelete =
                                 await _assessmentRepository.GetWorkflowInstancesToDeleteForRollback(
                                     intervention.AssessmentToolWorkflowInstance.AssessmentId,
-                                    intervention.TargetAssessmentToolWorkflow!.AssessmentTool.Order);
+                                    intervention.TargetAssessmentToolWorkflows.First().AssessmentToolWorkflow.AssessmentTool.Order);
                             break;
                         }
                         case InterventionDecisionTypes.Override:
@@ -481,7 +496,7 @@ namespace He.PipelineAssessment.UI.Services
                     }
 
                     await _assessmentRepository.SaveChanges();
-                    await CreateNextWorkflow(intervention);
+                    await CreateNextWorkflows(intervention);
                 }
             }
             catch (Exception ex)
@@ -491,7 +506,7 @@ namespace He.PipelineAssessment.UI.Services
             }
         }
 
-        private async Task CreateNextWorkflow(AssessmentIntervention intervention)
+        private async Task CreateNextWorkflows(AssessmentIntervention intervention)
         {
             if (intervention.DecisionType == InterventionDecisionTypes.Rollback)
             {
@@ -499,22 +514,28 @@ namespace He.PipelineAssessment.UI.Services
                     .AssessmentId);
             }
 
-            var nextWorkflow =
-                AssessmentToolInstanceNextWorkflow(intervention);
+            var nextWorkflows = new List<AssessmentToolInstanceNextWorkflow>();
 
-            await _assessmentRepository.CreateAssessmentToolInstanceNextWorkflows(
-                new List<AssessmentToolInstanceNextWorkflow>() { nextWorkflow });
+            foreach (var targetAssessmentToolWorkflow in intervention.TargetAssessmentToolWorkflows)
+            {
+                var nextWorkflow =
+                    AssessmentToolInstanceNextWorkflow(intervention, targetAssessmentToolWorkflow);
+                nextWorkflows.Add(nextWorkflow);
+            }
+
+            await _assessmentRepository.CreateAssessmentToolInstanceNextWorkflows(nextWorkflows);
         }
 
-        private AssessmentToolInstanceNextWorkflow AssessmentToolInstanceNextWorkflow(AssessmentIntervention intervention)
+        private AssessmentToolInstanceNextWorkflow AssessmentToolInstanceNextWorkflow(
+            AssessmentIntervention intervention, TargetAssessmentToolWorkflow targetAssessmentToolWorkflow)
         {
             return new AssessmentToolInstanceNextWorkflow
             {
                 AssessmentId = intervention.AssessmentToolWorkflowInstance.AssessmentId,
                 AssessmentToolWorkflowInstanceId = intervention.AssessmentToolWorkflowInstanceId,
-                NextWorkflowDefinitionId = intervention.TargetAssessmentToolWorkflow!.WorkflowDefinitionId,
+                NextWorkflowDefinitionId = targetAssessmentToolWorkflow.AssessmentToolWorkflow.WorkflowDefinitionId,
                 IsVariation = intervention.DecisionType == InterventionDecisionTypes.Variation,
-                IsLast = intervention.TargetAssessmentToolWorkflow.IsLast
+                IsLast = targetAssessmentToolWorkflow.AssessmentToolWorkflow.IsLast
             };
         }
     }

@@ -16,7 +16,6 @@ namespace He.PipelineAssessment.UI.Tests.Features.Intervention.InterventionManag
         [Theory]
         [AutoMoqData]
         public async Task Handle_Throws_GivenMapperThrowsException(
-            [Frozen] Mock<ICreateOverrideMapper> mapper,
             [Frozen] Mock<IAssessmentRepository> repo,
             [Frozen] Mock<IAssessmentToolWorkflowInstanceHelpers> assessmentToolWorkflowHelper,
             CreateOverrideCommand command,
@@ -31,8 +30,6 @@ namespace He.PipelineAssessment.UI.Tests.Features.Intervention.InterventionManag
             assessmentToolWorkflowHelper
                 .Setup(x => x.IsLatestSubmittedWorkflow(instance)).Returns(true);
 
-            mapper.Setup(x => x.CreateOverrideCommandToAssessmentIntervention(command)).Throws(exception);
-
             //Act
             var ex = await Assert.ThrowsAsync<ApplicationException>(() => sut.Handle(command, CancellationToken.None));
 
@@ -44,7 +41,6 @@ namespace He.PipelineAssessment.UI.Tests.Features.Intervention.InterventionManag
         [AutoMoqData]
         public async Task Handle_Throws_GivenRepoThrowsException(
             [Frozen] Mock<IAssessmentRepository> repo,
-            [Frozen] Mock<ICreateOverrideMapper> mapper,
             [Frozen] Mock<IAssessmentToolWorkflowInstanceHelpers> assessmentToolWorkflowHelper,
             CreateOverrideCommand command,
             Exception exception,
@@ -59,7 +55,6 @@ namespace He.PipelineAssessment.UI.Tests.Features.Intervention.InterventionManag
             assessmentToolWorkflowHelper
                 .Setup(x => x.IsLatestSubmittedWorkflow(instance)).Returns(true);
 
-            mapper.Setup(x => x.CreateOverrideCommandToAssessmentIntervention(command)).Returns(intervention);
             repo.Setup(x => x.CreateAssessmentIntervention(intervention)).Throws(exception);
 
             //Act
@@ -73,7 +68,6 @@ namespace He.PipelineAssessment.UI.Tests.Features.Intervention.InterventionManag
         [AutoMoqData]
         public async Task Handle_ReturnsInterventionId_GivenSuccessfulRepoCall(
             [Frozen] Mock<IAssessmentRepository> repo,
-            [Frozen] Mock<ICreateOverrideMapper> mapper,
             [Frozen]Mock<IAssessmentToolWorkflowInstanceHelpers> assessmentToolWorkflowHelper,
             CreateOverrideCommand command,
             AssessmentIntervention intervention,
@@ -86,8 +80,6 @@ namespace He.PipelineAssessment.UI.Tests.Features.Intervention.InterventionManag
 
             assessmentToolWorkflowHelper
                 .Setup(x => x.IsLatestSubmittedWorkflow(instance)).Returns(true);
-
-            mapper.Setup(x => x.CreateOverrideCommandToAssessmentIntervention(command)).Returns(intervention);
 
             repo.Setup(x => x.CreateAssessmentIntervention(intervention)).ReturnsAsync(1);
 
@@ -122,7 +114,6 @@ namespace He.PipelineAssessment.UI.Tests.Features.Intervention.InterventionManag
         [AutoMoqData]
         public async Task Handle_ThrowsException_GivenIsNotLatestSubmittedWorkflow(
             [Frozen] Mock<IAssessmentRepository> repo,
-            [Frozen] Mock<ICreateOverrideMapper> mapper,
             [Frozen] Mock<IAssessmentToolWorkflowInstanceHelpers> assessmentToolWorkflowHelper,
             CreateOverrideCommand command,
             AssessmentIntervention intervention,
@@ -135,8 +126,6 @@ namespace He.PipelineAssessment.UI.Tests.Features.Intervention.InterventionManag
 
             assessmentToolWorkflowHelper
                 .Setup(x => x.IsLatestSubmittedWorkflow(instance)).Returns(false);
-
-            mapper.Setup(x => x.CreateOverrideCommandToAssessmentIntervention(command)).Returns(intervention);
 
             repo.Setup(x => x.CreateAssessmentIntervention(intervention)).ReturnsAsync(1);
 

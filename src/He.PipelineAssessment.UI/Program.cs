@@ -66,8 +66,6 @@ builder.Services.AddScoped<IDateTimeProvider, DateTimeProvider>();
 builder.Services.AddScoped<IQuestionScreenSaveAndContinueMapper, QuestionScreenSaveAndContinueMapper>();
 builder.Services.AddScoped<IAssessmentToolMapper, AssessmentToolMapper>();
 builder.Services.AddScoped<IAssessmentToolWorkflowMapper, AssessmentToolWorkflowMapper>();
-builder.Services.AddScoped<ICreateOverrideMapper, CreateOverrideMapper>();
-builder.Services.AddScoped<ICreateRollbackMapper, CreateRollbackMapper>();
 builder.Services.AddScoped<IAssessmentInterventionMapper, AssessmentInterventionMapper>();
 builder.Services.AddScoped<NonceConfig>();
 

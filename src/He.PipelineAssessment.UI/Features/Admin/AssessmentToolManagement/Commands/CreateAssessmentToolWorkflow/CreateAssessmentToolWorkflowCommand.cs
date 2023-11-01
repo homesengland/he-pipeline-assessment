@@ -1,6 +1,4 @@
-﻿using FluentValidation.Results;
-using MediatR;
-using System.ComponentModel;
+﻿using MediatR;
 using System.ComponentModel.DataAnnotations;
 using ValidationResult = FluentValidation.Results.ValidationResult;
 
@@ -25,7 +23,7 @@ namespace He.PipelineAssessment.UI.Features.Admin.AssessmentToolManagement.Comma
         public int AssessmentToolId { get; set; }
         public int Version { get; set; } = 1;
         public bool IsLatest { get; set; } = true;
-        [Display(Name = "Is standard variation?")]
+        [Display(Name = "Is variation?")]
         public bool IsVariation { get; set; } = false;
 
         public bool IsLast { get; set; }

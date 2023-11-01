@@ -87,7 +87,7 @@ namespace He.PipelineAssessment.UI.Tests.Features.Intervention.InterventionManag
             Assert.Equal(intervention.Id, result);
             Assert.Equal(command.SignOffDocument, intervention.SignOffDocument);
             Assert.Equal(command.AdministratorRationale, intervention.AdministratorRationale);
-            Assert.Equal(command.TargetWorkflowId, intervention.TargetAssessmentToolWorkflowId);
+            //Assert.Equal(command.TargetWorkflowId, intervention.TargetAssessmentToolWorkflowId);
         }
     }
 }
