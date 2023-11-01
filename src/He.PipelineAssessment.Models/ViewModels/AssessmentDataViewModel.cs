@@ -25,7 +25,7 @@ namespace He.PipelineAssessment.Models.ViewModels
                     return "blue";
                 case "Economist Tool Not Started":
                     return "blue";
-                case "Complete":
+                case "Completed":
                     return "green";
                 case "Failed":
                     return "red";

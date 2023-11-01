@@ -57,7 +57,8 @@ namespace He.PipelineAssessment.UI.Tests.Features.Intervention
             var result = sut.AssessmentInterventionCommandFromAssessmentIntervention(assessmentIntervention);
 
             //Assert
-            Assert.Null(result.TargetWorkflowDefinitionId);
+            Assert.True(false);
+            //Assert.Null(result.TargetWorkflowDefinitionId);
         }
 
         [Theory]

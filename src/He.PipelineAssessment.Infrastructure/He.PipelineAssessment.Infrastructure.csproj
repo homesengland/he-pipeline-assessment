@@ -43,6 +43,7 @@
     <None Remove="Migrations\20231027101712_UpdateSPToReturnVariationsInOrderAtTheEnd\GetAssessmentStagesByAssessmentId.sql" />
     <None Remove="Migrations\20231027101712_UpdateSPToReturnVariationsInOrderAtTheEnd\GetStartableToolsByAssessmentId.sql" />
     <None Remove="Migrations\20231027101712_UpdateSPToReturnVariationsInOrderAtTheEnd\PopulateInterventionReasonForVariations.sql" />
+    <None Remove="Migrations\20231101164653_AddCompletedStatusToAssessmentsSP\GetAssessments.sql" />
   </ItemGroup>
 
   <ItemGroup>
@@ -82,6 +83,7 @@
     <EmbeddedResource Include="Migrations\20231027101712_UpdateSPToReturnVariationsInOrderAtTheEnd\GetAssessmentStagesByAssessmentId.sql" />
     <EmbeddedResource Include="Migrations\20231027101712_UpdateSPToReturnVariationsInOrderAtTheEnd\GetStartableToolsByAssessmentId.sql" />
     <EmbeddedResource Include="Migrations\20231030153908_AddIsVariationToInterventionReason\PopulateInterventionReasonForVariations.sql" />
+    <EmbeddedResource Include="Migrations\20231101164653_AddCompletedStatusToAssessmentsSP\GetAssessments.sql" />
   </ItemGroup>
 
   <ItemGroup>
