@@ -924,7 +924,9 @@ namespace He.PipelineAssessment.UI.Tests.Services
             AssessmentIntervention interventionToSave = intervention;
             interventionToSave.AdministratorRationale = command.AdministratorRationale;
             interventionToSave.SignOffDocument = command.SignOffDocument;
+            #pragma warning disable 0612, 0618
             interventionToSave.TargetAssessmentToolWorkflowId = command.TargetWorkflowId;
+            #pragma warning restore 0612, 0618
             interventionToSave.Administrator = command.Administrator;
             interventionToSave.AdministratorEmail = command.AdministratorEmail;
 

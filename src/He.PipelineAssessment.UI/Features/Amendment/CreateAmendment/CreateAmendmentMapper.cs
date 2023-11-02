@@ -28,7 +28,9 @@ namespace He.PipelineAssessment.UI.Features.Amendment.CreateAmendment
                 AdministratorRationale = command.AdministratorRationale,
                 AdministratorEmail = command.AdministratorEmail,
                 AssessmentToolWorkflowInstanceId = command.AssessmentToolWorkflowInstanceId,
+                #pragma warning disable 0612, 0618
                 TargetAssessmentToolWorkflowId = command.TargetWorkflowId,
+                #pragma warning restore 0612, 0618
                 AssessorRationale = command.AssessorRationale,
                 CreatedBy = command.RequestedBy ?? "",
                 DateSubmitted = createdDateTime,
