@@ -1,41 +1,36 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows.Input;
-using AutoFixture.Xunit2;
+﻿using AutoFixture.Xunit2;
 using He.PipelineAssessment.Models;
 using He.PipelineAssessment.Tests.Common;
-using Moq;
 using He.PipelineAssessment.UI.Common.Utility;
-using He.PipelineAssessment.UI.Features.Rollback.CreateRollback;
+using He.PipelineAssessment.UI.Features.Amendment.CreateAmendment;
+using Moq;
 using Xunit;
 
-namespace He.PipelineAssessment.UI.Tests.Features.Rollback.CreateRollback
+namespace He.PipelineAssessment.UI.Tests.Features.Amendment.CreateAmendment
 {
-    public class CreateRollbackMapperTests
+    public class CreateAmendmentMapperTests
     {
+
         [Theory]
         [AutoMoqData]
-        public void CreateRollbackCommandToAssessmentIntervention_MapsCorrectly(
+        public void CreateAmendmentCommandToAssessmentIntervention_MapsCorrectly(
             [Frozen] Mock<IDateTimeProvider> dateTimeProvider,
-            CreateRollbackCommand command,
-            CreateRollbackMapper sut
+            CreateAmendmentCommand command,
+            CreateAmendmentMapper sut
             )
         {
 
             //Arrange
             var date = DateTime.UtcNow;
             dateTimeProvider.Setup(x => x.UtcNow()).Returns(date);
-            
+
             //Act
-            var result = sut.CreateRollbackCommandToAssessmentIntervention(command);
+            var result = sut.CreateAmendmentCommandToAssessmentIntervention(command);
 
             //Assert
-            Assert.Equal(date,result.CreatedDateTime);
-            Assert.Equal(date,result.DateSubmitted);
-            Assert.Equal(date,result.LastModifiedDateTime);
+            Assert.Equal(date, result.CreatedDateTime);
+            Assert.Equal(date, result.DateSubmitted);
+            Assert.Equal(date, result.LastModifiedDateTime);
             Assert.Equal(command.Administrator, result.Administrator);
             Assert.Equal(command.AdministratorRationale, result.AdministratorRationale);
             Assert.Equal(command.AdministratorEmail, result.AdministratorEmail);

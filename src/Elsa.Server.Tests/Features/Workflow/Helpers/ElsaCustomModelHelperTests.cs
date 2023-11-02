@@ -235,7 +235,7 @@ namespace Elsa.Server.Tests.Features.Workflow.Helpers
         [InlineAutoMoqData((string?)null)]
         [InlineAutoMoqData("")]
         public void CreateQuestion_ShouldDefaultToActivityId_GivenNullOrEmptyActivityName(
-            string? activityName,
+            string activityName,
             [Frozen] Mock<IDateTimeProvider> mockDateTimeProvider,
             string nextActivityId,
             string nextActivityType,

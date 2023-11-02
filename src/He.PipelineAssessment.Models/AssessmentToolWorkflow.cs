@@ -1,4 +1,6 @@
-﻿namespace He.PipelineAssessment.Models
+﻿using System.Text.Json.Serialization;
+
+namespace He.PipelineAssessment.Models
 {
     public class AssessmentToolWorkflow : AuditableEntity
     {
@@ -10,11 +12,14 @@
         public bool IsLatest { get; set; }
         public string Name { get; set; } = null!;
         public bool IsEconomistWorkflow { get; set; }
+        public bool IsVariation { get; set; }
+        public bool IsLast { get; set; }
         public string? Status { get; set; }
+        public bool IsAmendable { get; set; }
 
         public virtual AssessmentTool AssessmentTool { get; set; } = null!;
+        [JsonIgnore]
+        public virtual List<TargetAssessmentToolWorkflow>? TargetAssessmentToolWorkflows { get; set; }
 
-        public virtual List<AssessmentIntervention>? AssessmentInterventions { get; set; }
-        
     }
 }

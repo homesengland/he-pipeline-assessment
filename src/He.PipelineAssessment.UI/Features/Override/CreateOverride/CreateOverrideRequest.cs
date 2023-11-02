@@ -1,10 +1,11 @@
-﻿using He.PipelineAssessment.UI.Features.Intervention;
-using MediatR;
+﻿using He.PipelineAssessment.Models;
+using He.PipelineAssessment.UI.Features.Intervention;
 
 namespace He.PipelineAssessment.UI.Features.Override.CreateOverride
 {
-    public class CreateOverrideRequest : IRequest<AssessmentInterventionDto>
+    public class CreateOverrideRequest : CreateInterventionRequest
     {
-        public string WorkflowInstanceId { get; set; } = null!;
+        public override string DecisionType => InterventionDecisionTypes.Override;
+        public override string InitialStatus => InterventionStatus.Pending;
     }
 }

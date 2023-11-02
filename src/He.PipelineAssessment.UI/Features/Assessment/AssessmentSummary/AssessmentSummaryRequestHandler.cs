@@ -38,17 +38,17 @@ namespace He.PipelineAssessment.UI.Features.Assessment.AssessmentSummary
                 if (assessmentStages.Any())
                 {
                     //Get distinct list of tools
-                    var uniqueTools = assessmentStages.Select(x => new { x.AssessmentToolId, x.Name, x.Order })
+                    var uniqueTools = assessmentStages.Select(x => new { x.AssessmentToolId, x.Name, x.Order, x.IsVariation })
                       .Distinct().ToList();
                     foreach (var assessmentTool in uniqueTools)
                     {
                        //Add All Current Workflow Instances in Draft or Submitted
-                       var assessmentStagesForCurrentTool = assessmentStages.Where(x => x.AssessmentToolId == assessmentTool.AssessmentToolId);
+                       var assessmentStagesForCurrentTool = assessmentStages.Where(x => x.AssessmentToolId == assessmentTool.AssessmentToolId && x.IsVariation == assessmentTool.IsVariation);
                        var workflowInstances = AssessmentSummaryStage(assessmentStagesForCurrentTool).ToList();
                        stages.AddRange(workflowInstances);
 
                         //Add All Startable Tools
-                        var startableWorkflowForCurrentTool = startableWorkflows.Where(x => x.AssessmentToolId == assessmentTool.AssessmentToolId);
+                        var startableWorkflowForCurrentTool = startableWorkflows.Where(x => x.AssessmentToolId == assessmentTool.AssessmentToolId && x.IsVariation == assessmentTool.IsVariation);
                         var startableList = AssessmentSummaryStage(startableWorkflowForCurrentTool,assessmentTool.Name,assessmentTool.Order).ToList();
                         stages.AddRange(startableList);
                             
@@ -118,6 +118,7 @@ namespace He.PipelineAssessment.UI.Features.Assessment.AssessmentSummary
                     WorkflowDefinitionId = startableAssessmentTool?.WorkflowDefinitionId,
                     AssessmentToolId = startableAssessmentTool?.AssessmentToolId,
                     IsFirstWorkflow = startableAssessmentTool?.IsFirstWorkflow,
+                    IsVariation = startableAssessmentTool?.IsVariation,
                     AssessmentToolWorkflowId = startableAssessmentTool?.AssessmentToolWorkflowId
                 };
                 stageList.Add(stage);
@@ -150,6 +151,7 @@ namespace He.PipelineAssessment.UI.Features.Assessment.AssessmentSummary
                         SubmittedDateTime = item.SubmittedDateTime,
                         AssessmentToolId = item.AssessmentToolId,
                         IsFirstWorkflow = item.IsFirstWorkflow,
+                        IsVariation = item.IsVariation,
                         AssessmentToolWorkflowInstanceId = item.AssessmentToolWorkflowInstanceId,
                         Result = item.Result,
                         SubmittedBy = item.SubmittedBy,

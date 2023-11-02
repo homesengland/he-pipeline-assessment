@@ -25,7 +25,7 @@ namespace He.PipelineAssessment.UI.Tests.Features.Workflow.LoadConfirmationScree
                 .ReturnsAsync((WorkflowActivityDataDto?)null);
 
             //Act
-            var ex = await Assert.ThrowsAsync<ApplicationException>(()=>sut.Handle(request, CancellationToken.None));
+            var ex = await Assert.ThrowsAsync<ApplicationException>(() => sut.Handle(request, CancellationToken.None));
 
             //Assert
             elsaServerHttpClient.Verify(x => x.LoadConfirmationScreen(It.IsAny<LoadWorkflowActivityDto>()), Times.Once);
@@ -46,11 +46,12 @@ namespace He.PipelineAssessment.UI.Tests.Features.Workflow.LoadConfirmationScree
             elsaServerHttpClient.Setup(x => x.LoadConfirmationScreen(It.IsAny<LoadWorkflowActivityDto>()))
                 .ReturnsAsync(workflowActivityDataDto);
 
-            assessmentRepository.Setup(x => x.GetAssessmentToolWorkflowInstance(workflowActivityDataDto.Data.WorkflowInstanceId))
+            assessmentRepository.Setup(x =>
+                    x.GetAssessmentToolWorkflowInstance(workflowActivityDataDto.Data.WorkflowInstanceId))
                 .ReturnsAsync((AssessmentToolWorkflowInstance?)null);
 
             //Act
-            var ex = await Assert.ThrowsAsync<ApplicationException>(()=>sut.Handle(request, CancellationToken.None));
+            var ex = await Assert.ThrowsAsync<ApplicationException>(() => sut.Handle(request, CancellationToken.None));
 
             //Assert
             Assert.Equal("Failed to load Confirmation Screen activity.", ex.Message);
@@ -72,7 +73,8 @@ namespace He.PipelineAssessment.UI.Tests.Features.Workflow.LoadConfirmationScree
             elsaServerHttpClient.Setup(x => x.LoadConfirmationScreen(It.IsAny<LoadWorkflowActivityDto>()))
                 .ReturnsAsync(workflowActivityDataDto);
 
-            assessmentRepository.Setup(x => x.GetAssessmentToolWorkflowInstance(workflowActivityDataDto.Data.WorkflowInstanceId))
+            assessmentRepository.Setup(x =>
+                    x.GetAssessmentToolWorkflowInstance(workflowActivityDataDto.Data.WorkflowInstanceId))
                 .ReturnsAsync(stage);
 
             //Act
@@ -90,20 +92,22 @@ namespace He.PipelineAssessment.UI.Tests.Features.Workflow.LoadConfirmationScree
         [Theory]
         [AutoMoqData]
         public async Task Handle_CreatesNextWorkflows_GivenTheyDoNotExistAndNextWorkflowDefinitionIdsIsNotEmpty
-            (
-                [Frozen] Mock<IElsaServerHttpClient> elsaServerHttpClient,
-                [Frozen] Mock<IAssessmentRepository> assessmentRepository,
-                AssessmentToolWorkflowInstance assessmentToolWorkflowInstance,
-                LoadConfirmationScreenRequest request,
-                WorkflowActivityDataDto workflowActivityDataDto,
-                LoadConfirmationScreenRequestHandler sut)
+        (
+            [Frozen] Mock<IElsaServerHttpClient> elsaServerHttpClient,
+            [Frozen] Mock<IAssessmentRepository> assessmentRepository,
+            AssessmentToolWorkflowInstance assessmentToolWorkflowInstance,
+            LoadConfirmationScreenRequest request,
+            WorkflowActivityDataDto workflowActivityDataDto,
+            LoadConfirmationScreenRequestHandler sut)
         {
             //Arrange
             assessmentToolWorkflowInstance.Status = AssessmentToolWorkflowInstanceConstants.Draft;
+            assessmentToolWorkflowInstance.IsVariation = false;
             elsaServerHttpClient.Setup(x => x.LoadConfirmationScreen(It.IsAny<LoadWorkflowActivityDto>()))
                 .ReturnsAsync(workflowActivityDataDto);
 
-            assessmentRepository.Setup(x => x.GetAssessmentToolWorkflowInstance(workflowActivityDataDto.Data.WorkflowInstanceId))
+            assessmentRepository.Setup(x =>
+                    x.GetAssessmentToolWorkflowInstance(workflowActivityDataDto.Data.WorkflowInstanceId))
                 .ReturnsAsync(assessmentToolWorkflowInstance);
             workflowActivityDataDto.Data.NextWorkflowDefinitionIds = "workflowDefinition1, workflowDefinition2";
             assessmentRepository
@@ -128,22 +132,24 @@ namespace He.PipelineAssessment.UI.Tests.Features.Workflow.LoadConfirmationScree
         [Theory]
         [AutoMoqData]
         public async Task Handle_CreatesOnlyNextWorkflowsWhichDoNotExist_GivenNextWorkflowDefinitionIdsIsNotEmpty
-            (
-                [Frozen] Mock<IElsaServerHttpClient> elsaServerHttpClient,
-                [Frozen] Mock<IAssessmentRepository> assessmentRepository,
-                AssessmentToolWorkflowInstance assessmentToolWorkflowInstance,
-                LoadConfirmationScreenRequest request,
-                WorkflowActivityDataDto workflowActivityDataDto,
-                AssessmentToolInstanceNextWorkflow nextWorkflow1,
-                LoadConfirmationScreenRequestHandler sut
-            )
+        (
+            [Frozen] Mock<IElsaServerHttpClient> elsaServerHttpClient,
+            [Frozen] Mock<IAssessmentRepository> assessmentRepository,
+            AssessmentToolWorkflowInstance assessmentToolWorkflowInstance,
+            LoadConfirmationScreenRequest request,
+            WorkflowActivityDataDto workflowActivityDataDto,
+            AssessmentToolInstanceNextWorkflow nextWorkflow1,
+            LoadConfirmationScreenRequestHandler sut
+        )
         {
             //Arrange
             assessmentToolWorkflowInstance.Status = AssessmentToolWorkflowInstanceConstants.Draft;
+            assessmentToolWorkflowInstance.IsVariation = false;
             elsaServerHttpClient.Setup(x => x.LoadConfirmationScreen(It.IsAny<LoadWorkflowActivityDto>()))
                 .ReturnsAsync(workflowActivityDataDto);
 
-            assessmentRepository.Setup(x => x.GetAssessmentToolWorkflowInstance(workflowActivityDataDto.Data.WorkflowInstanceId))
+            assessmentRepository.Setup(x =>
+                    x.GetAssessmentToolWorkflowInstance(workflowActivityDataDto.Data.WorkflowInstanceId))
                 .ReturnsAsync(assessmentToolWorkflowInstance);
             workflowActivityDataDto.Data.NextWorkflowDefinitionIds = "workflowDefinition1, workflowDefinition2";
             assessmentRepository
@@ -165,22 +171,23 @@ namespace He.PipelineAssessment.UI.Tests.Features.Workflow.LoadConfirmationScree
         [Theory]
         [AutoMoqData]
         public async Task Handle_DoesNotCreateNextWorkflows_GivenTheyExistAndNextWorkflowDefinitionIdsIsNotEmpty
-            (
-                [Frozen] Mock<IElsaServerHttpClient> elsaServerHttpClient,
-                [Frozen] Mock<IAssessmentRepository> assessmentRepository,
-                AssessmentToolWorkflowInstance assessmentToolWorkflowInstance,
-                LoadConfirmationScreenRequest request,
-                WorkflowActivityDataDto workflowActivityDataDto,
-                AssessmentToolInstanceNextWorkflow nextWorkflow1,
-                AssessmentToolInstanceNextWorkflow nextWorkflow2,
-                LoadConfirmationScreenRequestHandler sut
-            )
+        (
+            [Frozen] Mock<IElsaServerHttpClient> elsaServerHttpClient,
+            [Frozen] Mock<IAssessmentRepository> assessmentRepository,
+            AssessmentToolWorkflowInstance assessmentToolWorkflowInstance,
+            LoadConfirmationScreenRequest request,
+            WorkflowActivityDataDto workflowActivityDataDto,
+            AssessmentToolInstanceNextWorkflow nextWorkflow1,
+            AssessmentToolInstanceNextWorkflow nextWorkflow2,
+            LoadConfirmationScreenRequestHandler sut
+        )
         {
             //Arrange
             elsaServerHttpClient.Setup(x => x.LoadConfirmationScreen(It.IsAny<LoadWorkflowActivityDto>()))
                 .ReturnsAsync(workflowActivityDataDto);
 
-            assessmentRepository.Setup(x => x.GetAssessmentToolWorkflowInstance(workflowActivityDataDto.Data.WorkflowInstanceId))
+            assessmentRepository.Setup(x =>
+                    x.GetAssessmentToolWorkflowInstance(workflowActivityDataDto.Data.WorkflowInstanceId))
                 .ReturnsAsync(assessmentToolWorkflowInstance);
             workflowActivityDataDto.Data.NextWorkflowDefinitionIds = "workflowDefinition1, workflowDefinition2";
             assessmentRepository
@@ -205,20 +212,21 @@ namespace He.PipelineAssessment.UI.Tests.Features.Workflow.LoadConfirmationScree
         [Theory]
         [AutoMoqData]
         public async Task Handle_DoesNotAttemptToCreateNextWorkflows_GivenNextWorkflowDefinitionIdsIsEmpty
-            (
-                [Frozen] Mock<IElsaServerHttpClient> elsaServerHttpClient,
-                [Frozen] Mock<IAssessmentRepository> assessmentRepository,
-                AssessmentToolWorkflowInstance assessmentToolWorkflowInstance,
-                LoadConfirmationScreenRequest request,
-                WorkflowActivityDataDto workflowActivityDataDto,
-                LoadConfirmationScreenRequestHandler sut
-            )
+        (
+            [Frozen] Mock<IElsaServerHttpClient> elsaServerHttpClient,
+            [Frozen] Mock<IAssessmentRepository> assessmentRepository,
+            AssessmentToolWorkflowInstance assessmentToolWorkflowInstance,
+            LoadConfirmationScreenRequest request,
+            WorkflowActivityDataDto workflowActivityDataDto,
+            LoadConfirmationScreenRequestHandler sut
+        )
         {
             //Arrange
             elsaServerHttpClient.Setup(x => x.LoadConfirmationScreen(It.IsAny<LoadWorkflowActivityDto>()))
                 .ReturnsAsync(workflowActivityDataDto);
 
-            assessmentRepository.Setup(x => x.GetAssessmentToolWorkflowInstance(workflowActivityDataDto.Data.WorkflowInstanceId))
+            assessmentRepository.Setup(x =>
+                    x.GetAssessmentToolWorkflowInstance(workflowActivityDataDto.Data.WorkflowInstanceId))
                 .ReturnsAsync(assessmentToolWorkflowInstance);
             workflowActivityDataDto.Data.NextWorkflowDefinitionIds = string.Empty;
 
@@ -227,26 +235,28 @@ namespace He.PipelineAssessment.UI.Tests.Features.Workflow.LoadConfirmationScree
 
             //Assert
             assessmentRepository.Verify(x =>
-                x.CreateAssessmentToolInstanceNextWorkflows(It.IsAny<List<AssessmentToolInstanceNextWorkflow>>()), Times.Never);
+                    x.CreateAssessmentToolInstanceNextWorkflows(It.IsAny<List<AssessmentToolInstanceNextWorkflow>>()),
+                Times.Never);
         }
 
         [Theory]
         [AutoMoqData]
         public async Task Handle_DoesNotAttemptToCreateNextWorkflows_GivenNextWorkflowDefinitionIdsIsNull
-            (
-                [Frozen] Mock<IElsaServerHttpClient> elsaServerHttpClient,
-                [Frozen] Mock<IAssessmentRepository> assessmentRepository,
-                AssessmentToolWorkflowInstance assessmentToolWorkflowInstance,
-                LoadConfirmationScreenRequest request,
-                WorkflowActivityDataDto workflowActivityDataDto,
-                LoadConfirmationScreenRequestHandler sut
-            )
+        (
+            [Frozen] Mock<IElsaServerHttpClient> elsaServerHttpClient,
+            [Frozen] Mock<IAssessmentRepository> assessmentRepository,
+            AssessmentToolWorkflowInstance assessmentToolWorkflowInstance,
+            LoadConfirmationScreenRequest request,
+            WorkflowActivityDataDto workflowActivityDataDto,
+            LoadConfirmationScreenRequestHandler sut
+        )
         {
             //Arrange
             elsaServerHttpClient.Setup(x => x.LoadConfirmationScreen(It.IsAny<LoadWorkflowActivityDto>()))
                 .ReturnsAsync(workflowActivityDataDto);
 
-            assessmentRepository.Setup(x => x.GetAssessmentToolWorkflowInstance(workflowActivityDataDto.Data.WorkflowInstanceId))
+            assessmentRepository.Setup(x =>
+                    x.GetAssessmentToolWorkflowInstance(workflowActivityDataDto.Data.WorkflowInstanceId))
                 .ReturnsAsync(assessmentToolWorkflowInstance);
             workflowActivityDataDto.Data.NextWorkflowDefinitionIds = null;
 
@@ -255,7 +265,25 @@ namespace He.PipelineAssessment.UI.Tests.Features.Workflow.LoadConfirmationScree
 
             //Assert
             assessmentRepository.Verify(x =>
-                x.CreateAssessmentToolInstanceNextWorkflows(It.IsAny<List<AssessmentToolInstanceNextWorkflow>>()), Times.Never);
+                    x.CreateAssessmentToolInstanceNextWorkflows(It.IsAny<List<AssessmentToolInstanceNextWorkflow>>()),
+                Times.Never);
+        }
+
+        [Theory]
+        [AutoMoqData]
+        public async Task Handle_DoesNotCreateNextWorkflows_GivenCurrentInstanceIsVariation
+        (
+            [Frozen] Mock<IElsaServerHttpClient> elsaServerHttpClient,
+            [Frozen] Mock<IAssessmentRepository> assessmentRepository,
+            AssessmentToolWorkflowInstance assessmentToolWorkflowInstance,
+            LoadConfirmationScreenRequest request,
+            WorkflowActivityDataDto workflowActivityDataDto,
+            AssessmentToolInstanceNextWorkflow nextWorkflow1,
+            AssessmentToolInstanceNextWorkflow nextWorkflow2,
+            LoadConfirmationScreenRequestHandler sut
+        )
+        {
+            //TODO this + maybe other scenarios
         }
     }
 }

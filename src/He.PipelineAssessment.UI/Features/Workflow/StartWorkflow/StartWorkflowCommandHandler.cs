@@ -51,8 +51,6 @@ namespace He.PipelineAssessment.UI.Features.Workflow.StartWorkflow
 
                     var assessmentToolWorkflowInstance = AssessmentToolWorkflowInstance(request, response);
 
-                    await _assessmentRepository.CreateAssessmentToolWorkflowInstance(assessmentToolWorkflowInstance);
-
                     //if there is a next workflow record for the current set it to started
                     var nextWorkflow =
                         await _assessmentRepository.GetAssessmentToolInstanceNextWorkflowByAssessmentId(request.AssessmentId,
@@ -60,8 +58,11 @@ namespace He.PipelineAssessment.UI.Features.Workflow.StartWorkflow
 
                     if (nextWorkflow != null)
                     {
+                        assessmentToolWorkflowInstance.IsVariation = nextWorkflow.IsVariation;
                         await _assessmentRepository.DeleteNextWorkflow(nextWorkflow);
                     }
+
+                    await _assessmentRepository.CreateAssessmentToolWorkflowInstance(assessmentToolWorkflowInstance);
 
                     return await Task.FromResult(result);
                 }

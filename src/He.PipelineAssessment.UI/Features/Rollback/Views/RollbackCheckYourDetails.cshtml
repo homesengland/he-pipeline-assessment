@@ -82,10 +82,17 @@
                                         Target Workflow Definition
                                     </dt>
                                     <dd class="govuk-summary-list__value">
-                                        <p>@Model.TargetWorkflowDefinitionName</p>
-                                        <p class="govuk-hint">
-                                            @Model.TargetWorkflowDefinitionId
-                                        </p>
+                                        @if (Model.SelectedWorkflowDefinitions.Any())
+                                        {
+                                            @foreach (var definition in Model.SelectedWorkflowDefinitions)
+                                            {
+                                                <p>@definition.DisplayName</p>
+                                            }
+                                        }
+                                        else
+                                        {
+                                            <p>@Model.TargetWorkflowId</p>
+                                        }
                                     </dd>
                                     <dd class="govuk-summary-list__actions">
                                         @if (isEditable)
@@ -107,6 +114,7 @@
                     </div>
 
                     @Html.HiddenFor(x => Model.AssessmentInterventionId)
+                    @Html.HiddenFor(x => Model.DecisionType)
 
                 </fieldset>
             </div>

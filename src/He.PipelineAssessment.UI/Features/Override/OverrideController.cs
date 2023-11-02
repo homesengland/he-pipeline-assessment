@@ -110,7 +110,7 @@ namespace He.PipelineAssessment.UI.Features.Override
         public async Task<IActionResult> CheckYourDetails(int interventionId)
         {
 
-            SubmitOverrideCommand model = await _mediator.Send(new LoadOverrideCheckYourAnswersRequest() { InterventionId = interventionId });
+            SubmitOverrideCommand model = (SubmitOverrideCommand)await _mediator.Send(new LoadOverrideCheckYourAnswersRequest() { InterventionId = interventionId });
             return View("OverrideCheckYourDetails", model);
 
         }

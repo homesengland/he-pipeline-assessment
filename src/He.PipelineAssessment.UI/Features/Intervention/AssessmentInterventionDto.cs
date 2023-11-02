@@ -7,7 +7,7 @@ namespace He.PipelineAssessment.UI.Features.Intervention
     {
         public AssessmentInterventionCommand AssessmentInterventionCommand { get; set; } = new();
         public ValidationResult? ValidationResult { get; set; }
-        public List<TargetWorkflowDefinition>? TargetWorkflowDefinitions { get; set; }
+        public List<TargetWorkflowDefinition> TargetWorkflowDefinitions { get; set; } = new();
         public List<InterventionReason>? InterventionReasons { get; set; }
     }
 
@@ -20,6 +20,7 @@ namespace He.PipelineAssessment.UI.Features.Intervention
         public string Name { get; set; } = null!;
 
         public string DisplayName => $"{Name} ({WorkflowDefinitionId})";
+        public bool IsSelected { get; set; }
     }
 
     public struct DtoConfig

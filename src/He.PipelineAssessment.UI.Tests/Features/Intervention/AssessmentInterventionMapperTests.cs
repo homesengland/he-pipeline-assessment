@@ -1,6 +1,10 @@
-﻿using He.PipelineAssessment.Models;
+﻿using AutoFixture.Xunit2;
+using He.PipelineAssessment.Models;
 using He.PipelineAssessment.Tests.Common;
+using He.PipelineAssessment.UI.Common.Utility;
 using He.PipelineAssessment.UI.Features.Intervention;
+using Microsoft.Extensions.Logging;
+using Moq;
 using Xunit;
 
 namespace He.PipelineAssessment.UI.Tests.Features.Intervention
@@ -38,28 +42,26 @@ namespace He.PipelineAssessment.UI.Tests.Features.Intervention
             Assert.Equal(assessmentIntervention.AssessorRationale, result.AssessorRationale);
             Assert.Equal(assessmentIntervention.DateSubmitted, result.DateSubmitted);
             Assert.Equal(assessmentIntervention.Status, result.Status);
-            Assert.Equal(assessmentIntervention.TargetAssessmentToolWorkflowId, result.TargetWorkflowId);
-            Assert.Equal(assessmentIntervention.TargetAssessmentToolWorkflow!.WorkflowDefinitionId, result.TargetWorkflowDefinitionId);
-            Assert.Equal($"{assessmentIntervention.TargetAssessmentToolWorkflow?.AssessmentTool.Name} - {assessmentIntervention.TargetAssessmentToolWorkflow?.Name}", result.TargetWorkflowDefinitionName);
+            //Assert.Equal(assessmentIntervention.TargetAssessmentToolWorkflowId, result.TargetWorkflowId);
             Assert.Equal(assessmentIntervention.AssessmentToolWorkflowInstance.AssessmentId, result.AssessmentId);
             Assert.Equal(assessmentIntervention.AssessmentToolWorkflowInstance.Assessment.SpId, result.CorrelationId);
         }
 
         [Theory]
         [AutoMoqData]
-        public void AssessmentInterventionCommandFromAssessmentIntervention_DoesNotThrow_GivenTargetAssessmentToolWorkflowNull(
+        public void AssessmentInterventionCommandFromAssessmentIntervention_DoesNotThrow_GivenTargetAssessmentToolWorkflowEmpty(
             AssessmentIntervention assessmentIntervention,
             AssessmentInterventionMapper sut
         )
         {
             //Arrange
-            assessmentIntervention.TargetAssessmentToolWorkflow = null;
+            assessmentIntervention.TargetAssessmentToolWorkflows = new List<TargetAssessmentToolWorkflow>();
 
             //Act
             var result = sut.AssessmentInterventionCommandFromAssessmentIntervention(assessmentIntervention);
 
             //Assert
-            Assert.Null(result.TargetWorkflowDefinitionId);
+            Assert.Empty(result.TargetWorkflowDefinitions);
         }
 
         [Theory]
@@ -72,7 +74,7 @@ namespace He.PipelineAssessment.UI.Tests.Features.Intervention
             //Arrange
 
             //Act
-            var result = sut.TargetWorkflowDefinitionsFromAssessmentToolWorkflows(assessmentToolWorkflows);
+            var result = sut.TargetWorkflowDefinitionsFromAssessmentToolWorkflows(assessmentToolWorkflows, new List<TargetWorkflowDefinition>());
 
             //Assert
             Assert.Equal(assessmentToolWorkflows.Count, result.Count);
@@ -126,21 +128,25 @@ namespace He.PipelineAssessment.UI.Tests.Features.Intervention
         [Theory]
         [AutoMoqData]
         public void AssessmentInterventionFromAssessmentInterventionCommand_ReturnsCorrectDtoObject(
+            [Frozen] Mock<IDateTimeProvider> datetimeProvider,
+            [Frozen] Mock<ILogger<AssessmentInterventionMapper>> logger,
             AssessmentInterventionCommand command,
-          AssessmentInterventionMapper sut
-      )
+            DateTime dateTime)
         {
             //Arrange
-
+            command.DateSubmitted = dateTime;
+            command.DecisionType = InterventionDecisionTypes.Override;
+            command.Status = InterventionStatus.Pending;
+            datetimeProvider.Setup(x => x.UtcNow()).Returns(dateTime);
+            AssessmentInterventionMapper sut = new AssessmentInterventionMapper(logger.Object, datetimeProvider.Object);
             //Act
             var result = sut.AssessmentInterventionFromAssessmentInterventionCommand(command);
 
             //Assert
             Assert.NotNull(result);
             Assert.IsType<AssessmentIntervention>(result);
-            Assert.Equal(command.AssessmentInterventionId, result.Id);
             Assert.Equal(command.AssessmentToolWorkflowInstanceId, result.AssessmentToolWorkflowInstanceId);
-            Assert.Equal(command.TargetWorkflowId, result.TargetAssessmentToolWorkflowId);
+            //Assert.Equal(command.TargetWorkflowId, result.TargetAssessmentToolWorkflowId);
             Assert.Equal(command.RequestedBy, result.RequestedBy);
             Assert.Equal(command.RequestedByEmail, result.RequestedByEmail);
             Assert.Equal(command.Administrator, result.Administrator);

@@ -4,6 +4,7 @@
     {
         public int Id { get; set; }
         public int AssessmentToolWorkflowInstanceId { get; set; }
+        [Obsolete("It was used when assessment intervention could only trigger one new workflow")]
         public int? TargetAssessmentToolWorkflowId { get; set; }
         public string RequestedBy { get; set; } = null!;
         public string RequestedByEmail { get; set; } = null!; 
@@ -16,7 +17,7 @@
         public DateTime DateSubmitted { get; set; }
         public string Status { get; set; } = null!;
 
-        public virtual AssessmentToolWorkflow? TargetAssessmentToolWorkflow { get; set; } = null!;
+        public virtual List<TargetAssessmentToolWorkflow> TargetAssessmentToolWorkflows { get; set; } = new();
 
         public virtual AssessmentToolWorkflowInstance AssessmentToolWorkflowInstance { get; set; } = null!;
         public string? AssessmentResult { get; set; }

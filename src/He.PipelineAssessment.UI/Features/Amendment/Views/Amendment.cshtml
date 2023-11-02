@@ -1,0 +1,31 @@
+﻿@model He.PipelineAssessment.UI.Features.Intervention.AssessmentInterventionDto;
+
+@{
+    ViewData["Title"] = "Create Assessment Amendment";
+    Layout = "_Layout";
+}
+<div class="text-center">
+    @{
+        var errorFormClass = "";
+        if (Model.ValidationResult != null)
+        {
+            errorFormClass = !Model.ValidationResult.IsValid ? "govuk-form-group--error" : "";
+        }
+
+        if (Model.ValidationResult != null && !Model.ValidationResult.IsValid)
+        {
+            @await Html.PartialAsync("~/Features/Workflow/Views/Shared/_ValidationSummary.cshtml", Model.ValidationResult)
+        }
+        using (Html.BeginForm("CreateAmendment", "Amendment", FormMethod.Post))
+        {
+            @Html.AntiForgeryToken()
+            <div class="govuk-form-group @errorFormClass">
+                <div class="govuk-!-padding-bottom-6">
+                    @await Html.PartialAsync("_CreateOrEditAmendment.cshtml", Model)
+                </div>
+
+                <input id="Next" type="submit" value="Save and continue" name="Next" class="govuk-button" />
+            </div>
+        }
+    }
+</div>

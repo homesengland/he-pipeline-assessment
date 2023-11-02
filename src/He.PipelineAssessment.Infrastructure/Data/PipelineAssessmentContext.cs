@@ -20,6 +20,7 @@ namespace He.PipelineAssessment.Infrastructure.Data
         public DbSet<AssessmentToolInstanceNextWorkflow> AssessmentToolInstanceNextWorkflow { get; set; } = default!;
         public DbSet<AssessmentToolWorkflow> AssessmentToolWorkflow { get; set; } = default!;
         public DbSet<AssessmentIntervention> AssessmentIntervention { get; set; } = default!;
+        public DbSet<TargetAssessmentToolWorkflow> TargetAssessmentToolWorkflow { get; set; } = default!;
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
