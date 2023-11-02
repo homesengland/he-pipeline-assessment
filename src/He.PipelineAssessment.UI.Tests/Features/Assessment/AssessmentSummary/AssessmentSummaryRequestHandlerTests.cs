@@ -152,7 +152,7 @@ namespace He.PipelineAssessment.UI.Tests.Features.Assessment.AssessmentSummary
             //Arrange
             stage.WorkflowDefinitionId = null;
             stage.IsFirstWorkflow = null;
-            stage.AssessmentToolWorkflowInstanceId = null;
+            stage.AssessmentToolWorkflowInstanceId = 123;
             var stages = new List<AssessmentStageViewModel>()
             {
                 stage
