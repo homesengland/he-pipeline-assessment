@@ -49,20 +49,19 @@ namespace He.PipelineAssessment.UI.Tests.Features.Intervention
 
         [Theory]
         [AutoMoqData]
-        public void AssessmentInterventionCommandFromAssessmentIntervention_DoesNotThrow_GivenTargetAssessmentToolWorkflowNull(
+        public void AssessmentInterventionCommandFromAssessmentIntervention_DoesNotThrow_GivenTargetAssessmentToolWorkflowEmpty(
             AssessmentIntervention assessmentIntervention,
             AssessmentInterventionMapper sut
         )
         {
             //Arrange
-            //assessmentIntervention.TargetAssessmentToolWorkflow = null;
+            assessmentIntervention.TargetAssessmentToolWorkflows = new List<TargetAssessmentToolWorkflow>();
 
             //Act
             var result = sut.AssessmentInterventionCommandFromAssessmentIntervention(assessmentIntervention);
 
             //Assert
-            Assert.True(false);
-            //Assert.Null(result.TargetWorkflowDefinitionId);
+            Assert.Empty(result.TargetWorkflowDefinitions);
         }
 
         [Theory]
