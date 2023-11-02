@@ -6,7 +6,6 @@ namespace He.PipelineAssessment.UI.Features.Override.SubmitOverride
 {
     public class SubmitOverrideCommand : AssessmentInterventionCommand, IRequest
     {
-        //TODO: change this to override
-        public override string FinalInstanceStatus => AssessmentToolWorkflowInstanceConstants.SuspendedRollBack;
+        public override string FinalInstanceStatus => AssessmentToolWorkflowInstanceConstants.SuspendOverrides;
     }
 }
