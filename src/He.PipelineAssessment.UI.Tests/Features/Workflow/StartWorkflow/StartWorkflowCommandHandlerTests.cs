@@ -130,6 +130,7 @@ namespace He.PipelineAssessment.UI.Tests.Features.Workflow.StartWorkflow
             && y.Status == AssessmentToolWorkflowInstanceConstants.Draft
             && y.WorkflowName == workflowNextActivityDataDto.Data.WorkflowName
             && y.WorkflowDefinitionId == command.WorkflowDefinitionId
+            && y.IsVariation == assessmentToolInstanceNextWorkflow.IsVariation
             && y.AssessmentToolWorkflowId == command.AssessmentToolWorkflowId)), Times.Once);
         }
     }

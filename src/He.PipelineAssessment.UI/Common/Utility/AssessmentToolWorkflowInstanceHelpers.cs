@@ -11,12 +11,13 @@ namespace He.PipelineAssessment.UI.Common.Utility
 
     public class AssessmentToolWorkflowInstanceHelpers : IAssessmentToolWorkflowInstanceHelpers
     {
-        private IAssessmentRepository _repository;
+        private readonly IAssessmentRepository _repository;
 
         public AssessmentToolWorkflowInstanceHelpers(IAssessmentRepository repository)
         {
             _repository = repository;
         }
+
         public async Task<bool> IsOrderEqualToLatestSubmittedWorkflowOrder(AssessmentToolWorkflowInstance currentAssessmentToolWorkflowInstance)
         {
             var latestSubmittedWorkflowInstance = currentAssessmentToolWorkflowInstance.Assessment!.AssessmentToolWorkflowInstances!

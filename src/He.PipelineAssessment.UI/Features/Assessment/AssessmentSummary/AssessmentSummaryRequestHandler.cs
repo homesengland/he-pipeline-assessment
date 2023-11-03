@@ -1,9 +1,7 @@
 ﻿using He.PipelineAssessment.Infrastructure.Repository;
 using He.PipelineAssessment.Infrastructure.Repository.StoredProcedure;
-using He.PipelineAssessment.Models;
 using He.PipelineAssessment.Models.ViewModels;
 using MediatR;
-using System.Diagnostics;
 
 namespace He.PipelineAssessment.UI.Features.Assessment.AssessmentSummary
 {
