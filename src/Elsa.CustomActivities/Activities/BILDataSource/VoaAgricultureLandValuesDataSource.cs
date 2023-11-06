@@ -24,7 +24,7 @@ namespace Elsa.CustomActivities.Activities.PCSProfileDataSource
             _jsonHelper = jsonHelper;
         }
 
-        [ActivityInput(Hint = "Lep Area", SupportedSyntaxes = new[] { SyntaxNames.Literal, SyntaxNames.Json, SyntaxNames.JavaScript })]
+        [ActivityInput(Hint = "Lep Area of the record you wish to retrieve", SupportedSyntaxes = new[] { SyntaxNames.Literal, SyntaxNames.Json, SyntaxNames.JavaScript })]
         public string LepArea { get; set; } = null!;
 
         [ActivityOutput] public VoaAgricultureLandValues? Output { get; set; }

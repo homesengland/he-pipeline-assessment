@@ -24,7 +24,7 @@ namespace Elsa.CustomActivities.Activities.PCSProfileDataSource
             _jsonHelper = jsonHelper;
         }
 
-        [ActivityInput(Hint = "Id of the record to get", SupportedSyntaxes = new[] { SyntaxNames.Literal, SyntaxNames.Json, SyntaxNames.JavaScript })]
+        [ActivityInput(Hint = "The region of the record you wish to retrieve", SupportedSyntaxes = new[] { SyntaxNames.Literal, SyntaxNames.Json, SyntaxNames.JavaScript })]
         public string Region { get; set; } = null!;
 
         [ActivityOutput] public BilRegionalFigures? Output { get; set; }

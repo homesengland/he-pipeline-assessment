@@ -24,7 +24,7 @@ namespace Elsa.CustomActivities.Activities.PCSProfileDataSource
             _jsonHelper = jsonHelper;
         }
 
-        [ActivityInput(Hint = "Id of the record to get", SupportedSyntaxes = new[] { SyntaxNames.Literal, SyntaxNames.Json, SyntaxNames.JavaScript })]
+        [ActivityInput(Hint = "GSS Code of the record to get", SupportedSyntaxes = new[] { SyntaxNames.Literal, SyntaxNames.Json, SyntaxNames.JavaScript })]
         public string GssCode { get; set; } = null!;
 
         [ActivityOutput] public VoaLandValues? Output { get; set; }
