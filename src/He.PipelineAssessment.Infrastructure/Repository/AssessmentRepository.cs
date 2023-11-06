@@ -276,7 +276,7 @@ namespace He.PipelineAssessment.Infrastructure.Repository
             List<AssessmentToolInstanceNextWorkflow> nextWorkflows = await context.Set<AssessmentToolInstanceNextWorkflow>()
                 .Include(x=> x.AssessmentToolWorkflowInstance.AssessmentToolWorkflow.AssessmentTool)
                 .Where(x => x.AssessmentId == assessmentId
-                && x.AssessmentToolWorkflowInstance.AssessmentToolWorkflow.AssessmentTool.Order > order).ToListAsync();
+                && x.AssessmentToolWorkflowInstance.AssessmentToolWorkflow.AssessmentTool.Order >= order).ToListAsync();
 
             context.Set<AssessmentToolInstanceNextWorkflow>().RemoveRange(nextWorkflows);
 
