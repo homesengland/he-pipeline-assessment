@@ -62,7 +62,7 @@ namespace He.PipelineAssessment.UI.Features.Workflow.LoadConfirmationScreen
 
 
                             if (!string.IsNullOrEmpty(response.Data.NextWorkflowDefinitionIds) && !currentAssessmentToolWorkflowInstance.IsVariation)
-                            {
+                            { 
                                 var nextWorkflows = new List<AssessmentToolInstanceNextWorkflow>();
                                 var workflowDefinitionIds = response.Data.NextWorkflowDefinitionIds.Split(',', StringSplitOptions.TrimEntries);
                                 foreach (var workflowDefinitionId in workflowDefinitionIds)
@@ -70,8 +70,11 @@ namespace He.PipelineAssessment.UI.Features.Workflow.LoadConfirmationScreen
                                     var nextWorkflow =
                                         await _assessmentRepository.GetAssessmentToolInstanceNextWorkflow(currentAssessmentToolWorkflowInstance.Id,
                                             workflowDefinitionId);
+                                    var allAssessmentToolWorkflowInstances = await _assessmentRepository.GetAssessmentToolWorkflowInstances(currentAssessmentToolWorkflowInstance.AssessmentId);
+                                    var existingAssessmentToolWorkflowInstances = allAssessmentToolWorkflowInstances.Where(x => x.WorkflowDefinitionId == workflowDefinitionId);
+     
 
-                                    if (nextWorkflow == null)
+                                    if (nextWorkflow == null && !existingAssessmentToolWorkflowInstances.Any())
                                     {
                                         var assessmentToolInstanceNextWorkflow =
                                             AssessmentToolInstanceNextWorkflow(currentAssessmentToolWorkflowInstance, workflowDefinitionId);

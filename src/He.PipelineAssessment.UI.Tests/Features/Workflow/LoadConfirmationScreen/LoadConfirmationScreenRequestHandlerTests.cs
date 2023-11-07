@@ -271,6 +271,43 @@ namespace He.PipelineAssessment.UI.Tests.Features.Workflow.LoadConfirmationScree
 
         [Theory]
         [AutoMoqData]
+        public async Task Handle_DoesNotAttemptToCreateNextWorkflows_GivenAssessmentTollWorkflowInstanceAlreadyExists
+       (
+           [Frozen] Mock<IElsaServerHttpClient> elsaServerHttpClient,
+           [Frozen] Mock<IAssessmentRepository> assessmentRepository,
+           AssessmentToolWorkflowInstance assessmentToolWorkflowInstance,
+           LoadConfirmationScreenRequest request,
+           WorkflowActivityDataDto workflowActivityDataDto,
+           LoadConfirmationScreenRequestHandler sut,
+           List<AssessmentToolWorkflowInstance> assessmentToolWorkflowInstances
+       )
+        {
+            //Arrange
+            elsaServerHttpClient.Setup(x => x.LoadConfirmationScreen(It.IsAny<LoadWorkflowActivityDto>()))
+                .ReturnsAsync(workflowActivityDataDto);
+
+            assessmentRepository.Setup(x =>
+                    x.GetAssessmentToolWorkflowInstance(workflowActivityDataDto.Data.WorkflowInstanceId))
+                .ReturnsAsync(assessmentToolWorkflowInstance);
+            workflowActivityDataDto.Data.NextWorkflowDefinitionIds = "a1234";
+            assessmentToolWorkflowInstances.First().WorkflowDefinitionId = "a1234";
+            assessmentRepository.Setup(x =>
+                    x.GetAssessmentToolWorkflowInstances(assessmentToolWorkflowInstance.AssessmentId))
+                .ReturnsAsync(assessmentToolWorkflowInstances);
+            assessmentToolWorkflowInstance.Status = AssessmentToolWorkflowInstanceConstants.Draft;
+            assessmentToolWorkflowInstance.IsVariation = false;
+            
+            //Act
+            await sut.Handle(request, CancellationToken.None);
+
+            //Assert
+            assessmentRepository.Verify(x =>
+                    x.CreateAssessmentToolInstanceNextWorkflows(It.IsAny<List<AssessmentToolInstanceNextWorkflow>>()),
+                Times.Never);
+        }
+
+        [Theory]
+        [AutoMoqData]
         public async Task Handle_DoesNotCreateNextWorkflows_GivenCurrentInstanceIsVariation
         (
             [Frozen] Mock<IElsaServerHttpClient> elsaServerHttpClient,
