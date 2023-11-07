@@ -7,7 +7,7 @@ using He.PipelineAssessment.Data.BIL.VOAOfficeLandValues;
 using He.PipelineAssessment.Data.PCSProfile;
 using He.PipelineAssessment.Data.SinglePipeline;
 
-namespace Elsa.CustomActivities.Activities.PCSProfileDataSource
+namespace Elsa.CustomActivities.Activities.BilDataSource
 {
     [Action(
         Category = "Homes England Data",

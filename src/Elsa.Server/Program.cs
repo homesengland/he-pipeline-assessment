@@ -42,6 +42,7 @@ using Elsa.CustomActivities.Activities.RegionalFigsDataSource;
 using FluentValidation;
 using Elsa.CustomWorkflow.Sdk.Models.Workflow;
 using Elsa.Server.Features.Workflow.QuestionScreenValidateAndSave;
+using Elsa.CustomActivities.Activities.BilDataSource;
 
 var builder = WebApplication.CreateBuilder(args);
 var elsaConnectionString = builder.Configuration.GetConnectionString("Elsa");
