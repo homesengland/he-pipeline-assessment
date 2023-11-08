@@ -1,13 +1,8 @@
-﻿using He.PipelineAssessment.Data.BIL.VOALandValues;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿
 
-namespace He.PipelineAssessment.Data.BIL.VOAOfficeLandValues
+namespace He.PipelineAssessment.Data.VoaLandValues.Models.Office
 {
-    public class VoaOfficeLandValues
+    public class OfficeLandValues
     {
         public string lep_area { get; set; } = null!;
         public double? office_sq_m { get; set; }
@@ -22,7 +17,7 @@ namespace He.PipelineAssessment.Data.BIL.VOAOfficeLandValues
 
     public class Feature
     {
-        public VoaOfficeLandValues attributes { get; set; } = null!;
+        public OfficeLandValues attributes { get; set; } = null!;
     }
 
     public class Field
@@ -33,7 +28,7 @@ namespace He.PipelineAssessment.Data.BIL.VOAOfficeLandValues
         public int? length { get; set; }
     }
 
-    public class VoaOfficeLandValuesResponse
+    public class OfficeLandValuesResponse
     {
         public string objectIdFieldName { get; set; } = null!;
         public string globalIdFieldName { get; set; } = null!;

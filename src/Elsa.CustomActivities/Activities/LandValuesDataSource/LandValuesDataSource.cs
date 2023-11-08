@@ -3,9 +3,8 @@ using Elsa.Attributes;
 using Elsa.Expressions;
 using Elsa.Services;
 using Elsa.Services.Models;
-using He.PipelineAssessment.Data.BIL.VOALandValues;
-using He.PipelineAssessment.Data.PCSProfile;
-using He.PipelineAssessment.Data.SinglePipeline;
+using He.PipelineAssessment.Data.LandValues.Land;
+using He.PipelineAssessment.Data.LandValues.Models.Land;
 
 namespace Elsa.CustomActivities.Activities.BilDataSource
 {
@@ -14,11 +13,11 @@ namespace Elsa.CustomActivities.Activities.BilDataSource
         Description = "Get VOA Land Value Data Source",
         Outcomes = new[] { OutcomeNames.Done }
     )]
-    public class BILVoaLandVauesDataSource : Activity
+    public class LandVauesDataSource : Activity
     {
-        private readonly IEsriBILClient _client;
-        private readonly IEsriBILDataJsonHelper _jsonHelper;
-        public BILVoaLandVauesDataSource(IEsriBILClient client, IEsriBILDataJsonHelper jsonHelper)
+        private readonly ILandValuesClient _client;
+        private readonly ILandValuesDataJsonHelper _jsonHelper;
+        public LandVauesDataSource(ILandValuesClient client, ILandValuesDataJsonHelper jsonHelper)
         {
             _client = client;
             _jsonHelper = jsonHelper;
@@ -27,7 +26,7 @@ namespace Elsa.CustomActivities.Activities.BilDataSource
         [ActivityInput(Hint = "GSS Code of the record to get", SupportedSyntaxes = new[] { SyntaxNames.Literal, SyntaxNames.Json, SyntaxNames.JavaScript })]
         public string GssCode { get; set; } = null!;
 
-        [ActivityOutput] public VoaLandValues? Output { get; set; }
+        [ActivityOutput] public LandValues? Output { get; set; }
 
         protected override IActivityExecutionResult OnExecute(ActivityExecutionContext context)
         {
@@ -38,11 +37,11 @@ namespace Elsa.CustomActivities.Activities.BilDataSource
         {
             context.JournalData.Add(nameof(GssCode), GssCode);
 
-            var data = await _client.GetLaVoaLandValues(GssCode);
+            var data = await _client.GetLandValues(GssCode);
 
             if (data != null)
             {
-                var dataResult = _jsonHelper.JsonToVoaLandValuesData(data);
+                var dataResult = _jsonHelper.JsonToLandValuesData(data);
                 this.Output = dataResult;
             }
             else

@@ -3,9 +3,8 @@ using Elsa.Attributes;
 using Elsa.Expressions;
 using Elsa.Services;
 using Elsa.Services.Models;
-using He.PipelineAssessment.Data.BIL.VOAAgriculturalLandValues;
-using He.PipelineAssessment.Data.PCSProfile;
-using He.PipelineAssessment.Data.SinglePipeline;
+using He.PipelineAssessment.Data.VoaLandValues.Agricultural;
+using He.PipelineAssessment.Data.VoaLandValues.Models.Agriculture;
 
 namespace Elsa.CustomActivities.Activities.BilDataSource
 {
@@ -14,11 +13,11 @@ namespace Elsa.CustomActivities.Activities.BilDataSource
         Description = "Get VOA Agriculture Land Value Data Source",
         Outcomes = new[] { OutcomeNames.Done }
     )]
-    public class BILVoaAgricultureLandValueDataSource : Activity
+    public class AgricultureLandValueDataSource : Activity
     {
-        private readonly IEsriBILClient _client;
-        private readonly IEsriBILDataJsonHelper _jsonHelper;
-        public BILVoaAgricultureLandValueDataSource(IEsriBILClient client, IEsriBILDataJsonHelper jsonHelper)
+        private readonly IAgricultureLandValuesClient _client;
+        private readonly IAgricultureLandValuesDataJsonHelper _jsonHelper;
+        public AgricultureLandValueDataSource(IAgricultureLandValuesClient client, IAgricultureLandValuesDataJsonHelper jsonHelper)
         {
             _client = client;
             _jsonHelper = jsonHelper;
@@ -27,7 +26,7 @@ namespace Elsa.CustomActivities.Activities.BilDataSource
         [ActivityInput(Hint = "Lep Area of the record you wish to retrieve", SupportedSyntaxes = new[] { SyntaxNames.Literal, SyntaxNames.Json, SyntaxNames.JavaScript })]
         public string LepArea { get; set; } = null!;
 
-        [ActivityOutput] public VoaAgricultureLandValues? Output { get; set; }
+        [ActivityOutput] public AgricultureLandValues? Output { get; set; }
 
         protected override IActivityExecutionResult OnExecute(ActivityExecutionContext context)
         {
@@ -38,7 +37,7 @@ namespace Elsa.CustomActivities.Activities.BilDataSource
         {
             context.JournalData.Add(nameof(LepArea), LepArea);
 
-            var data = await _client.GetLepAgricultureVoaLandValues(LepArea);
+            var data = await _client.GetAgricultureLandValues(LepArea);
 
             if (data != null)
             {

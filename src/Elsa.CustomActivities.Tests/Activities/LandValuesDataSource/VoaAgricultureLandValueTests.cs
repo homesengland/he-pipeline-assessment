@@ -2,22 +2,16 @@
 using Elsa.ActivityResults;
 using Elsa.CustomActivities.Activities.BilDataSource;
 using Elsa.Services.Models;
-using He.PipelineAssessment.Data.BIL.VOAAgriculturalLandValues;
-using He.PipelineAssessment.Data.BIL.VOALandValues;
-using He.PipelineAssessment.Data.BIL.VOAOfficeLandValues;
+using He.PipelineAssessment.Data.VoaLandValues.Agricultural;
+using He.PipelineAssessment.Data.VoaLandValues.Models.Agriculture;
 using He.PipelineAssessment.Data.PCSProfile;
 using He.PipelineAssessment.Tests.Common;
 using Moq;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Xunit;
 
 namespace Elsa.CustomActivities.Tests.Activities.BILDataSource
 {
-    public class VoaLandValueTests
+    public class VoaAgricultureLandValueTests
     {
         [Theory]
         [AutoMoqData]
@@ -36,17 +30,17 @@ namespace Elsa.CustomActivities.Tests.Activities.BILDataSource
         [Theory]
         [AutoMoqData]
         public async Task ResumeAsync_ReturnsOutcomeResult(
-            [Frozen] Mock<IEsriBILClient> client,
-            [Frozen] Mock<IEsriBILDataJsonHelper> jsonHelperMock,
+            [Frozen] Mock<IAgricultureLandValuesClient> client,
+            [Frozen] Mock<IAgricultureLandValuesDataJsonHelper> jsonHelperMock,
             string dataString,
-            VoaLandValues data,
-            BILVoaLandVauesDataSource sut)
+            AgricultureLandValues data,
+            BILVoaAgricultureLandValueDataSource sut)
         {
             //Arrange
             sut.Output = null;
             var context = new ActivityExecutionContext(default!, default!, default!, sut.Id, default, default);
-            client.Setup(x => x.GetLaVoaLandValues(It.IsAny<string>())).ReturnsAsync(dataString);
-            jsonHelperMock.Setup(x => x.JsonToVoaLandValuesData(dataString)).Returns(data);
+            client.Setup(x => x.GetAgricultureLandValues(It.IsAny<string>())).ReturnsAsync(dataString);
+            jsonHelperMock.Setup(x => x.JsonToVoaAgricultureLandValuesData(dataString)).Returns(data);
 
             //Act
             var result = await sut.ResumeAsync(context);
@@ -66,13 +60,13 @@ namespace Elsa.CustomActivities.Tests.Activities.BILDataSource
         [Theory]
         [AutoMoqData]
         public async Task ResumeAsync_ReturnsOutcomeResult_GivenClientReturnsNull(
-            [Frozen] Mock<IEsriBILClient> client,
-            BILVoaLandVauesDataSource sut)
+            [Frozen] Mock<IAgricultureLandValuesClient> client,
+            BILVoaAgricultureLandValueDataSource sut)
         {
             //Arrange
             sut.Output = null;
             var context = new ActivityExecutionContext(default!, default!, default!, sut.Id, default, default);
-            client.Setup(x => x.GetLaVoaLandValues(It.IsAny<string>())).ReturnsAsync((string?)null);
+            client.Setup(x => x.GetAgricultureLandValues(It.IsAny<string>())).ReturnsAsync((string?)null);
 
             //Act
             var result = await sut.ResumeAsync(context);

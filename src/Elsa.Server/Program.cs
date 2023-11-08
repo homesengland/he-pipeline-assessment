@@ -80,7 +80,6 @@ builder.Services
         .NoCoreActivities()
         .AddActivity<SinglePipelineDataSource>()
         .AddActivity<PCSProfileDataSource>()
-        .AddActivity<BILRegionalFiguresDataSource>()
         .AddActivity<BILVoaAgricultureLandValueDataSource>()
         .AddActivity<BILVoaOfficeLandValueDataSource>()
         .AddActivity<BILVoaLandVauesDataSource>()
