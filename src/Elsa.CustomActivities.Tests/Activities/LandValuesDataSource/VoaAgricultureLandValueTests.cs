@@ -1,21 +1,20 @@
 ﻿using AutoFixture.Xunit2;
 using Elsa.ActivityResults;
-using Elsa.CustomActivities.Activities.BilDataSource;
 using Elsa.Services.Models;
 using He.PipelineAssessment.Data.VoaLandValues.Agricultural;
 using He.PipelineAssessment.Data.VoaLandValues.Models.Agriculture;
-using He.PipelineAssessment.Data.PCSProfile;
 using He.PipelineAssessment.Tests.Common;
 using Moq;
 using Xunit;
+using Elsa.CustomActivities.Activities.LandValuesDataSource;
 
-namespace Elsa.CustomActivities.Tests.Activities.BILDataSource
+namespace Elsa.CustomActivities.Tests.Activities.VoaLandValuesDataSource
 {
     public class VoaAgricultureLandValueTests
     {
         [Theory]
         [AutoMoqData]
-        public async Task OnExecute_ReturnsSuspendResult(BILVoaAgricultureLandValueDataSource sut)
+        public async Task OnExecute_ReturnsSuspendResult(AgricultureLandValueDataSource sut)
         {
             //Arrange
             var context = new ActivityExecutionContext(default!, default!, default!, sut.Id, default, default);
@@ -34,7 +33,7 @@ namespace Elsa.CustomActivities.Tests.Activities.BILDataSource
             [Frozen] Mock<IAgricultureLandValuesDataJsonHelper> jsonHelperMock,
             string dataString,
             AgricultureLandValues data,
-            BILVoaAgricultureLandValueDataSource sut)
+            AgricultureLandValueDataSource sut)
         {
             //Arrange
             sut.Output = null;
@@ -61,7 +60,7 @@ namespace Elsa.CustomActivities.Tests.Activities.BILDataSource
         [AutoMoqData]
         public async Task ResumeAsync_ReturnsOutcomeResult_GivenClientReturnsNull(
             [Frozen] Mock<IAgricultureLandValuesClient> client,
-            BILVoaAgricultureLandValueDataSource sut)
+            AgricultureLandValueDataSource sut)
         {
             //Arrange
             sut.Output = null;

@@ -3,10 +3,10 @@ using Elsa.Attributes;
 using Elsa.Expressions;
 using Elsa.Services;
 using Elsa.Services.Models;
-using He.PipelineAssessment.Data.LandValues.Land;
-using He.PipelineAssessment.Data.LandValues.Models.Land;
+using He.PipelineAssessment.Data.VoaLandValues.Land;
+using He.PipelineAssessment.Data.VoaLandValues.Models.Land;
 
-namespace Elsa.CustomActivities.Activities.BilDataSource
+namespace Elsa.CustomActivities.Activities.LandValuesDataSource
 {
     [Action(
         Category = "Homes England Data",

@@ -269,21 +269,21 @@ namespace He.PipelineAssessment.UI.Tests.Features.Workflow.LoadConfirmationScree
                 Times.Never);
         }
 
-        [Theory]
-        [AutoMoqData]
-        public async Task Handle_DoesNotCreateNextWorkflows_GivenCurrentInstanceIsVariation
-        (
-            [Frozen] Mock<IElsaServerHttpClient> elsaServerHttpClient,
-            [Frozen] Mock<IAssessmentRepository> assessmentRepository,
-            AssessmentToolWorkflowInstance assessmentToolWorkflowInstance,
-            LoadConfirmationScreenRequest request,
-            WorkflowActivityDataDto workflowActivityDataDto,
-            AssessmentToolInstanceNextWorkflow nextWorkflow1,
-            AssessmentToolInstanceNextWorkflow nextWorkflow2,
-            LoadConfirmationScreenRequestHandler sut
-        )
-        {
-            //TODO this + maybe other scenarios
-        }
+        //[Theory]
+        //[AutoMoqData]
+        //public async Task Handle_DoesNotCreateNextWorkflows_GivenCurrentInstanceIsVariation
+        //(
+        //    [Frozen] Mock<IElsaServerHttpClient> elsaServerHttpClient,
+        //    [Frozen] Mock<IAssessmentRepository> assessmentRepository,
+        //    AssessmentToolWorkflowInstance assessmentToolWorkflowInstance,
+        //    LoadConfirmationScreenRequest request,
+        //    WorkflowActivityDataDto workflowActivityDataDto,
+        //    AssessmentToolInstanceNextWorkflow nextWorkflow1,
+        //    AssessmentToolInstanceNextWorkflow nextWorkflow2,
+        //    LoadConfirmationScreenRequestHandler sut
+        //)
+        //{
+        //    //TODO this + maybe other scenarios
+        //}
     }
 }

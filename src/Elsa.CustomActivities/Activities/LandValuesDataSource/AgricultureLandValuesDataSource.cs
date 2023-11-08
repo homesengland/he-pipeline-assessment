@@ -6,7 +6,7 @@ using Elsa.Services.Models;
 using He.PipelineAssessment.Data.VoaLandValues.Agricultural;
 using He.PipelineAssessment.Data.VoaLandValues.Models.Agriculture;
 
-namespace Elsa.CustomActivities.Activities.BilDataSource
+namespace Elsa.CustomActivities.Activities.LandValuesDataSource
 {
     [Action(
         Category = "Homes England Data",

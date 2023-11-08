@@ -50,15 +50,15 @@ namespace He.PipelineAssessment.UI.Tests.Features.Rollback.LoadRollbackCheckYour
             Assert.Equal(command.CorrelationId, result.CorrelationId);
         }
 
-        [Theory]
-        [AutoMoqData]
-        public async Task Handle_ShouldThrow_GivenInterventionServiceReturnsNonConfirmRollbackCommand(
-            [Frozen] Mock<IInterventionService> interventionService,
-            AssessmentInterventionCommand command,
-            LoadRollbackCheckYourAnswersAssessorRequest request,
-            LoadRollbackCheckYourAnswersAssessorRequestHandler sut)
-        {
-            //TODO: not sure how easy it will be to do though
-        }
+        //[Theory]
+        //[AutoMoqData]
+        //public async Task Handle_ShouldThrow_GivenInterventionServiceReturnsNonConfirmRollbackCommand(
+        //    [Frozen] Mock<IInterventionService> interventionService,
+        //    AssessmentInterventionCommand command,
+        //    LoadRollbackCheckYourAnswersAssessorRequest request,
+        //    LoadRollbackCheckYourAnswersAssessorRequestHandler sut)
+        //{
+        //    //TODO: not sure how easy it will be to do though
+        //}
     }
 }

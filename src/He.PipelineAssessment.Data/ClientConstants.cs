@@ -15,5 +15,7 @@ namespace He.PipelineAssessment.Data
         public const string RegionalIPUClient = "RegionalIPUClient";
         public const string RegionalFigsClient = "RegionalFigsClient";
         public const string LandValuesClient = "LandValuesClient";
+        public const string AgricultureLandValues = "AgricultureLandValuesClient";
+        public const string OfficeLandValues = "OfficeLandValuesClient";
     }
 }

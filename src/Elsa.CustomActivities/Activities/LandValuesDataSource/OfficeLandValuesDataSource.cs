@@ -3,9 +3,8 @@ using Elsa.Attributes;
 using Elsa.Expressions;
 using Elsa.Services;
 using Elsa.Services.Models;
-using He.PipelineAssessment.Data.Bil;
-using He.PipelineAssessment.Data.LandValues.Models;
-using He.PipelineAssessment.Data.LandValues.Models.Office;
+using He.PipelineAssessment.Data.VoaLandValues.Models.Office;
+using He.PipelineAssessment.Data.VoaLandValues.Office;
 
 namespace Elsa.CustomActivities.Activities.LandValuesDataSource
 {

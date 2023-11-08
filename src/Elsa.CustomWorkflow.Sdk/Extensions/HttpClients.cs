@@ -1,13 +1,14 @@
-﻿using Elsa.CustomWorkflow.Sdk.HttpClients;
-using He.PipelineAssessment.Data;
+﻿using He.PipelineAssessment.Data;
 using He.PipelineAssessment.Data.Auth;
-using He.PipelineAssessment.Data.Bil;
 using He.PipelineAssessment.Data.LaHouseNeed;
 using He.PipelineAssessment.Data.PCSProfile;
 using He.PipelineAssessment.Data.RegionalFigs;
 using He.PipelineAssessment.Data.RegionalIPU;
 using He.PipelineAssessment.Data.SinglePipeline;
 using He.PipelineAssessment.Data.VFM;
+using He.PipelineAssessment.Data.VoaLandValues.Agricultural;
+using He.PipelineAssessment.Data.VoaLandValues.Land;
+using He.PipelineAssessment.Data.VoaLandValues.Office;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -25,6 +26,8 @@ namespace Elsa.CustomWorkflow.Sdk.Extensions
             services.AddRegionalIPUClient(config, isDevelopmentEnvironment);
             services.AddRegionalFigsClient(config, isDevelopmentEnvironment);
             services.AddLandValuesClient(config, isDevelopmentEnvironment);
+            services.AddOfficeLandValuesClient(config, isDevelopmentEnvironment);
+            services.AddAgricultureLandValuesClient(config, isDevelopmentEnvironment);
 
         }
         public static void AddSinglePipelineClient(this IServiceCollection services, IConfiguration config, bool isDevelopmentEnvironment)
@@ -168,8 +171,8 @@ namespace Elsa.CustomWorkflow.Sdk.Extensions
         {
             string serviceUrl = config["Datasources:LandValues"];
 
-            services.AddScoped<IEsriBILClient, EsriBILClient>();
-            services.AddScoped<IEsriBILDataJsonHelper, EsriBILDataJsonHelper>();
+            services.AddScoped<ILandValuesClient, LandValuesClient>();
+            services.AddScoped<ILandValuesDataJsonHelper, LandValuesDataJsonHelper>();
 
             if (isDevelopmentEnvironment)
             {
@@ -188,21 +191,21 @@ namespace Elsa.CustomWorkflow.Sdk.Extensions
         }
         public static void AddAgricultureLandValuesClient(this IServiceCollection services, IConfiguration config, bool isDevelopmentEnvironment)
         {
-            string serviceUrl = config["Datasources:LandValues"];
+            string serviceUrl = config["Datasources:AgricultureLandValues"];
 
-            services.AddScoped<IEsriBILClient, EsriBILClient>();
-            services.AddScoped<IEsriBILDataJsonHelper, EsriBILDataJsonHelper>();
+            services.AddScoped<IAgricultureLandValuesClient, AgricultureLandValuesClient>();
+            services.AddScoped<IAgricultureLandValuesDataJsonHelper, AgricultureLandValuesDataJsonHelper>();
 
             if (isDevelopmentEnvironment)
             {
-                services.AddHttpClient(ClientConstants.LandValuesClient, client =>
+                services.AddHttpClient(ClientConstants.AgricultureLandValues, client =>
                 {
                     client.BaseAddress = new Uri(serviceUrl);
                 });
             }
             else
             {
-                services.AddHttpClient(ClientConstants.LandValuesClient, client =>
+                services.AddHttpClient(ClientConstants.AgricultureLandValues, client =>
                 {
                     client.BaseAddress = new Uri(serviceUrl);
                 }).AddHttpMessageHandler<BearerTokenHandler>();
@@ -210,21 +213,21 @@ namespace Elsa.CustomWorkflow.Sdk.Extensions
         }
         public static void AddOfficeLandValuesClient(this IServiceCollection services, IConfiguration config, bool isDevelopmentEnvironment)
         {
-            string serviceUrl = config["Datasources:LandValues"];
+            string serviceUrl = config["Datasources:OfficeLandValues"];
 
-            services.AddScoped<IEsriBILClient, EsriBILClient>();
-            services.AddScoped<IEsriBILDataJsonHelper, EsriBILDataJsonHelper>();
+            services.AddScoped<IOfficeLandValuesClient, OfficeLandValuesClient>();
+            services.AddScoped<IOfficeLandValuesDataJsonHelper, OfficeLandValuesDataJsonHelper>();
 
             if (isDevelopmentEnvironment)
             {
-                services.AddHttpClient(ClientConstants.LandValuesClient, client =>
+                services.AddHttpClient(ClientConstants.OfficeLandValues, client =>
                 {
                     client.BaseAddress = new Uri(serviceUrl);
                 });
             }
             else
             {
-                services.AddHttpClient(ClientConstants.LandValuesClient, client =>
+                services.AddHttpClient(ClientConstants.OfficeLandValues, client =>
                 {
                     client.BaseAddress = new Uri(serviceUrl);
                 }).AddHttpMessageHandler<BearerTokenHandler>();
