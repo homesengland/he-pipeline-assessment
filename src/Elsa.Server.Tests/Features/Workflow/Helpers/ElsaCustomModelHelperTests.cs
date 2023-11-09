@@ -247,6 +247,7 @@ namespace Elsa.Server.Tests.Features.Workflow.Helpers
             //Arrange
             var currentTimeUtc = DateTime.UtcNow;
             mockDateTimeProvider.Setup(x => x.UtcNow()).Returns(currentTimeUtc);
+            activityName = string.Empty;
 
             //Act
             var result = sut.CreateQuestion(nextActivityId, nextActivityType, question, workflowInstance, activityName, "WorkflowName");
