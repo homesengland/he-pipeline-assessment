@@ -1,36 +1,32 @@
 ﻿using Microsoft.Extensions.Logging;
 
-namespace He.PipelineAssessment.Data.RegionalFigs
+namespace He.PipelineAssessment.Data.VoaLandValues.Land
 {
-    public interface IEsriRegionalFigsClient
+    public interface ILandValuesClient
     {
-        Task<string?> GetRegionalFigsData(string region, string appraisalYear);
+        Task<string?> GetLandValues(string gssCode);
     }
-    public class EsriRegionalFigsClient : IEsriRegionalFigsClient
 
+    public class LandValuesClient : ILandValuesClient
     {
         private readonly IHttpClientFactory _httpClientFactory;
-        private readonly ILogger<EsriRegionalFigsClient> _logger;
+        private readonly ILogger<LandValuesClient> _logger;
 
-        public EsriRegionalFigsClient(IHttpClientFactory httpClientFactory, ILogger<EsriRegionalFigsClient> logger)
+        public LandValuesClient(IHttpClientFactory httpClientFactory, ILogger<LandValuesClient> logger)
         {
             _httpClientFactory = httpClientFactory;
             _logger = logger;
         }
 
-        public async Task<string?> GetRegionalFigsData(string region, string? appraisalYear = null)
+        public async Task<string?> GetLandValues(string gssCode)
         {
             string? data = null;
-            string whereClause = $"region='{region}'";
-            if(appraisalYear != null)
-            {
-                whereClause += "AND appraisal_year='{appraisalYear}'";
-            }
+            string whereClause = $"gss_code='{gssCode}'";
             string outFields = "*";
 
             var relativeUri = $"query?where={whereClause}&outFields={outFields}&f=json";
 
-            using (var response = await _httpClientFactory.CreateClient("RegionalFigsClient")
+            using (var response = await _httpClientFactory.CreateClient(ClientConstants.LandValuesClient)
                        .GetAsync(relativeUri)
                        .ConfigureAwait(false))
             {

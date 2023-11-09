@@ -50,6 +50,9 @@ namespace Elsa.CustomActivities.Activities.Shared
                 ActivityTypeConstants.VFMDataSource,
                 ActivityTypeConstants.RegionalIPUDataSource,
                 ActivityTypeConstants.RegionalFigsDataSource,
+                ActivityTypeConstants.LandValues,
+                ActivityTypeConstants.AgricultureLandValues,
+                ActivityTypeConstants.OfficeLandValues
             };
         }
     }

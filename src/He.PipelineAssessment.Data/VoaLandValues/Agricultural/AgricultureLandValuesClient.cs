@@ -1,36 +1,33 @@
 ﻿using Microsoft.Extensions.Logging;
 
-namespace He.PipelineAssessment.Data.RegionalFigs
+namespace He.PipelineAssessment.Data.VoaLandValues.Agricultural
 {
-    public interface IEsriRegionalFigsClient
+    public interface IAgricultureLandValuesClient
     {
-        Task<string?> GetRegionalFigsData(string region, string appraisalYear);
+        Task<string?> GetAgricultureLandValues(string gssCode);
     }
-    public class EsriRegionalFigsClient : IEsriRegionalFigsClient
 
+    public class AgricultureLandValuesClient : IAgricultureLandValuesClient
     {
         private readonly IHttpClientFactory _httpClientFactory;
-        private readonly ILogger<EsriRegionalFigsClient> _logger;
+        private readonly ILogger<AgricultureLandValuesClient> _logger;
 
-        public EsriRegionalFigsClient(IHttpClientFactory httpClientFactory, ILogger<EsriRegionalFigsClient> logger)
+        public AgricultureLandValuesClient(IHttpClientFactory httpClientFactory, ILogger<AgricultureLandValuesClient> logger)
         {
             _httpClientFactory = httpClientFactory;
             _logger = logger;
         }
 
-        public async Task<string?> GetRegionalFigsData(string region, string? appraisalYear = null)
+
+        public async Task<string?> GetAgricultureLandValues(string lepArea)
         {
             string? data = null;
-            string whereClause = $"region='{region}'";
-            if(appraisalYear != null)
-            {
-                whereClause += "AND appraisal_year='{appraisalYear}'";
-            }
+            string whereClause = $"lep_area='{lepArea}'";
             string outFields = "*";
 
             var relativeUri = $"query?where={whereClause}&outFields={outFields}&f=json";
 
-            using (var response = await _httpClientFactory.CreateClient("RegionalFigsClient")
+            using (var response = await _httpClientFactory.CreateClient(ClientConstants.AgricultureLandValues)
                        .GetAsync(relativeUri)
                        .ConfigureAwait(false))
             {
