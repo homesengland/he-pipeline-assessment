@@ -13,11 +13,11 @@ namespace Elsa.CustomActivities.Activities.LandValuesDataSource
         Description = "Get VOA Land Value Data Source",
         Outcomes = new[] { OutcomeNames.Done }
     )]
-    public class LandVauesDataSource : Activity
+    public class LandValueDataSource : Activity
     {
         private readonly ILandValuesClient _client;
         private readonly ILandValuesDataJsonHelper _jsonHelper;
-        public LandVauesDataSource(ILandValuesClient client, ILandValuesDataJsonHelper jsonHelper)
+        public LandValueDataSource(ILandValuesClient client, ILandValuesDataJsonHelper jsonHelper)
         {
             _client = client;
             _jsonHelper = jsonHelper;

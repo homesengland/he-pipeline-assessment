@@ -82,7 +82,7 @@ builder.Services
         .AddActivity<PCSProfileDataSource>()
         .AddActivity<AgricultureLandValueDataSource>()
         .AddActivity<OfficeLandValueDataSource>()
-        .AddActivity<LandVauesDataSource>()
+        .AddActivity<LandValueDataSource>()
         .AddActivity<VFMDataSource>()
         .AddActivity<HousingNeedDataSource>()
         .AddActivity<QuestionScreen>()

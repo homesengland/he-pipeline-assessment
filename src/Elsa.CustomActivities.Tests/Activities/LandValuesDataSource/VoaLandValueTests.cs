@@ -14,7 +14,7 @@ namespace Elsa.CustomActivities.Tests.Activities.VoaLandValuesDataSource
     {
         [Theory]
         [AutoMoqData]
-        public async Task OnExecute_ReturnsSuspendResult(LandVauesDataSource sut)
+        public async Task OnExecute_ReturnsSuspendResult(LandValueDataSource sut)
         {
             //Arrange
             var context = new ActivityExecutionContext(default!, default!, default!, sut.Id, default, default);
@@ -33,7 +33,7 @@ namespace Elsa.CustomActivities.Tests.Activities.VoaLandValuesDataSource
             [Frozen] Mock<ILandValuesDataJsonHelper> jsonHelperMock,
             string dataString,
             LandValues data,
-            LandVauesDataSource sut)
+            LandValueDataSource sut)
         {
             //Arrange
             sut.Output = null;
@@ -60,7 +60,7 @@ namespace Elsa.CustomActivities.Tests.Activities.VoaLandValuesDataSource
         [AutoMoqData]
         public async Task ResumeAsync_ReturnsOutcomeResult_GivenClientReturnsNull(
             [Frozen] Mock<ILandValuesClient> client,
-            LandVauesDataSource sut)
+            LandValueDataSource sut)
         {
             //Arrange
             sut.Output = null;

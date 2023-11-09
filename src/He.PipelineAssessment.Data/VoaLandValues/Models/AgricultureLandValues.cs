@@ -3,7 +3,7 @@
     public class AgricultureLandValues
     {
         public string lep_area { get; set; } = null!;
-        public double? agricultural { get; set; }
+        public double? agricultual { get; set; }
         public double? stat_year { get; set; }
         public double? objectId { get; set; }
     }

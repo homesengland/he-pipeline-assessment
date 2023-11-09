@@ -13,6 +13,9 @@
         public const string VFMDataSource = "VFMDataSource";
         public const string RegionalIPUDataSource = "RegionalIPUDataSource";
         public const string RegionalFigsDataSource = "RegionalFigsDataSource";
+        public const string LandValues = "LandValueDataSource";
+        public const string AgricultureLandValues = "AgricultureLandValueDataSource";
+        public const string OfficeLandValues = "OfficeLandValueDataSource";
     }
 
     public class QuestionTypeConstants

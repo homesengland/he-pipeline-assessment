@@ -26,7 +26,7 @@ namespace He.PipelineAssessment.Data.VoaLandValues.Office
 
             var relativeUri = $"query?where={whereClause}&outFields={outFields}&f=json";
 
-            using (var response = await _httpClientFactory.CreateClient("BILClient")
+            using (var response = await _httpClientFactory.CreateClient(ClientConstants.OfficeLandValues)
                        .GetAsync(relativeUri)
                        .ConfigureAwait(false))
             {

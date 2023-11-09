@@ -114,6 +114,10 @@ namespace He.PipelineAssessment.UI.Features.Workflow
                 case ActivityTypeConstants.VFMDataSource:
                 case ActivityTypeConstants.RegionalFigsDataSource:
                 case ActivityTypeConstants.RegionalIPUDataSource:
+                case ActivityTypeConstants.LandValues:
+                case ActivityTypeConstants.OfficeLandValues:
+                case ActivityTypeConstants.AgricultureLandValues:
+
 
                 {
                         var executeWorkflowRequest = new ExecuteWorkflowCommand
