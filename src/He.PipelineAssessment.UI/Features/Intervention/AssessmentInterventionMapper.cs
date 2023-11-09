@@ -14,8 +14,6 @@ namespace He.PipelineAssessment.UI.Features.Intervention
             List<AssessmentToolWorkflow> assessmentToolWorkflows,
             List<TargetWorkflowDefinition> selectedWorkflowDefinitions);
 
-        AssessmentInterventionDto AssessmentInterventionDtoFromWorkflowInstance(AssessmentToolWorkflowInstance instance, 
-            DtoConfig dtoConfig);
         AssessmentInterventionDto AssessmentInterventionDtoFromWorkflowInstance(AssessmentToolWorkflowInstance instance,List<InterventionReason> reasons,
             DtoConfig dtoConfig);
     }
@@ -132,42 +130,6 @@ namespace He.PipelineAssessment.UI.Features.Intervention
             {
                 _logger.LogError(e.Message);
                 throw new ArgumentException($"Unable to map List of AssessmentToolWorkflow:  {JsonConvert.SerializeObject(assessmentToolWorkflows)} to List of TargetWorkflowDefinition");
-            }
-        }
-
-        public AssessmentInterventionDto AssessmentInterventionDtoFromWorkflowInstance(AssessmentToolWorkflowInstance instance,
-            DtoConfig dtoConfig)
-        {
-            {
-                try
-                {
-                    AssessmentInterventionDto dto = new AssessmentInterventionDto()
-                    {
-                        AssessmentInterventionCommand = new AssessmentInterventionCommand()
-                        {
-                            AssessmentToolWorkflowInstanceId = instance.Id,
-                            WorkflowInstanceId = instance.WorkflowInstanceId,
-                            AssessmentResult = instance.Result,
-                            AssessmentName = instance.WorkflowName,
-                            RequestedBy = dtoConfig.UserName,
-                            RequestedByEmail = dtoConfig.UserEmail,
-                            Administrator = dtoConfig.AdministratorName,
-                            AdministratorEmail = dtoConfig.AdministratorEmail,
-                            Status = dtoConfig.Status,
-                            ProjectReference = instance.Assessment.Reference,
-                            DecisionType = dtoConfig.DecisionType,
-
-                        }
-
-                    };
-                    return dto;
-                }
-                catch (Exception e)
-                {
-                    _logger.LogError(e.Message);
-
-                    throw new ArgumentException($"Unable to map AssessmentToolWorkflowInstance:  {JsonConvert.SerializeObject(instance)} to AssessmentInterventionDto");
-                }
             }
         }
 

@@ -558,24 +558,25 @@ namespace He.PipelineAssessment.UI.Services
                                 workflowsToDelete =
                                 await _assessmentRepository.GetWorkflowInstancesToDeleteForAmendment(intervention.AssessmentToolWorkflowInstance.AssessmentId, 
                                 intervention.AssessmentToolWorkflowInstance.AssessmentToolWorkflow.AssessmentTool.Order);
+                                intervention.AssessmentToolWorkflowInstance.Status = AssessmentToolWorkflowInstanceConstants.Draft;
                                 break;
                             }
+                        case InterventionDecisionTypes.Variation:
+                            break;
                         default:
                             {
                                 throw new Exception($"No Decision Type set for intervention: {intervention.Id}");
                                 
                             }
                     }
-                    if(workflowsToDelete != null)
+
+                    foreach (var workflowInstance in workflowsToDelete)
                     {
-                        foreach (var workflowInstance in workflowsToDelete)
-                        {
-                            workflowInstance.Status = command.FinalInstanceStatus;
-                        }
-                        intervention.AssessmentToolWorkflowInstance.Status = AssessmentToolWorkflowInstanceConstants.Draft;
-                        await _assessmentRepository.SaveChanges();
-                        await ClearNextWorkflowsByOrder(intervention, workflowsToDelete);
+                        workflowInstance.Status = command.FinalInstanceStatus;
                     }
+                    await _assessmentRepository.SaveChanges();
+                    await ClearNextWorkflowsByOrder(intervention, workflowsToDelete);
+                    await CreateNextWorkflows(intervention);
                 }
             }
             catch (NotFoundException ex)
@@ -597,16 +598,16 @@ namespace He.PipelineAssessment.UI.Services
                 await _assessmentRepository.DeleteAllNextWorkflowsByOrder(intervention.AssessmentToolWorkflowInstance.AssessmentId, intervention.AssessmentToolWorkflowInstance.AssessmentToolWorkflow.AssessmentTool.Order);
                 await _elsaServerHttpClient.PostArchiveQuestions(workflowsToDelete.Select(x => x.WorkflowInstanceId).ToArray());
             }
-        }
 
-        private async Task CreateNextWorkflow(AssessmentIntervention intervention)
-        {
             if (intervention.DecisionType == InterventionDecisionTypes.Rollback)
             {
-                await _assessmentRepository.DeleteAllNextWorkflows(intervention.AssessmentToolWorkflowInstance
-                    .AssessmentId);
+                await _assessmentRepository.DeleteAllNextWorkflows(intervention.AssessmentToolWorkflowInstance.AssessmentId);
+                await _elsaServerHttpClient.PostArchiveQuestions(workflowsToDelete.Select(x => x.WorkflowInstanceId).ToArray());
             }
+        }
 
+        private async Task CreateNextWorkflows(AssessmentIntervention intervention)
+        {
             var nextWorkflows = new List<AssessmentToolInstanceNextWorkflow>();
 
             foreach (var targetAssessmentToolWorkflow in intervention.TargetAssessmentToolWorkflows)

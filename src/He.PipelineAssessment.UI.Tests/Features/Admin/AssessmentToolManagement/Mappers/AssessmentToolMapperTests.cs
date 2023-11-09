@@ -63,6 +63,7 @@ namespace He.PipelineAssessment.UI.Tests.Features.Admin.AssessmentToolManagement
                     Assert.Equal(assessmentTools[i].AssessmentToolWorkflows![j].Version, result.AssessmentTools[i].AssessmentToolWorkFlows[j].Version);
                     Assert.Equal(assessmentTools[i].AssessmentToolWorkflows![j].IsVariation, result.AssessmentTools[i].AssessmentToolWorkFlows[j].IsVariation);
                     Assert.Equal(assessmentTools[i].AssessmentToolWorkflows![j].IsLast, result.AssessmentTools[i].AssessmentToolWorkFlows[j].IsLast);
+                    Assert.Equal(assessmentTools[i].AssessmentToolWorkflows![j].IsAmendable, result.AssessmentTools[i].AssessmentToolWorkFlows[j].IsAmendableWorkflow);
                 }
             }
         }
@@ -106,6 +107,7 @@ namespace He.PipelineAssessment.UI.Tests.Features.Admin.AssessmentToolManagement
                 Assert.Equal(assessmentToolWorkflows[i].IsVariation, result[i].IsVariation);
                 Assert.Equal(assessmentToolWorkflows[i].IsLast, result[i].IsLast);
                 Assert.Equal(assessmentToolWorkflows[i].IsEconomistWorkflow, result[i].IsEconomistWorkflow);
+                Assert.Equal(assessmentToolWorkflows[i].IsAmendable, result[i].IsAmendableWorkflow);
             }
         }
 
@@ -134,6 +136,7 @@ namespace He.PipelineAssessment.UI.Tests.Features.Admin.AssessmentToolManagement
                 Assert.Equal(assessmentToolWorkflows[i].IsEconomistWorkflow, result[i - 1].IsEconomistWorkflow);
                 Assert.Equal(assessmentToolWorkflows[i].IsLast, result[i - 1].IsLast);
                 Assert.Equal(assessmentToolWorkflows[i].IsVariation, result[i - 1].IsVariation);
+                Assert.Equal(assessmentToolWorkflows[i].IsAmendable, result[i - 1].IsAmendableWorkflow);
             }
         }
     }

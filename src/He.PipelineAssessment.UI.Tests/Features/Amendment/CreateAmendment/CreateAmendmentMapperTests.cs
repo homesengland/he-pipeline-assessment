@@ -35,7 +35,9 @@ namespace He.PipelineAssessment.UI.Tests.Features.Amendment.CreateAmendment
             Assert.Equal(command.AdministratorRationale, result.AdministratorRationale);
             Assert.Equal(command.AdministratorEmail, result.AdministratorEmail);
             Assert.Equal(command.AssessmentToolWorkflowInstanceId, result.AssessmentToolWorkflowInstanceId);
+            #pragma warning disable 0612, 0618
             Assert.Equal(command.TargetWorkflowId, result.TargetAssessmentToolWorkflowId);
+            #pragma warning restore 0612, 0618
             Assert.Equal(command.AssessorRationale, result.AssessorRationale);
             Assert.Equal(command.RequestedBy, result.CreatedBy);
             Assert.Equal(command.RequestedBy, result.CreatedBy);

@@ -32,7 +32,7 @@ namespace He.PipelineAssessment.UI.Features.Admin.AssessmentToolManagement.Comma
             catch (Exception e)
             {
                 _logger.LogError(e, e.Message);
-                throw new ApplicationException($"Unable to update assessment tool workflow. AssessmentToolWoirkflowId: {request.Id}");
+                throw new ApplicationException($"Unable to update assessment tool workflow. AssessmentToolWorkflowId: {request.Id}");
             }
 
         }

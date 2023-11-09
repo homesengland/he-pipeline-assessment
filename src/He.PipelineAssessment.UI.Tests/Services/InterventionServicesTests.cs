@@ -1,12 +1,6 @@
 ﻿using He.PipelineAssessment.Tests.Common;
-using He.PipelineAssessment.UI.Features.Amendment.SubmitAmendment;
 using He.PipelineAssessment.UI.Services;
 using AutoFixture.Xunit2;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Xunit;
 using Moq;
 using He.PipelineAssessment.Infrastructure.Repository;
@@ -17,12 +11,8 @@ using He.PipelineAssessment.UI.Common.Utility;
 using He.PipelineAssessment.UI.Features.Intervention;
 using Microsoft.Extensions.Logging;
 using He.PipelineAssessment.Models;
-using He.PipelineAssessment.Infrastructure.Migrations;
 using He.PipelineAssessment.UI.Common.Exceptions;
 using Newtonsoft.Json;
-using Xunit.Sdk;
-using Azure.Core;
-using Auth0.ManagementApi.Models;
 
 namespace He.PipelineAssessment.UI.Tests.Services
 {
@@ -435,7 +425,8 @@ namespace He.PipelineAssessment.UI.Tests.Services
             Assert.Equal($"Assessment Tool Workflow Instance with Id {request.WorkflowInstanceId} not found", ex.Message);
         }
 
-
+        [Theory]
+        [AutoMoqData]
         public async Task CreateInterventionRequest_Should_ThrowErrorIfRoleNotAuthorised(
             [Frozen] Mock<IAssessmentRepository> assessmentRepository,
             [Frozen] Mock<IRoleValidation> roleValidation,
@@ -462,8 +453,8 @@ namespace He.PipelineAssessment.UI.Tests.Services
                 logger.Object,
                 adminAssessmentToolWorkflowRepository.Object,
                 dateTimeProvider.Object,
-            elsaServerHttpClient.Object
-                );
+                elsaServerHttpClient.Object
+            );
 
             //Act
             var ex = await Assert.ThrowsAsync<UnauthorizedAccessException>(() => service.CreateInterventionRequest(request));
@@ -604,6 +595,24 @@ namespace He.PipelineAssessment.UI.Tests.Services
 
             //Assert
             Assert.Equal(exception.Message, ex.Message);
+        }
+
+        [Theory]
+        [AutoMoqData]
+        public async Task CreateInterventionRequest_Should_ThrowApplicationExceptionGivenAnyOtherExceptionThrown(
+                [Frozen] Mock<IAssessmentRepository> assessmentRepository,
+                CreateInterventionRequest request,
+                Exception e,
+                InterventionService sut)
+        {
+            //Arrange
+            assessmentRepository.Setup(x => x.GetAssessmentToolWorkflowInstance(request.WorkflowInstanceId)).Throws(e);
+
+            //Act
+            var ex = await Assert.ThrowsAsync<ApplicationException>(() => sut.CreateInterventionRequest(request));
+
+            //Assert
+            Assert.Equal($"Unable to create {request.DecisionType} request. WorkflowInstanceId: {request.WorkflowInstanceId}", ex.Message);
         }
 
         [Theory]
@@ -924,7 +933,9 @@ namespace He.PipelineAssessment.UI.Tests.Services
             AssessmentIntervention interventionToSave = intervention;
             interventionToSave.AdministratorRationale = command.AdministratorRationale;
             interventionToSave.SignOffDocument = command.SignOffDocument;
+            #pragma warning disable 0612, 0618
             interventionToSave.TargetAssessmentToolWorkflowId = command.TargetWorkflowId;
+            #pragma warning restore 0612, 0618
             interventionToSave.Administrator = command.Administrator;
             interventionToSave.AdministratorEmail = command.AdministratorEmail;
 
@@ -2182,6 +2193,18 @@ namespace He.PipelineAssessment.UI.Tests.Services
             assessmentRepository.Verify(x => x.GetWorkflowInstancesToDeleteForAmendment(intervention.AssessmentToolWorkflowInstance.AssessmentId,
                                 intervention.AssessmentToolWorkflowInstance.AssessmentToolWorkflow.AssessmentTool.Order), Times.Never);
             assessmentRepository.Verify(x => x.SaveChanges(), Times.Once);
+            assessmentRepository.Verify(
+                x => x.DeleteAllNextWorkflows(intervention.AssessmentToolWorkflowInstance.AssessmentId), Times.Once);
+            assessmentRepository.Verify(
+                x => x.DeleteAllNextWorkflowsByOrder(intervention.AssessmentToolWorkflowInstance.AssessmentId, intervention.AssessmentToolWorkflowInstance.AssessmentToolWorkflow.AssessmentTool.Order), Times.Never);
+            elsaServerHttpClient.Verify(
+                x => x.PostArchiveQuestions(It.Is<string[]>(y =>
+                    y.Intersect(instances.Select(z => z.WorkflowInstanceId).ToArray()).Count() == y.Length)),
+                Times.Once);
+            assessmentRepository.Verify(
+                x => x.CreateAssessmentToolInstanceNextWorkflows(
+                    It.Is<List<AssessmentToolInstanceNextWorkflow>>(y =>
+                        y.Count == intervention.TargetAssessmentToolWorkflows.Count)), Times.Once);
         }
 
         [Theory]
@@ -2204,9 +2227,12 @@ namespace He.PipelineAssessment.UI.Tests.Services
             command.Status = InterventionStatus.Approved;
             intervention.Status = InterventionStatus.Approved;
             intervention.DecisionType = InterventionDecisionTypes.Override;
-            assessmentRepository.Setup(x => x.GetAssessmentIntervention(command.AssessmentInterventionId)).ReturnsAsync(intervention);
-            assessmentRepository.Setup(x => x.GetSubsequentWorkflowInstancesForOverride(intervention.AssessmentToolWorkflowInstance.WorkflowInstanceId))
-    .ReturnsAsync(instances);
+            assessmentRepository.Setup(x => x.GetAssessmentIntervention(command.AssessmentInterventionId))
+                .ReturnsAsync(intervention);
+            assessmentRepository.Setup(x =>
+                    x.GetSubsequentWorkflowInstancesForOverride(intervention.AssessmentToolWorkflowInstance
+                        .WorkflowInstanceId))
+                .ReturnsAsync(instances);
 
 
 
@@ -2233,11 +2259,23 @@ namespace He.PipelineAssessment.UI.Tests.Services
             assessmentRepository.Verify(x => x.GetWorkflowInstancesToDeleteForAmendment(intervention.AssessmentToolWorkflowInstance.AssessmentId,
                                 intervention.AssessmentToolWorkflowInstance.AssessmentToolWorkflow.AssessmentTool.Order), Times.Never);
             assessmentRepository.Verify(x => x.SaveChanges(), Times.Once);
+            assessmentRepository.Verify(
+                x => x.DeleteAllNextWorkflows(intervention.AssessmentToolWorkflowInstance.AssessmentId), Times.Never);
+            assessmentRepository.Verify(
+                x => x.DeleteAllNextWorkflowsByOrder(intervention.AssessmentToolWorkflowInstance.AssessmentId, intervention.AssessmentToolWorkflowInstance.AssessmentToolWorkflow.AssessmentTool.Order), Times.Never);
+            elsaServerHttpClient.Verify(
+                x => x.PostArchiveQuestions(It.Is<string[]>(y =>
+                    y.Intersect(instances.Select(z => z.WorkflowInstanceId).ToArray()).Count() == y.Length)),
+                Times.Never);
+            assessmentRepository.Verify(
+                x => x.CreateAssessmentToolInstanceNextWorkflows(
+                    It.Is<List<AssessmentToolInstanceNextWorkflow>>(y =>
+                        y.Count == intervention.TargetAssessmentToolWorkflows.Count)), Times.Once);
         }
 
         [Theory]
         [AutoMoqData]
-        public async Task SubmitIntervention_ShouldRequestAmmendmentWorkflows_GivenAmmendmentDecisionType(
+        public async Task SubmitIntervention_ShouldRequestAmendmentWorkflows_GivenAmendmentDecisionType(
                 [Frozen] Mock<IAssessmentRepository> assessmentRepository,
                 [Frozen] Mock<IRoleValidation> roleValidation,
                 [Frozen] Mock<IAssessmentToolWorkflowInstanceHelpers> assessmentToolWorkflowInstanceHelpers,
@@ -2285,7 +2323,164 @@ namespace He.PipelineAssessment.UI.Tests.Services
             assessmentRepository.Verify(x => x.GetWorkflowInstancesToDeleteForAmendment(intervention.AssessmentToolWorkflowInstance.AssessmentId,
                                 intervention.AssessmentToolWorkflowInstance.AssessmentToolWorkflow.AssessmentTool.Order), Times.Once);
             assessmentRepository.Verify(x => x.SaveChanges(), Times.Once);
+            assessmentRepository.Verify(
+                x => x.DeleteAllNextWorkflows(intervention.AssessmentToolWorkflowInstance.AssessmentId), Times.Never);
+            assessmentRepository.Verify(
+                x => x.DeleteAllNextWorkflowsByOrder(intervention.AssessmentToolWorkflowInstance.AssessmentId,
+                    intervention.AssessmentToolWorkflowInstance.AssessmentToolWorkflow.AssessmentTool.Order),
+                Times.Once);
+            elsaServerHttpClient.Verify(
+                x => x.PostArchiveQuestions(It.Is<string[]>(y =>
+                    y.Intersect(instances.Select(z => z.WorkflowInstanceId).ToArray()).Count() == y.Length)),
+                Times.Once);
+            assessmentRepository.Verify(
+                x => x.CreateAssessmentToolInstanceNextWorkflows(
+                    It.Is<List<AssessmentToolInstanceNextWorkflow>>(y =>
+                        y.Count == intervention.TargetAssessmentToolWorkflows.Count)), Times.Once);
         }
+
+        [Theory]
+        [AutoMoqData]
+        public async Task SubmitIntervention_ShouldRequestVariationWorkflows_GivenVariationDecisionType(
+                [Frozen] Mock<IAssessmentRepository> assessmentRepository,
+                [Frozen] Mock<IElsaServerHttpClient> elsaServerHttpClient,
+                AssessmentIntervention intervention,
+                AssessmentInterventionCommand command,
+                InterventionService sut)
+        {
+            //Arrange
+            command.Status = InterventionStatus.Approved;
+            intervention.Status = InterventionStatus.Approved;
+            intervention.DecisionType = InterventionDecisionTypes.Variation;
+            assessmentRepository.Setup(x => x.GetAssessmentIntervention(command.AssessmentInterventionId)).ReturnsAsync(intervention);
+
+            //Act
+            await sut.SubmitIntervention(command);
+
+            //Assert
+            assessmentRepository.Verify(x => x.GetWorkflowInstancesToDeleteForRollback(intervention.AssessmentToolWorkflowInstance.AssessmentId,
+                                        intervention.TargetAssessmentToolWorkflows!.First().AssessmentToolWorkflow.AssessmentTool.Order), Times.Never);
+            assessmentRepository.Verify(x => x.GetSubsequentWorkflowInstancesForOverride(intervention
+                                        .AssessmentToolWorkflowInstance.WorkflowInstanceId), Times.Never);
+            assessmentRepository.Verify(x => x.GetWorkflowInstancesToDeleteForAmendment(intervention.AssessmentToolWorkflowInstance.AssessmentId,
+                                intervention.AssessmentToolWorkflowInstance.AssessmentToolWorkflow.AssessmentTool.Order), Times.Never);
+            assessmentRepository.Verify(x => x.SaveChanges(), Times.Once);
+            assessmentRepository.Verify(
+                x => x.DeleteAllNextWorkflows(intervention.AssessmentToolWorkflowInstance.AssessmentId), Times.Never);
+            assessmentRepository.Verify(
+                x => x.DeleteAllNextWorkflowsByOrder(intervention.AssessmentToolWorkflowInstance.AssessmentId,
+                    intervention.AssessmentToolWorkflowInstance.AssessmentToolWorkflow.AssessmentTool.Order),
+                Times.Never);
+            elsaServerHttpClient.Verify(
+                x => x.PostArchiveQuestions(It.IsAny<string[]>()),
+                Times.Never);
+            assessmentRepository.Verify(
+                x => x.CreateAssessmentToolInstanceNextWorkflows(
+                    It.Is<List<AssessmentToolInstanceNextWorkflow>>(y =>
+                        y.Count == intervention.TargetAssessmentToolWorkflows.Count)), Times.Once);
+        }
+
+        [Theory]
+        [AutoMoqData]
+        public async Task SubmitIntervention_ShouldCreateNextWorkflowsWithCorrectFlags_GivenVariationDecisionType(
+                [Frozen] Mock<IAssessmentRepository> assessmentRepository,
+                AssessmentIntervention intervention,
+                AssessmentInterventionCommand command,
+                string definitionId,
+                bool isLast,
+                InterventionService sut)
+        {
+            //Arrange
+            command.Status = InterventionStatus.Approved;
+            intervention.Status = InterventionStatus.Approved;
+            intervention.DecisionType = InterventionDecisionTypes.Variation;
+            intervention.TargetAssessmentToolWorkflows = new List<TargetAssessmentToolWorkflow>
+            {
+                new()
+                {
+                    AssessmentToolWorkflow = new AssessmentToolWorkflow
+                    {
+                        WorkflowDefinitionId = definitionId,
+                        IsLast = isLast
+                    }
+                }
+            };
+            assessmentRepository.Setup(x => x.GetAssessmentIntervention(command.AssessmentInterventionId)).ReturnsAsync(intervention);
+
+            //Act
+            await sut.SubmitIntervention(command);
+
+            //Assert
+            assessmentRepository.Verify(
+                x => x.CreateAssessmentToolInstanceNextWorkflows(
+                    It.Is<List<AssessmentToolInstanceNextWorkflow>>(y =>
+                        y.Count == 1 && 
+                        y[0].AssessmentId == intervention.AssessmentToolWorkflowInstance.AssessmentId &&
+                        y[0].AssessmentToolWorkflowInstanceId == intervention.AssessmentToolWorkflowInstanceId &&
+                        y[0].NextWorkflowDefinitionId == definitionId &&
+                        y[0].IsVariation == true &&
+                        y[0].IsLast == isLast
+                        )), Times.Once);
+        }
+
+        [Theory]
+        [InlineAutoMoqData(InterventionDecisionTypes.Rollback)]
+        [InlineAutoMoqData(InterventionDecisionTypes.Amendment)]
+        [InlineAutoMoqData(InterventionDecisionTypes.Override)]
+        public async Task SubmitIntervention_ShouldCreateNextWorkflowsWithCorrectFlags_GivenOtherDecisionTypes(
+            string decisionType,
+            [Frozen] Mock<IAssessmentRepository> assessmentRepository,
+            AssessmentIntervention intervention,
+            AssessmentInterventionCommand command,
+            string definitionId,
+            bool isLast,
+            List<AssessmentToolWorkflowInstance> instances,
+            InterventionService sut)
+        {
+            //Arrange
+            command.Status = InterventionStatus.Approved;
+            intervention.Status = InterventionStatus.Approved;
+            intervention.DecisionType = decisionType;
+            intervention.TargetAssessmentToolWorkflows = new List<TargetAssessmentToolWorkflow>
+            {
+                new()
+                {
+                    AssessmentToolWorkflow = new AssessmentToolWorkflow
+                    {
+                        WorkflowDefinitionId = definitionId,
+                        IsLast = isLast,
+                        AssessmentTool = new AssessmentTool
+                        {
+                            Order = 1
+                        }
+                    }
+                }
+            };
+            assessmentRepository.Setup(x => x.GetAssessmentIntervention(command.AssessmentInterventionId)).ReturnsAsync(intervention);
+            assessmentRepository.Setup(x => x.GetWorkflowInstancesToDeleteForAmendment(intervention.AssessmentToolWorkflowInstance.AssessmentId,
+                    intervention.AssessmentToolWorkflowInstance.AssessmentToolWorkflow.AssessmentTool.Order))
+                .ReturnsAsync(instances);
+            assessmentRepository.Setup(x => x.GetWorkflowInstancesToDeleteForRollback(intervention.AssessmentToolWorkflowInstance.AssessmentId,
+                intervention.TargetAssessmentToolWorkflows!.First().AssessmentToolWorkflow.AssessmentTool.Order)).ReturnsAsync(instances);
+            assessmentRepository.Setup(x => x.GetSubsequentWorkflowInstancesForOverride(intervention.AssessmentToolWorkflowInstance.WorkflowInstanceId))
+                .ReturnsAsync(instances);
+
+            //Act
+            await sut.SubmitIntervention(command);
+
+            //Assert
+            assessmentRepository.Verify(
+                x => x.CreateAssessmentToolInstanceNextWorkflows(
+                    It.Is<List<AssessmentToolInstanceNextWorkflow>>(y =>
+                        y.Count == 1 &&
+                        y[0].AssessmentId == intervention.AssessmentToolWorkflowInstance.AssessmentId &&
+                        y[0].AssessmentToolWorkflowInstanceId == intervention.AssessmentToolWorkflowInstanceId &&
+                        y[0].NextWorkflowDefinitionId == definitionId &&
+                        y[0].IsVariation == false &&
+                        y[0].IsLast == isLast
+                    )), Times.Once);
+        }
+
 
         #endregion
     }
