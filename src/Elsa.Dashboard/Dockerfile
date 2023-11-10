@@ -2,6 +2,14 @@
 
 
 FROM mcr.microsoft.com/dotnet/aspnet:6.0 AS base
+
+USER root
+RUN apt-get update && apt-get -y upgrade
+
+RUN groupadd -g 999 appuser && \
+useradd -r -u 999 -g appuser appuser
+USER appuser
+
 WORKDIR /app
 ENV ASPNETCORE_URLS="http://*:5555"
 EXPOSE 5555
