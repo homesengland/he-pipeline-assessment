@@ -1,4 +1,5 @@
 ﻿using System.Globalization;
+using He.PipelineAssessment.Models.Helper;
 
 namespace He.PipelineAssessment.Models.ViewModels
 {
@@ -16,6 +17,7 @@ namespace He.PipelineAssessment.Models.ViewModels
         public decimal? FundingAsk { get; set; }
         public int? NumberOfHomes { get; set; }
         public string? Status { get; set; }
+        public string? SensitiveStatus { get; set; }
 
         public string StatusDisplayTag()
         {
@@ -31,6 +33,23 @@ namespace He.PipelineAssessment.Models.ViewModels
                     return "red";
             }
             return "yellow";
+        }
+
+        public bool IsSensitiveRecord()
+        {
+            return SensitiveStatusHelper.IsSensitiveStatus(SensitiveStatus);
+        }
+
+        private bool B()
+        {
+            switch (SensitiveStatus?.ToLower())
+            {
+                case "sensitive - nda in place":
+                case "sensitive - plc involved in delivery":
+                    return true;
+                default:
+                    return false;
+            }
         }
 
         public string FundingAskCurrency
