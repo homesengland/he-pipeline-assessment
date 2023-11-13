@@ -16,5 +16,6 @@
         public string BusinessArea { get; set; } = string.Empty;
         public string LandType { get; set; } = string.Empty;
         public virtual List<AssessmentToolWorkflowInstance>? AssessmentToolWorkflowInstances { get; set; }
+        public string? SensitiveStatus { get; set; }
     }
 }
