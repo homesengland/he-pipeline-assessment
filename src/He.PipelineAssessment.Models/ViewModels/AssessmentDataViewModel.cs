@@ -40,18 +40,6 @@ namespace He.PipelineAssessment.Models.ViewModels
             return SensitiveStatusHelper.IsSensitiveStatus(SensitiveStatus);
         }
 
-        private bool B()
-        {
-            switch (SensitiveStatus?.ToLower())
-            {
-                case "sensitive - nda in place":
-                case "sensitive - plc involved in delivery":
-                    return true;
-                default:
-                    return false;
-            }
-        }
-
         public string FundingAskCurrency
         {
             get
