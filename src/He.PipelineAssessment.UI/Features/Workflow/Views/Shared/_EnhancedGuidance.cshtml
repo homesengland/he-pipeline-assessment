@@ -12,7 +12,10 @@
         {
             @foreach (var text in Model.EnhancedGuidance)
             {
-                @await Html.PartialAsync("_InformationGroup", text)
+                if (text.DisplayOnPage)
+                {
+                    @await Html.PartialAsync("_InformationGroup", text)
+                }
             }
         }
     </div>

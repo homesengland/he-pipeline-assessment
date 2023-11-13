@@ -63,6 +63,7 @@ namespace Elsa.Server.Mappers
                 IsCollapsed = x.Collapsed,
                 IsGuidance = x.Guidance,
                 IsBullets = x.Bullets,
+                DisplayOnPage = x.DisplayOnPage,
                 InformationTextList = x.TextRecords.ConvertAll(y => new InformationText()
                 {
                     Text = y.Text,
@@ -84,6 +85,7 @@ namespace Elsa.Server.Mappers
                 IsCollapsed = false,
                 IsGuidance = false,
                 IsBullets = x.Bullets,
+                DisplayOnPage = x.DisplayOnPage,
                 InformationTextList = x.TextRecords.ConvertAll(y => new InformationText()
                 {
                     Text = y.Text,
@@ -107,6 +109,7 @@ namespace Elsa.Server.Mappers
                     IsCollapsed = false,
                     IsGuidance = false,
                     IsBullets = false,
+                    DisplayOnPage = true,
                     InformationTextList = new List<InformationText>()
                     {
                         new InformationText()

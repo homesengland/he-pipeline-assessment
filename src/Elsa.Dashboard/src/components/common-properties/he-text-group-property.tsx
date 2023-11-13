@@ -17,6 +17,7 @@ import SortIcon from '../../icons/sort_icon';
 import { DisplayToggle, IDisplayToggle } from '../display-toggle-component';
 import MaximiseIcon from '../../icons/maximise_icon';
 import MinimiseIcon from '../../icons/minimise_icon';
+import { mapSyntaxToLanguage } from '../../utils/utils';
 
 @Component({
   tag: 'he-text-group-property',
@@ -167,6 +168,11 @@ export class HeTextGroupProperty implements ISortableSharedComponent, IDisplayTo
       let maximiseIconStyle = !isMinimised ? this.hiddenValue : this.displayValue;
       let displayGroupStyle = isMinimised ? this.hiddenValue : "";
 
+      const conditionSyntax = SyntaxNames.JavaScript;
+      const conditionLanguage = mapSyntaxToLanguage(conditionSyntax);
+      const conditionExpression = textGroup.expressions[TextActivityOptionsSyntax.Condition];
+      const conditionEditorHeight = "2.75em";
+      let conditionExpressionEditor = null;
 
       return (
         <div class="elsa-border-gray-300 elsa-rounded-md elsa-group-border" key={this.keyId}>
@@ -207,8 +213,7 @@ export class HeTextGroupProperty implements ISortableSharedComponent, IDisplayTo
                   <label class="elsa-block elsa-text-sm elsa-font-medium elsa-text-gray-700">Title</label>
                 </div>
               </div>
-            </div>
-
+              </div>
             <div>
               <div>
                 <input type="text" value={title} onChange={e => this._base.StandardUpdateExpression(e, textGroup, TextActivityOptionsSyntax.Title)}
@@ -216,8 +221,38 @@ export class HeTextGroupProperty implements ISortableSharedComponent, IDisplayTo
               </div>
               <p class="elsa-mt-2 elsa-text-sm elsa-text-gray-500">The title of the text grouping.  This can be left empty, but if a value is given, it will display as a heading.</p>
             </div>
-            <br/>
-            <div class="elsa-mb-1">
+              <br />
+              <div class="elsa-mb-1">
+                <div class="elsa-flex">
+                  <div class="elsa-flex-1">
+                    <label class="elsa-block elsa-text-sm elsa-font-medium elsa-text-gray-700">Display on Page</label>
+                  </div>
+                </div>
+              </div>
+              <div class = "elsa-relative">
+                  <he-expression-editor
+                      key={`expression-editor-${this.syntaxSwitchCount}`}
+                      ref={el => conditionExpressionEditor = el}
+                      expression={conditionExpression}
+                      language={conditionLanguage}
+                      single-line={false}
+                      editorHeight={conditionEditorHeight}
+                      padding="elsa-pt-1.5 elsa-pl-1 elsa-pr-28"
+                      onExpressionChanged={e => this._base.CustomUpdateExpression(e, textGroup, TextActivityOptionsSyntax.Condition)}
+                 />
+                  <div class="elsa-absolute elsa-inset-y-0 elsa-right-0 elsa-flex elsa-items-center elsa-select">
+                    <select onChange={e => this._base.UpdateSyntax(e, textGroup, conditionExpressionEditor)}
+                      class="focus:elsa-ring-blue-500 focus:elsa-border-blue-500 elsa-h-full elsa-py-0 elsa-pl-2 elsa-pr-7 elsa-border-transparent elsa-bg-transparent elsa-text-gray-500 sm:elsa-text-sm elsa-rounded-md">
+                      {this.supportedSyntaxes.filter(x => x == SyntaxNames.JavaScript).map(supportedSyntax => {
+                        const selected = supportedSyntax == SyntaxNames.JavaScript;
+                        return <option selected={selected}>{supportedSyntax}</option>;
+                      })}
+                    </select>
+                  </div>
+                </div>
+              <br />
+
+                 <div class="elsa-mb-1">
               <div class="elsa-flex">
                 <div class="elsa-flex-1">
                   <label class="elsa-block elsa-text-sm elsa-font-medium elsa-text-gray-700">Is Guidance</label>
