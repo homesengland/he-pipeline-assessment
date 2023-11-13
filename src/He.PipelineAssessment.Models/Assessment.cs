@@ -1,4 +1,6 @@
-﻿namespace He.PipelineAssessment.Models
+﻿using He.PipelineAssessment.Models.Helper;
+
+namespace He.PipelineAssessment.Models
 {
     public class Assessment : AuditableEntity
     {
@@ -17,5 +19,10 @@
         public string LandType { get; set; } = string.Empty;
         public virtual List<AssessmentToolWorkflowInstance>? AssessmentToolWorkflowInstances { get; set; }
         public string? SensitiveStatus { get; set; }
+
+        public bool IsSensitiveRecord()
+        {
+            return SensitiveStatusHelper.IsSensitiveStatus(SensitiveStatus);
+        }
     }
 }

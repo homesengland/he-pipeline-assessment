@@ -47,6 +47,7 @@
     <None Remove="Migrations\20231101164653_AddCompletedStatusToAssessmentsSP\GetAssessments.sql" />
     <None Remove="Migrations\20231102164948_FixForDuplicateStages\GetAssessmentStagesByAssessmentId.sql" />
     <None Remove="Migrations\20231106121320_AddNullableIsVariationCheckToStartableToolSP\GetStartableToolsByAssessmentId.sql" />
+    <None Remove="Migrations\20231113154952_AddSensitiveStatusToGetAssessmentsSP\GetAssessments.sql" />
   </ItemGroup>
 
   <ItemGroup>
@@ -90,6 +91,7 @@
     <EmbeddedResource Include="Migrations\20231101164653_AddCompletedStatusToAssessmentsSP\GetAssessments.sql" />
     <EmbeddedResource Include="Migrations\20231102164948_FixForDuplicateStages\GetAssessmentStagesByAssessmentId.sql" />
     <EmbeddedResource Include="Migrations\20231106121320_AddNullableIsVariationCheckToStartableToolSP\GetStartableToolsByAssessmentId.sql" />
+    <EmbeddedResource Include="Migrations\20231113154952_AddSensitiveStatusToGetAssessmentsSP\GetAssessments.sql" />
   </ItemGroup>
 
   <ItemGroup>

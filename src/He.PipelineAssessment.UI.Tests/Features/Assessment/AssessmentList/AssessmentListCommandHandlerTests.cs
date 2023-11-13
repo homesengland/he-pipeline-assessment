@@ -5,8 +5,6 @@ using He.PipelineAssessment.Models.ViewModels;
 using He.PipelineAssessment.UI.Features.Assessment.AssessmentList;
 using Moq;
 using Xunit;
-using He.PipelineAssessment.Models;
-using System.Collections.Generic;
 
 namespace He.PipelineAssessment.UI.Tests.Features.Assessment.AssessmentList
 {
@@ -17,16 +15,16 @@ namespace He.PipelineAssessment.UI.Tests.Features.Assessment.AssessmentList
         [AutoMoqData]
         public async Task Handle_ReturnsError_GivenRepoThrowsError(
             [Frozen] Mock<IStoredProcedureRepository> repo,
-            AssessmentListCommand assessmentListCommand,
+            AssessmentListRequest assessmentListRequest,
             Exception exception,
-            AssessmentListCommandHandler sut
+            AssessmentListRequestHandler sut
         )
         {
             //Arrange
             repo.Setup(x => x.GetAssessments()).Throws(exception);
 
             //Act
-            var result = await Assert.ThrowsAsync<ApplicationException>(()=>sut.Handle(assessmentListCommand, CancellationToken.None));
+            var result = await Assert.ThrowsAsync<ApplicationException>(()=>sut.Handle(assessmentListRequest, CancellationToken.None));
 
             //Assert
             Assert.Equal("Unable to get list of assessments.", result.Message);
@@ -36,9 +34,9 @@ namespace He.PipelineAssessment.UI.Tests.Features.Assessment.AssessmentList
         [AutoMoqData]
         public async Task Handle_ReturnsLAssessmentListData_GivenNoErrorsEncountered(
             [Frozen] Mock<IStoredProcedureRepository> repo,
-             AssessmentListCommand assessmentListCommand,
+             AssessmentListRequest assessmentListRequest,
             List<AssessmentDataViewModel> assessments,
-            AssessmentListCommandHandler sut
+            AssessmentListRequestHandler sut
         )
         {
             //Arrange
@@ -46,12 +44,90 @@ namespace He.PipelineAssessment.UI.Tests.Features.Assessment.AssessmentList
                 .ReturnsAsync(assessments);
 
             //Act
-            var result = await sut.Handle(assessmentListCommand, CancellationToken.None);
+            var result = await sut.Handle(assessmentListRequest, CancellationToken.None);
 
             //Assert
             Assert.NotNull(result);
             Assert.NotEmpty(result);
             Assert.Equal(assessments.Count(), result.Count());
+        }
+
+        [Theory]
+        [AutoMoqData]
+        public async Task Handle_ReturnsFilteredAssessmentListData_GivenNoSensitiveGroupPresent(
+            [Frozen] Mock<IStoredProcedureRepository> repo,
+            AssessmentListRequest assessmentListRequest,
+            List<AssessmentDataViewModel> assessments,
+            AssessmentListRequestHandler sut
+        )
+        {
+            //Arrange
+            assessmentListRequest.CanSeeSensitiveRecords = false;
+            assessments.First().SensitiveStatus = "Sensitive - NDA in place";
+            repo.Setup(x => x.GetAssessments())
+                .ReturnsAsync(assessments);
+
+            //Act
+            var result = await sut.Handle(assessmentListRequest, CancellationToken.None);
+
+            //Assert
+            Assert.NotNull(result);
+            Assert.NotEmpty(result);
+            Assert.Equal(assessments.Count() - 1, result.Count());
+            Assert.Empty(result.Where(x => x.IsSensitiveRecord()));
+        }
+
+        [Theory]
+        [AutoMoqData]
+        public async Task Handle_ReturnsFullAssessmentListData_GivenSensitiveGroupPresent(
+            [Frozen] Mock<IStoredProcedureRepository> repo,
+            AssessmentListRequest assessmentListRequest,
+            List<AssessmentDataViewModel> assessments,
+            AssessmentListRequestHandler sut
+        )
+        {
+            //Arrange
+            assessmentListRequest.CanSeeSensitiveRecords = true;
+            assessments.First().SensitiveStatus = "Sensitive - NDA in place";
+            repo.Setup(x => x.GetAssessments())
+                .ReturnsAsync(assessments);
+
+            //Act
+            var result = await sut.Handle(assessmentListRequest, CancellationToken.None);
+
+            //Assert
+            Assert.NotNull(result);
+            Assert.NotEmpty(result);
+            Assert.Equal(assessments.Count(), result.Count());
+            Assert.Equal(1, result.Count(x => x.IsSensitiveRecord()));
+        }
+
+        [Theory]
+        [AutoMoqData]
+        public async Task Handle_ReturnsFullAssessmentListData_GivenNoSensitiveGroupPresentButProjectManagerMatches(
+            [Frozen] Mock<IStoredProcedureRepository> repo,
+            AssessmentListRequest assessmentListRequest,
+            List<AssessmentDataViewModel> assessments,
+            string? projectManager,
+            AssessmentListRequestHandler sut
+        )
+        {
+            //Arrange
+            assessmentListRequest.CanSeeSensitiveRecords = false;
+            assessmentListRequest.Username = projectManager;
+            assessments.First().SensitiveStatus = "Sensitive - NDA in place";
+            assessments.First().ProjectManager = projectManager;
+            repo.Setup(x => x.GetAssessments())
+                .ReturnsAsync(assessments);
+
+            //Act
+            var result = await sut.Handle(assessmentListRequest, CancellationToken.None);
+
+            //Assert
+            Assert.NotNull(result);
+            Assert.NotEmpty(result);
+            Assert.Equal(assessments.Count(), result.Count());
+            Assert.Equal(1, result.Count(x => x.IsSensitiveRecord()));
         }
     }
 }

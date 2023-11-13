@@ -13,6 +13,7 @@
             public const string PipelineAdminOperations = "PipelineAssessment.AdminOperations";
 
             public const string PipelineEconomist = "PipelineAssessment.Economist";
+            public const string SensitiveRecordsViewer = "PipelineAssessment.SensitiveRecordsViewer";
         }
 
         public static class AuthorizationPolicies
@@ -26,7 +27,6 @@
             public const string AssignmentToWorkflowExecuteRoleRequired = "AssignmentToWorkflowExecuteRoleRequired";
 
             public const string AssignmentToWorkflowEconomistRoleRequired = "AssignmentToWorkflowEconomistRoleRequired";
-
         }
     }
 }
