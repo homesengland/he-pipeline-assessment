@@ -362,7 +362,8 @@ namespace Elsa.CustomWorkflow.Sdk.Models.Workflow
         public string? Url { get; set; }
         public bool IsBold { get; set; } = false;
         public bool IsBulletpoint { get; set; } = false;
-    }
+        public bool DisplayOnPage { get; set; } = true;
+     }
 
     public class DataTableInput
     {
