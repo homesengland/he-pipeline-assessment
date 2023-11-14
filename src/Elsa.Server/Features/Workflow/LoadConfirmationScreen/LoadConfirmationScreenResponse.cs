@@ -25,6 +25,7 @@ namespace Elsa.Server.Features.Workflow.LoadConfirmationScreen
         public bool IsGuidance { get; set; } = false;
         public bool IsCollapsed { get; set; } = false;
         public bool IsBullets { get; set; } = false;
+        public bool DisplayOnPage { get; set; } = true;
         public List<InformationText> InformationTextList { get; set; } = new List<InformationText>();
     }
 }

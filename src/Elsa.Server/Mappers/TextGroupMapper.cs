@@ -23,6 +23,7 @@ namespace Elsa.Server.Mappers
                 IsCollapsed = x.Collapsed,
                 IsGuidance = x.Guidance,
                 IsBullets = x.Bullets,
+                DisplayOnPage = x.DisplayOnPage,
                 InformationTextList = x.TextRecords.ConvertAll(y => new InformationText()
                 {
                     Text = y.Text,
