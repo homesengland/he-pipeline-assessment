@@ -91,7 +91,8 @@ export class HeTextGroupProperty implements ISortableSharedComponent, IDisplayTo
       syntax: SyntaxNames.Json,
       expressions: {
         [SyntaxNames.Json]: '',
-        [SyntaxNames.GroupedInformationText]: ''
+        [SyntaxNames.GroupedInformationText]: '',
+        [TextActivityOptionsSyntax.Condition]: 'true'
       }, type: PropertyOutputTypes.InformationGroup
     };
     this.properties = [... this.properties, newGroup];
