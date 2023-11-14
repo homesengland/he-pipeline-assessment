@@ -87,7 +87,7 @@ namespace He.PipelineAssessment.UI.Features.Assessment.AssessmentSummary
                 {
                     CorrelationId = request.CorrelationId,
                     AssessmentId = request.AssessmentId,
-                    SiteName = dbAssessment!.SiteName,
+                    SiteName = dbAssessment.SiteName,
                     CounterParty = dbAssessment.Counterparty,
                     Reference = dbAssessment.Reference,
                     Stages = stages,

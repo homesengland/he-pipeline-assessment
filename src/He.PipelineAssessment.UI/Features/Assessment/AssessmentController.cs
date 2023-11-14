@@ -31,11 +31,11 @@ namespace He.PipelineAssessment.UI.Features.Assessments
         public async Task<IActionResult> Index()
         {
             var username = _userProvider.GetUserName();
-            var canSeeSensitiveRecords = _userProvider.CheckUserRole(Constants.AppRole.SensitiveRecordsViewer);
+            var canViewSensitiveRecords = _userProvider.CheckUserRole(Constants.AppRole.SensitiveRecordsViewer);
             var listModel = await _mediator.Send(new AssessmentListRequest()
             {
                 Username = username,
-                CanSeeSensitiveRecords = canSeeSensitiveRecords
+                CanViewSensitiveRecords = canViewSensitiveRecords
             });
             return View("Index", listModel);
         }

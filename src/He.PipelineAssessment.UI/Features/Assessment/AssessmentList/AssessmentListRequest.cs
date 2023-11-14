@@ -6,6 +6,6 @@ namespace He.PipelineAssessment.UI.Features.Assessment.AssessmentList
     public class AssessmentListRequest : IRequest<List<AssessmentDataViewModel>>
     {
         public string? Username { get; set; }
-        public bool CanSeeSensitiveRecords { get; set; }
+        public bool CanViewSensitiveRecords { get; set; }
     }
 }

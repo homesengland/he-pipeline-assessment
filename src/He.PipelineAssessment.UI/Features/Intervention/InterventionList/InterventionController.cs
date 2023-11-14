@@ -25,11 +25,11 @@ namespace He.PipelineAssessment.UI.Features.Intervention.InterventionList
             try
             {
                 var username = _userProvider.GetUserName();
-                var canSeeSensitiveRecords = _userProvider.CheckUserRole(Constants.AppRole.SensitiveRecordsViewer);
+                var canViewSensitiveRecords = _userProvider.CheckUserRole(Constants.AppRole.SensitiveRecordsViewer);
 
                 var listModel = await _mediator.Send(new InterventionListRequest()
                 {
-                    CanSeeSensitiveRecords = canSeeSensitiveRecords,
+                    CanViewSensitiveRecords = canViewSensitiveRecords,
                     Username = username
                 });
                 return View("~/Features/Intervention/Views/InterventionList.cshtml", listModel);

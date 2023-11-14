@@ -22,7 +22,7 @@ namespace He.PipelineAssessment.UI.Features.Intervention.InterventionList
 
                 var filteredInterventions = interventionList.Where(x =>
                     !x.IsSensitiveRecord() || (x.IsSensitiveRecord() &&
-                                               (request.CanSeeSensitiveRecords ||
+                                               (request.CanViewSensitiveRecords ||
                                                 request.Username == x.ProjectManager)));
 
                 return filteredInterventions.ToList();

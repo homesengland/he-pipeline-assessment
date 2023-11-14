@@ -62,7 +62,7 @@ namespace He.PipelineAssessment.UI.Tests.Features.Assessment.AssessmentList
         )
         {
             //Arrange
-            assessmentListRequest.CanSeeSensitiveRecords = false;
+            assessmentListRequest.CanViewSensitiveRecords = false;
             assessments.First().SensitiveStatus = "Sensitive - NDA in place";
             repo.Setup(x => x.GetAssessments())
                 .ReturnsAsync(assessments);
@@ -87,7 +87,7 @@ namespace He.PipelineAssessment.UI.Tests.Features.Assessment.AssessmentList
         )
         {
             //Arrange
-            assessmentListRequest.CanSeeSensitiveRecords = true;
+            assessmentListRequest.CanViewSensitiveRecords = true;
             assessments.First().SensitiveStatus = "Sensitive - NDA in place";
             repo.Setup(x => x.GetAssessments())
                 .ReturnsAsync(assessments);
@@ -113,7 +113,7 @@ namespace He.PipelineAssessment.UI.Tests.Features.Assessment.AssessmentList
         )
         {
             //Arrange
-            assessmentListRequest.CanSeeSensitiveRecords = false;
+            assessmentListRequest.CanViewSensitiveRecords = false;
             assessmentListRequest.Username = projectManager;
             assessments.First().SensitiveStatus = "Sensitive - NDA in place";
             assessments.First().ProjectManager = projectManager;

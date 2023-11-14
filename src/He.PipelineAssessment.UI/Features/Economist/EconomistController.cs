@@ -21,12 +21,12 @@ public class EconomistController : BaseController<EconomistController>
     public async Task<IActionResult> GetEconomistList()
     {
         var username = _userProvider.GetUserName();
-        var canSeeSensitiveRecords = _userProvider.CheckUserRole(Constants.AppRole.SensitiveRecordsViewer);
+        var canViewSensitiveRecords = _userProvider.CheckUserRole(Constants.AppRole.SensitiveRecordsViewer);
 
         var listModel = await _mediator.Send(new EconomistAssessmentListRequest()
         {
             Username = username,
-            CanSeeSensitiveRecords = canSeeSensitiveRecords
+            CanViewSensitiveRecords = canViewSensitiveRecords
         });
         return View("Features/Economist/Views/EconomistAssessmentList.cshtml", listModel);
 

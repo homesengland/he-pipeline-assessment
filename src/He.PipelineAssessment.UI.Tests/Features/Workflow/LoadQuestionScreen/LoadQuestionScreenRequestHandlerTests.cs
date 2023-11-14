@@ -29,6 +29,7 @@ namespace He.PipelineAssessment.UI.Tests.Features.Workflow.LoadQuestionScreen
             assessmentRepository.Setup(x => x.GetAssessmentToolWorkflowInstance(loadWorkflowActivityRequest.WorkflowInstanceId))
                 .ReturnsAsync(assessmentToolWorkflowInstance);
 
+            roleValidation.Setup(x => x.ValidateSensitiveRecords(assessmentToolWorkflowInstance.Assessment)).Returns(true);
             roleValidation.Setup(x => x.ValidateRole(assessmentToolWorkflowInstance.AssessmentId, assessmentToolWorkflowInstance.WorkflowDefinitionId)).ReturnsAsync(true);
 
             elsaServerHttpClient.Setup(x => x.LoadQuestionScreen(It.IsAny<LoadWorkflowActivityDto>()))
@@ -59,6 +60,7 @@ namespace He.PipelineAssessment.UI.Tests.Features.Workflow.LoadQuestionScreen
             assessmentRepository.Setup(x => x.GetAssessmentToolWorkflowInstance(loadWorkflowActivityRequest.WorkflowInstanceId))
                 .ReturnsAsync(assessmentToolWorkflowInstance);
 
+            roleValidation.Setup(x => x.ValidateSensitiveRecords(assessmentToolWorkflowInstance.Assessment)).Returns(true);
             roleValidation.Setup(x => x.ValidateRole(assessmentToolWorkflowInstance.AssessmentId, assessmentToolWorkflowInstance.WorkflowDefinitionId)).ReturnsAsync(true);
 
             elsaServerHttpClient.Setup(x => x.LoadQuestionScreen(It.IsAny<LoadWorkflowActivityDto>()))
@@ -92,6 +94,7 @@ namespace He.PipelineAssessment.UI.Tests.Features.Workflow.LoadQuestionScreen
             assessmentRepository.Setup(x => x.GetAssessmentToolWorkflowInstance(loadWorkflowActivityRequest.WorkflowInstanceId))
                .ReturnsAsync(assessmentToolWorkflowInstance);
 
+            roleValidation.Setup(x => x.ValidateSensitiveRecords(assessmentToolWorkflowInstance.Assessment)).Returns(true);
             roleValidation.Setup(x => x.ValidateRole(assessmentToolWorkflowInstance.AssessmentId, assessmentToolWorkflowInstance.WorkflowDefinitionId)).ReturnsAsync(true);
 
             elsaServerHttpClient.Setup(x => x.LoadQuestionScreen(It.IsAny<LoadWorkflowActivityDto>()))
@@ -108,7 +111,7 @@ namespace He.PipelineAssessment.UI.Tests.Features.Workflow.LoadQuestionScreen
 
         [Theory]
         [AutoMoqData]
-        public async Task Handle_ReturnsSaveAndContinueCommand_GivenIncorrectRole(
+        public async Task Handle_ReturnsSaveAndContinueCommandWithIsAuthorisedFalse_GivenIncorrectRole(
            [Frozen] Mock<IAssessmentRepository> assessmentRepository,
            [Frozen] Mock<IRoleValidation> roleValidation,
            LoadQuestionScreenRequest loadWorkflowActivityRequest,
@@ -116,10 +119,11 @@ namespace He.PipelineAssessment.UI.Tests.Features.Workflow.LoadQuestionScreen
            LoadQuestionScreenRequestHandler sut)
         {
             //Arrange
-
+            loadWorkflowActivityRequest.IsReadOnly = false;
             assessmentRepository.Setup(x => x.GetAssessmentToolWorkflowInstance(loadWorkflowActivityRequest.WorkflowInstanceId))
                .ReturnsAsync(assessmentToolWorkflowInstance);
 
+            roleValidation.Setup(x => x.ValidateSensitiveRecords(assessmentToolWorkflowInstance.Assessment)).Returns(true);
             roleValidation.Setup(x => x.ValidateRole(assessmentToolWorkflowInstance.AssessmentId, assessmentToolWorkflowInstance.WorkflowDefinitionId)).ReturnsAsync(false);
 
             //Act
@@ -131,11 +135,34 @@ namespace He.PipelineAssessment.UI.Tests.Features.Workflow.LoadQuestionScreen
 
         [Theory]
         [AutoMoqData]
+        public async Task Handle_ReturnsSaveAndContinueCommand_GivenUserCannotViewSensitiveRecords(
+            [Frozen] Mock<IAssessmentRepository> assessmentRepository,
+            [Frozen] Mock<IRoleValidation> roleValidation,
+            LoadQuestionScreenRequest loadWorkflowActivityRequest,
+            AssessmentToolWorkflowInstance assessmentToolWorkflowInstance,
+            LoadQuestionScreenRequestHandler sut)
+        {
+            //Arrange
+
+            assessmentRepository.Setup(x => x.GetAssessmentToolWorkflowInstance(loadWorkflowActivityRequest.WorkflowInstanceId))
+                .ReturnsAsync(assessmentToolWorkflowInstance);
+
+            roleValidation.Setup(x => x.ValidateSensitiveRecords(assessmentToolWorkflowInstance.Assessment)).Returns(false);
+
+            //Act
+            var ex = await Assert.ThrowsAsync<UnauthorizedAccessException>(() => sut.Handle(loadWorkflowActivityRequest, CancellationToken.None));
+
+            //Assert
+            Assert.Equal($"You do not have permission to access this resource.", ex.Message);
+
+        }
+
+
+        [Theory]
+        [AutoMoqData]
         public async Task Handle_ThrowsApplicationException_GivenException(
            [Frozen] Mock<IAssessmentRepository> assessmentRepository,
-           [Frozen] Mock<IRoleValidation> roleValidation,
            LoadQuestionScreenRequest loadWorkflowActivityRequest,
-           AssessmentToolWorkflowInstance assessmentToolWorkflowInstance,
            LoadQuestionScreenRequestHandler sut)
         {
             //Arrange
@@ -148,33 +175,6 @@ namespace He.PipelineAssessment.UI.Tests.Features.Workflow.LoadQuestionScreen
 
             //Assert
             Assert.Equal("Failed to load Question Screen activity.", ex.Message);
-        }
-
-        [Theory]
-        [AutoMoqData]
-        public async Task Handle_ShouldThrowException_GivenRoleValidationReturnsFalse(
-            [Frozen] Mock<IAssessmentRepository> assessmentRepository,
-            [Frozen] Mock<IRoleValidation> roleValidation,
-            LoadQuestionScreenRequest loadWorkflowActivityRequest,
-            AssessmentToolWorkflowInstance assessmentToolWorkflowInstance,
-            LoadQuestionScreenRequestHandler sut)
-        {
-            //TODO: come back to this as the logic needs to change
-            //Arrange
-            loadWorkflowActivityRequest.IsReadOnly = false;
-            assessmentRepository.Setup(x => x.GetAssessmentToolWorkflowInstance(loadWorkflowActivityRequest.WorkflowInstanceId))
-                .ReturnsAsync(assessmentToolWorkflowInstance);
-
-            roleValidation.Setup(x =>
-                    x.ValidateRole(assessmentToolWorkflowInstance.AssessmentId, assessmentToolWorkflowInstance.WorkflowDefinitionId))
-                .ReturnsAsync(false);
-
-            //Act
-            var ex = await Assert.ThrowsAsync<UnauthorizedAccessException>(() => sut.Handle(loadWorkflowActivityRequest, CancellationToken.None));
-
-            //Assert
-            Assert.Equal($"You do not have permission to access this resource.", ex.Message);
-            Assert.False(true);
         }
     }
 }
