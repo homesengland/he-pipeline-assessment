@@ -11,7 +11,8 @@ BEGIN
 	i.DecisionType,
 	i.CreatedDateTime,
 	i.LastModifiedDateTime,
-	a.SensitiveStatus
+	a.SensitiveStatus,
+	a.ProjectManager
 	FROM dbo.AssessmentIntervention i
 	JOIN dbo.AssessmentToolWorkflowInstance atfi ON i.AssessmentToolWorkflowInstanceId = atfi.Id
 	JOIN dbo.Assessment a ON atfi.AssessmentId = a.Id

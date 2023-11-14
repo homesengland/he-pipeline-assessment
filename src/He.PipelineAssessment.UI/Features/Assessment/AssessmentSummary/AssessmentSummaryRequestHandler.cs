@@ -77,6 +77,7 @@ namespace He.PipelineAssessment.UI.Features.Assessment.AssessmentSummary
                 var interventions = new List<AssessmentInterventionViewModel>();
 
                 var dbInterventions = await _storedProcedureRepository.GetAssessmentInterventionList(request.AssessmentId);
+
                 if (dbInterventions.Any())
                 {
                     interventions = dbInterventions;
