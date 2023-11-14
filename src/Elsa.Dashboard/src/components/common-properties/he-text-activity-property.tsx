@@ -197,7 +197,7 @@ export class TextActivityProperty implements ISortableSharedComponent, IDisplayT
             </th>
           </tr>
           <tr style={{ display: optionsDisplay }} >
-              <th
+            <th
                 class="elsa-px-6 elsa-py-3 elsa-text-left elsa-text-xs elsa-font-medium elsa-text-gray-500 elsa-tracking-wider elsa-w-2/12">Display on Page
             </th>
             <td class="elsa-py-2 pl-5" colSpan={2} style={{ width: colWidth }}>
