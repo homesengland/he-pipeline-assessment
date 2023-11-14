@@ -7,5 +7,6 @@ namespace He.PipelineAssessment.UI.Features.Workflow.LoadConfirmationScreen
         public bool IsLatestSubmittedWorkflow { get; set; }
         public bool IsAmendableWorkflow { get; set; }
         public bool IsVariationAllowed { get; set; }
+        public bool IsAuthorised { get; set; }
     }
 }

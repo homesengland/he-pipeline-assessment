@@ -6,6 +6,7 @@ using He.PipelineAssessment.Models;
 using MediatR;
 using System.Text.Json;
 using He.PipelineAssessment.Infrastructure;
+using He.PipelineAssessment.UI.Authorization;
 using He.PipelineAssessment.UI.Common.Utility;
 using He.PipelineAssessment.UI.Helper;
 
@@ -19,8 +20,9 @@ namespace He.PipelineAssessment.UI.Features.Workflow.LoadConfirmationScreen
         private readonly IDateTimeProvider _dateTimeProvider;
         private readonly IAssessmentToolWorkflowInstanceHelpers _assessmentToolWorkflowInstanceHelpers;
         private readonly ILogger<LoadConfirmationScreenRequestHandler> _logger;
+        private readonly IRoleValidation _roleValidation;
 
-        public LoadConfirmationScreenRequestHandler(IElsaServerHttpClient elsaServerHttpClient, IAssessmentRepository assessmentRepository, IUserProvider userProvider, IDateTimeProvider dateTimeProvider, IAssessmentToolWorkflowInstanceHelpers assessmentToolWorkflowInstanceHelpers, ILogger<LoadConfirmationScreenRequestHandler> logger)
+        public LoadConfirmationScreenRequestHandler(IElsaServerHttpClient elsaServerHttpClient, IAssessmentRepository assessmentRepository, IUserProvider userProvider, IDateTimeProvider dateTimeProvider, IAssessmentToolWorkflowInstanceHelpers assessmentToolWorkflowInstanceHelpers, ILogger<LoadConfirmationScreenRequestHandler> logger, IRoleValidation roleValidation)
         {
             _elsaServerHttpClient = elsaServerHttpClient;
             _assessmentRepository = assessmentRepository;
@@ -28,6 +30,7 @@ namespace He.PipelineAssessment.UI.Features.Workflow.LoadConfirmationScreen
             _dateTimeProvider = dateTimeProvider;
             _assessmentToolWorkflowInstanceHelpers = assessmentToolWorkflowInstanceHelpers;
             _logger = logger;
+            _roleValidation = roleValidation;
         }
 
         public async Task<LoadConfirmationScreenResponse?> Handle(LoadConfirmationScreenRequest request, CancellationToken cancellationToken)
@@ -50,6 +53,23 @@ namespace He.PipelineAssessment.UI.Features.Workflow.LoadConfirmationScreen
                     var currentAssessmentToolWorkflowInstance = await _assessmentRepository.GetAssessmentToolWorkflowInstance(response.Data.WorkflowInstanceId);
                     if (currentAssessmentToolWorkflowInstance != null && result != null)
                     {
+                        var validateSensitiveStatus =
+                            _roleValidation.ValidateSensitiveRecords(currentAssessmentToolWorkflowInstance.Assessment);
+                        if (!validateSensitiveStatus)
+                        {
+                            throw new UnauthorizedAccessException("You do not have permission to access this resource.");
+                        }
+                        var isRoleExist = await _roleValidation.ValidateRole(currentAssessmentToolWorkflowInstance!.AssessmentId,
+                            currentAssessmentToolWorkflowInstance!.WorkflowDefinitionId);
+
+                        if (!isRoleExist)
+                        {
+                            return new LoadConfirmationScreenResponse
+                            {
+                                IsAuthorised = false
+                            };
+                        }
+
                         if (currentAssessmentToolWorkflowInstance.Status == AssessmentToolWorkflowInstanceConstants.Draft)
                         {
                             var data = response.Data.ConfirmationTitle;
@@ -99,7 +119,12 @@ namespace He.PipelineAssessment.UI.Features.Workflow.LoadConfirmationScreen
                 _logger.LogError($"Failed to load Confirmation Screen, response from elsa server client is null. ActivityId: {request.ActivityId} WorkflowInstanceId: {request.WorkflowInstanceId}");
                 throw new ApplicationException("Failed to load Confirmation Screen activity.");
             }
-            catch(Exception e)
+            catch (UnauthorizedAccessException e)
+            {
+                _logger.LogError(e, e.Message);
+                throw;
+            }
+            catch (Exception e)
             {
                 _logger.LogError(e, e.Message);
                 _logger.LogError($"Failed to load Confirmation Screen. ActivityId: {request.ActivityId} WorkflowInstanceId: {request.WorkflowInstanceId}");

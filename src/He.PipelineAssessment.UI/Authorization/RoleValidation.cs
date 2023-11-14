@@ -8,6 +8,7 @@ public interface IRoleValidation
 {
     Task<bool> ValidateRole(int assessmentId, string workflowDefinitionId);
 
+    bool ValidateSensitiveRecords(Assessment assessment);
 }
 public class RoleValidation : IRoleValidation
 {
@@ -69,7 +70,7 @@ public class RoleValidation : IRoleValidation
         return false;
     }
 
-    private bool ValidateSensitiveRecords(Assessment? assessment)
+    public bool ValidateSensitiveRecords(Assessment? assessment)
     {
         if (assessment != null)
         {

@@ -36,6 +36,13 @@ namespace He.PipelineAssessment.UI.Features.Workflow.LoadCheckYourAnswersScreen
             {
                 var assessmentWorkflowInstance = await _assessmentRepository.GetAssessmentToolWorkflowInstance(request.WorkflowInstanceId);
 
+                var validateSensitiveStatus =
+                    _roleValidation.ValidateSensitiveRecords(assessmentWorkflowInstance!.Assessment);
+                if (!validateSensitiveStatus)
+                {
+                    throw new UnauthorizedAccessException("You do not have permission to access this resource.");
+                }
+
                 var isRoleExist = await _roleValidation.ValidateRole(assessmentWorkflowInstance!.AssessmentId, assessmentWorkflowInstance.WorkflowDefinitionId);
 
                 if (!isRoleExist && !request.IsReadOnly)
