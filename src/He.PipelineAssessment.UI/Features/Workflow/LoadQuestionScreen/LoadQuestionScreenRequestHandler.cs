@@ -34,16 +34,19 @@ namespace He.PipelineAssessment.UI.Features.Workflow.LoadQuestionScreen
         {
             try
             {
-                var assessmentWorkflowInstance = await _assessmentRepository.GetAssessmentToolWorkflowInstance(request.WorkflowInstanceId);
+                var assessmentWorkflowInstance =
+                    await _assessmentRepository.GetAssessmentToolWorkflowInstance(request.WorkflowInstanceId);
 
-                var isRoleExist = await _roleValidation.ValidateRole(assessmentWorkflowInstance!.AssessmentId, assessmentWorkflowInstance!.WorkflowDefinitionId);
+                var isRoleExist = await _roleValidation.ValidateRole(assessmentWorkflowInstance!.AssessmentId,
+                    assessmentWorkflowInstance!.WorkflowDefinitionId);
 
                 if (!isRoleExist && !request.IsReadOnly)
                 {
                     throw new UnauthorizedAccessException($"You do not have permission to access this resource.");
                 }
 
-                if (assessmentWorkflowInstance.Status != AssessmentToolWorkflowInstanceConstants.Draft || request.IsReadOnly)
+                if (assessmentWorkflowInstance.Status != AssessmentToolWorkflowInstanceConstants.Draft ||
+                    request.IsReadOnly)
                 {
                     return new QuestionScreenSaveAndContinueCommand()
                     {
@@ -60,9 +63,12 @@ namespace He.PipelineAssessment.UI.Features.Workflow.LoadQuestionScreen
 
                 if (response != null)
                 {
-                    var jsonSerializerSettings = new JsonSerializerSettings { TypeNameHandling = TypeNameHandling.Auto };
+                    var jsonSerializerSettings = new JsonSerializerSettings
+                        { TypeNameHandling = TypeNameHandling.Auto };
                     string jsonResponse = JsonConvert.SerializeObject(response, jsonSerializerSettings);
-                    QuestionScreenSaveAndContinueCommand? result = JsonConvert.DeserializeObject<QuestionScreenSaveAndContinueCommand>(jsonResponse, jsonSerializerSettings);
+                    QuestionScreenSaveAndContinueCommand? result =
+                        JsonConvert.DeserializeObject<QuestionScreenSaveAndContinueCommand>(jsonResponse,
+                            jsonSerializerSettings);
                     result!.IsAuthorised = true;
                     result!.AssessmentId = assessmentWorkflowInstance.AssessmentId;
                     result!.WorkflowDefinitionId = assessmentWorkflowInstance.WorkflowDefinitionId;
@@ -72,10 +78,16 @@ namespace He.PipelineAssessment.UI.Features.Workflow.LoadQuestionScreen
                 }
                 else
                 {
-                    _logger.LogError($"Failed to load Question Screen activity, response from elsa server client is null. ActivityId: {request.ActivityId} WorkflowInstanceId: {request.WorkflowInstanceId}");
+                    _logger.LogError(
+                        $"Failed to load Question Screen activity, response from elsa server client is null. ActivityId: {request.ActivityId} WorkflowInstanceId: {request.WorkflowInstanceId}");
                     throw new ApplicationException("Failed to load Question Screen activity.");
                 }
 
+            }
+            catch (UnauthorizedAccessException e)
+            {
+                _logger.LogError(e, e.Message);
+                throw;
             }
             catch (Exception e)
             {

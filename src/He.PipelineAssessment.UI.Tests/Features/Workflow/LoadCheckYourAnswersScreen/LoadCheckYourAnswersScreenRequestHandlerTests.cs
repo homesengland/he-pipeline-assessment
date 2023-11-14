@@ -112,5 +112,32 @@ namespace He.PipelineAssessment.UI.Tests.Features.Workflow.LoadCheckYourAnswersS
             Assert.Equal("Failed to load check your answers screen activity", ex.Message);
         }
 
+        [Theory]
+        [AutoMoqData]
+        public async Task Handle_ShouldThrowException_GivenRoleValidationReturnsFalse(
+            [Frozen] Mock<IAssessmentRepository> assessmentRepository,
+            [Frozen] Mock<IRoleValidation> roleValidation,
+            LoadCheckYourAnswersScreenRequest loadCheckYourAnswersScreenRequest,
+            AssessmentToolWorkflowInstance assessmentToolWorkflowInstance,
+            LoadCheckYourAnswersScreenRequestHandler sut)
+        {
+            //TODO: come back to this as the logic needs to change
+            //Arrange
+            loadCheckYourAnswersScreenRequest.IsReadOnly = false;
+            assessmentRepository.Setup(x => x.GetAssessmentToolWorkflowInstance(loadCheckYourAnswersScreenRequest.WorkflowInstanceId))
+                .ReturnsAsync(assessmentToolWorkflowInstance);
+
+            roleValidation.Setup(x =>
+                    x.ValidateRole(assessmentToolWorkflowInstance.AssessmentId, assessmentToolWorkflowInstance.WorkflowDefinitionId))
+                .ReturnsAsync(false);
+
+            //Act
+            var ex = await Assert.ThrowsAsync<UnauthorizedAccessException>(() => sut.Handle(loadCheckYourAnswersScreenRequest, CancellationToken.None));
+
+            //Assert
+            Assert.Equal($"You do not have permission to access this resource.", ex.Message);
+            Assert.False(true);
+        }
+
     }
 }

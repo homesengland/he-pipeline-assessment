@@ -1,5 +1,4 @@
 ﻿using AutoFixture.Xunit2;
-using Azure;
 using Elsa.CustomWorkflow.Sdk.HttpClients;
 using Elsa.CustomWorkflow.Sdk.Models.Workflow;
 using He.PipelineAssessment.Infrastructure.Repository;
@@ -144,15 +143,38 @@ namespace He.PipelineAssessment.UI.Tests.Features.Workflow.LoadQuestionScreen
             assessmentRepository.Setup(x => x.GetAssessmentToolWorkflowInstance(loadWorkflowActivityRequest.WorkflowInstanceId))
                .ThrowsAsync(new Exception());
 
-            loadWorkflowActivityRequest.IsReadOnly = true;
-
-            roleValidation.Setup(x => x.ValidateRole(assessmentToolWorkflowInstance.AssessmentId, assessmentToolWorkflowInstance.WorkflowDefinitionId)).ReturnsAsync(false);
-
             //Act
             var ex = await Assert.ThrowsAsync<ApplicationException>(()=>sut.Handle(loadWorkflowActivityRequest, CancellationToken.None));
 
             //Assert
             Assert.Equal("Failed to load Question Screen activity.", ex.Message);
+        }
+
+        [Theory]
+        [AutoMoqData]
+        public async Task Handle_ShouldThrowException_GivenRoleValidationReturnsFalse(
+            [Frozen] Mock<IAssessmentRepository> assessmentRepository,
+            [Frozen] Mock<IRoleValidation> roleValidation,
+            LoadQuestionScreenRequest loadWorkflowActivityRequest,
+            AssessmentToolWorkflowInstance assessmentToolWorkflowInstance,
+            LoadQuestionScreenRequestHandler sut)
+        {
+            //TODO: come back to this as the logic needs to change
+            //Arrange
+            loadWorkflowActivityRequest.IsReadOnly = false;
+            assessmentRepository.Setup(x => x.GetAssessmentToolWorkflowInstance(loadWorkflowActivityRequest.WorkflowInstanceId))
+                .ReturnsAsync(assessmentToolWorkflowInstance);
+
+            roleValidation.Setup(x =>
+                    x.ValidateRole(assessmentToolWorkflowInstance.AssessmentId, assessmentToolWorkflowInstance.WorkflowDefinitionId))
+                .ReturnsAsync(false);
+
+            //Act
+            var ex = await Assert.ThrowsAsync<UnauthorizedAccessException>(() => sut.Handle(loadWorkflowActivityRequest, CancellationToken.None));
+
+            //Assert
+            Assert.Equal($"You do not have permission to access this resource.", ex.Message);
+            Assert.False(true);
         }
     }
 }
