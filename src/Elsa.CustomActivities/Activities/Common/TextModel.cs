@@ -13,6 +13,7 @@
         public bool Collapsed { get; set; } = false;
         public bool Bullets { get; set; } = false;
         public bool Guidance { get; set; } = false;
+        public bool DisplayOnPage { get; set; } = true;
         public List<TextRecord> TextRecords { get; set; } = new List<TextRecord>();
     }
 

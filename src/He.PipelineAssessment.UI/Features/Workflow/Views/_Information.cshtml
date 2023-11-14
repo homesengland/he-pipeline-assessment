@@ -1,7 +1,10 @@
 ﻿@model He.PipelineAssessment.UI.Features.Workflow.ViewModels.Question
 
 @foreach(var text in Model.Information){
+    if(text.DisplayOnPage && text.Text.Any(x => x.DisplayOnPage))
+    {
      @await Html.PartialAsync("_InformationGroup", text)
+    }
 }
 
 @for (int i = 0; i < Model.Information!.Count; i++)

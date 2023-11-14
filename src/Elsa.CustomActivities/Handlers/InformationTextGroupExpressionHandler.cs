@@ -61,6 +61,7 @@ namespace Elsa.CustomActivities.Handlers
                 Guidance = isGuidance,
                 Collapsed = isCollapsed,
                 Bullets = isBullets,
+                DisplayOnPage= condition,
                 TextRecords = records.TextRecords.ToList()
             };
         }
