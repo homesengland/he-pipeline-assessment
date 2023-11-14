@@ -32,6 +32,7 @@ namespace Elsa.Server.Tests.Mappers
                 Assert.Equal(expected.Collapsed, actual.IsCollapsed);
                 Assert.Equal(expected.Guidance, actual.IsGuidance);
                 Assert.Equal(expected.Title, actual.Title);
+                Assert.Equal(expected.DisplayOnPage, actual.DisplayOnPage);
                 for (var j = 0; j < expected.TextRecords.Count; j++)
                 {
                     var expectedTextRecord = expected.TextRecords[j];
@@ -69,6 +70,8 @@ namespace Elsa.Server.Tests.Mappers
                 Assert.Equal(expected.Collapsed, actual.IsCollapsed);
                 Assert.Equal(expected.Guidance, actual.IsGuidance);
                 Assert.Equal(expected.Title, actual.Title);
+                Assert.Equal(expected.DisplayOnPage, actual.DisplayOnPage);
+
                 for (var j = 0; j < expected.TextRecords.Count; j++)
                 {
                     var expectedTextRecord = expected.TextRecords[j];
@@ -106,6 +109,7 @@ namespace Elsa.Server.Tests.Mappers
                 Assert.False(actual.IsCollapsed);
                 Assert.False(actual.IsGuidance);
                 Assert.Equal(expected.Title, actual.Title);
+                Assert.Equal(expected.DisplayOnPage, actual.DisplayOnPage);
                 for (var j = 0; j < expected.TextRecords.Count; j++)
                 {
                     var expectedTextRecord = expected.TextRecords[j];
@@ -139,6 +143,7 @@ namespace Elsa.Server.Tests.Mappers
             Assert.False(actual.IsCollapsed);
             Assert.False(actual.IsGuidance);
             Assert.Equal("", actual.Title);
+            Assert.True(actual.DisplayOnPage);
             var actualInformationText = actual.InformationTextList.Single();
 
             Assert.False(actualInformationText.IsBold);
