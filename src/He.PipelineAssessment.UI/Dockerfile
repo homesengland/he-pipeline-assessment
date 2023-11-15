@@ -1,6 +1,14 @@
 #See https://aka.ms/containerfastmode to understand how Visual Studio uses this Dockerfile to build your images for faster debugging.
 
 FROM mcr.microsoft.com/dotnet/aspnet:6.0 AS base
+
+USER root
+RUN apt-get update && apt-get -y upgrade
+
+RUN groupadd -g 999 appuser && \
+useradd -r -u 999 -g appuser appuser
+USER appuser
+
 WORKDIR /app
 EXPOSE 8080
 ENV ASPNETCORE_URLS="http://*:5555"
