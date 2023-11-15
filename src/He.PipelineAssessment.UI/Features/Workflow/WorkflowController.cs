@@ -70,7 +70,6 @@ namespace He.PipelineAssessment.UI.Features.Workflow
                         else
                         {
                             return RedirectToAction("LoadReadOnlyWorkflowActivity", request);
-
                         }
                     }
                 case ActivityTypeConstants.CheckYourAnswersScreen:
@@ -90,9 +89,7 @@ namespace He.PipelineAssessment.UI.Features.Workflow
                         }
                         else
                         {
-
                             return RedirectToAction("LoadReadOnlyWorkflowActivity", request);
-
                         }
 
                     }
@@ -105,7 +102,14 @@ namespace He.PipelineAssessment.UI.Features.Workflow
                         };
 
                         var result = await this._mediator.Send(confirmationScreenRequest);
-                        return View("Confirmation", result);
+                        if (result.IsAuthorised)
+                        {
+                            return View("Confirmation", result);
+                        }
+                        else
+                        {
+                            return RedirectToAction("LoadReadOnlyWorkflowActivity", request);
+                        }
 
                     }
                 case ActivityTypeConstants.HousingNeedDataSource:

@@ -1,4 +1,5 @@
 ﻿using System.Globalization;
+using He.PipelineAssessment.Models.Helper;
 
 namespace He.PipelineAssessment.Models.ViewModels
 {
@@ -16,6 +17,7 @@ namespace He.PipelineAssessment.Models.ViewModels
         public decimal? FundingAsk { get; set; }
         public int? NumberOfHomes { get; set; }
         public string? Status { get; set; }
+        public string? SensitiveStatus { get; set; }
 
         public string StatusDisplayTag()
         {
@@ -31,6 +33,11 @@ namespace He.PipelineAssessment.Models.ViewModels
                     return "red";
             }
             return "yellow";
+        }
+
+        public bool IsSensitiveRecord()
+        {
+            return SensitiveStatusHelper.IsSensitiveStatus(SensitiveStatus);
         }
 
         public string FundingAskCurrency

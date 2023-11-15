@@ -72,6 +72,11 @@ namespace He.PipelineAssessment.UI.Features.Workflow.StartWorkflow
                     throw new ApplicationException("Failed to start workflow");
                 }
             }
+            catch (UnauthorizedAccessException e)
+            {
+                _logger.LogError(e, e.Message);
+                throw;
+            }
             catch (Exception e)
             {
                 _logger.LogError(e,e.Message);

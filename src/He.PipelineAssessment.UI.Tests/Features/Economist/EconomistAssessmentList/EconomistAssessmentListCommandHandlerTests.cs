@@ -13,25 +13,25 @@ public class EconomistAssessmentListCommandHandlerTests
     [AutoMoqData]
     public async Task Handle_ReturnsError_GivenRepoThrowsError(
            [Frozen] Mock<IStoredProcedureRepository> repo,
-           EconomistAssessmentListCommand economistAssessmentListCommand,
+           EconomistAssessmentListRequest economistAssessmentListRequest,
            Exception exception,
-           EconomistAssessmentListCommandHandler sut
+           EconomistAssessmentListRequestHandler sut
        )
     {
         //Arrange
         repo.Setup(x => x.GetEconomistAssessments()).Throws(exception);
 
         //Assert
-        await Assert.ThrowsAsync<ApplicationException>(() => sut.Handle(economistAssessmentListCommand, CancellationToken.None));
+        await Assert.ThrowsAsync<ApplicationException>(() => sut.Handle(economistAssessmentListRequest, CancellationToken.None));
     }
 
     [Theory]
     [AutoMoqData]
     public async Task Handle_ReturnsLAssessmentListData_GivenNoErrorsEncountered(
           [Frozen] Mock<IStoredProcedureRepository> repo,
-           EconomistAssessmentListCommand economistAssessmentListCommand,
+           EconomistAssessmentListRequest economistAssessmentListRequest,
           List<AssessmentDataViewModel> assessments,
-          EconomistAssessmentListCommandHandler sut
+          EconomistAssessmentListRequestHandler sut
       )
     {
         //Arrange
@@ -39,7 +39,7 @@ public class EconomistAssessmentListCommandHandlerTests
             .ReturnsAsync(assessments);
 
         //Act
-        var result = await sut.Handle(economistAssessmentListCommand, CancellationToken.None);
+        var result = await sut.Handle(economistAssessmentListRequest, CancellationToken.None);
 
         //Assert
         Assert.NotNull(result);

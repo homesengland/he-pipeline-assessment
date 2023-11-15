@@ -1,5 +1,6 @@
 ﻿using He.PipelineAssessment.Infrastructure.Repository;
 using He.PipelineAssessment.Infrastructure;
+using He.PipelineAssessment.Models;
 
 namespace He.PipelineAssessment.UI.Authorization;
 
@@ -7,6 +8,7 @@ public interface IRoleValidation
 {
     Task<bool> ValidateRole(int assessmentId, string workflowDefinitionId);
 
+    bool ValidateSensitiveRecords(Assessment assessment);
 }
 public class RoleValidation : IRoleValidation
 {
@@ -32,15 +34,23 @@ public class RoleValidation : IRoleValidation
                 return isEconomistRoleExist;
             }
         }
+        var assessment = await _assessmentRepository.GetAssessment(assessmentId);
 
-        var isValidForBusinessArea = ValidateForBusinessArea(assessmentId);
-        return isValidForBusinessArea.Result;
+        var isValidForBusinessArea = ValidateForBusinessArea(assessment);
+        if (!isValidForBusinessArea)
+        {
+            return false;
+        }
+
+        var canSeeRecord = ValidateSensitiveRecords(assessment);
+
+        return canSeeRecord;
     }
 
-    private async Task<bool> ValidateForBusinessArea(int assessmentId)
+    private bool ValidateForBusinessArea(Assessment? assessment)
     {
         bool isRoleExist = false;
-        var assessment = await _assessmentRepository.GetAssessment(assessmentId);
+
         if (assessment != null)
         {
             switch (assessment?.BusinessArea)
@@ -58,6 +68,25 @@ public class RoleValidation : IRoleValidation
             }
         }
         return false;
+    }
+
+    public bool ValidateSensitiveRecords(Assessment? assessment)
+    {
+        if (assessment != null)
+        {
+            if (assessment.IsSensitiveRecord())
+            {
+                if (_userProvider.CheckUserRole(Constants.AppRole.SensitiveRecordsViewer) ||
+                    assessment.ProjectManager == _userProvider.GetUserName())
+                {
+                    return true;
+                }
+
+                return false;
+            }
+        }
+
+        return true;
     }
 
 }
