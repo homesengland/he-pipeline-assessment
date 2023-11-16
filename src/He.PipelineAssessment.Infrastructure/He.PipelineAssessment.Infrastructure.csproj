@@ -50,6 +50,7 @@
     <None Remove="Migrations\20231113154952_AddSensitiveStatusToGetAssessmentsSP\GetAssessments.sql" />
     <None Remove="Migrations\20231114144436_UpdateEconomistAndInterventionSPsToReturnSensitiveStatus\GetEconomistAssessments.sql" />
     <None Remove="Migrations\20231114144436_UpdateEconomistAndInterventionSPsToReturnSensitiveStatus\GetInterventionList.sql" />
+    <None Remove="Migrations\20231116100927_AddProjectManagerToGetAssessmentListByAssessmentId\GetAssessmentInterventionListByAssessmentId.sql" />
   </ItemGroup>
 
   <ItemGroup>
@@ -96,6 +97,7 @@
     <EmbeddedResource Include="Migrations\20231113154952_AddSensitiveStatusToGetAssessmentsSP\GetAssessments.sql" />
     <EmbeddedResource Include="Migrations\20231114144436_UpdateEconomistAndInterventionSPsToReturnSensitiveStatus\GetEconomistAssessments.sql" />
     <EmbeddedResource Include="Migrations\20231114144436_UpdateEconomistAndInterventionSPsToReturnSensitiveStatus\GetInterventionList.sql" />
+    <EmbeddedResource Include="Migrations\20231116100927_AddProjectManagerToGetAssessmentListByAssessmentId\GetAssessmentInterventionListByAssessmentId.sql" />
   </ItemGroup>
 
   <ItemGroup>
