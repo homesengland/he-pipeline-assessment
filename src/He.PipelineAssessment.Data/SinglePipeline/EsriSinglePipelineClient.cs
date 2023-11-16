@@ -67,7 +67,8 @@ namespace He.PipelineAssessment.Data.SinglePipeline
                 "project_owner_email,local_authority,funding_ask," +
                 "units_or_homes," +
                 "sp_business_area," +
-                "land_type";
+                "land_type," +
+                "sensitive_status";
 
             var relativeUri =
                 $"query?where={whereClause}&outFields={outFields}&orderByFields={orderBy}&resultOffset={offset}&f=json"; //potentially needs a token on the end also
