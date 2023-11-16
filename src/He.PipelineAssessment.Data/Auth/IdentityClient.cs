@@ -1,5 +1,5 @@
-﻿using He.PipelineAssessment.Data.Auth;
-using Microsoft.Azure.Services.AppAuthentication;
+﻿using Azure.Identity;
+using He.PipelineAssessment.Data.Auth;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 
@@ -27,9 +27,14 @@ namespace He.PipelineAssessment.Data.Auth
                 string azureTenantId = _identityConfig.AzureTenantId;
                 string applicationManagedIdentity = _identityConfig.ApplicationManagedIdentity;
                 string azureResourceId = _identityConfig.AzureResourceId;
+                var options = new WorkloadIdentityCredentialOptions()
+                {
+                    TenantId = azureTenantId,
+                    ClientId = azureResourceId
+                };
 
-                var azureServiceTokenProvider = new AzureServiceTokenProvider(applicationManagedIdentity);
-
+                var azureServiceTokenProvider = new WorkloadIdentityCredential(options);
+                var accessToken = azureServiceTokenProvider.GetTokenAsync();
                 var accessToken = azureServiceTokenProvider.GetAccessTokenAsync(azureResourceId, azureTenantId).Result;
 
                 return accessToken;
