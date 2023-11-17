@@ -3,20 +3,20 @@ using System.Text.Json.Serialization;
 
 namespace He.PipelineAssessment.Data.ExtendedSinglePipeline
 {
-    public interface IEsriExtendedSinglePipelineDataJsonHelper
+    public interface IEsriSinglePipelineExtendedDataJsonHelper
     {
-        ExtendedSinglePipelineData? JsonToSinglePipelineData(string data);
-        ExtendedSinglePipelineDataList? JsonToSinglePipelineDataList(string data);
+        SinglePipelineExtendedData? JsonToSinglePipelineData(string data);
+        SinglePipelineExtendedDataList? JsonToSinglePipelineDataList(string data);
     }
 
     [JsonNumberHandling(JsonNumberHandling.AllowReadingFromString)]
-    public class EsriExtendedSinglePipelineDataJsonHelper : IEsriExtendedSinglePipelineDataJsonHelper
+    public class EsriSinglePipelineExtendedDataJsonHelper : IEsriSinglePipelineExtendedDataJsonHelper
     {
-        public ExtendedSinglePipelineData? JsonToSinglePipelineData(string data)
+        public SinglePipelineExtendedData? JsonToSinglePipelineData(string data)
         {
             try
             {
-                var result = JsonSerializer.Deserialize<EsriExtendedSinglePipelineResponse>(data);
+                var result = JsonSerializer.Deserialize<EsriSinglePipelineExtendedResponse>(data);
                 if (result != null && result.features.FirstOrDefault() != null)
                 {
                     
@@ -33,15 +33,15 @@ namespace He.PipelineAssessment.Data.ExtendedSinglePipeline
             return null;
         }
 
-        public ExtendedSinglePipelineDataList? JsonToSinglePipelineDataList(string data)
+        public SinglePipelineExtendedDataList? JsonToSinglePipelineDataList(string data)
         {
             try
             {
-                var result = JsonSerializer.Deserialize<EsriExtendedSinglePipelineResponse>(data);
+                var result = JsonSerializer.Deserialize<EsriSinglePipelineExtendedResponse>(data);
                 if (result != null && result.features.Any())
                 {
-                    List<ExtendedSinglePipelineData> dataResult = result.features.Select(x => x.attributes).ToList();
-                    return new ExtendedSinglePipelineDataList
+                    List<SinglePipelineExtendedData> dataResult = result.features.Select(x => x.attributes).ToList();
+                    return new SinglePipelineExtendedDataList
                     {
                         SinglePipelineData = dataResult,
                         ExceededTransferLimit = result.exceededTransferLimit

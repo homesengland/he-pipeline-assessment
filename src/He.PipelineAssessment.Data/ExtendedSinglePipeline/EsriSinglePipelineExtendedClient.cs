@@ -2,19 +2,19 @@
 
 namespace He.PipelineAssessment.Data.ExtendedSinglePipeline
 {
-    public interface IEsriExtendedSinglePipelineClient
+    public interface IEsriSinglePipelineExtendedClient
     {
         Task<string?> GetSinglePipelineData(string spid);
-        Task<ExtendedSinglePipelineDataList?> GetSinglePipelineDataList(int offset);
+        Task<SinglePipelineExtendedDataList?> GetSinglePipelineDataList(int offset);
     }
-    public class EsriExtendedSinglePipelineClient : IEsriExtendedSinglePipelineClient
+    public class EsriSinglePipelineExtendedClient : IEsriSinglePipelineExtendedClient
     {
 
         private readonly IHttpClientFactory _httpClientFactory;
-        private readonly ILogger<EsriExtendedSinglePipelineClient> _logger;
-        private readonly IEsriExtendedSinglePipelineDataJsonHelper _jsonHelper;
+        private readonly ILogger<EsriSinglePipelineExtendedClient> _logger;
+        private readonly IEsriSinglePipelineExtendedDataJsonHelper _jsonHelper;
 
-        public EsriSinglePipelineClient(IHttpClientFactory httpClientFactory, ILogger<EsriExtendedSinglePipelineClient> logger, IEsriExtendedSinglePipelineDataJsonHelper jsonHelper)
+        public EsriSinglePipelineExtendedClient(IHttpClientFactory httpClientFactory, ILogger<EsriSinglePipelineExtendedClient> logger, IEsriSinglePipelineDataJsonHelper jsonHelper)
         {
             _httpClientFactory = httpClientFactory;
             _logger = logger;
@@ -47,7 +47,7 @@ namespace He.PipelineAssessment.Data.ExtendedSinglePipeline
             return data;
         }      
 
-        public async Task<ExtendedSinglePipelineDataList?> GetSinglePipelineDataList(int offset)
+        public async Task<SinglePipelineExtendedDataList?> GetSinglePipelineDataList(int offset)
         {
             string? data = null;
             string whereClause =
