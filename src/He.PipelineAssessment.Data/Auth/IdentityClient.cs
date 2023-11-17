@@ -1,4 +1,5 @@
-﻿using Azure.Identity;
+﻿using Azure.Core;
+using Azure.Identity;
 using He.PipelineAssessment.Data.Auth;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
@@ -7,7 +8,7 @@ namespace He.PipelineAssessment.Data.Auth
 {
     public interface IIdentityClient
     {
-        string GetAccessToken();
+        Task<string> GetAccessToken();
     }
     public class IdentityClient : IIdentityClient
     {
@@ -20,7 +21,7 @@ namespace He.PipelineAssessment.Data.Auth
         }
 
 
-        public string GetAccessToken()
+        public async Task<string> GetAccessToken()
         {
             try
             {
@@ -29,15 +30,14 @@ namespace He.PipelineAssessment.Data.Auth
                 string azureResourceId = _identityConfig.AzureResourceId;
                 var options = new WorkloadIdentityCredentialOptions()
                 {
-                    TenantId = azureTenantId,
                     ClientId = azureResourceId
                 };
 
                 var azureServiceTokenProvider = new WorkloadIdentityCredential(options);
-                var accessToken = azureServiceTokenProvider.GetTokenAsync();
-                var accessToken = azureServiceTokenProvider.GetAccessTokenAsync(azureResourceId, azureTenantId).Result;
+                AccessToken accessToken = await azureServiceTokenProvider.GetTokenAsync(new Azure.Core.TokenRequestContext());
+                //var accessToken = azureServiceTokenProvider.GetAccessTokenAsync(azureResourceId, azureTenantId).Result;
 
-                return accessToken;
+                return accessToken.Token;
             }
             catch (Exception e)
             {
