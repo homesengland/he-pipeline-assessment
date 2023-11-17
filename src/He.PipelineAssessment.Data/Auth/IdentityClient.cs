@@ -28,13 +28,10 @@ namespace He.PipelineAssessment.Data.Auth
                 string azureTenantId = _identityConfig.AzureTenantId;
                 string applicationManagedIdentity = _identityConfig.ApplicationManagedIdentity;
                 string azureResourceId = _identityConfig.AzureResourceId;
-                var options = new WorkloadIdentityCredentialOptions()
-                {
-                    ClientId = azureResourceId
-                };
+                var options = new WorkloadIdentityCredentialOptions();
 
                 var azureServiceTokenProvider = new WorkloadIdentityCredential(options);
-                TokenRequestContext context = new TokenRequestContext(new[] { $"{azureResourceId}/.default" }, azureResourceId);
+                TokenRequestContext context = new TokenRequestContext(new[] { $"{azureResourceId}/.default" });
                 AccessToken accessToken = await azureServiceTokenProvider.GetTokenAsync(context);
                 //var accessToken = azureServiceTokenProvider.GetAccessTokenAsync(azureResourceId, azureTenantId).Result;
 
