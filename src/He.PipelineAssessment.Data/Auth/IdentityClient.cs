@@ -34,7 +34,8 @@ namespace He.PipelineAssessment.Data.Auth
                 };
 
                 var azureServiceTokenProvider = new WorkloadIdentityCredential(options);
-                AccessToken accessToken = await azureServiceTokenProvider.GetTokenAsync(new Azure.Core.TokenRequestContext());
+                TokenRequestContext context = new TokenRequestContext(new[] { $"{azureResourceId}/.default" }, azureResourceId);
+                AccessToken accessToken = await azureServiceTokenProvider.GetTokenAsync(context);
                 //var accessToken = azureServiceTokenProvider.GetAccessTokenAsync(azureResourceId, azureTenantId).Result;
 
                 return accessToken.Token;
