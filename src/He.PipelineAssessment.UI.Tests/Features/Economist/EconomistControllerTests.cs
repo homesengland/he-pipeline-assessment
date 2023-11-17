@@ -20,7 +20,7 @@ public class EconomistControllerTests
        EconomistController sut)
     {
         //Arrange
-        mediator.Setup(x => x.Send(It.IsAny<EconomistAssessmentListCommand>(), CancellationToken.None)).Throws(exception);
+        mediator.Setup(x => x.Send(It.IsAny<EconomistAssessmentListRequest>(), CancellationToken.None)).Throws(exception);
 
         //Assert
         await Assert.ThrowsAsync<Exception>(()=> sut.GetEconomistList());
@@ -31,12 +31,12 @@ public class EconomistControllerTests
     [AutoMoqData]
     public async Task GetEconomistList_ShouldRedirectToAction_GivenNoExceptionsThrow(
           [Frozen] Mock<IMediator> mediator,
-          EconomistAssessmentListCommand command,
+          EconomistAssessmentListRequest request,
           List<AssessmentDataViewModel> response,
           EconomistController sut)
     {
         //Arrange
-        mediator.Setup(x => x.Send(command, CancellationToken.None)).ReturnsAsync(response);
+        mediator.Setup(x => x.Send(request, CancellationToken.None)).ReturnsAsync(response);
 
         //Act
         var result = await sut.GetEconomistList();

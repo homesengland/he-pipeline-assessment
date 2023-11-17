@@ -5,12 +5,6 @@ using He.PipelineAssessment.Models;
 using He.PipelineAssessment.Tests.Common;
 using He.PipelineAssessment.UI.Authorization;
 using Moq;
-using NuGet.Frameworks;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Xunit;
 
 namespace He.PipelineAssessment.UI.Tests.Authorization;
@@ -274,6 +268,81 @@ public class RoleValidationTests
 
         //Assert
         Assert.False(result);
+    }
+
+    [Theory]
+    [AutoMoqData]
+    public async Task RoleValidation_ReturnsFalse_IfSensitiveRecordAndUserHasNotGotRoleSensitiveRecordViewer(
+        [Frozen] Mock<IAssessmentRepository> assessmentRepository,
+        [Frozen] Mock<IUserProvider> userProvider,
+        Assessment assessment,
+        string workflowDefinitionId,
+        int assessmentId,
+        RoleValidation sut)
+    {
+        //Arrange
+        assessment.SensitiveStatus = "Sensitive - NDA in place";
+        assessment.BusinessArea = "Development";
+        assessmentRepository.Setup(x => x.GetAssessment(assessmentId)).ReturnsAsync(assessment);
+        userProvider.Setup(x => x.CheckUserRole(Constants.AppRole.SensitiveRecordsViewer)).Returns(false);
+        userProvider.Setup(x => x.CheckUserRole(Constants.AppRole.PipelineAssessorDevelopment)).Returns(true);
+
+        //Act
+        var result = await sut.ValidateRole(assessmentId, workflowDefinitionId);
+
+        //Assert
+        Assert.False(result);
+    }
+
+    [Theory]
+    [AutoMoqData]
+    public async Task RoleValidation_ReturnsTrue_IfSensitiveRecordAndUserHasGotRoleSensitiveRecordViewer(
+        [Frozen] Mock<IAssessmentRepository> assessmentRepository,
+        [Frozen] Mock<IUserProvider> userProvider,
+        Assessment assessment,
+        string workflowDefinitionId,
+        int assessmentId,
+        RoleValidation sut)
+    {
+        //Arrange
+        assessment.SensitiveStatus = "Sensitive - NDA in place";
+        assessment.BusinessArea = "Development";
+        assessmentRepository.Setup(x => x.GetAssessment(assessmentId)).ReturnsAsync(assessment);
+        userProvider.Setup(x => x.CheckUserRole(Constants.AppRole.SensitiveRecordsViewer)).Returns(true);
+        userProvider.Setup(x => x.CheckUserRole(Constants.AppRole.PipelineAssessorDevelopment)).Returns(true);
+
+        //Act
+        var result = await sut.ValidateRole(assessmentId, workflowDefinitionId);
+
+        //Assert
+        Assert.True(result);
+    }
+
+    [Theory]
+    [AutoMoqData]
+    public async Task RoleValidation_ReturnsTrue_IfSensitiveRecordAndUserHasNotGotRoleSensitiveRecordViewerButIsProjectManager(
+        [Frozen] Mock<IAssessmentRepository> assessmentRepository,
+        [Frozen] Mock<IUserProvider> userProvider,
+        Assessment assessment,
+        string workflowDefinitionId,
+        int assessmentId,
+        string projectManager,
+        RoleValidation sut)
+    {
+        //Arrange
+        assessment.SensitiveStatus = "Sensitive - NDA in place";
+        assessment.BusinessArea = "Development";
+        assessment.ProjectManager = projectManager;
+        assessmentRepository.Setup(x => x.GetAssessment(assessmentId)).ReturnsAsync(assessment);
+        userProvider.Setup(x => x.CheckUserRole(Constants.AppRole.SensitiveRecordsViewer)).Returns(false);
+        userProvider.Setup(x => x.CheckUserRole(Constants.AppRole.PipelineAssessorDevelopment)).Returns(true);
+        userProvider.Setup(x => x.GetUserName()).Returns(projectManager);
+
+        //Act
+        var result = await sut.ValidateRole(assessmentId, workflowDefinitionId);
+
+        //Assert
+        Assert.True(result);
     }
 }
 

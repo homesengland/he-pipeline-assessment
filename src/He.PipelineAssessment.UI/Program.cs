@@ -1,7 +1,6 @@
 using Elsa.CustomWorkflow.Sdk;
 using Elsa.CustomWorkflow.Sdk.Extensions;
 using Elsa.CustomWorkflow.Sdk.HttpClients;
-using Elsa.CustomWorkflow.Sdk.Models.Workflow;
 using FluentValidation;
 using He.PipelineAssessment.Data.Auth;
 using He.PipelineAssessment.Data.SinglePipeline;
@@ -22,16 +21,12 @@ using He.PipelineAssessment.UI.Features.Admin.AssessmentToolManagement.Validator
 using He.PipelineAssessment.UI.Features.Amendment.CreateAmendment;
 using He.PipelineAssessment.UI.Features.Error;
 using He.PipelineAssessment.UI.Features.Intervention;
-using He.PipelineAssessment.UI.Features.Override.CreateOverride;
-using He.PipelineAssessment.UI.Features.Rollback.CreateRollback;
 using He.PipelineAssessment.UI.Features.SinglePipeline.Sync;
 using He.PipelineAssessment.UI.Features.Workflow.QuestionScreenSaveAndContinue;
 using He.PipelineAssessment.UI.Services;
-using MediatR;
 using Microsoft.AspNetCore.DataProtection;
 using Microsoft.AspNetCore.Mvc.Razor;
 using Microsoft.EntityFrameworkCore;
-using System.Net.Http;
 using System.Net.Http.Headers;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -68,8 +63,6 @@ builder.Services.AddScoped<IDateTimeProvider, DateTimeProvider>();
 builder.Services.AddScoped<IQuestionScreenSaveAndContinueMapper, QuestionScreenSaveAndContinueMapper>();
 builder.Services.AddScoped<IAssessmentToolMapper, AssessmentToolMapper>();
 builder.Services.AddScoped<IAssessmentToolWorkflowMapper, AssessmentToolWorkflowMapper>();
-//builder.Services.AddScoped<ICreateOverrideMapper, CreateOverrideMapper>();
-//builder.Services.AddScoped<ICreateRollbackMapper, CreateRollbackMapper>();
 builder.Services.AddScoped<ICreateAmendmentMapper, CreateAmendmentMapper>();
 builder.Services.AddScoped<IAssessmentInterventionMapper, AssessmentInterventionMapper>();
 builder.Services.AddScoped<NonceConfig>();

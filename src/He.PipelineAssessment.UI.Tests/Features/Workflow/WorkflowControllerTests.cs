@@ -202,7 +202,6 @@ namespace He.PipelineAssessment.UI.Tests.Features.Workflow
             //Assert
             Assert.NotNull(result);
             Assert.IsType<RedirectToActionResult>(result);
-            Assert.IsType<RedirectToActionResult>(result);
             var redirectToActionResult = (RedirectToActionResult)result;
             Assert.Equal("LoadReadOnlyWorkflowActivity", redirectToActionResult.ActionName);
         }
@@ -216,7 +215,7 @@ namespace He.PipelineAssessment.UI.Tests.Features.Workflow
             WorkflowController sut)
         {
             //Arrange
-
+            response.IsAuthorised = true;
             saveAndContinueCommandResponse.ActivityType = ActivityTypeConstants.ConfirmationScreen;
 
             mediator.Setup(x =>
@@ -236,6 +235,35 @@ namespace He.PipelineAssessment.UI.Tests.Features.Workflow
             var viewResult = (ViewResult)result;
             Assert.Equal("Confirmation", viewResult.ViewName);
             Assert.IsType<LoadConfirmationScreenResponse>(viewResult.Model);
+        }
+
+        [Theory]
+        [AutoMoqData]
+        public async Task LoadWorkflowActivity_ShouldRedirectToLoadReadOnlyWorkflowActivity_GivenConfirmationScreenAndNotAuthorisedResponse(
+            [Frozen] Mock<IMediator> mediator,
+            QuestionScreenSaveAndContinueCommandResponse saveAndContinueCommandResponse,
+            LoadConfirmationScreenResponse response,
+            WorkflowController sut)
+        {
+            //Arrange
+            response.IsAuthorised = false;
+            saveAndContinueCommandResponse.ActivityType = ActivityTypeConstants.ConfirmationScreen;
+
+            mediator.Setup(x =>
+                    x.Send(
+                        It.Is<LoadConfirmationScreenRequest>(y =>
+                            y.ActivityId == saveAndContinueCommandResponse.ActivityId && y.WorkflowInstanceId ==
+                            saveAndContinueCommandResponse.WorkflowInstanceId), CancellationToken.None))
+                .ReturnsAsync(response);
+
+            //Act
+            var result = await sut.LoadWorkflowActivity(saveAndContinueCommandResponse);
+
+            //Assert
+            Assert.NotNull(result);
+            Assert.IsType<RedirectToActionResult>(result);
+            var redirectToActionResult = (RedirectToActionResult)result;
+            Assert.Equal("LoadReadOnlyWorkflowActivity", redirectToActionResult.ActionName);
         }
 
         [Theory]

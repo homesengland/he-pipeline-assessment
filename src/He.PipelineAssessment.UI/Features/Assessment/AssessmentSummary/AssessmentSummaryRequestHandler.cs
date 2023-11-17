@@ -1,6 +1,7 @@
 ﻿using He.PipelineAssessment.Infrastructure.Repository;
 using He.PipelineAssessment.Infrastructure.Repository.StoredProcedure;
 using He.PipelineAssessment.Models.ViewModels;
+using He.PipelineAssessment.UI.Authorization;
 using MediatR;
 
 namespace He.PipelineAssessment.UI.Features.Assessment.AssessmentSummary
@@ -10,14 +11,17 @@ namespace He.PipelineAssessment.UI.Features.Assessment.AssessmentSummary
         private readonly IAssessmentRepository _repository;
         private readonly IStoredProcedureRepository _storedProcedureRepository;
         private readonly ILogger<AssessmentSummaryRequestHandler> _logger;
+        private readonly IRoleValidation _roleValidation;
 
         public AssessmentSummaryRequestHandler(IAssessmentRepository repository,
                                                ILogger<AssessmentSummaryRequestHandler> logger,
-                                               IStoredProcedureRepository storedProcedureRepository)
+                                               IStoredProcedureRepository storedProcedureRepository, 
+                                               IRoleValidation roleValidation)
         {
             _repository = repository;
             _logger = logger;
             _storedProcedureRepository = storedProcedureRepository;
+            _roleValidation = roleValidation;
         }
         public async Task<AssessmentSummaryResponse?> Handle(AssessmentSummaryRequest request, CancellationToken cancellationToken)
         {
@@ -28,6 +32,14 @@ namespace He.PipelineAssessment.UI.Features.Assessment.AssessmentSummary
                 {
                     throw new ApplicationException($"Assessment with id {request.AssessmentId} not found.");
                 }
+
+                var validateSensitiveStatus =
+                    _roleValidation.ValidateSensitiveRecords(dbAssessment);
+                if (!validateSensitiveStatus)
+                {
+                    throw new UnauthorizedAccessException("You do not have permission to access this resource.");
+                }
+
                 var assessmentStages = await _storedProcedureRepository.GetAssessmentStages(request.AssessmentId);
                 var startableWorkflows = await _storedProcedureRepository.GetStartableTools(request.AssessmentId);
 
@@ -65,6 +77,7 @@ namespace He.PipelineAssessment.UI.Features.Assessment.AssessmentSummary
                 var interventions = new List<AssessmentInterventionViewModel>();
 
                 var dbInterventions = await _storedProcedureRepository.GetAssessmentInterventionList(request.AssessmentId);
+
                 if (dbInterventions.Any())
                 {
                     interventions = dbInterventions;
@@ -74,7 +87,7 @@ namespace He.PipelineAssessment.UI.Features.Assessment.AssessmentSummary
                 {
                     CorrelationId = request.CorrelationId,
                     AssessmentId = request.AssessmentId,
-                    SiteName = dbAssessment!.SiteName,
+                    SiteName = dbAssessment.SiteName,
                     CounterParty = dbAssessment.Counterparty,
                     Reference = dbAssessment.Reference,
                     Stages = stages,
@@ -83,6 +96,11 @@ namespace He.PipelineAssessment.UI.Features.Assessment.AssessmentSummary
                     ProjectManager = dbAssessment.ProjectManager,
                     Interventions = interventions
                 };
+            }
+            catch (UnauthorizedAccessException e)
+            {
+                _logger.LogError(e, e.Message);
+                throw;
             }
             catch (Exception e)
             {

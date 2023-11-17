@@ -8,20 +8,17 @@ namespace He.PipelineAssessment.UI.Features.Workflow.QuestionScreenSaveAndContin
     public class QuestionScreenSaveAndContinueCommandHandler : IRequestHandler<QuestionScreenSaveAndContinueCommand, QuestionScreenSaveAndContinueCommandResponse?>
     {
         private readonly IElsaServerHttpClient _elsaServerHttpClient;
-        private readonly IQuestionScreenSaveAndContinueMapper _saveAndContinueMapper;
         private readonly IRoleValidation _roleValidation;
         private readonly IAssessmentRepository _assessmentRepository;
         private readonly ILogger<QuestionScreenSaveAndContinueCommandHandler> _logger;
 
         public QuestionScreenSaveAndContinueCommandHandler(
-            IElsaServerHttpClient elsaServerHttpClient, 
-            IQuestionScreenSaveAndContinueMapper saveAndContinueMapper,
+            IElsaServerHttpClient elsaServerHttpClient,
             IRoleValidation roleValidation,
             IAssessmentRepository assessmentRepository,
             ILogger<QuestionScreenSaveAndContinueCommandHandler> logger)
         {
             _elsaServerHttpClient = elsaServerHttpClient;
-            _saveAndContinueMapper = saveAndContinueMapper;
             _roleValidation = roleValidation;
             _assessmentRepository = assessmentRepository;
             _logger = logger;
@@ -70,6 +67,11 @@ namespace He.PipelineAssessment.UI.Features.Workflow.QuestionScreenSaveAndContin
                         $"Unable to save and continue. AssessmentId: {request.AssessmentId} WorkflowInstanceId:{request.Data.WorkflowInstanceId}");
                 }
 
+            }
+            catch (UnauthorizedAccessException e)
+            {
+                _logger.LogError(e, e.Message);
+                throw;
             }
             catch (Exception e)
             {

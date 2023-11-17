@@ -28,6 +28,7 @@ namespace He.PipelineAssessment.UI.Tests.Features.Workflow.LoadCheckYourAnswersS
             assessmentRepository.Setup(x => x.GetAssessmentToolWorkflowInstance(loadCheckYourAnswersScreenRequest.WorkflowInstanceId))
                .ReturnsAsync(assessmentToolWorkflowInstance);
 
+            roleValidation.Setup(x => x.ValidateSensitiveRecords(assessmentToolWorkflowInstance.Assessment)).Returns(true);
             roleValidation.Setup(x => x.ValidateRole(assessmentToolWorkflowInstance.AssessmentId, assessmentToolWorkflowInstance.WorkflowDefinitionId)).ReturnsAsync(true);
 
             elsaServerHttpClient.Setup(x => x.LoadCheckYourAnswersScreen(It.IsAny<LoadWorkflowActivityDto>()))
@@ -46,6 +47,7 @@ namespace He.PipelineAssessment.UI.Tests.Features.Workflow.LoadCheckYourAnswersS
         public async Task Handle_ReturnsSaveAndContinueCommand_GivenNoErrorsEncountered(
             [Frozen] Mock<IElsaServerHttpClient> elsaServerHttpClient,
             [Frozen] Mock<IAssessmentRepository> assessmentRepository,
+            [Frozen] Mock<IRoleValidation> roleValidation,
             LoadCheckYourAnswersScreenRequest loadCheckYourAnswersScreenRequest,
             WorkflowActivityDataDto workflowActivityDataDto,
             AssessmentToolWorkflowInstance assessmentToolWorkflowInstance,
@@ -57,6 +59,7 @@ namespace He.PipelineAssessment.UI.Tests.Features.Workflow.LoadCheckYourAnswersS
 
             assessmentRepository.Setup(x => x.GetAssessmentToolWorkflowInstance(loadCheckYourAnswersScreenRequest.WorkflowInstanceId))
                 .ReturnsAsync(assessmentToolWorkflowInstance);
+            roleValidation.Setup(x => x.ValidateSensitiveRecords(assessmentToolWorkflowInstance.Assessment)).Returns(true);
 
             //Act
             var result = await sut.Handle(loadCheckYourAnswersScreenRequest, CancellationToken.None);
@@ -103,14 +106,38 @@ namespace He.PipelineAssessment.UI.Tests.Features.Workflow.LoadCheckYourAnswersS
             assessmentRepository.Setup(x => x.GetAssessmentToolWorkflowInstance(loadCheckYourAnswersScreenRequest.WorkflowInstanceId))
               .ReturnsAsync(assessmentToolWorkflowInstance);
 
+            roleValidation.Setup(x => x.ValidateSensitiveRecords(assessmentToolWorkflowInstance.Assessment)).Returns(true);
             roleValidation.Setup(x => x.ValidateRole(assessmentToolWorkflowInstance.AssessmentId, assessmentToolWorkflowInstance.WorkflowDefinitionId)).ReturnsAsync(false);
 
             //Act
-            var ex = await Assert.ThrowsAsync<ApplicationException>(() => sut.Handle(loadCheckYourAnswersScreenRequest, CancellationToken.None));
+            var ex = await Assert.ThrowsAsync<UnauthorizedAccessException>(() => sut.Handle(loadCheckYourAnswersScreenRequest, CancellationToken.None));
 
             //Assert
-            Assert.Equal("Failed to load check your answers screen activity", ex.Message);
+            Assert.Equal("You do not have permission to access this resource.", ex.Message);
         }
 
+        [Theory]
+        [AutoMoqData]
+        public async Task Handle_ThrowsApplicationException_GivenUserCannotViewSensitiveRecords(
+            [Frozen] Mock<IAssessmentRepository> assessmentRepository,
+            [Frozen] Mock<IRoleValidation> roleValidation,
+            LoadCheckYourAnswersScreenRequest loadCheckYourAnswersScreenRequest,
+            AssessmentToolWorkflowInstance assessmentToolWorkflowInstance,
+            LoadCheckYourAnswersScreenRequestHandler sut)
+        {
+            //Arrange
+            loadCheckYourAnswersScreenRequest.IsReadOnly = false;
+
+            assessmentRepository.Setup(x => x.GetAssessmentToolWorkflowInstance(loadCheckYourAnswersScreenRequest.WorkflowInstanceId))
+                .ReturnsAsync(assessmentToolWorkflowInstance);
+
+            roleValidation.Setup(x => x.ValidateSensitiveRecords(assessmentToolWorkflowInstance.Assessment)).Returns(false);
+
+            //Act
+            var ex = await Assert.ThrowsAsync<UnauthorizedAccessException>(() => sut.Handle(loadCheckYourAnswersScreenRequest, CancellationToken.None));
+
+            //Assert
+            Assert.Equal("You do not have permission to access this resource.", ex.Message);
+        }
     }
 }

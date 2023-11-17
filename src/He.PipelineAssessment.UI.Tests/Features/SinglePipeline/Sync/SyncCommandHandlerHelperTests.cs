@@ -89,6 +89,7 @@ namespace He.PipelineAssessment.UI.Tests.Features.SinglePipeline.Sync
             destinationAssessment.NumberOfHomes = 345;
             destinationAssessment.BusinessArea = "Land";
             destinationAssessment.LandType = "Greenfield";
+            destinationAssessment.SensitiveStatus = "Sensitive";
 
             var destinationAssessments = new List<Models.Assessment>();
             destinationAssessments.Add(destinationAssessment);
@@ -104,6 +105,7 @@ namespace He.PipelineAssessment.UI.Tests.Features.SinglePipeline.Sync
             singlePipelineData.units_or_homes = 345;
             singlePipelineData.sp_business_area = "Land";
             singlePipelineData.land_type = "Greenfield";
+            singlePipelineData.sensitive_status = "Sensitive";
 
             var singlePipelineDataList = new List<SinglePipelineData>();
             singlePipelineDataList.Add(singlePipelineData);
@@ -137,6 +139,7 @@ namespace He.PipelineAssessment.UI.Tests.Features.SinglePipeline.Sync
             destinationAssessment.NumberOfHomes = 345;
             destinationAssessment.BusinessArea = "Land";
             destinationAssessment.LandType = "Greenfield";
+            destinationAssessment.SensitiveStatus = null;
 
 
             var destinationAssessments = new List<Models.Assessment>();
@@ -153,6 +156,7 @@ namespace He.PipelineAssessment.UI.Tests.Features.SinglePipeline.Sync
             singlePipelineData.units_or_homes = 667;
             singlePipelineData.sp_business_area = "Investment";
             singlePipelineData.land_type = "Brownfield";
+            singlePipelineData.sensitive_status = "Sensitive";
 
            var singlePipelineDataList = new List<SinglePipelineData>();
             singlePipelineDataList.Add(singlePipelineData);
