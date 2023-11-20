@@ -29,7 +29,7 @@ namespace He.PipelineAssessment.Data.ExtendedSinglePipeline
 
             var relativeUri = $"query?where={whereClause}&outFields={outFields}&f=json";//potentially needs a token on the end also
 
-            using (var response = await _httpClientFactory.CreateClient("SinglePipelineClient")
+            using (var response = await _httpClientFactory.CreateClient(ClientConstants.SinglePipelineExtendedClient)
                        .GetAsync(relativeUri)
                        .ConfigureAwait(false))
             {

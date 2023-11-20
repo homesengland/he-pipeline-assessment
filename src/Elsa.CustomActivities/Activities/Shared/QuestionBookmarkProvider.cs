@@ -45,6 +45,7 @@ namespace Elsa.CustomActivities.Activities.Shared
                 ActivityTypeConstants.CheckYourAnswersScreen,
                 ActivityTypeConstants.ConfirmationScreen,
                 ActivityTypeConstants.SinglePipelineDataSource,
+                ActivityTypeConstants.SinglePipelineExtendedDataSource,
                 ActivityTypeConstants.HousingNeedDataSource,
                 ActivityTypeConstants.PCSProfileDataSource,
                 ActivityTypeConstants.VFMDataSource,
