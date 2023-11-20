@@ -44,6 +44,7 @@ using Elsa.CustomWorkflow.Sdk.Models.Workflow;
 using Elsa.Server.Features.Workflow.QuestionScreenValidateAndSave;
 using Elsa.CustomActivities.Activities.LandValuesDataSource;
 using He.PipelineAssessment.Data.ExtendedSinglePipeline;
+using Elsa.CustomActivities.Activities.SinglePipelineExtendedDataSource;
 
 var builder = WebApplication.CreateBuilder(args);
 var elsaConnectionString = builder.Configuration.GetConnectionString("Elsa");

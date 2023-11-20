@@ -10,9 +10,9 @@ namespace He.PipelineAssessment.Data.ExtendedSinglePipeline
     }
     public class SinglePipelineExtendedProvider : ISinglePipelineExtendedProvider
     {
-        private readonly IEsriExtendedSinglePipelineExtendedClient _esriSinglePipelineExtendedClient;
+        private readonly IEsriSinglePipelineExtendedClient _esriSinglePipelineExtendedClient;
         private readonly ILogger<SinglePipelineExtendedProvider> _logger;
-        public SinglePipelineExtendedProvider(IEsriExtendedSinglePipelineClient esriSinglePipelineClient, ILogger<SinglePipelineExtendedProvider> logger)
+        public SinglePipelineExtendedProvider(IEsriSinglePipelineExtendedClient esriSinglePipelineClient, ILogger<SinglePipelineExtendedProvider> logger)
         {
             _esriSinglePipelineExtendedClient = esriSinglePipelineClient;
             _logger = logger;

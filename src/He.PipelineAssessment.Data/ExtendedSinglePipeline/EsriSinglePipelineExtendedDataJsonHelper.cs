@@ -5,14 +5,14 @@ namespace He.PipelineAssessment.Data.ExtendedSinglePipeline
 {
     public interface IEsriSinglePipelineExtendedDataJsonHelper
     {
-        SinglePipelineExtendedData? JsonToSinglePipelineData(string data);
-        SinglePipelineExtendedDataList? JsonToSinglePipelineDataList(string data);
+        SinglePipelineExtendedData? JsonToSinglePipelineExtendedData(string data);
+        SinglePipelineExtendedDataList? JsonToSinglePipelineExtendedDataList(string data);
     }
 
     [JsonNumberHandling(JsonNumberHandling.AllowReadingFromString)]
     public class EsriSinglePipelineExtendedDataJsonHelper : IEsriSinglePipelineExtendedDataJsonHelper
     {
-        public SinglePipelineExtendedData? JsonToSinglePipelineData(string data)
+        public SinglePipelineExtendedData? JsonToSinglePipelineExtendedData(string data)
         {
             try
             {
@@ -33,7 +33,7 @@ namespace He.PipelineAssessment.Data.ExtendedSinglePipeline
             return null;
         }
 
-        public SinglePipelineExtendedDataList? JsonToSinglePipelineDataList(string data)
+        public SinglePipelineExtendedDataList? JsonToSinglePipelineExtendedDataList(string data)
         {
             try
             {

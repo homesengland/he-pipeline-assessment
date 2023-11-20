@@ -36,11 +36,11 @@ namespace Elsa.CustomActivities.Activities.SinglePipelineExtendedDataSource
         {
             context.JournalData.Add(nameof(SpId), SpId);
 
-            var data = await _singlePipelineExtendedClient.GetSinglePipelineData(SpId);
+            var data = await _singlePipelineExtendedClient.GetSinglePipelineExtendedData(SpId);
 
             if (data != null)
             {
-                var dataResult = _jsonHelper.JsonToSinglePipelineData(data);
+                var dataResult = _jsonHelper.JsonToSinglePipelineExtendedData(data);
                 this.Output = dataResult;
             }
             else

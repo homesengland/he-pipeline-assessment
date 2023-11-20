@@ -4,8 +4,8 @@ namespace He.PipelineAssessment.Data.ExtendedSinglePipeline
 {
     public interface IEsriSinglePipelineExtendedClient
     {
-        Task<string?> GetSinglePipelineData(string spid);
-        Task<SinglePipelineExtendedDataList?> GetSinglePipelineDataList(int offset);
+        Task<string?> GetSinglePipelineExtendedData(string spid);
+        Task<SinglePipelineExtendedDataList?> GetSinglePipelineExtendedDataList(int offset);
     }
     public class EsriSinglePipelineExtendedClient : IEsriSinglePipelineExtendedClient
     {
@@ -14,14 +14,14 @@ namespace He.PipelineAssessment.Data.ExtendedSinglePipeline
         private readonly ILogger<EsriSinglePipelineExtendedClient> _logger;
         private readonly IEsriSinglePipelineExtendedDataJsonHelper _jsonHelper;
 
-        public EsriSinglePipelineExtendedClient(IHttpClientFactory httpClientFactory, ILogger<EsriSinglePipelineExtendedClient> logger, IEsriSinglePipelineDataJsonHelper jsonHelper)
+        public EsriSinglePipelineExtendedClient(IHttpClientFactory httpClientFactory, ILogger<EsriSinglePipelineExtendedClient> logger, IEsriSinglePipelineExtendedDataJsonHelper jsonHelper)
         {
             _httpClientFactory = httpClientFactory;
             _logger = logger;
             _jsonHelper = jsonHelper;
         }
 
-        public async Task<string?> GetSinglePipelineData(string spid)
+        public async Task<string?> GetSinglePipelineExtendedData(string spid)
         {
             string? data = null;
             string whereClause = $"sp_id={spid}";
@@ -47,7 +47,7 @@ namespace He.PipelineAssessment.Data.ExtendedSinglePipeline
             return data;
         }      
 
-        public async Task<SinglePipelineExtendedDataList?> GetSinglePipelineDataList(int offset)
+        public async Task<SinglePipelineExtendedDataList?> GetSinglePipelineExtendedDataList(int offset)
         {
             string? data = null;
             string whereClause =
@@ -86,7 +86,7 @@ namespace He.PipelineAssessment.Data.ExtendedSinglePipeline
                     return null;
                 }
 
-                var dataResult = _jsonHelper.JsonToSinglePipelineDataList(data);
+                var dataResult = _jsonHelper.JsonToSinglePipelineExtendedDataList(data);
                 if (dataResult != null)
                 {
                     return dataResult;
