@@ -42,7 +42,6 @@ namespace He.PipelineAssessment.Data.ExtendedSinglePipeline
                     return null;
                 }
             }
-
             return data;
         }      
     }
