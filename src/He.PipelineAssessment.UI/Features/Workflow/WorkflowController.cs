@@ -141,6 +141,26 @@ namespace He.PipelineAssessment.UI.Features.Workflow
                                 ActivityType = result?.ActivityType
                             });
 
+                }
+                case ActivityTypeConstants.ReturnToStartOfWorkflow:
+                    {
+                        var questionScreenRequest = new LoadQuestionScreenRequest
+                        {
+                            WorkflowInstanceId = request.WorkflowInstanceId,
+                            ActivityId = request.ActivityId,
+                            IsReadOnly = false
+                        };
+                        //var result = await this._mediator.Send(questionScreenRequest);
+
+                        //if (result.IsAuthorised && !result.IsReadOnly)
+                        //{
+                        //    return View("SaveAndContinue", result);
+                        //}
+                        //else
+                        //{
+                        //    return RedirectToAction("LoadReadOnlyWorkflowActivity", request);
+                        //}
+
                     }
                 default:
                     throw new ApplicationException(

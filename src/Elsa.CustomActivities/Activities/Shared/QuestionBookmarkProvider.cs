@@ -52,7 +52,9 @@ namespace Elsa.CustomActivities.Activities.Shared
                 ActivityTypeConstants.RegionalFigsDataSource,
                 ActivityTypeConstants.LandValues,
                 ActivityTypeConstants.AgricultureLandValues,
-                ActivityTypeConstants.OfficeLandValues
+                ActivityTypeConstants.OfficeLandValues,
+                ActivityTypeConstants.AgricultureLandValues,
+                ActivityTypeConstants.ReturnToStartOfWorkflow
             };
         }
     }
