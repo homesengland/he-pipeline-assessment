@@ -30,7 +30,7 @@ namespace He.PipelineAssessment.Data.RegionalFigs
 
             var relativeUri = $"query?where={whereClause}&outFields={outFields}&f=json";
 
-            using (var response = await _httpClientFactory.CreateClient("RegionalFigsClient")
+            using (var response = await _httpClientFactory.CreateClient(ClientConstants.RegionalFigsClient)
                        .GetAsync(relativeUri)
                        .ConfigureAwait(false))
             {
