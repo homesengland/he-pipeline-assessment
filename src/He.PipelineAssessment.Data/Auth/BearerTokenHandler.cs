@@ -14,7 +14,7 @@ namespace He.PipelineAssessment.Data.Auth
 
         protected override async Task<HttpResponseMessage> SendAsync(HttpRequestMessage request, CancellationToken cancellationToken)
         {
-            var token = _identityClient.GetAccessToken();
+            var token = await _identityClient.GetAccessToken();
             request.Headers.Authorization = new AuthenticationHeaderValue("Bearer", token);
             return await base.SendAsync(request, cancellationToken);
         }
