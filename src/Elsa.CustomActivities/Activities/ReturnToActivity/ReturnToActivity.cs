@@ -21,7 +21,7 @@ namespace Elsa.CustomActivities.Activities.ReturnToActivity
 )]
     public class ReturnToActivity : Activity
     {
-        [ActivityInput(Hint = "Activity to return to", SupportedSyntaxes = new[] { SyntaxNames.Literal, SyntaxNames.Json, SyntaxNames.JavaScript })]
+        [ActivityInput(Hint = "Name of activity to return to", SupportedSyntaxes = new[] { SyntaxNames.Literal, SyntaxNames.Json, SyntaxNames.JavaScript })]
         public string? ActivityName { get; set; }
 
         [ActivityOutput] public string Output { get; set; } = null!;
