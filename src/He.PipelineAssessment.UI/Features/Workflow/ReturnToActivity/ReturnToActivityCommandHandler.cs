@@ -35,32 +35,40 @@ namespace He.PipelineAssessment.UI.Features.Workflow.ReturnToActivity
         {
             try
             {
-                var assessmentWorkflowInstance = await _assessmentRepository.GetAssessmentToolWorkflowInstance(request.WorkflowInstanceId);
-
-                if (!await _roleValidation.ValidateRole(assessmentWorkflowInstance!.AssessmentId, assessmentWorkflowInstance!.WorkflowDefinitionId))
+                if (request.WorkflowInstanceId == null)
                 {
-                    throw new UnauthorizedAccessException($"You do not have permission to access this resource.");
-                }
+                    var assessmentWorkflowInstance = await _assessmentRepository.GetAssessmentToolWorkflowInstance(request.WorkflowInstanceId);
 
-                var data = new ReturnToActivityData
-                {
-                    WorkflowInstanceId = request.WorkflowInstanceId,
-                    ActivityId = request.ActivityId
-                };
+                    if (!await _roleValidation.ValidateRole(assessmentWorkflowInstance!.AssessmentId, assessmentWorkflowInstance!.WorkflowDefinitionId))
+                    {
+                        throw new UnauthorizedAccessException($"You do not have permission to access this resource.");
+                    }
 
-                var response = await _elsaServerHttpClient.ReturnToActivity(data);
-                if (response != null)
-                {
-                    return new ReturnToActivityCommandResponse()
+                    var data = new ReturnToActivityData
                     {
                         WorkflowInstanceId = request.WorkflowInstanceId,
-                        ActivityId = response.Data.ActivityId,
-                        ActivityType = response.Data.ActivityType
+                        ActivityId = request.ActivityId
                     };
+
+                    var response = await _elsaServerHttpClient.ReturnToActivity(data);
+                    if (response != null)
+                    {
+                        return new ReturnToActivityCommandResponse()
+                        {
+                            WorkflowInstanceId = request.WorkflowInstanceId,
+                            ActivityId = response.Data.ActivityId,
+                            ActivityType = response.Data.ActivityType
+                        };
+                    }
+                    else
+                    {
+                        _logger.LogError($"Failed to return to activity, response from elsa server client is null. ActivityId: {request.ActivityId} WorkflowInstanceId: {request.WorkflowInstanceId}.");
+                        throw new ApplicationException("Failed to return to activity.");
+                    }
                 }
                 else
                 {
-                    _logger.LogError($"Failed to return to activity, response from elsa server client is null. ActivityId: {request.ActivityId} WorkflowInstanceId: {request.WorkflowInstanceId}.");
+                    _logger.LogError($"Failed to return to activity, workflow instance id was null. WorkflowInstanceId: {request.WorkflowInstanceId}.");
                     throw new ApplicationException("Failed to return to activity.");
                 }
             }
