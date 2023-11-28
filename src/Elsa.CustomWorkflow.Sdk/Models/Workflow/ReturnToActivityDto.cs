@@ -15,8 +15,8 @@ namespace Elsa.CustomWorkflow.Sdk.Models.Workflow
     }
     public class ReturnToActivityData
     {
-        public string WorkflowInstanceId { get; set; }
-        public string ActivityId { get; set; }
-        public string ActivityType { get; set; }
+        public string? WorkflowInstanceId { get; set; }
+        public string? ActivityId { get; set; }
+        public string? ActivityType { get; set; }
     }
 }
