@@ -16,6 +16,7 @@
         public const string LandValues = "LandValueDataSource";
         public const string AgricultureLandValues = "AgricultureLandValueDataSource";
         public const string OfficeLandValues = "OfficeLandValueDataSource";
+        public const string ReturnToActivity = "ReturnToActivity";
     }
 
     public class QuestionTypeConstants

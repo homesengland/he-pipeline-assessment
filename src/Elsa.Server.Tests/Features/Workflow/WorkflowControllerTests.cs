@@ -7,11 +7,13 @@ using Elsa.Server.Features.Workflow.LoadCheckYourAnswersScreen;
 using Elsa.Server.Features.Workflow.LoadConfirmationScreen;
 using Elsa.Server.Features.Workflow.LoadQuestionScreen;
 using Elsa.Server.Features.Workflow.QuestionScreenSaveAndContinue;
+using Elsa.Server.Features.Workflow.ReturnToActivity;
 using Elsa.Server.Features.Workflow.StartWorkflow;
 using Elsa.Server.Models;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Moq;
+using System;
 using Xunit;
 
 namespace Elsa.Server.Tests.Features.Workflow
@@ -825,6 +827,92 @@ namespace Elsa.Server.Tests.Features.Workflow
 
             Assert.Equal(500, objectResult.StatusCode);
             Assert.IsType<NullReferenceException>(objectResult.Value);
+        }
+
+        [Theory]
+        [AutoData]
+        public async Task WorkflowController_ReturnToActivity_ShouldReturnOK_WhenCommandHandlerIsSuccessful(
+        ReturnToActivityCommand command,
+        ReturnToActivityResponse response,
+        Mock<IMediator> mediatorMock)
+        {
+            var returnToActivityOperationResult = new OperationResult<ReturnToActivityResponse>
+            {
+                ErrorMessages = new List<string>(),
+                ValidationMessages = null,
+                Data = response
+            };
+            //Arrange
+            mediatorMock.Setup(x => x.Send(It.IsAny<ReturnToActivityCommand>(), CancellationToken.None)).ReturnsAsync(returnToActivityOperationResult);
+
+            WorkflowController controller = new WorkflowController(mediatorMock.Object);
+
+            //Act
+            var result = await controller.ReturnToActivity(command.WorkflowInstanceId, command.ActivityId);
+
+            //Assert
+            Assert.NotNull(result);
+            Assert.IsType<OkObjectResult>(result);
+
+            var okResult = (OkObjectResult)result;
+            var okResultValueData = (OperationResult<ReturnToActivityResponse>)okResult.Value!;
+
+            Assert.Equal(response.ActivityId, okResultValueData.Data!.ActivityId);
+            Assert.Equal(response.ActivityType, okResultValueData.Data.ActivityType);
+        }
+
+        [Theory]
+        [AutoData]
+        public async Task WorkflowController_ReturnToActivity_ShouldReturnBadRequest_WhenCommandHandlerIsNotSuccessful(
+        ReturnToActivityCommand command,
+        OperationResult<ReturnToActivityResponse> operationResult,
+        Mock<IMediator> mediatorMock)
+        {
+            //Arrange
+            mediatorMock.Setup(x => x.Send(It.IsAny<ReturnToActivityCommand>(), CancellationToken.None)).ReturnsAsync(operationResult);
+
+            WorkflowController controller = new WorkflowController(mediatorMock.Object);
+
+            //Act
+            var result = await controller.ReturnToActivity(command!.WorkflowInstanceId, command!.ActivityId);
+
+            //Assert
+            Assert.NotNull(result);
+            Assert.IsType<BadRequestObjectResult>(result);
+
+            var badResult = (BadRequestObjectResult)result;
+            var badResultValueData = (string)badResult.Value!;
+
+            Assert.Equal(string.Join(',', operationResult.ErrorMessages), badResultValueData);
+        }
+
+        [Theory]
+        [AutoData]
+        public async Task WorkflowController_ReturnToActivity_ShouldReturn500_WhenCommandHandlerThrowsException(
+        ReturnToActivityCommand command,
+        Exception exception,
+        Mock<IMediator> mediatorMock)
+        {
+            //Arrange
+            mediatorMock.Setup(x => x.Send(It.IsAny<ReturnToActivityCommand>(), CancellationToken.None)).ThrowsAsync(exception);
+
+            WorkflowController controller = new WorkflowController(mediatorMock.Object);
+
+            //Act
+            var result = await controller.ReturnToActivity(command!.WorkflowInstanceId, command!.ActivityId);
+
+            //Assert
+            Assert.NotNull(result);
+            Assert.IsType<ObjectResult>(result);
+
+            var objectResult = (ObjectResult)result;
+
+            Assert.Equal(500, objectResult.StatusCode);
+            Assert.IsType<Exception>(objectResult.Value);
+
+            var exceptionResult = (Exception)objectResult.Value!;
+
+            Assert.Equal(exception.Message, exceptionResult.Message);
         }
 
 

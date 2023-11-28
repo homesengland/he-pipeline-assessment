@@ -45,6 +45,7 @@ using Elsa.Server.Features.Workflow.QuestionScreenValidateAndSave;
 using Elsa.CustomActivities.Activities.LandValuesDataSource;
 using He.PipelineAssessment.Data.ExtendedSinglePipeline;
 using Elsa.CustomActivities.Activities.SinglePipelineExtendedDataSource;
+using Elsa.CustomActivities.Activities.ReturnToActivity;
 
 var builder = WebApplication.CreateBuilder(args);
 var elsaConnectionString = builder.Configuration.GetConnectionString("Elsa");
@@ -97,6 +98,7 @@ builder.Services
         .AddActivity<SetVariable>()
         .AddActivity<RegionalIPUDataSource>()
         .AddActivity<RegionalFigsDataSource>()
+        .AddActivity<ReturnToActivity>()
         .AddConsoleActivities()
     );
 

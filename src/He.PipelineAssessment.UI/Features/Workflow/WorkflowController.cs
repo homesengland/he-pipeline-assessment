@@ -6,6 +6,7 @@ using He.PipelineAssessment.UI.Features.Workflow.LoadCheckYourAnswersScreen;
 using He.PipelineAssessment.UI.Features.Workflow.LoadConfirmationScreen;
 using He.PipelineAssessment.UI.Features.Workflow.LoadQuestionScreen;
 using He.PipelineAssessment.UI.Features.Workflow.QuestionScreenSaveAndContinue;
+using He.PipelineAssessment.UI.Features.Workflow.ReturnToActivity;
 using He.PipelineAssessment.UI.Features.Workflow.StartWorkflow;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
@@ -122,8 +123,6 @@ namespace He.PipelineAssessment.UI.Features.Workflow
                 case ActivityTypeConstants.LandValues:
                 case ActivityTypeConstants.OfficeLandValues:
                 case ActivityTypeConstants.AgricultureLandValues:
-
-
                 {
                         var executeWorkflowRequest = new ExecuteWorkflowCommand
                         {
@@ -133,6 +132,24 @@ namespace He.PipelineAssessment.UI.Features.Workflow
                         };
 
                         var result = await this._mediator.Send(executeWorkflowRequest);
+
+                        return RedirectToAction("LoadWorkflowActivity",
+                            new
+                            {
+                                WorkflowInstanceId = result?.WorkflowInstanceId,
+                                ActivityId = result?.ActivityId,
+                                ActivityType = result?.ActivityType
+                            });
+
+                }
+                case ActivityTypeConstants.ReturnToActivity:
+                    {
+                        var returnToActivityRequest = new ReturnToActivityCommand
+                        {
+                            WorkflowInstanceId = request.WorkflowInstanceId,
+                            ActivityId = request.ActivityId,
+                        };
+                        var result = await this._mediator.Send(returnToActivityRequest);
 
                         return RedirectToAction("LoadWorkflowActivity",
                             new
