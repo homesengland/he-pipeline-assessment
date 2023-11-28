@@ -170,6 +170,47 @@ namespace Elsa.Server.Tests.Features.Workflow.ReturnToActivity
             Assert.Equal("Failed to get workflow.", result.ErrorMessages.Single());
         }
 
+
+        [Theory]
+        [AutoMoqData]
+        public async Task
+        Handle_ShouldReturnErrors_WhenActivityNotFound(
+        [Frozen] Mock<IActivityDataProvider> activityDataProvider,
+        [Frozen] Mock<IElsaCustomRepository> elsaCustomRepository,
+        [Frozen] Mock<IWorkflowRegistry> workflowRegistry,
+        ReturnToActivityCommandHandler sut,
+        QuestionWorkflowInstance workflowInstance,
+        IWorkflowBlueprint workflowBlueprint
+        )
+        {
+            //Setup
+            var returnToActivityCommand = new ReturnToActivityCommand()
+            {
+                ActivityId = "123",
+                WorkflowInstanceId = "456"
+            };
+
+            var dictionary = new Dictionary<string, object?>()
+            {
+                { "ActivityName", "MyActivity" },
+            };
+
+            activityDataProvider.Setup(x => x.GetActivityData("456", "123", CancellationToken.None)).ReturnsAsync(dictionary);
+            elsaCustomRepository.Setup(x => x.GetQuestionWorkflowInstance("456", CancellationToken.None)).ReturnsAsync(workflowInstance);
+            workflowRegistry.Setup(x => x.FindAsync(workflowInstance.WorkflowDefinitionId, VersionOptions.Published, null, CancellationToken.None)).ReturnsAsync(workflowBlueprint);
+
+            //Act
+            var result = await sut.Handle(returnToActivityCommand, CancellationToken.None);
+
+            //Assert
+            elsaCustomRepository.Verify(x => x.GetQuestionWorkflowInstance(It.IsAny<String>(), CancellationToken.None), Times.Once);
+            activityDataProvider.Verify(x => x.GetActivityData(It.IsAny<string>(), It.IsAny<string>(), CancellationToken.None), Times.Once);
+            workflowRegistry.Verify(x => x.FindAsync(It.IsAny<String>(), VersionOptions.Published, It.IsAny<String>(), CancellationToken.None), Times.Once);
+            Assert.Equal(string.Empty, result.Data!.ActivityType);
+            Assert.Equal(String.Empty, result.Data!.ActivityId);
+            Assert.Equal("Failed to find activity to return to. Activity Name: MyActivity", result.ErrorMessages.Single());
+        }
+
         [Theory]
         [AutoMoqData]
         public async Task Handle_ReturnsOperationResultWithErrors_GivenExceptionIsThrown(

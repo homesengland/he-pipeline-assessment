@@ -65,6 +65,11 @@ namespace Elsa.Server.Features.Workflow.ReturnToActivity
                                 result.Data.ActivityId = activityBlueprint.Id;
                                 result.Data.ActivityType = activityBlueprint.Type;
                             }
+                            else
+                            {
+                                _logger.LogError($"Failed to find activity to return to. Activity Name: {activityName}");
+                                result.ErrorMessages.Add($"Failed to find activity to return to. Activity Name: {activityName}");
+                            }
                         }
                         else
                         {
