@@ -10,16 +10,20 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Elsa.Attributes;
+using Elsa.Expressions;
 
-namespace Elsa.CustomActivities.Activities.ReturnToStartOfWorkflow
+namespace Elsa.CustomActivities.Activities.ReturnToActivity
 {
     [Action(
     Category = "Homes England Activities",
-    Description = "Set up return to start of workflow activity",
+    Description = "Set up return to activity activity",
     Outcomes = new[] { OutcomeNames.Done }
 )]
-    public class ReturnToStartOfWorkflow : Activity
+    public class ReturnToActivity : Activity
     {
+        [ActivityInput(Hint = "Activity to return to", SupportedSyntaxes = new[] { SyntaxNames.Literal, SyntaxNames.Json, SyntaxNames.JavaScript })]
+        public string? ActivityName { get; set; }
+
         [ActivityOutput] public string Output { get; set; } = null!;
         protected override IActivityExecutionResult OnExecute(ActivityExecutionContext context)
         {

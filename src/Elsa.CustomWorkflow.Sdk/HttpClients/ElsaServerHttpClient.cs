@@ -6,6 +6,7 @@ using System.Net.Http.Headers;
 using JsonSerializer = System.Text.Json.JsonSerializer;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Hosting;
+using System.Reflection;
 
 namespace Elsa.CustomWorkflow.Sdk.HttpClients
 {
@@ -22,6 +23,7 @@ namespace Elsa.CustomWorkflow.Sdk.HttpClients
         Task<string?> LoadCustomActivities(string elsaServer);
         Task<string?> LoadDataDictionary(string elsaServer);
         Task PostArchiveQuestions(string[] workflowInstanceIds);
+        Task<ReturnToActivityDataDto?> ReturnToActivity(ReturnToActivityData model);
     }
 
     public class ElsaServerHttpClient : IElsaServerHttpClient
@@ -335,6 +337,30 @@ namespace Elsa.CustomWorkflow.Sdk.HttpClients
             }
         }
 
+        public async Task<ReturnToActivityDataDto?> ReturnToActivity(ReturnToActivityData model)
+        {
+            string data;
+            string relativeUri = $"workflow/ReturnToActivity?workflowInstanceId={model.WorkflowInstanceId}&activityId={model.ActivityId}";
+
+            var client = _httpClientFactory.CreateClient("ElsaServerClient");
+            AddAccessTokenToRequest(client);
+            using (var response = await client
+                       .GetAsync(relativeUri)
+                       .ConfigureAwait(false))
+            {
+                data = await response.Content.ReadAsStringAsync().ConfigureAwait(false);
+                if (!response.IsSuccessStatusCode)
+                {
+                    _logger.LogError($"StatusCode='{response.StatusCode}'," +
+                                     $"\n Message= '{data}'," +
+                                     $"\n Url='{relativeUri}'");
+
+                    return default;
+                }
+            }
+
+            return JsonSerializer.Deserialize<ReturnToActivityDataDto>(data, new JsonSerializerOptions { PropertyNameCaseInsensitive = true }); ;
+        }
 
         private void AddAccessTokenToRequest(HttpClient client)
         {
@@ -360,7 +386,6 @@ namespace Elsa.CustomWorkflow.Sdk.HttpClients
                 return string.Empty;
             }
         }
-
 
     }
 }

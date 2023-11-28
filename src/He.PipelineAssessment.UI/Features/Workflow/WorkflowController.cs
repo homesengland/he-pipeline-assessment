@@ -6,6 +6,7 @@ using He.PipelineAssessment.UI.Features.Workflow.LoadCheckYourAnswersScreen;
 using He.PipelineAssessment.UI.Features.Workflow.LoadConfirmationScreen;
 using He.PipelineAssessment.UI.Features.Workflow.LoadQuestionScreen;
 using He.PipelineAssessment.UI.Features.Workflow.QuestionScreenSaveAndContinue;
+using He.PipelineAssessment.UI.Features.Workflow.ReturnToActivity;
 using He.PipelineAssessment.UI.Features.Workflow.StartWorkflow;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
@@ -121,8 +122,6 @@ namespace He.PipelineAssessment.UI.Features.Workflow
                 case ActivityTypeConstants.LandValues:
                 case ActivityTypeConstants.OfficeLandValues:
                 case ActivityTypeConstants.AgricultureLandValues:
-
-
                 {
                         var executeWorkflowRequest = new ExecuteWorkflowCommand
                         {
@@ -142,24 +141,22 @@ namespace He.PipelineAssessment.UI.Features.Workflow
                             });
 
                 }
-                case ActivityTypeConstants.ReturnToStartOfWorkflow:
+                case ActivityTypeConstants.ReturnToActivity:
                     {
-                        var questionScreenRequest = new LoadQuestionScreenRequest
+                        var returnToActivityRequest = new ReturnToActivityCommand
                         {
                             WorkflowInstanceId = request.WorkflowInstanceId,
                             ActivityId = request.ActivityId,
-                            IsReadOnly = false
                         };
-                        //var result = await this._mediator.Send(questionScreenRequest);
+                        var result = await this._mediator.Send(returnToActivityRequest);
 
-                        //if (result.IsAuthorised && !result.IsReadOnly)
-                        //{
-                        //    return View("SaveAndContinue", result);
-                        //}
-                        //else
-                        //{
-                        //    return RedirectToAction("LoadReadOnlyWorkflowActivity", request);
-                        //}
+                        return RedirectToAction("LoadWorkflowActivity",
+                            new
+                            {
+                                WorkflowInstanceId = result?.WorkflowInstanceId,
+                                ActivityId = result?.ActivityId,
+                                ActivityType = result?.ActivityType
+                            });
 
                     }
                 default:
