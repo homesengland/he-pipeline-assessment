@@ -41,11 +41,13 @@ namespace He.PipelineAssessment.UI.Features.Workflow.ReturnToActivity
                 {
                     throw new UnauthorizedAccessException($"You do not have permission to access this resource.");
                 }
+
                 var data = new ReturnToActivityData
                 {
                     WorkflowInstanceId = request.WorkflowInstanceId,
                     ActivityId = request.ActivityId
                 };
+
                 var response = await _elsaServerHttpClient.ReturnToActivity(data);
                 if (response != null)
                 {
