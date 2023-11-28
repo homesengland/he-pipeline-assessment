@@ -35,7 +35,7 @@ namespace He.PipelineAssessment.UI.Features.Workflow.ReturnToActivity
         {
             try
             {
-                if (request.WorkflowInstanceId == null)
+                if (request.WorkflowInstanceId != null)
                 {
                     var assessmentWorkflowInstance = await _assessmentRepository.GetAssessmentToolWorkflowInstance(request.WorkflowInstanceId);
 
