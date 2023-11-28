@@ -29,7 +29,7 @@ namespace He.PipelineAssessment.Data.LaHouseNeed
 
             var relativeUri = $"query?where={whereClause}&resultRecordCount={recordCount}&outFields={outFields}&returnGeometry=false&f=json";//potentially needs a token on the end also
 
-            using (var response = await _httpClientFactory.CreateClient("LaHouseNeedClient")
+            using (var response = await _httpClientFactory.CreateClient(ClientConstants.HouseNeedClient)
                        .GetAsync(relativeUri)
                        .ConfigureAwait(false))
             {

@@ -43,6 +43,8 @@ using FluentValidation;
 using Elsa.CustomWorkflow.Sdk.Models.Workflow;
 using Elsa.Server.Features.Workflow.QuestionScreenValidateAndSave;
 using Elsa.CustomActivities.Activities.LandValuesDataSource;
+using He.PipelineAssessment.Data.ExtendedSinglePipeline;
+using Elsa.CustomActivities.Activities.SinglePipelineExtendedDataSource;
 using Elsa.CustomActivities.Activities.ReturnToActivity;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -80,6 +82,7 @@ builder.Services
         .UseEntityFrameworkPersistenceWithCache(ef => ef.UseSqlServer(elsaConnectionString!, typeof(Elsa.Persistence.EntityFramework.SqlServer.Migrations.Initial)), true, useCache)
         .NoCoreActivities()
         .AddActivity<SinglePipelineDataSource>()
+        .AddActivity<SinglePipelineExtendedDataSource>()
         .AddActivity<PCSProfileDataSource>()
         .AddActivity<AgricultureLandValueDataSource>()
         .AddActivity<OfficeLandValueDataSource>()

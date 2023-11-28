@@ -28,7 +28,7 @@ namespace He.PipelineAssessment.Data.VFM
 
             var relativeUri = $"query?where={whereClause}&resultRecordCount={recordCount}&outFields={outFields}&returnGeometry=false&f=json";//potentially needs a token on the end also
 
-            using (var response = await _httpClientFactory.CreateClient("VFMCalculationsClient")
+            using (var response = await _httpClientFactory.CreateClient(ClientConstants.VFMClient)
                        .GetAsync(relativeUri)
                        .ConfigureAwait(false))
             {

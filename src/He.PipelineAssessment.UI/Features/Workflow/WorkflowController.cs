@@ -116,6 +116,7 @@ namespace He.PipelineAssessment.UI.Features.Workflow
                 case ActivityTypeConstants.HousingNeedDataSource:
                 case ActivityTypeConstants.PCSProfileDataSource:
                 case ActivityTypeConstants.SinglePipelineDataSource:
+                case ActivityTypeConstants.SinglePipelineExtendedDataSource:
                 case ActivityTypeConstants.VFMDataSource:
                 case ActivityTypeConstants.RegionalFigsDataSource:
                 case ActivityTypeConstants.RegionalIPUDataSource:
