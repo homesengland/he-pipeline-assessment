@@ -215,3 +215,40 @@ elsa-modal-dialog > div > div > div:first-child {
   border-color: rgb(229 231 235) !important;
   border-width: 2px !important;
 }
+
+.elsa-select {
+  margin-right: 1em;
+  position:absolute;
+}
+
+.elsa-text-box {
+  width: 85%;
+}
+
+@media only screen and (max-width: 1800px) {
+  .elsa-text-box {
+    width: 90%;
+  }
+}
+
+@media only screen and (max-width: 1400px) {
+  .elsa-text-box {
+    width: 85%;
+  }
+}
+
+@media only screen and (max-width: 1200px) {
+  .elsa-text-box {
+    width: 80%;
+  }
+}
+@media only screen and (max-width: 1000px) {
+  .elsa-text-box {
+    width: 70%;
+  }
+}
+@media only screen and (max-width: 1200px) {
+  .elsa-text-box {
+    width: 60%;
+  }
+}

@@ -166,7 +166,7 @@ export class TextActivityProperty implements ISortableSharedComponent, IDisplayT
             <th class="elsa-px-6 elsa-py-3 elsa-text-left elsa-text-xs elsa-font-medium elsa-text-gray-500 elsa-tracking-wider elsa-w-2/12">Text
             </th>
             <td class="elsa-py-2 pl-5" colSpan={2} style={{ width: colWidth }}>
-              <div class="elsa-mt-1 elsa-relative elsa-rounded-md elsa-shadow-sm">
+              <div class="elsa-mt-1 elsa-relative elsa-rounded-md elsa-shadow-sm elsa-text-box">
               <he-expression-editor
                 key={`expression-editor-${index}-${this.syntaxSwitchCount}`}
                 ref={el => textExpressionEditor = el}
@@ -180,7 +180,7 @@ export class TextActivityProperty implements ISortableSharedComponent, IDisplayT
                 />
                 <div class="elsa-absolute elsa-inset-y-0 elsa-right-0 elsa-flex elsa-items-center">
                   <select onChange={e => this._base.UpdateSyntax(e, nestedTextActivity, textExpressionEditor)}
-                    class="focus:elsa-ring-blue-500 focus:elsa-border-blue-500 elsa-h-full elsa-py-0 elsa-pl-2 elsa-pr-7 elsa-border-transparent elsa-bg-transparent elsa-text-gray-500 sm:elsa-text-sm elsa-rounded-md">
+                    class="focus:elsa-ring-blue-500 focus:elsa-border-blue-500 elsa-h-full elsa-py-0 elsa-pl-2 elsa-pr-7 elsa-border-transparent elsa-bg-transparent elsa-text-gray-500 sm:elsa-text-sm elsa-rounded-md elsa-select">
                     {this.supportedSyntaxes.map(supportedSyntax => {
                       const selected = supportedSyntax == textSyntax;
                       return <option selected={selected}>{supportedSyntax}</option>;
@@ -201,7 +201,7 @@ export class TextActivityProperty implements ISortableSharedComponent, IDisplayT
                 class="elsa-px-6 elsa-py-3 elsa-text-left elsa-text-xs elsa-font-medium elsa-text-gray-500 elsa-tracking-wider elsa-w-2/12">Display on Page
             </th>
             <td class="elsa-py-2 pl-5" colSpan={2} style={{ width: colWidth }}>
-                <div class="elsa-mt-1 elsa-relative elsa-rounded-md elsa-shadow-sm">
+              <div class="elsa-mt-1 elsa-relative elsa-rounded-md elsa-shadow-sm elsa-text-box">
                   <he-expression-editor
                     key={`expression-editor-${index}-${this.syntaxSwitchCount}`}
                     ref={el => conditionExpressionEditor = el}
@@ -214,7 +214,7 @@ export class TextActivityProperty implements ISortableSharedComponent, IDisplayT
                   />
                 <div class="elsa-absolute elsa-inset-y-0 elsa-right-0 elsa-flex elsa-items-center">
                   <select onChange={e => this._base.UpdateSyntax(e, nestedTextActivity, conditionExpressionEditor)}
-                      class="focus:elsa-ring-blue-500 focus:elsa-border-blue-500 elsa-h-full elsa-py-0 elsa-pl-2 elsa-pr-7 elsa-border-transparent elsa-bg-transparent elsa-text-gray-500 sm:elsa-text-sm elsa-rounded-md">
+                    class="focus:elsa-ring-blue-500 focus:elsa-border-blue-500 elsa-h-full elsa-py-0 elsa-pl-2 elsa-pr-7 elsa-border-transparent elsa-bg-transparent elsa-text-gray-500 sm:elsa-text-sm elsa-rounded-md elsa-select">
                       {this.supportedSyntaxes.filter(x => x == SyntaxNames.JavaScript).map(supportedSyntax => {
                         const selected = supportedSyntax == SyntaxNames.JavaScript;
                         return <option selected={selected}>{supportedSyntax}</option>;
