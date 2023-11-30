@@ -1,5 +1,6 @@
-﻿using He.PipelineAssessment.Data.Auth;
-using Microsoft.Azure.Services.AppAuthentication;
+﻿using Azure.Core;
+using Azure.Identity;
+using He.PipelineAssessment.Data.Auth;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 
@@ -7,7 +8,7 @@ namespace He.PipelineAssessment.Data.Auth
 {
     public interface IIdentityClient
     {
-        string GetAccessToken();
+        Task<string> GetAccessToken();
     }
     public class IdentityClient : IIdentityClient
     {
@@ -20,19 +21,21 @@ namespace He.PipelineAssessment.Data.Auth
         }
 
 
-        public string GetAccessToken()
+        public async Task<string> GetAccessToken()
         {
             try
             {
                 string azureTenantId = _identityConfig.AzureTenantId;
                 string applicationManagedIdentity = _identityConfig.ApplicationManagedIdentity;
                 string azureResourceId = _identityConfig.AzureResourceId;
+                var options = new WorkloadIdentityCredentialOptions();
 
-                var azureServiceTokenProvider = new AzureServiceTokenProvider(applicationManagedIdentity);
+                var azureServiceTokenProvider = new WorkloadIdentityCredential(options);
+                TokenRequestContext context = new TokenRequestContext(new[] { $"{azureResourceId}/.default" });
+                AccessToken accessToken = await azureServiceTokenProvider.GetTokenAsync(context);
+                //var accessToken = azureServiceTokenProvider.GetAccessTokenAsync(azureResourceId, azureTenantId).Result;
 
-                var accessToken = azureServiceTokenProvider.GetAccessTokenAsync(azureResourceId, azureTenantId).Result;
-
-                return accessToken;
+                return accessToken.Token;
             }
             catch (Exception e)
             {

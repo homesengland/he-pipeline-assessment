@@ -157,7 +157,7 @@ export class HeWeightedRadioProperty implements ISortableSharedComponent, IDispl
               class="elsa-py-3 elsa-text-left elsa-text-xs elsa-font-medium elsa-text-gray-500 elsa-tracking-wider elsa-w-2/12">Answer
             </th>
             <td class="elsa-py-2" colSpan={2} style={{ width: colWidth }}>
-              <div class="elsa-mt-1 elsa-relative elsa-rounded-md elsa-shadow-sm">
+              <div class="elsa-mt-1 elsa-relative elsa-rounded-md elsa-shadow-sm elsa-text-box">
                 <he-expression-editor
                   key={`expression-editor-${index}-${this.syntaxSwitchCount}`}
                   ref={el => expressionEditor = el}
@@ -170,7 +170,7 @@ export class HeWeightedRadioProperty implements ISortableSharedComponent, IDispl
                 />
                 <div class="elsa-absolute elsa-inset-y-0 elsa-right-0 elsa-flex elsa-items-center elsa-select">
                   <select onChange={e => this._base.UpdateSyntax(e, radioOption, expressionEditor)}
-                    class="focus:elsa-ring-blue-500 focus:elsa-border-blue-500 elsa-h-full elsa-py-0 elsa-pl-2 elsa-pr-7 elsa-border-transparent elsa-bg-transparent elsa-text-gray-500 sm:elsa-text-sm elsa-rounded-md">
+                    class="focus:elsa-ring-blue-500 focus:elsa-border-blue-500 elsa-h-full elsa-py-0 elsa-pl-2 elsa-pr-7 elsa-border-transparent elsa-bg-transparent elsa-text-gray-500 sm:elsa-text-sm elsa-rounded-md elsa-select">
                     {supportedSyntaxes.map(supportedSyntax => {
                       const selected = supportedSyntax == syntax;
                       return <option selected={selected}>{supportedSyntax}</option>;
@@ -185,7 +185,7 @@ export class HeWeightedRadioProperty implements ISortableSharedComponent, IDispl
               Score
             </th>
             <td class="elsa-py-2" colSpan={2} style={{ width: colWidth }}>
-              <div class="elsa-mt-1 elsa-relative elsa-rounded-md elsa-shadow-sm">
+              <div class="elsa-mt-1 elsa-relative elsa-rounded-md elsa-shadow-sm elsa-text-box">
                 <he-expression-editor
                   key={`expression-editor-${index}-${this.scoreSyntaxSwitchCount}`}
                   ref={el => scoreExpressionEditor = el}
@@ -198,7 +198,7 @@ export class HeWeightedRadioProperty implements ISortableSharedComponent, IDispl
                 />
                 <div class="elsa-absolute elsa-inset-y-0 elsa-right-0 elsa-flex elsa-items-center elsa-select">
                   <select onChange={e => this._base.UpdateSyntax(e, radioOption, scoreExpressionEditor)}
-                    class="focus:elsa-ring-blue-500 focus:elsa-border-blue-500 elsa-h-full elsa-py-0 elsa-pl-2 elsa-pr-7 elsa-border-transparent elsa-bg-transparent elsa-text-gray-500 sm:elsa-text-sm elsa-rounded-md">
+                    class="focus:elsa-ring-blue-500 focus:elsa-border-blue-500 elsa-h-full elsa-py-0 elsa-pl-2 elsa-pr-7 elsa-border-transparent elsa-bg-transparent elsa-text-gray-500 sm:elsa-text-sm elsa-rounded-md elsa-select">
                     {this.supportedSyntaxes.filter(x => x == SyntaxNames.Literal).map(supportedSyntax => {
                       const selected = supportedSyntax == SyntaxNames.Literal;
                       return <option selected={selected}>{supportedSyntax}</option>;
@@ -218,7 +218,7 @@ export class HeWeightedRadioProperty implements ISortableSharedComponent, IDispl
           <tr style={{ display: optionsDisplay }}>
             <th class="elsa-py-3 elsa-text-left elsa-text-xs elsa-font-medium elsa-text-gray-500 elsa-tracking-wider elsa-w-2/12">Pre Populated</th>
             <td class="elsa-py-2 pl-5" colSpan={2} style={{ width: colWidth }}>
-              <div class="elsa-mt-1 elsa-relative elsa-rounded-md elsa-shadow-sm">
+              <div class="elsa-mt-1 elsa-relative elsa-rounded-md elsa-shadow-sm elsa-text-box">
                 <he-expression-editor
                   key={`expression-editor-${index}-${this.syntaxSwitchCount}`}
                   ref={el => prePopulatedExpressionEditor = el}
@@ -231,7 +231,7 @@ export class HeWeightedRadioProperty implements ISortableSharedComponent, IDispl
                 />
                 <div class="elsa-absolute elsa-inset-y-0 elsa-right-0 elsa-flex elsa-items-center elsa-select">
                   <select onChange={e => this._base.UpdateSyntax(e, radioOption, prePopulatedExpressionEditor)}
-                    class="focus:elsa-ring-blue-500 focus:elsa-border-blue-500 elsa-h-full elsa-py-0 elsa-pl-2 elsa-pr-7 elsa-border-transparent elsa-bg-transparent elsa-text-gray-500 sm:elsa-text-sm elsa-rounded-md">
+                    class="focus:elsa-ring-blue-500 focus:elsa-border-blue-500 elsa-h-full elsa-py-0 elsa-pl-2 elsa-pr-7 elsa-border-transparent elsa-bg-transparent elsa-text-gray-500 sm:elsa-text-sm elsa-rounded-md elsa-select">
                     {this.supportedSyntaxes.filter(x => x == SyntaxNames.JavaScript).map(supportedSyntax => {
                       const selected = supportedSyntax == SyntaxNames.JavaScript;
                       return <option selected={selected}>{supportedSyntax}</option>;
