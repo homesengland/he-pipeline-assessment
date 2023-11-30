@@ -41,7 +41,7 @@ namespace He.PipelineAssessment.UI.Features.Rollback.CreateRollback
                     throw new UnauthorizedAccessException($"You do not have permission to access this resource.");
                 }
 
-                var isLatest = _assessmentToolWorkflowInstanceHelpers.IsLatestSubmittedWorkflow(workflowInstance);
+                var isLatest = await _assessmentToolWorkflowInstanceHelpers.IsOrderEqualToLatestSubmittedWorkflowOrder(workflowInstance);
                 if (!isLatest)
                 {
                     throw new Exception(

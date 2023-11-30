@@ -11,6 +11,7 @@
         public string Name { get; set; } = null!;
         public bool IsEconomistWorkflow { get; set; }
         public string? Status { get; set; }
+        public bool IsAmendable { get; set; }
 
         public virtual AssessmentTool AssessmentTool { get; set; } = null!;
 

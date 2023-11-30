@@ -26,6 +26,7 @@ namespace He.PipelineAssessment.Infrastructure.Repository
 
         Task DeleteSubsequentNextWorkflows(AssessmentToolInstanceNextWorkflow? nextWorkflow);
         Task DeleteAllNextWorkflows(int assessmentId);
+        Task DeleteAllNextWorkflowsByOrder(int assessmentId, int order);
         Task<int> DeleteNextWorkflow(AssessmentToolInstanceNextWorkflow nextWorkflow);
 
         Task<int> SaveChanges();
@@ -34,6 +35,7 @@ namespace He.PipelineAssessment.Infrastructure.Repository
         Task<int> DeleteIntervention(AssessmentIntervention intervention);
         Task<List<InterventionReason>> GetInterventionReasons();
         Task<List<AssessmentIntervention>> GetOpenAssessmentInterventions(int assessmentId);
+        Task<List<AssessmentToolWorkflowInstance>> GetWorkflowInstancesToDeleteForAmendment(int assessmentId, int order);
     }
 
     public class AssessmentRepository : IAssessmentRepository
@@ -81,7 +83,10 @@ namespace He.PipelineAssessment.Infrastructure.Repository
         public async Task<IEnumerable<AssessmentToolWorkflowInstance>> GetAssessmentToolWorkflowInstances(int assessmentId)
         {
             return await context.Set<AssessmentToolWorkflowInstance>().Where(x =>
-                    x.AssessmentId == assessmentId && x.Status != AssessmentToolWorkflowInstanceConstants.SuspendedRollBack)
+                    x.AssessmentId == assessmentId 
+                    && x.Status != AssessmentToolWorkflowInstanceConstants.SuspendedRollBack
+                    && x.Status != AssessmentToolWorkflowInstanceConstants.SuspendOverrides
+                    && x.Status != AssessmentToolWorkflowInstanceConstants.SuspendedAmendment)
                 .ToListAsync();
         }
 
@@ -175,7 +180,9 @@ namespace He.PipelineAssessment.Infrastructure.Repository
                     .Where(x => x.CreatedDateTime > workflow.CreatedDateTime 
                     && x.Assessment.SpId == workflow.Assessment.SpId
                     && x.Assessment.Id == workflow.Assessment.Id
-                    && x.Status != AssessmentToolWorkflowInstanceConstants.SuspendedRollBack).ToListAsync();
+                    && x.Status != AssessmentToolWorkflowInstanceConstants.SuspendedRollBack
+                    && x.Status != AssessmentToolWorkflowInstanceConstants.SuspendOverrides
+                    && x.Status != AssessmentToolWorkflowInstanceConstants.SuspendedAmendment).ToListAsync();
             }
             return workflowsToRemove;
         }
@@ -187,6 +194,8 @@ namespace He.PipelineAssessment.Infrastructure.Repository
                 .Where(x =>
                             x.Assessment.Id == assessmentId
                             && x.Status != AssessmentToolWorkflowInstanceConstants.SuspendedRollBack
+                            && x.Status != AssessmentToolWorkflowInstanceConstants.SuspendOverrides
+                            && x.Status != AssessmentToolWorkflowInstanceConstants.SuspendedAmendment
                             && x.AssessmentToolWorkflow.AssessmentTool.Order >= assessmentToolOrder).ToListAsync();
 
             return workflowsToRemove;
@@ -220,6 +229,31 @@ namespace He.PipelineAssessment.Infrastructure.Repository
             .Where(x => x.AssessmentToolWorkflowInstance.AssessmentId == assessmentId 
             && (x.Status == InterventionStatus.Draft || x.Status == InterventionStatus.Pending))
             .ToListAsync();
+        }
+
+        public async Task<List<AssessmentToolWorkflowInstance>> GetWorkflowInstancesToDeleteForAmendment(int assessmentId, int assessmentToolOrder)
+        {
+            List<AssessmentToolWorkflowInstance> workflowsToRemove = await context.Set<AssessmentToolWorkflowInstance>()
+                .Where(x =>
+                            x.Assessment.Id == assessmentId
+                            && x.Status != AssessmentToolWorkflowInstanceConstants.SuspendedRollBack
+                            && x.Status != AssessmentToolWorkflowInstanceConstants.SuspendOverrides
+                            && x.Status != AssessmentToolWorkflowInstanceConstants.SuspendedAmendment
+                            && x.AssessmentToolWorkflow.AssessmentTool.Order > assessmentToolOrder).ToListAsync();
+
+            return workflowsToRemove;
+        }
+
+        public async Task DeleteAllNextWorkflowsByOrder(int assessmentId, int order)
+        {
+            List<AssessmentToolInstanceNextWorkflow> nextWorkflows = await context.Set<AssessmentToolInstanceNextWorkflow>()
+                .Include(x=> x.AssessmentToolWorkflowInstance.AssessmentToolWorkflow.AssessmentTool)
+                .Where(x => x.AssessmentId == assessmentId
+                && x.AssessmentToolWorkflowInstance.AssessmentToolWorkflow.AssessmentTool.Order > order).ToListAsync();
+
+            context.Set<AssessmentToolInstanceNextWorkflow>().RemoveRange(nextWorkflows);
+
+            await context.SaveChangesAsync();
         }
     }
 }

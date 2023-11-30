@@ -5,6 +5,8 @@
         public const string Draft = "Draft";
         public const string Submitted = "Submitted";
         public const string SuspendedRollBack = "Suspended - RB";
+        public const string SuspendedAmendment = "Suspended - A";
+        public const string SuspendOverrides = "Suspended - O";
     }
 
     public class InterventionDecisionTypes
@@ -12,6 +14,7 @@
         public const string Override = "Override";
         public const string Rollback = "Rollback";
         public const string Variation = "Variation";
+        public const string Amendment = "Amendment";
     }
 
     public class InterventionStatus

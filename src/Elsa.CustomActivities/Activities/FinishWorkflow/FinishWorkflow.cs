@@ -23,7 +23,10 @@ namespace Elsa.CustomActivities.Activities.FinishWorkflow
 
         protected override async ValueTask<IActivityExecutionResult> OnExecuteAsync(ActivityExecutionContext context)
         {
-            await base.OnExecuteAsync(context);
+            //Due to needing workflows to be ammendable - this should likely let us
+            //Keep the flag as being 'Finished' without wiping out the Blueprints from the
+            //child class.  
+            //await base.OnExecuteAsync(context);
 
             var workflowInstance = context.WorkflowInstance;
             workflowInstance.WorkflowStatus = WorkflowStatus.Finished;

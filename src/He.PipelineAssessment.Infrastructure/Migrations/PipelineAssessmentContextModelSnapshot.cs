@@ -375,6 +375,9 @@ namespace He.PipelineAssessment.Infrastructure.Migrations
                     b.Property<DateTime>("CreatedDateTime")
                         .HasColumnType("datetime2");
 
+                    b.Property<bool>("IsAmendable")
+                        .HasColumnType("bit");
+
                     b.Property<bool>("IsEconomistWorkflow")
                         .HasColumnType("bit");
 
