@@ -131,7 +131,7 @@ export class HEChecklistProperty {
           </td>
           <td class="elsa-py-2 pl-5">
 
-            <div class="elsa-mt-1 elsa-relative elsa-rounded-md elsa-shadow-sm">
+            <div class="elsa-mt-1 elsa-relative elsa-rounded-md elsa-shadow-sm elsa-text-box">
               <he-expression-editor
                 key={`expression-editor-${index}-${this.syntaxSwitchCount}-${this.keyId}`}
                 ref={el => expressionEditor = el}
@@ -144,7 +144,7 @@ export class HEChecklistProperty {
               />
               <div class="elsa-absolute elsa-inset-y-0 elsa-right-0 elsa-flex elsa-items-center">
                 <select onChange={e => this.onCaseSyntaxChanged(e, switchCase, expressionEditor)}
-                  class="focus:elsa-ring-blue-500 focus:elsa-border-blue-500 elsa-h-full elsa-py-0 elsa-pl-2 elsa-pr-7 elsa-border-transparent elsa-bg-transparent elsa-text-gray-500 sm:elsa-text-sm elsa-rounded-md">
+                  class="focus:elsa-ring-blue-500 focus:elsa-border-blue-500 elsa-h-full elsa-py-0 elsa-pl-2 elsa-pr-7 elsa-border-transparent elsa-bg-transparent elsa-text-gray-500 sm:elsa-text-sm elsa-rounded-md elsa-select">
                   {supportedSyntaxes.map(supportedSyntax => {
                     const selected = supportedSyntax == syntax;
                     return <option selected={selected}>{supportedSyntax}</option>;
