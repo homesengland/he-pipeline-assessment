@@ -22,6 +22,7 @@ export class ElsaMultiExpressionEditor {
   @Prop({ attribute: 'editor-height', reflect: true }) editorHeight: string = '10em';
   @Prop({ attribute: 'single-line', reflect: true }) singleLineMode: boolean = false;
   @Prop() context?: IntellisenseContext;
+  @Prop() hint?: string;
 
   @Event() syntaxChanged: EventEmitter<string>;
   @Event() expressionChanged: EventEmitter<string>;
@@ -103,6 +104,7 @@ export class ElsaMultiExpressionEditor {
           </div>
           {this.renderContextMenuWidget()}
         </div>
+        {this.renderHint()}
       </div>
       {this.renderEditor()}
     </div>
@@ -118,6 +120,14 @@ export class ElsaMultiExpressionEditor {
     return <label htmlFor={fieldId} class="elsa-block elsa-text-sm elsa-font-medium elsa-text-gray-700">
       {fieldLabel}
     </label>;
+  }
+
+  renderHint() {
+    if (this.hint && this.hint != '') {
+      return <div class="elsa-flex">
+        <p class="elsa-mt-2 elsa-text-sm elsa-text-gray-500">{this.hint}</p>
+      </div>
+    }
   }
 
   renderContextMenuWidget() {

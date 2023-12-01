@@ -24,76 +24,53 @@ namespace Elsa.CustomActivities.Activities.QuestionScreen.Helpers
 
         public async Task<string> GetAnswer(string correlationId, string workflowName, string activityName, string questionId)
         {
-            string result = String.Empty;
-            var workflowBlueprint = await _workflowRegistry.FindByNameAsync(workflowName, Models.VersionOptions.Published);
+            var question = await _elsaCustomRepository.GetQuestionByWorkflowAndActivityName(activityName,
+                workflowName, correlationId, questionId, CancellationToken.None);
 
-            if (workflowBlueprint != null)
-            {
-                var activity = workflowBlueprint.Activities.FirstOrDefault(x => x.Name == activityName);
-                if (activity != null)
-                {
-                    var question = await _elsaCustomRepository.GetQuestionByCorrelationId(activity.Id,
-                        correlationId, questionId, CancellationToken.None);
-
-                    if (question != null && question.Answers != null &&
+            if (question != null && question.Answers != null &&
                         (question.QuestionType == QuestionTypeConstants.CheckboxQuestion || question.QuestionType == QuestionTypeConstants.WeightedCheckboxQuestion))
-                    {
-                        return string.Join(",", question.Answers.Select(x => x.AnswerText));
-                    }
-                }
+            {
+                return string.Join(",", question.Answers.Select(x => x.AnswerText));
             }
-
-            return result;
+            return string.Empty;
         }
 
         public async Task<bool> AnswerEquals(ActivityExecutionContext activityExecutionContext, string workflowName, string activityName, string questionId, string[] choiceIdsToCheck)
         {
             bool result = false;
-            var workflowBlueprint = await _workflowRegistry.FindByNameAsync(workflowName, Models.VersionOptions.Published);
             var randomId = random.Next();
             var choiceIdsString = string.Join(", ", choiceIdsToCheck);
-            if (workflowBlueprint != null)
-            {
-                activityExecutionContext.JournalData.Add($"Running checkboxQuestionAnswerEquals for choices {choiceIdsString}. (random id - {randomId})", $"CorrelationID: {activityExecutionContext.CorrelationId}, WorkflowName: {workflowName}, ActivityName: {activityName}, QuestionID: {questionId}, ChoiceIdsToCheck: {choiceIdsToCheck}");
-                var activity = workflowBlueprint.Activities.FirstOrDefault(x => x.Name == activityName);
-                if (activity != null)
-                {
-                    var question = await _elsaCustomRepository.GetQuestionByCorrelationId(activity.Id,
-                        activityExecutionContext.CorrelationId, questionId, CancellationToken.None);
-                    if (question != null &&
+            var question = await _elsaCustomRepository.GetQuestionByWorkflowAndActivityName(activityName,
+                workflowName, activityExecutionContext.CorrelationId, questionId, CancellationToken.None);
+            if (question != null &&
                         (question.QuestionType == QuestionTypeConstants.CheckboxQuestion || question.QuestionType == QuestionTypeConstants.WeightedCheckboxQuestion) &&
                         question.Answers != null)
+            {
+                activityExecutionContext.JournalData.Add($"checkboxQuestionAnswerEquals Question Found for choices {choiceIdsString}. (random id - {randomId})", $"CorrelationID: {activityExecutionContext.CorrelationId}, WorkflowName: {workflowName}, ActivityName: {activityName}, QuestionID: {questionId}, ChoicesToCheck: {choiceIdsToCheck}, DBQuestionID: {question.Id}, DBInstanceID: {question.WorkflowInstanceId}");
+                if (question.Answers.Count != choiceIdsToCheck.Length)
+                    return false;
+                foreach (var item in choiceIdsToCheck)
+                {
+                    randomId = random.Next();
+                    var answerFound = question.Answers.FirstOrDefault(x => x.Choice?.Identifier == item);
+
+                    if (answerFound != null)
                     {
-                        activityExecutionContext.JournalData.Add($"checkboxQuestionAnswerEquals Question Found for choices {choiceIdsString}. (random id - {randomId})", $"CorrelationID: {activityExecutionContext.CorrelationId}, WorkflowName: {workflowName}, ActivityName: {activityName}, QuestionID: {questionId}, ChoicesToCheck: {choiceIdsToCheck}, DBQuestionID: {question.Id}, DBInstanceID: {question.WorkflowInstanceId}");
-                        if (question.Answers.Count != choiceIdsToCheck.Length)
-                            return false;
-                        foreach (var item in choiceIdsToCheck)
-                        {
-                            randomId = random.Next();
-                            var answerFound = question.Answers.FirstOrDefault(x => x.Choice?.Identifier == item);
-                            
-                            if (answerFound != null)
-                            {
-                                activityExecutionContext.JournalData.Add($"checkboxQuestionAnswerEquals Answer Found for choices {choiceIdsString}. (random id - {randomId})", $"CorrelationID: {activityExecutionContext.CorrelationId}, WorkflowName: {workflowName}, ActivityName: {activityName}, QuestionID: {questionId}, ChoicesToCheck: {choiceIdsToCheck}, DBQuestionID: {question.Id}, DBInstanceID: {question.WorkflowInstanceId}, Answer: {answerFound.AnswerText}, Choice: {answerFound.Choice?.Identifier}");
-                                result = true;
-                            }
-                            else
-                            {
-                                activityExecutionContext.JournalData.Add($"checkboxQuestionAnswerEquals Answer  not Found for choices {choiceIdsString}. (random id - {randomId})", $"CorrelationID: {activityExecutionContext.CorrelationId}, WorkflowName: {workflowName}, ActivityName: {activityName}, QuestionID: {questionId}, ChoicesToCheck: {choiceIdsToCheck}, DBQuestionID: {question.Id}, DBInstanceID: {question.WorkflowInstanceId},  Choice: {item}");
-                                result = false;
-                            }
-                        }
+                        activityExecutionContext.JournalData.Add($"checkboxQuestionAnswerEquals Answer Found for choices {choiceIdsString}. (random id - {randomId})", $"CorrelationID: {activityExecutionContext.CorrelationId}, WorkflowName: {workflowName}, ActivityName: {activityName}, QuestionID: {questionId}, ChoicesToCheck: {choiceIdsToCheck}, DBQuestionID: {question.Id}, DBInstanceID: {question.WorkflowInstanceId}, Answer: {answerFound.AnswerText}, Choice: {answerFound.Choice?.Identifier}");
+                        result = true;
                     }
                     else
                     {
-                        activityExecutionContext.JournalData.Add($"checkboxQuestionAnswerEquals Question NULL for choices {choiceIdsToCheck}. (random id - {randomId})", $"CorrelationID: {activityExecutionContext.CorrelationId}, WorkflowName: {workflowName}, ActivityName: {activityName}, QuestionID: {questionId}, ChoicesToCheck: {choiceIdsToCheck}");
+                        activityExecutionContext.JournalData.Add($"checkboxQuestionAnswerEquals Answer  not Found for choices {choiceIdsString}. (random id - {randomId})", $"CorrelationID: {activityExecutionContext.CorrelationId}, WorkflowName: {workflowName}, ActivityName: {activityName}, QuestionID: {questionId}, ChoicesToCheck: {choiceIdsToCheck}, DBQuestionID: {question.Id}, DBInstanceID: {question.WorkflowInstanceId},  Choice: {item}");
+                        result = false;
                     }
                 }
-                else
-                {
-                    activityExecutionContext.JournalData.Add($"checkboxQuestionAnswerEquals Activity NULL for choices {choiceIdsToCheck}. (random id - {randomId})", $"CorrelationID: {activityExecutionContext.CorrelationId}, WorkflowName: {workflowName}, ActivityName: {activityName}, QuestionID: {questionId}, ChoicesToCheck: {choiceIdsToCheck}");
-                }
             }
+            else
+            {
+                activityExecutionContext.JournalData.Add($"checkboxQuestionAnswerEquals Question NULL for choices {choiceIdsToCheck}. (random id - {randomId})", $"CorrelationID: {activityExecutionContext.CorrelationId}, WorkflowName: {workflowName}, ActivityName: {activityName}, QuestionID: {questionId}, ChoicesToCheck: {choiceIdsToCheck}");
+            }
+
             return result;
         }
 
@@ -102,85 +79,59 @@ namespace Elsa.CustomActivities.Activities.QuestionScreen.Helpers
         {
             var methodName = containsAny ? "checkboxQuestionAnswerContainsAny" : "checkboxQuestionAnswerContains";
             bool result = false;
-            var workflowBlueprint =
-                await _workflowRegistry.FindByNameAsync(workflowName, Models.VersionOptions.Published);
             var randomId = random.Next();
             var choiceIdsString = string.Join(", ", choiceIdsToCheck);
-            if (workflowBlueprint != null)
-            {
-                activityExecutionContext.JournalData.Add($"Running {methodName} for choices {choiceIdsString}. (random id - {randomId})", $"CorrelationID: {activityExecutionContext.CorrelationId}, WorkflowName: {workflowName}, ActivityName: {activityName}, QuestionID: {questionId}, ChoiceIdsToCheck: {choiceIdsToCheck}");
-
-                var activity = workflowBlueprint.Activities.FirstOrDefault(x => x.Name == activityName);
-                if (activity != null)
-                {
-
-                    var question = await _elsaCustomRepository.GetQuestionByCorrelationId(activity.Id, activityExecutionContext.CorrelationId, questionId,
-                        CancellationToken.None);
-                    if (question != null &&
+            var question = await _elsaCustomRepository.GetQuestionByWorkflowAndActivityName(activityName,
+                workflowName, activityExecutionContext.CorrelationId, questionId, CancellationToken.None);
+            if (question != null &&
                         (question.QuestionType == QuestionTypeConstants.CheckboxQuestion || question.QuestionType == QuestionTypeConstants.WeightedCheckboxQuestion))
+            {
+                activityExecutionContext.JournalData.Add($"{methodName} Question Found for choices {choiceIdsString}. (random id - {randomId})", $"CorrelationID: {activityExecutionContext.CorrelationId}, WorkflowName: {workflowName}, ActivityName: {activityName}, QuestionID: {questionId}, ChoicesToCheck: {choiceIdsToCheck}, DBQuestionID: {question.Id}, DBInstanceID: {question.WorkflowInstanceId}");
+
+                if (question.Answers != null)
+                {
+                    foreach (var item in choiceIdsToCheck)
                     {
-                        activityExecutionContext.JournalData.Add($"{methodName} Question Found for choices {choiceIdsString}. (random id - {randomId})", $"CorrelationID: {activityExecutionContext.CorrelationId}, WorkflowName: {workflowName}, ActivityName: {activityName}, QuestionID: {questionId}, ChoicesToCheck: {choiceIdsToCheck}, DBQuestionID: {question.Id}, DBInstanceID: {question.WorkflowInstanceId}");
-
-                        if (question.Answers != null)
+                        randomId = random.Next();
+                        var answerFound = question.Answers.FirstOrDefault(x => x.Choice?.Identifier == item);
+                        if (answerFound != null)
                         {
-                            foreach (var item in choiceIdsToCheck)
-                            {
-                                randomId = random.Next();
-                                var answerFound = question.Answers.FirstOrDefault(x => x.Choice?.Identifier == item);
-                                if (answerFound != null)
-                                {
-                                    activityExecutionContext.JournalData.Add($"{methodName} Answer Found for choices {choiceIdsString}. (random id - {randomId})", $"CorrelationID: {activityExecutionContext.CorrelationId}, WorkflowName: {workflowName}, ActivityName: {activityName}, QuestionID: {questionId}, ChoicesToCheck: {choiceIdsToCheck}, DBQuestionID: {question.Id}, DBInstanceID: {question.WorkflowInstanceId}, Answer: {answerFound.AnswerText}, Choice: {answerFound.Choice?.Identifier}");
+                            activityExecutionContext.JournalData.Add($"{methodName} Answer Found for choices {choiceIdsString}. (random id - {randomId})", $"CorrelationID: {activityExecutionContext.CorrelationId}, WorkflowName: {workflowName}, ActivityName: {activityName}, QuestionID: {questionId}, ChoicesToCheck: {choiceIdsToCheck}, DBQuestionID: {question.Id}, DBInstanceID: {question.WorkflowInstanceId}, Answer: {answerFound.AnswerText}, Choice: {answerFound.Choice?.Identifier}");
 
-                                    if (containsAny)
-                                    {
-                                        return true;
-                                    }
-                                    else
-                                    {
-                                        result = true;
-                                    }
-                                }
-                                else
-                                {
-                                    activityExecutionContext.JournalData.Add($"{methodName} Answer  not Found for choices {choiceIdsString}. (random id - {randomId})", $"CorrelationID: {activityExecutionContext.CorrelationId}, WorkflowName: {workflowName}, ActivityName: {activityName}, QuestionID: {questionId}, ChoicesToCheck: {choiceIdsToCheck}, DBQuestionID: {question.Id}, DBInstanceID: {question.WorkflowInstanceId},  Choice: {item}");
-                                    result = false;
-                                }
+                            if (containsAny)
+                            {
+                                return true;
+                            }
+                            else
+                            {
+                                result = true;
                             }
                         }
+                        else
+                        {
+                            activityExecutionContext.JournalData.Add($"{methodName} Answer  not Found for choices {choiceIdsString}. (random id - {randomId})", $"CorrelationID: {activityExecutionContext.CorrelationId}, WorkflowName: {workflowName}, ActivityName: {activityName}, QuestionID: {questionId}, ChoicesToCheck: {choiceIdsToCheck}, DBQuestionID: {question.Id}, DBInstanceID: {question.WorkflowInstanceId},  Choice: {item}");
+                            result = false;
+                        }
                     }
-                    else
-                    {
-                        activityExecutionContext.JournalData.Add($"{methodName} Question NULL for choices {choiceIdsString}. (random id - {randomId})", $"CorrelationID: {activityExecutionContext.CorrelationId}, WorkflowName: {workflowName}, ActivityName: {activityName}, QuestionID: {questionId}, ChoicesToCheck: {choiceIdsToCheck}");
-                    }
-                }
-                else
-                {
-                    activityExecutionContext.JournalData.Add($"{methodName} Activity NULL for choices {choiceIdsString}. (random id - {randomId})", $"CorrelationID: {activityExecutionContext.CorrelationId}, WorkflowName: {workflowName}, ActivityName: {activityName}, QuestionID: {questionId}, ChoicesToCheck: {choiceIdsToCheck}");
                 }
             }
-
+            else
+            {
+                activityExecutionContext.JournalData.Add($"{methodName} Question NULL for choices {choiceIdsString}. (random id - {randomId})", $"CorrelationID: {activityExecutionContext.CorrelationId}, WorkflowName: {workflowName}, ActivityName: {activityName}, QuestionID: {questionId}, ChoicesToCheck: {choiceIdsToCheck}");
+            }
             return result;
         }
 
         public async Task<int> AnswerCount(string correlationId, string workflowName, string activityName, string questionId)
         {
             int result = 0;
-            var workflowBlueprint = await _workflowRegistry.FindByNameAsync(workflowName, Models.VersionOptions.Published);
-
-            if (workflowBlueprint != null)
+            var question = await _elsaCustomRepository.GetQuestionByWorkflowAndActivityName(activityName,
+                workflowName, correlationId, questionId, CancellationToken.None);
+            if (question != null && (question.QuestionType == QuestionTypeConstants.CheckboxQuestion || question.QuestionType == QuestionTypeConstants.WeightedCheckboxQuestion))
             {
-                var activity = workflowBlueprint.Activities.FirstOrDefault(x => x.Name == activityName);
-                if (activity != null)
+                if (question.Answers != null)
                 {
-
-                    var question = await _elsaCustomRepository.GetQuestionByCorrelationId(activity.Id, correlationId, questionId, CancellationToken.None);
-                    if (question != null && (question.QuestionType == QuestionTypeConstants.CheckboxQuestion || question.QuestionType == QuestionTypeConstants.WeightedCheckboxQuestion))
-                    {
-                        if (question.Answers != null)
-                        {
-                            return question.Answers.Count;
-                        }
-                    }
+                    return question.Answers.Count;
                 }
             }
             return result;

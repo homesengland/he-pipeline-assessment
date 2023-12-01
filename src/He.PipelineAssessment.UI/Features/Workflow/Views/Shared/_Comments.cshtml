@@ -1,15 +1,16 @@
-﻿@using Microsoft.ApplicationInsights.Extensibility.Implementation
-@model He.PipelineAssessment.UI.Features.Workflow.ViewModels.Comment
+﻿@model He.PipelineAssessment.UI.Features.Workflow.ViewModels.Comment
 @{
     var itemName = "Data.Questions[" + Model.Index + "].Comments";
 }
 @if (Model.DisplayComments)
 {
     <br />
+    var moreDetailCommentsId = "more-detail-comments " + Model.Index;
+    var labelCommentsId = "Comments " + Model.Index;
     <div class="govuk-form-group">
-        <label class="govuk-label" for="more-detail">
+        <label id="@labelCommentsId" class="govuk-label" for="@moreDetailCommentsId">
             Comments
         </label>
-        <textarea id="more-detail" name="@itemName" class="govuk-textarea" maxlength=2000 >@Model.CommentText</textarea>
+        <textarea id="@moreDetailCommentsId" name="@itemName" class="govuk-textarea" maxlength=2000 >@Model.CommentText</textarea>
     </div>
 }

@@ -11,6 +11,7 @@ using RedLockNet.SERedis;
 using RedLockNet;
 using StackExchange.Redis;
 using Elsa.Extensions;
+using Rebus.Threading;
 
 namespace Elsa.Server.Extensions
 {
@@ -77,33 +78,79 @@ namespace Elsa.Server.Extensions
 
     public static class RedisServiceCollectionExtensions
     {
-        private static string _certificatePath = "";
-        private static string _certificateKeyPath = "";
+        private static string? _certificatePath = "";
+        private static string? _certificateKeyPath = "";
 
-        public async static Task<IServiceCollection> AddRedisWithSelfSignedSslCertificate(
+        public static async Task<IServiceCollection> AddRedisWithSelfSignedSslCertificate(
             this IServiceCollection services,
-            string connectionString, string certificatePath, string certificateKeyPath, ILogger logger)
+            string connectionString, string? certificatePath, string? certificateKeyPath, ILogger logger, bool clearCache = false)
         {
             _certificatePath = certificatePath;
             _certificateKeyPath = certificateKeyPath;
             var configurationOptions = ConfigurationOptions.Parse(connectionString);
             configurationOptions.CertificateValidation += CertificateValidationCallBack!;
-            configurationOptions.CertificateSelection += OptionsOnCertificateSelection;
+            if (!string.IsNullOrWhiteSpace(_certificatePath))
+            {
+                configurationOptions.CertificateSelection += OptionsOnCertificateSelection;
+            }
+
+            if (clearCache)
+            {
+                configurationOptions.AllowAdmin = true;
+            }
             configurationOptions.Ssl = true;
             configurationOptions.SslProtocols = SslProtocols.Tls13;
             configurationOptions.AbortOnConnectFail = false;
-            services.AddSingleton<IConnectionMultiplexer>(ConnectionMultiplexer.Connect(configurationOptions));
-            //Code ahead for logging only.
-            var connectionMultiplexer = (IConnectionMultiplexer)ConnectionMultiplexer.Connect(configurationOptions);
+            var connectionMultiplexer = await ConnectionMultiplexer.ConnectAsync(configurationOptions);
+            services.AddSingleton<IConnectionMultiplexer>(connectionMultiplexer);
             connectionMultiplexer.IncludeDetailInExceptions = true;
             logger.LogInformation($"Check SSL RedisConnection.  Is connected: {connectionMultiplexer.IsConnected}");
             if (connectionMultiplexer.IsConnected)
             {
                 await RedisSmokeTest(connectionMultiplexer, logger);
             }
-            logger.LogInformation("Adding Singleton for connection multiplexer");
-            logger.LogInformation($"Multiplexer Config: {connectionMultiplexer.Configuration}");
-            logger.LogInformation($"Multiplexer Client Name: {connectionMultiplexer.ClientName}");
+
+            if (clearCache)
+            {
+                await ClearCache(logger, connectionMultiplexer);
+            }
+            return services;
+        }
+
+        private static async Task ClearCache(ILogger logger, IConnectionMultiplexer connectionMultiplexer)
+        {
+            logger.LogInformation("Clearing Cache");
+
+            try
+            {
+                var endPoints = connectionMultiplexer.GetEndPoints();
+                foreach (var endPoint in endPoints)
+                {
+                    var server = connectionMultiplexer.GetServer(endPoint);
+                    await server.FlushAllDatabasesAsync();
+                }
+            }
+            catch (Exception ex)
+            {
+                logger.LogError($"Failed to clear cache: {ex.Message}", ex);
+            }
+        }
+
+        public static async Task<IServiceCollection> AddRedisLocal(
+            this IServiceCollection services,
+            string connectionString, ILogger logger, bool clearCache = false)
+        {
+            if (clearCache)
+            {
+                connectionString += ",allowAdmin=true";
+            }
+            var connectionMultiplexer = await ConnectionMultiplexer.ConnectAsync(connectionString);
+            services.AddSingleton<IConnectionMultiplexer>(connectionMultiplexer);
+            if (clearCache)
+            {
+                await ClearCache(logger, connectionMultiplexer);
+            }
+
             return services;
         }
 
@@ -112,7 +159,7 @@ namespace Elsa.Server.Extensions
             return CreateCertFromPemFile(_certificatePath, _certificateKeyPath);
         }
 
-        private async static Task RedisSmokeTest(IConnectionMultiplexer conn, ILogger logger)
+        private static async Task RedisSmokeTest(IConnectionMultiplexer conn, ILogger logger)
         {
             string sampleKey = "TestKey";
             string sampleValue = "SampleValue";
@@ -137,12 +184,12 @@ namespace Elsa.Server.Extensions
             }
         }
 
-        static X509Certificate2 CreateCertFromPemFile(string certPath, string keyPath)
+        static X509Certificate2 CreateCertFromPemFile(string? certPath, string? keyPath)
         {
             if (!RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
-                return X509Certificate2.CreateFromPemFile(certPath, keyPath);
+                return X509Certificate2.CreateFromPemFile(certPath!, keyPath);
 
-            using var cert = X509Certificate2.CreateFromPemFile(certPath, keyPath);
+            using var cert = X509Certificate2.CreateFromPemFile(certPath!, keyPath);
             return new X509Certificate2(cert.Export(X509ContentType.Pkcs12));
         }
 

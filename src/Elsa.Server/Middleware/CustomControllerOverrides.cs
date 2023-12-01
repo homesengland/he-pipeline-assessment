@@ -42,7 +42,7 @@ namespace Elsa.Server.Middleware
 
     public static class ControllerRoutingMiddlewareExtensions
     {
-        public static IApplicationBuilder UseCustomControllerOverrides(this IApplicationBuilder builder, string serverPrefix)
+        public static IApplicationBuilder UseCustomControllerOverrides(this IApplicationBuilder builder, string? serverPrefix)
         {
             return builder.UseMiddleware<ControllerRoutingMiddleware>(serverPrefix);
         }

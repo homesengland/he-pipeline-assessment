@@ -46,12 +46,23 @@ namespace Elsa.CustomActivities.Handlers
             {
                 return null;
             }
-            bool isParagraph = EvaluateParagraph(property);
-            bool isGuidance = EvaluateGuidance(property);
-            bool isHyperlink = EvaluateHyperlink(property);
-            string? url = EvaluateUrl(property);
+            bool isParagraph = EvaluateBoolean(property, TextActivitySyntaxNames.Paragraph);
+            bool isGuidance = EvaluateBoolean(property, TextActivitySyntaxNames.Guidance);
+            bool isHyperlink = EvaluateBoolean(property, TextActivitySyntaxNames.Hyperlink);
+            bool isBold = EvaluateBoolean(property, TextActivitySyntaxNames.Bold);
+            string? url = EvaluateString(property, TextActivitySyntaxNames.Url);
 
-            return new TextRecord(value, isParagraph, isGuidance, isHyperlink, url);
+            return new TextRecord(value, isParagraph, isGuidance, isHyperlink, url, isBold);
+        }
+
+        public bool EvaluateBoolean(ElsaProperty property, string key)
+        {
+            if (property.Expressions!.ContainsKey(key))
+            {
+                bool value = property.Expressions?[key].ToLower() == "true";
+                return value;
+            };
+            return false;
         }
 
         public async Task<bool> EvaluateCondition(ElsaProperty property, IExpressionEvaluator evaluator, ActivityExecutionContext context)
@@ -69,41 +80,11 @@ namespace Elsa.CustomActivities.Handlers
             return true;
         }
 
-        public bool EvaluateParagraph(ElsaProperty property)
+        public string? EvaluateString(ElsaProperty property, string key)
         {
-            if (property.Expressions!.ContainsKey(TextActivitySyntaxNames.Paragraph))
+            if (property.Expressions!.ContainsKey(key))
             {
-                bool value = property.Expressions?[TextActivitySyntaxNames.Paragraph].ToLower() == "true";
-                return value;
-            };
-            return false;
-        }
-
-        public bool EvaluateGuidance(ElsaProperty property)
-        {
-            if (property.Expressions!.ContainsKey(TextActivitySyntaxNames.Guidance))
-            {
-                bool value = property.Expressions?[TextActivitySyntaxNames.Guidance].ToLower() == "true";
-                return value;
-            };
-            return false;
-        }
-
-        public bool EvaluateHyperlink(ElsaProperty property)
-        {
-            if (property.Expressions!.ContainsKey(TextActivitySyntaxNames.Hyperlink))
-            {
-                bool value = property.Expressions?[TextActivitySyntaxNames.Hyperlink].ToLower() == "true";
-                return value;
-            };
-            return false;
-        }
-
-        public string? EvaluateUrl(ElsaProperty property)
-        {
-            if (property.Expressions!.ContainsKey(TextActivitySyntaxNames.Url))
-            {
-                string? value = property.Expressions?[TextActivitySyntaxNames.Url];
+                string? value = property.Expressions?[key];
                 return value;
             };
             return string.Empty;

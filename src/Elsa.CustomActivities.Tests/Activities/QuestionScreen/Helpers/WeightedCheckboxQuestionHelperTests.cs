@@ -14,63 +14,12 @@ namespace Elsa.CustomActivities.Tests.Activities.QuestionScreen.Helpers
 {
     public class WeightedCheckboxQuestionHelperTests
     {
-        [Theory]
-        [AutoMoqData]
-        public async Task AnswerEquals_ReturnsFalse_GivenWorkflowFindByNameAsyncReturnsNull(
-         [Frozen] Mock<IElsaCustomRepository> elsaCustomRepository,
-         [Frozen] Mock<IWorkflowRegistry> workflowRegistry,
-         string workflowName,
-         string activityName,
-         string questionId,
-         string groupId,
-         string correlationId,
-         WeightedCheckboxQuestionHelper sut)
-        {
-            //Arrange
-            elsaCustomRepository.Setup(x => x.GetQuestionByCorrelationId(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>(), CancellationToken.None)).ReturnsAsync((Question?)null);
-
-            workflowRegistry.Setup(x => x.FindByNameAsync(workflowName!, VersionOptions.Published, null, default)).ReturnsAsync((WorkflowBlueprint?)null);
-
-            var stringAnwers = new string[] { "A" };
-            //Act
-            var result = await sut.AnswerEquals(correlationId, workflowName, activityName, questionId, groupId, stringAnwers);
-
-            //Assert
-            Assert.False(result);
-        }
-
-        [Theory]
-        [AutoMoqData]
-        public async Task AnswerEquals_ReturnsFalse_WorkflowActivitesReturnsNull(
-            [Frozen] Mock<IElsaCustomRepository> elsaCustomRepository,
-            [Frozen] Mock<IWorkflowRegistry> workflowRegistry,
-            string workflowName,
-            string activityName,
-            string questionId,
-            string groupId,
-            string correlationId,
-            WorkflowBlueprint workflowBlueprint,
-            WeightedCheckboxQuestionHelper sut)
-        {
-
-            //Arrange
-            elsaCustomRepository.Setup(x => x.GetQuestionByCorrelationId(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>(), CancellationToken.None)).ReturnsAsync((Question?)null);
-
-            workflowRegistry.Setup(x => x.FindByNameAsync(workflowName!, VersionOptions.Published, null, default)).ReturnsAsync(workflowBlueprint);
-
-            var stringAnwers = new string[] { "A" };
-            //Act
-            var result = await sut.AnswerEquals(correlationId, workflowName, activityName, questionId, groupId, stringAnwers);
-
-            //Assert
-            Assert.False(result);
-        }
+       
 
         [Theory]
         [AutoMoqData]
         public async Task AnswerEquals_ReturnsFalse_GetQuestionRecordReturnsNull(
             [Frozen] Mock<IElsaCustomRepository> elsaCustomRepository,
-            [Frozen] Mock<IWorkflowRegistry> workflowRegistry,
             string workflowName,
             string activityId,
             string activityName,
@@ -87,9 +36,8 @@ namespace Elsa.CustomActivities.Tests.Activities.QuestionScreen.Helpers
                 Name = activityName
             });
 
-            elsaCustomRepository.Setup(x => x.GetQuestionByCorrelationId(activityId, correlationId, It.IsAny<string>(), CancellationToken.None)).ReturnsAsync((Question?)null);
+            elsaCustomRepository.Setup(x => x.GetQuestionByWorkflowAndActivityName(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>(), CancellationToken.None)).ReturnsAsync((Question?)null);
 
-            workflowRegistry.Setup(x => x.FindByNameAsync(workflowName!, VersionOptions.Published, null, default)).ReturnsAsync(workflowBlueprint);
 
             var stringAnwers = new string[] { "A" };
             //Act
@@ -103,7 +51,6 @@ namespace Elsa.CustomActivities.Tests.Activities.QuestionScreen.Helpers
         [AutoMoqData]
         public async Task AnswerEquals_ReturnsFalse_GivenChoicesAreNull(
             [Frozen] Mock<IElsaCustomRepository> elsaCustomRepository,
-            [Frozen] Mock<IWorkflowRegistry> workflowRegistry,
             string workflowName,
             string activityId,
             string activityName,
@@ -124,9 +71,8 @@ namespace Elsa.CustomActivities.Tests.Activities.QuestionScreen.Helpers
             question.QuestionType = QuestionTypeConstants.WeightedCheckboxQuestion;
             question.Choices = null;
 
-            elsaCustomRepository.Setup(x => x.GetQuestionByCorrelationId(activityId, correlationId, questionId, CancellationToken.None)).ReturnsAsync(question);
+            elsaCustomRepository.Setup(x => x.GetQuestionByWorkflowAndActivityName(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>(), CancellationToken.None)).ReturnsAsync(question);
 
-            workflowRegistry.Setup(x => x.FindByNameAsync(workflowName!, VersionOptions.Published, null, default)).ReturnsAsync(workflowBlueprint);
 
             var stringAnwers = new string[] { "A" };
             //Act
@@ -146,7 +92,6 @@ namespace Elsa.CustomActivities.Tests.Activities.QuestionScreen.Helpers
             string[] choiceIdsToCheck,
             bool expectedResult,
             [Frozen] Mock<IElsaCustomRepository> elsaCustomRepository,
-            [Frozen] Mock<IWorkflowRegistry> workflowRegistry,
             string workflowName,
             string activityId,
             string activityName,
@@ -168,9 +113,8 @@ namespace Elsa.CustomActivities.Tests.Activities.QuestionScreen.Helpers
             question.Answers = expectedIdentifiers
                 .Select(x => new Answer() { Choice = new QuestionChoice() { Identifier = x, QuestionChoiceGroup = new QuestionChoiceGroup() { GroupIdentifier = groupId}} }).ToList();
 
-            elsaCustomRepository.Setup(x => x.GetQuestionByCorrelationId(activityId, correlationId, questionId, CancellationToken.None)).ReturnsAsync(question);
+            elsaCustomRepository.Setup(x => x.GetQuestionByWorkflowAndActivityName(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>(), CancellationToken.None)).ReturnsAsync(question);
 
-            workflowRegistry.Setup(x => x.FindByNameAsync(workflowName!, VersionOptions.Published, null, default)).ReturnsAsync(workflowBlueprint);
 
             //Act
             var result = await sut.AnswerEquals(correlationId, workflowName, activityName, questionId, groupId, choiceIdsToCheck);
@@ -191,7 +135,6 @@ namespace Elsa.CustomActivities.Tests.Activities.QuestionScreen.Helpers
             string groupId,
             bool expectedResult,
             [Frozen] Mock<IElsaCustomRepository> elsaCustomRepository,
-            [Frozen] Mock<IWorkflowRegistry> workflowRegistry,
             string workflowName,
             string activityId,
             string activityName,
@@ -212,9 +155,8 @@ namespace Elsa.CustomActivities.Tests.Activities.QuestionScreen.Helpers
             question.Answers = expectedIdentifiers
                 .Select(x => new Answer() { Choice = new QuestionChoice() { Identifier = x, QuestionChoiceGroup = new QuestionChoiceGroup() { GroupIdentifier = groupId } } }).ToList();
 
-            elsaCustomRepository.Setup(x => x.GetQuestionByCorrelationId(activityId, correlationId, questionId, CancellationToken.None)).ReturnsAsync(question);
+            elsaCustomRepository.Setup(x => x.GetQuestionByWorkflowAndActivityName(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>(), CancellationToken.None)).ReturnsAsync(question);
 
-            workflowRegistry.Setup(x => x.FindByNameAsync(workflowName!, VersionOptions.Published, null, default)).ReturnsAsync(workflowBlueprint);
 
             //Act
             var result = await sut.AnswerEquals(correlationId, workflowName, activityName, questionId, "CorrectGroup", choiceIdsToCheck);
@@ -223,63 +165,13 @@ namespace Elsa.CustomActivities.Tests.Activities.QuestionScreen.Helpers
             Assert.Equal(expectedResult, result);
         }
 
-        [Theory]
-        [AutoMoqData]
-        public async Task AnswerContains_ReturnsFalse_GivenWorkflowFindByNameAsyncReturnsNull(
-        [Frozen] Mock<IElsaCustomRepository> elsaCustomRepository,
-        [Frozen] Mock<IWorkflowRegistry> workflowRegistry,
-        string workflowName,
-        string activityName,
-        string questionId,
-        string groupId,
-        string correlationId,
-        WeightedCheckboxQuestionHelper sut)
-        {
-            //Arrange
-            elsaCustomRepository.Setup(x => x.GetQuestionByCorrelationId(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>(), CancellationToken.None)).ReturnsAsync((Question?)null);
-
-            workflowRegistry.Setup(x => x.FindByNameAsync(workflowName!, VersionOptions.Published, null, default)).ReturnsAsync((WorkflowBlueprint?)null);
-
-            var stringAnwers = new string[] { "A" };
-            //Act
-            var result = await sut.AnswerContains(correlationId, workflowName, activityName, questionId, groupId, stringAnwers);
-
-            //Assert
-            Assert.False(result);
-        }
-
-        [Theory]
-        [AutoMoqData]
-        public async Task AnswerContains_ReturnsFalse_WorkflowActivitesReturnsNull(
-            [Frozen] Mock<IElsaCustomRepository> elsaCustomRepository,
-            [Frozen] Mock<IWorkflowRegistry> workflowRegistry,
-            string workflowName,
-            string activityName,
-            string questionId,
-            string groupId,
-            string correlationId,
-            WorkflowBlueprint workflowBlueprint,
-            WeightedCheckboxQuestionHelper sut)
-        {
-
-            //Arrange
-            elsaCustomRepository.Setup(x => x.GetQuestionByCorrelationId(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>(), CancellationToken.None)).ReturnsAsync((Question?)null);
-
-            workflowRegistry.Setup(x => x.FindByNameAsync(workflowName!, VersionOptions.Published, null, default)).ReturnsAsync(workflowBlueprint);
-
-            var stringAnwers = new string[] { "A" };
-            //Act
-            var result = await sut.AnswerContains(correlationId, workflowName, activityName, questionId, groupId, stringAnwers);
-
-            //Assert
-            Assert.False(result);
-        }
+       
+       
 
         [Theory]
         [AutoMoqData]
         public async Task AnswerContains_ReturnsFalse_GetQuestionRecordReturnsNull(
             [Frozen] Mock<IElsaCustomRepository> elsaCustomRepository,
-            [Frozen] Mock<IWorkflowRegistry> workflowRegistry,
             string workflowName,
             string activityId,
             string activityName,
@@ -296,9 +188,7 @@ namespace Elsa.CustomActivities.Tests.Activities.QuestionScreen.Helpers
                 Name = activityName
             });
 
-            elsaCustomRepository.Setup(x => x.GetQuestionByCorrelationId(activityId, correlationId, It.IsAny<string>(), CancellationToken.None)).ReturnsAsync((Question?)null);
-
-            workflowRegistry.Setup(x => x.FindByNameAsync(workflowName!, VersionOptions.Published, null, default)).ReturnsAsync(workflowBlueprint);
+            elsaCustomRepository.Setup(x => x.GetQuestionByWorkflowAndActivityName(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>(), CancellationToken.None)).ReturnsAsync((Question?)null);
 
             var stringAnwers = new string[] { "A" };
             //Act
@@ -312,7 +202,6 @@ namespace Elsa.CustomActivities.Tests.Activities.QuestionScreen.Helpers
         [AutoMoqData]
         public async Task AnswerContains_ReturnsFalse_GivenChoicesAreNull(
             [Frozen] Mock<IElsaCustomRepository> elsaCustomRepository,
-            [Frozen] Mock<IWorkflowRegistry> workflowRegistry,
             string workflowName,
             string activityId,
             string activityName,
@@ -333,9 +222,7 @@ namespace Elsa.CustomActivities.Tests.Activities.QuestionScreen.Helpers
             question.QuestionType = QuestionTypeConstants.WeightedCheckboxQuestion;
             question.Choices = null;
 
-            elsaCustomRepository.Setup(x => x.GetQuestionByCorrelationId(activityId, correlationId, questionId, CancellationToken.None)).ReturnsAsync(question);
-
-            workflowRegistry.Setup(x => x.FindByNameAsync(workflowName!, VersionOptions.Published, null, default)).ReturnsAsync(workflowBlueprint);
+            elsaCustomRepository.Setup(x => x.GetQuestionByWorkflowAndActivityName(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>(), CancellationToken.None)).ReturnsAsync(question);
 
             var stringAnwers = new string[] { "A" };
             //Act
@@ -357,7 +244,6 @@ namespace Elsa.CustomActivities.Tests.Activities.QuestionScreen.Helpers
             string[] choiceIdsToCheck,
             bool expectedResult,
             [Frozen] Mock<IElsaCustomRepository> elsaCustomRepository,
-            [Frozen] Mock<IWorkflowRegistry> workflowRegistry,
             string workflowName,
             string activityId,
             string activityName,
@@ -379,9 +265,7 @@ namespace Elsa.CustomActivities.Tests.Activities.QuestionScreen.Helpers
             question.Answers = expectedIdentifiers
                 .Select(x => new Answer() { Choice = new QuestionChoice() { Identifier = x, QuestionChoiceGroup = new QuestionChoiceGroup() { GroupIdentifier = groupId } } }).ToList();
 
-            elsaCustomRepository.Setup(x => x.GetQuestionByCorrelationId(activityId, correlationId, questionId, CancellationToken.None)).ReturnsAsync(question);
-
-            workflowRegistry.Setup(x => x.FindByNameAsync(workflowName!, VersionOptions.Published, null, default)).ReturnsAsync(workflowBlueprint);
+            elsaCustomRepository.Setup(x => x.GetQuestionByWorkflowAndActivityName(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>(), CancellationToken.None)).ReturnsAsync(question);
 
             //Act
             var result = await sut.AnswerContains(correlationId, workflowName, activityName, questionId, groupId, choiceIdsToCheck);
@@ -403,7 +287,6 @@ namespace Elsa.CustomActivities.Tests.Activities.QuestionScreen.Helpers
             string groupId,
             bool expectedResult,
             [Frozen] Mock<IElsaCustomRepository> elsaCustomRepository,
-            [Frozen] Mock<IWorkflowRegistry> workflowRegistry,
             string workflowName,
             string activityId,
             string activityName,
@@ -424,9 +307,8 @@ namespace Elsa.CustomActivities.Tests.Activities.QuestionScreen.Helpers
             question.Answers = expectedIdentifiers
                 .Select(x => new Answer() { Choice = new QuestionChoice() { Identifier = x, QuestionChoiceGroup = new QuestionChoiceGroup() { GroupIdentifier = groupId } } }).ToList();
 
-            elsaCustomRepository.Setup(x => x.GetQuestionByCorrelationId(activityId, correlationId, questionId, CancellationToken.None)).ReturnsAsync(question);
+            elsaCustomRepository.Setup(x => x.GetQuestionByWorkflowAndActivityName(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>(), CancellationToken.None)).ReturnsAsync(question);
 
-            workflowRegistry.Setup(x => x.FindByNameAsync(workflowName!, VersionOptions.Published, null, default)).ReturnsAsync(workflowBlueprint);
 
             //Act
             var result = await sut.AnswerContains(correlationId, workflowName, activityName, questionId, "CorrectGroup", choiceIdsToCheck);
@@ -448,7 +330,6 @@ namespace Elsa.CustomActivities.Tests.Activities.QuestionScreen.Helpers
             string[] choiceIdsToCheck,
             bool expectedResult,
             [Frozen] Mock<IElsaCustomRepository> elsaCustomRepository,
-            [Frozen] Mock<IWorkflowRegistry> workflowRegistry,
             string workflowName,
             string activityId,
             string activityName,
@@ -470,9 +351,7 @@ namespace Elsa.CustomActivities.Tests.Activities.QuestionScreen.Helpers
             question.Answers = expectedIdentifiers
                 .Select(x => new Answer() { Choice = new QuestionChoice() { Identifier = x, QuestionChoiceGroup = new QuestionChoiceGroup() { GroupIdentifier = groupId } } }).ToList();
 
-            elsaCustomRepository.Setup(x => x.GetQuestionByCorrelationId(activityId, correlationId, questionId, CancellationToken.None)).ReturnsAsync(question);
-
-            workflowRegistry.Setup(x => x.FindByNameAsync(workflowName!, VersionOptions.Published, null, default)).ReturnsAsync(workflowBlueprint);
+            elsaCustomRepository.Setup(x => x.GetQuestionByWorkflowAndActivityName(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>(), CancellationToken.None)).ReturnsAsync(question);
 
             //Act
             var result = await sut.AnswerContains(correlationId, workflowName, activityName, questionId, groupId, choiceIdsToCheck, true);
@@ -495,7 +374,6 @@ namespace Elsa.CustomActivities.Tests.Activities.QuestionScreen.Helpers
            string groupId,
            bool expectedResult,
            [Frozen] Mock<IElsaCustomRepository> elsaCustomRepository,
-           [Frozen] Mock<IWorkflowRegistry> workflowRegistry,
            string workflowName,
            string activityId,
            string activityName,
@@ -516,9 +394,7 @@ namespace Elsa.CustomActivities.Tests.Activities.QuestionScreen.Helpers
             question.Answers = expectedIdentifiers
                 .Select(x => new Answer() { Choice = new QuestionChoice() { Identifier = x, QuestionChoiceGroup = new QuestionChoiceGroup() { GroupIdentifier = groupId } } }).ToList();
 
-            elsaCustomRepository.Setup(x => x.GetQuestionByCorrelationId(activityId, correlationId, questionId, CancellationToken.None)).ReturnsAsync(question);
-
-            workflowRegistry.Setup(x => x.FindByNameAsync(workflowName!, VersionOptions.Published, null, default)).ReturnsAsync(workflowBlueprint);
+            elsaCustomRepository.Setup(x => x.GetQuestionByWorkflowAndActivityName(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>(), CancellationToken.None)).ReturnsAsync(question);
 
             //Act
             var result = await sut.AnswerContains(correlationId, workflowName, activityName, questionId, "CorrectGroup", choiceIdsToCheck, true);
