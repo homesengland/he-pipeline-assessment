@@ -341,7 +341,7 @@ export class HeWeightedCheckboxOptionGroupProperty implements ISortableSharedCom
             <input type="text" value={this.propertyModel.name} onChange={e => this._base.UpdateName(e, this.propertyModel)}
               class="focus:elsa-ring-blue-500 focus:elsa-border-bue-500 elsa-block elsa-w-full elsa-min-w-0 elsa-rounded-md sm:elsa-text-sm elsa-border-gray-300" />
           </div>
-          <p class="elsa-mt-2 elsa-text-sm elsa-text-gray-500">The name of the group of Anwers.  Each group name must be unique.</p>
+          <p class="elsa-mt-2 elsa-text-sm elsa-text-gray-500">The name of the group of Answers.  Each group name must be unique.</p>
         </div>
 
         <div class="elsa-mb-1">
