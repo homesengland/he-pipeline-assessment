@@ -196,6 +196,7 @@ namespace He.PipelineAssessment.UI.Features.Workflow
         [Authorize(Policy = Authorization.Constants.AuthorizationPolicies.AssignmentToWorkflowExecuteRoleRequired)]
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [RequestFormLimits(ValueCountLimit = 5000)]
         public async Task<IActionResult> QuestionScreenSaveAndContinue([FromForm] QuestionScreenSaveAndContinueCommand command)
         {
             var result = await this._mediator.Send(command);
