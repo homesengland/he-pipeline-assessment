@@ -4,6 +4,7 @@ using Elsa.CustomInfrastructure.Extensions;
 using Elsa.Dashboard.Exceptions;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Options;
 using System.Net.Http.Headers;
 
 namespace Elsa.Dashboard
@@ -104,20 +105,17 @@ namespace Elsa.Dashboard
     {
       try
       {
-        var credential = new ManagedIdentityCredential();
         var ccflowApplicationIdUri = _configuration["AzureManagedIdentityConfig:ElsaServerAzureApplicationIdUri"];
-        var accessTokenRequest = await credential.GetTokenAsync(
-            new TokenRequestContext(scopes: new string[] { ccflowApplicationIdUri }) { }
-        );
+        var azureServiceTokenProvider = new WorkloadIdentityCredential();
+        TokenRequestContext context = new TokenRequestContext(new[] { $"{ccflowApplicationIdUri}/.default" });
+        AccessToken accessToken = await azureServiceTokenProvider.GetTokenAsync(context);
 
-        var accessToken = accessTokenRequest.Token;
-
-        if (String.IsNullOrEmpty(accessToken))
+        if (String.IsNullOrEmpty(accessToken.Token))
         {
           _logger.LogError("Failed to get Access Token, Access Token is empty");
         }
 
-        return accessToken;
+        return accessToken.Token;
       }
       catch (Exception ex)
       {
