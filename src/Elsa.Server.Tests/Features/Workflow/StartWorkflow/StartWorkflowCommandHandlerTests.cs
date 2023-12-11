@@ -68,7 +68,7 @@ namespace Elsa.Server.Tests.Features.Workflow.StartWorkflow
             //Assert
             nextActivityNavigationService.Verify(
                 x => x.CreateNextActivityNavigation(workflowNextActivityModel.NextActivity.Id, customActivityNavigation,
-                    workflowNextActivityModel.NextActivity, workflowNextActivityModel.WorkflowInstance, workflowBlueprint.Name, CancellationToken.None), Times.Once);
+                    workflowNextActivityModel.NextActivity, workflowNextActivityModel.WorkflowInstance, workflowBlueprint.Name!, CancellationToken.None), Times.Once);
             Assert.Equal(workflowNextActivityModel.NextActivity.Id, result.Data!.NextActivityId);
             Assert.Equal(workflowBlueprint.Name, result.Data.WorkflowName);
             Assert.Equal(workflowInstance.Id, result.Data.WorkflowInstanceId);
@@ -133,7 +133,7 @@ namespace Elsa.Server.Tests.Features.Workflow.StartWorkflow
             //Assert
             nextActivityNavigationService.Verify(
                 x => x.CreateNextActivityNavigation(workflowNextActivityModel.NextActivity.Id, customActivityNavigation,
-                    workflowNextActivityModel.NextActivity, workflowNextActivityModel.WorkflowInstance, workflowBlueprint.Name, CancellationToken.None), Times.Once);
+                    workflowNextActivityModel.NextActivity, workflowNextActivityModel.WorkflowInstance, workflowBlueprint.Name!, CancellationToken.None), Times.Once);
             Assert.Equal(workflowNextActivityModel.NextActivity.Id, result.Data!.NextActivityId);
             Assert.Equal(workflowBlueprint.Name, result.Data.WorkflowName);
             Assert.Equal(workflowInstance.Id, result.Data.WorkflowInstanceId);
@@ -204,7 +204,7 @@ namespace Elsa.Server.Tests.Features.Workflow.StartWorkflow
             //Assert
             nextActivityNavigationService.Verify(
                 x => x.CreateNextActivityNavigation(workflowNextActivityModel.NextActivity.Id, customActivityNavigation,
-                    workflowNextActivityModel.NextActivity, workflowNextActivityModel.WorkflowInstance, workflowBlueprint.Name, CancellationToken.None), Times.Once);
+                    workflowNextActivityModel.NextActivity, workflowNextActivityModel.WorkflowInstance, workflowBlueprint.Name!, CancellationToken.None), Times.Once);
             Assert.Equal(workflowNextActivityModel.WorkflowInstance.Id, result.Data!.WorkflowInstanceId);
             Assert.Equal(workflowNextActivityModel.NextActivity.Id, result.Data.NextActivityId);
             Assert.Equal(workflowNextActivityModel.NextActivity.Type, result.Data.ActivityType);
@@ -269,7 +269,7 @@ namespace Elsa.Server.Tests.Features.Workflow.StartWorkflow
             //Assert
             nextActivityNavigationService.Verify(
                 x => x.CreateNextActivityNavigation(workflowNextActivityModel.NextActivity.Id, customActivityNavigation,
-                    workflowNextActivityModel.NextActivity, workflowNextActivityModel.WorkflowInstance, workflowBlueprint.Name, CancellationToken.None), Times.Once);
+                    workflowNextActivityModel.NextActivity, workflowNextActivityModel.WorkflowInstance, workflowBlueprint.Name!, CancellationToken.None), Times.Once);
             Assert.Equal(workflowNextActivityModel.WorkflowInstance.Id, result.Data!.WorkflowInstanceId);
             Assert.Equal(workflowNextActivityModel.NextActivity.Id, result.Data.NextActivityId);
             Assert.Equal(workflowNextActivityModel.NextActivity.Type, result.Data.ActivityType);
@@ -334,7 +334,7 @@ namespace Elsa.Server.Tests.Features.Workflow.StartWorkflow
             //Assert
             nextActivityNavigationService.Verify(
                 x => x.CreateNextActivityNavigation(workflowNextActivityModel.NextActivity.Id, customActivityNavigation,
-                    workflowNextActivityModel.NextActivity, runWorkflowResult.WorkflowInstance, workflowBlueprint.Name, CancellationToken.None), Times.Once);
+                    workflowNextActivityModel.NextActivity, runWorkflowResult.WorkflowInstance, workflowBlueprint.Name!, CancellationToken.None), Times.Once);
             Assert.Equal(runWorkflowResult.WorkflowInstance.Id, result.Data!.WorkflowInstanceId);
             Assert.Equal(workflowNextActivityModel.NextActivity.Id, result.Data.NextActivityId);
             Assert.Equal(workflowNextActivityModel.NextActivity.Type, result.Data.ActivityType);
@@ -470,7 +470,7 @@ namespace Elsa.Server.Tests.Features.Workflow.StartWorkflow
             //Assert
             nextActivityNavigationService.Verify(
                 x => x.CreateNextActivityNavigation(workflowNextActivityModel.NextActivity.Id, null,
-                    workflowNextActivityModel.NextActivity, workflowNextActivityModel.WorkflowInstance, workflowBlueprint.Name, CancellationToken.None), Times.Once);
+                    workflowNextActivityModel.NextActivity, workflowNextActivityModel.WorkflowInstance, workflowBlueprint.Name!, CancellationToken.None), Times.Once);
             Assert.Equal(workflowNextActivityModel.NextActivity.Id, result.Data!.NextActivityId);
             Assert.Equal(workflowBlueprint.Name, result.Data.WorkflowName);
             Assert.Equal(workflowInstance.Id, result.Data.WorkflowInstanceId);
