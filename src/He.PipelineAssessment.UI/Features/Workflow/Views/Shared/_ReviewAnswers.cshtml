@@ -43,19 +43,32 @@
                                     <p>@answer.AnswerText</p>
 
                                 }
-                                if (!string.IsNullOrEmpty(question.Comments))
-                                {
-                                    <details class="govuk-details" data-module="govuk-details">
-                                        <summary class="govuk-details__summary">
-                                            <span class="govuk-details__summary-text">
-                                                Display supporting comments
-                                            </span>
-                                        </summary>
-                                        <div class="govuk-details__text">
-                                            @question.Comments
-                                        </div>
-                                    </details>
-                                }
+                            }
+                            if (!string.IsNullOrEmpty(question.Comments))
+                            {
+                                <details class="govuk-details" data-module="govuk-details">
+                                    <summary class="govuk-details__summary">
+                                        <span class="govuk-details__summary-text">
+                                            Display supporting comments
+                                        </span>
+                                    </summary>
+                                    <div class="govuk-details__text">
+                                        @question.Comments
+                                    </div>
+                                </details>
+                            }
+                            if (!string.IsNullOrEmpty(question.DocumentEvidenceLink))
+                            {
+                                <details class="govuk-details" data-module="govuk-details">
+                                    <summary class="govuk-details__summary">
+                                        <span class="govuk-details__summary-text">
+                                            Display supporting evidence
+                                        </span>
+                                    </summary>
+                                    <div class="govuk-details__text">
+                                        <a href="@question.DocumentEvidenceLink" class="govuk-link" rel="noreferrer noopener" target="_blank">Evidence</a>
+                                    </div>
+                                </details>
                             }
                         }
                     </dd>
