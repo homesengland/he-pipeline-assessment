@@ -21,7 +21,7 @@ namespace He.PipelineAssessment.Data.VoaLandValues.Office
         public async Task<string?> GetOfficeLandValues(string lepArea)
         {
             string? data = null;
-            string whereClause = $"lep_area='{lepArea}'";
+            string whereClause = $"lep_area like '{lepArea}%'";
             string outFields = "*";
 
             var relativeUri = $"query?where={whereClause}&outFields={outFields}&f=json";
