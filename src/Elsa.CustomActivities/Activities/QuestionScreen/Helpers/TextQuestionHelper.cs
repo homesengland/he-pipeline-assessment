@@ -30,7 +30,9 @@ namespace Elsa.CustomActivities.Activities.QuestionScreen.Helpers
 
         public async Task<bool> AnswerEquals(string correlationId, int dataDictionaryId, string answerToCheck)
         {
-            var question = await _elsaCustomRepository.GetQuestionByDataDictionary(correlationId, dataDictionaryId, CancellationToken.None);
+            var question =
+                await _elsaCustomRepository.GetQuestionByDataDictionary(correlationId, dataDictionaryId,
+                    CancellationToken.None);
 
             return AnswerEquals(answerToCheck, question);
         }
@@ -60,7 +62,9 @@ namespace Elsa.CustomActivities.Activities.QuestionScreen.Helpers
 
         public async Task<bool> AnswerContains(string correlationId, int dataDictionaryId, string answerToCheck)
         {
-            var question = await _elsaCustomRepository.GetQuestionByDataDictionary(correlationId, dataDictionaryId, CancellationToken.None);
+            var question =
+                await _elsaCustomRepository.GetQuestionByDataDictionary(correlationId, dataDictionaryId,
+                    CancellationToken.None);
 
             return AnswerContains(answerToCheck, question);
         }
@@ -94,6 +98,8 @@ namespace Elsa.CustomActivities.Activities.QuestionScreen.Helpers
             var output = notification.Output;
             output.AppendLine("declare function textQuestionAnswerEquals(workflowName: string, activityName:string, questionId:string, answerToCheck:string ): boolean;");
             output.AppendLine("declare function textQuestionAnswerContains(workflowName: string, activityName:string, questionId:string, answerToCheck:string  ): boolean;");
+            output.AppendLine("declare function textQuestionAnswerEquals(dataDictionaryId: number, answerToCheck:string ): boolean;");
+            output.AppendLine("declare function textQuestionAnswerContains(dataDictionaryId: number, answerToCheck:string  ): boolean;");
             return Task.CompletedTask;
         }
     }

@@ -177,18 +177,30 @@ namespace Elsa.CustomActivities.Activities.QuestionScreen.Helpers
             output.AppendLine("declare function currencyQuestionAnswerEqualToOrGreaterThan(workflowName: string, activityName:string, questionId:string, answerToCheck:decimal ): boolean;");
             output.AppendLine("declare function currencyQuestionAnswerEqualToOrLessThan(workflowName: string, activityName:string, questionId:string, answerToCheck:decimal ): boolean;");
             output.AppendLine("declare function currencyQuestionGetAnswer(workflowName: string, activityName:string, questionId:string ): number;");
+            output.AppendLine("declare function currencyQuestionAnswerEqualToOrGreaterThan(dataDictionaryId: number, answerToCheck:decimal ): boolean;");
+            output.AppendLine("declare function currencyQuestionAnswerEqualToOrLessThan(dataDictionaryId: number, answerToCheck:decimal ): boolean;");
+            output.AppendLine("declare function currencyQuestionGetAnswer(dataDictionaryId: number ): number;");
 
             output.AppendLine("declare function decimalQuestionAnswerEqualToOrGreaterThan(workflowName: string, activityName:string, questionId:string, answerToCheck:decimal ): boolean;");
             output.AppendLine("declare function decimalQuestionAnswerEqualToOrLessThan(workflowName: string, activityName:string, questionId:string, answerToCheck:decimal ): boolean;");
             output.AppendLine("declare function decimalQuestionGetAnswer(workflowName: string, activityName:string, questionId:string ): number;");
+            output.AppendLine("declare function decimalQuestionAnswerEqualToOrGreaterThan(dataDictionaryId: number, answerToCheck:decimal ): boolean;");
+            output.AppendLine("declare function decimalQuestionAnswerEqualToOrLessThan(dataDictionaryId: number, answerToCheck:decimal ): boolean;");
+            output.AppendLine("declare function decimalQuestionGetAnswer(dataDictionaryId: number ): number;");
 
             output.AppendLine("declare function percentageQuestionAnswerEqualToOrGreaterThan(workflowName: string, activityName:string, questionId:string, answerToCheck:decimal ): boolean;");
             output.AppendLine("declare function percentageQuestionAnswerEqualToOrLessThan(workflowName: string, activityName:string, questionId:string, answerToCheck:decimal ): boolean;");
             output.AppendLine("declare function percentageQuestionGetAnswer(workflowName: string, activityName:string, questionId:string ): number;");
+            output.AppendLine("declare function percentageQuestionAnswerEqualToOrGreaterThan(dataDictionaryId: number, answerToCheck:decimal ): boolean;");
+            output.AppendLine("declare function percentageQuestionAnswerEqualToOrLessThan(dataDictionaryId: number, answerToCheck:decimal ): boolean;");
+            output.AppendLine("declare function percentageQuestionGetAnswer(dataDictionaryId: number): number;");
 
             output.AppendLine("declare function integerQuestionAnswerEqualToOrGreaterThan(workflowName: string, activityName:string, questionId:string, answerToCheck:decimal ): boolean;");
             output.AppendLine("declare function integerQuestionAnswerEqualToOrLessThan(workflowName: string, activityName:string, questionId:string, answerToCheck:decimal ): boolean;");
             output.AppendLine("declare function integerQuestionGetAnswer(workflowName: string, activityName:string, questionId:string ): number;");
+            output.AppendLine("declare function integerQuestionAnswerEqualToOrGreaterThan(dataDictionaryId: number, answerToCheck:decimal ): boolean;");
+            output.AppendLine("declare function integerQuestionAnswerEqualToOrLessThan(dataDictionaryId: number, answerToCheck:decimal ): boolean;");
+            output.AppendLine("declare function integerQuestionGetAnswer(dataDictionaryId: number): number;");
 
             return Task.CompletedTask;
         }
