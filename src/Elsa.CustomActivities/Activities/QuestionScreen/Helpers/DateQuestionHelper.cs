@@ -2,7 +2,6 @@
 using Elsa.CustomWorkflow.Sdk;
 using Elsa.Scripting.JavaScript.Events;
 using Elsa.Scripting.JavaScript.Messages;
-using Elsa.Services;
 using MediatR;
 using System.Globalization;
 
@@ -12,12 +11,10 @@ namespace Elsa.CustomActivities.Activities.QuestionScreen.Helpers
     {
 
         private readonly IElsaCustomRepository _elsaCustomRepository;
-        private readonly IWorkflowRegistry _workflowRegistry;
 
-        public DateQuestionHelper(IElsaCustomRepository elsaCustomRepository, IWorkflowRegistry workflowRegistry)
+        public DateQuestionHelper(IElsaCustomRepository elsaCustomRepository)
         {
             _elsaCustomRepository = elsaCustomRepository;
-            _workflowRegistry = workflowRegistry;
         }
 
 

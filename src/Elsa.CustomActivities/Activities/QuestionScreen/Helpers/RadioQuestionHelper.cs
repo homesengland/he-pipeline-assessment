@@ -2,7 +2,6 @@
 using Elsa.CustomWorkflow.Sdk;
 using Elsa.Scripting.JavaScript.Events;
 using Elsa.Scripting.JavaScript.Messages;
-using Elsa.Services;
 using Elsa.Services.Models;
 using MediatR;
 using Microsoft.Extensions.Logging;
