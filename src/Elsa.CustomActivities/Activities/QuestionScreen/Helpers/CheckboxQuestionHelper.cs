@@ -2,7 +2,6 @@
 using Elsa.CustomWorkflow.Sdk;
 using Elsa.Scripting.JavaScript.Events;
 using Elsa.Scripting.JavaScript.Messages;
-using Elsa.Services;
 using Elsa.Services.Models;
 using MediatR;
 
@@ -12,13 +11,11 @@ namespace Elsa.CustomActivities.Activities.QuestionScreen.Helpers
     {
 
         private readonly IElsaCustomRepository _elsaCustomRepository;
-        private readonly IWorkflowRegistry _workflowRegistry;
         private readonly Random random = new Random();
 
-        public CheckboxQuestionHelper(IElsaCustomRepository elsaCustomRepository, IWorkflowRegistry workflowRegistry)
+        public CheckboxQuestionHelper(IElsaCustomRepository elsaCustomRepository)
         {
             _elsaCustomRepository = elsaCustomRepository;
-            _workflowRegistry = workflowRegistry;
         }
 
         public async Task<string> GetAnswer(string correlationId, string workflowName, string activityName, string questionId)
