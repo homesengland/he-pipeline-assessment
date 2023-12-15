@@ -35,7 +35,7 @@ namespace Elsa.Server.Features.Activities.DataDictionary
 
                 string combinedResult = JsonConvert.SerializeObject(dictionaryResult);
 
-                return await Task.FromResult(dataDictionaryJsonResult);
+                return await Task.FromResult(combinedResult);
             }
             catch(Exception e)
             {
@@ -53,10 +53,13 @@ namespace Elsa.Server.Features.Activities.DataDictionary
             foreach (var dataDictionary in group)
             {
                 var groupName = dataDictionary.Name.Replace(" ", "_");
-                stringBuilder.Append("declare const " + group + "_" + dataDictionary.Name + ": number;");
-                stringBuilder.Append("\\n");
-                //stringBuilder.Append(group + "_" +
-                //                     dataDictionary.Name + ": '" + dataDictionary.Id + "',");
+                foreach(QuestionDataDictionary? dictionaryItem in dataDictionary.QuestionDataDictionaryList!)
+                {
+                    stringBuilder.Append("declare const " + groupName + "_" + dictionaryItem.Name + ": number;");
+                    stringBuilder.Append("\n");
+                    //stringBuilder.Append(group + "_" +
+                    //                     dataDictionary.Name + ": '" + dataDictionary.Id + "',");
+                }
             }
 
             //stringBuilder.Remove(stringBuilder.Length - 1, 1);
