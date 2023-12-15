@@ -1,5 +1,7 @@
 ﻿
 
+using He.PipelineAssessment.Data.ExtendedSinglePipeline;
+
 namespace He.PipelineAssessment.Data.VoaLandValues.Models.Office
 {
     public class OfficeLandValues
