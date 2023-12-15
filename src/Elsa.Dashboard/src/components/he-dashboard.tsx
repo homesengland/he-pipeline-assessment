@@ -21,6 +21,8 @@ export class HeDashboard {
   async componentWillLoad() {
     this.setStoreConfig();
     this.setDataDictionary();
+    //this.setDictionaryLib();
+    console.log("Intellisense", this.config.dataDictionaryIntellisense);
     this.intellisenseGatherer = new IntellisenseGatherer();
   }
 
@@ -74,10 +76,26 @@ export class HeDashboard {
         state.useRefreshToken = this.config.useRefreshTokens;
         state.useRefreshTokenFallback = this.config.useRefreshTokensFallback;
         state.monacoLibPath = this.config.monacoLibPath;
+        state.dataDictionaryIntellisense = this.config.dataDictionaryIntellisense;
       }
     }
     this.storeConfig = null;
   }
+
+  //setDictionaryLib() {
+  //  console.log("Data dictionary group", this.dataDictionaryGroup);
+  //  console.log("Dictionary", this.dictionary);
+  //  const dictionaryLib: Array<string> = [];
+  //  this.dictionary.forEach((group) => this.appendGroupData(group, dictionaryLib));
+  //}
+
+  //appendGroupData(dictionaryGroup: DataDictionaryGroup, dictionaryLib: Array<string>) {
+  //  const groupName = "declare const " + dictionaryGroup.Name.replace(" ", "_");
+  //  for (let i = 0; i < dictionaryGroup.QuestionDataDictionaryList.length; i++) {
+  //    const dictName = groupName + "_" + dictionaryGroup.QuestionDataDictionaryList[i].Name;
+  //    dictionaryLib.push(dictName).push("/n");
+  //  }
+  //}
 
   render() {
 

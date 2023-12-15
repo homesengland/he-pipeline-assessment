@@ -61,6 +61,7 @@ export namespace Components {
     }
     interface HeMonaco {
         "addJavaScriptLib": (libSource: string, libUri: string) => Promise<void>;
+        "componentWillLoad": () => Promise<void>;
         "editorHeight": string;
         "language": string;
         "monacoLibPath": string;

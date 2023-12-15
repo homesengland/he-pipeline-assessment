@@ -71,6 +71,23 @@ export class HeMonaco {
     }
   }
 
+  @Method()
+  //async addDataDictionary() {
+  //  const monaco = this.monaco;
+  //  const libUri = "ts:filename/datadictionary.d.ts"
+  //  const libSource = [];
+  //  state.dictionaryGroups.forEach((group) => libSource.join(
+  //    `declare const` + group.Name.Replace(" ", "_")+`_+",
+  //    "    /**",
+  //    "     * Returns the next fact",
+  //    "     */",
+  //    "    static next():string",
+  //    "}`)
+  //  .join("\n"); )
+
+  //  monaco.languages.typescript.javascriptDefaults.setExtraLibs(libSource, libUri);
+  //}
+
   async componentWillLoad() {
     const monacoLibPath = this.monacoLibPath ?? state.monacoLibPath;
     this.monaco = await initializeMonacoWorker(monacoLibPath);
