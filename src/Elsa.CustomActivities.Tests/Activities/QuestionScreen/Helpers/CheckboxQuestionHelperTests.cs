@@ -3,8 +3,6 @@ using Elsa.CustomActivities.Activities.QuestionScreen.Helpers;
 using Elsa.CustomInfrastructure.Data.Repository;
 using Elsa.CustomModels;
 using Elsa.CustomWorkflow.Sdk;
-using Elsa.Models;
-using Elsa.Services;
 using Elsa.Services.Models;
 using He.PipelineAssessment.Tests.Common;
 using Moq;
