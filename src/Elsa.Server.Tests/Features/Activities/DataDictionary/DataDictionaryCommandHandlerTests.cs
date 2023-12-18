@@ -1,18 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using AutoFixture.Xunit2;
+﻿using AutoFixture.Xunit2;
 using Elsa.CustomActivities.Describers;
 using Elsa.CustomInfrastructure.Data.Repository;
 using Elsa.CustomModels;
-using Elsa.Server.Features.Activities.CustomActivityProperties;
 using Elsa.Server.Features.Activities.DataDictionary;
 using He.PipelineAssessment.Tests.Common;
 using Moq;
 using Newtonsoft.Json;
-using Newtonsoft.Json.Serialization;
 using Xunit;
 
 namespace Elsa.Server.Tests.Features.Activities.DataDictionary
