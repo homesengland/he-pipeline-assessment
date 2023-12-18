@@ -24,7 +24,7 @@ namespace He.PipelineAssessment.Data.RegionalFigs
             string whereClause = $"region='{region}'";
             if(appraisalYear != null)
             {
-                whereClause += "AND appraisal_year='{appraisalYear}'";
+                whereClause += $"AND appraisal_year='{appraisalYear}'";
             }
             string outFields = "*";
 
