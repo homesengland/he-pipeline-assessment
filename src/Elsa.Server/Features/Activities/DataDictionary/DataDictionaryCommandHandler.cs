@@ -2,6 +2,7 @@
 using Elsa.CustomActivities.Describers;
 using Elsa.CustomInfrastructure.Data.Repository;
 using Elsa.CustomModels;
+using Elsa.CustomWorkflow.Sdk;
 using MediatR;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Serialization;
@@ -25,8 +26,9 @@ namespace Elsa.Server.Features.Activities.DataDictionary
             try
             {
                 var dataDictionaryResult = (await _elsaCustomRepository.GetQuestionDataDictionaryGroupsAsync(cancellationToken)).ToList();
+                var dataDictionaryList = await _elsaCustomRepository.GetQuestionDataDictionaryListAsync(cancellationToken);
                 string dataDictionaryJsonResult =  JsonConvert.SerializeObject(dataDictionaryResult);
-                string intellisenseLibrary = ToIntellisenseLibrary(dataDictionaryResult);
+                string intellisenseLibrary = ToIntellisenseLibrary(dataDictionaryList);
                 Dictionary<string, string> dictionaryResult = new Dictionary<string, string>()
                 {
                     {"Dictionary", dataDictionaryJsonResult },
@@ -44,22 +46,18 @@ namespace Elsa.Server.Features.Activities.DataDictionary
             }
         }
 
-        private string ToIntellisenseLibrary(List<QuestionDataDictionaryGroup> group)
+        private string ToIntellisenseLibrary(List<QuestionDataDictionary> dictionaryItems)
         {
             var stringBuilder = new StringBuilder();
 
             //stringBuilder.Append("declare const DataDictionary = {");
 
-            foreach (var dataDictionary in group)
+            foreach (var dataDictionary in dictionaryItems)
             {
-                var groupName = dataDictionary.Name.Replace(" ", "_");
-                foreach(QuestionDataDictionary? dictionaryItem in dataDictionary.QuestionDataDictionaryList!)
-                {
-                    stringBuilder.Append("declare const " + groupName + "_" + dictionaryItem.Name + ": number;");
-                    stringBuilder.Append("\n");
-                    //stringBuilder.Append(group + "_" +
-                    //                     dataDictionary.Name + ": '" + dataDictionary.Id + "',");
-                }
+                stringBuilder.Append(DataDictionaryToJavascriptHelper.JintDeclaration(dataDictionary.Group.Name, dataDictionary.Name, dataDictionary.Id));
+                stringBuilder.Append("\n");
+                //stringBuilder.Append(group + "_" +
+                //                     dataDictionary.Name + ": '" + dataDictionary.Id + "',");
             }
 
             //stringBuilder.Remove(stringBuilder.Length - 1, 1);
