@@ -95,7 +95,7 @@ namespace Elsa.CustomActivities.Activities.QuestionScreen.Helpers
                         activityExecutionContext.JournalData.Add(
                             $"checkboxQuestionAnswerEquals Answer  not Found for choices {choiceIdsString}. (random id - {randomId})",
                             $"CorrelationID: {activityExecutionContext.CorrelationId}, ChoicesToCheck: {choiceIdsToCheck}, DBQuestionID: {question.Id}, DBInstanceID: {question.WorkflowInstanceId},  Choice: {item}");
-                        result = false;
+                        return false;
                     }
                 }
             }
