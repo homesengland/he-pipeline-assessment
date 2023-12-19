@@ -23,10 +23,10 @@ namespace Elsa.CustomActivities.Activities.QuestionScreen.Helpers
             _dataDictionaryItems = null;
         }
 
-        public async Task Handle(EvaluatingJavaScriptExpression notification, CancellationToken cancellationToken)
+        public Task Handle(EvaluatingJavaScriptExpression notification, CancellationToken cancellationToken)
         {
             var engine = notification.Engine;
-            _dataDictionaryItems = await _elsaCustomRepository.GetQuestionDataDictionaryListAsync(cancellationToken);
+            _dataDictionaryItems = _elsaCustomRepository.GetQuestionDataDictionaryListAsync(cancellationToken).Result;
             if(_dataDictionaryItems != null)
             {
                 foreach (var dataDictionary in _dataDictionaryItems)
@@ -36,6 +36,7 @@ namespace Elsa.CustomActivities.Activities.QuestionScreen.Helpers
                     engine.SetValue(name, dataDictionary.Id);
                 }
             }
+            return Task.CompletedTask;
             //engine.SetValue("DataDictionary", _dataDictionaryItems);
         }
 
