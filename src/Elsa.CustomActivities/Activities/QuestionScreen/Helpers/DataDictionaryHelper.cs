@@ -1,43 +1,64 @@
-﻿using System.Text;
-using System.Text.RegularExpressions;
-using Elsa.CustomInfrastructure.Data.Repository;
+﻿using Elsa.CustomInfrastructure.Data.Repository;
 using Elsa.CustomModels;
 using Elsa.CustomWorkflow.Sdk;
-using Elsa.Scripting.JavaScript.Events;
 using Elsa.Scripting.JavaScript.Messages;
-using Elsa.Services.Models;
-using Jint.Native;
-using Jint.Runtime;
 using MediatR;
+using Newtonsoft.Json;
+using StackExchange.Redis;
 
 namespace Elsa.CustomActivities.Activities.QuestionScreen.Helpers
 {
     public class DataDictionaryHelper : INotificationHandler<EvaluatingJavaScriptExpression>/*, INotificationHandler<RenderingTypeScriptDefinitions>*/
     {
         private readonly IElsaCustomRepository _elsaCustomRepository;
-        private List<QuestionDataDictionary>? _dataDictionaryItems;
+        private readonly TimeSpan _expiryTime = TimeSpan.FromHours(1);
+        private readonly IDatabase _cache;
+        private readonly string _cacheKey = "DataDictionary";
 
-        public DataDictionaryHelper(IElsaCustomRepository elsaCustomRepository)
+        public DataDictionaryHelper(
+            IElsaCustomRepository elsaCustomRepository, 
+            IConnectionMultiplexer cache)
         {
             _elsaCustomRepository = elsaCustomRepository;
-            _dataDictionaryItems = null;
+            _cache = cache.GetDatabase();
         }
 
-        public Task Handle(EvaluatingJavaScriptExpression notification, CancellationToken cancellationToken)
+        public async Task Handle(EvaluatingJavaScriptExpression notification, CancellationToken cancellationToken)
         {
-            var engine = notification.Engine;
-            _dataDictionaryItems = _elsaCustomRepository.GetQuestionDataDictionaryListAsync(cancellationToken).Result;
-            if(_dataDictionaryItems != null)
+            var dataDictionaryInCache = await _cache.StringGetAsync(_cacheKey);
+            if (string.IsNullOrEmpty(dataDictionaryInCache))
             {
-                foreach (var dataDictionary in _dataDictionaryItems)
+                var dbDataDictionaryItems = await _elsaCustomRepository.GetQuestionDataDictionaryListAsync(cancellationToken);
+                var cacheItems = dbDataDictionaryItems.Select(x => new DataDictionaryCacheItem
                 {
-                    string name = DataDictionaryToJavascriptHelper.ToJintKey(dataDictionary.Group.Name, dataDictionary.Name);
+                    Id = x.Id,
+                    Name = x.Name,
+                    Group = x.Group.Name
+                });
+                string json = JsonConvert.SerializeObject(cacheItems);
+                await _cache.StringSetAsync(_cacheKey, json, _expiryTime);
+                dataDictionaryInCache = await _cache.StringGetAsync(_cacheKey);
+            }
+            var dataDictionaryItems = JsonConvert.DeserializeObject<List<DataDictionaryCacheItem>>(dataDictionaryInCache);
+            if (dataDictionaryItems != null)
+            {
+                var engine = notification.Engine;
+                foreach (var dataDictionary in dataDictionaryItems)
+                {
+                    string name = DataDictionaryToJavascriptHelper.ToJintKey(dataDictionary.Group, dataDictionary.Name);
 
                     engine.SetValue(name, dataDictionary.Id);
                 }
             }
-            return Task.CompletedTask;
+
             //engine.SetValue("DataDictionary", _dataDictionaryItems);
+        }
+
+        private class DataDictionaryCacheItem
+        {
+            public int Id{ get; set; }
+            public string Name{ get; set; }
+            public string Group{ get; set; }
         }
 
         //public async Task Handle(RenderingTypeScriptDefinitions notification, CancellationToken cancellationToken)
