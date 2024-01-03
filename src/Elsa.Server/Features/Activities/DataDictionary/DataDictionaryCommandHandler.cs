@@ -1,13 +1,9 @@
-﻿using Elsa.CustomActivities.Activities.QuestionScreen;
-using Elsa.CustomActivities.Describers;
-using Elsa.CustomInfrastructure.Data.Repository;
+﻿using Elsa.CustomInfrastructure.Data.Repository;
 using Elsa.CustomModels;
 using Elsa.CustomWorkflow.Sdk;
 using MediatR;
 using Newtonsoft.Json;
-using Newtonsoft.Json.Serialization;
 using System.Text;
-using System.Threading;
 
 namespace Elsa.Server.Features.Activities.DataDictionary
 {
@@ -50,19 +46,11 @@ namespace Elsa.Server.Features.Activities.DataDictionary
         {
             var stringBuilder = new StringBuilder();
 
-            //stringBuilder.Append("declare const DataDictionary = {");
-
             foreach (var dataDictionary in dictionaryItems)
             {
                 stringBuilder.Append(DataDictionaryToJavascriptHelper.JintDeclaration(dataDictionary.Group.Name, dataDictionary.Name, dataDictionary.Id));
                 stringBuilder.Append("\n");
-                //stringBuilder.Append(group + "_" +
-                //                     dataDictionary.Name + ": '" + dataDictionary.Id + "',");
             }
-
-            //stringBuilder.Remove(stringBuilder.Length - 1, 1);
-            //stringBuilder.Append("};");
-
             var dataDictionaryObject = stringBuilder.ToString();
             return dataDictionaryObject;
         }

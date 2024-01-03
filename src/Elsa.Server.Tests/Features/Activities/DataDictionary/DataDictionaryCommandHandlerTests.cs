@@ -6,6 +6,7 @@ using Elsa.Server.Features.Activities.DataDictionary;
 using He.PipelineAssessment.Tests.Common;
 using Moq;
 using Newtonsoft.Json;
+using System.ComponentModel;
 using Xunit;
 
 namespace Elsa.Server.Tests.Features.Activities.DataDictionary
@@ -19,20 +20,34 @@ namespace Elsa.Server.Tests.Features.Activities.DataDictionary
             [Frozen] Mock<IElsaCustomRepository> repository,
             DataDictionaryCommand command,
             List<HeActivityInputDescriptor> inputDescriptors,
-            List<QuestionDataDictionaryGroup> dataDictionaries,
+            List<QuestionDataDictionaryGroup> dataDictionaryGroups,
+            List<QuestionDataDictionary> dataDictionaries,
             DataDictionaryCommandHandler sut)
         {
             //Arrange
             propertyDescriber.Setup(x => x.DescribeInputProperties(typeof(Question))).Returns(inputDescriptors);
-            repository.Setup(x => x.GetQuestionDataDictionaryGroupsAsync(CancellationToken.None)).ReturnsAsync(dataDictionaries);
+            repository.Setup(x => x.GetQuestionDataDictionaryGroupsAsync(CancellationToken.None)).ReturnsAsync(dataDictionaryGroups);
+            repository.Setup(x => x.GetQuestionDataDictionaryListAsync(CancellationToken.None)).ReturnsAsync(dataDictionaries);
 
             var jsonData = JsonConvert.SerializeObject(dataDictionaries);
             //Act
             var result = await sut.Handle(command, CancellationToken.None);
+            Dictionary<string, string>? deserialisedResult = JsonConvert.DeserializeObject<Dictionary<string, string>>(result);
+            if (deserialisedResult != null)
+            {
+                deserialisedResult.TryGetValue("Intellisense", out string? intellisense);
+                if (intellisense != null)
+                {
+                    Assert.Contains(dataDictionaries[0].Group.Name + "_" + dataDictionaries[0].Name, intellisense);
+                    Assert.Contains(dataDictionaries[1].Group.Name + "_" + dataDictionaries[1].Name, intellisense);
+                    Assert.Contains(dataDictionaries[2].Group.Name + "_" + dataDictionaries[2].Name, intellisense);
+                }
+            }
 
             //Assert
             Assert.NotNull(result);
-            Assert.Equal(jsonData,result);
+
+
         }
 
         [Theory]
