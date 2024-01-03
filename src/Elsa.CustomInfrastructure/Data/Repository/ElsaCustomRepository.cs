@@ -139,7 +139,7 @@ namespace Elsa.CustomInfrastructure.Data.Repository
 
         public async Task<List<QuestionDataDictionary>> GetQuestionDataDictionaryListAsync(CancellationToken cancellationToken = default)
         {
-            var result = await _dbContext.Set<QuestionDataDictionary>().Include(x => x.Group).ToListAsync(cancellationToken);
+            var result = await _dbContext.Set<QuestionDataDictionary>().Include(x => x.Group).Where(x=> (!x.IsArchived.HasValue || !x.IsArchived.Value)).ToListAsync(cancellationToken);
             return result;
         }
 
@@ -221,6 +221,42 @@ namespace Elsa.CustomInfrastructure.Data.Repository
             return await _dbContext.Set<CustomActivityNavigation>()
                 .OrderByDescending(x=>x.Id)
                 .FirstOrDefaultAsync(x=>x.WorkflowInstanceId == workflowInstanceId, cancellationToken);
+        }
+
+        public async Task ArchiveDataDictionaryItem(int id, CancellationToken cancellationToken)
+        {
+            var items = _dbContext.Set<QuestionDataDictionary>().Where(x => x.Id == id);
+            foreach (var item in items)
+            {
+                item.IsArchived = true;
+            }
+            _dbContext.UpdateRange(items);
+            await SaveChanges(cancellationToken);
+        }
+
+        public async Task CreateDataDictionaryGroup(QuestionDataDictionaryGroup group, CancellationToken cancellationToken = default)
+        {
+            await _dbContext.AddAsync(group, cancellationToken);
+            await SaveChanges(cancellationToken);
+        }
+
+        public async Task CreateDataDictionaryItem(QuestionDataDictionary item, CancellationToken cancellationToken)
+        {
+            await _dbContext.AddAsync(item, cancellationToken);
+            await SaveChanges(cancellationToken);
+        }
+
+        public async Task UpdateDataDictionaryGroup(QuestionDataDictionaryGroup group, CancellationToken cancellationToken)
+        {
+            _dbContext.Set<QuestionDataDictionaryGroup>().Update(group);
+            await SaveChanges(cancellationToken);
+        }
+
+
+        public async Task UpdateDataDictionaryItem(QuestionDataDictionary item, CancellationToken cancellationToken)
+        {
+            _dbContext.Set<QuestionDataDictionary>().Update(item);
+            await SaveChanges(cancellationToken);
         }
     }
 }

@@ -42,5 +42,10 @@ namespace Elsa.CustomInfrastructure.Data.Repository
         Task SetWorkflowInstanceResult(string workflowInstanceId, string result, CancellationToken cancellationToken = default);
         Task SetWorkflowInstanceScore(string workflowInstanceId, string score, CancellationToken cancellationToken = default);
         Task ArchiveQuestions(string[] requestWorkflowInstanceIds, CancellationToken cancellationToken = default);
+        Task CreateDataDictionaryGroup(QuestionDataDictionaryGroup group, CancellationToken cancellationToken);
+        Task CreateDataDictionaryItem(QuestionDataDictionary item, CancellationToken cancellationToken);
+        Task UpdateDataDictionaryGroup(QuestionDataDictionaryGroup group, CancellationToken cancellationToken);
+        Task UpdateDataDictionaryItem(QuestionDataDictionary item, CancellationToken cancellationToken);
+        Task ArchiveDataDictionaryItem(int id, CancellationToken cancellationToken);
     }
 }
