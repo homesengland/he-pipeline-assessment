@@ -26,7 +26,14 @@ namespace Elsa.Dashboard
       _hostEnvironment = environment;
     }
 
-    [Route("{**catchall}")]
+    //[Route("DataDictionary")]
+    //[Authorize(Policy = Elsa.Dashboard.Authorization.Constants.AuthorizationPolicies.AssignmentToElsaDashboardAdminRoleRequired)]
+    //public IActionResult DataDictionary()
+    //{
+    //  return View("DataDictionary");
+    //}
+
+      [Route("{**catchall}")]
     [Authorize(Policy = Elsa.Dashboard.Authorization.Constants.AuthorizationPolicies.AssignmentToElsaDashboardAdminRoleRequired)]
     public async Task<IActionResult> CatchAll()
     {

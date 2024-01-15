@@ -39,6 +39,7 @@ namespace Elsa.Dashboard
       var styleSrcElem = $"style-src-elem 'self' 'unsafe-inline';";
       var styleSrc = $"style-src 'self' 'unsafe-inline';";
       var imgSrc = $"img-src 'self' data: https://unpkg.com/benteststencil@0.0.16/;";
+
       var fontSrc = $"font-src 'self';";
       var frameSrc = $"frame-src 'self' {oAuthToken} {axios} {oAuthToken2};";
 

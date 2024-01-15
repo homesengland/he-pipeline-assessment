@@ -26,7 +26,7 @@ namespace Elsa.Server.Features.Admin.DataDictionary.ArchiveDataDictionaryItem
             var result = new OperationResult<ArchiveDataDictionaryItemCommandResponse>();
             try
             {
-                await _elsaCustomRepository.ArchiveDataDictionaryItem(request.id, cancellationToken);
+                await _elsaCustomRepository.ArchiveDataDictionaryItem(request.Id, cancellationToken);
             }
             catch (Exception e)
             {

@@ -6,6 +6,6 @@ namespace Elsa.Server.Features.Admin.DataDictionary.UpdateDataDictionaryItem
 {
     public class UpdateDataDictionaryItemCommand : IRequest<OperationResult<UpdateDataDictionaryItemCommandResponse>>
     {
-        public QuestionDataDictionary? item { get; set; }
+        public QuestionDataDictionary? Item { get; set; }
     }
 }

@@ -13,11 +13,14 @@ const { state, onChange } = createStore({
   javaScriptTypeDefinitions:'',
   javaScriptTypeDefinitionsFetchStatus: StoreStatus.Empty,
   monacoLibPath: '',
+  basePath: ''
 });
 
 onChange("dictionaryGroups", value => { state.dictionaryGroups = value });
 
 onChange("serverUrl", value => { state.serverUrl = value });
+
+onChange("basePath", value => { state.basePath = value });
 
 onChange("workflowDefinitionId", value => { state.workflowDefinitionId = value });
 

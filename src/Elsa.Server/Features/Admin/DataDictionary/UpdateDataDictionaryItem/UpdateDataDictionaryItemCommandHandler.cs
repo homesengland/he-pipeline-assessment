@@ -26,9 +26,9 @@ namespace Elsa.Server.Features.Admin.DataDictionary.UpdateDataDictionaryItem
             var result = new OperationResult<UpdateDataDictionaryItemCommandResponse>();
             try
             {
-                if (request.item != null)
+                if (request.Item != null)
                 {
-                    await _elsaCustomRepository.UpdateDataDictionaryItem(request.item, cancellationToken);
+                    await _elsaCustomRepository.UpdateDataDictionaryItem(request.Item, cancellationToken);
                 }
                 else
                 {

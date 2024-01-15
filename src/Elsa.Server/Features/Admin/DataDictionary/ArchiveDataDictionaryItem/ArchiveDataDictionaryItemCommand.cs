@@ -6,7 +6,7 @@ namespace Elsa.Server.Features.Admin.DataDictionary.ArchiveDataDictionaryItem
 {
     public class ArchiveDataDictionaryItemCommand : IRequest<OperationResult<ArchiveDataDictionaryItemCommandResponse>>
     {
-        public int id { get; set; }
+        public int Id { get; set; }
        
     }
 }

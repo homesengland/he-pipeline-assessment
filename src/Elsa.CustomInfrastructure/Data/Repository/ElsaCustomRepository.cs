@@ -145,7 +145,7 @@ namespace Elsa.CustomInfrastructure.Data.Repository
 
         public async Task<List<QuestionDataDictionaryGroup>> GetQuestionDataDictionaryGroupsAsync(CancellationToken cancellationToken = default)
         {
-            var result = await _dbContext.Set<QuestionDataDictionaryGroup>().Include(x => x.QuestionDataDictionaryList).ToListAsync(cancellationToken);
+            var result = await _dbContext.Set<QuestionDataDictionaryGroup>().Include(x => x.QuestionDataDictionaryList.Where(x=> (!x.IsArchived.HasValue || !x.IsArchived.Value))).ToListAsync(cancellationToken);
             return result;
 
         }
