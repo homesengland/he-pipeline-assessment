@@ -142,6 +142,7 @@ namespace Elsa.Server.Tests.Features.Workflow
            LoadQuestionScreenRequest request,
            Mock<IMediator> mediatorMock)
         {
+
             var response = SampleResponse<LoadQuestionScreenResponse>();
             var startWorkflowOperationResult = new OperationResult<LoadQuestionScreenResponse>
             {

@@ -26,7 +26,7 @@ namespace Elsa.Server.Features.Admin.DataDictionary.UpdateDataDictionaryGroup
             var result = new OperationResult<UpdateDataDictionaryGroupCommandResponse>();
             try
             {
-                if (request.group != null)
+                if (request.group != null && !string.IsNullOrEmpty(request.group.Name))
                 {
                     await _elsaCustomRepository.UpdateDataDictionaryGroup(request.group, cancellationToken);
                 }

@@ -26,13 +26,13 @@ namespace Elsa.Server.Features.Admin.DataDictionary.UpdateDataDictionaryItem
             var result = new OperationResult<UpdateDataDictionaryItemCommandResponse>();
             try
             {
-                if (request.Item != null)
+                if (request.Item != null && !string.IsNullOrEmpty(request.Item.Name) && !string.IsNullOrEmpty(request.Item.LegacyName))
                 {
                     await _elsaCustomRepository.UpdateDataDictionaryItem(request.Item, cancellationToken);
                 }
                 else
                 {
-                    throw new Exception("Data dictionary group could not be updated, becuase name was invalid.");
+                    throw new Exception("Data dictionary group could not be updated, becuase name or legacy name were invalid.");
                 }
             }
             catch (Exception e)

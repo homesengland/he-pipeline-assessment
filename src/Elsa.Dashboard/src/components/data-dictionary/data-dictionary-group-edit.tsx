@@ -158,7 +158,7 @@ export class DataDictionaryGroupScreen {
                   <td class="elsa-pr-6">
                     <elsa-context-menu history={this.history} menuItems={[
                       { text: 'Edit', anchorUrl: editUrl, icon: editIcon },
-                      { text: 'Delete', clickHandler: () => this.archive(id), icon: deleteIcon }
+                      { text: 'Archive', clickHandler: () => this.archive(id), icon: deleteIcon }
                     ]} />
                   </td>
                 </tr>
