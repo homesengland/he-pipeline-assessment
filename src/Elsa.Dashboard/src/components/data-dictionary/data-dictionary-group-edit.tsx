@@ -16,21 +16,23 @@ export class DataDictionaryGroupScreen {
   @Prop() basePath: string;
   @Prop() match: MatchResults;
   @Prop() history: RouterHistory;
+  @Prop() isEditable: boolean;
   private auth0: Auth0Client;
   private options: Auth0ClientOptions;
   private serverUrl: string = null;
   id?: string;
 
+
   constructor() {
     this.options = GetAuth0Options();
     this.serverUrl = state.serverUrl;
+    this.isEditable = false;
   }
 
   async loadDataDictionaryGroups(id: any) {
     await this.initialize();
     const elsaClient = await CreateClient(this.auth0, this.serverUrl);
     const response = await (await elsaClient.get<Array<DataDictionaryGroup>>(`activities/dictionary/`, { params: { includeArchived: 'true' } }));
-    console.log(response.data.find(x => x.Id == id));
     this.group = response.data.find(x => x.Id == id);
     this.dataDictionaryItems = this.group.QuestionDataDictionaryList;
   }
@@ -85,7 +87,12 @@ export class DataDictionaryGroupScreen {
   }
 
   handleChange(event) {
-    this.group.Name = event.target.value;
+    this.group.Name = event.target.value.replaceAll(" ", "");
+  }
+
+  onCheckChanged(event) {
+    const checkbox = (event.target as HTMLInputElement);
+    this.isEditable = checkbox.checked;
   }
 
   render() {
@@ -102,11 +109,24 @@ export class DataDictionaryGroupScreen {
           </div>
         </div>
         <form onSubmit={e => this.onSubmit(e)} class='activity-editor-form'>
-          <div class="elsa-border-b elsa-border-gray-200 elsa-px-4 elsa-py-4 sm:elsa-flex sm:elsa-items-center sm:elsa-justify-between sm:elsa-px-6 lg:elsa-px-8 elsa-bg-white">
-            <label htmlfor="GroupName" class="elsa-block elsa-text-sm elsa-font-medium elsa-text-gray-700">Name</label>
+          <div class="elsa-border-b elsa-border-gray-200 elsa-px-4 elsa-py-4 sm:elsa-block sm:elsa-items-center sm:elsa-justify-between sm:elsa-px-6 lg:elsa-px-8 elsa-bg-white">
+            <div >
+              <label htmlfor="ItemName" class="elsa-block elsa-text-sm elsa-font-medium elsa-text-gray-700">Name</label>
+            </div>
+            <div >
+              <label htmlfor="ItemName" class="elsa-block elsa-text-sm elsa-text-xs elsa-text-gray-500">* Names must be consistent between setup and production environments</label>
+            </div>
           </div>
           <div class="elsa-border-b elsa-border-gray-200 elsa-px-4 elsa-py-4 sm:elsa-flex sm:elsa-items-center sm:elsa-justify-between sm:elsa-px-6 lg:elsa-px-8 elsa-bg-white">
-            <input type="text" value={this.group.Name} onInput={(event) => this.handleChange(event)} class="disabled:elsa-opacity-50 disabled:elsa-cursor-not-allowed focus:elsa-ring-blue-500 focus:elsa-border-blue-500 elsa-block elsa-w-full elsa-min-w-0 elsa-rounded-md sm:elsa-text-sm elsa-border-gray-300"></input>
+            <input disabled={!this.isEditable} type="text" value={this.group.Name} onInput={(event) => this.handleChange(event)} class="disabled:elsa-opacity-50 disabled:elsa-cursor-not-allowed focus:elsa-ring-blue-500 focus:elsa-border-blue-500 elsa-block elsa-w-full elsa-min-w-0 elsa-rounded-md sm:elsa-text-sm elsa-border-gray-300"></input>
+          </div>
+          <div class="elsa-border-b elsa-border-gray-200 elsa-px-4 elsa-py-4 sm:elsa-flex sm:elsa-items-center sm:elsa-justify-left sm:elsa-px-6 lg:elsa-px-8 elsa-bg-white">
+          <input  id="isEditable" name="isEditable" type="checkbox" checked={this.isEditable}
+            onChange={e => this.onCheckChanged(e)}
+              class="focus:elsa-ring-blue-500 elsa-h-4 elsa-w-4 elsa-text-blue-600 elsa-border-gray-300 elsa-rounded" />
+            <div class="elsa-ml-3 elsa-text-sm">
+              <label htmlFor="isEditable" class="elsa-font-medium elsa-font-bold elsa-text-gray-700">{"WARNING: Do not change the name of the Data Dictionary Group unless it was input in error.  Doing so may cause errors when running workflows."}</label>
+            </div>
           </div>
           <div class="elsa-border-b elsa-border-gray-200 elsa-px-4 elsa-py-4 sm:elsa-flex sm:elsa-items-center  sm:elsa-px-6 lg:elsa-px-8 elsa-bg-white">
             <button type="submit" aria-has-popup="true" class=" elsa-order-0 elsa-inline-flex elsa-items-center elsa-px-4 elsa-py-2 elsa-border elsa-border-transparent elsa-shadow-sm elsa-text-sm elsa-font-medium elsa-rounded-md elsa-text-white elsa-bg-blue-600 hover:elsa-bg-blue-700 focus:elsa-outline-none focus:elsa-ring-2 focus:elsa-ring-offset-2 focus:elsa-ring-blue-500 sm:elsa-order-1 sm:elsa-ml-3">

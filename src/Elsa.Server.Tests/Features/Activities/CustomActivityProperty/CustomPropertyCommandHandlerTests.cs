@@ -26,7 +26,7 @@ public class CustomPropertyCommandHandlerTests
     {
         //Arrange
         propertyDescriber.Setup(x => x.DescribeInputProperties(typeof(Question))).Returns(inputDescriptors);
-        repository.Setup(x => x.GetQuestionDataDictionaryGroupsAsync(CancellationToken.None)).ReturnsAsync(dataDictionaries);
+        repository.Setup(x => x.GetQuestionDataDictionaryGroupsAsync(false, CancellationToken.None)).ReturnsAsync(dataDictionaries);
 
         //Act
         var result = await sut.Handle(loadCustomProperties, CancellationToken.None);

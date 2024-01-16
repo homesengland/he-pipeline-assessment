@@ -82,7 +82,7 @@ namespace Elsa.Server.Tests.Features.Activities
             ActivitiesController controller = new ActivitiesController(mediatorMock.Object);
 
             //Act
-            var result = await controller.GetDataDictionary();
+            var result = await controller.GetDataDictionary(false);
 
             //Assert
             Assert.NotNull(result);
@@ -103,7 +103,7 @@ namespace Elsa.Server.Tests.Features.Activities
             ActivitiesController controller = new ActivitiesController(mediatorMock.Object);
 
             //Act
-            var result = await controller.GetDataDictionary();
+            var result = await controller.GetDataDictionary(false);
 
             //Assert
             Assert.NotNull(result);

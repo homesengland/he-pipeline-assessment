@@ -5,6 +5,7 @@ namespace Elsa.CustomModels
     public class QuestionDataDictionary : AuditableEntity
     {
         public int Id { get; set; }
+
         public int QuestionDataDictionaryGroupId { get; set; }
         [JsonIgnore]
         public QuestionDataDictionaryGroup Group { get; set; } = null!;

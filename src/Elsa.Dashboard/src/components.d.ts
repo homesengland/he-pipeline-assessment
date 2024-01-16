@@ -18,6 +18,7 @@ export namespace Components {
     interface DataDictionaryGroupEdit {
         "basePath": string;
         "history": RouterHistory;
+        "isEditable": boolean;
         "match": MatchResults;
     }
     interface DataDictionaryGroups {
@@ -28,6 +29,7 @@ export namespace Components {
     }
     interface DataDictionaryItemEdit {
         "history": RouterHistory;
+        "isEditable": boolean;
         "match": MatchResults;
     }
     interface DataDictionaryScreen {
@@ -600,6 +602,7 @@ declare namespace LocalJSX {
     interface DataDictionaryGroupEdit {
         "basePath"?: string;
         "history"?: RouterHistory;
+        "isEditable"?: boolean;
         "match"?: MatchResults;
     }
     interface DataDictionaryGroups {
@@ -610,6 +613,7 @@ declare namespace LocalJSX {
     }
     interface DataDictionaryItemEdit {
         "history"?: RouterHistory;
+        "isEditable"?: boolean;
         "match"?: MatchResults;
     }
     interface DataDictionaryScreen {

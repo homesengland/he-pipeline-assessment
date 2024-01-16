@@ -64,10 +64,10 @@ export class DataDictionaryItemCreate {
   }
 
   handleNameChange(event) {
-    this.itemName = event.target.value;
+    this.itemName = event.target.value.replaceAll(" ", "");
   }
   handleLegacyNameChange(event) {
-    this.itemLegacyName = event.target.value;
+    this.itemLegacyName = event.target.value.replaceAll(" ", "");
   }
 
   render() {
@@ -88,8 +88,13 @@ export class DataDictionaryItemCreate {
         </div>
         <form onSubmit={e => this.onSubmit(e)} class='activity-editor-form'>
           <div>
-            <div class="elsa-border-b elsa-border-gray-200 elsa-px-4 elsa-py-4 sm:elsa-flex sm:elsa-items-center sm:elsa-justify-between sm:elsa-px-6 lg:elsa-px-8 elsa-bg-white">
-              <label htmlfor="ItemName" class="elsa-block elsa-text-sm elsa-font-medium elsa-text-gray-700">Name</label>
+            <div class="elsa-border-b elsa-border-gray-200 elsa-px-4 elsa-py-4 sm:elsa-block sm:elsa-items-center sm:elsa-justify-between sm:elsa-px-6 lg:elsa-px-8 elsa-bg-white">
+              <div >
+                <label htmlfor="ItemName" class="elsa-block elsa-text-sm elsa-font-medium elsa-text-gray-700">Name</label>
+              </div>
+              <div >
+                <label htmlfor="ItemName" class="elsa-block elsa-text-sm elsa-text-xs elsa-text-gray-500">* Names must be consistent between setup and production environments</label>
+              </div>
             </div>
             <div class="elsa-border-b elsa-border-gray-200 elsa-px-4 elsa-py-4 sm:elsa-flex sm:elsa-items-center sm:elsa-justify-between sm:elsa-px-6 lg:elsa-px-8 elsa-bg-white">
               <input type="text" value={this.itemName} onInput={(event) => this.handleNameChange(event)} class="disabled:elsa-opacity-50 disabled:elsa-cursor-not-allowed focus:elsa-ring-blue-500 focus:elsa-border-blue-500 elsa-block elsa-w-full elsa-min-w-0 elsa-rounded-md sm:elsa-text-sm elsa-border-gray-300"></input>

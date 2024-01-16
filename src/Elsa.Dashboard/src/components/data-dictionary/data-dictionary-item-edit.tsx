@@ -14,6 +14,7 @@ export class DataDictionaryItemEdit {
   @State() item: DataDictionary;
   @Prop() history: RouterHistory;
   @Prop() match: MatchResults;
+  @Prop() isEditable: boolean;
   private auth0: Auth0Client;
   private options: Auth0ClientOptions;
   private serverUrl: string = null;
@@ -23,6 +24,8 @@ export class DataDictionaryItemEdit {
   constructor() {
     this.options = GetAuth0Options();
     this.serverUrl = state.serverUrl;
+    this.serverUrl = state.serverUrl;
+    this.isEditable = false;
   }
 
   async componentWillLoad() {
@@ -76,11 +79,16 @@ export class DataDictionaryItemEdit {
   }
 
   handleItemNameChange(event) {
-    this.item.Name = event.target.value;
+    this.item.Name = event.target.value.replaceAll(" ", "");
   }
 
   handleItemLegacyNameChange(event) {
-    this.item.LegacyName = event.target.value;
+    this.item.LegacyName = event.target.value.replaceAll(" ", "");
+  }
+
+  onCheckChanged(event) {
+    const checkbox = (event.target as HTMLInputElement);
+    this.isEditable = checkbox.checked;
   }
 
   render() {
@@ -101,11 +109,24 @@ export class DataDictionaryItemEdit {
         </div>
         <form onSubmit={e => this.onSubmit(e)} class='activity-editor-form'>
           <div>
-            <div class="elsa-border-b elsa-border-gray-200 elsa-px-4 elsa-py-4 sm:elsa-flex sm:elsa-items-center sm:elsa-justify-between sm:elsa-px-6 lg:elsa-px-8 elsa-bg-white">
-              <label htmlfor="ItemName" class="elsa-block elsa-text-sm elsa-font-medium elsa-text-gray-700">Name</label>
+            <div class="elsa-border-b elsa-border-gray-200 elsa-px-4 elsa-py-4 sm:elsa-block sm:elsa-items-center sm:elsa-justify-between sm:elsa-px-6 lg:elsa-px-8 elsa-bg-white">
+              <div >
+                <label htmlfor="ItemName" class="elsa-block elsa-text-sm elsa-font-medium elsa-text-gray-700">Name</label>
+              </div>
+              <div >
+                <label htmlfor="ItemName" class="elsa-block elsa-text-sm elsa-text-xs elsa-text-gray-500">* Names must be consistent between setup and production environments</label>
+              </div>
             </div>
             <div class="elsa-border-b elsa-border-gray-200 elsa-px-4 elsa-py-4 sm:elsa-flex sm:elsa-items-center sm:elsa-justify-between sm:elsa-px-6 lg:elsa-px-8 elsa-bg-white">
-              <input type="text" value={this.item.Name} onInput={(event) => this.handleItemNameChange(event)} class="disabled:elsa-opacity-50 disabled:elsa-cursor-not-allowed focus:elsa-ring-blue-500 focus:elsa-border-blue-500 elsa-block elsa-w-full elsa-min-w-0 elsa-rounded-md sm:elsa-text-sm elsa-border-gray-300"></input>
+              <input disabled={!this.isEditable} type="text" value={this.item.Name} onInput={(event) => this.handleItemNameChange(event)} class="disabled:elsa-opacity-50 disabled:elsa-cursor-not-allowed focus:elsa-ring-blue-500 focus:elsa-border-blue-500 elsa-block elsa-w-full elsa-min-w-0 elsa-rounded-md sm:elsa-text-sm elsa-border-gray-300"></input>
+            </div>
+            <div class="elsa-border-b elsa-border-gray-200 elsa-px-4 elsa-py-4 sm:elsa-flex sm:elsa-items-center sm:elsa-justify-left sm:elsa-px-6 lg:elsa-px-8 elsa-bg-white">
+              <input id="isEditable" name="isEditable" type="checkbox" checked={this.isEditable}
+                onChange={e => this.onCheckChanged(e)}
+                class="focus:elsa-ring-blue-500 elsa-h-4 elsa-w-4 elsa-text-blue-600 elsa-border-gray-300 elsa-rounded" />
+              <div class="elsa-ml-3 elsa-text-sm">
+                <label htmlFor="isEditable" class="elsa-font-medium elsa-font-bold elsa-text-gray-700">{"WARNING: Do not change the name of the Data Dictionary Item unless it was input in error.  Doing so may cause errors when running workflows."}</label>
+              </div>
             </div>
             <div class="elsa-border-b elsa-border-gray-200 elsa-px-4 elsa-py-4 sm:elsa-flex sm:elsa-items-center sm:elsa-justify-between sm:elsa-px-6 lg:elsa-px-8 elsa-bg-white">
               <label htmlfor="ItemLegacyName" class="elsa-block elsa-text-sm elsa-font-medium elsa-text-gray-700">Name</label>
