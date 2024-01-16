@@ -96,4 +96,5 @@ export interface DataDictionary{
   Id: number;
   Name: string;
   LegacyName: string;
+  IsArchived: boolean;
 }

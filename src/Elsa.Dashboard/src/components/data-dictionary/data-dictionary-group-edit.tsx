@@ -29,7 +29,8 @@ export class DataDictionaryGroupScreen {
   async loadDataDictionaryGroups(id: any) {
     await this.initialize();
     const elsaClient = await CreateClient(this.auth0, this.serverUrl);
-    const response = await elsaClient.get<Array<DataDictionaryGroup>>(`activities/dictionary/`);
+    const response = await (await elsaClient.get<Array<DataDictionaryGroup>>(`activities/dictionary/`, { params: { includeArchived: 'true' } }));
+    console.log(response.data.find(x => x.Id == id));
     this.group = response.data.find(x => x.Id == id);
     this.dataDictionaryItems = this.group.QuestionDataDictionaryList;
   }
@@ -119,6 +120,10 @@ export class DataDictionaryGroupScreen {
                 class="elsa-px-6 elsa-py-3 elsa-border-b elsa-border-gray-200 elsa-bg-gray-50 elsa-text-left elsa-text-xs elsa-leading-4 elsa-font-medium elsa-text-gray-500 elsa-text-left elsa-uppercase elsa-tracking-wider"><span
                   class="lg:elsa-pl-2">Data Dictionary Items</span>
               </th>
+              <th
+                class="elsa-px-6 elsa-py-3 elsa-border-b elsa-border-gray-200 elsa-bg-gray-50 elsa-text-left elsa-text-xs elsa-leading-4 elsa-font-medium elsa-text-gray-500 elsa-text-left elsa-uppercase elsa-tracking-wider"><span
+                  class="lg:elsa-pl-2">Is Archived?</span>
+              </th>
             </tr>
           </thead>
           <tbody class="elsa-bg-white elsa-divide-y elsa-divide-gray-100">
@@ -126,6 +131,8 @@ export class DataDictionaryGroupScreen {
               const editUrl = `/data-dictionary/group/${this.id}/item/${dataTag.Id}`;
               const name = dataTag.Name;
               const id = dataTag.Id;
+              const isArchived = dataTag.IsArchive != null ? dataTag.IsArchived.toString(): 'false';
+              console.log(isArchived);
               const editIcon = (
                 <svg class="elsa-h-5 elsa-w-5 elsa-text-gray-500" width="24" height="24" viewBox="0 0 24 24"
                   xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-width="2"
@@ -154,9 +161,14 @@ export class DataDictionaryGroupScreen {
                         <span>{name}</span></stencil-route-link>
                     </div>
                   </td>
-
+                  <td
+                    class="elsa-px-6 elsa-py-3 elsa-whitespace-no-wrap elsa-text-sm elsa-leading-5 elsa-font-medium elsa-text-gray-900">
+                    <div class="elsa-flex elsa-items-center elsa-space-x-3 lg:elsa-pl-2">
+                      {isArchived}
+                      </div>
+                  </td>
                   <td class="elsa-pr-6">
-                    <elsa-context-menu history={this.history} menuItems={[
+                    <elsa-context-menu-new history={this.history} menuItems={[
                       { text: 'Edit', anchorUrl: editUrl, icon: editIcon },
                       { text: 'Archive', clickHandler: () => this.archive(id), icon: deleteIcon }
                     ]} />

@@ -55,7 +55,7 @@ export class DataDictionaryGroups {
       menuItems = [...menuItems, ...[{ text: 'Edit', anchorUrl: editUrl, icon: editIcon }]];
 
       return (<td class="elsa-pr-6">
-        <elsa-context-menu menuItems={menuItems} />
+        <elsa-context-menu-new menuItems={menuItems} />
       </td>)
     }
 

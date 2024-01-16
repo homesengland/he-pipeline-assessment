@@ -13,6 +13,6 @@ namespace Elsa.CustomModels
         public string? Type { get; set; }
         public string? Description { get; set; }
 
-        public bool? IsArchived { get; set; }
+        public bool? IsArchived { get; set; } = false;
     }
 }

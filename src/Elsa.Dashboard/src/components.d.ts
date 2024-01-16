@@ -6,7 +6,7 @@
  */
 import { HTMLStencilElement, JSXBase } from "@stencil/core/internal";
 import { MatchResults, RouterHistory } from "@stencil/router";
-import { ActivityDefinitionProperty, ActivityModel, ActivityPropertyDescriptor, IntellisenseContext } from "./models/elsa-interfaces";
+import { ActivityDefinitionProperty, ActivityModel, ActivityPropertyDescriptor, IntellisenseContext, MenuItem } from "./models/elsa-interfaces";
 import { VNode } from "@stencil/core";
 import { MonacoValueChangedArgs } from "./components/editors/he-monaco/he-monaco";
 import { Map } from "./utils/utils";
@@ -31,6 +31,10 @@ export namespace Components {
         "match": MatchResults;
     }
     interface DataDictionaryScreen {
+    }
+    interface ElsaContextMenuNew {
+        "history": RouterHistory;
+        "menuItems": Array<MenuItem>;
     }
     interface HeCheckListProperty {
         "activityModel": ActivityModel;
@@ -363,6 +367,12 @@ declare global {
         prototype: HTMLDataDictionaryScreenElement;
         new (): HTMLDataDictionaryScreenElement;
     };
+    interface HTMLElsaContextMenuNewElement extends Components.ElsaContextMenuNew, HTMLStencilElement {
+    }
+    var HTMLElsaContextMenuNewElement: {
+        prototype: HTMLElsaContextMenuNewElement;
+        new (): HTMLElsaContextMenuNewElement;
+    };
     interface HTMLHeCheckListPropertyElement extends Components.HeCheckListProperty, HTMLStencilElement {
     }
     var HTMLHeCheckListPropertyElement: {
@@ -550,6 +560,7 @@ declare global {
         "data-dictionary-item-create": HTMLDataDictionaryItemCreateElement;
         "data-dictionary-item-edit": HTMLDataDictionaryItemEditElement;
         "data-dictionary-screen": HTMLDataDictionaryScreenElement;
+        "elsa-context-menu-new": HTMLElsaContextMenuNewElement;
         "he-check-list-property": HTMLHeCheckListPropertyElement;
         "he-checkbox-options-property": HTMLHeCheckboxOptionsPropertyElement;
         "he-checkbox-property": HTMLHeCheckboxPropertyElement;
@@ -602,6 +613,10 @@ declare namespace LocalJSX {
         "match"?: MatchResults;
     }
     interface DataDictionaryScreen {
+    }
+    interface ElsaContextMenuNew {
+        "history"?: RouterHistory;
+        "menuItems"?: Array<MenuItem>;
     }
     interface HeCheckListProperty {
         "activityModel"?: ActivityModel;
@@ -823,6 +838,7 @@ declare namespace LocalJSX {
         "data-dictionary-item-create": DataDictionaryItemCreate;
         "data-dictionary-item-edit": DataDictionaryItemEdit;
         "data-dictionary-screen": DataDictionaryScreen;
+        "elsa-context-menu-new": ElsaContextMenuNew;
         "he-check-list-property": HeCheckListProperty;
         "he-checkbox-options-property": HeCheckboxOptionsProperty;
         "he-checkbox-property": HeCheckboxProperty;
@@ -865,6 +881,7 @@ declare module "@stencil/core" {
             "data-dictionary-item-create": LocalJSX.DataDictionaryItemCreate & JSXBase.HTMLAttributes<HTMLDataDictionaryItemCreateElement>;
             "data-dictionary-item-edit": LocalJSX.DataDictionaryItemEdit & JSXBase.HTMLAttributes<HTMLDataDictionaryItemEditElement>;
             "data-dictionary-screen": LocalJSX.DataDictionaryScreen & JSXBase.HTMLAttributes<HTMLDataDictionaryScreenElement>;
+            "elsa-context-menu-new": LocalJSX.ElsaContextMenuNew & JSXBase.HTMLAttributes<HTMLElsaContextMenuNewElement>;
             "he-check-list-property": LocalJSX.HeCheckListProperty & JSXBase.HTMLAttributes<HTMLHeCheckListPropertyElement>;
             "he-checkbox-options-property": LocalJSX.HeCheckboxOptionsProperty & JSXBase.HTMLAttributes<HTMLHeCheckboxOptionsPropertyElement>;
             "he-checkbox-property": LocalJSX.HeCheckboxProperty & JSXBase.HTMLAttributes<HTMLHeCheckboxPropertyElement>;

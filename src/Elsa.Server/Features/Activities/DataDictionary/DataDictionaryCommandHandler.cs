@@ -21,7 +21,7 @@ namespace Elsa.Server.Features.Activities.DataDictionary
         {
             try
             {
-                var dataDictionaryResult = (await _elsaCustomRepository.GetQuestionDataDictionaryGroupsAsync(cancellationToken)).ToList();
+                var dataDictionaryResult = (await _elsaCustomRepository.GetQuestionDataDictionaryGroupsAsync(request.IncludeArchived, cancellationToken)).ToList();
                 string dataDictionaryJsonResult =  JsonConvert.SerializeObject(dataDictionaryResult);
 
                 return await Task.FromResult(dataDictionaryJsonResult);
