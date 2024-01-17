@@ -9,8 +9,8 @@ namespace Elsa.CustomInfrastructure.Config
         public void Configure(EntityTypeBuilder<QuestionDataDictionaryGroup> builder)
         {
             //builder.ToTable(x => x.IsTemporal());
-            builder.HasKey(x => x.PlaceholderId);
-            //builder.Property(p => p.Id).HasColumnOrder(0);
+            builder.HasKey(x => x.Id);
+            builder.Property(p => p.Id).HasColumnOrder(0);
             builder.Property(p => p.Name).HasMaxLength(EntityConfigurationConstants.MaxLength);
         }
     }
