@@ -9,13 +9,13 @@ namespace Elsa.CustomInfrastructure.Config
         public void Configure(EntityTypeBuilder<QuestionDataDictionary> builder)
         {
             //.ToTable(x => x.IsTemporal());
-            builder.HasKey(x => x.Id);
-            builder.Property(p => p.Id).HasColumnOrder(0);
+            builder.HasKey(x => x.PlaceholderId);
+            //builder.Property(p => p.Id).HasColumnOrder(0);
             builder.Property(p => p.Name).HasMaxLength(EntityConfigurationConstants.MaxLength);
             builder.Property(p => p.LegacyName).HasMaxLength(EntityConfigurationConstants.MaxLength);
             builder.Property(p => p.Description).HasMaxLength(EntityConfigurationConstants.MaxLength);
             builder.Property(p => p.Type).HasMaxLength(EntityConfigurationConstants.DataDictionaryTypeMaxLength);
-            builder.HasOne(x => x.Group).WithMany(x => x.QuestionDataDictionaryList).HasForeignKey(x => x.QuestionDataDictionaryGroupId);
+            //builder.HasOne(x => x.Group).WithMany(x => x.QuestionDataDictionaryList).HasForeignKey(x => x.QuestionDataDictionaryGroupId);
         
         }
     }
