@@ -233,7 +233,7 @@ namespace Elsa.CustomInfrastructure.Data.Repository
 
         public async Task ArchiveDataDictionaryItem(int id, CancellationToken cancellationToken)
         {
-            var items = _dbContext.Set<QuestionDataDictionary>().Where(x => x.Id== id);
+            var items = _dbContext.Set<QuestionDataDictionary>().Where(x => x.TempId== id);
             foreach (var item in items)
             {
                 item.IsArchived = true;
