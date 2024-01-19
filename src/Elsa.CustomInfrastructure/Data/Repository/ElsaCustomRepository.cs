@@ -139,22 +139,21 @@ namespace Elsa.CustomInfrastructure.Data.Repository
 
         public async Task<List<QuestionDataDictionary>> GetQuestionDataDictionaryListAsync(CancellationToken cancellationToken = default)
         {
-            //var result = await _dbContext.Set<QuestionDataDictionary>().Include(x => x.Group).Where(x=> (!x.IsArchived.HasValue || !x.IsArchived.Value)).ToListAsync(cancellationToken);
-            var result = await _dbContext.Set<QuestionDataDictionary>().Where(x => (!x.IsArchived.HasValue || !x.IsArchived.Value)).ToListAsync(cancellationToken);
+            var result = await _dbContext.Set<QuestionDataDictionary>().Include(x => x.Group).Where(x=> (!x.IsArchived.HasValue || !x.IsArchived.Value)).ToListAsync(cancellationToken);
             return result;
         }
 
         public async Task<List<QuestionDataDictionaryGroup>> GetQuestionDataDictionaryGroupsAsync(bool includeArchived = false, CancellationToken cancellationToken = default)
         {
             var result = new List<QuestionDataDictionaryGroup>();
-            //if (!includeArchived)
-            //{
-            //    result = await _dbContext.Set<QuestionDataDictionaryGroup>().Include(x => x.QuestionDataDictionaryList.Where(x => (!x.IsArchived.HasValue || !x.IsArchived.Value))).ToListAsync(cancellationToken);
-            //}
-            //else
-            //{
-            //    result = await _dbContext.Set<QuestionDataDictionaryGroup>().Include(x => x.QuestionDataDictionaryList).ToListAsync(cancellationToken);
-            //}
+            if (!includeArchived)
+            {
+                result = await _dbContext.Set<QuestionDataDictionaryGroup>().Include(x => x.QuestionDataDictionaryList.Where(x => (!x.IsArchived.HasValue || !x.IsArchived.Value))).ToListAsync(cancellationToken);
+            }
+            else
+            {
+                result = await _dbContext.Set<QuestionDataDictionaryGroup>().Include(x => x.QuestionDataDictionaryList).ToListAsync(cancellationToken);
+            }
             return result;
 
         }
@@ -234,7 +233,7 @@ namespace Elsa.CustomInfrastructure.Data.Repository
 
         public async Task ArchiveDataDictionaryItem(int id, CancellationToken cancellationToken)
         {
-            var items = _dbContext.Set<QuestionDataDictionary>().Where(x => x.TempId== id);
+            var items = _dbContext.Set<QuestionDataDictionary>().Where(x => x.Id== id);
             foreach (var item in items)
             {
                 item.IsArchived = true;
