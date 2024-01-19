@@ -26,7 +26,7 @@ namespace Elsa.CustomActivities.Activities.LandValuesDataSource
         [ActivityInput(Hint = "LEP Area of the record you wish to retrieve", SupportedSyntaxes = new[] { SyntaxNames.Literal, SyntaxNames.Json, SyntaxNames.JavaScript })]
         public string LepArea { get; set; } = null!;
 
-        [ActivityOutput] public OfficeLandValues? Output { get; set; }
+        [ActivityOutput] public List<OfficeLandValues>? Output { get; set; }
 
         protected override IActivityExecutionResult OnExecute(ActivityExecutionContext context)
         {
@@ -41,7 +41,7 @@ namespace Elsa.CustomActivities.Activities.LandValuesDataSource
 
             if (data != null)
             {
-                var dataResult = _jsonHelper.JsonToOfficeLandValuesData(data);
+                var dataResult = _jsonHelper.JsonToOfficeLandValuesDataList(data);
                 this.Output = dataResult;
             }
             else
