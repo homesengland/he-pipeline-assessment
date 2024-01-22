@@ -18,5 +18,8 @@ namespace Elsa.Dashboard.Models
     public bool UseRefreshTokensFallback { get; set; }
     [JsonPropertyName("monacoLibPath")]
     public string MonacoLibPath { get; set; } = null!;
+
+    [JsonPropertyName("dataDictionaryIntellisense")]
+    public string? DataDictionaryIntellisense { get; set; }
   }
 }

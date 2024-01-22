@@ -5,10 +5,8 @@ using Elsa.CustomWorkflow.Sdk.HttpClients;
 using Elsa.CustomWorkflow.Sdk.Models.Activities;
 using Newtonsoft.Json;
 using Microsoft.Extensions.Logging;
-using System.Net.WebSockets;
 using Microsoft.Extensions.Options;
 using Elsa.Dashboard.Models;
-using Microsoft.AspNetCore.Builder.Extensions;
 using He.PipelineAssessment.Tests.Common;
 
 namespace Elsa.Dashboard.Tests.Pages
@@ -24,15 +22,18 @@ namespace Elsa.Dashboard.Tests.Pages
         Mock<Urls> urlMock,
         ILogger<ElsaDashboardLoader> logger,
         Dictionary<string, HeActivityInputDescriptorDTO> data,
+        Dictionary<string, string> dataDictionaryData,
         string mockUrl
             )
         {
 
             // Arrange
             var dataJson = JsonConvert.SerializeObject(data);
+            var dataDictionaryDataJson = JsonConvert.SerializeObject(dataDictionaryData);
             config.SetupGet(o => o.Value).Returns(urlMock.Object);
             urlMock.SetupGet(u => u.ElsaServer).Returns(mockUrl);
             httpClient.Setup(c => c.LoadCustomActivities(mockUrl)).ReturnsAsync(dataJson);
+            httpClient.Setup(c => c.LoadDataDictionary(mockUrl)).ReturnsAsync(dataDictionaryDataJson);
             var pageModel = new ElsaDashboardLoader(httpClient.Object, config.Object, logger, auth0Config.Object);
 
             // Act
@@ -50,6 +51,7 @@ namespace Elsa.Dashboard.Tests.Pages
         Mock<IOptions<Auth0Config>> auth0Config,
         Mock<Urls> urlMock,
         Dictionary<string, HeActivityInputDescriptorDTO> data,
+        Dictionary<string, string> dataDictionaryData,
         ILogger<ElsaDashboardLoader> logger,
         string mockUrl
             )
@@ -57,9 +59,11 @@ namespace Elsa.Dashboard.Tests.Pages
 
             // Arrange
             var dataJson = JsonConvert.SerializeObject(data);
+            var dataDictionaryDataJson = JsonConvert.SerializeObject(dataDictionaryData);
             config.SetupGet(o => o.Value).Returns(urlMock.Object);
             urlMock.SetupGet(u => u.ElsaServer).Returns(mockUrl);
             httpClient.Setup(c => c.LoadCustomActivities(mockUrl)).ReturnsAsync(dataJson);
+            httpClient.Setup(c => c.LoadDataDictionary(mockUrl)).ReturnsAsync(dataDictionaryDataJson);
             var pageModel = new ElsaDashboardLoader(httpClient.Object, config.Object, logger, auth0Config.Object);
 
             // Act
@@ -89,6 +93,69 @@ namespace Elsa.Dashboard.Tests.Pages
 
             // Assert
             await Assert.ThrowsAsync<NullReferenceException>(pageModel.OnGetAsync);
+        }
+
+        [Theory]
+        [AutoMoqData]
+        public async void OnGetSetsDcitionaryData_GivenValuesReturnedWithoutError(
+        Mock<IElsaServerHttpClient> httpClient,
+        Mock<IOptions<Urls>> config,
+        Mock<IOptions<Auth0Config>> auth0Config,
+        Mock<Urls> urlMock,
+        Dictionary<string, string> dataDictionaryData,
+        Dictionary<string, HeActivityInputDescriptorDTO> data,
+        ILogger<ElsaDashboardLoader> logger,
+        string mockUrl
+    )
+        {
+
+            // Arrange
+            dataDictionaryData.Add("Dictionary", "dataDictionaryResponse");
+            var dataJson = JsonConvert.SerializeObject(data);
+            var dataDictionaryDataJson = JsonConvert.SerializeObject(dataDictionaryData);
+            config.SetupGet(o => o.Value).Returns(urlMock.Object);
+            urlMock.SetupGet(u => u.ElsaServer).Returns(mockUrl);
+            httpClient.Setup(c => c.LoadCustomActivities(mockUrl)).ReturnsAsync(dataJson);
+            httpClient.Setup(c => c.LoadDataDictionary(mockUrl)).ReturnsAsync(dataDictionaryDataJson);
+            var pageModel = new ElsaDashboardLoader(httpClient.Object, config.Object, logger, auth0Config.Object);
+
+
+            // Act
+            await pageModel.OnGetAsync();
+
+            // Assert
+            Assert.Equal("dataDictionaryResponse", pageModel.DictionaryResponse);
+        }
+
+        [Theory]
+        [AutoMoqData]
+        public async void OnGetSetsIntellisense_GivenValuesReturnedWithoutError(
+        Mock<IElsaServerHttpClient> httpClient,
+        Mock<IOptions<Urls>> config,
+        Mock<IOptions<Auth0Config>> auth0Config,
+        Mock<Urls> urlMock,
+        Dictionary<string, string> dataDictionaryData,
+        Dictionary<string, HeActivityInputDescriptorDTO> data,
+        ILogger<ElsaDashboardLoader> logger,
+        string mockUrl
+        )
+        {
+            // Arrange
+            dataDictionaryData.Add("Intellisense", "intellisenseResponse");
+            var dataJson = JsonConvert.SerializeObject(data);
+            var dataDictionaryDataJson = JsonConvert.SerializeObject(dataDictionaryData);
+            config.SetupGet(o => o.Value).Returns(urlMock.Object);
+            urlMock.SetupGet(u => u.ElsaServer).Returns(mockUrl);
+            httpClient.Setup(c => c.LoadCustomActivities(mockUrl)).ReturnsAsync(dataJson);
+            httpClient.Setup(c => c.LoadDataDictionary(mockUrl)).ReturnsAsync(dataDictionaryDataJson);
+            var pageModel = new ElsaDashboardLoader(httpClient.Object, config.Object, logger, auth0Config.Object);
+
+
+            // Act
+            await pageModel.OnGetAsync();
+
+            // Assert
+            Assert.Equal("intellisenseResponse", pageModel.IntellisenseResponse);
         }
     }
 }

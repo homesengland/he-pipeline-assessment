@@ -22,6 +22,7 @@ namespace Elsa.Dashboard.PageModels
     public string? JsonResponse { get; set; }
 
     public string? DictionaryResponse { get; set; }
+    public string? IntellisenseResponse { get; set; }
 
     public ElsaDashboardLoader(IElsaServerHttpClient client, IOptions<Urls> options, ILogger<ElsaDashboardLoader> logger, IOptions<Auth0Config> auth0Options)
     {
@@ -37,7 +38,7 @@ namespace Elsa.Dashboard.PageModels
       if (!string.IsNullOrEmpty(_serverUrl))
       {
         JsonResponse = await _client.LoadCustomActivities(_serverUrl);
-        DictionaryResponse = await _client.LoadDataDictionary(_serverUrl);
+        await LoadDataDictionary(_serverUrl);
         StoreConfig = SetStoreConfig();
 
       }
@@ -46,6 +47,24 @@ namespace Elsa.Dashboard.PageModels
         HttpContext.Response.StatusCode = (int)HttpStatusCode.FailedDependency;
         throw new NullReferenceException("No Configuration value found for Urls:ElsaServer");
       }
+    }
+
+    private async Task LoadDataDictionary(string url)
+    {
+      string? result = await _client.LoadDataDictionary(_serverUrl);
+      Dictionary<string, string>? dict = JsonSerializer.Deserialize<Dictionary<string, string>>(result!);
+      if(dict != null)
+      {
+        if (dict.TryGetValue("Dictionary", out string? response))
+        {
+          DictionaryResponse = response;
+        }
+        if (dict.TryGetValue("Intellisense", out string? intellisense))
+        {
+          IntellisenseResponse = intellisense;
+        }
+      }
+
     }
 
     private string? SetStoreConfig()
@@ -58,7 +77,8 @@ namespace Elsa.Dashboard.PageModels
         ClientId = _auth0Options.ClientId,
         UseRefreshTokens = true,
         UseRefreshTokensFallback = true,
-        MonacoLibPath = "_content/Elsa.Designer.Components.Web/monaco-editor/min"
+        MonacoLibPath = "_content/Elsa.Designer.Components.Web/monaco-editor/min",
+        DataDictionaryIntellisense = IntellisenseResponse
       };
       var configJson = JsonSerializer.Serialize(config);
       return configJson;

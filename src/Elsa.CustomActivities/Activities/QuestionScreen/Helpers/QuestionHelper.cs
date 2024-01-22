@@ -1,7 +1,6 @@
 ﻿using Elsa.CustomInfrastructure.Data.Repository;
 using Elsa.Scripting.JavaScript.Events;
 using Elsa.Scripting.JavaScript.Messages;
-using Elsa.Services;
 using Elsa.Services.Models;
 using MediatR;
 
@@ -11,24 +10,35 @@ namespace Elsa.CustomActivities.Activities.QuestionScreen.Helpers
     {
 
         private readonly IElsaCustomRepository _elsaCustomRepository;
-        private readonly IWorkflowRegistry _workflowRegistry;
 
-        public QuestionHelper(IElsaCustomRepository elsaCustomRepository, IWorkflowRegistry workflowRegistry)
+        public QuestionHelper(IElsaCustomRepository elsaCustomRepository)
         {
             _elsaCustomRepository = elsaCustomRepository;
-            _workflowRegistry = workflowRegistry;
         }
-
 
         public async Task<string> GetAnswer(string correlationId, string workflowName, string activityName, string questionId)
         {
-            var result = await _elsaCustomRepository.GetQuestionByWorkflowAndActivityName(activityName,
+            var question = await _elsaCustomRepository.GetQuestionByWorkflowAndActivityName(activityName,
                 workflowName, correlationId, questionId, CancellationToken.None);
 
-            if (result?.Answers != null)
+            return GetAnswer(question);
+        }
+
+        public async Task<IEnumerable<char>> GetAnswer(string correlationId, int dataDictionaryId)
+        {
+            var question = await _elsaCustomRepository.GetQuestionByDataDictionary(correlationId,
+                dataDictionaryId, CancellationToken.None);
+
+            return GetAnswer(question);
+        }
+
+        private static string GetAnswer(CustomModels.Question? question)
+        {
+            if (question?.Answers != null)
             {
-                return string.Join(',', result.Answers.Select(x => x.AnswerText));
+                return string.Join(',', question.Answers.Select(x => x.AnswerText));
             }
+
             return string.Empty;
         }
 

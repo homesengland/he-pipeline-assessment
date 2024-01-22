@@ -227,19 +227,19 @@ elsa-modal-dialog > div > div > div:first-child {
 
 @media only screen and (max-width: 1800px) {
   .elsa-text-box {
-    width: 90%;
+    width: 85%;
   }
 }
 
 @media only screen and (max-width: 1400px) {
   .elsa-text-box {
-    width: 85%;
+    width: 80%;
   }
 }
 
 @media only screen and (max-width: 1200px) {
   .elsa-text-box {
-    width: 80%;
+    width: 75%;
   }
 }
 @media only screen and (max-width: 1000px) {

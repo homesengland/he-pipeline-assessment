@@ -21,8 +21,9 @@ namespace Elsa.CustomInfrastructure.Data.Repository
             CancellationToken cancellationToken = default);
         Task CreateQuestionsAsync(List<Question> assessments, CancellationToken cancellationToken);
         Task<List<Question>> GetActivityQuestions(string activityId, string workflowInstanceId, CancellationToken cancellationToken);
-        Task<Question?> GetQuestionByCorrelationId(string activityId, string correlationId, string questionID, CancellationToken cancellationToken);
         Task<Question?> GetQuestionByWorkflowAndActivityName (string activityName, string workflowName, string correlationId, string questionID, CancellationToken cancellationToken);
+        Task<Question?> GetQuestionByDataDictionary(string correlationId, int dataDictionaryId,
+            CancellationToken cancellationToken);
 
         Task<Question?> GetQuestionById(int id);
         Task SaveChanges(CancellationToken cancellationToken);

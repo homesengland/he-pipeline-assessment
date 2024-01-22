@@ -55,23 +55,6 @@ namespace Elsa.CustomInfrastructure.Data.Repository
             return list;
         }
 
-        public async Task<Question?> GetQuestionByCorrelationId(string activityId, string correlationId, string questionID,
-            CancellationToken cancellationToken)
-        {
-            var result = await _dbContext.Set<Question>()
-                .Where(x => 
-                    x.ActivityId == activityId && 
-                    x.CorrelationId == correlationId && 
-                    x.QuestionId == questionID && 
-                    (!x.IsArchived.HasValue || !x.IsArchived.Value))
-                .Include(x => x.Choices)!.ThenInclude(y => y.QuestionChoiceGroup)
-                .Include(x => x.Answers)
-                .OrderByDescending(x => x.CreatedDateTime)
-                .FirstOrDefaultAsync(cancellationToken: cancellationToken);
-           
-            return result;
-        }
-
         public async Task<Question?> GetQuestionByWorkflowAndActivityName(string activityName, string workflowName, string correlationId, string questionID,
     CancellationToken cancellationToken)
         {
@@ -81,6 +64,22 @@ namespace Elsa.CustomInfrastructure.Data.Repository
                     x.ActivityName == activityName &&
                     x.WorkflowName == workflowName &&
                     x.QuestionId == questionID &&
+                    (!x.IsArchived.HasValue || !x.IsArchived.Value))
+                .Include(x => x.Choices)!.ThenInclude(y => y.QuestionChoiceGroup)
+                .Include(x => x.Answers)
+                .OrderByDescending(x => x.CreatedDateTime)
+                .FirstOrDefaultAsync(cancellationToken: cancellationToken);
+
+            return result;
+        }
+
+        public async Task<Question?> GetQuestionByDataDictionary(string correlationId, int dataDictionaryId,
+            CancellationToken cancellationToken)
+        {
+            var result = await _dbContext.Set<Question>()
+                .Where(x =>
+                    x.CorrelationId == correlationId &&
+                    x.QuestionDataDictionaryId == dataDictionaryId &&
                     (!x.IsArchived.HasValue || !x.IsArchived.Value))
                 .Include(x => x.Choices)!.ThenInclude(y => y.QuestionChoiceGroup)
                 .Include(x => x.Answers)
