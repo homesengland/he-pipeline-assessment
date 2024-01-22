@@ -13,7 +13,7 @@ const { state, onChange } = createStore({
   javaScriptTypeDefinitions:'',
   javaScriptTypeDefinitionsFetchStatus: StoreStatus.Empty,
   monacoLibPath: '',
-  basePath: ''
+  basePath: '',
   dataDictionaryIntellisense: '',
 });
 
