@@ -1,6 +1,7 @@
 ﻿using Elsa.CustomInfrastructure.Data.Repository;
 using Elsa.CustomInfrastructure.Migrations;
 using Elsa.CustomModels;
+using Elsa.Server.Features.Admin.DataDictionary.ClearDictionaryCache;
 using Elsa.Server.Features.Admin.DataDictionary.CreateDataDictionaryGroup;
 using Elsa.Server.Models;
 using MediatR;
@@ -11,12 +12,14 @@ namespace Elsa.Server.Features.Admin.DataDictionary.ArchiveDataDictionaryItem
     {
         private readonly IElsaCustomRepository _elsaCustomRepository;
         private readonly ILogger<ArchiveDataDictionaryItemCommandHandler> _logger;
+        private readonly IMediator _mediator;
 
 
-        public ArchiveDataDictionaryItemCommandHandler(
+        public ArchiveDataDictionaryItemCommandHandler(IMediator mediator,
             IElsaCustomRepository elsaCustomRepository,
             ILogger<ArchiveDataDictionaryItemCommandHandler> logger)
         {
+            _mediator = mediator;
             _elsaCustomRepository = elsaCustomRepository;
             _logger = logger;
         }
@@ -27,6 +30,7 @@ namespace Elsa.Server.Features.Admin.DataDictionary.ArchiveDataDictionaryItem
             try
             {
                 await _elsaCustomRepository.ArchiveDataDictionaryItem(request.Id, cancellationToken);
+                await _mediator.Send(new ClearDictionaryCacheCommand());
             }
             catch (Exception e)
             {
