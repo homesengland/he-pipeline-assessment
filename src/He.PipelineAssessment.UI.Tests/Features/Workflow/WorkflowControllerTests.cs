@@ -97,6 +97,7 @@ namespace He.PipelineAssessment.UI.Tests.Features.Workflow
         {
             //Arrange
             saveAndContinueCommandResponse.IsAuthorised = true;
+            saveAndContinueCommandResponse.IsValid = true;
             mediator.Setup(x => x.Send(command, CancellationToken.None)).ReturnsAsync(saveAndContinueCommandResponse);
 
             //Act
@@ -129,6 +130,7 @@ namespace He.PipelineAssessment.UI.Tests.Features.Workflow
         {
             //Arrange
             saveAndContinueCommandResponse.IsAuthorised = false;
+            saveAndContinueCommandResponse.IsValid = true;
             mediator.Setup(x => x.Send(command, CancellationToken.None)).ReturnsAsync(saveAndContinueCommandResponse);
 
             //Act
@@ -136,9 +138,10 @@ namespace He.PipelineAssessment.UI.Tests.Features.Workflow
 
             //Assert
             Assert.NotNull(result);
-            Assert.IsType<RedirectToActionResult>(result);
-
             var redirectToActionResult = (RedirectToActionResult)result;
+            Assert.IsType<RedirectToActionResult>(redirectToActionResult);
+
+
             Assert.Equal("AccessDenied", redirectToActionResult.ActionName);
         }
 

@@ -2,8 +2,11 @@
 using Elsa.CustomInfrastructure.Data.Repository;
 using Elsa.Server.Features.Admin.DataDictionary;
 using Elsa.Server.Features.Admin.DataDictionary.ArchiveDataDictionaryItem;
+using Elsa.Server.Features.Admin.DataDictionary.ClearDictionaryCache;
 using Elsa.Server.Features.Workflow.ArchiveQuestions;
+using Elsa.Server.Models;
 using He.PipelineAssessment.Tests.Common;
+using MediatR;
 using Moq;
 using System;
 using System.Collections.Generic;
@@ -19,22 +22,27 @@ namespace Elsa.Server.Tests.Features.Admin.ArchiveDataDictionaryItem
         [Theory]
         [AutoMoqData]
         public async Task Handle_ShouldReturnArchiveDataDictionaryCommandResponse(
-    ArchiveDataDictionaryItemCommand command,
-    ArchiveDataDictionaryItemCommandHandler sut)
+         [Frozen] Mock<IMediator> mediator,
+            OperationResult<bool> clearCacheResult,
+            ArchiveDataDictionaryItemCommand command,
+            ArchiveDataDictionaryItemCommandHandler sut)
         {
             //Arrange
-
+            mediator.Setup(x => x.Send(It.IsAny<ClearDictionaryCacheCommand>(), It.IsAny<CancellationToken>()))
+            .ReturnsAsync(clearCacheResult);
             //Act
             var result = await sut.Handle(command, CancellationToken.None);
 
             //Assert
             Assert.NotNull(result);
             Assert.True(result.IsSuccess);
+            mediator.Verify(x => x.Send(It.IsAny<ClearDictionaryCacheCommand>(), CancellationToken.None), Times.Once);
         }
 
         [Theory]
         [AutoMoqData]
         public async Task Handle_ShouldReturnErrors_GivenCallToElsaCustomRepositoryFails(
+            [Frozen] Mock<IMediator> mediator,
     [Frozen] Mock<IElsaCustomRepository> elsaCustomRepository,
     ArchiveDataDictionaryItemCommand command,
     Exception exception,
@@ -53,6 +61,7 @@ namespace Elsa.Server.Tests.Features.Admin.ArchiveDataDictionaryItem
             Assert.False(result.IsSuccess);
             var errorMessage = result.ErrorMessages.First();
             Assert.Equal(exception.Message, errorMessage);
+            mediator.Verify(x => x.Send(It.IsAny<ClearDictionaryCacheCommand>(), CancellationToken.None), Times.Never);
         }
     }
 }

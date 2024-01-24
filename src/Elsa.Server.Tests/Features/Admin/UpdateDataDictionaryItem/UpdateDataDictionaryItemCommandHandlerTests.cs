@@ -24,7 +24,7 @@ namespace Elsa.Server.Tests.Features.Admin.UpdateDataDictionaryItem
         public async Task Handle_ShouldReturnUpdateDataDictionaryItemCommandResponse(
         UpdateDataDictionaryItemCommand command,
         OperationResult<bool> clearCacheResult,
-        Mock<IMediator> mediator,
+        [Frozen]Mock<IMediator> mediator,
         UpdateDataDictionaryItemCommandHandler sut)
         {
             //Arrange
@@ -36,14 +36,14 @@ namespace Elsa.Server.Tests.Features.Admin.UpdateDataDictionaryItem
             //Assert
             Assert.NotNull(result);
             Assert.True(result.IsSuccess);
-            mediator.Verify(x => x.Send(It.IsAny<ClearDictionaryCacheCommand>(), It.IsAny<CancellationToken>()), Times.Once);
+            mediator.Verify(x => x.Send(It.IsAny<ClearDictionaryCacheCommand>(), CancellationToken.None), Times.Once);
         }
 
         [Theory]
         [AutoMoqData]
         public async Task Handle_ShouldReturnErrors_GivenGroupIsNull(
             UpdateDataDictionaryItemCommand command,
-            Mock<IMediator> mediator,
+            [Frozen] Mock<IMediator> mediator,
             UpdateDataDictionaryItemCommandHandler sut)
         {
             //Arrange
@@ -66,7 +66,7 @@ namespace Elsa.Server.Tests.Features.Admin.UpdateDataDictionaryItem
             [Frozen] Mock<IElsaCustomRepository> elsaCustomRepository,
             UpdateDataDictionaryItemCommand command,
             Exception exception,
-            Mock<IMediator> mediator,
+            [Frozen]Mock<IMediator> mediator,
             UpdateDataDictionaryItemCommandHandler sut)
         {
             //Arrange
