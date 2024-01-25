@@ -136,22 +136,22 @@ namespace Elsa.CustomInfrastructure.Data.Repository
         public async Task<List<PotScoreOption>> GetPotScoreOptionsAsync(CancellationToken cancellationToken) =>
             await _dbContext.Set<PotScoreOption>().Where(x => x.IsActive).ToListAsync(cancellationToken);
 
-        public async Task<List<QuestionDataDictionary>> GetQuestionDataDictionaryListAsync(CancellationToken cancellationToken = default)
+        public async Task<List<DataDictionary>> GetQuestionDataDictionaryListAsync(CancellationToken cancellationToken = default)
         {
-            var result = await _dbContext.Set<QuestionDataDictionary>().Include(x => x.Group).Where(x=> (!x.IsArchived.HasValue || !x.IsArchived.Value)).ToListAsync(cancellationToken);
+            var result = await _dbContext.Set<DataDictionary>().Include(x => x.Group).Where(x=> (!x.IsArchived.HasValue || !x.IsArchived.Value)).ToListAsync(cancellationToken);
             return result;
         }
 
-        public async Task<List<QuestionDataDictionaryGroup>> GetQuestionDataDictionaryGroupsAsync(bool includeArchived = false, CancellationToken cancellationToken = default)
+        public async Task<List<DataDictionaryGroup>> GetQuestionDataDictionaryGroupsAsync(bool includeArchived = false, CancellationToken cancellationToken = default)
         {
-            var result = new List<QuestionDataDictionaryGroup>();
+            var result = new List<DataDictionaryGroup>();
             if (!includeArchived)
             {
-                result = await _dbContext.Set<QuestionDataDictionaryGroup>().Include(x => x.QuestionDataDictionaryList.Where(x => (!x.IsArchived.HasValue || !x.IsArchived.Value))).ToListAsync(cancellationToken);
+                result = await _dbContext.Set<DataDictionaryGroup>().Include(x => x.DataDictionaryList.Where(x => (!x.IsArchived.HasValue || !x.IsArchived.Value))).ToListAsync(cancellationToken);
             }
             else
             {
-                result = await _dbContext.Set<QuestionDataDictionaryGroup>().Include(x => x.QuestionDataDictionaryList).ToListAsync(cancellationToken);
+                result = await _dbContext.Set<DataDictionaryGroup>().Include(x => x.DataDictionaryList).ToListAsync(cancellationToken);
             }
             return result;
 
@@ -245,6 +245,7 @@ namespace Elsa.CustomInfrastructure.Data.Repository
         {
             await _dbContext.AddAsync(group, cancellationToken);
             await SaveChanges(cancellationToken);
+            int id = group.Id;
         }
 
         public async Task CreateDataDictionaryItem(QuestionDataDictionary item, CancellationToken cancellationToken)

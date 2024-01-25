@@ -13,6 +13,7 @@
     <None Remove="Migrations\20230914085842_DataDictionaryUpdates\DataDictionaryUpdates.sql" />
     <None Remove="Migrations\20230929094647_MoreDataDictionaryUpdates\MoreDataDictionaryUpdates.sql" />
     <None Remove="Migrations\20240117173916_CopyDataDictionaryIdsToTempColumns\CopyDataDictionaryIdsToTempColumns.sql" />
+    <None Remove="Migrations\20240125180206_MigrateOldDictionaryDataToNewTables\CopyOldTableValuesToNewDataDictionary.sql" />
     <None Remove="Migrations\20240117180459_CopyTempIdColumnToPrimaryKey\CopyTempIdColumnToPrimaryKey.sql" />
   </ItemGroup>
 
@@ -22,6 +23,7 @@
     <EmbeddedResource Include="Migrations\20230821073105_DataDictionaryValueUpdates\ReAddDataDictionaryGroupsAndValues.sql" />
     <EmbeddedResource Include="Migrations\20230914085842_DataDictionaryUpdates\DataDictionaryUpdates.sql" />
     <EmbeddedResource Include="Migrations\20230929094647_MoreDataDictionaryUpdates\MoreDataDictionaryUpdates.sql" />
+    <EmbeddedResource Include="Migrations\20240125180206_MigrateOldDictionaryDataToNewTables\CopyOldTableValuesToNewDataDictionary.sql" />
     <EmbeddedResource Include="Migrations\20240117180459_CopyTempIdColumnToPrimaryKey\CopyTempIdColumnToPrimaryKey.sql" />
     <EmbeddedResource Include="Migrations\20240117173916_CopyDataDictionaryIdsToTempColumns\CopyDataDictionaryIdsToTempColumns.sql" />
   </ItemGroup>

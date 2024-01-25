@@ -3,7 +3,7 @@ import { createAuth0Client, Auth0Client, Auth0ClientOptions } from '@auth0/auth0
 import state from '../../stores/store';
 import * as collection from 'lodash/collection';
 import { MenuItem } from '../../models/elsa-interfaces';
-import { GetAuth0Options, CreateClient } from '../../http-clients/http-client-services';
+import { GetAuth0Options, /*CreateClient*/ } from '../../http-clients/http-client-services';
 
 @Component({
   tag: 'data-dictionary-groups',
@@ -11,25 +11,27 @@ import { GetAuth0Options, CreateClient } from '../../http-clients/http-client-se
 })
 
 export class DataDictionaryGroups {
-  @State() private dataDictionaryGroups: string;
+  @State() private dataDictionaryGroups: any[];
   private auth0: Auth0Client;
   private options: Auth0ClientOptions;
-  private serverUrl: string = null;
+  //private serverUrl: string = null;
 
   constructor() {
     this.options = GetAuth0Options();
-    this.serverUrl = state.serverUrl;   
+    //this.serverUrl = state.serverUrl;   
   }
 
   async componentWillLoad() {
-    this.loadDataDictionaryGroups();
+    await this.loadDataDictionaryGroups();
+    console.log("loaded", this.dataDictionaryGroups);
   }
 
   async loadDataDictionaryGroups() {
     await this.initialize();
-    const elsaClient = await CreateClient(this.auth0, this.serverUrl);
-    const response = await elsaClient.get<string>(`activities/dictionary/`);
-    this.dataDictionaryGroups = response.data;
+    //const elsaClient = await CreateClient(this.auth0, this.serverUrl);
+    //const response = await elsaClient.get<string>(`activities/dictionary/`);
+    //this.dataDictionaryGroups = response.data;
+    this.dataDictionaryGroups = state.dictionaryGroups
   }
 
   initialize = async () => {

@@ -34,8 +34,8 @@ namespace Elsa.CustomInfrastructure.Data.Repository
         Task DeleteQuestions(string workflowInstanceId, List<string> previousPathActivities, CancellationToken cancellationToken);
 
         Task<List<PotScoreOption>> GetPotScoreOptionsAsync(CancellationToken cancellationToken = default);
-        Task<List<QuestionDataDictionary>> GetQuestionDataDictionaryListAsync(CancellationToken cancellationToken = default);
-        Task<List<QuestionDataDictionaryGroup>> GetQuestionDataDictionaryGroupsAsync(bool includeArchived = false, CancellationToken cancellationToken = default);
+        Task<List<DataDictionary>> GetDataDictionaryListAsync(CancellationToken cancellationToken = default);
+        Task<List<DataDictionaryGroup>> GetDataDictionaryGroupsAsync(bool includeArchived = false, CancellationToken cancellationToken = default);
         Task CreateQuestionWorkflowInstance(QuestionWorkflowInstance questionWorkflowInstance, CancellationToken cancellationToken = default);
         Task<QuestionWorkflowInstance?> GetQuestionWorkflowInstance(string workflowInstanceId, CancellationToken cancellationToken = default);
         Task<List<QuestionWorkflowInstance>> GetQuestionWorkflowInstancesByName(string correlationId, string name, CancellationToken cancellationToken = default);
@@ -43,10 +43,10 @@ namespace Elsa.CustomInfrastructure.Data.Repository
         Task SetWorkflowInstanceResult(string workflowInstanceId, string result, CancellationToken cancellationToken = default);
         Task SetWorkflowInstanceScore(string workflowInstanceId, string score, CancellationToken cancellationToken = default);
         Task ArchiveQuestions(string[] requestWorkflowInstanceIds, CancellationToken cancellationToken = default);
-        Task CreateDataDictionaryGroup(QuestionDataDictionaryGroup group, CancellationToken cancellationToken);
-        Task CreateDataDictionaryItem(QuestionDataDictionary item, CancellationToken cancellationToken);
-        Task UpdateDataDictionaryGroup(QuestionDataDictionaryGroup group, CancellationToken cancellationToken);
-        Task UpdateDataDictionaryItem(QuestionDataDictionary item, CancellationToken cancellationToken);
+        Task CreateDataDictionaryGroup(DataDictionaryGroup group, CancellationToken cancellationToken);
+        Task CreateDataDictionaryItem(DataDictionary item, CancellationToken cancellationToken);
+        Task UpdateDataDictionaryGroup(DataDictionaryGroup group, CancellationToken cancellationToken);
+        Task UpdateDataDictionaryItem(DataDictionary item, CancellationToken cancellationToken);
         Task ArchiveDataDictionaryItem(int id, CancellationToken cancellationToken);
     }
 }

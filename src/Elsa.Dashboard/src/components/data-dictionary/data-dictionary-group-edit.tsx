@@ -31,9 +31,10 @@ export class DataDictionaryGroupScreen {
 
   async loadDataDictionaryGroups(id: any) {
     await this.initialize();
-    const elsaClient = await CreateClient(this.auth0, this.serverUrl);
-    const response = await (await elsaClient.get<Array<DataDictionaryGroup>>(`activities/dictionary/`, { params: { includeArchived: 'true' } }));
-    this.group = response.data.find(x => x.Id == id);
+    this.group = state.dictionaryGroups.find(x => x.Id = id);
+    //const elsaClient = await CreateClient(this.auth0, this.serverUrl);
+    //const response = await (await elsaClient.get<Array<DataDictionaryGroup>>(`activities/dictionary/`, { params: { includeArchived: 'true' } }));
+    //this.group = response.data.find(x => x.Id == id);
     this.dataDictionaryItems = this.group.QuestionDataDictionaryList;
   }
 

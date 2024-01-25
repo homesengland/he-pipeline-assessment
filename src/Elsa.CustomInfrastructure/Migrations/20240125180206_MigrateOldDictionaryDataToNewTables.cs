@@ -5,14 +5,14 @@ using System.Reflection;
 
 namespace Elsa.CustomInfrastructure.Migrations
 {
-    public partial class CopyDataDictionaryIdsToTempColumns : Migration
+    public partial class MigrateOldDictionaryDataToNewTables : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             var assembly = Assembly.GetExecutingAssembly();
             var sqlFiles = assembly.GetManifestResourceNames().Where(file =>
                 file.Contains(
-                    "20240117173916_CopyDataDictionaryIdsToTempColumns.CopyDataDictionaryIdsToTempColumns.sql"));
+                    "20240125180206_MigrateOldDictionaryDataToNewTables.CopyOldTableValuesToNewDataDictionary.sql"));
             foreach (var sqlFile in sqlFiles)
             {
                 using (Stream stream = assembly.GetManifestResourceStream(sqlFile))
@@ -22,7 +22,6 @@ namespace Elsa.CustomInfrastructure.Migrations
                     migrationBuilder.Sql($"EXEC(N'{sqlScript}')");
                 }
             }
-
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
