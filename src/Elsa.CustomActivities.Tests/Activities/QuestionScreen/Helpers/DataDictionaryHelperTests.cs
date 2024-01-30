@@ -68,7 +68,7 @@ namespace Elsa.CustomActivities.Tests.Activities.QuestionScreen.Helpers
         [Frozen] Mock<IConnectionMultiplexer> cache,
         [Frozen] Mock<IDatabase> db,
         CancellationToken cancellationToken,
-        List<QuestionDataDictionary> dbDataDictionaryItems,
+        List<DataDictionary> dbDataDictionaryItems,
         [WithAutofixtureResolution] ActivityExecutionContext activityExecutionContext,
         Engine engine)
         {
@@ -96,7 +96,7 @@ namespace Elsa.CustomActivities.Tests.Activities.QuestionScreen.Helpers
             var serialisedCachedItems = JsonConvert.SerializeObject(cachedItems);
             RedisValue nullRedisValue = new RedisValue(null);
             RedisValue redisValue = new RedisValue(serialisedCachedItems);
-            repository.Setup(x => x.GetQuestionDataDictionaryListAsync(It.IsAny<CancellationToken>())).ReturnsAsync(dbDataDictionaryItems);
+            repository.Setup(x => x.GetDataDictionaryListAsync(It.IsAny<CancellationToken>())).ReturnsAsync(dbDataDictionaryItems);
             cache.Setup(x => x.GetDatabase(It.IsAny<int>(), It.IsAny<object>())).Returns(db.Object);
             db.SetupSequence(x => x.StringGetAsync(It.IsAny<RedisKey>(), It.IsAny<CommandFlags>())).ReturnsAsync(nullRedisValue).ReturnsAsync(redisValue);
             DataDictionaryHelper sut = new DataDictionaryHelper(repository.Object, cache.Object);

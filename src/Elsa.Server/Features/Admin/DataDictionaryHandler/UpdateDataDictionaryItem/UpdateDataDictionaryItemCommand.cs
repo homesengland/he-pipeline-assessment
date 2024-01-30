@@ -2,10 +2,10 @@
 using Elsa.Server.Models;
 using MediatR;
 
-namespace Elsa.Server.Features.Admin.DataDictionary.UpdateDataDictionaryItem
+namespace Elsa.Server.Features.Admin.DataDictionaryHandler.UpdateDataDictionaryItem
 {
     public class UpdateDataDictionaryItemCommand : IRequest<OperationResult<UpdateDataDictionaryItemCommandResponse>>
     {
-        public QuestionDataDictionary? Item { get; set; }
+        public DataDictionary? Item { get; set; }
     }
 }

@@ -1,5 +1,6 @@
 ﻿using Elsa.CustomModels;
 using Microsoft.EntityFrameworkCore;
+using System.Text.RegularExpressions;
 using System.Threading;
 
 namespace Elsa.CustomInfrastructure.Data.Repository
@@ -136,13 +137,13 @@ namespace Elsa.CustomInfrastructure.Data.Repository
         public async Task<List<PotScoreOption>> GetPotScoreOptionsAsync(CancellationToken cancellationToken) =>
             await _dbContext.Set<PotScoreOption>().Where(x => x.IsActive).ToListAsync(cancellationToken);
 
-        public async Task<List<DataDictionary>> GetQuestionDataDictionaryListAsync(CancellationToken cancellationToken = default)
+        public async Task<List<DataDictionary>> GetDataDictionaryListAsync(CancellationToken cancellationToken = default)
         {
             var result = await _dbContext.Set<DataDictionary>().Include(x => x.Group).Where(x=> (!x.IsArchived.HasValue || !x.IsArchived.Value)).ToListAsync(cancellationToken);
             return result;
         }
 
-        public async Task<List<DataDictionaryGroup>> GetQuestionDataDictionaryGroupsAsync(bool includeArchived = false, CancellationToken cancellationToken = default)
+        public async Task<List<DataDictionaryGroup>> GetDataDictionaryGroupsAsync(bool includeArchived = false, CancellationToken cancellationToken = default)
         {
             var result = new List<DataDictionaryGroup>();
             if (!includeArchived)
@@ -232,7 +233,7 @@ namespace Elsa.CustomInfrastructure.Data.Repository
 
         public async Task ArchiveDataDictionaryItem(int id, CancellationToken cancellationToken)
         {
-            var items = _dbContext.Set<QuestionDataDictionary>().Where(x => x.Id== id);
+            var items = _dbContext.Set<DataDictionary>().Where(x => x.Id== id);
             foreach (var item in items)
             {
                 item.IsArchived = true;
@@ -240,30 +241,49 @@ namespace Elsa.CustomInfrastructure.Data.Repository
             _dbContext.UpdateRange(items);
             await SaveChanges(cancellationToken);
         }
+        public async Task ArchiveDataDictionaryGroup(int id, CancellationToken cancellationToken)
+        {
+            var items = _dbContext.Set<DataDictionaryGroup>().Where(x => x.Id == id);
+            foreach (var item in items)
+            {
+                item.IsArchived = true;
+            }
+            _dbContext.UpdateRange(items);
 
-        public async Task CreateDataDictionaryGroup(QuestionDataDictionaryGroup group, CancellationToken cancellationToken = default)
+            var dictionaryItems = _dbContext.Set<DataDictionary>().Where(x => x.DataDictionaryGroupId == id);
+            foreach (var item in dictionaryItems)
+            {
+                item.IsArchived = true;
+            }
+            _dbContext.UpdateRange(dictionaryItems);
+
+            await SaveChanges(cancellationToken);
+        }
+
+        public async Task<int> CreateDataDictionaryGroup(DataDictionaryGroup group, CancellationToken cancellationToken = default)
         {
             await _dbContext.AddAsync(group, cancellationToken);
             await SaveChanges(cancellationToken);
-            int id = group.Id;
+            return group.Id;
         }
 
-        public async Task CreateDataDictionaryItem(QuestionDataDictionary item, CancellationToken cancellationToken)
+        public async Task<int> CreateDataDictionaryItem(DataDictionary item, CancellationToken cancellationToken)
         {
             await _dbContext.AddAsync(item, cancellationToken);
             await SaveChanges(cancellationToken);
+            return item.Id;
         }
 
-        public async Task UpdateDataDictionaryGroup(QuestionDataDictionaryGroup group, CancellationToken cancellationToken)
+        public async Task UpdateDataDictionaryGroup(DataDictionaryGroup group, CancellationToken cancellationToken)
         {
-            _dbContext.Set<QuestionDataDictionaryGroup>().Update(group);
+            _dbContext.Set<DataDictionaryGroup>().Update(group);
             await SaveChanges(cancellationToken);
         }
 
 
-        public async Task UpdateDataDictionaryItem(QuestionDataDictionary item, CancellationToken cancellationToken)
+        public async Task UpdateDataDictionaryItem(DataDictionary item, CancellationToken cancellationToken)
         {
-            _dbContext.Set<QuestionDataDictionary>().Update(item);
+            _dbContext.Set<DataDictionary>().Update(item);
             await SaveChanges(cancellationToken);
         }
     }

@@ -1,12 +1,12 @@
 ﻿using Elsa.CustomInfrastructure.Data.Repository;
 using Elsa.CustomInfrastructure.Migrations;
 using Elsa.CustomModels;
-using Elsa.Server.Features.Admin.DataDictionary.ClearDictionaryCache;
-using Elsa.Server.Features.Admin.DataDictionary.CreateDataDictionaryGroup;
+using Elsa.Server.Features.Admin.DataDictionaryHandler.ClearDictionaryCache;
+using Elsa.Server.Features.Admin.DataDictionaryHandler.CreateDataDictionaryGroup;
 using Elsa.Server.Models;
 using MediatR;
 
-namespace Elsa.Server.Features.Admin.DataDictionary.UpdateDataDictionaryItem
+namespace Elsa.Server.Features.Admin.DataDictionaryHandler.UpdateDataDictionaryItem
 {
     public class UpdateDataDictionaryItemCommandHandler : IRequestHandler<UpdateDataDictionaryItemCommand, OperationResult<UpdateDataDictionaryItemCommandResponse>>
     {

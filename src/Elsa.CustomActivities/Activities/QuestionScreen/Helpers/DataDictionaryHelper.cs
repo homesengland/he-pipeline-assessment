@@ -47,7 +47,7 @@ namespace Elsa.CustomActivities.Activities.QuestionScreen.Helpers
 
         private async Task<RedisValue> AddDataDictionaryItemsToCache(CancellationToken cancellationToken)
         {
-            var dbDataDictionaryItems = await _elsaCustomRepository.GetQuestionDataDictionaryListAsync(cancellationToken);
+            var dbDataDictionaryItems = await _elsaCustomRepository.GetDataDictionaryListAsync(cancellationToken);
             var cacheItems = dbDataDictionaryItems.Select(x => new DataDictionaryCacheItem
             {
                 Id = x.Id,

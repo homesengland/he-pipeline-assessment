@@ -4,6 +4,7 @@ import state from '../../stores/store';
 import * as collection from 'lodash/collection';
 import { MenuItem } from '../../models/elsa-interfaces';
 import { GetAuth0Options, /*CreateClient*/ } from '../../http-clients/http-client-services';
+import { DataDictionaryGroup } from '../../models/custom-component-models';
 
 @Component({
   tag: 'data-dictionary-groups',
@@ -11,7 +12,7 @@ import { GetAuth0Options, /*CreateClient*/ } from '../../http-clients/http-clien
 })
 
 export class DataDictionaryGroups {
-  @State() private dataDictionaryGroups: any[];
+  @State() private dataDictionaryGroups: DataDictionaryGroup[];
   private auth0: Auth0Client;
   private options: Auth0ClientOptions;
   //private serverUrl: string = null;
@@ -61,6 +62,7 @@ export class DataDictionaryGroups {
       </td>)
     }
 
+
     return (
       <div>
         <table class="elsa-min-w-full">
@@ -73,32 +75,63 @@ export class DataDictionaryGroups {
             </tr>
           </thead>
           <tbody class="elsa-bg-white elsa-divide-y elsa-divide-gray-100">
-            {collection.map(this.dataDictionaryGroups, group => {
-              const editUrl = `/data-dictionary/group/${group.Id}`;
-              const name = group.Name;
-              const editIcon = (
-                <svg class="elsa-h-5 elsa-w-5 elsa-text-gray-500" width="24" height="24" viewBox="0 0 24 24"
-                  xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-width="2"
-                  stroke-linecap="round"
-                  stroke-linejoin="round">
-                  <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7" />
-                  <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z" />
-                </svg>
-              );
-              return (
-                <tr>
-                <td
-                  class="elsa-px-6 elsa-py-3 elsa-whitespace-no-wrap elsa-text-sm elsa-leading-5 elsa-font-medium elsa-text-gray-900">
-                  <div class="elsa-flex elsa-items-center elsa-space-x-3 lg:elsa-pl-2">
-                    <stencil-route-link  anchorClass="elsa-truncate hover:elsa-text-gray-600">
-                      <span>{name}</span></stencil-route-link>
-                  </div>
-                  </td>
-                  {renderContextMenu( editUrl, editIcon)}
-                  </tr>
-              );
-            })
-              }
+            {collection.map(this.dataDictionaryGroups.filter(x => !x.IsArchived), group => {
+          const editUrl = `/data-dictionary/group/${group.Id}`;
+          const name = group.Name;
+          const editIcon = (
+            <svg class="elsa-h-5 elsa-w-5 elsa-text-gray-500" width="24" height="24" viewBox="0 0 24 24"
+              xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round">
+              <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7" />
+              <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z" />
+            </svg>
+          );
+          return (
+            <tr>
+              <td
+                class="elsa-px-6 elsa-py-3 elsa-whitespace-no-wrap elsa-text-sm elsa-leading-5 elsa-font-medium elsa-text-gray-900">
+                <div class="elsa-flex elsa-items-center elsa-space-x-3 lg:elsa-pl-2">
+                  <stencil-route-link anchorClass="elsa-truncate hover:elsa-text-gray-600">
+                    <span>{name}</span></stencil-route-link>
+                </div>
+              </td>
+              {renderContextMenu(editUrl, editIcon)}
+            </tr>
+          );
+        })
+      }
+            <tr>
+              <td>Archived Groups</td>
+              <td></td>
+
+            </tr>
+          {collection.map(this.dataDictionaryGroups.filter(x => x.IsArchived), group => {
+          const editUrl = `/data-dictionary/group/${group.Id}`;
+          const name = group.Name;
+          const editIcon = (
+            <svg class="elsa-h-5 elsa-w-5 elsa-text-gray-500" width="24" height="24" viewBox="0 0 24 24"
+              xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round">
+              <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7" />
+              <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z" />
+            </svg>
+          );
+          return (
+            <tr>
+              <td
+                class="elsa-px-6 elsa-py-3 elsa-whitespace-no-wrap elsa-text-sm elsa-leading-5 elsa-font-medium elsa-text-gray-900">
+                <div class="elsa-flex elsa-items-center elsa-space-x-3 lg:elsa-pl-2">
+                  <stencil-route-link anchorClass="elsa-truncate hover:elsa-text-gray-600">
+                    <span>{name}</span></stencil-route-link>
+                </div>
+              </td>
+              {renderContextMenu(editUrl, editIcon)}
+            </tr>
+          );
+        })
+      }
           </tbody>
         </table>
       </div>

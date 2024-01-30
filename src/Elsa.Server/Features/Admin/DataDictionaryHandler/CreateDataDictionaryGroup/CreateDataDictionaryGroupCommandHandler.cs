@@ -1,10 +1,10 @@
 ﻿using Elsa.CustomInfrastructure.Data.Repository;
 using Elsa.CustomModels;
-using Elsa.Server.Features.Admin.DataDictionary.ClearDictionaryCache;
+using Elsa.Server.Features.Admin.DataDictionaryHandler.ClearDictionaryCache;
 using Elsa.Server.Models;
 using MediatR;
 
-namespace Elsa.Server.Features.Admin.DataDictionary.CreateDataDictionaryGroup
+namespace Elsa.Server.Features.Admin.DataDictionaryHandler.CreateDataDictionaryGroup
 {
     public class CreateDataDictionaryGroupCommandHandler : IRequestHandler<CreateDataDictionaryGroupCommand, OperationResult<CreateDataDictionaryGroupCommandResponse>>
     {
@@ -28,12 +28,13 @@ namespace Elsa.Server.Features.Admin.DataDictionary.CreateDataDictionaryGroup
             {
                 if (!string.IsNullOrEmpty(request.Name))
                 {
-                    QuestionDataDictionaryGroup newGroup = new QuestionDataDictionaryGroup()
+                    DataDictionaryGroup newGroup = new DataDictionaryGroup()
                     {
                         Name = request.Name
                     };
-                    await _elsaCustomRepository.CreateDataDictionaryGroup(newGroup, cancellationToken);
+                    int id = await _elsaCustomRepository.CreateDataDictionaryGroup(newGroup, cancellationToken);
                     await _mediator.Send(new ClearDictionaryCacheCommand());
+                    result.Data!.Id = id;
                 }
                 else
                 {

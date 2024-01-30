@@ -2,14 +2,14 @@
 using Elsa.CustomActivities.Describers;
 using Elsa.CustomInfrastructure.Data.Repository;
 using Elsa.CustomModels;
-using Elsa.Server.Features.Activities.DataDictionary;
+using Elsa.Server.Features.Activities.DataDictionaryProvider;
 using He.PipelineAssessment.Tests.Common;
 using Moq;
 using Newtonsoft.Json;
 using System.ComponentModel;
 using Xunit;
 
-namespace Elsa.Server.Tests.Features.Activities.DataDictionary
+namespace Elsa.Server.Tests.Features.Activities.DataDictionaryProvider
 {
     public class DataDictionaryCommandHandlerTests
     {
@@ -20,14 +20,14 @@ namespace Elsa.Server.Tests.Features.Activities.DataDictionary
             [Frozen] Mock<IElsaCustomRepository> repository,
             DataDictionaryCommand command,
             List<HeActivityInputDescriptor> inputDescriptors,
-            List<QuestionDataDictionaryGroup> dataDictionaryGroups,
-            List<QuestionDataDictionary> dataDictionaries,
+            List<DataDictionaryGroup> dataDictionaryGroups,
+            List<DataDictionary> dataDictionaries,
             DataDictionaryCommandHandler sut)
         {
             //Arrange
             propertyDescriber.Setup(x => x.DescribeInputProperties(typeof(Question))).Returns(inputDescriptors);
-            repository.Setup(x => x.GetQuestionDataDictionaryGroupsAsync(false, CancellationToken.None)).ReturnsAsync(dataDictionaryGroups);
-            repository.Setup(x => x.GetQuestionDataDictionaryListAsync(CancellationToken.None)).ReturnsAsync(dataDictionaries);
+            repository.Setup(x => x.GetDataDictionaryGroupsAsync(false, CancellationToken.None)).ReturnsAsync(dataDictionaryGroups);
+            repository.Setup(x => x.GetDataDictionaryListAsync(CancellationToken.None)).ReturnsAsync(dataDictionaries);
 
             var jsonData = JsonConvert.SerializeObject(dataDictionaries);
             //Act

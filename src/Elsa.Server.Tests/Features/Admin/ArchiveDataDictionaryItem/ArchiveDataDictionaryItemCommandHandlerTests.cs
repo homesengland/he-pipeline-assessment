@@ -1,8 +1,8 @@
 ﻿using AutoFixture.Xunit2;
 using Elsa.CustomInfrastructure.Data.Repository;
-using Elsa.Server.Features.Admin.DataDictionary;
-using Elsa.Server.Features.Admin.DataDictionary.ArchiveDataDictionaryItem;
-using Elsa.Server.Features.Admin.DataDictionary.ClearDictionaryCache;
+using Elsa.Server.Features.Admin.DataDictionaryHandler;
+using Elsa.Server.Features.Admin.DataDictionaryHandler.ArchiveDataDictionaryItem;
+using Elsa.Server.Features.Admin.DataDictionaryHandler.ClearDictionaryCache;
 using Elsa.Server.Features.Workflow.ArchiveQuestions;
 using Elsa.Server.Models;
 using He.PipelineAssessment.Tests.Common;

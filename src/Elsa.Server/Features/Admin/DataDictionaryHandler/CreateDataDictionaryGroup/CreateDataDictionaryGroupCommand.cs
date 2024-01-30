@@ -1,10 +1,10 @@
 ﻿using Elsa.Server.Models;
 using MediatR;
 
-namespace Elsa.Server.Features.Admin.DataDictionary.CreateDataDictionaryGroup
+namespace Elsa.Server.Features.Admin.DataDictionaryHandler.CreateDataDictionaryGroup
 {
     public class CreateDataDictionaryGroupCommand : IRequest<OperationResult<CreateDataDictionaryGroupCommandResponse>>
     {
-        public String? Name {get; set;}
+        public string? Name {get; set;}
     }
 }

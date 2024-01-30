@@ -21,12 +21,12 @@ public class CustomPropertyCommandHandlerTests
         [Frozen] Mock<IElsaCustomRepository> repository,
         CustomPropertyCommand loadCustomProperties,
         List<HeActivityInputDescriptor> inputDescriptors,
-        List<QuestionDataDictionaryGroup> dataDictionaries,
+        List<DataDictionaryGroup> dataDictionaries,
         CustomPropertyCommandHandler sut)
     {
         //Arrange
         propertyDescriber.Setup(x => x.DescribeInputProperties(typeof(Question))).Returns(inputDescriptors);
-        repository.Setup(x => x.GetQuestionDataDictionaryGroupsAsync(false, CancellationToken.None)).ReturnsAsync(dataDictionaries);
+        repository.Setup(x => x.GetDataDictionaryGroupsAsync(false, CancellationToken.None)).ReturnsAsync(dataDictionaries);
 
         //Act
         var result = await sut.Handle(loadCustomProperties, CancellationToken.None);

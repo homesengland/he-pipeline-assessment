@@ -1,9 +1,9 @@
 ﻿using AutoFixture.Xunit2;
 using Elsa.CustomInfrastructure.Data.Repository;
 using Elsa.CustomModels;
-using Elsa.Server.Features.Admin.DataDictionary.ClearDictionaryCache;
-using Elsa.Server.Features.Admin.DataDictionary.CreateDataDictionaryGroup;
-using Elsa.Server.Features.Admin.DataDictionary.UpdateDataDictionaryGroup;
+using Elsa.Server.Features.Admin.DataDictionaryHandler.ClearDictionaryCache;
+using Elsa.Server.Features.Admin.DataDictionaryHandler.CreateDataDictionaryGroup;
+using Elsa.Server.Features.Admin.DataDictionaryHandler.UpdateDataDictionaryGroup;
 using Elsa.Server.Models;
 using He.PipelineAssessment.Tests.Common;
 using MediatR;
@@ -70,7 +70,7 @@ UpdateDataDictionaryGroupCommandHandler sut)
     UpdateDataDictionaryGroupCommandHandler sut)
         {
             //Arrange
-            elsaCustomRepository.Setup(x => x.UpdateDataDictionaryGroup(It.IsAny<QuestionDataDictionaryGroup>(), CancellationToken.None))
+            elsaCustomRepository.Setup(x => x.UpdateDataDictionaryGroup(It.IsAny<DataDictionaryGroup>(), CancellationToken.None))
                 .Throws(exception);
 
             //Act

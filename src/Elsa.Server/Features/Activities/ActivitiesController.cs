@@ -1,6 +1,6 @@
 ﻿using Elsa.CustomActivities.Describers;
 using Elsa.Server.Features.Activities.CustomActivityProperties;
-using Elsa.Server.Features.Activities.DataDictionary;
+using Elsa.Server.Features.Activities.DataDictionaryProvider;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;

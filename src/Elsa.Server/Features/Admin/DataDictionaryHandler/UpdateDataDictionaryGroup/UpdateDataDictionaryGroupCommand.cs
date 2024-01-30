@@ -2,10 +2,10 @@
 using Elsa.Server.Models;
 using MediatR;
 
-namespace Elsa.Server.Features.Admin.DataDictionary.UpdateDataDictionaryGroup
+namespace Elsa.Server.Features.Admin.DataDictionaryHandler.UpdateDataDictionaryGroup
 {
     public class UpdateDataDictionaryGroupCommand : IRequest<OperationResult<UpdateDataDictionaryGroupCommandResponse>>
     {
-        public QuestionDataDictionaryGroup? group { get; set; }
+        public DataDictionaryGroup? group { get; set; }
     }
 }

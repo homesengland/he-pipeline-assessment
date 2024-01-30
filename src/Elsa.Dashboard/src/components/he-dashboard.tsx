@@ -59,6 +59,7 @@ export class HeDashboard {
     if (this.dataDictionaryGroup != null) {
       this.dictionary = JSON.parse(this.dataDictionaryGroup);
       if (this.dictionary != null) {
+        console.log("Setting dictionary", this.dictionary)
         state.dictionaryGroups = this.dictionary;
       }
     }

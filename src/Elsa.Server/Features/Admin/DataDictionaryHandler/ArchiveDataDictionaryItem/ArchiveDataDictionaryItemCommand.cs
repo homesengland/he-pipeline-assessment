@@ -2,11 +2,12 @@
 using Elsa.Server.Models;
 using MediatR;
 
-namespace Elsa.Server.Features.Admin.DataDictionary.ArchiveDataDictionaryItem
+namespace Elsa.Server.Features.Admin.DataDictionaryHandler.ArchiveDataDictionaryItem
 {
     public class ArchiveDataDictionaryItemCommand : IRequest<OperationResult<ArchiveDataDictionaryItemCommandResponse>>
     {
         public int Id { get; set; }
+        public bool IsArchived { get; set; }
        
     }
 }

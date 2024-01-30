@@ -7,7 +7,7 @@ using Microsoft.AspNetCore.DataProtection.KeyManagement.Internal;
 using StackExchange.Redis;
 using System.Linq.Expressions;
 
-namespace Elsa.Server.Features.Admin.DataDictionary.ClearDictionaryCache
+namespace Elsa.Server.Features.Admin.DataDictionaryHandler.ClearDictionaryCache
 {
     public class ClearDictionaryCacheCommandHandler : IRequestHandler<ClearDictionaryCacheCommand, OperationResult<bool>>
     {

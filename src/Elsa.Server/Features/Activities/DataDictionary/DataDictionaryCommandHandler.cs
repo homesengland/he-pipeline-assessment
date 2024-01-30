@@ -5,7 +5,7 @@ using MediatR;
 using Newtonsoft.Json;
 using System.Text;
 
-namespace Elsa.Server.Features.Activities.DataDictionary
+namespace Elsa.Server.Features.Activities.DataDictionaryProvider
 {
     public class DataDictionaryCommandHandler : IRequestHandler<DataDictionaryCommand, string>
     {
@@ -21,8 +21,8 @@ namespace Elsa.Server.Features.Activities.DataDictionary
         {
             try
             {
-                var dataDictionaryResult = (await _elsaCustomRepository.GetQuestionDataDictionaryGroupsAsync(request.IncludeArchived, cancellationToken)).ToList();
-                var dataDictionaryList = await _elsaCustomRepository.GetQuestionDataDictionaryListAsync(cancellationToken);
+                var dataDictionaryResult = (await _elsaCustomRepository.GetDataDictionaryGroupsAsync(request.IncludeArchived, cancellationToken)).ToList();
+                var dataDictionaryList = await _elsaCustomRepository.GetDataDictionaryListAsync(cancellationToken);
                 string dataDictionaryJsonResult =  JsonConvert.SerializeObject(dataDictionaryResult);
                 string intellisenseLibrary = ToIntellisenseLibrary(dataDictionaryList);
                 Dictionary<string, string> dictionaryResult = new Dictionary<string, string>()
@@ -42,7 +42,7 @@ namespace Elsa.Server.Features.Activities.DataDictionary
             }
         }
 
-        private string ToIntellisenseLibrary(List<QuestionDataDictionary> dictionaryItems)
+        private string ToIntellisenseLibrary(List<DataDictionary> dictionaryItems)
         {
             var stringBuilder = new StringBuilder();
 

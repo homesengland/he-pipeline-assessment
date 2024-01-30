@@ -1,7 +1,7 @@
 SET IDENTITY_INSERT DataDictionaryGroup ON  
 
-INSERT INTO DataDictionaryGroup (Id, [Name], CreatedDateTime, LastModifiedDateTime)
-SELECT Id, [Name], CreatedDateTime, LastModifiedDateTime
+INSERT INTO DataDictionaryGroup (Id, [Name], IsArchived, CreatedDateTime, LastModifiedDateTime)
+SELECT Id, [Name], 0, CreatedDateTime, LastModifiedDateTime
 FROM QuestionDataDictionaryGroup
 
 SET IDENTITY_INSERT DataDictionaryGroup OFF  

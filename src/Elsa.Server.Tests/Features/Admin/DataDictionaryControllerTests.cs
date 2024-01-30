@@ -1,11 +1,11 @@
 ﻿using AutoFixture;
 using AutoFixture.Xunit2;
-using Elsa.Server.Features.Admin.DataDictionary;
-using Elsa.Server.Features.Admin.DataDictionary.ArchiveDataDictionaryItem;
-using Elsa.Server.Features.Admin.DataDictionary.CreateDataDictionaryGroup;
-using Elsa.Server.Features.Admin.DataDictionary.CreateDataDictionaryItem;
-using Elsa.Server.Features.Admin.DataDictionary.UpdateDataDictionaryGroup;
-using Elsa.Server.Features.Admin.DataDictionary.UpdateDataDictionaryItem;
+using Elsa.Server.Features.Admin.DataDictionaryHandler;
+using Elsa.Server.Features.Admin.DataDictionaryHandler.ArchiveDataDictionaryItem;
+using Elsa.Server.Features.Admin.DataDictionaryHandler.CreateDataDictionaryGroup;
+using Elsa.Server.Features.Admin.DataDictionaryHandler.CreateDataDictionaryItem;
+using Elsa.Server.Features.Admin.DataDictionaryHandler.UpdateDataDictionaryGroup;
+using Elsa.Server.Features.Admin.DataDictionaryHandler.UpdateDataDictionaryItem;
 using Elsa.Server.Features.Workflow.LoadCheckYourAnswersScreen;
 using Elsa.Server.Features.Workflow.LoadQuestionScreen;
 using Elsa.Server.Features.Workflow.StartWorkflow;
