@@ -13,6 +13,8 @@ import { GetAuth0Options, CreateClient } from '../../http-clients/http-client-se
 export class DataDictionaryGroupScreen {
   @State() private dataDictionaryItems: Array<DataDictionary>;
   @State() private group: DataDictionaryGroup = { Name: '', Id: null, DataDictionaryList: [], IsArchived: false };
+  @State() archiveText: string = this.group.IsArchived ? "Restore" : "Archive";
+  @State() update: number = 0;
   @Prop() basePath: string;
   @Prop() match: MatchResults;
   @Prop() history: RouterHistory;
@@ -31,11 +33,11 @@ export class DataDictionaryGroupScreen {
 
   async loadDataDictionaryGroups(id: any) {
     await this.initialize();
-    this.group = state.dictionaryGroups.find(x => x.Id == id);
+    this.group = { ...state.dictionaryGroups.find(x => x.Id == id) };
     //const elsaClient = await CreateClient(this.auth0, this.serverUrl);
     //const response = await (await elsaClient.get<Array<DataDictionaryGroup>>(`activities/dictionary/`, { params: { includeArchived: 'true' } }));
     //this.group = response.data.find(x => x.Id == id);
-    this.dataDictionaryItems = this.group.DataDictionaryList;
+    this.dataDictionaryItems = { ...this.group.DataDictionaryList }
     console.log("Group", this.group);
     console.log("Items", this.dataDictionaryItems);
   }
@@ -62,22 +64,34 @@ export class DataDictionaryGroupScreen {
 
     this.id = id;
     await this.loadDataDictionaryGroups(this.id);
+    this.updateButtonText();
   }
 
-  async onSubmit(e: Event) {
+  onSubmit = async (e: Event) => {
     e.preventDefault();
     await this.updateGroup();
     this.updateState();
+    this.update++;
   }
 
-  async onSubmitArchive(e: Event) {
+  onSubmitArchive = async (e: Event) => {
     e.preventDefault();
-    this.group.IsArchived = !this.group.IsArchived;
+    let archived: boolean = !this.group.IsArchived;
+    let list: DataDictionary[] = this.group.DataDictionaryList;
+    list.forEach(x => x.IsArchived = archived);
+    this.group = { ...this.group, IsArchived: !this.group.IsArchived };
+    this.group = { ...this.group, DataDictionaryList: list };
     await this.archive(this.group.Id, this.group.IsArchived);
     this.updateState();
+    this.updateButtonText();
+    this.update++;
   }
 
-  async updateGroup() {
+  updateButtonText = () => {
+    this.archiveText = this.group.IsArchived ? "Restore" : "Archive";
+  }
+
+  updateGroup = async () => {
     await this.initialize();
     const elsaClient = await CreateClient(this.auth0, this.serverUrl);
     let updateCommand = {
@@ -87,14 +101,14 @@ export class DataDictionaryGroupScreen {
     await this.loadDataDictionaryGroups(this.id);
   }
 
-    updateState() {
+    updateState = () => {
       let groups: DataDictionaryGroup[] = state.dictionaryGroups;
       let group: DataDictionaryGroup = groups.find(x => x.Id == this.group.Id);
       groups[this.group.Id] = group;
       state.dictionaryGroups = groups;
     }
 
-  async archive(id: any, isArchived: boolean) {
+  archive = async  (id: any, isArchived: boolean) => {
     await this.initialize();
     const elsaClient = await CreateClient(this.auth0, this.serverUrl);
     let archiveCommand = {
@@ -112,10 +126,6 @@ export class DataDictionaryGroupScreen {
   onCheckChanged(event) {
     const checkbox = (event.target as HTMLInputElement);
     this.isEditable = checkbox.checked;
-  }
-
-  archiveText(): string {
-    return this.group.IsArchived ? "Restore" : "Archive";
   }
 
   render() {
@@ -162,7 +172,7 @@ export class DataDictionaryGroupScreen {
 
           <div class="elsa-border-b elsa-border-gray-200 elsa-px-4 elsa-py-4 sm:elsa-flex sm:elsa-items-center  sm:elsa-px-6 lg:elsa-px-8 elsa-bg-white">
             <button type="submit" aria-has-popup="true" class=" elsa-order-0 elsa-inline-flex elsa-items-center elsa-px-4 elsa-py-2 elsa-border elsa-border-transparent elsa-shadow-sm elsa-text-sm elsa-font-medium elsa-rounded-md elsa-text-white elsa-bg-blue-600 hover:elsa-bg-blue-700 focus:elsa-outline-none focus:elsa-ring-2 focus:elsa-ring-offset-2 focus:elsa-ring-blue-500 sm:elsa-order-1 sm:elsa-ml-3">
-              {this.archiveText()} </button>
+              {this.archiveText} </button>
           </div>
         </form>
 
@@ -180,11 +190,10 @@ export class DataDictionaryGroupScreen {
             </tr>
           </thead>
           <tbody class="elsa-bg-white elsa-divide-y elsa-divide-gray-100">
-            {collection.map(this.dataDictionaryItems, dataTag => {
+            {collection.map(this.group.DataDictionaryList, dataTag => {
               const editUrl = `/data-dictionary/group/${this.id}/item/${dataTag.Id}`;
               const name = dataTag.Name;
               const isArchived = dataTag.IsArchive != null ? dataTag.IsArchived.toString(): 'false';
-              console.log(isArchived);
               const editIcon = (
                 <svg class="elsa-h-5 elsa-w-5 elsa-text-gray-500" width="24" height="24" viewBox="0 0 24 24"
                   xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-width="2"

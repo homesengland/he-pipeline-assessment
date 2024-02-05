@@ -102,8 +102,8 @@ export class DataDictionaryGroups {
         })
       }
             <tr>
-              <td>Archived Groups</td>
-              <td></td>
+              <th class="elsa-px-6 elsa-py-3 elsa-border-b elsa-border-gray-200 elsa-bg-gray-50 elsa-text-left elsa-text-xs elsa-leading-4 elsa-font-medium elsa-text-gray-500 elsa-text-left elsa-uppercase elsa-tracking-wider">
+                <span class="lg:elsa-pl-2">Archived Groups</span></th>
 
             </tr>
           {collection.map(this.dataDictionaryGroups.filter(x => x.IsArchived), group => {

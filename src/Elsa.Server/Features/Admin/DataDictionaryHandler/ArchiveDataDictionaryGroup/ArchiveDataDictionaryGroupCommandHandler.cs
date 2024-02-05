@@ -29,7 +29,7 @@ namespace Elsa.Server.Features.Admin.DataDictionaryHandler.ArchiveDataDictionary
             var result = new OperationResult<ArchiveDataDictionaryGroupCommandResponse>();
             try
             {
-                await _elsaCustomRepository.ArchiveDataDictionaryGroup(request.Id, cancellationToken);
+                await _elsaCustomRepository.ArchiveDataDictionaryGroup(request.Id, request.IsArchived, cancellationToken);
                 await _mediator.Send(new ClearDictionaryCacheCommand());
             }
             catch (Exception e)

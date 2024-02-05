@@ -231,29 +231,29 @@ namespace Elsa.CustomInfrastructure.Data.Repository
                 .FirstOrDefaultAsync(x=>x.WorkflowInstanceId == workflowInstanceId, cancellationToken);
         }
 
-        public async Task ArchiveDataDictionaryItem(int id, CancellationToken cancellationToken)
+        public async Task ArchiveDataDictionaryItem(int id, bool isArchived, CancellationToken cancellationToken)
         {
             var items = _dbContext.Set<DataDictionary>().Where(x => x.Id== id);
             foreach (var item in items)
             {
-                item.IsArchived = true;
+                item.IsArchived = isArchived;
             }
             _dbContext.UpdateRange(items);
             await SaveChanges(cancellationToken);
         }
-        public async Task ArchiveDataDictionaryGroup(int id, CancellationToken cancellationToken)
+        public async Task ArchiveDataDictionaryGroup(int id, bool isArchived,CancellationToken cancellationToken)
         {
             var items = _dbContext.Set<DataDictionaryGroup>().Where(x => x.Id == id);
             foreach (var item in items)
             {
-                item.IsArchived = true;
+                item.IsArchived = isArchived;
             }
             _dbContext.UpdateRange(items);
 
             var dictionaryItems = _dbContext.Set<DataDictionary>().Where(x => x.DataDictionaryGroupId == id);
             foreach (var item in dictionaryItems)
             {
-                item.IsArchived = true;
+                item.IsArchived = isArchived;
             }
             _dbContext.UpdateRange(dictionaryItems);
 
