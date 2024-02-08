@@ -1,0 +1,57 @@
+@page "/DataDictionary/{group:int}/Create"
+@model DataDictionaryItemModel
+@{
+    Layout = "_Layout";
+}
+
+<div class="govuk-grid-row">
+    <div class="govuk-grid-column-two-thirds">
+      <a asp-page="/_DataDictionaryGroup" asp-route-group="@Model.DictionaryItem.Group.Id" class="govuk-back-link">Back</a>
+    </div>
+    <div class="govuk-grid-column-one-third pull-right">
+      
+    </div>
+</div>
+<div class="text-center">
+<form action="/Admin/CreateAssessmentTool" method="post">
+  <fieldset class="govuk-fieldset">
+  <legend class="govuk-fieldset__legend govuk-fieldset__legend--l">
+    <h1 class="govuk-fieldset__heading">
+      Edit @Model.DictionaryItem.Name
+    </h1>
+  </legend>
+  <div class="govuk-form-group">
+    <label class="govuk-label" for="item-name">
+      Data Dictionary Item Name
+    </label>
+    <input asp-for="DictionaryItem.Name" class="govuk-input" id="item-name" name="item-name" type="text">
+  </div>
+    <div class="govuk-form-group">
+    <label class="govuk-label" for="legacy-name">
+      Data Dictionary Item Legacy Name
+    </label>
+    <input asp-for="DictionaryItem.LegacyName" class="govuk-input" id="legacy-name" name="legacy-name" type="text">
+  </div>
+      <div class="govuk-form-group">
+    <label class="govuk-label" for="legacy-name">
+      Type
+    </label>
+    <input asp-for="DictionaryItem.Type" class="govuk-input" id="legacy-name" name="legacy-name" type="text">
+  </div>
+      <div class="govuk-form-group">
+    <label class="govuk-label" for="legacy-name">
+      Description
+    </label>
+    <textarea asp-for="DictionaryItem.Description" class="govuk-textarea" id="legacy-name" name="legacy-name" type="text"></textarea>
+  </div>
+  <div class="govuk-form-group">
+    <label class="govuk-label" for="group-archived">
+      Archived
+    </label>
+    <input asp-for="DictionaryItem.IsArchived" class="govuk-input" id="group-archived" name="group-archived" type="checkbox">
+  </div>
+
+</fieldset>
+  
+</form>
+</div>

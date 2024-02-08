@@ -1,0 +1,52 @@
+@page "/DataDictionary"
+@model DataDictionaryModel
+@{
+    Layout = "_Layout";
+}
+<div>
+<div class="govuk-grid-row">
+    <div class="govuk-grid-column-two-thirds">
+    </div>
+    <div class="govuk-grid-column-one-third pull-right">
+      <a asp-page="/_CreateDataDictionaryGroup" class="govuk-link">Add Data Dictionary Group</a>
+    </div>
+</div>
+
+    <br />
+
+    <table class="govuk-table" id="assessmentListTable">
+
+        <thead class="govuk-table__head">
+            <tr class="govuk-table__row">
+                <th scope="col" class="govuk-table__header">Group Name</th>
+                <th scope="col" class="govuk-table__header">Items</th>
+                <th scope="col" class="govuk-table__header">IsArchived</th>
+            </tr>
+        </thead>
+        <tbody class="govuk-table__body">
+            @if(Model.Dictionary != null)
+            {
+            @foreach (var group in Model.Dictionary.Where(x => !x.IsArchived))
+            {
+
+                <tr class="govuk-table__row">
+                    <td class="govuk-table__cell"><a asp-page="/_DataDictionaryGroup" asp-route-group="@group.Id" class="">@group.Name</a></td>
+                    <td class="govuk-table__cell">@group.DataDictionaryList.Count()</td>
+                    <td class="govuk-table__cell">False</td>
+                </tr>
+            }
+
+            @foreach (var group in Model.Dictionary.Where(x => x.IsArchived))
+            {
+                <tr class="govuk-table__row">
+                    <td class="govuk-table__cell"><a asp-page="/_DataDictionaryGroup" asp-route-group="@group.Id" class="">@group.Name</a></td>
+                    <td class="govuk-table__cell">@group.DataDictionaryList.Count()</td>
+                    <td class="govuk-table__cell">True</td>
+                </tr>
+            }
+            }
+
+        </tbody>
+
+    </table>
+</div>

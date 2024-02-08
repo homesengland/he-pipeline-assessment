@@ -137,10 +137,19 @@ namespace Elsa.CustomInfrastructure.Data.Repository
         public async Task<List<PotScoreOption>> GetPotScoreOptionsAsync(CancellationToken cancellationToken) =>
             await _dbContext.Set<PotScoreOption>().Where(x => x.IsActive).ToListAsync(cancellationToken);
 
-        public async Task<List<DataDictionary>> GetDataDictionaryListAsync(CancellationToken cancellationToken = default)
+        public async Task<List<DataDictionary>> GetDataDictionaryListAsync(bool includeArchived = false, CancellationToken cancellationToken = default)
         {
-            var result = await _dbContext.Set<DataDictionary>().Include(x => x.Group).Where(x=> (!x.IsArchived.HasValue || !x.IsArchived.Value)).ToListAsync(cancellationToken);
-            return result;
+            if (includeArchived)
+            {
+                var result = await _dbContext.Set<DataDictionary>().Include(x => x.Group).Where(x => !x.IsArchived).ToListAsync(cancellationToken);
+                return result;
+            }
+            else
+            {
+                var result = await _dbContext.Set<DataDictionary>().Include(x => x.Group).ToListAsync(cancellationToken);
+                return result;
+            }
+
         }
 
         public async Task<List<DataDictionaryGroup>> GetDataDictionaryGroupsAsync(bool includeArchived = false, CancellationToken cancellationToken = default)
@@ -148,7 +157,7 @@ namespace Elsa.CustomInfrastructure.Data.Repository
             var result = new List<DataDictionaryGroup>();
             if (!includeArchived)
             {
-                result = await _dbContext.Set<DataDictionaryGroup>().Include(x => x.DataDictionaryList.Where(x => (!x.IsArchived.HasValue || !x.IsArchived.Value))).ToListAsync(cancellationToken);
+                result = await _dbContext.Set<DataDictionaryGroup>().Include(x => x.DataDictionaryList.Where(x => !x.IsArchived)).ToListAsync(cancellationToken);
             }
             else
             {

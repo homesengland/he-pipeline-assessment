@@ -50,7 +50,7 @@ namespace Elsa.Server.Tests.Features.Admin.ArchiveDataDictionaryItem
         {
             //Arrange
 
-            elsaCustomRepository.Setup(x => x.ArchiveDataDictionaryItem(command.Id, CancellationToken.None))
+            elsaCustomRepository.Setup(x => x.ArchiveDataDictionaryItem(command.Id, true, CancellationToken.None))
                 .Throws(exception);
 
             //Act

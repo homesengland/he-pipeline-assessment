@@ -51,10 +51,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Content Remove="Pages\Data-Dictionary.cshtml" />
-  </ItemGroup>
-
-  <ItemGroup>
     <None Remove="src\components\base-component.ts" />
     <None Remove="src\components\common-properties\he-text-activity-property.tsx" />
     <None Remove="src\components\common-properties\nested-properties\nested-property-list.tsx" />
@@ -83,10 +79,6 @@
     <None Remove="src\components\custom-outcome-property.tsx" />
     <None Remove="src\components\custom_outcome_list_property.tsx" />
     <None Remove="src\models\activity-provider.ts" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Compile Include="Pages\Data-Dictionary.cshtml" />
   </ItemGroup>
 
   <ItemGroup>

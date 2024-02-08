@@ -27,7 +27,7 @@ namespace Elsa.Server.Tests.Features.Activities.DataDictionaryProvider
             //Arrange
             propertyDescriber.Setup(x => x.DescribeInputProperties(typeof(Question))).Returns(inputDescriptors);
             repository.Setup(x => x.GetDataDictionaryGroupsAsync(false, CancellationToken.None)).ReturnsAsync(dataDictionaryGroups);
-            repository.Setup(x => x.GetDataDictionaryListAsync(CancellationToken.None)).ReturnsAsync(dataDictionaries);
+            repository.Setup(x => x.GetDataDictionaryListAsync(false, CancellationToken.None)).ReturnsAsync(dataDictionaries);
 
             var jsonData = JsonConvert.SerializeObject(dataDictionaries);
             //Act

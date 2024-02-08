@@ -1,6 +1,5 @@
 using Elsa.CustomWorkflow.Sdk.HttpClients;
 using Elsa.Dashboard.Models;
-using Microsoft.AspNetCore.Authentication.OAuth;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.Extensions.Options;
@@ -51,7 +50,7 @@ namespace Elsa.Dashboard.PageModels
 
     private async Task LoadDataDictionary(string url)
     {
-      string? result = await _client.LoadDataDictionary(_serverUrl);
+      string? result = await _client.LoadDataDictionary(_serverUrl, true);
       Dictionary<string, string>? dict = JsonSerializer.Deserialize<Dictionary<string, string>>(result!);
       if(dict != null)
       {

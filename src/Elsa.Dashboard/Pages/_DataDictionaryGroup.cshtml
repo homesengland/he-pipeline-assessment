@@ -1,0 +1,69 @@
+@page "/DataDictionary/{*group}"
+@model DataDictionaryGroupModel
+@{
+    Layout = "_Layout";
+    string archiveText = Model.DictionaryGroup.IsArchived ? "Restore" : "Archive";
+}
+<div class="govuk-grid-row">
+    <div class="govuk-grid-column-two-thirds">
+      <a asp-page="/_DataDictionary" class="govuk-back-link">Back</a>
+    </div>
+    <div class="govuk-grid-column-one-third pull-right">
+      <a asp-page="/_CreateDataDictionaryItem" asp-route-group="@Model.DictionaryGroup.Id" class="govuk-link">Add Data Dictionary Item</a>
+    </div>
+</div>
+<div class="text-center">
+<form action="/Admin/CreateAssessmentTool" method="post">
+  <fieldset class="govuk-fieldset">
+  <legend class="govuk-fieldset__legend govuk-fieldset__legend--l">
+    <h1 class="govuk-fieldset__heading">
+      Edit @Model.DictionaryGroup.Name
+    </h1>
+  </legend>
+  <div class="govuk-form-group">
+    <label class="govuk-label" for="group-name">
+      Group Name
+    </label>
+    <input asp-for="DictionaryGroup.Name" class="govuk-input" id="group-name" name="group-name" type="text">
+  </div>
+  <div class="govuk-form-group">
+    <label class="govuk-label" for="group-archived">
+      Archived
+    </label>
+    <input asp-for="DictionaryGroup.IsArchived" class="govuk-checkboxes__input" id="group-archived" name="group-archived" type="checkbox">
+  </div>
+
+
+  <table class="govuk-table">
+  <caption class="govuk-table__caption govuk-table__caption--m">List of Data Dictionary Items</caption>
+  <thead class="govuk-table__head">
+    <tr class="govuk-table__row">
+      <th scope="col" class="govuk-table__header">Name</th>
+      <th scope="col" class="govuk-table__header">Archived</th>
+    </tr>
+  </thead>
+  <tbody class="govuk-table__body">
+                    @foreach(var item in Model.DictionaryGroup.DataDictionaryList)
+                    {
+                        <tr class="govuk-table__row">
+                          <th scope="row" class="govuk-table__header"><a asp-page="_DataDictionaryItem" asp-route-group="@item.DataDictionaryGroupId" asp-route-item="@item.Id">@item.Name</a></th>
+                          <td class="govuk-table__cell">@item.IsArchived.ToString()</td>
+                        </tr>
+                    }
+  </tbody>
+</table>
+
+</fieldset>
+  
+</form>
+<div class="govuk-button-group">
+        <input id="update" type="submit" value="Update Group" name="update" class="govuk-button" />
+    </div>
+</div>
+
+<form method="post">
+    <input asp-for="DictionaryGroup" />
+    <span asp-validation-for="DictionaryGroup" class="text-danger"></span>
+    <button type="submit" class="govuk-button" asp-page-handler="archive">@archiveText</button>
+</form>
+</div>

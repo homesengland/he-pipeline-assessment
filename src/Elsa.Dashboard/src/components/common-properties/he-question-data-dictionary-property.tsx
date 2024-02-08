@@ -28,7 +28,7 @@ export class HEQuestionDataDictionaryProperty {
   @State() dataDictionary: Array<DataDictionary> = [];
   @State() selectedDataDictionaryItem: number;
 
-  dataDictionaryGroup: Array<DataDictionaryGroup> = state.dictionaryGroups;
+  dataDictionaryGroup: Array<DataDictionaryGroup> = state.dictionaryGroups.filter(x => !x.isArchived);
 
   selectedGroupDictionaryId: number;
   selectedGroup: DataDictionaryGroup;
@@ -42,7 +42,7 @@ export class HEQuestionDataDictionaryProperty {
     this.selectedGroup = this.dataDictionaryGroup.filter(x => x.DataDictionaryList.filter(y => y.Id == this.selectedDataDictionaryItem)[0])[0];
     if (this.selectedGroup != undefined) {
       this.dataDictionaryDisplayToggle = true;
-      this.dataDictionary = [...this.selectedGroup.DataDictionaryList];
+      this.dataDictionary = [...this.selectedGroup.DataDictionaryList.filter(x => !x.IsArchived)];
 
     }
   }

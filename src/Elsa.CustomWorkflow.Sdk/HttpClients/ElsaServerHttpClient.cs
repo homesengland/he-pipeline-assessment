@@ -21,7 +21,7 @@ namespace Elsa.CustomWorkflow.Sdk.HttpClients
         Task<WorkflowActivityDataDto?> LoadCheckYourAnswersScreen(LoadWorkflowActivityDto model);
         Task<WorkflowActivityDataDto?> LoadConfirmationScreen(LoadWorkflowActivityDto model);
         Task<string?> LoadCustomActivities(string elsaServer);
-        Task<string?> LoadDataDictionary(string elsaServer);
+        Task<string?> LoadDataDictionary(string elsaServer, bool includeArchived);
         Task PostArchiveQuestions(string[] workflowInstanceIds);
         Task<ReturnToActivityDataDto?> ReturnToActivity(ReturnToActivityData model);
     }
@@ -286,10 +286,10 @@ namespace Elsa.CustomWorkflow.Sdk.HttpClients
             return data;
         }
 
-        public async Task<string?> LoadDataDictionary(string elsaServer)
+        public async Task<string?> LoadDataDictionary(string elsaServer, bool includeArchived = false)
         {
             string data;
-            string fullUri = $"{elsaServer}/activities/dictionary" + "?t=" + DateTime.UtcNow.Ticks;
+            string fullUri = $"{elsaServer}/activities/dictionary?includeArchived={includeArchived}" + "?t=" + DateTime.UtcNow.Ticks;
             var client = _httpClientFactory.CreateClient("ElsaServerClient");
             AddAccessTokenToRequest(client);
             using (var response = await client

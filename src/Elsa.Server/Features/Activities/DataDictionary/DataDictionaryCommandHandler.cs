@@ -22,7 +22,7 @@ namespace Elsa.Server.Features.Activities.DataDictionaryProvider
             try
             {
                 var dataDictionaryResult = (await _elsaCustomRepository.GetDataDictionaryGroupsAsync(request.IncludeArchived, cancellationToken)).ToList();
-                var dataDictionaryList = await _elsaCustomRepository.GetDataDictionaryListAsync(cancellationToken);
+                var dataDictionaryList = await _elsaCustomRepository.GetDataDictionaryListAsync(false, cancellationToken);
                 string dataDictionaryJsonResult =  JsonConvert.SerializeObject(dataDictionaryResult);
                 string intellisenseLibrary = ToIntellisenseLibrary(dataDictionaryList);
                 Dictionary<string, string> dictionaryResult = new Dictionary<string, string>()

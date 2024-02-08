@@ -252,3 +252,10 @@ elsa-modal-dialog > div > div > div:first-child {
     width: 60%;
   }
 }
+.pull-right {
+  float: right;
+}
+
+.pull-left {
+  float: left;
+}

@@ -75,6 +75,9 @@ export class DataDictionaryGroupScreen {
   }
 
   onSubmitArchive = async (e: Event) => {
+    console.log("submitting archive");
+    console.log("update value", this.update);
+    console.log("what exactly is, this...?", this);
     e.preventDefault();
     let archived: boolean = !this.group.IsArchived;
     let list: DataDictionary[] = this.group.DataDictionaryList;
@@ -82,9 +85,11 @@ export class DataDictionaryGroupScreen {
     this.group = { ...this.group, IsArchived: !this.group.IsArchived };
     this.group = { ...this.group, DataDictionaryList: list };
     await this.archive(this.group.Id, this.group.IsArchived);
+    console.log("Archiving...");
     this.updateState();
     this.updateButtonText();
     this.update++;
+    console.log(this.update);
   }
 
   updateButtonText = () => {
@@ -101,7 +106,8 @@ export class DataDictionaryGroupScreen {
     await this.loadDataDictionaryGroups(this.id);
   }
 
-    updateState = () => {
+  updateState = () => {
+    console.log("Updating state");
       let groups: DataDictionaryGroup[] = state.dictionaryGroups;
       let group: DataDictionaryGroup = groups.find(x => x.Id == this.group.Id);
       groups[this.group.Id] = group;

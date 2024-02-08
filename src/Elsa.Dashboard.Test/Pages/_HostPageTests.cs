@@ -33,7 +33,7 @@ namespace Elsa.Dashboard.Tests.Pages
             config.SetupGet(o => o.Value).Returns(urlMock.Object);
             urlMock.SetupGet(u => u.ElsaServer).Returns(mockUrl);
             httpClient.Setup(c => c.LoadCustomActivities(mockUrl)).ReturnsAsync(dataJson);
-            httpClient.Setup(c => c.LoadDataDictionary(mockUrl)).ReturnsAsync(dataDictionaryDataJson);
+            httpClient.Setup(c => c.LoadDataDictionary(mockUrl, false)).ReturnsAsync(dataDictionaryDataJson);
             var pageModel = new ElsaDashboardLoader(httpClient.Object, config.Object, logger, auth0Config.Object);
 
             // Act
@@ -63,7 +63,7 @@ namespace Elsa.Dashboard.Tests.Pages
             config.SetupGet(o => o.Value).Returns(urlMock.Object);
             urlMock.SetupGet(u => u.ElsaServer).Returns(mockUrl);
             httpClient.Setup(c => c.LoadCustomActivities(mockUrl)).ReturnsAsync(dataJson);
-            httpClient.Setup(c => c.LoadDataDictionary(mockUrl)).ReturnsAsync(dataDictionaryDataJson);
+            httpClient.Setup(c => c.LoadDataDictionary(mockUrl, false)).ReturnsAsync(dataDictionaryDataJson);
             var pageModel = new ElsaDashboardLoader(httpClient.Object, config.Object, logger, auth0Config.Object);
 
             // Act
@@ -116,7 +116,7 @@ namespace Elsa.Dashboard.Tests.Pages
             config.SetupGet(o => o.Value).Returns(urlMock.Object);
             urlMock.SetupGet(u => u.ElsaServer).Returns(mockUrl);
             httpClient.Setup(c => c.LoadCustomActivities(mockUrl)).ReturnsAsync(dataJson);
-            httpClient.Setup(c => c.LoadDataDictionary(mockUrl)).ReturnsAsync(dataDictionaryDataJson);
+            httpClient.Setup(c => c.LoadDataDictionary(mockUrl, false)).ReturnsAsync(dataDictionaryDataJson);
             var pageModel = new ElsaDashboardLoader(httpClient.Object, config.Object, logger, auth0Config.Object);
 
 
@@ -147,7 +147,7 @@ namespace Elsa.Dashboard.Tests.Pages
             config.SetupGet(o => o.Value).Returns(urlMock.Object);
             urlMock.SetupGet(u => u.ElsaServer).Returns(mockUrl);
             httpClient.Setup(c => c.LoadCustomActivities(mockUrl)).ReturnsAsync(dataJson);
-            httpClient.Setup(c => c.LoadDataDictionary(mockUrl)).ReturnsAsync(dataDictionaryDataJson);
+            httpClient.Setup(c => c.LoadDataDictionary(mockUrl, false)).ReturnsAsync(dataDictionaryDataJson);
             var pageModel = new ElsaDashboardLoader(httpClient.Object, config.Object, logger, auth0Config.Object);
 
 
