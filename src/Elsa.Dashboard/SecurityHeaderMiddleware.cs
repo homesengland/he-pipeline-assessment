@@ -27,13 +27,14 @@ namespace Elsa.Dashboard
     public async Task Invoke([NotNull] HttpContext context, [NotNull] NonceConfig nonceConfig)
     {
       var elsaSetupNonce = $"nonce-{nonceConfig.ElsaSetup}";
+      var govUkSetupNonce = $"nonce-{nonceConfig.GovUkSetup}";
       var elsaServer = _configuration["Urls:ElsaServer"];
       var oAuthToken = "https://*.homesengland.org.uk";
       var oAuthToken2 = "https://*.auth0.com";
       var auth0Script = "https://unpkg.com/@auth0/auth0-spa-js@1.1.1/dist/auth0-spa-js.production.esm.js";
       var axios = "https://cdn.jsdelivr.net/npm/axios-middleware@0.3.1/dist/axios-middleware.esm.js";
 
-      var connectSrc = $"connect-src 'self' {elsaServer} {oAuthToken} {oAuthToken2} {auth0Script} {axios};";
+      var connectSrc = $"connect-src 'self' {elsaServer} {govUkSetupNonce} {oAuthToken} {oAuthToken2} {auth0Script} {axios};";
       var defaultSrc = $"default-src 'self';";
       var scriptSrc = $"script-src 'self' 'strict-dynamic' '{elsaSetupNonce}' 'unsafe-eval';";
       var styleSrcElem = $"style-src-elem 'self' 'unsafe-inline';";

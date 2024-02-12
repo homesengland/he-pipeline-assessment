@@ -12,14 +12,16 @@
 
     <link rel="shortcut icon" sizes="16x16 32x32 48x48" href="~/styles/assets/images/favicon.ico" type="image/x-icon">
     <link rel="mask-icon" href="~/styles/assets/images/govuk-mask-icon.svg" color="#0b0c0c">
-    <link rel="apple-touch-icon" sizes="180x180" href="~/styles/assets/images/govuk-apple-touch-icon-180x180.png">
-    <link rel="apple-touch-icon" sizes="167x167" href="~/styles/assets/images/govuk-apple-touch-icon-167x167.png">
-    <link rel="apple-touch-icon" sizes="152x152" href="~/styles/assets/images/govuk-apple-touch-icon-152x152.png">
     <link rel="apple-touch-icon" href="~/styles/assets/images/govuk-apple-touch-icon.png">
     <link rel="stylesheet" href="~/css/site.css" />
     <link href="~/styles/govuk-frontend-4.3.0.min.css" rel="stylesheet">
     <link rel="stylesheet" type="text/css" href="~/DataTables/datatablesgovuk.min.css">
     <link href="~/styles/overrides.css" rel="stylesheet">
+    <link rel="icon" type="image/png" sizes="32x32" href="/_content/Elsa.Designer.Components.Web/elsa-workflows-studio/assets/images/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/_content/Elsa.Designer.Components.Web/elsa-workflows-studio/assets/images/favicon-16x16.png">
+    <link rel="stylesheet" href="/_content/Elsa.Designer.Components.Web/elsa-workflows-studio/assets/fonts/inter/inter.css">
+    <link rel="stylesheet" href="/_content/Elsa.Designer.Components.Web/elsa-workflows-studio/elsa-workflows-studio.css">
+    <link rel="stylesheet" href="/css/site.css">
 
     @RenderSection("Styles", required: false)
 </head>
@@ -87,11 +89,9 @@
         </div>
     </footer>
 
-    <script src="~/jquery/dist/jquery.min.js" nonce="@nonceConfig.JQuerySetup"></script>
-    <script src="~/styles/govuk-frontend-4.3.0.min.js"></script>
-    <script src="~/DataTables/datatables.min.js" nonce="@nonceConfig.DataTablesSetup"></script>
+    <script src="~/styles/govuk-frontend-4.3.0.min.js" nonce="@nonceConfig.GovUkSetup"></script>
 
-    <script nonce="@nonceConfig.ElsaSetup">
+    <script nonce="@nonceConfig.GovUkSetup">
         window.GOVUKFrontend.initAll()
     </script>
 
