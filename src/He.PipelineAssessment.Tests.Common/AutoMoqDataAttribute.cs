@@ -2,7 +2,7 @@ using AutoFixture;
 using AutoFixture.AutoMoq;
 using AutoFixture.Kernel;
 using AutoFixture.Xunit2;
-using Microsoft.AspNetCore.Mvc;
+using System.Web.Mvc;
 
 namespace He.PipelineAssessment.Tests.Common
 {
