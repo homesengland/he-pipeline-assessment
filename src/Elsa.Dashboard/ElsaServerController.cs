@@ -126,7 +126,7 @@ namespace Elsa.Dashboard
       }
       catch (Exception ex)
       {
-        _logger.LogError("Error getting access token: ", ex.Message);
+        _logger.LogError(ex.Message, "Error getting access token: ");
         return null;
       }
     }

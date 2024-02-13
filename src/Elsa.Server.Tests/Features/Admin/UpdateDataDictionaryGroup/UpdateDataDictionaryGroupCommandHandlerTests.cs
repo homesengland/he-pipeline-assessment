@@ -47,7 +47,7 @@ UpdateDataDictionaryGroupCommand command,
 UpdateDataDictionaryGroupCommandHandler sut)
         {
             //Arrange
-            command.group.Name = string.Empty;
+            command.group!.Name = string.Empty;
 
             //Act
             var result = await sut.Handle(command, CancellationToken.None);

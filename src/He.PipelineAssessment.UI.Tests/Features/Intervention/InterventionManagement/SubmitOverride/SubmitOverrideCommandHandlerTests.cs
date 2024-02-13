@@ -57,7 +57,7 @@ namespace He.PipelineAssessment.UI.Tests.Features.Intervention.InterventionManag
  
             catch(Exception e)
             {
-                Assert.False(true, "No Exception should be thrown");
+                Assert.False(true, e.Message);
             }
 
             

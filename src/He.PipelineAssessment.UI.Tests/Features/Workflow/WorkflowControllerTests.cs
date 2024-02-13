@@ -63,10 +63,8 @@ namespace He.PipelineAssessment.UI.Tests.Features.Workflow
         [AutoMoqData]
         public async Task QuestionScreenSaveAndContinue_ShouldRedirectToAction_GivenValidationIssuesAreFound(
             [Frozen] Mock<IMediator> mediator,
-            [Frozen] Mock<IElsaServerHttpClient> http,
             QuestionScreenSaveAndContinueCommand command,
             QuestionScreenSaveAndContinueCommandResponse saveAndContinueCommandResponse,
-            WorkflowNextActivityDataDto httpResponse,
             ValidationResult validationResult,
             WorkflowController sut)
         {
