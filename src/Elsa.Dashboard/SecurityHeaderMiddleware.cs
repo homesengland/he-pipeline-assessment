@@ -36,7 +36,7 @@ namespace Elsa.Dashboard
 
       var connectSrc = $"connect-src 'self' {elsaServer} {govUkSetupNonce} {oAuthToken} {oAuthToken2} {auth0Script} {axios};";
       var defaultSrc = $"default-src 'self';";
-      var scriptSrc = $"script-src 'self' 'strict-dynamic' '{elsaSetupNonce}' 'unsafe-eval';";
+      var scriptSrc = $"script-src 'self' 'strict-dynamic' '{govUkSetupNonce}' '{elsaSetupNonce}' 'unsafe-eval';";
       var styleSrcElem = $"style-src-elem 'self' 'unsafe-inline';";
       var styleSrc = $"style-src 'self' 'unsafe-inline';";
       var imgSrc = $"img-src 'self' data: https://unpkg.com/benteststencil@0.0.16/;";

@@ -1,17 +1,8 @@
-﻿using Castle.Core.Logging;
-using Elsa.Server.Features.Admin.DataDictionaryHandler.ClearDictionaryCache;
-using Elsa.Server.Features.Admin.DataDictionaryHandler.UpdateDataDictionaryItem;
-using Elsa.Server.Models;
+﻿using Elsa.Server.Features.Admin.DataDictionaryHandler.ClearDictionaryCache;
 using He.PipelineAssessment.Tests.Common;
-using MediatR;
 using Microsoft.Extensions.Logging;
 using Moq;
 using StackExchange.Redis;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Xunit;
 
 namespace Elsa.Server.Tests.Features.Admin.ClearDataDictionaryCache

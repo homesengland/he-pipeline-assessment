@@ -162,7 +162,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="src\components\data-dictionary\" />
     <Folder Include="src\http-clients\" />
     <Folder Include="www\" />
     <Folder Include="Views\" />

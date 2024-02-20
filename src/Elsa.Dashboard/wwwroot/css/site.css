@@ -259,3 +259,29 @@ elsa-modal-dialog > div > div > div:first-child {
 .pull-left {
   float: left;
 }
+
+.govuk-button .govuk-button-override {
+  background-color: #00703c;
+}
+
+.no-vertical-padding {
+    padding-bottom: 0 !important;
+    padding-top:0 !important;
+}
+
+.workflow-settings-button {
+  top: 15rem !important;
+}
+
+elsa-flyout-panel .elsa-top-20 {
+  top: 15rem;
+}
+
+.elsa-top-20 .workflow-settings-button {
+    top: 0rem !important;
+}
+
+.horizontal-padding__sm {
+    padding-left: 2rem;
+    padding-right: 2rem;
+}

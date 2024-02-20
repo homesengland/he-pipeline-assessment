@@ -6,27 +6,27 @@ using Elsa.Server.Features.Admin.DataDictionaryHandler.CreateDataDictionaryGroup
 using Elsa.Server.Models;
 using MediatR;
 
-namespace Elsa.Server.Features.Admin.DataDictionaryHandler.ArchiveDataDictionaryItem
+namespace Elsa.Server.Features.Admin.DataDictionaryHandler.ArchiveDataDictionaryRecord
 {
-    public class ArchiveDataDictionaryItemCommandHandler : IRequestHandler<ArchiveDataDictionaryItemCommand, OperationResult<ArchiveDataDictionaryItemCommandResponse>>
+    public class ArchiveDataDictionaryRecordCommandHandler : IRequestHandler<ArchiveDataDictionaryRecordCommand, OperationResult<ArchiveDataDictionaryRecordCommandResponse>>
     {
         private readonly IElsaCustomRepository _elsaCustomRepository;
-        private readonly ILogger<ArchiveDataDictionaryItemCommandHandler> _logger;
+        private readonly ILogger<ArchiveDataDictionaryRecordCommandHandler> _logger;
         private readonly IMediator _mediator;
 
 
-        public ArchiveDataDictionaryItemCommandHandler(IMediator mediator,
+        public ArchiveDataDictionaryRecordCommandHandler(IMediator mediator,
             IElsaCustomRepository elsaCustomRepository,
-            ILogger<ArchiveDataDictionaryItemCommandHandler> logger)
+            ILogger<ArchiveDataDictionaryRecordCommandHandler> logger)
         {
             _mediator = mediator;
             _elsaCustomRepository = elsaCustomRepository;
             _logger = logger;
         }
 
-        public async Task<OperationResult<ArchiveDataDictionaryItemCommandResponse>> Handle(ArchiveDataDictionaryItemCommand request, CancellationToken cancellationToken)
+        public async Task<OperationResult<ArchiveDataDictionaryRecordCommandResponse>> Handle(ArchiveDataDictionaryRecordCommand request, CancellationToken cancellationToken)
         {
-            var result = new OperationResult<ArchiveDataDictionaryItemCommandResponse>();
+            var result = new OperationResult<ArchiveDataDictionaryRecordCommandResponse>();
             try
             {
                 await _elsaCustomRepository.ArchiveDataDictionaryItem(request.Id, request.IsArchived, cancellationToken);

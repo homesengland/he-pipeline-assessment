@@ -2,18 +2,18 @@
 @using Elsa.CustomModels
 @model DataDictionaryModel
 @{
-    Layout = "_Layout";
-    IEnumerable<DataDictionary> itemList = from p in Model.Dictionary
+    Layout = "_LayoutFullWidth";
+    IEnumerable<DataDictionary> recordList = from p in Model.Dictionary
                                  from c in p.DataDictionaryList
                                  select new DataDictionary { Id = c.Id, Name = c.Name, LegacyName = c.LegacyName, IsArchived = c.IsArchived, DataDictionaryGroupId = c.DataDictionaryGroupId, Group = p  };
 }
-<div>
-    <div class="govuk-tabs" data-module="govuk-tabs">
+<div class="govuk-lg-width-container">
+    <div class="govuk-tabs horizontal-padding__sm" data-module="govuk-tabs">
         <div class="govuk-grid-row">
             <div class="govuk-grid-column-two-thirds">
             </div>
             <div class="govuk-grid-column-one-third pull-right">
-                <a asp-page="/_CreateDataDictionaryGroup" class="govuk-link">Add Data Dictionary Group</a>
+                <a asp-page="/_CreateDataDictionaryGroup" class="govuk-link pull-right">Add Data Dictionary Group</a>
             </div>
         </div>
         <ul class="govuk-tabs__list">
@@ -36,7 +36,7 @@
             <tr class="govuk-table__row">
                 <th scope="col" class="govuk-table__header">Group Name</th>
                 <th scope="col" class="govuk-table__header">Items</th>
-                <th scope="col" class="govuk-table__header">IsArchived</th>
+                <th scope="col" class="govuk-table__header">Archived</th>
             </tr>
         </thead>
         <tbody class="govuk-table__body">
@@ -46,8 +46,8 @@
             {
 
                 <tr class="govuk-table__row">
-                    <td class="govuk-table__cell"><a asp-page="/_DataDictionaryGroup" asp-route-group="@group.Id" class="">@group.Name</a></td>
-                    <td class="govuk-table__cell">@group.DataDictionaryList.Count()</td>
+                                <td class="govuk-table__cell"><a asp-page="/_DataDictionaryGroup" asp-route-group="@group.Id" class="govuk-link">@group.Name</a></td>
+                                <td class="govuk-table__cell">@group.DataDictionaryList.Count()</td>
                     <td class="govuk-table__cell">False</td>
                 </tr>
             }
@@ -55,8 +55,8 @@
             @foreach (var group in Model.Dictionary.Where(x => x.IsArchived))
             {
                 <tr class="govuk-table__row">
-                    <td class="govuk-table__cell"><a asp-page="/_DataDictionaryGroup" asp-route-group="@group.Id" class="">@group.Name</a></td>
-                    <td class="govuk-table__cell">@group.DataDictionaryList.Count()</td>
+                                <td class="govuk-table__cell"><a asp-page="/_DataDictionaryGroup" asp-route-group="@group.Id" class="govuk-link">@group.Name</a></td>
+                                <td class="govuk-table__cell">@group.DataDictionaryList.Count()</td>
                     <td class="govuk-table__cell">True</td>
                 </tr>
             }
@@ -75,32 +75,32 @@
                         <th scope="col" class="govuk-table__header">Name</th>
                         <th scope="col" class="govuk-table__header">Legacy Name</th>
                         <th scope="col" class="govuk-table__header">Group Name</th>
-                        <th scope="col" class="govuk-table__header">IsArchived</th>
+                        <th scope="col" class="govuk-table__header">Archived</th>
                     </tr>
                 </thead>
                 <tbody class="govuk-table__body">
                     @if (Model.Dictionary != null)
                     {
-                        @foreach (var item in itemList.Where(x => !x.IsArchived).ToList())
+                        @foreach (var record in recordList.Where(x => !x.IsArchived).ToList())
                         {
 
                             <tr class="govuk-table__row">
-                                <td class="govuk-table__cell"><a asp-page="/_DataDictionaryItem" asp-route-group="@item.DataDictionaryGroupId" asp-route-item="@item.Id" class="">@item.Name</a></td>
-                                <td class="govuk-table__cell">@item.LegacyName</td>
+                                <td class="govuk-table__cell"><a asp-page="/_DataDictionaryItem" asp-route-group="@record.DataDictionaryGroupId" asp-route-record="@record.Id" class="govuk-link">@record.Name</a></td>
+                                <td class="govuk-table__cell">@record.LegacyName</td>
                                 <td class="govuk-table__cell">
-                                    <a asp-page="/_DataDictionaryGroup" asp-route-group="@item.DataDictionaryGroupId" class="">@item.Group.Name</a>
+                                    <a asp-page="/_DataDictionaryGroup" asp-route-group="@record.DataDictionaryGroupId" class="">@record.Group.Name</a>
                                 </td>
                                 <td class="govuk-table__cell">False</td>
                             </tr>
                         }
 
-                        @foreach (var item in itemList.Where(x => x.IsArchived).ToList())
+                        @foreach (var record in recordList.Where(x => x.IsArchived).ToList())
                         {
                             <tr class="govuk-table__row">
-                                <td class="govuk-table__cell"><a asp-page="/_DataDictionaryItem" asp-route-group="@item.DataDictionaryGroupId" asp-route-item="@item.Id" class="">@item.Name</a></td>
-                                <td class="govuk-table__cell">@item.LegacyName</td>
+                                <td class="govuk-table__cell"><a asp-page="/_DataDictionaryItem" asp-route-group="@record.DataDictionaryGroupId" asp-route-record="@record.Id" class="govuk-link">@record.Name</a></td>
+                                <td class="govuk-table__cell">@record.LegacyName</td>
                                 <td class="govuk-table__cell">
-                                    <a asp-page="/_DataDictionaryGroup" asp-route-group="@item.DataDictionaryGroupId" class="">@item.Group.Name</a>
+                                    <a asp-page="/_DataDictionaryGroup" asp-route-group="@record.DataDictionaryGroupId" class="">@record.Group.Name</a>
                                 </td>
                                 <td class="govuk-table__cell">True</td>
                             </tr>
@@ -114,3 +114,8 @@
 
     </div>
     </div>
+@await Html.PartialAsync("_Footer");
+
+@section Scripts {
+
+}

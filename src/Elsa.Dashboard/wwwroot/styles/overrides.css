@@ -1,12 +1,19 @@
-﻿.override-question-guidance {
+.override-question-guidance {
     margin-top: 5px !important;
     margin-bottom: 0px !important;
 }
 .govuk-full-width-container {
-    max-width: 1800px;
+/*    max-width: 1800px;*/
     margin-right: 50px;
     margin-left: 50px;
 }
+
+.govuk-lg-width-container {
+  max-width: 1800px;
+  margin-right: auto;
+  margin-left: auto;
+}
+
 .override-header-select {
     float: left;
 }

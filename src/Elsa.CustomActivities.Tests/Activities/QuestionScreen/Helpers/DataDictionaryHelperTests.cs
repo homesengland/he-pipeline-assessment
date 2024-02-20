@@ -96,7 +96,7 @@ namespace Elsa.CustomActivities.Tests.Activities.QuestionScreen.Helpers
             var serialisedCachedItems = JsonConvert.SerializeObject(cachedItems);
             RedisValue nullRedisValue = new RedisValue(null);
             RedisValue redisValue = new RedisValue(serialisedCachedItems);
-            repository.Setup(x => x.GetDataDictionaryListAsync(false, It.IsAny<CancellationToken>())).ReturnsAsync(dbDataDictionaryItems);
+            repository.Setup(x => x.GetDataDictionaryListAsync(true, It.IsAny<CancellationToken>())).ReturnsAsync(dbDataDictionaryItems);
             cache.Setup(x => x.GetDatabase(It.IsAny<int>(), It.IsAny<object>())).Returns(db.Object);
             db.SetupSequence(x => x.StringGetAsync(It.IsAny<RedisKey>(), It.IsAny<CommandFlags>())).ReturnsAsync(nullRedisValue).ReturnsAsync(redisValue);
             DataDictionaryHelper sut = new DataDictionaryHelper(repository.Object, cache.Object);

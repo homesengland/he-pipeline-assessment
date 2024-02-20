@@ -9,17 +9,16 @@ using System.Text.Json;
 
 namespace Elsa.Dashboard.Pages
 {
-    public class DataDictionaryModel : PageModel
+
+  public class DataDictionaryModel : PageModel
   {
     public string _serverUrl { get; set; }
-    private Auth0Config _auth0Options { get; set; }
-    private IElsaServerHttpClient _client { get; set; }
+    private IDataDictionaryHttpClient _client { get; set; }
     private ILogger<ElsaDashboardLoader> _logger { get; set; }
     public List<DataDictionaryGroup>? Dictionary { get; set; }
 
-    public DataDictionaryModel(IElsaServerHttpClient client, IOptions<Urls> options, ILogger<ElsaDashboardLoader> logger, IOptions<Auth0Config> auth0Options)
+    public DataDictionaryModel(IDataDictionaryHttpClient client, IOptions<Urls> options, ILogger<ElsaDashboardLoader> logger)
     {
-      _auth0Options = auth0Options.Value;
       _serverUrl = options.Value.ElsaServer ?? string.Empty;
       _client = client;
       _logger = logger;

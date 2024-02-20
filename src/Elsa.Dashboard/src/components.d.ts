@@ -5,39 +5,12 @@
  * It contains typing information for all components that exist in this project.
  */
 import { HTMLStencilElement, JSXBase } from "@stencil/core/internal";
-import { MatchResults, RouterHistory } from "@stencil/router";
-import { ActivityDefinitionProperty, ActivityModel, ActivityPropertyDescriptor, IntellisenseContext, MenuItem } from "./models/elsa-interfaces";
+import { ActivityDefinitionProperty, ActivityModel, ActivityPropertyDescriptor, IntellisenseContext } from "./models/elsa-interfaces";
 import { VNode } from "@stencil/core";
 import { MonacoValueChangedArgs } from "./components/editors/he-monaco/he-monaco";
 import { Map } from "./utils/utils";
 import { HeActivityPropertyDescriptor, NestedActivityDefinitionProperty, NestedPropertyModel } from "./models/custom-component-models";
 export namespace Components {
-    interface DataDictionaryGroupCreate {
-        "history": RouterHistory;
-    }
-    interface DataDictionaryGroupEdit {
-        "basePath": string;
-        "history": RouterHistory;
-        "isEditable": boolean;
-        "match": MatchResults;
-    }
-    interface DataDictionaryGroups {
-    }
-    interface DataDictionaryItemCreate {
-        "history": RouterHistory;
-        "match": MatchResults;
-    }
-    interface DataDictionaryItemEdit {
-        "history": RouterHistory;
-        "isEditable": boolean;
-        "match": MatchResults;
-    }
-    interface DataDictionaryScreen {
-    }
-    interface ElsaContextMenuNew {
-        "history": RouterHistory;
-        "menuItems": Array<MenuItem>;
-    }
     interface HeCheckListProperty {
         "activityModel": ActivityModel;
         "keyId": string;
@@ -333,48 +306,6 @@ export interface QuestionPropertyCustomEvent<T> extends CustomEvent<T> {
     target: HTMLQuestionPropertyElement;
 }
 declare global {
-    interface HTMLDataDictionaryGroupCreateElement extends Components.DataDictionaryGroupCreate, HTMLStencilElement {
-    }
-    var HTMLDataDictionaryGroupCreateElement: {
-        prototype: HTMLDataDictionaryGroupCreateElement;
-        new (): HTMLDataDictionaryGroupCreateElement;
-    };
-    interface HTMLDataDictionaryGroupEditElement extends Components.DataDictionaryGroupEdit, HTMLStencilElement {
-    }
-    var HTMLDataDictionaryGroupEditElement: {
-        prototype: HTMLDataDictionaryGroupEditElement;
-        new (): HTMLDataDictionaryGroupEditElement;
-    };
-    interface HTMLDataDictionaryGroupsElement extends Components.DataDictionaryGroups, HTMLStencilElement {
-    }
-    var HTMLDataDictionaryGroupsElement: {
-        prototype: HTMLDataDictionaryGroupsElement;
-        new (): HTMLDataDictionaryGroupsElement;
-    };
-    interface HTMLDataDictionaryItemCreateElement extends Components.DataDictionaryItemCreate, HTMLStencilElement {
-    }
-    var HTMLDataDictionaryItemCreateElement: {
-        prototype: HTMLDataDictionaryItemCreateElement;
-        new (): HTMLDataDictionaryItemCreateElement;
-    };
-    interface HTMLDataDictionaryItemEditElement extends Components.DataDictionaryItemEdit, HTMLStencilElement {
-    }
-    var HTMLDataDictionaryItemEditElement: {
-        prototype: HTMLDataDictionaryItemEditElement;
-        new (): HTMLDataDictionaryItemEditElement;
-    };
-    interface HTMLDataDictionaryScreenElement extends Components.DataDictionaryScreen, HTMLStencilElement {
-    }
-    var HTMLDataDictionaryScreenElement: {
-        prototype: HTMLDataDictionaryScreenElement;
-        new (): HTMLDataDictionaryScreenElement;
-    };
-    interface HTMLElsaContextMenuNewElement extends Components.ElsaContextMenuNew, HTMLStencilElement {
-    }
-    var HTMLElsaContextMenuNewElement: {
-        prototype: HTMLElsaContextMenuNewElement;
-        new (): HTMLElsaContextMenuNewElement;
-    };
     interface HTMLHeCheckListPropertyElement extends Components.HeCheckListProperty, HTMLStencilElement {
     }
     var HTMLHeCheckListPropertyElement: {
@@ -556,13 +487,6 @@ declare global {
         new (): HTMLSwitchAnswersPropertyElement;
     };
     interface HTMLElementTagNameMap {
-        "data-dictionary-group-create": HTMLDataDictionaryGroupCreateElement;
-        "data-dictionary-group-edit": HTMLDataDictionaryGroupEditElement;
-        "data-dictionary-groups": HTMLDataDictionaryGroupsElement;
-        "data-dictionary-item-create": HTMLDataDictionaryItemCreateElement;
-        "data-dictionary-item-edit": HTMLDataDictionaryItemEditElement;
-        "data-dictionary-screen": HTMLDataDictionaryScreenElement;
-        "elsa-context-menu-new": HTMLElsaContextMenuNewElement;
         "he-check-list-property": HTMLHeCheckListPropertyElement;
         "he-checkbox-options-property": HTMLHeCheckboxOptionsPropertyElement;
         "he-checkbox-property": HTMLHeCheckboxPropertyElement;
@@ -596,32 +520,6 @@ declare global {
     }
 }
 declare namespace LocalJSX {
-    interface DataDictionaryGroupCreate {
-        "history"?: RouterHistory;
-    }
-    interface DataDictionaryGroupEdit {
-        "basePath"?: string;
-        "history"?: RouterHistory;
-        "isEditable"?: boolean;
-        "match"?: MatchResults;
-    }
-    interface DataDictionaryGroups {
-    }
-    interface DataDictionaryItemCreate {
-        "history"?: RouterHistory;
-        "match"?: MatchResults;
-    }
-    interface DataDictionaryItemEdit {
-        "history"?: RouterHistory;
-        "isEditable"?: boolean;
-        "match"?: MatchResults;
-    }
-    interface DataDictionaryScreen {
-    }
-    interface ElsaContextMenuNew {
-        "history"?: RouterHistory;
-        "menuItems"?: Array<MenuItem>;
-    }
     interface HeCheckListProperty {
         "activityModel"?: ActivityModel;
         "keyId"?: string;
@@ -836,13 +734,6 @@ declare namespace LocalJSX {
         "propertyModel"?: ActivityDefinitionProperty;
     }
     interface IntrinsicElements {
-        "data-dictionary-group-create": DataDictionaryGroupCreate;
-        "data-dictionary-group-edit": DataDictionaryGroupEdit;
-        "data-dictionary-groups": DataDictionaryGroups;
-        "data-dictionary-item-create": DataDictionaryItemCreate;
-        "data-dictionary-item-edit": DataDictionaryItemEdit;
-        "data-dictionary-screen": DataDictionaryScreen;
-        "elsa-context-menu-new": ElsaContextMenuNew;
         "he-check-list-property": HeCheckListProperty;
         "he-checkbox-options-property": HeCheckboxOptionsProperty;
         "he-checkbox-property": HeCheckboxProperty;
@@ -879,13 +770,6 @@ export { LocalJSX as JSX };
 declare module "@stencil/core" {
     export namespace JSX {
         interface IntrinsicElements {
-            "data-dictionary-group-create": LocalJSX.DataDictionaryGroupCreate & JSXBase.HTMLAttributes<HTMLDataDictionaryGroupCreateElement>;
-            "data-dictionary-group-edit": LocalJSX.DataDictionaryGroupEdit & JSXBase.HTMLAttributes<HTMLDataDictionaryGroupEditElement>;
-            "data-dictionary-groups": LocalJSX.DataDictionaryGroups & JSXBase.HTMLAttributes<HTMLDataDictionaryGroupsElement>;
-            "data-dictionary-item-create": LocalJSX.DataDictionaryItemCreate & JSXBase.HTMLAttributes<HTMLDataDictionaryItemCreateElement>;
-            "data-dictionary-item-edit": LocalJSX.DataDictionaryItemEdit & JSXBase.HTMLAttributes<HTMLDataDictionaryItemEditElement>;
-            "data-dictionary-screen": LocalJSX.DataDictionaryScreen & JSXBase.HTMLAttributes<HTMLDataDictionaryScreenElement>;
-            "elsa-context-menu-new": LocalJSX.ElsaContextMenuNew & JSXBase.HTMLAttributes<HTMLElsaContextMenuNewElement>;
             "he-check-list-property": LocalJSX.HeCheckListProperty & JSXBase.HTMLAttributes<HTMLHeCheckListPropertyElement>;
             "he-checkbox-options-property": LocalJSX.HeCheckboxOptionsProperty & JSXBase.HTMLAttributes<HTMLHeCheckboxOptionsPropertyElement>;
             "he-checkbox-property": LocalJSX.HeCheckboxProperty & JSXBase.HTMLAttributes<HTMLHeCheckboxPropertyElement>;

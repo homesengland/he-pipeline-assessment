@@ -2,6 +2,8 @@ using Auth0.ManagementApi.Models;
 using Elsa.CustomModels;
 using Elsa.CustomWorkflow.Sdk.HttpClients;
 using Elsa.Dashboard.Models;
+using Elsa.Dashboard.PageModels;
+using Microsoft.AspNetCore.Authentication.OAuth;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.Extensions.Options;
@@ -11,20 +13,22 @@ using System.Text.Json;
 namespace Elsa.Dashboard.Pages
 {
   [BindProperties]
-  public class DataDictionaryGroupModel : PageModel
+  public class DataDictionaryRecordModel : PageModel
   {
     public string _serverUrl { get; set; }
     private Auth0Config _auth0Options { get; set; }
     private IDataDictionaryHttpClient _client { get; set; }
-    private ILogger<DataDictionaryGroup> _logger { get; set; }
+    private ILogger<ElsaDashboardLoader> _logger { get; set; }
     [BindProperty]
-    public int GroupId { get; set; }
+    public int GroupId { get;set; }
     [BindProperty]
-    public DataDictionaryGroup DictionaryGroup { get; set; } = new DataDictionaryGroup();
+    public int RecordId { get;set; }
+    [BindProperty]
+    public DataDictionary DictionaryRecord { get; set; } = new DataDictionary();
     [BindProperty]
     public bool ToArchive { get; set; }
 
-    public DataDictionaryGroupModel(IDataDictionaryHttpClient client, IOptions<Urls> options, ILogger<DataDictionaryGroup> logger, IOptions<Auth0Config> auth0Options)
+    public DataDictionaryRecordModel(IDataDictionaryHttpClient client, IOptions<Urls> options, ILogger<ElsaDashboardLoader> logger, IOptions<Auth0Config> auth0Options)
     {
       _auth0Options = auth0Options.Value;
       _serverUrl = options.Value.ElsaServer ?? string.Empty;
@@ -32,12 +36,13 @@ namespace Elsa.Dashboard.Pages
       _logger = logger;
     }
 
-    public async Task<IActionResult> OnGetAsync(int group)
+    public async Task OnGetAsync(int group, int record)
     {
       GroupId = group;
+      RecordId = record;
       if (!string.IsNullOrEmpty(_serverUrl))
       {
-        await LoadDataDictionaryGroup(_serverUrl);
+        await LoadDataDictionaryRecordAsync(_serverUrl);
 
       }
       else
@@ -45,26 +50,26 @@ namespace Elsa.Dashboard.Pages
         HttpContext.Response.StatusCode = (int)HttpStatusCode.FailedDependency;
         throw new NullReferenceException("No Configuration value found for Urls:ElsaServer");
       }
+    }
+
+    public async Task<IActionResult> OnPostAsync()
+    {
+      if(DictionaryRecord != null)
+      {
+        await _client.UpdateDataDictionaryRecord(_serverUrl, DictionaryRecord);
+      }
+      else { HttpContext.Response.StatusCode = (int)HttpStatusCode.BadRequest; }
       return Page();
     }
 
-    public async Task<IActionResult> OnPostAsync(int groupId)
+    public async Task<IActionResult> OnPostArchiveAsync(bool archive)
     {
-      if (DictionaryGroup != null)
-      {
-        await _client.UpdateDataDictionaryGroup(_serverUrl, DictionaryGroup);
-      }
-      else { HttpContext.Response.StatusCode = (int)HttpStatusCode.BadRequest; }
-      return await OnGetAsync(groupId);
+      await _client.ArchiveDataDictionaryRecord(_serverUrl, RecordId, archive);
+      return Page();
+
     }
 
-    public async Task<IActionResult> OnPostArchiveAsync(bool archive, int groupId)
-    {
-      await _client.ArchiveDataDictionaryGroup(_serverUrl, GroupId, archive);
-      return await OnGetAsync(groupId);
-    }
-
-    private async Task LoadDataDictionaryGroup(string url)
+    private async Task LoadDataDictionaryRecordAsync(string url)
     {
       string? result = await _client.LoadDataDictionary(_serverUrl, true);
       Dictionary<string, string>? dict = JsonSerializer.Deserialize<Dictionary<string, string>>(result!);
@@ -73,13 +78,22 @@ namespace Elsa.Dashboard.Pages
         if (dict.TryGetValue("Dictionary", out string? response))
         {
           List<DataDictionaryGroup>? parsedList = JsonSerializer.Deserialize<List<DataDictionaryGroup>>(response);
-          if(parsedList != null)
+          if (parsedList != null)
           {
             DataDictionaryGroup? group = parsedList.Where(x => x.Id == GroupId).FirstOrDefault();
             if (group != null)
             {
-              DictionaryGroup = group;
-              ToArchive = !DictionaryGroup.IsArchived;
+              DataDictionary? item = group.DataDictionaryList.FirstOrDefault(x => x.Id == RecordId);
+              if (item != null)
+              {
+                DictionaryRecord = item;
+                ToArchive = !DictionaryRecord.IsArchived;
+              }
+              else
+              {
+                HttpContext.Response.StatusCode = (int)HttpStatusCode.NotFound;
+                throw new Exception($"No Data Dictionary Item found for {RecordId}");
+              }
             }
             else
             {
@@ -92,7 +106,7 @@ namespace Elsa.Dashboard.Pages
             HttpContext.Response.StatusCode = (int)HttpStatusCode.NotFound;
             throw new Exception($"No Data Dictionary group found for {GroupId}");
           }
-          
+
         }
       }
 

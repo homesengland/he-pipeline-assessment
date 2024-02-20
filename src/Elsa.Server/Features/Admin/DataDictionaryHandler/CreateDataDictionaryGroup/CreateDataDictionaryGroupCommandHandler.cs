@@ -34,7 +34,7 @@ namespace Elsa.Server.Features.Admin.DataDictionaryHandler.CreateDataDictionaryG
                     };
                     int id = await _elsaCustomRepository.CreateDataDictionaryGroup(newGroup, cancellationToken);
                     await _mediator.Send(new ClearDictionaryCacheCommand());
-                    result.Data!.Id = id;
+                    result.Data = new CreateDataDictionaryGroupCommandResponse { Id = id };
                 }
                 else
                 {

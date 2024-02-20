@@ -6,32 +6,32 @@ using Elsa.Server.Features.Admin.DataDictionaryHandler.CreateDataDictionaryGroup
 using Elsa.Server.Models;
 using MediatR;
 
-namespace Elsa.Server.Features.Admin.DataDictionaryHandler.UpdateDataDictionaryItem
+namespace Elsa.Server.Features.Admin.DataDictionaryHandler.UpdateDataDictionaryRecord
 {
-    public class UpdateDataDictionaryItemCommandHandler : IRequestHandler<UpdateDataDictionaryItemCommand, OperationResult<UpdateDataDictionaryItemCommandResponse>>
+    public class UpdateDataDictionaryRecordCommandHandler : IRequestHandler<UpdateDataDictionaryRecordCommand, OperationResult<UpdateDataDictionaryRecordCommandResponse>>
     {
         private readonly IElsaCustomRepository _elsaCustomRepository;
-        private readonly ILogger<UpdateDataDictionaryItemCommandHandler> _logger;
+        private readonly ILogger<UpdateDataDictionaryRecordCommandHandler> _logger;
         private readonly IMediator _mediator;
 
 
-        public UpdateDataDictionaryItemCommandHandler(IMediator mediator,
+        public UpdateDataDictionaryRecordCommandHandler(IMediator mediator,
             IElsaCustomRepository elsaCustomRepository,
-            ILogger<UpdateDataDictionaryItemCommandHandler> logger)
+            ILogger<UpdateDataDictionaryRecordCommandHandler> logger)
         {
             _mediator = mediator;
             _elsaCustomRepository = elsaCustomRepository;
             _logger = logger;
         }
 
-        public async Task<OperationResult<UpdateDataDictionaryItemCommandResponse>> Handle(UpdateDataDictionaryItemCommand request, CancellationToken cancellationToken)
+        public async Task<OperationResult<UpdateDataDictionaryRecordCommandResponse>> Handle(UpdateDataDictionaryRecordCommand request, CancellationToken cancellationToken)
         {
-            var result = new OperationResult<UpdateDataDictionaryItemCommandResponse>();
+            var result = new OperationResult<UpdateDataDictionaryRecordCommandResponse>();
             try
             {
-                if (request.Item != null && !string.IsNullOrEmpty(request.Item.Name) && !string.IsNullOrEmpty(request.Item.LegacyName))
+                if (request.Record != null && !string.IsNullOrEmpty(request.Record.Name) && !string.IsNullOrEmpty(request.Record.LegacyName))
                 {
-                    await _elsaCustomRepository.UpdateDataDictionaryItem(request.Item, cancellationToken);
+                    await _elsaCustomRepository.UpdateDataDictionaryItem(request.Record, cancellationToken);
                     await _mediator.Send(new ClearDictionaryCacheCommand());
                 }
                 else

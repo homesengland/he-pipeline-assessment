@@ -7,10 +7,10 @@ export function RegisterCustomPlugins(elsaStudio){
       EnableCustomSwitchOutcomePaths(eventContext);
     });
 
-  eventBus.on('dashboard.appearing',
-    eventContext => {
-      AddDataDictionaryTab(eventContext);
-    });
+  //eventBus.on('dashboard.appearing',
+  //  eventContext => {
+  //    AddDataDictionaryTab(eventContext);
+  //  });
 }
 
 const ActivitiesWithFilteredOutcomes = [
@@ -26,24 +26,24 @@ const SwitchSyntax = 'Switch';
 const DefaultOutcome = 'Default';
 const DoneOutcome = 'Done'
 
-function AddDataDictionaryTab(eventContext) {
-  // Define a list of menu items to append.
-  const menuItems = [["data-dictionary", "Data Dictionary"]];
+//function AddDataDictionaryTab(eventContext) {
+//  // Define a list of menu items to append.
+//  const menuItems = [["data-dictionary", "Data Dictionary"]];
 
-  // Define a list of routes to register with the router.
-  const routes = [["data-dictionary", "data-dictionary-screen", true],
-    ["data-dictionary/group/new", "data-dictionary-group-create", true],
-    ["data-dictionary/group/:id", "data-dictionary-group-edit", true],
-    ["data-dictionary/group/:id/item/new", "data-dictionary-item-create", true],
-    ["data-dictionary/group/:id/item/:itemId", "data-dictionary-item-edit", true],
-  ];
+//  // Define a list of routes to register with the router.
+//  const routes = [["data-dictionary", "data-dictionary-screen", true],
+//    ["data-dictionary/group/new", "data-dictionary-group-create", true],
+//    ["data-dictionary/group/:id", "data-dictionary-group-edit", true],
+//    ["data-dictionary/group/:id/item/new", "data-dictionary-item-create", true],
+//    ["data-dictionary/group/:id/item/:itemId", "data-dictionary-item-edit", true],
+//  ];
 
-  // Append custom menu items to existing list of menu items.
-  eventContext.data.menuItems = [...eventContext.data.menuItems, ...menuItems];
+//  // Append custom menu items to existing list of menu items.
+//  eventContext.data.menuItems = [...eventContext.data.menuItems, ...menuItems];
 
-  // Append custom routes to existing list of routes.
-  eventContext.data.routes = [...eventContext.data.routes, ...routes];
-}
+//  // Append custom routes to existing list of routes.
+//  eventContext.data.routes = [...eventContext.data.routes, ...routes];
+//}
 
 function DisableDefaultOutcomePaths(eventContext) {
   if (ActivitiesWithFilteredOutcomes.includes(eventContext.activityModel.type))

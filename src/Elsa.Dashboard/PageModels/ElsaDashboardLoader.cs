@@ -50,7 +50,7 @@ namespace Elsa.Dashboard.PageModels
 
     private async Task LoadDataDictionary(string url)
     {
-      string? result = await _client.LoadDataDictionary(_serverUrl, true);
+      string? result = await _client.LoadDataDictionary(_serverUrl, false);
       Dictionary<string, string>? dict = JsonSerializer.Deserialize<Dictionary<string, string>>(result!);
       if(dict != null)
       {

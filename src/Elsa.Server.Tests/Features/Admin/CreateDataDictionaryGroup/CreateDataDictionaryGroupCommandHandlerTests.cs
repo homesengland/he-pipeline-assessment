@@ -1,7 +1,7 @@
 ﻿using AutoFixture.Xunit2;
 using Elsa.CustomInfrastructure.Data.Repository;
 using Elsa.CustomModels;
-using Elsa.Server.Features.Admin.DataDictionaryHandler.ArchiveDataDictionaryItem;
+using Elsa.Server.Features.Admin.DataDictionaryHandler.ArchiveDataDictionaryRecord;
 using Elsa.Server.Features.Admin.DataDictionaryHandler.ClearDictionaryCache;
 using Elsa.Server.Features.Admin.DataDictionaryHandler.CreateDataDictionaryGroup;
 using Elsa.Server.Models;

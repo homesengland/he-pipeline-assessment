@@ -1,24 +1,15 @@
 ﻿using AutoFixture;
 using AutoFixture.Xunit2;
 using Elsa.Server.Features.Admin.DataDictionaryHandler;
-using Elsa.Server.Features.Admin.DataDictionaryHandler.ArchiveDataDictionaryItem;
+using Elsa.Server.Features.Admin.DataDictionaryHandler.ArchiveDataDictionaryRecord;
 using Elsa.Server.Features.Admin.DataDictionaryHandler.CreateDataDictionaryGroup;
-using Elsa.Server.Features.Admin.DataDictionaryHandler.CreateDataDictionaryItem;
+using Elsa.Server.Features.Admin.DataDictionaryHandler.CreateDataDictionaryRecord;
 using Elsa.Server.Features.Admin.DataDictionaryHandler.UpdateDataDictionaryGroup;
-using Elsa.Server.Features.Admin.DataDictionaryHandler.UpdateDataDictionaryItem;
-using Elsa.Server.Features.Workflow.LoadCheckYourAnswersScreen;
-using Elsa.Server.Features.Workflow.LoadQuestionScreen;
-using Elsa.Server.Features.Workflow.StartWorkflow;
+using Elsa.Server.Features.Admin.DataDictionaryHandler.UpdateDataDictionaryRecord;
 using Elsa.Server.Models;
-using Esprima.Ast;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Moq;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Xunit;
 
 namespace Elsa.Server.Tests.Features.Admin
@@ -199,13 +190,13 @@ namespace Elsa.Server.Tests.Features.Admin
 
         [Theory]
         [AutoData]
-        public async Task DataDictionaryController_CreateDataDictionaryItem_ShouldReturnOK_WhenCommandHandlerIsSuccessful(
-            CreateDataDictionaryItemCommand command,
-            CreateDataDictionaryItemCommandResponse response,
+        public async Task DataDictionaryController_CreateDataDictionaryRecord_ShouldReturnOK_WhenCommandHandlerIsSuccessful(
+            CreateDataDictionaryRecordCommand command,
+            CreateDataDictionaryRecordCommandResponse response,
             Mock<IMediator> mediatorMock)
         {
             //Arrange
-            var createGroupResult = new OperationResult<CreateDataDictionaryItemCommandResponse>
+            var createGroupResult = new OperationResult<CreateDataDictionaryRecordCommandResponse>
             {
                 ErrorMessages = new List<string>(),
                 ValidationMessages = null,
@@ -216,7 +207,7 @@ namespace Elsa.Server.Tests.Features.Admin
             DataDictionaryController controller = new DataDictionaryController(mediatorMock.Object);
 
             //Act
-            var result = await controller.CreateDataDictionaryItem(command);
+            var result = await controller.CreateDataDictionaryRecord(command);
 
             //Assert
             Assert.NotNull(result);
@@ -225,9 +216,9 @@ namespace Elsa.Server.Tests.Features.Admin
 
         [Theory]
         [AutoData]
-        public async Task DataDictionaryController_CreateDataDictionaryItem_ShouldReturnBadRequest_WhenCommandHandlerReturnsErrors(
-            CreateDataDictionaryItemCommand command,
-            OperationResult<CreateDataDictionaryItemCommandResponse> response,
+        public async Task DataDictionaryController_CreateDataDictionaryRecord_ShouldReturnBadRequest_WhenCommandHandlerReturnsErrors(
+            CreateDataDictionaryRecordCommand command,
+            OperationResult<CreateDataDictionaryRecordCommandResponse> response,
     Mock<IMediator> mediatorMock)
         {
 
@@ -237,7 +228,7 @@ namespace Elsa.Server.Tests.Features.Admin
             DataDictionaryController controller = new DataDictionaryController(mediatorMock.Object);
 
             //Act
-            var result = await controller.CreateDataDictionaryItem(command);
+            var result = await controller.CreateDataDictionaryRecord(command);
 
             //Assert
             Assert.NotNull(result);
@@ -252,8 +243,8 @@ namespace Elsa.Server.Tests.Features.Admin
 
         [Theory]
         [AutoData]
-        public async Task DataDictionaryController_CreateDataDictionaryItem_ShouldReturn500_WhenCommandHandlerThrowsException(
-            CreateDataDictionaryItemCommand command,
+        public async Task DataDictionaryController_CreateDataDictionaryRecord_ShouldReturn500_WhenCommandHandlerThrowsException(
+            CreateDataDictionaryRecordCommand command,
     Exception exception,
     Mock<IMediator> mediatorMock)
         {
@@ -264,7 +255,7 @@ namespace Elsa.Server.Tests.Features.Admin
             DataDictionaryController controller = new DataDictionaryController(mediatorMock.Object);
 
             //Act
-            var result = await controller.CreateDataDictionaryItem(command);
+            var result = await controller.CreateDataDictionaryRecord(command);
 
             //Assert
             Assert.NotNull(result);
@@ -282,24 +273,24 @@ namespace Elsa.Server.Tests.Features.Admin
 
         [Theory]
         [AutoData]
-        public async Task DataDictionaryController_UpdateDataDictionaryItem_ShouldReturnOK_WhenCommandHandlerIsSuccessful(
+        public async Task DataDictionaryController_UpdateDataDictionaryRecord_ShouldReturnOK_WhenCommandHandlerIsSuccessful(
             Mock<IMediator> mediatorMock)
         {
             //Arrange
-            var request = SampleRequest<UpdateDataDictionaryItemCommand>();
-            var response = SampleRequest<UpdateDataDictionaryItemCommandResponse>();
-            var updateItemResult = new OperationResult<UpdateDataDictionaryItemCommandResponse>
+            var request = SampleRequest<UpdateDataDictionaryRecordCommand>();
+            var response = SampleRequest<UpdateDataDictionaryRecordCommandResponse>();
+            var updateItemResult = new OperationResult<UpdateDataDictionaryRecordCommandResponse>
             {
                 ErrorMessages = new List<string>(),
                 ValidationMessages = null,
                 Data = response
             };
-            mediatorMock.Setup(x => x.Send(It.IsAny<UpdateDataDictionaryItemCommand>(), CancellationToken.None)).ReturnsAsync(updateItemResult);
+            mediatorMock.Setup(x => x.Send(It.IsAny<UpdateDataDictionaryRecordCommand>(), CancellationToken.None)).ReturnsAsync(updateItemResult);
 
             DataDictionaryController controller = new DataDictionaryController(mediatorMock.Object);
 
             //Act
-            var result = await controller.UpdateDataDictionaryItem(request);
+            var result = await controller.UpdateDataDictionaryRecord(request);
 
             //Assert
             Assert.NotNull(result);
@@ -308,14 +299,14 @@ namespace Elsa.Server.Tests.Features.Admin
 
         [Theory]
         [AutoData]
-        public async Task DataDictionaryController_UpdateDataDictionaryItem_ShouldReturnBadRequest_WhenCommandHandlerReturnsErrors(
+        public async Task DataDictionaryController_UpdateDataDictionaryRecord_ShouldReturnBadRequest_WhenCommandHandlerReturnsErrors(
             Mock<IMediator> mediatorMock)
         {
 
             //Arrange
-            var request = SampleRequest<UpdateDataDictionaryItemCommand>();
-            var response = SampleRequest<UpdateDataDictionaryItemCommandResponse>();
-            var updateItemResult = new OperationResult<UpdateDataDictionaryItemCommandResponse>
+            var request = SampleRequest<UpdateDataDictionaryRecordCommand>();
+            var response = SampleRequest<UpdateDataDictionaryRecordCommandResponse>();
+            var updateItemResult = new OperationResult<UpdateDataDictionaryRecordCommandResponse>
             {
                 ErrorMessages = new List<string>() { new String("Error 1") },
                 ValidationMessages = null,
@@ -326,7 +317,7 @@ namespace Elsa.Server.Tests.Features.Admin
             DataDictionaryController controller = new DataDictionaryController(mediatorMock.Object);
 
             //Act
-            var result = await controller.UpdateDataDictionaryItem(request);
+            var result = await controller.UpdateDataDictionaryRecord(request);
 
             //Assert
             Assert.NotNull(result);
@@ -341,19 +332,19 @@ namespace Elsa.Server.Tests.Features.Admin
 
         [Theory]
         [AutoData]
-        public async Task DataDictionaryController_UpdateDataDictionaryItem_ShouldReturn500_WhenCommandHandlerThrowsException(
+        public async Task DataDictionaryController_UpdateDataDictionaryRecord_ShouldReturn500_WhenCommandHandlerThrowsException(
          Exception exception,
          Mock<IMediator> mediatorMock)
         {
 
             //Arrange
-            var request = SampleRequest<UpdateDataDictionaryItemCommand>();
+            var request = SampleRequest<UpdateDataDictionaryRecordCommand>();
             mediatorMock.Setup(x => x.Send(request, CancellationToken.None)).ThrowsAsync(exception);
 
             DataDictionaryController controller = new DataDictionaryController(mediatorMock.Object);
 
             //Act
-            var result = await controller.UpdateDataDictionaryItem(request);
+            var result = await controller.UpdateDataDictionaryRecord(request);
 
             //Assert
             Assert.NotNull(result);
@@ -371,13 +362,13 @@ namespace Elsa.Server.Tests.Features.Admin
 
         [Theory]
         [AutoData]
-        public async Task DataDictionaryController_ArchiveDataDictionaryItem_ShouldReturnOK_WhenCommandHandlerIsSuccessful(
-            ArchiveDataDictionaryItemCommand command,
-            ArchiveDataDictionaryItemCommandResponse response,
+        public async Task DataDictionaryController_ArchiveDataDictionaryRecord_ShouldReturnOK_WhenCommandHandlerIsSuccessful(
+            ArchiveDataDictionaryRecordCommand command,
+            ArchiveDataDictionaryRecordCommandResponse response,
             Mock<IMediator> mediatorMock)
         {
             //Arrange
-            var archiveGroupResult = new OperationResult<ArchiveDataDictionaryItemCommandResponse>
+            var archiveGroupResult = new OperationResult<ArchiveDataDictionaryRecordCommandResponse>
             {
                 ErrorMessages = new List<string>(),
                 ValidationMessages = null,
@@ -388,7 +379,7 @@ namespace Elsa.Server.Tests.Features.Admin
             DataDictionaryController controller = new DataDictionaryController(mediatorMock.Object);
 
             //Act
-            var result = await controller.ArchiveDataDictionaryItem(command);
+            var result = await controller.ArchiveDataDictionaryRecord(command);
 
             //Assert
             Assert.NotNull(result);
@@ -397,9 +388,9 @@ namespace Elsa.Server.Tests.Features.Admin
 
         [Theory]
         [AutoData]
-        public async Task DataDictionaryController_ArchiveDataDictionaryItem_ShouldReturnBadRequest_WhenCommandHandlerReturnsErrors(
-            ArchiveDataDictionaryItemCommand command,
-            OperationResult<ArchiveDataDictionaryItemCommandResponse> response,
+        public async Task DataDictionaryController_ArchiveDataDictionaryRecord_ShouldReturnBadRequest_WhenCommandHandlerReturnsErrors(
+            ArchiveDataDictionaryRecordCommand command,
+            OperationResult<ArchiveDataDictionaryRecordCommandResponse> response,
     Mock<IMediator> mediatorMock)
         {
 
@@ -409,7 +400,7 @@ namespace Elsa.Server.Tests.Features.Admin
             DataDictionaryController controller = new DataDictionaryController(mediatorMock.Object);
 
             //Act
-            var result = await controller.ArchiveDataDictionaryItem(command);
+            var result = await controller.ArchiveDataDictionaryRecord(command);
 
             //Assert
             Assert.NotNull(result);
@@ -424,8 +415,8 @@ namespace Elsa.Server.Tests.Features.Admin
 
         [Theory]
         [AutoData]
-        public async Task DataDictionaryController_ArchiveDataDictionaryItem_ShouldReturn500_WhenCommandHandlerThrowsException(
-            ArchiveDataDictionaryItemCommand command,
+        public async Task DataDictionaryController_ArchiveDataDictionaryRecord_ShouldReturn500_WhenCommandHandlerThrowsException(
+            ArchiveDataDictionaryRecordCommand command,
     Exception exception,
     Mock<IMediator> mediatorMock)
         {
@@ -436,7 +427,7 @@ namespace Elsa.Server.Tests.Features.Admin
             DataDictionaryController controller = new DataDictionaryController(mediatorMock.Object);
 
             //Act
-            var result = await controller.ArchiveDataDictionaryItem(command);
+            var result = await controller.ArchiveDataDictionaryRecord(command);
 
             //Assert
             Assert.NotNull(result);

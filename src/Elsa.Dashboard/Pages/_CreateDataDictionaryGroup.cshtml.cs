@@ -1,28 +1,24 @@
-using Auth0.ManagementApi.Models;
-using Elsa.CustomModels;
 using Elsa.CustomWorkflow.Sdk.HttpClients;
 using Elsa.Dashboard.Models;
-using Elsa.Dashboard.PageModels;
-using Microsoft.AspNetCore.Authentication.OAuth;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.Extensions.Options;
+using System.Net;
 
 namespace Elsa.Dashboard.Pages
 {
+  [BindProperties]
   public class CreateDataDictionaryGroupModel : PageModel
   {
 
     public string _serverUrl { get; set; }
-    private Auth0Config _auth0Options { get; set; }
-    private IElsaServerHttpClient _client { get; set; }
-    private ILogger<ElsaDashboardLoader> _logger { get; set; }
+    private IDataDictionaryHttpClient _client { get; set; }
+    private ILogger<CreateDataDictionaryGroupModel> _logger { get; set; }
     [BindProperty]
-    public DataDictionaryGroup DictionaryGroup { get; set; } = new DataDictionaryGroup();
+    public string? Name { get; set; }
 
-    public CreateDataDictionaryGroupModel(IElsaServerHttpClient client, IOptions<Urls> options, ILogger<ElsaDashboardLoader> logger, IOptions<Auth0Config> auth0Options)
+    public CreateDataDictionaryGroupModel(IDataDictionaryHttpClient client, IOptions<Urls> options, ILogger<CreateDataDictionaryGroupModel> logger)
     {
-      _auth0Options = auth0Options.Value;
       _serverUrl = options.Value.ElsaServer ?? string.Empty;
       _client = client;
       _logger = logger;
@@ -30,13 +26,21 @@ namespace Elsa.Dashboard.Pages
 
     public async Task OnGetAsync()
     {
-
       await Task.CompletedTask;
     }
 
-    public async Task OnPostAsync()
+    public async Task<IActionResult> OnPostAsync()
     {
-      await Task.CompletedTask;
+      if (Name != null)
+      {
+        await _client.CreateDataDictionaryGroup(_serverUrl, Name);
+      }
+      else
+      {
+        _logger.LogError("Dictionary Group unable to be parsed by PageModel");
+        HttpContext.Response.StatusCode = (int)HttpStatusCode.BadRequest;
+      }
+      return RedirectToPage("/DataDictionary");
     }
   }
 }

@@ -3,7 +3,7 @@ using Elsa.CustomInfrastructure.Data.Repository;
 using Elsa.CustomModels;
 using Elsa.Server.Features.Admin.DataDictionaryHandler.ClearDictionaryCache;
 using Elsa.Server.Features.Admin.DataDictionaryHandler.CreateDataDictionaryGroup;
-using Elsa.Server.Features.Admin.DataDictionaryHandler.CreateDataDictionaryItem;
+using Elsa.Server.Features.Admin.DataDictionaryHandler.CreateDataDictionaryRecord;
 using Elsa.Server.Models;
 using He.PipelineAssessment.Tests.Common;
 using MediatR;
@@ -15,17 +15,17 @@ using System.Text;
 using System.Threading.Tasks;
 using Xunit;
 
-namespace Elsa.Server.Tests.Features.Admin.CreateDataDictionaryItem
+namespace Elsa.Server.Tests.Features.Admin.CreateDataDictionaryRecord
 {
-    public class CreateDataDictionaryItemCommandHandlerTests
+    public class CreateDataDictionaryRecordCommandHandlerTests
     {
             [Theory]
             [AutoMoqData]
             public async Task Handle_ShouldReturnCreateDataDictionaryItemCommandResponse(
             [Frozen] Mock<IMediator> mediator,
             OperationResult<bool> clearCacheResult,
-            CreateDataDictionaryItemCommand command,
-            CreateDataDictionaryItemCommandHandler sut)
+            CreateDataDictionaryRecordCommand command,
+            CreateDataDictionaryRecordCommandHandler sut)
             {
             //Arrange
             mediator.Setup(x => x.Send(It.IsAny<ClearDictionaryCacheCommand>(), It.IsAny<CancellationToken>()))
@@ -45,9 +45,9 @@ namespace Elsa.Server.Tests.Features.Admin.CreateDataDictionaryItem
             public async Task Handle_ShouldReturnErrors_GivenCallToElsaCustomRepositoryFails(
                 [Frozen] Mock<IMediator> mediator,
                 [Frozen] Mock<IElsaCustomRepository> elsaCustomRepository,
-                CreateDataDictionaryItemCommand command,
+                CreateDataDictionaryRecordCommand command,
                 Exception exception,
-                CreateDataDictionaryItemCommandHandler sut)
+                CreateDataDictionaryRecordCommandHandler sut)
             {
                 //Arrange
                 elsaCustomRepository.Setup(x => x.CreateDataDictionaryItem(It.IsAny<DataDictionary>(), CancellationToken.None))
@@ -68,11 +68,13 @@ namespace Elsa.Server.Tests.Features.Admin.CreateDataDictionaryItem
             [AutoMoqData]
             public async Task Handle_ShouldReturnErrors_GivenGroupNameIsNull(
                 [Frozen] Mock<IMediator> mediator,
-                CreateDataDictionaryItemCommand command,
-                CreateDataDictionaryItemCommandHandler sut)
+                CreateDataDictionaryRecordCommand command,
+                DataDictionary dataDictionary,
+                CreateDataDictionaryRecordCommandHandler sut)
             {
                 //Arrange
-                command.Name = string.Empty;
+                command.DictionaryRecord = dataDictionary;
+                command.DictionaryRecord!.Name = string.Empty;
 
                 //Act
                 var result = await sut.Handle(command, CancellationToken.None);

@@ -1,9 +1,9 @@
 ﻿using Elsa.Server.Features.Admin.DataDictionaryHandler.ArchiveDataDictionaryGroup;
-using Elsa.Server.Features.Admin.DataDictionaryHandler.ArchiveDataDictionaryItem;
+using Elsa.Server.Features.Admin.DataDictionaryHandler.ArchiveDataDictionaryRecord;
 using Elsa.Server.Features.Admin.DataDictionaryHandler.CreateDataDictionaryGroup;
-using Elsa.Server.Features.Admin.DataDictionaryHandler.CreateDataDictionaryItem;
+using Elsa.Server.Features.Admin.DataDictionaryHandler.CreateDataDictionaryRecord;
 using Elsa.Server.Features.Admin.DataDictionaryHandler.UpdateDataDictionaryGroup;
-using Elsa.Server.Features.Admin.DataDictionaryHandler.UpdateDataDictionaryItem;
+using Elsa.Server.Features.Admin.DataDictionaryHandler.UpdateDataDictionaryRecord;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 
@@ -63,8 +63,8 @@ namespace Elsa.Server.Features.Admin.DataDictionaryHandler
             }
         }
 
-        [HttpPost("CreateDataDictionaryItem")]
-        public async Task<ActionResult> CreateDataDictionaryItem([FromBody] CreateDataDictionaryItemCommand command)
+        [HttpPost("CreateDataDictionaryRecord")]
+        public async Task<ActionResult> CreateDataDictionaryRecord([FromBody] CreateDataDictionaryRecordCommand command)
         {
             try
             {
@@ -85,8 +85,8 @@ namespace Elsa.Server.Features.Admin.DataDictionaryHandler
             }
         }
 
-        [HttpPost("UpdateDataDictionaryItem")]
-        public async Task<ActionResult> UpdateDataDictionaryItem([FromBody] UpdateDataDictionaryItemCommand command)
+        [HttpPost("UpdateDataDictionaryRecord")]
+        public async Task<ActionResult> UpdateDataDictionaryRecord([FromBody] UpdateDataDictionaryRecordCommand command)
         {
             try
             {
@@ -107,8 +107,8 @@ namespace Elsa.Server.Features.Admin.DataDictionaryHandler
             }
         }
 
-        [HttpPost("ArchiveDataDictionaryItem")]
-        public async Task<ActionResult> ArchiveDataDictionaryItem([FromBody] ArchiveDataDictionaryItemCommand command)
+        [HttpPost("ArchiveDataDictionaryRecord")]
+        public async Task<ActionResult> ArchiveDataDictionaryRecord([FromBody] ArchiveDataDictionaryRecordCommand command)
         {
             try
             {

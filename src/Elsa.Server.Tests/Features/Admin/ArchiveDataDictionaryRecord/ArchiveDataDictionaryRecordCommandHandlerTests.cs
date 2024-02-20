@@ -1,31 +1,24 @@
 ﻿using AutoFixture.Xunit2;
 using Elsa.CustomInfrastructure.Data.Repository;
-using Elsa.Server.Features.Admin.DataDictionaryHandler;
-using Elsa.Server.Features.Admin.DataDictionaryHandler.ArchiveDataDictionaryItem;
+using Elsa.Server.Features.Admin.DataDictionaryHandler.ArchiveDataDictionaryRecord;
 using Elsa.Server.Features.Admin.DataDictionaryHandler.ClearDictionaryCache;
-using Elsa.Server.Features.Workflow.ArchiveQuestions;
 using Elsa.Server.Models;
 using He.PipelineAssessment.Tests.Common;
 using MediatR;
 using Moq;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Xunit;
 
-namespace Elsa.Server.Tests.Features.Admin.ArchiveDataDictionaryItem
+namespace Elsa.Server.Tests.Features.Admin.ArchiveDataDictionaryRecord
 {
-    public class ArchiveDataDictionaryItemCommandHandlerTests
+    public class ArchiveDataDictionaryRecordCommandHandlerTests
     {
         [Theory]
         [AutoMoqData]
         public async Task Handle_ShouldReturnArchiveDataDictionaryCommandResponse(
          [Frozen] Mock<IMediator> mediator,
             OperationResult<bool> clearCacheResult,
-            ArchiveDataDictionaryItemCommand command,
-            ArchiveDataDictionaryItemCommandHandler sut)
+            ArchiveDataDictionaryRecordCommand command,
+            ArchiveDataDictionaryRecordCommandHandler sut)
         {
             //Arrange
             mediator.Setup(x => x.Send(It.IsAny<ClearDictionaryCacheCommand>(), It.IsAny<CancellationToken>()))
@@ -43,10 +36,10 @@ namespace Elsa.Server.Tests.Features.Admin.ArchiveDataDictionaryItem
         [AutoMoqData]
         public async Task Handle_ShouldReturnErrors_GivenCallToElsaCustomRepositoryFails(
             [Frozen] Mock<IMediator> mediator,
-    [Frozen] Mock<IElsaCustomRepository> elsaCustomRepository,
-    ArchiveDataDictionaryItemCommand command,
-    Exception exception,
-    ArchiveDataDictionaryItemCommandHandler sut)
+            [Frozen] Mock<IElsaCustomRepository> elsaCustomRepository,
+            ArchiveDataDictionaryRecordCommand command,
+            Exception exception,
+            ArchiveDataDictionaryRecordCommandHandler sut)
         {
             //Arrange
 
