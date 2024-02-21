@@ -1,5 +1,6 @@
 ﻿using AutoFixture;
 using AutoFixture.Xunit2;
+using Elsa.CustomModels;
 using Elsa.Server.Features.Admin.DataDictionaryHandler;
 using Elsa.Server.Features.Admin.DataDictionaryHandler.ArchiveDataDictionaryRecord;
 using Elsa.Server.Features.Admin.DataDictionaryHandler.CreateDataDictionaryGroup;
@@ -10,6 +11,7 @@ using Elsa.Server.Models;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Moq;
+using System.Drawing.Text;
 using Xunit;
 
 namespace Elsa.Server.Tests.Features.Admin
@@ -191,11 +193,15 @@ namespace Elsa.Server.Tests.Features.Admin
         [Theory]
         [AutoData]
         public async Task DataDictionaryController_CreateDataDictionaryRecord_ShouldReturnOK_WhenCommandHandlerIsSuccessful(
-            CreateDataDictionaryRecordCommand command,
+            
             CreateDataDictionaryRecordCommandResponse response,
             Mock<IMediator> mediatorMock)
         {
             //Arrange
+            CreateDataDictionaryRecordCommand command = new CreateDataDictionaryRecordCommand()
+            {
+                DictionaryRecord = SampleDictionary("Sample_Record")
+            };
             var createGroupResult = new OperationResult<CreateDataDictionaryRecordCommandResponse>
             {
                 ErrorMessages = new List<string>(),
@@ -216,13 +222,16 @@ namespace Elsa.Server.Tests.Features.Admin
 
         [Theory]
         [AutoData]
-        public async Task DataDictionaryController_CreateDataDictionaryRecord_ShouldReturnBadRequest_WhenCommandHandlerReturnsErrors(
-            CreateDataDictionaryRecordCommand command,
+        public async Task DataDictionaryController_CreateDataDictionaryRecord_ShouldReturnBadRequest_WhenCommandHandlerReturnsErrors( 
             OperationResult<CreateDataDictionaryRecordCommandResponse> response,
-    Mock<IMediator> mediatorMock)
+            Mock<IMediator> mediatorMock)
         {
 
             //Arrange
+            CreateDataDictionaryRecordCommand command = new CreateDataDictionaryRecordCommand()
+            {
+                DictionaryRecord = SampleDictionary("Sample_Record")
+            };
             mediatorMock.Setup(x => x.Send(command, CancellationToken.None)).ReturnsAsync(response);
 
             DataDictionaryController controller = new DataDictionaryController(mediatorMock.Object);
@@ -244,12 +253,13 @@ namespace Elsa.Server.Tests.Features.Admin
         [Theory]
         [AutoData]
         public async Task DataDictionaryController_CreateDataDictionaryRecord_ShouldReturn500_WhenCommandHandlerThrowsException(
-            CreateDataDictionaryRecordCommand command,
-    Exception exception,
-    Mock<IMediator> mediatorMock)
+            Exception exception,
+            Mock<IMediator> mediatorMock)
         {
 
             //Arrange
+            CreateDataDictionaryRecordCommand command = new CreateDataDictionaryRecordCommand();
+            command.DictionaryRecord = SampleDictionary("Sample_Record");
             mediatorMock.Setup(x => x.Send(command, CancellationToken.None)).ThrowsAsync(exception);
 
             DataDictionaryController controller = new DataDictionaryController(mediatorMock.Object);
@@ -451,5 +461,21 @@ namespace Elsa.Server.Tests.Features.Admin
             var response = fixture.Create<T>();
             return response;
         }
+
+        private DataDictionary SampleDictionary(string name, string? legacyName = null, int id = 1, int groupId = 1)
+        {
+            return new DataDictionary
+            {
+                Id = id,
+                DataDictionaryGroupId = groupId,
+                Description = "Sample Description",
+                Type = "Text",
+                CreatedDateTime = DateTime.Now,
+                LastModifiedDateTime = DateTime.Now,
+                Name = name,
+                LegacyName = legacyName ?? name
+            };
+        }
     }
 }
+
