@@ -16,7 +16,7 @@ namespace Elsa.CustomActivities.Activities.QuestionScreen.Helpers
 
         public async Task Handle(EvaluatingJavaScriptExpression notification, CancellationToken cancellationToken)
         {
-            List<DataDictionaryItem>? dataDictionaryItems = await _accessor.GetDictionary(cancellationToken);
+            List<DataDictionaryItem>? dataDictionaryItems = await _accessor.GetDictionary(cancellationToken, _cacheKey);
 
             if (dataDictionaryItems != null)
             {

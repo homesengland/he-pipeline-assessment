@@ -11,7 +11,7 @@ namespace Elsa.Server.DataDictionaryAccessors
         private readonly IElsaCustomRepository _elsaCustomRepository;
         private readonly TimeSpan _expiryTime = TimeSpan.FromHours(1);
 
-        private readonly string _cacheKey = "DataDictionary";
+        private string _cacheKey = "DataDictionary";
         public CachedDataDictionaryIntellisenseAccessor(IConnectionMultiplexer conn, IElsaCustomRepository repo)
         {
             _cache = conn.GetDatabase();
@@ -24,10 +24,19 @@ namespace Elsa.Server.DataDictionaryAccessors
             return result;
         }
 
-        public async Task<List<DataDictionaryItem>?> GetDictionary(CancellationToken cancellationToken)
+        public async Task<List<DataDictionaryItem>?> GetDictionary(CancellationToken cancellationToken, string? cacheKey = null)
         {
+            SetCacheKey(cacheKey);
             List<DataDictionaryItem>? dataDictionaryItems = await GetDictionaryFromCache(cancellationToken);
             return dataDictionaryItems;
+        }
+
+        private void SetCacheKey(string? cacheKey)
+        {
+            if (!string.IsNullOrEmpty(cacheKey))
+            {
+                _cacheKey = cacheKey;
+            }
         }
 
         private async Task<List<DataDictionaryItem>?> GetDictionaryFromCache(CancellationToken cancellationToken)

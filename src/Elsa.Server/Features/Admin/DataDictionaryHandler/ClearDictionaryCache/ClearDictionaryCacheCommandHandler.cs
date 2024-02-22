@@ -12,7 +12,6 @@ namespace Elsa.Server.Features.Admin.DataDictionaryHandler.ClearDictionaryCache
 {
     public class ClearDictionaryCacheCommandHandler : IRequestHandler<ClearDictionaryCacheCommand, OperationResult<bool>>
     {
-        private IDatabase _cache;
         private IDataDictionaryIntellisenseAccessor _accessor;
         private ILogger<ClearDictionaryCacheCommandHandler> _logger;
         public ClearDictionaryCacheCommandHandler(IDataDictionaryIntellisenseAccessor accessor, ILogger<ClearDictionaryCacheCommandHandler> logger) 

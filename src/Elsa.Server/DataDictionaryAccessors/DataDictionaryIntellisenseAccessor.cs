@@ -19,7 +19,7 @@ namespace Elsa.Server.DataDictionaryAccessors
             return Task.FromResult(true);
         }
 
-        public async Task<List<DataDictionaryItem>?> GetDictionary(CancellationToken cancellationToken)
+        public async Task<List<DataDictionaryItem>?> GetDictionary(CancellationToken cancellationToken, string? cacheKey = null)
         {
             List<DataDictionaryItem>? dataDictionaryItems = await GetDictionaryFromDatabase(cancellationToken);
             return dataDictionaryItems;
