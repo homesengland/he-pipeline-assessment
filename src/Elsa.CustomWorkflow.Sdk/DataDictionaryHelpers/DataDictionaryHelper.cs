@@ -1,13 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿
 
-namespace Elsa.CustomWorkflow.Sdk
+namespace Elsa.CustomWorkflow.Sdk.DataDictionaryHelpers
 {
-    public static class DataDictionaryToJavascriptHelper 
-    { 
+    public static class DataDictionaryToJavascriptHelper
+    {
 
         public static string JintDeclaration(string groupName, string valueName, int id)
         {

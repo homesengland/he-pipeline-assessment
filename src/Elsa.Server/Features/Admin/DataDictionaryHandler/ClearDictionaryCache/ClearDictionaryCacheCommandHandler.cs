@@ -1,4 +1,5 @@
 ﻿using DotLiquid;
+using Elsa.CustomWorkflow.Sdk.DataDictionaryHelpers;
 using Elsa.Models;
 using Elsa.Server.Models;
 using He.AspNetCore.Mvc.Gds.Components.Extensions;
@@ -12,17 +13,18 @@ namespace Elsa.Server.Features.Admin.DataDictionaryHandler.ClearDictionaryCache
     public class ClearDictionaryCacheCommandHandler : IRequestHandler<ClearDictionaryCacheCommand, OperationResult<bool>>
     {
         private IDatabase _cache;
+        private IDataDictionaryIntellisenseAccessor _accessor;
         private ILogger<ClearDictionaryCacheCommandHandler> _logger;
-        public ClearDictionaryCacheCommandHandler(IConnectionMultiplexer connection, ILogger<ClearDictionaryCacheCommandHandler> logger) 
+        public ClearDictionaryCacheCommandHandler(IDataDictionaryIntellisenseAccessor accessor, ILogger<ClearDictionaryCacheCommandHandler> logger) 
         {
-            _cache = connection.GetDatabase();
+            _accessor = accessor;
             _logger = logger;
         }
         public async Task<OperationResult<bool>> Handle(ClearDictionaryCacheCommand request, CancellationToken cancellationToken)
         {
             try
             {
-                var result = await _cache.KeyDeleteAsync(request.CacheKey);
+                var result = await _accessor.ClearDictionaryCache(request.CacheKey, cancellationToken);
                 if (result)
                 {
                     return new OperationResult<bool>

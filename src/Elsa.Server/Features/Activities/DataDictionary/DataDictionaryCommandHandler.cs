@@ -1,6 +1,6 @@
 ﻿using Elsa.CustomInfrastructure.Data.Repository;
 using Elsa.CustomModels;
-using Elsa.CustomWorkflow.Sdk;
+using Elsa.CustomWorkflow.Sdk.DataDictionaryHelpers;
 using MediatR;
 using Newtonsoft.Json;
 using System.Text;

@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <TargetFramework>net6.0</TargetFramework>
@@ -34,6 +34,7 @@
   <ItemGroup>
     <ProjectReference Include="..\Elsa.CustomActivities\Elsa.CustomActivities.csproj" />
     <ProjectReference Include="..\Elsa.Models\Elsa.CustomModels.csproj" />
+    <ProjectReference Include="..\Elsa.Server\Elsa.Server.csproj" />
     <ProjectReference Include="..\He.PipelineAssessment.Tests.Common\He.PipelineAssessment.Tests.Common.csproj" />
   </ItemGroup>
 

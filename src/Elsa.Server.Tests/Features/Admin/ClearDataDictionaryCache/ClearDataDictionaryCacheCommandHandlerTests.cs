@@ -1,4 +1,6 @@
-﻿using Elsa.Server.Features.Admin.DataDictionaryHandler.ClearDictionaryCache;
+﻿using Elsa.CustomInfrastructure.Data.Repository;
+using Elsa.Server.DataDictionaryAccessors;
+using Elsa.Server.Features.Admin.DataDictionaryHandler.ClearDictionaryCache;
 using He.PipelineAssessment.Tests.Common;
 using Microsoft.Extensions.Logging;
 using Moq;
@@ -15,14 +17,15 @@ namespace Elsa.Server.Tests.Features.Admin.ClearDataDictionaryCache
             ILogger<ClearDictionaryCacheCommandHandler> logger,
             Mock<IConnectionMultiplexer> connection,
             Mock<IDatabase> cache,
+            Mock<IElsaCustomRepository> repo,
             ClearDictionaryCacheCommand command)
         {
             //Arrange
             cache.Setup(x => x.KeyDeleteAsync(command.CacheKey, CommandFlags.None)).ReturnsAsync(true);
             cache.Setup(x => x.KeyExistsAsync(command.CacheKey, CommandFlags.None)).ReturnsAsync(true);
             connection.Setup(x => x.GetDatabase(It.IsAny<int>(), It.IsAny<object>())).Returns(cache.Object);
-
-            ClearDictionaryCacheCommandHandler sut = new ClearDictionaryCacheCommandHandler(connection.Object, logger);
+            CachedDataDictionaryIntellisenseAccessor accessor = new CachedDataDictionaryIntellisenseAccessor(connection.Object, repo.Object);
+            ClearDictionaryCacheCommandHandler sut = new ClearDictionaryCacheCommandHandler(accessor, logger);
 
             //Act
             var result = await sut.Handle(command, CancellationToken.None);
@@ -40,6 +43,7 @@ namespace Elsa.Server.Tests.Features.Admin.ClearDataDictionaryCache
                 ILogger<ClearDictionaryCacheCommandHandler> logger,
                 Mock<IConnectionMultiplexer> connection,
                 Mock<IDatabase> cache,
+                Mock<IElsaCustomRepository> repo,
                 ClearDictionaryCacheCommand command,
                 Exception e)
         {
@@ -48,7 +52,8 @@ namespace Elsa.Server.Tests.Features.Admin.ClearDataDictionaryCache
             cache.Setup(x => x.KeyExistsAsync(command.CacheKey, CommandFlags.None)).ReturnsAsync(false);
             connection.Setup(x => x.GetDatabase(It.IsAny<int>(), It.IsAny<object>())).Returns(cache.Object);
 
-            ClearDictionaryCacheCommandHandler sut = new ClearDictionaryCacheCommandHandler(connection.Object, logger);
+            CachedDataDictionaryIntellisenseAccessor accessor = new CachedDataDictionaryIntellisenseAccessor(connection.Object, repo.Object);
+            ClearDictionaryCacheCommandHandler sut = new ClearDictionaryCacheCommandHandler(accessor, logger);
 
             //Act
             var result = await sut.Handle(command, CancellationToken.None);
@@ -66,6 +71,7 @@ namespace Elsa.Server.Tests.Features.Admin.ClearDataDictionaryCache
         ILogger<ClearDictionaryCacheCommandHandler> logger,
         Mock<IConnectionMultiplexer> connection,
         Mock<IDatabase> cache,
+        Mock<IElsaCustomRepository> repo,
         ClearDictionaryCacheCommand command)
         {
             //Arrange
@@ -73,7 +79,8 @@ namespace Elsa.Server.Tests.Features.Admin.ClearDataDictionaryCache
             cache.Setup(x => x.KeyExistsAsync(command.CacheKey, CommandFlags.None)).ReturnsAsync(false);
             connection.Setup(x => x.GetDatabase(It.IsAny<int>(), It.IsAny<object>())).Returns(cache.Object);
 
-            ClearDictionaryCacheCommandHandler sut = new ClearDictionaryCacheCommandHandler(connection.Object, logger);
+            CachedDataDictionaryIntellisenseAccessor accessor = new CachedDataDictionaryIntellisenseAccessor(connection.Object, repo.Object);
+            ClearDictionaryCacheCommandHandler sut = new ClearDictionaryCacheCommandHandler(accessor, logger);
 
             //Act
             var result = await sut.Handle(command, CancellationToken.None);

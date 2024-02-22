@@ -1,9 +1,10 @@
 ﻿using AutoFixture.Xunit2;
-using Elsa.CustomActivities.Activities.QuestionScreen;
 using Elsa.CustomActivities.Activities.QuestionScreen.Helpers;
 using Elsa.CustomInfrastructure.Data.Repository;
 using Elsa.CustomModels;
+using Elsa.CustomWorkflow.Sdk.DataDictionaryHelpers;
 using Elsa.Scripting.JavaScript.Messages;
+using Elsa.Server.DataDictionaryAccessors;
 using Elsa.Services.Models;
 using He.PipelineAssessment.Tests.Common;
 using Jint;
@@ -26,20 +27,20 @@ namespace Elsa.CustomActivities.Tests.Activities.QuestionScreen.Helpers
            Engine engine)
         {
             //Arrange
-            List<DataDictionaryCacheItem> cachedItems = new List<DataDictionaryCacheItem>() {
-                new DataDictionaryCacheItem()
+            List<DataDictionaryItem> cachedItems = new List<DataDictionaryItem>() {
+                new DataDictionaryItem()
                 {
                     Id = 1,
                     Group = "Group1",
                     Name = "Name1",
                 },
-                new DataDictionaryCacheItem()
+                new DataDictionaryItem()
                 {
                     Id = 2,
                     Group = "Group2",
                     Name = "Name2",
                 },
-                new DataDictionaryCacheItem()
+                new DataDictionaryItem()
                 {
                     Id = 3,
                     Group = "Group3",
@@ -50,7 +51,8 @@ namespace Elsa.CustomActivities.Tests.Activities.QuestionScreen.Helpers
             RedisValue redisValue = new RedisValue(serialisedCachedItems);
             cache.Setup(x => x.GetDatabase(It.IsAny<int>(), It.IsAny<object>())).Returns(db.Object);
             db.Setup(x => x.StringGetAsync(It.IsAny<RedisKey>(), It.IsAny<CommandFlags>())).ReturnsAsync(redisValue);
-            DataDictionaryHelper sut = new DataDictionaryHelper(repository.Object, cache.Object);
+            CachedDataDictionaryIntellisenseAccessor accessor = new CachedDataDictionaryIntellisenseAccessor(cache.Object, repository.Object);
+            DataDictionaryHelper sut = new DataDictionaryHelper(accessor);
             EvaluatingJavaScriptExpression notification = new EvaluatingJavaScriptExpression(engine, activityExecutionContext);
 
             //Act
@@ -73,20 +75,20 @@ namespace Elsa.CustomActivities.Tests.Activities.QuestionScreen.Helpers
         Engine engine)
         {
             //Arrange
-            List<DataDictionaryCacheItem> cachedItems = new List<DataDictionaryCacheItem>() {
-                new DataDictionaryCacheItem()
+            List<DataDictionaryItem> cachedItems = new List<DataDictionaryItem>() {
+                new DataDictionaryItem()
                 {
                     Id = 1,
                     Group = "Group1",
                     Name = "Name1",
                 },
-                new DataDictionaryCacheItem()
+                new DataDictionaryItem()
                 {
                     Id = 2,
                     Group = "Group2",
                     Name = "Name2",
                 },
-                new DataDictionaryCacheItem()
+                new DataDictionaryItem()
                 {
                     Id = 3,
                     Group = "Group3",
@@ -99,7 +101,8 @@ namespace Elsa.CustomActivities.Tests.Activities.QuestionScreen.Helpers
             repository.Setup(x => x.GetDataDictionaryListAsync(true, It.IsAny<CancellationToken>())).ReturnsAsync(dbDataDictionaryItems);
             cache.Setup(x => x.GetDatabase(It.IsAny<int>(), It.IsAny<object>())).Returns(db.Object);
             db.SetupSequence(x => x.StringGetAsync(It.IsAny<RedisKey>(), It.IsAny<CommandFlags>())).ReturnsAsync(nullRedisValue).ReturnsAsync(redisValue);
-            DataDictionaryHelper sut = new DataDictionaryHelper(repository.Object, cache.Object);
+            CachedDataDictionaryIntellisenseAccessor accessor = new CachedDataDictionaryIntellisenseAccessor(cache.Object, repository.Object);
+            DataDictionaryHelper sut = new DataDictionaryHelper(accessor);
             EvaluatingJavaScriptExpression notification = new EvaluatingJavaScriptExpression(engine, activityExecutionContext);
 
             //Act
