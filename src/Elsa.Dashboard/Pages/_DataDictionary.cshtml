@@ -85,7 +85,7 @@
                         {
 
                             <tr class="govuk-table__row">
-                                <td class="govuk-table__cell"><a asp-page="/_DataDictionaryItem" asp-route-group="@record.DataDictionaryGroupId" asp-route-record="@record.Id" class="govuk-link">@record.Name</a></td>
+                                <td class="govuk-table__cell"><a asp-page="/_DataDictionaryRecord" asp-route-group="@record.DataDictionaryGroupId" asp-route-record="@record.Id" class="govuk-link">@record.Name</a></td>
                                 <td class="govuk-table__cell">@record.LegacyName</td>
                                 <td class="govuk-table__cell">
                                     <a asp-page="/_DataDictionaryGroup" asp-route-group="@record.DataDictionaryGroupId" class="">@record.Group.Name</a>
@@ -97,7 +97,7 @@
                         @foreach (var record in recordList.Where(x => x.IsArchived).ToList())
                         {
                             <tr class="govuk-table__row">
-                                <td class="govuk-table__cell"><a asp-page="/_DataDictionaryItem" asp-route-group="@record.DataDictionaryGroupId" asp-route-record="@record.Id" class="govuk-link">@record.Name</a></td>
+                                <td class="govuk-table__cell"><a asp-page="/_DataDictionaryRecord" asp-route-group="@record.DataDictionaryGroupId" asp-route-record="@record.Id" class="govuk-link">@record.Name</a></td>
                                 <td class="govuk-table__cell">@record.LegacyName</td>
                                 <td class="govuk-table__cell">
                                     <a asp-page="/_DataDictionaryGroup" asp-route-group="@record.DataDictionaryGroupId" class="">@record.Group.Name</a>

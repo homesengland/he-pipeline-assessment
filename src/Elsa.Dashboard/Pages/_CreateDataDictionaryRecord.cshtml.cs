@@ -1,9 +1,6 @@
-using Auth0.ManagementApi.Models;
 using Elsa.CustomModels;
 using Elsa.CustomWorkflow.Sdk.HttpClients;
 using Elsa.Dashboard.Models;
-using Elsa.Dashboard.PageModels;
-using Microsoft.AspNetCore.Authentication.OAuth;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.Extensions.Options;
@@ -12,18 +9,18 @@ using System.Net;
 namespace Elsa.Dashboard.Pages
 {
   [BindProperties]
-  public class CreateDataDictionaryItemModel : PageModel
+  public class CreateDataDictionaryRecordModel : PageModel
   {
 
     public string _serverUrl { get; set; }
     private IDataDictionaryHttpClient _client { get; set; }
-    private ILogger<CreateDataDictionaryItemModel> _logger { get; set; }
+    private ILogger<CreateDataDictionaryRecordModel> _logger { get; set; }
     [BindProperty]
-    public DataDictionary DictionaryItem { get; set; } = new DataDictionary();
+    public DataDictionary DictionaryRecord { get; set; } = new DataDictionary();
     [BindProperty]
     public int DictionaryGroupId { get; set; }
 
-    public CreateDataDictionaryItemModel(IDataDictionaryHttpClient client, IOptions<Urls> options, ILogger<CreateDataDictionaryItemModel> logger)
+    public CreateDataDictionaryRecordModel(IDataDictionaryHttpClient client, IOptions<Urls> options, ILogger<CreateDataDictionaryRecordModel> logger)
     {
       _serverUrl = options.Value.ElsaServer ?? string.Empty;
       _client = client;
@@ -38,10 +35,10 @@ namespace Elsa.Dashboard.Pages
 
     public async Task<IActionResult> OnPostAsync()
     {
-      if (DictionaryItem != null && DictionaryGroupId > 0)
+      if (DictionaryRecord != null && DictionaryGroupId > 0)
       {
-        DictionaryItem.DataDictionaryGroupId = DictionaryGroupId;
-        await _client.CreateDataDictionaryRecord(_serverUrl, DictionaryItem);
+        DictionaryRecord.DataDictionaryGroupId = DictionaryGroupId;
+        await _client.CreateDataDictionaryRecord(_serverUrl, DictionaryRecord);
       }
       else
       {

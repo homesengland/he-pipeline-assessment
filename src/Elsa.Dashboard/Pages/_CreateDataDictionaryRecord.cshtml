@@ -1,5 +1,5 @@
 @page "/DataDictionary/{group:int}/Create"
-@model CreateDataDictionaryItemModel
+@model CreateDataDictionaryRecordModel
 @{
     Layout = "_Layout";
 }
@@ -18,37 +18,37 @@
             <fieldset class="govuk-fieldset">
                 <legend class="govuk-fieldset__legend govuk-fieldset__legend--l">
                     <h1 class="govuk-fieldset__heading">
-                        Create Dictionary Item
+                        Create Dictionary Record
                     </h1>
                 </legend>
                 <div class="govuk-form-group">
-                    <label class="govuk-label" for="item-name">
-                        Data Dictionary Item Name
+                    <label class="govuk-label" for="record-name">
+                        Data Dictionary Record Name
                     </label>
-                    <input asp-for="DictionaryItem.Name" class="govuk-input" id="item-name" name="DictionaryItem.Name" type="text">
+                    <input asp-for="DictionaryRecord.Name" class="govuk-input" id="record-name" name="DictionaryRecord.Name" type="text">
                 </div>
                 <div class="govuk-form-group">
                     <label class="govuk-label" for="legacy-name">
-                        Data Dictionary Item Legacy Name
+                        Data Dictionary Record Legacy Name
                     </label>
-                    <input asp-for="DictionaryItem.LegacyName" class="govuk-input" id="legacy-name" name="DictionaryItem.LegacyName" type="text">
+                    <input asp-for="DictionaryRecord.LegacyName" class="govuk-input" id="legacy-name" name="DictionaryRecord.LegacyName" type="text">
                 </div>
                 <div class="govuk-form-group">
                     <label class="govuk-label" for="legacy-name">
                         Type
                     </label>
-                    <input asp-for="DictionaryItem.Type" class="govuk-input" id="legacy-name" name="DictionaryItem.Type" type="text">
+                    <input asp-for="DictionaryRecord.Type" class="govuk-input" id="type" name="DictionaryRecord.Type" type="text">
                 </div>
                 <div class="govuk-form-group">
                     <label class="govuk-label" for="legacy-name">
                         Description
                     </label>
-                    <textarea asp-for="DictionaryItem.Description" class="govuk-textarea" id="legacy-name" name="DictionaryItem.Description" type="text"></textarea>
+                    <textarea asp-for="DictionaryRecord.Description" class="govuk-textarea" id="description" name="DictionaryRecord.Description" type="text"></textarea>
                 </div>
 
             </fieldset>
                         <div class="govuk-button-group">
-                <input id="update" type="submit" value="Create Item" name="update" class="govuk-button" />
+                <input id="update" type="submit" value="Create Record" name="update" class="govuk-button" />
             </div>
         </form>
     </div>

@@ -10,7 +10,7 @@
             <a asp-page="/_DataDictionary" class="govuk-back-link">Back</a>
         </div>
         <div class="govuk-grid-column-one-third pull-right">
-            <a asp-page="/_CreateDataDictionaryItem" asp-route-group="@Model.DictionaryGroup.Id" class="govuk-link pull-right">Add Data Dictionary Item</a>
+            <a asp-page="/_CreateDataDictionaryRecord" asp-route-group="@Model.DictionaryGroup.Id" class="govuk-link pull-right">Add Data Dictionary Record</a>
         </div>
     </div>
     <div class="text-center">
@@ -59,7 +59,7 @@
                                 <input asp-for="@record.LastModifiedDateTime" name="@(namePrefix)LastModifiedDateTime" type="hidden" value="@record.LastModifiedDateTime"/>
                                 <input asp-for="@record.CreatedDateTime" name="@(namePrefix)CreatedDateTime" type="hidden" value="@record.CreatedDateTime"/>
                                 <tr class="govuk-table__row">
-                                    <td scope="row" class="govuk-table__cell"><a asp-page="_DataDictionaryItem" class="govuk-link" asp-route-group="@record.DataDictionaryGroupId" asp-route-record="@record.Id" data-module="govuk-button">@record.Name</a></td>
+                                    <td scope="row" class="govuk-table__cell"><a asp-page="_DataDictionaryRecord" class="govuk-link" asp-route-group="@record.DataDictionaryGroupId" asp-route-record="@record.Id" data-module="govuk-button">@record.Name</a></td>
                                     <td class="govuk-table__cell">@record.IsArchived.ToString()</td>
                                 </tr>
                                 count++;
@@ -82,7 +82,7 @@
                                     <input asp-for="@record.LastModifiedDateTime" name="@(namePrefix)LastModifiedDateTime" type="hidden" value="@record.LastModifiedDateTime" />
                                     <input asp-for="@record.CreatedDateTime" name="@(namePrefix)CreatedDateTime" type="hidden" value="@record.CreatedDateTime" />
                                     <tr class="govuk-table__row">
-                                        <td scope="row" class="govuk-table__cell"><a asp-page="_DataDictionaryItem" class="govuk-link" asp-route-group="@record.DataDictionaryGroupId" asp-route-record="@record.Id" data-module="govuk-button">@record.Name</a></td>
+                                        <td scope="row" class="govuk-table__cell"><a asp-page="_DataDictionaryRecord" class="govuk-link" asp-route-group="@record.DataDictionaryGroupId" asp-route-record="@record.Id" data-module="govuk-button">@record.Name</a></td>
                                         <td class="govuk-table__cell">@record.IsArchived.ToString()</td>
                                     </tr>
                                     count++;
