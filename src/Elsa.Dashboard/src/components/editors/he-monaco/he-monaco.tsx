@@ -60,7 +60,6 @@ export class HeMonaco {
     if (oldModel)
       oldModel.dispose();
 
-    //const newModel = monaco.editor.createModel(libSource, 'typescript', monaco.Uri.parse(libUri));
 
     const matches = libSource.matchAll(/declare const (\w+): (string|number)/g);
 
@@ -71,19 +70,9 @@ export class HeMonaco {
     }
   }
 
-  //addDataDictionary() {
-  //  console.log("Adding Data Dictionary");
-  //  const monaco = this.monaco;
-  //  const libUri = "ts:filename/datadictionary.d.ts"
-  //  console.log("Lib souce", state.dataDictionaryIntellisense);
-  //  const libSource = state.dataDictionaryIntellisense;
-  //  monaco.languages.typescript.javascriptDefaults.setExtraLibs(libSource, libUri);
-  //}
-
   async componentWillLoad() {
     const monacoLibPath = this.monacoLibPath ?? state.monacoLibPath;
     this.monaco = await initializeMonacoWorker(monacoLibPath);
-    //this.addDataDictionary();
   }
 
   componentDidLoad() {

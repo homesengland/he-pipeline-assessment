@@ -4,7 +4,6 @@ using Elsa.CustomInfrastructure.Extensions;
 using Elsa.Dashboard.Exceptions;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Options;
 using System.Net.Http.Headers;
 
 namespace Elsa.Dashboard
@@ -25,13 +24,6 @@ namespace Elsa.Dashboard
       _httpClientFactory = httpClientFactory;
       _hostEnvironment = environment;
     }
-
-    //[Route("DataDictionary")]
-    //[Authorize(Policy = Elsa.Dashboard.Authorization.Constants.AuthorizationPolicies.AssignmentToElsaDashboardAdminRoleRequired)]
-    //public IActionResult DataDictionary()
-    //{
-    //  return View("DataDictionary");
-    //}
 
       [Route("{**catchall}")]
     [Authorize(Policy = Elsa.Dashboard.Authorization.Constants.AuthorizationPolicies.AssignmentToElsaDashboardAdminRoleRequired)]
