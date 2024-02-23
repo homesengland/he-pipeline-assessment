@@ -18,10 +18,10 @@
 
   <ItemGroup>
     <PackageReference Include="Elsa.Designer.Components.Web" Version="2.12.0" />
-    <PackageReference Include="Microsoft.ApplicationInsights.AspNetCore" Version="2.21.0" />
+    <PackageReference Include="Microsoft.ApplicationInsights.AspNetCore" Version="2.22.0" />
     <PackageReference Include="Microsoft.AspNetCore.DataProtection" Version="6.0.9" />
     <PackageReference Include="Microsoft.AspNetCore.DataProtection.EntityFrameworkCore" Version="6.0.9" />
-    <PackageReference Include="Microsoft.Data.SqlClient" Version="5.1.2" />
+    <PackageReference Include="Microsoft.Data.SqlClient" Version="5.1.5" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="6.0.9">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
@@ -79,6 +79,22 @@
     <None Remove="src\components\custom-outcome-property.tsx" />
     <None Remove="src\components\custom_outcome_list_property.tsx" />
     <None Remove="src\models\activity-provider.ts" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <_ContentIncludedByDefault Remove="wwwroot\styles\assets\fonts\Roboto\LICENSE.txt" />
+    <_ContentIncludedByDefault Remove="wwwroot\styles\assets\fonts\Roboto\Roboto-Black.ttf" />
+    <_ContentIncludedByDefault Remove="wwwroot\styles\assets\fonts\Roboto\Roboto-BlackItalic.ttf" />
+    <_ContentIncludedByDefault Remove="wwwroot\styles\assets\fonts\Roboto\Roboto-Bold.ttf" />
+    <_ContentIncludedByDefault Remove="wwwroot\styles\assets\fonts\Roboto\Roboto-BoldItalic.ttf" />
+    <_ContentIncludedByDefault Remove="wwwroot\styles\assets\fonts\Roboto\Roboto-Italic.ttf" />
+    <_ContentIncludedByDefault Remove="wwwroot\styles\assets\fonts\Roboto\Roboto-Light.ttf" />
+    <_ContentIncludedByDefault Remove="wwwroot\styles\assets\fonts\Roboto\Roboto-LightItalic.ttf" />
+    <_ContentIncludedByDefault Remove="wwwroot\styles\assets\fonts\Roboto\Roboto-Medium.ttf" />
+    <_ContentIncludedByDefault Remove="wwwroot\styles\assets\fonts\Roboto\Roboto-MediumItalic.ttf" />
+    <_ContentIncludedByDefault Remove="wwwroot\styles\assets\fonts\Roboto\Roboto-Regular.ttf" />
+    <_ContentIncludedByDefault Remove="wwwroot\styles\assets\fonts\Roboto\Roboto-Thin.ttf" />
+    <_ContentIncludedByDefault Remove="wwwroot\styles\assets\fonts\Roboto\Roboto-ThinItalic.ttf" />
   </ItemGroup>
 
   <ItemGroup>
@@ -146,8 +162,88 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Folder Include="src\http-clients\" />
     <Folder Include="www\" />
     <Folder Include="Views\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Update="wwwroot\styles\assets\fonts\bold-affa96571d-v2.woff">
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+    <Content Update="wwwroot\styles\assets\fonts\bold-b542beb274-v2.woff2">
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+    <Content Update="wwwroot\styles\assets\fonts\light-94a07e06a1-v2.woff2">
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+    <Content Update="wwwroot\styles\assets\fonts\light-f591b13f7d-v2.woff">
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+    <Content Update="wwwroot\styles\assets\images\favicon.ico">
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+    <Content Update="wwwroot\styles\assets\images\govuk-apple-touch-icon-152x152.png">
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+    <Content Update="wwwroot\styles\assets\images\govuk-apple-touch-icon-167x167.png">
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+    <Content Update="wwwroot\styles\assets\images\govuk-apple-touch-icon-180x180.png">
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+    <Content Update="wwwroot\styles\assets\images\govuk-apple-touch-icon.png">
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+    <Content Update="wwwroot\styles\assets\images\govuk-crest-2x.png">
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+    <Content Update="wwwroot\styles\assets\images\govuk-crest.png">
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+    <Content Update="wwwroot\styles\assets\images\govuk-logotype-crown.png">
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+    <Content Update="wwwroot\styles\assets\images\govuk-mask-icon.svg">
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+    <Content Update="wwwroot\styles\assets\images\govuk-opengraph-image.png">
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+    <Content Update="wwwroot\styles\govuk-frontend-4.3.0.min.css">
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+    <Content Update="wwwroot\styles\govuk-frontend-4.3.0.min.js">
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+    <Content Update="wwwroot\styles\govuk-frontend-ie8-4.3.0.min.css">
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+    <Content Update="wwwroot\styles\overrides.css">
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+    <Content Update="wwwroot\styles\VERSION.txt">
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
   </ItemGroup>
 
 </Project>

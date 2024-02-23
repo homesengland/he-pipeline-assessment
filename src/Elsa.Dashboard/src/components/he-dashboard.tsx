@@ -21,6 +21,8 @@ export class HeDashboard {
   async componentWillLoad() {
     this.setStoreConfig();
     this.setDataDictionary();
+    //this.setDictionaryLib();
+    console.log("Intellisense", this.config.dataDictionaryIntellisense);
     this.intellisenseGatherer = new IntellisenseGatherer();
   }
 
@@ -57,6 +59,7 @@ export class HeDashboard {
     if (this.dataDictionaryGroup != null) {
       this.dictionary = JSON.parse(this.dataDictionaryGroup);
       if (this.dictionary != null) {
+        console.log("Setting dictionary", this.dictionary)
         state.dictionaryGroups = this.dictionary;
       }
     }
@@ -74,6 +77,7 @@ export class HeDashboard {
         state.useRefreshToken = this.config.useRefreshTokens;
         state.useRefreshTokenFallback = this.config.useRefreshTokensFallback;
         state.monacoLibPath = this.config.monacoLibPath;
+        state.dataDictionaryIntellisense = this.config.dataDictionaryIntellisense;
       }
     }
     this.storeConfig = null;

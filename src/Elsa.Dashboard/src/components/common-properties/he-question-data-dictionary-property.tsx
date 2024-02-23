@@ -28,7 +28,7 @@ export class HEQuestionDataDictionaryProperty {
   @State() dataDictionary: Array<DataDictionary> = [];
   @State() selectedDataDictionaryItem: number;
 
-  dataDictionaryGroup: Array<DataDictionaryGroup> = state.dictionaryGroups;
+  dataDictionaryGroup: Array<DataDictionaryGroup> = state.dictionaryGroups.filter(x => !x.isArchived);
 
   selectedGroupDictionaryId: number;
   selectedGroup: DataDictionaryGroup;
@@ -39,10 +39,10 @@ export class HEQuestionDataDictionaryProperty {
     this.dataDictionary = [];
     this.selectedDataDictionaryItem = parseInt(this.propertyModel.expressions[SyntaxNames.Literal]);
   
-    this.selectedGroup = this.dataDictionaryGroup.filter(x => x.QuestionDataDictionaryList.filter(y => y.Id == this.selectedDataDictionaryItem)[0])[0];
+    this.selectedGroup = this.dataDictionaryGroup.filter(x => x.DataDictionaryList.filter(y => y.Id == this.selectedDataDictionaryItem)[0])[0];
     if (this.selectedGroup != undefined) {
       this.dataDictionaryDisplayToggle = true;
-      this.dataDictionary = [...this.selectedGroup.QuestionDataDictionaryList];
+      this.dataDictionary = [...this.selectedGroup.DataDictionaryList.filter(x => !x.IsArchived)];
 
     }
   }
@@ -60,7 +60,7 @@ export class HEQuestionDataDictionaryProperty {
       this.selectedDataDictionaryItem = 0;
       this.selectedGroup = selectedGroup;
       this.dataDictionaryDisplayToggle = true;
-      this.dataDictionary = [...selectedGroup.QuestionDataDictionaryList];
+      this.dataDictionary = [...selectedGroup.DataDictionaryList];
 
     }
     else {
@@ -84,7 +84,7 @@ export class HEQuestionDataDictionaryProperty {
     const clearSelection = selectedDataDictionaryItem == 0;
     let selectedGroup = this.selectedGroup;
     if (selectedGroup == undefined) {
-      selectedGroup = this.dataDictionaryGroup.filter(x => x.QuestionDataDictionaryList.filter(y => y.Id == selectedDataDictionaryItem)[0])[0];
+      selectedGroup = this.dataDictionaryGroup.filter(x => x.DataDictionaryList.filter(y => y.Id == selectedDataDictionaryItem)[0])[0];
     }
 
     return (

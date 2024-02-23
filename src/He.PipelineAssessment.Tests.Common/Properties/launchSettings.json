@@ -1,0 +1,12 @@
+{
+  "profiles": {
+    "He.PipelineAssessment.Tests.Common": {
+      "commandName": "Project",
+      "launchBrowser": true,
+      "environmentVariables": {
+        "ASPNETCORE_ENVIRONMENT": "Development"
+      },
+      "applicationUrl": "https://localhost:50985;http://localhost:50986"
+    }
+  }
+}

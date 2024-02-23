@@ -32,7 +32,7 @@ using System.Net.Http.Headers;
 var builder = WebApplication.CreateBuilder(args);
 
 
-var pipelineAssessmentConnectionString = builder.Configuration.GetConnectionString("SqlDatabase");
+string pipelineAssessmentConnectionString = builder.Configuration.GetConnectionString("SqlDatabase") ?? string.Empty;
 
 
 
@@ -140,7 +140,7 @@ if (app.Environment.IsDevelopment())
 {
     using var scope = app.Services.CreateScope();
     var context = scope.ServiceProvider.GetRequiredService<PipelineAssessmentContext>();
-    context.Database.Migrate();
+   context.Database.Migrate();
 }
 
 app.UseExceptionHandler("/Error/Index");

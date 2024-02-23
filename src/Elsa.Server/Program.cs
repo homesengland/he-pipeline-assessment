@@ -43,9 +43,10 @@ using FluentValidation;
 using Elsa.CustomWorkflow.Sdk.Models.Workflow;
 using Elsa.Server.Features.Workflow.QuestionScreenValidateAndSave;
 using Elsa.CustomActivities.Activities.LandValuesDataSource;
-using He.PipelineAssessment.Data.ExtendedSinglePipeline;
 using Elsa.CustomActivities.Activities.SinglePipelineExtendedDataSource;
 using Elsa.CustomActivities.Activities.ReturnToActivity;
+using Elsa.CustomWorkflow.Sdk.DataDictionaryHelpers;
+using Elsa.Server.DataDictionaryAccessors;
 
 var builder = WebApplication.CreateBuilder(args);
 var elsaConnectionString = builder.Configuration.GetConnectionString("Elsa");
@@ -122,6 +123,14 @@ builder.Services.AddDbContext<ElsaCustomContext>(config =>
 builder.Services.AddScoped<DbContext>(provider => provider.GetRequiredService<ElsaCustomContext>());
 builder.Services.AddDataProtection().PersistKeysToDbContext<ElsaCustomContext>();
 
+if (useCache)
+{
+    builder.Services.AddScoped<IDataDictionaryIntellisenseAccessor, CachedDataDictionaryIntellisenseAccessor>();
+}
+else
+{
+    builder.Services.AddScoped<IDataDictionaryIntellisenseAccessor, DataDictionaryIntellisenseAccessor>();
+}
 // Elsa API endpoints.
 builder.Services.AddElsaApiEndpoints();
 
@@ -170,7 +179,6 @@ builder.Services.AddScoped<IDeleteChangedWorkflowPathService, DeleteChangedWorkf
 builder.Services.AddScoped<INextActivityNavigationService, NextActivityNavigationService>();
 
 builder.Services.AddScoped<ITextGroupMapper, TextGroupMapper>();
-
 
 builder.Services.AddScoped<IValidator<WorkflowActivityDataDto>, QuestionScreenValidator>();
 

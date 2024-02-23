@@ -21,8 +21,9 @@ namespace Elsa.CustomInfrastructure.Data.Repository
             CancellationToken cancellationToken = default);
         Task CreateQuestionsAsync(List<Question> assessments, CancellationToken cancellationToken);
         Task<List<Question>> GetActivityQuestions(string activityId, string workflowInstanceId, CancellationToken cancellationToken);
-        Task<Question?> GetQuestionByCorrelationId(string activityId, string correlationId, string questionID, CancellationToken cancellationToken);
         Task<Question?> GetQuestionByWorkflowAndActivityName (string activityName, string workflowName, string correlationId, string questionID, CancellationToken cancellationToken);
+        Task<Question?> GetQuestionByDataDictionary(string correlationId, int dataDictionaryId,
+            CancellationToken cancellationToken);
 
         Task<Question?> GetQuestionById(int id);
         Task SaveChanges(CancellationToken cancellationToken);
@@ -33,8 +34,8 @@ namespace Elsa.CustomInfrastructure.Data.Repository
         Task DeleteQuestions(string workflowInstanceId, List<string> previousPathActivities, CancellationToken cancellationToken);
 
         Task<List<PotScoreOption>> GetPotScoreOptionsAsync(CancellationToken cancellationToken = default);
-        Task<List<QuestionDataDictionary>> GetQuestionDataDictionaryListAsync(CancellationToken cancellationToken = default);
-        Task<List<QuestionDataDictionaryGroup>> GetQuestionDataDictionaryGroupsAsync(CancellationToken cancellationToken = default);
+        Task<List<DataDictionary>> GetDataDictionaryListAsync(bool includeArchived = false, CancellationToken cancellationToken = default);
+        Task<List<DataDictionaryGroup>> GetDataDictionaryGroupsAsync(bool includeArchived = false, CancellationToken cancellationToken = default);
         Task CreateQuestionWorkflowInstance(QuestionWorkflowInstance questionWorkflowInstance, CancellationToken cancellationToken = default);
         Task<QuestionWorkflowInstance?> GetQuestionWorkflowInstance(string workflowInstanceId, CancellationToken cancellationToken = default);
         Task<List<QuestionWorkflowInstance>> GetQuestionWorkflowInstancesByName(string correlationId, string name, CancellationToken cancellationToken = default);
@@ -42,5 +43,11 @@ namespace Elsa.CustomInfrastructure.Data.Repository
         Task SetWorkflowInstanceResult(string workflowInstanceId, string result, CancellationToken cancellationToken = default);
         Task SetWorkflowInstanceScore(string workflowInstanceId, string score, CancellationToken cancellationToken = default);
         Task ArchiveQuestions(string[] requestWorkflowInstanceIds, CancellationToken cancellationToken = default);
+        Task<int> CreateDataDictionaryGroup(DataDictionaryGroup group, CancellationToken cancellationToken);
+        Task<int> CreateDataDictionaryItem(DataDictionary item, CancellationToken cancellationToken);
+        Task UpdateDataDictionaryGroup(DataDictionaryGroup group, CancellationToken cancellationToken);
+        Task UpdateDataDictionaryItem(DataDictionary item, CancellationToken cancellationToken);
+        Task ArchiveDataDictionaryItem(int id, bool isArchived, CancellationToken cancellationToken);
+        Task ArchiveDataDictionaryGroup(int id, bool isArchived, CancellationToken cancellationToken);
     }
 }

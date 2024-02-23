@@ -5,7 +5,7 @@ using Elsa.CustomModels;
 using Elsa.Metadata;
 using Elsa.Server.Features.Activities;
 using Elsa.Server.Features.Activities.CustomActivityProperties;
-using Elsa.Server.Features.Activities.DataDictionary;
+using Elsa.Server.Features.Activities.DataDictionaryProvider;
 using Elsa.Server.Models;
 using He.PipelineAssessment.Tests.Common;
 using MediatR;
@@ -82,7 +82,7 @@ namespace Elsa.Server.Tests.Features.Activities
             ActivitiesController controller = new ActivitiesController(mediatorMock.Object);
 
             //Act
-            var result = await controller.GetDataDictionary();
+            var result = await controller.GetDataDictionary(false);
 
             //Assert
             Assert.NotNull(result);
@@ -103,7 +103,7 @@ namespace Elsa.Server.Tests.Features.Activities
             ActivitiesController controller = new ActivitiesController(mediatorMock.Object);
 
             //Act
-            var result = await controller.GetDataDictionary();
+            var result = await controller.GetDataDictionary(false);
 
             //Assert
             Assert.NotNull(result);

@@ -30,7 +30,7 @@ namespace He.PipelineAssessment.UI.Tests.Features.Workflow.ReturnToActivity
         AssessmentToolWorkflowInstance assessmentToolWorkflowInstance)
         {
             //Arrange
-            assessmentRepository.Setup(x=> x.GetAssessmentToolWorkflowInstance(command.WorkflowInstanceId)).ReturnsAsync(assessmentToolWorkflowInstance);
+            assessmentRepository.Setup(x=> x.GetAssessmentToolWorkflowInstance(command.WorkflowInstanceId!)).ReturnsAsync(assessmentToolWorkflowInstance);
             roleValidation.Setup(x => x.ValidateRole(assessmentToolWorkflowInstance.AssessmentId, assessmentToolWorkflowInstance.WorkflowDefinitionId)).ReturnsAsync(true);
 
             elsaServerHttpClient.Setup(x => x.ReturnToActivity(It.IsAny<ReturnToActivityData>()))
@@ -54,7 +54,7 @@ namespace He.PipelineAssessment.UI.Tests.Features.Workflow.ReturnToActivity
         )
         {
             //Arrange
-            repository.Setup(x => x.GetAssessmentToolWorkflowInstance(command.WorkflowInstanceId)).ReturnsAsync(assessmentToolWorkflowInstance);
+            repository.Setup(x => x.GetAssessmentToolWorkflowInstance(command.WorkflowInstanceId!)).ReturnsAsync(assessmentToolWorkflowInstance);
 
             roleValidation.Setup(x => x.ValidateRole(assessmentToolWorkflowInstance.AssessmentId, assessmentToolWorkflowInstance.WorkflowDefinitionId))
                 .ReturnsAsync(false);
@@ -78,7 +78,7 @@ namespace He.PipelineAssessment.UI.Tests.Features.Workflow.ReturnToActivity
         ReturnToActivityDataDto response)
         {
             //Arrange
-            assessmentRepository.Setup(x => x.GetAssessmentToolWorkflowInstance(command.WorkflowInstanceId)).ReturnsAsync(assessmentToolWorkflowInstance);
+            assessmentRepository.Setup(x => x.GetAssessmentToolWorkflowInstance(command.WorkflowInstanceId!)).ReturnsAsync(assessmentToolWorkflowInstance);
             roleValidation.Setup(x => x.ValidateRole(assessmentToolWorkflowInstance.AssessmentId, assessmentToolWorkflowInstance.WorkflowDefinitionId)).ReturnsAsync(true);
 
             elsaServerHttpClient.Setup(x => x.ReturnToActivity(It.IsAny<ReturnToActivityData>()))

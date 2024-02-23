@@ -142,6 +142,7 @@ namespace Elsa.Server.Tests.Features.Workflow
            LoadQuestionScreenRequest request,
            Mock<IMediator> mediatorMock)
         {
+
             var response = SampleResponse<LoadQuestionScreenResponse>();
             var startWorkflowOperationResult = new OperationResult<LoadQuestionScreenResponse>
             {
@@ -848,7 +849,7 @@ namespace Elsa.Server.Tests.Features.Workflow
             WorkflowController controller = new WorkflowController(mediatorMock.Object);
 
             //Act
-            var result = await controller.ReturnToActivity(command.WorkflowInstanceId, command.ActivityId);
+            var result = await controller.ReturnToActivity(command.WorkflowInstanceId!, command.ActivityId!);
 
             //Assert
             Assert.NotNull(result);
@@ -874,7 +875,7 @@ namespace Elsa.Server.Tests.Features.Workflow
             WorkflowController controller = new WorkflowController(mediatorMock.Object);
 
             //Act
-            var result = await controller.ReturnToActivity(command!.WorkflowInstanceId, command!.ActivityId);
+            var result = await controller.ReturnToActivity(command.WorkflowInstanceId!, command.ActivityId!);
 
             //Assert
             Assert.NotNull(result);
@@ -899,7 +900,7 @@ namespace Elsa.Server.Tests.Features.Workflow
             WorkflowController controller = new WorkflowController(mediatorMock.Object);
 
             //Act
-            var result = await controller.ReturnToActivity(command!.WorkflowInstanceId, command!.ActivityId);
+            var result = await controller.ReturnToActivity(command.WorkflowInstanceId!, command.ActivityId!);
 
             //Assert
             Assert.NotNull(result);

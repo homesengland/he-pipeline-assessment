@@ -60,7 +60,6 @@ export class HeMonaco {
     if (oldModel)
       oldModel.dispose();
 
-    //const newModel = monaco.editor.createModel(libSource, 'typescript', monaco.Uri.parse(libUri));
 
     const matches = libSource.matchAll(/declare const (\w+): (string|number)/g);
 
