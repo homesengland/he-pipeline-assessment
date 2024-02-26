@@ -58,6 +58,9 @@
                     <div class="govuk-hint">A verbose description of what this Data Dictionary item represents, and what it is intended to represent for reporting purposes.</div>
                 </div>
                 <div class="govuk-form-group">
+                    <label class="govuk-label" for="group-archived">
+                        Archived
+                    </label>
                     <input asp-for="DictionaryRecord.IsArchived" class="govuk-checkboxes__input" name="DictionaryRecord.IsArchived" type="hidden">
                 </div>
                 <input asp-for="DictionaryRecord.CreatedDateTime" name="DictionaryRecord.CreatedDateTime" type="hidden">
@@ -86,14 +89,14 @@
                 }
                 else
                 {
-                <strong class="govuk-warning-text__text">
-                    <span class="govuk-visually-hidden">Warning</span>
-                    Data Dictionary Records cannot be deleted.  You may archive a record, which will prevent it from being selected when building future versions of workflows.
-                </strong>
-                <strong class="govuk-warning-text__text">
-                    <span class="govuk-visually-hidden">Warning</span>
-                    Archived Records will still be recorded and reported on, if they have been previously referenced in completed assessments.
-                </strong>
+            <strong class="govuk-warning-text__text">
+                <span class="govuk-visually-hidden">Warning</span>
+                Data Dictionary Records cannot be deleted.  You may archive a record, which will prevent it from being selected when building future versions of workflows.
+            </strong>
+            <strong class="govuk-warning-text__text">
+                <span class="govuk-visually-hidden">Warning</span>
+                Archived Records will still be recorded and reported on, if they have been previously referenced in completed assessments.
+            </strong>
                 }
 
         </div>
