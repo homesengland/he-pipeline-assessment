@@ -52,16 +52,17 @@ namespace Elsa.Dashboard.Pages
     {
       if(DictionaryRecord != null)
       {
+        DictionaryRecord.Name = DictionaryRecord.Name.Replace(" ", "_");
         await _client.UpdateDataDictionaryRecord(_serverUrl, DictionaryRecord);
       }
       else { HttpContext.Response.StatusCode = (int)HttpStatusCode.BadRequest; }
-      return Page();
+      return RedirectToPage("DataDictionaryRecord", new {group = GroupId, record = DictionaryRecord!.Id });
     }
 
     public async Task<IActionResult> OnPostArchiveAsync(bool archive)
     {
       await _client.ArchiveDataDictionaryRecord(_serverUrl, RecordId, archive);
-      return Page();
+      return RedirectToPage("DataDictionaryRecord", new { group = GroupId, record = DictionaryRecord!.Id });
 
     }
 

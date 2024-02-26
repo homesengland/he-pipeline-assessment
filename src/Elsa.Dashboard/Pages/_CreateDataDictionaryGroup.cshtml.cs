@@ -40,7 +40,7 @@ namespace Elsa.Dashboard.Pages
         _logger.LogError("Dictionary Group unable to be parsed by PageModel");
         HttpContext.Response.StatusCode = (int)HttpStatusCode.BadRequest;
       }
-      return RedirectToPage("/DataDictionary");
+      return RedirectToPage("_DataDictionary");
     }
   }
 }

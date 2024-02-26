@@ -37,15 +37,16 @@ namespace Elsa.Dashboard.Pages
     {
       if (DictionaryRecord != null && DictionaryGroupId > 0)
       {
+        DictionaryRecord.Name = DictionaryRecord.Name.Replace(" ", "_");
         DictionaryRecord.DataDictionaryGroupId = DictionaryGroupId;
         await _client.CreateDataDictionaryRecord(_serverUrl, DictionaryRecord);
       }
       else
       {
-        _logger.LogError("Dictionary Item unable to be parsed by PageModel");
+        _logger.LogError("Dictionary Record unable to be parsed by PageModel");
         HttpContext.Response.StatusCode = (int)HttpStatusCode.BadRequest;
       }
-      return RedirectToPage($"_DataDictionaryGroup", new { group = DictionaryGroupId});
+      return RedirectToPage("_DataDictionaryGroup", new { group = DictionaryGroupId});
     }
   }
 }

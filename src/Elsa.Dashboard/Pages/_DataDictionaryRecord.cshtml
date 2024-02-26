@@ -31,6 +31,7 @@
                     </label>
                     <input asp-for="DictionaryRecord.Name" class="govuk-input" name="DictionaryRecord.Name" type="text">
                     <div class="govuk-hint">Record names should indicate the data they report upon.</div>
+                    <div class="govuk-hint">Whitespace is not allowed, and will be replaced by an "_" character.</div>
                 </div>
                 <div class="govuk-form-group">
                     <label class="govuk-label" for="legacy-name">
@@ -47,7 +48,7 @@
                     <select asp-for="DictionaryRecord.Type" asp-items="@selectTypes" class="govuk-input" name="DictionaryRecord.Type">
                         <option>Please select a data type...</option>
                       </select>
-                    <div class="govuk-hint">Record names should indicate the type of data that this field will report.</div>
+                    <div class="govuk-hint">Type should indicate the type of data that this field will report.</div>
                 </div>
                 <div class="govuk-form-group">
                     <label class="govuk-label" for="legacy-name">
@@ -67,7 +68,7 @@
             </fieldset>
 
             <div class="govuk-button-group">
-                <input id="update" type="submit" value="Update Group" name="update" class="govuk-button" />
+                <input id="update" type="submit" value="Update Record" name="update" class="govuk-button" />
             </div>
         </form>
 
@@ -78,6 +79,16 @@
         <button type="submit" class="govuk-button" asp-page-handler="archive">@archiveText</button>
         <div class="govuk-warning-text">
             <span class="govuk-warning-text__icon" aria-hidden="true">!</span>
+            
+                @if (Model.DictionaryRecord.IsArchived)
+                {
+                <strong class="govuk-warning-text__text">
+                    <span class="govuk-visually-hidden">Warning</span>
+                    Data Dictionary Records may be restored.  Doing so will mean it is once again selectable within the workflow tools.
+                </strong>
+                }
+                else
+                {
             <strong class="govuk-warning-text__text">
                 <span class="govuk-visually-hidden">Warning</span>
                 Data Dictionary Records cannot be deleted.  You may archive a record, which will prevent it from being selected when building future versions of workflows.
@@ -86,6 +97,8 @@
                 <span class="govuk-visually-hidden">Warning</span>
                 Archived Records will still be recorded and reported on, if they have been previously referenced in completed assessments.
             </strong>
+                }
+
         </div>
     </form>
 </div>
