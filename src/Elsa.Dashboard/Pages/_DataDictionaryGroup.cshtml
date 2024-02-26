@@ -102,7 +102,7 @@
 
             </fieldset>
             <div class="govuk-button-group">
-                <button type="submit" asp-page-handler="update" class="govuk-button govuk-button-override" data-module="govuk-button">Update</button>
+                <button type="submit" asp-page-handler="update" class="govuk-button govuk-button-override" data-module="govuk-button">Update Group</button>
             </div>
         </form>
 
@@ -114,14 +114,28 @@
         <button type="submit" class="govuk-button govuk-button-override" asp-page-handler="archive" data-module="govuk-button">@archiveText</button>
         <div class="govuk-warning-text">
             <span class="govuk-warning-text__icon" aria-hidden="true">!</span>
-            <strong class="govuk-warning-text__text">
-                <span class="govuk-visually-hidden">Warning</span>
-                Data Dictionary Items cannot be deleted.  You may archive an record, which will prevent it from being selected when building future versions of workflows.
-            </strong>
-            <strong class="govuk-warning-text__text">
-                <span class="govuk-visually-hidden">Warning</span>
-                Archived Items will still be recorded and reported on, if they have been previously referenced in completed assessments.
-            </strong>
+            @if (Model.DictionaryGroup.IsArchived)
+            {
+                <strong class="govuk-warning-text__text">
+                    <span class="govuk-visually-hidden">Warning</span>
+                    Data Dictionary Groups may be restored.  Doing so will mean it is once again selectable within the workflow tools.  All related Records will also be restored by this action.
+                </strong>
+            }
+            else
+            {
+                <strong class="govuk-warning-text__text">
+                    <span class="govuk-visually-hidden">Warning</span>
+                    Data Dictionary Groups and Records cannot be deleted.  You may archive a record, which will prevent it from being selected when building future versions of workflows.
+                </strong>
+                <strong class="govuk-warning-text__text">
+                    <span class="govuk-visually-hidden">Warning</span>
+                    Archived Records will still be recorded and reported on, if they have been previously referenced in completed assessments.
+                </strong>
+                <strong class="govuk-warning-text__text">
+                    <span class="govuk-visually-hidden">Warning</span>
+                    All listed Dictionary Records belonging to this group will also be archived.
+                </strong>
+            }
         </div>
     </form>
 </div>

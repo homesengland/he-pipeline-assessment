@@ -224,7 +224,7 @@ namespace Elsa.CustomWorkflow.Sdk.HttpClients
             using var request = new HttpRequestMessage(HttpMethod.Post, relativeUri);
             var content = JsonSerializer.Serialize(new
             {
-                DictionaryItem = record
+                DictionaryRecord = record
             });
             request.Content = new StringContent(content, Encoding.UTF8, "application/json");
 
@@ -252,7 +252,7 @@ namespace Elsa.CustomWorkflow.Sdk.HttpClients
             using var request = new HttpRequestMessage(HttpMethod.Post, relativeUri);
             var content = JsonSerializer.Serialize(new
             {
-                record = record
+                Record = record
             });
             request.Content = new StringContent(content, Encoding.UTF8, "application/json");
 

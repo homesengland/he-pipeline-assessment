@@ -2,6 +2,8 @@
 @model CreateDataDictionaryRecordModel
 @{
     Layout = "_Layout";
+    List<string> types = new List<string>() { "Text", "Multiple Choice", "Numeric", "Link", };
+    SelectList selectTypes = new SelectList(types);
 }
 
 <div class="govuk-width-container">
@@ -37,7 +39,10 @@
                     <label class="govuk-label" for="legacy-name">
                         Type
                     </label>
-                    <input asp-for="DictionaryRecord.Type" class="govuk-input" id="type" name="DictionaryRecord.Type" type="text">
+                    <select asp-for="DictionaryRecord.Type" asp-items="@selectTypes" class="govuk-input" name="DictionaryRecord.Type">
+                        <option>Please select a data type...</option>
+                    </select>
+                    <div class="govuk-hint">Type should indicate the type of data that this field will report.</div>
                 </div>
                 <div class="govuk-form-group">
                     <label class="govuk-label" for="legacy-name">
