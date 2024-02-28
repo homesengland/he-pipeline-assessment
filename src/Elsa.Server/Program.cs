@@ -46,6 +46,8 @@ using Elsa.CustomActivities.Activities.LandValuesDataSource;
 using He.PipelineAssessment.Data.ExtendedSinglePipeline;
 using Elsa.CustomActivities.Activities.SinglePipelineExtendedDataSource;
 using Elsa.CustomActivities.Activities.ReturnToActivity;
+using Elsa.CustomActivities.Activities.DataverseDataSource;
+using He.PipelineAssessment.Data.Dataverse;
 
 var builder = WebApplication.CreateBuilder(args);
 var elsaConnectionString = builder.Configuration.GetConnectionString("Elsa");
@@ -99,6 +101,7 @@ builder.Services
         .AddActivity<RegionalIPUDataSource>()
         .AddActivity<RegionalFigsDataSource>()
         .AddActivity<ReturnToActivity>()
+        .AddActivity<DataverseDataSource>()
         .AddConsoleActivities()
     );
 
@@ -197,6 +200,12 @@ builder.Services.AddOptions<IdentityClientConfig>()
     configuration.GetSection("IdentityClientConfig").Bind(settings);
 });
 
+builder.Services.AddOptions<DataverseClientConfig>()
+.Configure<IConfiguration>((settings, configuration) =>
+{
+    configuration.GetSection("DataverseClientConfig").Bind(settings);
+});
+
 
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
     .AddJwtBearer(options =>
@@ -206,6 +215,7 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
     });
 
 builder.Services.AddEsriHttpClients(builder.Configuration, builder.Environment.IsDevelopment());
+builder.Services.AddScoped<IDataverseClient, DataverseClient>();
 
 
 //HibernatingRhinos.Profiler.Appender.EntityFramework.EntityFrameworkProfiler.Initialize();

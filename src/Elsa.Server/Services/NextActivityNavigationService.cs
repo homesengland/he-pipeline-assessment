@@ -37,7 +37,8 @@ namespace Elsa.Server.Services
                  nextActivity.Type != ActivityTypeConstants.PCSProfileDataSource &&
                  nextActivity.Type != ActivityTypeConstants.LandValues &&
                  nextActivity.Type != ActivityTypeConstants.AgricultureLandValues &&
-                 nextActivity.Type != ActivityTypeConstants.OfficeLandValues))
+                 nextActivity.Type != ActivityTypeConstants.OfficeLandValues &&
+                 nextActivity.Type != ActivityTypeConstants.DataverseDataSource))
             {
                 var customActivityNavigation =
                     _elsaCustomModelHelper.CreateNextCustomActivityNavigation(previousActivityId,
