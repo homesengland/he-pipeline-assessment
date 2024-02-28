@@ -215,6 +215,7 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
     });
 
 builder.Services.AddEsriHttpClients(builder.Configuration, builder.Environment.IsDevelopment());
+builder.Services.AddScoped<IDataverseResultConverter, DataverseResultConverter>();
 builder.Services.AddScoped<IDataverseClient, DataverseClient>();
 
 

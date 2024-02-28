@@ -30,25 +30,24 @@ namespace Elsa.CustomActivities.Activities.DataverseDataSource
         public string FetchXML { get; set; } = null!;
 
         [ActivityInput(
-            Hint = "Check this option to use Suspend/Resume approach for execution", 
-            SupportedSyntaxes = new[] { SyntaxNames.Variable }
+            Hint = "Check this option to execute the activity without suspend/resume approach", 
+            SupportedSyntaxes = new[] { SyntaxNames.Literal, SyntaxNames.Variable }
             )]
-        public bool UseSuspendResumeModel { get; set; }
-
+        public bool RunAsNonBlockingActivity { get; set; }
 
         [ActivityOutput(IsBrowsable = true)]
-        public DataverseResults Output { get; set; }
+        public DataverseResults? Output { get; set; }
 
         protected override IActivityExecutionResult OnExecute(ActivityExecutionContext context)
         {
-            if (this.UseSuspendResumeModel)
-            {
-                return Suspend();
-            }
-            else
+            if (this.RunAsNonBlockingActivity)
             {
                 this.Execute(context);
                 return Done();
+            }
+            else
+            {
+                return Suspend();
             }
         }
 
@@ -56,23 +55,16 @@ namespace Elsa.CustomActivities.Activities.DataverseDataSource
         {
             context.JournalData.Add(nameof(this.FetchXML), this.FetchXML);
 
-            try
+            var data = this._client.RunFetchXML(this.FetchXML);
+            if (data != null)
             {
-                var data = this._client.RunFetchXML(this.FetchXML);
-                if (data != null)
-                {
-                    string resutsAsJsonn = JsonConvert.SerializeObject(data, Formatting.Indented); ;
-                    context.JournalData.Add("Info", resutsAsJsonn);
-                    this.Output = data;
-                }
-                else
-                {
-                    context.JournalData.Add("Error", "Call to Dataverse returned NULL");
-                }
+                string resutsAsJsonn = JsonConvert.SerializeObject(data, Formatting.Indented);
+                context.JournalData.Add("Info", resutsAsJsonn);
+                this.Output = data;
             }
-            catch (Exception ex)
+            else
             {
-                context.JournalData.Add("Error", ex.Message);
+                context.JournalData.Add("Error", "Call to Dataverse returned NULL");
             }
         }
 

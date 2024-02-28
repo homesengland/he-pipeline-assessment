@@ -8,6 +8,10 @@ namespace He.PipelineAssessment.Data.Dataverse
 {
     public class DataverseResults
     {
+        public DataverseResults() {
+            this.Columns = new string[0];
+            this.Rows = new Dictionary<string, object>[0];        
+        }
         public int RowCount
         {
             get
@@ -17,7 +21,7 @@ namespace He.PipelineAssessment.Data.Dataverse
             }
         }
 
-        public string[]? Columns { get; set; }
+        public string[] Columns { get; set; } = new string[0];
         public Dictionary<string, object>? FirstRow
         {
             get
@@ -26,27 +30,6 @@ namespace He.PipelineAssessment.Data.Dataverse
                 return result;
             }
         }
-    public Dictionary<string, object>[]? Rows { get; set; }
-
-        public static DataverseResults GetSampleData()
-        { 
-            DataverseResults result = new DataverseResults();
-
-            result.Columns = new string[] { 
-                "accountid",
-                "name"
-            };
-
-            result.Rows = new Dictionary<string, object>[2];
-            result.Rows[0] = new Dictionary<string, object>();
-            result.Rows[0]["accountid"] = Guid.NewGuid();
-            result.Rows[0]["name"] = "account 1";
-
-            result.Rows[1] = new Dictionary<string, object>();
-            result.Rows[1]["accountid"] = Guid.NewGuid();
-            result.Rows[1]["name"] = "account 2";
-
-            return result;
-        }
+        public Dictionary<string, object>[] Rows { get; set; }
     }
 }
