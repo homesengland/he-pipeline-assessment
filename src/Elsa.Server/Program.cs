@@ -47,6 +47,7 @@ using Elsa.CustomActivities.Activities.SinglePipelineExtendedDataSource;
 using Elsa.CustomActivities.Activities.ReturnToActivity;
 using Elsa.CustomWorkflow.Sdk.DataDictionaryHelpers;
 using Elsa.Server.DataDictionaryAccessors;
+using Elsa.CustomActivities;
 
 var builder = WebApplication.CreateBuilder(args);
 var elsaConnectionString = builder.Configuration.GetConnectionString("Elsa");

@@ -60,7 +60,7 @@ namespace Elsa.CustomWorkflow.Sdk.HttpClients
                     _logger.LogError($"StatusCode='{response.StatusCode}'," +
                                      $"\n Url='{request.RequestUri}'");
 
-                    throw new ApplicationException("Failed to archive questions");
+                    throw new ApplicationException("Failed to archive group");
                 }
             }
         }
@@ -83,7 +83,7 @@ namespace Elsa.CustomWorkflow.Sdk.HttpClients
                     _logger.LogError($"StatusCode='{response.StatusCode}'," +
                                      $"\n Url='{request.RequestUri}'");
 
-                    throw new ApplicationException("Failed to archive questions");
+                    throw new ApplicationException("Failed to archive record");
                 }
             }
         }
@@ -211,7 +211,7 @@ namespace Elsa.CustomWorkflow.Sdk.HttpClients
                     _logger.LogError($"StatusCode='{response.StatusCode}'," +
                                      $"\n Url='{request.RequestUri}'");
 
-                    throw new ApplicationException("Failed to archive questions");
+                    throw new ApplicationException("Failed to create group");
                 }
             }
         }
@@ -268,7 +268,7 @@ namespace Elsa.CustomWorkflow.Sdk.HttpClients
                     _logger.LogError($"StatusCode='{response.StatusCode}'," +
                                      $"\n Url='{request.RequestUri}'");
 
-                    throw new ApplicationException("Failed to archive questions");
+                    throw new ApplicationException("Failed to update record");
                 }
             }
         }

@@ -228,23 +228,23 @@ namespace Elsa.CustomActivities.Activities.QuestionScreen.Helpers
 
             engine.SetValue("dataTableQuestionGetStringAnswer", (Func<string, string, string, string, string?>)((workflowName, activityName, questionId, tableCellIdentifier) => GetStringAnswer(activityExecutionContext.CorrelationId, workflowName, activityName, questionId, tableCellIdentifier).Result));
             engine.SetValue("dataTableQuestionGetStringAnswerArray", (Func<string, string, string, string?[]>)((workflowName, activityName, questionId) => GetStringAnswerArray(activityExecutionContext.CorrelationId, workflowName, activityName, questionId).Result));
-            engine.SetValue("dataTableQuestionGetStringAnswer", (Func<int, string, string?>)((dataDictionaryId, tableCellIdentifier) => GetStringAnswer(activityExecutionContext.CorrelationId, dataDictionaryId, tableCellIdentifier).Result));
-            engine.SetValue("dataTableQuestionGetStringAnswerArray", (Func<int, string?[]>)((dataDictionaryId) => GetStringAnswerArray(activityExecutionContext.CorrelationId, dataDictionaryId).Result));
+            engine.SetValue("dataTableGetStringAnswer", (Func<int, string, string?>)((dataDictionaryId, tableCellIdentifier) => GetStringAnswer(activityExecutionContext.CorrelationId, dataDictionaryId, tableCellIdentifier).Result));
+            engine.SetValue("dataTableGetStringAnswerArray", (Func<int, string?[]>)((dataDictionaryId) => GetStringAnswerArray(activityExecutionContext.CorrelationId, dataDictionaryId).Result));
 
             engine.SetValue("dataTableQuestionGetCurrencyAnswerArray", (Func<string, string, string, decimal?[]>)((workflowName, activityName, questionId) => GetDecimalAnswerArray(activityExecutionContext.CorrelationId, workflowName, activityName, questionId).Result));
             engine.SetValue("dataTableQuestionGetCurrencyAnswer", (Func<string, string, string, string, decimal?>)((workflowName, activityName, questionId, tableCellIdentifier) => GetDecimalAnswer(activityExecutionContext.CorrelationId, workflowName, activityName, questionId, tableCellIdentifier).Result));
-            engine.SetValue("dataTableQuestionGetCurrencyAnswerArray", (Func<int, decimal?[]>)((dataDictionaryId) => GetDecimalAnswerArray(activityExecutionContext.CorrelationId, dataDictionaryId).Result));
-            engine.SetValue("dataTableQuestionGetCurrencyAnswer", (Func<int, string, decimal?>)((dataDictionaryId, tableCellIdentifier) => GetDecimalAnswer(activityExecutionContext.CorrelationId, dataDictionaryId, tableCellIdentifier).Result));
+            engine.SetValue("dataTableGetCurrencyAnswerArray", (Func<int, decimal?[]>)((dataDictionaryId) => GetDecimalAnswerArray(activityExecutionContext.CorrelationId, dataDictionaryId).Result));
+            engine.SetValue("dataTableGetCurrencyAnswer", (Func<int, string, decimal?>)((dataDictionaryId, tableCellIdentifier) => GetDecimalAnswer(activityExecutionContext.CorrelationId, dataDictionaryId, tableCellIdentifier).Result));
 
             engine.SetValue("dataTableQuestionGetIntegerAnswerArray", (Func<string, string, string, decimal?[]>)((workflowName, activityName, questionId) => GetDecimalAnswerArray(activityExecutionContext.CorrelationId, workflowName, activityName, questionId).Result));
             engine.SetValue("dataTableQuestionGetIntegerAnswer", (Func<string, string, string, string, decimal?>)((workflowName, activityName, questionId, tableCellIdentifier) => GetDecimalAnswer(activityExecutionContext.CorrelationId, workflowName, activityName, questionId, tableCellIdentifier).Result));
-            engine.SetValue("dataTableQuestionGetIntegerAnswerArray", (Func<int, decimal?[]>)((dataDictionaryId) => GetDecimalAnswerArray(activityExecutionContext.CorrelationId, dataDictionaryId).Result));
-            engine.SetValue("dataTableQuestionGetIntegerAnswer", (Func<int, string, decimal?>)((dataDictionaryId, tableCellIdentifier) => GetDecimalAnswer(activityExecutionContext.CorrelationId, dataDictionaryId, tableCellIdentifier).Result));
+            engine.SetValue("dataTableGetIntegerAnswerArray", (Func<int, decimal?[]>)((dataDictionaryId) => GetDecimalAnswerArray(activityExecutionContext.CorrelationId, dataDictionaryId).Result));
+            engine.SetValue("dataTableGetIntegerAnswer", (Func<int, string, decimal?>)((dataDictionaryId, tableCellIdentifier) => GetDecimalAnswer(activityExecutionContext.CorrelationId, dataDictionaryId, tableCellIdentifier).Result));
 
             engine.SetValue("dataTableQuestionGetDecimalAnswerArray", (Func<string, string, string, decimal?[]>)((workflowName, activityName, questionId) => GetDecimalAnswerArray(activityExecutionContext.CorrelationId, workflowName, activityName, questionId).Result));
             engine.SetValue("dataTableQuestionGetDecimalAnswer", (Func<string, string, string, string, decimal?>)((workflowName, activityName, questionId, tableCellIdentifier) => GetDecimalAnswer(activityExecutionContext.CorrelationId, workflowName, activityName, questionId, tableCellIdentifier).Result));
-            engine.SetValue("dataTableQuestionGetDecimalAnswerArray", (Func<int, decimal?[]>)((dataDictionaryId) => GetDecimalAnswerArray(activityExecutionContext.CorrelationId, dataDictionaryId).Result));
-            engine.SetValue("dataTableQuestionGetDecimalAnswer", (Func<int, string, decimal?>)((dataDictionaryId, tableCellIdentifier) => GetDecimalAnswer(activityExecutionContext.CorrelationId, dataDictionaryId, tableCellIdentifier).Result));
+            engine.SetValue("dataTableGetDecimalAnswerArray", (Func<int, decimal?[]>)((dataDictionaryId) => GetDecimalAnswerArray(activityExecutionContext.CorrelationId, dataDictionaryId).Result));
+            engine.SetValue("dataTableGetDecimalAnswer", (Func<int, string, decimal?>)((dataDictionaryId, tableCellIdentifier) => GetDecimalAnswer(activityExecutionContext.CorrelationId, dataDictionaryId, tableCellIdentifier).Result));
 
             return Task.CompletedTask;
         }
@@ -255,23 +255,23 @@ namespace Elsa.CustomActivities.Activities.QuestionScreen.Helpers
 
             output.AppendLine("declare function dataTableQuestionGetStringAnswerArray(workflowName: string, activityName:string, questionId:string): [];");
             output.AppendLine("declare function dataTableQuestionGetStringAnswer(workflowName: string, activityName:string, questionId:string, tableCellIdentifier:string ): string;");
-            output.AppendLine("declare function dataTableQuestionGetStringAnswerArray(dataDictionaryId: number): [];");
-            output.AppendLine("declare function dataTableQuestionGetStringAnswer(dataDictionaryId: number, tableCellIdentifier:string ): string;");
+            output.AppendLine("declare function dataTableGetStringAnswerArray(dataDictionaryId: number): [];");
+            output.AppendLine("declare function dataTableGetStringAnswer(dataDictionaryId: number, tableCellIdentifier:string ): string;");
 
             output.AppendLine("declare function dataTableQuestionGetCurrencyAnswerArray(workflowName: string, activityName:string, questionId:string ): [];");
             output.AppendLine("declare function dataTableQuestionGetCurrencyAnswer(workflowName: string, activityName:string, questionId:string, tableCellIdentifier:string ): number;");
-            output.AppendLine("declare function dataTableQuestionGetCurrencyAnswerArray(dataDictionaryId: number): [];");
-            output.AppendLine("declare function dataTableQuestionGetCurrencyAnswer(dataDictionaryId: number, tableCellIdentifier:string ): number;");
+            output.AppendLine("declare function dataTableGetCurrencyAnswerArray(dataDictionaryId: number): [];");
+            output.AppendLine("declare function dataTableGetCurrencyAnswer(dataDictionaryId: number, tableCellIdentifier:string ): number;");
 
             output.AppendLine("declare function dataTableQuestionGetIntegerAnswerArray(workflowName: string, activityName:string, questionId:string ): [];");
             output.AppendLine("declare function dataTableQuestionGetIntegerAnswer(workflowName: string, activityName:string, questionId:string, tableCellIdentifier:string ): number;");
-            output.AppendLine("declare function dataTableQuestionGetIntegerAnswerArray(dataDictionaryId: number): [];");
-            output.AppendLine("declare function dataTableQuestionGetIntegerAnswer(dataDictionaryId: number, tableCellIdentifier:string ): number;");
+            output.AppendLine("declare function dataTableGetIntegerAnswerArray(dataDictionaryId: number): [];");
+            output.AppendLine("declare function dataTableGetIntegerAnswer(dataDictionaryId: number, tableCellIdentifier:string ): number;");
 
             output.AppendLine("declare function dataTableQuestionGetDecimalAnswerArray(workflowName: string, activityName:string, questionId:string ): [];");
             output.AppendLine("declare function dataTableQuestionGetDecimalAnswer(workflowName: string, activityName:string, questionId:string, tableCellIdentifier:string ): number;");
-            output.AppendLine("declare function dataTableQuestionGetDecimalAnswerArray(dataDictionaryId: number): [];");
-            output.AppendLine("declare function dataTableQuestionGetDecimalAnswer(dataDictionaryId: number, tableCellIdentifier:string ): number;");
+            output.AppendLine("declare function dataTableGetDecimalAnswerArray(dataDictionaryId: number): [];");
+            output.AppendLine("declare function dataTableGetDecimalAnswer(dataDictionaryId: number, tableCellIdentifier:string ): number;");
 
             return Task.CompletedTask;
         }

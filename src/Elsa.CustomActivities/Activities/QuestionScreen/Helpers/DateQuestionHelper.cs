@@ -111,8 +111,8 @@ namespace Elsa.CustomActivities.Activities.QuestionScreen.Helpers
             var engine = notification.Engine;
             engine.SetValue("dateQuestionAnswerEqualToOrGreaterThan", (Func<string, string, string, int, int, int, bool>)((workflowName, activityName, questionId, day, month, year) => AnswerEqualToOrGreaterThan(activityExecutionContext.CorrelationId, workflowName, activityName, questionId, day, month, year).Result));
             engine.SetValue("dateQuestionAnswerEqualToOrLessThan", (Func<string, string, string, int, int, int, bool>)((workflowName, activityName, questionId, day, month, year) => AnswerEqualToOrLessThan(activityExecutionContext.CorrelationId, workflowName, activityName, questionId, day, month, year).Result));
-            engine.SetValue("dateQuestionAnswerEqualToOrGreaterThan", (Func<int, int, int, int, bool>)((dataDictionaryId, day, month, year) => AnswerEqualToOrGreaterThan(activityExecutionContext.CorrelationId, dataDictionaryId, day, month, year).Result));
-            engine.SetValue("dateQuestionAnswerEqualToOrLessThan", (Func<int, int, int, int, bool>)((dataDictionaryId, day, month, year) => AnswerEqualToOrLessThan(activityExecutionContext.CorrelationId, dataDictionaryId, day, month, year).Result));
+            engine.SetValue("dateAnswerEqualToOrGreaterThan", (Func<int, int, int, int, bool>)((dataDictionaryId, day, month, year) => AnswerEqualToOrGreaterThan(activityExecutionContext.CorrelationId, dataDictionaryId, day, month, year).Result));
+            engine.SetValue("dateAnswerEqualToOrLessThan", (Func<int, int, int, int, bool>)((dataDictionaryId, day, month, year) => AnswerEqualToOrLessThan(activityExecutionContext.CorrelationId, dataDictionaryId, day, month, year).Result));
             return Task.CompletedTask;
         }
 
@@ -121,8 +121,8 @@ namespace Elsa.CustomActivities.Activities.QuestionScreen.Helpers
             var output = notification.Output;
             output.AppendLine("declare function dateQuestionAnswerEqualToOrGreaterThan(workflowName: string, activityName:string, questionId:string, answerToCheck:decimal ): boolean;");
             output.AppendLine("declare function dateQuestionAnswerEqualToOrLessThan(workflowName: string, activityName:string, questionId:string, answerToCheck:decimal ): boolean;");
-            output.AppendLine("declare function dateQuestionAnswerEqualToOrGreaterThan(dataDictionaryId: number, answerToCheck:decimal ): boolean;");
-            output.AppendLine("declare function dateQuestionAnswerEqualToOrLessThan(dataDictionaryId: number, answerToCheck:decimal ): boolean;");
+            output.AppendLine("declare function dateAnswerEqualToOrGreaterThan(dataDictionaryId: number, answerToCheck:decimal ): boolean;");
+            output.AppendLine("declare function dateAnswerEqualToOrLessThan(dataDictionaryId: number, answerToCheck:decimal ): boolean;");
             return Task.CompletedTask;
         }
     }

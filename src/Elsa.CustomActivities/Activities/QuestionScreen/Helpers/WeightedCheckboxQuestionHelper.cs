@@ -119,9 +119,9 @@ namespace Elsa.CustomActivities.Activities.QuestionScreen.Helpers
             engine.SetValue("weightedCheckboxQuestionAnswerEquals", (Func<string, string, string, string, string[], bool>)((workflowName, activityName, questionId, groupId, choiceIdsToCheck) => AnswerEquals(activityExecutionContext.CorrelationId, workflowName, activityName, questionId, groupId, choiceIdsToCheck).Result));
             engine.SetValue("weightedCheckboxQuestionAnswerContains", (Func<string, string, string, string, string[], bool>)((workflowName, activityName, questionId, groupId, choiceIdsToCheck) => AnswerContains(activityExecutionContext.CorrelationId, workflowName, activityName, questionId, groupId, choiceIdsToCheck).Result));
             engine.SetValue("weightedCheckboxQuestionAnswerContainsAny", (Func<string, string, string, string, string[], bool>)((workflowName, activityName, questionId, groupId, choiceIdsToCheck) => AnswerContains(activityExecutionContext.CorrelationId, workflowName, activityName, questionId, groupId, choiceIdsToCheck, true).Result));
-            engine.SetValue("weightedCheckboxQuestionAnswerEquals", (Func<int, string, string[], bool>)((dataDictionaryId, groupId, choiceIdsToCheck) => AnswerEquals(activityExecutionContext.CorrelationId, dataDictionaryId, groupId, choiceIdsToCheck).Result));
-            engine.SetValue("weightedCheckboxQuestionAnswerContains", (Func<int, string, string[], bool>)((dataDictionaryId, groupId, choiceIdsToCheck) => AnswerContains(activityExecutionContext.CorrelationId, dataDictionaryId, groupId, choiceIdsToCheck).Result));
-            engine.SetValue("weightedCheckboxQuestionAnswerContainsAny", (Func<int, string, string[], bool>)((dataDictionaryId, groupId, choiceIdsToCheck) => AnswerContains(activityExecutionContext.CorrelationId, dataDictionaryId, groupId, choiceIdsToCheck, true).Result));
+            engine.SetValue("weightedCheckboxAnswerEquals", (Func<int, string, string[], bool>)((dataDictionaryId, groupId, choiceIdsToCheck) => AnswerEquals(activityExecutionContext.CorrelationId, dataDictionaryId, groupId, choiceIdsToCheck).Result));
+            engine.SetValue("weightedCheckboxAnswerContains", (Func<int, string, string[], bool>)((dataDictionaryId, groupId, choiceIdsToCheck) => AnswerContains(activityExecutionContext.CorrelationId, dataDictionaryId, groupId, choiceIdsToCheck).Result));
+            engine.SetValue("weightedCheckboxAnswerContainsAny", (Func<int, string, string[], bool>)((dataDictionaryId, groupId, choiceIdsToCheck) => AnswerContains(activityExecutionContext.CorrelationId, dataDictionaryId, groupId, choiceIdsToCheck, true).Result));
             return Task.CompletedTask;
         }
 
@@ -131,9 +131,9 @@ namespace Elsa.CustomActivities.Activities.QuestionScreen.Helpers
             output.AppendLine("declare function weightedCheckboxQuestionAnswerEquals(workflowName: string, activityName:string, questionId:string, groupId:string, choiceIdsToCheck:string[] ): boolean;");
             output.AppendLine("declare function weightedCheckboxQuestionAnswerContains(workflowName: string, activityName:string, questionId:string, groupId:string, choiceIdsToCheck:string[]  ): boolean;");
             output.AppendLine("declare function weightedCheckboxQuestionAnswerContainsAny(workflowName: string, activityName:string, questionId:string, groupId:string, choiceIdsToCheck:string[]  ): boolean;");
-            output.AppendLine("declare function weightedCheckboxQuestionAnswerEquals(dataDictionaryId: number, groupId:string, choiceIdsToCheck:string[] ): boolean;");
-            output.AppendLine("declare function weightedCheckboxQuestionAnswerContains(dataDictionaryId: number, groupId:string, choiceIdsToCheck:string[]  ): boolean;");
-            output.AppendLine("declare function weightedCheckboxQuestionAnswerContainsAny(dataDictionaryId: number, groupId:string, choiceIdsToCheck:string[]  ): boolean;");
+            output.AppendLine("declare function weightedCheckboxAnswerEquals(dataDictionaryId: number, groupId:string, choiceIdsToCheck:string[] ): boolean;");
+            output.AppendLine("declare function weightedCheckboxAnswerContains(dataDictionaryId: number, groupId:string, choiceIdsToCheck:string[]  ): boolean;");
+            output.AppendLine("declare function weightedCheckboxAnswerContainsAny(dataDictionaryId: number, groupId:string, choiceIdsToCheck:string[]  ): boolean;");
             return Task.CompletedTask;
         }
     }

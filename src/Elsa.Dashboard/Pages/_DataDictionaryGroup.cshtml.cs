@@ -55,13 +55,13 @@ namespace Elsa.Dashboard.Pages
         await _client.UpdateDataDictionaryGroup(_serverUrl, DictionaryGroup);
       }
       else { HttpContext.Response.StatusCode = (int)HttpStatusCode.BadRequest; }
-      return await OnGetAsync(groupId);
+      return RedirectToPage("_DataDictionaryGroup", new { group = groupId });
     }
 
     public async Task<IActionResult> OnPostArchiveAsync(bool archive, int groupId)
     {
       await _client.ArchiveDataDictionaryGroup(_serverUrl, GroupId, archive);
-      return await OnGetAsync(groupId);
+      return RedirectToPage("_DataDictionaryGroup", new { group = groupId });
     }
 
     private async Task LoadDataDictionaryGroup(string url)

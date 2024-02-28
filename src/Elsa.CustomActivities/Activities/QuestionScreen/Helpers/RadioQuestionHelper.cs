@@ -134,8 +134,8 @@ namespace Elsa.CustomActivities.Activities.QuestionScreen.Helpers
             var engine = notification.Engine;
             engine.SetValue("radioQuestionAnswerEquals", (Func<string, string, string, string, bool>)((workflowName, activityName, questionId, choiceIdToCheck) => AnswerEquals(activityExecutionContext, workflowName, activityName, questionId, choiceIdToCheck).Result));
             engine.SetValue("radioQuestionAnswerIn", (Func<string, string, string, string[], bool>)((workflowName, activityName, questionId, choiceIdsToCheck) => AnswerIn(activityExecutionContext.CorrelationId, workflowName, activityName, questionId, choiceIdsToCheck).Result));
-            engine.SetValue("radioQuestionAnswerEquals", (Func<int, string, bool>)((dataDictionaryId, choiceIdToCheck) => AnswerEquals(activityExecutionContext, dataDictionaryId, choiceIdToCheck).Result));
-            engine.SetValue("radioQuestionAnswerIn", (Func<int, string[], bool>)((dataDictionaryId, choiceIdsToCheck) => AnswerIn(activityExecutionContext.CorrelationId, dataDictionaryId, choiceIdsToCheck).Result));
+            engine.SetValue("radioAnswerEquals", (Func<int, string, bool>)((dataDictionaryId, choiceIdToCheck) => AnswerEquals(activityExecutionContext, dataDictionaryId, choiceIdToCheck).Result));
+            engine.SetValue("radioAnswerIn", (Func<int, string[], bool>)((dataDictionaryId, choiceIdsToCheck) => AnswerIn(activityExecutionContext.CorrelationId, dataDictionaryId, choiceIdsToCheck).Result));
             return Task.CompletedTask;
         }
 
@@ -144,8 +144,8 @@ namespace Elsa.CustomActivities.Activities.QuestionScreen.Helpers
             var output = notification.Output;
             output.AppendLine("declare function radioQuestionAnswerEquals(workflowName: string, activityName:string, questionId:string, choiceIdToCheck:string ): boolean;");
             output.AppendLine("declare function radioQuestionAnswerIn(workflowName: string, activityName:string, questionId:string, choiceIdsToCheck:string[]  ): boolean;");
-            output.AppendLine("declare function radioQuestionAnswerEquals(dataDictionaryId: number, choiceIdToCheck:string ): boolean;");
-            output.AppendLine("declare function radioQuestionAnswerIn(dataDictionaryId: number, choiceIdsToCheck:string[]  ): boolean;");
+            output.AppendLine("declare function radioAnswerEquals(dataDictionaryId: number, choiceIdToCheck:string ): boolean;");
+            output.AppendLine("declare function radioAnswerIn(dataDictionaryId: number, choiceIdsToCheck:string[]  ): boolean;");
             return Task.CompletedTask;
         }
     }

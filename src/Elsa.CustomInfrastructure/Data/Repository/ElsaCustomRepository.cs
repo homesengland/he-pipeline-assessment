@@ -292,7 +292,19 @@ namespace Elsa.CustomInfrastructure.Data.Repository
 
         public async Task UpdateDataDictionaryItem(DataDictionary item, CancellationToken cancellationToken)
         {
-            _dbContext.Set<DataDictionary>().Update(item);
+            var record = _dbContext.Set<DataDictionary>().Where(x => x.Id == item.Id).FirstOrDefault();
+            if(record != null)
+            {
+                record.Name = item.Name ?? record.Name;
+                record.LegacyName = item.LegacyName ?? record.LegacyName;
+                record.CreatedDateTime = record!.CreatedDateTime;
+                record.Type = item.Type ?? record!.Type;
+                record.LastModifiedDateTime = DateTime.UtcNow;
+                record.Description = record!.Description;
+                record.DataDictionaryGroupId = record.DataDictionaryGroupId;
+                    record.IsArchived = item.IsArchived;
+                _dbContext.Set<DataDictionary>().Update(record);
+            }
             await SaveChanges(cancellationToken);
         }
     }
