@@ -11,7 +11,7 @@ namespace Elsa.CustomActivities.Activities.DataverseDataSource
 {
     [Action(
         Category = "Homes England Data",
-        Description = "Generic DataSource for Dataverse (Single Pipeline)",
+        Description = "Generic DataSource to get data from Dataverse (Single Pipeline)",
         Outcomes = new[] { OutcomeNames.Done }
     )]
     public class DataverseDataSource : Activity
