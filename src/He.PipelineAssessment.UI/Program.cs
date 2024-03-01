@@ -23,6 +23,7 @@ using He.PipelineAssessment.UI.Features.Error;
 using He.PipelineAssessment.UI.Features.Intervention;
 using He.PipelineAssessment.UI.Features.SinglePipeline.Sync;
 using He.PipelineAssessment.UI.Features.Workflow.QuestionScreenSaveAndContinue;
+using He.PipelineAssessment.UI.Integration.ServiceBus;
 using He.PipelineAssessment.UI.Services;
 using Microsoft.AspNetCore.DataProtection;
 using Microsoft.AspNetCore.Mvc.Razor;
@@ -133,8 +134,18 @@ builder.Services.AddAntiforgery(options =>
     options.Cookie.HttpOnly = true;
 });
 
-var app = builder.Build();
+//Service Bus - Receive messages
+builder.Services.AddOptions<ServiceBusConfiguration>()
+    .Configure<IConfiguration>((settings, configuration) =>
+    {
+        configuration.GetSection("ServiceBusConfiguration").Bind(settings);
+    });
 
+builder.Services.AddScoped<IServiceBusMessageReceiver, ServiceBusMessageReceiver>();
+
+builder.Services.AddHostedService<WorkerServiceBus>();
+
+var app = builder.Build();
 
 if (app.Environment.IsDevelopment())
 {

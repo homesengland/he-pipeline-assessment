@@ -218,7 +218,6 @@ builder.Services.AddEsriHttpClients(builder.Configuration, builder.Environment.I
 builder.Services.AddScoped<IDataverseResultConverter, DataverseResultConverter>();
 builder.Services.AddScoped<IDataverseClient, DataverseClient>();
 
-
 //HibernatingRhinos.Profiler.Appender.EntityFramework.EntityFrameworkProfiler.Initialize();
 var app = builder.Build();
 
@@ -248,6 +247,5 @@ app
             pattern: "{controller=Home}/{action=Index}");
 
     });
-
 
 app.Run();
