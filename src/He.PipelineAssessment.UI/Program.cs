@@ -23,7 +23,9 @@ using He.PipelineAssessment.UI.Features.Error;
 using He.PipelineAssessment.UI.Features.Intervention;
 using He.PipelineAssessment.UI.Features.SinglePipeline.Sync;
 using He.PipelineAssessment.UI.Features.Workflow.QuestionScreenSaveAndContinue;
+using He.PipelineAssessment.UI.Integration;
 using He.PipelineAssessment.UI.Integration.ServiceBus;
+using He.PipelineAssessment.UI.Integration.ServiceBusSend;
 using He.PipelineAssessment.UI.Services;
 using Microsoft.AspNetCore.DataProtection;
 using Microsoft.AspNetCore.Mvc.Razor;
@@ -141,6 +143,7 @@ builder.Services.AddOptions<ServiceBusConfiguration>()
         configuration.GetSection("ServiceBusConfiguration").Bind(settings);
     });
 
+builder.Services.AddScoped<IServiceBusMessageSender, ServiceBusMessageSender>();
 builder.Services.AddScoped<IServiceBusMessageReceiver, ServiceBusMessageReceiver>();
 
 builder.Services.AddHostedService<WorkerServiceBus>();

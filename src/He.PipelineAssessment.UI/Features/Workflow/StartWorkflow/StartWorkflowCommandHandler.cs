@@ -4,7 +4,10 @@ using He.PipelineAssessment.Infrastructure.Repository;
 using He.PipelineAssessment.Models;
 using He.PipelineAssessment.UI.Authorization;
 using He.PipelineAssessment.UI.Features.Workflow.LoadQuestionScreen;
+using He.PipelineAssessment.UI.Features.Workflow.QuestionScreenSaveAndContinue;
+using He.PipelineAssessment.UI.Integration.ServiceBusSend;
 using MediatR;
+using Newtonsoft.Json;
 
 namespace He.PipelineAssessment.UI.Features.Workflow.StartWorkflow
 {
@@ -14,12 +17,20 @@ namespace He.PipelineAssessment.UI.Features.Workflow.StartWorkflow
         private readonly IElsaServerHttpClient _elsaServerHttpClient;
         private readonly IAssessmentRepository _assessmentRepository;
         private readonly IRoleValidation _roleValidation;
+        private readonly IServiceBusMessageSender _serviceBusMessageSender;
         private readonly ILogger<StartWorkflowCommandHandler> _logger;
-        public StartWorkflowCommandHandler(IElsaServerHttpClient elsaServerHttpClient, IAssessmentRepository assessmentRepository, IRoleValidation roleValidation, ILogger<StartWorkflowCommandHandler> logger)
+
+        public StartWorkflowCommandHandler(
+            IElsaServerHttpClient elsaServerHttpClient, 
+            IAssessmentRepository assessmentRepository, 
+            IRoleValidation roleValidation, 
+            IServiceBusMessageSender serviceBusMessageSender,
+            ILogger<StartWorkflowCommandHandler> logger)
         {
             _elsaServerHttpClient = elsaServerHttpClient;
             _assessmentRepository = assessmentRepository;
             _roleValidation = roleValidation;
+            _serviceBusMessageSender = serviceBusMessageSender;
             _logger = logger;
         }
 
@@ -64,6 +75,7 @@ namespace He.PipelineAssessment.UI.Features.Workflow.StartWorkflow
 
                     await _assessmentRepository.CreateAssessmentToolWorkflowInstance(assessmentToolWorkflowInstance);
 
+                    this._serviceBusMessageSender.SendMessage(assessmentToolWorkflowInstance); 
                     return await Task.FromResult(result);
                 }
                 else

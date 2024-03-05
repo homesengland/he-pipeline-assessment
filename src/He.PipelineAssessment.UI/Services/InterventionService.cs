@@ -6,6 +6,8 @@ using He.PipelineAssessment.UI.Authorization;
 using He.PipelineAssessment.UI.Common.Exceptions;
 using He.PipelineAssessment.UI.Common.Utility;
 using He.PipelineAssessment.UI.Features.Intervention;
+using He.PipelineAssessment.UI.Integration.ServiceBusSend;
+using MediatR;
 
 namespace He.PipelineAssessment.UI.Services
 {
@@ -21,6 +23,7 @@ namespace He.PipelineAssessment.UI.Services
         private readonly IAdminAssessmentToolWorkflowRepository _adminAssessmentToolWorkflowRepository;
         private readonly IDateTimeProvider _dateTimeProvider;
         private readonly IElsaServerHttpClient _elsaServerHttpClient;
+        private readonly IServiceBusMessageSender _serviceBusMessageSender;
 
         public InterventionService(
             IAssessmentRepository assessmentRepository, 
@@ -31,7 +34,9 @@ namespace He.PipelineAssessment.UI.Services
             ILogger<InterventionService> logger,
             IAdminAssessmentToolWorkflowRepository adminAssessmentToolWorkflowRepository,
             IDateTimeProvider dateTimeProvider,
-            IElsaServerHttpClient elsaServerHttpClient)
+            IElsaServerHttpClient elsaServerHttpClient,
+            IServiceBusMessageSender serviceBusMessageSender
+            )
         {
             _assessmentRepository = assessmentRepository;
             _logger = logger;
@@ -42,6 +47,7 @@ namespace He.PipelineAssessment.UI.Services
             _adminAssessmentToolWorkflowRepository = adminAssessmentToolWorkflowRepository;
             _dateTimeProvider = dateTimeProvider;
             _elsaServerHttpClient = elsaServerHttpClient;
+            _serviceBusMessageSender = serviceBusMessageSender;
         }
 
 
@@ -574,9 +580,15 @@ namespace He.PipelineAssessment.UI.Services
                     {
                         workflowInstance.Status = command.FinalInstanceStatus;
                     }
+
                     await _assessmentRepository.SaveChanges();
                     await ClearNextWorkflowsByOrder(intervention, workflowsToDelete);
                     await CreateNextWorkflows(intervention);
+
+                    foreach (var workflowInstance in workflowsToDelete)
+                    {
+                        this._serviceBusMessageSender.SendMessage(workflowInstance);
+                    }
                 }
             }
             catch (NotFoundException ex)

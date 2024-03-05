@@ -9,6 +9,7 @@ using He.PipelineAssessment.Infrastructure;
 using He.PipelineAssessment.UI.Authorization;
 using He.PipelineAssessment.UI.Common.Utility;
 using He.PipelineAssessment.UI.Helper;
+using He.PipelineAssessment.UI.Integration.ServiceBusSend;
 
 namespace He.PipelineAssessment.UI.Features.Workflow.LoadConfirmationScreen
 {
@@ -22,7 +23,17 @@ namespace He.PipelineAssessment.UI.Features.Workflow.LoadConfirmationScreen
         private readonly ILogger<LoadConfirmationScreenRequestHandler> _logger;
         private readonly IRoleValidation _roleValidation;
 
-        public LoadConfirmationScreenRequestHandler(IElsaServerHttpClient elsaServerHttpClient, IAssessmentRepository assessmentRepository, IUserProvider userProvider, IDateTimeProvider dateTimeProvider, IAssessmentToolWorkflowInstanceHelpers assessmentToolWorkflowInstanceHelpers, ILogger<LoadConfirmationScreenRequestHandler> logger, IRoleValidation roleValidation)
+        private readonly IServiceBusMessageSender _serviceBusMessageSender;
+
+        public LoadConfirmationScreenRequestHandler(
+            IElsaServerHttpClient elsaServerHttpClient, 
+            IAssessmentRepository assessmentRepository, 
+            IUserProvider userProvider, 
+            IDateTimeProvider dateTimeProvider, 
+            IAssessmentToolWorkflowInstanceHelpers assessmentToolWorkflowInstanceHelpers, 
+            ILogger<LoadConfirmationScreenRequestHandler> logger, 
+            IRoleValidation roleValidation,
+            IServiceBusMessageSender serviceBusMessageSender)
         {
             _elsaServerHttpClient = elsaServerHttpClient;
             _assessmentRepository = assessmentRepository;
@@ -31,6 +42,7 @@ namespace He.PipelineAssessment.UI.Features.Workflow.LoadConfirmationScreen
             _assessmentToolWorkflowInstanceHelpers = assessmentToolWorkflowInstanceHelpers;
             _logger = logger;
             _roleValidation = roleValidation;
+            _serviceBusMessageSender = serviceBusMessageSender;
         }
 
         public async Task<LoadConfirmationScreenResponse?> Handle(LoadConfirmationScreenRequest request, CancellationToken cancellationToken)
@@ -105,6 +117,8 @@ namespace He.PipelineAssessment.UI.Features.Workflow.LoadConfirmationScreen
                                 if (nextWorkflows.Any())
                                     await _assessmentRepository.CreateAssessmentToolInstanceNextWorkflows(nextWorkflows);
                             }
+
+                            _serviceBusMessageSender.SendMessage(currentAssessmentToolWorkflowInstance);
                         }
                         result.CorrelationId = currentAssessmentToolWorkflowInstance.Assessment.SpId;
                         result.AssessmentId = currentAssessmentToolWorkflowInstance.AssessmentId;
