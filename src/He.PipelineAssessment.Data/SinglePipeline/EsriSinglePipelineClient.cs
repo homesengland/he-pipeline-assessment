@@ -58,7 +58,8 @@ namespace He.PipelineAssessment.Data.SinglePipeline
                 "AND (funding_ask is NOT NULL) " +
                 "AND (pipeline_opportunity_site_name is NOT NULL AND pipeline_opportunity_site_name <> '') " +
                 "AND (applicant_1 is NOT NULL AND applicant_1 <> '') " +
-                "AND land_type in ('Greenfield', 'Brownfield', 'Mixed')";
+                "AND land_type in ('Greenfield', 'Brownfield', 'Mixed') "+
+                "AND sp_type NOT IN ('Place')";
             string orderBy = "esri_id";
             string outFields =
                 "sp_id,internal_reference,pipeline_opportunity_site_name," +
