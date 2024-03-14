@@ -32,7 +32,7 @@ namespace Elsa.Dashboard.Pages
       _logger = logger;
     }
 
-    public async Task OnGetAsync(int group, int record)
+    public async Task<IActionResult> OnGetAsync(int group, int record)
     {
       GroupId = group;
       RecordId = record;
@@ -46,24 +46,24 @@ namespace Elsa.Dashboard.Pages
         HttpContext.Response.StatusCode = (int)HttpStatusCode.FailedDependency;
         throw new NullReferenceException("No Configuration value found for Urls:ElsaServer");
       }
+      return Page();
     }
 
     public async Task<IActionResult> OnPostAsync()
     {
-      if(DictionaryRecord != null)
+      if (DictionaryRecord != null)
       {
         DictionaryRecord.Name = DictionaryRecord.Name.Replace(" ", "_");
         await _client.UpdateDataDictionaryRecord(_serverUrl, DictionaryRecord);
       }
       else { HttpContext.Response.StatusCode = (int)HttpStatusCode.BadRequest; }
-      return RedirectToPage("DataDictionaryRecord", new {group = GroupId, record = DictionaryRecord!.Id });
+      return await OnGetAsync(GroupId,DictionaryRecord!.Id );
     }
 
     public async Task<IActionResult> OnPostArchiveAsync(bool archive)
     {
       await _client.ArchiveDataDictionaryRecord(_serverUrl, RecordId, archive);
-      return RedirectToPage("DataDictionaryRecord", new { group = GroupId, record = DictionaryRecord!.Id });
-
+      return await OnGetAsync(GroupId, RecordId);
     }
 
     private async Task LoadDataDictionaryRecordAsync(string url)
