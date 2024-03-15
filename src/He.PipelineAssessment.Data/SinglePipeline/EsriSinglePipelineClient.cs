@@ -72,8 +72,8 @@ namespace He.PipelineAssessment.Data.SinglePipeline
 
             var relativeUri =
                 $"query?where={whereClause}&outFields={outFields}&orderByFields={orderBy}&resultOffset={offset}&f=json"; //potentially needs a token on the end also
-            using (var response = await _httpClientFactory.CreateClient("SinglePipelineClient").GetAsync(relativeUri)
-                       .ConfigureAwait(false))
+            var client = _httpClientFactory.CreateClient("SinglePipelineClient");
+            using (var response = await client.GetAsync(relativeUri).ConfigureAwait(false))
             {
                 data = await response.Content.ReadAsStringAsync().ConfigureAwait(false);
 

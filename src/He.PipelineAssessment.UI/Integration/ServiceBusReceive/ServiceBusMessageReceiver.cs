@@ -1,4 +1,5 @@
-﻿using Azure.Messaging.ServiceBus;
+﻿using Azure.Identity;
+using Azure.Messaging.ServiceBus;
 using He.PipelineAssessment.UI.Integration.Project;
 using MediatR;
 using Microsoft.Azure.Amqp.Framing;
@@ -17,7 +18,16 @@ namespace He.PipelineAssessment.UI.Integration.ServiceBus
         public ServiceBusMessageReceiver(IOptions<ServiceBusConfiguration> configuration, IMediator mediator)
         {
             _configuration = configuration.Value;
-            this._client = new ServiceBusClient(_configuration.ConnectionString);
+
+            if (_configuration.UseDefaultAzureCredential)
+            {
+                this._client = new ServiceBusClient(_configuration.ConnectionString, new DefaultAzureCredential());
+            }
+            else
+            {
+                this._client = new ServiceBusClient(_configuration.ConnectionString);
+            }
+
             this._processor = _client.CreateProcessor(_configuration.QueueToReceiveMessages, new ServiceBusProcessorOptions());
             this._mediator = mediator;
         }

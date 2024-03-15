@@ -146,7 +146,11 @@ builder.Services.AddOptions<ServiceBusConfiguration>()
 builder.Services.AddScoped<IServiceBusMessageSender, ServiceBusMessageSender>();
 builder.Services.AddScoped<IServiceBusMessageReceiver, ServiceBusMessageReceiver>();
 
-builder.Services.AddHostedService<WorkerServiceBus>();
+var receiveMessagesFromServiceBus = Convert.ToBoolean(builder.Configuration["ServiceBusConfiguration:ReceiveMessages"]);
+if (receiveMessagesFromServiceBus)
+{
+    builder.Services.AddHostedService<WorkerServiceBus>();
+}
 
 var app = builder.Build();
 
