@@ -69,7 +69,7 @@ namespace He.PipelineAssessment.Data.Tests.Dataverse
             Assert.NotNull(result.FirstRow);
             
             //String field
-            Assert.Equal(record1[stringFieldName], result.FirstRow[stringFieldName]);
+            Assert.Equal(record1[stringFieldName], result.FirstRow![stringFieldName]);
 
             //Optionset Value
             Assert.Equal(

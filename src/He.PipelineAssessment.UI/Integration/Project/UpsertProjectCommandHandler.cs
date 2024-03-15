@@ -32,7 +32,7 @@ namespace He.PipelineAssessment.UI.Integration.Project
             try
             {
                 var destinationAssessments = await _assessmentRepository.GetAssessments();
-                Models.Assessment assessmentRecord = destinationAssessments.FirstOrDefault(p => p.SpId == request.ProjectData.ProjectId);
+                Models.Assessment? assessmentRecord = destinationAssessments.FirstOrDefault(p => p.SpId == request.ProjectData.ProjectId);
                 bool recordExists = (assessmentRecord != null);
 
                 if (assessmentRecord == null)

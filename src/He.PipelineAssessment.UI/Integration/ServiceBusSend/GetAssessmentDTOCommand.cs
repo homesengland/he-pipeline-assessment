@@ -7,6 +7,6 @@ namespace He.PipelineAssessment.UI.Features.Workflow.QuestionScreenSaveAndContin
     {
         public int ProjectId { get; set; }
         public int AssessmentToolWorkflowInstanceId { get; set; }
-        public string WorkflowInstanceId { get; set; }
+        public string? WorkflowInstanceId { get; set; }
     }
 }

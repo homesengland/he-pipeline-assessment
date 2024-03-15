@@ -8,7 +8,7 @@ namespace He.PipelineAssessment.Infrastructure.Repository
     {
         Task<Assessment?> GetAssessment(int assessmentId);
         Task<List<Assessment>> GetAssessments();
-        Task<AssessmentToolWorkflowInstance?> GetAssessmentToolWorkflowInstance(string workflowInstance);
+        Task<AssessmentToolWorkflowInstance?> GetAssessmentToolWorkflowInstance(string? workflowInstance);
         Task<AssessmentToolInstanceNextWorkflow?> GetAssessmentToolInstanceNextWorkflow(int assessmentToolWorkflowInstanceId, string workflowDefinitionId);
         Task<AssessmentToolInstanceNextWorkflow?> GetAssessmentToolInstanceNextWorkflowByAssessmentId(int assessmentId, string workflowDefinitionId);
         Task<IEnumerable<AssessmentToolWorkflowInstance>> GetAssessmentToolWorkflowInstances(int assessmentId);
