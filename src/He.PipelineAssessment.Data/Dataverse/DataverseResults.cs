@@ -10,7 +10,7 @@ namespace He.PipelineAssessment.Data.Dataverse
     {
         public DataverseResults() {
             this.Columns = new string[0];
-            this.Rows = new Dictionary<string, object>[0];        
+            this.Rows = new Dictionary<string, object?>[0];        
         }
         public int RowCount
         {
@@ -22,7 +22,7 @@ namespace He.PipelineAssessment.Data.Dataverse
         }
 
         public string[] Columns { get; set; } = new string[0];
-        public Dictionary<string, object>? FirstRow
+        public Dictionary<string, object?>? FirstRow
         {
             get
             {
@@ -30,6 +30,6 @@ namespace He.PipelineAssessment.Data.Dataverse
                 return result;
             }
         }
-        public Dictionary<string, object>[] Rows { get; set; }
+        public Dictionary<string, object?>[] Rows { get; set; }
     }
 }

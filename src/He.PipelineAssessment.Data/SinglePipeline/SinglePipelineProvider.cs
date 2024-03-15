@@ -41,7 +41,7 @@ namespace He.PipelineAssessment.Data.SinglePipeline
             }
             catch (Exception ex)
             {
-                _logger.LogError("Error in getting data from singlepipeline data", ex);
+                _logger.LogError("Error in getting data from singlepipeline data: {0}", ex);
             }
             return singlePipelineData;
         }

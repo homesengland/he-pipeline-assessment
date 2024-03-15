@@ -13,7 +13,7 @@ namespace He.PipelineAssessment.Data.Dataverse
         {
             var result = new DataverseResults();
             var columns = new HashSet<string>();
-            var rows = new List<Dictionary<string, object>>();
+            var rows = new List<Dictionary<string, object?>>();
 
             foreach (var record in queryResult)
             {
