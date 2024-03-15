@@ -74,29 +74,29 @@ namespace He.PipelineAssessment.Data.Tests.Dataverse
             //Optionset Value
             Assert.Equal(
                 ((Microsoft.Xrm.Sdk.OptionSetValue)(record1[optionSetFieldName])).Value, 
-                ((Data.Dataverse.OptionSetValue)(result.FirstRow[optionSetFieldName])).Value);
+                ((Data.Dataverse.OptionSetValue)(result.FirstRow[optionSetFieldName]!)).Value);
             Assert.Equal(
                 record1.FormattedValues[optionSetFieldName],
-                ((Data.Dataverse.OptionSetValue)(result.FirstRow[optionSetFieldName])).Name);
+                ((Data.Dataverse.OptionSetValue)(result.FirstRow[optionSetFieldName]!)).Name);
 
             //Optionset Collection Value
             Assert.Equal(
                 ((Microsoft.Xrm.Sdk.OptionSetValueCollection)(record1[optionSetCollectionFieldName])).Count,
-                ((Data.Dataverse.OptionSetValues)(result.FirstRow[optionSetCollectionFieldName])).Values.Length);
+                ((Data.Dataverse.OptionSetValues)(result.FirstRow[optionSetCollectionFieldName]!)).Values!.Length);
             Assert.Equal(
                 record1.FormattedValues[optionSetCollectionFieldName],
-                ((Data.Dataverse.OptionSetValues)(result.FirstRow[optionSetCollectionFieldName])).FormatedNames);
+                ((Data.Dataverse.OptionSetValues)(result.FirstRow[optionSetCollectionFieldName]!)).FormatedNames);
 
             //Entity Reference
             Assert.Equal(
                 ((EntityReference)(record1[entityReferenceFieldName])).Name,
-                ((EntityReference)(result.FirstRow[entityReferenceFieldName])).Name);
+                ((EntityReference)(result.FirstRow[entityReferenceFieldName]!)).Name);
             Assert.Equal(
                 ((EntityReference)(record1[entityReferenceFieldName])).Id,
-                ((EntityReference)(result.FirstRow[entityReferenceFieldName])).Id);
+                ((EntityReference)(result.FirstRow[entityReferenceFieldName]!)).Id);
             Assert.Equal(
                 ((EntityReference)(record1[entityReferenceFieldName])).LogicalName,
-                ((EntityReference)(result.FirstRow[entityReferenceFieldName])).LogicalName);
+                ((EntityReference)(result.FirstRow[entityReferenceFieldName]!)).LogicalName);
         }
     }
 }
