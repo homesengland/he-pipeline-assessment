@@ -54,7 +54,6 @@ namespace He.PipelineAssessment.UI.Features.Assessments
             var enableTestSummaryPage = _configuration["Environment:EnableTestSummaryPage"];
             if (bool.Parse(enableTestSummaryPage ?? "false"))
             {
-
                 var overviewModel = await _mediator.Send(new TestAssessmentSummaryRequest(assessmentid, correlationId));
                 return View("TestSummary", overviewModel);
             }
