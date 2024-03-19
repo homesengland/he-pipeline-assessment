@@ -51,7 +51,7 @@ namespace Elsa.CustomActivities.Handlers.Models
             }
         }
 
-        public static Task<T> EvaluateFromExpressionsExplicit<T>(this ElsaProperty @this,
+        public async static Task<T> EvaluateFromExpressionsExplicit<T>(this ElsaProperty @this,
             IExpressionEvaluator evaluator,
             ActivityExecutionContext context,
             ILogger logger,
@@ -59,6 +59,7 @@ namespace Elsa.CustomActivities.Handlers.Models
             string overrideSyntax,
             CancellationToken cancellationToken = default)
         {
+            await Task.CompletedTask;  //Terrible I know, but just here to not break any async calls.
             lock (@this)
             {
                 try
@@ -69,7 +70,7 @@ namespace Elsa.CustomActivities.Handlers.Models
                         var result = evaluator.TryEvaluateAsync<T>(overrideExpression, overrideSyntax, context, cancellationToken).Result;
                         if (result.Value != null)
                         {
-                            return Task.FromResult(result.Value);
+                            return result.Value;
                         }
                         return default!;
                     }
