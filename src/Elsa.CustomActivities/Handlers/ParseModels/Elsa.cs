@@ -51,7 +51,7 @@ namespace Elsa.CustomActivities.Handlers.Models
             }
         }
 
-        public async static Task<T> EvaluateFromExpressionsExplicit<T>(this ElsaProperty @this,
+        public static Task<T> EvaluateFromExpressionsExplicit<T>(this ElsaProperty @this,
             IExpressionEvaluator evaluator,
             ActivityExecutionContext context,
             ILogger logger,
@@ -69,7 +69,7 @@ namespace Elsa.CustomActivities.Handlers.Models
                         var result = evaluator.TryEvaluateAsync<T>(overrideExpression, overrideSyntax, context, cancellationToken).Result;
                         if (result.Value != null)
                         {
-                            return result.Value;
+                            return Task.FromResult(result.Value);
                         }
                         return default!;
                     }
