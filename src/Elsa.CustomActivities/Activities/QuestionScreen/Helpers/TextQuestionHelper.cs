@@ -1,9 +1,11 @@
-﻿using Elsa.CustomInfrastructure.Data.Repository;
+﻿using Elsa.Attributes;
+using Elsa.CustomInfrastructure.Data.Repository;
 using Elsa.CustomWorkflow.Sdk;
 using Elsa.Scripting.JavaScript.Events;
 using Elsa.Scripting.JavaScript.Messages;
 using Elsa.Services;
 using MediatR;
+using Microsoft.Extensions.FileSystemGlobbing.Internal;
 
 namespace Elsa.CustomActivities.Activities.QuestionScreen.Helpers
 {
@@ -82,14 +84,19 @@ namespace Elsa.CustomActivities.Activities.QuestionScreen.Helpers
             return false;
         }
 
+        private string TestResult()
+        {
+            return "Hello World Manual";
+        }
+
         public Task Handle(EvaluatingJavaScriptExpression notification, CancellationToken cancellationToken)
         {
             var activityExecutionContext = notification.ActivityExecutionContext;
             var engine = notification.Engine;
             engine.SetValue("textQuestionAnswerEquals", (Func<string, string, string, string, bool>)((workflowName, activityName, questionId, answerToCheck) => AnswerEquals(activityExecutionContext.CorrelationId, workflowName, activityName, questionId, answerToCheck).Result));
-            engine.SetValue("textQuestionAnswerEquals", (Func<int, string, bool>)((dataDictionaryId, answerToCheck) => AnswerEquals(activityExecutionContext.CorrelationId, dataDictionaryId, answerToCheck).Result));
+            engine.SetValue("textAnswerEquals", (Func<int, string, bool>)((dataDictionaryId, answerToCheck) => AnswerEquals(activityExecutionContext.CorrelationId, dataDictionaryId, answerToCheck).Result));
             engine.SetValue("textQuestionAnswerContains", (Func<string, string, string, string, bool>)((workflowName, activityName, questionId, answerToCheck) => AnswerContains(activityExecutionContext.CorrelationId, workflowName, activityName, questionId, answerToCheck).Result));
-            engine.SetValue("textQuestionAnswerContains", (Func<int, string, bool>)((dataDictionaryId, answerToCheck) => AnswerContains(activityExecutionContext.CorrelationId, dataDictionaryId, answerToCheck).Result));
+            engine.SetValue("textAnswerContains", (Func<int, string, bool>)((dataDictionaryId, answerToCheck) => AnswerContains(activityExecutionContext.CorrelationId, dataDictionaryId, answerToCheck).Result));
             return Task.CompletedTask;
         }
 
@@ -98,8 +105,9 @@ namespace Elsa.CustomActivities.Activities.QuestionScreen.Helpers
             var output = notification.Output;
             output.AppendLine("declare function textQuestionAnswerEquals(workflowName: string, activityName:string, questionId:string, answerToCheck:string ): boolean;");
             output.AppendLine("declare function textQuestionAnswerContains(workflowName: string, activityName:string, questionId:string, answerToCheck:string  ): boolean;");
-            output.AppendLine("declare function textQuestionAnswerEquals(dataDictionaryId: number, answerToCheck:string ): boolean;");
-            output.AppendLine("declare function textQuestionAnswerContains(dataDictionaryId: number, answerToCheck:string  ): boolean;");
+            output.AppendLine("declare function textAnswerEquals(dataDictionaryId: number, answerToCheck:string ): boolean;");
+            output.AppendLine("declare function textAnswerContains(dataDictionaryId: number, answerToCheck:string  ): boolean;");
+ 
             return Task.CompletedTask;
         }
     }

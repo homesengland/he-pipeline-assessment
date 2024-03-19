@@ -224,11 +224,11 @@ namespace Elsa.CustomActivities.Activities.QuestionScreen.Helpers
             engine.SetValue("checkboxQuestionAnswerContains", (Func<string, string, string, string[], bool>)((workflowName, activityName, questionId, choiceIdsToCheck) => AnswerContains(activityExecutionContext, workflowName, activityName, questionId, choiceIdsToCheck).Result));
             engine.SetValue("checkboxQuestionAnswerContainsAny", (Func<string, string, string, string[], bool>)((workflowName, activityName, questionId, choiceIdsToCheck) => AnswerContains(activityExecutionContext, workflowName, activityName, questionId, choiceIdsToCheck, true).Result));
             engine.SetValue("checkboxQuestionAnswerCount", (Func<string, string, string, int>)((workflowName, activityName, questionId) => AnswerCount(activityExecutionContext.CorrelationId, workflowName, activityName, questionId).Result));
-            engine.SetValue("checkboxQuestionGetAnswer", (Func<int, string?>)((dataDictionaryId) => GetAnswer(activityExecutionContext.CorrelationId, dataDictionaryId).Result));
-            engine.SetValue("checkboxQuestionAnswerEquals", (Func<int, string[], bool>)((dataDictionaryId, choiceIdsToCheck) => AnswerEquals(activityExecutionContext, dataDictionaryId, choiceIdsToCheck).Result));
-            engine.SetValue("checkboxQuestionAnswerContains", (Func<int, string[], bool>)((dataDictionaryId, choiceIdsToCheck) => AnswerContains(activityExecutionContext, dataDictionaryId, choiceIdsToCheck).Result));
-            engine.SetValue("checkboxQuestionAnswerContainsAny", (Func<int, string[], bool>)((dataDictionaryId, choiceIdsToCheck) => AnswerContains(activityExecutionContext, dataDictionaryId, choiceIdsToCheck, true).Result));
-            engine.SetValue("checkboxQuestionAnswerCount", (Func<int, int>)((dataDictionaryId) => AnswerCount(activityExecutionContext.CorrelationId, dataDictionaryId).Result));
+            engine.SetValue("checkboxGetAnswer", (Func<int, string?>)((dataDictionaryId) => GetAnswer(activityExecutionContext.CorrelationId, dataDictionaryId).Result));
+            engine.SetValue("checkboxAnswerEquals", (Func<int, string[], bool>)((dataDictionaryId, choiceIdsToCheck) => AnswerEquals(activityExecutionContext, dataDictionaryId, choiceIdsToCheck).Result));
+            engine.SetValue("checkboxAnswerContains", (Func<int, string[], bool>)((dataDictionaryId, choiceIdsToCheck) => AnswerContains(activityExecutionContext, dataDictionaryId, choiceIdsToCheck).Result));
+            engine.SetValue("checkboxAnswerContainsAny", (Func<int, string[], bool>)((dataDictionaryId, choiceIdsToCheck) => AnswerContains(activityExecutionContext, dataDictionaryId, choiceIdsToCheck, true).Result));
+            engine.SetValue("checkboxAnswerCount", (Func<int, int>)((dataDictionaryId) => AnswerCount(activityExecutionContext.CorrelationId, dataDictionaryId).Result));
             return Task.CompletedTask;
         }
 
@@ -240,11 +240,11 @@ namespace Elsa.CustomActivities.Activities.QuestionScreen.Helpers
             output.AppendLine("declare function checkboxQuestionAnswerContains(workflowName: string, activityName:string, questionId:string, choiceIdsToCheck:string[]  ): boolean;");
             output.AppendLine("declare function checkboxQuestionAnswerContainsAny(workflowName: string, activityName:string, questionId:string, choiceIdsToCheck:string[]  ): boolean;");
             output.AppendLine("declare function checkboxQuestionAnswerCount(workflowName: string, activityName:string, questionId:string ): number;");
-            output.AppendLine("declare function checkboxQuestionGetAnswer(dataDictionaryId: number): string;");
-            output.AppendLine("declare function checkboxQuestionAnswerEquals(dataDictionaryId: number, choiceIdsToCheck:string[] ): boolean;");
-            output.AppendLine("declare function checkboxQuestionAnswerContains(dataDictionaryId: number, choiceIdsToCheck:string[]  ): boolean;");
-            output.AppendLine("declare function checkboxQuestionAnswerContainsAny(dataDictionaryId: number, choiceIdsToCheck:string[]  ): boolean;");
-            output.AppendLine("declare function checkboxQuestionAnswerCount(dataDictionaryId: number): number;");
+            output.AppendLine("declare function checkboxGetAnswer(dataDictionaryId: number): string;");
+            output.AppendLine("declare function checkboxAnswerEquals(dataDictionaryId: number, choiceIdsToCheck:string[] ): boolean;");
+            output.AppendLine("declare function checkboxAnswerContains(dataDictionaryId: number, choiceIdsToCheck:string[]  ): boolean;");
+            output.AppendLine("declare function checkboxAnswerContainsAny(dataDictionaryId: number, choiceIdsToCheck:string[]  ): boolean;");
+            output.AppendLine("declare function checkboxAnswerCount(dataDictionaryId: number): number;");
             return Task.CompletedTask;
         }
     }
