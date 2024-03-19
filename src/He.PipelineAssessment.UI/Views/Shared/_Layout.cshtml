@@ -109,10 +109,9 @@
         }
 
         document.addEventListener('DOMContentLoaded', function () {
-            console.log('DomLoaded');
             var forms = document.querySelectorAll('form');
             forms.forEach(function (form) {
-                form.addEventListener('submit', handleFormSubmission)
+                form.addEventListener('submit', handleFormSubmission);
             });
         });
 </script>
