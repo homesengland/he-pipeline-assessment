@@ -33,7 +33,7 @@ namespace He.PipelineAssessment.UI.Features.Workflow.QuestionScreenSaveAndContin
                     result.Assessment.InstanceId = assessmentToolWorkflowInstance.Id;
                     result.Assessment.WorkflowInstanceId = assessmentToolWorkflowInstance.WorkflowInstanceId;
                     result.Assessment.Result = assessmentToolWorkflowInstance.Result;
-                    result.Assessment.ProjectId = assessmentToolWorkflowInstance.AssessmentId;
+                    result.Assessment.ProjectId = assessmentToolWorkflowInstance.Assessment.SpId;
                     result.Assessment.SubmittedBy = assessmentToolWorkflowInstance.SubmittedBy;
                     result.Assessment.Name = $"{assessmentToolWorkflowInstance.AssessmentToolWorkflow.Name} - {assessmentToolWorkflowInstance.WorkflowName}";
                 }
