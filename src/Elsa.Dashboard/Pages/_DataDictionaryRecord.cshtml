@@ -65,6 +65,8 @@
                 </div>
                 <input asp-for="DictionaryRecord.CreatedDateTime" name="DictionaryRecord.CreatedDateTime" type="hidden">
                 <input asp-for="DictionaryRecord.LastModifiedDateTime" name="DictionaryRecord.LastModifiedDateTime" type="hidden">
+                <input asp-for="DictionaryRecord.DataDictionaryGroupId" name="DictionaryRecord.DataDictionaryGroupId" type="hidden">
+                <input asp-for="GroupId" name="GroupId" type="hidden">
             </fieldset>
 
             <div class="govuk-button-group">
@@ -75,6 +77,9 @@
     </div>
     <form method="post">
         <input type="hidden" name="archive" value="@Model.ToArchive.ToString().ToLower()" />
+        <input asp-for="RecordId" name="RecordId" type="hidden">
+        <input asp-for="GroupId" name="GroupId" type="hidden">
+        <input asp-for="DictionaryRecord.Id" name="GroupId" type="hidden">
         <span asp-validation-for="DictionaryRecord" class="text-danger"></span>
         <button type="submit" class="govuk-button" asp-page-handler="archive">@archiveText</button>
         <div class="govuk-warning-text">
