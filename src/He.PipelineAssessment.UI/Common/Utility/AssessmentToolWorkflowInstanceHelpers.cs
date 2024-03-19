@@ -21,6 +21,7 @@ namespace He.PipelineAssessment.UI.Common.Utility
         public async Task<bool> IsOrderEqualToLatestSubmittedWorkflowOrder(AssessmentToolWorkflowInstance currentAssessmentToolWorkflowInstance)
         {
             var latestSubmittedWorkflowInstance = currentAssessmentToolWorkflowInstance.Assessment!.AssessmentToolWorkflowInstances!
+                .Where(x => x.AssessmentToolWorkflowId != null)
                 .OrderByDescending(x => x.SubmittedDateTime)
                 .FirstOrDefault(x => x.Status == AssessmentToolWorkflowInstanceConstants.Submitted);
             if (latestSubmittedWorkflowInstance != null)
