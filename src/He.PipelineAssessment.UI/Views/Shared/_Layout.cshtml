@@ -88,18 +88,33 @@
 <script nonce="@nonceConfig.GovUkSetup">
     window.GOVUKFrontend.initAll()
 </script>
-    <script nonce="@nonceConfig.GovUkSetup">
-        let forms = document.querySelectorAll('form');
+ <script nonce="@nonceConfig.GovUkSetup">
+        function handleFormSubmission(event) {
+            var form = event.target;
+            var submitButton = event.submitter;
+            if (submitButton) {
+                var submitButtonValue = encodeURIComponent(submitButton.value);
+                var actionUrl = form.getAttribute('action');
+                if (actionUrl.indexOf('?') !== -1) {
+                    actionUrl += '&submitButton=' + submitButtonValue;
+                } else {
+                    actionUrl += '?submitButton=' + submitButtonValue;
+                }
+                form.setAttribute('action', actionUrl);
+                var submitButtons = form.querySelectorAll('input[type="submit"]');
+                submitButtons.forEach(function (btn) {
+                    btn.disabled = true;
+                });
+            }
+        }
 
-        forms.forEach(function (form) {
-            form.addEventListener('submit', function (event) {
-                //trying to disable the button that is inside the current form only on submit
-
-                var submitBtn = document.querySelector('input[type="submit"]')
-                submitBtn.setAttribute('disabled', true);
+        document.addEventListener('DOMContentLoaded', function () {
+            console.log('DomLoaded');
+            var forms = document.querySelectorAll('form');
+            forms.forEach(function (form) {
+                form.addEventListener('submit', handleFormSubmission)
             });
         });
-
 </script>
 
 @RenderSection("Scripts", required: false)
