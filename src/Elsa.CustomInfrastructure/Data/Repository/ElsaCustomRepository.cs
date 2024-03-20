@@ -139,7 +139,7 @@ namespace Elsa.CustomInfrastructure.Data.Repository
 
         public async Task<List<DataDictionary>> GetDataDictionaryListAsync(bool includeArchived = false, CancellationToken cancellationToken = default)
         {
-            if (includeArchived)
+            if (!includeArchived)
             {
                 var result = await _dbContext.Set<DataDictionary>().Include(x => x.Group).Where(x => !x.IsArchived).ToListAsync(cancellationToken);
                 return result;
@@ -157,7 +157,7 @@ namespace Elsa.CustomInfrastructure.Data.Repository
             var result = new List<DataDictionaryGroup>();
             if (!includeArchived)
             {
-                result = await _dbContext.Set<DataDictionaryGroup>().Include(x => x.DataDictionaryList.Where(x => !x.IsArchived)).ToListAsync(cancellationToken);
+                result = await _dbContext.Set<DataDictionaryGroup>().Include(x => x.DataDictionaryList.Where(x => !x.IsArchived)).Where(x => !x.IsArchived).ToListAsync(cancellationToken);
             }
             else
             {
