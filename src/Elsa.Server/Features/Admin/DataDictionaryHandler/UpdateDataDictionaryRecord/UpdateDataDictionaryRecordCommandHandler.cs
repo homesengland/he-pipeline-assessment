@@ -29,7 +29,7 @@ namespace Elsa.Server.Features.Admin.DataDictionaryHandler.UpdateDataDictionaryR
             var result = new OperationResult<UpdateDataDictionaryRecordCommandResponse>();
             try
             {
-                if (request.Record != null && !string.IsNullOrEmpty(request.Record.Name) && !string.IsNullOrEmpty(request.Record.LegacyName))
+                if (request.Record != null && !string.IsNullOrEmpty(request.Record.Name))
                 {
                     await _elsaCustomRepository.UpdateDataDictionaryItem(request.Record, cancellationToken);
                     await _mediator.Send(new ClearDictionaryCacheCommand());
