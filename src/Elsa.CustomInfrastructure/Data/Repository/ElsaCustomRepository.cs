@@ -300,7 +300,7 @@ namespace Elsa.CustomInfrastructure.Data.Repository
                 record.CreatedDateTime = record!.CreatedDateTime;
                 record.Type = item.Type ?? record!.Type;
                 record.LastModifiedDateTime = DateTime.UtcNow;
-                record.Description = item.Description ?? record!.Description;
+                record.Description = item!.Description;
                 record.DataDictionaryGroupId = record.DataDictionaryGroupId;
                     record.IsArchived = item.IsArchived;
                 _dbContext.Set<DataDictionary>().Update(record);
