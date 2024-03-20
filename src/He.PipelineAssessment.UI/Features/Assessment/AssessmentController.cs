@@ -52,7 +52,7 @@ namespace He.PipelineAssessment.UI.Features.Assessments
         public async Task<IActionResult> TestSummary(int assessmentid, int correlationId)
         {
             var enableTestSummaryPage = _configuration["Environment:EnableTestSummaryPage"];
-            if (bool.Parse(enableTestSummaryPage))
+            if (bool.Parse(enableTestSummaryPage ?? "false"))
             {
                 var overviewModel = await _mediator.Send(new TestAssessmentSummaryRequest(assessmentid, correlationId));
                 return View("TestSummary", overviewModel);

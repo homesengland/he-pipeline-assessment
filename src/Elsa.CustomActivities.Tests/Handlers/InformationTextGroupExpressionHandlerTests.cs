@@ -122,7 +122,7 @@ namespace Elsa.CustomActivities.Tests.Handlers
             GroupedTextModel? expectedResults = results.ConvertTo<GroupedTextModel>();
 
             //Assert
-            Assert.Equal(0, expectedResults!.TextGroups.Count());
+            Assert.Empty(expectedResults!.TextGroups);
         }
 
         private ElsaProperty SampleElsaProperty(Dictionary<string, string> expressions, string syntax, string name)

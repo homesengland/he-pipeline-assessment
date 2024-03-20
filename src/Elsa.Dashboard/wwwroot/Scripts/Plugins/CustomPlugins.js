@@ -6,6 +6,11 @@ export function RegisterCustomPlugins(elsaStudio){
       DisableDefaultOutcomePaths(eventContext);
       EnableCustomSwitchOutcomePaths(eventContext);
     });
+
+  //eventBus.on('dashboard.appearing',
+  //  eventContext => {
+  //    AddDataDictionaryTab(eventContext);
+  //  });
 }
 
 const ActivitiesWithFilteredOutcomes = [
@@ -20,7 +25,6 @@ const ActivitiesWithDoneOutcome = [
 const SwitchSyntax = 'Switch';
 const DefaultOutcome = 'Default';
 const DoneOutcome = 'Done'
-
 
 function DisableDefaultOutcomePaths(eventContext) {
   if (ActivitiesWithFilteredOutcomes.includes(eventContext.activityModel.type))

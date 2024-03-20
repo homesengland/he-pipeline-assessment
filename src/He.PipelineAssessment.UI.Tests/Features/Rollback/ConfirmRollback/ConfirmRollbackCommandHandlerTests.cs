@@ -35,7 +35,6 @@ namespace He.PipelineAssessment.UI.Tests.Features.Rollback.ConfirmRollback
         public async Task Handle_Return_GivenNoExceptionThrownByInterventionService(
             [Frozen] Mock<IInterventionService> service,
             ConfirmRollbackCommand command,
-            AssessmentIntervention intervention,
             ConfirmRollbackCommandHandler sut)
         {
             //Arrange

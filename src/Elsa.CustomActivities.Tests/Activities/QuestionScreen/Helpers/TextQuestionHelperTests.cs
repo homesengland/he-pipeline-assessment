@@ -3,9 +3,6 @@ using Elsa.CustomActivities.Activities.QuestionScreen.Helpers;
 using Elsa.CustomInfrastructure.Data.Repository;
 using Elsa.CustomModels;
 using Elsa.CustomWorkflow.Sdk;
-using Elsa.Models;
-using Elsa.Services;
-using Elsa.Services.Models;
 using He.PipelineAssessment.Tests.Common;
 using Moq;
 using Xunit;
@@ -20,22 +17,13 @@ namespace Elsa.CustomActivities.Tests.Activities.QuestionScreen.Helpers
         public async Task AnswerContains_ReturnsFalse_GetQuestionRecordReturnsNull(
             [Frozen] Mock<IElsaCustomRepository> elsaCustomRepository,
             string workflowName,
-            string activityId,
             string activityName,
             string questionId,
             string workflowInstanceId,
-            WorkflowBlueprint workflowBlueprint,
             TextQuestionHelper sut)
         {
             //Arrange
-            workflowBlueprint.Activities.Add(new ActivityBlueprint()
-            {
-                Id = activityId,
-                Name = activityName
-            });
-
             elsaCustomRepository.Setup(x => x.GetQuestionByWorkflowAndActivityName(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>(), CancellationToken.None)).ReturnsAsync((Question?)null);
-
 
             //Act
             var result = await sut.AnswerContains(workflowInstanceId, workflowName, activityName, questionId, "Test");
@@ -48,31 +36,23 @@ namespace Elsa.CustomActivities.Tests.Activities.QuestionScreen.Helpers
         [InlineAutoMoqData("Test", "Test", true)]
         [InlineAutoMoqData("Test", "st", true)]
         [InlineAutoMoqData("False", "Test", false)]
-        public async Task AnswerContains_ForTextQuestion_ReturnsExepctedValue(
+        public async Task AnswerContains_ForTextQuestion_ReturnsExpectedValue(
             string answer,
             string answerToCheck,
             bool expectedResult,
             [Frozen] Mock<IElsaCustomRepository> elsaCustomRepository,
             string workflowName,
-            string activityId,
             string activityName,
             string questionId,
             string workflowInstanceId,
-            WorkflowBlueprint workflowBlueprint,
             Question question,
             TextQuestionHelper sut)
         {
             //Arrange
-            workflowBlueprint.Activities.Add(new ActivityBlueprint()
-            {
-                Id = activityId,
-                Name = activityName
-            });
             question.QuestionType = QuestionTypeConstants.TextQuestion;
             question.Answers = new List<Answer> { new() { AnswerText = answer } };
 
             elsaCustomRepository.Setup(x => x.GetQuestionByWorkflowAndActivityName(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>(), CancellationToken.None)).ReturnsAsync(question);
-
 
             //Act
             var result = await sut.AnswerContains(workflowInstanceId, workflowName, activityName, questionId, answerToCheck);
@@ -85,31 +65,23 @@ namespace Elsa.CustomActivities.Tests.Activities.QuestionScreen.Helpers
         [InlineAutoMoqData("Test", "Test", true)]
         [InlineAutoMoqData("Test", "st", true)]
         [InlineAutoMoqData("False", "Test", false)]
-        public async Task AnswerContains_ForTextAreaQuestion_ReturnsExepctedValue(
+        public async Task AnswerContains_ForTextAreaQuestion_ReturnsExpectedValue(
             string answer,
             string answerToCheck,
             bool expectedResult,
             [Frozen] Mock<IElsaCustomRepository> elsaCustomRepository,
             string workflowName,
-            string activityId,
             string activityName,
             string questionId,
             string workflowInstanceId,
-            WorkflowBlueprint workflowBlueprint,
             Question question,
             TextQuestionHelper sut)
         {
             //Arrange
-            workflowBlueprint.Activities.Add(new ActivityBlueprint()
-            {
-                Id = activityId,
-                Name = activityName
-            });
             question.QuestionType = QuestionTypeConstants.TextAreaQuestion;
             question.Answers = new List<Answer> { new() { AnswerText = answer } };
 
             elsaCustomRepository.Setup(x => x.GetQuestionByWorkflowAndActivityName(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>(), CancellationToken.None)).ReturnsAsync(question);
-
 
             //Act
             var result = await sut.AnswerContains(workflowInstanceId, workflowName, activityName, questionId, answerToCheck);
@@ -123,22 +95,13 @@ namespace Elsa.CustomActivities.Tests.Activities.QuestionScreen.Helpers
         public async Task AnswerEquals_ReturnsFalse_GetQuestionRecordReturnsNull(
             [Frozen] Mock<IElsaCustomRepository> elsaCustomRepository,
             string workflowName,
-            string activityId,
             string activityName,
             string questionId,
             string correlationId,
-            WorkflowBlueprint workflowBlueprint,
             TextQuestionHelper sut)
         {
             //Arrange
-            workflowBlueprint.Activities.Add(new ActivityBlueprint()
-            {
-                Id = activityId,
-                Name = activityName
-            });
-
             elsaCustomRepository.Setup(x => x.GetQuestionByWorkflowAndActivityName(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>(), CancellationToken.None)).ReturnsAsync((Question?)null);
-
 
             //Act
             var result = await sut.AnswerEquals(correlationId, workflowName, activityName, questionId, "Test");
@@ -156,25 +119,17 @@ namespace Elsa.CustomActivities.Tests.Activities.QuestionScreen.Helpers
             bool expectedResult,
             [Frozen] Mock<IElsaCustomRepository> elsaCustomRepository,
             string workflowName,
-            string activityId,
             string activityName,
             string questionId,
             string correlationId,
-            WorkflowBlueprint workflowBlueprint,
             Question question,
             TextQuestionHelper sut)
         {
             //Arrange
-            workflowBlueprint.Activities.Add(new ActivityBlueprint()
-            {
-                Id = activityId,
-                Name = activityName
-            });
             question.QuestionType = QuestionTypeConstants.TextQuestion;
             question.Answers = new List<Answer> { new() { AnswerText = answer } };
 
             elsaCustomRepository.Setup(x => x.GetQuestionByWorkflowAndActivityName(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>(), CancellationToken.None)).ReturnsAsync(question);
-
 
             //Act
             var result = await sut.AnswerEquals(correlationId, workflowName, activityName, questionId, answerToCheck);
@@ -192,28 +147,176 @@ namespace Elsa.CustomActivities.Tests.Activities.QuestionScreen.Helpers
             bool expectedResult,
             [Frozen] Mock<IElsaCustomRepository> elsaCustomRepository,
             string workflowName,
-            string activityId,
             string activityName,
             string questionId,
             string correlationId,
-            WorkflowBlueprint workflowBlueprint,
             Question question,
             TextQuestionHelper sut)
         {
             //Arrange
-            workflowBlueprint.Activities.Add(new ActivityBlueprint()
-            {
-                Id = activityId,
-                Name = activityName
-            });
             question.QuestionType = QuestionTypeConstants.TextAreaQuestion;
             question.Answers = new List<Answer> { new() { AnswerText = answer } };
 
             elsaCustomRepository.Setup(x => x.GetQuestionByWorkflowAndActivityName(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>(), CancellationToken.None)).ReturnsAsync(question);
 
-
             //Act
             var result = await sut.AnswerEquals(correlationId, workflowName, activityName, questionId, answerToCheck);
+
+            //Assert
+            Assert.Equal(expectedResult, result);
+        }
+
+        [Theory]
+        [AutoMoqData]
+        public async Task DataDictionaryAnswerContains_ReturnsFalse_GetQuestionRecordReturnsNull(
+            [Frozen] Mock<IElsaCustomRepository> elsaCustomRepository,
+            string correlationId,
+            int dataDictionaryId,
+            TextQuestionHelper sut)
+        {
+            //Arrange
+            elsaCustomRepository
+                .Setup(x => x.GetQuestionByDataDictionary(correlationId, dataDictionaryId, CancellationToken.None))
+                .ReturnsAsync((Question?)null);
+
+            //Act
+            var result = await sut.AnswerContains(correlationId, dataDictionaryId, "Test");
+
+            //Assert
+            Assert.False(result);
+        }
+
+        [Theory]
+        [InlineAutoMoqData("Test", "Test", true)]
+        [InlineAutoMoqData("Test", "st", true)]
+        [InlineAutoMoqData("False", "Test", false)]
+        public async Task DataDictionaryAnswerContains_ForTextQuestion_ReturnsExpectedValue(
+            string answer,
+            string answerToCheck,
+            bool expectedResult,
+            [Frozen] Mock<IElsaCustomRepository> elsaCustomRepository,
+            string correlationId,
+            int dataDictionaryId,
+            Question question,
+            TextQuestionHelper sut)
+        {
+            //Arrange
+            question.QuestionType = QuestionTypeConstants.TextQuestion;
+            question.Answers = new List<Answer> { new() { AnswerText = answer } };
+
+            elsaCustomRepository
+                .Setup(x => x.GetQuestionByDataDictionary(correlationId, dataDictionaryId, CancellationToken.None))
+                .ReturnsAsync(question);
+
+            //Act
+            var result = await sut.AnswerContains(correlationId, dataDictionaryId, answerToCheck);
+
+            //Assert
+            Assert.Equal(expectedResult, result);
+        }
+
+        [Theory]
+        [InlineAutoMoqData("Test", "Test", true)]
+        [InlineAutoMoqData("Test", "st", true)]
+        [InlineAutoMoqData("False", "Test", false)]
+        public async Task DataDictionaryAnswerContains_ForTextAreaQuestion_ReturnsExpectedValue(
+            string answer,
+            string answerToCheck,
+            bool expectedResult,
+            [Frozen] Mock<IElsaCustomRepository> elsaCustomRepository,
+            string correlationId,
+            int dataDictionaryId,
+            Question question,
+            TextQuestionHelper sut)
+        {
+            //Arrange
+            question.QuestionType = QuestionTypeConstants.TextAreaQuestion;
+            question.Answers = new List<Answer> { new() { AnswerText = answer } };
+
+            elsaCustomRepository
+                .Setup(x => x.GetQuestionByDataDictionary(correlationId, dataDictionaryId, CancellationToken.None))
+                .ReturnsAsync(question);
+
+            //Act
+            var result = await sut.AnswerContains(correlationId, dataDictionaryId, answerToCheck);
+
+            //Assert
+            Assert.Equal(expectedResult, result);
+        }
+
+        [Theory]
+        [AutoMoqData]
+        public async Task DataDictionaryAnswerEquals_ReturnsFalse_GetQuestionRecordReturnsNull(
+            [Frozen] Mock<IElsaCustomRepository> elsaCustomRepository,
+            string correlationId,
+            int dataDictionaryId,
+            TextQuestionHelper sut)
+        {
+            //Arrange
+            elsaCustomRepository
+                .Setup(x => x.GetQuestionByDataDictionary(correlationId, dataDictionaryId, CancellationToken.None))
+                .ReturnsAsync((Question?)null);
+
+            //Act
+            var result = await sut.AnswerEquals(correlationId, dataDictionaryId, "Test");
+
+            //Assert
+            Assert.False(result);
+        }
+
+        [Theory]
+        [InlineAutoMoqData("Test", "Test", true)]
+        [InlineAutoMoqData("False", "Test", false)]
+        public async Task DataDictionaryAnswerEquals_ForTextQuestion_ReturnsExpectedValue(
+            string answer,
+            string answerToCheck,
+            bool expectedResult,
+            [Frozen] Mock<IElsaCustomRepository> elsaCustomRepository,
+            string correlationId,
+            int dataDictionaryId,
+            Question question,
+            TextQuestionHelper sut)
+        {
+            //Arrange
+            question.QuestionType = QuestionTypeConstants.TextQuestion;
+            question.Answers = new List<Answer> { new() { AnswerText = answer } };
+
+            elsaCustomRepository
+                .Setup(x => x.GetQuestionByDataDictionary(correlationId, dataDictionaryId, CancellationToken.None))
+                .ReturnsAsync(question);
+
+
+            //Act
+            var result = await sut.AnswerEquals(correlationId, dataDictionaryId, answerToCheck);
+
+            //Assert
+            Assert.Equal(expectedResult, result);
+        }
+
+        [Theory]
+        [InlineAutoMoqData("Test", "Test", true)]
+        [InlineAutoMoqData("False", "Test", false)]
+        public async Task DataDictionaryAnswerEquals_ForTextAreaQuestion_ReturnsExpectedValue(
+            string answer,
+            string answerToCheck,
+            bool expectedResult,
+            [Frozen] Mock<IElsaCustomRepository> elsaCustomRepository,
+            string correlationId,
+            int dataDictionaryId,
+            Question question,
+            TextQuestionHelper sut)
+        {
+            //Arrange
+            question.QuestionType = QuestionTypeConstants.TextAreaQuestion;
+            question.Answers = new List<Answer> { new() { AnswerText = answer } };
+
+            elsaCustomRepository
+                .Setup(x => x.GetQuestionByDataDictionary(correlationId, dataDictionaryId, CancellationToken.None))
+                .ReturnsAsync(question);
+
+
+            //Act
+            var result = await sut.AnswerEquals(correlationId, dataDictionaryId, answerToCheck);
 
             //Assert
             Assert.Equal(expectedResult, result);

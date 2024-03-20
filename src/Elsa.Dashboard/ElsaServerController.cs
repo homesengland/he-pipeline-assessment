@@ -4,7 +4,6 @@ using Elsa.CustomInfrastructure.Extensions;
 using Elsa.Dashboard.Exceptions;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Options;
 using System.Net.Http.Headers;
 
 namespace Elsa.Dashboard
@@ -26,7 +25,7 @@ namespace Elsa.Dashboard
       _hostEnvironment = environment;
     }
 
-    [Route("{**catchall}")]
+      [Route("{**catchall}")]
     [Authorize(Policy = Elsa.Dashboard.Authorization.Constants.AuthorizationPolicies.AssignmentToElsaDashboardAdminRoleRequired)]
     public async Task<IActionResult> CatchAll()
     {
@@ -119,7 +118,7 @@ namespace Elsa.Dashboard
       }
       catch (Exception ex)
       {
-        _logger.LogError("Error getting access token: ", ex.Message);
+        _logger.LogError(ex.Message, "Error getting access token: ");
         return null;
       }
     }

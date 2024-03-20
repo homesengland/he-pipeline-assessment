@@ -63,10 +63,8 @@ namespace He.PipelineAssessment.UI.Tests.Features.Workflow
         [AutoMoqData]
         public async Task QuestionScreenSaveAndContinue_ShouldRedirectToAction_GivenValidationIssuesAreFound(
             [Frozen] Mock<IMediator> mediator,
-            [Frozen] Mock<IElsaServerHttpClient> http,
             QuestionScreenSaveAndContinueCommand command,
             QuestionScreenSaveAndContinueCommandResponse saveAndContinueCommandResponse,
-            WorkflowNextActivityDataDto httpResponse,
             ValidationResult validationResult,
             WorkflowController sut)
         {
@@ -97,6 +95,7 @@ namespace He.PipelineAssessment.UI.Tests.Features.Workflow
         {
             //Arrange
             saveAndContinueCommandResponse.IsAuthorised = true;
+            saveAndContinueCommandResponse.IsValid = true;
             mediator.Setup(x => x.Send(command, CancellationToken.None)).ReturnsAsync(saveAndContinueCommandResponse);
 
             //Act
@@ -129,6 +128,7 @@ namespace He.PipelineAssessment.UI.Tests.Features.Workflow
         {
             //Arrange
             saveAndContinueCommandResponse.IsAuthorised = false;
+            saveAndContinueCommandResponse.IsValid = true;
             mediator.Setup(x => x.Send(command, CancellationToken.None)).ReturnsAsync(saveAndContinueCommandResponse);
 
             //Act
@@ -136,9 +136,10 @@ namespace He.PipelineAssessment.UI.Tests.Features.Workflow
 
             //Assert
             Assert.NotNull(result);
-            Assert.IsType<RedirectToActionResult>(result);
-
             var redirectToActionResult = (RedirectToActionResult)result;
+            Assert.IsType<RedirectToActionResult>(redirectToActionResult);
+
+
             Assert.Equal("AccessDenied", redirectToActionResult.ActionName);
         }
 

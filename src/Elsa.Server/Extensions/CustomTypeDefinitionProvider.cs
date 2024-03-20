@@ -1,5 +1,4 @@
-﻿using Elsa.CustomActivities.Activities.DataverseDataSource;
-using Elsa.CustomModels;
+﻿using Elsa.CustomModels;
 using Elsa.Scripting.JavaScript.Services;
 using He.PipelineAssessment.Data.Dataverse;
 using He.PipelineAssessment.Data.ExtendedSinglePipeline;
@@ -32,6 +31,7 @@ namespace Elsa.Server.Extensions
             typeof(LandValues),
             typeof(AgricultureLandValues),
             typeof(OfficeLandValues),
+            typeof(LocalAuthority),
             typeof(DataverseResults)
         };
     }

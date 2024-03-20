@@ -14,9 +14,10 @@
 
     <h1 class="govuk-heading-l govuk-grid-column-one-quarter pull-left" for="event-name">Assessment Search</h1>
     <div class="govuk-grid-column-three-quarters pull-right">
+        @Html.ActionLink("Sync", "Index", "SinglePipeline", null, new { @class = "govuk-link pull-right  govuk-!-font-size-24 govuk-!-padding-right-2" })
+
         @if ((await AuthorizationService.AuthorizeAsync(User, Constants.AuthorizationPolicies.AssignmentToPipelineAdminRoleRequired)).Succeeded)
         {
-            @Html.ActionLink("Sync", "Index", "SinglePipeline", null, new { @class =  "govuk-link pull-right  govuk-!-font-size-24 govuk-!-padding-right-2"})
             @Html.ActionLink("Admin", "AssessmentTool", "Admin", null, new { @class = "govuk-link pull-right  govuk-!-font-size-24 govuk-!-padding-right-2" })
             @Html.ActionLink("Assessment Requests", "Index", "Intervention", null, new { @class = "govuk-link pull-right  govuk-!-font-size-24 govuk-!-padding-right-2" })
         }
