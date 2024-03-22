@@ -34,11 +34,26 @@ namespace Elsa.Server.Features.Activities
         }
 
         [HttpGet("dictionary")]
-        public async Task<IActionResult> GetDataDictionary(bool includeArchived)
+        public async Task<IActionResult> GetDataDictionary()
         {
             try
             {
-                string results = await _mediator.Send(new DataDictionaryCommand() { IncludeArchived = includeArchived});
+                string results = await _mediator.Send(new DataDictionaryCommand() { IncludeArchived = false});
+                return Ok(results);
+
+            }
+            catch (Exception e)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, e);
+            }
+        }
+
+        [HttpGet("dictionary/archived")]
+        public async Task<IActionResult> GetArchivedDataDictionary()
+        {
+            try
+            {
+                string results = await _mediator.Send(new DataDictionaryCommand() { IncludeArchived = true });
                 return Ok(results);
 
             }
