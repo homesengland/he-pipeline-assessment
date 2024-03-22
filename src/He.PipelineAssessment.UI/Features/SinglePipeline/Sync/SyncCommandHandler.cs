@@ -54,7 +54,6 @@ namespace He.PipelineAssessment.UI.Features.SinglePipeline.Sync
                 _logger.LogError(e,e.Message);
                 throw new ApplicationException("Single Pipeline Data failed to sync");
             }
-
             return syncModel;
         }
     }

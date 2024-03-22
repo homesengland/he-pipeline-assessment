@@ -34,9 +34,6 @@ var builder = WebApplication.CreateBuilder(args);
 
 string pipelineAssessmentConnectionString = builder.Configuration.GetConnectionString("SqlDatabase") ?? string.Empty;
 
-//Add Background Task
-builder.Services.AddHostedService<AutoSyncBackgroundService>();
-
 // Add services to the container.
 builder.Services.AddControllersWithViews();
 
@@ -133,6 +130,10 @@ builder.Services.AddAntiforgery(options =>
     options.Cookie.SecurePolicy = CookieSecurePolicy.Always;
     options.Cookie.HttpOnly = true;
 });
+
+//Add Background Task
+builder.Services.AddHostedService<AutoSyncBackgroundService>();
+
 
 var app = builder.Build();
 
