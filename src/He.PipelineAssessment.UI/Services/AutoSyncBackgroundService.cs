@@ -10,12 +10,19 @@ namespace He.PipelineAssessment.UI.Services
         private readonly ILogger<AutoSyncBackgroundService> _logger;
         private readonly IServiceProvider _serviceProvider;
         private readonly IHttpContextAccessor _contextAccessor;
+        public bool _skipDelay = false;
 
         public AutoSyncBackgroundService(ILogger<AutoSyncBackgroundService> logger, IServiceProvider serviceProvider, IHttpContextAccessor contextAccessor)
         {
             _logger = logger;
             _serviceProvider = serviceProvider;
             _contextAccessor = contextAccessor;
+        }
+
+        public async Task PublicMethodAsync()
+        {
+            _skipDelay = true;
+            await ExecuteAsync(CancellationToken.None);
         }
 
         protected override async Task ExecuteAsync(CancellationToken stoppingToken)
@@ -42,7 +49,13 @@ namespace He.PipelineAssessment.UI.Services
                             _logger.LogInformation($"Failed to Load the Mediator Service in AutoSync Background Service");
                         }
                     }
-                    await Task.Delay(TimeSpan.FromMinutes(1));
+                    if(!_skipDelay) {
+                        await Task.Delay(TimeSpan.FromHours(1));
+                    }else
+                    {
+                        _skipDelay = false;
+                        break;
+                    } 
                 }
             }
             catch (Exception ex)
