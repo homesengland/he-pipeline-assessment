@@ -43,7 +43,7 @@ namespace He.PipelineAssessment.Data.SinglePipeline
             {
                 _logger.LogError(ex, "Error in getting data from singlepipeline data");
             }
-            return singlePipelineData;
+            return singlePipelineData.Where(x => !string.IsNullOrWhiteSpace(x.project_owner)).ToList();
         }
     }
 }

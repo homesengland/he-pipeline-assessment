@@ -46,10 +46,9 @@
                         .unique()
                         .sort()
                         .each(function (d, j) {
-
                             var dom_nodes = $($.parseHTML(d));
                             var node = dom_nodes[0];
-                            if (node.innerText != null) {
+                            if (node?.innerText != null) {
                                 select.append('<option value="' + node.innerText + '">' + node.innerText + '</option>');
                             }
                             else {
