@@ -67,7 +67,8 @@ namespace He.PipelineAssessment.UI.Features.Admin.AssessmentToolManagement.Mappe
                     Version = x.Version,
                     WorkflowDefinitionId = x.WorkflowDefinitionId,
                     IsVariation = x.IsVariation,
-                    IsLast = x.IsLast
+                    IsLast = x.IsLast,
+                    IsEarlyStage = x.IsEarlyStage,
                 }).ToList();
         }
     }

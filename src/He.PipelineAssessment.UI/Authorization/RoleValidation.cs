@@ -1,6 +1,7 @@
 ﻿using He.PipelineAssessment.Infrastructure.Repository;
 using He.PipelineAssessment.Infrastructure;
 using He.PipelineAssessment.Models;
+using HibernatingRhinos.Profiler.Appender.CosmosDB;
 
 namespace He.PipelineAssessment.UI.Authorization;
 
@@ -37,9 +38,12 @@ public class RoleValidation : IRoleValidation
         var assessment = await _assessmentRepository.GetAssessment(assessmentId);
 
         var isValidForBusinessArea = ValidateForBusinessArea(assessment);
-        if (!isValidForBusinessArea)
+        if(assessmentToolWorkflow != null && !assessmentToolWorkflow.IsEarlyStage)
         {
-            return false;
+            if (!isValidForBusinessArea)
+            {
+                return false;
+            }
         }
 
         var canSeeRecord = ValidateSensitiveRecords(assessment);
