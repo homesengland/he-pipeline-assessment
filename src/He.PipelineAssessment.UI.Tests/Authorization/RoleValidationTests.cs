@@ -58,6 +58,51 @@ public class RoleValidationTests
 
     [Theory]
     [AutoMoqData]
+    public async Task RoleValidation_ReturnsTrue_IfWorkflowIsEarlyStage(
+    [Frozen] Mock<IAdminAssessmentToolRepository> adminAssessmentToolRepository,
+    [Frozen] Mock<IUserProvider> userProvider,
+    AssessmentToolWorkflow assessmentTool,
+    string workflowDefinitionId,
+    int assessmentId,
+    RoleValidation sut
+ )
+    {
+        //Arrange
+        assessmentTool.IsEarlyStage = true;
+        adminAssessmentToolRepository.Setup(x => x.GetAssessmentToolByWorkflowDefinitionId(workflowDefinitionId)).ReturnsAsync(assessmentTool);
+        userProvider.Setup(x => x.CheckUserRole(Constants.AppRole.PipelineEconomist)).Returns(true);
+
+        //Act
+        var result = await sut.ValidateRole(assessmentId, workflowDefinitionId);
+
+        //Assert
+        Assert.True(result);
+    }
+
+    [Theory]
+    [AutoMoqData]
+    public async Task RoleValidation_ReturnsFalse_IfWorkflowIsEarlyStage(
+    [Frozen] Mock<IAdminAssessmentToolRepository> adminAssessmentToolRepository,
+    [Frozen] Mock<IUserProvider> userProvider,
+    AssessmentToolWorkflow assessmentTool,
+    string workflowDefinitionId,
+    int assessmentId,
+    RoleValidation sut)
+    {
+        //Arrange
+        assessmentTool.IsEarlyStage = true;
+        adminAssessmentToolRepository.Setup(x => x.GetAssessmentToolByWorkflowDefinitionId(workflowDefinitionId)).ReturnsAsync(assessmentTool);
+        userProvider.Setup(x => x.CheckUserRole(Constants.AppRole.PipelineEconomist)).Returns(false);
+
+        //Act
+        var result = await sut.ValidateRole(assessmentId, workflowDefinitionId);
+
+        //Assert
+        Assert.False(result);
+    }
+
+    [Theory]
+    [AutoMoqData]
     public async Task RoleValidation_ReturnsTrue_IfBusinessAreaIsMPPAndUserHasRoleMPP(
     [Frozen] Mock<IAdminAssessmentToolRepository> assessmentToolRepository,
     [Frozen] Mock<IAssessmentRepository> assessmentRepository,
@@ -97,6 +142,7 @@ public class RoleValidationTests
     {
         //Arrange
         assessmentTool.IsEconomistWorkflow = false;
+        assessmentTool.IsEarlyStage = false;
         assessment.BusinessArea = "MPP";
         assessmentToolRepository.Setup(x => x.GetAssessmentToolByWorkflowDefinitionId(workflowDefinitionId)).ReturnsAsync(assessmentTool);
         assessmentRepository.Setup(x => x.GetAssessment(assessmentId)).ReturnsAsync(assessment);
@@ -151,6 +197,7 @@ public class RoleValidationTests
     {
         //Arrange
         assessmentTool.IsEconomistWorkflow = false;
+        assessmentTool.IsEarlyStage = false;
         assessment.BusinessArea = "Investment";
         assessmentToolRepository.Setup(x => x.GetAssessmentToolByWorkflowDefinitionId(workflowDefinitionId)).ReturnsAsync(assessmentTool);
         assessmentRepository.Setup(x => x.GetAssessment(assessmentId)).ReturnsAsync(assessment);
@@ -205,6 +252,7 @@ public class RoleValidationTests
     {
         //Arrange
         assessmentTool.IsEconomistWorkflow = false;
+        assessmentTool.IsEarlyStage = false;
         assessment.BusinessArea = "Development";
         assessmentToolRepository.Setup(x => x.GetAssessmentToolByWorkflowDefinitionId(workflowDefinitionId)).ReturnsAsync(assessmentTool);
         assessmentRepository.Setup(x => x.GetAssessment(assessmentId)).ReturnsAsync(assessment);
@@ -232,6 +280,7 @@ public class RoleValidationTests
     {
         //Arrange
         assessmentTool.IsEconomistWorkflow = false;
+        assessmentTool.IsEarlyStage = false;
         assessment.BusinessArea = "";
         assessmentToolRepository.Setup(x => x.GetAssessmentToolByWorkflowDefinitionId(workflowDefinitionId)).ReturnsAsync(assessmentTool);
         assessmentRepository.Setup(x => x.GetAssessment(assessmentId)).ReturnsAsync(assessment);
@@ -258,6 +307,7 @@ public class RoleValidationTests
     {
         //Arrange
         assessmentTool.IsEconomistWorkflow = false;
+        assessmentTool.IsEarlyStage = false;
         assessment.BusinessArea = "";
         assessmentToolRepository.Setup(x => x.GetAssessmentToolByWorkflowDefinitionId(workflowDefinitionId)).ReturnsAsync(assessmentTool);
         assessmentRepository.Setup(x => x.GetAssessment(assessmentId)).ReturnsAsync((Assessment?)null);
