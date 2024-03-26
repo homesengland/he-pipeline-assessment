@@ -13,6 +13,7 @@ namespace He.PipelineAssessment.Models
         public string Name { get; set; } = null!;
         public bool IsEconomistWorkflow { get; set; }
         public bool IsVariation { get; set; }
+        public bool IsEarlyStage { get; set; }
         public bool IsLast { get; set; }
         public string? Status { get; set; }
         public bool IsAmendable { get; set; }

@@ -22,5 +22,6 @@ namespace He.PipelineAssessment.UI.Features.Admin.AssessmentToolManagement.Comma
         public bool IsVariation { get; set; }
         public bool IsAmendableWorkflow { get; set; } = true;
         public bool IsLast { get; set; }
+        public bool IsEarlyStage {  get; set; }
     }
 }

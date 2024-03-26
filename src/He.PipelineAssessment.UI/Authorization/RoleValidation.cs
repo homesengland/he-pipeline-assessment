@@ -1,6 +1,7 @@
 ﻿using He.PipelineAssessment.Infrastructure.Repository;
 using He.PipelineAssessment.Infrastructure;
 using He.PipelineAssessment.Models;
+using HibernatingRhinos.Profiler.Appender.CosmosDB;
 
 namespace He.PipelineAssessment.UI.Authorization;
 
@@ -26,20 +27,19 @@ public class RoleValidation : IRoleValidation
     {
         var assessmentToolWorkflow = await _adminAssessmentToolRepository.GetAssessmentToolByWorkflowDefinitionId(workflowDefinitionId);
 
-        if (assessmentToolWorkflow != null)
+        if (assessmentToolWorkflow != null && assessmentToolWorkflow.IsEconomistWorkflow)
         {
-            if (assessmentToolWorkflow.IsEconomistWorkflow)
-            {
                 bool isEconomistRoleExist = (_userProvider.CheckUserRole(Constants.AppRole.PipelineEconomist) || _userProvider.CheckUserRole(Constants.AppRole.PipelineAdminOperations));
                 return isEconomistRoleExist;
-            }
         }
         var assessment = await _assessmentRepository.GetAssessment(assessmentId);
 
-        var isValidForBusinessArea = ValidateForBusinessArea(assessment);
-        if (!isValidForBusinessArea)
+        if(assessmentToolWorkflow != null && !assessmentToolWorkflow.IsEarlyStage)
         {
-            return false;
+            if (!ValidateForBusinessArea(assessment))
+            {
+                return false;
+            }
         }
 
         var canSeeRecord = ValidateSensitiveRecords(assessment);
