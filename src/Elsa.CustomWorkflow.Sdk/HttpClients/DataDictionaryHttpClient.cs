@@ -91,7 +91,8 @@ namespace Elsa.CustomWorkflow.Sdk.HttpClients
         public async Task<string?> LoadDataDictionary(string elsaServer, bool includeArchived = false)
         {
             string data;
-            string fullUri = $"{elsaServer}/activities/dictionary?includeArchived={includeArchived}" + "?t=" + DateTime.UtcNow.Ticks;
+            string uri = includeArchived ? "dictionary/archived" : "dictionary";
+            string fullUri = $"{elsaServer}/activities/{uri}?" + "t=" + DateTime.UtcNow.Ticks;
             var client = _httpClientFactory.CreateClient("DataDictionaryClient");
             AddAccessTokenToRequest(client);
             using (var response = await client

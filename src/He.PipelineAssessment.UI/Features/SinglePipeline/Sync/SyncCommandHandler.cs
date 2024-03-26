@@ -31,8 +31,17 @@ namespace He.PipelineAssessment.UI.Features.SinglePipeline.Sync
                     List<int> sourceAssessmentSpIds = data.Select(x => x.sp_id!.Value).ToList();
 
                     var destinationAssessments = await _assessmentRepository.GetAssessments();
-                    var destinationAssessmentSpIds = destinationAssessments.Select(x => x.SpId).ToList();
+                    var destinationAssessmentSpIdsThatHaveBeganAssessment = destinationAssessments.Where(x => x.AssessmentToolWorkflowInstances != null && x.AssessmentToolWorkflowInstances.Any())
+                        .Select(x => x.SpId).ToList();
+                    var destinationAssessmentSpIdsThatHaveNotBeganAssessment = destinationAssessments.Where(x => x.AssessmentToolWorkflowInstances == null || x.AssessmentToolWorkflowInstances.Count == 0)
+                        .Select(x => x.SpId).ToList();
+                    
+                    var assessmentsToBeRemoved = _syncCommandHandlerHelper.AssessmentsToBeRemoved(sourceAssessmentSpIds, destinationAssessmentSpIdsThatHaveNotBeganAssessment, destinationAssessments);
+                    
+                    assessmentsToBeRemoved.ForEach(x => destinationAssessments.Remove(x));
 
+                    var validDestinationAssessmentSpIdsThatHaveNotBeganAssessment = destinationAssessmentSpIdsThatHaveNotBeganAssessment.Except(assessmentsToBeRemoved.Select(x => x.SpId)).ToList();
+                    var destinationAssessmentSpIds = destinationAssessmentSpIdsThatHaveBeganAssessment.Concat(validDestinationAssessmentSpIdsThatHaveNotBeganAssessment).ToList();
                     var assessmentsToBeAdded = _syncCommandHandlerHelper.AssessmentsToBeAdded(sourceAssessmentSpIds, destinationAssessmentSpIds, data);
                     await _assessmentRepository.CreateAssessments(assessmentsToBeAdded);
 
@@ -54,7 +63,6 @@ namespace He.PipelineAssessment.UI.Features.SinglePipeline.Sync
                 _logger.LogError(e,e.Message);
                 throw new ApplicationException("Single Pipeline Data failed to sync");
             }
-
             return syncModel;
         }
     }

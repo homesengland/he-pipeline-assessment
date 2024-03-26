@@ -37,8 +37,6 @@ var builder = WebApplication.CreateBuilder(args);
 
 string pipelineAssessmentConnectionString = builder.Configuration.GetConnectionString("SqlDatabase") ?? string.Empty;
 
-
-
 // Add services to the container.
 builder.Services.AddControllersWithViews();
 
@@ -152,8 +150,10 @@ if (receiveMessagesFromServiceBus)
     builder.Services.AddHostedService<WorkerServiceBus>();
 }
 
-var app = builder.Build();
+//Add Background Task
+builder.Services.AddHostedService<AutoSyncBackgroundService>();
 
+var app = builder.Build();
 if (app.Environment.IsDevelopment())
 {
     using var scope = app.Services.CreateScope();
