@@ -14,6 +14,7 @@ namespace He.PipelineAssessment.Infrastructure.Repository
         Task<IEnumerable<AssessmentToolWorkflowInstance>> GetAssessmentToolWorkflowInstances(int assessmentId);
 
         Task<int> CreateAssessments(List<Assessment> assessments);
+        Task RemoveAssesments(List<Assessment> assessments);
         Task<int> CreateAssessmentToolWorkflowInstance(AssessmentToolWorkflowInstance assessmentStage);
         Task CreateAssessmentToolInstanceNextWorkflows(List<AssessmentToolInstanceNextWorkflow> nextWorkflows);
         Task<int> CreateAssessmentIntervention(AssessmentIntervention assessmentIntervention);
@@ -97,6 +98,12 @@ namespace He.PipelineAssessment.Infrastructure.Repository
         {
             await context.Set<Assessment>().AddRangeAsync(assessments);
             return await context.SaveChangesAsync();
+        }
+
+        public async Task RemoveAssesments(List<Assessment> assessments)
+        {
+            context.Set<Assessment>().RemoveRange(assessments);
+            await context.SaveChangesAsync();
         }
 
         public async Task<int> CreateAssessmentToolWorkflowInstance(AssessmentToolWorkflowInstance assessmentStage)
