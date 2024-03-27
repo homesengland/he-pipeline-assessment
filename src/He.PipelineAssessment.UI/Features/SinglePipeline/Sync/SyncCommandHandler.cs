@@ -37,8 +37,7 @@ namespace He.PipelineAssessment.UI.Features.SinglePipeline.Sync
                         .Select(x => x.SpId).ToList();
                     
                     var assessmentsToBeRemoved = _syncCommandHandlerHelper.AssessmentsToBeRemoved(sourceAssessmentSpIds, destinationAssessmentSpIdsThatHaveNotBeganAssessment, destinationAssessments);
-                    
-                    assessmentsToBeRemoved.ForEach(x => destinationAssessments.Remove(x));
+                    await _assessmentRepository.RemoveAssesments(assessmentsToBeRemoved);
 
                     var validDestinationAssessmentSpIdsThatHaveNotBeganAssessment = destinationAssessmentSpIdsThatHaveNotBeganAssessment.Except(assessmentsToBeRemoved.Select(x => x.SpId)).ToList();
                     var destinationAssessmentSpIds = destinationAssessmentSpIdsThatHaveBeganAssessment.Concat(validDestinationAssessmentSpIdsThatHaveNotBeganAssessment).ToList();

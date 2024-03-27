@@ -77,6 +77,7 @@ namespace He.PipelineAssessment.UI.Tests.Features.SinglePipeline.Sync
 
             //Assert
             assessmentRepository.Verify(x => x.CreateAssessments(assessmentsTobeAdded), Times.Once);
+            assessmentRepository.Verify(x => x.RemoveAssesments(assessmentsTobeAdded), Times.Once);
             Assert.NotNull(result);
             Assert.IsType<SyncModel>(result);
             Assert.Equal(assessmentsTobeAdded.Count, result.NewAssessmentCount);
