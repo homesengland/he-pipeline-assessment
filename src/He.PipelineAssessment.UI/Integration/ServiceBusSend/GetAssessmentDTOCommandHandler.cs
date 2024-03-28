@@ -35,7 +35,7 @@ namespace He.PipelineAssessment.UI.Features.Workflow.QuestionScreenSaveAndContin
                     result.Assessment.Result = assessmentToolWorkflowInstance.Result;
                     result.Assessment.ProjectId = assessmentToolWorkflowInstance.Assessment.SpId;
                     result.Assessment.SubmittedBy = assessmentToolWorkflowInstance.SubmittedBy;
-                    result.Assessment.Name = $"{assessmentToolWorkflowInstance.AssessmentToolWorkflow.Name} - {assessmentToolWorkflowInstance.WorkflowName}";
+                    result.Assessment.Name = assessmentToolWorkflowInstance.AssessmentToolWorkflow.Name;
                 }
 
                 return await Task.FromResult(result);
