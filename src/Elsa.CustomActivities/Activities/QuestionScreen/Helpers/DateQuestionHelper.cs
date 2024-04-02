@@ -119,10 +119,10 @@ namespace Elsa.CustomActivities.Activities.QuestionScreen.Helpers
         public Task Handle(RenderingTypeScriptDefinitions notification, CancellationToken cancellationToken)
         {
             var output = notification.Output;
-            output.AppendLine("declare function dateQuestionAnswerEqualToOrGreaterThan(workflowName: string, activityName:string, questionId:string, answerToCheck:decimal ): boolean;");
-            output.AppendLine("declare function dateQuestionAnswerEqualToOrLessThan(workflowName: string, activityName:string, questionId:string, answerToCheck:decimal ): boolean;");
-            output.AppendLine("declare function dateAnswerEqualToOrGreaterThan(dataDictionaryId: number, answerToCheck:decimal ): boolean;");
-            output.AppendLine("declare function dateAnswerEqualToOrLessThan(dataDictionaryId: number, answerToCheck:decimal ): boolean;");
+            output.AppendLine("declare function dateQuestionAnswerEqualToOrGreaterThan(workflowName: string, activityName:string, questionId:string, day:number, month: number, year:number ): boolean;");
+            output.AppendLine("declare function dateQuestionAnswerEqualToOrLessThan(workflowName: string, activityName:string, questionId:string, day:number, month: number, year:number ): boolean;");
+            output.AppendLine("declare function dateAnswerEqualToOrGreaterThan(dataDictionaryId: number, day:number, month: number, year:number ): boolean;");
+            output.AppendLine("declare function dateAnswerEqualToOrLessThan(dataDictionaryId: number, day:number, month: number, year:number ): boolean;");
             return Task.CompletedTask;
         }
     }

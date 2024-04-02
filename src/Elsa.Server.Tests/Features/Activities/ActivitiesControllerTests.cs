@@ -71,7 +71,7 @@ namespace Elsa.Server.Tests.Features.Activities
         [Theory]
         [AutoMoqData]
         public async Task GetDataDictionary_ShouldReturnOK_WhenCommandHandlerIsSuccessful(
-            List<QuestionDataDictionaryGroup> dataDictionaries,
+            List<DataDictionaryGroup> dataDictionaries,
             Mock<IMediator> mediatorMock)
         {
             var response = JsonConvert.SerializeObject(dataDictionaries);

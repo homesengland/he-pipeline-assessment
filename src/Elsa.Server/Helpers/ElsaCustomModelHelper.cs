@@ -52,7 +52,7 @@ namespace Elsa.Server.Helpers
                 QuestionType = question.QuestionType,
                 QuestionText = question.QuestionText,
                 Weighting = question.QuestionWeighting,
-                QuestionDataDictionaryId = question.DataDictionary == 0 ? null : question.DataDictionary,
+                DataDictionaryId = question.DataDictionary == 0 ? null : question.DataDictionary,
                 Choices = MapChoices(question),
                 IsReadOnly = question.IsReadOnly,
                 WorkflowName = workflowName,

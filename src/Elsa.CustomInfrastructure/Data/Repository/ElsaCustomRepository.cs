@@ -80,7 +80,7 @@ namespace Elsa.CustomInfrastructure.Data.Repository
             var result = await _dbContext.Set<Question>()
                 .Where(x =>
                     x.CorrelationId == correlationId &&
-                    x.QuestionDataDictionaryId == dataDictionaryId &&
+                    x.DataDictionaryId == dataDictionaryId &&
                     (!x.IsArchived.HasValue || !x.IsArchived.Value))
                 .Include(x => x.Choices)!.ThenInclude(y => y.QuestionChoiceGroup)
                 .Include(x => x.Answers)
