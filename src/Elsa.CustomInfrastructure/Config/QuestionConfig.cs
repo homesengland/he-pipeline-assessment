@@ -15,7 +15,7 @@ namespace Elsa.CustomInfrastructure.Config
             builder.Property(x => x.WorkflowInstanceId).HasMaxLength(EntityConfigurationConstants.MaxLength);
             builder.Property(x => x.QuestionId).HasMaxLength(EntityConfigurationConstants.MaxLength);
             builder.Property(x => x.QuestionType).HasMaxLength(EntityConfigurationConstants.QuestionTypeMaxLength);
-            builder.HasOne(x => x.QuestionDataDictionary).WithMany().HasForeignKey(x => x.QuestionDataDictionaryId);
+            builder.HasOne(x => x.DataDictionary).WithMany().HasForeignKey(x => x.DataDictionaryId);
         }
     }
 }
