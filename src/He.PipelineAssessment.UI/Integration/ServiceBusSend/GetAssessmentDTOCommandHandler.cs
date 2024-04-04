@@ -23,7 +23,8 @@ namespace He.PipelineAssessment.UI.Features.Workflow.QuestionScreenSaveAndContin
                 var assessmentToolWorkflowInstance = await _assessmentRepository.GetAssessmentToolWorkflowInstance(request.WorkflowInstanceId);
 
                 GetAssessmentDTOCommandResponse result = new GetAssessmentDTOCommandResponse(){ };
-                
+                string assessmentToolName = assessmentToolWorkflowInstance!.AssessmentToolWorkflow.AssessmentTool.Name;
+
                 if (assessmentToolWorkflowInstance != null)
                 {
                     result.Assessment.AssessmentToolId = assessmentToolWorkflowInstance.AssessmentToolWorkflowId!.Value;
@@ -35,7 +36,9 @@ namespace He.PipelineAssessment.UI.Features.Workflow.QuestionScreenSaveAndContin
                     result.Assessment.Result = assessmentToolWorkflowInstance.Result;
                     result.Assessment.ProjectId = assessmentToolWorkflowInstance.Assessment.SpId;
                     result.Assessment.SubmittedBy = assessmentToolWorkflowInstance.SubmittedBy;
-                    result.Assessment.Name = $"{assessmentToolWorkflowInstance.AssessmentToolWorkflow.Name} - {assessmentToolWorkflowInstance.WorkflowName}";
+                    result.Assessment.Name = string.Compare(result.Assessment.Status, "Suspended - RB", true)==0
+                        ? $"{assessmentToolName} - {assessmentToolWorkflowInstance.WorkflowName}"
+                        : result.Assessment.Name = assessmentToolName;
                 }
 
                 return await Task.FromResult(result);
