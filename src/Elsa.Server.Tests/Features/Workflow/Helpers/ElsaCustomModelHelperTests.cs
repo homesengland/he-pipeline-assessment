@@ -73,7 +73,7 @@ namespace Elsa.Server.Tests.Features.Workflow.Helpers
             Assert.Equal(question.Id, result.QuestionId);
             Assert.Equal(question.QuestionType, result.QuestionType);
             Assert.Equal(question.QuestionText, result.QuestionText);
-            Assert.Equal(question.DataDictionary, result.QuestionDataDictionaryId);
+            Assert.Equal(question.DataDictionary, result.DataDictionaryId);
             Assert.Equal(question.Checkbox.Choices, result.Choices!.Select(x => new CheckboxRecord(x.Identifier, x.Answer, x.IsSingle, x.IsPrePopulated)));
         }
 
@@ -136,7 +136,7 @@ namespace Elsa.Server.Tests.Features.Workflow.Helpers
             Assert.Equal(question.Id, result.QuestionId);
             Assert.Equal(question.QuestionType, result.QuestionType);
             Assert.Equal(question.QuestionText, result.QuestionText);
-            Assert.Equal(question.DataDictionary, result.QuestionDataDictionaryId);
+            Assert.Equal(question.DataDictionary, result.DataDictionaryId);
             Assert.Equal(question.Radio.Choices, result.Choices!.Select(x => new RadioRecord(x.Identifier, x.Answer, x.IsPrePopulated)));
         }
 
@@ -227,7 +227,7 @@ namespace Elsa.Server.Tests.Features.Workflow.Helpers
             Assert.Equal(question.Id, result.QuestionId);
             Assert.Equal(question.QuestionType, result.QuestionType);
             Assert.Equal(question.QuestionText, result.QuestionText);
-            Assert.Equal(question.DataDictionary, result.QuestionDataDictionaryId);
+            Assert.Equal(question.DataDictionary, result.DataDictionaryId);
             Assert.Null(result.Choices);
         }
 
@@ -277,7 +277,7 @@ namespace Elsa.Server.Tests.Features.Workflow.Helpers
             var result = sut.CreateQuestion(nextActivityId, nextActivityType, question, workflowInstance, "ActivityName", "WorkflowName");
 
             //Assert
-            Assert.Null(result.QuestionDataDictionary);
+            Assert.Null(result.DataDictionary);
         }
 
         [Theory]
