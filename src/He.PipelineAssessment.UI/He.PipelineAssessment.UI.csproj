@@ -68,6 +68,7 @@
     <PackageReference Include="AutoMapper" Version="11.0.1" />
     <PackageReference Include="AutoMapper.Extensions.Microsoft.DependencyInjection" Version="11.0.0" />
     <PackageReference Include="EntityFrameworkProfiler.Appender" Version="6.0.6046" />
+    <PackageReference Include="Azure.Messaging.ServiceBus" Version="7.17.3" />
     <PackageReference Include="FluentValidation" Version="11.2.2" />
     <PackageReference Include="He.Cookies.Mvc" Version="1.0.36" />
     <PackageReference Include="He.Identity.Auth0" Version="1.0.58" />
@@ -76,6 +77,7 @@
     <PackageReference Include="MediatR.Extensions.Microsoft.DependencyInjection" Version="10.0.1" />
     <PackageReference Include="Microsoft.ApplicationInsights.AspNetCore" Version="2.22.0" />
     <PackageReference Include="Microsoft.Data.SqlClient" Version="5.1.5" />
+    <PackageReference Include="Microsoft.AspNetCore.Authentication.Cookies" Version="2.2.0" />
     <PackageReference Include="Microsoft.EntityFrameworkCore" Version="6.0.9" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="6.0.9">
       <PrivateAssets>all</PrivateAssets>
@@ -97,5 +99,9 @@
     <ProjectReference Include="..\He.PipelineAssessment.Data\He.PipelineAssessment.Data.csproj" />
     <ProjectReference Include="..\He.PipelineAssessment.Infrastructure\He.PipelineAssessment.Infrastructure.csproj" />
     <ProjectReference Include="..\He.PipelineAssessment.Models\He.PipelineAssessment.Models.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Integration\UpsertProject\" />
   </ItemGroup>
 </Project>

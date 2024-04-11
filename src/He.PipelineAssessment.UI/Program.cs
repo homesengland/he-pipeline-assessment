@@ -23,6 +23,9 @@ using He.PipelineAssessment.UI.Features.Error;
 using He.PipelineAssessment.UI.Features.Intervention;
 using He.PipelineAssessment.UI.Features.SinglePipeline.Sync;
 using He.PipelineAssessment.UI.Features.Workflow.QuestionScreenSaveAndContinue;
+using He.PipelineAssessment.UI.Integration;
+using He.PipelineAssessment.UI.Integration.ServiceBus;
+using He.PipelineAssessment.UI.Integration.ServiceBusSend;
 using He.PipelineAssessment.UI.Services;
 using Microsoft.AspNetCore.DataProtection;
 using Microsoft.AspNetCore.Mvc.Razor;
@@ -131,13 +134,26 @@ builder.Services.AddAntiforgery(options =>
     options.Cookie.HttpOnly = true;
 });
 
+//Service Bus - Receive messages
+builder.Services.AddOptions<ServiceBusConfiguration>()
+    .Configure<IConfiguration>((settings, configuration) =>
+    {
+        configuration.GetSection("ServiceBusConfiguration").Bind(settings);
+    });
+
+builder.Services.AddScoped<IServiceBusMessageSender, ServiceBusMessageSender>();
+builder.Services.AddScoped<IServiceBusMessageReceiver, ServiceBusMessageReceiver>();
+
+var receiveMessagesFromServiceBus = Convert.ToBoolean(builder.Configuration["ServiceBusConfiguration:ReceiveMessages"]);
+if (receiveMessagesFromServiceBus)
+{
+    builder.Services.AddHostedService<WorkerServiceBus>();
+}
+
 //Add Background Task
 builder.Services.AddHostedService<AutoSyncBackgroundService>();
 
-
 var app = builder.Build();
-
-
 if (app.Environment.IsDevelopment())
 {
     using var scope = app.Services.CreateScope();

@@ -13,6 +13,7 @@ using Microsoft.Extensions.Logging;
 using He.PipelineAssessment.Models;
 using He.PipelineAssessment.UI.Common.Exceptions;
 using Newtonsoft.Json;
+using He.PipelineAssessment.UI.Integration.ServiceBusSend;
 
 namespace He.PipelineAssessment.UI.Tests.Services
 {
@@ -33,6 +34,7 @@ namespace He.PipelineAssessment.UI.Tests.Services
             [Frozen] Mock<IAdminAssessmentToolWorkflowRepository> adminAssessmentToolWorkflowRepository,
             [Frozen] Mock<IDateTimeProvider> dateTimeProvider,
             [Frozen] Mock<IElsaServerHttpClient> elsaServerHttpClient,
+            [Frozen] Mock<IServiceBusMessageSender> serviceBusMessageSender,
             AssessmentInterventionCommand command)
         {
             //Arrange
@@ -47,7 +49,8 @@ namespace He.PipelineAssessment.UI.Tests.Services
                 logger.Object,
                 adminAssessmentToolWorkflowRepository.Object,
                 dateTimeProvider.Object,
-                elsaServerHttpClient.Object
+                elsaServerHttpClient.Object,
+                serviceBusMessageSender.Object
                 );
 
             //Act
@@ -69,6 +72,7 @@ namespace He.PipelineAssessment.UI.Tests.Services
             [Frozen] Mock<IAdminAssessmentToolWorkflowRepository> adminAssessmentToolWorkflowRepository,
             [Frozen] Mock<IDateTimeProvider> dateTimeProvider,
             [Frozen] Mock<IElsaServerHttpClient> elsaServerHttpClient,
+            [Frozen] Mock<IServiceBusMessageSender> serviceBusMessageSender,
             AssessmentInterventionCommand command)
         {
             //Arrange
@@ -83,7 +87,8 @@ namespace He.PipelineAssessment.UI.Tests.Services
                 logger.Object,
                 adminAssessmentToolWorkflowRepository.Object,
                 dateTimeProvider.Object,
-                elsaServerHttpClient.Object
+                elsaServerHttpClient.Object,
+                serviceBusMessageSender.Object
                 );
 
             //Act
@@ -105,7 +110,8 @@ namespace He.PipelineAssessment.UI.Tests.Services
             [Frozen] Mock<IAdminAssessmentToolWorkflowRepository> adminAssessmentToolWorkflowRepository,
             [Frozen] Mock<IDateTimeProvider> dateTimeProvider,
             [Frozen] Mock<IElsaServerHttpClient> elsaServerHttpClient,
-            AssessmentIntervention intervention,
+            [Frozen] Mock<IServiceBusMessageSender> serviceBusMessageSender,
+             AssessmentIntervention intervention,
             AssessmentInterventionCommand command)
         {
             //Arrange
@@ -121,7 +127,8 @@ namespace He.PipelineAssessment.UI.Tests.Services
                 logger.Object,
                 adminAssessmentToolWorkflowRepository.Object,
                 dateTimeProvider.Object,
-                elsaServerHttpClient.Object
+                elsaServerHttpClient.Object,
+                serviceBusMessageSender.Object
                 );
 
             //Act
@@ -152,6 +159,7 @@ namespace He.PipelineAssessment.UI.Tests.Services
      [Frozen] Mock<IAdminAssessmentToolWorkflowRepository> adminAssessmentToolWorkflowRepository,
      [Frozen] Mock<IDateTimeProvider> dateTimeProvider,
      [Frozen] Mock<IElsaServerHttpClient> elsaServerHttpClient,
+     [Frozen] Mock<IServiceBusMessageSender> serviceBusMessageSender,
      AssessmentInterventionCommand command)
         {
             //Arrange
@@ -166,7 +174,8 @@ namespace He.PipelineAssessment.UI.Tests.Services
                 logger.Object,
                 adminAssessmentToolWorkflowRepository.Object,
                 dateTimeProvider.Object,
-                elsaServerHttpClient.Object
+                elsaServerHttpClient.Object,
+                serviceBusMessageSender.Object
                 );
 
             //Act
@@ -188,6 +197,7 @@ namespace He.PipelineAssessment.UI.Tests.Services
             [Frozen] Mock<IAdminAssessmentToolWorkflowRepository> adminAssessmentToolWorkflowRepository,
             [Frozen] Mock<IDateTimeProvider> dateTimeProvider,
             [Frozen] Mock<IElsaServerHttpClient> elsaServerHttpClient,
+            [Frozen] Mock<IServiceBusMessageSender> serviceBusMessageSender,
             AssessmentToolWorkflowInstance workflowInstance,
             AssessmentInterventionCommand command)
         {
@@ -204,7 +214,8 @@ namespace He.PipelineAssessment.UI.Tests.Services
                 logger.Object,
                 adminAssessmentToolWorkflowRepository.Object,
                 dateTimeProvider.Object,
-                elsaServerHttpClient.Object
+                elsaServerHttpClient.Object,
+                serviceBusMessageSender.Object
                 );
 
             //Act
@@ -226,6 +237,7 @@ namespace He.PipelineAssessment.UI.Tests.Services
     [Frozen] Mock<IAdminAssessmentToolWorkflowRepository> adminAssessmentToolWorkflowRepository,
     [Frozen] Mock<IDateTimeProvider> dateTimeProvider,
     [Frozen] Mock<IElsaServerHttpClient> elsaServerHttpClient,
+    [Frozen] Mock<IServiceBusMessageSender> serviceBusMessageSender,
     AssessmentToolWorkflowInstance workflowInstance,
     AssessmentInterventionCommand command)
         {
@@ -243,7 +255,8 @@ namespace He.PipelineAssessment.UI.Tests.Services
                 logger.Object,
                 adminAssessmentToolWorkflowRepository.Object,
                 dateTimeProvider.Object,
-                elsaServerHttpClient.Object
+                elsaServerHttpClient.Object,
+                serviceBusMessageSender.Object
                 );
 
             //Act
@@ -265,6 +278,7 @@ namespace He.PipelineAssessment.UI.Tests.Services
             [Frozen] Mock<IAdminAssessmentToolWorkflowRepository> adminAssessmentToolWorkflowRepository,
             [Frozen] Mock<IDateTimeProvider> dateTimeProvider,
             [Frozen] Mock<IElsaServerHttpClient> elsaServerHttpClient,
+            [Frozen] Mock<IServiceBusMessageSender> serviceBusMessageSender,
             AssessmentToolWorkflowInstance workflowInstance,
             ArgumentException e,
             AssessmentInterventionCommand command)
@@ -284,7 +298,8 @@ namespace He.PipelineAssessment.UI.Tests.Services
                 logger.Object,
                 adminAssessmentToolWorkflowRepository.Object,
                 dateTimeProvider.Object,
-                elsaServerHttpClient.Object
+                elsaServerHttpClient.Object,
+                serviceBusMessageSender.Object
                 );
 
             //Act
@@ -305,6 +320,7 @@ namespace He.PipelineAssessment.UI.Tests.Services
             [Frozen] Mock<IAdminAssessmentToolWorkflowRepository> adminAssessmentToolWorkflowRepository,
             [Frozen] Mock<IDateTimeProvider> dateTimeProvider,
             [Frozen] Mock<IElsaServerHttpClient> elsaServerHttpClient,
+            [Frozen] Mock<IServiceBusMessageSender> serviceBusMessageSender,
             AssessmentToolWorkflowInstance workflowInstance,
             Exception e,
             AssessmentInterventionCommand command,
@@ -326,7 +342,8 @@ namespace He.PipelineAssessment.UI.Tests.Services
                 logger.Object,
                 adminAssessmentToolWorkflowRepository.Object,
                 dateTimeProvider.Object,
-                elsaServerHttpClient.Object
+                elsaServerHttpClient.Object,
+                serviceBusMessageSender.Object
                 );
 
             //Act
@@ -348,6 +365,7 @@ namespace He.PipelineAssessment.UI.Tests.Services
             [Frozen] Mock<IAdminAssessmentToolWorkflowRepository> adminAssessmentToolWorkflowRepository,
             [Frozen] Mock<IDateTimeProvider> dateTimeProvider,
             [Frozen] Mock<IElsaServerHttpClient> elsaServerHttpClient,
+            [Frozen] Mock<IServiceBusMessageSender> serviceBusMessageSender,
             AssessmentToolWorkflowInstance workflowInstance,
             AssessmentInterventionCommand command,
             AssessmentIntervention intervention)
@@ -368,7 +386,8 @@ namespace He.PipelineAssessment.UI.Tests.Services
                 logger.Object,
                 adminAssessmentToolWorkflowRepository.Object,
                 dateTimeProvider.Object,
-                elsaServerHttpClient.Object
+                elsaServerHttpClient.Object,
+                serviceBusMessageSender.Object
                 );
 
             //Act
@@ -401,6 +420,7 @@ namespace He.PipelineAssessment.UI.Tests.Services
             [Frozen] Mock<IAdminAssessmentToolWorkflowRepository> adminAssessmentToolWorkflowRepository,
             [Frozen] Mock<IDateTimeProvider> dateTimeProvider,
             [Frozen] Mock<IElsaServerHttpClient> elsaServerHttpClient,
+            [Frozen] Mock<IServiceBusMessageSender> serviceBusMessageSender,
             CreateInterventionRequest request)
         {
             //Arrange
@@ -415,7 +435,8 @@ namespace He.PipelineAssessment.UI.Tests.Services
                 logger.Object,
                 adminAssessmentToolWorkflowRepository.Object,
                 dateTimeProvider.Object,
-                elsaServerHttpClient.Object
+                elsaServerHttpClient.Object,
+                serviceBusMessageSender.Object
                 );
 
             //Act
@@ -437,6 +458,7 @@ namespace He.PipelineAssessment.UI.Tests.Services
             [Frozen] Mock<IAdminAssessmentToolWorkflowRepository> adminAssessmentToolWorkflowRepository,
             [Frozen] Mock<IDateTimeProvider> dateTimeProvider,
             [Frozen] Mock<IElsaServerHttpClient> elsaServerHttpClient,
+            [Frozen] Mock<IServiceBusMessageSender> serviceBusMessageSender,
             AssessmentToolWorkflowInstance workflowToolInstance,
             CreateInterventionRequest request)
         {
@@ -453,7 +475,8 @@ namespace He.PipelineAssessment.UI.Tests.Services
                 logger.Object,
                 adminAssessmentToolWorkflowRepository.Object,
                 dateTimeProvider.Object,
-                elsaServerHttpClient.Object
+                elsaServerHttpClient.Object,
+                serviceBusMessageSender.Object
             );
 
             //Act
@@ -475,6 +498,7 @@ namespace He.PipelineAssessment.UI.Tests.Services
             [Frozen] Mock<IAdminAssessmentToolWorkflowRepository> adminAssessmentToolWorkflowRepository,
             [Frozen] Mock<IDateTimeProvider> dateTimeProvider,
             [Frozen] Mock<IElsaServerHttpClient> elsaServerHttpClient,
+            [Frozen] Mock<IServiceBusMessageSender> serviceBusMessageSender,
             AssessmentToolWorkflowInstance workflowInstance,
             CreateInterventionRequest request)
         {
@@ -492,7 +516,8 @@ namespace He.PipelineAssessment.UI.Tests.Services
                 logger.Object,
                 adminAssessmentToolWorkflowRepository.Object,
                 dateTimeProvider.Object,
-                elsaServerHttpClient.Object
+                elsaServerHttpClient.Object,
+                serviceBusMessageSender.Object
                 );
 
             //Act
@@ -514,6 +539,7 @@ namespace He.PipelineAssessment.UI.Tests.Services
             [Frozen] Mock<IAdminAssessmentToolWorkflowRepository> adminAssessmentToolWorkflowRepository,
             [Frozen] Mock<IDateTimeProvider> dateTimeProvider,
             [Frozen] Mock<IElsaServerHttpClient> elsaServerHttpClient,
+            [Frozen] Mock<IServiceBusMessageSender> serviceBusMessageSender,
             AssessmentToolWorkflowInstance workflowInstance,
             List<AssessmentIntervention> interventions,
             CreateInterventionRequest request)
@@ -537,7 +563,8 @@ namespace He.PipelineAssessment.UI.Tests.Services
                 logger.Object,
                 adminAssessmentToolWorkflowRepository.Object,
                 dateTimeProvider.Object,
-                elsaServerHttpClient.Object
+                elsaServerHttpClient.Object,
+                serviceBusMessageSender.Object
                 );
 
             //Act
@@ -559,6 +586,7 @@ namespace He.PipelineAssessment.UI.Tests.Services
                 [Frozen] Mock<IAdminAssessmentToolWorkflowRepository> adminAssessmentToolWorkflowRepository,
                 [Frozen] Mock<IDateTimeProvider> dateTimeProvider,
                 [Frozen] Mock<IElsaServerHttpClient> elsaServerHttpClient,
+                [Frozen] Mock<IServiceBusMessageSender> serviceBusMessageSender,
                 AssessmentToolWorkflowInstance workflowInstance,
                 string userName,
                 string email,
@@ -587,7 +615,8 @@ namespace He.PipelineAssessment.UI.Tests.Services
                 logger.Object,
                 adminAssessmentToolWorkflowRepository.Object,
                 dateTimeProvider.Object,
-                elsaServerHttpClient.Object
+                elsaServerHttpClient.Object,
+                serviceBusMessageSender.Object
                 );
 
             //Act
@@ -627,6 +656,7 @@ namespace He.PipelineAssessment.UI.Tests.Services
         [Frozen] Mock<IAdminAssessmentToolWorkflowRepository> adminAssessmentToolWorkflowRepository,
         [Frozen] Mock<IDateTimeProvider> dateTimeProvider,
         [Frozen] Mock<IElsaServerHttpClient> elsaServerHttpClient,
+        [Frozen] Mock<IServiceBusMessageSender> serviceBusMessageSender,
         AssessmentToolWorkflowInstance workflowInstance,
         string userName,
         string email,
@@ -655,7 +685,8 @@ namespace He.PipelineAssessment.UI.Tests.Services
                 logger.Object,
                 adminAssessmentToolWorkflowRepository.Object,
                 dateTimeProvider.Object,
-                elsaServerHttpClient.Object
+                elsaServerHttpClient.Object,
+                serviceBusMessageSender.Object
                 );
 
             string expectedErrorMessage = $"Unable to map AssessmentToolWorkflowInstance:  {JsonConvert.SerializeObject(workflowInstance)} to AssessmentInterventionDto";
@@ -685,6 +716,7 @@ namespace He.PipelineAssessment.UI.Tests.Services
             [Frozen] Mock<IAdminAssessmentToolWorkflowRepository> adminAssessmentToolWorkflowRepository,
             [Frozen] Mock<IDateTimeProvider> dateTimeProvider,
             [Frozen] Mock<IElsaServerHttpClient> elsaServerHttpClient,
+            [Frozen] Mock<IServiceBusMessageSender> serviceBusMessageSender,
             AssessmentInterventionCommand command)
         {
             //Arrange
@@ -699,7 +731,8 @@ namespace He.PipelineAssessment.UI.Tests.Services
                 logger.Object,
                 adminAssessmentToolWorkflowRepository.Object,
                 dateTimeProvider.Object,
-                elsaServerHttpClient.Object
+                elsaServerHttpClient.Object,
+                serviceBusMessageSender.Object
                 );
 
             //Act
@@ -721,6 +754,7 @@ namespace He.PipelineAssessment.UI.Tests.Services
             [Frozen] Mock<IAdminAssessmentToolWorkflowRepository> adminAssessmentToolWorkflowRepository,
             [Frozen] Mock<IDateTimeProvider> dateTimeProvider,
             [Frozen] Mock<IElsaServerHttpClient> elsaServerHttpClient,
+            [Frozen] Mock<IServiceBusMessageSender> serviceBusMessageSender,
             AssessmentIntervention intervention,
             AssessmentInterventionCommand command)
         {
@@ -738,7 +772,8 @@ namespace He.PipelineAssessment.UI.Tests.Services
                 logger.Object,
                 adminAssessmentToolWorkflowRepository.Object,
                 dateTimeProvider.Object,
-                elsaServerHttpClient.Object
+                elsaServerHttpClient.Object,
+                serviceBusMessageSender.Object
                 );
 
             //Act
@@ -760,6 +795,7 @@ namespace He.PipelineAssessment.UI.Tests.Services
             [Frozen] Mock<IAdminAssessmentToolWorkflowRepository> adminAssessmentToolWorkflowRepository,
             [Frozen] Mock<IDateTimeProvider> dateTimeProvider,
             [Frozen] Mock<IElsaServerHttpClient> elsaServerHttpClient,
+            [Frozen] Mock<IServiceBusMessageSender> serviceBusMessageSender,
             AssessmentIntervention intervention,
             AssessmentInterventionCommand command)
         {
@@ -778,7 +814,8 @@ namespace He.PipelineAssessment.UI.Tests.Services
                 logger.Object,
                 adminAssessmentToolWorkflowRepository.Object,
                 dateTimeProvider.Object,
-                elsaServerHttpClient.Object
+                elsaServerHttpClient.Object,
+                serviceBusMessageSender.Object
                 );
 
             //Act
@@ -800,6 +837,7 @@ namespace He.PipelineAssessment.UI.Tests.Services
             [Frozen] Mock<IAdminAssessmentToolWorkflowRepository> adminAssessmentToolWorkflowRepository,
             [Frozen] Mock<IDateTimeProvider> dateTimeProvider,
             [Frozen] Mock<IElsaServerHttpClient> elsaServerHttpClient,
+            [Frozen] Mock<IServiceBusMessageSender> serviceBusMessageSender,
             AssessmentIntervention intervention,
             AssessmentInterventionCommand command,
             Exception e)
@@ -819,7 +857,8 @@ namespace He.PipelineAssessment.UI.Tests.Services
                 logger.Object,
                 adminAssessmentToolWorkflowRepository.Object,
                 dateTimeProvider.Object,
-                elsaServerHttpClient.Object
+                elsaServerHttpClient.Object,
+                serviceBusMessageSender.Object
                 );
 
             //Act
@@ -847,6 +886,7 @@ namespace He.PipelineAssessment.UI.Tests.Services
             [Frozen] Mock<IAdminAssessmentToolWorkflowRepository> adminAssessmentToolWorkflowRepository,
             [Frozen] Mock<IDateTimeProvider> dateTimeProvider,
             [Frozen] Mock<IElsaServerHttpClient> elsaServerHttpClient,
+            [Frozen] Mock<IServiceBusMessageSender> serviceBusMessageSender,
             AssessmentInterventionCommand command)
         {
             //Arrange
@@ -861,7 +901,8 @@ namespace He.PipelineAssessment.UI.Tests.Services
                 logger.Object,
                 adminAssessmentToolWorkflowRepository.Object,
                 dateTimeProvider.Object,
-                elsaServerHttpClient.Object
+                elsaServerHttpClient.Object,
+                serviceBusMessageSender.Object
                 );
 
             //Act
@@ -883,6 +924,7 @@ namespace He.PipelineAssessment.UI.Tests.Services
             [Frozen] Mock<IAdminAssessmentToolWorkflowRepository> adminAssessmentToolWorkflowRepository,
             [Frozen] Mock<IDateTimeProvider> dateTimeProvider,
             [Frozen] Mock<IElsaServerHttpClient> elsaServerHttpClient,
+            [Frozen] Mock<IServiceBusMessageSender> serviceBusMessageSender,
             AssessmentIntervention intervention,
             AssessmentInterventionCommand command)
         {
@@ -900,7 +942,8 @@ namespace He.PipelineAssessment.UI.Tests.Services
                 logger.Object,
                 adminAssessmentToolWorkflowRepository.Object,
                 dateTimeProvider.Object,
-                elsaServerHttpClient.Object
+                elsaServerHttpClient.Object,
+                serviceBusMessageSender.Object
                 );
 
             //Act
@@ -922,6 +965,7 @@ namespace He.PipelineAssessment.UI.Tests.Services
             [Frozen] Mock<IAdminAssessmentToolWorkflowRepository> adminAssessmentToolWorkflowRepository,
             [Frozen] Mock<IDateTimeProvider> dateTimeProvider,
             [Frozen] Mock<IElsaServerHttpClient> elsaServerHttpClient,
+            [Frozen] Mock<IServiceBusMessageSender> serviceBusMessageSender,
             AssessmentIntervention intervention,
             AssessmentInterventionCommand command)
         {
@@ -948,7 +992,8 @@ namespace He.PipelineAssessment.UI.Tests.Services
                 logger.Object,
                 adminAssessmentToolWorkflowRepository.Object,
                 dateTimeProvider.Object,
-                elsaServerHttpClient.Object
+                elsaServerHttpClient.Object,
+                serviceBusMessageSender.Object
                 );
 
             //Act
@@ -970,6 +1015,7 @@ namespace He.PipelineAssessment.UI.Tests.Services
             [Frozen] Mock<IAdminAssessmentToolWorkflowRepository> adminAssessmentToolWorkflowRepository,
             [Frozen] Mock<IDateTimeProvider> dateTimeProvider,
             [Frozen] Mock<IElsaServerHttpClient> elsaServerHttpClient,
+            [Frozen] Mock<IServiceBusMessageSender> serviceBusMessageSender,
             AssessmentIntervention intervention,
             Exception e,
             AssessmentInterventionCommand command)
@@ -989,7 +1035,8 @@ namespace He.PipelineAssessment.UI.Tests.Services
                 logger.Object,
                 adminAssessmentToolWorkflowRepository.Object,
                 dateTimeProvider.Object,
-                elsaServerHttpClient.Object
+                elsaServerHttpClient.Object,
+                serviceBusMessageSender.Object
                 );
 
             //Act
@@ -1016,6 +1063,7 @@ namespace He.PipelineAssessment.UI.Tests.Services
             [Frozen] Mock<IAdminAssessmentToolWorkflowRepository> adminAssessmentToolWorkflowRepository,
             [Frozen] Mock<IDateTimeProvider> dateTimeProvider,
             [Frozen] Mock<IElsaServerHttpClient> elsaServerHttpClient,
+            [Frozen] Mock<IServiceBusMessageSender> serviceBusMessageSender,
             AssessmentInterventionCommand command)
         {
             //Arrange
@@ -1030,7 +1078,8 @@ namespace He.PipelineAssessment.UI.Tests.Services
                 logger.Object,
                 adminAssessmentToolWorkflowRepository.Object,
                 dateTimeProvider.Object,
-                elsaServerHttpClient.Object
+                elsaServerHttpClient.Object,
+                serviceBusMessageSender.Object
                 );
 
             //Act
@@ -1052,6 +1101,7 @@ namespace He.PipelineAssessment.UI.Tests.Services
             [Frozen] Mock<IAdminAssessmentToolWorkflowRepository> adminAssessmentToolWorkflowRepository,
             [Frozen] Mock<IDateTimeProvider> dateTimeProvider,
             [Frozen] Mock<IElsaServerHttpClient> elsaServerHttpClient,
+            [Frozen] Mock<IServiceBusMessageSender> serviceBusMessageSender,
             AssessmentIntervention intervention,
             Exception e,
             AssessmentInterventionCommand command)
@@ -1069,7 +1119,8 @@ namespace He.PipelineAssessment.UI.Tests.Services
                 logger.Object,
                 adminAssessmentToolWorkflowRepository.Object,
                 dateTimeProvider.Object,
-                elsaServerHttpClient.Object
+                elsaServerHttpClient.Object,
+                serviceBusMessageSender.Object
                 );
 
             //Act
@@ -1091,6 +1142,7 @@ namespace He.PipelineAssessment.UI.Tests.Services
             [Frozen] Mock<IAdminAssessmentToolWorkflowRepository> adminAssessmentToolWorkflowRepository,
             [Frozen] Mock<IDateTimeProvider> dateTimeProvider,
             [Frozen] Mock<IElsaServerHttpClient> elsaServerHttpClient,
+            [Frozen] Mock<IServiceBusMessageSender> serviceBusMessageSender,
             AssessmentIntervention intervention,
             AssessmentInterventionCommand command)
         {
@@ -1107,7 +1159,8 @@ namespace He.PipelineAssessment.UI.Tests.Services
                 logger.Object,
                 adminAssessmentToolWorkflowRepository.Object,
                 dateTimeProvider.Object,
-                elsaServerHttpClient.Object
+                elsaServerHttpClient.Object,
+                serviceBusMessageSender.Object
                 );
 
             //Act
@@ -1135,6 +1188,7 @@ namespace He.PipelineAssessment.UI.Tests.Services
             [Frozen] Mock<IAdminAssessmentToolWorkflowRepository> adminAssessmentToolWorkflowRepository,
             [Frozen] Mock<IDateTimeProvider> dateTimeProvider,
             [Frozen] Mock<IElsaServerHttpClient> elsaServerHttpClient,
+            [Frozen] Mock<IServiceBusMessageSender> serviceBusMessageSender,
             EditInterventionAssessorRequest request)
         {
             //Arrange
@@ -1149,7 +1203,8 @@ namespace He.PipelineAssessment.UI.Tests.Services
                 logger.Object,
                 adminAssessmentToolWorkflowRepository.Object,
                 dateTimeProvider.Object,
-                elsaServerHttpClient.Object
+                elsaServerHttpClient.Object,
+                serviceBusMessageSender.Object
                 );
 
             //Act
@@ -1171,6 +1226,7 @@ namespace He.PipelineAssessment.UI.Tests.Services
                 [Frozen] Mock<IAdminAssessmentToolWorkflowRepository> adminAssessmentToolWorkflowRepository,
                 [Frozen] Mock<IDateTimeProvider> dateTimeProvider,
                 [Frozen] Mock<IElsaServerHttpClient> elsaServerHttpClient,
+                [Frozen] Mock<IServiceBusMessageSender> serviceBusMessageSender,
                 AssessmentIntervention intervention,
                 Exception e,
                 EditInterventionAssessorRequest request)
@@ -1188,7 +1244,8 @@ namespace He.PipelineAssessment.UI.Tests.Services
                 logger.Object,
                 adminAssessmentToolWorkflowRepository.Object,
                 dateTimeProvider.Object,
-                elsaServerHttpClient.Object
+                elsaServerHttpClient.Object,
+                serviceBusMessageSender.Object
                 );
 
             //Act
@@ -1210,6 +1267,7 @@ namespace He.PipelineAssessment.UI.Tests.Services
             [Frozen] Mock<IAdminAssessmentToolWorkflowRepository> adminAssessmentToolWorkflowRepository,
             [Frozen] Mock<IDateTimeProvider> dateTimeProvider,
             [Frozen] Mock<IElsaServerHttpClient> elsaServerHttpClient,
+            [Frozen] Mock<IServiceBusMessageSender> serviceBusMessageSender,
             AssessmentIntervention intervention,
             AssessmentInterventionCommand command,
             Exception e,
@@ -1229,7 +1287,8 @@ namespace He.PipelineAssessment.UI.Tests.Services
                 logger.Object,
                 adminAssessmentToolWorkflowRepository.Object,
                 dateTimeProvider.Object,
-                elsaServerHttpClient.Object
+                elsaServerHttpClient.Object,
+                serviceBusMessageSender.Object
                 );
 
             //Act
@@ -1251,6 +1310,7 @@ namespace He.PipelineAssessment.UI.Tests.Services
                 [Frozen] Mock<IAdminAssessmentToolWorkflowRepository> adminAssessmentToolWorkflowRepository,
                 [Frozen] Mock<IDateTimeProvider> dateTimeProvider,
                 [Frozen] Mock<IElsaServerHttpClient> elsaServerHttpClient,
+                [Frozen] Mock<IServiceBusMessageSender> serviceBusMessageSender,
                 AssessmentIntervention intervention,
                 AssessmentInterventionCommand command,
                 List<InterventionReason> reasons,
@@ -1270,7 +1330,8 @@ namespace He.PipelineAssessment.UI.Tests.Services
                 logger.Object,
                 adminAssessmentToolWorkflowRepository.Object,
                 dateTimeProvider.Object,
-                elsaServerHttpClient.Object
+                elsaServerHttpClient.Object,
+                serviceBusMessageSender.Object
                 );
 
             var expectedResult = new AssessmentInterventionDto
@@ -1303,6 +1364,7 @@ namespace He.PipelineAssessment.UI.Tests.Services
                 [Frozen] Mock<IAdminAssessmentToolWorkflowRepository> adminAssessmentToolWorkflowRepository,
                 [Frozen] Mock<IDateTimeProvider> dateTimeProvider,
                 [Frozen] Mock<IElsaServerHttpClient> elsaServerHttpClient,
+                [Frozen] Mock<IServiceBusMessageSender> serviceBusMessageSender,
                 EditInterventionRequest request)
         {
             //Arrange
@@ -1317,7 +1379,8 @@ namespace He.PipelineAssessment.UI.Tests.Services
                 logger.Object,
                 adminAssessmentToolWorkflowRepository.Object,
                 dateTimeProvider.Object,
-                elsaServerHttpClient.Object
+                elsaServerHttpClient.Object,
+                serviceBusMessageSender.Object
                 );
 
             //Act
@@ -1340,6 +1403,7 @@ namespace He.PipelineAssessment.UI.Tests.Services
                 [Frozen] Mock<IAdminAssessmentToolWorkflowRepository> adminAssessmentToolWorkflowRepository,
                 [Frozen] Mock<IDateTimeProvider> dateTimeProvider,
                 [Frozen] Mock<IElsaServerHttpClient> elsaServerHttpClient,
+                [Frozen] Mock<IServiceBusMessageSender> serviceBusMessageSender,
                 AssessmentIntervention intervention,
                 EditInterventionRequest request)
         {
@@ -1357,7 +1421,8 @@ namespace He.PipelineAssessment.UI.Tests.Services
                 logger.Object,
                 adminAssessmentToolWorkflowRepository.Object,
                 dateTimeProvider.Object,
-                elsaServerHttpClient.Object
+                elsaServerHttpClient.Object,
+                serviceBusMessageSender.Object
                 );
 
             //Act
@@ -1379,6 +1444,7 @@ namespace He.PipelineAssessment.UI.Tests.Services
         [Frozen] Mock<IAdminAssessmentToolWorkflowRepository> adminAssessmentToolWorkflowRepository,
         [Frozen] Mock<IDateTimeProvider> dateTimeProvider,
         [Frozen] Mock<IElsaServerHttpClient> elsaServerHttpClient,
+        [Frozen] Mock<IServiceBusMessageSender> serviceBusMessageSender,
         AssessmentIntervention intervention,
         Exception e,
         EditInterventionRequest request)
@@ -1398,7 +1464,8 @@ namespace He.PipelineAssessment.UI.Tests.Services
                 logger.Object,
                 adminAssessmentToolWorkflowRepository.Object,
                 dateTimeProvider.Object,
-                elsaServerHttpClient.Object
+                elsaServerHttpClient.Object,
+                serviceBusMessageSender.Object
                 );
 
             //Act
@@ -1420,6 +1487,7 @@ namespace He.PipelineAssessment.UI.Tests.Services
             [Frozen] Mock<IAdminAssessmentToolWorkflowRepository> adminAssessmentToolWorkflowRepository,
             [Frozen] Mock<IDateTimeProvider> dateTimeProvider,
             [Frozen] Mock<IElsaServerHttpClient> elsaServerHttpClient,
+            [Frozen] Mock<IServiceBusMessageSender> serviceBusMessageSender,
             AssessmentIntervention intervention,
             AssessmentInterventionCommand command,
             EditInterventionRequest request)
@@ -1439,7 +1507,8 @@ namespace He.PipelineAssessment.UI.Tests.Services
                 logger.Object,
                 adminAssessmentToolWorkflowRepository.Object,
                 dateTimeProvider.Object,
-                elsaServerHttpClient.Object
+                elsaServerHttpClient.Object,
+                serviceBusMessageSender.Object
                 );
 
             var expectedDto = new AssessmentInterventionDto()
@@ -1470,6 +1539,7 @@ namespace He.PipelineAssessment.UI.Tests.Services
             [Frozen] Mock<IAdminAssessmentToolWorkflowRepository> adminAssessmentToolWorkflowRepository,
             [Frozen] Mock<IDateTimeProvider> dateTimeProvider,
             [Frozen] Mock<IElsaServerHttpClient> elsaServerHttpClient,
+            [Frozen] Mock<IServiceBusMessageSender> serviceBusMessageSender,
             LoadInterventionCheckYourAnswersAssessorRequest request)
         {
             //Arrange
@@ -1484,7 +1554,8 @@ namespace He.PipelineAssessment.UI.Tests.Services
                 logger.Object,
                 adminAssessmentToolWorkflowRepository.Object,
                 dateTimeProvider.Object,
-                elsaServerHttpClient.Object
+                elsaServerHttpClient.Object,
+                serviceBusMessageSender.Object
                 );
 
             //Act
@@ -1506,6 +1577,7 @@ namespace He.PipelineAssessment.UI.Tests.Services
             [Frozen] Mock<IAdminAssessmentToolWorkflowRepository> adminAssessmentToolWorkflowRepository,
             [Frozen] Mock<IDateTimeProvider> dateTimeProvider,
             [Frozen] Mock<IElsaServerHttpClient> elsaServerHttpClient,
+            [Frozen] Mock<IServiceBusMessageSender> serviceBusMessageSender,
             AssessmentIntervention intervention,
             Exception e,
             LoadInterventionCheckYourAnswersAssessorRequest request)
@@ -1523,7 +1595,8 @@ namespace He.PipelineAssessment.UI.Tests.Services
                 logger.Object,
                 adminAssessmentToolWorkflowRepository.Object,
                 dateTimeProvider.Object,
-                elsaServerHttpClient.Object
+                elsaServerHttpClient.Object,
+                serviceBusMessageSender.Object
                 );
 
             //Act
@@ -1545,6 +1618,7 @@ namespace He.PipelineAssessment.UI.Tests.Services
             [Frozen] Mock<IAdminAssessmentToolWorkflowRepository> adminAssessmentToolWorkflowRepository,
             [Frozen] Mock<IDateTimeProvider> dateTimeProvider,
             [Frozen] Mock<IElsaServerHttpClient> elsaServerHttpClient,
+            [Frozen] Mock<IServiceBusMessageSender> serviceBusMessageSender,
             AssessmentIntervention intervention,
             AssessmentInterventionCommand command,
             LoadInterventionCheckYourAnswersAssessorRequest request)
@@ -1562,7 +1636,8 @@ namespace He.PipelineAssessment.UI.Tests.Services
                 logger.Object,
                 adminAssessmentToolWorkflowRepository.Object,
                 dateTimeProvider.Object,
-                elsaServerHttpClient.Object
+                elsaServerHttpClient.Object,
+                serviceBusMessageSender.Object
                 );
 
             //Act
@@ -1588,6 +1663,7 @@ namespace He.PipelineAssessment.UI.Tests.Services
             [Frozen] Mock<IAdminAssessmentToolWorkflowRepository> adminAssessmentToolWorkflowRepository,
             [Frozen] Mock<IDateTimeProvider> dateTimeProvider,
             [Frozen] Mock<IElsaServerHttpClient> elsaServerHttpClient,
+            [Frozen] Mock<IServiceBusMessageSender> serviceBusMessageSender,
             LoadInterventionCheckYourAnswersRequest request)
         {
             //Arrange
@@ -1602,7 +1678,8 @@ namespace He.PipelineAssessment.UI.Tests.Services
                 logger.Object,
                 adminAssessmentToolWorkflowRepository.Object,
                 dateTimeProvider.Object,
-                elsaServerHttpClient.Object
+                elsaServerHttpClient.Object,
+                serviceBusMessageSender.Object
                 );
 
             //Act
@@ -1624,6 +1701,7 @@ namespace He.PipelineAssessment.UI.Tests.Services
     [Frozen] Mock<IAdminAssessmentToolWorkflowRepository> adminAssessmentToolWorkflowRepository,
     [Frozen] Mock<IDateTimeProvider> dateTimeProvider,
     [Frozen] Mock<IElsaServerHttpClient> elsaServerHttpClient,
+    [Frozen] Mock<IServiceBusMessageSender> serviceBusMessageSender,
     AssessmentIntervention intervention,
     Exception e,
     LoadInterventionCheckYourAnswersRequest request)
@@ -1641,7 +1719,8 @@ namespace He.PipelineAssessment.UI.Tests.Services
                 logger.Object,
                 adminAssessmentToolWorkflowRepository.Object,
                 dateTimeProvider.Object,
-                elsaServerHttpClient.Object
+                elsaServerHttpClient.Object,
+                serviceBusMessageSender.Object
                 );
 
             //Act
@@ -1663,6 +1742,7 @@ namespace He.PipelineAssessment.UI.Tests.Services
             [Frozen] Mock<IAdminAssessmentToolWorkflowRepository> adminAssessmentToolWorkflowRepository,
             [Frozen] Mock<IDateTimeProvider> dateTimeProvider,
             [Frozen] Mock<IElsaServerHttpClient> elsaServerHttpClient,
+            [Frozen] Mock<IServiceBusMessageSender> serviceBusMessageSender,
             AssessmentIntervention intervention,
             AssessmentInterventionCommand command,
             LoadInterventionCheckYourAnswersRequest request)
@@ -1680,7 +1760,8 @@ namespace He.PipelineAssessment.UI.Tests.Services
                 logger.Object,
                 adminAssessmentToolWorkflowRepository.Object,
                 dateTimeProvider.Object,
-                elsaServerHttpClient.Object
+                elsaServerHttpClient.Object,
+                serviceBusMessageSender.Object
                 );
 
             //Act
@@ -1708,6 +1789,7 @@ namespace He.PipelineAssessment.UI.Tests.Services
             [Frozen] Mock<IAdminAssessmentToolWorkflowRepository> adminAssessmentToolWorkflowRepository,
             [Frozen] Mock<IDateTimeProvider> dateTimeProvider,
             [Frozen] Mock<IElsaServerHttpClient> elsaServerHttpClient,
+            [Frozen] Mock<IServiceBusMessageSender> serviceBusMessageSender,
             string workflowInstanceId)
         {
             //Arrange
@@ -1722,7 +1804,8 @@ namespace He.PipelineAssessment.UI.Tests.Services
                 logger.Object,
                 adminAssessmentToolWorkflowRepository.Object,
                 dateTimeProvider.Object,
-                elsaServerHttpClient.Object
+                elsaServerHttpClient.Object,
+                serviceBusMessageSender.Object
                 );
 
             //Act
@@ -1744,6 +1827,7 @@ namespace He.PipelineAssessment.UI.Tests.Services
             [Frozen] Mock<IAdminAssessmentToolWorkflowRepository> adminAssessmentToolWorkflowRepository,
             [Frozen] Mock<IDateTimeProvider> dateTimeProvider,
             [Frozen] Mock<IElsaServerHttpClient> elsaServerHttpClient,
+            [Frozen] Mock<IServiceBusMessageSender> serviceBusMessageSender,
             AssessmentToolWorkflowInstance instance,
             string workflowInstanceId)
         {
@@ -1762,7 +1846,8 @@ namespace He.PipelineAssessment.UI.Tests.Services
                 logger.Object,
                 adminAssessmentToolWorkflowRepository.Object,
                 dateTimeProvider.Object,
-                elsaServerHttpClient.Object
+                elsaServerHttpClient.Object,
+                serviceBusMessageSender.Object
                 );
 
             //Act
@@ -1784,6 +1869,7 @@ namespace He.PipelineAssessment.UI.Tests.Services
             [Frozen] Mock<IAdminAssessmentToolWorkflowRepository> adminAssessmentToolWorkflowRepository,
             [Frozen] Mock<IDateTimeProvider> dateTimeProvider,
             [Frozen] Mock<IElsaServerHttpClient> elsaServerHttpClient,
+            [Frozen] Mock<IServiceBusMessageSender> serviceBusMessageSender,
             AssessmentToolWorkflowInstance instance,
             List<AssessmentToolWorkflow> workflows,
             string workflowInstanceId)
@@ -1802,7 +1888,8 @@ namespace He.PipelineAssessment.UI.Tests.Services
                 logger.Object,
                 adminAssessmentToolWorkflowRepository.Object,
                 dateTimeProvider.Object,
-                elsaServerHttpClient.Object
+                elsaServerHttpClient.Object,
+                serviceBusMessageSender.Object
                 );
 
             //Act
@@ -1828,6 +1915,7 @@ namespace He.PipelineAssessment.UI.Tests.Services
             [Frozen] Mock<IAdminAssessmentToolWorkflowRepository> adminAssessmentToolWorkflowRepository,
             [Frozen] Mock<IDateTimeProvider> dateTimeProvider,
             [Frozen] Mock<IElsaServerHttpClient> elsaServerHttpClient,
+            [Frozen] Mock<IServiceBusMessageSender> serviceBusMessageSender,
             string workflowInstanceId)
         {
             //Arrange
@@ -1842,7 +1930,8 @@ namespace He.PipelineAssessment.UI.Tests.Services
                 logger.Object,
                 adminAssessmentToolWorkflowRepository.Object,
                 dateTimeProvider.Object,
-                elsaServerHttpClient.Object
+                elsaServerHttpClient.Object,
+                serviceBusMessageSender.Object
                 );
 
             //Act
@@ -1864,6 +1953,7 @@ namespace He.PipelineAssessment.UI.Tests.Services
             [Frozen] Mock<IAdminAssessmentToolWorkflowRepository> adminAssessmentToolWorkflowRepository,
             [Frozen] Mock<IDateTimeProvider> dateTimeProvider,
             [Frozen] Mock<IElsaServerHttpClient> elsaServerHttpClient,
+            [Frozen] Mock<IServiceBusMessageSender> serviceBusMessageSender,
             AssessmentToolWorkflowInstance instance,
             string workflowInstanceId)
         {
@@ -1882,7 +1972,8 @@ namespace He.PipelineAssessment.UI.Tests.Services
                 logger.Object,
                 adminAssessmentToolWorkflowRepository.Object,
                 dateTimeProvider.Object,
-                elsaServerHttpClient.Object
+                elsaServerHttpClient.Object,
+                serviceBusMessageSender.Object
                 );
 
             //Act
@@ -1904,6 +1995,7 @@ namespace He.PipelineAssessment.UI.Tests.Services
             [Frozen] Mock<IAdminAssessmentToolWorkflowRepository> adminAssessmentToolWorkflowRepository,
             [Frozen] Mock<IDateTimeProvider> dateTimeProvider,
             [Frozen] Mock<IElsaServerHttpClient> elsaServerHttpClient,
+            [Frozen] Mock<IServiceBusMessageSender> serviceBusMessageSender,
             AssessmentToolWorkflowInstance instance,
             List<AssessmentToolWorkflow> workflows,
             string workflowInstanceId)
@@ -1922,7 +2014,8 @@ namespace He.PipelineAssessment.UI.Tests.Services
                 logger.Object,
                 adminAssessmentToolWorkflowRepository.Object,
                 dateTimeProvider.Object,
-                elsaServerHttpClient.Object
+                elsaServerHttpClient.Object,
+                serviceBusMessageSender.Object
                 );
 
             //Act
@@ -1948,6 +2041,7 @@ namespace He.PipelineAssessment.UI.Tests.Services
             [Frozen] Mock<IAdminAssessmentToolWorkflowRepository> adminAssessmentToolWorkflowRepository,
             [Frozen] Mock<IDateTimeProvider> dateTimeProvider,
             [Frozen] Mock<IElsaServerHttpClient> elsaServerHttpClient,
+            [Frozen] Mock<IServiceBusMessageSender> serviceBusMessageSender,
             string workflowInstanceId)
         {
             //Arrange
@@ -1964,7 +2058,8 @@ namespace He.PipelineAssessment.UI.Tests.Services
                 logger.Object,
                 adminAssessmentToolWorkflowRepository.Object,
                 dateTimeProvider.Object,
-                elsaServerHttpClient.Object
+                elsaServerHttpClient.Object,
+                serviceBusMessageSender.Object
                 );
 
             //Act
@@ -1986,6 +2081,7 @@ namespace He.PipelineAssessment.UI.Tests.Services
             [Frozen] Mock<IAdminAssessmentToolWorkflowRepository> adminAssessmentToolWorkflowRepository,
             [Frozen] Mock<IDateTimeProvider> dateTimeProvider,
             [Frozen] Mock<IElsaServerHttpClient> elsaServerHttpClient,
+            [Frozen] Mock<IServiceBusMessageSender> serviceBusMessageSender,
             List<AssessmentToolWorkflow> workflows,
             string workflowInstanceId)
         {
@@ -2002,7 +2098,8 @@ namespace He.PipelineAssessment.UI.Tests.Services
                 logger.Object,
                 adminAssessmentToolWorkflowRepository.Object,
                 dateTimeProvider.Object,
-                elsaServerHttpClient.Object
+                elsaServerHttpClient.Object,
+                serviceBusMessageSender.Object
                 );
 
             //Act
@@ -2028,6 +2125,7 @@ namespace He.PipelineAssessment.UI.Tests.Services
     [Frozen] Mock<IAdminAssessmentToolWorkflowRepository> adminAssessmentToolWorkflowRepository,
     [Frozen] Mock<IDateTimeProvider> dateTimeProvider,
     [Frozen] Mock<IElsaServerHttpClient> elsaServerHttpClient,
+    [Frozen] Mock<IServiceBusMessageSender> serviceBusMessageSender,
     AssessmentInterventionCommand command)
         {
             //Arrange
@@ -2042,7 +2140,8 @@ namespace He.PipelineAssessment.UI.Tests.Services
                 logger.Object,
                 adminAssessmentToolWorkflowRepository.Object,
                 dateTimeProvider.Object,
-                elsaServerHttpClient.Object
+                elsaServerHttpClient.Object,
+                serviceBusMessageSender.Object
                 );
 
             //Act
@@ -2067,6 +2166,7 @@ namespace He.PipelineAssessment.UI.Tests.Services
             [Frozen] Mock<IAdminAssessmentToolWorkflowRepository> adminAssessmentToolWorkflowRepository,
             [Frozen] Mock<IDateTimeProvider> dateTimeProvider,
             [Frozen] Mock<IElsaServerHttpClient> elsaServerHttpClient,
+            [Frozen] Mock<IServiceBusMessageSender> serviceBusMessageSender,
             AssessmentIntervention intervention,
             AssessmentInterventionCommand command)
         {
@@ -2086,7 +2186,8 @@ namespace He.PipelineAssessment.UI.Tests.Services
                 logger.Object,
                 adminAssessmentToolWorkflowRepository.Object,
                 dateTimeProvider.Object,
-                elsaServerHttpClient.Object
+                elsaServerHttpClient.Object,
+                serviceBusMessageSender.Object
                 );
 
             //Act
@@ -2114,6 +2215,7 @@ namespace He.PipelineAssessment.UI.Tests.Services
                 [Frozen] Mock<IAdminAssessmentToolWorkflowRepository> adminAssessmentToolWorkflowRepository,
                 [Frozen] Mock<IDateTimeProvider> dateTimeProvider,
                 [Frozen] Mock<IElsaServerHttpClient> elsaServerHttpClient,
+                [Frozen] Mock<IServiceBusMessageSender> serviceBusMessageSender,
                 AssessmentIntervention intervention,
                 AssessmentInterventionCommand command)
         {
@@ -2134,7 +2236,8 @@ namespace He.PipelineAssessment.UI.Tests.Services
                 logger.Object,
                 adminAssessmentToolWorkflowRepository.Object,
                 dateTimeProvider.Object,
-                elsaServerHttpClient.Object
+                elsaServerHttpClient.Object,
+                serviceBusMessageSender.Object
                 );
 
             //Act
@@ -2156,6 +2259,7 @@ namespace He.PipelineAssessment.UI.Tests.Services
         [Frozen] Mock<IAdminAssessmentToolWorkflowRepository> adminAssessmentToolWorkflowRepository,
         [Frozen] Mock<IDateTimeProvider> dateTimeProvider,
         [Frozen] Mock<IElsaServerHttpClient> elsaServerHttpClient,
+        [Frozen] Mock<IServiceBusMessageSender> serviceBusMessageSender,
         AssessmentIntervention intervention,
         List<AssessmentToolWorkflowInstance> instances,
         AssessmentInterventionCommand command)
@@ -2179,7 +2283,8 @@ namespace He.PipelineAssessment.UI.Tests.Services
                 logger.Object,
                 adminAssessmentToolWorkflowRepository.Object,
                 dateTimeProvider.Object,
-                elsaServerHttpClient.Object
+                elsaServerHttpClient.Object,
+                serviceBusMessageSender.Object
                 );
 
             //Act
@@ -2219,6 +2324,7 @@ namespace He.PipelineAssessment.UI.Tests.Services
             [Frozen] Mock<IAdminAssessmentToolWorkflowRepository> adminAssessmentToolWorkflowRepository,
             [Frozen] Mock<IDateTimeProvider> dateTimeProvider,
             [Frozen] Mock<IElsaServerHttpClient> elsaServerHttpClient,
+            [Frozen] Mock<IServiceBusMessageSender> serviceBusMessageSender,
             AssessmentIntervention intervention,
             List<AssessmentToolWorkflowInstance> instances,
             AssessmentInterventionCommand command)
@@ -2245,7 +2351,8 @@ namespace He.PipelineAssessment.UI.Tests.Services
                 logger.Object,
                 adminAssessmentToolWorkflowRepository.Object,
                 dateTimeProvider.Object,
-                elsaServerHttpClient.Object
+                elsaServerHttpClient.Object,
+                serviceBusMessageSender.Object
                 );
 
             //Act
@@ -2285,6 +2392,7 @@ namespace He.PipelineAssessment.UI.Tests.Services
                 [Frozen] Mock<IAdminAssessmentToolWorkflowRepository> adminAssessmentToolWorkflowRepository,
                 [Frozen] Mock<IDateTimeProvider> dateTimeProvider,
                 [Frozen] Mock<IElsaServerHttpClient> elsaServerHttpClient,
+                [Frozen] Mock<IServiceBusMessageSender> serviceBusMessageSender,
                 AssessmentIntervention intervention,
                 List<AssessmentToolWorkflowInstance> instances,
                 AssessmentInterventionCommand command)
@@ -2309,7 +2417,8 @@ namespace He.PipelineAssessment.UI.Tests.Services
                 logger.Object,
                 adminAssessmentToolWorkflowRepository.Object,
                 dateTimeProvider.Object,
-                elsaServerHttpClient.Object
+                elsaServerHttpClient.Object,
+                serviceBusMessageSender.Object
                 );
 
             //Act

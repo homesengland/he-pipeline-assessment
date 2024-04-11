@@ -11,7 +11,7 @@ namespace Elsa.CustomActivities.Activities.SinglePipelineDataSource
 {
     [Action(
         Category = "Homes England Data",
-        Description = "Get Single Pipeline Data Source",
+        Description = "Get Single Pipeline Data Source (IDCT)",
         Outcomes = new[] { OutcomeNames.Done }
     )]
     public class SinglePipelineDataSource : Activity

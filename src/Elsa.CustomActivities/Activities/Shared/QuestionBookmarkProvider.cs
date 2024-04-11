@@ -55,7 +55,8 @@ namespace Elsa.CustomActivities.Activities.Shared
                 ActivityTypeConstants.AgricultureLandValues,
                 ActivityTypeConstants.OfficeLandValues,
                 ActivityTypeConstants.AgricultureLandValues,
-                ActivityTypeConstants.ReturnToActivity
+                ActivityTypeConstants.ReturnToActivity,
+                ActivityTypeConstants.DataverseDataSource
             };
         }
     }
