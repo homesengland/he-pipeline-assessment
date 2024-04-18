@@ -9,8 +9,6 @@
         </span>
     </summary>
     <div class="govuk-details__text">
-        @if (Model.EnhancedGuidance != null && Model.EnhancedGuidance.Any())
-        {
             @foreach (var text in Model.EnhancedGuidance)
             {
                 if (text.DisplayOnPage && text.Text.Any(x => x.DisplayOnPage ))

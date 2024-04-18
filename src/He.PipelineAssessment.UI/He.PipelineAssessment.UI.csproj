@@ -104,5 +104,4 @@
   <ItemGroup>
     <Folder Include="Integration\UpsertProject\" />
   </ItemGroup>
-
 </Project>

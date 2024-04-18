@@ -30,6 +30,10 @@ namespace Elsa.CustomActivities.Tests.Activities.QuestionScreen.Helpers
             //Act
             var result = await sut.AnswerEquals(activityExecutionContext, workflowName, activityName, questionId, stringAnswers);
 
+            //Assert
+            Assert.False(result);
+        }
+
         [Theory]
         [AutoMoqData]
         public async Task AnswerEquals_ReturnsFalse_GivenChoicesAreNull(
@@ -281,7 +285,7 @@ namespace Elsa.CustomActivities.Tests.Activities.QuestionScreen.Helpers
         {
             //Arrange
             question.QuestionType = "NotACheckbox";
-            elsaCustomRepository.Setup(x => x.GetQuestionByWorkflowAndActivityName(activityName, workflowName,correlationId, It.IsAny<string>(), CancellationToken.None)).ReturnsAsync(question);
+            elsaCustomRepository.Setup(x => x.GetQuestionByWorkflowAndActivityName(activityName, workflowName, correlationId, It.IsAny<string>(), CancellationToken.None)).ReturnsAsync(question);
 
             //Act
             var result = await sut.AnswerCount(correlationId, workflowName, activityName, questionId);

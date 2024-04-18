@@ -87,25 +87,23 @@ namespace Elsa.CustomActivities.Activities.QuestionScreen.Helpers
                     var answers = question.Answers
                         .Where(x => x.Choice?.QuestionChoiceGroup?.GroupIdentifier == groupId).ToList();
 
-                            foreach (var item in choiceIdsToCheck)
+                    foreach (var item in choiceIdsToCheck)
+                    {
+                        var answerFound = answers.FirstOrDefault(x => x.Choice?.Identifier == item);
+                        if (answerFound != null)
+                        {
+                            if (containsAny)
                             {
-                                var answerFound = answers.FirstOrDefault(x => x.Choice?.Identifier == item);
-                                if (answerFound != null)
-                                {
-                                    if (containsAny)
-                                    {
-                                        return true;
-                                    }
-                                    else
-                                    {
-                                        result = true;
-                                    }
-                                }
-                                else
-                                {
-                                    result = false;
-                                }
+                                return true;
                             }
+                            else
+                            {
+                                result = true;
+                            }
+                        }
+                        else
+                        {
+                            result = false;
                         }
                     }
                 }

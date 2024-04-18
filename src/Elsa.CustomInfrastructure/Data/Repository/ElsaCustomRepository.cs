@@ -90,24 +90,6 @@ namespace Elsa.CustomInfrastructure.Data.Repository
             return result;
         }
 
-        public async Task<Question?> GetQuestionByWorkflowAndActivityName(string activityName, string workflowName, string correlationId, string questionID,
-    CancellationToken cancellationToken)
-        {
-            var result = await _dbContext.Set<Question>()
-                .Where(x =>
-                    x.CorrelationId == correlationId &&
-                    x.ActivityName == activityName &&
-                    x.WorkflowName == workflowName &&
-                    x.QuestionId == questionID &&
-                    (!x.IsArchived.HasValue || !x.IsArchived.Value))
-                .Include(x => x.Choices)!.ThenInclude(y => y.QuestionChoiceGroup)
-                .Include(x => x.Answers)
-                .OrderByDescending(x => x.CreatedDateTime)
-                .FirstOrDefaultAsync(cancellationToken: cancellationToken);
-
-            return result;
-        }
-
         public async Task<Question?> GetQuestionById(int id)
         {
             var result = await _dbContext.Set<Question>().FirstOrDefaultAsync(x => x.Id == id);
@@ -219,7 +201,7 @@ namespace Elsa.CustomInfrastructure.Data.Repository
         public async Task SetWorkflowInstanceResult(string workflowInstanceId, string result, CancellationToken cancellationToken = default)
         {
             var workflowInstance = _dbContext.Set<QuestionWorkflowInstance>().Where(x => x.WorkflowInstanceId == workflowInstanceId).ToList();
-            foreach(var workflow in workflowInstance)
+            foreach (var workflow in workflowInstance)
             {
                 workflow.Result = result;
             }
@@ -254,13 +236,13 @@ namespace Elsa.CustomInfrastructure.Data.Repository
         public async Task<CustomActivityNavigation?> GetLatestCustomActivityNavigation(string workflowInstanceId, CancellationToken cancellationToken = default)
         {
             return await _dbContext.Set<CustomActivityNavigation>()
-                .OrderByDescending(x=>x.Id)
-                .FirstOrDefaultAsync(x=>x.WorkflowInstanceId == workflowInstanceId, cancellationToken);
+                .OrderByDescending(x => x.Id)
+                .FirstOrDefaultAsync(x => x.WorkflowInstanceId == workflowInstanceId, cancellationToken);
         }
 
         public async Task ArchiveDataDictionaryItem(int id, bool isArchived, CancellationToken cancellationToken)
         {
-            var items = _dbContext.Set<DataDictionary>().Where(x => x.Id== id);
+            var items = _dbContext.Set<DataDictionary>().Where(x => x.Id == id);
             foreach (var item in items)
             {
                 item.IsArchived = isArchived;
@@ -268,7 +250,7 @@ namespace Elsa.CustomInfrastructure.Data.Repository
             _dbContext.UpdateRange(items);
             await SaveChanges(cancellationToken);
         }
-        public async Task ArchiveDataDictionaryGroup(int id, bool isArchived,CancellationToken cancellationToken)
+        public async Task ArchiveDataDictionaryGroup(int id, bool isArchived, CancellationToken cancellationToken)
         {
             var items = _dbContext.Set<DataDictionaryGroup>().Where(x => x.Id == id);
             foreach (var item in items)
@@ -311,7 +293,7 @@ namespace Elsa.CustomInfrastructure.Data.Repository
         public async Task UpdateDataDictionaryItem(DataDictionary item, CancellationToken cancellationToken)
         {
             var record = _dbContext.Set<DataDictionary>().Where(x => x.Id == item.Id).FirstOrDefault();
-            if(record != null)
+            if (record != null)
             {
                 record.Name = item.Name ?? record.Name;
                 record.LegacyName = item.LegacyName ?? record.LegacyName;
@@ -320,7 +302,7 @@ namespace Elsa.CustomInfrastructure.Data.Repository
                 record.LastModifiedDateTime = DateTime.UtcNow;
                 record.Description = item!.Description;
                 record.DataDictionaryGroupId = record.DataDictionaryGroupId;
-                    record.IsArchived = item.IsArchived;
+                record.IsArchived = item.IsArchived;
                 _dbContext.Set<DataDictionary>().Update(record);
             }
             await SaveChanges(cancellationToken);
