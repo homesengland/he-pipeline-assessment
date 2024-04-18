@@ -1,7 +1,6 @@
 ﻿using He.PipelineAssessment.Tests.Common;
 using He.PipelineAssessment.UI.Features.Admin.AssessmentToolManagement.Commands.CreateAssessmentToolWorkflow;
 using He.PipelineAssessment.UI.Features.Admin.AssessmentToolManagement.Mappers;
-using He.PipelineAssessment.UI.Features.Workflow.QuestionScreenSaveAndContinue;
 using Xunit;
 
 namespace He.PipelineAssessment.UI.Tests.Features.Admin.AssessmentToolManagement.Mappers
@@ -29,6 +28,8 @@ namespace He.PipelineAssessment.UI.Tests.Features.Admin.AssessmentToolManagement
             Assert.Equal(assessmentToolWorkflowCommand.IsLatest, result.IsLatest);
             Assert.Equal(assessmentToolWorkflowCommand.WorkflowDefinitionId, result.WorkflowDefinitionId);
             Assert.Equal(assessmentToolWorkflowCommand.Name, result.Name);
+            Assert.Equal(assessmentToolWorkflowCommand.IsVariation, result.IsVariation);
+            Assert.Equal(assessmentToolWorkflowCommand.IsLast, result.IsLast);
         }
     }
 }

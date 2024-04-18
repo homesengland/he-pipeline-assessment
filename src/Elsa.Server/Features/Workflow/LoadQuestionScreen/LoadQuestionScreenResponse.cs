@@ -1,6 +1,7 @@
 ﻿using Elsa.CustomActivities.Activities.Common;
 using Elsa.CustomModels;
 using Elsa.CustomWorkflow.Sdk;
+using FluentValidation.Results;
 
 namespace Elsa.Server.Features.Workflow.LoadQuestionScreen
 {
@@ -45,6 +46,10 @@ namespace Elsa.Server.Features.Workflow.LoadQuestionScreen
         public bool ReevaluatePrepopulatedAnswers { get; set; }
         public List<Answer> Answers { get; set; } = new();
         public bool HideQuestion { get; set; }
+
+       // public ValidationResult Validations { get; set; } = new ValidationResult();
+
+        //public bool IsValid { get; set; }
 
         public bool HasAnswers()
         {

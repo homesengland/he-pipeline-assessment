@@ -26,12 +26,14 @@
     IsBullet = x.IsBullets,
     IsGuidance = x.IsGuidance,
     IsCollapsed = x.IsCollapsed,
+    DisplayOnPage = x.DisplayOnPage,
     Text = x.InformationTextList.Select(y => new InformationText {
         Text = y.Text,
         IsHyperlink = y.IsHyperlink,
         IsParagraph = y.IsParagraph,
         Url = y.Url,
-        IsBold = y.IsBold
+        IsBold = y.IsBold,
+        DisplayOnPage = y.DisplayOnPage
         }).ToList()
     }).ToList()
     })
@@ -48,5 +50,10 @@
 
 @if (Model.IsLatestSubmittedWorkflow)
 {
-    @await Html.PartialAsync("_InterventionOptions.cshtml", Model.Data.WorkflowInstanceId)
+    @await Html.PartialAsync("_InterventionOptions.cshtml", new InterventionOptions
+           {
+                WorkflowInstanceId = Model.Data.WorkflowInstanceId,
+                IsVariationAllowed = Model.IsVariationAllowed,
+                IsAmendableWorkflow = Model.IsAmendableWorkflow
+           })
 }

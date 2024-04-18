@@ -29,7 +29,7 @@ namespace He.PipelineAssessment.UI.Tests.Features.Admin.AssessmentToolManagement
                 await Assert.ThrowsAsync<ApplicationException>(() => sut.Handle(updateAssessmentToolWorkflowCommand, CancellationToken.None));
 
             //Assert          
-            Assert.Equal($"Unable to update assessment tool workflow. AssessmentToolWoirkflowId: {updateAssessmentToolWorkflowCommand.Id}", result.Message);
+            Assert.Equal($"Unable to update assessment tool workflow. AssessmentToolWorkflowId: {updateAssessmentToolWorkflowCommand.Id}", result.Message);
         }
 
         [Theory]
@@ -51,7 +51,7 @@ namespace He.PipelineAssessment.UI.Tests.Features.Admin.AssessmentToolManagement
 
             //Assert          
             //Assert          
-            Assert.Equal($"Unable to update assessment tool workflow. AssessmentToolWoirkflowId: {updateAssessmentToolWorkflowCommand.Id}", result.Message);
+            Assert.Equal($"Unable to update assessment tool workflow. AssessmentToolWorkflowId: {updateAssessmentToolWorkflowCommand.Id}", result.Message);
         }
 
         [Theory]
@@ -79,7 +79,12 @@ namespace He.PipelineAssessment.UI.Tests.Features.Admin.AssessmentToolManagement
                     y.WorkflowDefinitionId == updateAssessmentToolWorkflowCommand.WorkflowDefinitionId &&
                     y.IsFirstWorkflow == updateAssessmentToolWorkflowCommand.IsFirstWorkflow &&
                     y.Name == updateAssessmentToolWorkflowCommand.Name && 
-                    y.IsEconomistWorkflow == updateAssessmentToolWorkflowCommand.IsEconomistWorkflow)), Times.Once);
+                    y.IsEconomistWorkflow == updateAssessmentToolWorkflowCommand.IsEconomistWorkflow &&
+                    y.IsVariation == updateAssessmentToolWorkflowCommand.IsVariation &&
+                    y.IsAmendable == updateAssessmentToolWorkflowCommand.IsAmendableWorkflow &&
+                    y.IsLast == updateAssessmentToolWorkflowCommand.IsLast &&
+                    y.IsEarlyStage == updateAssessmentToolWorkflowCommand.IsEarlyStage 
+                    )), Times.Once);
             Assert.Equal(2, result);
         }
     }

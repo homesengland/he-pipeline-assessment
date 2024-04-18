@@ -1,50 +1,25 @@
-﻿using He.PipelineAssessment.Infrastructure.Repository;
-using He.PipelineAssessment.Models;
-using He.PipelineAssessment.UI.Common.Exceptions;
-using He.PipelineAssessment.UI.Features.Intervention;
+﻿using He.PipelineAssessment.UI.Features.Intervention;
+using He.PipelineAssessment.UI.Services;
 using MediatR;
-using static Microsoft.EntityFrameworkCore.DbLoggerCategory.Database;
 
 namespace He.PipelineAssessment.UI.Features.Override.EditOverride
 {
     public class EditOverrideRequestHandler : IRequestHandler<EditOverrideRequest, AssessmentInterventionDto>
     {
-
+        private readonly IInterventionService _interventionService;
         private readonly IAssessmentInterventionMapper _mapper;
-        private readonly IAssessmentRepository _repository;
-        private readonly IAdminAssessmentToolWorkflowRepository _adminAssessmentToolWorkflowRepository;
-        private readonly ILogger<EditOverrideRequestHandler> _logger;
 
-        public EditOverrideRequestHandler(IAssessmentInterventionMapper mapper,
-            IAssessmentRepository repo, IAdminAssessmentToolWorkflowRepository adminAssessmentToolWorkflowRepository,
-            ILogger<EditOverrideRequestHandler> logger)
+        public EditOverrideRequestHandler(IInterventionService interventionService, IAssessmentInterventionMapper mapper)
         {
+            _interventionService = interventionService;
             _mapper = mapper;
-            _repository = repo;
-            _adminAssessmentToolWorkflowRepository = adminAssessmentToolWorkflowRepository;
-            _logger = logger;
         }
         public async Task<AssessmentInterventionDto> Handle(EditOverrideRequest request, CancellationToken cancellationToken)
         {
-            AssessmentIntervention? intervention = await _repository.GetAssessmentIntervention(request.InterventionId);
-            if (intervention == null)
-            {
-                throw new NotFoundException($"Assessment Intervention with Id {request.InterventionId} not found");
-            }
-            AssessmentInterventionCommand command = _mapper.AssessmentInterventionCommandFromAssessmentIntervention(intervention);
-            List<AssessmentToolWorkflow> assessmentToolWorkflows =
-                await _adminAssessmentToolWorkflowRepository.GetAssessmentToolWorkflowsForOverride(intervention.AssessmentToolWorkflowInstance
-                    .AssessmentToolWorkflow.AssessmentTool.Order);
-            if (assessmentToolWorkflows == null || !assessmentToolWorkflows.Any())
-            {
-                throw new NotFoundException($"No suitable assessment tool workflows found for override");
-            }
-            var dto = new AssessmentInterventionDto
-            {
-                AssessmentInterventionCommand = command,
-                TargetWorkflowDefinitions =
-                    _mapper.TargetWorkflowDefinitionsFromAssessmentToolWorkflows(assessmentToolWorkflows)
-            };
+            var dto = await _interventionService.EditInterventionRequest(request);
+            var assessmentToolWorkflows = await
+                _interventionService.GetAssessmentToolWorkflowsForOverride(dto.AssessmentInterventionCommand.WorkflowInstanceId);
+            dto.TargetWorkflowDefinitions = _mapper.TargetWorkflowDefinitionsFromAssessmentToolWorkflows(assessmentToolWorkflows, dto.AssessmentInterventionCommand.SelectedWorkflowDefinitions);
             return dto;
         }
     }

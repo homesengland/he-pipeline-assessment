@@ -18,15 +18,19 @@ namespace He.PipelineAssessment.Data.RegionalFigs
             _logger = logger;
         }
 
-        public async Task<string?> GetRegionalFigsData(string region, string appraisalYear)
+        public async Task<string?> GetRegionalFigsData(string region, string? appraisalYear = null)
         {
             string? data = null;
-            string whereClause = $"region='{region}' AND appraisal_year='{appraisalYear}'";
+            string whereClause = $"region='{region}'";
+            if(appraisalYear != null)
+            {
+                whereClause += $"AND appraisal_year='{appraisalYear}'";
+            }
             string outFields = "*";
 
             var relativeUri = $"query?where={whereClause}&outFields={outFields}&f=json";
 
-            using (var response = await _httpClientFactory.CreateClient("RegionalFigsClient")
+            using (var response = await _httpClientFactory.CreateClient(ClientConstants.RegionalFigsClient)
                        .GetAsync(relativeUri)
                        .ConfigureAwait(false))
             {

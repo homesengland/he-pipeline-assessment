@@ -6,4 +6,5 @@ export class StoreConfig {
   useRefreshTokens: boolean = true;
   useRefreshTokensFallback: boolean = true;
   monacoLibPath: string = "";
+  dataDictionaryIntellisense: string = "";
 }

@@ -6,13 +6,18 @@
         public const string CheckYourAnswersScreen = "CheckYourAnswersScreen";
         public const string ConfirmationScreen = "ConfirmationScreen";
         public const string PotScoreCalculation = "PotScore";
-
         public const string HousingNeedDataSource = "HousingNeedDataSource";
         public const string PCSProfileDataSource = "PCSProfileDataSource";
         public const string SinglePipelineDataSource = "SinglePipelineDataSource";
+        public const string SinglePipelineExtendedDataSource = "SinglePipelineExtendedDataSource";
         public const string VFMDataSource = "VFMDataSource";
         public const string RegionalIPUDataSource = "RegionalIPUDataSource";
         public const string RegionalFigsDataSource = "RegionalFigsDataSource";
+        public const string LandValues = "LandValueDataSource";
+        public const string AgricultureLandValues = "AgricultureLandValueDataSource";
+        public const string OfficeLandValues = "OfficeLandValueDataSource";
+        public const string ReturnToActivity = "ReturnToActivity";
+        public const string DataverseDataSource = "DataverseDataSource";
     }
 
     public class QuestionTypeConstants

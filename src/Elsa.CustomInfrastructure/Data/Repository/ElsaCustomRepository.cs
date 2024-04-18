@@ -1,5 +1,6 @@
 ﻿using Elsa.CustomModels;
 using Microsoft.EntityFrameworkCore;
+using System.Text.RegularExpressions;
 using System.Threading;
 
 namespace Elsa.CustomInfrastructure.Data.Repository
@@ -55,20 +56,37 @@ namespace Elsa.CustomInfrastructure.Data.Repository
             return list;
         }
 
-        public async Task<Question?> GetQuestionByCorrelationId(string activityId, string correlationId, string questionID,
-            CancellationToken cancellationToken)
+        public async Task<Question?> GetQuestionByWorkflowAndActivityName(string activityName, string workflowName, string correlationId, string questionID,
+    CancellationToken cancellationToken)
         {
             var result = await _dbContext.Set<Question>()
-                .Where(x => 
-                    x.ActivityId == activityId && 
-                    x.CorrelationId == correlationId && 
-                    x.QuestionId == questionID && 
+                .Where(x =>
+                    x.CorrelationId == correlationId &&
+                    x.ActivityName == activityName &&
+                    x.WorkflowName == workflowName &&
+                    x.QuestionId == questionID &&
                     (!x.IsArchived.HasValue || !x.IsArchived.Value))
                 .Include(x => x.Choices)!.ThenInclude(y => y.QuestionChoiceGroup)
                 .Include(x => x.Answers)
                 .OrderByDescending(x => x.CreatedDateTime)
                 .FirstOrDefaultAsync(cancellationToken: cancellationToken);
-           
+
+            return result;
+        }
+
+        public async Task<Question?> GetQuestionByDataDictionary(string correlationId, int dataDictionaryId,
+            CancellationToken cancellationToken)
+        {
+            var result = await _dbContext.Set<Question>()
+                .Where(x =>
+                    x.CorrelationId == correlationId &&
+                    x.DataDictionaryId == dataDictionaryId &&
+                    (!x.IsArchived.HasValue || !x.IsArchived.Value))
+                .Include(x => x.Choices)!.ThenInclude(y => y.QuestionChoiceGroup)
+                .Include(x => x.Answers)
+                .OrderByDescending(x => x.CreatedDateTime)
+                .FirstOrDefaultAsync(cancellationToken: cancellationToken);
+
             return result;
         }
 
@@ -137,15 +155,32 @@ namespace Elsa.CustomInfrastructure.Data.Repository
         public async Task<List<PotScoreOption>> GetPotScoreOptionsAsync(CancellationToken cancellationToken) =>
             await _dbContext.Set<PotScoreOption>().Where(x => x.IsActive).ToListAsync(cancellationToken);
 
-        public async Task<List<QuestionDataDictionary>> GetQuestionDataDictionaryListAsync(CancellationToken cancellationToken = default)
+        public async Task<List<DataDictionary>> GetDataDictionaryListAsync(bool includeArchived = false, CancellationToken cancellationToken = default)
         {
-            var result = await _dbContext.Set<QuestionDataDictionary>().Include(x => x.Group).ToListAsync(cancellationToken);
-            return result;
+            if (!includeArchived)
+            {
+                var result = await _dbContext.Set<DataDictionary>().Include(x => x.Group).Where(x => !x.IsArchived).ToListAsync(cancellationToken);
+                return result;
+            }
+            else
+            {
+                var result = await _dbContext.Set<DataDictionary>().Include(x => x.Group).ToListAsync(cancellationToken);
+                return result;
+            }
+
         }
 
-        public async Task<List<QuestionDataDictionaryGroup>> GetQuestionDataDictionaryGroupsAsync(CancellationToken cancellationToken = default)
+        public async Task<List<DataDictionaryGroup>> GetDataDictionaryGroupsAsync(bool includeArchived = false, CancellationToken cancellationToken = default)
         {
-            var result = await _dbContext.Set<QuestionDataDictionaryGroup>().Include(x => x.QuestionDataDictionaryList).ToListAsync(cancellationToken);
+            var result = new List<DataDictionaryGroup>();
+            if (!includeArchived)
+            {
+                result = await _dbContext.Set<DataDictionaryGroup>().Include(x => x.DataDictionaryList.Where(x => !x.IsArchived)).Where(x => !x.IsArchived).ToListAsync(cancellationToken);
+            }
+            else
+            {
+                result = await _dbContext.Set<DataDictionaryGroup>().Include(x => x.DataDictionaryList).ToListAsync(cancellationToken);
+            }
             return result;
 
         }
@@ -221,6 +256,74 @@ namespace Elsa.CustomInfrastructure.Data.Repository
             return await _dbContext.Set<CustomActivityNavigation>()
                 .OrderByDescending(x=>x.Id)
                 .FirstOrDefaultAsync(x=>x.WorkflowInstanceId == workflowInstanceId, cancellationToken);
+        }
+
+        public async Task ArchiveDataDictionaryItem(int id, bool isArchived, CancellationToken cancellationToken)
+        {
+            var items = _dbContext.Set<DataDictionary>().Where(x => x.Id== id);
+            foreach (var item in items)
+            {
+                item.IsArchived = isArchived;
+            }
+            _dbContext.UpdateRange(items);
+            await SaveChanges(cancellationToken);
+        }
+        public async Task ArchiveDataDictionaryGroup(int id, bool isArchived,CancellationToken cancellationToken)
+        {
+            var items = _dbContext.Set<DataDictionaryGroup>().Where(x => x.Id == id);
+            foreach (var item in items)
+            {
+                item.IsArchived = isArchived;
+            }
+            _dbContext.UpdateRange(items);
+
+            var dictionaryItems = _dbContext.Set<DataDictionary>().Where(x => x.DataDictionaryGroupId == id);
+            foreach (var item in dictionaryItems)
+            {
+                item.IsArchived = isArchived;
+            }
+            _dbContext.UpdateRange(dictionaryItems);
+
+            await SaveChanges(cancellationToken);
+        }
+
+        public async Task<int> CreateDataDictionaryGroup(DataDictionaryGroup group, CancellationToken cancellationToken = default)
+        {
+            await _dbContext.AddAsync(group, cancellationToken);
+            await SaveChanges(cancellationToken);
+            return group.Id;
+        }
+
+        public async Task<int> CreateDataDictionaryItem(DataDictionary item, CancellationToken cancellationToken)
+        {
+            await _dbContext.AddAsync(item, cancellationToken);
+            await SaveChanges(cancellationToken);
+            return item.Id;
+        }
+
+        public async Task UpdateDataDictionaryGroup(DataDictionaryGroup group, CancellationToken cancellationToken)
+        {
+            _dbContext.Set<DataDictionaryGroup>().Update(group);
+            await SaveChanges(cancellationToken);
+        }
+
+
+        public async Task UpdateDataDictionaryItem(DataDictionary item, CancellationToken cancellationToken)
+        {
+            var record = _dbContext.Set<DataDictionary>().Where(x => x.Id == item.Id).FirstOrDefault();
+            if(record != null)
+            {
+                record.Name = item.Name ?? record.Name;
+                record.LegacyName = item.LegacyName ?? record.LegacyName;
+                record.CreatedDateTime = record!.CreatedDateTime;
+                record.Type = item.Type ?? record!.Type;
+                record.LastModifiedDateTime = DateTime.UtcNow;
+                record.Description = item!.Description;
+                record.DataDictionaryGroupId = record.DataDictionaryGroupId;
+                    record.IsArchived = item.IsArchived;
+                _dbContext.Set<DataDictionary>().Update(record);
+            }
+            await SaveChanges(cancellationToken);
         }
     }
 }

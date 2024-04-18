@@ -1,10 +1,10 @@
-﻿using He.PipelineAssessment.UI.Features.Intervention;
-using MediatR;
+﻿using He.PipelineAssessment.Models;
+using He.PipelineAssessment.UI.Features.Intervention;
 
 namespace He.PipelineAssessment.UI.Features.Rollback.CreateRollback
 {
-    public class CreateRollbackRequest : IRequest<AssessmentInterventionDto>
+    public class CreateRollbackRequest : CreateInterventionRequest
     {
-        public string WorkflowInstanceId { get; set; } = null!;
+        public override string DecisionType => InterventionDecisionTypes.Rollback;
     }
 }

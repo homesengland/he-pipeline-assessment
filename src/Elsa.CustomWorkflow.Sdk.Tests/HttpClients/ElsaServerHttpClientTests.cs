@@ -399,5 +399,52 @@ namespace Elsa.CustomWorkflow.Sdk.Tests.HttpClients
             //Assert
             httpClientFactoryMock.Verify(x=>x.CreateClient("ElsaServerClient"),Times.Once); 
         }
+
+        [Theory]
+        [AutoMoqData]
+        public async Task ReturnToActivity_ReturnsNull_GivenHttpClientGivesBackNonSuccessResponse(
+        [Frozen] Mock<IHttpClientFactory> httpClientFactoryMock,
+        [Frozen] Mock<HttpMessageHandler> httpMessageHandlerMock,
+        ReturnToActivityData returnToActivityDto,
+         ReturnToActivityDataDto returnToActivityDataDto,
+        ElsaServerHttpClient sut)
+        {
+            //Arrange
+            HttpClientTestHelpers.SetupHttpClientWithExpectedStatusCode(returnToActivityDataDto,
+                HttpStatusCode.BadRequest,
+                httpClientFactoryMock,
+                httpMessageHandlerMock);
+
+
+            //Act
+            var result = await sut.ReturnToActivity(returnToActivityDto);
+
+            //Assert
+            Assert.Null(result);
+        }
+
+        [Theory]
+        [AutoMoqData]
+        public async Task ReturnToActivity_ReturnsActivityDto_GivenHttpClientGivesBackSuccessResponse(
+        [Frozen] Mock<IHttpClientFactory> httpClientFactoryMock,
+        [Frozen] Mock<HttpMessageHandler> httpMessageHandlerMock,
+        ReturnToActivityData returnToActivityDto,
+        ReturnToActivityDataDto returnToActivityDataDto,
+        ElsaServerHttpClient sut)
+        {
+            //Arrange
+            HttpClientTestHelpers.SetupHttpClientWithExpectedStatusCode(returnToActivityDataDto,
+                HttpStatusCode.OK,
+                httpClientFactoryMock,
+                httpMessageHandlerMock);
+
+
+            //Act
+            var result = await sut.ReturnToActivity(returnToActivityDto);
+
+            //Assert
+            Assert.NotNull(result);
+            Assert.IsType<ReturnToActivityDataDto>(result);
+        }
     }
 }

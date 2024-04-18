@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace He.PipelineAssessment.Models
+﻿namespace He.PipelineAssessment.Models
 {
     public class InterventionReason: AuditableEntity
     {
@@ -12,5 +6,6 @@ namespace He.PipelineAssessment.Models
         public string Name { get; set; } = null!;
         public int Order { get; set; }
         public string? Status { get; set; }
+        public bool IsVariation { get; set; }
     }
 }

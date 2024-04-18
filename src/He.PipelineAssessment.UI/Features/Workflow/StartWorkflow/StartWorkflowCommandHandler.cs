@@ -4,7 +4,10 @@ using He.PipelineAssessment.Infrastructure.Repository;
 using He.PipelineAssessment.Models;
 using He.PipelineAssessment.UI.Authorization;
 using He.PipelineAssessment.UI.Features.Workflow.LoadQuestionScreen;
+using He.PipelineAssessment.UI.Features.Workflow.QuestionScreenSaveAndContinue;
+using He.PipelineAssessment.UI.Integration.ServiceBusSend;
 using MediatR;
+using Newtonsoft.Json;
 
 namespace He.PipelineAssessment.UI.Features.Workflow.StartWorkflow
 {
@@ -14,12 +17,20 @@ namespace He.PipelineAssessment.UI.Features.Workflow.StartWorkflow
         private readonly IElsaServerHttpClient _elsaServerHttpClient;
         private readonly IAssessmentRepository _assessmentRepository;
         private readonly IRoleValidation _roleValidation;
+        private readonly IServiceBusMessageSender _serviceBusMessageSender;
         private readonly ILogger<StartWorkflowCommandHandler> _logger;
-        public StartWorkflowCommandHandler(IElsaServerHttpClient elsaServerHttpClient, IAssessmentRepository assessmentRepository, IRoleValidation roleValidation, ILogger<StartWorkflowCommandHandler> logger)
+
+        public StartWorkflowCommandHandler(
+            IElsaServerHttpClient elsaServerHttpClient, 
+            IAssessmentRepository assessmentRepository, 
+            IRoleValidation roleValidation, 
+            IServiceBusMessageSender serviceBusMessageSender,
+            ILogger<StartWorkflowCommandHandler> logger)
         {
             _elsaServerHttpClient = elsaServerHttpClient;
             _assessmentRepository = assessmentRepository;
             _roleValidation = roleValidation;
+            _serviceBusMessageSender = serviceBusMessageSender;
             _logger = logger;
         }
 
@@ -51,8 +62,6 @@ namespace He.PipelineAssessment.UI.Features.Workflow.StartWorkflow
 
                     var assessmentToolWorkflowInstance = AssessmentToolWorkflowInstance(request, response);
 
-                    await _assessmentRepository.CreateAssessmentToolWorkflowInstance(assessmentToolWorkflowInstance);
-
                     //if there is a next workflow record for the current set it to started
                     var nextWorkflow =
                         await _assessmentRepository.GetAssessmentToolInstanceNextWorkflowByAssessmentId(request.AssessmentId,
@@ -60,9 +69,13 @@ namespace He.PipelineAssessment.UI.Features.Workflow.StartWorkflow
 
                     if (nextWorkflow != null)
                     {
+                        assessmentToolWorkflowInstance.IsVariation = nextWorkflow.IsVariation;
                         await _assessmentRepository.DeleteNextWorkflow(nextWorkflow);
                     }
 
+                    await _assessmentRepository.CreateAssessmentToolWorkflowInstance(assessmentToolWorkflowInstance);
+
+                    this._serviceBusMessageSender.SendMessage(assessmentToolWorkflowInstance); 
                     return await Task.FromResult(result);
                 }
                 else
@@ -70,6 +83,11 @@ namespace He.PipelineAssessment.UI.Features.Workflow.StartWorkflow
                     _logger.LogError($"Failed to start workflow, response from elsa server client is null. AssessmentId: {request.AssessmentId} WorkflowDefinitionId: {request.WorkflowDefinitionId}");
                     throw new ApplicationException("Failed to start workflow");
                 }
+            }
+            catch (UnauthorizedAccessException e)
+            {
+                _logger.LogError(e, e.Message);
+                throw;
             }
             catch (Exception e)
             {

@@ -59,26 +59,29 @@ namespace Elsa.CustomActivities.Handlers.Models
             string overrideSyntax,
             CancellationToken cancellationToken = default)
         {
-            try
+            await Task.CompletedTask;  //Terrible I know, but just here to not break any async calls.
+            lock (@this)
             {
-                var syntax = overrideSyntax;
-                if (@this.Expressions != null && @this.Expressions.Count > 0)
+                try
                 {
-                    var result = await evaluator.TryEvaluateAsync<T>(overrideExpression, overrideSyntax, context, cancellationToken);
-                    if (result.Value != null)
+                    var syntax = overrideSyntax;
+                    if (@this.Expressions != null && @this.Expressions.Count > 0)
                     {
-                        return result.Value;
+                        var result = evaluator.TryEvaluateAsync<T>(overrideExpression, overrideSyntax, context, cancellationToken).Result;
+                        if (result.Value != null)
+                        {
+                            return result.Value;
+                        }
+                        return default!;
                     }
+                    else return default!;
+                }
+                catch (KeyNotFoundException e)
+                {
+                    logger.LogError(e, "Incorrect data structure.  Expression did not contain correct Syntax");
                     return default!;
                 }
-                else return default!;
-            }
-            catch (KeyNotFoundException e)
-            {
-                logger.LogError(e, "Incorrect data structure.  Expression did not contain correct Syntax");
-                return default!;
             }
         }
     }
-
 }

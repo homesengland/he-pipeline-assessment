@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace He.PipelineAssessment.Models.ViewModels
+﻿namespace He.PipelineAssessment.Models.ViewModels
 {
     public class SyncModel
     {

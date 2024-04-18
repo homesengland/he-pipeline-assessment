@@ -1,4 +1,4 @@
-﻿@model string;
+﻿@model He.PipelineAssessment.UI.Features.Workflow.ViewModels.InterventionOptions;
 @using He.PipelineAssessment.UI.Authorization;
 @using Microsoft.AspNetCore.Authorization
 @inject IAuthorizationService AuthorizationService
@@ -10,13 +10,30 @@
 <div class="govuk-button-group">
     @if ((await AuthorizationService.AuthorizeAsync(User, Constants.AuthorizationPolicies.AssignmentToPipelineAdminRoleRequired)).Succeeded)
     {
-        @Html.ActionLink("Override", "Override", "Override", new { workflowInstanceId = Model }, new { @class = "govuk-button", data_module="govuk-button" })
+        @Html.ActionLink("Override", "Override", "Override", new { workflowInstanceId = Model.WorkflowInstanceId }, new { @class = "govuk-button", data_module="govuk-button" })
     }
 
-    @Html.ActionLink("Rollback", "Rollback", "Rollback", new { workflowInstanceId = Model }, new { @class = "govuk-button", data_module="govuk-button" })
+    @Html.ActionLink("Rollback", "Rollback", "Rollback", new { workflowInstanceId = Model.WorkflowInstanceId }, new { @class = "govuk-button", data_module="govuk-button" })
     
-    <button disabled="disabled" aria-disabled="true" class="govuk-button govuk-button--disabled" data-module="govuk-button">
-        Variation
-    </button>
-    @*@Html.ActionLink("Variation", "Variation", "Intervention", new { workflowInstanceId = Model }, new { @class = "govuk-button", data_module="govuk-button" })*@
+    @if(Model.IsAmendableWorkflow)
+    {
+        @Html.ActionLink("Amendment", "Amendment", "Amendment", new { workflowInstanceId = Model.WorkflowInstanceId }, new { @class = "govuk-button", data_module="govuk-button" })
+    }
+    else
+    {
+        <button disabled="disabled" aria-disabled="true" class="govuk-button govuk-button--disabled" data-module="govuk-button">
+            Amendment
+        </button>
+    }
+
+    @if (Model.IsVariationAllowed)
+    {
+        @Html.ActionLink("Variation", "Variation", "Variation", new { workflowInstanceId = Model.WorkflowInstanceId }, new { @class = "govuk-button", data_module="govuk-button" })
+    }
+    else
+    {
+        <button disabled="disabled" aria-disabled="true" class="govuk-button govuk-button--disabled" data-module="govuk-button">
+            Variation
+        </button>
+    }
 </div>

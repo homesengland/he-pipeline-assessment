@@ -1,21 +1,15 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using AutoFixture.Xunit2;
+﻿using AutoFixture.Xunit2;
 using Elsa.CustomActivities.Describers;
 using Elsa.CustomInfrastructure.Data.Repository;
 using Elsa.CustomModels;
-using Elsa.Server.Features.Activities.CustomActivityProperties;
-using Elsa.Server.Features.Activities.DataDictionary;
+using Elsa.Server.Features.Activities.DataDictionaryProvider;
 using He.PipelineAssessment.Tests.Common;
 using Moq;
 using Newtonsoft.Json;
-using Newtonsoft.Json.Serialization;
+using System.ComponentModel;
 using Xunit;
 
-namespace Elsa.Server.Tests.Features.Activities.DataDictionary
+namespace Elsa.Server.Tests.Features.Activities.DataDictionaryProvider
 {
     public class DataDictionaryCommandHandlerTests
     {
@@ -26,20 +20,34 @@ namespace Elsa.Server.Tests.Features.Activities.DataDictionary
             [Frozen] Mock<IElsaCustomRepository> repository,
             DataDictionaryCommand command,
             List<HeActivityInputDescriptor> inputDescriptors,
-            List<QuestionDataDictionaryGroup> dataDictionaries,
+            List<DataDictionaryGroup> dataDictionaryGroups,
+            List<DataDictionary> dataDictionaries,
             DataDictionaryCommandHandler sut)
         {
             //Arrange
             propertyDescriber.Setup(x => x.DescribeInputProperties(typeof(Question))).Returns(inputDescriptors);
-            repository.Setup(x => x.GetQuestionDataDictionaryGroupsAsync(CancellationToken.None)).ReturnsAsync(dataDictionaries);
+            repository.Setup(x => x.GetDataDictionaryGroupsAsync(false, CancellationToken.None)).ReturnsAsync(dataDictionaryGroups);
+            repository.Setup(x => x.GetDataDictionaryListAsync(false, CancellationToken.None)).ReturnsAsync(dataDictionaries);
 
             var jsonData = JsonConvert.SerializeObject(dataDictionaries);
             //Act
             var result = await sut.Handle(command, CancellationToken.None);
+            Dictionary<string, string>? deserialisedResult = JsonConvert.DeserializeObject<Dictionary<string, string>>(result);
+            if (deserialisedResult != null)
+            {
+                deserialisedResult.TryGetValue("Intellisense", out string? intellisense);
+                if (intellisense != null)
+                {
+                    Assert.Contains(dataDictionaries[0].Group.Name + "_" + dataDictionaries[0].Name, intellisense);
+                    Assert.Contains(dataDictionaries[1].Group.Name + "_" + dataDictionaries[1].Name, intellisense);
+                    Assert.Contains(dataDictionaries[2].Group.Name + "_" + dataDictionaries[2].Name, intellisense);
+                }
+            }
 
             //Assert
             Assert.NotNull(result);
-            Assert.Equal(jsonData,result);
+
+
         }
 
         [Theory]

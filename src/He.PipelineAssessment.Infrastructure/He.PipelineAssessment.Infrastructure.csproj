@@ -39,6 +39,18 @@
     <None Remove="Migrations\20231013132330_RewriteGetAssessmentStoredProcedure\GetAssessmentStagesByAssessmentId.sql" />
     <None Remove="Migrations\20231017124829_FifForIncorrectStatusOnAssessmentScreen\GetAssessments.sql" />
     <None Remove="Migrations\20231013160042_FixRewriteGetAssessmentStoredProcedure\GetAssessmentStagesByAssessmentId.sql" />
+    <None Remove="Migrations\20231026150046_FixToDisplayOutstandingAssessmnetsStatusOfEqualOrder\GetAssessments.sql" />
+    <None Remove="Migrations\20231027101712_UpdateSPToReturnVariationsInOrderAtTheEnd\GetAssessmentHistoryByAssessmentId.sql" />
+    <None Remove="Migrations\20231027101712_UpdateSPToReturnVariationsInOrderAtTheEnd\GetAssessmentStagesByAssessmentId.sql" />
+    <None Remove="Migrations\20231027101712_UpdateSPToReturnVariationsInOrderAtTheEnd\GetStartableToolsByAssessmentId.sql" />
+    <None Remove="Migrations\20231027101712_UpdateSPToReturnVariationsInOrderAtTheEnd\PopulateInterventionReasonForVariations.sql" />
+    <None Remove="Migrations\20231101164653_AddCompletedStatusToAssessmentsSP\GetAssessments.sql" />
+    <None Remove="Migrations\20231102164948_FixForDuplicateStages\GetAssessmentStagesByAssessmentId.sql" />
+    <None Remove="Migrations\20231106121320_AddNullableIsVariationCheckToStartableToolSP\GetStartableToolsByAssessmentId.sql" />
+    <None Remove="Migrations\20231113154952_AddSensitiveStatusToGetAssessmentsSP\GetAssessments.sql" />
+    <None Remove="Migrations\20231114144436_UpdateEconomistAndInterventionSPsToReturnSensitiveStatus\GetEconomistAssessments.sql" />
+    <None Remove="Migrations\20231114144436_UpdateEconomistAndInterventionSPsToReturnSensitiveStatus\GetInterventionList.sql" />
+    <None Remove="Migrations\20231116100927_AddProjectManagerToGetAssessmentListByAssessmentId\GetAssessmentInterventionListByAssessmentId.sql" />
   </ItemGroup>
 
   <ItemGroup>
@@ -74,11 +86,23 @@
     <EmbeddedResource Include="Migrations\20231013132330_RewriteGetAssessmentStoredProcedure\GetAssessmentStagesByAssessmentId.sql" />
     <EmbeddedResource Include="Migrations\20231017124829_FifForIncorrectStatusOnAssessmentScreen\GetAssessments.sql" />
     <EmbeddedResource Include="Migrations\20231013160042_FixRewriteGetAssessmentStoredProcedure\GetAssessmentStagesByAssessmentId.sql" />
+    <EmbeddedResource Include="Migrations\20231026150046_FixToDisplayOutstandingAssessmnetsStatusOfEqualOrder\GetAssessments.sql" />
+    <EmbeddedResource Include="Migrations\20231027101712_UpdateSPToReturnVariationsInOrderAtTheEnd\GetAssessmentHistoryByAssessmentId.sql" />
+    <EmbeddedResource Include="Migrations\20231027101712_UpdateSPToReturnVariationsInOrderAtTheEnd\GetAssessmentStagesByAssessmentId.sql" />
+    <EmbeddedResource Include="Migrations\20231027101712_UpdateSPToReturnVariationsInOrderAtTheEnd\GetStartableToolsByAssessmentId.sql" />
+    <EmbeddedResource Include="Migrations\20231030153908_AddIsVariationToInterventionReason\PopulateInterventionReasonForVariations.sql" />
+    <EmbeddedResource Include="Migrations\20231101164653_AddCompletedStatusToAssessmentsSP\GetAssessments.sql" />
+    <EmbeddedResource Include="Migrations\20231102164948_FixForDuplicateStages\GetAssessmentStagesByAssessmentId.sql" />
+    <EmbeddedResource Include="Migrations\20231106121320_AddNullableIsVariationCheckToStartableToolSP\GetStartableToolsByAssessmentId.sql" />
+    <EmbeddedResource Include="Migrations\20231113154952_AddSensitiveStatusToGetAssessmentsSP\GetAssessments.sql" />
+    <EmbeddedResource Include="Migrations\20231114144436_UpdateEconomistAndInterventionSPsToReturnSensitiveStatus\GetEconomistAssessments.sql" />
+    <EmbeddedResource Include="Migrations\20231114144436_UpdateEconomistAndInterventionSPsToReturnSensitiveStatus\GetInterventionList.sql" />
+    <EmbeddedResource Include="Migrations\20231116100927_AddProjectManagerToGetAssessmentListByAssessmentId\GetAssessmentInterventionListByAssessmentId.sql" />
   </ItemGroup>
 
   <ItemGroup>
+	<FrameworkReference Include="Microsoft.AspNetCore.App" />
     <PackageReference Include="Microsoft.AspNetCore.DataProtection.EntityFrameworkCore" Version="6.0.9" />
-    <PackageReference Include="Microsoft.AspNetCore.Http.Abstractions" Version="2.2.0" />
     <PackageReference Include="Microsoft.EntityFrameworkCore" Version="6.0.9" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="6.0.9" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="6.0.9">

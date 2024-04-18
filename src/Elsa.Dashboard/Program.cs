@@ -46,8 +46,14 @@ builder.Services.AddHttpClient("ElsaServerClient", client =>
   client.BaseAddress = new Uri(serverURl);
 });
 
+builder.Services.AddHttpClient("DataDictionaryClient", client =>
+{
+  client.BaseAddress = new Uri(serverURl);
+});
+
 
 builder.Services.AddScoped<IElsaServerHttpClient, ElsaServerHttpClient>();
+builder.Services.AddScoped<IDataDictionaryHttpClient, DataDictionaryHttpClient>();
 
 // For Authentication
 builder.AddCustomAuth0Configuration();

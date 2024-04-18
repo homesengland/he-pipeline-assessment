@@ -74,7 +74,7 @@ namespace Elsa.CustomInfrastructure.Migrations
                 .Annotation("SqlServer:TemporalPeriodEndColumnName", "PeriodEnd")
                 .Annotation("SqlServer:TemporalPeriodStartColumnName", "PeriodStart");
 
-            migrationBuilder.Sql("UPDATE Question SET QuestionDataDictionaryId = NULL");
+            migrationBuilder.Sql("exec('UPDATE Question SET QuestionDataDictionaryId = NULL')");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Question_QuestionDataDictionaryId",

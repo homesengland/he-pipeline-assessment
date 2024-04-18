@@ -8,6 +8,8 @@ using Elsa.Services;
 using Elsa.Services.Models;
 using Elsa.CustomActivities.Providers;
 using Elsa.CustomInfrastructure.Data.Repository;
+using System.Net.WebSockets;
+using Elsa.CustomActivities.Activities.Common;
 
 namespace Elsa.CustomActivities.Activities.QuestionScreen
 {
@@ -61,6 +63,16 @@ namespace Elsa.CustomActivities.Activities.QuestionScreen
 
         protected override async ValueTask<IActivityExecutionResult> OnResumeAsync(ActivityExecutionContext context)
         {
+            List<ValidationModel> validationModels = Questions.Questions.Select(x => x.Validations).ToList();
+            List<Validation> invalidValidations = validationModels.SelectMany(x => x.Validations.Where(v => !v.IsValid)).ToList();
+            if(invalidValidations.Any())
+            {
+                return await Task.FromResult(new CombinedResult(new List<IActivityExecutionResult>
+            {
+                Outcomes(new [] {OutcomeNames.False}),
+                new SuspendResult()
+            }));
+            }
             await UpdateQuestionScores(context);
             var response = context.GetInput<List<CustomModels.Question>>();
             Output = response;
@@ -75,6 +87,24 @@ namespace Elsa.CustomActivities.Activities.QuestionScreen
                 Outcomes(outcomes),
                 new SuspendResult()
             }));
+        }
+
+        private bool EvaluateValidations(ActivityExecutionContext context, out Dictionary<string, List<string?>> validationMap)
+        {
+            //TODO - tidy this up as I don't expect it will work - just need to map out intent.
+            validationMap = new Dictionary<string, List<string?>>();
+            foreach(var question in Questions.Questions)
+            {
+                if(question.Validations != null && question.Validations.Validations.Count > 0)
+                {
+                    var failedValidation = question.Validations.Validations.Where(x => !x.IsValid);
+                    if(failedValidation.Any())
+                    {
+                        validationMap.Add(question.Id, failedValidation.Select(x => x.ValidationMessage).ToList());
+                    } 
+                }
+            }
+            return validationMap.Keys.Count > 0;
         }
 
         private async Task UpdateQuestionScores(ActivityExecutionContext context)

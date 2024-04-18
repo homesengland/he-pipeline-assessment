@@ -5,12 +5,13 @@ using Elsa.CustomActivities.Activities.Shared;
 using Elsa.CustomInfrastructure.Data.Repository;
 using Elsa.CustomModels;
 using Elsa.CustomWorkflow.Sdk;
+using Elsa.CustomWorkflow.Sdk.Providers;
 using Elsa.Persistence;
 using Elsa.Persistence.Specifications.WorkflowInstances;
 using Elsa.Server.Mappers;
 using Elsa.Server.Models;
+using FluentValidation.Results;
 using MediatR;
-using Question = Elsa.CustomModels.Question;
 
 namespace Elsa.Server.Features.Workflow.LoadQuestionScreen
 {
@@ -102,6 +103,7 @@ namespace Elsa.Server.Features.Workflow.LoadQuestionScreen
                                 result.Data.Questions = new List<QuestionActivityData>();
                                 result.Data.ActivityType = customActivityNavigation.ActivityType;
 
+                                int questionIndex = 0;
                                 foreach (var item in elsaActivityAssessmentQuestions.Questions)
                                 {
                                     //get me the item
@@ -109,11 +111,13 @@ namespace Elsa.Server.Features.Workflow.LoadQuestionScreen
                                         dbAssessmentQuestionList.FirstOrDefault(x => x.QuestionId == item.Id);
                                     if (dbQuestion != null)
                                     {
-                                        var questionActivityData = CreateQuestionActivityData(dbQuestion, item, _textGroupMapper);
+                                        var questionActivityData = CreateQuestionActivityData(dbQuestion, item, _textGroupMapper, questionIndex);
 
                                         result.Data.Questions.Add(questionActivityData);
                                     }
+                                    questionIndex++;
                                 }
+                                result.ValidationMessages = MapValidationModelToValidationResults(elsaActivityAssessmentQuestions.Questions);
                             }
                             else
                             {
@@ -149,8 +153,8 @@ namespace Elsa.Server.Features.Workflow.LoadQuestionScreen
             return await Task.FromResult(result);
         }
 
-        private static QuestionActivityData CreateQuestionActivityData(Question dbQuestion,
-            CustomActivities.Activities.QuestionScreen.Question item, ITextGroupMapper textGroupMapper)
+        private static QuestionActivityData CreateQuestionActivityData(CustomModels.Question dbQuestion,
+            CustomActivities.Activities.QuestionScreen.Question item, ITextGroupMapper textGroupMapper, int questionIndex)
         {
             var reevaluatePrepopulatedAnswers = item.ReevaluatePrePopulatedAnswers;
 
@@ -174,7 +178,7 @@ namespace Elsa.Server.Features.Workflow.LoadQuestionScreen
             questionActivityData.IsReadOnly = item.IsReadOnly;
             questionActivityData.ReevaluatePrepopulatedAnswers = item.ReevaluatePrePopulatedAnswers;
             questionActivityData.HideQuestion = item.HideQuestion;
-
+            
             if (item.QuestionType == QuestionTypeConstants.CheckboxQuestion ||
                 item.QuestionType == QuestionTypeConstants.WeightedCheckboxQuestion)
             {
@@ -330,6 +334,29 @@ namespace Elsa.Server.Features.Workflow.LoadQuestionScreen
             }
 
             return questionActivityData;
+        }
+
+        private ValidationResult MapValidationModelToValidationResults(List<CustomActivities.Activities.QuestionScreen.Question> items)
+        {
+            var validationFailures = new List<ValidationFailure>();
+            for (int i = 0; i < items.Count; i++)
+            {
+                foreach (var validation in items[i].Validations.Validations)
+                {
+
+                    if (!validation.IsValid && !string.IsNullOrEmpty(validation.ValidationMessage))
+                    {
+                        var failure = new ValidationFailure()
+                        {
+                            PropertyName = ValidationPropertyNameProvider.GetPropertyName(items[i].QuestionType, i),
+                            ErrorMessage = validation.ValidationMessage
+                        };
+                        validationFailures.Add(failure);
+                    }
+                }
+            }
+            var validationResult = new ValidationResult(validationFailures);
+            return validationResult;
         }
     }
 }

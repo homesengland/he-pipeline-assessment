@@ -1,6 +1,8 @@
 ﻿using AutoFixture.Xunit2;
 using Azure.Core;
 using Elsa.CustomWorkflow.Sdk;
+using Elsa.CustomWorkflow.Sdk.HttpClients;
+using Elsa.CustomWorkflow.Sdk.Models.Workflow;
 using FluentValidation;
 using FluentValidation.Results;
 using He.PipelineAssessment.Tests.Common;
@@ -11,6 +13,7 @@ using He.PipelineAssessment.UI.Features.Workflow.LoadCheckYourAnswersScreen;
 using He.PipelineAssessment.UI.Features.Workflow.LoadConfirmationScreen;
 using He.PipelineAssessment.UI.Features.Workflow.LoadQuestionScreen;
 using He.PipelineAssessment.UI.Features.Workflow.QuestionScreenSaveAndContinue;
+using He.PipelineAssessment.UI.Features.Workflow.ReturnToActivity;
 using He.PipelineAssessment.UI.Features.Workflow.StartWorkflow;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
@@ -22,7 +25,7 @@ namespace He.PipelineAssessment.UI.Tests.Features.Workflow
 {
     public class WorkflowControllerTests
     {
-       
+
 
         [Theory]
         [AutoMoqData]
@@ -55,22 +58,21 @@ namespace He.PipelineAssessment.UI.Tests.Features.Workflow
             Assert.Contains(activityTypeRouteValue, redirectToActionResult.RouteValues!);
         }
 
-     
+
         [Theory]
         [AutoMoqData]
         public async Task QuestionScreenSaveAndContinue_ShouldRedirectToAction_GivenValidationIssuesAreFound(
             [Frozen] Mock<IMediator> mediator,
-            [Frozen] Mock<IValidator<QuestionScreenSaveAndContinueCommand>> validator,
             QuestionScreenSaveAndContinueCommand command,
             QuestionScreenSaveAndContinueCommandResponse saveAndContinueCommandResponse,
             ValidationResult validationResult,
             WorkflowController sut)
         {
             //Arrange
+            saveAndContinueCommandResponse.IsValid = false;
+            saveAndContinueCommandResponse.ValidationMessages = validationResult;
             mediator.Setup(x => x.Send(command, CancellationToken.None)).ReturnsAsync(saveAndContinueCommandResponse);
-            validator.Setup(x => x.Validate(It.IsAny<QuestionScreenSaveAndContinueCommand>()))
-                .Returns(validationResult);
-            
+
             //Act
             var result = await sut.QuestionScreenSaveAndContinue(command);
 
@@ -93,8 +95,9 @@ namespace He.PipelineAssessment.UI.Tests.Features.Workflow
         {
             //Arrange
             saveAndContinueCommandResponse.IsAuthorised = true;
+            saveAndContinueCommandResponse.IsValid = true;
             mediator.Setup(x => x.Send(command, CancellationToken.None)).ReturnsAsync(saveAndContinueCommandResponse);
-            
+
             //Act
             var result = await sut.QuestionScreenSaveAndContinue(command);
 
@@ -125,6 +128,7 @@ namespace He.PipelineAssessment.UI.Tests.Features.Workflow
         {
             //Arrange
             saveAndContinueCommandResponse.IsAuthorised = false;
+            saveAndContinueCommandResponse.IsValid = true;
             mediator.Setup(x => x.Send(command, CancellationToken.None)).ReturnsAsync(saveAndContinueCommandResponse);
 
             //Act
@@ -132,15 +136,16 @@ namespace He.PipelineAssessment.UI.Tests.Features.Workflow
 
             //Assert
             Assert.NotNull(result);
-            Assert.IsType<RedirectToActionResult>(result);
-
             var redirectToActionResult = (RedirectToActionResult)result;
+            Assert.IsType<RedirectToActionResult>(redirectToActionResult);
+
+
             Assert.Equal("AccessDenied", redirectToActionResult.ActionName);
         }
 
-       
 
-       
+
+
 
         [Theory]
         [AutoMoqData]
@@ -184,6 +189,7 @@ namespace He.PipelineAssessment.UI.Tests.Features.Workflow
         {
             //Arrange
             saveAndContinueCommandResponse.ActivityType = ActivityTypeConstants.CheckYourAnswersScreen;
+            saveAndContinueCommand.IsAuthorised = false;
 
             mediator.Setup(x =>
                     x.Send(
@@ -198,7 +204,6 @@ namespace He.PipelineAssessment.UI.Tests.Features.Workflow
             //Assert
             Assert.NotNull(result);
             Assert.IsType<RedirectToActionResult>(result);
-            Assert.IsType<RedirectToActionResult>(result);
             var redirectToActionResult = (RedirectToActionResult)result;
             Assert.Equal("LoadReadOnlyWorkflowActivity", redirectToActionResult.ActionName);
         }
@@ -212,7 +217,7 @@ namespace He.PipelineAssessment.UI.Tests.Features.Workflow
             WorkflowController sut)
         {
             //Arrange
-
+            response.IsAuthorised = true;
             saveAndContinueCommandResponse.ActivityType = ActivityTypeConstants.ConfirmationScreen;
 
             mediator.Setup(x =>
@@ -232,6 +237,35 @@ namespace He.PipelineAssessment.UI.Tests.Features.Workflow
             var viewResult = (ViewResult)result;
             Assert.Equal("Confirmation", viewResult.ViewName);
             Assert.IsType<LoadConfirmationScreenResponse>(viewResult.Model);
+        }
+
+        [Theory]
+        [AutoMoqData]
+        public async Task LoadWorkflowActivity_ShouldRedirectToLoadReadOnlyWorkflowActivity_GivenConfirmationScreenAndNotAuthorisedResponse(
+            [Frozen] Mock<IMediator> mediator,
+            QuestionScreenSaveAndContinueCommandResponse saveAndContinueCommandResponse,
+            LoadConfirmationScreenResponse response,
+            WorkflowController sut)
+        {
+            //Arrange
+            response.IsAuthorised = false;
+            saveAndContinueCommandResponse.ActivityType = ActivityTypeConstants.ConfirmationScreen;
+
+            mediator.Setup(x =>
+                    x.Send(
+                        It.Is<LoadConfirmationScreenRequest>(y =>
+                            y.ActivityId == saveAndContinueCommandResponse.ActivityId && y.WorkflowInstanceId ==
+                            saveAndContinueCommandResponse.WorkflowInstanceId), CancellationToken.None))
+                .ReturnsAsync(response);
+
+            //Act
+            var result = await sut.LoadWorkflowActivity(saveAndContinueCommandResponse);
+
+            //Assert
+            Assert.NotNull(result);
+            Assert.IsType<RedirectToActionResult>(result);
+            var redirectToActionResult = (RedirectToActionResult)result;
+            Assert.Equal("LoadReadOnlyWorkflowActivity", redirectToActionResult.ActionName);
         }
 
         [Theory]
@@ -306,6 +340,9 @@ namespace He.PipelineAssessment.UI.Tests.Features.Workflow
         {
             //Arrange
             saveAndContinueCommandResponse.ActivityType = ActivityTypeConstants.QuestionScreen;
+            saveAndContinueCommand.IsValid = false;
+            saveAndContinueCommand.IsReadOnly = true;
+
 
             mediator.Setup(x =>
                     x.Send(
@@ -355,7 +392,7 @@ namespace He.PipelineAssessment.UI.Tests.Features.Workflow
             Assert.IsType<QuestionScreenSaveAndContinueCommand>(viewResult.Model);
         }
 
-      
+
 
 
         [Theory]
@@ -433,7 +470,7 @@ namespace He.PipelineAssessment.UI.Tests.Features.Workflow
             var ex = await Assert.ThrowsAsync<ApplicationException>(() => sut.LoadWorkflowActivity(saveAndContinueCommandResponse));
 
             //Assert
-            Assert.Equal("Attempted to load unsupported activity type: UnknownType",ex.Message);
+            Assert.Equal("Attempted to load unsupported activity type: UnknownType", ex.Message);
 
         }
 
@@ -493,6 +530,47 @@ namespace He.PipelineAssessment.UI.Tests.Features.Workflow
 
             Assert.Equal("AccessDenied", redirectToActionResult.ActionName);
 
+        }
+
+
+        [Theory]
+        [AutoMoqData]
+        public async Task ReturnToActivityActivity_ShouldRedirectToLoadWorkflowActivity_GivenNoExceptionsThrow(
+          [Frozen] Mock<IMediator> mediator,
+            QuestionScreenSaveAndContinueCommandResponse saveAndContinueCommandResponse,
+            QuestionScreenSaveAndContinueCommand saveAndContinueCommand,
+            ReturnToActivityCommandResponse response,
+            WorkflowController sut)
+        {
+            //Arrange
+            saveAndContinueCommand.IsAuthorised = true;
+            saveAndContinueCommand.IsReadOnly = false;
+            saveAndContinueCommandResponse.ActivityType = ActivityTypeConstants.ReturnToActivity;
+
+            mediator.Setup(x =>
+                    x.Send(
+                        It.Is<ReturnToActivityCommand>(y =>
+                            y.ActivityId == saveAndContinueCommandResponse.ActivityId && y.WorkflowInstanceId ==
+                            saveAndContinueCommandResponse.WorkflowInstanceId), CancellationToken.None))
+                .ReturnsAsync(response);
+
+            //Act
+            var result = await sut.LoadWorkflowActivity(saveAndContinueCommandResponse);
+
+            //Assert
+            Assert.NotNull(result);
+            Assert.IsType<RedirectToActionResult>(result);
+
+            var redirectToActionResult = (RedirectToActionResult)result;
+            Assert.Equal("LoadWorkflowActivity", redirectToActionResult.ActionName);
+
+            var activityIdRouteValue = new KeyValuePair<string, object?>("ActivityId", response.ActivityId);
+            var workflowInstanceIdRouteValue = new KeyValuePair<string, object?>("WorkflowInstanceId", response.WorkflowInstanceId);
+            var activityTypeRouteValue = new KeyValuePair<string, object?>("ActivityType", response.ActivityType);
+
+            Assert.Contains(activityIdRouteValue, redirectToActionResult.RouteValues!);
+            Assert.Contains(workflowInstanceIdRouteValue, redirectToActionResult.RouteValues!);
+            Assert.Contains(activityTypeRouteValue, redirectToActionResult.RouteValues!);
         }
     }
 }

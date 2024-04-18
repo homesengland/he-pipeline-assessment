@@ -1,10 +1,12 @@
 ﻿using He.PipelineAssessment.Data.SinglePipeline;
+using Microsoft.CodeAnalysis.CSharp.Syntax;
 
 namespace He.PipelineAssessment.UI.Features.SinglePipeline.Sync
 {
     public interface ISyncCommandHandlerHelper
     {
         List<Models.Assessment> AssessmentsToBeAdded(List<int> sourceAssessmentSpIds, List<int> destinationAssessmentSpIds, List<SinglePipelineData> sourcSinglePipelineData);
+        List<Models.Assessment> AssessmentsToBeRemoved(List<int> sourceAssessmentSpIds, List<int> destinationAssessmentSpIds, List<Models.Assessment> singlePipelineData);
         int UpdateAssessments(List<Models.Assessment> destinationAssessments, List<int> existingAssessments, List<SinglePipelineData> data);
     }
 
@@ -44,6 +46,7 @@ namespace He.PipelineAssessment.UI.Features.SinglePipeline.Sync
                     LandType = string.IsNullOrEmpty(item.land_type)
                         ? "-"
                         : item.land_type,
+                    SensitiveStatus = item.sensitive_status
                 };
 
                 assessmentsToBeAdded.Add(assessment);
@@ -51,6 +54,19 @@ namespace He.PipelineAssessment.UI.Features.SinglePipeline.Sync
 
             return assessmentsToBeAdded;
         }
+
+        public List<Models.Assessment> AssessmentsToBeRemoved(List<int> sourceAssessmentSpIds, List<int> destinationAssessmentSpIds, List<Models.Assessment> assessments)
+        {
+            List<int> idsToBeRemoved = new List<int>();
+            idsToBeRemoved = destinationAssessmentSpIds.Except(sourceAssessmentSpIds).ToList();
+            List<Models.Assessment> assessmentsToBeRemoved = new List<Models.Assessment>();
+            if (idsToBeRemoved.Count > 0)
+            {
+                assessmentsToBeRemoved = assessments.Where(x => idsToBeRemoved.Contains(x.SpId)).ToList();
+            }
+            return assessmentsToBeRemoved;
+        }
+
         public int UpdateAssessments(List<Models.Assessment> destinationAssessments, List<int> existingAssessments, List<SinglePipelineData> data)
         {
             var count = 0;
@@ -104,6 +120,11 @@ namespace He.PipelineAssessment.UI.Features.SinglePipeline.Sync
                     if (!string.IsNullOrEmpty(source.land_type) && destination.LandType != source.land_type)
                     {
                         destination.LandType = source.land_type!;
+                        updateFlag = true;
+                    }
+                    if (!string.IsNullOrEmpty(source.sensitive_status) && destination.SensitiveStatus != source.sensitive_status)
+                    {
+                        destination.SensitiveStatus = source.sensitive_status!;
                         updateFlag = true;
                     }
                 }

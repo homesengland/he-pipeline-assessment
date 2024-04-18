@@ -1,7 +1,6 @@
 ﻿using Elsa.CustomInfrastructure.Data.Repository;
 using Elsa.Scripting.JavaScript.Events;
 using Elsa.Scripting.JavaScript.Messages;
-using Elsa.Services;
 using Elsa.Services.Models;
 using MediatR;
 
@@ -11,24 +10,35 @@ namespace Elsa.CustomActivities.Activities.QuestionScreen.Helpers
     {
 
         private readonly IElsaCustomRepository _elsaCustomRepository;
-        private readonly IWorkflowRegistry _workflowRegistry;
 
-        public QuestionHelper(IElsaCustomRepository elsaCustomRepository, IWorkflowRegistry workflowRegistry)
+        public QuestionHelper(IElsaCustomRepository elsaCustomRepository)
         {
             _elsaCustomRepository = elsaCustomRepository;
-            _workflowRegistry = workflowRegistry;
         }
-
 
         public async Task<string> GetAnswer(string correlationId, string workflowName, string activityName, string questionId)
         {
-            var result = await _elsaCustomRepository.GetQuestionByWorkflowAndActivityName(activityName,
+            var question = await _elsaCustomRepository.GetQuestionByWorkflowAndActivityName(activityName,
                 workflowName, correlationId, questionId, CancellationToken.None);
 
-            if (result?.Answers != null)
+            return GetAnswer(question);
+        }
+
+        public async Task<string> GetAnswer(string correlationId, int dataDictionaryId)
+        {
+            var question = await _elsaCustomRepository.GetQuestionByDataDictionary(correlationId,
+                dataDictionaryId, CancellationToken.None);
+
+            return GetAnswer(question);
+        }
+
+        private static string GetAnswer(CustomModels.Question? question)
+        {
+            if (question?.Answers != null)
             {
-                return string.Join(',', result.Answers.Select(x => x.AnswerText));
+                return string.Join(',', question.Answers.Select(x => x.AnswerText));
             }
+
             return string.Empty;
         }
 
@@ -44,6 +54,7 @@ namespace Elsa.CustomActivities.Activities.QuestionScreen.Helpers
             var activityExecutionContext = notification.ActivityExecutionContext;
             var engine = notification.Engine;
             engine.SetValue("questionGetAnswer", (Func<string, string, string, string?>)((workflowName, activityName, questionId) => GetAnswer(activityExecutionContext.CorrelationId, workflowName, activityName, questionId).Result));
+            engine.SetValue("getAnswer", (Func<int, string?>)((dataDictionaryId) => GetAnswer(activityExecutionContext.CorrelationId, dataDictionaryId).Result));
             engine.SetValue("writeJournalData", (Func<string, string, string>)((key, message) => WriteJournalData(key, message, activityExecutionContext).Result));
             return Task.CompletedTask;
         }
@@ -52,6 +63,7 @@ namespace Elsa.CustomActivities.Activities.QuestionScreen.Helpers
         {
             var output = notification.Output;
             output.AppendLine("declare function questionGetAnswer(workflowName: string, activityName:string, questionId:string ): string;");
+            output.AppendLine("declare function getAnswer(datadictionaryId: number");
             output.AppendLine("declare function writeJournalData(key: string, message:string): string;");
             return Task.CompletedTask;
         }

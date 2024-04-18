@@ -16,6 +16,7 @@
         public DateTime? SubmittedDateTime { get; set; }
         public string? Result { get; set; }
         public string? SubmittedBy { get; set; } = null;
+        public bool IsVariation { get; set; }
         public virtual Assessment Assessment { get; set; } = null!;
         public virtual AssessmentToolWorkflow AssessmentToolWorkflow { get; set; } = null!;
         public virtual List<AssessmentToolInstanceNextWorkflow> AssessmentToolInstanceNextWorkflows { get; set; } = null!;

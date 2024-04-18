@@ -12,6 +12,9 @@
     <None Remove="Migrations\20230821073105_DataDictionaryValueUpdates\ReAddDataDictionaryGroupsAndValues.sql" />
     <None Remove="Migrations\20230914085842_DataDictionaryUpdates\DataDictionaryUpdates.sql" />
     <None Remove="Migrations\20230929094647_MoreDataDictionaryUpdates\MoreDataDictionaryUpdates.sql" />
+    <None Remove="Migrations\20240117173916_CopyDataDictionaryIdsToTempColumns\CopyDataDictionaryIdsToTempColumns.sql" />
+    <None Remove="Migrations\20240125180206_MigrateOldDictionaryDataToNewTables\CopyOldTableValuesToNewDataDictionary.sql" />
+    <None Remove="Migrations\20240117180459_CopyTempIdColumnToPrimaryKey\CopyTempIdColumnToPrimaryKey.sql" />
   </ItemGroup>
 
   <ItemGroup>
@@ -20,21 +23,26 @@
     <EmbeddedResource Include="Migrations\20230821073105_DataDictionaryValueUpdates\ReAddDataDictionaryGroupsAndValues.sql" />
     <EmbeddedResource Include="Migrations\20230914085842_DataDictionaryUpdates\DataDictionaryUpdates.sql" />
     <EmbeddedResource Include="Migrations\20230929094647_MoreDataDictionaryUpdates\MoreDataDictionaryUpdates.sql" />
+    <EmbeddedResource Include="Migrations\20240125180206_MigrateOldDictionaryDataToNewTables\CopyOldTableValuesToNewDataDictionary.sql" />
+    <EmbeddedResource Include="Migrations\20240117180459_CopyTempIdColumnToPrimaryKey\CopyTempIdColumnToPrimaryKey.sql" />
+    <EmbeddedResource Include="Migrations\20240117173916_CopyDataDictionaryIdsToTempColumns\CopyDataDictionaryIdsToTempColumns.sql" />
   </ItemGroup>
 
   <ItemGroup>
+    <PackageReference Include="Azure.Core" Version="1.36.0" />
+    <PackageReference Include="Azure.Identity" Version="1.10.4" />
     <PackageReference Include="Microsoft.AspNetCore.DataProtection" Version="6.0.9" />
     <PackageReference Include="He.Cookies.Mvc" Version="1.0.36" />
     <PackageReference Include="He.Identity.Auth0" Version="1.0.58" />
     <PackageReference Include="He.Identity.Mvc" Version="1.0.58" />
     <PackageReference Include="Microsoft.AspNetCore.DataProtection.EntityFrameworkCore" Version="6.0.9" />
+    <PackageReference Include="Microsoft.Data.SqlClient" Version="5.1.5" />
     <PackageReference Include="Microsoft.EntityFrameworkCore" Version="6.0.9" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="6.0.9" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="6.0.9">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
-	  <PackageReference Include="Microsoft.AspNetCore.Authentication.Cookies" Version="2.2.0" />
   </ItemGroup>
 
   <ItemGroup>

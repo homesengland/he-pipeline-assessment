@@ -4,7 +4,7 @@
 @{
 }
 <div class="govuk-grid-row">
-    <div class="govuk-grid-column-two-thirds-from-desktop">
+    <div class="govuk-grid-column-full">
         <dl class="govuk-summary-list govuk-!-margin-bottom-9">
             @foreach (var question in Model.Questions!.Where(x => x.QuestionType != QuestionTypeConstants.Information))
             {
@@ -12,7 +12,7 @@
                     <dt class="govuk-summary-list__key">
                         @question.QuestionText
                     </dt>
-                    <dd class="govuk-summary-list__value">
+                    <dd class="govuk-summary-list__value govuk-!-width-full">
                         @if (question.Answers != null)
                         {
                             @foreach (var answer in question.Answers)
@@ -43,6 +43,32 @@
                                     <p>@answer.AnswerText</p>
 
                                 }
+                            }
+                            if (!string.IsNullOrEmpty(question.Comments))
+                            {
+                                <details class="govuk-details" data-module="govuk-details">
+                                    <summary class="govuk-details__summary">
+                                        <span class="govuk-details__summary-text">
+                                            Display supporting comments
+                                        </span>
+                                    </summary>
+                                    <div class="govuk-details__text">
+                                        @question.Comments
+                                    </div>
+                                </details>
+                            }
+                            if (!string.IsNullOrEmpty(question.DocumentEvidenceLink))
+                            {
+                                <details class="govuk-details" data-module="govuk-details">
+                                    <summary class="govuk-details__summary">
+                                        <span class="govuk-details__summary-text">
+                                            Display supporting evidence
+                                        </span>
+                                    </summary>
+                                    <div class="govuk-details__text">
+                                        <a href="@question.DocumentEvidenceLink" class="govuk-link" rel="noreferrer noopener" target="_blank">Evidence</a>
+                                    </div>
+                                </details>
                             }
                         }
                     </dd>

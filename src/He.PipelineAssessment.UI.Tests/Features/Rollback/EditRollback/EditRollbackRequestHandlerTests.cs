@@ -1,10 +1,9 @@
 ﻿using AutoFixture.Xunit2;
-using He.PipelineAssessment.Infrastructure.Repository;
 using He.PipelineAssessment.Models;
 using He.PipelineAssessment.Tests.Common;
-using He.PipelineAssessment.UI.Authorization;
 using He.PipelineAssessment.UI.Features.Intervention;
 using He.PipelineAssessment.UI.Features.Rollback.EditRollback;
+using He.PipelineAssessment.UI.Services;
 using Moq;
 using Xunit;
 
@@ -14,113 +13,51 @@ namespace He.PipelineAssessment.UI.Tests.Features.Rollback.EditRollback
     {
         [Theory]
         [AutoMoqData]
-        public async Task Handle_ShouldError_GivenAssessmentToolWorkflowInstanceCannotBeFound(
-            EditRollbackRequest request,
-            EditRollbackRequestHandler sut)
-        {
-            //Act
-            var ex = await Assert.ThrowsAsync<ApplicationException>(() => sut.Handle(request, CancellationToken.None));
-
-            //Assert
-            Assert.Equal($"Unable to edit rollback. InterventionId: {request.InterventionId}", ex.Message);
-        }
-
-        [Theory]
-        [AutoMoqData]
-        public async Task Handle_ShouldError_GivenNotPermitted(
-            [Frozen]Mock<IAssessmentRepository> repository,
-            AssessmentIntervention intervention,
+        public async Task Handle_ShouldError_GivenInterventionServiceErrors(
+            [Frozen] Mock<IInterventionService> interventionService,
+            Exception e,
             EditRollbackRequest request,
             EditRollbackRequestHandler sut)
         {
             //Arrange
-            repository.Setup(x => x.GetAssessmentIntervention(request.InterventionId))
-                .ReturnsAsync(intervention);
+            interventionService.Setup(x => x.EditInterventionRequest(request)).Throws(e);
 
             //Act
-            var ex = await Assert.ThrowsAsync<UnauthorizedAccessException>(() => sut.Handle(request, CancellationToken.None));
+            var ex = await Assert.ThrowsAsync<Exception>(() => sut.Handle(request, CancellationToken.None));
 
             //Assert
-            Assert.Equal($"You do not have permission to access this resource.", ex.Message);
+            Assert.Equal(e.Message, ex.Message);
         }
 
         [Theory]
         [AutoMoqData]
-        public async Task Handle_ShouldError_GivenNoSuitableWorkflowsToRollBackTo(
-            [Frozen] Mock<IAssessmentRepository> repository,
-            [Frozen] Mock<IRoleValidation> roleValidation,
-            [Frozen] Mock<IAdminAssessmentToolWorkflowRepository> adminAssessmentToolWorkflowRepository,
-            AssessmentIntervention intervention,
+        public async Task Handle_ShouldReturnDtoWithCorrectWorkflowDefinitions_GivenSuccessfulCallToInterventionService(
+            [Frozen] Mock<IInterventionService> interventionService,
+            [Frozen] Mock<IAssessmentInterventionMapper> mapper,
+            AssessmentInterventionDto dto,
+            List<AssessmentToolWorkflow> assessmentToolWorkflows,
+            List<TargetWorkflowDefinition> targetWorkflowDefinitions,
             EditRollbackRequest request,
             EditRollbackRequestHandler sut)
         {
             //Arrange
-            repository.Setup(x => x.GetAssessmentIntervention(request.InterventionId))
-                .ReturnsAsync(intervention);
-
-            roleValidation.Setup(x => x.ValidateRole(intervention.AssessmentToolWorkflowInstance.AssessmentId, intervention.AssessmentToolWorkflowInstance.WorkflowDefinitionId))
-                .ReturnsAsync(true);
-
-            adminAssessmentToolWorkflowRepository.Setup(x => x.GetAssessmentToolWorkflowsForRollback(intervention
-                .AssessmentToolWorkflowInstance
-                .AssessmentToolWorkflow.AssessmentTool.Order)).ReturnsAsync(new List<AssessmentToolWorkflow>());
-
-            //Act
-            var ex = await Assert.ThrowsAsync<ApplicationException>(() => sut.Handle(request, CancellationToken.None));
-
-            //Assert
-            Assert.Equal($"Unable to edit rollback. InterventionId: {request.InterventionId}", ex.Message);
-            adminAssessmentToolWorkflowRepository.Verify(x=>x.GetAssessmentToolWorkflowsForRollback(intervention
-                .AssessmentToolWorkflowInstance
-                .AssessmentToolWorkflow.AssessmentTool.Order),Times.Once);
-        }
-
-        [Theory]
-        [AutoMoqData]
-        public async Task Handle_ShouldReturn(
-            [Frozen] Mock<IAssessmentRepository> repository,
-            [Frozen] Mock<IRoleValidation> roleValidation,
-            [Frozen] Mock<IAdminAssessmentToolWorkflowRepository> adminAssessmentToolWorkflowRepository,
-            [Frozen] Mock <IAssessmentInterventionMapper> interventionMapper,
-            AssessmentIntervention intervention,
-            AssessmentInterventionCommand command,
-            List<AssessmentToolWorkflow> listSource,
-            List<TargetWorkflowDefinition> listTarget,
-            EditRollbackRequest request,
-            EditRollbackRequestHandler sut)
-        {
-            //Arrange
-            repository.Setup(x => x.GetAssessmentIntervention(request.InterventionId))
-                .ReturnsAsync(intervention);
-
-            roleValidation.Setup(x => x.ValidateRole(intervention.AssessmentToolWorkflowInstance.AssessmentId, intervention.AssessmentToolWorkflowInstance.WorkflowDefinitionId))
-                .ReturnsAsync(true);
-
-            adminAssessmentToolWorkflowRepository.Setup(x => x.GetAssessmentToolWorkflowsForRollback(intervention
-                .AssessmentToolWorkflowInstance
-                .AssessmentToolWorkflow.AssessmentTool.Order)).ReturnsAsync(listSource);
-
-            interventionMapper.Setup(x => x.AssessmentInterventionCommandFromAssessmentIntervention(intervention))
-                .Returns(command);
-
-            interventionMapper.Setup(x => x.TargetWorkflowDefinitionsFromAssessmentToolWorkflows(listSource))
-                .Returns(listTarget);
+            dto.TargetWorkflowDefinitions = new List<TargetWorkflowDefinition>();
+            interventionService.Setup(x => x.EditInterventionRequest(request))
+                .ReturnsAsync(dto);
+            interventionService.Setup(x =>
+                    x.GetAssessmentToolWorkflowsForRollback(dto.AssessmentInterventionCommand.WorkflowInstanceId))
+                .ReturnsAsync(assessmentToolWorkflows);
+            mapper.Setup(x => x.TargetWorkflowDefinitionsFromAssessmentToolWorkflows(assessmentToolWorkflows,
+                    dto.AssessmentInterventionCommand.SelectedWorkflowDefinitions))
+                .Returns(targetWorkflowDefinitions);
 
             //Act
-            var result =  await sut.Handle(request, CancellationToken.None);
+            var result = await sut.Handle(request, CancellationToken.None);
 
             //Assert
-            Assert.NotNull(result);
-            Assert.IsType<AssessmentInterventionDto>(result);
-            Assert.Equal(command,result.AssessmentInterventionCommand);
-            Assert.Equal(listTarget, result.TargetWorkflowDefinitions);
-
-            adminAssessmentToolWorkflowRepository.Verify(x => x.GetAssessmentToolWorkflowsForRollback(intervention
-                .AssessmentToolWorkflowInstance
-                .AssessmentToolWorkflow.AssessmentTool.Order), Times.Once);
-
-            interventionMapper.Verify(x => x.AssessmentInterventionCommandFromAssessmentIntervention(intervention),Times.Once);
-            interventionMapper.Verify(x => x.TargetWorkflowDefinitionsFromAssessmentToolWorkflows(listSource),Times.Once);
+            Assert.Equal(dto.AssessmentInterventionCommand, result.AssessmentInterventionCommand);
+            Assert.Equal(dto.InterventionReasons, result.InterventionReasons);
+            Assert.Equal(targetWorkflowDefinitions, result.TargetWorkflowDefinitions);
         }
     }
 }

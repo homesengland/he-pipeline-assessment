@@ -1,4 +1,5 @@
-﻿using He.PipelineAssessment.UI.Authorization;
+﻿using He.PipelineAssessment.Infrastructure;
+using He.PipelineAssessment.UI.Authorization;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -9,11 +10,13 @@ namespace He.PipelineAssessment.UI.Features.Intervention.InterventionList
     {
         private readonly IMediator _mediator;
         private readonly ILogger<InterventionController> _logger;
+        private readonly IUserProvider _userProvider;
 
-        public InterventionController(IMediator mediator, ILogger<InterventionController> logger)
+        public InterventionController(IMediator mediator, ILogger<InterventionController> logger, IUserProvider userProvider)
         {
             _mediator = mediator;
             _logger = logger;
+            _userProvider = userProvider;
         }
 
         [Authorize(Policy = Constants.AuthorizationPolicies.AssignmentToPipelineAdminRoleRequired)]
@@ -21,7 +24,14 @@ namespace He.PipelineAssessment.UI.Features.Intervention.InterventionList
         {
             try
             {
-                var listModel = await _mediator.Send(new InterventionListRequest());
+                var username = _userProvider.GetUserName();
+                var canViewSensitiveRecords = _userProvider.CheckUserRole(Constants.AppRole.SensitiveRecordsViewer);
+
+                var listModel = await _mediator.Send(new InterventionListRequest()
+                {
+                    CanViewSensitiveRecords = canViewSensitiveRecords,
+                    Username = username
+                });
                 return View("~/Features/Intervention/Views/InterventionList.cshtml", listModel);
             }
             catch (Exception e)

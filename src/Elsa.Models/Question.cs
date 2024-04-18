@@ -23,8 +23,8 @@
         public virtual List<QuestionChoice>? Choices { get; set; }
         public virtual List<Answer>? Answers { get; set; } = new();
 
-        public int? QuestionDataDictionaryId { get; set; }
-        public virtual QuestionDataDictionary? QuestionDataDictionary { get; set; }
+        public int? DataDictionaryId { get; set; }
+        public virtual DataDictionary? DataDictionary { get; set; }
         public bool? IsArchived { get; set; }
     }
 }

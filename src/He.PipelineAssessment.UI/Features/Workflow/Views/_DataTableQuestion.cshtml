@@ -1,11 +1,12 @@
 ﻿@using He.PipelineAssessment.UI.Features.Workflow.ViewModels
 @using He.PipelineAssessment.UI.Helper
+@using Elsa.CustomWorkflow.Sdk.Providers;
 @using Elsa.CustomWorkflow.Sdk
 @model He.PipelineAssessment.UI.Features.Workflow.ViewModels.Question
 
 
 @{
-    var formItemName = "Data.Questions[" + Model.Index + "].DataTable";
+    var formItemName = ValidationPropertyNameProvider.GetPropertyName(Model.QuestionType, Model.Index);
     var errorFormClass = !Model.IsValid ? "govuk-form-group--error" : "";
     //var errorFieldClass = !Model.IsValid ? "govuk-input--error" : "";
     var isReadOnly = Model.IsReadOnly ? "disabled" : "";

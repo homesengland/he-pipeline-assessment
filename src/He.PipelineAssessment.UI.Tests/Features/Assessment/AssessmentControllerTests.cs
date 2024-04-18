@@ -20,12 +20,12 @@ namespace He.PipelineAssessment.UI.Tests.Features.SinglePipeline
         [AutoMoqData]
         public async Task Index_ShouldRedirectToAction_GivenNoExceptionsThrow(
             [Frozen] Mock<IMediator> mediator,
-            AssessmentListCommand command,
+            AssessmentListRequest request,
             List<AssessmentDataViewModel> response,
             AssessmentController sut)
         {
             //Arrange
-            mediator.Setup(x => x.Send(command, CancellationToken.None)).ReturnsAsync(response);
+            mediator.Setup(x => x.Send(request, CancellationToken.None)).ReturnsAsync(response);
 
             //Act
             var result = await sut.Index();
@@ -40,14 +40,14 @@ namespace He.PipelineAssessment.UI.Tests.Features.SinglePipeline
         [AutoMoqData]
         public async Task Summary_ShouldRedirectToAction_GivenNoExceptionsThrow(
             [Frozen] Mock<IMediator> mediator,
-            AssessmentListCommand command,
+            AssessmentListRequest request,
             List<AssessmentDataViewModel> response,
             AssessmentController sut,
             int correlationId,
             int assessmentId)
         {
             //Arrange
-            mediator.Setup(x => x.Send(command, CancellationToken.None)).ReturnsAsync(response);
+            mediator.Setup(x => x.Send(request, CancellationToken.None)).ReturnsAsync(response);
 
             //Act
             var result = await sut.Summary(assessmentId, correlationId);
@@ -63,7 +63,7 @@ namespace He.PipelineAssessment.UI.Tests.Features.SinglePipeline
         public async Task TestSummary_ShouldRedirectToSummary_EnableTestSummaryPageIsFalse(
             [Frozen] Mock<IMediator> mediator,
             [Frozen] Mock<IConfiguration> configuration,
-            AssessmentListCommand command,
+            AssessmentListRequest request,
             List<AssessmentDataViewModel> response,
             AssessmentController sut,
             int correlationId,
@@ -72,7 +72,7 @@ namespace He.PipelineAssessment.UI.Tests.Features.SinglePipeline
             //Arrange
             configuration.Setup(x => x["Environment:EnableTestSummaryPage"]).Returns("false");
 
-            mediator.Setup(x => x.Send(command, CancellationToken.None)).ReturnsAsync(response);
+            mediator.Setup(x => x.Send(request, CancellationToken.None)).ReturnsAsync(response);
 
 
 
@@ -89,7 +89,7 @@ namespace He.PipelineAssessment.UI.Tests.Features.SinglePipeline
         public async Task TestSummary_ShouldDirectToTestSummaryView_EnableTestSummaryPageIsTrue(
         [Frozen] Mock<IMediator> mediator,
         [Frozen] Mock<IConfiguration> configuration,
-        AssessmentListCommand command,
+        AssessmentListRequest request,
         List<AssessmentDataViewModel> response,
         AssessmentController sut,
         int correlationId,
@@ -97,7 +97,7 @@ namespace He.PipelineAssessment.UI.Tests.Features.SinglePipeline
         {
             //Arrange
             configuration.Setup(x => x["Environment:EnableTestSummaryPage"]).Returns("true");
-            mediator.Setup(x => x.Send(command, CancellationToken.None)).ReturnsAsync(response);
+            mediator.Setup(x => x.Send(request, CancellationToken.None)).ReturnsAsync(response);
 
             //Act
             var result = await sut.TestSummary(assessmentId, correlationId);

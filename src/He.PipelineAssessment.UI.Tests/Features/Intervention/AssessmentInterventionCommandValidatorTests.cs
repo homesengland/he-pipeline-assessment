@@ -9,7 +9,7 @@ namespace He.PipelineAssessment.UI.Tests.Features.Intervention
     public class AssessmentInterventionCommandValidatorTests
     {
         [Theory]
-        [InlineAutoMoqData("CorrectValue", "CorrectValue", "CorrectValue", null,1, false, "TargetWorkflowId", "The target workflow definition has to be selected")]
+        [InlineAutoMoqData("CorrectValue", "CorrectValue", "CorrectValue", null,1, true, null, null)]
 
         [InlineAutoMoqData("", "CorrectValue", "CorrectValue", 1,2, false, "SignOffDocument", "The Sign Off Document cannot be empty")]
         [InlineAutoMoqData(null, "CorrectValue", "CorrectValue", 2,3, false, "SignOffDocument", "The Sign Off Document cannot be empty")]
@@ -31,7 +31,8 @@ namespace He.PipelineAssessment.UI.Tests.Features.Intervention
             int? interventionReasonId,
             bool validationResult,
             string? errorPropertyName,
-            string? validationMessage
+            string? validationMessage,
+            List<TargetWorkflowDefinition> targetWorkflowDefinitions
             )
         {
             
@@ -44,6 +45,7 @@ namespace He.PipelineAssessment.UI.Tests.Features.Intervention
                 TargetWorkflowId = targetWorkflowId,
                 AssessorRationale = assessorRationale,
                 InterventionReasonId = interventionReasonId,
+                TargetWorkflowDefinitions = targetWorkflowDefinitions,
             };
 
             //Act
@@ -82,7 +84,7 @@ namespace He.PipelineAssessment.UI.Tests.Features.Intervention
             Assert.Equal(5, result.Errors.Count);
             result.ShouldHaveValidationErrorFor(x => x.SignOffDocument).WithErrorMessage("The Sign Off Document cannot be empty");
             result.ShouldHaveValidationErrorFor(x => x.AdministratorRationale).WithErrorMessage("The Administrator Rationale cannot be empty");
-            result.ShouldHaveValidationErrorFor(x => x.TargetWorkflowId).WithErrorMessage("The target workflow definition has to be selected");
+            result.ShouldHaveValidationErrorFor(x => x.TargetWorkflowDefinitions).WithErrorMessage("At least one target workflow definition has to be selected");
             result.ShouldHaveValidationErrorFor(x => x.InterventionReasonId).WithErrorMessage("The request reason cannot be empty");
         }
     }

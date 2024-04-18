@@ -36,6 +36,13 @@ namespace He.PipelineAssessment.UI.Features.Workflow.LoadCheckYourAnswersScreen
             {
                 var assessmentWorkflowInstance = await _assessmentRepository.GetAssessmentToolWorkflowInstance(request.WorkflowInstanceId);
 
+                var validateSensitiveStatus =
+                    _roleValidation.ValidateSensitiveRecords(assessmentWorkflowInstance!.Assessment);
+                if (!validateSensitiveStatus)
+                {
+                    throw new UnauthorizedAccessException("You do not have permission to access this resource.");
+                }
+
                 var isRoleExist = await _roleValidation.ValidateRole(assessmentWorkflowInstance!.AssessmentId, assessmentWorkflowInstance.WorkflowDefinitionId);
 
                 if (!isRoleExist && !request.IsReadOnly)
@@ -75,6 +82,11 @@ namespace He.PipelineAssessment.UI.Features.Workflow.LoadCheckYourAnswersScreen
                     _logger.LogError($"Failed to load check your answers screen activity response from elsa server client is null. ActivityId: {request.ActivityId} WorkflowInstanceId: {request.WorkflowInstanceId}");
                     throw new ApplicationException("Failed to load check your answers screen activity");
                 }
+            }
+            catch (UnauthorizedAccessException e)
+            {
+                _logger.LogError(e, e.Message);
+                throw;
             }
             catch (Exception e)
             {

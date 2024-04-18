@@ -2,14 +2,8 @@
 using Elsa.CustomWorkflow.Sdk;
 using Elsa.Scripting.JavaScript.Events;
 using Elsa.Scripting.JavaScript.Messages;
-using Elsa.Services;
 using MediatR;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Text.Json;
-using System.Threading.Tasks;
 using Elsa.CustomActivities.Activities.Common;
 
 namespace Elsa.CustomActivities.Activities.QuestionScreen.Helpers
@@ -19,21 +13,32 @@ namespace Elsa.CustomActivities.Activities.QuestionScreen.Helpers
     {
 
         private readonly IElsaCustomRepository _elsaCustomRepository;
-        private readonly IWorkflowRegistry _workflowRegistry;
 
-        public DataTableQuestionHelper(IElsaCustomRepository elsaCustomRepository, IWorkflowRegistry workflowRegistry)
+        public DataTableQuestionHelper(IElsaCustomRepository elsaCustomRepository)
         {
             _elsaCustomRepository = elsaCustomRepository;
-            _workflowRegistry = workflowRegistry;
         }
 
         public async Task<decimal?> GetDecimalAnswer(string correlationId, string workflowName, string activityName, string questionId, string tableCellIdentifier)
         {
+            var question = await _elsaCustomRepository.GetQuestionByWorkflowAndActivityName(activityName,
+                workflowName, correlationId, questionId, CancellationToken.None);
+            return GetDecimalAnswer(tableCellIdentifier, question);
+        }
+
+        public async Task<decimal?> GetDecimalAnswer(string correlationId, int dataDictionaryId, string tableCellIdentifier)
+        {
+            var question =
+                await _elsaCustomRepository.GetQuestionByDataDictionary(correlationId, dataDictionaryId,
+                    CancellationToken.None);
+
+            return GetDecimalAnswer(tableCellIdentifier, question);
+        }
+
+        private static decimal? GetDecimalAnswer(string tableCellIdentifier, CustomModels.Question? question)
+        {
             try
             {
-                var question = await _elsaCustomRepository.GetQuestionByWorkflowAndActivityName(activityName,
-                    workflowName, correlationId, questionId, CancellationToken.None);
-
                 if (question != null && question.Answers != null &&
                     question.QuestionType == QuestionTypeConstants.DataTable)
                 {
@@ -55,7 +60,6 @@ namespace Elsa.CustomActivities.Activities.QuestionScreen.Helpers
                                 return answerText;
                             }
                         }
-
                     }
                 }
             }
@@ -69,11 +73,24 @@ namespace Elsa.CustomActivities.Activities.QuestionScreen.Helpers
 
         public async Task<decimal?[]> GetDecimalAnswerArray(string correlationId, string workflowName, string activityName, string questionId)
         {
+            var question = await _elsaCustomRepository.GetQuestionByWorkflowAndActivityName(activityName,
+                workflowName, correlationId, questionId, CancellationToken.None);
+            return GetDecimalAnswerArray(question);
+        }
+
+        public async Task<decimal?[]> GetDecimalAnswerArray(string correlationId, int dataDictionaryId)
+        {
+            var question =
+                await _elsaCustomRepository.GetQuestionByDataDictionary(correlationId, dataDictionaryId,
+                    CancellationToken.None);
+
+            return GetDecimalAnswerArray(question);
+        }
+
+        private static decimal?[] GetDecimalAnswerArray(CustomModels.Question? question)
+        {
             try
             {
-                var question = await _elsaCustomRepository.GetQuestionByWorkflowAndActivityName(activityName,
-                    workflowName, correlationId, questionId, CancellationToken.None);
-
                 if (question != null && question.Answers != null &&
                     question.QuestionType == QuestionTypeConstants.DataTable)
                 {
@@ -117,11 +134,25 @@ namespace Elsa.CustomActivities.Activities.QuestionScreen.Helpers
 
         public async Task<string> GetStringAnswer(string correlationId, string workflowName, string activityName, string questionId, string tableCellIdentifier)
         {
+            var question = await _elsaCustomRepository.GetQuestionByWorkflowAndActivityName(activityName,
+                workflowName, correlationId, questionId, CancellationToken.None);
+
+            return GetStringAnswer(tableCellIdentifier, question);
+        }
+
+        public async Task<string> GetStringAnswer(string correlationId, int dataDictionaryId, string tableCellIdentifier)
+        {
+            var question =
+                await _elsaCustomRepository.GetQuestionByDataDictionary(correlationId, dataDictionaryId,
+                    CancellationToken.None);
+
+            return GetStringAnswer(tableCellIdentifier, question);
+        }
+
+        private static string GetStringAnswer(string tableCellIdentifier, CustomModels.Question? question)
+        {
             try
             {
-                var question = await _elsaCustomRepository.GetQuestionByWorkflowAndActivityName(activityName,
-                    workflowName, correlationId, questionId, CancellationToken.None);
-
                 if (question != null && question.Answers != null && question.QuestionType == QuestionTypeConstants.DataTable)
                 {
                     var answer = question.Answers.FirstOrDefault();
@@ -137,7 +168,6 @@ namespace Elsa.CustomActivities.Activities.QuestionScreen.Helpers
                                 return input.Input;
                             }
                         }
-
                     }
                 }
             }
@@ -151,11 +181,24 @@ namespace Elsa.CustomActivities.Activities.QuestionScreen.Helpers
 
         public async Task<string?[]> GetStringAnswerArray(string correlationId, string workflowName, string activityName, string questionId)
         {
+            var question = await _elsaCustomRepository.GetQuestionByWorkflowAndActivityName(activityName,
+                workflowName, correlationId, questionId, CancellationToken.None);
+
+            return GetStringAnswerArray(question);
+        }
+        public async Task<string?[]> GetStringAnswerArray(string correlationId, int dataDictionaryId)
+        {
+            var question =
+                await _elsaCustomRepository.GetQuestionByDataDictionary(correlationId, dataDictionaryId,
+                    CancellationToken.None);
+
+            return GetStringAnswerArray(question);
+        }
+
+        private static string?[] GetStringAnswerArray(CustomModels.Question? question)
+        {
             try
             {
-                var question = await _elsaCustomRepository.GetQuestionByWorkflowAndActivityName(activityName,
-                    workflowName, correlationId, questionId, CancellationToken.None);
-
                 if (question != null && question.Answers != null && question.QuestionType == QuestionTypeConstants.DataTable)
                 {
                     var answer = question.Answers.FirstOrDefault();
@@ -185,15 +228,23 @@ namespace Elsa.CustomActivities.Activities.QuestionScreen.Helpers
 
             engine.SetValue("dataTableQuestionGetStringAnswer", (Func<string, string, string, string, string?>)((workflowName, activityName, questionId, tableCellIdentifier) => GetStringAnswer(activityExecutionContext.CorrelationId, workflowName, activityName, questionId, tableCellIdentifier).Result));
             engine.SetValue("dataTableQuestionGetStringAnswerArray", (Func<string, string, string, string?[]>)((workflowName, activityName, questionId) => GetStringAnswerArray(activityExecutionContext.CorrelationId, workflowName, activityName, questionId).Result));
+            engine.SetValue("dataTableGetStringAnswer", (Func<int, string, string?>)((dataDictionaryId, tableCellIdentifier) => GetStringAnswer(activityExecutionContext.CorrelationId, dataDictionaryId, tableCellIdentifier).Result));
+            engine.SetValue("dataTableGetStringAnswerArray", (Func<int, string?[]>)((dataDictionaryId) => GetStringAnswerArray(activityExecutionContext.CorrelationId, dataDictionaryId).Result));
 
             engine.SetValue("dataTableQuestionGetCurrencyAnswerArray", (Func<string, string, string, decimal?[]>)((workflowName, activityName, questionId) => GetDecimalAnswerArray(activityExecutionContext.CorrelationId, workflowName, activityName, questionId).Result));
             engine.SetValue("dataTableQuestionGetCurrencyAnswer", (Func<string, string, string, string, decimal?>)((workflowName, activityName, questionId, tableCellIdentifier) => GetDecimalAnswer(activityExecutionContext.CorrelationId, workflowName, activityName, questionId, tableCellIdentifier).Result));
+            engine.SetValue("dataTableGetCurrencyAnswerArray", (Func<int, decimal?[]>)((dataDictionaryId) => GetDecimalAnswerArray(activityExecutionContext.CorrelationId, dataDictionaryId).Result));
+            engine.SetValue("dataTableGetCurrencyAnswer", (Func<int, string, decimal?>)((dataDictionaryId, tableCellIdentifier) => GetDecimalAnswer(activityExecutionContext.CorrelationId, dataDictionaryId, tableCellIdentifier).Result));
 
             engine.SetValue("dataTableQuestionGetIntegerAnswerArray", (Func<string, string, string, decimal?[]>)((workflowName, activityName, questionId) => GetDecimalAnswerArray(activityExecutionContext.CorrelationId, workflowName, activityName, questionId).Result));
             engine.SetValue("dataTableQuestionGetIntegerAnswer", (Func<string, string, string, string, decimal?>)((workflowName, activityName, questionId, tableCellIdentifier) => GetDecimalAnswer(activityExecutionContext.CorrelationId, workflowName, activityName, questionId, tableCellIdentifier).Result));
+            engine.SetValue("dataTableGetIntegerAnswerArray", (Func<int, decimal?[]>)((dataDictionaryId) => GetDecimalAnswerArray(activityExecutionContext.CorrelationId, dataDictionaryId).Result));
+            engine.SetValue("dataTableGetIntegerAnswer", (Func<int, string, decimal?>)((dataDictionaryId, tableCellIdentifier) => GetDecimalAnswer(activityExecutionContext.CorrelationId, dataDictionaryId, tableCellIdentifier).Result));
 
             engine.SetValue("dataTableQuestionGetDecimalAnswerArray", (Func<string, string, string, decimal?[]>)((workflowName, activityName, questionId) => GetDecimalAnswerArray(activityExecutionContext.CorrelationId, workflowName, activityName, questionId).Result));
             engine.SetValue("dataTableQuestionGetDecimalAnswer", (Func<string, string, string, string, decimal?>)((workflowName, activityName, questionId, tableCellIdentifier) => GetDecimalAnswer(activityExecutionContext.CorrelationId, workflowName, activityName, questionId, tableCellIdentifier).Result));
+            engine.SetValue("dataTableGetDecimalAnswerArray", (Func<int, decimal?[]>)((dataDictionaryId) => GetDecimalAnswerArray(activityExecutionContext.CorrelationId, dataDictionaryId).Result));
+            engine.SetValue("dataTableGetDecimalAnswer", (Func<int, string, decimal?>)((dataDictionaryId, tableCellIdentifier) => GetDecimalAnswer(activityExecutionContext.CorrelationId, dataDictionaryId, tableCellIdentifier).Result));
 
             return Task.CompletedTask;
         }
@@ -204,15 +255,23 @@ namespace Elsa.CustomActivities.Activities.QuestionScreen.Helpers
 
             output.AppendLine("declare function dataTableQuestionGetStringAnswerArray(workflowName: string, activityName:string, questionId:string): [];");
             output.AppendLine("declare function dataTableQuestionGetStringAnswer(workflowName: string, activityName:string, questionId:string, tableCellIdentifier:string ): string;");
+            output.AppendLine("declare function dataTableGetStringAnswerArray(dataDictionaryId: number): [];");
+            output.AppendLine("declare function dataTableGetStringAnswer(dataDictionaryId: number, tableCellIdentifier:string ): string;");
 
             output.AppendLine("declare function dataTableQuestionGetCurrencyAnswerArray(workflowName: string, activityName:string, questionId:string ): [];");
             output.AppendLine("declare function dataTableQuestionGetCurrencyAnswer(workflowName: string, activityName:string, questionId:string, tableCellIdentifier:string ): number;");
+            output.AppendLine("declare function dataTableGetCurrencyAnswerArray(dataDictionaryId: number): [];");
+            output.AppendLine("declare function dataTableGetCurrencyAnswer(dataDictionaryId: number, tableCellIdentifier:string ): number;");
 
             output.AppendLine("declare function dataTableQuestionGetIntegerAnswerArray(workflowName: string, activityName:string, questionId:string ): [];");
             output.AppendLine("declare function dataTableQuestionGetIntegerAnswer(workflowName: string, activityName:string, questionId:string, tableCellIdentifier:string ): number;");
+            output.AppendLine("declare function dataTableGetIntegerAnswerArray(dataDictionaryId: number): [];");
+            output.AppendLine("declare function dataTableGetIntegerAnswer(dataDictionaryId: number, tableCellIdentifier:string ): number;");
 
             output.AppendLine("declare function dataTableQuestionGetDecimalAnswerArray(workflowName: string, activityName:string, questionId:string ): [];");
             output.AppendLine("declare function dataTableQuestionGetDecimalAnswer(workflowName: string, activityName:string, questionId:string, tableCellIdentifier:string ): number;");
+            output.AppendLine("declare function dataTableGetDecimalAnswerArray(dataDictionaryId: number): [];");
+            output.AppendLine("declare function dataTableGetDecimalAnswer(dataDictionaryId: number, tableCellIdentifier:string ): number;");
 
             return Task.CompletedTask;
         }

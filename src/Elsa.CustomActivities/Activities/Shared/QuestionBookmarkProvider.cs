@@ -45,11 +45,18 @@ namespace Elsa.CustomActivities.Activities.Shared
                 ActivityTypeConstants.CheckYourAnswersScreen,
                 ActivityTypeConstants.ConfirmationScreen,
                 ActivityTypeConstants.SinglePipelineDataSource,
+                ActivityTypeConstants.SinglePipelineExtendedDataSource,
                 ActivityTypeConstants.HousingNeedDataSource,
                 ActivityTypeConstants.PCSProfileDataSource,
                 ActivityTypeConstants.VFMDataSource,
                 ActivityTypeConstants.RegionalIPUDataSource,
                 ActivityTypeConstants.RegionalFigsDataSource,
+                ActivityTypeConstants.LandValues,
+                ActivityTypeConstants.AgricultureLandValues,
+                ActivityTypeConstants.OfficeLandValues,
+                ActivityTypeConstants.AgricultureLandValues,
+                ActivityTypeConstants.ReturnToActivity,
+                ActivityTypeConstants.DataverseDataSource
             };
         }
     }

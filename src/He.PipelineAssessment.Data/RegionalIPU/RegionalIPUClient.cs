@@ -26,7 +26,7 @@ namespace He.PipelineAssessment.Data.RegionalIPU
 
             var relativeUri = $"query?where={whereClause}&outFields={outFields}&f=json";
 
-            using (var response = await _httpClientFactory.CreateClient("RegionalIPUClient")
+            using (var response = await _httpClientFactory.CreateClient(ClientConstants.RegionalIPUClient)
                        .GetAsync(relativeUri)
                        .ConfigureAwait(false))
             {

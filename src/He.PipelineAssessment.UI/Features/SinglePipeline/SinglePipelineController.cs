@@ -7,7 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace He.PipelineAssessment.UI.Features.SinglePipeline
 {
-    [Authorize(Policy = Constants.AuthorizationPolicies.AssignmentToPipelineAdminRoleRequired)]
+    [Authorize]
     public class SinglePipelineController : Controller
     {
         private readonly ILogger<SinglePipelineController> _logger;

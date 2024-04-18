@@ -6,6 +6,7 @@ using He.PipelineAssessment.UI.Features.Workflow.LoadCheckYourAnswersScreen;
 using He.PipelineAssessment.UI.Features.Workflow.LoadConfirmationScreen;
 using He.PipelineAssessment.UI.Features.Workflow.LoadQuestionScreen;
 using He.PipelineAssessment.UI.Features.Workflow.QuestionScreenSaveAndContinue;
+using He.PipelineAssessment.UI.Features.Workflow.ReturnToActivity;
 using He.PipelineAssessment.UI.Features.Workflow.StartWorkflow;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
@@ -18,14 +19,12 @@ namespace He.PipelineAssessment.UI.Features.Workflow
     {
         private readonly ILogger<WorkflowController> _logger;
         private readonly IMediator _mediator;
-        private readonly IValidator<QuestionScreenSaveAndContinueCommand> _validator;
 
 
-        public WorkflowController(IValidator<QuestionScreenSaveAndContinueCommand> validator, ILogger<WorkflowController> logger, IMediator mediator)
+        public WorkflowController(ILogger<WorkflowController> logger, IMediator mediator)
         {
             _logger = logger;
             _mediator = mediator;
-            _validator = validator;
         }
 
         [Authorize(Policy = Authorization.Constants.AuthorizationPolicies.AssignmentToWorkflowExecuteRoleRequired)]
@@ -33,7 +32,6 @@ namespace He.PipelineAssessment.UI.Features.Workflow
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> StartWorkflow([FromForm] StartWorkflowCommand command)
         {
-
             var result = await _mediator.Send(command);
 
             return RedirectToAction("LoadWorkflowActivity",
@@ -43,6 +41,7 @@ namespace He.PipelineAssessment.UI.Features.Workflow
                     ActivityId = result?.ActivityId,
                     ActivityType = result?.ActivityType
                 });
+
         }
 
         [Authorize(Policy = Authorization.Constants.AuthorizationPolicies.AssignmentToWorkflowExecuteRoleRequired)]
@@ -72,7 +71,6 @@ namespace He.PipelineAssessment.UI.Features.Workflow
                         else
                         {
                             return RedirectToAction("LoadReadOnlyWorkflowActivity", request);
-
                         }
                     }
                 case ActivityTypeConstants.CheckYourAnswersScreen:
@@ -92,9 +90,7 @@ namespace He.PipelineAssessment.UI.Features.Workflow
                         }
                         else
                         {
-
                             return RedirectToAction("LoadReadOnlyWorkflowActivity", request);
-
                         }
 
                     }
@@ -107,16 +103,27 @@ namespace He.PipelineAssessment.UI.Features.Workflow
                         };
 
                         var result = await this._mediator.Send(confirmationScreenRequest);
-                        return View("Confirmation", result);
+                        if (result.IsAuthorised)
+                        {
+                            return View("Confirmation", result);
+                        }
+                        else
+                        {
+                            return RedirectToAction("LoadReadOnlyWorkflowActivity", request);
+                        }
 
                     }
                 case ActivityTypeConstants.HousingNeedDataSource:
                 case ActivityTypeConstants.PCSProfileDataSource:
                 case ActivityTypeConstants.SinglePipelineDataSource:
+                case ActivityTypeConstants.SinglePipelineExtendedDataSource:
                 case ActivityTypeConstants.VFMDataSource:
                 case ActivityTypeConstants.RegionalFigsDataSource:
                 case ActivityTypeConstants.RegionalIPUDataSource:
-
+                case ActivityTypeConstants.LandValues:
+                case ActivityTypeConstants.OfficeLandValues:
+                case ActivityTypeConstants.AgricultureLandValues:
+                case ActivityTypeConstants.DataverseDataSource:
                 {
                         var executeWorkflowRequest = new ExecuteWorkflowCommand
                         {
@@ -126,6 +133,24 @@ namespace He.PipelineAssessment.UI.Features.Workflow
                         };
 
                         var result = await this._mediator.Send(executeWorkflowRequest);
+
+                        return RedirectToAction("LoadWorkflowActivity",
+                            new
+                            {
+                                WorkflowInstanceId = result?.WorkflowInstanceId,
+                                ActivityId = result?.ActivityId,
+                                ActivityType = result?.ActivityType
+                            });
+
+                }
+                case ActivityTypeConstants.ReturnToActivity:
+                    {
+                        var returnToActivityRequest = new ReturnToActivityCommand
+                        {
+                            WorkflowInstanceId = request.WorkflowInstanceId,
+                            ActivityId = request.ActivityId,
+                        };
+                        var result = await this._mediator.Send(returnToActivityRequest);
 
                         return RedirectToAction("LoadWorkflowActivity",
                             new
@@ -172,14 +197,12 @@ namespace He.PipelineAssessment.UI.Features.Workflow
         [Authorize(Policy = Authorization.Constants.AuthorizationPolicies.AssignmentToWorkflowExecuteRoleRequired)]
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [RequestFormLimits(ValueCountLimit = 5000)]
         public async Task<IActionResult> QuestionScreenSaveAndContinue([FromForm] QuestionScreenSaveAndContinueCommand command)
         {
-
-            var validationResult = _validator.Validate(command);
-            if (validationResult.IsValid)
+            var result = await this._mediator.Send(command);
+            if (result.IsValid)
             {
-                var result = await this._mediator.Send(command);
-
                 if (result.IsAuthorised)
                 {
 
@@ -199,7 +222,7 @@ namespace He.PipelineAssessment.UI.Features.Workflow
             }
             else
             {
-                command.ValidationMessages = validationResult;
+                command.ValidationMessages = result.ValidationMessages;
 
                 return View("SaveAndContinue", command);
             }

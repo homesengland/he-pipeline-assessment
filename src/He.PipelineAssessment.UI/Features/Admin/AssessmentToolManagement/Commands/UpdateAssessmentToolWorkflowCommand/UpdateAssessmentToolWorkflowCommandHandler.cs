@@ -24,12 +24,16 @@ namespace He.PipelineAssessment.UI.Features.Admin.AssessmentToolManagement.Comma
                 entity.Name = request.Name;
                 entity.IsFirstWorkflow = request.IsFirstWorkflow;
                 entity.IsEconomistWorkflow = request.IsEconomistWorkflow;
+                entity.IsVariation = request.IsVariation;
+                entity.IsAmendable = request.IsAmendableWorkflow;
+                entity.IsLast = request.IsLast;
+                entity.IsEarlyStage = request.IsEarlyStage;
                 return await _adminAssessmentToolWorkflowRepository.UpdateAssessmentToolWorkflow(entity);
             }
             catch (Exception e)
             {
                 _logger.LogError(e, e.Message);
-                throw new ApplicationException($"Unable to update assessment tool workflow. AssessmentToolWoirkflowId: {request.Id}");
+                throw new ApplicationException($"Unable to update assessment tool workflow. AssessmentToolWorkflowId: {request.Id}");
             }
 
         }

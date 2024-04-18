@@ -18,25 +18,24 @@ using He.PipelineAssessment.UI.Features.Admin.AssessmentToolManagement.Commands.
 using He.PipelineAssessment.UI.Features.Admin.AssessmentToolManagement.Commands.UpdateAssessmentToolWorkflowCommand;
 using He.PipelineAssessment.UI.Features.Admin.AssessmentToolManagement.Mappers;
 using He.PipelineAssessment.UI.Features.Admin.AssessmentToolManagement.Validators;
+using He.PipelineAssessment.UI.Features.Amendment.CreateAmendment;
 using He.PipelineAssessment.UI.Features.Error;
 using He.PipelineAssessment.UI.Features.Intervention;
-using He.PipelineAssessment.UI.Features.Override.CreateOverride;
-using He.PipelineAssessment.UI.Features.Rollback.CreateRollback;
 using He.PipelineAssessment.UI.Features.SinglePipeline.Sync;
 using He.PipelineAssessment.UI.Features.Workflow.QuestionScreenSaveAndContinue;
-using MediatR;
+using He.PipelineAssessment.UI.Integration;
+using He.PipelineAssessment.UI.Integration.ServiceBus;
+using He.PipelineAssessment.UI.Integration.ServiceBusSend;
+using He.PipelineAssessment.UI.Services;
 using Microsoft.AspNetCore.DataProtection;
 using Microsoft.AspNetCore.Mvc.Razor;
 using Microsoft.EntityFrameworkCore;
-using System.Net.Http;
 using System.Net.Http.Headers;
 
 var builder = WebApplication.CreateBuilder(args);
 
 
-var pipelineAssessmentConnectionString = builder.Configuration.GetConnectionString("SqlDatabase");
-
-
+string pipelineAssessmentConnectionString = builder.Configuration.GetConnectionString("SqlDatabase") ?? string.Empty;
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();
@@ -65,8 +64,7 @@ builder.Services.AddScoped<IDateTimeProvider, DateTimeProvider>();
 builder.Services.AddScoped<IQuestionScreenSaveAndContinueMapper, QuestionScreenSaveAndContinueMapper>();
 builder.Services.AddScoped<IAssessmentToolMapper, AssessmentToolMapper>();
 builder.Services.AddScoped<IAssessmentToolWorkflowMapper, AssessmentToolWorkflowMapper>();
-builder.Services.AddScoped<ICreateOverrideMapper, CreateOverrideMapper>();
-builder.Services.AddScoped<ICreateRollbackMapper, CreateRollbackMapper>();
+builder.Services.AddScoped<ICreateAmendmentMapper, CreateAmendmentMapper>();
 builder.Services.AddScoped<IAssessmentInterventionMapper, AssessmentInterventionMapper>();
 builder.Services.AddScoped<NonceConfig>();
 
@@ -94,7 +92,6 @@ var tokenService = new TokenProvider(domain, clientId, clientSecret, apiIdentifi
 builder.Services.AddSingleton<ITokenProvider>(tokenService);
 
 //Validators
-builder.Services.AddScoped<IValidator<QuestionScreenSaveAndContinueCommand>, SaveAndContinueCommandValidator>();
 builder.Services.AddScoped<IValidator<CreateAssessmentToolCommand>, CreateAssessmentToolCommandValidator>();
 builder.Services.AddScoped<IValidator<CreateAssessmentToolWorkflowCommand>, CreateAssessmentToolWorkflowCommandValidator>();
 builder.Services.AddScoped<IValidator<UpdateAssessmentToolCommand>, UpdateAssessmentToolCommandValidator>();
@@ -112,6 +109,8 @@ builder.Services.AddScoped<IAssessmentToolWorkflowInstanceHelpers, AssessmentToo
 builder.Services.AddScoped<IUserProvider, UserProvider>();
 builder.Services.AddScoped<IRoleValidation, RoleValidation>();
 builder.Services.AddScoped<IErrorHelper, ErrorHelper>();
+builder.Services.AddScoped<IInterventionService, InterventionService>();
+builder.Services.AddScoped<IAssessmentInterventionMapper, AssessmentInterventionMapper>();
 
 builder.Services.AddHttpContextAccessor();
 
@@ -135,14 +134,31 @@ builder.Services.AddAntiforgery(options =>
     options.Cookie.HttpOnly = true;
 });
 
+//Service Bus - Receive messages
+builder.Services.AddOptions<ServiceBusConfiguration>()
+    .Configure<IConfiguration>((settings, configuration) =>
+    {
+        configuration.GetSection("ServiceBusConfiguration").Bind(settings);
+    });
+
+builder.Services.AddScoped<IServiceBusMessageSender, ServiceBusMessageSender>();
+builder.Services.AddScoped<IServiceBusMessageReceiver, ServiceBusMessageReceiver>();
+
+var receiveMessagesFromServiceBus = Convert.ToBoolean(builder.Configuration["ServiceBusConfiguration:ReceiveMessages"]);
+if (receiveMessagesFromServiceBus)
+{
+    builder.Services.AddHostedService<WorkerServiceBus>();
+}
+
+//Add Background Task
+builder.Services.AddHostedService<AutoSyncBackgroundService>();
+
 var app = builder.Build();
-
-
 if (app.Environment.IsDevelopment())
 {
     using var scope = app.Services.CreateScope();
     var context = scope.ServiceProvider.GetRequiredService<PipelineAssessmentContext>();
-    context.Database.Migrate();
+   context.Database.Migrate();
 }
 
 app.UseExceptionHandler("/Error/Index");

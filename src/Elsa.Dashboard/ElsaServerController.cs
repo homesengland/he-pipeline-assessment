@@ -25,7 +25,7 @@ namespace Elsa.Dashboard
       _hostEnvironment = environment;
     }
 
-    [Route("{**catchall}")]
+      [Route("{**catchall}")]
     [Authorize(Policy = Elsa.Dashboard.Authorization.Constants.AuthorizationPolicies.AssignmentToElsaDashboardAdminRoleRequired)]
     public async Task<IActionResult> CatchAll()
     {
@@ -104,24 +104,21 @@ namespace Elsa.Dashboard
     {
       try
       {
-        var credential = new ManagedIdentityCredential();
         var ccflowApplicationIdUri = _configuration["AzureManagedIdentityConfig:ElsaServerAzureApplicationIdUri"];
-        var accessTokenRequest = await credential.GetTokenAsync(
-            new TokenRequestContext(scopes: new string[] { ccflowApplicationIdUri }) { }
-        );
+        var azureServiceTokenProvider = new WorkloadIdentityCredential();
+        TokenRequestContext context = new TokenRequestContext(new[] { $"{ccflowApplicationIdUri}/.default" });
+        AccessToken accessToken = await azureServiceTokenProvider.GetTokenAsync(context);
 
-        var accessToken = accessTokenRequest.Token;
-
-        if (String.IsNullOrEmpty(accessToken))
+        if (String.IsNullOrEmpty(accessToken.Token))
         {
           _logger.LogError("Failed to get Access Token, Access Token is empty");
         }
 
-        return accessToken;
+        return accessToken.Token;
       }
       catch (Exception ex)
       {
-        _logger.LogError("Error getting access token: ", ex.Message);
+        _logger.LogError(ex.Message, "Error getting access token: ");
         return null;
       }
     }

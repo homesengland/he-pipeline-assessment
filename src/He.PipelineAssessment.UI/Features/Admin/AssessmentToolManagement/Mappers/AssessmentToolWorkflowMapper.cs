@@ -16,10 +16,14 @@ namespace He.PipelineAssessment.UI.Features.Admin.AssessmentToolManagement.Mappe
                 AssessmentToolId = assessmentToolWorkflowCommand.AssessmentToolId,
                 IsFirstWorkflow = assessmentToolWorkflowCommand.IsFirstWorkflow,
                 IsEconomistWorkflow = assessmentToolWorkflowCommand.IsEconomistWorkflow,
+                IsAmendable = assessmentToolWorkflowCommand.IsAmendableWorkflow,
                 Version = assessmentToolWorkflowCommand.Version,
                 IsLatest = assessmentToolWorkflowCommand.IsLatest,
                 WorkflowDefinitionId = assessmentToolWorkflowCommand.WorkflowDefinitionId,
-                Name = assessmentToolWorkflowCommand.Name
+                Name = assessmentToolWorkflowCommand.Name,
+                IsVariation = assessmentToolWorkflowCommand.IsVariation,
+                IsEarlyStage = assessmentToolWorkflowCommand.IsEarlyStage,
+                IsLast = assessmentToolWorkflowCommand.IsLast
             };
         }
     }
