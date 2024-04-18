@@ -148,6 +148,121 @@ namespace Elsa.CustomInfrastructure.Migrations
                     ));
                 });
 
+            modelBuilder.Entity("Elsa.CustomModels.DataDictionary", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasColumnOrder(0);
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+
+                    b.Property<DateTime>("CreatedDateTime")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int>("DataDictionaryGroupId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Description")
+                        .HasMaxLength(450)
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<bool>("IsArchived")
+                        .HasColumnType("bit");
+
+                    b.Property<DateTime?>("LastModifiedDateTime")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("LegacyName")
+                        .HasMaxLength(450)
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(450)
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<DateTime>("PeriodEnd")
+                        .ValueGeneratedOnAddOrUpdate()
+                        .HasColumnType("datetime2")
+                        .HasColumnName("PeriodEnd");
+
+                    b.Property<DateTime>("PeriodStart")
+                        .ValueGeneratedOnAddOrUpdate()
+                        .HasColumnType("datetime2")
+                        .HasColumnName("PeriodStart");
+
+                    b.Property<string>("Type")
+                        .HasMaxLength(30)
+                        .HasColumnType("nvarchar(30)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("DataDictionaryGroupId");
+
+                    b.ToTable("DataDictionary");
+
+                    b.ToTable(tb => tb.IsTemporal(ttb =>
+                        {
+                            ttb
+                                .HasPeriodStart("PeriodStart")
+                                .HasColumnName("PeriodStart");
+                            ttb
+                                .HasPeriodEnd("PeriodEnd")
+                                .HasColumnName("PeriodEnd");
+                        }
+                    ));
+                });
+
+            modelBuilder.Entity("Elsa.CustomModels.DataDictionaryGroup", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasColumnOrder(0);
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+
+                    b.Property<DateTime>("CreatedDateTime")
+                        .HasColumnType("datetime2");
+
+                    b.Property<bool>("IsArchived")
+                        .HasColumnType("bit");
+
+                    b.Property<DateTime?>("LastModifiedDateTime")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(450)
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<DateTime>("PeriodEnd")
+                        .ValueGeneratedOnAddOrUpdate()
+                        .HasColumnType("datetime2")
+                        .HasColumnName("PeriodEnd");
+
+                    b.Property<DateTime>("PeriodStart")
+                        .ValueGeneratedOnAddOrUpdate()
+                        .HasColumnType("datetime2")
+                        .HasColumnName("PeriodStart");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("DataDictionaryGroup");
+
+                    b.ToTable(tb => tb.IsTemporal(ttb =>
+                        {
+                            ttb
+                                .HasPeriodStart("PeriodStart")
+                                .HasColumnName("PeriodStart");
+                            ttb
+                                .HasPeriodEnd("PeriodEnd")
+                                .HasColumnName("PeriodEnd");
+                        }
+                    ));
+                });
+
             modelBuilder.Entity("Elsa.CustomModels.PotScoreOption", b =>
                 {
                     b.Property<int>("Id")
@@ -225,6 +340,9 @@ namespace Elsa.CustomInfrastructure.Migrations
                     b.Property<DateTime>("CreatedDateTime")
                         .HasColumnType("datetime2");
 
+                    b.Property<int?>("DataDictionaryId")
+                        .HasColumnType("int");
+
                     b.Property<string>("DocumentEvidenceLink")
                         .HasColumnType("nvarchar(max)");
 
@@ -246,9 +364,6 @@ namespace Elsa.CustomInfrastructure.Migrations
                         .ValueGeneratedOnAddOrUpdate()
                         .HasColumnType("datetime2")
                         .HasColumnName("PeriodStart");
-
-                    b.Property<int?>("QuestionDataDictionaryId")
-                        .HasColumnType("int");
 
                     b.Property<string>("QuestionId")
                         .HasMaxLength(450)
@@ -278,7 +393,7 @@ namespace Elsa.CustomInfrastructure.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("QuestionDataDictionaryId");
+                    b.HasIndex("DataDictionaryId");
 
                     b.ToTable("Question");
 
@@ -415,109 +530,6 @@ namespace Elsa.CustomInfrastructure.Migrations
                     ));
                 });
 
-            modelBuilder.Entity("Elsa.CustomModels.QuestionDataDictionary", b =>
-                {
-                    b.Property<int>("Id")
-                        .HasColumnType("int")
-                        .HasColumnOrder(0);
-
-                    b.Property<DateTime>("CreatedDateTime")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("Description")
-                        .HasMaxLength(450)
-                        .HasColumnType("nvarchar(450)");
-
-                    b.Property<DateTime?>("LastModifiedDateTime")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("LegacyName")
-                        .HasMaxLength(450)
-                        .HasColumnType("nvarchar(450)");
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasMaxLength(450)
-                        .HasColumnType("nvarchar(450)");
-
-                    b.Property<DateTime>("PeriodEnd")
-                        .ValueGeneratedOnAddOrUpdate()
-                        .HasColumnType("datetime2")
-                        .HasColumnName("PeriodEnd");
-
-                    b.Property<DateTime>("PeriodStart")
-                        .ValueGeneratedOnAddOrUpdate()
-                        .HasColumnType("datetime2")
-                        .HasColumnName("PeriodStart");
-
-                    b.Property<int>("QuestionDataDictionaryGroupId")
-                        .HasColumnType("int");
-
-                    b.Property<string>("Type")
-                        .HasMaxLength(30)
-                        .HasColumnType("nvarchar(30)");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("QuestionDataDictionaryGroupId");
-
-                    b.ToTable("QuestionDataDictionary");
-
-                    b.ToTable(tb => tb.IsTemporal(ttb =>
-                        {
-                            ttb
-                                .HasPeriodStart("PeriodStart")
-                                .HasColumnName("PeriodStart");
-                            ttb
-                                .HasPeriodEnd("PeriodEnd")
-                                .HasColumnName("PeriodEnd");
-                        }
-                    ));
-                });
-
-            modelBuilder.Entity("Elsa.CustomModels.QuestionDataDictionaryGroup", b =>
-                {
-                    b.Property<int>("Id")
-                        .HasColumnType("int")
-                        .HasColumnOrder(0);
-
-                    b.Property<DateTime>("CreatedDateTime")
-                        .HasColumnType("datetime2");
-
-                    b.Property<DateTime?>("LastModifiedDateTime")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasMaxLength(450)
-                        .HasColumnType("nvarchar(450)");
-
-                    b.Property<DateTime>("PeriodEnd")
-                        .ValueGeneratedOnAddOrUpdate()
-                        .HasColumnType("datetime2")
-                        .HasColumnName("PeriodEnd");
-
-                    b.Property<DateTime>("PeriodStart")
-                        .ValueGeneratedOnAddOrUpdate()
-                        .HasColumnType("datetime2")
-                        .HasColumnName("PeriodStart");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("QuestionDataDictionaryGroup");
-
-                    b.ToTable(tb => tb.IsTemporal(ttb =>
-                        {
-                            ttb
-                                .HasPeriodStart("PeriodStart")
-                                .HasColumnName("PeriodStart");
-                            ttb
-                                .HasPeriodEnd("PeriodEnd")
-                                .HasColumnName("PeriodEnd");
-                        }
-                    ));
-                });
-
             modelBuilder.Entity("Elsa.CustomModels.QuestionWorkflowInstance", b =>
                 {
                     b.Property<int>("Id")
@@ -621,13 +633,24 @@ namespace Elsa.CustomInfrastructure.Migrations
                     b.Navigation("Question");
                 });
 
+            modelBuilder.Entity("Elsa.CustomModels.DataDictionary", b =>
+                {
+                    b.HasOne("Elsa.CustomModels.DataDictionaryGroup", "Group")
+                        .WithMany("DataDictionaryList")
+                        .HasForeignKey("DataDictionaryGroupId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Group");
+                });
+
             modelBuilder.Entity("Elsa.CustomModels.Question", b =>
                 {
-                    b.HasOne("Elsa.CustomModels.QuestionDataDictionary", "QuestionDataDictionary")
+                    b.HasOne("Elsa.CustomModels.DataDictionary", "DataDictionary")
                         .WithMany()
-                        .HasForeignKey("QuestionDataDictionaryId");
+                        .HasForeignKey("DataDictionaryId");
 
-                    b.Navigation("QuestionDataDictionary");
+                    b.Navigation("DataDictionary");
                 });
 
             modelBuilder.Entity("Elsa.CustomModels.QuestionChoice", b =>
@@ -647,15 +670,9 @@ namespace Elsa.CustomInfrastructure.Migrations
                     b.Navigation("QuestionChoiceGroup");
                 });
 
-            modelBuilder.Entity("Elsa.CustomModels.QuestionDataDictionary", b =>
+            modelBuilder.Entity("Elsa.CustomModels.DataDictionaryGroup", b =>
                 {
-                    b.HasOne("Elsa.CustomModels.QuestionDataDictionaryGroup", "Group")
-                        .WithMany("QuestionDataDictionaryList")
-                        .HasForeignKey("QuestionDataDictionaryGroupId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Group");
+                    b.Navigation("DataDictionaryList");
                 });
 
             modelBuilder.Entity("Elsa.CustomModels.Question", b =>
@@ -668,11 +685,6 @@ namespace Elsa.CustomInfrastructure.Migrations
             modelBuilder.Entity("Elsa.CustomModels.QuestionChoiceGroup", b =>
                 {
                     b.Navigation("QuestionGroupChoices");
-                });
-
-            modelBuilder.Entity("Elsa.CustomModels.QuestionDataDictionaryGroup", b =>
-                {
-                    b.Navigation("QuestionDataDictionaryList");
                 });
 #pragma warning restore 612, 618
         }

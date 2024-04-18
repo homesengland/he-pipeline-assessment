@@ -25,7 +25,7 @@ namespace He.PipelineAssessment.Data.PCSProfile
 
             var relativeUri = $"query?where={whereClause}&outFields={outFields}&f=json";
 
-            using (var response = await _httpClientFactory.CreateClient("PCSProfileClient")
+            using (var response = await _httpClientFactory.CreateClient(ClientConstants.PCSClient)
                        .GetAsync(relativeUri)
                        .ConfigureAwait(false))
             {

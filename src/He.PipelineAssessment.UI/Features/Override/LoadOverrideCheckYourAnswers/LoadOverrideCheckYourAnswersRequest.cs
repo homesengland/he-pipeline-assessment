@@ -1,10 +1,8 @@
-﻿using He.PipelineAssessment.UI.Features.Override.SubmitOverride;
-using MediatR;
+﻿using He.PipelineAssessment.UI.Features.Intervention;
 
 namespace He.PipelineAssessment.UI.Features.Override.LoadOverrideCheckYourAnswers
 {
-    public class LoadOverrideCheckYourAnswersRequest : IRequest<SubmitOverrideCommand>
+    public class LoadOverrideCheckYourAnswersRequest : LoadInterventionCheckYourAnswersRequest
     {
-        public int InterventionId { get; set; }
     }
 }

@@ -6,6 +6,7 @@ using System.Net.Http.Headers;
 using JsonSerializer = System.Text.Json.JsonSerializer;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Hosting;
+using System.Reflection;
 
 namespace Elsa.CustomWorkflow.Sdk.HttpClients
 {
@@ -13,14 +14,16 @@ namespace Elsa.CustomWorkflow.Sdk.HttpClients
     {
         Task<WorkflowNextActivityDataDto?> PostStartWorkflow(StartWorkflowCommandDto model);
         Task<WorkflowNextActivityDataDto?> PostExecuteWorkflow(ExecuteWorkflowCommandDto model);
+        Task<WorkflowNextActivityDataDto?> QuestionScreenSaveAndValidate(WorkflowActivityDataDto model);
         Task<WorkflowNextActivityDataDto?> QuestionScreenSaveAndContinue(QuestionScreenSaveAndContinueCommandDto model);
         Task<WorkflowNextActivityDataDto?> CheckYourAnswersSaveAndContinue(CheckYourAnswersSaveAndContinueCommandDto model);
         Task<WorkflowActivityDataDto?> LoadQuestionScreen(LoadWorkflowActivityDto model);
         Task<WorkflowActivityDataDto?> LoadCheckYourAnswersScreen(LoadWorkflowActivityDto model);
         Task<WorkflowActivityDataDto?> LoadConfirmationScreen(LoadWorkflowActivityDto model);
         Task<string?> LoadCustomActivities(string elsaServer);
-        Task<string?> LoadDataDictionary(string elsaServer);
+        Task<string?> LoadDataDictionary(string elsaServer, bool includeArchived);
         Task PostArchiveQuestions(string[] workflowInstanceIds);
+        Task<ReturnToActivityDataDto?> ReturnToActivity(ReturnToActivityData model);
     }
 
     public class ElsaServerHttpClient : IElsaServerHttpClient
@@ -93,6 +96,34 @@ namespace Elsa.CustomWorkflow.Sdk.HttpClients
                                      $"\n Url='{request.RequestUri}'");
 
                     throw new ApplicationException("Failed to execute workflow");
+                }
+            }
+
+            return JsonSerializer.Deserialize<WorkflowNextActivityDataDto>(data, new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
+        }
+
+        public async Task<WorkflowNextActivityDataDto?> QuestionScreenSaveAndValidate(WorkflowActivityDataDto model)
+        {
+            string data;
+            var relativeUri = "workflow/QuestionScreenValidateAndSave" + "?t=" + DateTime.UtcNow.Ticks;
+            using var request = new HttpRequestMessage(HttpMethod.Post, relativeUri);
+            var content = JsonSerializer.Serialize(model);
+            request.Content = new StringContent(content, Encoding.UTF8, "application/json");
+
+            var client = _httpClientFactory.CreateClient("ElsaServerClient");
+            AddAccessTokenToRequest(client);
+            using (var response = await client
+                       .SendAsync(request)
+                       .ConfigureAwait(false))
+            {
+                data = await response.Content.ReadAsStringAsync().ConfigureAwait(false);
+                if (!response.IsSuccessStatusCode)
+                {
+                    _logger.LogError($"StatusCode='{response.StatusCode}'," +
+                                     $"\n Message= '{data}'," +
+                                     $"\n Url='{request.RequestUri}'");
+
+                    return null;
                 }
             }
 
@@ -255,10 +286,11 @@ namespace Elsa.CustomWorkflow.Sdk.HttpClients
             return data;
         }
 
-        public async Task<string?> LoadDataDictionary(string elsaServer)
+        public async Task<string?> LoadDataDictionary(string elsaServer, bool includeArchived = false)
         {
             string data;
-            string fullUri = $"{elsaServer}/activities/dictionary" + "?t=" + DateTime.UtcNow.Ticks;
+            string uri = includeArchived ? "dictionary/archived" : "dictionary";
+            string fullUri = $"{elsaServer}/activities/{uri}?" + "t=" + DateTime.UtcNow.Ticks;
             var client = _httpClientFactory.CreateClient("ElsaServerClient");
             AddAccessTokenToRequest(client);
             using (var response = await client
@@ -306,6 +338,30 @@ namespace Elsa.CustomWorkflow.Sdk.HttpClients
             }
         }
 
+        public async Task<ReturnToActivityDataDto?> ReturnToActivity(ReturnToActivityData model)
+        {
+            string data;
+            string relativeUri = $"workflow/ReturnToActivity?workflowInstanceId={model.WorkflowInstanceId}&activityId={model.ActivityId}";
+
+            var client = _httpClientFactory.CreateClient("ElsaServerClient");
+            AddAccessTokenToRequest(client);
+            using (var response = await client
+                       .GetAsync(relativeUri)
+                       .ConfigureAwait(false))
+            {
+                data = await response.Content.ReadAsStringAsync().ConfigureAwait(false);
+                if (!response.IsSuccessStatusCode)
+                {
+                    _logger.LogError($"StatusCode='{response.StatusCode}'," +
+                                     $"\n Message= '{data}'," +
+                                     $"\n Url='{relativeUri}'");
+
+                    return default;
+                }
+            }
+
+            return JsonSerializer.Deserialize<ReturnToActivityDataDto>(data, new JsonSerializerOptions { PropertyNameCaseInsensitive = true }); ;
+        }
 
         private void AddAccessTokenToRequest(HttpClient client)
         {
@@ -331,5 +387,6 @@ namespace Elsa.CustomWorkflow.Sdk.HttpClients
                 return string.Empty;
             }
         }
+
     }
 }

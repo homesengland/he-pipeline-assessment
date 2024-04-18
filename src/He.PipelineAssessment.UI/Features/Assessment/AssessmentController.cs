@@ -1,4 +1,5 @@
-﻿using He.PipelineAssessment.UI.Authorization;
+﻿using He.PipelineAssessment.Infrastructure;
+using He.PipelineAssessment.UI.Authorization;
 using He.PipelineAssessment.UI.Features.Assessment.AssessmentList;
 using He.PipelineAssessment.UI.Features.Assessment.AssessmentSummary;
 using He.PipelineAssessment.UI.Features.Assessment.TestAssessmentSummary;
@@ -15,19 +16,27 @@ namespace He.PipelineAssessment.UI.Features.Assessments
         private readonly ILogger<AssessmentController> _logger;
         private readonly IMediator _mediator;
         private readonly IConfiguration _configuration;
+        private readonly IUserProvider _userProvider;
 
 
-        public AssessmentController(ILogger<AssessmentController> logger, IMediator mediator, IConfiguration configuration)
+        public AssessmentController(ILogger<AssessmentController> logger, IMediator mediator, IConfiguration configuration, IUserProvider userProvider)
         {
             _logger = logger;
             _mediator = mediator;
             _configuration = configuration;
+            _userProvider = userProvider;
         }
 
         [Authorize(Policy = Constants.AuthorizationPolicies.AssignmentToPipelineViewAssessmentRoleRequired)]
         public async Task<IActionResult> Index()
         {
-            var listModel = await _mediator.Send(new AssessmentListCommand());
+            var username = _userProvider.GetUserName();
+            var canViewSensitiveRecords = _userProvider.CheckUserRole(Constants.AppRole.SensitiveRecordsViewer);
+            var listModel = await _mediator.Send(new AssessmentListRequest()
+            {
+                Username = username,
+                CanViewSensitiveRecords = canViewSensitiveRecords
+            });
             return View("Index", listModel);
         }
 
@@ -43,7 +52,7 @@ namespace He.PipelineAssessment.UI.Features.Assessments
         public async Task<IActionResult> TestSummary(int assessmentid, int correlationId)
         {
             var enableTestSummaryPage = _configuration["Environment:EnableTestSummaryPage"];
-            if (bool.Parse(enableTestSummaryPage))
+            if (bool.Parse(enableTestSummaryPage ?? "false"))
             {
                 var overviewModel = await _mediator.Send(new TestAssessmentSummaryRequest(assessmentid, correlationId));
                 return View("TestSummary", overviewModel);

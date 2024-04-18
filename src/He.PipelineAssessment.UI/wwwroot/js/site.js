@@ -2,21 +2,21 @@
 // for details on configuring this project to bundle and minify static web assets.
 
 
-var forms = document.querySelectorAll('form');
+//let forms = document.querySelectorAll('form');
 
-forms.forEach(function (form) {
-    form.addEventListener('submit', function (event) {
-        //trying to disable the button that is inside the current form only on submit
+//forms.forEach(function (form) {
+//    form.addEventListener('submit', function (event) {
+//        //trying to disable the button that is inside the current form only on submit
 
-        var submitBtn = document.querySelector('input[type="submit"]')
-        submitBtn.setAttribute('disabled', true);
-    });
-});
+//        var submitBtn = document.querySelector('input[type="submit"]')
+//        submitBtn.setAttribute('disabled', true);
+//    });
+//});
 
 // Write your JavaScript code.
 var groupCheckboxes = document.querySelectorAll('input[group][type="checkbox"]');
 
-let enabledSettings = []
+let enabledSettings = [];
 
 var currencyInputs = document.querySelectorAll('input[currency-formatter="true"]');
 
@@ -145,16 +145,9 @@ unCheckExclusiveInputsInQuestion = function ($input) {
 
 function nodeListForEach(nodes, callback) {
     if (window.NodeList.prototype.forEach) {
-        return nodes.forEach(callback)
+        return nodes.forEach(callback);
     }
     for (var i = 0; i < nodes.length; i++) {
         callback.call(window, nodes[i], i, nodes);
     }
 }
-
-
-
-
-
-
-

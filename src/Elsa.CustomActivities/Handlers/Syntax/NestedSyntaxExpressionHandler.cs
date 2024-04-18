@@ -30,6 +30,8 @@ namespace Elsa.CustomActivities.Handlers.Syntax
         private readonly PotScoreRadioExpressionHandler _potScoreRadioExpressionHandler;
         private readonly WeightedRadioExpressionHandler _weightedRadioExpressionHandler;
         private readonly WeightedCheckboxExpressionHandler _weightedCheckboxExpressionHandler;
+        private readonly ValidationExpressionHandler _validationExpressionHandler;
+
         public NestedSyntaxExpressionHandler(ILogger<IExpressionHandler> logger, IContentSerializer serializer)
         {
             _logger = logger;
@@ -41,7 +43,7 @@ namespace Elsa.CustomActivities.Handlers.Syntax
             _weightedRadioExpressionHandler = new WeightedRadioExpressionHandler(logger, serializer);
             _weightedCheckboxExpressionHandler = new WeightedCheckboxExpressionHandler(logger, serializer);
             _dataTableExpressionHandler = new DataTableExpressionHandler(logger, serializer);
-
+            _validationExpressionHandler = new ValidationExpressionHandler(logger, serializer);
         }
 
         public async Task<object?> EvaluateModel(ElsaProperty property, IExpressionEvaluator evaluator, ActivityExecutionContext context, Type propertyType)
@@ -217,6 +219,18 @@ namespace Elsa.CustomActivities.Handlers.Syntax
                 }
                 return result;
 
+            }
+            if (propertyType != null && propertyType == typeof(ValidationModel))
+            {
+                ValidationModel result = new ValidationModel();
+                var parsedProperties = ParseToList(property, ValidationSyntaxNames.Validation);
+                if (parsedProperties != null)
+                {
+                    List<Validation> validations = await _validationExpressionHandler.ElsaPropertyToValidationsList(parsedProperties, evaluator, context);
+                    result.Validations = validations;   
+                }
+                
+                return result;
             }
             else
             {

@@ -46,6 +46,7 @@ namespace He.PipelineAssessment.UI.Features.Workflow.ViewModels
         public bool IsGuidance { get; set; } = false;
         public bool IsBullet { get; set; } = false;
         public bool IsCollapsed { get; set; } = false;
+        public bool DisplayOnPage { get; set; } = true;
         public List<InformationText> Text { get; set; } = new List<InformationText>();
     }
 
@@ -80,6 +81,7 @@ namespace He.PipelineAssessment.UI.Features.Workflow.ViewModels
         public string? Url { get; set; }
         public bool IsBold { get; set; } = false;
         public bool IsGuidance { get; set; }
+        public bool DisplayOnPage { get; set; } = true;
     }
 
     public class TableInput

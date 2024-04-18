@@ -1,4 +1,5 @@
-﻿using MediatR;
+﻿using FluentValidation.Results;
+using MediatR;
 
 namespace He.PipelineAssessment.UI.Features.Workflow.QuestionScreenSaveAndContinue
 {
@@ -8,5 +9,7 @@ namespace He.PipelineAssessment.UI.Features.Workflow.QuestionScreenSaveAndContin
         public string ActivityId { get; set; } = null!;
         public string ActivityType { get; set; } = null!;
         public bool IsAuthorised { get; set; }
+        public bool IsValid { get; set; }
+        public ValidationResult? ValidationMessages { get; set; }
     }
 }

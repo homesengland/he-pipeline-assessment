@@ -1,6 +1,4 @@
-﻿using FluentValidation.Results;
-using MediatR;
-using System.ComponentModel;
+﻿using MediatR;
 using System.ComponentModel.DataAnnotations;
 using ValidationResult = FluentValidation.Results.ValidationResult;
 
@@ -22,8 +20,16 @@ namespace He.PipelineAssessment.UI.Features.Admin.AssessmentToolManagement.Comma
         public bool IsFirstWorkflow { get; set; } = false;
         [Display(Name = "Is economist workflow?")]
         public bool IsEconomistWorkflow { get; set; } = false;
+        [Display(Name = "Is ammendable workflow?")]
+        public bool IsAmendableWorkflow { get; set; } = false;
         public int AssessmentToolId { get; set; }
         public int Version { get; set; } = 1;
         public bool IsLatest { get; set; } = true;
+        [Display(Name = "Is variation?")]
+        public bool IsVariation { get; set; } = false;
+        [Display(Name = "Is early stage")]
+        public bool IsEarlyStage { get; set; } = false;
+
+        public bool IsLast { get; set; }
     }
 }

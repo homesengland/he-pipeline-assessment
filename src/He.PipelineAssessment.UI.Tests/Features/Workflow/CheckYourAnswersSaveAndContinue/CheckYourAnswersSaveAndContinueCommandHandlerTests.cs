@@ -1,5 +1,4 @@
 ﻿using AutoFixture.Xunit2;
-using Azure.Core;
 using Elsa.CustomWorkflow.Sdk.HttpClients;
 using Elsa.CustomWorkflow.Sdk.Models.Workflow;
 using He.PipelineAssessment.Infrastructure.Repository;
@@ -24,12 +23,12 @@ namespace He.PipelineAssessment.UI.Tests.Features.Workflow.CheckYourAnswersSaveA
         )
         {
             //Arrange
-            roleValidation.Setup(x => x.ValidateRole(saveAndContinueCommand.AssessmentId, saveAndContinueCommand.WorkflowDefinitionId)).ReturnsAsync(true);
-
             elsaServerHttpClient.Setup(x => x.CheckYourAnswersSaveAndContinue(It.IsAny<CheckYourAnswersSaveAndContinueCommandDto>()))
                 .ReturnsAsync((WorkflowNextActivityDataDto?)null);
             saveAndContinueCommand.AssessmentId = 1;
             saveAndContinueCommand.WorkflowDefinitionId = "Test Workflow Id";
+            roleValidation.Setup(x => x.ValidateRole(saveAndContinueCommand.AssessmentId, saveAndContinueCommand.WorkflowDefinitionId)).ReturnsAsync(true);
+
             //Act
             var exceptionThrown = await Assert.ThrowsAsync<ApplicationException>(()=> sut.Handle(saveAndContinueCommand, CancellationToken.None));
 
@@ -72,28 +71,6 @@ namespace He.PipelineAssessment.UI.Tests.Features.Workflow.CheckYourAnswersSaveA
 
         [Theory]
         [AutoMoqData]
-        public async Task Handle_ReturnsNull_GivenIncorrectBusinessArea(
-
-            [Frozen] Mock<IRoleValidation> roleValidation,
-            CheckYourAnswersSaveAndContinueCommand saveAndContinueCommand,
-            CheckYourAnswersSaveAndContinueCommandHandler sut
-        )
-        {
-            //Arrange
-
-            roleValidation.Setup(x => x.ValidateRole(saveAndContinueCommand.AssessmentId, saveAndContinueCommand.WorkflowDefinitionId)).ReturnsAsync(false);
-
-
-            //Act
-            var exceptionThrown = await Assert.ThrowsAsync<ApplicationException>(()=> sut.Handle(saveAndContinueCommand, CancellationToken.None));
-
-            //Assert
-            Assert.Equal($"Unable to submit workflow. AssessmentId: {saveAndContinueCommand.AssessmentId} WorkflowDefinitionId:{saveAndContinueCommand.WorkflowDefinitionId}", exceptionThrown.Message);
-        }
-
-
-        [Theory]
-        [AutoMoqData]
         public async Task Handle_ReturnsNull_GivenException(
           [Frozen] Mock<IRoleValidation> roleValidation,
           CheckYourAnswersSaveAndContinueCommand saveAndContinueCommand,
@@ -110,6 +87,25 @@ namespace He.PipelineAssessment.UI.Tests.Features.Workflow.CheckYourAnswersSaveA
 
             //Assert
             Assert.Equal($"Unable to submit workflow. AssessmentId: {saveAndContinueCommand.AssessmentId} WorkflowDefinitionId:{saveAndContinueCommand.WorkflowDefinitionId}", exceptionThrown.Message);
+        }
+
+        [Theory]
+        [AutoMoqData]
+        public async Task Handle_ShouldThrowException_GivenRoleValidationReturnsFalse(
+                [Frozen] Mock<IRoleValidation> roleValidation,
+                CheckYourAnswersSaveAndContinueCommand saveAndContinueCommand,
+                CheckYourAnswersSaveAndContinueCommandHandler sut)
+        {
+            //Arrange
+            roleValidation.Setup(x =>
+                    x.ValidateRole(saveAndContinueCommand.AssessmentId, saveAndContinueCommand.WorkflowDefinitionId))
+                .ReturnsAsync(false);
+
+            //Act
+            var ex = await Assert.ThrowsAsync<UnauthorizedAccessException>(() => sut.Handle(saveAndContinueCommand, CancellationToken.None));
+
+            //Assert
+            Assert.Equal($"You do not have permission to access this resource.", ex.Message);
         }
 
     }

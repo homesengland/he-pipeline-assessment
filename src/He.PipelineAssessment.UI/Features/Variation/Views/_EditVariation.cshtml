@@ -1,0 +1,125 @@
+﻿@model He.PipelineAssessment.UI.Features.Intervention.AssessmentInterventionDto;
+
+@{
+    var adminRationaleErrorClass = "";
+    var workflowDefinitionClass = "";
+    if (Model.ValidationResult != null)
+    {
+        var adminRationaleInvalid = Model.ValidationResult.Errors.Any(x => x.PropertyName == "AdministratorRationale");
+        var workflowDefinitionInvalid = Model.ValidationResult.Errors.Any(x => x.PropertyName == "TargetWorkflowDefinitions");
+        adminRationaleErrorClass = adminRationaleInvalid ? "govuk-input--error" : "";
+        workflowDefinitionClass = workflowDefinitionInvalid ? "govuk-form-group--error" : "";
+    }
+}
+
+<fieldset class="govuk-fieldset" aria-describedby="waste-hint">
+    <legend class="govuk-fieldset__legend govuk-fieldset__legend--l">
+        <span class="govuk-caption-l">@Model.AssessmentInterventionCommand.ProjectReference</span>
+        <h1 class="govuk-heading-l">
+            Decision for @Model.AssessmentInterventionCommand.DecisionType
+        </h1>
+    </legend>
+
+    <dl class="govuk-summary-list govuk-summary-list--no-border">
+        <div class="govuk-summary-list__row">
+            <dt class="govuk-summary-list__key">
+                Decision Type
+            </dt>
+            <dd class="govuk-summary-list__value">
+                @Model.AssessmentInterventionCommand.DecisionType
+            </dd>
+        </div>
+        <div class="govuk-summary-list__row">
+            <dt class="govuk-summary-list__key">
+                Name
+            </dt>
+            <dd class="govuk-summary-list__value">
+                @Model.AssessmentInterventionCommand.RequestedBy
+            </dd>
+        </div>
+        <div class="govuk-summary-list__row">
+            <dt class="govuk-summary-list__key">
+                Assessment Stage
+            </dt>
+            <dd class="govuk-summary-list__value">
+                @Model.AssessmentInterventionCommand.AssessmentName
+            </dd>
+        </div>
+        <div class="govuk-summary-list__row">
+            <dt class="govuk-summary-list__key">
+                Result
+            </dt>
+            <dd class="govuk-summary-list__value">
+                @Model.AssessmentInterventionCommand.AssessmentResult
+            </dd>
+        </div>
+        <div class="govuk-summary-list__row">
+            <dt class="govuk-summary-list__key">
+                Reason
+            </dt>
+            <dd class="govuk-summary-list__value">
+                @Model.AssessmentInterventionCommand.InterventionReasonName
+            </dd>
+        </div>
+        <div class="govuk-summary-list__row">
+            <dt class="govuk-summary-list__key">
+                Assessor Rationale
+            </dt>
+            <dd class="govuk-summary-list__value">
+                @Model.AssessmentInterventionCommand.AssessorRationale
+            </dd>
+        </div>
+    </dl>
+
+    <div class="govuk-form-group">
+        <h1 class="govuk-label-wrapper">
+            <label class="govuk-label govuk-label--m" for="AdministratorRationale">
+                Rationale
+            </label>
+        </h1>
+        <textarea class="govuk-textarea @adminRationaleErrorClass" id="AdministratorRationale" name="AssessmentInterventionCommand.AdministratorRationale" rows="5" aria-describedby="AdministratorRationale">@Model.AssessmentInterventionCommand.AdministratorRationale</textarea>
+    </div>
+    <div class="govuk-form-group">
+        <label class="govuk-label" for="TargetWorkflowDefinitions">
+            Target workflow definitions
+        </label>
+        <div id="subject-hint" class="govuk-hint">
+            These are the workflow definitions, which will be available to start after this variation request has been approved.
+        </div>
+        
+        <div class="govuk-checkboxes @workflowDefinitionClass" data-module="govuk-checkboxes" id="TargetWorkflowDefinitions">
+            @for (int i = 0; i < @Model.TargetWorkflowDefinitions.Count; i++)
+            {
+                var targetWorkflow = @Model.TargetWorkflowDefinitions[i];
+                var choiceId = "choice" + targetWorkflow.Id;
+                var labelId = "label" + targetWorkflow.Id;
+
+                <div class="govuk-checkboxes__item">
+                    @Html.CheckBoxFor(x => @Model.TargetWorkflowDefinitions[i].IsSelected, new { @class = "govuk-checkboxes__input", @id=@choiceId, @aria_labelledby=@labelId })
+                    @Html.Label(Model.TargetWorkflowDefinitions[i].DisplayName, Model.TargetWorkflowDefinitions[i].DisplayName, new { @class = "govuk-label govuk-checkboxes__label", @id = @labelId })
+                </div>
+            }
+        </div>
+    </div>
+    @Html.HiddenFor(x => Model.AssessmentInterventionCommand.AssessmentInterventionId)
+    @Html.HiddenFor(x => Model.AssessmentInterventionCommand.AssessmentToolWorkflowInstanceId)
+    @Html.HiddenFor(x => Model.AssessmentInterventionCommand.WorkflowInstanceId)
+    @Html.HiddenFor(x => Model.AssessmentInterventionCommand.AssessmentResult)
+    @Html.HiddenFor(x => Model.AssessmentInterventionCommand.AssessmentName)
+    @Html.HiddenFor(x => Model.AssessmentInterventionCommand.AssessorRationale)
+    @Html.HiddenFor(x => Model.AssessmentInterventionCommand.RequestedBy)
+    @Html.HiddenFor(x => Model.AssessmentInterventionCommand.RequestedByEmail)
+    @Html.HiddenFor(x => Model.AssessmentInterventionCommand.Administrator)
+    @Html.HiddenFor(x => Model.AssessmentInterventionCommand.AdministratorEmail)
+    @Html.HiddenFor(x => Model.AssessmentInterventionCommand.DecisionType)
+    @Html.HiddenFor(x => Model.AssessmentInterventionCommand.Status)
+    @Html.HiddenFor(x => Model.AssessmentInterventionCommand.ProjectReference)
+    @Html.HiddenFor(x => Model.AssessmentInterventionCommand.InterventionReasonName)
+    @for (int i = 0; i < Model.TargetWorkflowDefinitions!.Count; i++)
+    {
+        @Html.HiddenFor(model => Model.TargetWorkflowDefinitions[i].Id)
+        @Html.HiddenFor(model => Model.TargetWorkflowDefinitions[i].Name)
+        @Html.HiddenFor(model => Model.TargetWorkflowDefinitions[i].WorkflowDefinitionId)
+        @Html.HiddenFor(model => Model.TargetWorkflowDefinitions[i].DisplayName)
+    }
+</fieldset>

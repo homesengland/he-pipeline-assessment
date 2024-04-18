@@ -15,9 +15,41 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Remove="Features\Intervention\Controllers\**" />
+    <Compile Remove="Features\Variation\ConfirmStandardVariation\**" />
+    <Compile Remove="Features\Variation\CreateStandardVariation\**" />
+    <Compile Remove="Features\Variation\DeleteStandardVariation\**" />
+    <Compile Remove="Features\Variation\EditStandardVariationAssessor\**" />
+    <Compile Remove="Features\Variation\EditStandardVariation\**" />
+    <Compile Remove="Features\Variation\LoadStandardVariationCheckYourAnswersAssessor\**" />
+    <Compile Remove="Features\Variation\LoadStandardVariationCheckYourAnswers\**" />
+    <Compile Remove="Features\Variation\SubmitStandardVariation\**" />
     <Content Remove="Features\Intervention\Controllers\**" />
+    <Content Remove="Features\Variation\ConfirmStandardVariation\**" />
+    <Content Remove="Features\Variation\CreateStandardVariation\**" />
+    <Content Remove="Features\Variation\DeleteStandardVariation\**" />
+    <Content Remove="Features\Variation\EditStandardVariationAssessor\**" />
+    <Content Remove="Features\Variation\EditStandardVariation\**" />
+    <Content Remove="Features\Variation\LoadStandardVariationCheckYourAnswersAssessor\**" />
+    <Content Remove="Features\Variation\LoadStandardVariationCheckYourAnswers\**" />
+    <Content Remove="Features\Variation\SubmitStandardVariation\**" />
     <EmbeddedResource Remove="Features\Intervention\Controllers\**" />
+    <EmbeddedResource Remove="Features\Variation\ConfirmStandardVariation\**" />
+    <EmbeddedResource Remove="Features\Variation\CreateStandardVariation\**" />
+    <EmbeddedResource Remove="Features\Variation\DeleteStandardVariation\**" />
+    <EmbeddedResource Remove="Features\Variation\EditStandardVariationAssessor\**" />
+    <EmbeddedResource Remove="Features\Variation\EditStandardVariation\**" />
+    <EmbeddedResource Remove="Features\Variation\LoadStandardVariationCheckYourAnswersAssessor\**" />
+    <EmbeddedResource Remove="Features\Variation\LoadStandardVariationCheckYourAnswers\**" />
+    <EmbeddedResource Remove="Features\Variation\SubmitStandardVariation\**" />
     <None Remove="Features\Intervention\Controllers\**" />
+    <None Remove="Features\Variation\ConfirmStandardVariation\**" />
+    <None Remove="Features\Variation\CreateStandardVariation\**" />
+    <None Remove="Features\Variation\DeleteStandardVariation\**" />
+    <None Remove="Features\Variation\EditStandardVariationAssessor\**" />
+    <None Remove="Features\Variation\EditStandardVariation\**" />
+    <None Remove="Features\Variation\LoadStandardVariationCheckYourAnswersAssessor\**" />
+    <None Remove="Features\Variation\LoadStandardVariationCheckYourAnswers\**" />
+    <None Remove="Features\Variation\SubmitStandardVariation\**" />
   </ItemGroup>
 
   <ItemGroup>
@@ -35,15 +67,17 @@
   <ItemGroup>
     <PackageReference Include="AutoMapper" Version="11.0.1" />
     <PackageReference Include="AutoMapper.Extensions.Microsoft.DependencyInjection" Version="11.0.0" />
+    <PackageReference Include="EntityFrameworkProfiler.Appender" Version="6.0.6046" />
+    <PackageReference Include="Azure.Messaging.ServiceBus" Version="7.17.3" />
     <PackageReference Include="FluentValidation" Version="11.2.2" />
     <PackageReference Include="He.Cookies.Mvc" Version="1.0.36" />
     <PackageReference Include="He.Identity.Auth0" Version="1.0.58" />
     <PackageReference Include="He.Identity.Mvc" Version="1.0.58" />
     <PackageReference Include="MediatR" Version="12.1.1" />
     <PackageReference Include="MediatR.Extensions.Microsoft.DependencyInjection" Version="10.0.1" />
-    <PackageReference Include="Microsoft.ApplicationInsights.AspNetCore" Version="2.21.0" />
+    <PackageReference Include="Microsoft.ApplicationInsights.AspNetCore" Version="2.22.0" />
+    <PackageReference Include="Microsoft.Data.SqlClient" Version="5.1.5" />
     <PackageReference Include="Microsoft.AspNetCore.Authentication.Cookies" Version="2.2.0" />
-    <PackageReference Include="Microsoft.Data.SqlClient" Version="5.1.2" />
     <PackageReference Include="Microsoft.EntityFrameworkCore" Version="6.0.9" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="6.0.9">
       <PrivateAssets>all</PrivateAssets>
@@ -64,5 +98,10 @@
     <ProjectReference Include="..\Elsa.CustomWorkflow.Sdk\Elsa.CustomWorkflow.Sdk.csproj" />
     <ProjectReference Include="..\He.PipelineAssessment.Data\He.PipelineAssessment.Data.csproj" />
     <ProjectReference Include="..\He.PipelineAssessment.Infrastructure\He.PipelineAssessment.Infrastructure.csproj" />
+    <ProjectReference Include="..\He.PipelineAssessment.Models\He.PipelineAssessment.Models.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Integration\UpsertProject\" />
   </ItemGroup>
 </Project>

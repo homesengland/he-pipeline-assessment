@@ -20,6 +20,7 @@ namespace He.PipelineAssessment.Infrastructure.Data
         public DbSet<AssessmentToolInstanceNextWorkflow> AssessmentToolInstanceNextWorkflow { get; set; } = default!;
         public DbSet<AssessmentToolWorkflow> AssessmentToolWorkflow { get; set; } = default!;
         public DbSet<AssessmentIntervention> AssessmentIntervention { get; set; } = default!;
+        public DbSet<TargetAssessmentToolWorkflow> TargetAssessmentToolWorkflow { get; set; } = default!;
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -29,7 +30,6 @@ namespace He.PipelineAssessment.Infrastructure.Data
 
         public override Task<int> SaveChangesAsync(CancellationToken cancellationToken = new CancellationToken())
         {
-
             var userName = _userProvider.GetUserName();
 
             if (userName is null)

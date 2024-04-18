@@ -39,6 +39,17 @@ using Elsa.Services.Workflows;
 using Elsa.Server.Mappers;
 using Elsa.CustomActivities.Activities.RegionalIPUDataSource;
 using Elsa.CustomActivities.Activities.RegionalFigsDataSource;
+using FluentValidation;
+using Elsa.CustomWorkflow.Sdk.Models.Workflow;
+using Elsa.Server.Features.Workflow.QuestionScreenValidateAndSave;
+using Elsa.CustomActivities.Activities.LandValuesDataSource;
+using Elsa.CustomActivities.Activities.SinglePipelineExtendedDataSource;
+using Elsa.CustomActivities.Activities.ReturnToActivity;
+using Elsa.CustomWorkflow.Sdk.DataDictionaryHelpers;
+using Elsa.Server.DataDictionaryAccessors;
+using Elsa.CustomActivities;
+using Elsa.CustomActivities.Activities.DataverseDataSource;
+using He.PipelineAssessment.Data.Dataverse;
 
 var builder = WebApplication.CreateBuilder(args);
 var elsaConnectionString = builder.Configuration.GetConnectionString("Elsa");
@@ -75,7 +86,11 @@ builder.Services
         .UseEntityFrameworkPersistenceWithCache(ef => ef.UseSqlServer(elsaConnectionString!, typeof(Elsa.Persistence.EntityFramework.SqlServer.Migrations.Initial)), true, useCache)
         .NoCoreActivities()
         .AddActivity<SinglePipelineDataSource>()
+        .AddActivity<SinglePipelineExtendedDataSource>()
         .AddActivity<PCSProfileDataSource>()
+        .AddActivity<AgricultureLandValueDataSource>()
+        .AddActivity<OfficeLandValueDataSource>()
+        .AddActivity<LandValueDataSource>()
         .AddActivity<VFMDataSource>()
         .AddActivity<HousingNeedDataSource>()
         .AddActivity<QuestionScreen>()
@@ -87,6 +102,8 @@ builder.Services
         .AddActivity<SetVariable>()
         .AddActivity<RegionalIPUDataSource>()
         .AddActivity<RegionalFigsDataSource>()
+        .AddActivity<ReturnToActivity>()
+        .AddActivity<DataverseDataSource>()
         .AddConsoleActivities()
     );
 
@@ -110,6 +127,14 @@ builder.Services.AddDbContext<ElsaCustomContext>(config =>
 builder.Services.AddScoped<DbContext>(provider => provider.GetRequiredService<ElsaCustomContext>());
 builder.Services.AddDataProtection().PersistKeysToDbContext<ElsaCustomContext>();
 
+if (useCache)
+{
+    builder.Services.AddScoped<IDataDictionaryIntellisenseAccessor, CachedDataDictionaryIntellisenseAccessor>();
+}
+else
+{
+    builder.Services.AddScoped<IDataDictionaryIntellisenseAccessor, DataDictionaryIntellisenseAccessor>();
+}
 // Elsa API endpoints.
 builder.Services.AddElsaApiEndpoints();
 
@@ -159,6 +184,7 @@ builder.Services.AddScoped<INextActivityNavigationService, NextActivityNavigatio
 
 builder.Services.AddScoped<ITextGroupMapper, TextGroupMapper>();
 
+builder.Services.AddScoped<IValidator<WorkflowActivityDataDto>, QuestionScreenValidator>();
 
 // Allow arbitrary client browser apps to access the API.
 // In a production environment, make sure to allow only origins you trust.
@@ -183,6 +209,12 @@ builder.Services.AddOptions<IdentityClientConfig>()
     configuration.GetSection("IdentityClientConfig").Bind(settings);
 });
 
+builder.Services.AddOptions<DataverseClientConfig>()
+.Configure<IConfiguration>((settings, configuration) =>
+{
+    configuration.GetSection("DataverseClientConfig").Bind(settings);
+});
+
 
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
     .AddJwtBearer(options =>
@@ -192,7 +224,8 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
     });
 
 builder.Services.AddEsriHttpClients(builder.Configuration, builder.Environment.IsDevelopment());
-
+builder.Services.AddScoped<IDataverseResultConverter, DataverseResultConverter>();
+builder.Services.AddScoped<IDataverseClient, DataverseClient>();
 
 //HibernatingRhinos.Profiler.Appender.EntityFramework.EntityFrameworkProfiler.Initialize();
 var app = builder.Build();
@@ -223,6 +256,5 @@ app
             pattern: "{controller=Home}/{action=Index}");
 
     });
-
 
 app.Run();

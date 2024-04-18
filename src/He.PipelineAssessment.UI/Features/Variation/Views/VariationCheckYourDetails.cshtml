@@ -1,0 +1,126 @@
+﻿@using He.PipelineAssessment.Models
+@model He.PipelineAssessment.UI.Features.Variation.SubmitVariation.SubmitVariationCommand
+@{
+    ViewData["Title"] = "Submit Assessment Variation";
+    Layout = "_Layout";
+}
+<div class="text-center">
+    @{
+        var isEditable = Model.Status == InterventionStatus.Pending;
+    }
+    @using (Html.BeginForm("SubmitVariation", "Variation", FormMethod.Post))
+    {
+        @Html.AntiForgeryToken()
+        <div class="govuk-form-group">
+            <div class="govuk-!-padding-bottom-6">
+                <fieldset class="govuk-fieldset" aria-describedby="waste-hint">
+                    <legend class="govuk-fieldset__legend govuk-fieldset__legend--l">
+                        <span class="govuk-caption-l">@Model.ProjectReference</span>
+                        <h1 class="govuk-heading-l">
+                            Decision for @Model.DecisionType
+                        </h1>
+                    </legend>
+                    <div class="govuk-grid-row">
+                        <div class="govuk-grid-column-two-thirds-from-desktop">
+                            <dl class="govuk-summary-list govuk-!-margin-bottom-9">
+                                <div class="govuk-summary-list__row">
+                                    <dt class="govuk-summary-list__key">
+                                        Decision Type
+                                    </dt>
+                                    <dd class="govuk-summary-list__value">
+                                        <p>@Model.DecisionType</p>
+                                    </dd>
+                                </div>
+                                <div class="govuk-summary-list__row">
+                                    <dt class="govuk-summary-list__key">
+                                        Name
+                                    </dt>
+                                    <dd class="govuk-summary-list__value">
+                                        <p>@Model.RequestedBy</p>
+                                    </dd>
+                                </div>
+                                <div class="govuk-summary-list__row">
+                                    <dt class="govuk-summary-list__key">
+                                        Assessment Stage
+                                    </dt>
+                                    <dd class="govuk-summary-list__value">
+                                        <p>@Model.AssessmentName</p>
+                                    </dd>
+                                </div>
+                                <div class="govuk-summary-list__row">
+                                    <dt class="govuk-summary-list__key">
+                                        Result
+                                    </dt>
+                                    <dd class="govuk-summary-list__value">
+                                        <p>@Model.AssessmentResult</p>
+                                    </dd>
+                                </div>
+                                <div class="govuk-summary-list__row">
+                                    <dt class="govuk-summary-list__key">
+                                        Assessor Rationale
+                                    </dt>
+                                    <dd class="govuk-summary-list__value">
+                                        <p>@Model.AssessorRationale</p>
+                                    </dd>
+                                </div>
+                                <div class="govuk-summary-list__row">
+                                    <dt class="govuk-summary-list__key">
+                                        Rationale
+                                    </dt>
+                                    <dd class="govuk-summary-list__value">
+                                        <p>@Model.AdministratorRationale</p>
+                                    </dd>
+                                    <dd class="govuk-summary-list__actions">
+                                        @if (isEditable)
+                                        {
+                                            @Html.ActionLink("Change", "EditVariation", "Variation", new { InterventionId = Model.AssessmentInterventionId }, new { @class = "govuk-link" })
+                                        }
+                                    </dd>
+                                </div>
+                                <div class="govuk-summary-list__row">
+                                    <dt class="govuk-summary-list__key">
+                                        Target Workflow Definitions
+                                    </dt>
+                                    <dd class="govuk-summary-list__value">
+                                        @foreach (var definition in Model.SelectedWorkflowDefinitions)
+                                        {
+                                            <p>@definition.DisplayName</p>
+                                        }
+                                        
+                                    </dd>
+                                    <dd class="govuk-summary-list__actions">
+                                        @if (isEditable)
+                                        {
+                                            @Html.ActionLink("Change", "EditVariation", "Variation", new { InterventionId = Model.AssessmentInterventionId }, new { @class = "govuk-link" })
+                                        }
+                                    </dd>
+                                </div>
+                                <div class="govuk-summary-list__row">
+                                    <dt class="govuk-summary-list__key">
+                                        Status
+                                    </dt>
+                                    <dd class="govuk-summary-list__value">
+                                        <p>@Model.Status</p>
+                                    </dd>
+                                </div>
+                            </dl>
+                        </div>
+                    </div>
+
+                    @Html.HiddenFor(x => Model.AssessmentInterventionId)
+                    @Html.HiddenFor(x => Model.DecisionType)
+
+                </fieldset>
+            </div>
+            <div class="govuk-button-group">
+                @if (isEditable)
+                {
+                    <input id="Submit" type="submit" value="Submit" name="submitButton" class="govuk-button"/>
+                    <input id="Reject" type="submit" value="Reject" name="submitButton" class="govuk-button govuk-button--warning"/>
+                }
+                @Html.ActionLink("Go to Assessment Summary", "Summary", "Assessment", new { AssessmentId = Model.AssessmentId, CorrelationId = Model.CorrelationId }, new { @class = "govuk-button" })
+            </div>
+
+        </div>
+    }
+</div>

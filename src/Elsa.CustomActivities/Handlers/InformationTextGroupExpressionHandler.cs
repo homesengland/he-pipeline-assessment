@@ -61,6 +61,7 @@ namespace Elsa.CustomActivities.Handlers
                 Guidance = isGuidance,
                 Collapsed = isCollapsed,
                 Bullets = isBullets,
+                DisplayOnPage= condition,
                 TextRecords = records.TextRecords.ToList()
             };
         }
@@ -106,7 +107,7 @@ namespace Elsa.CustomActivities.Handlers
             }
             catch(Exception ex)
             {
-                _logger.LogError("An exception was thrown whilst attempting to parse Text Activity", ex);
+                _logger.LogError(ex, "An exception was thrown whilst attempting to parse Text Activity");
                 return new TextModel();
             }
 

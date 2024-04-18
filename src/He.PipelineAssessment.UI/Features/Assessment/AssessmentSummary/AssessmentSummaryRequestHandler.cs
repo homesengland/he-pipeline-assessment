@@ -1,9 +1,8 @@
 ﻿using He.PipelineAssessment.Infrastructure.Repository;
 using He.PipelineAssessment.Infrastructure.Repository.StoredProcedure;
-using He.PipelineAssessment.Models;
 using He.PipelineAssessment.Models.ViewModels;
+using He.PipelineAssessment.UI.Authorization;
 using MediatR;
-using System.Diagnostics;
 
 namespace He.PipelineAssessment.UI.Features.Assessment.AssessmentSummary
 {
@@ -12,14 +11,17 @@ namespace He.PipelineAssessment.UI.Features.Assessment.AssessmentSummary
         private readonly IAssessmentRepository _repository;
         private readonly IStoredProcedureRepository _storedProcedureRepository;
         private readonly ILogger<AssessmentSummaryRequestHandler> _logger;
+        private readonly IRoleValidation _roleValidation;
 
         public AssessmentSummaryRequestHandler(IAssessmentRepository repository,
                                                ILogger<AssessmentSummaryRequestHandler> logger,
-                                               IStoredProcedureRepository storedProcedureRepository)
+                                               IStoredProcedureRepository storedProcedureRepository, 
+                                               IRoleValidation roleValidation)
         {
             _repository = repository;
             _logger = logger;
             _storedProcedureRepository = storedProcedureRepository;
+            _roleValidation = roleValidation;
         }
         public async Task<AssessmentSummaryResponse?> Handle(AssessmentSummaryRequest request, CancellationToken cancellationToken)
         {
@@ -30,6 +32,14 @@ namespace He.PipelineAssessment.UI.Features.Assessment.AssessmentSummary
                 {
                     throw new ApplicationException($"Assessment with id {request.AssessmentId} not found.");
                 }
+
+                var validateSensitiveStatus =
+                    _roleValidation.ValidateSensitiveRecords(dbAssessment);
+                if (!validateSensitiveStatus)
+                {
+                    throw new UnauthorizedAccessException("You do not have permission to access this resource.");
+                }
+
                 var assessmentStages = await _storedProcedureRepository.GetAssessmentStages(request.AssessmentId);
                 var startableWorkflows = await _storedProcedureRepository.GetStartableTools(request.AssessmentId);
 
@@ -38,17 +48,17 @@ namespace He.PipelineAssessment.UI.Features.Assessment.AssessmentSummary
                 if (assessmentStages.Any())
                 {
                     //Get distinct list of tools
-                    var uniqueTools = assessmentStages.Select(x => new { x.AssessmentToolId, x.Name, x.Order })
+                    var uniqueTools = assessmentStages.Select(x => new { x.AssessmentToolId, x.Name, x.Order, x.IsVariation })
                       .Distinct().ToList();
                     foreach (var assessmentTool in uniqueTools)
                     {
                        //Add All Current Workflow Instances in Draft or Submitted
-                       var assessmentStagesForCurrentTool = assessmentStages.Where(x => x.AssessmentToolId == assessmentTool.AssessmentToolId);
+                       var assessmentStagesForCurrentTool = assessmentStages.Where(x => x.AssessmentToolId == assessmentTool.AssessmentToolId && x.IsVariation == assessmentTool.IsVariation);
                        var workflowInstances = AssessmentSummaryStage(assessmentStagesForCurrentTool).ToList();
                        stages.AddRange(workflowInstances);
 
                         //Add All Startable Tools
-                        var startableWorkflowForCurrentTool = startableWorkflows.Where(x => x.AssessmentToolId == assessmentTool.AssessmentToolId);
+                        var startableWorkflowForCurrentTool = startableWorkflows.Where(x => x.AssessmentToolId == assessmentTool.AssessmentToolId && x.IsVariation == assessmentTool.IsVariation);
                         var startableList = AssessmentSummaryStage(startableWorkflowForCurrentTool,assessmentTool.Name,assessmentTool.Order).ToList();
                         stages.AddRange(startableList);
                             
@@ -67,6 +77,7 @@ namespace He.PipelineAssessment.UI.Features.Assessment.AssessmentSummary
                 var interventions = new List<AssessmentInterventionViewModel>();
 
                 var dbInterventions = await _storedProcedureRepository.GetAssessmentInterventionList(request.AssessmentId);
+
                 if (dbInterventions.Any())
                 {
                     interventions = dbInterventions;
@@ -76,7 +87,7 @@ namespace He.PipelineAssessment.UI.Features.Assessment.AssessmentSummary
                 {
                     CorrelationId = request.CorrelationId,
                     AssessmentId = request.AssessmentId,
-                    SiteName = dbAssessment!.SiteName,
+                    SiteName = dbAssessment.SiteName,
                     CounterParty = dbAssessment.Counterparty,
                     Reference = dbAssessment.Reference,
                     Stages = stages,
@@ -85,6 +96,11 @@ namespace He.PipelineAssessment.UI.Features.Assessment.AssessmentSummary
                     ProjectManager = dbAssessment.ProjectManager,
                     Interventions = interventions
                 };
+            }
+            catch (UnauthorizedAccessException e)
+            {
+                _logger.LogError(e, e.Message);
+                throw;
             }
             catch (Exception e)
             {
@@ -118,6 +134,7 @@ namespace He.PipelineAssessment.UI.Features.Assessment.AssessmentSummary
                     WorkflowDefinitionId = startableAssessmentTool?.WorkflowDefinitionId,
                     AssessmentToolId = startableAssessmentTool?.AssessmentToolId,
                     IsFirstWorkflow = startableAssessmentTool?.IsFirstWorkflow,
+                    IsVariation = startableAssessmentTool?.IsVariation,
                     AssessmentToolWorkflowId = startableAssessmentTool?.AssessmentToolWorkflowId
                 };
                 stageList.Add(stage);
@@ -150,6 +167,7 @@ namespace He.PipelineAssessment.UI.Features.Assessment.AssessmentSummary
                         SubmittedDateTime = item.SubmittedDateTime,
                         AssessmentToolId = item.AssessmentToolId,
                         IsFirstWorkflow = item.IsFirstWorkflow,
+                        IsVariation = item.IsVariation,
                         AssessmentToolWorkflowInstanceId = item.AssessmentToolWorkflowInstanceId,
                         Result = item.Result,
                         SubmittedBy = item.SubmittedBy,

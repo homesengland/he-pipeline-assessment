@@ -1,50 +1,24 @@
-﻿using He.PipelineAssessment.Infrastructure.Repository;
-using He.PipelineAssessment.UI.Common.Exceptions;
-using He.PipelineAssessment.UI.Features.Intervention;
+﻿using He.PipelineAssessment.UI.Features.Intervention;
 using He.PipelineAssessment.UI.Features.Rollback.SubmitRollback;
+using He.PipelineAssessment.UI.Services;
 using MediatR;
 using Newtonsoft.Json;
 
 namespace He.PipelineAssessment.UI.Features.Rollback.LoadRollbackCheckYourAnswers
 {
-    public class LoadRollbackCheckYourAnswersRequestHandler : IRequestHandler<LoadRollbackCheckYourAnswersRequest, SubmitRollbackCommand>
+    public class LoadRollbackCheckYourAnswersRequestHandler : IRequestHandler<LoadRollbackCheckYourAnswersRequest, AssessmentInterventionCommand>
     {
+        private readonly IInterventionService _interventionService;
 
-        private readonly IAssessmentRepository _assessmentRepository;
-        private readonly IAssessmentInterventionMapper _mapper;
-        private readonly ILogger<LoadRollbackCheckYourAnswersRequestHandler> _logger;
-
-        public LoadRollbackCheckYourAnswersRequestHandler(IAssessmentRepository assessmentRepository,
-            IAssessmentInterventionMapper mapper,
-            ILogger<LoadRollbackCheckYourAnswersRequestHandler> logger)
+        public LoadRollbackCheckYourAnswersRequestHandler(IInterventionService interventionService)
         {
-            _assessmentRepository = assessmentRepository;
-            _logger = logger;
-            _mapper = mapper;
+            _interventionService = interventionService;
         }
 
-        public async Task<SubmitRollbackCommand> Handle(LoadRollbackCheckYourAnswersRequest request, CancellationToken cancellationToken)
+        public async Task<AssessmentInterventionCommand> Handle(LoadRollbackCheckYourAnswersRequest request, CancellationToken cancellationToken)
         {
-            try
-            {
-                var intervention = await _assessmentRepository.GetAssessmentIntervention(request.InterventionId);
-                if (intervention == null)
-                {
-                    throw new NotFoundException($"Assessment Intervention with Id {request.InterventionId} not found");
-                }
-                AssessmentInterventionCommand command = _mapper.AssessmentInterventionCommandFromAssessmentIntervention(intervention);
-
-                var submitRollbackCommand = SerializedCommand(command);
-
-                return submitRollbackCommand;
-            }
-            catch (Exception e)
-            {
-                _logger.LogError(e, e.Message);
-                throw new ApplicationException($"Unable to load rollback. InterventionId: {request.InterventionId}");
-            }
-
-
+            var assessmentInterventionCommand = await _interventionService.LoadInterventionCheckYourAnswersRequest(request);
+            return SerializedCommand(assessmentInterventionCommand);
         }
 
         private SubmitRollbackCommand SerializedCommand(AssessmentInterventionCommand command)
@@ -53,7 +27,7 @@ namespace He.PipelineAssessment.UI.Features.Rollback.LoadRollbackCheckYourAnswer
             var submitRollbackCommand = JsonConvert.DeserializeObject<SubmitRollbackCommand>(serializedCommand);
             if (submitRollbackCommand == null)
             {
-                throw new ArgumentException($"Unable to deserialise SubmitOverrideCommand: {serializedCommand} from serialized AssessmentInterventionCommand");
+                throw new ArgumentException($"Unable to deserialise SubmitRollbackCommand: {serializedCommand} from serialized AssessmentInterventionCommand");
             }
             return submitRollbackCommand;
         }

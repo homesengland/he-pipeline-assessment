@@ -1,6 +1,6 @@
 ﻿using Elsa.CustomActivities.Describers;
 using Elsa.Server.Features.Activities.CustomActivityProperties;
-using Elsa.Server.Features.Activities.DataDictionary;
+using Elsa.Server.Features.Activities.DataDictionaryProvider;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -38,7 +38,22 @@ namespace Elsa.Server.Features.Activities
         {
             try
             {
-                string results = await _mediator.Send(new DataDictionaryCommand());
+                string results = await _mediator.Send(new DataDictionaryCommand() { IncludeArchived = false});
+                return Ok(results);
+
+            }
+            catch (Exception e)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, e);
+            }
+        }
+
+        [HttpGet("dictionary/archived")]
+        public async Task<IActionResult> GetArchivedDataDictionary()
+        {
+            try
+            {
+                string results = await _mediator.Send(new DataDictionaryCommand() { IncludeArchived = true });
                 return Ok(results);
 
             }

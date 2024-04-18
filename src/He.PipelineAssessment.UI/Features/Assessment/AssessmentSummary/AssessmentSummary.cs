@@ -37,6 +37,7 @@ namespace He.PipelineAssessment.UI.Features.Assessment.AssessmentSummary
         public int? AssessmentToolWorkflowId { get; set; }
         public int? AssessmentToolWorkflowInstanceId { get; set; }
         public bool? IsFirstWorkflow { get; set; }
+        public bool? IsVariation { get; set; }
         public string? Result { get; set; } = null;
         public string? SubmittedBy { get; set; } = null;
 
@@ -68,6 +69,10 @@ namespace He.PipelineAssessment.UI.Features.Assessment.AssessmentSummary
                 case AssessmentToolWorkflowInstanceConstants.Submitted:
                     return "green";
                 case AssessmentToolWorkflowInstanceConstants.SuspendedRollBack:
+                    return "red";
+                case AssessmentToolWorkflowInstanceConstants.SuspendedAmendment:
+                    return "red";
+                case AssessmentToolWorkflowInstanceConstants.SuspendOverrides:
                     return "red";
             }
             return "grey";

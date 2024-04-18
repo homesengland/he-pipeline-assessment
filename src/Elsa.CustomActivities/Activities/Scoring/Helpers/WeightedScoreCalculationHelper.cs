@@ -33,7 +33,7 @@ namespace Elsa.CustomActivities.Activities.Scoring.Helpers
             }
             catch (Exception e)
             {
-                _logger.LogError("Error whilst retrieving Total Weighted Score", e);
+                _logger.LogError(e, "Error whilst retrieving Total Weighted Score");
                 throw (new Exception(e.Message, e.InnerException));
             }
 

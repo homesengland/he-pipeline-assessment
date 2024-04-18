@@ -1,8 +1,9 @@
 ﻿@using He.PipelineAssessment.UI.Features.Workflow.ViewModels
+@using Elsa.CustomWorkflow.Sdk.Providers;
 @model He.PipelineAssessment.UI.Features.Workflow.ViewModels.Question
 @{
-    var itemName = "Data.Questions[" + Model.Index + "].Radio.SelectedAnswer";
-    var formItemName = "Data.Questions[" + Model.Index + "].Radio";
+    var itemName = ValidationPropertyNameProvider.GetPropertyName(Model.QuestionType, Model.Index) + ".SelectedAnswer";
+    var formItemName = ValidationPropertyNameProvider.GetPropertyName(Model.QuestionType, Model.Index);
 
     var itemId = Model.Index + "radio_multi_select_";
     var errorFormClass = !Model.IsValid ? "govuk-form-group--error" : "";

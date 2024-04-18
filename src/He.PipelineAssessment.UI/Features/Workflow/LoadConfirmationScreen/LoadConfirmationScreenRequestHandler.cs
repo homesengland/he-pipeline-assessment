@@ -6,8 +6,10 @@ using He.PipelineAssessment.Models;
 using MediatR;
 using System.Text.Json;
 using He.PipelineAssessment.Infrastructure;
+using He.PipelineAssessment.UI.Authorization;
 using He.PipelineAssessment.UI.Common.Utility;
 using He.PipelineAssessment.UI.Helper;
+using He.PipelineAssessment.UI.Integration.ServiceBusSend;
 
 namespace He.PipelineAssessment.UI.Features.Workflow.LoadConfirmationScreen
 {
@@ -19,8 +21,19 @@ namespace He.PipelineAssessment.UI.Features.Workflow.LoadConfirmationScreen
         private readonly IDateTimeProvider _dateTimeProvider;
         private readonly IAssessmentToolWorkflowInstanceHelpers _assessmentToolWorkflowInstanceHelpers;
         private readonly ILogger<LoadConfirmationScreenRequestHandler> _logger;
+        private readonly IRoleValidation _roleValidation;
 
-        public LoadConfirmationScreenRequestHandler(IElsaServerHttpClient elsaServerHttpClient, IAssessmentRepository assessmentRepository, IUserProvider userProvider, IDateTimeProvider dateTimeProvider, IAssessmentToolWorkflowInstanceHelpers assessmentToolWorkflowInstanceHelpers, ILogger<LoadConfirmationScreenRequestHandler> logger)
+        private readonly IServiceBusMessageSender _serviceBusMessageSender;
+
+        public LoadConfirmationScreenRequestHandler(
+            IElsaServerHttpClient elsaServerHttpClient, 
+            IAssessmentRepository assessmentRepository, 
+            IUserProvider userProvider, 
+            IDateTimeProvider dateTimeProvider, 
+            IAssessmentToolWorkflowInstanceHelpers assessmentToolWorkflowInstanceHelpers, 
+            ILogger<LoadConfirmationScreenRequestHandler> logger, 
+            IRoleValidation roleValidation,
+            IServiceBusMessageSender serviceBusMessageSender)
         {
             _elsaServerHttpClient = elsaServerHttpClient;
             _assessmentRepository = assessmentRepository;
@@ -28,6 +41,8 @@ namespace He.PipelineAssessment.UI.Features.Workflow.LoadConfirmationScreen
             _dateTimeProvider = dateTimeProvider;
             _assessmentToolWorkflowInstanceHelpers = assessmentToolWorkflowInstanceHelpers;
             _logger = logger;
+            _roleValidation = roleValidation;
+            _serviceBusMessageSender = serviceBusMessageSender;
         }
 
         public async Task<LoadConfirmationScreenResponse?> Handle(LoadConfirmationScreenRequest request, CancellationToken cancellationToken)
@@ -50,6 +65,23 @@ namespace He.PipelineAssessment.UI.Features.Workflow.LoadConfirmationScreen
                     var currentAssessmentToolWorkflowInstance = await _assessmentRepository.GetAssessmentToolWorkflowInstance(response.Data.WorkflowInstanceId);
                     if (currentAssessmentToolWorkflowInstance != null && result != null)
                     {
+                        var validateSensitiveStatus =
+                            _roleValidation.ValidateSensitiveRecords(currentAssessmentToolWorkflowInstance.Assessment);
+                        if (!validateSensitiveStatus)
+                        {
+                            throw new UnauthorizedAccessException("You do not have permission to access this resource.");
+                        }
+                        var isRoleExist = await _roleValidation.ValidateRole(currentAssessmentToolWorkflowInstance!.AssessmentId,
+                            currentAssessmentToolWorkflowInstance!.WorkflowDefinitionId);
+
+                        if (!isRoleExist)
+                        {
+                            return new LoadConfirmationScreenResponse
+                            {
+                                IsAuthorised = false
+                            };
+                        }
+
                         if (currentAssessmentToolWorkflowInstance.Status == AssessmentToolWorkflowInstanceConstants.Draft)
                         {
                             var data = response.Data.ConfirmationTitle;
@@ -61,8 +93,8 @@ namespace He.PipelineAssessment.UI.Features.Workflow.LoadConfirmationScreen
                             await _assessmentRepository.SaveChanges();
 
 
-                            if (!string.IsNullOrEmpty(response.Data.NextWorkflowDefinitionIds))
-                            {
+                            if (!string.IsNullOrEmpty(response.Data.NextWorkflowDefinitionIds) && !currentAssessmentToolWorkflowInstance.IsVariation)
+                            { 
                                 var nextWorkflows = new List<AssessmentToolInstanceNextWorkflow>();
                                 var workflowDefinitionIds = response.Data.NextWorkflowDefinitionIds.Split(',', StringSplitOptions.TrimEntries);
                                 foreach (var workflowDefinitionId in workflowDefinitionIds)
@@ -70,12 +102,14 @@ namespace He.PipelineAssessment.UI.Features.Workflow.LoadConfirmationScreen
                                     var nextWorkflow =
                                         await _assessmentRepository.GetAssessmentToolInstanceNextWorkflow(currentAssessmentToolWorkflowInstance.Id,
                                             workflowDefinitionId);
+                                    var allAssessmentToolWorkflowInstances = await _assessmentRepository.GetAssessmentToolWorkflowInstances(currentAssessmentToolWorkflowInstance.AssessmentId);
+                                    var existingAssessmentToolWorkflowInstances = allAssessmentToolWorkflowInstances.Where(x => x.WorkflowDefinitionId == workflowDefinitionId);
+     
 
-                                    if (nextWorkflow == null)
+                                    if (nextWorkflow == null && !existingAssessmentToolWorkflowInstances.Any())
                                     {
                                         var assessmentToolInstanceNextWorkflow =
-                                            AssessmentToolInstanceNextWorkflow(currentAssessmentToolWorkflowInstance.AssessmentId,
-                                                currentAssessmentToolWorkflowInstance.Id, workflowDefinitionId);
+                                            AssessmentToolInstanceNextWorkflow(currentAssessmentToolWorkflowInstance, workflowDefinitionId);
                                         nextWorkflows.Add(assessmentToolInstanceNextWorkflow);
                                     }
                                 }
@@ -83,10 +117,17 @@ namespace He.PipelineAssessment.UI.Features.Workflow.LoadConfirmationScreen
                                 if (nextWorkflows.Any())
                                     await _assessmentRepository.CreateAssessmentToolInstanceNextWorkflows(nextWorkflows);
                             }
+
+                            _serviceBusMessageSender.SendMessage(currentAssessmentToolWorkflowInstance);
                         }
                         result.CorrelationId = currentAssessmentToolWorkflowInstance.Assessment.SpId;
                         result.AssessmentId = currentAssessmentToolWorkflowInstance.AssessmentId;
-                        result.IsLatestSubmittedWorkflow = _assessmentToolWorkflowInstanceHelpers.IsLatestSubmittedWorkflow(currentAssessmentToolWorkflowInstance);
+                        if (currentAssessmentToolWorkflowInstance.AssessmentToolWorkflow != null)
+                        {
+                            result.IsVariationAllowed = await _assessmentToolWorkflowInstanceHelpers.IsVariationAllowed(currentAssessmentToolWorkflowInstance);
+                            result.IsLatestSubmittedWorkflow = await _assessmentToolWorkflowInstanceHelpers.IsOrderEqualToLatestSubmittedWorkflowOrder(currentAssessmentToolWorkflowInstance);
+                            result.IsAmendableWorkflow = currentAssessmentToolWorkflowInstance.AssessmentToolWorkflow.IsAmendable;
+                        }
                         PageHeaderHelper.PopulatePageHeaderInformation(result, currentAssessmentToolWorkflowInstance);
                         return await Task.FromResult(result);
                     }
@@ -95,7 +136,12 @@ namespace He.PipelineAssessment.UI.Features.Workflow.LoadConfirmationScreen
                 _logger.LogError($"Failed to load Confirmation Screen, response from elsa server client is null. ActivityId: {request.ActivityId} WorkflowInstanceId: {request.WorkflowInstanceId}");
                 throw new ApplicationException("Failed to load Confirmation Screen activity.");
             }
-            catch(Exception e)
+            catch (UnauthorizedAccessException e)
+            {
+                _logger.LogError(e, e.Message);
+                throw;
+            }
+            catch (Exception e)
             {
                 _logger.LogError(e, e.Message);
                 _logger.LogError($"Failed to load Confirmation Screen. ActivityId: {request.ActivityId} WorkflowInstanceId: {request.WorkflowInstanceId}");
@@ -103,13 +149,14 @@ namespace He.PipelineAssessment.UI.Features.Workflow.LoadConfirmationScreen
             }
         }
 
-        private AssessmentToolInstanceNextWorkflow AssessmentToolInstanceNextWorkflow(int assessmentId, int assessmentToolWorkflowInstanceId, string workflowDefinitionId)
+        private AssessmentToolInstanceNextWorkflow AssessmentToolInstanceNextWorkflow(AssessmentToolWorkflowInstance currentAssessmentToolWorkflowInstance, string workflowDefinitionId)
         {
             return new AssessmentToolInstanceNextWorkflow
             {
-                AssessmentId = assessmentId,
-                AssessmentToolWorkflowInstanceId = assessmentToolWorkflowInstanceId,
-                NextWorkflowDefinitionId = workflowDefinitionId
+                AssessmentId = currentAssessmentToolWorkflowInstance.AssessmentId,
+                AssessmentToolWorkflowInstanceId = currentAssessmentToolWorkflowInstance.Id,
+                NextWorkflowDefinitionId = workflowDefinitionId,
+                IsLast = currentAssessmentToolWorkflowInstance.AssessmentToolWorkflow.IsLast
             };
         }
     }

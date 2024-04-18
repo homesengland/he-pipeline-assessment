@@ -1,4 +1,6 @@
-﻿namespace He.PipelineAssessment.Models.ViewModels;
+﻿using He.PipelineAssessment.Models.Helper;
+
+namespace He.PipelineAssessment.Models.ViewModels;
 
 public class AssessmentInterventionViewModel : AuditableEntityViewModel
 {
@@ -9,6 +11,8 @@ public class AssessmentInterventionViewModel : AuditableEntityViewModel
     public string? Administrator { get; set; }
     public string Status { get; set; } = null!;
     public string DecisionType { get; set; } = null!;
+    public string? SensitiveStatus { get; set; } = null!;
+    public string ProjectManager { get; set; } = null!;
 
     public string StatusDisplayTag()
     {
@@ -22,5 +26,10 @@ public class AssessmentInterventionViewModel : AuditableEntityViewModel
                 return "red";
         }
         return "yellow";
+    }
+
+    public bool IsSensitiveRecord()
+    {
+        return SensitiveStatusHelper.IsSensitiveStatus(SensitiveStatus);
     }
 }

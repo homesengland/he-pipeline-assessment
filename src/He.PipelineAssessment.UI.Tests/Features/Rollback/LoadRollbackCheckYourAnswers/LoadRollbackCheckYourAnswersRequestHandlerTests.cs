@@ -3,8 +3,11 @@ using He.PipelineAssessment.Infrastructure.Repository;
 using He.PipelineAssessment.Models;
 using He.PipelineAssessment.Tests.Common;
 using He.PipelineAssessment.UI.Features.Intervention;
+using He.PipelineAssessment.UI.Features.Rollback.ConfirmRollback;
 using He.PipelineAssessment.UI.Features.Rollback.LoadRollbackCheckYourAnswers;
+using He.PipelineAssessment.UI.Features.Rollback.LoadRollbackCheckYourAnswersAssessor;
 using He.PipelineAssessment.UI.Features.Rollback.SubmitRollback;
+using He.PipelineAssessment.UI.Services;
 using Moq;
 using Xunit;
 
@@ -14,40 +17,52 @@ namespace He.PipelineAssessment.UI.Tests.Features.Rollback.LoadRollbackCheckYour
     {
         [Theory]
         [AutoMoqData]
-        public async Task Handle_ShouldError_GivenInterventionNotFound(
-            LoadRollbackCheckYourAnswersRequest request,
-            LoadRollbackCheckYourAnswersRequestHandler sut)
-        {
-            //Act
-            var ex = await Assert.ThrowsAsync<ApplicationException>(() => sut.Handle(request, CancellationToken.None));
-
-            //Assert
-            Assert.Equal($"Unable to load rollback. InterventionId: {request.InterventionId}", ex.Message);
-        }
-
-        [Theory]
-        [AutoMoqData]
-        public async Task Handle_ShouldReturn(
-            [Frozen] Mock<IAssessmentRepository> repository,
-            [Frozen]Mock<IAssessmentInterventionMapper> mapper,
-            AssessmentInterventionCommand command,
-            AssessmentIntervention intervention,
+        public async Task Handle_ShouldError_GivenInterventionServiceErrors(
+            [Frozen] Mock<IInterventionService> interventionService,
+            Exception e,
             LoadRollbackCheckYourAnswersRequest request,
             LoadRollbackCheckYourAnswersRequestHandler sut)
         {
             //Arrange
-            repository.Setup(x => x.GetAssessmentIntervention(request.InterventionId))
-                .ReturnsAsync(intervention);
-
-            mapper.Setup(x => x.AssessmentInterventionCommandFromAssessmentIntervention(intervention))
-                .Returns(command);
+            interventionService.Setup(x => x.LoadInterventionCheckYourAnswersRequest(request)).Throws(e);
 
             //Act
-            var result =  await sut.Handle(request, CancellationToken.None);
+            var ex = await Assert.ThrowsAsync<Exception>(() => sut.Handle(request, CancellationToken.None));
+
+            //Assert
+            Assert.Equal(e.Message, ex.Message);
+        }
+
+        [Theory]
+        [AutoMoqData]
+        public async Task Handle_ShouldReturnSubmitRollbackCommand(
+            [Frozen] Mock<IInterventionService> interventionService,
+            AssessmentInterventionCommand command,
+            LoadRollbackCheckYourAnswersRequest request,
+            LoadRollbackCheckYourAnswersRequestHandler sut)
+        {
+            //Arrange
+            interventionService.Setup(x => x.LoadInterventionCheckYourAnswersRequest(request))
+                .ReturnsAsync(command);
+
+            //Act
+            var result = await sut.Handle(request, CancellationToken.None);
 
             //Assert
             Assert.NotNull(result);
             Assert.IsType<SubmitRollbackCommand>(result);
+            Assert.Equal(command.CorrelationId, result.CorrelationId);
         }
+
+        //[Theory]
+        //[AutoMoqData]
+        //public async Task Handle_ShouldThrow_GivenInterventionServiceReturnsNonSubmitRollbackCommand(
+        //    [Frozen] Mock<IInterventionService> interventionService,
+        //    AssessmentInterventionCommand command,
+        //    LoadRollbackCheckYourAnswersRequest request,
+        //    LoadRollbackCheckYourAnswersRequestHandler sut)
+        //{
+        //    //TODO: not sure how easy it will be to do though
+        //}
     }
 }

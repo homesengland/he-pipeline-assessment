@@ -11,7 +11,6 @@ using RedLockNet.SERedis;
 using RedLockNet;
 using StackExchange.Redis;
 using Elsa.Extensions;
-using Rebus.Threading;
 
 namespace Elsa.Server.Extensions
 {

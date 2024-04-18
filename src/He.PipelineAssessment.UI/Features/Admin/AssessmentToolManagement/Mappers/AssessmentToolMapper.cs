@@ -30,8 +30,12 @@ namespace He.PipelineAssessment.UI.Features.Admin.AssessmentToolManagement.Mappe
                         IsFirstWorkflow = y.IsFirstWorkflow,
                         IsEconomistWorkflow = y.IsEconomistWorkflow,
                         IsLatest = y.IsLatest,
+                        IsVariation = y.IsVariation,
+                        IsEarlyStage = y.IsEarlyStage, 
+                        IsLast = y.IsLast,
                         WorkflowDefinitionId = y.WorkflowDefinitionId,
                         Version = y.Version,
+                        IsAmendableWorkflow = y.IsAmendable,
 
                     }).ToList() : new List<AssessmentToolWorkflowDto> { }
                 }).ToList(),
@@ -58,9 +62,13 @@ namespace He.PipelineAssessment.UI.Features.Admin.AssessmentToolManagement.Mappe
                     AssessmentToolId = x.AssessmentToolId,
                     IsFirstWorkflow = x.IsFirstWorkflow,
                     IsEconomistWorkflow = x.IsEconomistWorkflow,
+                    IsAmendableWorkflow = x.IsAmendable,
                     IsLatest = x.IsLatest,
                     Version = x.Version,
-                    WorkflowDefinitionId = x.WorkflowDefinitionId
+                    WorkflowDefinitionId = x.WorkflowDefinitionId,
+                    IsVariation = x.IsVariation,
+                    IsLast = x.IsLast,
+                    IsEarlyStage = x.IsEarlyStage,
                 }).ToList();
         }
     }

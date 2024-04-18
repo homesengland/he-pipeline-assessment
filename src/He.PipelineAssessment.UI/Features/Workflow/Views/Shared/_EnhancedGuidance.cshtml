@@ -1,6 +1,7 @@
 ﻿@model He.PipelineAssessment.UI.Features.Workflow.ViewModels.Question
 
-
+@if (Model.EnhancedGuidance != null && Model.EnhancedGuidance.Any(x=> x.DisplayOnPage && x.Text.Any(x=>x.DisplayOnPage)))
+{
 <details class="override-question-guidance govuk-details" data-module="govuk-details">
     <summary class="govuk-details__summary">
         <span class="govuk-details__summary-text">
@@ -8,13 +9,14 @@
         </span>
     </summary>
     <div class="govuk-details__text">
-        @if (Model.EnhancedGuidance != null && Model.EnhancedGuidance.Any())
-        {
             @foreach (var text in Model.EnhancedGuidance)
             {
-                @await Html.PartialAsync("_InformationGroup", text)
+                if (text.DisplayOnPage && text.Text.Any(x => x.DisplayOnPage ))
+                {
+                    @await Html.PartialAsync("_InformationGroup", text)
+                }
             }
-        }
+        
     </div>
 </details>
 
@@ -47,4 +49,5 @@
         <input type="hidden" name="@hiddenItemIsHyperlink" value="@Model.EnhancedGuidance[i].Text[j].IsHyperlink.ToString()" />
         <input type="hidden" name="@hiddenItemUrl" value="@Model.EnhancedGuidance[i].Text[j].Url" />
     }
+}
 }

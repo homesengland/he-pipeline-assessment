@@ -1,9 +1,10 @@
 ﻿@using He.PipelineAssessment.UI.Features.Workflow.ViewModels
 @using He.PipelineAssessment.UI.Helper
+@using Elsa.CustomWorkflow.Sdk.Providers;
 @model He.PipelineAssessment.UI.Features.Workflow.ViewModels.Question
 @{
     var itemName = "Data.Questions[" + Model.Index + "].Decimal";
-    var answerName = "Data.Questions[" + Model.Index + "].Answers[0]";
+    var answerName = ValidationPropertyNameProvider.GetPropertyName(Model.QuestionType, Model.Index);
     var errorFormClass = !Model.IsValid ? "govuk-form-group--error" : "";
     var errorFieldClass = !Model.IsValid ? "govuk-input--error" : "";
     var isReadOnly = Model.IsReadOnly ? "disabled" : "";

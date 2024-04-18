@@ -66,6 +66,7 @@ export class IntellisenseGatherer {
     let definitions = await this.getJavaScriptTypeDefinitions(state.workflowDefinitionId, this.context);
     state.javaScriptTypeDefinitions = definitions;
     if (state.javaScriptTypeDefinitions != null) {
+      this.appendGatheredValues();
       state.javaScriptTypeDefinitionsFetchStatus = StoreStatus.Available;
     }
     else {
@@ -77,6 +78,11 @@ export class IntellisenseGatherer {
 
   hasDefinitions() {
     return state.javaScriptTypeDefinitions != null && state.javaScriptTypeDefinitions.trim().length > 0;
+  }
+
+  private appendGatheredValues() {
+    let intellisense = state.javaScriptTypeDefinitions + state.dataDictionaryIntellisense;
+    state.javaScriptTypeDefinitions = intellisense;
   }
 
 

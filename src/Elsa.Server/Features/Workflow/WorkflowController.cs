@@ -5,6 +5,8 @@ using Elsa.Server.Features.Workflow.LoadCheckYourAnswersScreen;
 using Elsa.Server.Features.Workflow.LoadConfirmationScreen;
 using Elsa.Server.Features.Workflow.LoadQuestionScreen;
 using Elsa.Server.Features.Workflow.QuestionScreenSaveAndContinue;
+using Elsa.Server.Features.Workflow.QuestionScreenValidateAndSave;
+using Elsa.Server.Features.Workflow.ReturnToActivity;
 using Elsa.Server.Features.Workflow.StartWorkflow;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
@@ -150,6 +152,29 @@ namespace Elsa.Server.Features.Workflow
             }
         }
 
+        [HttpPost("QuestionScreenValidateAndSave")]
+        public async Task<IActionResult> QuestionScreenValidateAndSave([FromBody] QuestionScreenValidateAndSaveCommand model)
+        {
+            try
+            {
+                var result = await this._mediator.Send(model);
+
+                if (result.IsSuccess)
+                {
+                    return Ok(result);
+                }
+                else
+                {
+                    return BadRequest(string.Join(',', result.ErrorMessages));
+                }
+            }
+            catch (Exception e)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, e);
+            }
+
+        }
+
         [HttpPost("QuestionScreenSaveAndContinue")]
         public async Task<IActionResult> QuestionScreenSaveAndContinue([FromBody] QuestionScreenSaveAndContinueCommand model)
         {
@@ -219,6 +244,34 @@ namespace Elsa.Server.Features.Workflow
                 return StatusCode(StatusCodes.Status500InternalServerError, e);
             }
 
+        }
+
+        [HttpGet("ReturnToActivity")]
+        public async Task<IActionResult> ReturnToActivity(string workflowInstanceId, string activityId)
+        {
+            var request = new ReturnToActivityCommand
+            {
+                WorkflowInstanceId = workflowInstanceId,
+                ActivityId = activityId
+            };
+
+            try
+            {
+                var result = await this._mediator.Send(request);
+
+                if (result.IsSuccess)
+                {
+                    return Ok(result);
+                }
+                else
+                {
+                    return BadRequest(string.Join(',', result.ErrorMessages));
+                }
+            }
+            catch (Exception e)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, e);
+            }
         }
 
     }

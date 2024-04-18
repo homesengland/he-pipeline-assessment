@@ -22,18 +22,17 @@ namespace He.PipelineAssessment.Infrastructure
         }
 
         public string? GetUserName()
-        {
+        { 
             if (_httpContextAccessor.HttpContext != null)
             {
-
-                var userName = _httpContextAccessor.HttpContext.User.Identities.First().Claims.First(c => c.Type == "name").Value;
+                var context = _httpContextAccessor.HttpContext.User.Identities.First().Claims;
+                var userName = (context.First().OriginalIssuer == "LOCAL AUTHORITY") ?  context.First().Value : context.First(c => c.Type == "name").Value;
                 return userName;
             }
             else
             {
                 _logger.LogError("The HttpContext is null");
                 return null;
-
             }
         }
 

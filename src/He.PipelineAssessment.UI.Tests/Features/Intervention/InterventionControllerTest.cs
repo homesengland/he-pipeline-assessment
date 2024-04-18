@@ -1,4 +1,5 @@
-﻿using He.PipelineAssessment.Models.ViewModels;
+﻿using He.PipelineAssessment.Infrastructure;
+using He.PipelineAssessment.Models.ViewModels;
 using He.PipelineAssessment.Tests.Common;
 using He.PipelineAssessment.UI.Features.Intervention.InterventionList;
 using MediatR;
@@ -12,10 +13,12 @@ public class InterventionControllerTest
 {
     private readonly Mock<IMediator> _mediatorMock;
     private readonly Mock<ILogger<InterventionController>> _loggerMock;
+    private readonly Mock<IUserProvider> _userProvider;
     public InterventionControllerTest()
     {
         _mediatorMock = new Mock<IMediator>();
         _loggerMock = new Mock<ILogger<InterventionController>>();
+        _userProvider = new Mock<IUserProvider>();
 
     }
 
@@ -27,7 +30,7 @@ public class InterventionControllerTest
         _mediatorMock.Setup(m => m.Send(It.IsAny<AssessmentInterventionViewModel>(), CancellationToken.None)).ReturnsAsync(assessmentInterventionViewModel);
 
         // Act
-        var interventionController = new InterventionController(_mediatorMock.Object, _loggerMock.Object);
+        var interventionController = new InterventionController(_mediatorMock.Object, _loggerMock.Object, _userProvider.Object);
         var actionResult = await interventionController.Index();
 
         // Assert
@@ -42,7 +45,7 @@ public class InterventionControllerTest
         _mediatorMock.Setup(m => m.Send(It.IsAny<InterventionListRequest>(), CancellationToken.None)).ThrowsAsync(new Exception());
 
         // Act
-        var interventionController = new InterventionController(_mediatorMock.Object, _loggerMock.Object);
+        var interventionController = new InterventionController(_mediatorMock.Object, _loggerMock.Object, _userProvider.Object);
         var actionResult = await interventionController.Index();
 
         // Assert
