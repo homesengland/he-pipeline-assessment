@@ -11,6 +11,7 @@ namespace He.PipelineAssessment.UI.Features.SinglePipeline.Sync
         private readonly ISinglePipelineProvider _singlePipelineProvider;
         private readonly ISyncCommandHandlerHelper _syncCommandHandlerHelper;
         private readonly ILogger<SyncCommandHandler> _logger;
+        private static SemaphoreSlim _semaphore = new SemaphoreSlim(1,1);
 
         public SyncCommandHandler(IAssessmentRepository assessmentRepository, ISinglePipelineProvider singlePipelineProvider, ISyncCommandHandlerHelper syncCommandHandlerHelper, ILogger<SyncCommandHandler> logger)
         {
@@ -22,6 +23,7 @@ namespace He.PipelineAssessment.UI.Features.SinglePipeline.Sync
 
         public async Task<SyncModel> Handle(SyncCommand request, CancellationToken cancellationToken)
         {
+            await _semaphore.WaitAsync();
             var syncModel = new SyncModel();
             try
             {
@@ -61,6 +63,10 @@ namespace He.PipelineAssessment.UI.Features.SinglePipeline.Sync
             {
                 _logger.LogError(e,e.Message);
                 throw new ApplicationException("Single Pipeline Data failed to sync");
+            }
+            finally
+            {
+                _semaphore.Release();
             }
             return syncModel;
         }
