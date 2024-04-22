@@ -12,7 +12,7 @@ namespace He.PipelineAssessment.Infrastructure.Config
 
             builder.HasKey(x => x.Id);
 
-            builder.Property(x => x.SpId);
+            builder.HasIndex(x => x.SpId).IsUnique();
 
             builder.Property(x => x.Counterparty)
                 .HasMaxLength(EntityConfigurationConstants.MaxLength);
