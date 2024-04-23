@@ -2,7 +2,6 @@
 using He.PipelineAssessment.Models;
 using Microsoft.AspNetCore.DataProtection.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
-using System.Net;
 
 namespace He.PipelineAssessment.Infrastructure.Data
 {
@@ -15,6 +14,7 @@ namespace He.PipelineAssessment.Infrastructure.Data
         }
 
         public DbSet<DataProtectionKey> DataProtectionKeys { get; set; } = default!;
+        public DbSet<DistributedLock> DistributedLock { get; set; } = default!;
         public DbSet<Assessment> Assessment { get; set; } = default!;
         public DbSet<AssessmentTool> AssessmentTool { get; set; } = default!;
         public DbSet<AssessmentToolInstanceNextWorkflow> AssessmentToolInstanceNextWorkflow { get; set; } = default!;

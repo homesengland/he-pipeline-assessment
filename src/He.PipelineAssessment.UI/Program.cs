@@ -101,6 +101,7 @@ builder.Services.AddScoped<ISinglePipelineProvider, SinglePipelineProvider>();
 
 builder.Services.AddDataProtection().PersistKeysToDbContext<PipelineAssessmentContext>();
 builder.Services.AddScoped<IAssessmentRepository, AssessmentRepository>();
+builder.Services.AddScoped<IDistributedLockRepository, DistributedLockRepository>();
 builder.Services.AddScoped<IStoredProcedureRepository, StoredProcedureRepository>();
 builder.Services.AddScoped<IAdminAssessmentToolRepository, AdminAssessmentToolRepository>();
 builder.Services.AddScoped<IAdminAssessmentToolWorkflowRepository, AdminAssessmentToolWorkflowRepository>();
