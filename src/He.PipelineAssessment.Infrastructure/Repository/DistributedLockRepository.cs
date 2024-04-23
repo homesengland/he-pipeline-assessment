@@ -1,6 +1,5 @@
 ﻿using He.PipelineAssessment.Infrastructure.Data;
 using He.PipelineAssessment.Models;
-using Microsoft.Extensions.Configuration;
 
 namespace He.PipelineAssessment.Infrastructure.Repository
 {
@@ -34,7 +33,7 @@ namespace He.PipelineAssessment.Infrastructure.Repository
         {
             try
             {
-                context.DistributedLock.Add(new Models.DistributedLock { LockId = lockId });
+                context.DistributedLock.Add(new DistributedLock { LockId = lockId });
                 await context.SaveChangesAsync();
                 return true;
             }
