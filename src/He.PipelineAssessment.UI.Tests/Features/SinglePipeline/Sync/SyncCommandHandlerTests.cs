@@ -16,11 +16,13 @@ namespace He.PipelineAssessment.UI.Tests.Features.SinglePipeline.Sync
         [AutoMoqData]
         public async Task Handle_ReturnsErrors_GivenExceptionIsThrown(
             [Frozen] Mock<ISinglePipelineProvider> singlePipelineService,
+            [Frozen] Mock<IDistributedLockRepository> distributedLockRepository,
             Exception exception,
             SyncCommandHandler sut)
         {
             //Arrange
             singlePipelineService.Setup(x => x.GetSinglePipelineData()).Throws(exception);
+            distributedLockRepository.Setup(x => x.TryAcquireLockAsync("bg_task")).ReturnsAsync(true);
 
             //Act
             var exceptionThrown = await Assert.ThrowsAsync<ApplicationException>(() => sut.Handle(It.IsAny<SyncCommand>(), CancellationToken.None));
@@ -32,11 +34,13 @@ namespace He.PipelineAssessment.UI.Tests.Features.SinglePipeline.Sync
         [Theory]
         [AutoMoqData]
         public async Task Handle_ReturnsErrors_GivenResponseDataIsEmpty(
-            [Frozen] Mock<ISinglePipelineProvider> singlePipelineService,           
+            [Frozen] Mock<ISinglePipelineProvider> singlePipelineService,
+            [Frozen] Mock<IDistributedLockRepository> distributedLockRepository,
             SyncCommandHandler sut)
         {
             //Arrange
             singlePipelineService.Setup(x => x.GetSinglePipelineData()).ReturnsAsync(new List<SinglePipelineData>());
+            distributedLockRepository.Setup(x => x.TryAcquireLockAsync("bg_task")).ReturnsAsync(true);
 
             //Act
             var exceptionThrown = await Assert.ThrowsAsync<ApplicationException>(() => sut.Handle(It.IsAny<SyncCommand>(), CancellationToken.None));
@@ -53,6 +57,7 @@ namespace He.PipelineAssessment.UI.Tests.Features.SinglePipeline.Sync
             [Frozen] Mock<ISyncCommandHandlerHelper> syncCommandHandlerHelper,
             [Frozen] Mock<ISinglePipelineProvider> singlePipelineService,
             [Frozen] Mock<IAssessmentRepository> assessmentRepository,
+            [Frozen] Mock<IDistributedLockRepository> distributedLockRepository,
             List<Models.Assessment> assessmentsTobeAdded,           
             List<Models.Assessment> assessments,
             List<SinglePipelineData> singlePipelineDataResponse,
@@ -62,7 +67,7 @@ namespace He.PipelineAssessment.UI.Tests.Features.SinglePipeline.Sync
             singlePipelineService.Setup(x => x.GetSinglePipelineData()).ReturnsAsync(singlePipelineDataResponse);
            
             assessmentRepository.Setup(x => x.GetAssessments()).ReturnsAsync(assessments);
-
+            distributedLockRepository.Setup(x => x.TryAcquireLockAsync("bg_task")).ReturnsAsync(true);
             var sourceAssessmentSpIds = singlePipelineDataResponse.Select(x => x.sp_id!.Value).ToList();
             var destinationAssessmentSpIds = assessments.Select(x => x.SpId).ToList();
 
@@ -77,6 +82,8 @@ namespace He.PipelineAssessment.UI.Tests.Features.SinglePipeline.Sync
 
             //Assert
             assessmentRepository.Verify(x => x.CreateAssessments(assessmentsTobeAdded), Times.Once);
+            distributedLockRepository.Verify(x => x.TryAcquireLockAsync("bg_task"), Times.Once);
+            distributedLockRepository.Verify(x => x.ReleaseLockAsync("bg_task"), Times.Once);
             Assert.NotNull(result);
             Assert.IsType<SyncModel>(result);
             Assert.Equal(assessmentsTobeAdded.Count, result.NewAssessmentCount);
@@ -92,6 +99,7 @@ namespace He.PipelineAssessment.UI.Tests.Features.SinglePipeline.Sync
             [Frozen] Mock<ISyncCommandHandlerHelper> syncCommandHandlerHelper,
             [Frozen] Mock<ISinglePipelineProvider> singlePipelineService,
             [Frozen] Mock<IAssessmentRepository> assessmentRepository,
+            [Frozen] Mock<IDistributedLockRepository> distributedLockRepository,
             List<Models.Assessment> assessmentsTobeAdded,
             List<Models.Assessment> assessments,
             List<SinglePipelineData> singlePipelineDataResponse,
@@ -106,7 +114,7 @@ namespace He.PipelineAssessment.UI.Tests.Features.SinglePipeline.Sync
             singlePipelineService.Setup(x => x.GetSinglePipelineData()).ReturnsAsync(singlePipelineDataResponse);
 
             assessmentRepository.Setup(x => x.GetAssessments()).ReturnsAsync(assessments);
-
+            distributedLockRepository.Setup(x => x.TryAcquireLockAsync("bg_task")).ReturnsAsync(true);
             var sourceAssessmentSpIds = singlePipelineDataResponse.Select(x => x.sp_id!.Value).ToList();
             var destinationAssessmentSpIdsThatHaveBeganAssessment = assessments.Where(x => x.AssessmentToolWorkflowInstances != null && x.AssessmentToolWorkflowInstances.Any())
                         .Select(x => x.SpId).ToList();
@@ -132,6 +140,8 @@ namespace He.PipelineAssessment.UI.Tests.Features.SinglePipeline.Sync
             //Assert
             assessmentRepository.Verify(x => x.CreateAssessments(assessmentsTobeAdded), Times.Once);
             assessmentRepository.Verify(x => x.RemoveAssesments(assessmentsToRemove), Times.Once);
+            distributedLockRepository.Verify(x => x.TryAcquireLockAsync("bg_task"), Times.Once);
+            distributedLockRepository.Verify(x => x.ReleaseLockAsync("bg_task"), Times.Once);
             Assert.NotNull(result);
             Assert.IsType<SyncModel>(result);
             Assert.Equal(assessmentsTobeAdded.Count, result.NewAssessmentCount);

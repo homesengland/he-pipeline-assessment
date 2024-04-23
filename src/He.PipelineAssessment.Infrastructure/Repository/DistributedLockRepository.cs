@@ -1,5 +1,6 @@
 ﻿using He.PipelineAssessment.Infrastructure.Data;
 using He.PipelineAssessment.Models;
+using Microsoft.Extensions.Configuration;
 
 namespace He.PipelineAssessment.Infrastructure.Repository
 {
@@ -20,9 +21,12 @@ namespace He.PipelineAssessment.Infrastructure.Repository
 
         public async Task ReleaseLockAsync(string lockId)
         {
-            var _lock = new DistributedLock { LockId = lockId };
-            context.DistributedLock.Attach(_lock) ;
-            context.DistributedLock.Remove(_lock) ;
+            var _lock =  context.Set<DistributedLock>()
+                            .FirstOrDefault(x => x.LockId == lockId);
+            if (_lock != null)
+            {
+                context.Set<DistributedLock>().RemoveRange(_lock);
+            }
             await context.SaveChangesAsync();
         }
 
