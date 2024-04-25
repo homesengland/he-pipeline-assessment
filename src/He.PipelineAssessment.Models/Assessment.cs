@@ -1,7 +1,9 @@
 ﻿using He.PipelineAssessment.Models.Helper;
+using Microsoft.EntityFrameworkCore;
 
 namespace He.PipelineAssessment.Models
 {
+    [Index(nameof(Assessment.SpId), IsUnique = true)]
     public class Assessment : AuditableEntity
     {
         public int Id { get; set; }
