@@ -1,0 +1,106 @@
+﻿@model He.PipelineAssessment.UI.Features.Admin.AssessmentToolManagement.Commands.ManageCategory.ManageCategoriesDto;
+
+@{
+    ViewData["Title"] = "Assessment Tools";
+    Layout = "_Layout";
+}
+
+@Html.ActionLink("Back","AssessmentTool","Admin", null,new{ @class="govuk-back-link"})
+
+<div class="text-center">
+    @{
+        var nameErrorClass = "";
+        var orderErrorClass = "";
+        var errorFormClass = "";
+        if (Model.CreateCategoryDto.ValidationResult != null)
+        {
+            errorFormClass = !Model.CreateCategoryDto.ValidationResult.IsValid ? "govuk-form-group--error" : "";
+            var nameInvalid = Model.CreateCategoryDto.ValidationResult.Errors.Any(x => x.PropertyName == "Name");
+            var orderInvalid = Model.CreateCategoryDto.ValidationResult.Errors.Any(x => x.PropertyName == "Order");
+            nameErrorClass = nameInvalid ? "govuk-input--error" : "";
+            orderErrorClass = orderInvalid ? "govuk-input--error" : "";
+        }
+
+        @if (Model.CreateCategoryDto.ValidationResult != null && !Model.CreateCategoryDto.ValidationResult.IsValid)
+        {
+            @await Html.PartialAsync("~/Features/Workflow/Views/Shared/_ValidationSummary.cshtml", Model.CreateCategoryDto.ValidationResult)
+        }
+        @using (Html.BeginForm("ManageCategories", "Admin", FormMethod.Post))
+        {
+            @Html.AntiForgeryToken()
+
+            <div class="govuk-form-group @errorFormClass">
+                <h3 class="govuk-label-wrapper">
+                    @Html.LabelFor(m => Model.CreateCategoryDto.CreateCategoryCommand.CategoryName, new { @class = "govuk-label govuk-label--s" })
+                </h3>
+                @if (Model.CreateCategoryDto.ValidationResult != null)
+                {
+                    @foreach (var error in Model.CreateCategoryDto.ValidationResult.Errors.Where(x => x.PropertyName == "CategoryName"))
+                    {
+                        @Html.ValidationMessageFor(model => Model.CreateCategoryDto.CreateCategoryCommand.CategoryName, error.ErrorMessage, new { @class = "govuk-error-message" })
+                    }
+                }
+
+                @Html.TextBoxFor(m => Model.CreateCategoryDto.CreateCategoryCommand.CategoryName, new { @class = $"govuk-input {nameErrorClass}", id = "CreateAssessmentToolCommand_Name" })
+            </div>
+
+            <input class="govuk-button" data-module="govuk-button" id="Submit" type="submit" value="Create Category" />
+        }
+    }
+</div>
+
+<div class="text-center">
+    <div class="text-center">
+        <table class="govuk-table">
+            <caption class="govuk-table__caption govuk-table__caption--m">Assessment Categories</caption>
+            <thead class="govuk-table__head">
+                <tr class="govuk-table__row">
+                    <th scope="col" class="govuk-table__header">Categories</th>
+                </tr>
+            </thead>
+            <tbody class="govuk-table__body">
+            @foreach (var category in Model.CreateCategoryDto.Categories)
+            {
+                var categoryNameErrorClass = "";
+                if (Model.UpdateCategoryCommandDto  != null && Model.UpdateCategoryCommandDto.ValidationResult != null)
+                {
+                        errorFormClass = !Model.UpdateCategoryCommandDto.ValidationResult.IsValid ? "govuk-form-group--error" : "";
+                        var nameInvalid = Model.UpdateCategoryCommandDto.ValidationResult.Errors.Any(x => x.PropertyName == "Name");
+                        var categoyNameInvalid = Model.UpdateCategoryCommandDto.ValidationResult.Errors.Any(x => x.PropertyName == "CategoryName");
+                    nameErrorClass = nameInvalid ? "govuk-input--error" : "";
+                    categoryNameErrorClass = categoyNameInvalid ? "govuk-input--error" : "";
+                }
+
+                @if (Model.UpdateCategoryCommandDto  != null && Model.UpdateCategoryCommandDto.ValidationResult != null && !Model.UpdateCategoryCommandDto.ValidationResult.IsValid)
+                {
+                        @await Html.PartialAsync("~/Features/Workflow/Views/Shared/_ValidationSummary.cshtml", Model.UpdateCategoryCommandDto.ValidationResult)
+                }
+                <tr class="govuk-table__row @errorFormClass">
+                    @using (Html.BeginForm("UpdateCategory", "Admin", FormMethod.Post))
+                    {
+                        <td class="govuk-table__cell">
+                            <div class="govuk-form-group">
+                                <input type="text" value="@category.CategoryName" name="UpdateCategoryCommand.CategoryName" class="govuk-input @categoryNameErrorClass" />
+                                @if (Model.UpdateCategoryCommandDto  != null && @Model.UpdateCategoryCommandDto.ValidationResult != null)
+                                {
+                                    @foreach (var error in Model.UpdateCategoryCommandDto.ValidationResult.Errors.Where(x => x.PropertyName == "CategoryName"))
+                                    {
+                                        @Html.ValidationMessageFor(model => category.CategoryName, error.ErrorMessage, new { @class = "govuk-error-message" })
+                                    }
+                                }
+                            </div>
+                        </td>
+                        <td class="govuk-table__cell">
+                            @Html.AntiForgeryToken()
+                            @Html.Hidden("CatgeoryId", category.CategoryId)
+                            @Html.Hidden("UpdateCategoryCommand.CategoryId", category.CategoryId)
+                            @Html.Hidden("UpdateCategoryCommand.CategoryOldName", category.CategoryName)
+                            <input class="govuk-button govuk-!-margin-0" data-module="govuk-button" id="Update" type="submit" value="Update" />
+                        </td>
+                    }
+                </tr>
+            }
+            </tbody>
+        </table>
+    </div>
+</div>

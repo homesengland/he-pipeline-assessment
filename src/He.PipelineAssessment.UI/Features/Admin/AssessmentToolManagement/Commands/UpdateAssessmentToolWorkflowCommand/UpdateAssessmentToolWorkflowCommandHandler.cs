@@ -28,6 +28,7 @@ namespace He.PipelineAssessment.UI.Features.Admin.AssessmentToolManagement.Comma
                 entity.IsAmendable = request.IsAmendableWorkflow;
                 entity.IsLast = request.IsLast;
                 entity.IsEarlyStage = request.IsEarlyStage;
+                entity.Category = entity.Category;
                 return await _adminAssessmentToolWorkflowRepository.UpdateAssessmentToolWorkflow(entity);
             }
             catch (Exception e)

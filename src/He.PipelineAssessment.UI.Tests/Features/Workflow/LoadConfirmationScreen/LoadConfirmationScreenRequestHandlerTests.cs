@@ -1,6 +1,7 @@
 ﻿using AutoFixture.Xunit2;
 using Elsa.CustomWorkflow.Sdk.HttpClients;
 using Elsa.CustomWorkflow.Sdk.Models.Workflow;
+using Google.Protobuf.WellKnownTypes;
 using He.PipelineAssessment.Infrastructure.Repository;
 using He.PipelineAssessment.Models;
 using He.PipelineAssessment.Tests.Common;
@@ -226,6 +227,7 @@ namespace He.PipelineAssessment.UI.Tests.Features.Workflow.LoadConfirmationScree
             [Frozen] Mock<IElsaServerHttpClient> elsaServerHttpClient,
             [Frozen] Mock<IAssessmentRepository> assessmentRepository,
             [Frozen] Mock<IRoleValidation> roleValidation,
+            [Frozen] Mock<IAdminAssessmentToolWorkflowRepository> adminAssessmentToolWorkflowRepository,
             AssessmentToolWorkflowInstance assessmentToolWorkflowInstance,
             LoadConfirmationScreenRequest request,
             WorkflowActivityDataDto workflowActivityDataDto,
@@ -242,7 +244,10 @@ namespace He.PipelineAssessment.UI.Tests.Features.Workflow.LoadConfirmationScree
                 .ReturnsAsync(assessmentToolWorkflowInstance);
             roleValidation.Setup(x => x.ValidateSensitiveRecords(assessmentToolWorkflowInstance.Assessment)).Returns(true);
             roleValidation.Setup(x => x.ValidateRole(assessmentToolWorkflowInstance.AssessmentId,
-                assessmentToolWorkflowInstance.WorkflowDefinitionId)).ReturnsAsync(true);
+            assessmentToolWorkflowInstance.WorkflowDefinitionId)).ReturnsAsync(true);
+            adminAssessmentToolWorkflowRepository.Setup(x => x.GetLatestWorkflowDefinition(It.IsAny<string>())).ReturnsAsync(new AssessmentToolWorkflow());
+            adminAssessmentToolWorkflowRepository.Setup(x => x.GetLatestWorkflowDefinitionByAssessmentToolId(It.IsAny<int>(),It.IsAny<string>())).ReturnsAsync(new AssessmentToolWorkflow());
+
 
             workflowActivityDataDto.Data.NextWorkflowDefinitionIds = "workflowDefinition1, workflowDefinition2";
             assessmentRepository
@@ -271,6 +276,7 @@ namespace He.PipelineAssessment.UI.Tests.Features.Workflow.LoadConfirmationScree
             [Frozen] Mock<IElsaServerHttpClient> elsaServerHttpClient,
             [Frozen] Mock<IAssessmentRepository> assessmentRepository,
             [Frozen] Mock<IRoleValidation> roleValidation,
+            [Frozen] Mock<IAdminAssessmentToolWorkflowRepository> adminAssessmentToolWorkflowRepository,
             AssessmentToolWorkflowInstance assessmentToolWorkflowInstance,
             LoadConfirmationScreenRequest request,
             WorkflowActivityDataDto workflowActivityDataDto,
@@ -298,6 +304,10 @@ namespace He.PipelineAssessment.UI.Tests.Features.Workflow.LoadConfirmationScree
             assessmentRepository
                 .Setup(x => x.GetAssessmentToolInstanceNextWorkflow(assessmentToolWorkflowInstance.Id,
                     "workflowDefinition2")).ReturnsAsync((AssessmentToolInstanceNextWorkflow?)null);
+            //assessmentRepository
+            //    .Setup(x => x.CreateAssessmentToolInstanceNextWorkflows(It.IsAny<List<AssessmentToolInstanceNextWorkflow>>())).Returns(Task.CompletedTask);
+            adminAssessmentToolWorkflowRepository.Setup(x => x.GetLatestWorkflowDefinition(It.IsAny<string>())).ReturnsAsync(new AssessmentToolWorkflow());
+            adminAssessmentToolWorkflowRepository.Setup(x => x.GetLatestWorkflowDefinitionByAssessmentToolId(It.IsAny<int>(), It.IsAny<string>())).ReturnsAsync(new AssessmentToolWorkflow());
 
             //Act
             await sut.Handle(request, CancellationToken.None);

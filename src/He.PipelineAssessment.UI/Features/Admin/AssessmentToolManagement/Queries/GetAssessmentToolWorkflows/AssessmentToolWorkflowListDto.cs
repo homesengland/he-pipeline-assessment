@@ -8,12 +8,15 @@ namespace He.PipelineAssessment.UI.Features.Admin.AssessmentToolManagement.Queri
         public string AssessmentToolName { get; set; } = string.Empty;
 
         public List<AssessmentToolWorkflowDto> AssessmentToolWorkflowDtos { get; set; } = new();
+
+        public IEnumerable<IGrouping<string, AssessmentToolWorkflowDto>> CategoriedAssessmentToolWorkflowDtos { get; set; } = new List<IGrouping<string, AssessmentToolWorkflowDto>>();
     }
 
     public class AssessmentToolWorkflowDto
     {
         public int Id { get; set; }
         public int AssessmentToolId { get; set; }
+        public string Category { get; set; } = string.Empty;
         public string Name { get; set; } = string.Empty;
         public string WorkflowDefinitionId { get; set; } = string.Empty;
         public bool IsFirstWorkflow { get; set; }

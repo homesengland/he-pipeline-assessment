@@ -28,7 +28,10 @@ namespace He.PipelineAssessment.UI.Features.Admin.AssessmentToolManagement.Queri
             if (entity.AssessmentToolWorkflows != null)
             {
                 assessmentToolWorkflowListDto.AssessmentToolWorkflowDtos = _assessmentToolMapper.AssessmentToolWorkflowsToAssessmentToolDto(entity.AssessmentToolWorkflows.ToList());
-
+            }
+            if (assessmentToolWorkflowListDto.AssessmentToolWorkflowDtos != null)
+            {
+                assessmentToolWorkflowListDto.CategoriedAssessmentToolWorkflowDtos = assessmentToolWorkflowListDto.AssessmentToolWorkflowDtos.GroupBy(x => x.Category);
             }
 
             return assessmentToolWorkflowListDto;

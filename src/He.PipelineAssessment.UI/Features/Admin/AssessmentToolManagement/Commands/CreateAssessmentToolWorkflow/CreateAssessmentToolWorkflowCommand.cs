@@ -1,4 +1,7 @@
-﻿using MediatR;
+﻿using He.PipelineAssessment.Models;
+using MediatR;
+using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.Identity.Client;
 using System.ComponentModel.DataAnnotations;
 using ValidationResult = FluentValidation.Results.ValidationResult;
 
@@ -16,20 +19,25 @@ namespace He.PipelineAssessment.UI.Features.Admin.AssessmentToolManagement.Comma
     {
         public string Name { get; set; } = string.Empty;
         public string WorkflowDefinitionId { get; set; } = string.Empty;
-        [Display(Name = "Is first workflow?")]
+        public string Category { get; set; } = string.Empty;
+        [Display(Name = "Is Latest Version?")]
+        public bool IsLatest { get; set; } = true;
+        [Display(Name = "Is First Workflow?")]
         public bool IsFirstWorkflow { get; set; } = false;
-        [Display(Name = "Is economist workflow?")]
+        [Display(Name = "Is Economist Workflow?")]
         public bool IsEconomistWorkflow { get; set; } = false;
-        [Display(Name = "Is ammendable workflow?")]
+        [Display(Name = "Is Ammendable Workflow?")]
         public bool IsAmendableWorkflow { get; set; } = false;
         public int AssessmentToolId { get; set; }
         public int Version { get; set; } = 1;
-        public bool IsLatest { get; set; } = true;
-        [Display(Name = "Is variation?")]
+        [Display(Name = "Is Variation?")]
         public bool IsVariation { get; set; } = false;
-        [Display(Name = "Is early stage")]
+        [Display(Name = "Is Early Stage?")]
         public bool IsEarlyStage { get; set; } = false;
-
+        [Display(Name = "Is Last?")]
         public bool IsLast { get; set; }
+
+        public string SelectedOption { get;set; } = string.Empty;
+        public IEnumerable<SelectListItem> Options { get; set; } = new List<SelectListItem>();
     }
 }
