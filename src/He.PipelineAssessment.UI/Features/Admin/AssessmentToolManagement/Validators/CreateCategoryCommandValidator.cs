@@ -11,6 +11,8 @@ namespace He.PipelineAssessment.UI.Features.Admin.AssessmentToolManagement.Valid
         {
             this._adminCategoryRepository = adminCategoryRepository;
             RuleFor(c => c.CategoryName).NotEmpty().WithMessage("The {PropertyName} cannot be empty");
+
+
             RuleFor(c => c)
               .Must((c) => BeUnique(c.CategoryName))
               .WithMessage("The Category Name must be unique");

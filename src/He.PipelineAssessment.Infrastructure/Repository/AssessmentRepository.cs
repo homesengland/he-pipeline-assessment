@@ -116,16 +116,8 @@ namespace He.PipelineAssessment.Infrastructure.Repository
 
         public async Task CreateAssessmentToolInstanceNextWorkflows(List<AssessmentToolInstanceNextWorkflow> nextWorkflows)
         {
-            try
-            {
                 await context.Set<AssessmentToolInstanceNextWorkflow>().AddRangeAsync(nextWorkflows);
                 await context.SaveChangesAsync();
-            }
-            catch (Exception ex)
-            {
-
-                throw;
-            }
         }
 
         public async Task<int> CreateAssessmentIntervention(AssessmentIntervention assessmentIntervention)
