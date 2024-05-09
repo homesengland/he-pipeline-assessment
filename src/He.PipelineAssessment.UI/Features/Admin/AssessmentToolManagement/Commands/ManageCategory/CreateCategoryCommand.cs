@@ -17,7 +17,7 @@ namespace He.PipelineAssessment.UI.Features.Admin.AssessmentToolManagement.Comma
         public CreateCategoryCommand CreateCategoryCommand { get; set; } = new();
         public ValidationResult? ValidationResult { get; set; }
 
-        public List<Category>? Categories { get; set; }
+        public List<Category> Categories { get; set; } = null!;
     }
 
     public class CreateCategoryCommand : IRequest

@@ -1,4 +1,4 @@
-﻿using System;
+﻿using He.PipelineAssessment.Models;
 using Microsoft.EntityFrameworkCore.Migrations;
 
 #nullable disable
@@ -15,8 +15,8 @@ namespace He.PipelineAssessment.Infrastructure.Migrations
                 type: "nvarchar(500)",
                 maxLength: 500,
                 nullable: false,
-                defaultValue: "");
-
+                defaultValue: new Guid());
+            
             migrationBuilder.CreateTable(
                 name: "Categories",
                 columns: table => new

@@ -14,8 +14,8 @@ namespace He.PipelineAssessment.UI.Features.Admin.AssessmentToolManagement.Comma
     {
         public int CategoryId { get; set; }
 
-        public string? CategoryName { get; set; }
+        public string CategoryName { get; set; } = null!;
 
-        public string? CategoryOldName { get; set; }
+        public string CategoryOldName { get; set; } = null!;
     }
 }
