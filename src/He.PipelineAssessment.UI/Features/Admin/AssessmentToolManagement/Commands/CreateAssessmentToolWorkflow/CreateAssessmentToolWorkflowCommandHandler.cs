@@ -40,7 +40,7 @@ namespace He.PipelineAssessment.UI.Features.Admin.AssessmentToolManagement.Comma
                 {
                     isAnExistingWorkFlow = true;
                     var oldAssessmentWorkflow = assessmentTool.AssessmentToolWorkflows.Where(x => x.Category == request.Category && x.IsLatest).FirstOrDefault();
-                    request.Version  = assessmentTool.AssessmentToolWorkflows.Where(x => x.Category == request.Category).OrderBy(x => x.CreatedDateTime).First().Version + 1;
+                    request.Version  = assessmentTool.AssessmentToolWorkflows.Where(x => x.Category == request.Category).OrderByDescending(x => x.CreatedDateTime).First().Version + 1;
                     oldWorkFlowDefinitionId = oldAssessmentWorkflow?.WorkflowDefinitionId ?? "";
                     workflowInstanceId = oldAssessmentWorkflow?.Id ?? 0;
                 }

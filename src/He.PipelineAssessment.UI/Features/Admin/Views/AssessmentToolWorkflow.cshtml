@@ -71,7 +71,7 @@
                                 {
                                     <td class="govuk-table__cell">
                                         <div class="govuk-form-group">
-                                            <input type="text" value="@assessmentToolWorkflow.WorkflowDefinitionId" name="UpdateAssessmentToolWorkflowCommand.WorkflowDefinitionId" class="govuk-input @workflowDefinitionErrorClass" />
+                                            <input type="text" value="@assessmentToolWorkflow.WorkflowDefinitionId" name="UpdateAssessmentToolWorkflowCommand.WorkflowDefinitionId" class="govuk-input @workflowDefinitionErrorClass" readonly/>
                                             @if (assessmentToolWorkflow.ValidationResult != null)
                                             {
                                                 @foreach (var error in assessmentToolWorkflow.ValidationResult.Errors.Where(x => x.PropertyName == "WorkflowDefinitionId"))
