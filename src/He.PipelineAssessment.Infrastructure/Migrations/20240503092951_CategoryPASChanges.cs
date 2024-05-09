@@ -15,7 +15,7 @@ namespace He.PipelineAssessment.Infrastructure.Migrations
                 type: "nvarchar(500)",
                 maxLength: 500,
                 nullable: false,
-                defaultValue: new Guid());
+                defaultValue: Guid.NewGuid().ToString());
             
             migrationBuilder.CreateTable(
                 name: "Categories",
