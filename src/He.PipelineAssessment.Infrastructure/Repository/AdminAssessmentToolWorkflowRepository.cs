@@ -16,6 +16,8 @@ namespace He.PipelineAssessment.Infrastructure.Repository
 
         Task<AssessmentToolWorkflow?> GetExistingAssessmentWorkFlow(int assessmentToolId , string category);
 
+        Task<List<AssessmentToolWorkflow>> GetExistingAssessmentWorkFlowsByCategory(string category);
+
         Task<int> UpdateIsLatest(int assessmentToolId, string category, string oldWorkFlowDefinitionId);
 
         Task<List<AssessmentToolWorkflow>> GetAssessmentToolWorkflowsForOverride(int order);
@@ -139,6 +141,11 @@ namespace He.PipelineAssessment.Infrastructure.Repository
             var assessmentWorflows = await _context.Set<AssessmentToolWorkflow>().Where(x => x.Name == oldCategoryName).ToListAsync();
             assessmentWorflows.ForEach(x => { x.Name = newCategoryName; x.Category = x.Category.Replace(oldCategoryName, newCategoryName);  });
             await _context.SaveChangesAsync();
+        }
+
+        public async Task<List<AssessmentToolWorkflow>> GetExistingAssessmentWorkFlowsByCategory(string category)
+        {
+            return await _context.Set<AssessmentToolWorkflow>().Where(x => x.Status != AssessmentToolStatus.Deleted && x.Category == category).ToListAsync();
         }
     }
 }

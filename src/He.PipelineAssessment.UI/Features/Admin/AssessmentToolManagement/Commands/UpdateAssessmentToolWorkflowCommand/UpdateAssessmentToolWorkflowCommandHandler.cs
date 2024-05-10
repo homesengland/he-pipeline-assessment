@@ -35,17 +35,20 @@ namespace He.PipelineAssessment.UI.Features.Admin.AssessmentToolManagement.Comma
                 entity.IsEarlyStage = request.IsEarlyStage;
                 entity.Category = entity.Category;
                 entity.IsLatest = request.IsLatest;
-
+                var oldAssessment = await _adminAssessmentToolWorkflowRepository.GetExistingAssessmentWorkFlowsByCategory(entity.Category);
+                if(oldAssessment.Any())
+                {
+                    oldAssessment.RemoveAll(x => x.Id == request.Id);
+                }
                 var response = await _adminAssessmentToolWorkflowRepository.UpdateAssessmentToolWorkflow(entity);
-                var oldAssessment = await _adminAssessmentToolWorkflowRepository.GetExistingAssessmentWorkFlow(request.AssessmentToolId, entity.Category);
-
+               
                 if(response == 1)
                 {
-                    if (oldAssessment != null && oldAssessment.IsLatest == request.IsLatest && oldAssessment.Id != request.Id)
+                    foreach (var assessment in oldAssessment)
                     {
-                            oldAssessment.IsLatest = false;
-                            await _adminAssessmentToolWorkflowRepository.UpdateAssessmentToolWorkflow(oldAssessment);
-                            await _assessmentRepository.UpdateNextWorkflowDefintionId(oldAssessment.WorkflowDefinitionId, request.WorkflowDefinitionId);
+                        assessment.IsLatest = false;
+                        await _adminAssessmentToolWorkflowRepository.UpdateAssessmentToolWorkflow(assessment);
+                        await _assessmentRepository.UpdateNextWorkflowDefintionId(assessment.WorkflowDefinitionId, request.WorkflowDefinitionId);
                     }
                 }
                 return response;

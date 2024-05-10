@@ -165,6 +165,11 @@ namespace He.PipelineAssessment.UI.Features.Admin
         [HttpPost]
         public async Task<IActionResult> CreateAssessmentToolWorkflow(CreateAssessmentToolWorkflowDto createAssessmentToolWorkflowDto)
         {
+            createAssessmentToolWorkflowDto.CreateAssessmentToolWorkflowCommand.Options = _adminCategoryRepository.GetCategories().Result.Select(e => new Microsoft.AspNetCore.Mvc.Rendering.SelectListItem
+            {
+                Value = e.CategoryName,
+                Text = e.CategoryName
+            });
             var validationResult = await _createAssessmentToolWorkflowCommandValidator.ValidateAsync(createAssessmentToolWorkflowDto.CreateAssessmentToolWorkflowCommand);
             if (validationResult.IsValid)
             {
