@@ -30,7 +30,7 @@ namespace He.PipelineAssessment.Infrastructure.Config
                 .HasMaxLength(EntityConfigurationConstants.ShortLength);
 
             builder
-                .HasIndex(e => new { e.WorkflowDefinitionId ,e.AssessmentToolId, e.Category})
+                .HasIndex(e => new { e.WorkflowDefinitionId ,e.AssessmentToolId, e.Category , e.Status})
                 .IsUnique();
 
             builder
