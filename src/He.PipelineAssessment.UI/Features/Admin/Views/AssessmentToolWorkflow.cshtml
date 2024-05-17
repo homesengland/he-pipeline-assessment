@@ -67,7 +67,7 @@
                                 @await Html.PartialAsync("~/Features/Workflow/Views/Shared/_ValidationSummary.cshtml", assessmentToolWorkflow.ValidationResult)
                             }
                             <tr class="govuk-table__row @errorFormClass">
-                                @using (Html.BeginForm("UpdateAssessmentToolWorkflow", "Admin", FormMethod.Post))
+                            @using (Html.BeginForm("UpdateAssessmentToolWorkflow", "Admin", FormMethod.Post, new { @class = "govuk-button govuk-button--warning" }))
                                 {
                                     <td class="govuk-table__cell">
                                         <div class="govuk-form-group">
@@ -185,11 +185,11 @@
                                         @Html.AntiForgeryToken()
                                         @Html.Hidden("UpdateAssessmentToolWorkflowCommand.Id", assessmentToolWorkflow.Id)
                                         @Html.Hidden("UpdateAssessmentToolWorkflowCommand.AssessmentToolId", assessmentToolWorkflow.AssessmentToolId)
-                                        <input class="govuk-button govuk-!-margin-0" data-module="govuk-button" id="Update" type="submit" value="Update" />
+                                    <input class="govuk-button govuk-!-margin-0" data-module="govuk-button" id="Update" type="submit" value="Update" onclick="return confirm('Are you sure want to delete this worklow ?');" />
                                     </td>
                                 }
                                 <td class="govuk-table__cell">
-                                    @using (Html.BeginForm("DeleteAssessmentToolWorkflow", "Admin", FormMethod.Post))
+                                @using (Html.BeginForm("DeleteAssessmentToolWorkflow", "Admin", FormMethod.Post))
                                     {
                                         @Html.AntiForgeryToken()
                                         @Html.Hidden("assessmentToolWorkflowId", assessmentToolWorkflow.Id)

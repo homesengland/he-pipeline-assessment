@@ -7,6 +7,7 @@ namespace He.PipelineAssessment.Infrastructure.Repository
     public interface IAssessmentRepository
     {
         Task<Assessment?> GetAssessment(int assessmentId);
+        Task<AssessmentTool?> GetAssessmentTool(int assessmentToolId);
         Task<List<Assessment>> GetAssessments();
         Task<AssessmentToolWorkflowInstance?> GetAssessmentToolWorkflowInstance(string workflowInstance);
         Task<AssessmentToolInstanceNextWorkflow?> GetAssessmentToolInstanceNextWorkflow(int assessmentToolWorkflowInstanceId, string workflowDefinitionId);
@@ -55,6 +56,11 @@ namespace He.PipelineAssessment.Infrastructure.Repository
         public async Task<Assessment?> GetAssessment(int assessmentId)
         {
             return await context.Set<Assessment>().FirstOrDefaultAsync(x => x.Id == assessmentId);
+        }
+
+        public async Task<AssessmentTool?> GetAssessmentTool(int assessmentToolId)
+        {
+            return await context.Set<AssessmentTool>().Where(x => x.Status != "Deleted").FirstOrDefaultAsync(x => x.Id == assessmentToolId);
         }
 
         public async Task<List<Assessment>> GetAssessments()
