@@ -2,6 +2,7 @@
 using Elsa.CustomActivities.Activities.Common;
 using Elsa.CustomActivities.Activities.QuestionScreen;
 using Elsa.CustomActivities.Activities.Shared;
+using Elsa.CustomActivities.Handlers.ParseModels;
 using Elsa.CustomInfrastructure.Data.Repository;
 using Elsa.CustomModels;
 using Elsa.CustomWorkflow.Sdk;
@@ -112,7 +113,16 @@ namespace Elsa.Server.Features.Workflow.LoadQuestionScreen
                                     if (dbQuestion != null)
                                     {
                                         var questionActivityData = CreateQuestionActivityData(dbQuestion, item, _textGroupMapper, questionIndex);
-
+                                        if((questionActivityData.QuestionType == QuestionTypeConstants.CurrencyQuestion ||
+                                           questionActivityData.QuestionType == QuestionTypeConstants.DecimalQuestion ||
+                                           questionActivityData.QuestionType == QuestionTypeConstants.IntegerQuestion ||
+                                           questionActivityData.QuestionType == QuestionTypeConstants.PercentageQuestion ||
+                                           questionActivityData.QuestionType == QuestionTypeConstants.TextQuestion ||
+                                           questionActivityData.QuestionType == QuestionTypeConstants.TextAreaQuestion) &&
+                                           questionActivityData.Answers.Any(x => string.IsNullOrEmpty(x.AnswerText)))
+                                        {
+                                            questionActivityData.IsReadOnly = false;
+                                        }
                                         result.Data.Questions.Add(questionActivityData);
                                     }
                                     questionIndex++;
@@ -203,13 +213,20 @@ namespace Elsa.Server.Features.Workflow.LoadQuestionScreen
                         if (item.QuestionType == QuestionTypeConstants.CheckboxQuestion)
                         {
                             var prepopulatedAnswerListIdentifiers = item.Checkbox.Choices.Where(x => x.IsPrePopulated).Select(x => x.Identifier).ToList();
+                            if(prepopulatedAnswerListIdentifiers.Count() == 0)
+                            {
+                                questionActivityData.IsReadOnly = false;
+                            }
                             answerList = dbQuestion.Choices.Where(x => prepopulatedAnswerListIdentifiers.Contains(x.Identifier)).Select(x => x.Id).ToList();
                         }
                         else
                         {
                             var prepopulatedAnswerListIdentifiers = item.WeightedCheckbox.Groups.Values.SelectMany(x => x.Choices.Where(y => y.IsPrePopulated)
                             .Select(z => new { Id = z.Identifier, GroupId = x.GroupIdentifier})).ToList();
-                            
+                            if (prepopulatedAnswerListIdentifiers.Count() == 0)
+                            {
+                                questionActivityData.IsReadOnly = false;
+                            }
                             var groups = dbQuestion.Choices.Select(x => x.QuestionChoiceGroup);
                             
                             answerList = dbQuestion.Choices.Where(x => prepopulatedAnswerListIdentifiers.Any(y => {
@@ -252,6 +269,10 @@ namespace Elsa.Server.Features.Workflow.LoadQuestionScreen
                                     questionActivityData.Radio.SelectedAnswer = databaseChoiceAnswer.Id;
                                 }
                             }
+                            else
+                            {
+                                questionActivityData.IsReadOnly = false;
+                            }
                         }
                         else if (item.QuestionType == QuestionTypeConstants.PotScoreRadioQuestion)
                         {
@@ -264,6 +285,10 @@ namespace Elsa.Server.Features.Workflow.LoadQuestionScreen
                                     questionActivityData.Radio.SelectedAnswer = databaseChoiceAnswer.Id;
                                 }
                             }
+                            else
+                            {
+                                questionActivityData.IsReadOnly = false;
+                            }
                         }
                         else if(item.QuestionType == QuestionTypeConstants.WeightedRadioQuestion)
                         {
@@ -275,6 +300,10 @@ namespace Elsa.Server.Features.Workflow.LoadQuestionScreen
                                 {
                                     questionActivityData.Radio.SelectedAnswer = databaseChoiceAnswer.Id;
                                 }
+                            }
+                            else
+                            {
+                                questionActivityData.IsReadOnly = false;
                             }
                         }
                     }
