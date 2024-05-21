@@ -14,6 +14,7 @@ using He.PipelineAssessment.UI.Common.Utility;
 using He.PipelineAssessment.UI.Extensions;
 using He.PipelineAssessment.UI.Features.Admin.AssessmentToolManagement.Commands.CreateAssessmentTool;
 using He.PipelineAssessment.UI.Features.Admin.AssessmentToolManagement.Commands.CreateAssessmentToolWorkflow;
+using He.PipelineAssessment.UI.Features.Admin.AssessmentToolManagement.Commands.ManageCategory;
 using He.PipelineAssessment.UI.Features.Admin.AssessmentToolManagement.Commands.UpdateAssessmentTool;
 using He.PipelineAssessment.UI.Features.Admin.AssessmentToolManagement.Commands.UpdateAssessmentToolWorkflowCommand;
 using He.PipelineAssessment.UI.Features.Admin.AssessmentToolManagement.Mappers;
@@ -93,6 +94,8 @@ builder.Services.AddSingleton<ITokenProvider>(tokenService);
 
 //Validators
 builder.Services.AddScoped<IValidator<CreateAssessmentToolCommand>, CreateAssessmentToolCommandValidator>();
+builder.Services.AddScoped<IValidator<CreateCategoryCommand>, CreateCategoryCommandValidator>();
+builder.Services.AddScoped<IValidator<UpdateCategoryCommand>, UpdateCategoryCommandValidator>();
 builder.Services.AddScoped<IValidator<CreateAssessmentToolWorkflowCommand>, CreateAssessmentToolWorkflowCommandValidator>();
 builder.Services.AddScoped<IValidator<UpdateAssessmentToolCommand>, UpdateAssessmentToolCommandValidator>();
 builder.Services.AddScoped<IValidator<UpdateAssessmentToolWorkflowCommand>, UpdateAssessmentToolWorkflowCommandValidator>();
@@ -103,6 +106,7 @@ builder.Services.AddDataProtection().PersistKeysToDbContext<PipelineAssessmentCo
 builder.Services.AddScoped<IAssessmentRepository, AssessmentRepository>();
 builder.Services.AddScoped<IStoredProcedureRepository, StoredProcedureRepository>();
 builder.Services.AddScoped<IAdminAssessmentToolRepository, AdminAssessmentToolRepository>();
+builder.Services.AddScoped<IAdminCategoryRepository, AdminCategoryRepository>();
 builder.Services.AddScoped<IAdminAssessmentToolWorkflowRepository, AdminAssessmentToolWorkflowRepository>();
 builder.Services.AddScoped<ISyncCommandHandlerHelper, SyncCommandHandlerHelper>();
 builder.Services.AddScoped<IAssessmentToolWorkflowInstanceHelpers, AssessmentToolWorkflowInstanceHelpers>();

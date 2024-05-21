@@ -12,6 +12,8 @@ namespace He.PipelineAssessment.Infrastructure.Config
             builder.HasKey(x => x.Id);
             builder.Property(x => x.WorkflowDefinitionId)
                 .HasMaxLength(EntityConfigurationConstants.MaxLength);
+            builder.Property(x => x.Category)
+                .HasMaxLength(EntityConfigurationConstants.MaxLength);
             builder.Property(x => x.Name)
                 .HasMaxLength(EntityConfigurationConstants.StandardLength);
 
@@ -26,6 +28,14 @@ namespace He.PipelineAssessment.Infrastructure.Config
                 .HasMaxLength(EntityConfigurationConstants.MaxLength);
             builder.Property(x => x.Status)
                 .HasMaxLength(EntityConfigurationConstants.ShortLength);
+
+            builder
+                .HasIndex(e => new { e.WorkflowDefinitionId ,e.AssessmentToolId, e.Category , e.Status})
+                .IsUnique();
+
+            builder
+             .Property(x => x.Version)
+             .IsRequired();
 
         }
     }

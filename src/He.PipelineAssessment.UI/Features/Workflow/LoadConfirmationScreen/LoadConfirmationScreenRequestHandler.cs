@@ -22,6 +22,7 @@ namespace He.PipelineAssessment.UI.Features.Workflow.LoadConfirmationScreen
         private readonly IAssessmentToolWorkflowInstanceHelpers _assessmentToolWorkflowInstanceHelpers;
         private readonly ILogger<LoadConfirmationScreenRequestHandler> _logger;
         private readonly IRoleValidation _roleValidation;
+        private readonly IAdminAssessmentToolWorkflowRepository _adminAssessmentToolWorkflowRepository;
 
         private readonly IServiceBusMessageSender _serviceBusMessageSender;
 
@@ -30,7 +31,8 @@ namespace He.PipelineAssessment.UI.Features.Workflow.LoadConfirmationScreen
             IAssessmentRepository assessmentRepository, 
             IUserProvider userProvider, 
             IDateTimeProvider dateTimeProvider, 
-            IAssessmentToolWorkflowInstanceHelpers assessmentToolWorkflowInstanceHelpers, 
+            IAssessmentToolWorkflowInstanceHelpers assessmentToolWorkflowInstanceHelpers,
+            IAdminAssessmentToolWorkflowRepository adminAssessmentToolWorkflowRepository,
             ILogger<LoadConfirmationScreenRequestHandler> logger, 
             IRoleValidation roleValidation,
             IServiceBusMessageSender serviceBusMessageSender)
@@ -43,6 +45,7 @@ namespace He.PipelineAssessment.UI.Features.Workflow.LoadConfirmationScreen
             _logger = logger;
             _roleValidation = roleValidation;
             _serviceBusMessageSender = serviceBusMessageSender;
+            _adminAssessmentToolWorkflowRepository = adminAssessmentToolWorkflowRepository;
         }
 
         public async Task<LoadConfirmationScreenResponse?> Handle(LoadConfirmationScreenRequest request, CancellationToken cancellationToken)
@@ -99,18 +102,26 @@ namespace He.PipelineAssessment.UI.Features.Workflow.LoadConfirmationScreen
                                 var workflowDefinitionIds = response.Data.NextWorkflowDefinitionIds.Split(',', StringSplitOptions.TrimEntries);
                                 foreach (var workflowDefinitionId in workflowDefinitionIds)
                                 {
-                                    var nextWorkflow =
-                                        await _assessmentRepository.GetAssessmentToolInstanceNextWorkflow(currentAssessmentToolWorkflowInstance.Id,
-                                            workflowDefinitionId);
-                                    var allAssessmentToolWorkflowInstances = await _assessmentRepository.GetAssessmentToolWorkflowInstances(currentAssessmentToolWorkflowInstance.AssessmentId);
-                                    var existingAssessmentToolWorkflowInstances = allAssessmentToolWorkflowInstances.Where(x => x.WorkflowDefinitionId == workflowDefinitionId);
-     
-
-                                    if (nextWorkflow == null && !existingAssessmentToolWorkflowInstances.Any())
+                                    var latestWorklow = await _adminAssessmentToolWorkflowRepository.GetLatestWorkflowDefinition(workflowDefinitionId);
+                                    if(latestWorklow == null) 
                                     {
-                                        var assessmentToolInstanceNextWorkflow =
-                                            AssessmentToolInstanceNextWorkflow(currentAssessmentToolWorkflowInstance, workflowDefinitionId);
-                                        nextWorkflows.Add(assessmentToolInstanceNextWorkflow);
+                                        latestWorklow = await _adminAssessmentToolWorkflowRepository.GetLatestWorkflowDefinitionByAssessmentToolId(currentAssessmentToolWorkflowInstance.AssessmentToolWorkflow.AssessmentToolId,currentAssessmentToolWorkflowInstance.WorkflowName);
+                                    }
+                                    if (latestWorklow != null)
+                                    {
+                                        var nextWorkflow =
+                                            await _assessmentRepository.GetAssessmentToolInstanceNextWorkflow(currentAssessmentToolWorkflowInstance.Id,
+                                                latestWorklow.WorkflowDefinitionId);
+                                        var allAssessmentToolWorkflowInstances = await _assessmentRepository.GetAssessmentToolWorkflowInstances(currentAssessmentToolWorkflowInstance.AssessmentId);
+                                        var existingAssessmentToolWorkflowInstances = allAssessmentToolWorkflowInstances.Where(x => x.WorkflowDefinitionId == latestWorklow.WorkflowDefinitionId);
+
+
+                                        if (nextWorkflow == null && !existingAssessmentToolWorkflowInstances.Any())
+                                        {
+                                            var assessmentToolInstanceNextWorkflow =
+                                                AssessmentToolInstanceNextWorkflow(currentAssessmentToolWorkflowInstance, latestWorklow.WorkflowDefinitionId);
+                                            nextWorkflows.Add(assessmentToolInstanceNextWorkflow);
+                                        }
                                     }
                                 }
 

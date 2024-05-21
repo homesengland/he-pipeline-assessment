@@ -7,6 +7,7 @@ namespace He.PipelineAssessment.Models
         public int Id { get; set; }
         public int AssessmentToolId { get; set; }
         public string WorkflowDefinitionId { get; set; } = null!;
+        public string Category { get; set; } = null!;
         public bool IsFirstWorkflow { get; set; }
         public int Version { get; set; }
         public bool IsLatest { get; set; }

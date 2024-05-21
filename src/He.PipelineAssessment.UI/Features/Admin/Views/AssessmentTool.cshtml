@@ -14,6 +14,10 @@
         <label for="createAssessmentTool" hidden="hidden">Back: </label>
         @Html.ActionLink("Create Assessment Tool", "LoadAssessmentTool","Admin", null, new {@class = "govuk-link"})
     </div>
+    <div class="govuk-grid-column-one-third pull-right">
+        <label for="manageAssessmentCategories" hidden="hidden">Back: </label>
+        @Html.ActionLink("Manage Assessment categories", "LoadCategories", "Admin", null, new { @class = "govuk-link" })
+    </div>
 </div>
 <div class="text-center">
     <table class="govuk-table">
@@ -101,18 +105,21 @@
                         </td>
                         <td class="govuk-table__cell">
                             <table class="govuk-table" style="margin-bottom: 0">
+                                <thead class="govuk-table__head">
+                                    <tr class="govuk-table__row">
+                                        <th scope="col" class="govuk-table__header">Definition Id</th>
+                                        <th scope="col" class="govuk-table__header">Category</th>
+                                    </tr>
+                                </thead>
                                 <tbody class="govuk-table__body">
-                                    @foreach (var assessmentToolWorkflow in assessmentTool.AssessmentToolWorkFlows)
+                                    @foreach (var assessmentToolWorkflow in assessmentTool.AssessmentToolWorkFlows.Where(x => x.IsLatest == true))
                                     {
                                         <tr class="govuk-table__row">
                                             <td class="govuk-table__cell">
                                                 @assessmentToolWorkflow.WorkflowDefinitionId
                                             </td>
                                             <td class="govuk-table__cell">
-                                                @if (assessmentToolWorkflow.IsFirstWorkflow)
-                                                {
-                                                    @:First workflow
-                                                }
+                                                @assessmentToolWorkflow.Category
                                             </td>
                                         </tr>
                                     }

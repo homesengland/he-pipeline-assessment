@@ -152,6 +152,7 @@ namespace He.PipelineAssessment.UI.Tests.Features.Assessment.AssessmentSummary
             [Frozen] Mock<IAssessmentRepository> assessmentRepository,
             [Frozen] Mock<IStoredProcedureRepository> storeProcRepository,
             [Frozen] Mock<IRoleValidation> roleValidation,
+            [Frozen] Mock<IAdminAssessmentToolWorkflowRepository> adminAssessmentToolWorkflowRepository,
             Models.Assessment assessment,
             List<AssessmentStageViewModel> stages,
             List<AssessmentStageViewModel> historyStages,
@@ -169,7 +170,7 @@ namespace He.PipelineAssessment.UI.Tests.Features.Assessment.AssessmentSummary
             storeProcRepository.Setup(x => x.GetAssessmentStages(It.IsAny<int>())).ReturnsAsync(stages);
             storeProcRepository.Setup(x => x.GetAssessmentInterventionList(It.IsAny<int>())).ReturnsAsync(new List<AssessmentInterventionViewModel>());
             storeProcRepository.Setup(x => x.GetAssessmentHistory(request.AssessmentId)).ReturnsAsync(historyStages);
-
+            adminAssessmentToolWorkflowRepository.Setup(x => x.GetWorkflowsOfSameCategory(It.IsAny<int>(), It.IsAny<string>())).ReturnsAsync(new List<string>());
             //Act
             var result = await sut.Handle(request, CancellationToken.None);
 
@@ -291,6 +292,7 @@ namespace He.PipelineAssessment.UI.Tests.Features.Assessment.AssessmentSummary
             [Frozen] Mock<IAssessmentRepository> assessmentRepository,
             [Frozen] Mock<IStoredProcedureRepository> storeProcRepository,
             [Frozen] Mock<IRoleValidation> roleValidation,
+            [Frozen] Mock<IAdminAssessmentToolWorkflowRepository> adminAssessmentToolWorkflowRepository,
             Models.Assessment assessment,
             List<AssessmentStageViewModel> stages,
             List<StartableToolViewModel> startableTools,
@@ -307,6 +309,7 @@ namespace He.PipelineAssessment.UI.Tests.Features.Assessment.AssessmentSummary
             storeProcRepository.Setup(x => x.GetAssessmentInterventionList(It.IsAny<int>()))
                 .ReturnsAsync(new List<AssessmentInterventionViewModel>());
             storeProcRepository.Setup(x => x.GetAssessmentHistory(request.AssessmentId)).ReturnsAsync(historyStages);
+            adminAssessmentToolWorkflowRepository.Setup(x => x.GetWorkflowsOfSameCategory(It.IsAny<int>(), It.IsAny<string>())).ReturnsAsync(new List<string>());
 
             //Act
             var result = await sut.Handle(request, CancellationToken.None);

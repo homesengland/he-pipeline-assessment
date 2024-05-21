@@ -11,10 +11,6 @@ namespace He.PipelineAssessment.UI.Features.Admin.AssessmentToolManagement.Valid
         {
             this._assessmentRepository = assessmentRepository;
 
-            RuleFor(c => c.Name)
-                .NotEmpty()
-                .WithMessage("The {PropertyName} cannot be empty").MaximumLength(100);
-
             RuleFor(c => c.WorkflowDefinitionId)
                 .NotEmpty()
                 .WithMessage("The {PropertyName} cannot be empty");
@@ -22,6 +18,10 @@ namespace He.PipelineAssessment.UI.Features.Admin.AssessmentToolManagement.Valid
             RuleFor(c => c.WorkflowDefinitionId)
                 .Must(BeUnique)
                 .WithMessage("The {PropertyName} must be unique and not used in another Assessment Tool Workflow");
+
+            RuleFor(c => c.SelectedOption)
+               .NotEmpty()
+               .WithMessage("The {PropertyName} cannot be empty");
         }
 
         private bool BeUnique(string workflowDefinitionId)

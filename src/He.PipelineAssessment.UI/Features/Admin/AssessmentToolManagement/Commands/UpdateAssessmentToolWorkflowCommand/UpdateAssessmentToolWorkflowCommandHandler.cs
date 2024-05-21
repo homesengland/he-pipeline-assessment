@@ -7,11 +7,16 @@ namespace He.PipelineAssessment.UI.Features.Admin.AssessmentToolManagement.Comma
     {
         private readonly IAdminAssessmentToolWorkflowRepository _adminAssessmentToolWorkflowRepository;
         private readonly ILogger<UpdateAssessmentToolWorkflowCommandHandler> _logger;
+        private readonly IAssessmentRepository _assessmentRepository;
 
-        public UpdateAssessmentToolWorkflowCommandHandler(IAdminAssessmentToolWorkflowRepository adminAssessmentToolWorkflowRepository, ILogger<UpdateAssessmentToolWorkflowCommandHandler> logger)
+
+        public UpdateAssessmentToolWorkflowCommandHandler(IAdminAssessmentToolWorkflowRepository adminAssessmentToolWorkflowRepository, 
+            ILogger<UpdateAssessmentToolWorkflowCommandHandler> logger,
+            IAssessmentRepository assessmentRepository)
         {
             _adminAssessmentToolWorkflowRepository = adminAssessmentToolWorkflowRepository;
             _logger = logger;
+            _assessmentRepository = assessmentRepository;
         }
 
         public async Task<int> Handle(UpdateAssessmentToolWorkflowCommand request, CancellationToken cancellationToken)
@@ -21,14 +26,32 @@ namespace He.PipelineAssessment.UI.Features.Admin.AssessmentToolManagement.Comma
                 var entity = await _adminAssessmentToolWorkflowRepository.GetAssessmentToolWorkflowById(request.Id);
                 ArgumentNullException.ThrowIfNull(entity, "Assessment Tool Workflow not found");
                 entity.WorkflowDefinitionId = request.WorkflowDefinitionId;
-                entity.Name = request.Name;
+                entity.Name = request.Name.Trim();
                 entity.IsFirstWorkflow = request.IsFirstWorkflow;
                 entity.IsEconomistWorkflow = request.IsEconomistWorkflow;
                 entity.IsVariation = request.IsVariation;
                 entity.IsAmendable = request.IsAmendableWorkflow;
                 entity.IsLast = request.IsLast;
                 entity.IsEarlyStage = request.IsEarlyStage;
-                return await _adminAssessmentToolWorkflowRepository.UpdateAssessmentToolWorkflow(entity);
+                entity.Category = entity.Category;
+                entity.IsLatest = request.IsLatest;
+                var oldAssessment = await _adminAssessmentToolWorkflowRepository.GetExistingAssessmentWorkFlowsByCategory(entity.Category);
+                var response = await _adminAssessmentToolWorkflowRepository.UpdateAssessmentToolWorkflow(entity);
+               
+                if(response == 1)
+                {
+                    if (oldAssessment != null && oldAssessment.Any())
+                    {
+                        oldAssessment.RemoveAll(x => x.Id == request.Id);
+                        foreach (var assessment in oldAssessment)
+                        {
+                            assessment.IsLatest = false;
+                            await _adminAssessmentToolWorkflowRepository.UpdateAssessmentToolWorkflow(assessment);
+                            await _assessmentRepository.UpdateNextWorkflowDefintionId(assessment.WorkflowDefinitionId, request.WorkflowDefinitionId);
+                        }
+                    }
+                }
+                return response;
             }
             catch (Exception e)
             {

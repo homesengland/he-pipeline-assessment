@@ -1,9 +1,11 @@
 ﻿using FluentValidation;
+using He.PipelineAssessment.Infrastructure.Repository;
 using He.PipelineAssessment.UI.Authorization;
 using He.PipelineAssessment.UI.Features.Admin.AssessmentToolManagement.Commands.CreateAssessmentTool;
 using He.PipelineAssessment.UI.Features.Admin.AssessmentToolManagement.Commands.CreateAssessmentToolWorkflow;
 using He.PipelineAssessment.UI.Features.Admin.AssessmentToolManagement.Commands.DeleteAssessmentTool;
 using He.PipelineAssessment.UI.Features.Admin.AssessmentToolManagement.Commands.DeleteAssessmentToolWorkflow;
+using He.PipelineAssessment.UI.Features.Admin.AssessmentToolManagement.Commands.ManageCategory;
 using He.PipelineAssessment.UI.Features.Admin.AssessmentToolManagement.Commands.UpdateAssessmentTool;
 using He.PipelineAssessment.UI.Features.Admin.AssessmentToolManagement.Commands.UpdateAssessmentToolWorkflowCommand;
 using He.PipelineAssessment.UI.Features.Admin.AssessmentToolManagement.Queries.GetAssessmentTools;
@@ -21,12 +23,17 @@ namespace He.PipelineAssessment.UI.Features.Admin
         private readonly IValidator<UpdateAssessmentToolCommand> _updateAssessmentToolCommandValidator;
         private readonly IValidator<UpdateAssessmentToolWorkflowCommand> _updateAssessmentToolWorkflowCommandValidator;
         private readonly IValidator<CreateAssessmentToolWorkflowCommand> _createAssessmentToolWorkflowCommandValidator;
-
+        private readonly IValidator<CreateCategoryCommand> _createCategoryCommandValidator;
+        private readonly IValidator<UpdateCategoryCommand> _updateCategoryCommandValidator;
+        private readonly IAdminCategoryRepository _adminCategoryRepository;
         public AdminController(
             IValidator<CreateAssessmentToolCommand> createAssessmentToolCommandValidator,
             IValidator<CreateAssessmentToolWorkflowCommand> createAssessmentToolWorkflowCommandValidator,
             IValidator<UpdateAssessmentToolCommand> updateAssessmentToolCommandValidator,
             IValidator<UpdateAssessmentToolWorkflowCommand> updateAssessmentToolWorkflowCommandValidator,
+            IValidator<CreateCategoryCommand> createCategoryCommandValidator,
+            IValidator<UpdateCategoryCommand> updateCategoryCommandValidator,
+            IAdminCategoryRepository adminCategoryRepository,
             IMediator mediator,
             ILogger<AdminController> logger) : base(mediator, logger)
         {
@@ -34,6 +41,9 @@ namespace He.PipelineAssessment.UI.Features.Admin
             _updateAssessmentToolCommandValidator = updateAssessmentToolCommandValidator;
             _updateAssessmentToolWorkflowCommandValidator = updateAssessmentToolWorkflowCommandValidator;
             _createAssessmentToolCommandValidator = createAssessmentToolCommandValidator;
+            _createCategoryCommandValidator = createCategoryCommandValidator;
+            _updateCategoryCommandValidator = updateCategoryCommandValidator;
+            _adminCategoryRepository = adminCategoryRepository;
         }
 
         public IActionResult Index()
@@ -74,8 +84,21 @@ namespace He.PipelineAssessment.UI.Features.Admin
         }
 
         [HttpGet]
+        public Task<IActionResult> LoadCategories(CreateCategoryDto createCategoryDto)
+        {
+            createCategoryDto.Categories = _adminCategoryRepository.GetCategories().Result.ToList();
+            ManageCategoriesDto manageCategoriesDto = new ManageCategoriesDto();
+            manageCategoriesDto.CreateCategoryDto = createCategoryDto;
+            return Task.FromResult<IActionResult>(View("LoadCategories", manageCategoriesDto));
+        }
+
+        [HttpGet]
         public Task<IActionResult> LoadAssessmentToolWorkflow(CreateAssessmentToolWorkflowDto createAssessmentToolWorkflowDto)
         {
+           createAssessmentToolWorkflowDto.CreateAssessmentToolWorkflowCommand.Options =  _adminCategoryRepository.GetCategories().Result.Select(e => new Microsoft.AspNetCore.Mvc.Rendering.SelectListItem { 
+                Value = e.CategoryName,
+                Text = e.CategoryName
+            });
             return Task.FromResult<IActionResult>(View("LoadAssessmentToolWorkflow", createAssessmentToolWorkflowDto));
         }
 
@@ -96,10 +119,57 @@ namespace He.PipelineAssessment.UI.Features.Admin
             }
         }
 
+        //Create a Category
+        [HttpPost]
+        public async Task<IActionResult> ManageCategories(CreateCategoryDto createCategoryDto)
+        {
+            var validationResult = await _createCategoryCommandValidator.ValidateAsync(createCategoryDto.CreateCategoryCommand);
+            ManageCategoriesDto manageCategoriesDto = new ManageCategoriesDto();
+            if (validationResult.IsValid)
+            {
+                await _mediator.Send(createCategoryDto.CreateCategoryCommand);
+                createCategoryDto.Categories = _adminCategoryRepository.GetCategories().Result.ToList();
+                manageCategoriesDto.CreateCategoryDto = createCategoryDto;
+                return RedirectToAction("LoadCategories", manageCategoriesDto);
+            }
+            else
+            {
+                manageCategoriesDto.CreateCategoryDto.ValidationResult = validationResult;
+                manageCategoriesDto.CreateCategoryDto.Categories = _adminCategoryRepository.GetCategories().Result.ToList();
+                return View("LoadCategories", manageCategoriesDto);
+            }
+        }
+
+
+        [HttpPost]
+        public async Task<IActionResult> UpdateCategory(UpdateCategoryCommandDto updateCategoryCommandDto)
+        {
+            var validationResult = await _updateCategoryCommandValidator.ValidateAsync(updateCategoryCommandDto.UpdateCategoryCommand);
+            ManageCategoriesDto manageCategoriesDto = new ManageCategoriesDto();
+
+            if (validationResult.IsValid)
+            {
+                await _mediator.Send(updateCategoryCommandDto.UpdateCategoryCommand);
+                manageCategoriesDto.CreateCategoryDto.Categories = _adminCategoryRepository.GetCategories().Result.ToList();
+                return RedirectToAction("LoadCategories", manageCategoriesDto);
+            }
+            else
+            {
+                manageCategoriesDto.UpdateCategoryCommandDto.ValidationResult = validationResult;
+                manageCategoriesDto.CreateCategoryDto.Categories = _adminCategoryRepository.GetCategories().Result.ToList();
+                return View("LoadCategories", manageCategoriesDto);
+            }
+        }
+
         //Create an assessment tool workflow
         [HttpPost]
         public async Task<IActionResult> CreateAssessmentToolWorkflow(CreateAssessmentToolWorkflowDto createAssessmentToolWorkflowDto)
         {
+            createAssessmentToolWorkflowDto.CreateAssessmentToolWorkflowCommand.Options = _adminCategoryRepository.GetCategories().Result.Select(e => new Microsoft.AspNetCore.Mvc.Rendering.SelectListItem
+            {
+                Value = e.CategoryName,
+                Text = e.CategoryName
+            });
             var validationResult = await _createAssessmentToolWorkflowCommandValidator.ValidateAsync(createAssessmentToolWorkflowDto.CreateAssessmentToolWorkflowCommand);
             if (validationResult.IsValid)
             {
@@ -152,7 +222,7 @@ namespace He.PipelineAssessment.UI.Features.Admin
             {
                 return RedirectToAction("Index", "Error", new { message = "Bad request. No Assessment Tool Workflow Id provided." });
             }
-
+            updateAssessmentToolWorkflowDto.UpdateAssessmentToolWorkflowCommand.Name = updateAssessmentToolWorkflowDto.UpdateAssessmentToolWorkflowCommand.Name.Substring(0, updateAssessmentToolWorkflowDto.UpdateAssessmentToolWorkflowCommand.Name.Length - 4);
 
             var validationResult = await _updateAssessmentToolWorkflowCommandValidator.ValidateAsync(updateAssessmentToolWorkflowDto.UpdateAssessmentToolWorkflowCommand);
             if (validationResult.IsValid)

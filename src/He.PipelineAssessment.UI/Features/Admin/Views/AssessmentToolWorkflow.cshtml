@@ -16,159 +16,193 @@
 <div class="text-center">
     @if (Model.AssessmentToolWorkflowDtos.Any())
     {
-        <table class="govuk-table">
-            <caption class="govuk-table__caption govuk-table__caption--m">Workflow Definitions for: @Model.AssessmentToolName</caption>
-            <thead class="govuk-table__head">
-            <tr class="govuk-table__row">
-                <th scope="col" class="govuk-table__header govuk-!-width-one-fifth">WorkflowDefinitionId</th>
-                <th scope="col" class="govuk-table__header govuk-!-width-one-fifth">Name</th>
-                <th scope="col" class="govuk-table__header govuk-!-width-one-fifth">Is first workflow?</th>
-                <th scope="col" class="govuk-table__header govuk-!-width-one-fifth">Is economist workflow?</th>
-                <th scope="col" class="govuk-table__header govuk-!-width-one-fifth">Is variation?</th>
-                <th scope="col" class="govuk-table__header govuk-!-width-one-fifth">Is last?</th>
-                <th scope="col" class="govuk-table__header govuk-!-width-one-fifth">Is ammendable?</th>
-                <th scope="col" class="govuk-table__header govuk-!-width-one-fifth">Is early stage?</th>
-                <th scope="col" class="govuk-table__header">Update</th>
-                <th scope="col" class="govuk-table__header">Delete</th>
-            </tr>
-            </thead>
-            <tbody class="govuk-table__body">
-            @foreach (var assessmentToolWorkflow in Model.AssessmentToolWorkflowDtos)
-            {
-                var nameErrorClass = "";
-                var workflowDefinitionErrorClass = "";
-                var errorFormClass = "";
-                if (assessmentToolWorkflow.ValidationResult != null)
-                {
-                    errorFormClass = !assessmentToolWorkflow.ValidationResult.IsValid ? "govuk-form-group--error" : "";
-                    var nameInvalid = assessmentToolWorkflow.ValidationResult.Errors.Any(x => x.PropertyName == "Name");
-                    var workflowDefinitionInvalid = assessmentToolWorkflow.ValidationResult.Errors.Any(x => x.PropertyName == "WorkflowDefinitionId");
-                    nameErrorClass = nameInvalid ? "govuk-input--error" : "";
-                    workflowDefinitionErrorClass = workflowDefinitionInvalid ? "govuk-input--error" : "";
-                }
-
-                @if (assessmentToolWorkflow.ValidationResult != null && !assessmentToolWorkflow.ValidationResult.IsValid)
-                {
-                    @await Html.PartialAsync("~/Features/Workflow/Views/Shared/_ValidationSummary.cshtml", assessmentToolWorkflow.ValidationResult)
-                }
-                <tr class="govuk-table__row @errorFormClass">
-                    @using (Html.BeginForm("UpdateAssessmentToolWorkflow", "Admin", FormMethod.Post))
-                    {
-                        <td class="govuk-table__cell">
-                            <div class="govuk-form-group">
-                                <input type="text" value="@assessmentToolWorkflow.WorkflowDefinitionId" name="UpdateAssessmentToolWorkflowCommand.WorkflowDefinitionId" class="govuk-input @workflowDefinitionErrorClass"/>
-                                @if (assessmentToolWorkflow.ValidationResult != null)
-                                {
-                                    @foreach (var error in assessmentToolWorkflow.ValidationResult.Errors.Where(x => x.PropertyName == "WorkflowDefinitionId"))
-                                    {
-                                        @Html.ValidationMessageFor(model => assessmentToolWorkflow.WorkflowDefinitionId, error.ErrorMessage, new { @class = "govuk-error-message" })
-                                    }
-                                }
-                            </div>
-                        </td>
-                        <td class="govuk-table__cell">
-                            <div class="govuk-form-group">
-                                <input type="text" value="@assessmentToolWorkflow.Name" name="UpdateAssessmentToolWorkflowCommand.Name" class="govuk-input @nameErrorClass"/>
-                                @if (assessmentToolWorkflow.ValidationResult != null)
-                                {
-                                    @foreach (var error in assessmentToolWorkflow.ValidationResult.Errors.Where(x => x.PropertyName == "Name"))
-                                    {
-                                        @Html.ValidationMessageFor(model => assessmentToolWorkflow.Name, error.ErrorMessage, new { @class = "govuk-error-message" })
-                                    }
-                                }
-                            </div>
-                        </td>
-                        <td class="govuk-table__cell">
-                                <div class="govuk-radios--inline govuk-radios--small">
-                                    <div class="govuk-radios__item radio-no-margin">
-                                    @Html.RadioButton("UpdateAssessmentToolWorkflowCommand.IsFirstWorkflow", "True", assessmentToolWorkflow.IsFirstWorkflow, new { @class = "govuk-radios__input" })
-                                    <label class="govuk-label govuk-radios__label" for="@assessmentToolWorkflow.IsFirstWorkflow">Yes</label>
-                                </div>
-                                    <div class="govuk-radios__item radio-no-margin">
-                                    @Html.RadioButton("UpdateAssessmentToolWorkflowCommand.IsFirstWorkflow", "False", !assessmentToolWorkflow.IsFirstWorkflow, new { @class = "govuk-radios__input" })
-                                    <label class="govuk-label govuk-radios__label" for="@assessmentToolWorkflow.IsFirstWorkflow">No</label>
-                                </div>
-                            </div>
-                        </td>
-                        <td class="govuk-table__cell">
-                            <div class="govuk-radios--inline govuk-radios--small">
-                                <div class="govuk-radios__item radio-no-margin">
-                                    @Html.RadioButton("UpdateAssessmentToolWorkflowCommand.IsEconomistWorkflow", "True", assessmentToolWorkflow.IsEconomistWorkflow, new { @class = "govuk-radios__input" })
-                                    <label class="govuk-label govuk-radios__label" for="@assessmentToolWorkflow.IsEconomistWorkflow">Yes</label>
-                                </div>
-                                <div class="govuk-radios__item radio-no-margin">
-                                    @Html.RadioButton("UpdateAssessmentToolWorkflowCommand.IsEconomistWorkflow", "False", !assessmentToolWorkflow.IsEconomistWorkflow, new { @class = "govuk-radios__input" })
-                                    <label class="govuk-label govuk-radios__label" for="@assessmentToolWorkflow.IsEconomistWorkflow">No</label>
-                                </div>
-                            </div>
-                        </td>
-                        <td class="govuk-table__cell">
-                            <div class="govuk-radios--inline govuk-radios--small">
-                                <div class="govuk-radios__item radio-no-margin">
-                                    @Html.RadioButton("UpdateAssessmentToolWorkflowCommand.IsVariation", "True", assessmentToolWorkflow.IsVariation, new { @class = "govuk-radios__input" })
-                                    <label class="govuk-label govuk-radios__label" for="@assessmentToolWorkflow.IsVariation">Yes</label>
-                                </div>
-                                <div class="govuk-radios__item radio-no-margin">
-                                    @Html.RadioButton("UpdateAssessmentToolWorkflowCommand.IsVariation", "False", !assessmentToolWorkflow.IsVariation, new { @class = "govuk-radios__input" })
-                                    <label class="govuk-label govuk-radios__label" for="@assessmentToolWorkflow.IsVariation">No</label>
-                                </div>
-                            </div>
-                        </td>
-                        <td class="govuk-table__cell">
-                            <div class="govuk-radios--inline govuk-radios--small">
-                                <div class="govuk-radios__item radio-no-margin">
-                                        @Html.RadioButton("UpdateAssessmentToolWorkflowCommand.IsLast", "True", assessmentToolWorkflow.IsLast, new { @class = "govuk-radios__input" })
-                                        <label class="govuk-label govuk-radios__label" for="@assessmentToolWorkflow.IsLast">Yes</label>
-                                </div>
-                                <div class="govuk-radios__item radio-no-margin">
-                                        @Html.RadioButton("UpdateAssessmentToolWorkflowCommand.IsLast", "False", !assessmentToolWorkflow.IsLast, new { @class = "govuk-radios__input" })
-                                        <label class="govuk-label govuk-radios__label" for="@assessmentToolWorkflow.IsLast">No</label>
-                                </div>
-                            </div>
-                        </td>
-                        <td class="govuk-table__cell">
-                                <div class="govuk-radios--inline govuk-radios--small">
-                                    <div class="govuk-radios__item radio-no-margin">
-                                        @Html.RadioButton("UpdateAssessmentToolWorkflowCommand.IsAmendableWorkflow", "True", assessmentToolWorkflow.IsAmendableWorkflow, new { @class = "govuk-radios__input" })
-                                        <label class="govuk-label govuk-radios__label" for="@assessmentToolWorkflow.IsAmendableWorkflow">Yes</label>
-                                    </div>
-                                    <div class="govuk-radios__item radio-no-margin">
-                                        @Html.RadioButton("UpdateAssessmentToolWorkflowCommand.IsAmendableWorkflow", "False", !assessmentToolWorkflow.IsAmendableWorkflow, new { @class = "govuk-radios__input" })
-                                        <label class="govuk-label govuk-radios__label" for="@assessmentToolWorkflow.IsAmendableWorkflow">No</label>
-                                    </div>
-                            </div>
-                        </td>
-                                 <td class="govuk-table__cell">
-                                <div class="govuk-radios--inline govuk-radios--small">
-                                    <div class="govuk-radios__item radio-no-margin">
-                                        @Html.RadioButton("UpdateAssessmentToolWorkflowCommand.IsEarlyStage", "True", assessmentToolWorkflow.IsEarlyStage, new { @class = "govuk-radios__input" })
-                                        <label class="govuk-label govuk-radios__label" for="@assessmentToolWorkflow.IsEarlyStage">Yes</label>
-                                    </div>
-                                    <div class="govuk-radios__item radio-no-margin">
-                                        @Html.RadioButton("UpdateAssessmentToolWorkflowCommand.IsEarlyStage", "False", !assessmentToolWorkflow.IsEarlyStage, new { @class = "govuk-radios__input" })
-                                        <label class="govuk-label govuk-radios__label" for="@assessmentToolWorkflow.IsEarlyStage">No</label>
-                                    </div>
-                            </div>
-                        </td>
-                        <td class="govuk-table__cell">
-                            @Html.AntiForgeryToken()
-                            @Html.Hidden("UpdateAssessmentToolWorkflowCommand.Id", assessmentToolWorkflow.Id)
-                            @Html.Hidden("UpdateAssessmentToolWorkflowCommand.AssessmentToolId", assessmentToolWorkflow.AssessmentToolId)
-                            <input class="govuk-button govuk-!-margin-0" data-module="govuk-button" id="Update" type="submit" value="Update"/>
-                        </td>
-                    }
-                    <td class="govuk-table__cell">
-                        @using (Html.BeginForm("DeleteAssessmentToolWorkflow", "Admin", FormMethod.Post))
+        foreach (var categories in Model.CategoriedAssessmentToolWorkflowDtos)
+        {
+@*             <div class="govuk-accordion" data-module="govuk-button" id="accordion-with-summary-sections">
+                <div class="govuk-accordion__section">
+                    <div class="govuk-accordion__section-header"> *@
+                        <h2 class="govuk-accordion__section-heading">
+                            <span class="govuk-accordion__section-button" id="accordion-with-summary-sections-heading-1">
+                                @categories.Key
+                            </span>
+                        </h2>
+  @*                   </div>
+                </div>
+            </div> *@
+            @* <div id="accordion-with-summary-sections-content-1" class="govuk-accordion__section-content" aria-labelledby="accordion-with-summary-sections-heading-1"> *@
+                <table class="govuk-table">
+                    <caption class="govuk-table__caption govuk-table__caption--m">Workflow Definitions for: @categories.Key</caption>
+                    <thead class="govuk-table__head">
+                        <tr class="govuk-table__row">
+                            <th scope="col" class="govuk-table__header govuk-!-width-one-fifth">WorkflowDefinitionId</th>
+                            <th scope="col" class="govuk-table__header govuk-!-width-one-fifth">Name</th>
+                            <th scope="col" class="govuk-table__header govuk-!-width-one-fifth">Is Latest Version</th>
+                            <th scope="col" class="govuk-table__header govuk-!-width-one-fifth">Is First</th>
+                            <th scope="col" class="govuk-table__header govuk-!-width-one-fifth">Is Early Stage</th>
+                            <th scope="col" class="govuk-table__header govuk-!-width-one-fifth">Is Last</th>
+                            <th scope="col" class="govuk-table__header govuk-!-width-one-fifth">Is Economist</th>
+                            <th scope="col" class="govuk-table__header govuk-!-width-one-fifth">Is Ammendable</th>
+                            <th scope="col" class="govuk-table__header govuk-!-width-one-fifth">Is Variation</th>
+                            <th scope="col" class="govuk-table__header">Update</th>
+                            <th scope="col" class="govuk-table__header">Delete</th>
+                        </tr>
+                    </thead>
+                    <tbody class="govuk-table__body">
+                        @foreach (var assessmentToolWorkflow in categories.OrderByDescending(x => x.IsLatest))
                         {
-                            @Html.AntiForgeryToken()
-                            @Html.Hidden("assessmentToolWorkflowId", assessmentToolWorkflow.Id)
-                            @Html.Hidden("assessmentToolId", assessmentToolWorkflow.AssessmentToolId)
-                            <input class="govuk-button govuk-!-margin-0 govuk-button--warning" data-module="govuk-button" id="Delete" type="submit" value="Delete"/>
+                            var nameErrorClass = "";
+                            var workflowDefinitionErrorClass = "";
+                            var errorFormClass = "";
+                            if (assessmentToolWorkflow.ValidationResult != null)
+                            {
+                                errorFormClass = !assessmentToolWorkflow.ValidationResult.IsValid ? "govuk-form-group--error" : "";
+                                var nameInvalid = assessmentToolWorkflow.ValidationResult.Errors.Any(x => x.PropertyName == "Name");
+                                var workflowDefinitionInvalid = assessmentToolWorkflow.ValidationResult.Errors.Any(x => x.PropertyName == "WorkflowDefinitionId");
+                                nameErrorClass = nameInvalid ? "govuk-input--error" : "";
+                                workflowDefinitionErrorClass = workflowDefinitionInvalid ? "govuk-input--error" : "";
+                            }
+
+                            @if (assessmentToolWorkflow.ValidationResult != null && !assessmentToolWorkflow.ValidationResult.IsValid)
+                            {
+                                @await Html.PartialAsync("~/Features/Workflow/Views/Shared/_ValidationSummary.cshtml", assessmentToolWorkflow.ValidationResult)
+                            }
+                            <tr class="govuk-table__row @errorFormClass">
+                            @using (Html.BeginForm("UpdateAssessmentToolWorkflow", "Admin", FormMethod.Post, new { @class = "govuk-button govuk-button--warning" }))
+                                {
+                                    <td class="govuk-table__cell">
+                                        <div class="govuk-form-group">
+                                            <input type="text" value="@assessmentToolWorkflow.WorkflowDefinitionId" name="UpdateAssessmentToolWorkflowCommand.WorkflowDefinitionId" class="govuk-input @workflowDefinitionErrorClass" readonly/>
+                                            @if (assessmentToolWorkflow.ValidationResult != null)
+                                            {
+                                                @foreach (var error in assessmentToolWorkflow.ValidationResult.Errors.Where(x => x.PropertyName == "WorkflowDefinitionId"))
+                                                {
+                                                    @Html.ValidationMessageFor(model => assessmentToolWorkflow.WorkflowDefinitionId, error.ErrorMessage, new { @class = "govuk-error-message" })
+                                                }
+                                            }
+                                        </div>
+                                    </td>
+                                    <td class="govuk-table__cell">
+                                        <div class="govuk-form-group">
+                                            @{
+                                                string Version = "(v" + @assessmentToolWorkflow.Version.ToString() + ")";
+                                            }
+                                            <input type="text" value="@assessmentToolWorkflow.Name @Version" name="UpdateAssessmentToolWorkflowCommand.Name" class="govuk-input @nameErrorClass" readonly />
+                                            @if (assessmentToolWorkflow.ValidationResult != null)
+                                            {
+                                                @foreach (var error in assessmentToolWorkflow.ValidationResult.Errors.Where(x => x.PropertyName == "Name"))
+                                                {
+                                                    @Html.ValidationMessageFor(model => assessmentToolWorkflow.Name, error.ErrorMessage, new { @class = "govuk-error-message" })
+                                                }
+                                            }
+                                        </div>
+                                    </td>
+                                <td class="govuk-table__cell">
+                                    <div class="govuk-radios--inline govuk-radios--small">
+                                        <div class="govuk-radios__item radio-no-margin">
+                                            @Html.RadioButton("UpdateAssessmentToolWorkflowCommand.IsLatest", "True", assessmentToolWorkflow.IsLatest, new { @class = "govuk-radios__input" })
+                                            <label class="govuk-label govuk-radios__label" for="@assessmentToolWorkflow.IsLatest">Yes</label>
+                                        </div>
+                                        <div class="govuk-radios__item radio-no-margin">
+                                            @Html.RadioButton("UpdateAssessmentToolWorkflowCommand.IsLatest", "False", !assessmentToolWorkflow.IsLatest, new { @class = "govuk-radios__input" })
+                                            <label class="govuk-label govuk-radios__label" for="@assessmentToolWorkflow.IsLatest">No</label>
+                                        </div>
+                                    </div>
+                                </td>
+                                    <td class="govuk-table__cell">
+                                        <div class="govuk-radios--inline govuk-radios--small">
+                                            <div class="govuk-radios__item radio-no-margin">
+                                                @Html.RadioButton("UpdateAssessmentToolWorkflowCommand.IsFirstWorkflow", "True", assessmentToolWorkflow.IsFirstWorkflow, new { @class = "govuk-radios__input" })
+                                                <label class="govuk-label govuk-radios__label" for="@assessmentToolWorkflow.IsFirstWorkflow">Yes</label>
+                                            </div>
+                                            <div class="govuk-radios__item radio-no-margin">
+                                                @Html.RadioButton("UpdateAssessmentToolWorkflowCommand.IsFirstWorkflow", "False", !assessmentToolWorkflow.IsFirstWorkflow, new { @class = "govuk-radios__input" })
+                                                <label class="govuk-label govuk-radios__label" for="@assessmentToolWorkflow.IsFirstWorkflow">No</label>
+                                            </div>
+                                        </div>
+                                    </td>
+                                <td class="govuk-table__cell">
+                                    <div class="govuk-radios--inline govuk-radios--small">
+                                        <div class="govuk-radios__item radio-no-margin">
+                                            @Html.RadioButton("UpdateAssessmentToolWorkflowCommand.IsEarlyStage", "True", assessmentToolWorkflow.IsEarlyStage, new { @class = "govuk-radios__input" })
+                                            <label class="govuk-label govuk-radios__label" for="@assessmentToolWorkflow.IsEarlyStage">Yes</label>
+                                        </div>
+                                        <div class="govuk-radios__item radio-no-margin">
+                                            @Html.RadioButton("UpdateAssessmentToolWorkflowCommand.IsEarlyStage", "False", !assessmentToolWorkflow.IsEarlyStage, new { @class = "govuk-radios__input" })
+                                            <label class="govuk-label govuk-radios__label" for="@assessmentToolWorkflow.IsEarlyStage">No</label>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td class="govuk-table__cell">
+                                    <div class="govuk-radios--inline govuk-radios--small">
+                                        <div class="govuk-radios__item radio-no-margin">
+                                            @Html.RadioButton("UpdateAssessmentToolWorkflowCommand.IsLast", "True", assessmentToolWorkflow.IsLast, new { @class = "govuk-radios__input" })
+                                            <label class="govuk-label govuk-radios__label" for="@assessmentToolWorkflow.IsLast">Yes</label>
+                                        </div>
+                                        <div class="govuk-radios__item radio-no-margin">
+                                            @Html.RadioButton("UpdateAssessmentToolWorkflowCommand.IsLast", "False", !assessmentToolWorkflow.IsLast, new { @class = "govuk-radios__input" })
+                                            <label class="govuk-label govuk-radios__label" for="@assessmentToolWorkflow.IsLast">No</label>
+                                        </div>
+                                    </div>
+                                </td>
+                                    <td class="govuk-table__cell">
+                                        <div class="govuk-radios--inline govuk-radios--small">
+                                            <div class="govuk-radios__item radio-no-margin">
+                                                @Html.RadioButton("UpdateAssessmentToolWorkflowCommand.IsEconomistWorkflow", "True", assessmentToolWorkflow.IsEconomistWorkflow, new { @class = "govuk-radios__input" })
+                                                <label class="govuk-label govuk-radios__label" for="@assessmentToolWorkflow.IsEconomistWorkflow">Yes</label>
+                                            </div>
+                                            <div class="govuk-radios__item radio-no-margin">
+                                                @Html.RadioButton("UpdateAssessmentToolWorkflowCommand.IsEconomistWorkflow", "False", !assessmentToolWorkflow.IsEconomistWorkflow, new { @class = "govuk-radios__input" })
+                                                <label class="govuk-label govuk-radios__label" for="@assessmentToolWorkflow.IsEconomistWorkflow">No</label>
+                                            </div>
+                                        </div>
+                                    </td>
+
+                                <td class="govuk-table__cell">
+                                    <div class="govuk-radios--inline govuk-radios--small">
+                                        <div class="govuk-radios__item radio-no-margin">
+                                            @Html.RadioButton("UpdateAssessmentToolWorkflowCommand.IsAmendableWorkflow", "True", assessmentToolWorkflow.IsAmendableWorkflow, new { @class = "govuk-radios__input" })
+                                            <label class="govuk-label govuk-radios__label" for="@assessmentToolWorkflow.IsAmendableWorkflow">Yes</label>
+                                        </div>
+                                        <div class="govuk-radios__item radio-no-margin">
+                                            @Html.RadioButton("UpdateAssessmentToolWorkflowCommand.IsAmendableWorkflow", "False", !assessmentToolWorkflow.IsAmendableWorkflow, new { @class = "govuk-radios__input" })
+                                            <label class="govuk-label govuk-radios__label" for="@assessmentToolWorkflow.IsAmendableWorkflow">No</label>
+                                        </div>
+                                    </div>
+                                </td>
+                                    <td class="govuk-table__cell">
+                                        <div class="govuk-radios--inline govuk-radios--small">
+                                            <div class="govuk-radios__item radio-no-margin">
+                                                @Html.RadioButton("UpdateAssessmentToolWorkflowCommand.IsVariation", "True", assessmentToolWorkflow.IsVariation, new { @class = "govuk-radios__input" })
+                                                <label class="govuk-label govuk-radios__label" for="@assessmentToolWorkflow.IsVariation">Yes</label>
+                                            </div>
+                                            <div class="govuk-radios__item radio-no-margin">
+                                                @Html.RadioButton("UpdateAssessmentToolWorkflowCommand.IsVariation", "False", !assessmentToolWorkflow.IsVariation, new { @class = "govuk-radios__input" })
+                                                <label class="govuk-label govuk-radios__label" for="@assessmentToolWorkflow.IsVariation">No</label>
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <td class="govuk-table__cell">
+                                        @Html.AntiForgeryToken()
+                                        @Html.Hidden("UpdateAssessmentToolWorkflowCommand.Id", assessmentToolWorkflow.Id)
+                                        @Html.Hidden("UpdateAssessmentToolWorkflowCommand.AssessmentToolId", assessmentToolWorkflow.AssessmentToolId)
+                                    <input class="govuk-button govuk-!-margin-0" data-module="govuk-button" id="Update" type="submit" value="Update" onclick="return confirm('Are you sure want to delete this worklow ?');" />
+                                    </td>
+                                }
+                                <td class="govuk-table__cell">
+                                @using (Html.BeginForm("DeleteAssessmentToolWorkflow", "Admin", FormMethod.Post))
+                                    {
+                                        @Html.AntiForgeryToken()
+                                        @Html.Hidden("assessmentToolWorkflowId", assessmentToolWorkflow.Id)
+                                        @Html.Hidden("assessmentToolId", assessmentToolWorkflow.AssessmentToolId)
+                                        <input class="govuk-button govuk-!-margin-0 govuk-button--warning" data-module="govuk-button" id="Delete" type="submit" value="Delete" />
+                                    }
+                                </td>
+                            </tr>
                         }
-                    </td>
-                </tr>
-            }
-            </tbody>
-        </table>
+                    </tbody>
+                </table>
+            @* </div> *@
+  
+        }
     }
 </div>

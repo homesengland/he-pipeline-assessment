@@ -40,11 +40,12 @@ namespace He.PipelineAssessment.Infrastructure.Repository.StoredProcedure
 
         public async Task<List<AssessmentStageViewModel>> GetAssessmentStages(int assessmentId)
         {
-
-            var assessmentIdParameter = new SqlParameter("@assessmentId", assessmentId);
-            var stages = await _storeProcContext.AssessmentStageViewModel
-                .FromSqlRaw(sp_GetAssessmentStagesByAssessmentId, assessmentIdParameter).ToListAsync();
-            return new List<AssessmentStageViewModel>(stages);
+                var assessmentIdParameter = new SqlParameter("@assessmentId", assessmentId);
+                var stages = _storeProcContext.AssessmentStageViewModel
+                    .FromSqlRaw(sp_GetAssessmentStagesByAssessmentId, assessmentIdParameter);
+                    
+                var d = await stages.ToListAsync();
+                return new List<AssessmentStageViewModel>(d);
         }
 
         public async Task<List<AssessmentInterventionViewModel>> GetAssessmentInterventionList(int assessmentId)

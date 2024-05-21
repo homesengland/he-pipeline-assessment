@@ -34,7 +34,7 @@ namespace He.PipelineAssessment.UI.Tests.Features.Admin.AssessmentToolManagement
             var result = validator.Validate(command);
 
             //Assert
-            Assert.Equal(2, result.Errors.Count);
+            Assert.Equal(3, result.Errors.Count);
             Assert.Contains(expectedValidationMessage,
                 result.Errors.Where(x => x.PropertyName == "Name").Select(x => x.ErrorMessage));
             Assert.Contains("The Workflow Definition Id cannot be empty",
@@ -57,6 +57,7 @@ namespace He.PipelineAssessment.UI.Tests.Features.Admin.AssessmentToolManagement
             var validator = new UpdateAssessmentToolWorkflowCommandValidator(repository.Object);
 
             repository.Setup(x => x.GetAssessmentToolWorkflowByDefinitionId(It.IsAny<string>())).Returns(assessmentToolWorkflow);
+            repository.Setup(x => x.GetAssessmentTool(It.IsAny<int>())).ReturnsAsync(new AssessmentTool { Order =1 });
 
             var command = new UpdateAssessmentToolWorkflowCommand
             {
@@ -83,8 +84,8 @@ namespace He.PipelineAssessment.UI.Tests.Features.Admin.AssessmentToolManagement
         {
             //Arrange
             var validator = new UpdateAssessmentToolWorkflowCommandValidator(repository.Object);
-
             repository.Setup(x => x.GetAssessmentToolWorkflowByDefinitionId(It.IsAny<string>())).Returns(assessmentToolWorkflow);
+            repository.Setup(x => x.GetAssessmentTool(It.IsAny<int>())).ReturnsAsync(new AssessmentTool() { Order = 1 });
 
             var command = new UpdateAssessmentToolWorkflowCommand
             {
@@ -111,6 +112,7 @@ namespace He.PipelineAssessment.UI.Tests.Features.Admin.AssessmentToolManagement
             var validator = new UpdateAssessmentToolWorkflowCommandValidator(repository.Object);
 
             repository.Setup(x => x.GetAssessmentToolWorkflowByDefinitionId(It.IsAny<string>())).Returns((AssessmentToolWorkflow?)null);
+            repository.Setup(x => x.GetAssessmentTool(It.IsAny<int>())).ReturnsAsync(new AssessmentTool() { Order = 1});
 
             var command = new UpdateAssessmentToolWorkflowCommand
             {

@@ -32,16 +32,15 @@ namespace He.PipelineAssessment.UI.Features.Workflow
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> StartWorkflow([FromForm] StartWorkflowCommand command)
         {
-            var result = await _mediator.Send(command);
+                var result = await _mediator.Send(command);
 
-            return RedirectToAction("LoadWorkflowActivity",
-                new
-                {
-                    WorkflowInstanceId = result?.WorkflowInstanceId,
-                    ActivityId = result?.ActivityId,
-                    ActivityType = result?.ActivityType
-                });
-
+                return RedirectToAction("LoadWorkflowActivity",
+                    new
+                    {
+                        WorkflowInstanceId = result?.WorkflowInstanceId,
+                        ActivityId = result?.ActivityId,
+                        ActivityType = result?.ActivityType
+                    });
         }
 
         [Authorize(Policy = Authorization.Constants.AuthorizationPolicies.AssignmentToWorkflowExecuteRoleRequired)]

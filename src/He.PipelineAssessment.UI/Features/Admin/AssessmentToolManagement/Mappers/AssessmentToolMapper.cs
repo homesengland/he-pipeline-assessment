@@ -26,6 +26,7 @@ namespace He.PipelineAssessment.UI.Features.Admin.AssessmentToolManagement.Mappe
                     {
                         Id = y.Id,
                         Name = y.Name,
+                        Category = y.Category,
                         AssessmentToolId = y.AssessmentToolId,
                         IsFirstWorkflow = y.IsFirstWorkflow,
                         IsEconomistWorkflow = y.IsEconomistWorkflow,
@@ -59,6 +60,7 @@ namespace He.PipelineAssessment.UI.Features.Admin.AssessmentToolManagement.Mappe
                 {
                     Id = x.Id,
                     Name = x.Name,
+                    Category = x.Category,
                     AssessmentToolId = x.AssessmentToolId,
                     IsFirstWorkflow = x.IsFirstWorkflow,
                     IsEconomistWorkflow = x.IsEconomistWorkflow,

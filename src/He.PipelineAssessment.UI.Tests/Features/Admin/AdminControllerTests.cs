@@ -7,6 +7,7 @@ using He.PipelineAssessment.UI.Features.Admin.AssessmentToolManagement.Commands.
 using He.PipelineAssessment.UI.Features.Admin.AssessmentToolManagement.Commands.CreateAssessmentToolWorkflow;
 using He.PipelineAssessment.UI.Features.Admin.AssessmentToolManagement.Commands.DeleteAssessmentTool;
 using He.PipelineAssessment.UI.Features.Admin.AssessmentToolManagement.Commands.DeleteAssessmentToolWorkflow;
+using He.PipelineAssessment.UI.Features.Admin.AssessmentToolManagement.Commands.ManageCategory;
 using He.PipelineAssessment.UI.Features.Admin.AssessmentToolManagement.Commands.UpdateAssessmentTool;
 using He.PipelineAssessment.UI.Features.Admin.AssessmentToolManagement.Commands.UpdateAssessmentToolWorkflowCommand;
 using He.PipelineAssessment.UI.Features.Admin.AssessmentToolManagement.Queries.GetAssessmentTools;
@@ -192,6 +193,74 @@ namespace He.PipelineAssessment.UI.Tests.Features.Admin
             var redirectToActionResult = (RedirectToActionResult)result;
             Assert.Equal("AssessmentTool", redirectToActionResult.ActionName);
             Assert.Null(createAssessmentToolDto.ValidationResult);
+        }
+
+        [Theory]
+        [AutoMoqData]
+        public async Task CreateCategory_ShouldRedirectToLoadCategories_GivenValidationResultIsValid(
+            [Frozen] Mock<IValidator<CreateCategoryCommand>> validator,
+            ValidationResult validationResult,
+            AdminController sut)
+        {
+            //Arrange
+            validationResult.Errors = new List<ValidationFailure>();
+            var createCategoryDto = new CreateCategoryDto
+            {
+                ValidationResult = null
+            };
+
+            validator.Setup(x => x.ValidateAsync(createCategoryDto.CreateCategoryCommand, CancellationToken.None)).ReturnsAsync(validationResult);
+
+            //Act
+            var result = await sut.ManageCategories(createCategoryDto);
+
+            //Assert
+            Assert.IsType<RedirectToActionResult>(result);
+            var redirectToActionResult = (RedirectToActionResult)result;
+            Assert.Equal("LoadCategories", redirectToActionResult.ActionName);
+            Assert.Null(createCategoryDto.ValidationResult);
+        }
+
+        [Theory]
+        [AutoMoqData]
+        public async Task UpdateCategories_ShouldRedirectToLoadCategories_GivenValidationResultIsValid(
+            [Frozen] Mock<IValidator<UpdateCategoryCommand>> validator,
+            ValidationResult validationResult,
+            AdminController sut)
+        {
+            //Arrange
+            validationResult.Errors = new List<ValidationFailure>();
+            var updateCategory = new UpdateCategoryCommandDto
+            {
+                ValidationResult = null
+            };
+
+            validator.Setup(x => x.ValidateAsync(updateCategory.UpdateCategoryCommand, CancellationToken.None)).ReturnsAsync(validationResult);
+
+            //Act
+            var result = await sut.UpdateCategory(updateCategory);
+
+            //Assert
+            Assert.IsType<RedirectToActionResult>(result);
+            var redirectToActionResult = (RedirectToActionResult)result;
+            Assert.Equal("LoadCategories", redirectToActionResult.ActionName);
+            Assert.Null(updateCategory.ValidationResult);
+        }
+
+        [Theory]
+        [AutoMoqData]
+        public async Task LoadCategories_ShouldRedirectToView_GivenNoExceptionsThrow(
+        CreateCategoryDto createCategoryDto,
+        AdminController sut)
+        {
+            //Arrange
+
+            //Act
+            var result = await sut.LoadCategories(createCategoryDto);
+
+            //Assert
+            Assert.NotNull(result);
+            Assert.IsType<ViewResult>(result);
         }
 
         [Theory]

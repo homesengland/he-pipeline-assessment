@@ -9,11 +9,13 @@ namespace He.PipelineAssessment.UI.Features.Assessment.AssessmentSummary
     public class AssessmentSummaryRequestHandler : IRequestHandler<AssessmentSummaryRequest, AssessmentSummaryResponse?>
     {
         private readonly IAssessmentRepository _repository;
+        private readonly IAdminAssessmentToolWorkflowRepository _adminAssessmentToolWorkflowRepository;
         private readonly IStoredProcedureRepository _storedProcedureRepository;
         private readonly ILogger<AssessmentSummaryRequestHandler> _logger;
         private readonly IRoleValidation _roleValidation;
 
         public AssessmentSummaryRequestHandler(IAssessmentRepository repository,
+                                               IAdminAssessmentToolWorkflowRepository adminAssessmentToolWorkflowRepository,
                                                ILogger<AssessmentSummaryRequestHandler> logger,
                                                IStoredProcedureRepository storedProcedureRepository, 
                                                IRoleValidation roleValidation)
@@ -22,6 +24,7 @@ namespace He.PipelineAssessment.UI.Features.Assessment.AssessmentSummary
             _logger = logger;
             _storedProcedureRepository = storedProcedureRepository;
             _roleValidation = roleValidation;
+            _adminAssessmentToolWorkflowRepository = adminAssessmentToolWorkflowRepository;
         }
         public async Task<AssessmentSummaryResponse?> Handle(AssessmentSummaryRequest request, CancellationToken cancellationToken)
         {
@@ -51,6 +54,7 @@ namespace He.PipelineAssessment.UI.Features.Assessment.AssessmentSummary
                     var uniqueTools = assessmentStages.Select(x => new { x.AssessmentToolId, x.Name, x.Order, x.IsVariation })
                       .Distinct().ToList();
                     foreach (var assessmentTool in uniqueTools)
+                    
                     {
                        //Add All Current Workflow Instances in Draft or Submitted
                        var assessmentStagesForCurrentTool = assessmentStages.Where(x => x.AssessmentToolId == assessmentTool.AssessmentToolId && x.IsVariation == assessmentTool.IsVariation);
@@ -60,8 +64,33 @@ namespace He.PipelineAssessment.UI.Features.Assessment.AssessmentSummary
                         //Add All Startable Tools
                         var startableWorkflowForCurrentTool = startableWorkflows.Where(x => x.AssessmentToolId == assessmentTool.AssessmentToolId && x.IsVariation == assessmentTool.IsVariation);
                         var startableList = AssessmentSummaryStage(startableWorkflowForCurrentTool,assessmentTool.Name,assessmentTool.Order).ToList();
+
+
                         stages.AddRange(startableList);
-                            
+
+                        var completedAssessmentTools = _repository.GetAssessmentToolWorkflowInstances(request.AssessmentId).Result.Where(x => x.Status == "Submitted" || x.Status == "Draft").Select(x =>  x.WorkflowDefinitionId ).ToList();
+
+                        if (completedAssessmentTools.Any()) 
+                        { 
+                            foreach (var completedAssessmentTool in completedAssessmentTools)
+                            {
+                                var assessmentWorkflowTool = _repository.GetAssessmentToolWorkflowByDefinitionId(completedAssessmentTool);
+                                if(assessmentWorkflowTool != null) 
+                                {
+                                    var sameCategoryDefinitions = await _adminAssessmentToolWorkflowRepository.GetWorkflowsOfSameCategory(assessmentWorkflowTool.AssessmentToolId, assessmentWorkflowTool.Category);
+                                    sameCategoryDefinitions.Remove(completedAssessmentTool);
+                                    stages.RemoveAll(x => sameCategoryDefinitions.Any(y => y == x.WorkflowDefinitionId));
+                                }
+                            }
+                        }
+                        if (uniqueTools.Any() && !completedAssessmentTools.Any())
+                        {
+                            var nonLatestWorkflows = await _adminAssessmentToolWorkflowRepository.GetNonLatestWorkflowsByAssessmentTool(uniqueTools.First().AssessmentToolId ?? 0);
+                            if(nonLatestWorkflows != null)
+                            {
+                                stages.RemoveAll(x => nonLatestWorkflows.Any(y => y == x.WorkflowDefinitionId));
+                            }
+                        }
                         //If there is nothing add the current stage as a non startable item
                         if (!workflowInstances.Any() && !startableList.Any())
                         {
@@ -171,7 +200,7 @@ namespace He.PipelineAssessment.UI.Features.Assessment.AssessmentSummary
                         AssessmentToolWorkflowInstanceId = item.AssessmentToolWorkflowInstanceId,
                         Result = item.Result,
                         SubmittedBy = item.SubmittedBy,
-                        AssessmentToolWorkflowId = null
+                        AssessmentToolWorkflowId = null,
                     };
                     stageList.Add(inFlightStage);
                 }

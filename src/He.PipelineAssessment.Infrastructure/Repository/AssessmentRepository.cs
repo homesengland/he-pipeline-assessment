@@ -7,6 +7,7 @@ namespace He.PipelineAssessment.Infrastructure.Repository
     public interface IAssessmentRepository
     {
         Task<Assessment?> GetAssessment(int assessmentId);
+        Task<AssessmentTool?> GetAssessmentTool(int assessmentToolId);
         Task<List<Assessment>> GetAssessments();
         Task<AssessmentToolWorkflowInstance?> GetAssessmentToolWorkflowInstance(string workflowInstance);
         Task<AssessmentToolInstanceNextWorkflow?> GetAssessmentToolInstanceNextWorkflow(int assessmentToolWorkflowInstanceId, string workflowDefinitionId);
@@ -29,6 +30,7 @@ namespace He.PipelineAssessment.Infrastructure.Repository
 
 
         Task DeleteSubsequentNextWorkflows(AssessmentToolInstanceNextWorkflow? nextWorkflow);
+        Task UpdateNextWorkflowDefintionId(string oldNextworkflowId , string newNextWorkflowId);
         Task DeleteAllNextWorkflows(int assessmentId);
         Task DeleteAllNextWorkflowsByOrder(int assessmentId, int order);
         Task<int> DeleteNextWorkflow(AssessmentToolInstanceNextWorkflow nextWorkflow);
@@ -54,6 +56,11 @@ namespace He.PipelineAssessment.Infrastructure.Repository
         public async Task<Assessment?> GetAssessment(int assessmentId)
         {
             return await context.Set<Assessment>().FirstOrDefaultAsync(x => x.Id == assessmentId);
+        }
+
+        public async Task<AssessmentTool?> GetAssessmentTool(int assessmentToolId)
+        {
+            return await context.Set<AssessmentTool>().Where(x => x.Status != "Deleted").FirstOrDefaultAsync(x => x.Id == assessmentToolId);
         }
 
         public async Task<List<Assessment>> GetAssessments()
@@ -115,8 +122,8 @@ namespace He.PipelineAssessment.Infrastructure.Repository
 
         public async Task CreateAssessmentToolInstanceNextWorkflows(List<AssessmentToolInstanceNextWorkflow> nextWorkflows)
         {
-            await context.Set<AssessmentToolInstanceNextWorkflow>().AddRangeAsync(nextWorkflows);
-            await context.SaveChangesAsync();
+                await context.Set<AssessmentToolInstanceNextWorkflow>().AddRangeAsync(nextWorkflows);
+                await context.SaveChangesAsync();
         }
 
         public async Task<int> CreateAssessmentIntervention(AssessmentIntervention assessmentIntervention)
@@ -288,6 +295,17 @@ namespace He.PipelineAssessment.Infrastructure.Repository
             context.Set<AssessmentToolInstanceNextWorkflow>().RemoveRange(nextWorkflows);
 
             await context.SaveChangesAsync();
+        }
+
+        public async Task UpdateNextWorkflowDefintionId(string oldNextworkflowId, string newNextWorkflowId)
+        {
+            var nextWorkflow = await context.Set<AssessmentToolInstanceNextWorkflow>()
+                .FirstOrDefaultAsync(x => x.NextWorkflowDefinitionId == oldNextworkflowId);
+            if (nextWorkflow != null)
+            {
+                nextWorkflow.NextWorkflowDefinitionId = newNextWorkflowId;
+                await context.SaveChangesAsync();
+            }
         }
     }
 }

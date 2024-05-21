@@ -38,15 +38,15 @@ namespace He.PipelineAssessment.UI.Integration.ServiceBusSend
 
         public async void SendMessage(string messageBody)
         {
-            //if (_configuration.SendMessages)
-            //{
+            if (_configuration.SendMessages)
+            {
                 ServiceBusMessage message = new ServiceBusMessage(messageBody);
                 await this._sender.SendMessageAsync(message);
-            //}
-            //else
-            //{
-            //    _logger.LogInformation("A message was not sent to Service Bus due to configuration");
-            //}
+            }
+            else
+            {
+                _logger.LogInformation("A message was not sent to Service Bus due to configuration");
+            }
         }
 
         public void SendMessage(AssessmentToolWorkflowInstance data)

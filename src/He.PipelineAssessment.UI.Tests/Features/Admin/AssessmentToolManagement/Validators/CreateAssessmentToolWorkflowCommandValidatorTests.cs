@@ -11,9 +11,8 @@ namespace He.PipelineAssessment.UI.Tests.Features.Admin.AssessmentToolManagement
     public class CreateAssessmentToolWorkflowCommandValidatorTests
     {
         [Theory]
-        [InlineAutoMoqData("", "The Name cannot be empty")]
-        [InlineAutoMoqData("", "The Name cannot be empty")]
-        [InlineAutoMoqData("Name_that_is_over_100_characters_long.............................................................123", "The length of 'Name' must be 100 characters or fewer. You entered 101 characters.")]
+        [InlineAutoMoqData("", "The Selected Option cannot be empty")]
+        [InlineAutoMoqData("", "The Selected Option cannot be empty")]
         public void Should_ReturnValidationMessage_WhenPropertyIsInvalid(
             string name, 
             string expectedValidationMessage, 
@@ -28,7 +27,8 @@ namespace He.PipelineAssessment.UI.Tests.Features.Admin.AssessmentToolManagement
             var command = new CreateAssessmentToolWorkflowCommand
             {
                 Name = name,
-                WorkflowDefinitionId = string.Empty
+                WorkflowDefinitionId = string.Empty,
+                SelectedOption = string.Empty,
             };
 
             //Act
@@ -37,12 +37,12 @@ namespace He.PipelineAssessment.UI.Tests.Features.Admin.AssessmentToolManagement
             //Assert
             Assert.Equal(2, result.Errors.Count);
             Assert.Contains(expectedValidationMessage,
-                result.Errors.Where(x => x.PropertyName == "Name").Select(x => x.ErrorMessage));
+                result.Errors.Where(x => x.PropertyName == "SelectedOption").Select(x => x.ErrorMessage).First());
             Assert.Contains("The Workflow Definition Id cannot be empty",
-                result.Errors.Where(x => x.PropertyName == "WorkflowDefinitionId").Select(x => x.ErrorMessage));
+                result.Errors.Where(x => x.PropertyName == "WorkflowDefinitionId").Select(x => x.ErrorMessage).First());
             Assert.NotEqual("The Name can be empty",
-                result.Errors.First(x => x.PropertyName == "Name").ErrorMessage);
-            Assert.NotEqual("The Workflow Definition Id can be empty.",
+                result.Errors.First(x => x.PropertyName == "SelectedOption").ErrorMessage);
+            Assert.NotEqual("The WorkflowDefinitionId can be empty.",
                 result.Errors.First(x => x.PropertyName == "WorkflowDefinitionId").ErrorMessage);
         }
 
@@ -63,7 +63,8 @@ namespace He.PipelineAssessment.UI.Tests.Features.Admin.AssessmentToolManagement
             var command = new CreateAssessmentToolWorkflowCommand
             {
                 Name = name,
-                WorkflowDefinitionId = workflowDefinitionId
+                WorkflowDefinitionId = workflowDefinitionId,
+                SelectedOption="LUBHF"
             };
 
             //Act
@@ -90,7 +91,8 @@ namespace He.PipelineAssessment.UI.Tests.Features.Admin.AssessmentToolManagement
             var command = new CreateAssessmentToolWorkflowCommand
             {
                 Name = name,
-                WorkflowDefinitionId = workflowDefinitionId
+                WorkflowDefinitionId = workflowDefinitionId,
+                SelectedOption = "LUBHF"
             };
 
             //Act
