@@ -2,6 +2,7 @@ using Elsa.CustomWorkflow.Sdk;
 using Elsa.CustomWorkflow.Sdk.Extensions;
 using Elsa.CustomWorkflow.Sdk.HttpClients;
 using FluentValidation;
+using He.Notification.Client;
 using He.PipelineAssessment.Data.Auth;
 using He.PipelineAssessment.Data.SinglePipeline;
 using He.PipelineAssessment.Infrastructure;
@@ -115,6 +116,14 @@ builder.Services.AddScoped<IRoleValidation, RoleValidation>();
 builder.Services.AddScoped<IErrorHelper, ErrorHelper>();
 builder.Services.AddScoped<IInterventionService, InterventionService>();
 builder.Services.AddScoped<IAssessmentInterventionMapper, AssessmentInterventionMapper>();
+
+builder.Services.AddHttpClient<INotificationService, NotificationService>(client =>
+{
+    client.BaseAddress = new Uri("https://notification.homesengland.org.uk");
+    client.DefaultRequestHeaders.Add("Accept", "application/json");
+    client.DefaultRequestHeaders.Add("Ocp-Apim-Subscription-Key", "**");
+    client.DefaultRequestHeaders.Add("Client-Name", "**");
+});
 
 builder.Services.AddHttpContextAccessor();
 

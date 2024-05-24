@@ -7,6 +7,7 @@ using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
+using Microsoft.Xrm.Sdk;
 
 namespace He.PipelineAssessment.UI.Features.Assessments
 {
@@ -61,6 +62,18 @@ namespace He.PipelineAssessment.UI.Features.Assessments
             {
                 return RedirectToAction("Summary", new { assessmentid = assessmentid, correlationId = correlationId });
             }
+        }
+
+        [HttpPost]
+        public async Task SendPASProjectsUpdate()
+        {
+            var listModel = await _mediator.Send(new AssessmentListRequest()
+            {
+                Username = null,
+                CanViewSensitiveRecords = true,
+                IsChronJobRequest = true
+            });
+            await Task.CompletedTask;
         }
     }
 }

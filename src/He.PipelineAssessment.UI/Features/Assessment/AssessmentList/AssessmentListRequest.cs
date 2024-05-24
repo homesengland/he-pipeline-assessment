@@ -1,5 +1,6 @@
 ﻿using He.PipelineAssessment.Models.ViewModels;
 using MediatR;
+using Microsoft.AspNetCore.Components.Web;
 
 namespace He.PipelineAssessment.UI.Features.Assessment.AssessmentList
 {
@@ -7,5 +8,7 @@ namespace He.PipelineAssessment.UI.Features.Assessment.AssessmentList
     {
         public string? Username { get; set; }
         public bool CanViewSensitiveRecords { get; set; }
+
+        public bool IsChronJobRequest { get; set; }  = false;
     }
 }
