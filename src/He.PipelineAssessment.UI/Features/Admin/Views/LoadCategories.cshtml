@@ -59,35 +59,38 @@
                 </tr>
             </thead>
             <tbody class="govuk-table__body">
-            @foreach (var category in Model.CreateCategoryDto.Categories)
-            {
+                @{
                 var categoryNameErrorClass = "";
-                if (Model.UpdateCategoryCommandDto  != null && Model.UpdateCategoryCommandDto.ValidationResult != null)
+                @if (Model.UpdateCategoryCommandDto != null && Model.UpdateCategoryCommandDto.ValidationResult != null)
                 {
-                        errorFormClass = !Model.UpdateCategoryCommandDto.ValidationResult.IsValid ? "govuk-form-group--error" : "";
-                        var nameInvalid = Model.UpdateCategoryCommandDto.ValidationResult.Errors.Any(x => x.PropertyName == "Name");
-                        var categoyNameInvalid = Model.UpdateCategoryCommandDto.ValidationResult.Errors.Any(x => x.PropertyName == "CategoryName");
+                    errorFormClass = !Model.UpdateCategoryCommandDto.ValidationResult.IsValid ? "govuk-form-group--error" : "";
+                    var nameInvalid = Model.UpdateCategoryCommandDto.ValidationResult.Errors.Any(x => x.PropertyName == "Name");
+                    var categoyNameInvalid = Model.UpdateCategoryCommandDto.ValidationResult.Errors.Any(x => x.PropertyName == "CategoryName");
                     nameErrorClass = nameInvalid ? "govuk-input--error" : "";
                     categoryNameErrorClass = categoyNameInvalid ? "govuk-input--error" : "";
                 }
 
-                @if (Model.UpdateCategoryCommandDto  != null && Model.UpdateCategoryCommandDto.ValidationResult != null && !Model.UpdateCategoryCommandDto.ValidationResult.IsValid)
+                @if (Model.UpdateCategoryCommandDto != null && Model.UpdateCategoryCommandDto.ValidationResult != null && !Model.UpdateCategoryCommandDto.ValidationResult.IsValid)
                 {
-                        @await Html.PartialAsync("~/Features/Workflow/Views/Shared/_ValidationSummary.cshtml", Model.UpdateCategoryCommandDto.ValidationResult)
+                    @await Html.PartialAsync("~/Features/Workflow/Views/Shared/_ValidationSummary.cshtml", Model.UpdateCategoryCommandDto.ValidationResult)
                 }
+                @if (Model.UpdateCategoryCommandDto != null && @Model.UpdateCategoryCommandDto.ValidationResult != null)
+                {
+                    @foreach (var error in Model.UpdateCategoryCommandDto.ValidationResult.Errors.Where(x => x.PropertyName == "CategoryName"))
+                    {
+                        @Html.ValidationMessageFor(model => "CategoryName", error.ErrorMessage, new { @class = "govuk-error-message" })
+                    }
+                }
+                } 
+                
+            @foreach (var category in Model.CreateCategoryDto.Categories)
+            {
                 <tr class="govuk-table__row @errorFormClass">
                     @using (Html.BeginForm("UpdateCategory", "Admin", FormMethod.Post))
                     {
                         <td class="govuk-table__cell">
                             <div class="govuk-form-group">
                                 <input type="text" value="@category.CategoryName" name="UpdateCategoryCommand.CategoryName" class="govuk-input @categoryNameErrorClass" />
-                                @if (Model.UpdateCategoryCommandDto  != null && @Model.UpdateCategoryCommandDto.ValidationResult != null)
-                                {
-                                    @foreach (var error in Model.UpdateCategoryCommandDto.ValidationResult.Errors.Where(x => x.PropertyName == "CategoryName"))
-                                    {
-                                        @Html.ValidationMessageFor(model => category.CategoryName, error.ErrorMessage, new { @class = "govuk-error-message" })
-                                    }
-                                }
                             </div>
                         </td>
                         <td class="govuk-table__cell">

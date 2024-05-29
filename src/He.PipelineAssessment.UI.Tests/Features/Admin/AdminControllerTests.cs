@@ -162,7 +162,7 @@ namespace He.PipelineAssessment.UI.Tests.Features.Admin
             mediator.Setup(x => x.Send(command, CancellationToken.None));
 
             //Act
-            var result = await sut.DeleteAssessmentToolWorkflow(assessmentToolWorkflowId, assessmentToolId);
+            var result = await sut.DeleteAssessmentToolWorkflow(assessmentToolWorkflowId, assessmentToolId,"");
 
             //Assert
             Assert.NotNull(result);
