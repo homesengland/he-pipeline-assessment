@@ -1,8 +1,6 @@
-﻿using Azure.Core;
-using Azure.Identity;
+﻿using Azure.Identity;
 using Azure.Messaging.ServiceBus;
 using He.PipelineAssessment.Models;
-using He.PipelineAssessment.UI.Features.Admin.AssessmentToolManagement.Commands.CreateAssessmentTool;
 using He.PipelineAssessment.UI.Features.Workflow.QuestionScreenSaveAndContinue;
 using MediatR;
 using Microsoft.Extensions.Options;
@@ -14,13 +12,14 @@ namespace He.PipelineAssessment.UI.Integration.ServiceBusSend
     {
         private readonly ServiceBusConfiguration _configuration;
         private readonly ServiceBusClient _client;
-        private readonly ServiceBusSender _sender;
+        private readonly List<ServiceBusSender> _senders;
         private readonly IMediator _mediator;
         private readonly ILogger<ServiceBusMessageSender> _logger;
 
         public ServiceBusMessageSender(IOptions<ServiceBusConfiguration> configuration, IMediator mediator, ILogger<ServiceBusMessageSender> logger)
         {
             _configuration = configuration.Value;
+            _senders = new List<ServiceBusSender>();
 
             if (_configuration.UseDefaultAzureCredential)
             {
@@ -30,8 +29,14 @@ namespace He.PipelineAssessment.UI.Integration.ServiceBusSend
             {
                 this._client = new ServiceBusClient(_configuration.ConnectionString);
             }
-
-            this._sender = this._client.CreateSender(_configuration.QueueToSendMessages);
+            var queuesToSendMessage = _configuration.QueueToSendMessages;
+            if(queuesToSendMessage != null && queuesToSendMessage.Length > 0)
+            {
+                foreach (var queue in queuesToSendMessage)
+                {
+                    this._senders.Add(this._client.CreateSender(queue));
+                }
+            }
             this._mediator = mediator;
             this._logger = logger;
         }
@@ -41,7 +46,13 @@ namespace He.PipelineAssessment.UI.Integration.ServiceBusSend
             if (_configuration.SendMessages)
             {
                 ServiceBusMessage message = new ServiceBusMessage(messageBody);
-                await this._sender.SendMessageAsync(message);
+               if(_senders !=  null && _senders.Count() > 0)
+                {
+                    foreach (var sender in _senders)
+                    {
+                        await sender.SendMessageAsync(message);
+                    }
+                }
             }
             else
             {
