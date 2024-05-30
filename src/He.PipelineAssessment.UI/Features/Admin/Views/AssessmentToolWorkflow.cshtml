@@ -194,7 +194,8 @@
                                         @Html.AntiForgeryToken()
                                         @Html.Hidden("assessmentToolWorkflowId", assessmentToolWorkflow.Id)
                                         @Html.Hidden("assessmentToolId", assessmentToolWorkflow.AssessmentToolId)
-                                        <input class="govuk-button govuk-!-margin-0 govuk-button--warning" data-module="govuk-button" id="Delete" type="submit" value="Delete" />
+                                        @Html.Hidden("isRedirection", true)
+                                        <input class="govuk-button govuk-!-margin-0 govuk-button--warning" data-module="govuk-button" id="Remove" type="submit" value="Remove" />
                                     }
                                 </td>
                             </tr>

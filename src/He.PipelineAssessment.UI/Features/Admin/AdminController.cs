@@ -1,5 +1,6 @@
 ﻿using FluentValidation;
 using He.PipelineAssessment.Infrastructure.Repository;
+using He.PipelineAssessment.Models;
 using He.PipelineAssessment.UI.Authorization;
 using He.PipelineAssessment.UI.Features.Admin.AssessmentToolManagement.Commands.CreateAssessmentTool;
 using He.PipelineAssessment.UI.Features.Admin.AssessmentToolManagement.Commands.CreateAssessmentToolWorkflow;
@@ -258,12 +259,21 @@ namespace He.PipelineAssessment.UI.Features.Admin
 
         //delete an assessment tool workflow
         [HttpPost]
-        public async Task<IActionResult> DeleteAssessmentToolWorkflow(int assessmentToolWorkflowId, int assessmentToolId)
+        public async Task<IActionResult> DeleteAssessmentToolWorkflow(int assessmentToolWorkflowId, int assessmentToolId, string submitButton)
         {
+            if (submitButton == "Remove")
+            {
+               // AssessmentToolWorkflowListDto
+                var assessmentToolsWorkflows = await _mediator.Send(new AssessmentToolWorkflowQuery(assessmentToolId));
+                assessmentToolsWorkflows.AssessmentToolWorkflowDtos = assessmentToolsWorkflows.AssessmentToolWorkflowDtos.Where(x => x.Id == assessmentToolWorkflowId).ToList();
+                return View("DeleteAssessmentToolWorkFlow", assessmentToolsWorkflows);
+            }
+            else
+            {
+                await _mediator.Send(new DeleteAssessmentToolWorkflowCommand(assessmentToolWorkflowId));
 
-            await _mediator.Send(new DeleteAssessmentToolWorkflowCommand(assessmentToolWorkflowId));
-
-            return RedirectToAction("AssessmentToolWorkflow", new { assessmentToolId });
+                return RedirectToAction("AssessmentToolWorkflow", new { assessmentToolId });
+            }
         }
     }
 }

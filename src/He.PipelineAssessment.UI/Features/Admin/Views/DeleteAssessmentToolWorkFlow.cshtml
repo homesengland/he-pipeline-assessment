@@ -1,0 +1,28 @@
+﻿@model He.PipelineAssessment.UI.Features.Admin.AssessmentToolManagement.Queries.GetAssessmentToolWorkflows.AssessmentToolWorkflowListDto;
+
+@{
+    ViewData["Title"] = "Assessment Tool Workflow";
+    Layout = "_Layout";
+}
+@Html.ActionLink("Back","AssessmentTool","Admin", null,new{ @class="govuk-back-link"})
+<div class="govuk-body">
+    <h2 class="govuk-heading-m">You are about to delete the following Assessment Tool: @Model.AssessmentToolName</h2>
+    @if(Model.AssessmentToolWorkflowDtos.Any())
+    {
+    <p class="govuk-body">This will also delete the following Assessment Tool Workflows, as they are currently associated with this assessment tool:</p>
+    <ul class="govuk-list">
+        @foreach (var assessmentToolWorkflow in Model.AssessmentToolWorkflowDtos)
+        {
+            <li>@assessmentToolWorkflow.WorkflowDefinitionId - @assessmentToolWorkflow.Name</li>
+        }
+    </ul>
+    }
+    @using (Html.BeginForm("DeleteAssessmentToolWorkflow", "Admin", FormMethod.Post))
+    {
+        @Html.AntiForgeryToken()
+        @Html.Hidden("assessmentToolWorkflowId", Model.AssessmentToolWorkflowDtos.First().Id)
+        @Html.Hidden("assessmentToolId", Model.AssessmentToolId)
+        @Html.Hidden("isRedirection", false)
+        <input class="govuk-button govuk-!-margin-0 govuk-button--warning" data-module="govuk-button" id="Delete" type="submit" value="Delete" />
+    }
+</div>
