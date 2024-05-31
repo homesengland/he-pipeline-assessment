@@ -29,14 +29,20 @@ namespace He.PipelineAssessment.UI.Integration.ServiceBusSend
             {
                 this._client = new ServiceBusClient(_configuration.ConnectionString);
             }
-            var queuesToSendMessage = _configuration.QueueToSendMessages;
-            if(queuesToSendMessage != null && queuesToSendMessage.Length > 0)
+
+            if (_configuration.QueueToSendMessages != null)
             {
-                foreach (var queue in queuesToSendMessage)
+                var queuesToSendMessage = _configuration.QueueToSendMessages.Split(",");
+
+                if (queuesToSendMessage != null && queuesToSendMessage.Length > 0)
                 {
-                    this._senders.Add(this._client.CreateSender(queue));
+                    foreach (var queue in queuesToSendMessage)
+                    {
+                        this._senders.Add(this._client.CreateSender(queue));
+                    }
                 }
             }
+
             this._mediator = mediator;
             this._logger = logger;
         }
