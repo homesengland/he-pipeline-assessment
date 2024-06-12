@@ -66,7 +66,7 @@ namespace Elsa.CustomActivities.Providers
                             }
                         }
                     }
-                    
+
                 }
             }
 
@@ -77,6 +77,7 @@ namespace Elsa.CustomActivities.Providers
 
         private static decimal GetScoreFromScoreArray(List<Answer> answers, List<decimal> scoreArray)
         {
+            if (answers.Count == 0) return 0;
             var answerCount = answers.Count;
             var scoreArrayIndex = answerCount - 1;
             if (answerCount > scoreArray.Count)

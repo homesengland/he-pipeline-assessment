@@ -112,7 +112,16 @@ namespace Elsa.Server.Features.Workflow.LoadQuestionScreen
                                     if (dbQuestion != null)
                                     {
                                         var questionActivityData = CreateQuestionActivityData(dbQuestion, item, _textGroupMapper, questionIndex);
-
+                                        if ((questionActivityData.QuestionType == QuestionTypeConstants.CurrencyQuestion ||
+                                           questionActivityData.QuestionType == QuestionTypeConstants.DecimalQuestion ||
+                                           questionActivityData.QuestionType == QuestionTypeConstants.IntegerQuestion ||
+                                           questionActivityData.QuestionType == QuestionTypeConstants.PercentageQuestion ||
+                                           questionActivityData.QuestionType == QuestionTypeConstants.TextQuestion ||
+                                           questionActivityData.QuestionType == QuestionTypeConstants.TextAreaQuestion) &&
+                                           questionActivityData.Answers.Any(x => string.IsNullOrEmpty(x.AnswerText)))
+                                        {
+                                            questionActivityData.IsReadOnly = false;
+                                        }
                                         result.Data.Questions.Add(questionActivityData);
                                     }
                                     questionIndex++;
@@ -146,7 +155,7 @@ namespace Elsa.Server.Features.Workflow.LoadQuestionScreen
             }
             catch (Exception e)
             {
-                _logger.LogError(e,e.Message);
+                _logger.LogError(e, e.Message);
                 result.ErrorMessages.Add(e.Message);
             }
 
@@ -178,7 +187,7 @@ namespace Elsa.Server.Features.Workflow.LoadQuestionScreen
             questionActivityData.IsReadOnly = item.IsReadOnly;
             questionActivityData.ReevaluatePrepopulatedAnswers = item.ReevaluatePrePopulatedAnswers;
             questionActivityData.HideQuestion = item.HideQuestion;
-            
+
             if (item.QuestionType == QuestionTypeConstants.CheckboxQuestion ||
                 item.QuestionType == QuestionTypeConstants.WeightedCheckboxQuestion)
             {
@@ -188,8 +197,11 @@ namespace Elsa.Server.Features.Workflow.LoadQuestionScreen
                     {
                         Choices = dbQuestion.Choices.Select(x => new QuestionChoice()
                         {
-                            Answer = x.Answer, IsSingle = x.IsSingle, IsExclusiveToQuestion = x.IsExclusiveToQuestion,
-                            Id = x.Id, QuestionChoiceGroup = x.QuestionChoiceGroup
+                            Answer = x.Answer,
+                            IsSingle = x.IsSingle,
+                            IsExclusiveToQuestion = x.IsExclusiveToQuestion,
+                            Id = x.Id,
+                            QuestionChoiceGroup = x.QuestionChoiceGroup
                         }).ToArray()
                     };
 
@@ -203,20 +215,27 @@ namespace Elsa.Server.Features.Workflow.LoadQuestionScreen
                         if (item.QuestionType == QuestionTypeConstants.CheckboxQuestion)
                         {
                             var prepopulatedAnswerListIdentifiers = item.Checkbox.Choices.Where(x => x.IsPrePopulated).Select(x => x.Identifier).ToList();
+                            if (prepopulatedAnswerListIdentifiers.Count() == 0)
+                            {
+                                questionActivityData.IsReadOnly = false;
+                            }
                             answerList = dbQuestion.Choices.Where(x => prepopulatedAnswerListIdentifiers.Contains(x.Identifier)).Select(x => x.Id).ToList();
                         }
                         else
                         {
                             var prepopulatedAnswerListIdentifiers = item.WeightedCheckbox.Groups.Values.SelectMany(x => x.Choices.Where(y => y.IsPrePopulated)
-                            .Select(z => new { Id = z.Identifier, GroupId = x.GroupIdentifier})).ToList();
-                            
+                            .Select(z => new { Id = z.Identifier, GroupId = x.GroupIdentifier })).ToList();
+                            if (prepopulatedAnswerListIdentifiers.Count() == 0)
+                            {
+                                questionActivityData.IsReadOnly = false;
+                            }
                             var groups = dbQuestion.Choices.Select(x => x.QuestionChoiceGroup);
-                            
+
                             answerList = dbQuestion.Choices.Where(x => prepopulatedAnswerListIdentifiers.Any(y => {
                                 var g = groups.FirstOrDefault(z => z!.Id == x.QuestionChoiceGroupId);
                                 return y.Id == x.Identifier && g != null && g.GroupIdentifier == y.GroupId;
                             })).Select(x => x.Id).ToList(); ;
-                        } 
+                        }
                     }
 
                     questionActivityData.Checkbox.SelectedChoices = answerList;
@@ -252,6 +271,10 @@ namespace Elsa.Server.Features.Workflow.LoadQuestionScreen
                                     questionActivityData.Radio.SelectedAnswer = databaseChoiceAnswer.Id;
                                 }
                             }
+                            else
+                            {
+                                questionActivityData.IsReadOnly = false;
+                            }
                         }
                         else if (item.QuestionType == QuestionTypeConstants.PotScoreRadioQuestion)
                         {
@@ -264,8 +287,12 @@ namespace Elsa.Server.Features.Workflow.LoadQuestionScreen
                                     questionActivityData.Radio.SelectedAnswer = databaseChoiceAnswer.Id;
                                 }
                             }
+                            else
+                            {
+                                questionActivityData.IsReadOnly = false;
+                            }
                         }
-                        else if(item.QuestionType == QuestionTypeConstants.WeightedRadioQuestion)
+                        else if (item.QuestionType == QuestionTypeConstants.WeightedRadioQuestion)
                         {
                             var prepopulatedAnswer = item.WeightedRadio.Choices.FirstOrDefault(x => x.IsPrePopulated);
                             if (prepopulatedAnswer != null)
@@ -275,6 +302,10 @@ namespace Elsa.Server.Features.Workflow.LoadQuestionScreen
                                 {
                                     questionActivityData.Radio.SelectedAnswer = databaseChoiceAnswer.Id;
                                 }
+                            }
+                            else
+                            {
+                                questionActivityData.IsReadOnly = false;
                             }
                         }
                     }
@@ -292,12 +323,12 @@ namespace Elsa.Server.Features.Workflow.LoadQuestionScreen
             }
             else
             {
-                #pragma warning disable 0612, 0618
+#pragma warning disable 0612, 0618
                 if (!string.IsNullOrEmpty(item.QuestionGuidance))
                 {
                     questionActivityData.EnhancedGuidance = textGroupMapper.InformationTextGroupListFromGuidanceString(item.QuestionGuidance);
                 }
-                #pragma warning restore 0612, 0618
+#pragma warning restore 0612, 0618
             }
 
             if (item.QuestionType == QuestionTypeConstants.DataTable)
