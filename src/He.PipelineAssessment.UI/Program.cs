@@ -32,6 +32,7 @@ using He.PipelineAssessment.UI.Services;
 using Microsoft.AspNetCore.DataProtection;
 using Microsoft.AspNetCore.Mvc.Razor;
 using Microsoft.EntityFrameworkCore;
+using System.Configuration;
 using System.Net.Http.Headers;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -117,13 +118,9 @@ builder.Services.AddScoped<IErrorHelper, ErrorHelper>();
 builder.Services.AddScoped<IInterventionService, InterventionService>();
 builder.Services.AddScoped<IAssessmentInterventionMapper, AssessmentInterventionMapper>();
 
-builder.Services.AddHttpClient<INotificationService, NotificationService>(client =>
-{
-    client.BaseAddress = new Uri("https://notification.homesengland.org.uk");
-    client.DefaultRequestHeaders.Add("Accept", "application/json");
-    client.DefaultRequestHeaders.Add("Ocp-Apim-Subscription-Key", "**");
-    client.DefaultRequestHeaders.Add("Client-Name", "**");
-});
+var heNotificationConfig = builder.Configuration.GetSection("HeNotification").Get<NotificationServiceConfiguration>();
+builder.Services.AddNotificationService(heNotificationConfig);
+
 
 builder.Services.AddHttpContextAccessor();
 

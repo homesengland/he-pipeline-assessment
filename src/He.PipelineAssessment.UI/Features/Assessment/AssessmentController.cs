@@ -36,7 +36,8 @@ namespace He.PipelineAssessment.UI.Features.Assessments
             var listModel = await _mediator.Send(new AssessmentListRequest()
             {
                 Username = username,
-                CanViewSensitiveRecords = canViewSensitiveRecords
+                CanViewSensitiveRecords = canViewSensitiveRecords,
+                IsChronJobRequest = true
             });
             return View("Index", listModel);
         }

@@ -61,13 +61,13 @@ namespace He.PipelineAssessment.UI.Features.Assessment.AssessmentList
                 {"UpdatedProjects", updatedProjects},
                 {"Date", DateTime.Now},
                 {"TotalProjects", totalProjects},
-                {"email address","avinash.bobba@homesengland.gov.uk" }
+                { "recipientEmail","avinash.bobba@homesengland.gov.uk" }
 
             };
 
                 DynamicEmailModel<Dictionary<String, dynamic>> sendEmailRequest = new DynamicEmailModel<Dictionary<String, dynamic>>()
                 {
-                    TemplateId = "7288ae5b-d402-4764-a078-c87d7df8ad31",
+                    TemplateId = "486e4950-fd2e-4a4f-99cf-6c2e54c9675a",
                     Personalisation = personalisation,
                 };
                 var response = await this._notificationService.SendEmail(sendEmailRequest);
