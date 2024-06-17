@@ -1,8 +1,6 @@
-﻿using Azure.Core;
-using Azure.Identity;
+﻿using Azure.Identity;
 using Azure.Messaging.ServiceBus;
 using He.PipelineAssessment.Models;
-using He.PipelineAssessment.UI.Features.Admin.AssessmentToolManagement.Commands.CreateAssessmentTool;
 using He.PipelineAssessment.UI.Features.Workflow.QuestionScreenSaveAndContinue;
 using MediatR;
 using Microsoft.Extensions.Options;
@@ -38,15 +36,15 @@ namespace He.PipelineAssessment.UI.Integration.ServiceBusSend
 
         public async void SendMessage(string messageBody)
         {
-            //if (_configuration.SendMessages)
-            //{
+            if (_configuration.SendMessages)
+            {
                 ServiceBusMessage message = new ServiceBusMessage(messageBody);
                 await this._sender.SendMessageAsync(message);
-            //}
-            //else
-            //{
-            //    _logger.LogInformation("A message was not sent to Service Bus due to configuration");
-            //}
+            }
+            else
+            {
+                _logger.LogInformation("A message was not sent to Service Bus due to configuration");
+            }
         }
 
         public void SendMessage(AssessmentToolWorkflowInstance data)
