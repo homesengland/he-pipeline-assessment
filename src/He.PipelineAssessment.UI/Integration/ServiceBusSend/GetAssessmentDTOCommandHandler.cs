@@ -22,12 +22,21 @@ namespace He.PipelineAssessment.UI.Features.Workflow.QuestionScreenSaveAndContin
             {
                 var assessmentToolWorkflowInstance = await _assessmentRepository.GetAssessmentToolWorkflowInstance(request.WorkflowInstanceId);
 
-                GetAssessmentDTOCommandResponse result = new GetAssessmentDTOCommandResponse(){ };
-                string assessmentToolName = assessmentToolWorkflowInstance!.AssessmentToolWorkflow.AssessmentTool.Name;
+                GetAssessmentDTOCommandResponse result = new GetAssessmentDTOCommandResponse() { };
+
+                string assessmentToolName = "";
+
+
+                if (assessmentToolWorkflowInstance != null
+                    && assessmentToolWorkflowInstance.AssessmentToolWorkflow != null
+                    && assessmentToolWorkflowInstance.AssessmentToolWorkflow.AssessmentTool != null)
+                {
+                    assessmentToolName = assessmentToolWorkflowInstance.AssessmentToolWorkflow.AssessmentTool.Name;
+                }
 
                 if (assessmentToolWorkflowInstance != null)
                 {
-                    result.Assessment.AssessmentToolId = assessmentToolWorkflowInstance.AssessmentToolWorkflowId!.Value;
+                    result.Assessment.AssessmentToolId = assessmentToolWorkflowInstance.AssessmentToolWorkflowId == null ? 0 : assessmentToolWorkflowInstance.AssessmentToolWorkflowId!.Value;
                     result.Assessment.CreatedDateTime = assessmentToolWorkflowInstance.CreatedDateTime;
                     result.Assessment.SubmittedDateTime = assessmentToolWorkflowInstance.SubmittedDateTime;
                     result.Assessment.Status = assessmentToolWorkflowInstance.Status;
@@ -36,7 +45,7 @@ namespace He.PipelineAssessment.UI.Features.Workflow.QuestionScreenSaveAndContin
                     result.Assessment.Result = assessmentToolWorkflowInstance.Result;
                     result.Assessment.ProjectId = assessmentToolWorkflowInstance.Assessment.SpId;
                     result.Assessment.SubmittedBy = assessmentToolWorkflowInstance.SubmittedBy;
-                    result.Assessment.Name = string.Compare(result.Assessment.Status, "Suspended - RB", true)==0
+                    result.Assessment.Name = string.Compare(result.Assessment.Status, "Suspended - RB", true) == 0
                         ? $"{assessmentToolName} - {assessmentToolWorkflowInstance.WorkflowName}"
                         : result.Assessment.Name = assessmentToolName;
                 }
