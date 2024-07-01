@@ -21,23 +21,30 @@ namespace He.PipelineAssessment.Data.VoaLandValues.Land
         public async Task<string?> GetLandValues(string gssCode)
         {
             string? data = null;
-            string whereClause = $"gss_code='{gssCode}'";
-            string outFields = "*";
-
-            var relativeUri = $"query?where={whereClause}&outFields={outFields}&f=json";
-
-            using (var response = await _httpClientFactory.CreateClient(ClientConstants.LandValuesClient)
-                       .GetAsync(relativeUri)
-                       .ConfigureAwait(false))
+            foreach (var code in gssCode.Split(','))
             {
-                data = await response.Content.ReadAsStringAsync().ConfigureAwait(false);
-                if (!response.IsSuccessStatusCode)
-                {
-                    _logger.LogError($"StatusCode='{response.StatusCode}'," +
-                                     $"\n Message= '{data}'," +
-                                     $"\n Url='{relativeUri}'");
+                string whereClause = $"gss_code='{code}'";
+                string outFields = "*";
 
-                    return null;
+                var relativeUri = $"query?where={whereClause}&outFields={outFields}&f=json";
+
+                using (var response = await _httpClientFactory.CreateClient(ClientConstants.LandValuesClient)
+                           .GetAsync(relativeUri)
+                           .ConfigureAwait(false))
+                {
+                    data = await response.Content.ReadAsStringAsync().ConfigureAwait(false);
+                    if (!response.IsSuccessStatusCode)
+                    {
+                        _logger.LogError($"StatusCode='{response.StatusCode}'," +
+                                         $"\n Message= '{data}'," +
+                                         $"\n Url='{relativeUri}'");
+
+                        return null;
+                    }
+                    if (data != null)
+                    {
+                        return data;
+                    }
                 }
             }
 
