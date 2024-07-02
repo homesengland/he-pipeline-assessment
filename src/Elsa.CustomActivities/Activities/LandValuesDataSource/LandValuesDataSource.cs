@@ -24,8 +24,7 @@ namespace Elsa.CustomActivities.Activities.LandValuesDataSource
         }
 
         [ActivityInput(Hint = "GSS Code of the record to get", SupportedSyntaxes = new[] { SyntaxNames.Literal, SyntaxNames.Json, SyntaxNames.JavaScript })]
-        public string GssCode { get; set; } = null!;
-
+        public string[] GssCodes { get; set; } = null!;
         [ActivityOutput] public LandValues? Output { get; set; }
 
         protected override IActivityExecutionResult OnExecute(ActivityExecutionContext context)
@@ -35,23 +34,31 @@ namespace Elsa.CustomActivities.Activities.LandValuesDataSource
 
         protected override async ValueTask<IActivityExecutionResult> OnResumeAsync(ActivityExecutionContext context)
         {
-            context.JournalData.Add(nameof(GssCode), GssCode);
+            var outCome = "Done";
 
-            var data = await _client.GetLandValues(GssCode);
+            context.JournalData.Add(nameof(GssCodes), GssCodes);
+            foreach (var GssCode in GssCodes)
+            {
+                var data = await _client.GetLandValues(GssCode);
 
-            if (data != null)
-            {
-                var dataResult = _jsonHelper.JsonToLandValuesData(data);
-                this.Output = dataResult;
-            }
-            else
-            {
-                context.JournalData.Add("Error", "Call to GetLaVoaLandValues returned null");
+                if (data != null)
+                {
+                    var dataResult = _jsonHelper.JsonToLandValuesData(data);
+                    if (dataResult != null) {
+                        this.Output = dataResult;
+                        outCome = "Done";
+                        break;
+                    }
+                }
+                else
+                {
+                    context.JournalData.Add("Error", "Call to GetLaVoaLandValues returned null");
+                }
             }
 
             return await Task.FromResult(new CombinedResult(new List<IActivityExecutionResult>
             {
-                Outcomes("Done"),
+                Outcomes(outCome),
                 new SuspendResult()
             }));
         }
