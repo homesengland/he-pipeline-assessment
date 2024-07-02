@@ -53,6 +53,7 @@ namespace Elsa.CustomActivities.Activities.LandValuesDataSource
                 else
                 {
                     context.JournalData.Add("Error", "Call to GetLaVoaLandValues returned null");
+                    break;
                 }
             }
 
