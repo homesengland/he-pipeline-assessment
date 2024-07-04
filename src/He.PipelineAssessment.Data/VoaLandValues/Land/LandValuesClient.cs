@@ -21,7 +21,7 @@ namespace He.PipelineAssessment.Data.VoaLandValues.Land
         public async Task<string?> GetLandValues(string gssCode)
         {
             string? data = null;
-            string whereClause = $"gss_code='{gssCode}'";
+            string whereClause = $"gss_code='{gssCode}'  AND latest_stat='Y'";
             string outFields = "*";
 
             var relativeUri = $"query?where={whereClause}&outFields={outFields}&f=json";
