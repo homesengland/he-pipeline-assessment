@@ -51,7 +51,7 @@ namespace He.PipelineAssessment.UI.Integration.ServiceBusSend
         {
             GetAssessmentDTOCommand command = new GetAssessmentDTOCommand()
             {
-                ProjectId = data.Assessment.SpId,
+                ProjectId = data.Assessment == null ?  0 : data.Assessment.Id,
                 WorkflowInstanceId = data.WorkflowInstanceId,
                 AssessmentToolWorkflowInstanceId = data.Id
             };
