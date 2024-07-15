@@ -13,6 +13,18 @@
         public double? stand_house_unit { get; set; }
         public double? high_dens_unit { get; set; }
         public double? stat_year { get; set; }
+        public double? objectid { get; set; }
+        public double? agricultural_value { get; set; }
+        public double? land_edge_centre_value { get; set; }
+        public double? land_edge_centre_value_sqm { get; set; }
+        public double? land_out_town_value { get; set; }
+        public double? land_out_town_value_sqm { get; set; }
+        public double? net_ann_ben_social_rent { get; set; }
+        public double? net_ann_ben_afford_rent { get; set; }
+        public double? net_ann_ben_support_hous { get; set; }
+        public double? net_avg_soc_aff_rent { get; set; }
+        public string? latest_stat { get; set; }
+
     }
 
     public class Feature

@@ -14,7 +14,7 @@ namespace He.PipelineAssessment.Data.VoaLandValues.Land
             try
             {
                 var result = JsonSerializer.Deserialize<LandValuesResponse>(data);
-                if (result != null)
+                if (result != null && result.features.Count() > 0)
                 {
                     var dataResult = result.features.FirstOrDefault()!.attributes;
                     return dataResult;
