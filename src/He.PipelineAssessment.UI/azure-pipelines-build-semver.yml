@@ -4,10 +4,23 @@
 # https://aka.ms/yaml
 
 trigger:
-  - none
+  branches:
+    include:
+    - master
+parameters:
+  - name: forcePushToProd
+    displayName: Force Push to Production
+    type: boolean
+    default: false
 
-pool:
-  vmImage: 'ubuntu-22.04'
+variables:
+  buildMajor: 0
+  buildMinor: 0
+  buildBranch: $[replace(variables['Build.SourceBranch'], '/', '.')]
+
+pool: 'vmss-ado-chs-nonprod-001'
+
+name: $(buildMajor).$(buildMinor).$(Rev:r)-api.$(buildBranch)
 
 resources:
   repositories:
