@@ -1,0 +1,37 @@
+# Starter pipeline
+# Start with a minimal pipeline that you can customize to build and deploy your code.
+# Add steps that build, run tests, deploy, and more:
+# https://aka.ms/yaml
+
+trigger:
+  branches:
+    include:
+    - master
+parameters:
+  - name: forcePushToProd
+    displayName: Force Push to Production
+    type: boolean
+    default: false
+
+variables:
+  buildMajor: 0
+  buildMinor: 0
+  buildBranch: $[replace(variables['Build.SourceBranch'], '/', '.')]
+
+pool: 'vmss-ado-chs-nonprod-001'
+
+name: $(buildMajor).$(buildMinor).$(Rev:r)-$(buildBranch)
+
+resources:
+  repositories:
+  - repository: pipeline-assessment-deployment
+    type: git
+    name: 'Pipeline Assessment/pipeline-assessment-deployment'   
+    ref: 'feature/semver'
+  - repository: templates
+    type: git
+    name: 'Cloud Hosting Service/Templates'   
+    ref: 'master'
+
+stages:
+- template: pipelines/build.yml@pipeline-assessment-deployment
