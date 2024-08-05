@@ -1,6 +1,5 @@
 ﻿using Elsa.CustomModels;
 using Elsa.Scripting.JavaScript.Services;
-using He.PipelineAssessment.Data.Dataverse;
 using He.PipelineAssessment.Data.ExtendedSinglePipeline;
 using He.PipelineAssessment.Data.LaHouseNeed;
 using He.PipelineAssessment.Data.PCSProfile;
@@ -11,7 +10,6 @@ using He.PipelineAssessment.Data.VFM;
 using He.PipelineAssessment.Data.VoaLandValues.Models.Agriculture;
 using He.PipelineAssessment.Data.VoaLandValues.Models.Land;
 using He.PipelineAssessment.Data.VoaLandValues.Models.Office;
-using Npgsql.TypeMapping;
 
 namespace Elsa.Server.Extensions
 {
@@ -32,7 +30,6 @@ namespace Elsa.Server.Extensions
             typeof(AgricultureLandValues),
             typeof(OfficeLandValues),
             typeof(LocalAuthority),
-            typeof(DataverseResults)
         };
     }
 }

@@ -47,9 +47,6 @@ using Elsa.CustomActivities.Activities.SinglePipelineExtendedDataSource;
 using Elsa.CustomActivities.Activities.ReturnToActivity;
 using Elsa.CustomWorkflow.Sdk.DataDictionaryHelpers;
 using Elsa.Server.DataDictionaryAccessors;
-using Elsa.CustomActivities;
-using Elsa.CustomActivities.Activities.DataverseDataSource;
-using He.PipelineAssessment.Data.Dataverse;
 
 var builder = WebApplication.CreateBuilder(args);
 var elsaConnectionString = builder.Configuration.GetConnectionString("Elsa");
@@ -103,7 +100,6 @@ builder.Services
         .AddActivity<RegionalIPUDataSource>()
         .AddActivity<RegionalFigsDataSource>()
         .AddActivity<ReturnToActivity>()
-        .AddActivity<DataverseDataSource>()
         .AddConsoleActivities()
     );
 
@@ -224,8 +220,6 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
     });
 
 builder.Services.AddEsriHttpClients(builder.Configuration, builder.Environment.IsDevelopment());
-builder.Services.AddScoped<IDataverseResultConverter, DataverseResultConverter>();
-builder.Services.AddScoped<IDataverseClient, DataverseClient>();
 
 //HibernatingRhinos.Profiler.Appender.EntityFramework.EntityFrameworkProfiler.Initialize();
 var app = builder.Build();
