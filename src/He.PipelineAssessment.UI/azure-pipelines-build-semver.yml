@@ -31,7 +31,7 @@ resources:
   - repository: templates
     type: git
     name: 'Cloud Hosting Service/Templates'   
-    ref: 'master'
+    ref: 'feature/environment'
 
 stages:
 - template: pipelines/build.yml@pipeline-assessment-deployment
