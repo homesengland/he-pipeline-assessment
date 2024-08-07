@@ -1,55 +1,23 @@
 import { IntellisenseContext } from "../models/elsa-interfaces";
 import axios, { AxiosInstance, AxiosRequestConfig } from "axios";
 import state from '../stores/store';
-import { createAuth0Client, Auth0Client, Auth0ClientOptions, AuthorizationParams } from '@auth0/auth0-spa-js';
 import { StoreStatus } from "../constants/constants";
+import { Auth0ClientInitializer }  from "./auth0ClientInitializer"
+import { Auth0Client } from "@auth0/auth0-spa-js";
 
 
 export class IntellisenseGatherer {
+  private _auth0ClientGatherer: Auth0ClientInitializer = new Auth0ClientInitializer
   private _httpClient: AxiosInstance = null;
   private _baseUrl: string = null;
-  private auth0: Auth0Client;
-  private options: Auth0ClientOptions;
   private context: IntellisenseContext = {
       activityTypeName: "",
       propertyName: ""
   };
 
   constructor() {
-
-    let auth0Params: AuthorizationParams = {
-      audience: state.audience,
-    };
-
-    let auth0Options: Auth0ClientOptions = {
-      authorizationParams: auth0Params,
-      clientId: state.clientId,
-      domain: state.domain,
-      useRefreshTokens: state.useRefreshToken,
-      useRefreshTokensFallback: state.useRefreshTokenFallback,
-    };
-
-    this.options = auth0Options;
-
     this._baseUrl = state.serverUrl;
   }
-
-  initialize = async () => {
-    const options = this.options;
-    const { domain } = options;
-
-    if (!domain || domain.trim().length == 0)
-      return;
-
-    this.auth0 = await createAuth0Client(this.options);
-    const isAuthenticated = await this.auth0.isAuthenticated();
-
-    // Nothing to do if authenticated.
-    if (isAuthenticated)
-      return;
-  };
-
-
 
   async getIntellisense(): Promise<string> {
     if (state.javaScriptTypeDefinitionsFetchStatus == StoreStatus.Available && this.hasDefinitions) {
@@ -94,15 +62,16 @@ export class IntellisenseGatherer {
 
   private async createHttpClient(): Promise<AxiosInstance> {
 
-    await this.initialize();
 
     if (!!this._httpClient) {
       return this._httpClient;
     }
-    const token = await this.auth0.getTokenSilently();
+    let auth0: Auth0Client = await this._auth0ClientGatherer.getClient();
+    const token = await auth0.getTokenSilently();
 
     let config: AxiosRequestConfig;
     if (!!token) {
+      console.log("Intellisense Token", token);
       config = {
         baseURL: this._baseUrl,
         headers: { 'Authorization': `Bearer ${token}`, 'Content-Type': `application/json; charset=UTF-8` }

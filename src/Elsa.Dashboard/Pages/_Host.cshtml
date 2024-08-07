@@ -46,12 +46,11 @@
     var elsaStudioRoot = document.querySelector('elsa-studio-root');
     let customActivities = @Html.Raw(Model.JsonResponse)
 
-            const auth0ClientOptions = {
-        client_id: '@clientId',
-        domain: '@domain',
-        audience: '@audience',
-        useRefreshTokens: true
-    }
+        const auth0ClientOptions = {
+            clientId: '@clientId',
+            domain: '@domain',
+            audience: '@audience'
+        }
 
     InitCustomElsa(elsaStudioRoot, customActivities, auth0ClientOptions)
 </script>

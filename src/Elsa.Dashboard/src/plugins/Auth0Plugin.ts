@@ -1,25 +1,19 @@
-//Have to use link here, as importing directly from Node Modules is causing siginificant issues - and for some reason the global script import on a cshtml page
-//is also not registering the method.
-import { createAuth0Client } from 'https://unpkg.com/@auth0/auth0-spa-js@2.1.3/dist/auth0-spa-js.production.esm.js';
-import { Service } from 'https://cdn.jsdelivr.net/npm/axios-middleware@0.4.0/dist/axios-middleware.esm.js';
+import { Service } from 'axios-middleware';
+import { createAuth0Client, Auth0Client, Auth0ClientOptions } from '@auth0/auth0-spa-js';
+//import state from '../stores/store';
+
 
 export class Auth0Plugin {
-  options;  //Auth0ClientOptions
-  auth0;  //Auth0Client
-  token;
+  private auth0: Auth0Client;
+  //having to set Eventbus to 'Any' type as we can't afford to import from Elsa.  Slows build time down exponentially.
+  private eventBus: any;
+  private token: string;
+  private options: Auth0ClientOptions;
 
-  constructor(options, elsaStudio) {
-    let origin = window.location.origin;
-    let auth0Params=  {
-      redirect_uri: origin,
-      audience: options.audience
-    };
-    this.options = options;
-    this.options.authorizationParams = auth0Params;
-    this.options.cacheLocation = 'memory';
-    const eventBus = elsaStudio.eventBus;
-    eventBus.on('root.initializing', this.initialize);
-    eventBus.on('http-client-created', this.configureAuthMiddleware);
+  constructor(eventBus: any, auth0Options: Auth0ClientOptions) {
+    this.eventBus = eventBus;
+    this.options = auth0Options;
+    this.eventBus.on('http-client-created', e => this.configureAuthMiddleware(e));
   }
 
   initialize = async () => {
@@ -56,12 +50,22 @@ export class Auth0Plugin {
     // Redirect to Auth0 for the user to authenticate themselves.
     const origin = window.location.origin;
 
-    const redirectOptions = {
-      redirect_uri: origin
-    };
+    this.options.authorizationParams.redirect_uri = origin;
 
-    await this.auth0.loginWithRedirect(redirectOptions);
+    //let redirectOptions: RedirectLoginOptions = {
+    //}
+    //  redirectOptions.authorizationParams = this.options.authorizationParams;
+    
+
+    await this.auth0.loginWithRedirect(this.options);
   };
+
+  getToken = async () => {
+    if (this.token == null) {
+      this.token = await this.auth0.getTokenSilently();
+    }
+    return this.token;
+  }
 
   configureAuthMiddleware = async (e) => {
 
@@ -69,8 +73,7 @@ export class Auth0Plugin {
     if (e != null && e != undefined && e.service != null && e.service != undefined) {
       service = e.service;
     }
-    const auth0 = this.auth0;
-    const token = await auth0.getTokenSilently();
+    const token = await this.getToken();
 
     service.register({
       async onRequest(request) {
@@ -88,3 +91,13 @@ export class Auth0Plugin {
 
 }
 
+//  async isAlreadyInitialized(): Promise<boolean> {
+//    if (state.auth0Client != null) {
+//      if (state.auth0Client = typeof (Auth0Client)) {
+//        return (state.auth0Client as Auth0Client) = await state.auth0Client.isAuthenticated(); 
+//      }
+//    }
+//    return false;
+//  }
+
+//}
