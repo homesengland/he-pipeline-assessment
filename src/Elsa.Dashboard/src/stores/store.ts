@@ -10,11 +10,12 @@ const { state, onChange } = createStore({
   useRefreshToken: true,
   useRefreshTokenFallback: true,
   workflowDefinitionId: '',
-  javaScriptTypeDefinitions:'',
+  javaScriptTypeDefinitions: '',
   javaScriptTypeDefinitionsFetchStatus: StoreStatus.Empty,
   monacoLibPath: '',
   basePath: '',
   dataDictionaryIntellisense: '',
+  auth0Client: null
 });
 
 onChange("dictionaryGroups", value => { state.dictionaryGroups = value });
@@ -43,6 +44,6 @@ onChange("monacoLibPath", value => { state.monacoLibPath = value });
 
 onChange("dataDictionaryIntellisense", value => { state.dataDictionaryIntellisense = value });
 
+onChange("auth0Client", value => { state.auth0Client = value })
+
 export default state;
-
-
