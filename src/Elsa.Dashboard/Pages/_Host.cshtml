@@ -50,7 +50,9 @@
             clientId: '@clientId',
         domain: '@domain',
         audience: '@audience',
-        useRefreshTokens: true
+        useRefreshTokens: true,
+        cacheKey: "@@auth0Key",
+        salt: "imahappypotato"
     }
 
     InitCustomElsa(elsaStudioRoot, customActivities, auth0ClientOptions)
