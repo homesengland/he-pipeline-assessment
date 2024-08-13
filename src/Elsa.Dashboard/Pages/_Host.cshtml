@@ -40,6 +40,7 @@
 <script nonce="@nonceConfig.ElsaSetup" type="module" src="/_content/Elsa.Designer.Components.Web/elsa-workflows-studio/elsa-workflows-studio.esm.js"></script>
 <script nonce="@nonceConfig.ElsaSetup" type="module" src="/static/build/custom-elsa.esm.js"></script>
 <script nonce="@nonceConfig.ElsaSetup" type="module" src="/Scripts/CustomElsa.js"></script>
+<script nonce="@nonceConfig.ElsaSetup" src="https://unpkg.com/encrypt-storage@latest/dist/index.js"></script>
 
 <script nonce="@nonceConfig.ElsaSetup" type="module">
     import { InitCustomElsa } from "InitCustomElsa"
@@ -50,7 +51,8 @@
             clientId: '@clientId',
         domain: '@domain',
         audience: '@audience',
-        useRefreshTokens: true,
+                scope: 'all',
+        //useRefreshTokens: true,
         cacheKey: "@@auth0Key",
         salt: "imahappypotato"
     }
