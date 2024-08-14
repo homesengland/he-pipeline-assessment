@@ -22,6 +22,7 @@ export class Auth0Plugin {
     this.options = options;
     this.options.authorizationParams = auth0Params;
     this.options.cacheLocation = 'memory';
+    //this.options.cacheLocation = 'localstorage';
     //this.options.cache = cache;
     const eventBus = elsaStudio.eventBus;
     eventBus.on('root.initializing', this.initialize);
@@ -35,6 +36,9 @@ export class Auth0Plugin {
     if (!domain || domain.trim().length == 0)
       return;
     this.auth0 = await createAuth0Client(options);
+
+    //let cache = new EncryptedCache();
+    //this.auth0.cache = cache;
     const isAuthenticated = await this.auth0.isAuthenticated();
     console.log("Is Authenticated", isAuthenticated);
     // Nothing to do if authenticated.
