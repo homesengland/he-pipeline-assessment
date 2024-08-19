@@ -1,6 +1,5 @@
 import state from '../stores/store';
 import { createAuth0Client, Auth0Client, Auth0ClientOptions, AuthorizationParams } from '@auth0/auth0-spa-js';
-//import { EncryptedCache } from './encryptedCache';
 
 
 export class Auth0ClientInitializer {
@@ -13,16 +12,11 @@ export class Auth0ClientInitializer {
       audience: state.audience,
     };
 
-    //let encryptStorage = new EncryptedCache();
-
     let auth0Options: Auth0ClientOptions = {
       authorizationParams: auth0Params,
       clientId: state.clientId,
       domain: state.domain,
-      //cache: encryptStorage,
       cacheLocation: 'memory'
-      //useRefreshTokens: true
-
     };
 
     this.options = auth0Options;

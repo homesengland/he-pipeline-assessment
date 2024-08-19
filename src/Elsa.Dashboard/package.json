@@ -34,7 +34,6 @@
     "axios": "^0.26.1",
     "construe": "^0.4.1",
     "el-transition": "^0.0.7",
-    "encrypt-storage": "^2.13.2",
     "lodash": "^4.17.21",
     "sortablejs": "^1.15.0"
   },

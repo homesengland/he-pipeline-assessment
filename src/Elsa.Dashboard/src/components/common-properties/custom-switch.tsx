@@ -36,7 +36,6 @@ export class CustomElsaSwitchCasesProperty {
   syntaxSwitchCount: number = 0;
 
   async componentWillLoad() {
-    console.log("Custom switch loading");
     const propertyModel = this.propertyModel;
     const casesJson = propertyModel.expressions['Switch']
     this.cases = parseJson(casesJson) || [];

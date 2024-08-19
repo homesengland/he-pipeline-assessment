@@ -12,7 +12,6 @@
     <None Remove="src\components\common-properties\he-validation-property.tsx" />
     <None Remove="src\nested-drivers\he-validation-driver.tsx" />
     <None Remove="src\utils\auth0ClientInitializer.ts" />
-    <None Remove="src\utils\encryptedCache.ts" />
     <None Remove="System.Security.Cryptography.Pkcs" />
     <None Remove="System.Drawing.Common" />
     <None Remove="System.Text.RegularExpressions" />
@@ -125,7 +124,6 @@
     <TypeScriptCompile Include="src\nested-drivers\he-numeric-driver.tsx" />
     <TypeScriptCompile Include="src\nested-drivers\he-validation-driver.tsx" />
     <TypeScriptCompile Include="src\nested-drivers\he-text-group-driver.tsx" />
-    <TypeScriptCompile Include="src\utils\encryptedCache.ts" />
     <TypeScriptCompile Include="src\utils\auth0ClientInitializer.ts" />
     <TypeScriptCompile Include="src\utils\intellisenseGatherer.ts" />
     <TypeScriptCompile Include="src\functions\multiExpressionEditorUpdate.tsx">
