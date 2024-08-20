@@ -27,6 +27,7 @@ export class IntellisenseGatherer {
       domain: state.domain,
       useRefreshTokens: state.useRefreshToken,
       useRefreshTokensFallback: state.useRefreshTokenFallback,
+      cacheLocation: "memory"
     };
 
     this.options = auth0Options;
@@ -46,9 +47,16 @@ export class IntellisenseGatherer {
 
     // Nothing to do if authenticated.
     if (isAuthenticated)
+      state.auth0Client = this.auth0;
       return;
   };
 
+  async getAuth0Client(): Promise<Auth0Client> {
+    if (state.auth0Client == null) {
+      await this.initialize();
+    }
+    return state.auth0Client;
+  }
 
 
   async getIntellisense(): Promise<string> {
@@ -94,7 +102,7 @@ export class IntellisenseGatherer {
 
   private async createHttpClient(): Promise<AxiosInstance> {
 
-    await this.initialize();
+    await this.getAuth0Client();
 
     if (!!this._httpClient) {
       return this._httpClient;

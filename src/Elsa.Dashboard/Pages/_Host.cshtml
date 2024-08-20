@@ -47,10 +47,13 @@
     let customActivities = @Html.Raw(Model.JsonResponse)
 
             const auth0ClientOptions = {
-        client_id: '@clientId',
+            clientId: '@clientId',
         domain: '@domain',
         audience: '@audience',
-        useRefreshTokens: true
+                scope: 'all',
+        //useRefreshTokens: true,
+        cacheKey: "@@auth0Key",
+        salt: "imahappypotato"
     }
 
     InitCustomElsa(elsaStudioRoot, customActivities, auth0ClientOptions)

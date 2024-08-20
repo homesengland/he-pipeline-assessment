@@ -1,14 +1,23 @@
 //Have to use link here, as importing directly from Node Modules is causing siginificant issues - and for some reason the global script import on a cshtml page
 //is also not registering the method.
-import createAuth0Client from 'https://unpkg.com/@auth0/auth0-spa-js@1.1.1/dist/auth0-spa-js.production.esm.js';
-import { Service } from 'https://cdn.jsdelivr.net/npm/axios-middleware@0.3.1/dist/axios-middleware.esm.js';
+import { createAuth0Client } from 'https://unpkg.com/@auth0/auth0-spa-js@2.1.3/dist/auth0-spa-js.production.esm.js';
+import { Service } from 'https://cdn.jsdelivr.net/npm/axios-middleware@0.4.0/dist/axios-middleware.esm.js';
 
 export class Auth0Plugin {
   options;  //Auth0ClientOptions
   auth0;  //Auth0Client
+  token;
 
   constructor(options, elsaStudio) {
+    let origin = window.location.origin;
+    let auth0Params = {
+      redirect_uri: origin,
+      audience: options.audience,
+/*      scope: options.scope*/
+    };
     this.options = options;
+    this.options.authorizationParams = auth0Params;
+    this.options.cacheLocation = 'memory';
     const eventBus = elsaStudio.eventBus;
     eventBus.on('root.initializing', this.initialize);
     eventBus.on('http-client-created', this.configureAuthMiddleware);
@@ -20,10 +29,10 @@ export class Auth0Plugin {
 
     if (!domain || domain.trim().length == 0)
       return;
-
     this.auth0 = await createAuth0Client(options);
-    const isAuthenticated = await this.auth0.isAuthenticated();
 
+    const isAuthenticated = await this.auth0.isAuthenticated();
+    console.log("Is Authenticated", isAuthenticated);
     // Nothing to do if authenticated.
     if (isAuthenticated)
       return;
@@ -63,11 +72,11 @@ export class Auth0Plugin {
       service = e.service;
     }
     const auth0 = this.auth0;
+    const token = await auth0.getTokenSilently();
 
     service.register({
       async onRequest(request) {
         // Get a (cached) access token.
-        const token = await auth0.getTokenSilently();
         if (request.data == null) {
           request.data = "{}";
         }
@@ -78,5 +87,6 @@ export class Auth0Plugin {
       }
     });
   };
+
 }
 
