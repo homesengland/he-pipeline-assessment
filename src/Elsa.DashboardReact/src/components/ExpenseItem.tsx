@@ -13,6 +13,9 @@ interface ExpenseItemProps {
 }
 
 const ExpenseItem: React.FC<ExpenseItemProps> = ({ expense }) => {
+  const amount = expense.amount ? expense.amount.toFixed(2) : '0.00';
+  const formattedDate = expense.date ? expense.date.toLocaleDateString() : 'Invalid date';
+
   return (
     <ListItem>
       <ListItemAvatar>
@@ -21,8 +24,8 @@ const ExpenseItem: React.FC<ExpenseItemProps> = ({ expense }) => {
         </Avatar>
       </ListItemAvatar>
       <ListItemText
-        primary={`${expense.category}: $${expense.amount.toFixed(2)}`}
-        secondary={`Date: ${expense.date.toLocaleDateString()}${
+        primary={`${expense.category}: £${amount}`}
+        secondary={`Date: ${formattedDate}${
           expense.description ? ` - ${expense.description}` : ''
         }`}
       />

@@ -12,11 +12,10 @@ const TotalExpenditure: React.FC<TotalExpenditureProps> = ({ expenses }) => {
   return (
     <Paper style={{ padding: '16px', marginBottom: '16px' }}>
       <Typography variant="h5" align="center">
-        Total Expenditure: ${total.toFixed(2)}
+        Total Expenditure: £{total.toFixed(2)}
       </Typography>
     </Paper>
   );
 };
 
 export default TotalExpenditure;
-

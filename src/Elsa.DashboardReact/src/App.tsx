@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Expense } from '.interfaces/Expense';
+import { Expense } from './interfaces/Expense';
 import ExpenseForm from './components/ExpenseForm'
 import ExpenseList from './components/ExpenseList'
 import FilterOptions from './components/FilterOptions'
@@ -9,15 +9,20 @@ import { Container, Typography } from '@mui/material';
 const App: React.FC = () => {
   // state management
   const [expenses, setExpenses] = useState<Expense[]>([]);
-  const [filters, setFilters] = useState({
+  const [filters, setFilters] = useState<{
+    category: string;
+    startDate: Date | null;
+    endDate: Date | null;
+  }>({
     category: '',
     startDate: null,
     endDate: null,
   });
+  
   // functions
   const addExpense = (expense: Expense) => {
-    setExpenses((prevExpenses) => [...[prevExpenses, expense]]);
-  };
+    setExpenses((prevExpenses) => [...prevExpenses, expense]);
+  };  
 
   const updateFilters = (newFilters: typeof filters) => {
     setFilters(newFilters);
@@ -28,13 +33,14 @@ const App: React.FC = () => {
       filters.category === '' || expense.category === filters.category;
   
     const matchesStartDate =
-      !filters.startDate || expense.date >= filters.startDate;
+      !filters.startDate || (expense.date instanceof Date && expense.date >= filters.startDate);
   
     const matchesEndDate =
-      !filters.endDate || expense.date <= filters.endDate;
+      !filters.endDate || (expense.date instanceof Date && expense.date <= filters.endDate);
   
     return matchesCategory && matchesStartDate && matchesEndDate;
   });
+  
   
 
   return (
