@@ -1,85 +1,98 @@
-<script setup lang="ts">
-import { RouterLink, RouterView } from 'vue-router'
-import HelloWorld from './components/HelloWorld.vue'
-</script>
-
 <template>
-  <header>
-    <img alt="Vue logo" class="logo" src="@/assets/logo.svg" width="125" height="125" />
+  <v-container>
+    <!-- Title of the application -->
+    <v-row justify="center">
+      <v-col cols="12">
+        <v-typography variant="h3" align="center" class="mb-4">
+          Expense Tracker
+        </v-typography>
+      </v-col>
+    </v-row>
 
-    <div class="wrapper">
-      <HelloWorld msg="You did it!" />
+    <!-- Display the total expenditure -->
+    <v-row justify="center">
+      <v-col cols="12" md="6">
+        <TotalExpenditure :expenses="filteredExpenses" />
+      </v-col>
+    </v-row>
 
-      <nav>
-        <RouterLink to="/">Home</RouterLink>
-        <RouterLink to="/about">About</RouterLink>
-      </nav>
-    </div>
-  </header>
+    <!-- Form to add new expenses -->
+    <v-row justify="center">
+      <v-col cols="12" md="6">
+        <ExpenseForm @onAddExpense="addExpense" />
+      </v-col>
+    </v-row>
 
-  <RouterView />
+    <!-- Filter options to filter the list of expenses -->
+    <v-row justify="center">
+      <v-col cols="12" md="6">
+        <FilterOptions :filters="filters" @onUpdateFilters="updateFilters" />
+      </v-col>
+    </v-row>
+
+    <!-- List of filtered expenses -->
+    <v-row justify="center">
+      <v-col cols="12" md="6">
+        <ExpenseList :expenses="filteredExpenses" />
+      </v-col>
+    </v-row>
+  </v-container>
 </template>
 
-<style scoped>
-header {
-  line-height: 1.5;
-  max-height: 100vh;
-}
+<script lang="ts">
+import { defineComponent, ref, computed } from 'vue';
+import ExpenseForm from './components/ExpenseForm.vue';
+import ExpenseList from './components/ExpenseList.vue';
+import FilterOptions from './components/FilterOptions.vue';
+import TotalExpenditure from './components/TotalExpenditure.vue';
+import { Expense } from '@/interfaces/Expense';
 
-.logo {
-  display: block;
-  margin: 0 auto 2rem;
-}
+export default defineComponent({
+  name: 'App',
+  components: {
+    ExpenseForm,
+    ExpenseList,
+    FilterOptions,
+    TotalExpenditure,
+  },
+  setup() {
+    const expenses = ref<Expense[]>([]);
+    const filters = ref({
+      category: '',
+      startDate: null as Date | null,
+      endDate: null as Date | null,
+    });
 
-nav {
-  width: 100%;
-  font-size: 12px;
-  text-align: center;
-  margin-top: 2rem;
-}
+    const addExpense = (expense: Expense) => {
+      expenses.value.push(expense);
+    };
 
-nav a.router-link-exact-active {
-  color: var(--color-text);
-}
+    const updateFilters = (newFilters: typeof filters.value) => {
+      filters.value = { ...newFilters };
+    };
 
-nav a.router-link-exact-active:hover {
-  background-color: transparent;
-}
+    const filteredExpenses = computed(() => {
+      return expenses.value.filter((expense) => {
+        const matchesCategory =
+          !filters.value.category || expense.category === filters.value.category;
 
-nav a {
-  display: inline-block;
-  padding: 0 1rem;
-  border-left: 1px solid var(--color-border);
-}
+        const matchesStartDate =
+          !filters.value.startDate || expense.date >= filters.value.startDate;
 
-nav a:first-of-type {
-  border: 0;
-}
+        const matchesEndDate =
+          !filters.value.endDate || expense.date <= filters.value.endDate;
 
-@media (min-width: 1024px) {
-  header {
-    display: flex;
-    place-items: center;
-    padding-right: calc(var(--section-gap) / 2);
-  }
+        return matchesCategory && matchesStartDate && matchesEndDate;
+      });
+    });
 
-  .logo {
-    margin: 0 2rem 0 0;
-  }
-
-  header .wrapper {
-    display: flex;
-    place-items: flex-start;
-    flex-wrap: wrap;
-  }
-
-  nav {
-    text-align: left;
-    margin-left: -1rem;
-    font-size: 1rem;
-
-    padding: 1rem 0;
-    margin-top: 1rem;
-  }
-}
-</style>
+    return {
+      expenses,
+      filters,
+      addExpense,
+      updateFilters,
+      filteredExpenses,
+    };
+  },
+});
+</script>
