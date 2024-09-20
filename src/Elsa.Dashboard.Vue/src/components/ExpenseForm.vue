@@ -58,13 +58,7 @@
   
   export default defineComponent({
     name: 'ExpenseForm',
-    props: {
-      onAddExpense: {
-        type: Function,
-        required: true,
-      },
-    },
-    setup(props) {
+    setup(_, { emit }) {
       const amount = ref(0);
       const category = ref('');
       const date = ref('');
@@ -81,7 +75,8 @@
           description: description.value,
         };
   
-        props.onAddExpense(newExpense);
+        // Emit the newExpense object back to the parent component
+        emit('add-expense', newExpense);
   
         // Reset form
         amount.value = 0;

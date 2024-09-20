@@ -19,14 +19,15 @@
     <!-- Form to add new expenses -->
     <v-row justify="center">
       <v-col cols="12" md="6">
-        <ExpenseForm @onAddExpense="addExpense" />
+        <!-- Listen for the add-expense event emitted by ExpenseForm -->
+        <ExpenseForm @add-expense="addExpense" />
       </v-col>
     </v-row>
 
     <!-- Filter options to filter the list of expenses -->
     <v-row justify="center">
       <v-col cols="12" md="6">
-        <FilterOptions :filters="filters" @onUpdateFilters="updateFilters" />
+        <FilterOptions :filters="filters" @updateFilters="updateFilters" />
       </v-col>
     </v-row>
 
