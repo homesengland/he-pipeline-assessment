@@ -37,4 +37,4 @@ resources:
     ref: 'master'
 
 stages:
-- template: azure-pipelines-build.yml@he-workflow
+- template: azure-pipelines-elsaserver-build.yml@he-workflow
