@@ -4,7 +4,23 @@
 # https://aka.ms/yaml
 
 trigger:
-  - none
+  branches:
+    include:
+      - main
+
+parameters:
+  - name: forcePushToProd
+    displayName: Force Push to Production
+    type: boolean
+    default: false
+variables:
+
+  buildMajor: 0
+  buildMinor: 0
+  buildBranch: $[replace(variables['Build.SourceBranch'], '/', '.')]
+
+name: $(buildMajor).$(buildMinor).$(Rev:r)-elsaserver.$(buildBranch)
+# Build and Push
 
 pool:
   vmImage: 'ubuntu-22.04'
@@ -14,7 +30,7 @@ resources:
   - repository: he-workflow
     type: git
     name: 'Common Components (Agile Board)/He.Workflow'   
-    ref: 'main'
+    ref: 'feature/semver'
   - repository: templates
     type: git
     name: 'Cloud Hosting Service/Templates'   
