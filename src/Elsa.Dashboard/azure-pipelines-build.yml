@@ -1,0 +1,45 @@
+# Starter pipeline
+# Start with a minimal pipeline that you can customize to build and deploy your code.
+# Add steps that build, run tests, deploy, and more:
+# https://aka.ms/yaml
+
+trigger:
+  branches:
+    include:
+      - main
+
+pr:
+  branches:
+    include:
+    - main
+    
+parameters:
+  - name: forcePushToProd
+    displayName: Force Push to Production
+    type: boolean
+    default: false
+variables:
+
+  buildMajor: 0
+  buildMinor: 0
+  buildBranch: $[replace(variables['Build.SourceBranch'], '/', '.')]
+
+name: $(buildMajor).$(buildMinor).$(Rev:r)-elsadashboard.$(buildBranch)
+# Build and Push
+
+pool:
+  vmImage: 'ubuntu-22.04'
+
+resources:
+  repositories:
+  - repository: he-workflow
+    type: git
+    name: 'Common Components (Agile Board)/He.Workflow'   
+    ref: 'feature/semver'
+  - repository: templates
+    type: git
+    name: 'Cloud Hosting Service/Templates'   
+    ref: 'master'
+
+stages:
+- template: azure-pipelines-elsadashboard-build.yml@he-workflow
