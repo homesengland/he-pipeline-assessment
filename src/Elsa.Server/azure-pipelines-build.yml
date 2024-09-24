@@ -8,6 +8,11 @@ trigger:
     include:
       - main
 
+pr:
+  branches:
+    include:
+    - main
+    
 parameters:
   - name: forcePushToProd
     displayName: Force Push to Production
