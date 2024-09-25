@@ -24,7 +24,7 @@ variables:
   buildMinor: 1
   buildBranch: $[replace(variables['Build.SourceBranch'], '/', '.')]
 
-name: $(buildMajor).$(buildMinor).$(Rev:r)-elsaserver.$(buildBranch)
+name: $(buildMajor).$(buildMinor).$(Rev:r)-elsadashboard.$(buildBranch)
 # Build and Push
 
 pool:
@@ -41,4 +41,4 @@ resources:
     ref: 'master'
 
 stages:
-- template: azure-pipelines-elsaserver-build.yml@he-workflow
+- template: azure-pipelines-elsadashboard-build.yml@he-workflow
