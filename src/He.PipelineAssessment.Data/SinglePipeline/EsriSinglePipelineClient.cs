@@ -53,12 +53,10 @@ namespace He.PipelineAssessment.Data.SinglePipeline
             string whereClause =
                 "sp_status in ('Active', 'Approved','In Programme') " +
                 "AND (sp_stage is NOT NULL and sp_stage <> '' and sp_stage not in ('Draft', 'Prospect')) " +
-                "AND sp_business_area in ('Investment', 'Development', 'MPP') " +
                 "AND (project_owner is NOT NULL AND project_owner <> '') " +
                 "AND (units_or_homes is NOT NULL) " +
                 "AND (local_authority is NOT NULL AND local_authority <> '') " +
                 "AND (pipeline_opportunity_site_name is NOT NULL AND pipeline_opportunity_site_name <> '') " +
-                "AND (applicant_1 is NOT NULL AND applicant_1 <> '') " +
                 "AND sp_type NOT IN ('Place')";
             string orderBy = "esri_id";
             string outFields =
