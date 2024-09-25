@@ -20,8 +20,8 @@ parameters:
     default: false
 variables:
 
-  buildMajor: 0
-  buildMinor: 0
+  buildMajor: 1
+  buildMinor: 1
   buildBranch: $[replace(variables['Build.SourceBranch'], '/', '.')]
 
 name: $(buildMajor).$(buildMinor).$(Rev:r)-elsadashboard.$(buildBranch)
@@ -35,7 +35,6 @@ resources:
   - repository: he-workflow
     type: git
     name: 'Common Components (Agile Board)/He.Workflow'   
-    ref: 'feature/semver'
   - repository: templates
     type: git
     name: 'Cloud Hosting Service/Templates'   
