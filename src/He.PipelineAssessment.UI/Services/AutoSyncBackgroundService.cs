@@ -50,7 +50,7 @@ namespace He.PipelineAssessment.UI.Services
                         }
                     }
                     if(!_skipDelay) {
-                        await Task.Delay(TimeSpan.FromHours(1));
+                        await Task.Delay(TimeSpan.FromHours(24));
                     }else
                     {
                         _skipDelay = false;

@@ -151,7 +151,7 @@ if (receiveMessagesFromServiceBus)
 }
 
 //Add Background Task
-builder.Services.AddHostedService<AutoSyncBackgroundService>();
+//builder.Services.AddHostedService<AutoSyncBackgroundService>();
 
 var app = builder.Build();
 if (app.Environment.IsDevelopment())
