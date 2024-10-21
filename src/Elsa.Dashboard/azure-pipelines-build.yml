@@ -39,6 +39,9 @@ resources:
     type: git
     name: 'Cloud Hosting Service/Templates'   
     ref: 'master'
+  - repository: Common Components (Agile Board)/He.Workflow
+    type: git
+    name: 'He.Workflow'
 
 stages:
 - template: azure-pipelines-elsadashboard-build.yml@he-workflow
