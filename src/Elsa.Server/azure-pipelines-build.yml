@@ -32,13 +32,14 @@ pool:
 
 resources:
   repositories:
-  - repository: he-workflow
+  - repository: He.Workflow
     type: git
-    name: 'Common Components (Agile Board)/He.Workflow'   
+    name: 'Common Components (Agile Board)/He.Workflow'
+    ref: 'feature/tag-db-deploy'   
   - repository: templates
     type: git
     name: 'Cloud Hosting Service/Templates'   
     ref: 'master'
 
 stages:
-- template: azure-pipelines-elsaserver-build.yml@he-workflow
+- template: azure-pipelines-elsaserver-build.yml@He.Workflow
