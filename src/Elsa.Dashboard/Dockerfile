@@ -1,7 +1,7 @@
 #See https://aka.ms/containerfastmode to understand how Visual Studio uses this Dockerfile to build your images for faster debugging.
 
 
-FROM mcr.microsoft.com/dotnet/aspnet:6.0 AS base
+FROM mcr.microsoft.com/dotnet/aspnet:8.0 AS base
 
 USER root
 RUN apt-get update && apt-get -y upgrade
@@ -15,7 +15,7 @@ ENV ASPNETCORE_URLS="http://*:5555"
 EXPOSE 5555
 
 FROM node:21-bullseye AS node_base
-FROM mcr.microsoft.com/dotnet/sdk:6.0 AS build
+FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
 COPY --from=node_base . .
 WORKDIR /src
 COPY ["Elsa.Dashboard/Elsa.Dashboard.csproj", "Elsa.Dashboard/"]

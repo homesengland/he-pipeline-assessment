@@ -1,13 +1,11 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk.Web">
-
   <PropertyGroup>
-    <TargetFramework>net6.0</TargetFramework>
+    <TargetFramework>net8.0</TargetFramework>
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
     <UserSecretsId>d1e00e77-9df1-4665-9129-aa059c51ef0e</UserSecretsId>
     <DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
   </PropertyGroup>
-
   <ItemGroup>
     <None Remove="src\components\common-properties\he-validation-property.tsx" />
     <None Remove="src\nested-drivers\he-validation-driver.tsx" />
@@ -15,41 +13,34 @@
     <None Remove="System.Drawing.Common" />
     <None Remove="System.Text.RegularExpressions" />
   </ItemGroup>
-
   <ItemGroup>
     <PackageReference Include="Elsa.Designer.Components.Web" Version="2.12.0" />
     <PackageReference Include="Microsoft.ApplicationInsights.AspNetCore" Version="2.22.0" />
-    <PackageReference Include="Microsoft.AspNetCore.DataProtection" Version="6.0.9" />
-    <PackageReference Include="Microsoft.AspNetCore.DataProtection.EntityFrameworkCore" Version="6.0.9" />
+    <PackageReference Include="Microsoft.AspNetCore.DataProtection" Version="8.0.10" />
+    <PackageReference Include="Microsoft.AspNetCore.DataProtection.EntityFrameworkCore" Version="8.0.10" />
     <PackageReference Include="Microsoft.Data.SqlClient" Version="5.1.5" />
-    <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="6.0.9">
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="8.0.10">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
-    <PackageReference Include="Microsoft.VisualStudio.Azure.Containers.Tools.Targets" Version="1.17.0" />
-    <PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
-    <PackageReference Include="System.Security.Cryptography.Pkcs" Version="6.0.3" />
-    <PackageReference Include="System.Drawing.Common" Version="7.0.0" />
-    <PackageReference Include="System.Text.RegularExpressions" Version="4.3.1" />
+    <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
+    <PackageReference Include="System.Security.Cryptography.Pkcs" Version="8.0.1" />
+    <PackageReference Include="System.Drawing.Common" Version="8.0.10" />
   </ItemGroup>
-
   <ItemGroup>
     <Content Include="www\build\*.*">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
   </ItemGroup>
-
   <ItemGroup>
     <Compile Remove="src\components\interfaces\**" />
     <Content Remove="src\components\interfaces\**" />
     <EmbeddedResource Remove="src\components\interfaces\**" />
     <None Remove="src\components\interfaces\**" />
   </ItemGroup>
-
   <ItemGroup>
     <Compile Remove="RequestHelper.cs" />
   </ItemGroup>
-
   <ItemGroup>
     <None Remove="src\components\base-component.ts" />
     <None Remove="src\components\common-properties\he-text-activity-property.tsx" />
@@ -80,7 +71,6 @@
     <None Remove="src\components\custom_outcome_list_property.tsx" />
     <None Remove="src\models\activity-provider.ts" />
   </ItemGroup>
-
   <ItemGroup>
     <_ContentIncludedByDefault Remove="wwwroot\styles\assets\fonts\Roboto\LICENSE.txt" />
     <_ContentIncludedByDefault Remove="wwwroot\styles\assets\fonts\Roboto\Roboto-Black.ttf" />
@@ -96,21 +86,17 @@
     <_ContentIncludedByDefault Remove="wwwroot\styles\assets\fonts\Roboto\Roboto-Thin.ttf" />
     <_ContentIncludedByDefault Remove="wwwroot\styles\assets\fonts\Roboto\Roboto-ThinItalic.ttf" />
   </ItemGroup>
-
   <ItemGroup>
     <Content Include="Extensions\RequestHelper.cs" />
   </ItemGroup>
-
   <ItemGroup>
     <None Include="wwwroot\Scripts\Constants\CustomComponentTags.js" />
     <None Include="wwwroot\Scripts\Constants\CustomPropertyUiHints.js" />
   </ItemGroup>
-
   <ItemGroup>
     <ProjectReference Include="..\Elsa.CustomInfrastructure\Elsa.CustomInfrastructure.csproj" />
     <ProjectReference Include="..\Elsa.CustomWorkflow.Sdk\Elsa.CustomWorkflow.Sdk.csproj" />
   </ItemGroup>
-
   <ItemGroup>
     <TypeScriptCompile Include="src\components\common-properties\he-validation-property.tsx" />
     <TypeScriptCompile Include="src\components\display-toggle-component.ts">
@@ -160,13 +146,11 @@
     <TypeScriptCompile Include="wwwroot\Scripts\Plugins\CustomPlugins.js" />
     <TypeScriptCompile Include="src\components\providers\question-provider\question-provider.tsx" />
   </ItemGroup>
-
   <ItemGroup>
     <Folder Include="src\http-clients\" />
     <Folder Include="www\" />
     <Folder Include="Views\" />
   </ItemGroup>
-
   <ItemGroup>
     <Content Update="wwwroot\styles\assets\fonts\bold-affa96571d-v2.woff">
       <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
@@ -245,5 +229,4 @@
       <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
     </Content>
   </ItemGroup>
-
 </Project>

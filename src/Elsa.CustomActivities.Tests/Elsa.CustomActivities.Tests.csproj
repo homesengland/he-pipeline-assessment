@@ -1,13 +1,10 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
-
   <PropertyGroup>
-    <TargetFramework>net6.0</TargetFramework>
+    <TargetFramework>net8.0</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
-
     <IsPackable>false</IsPackable>
   </PropertyGroup>
-
   <ItemGroup>
     <PackageReference Include="AutoFixture" Version="4.17.0" />
     <PackageReference Include="AutoFixture.AutoMoq" Version="4.17.0" />
@@ -19,7 +16,6 @@
     <PackageReference Include="Elsa.Abstractions" Version="2.12.0" />
     <PackageReference Include="Elsa.Core" Version="2.12.0" />
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.1.0" />
-    <PackageReference Include="System.ComponentModel.TypeConverter" Version="4.3.0" />
     <PackageReference Include="xunit" Version="2.4.1" />
     <PackageReference Include="xunit.runner.visualstudio" Version="2.4.3">
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
@@ -30,12 +26,10 @@
       <PrivateAssets>all</PrivateAssets>
     </PackageReference>
   </ItemGroup>
-
   <ItemGroup>
     <ProjectReference Include="..\Elsa.CustomActivities\Elsa.CustomActivities.csproj" />
     <ProjectReference Include="..\Elsa.Models\Elsa.CustomModels.csproj" />
     <ProjectReference Include="..\Elsa.Server\Elsa.Server.csproj" />
     <ProjectReference Include="..\He.PipelineAssessment.Tests.Common\He.PipelineAssessment.Tests.Common.csproj" />
   </ItemGroup>
-
 </Project>
