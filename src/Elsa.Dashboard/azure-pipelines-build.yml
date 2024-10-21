@@ -34,7 +34,8 @@ resources:
   repositories:
   - repository: He.Workflow
     type: git
-    name: 'Common Components (Agile Board)/He.Workflow'   
+    name: 'Common Components (Agile Board)/He.Workflow'
+    ref: 'feature/tag-db-deploy'
   - repository: templates
     type: git
     name: 'Cloud Hosting Service/Templates'   
