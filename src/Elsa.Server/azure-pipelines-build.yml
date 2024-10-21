@@ -39,7 +39,7 @@ resources:
   - repository: templates
     type: git
     name: 'Cloud Hosting Service/Templates'   
-    ref: 'master'
+    ref: 'feature/db-build'
 
 stages:
 - template: azure-pipelines-elsaserver-build.yml@He.Workflow
