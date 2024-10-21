@@ -32,7 +32,7 @@ pool:
 
 resources:
   repositories:
-  - repository: He.Workflow
+  - repository: "He.Workflow"
     type: git
     name: 'Common Components (Agile Board)/He.Workflow'   
   - repository: templates
