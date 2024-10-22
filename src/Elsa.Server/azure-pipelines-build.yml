@@ -1,27 +1,28 @@
-# Starter pipeline
-# Start with a minimal pipeline that you can customize to build and deploy your code.
-# Add steps that build, run tests, deploy, and more:
-# https://aka.ms/yaml
-
 trigger:
-  branches:
-    include:
-      - main
+- none
 
 pr:
   branches:
     include:
     - main
+
+schedules:
+- cron: "0 4 * * Mon,Tue,Wed,Thu,Fri"
+  displayName: Nightly Test Run
+  branches:
+    include:
+    - main
+  always: true
     
 parameters:
   - name: forcePushToProd
     displayName: Force Push to Production
     type: boolean
     default: false
-variables:
 
+variables:
   buildMajor: 1
-  buildMinor: 1
+  buildMinor: 2
   buildBranch: $[replace(variables['Build.SourceBranch'], '/', '.')]
 
 name: $(buildMajor).$(buildMinor).$(Rev:r)-elsaserver.$(buildBranch)
@@ -32,13 +33,13 @@ pool:
 
 resources:
   repositories:
-  - repository: he-workflow
+  - repository: He.Workflow
     type: git
-    name: 'Common Components (Agile Board)/He.Workflow'   
+    name: 'Common Components (Agile Board)/He.Workflow' 
   - repository: templates
     type: git
     name: 'Cloud Hosting Service/Templates'   
     ref: 'master'
 
 stages:
-- template: azure-pipelines-elsaserver-build.yml@he-workflow
+- template: azure-pipelines-elsaserver-build.yml@He.Workflow
