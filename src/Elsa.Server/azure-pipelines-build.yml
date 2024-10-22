@@ -1,25 +1,26 @@
-# Starter pipeline
-# Start with a minimal pipeline that you can customize to build and deploy your code.
-# Add steps that build, run tests, deploy, and more:
-# https://aka.ms/yaml
-
 trigger:
-  branches:
-    include:
-      - main
+- none
 
 pr:
   branches:
     include:
     - main
+
+schedules:
+- cron: "0 4 * * Mon,Tue,Wed,Thu,Fri"
+  displayName: Nightly Test Run
+  branches:
+    include:
+    - main
+  always: true
     
 parameters:
   - name: forcePushToProd
     displayName: Force Push to Production
     type: boolean
     default: false
-variables:
 
+variables:
   buildMajor: 1
   buildMinor: 1
   buildBranch: $[replace(variables['Build.SourceBranch'], '/', '.')]
