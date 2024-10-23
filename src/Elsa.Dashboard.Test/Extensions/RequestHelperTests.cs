@@ -25,9 +25,9 @@ namespace Elsa.Dashboard.Tests.Pages
             var request = context.Request;
             var elsaServerUrl = "https://elsa-server-url";
             request.Method= "GET";
-            request.Headers.Add("Accept-Language", "en-US,en;q=0.5");
-            request.Headers.Add("Accept", "*/*");
-            request.Headers.Add("Content-Type", "application/json");
+            request.Headers.Append("Accept-Language", "en-US,en;q=0.5");
+            request.Headers.Append("Accept", "*/*");
+            request.Headers.Append("Content-Type", "application/json");
             request.Path = "/ElsaServer/GetWorkflows";
             request.QueryString = new QueryString().Add("Param1", "test1");
 

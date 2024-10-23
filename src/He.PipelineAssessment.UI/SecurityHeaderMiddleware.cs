@@ -54,7 +54,7 @@ namespace He.PipelineAssessment.UI
             }
             else
             {
-                context.Response.Headers.Add(header, value);
+                context.Response.Headers.Append(header, value);
             }
         }
     }
