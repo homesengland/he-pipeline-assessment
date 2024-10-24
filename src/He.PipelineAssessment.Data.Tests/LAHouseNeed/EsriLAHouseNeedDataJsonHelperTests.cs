@@ -48,7 +48,7 @@ namespace He.PipelineAssessment.Data.Tests.LAHouseNeed
             inputData.features = new List<Feature>();
             var strData = JsonSerializer.Serialize(inputData);
             //Act
-            var result = helper.JsonToLAHouseNeedData(strData);
+            var result = helper.JsonToLAHouseNeedData(strData)!;
 
             //Assert
             Assert.Empty(result);

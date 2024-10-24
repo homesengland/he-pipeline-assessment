@@ -1005,6 +1005,8 @@ namespace He.PipelineAssessment.UI.Tests.Services
             Assert.Equal(intervention.Id, result);
         }
 
+        [Theory]
+        [AutoMoqData]
         public async Task EditIntervention_Should_CatchAndThrowException_GivenRepositoryThrowsException(
             [Frozen] Mock<IAssessmentRepository> assessmentRepository,
             [Frozen] Mock<IRoleValidation> roleValidation,

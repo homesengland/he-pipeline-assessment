@@ -60,30 +60,31 @@
     <None Include="bundleconfig.json" />
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="AutoMapper" Version="11.0.1" />
-    <PackageReference Include="AutoMapper.Extensions.Microsoft.DependencyInjection" Version="11.0.0" />
-    <PackageReference Include="EntityFrameworkProfiler.Appender" Version="6.0.6046" />
-    <PackageReference Include="Azure.Messaging.ServiceBus" Version="7.17.3" />
-    <PackageReference Include="FluentValidation" Version="11.2.2" />
-    <PackageReference Include="He.Cookies.Mvc" Version="1.0.36" />
-    <PackageReference Include="He.Identity.Auth0" Version="1.0.58" />
-    <PackageReference Include="He.Identity.Mvc" Version="1.0.58" />
-    <PackageReference Include="MediatR" Version="12.1.1" />
-    <PackageReference Include="MediatR.Extensions.Microsoft.DependencyInjection" Version="10.0.1" />
-    <PackageReference Include="Microsoft.ApplicationInsights.AspNetCore" Version="2.22.0" />
-    <PackageReference Include="Microsoft.Data.SqlClient" Version="5.1.5" />
-    <PackageReference Include="Microsoft.EntityFrameworkCore" Version="8.0.10" />
-    <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="8.0.10">
+    <PackageReference Include="AutoMapper" />
+    <PackageReference Include="AutoMapper.Extensions.Microsoft.DependencyInjection" />
+    <PackageReference Include="EntityFrameworkProfiler.Appender" />
+    <PackageReference Include="Azure.Messaging.ServiceBus" />
+    <PackageReference Include="FluentValidation" />
+    <PackageReference Include="He.Cookies.Mvc" />
+    <PackageReference Include="He.Identity.Auth0" />
+    <PackageReference Include="He.Identity.Mvc" />
+    <PackageReference Include="MediatR" />
+    <PackageReference Include="MediatR.Extensions.Microsoft.DependencyInjection" />
+    <PackageReference Include="Microsoft.ApplicationInsights.AspNetCore" />
+    <PackageReference Include="Microsoft.Data.SqlClient" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Design">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
-    <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="8.0.10" />
-    <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="8.0.10">
+    <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Tools">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
-    <PackageReference Include="System.Security.Cryptography.Pkcs" Version="8.0.1" />
-    <PackageReference Include="System.Drawing.Common" Version="8.0.10" />
+    <PackageReference Include="System.Security.Cryptography.Pkcs" />
+    <PackageReference Include="System.Drawing.Common" />
+    <PackageReference Include="Azure.Storage.Blobs" VersionOverride="12.18.0" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Elsa.CustomWorkflow.Sdk\Elsa.CustomWorkflow.Sdk.csproj" />
