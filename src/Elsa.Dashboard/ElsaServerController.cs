@@ -29,7 +29,7 @@ namespace Elsa.Dashboard
     [Authorize(Policy = Elsa.Dashboard.Authorization.Constants.AuthorizationPolicies.AssignmentToElsaDashboardAdminRoleRequired)]
     public async Task<IActionResult> CatchAll()
     {
-      var elsaServer = _configuration["Urls:ElsaServer"];
+      var elsaServer = _configuration["Urls:ElsaServer"]!;
       var newRequestMsg = HttpContext.Request.ToHttpRequestMessage(elsaServer);
 
       var client = _httpClientFactory.CreateClient("ElsaServerClient");

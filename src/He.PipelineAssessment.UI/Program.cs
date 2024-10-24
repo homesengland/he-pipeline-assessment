@@ -47,7 +47,7 @@ builder.Services.Configure<RazorViewEngineOptions>(options =>
     options.ViewLocationFormats.Add($"/Views/Shared/{{0}}{RazorViewEngine.ViewExtension}");
 });
 
-string serverURl = builder.Configuration["Urls:ElsaServer"];
+string serverURl = builder.Configuration["Urls:ElsaServer"]!;
 
 //TODO: make this an extension in the SDK
 builder.Services.AddHttpClient("ElsaServerClient", client =>
@@ -84,10 +84,10 @@ builder.Services.AddDbContext<PipelineAssessmentStoreProcContext>(config =>
 builder.Services.AddScoped<DbContext>(provider => provider.GetRequiredService<PipelineAssessmentContext>());
 builder.Services.AddScoped<DbContext>(provider => provider.GetRequiredService<PipelineAssessmentStoreProcContext>());
 
-var domain = builder.Configuration["Auth0Config:Domain"];
-var clientId = builder.Configuration["Auth0Config:MachineToMachineClientId"];
-var clientSecret = builder.Configuration["Auth0Config:MachineToMachineClientSecret"];
-var apiIdentifier = builder.Configuration["Auth0Config:Audience"];
+var domain = builder.Configuration["Auth0Config:Domain"]!;
+var clientId = builder.Configuration["Auth0Config:MachineToMachineClientId"]!;
+var clientSecret = builder.Configuration["Auth0Config:MachineToMachineClientSecret"]!;
+var apiIdentifier = builder.Configuration["Auth0Config:Audience"]!;
 var tokenService = new TokenProvider(domain, clientId, clientSecret, apiIdentifier);
 builder.Services.AddSingleton<ITokenProvider>(tokenService);
 

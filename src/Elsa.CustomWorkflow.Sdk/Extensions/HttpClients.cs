@@ -34,7 +34,7 @@ namespace Elsa.CustomWorkflow.Sdk.Extensions
         }
         public static void AddSinglePipelineClient(this IServiceCollection services, IConfiguration config, bool isDevelopmentEnvironment)
         {
-            string serviceUrl = config["Datasources:SinglePipeline"];
+            string serviceUrl = config["Datasources:SinglePipeline"]!;
 
             services.AddScoped<IEsriSinglePipelineClient, EsriSinglePipelineClient>();
             services.AddScoped<IEsriSinglePipelineDataJsonHelper, EsriSinglePipelineDataJsonHelper>();
@@ -57,7 +57,7 @@ namespace Elsa.CustomWorkflow.Sdk.Extensions
 
         public static void AddSinglePipelineExtendedClient(this IServiceCollection services, IConfiguration config, bool isDevelopmentEnvironment)
         {
-            string serviceUrl = config["Datasources:SinglePipelineExtended"];
+            string serviceUrl = config["Datasources:SinglePipelineExtended"]!;
 
             services.AddScoped<IEsriSinglePipelineExtendedClient, EsriSinglePipelineExtendedClient>();
             services.AddScoped<IEsriSinglePipelineExtendedDataJsonHelper, EsriSinglePipelineExtendedDataJsonHelper>();
@@ -81,7 +81,7 @@ namespace Elsa.CustomWorkflow.Sdk.Extensions
 
         public static void AddVFMClient(this IServiceCollection services, IConfiguration config, bool isDevelopmentEnvironment)
         {
-            string serviceUrl = config["Datasources:VFM"];
+            string serviceUrl = config["Datasources:VFM"]!;
 
             services.AddScoped<IEsriVFMClient, EsriVFMClient>();
             services.AddScoped<IEsriVFMDataJsonHelper, EsriVFMDataJsonHelper>();
@@ -104,7 +104,7 @@ namespace Elsa.CustomWorkflow.Sdk.Extensions
 
         public static void AddHousingNeedClient(this IServiceCollection services, IConfiguration config, bool isDevelopmentEnvironment)
         {
-            string serviceUrl = config["Datasources:HousingNeed"];
+            string serviceUrl = config["Datasources:HousingNeed"]!;
             if (isDevelopmentEnvironment)
             {
                 services.AddHttpClient(ClientConstants.HouseNeedClient, client =>
@@ -123,7 +123,7 @@ namespace Elsa.CustomWorkflow.Sdk.Extensions
 
         public static void AddPCSClient(this IServiceCollection services, IConfiguration config, bool isDevelopmentEnvironment)
         {
-            string serviceUrl = config["Datasources:PCS"];
+            string serviceUrl = config["Datasources:PCS"]!;
 
             services.AddScoped<IEsriLaHouseNeedClient, EsriLAHouseNeedClient>();
             services.AddScoped<IEsriLaHouseNeedDataJsonHelper, EsriLAHouseNeedDataJsonHelper>();
@@ -149,7 +149,7 @@ namespace Elsa.CustomWorkflow.Sdk.Extensions
 
         public static void AddRegionalIPUClient(this IServiceCollection services, IConfiguration config, bool isDevelopmentEnvironment)
         {
-            string serviceUrl = config["Datasources:RegionalIPU"];
+            string serviceUrl = config["Datasources:RegionalIPU"]!;
 
             services.AddScoped<IEsriRegionalIPUClient, EsriRegionalIPUClient>();
             services.AddScoped<IEsriRegionalIPUJsonHelper, EsriRegionalIPUJsonHelper>();
@@ -172,7 +172,7 @@ namespace Elsa.CustomWorkflow.Sdk.Extensions
 
         public static void AddRegionalFigsClient(this IServiceCollection services, IConfiguration config, bool isDevelopmentEnvironment)
         {
-            string serviceUrl = config["Datasources:RegionalFigs"];
+            string serviceUrl = config["Datasources:RegionalFigs"]!;
 
             services.AddScoped<IEsriRegionalFigsClient, EsriRegionalFigsClient>();
             services.AddScoped<IEsriRegionalFigsJsonHelper, EsriRegionalFigsJsonHelper>();
@@ -195,7 +195,7 @@ namespace Elsa.CustomWorkflow.Sdk.Extensions
 
         public static void AddLandValuesClient(this IServiceCollection services, IConfiguration config, bool isDevelopmentEnvironment)
         {
-            string serviceUrl = config["Datasources:LandValues"];
+            string serviceUrl = config["Datasources:LandValues"]!;
 
             services.AddScoped<ILandValuesClient, LandValuesClient>();
             services.AddScoped<ILandValuesDataJsonHelper, LandValuesDataJsonHelper>();
@@ -217,7 +217,7 @@ namespace Elsa.CustomWorkflow.Sdk.Extensions
         }
         public static void AddAgricultureLandValuesClient(this IServiceCollection services, IConfiguration config, bool isDevelopmentEnvironment)
         {
-            string serviceUrl = config["Datasources:AgricultureLandValues"];
+            string serviceUrl = config["Datasources:AgricultureLandValues"]!;
 
             services.AddScoped<IAgricultureLandValuesClient, AgricultureLandValuesClient>();
             services.AddScoped<IAgricultureLandValuesDataJsonHelper, AgricultureLandValuesDataJsonHelper>();
@@ -239,7 +239,7 @@ namespace Elsa.CustomWorkflow.Sdk.Extensions
         }
         public static void AddOfficeLandValuesClient(this IServiceCollection services, IConfiguration config, bool isDevelopmentEnvironment)
         {
-            string serviceUrl = config["Datasources:OfficeLandValues"];
+            string serviceUrl = config["Datasources:OfficeLandValues"]!;
 
             services.AddScoped<IOfficeLandValuesClient, OfficeLandValuesClient>();
             services.AddScoped<IOfficeLandValuesDataJsonHelper, OfficeLandValuesDataJsonHelper>();
