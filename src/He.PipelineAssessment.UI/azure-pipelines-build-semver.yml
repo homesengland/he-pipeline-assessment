@@ -42,6 +42,7 @@ resources:
   - repository: templates
     type: git
     name: 'Cloud Hosting Service/Templates'
+    ref: 'feature/db-paths'
 
 stages:
 - template: pipelines/build.yml@pipeline-assessment-deployment
