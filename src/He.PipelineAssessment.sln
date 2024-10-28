@@ -33,6 +33,8 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{60184F01-9213-4233-B604-A3F384050DB6}"
 	ProjectSection(SolutionItems) = preProject
 		CodeCoverage.runsettings = CodeCoverage.runsettings
+		Directory.Packages.props = Directory.Packages.props
+		nuget.config = nuget.config
 		..\README.md = ..\README.md
 	EndProjectSection
 EndProject
@@ -56,7 +58,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Elsa.Dashboard.Tests", "Els
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "He.PipelineAssessment.Tests.Common", "He.PipelineAssessment.Tests.Common\He.PipelineAssessment.Tests.Common.csproj", "{F3336700-3307-4C2E-9577-E000F70A2ED9}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "He.PipelineAssessment.Models.Tests", "He.PipelineAssessment.Models.Tests\He.PipelineAssessment.Models.Tests.csproj", "{36EBB5E0-4340-4958-B2E6-884435A8DCBE}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "He.PipelineAssessment.Models.Tests", "He.PipelineAssessment.Models.Tests\He.PipelineAssessment.Models.Tests.csproj", "{36EBB5E0-4340-4958-B2E6-884435A8DCBE}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
