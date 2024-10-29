@@ -20,6 +20,7 @@ COPY ["He.PipelineAssessment.UI/He.PipelineAssessment.UI.csproj", "He.PipelineAs
 COPY ["Elsa.CustomWorkflow.Sdk/Elsa.CustomWorkflow.Sdk.csproj", "Elsa.CustomWorkflow.Sdk/"]
 COPY ["Elsa.Models/Elsa.CustomModels.csproj", "Elsa.Models/"]
 COPY "nuget.config" .
+COPY "Directory.Packages.props" .
 
 RUN curl -L "https://raw.githubusercontent.com/Microsoft/artifacts-credprovider/master/helpers/installcredprovider.sh" | sh
 ARG INTERNAL_FEED_ACCESSTOKEN
