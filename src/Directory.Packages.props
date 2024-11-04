@@ -30,8 +30,8 @@
     <PackageVersion Include="Elsa.WorkflowSettings.Persistence.EntityFramework.Core" Version="2.14.1" />
     <PackageVersion Include="EntityFrameworkProfiler.Appender" Version="6.0.6046" />
     <PackageVersion Include="FluentValidation" Version="11.2.2" />
-    <PackageVersion Include="He.Cookies.Mvc" Version="1.0.36" />
-    <PackageVersion Include="He.Identity.Auth0" Version="1.0.58" />
+    <PackageVersion Include="He.Cookies.Mvc" Version="3.0.4" />
+    <PackageVersion Include="He.Identity.Auth0" Version="2.1.1" />
     <PackageVersion Include="He.Identity.Mvc" Version="1.0.58" />
     <PackageVersion Include="MediatR" Version="12.1.1" />
     <PackageVersion Include="MediatR.Extensions.Microsoft.DependencyInjection" Version="10.0.1" />
