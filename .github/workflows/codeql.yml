@@ -28,12 +28,7 @@ jobs:
     #   - https://gh.io/using-larger-runners (GitHub.com only)
     # Consider using larger runners or machines with greater resources for possible analysis time improvements.
     runs-on: ${{ (matrix.language == 'swift' && 'macos-latest') || 'ubuntu-latest' }}
-    # add creds for external package feed
-    env:      
-       VSS_NUGET_EXTERNAL_FEED_ENDPOINTS: '{"endpointCredentials": [{"endpoint":"${{vars.PACKAGEFEEDURI}}", "password":"${{secrets.PACKAGEFEED}}"}]}'
-       run:
-         echo 'PACKAGEFEEDURI ' + ${{vars.PACKAGEFEEDURI}}
-         exit 1
+    
     permissions:
       # required for all workflows
       security-events: write
@@ -95,6 +90,9 @@ jobs:
         exit 1
 
     - name: Perform CodeQL Analysis
+    # add creds for external package feed
+      env:      
+        VSS_NUGET_EXTERNAL_FEED_ENDPOINTS: '{"endpointCredentials": [{"endpoint":"https://pkgs.dev.azure.com/homesengland/_packaging/homesengland/nuget/v3/index.json", "password":"${{secrets.PACKAGEFEED}}"}]}'
       uses: github/codeql-action/analyze@v3
       with:
         category: "/language:${{matrix.language}}"
