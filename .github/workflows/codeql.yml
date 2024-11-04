@@ -40,10 +40,6 @@ jobs:
       actions: read
       contents: read
 
-    # add creds for external package feed
-    env:      
-      VSS_NUGET_EXTERNAL_FEED_ENDPOINTS: '{"endpointCredentials": [{"endpoint":"${{vars.PACKAGEFEEDURI}}", "password":"${{secrets.PACKAGEFEED}}"}]}'
-
     strategy:
       fail-fast: false
       matrix:
