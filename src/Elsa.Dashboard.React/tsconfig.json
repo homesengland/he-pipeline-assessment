@@ -2,7 +2,7 @@
   "compilerOptions": {
     "allowSyntheticDefaultImports": true,
     "allowUnreachableCode": false,
-    //"allowJs": true,
+    "allowJs": true,
     "declaration": false,
     "experimentalDecorators": true,
     "skipLibCheck": true,
@@ -18,14 +18,13 @@
     "target": "es2017",
     "noUnusedLocals": true,
     "noUnusedParameters": true,
-    "jsx": "react",
-    "jsxFactory": "h"
+    "jsx": "react-jsx"
   },
   "include": [
-    "src"
+    "src-react"
   ],
   "exclude": [
     "node_modules",
-    "src/index.html"
+    "src-react/index.html"
   ]
 }
