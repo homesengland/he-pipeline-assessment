@@ -30,7 +30,7 @@ jobs:
     runs-on: ${{ (matrix.language == 'swift' && 'macos-latest') || 'ubuntu-latest' }}
     # add creds for external package feed
     env:      
-       VSS_NUGET_EXTERNAL_FEED_ENDPOINTS: '{"endpointCredentials": [{"endpoint":"${{secrets.PACKAGEFEEDURI}}", "password":"${{ secrets.PACKAGEFEED }}"}]}'
+       VSS_NUGET_EXTERNAL_FEED_ENDPOINTS: '{"endpointCredentials": [{"endpoint":"${{variables.PACKAGEFEEDURI}}", "password":"${{ secrets.PACKAGEFEED }}"}]}'
  
     permissions:
       # required for all workflows
