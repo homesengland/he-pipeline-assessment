@@ -30,7 +30,7 @@ jobs:
     runs-on: ${{ (matrix.language == 'swift' && 'macos-latest') || 'ubuntu-latest' }}
     # add creds for external package feed
     env:      
-       VSS_NUGET_EXTERNAL_FEED_ENDPOINTS: '{"endpointCredentials": [{"endpoint":"${{vars.PACKAGEFEEDURI}}", "password":"${{secret.PACKAGEFEED}}"}]}'
+       VSS_NUGET_EXTERNAL_FEED_ENDPOINTS: '{"endpointCredentials": [{"endpoint":"${{vars.PACKAGEFEEDURI}}", "password":"${{secrets.PACKAGEFEED}}"}]}'
        run:
          echo 'PACKAGEFEEDURI ' + ${{vars.PACKAGEFEEDURI}}
          exit 1
