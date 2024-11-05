@@ -61,12 +61,12 @@ jobs:
     - name: Checkout repository
       uses: actions/checkout@v4
 
-    - name: Set Env
-      env:
-        VSS_NUGET_EXTERNAL_FEED_ENDPOINTS: '{"endpointCredentials": [{"endpoint":"${{vars.PACKAGEFEEDURI}}", "password":"${{secrets.PACKAGEFEED}}"}]}'
+    #- name: Set Env
+    #  env:
+    #    VSS_NUGET_EXTERNAL_FEED_ENDPOINTS: '{"endpointCredentials": [{"endpoint":"${{vars.PACKAGEFEEDURI}}", "password":"${{secrets.PACKAGEFEED}}"}]}'
 
     # Initializes the CodeQL tools for scanning.
-    - name: Initialize CodeQL
+    - name: Initialize CodeQL2
       uses: github/codeql-action/init@v3
       with:
         languages: ${{ matrix.language }}
