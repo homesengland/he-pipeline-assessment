@@ -71,6 +71,7 @@ jobs:
         config: |
           paths-ignore:
             - 'src/Elsa.Custom*'
+            - 'src/Elsa.*Test*'
             - 'src/HE.*'
         build-mode: ${{ matrix.build-mode }}
         # If you wish to specify custom queries, you can do so here or in a config file.
