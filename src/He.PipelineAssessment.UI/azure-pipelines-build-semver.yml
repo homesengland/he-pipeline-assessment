@@ -28,20 +28,23 @@ parameters:
 variables:
   buildMajor: 1
   buildMinor: 2
+  buildPatch: 1
   buildBranch: $[replace(variables['Build.SourceBranch'], '/', '.')]
 
 pool: 'vmss-ado-chs-nonprod-001'
 
-name: $(buildMajor).$(buildMinor).$(Rev:r)-$(buildBranch)
+name: $(buildMajor).$(buildMinor).$(buildPatch)-$(Rev:r)-$(buildBranch)
 
 resources:
   repositories:
   - repository: pipeline-assessment-deployment
     type: git
-    name: 'Pipeline Assessment/pipeline-assessment-deployment'   
+    name: 'Pipeline Assessment/pipeline-assessment-deployment'
+    ref: 'feature/testing-new-deployments' 
   - repository: templates
     type: git
     name: 'Cloud Hosting Service/Templates'
+    ref: 'feature/pshell-improvements'
 
 stages:
 - template: pipelines/build.yml@pipeline-assessment-deployment

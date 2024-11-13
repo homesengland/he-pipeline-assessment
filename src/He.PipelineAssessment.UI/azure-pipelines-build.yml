@@ -14,11 +14,11 @@ resources:
   - repository: pipeline-assessment-deployment
     type: git
     name: 'Pipeline Assessment/pipeline-assessment-deployment'   
-    ref: 'feature/testing-new-deployments'
+    ref: 'main'
   - repository: templates
     type: git
     name: 'Cloud Hosting Service/Templates'   
-    ref: 'feature/pshell-improvements'
+    ref: 'master'
 
 stages:
 - template: azure-pipelines-build.yml@pipeline-assessment-deployment
