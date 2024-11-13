@@ -29,7 +29,7 @@ variables:
   buildMajor: 1
   buildMinor: 2
   buildPatch: 1
-  buildBranch: $[replace(variables['Build.SourceBranch'], '/', '.')]
+  buildBranch: $[replace(replace(variables['Build.SourceBranch'], 'refs/heads/', ''), '/', '.')]
 
 pool: 'vmss-ado-chs-nonprod-001'
 
