@@ -47,4 +47,15 @@ resources:
     ref: 'feature/pshell-improvements'
 
 stages:
+- stage: DisplayBuildBranch
+  jobs:
+  - job: ShowBranchName
+    steps:
+    - task: PowerShell@2
+      displayName: "Display Build Branch"
+      inputs:
+        targetType: 'inline'
+        script: |
+          Write-Host "The buildBranch variable is set to: $(buildBranch)"
+          
 - template: pipelines/build.yml@pipeline-assessment-deployment
