@@ -62,9 +62,13 @@ jobs:
     - name: Checkout repository
       uses: actions/checkout@v4
 
+    - name: Initialize Cred Provider
+      run: | 
+        wget -qO- https://aka.ms/install-artifacts-credprovider.sh 
+
     # Initializes the CodeQL tools for scanning.
     - name: Initialize CodeQL
-      
+   
       env:
         VSS_NUGET_EXTERNAL_FEED_ENDPOINTS: '{"endpointCredentials": [{"endpoint":"${{vars.PACKAGEFEEDURI}}", "password":"${{secrets.PACKAGEFEED}}"}]}'
       uses: github/codeql-action/init@v3
