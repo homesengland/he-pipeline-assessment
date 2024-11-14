@@ -75,7 +75,8 @@ jobs:
             - 'src/Elsa.Custom*'
             - 'src/Elsa.*Test*'
             - 'src/HE.*'
-            - 'src/Elsa.Models*'            
+            - 'src/Elsa.Models*'      
+            - 'src/Elsa.Server*'
             
         build-mode: ${{ matrix.build-mode }}
         # If you wish to specify custom queries, you can do so here or in a config file.
