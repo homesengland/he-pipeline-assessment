@@ -19,6 +19,11 @@ on:
   schedule:
     - cron: '35 22 * * 2'
 
+env:
+        USE_NET6_ARTIFACTS_CREDENTIAL_PROVIDER: "false"
+        USE_NET8_ARTIFACTS_CREDENTIAL_PROVIDER: "true"
+        VSS_NUGET_EXTERNAL_FEED_ENDPOINTS: '{"endpointCredentials": [{"endpoint":"${{vars.PACKAGEFEEDURI}}", "username":"user", "password":"${{secrets.PACKAGEFEED}}"}]}'
+
 jobs:
   analyze:
     name: Analyze (${{ matrix.language }})
