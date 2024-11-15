@@ -71,6 +71,9 @@ jobs:
         wget -qO- https://aka.ms/install-artifacts-credprovider.sh | bash
         echo 'Checking Variables - "${{secrets.PACKAGEFEED}}"' 
 
+    - name: add nuget auth
+      run: dotnet nuget add source https://pkgs.dev.azure.com/homesengland/_packaging/homesengland/nuget/v3/index.json -n "Azure DevOps" -u USERNAME -p "${{secrets.PACKAGEFEED}}" --store-password-in-clear-text
+
     # Initializes the CodeQL tools for scanning.
     - name: Initialize CodeQL
    
