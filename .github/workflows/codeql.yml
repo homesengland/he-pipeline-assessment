@@ -81,10 +81,10 @@ jobs:
         languages: ${{ matrix.language }}
         config: |
           paths-ignore:
-            - 'src/Elsa.Custom*'
+            # - 'src/Elsa.Custom*'
             # - 'src/HE.*'
-            - 'src/Elsa.Models*'      
-            - 'src/Elsa.Server*'
+            # - 'src/Elsa.Models*'      
+            # - 'src/Elsa.Server*'
             # - 'src/Elsa.Dashboard*'
             
         build-mode: ${{ matrix.build-mode }}
