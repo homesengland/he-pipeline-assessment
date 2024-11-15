@@ -82,7 +82,7 @@ jobs:
         config: |
           paths-ignore:
             - 'src/Elsa.Custom*'
-            - 'src/HE.*'
+            # - 'src/HE.*'
             - 'src/Elsa.Models*'      
             - 'src/Elsa.Server*'
             # - 'src/Elsa.Dashboard*'
