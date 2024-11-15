@@ -70,6 +70,7 @@ jobs:
     - name: Initialize CodeQL
    
       env:
+        USE_NET8_ARTIFACTS_CREDENTIAL_PROVIDER: "true"
         VSS_NUGET_EXTERNAL_FEED_ENDPOINTS: '{"endpointCredentials": [{"endpoint":"${{vars.PACKAGEFEEDURI}}", "password":"${{secrets.PACKAGEFEED}}"}]}'
       uses: github/codeql-action/init@v3
       with:
