@@ -69,7 +69,7 @@ jobs:
         VSS_NUGET_EXTERNAL_FEED_ENDPOINTS: '{"endpointCredentials": [{"endpoint":"${{vars.PACKAGEFEEDURI}}", "username":"user", "password":"${{secrets.PACKAGEFEED}}"}]}'
       run: | 
         wget -qO- https://aka.ms/install-artifacts-credprovider.sh | bash
-        echo 'Checking Variables - "${{vars.PACKAGEFEEDURI}}"' 
+        echo 'Checking Variables - "${{secrets.PACKAGEFEED}}"' 
 
     # Initializes the CodeQL tools for scanning.
     - name: Initialize CodeQL
