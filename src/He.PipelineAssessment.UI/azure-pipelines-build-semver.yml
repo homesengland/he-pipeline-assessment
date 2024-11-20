@@ -4,9 +4,21 @@
 # https://aka.ms/yaml
 
 trigger:
+- none
+
+pr:
   branches:
     include:
-    - master
+    - main
+
+schedules:
+- cron: "0 4 * * Mon,Tue,Wed,Thu,Fri"
+  displayName: Nightly Test Run
+  branches:
+    include:
+    - main
+  always: true
+
 parameters:
   - name: forcePushToProd
     displayName: Force Push to Production
@@ -15,7 +27,7 @@ parameters:
 
 variables:
   buildMajor: 1
-  buildMinor: 1
+  buildMinor: 2
   buildBranch: $[replace(variables['Build.SourceBranch'], '/', '.')]
 
 pool: 'vmss-ado-chs-nonprod-001'
@@ -27,11 +39,10 @@ resources:
   - repository: pipeline-assessment-deployment
     type: git
     name: 'Pipeline Assessment/pipeline-assessment-deployment'   
-    ref: 'feature/net8-upgrade'
+    ref: 'main'
   - repository: templates
     type: git
-    name: 'Cloud Hosting Service/Templates'   
-    ref: 'master'
+    name: 'Cloud Hosting Service/Templates'
 
 stages:
 - template: pipelines/build.yml@pipeline-assessment-deployment
