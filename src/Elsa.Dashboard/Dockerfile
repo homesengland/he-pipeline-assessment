@@ -14,7 +14,7 @@ WORKDIR /app
 ENV ASPNETCORE_URLS="http://*:5555"
 EXPOSE 5555
 
-FROM node:21-bullseye AS node_base
+FROM node:23-bullseye AS node_base
 FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
 COPY --from=node_base . .
 WORKDIR /src
