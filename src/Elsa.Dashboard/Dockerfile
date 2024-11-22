@@ -24,6 +24,7 @@ COPY ["Elsa.CustomActivities/Elsa.CustomActivities.csproj", "Elsa.CustomActiviti
 COPY ["Elsa.Models/Elsa.CustomModels.csproj", "Elsa.Models/"]
 COPY ["Elsa.CustomInfrastructure/Elsa.CustomInfrastructure.csproj", "Elsa.CustomInfrastructure/"]
 COPY "nuget.config" .
+COPY "Directory.Packages.props" .
 
 RUN curl -L "https://raw.githubusercontent.com/Microsoft/artifacts-credprovider/master/helpers/installcredprovider.sh" | sh
 ARG INTERNAL_FEED_ACCESSTOKEN
