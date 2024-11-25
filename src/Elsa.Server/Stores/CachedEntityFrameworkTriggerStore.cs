@@ -8,7 +8,7 @@ namespace Elsa.Server.Stores
     public class CachedEntityFrameworkTriggerStore : EntityFrameworkTriggerStore
     {
         private IConnectionMultiplexer _cache;
-        public CachedEntityFrameworkTriggerStore(IElsaContextFactory dbContextFactory, IMapper mapper, IConnectionMultiplexer connectionMultiplexer) : base(dbContextFactory, mapper)
+        public CachedEntityFrameworkTriggerStore(IElsaContextFactory dbContextFactory, IMapper mapper, IConnectionMultiplexer connectionMultiplexer, ILogger<EntityFrameworkTriggerStore> logger) : base(dbContextFactory, mapper, logger)
         {
             _cache = connectionMultiplexer;
         }

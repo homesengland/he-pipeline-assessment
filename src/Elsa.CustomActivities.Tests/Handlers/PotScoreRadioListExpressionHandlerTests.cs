@@ -1,5 +1,4 @@
-﻿using Castle.Core.Internal;
-using Elsa.CustomActivities.Activities.Common;
+﻿using Elsa.CustomActivities.Activities.Common;
 using Elsa.CustomActivities.Constants;
 using Elsa.CustomActivities.Handlers;
 using Elsa.CustomActivities.Handlers.Models;
@@ -8,6 +7,7 @@ using Elsa.Serialization;
 using Elsa.Services.Models;
 using He.PipelineAssessment.Tests.Common;
 using Microsoft.Extensions.Logging;
+using Microsoft.IdentityModel.Tokens;
 using Moq;
 using Newtonsoft.Json;
 using Xunit;

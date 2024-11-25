@@ -64,7 +64,7 @@ namespace Elsa.Dashboard
       }
       else
       {
-        context.Response.Headers.Add(header, value);
+        context.Response.Headers.Append(header, value);
       }
     }
   }

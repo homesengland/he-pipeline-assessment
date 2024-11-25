@@ -39,6 +39,7 @@ resources:
   - repository: pipeline-assessment-deployment
     type: git
     name: 'Pipeline Assessment/pipeline-assessment-deployment'   
+    ref: 'main'
   - repository: templates
     type: git
     name: 'Cloud Hosting Service/Templates'

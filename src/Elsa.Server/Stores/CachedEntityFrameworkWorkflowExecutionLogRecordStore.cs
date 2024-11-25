@@ -8,7 +8,7 @@ namespace Elsa.Server.Stores
     public class CachedEntityFrameworkWorkflowExecutionLogRecordStore : EntityFrameworkWorkflowExecutionLogRecordStore
     {
         private IConnectionMultiplexer _cache;
-        public CachedEntityFrameworkWorkflowExecutionLogRecordStore(IElsaContextFactory dbContextFactory, IMapper mapper, IConnectionMultiplexer connectionMultiplexer) : base(dbContextFactory, mapper)
+        public CachedEntityFrameworkWorkflowExecutionLogRecordStore(IElsaContextFactory dbContextFactory, IMapper mapper, IConnectionMultiplexer connectionMultiplexer, ILogger<EntityFrameworkWorkflowExecutionLogRecordStore> logger) : base(dbContextFactory, mapper, logger)
         {
             _cache = connectionMultiplexer;
         }

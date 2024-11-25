@@ -32,15 +32,15 @@ builder.Services.Configure<Urls>(
 builder.Services.Configure<Auth0Config>(
   builder.Configuration.GetSection("Auth0Config"));
 
-var domain = builder.Configuration["Auth0Config:Domain"];
-var clientId = builder.Configuration["Auth0Config:MachineToMachineClientId"];
-var clientSecret = builder.Configuration["Auth0Config:MachineToMachineClientSecret"];
-var audience = builder.Configuration["Auth0Config:Audience"];
+var domain = builder.Configuration["Auth0Config:Domain"]!;
+var clientId = builder.Configuration["Auth0Config:MachineToMachineClientId"]!;
+var clientSecret = builder.Configuration["Auth0Config:MachineToMachineClientSecret"]!;
+var audience = builder.Configuration["Auth0Config:Audience"]!;
 var tokenService = new TokenProvider(domain, clientId, clientSecret, audience);
 builder.Services.AddSingleton<ITokenProvider>(tokenService);
 
 
-string serverURl = builder.Configuration["Urls:ElsaServer"];
+string serverURl = builder.Configuration["Urls:ElsaServer"]!;
 builder.Services.AddHttpClient("ElsaServerClient", client =>
 {
   client.BaseAddress = new Uri(serverURl);
