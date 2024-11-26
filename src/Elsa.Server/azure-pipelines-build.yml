@@ -22,10 +22,11 @@ parameters:
 
 variables:
   buildMajor: 1
-  buildMinor: 3
-  buildBranch: $[replace(variables['Build.SourceBranch'], '/', '.')]
+  buildMinor: 4
+  buildPatch: 1
+  buildBranch: $[replace(replace(variables['Build.SourceBranch'], 'refs/heads/', ''), '/', '.')]
 
-name: $(buildMajor).$(buildMinor).$(Rev:r)-elsaserver.$(buildBranch)
+name: $(buildMajor).$(buildMinor).$(buildPatch)-$(Rev:r)-elsaserver.$(buildBranch)
 # Build and Push
 
 pool:
