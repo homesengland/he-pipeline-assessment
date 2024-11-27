@@ -34,12 +34,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Content Include="www\build\*.*">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-  </ItemGroup>
-
-  <ItemGroup>
     <Compile Remove="src\components\interfaces\**" />
     <Content Remove="src\components\interfaces\**" />
     <EmbeddedResource Remove="src\components\interfaces\**" />
@@ -167,11 +161,10 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Folder Include="www\" />
     <Folder Include="src\http-clients\" />
     <Folder Include="wwwroot\Scripts\React\" />
-    <Folder Include="www\" />
     <Folder Include="Views\" />
-    <Folder Include="www\build\" />
   </ItemGroup>
 
   <ItemGroup>
