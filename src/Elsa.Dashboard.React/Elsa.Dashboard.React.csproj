@@ -51,6 +51,11 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Content Remove="wwwroot\Scripts\index-BAFGesPU.js" />
+    <Content Remove="wwwroot\Scripts\index-Cbaj9fgY.js" />
+  </ItemGroup>
+
+  <ItemGroup>
     <None Remove="src\components\base-component.ts" />
     <None Remove="src\components\common-properties\he-text-activity-property.tsx" />
     <None Remove="src\components\common-properties\nested-properties\nested-property-list.tsx" />
@@ -163,8 +168,10 @@
 
   <ItemGroup>
     <Folder Include="src\http-clients\" />
+    <Folder Include="wwwroot\Scripts\React\" />
     <Folder Include="www\" />
     <Folder Include="Views\" />
+    <Folder Include="www\build\" />
   </ItemGroup>
 
   <ItemGroup>
