@@ -12,6 +12,7 @@ using Microsoft.AspNetCore.Mvc;
 using Swashbuckle.AspNetCore.Annotations;
 using Swashbuckle.AspNetCore.Filters;
 using System.Linq.Expressions;
+using System.Text.Json;
 
 namespace Elsa.Server.Features.Dashboard
 {
@@ -60,7 +61,9 @@ namespace Elsa.Server.Features.Dashboard
             var summaries = _mapper.Map<IList<WorkflowDefinitionSummaryModel>>(items);
             var pagedList = new PagedList<WorkflowDefinitionSummaryModel>(summaries, page, pageSize, totalCount);
 
-            return Json(pagedList, SerializationHelper.GetSettingsForWorkflowDefinition());
+            var test = new JsonSerializerOptions(JsonSerializerOptions.Default);
+
+            return Json(pagedList, test);//SerializationHelper.GetSettingsForWorkflowDefinition());
         }
 
         private WorkflowDefinitionListSpecification GetSpecification(string? ids, VersionOptions version,
