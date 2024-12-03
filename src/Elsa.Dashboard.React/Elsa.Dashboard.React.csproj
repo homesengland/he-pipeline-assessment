@@ -162,6 +162,7 @@
 
   <ItemGroup>
     <Folder Include="www\" />
+    <Folder Include="www\" />
     <Folder Include="src\http-clients\" />
     <Folder Include="wwwroot\Scripts\React\" />
     <Folder Include="Views\" />

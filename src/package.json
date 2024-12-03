@@ -5,6 +5,7 @@
     "async-mutex": "^0.4.0",
     "el-transition": "^0.0.7",
     "lodash": "^4.17.21",
+    "react-router-dom": "^7.0.1",
     "sortablejs": "^1.15.0"
   }
 }
