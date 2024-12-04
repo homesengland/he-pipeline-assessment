@@ -8,8 +8,7 @@ class ElsaStudioDashboard extends Component<ElsaDashboardProps, ElsaDashboardSta
     super(props);
     this.state = {
       basePath: ""
-    }
-    
+    }  
   }
 
   private dashboardMenu: ConfigureDashboardMenuContext = {
@@ -35,8 +34,7 @@ class ElsaStudioDashboard extends Component<ElsaDashboardProps, ElsaDashboardSta
 
     const renderFeatureMenuItem = (item, basePath) => {
       return (<NavLink to={`${basePath}/${item[0]}`}
-        className={({ isActive }) => (isActive ? "" : "elsa-text-gray-300 hover:elsa-bg-gray-700 hover:elsa-text-white elsa-px-3 elsa-py-2 elsa-rounded-md elsa-text-sm elsa-font-medium")}
-            >
+        className={({ isActive }) => (isActive ? "" : "elsa-text-gray-300 hover:elsa-bg-gray-700 hover:elsa-text-white elsa-px-3 elsa-py-2 elsa-rounded-md elsa-text-sm elsa-font-medium")}>
         {item[1]}
       </NavLink>);
     }

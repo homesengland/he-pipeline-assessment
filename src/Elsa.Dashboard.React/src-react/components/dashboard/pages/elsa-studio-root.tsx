@@ -6,7 +6,7 @@ class ElsaStudioRoot extends Component
   render() {
     return (
       <div>
-        <ElsaStudioDashboard></ElsaStudioDashboard>
+        <ElsaStudioDashboard basePath= ""></ElsaStudioDashboard>
       </div>
     );
   }
