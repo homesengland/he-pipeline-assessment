@@ -3,12 +3,11 @@ import { ConfigureDashboardMenuContext } from '../../../models/events';
 import { NavLink, Routes, Route } from 'react-router-dom'
 import ElsaStudioWorkflowDefinitionsList from './elsa-studio-workflow-definitions-list';
 import ElsaStudioWorkflowInstancesList from './elsa-studio-workflow-instances-list';
-class ElsaStudioDashboard extends Component
-{
+class ElsaStudioDashboard extends Component<ElsaDashboardProps, ElsaDashboardState> {
   constructor(props) {
     super(props);
     this.state = {
-      basePath: props.basePath
+      basePath: ""
     }
     
   }
@@ -28,7 +27,7 @@ class ElsaStudioDashboard extends Component
 
   render() {
     const logoPath = '/assets/logo.png';
- 
+    let basePath = this.state.basePath;
     let menuItems = (this.dashboardMenu.data != null ? this.dashboardMenu.data.menuItems : [])
       .map(([route, label]) => [route, label]);
 
@@ -60,7 +59,7 @@ class ElsaStudioDashboard extends Component
                 </div>
                 <div className="hidden md:elsa-block">
                   <div className="elsa-ml-10 elsa-flex elsa-items-baseline elsa-space-x-4">
-                    {menuItems.map((item) => renderFeatureMenuItem(item, ""))}
+                    {menuItems.map((item) => renderFeatureMenuItem(item, basePath))}
                   </div>
                 </div>
               </div>
@@ -69,7 +68,7 @@ class ElsaStudioDashboard extends Component
         </nav>
         <main>
           <Routes>
-            {routes.map(({ path, element }) => renderFeatureRoute(path, element, ""))}
+            {routes.map(({ path, element }) => renderFeatureRoute(path, element, basePath))}
             </Routes>
         </main>
       </div>
@@ -78,5 +77,13 @@ class ElsaStudioDashboard extends Component
 }
 
 export default ElsaStudioDashboard;
+
+interface ElsaDashboardProps {
+  basePath: string;
+}
+
+interface ElsaDashboardState {
+  basePath: string;
+}
 
 
