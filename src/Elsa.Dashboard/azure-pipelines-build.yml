@@ -39,7 +39,7 @@ resources:
   - repository: templates
     type: git
     name: 'Cloud Hosting Service/Templates'   
-    ref: 'master'
+    ref: 'feature/code-coverage-step-dotnet-version-check'
 
 stages:
 - template: azure-pipelines-elsadashboard-build.yml@He.Workflow
