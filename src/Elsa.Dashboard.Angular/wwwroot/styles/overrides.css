@@ -1,0 +1,57 @@
+.override-question-guidance {
+    margin-top: 5px !important;
+    margin-bottom: 0px !important;
+}
+.govuk-full-width-container {
+/*    max-width: 1800px;*/
+    margin-right: 50px;
+    margin-left: 50px;
+}
+
+.govuk-lg-width-container {
+  max-width: 1800px;
+  margin-right: auto;
+  margin-left: auto;
+}
+
+.override-header-select {
+    float: left;
+}
+
+.float-right {
+    float: right;
+}
+
+.margin-right-10 {
+    margin-right: 10px;
+}
+
+.scroll-table{
+    overflow-x:auto !important;
+    width:100% !important;
+}
+
+.govuk-input--width-scroll-table {
+    width: 100px !important;
+}
+
+@font-face {
+    font-family: Roboto;
+    font-style: normal;
+    font-weight: 400;
+    src: url(../styles/assets/fonts/Roboto/Roboto-Light.ttf) format("ttf");
+    font-display: fallback
+}
+
+@font-face {
+    font-family: Roboto;
+    font-style: normal;
+    font-weight: 700;
+    src: url(../styles/assets/fonts/Roboto/Roboto-Bold.ttf) format("ttf");
+    font-display: fallback
+}
+
+body *
+{
+    font-family: Roboto,arial,sans-serif !important;
+}

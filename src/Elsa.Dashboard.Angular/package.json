@@ -1,0 +1,74 @@
+{
+  "name": "customstencil",
+  "version": "0.0.14",
+  "description": "Stencil Component Starter",
+  "main": "dist/index.cjs.js",
+  "module": "dist/index.js",
+  "es2015": "dist/esm/index.mjs",
+  "es2017": "dist/esm/index.mjs",
+  "types": "dist/types/index.d.ts",
+  "collection": "dist/collection/collection-manifest.json",
+  "collection:main": "dist/collection/index.js",
+  "unpkg": "dist/custom/custom.esm.js",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/ionic-team/stencil-component-starter.git"
+  },
+  "files": [
+    "dist/",
+    "dist/loader/"
+  ],
+  "scripts": {
+    "ng": "ng",
+    "start": "run-script-os",
+    "build": "ng build",
+    "watch": "ng build --watch --configuration development",
+    "test": "ng test",
+    "serve": "ng serve"
+  },
+  "dependencies": {
+    "@angular/animations": "19.0.3",
+    "@angular/common": "19.0.3",
+    "@angular/compiler": "19.0.3",
+    "@angular/core": "19.0.3",
+    "@angular/forms": "19.0.3",
+    "@angular/platform-browser": "^19.0.3",
+    "@angular/platform-browser-dynamic": "^19.0.3",
+    "@angular/router": "19.0.3",
+    "@auth0/auth0-spa-js": "^2.1.1",
+    "async-mutex": "^0.4.0",
+    "axios": "^0.26.1",
+    "construe": "^0.4.1",
+    "el-transition": "^0.0.7",
+    "lodash": "^4.17.21",
+    "sortablejs": "^1.15.0",
+    "tslib": "^2.8.1",
+    "typescript": "^5.6.3"
+  },
+  "devDependencies": {
+    "@angular-devkit/build-angular": "19.0.3",
+    "@angular/cli": "19.0.3",
+    "@angular/compiler-cli": "19.0.3",
+    "@types/jest": "^27.5.2",
+    "@typescript-eslint/parser": "^5.43.0",
+    "axios": "^0.26.1",
+    "jest": "^29.0.0",
+    "jest-cli": "^29.0.0",
+    "jest-environment-jsdom": "^29.3.1",
+    "jest-junit": "^15.0.0",
+    "puppeteer": "^10.0.0",
+    "ts-jest": "^29.0.3",
+    "workbox-build": "^4.3.1"
+  },
+  "license": "MIT",
+  "jest-junit": {
+    "suiteName": "jest tests",
+    "outputDirectory": ".",
+    "outputName": "junit.xml",
+    "uniqueOutputName": "false",
+    "classNameTemplate": "{classname}-{title}",
+    "titleTemplate": "{classname}-{title}",
+    "ancestorSeparator": " › ",
+    "usePathForSuiteName": "true"
+  }
+}
