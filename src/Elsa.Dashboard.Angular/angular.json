@@ -3,7 +3,7 @@
   "version": 1,
   "newProjectRoot": "projects",
   "projects": {
-    "angularapp1.client": {
+    "workflow": {
       "projectType": "application",
       "schematics": {},
       "root": "",
@@ -13,7 +13,7 @@
         "build": {
           "builder": "@angular-devkit/build-angular:browser",
           "options": {
-            "outputPath": "dist/angularapp1.client",
+            "outputPath": "dist/workflow",
             "index": "src/index.html",
             "main": "src/main.tsx",
             "polyfills": [

@@ -109,9 +109,6 @@
     <TypeScriptCompile Include="wwwroot\Scripts\Plugins\CustomPlugins.js" />
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="www\" />
-  </ItemGroup>
-  <ItemGroup>
     <Content Update="wwwroot\styles\assets\fonts\bold-affa96571d-v2.woff">
       <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
       <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
@@ -188,5 +185,8 @@
       <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
       <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
     </Content>
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="www\" />
   </ItemGroup>
 </Project>

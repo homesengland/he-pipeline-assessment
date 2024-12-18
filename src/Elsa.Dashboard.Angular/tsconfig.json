@@ -11,7 +11,7 @@
     "importHelpers": true,
     "skipLibCheck": true,
     "lib": [
-      "es2021",
+      "ES2022",
       "dom"
     ],
     "module": "ESNext",
@@ -23,7 +23,7 @@
     "outDir": "./dist/out-tsc",
     "sourceMap": true,
     "strict": true,
-    "target": "es2021",
+    "target": "ES2022",
     "useDefineForClassFields": false
   },
   "angularCompilerOptions": {

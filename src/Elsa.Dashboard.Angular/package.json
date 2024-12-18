@@ -1,7 +1,7 @@
 {
-  "name": "customstencil",
-  "version": "0.0.14",
-  "description": "Stencil Component Starter",
+  "name": "angular",
+  "version": "0.0.15",
+  "description": "Angular Component Starter",
   "main": "dist/index.cjs.js",
   "module": "dist/index.js",
   "es2015": "dist/esm/index.mjs",
@@ -21,7 +21,9 @@
   "scripts": {
     "ng": "ng",
     "start": "run-script-os",
-    "build": "ng build",
+    "build": "ng build --output-hashing=none",
+    "package": "concat -o www/package.js ./dist/workflow/main.js ./dist/workflow/polyfills.js ./dist/workflow/runtime.js",
+    "bundle": "npm run build && npm run package",
     "watch": "ng build --watch --configuration development",
     "test": "ng test",
     "serve": "ng serve"
@@ -38,6 +40,7 @@
     "@auth0/auth0-spa-js": "^2.1.1",
     "async-mutex": "^0.4.0",
     "axios": "^0.26.1",
+    "concat": "^1.0.3",
     "construe": "^0.4.1",
     "el-transition": "^0.0.7",
     "lodash": "^4.17.21",
