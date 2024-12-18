@@ -27,7 +27,6 @@ variables:
   buildBranch: $[replace(replace(variables['Build.SourceBranch'], 'refs/heads/', ''), '/', '.')]
 
 name: $(buildMajor).$(buildMinor).$(buildPatch)-$(Rev:r)-elsaserver.$(buildBranch)
-# Build and Push
 
 pool:
   vmImage: 'ubuntu-22.04'
