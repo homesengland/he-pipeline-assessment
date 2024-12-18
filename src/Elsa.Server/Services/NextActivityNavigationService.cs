@@ -38,7 +38,8 @@ namespace Elsa.Server.Services
                  nextActivity.Type != ActivityTypeConstants.LandValues &&
                  nextActivity.Type != ActivityTypeConstants.AgricultureLandValues &&
                  nextActivity.Type != ActivityTypeConstants.OfficeLandValues &&
-                 nextActivity.Type != ActivityTypeConstants.DataverseDataSource))
+                 nextActivity.Type != ActivityTypeConstants.DataverseDataSource &&
+                 nextActivity.Type != ActivityTypeConstants.AssignFund))
             {
                 var customActivityNavigation =
                     _elsaCustomModelHelper.CreateNextCustomActivityNavigation(previousActivityId,

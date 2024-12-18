@@ -49,6 +49,7 @@ using Elsa.CustomWorkflow.Sdk.DataDictionaryHelpers;
 using Elsa.Server.DataDictionaryAccessors;
 using Microsoft.AspNetCore.Mvc;
 using System.Text.Json.Serialization;
+using Elsa.CustomActivities.Activities.AssignFund;
 
 var builder = WebApplication.CreateBuilder(args);
 var elsaConnectionString = builder.Configuration.GetConnectionString("Elsa");
@@ -102,6 +103,7 @@ builder.Services
         .AddActivity<RegionalIPUDataSource>()
         .AddActivity<RegionalFigsDataSource>()
         .AddActivity<ReturnToActivity>()
+        .AddActivity<AssignFund>()
         .AddConsoleActivities()
     );
 

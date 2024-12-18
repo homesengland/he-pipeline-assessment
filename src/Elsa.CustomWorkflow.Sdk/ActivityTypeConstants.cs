@@ -18,6 +18,7 @@
         public const string OfficeLandValues = "OfficeLandValueDataSource";
         public const string ReturnToActivity = "ReturnToActivity";
         public const string DataverseDataSource = "DataverseDataSource";
+        public const string AssignFund = "AssignFund";
     }
 
     public class QuestionTypeConstants

@@ -124,6 +124,7 @@ namespace He.PipelineAssessment.UI.Features.Workflow
                 case ActivityTypeConstants.OfficeLandValues:
                 case ActivityTypeConstants.AgricultureLandValues:
                 case ActivityTypeConstants.DataverseDataSource:
+                case ActivityTypeConstants.AssignFund:
                 {
                         var executeWorkflowRequest = new ExecuteWorkflowCommand
                         {
