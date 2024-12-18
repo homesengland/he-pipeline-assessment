@@ -47,6 +47,8 @@ using Elsa.CustomActivities.Activities.SinglePipelineExtendedDataSource;
 using Elsa.CustomActivities.Activities.ReturnToActivity;
 using Elsa.CustomWorkflow.Sdk.DataDictionaryHelpers;
 using Elsa.Server.DataDictionaryAccessors;
+using Microsoft.AspNetCore.Mvc;
+using System.Text.Json.Serialization;
 
 var builder = WebApplication.CreateBuilder(args);
 var elsaConnectionString = builder.Configuration.GetConnectionString("Elsa");
@@ -79,7 +81,7 @@ bool useCache = (Convert.ToBoolean(builder.Configuration["Redis:UseCache"]) && !
 logger.LogInformation($"Using Cache: {useCache}");
 // Elsa services.
 builder.Services
-    .AddElsa(elsa => elsa
+    .AddElsa(elsa => elsa    
         .UseEntityFrameworkPersistenceWithCache(ef => ef.UseSqlServer(elsaConnectionString!, typeof(Elsa.Persistence.EntityFramework.SqlServer.Migrations.Initial)), true, useCache)
         .NoCoreActivities()
         .AddActivity<SinglePipelineDataSource>()
@@ -133,6 +135,10 @@ else
 }
 // Elsa API endpoints.
 builder.Services.AddElsaApiEndpoints();
+builder.Services.AddMvc(delegate (MvcOptions options)
+{
+    options.Conventions.Add(new CustomElsaNewtonsoftJsonConvention());
+}); 
 
 //Custom method.  Register new Script Handlers here.
 builder.Services.AddCustomElsaScriptHandlers();
@@ -220,6 +226,10 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
     });
 
 builder.Services.AddEsriHttpClients(builder.Configuration, builder.Environment.IsDevelopment());
+
+//Fix for the infinite JSON loop following an update in Elsa 2.14.1
+builder.Services.AddControllers().AddJsonOptions(x =>
+                x.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles);
 
 //HibernatingRhinos.Profiler.Appender.EntityFramework.EntityFrameworkProfiler.Initialize();
 var app = builder.Build();
