@@ -47,16 +47,12 @@
     </Content>
   </ItemGroup>
   <ItemGroup>
-    <Compile Remove="src\components\**" />
     <Compile Remove="src\nested-drivers\**" />
     <Compile Remove="Views\**" />
-    <Content Remove="src\components\**" />
     <Content Remove="src\nested-drivers\**" />
     <Content Remove="Views\**" />
-    <EmbeddedResource Remove="src\components\**" />
     <EmbeddedResource Remove="src\nested-drivers\**" />
     <EmbeddedResource Remove="Views\**" />
-    <None Remove="src\components\**" />
     <None Remove="src\nested-drivers\**" />
     <None Remove="Views\**" />
   </ItemGroup>
@@ -211,6 +207,60 @@
     </Content>
   </ItemGroup>
   <ItemGroup>
+    <Folder Include="src\Assets\FontsInter\" />
+    <Folder Include="src\Assets\Images\" />
+    <Folder Include="src\Components\Controls\ContextMenu\" />
+    <Folder Include="src\Components\Controls\Control\" />
+    <Folder Include="src\Components\Controls\DropdownButton\" />
+    <Folder Include="src\Components\Controls\InputTags\" />
+    <Folder Include="src\Components\Controls\Monaco\" />
+    <Folder Include="src\Components\Controls\UserContextMenu\" />
+    <Folder Include="src\Components\Controls\Pager\" />
+    <Folder Include="src\Components\DashboardPages\Dashboard\" />
+    <Folder Include="src\Components\DashboardPages\Home\" />
+    <Folder Include="src\Components\DashboardPages\WorkflowRegistry\" />
+    <Folder Include="src\Components\DashboardPages\WorkflowInstancesView\" />
+    <Folder Include="src\Components\DashboardPages\WorkflowInstancesList\" />
+    <Folder Include="src\Components\DashboardPages\WorkflowDefinitionsList\" />
+    <Folder Include="src\Components\DashboardPages\WorkflowDefinitionsEdit\" />
+    <Folder Include="src\Components\DashboardPages\WorkflowBlueprintView\" />
+    <Folder Include="src\Components\DashboardPages\Root\" />
+    <Folder Include="src\Components\DashboardPages\Oauth2Authorized\" />
+    <Folder Include="src\Components\Designers\DesignerTree\" />
+    <Folder Include="src\Components\Designers\X6Designer\" />
+    <Folder Include="src\Components\Editors\ExpressionEditor\" />
+    <Folder Include="src\Components\Editors\MultiExpressionEditor\" />
+    <Folder Include="src\Components\Editors\Properties\CheckListProperty\" />
+    <Folder Include="src\Components\Editors\Properties\CheckboxProperty\" />
+    <Folder Include="src\Components\Editors\Properties\CronExpressionProperty\" />
+    <Folder Include="src\Components\Editors\Properties\DictionaryProperty\" />
+    <Folder Include="src\Components\Editors\Properties\DropdownProperty\" />
+    <Folder Include="src\Components\Editors\Properties\JsonProperty\" />
+    <Folder Include="src\Components\Editors\Properties\MultiLineProperty\" />
+    <Folder Include="src\Components\Editors\Properties\MultiTextProperty\" />
+    <Folder Include="src\Components\Editors\Properties\SwitchCasesProperty\" />
+    <Folder Include="src\Components\Editors\Properties\SingleLineProperty\" />
+    <Folder Include="src\Components\Editors\Properties\ScriptProperty\" />
+    <Folder Include="src\Components\Editors\Properties\RadioListProperty\" />
+    <Folder Include="src\Components\Editors\PropertyEditor\" />
+    <Folder Include="src\Components\i18n\" />
+    <Folder Include="src\Components\Icons\" />
+    <Folder Include="src\Components\Screens\WorkflowRegistryList\" />
+    <Folder Include="src\Components\Screens\WorkflowInstanceViewer\" />
+    <Folder Include="src\Components\Screens\WorkflowInstanceList\" />
+    <Folder Include="src\Components\Screens\WorkflowDefinitionList\" />
+    <Folder Include="src\Components\Screens\WorkflowBlueprintViewer\WorkflowBlueprintViewerScreen\" />
+    <Folder Include="src\Components\Screens\WorkflowBlueprintViewer\WorkflowBlueprintPropertiesPanel\" />
+    <Folder Include="src\Components\Screens\WorkflowDefinitionEditor\ActivityEditorModel\" />
+    <Folder Include="src\Components\Screens\WorkflowDefinitionEditor\ActivityEditorPanel\" />
+    <Folder Include="src\Components\Screens\WorkflowDefinitionEditor\ActivityPickerModal\" />
+    <Folder Include="src\Components\Screens\WorkflowDefinitionEditor\WorkflowTestPanel\" />
+    <Folder Include="src\Components\Screens\WorkflowDefinitionEditor\WorkflowSettingsModal\" />
+    <Folder Include="src\Components\Screens\WorkflowDefinitionEditor\WorkflowPublishButton\" />
+    <Folder Include="src\Components\Screens\WorkflowDefinitionEditor\WorkflowPropertiesPanel\" />
+    <Folder Include="src\Components\Screens\WorkflowDefinitionEditor\WorkflowDefinitionEditorScreen\" />
+    <Folder Include="src\Components\Screens\WorkflowDefinitionEditor\WorkflowDefinitionEditorNotifications\" />
+    <Folder Include="src\Components\Screens\WorkflowDefinitionEditor\VersionHistoryPanel\" />
     <Folder Include="www\" />
   </ItemGroup>
 </Project>
