@@ -16,6 +16,13 @@
     <TypeScriptJSXEmit>preserve</TypeScriptJSXEmit>
   </PropertyGroup>
   <ItemGroup>
+    <None Remove="src\Models\domain.ts" />
+    <None Remove="src\Models\event-args.ts" />
+    <None Remove="src\Models\events.ts" />
+    <None Remove="src\Models\index.ts" />
+    <None Remove="src\Models\services.ts" />
+    <None Remove="src\Models\view.ts" />
+    <None Remove="src\Utils\utils.ts" />
     <None Remove="System.Security.Cryptography.Pkcs" />
     <None Remove="System.Drawing.Common" />
     <None Remove="System.Text.RegularExpressions" />
@@ -99,6 +106,23 @@
     <ProjectReference Include="..\Elsa.CustomWorkflow.Sdk\Elsa.CustomWorkflow.Sdk.csproj" />
   </ItemGroup>
   <ItemGroup>
+    <TypeScriptCompile Include="src\Models\index.ts">
+      <SubType>Code</SubType>
+    </TypeScriptCompile>
+    <TypeScriptCompile Include="src\Models\events.ts">
+      <SubType>Code</SubType>
+    </TypeScriptCompile>
+    <TypeScriptCompile Include="src\Models\event-args.ts">
+      <SubType>Code</SubType>
+    </TypeScriptCompile>
+    <TypeScriptCompile Include="src\Models\domain.ts">
+      <SubType>Code</SubType>
+    </TypeScriptCompile>
+    <TypeScriptCompile Include="src\Models\services.ts" />
+    <TypeScriptCompile Include="src\Models\view.ts" />
+    <TypeScriptCompile Include="src\Utils\utils.ts">
+      <SubType>Code</SubType>
+    </TypeScriptCompile>
     <TypeScriptCompile Include="wwwroot\Scripts\CustomElsa.js" />
     <TypeScriptCompile Include="wwwroot\Scripts\Drivers\ConditionalTextListPropertyDriver.js" />
     <TypeScriptCompile Include="wwwroot\Scripts\Drivers\CustomSwitchPropertyDriver.js" />
