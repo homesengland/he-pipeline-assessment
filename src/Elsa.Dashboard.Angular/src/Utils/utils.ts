@@ -130,13 +130,10 @@ export function getOrCreateProperty(activity: ActivityModel, name: string, defau
   let property: ActivityDefinitionProperty | undefined = activity.properties?.find(x => x.name == name);
 
   if (!property) {
-    const expressions: Map<string, string> = new Map();
-    let syntax = defaultSyntax ? defaultSyntax() : undefined;
+    const expressions: Record<string, string> = {};
+    const syntax = defaultSyntax?.() ?? 'Literal';
 
-    if (!syntax)
-      syntax = 'Literal';
-
-    expressions[syntax] = defaultExpression ? defaultExpression() : undefined;
+    expressions[syntax] = defaultExpression?.() ?? '';
     property = { name: name, expressions: expressions, syntax: undefined };
     activity.properties?.push(property);
   }
