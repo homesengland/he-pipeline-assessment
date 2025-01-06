@@ -1,6 +1,6 @@
 import { ActivityDefinition, ActivityDefinitionProperty, ActivityModel, ConnectionModel, WorkflowModel } from "../models";
-//import * as collection from 'lodash/collection';
-//import { Duration } from "moment";
+import * as collection from 'lodash';
+import { Duration } from "moment";
 //import { createDocument } from "@stencil/core/mock-doc";
 
 declare global {
@@ -153,13 +153,13 @@ export function parseJson(json: string): any {
   return undefined;
 }
 
-export function parseQuery(queryString?: string): any {
+export function parseQuery(queryString?: string): { [key: string]: string } {
 
   if (!queryString)
     return {};
 
-  const query = {};
-  const pairs = (queryString[0] === '?' ? queryString.substr(1) : queryString).split('&');
+  const query: { [key: string]: string } = {};
+  const pairs = (queryString[0] === '?' ? queryString.substring(1) : queryString).split('&');
   for (let i = 0; i < pairs.length; i++) {
     const pair = pairs[i].split('=');
     query[decodeURIComponent(pair[0])] = decodeURIComponent(pair[1] || '');
@@ -192,16 +192,20 @@ export function htmlToElement(html: string): Element {
   const template = document.createElement('template');
   html = html.trim(); // Never return a text node of whitespace as the result.
   template.innerHTML = html;
-  return template.content.firstElementChild;
+  const element = template.content.firstElementChild;
+  if (!element) {
+    throw new Error('No element found in the provided HTML string.');
+  }
+  return element;
 }
 
-export function htmlDecode(value) {
+export function htmlDecode(value: string) {
   const textarea = htmlToElement("<textarea/>");
   textarea.innerHTML = value;
   return textarea.textContent;
 }
 
-export function htmlEncode(value) {
+export function htmlEncode(value: string) {
   const textarea = htmlToElement("<textarea/>");
   textarea.textContent = value;
   return textarea.innerHTML;
@@ -218,15 +222,19 @@ export function durationToString(duration: Duration) {
     : null;
 }
 
-export function clip(el) {
+export function clip(el: Element) {
   const range = document.createRange();
   range.selectNodeContents(el);
   const sel = window.getSelection();
-  sel.removeAllRanges();
-  sel.addRange(range);
+  if (sel) {
+    sel.removeAllRanges();
+    sel.addRange(range);
+  } else {
+    console.error("Unable to get selection object")
+  }
 }
 
-export async function awaitElement(selector) {
+export async function awaitElement(selector: string) {
   while (document.querySelector(selector) === null) {
     await new Promise(resolve => requestAnimationFrame(resolve))
   }
@@ -239,5 +247,5 @@ export interface Hash<TValue> {
 
 export const stripActivityNameSpace = (name: string): string => {
   const lastDotIndex = name.lastIndexOf('.');
-  return lastDotIndex < 0 ? name : name.substr(lastDotIndex + 1);
+  return lastDotIndex < 0 ? name : name.substring(lastDotIndex + 1);
 };
