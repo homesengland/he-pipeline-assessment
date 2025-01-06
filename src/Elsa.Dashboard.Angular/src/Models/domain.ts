@@ -390,7 +390,9 @@ export const getVersionOptionsString = (versionOptions?: VersionOptions) => {
           ? 'Published'
           : versionOptions.isLatestOrPublished
             ? 'LatestOrPublished'
-            : versionOptions.version.toString();
+            : versionOptions.version !== undefined
+              ? versionOptions.version.toString()
+              : '';
 };
 
 export enum WorkflowTestActivityMessageStatus {
