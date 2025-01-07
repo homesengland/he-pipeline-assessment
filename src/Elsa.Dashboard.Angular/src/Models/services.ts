@@ -1,3 +1,9 @@
+// TODO:
+
+export interface Sudio {
+
+}
+
 //import { PluginManager, ActivityIconProvider, ConfirmDialogService, PropertyDisplayManager } from "../services";
 //import { ElsaClient, ToastNotificationService } from "../services";
 //import EventBus from "../services/custom-event-bus";
