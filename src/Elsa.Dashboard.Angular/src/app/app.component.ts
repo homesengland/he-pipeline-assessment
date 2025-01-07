@@ -33,5 +33,5 @@ export class AppComponent implements OnInit {
     );
   }
 
-  title = 'angularapp1.client';
+  title = 'Workflow';
 }

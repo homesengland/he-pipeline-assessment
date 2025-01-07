@@ -51,7 +51,8 @@
               "vendorChunk": true,
               "extractLicenses": false,
               "sourceMap": true,
-              "namedChunks": true
+              "namedChunks": true,
+              "outputHashing": "all"
             }
           },
           "defaultConfiguration": "production"
@@ -60,10 +61,10 @@
           "builder": "@angular-devkit/build-angular:dev-server",
           "configurations": {
             "production": {
-              "buildTarget": "angularapp1.client:build:production"
+              "buildTarget": "workflow.client:build:production"
             },
             "development": {
-              "buildTarget": "angularapp1.client:build:development"
+              "buildTarget": "workflow.client:build:development"
             }
           },
           "defaultConfiguration": "development",
@@ -74,7 +75,7 @@
         "extract-i18n": {
           "builder": "@angular-devkit/build-angular:extract-i18n",
           "options": {
-            "browserTarget": "angularapp1.client:build"
+            "browserTarget": "workflow.client:build"
           }
         },
         "test": {

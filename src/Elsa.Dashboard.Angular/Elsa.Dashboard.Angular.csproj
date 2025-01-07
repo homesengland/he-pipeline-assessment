@@ -187,6 +187,7 @@
     </Content>
   </ItemGroup>
   <ItemGroup>
+    <Folder Include="dist\" />
     <Folder Include="www\" />
   </ItemGroup>
 </Project>
