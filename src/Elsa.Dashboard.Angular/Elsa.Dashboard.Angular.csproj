@@ -16,6 +16,13 @@
     <TypeScriptJSXEmit>preserve</TypeScriptJSXEmit>
   </PropertyGroup>
   <ItemGroup>
+    <None Remove="src\models\domain.ts" />
+    <None Remove="src\models\event-args.ts" />
+    <None Remove="src\models\events.ts" />
+    <None Remove="src\models\index.ts" />
+    <None Remove="src\models\services.ts" />
+    <None Remove="src\models\view.ts" />
+    <None Remove="src\utils\utils.ts" />
     <None Remove="src\modules\auth0\auth0-plugin.ts" />
     <None Remove="src\services\custom-event-bus.d.ts" />
     <None Remove="src\services\custom-event-bus.js" />
@@ -35,6 +42,10 @@
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
+    <PackageReference Include="Microsoft.TypeScript.MSBuild">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
     <PackageReference Include="Newtonsoft.Json" />
     <PackageReference Include="System.Security.Cryptography.Pkcs" />
     <PackageReference Include="System.Drawing.Common" />
@@ -45,18 +56,49 @@
     </Content>
   </ItemGroup>
   <ItemGroup>
-    <Compile Remove="src\components\**" />
+    <Compile Remove="src\Data\**" />
+    <Compile Remove="src\Drivers\**" />
+    <Compile Remove="src\Globals\**" />
+    <Compile Remove="src\Modules\**" />
     <Compile Remove="src\nested-drivers\**" />
+    <Compile Remove="src\Plugins\**" />
+    <Compile Remove="src\Services\**" />
+    <Compile Remove="src\Validation\**" />
     <Compile Remove="Views\**" />
-    <Content Remove="src\components\**" />
+    <Content Remove="src\Data\**" />
+    <Content Remove="src\Drivers\**" />
+    <Content Remove="src\Globals\**" />
+    <Content Remove="src\Modules\**" />
     <Content Remove="src\nested-drivers\**" />
+    <Content Remove="src\Plugins\**" />
+    <Content Remove="src\Services\**" />
+    <Content Remove="src\Validation\**" />
     <Content Remove="Views\**" />
-    <EmbeddedResource Remove="src\components\**" />
+    <EmbeddedResource Remove="src\Data\**" />
+    <EmbeddedResource Remove="src\Drivers\**" />
+    <EmbeddedResource Remove="src\Globals\**" />
+    <EmbeddedResource Remove="src\Modules\**" />
     <EmbeddedResource Remove="src\nested-drivers\**" />
+    <EmbeddedResource Remove="src\Plugins\**" />
+    <EmbeddedResource Remove="src\Services\**" />
+    <EmbeddedResource Remove="src\Validation\**" />
     <EmbeddedResource Remove="Views\**" />
-    <None Remove="src\components\**" />
+    <None Remove="src\Data\**" />
+    <None Remove="src\Drivers\**" />
+    <None Remove="src\Globals\**" />
+    <None Remove="src\Modules\**" />
     <None Remove="src\nested-drivers\**" />
+    <None Remove="src\Plugins\**" />
+    <None Remove="src\Services\**" />
+    <None Remove="src\Validation\**" />
     <None Remove="Views\**" />
+    <TypeScriptCompile Remove="src\Data\**" />
+    <TypeScriptCompile Remove="src\Drivers\**" />
+    <TypeScriptCompile Remove="src\Globals\**" />
+    <TypeScriptCompile Remove="src\Modules\**" />
+    <TypeScriptCompile Remove="src\Plugins\**" />
+    <TypeScriptCompile Remove="src\Services\**" />
+    <TypeScriptCompile Remove="src\Validation\**" />
   </ItemGroup>
   <ItemGroup>
     <Compile Remove="RequestHelper.cs" />
@@ -104,6 +146,23 @@
     <ProjectReference Include="..\Elsa.CustomWorkflow.Sdk\Elsa.CustomWorkflow.Sdk.csproj" />
   </ItemGroup>
   <ItemGroup>
+    <TypeScriptCompile Include="src\models\index.ts">
+      <SubType>Code</SubType>
+    </TypeScriptCompile>
+    <TypeScriptCompile Include="src\models\events.ts">
+      <SubType>Code</SubType>
+    </TypeScriptCompile>
+    <TypeScriptCompile Include="src\models\event-args.ts">
+      <SubType>Code</SubType>
+    </TypeScriptCompile>
+    <TypeScriptCompile Include="src\models\domain.ts">
+      <SubType>Code</SubType>
+    </TypeScriptCompile>
+    <TypeScriptCompile Include="src\models\services.ts" />
+    <TypeScriptCompile Include="src\models\view.ts" />
+    <TypeScriptCompile Include="src\utils\utils.ts">
+      <SubType>Code</SubType>
+    </TypeScriptCompile>
     <TypeScriptCompile Include="src\modules\auth0\auth0-plugin.ts" />
     <TypeScriptCompile Include="src\services\custom-event-bus.d.ts" />
     <TypeScriptCompile Include="src\services\custom-event-bus.js" />
