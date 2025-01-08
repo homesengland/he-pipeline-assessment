@@ -1,0 +1,29 @@
+<div class="elsa-h-screen elsa-bg-gray-100">
+    <nav class="elsa-bg-gray-800">
+        <div class="elsa-px-4 sm:elsa-px-6 lg:elsa-px-8">
+            <div class="elsa-flex elsa-items-center elsa-justify-between elsa-h-16">
+                <div class="elsa-flex elsa-items-center">
+
+                    <div class="elsa-flex-shrink-0">
+                       <a [href]="basePath"> Logo
+                            <!-- <img class="elsa-h-8 elsa-w-8" [src]="logoPath" alt="Workflow" /> -->
+                       </a> 
+                    </div>
+                <!-- <div class="hidden md:elsa-block">  -->
+                        <div class="elsa-ml-10 elsa-flex elsa-items-baseline elsa-space-x-4">
+                             <div *ngFor="let item of menuItems">
+                                {{item[1]}}
+                            </div> 
+<!--                              <a *ngFor="let item of menuItems" class="elsa-text-gray-300 hover:elsa-bg-gray-700 hover:elsa-text-white elsa-px-3 elsa-py-2 elsa-rounded-md elsa-text-sm elsa-font-medium" >
+                                  {{ item[1]  }}  
+                            </a>  -->
+                        </div>
+                     </div> 
+<!--                 </div> -->
+<!--                 <app-user-context-menu></app-user-context-menu> -->
+            </div>
+        </div>
+    </nav>
+    <main>
+    </main>
+</div>

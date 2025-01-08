@@ -21,8 +21,7 @@
             ],
             "tsConfig": "tsconfig.app.json",
             "assets": [
-              "src/favicon.ico",
-              "src/assets"
+              "src/components/dashboard/pages/workflow-dashboard/assets"
             ],
             "styles": [
               "src/styles.css"
@@ -60,10 +59,10 @@
           "builder": "@angular-devkit/build-angular:dev-server",
           "configurations": {
             "production": {
-              "buildTarget": "angularapp1.client:build:production"
+              "buildTarget": "workflow:build:production"
             },
             "development": {
-              "buildTarget": "angularapp1.client:build:development"
+              "buildTarget": "workflow:build:development"
             }
           },
           "defaultConfiguration": "development",
@@ -74,7 +73,7 @@
         "extract-i18n": {
           "builder": "@angular-devkit/build-angular:extract-i18n",
           "options": {
-            "browserTarget": "angularapp1.client:build"
+            "browserTarget": "workflow:build"
           }
         },
         "test": {

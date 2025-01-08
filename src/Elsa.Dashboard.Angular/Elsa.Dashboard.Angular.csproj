@@ -57,7 +57,6 @@
     <Compile Remove="src\Modules\**" />
     <Compile Remove="src\nested-drivers\**" />
     <Compile Remove="src\Plugins\**" />
-    <Compile Remove="src\Services\**" />
     <Compile Remove="src\Validation\**" />
     <Compile Remove="Views\**" />
     <Content Remove="src\Data\**" />
@@ -66,7 +65,6 @@
     <Content Remove="src\Modules\**" />
     <Content Remove="src\nested-drivers\**" />
     <Content Remove="src\Plugins\**" />
-    <Content Remove="src\Services\**" />
     <Content Remove="src\Validation\**" />
     <Content Remove="Views\**" />
     <EmbeddedResource Remove="src\Data\**" />
@@ -75,7 +73,6 @@
     <EmbeddedResource Remove="src\Modules\**" />
     <EmbeddedResource Remove="src\nested-drivers\**" />
     <EmbeddedResource Remove="src\Plugins\**" />
-    <EmbeddedResource Remove="src\Services\**" />
     <EmbeddedResource Remove="src\Validation\**" />
     <EmbeddedResource Remove="Views\**" />
     <None Remove="src\Data\**" />
@@ -84,7 +81,6 @@
     <None Remove="src\Modules\**" />
     <None Remove="src\nested-drivers\**" />
     <None Remove="src\Plugins\**" />
-    <None Remove="src\Services\**" />
     <None Remove="src\Validation\**" />
     <None Remove="Views\**" />
     <TypeScriptCompile Remove="src\Data\**" />
@@ -92,7 +88,6 @@
     <TypeScriptCompile Remove="src\Globals\**" />
     <TypeScriptCompile Remove="src\Modules\**" />
     <TypeScriptCompile Remove="src\Plugins\**" />
-    <TypeScriptCompile Remove="src\Services\**" />
     <TypeScriptCompile Remove="src\Validation\**" />
   </ItemGroup>
   <ItemGroup>

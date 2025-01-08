@@ -32,19 +32,23 @@
     <script nonce="@nonceConfig.ElsaSetup" type="module" src="/static/build/custom-elsa.esm.js"></script>
     <script nonce="@nonceConfig.ElsaSetup" type="module" src="/Scripts/CustomElsa.js"></script>
 
-@*     <environment include="Development">
-        <script nonce="@nonceConfig.ElsaSetup" type="module" src="http://localhost:4200/main.js"></script>
+          @* <environment include="Development">
+        <script nonce="@nonceConfig.ElsaSetup" type="text/javascript" src="http://localhost:4200/main.js"></script>
+        <script nonce="@nonceConfig.ElsaSetup" type="text/javascript" src="http://localhost:4200/polyfills.js"></script>
+        <script nonce="@nonceConfig.ElsaSetup" type="text/javascript" src="http://localhost:4200/runtime.js"></script>
+        <script nonce="@nonceConfig.ElsaSetup" type="text/javascript" src="http://localhost:4200/styles.js"></script>
+        <script nonce="@nonceConfig.ElsaSetup" type="text/javascript" src="http://localhost:4200/vendor.js"></script>
     </environment>
 
     <environment include="Production"> *@
-    <script nonce="@nonceConfig.ElsaSetup" type="module" src="/static/package.js"></script>
-@*     </environment> *@
+      <script nonce="@nonceConfig.ElsaSetup" type="module" src="/static/package.js"></script>
+@*           </environment> *@
 }
 
 
 <div class="" style="margin-left:0; margin-right:0;">
         <he-dashboard store-config="@Model.StoreConfig" data-dictionary="@Model.DictionaryResponse">
-        <app-root></app-root>
+        <workflow-root></workflow-root>
         </he-dashboard>
     </div>
 
