@@ -1,17 +1,19 @@
 import { Input, Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { RouterModule } from '@angular/router';
+import { RouterModule, RouterOutlet } from '@angular/router';
+import { WorkflowUserContextMenu } from '../../../controls/workflow-user-context-menu/workflow-user-context-menu';
+/*const Logo = require("./assets/logo.png");*/
+
 
 @Component({
   selector: 'workflow-dashboard',
   templateUrl: './workflow-dashboard.html',
   styleUrls: ['./workflow-dashboard.css'],
-  imports: [CommonModule, RouterModule]
+  imports: [CommonModule, RouterModule, RouterOutlet, WorkflowUserContextMenu]
 })
 export class WorkflowDashboard implements OnInit {
   @Input() basePath: string = '';
-
-  logoPath = './assets/logo.png';
+/*  logo = Logo;*/
   menuItems: [string, string][] = [
     ['workflow-definitions', 'Workflow Definitions'],
     ['workflow-instances', 'Workflow Instances'],
