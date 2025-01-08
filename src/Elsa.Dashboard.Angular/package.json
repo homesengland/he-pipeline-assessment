@@ -21,9 +21,8 @@
   "scripts": {
     "ng": "ng",
     "start": "run-script-os",
+    "build-dev": "ng build --configuration=development --optimization=false --output-hashing=none",
     "build": "ng build --output-hashing=none",
-    "package": "concat -o www/package.js ./dist/workflow/main.js ./dist/workflow/polyfills.js ./dist/workflow/runtime.js",
-    "bundle": "npm run build && npm run package",
     "watch": "ng build --watch --configuration development",
     "test": "ng test",
     "serve": "ng serve --live-reload=false"
