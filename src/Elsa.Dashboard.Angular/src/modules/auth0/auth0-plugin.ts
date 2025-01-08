@@ -1,9 +1,10 @@
-import createAuth0Client, { Auth0Client, Auth0ClientOptions } from '@auth0/auth0-spa-js';
+import { createAuth0Client, Auth0Client, Auth0ClientOptions } from '@auth0/auth0-spa-js';
 import { Service } from 'axios-middleware';
-import { eventBus, WorkflowPlugin } from "../../services";
+import { WorkflowPlugin } from '../../services/workflow-plugin';
+import { eventBus } from '../../services/event-bus';
 import { EventTypes } from "../../models";
 
-export class Auth0Plugin implements ElsaPlugin {
+export class Auth0Plugin implements WorkflowPlugin {
   private readonly options: Auth0ClientOptions
   private auth0: Auth0Client;
 
