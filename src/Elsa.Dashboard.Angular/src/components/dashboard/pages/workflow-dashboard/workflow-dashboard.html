@@ -9,16 +9,16 @@
                             <!-- <img class="elsa-h-8 elsa-w-8" [src]="logoPath" alt="Workflow" /> -->
                        </a> 
                     </div>
-                <!-- <div class="hidden md:elsa-block">  -->
-                        <div class="elsa-ml-10 elsa-flex elsa-items-baseline elsa-space-x-4">
-                             <div *ngFor="let item of menuItems">
-                                {{item[1]}}
-                            </div> 
-<!--                              <a *ngFor="let item of menuItems" class="elsa-text-gray-300 hover:elsa-bg-gray-700 hover:elsa-text-white elsa-px-3 elsa-py-2 elsa-rounded-md elsa-text-sm elsa-font-medium" >
-                                  {{ item[1]  }}  
-                            </a>  -->
-                        </div>
-                     </div> 
+                 <!-- <div class="hidden md:elsa-block">  --> -->
+                    <div class="elsa-ml-10 elsa-flex elsa-items-baseline elsa-space-x-4">
+                        <!-- <div *ngFor="let item of menuItems">
+        {{item[1]}}
+    </div>  -->
+                        <a *ngFor="let item of menuItems" [routerLink]="[basePath, item[0]]" class="elsa-text-gray-300 hover:elsa-bg-gray-700 hover:elsa-text-white elsa-px-3 elsa-py-2 elsa-rounded-md elsa-text-sm elsa-font-medium">
+                            {{ item[1]  }}
+                        </a>
+                    </div>
+                    </div>  
 <!--                 </div> -->
 <!--                 <app-user-context-menu></app-user-context-menu> -->
             </div>
