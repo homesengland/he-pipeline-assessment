@@ -253,7 +253,6 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="dist\" />
-    <Folder Include="src\models\" />
     <Folder Include="www\" />
   </ItemGroup>
 </Project>
