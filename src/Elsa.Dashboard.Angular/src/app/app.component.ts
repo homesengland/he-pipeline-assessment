@@ -1,36 +1,35 @@
 import { HttpClient } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
-
-interface WeatherForecast {
-  date: string;
-  temperatureC: number;
-  temperatureF: number;
-  summary: string;
-}
+import { Store } from '@ngrx/store';
+import { selectBooks } from './State/Selectors/Book.selectors';
+import { BooksService } from './BookList/Books.service';
+import { BooksApiActions } from './State/Actions/Book.actions';
+import { Book } from './BookList/Book.model';
+import { NgFor } from '@angular/common';
 
 @Component({
   selector: 'app-root',
+  imports: [NgFor],
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.css']
 })
 export class AppComponent implements OnInit {
-  public forecasts: WeatherForecast[] = [];
+  public bookList: Book[];
 
-  constructor(private http: HttpClient) {}
+  constructor(private http: HttpClient, private booksService: BooksService, private store: Store) { }
 
   ngOnInit() {
-    this.getForecasts();
+
+    let bookArray  = this.booksService.getBooks();
+    this.store.dispatch(BooksApiActions.retrievedBookList({ books: bookArray }));
+
+    this.getBooksFromStore();
   }
 
-  getForecasts() {
-    this.http.get<WeatherForecast[]>('/weatherforecast').subscribe(
-      (result) => {
-        this.forecasts = result;
-      },
-      (error) => {
-        console.error(error);
-      }
-    );
+  getBooksFromStore() {
+    this.store.select(selectBooks).subscribe(data => {
+      this.bookList = data
+    })
   }
 
   title = 'Workflow';
