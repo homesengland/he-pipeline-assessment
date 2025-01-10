@@ -361,3 +361,4 @@ pipelineassessment.db-wal
 appsettings.Development.json
 junit.xml
 /src/Elsa.Dashboard.Angular/.angular/**/*
+/src/Elsa.Dashboard.Angular/.angular/*
