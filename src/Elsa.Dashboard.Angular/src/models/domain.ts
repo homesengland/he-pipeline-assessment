@@ -1,4 +1,4 @@
-import { Map } from '../utils/utils';
+import { Map } from '../utils/utils.ts';
 
 export interface WorkflowDefinition {
   id?: string;

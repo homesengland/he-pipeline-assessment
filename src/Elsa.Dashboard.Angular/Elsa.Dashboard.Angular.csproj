@@ -16,23 +16,6 @@
     <TypeScriptJSXEmit>preserve</TypeScriptJSXEmit>
   </PropertyGroup>
   <ItemGroup>
-    <None Remove="src\models\domain.ts" />
-    <None Remove="src\models\event-args.ts" />
-    <None Remove="src\models\events.ts" />
-    <None Remove="src\models\index.ts" />
-    <None Remove="src\models\services.ts" />
-    <None Remove="src\models\view.ts" />
-    <None Remove="src\modules\auth0\auth0-plugin.ts" />
-    <None Remove="src\services\custom-event-bus.d.ts" />
-    <None Remove="src\services\custom-event-bus.js" />
-    <None Remove="src\services\event-bus.ts" />
-    <None Remove="src\services\workflow-plugin.ts" />
-	<None Remove="src\utils\utils.ts" />
-    <None Remove="System.Security.Cryptography.Pkcs" />
-    <None Remove="System.Drawing.Common" />
-    <None Remove="System.Text.RegularExpressions" />
-  </ItemGroup>
-  <ItemGroup>
     <PackageReference Include="Elsa.Designer.Components.Web" />
     <PackageReference Include="Microsoft.ApplicationInsights.AspNetCore" />
     <PackageReference Include="Microsoft.AspNetCore.DataProtection" />
@@ -54,51 +37,6 @@
     <Content Include="www\build\*.*">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-  </ItemGroup>
-  <ItemGroup>
-    <Compile Remove="src\Data\**" />
-    <Compile Remove="src\Drivers\**" />
-    <Compile Remove="src\Globals\**" />
-    <Compile Remove="src\Modules\**" />
-    <Compile Remove="src\nested-drivers\**" />
-    <Compile Remove="src\Plugins\**" />
-    <Compile Remove="src\Services\**" />
-    <Compile Remove="src\Validation\**" />
-    <Compile Remove="Views\**" />
-    <Content Remove="src\Data\**" />
-    <Content Remove="src\Drivers\**" />
-    <Content Remove="src\Globals\**" />
-    <Content Remove="src\Modules\**" />
-    <Content Remove="src\nested-drivers\**" />
-    <Content Remove="src\Plugins\**" />
-    <Content Remove="src\Services\**" />
-    <Content Remove="src\Validation\**" />
-    <Content Remove="Views\**" />
-    <EmbeddedResource Remove="src\Data\**" />
-    <EmbeddedResource Remove="src\Drivers\**" />
-    <EmbeddedResource Remove="src\Globals\**" />
-    <EmbeddedResource Remove="src\Modules\**" />
-    <EmbeddedResource Remove="src\nested-drivers\**" />
-    <EmbeddedResource Remove="src\Plugins\**" />
-    <EmbeddedResource Remove="src\Services\**" />
-    <EmbeddedResource Remove="src\Validation\**" />
-    <EmbeddedResource Remove="Views\**" />
-    <None Remove="src\Data\**" />
-    <None Remove="src\Drivers\**" />
-    <None Remove="src\Globals\**" />
-    <None Remove="src\Modules\**" />
-    <None Remove="src\nested-drivers\**" />
-    <None Remove="src\Plugins\**" />
-    <None Remove="src\Services\**" />
-    <None Remove="src\Validation\**" />
-    <None Remove="Views\**" />
-    <TypeScriptCompile Remove="src\Data\**" />
-    <TypeScriptCompile Remove="src\Drivers\**" />
-    <TypeScriptCompile Remove="src\Globals\**" />
-    <TypeScriptCompile Remove="src\Modules\**" />
-    <TypeScriptCompile Remove="src\Plugins\**" />
-    <TypeScriptCompile Remove="src\Services\**" />
-    <TypeScriptCompile Remove="src\Validation\**" />
   </ItemGroup>
   <ItemGroup>
     <Compile Remove="RequestHelper.cs" />
@@ -164,6 +102,7 @@
     <TypeScriptCompile Include="src\services\custom-event-bus.d.ts" />
     <TypeScriptCompile Include="src\services\custom-event-bus.js" />
     <TypeScriptCompile Include="src\services\event-bus.ts" />
+    <TypeScriptCompile Include="src\services\toast-notification-service.ts" />
     <TypeScriptCompile Include="src\services\workflow-plugin.ts" />
 	  <TypeScriptCompile Include="src\utils\utils.ts">
 		  <SubType>Code</SubType>
