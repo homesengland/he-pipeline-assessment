@@ -35,7 +35,8 @@
     "construe": "^0.4.1",
     "el-transition": "^0.0.7",
     "lodash": "^4.17.21",
-    "sortablejs": "^1.15.0"
+    "sortablejs": "^1.15.0",
+    "typescript-eslint": "^8.19.1"
   },
   "devDependencies": {
     "@stencil/core": "^2.19.3",
