@@ -1,5 +1,5 @@
 import { HttpClient } from '@angular/common/http';
-import { Component, OnInit } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 
 @Component({
   selector: 'workflow-user-context-menu',
@@ -7,6 +7,7 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./workflow-user-context-menu.css'],
 })
 export class WorkflowUserContextMenu implements OnInit {
+  @Input() serverUrl: string;
 
   constructor(private http: HttpClient) {}
     ngOnInit(): void {
