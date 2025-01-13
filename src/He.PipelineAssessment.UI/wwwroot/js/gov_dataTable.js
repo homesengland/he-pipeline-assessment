@@ -48,11 +48,14 @@
                         .each(function (d, j) {
                             var dom_nodes = $($.parseHTML(d));
                             var node = dom_nodes[0];
+                            var option = document.createElement('option');
                             if (node?.innerText != null) {
-                                select.append('<option value="' + node.innerText + '">' + node.innerText + '</option>');
+                                option.value = node.innerText;
+                                option.textContent = node.innerText;
                             }
                             else {
-                                select.append('<option value="' + d + '">' + d + '</option>');
+                                option.value = d;
+                                option.textContent = d;
                             }
 
                         });
@@ -125,13 +128,18 @@ function initInterventionDataTable(tableId, columnNumberToSort, searchElementId)
 
                             var dom_nodes = $($.parseHTML(d));
                             var node = dom_nodes[0];
+                            var option = document.createElement('option');
+
                             if (node.innerText != null) {
                                 var selected = node.innerText == 'Pending' ? 'selected' : '';
-
-                                select.append('<option value="' + node.innerText + '"' + selected + '>' + node.innerText + '</option>');
-                            }
-                            else {
-                                select.append('<option value="' + d + '">' + d + '</option>');
+                                option.value = node.innerText;
+                                option.textContent = node.innerText;
+                                if (selected) {
+                                    option.setAttribute('selected', 'selected');
+                                }
+                            } else {
+                                option.value = d;
+                                option.textContent = d;
                             }
 
                         });
