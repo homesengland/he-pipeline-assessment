@@ -20,7 +20,9 @@
     <link rel="stylesheet" href="/_content/Elsa.Designer.Components.Web/elsa-workflows-studio/elsa-workflows-studio.css">
 
 <div class="" style="margin-left:0; margin-right:0;">
-    <app-root></app-root>
+    <he-dashboard store-config="@Model.StoreConfig" data-dictionary="@Model.DictionaryResponse">
+        <workflow-root></workflow-root>
+    </he-dashboard>
 </div>
 
 
@@ -33,33 +35,14 @@
 
 @section Scripts {
     <script nonce="@nonceConfig.ElsaSetup" src="/_content/Elsa.Designer.Components.Web/monaco-editor/min/vs/loader.js"></script>
-    @* <script nonce="@nonceConfig.ElsaSetup" type="module" src="/_content/Elsa.Designer.Components.Web/elsa-workflows-studio/elsa-workflows-studio.esm.js"></script> *@
-    @* <script nonce="@nonceConfig.ElsaSetup" type="module" src="/static/build/custom-elsa.esm.js"></script> *@
     <script nonce="@nonceConfig.ElsaSetup" type="module" src="/Scripts/CustomElsa.js"></script>
 
-          @* <environment include="Development">
-        <script nonce="@nonceConfig.ElsaSetup" type="text/javascript" src="http://localhost:4200/main.js"></script>
-        <script nonce="@nonceConfig.ElsaSetup" type="text/javascript" src="http://localhost:4200/polyfills.js"></script>
-        <script nonce="@nonceConfig.ElsaSetup" type="text/javascript" src="http://localhost:4200/runtime.js"></script>
-        <script nonce="@nonceConfig.ElsaSetup" type="text/javascript" src="http://localhost:4200/styles.js"></script>
-        <script nonce="@nonceConfig.ElsaSetup" type="text/javascript" src="http://localhost:4200/vendor.js"></script>
-    </environment>
-
-    <environment include="Production"> *@
-@*     <script nonce="@nonceConfig.ElsaSetup" type="module" src="/static/package.js"></script> *@
     <script nonce="@nonceConfig.ElsaSetup" type="module" src="/static/runtime.js"></script>
-     <script nonce="@nonceConfig.ElsaSetup" type="module" src="/static/polyfills.js"></script>
-      <script nonce="@nonceConfig.ElsaSetup" type="module" src="/static/vendor.js"></script>
-       <script nonce="@nonceConfig.ElsaSetup" type="module" src="/static/main.js"></script>
+    <script nonce="@nonceConfig.ElsaSetup" type="module" src="/static/polyfills.js"></script>
+    <script nonce="@nonceConfig.ElsaSetup" type="module" src="/static/vendor.js"></script>
+    <script nonce="@nonceConfig.ElsaSetup" type="module" src="/static/main.js"></script>
    
-@*     </environment> *@
 }
 
-
-<div class="" style="margin-left:0; margin-right:0;">
-        <he-dashboard store-config="@Model.StoreConfig" data-dictionary="@Model.DictionaryResponse">
-        <workflow-root></workflow-root>
-        </he-dashboard>
-    </div>
 
 
