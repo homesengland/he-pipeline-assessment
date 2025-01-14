@@ -1,0 +1,17 @@
+<div class="elsa-relative" #element>
+    <button (click)="toggleMenu()" type="button"
+            [class]=this.btnClass
+            aria-haspopup="true" aria-expanded="false">
+        {{ text }}
+        <svg class="elsa-ml-2.5 -elsa-elsa-mr-1.5 elsa-h-5 elsa-w-5 elsa-text-gray-400" x-description="Heroicon name: chevron-down" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+            <path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd" />
+        </svg>
+    </button>
+    <div class="{{originClass}}" #contextMenu>
+        <div class="elsa-py-1" role="menu" aria-orientation="vertical">
+            <ng-container *ngFor="let item of items">
+                <a *ngIf="!item.url" (click)="onItemClick($event, item)" class="elsa-block elsa-px-4 elsa-py-2 elsa-text-sm {{selectedCssClass(item)}} elsa-cursor-pointer" role="menuitem">{{item.text}}</a>
+                </ng-container>
+</div>
+    </div>
+</div>
