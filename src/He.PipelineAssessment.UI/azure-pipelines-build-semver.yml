@@ -27,12 +27,13 @@ parameters:
 
 variables:
   buildMajor: 1
-  buildMinor: 2
-  buildBranch: $[replace(variables['Build.SourceBranch'], '/', '.')]
+  buildMinor: 7
+  buildPatch: 1
+  buildBranch: $[replace(replace(variables['Build.SourceBranch'], 'refs/heads/', ''), '/', '.')]
 
 pool: 'vmss-ado-chs-nonprod-001'
 
-name: $(buildMajor).$(buildMinor).$(Rev:r)-$(buildBranch)
+name: $(buildMajor).$(buildMinor).$(buildPatch)-$(Rev:r).$(buildBranch)
 
 resources:
   repositories:
