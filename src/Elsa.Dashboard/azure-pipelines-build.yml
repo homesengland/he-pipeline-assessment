@@ -22,11 +22,11 @@ parameters:
 
 variables:
   buildMajor: 1
-  buildMinor: 3
-  buildBranch: $[replace(variables['Build.SourceBranch'], '/', '.')]
+  buildMinor: 5
+  buildPatch: 1
+  buildBranch: $[replace(replace(variables['Build.SourceBranch'], 'refs/heads/', ''), '/', '.')]
 
-name: $(buildMajor).$(buildMinor).$(Rev:r)-elsadashboard.$(buildBranch)
-# Build and Push
+name: $(buildMajor).$(buildMinor).$(buildPatch)-$(Rev:r)-elsadashboard.$(buildBranch)
 
 pool:
   vmImage: 'ubuntu-22.04'
