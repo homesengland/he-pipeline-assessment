@@ -4,6 +4,8 @@ import { AuthenticationConfguration, ElsaClientService, UserDetail } from '../..
 import { DropdownButtonItem, DropdownButtonOrigin } from '../workflow-dropdown-button/models';
 import { CommonModule } from '@angular/common';
 import { WorkflowDropdownButton } from '../workflow-dropdown-button/workflow-dropdown-button';
+import { Store } from '@ngrx/store';
+import { selectServerUrl } from '../../state/selectors/app.state.selectors';
 
 @Component({
   selector: 'workflow-user-context-menu',
@@ -11,12 +13,12 @@ import { WorkflowDropdownButton } from '../workflow-dropdown-button/workflow-dro
   styleUrls: ['./workflow-user-context-menu.css'],
   imports: [WorkflowDropdownButton, CommonModule]
 })
-export class WorkflowUserContextMenu  {
-  @Input() serverUrl: string;
+
+export class WorkflowUserContextMenu implements OnInit  {
+  serverUrl: string;
   userDetail: UserDetail = null;
   authenticationConfguration: AuthenticationConfguration;
   origin: DropdownButtonOrigin = DropdownButtonOrigin.TopRight;
-
   ddlitems: Array<DropdownButtonItem> = [{ 'text': ("logout"), value: "logout" }].map(x => {
     const item: DropdownButtonItem = { text: x.text, isSelected: false, value: x.value };
     return item
@@ -32,12 +34,17 @@ export class WorkflowUserContextMenu  {
     "JwtBearerToken": ""
   };
 
-  constructor(private elsaClientService: ElsaClientService, private http: HttpClient) {
+  constructor(private elsaClientService: ElsaClientService, private http: HttpClient, private store: Store) {
     this.userDetail = {
       name: "Lorna Birchall",
       tenantId: "XXX",
       isAuthenticated: true,
-    }
+    };
+    
+  }
+
+  ngOnInit() {
+    this.store.select(selectServerUrl).subscribe(data => { this.serverUrl = data });
   }
 
   async componentWillRender() {
