@@ -24,7 +24,6 @@
     <None Remove="src\models\view.ts" />
     <None Remove="src\modules\auth0\auth0-plugin.ts" />
     <None Remove="src\services\custom-event-bus.d.ts" />
-    <None Remove="src\services\custom-event-bus.js" />
     <None Remove="src\services\event-bus.ts" />
     <None Remove="src\services\workflow-plugin.ts" />
     <None Remove="System.Security.Cryptography.Pkcs" />
