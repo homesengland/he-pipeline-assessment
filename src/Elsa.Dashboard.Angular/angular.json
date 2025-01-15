@@ -21,13 +21,17 @@
             ],
             "tsConfig": "tsconfig.app.json",
             "assets": [
-              "src/favicon.ico",
-              "src/assets"
+              {
+                "glob": "**/*",
+                "input": "src/static",
+                "output": ""
+              }
             ],
             "styles": [
               "src/styles.css"
             ],
-            "scripts": []
+            "scripts": [
+            ]
           },
           "configurations": {
             "production": {
@@ -61,21 +65,21 @@
           "builder": "@angular-devkit/build-angular:dev-server",
           "configurations": {
             "production": {
-              "buildTarget": "workflow.client:build:production"
+              "buildTarget": "workflow:build:production"
             },
             "development": {
-              "buildTarget": "workflow.client:build:development"
+              "buildTarget": "workflow:build:development"
             }
           },
           "defaultConfiguration": "development",
           "options": {
-            "proxyConfig": "src/proxy.conf.js"
+            //"proxyConfig": "src/proxy.conf.js"
           }
         },
         "extract-i18n": {
           "builder": "@angular-devkit/build-angular:extract-i18n",
           "options": {
-            "browserTarget": "workflow.client:build"
+            "browserTarget": "workflow:build"
           }
         },
         "test": {

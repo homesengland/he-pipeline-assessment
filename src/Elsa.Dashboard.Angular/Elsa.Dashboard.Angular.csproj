@@ -24,7 +24,6 @@
     <None Remove="src\models\view.ts" />
     <None Remove="src\modules\auth0\auth0-plugin.ts" />
     <None Remove="src\services\custom-event-bus.d.ts" />
-    <None Remove="src\services\custom-event-bus.js" />
     <None Remove="src\services\event-bus.ts" />
     <None Remove="src\services\workflow-plugin.ts" />
     <None Remove="System.Security.Cryptography.Pkcs" />
@@ -78,26 +77,13 @@
     <EmbeddedResource Remove="src\Globals\**" />
     <EmbeddedResource Remove="src\Modules\**" />
     <EmbeddedResource Remove="src\nested-drivers\**" />
-    <EmbeddedResource Remove="src\Plugins\**" />
-    <EmbeddedResource Remove="src\Services\**" />
-    <EmbeddedResource Remove="src\Validation\**" />
     <EmbeddedResource Remove="Views\**" />
     <None Remove="src\Data\**" />
     <None Remove="src\Drivers\**" />
     <None Remove="src\Globals\**" />
     <None Remove="src\Modules\**" />
     <None Remove="src\nested-drivers\**" />
-    <None Remove="src\Plugins\**" />
-    <None Remove="src\Services\**" />
-    <None Remove="src\Validation\**" />
     <None Remove="Views\**" />
-    <TypeScriptCompile Remove="src\Data\**" />
-    <TypeScriptCompile Remove="src\Drivers\**" />
-    <TypeScriptCompile Remove="src\Globals\**" />
-    <TypeScriptCompile Remove="src\Modules\**" />
-    <TypeScriptCompile Remove="src\Plugins\**" />
-    <TypeScriptCompile Remove="src\Services\**" />
-    <TypeScriptCompile Remove="src\Validation\**" />
   </ItemGroup>
   <ItemGroup>
     <Compile Remove="RequestHelper.cs" />
@@ -145,25 +131,6 @@
     <ProjectReference Include="..\Elsa.CustomWorkflow.Sdk\Elsa.CustomWorkflow.Sdk.csproj" />
   </ItemGroup>
   <ItemGroup>
-    <TypeScriptCompile Include="src\models\index.ts">
-      <SubType>Code</SubType>
-    </TypeScriptCompile>
-    <TypeScriptCompile Include="src\models\events.ts">
-      <SubType>Code</SubType>
-    </TypeScriptCompile>
-    <TypeScriptCompile Include="src\models\event-args.ts">
-      <SubType>Code</SubType>
-    </TypeScriptCompile>
-    <TypeScriptCompile Include="src\models\domain.ts">
-      <SubType>Code</SubType>
-    </TypeScriptCompile>
-    <TypeScriptCompile Include="src\models\services.ts" />
-    <TypeScriptCompile Include="src\models\view.ts" />
-    <TypeScriptCompile Include="src\modules\auth0\auth0-plugin.ts" />
-    <TypeScriptCompile Include="src\services\custom-event-bus.d.ts" />
-    <TypeScriptCompile Include="src\services\custom-event-bus.js" />
-    <TypeScriptCompile Include="src\services\event-bus.ts" />
-    <TypeScriptCompile Include="src\services\workflow-plugin.ts" />
     <TypeScriptCompile Include="wwwroot\Scripts\CustomElsa.js" />
     <TypeScriptCompile Include="wwwroot\Scripts\Drivers\ConditionalTextListPropertyDriver.js" />
     <TypeScriptCompile Include="wwwroot\Scripts\Drivers\CustomSwitchPropertyDriver.js" />
