@@ -1,6 +1,7 @@
 import { HttpClient } from '@angular/common/http';
-import { Component, OnInit } from '@angular/core';
+import { Component, ElementRef, Input, OnInit } from '@angular/core';
 import { WorkflowDashboard} from '../workflow-dashboard/workflow-dashboard'
+import { Store } from '@ngrx/store';
 
 @Component({
   selector: 'workflow-root',
@@ -9,11 +10,18 @@ import { WorkflowDashboard} from '../workflow-dashboard/workflow-dashboard'
   imports: [WorkflowDashboard]
 })
 export class WorkflowRoot implements OnInit {
+  serverUrl: string;
+  monacoLibPath: string;
 
-  constructor(private http: HttpClient) {}
-    ngOnInit(): void {
+  constructor(private http: HttpClient, el: ElementRef, private store: Store) {
+    this.serverUrl = el.nativeElement.getAttribute('serverUrl');
+    this.monacoLibPath = el.nativeElement.getAttribute('monacoLibPath');
 
-    }
+  }
+
+  ngOnInit(): void {
+
+  }
 
 }
 

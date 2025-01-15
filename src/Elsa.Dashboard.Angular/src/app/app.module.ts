@@ -9,7 +9,10 @@ import { booksReducer } from './State/Reducers/Book.reducers';
   declarations: [
   ],
   imports: [
-    BrowserModule, HttpClientModule, StoreModule.forRoot({ books: booksReducer })
+    BrowserModule, HttpClientModule,
+
+
+    StoreModule.forRoot({ books: booksReducer })
 
   ],
   providers: [],
