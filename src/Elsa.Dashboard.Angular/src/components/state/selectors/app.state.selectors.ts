@@ -3,11 +3,10 @@ import { AppState } from '../reducers/app.state.reducers';
 
 //export const selectServerUrl = createFeatureSelector<string>('serverUrl');
 
-export const selectmonacoLibPath = createFeatureSelector<string>('monacoLibPath');
+/*export const selectmonacoLibPath = createFeatureSelector<string>('monacoLibPath');*/
 
-export const selectState = (state: AppState) => state;
+const getAppState = createFeatureSelector<AppState>('appState');
 
-export const selectServerUrl = createSelector(
-  selectState,
-  (state: AppState) => state.serverUrl
-);
+export const selectServerUrl = createSelector(getAppState, (state) => state.serverUrl);
+
+export const selectMonacoLibPath = createSelector(getAppState, (state) => state.monacoLibPath);;

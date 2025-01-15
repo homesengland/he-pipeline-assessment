@@ -5,7 +5,7 @@ import { DropdownButtonItem, DropdownButtonOrigin } from '../workflow-dropdown-b
 import { CommonModule } from '@angular/common';
 import { WorkflowDropdownButton } from '../workflow-dropdown-button/workflow-dropdown-button';
 import { Store } from '@ngrx/store';
-import { selectServerUrl } from '../../state/selectors/app.state.selectors';
+import { selectMonacoLibPath, selectServerUrl } from '../../state/selectors/app.state.selectors';
 
 @Component({
   selector: 'workflow-user-context-menu',
@@ -16,6 +16,7 @@ import { selectServerUrl } from '../../state/selectors/app.state.selectors';
 
 export class WorkflowUserContextMenu implements OnInit  {
   serverUrl: string;
+  monacoLibPath: string;
   userDetail: UserDetail = null;
   authenticationConfguration: AuthenticationConfguration;
   origin: DropdownButtonOrigin = DropdownButtonOrigin.TopRight;
@@ -44,7 +45,14 @@ export class WorkflowUserContextMenu implements OnInit  {
   }
 
   ngOnInit() {
-    this.store.select(selectServerUrl).subscribe(data => { this.serverUrl = data });
+    this.store.select(selectServerUrl).subscribe(data => {
+      console.log(data);
+      this.serverUrl = data;
+    });
+    this.store.select(selectMonacoLibPath).subscribe(data => {
+      console.log("monacoLibPath", data);
+      this.monacoLibPath = data
+    });
   }
 
   async componentWillRender() {
