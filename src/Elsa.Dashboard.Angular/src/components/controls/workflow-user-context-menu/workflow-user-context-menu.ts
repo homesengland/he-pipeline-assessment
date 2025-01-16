@@ -46,11 +46,9 @@ export class WorkflowUserContextMenu implements OnInit  {
 
   ngOnInit() {
     this.store.select(selectServerUrl).subscribe(data => {
-      console.log(data);
       this.serverUrl = data;
     });
     this.store.select(selectMonacoLibPath).subscribe(data => {
-      console.log("monacoLibPath", data);
       this.monacoLibPath = data
     });
   }
