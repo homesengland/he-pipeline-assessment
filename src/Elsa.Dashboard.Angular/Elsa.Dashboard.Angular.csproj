@@ -131,6 +131,29 @@
     <ProjectReference Include="..\Elsa.CustomWorkflow.Sdk\Elsa.CustomWorkflow.Sdk.csproj" />
   </ItemGroup>
   <ItemGroup>
+    <TypeScriptCompile Include="src\models\index.ts">
+      <SubType>Code</SubType>
+    </TypeScriptCompile>
+    <TypeScriptCompile Include="src\models\events.ts">
+      <SubType>Code</SubType>
+    </TypeScriptCompile>
+    <TypeScriptCompile Include="src\models\event-args.ts">
+      <SubType>Code</SubType>
+    </TypeScriptCompile>
+    <TypeScriptCompile Include="src\models\domain.ts">
+      <SubType>Code</SubType>
+    </TypeScriptCompile>
+    <TypeScriptCompile Include="src\models\services.ts" />
+    <TypeScriptCompile Include="src\models\view.ts" />
+    <TypeScriptCompile Include="src\modules\auth0\auth0-plugin.ts" />
+    <TypeScriptCompile Include="src\services\custom-event-bus.d.ts" />
+    <TypeScriptCompile Include="src\services\custom-event-bus.js" />
+    <TypeScriptCompile Include="src\services\event-bus.ts" />
+    <TypeScriptCompile Include="src\services\toast-notification-service.ts" />
+    <TypeScriptCompile Include="src\services\workflow-plugin.ts" />
+	  <TypeScriptCompile Include="src\utils\utils.ts">
+		  <SubType>Code</SubType>
+	  </TypeScriptCompile>
     <TypeScriptCompile Include="wwwroot\Scripts\CustomElsa.js" />
     <TypeScriptCompile Include="wwwroot\Scripts\Drivers\ConditionalTextListPropertyDriver.js" />
     <TypeScriptCompile Include="wwwroot\Scripts\Drivers\CustomSwitchPropertyDriver.js" />

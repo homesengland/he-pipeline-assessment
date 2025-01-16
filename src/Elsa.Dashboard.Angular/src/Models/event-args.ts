@@ -1,4 +1,4 @@
-import { Edge, Graph, Node } from "@antv/x6";
+import { Edge, Graph, Node } from "@antv/x6"
 import { ActivityModel, ConnectionModel } from "./view";
 
 export interface ActivitySelectedArgs {

@@ -13,6 +13,7 @@ import { selectMonacoLibPath, selectServerUrl } from '../../state/selectors/app.
   styleUrls: ['./workflow-user-context-menu.css'],
   imports: [WorkflowDropdownButton, CommonModule]
 })
+export class WorkflowUserContextMenu implements OnInit {
 
 export class WorkflowUserContextMenu implements OnInit  {
   serverUrl: string;
