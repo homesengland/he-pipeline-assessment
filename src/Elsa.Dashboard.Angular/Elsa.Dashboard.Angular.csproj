@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk.Web">
+﻿<Project Sdk="Microsoft.NET.Sdk.Web">
   <PropertyGroup Label="Configuration" Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
     <TypeScriptTarget>ES5</TypeScriptTarget>
   </PropertyGroup>
@@ -15,6 +15,21 @@
     <TypeScriptCompileBlocked>true</TypeScriptCompileBlocked>
     <TypeScriptJSXEmit>preserve</TypeScriptJSXEmit>
   </PropertyGroup>
+  <ItemGroup>
+    <None Remove="src\models\domain.ts" />
+    <None Remove="src\models\event-args.ts" />
+    <None Remove="src\models\events.ts" />
+    <None Remove="src\models\index.ts" />
+    <None Remove="src\models\services.ts" />
+    <None Remove="src\models\view.ts" />
+    <None Remove="src\modules\auth0\auth0-plugin.ts" />
+    <None Remove="src\services\custom-event-bus.d.ts" />
+    <None Remove="src\services\event-bus.ts" />
+    <None Remove="src\services\workflow-plugin.ts" />
+    <None Remove="System.Security.Cryptography.Pkcs" />
+    <None Remove="System.Drawing.Common" />
+    <None Remove="System.Text.RegularExpressions" />
+  </ItemGroup>
   <ItemGroup>
     <PackageReference Include="Elsa.Designer.Components.Web" />
     <PackageReference Include="Microsoft.ApplicationInsights.AspNetCore" />
@@ -37,6 +52,38 @@
     <Content Include="www\build\*.*">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Remove="src\Data\**" />
+    <Compile Remove="src\Drivers\**" />
+    <Compile Remove="src\Globals\**" />
+    <Compile Remove="src\Modules\**" />
+    <Compile Remove="src\nested-drivers\**" />
+    <Compile Remove="src\Plugins\**" />
+    <Compile Remove="src\Services\**" />
+    <Compile Remove="src\Validation\**" />
+    <Compile Remove="Views\**" />
+    <Content Remove="src\Data\**" />
+    <Content Remove="src\Drivers\**" />
+    <Content Remove="src\Globals\**" />
+    <Content Remove="src\Modules\**" />
+    <Content Remove="src\nested-drivers\**" />
+    <Content Remove="src\Plugins\**" />
+    <Content Remove="src\Services\**" />
+    <Content Remove="src\Validation\**" />
+    <Content Remove="Views\**" />
+    <EmbeddedResource Remove="src\Data\**" />
+    <EmbeddedResource Remove="src\Drivers\**" />
+    <EmbeddedResource Remove="src\Globals\**" />
+    <EmbeddedResource Remove="src\Modules\**" />
+    <EmbeddedResource Remove="src\nested-drivers\**" />
+    <EmbeddedResource Remove="Views\**" />
+    <None Remove="src\Data\**" />
+    <None Remove="src\Drivers\**" />
+    <None Remove="src\Globals\**" />
+    <None Remove="src\Modules\**" />
+    <None Remove="src\nested-drivers\**" />
+    <None Remove="Views\**" />
   </ItemGroup>
   <ItemGroup>
     <Compile Remove="RequestHelper.cs" />

@@ -48,6 +48,7 @@ using Elsa.CustomActivities.Activities.ReturnToActivity;
 using Elsa.CustomWorkflow.Sdk.DataDictionaryHelpers;
 using Elsa.Server.DataDictionaryAccessors;
 using Microsoft.AspNetCore.Mvc;
+using System.Text.Json.Serialization;
 
 var builder = WebApplication.CreateBuilder(args);
 var elsaConnectionString = builder.Configuration.GetConnectionString("Elsa");
@@ -225,6 +226,10 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
     });
 
 builder.Services.AddEsriHttpClients(builder.Configuration, builder.Environment.IsDevelopment());
+
+//Fix for the infinite JSON loop following an update in Elsa 2.14.1
+builder.Services.AddControllers().AddJsonOptions(x =>
+                x.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles);
 
 //HibernatingRhinos.Profiler.Appender.EntityFramework.EntityFrameworkProfiler.Initialize();
 var app = builder.Build();
