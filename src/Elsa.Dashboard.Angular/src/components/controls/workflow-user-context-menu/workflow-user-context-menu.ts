@@ -20,6 +20,7 @@ export class WorkflowUserContextMenu implements OnInit  {
   userDetail: UserDetail = null;
   authenticationConfguration: AuthenticationConfguration;
   origin: DropdownButtonOrigin = DropdownButtonOrigin.TopRight;
+
   ddlitems: Array<DropdownButtonItem> = [{ 'text': ("logout"), value: "logout" }].map(x => {
     const item: DropdownButtonItem = { text: x.text, isSelected: false, value: x.value };
     return item
@@ -42,7 +43,7 @@ export class WorkflowUserContextMenu implements OnInit  {
       isAuthenticated: true,
     };
     
-  }
+    }
 
   ngOnInit() {
     this.store.select(selectServerUrl).subscribe(data => {
