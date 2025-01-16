@@ -1,5 +1,6 @@
 import { ActivityModel } from "./view";
 import { ActivityDescriptor } from "./domain";
+import { ViewContainerRef } from "@angular/core";
 
 export const EventTypes = {
   Root: {
@@ -72,7 +73,7 @@ export interface ActivityPickedEventArgs {
 export interface ActivityDesignDisplayContext {
   activityModel: ActivityModel;
   activityDescriptor: ActivityDescriptor;
-  activityIcon?: any;
+  activityIcon?: ViewContainerRef;
   displayName?: string;
   bodyDisplay?: string;
   outcomes: Array<string>;
@@ -95,7 +96,7 @@ export interface ActivityValidatingContext {
 
 export interface ActivityDescriptorDisplayContext {
   activityDescriptor: ActivityDescriptor;
-  activityIcon: any;
+  activityIcon: ViewContainerRef;
 }
 
 export interface ConfigureDashboardMenuContext {

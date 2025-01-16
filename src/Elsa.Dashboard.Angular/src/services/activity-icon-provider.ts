@@ -24,13 +24,13 @@ import { ReadLineIcon } from "../components/icons/read-line-icon/read-line-icon"
 //import { CorrelateIcon } from "../components/icons/correlate-icon";
 //import { StateIcon } from "../components/icons/state-icon";
 //import { WebhookIcon } from "../components/icons/webhook-icon";
-import { ViewContainerRef } from '@angular/core';
+import { Component, Type, ViewContainerRef } from '@angular/core';
 
 export class ActivityIconProvider {
 
-  map: Map<() => any>
+  map: Map<Type<Component>>
 
-  constructor(private viewContainer: ViewContainerRef) {
+  constructor() {
     this.map = {
       //'If': () => IfIcon,
       //'Fork': () => ForkIcon,
@@ -57,7 +57,7 @@ export class ActivityIconProvider {
       //'State': () => StateIcon,
       //'InterruptTrigger': () => InterruptTriggerIcon,
       //'RunJavaScript': () => ScriptIcon,
-      'ReadLine': () => ReadLineIcon,
+      'ReadLine': ReadLineIcon,
       //'WriteLine': () => WriteLineIcon,
       //'HttpEndpoint': () => HttpEndpointIcon,
       //'SendHttpRequest': () => SendHttpRequestIcon,
@@ -70,8 +70,8 @@ export class ActivityIconProvider {
     }
   }
 
-  register(activityType: string, icon: string) {
-    this.map[activityType] = () => icon;
+  register(activityType: string, icon: Type<Component>) {
+    this.map[activityType] = icon;
   };
 
   //getIcon(activityType: string): any {
@@ -83,10 +83,10 @@ export class ActivityIconProvider {
   //  return provider();
   //}
 
-  getIcon(activityType: string) {
-    var component = this.map[activityType];
+  getIcon(activityType: string, viewContainer: ViewContainerRef) {
+    var component: Type<Component> = this.map[activityType];
 
-    this.viewContainer.createComponent(component);
+    viewContainer.createComponent(component);
   }
 }
 

@@ -1,6 +1,6 @@
-﻿import {eventBus} from './event-bus';
-import {EventTypes} from "../models";
-import {ToastNotificationOptions} from "../components/shared/elsa-toast-notification/elsa-toast-notification";
+import {eventBus} from './event-bus';
+import { EventTypes } from "../models";
+import { ToastNotificationOptions } from "../models/toast";
 
 export class ToastNotificationService {
   show(title: string, message: string, autoCloseIn?: number) {
@@ -13,5 +13,4 @@ export class ToastNotificationService {
   }
 }
 
-export const toastNotificationService = new ToastNotificationService();
 export const toastNotificationService = new ToastNotificationService();

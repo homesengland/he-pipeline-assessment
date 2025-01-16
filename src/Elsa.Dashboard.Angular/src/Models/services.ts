@@ -1,7 +1,7 @@
 import { PropertyDisplayManager } from "../services/property-display-manager";
-import { PluginManager } from "../services/property-display-manager";
-import { ConfirmDialogService } from "../services/property-display-manager";
-import { ActivityIconProvider } from "../services/property-display-manager";
+import { PluginManager } from "../services/plugin-manager";
+import { ConfirmDialogService } from "../services/confirm-dialog-service";
+import { ActivityIconProvider } from "../services/activity-icon-provider";
 import { ToastNotificationService } from "../services/toast-notification-service";
 import { WorkflowClient } from '../services/workflow-client';
 import EventBus from "../services/custom-event-bus";
