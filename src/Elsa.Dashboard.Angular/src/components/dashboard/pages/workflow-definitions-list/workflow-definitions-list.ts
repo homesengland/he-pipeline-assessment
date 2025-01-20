@@ -1,5 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
+import { Store } from '@ngrx/store';
+import { selectMonacoLibPath, selectServerUrl } from '../../../state/selectors/app.state.selectors';
 
 @Component({
   selector: 'workflow-definitions-list',
@@ -7,10 +9,17 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./workflow-definitions-list.css'],
 })
 export class WorkflowDefinitionsList implements OnInit {
+  serverUrl: string;
+  monacoLibPath: string;
 
-  constructor(private http: HttpClient) {}
+  constructor(private http: HttpClient, private store: Store) {}
     ngOnInit(): void {
-
+    this.store.select(selectServerUrl).subscribe(data => {
+      this.serverUrl = data;
+    });
+    this.store.select(selectMonacoLibPath).subscribe(data => {
+      this.monacoLibPath = data
+    });
     }
 
 }
