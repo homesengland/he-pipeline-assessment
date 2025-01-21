@@ -3,14 +3,14 @@
 @tailwind utilities;
 
 svg.jtk-connector path {
-  @apply elsa-stroke-current;
-  @apply elsa-text-gray-400;
+/*  @apply elsa-stroke-current;
+  @apply elsa-text-gray-400;*/
 }
 
 svg.jtk-connector.jtk-hover path {
-  @apply elsa-stroke-current;
+/*  @apply elsa-stroke-current;
   @apply elsa-stroke-2;
-  @apply elsa-text-blue-400;
+  @apply elsa-text-blue-400;*/
 }
 
 .jtk-endpoint {
