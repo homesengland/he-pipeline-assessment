@@ -16,6 +16,8 @@ import { ActivityIconProviderPlugin } from "../plugins/activity-icon-provider-pl
 //import { SendHttpRequestPlugin } from "../plugins/send-http-request-plugin";
 //import { DynamicOutcomesPlugin } from "../plugins/dynamic-outcomes-plugin";
 import { WorkflowStudio } from "../models";
+import { Auth0Plugin } from "../modules/auth0/auth0-plugin"
+import { Auth0ClientOptions } from '@auth0/auth0-spa-js';
 
 export class PluginManager {
   pluginFactories: Array<any> = [];
@@ -23,6 +25,7 @@ export class PluginManager {
   initialized: boolean;
 
   constructor() {
+
     this.pluginFactories = [
 /*      () => new DefaultDriversPlugin(),*/
       () => new ActivityIconProviderPlugin(),
@@ -43,7 +46,7 @@ export class PluginManager {
     ];
   }
 
-  initialize(workflowStudio: WorkflowStudio) {
+  initialize(workflowStudio: WorkflowStudio, options: Auth0ClientOptions) {
     if (this.initialized)
       return;
 

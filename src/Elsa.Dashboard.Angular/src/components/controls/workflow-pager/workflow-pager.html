@@ -1,0 +1,30 @@
+<div class="elsa-bg-white elsa-px-4 elsa-py-3 elsa-flex elsa-items-center elsa-justify-between elsa-border-t elsa-border-gray-200 sm:elsa-px-6">
+    <div class="elsa-flex-1 elsa-flex elsa-justify-between sm:elsa-hidden">
+        <a *ngIf="page<=0" href="getNavUrl(page - 1)"
+           (click)="onNavigateClick($event, page - 1)"
+            class="elsa-relative elsa-inline-flex elsa-items-center elsa-px-4 elsa-py-2 elsa-border elsa-border-gray-300 elsa-text-sm elsa-leading-5 elsa-font-medium elsa-rounded-md elsa-text-gray-700 elsa-bg-white hover:elsa-text-gray-500 focus:elsa-outline-none focus:elsa-shadow-outline-blue focus:elsa-border-blue-300 active:elsa-bg-gray-100 active:elsa-text-gray-700 elsa-transition elsa-ease-in-out elsa-duration-150">
+            'Previous'
+        </a>
+<!--         {renderNextButton()} -->
+    </div>
+    <div class="hidden sm:elsa-flex-1 sm:elsa-flex sm:elsa-items-center sm:elsa-justify-between">
+        <div>
+            <p class="elsa-text-sm elsa-leading-5 elsa-text-gray-700 elsa-space-x-0-5">
+                <span>'From'</span>
+                <span class="elsa-font-medium">{{from}}</span>
+                <span>'To'</span>
+                <span class="elsa-font-medium">{{math.min(this.page + this.pageSize - 1, this.totalCount)}}</span>
+                <span>'Of'</span>
+                <span class="elsa-font-medium">{{totalCount}}</span>
+                <span>'Results'</span>
+            </p>
+        </div>
+        <div>
+            <nav class="elsa-relative elsa-z-0 elsa-inline-flex elsa-shadow-sm">
+<!--                 {renderChevronLeft()}
+                {renderPagerButtons()}
+                {renderChevronRight()} -->
+            </nav>
+        </div>
+    </div>
+</div>

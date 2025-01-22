@@ -218,12 +218,12 @@ builder.Services.AddOptions<DataverseClientConfig>()
 });
 
 
-builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
-    .AddJwtBearer(options =>
-    {
-        options.Audience = builder.Configuration["Auth0Config:Audience"];
-        options.Authority = builder.Configuration["Auth0Config:Authority"];
-    });
+//builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+//    .AddJwtBearer(options =>
+//    {
+//        options.Audience = builder.Configuration["Auth0Config:Audience"];
+//        options.Authority = builder.Configuration["Auth0Config:Authority"];
+//    });
 
 builder.Services.AddEsriHttpClients(builder.Configuration, builder.Environment.IsDevelopment());
 
@@ -248,13 +248,13 @@ app
     .UseHttpsRedirection()
     .UseStaticFiles() // For Dashboard.
     .UseRouting()
-    .UseAuthentication()
-    .UseAuthorization()
+    //.UseAuthentication()
+    //.UseAuthorization()
     .UseCustomControllerOverrides(builder.Configuration["Elsa:ServerPrefix"])
     .UseEndpoints(endpoints =>
     {
-    // Elsa API Endpoints are implemented as regular ASP.NET Core API controllers.
-    endpoints.MapControllers().RequireAuthorization(); // locks down elsa server end points
+        // Elsa API Endpoints are implemented as regular ASP.NET Core API controllers.
+        endpoints.MapControllers();//.RequireAuthorization(); // locks down elsa server end points
         endpoints.MapControllerRoute(
             name: "default",
             pattern: "{controller=Home}/{action=Index}");
