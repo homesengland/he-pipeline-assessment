@@ -22,8 +22,7 @@
     "ng": "ng",
     "start": "run-script-os",
     "build-dev": "ng build --configuration=development --optimization=false --output-hashing=none",
-    "build": "ng build --output-hashing=none",
-    "build:css": "npx tailwindcss -i ./src/tailwind.css -o ./dist/workflow/styles.css --watch",
+    "build": "ng build --output-hashing=none && npx tailwindcss -i ./src/tailwind.css -o ./dist/workflow/styles.css --watch",
     "watch": "ng build --watch --configuration development",
     "test": "ng test",
     "serve": "ng serve --live-reload=false"
