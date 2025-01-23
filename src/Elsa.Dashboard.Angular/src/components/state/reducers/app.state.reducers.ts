@@ -1,16 +1,18 @@
 import { createReducer, on, StoreModule } from '@ngrx/store';
 import { AppStateActionGroup } from '../actions/app.state.actions';
+import { StoreConfig } from '../../../Models/storeConfig';
+import { DataDictionaryGroup } from '../../../Models/custom-component-models';
 
 export class AppState {
-  serverUrl: string;
-  monacoLibPath: string;
+  storeConfig: StoreConfig;
+  dataDictionary: Array<DataDictionaryGroup>;
 }
 export const initialState: AppState = {
-  serverUrl: "",
-  monacoLibPath: ""
+  storeConfig: null,
+  dataDictionary: null
 }
 
 export const appStateReducer = createReducer(
   initialState,
-  on(AppStateActionGroup.setExternalState, (_state, { serverUrl, monacoLibPath }) => ({ serverUrl: serverUrl, monacoLibPath: monacoLibPath }))
+  on(AppStateActionGroup.setExternalState, (_state, { storeConfig, dataDictionary }) => ({ storeConfig: storeConfig, dataDictionary: dataDictionary }))
 );
