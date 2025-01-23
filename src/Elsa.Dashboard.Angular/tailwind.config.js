@@ -1,7 +1,6 @@
 /** @type {import('tailwindcss').Config} */
 const defaultTheme = require('tailwindcss/defaultTheme');
 const colors = require('tailwindcss/colors')
-
 module.exports = {
   //important: 'elsa-studio-root',
   content: ['./src/**/*.tsx', './src/**/*.html'],
