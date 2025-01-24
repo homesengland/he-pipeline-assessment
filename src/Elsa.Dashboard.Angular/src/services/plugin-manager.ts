@@ -16,6 +16,7 @@ import { ActivityIconProviderPlugin } from "../plugins/activity-icon-provider-pl
 //import { SendHttpRequestPlugin } from "../plugins/send-http-request-plugin";
 //import { DynamicOutcomesPlugin } from "../plugins/dynamic-outcomes-plugin";
 import { WorkflowStudio } from "../models";
+import { Auth0Plugin } from "../plugins/auth0-plugin";
 
 export class PluginManager {
   pluginFactories: Array<any> = [];
@@ -40,6 +41,7 @@ export class PluginManager {
       //() => new StatePlugin(),
       //() => new SendEmailPlugin(),
       //() => new DynamicOutcomesPlugin()
+      //() => new Auth0Plugin()
     ];
   }
 
