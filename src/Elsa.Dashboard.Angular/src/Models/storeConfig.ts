@@ -7,4 +7,5 @@ export class StoreConfig {
   useRefreshTokensFallback: boolean = true;
   monacoLibPath: string = "";
   dataDictionaryIntellisense: string = "";
+  workflowDefinitionId: string = "";
 }

@@ -5,6 +5,7 @@ import { Store } from '@ngrx/store';
 import { StoreConfig } from '../../../../Models/storeConfig';
 import { AppStateActionGroup } from '../../../state/actions/app.state.actions';
 import { DataDictionaryGroup } from '../../../../Models/custom-component-models';
+import { IntellisenseGatherer } from '../../../../Utils/intellisenseGatherer';
 
 @Component({
   selector: 'workflow-root',
@@ -17,12 +18,14 @@ export class WorkflowRoot implements OnInit {
   dataDictionaryJson: string;
   storeConfig: StoreConfig;
   storeConfigJson: string;
+  intellisenseGatherer: IntellisenseGatherer;
 
 
   constructor(private http: HttpClient, el: ElementRef, private store: Store) {
     this.dataDictionaryJson = el.nativeElement.getAttribute('dataDictionaryJson');
     this.storeConfigJson = el.nativeElement.getAttribute('storeConfigJson');
     this.setEternalState()
+    this.intellisenseGatherer = new IntellisenseGatherer();
   }
 
   setEternalState() {
