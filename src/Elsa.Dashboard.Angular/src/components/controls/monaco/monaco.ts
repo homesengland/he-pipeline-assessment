@@ -1,8 +1,9 @@
-import { Component, Input } from "@angular/core";
+import { Component, Input, output, SimpleChanges } from "@angular/core";
 import { initializeMonacoWorker, Monaco, EditorVariables } from "./monaco-utils";
 import { selectMonacoLibPath } from '../../state/selectors/app.state.selectors';
 import { Store } from '@ngrx/store';
 import { AppState } from '../../state/reducers/app.state.reducers'
+import { MonacoValueChangedArgs } from "../../../models/monaco-elements";
 
 @Component({
   selector: 'monaco',
@@ -12,9 +13,9 @@ import { AppState } from '../../state/reducers/app.state.reducers'
 
 export class HeMonaco {
   private monaco: Monaco;
-  monacoLivPath: string;
+  monacoLibPath: string;
+  valueChanged = output<MonacoValueChangedArgs>();
 
-  @Input() monacoLibPath: string;
   @Input() editorHeight: string = '5em';
   @Input() value: string;
   @Input() language: string;
@@ -27,7 +28,12 @@ export class HeMonaco {
     });
   }
 
-  ngOnInit(): void {
+  ngOnChanges(changes: SimpleChanges) {
+    this.languageChangeHandler(changes);
+
+  };
+
+  async ngOnInit(): Promise<void> {
     this.monaco = await initializeMonacoWorker(this.monacoLibPath);
       const monaco = this.monaco;
       const language = this.language;
@@ -90,7 +96,8 @@ export class HeMonaco {
         e = e;
         const value = this.editor.getValue();
         const markers = monaco.editor.getModelMarkers({ owner: language });
-        this.valueChanged.emit({ value: value, markers: markers });
+        var event: MonacoValueChangedArgs = { value: value, markers: markers };
+        this.valueChanged.emit(event);
       });
 
       if (this.singleLineMode) {
@@ -117,21 +124,18 @@ export class HeMonaco {
       }
     }
 
-
-
-  @Event({ eventName: 'valueChanged' }) valueChanged: EventEmitter<MonacoValueChangedArgs>;
-
   container: HTMLElement;
   editor: any;
 
-  @Watch('language')
-  languageChangeHandler(newValue: string) {
-    newValue = newValue;
-    if (!this.editor)
-      return;
+  languageChangeHandler(changes: SimpleChanges) {
+    if (changes["language"].currentValue != changes["language"].previousValue) {
+      var newValue = changes["language"].currentValue;
+      if (!this.editor)
+        return;
 
-    const model = this.editor.getModel();
-    this.monaco.editor.setModelLanguage(model, this.language);
+      const model = this.editor.getModel();
+      this.monaco.editor.setModelLanguage(model, this.language);
+    }
   }
 
   async setValue(value: string) {
@@ -164,6 +168,7 @@ export class HeMonaco {
     for (const match of matches) {
       EditorVariables.push({ variableName: match[1], type: match[2] });
     }
+
   }
 
   disconnectedCallback() {
@@ -171,12 +176,5 @@ export class HeMonaco {
 
     if (!!editor)
       editor.dispose();
-  }
-
-  render() {
-    const padding = this.padding || 'elsa-pt-1.5 elsa-pl-1';
-    return (
-      <
-    )
   }
 }

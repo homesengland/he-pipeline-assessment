@@ -1,0 +1,8 @@
+
+<he-monaco value={value}
+           language={language}
+           editor-height={this.editorHeight}
+           single-line={this.singleLineMode}
+           padding={this.padding}
+           onValueChanged={e => this.onMonacoValueChanged(e.detail)}
+           ref={el => this.monacoEditor = el} />
