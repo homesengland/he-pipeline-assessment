@@ -9,4 +9,8 @@ const getAppState = createFeatureSelector<AppState>('appState');
 
 export const selectServerUrl = createSelector(getAppState, (state) => state.serverUrl);
 
-export const selectMonacoLibPath = createSelector(getAppState, (state) => state.monacoLibPath);;
+export const selectMonacoLibPath = createSelector(getAppState, (state) => state.monacoLibPath);
+
+export const javascriptTypeDefinitions = createSelector(getAppState, (state) => "");
+
+export const workflowDefinitionId = createSelector(getAppState, (state) => "");

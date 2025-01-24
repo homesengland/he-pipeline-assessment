@@ -7,7 +7,7 @@ export class AppState {
 }
 export const initialState: AppState = {
   serverUrl: "",
-  monacoLibPath: ""
+  monacoLibPath: "",
 }
 
 export const appStateReducer = createReducer(

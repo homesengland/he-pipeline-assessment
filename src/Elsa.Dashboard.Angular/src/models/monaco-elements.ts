@@ -1,14 +1,13 @@
 import { Component } from "@angular/core";
 import { Monaco } from "../components/controls/monaco/monaco-utils";
-import { HeMonaco } from "../components/controls/monaco/monaco";
+import { MonacoEditor } from "../components/controls/monaco/monaco-editor";
 
-export interface HTMLModalDialogElement extends HeMonaco {
+export interface HTMLModalDialogElement extends MonacoEditor, HTMLElement {
   show();
 }
 
-export interface HTMLMonacoElement extends HeMonaco {
-  language: string;
-  setValue(value: string);
+export interface HTMLMonacoElement extends MonacoEditor, HTMLElement {
+
 }
 
 export interface MonacoValueChangedArgs {

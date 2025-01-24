@@ -2,9 +2,12 @@ import { Component, Input, output, SimpleChanges } from "@angular/core";
 import { HTMLMonacoElement, MonacoValueChangedArgs } from "../../../../models/monaco-elements";
 import { IntellisenseContext } from "../../../../models";
 import { IntellisenseGatherer } from "../../../../utils/intellisense-gatherer";
+import { Uri } from '../../../../constants/constants';
+import { javascriptTypeDefinitions, workflowDefinitionId } from '../../../state/selectors/app.state.selectors';
+import { Store } from "@ngrx/store";
 
 @Component({
-  tag: 'expression-editor',
+  selector: 'expression-editor',
   template: './expression-editor.html'
 })
 export class ExpressionEditor {
@@ -12,27 +15,27 @@ export class ExpressionEditor {
 
   @Input() language: string;
   @Input() expression: string;
-  @Input({ attribute: 'editor-height', reflect: true }) editorHeight: string = '6em';
-  @Input({ attribute: 'single-line', reflect: true }) singleLineMode: boolean = false;
+  @Input() editorHeight: string = '6em';
+  @Input() singleLineMode: boolean = false;
   @Input() padding: string;
   @Input() context?: IntellisenseContext;
-  @Input({ mutable: true }) serverUrl: string;
-  @Input({ mutable: true }) workflowDefinitionId: string;
+  @Input() serverUrl: string;
+  @Input() workflowDefinitionId: string;
   currentExpression?: string
   expressionChanged = output<string>();
 
   intellisenseGatherer: IntellisenseGatherer;
   monacoEditor: HTMLMonacoElement;
-  constructor() {
+  constructor(private store: Store) {
     this.currentExpression = this.expression;
   }
 
   async ngInit() {
-    this.workflowDefinitionId = state.workflowDefinitionId;
+    this.workflowDefinitionId = javascriptTypeDefinitions(this.store);
     this.currentExpression = this.expression;
     this.intellisenseGatherer = new IntellisenseGatherer();
 
-    let libSource: string = state.javaScriptTypeDefinitions;
+    let libSource: string = workflowDefinitionId(this.store);
     const libUri = Uri.LibUri;
 
     await this.monacoEditor.addJavaScriptLib(libSource, libUri);

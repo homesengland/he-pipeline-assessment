@@ -11,7 +11,7 @@ import { MonacoValueChangedArgs } from "../../../models/monaco-elements";
   styleUrls: ['./monaco.css'],
 })
 
-export class HeMonaco {
+export class MonacoEditor {
   private monaco: Monaco;
   monacoLibPath: string;
   valueChanged = output<MonacoValueChangedArgs>();
@@ -23,9 +23,11 @@ export class HeMonaco {
   @Input() padding: string;
 
   constructor(private store: Store) {
+    super();
     this.store.select(selectMonacoLibPath).subscribe(data => {
       this.monacoLibPath = data
     });
+
   }
 
   ngOnChanges(changes: SimpleChanges) {
