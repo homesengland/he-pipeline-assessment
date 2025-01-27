@@ -1,8 +1,8 @@
 import { createAuth0Client, Auth0Client, Auth0ClientOptions, RedirectLoginOptions } from '@auth0/auth0-spa-js';
 import { Service } from 'axios-middleware';
-import { WorkflowPlugin } from '../../services/workflow-plugin';
-import { eventBus } from '../../services/event-bus';
-import { EventTypes } from "../../models";
+import { WorkflowPlugin } from '../services/workflow-plugin';
+import { eventBus } from '../services/event-bus';
+import { EventTypes } from "../models";
 import { Browser } from '@capacitor/browser';
 
 export class Auth0Plugin implements WorkflowPlugin {
@@ -52,11 +52,11 @@ export class Auth0Plugin implements WorkflowPlugin {
     let origin = window.location.origin;
 
     const redirectOptions: RedirectLoginOptions = {
-      openUrl(origin) {async () => await Browser.open({ url: origin }) }
-      };
+      openUrl(origin) { async () => await Browser.open({ url: origin }) }
+    };
 
     await this.auth0.loginWithRedirect(redirectOptions);
-};
+  };
 
   private configureAuthMiddleware = async (e: any) => {
 
