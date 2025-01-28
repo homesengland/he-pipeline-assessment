@@ -24,22 +24,19 @@
     "sourceMap": true,
     "strict": false,
     "target": "ES2022",
-    "useDefineForClassFields": false,
-    "paths": {
-      "tailwindcss": [ "./node_modules/tailwindcss" ]
-    },
-    "angularCompilerOptions": {
-      "enableI18nLegacyMessageIdFormat": false,
-      "strictInjectionParameters": true,
-      "strictInputAccessModifiers": true,
-      "strictTemplates": true
-    },
-    "include": [
-      "src"
-    ],
-    "exclude": [
-      "node_modules",
-      "src/index.html"
-    ]
-  }
+    "useDefineForClassFields": false
+  },
+  "angularCompilerOptions": {
+    "enableI18nLegacyMessageIdFormat": false,
+    "strictInjectionParameters": true,
+    "strictInputAccessModifiers": true,
+    "strictTemplates": true
+  },
+  "include": [
+    "src"
+  ],
+  "exclude": [
+    "node_modules",
+    "src/index.html"
+  ]
 }
