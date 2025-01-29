@@ -14,7 +14,8 @@ export class WorkflowDashboard implements OnInit {
   menuItems: [string, string][] = [
     ['workflow-definitions', 'Workflow Definitions'],
     ['workflow-instances', 'Workflow Instances'],
-    ['workflow-registry', 'Workflow Registry']
+    ['workflow-registry', 'Workflow Registry'],
+    ['workflow-placeholder', 'Workflow Placeholder']
   ];
 
   ngOnInit() {
