@@ -17,7 +17,7 @@ const routes: Routes = [
     path: 'workflow-definitions',
     component: WorkflowDefinitionsList,
   },
-    {
+   {
       path: 'workflow-instances',
       component: WorkflowInstancesList,
   },

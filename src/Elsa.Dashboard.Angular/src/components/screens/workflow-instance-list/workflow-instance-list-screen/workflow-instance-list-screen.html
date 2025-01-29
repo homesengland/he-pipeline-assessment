@@ -24,6 +24,38 @@
             </div>
         </div>
 
+        <div class="elsa-p-8 elsa-flex elsa-content-end elsa-justify-right elsa-bg-white elsa-space-x-4">
+            <div class="elsa-flex-shrink-0">
+                <workflow-dropdown-button text="Bulk Actions" [items]="bulkActions"
+                                          [origin]="dropdownButtonOrigin.TopLeft"
+                                          (onItemSelected)="handleBulkActionsChanged($event)"
+                                          iconPath="static/images/instances-pagesize-icon.svg" />
+            </div>
+            <div class="elsa-flex-1">
+                &nbsp;
+            </div>
+            <workflow-dropdown-button [text]="currentPageSizeText" [items]="pageSizeButtonItems"
+                                      [origin]="dropdownButtonOrigin.TopRight"
+                                      (onItemSelected)="handlePageSizeChanged($event)"
+                                      iconPath="static/images/instances-pagesize-icon.svg" />
+
+            <workflow-dropdown-button [text]="selectedWorkflowText" [items]="workflowButtonItems"
+                                      [origin]="dropdownButtonOrigin.TopRight"
+                                      (onItemSelected)="handleWorkflowIdChanged($event)"
+                                      iconPath="static/images/instances-workflow-icon.svg" />
+
+            @let selectedWorkflowStatusText = !!selectedWorkflowStatus ? selectedWorkflowStatus : 'Status';
+            <workflow-dropdown-button [text]="selectedWorkflowStatusText" [items]="statusesButtonItems"
+                                      [origin]="dropdownButtonOrigin.TopRight"
+                                      (onItemSelected)="handleWorkflowStatusChanged($event)"
+                                      iconPath="static/images/instances-status-icon.svg" />
+
+            <workflow-dropdown-button [text]="selectedOrderByText" [items]="orderByButtonItems"
+                                      [origin]="dropdownButtonOrigin.TopRight"
+                                      (onItemSelected)="handleOrderByChanged($event)"
+                                      iconPath="static/images/instances-bulkactions-icon.svg" />
+        </div>
+
         <div class="elsa-mt-8 sm:elsa-block">
             <div class="elsa-align-middle elsa-inline-block elsa-min-w-full elsa-border-b elsa-border-gray-200">
                 <table class="elsa-min-w-full">
@@ -32,7 +64,7 @@
                             <th class="elsa-px-6 elsa-py-3 elsa-border-b elsa-border-gray-200 elsa-bg-gray-50 elsa-text-left elsa-text-xs elsa-leading-4 elsa-font-medium elsa-text-gray-500 elsa-uppercase elsa-tracking-wider">
                                 <input #selectAllCheckbox type="checkbox" value="true" [checked]="getSelectAllState()"
                                        (change)="onSelectAllCheckChange($event)"
-                                       class="focus:elsa-ring-blue-500 elsa-h-4 elsa-w-4 elsa-text-blue-600 elsa-border-gray-300 elsa-rounded"/> 
+                                       class="focus:elsa-ring-blue-500 elsa-h-4 elsa-w-4 elsa-text-blue-600 elsa-border-gray-300 elsa-rounded" />
                             </th>
                             <th class="elsa-px-6 elsa-py-3 elsa-border-b elsa-border-gray-200 elsa-bg-gray-50 elsa-text-left elsa-text-xs elsa-leading-4 elsa-font-medium elsa-text-gray-500 elsa-uppercase elsa-tracking-wider">
                                 ID
@@ -67,46 +99,7 @@
                             <th class="elsa-pr-6 elsa-py-3 elsa-border-b elsa-border-gray-200 elsa-bg-gray-50 elsa-text-xs elsa-leading-4 elsa-font-medium elsa-text-gray-500 elsa-uppercase elsa-tracking-wider"></th>
                         </tr>
                     </thead>
-                    <tbody class="elsa-bg-white elsa-divide-y elsa-divide-gray-100">
-<!--                         {workflowInstances.map(workflowInstance => {
-                        const workflowBlueprint = workflowBlueprints.find(x => x.versionId == workflowInstance.definitionVersionId) ?? {
-                        name: 'Not Found',
-                        displayName: '(Workflow definition not found)'
-                        };
-                        const displayName = workflowBlueprint.displayName || workflowBlueprint.name || '(Untitled)';
-                        const statusColor = this.getStatusColor(workflowInstance.workflowStatus);
-                        const instanceViewUrl = `${basePath}/workflow-instances/${workflowInstance.id}`;
-                        const correlationId = !!workflowInstance.correlationId ? workflowInstance.correlationId : ''
-                        const correlationListViewUrl = `${basePath}/workflow-instances?correlationId=${correlationId}`;
-                        const blueprintViewUrl = `${basePath}/workflow-registry/${workflowInstance.definitionId}`;
-                        const instanceName = !workflowInstance.name ? '' : workflowInstance.name;
-                        const isSelected = this.selectedWorkflowInstanceIds.findIndex(x => x === workflowInstance.id) >= 0;
-                        const createdAt = moment(workflowInstance.createdAt);
-                        const finishedAt = !!workflowInstance.finishedAt ? moment(workflowInstance.finishedAt) : null;
-                        const lastExecutedAt = !!workflowInstance.lastExecutedAt ? moment(workflowInstance.lastExecutedAt) : null;
-                        const faultedAt = !!workflowInstance.faultedAt ? moment(workflowInstance.faultedAt) : null;
-                        const isFaulted = workflowInstance.workflowStatus == WorkflowStatus.Faulted;
-
-                        const contextMenuItems = [
-                        {text: t('Table.ContextMenu.View'), anchorUrl: instanceViewUrl, icon: renderViewIcon()},
-                        {
-                        text: t('Table.ContextMenu.Cancel'),
-                        clickHandler: e => this.onCancelClick(e, workflowInstance),
-                        icon: renderCancelIcon()
-                        },
-                        ...[isFaulted ? {
-                        text: t('Table.ContextMenu.Retry'),
-                        clickHandler: e => this.onRetryClick(e, workflowInstance),
-                        icon: renderRetryIcon()
-                        } : null],
-                        {
-                        text: t('Table.ContextMenu.Delete'),
-                        clickHandler: e => this.onDeleteClick(e, workflowInstance),
-                        icon: renderDeleteIcon()
-                        }
-                        ].filter(x => x != null);
-
-                        return -->
+                    <tbody class="elsa-bg-white elsa-divide-y elsa-divide-gray-100">                     
                         <tr *ngFor="let instance of workflowInstancesTableValues.items">
                             <td class="elsa-px-6 elsa-py-3 elsa-whitespace-no-wrap elsa-text-sm elsa-leading-5 elsa-font-medium elsa-text-gray-900">
 
@@ -120,7 +113,7 @@
                                 </a>
                             </td>
                             <td class="elsa-px-6 elsa-py-3 elsa-whitespace-no-wrap elsa-text-sm elsa-leading-5 elsa-font-medium elsa-text-gray-900">
-                                  <a [routerLink]="instance.correlationListViewUrl" class="elsa-truncate hover:elsa-text-gray-600">
+                                <a [routerLink]="instance.correlationListViewUrl" class="elsa-truncate hover:elsa-text-gray-600">
                                     {{ instance.correlationId }}
                                 </a>
                             </td>
@@ -156,14 +149,12 @@
                                 {{instance.faultedAt}}
                             </td>
                             <td class="elsa-pr-6">
-
-                                <!--                                 <elsa-context-menu history={this.history} menuItems={contextMenuItems} /> -->
+<!--                                 <workflow-context-menu [menuItems]="contextMenuItems" /> -->
                             </td>
                         </tr>
-
                     </tbody>
                 </table>
-                <workflow-pager [page]="currentPage" [pageSize]="currentPageSize" [totalCount]="totalCount" (Paged)="onPaged" /> 
+                <workflow-pager [page]="currentPage" [pageSize]="currentPageSize" [totalCount]="totalCount" (paged)="onPaged($event)" />
             </div>
         </div>
     </div>

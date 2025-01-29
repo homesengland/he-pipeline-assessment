@@ -14,10 +14,11 @@ import { ReactiveFormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { RouterModule, RouterOutlet } from '@angular/router';
 import { WorkflowPager } from './controls/workflow-pager/workflow-pager';
+import { WorkflowDropdownButton } from './controls/workflow-dropdown-button/workflow-dropdown-button';
 
 
 @NgModule({
-  declarations: [ WorkflowRoot, WorkflowDashboard, WorkflowDefinitionsList, WorkflowInstancesList, WorkflowHome, WorkflowRegistry, WorkflowInstanceListScreen, WorkflowPager ],
+  declarations: [WorkflowRoot, WorkflowDashboard, WorkflowDefinitionsList, WorkflowInstancesList, WorkflowHome, WorkflowRegistry, WorkflowInstanceListScreen, WorkflowPager, WorkflowDropdownButton],
   imports: [
     BrowserModule, HttpClientModule, routing, AppStateModule, ReactiveFormsModule, RouterModule, RouterOutlet, CommonModule
   ],
