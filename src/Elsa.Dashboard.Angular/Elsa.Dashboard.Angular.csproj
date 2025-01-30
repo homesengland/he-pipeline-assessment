@@ -243,8 +243,6 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="dist\" />
-    <Folder Include="src\components\controls\editors\multi-expression-editor\" />
-    <Folder Include="src\components\controls\editors\property-editor\" />
     <Folder Include="www\" />
   </ItemGroup>
 </Project>

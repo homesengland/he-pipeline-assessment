@@ -23,7 +23,6 @@ export class MonacoEditor {
   @Input() padding: string;
 
   constructor(private store: Store) {
-    super();
     this.store.select(selectMonacoLibPath).subscribe(data => {
       this.monacoLibPath = data
     });

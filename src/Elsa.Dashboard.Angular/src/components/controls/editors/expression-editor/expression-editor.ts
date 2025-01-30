@@ -1,4 +1,4 @@
-import { Component, Input, output, SimpleChanges } from "@angular/core";
+import { Component, Input, output, signal, SimpleChanges } from "@angular/core";
 import { HTMLMonacoElement, MonacoValueChangedArgs } from "../../../../models/monaco-elements";
 import { IntellisenseContext } from "../../../../models";
 import { IntellisenseGatherer } from "../../../../utils/intellisense-gatherer";
@@ -21,18 +21,18 @@ export class ExpressionEditor {
   @Input() context?: IntellisenseContext;
   @Input() serverUrl: string;
   @Input() workflowDefinitionId: string;
-  currentExpression?: string
+  currentExpression?
   expressionChanged = output<string>();
 
   intellisenseGatherer: IntellisenseGatherer;
   monacoEditor: HTMLMonacoElement;
   constructor(private store: Store) {
-    this.currentExpression = this.expression;
+    this.currentExpression = signal(this.expression);
   }
 
   async ngInit() {
     this.workflowDefinitionId = javascriptTypeDefinitions(this.store);
-    this.currentExpression = this.expression;
+    this.currentExpression.set(this.expression);
     this.intellisenseGatherer = new IntellisenseGatherer();
 
     let libSource: string = workflowDefinitionId(this.store);
@@ -50,7 +50,7 @@ export class ExpressionEditor {
   }
 
   expressionChangedHandler(newValue: string) {
-    this.currentExpression = newValue;
+    this.currentExpression.set(newValue);
   }
 
   async setExpression(value: string) {
@@ -58,7 +58,7 @@ export class ExpressionEditor {
   }
 
   async onMonacoValueChanged(e: MonacoValueChangedArgs) {
-    this.currentExpression = e.value;
+    this.currentExpression.set(e.value);
     await this.expressionChanged.emit(e.value);
   }
 }
