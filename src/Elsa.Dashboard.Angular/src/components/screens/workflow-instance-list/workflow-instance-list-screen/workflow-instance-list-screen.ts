@@ -123,8 +123,8 @@ export class WorkflowInstanceListScreen implements OnInit {
     this.statusesButtonItems = this.statuses.map(x => {
       const text = x ?? 'All';
       const item: DropdownButtonItem = { text: text, isSelected: x == this.selectedWorkflowStatus, value: x };
-
-      item.url = this.buildFilterUrl(this.selectedWorkflowId, x, this.selectedOrderByState, null, this.selectedCorrelationId);
+      item.url = `${this.basePath}/workflow-instances`; 
+      item.queryParams = this.buildFilterUrl(this.selectedWorkflowId, x, this.selectedOrderByState, null, this.selectedCorrelationId);
 
       return item;
     });
@@ -134,14 +134,14 @@ export class WorkflowInstanceListScreen implements OnInit {
     this.workflowButtonItems = latestWorkflowBlueprints.map(x => {
       const displayName = !!x.displayName && x.displayName.length > 0 ? x.displayName : x.name || 'Untitled';
       const item: DropdownButtonItem = { text: displayName, value: x.id, isSelected: x.id == this.selectedWorkflowId };
-
-      item.url = this.buildFilterUrl(x.id, this.selectedWorkflowStatus, this.selectedOrderByState, null, this.selectedCorrelationId);
+      item.url = `${this.basePath}/workflow-instances`; 
+      item.queryParams = this.buildFilterUrl(x.id, this.selectedWorkflowStatus, this.selectedOrderByState, null, this.selectedCorrelationId);
 
       return item;
     });
 
     let allItem: DropdownButtonItem = { text: 'All', value: null, isSelected: !this.selectedWorkflowId };
-    allItem.url = this.buildFilterUrl(null, this.selectedWorkflowStatus, this.selectedOrderByState, null, this.selectedCorrelationId);
+    allItem.queryParams = this.buildFilterUrl(null, this.selectedWorkflowStatus, this.selectedOrderByState, null, this.selectedCorrelationId);
 
     this.workflowButtonItems = [allItem, ...this.workflowButtonItems];
     let selectedWorkflow = latestWorkflowBlueprints.find(x => x.id == this.selectedWorkflowId);
@@ -150,8 +150,8 @@ export class WorkflowInstanceListScreen implements OnInit {
     this.pageSizeButtonItems = this.pageSizes.map(x => {
       const text = "" + x;
       const item: DropdownButtonItem = { text: text, isSelected: x == this.currentPageSize, value: x };
-
-      item.url = this.buildFilterUrl(this.selectedWorkflowId, this.selectedWorkflowStatus, this.selectedOrderByState, x, this.selectedCorrelationId);
+      item.url = `${this.basePath}/workflow-instances`; 
+      item.queryParams = this.buildFilterUrl(this.selectedWorkflowId, this.selectedWorkflowStatus, this.selectedOrderByState, x, this.selectedCorrelationId);
 
       return item;
     });
@@ -160,8 +160,8 @@ export class WorkflowInstanceListScreen implements OnInit {
     this.selectedOrderByText = !!this.selectedOrderByState ? `Sort by: ${this.selectedOrderByState}` : "Sort";
     this.orderByButtonItems = this.orderByValues.map(x => {
       const item: DropdownButtonItem = { text: x, value: x, isSelected: x == this.selectedOrderByState };
-
-      item.url = this.buildFilterUrl(this.selectedWorkflowId, this.selectedWorkflowStatus, x, null, this.selectedCorrelationId);
+      item.url = `${this.basePath}/workflow-instances`; 
+      item.queryParams = this.buildFilterUrl(this.selectedWorkflowId, this.selectedWorkflowStatus, x, null, this.selectedCorrelationId);
 
       return item;
     });
@@ -216,9 +216,12 @@ export class WorkflowInstanceListScreen implements OnInit {
 
     if (newPageSize != this.currentPageSize)
       filters['page'] = Math.floor(this.currentPage * this.currentPageSize / newPageSize).toString();
-
+   
     const queryString = collection.map(filters, (v, k) => `${k}=${v}`).join('&');
-    return `${this.basePath}/workflow-instances?${queryString}`
+
+    const json = JSON.stringify(filters);
+
+    return JSON.parse(json);
   }
 
   async onSearchSubmit(): Promise<void> {

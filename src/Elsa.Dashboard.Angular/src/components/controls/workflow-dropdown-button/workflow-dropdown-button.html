@@ -22,8 +22,8 @@
             @for(item of items; track item.text){
             @let selectedCssClass = item.isSelected ? 'elsa-bg-blue-600 hover:elsa-bg-blue-700 elsa-text-white': 'hover:elsa-bg-gray-100 elsa-text-gray-700 hover:elsa-text-gray-900';
 
-            <a *ngIf="item.url != null" (click)="closeContextMenu()" [href]="item.url" class="elsa-block elsa-px-4 elsa-py-2 elsa-text-sm {{selectedCssClass}} elsa-cursor-pointer" role="menuitem">{{item.text}}</a>
-            <a *ngIf="item.url == null"  href="#" (click)="onItemClick($event, item)" class="elsa-block elsa-px-4 elsa-py-2 elsa-text-sm {{selectedCssClass}}" role="menuitem">{{item.text}}</a>
+            <a *ngIf="item.url != null" (click)="closeContextMenu()" [routerLink]="item.url" [queryParams]="item.queryParams" class="elsa-block elsa-px-4 elsa-py-2 elsa-text-sm {{selectedCssClass}} elsa-cursor-pointer" role="menuitem">{{item.text}}</a>
+            <a *ngIf="item.url == null" routerLink="#" (click)="onItemClick($event, item)" class="elsa-block elsa-px-4 elsa-py-2 elsa-text-sm {{selectedCssClass}}" role="menuitem">{{item.text}}</a>
             }
         </div>
     </div>
