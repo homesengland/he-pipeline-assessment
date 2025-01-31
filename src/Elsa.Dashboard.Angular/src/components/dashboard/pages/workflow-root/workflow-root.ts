@@ -21,7 +21,8 @@ export class WorkflowRoot implements OnInit {
   storeConfigJson: string;
   intellisenseGatherer: IntellisenseGatherer;
   renderer2: Renderer2;
-  private unlistener: () => void;
+  private modalShownListener: () => void;
+  private modalHiddenListener: () => void;
 
 
   constructor(private http: HttpClient, el: ElementRef, private store: Store, renderer2: Renderer2) {
@@ -34,11 +35,17 @@ export class WorkflowRoot implements OnInit {
 
   ngOnInit(): void {
     this.modalHandlerShown();
+    this.modalHandlerHidden();
+  }
+
+  ngOnDestroy() {
+    this.modalShownListener();
+    this.modalHiddenListener();
   }
 
   async modalHandlerShown() {
 
-    this.unlistener = this.renderer2.listen("window", "shown", event => {
+    this.modalShownListener = this.renderer2.listen("window", "shown", event => {
       event = event;
       var url_string = document.URL;
       var n = url_string.lastIndexOf('/');
@@ -52,7 +59,7 @@ export class WorkflowRoot implements OnInit {
 
   async modalHandlerHidden() {
 
-    this.unlistener = this.renderer2.listen("window", "hidden", event => {
+    this.modalHiddenListener = this.renderer2.listen("window", "hidden", event => {
       event = event;
       this.store.dispatch(AppStateActionGroup.setJavaScriptTypeDefinitions({
         javaScriptTypeDefinitions: ""
