@@ -2,10 +2,11 @@ import { IntellisenseContext } from '../Models/elsa-interfaces'
 import axios, { AxiosInstance, AxiosRequestConfig } from "axios";
 //import state from '../stores/store';
 import { createAuth0Client, Auth0Client, Auth0ClientOptions, AuthorizationParams } from '@auth0/auth0-spa-js';
-import { StoreStatus } from "../constants/constants";
+import { StoreStatus } from "../Models/constants";
 import { StoreConfig } from '../Models/storeConfig'
-import { selectStoreConfig } from '../components/state/selectors/app.state.selectors';
+import { selectDataDictionaryIntellisense, selectJavaScriptTypeDefinitions, selectJavaScriptTypeDefinitionsFetchStatus, selectStoreConfig, selectWorkflowDefinitionIds } from '../components/state/selectors/app.state.selectors';
 import { Store } from '@ngrx/store';
+import { AppStateActionGroup } from '../components/state/actions/app.state.actions';
 
 
 export class IntellisenseGatherer {
@@ -14,10 +15,14 @@ export class IntellisenseGatherer {
   private auth0: Auth0Client;
   private options: Auth0ClientOptions;
   private context: IntellisenseContext = {
-      activityTypeName: "",
-      propertyName: ""
+    activityTypeName: "",
+    propertyName: ""
   };
   private storeConfig: StoreConfig;
+  private workflowDefinitionId = "";
+  private javaScriptTypeDefinitionsFetchStatus = "";
+  private javaScriptTypeDefinitions = "";
+  private dataDictionaryIntellisense = "";
 
 
   constructor(private store: Store) {
@@ -25,6 +30,18 @@ export class IntellisenseGatherer {
     this.store.select(selectStoreConfig).subscribe(data => {
       this.storeConfig = data;
     });
+    this.store.select(selectWorkflowDefinitionIds).subscribe(data => {
+      this.workflowDefinitionId = data;
+    })
+    this.store.select(selectJavaScriptTypeDefinitionsFetchStatus).subscribe(data => {
+      this.javaScriptTypeDefinitionsFetchStatus = data;
+    })
+    this.store.select(selectJavaScriptTypeDefinitions).subscribe(data => {
+      this.javaScriptTypeDefinitions = data;
+    })
+    this.store.select(selectDataDictionaryIntellisense).subscribe(data => {
+      this.dataDictionaryIntellisense = data;
+    })
 
     let auth0Params: AuthorizationParams = {
       audience: this.storeConfig.audience,
@@ -41,7 +58,7 @@ export class IntellisenseGatherer {
 
     this.options = auth0Options;
 
-      this._baseUrl = this.storeConfig.serverUrl;
+    this._baseUrl = this.storeConfig.serverUrl;
   }
 
   initialize = async () => {
@@ -55,51 +72,57 @@ export class IntellisenseGatherer {
     const isAuthenticated = await this.auth0.isAuthenticated();
 
     // Nothing to do if authenticated.
-    if (isAuthenticated)
-      state.auth0Client = this.auth0;
-      return;
+    if (isAuthenticated) {
+      var storeconfig = JSON.parse(JSON.stringify(this.storeConfig))
+      storeconfig.auth0Client = this.auth0;
+
+      this.store.dispatch(AppStateActionGroup.setStoreConfig({
+        storeConfig: storeconfig
+      }));
+    }
+    return;
   };
 
   async getAuth0Client(): Promise<Auth0Client> {
-    if (state.auth0Client == null) {
+    if (this.storeConfig.auth0Client == null) {
       await this.initialize();
     }
-    return state.auth0Client;
+    return this.storeConfig.auth0Client;
   }
 
 
   async getIntellisense(): Promise<string> {
-    if (state.javaScriptTypeDefinitionsFetchStatus == StoreStatus.Available && this.hasDefinitions) {
-        return state.javaScriptTypeDefinitions;
+    if (this.javaScriptTypeDefinitionsFetchStatus == StoreStatus.Available && this.hasDefinitions) {
+      return this.javaScriptTypeDefinitions;
     }
     else {
       this.tryFetchDefinitions();
-      return state.javaScriptTypeDefinitions;
+      return this.javaScriptTypeDefinitions;
     }
   }
 
   private async tryFetchDefinitions() {
-    state.javaScriptTypeDefinitionsFetchStatus = StoreStatus.Fetching;
-    let definitions = await this.getJavaScriptTypeDefinitions(this.storeConfig.workflowDefinitionId, this.context);
-    state.javaScriptTypeDefinitions = definitions;
-    if (state.javaScriptTypeDefinitions != null) {
+    this.javaScriptTypeDefinitionsFetchStatus = StoreStatus.Fetching;
+    let definitions = await this.getJavaScriptTypeDefinitions(this.workflowDefinitionId, this.context);
+    this.javaScriptTypeDefinitions = definitions;
+    if (this.javaScriptTypeDefinitions != null) {
       this.appendGatheredValues();
-      state.javaScriptTypeDefinitionsFetchStatus = StoreStatus.Available;
+      this.javaScriptTypeDefinitionsFetchStatus = StoreStatus.Available;
     }
     else {
-      state.javaScriptTypeDefinitionsFetchStatus = StoreStatus.Empty;
-      state.javaScriptTypeDefinitions = '';
+      this.javaScriptTypeDefinitionsFetchStatus = StoreStatus.Empty;
+      this.javaScriptTypeDefinitions = '';
     }
-    return state.javaScriptTypeDefinitions;
+    return this.javaScriptTypeDefinitions;
   }
 
   hasDefinitions() {
-    return state.javaScriptTypeDefinitions != null && state.javaScriptTypeDefinitions.trim().length > 0;
+    return this.javaScriptTypeDefinitions != null && this.javaScriptTypeDefinitions.trim().length > 0;
   }
 
   private appendGatheredValues() {
-    let intellisense = state.javaScriptTypeDefinitions + state.dataDictionaryIntellisense;
-    state.javaScriptTypeDefinitions = intellisense;
+    let intellisense = this.javaScriptTypeDefinitions + this.dataDictionaryIntellisense;
+    this.javaScriptTypeDefinitions = intellisense;
   }
 
 

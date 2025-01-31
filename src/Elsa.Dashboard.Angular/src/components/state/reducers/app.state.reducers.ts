@@ -6,15 +6,28 @@ import { DataDictionaryGroup } from '../../../Models/custom-component-models';
 export class AppState {
   storeConfig: StoreConfig;
   dataDictionary: Array<DataDictionaryGroup>;
-  storeDefinitions: object;
+  workflowDefinitionId: string;
+  javaScriptTypeDefinitionsFetchStatus: string;
+  javaScriptTypeDefinitions: string;
+  dataDictionaryIntellisense: string;
 }
 export const initialState: AppState = {
   storeConfig: null,
   dataDictionary: null,
-  storeDefinitions: null
+  workflowDefinitionId: "",
+  javaScriptTypeDefinitionsFetchStatus: "",
+  javaScriptTypeDefinitions: "",
+  dataDictionaryIntellisense: ""
 }
 
 export const appStateReducer = createReducer(
   initialState,
-  on(AppStateActionGroup.setExternalState, (_state, { storeConfig, dataDictionary }) => ({ storeConfig: storeConfig, dataDictionary: dataDictionary }))
+  on(AppStateActionGroup.setExternalState, (_state, { storeConfig, dataDictionary }) => ({ ..._state, storeConfig: storeConfig, dataDictionary: dataDictionary })),
+  on(AppStateActionGroup.setStoreConfig, (_state, { storeConfig }) => ({ ..._state, storeConfig: storeConfig })),
+  on(AppStateActionGroup.setWorkflowDefinitionId, (_state, { workflowDefinitionId }) => ({ ..._state, workflowDefinitionId: workflowDefinitionId })),
+  on(AppStateActionGroup.setJavascriptTypeDefinitionsFetchStatus, (_state, { javaScriptTypeDefinitionsFetchStatus }) => ({ ..._state, javaScriptTypeDefinitionsFetchStatus: javaScriptTypeDefinitionsFetchStatus })),
+  on(AppStateActionGroup.setJavaScriptTypeDefinitions, (_state, { javaScriptTypeDefinitions }) => ({ ..._state, javaScriptTypeDefinitions: javaScriptTypeDefinitions })),
+  on(AppStateActionGroup.setDataDictionaryIntellisense, (_state, { dataDictionaryIntellisense }) => ({ ..._state, dataDictionaryIntellisense: dataDictionaryIntellisense }))
 );
+
+

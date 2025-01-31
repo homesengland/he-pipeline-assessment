@@ -1,3 +1,5 @@
+import { Auth0Client } from "@auth0/auth0-spa-js";
+
 export class StoreConfig {
   serverUrl: string = "";
   audience: string = "";
@@ -7,5 +9,5 @@ export class StoreConfig {
   useRefreshTokensFallback: boolean = true;
   monacoLibPath: string = "";
   dataDictionaryIntellisense: string = "";
-  workflowDefinitionId: string = "";
+  auth0Client: Auth0Client = null;
 }

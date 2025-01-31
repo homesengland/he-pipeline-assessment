@@ -1,11 +1,12 @@
 import { HttpClient } from '@angular/common/http';
-import { Component, ElementRef, Input, OnInit } from '@angular/core';
+import { Component, ElementRef, OnInit, Renderer2 } from '@angular/core';
 import { WorkflowDashboard} from '../workflow-dashboard/workflow-dashboard'
 import { Store } from '@ngrx/store';
 import { StoreConfig } from '../../../../Models/storeConfig';
 import { AppStateActionGroup } from '../../../state/actions/app.state.actions';
 import { DataDictionaryGroup } from '../../../../Models/custom-component-models';
 import { IntellisenseGatherer } from '../../../../Utils/intellisenseGatherer';
+import { StoreStatus } from '../../../../Models/constants';
 
 @Component({
   selector: 'workflow-root',
@@ -19,19 +20,61 @@ export class WorkflowRoot implements OnInit {
   storeConfig: StoreConfig;
   storeConfigJson: string;
   intellisenseGatherer: IntellisenseGatherer;
+  renderer2: Renderer2;
+  private unlistener: () => void;
 
 
-  constructor(private http: HttpClient, el: ElementRef, private store: Store) {
+  constructor(private http: HttpClient, el: ElementRef, private store: Store, renderer2: Renderer2) {
+    this.renderer2 = renderer2;
     this.dataDictionaryJson = el.nativeElement.getAttribute('dataDictionaryJson');
     this.storeConfigJson = el.nativeElement.getAttribute('storeConfigJson');
-    this.setEternalState()
-    this.intellisenseGatherer = new IntellisenseGatherer();
+    this.setExternalState()
+    this.intellisenseGatherer = new IntellisenseGatherer(store);
   }
 
-  setEternalState() {
+  ngOnInit(): void {
+    this.modalHandlerShown();
+  }
+
+  async modalHandlerShown() {
+
+    this.unlistener = this.renderer2.listen("window", "shown", event => {
+      event = event;
+      var url_string = document.URL;
+      var n = url_string.lastIndexOf('/');
+      var workflowDef = url_string.substring(n + 1);
+      this.store.dispatch(AppStateActionGroup.setWorkflowDefinitionId({
+        workflowDefinitionId: workflowDef
+      }));
+    });
+      await this.getIntellisense(); 
+  }
+
+  async modalHandlerHidden() {
+
+    this.unlistener = this.renderer2.listen("window", "hidden", event => {
+      event = event;
+      this.store.dispatch(AppStateActionGroup.setJavaScriptTypeDefinitions({
+        javaScriptTypeDefinitions: ""
+      }));
+      this.store.dispatch(AppStateActionGroup.setJavascriptTypeDefinitionsFetchStatus({
+        javaScriptTypeDefinitionsFetchStatus: StoreStatus.Empty
+      }));
+    });
+      await this.getIntellisense();
+  }
+
+  setExternalState() {
     this.setStoreConfig()
     this.setDataDictionary()
-    this.store.dispatch(AppStateActionGroup.setExternalState({ storeConfig: this.storeConfig, dataDictionary: this.dataDictionary }));
+    this.store.dispatch(AppStateActionGroup.setExternalState({
+      storeConfig: this.storeConfig,
+      dataDictionary: this.dataDictionary
+    }));
+  }
+
+  async getIntellisense() {
+    await this.intellisenseGatherer.getIntellisense();
   }
 
   setStoreConfig() {
@@ -46,10 +89,5 @@ export class WorkflowRoot implements OnInit {
       this.dataDictionary = JSON.parse(this.dataDictionaryJson);
     }
   }
-
-  ngOnInit(): void {
-
-  }
-
 }
 
