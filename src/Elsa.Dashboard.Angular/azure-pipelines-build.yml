@@ -1,0 +1,45 @@
+trigger:
+- none
+
+pr:
+  branches:
+    include:
+    - main
+
+schedules:
+- cron: "0 4 * * Mon,Tue,Wed,Thu,Fri"
+  displayName: Nightly Test Run
+  branches:
+    include:
+    - main
+  always: true
+    
+parameters:
+  - name: forcePushToProd
+    displayName: Force Push to Production
+    type: boolean
+    default: false
+
+variables:
+  buildMajor: 1
+  buildMinor: 3
+  buildBranch: $[replace(variables['Build.SourceBranch'], '/', '.')]
+
+name: $(buildMajor).$(buildMinor).$(Rev:r)-elsadashboard.$(buildBranch)
+# Build and Push
+
+pool:
+  vmImage: 'ubuntu-22.04'
+
+resources:
+  repositories:
+  - repository: He.Workflow
+    type: git
+    name: 'Common Components (Agile Board)/He.Workflow'
+  - repository: templates
+    type: git
+    name: 'Cloud Hosting Service/Templates'   
+    ref: 'master'
+
+stages:
+- template: azure-pipelines-elsadashboard-build.yml@He.Workflow

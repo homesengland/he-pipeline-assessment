@@ -1,0 +1,40 @@
+@page "/DataDictionary/Create"
+@model CreateDataDictionaryGroupModel
+@{
+    Layout = "_Layout";
+}
+<div class="govuk-width-container">
+    <div class="govuk-grid-row">
+        <div class="govuk-grid-column-two-thirds">
+            <a asp-page="/_DataDictionary" class="govuk-back-link">Back</a>
+        </div>
+        <div class="govuk-grid-column-one-third pull-right">
+        </div>
+    </div>
+    <div class="text-center">
+        <form method="post">
+            <fieldset class="govuk-fieldset">
+                <legend class="govuk-fieldset__legend govuk-fieldset__legend--l">
+                    <h1 class="govuk-fieldset__heading">
+                        Create Data Dictionary Group
+                    </h1>
+                </legend>
+                <div class="govuk-form-group">
+                    <label class="govuk-label" for="group-name">
+                        Group Name
+                    </label>
+                    <input asp-for="Name" class="govuk-input" id="group-name" name="Name" type="text">
+                </div>
+
+            </fieldset>
+            <div class="govuk-button-group">
+                <input id="update" type="submit" value="Create Group" name="update" class="govuk-button" />
+            </div>
+        </form>
+
+    </div>
+</div>
+@await Html.PartialAsync("_Footer");
+@section Scripts {
+
+}

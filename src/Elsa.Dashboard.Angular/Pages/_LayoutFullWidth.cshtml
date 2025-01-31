@@ -1,0 +1,92 @@
+@inject NonceConfig nonceConfig
+<!DOCTYPE html>
+<html lang="en" class="govuk-template ">
+
+<head>
+    <meta charset="utf-8">
+    <title>Homes England Workflows</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+    <meta name="theme-color" content="#0b0c0c">
+
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+
+    <link rel="shortcut icon" sizes="16x16 32x32 48x48" href="~/styles/assets/images/favicon.ico" type="image/x-icon">
+    <link rel="mask-icon" href="~/styles/assets/images/govuk-mask-icon.svg" color="#0b0c0c">
+    <link rel="apple-touch-icon" href="~/styles/assets/images/govuk-apple-touch-icon.png">
+    <link href="/styles/govuk-frontend-4.3.0.min.css" rel="stylesheet">
+    <link href="/styles/overrides.css" rel="stylesheet">
+
+    <link rel="stylesheet" href="/css/site.css">
+
+    @RenderSection("Styles", required: false)
+</head>
+
+<body class="govuk-template__body flex-body">
+    <script nonce="@nonceConfig.GovUkSetup">
+        document.body.className = ((document.body.className) ? document.body.className + ' js-enabled' : 'js-enabled');
+    </script>
+
+    <a href="#main-content" class="govuk-skip-link" data-module="govuk-skip-link">Skip to main content</a>
+
+    <header class="govuk-header " role="banner" data-module="govuk-header">
+        <div class="govuk-header__container govuk-lg-width-container horizontal-padding__sm">
+            <div class="govuk-header__logo">
+                <a href="/" class="govuk-header__link govuk-header__link--homepage">
+                    <span class="govuk-header__logotype">
+                        <!--[if gt IE 8]><!-->
+                        <!--<![endif]-->
+                        <!--[if IE 8]>
+                            <img src="/assets/images/govuk-logotype-crown.png" class="govuk-header__logotype-crown-fallback-image" width="36" height="32">
+                        <![endif]-->
+                        <span class="govuk-header__logotype-text">
+                            Homes England
+                        </span>
+                    </span>
+                    <span class="govuk-header__product-name">
+                        Workflow Tool
+                    </span>
+                </a>
+            </div>
+        </div>
+    </header>
+
+
+    <div class="govuk-lg-width-container horizontal-padding__sm">
+        <main class="govuk-main-wrapper no-vertical-padding" id="main-content" role="main">
+            <div class="govuk-grid-row">
+                <h1 class="govuk-heading-l govuk-grid-column-one-quarter pull-left" for="event-name">Workflow Tools</h1>
+                <div class="govuk-grid-column-three-quarters pull-right">
+                    <a asp-page="/_Host" class="govuk-link pull-right  govuk-!-font-size-24 govuk-!-padding-right-2">Workflow Tools</a>
+                    <a asp-page="/_DataDictionary" class="govuk-link pull-right  govuk-!-font-size-24 govuk-!-padding-right-2">Data Dictionary</a>
+                </div>
+            </div>
+        </main>
+    </div>
+    @RenderBody()
+
+
+
+    <script src="~/styles/govuk-frontend-4.3.0.min.js" nonce="@nonceConfig.GovUkSetup"></script>
+
+    <script nonce="@nonceConfig.GovUkSetup">
+        window.GOVUKFrontend.initAll()
+    </script>
+    <script nonce="@nonceConfig.GovUkSetup">
+        let forms = document.querySelectorAll('form');
+
+        forms.forEach(function (form) {
+            form.addEventListener('submit', function (event) {
+                //trying to disable the button that is inside the current form only on submit
+
+                var submitBtn = document.querySelector('input[type="submit"]')
+                submitBtn.setAttribute('disabled', true);
+            });
+        });
+
+    </script>
+
+    @RenderSection("Scripts", required: true)
+
+</body>
+
+</html>

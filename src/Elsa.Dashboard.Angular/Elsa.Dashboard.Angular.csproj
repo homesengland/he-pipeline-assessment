@@ -1,0 +1,248 @@
+﻿<Project Sdk="Microsoft.NET.Sdk.Web">
+  <PropertyGroup Label="Configuration" Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+    <TypeScriptTarget>ES5</TypeScriptTarget>
+  </PropertyGroup>
+  <PropertyGroup Label="Configuration" Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
+    <TypeScriptTarget>ES5</TypeScriptTarget>
+  </PropertyGroup>
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <UserSecretsId>d1e00e77-9df1-4665-9129-aa059c51ef0e</UserSecretsId>
+    <DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
+    <TypeScriptModuleKind>none</TypeScriptModuleKind>
+    <TypeScriptCompileBlocked>true</TypeScriptCompileBlocked>
+    <TypeScriptJSXEmit>preserve</TypeScriptJSXEmit>
+  </PropertyGroup>
+  <ItemGroup>
+    <None Remove="src\models\domain.ts" />
+    <None Remove="src\models\event-args.ts" />
+    <None Remove="src\models\events.ts" />
+    <None Remove="src\models\index.ts" />
+    <None Remove="src\models\services.ts" />
+    <None Remove="src\models\view.ts" />
+    <None Remove="src\modules\auth0\auth0-plugin.ts" />
+    <None Remove="src\services\custom-event-bus.d.ts" />
+    <None Remove="src\services\event-bus.ts" />
+    <None Remove="src\services\workflow-plugin.ts" />
+    <None Remove="System.Security.Cryptography.Pkcs" />
+    <None Remove="System.Drawing.Common" />
+    <None Remove="System.Text.RegularExpressions" />
+  </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="Elsa.Designer.Components.Web" />
+    <PackageReference Include="Microsoft.ApplicationInsights.AspNetCore" />
+    <PackageReference Include="Microsoft.AspNetCore.DataProtection" />
+    <PackageReference Include="Microsoft.AspNetCore.DataProtection.EntityFrameworkCore" />
+    <PackageReference Include="Microsoft.Data.SqlClient" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Tools">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
+    <PackageReference Include="Microsoft.TypeScript.MSBuild">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
+    <PackageReference Include="Newtonsoft.Json" />
+    <PackageReference Include="System.Security.Cryptography.Pkcs" />
+    <PackageReference Include="System.Drawing.Common" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="www\build\*.*">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Remove="src\Data\**" />
+    <Compile Remove="src\Drivers\**" />
+    <Compile Remove="src\Globals\**" />
+    <Compile Remove="src\Modules\**" />
+    <Compile Remove="src\nested-drivers\**" />
+    <Compile Remove="src\Plugins\**" />
+    <Compile Remove="src\Services\**" />
+    <Compile Remove="src\Validation\**" />
+    <Compile Remove="Views\**" />
+    <Content Remove="src\Data\**" />
+    <Content Remove="src\Drivers\**" />
+    <Content Remove="src\Globals\**" />
+    <Content Remove="src\Modules\**" />
+    <Content Remove="src\nested-drivers\**" />
+    <Content Remove="src\Plugins\**" />
+    <Content Remove="src\Services\**" />
+    <Content Remove="src\Validation\**" />
+    <Content Remove="Views\**" />
+    <EmbeddedResource Remove="src\Data\**" />
+    <EmbeddedResource Remove="src\Drivers\**" />
+    <EmbeddedResource Remove="src\Globals\**" />
+    <EmbeddedResource Remove="src\Modules\**" />
+    <EmbeddedResource Remove="src\nested-drivers\**" />
+    <EmbeddedResource Remove="Views\**" />
+    <None Remove="src\Data\**" />
+    <None Remove="src\Drivers\**" />
+    <None Remove="src\Globals\**" />
+    <None Remove="src\Modules\**" />
+    <None Remove="src\nested-drivers\**" />
+    <None Remove="Views\**" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Remove="RequestHelper.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Remove="wwwroot\Scripts\main.a73db92ed72b803d.js" />
+    <Content Remove="wwwroot\Scripts\main.b9c6b69cbdf2422a.js" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Remove="wwwroot\Scripts\CustomElsa.js" />
+    <None Remove="wwwroot\Scripts\Drivers\ConditionalTextListPropertyDriver.js" />
+    <None Remove="wwwroot\Scripts\Drivers\CustomSwitchPropertyDriver.js" />
+    <None Remove="wwwroot\Scripts\Drivers\CustomTextPropertyDriver.js" />
+    <None Remove="wwwroot\Scripts\Drivers\QuestionPropertyDriver.js" />
+    <None Remove="wwwroot\Scripts\Drivers\TextActivityPropertyDriver.js" />
+    <None Remove="wwwroot\Scripts\Drivers\TextGroupDriver.js" />
+    <None Remove="wwwroot\Scripts\Plugins\CustomPlugins.js" />
+  </ItemGroup>
+  <ItemGroup>
+    <_ContentIncludedByDefault Remove="wwwroot\styles\assets\fonts\Roboto\LICENSE.txt" />
+    <_ContentIncludedByDefault Remove="wwwroot\styles\assets\fonts\Roboto\Roboto-Black.ttf" />
+    <_ContentIncludedByDefault Remove="wwwroot\styles\assets\fonts\Roboto\Roboto-BlackItalic.ttf" />
+    <_ContentIncludedByDefault Remove="wwwroot\styles\assets\fonts\Roboto\Roboto-Bold.ttf" />
+    <_ContentIncludedByDefault Remove="wwwroot\styles\assets\fonts\Roboto\Roboto-BoldItalic.ttf" />
+    <_ContentIncludedByDefault Remove="wwwroot\styles\assets\fonts\Roboto\Roboto-Italic.ttf" />
+    <_ContentIncludedByDefault Remove="wwwroot\styles\assets\fonts\Roboto\Roboto-Light.ttf" />
+    <_ContentIncludedByDefault Remove="wwwroot\styles\assets\fonts\Roboto\Roboto-LightItalic.ttf" />
+    <_ContentIncludedByDefault Remove="wwwroot\styles\assets\fonts\Roboto\Roboto-Medium.ttf" />
+    <_ContentIncludedByDefault Remove="wwwroot\styles\assets\fonts\Roboto\Roboto-MediumItalic.ttf" />
+    <_ContentIncludedByDefault Remove="wwwroot\styles\assets\fonts\Roboto\Roboto-Regular.ttf" />
+    <_ContentIncludedByDefault Remove="wwwroot\styles\assets\fonts\Roboto\Roboto-Thin.ttf" />
+    <_ContentIncludedByDefault Remove="wwwroot\styles\assets\fonts\Roboto\Roboto-ThinItalic.ttf" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Extensions\RequestHelper.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="wwwroot\Scripts\Constants\CustomComponentTags.js" />
+    <None Include="wwwroot\Scripts\Constants\CustomPropertyUiHints.js" />
+    <None Include="wwwroot\Scripts\main.a73db92ed72b803d.js" />
+    <None Include="wwwroot\Scripts\main.b9c6b69cbdf2422a.js" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Elsa.CustomInfrastructure\Elsa.CustomInfrastructure.csproj" />
+    <ProjectReference Include="..\Elsa.CustomWorkflow.Sdk\Elsa.CustomWorkflow.Sdk.csproj" />
+  </ItemGroup>
+  <ItemGroup>
+    <TypeScriptCompile Include="src\models\index.ts">
+      <SubType>Code</SubType>
+    </TypeScriptCompile>
+    <TypeScriptCompile Include="src\models\events.ts">
+      <SubType>Code</SubType>
+    </TypeScriptCompile>
+    <TypeScriptCompile Include="src\models\event-args.ts">
+      <SubType>Code</SubType>
+    </TypeScriptCompile>
+    <TypeScriptCompile Include="src\models\domain.ts">
+      <SubType>Code</SubType>
+    </TypeScriptCompile>
+    <TypeScriptCompile Include="src\models\services.ts" />
+    <TypeScriptCompile Include="src\models\view.ts" />
+    <TypeScriptCompile Include="src\modules\auth0\auth0-plugin.ts" />
+    <TypeScriptCompile Include="src\services\custom-event-bus.d.ts" />
+    <TypeScriptCompile Include="src\services\custom-event-bus.js" />
+    <TypeScriptCompile Include="src\services\event-bus.ts" />
+    <TypeScriptCompile Include="src\services\toast-notification-service.ts" />
+    <TypeScriptCompile Include="src\services\workflow-plugin.ts" />
+	  <TypeScriptCompile Include="src\utils\utils.ts">
+		  <SubType>Code</SubType>
+	  </TypeScriptCompile>
+    <TypeScriptCompile Include="wwwroot\Scripts\CustomElsa.js" />
+    <TypeScriptCompile Include="wwwroot\Scripts\Drivers\ConditionalTextListPropertyDriver.js" />
+    <TypeScriptCompile Include="wwwroot\Scripts\Drivers\CustomSwitchPropertyDriver.js" />
+    <TypeScriptCompile Include="wwwroot\Scripts\Drivers\CustomTextPropertyDriver.js" />
+    <TypeScriptCompile Include="wwwroot\Scripts\Drivers\TextGroupDriver.js" />
+    <TypeScriptCompile Include="wwwroot\Scripts\Drivers\TextActivityPropertyDriver.js" />
+    <TypeScriptCompile Include="wwwroot\Scripts\Drivers\QuestionPropertyDriver.js" />
+    <TypeScriptCompile Include="wwwroot\Scripts\Plugins\CustomPlugins.js" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Update="wwwroot\styles\assets\fonts\bold-affa96571d-v2.woff">
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+    <Content Update="wwwroot\styles\assets\fonts\bold-b542beb274-v2.woff2">
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+    <Content Update="wwwroot\styles\assets\fonts\light-94a07e06a1-v2.woff2">
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+    <Content Update="wwwroot\styles\assets\fonts\light-f591b13f7d-v2.woff">
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+    <Content Update="wwwroot\styles\assets\images\favicon.ico">
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+    <Content Update="wwwroot\styles\assets\images\govuk-apple-touch-icon-152x152.png">
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+    <Content Update="wwwroot\styles\assets\images\govuk-apple-touch-icon-167x167.png">
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+    <Content Update="wwwroot\styles\assets\images\govuk-apple-touch-icon-180x180.png">
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+    <Content Update="wwwroot\styles\assets\images\govuk-apple-touch-icon.png">
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+    <Content Update="wwwroot\styles\assets\images\govuk-crest-2x.png">
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+    <Content Update="wwwroot\styles\assets\images\govuk-crest.png">
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+    <Content Update="wwwroot\styles\assets\images\govuk-logotype-crown.png">
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+    <Content Update="wwwroot\styles\assets\images\govuk-mask-icon.svg">
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+    <Content Update="wwwroot\styles\assets\images\govuk-opengraph-image.png">
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+    <Content Update="wwwroot\styles\govuk-frontend-4.3.0.min.css">
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+    <Content Update="wwwroot\styles\govuk-frontend-4.3.0.min.js">
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+    <Content Update="wwwroot\styles\govuk-frontend-ie8-4.3.0.min.css">
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+    <Content Update="wwwroot\styles\overrides.css">
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+    <Content Update="wwwroot\styles\VERSION.txt">
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="dist\" />
+    <Folder Include="www\" />
+  </ItemGroup>
+</Project>
