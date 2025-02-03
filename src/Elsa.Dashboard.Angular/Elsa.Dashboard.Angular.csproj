@@ -1,4 +1,4 @@
-﻿<Project Sdk="Microsoft.NET.Sdk.Web">
+<Project Sdk="Microsoft.NET.Sdk.Web">
   <PropertyGroup Label="Configuration" Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
     <TypeScriptTarget>ES5</TypeScriptTarget>
   </PropertyGroup>
@@ -22,7 +22,7 @@
     <None Remove="src\models\index.ts" />
     <None Remove="src\models\services.ts" />
     <None Remove="src\models\view.ts" />
-    <None Remove="src\modules\auth0\auth0-plugin.ts" />
+    <None Remove="src\plugins\auth0-plugin.ts" />
     <None Remove="src\services\custom-event-bus.d.ts" />
     <None Remove="src\services\event-bus.ts" />
     <None Remove="src\services\workflow-plugin.ts" />
