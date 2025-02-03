@@ -34,12 +34,12 @@ export class MultiExpressionEditor {
   expressionEditor: HTMLExpressionEditorElement;
   defaultSyntaxValue: string;
   contextMenuWidget: HTMLElement;
+  monacoLanguage;
   
 
   //Styling computed Variables
   fieldId;
   fieldLabel;
-  monacoLanguage = mapSyntaxToLanguage(this.selectedSyntax);
   expressionEditorClass;
   defaultEditorClass;
   advancedButtonClass;
@@ -52,6 +52,8 @@ export class MultiExpressionEditor {
     this.expressionEditorClass = computed(() => this.selectedSyntax ? 'block' : 'hidden');
     this.defaultEditorClass = computed(() => this.selectedSyntax ? 'hidden' : 'block');
     this.advancedButtonClass = computed(() => this.selectedSyntax ? 'elsa-text-blue-500' : 'elsa-text-gray-300');
+    this.monacoLanguage = computed(() => mapSyntaxToLanguage(this.selectedSyntax));
+
   }
 
   ngOnInit() {

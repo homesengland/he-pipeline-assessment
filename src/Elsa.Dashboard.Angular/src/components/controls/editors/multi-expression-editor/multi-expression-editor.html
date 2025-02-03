@@ -1,6 +1,5 @@
 @let selectedSyntaxClass = "elsa-block elsa-px-4 elsa-py-2 elsa-text-sm hover:elsa-bg-gray-100 hover:elsa-text-gray-900 elsa-text-blue-700";
 @let nonSelectedSyntaxClass = "elsa-block elsa-px-4 elsa-py-2 elsa-text-sm hover:elsa-bg-gray-100 hover:elsa-text-gray-900 elsa-text-grey-700";
-
 <div>
   <div class="elsa-mb-1">
     <div class="elsa-flex">
@@ -9,9 +8,8 @@
           { fieldLabel }
         </label>
       </div>
-      <div class="elsa-relative" ref={ el=>
-        this.contextMenuWidget = el } >
-        <button type="button" class="elsa-border-0 focus:elsa-outline-none elsa-text-sm {{advancedButtonClass}}" (click)="onSettingsClick($event)">
+      <div class="elsa-relative" ref={{contextMenuWidget}}>
+        <button type="button" class=`elsa-border-0 focus:elsa-outline-none elsa-text-sm ${{advancedButtonClass}}` (click)="onSettingsClick($event)">
 
           <ng-template [ngif]="!readOnly">
             <svg class="elsa-h-5 elsa-w-5 elsa-text-gray-400" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
@@ -35,8 +33,8 @@
                data-transition-leave-start="elsa-transform elsa-opacity-100 elsa-scale-100"
                data-transition-leave-end="elsa-transform elsa-opacity-0 elsa-scale-95"
                class="hidden elsa-origin-top-right elsa-absolute elsa-right-1 elsa-mt-1 elsa-w-56 elsa-rounded-md elsa-shadow-lg elsa-bg-white elsa-ring-1 elsa-ring-black elsa-ring-opacity-5 elsa-divide-y elsa-divide-gray-100 focus:elsa-outline-none elsa-z-10" role="menu"
-               aria - orientation="vertical"
-               aria - labelledby="options-menu">
+               aria-orientation="vertical"
+               aria-abelledby="options-menu">
             <div class="elsa-py-1" role="none">
               <a onClick={ e=> this.selectSyntax(e, null) } href = "#" class={ `elsa-block elsa-px-4 elsa-py-2 elsa-text-sm hover:elsa-bg-gray-100 hover:elsa-text-gray-900 ${!selectedSyntax ? 'elsa-text-blue-700' : 'elsa-text-gray-700'}` } role = "menuitem" > Default </a>
             </div>
@@ -45,7 +43,7 @@
               <a *ngFor="let syntax from supportedSyntaxes; index as i;"
                  (click)="selectSyntax(e, {{syntax}})" href="#"
                  ngClass="syntax == selectedSyntax ? selectedSyntaxClass : nonSelectedSyntaxClass" role="menuitem">
-                { syntax }
+                {{ syntax }}
               </a>
             </div>
           </div>
@@ -53,21 +51,20 @@
       </div>
     </div>
     <div class="elsa-flex">
-      <p class="elsa-mt-2 elsa-text-sm elsa-text-gray-500"> { this.hint } </p>
+      <p class="elsa-mt-2 elsa-text-sm elsa-text-gray-500"> {{hint}} </p>
     </div>
   </div>
   <div>
     <div class={ expressionEditorClass }>
-      <he-expression - editor ref={ el=>
-        this.expressionEditor = el }
-        onExpressionChanged = { e => this.onExpressionChanged(e) }
-        expression = { value }
-        language = { monacoLanguage }
-        editorHeight = { this.editorHeight }
-        singleLineMode = { this.singleLineMode }
-        context = { this.context } />
+      <expression-editor ref={{expressionEditor}}
+        [onExpressionChanged]="onExpressionChanged(e)"
+        [expression]="currentExpression"
+        [monacoLanguage]="monacoLanguage"
+        [editorHeight]="editorHeight"
+        [singleLineMode]="singleLineMode"
+        [context]="context" />
     </div>
-    < div class={ defaultEditorClass }>
+    <div ngClass="defaultEditorClass">
     <slot />
   </div>
 </div>
