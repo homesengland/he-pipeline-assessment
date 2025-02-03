@@ -3,6 +3,7 @@ import { MenuItem } from "./models";
 import { leave, toggle } from 'el-transition'
 import { Location } from '@angular/common';
 import { DropdownButtonItem } from "../workflow-dropdown-button/models";
+import { Router } from "@angular/router";
 
 @Component({
   selector: 'workflow-context-menu',
@@ -16,7 +17,7 @@ export class WorkflowContextMenu implements OnInit {
   @ViewChild('element') element;
   @ViewChild('contextMenu') contextMenu;
 
-  constructor(private location:Location) {
+  constructor(private location:Location, private router: Router) {
 
   }
 
@@ -44,7 +45,7 @@ export class WorkflowContextMenu implements OnInit {
   async onMenuItemClick(e: Event, menuItem: MenuItem) {
     e.preventDefault();
     if (!!menuItem.anchorUrl) {
-      this.location.go(menuItem.anchorUrl);
+      this.router.navigate([menuItem.anchorUrl]);
     }
     else if (!!menuItem.clickHandler) {
       menuItem.clickHandler(e);
