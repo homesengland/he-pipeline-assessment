@@ -1,9 +1,11 @@
 import { HttpClient } from '@angular/common/http';
-import { Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { parseQuery, queryToString } from "../../../utils/utils";
 import { Location } from '@angular/common';
-import { ActivatedRoute, Router } from '@angular/router';
+import { selectBasePath } from '../../state/selectors/app.state.selectors';
 import * as _ from 'lodash';
+import { Store } from '@ngrx/store';
+import { Router } from '@angular/router';
 
 export interface PagerData {
   page: number;
@@ -28,30 +30,31 @@ export class WorkflowPager implements OnInit {
   math: Math;
   chevronLeftHref: string;
   history: Array<string> = new Array<string>();
-
-  @Output() paged = new EventEmitter<PagerData>();
   loadash: any;
 
-  constructor(private http: HttpClient, private location: Location, private router: Router, private activatedRoute: ActivatedRoute) {
+  @Output() paged = new EventEmitter<PagerData>();
+
+  constructor(private http: HttpClient, private location: Location, private router: Router, private store: Store) {
     this.math = Math;
     this.loadash = _;
   }
 
   ngOnInit(): void {
-    this.basePath = "";
-    }
+    this.store.select(selectBasePath).subscribe(data => {
+      this.basePath = data ? data : "";
+    });
+  }
 
   onNavigateClick(e: Event, page: number) {
     const anchor = e.currentTarget as HTMLAnchorElement;
 
     e.preventDefault();
-    let query = parseQuery(anchor.search);
     this.navigate(`${anchor.pathname}${anchor.search}`, page);
   }
 
   navigate(path: string, page: number) {
-     if (this.location) {
-      this.location.replaceState(path);
+    if (this.location) {
+      this.location.go(path);
       return;
     }
     else {
@@ -66,9 +69,5 @@ export class WorkflowPager implements OnInit {
     const query = { ...currentQuery, 'page': page };
     return `${this.basePath}?${queryToString(query)}`;
   };
-
-  log(text: string, obj: any) {
-    console.log(text, obj);
-  }
 }
 

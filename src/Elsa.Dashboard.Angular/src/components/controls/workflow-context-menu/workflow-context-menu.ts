@@ -1,6 +1,8 @@
-import { Component, HostListener, Input, OnInit, ViewChild } from "@angular/core";
+import { Component, EventEmitter, HostListener, Input, OnInit, Output, ViewChild } from "@angular/core";
 import { MenuItem } from "./models";
 import { leave, toggle } from 'el-transition'
+import { Location } from '@angular/common';
+import { DropdownButtonItem } from "../workflow-dropdown-button/models";
 
 @Component({
   selector: 'workflow-context-menu',
@@ -8,13 +10,15 @@ import { leave, toggle } from 'el-transition'
   styleUrls: ['./workflow-context-menu.css'],
   standalone: false
 })
-export class WorkflowPager implements OnInit {
+export class WorkflowContextMenu implements OnInit {
   @Input() menuItems: Array<MenuItem> = [];
 
-  navigate: (path: string) => void;
   @ViewChild('element') element;
   @ViewChild('contextMenu') contextMenu;
 
+  constructor(private location:Location) {
+
+  }
 
   ngOnInit(): void {
     this.menuItems.map(item => !!item.anchorUrl ? item.anchorUrl : "#");
@@ -29,23 +33,22 @@ export class WorkflowPager implements OnInit {
   }
 
   closeContextMenu() {
-    if (!!this.contextMenu)
-      leave(this.contextMenu);
+    if (!!this.contextMenu.nativeElement)
+      leave(this.contextMenu.nativeElement);
   }
 
   toggleMenu() {
-    toggle(this.contextMenu);
+    toggle(this.contextMenu.nativeElement);
   }
 
   async onMenuItemClick(e: Event, menuItem: MenuItem) {
     e.preventDefault();
-
     if (!!menuItem.anchorUrl) {
-      this.navigate(menuItem.anchorUrl);
-    } else if (!!menuItem.clickHandler) {
+      this.location.go(menuItem.anchorUrl);
+    }
+    else if (!!menuItem.clickHandler) {
       menuItem.clickHandler(e);
     }
-
     this.closeContextMenu();
   }
 
