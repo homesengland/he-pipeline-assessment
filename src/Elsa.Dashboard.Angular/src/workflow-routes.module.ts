@@ -5,6 +5,7 @@ import { WorkflowDashboard} from './components/dashboard/pages/workflow-dashboar
 import { WorkflowInstancesList } from './components/dashboard/pages/workflow-instances-list/workflow-instances-list';
 import { WorkflowRegistry } from './components/dashboard/pages/workflow-registry/workflow-registry';
 import { WorkflowHome } from './components/dashboard/pages/workflow-home/workflow-home';
+import {WorkflowPlaceholder} from './components/dashboard/pages/workflow-placeholder/workflow-placeholder';
 
 const routes: Routes = [
   {
@@ -15,14 +16,19 @@ const routes: Routes = [
     path: 'workflow-definitions',
     component: WorkflowDefinitionsList,
   },
-    {
-      path: 'workflow-instances',
-      component: WorkflowInstancesList,
+  {
+    path: 'workflow-instances',
+    component: WorkflowInstancesList,
   },
-    {
+  {
     path: 'workflow-registry',
-      component: WorkflowRegistry,
+    component: WorkflowRegistry,
+  },
+  {
+    path: 'workflow-placeholder',
+    component: WorkflowPlaceholder,
   }
+
 ];
 
 export const routing = RouterModule.forRoot(routes);
