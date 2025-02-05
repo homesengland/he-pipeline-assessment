@@ -9,7 +9,7 @@ export const selectMonacoLibPath = createSelector(getAppState, (state) => state.
 
 export const selectStoreConfig = createSelector(getAppState, (state) => state.storeConfig);
 
-export const selectWorkflowDefinitionIds = createSelector(getAppState, (state) => state.workflowDefinitionId);
+export const selectWorkflowDefinitionId = createSelector(getAppState, (state) => state.workflowDefinitionId);
 
 export const selectJavaScriptTypeDefinitions = createSelector(getAppState, (state) => state.javaScriptTypeDefinitions);
 

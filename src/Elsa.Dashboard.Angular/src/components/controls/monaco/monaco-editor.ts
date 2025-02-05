@@ -1,4 +1,4 @@
-import { Component, Input, output, SimpleChanges } from "@angular/core";
+import { Component, Input, model, output, SimpleChanges } from "@angular/core";
 import { initializeMonacoWorker, Monaco, EditorVariables } from "./monaco-utils";
 import { selectMonacoLibPath } from '../../state/selectors/app.state.selectors';
 import { Store } from '@ngrx/store';
@@ -16,11 +16,11 @@ export class MonacoEditor {
   monacoLibPath: string;
   valueChanged = output<MonacoValueChangedArgs>();
 
-  @Input() editorHeight: string = '5em';
-  @Input() value: string;
-  @Input() language: string;
-  @Input() singleLineMode: boolean = false;
-  @Input() padding: string;
+  editorHeight = model<string>('5em');
+  value = model<string>();
+  language = model<string>();
+  singleLineMode = model<boolean>(false);
+  padding = model<string>();
 
   constructor(private store: Store) {
     this.store.select(selectMonacoLibPath).subscribe(data => {

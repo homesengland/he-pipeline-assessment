@@ -57,12 +57,11 @@
   <div>
     <div class={ expressionEditorClass }>
       <expression-editor ref={{expressionEditor}}
-        [onExpressionChanged]="onExpressionChanged(e)"
-        [expression]="currentExpression"
-        [monacoLanguage]="monacoLanguage"
-        [editorHeight]="editorHeight"
-        [singleLineMode]="singleLineMode"
-        [context]="context" />
+        [(expression)]="currentExpression"
+        [(monacoLanguage)]="monacoLanguage"
+        [(editorHeight)]="editorHeight"
+        [(singleLineMode)]="singleLineMode"
+        [(context)]="context" />
     </div>
     <div ngClass="defaultEditorClass">
     <slot />

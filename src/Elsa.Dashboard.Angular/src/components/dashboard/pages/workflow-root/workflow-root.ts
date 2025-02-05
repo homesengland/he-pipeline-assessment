@@ -2,11 +2,11 @@ import { HttpClient } from '@angular/common/http';
 import { Component, ElementRef, OnInit, Renderer2 } from '@angular/core';
 import { WorkflowDashboard} from '../workflow-dashboard/workflow-dashboard'
 import { Store } from '@ngrx/store';
-import { StoreConfig } from '../../../../Models/storeConfig';
+import { StoreConfig } from '../../../../models/store-config';
 import { AppStateActionGroup } from '../../../state/actions/app.state.actions';
 import { DataDictionaryGroup } from '../../../../Models/custom-component-models';
-import { IntellisenseGatherer } from '../../../../Utils/intellisenseGatherer';
-import { StoreStatus } from '../../../../Models/constants';
+import { IntellisenseGatherer } from '../../../../utils/intellisense-gatherer';
+import { StoreStatus } from '../../../../models/constants';
 
 @Component({
   selector: 'workflow-root',

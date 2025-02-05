@@ -1,5 +1,5 @@
 import { createActionGroup, props } from '@ngrx/store';
-import { StoreConfig } from '../../../Models/storeConfig';
+import { StoreConfig } from '../../../models/store-config';
 import { DataDictionaryGroup } from '../../../Models/custom-component-models';
 
 export const AppStateActionGroup = createActionGroup({

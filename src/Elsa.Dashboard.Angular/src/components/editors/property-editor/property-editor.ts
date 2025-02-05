@@ -1,13 +1,13 @@
-import { Component, input, Input, model, output } from '@angular/core';
-import { SyntaxNames } from '../../../../constants/constants';
-import { ActivityDefinitionProperty, ActivityModel, ActivityPropertyDescriptor, IntellisenseContext } from '../../../../models';
+import { Component, input, Input, model, OnChanges, OnInit, output, SimpleChanges } from '@angular/core';
+import { SyntaxNames } from '../../../constants/constants';
+import { ActivityDefinitionProperty, ActivityModel, ActivityPropertyDescriptor, IntellisenseContext } from '../../../models';
 
 
 @Component({
   selector: 'property-editor',
   template: './property-editor.html',
 })
-export class PropertyEditor {
+export class PropertyEditor implements OnInit, OnChanges {
 
   activityModel = model<ActivityModel>();
   propertyDescriptor = model<ActivityPropertyDescriptor>();
@@ -22,6 +22,9 @@ export class PropertyEditor {
   constructor() {
 
   }
+    ngOnChanges(changes: SimpleChanges): void {
+
+    }
 
   ngOnInit() {
     this.editorContext = {

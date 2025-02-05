@@ -1,7 +1,7 @@
 import { Component } from "@angular/core";
 import { Monaco } from "../components/controls/monaco/monaco-utils";
 import { MonacoEditor } from "../components/controls/monaco/monaco-editor";
-import { ExpressionEditor } from "../components/controls/editors/expression-editor/expression-editor";
+import { ExpressionEditor } from "../components/editors/expression-editor/expression-editor";
 
 export interface HTMLModalDialogElement extends MonacoEditor, HTMLElement {
   show();
