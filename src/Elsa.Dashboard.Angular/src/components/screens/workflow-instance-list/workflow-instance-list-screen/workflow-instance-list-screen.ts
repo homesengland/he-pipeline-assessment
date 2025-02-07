@@ -7,7 +7,7 @@ import { Store } from '@ngrx/store';
 import { ElsaClientService, ElsaClient } from "../../../../services/elsa-client";
 import { EventTypes, OrderBy, PagedList, WorkflowBlueprintSummary, WorkflowInstanceSummary, WorkflowStatus } from "../../../../models";
 import { Map, parseQuery } from '../../../../utils/utils';
-import { selectBasePath, selectServerUrl } from '../../../state/selectors/app.state.selectors';
+import { selectStoreConfig } from '../../../state/selectors/app.state.selectors';
 import { eventBus } from '../../../../services/event-bus';
 import { confirmDialogService } from '../../../../services/confirm-dialog-service';
 import { DropdownButtonItem, DropdownButtonOrigin } from "../../../controls/workflow-dropdown-button/models";
@@ -106,12 +106,12 @@ export class WorkflowInstanceListScreen implements OnInit {
   }
 
   private setVariablesFromAppState() {
-    this.store.select(selectServerUrl).subscribe(data => {
-      this.serverUrl = data;
+    this.store.select(selectStoreConfig).subscribe(data => {
+      this.serverUrl = data.serverUrl;
     });
 
-    this.store.select(selectBasePath).subscribe(data => {
-      this.basePath = data ? data : "";
+    this.store.select(selectStoreConfig).subscribe(data => {
+      this.basePath = data.basePath ? data.basePath : "";
     });
   }
 

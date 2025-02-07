@@ -2,7 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { parseQuery, queryToString } from "../../../utils/utils";
 import { Location } from '@angular/common';
-import { selectBasePath } from '../../state/selectors/app.state.selectors';
+import { selectStoreConfig } from '../../state/selectors/app.state.selectors';
 import * as _ from 'lodash';
 import { Store } from '@ngrx/store';
 import { Router } from '@angular/router';
@@ -40,8 +40,8 @@ export class WorkflowPager implements OnInit {
   }
 
   ngOnInit(): void {
-    this.store.select(selectBasePath).subscribe(data => {
-      this.basePath = data ? data : "";
+    this.store.select(selectStoreConfig).subscribe(data => {
+      this.basePath = data.basePath ? data.basePath : "";
     });
   }
 

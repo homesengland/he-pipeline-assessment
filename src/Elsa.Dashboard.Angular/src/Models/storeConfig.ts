@@ -10,4 +10,5 @@ export class StoreConfig {
   monacoLibPath: string = "";
   dataDictionaryIntellisense: string = "";
   auth0Client: Auth0Client = null;
+  basePath: string = "";
 }
