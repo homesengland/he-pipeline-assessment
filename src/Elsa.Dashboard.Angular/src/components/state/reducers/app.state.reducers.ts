@@ -1,24 +1,33 @@
 import { createReducer, on, StoreModule } from '@ngrx/store';
 import { AppStateActionGroup } from '../actions/app.state.actions';
+import { StoreConfig } from '../../../Models/storeConfig';
+import { DataDictionaryGroup } from '../../../Models/custom-component-models';
 
 export class AppState {
-  serverUrl: string;
-  monacoLibPath: string;
-  auth0Domain: string;
-  auth0ClientId: string;
-  auth0Audience: string;
-  basePath: string;
+  storeConfig: StoreConfig;
+  dataDictionary: Array<DataDictionaryGroup>;
+  workflowDefinitionId: string;
+  javaScriptTypeDefinitionsFetchStatus: string;
+  javaScriptTypeDefinitions: string;
+  dataDictionaryIntellisense: string;
 }
 export const initialState: AppState = {
-  serverUrl: "",
-  monacoLibPath: "",
-  auth0Audience: "",
-  auth0ClientId: "",
-  auth0Domain: "",
-  basePath: ""
+  storeConfig: null,
+  dataDictionary: null,
+  workflowDefinitionId: "",
+  javaScriptTypeDefinitionsFetchStatus: "",
+  javaScriptTypeDefinitions: "",
+  dataDictionaryIntellisense: ""
 }
 
 export const appStateReducer = createReducer(
   initialState,
-  on(AppStateActionGroup.setExternalState, (_state, { serverUrl, monacoLibPath, auth0Domain, auth0ClientId, auth0Audience, basePath }) => ({ serverUrl: serverUrl, monacoLibPath: monacoLibPath, auth0Domain: auth0Domain, auth0Audience: auth0ClientId, auth0ClientId: auth0Audience, basePath: basePath }))
+  on(AppStateActionGroup.setExternalState, (_state, { storeConfig, dataDictionary }) => ({ ..._state, storeConfig: storeConfig, dataDictionary: dataDictionary })),
+  on(AppStateActionGroup.setStoreConfig, (_state, { storeConfig }) => ({ ..._state, storeConfig: storeConfig })),
+  on(AppStateActionGroup.setWorkflowDefinitionId, (_state, { workflowDefinitionId }) => ({ ..._state, workflowDefinitionId: workflowDefinitionId })),
+  on(AppStateActionGroup.setJavascriptTypeDefinitionsFetchStatus, (_state, { javaScriptTypeDefinitionsFetchStatus }) => ({ ..._state, javaScriptTypeDefinitionsFetchStatus: javaScriptTypeDefinitionsFetchStatus })),
+  on(AppStateActionGroup.setJavaScriptTypeDefinitions, (_state, { javaScriptTypeDefinitions }) => ({ ..._state, javaScriptTypeDefinitions: javaScriptTypeDefinitions })),
+  on(AppStateActionGroup.setDataDictionaryIntellisense, (_state, { dataDictionaryIntellisense }) => ({ ..._state, dataDictionaryIntellisense: dataDictionaryIntellisense }))
 );
+
+

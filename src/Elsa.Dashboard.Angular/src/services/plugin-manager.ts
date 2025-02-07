@@ -43,6 +43,7 @@ export class PluginManager {
       //() => new StatePlugin(),
       //() => new SendEmailPlugin(),
       //() => new DynamicOutcomesPlugin()
+      //() => new Auth0Plugin()
     ];
   }
 

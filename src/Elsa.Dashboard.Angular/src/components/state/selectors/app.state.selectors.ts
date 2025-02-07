@@ -1,19 +1,18 @@
 import {createFeatureSelector, createSelector } from '@ngrx/store';
 import { AppState } from '../reducers/app.state.reducers';
 
-//export const selectServerUrl = createFeatureSelector<string>('serverUrl');
-
-/*export const selectmonacoLibPath = createFeatureSelector<string>('monacoLibPath');*/
-
 const getAppState = createFeatureSelector<AppState>('appState');
 
-export const selectServerUrl = createSelector(getAppState, (state) => state.serverUrl);
+export const selectServerUrl = createSelector(getAppState, (state) => state.storeConfig.serverUrl);
 
-export const selectMonacoLibPath = createSelector(getAppState, (state) => state.monacoLibPath);
+export const selectMonacoLibPath = createSelector(getAppState, (state) => state.storeConfig.monacoLibPath);
 
-export const selectAuth0Domain = createSelector(getAppState, (state) => state.auth0Domain);
+export const selectStoreConfig = createSelector(getAppState, (state) => state.storeConfig);
 
-export const selectAuth0ClientId = createSelector(getAppState, (state) => state.auth0ClientId);
+export const selectWorkflowDefinitionIds = createSelector(getAppState, (state) => state.workflowDefinitionId);
 
-export const selectAuth0Audience = createSelector(getAppState, (state) => state.auth0Audience);
-export const selectBasePath = createSelector(getAppState, (state) => state.basePath);
+export const selectJavaScriptTypeDefinitions = createSelector(getAppState, (state) => state.javaScriptTypeDefinitions);
+
+export const selectJavaScriptTypeDefinitionsFetchStatus = createSelector(getAppState, (state) => state.javaScriptTypeDefinitionsFetchStatus);
+
+export const selectDataDictionaryIntellisense = createSelector(getAppState, (state) => state.dataDictionaryIntellisense);
