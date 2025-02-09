@@ -1,20 +1,19 @@
-@let from = page * pageSize + 1;
-@let to = math.min(from + pageSize - 1, totalCount);
-@let pageCount = math.round(((totalCount - 1) / pageSize) + 0.5);
+@let from = page() * pageSize() + 1;
+@let to = math.min(from + pageSize() - 1, totalCount());
+@let pageCount = math.round(((totalCount() - 1) / pageSize()) + 0.5);
 @let maxPageButtons = 10;
-@let fromPage = math.max(0, page - maxPageButtons / 2);
+@let fromPage = math.max(0, ((page())) - maxPageButtons / 2);
 @let toPage = math.min(pageCount, fromPage + maxPageButtons);
 @let currentPages = loadash.range(fromPage, toPage);
-<div class="elsa-bg-white elsa-px-4 elsa-py-3 elsa-flex elsa-items-center elsa-justify-between elsa-border-t elsa-border-gray-200 sm:elsa-px-6">
+<div
+    class="elsa-bg-white elsa-px-4 elsa-py-3 elsa-flex elsa-items-center elsa-justify-between elsa-border-t elsa-border-gray-200 sm:elsa-px-6">
     <div class="elsa-flex-1 elsa-flex elsa-justify-between sm:elsa-hidden">
-        <a *ngIf="page > 0" href={{getNavUrl(page-1)}
-           (click)="onNavigateClick($event, page-1)"
-           class="elsa-relative elsa-inline-flex elsa-items-center elsa-px-4 elsa-py-2 elsa-border elsa-border-gray-300 elsa-text-sm elsa-leading-5 elsa-font-medium elsa-rounded-md elsa-text-gray-700 elsa-bg-white hover:elsa-text-gray-500 focus:elsa-outline-none focus:elsa-shadow-outline-blue focus:elsa-border-blue-300 active:elsa-bg-gray-100 active:elsa-text-gray-700 elsa-transition elsa-ease-in-out elsa-duration-150">
+        <a *ngIf="page() > 0" href={{getNavUrl(page-1)} (click)="onNavigateClick($event, page()-1)"
+            class="elsa-relative elsa-inline-flex elsa-items-center elsa-px-4 elsa-py-2 elsa-border elsa-border-gray-300 elsa-text-sm elsa-leading-5 elsa-font-medium elsa-rounded-md elsa-text-gray-700 elsa-bg-white hover:elsa-text-gray-500 focus:elsa-outline-none focus:elsa-shadow-outline-blue focus:elsa-border-blue-300 active:elsa-bg-gray-100 active:elsa-text-gray-700 elsa-transition elsa-ease-in-out elsa-duration-150">
             Previous
         </a>
-        <a *ngIf="page < pageCount-1" href={{getNavUrl(page+1)}
-           (click)="onNavigateClick($event, page+1)"
-           class="elsa-ml-3 elsa-relative elsa-inline-flex elsa-items-center elsa-px-4 elsa-py-2 elsa-border elsa-border-gray-300 elsa-text-sm elsa-leading-5 elsa-font-medium elsa-rounded-md elsa-text-gray-700 elsa-bg-white hover:elsa-text-gray-500 focus:elsa-outline-none focus:elsa-shadow-outline-blue focus:elsa-border-blue-300 active:elsa-bg-gray-100 active:elsa-text-gray-700 elsa-transition elsa-ease-in-out elsa-duration-150">
+        <a *ngIf="page() < pageCount-1" href={{getNavUrl(page+1)} (click)="onNavigateClick($event, page()+1)"
+            class="elsa-ml-3 elsa-relative elsa-inline-flex elsa-items-center elsa-px-4 elsa-py-2 elsa-border elsa-border-gray-300 elsa-text-sm elsa-leading-5 elsa-font-medium elsa-rounded-md elsa-text-gray-700 elsa-bg-white hover:elsa-text-gray-500 focus:elsa-outline-none focus:elsa-shadow-outline-blue focus:elsa-border-blue-300 active:elsa-bg-gray-100 active:elsa-text-gray-700 elsa-transition elsa-ease-in-out elsa-duration-150">
             Next
         </a>
     </div>
@@ -26,18 +25,20 @@
                 <span>'To'</span>
                 <span class="elsa-font-medium">{{to}}</span>
                 <span>'Of'</span>
-                <span class="elsa-font-medium">{{totalCount}}</span>
+                <span class="elsa-font-medium">{{totalCount()}}</span>
                 <span>'Results'</span>
             </p>
         </div>
         <div>
             <nav class="elsa-relative elsa-z-0 elsa-inline-flex elsa-shadow-sm">
-                <a *ngIf="page > 0" href={{getNavUrl(page-1)}}
-                   (click)="onNavigateClick($event, page-1)"
-                   class="elsa-relative elsa-inline-flex elsa-items-center elsa-px-2 elsa-py-2 elsa-rounded-l-md elsa-border elsa-border-gray-300 elsa-bg-white elsa-text-sm elsa-leading-5 elsa-font-medium elsa-text-gray-500 hover:elsa-text-gray-400 focus:elsa-z-10 focus:elsa-outline-none focus:elsa-border-blue-300 focus:elsa-shadow-outline-blue active:elsa-bg-gray-100 active:elsa-text-gray-500 elsa-transition elsa-ease-in-out elsa-duration-150"
-                   aria-label="Previous">
-                    <svg class="elsa-h-5 elsa-w-5" x-description="Heroicon name: chevron-left" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
-                        <path fill-rule="evenodd" d="M12.707 5.293a1 1 0 010 1.414L9.414 10l3.293 3.293a1 1 0 01-1.414 1.414l-4-4a1 1 0 010-1.414l4-4a1 1 0 011.414 0z" clip-rule="evenodd" />
+                <a *ngIf="page() > 0" href={{getNavUrl(page()-1)}} (click)="onNavigateClick($event, page()-1)"
+                    class="elsa-relative elsa-inline-flex elsa-items-center elsa-px-2 elsa-py-2 elsa-rounded-l-md elsa-border elsa-border-gray-300 elsa-bg-white elsa-text-sm elsa-leading-5 elsa-font-medium elsa-text-gray-500 hover:elsa-text-gray-400 focus:elsa-z-10 focus:elsa-outline-none focus:elsa-border-blue-300 focus:elsa-shadow-outline-blue active:elsa-bg-gray-100 active:elsa-text-gray-500 elsa-transition elsa-ease-in-out elsa-duration-150"
+                    aria-label="Previous">
+                    <svg class="elsa-h-5 elsa-w-5" x-description="Heroicon name: chevron-left"
+                        xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
+                        <path fill-rule="evenodd"
+                            d="M12.707 5.293a1 1 0 010 1.414L9.414 10l3.293 3.293a1 1 0 01-1.414 1.414l-4-4a1 1 0 010-1.414l4-4a1 1 0 011.414 0z"
+                            clip-rule="evenodd" />
                     </svg>
                 </a>
                 <div *ngFor="let currentPage of currentPages">
@@ -46,25 +47,27 @@
                     @let isCurrent = currentPage == page;
                     @let leftRoundedClass = isFirst && isCurrent ? 'elsa-rounded-l-md': '';
                     @let rightRoundedClass = isLast && isCurrent ? 'elsa-rounded-l-md': '';
-                    <div *ngIf="page == currentPage">
-                        <span class="-elsa-ml-px elsa-relative elsa-inline-flex elsa-items-center elsa-px-4 elsa-py-2 elsa-border elsa-border-gray-300 elsa-text-sm elsa-leading-5 elsa-font-medium elsa-bg-blue-600 elsa-text-white {{leftRoundedClass}} {{rightRoundedClass}}">
+                    <div *ngIf="page() == currentPage">
+                        <span
+                            class="-elsa-ml-px elsa-relative elsa-inline-flex elsa-items-center elsa-px-4 elsa-py-2 elsa-border elsa-border-gray-300 elsa-text-sm elsa-leading-5 elsa-font-medium elsa-bg-blue-600 elsa-text-white {{leftRoundedClass}} {{rightRoundedClass}}">
                             {{currentPage+ 1}}
                         </span>
                     </div>
-                    <div *ngIf="page != currentPage">
-                        <a href={{getNavUrl(currentPage)}}
-                           (click)="onNavigateClick($event, currentPage)"
-                           class="-elsa-ml-px elsa-relative elsa-inline-flex elsa-items-center elsa-px-4 elsa-py-2 elsa-border elsa-border-gray-300 elsa-bg-white elsa-text-sm elsa-leading-5 elsa-font-medium elsa-text-gray-700 hover:elsa-text-gray-500 focus:elsa-z-10 focus:elsa-outline-none active:elsa-bg-gray-100 active:elsa-text-gray-700 elsa-transition elsa-ease-in-out elsa-duration-150 {{leftRoundedClass}}">
+                    <div *ngIf="page() != currentPage">
+                        <a href={{getNavUrl(currentPage)}} (click)="onNavigateClick($event, currentPage)"
+                            class="-elsa-ml-px elsa-relative elsa-inline-flex elsa-items-center elsa-px-4 elsa-py-2 elsa-border elsa-border-gray-300 elsa-bg-white elsa-text-sm elsa-leading-5 elsa-font-medium elsa-text-gray-700 hover:elsa-text-gray-500 focus:elsa-z-10 focus:elsa-outline-none active:elsa-bg-gray-100 active:elsa-text-gray-700 elsa-transition elsa-ease-in-out elsa-duration-150 {{leftRoundedClass}}">
                             {{currentPage + 1}}
                         </a>
                     </div>
                 </div>
-                <a *ngIf="page < pageCount-1" href={{getNavUrl(page+1)}}
-                   (click)="onNavigateClick($event, page+1)"
-                   class="-elsa-ml-px elsa-relative elsa-inline-flex elsa-items-center elsa-px-2 elsa-py-2 elsa-rounded-r-md elsa-border elsa-border-gray-300 elsa-bg-white elsa-text-sm elsa-leading-5 elsa-font-medium elsa-text-gray-500 hover:elsa-text-gray-400 focus:elsa-z-10 focus:elsa-outline-none focus:elsa-border-blue-300 focus:elsa-shadow-outline-blue active:elsa-bg-gray-100 active:elsa-text-gray-500 elsa-transition elsa-ease-in-out elsa-duration-150"
-                   aria-label="Next">
-                    <svg class="elsa-h-5 elsa-w-5" x-description="Heroicon name: chevron-right" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
-                        <path fill-rule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clip-rule="evenodd" />
+                <a *ngIf="page() < pageCount-1" href={{getNavUrl(page()+1)}} (click)="onNavigateClick($event, page()+1)"
+                    class="-elsa-ml-px elsa-relative elsa-inline-flex elsa-items-center elsa-px-2 elsa-py-2 elsa-rounded-r-md elsa-border elsa-border-gray-300 elsa-bg-white elsa-text-sm elsa-leading-5 elsa-font-medium elsa-text-gray-500 hover:elsa-text-gray-400 focus:elsa-z-10 focus:elsa-outline-none focus:elsa-border-blue-300 focus:elsa-shadow-outline-blue active:elsa-bg-gray-100 active:elsa-text-gray-500 elsa-transition elsa-ease-in-out elsa-duration-150"
+                    aria-label="Next">
+                    <svg class="elsa-h-5 elsa-w-5" x-description="Heroicon name: chevron-right"
+                        xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
+                        <path fill-rule="evenodd"
+                            d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z"
+                            clip-rule="evenodd" />
                     </svg>
                 </a>
             </nav>

@@ -1,4 +1,4 @@
-import { Component, EventEmitter, HostListener, Input, OnInit, Output, ViewChild} from '@angular/core';
+import { Component, EventEmitter, HostListener, OnInit, Output, ViewChild, input } from '@angular/core';
 import { DropdownButtonItem, DropdownButtonOrigin } from './models';
 import { leave, toggle } from 'el-transition'
 
@@ -9,11 +9,11 @@ import { leave, toggle } from 'el-transition'
   standalone: false
 })
 export class WorkflowDropdownButton {
-  @Input() text: string;
-  @Input() iconPath?: string;
-  @Input() btnClass?: string = " elsa-w-full elsa-bg-white elsa-border elsa-border-gray-300 elsa-rounded-md elsa-shadow-sm elsa-px-4 elsa-py-2 elsa-inline-flex elsa-justify-center elsa-text-sm elsa-font-medium elsa-text-gray-700 hover:elsa-bg-gray-50 focus:elsa-outline-none focus:elsa-ring-2 focus:elsa-ring-offset-2 focus:elsa-ring-blue-500"
-  @Input() origin: DropdownButtonOrigin = DropdownButtonOrigin.TopLeft;
-  @Input() items: Array<DropdownButtonItem> = [];
+  readonly text = input<string>(undefined);
+  readonly iconPath = input<string>(undefined);
+  readonly btnClass = input<string>(" elsa-w-full elsa-bg-white elsa-border elsa-border-gray-300 elsa-rounded-md elsa-shadow-sm elsa-px-4 elsa-py-2 elsa-inline-flex elsa-justify-center elsa-text-sm elsa-font-medium elsa-text-gray-700 hover:elsa-bg-gray-50 focus:elsa-outline-none focus:elsa-ring-2 focus:elsa-ring-offset-2 focus:elsa-ring-blue-500");
+  readonly origin = input<DropdownButtonOrigin>(DropdownButtonOrigin.TopLeft);
+  readonly items = input<Array<DropdownButtonItem>>([]);
 
   @Output() onItemSelected = new EventEmitter<DropdownButtonItem>();
 
@@ -41,7 +41,7 @@ export class WorkflowDropdownButton {
   }
 
   getOriginClass(): string {
-    switch (this.origin) {
+    switch (this.origin()) {
       case DropdownButtonOrigin.TopLeft:
         return `elsa-left-0 elsa-origin-top-left`;
       case DropdownButtonOrigin.TopRight:

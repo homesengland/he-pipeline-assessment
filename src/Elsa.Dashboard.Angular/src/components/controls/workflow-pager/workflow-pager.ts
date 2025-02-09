@@ -1,5 +1,5 @@
 import { HttpClient } from '@angular/common/http';
-import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, OnInit, Output, input } from '@angular/core';
 import { parseQuery, queryToString } from "../../../utils/utils";
 import { Location } from '@angular/common';
 import { selectBasePath } from '../../state/selectors/app.state.selectors';
@@ -20,9 +20,9 @@ export interface PagerData {
   standalone: false
 })
 export class WorkflowPager implements OnInit {
-  @Input() page: number;
-  @Input() pageSize: number;
-  @Input() totalCount: number;
+  readonly page = input<number>(undefined);
+  readonly pageSize = input<number>(undefined);
+  readonly totalCount = input<number>(undefined);
 
   basePath: string;
   from: number;
@@ -58,12 +58,12 @@ export class WorkflowPager implements OnInit {
       return;
     }
     else {
-      this.paged.emit({ page, pageSize: this.pageSize, totalCount: this.totalCount });
+      this.paged.emit({ page, pageSize: this.pageSize(), totalCount: this.totalCount() });
     }
   }
 
   getNavUrl(page: number) {
-    let pageSize = this.pageSize;
+    let pageSize = this.pageSize();
     let queryString = this.router.url.split('?')[1];
     const currentQuery = queryString != null ? parseQuery(queryString) : { page, pageSize };
     const query = { ...currentQuery, 'page': page };

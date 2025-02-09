@@ -1,5 +1,5 @@
 import { HttpClient } from '@angular/common/http';
-import { Component, Input, OnInit, ViewChild } from '@angular/core';
+import { Component, OnDestroy, OnInit, input, viewChild } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { Router } from '@angular/router';
 import { Location } from '@angular/common';
@@ -22,11 +22,11 @@ import * as array from 'lodash/array';
   styleUrls: ['./workflow-instance-list-screen.css'],
   standalone: false
 })
-export class WorkflowInstanceListScreen implements OnInit {
-  @Input() workflowId?: string;
-  @Input() correlationId?: string;
-  @Input() workflowStatus?: WorkflowStatus;
-  @Input() orderBy?: OrderBy = OrderBy.Started;
+export class WorkflowInstanceListScreen implements OnInit, OnDestroy {
+  readonly workflowId = input<string>(undefined);
+  readonly correlationId = input<string>(undefined);
+  readonly workflowStatus = input<WorkflowStatus>(undefined);
+  readonly orderBy = input<OrderBy>(OrderBy.Started);
 
   static readonly DEFAULT_PAGE_SIZE = 15;
   static readonly MIN_PAGE_SIZE = 5;
@@ -40,7 +40,7 @@ export class WorkflowInstanceListScreen implements OnInit {
   basePath: string;
 
   searchForm: FormGroup = this.formBuilder.group({
-  searchTerm: '',
+    searchTerm: '',
   });
 
   statusesButtonItems: Array<DropdownButtonItem> = new Array<DropdownButtonItem>();
@@ -72,25 +72,27 @@ export class WorkflowInstanceListScreen implements OnInit {
   dropdownButtonOrigin = DropdownButtonOrigin;
 
   unlistenRouteChanged: any;
+  private clearRouteChangedListeners: () => void;
 
-  @ViewChild('selectAllCheckbox') selectAllCheckboxEl; 
+  readonly selectAllCheckboxEl = viewChild('selectAllCheckbox');
 
   constructor(private http: HttpClient, private formBuilder: FormBuilder, private elsaClientService: ElsaClientService, private store: Store, private router: Router, private location: Location) {
-    this.location.onUrlChange(async(url, state) => {
+  }
+
+  async ngOnInit(): Promise<void> {
+    this.clearRouteChangedListeners = this.location.onUrlChange(async (url, state) => {
       let queryString = url.split('?')[1] ? url.split('?')[1] : "";
       this.applyQueryString(queryString);
       this.updateDropdownFilterItems();
       await this.loadWorkflowInstances();
-    }); 
-  }
+    });
 
-  async ngOnInit(): Promise<void> {
     this.setVariablesFromAppState();
 
-    this.selectedWorkflowId = this.workflowId;
-    this.selectedCorrelationId = this.correlationId;
-    this.selectedWorkflowStatus = this.workflowStatus;
-    this.selectedOrderByState = this.orderBy;
+    this.selectedWorkflowId = this.workflowId();
+    this.selectedCorrelationId = this.correlationId();
+    this.selectedWorkflowStatus = this.workflowStatus();
+    this.selectedOrderByState = this.orderBy();
 
     if (this.router.navigated) {
       let queryString = this.router.url.split('?')[1];
@@ -99,13 +101,29 @@ export class WorkflowInstanceListScreen implements OnInit {
 
     await this.loadWorkflowBlueprints();
     await this.loadWorkflowInstances();
+
     let bulkActions = this.bulkActions;
     await eventBus.emit(EventTypes.WorkflowInstanceBulkActionsLoading, this, { sender: this, bulkActions });
 
     this.updateDropdownFilterItems();
   }
 
-  private setVariablesFromAppState() {
+  ngOnDestroy(): void {
+    if (this.clearRouteChangedListeners) {
+      this.clearRouteChangedListeners();
+    }
+  }
+
+  /**
+   * Sets the `serverUrl` and `basePath` properties from the application state.
+   * 
+   * This method subscribes to the `selectServerUrl` and `selectBasePath` selectors from the store.
+   * When the selectors emit new values, the corresponding properties (`serverUrl` and `basePath`) are updated.
+   * 
+   * - `serverUrl` is set to the value emitted by `selectServerUrl`.
+   * - `basePath` is set to the value emitted by `selectBasePath`, or an empty string if the emitted value is falsy.
+   */
+  private setVariablesFromAppState(): void {
     this.store.select(selectServerUrl).subscribe(data => {
       this.serverUrl = data;
     });
@@ -115,7 +133,7 @@ export class WorkflowInstanceListScreen implements OnInit {
     });
   }
 
-  updateDropdownFilterItems() {
+  updateDropdownFilterItems(): void {
     let latestWorkflowBlueprints = this.getLatestWorkflowBlueprintVersions();
 
     this.updateWorkflowDropdownItems(latestWorkflowBlueprints);
@@ -133,56 +151,56 @@ export class WorkflowInstanceListScreen implements OnInit {
     this.selectedOrderByText = !!this.selectedOrderByState ? `Sort by: ${this.selectedOrderByState}` : "Sort";
   }
 
-  private updateStatusesDropdownItems() {
+  private updateStatusesDropdownItems(): void {
     this.statusesButtonItems = WorkflowInstanceListScreen.STATUSES.map(x => {
-    const text = x ?? 'All';
-    const item: DropdownButtonItem = { text: text, isSelected: x == this.selectedWorkflowStatus, value: x };
-    item.url = `${this.basePath}/workflow-instances`;
-    item.queryParams = this.buildFilterUrl(this.selectedWorkflowId, x, this.selectedOrderByState, null, this.selectedCorrelationId);
+      const text = x ?? 'All';
+      const item: DropdownButtonItem = { text: text, isSelected: x == this.selectedWorkflowStatus, value: x };
+      item.url = `${this.basePath}/workflow-instances`;
+      item.queryParams = this.buildFilterUrl(this.selectedWorkflowId, x, this.selectedOrderByState, null, this.selectedCorrelationId);
 
-    return item;
+      return item;
     });
   }
 
-  private updateOrderbyDropdownItems() {
+  private updateOrderbyDropdownItems(): void {
     this.orderByButtonItems = WorkflowInstanceListScreen.ORDER_BY_VALUES.map(x => {
-    const item: DropdownButtonItem = { text: x, value: x, isSelected: x == this.selectedOrderByState };
-    item.url = `${this.basePath}/workflow-instances`;
-    item.queryParams = this.buildFilterUrl(this.selectedWorkflowId, this.selectedWorkflowStatus, x, this.currentPageSize, this.selectedCorrelationId);
+      const item: DropdownButtonItem = { text: x, value: x, isSelected: x == this.selectedOrderByState };
+      item.url = `${this.basePath}/workflow-instances`;
+      item.queryParams = this.buildFilterUrl(this.selectedWorkflowId, this.selectedWorkflowStatus, x, this.currentPageSize, this.selectedCorrelationId);
 
-    return item;
+      return item;
     });
   }
 
-  private updatePageSizeDropdownItems() {
+  private updatePageSizeDropdownItems(): void {
     this.pageSizeButtonItems = WorkflowInstanceListScreen.PAGE_SIZES.map(x => {
-    const text = "" + x;
-    const item: DropdownButtonItem = { text: text, isSelected: x == this.currentPageSize, value: x };
-    item.url = `${this.basePath}/workflow-instances`;
-    item.queryParams = this.buildFilterUrl(this.selectedWorkflowId, this.selectedWorkflowStatus, this.selectedOrderByState, x, this.selectedCorrelationId);
+      const text = "" + x;
+      const item: DropdownButtonItem = { text: text, isSelected: x == this.currentPageSize, value: x };
+      item.url = `${this.basePath}/workflow-instances`;
+      item.queryParams = this.buildFilterUrl(this.selectedWorkflowId, this.selectedWorkflowStatus, this.selectedOrderByState, x, this.selectedCorrelationId);
 
-    return item;
+      return item;
     });
   }
 
-  private updateWorkflowDropdownItems(latestWorkflowBlueprints: WorkflowBlueprintSummary[]) {
+  private updateWorkflowDropdownItems(latestWorkflowBlueprints: WorkflowBlueprintSummary[]): void {
     this.workflowButtonItems = latestWorkflowBlueprints.map(x => {
-    const displayName = !!x.displayName && x.displayName.length > 0 ? x.displayName : x.name || 'Untitled';
-    const item: DropdownButtonItem = { text: displayName, value: x.id, isSelected: x.id == this.selectedWorkflowId };
-    item.url = `${this.basePath}/workflow-instances`;
-    item.queryParams = this.buildFilterUrl(x.id, this.selectedWorkflowStatus, this.selectedOrderByState, null, this.selectedCorrelationId);
+      const displayName = !!x.displayName && x.displayName.length > 0 ? x.displayName : x.name || 'Untitled';
+      const item: DropdownButtonItem = { text: displayName, value: x.id, isSelected: x.id == this.selectedWorkflowId };
+      item.url = `${this.basePath}/workflow-instances`;
+      item.queryParams = this.buildFilterUrl(x.id, this.selectedWorkflowStatus, this.selectedOrderByState, null, this.selectedCorrelationId);
 
-    return item;
+      return item;
     });
     let allItem: DropdownButtonItem = { text: 'All', value: null, isSelected: !this.selectedWorkflowId };
     allItem.queryParams = this.buildFilterUrl(null, this.selectedWorkflowStatus, this.selectedOrderByState, null, this.selectedCorrelationId);
     this.workflowButtonItems = [allItem, ...this.workflowButtonItems];
   }
 
-  private applyQueryString(queryString?: string) {
+  private applyQueryString(queryString?: string): void {
     const query = parseQuery(queryString);
     this.selectedWorkflowId = query['workflow'];
-    this.correlationId = query['correlationId'];
+    this.selectedCorrelationId = query['correlationId'];
     this.selectedWorkflowStatus = WorkflowStatus[query['status']];
     this.selectedOrderByState = OrderBy[query['orderBy']] ?? OrderBy.Started;
     this.currentPage = !!query['page'] ? parseInt(query['page']) : 0;
@@ -197,12 +215,12 @@ export class WorkflowInstanceListScreen implements OnInit {
     return collection.map(groups, x => array.first(collection.orderBy(x, 'version', 'desc')));
   }
 
-  handleWorkflowIdChanged = async(e: any) => {
+  handleWorkflowIdChanged = async (e: any) => {
     this.selectedWorkflowId = e.value;
     await this.loadWorkflowInstances();
   }
 
-  buildFilterUrl(workflowId?: string, workflowStatus?: WorkflowStatus, orderBy?: OrderBy, pageSize?: number, correlationId?: string) {
+  buildFilterUrl(workflowId?: string, workflowStatus?: WorkflowStatus, orderBy?: OrderBy, pageSize?: number, correlationId?: string): any {
     const filters: Map<string> = {};
 
     if (!!correlationId)
@@ -226,7 +244,7 @@ export class WorkflowInstanceListScreen implements OnInit {
 
     if (newPageSize != this.currentPageSize)
       filters['page'] = Math.floor(this.currentPage * this.currentPageSize / newPageSize).toString();
-   
+
     const json = JSON.stringify(filters);
 
     return JSON.parse(json);
@@ -242,19 +260,19 @@ export class WorkflowInstanceListScreen implements OnInit {
     this.currentPage = Math.max(this.currentPage, WorkflowInstanceListScreen.START_PAGE);
     this.currentPageSize = isNaN(this.currentPageSize) ? WorkflowInstanceListScreen.DEFAULT_PAGE_SIZE : this.currentPageSize;
     const elsaClient = await this.createClient();
-    this.workflowInstances = await elsaClient.workflowInstancesApi.list(this.currentPage, this.currentPageSize, this.selectedWorkflowId, this.selectedWorkflowStatus, this.selectedOrderByState, this.currentSearchTerm, this.correlationId);
+    this.workflowInstances = await elsaClient.workflowInstancesApi.list(this.currentPage, this.currentPageSize, this.selectedWorkflowId, this.selectedWorkflowStatus, this.selectedOrderByState, this.currentSearchTerm, this.correlationId());
     this.totalCount = this.workflowInstances.totalCount;
     this.workflowInstancesTableValues = this.setTableValues(this.workflowInstances);
     const maxPage = Math.floor(this.workflowInstances.totalCount / this.currentPageSize);
 
     if (this.currentPage > maxPage) {
       this.currentPage = maxPage;
-      this.workflowInstances = await elsaClient.workflowInstancesApi.list(this.currentPage, this.currentPageSize, this.selectedWorkflowId, this.selectedWorkflowStatus, this.selectedOrderByState, this.currentSearchTerm, this.correlationId);
+      this.workflowInstances = await elsaClient.workflowInstancesApi.list(this.currentPage, this.currentPageSize, this.selectedWorkflowId, this.selectedWorkflowStatus, this.selectedOrderByState, this.currentSearchTerm, this.correlationId());
       this.workflowInstancesTableValues = this.setTableValues(this.workflowInstances);
       this.totalCount = this.workflowInstances.totalCount;
     }
 
-    this.setSelectAllIndeterminateState();   
+    this.setSelectAllIndeterminateState();
   }
 
   private async loadWorkflowBlueprints() {
@@ -263,17 +281,18 @@ export class WorkflowInstanceListScreen implements OnInit {
   }
 
   setSelectAllIndeterminateState = () => {
-    if (this.selectAllCheckboxEl) {
+    const selectAllCheckboxEl = this.selectAllCheckboxEl();
+    if (selectAllCheckboxEl) {
       const selectedItems = this.workflowInstances.items.filter(item => this.selectedWorkflowInstanceIds.includes(item.id));
-      this.selectAllCheckboxEl.indeterminate = selectedItems.length != 0 && selectedItems.length != this.workflowInstances.items.length;
+      (selectAllCheckboxEl as HTMLInputElement).indeterminate = selectedItems.length != 0 && selectedItems.length != this.workflowInstances.items.length;
     }
   }
 
-  createClient() : Promise<ElsaClient> {
+  createClient(): Promise<ElsaClient> {
     return this.elsaClientService.createElsaClient(this.serverUrl);
   }
 
-  getStatusColor(status: WorkflowStatus) {
+  getStatusColor(status: WorkflowStatus): "gray" | "rose" | "blue" | "green" | "red" | "yellow" {
     switch (status) {
       default:
       case WorkflowStatus.Idle:
@@ -291,7 +310,7 @@ export class WorkflowInstanceListScreen implements OnInit {
     }
   }
 
-  onWorkflowInstanceCheckChange(e:Event, workflowInstance: WorkflowInstanceSummary) {
+  onWorkflowInstanceCheckChange(e: Event, workflowInstance: WorkflowInstanceSummary): void {
     const checkBox = e.target as HTMLInputElement;
     const isChecked = checkBox.checked;
 
@@ -315,7 +334,7 @@ export class WorkflowInstanceListScreen implements OnInit {
     return true;
   }
 
-  onSelectAllCheckChange(e: Event) {
+  onSelectAllCheckChange(e: Event): void {
     const checkBox = e.target as HTMLInputElement;
     const isChecked = checkBox.checked;
 
@@ -338,7 +357,7 @@ export class WorkflowInstanceListScreen implements OnInit {
         return !currentItems.includes(item);
       });
     }
-    this.workflowInstancesTableValues = this.setTableValues(this.workflowInstances); 
+    this.workflowInstancesTableValues = this.setTableValues(this.workflowInstances);
   }
 
   setTableValues(workflowInstances: PagedList<WorkflowInstanceSummary>): PagedList<WorkflowInstanceSummaryTableRow> {
@@ -419,7 +438,7 @@ export class WorkflowInstanceListScreen implements OnInit {
     this.updateSelectAllChecked();
   }
 
-  async onBulkCancel() {
+  async onBulkCancel(): Promise<void> {
     const result = await confirmDialogService.show('Cancel Selected Workflow Instances', 'Are you sure you wish to cancel all selected workflow instances?');
 
     if (!result)
@@ -432,7 +451,7 @@ export class WorkflowInstanceListScreen implements OnInit {
     this.currentPage = 0;
   }
 
-  async onBulkDelete() {
+  async onBulkDelete(): Promise<void> {
     const result = await confirmDialogService.show('Delete Selected Workflow Instances', 'Are you sure you wish to permanently delete all selected workflow instances?');
 
     if (!result)
@@ -445,7 +464,7 @@ export class WorkflowInstanceListScreen implements OnInit {
     this.currentPage = 0;
   }
 
-  async onBulkRetry() {
+  async onBulkRetry(): Promise<void> {
     const result = await confirmDialogService.show('Retry Selected Workflow Instances', 'Are you sure you wish to retry all selected workflow instances?');
 
     if (!result)
@@ -458,7 +477,7 @@ export class WorkflowInstanceListScreen implements OnInit {
     this.currentPage = 0;
   }
 
-  updateSelectAllChecked() {
+  updateSelectAllChecked(): void {
     if (this.workflowInstances.items.length == 0) {
       this.selectAllChecked = false;
       return;
