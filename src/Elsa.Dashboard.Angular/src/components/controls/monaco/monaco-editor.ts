@@ -20,7 +20,10 @@ export class MonacoEditor {
   value = model<string>();
   language = model<string>();
   singleLineMode = model<boolean>(false);
-  padding = model<string>();
+    padding = model<string>();
+
+    monacoClass = 'elsa-monaco-editor-container ' + this.padding();
+    hostStyle = 'min-height: ' + this.editorHeight();
 
   constructor(private store: Store) {
     this.store.select(selectMonacoLibPath).subscribe(data => {

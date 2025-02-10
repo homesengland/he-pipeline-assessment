@@ -1,11 +1,13 @@
 import { Component, input, Input, model, OnChanges, OnInit, output, SimpleChanges } from '@angular/core';
 import { SyntaxNames } from '../../../constants/constants';
 import { ActivityDefinitionProperty, ActivityModel, ActivityPropertyDescriptor, IntellisenseContext } from '../../../models';
+import { MultiExpressionEditor } from '../multi-expression-editor/multi-expression-editor';
 
 
 @Component({
   selector: 'property-editor',
-  template: './property-editor.html',
+    template: './property-editor.html',
+    imports: [MultiExpressionEditor]
 })
 export class PropertyEditor implements OnInit, OnChanges {
 

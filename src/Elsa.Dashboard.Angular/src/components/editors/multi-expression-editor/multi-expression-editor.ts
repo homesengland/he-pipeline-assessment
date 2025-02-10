@@ -4,11 +4,13 @@ import { SyntaxNames } from "../../../constants/constants";
 import { enter, leave, toggle } from 'el-transition';
 import { Map, mapSyntaxToLanguage } from '../../../utils/utils'
 import { HTMLExpressionEditorElement } from "../../../models/monaco-elements";
+import { ExpressionEditor } from "../expression-editor/expression-editor";
 
 
 @Component({
   selector: 'multi-expression-editor',
-  template: './multi-expression-editor.html'
+    template: './multi-expression-editor.html',
+    imports: [ExpressionEditor]
 })
 export class MultiExpressionEditor implements OnInit, OnChanges {
 

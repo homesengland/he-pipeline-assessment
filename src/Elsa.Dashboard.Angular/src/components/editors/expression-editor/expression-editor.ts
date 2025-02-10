@@ -5,12 +5,14 @@ import { IntellisenseGatherer } from "../../../utils/intellisense-gatherer";
 import { Uri } from '../../../constants/constants';
 import { selectJavaScriptTypeDefinitions, selectWorkflowDefinitionId } from '../../state/selectors/app.state.selectors';
 import { Store } from "@ngrx/store";
+import { MonacoEditor } from "../../controls/monaco/monaco-editor";
 
 @Component({
-  selector: 'expression-editor',
-  template: './expression-editor.html'
+    selector: 'expression-editor',
+    template: './expression-editor.html',
+    imports: [MonacoEditor]
 })
-export class ExpressionEditor implements OnInit, OnChanges {
+export class ExpressionEditor implements OnInit {
 
 
     language = model<string>();
@@ -26,15 +28,14 @@ export class ExpressionEditor implements OnInit, OnChanges {
   intellisenseGatherer: IntellisenseGatherer;
   monacoEditor: HTMLMonacoElement;
     constructor(private store: Store) {
+        this.workflowDefinitionId.set(selectWorkflowDefinitionId(this.store))
+        this.intellisenseGatherer = new IntellisenseGatherer(this.store);
 
   }
 
     async ngOnInit() {
-    this.workflowDefinitionId.set(selectWorkflowDefinitionId(this.store))
-    this.intellisenseGatherer = new IntellisenseGatherer();
-
         let libSource: string = selectJavaScriptTypeDefinitions(this.store);
-    const libUri = Uri.LibUri;
+        const libUri = Uri.LibUri;
 
         await this.monacoEditor.addJavaScriptLib(libSource, libUri);
         this.setExpression(this.expression());

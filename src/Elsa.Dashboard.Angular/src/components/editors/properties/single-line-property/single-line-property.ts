@@ -1,9 +1,12 @@
-﻿import { Component, computed, Input, model, OnChanges, OnInit, signal, SimpleChanges } from "@angular/core";
-import { ActivityDefinitionProperty, ActivityModel, ActivityPropertyDescriptor, SyntaxNames } from "../../../../models";
+﻿import { Component, computed, model, OnChanges, OnInit, signal, SimpleChanges } from "@angular/core";
+import { ActivityModel, SyntaxNames } from "../../../../models";
+import { ActivityDefinitionProperty, ActivityPropertyDescriptor } from '../../../../models/domain'
+import { PropertyEditor } from "../../property-editor/property-editor";
 
 @Component({
     selector: 'single-line-property',
     templateUrl: './single-line-property.html',
+    imports:[PropertyEditor]
 })
 
 export class SingleLineProperty implements OnInit, OnChanges {
@@ -11,7 +14,7 @@ export class SingleLineProperty implements OnInit, OnChanges {
     activityModel = model<ActivityModel>();
     propertyDescriptor = model<ActivityPropertyDescriptor>();
     propertyModel = model<ActivityDefinitionProperty>();
-    defaultSyntax = computed(() => this.propertyDescriptor().defaultSyntax || SyntaxNames.Literal;
+    defaultSyntax = computed(() => this.propertyDescriptor().defaultSyntax || SyntaxNames.Literal);
     isEncypted = model<boolean>(false);
     propertyName: string;
     fieldId: string;
@@ -50,7 +53,7 @@ export class SingleLineProperty implements OnInit, OnChanges {
         }
     }
 
-    onDefaultSyntaxValueChanged(e: CustomEvent) {
+    onDefaultSyntaxValueChanged(e: string) {
         //dont think we need this...
         //this.currentValue = e.detail;
     }

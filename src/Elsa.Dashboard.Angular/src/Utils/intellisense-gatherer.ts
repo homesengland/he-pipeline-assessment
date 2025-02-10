@@ -1,4 +1,4 @@
-import { IntellisenseContext } from '../models/elsa-interfaces'
+import { IntellisenseContext } from '../models/intellisense';
 import axios, { AxiosInstance, AxiosRequestConfig } from "axios";
 //import state from '../stores/store';
 import { createAuth0Client, Auth0Client, Auth0ClientOptions, AuthorizationParams } from '@auth0/auth0-spa-js';
