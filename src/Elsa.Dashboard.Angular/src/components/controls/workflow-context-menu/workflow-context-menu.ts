@@ -1,8 +1,7 @@
-import { Component, EventEmitter, HostListener, Input, OnInit, Output, ViewChild } from "@angular/core";
+import { Component, HostListener, OnInit, Output, ElementRef, input, viewChild } from "@angular/core";
 import { MenuItem } from "./models";
 import { leave, toggle } from 'el-transition'
 import { Location } from '@angular/common';
-import { DropdownButtonItem } from "../workflow-dropdown-button/models";
 import { Router } from "@angular/router";
 
 @Component({
@@ -12,37 +11,38 @@ import { Router } from "@angular/router";
   standalone: false
 })
 export class WorkflowContextMenu implements OnInit {
-  @Input() menuItems: Array<MenuItem> = [];
+  
+  readonly menuItems = input<Array<MenuItem>>([]);
 
-  @ViewChild('element') element;
-  @ViewChild('contextMenu') contextMenu;
+  readonly element = viewChild.required<ElementRef>('element');
+  readonly contextMenu = viewChild.required<ElementRef>('contextMenu');
 
-  constructor(private location:Location, private router: Router) {
-
+  constructor(private location: Location, private router: Router) {
   }
 
   ngOnInit(): void {
-    this.menuItems.map(item => !!item.anchorUrl ? item.anchorUrl : "#");
+    this.menuItems().map(item => !!item.anchorUrl ? item.anchorUrl : "#");
   }
 
   @HostListener('document:click', ['$event'])
-  onWindowClicked(event: Event) {
+  onWindowClicked(event: Event): void {
     const target = event.target as HTMLElement;
 
-    if (!this.element.nativeElement.contains(target))
+    if (!this.element().nativeElement.contains(target))
       this.closeContextMenu();
   }
 
-  closeContextMenu() {
-    if (!!this.contextMenu.nativeElement)
-      leave(this.contextMenu.nativeElement);
+  closeContextMenu(): void {
+    const contextMenu = this.contextMenu();
+    if (!!contextMenu.nativeElement)
+      leave(contextMenu.nativeElement);
   }
 
-  toggleMenu() {
-    toggle(this.contextMenu.nativeElement);
+  toggleMenu(): void {
+    toggle(this.contextMenu().nativeElement);
   }
 
-  async onMenuItemClick(e: Event, menuItem: MenuItem) {
+  async onMenuItemClick(e: Event, menuItem: MenuItem): Promise<void> {
     e.preventDefault();
     if (!!menuItem.anchorUrl) {
       this.router.navigate([menuItem.anchorUrl]);
@@ -52,7 +52,5 @@ export class WorkflowContextMenu implements OnInit {
     }
     this.closeContextMenu();
   }
-
-  
 }
 

@@ -1,29 +1,37 @@
 <div class="elsa-relative" #element>
-    <button (click)="toggleMenu()" type="button"
-            class={{btnClass}}
-            aria-haspopup="true" aria-expanded="false">
-        @if(iconPath)
+    <button (click)="toggleMenu()" type="button" class={{btnClass()}} aria-haspopup="true" aria-expanded="false">
+        @if(iconPath())
         {
-        <img class="elsa-mr-3 elsa-h-5 elsa-w-5 elsa-text-gray-400" src={{iconPath}} />
+        <img class="elsa-mr-3 elsa-h-5 elsa-w-5 elsa-text-gray-400" src={{iconPath()}} />
         }
-        {{text}}
-        <svg class="elsa-ml-2.5 -elsa-elsa-mr-1.5 elsa-h-5 elsa-w-5 elsa-text-gray-400" x-description="Heroicon name: chevron-down" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
-            <path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd" />
+        {{text()}}
+        <svg class="elsa-ml-2.5 -elsa-elsa-mr-1.5 elsa-h-5 elsa-w-5 elsa-text-gray-400"
+            x-description="Heroicon name: chevron-down" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"
+            fill="currentColor" aria-hidden="true">
+            <path fill-rule="evenodd"
+                d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"
+                clip-rule="evenodd" />
         </svg>
     </button>
     @let originClass=getOriginClass();
     <div #contextMenu data-transition-enter="elsa-transition elsa-ease-out elsa-duration-100"
-         data-transition-enter-start="elsa-transform elsa-opacity-0 elsa-scale-95"
-         data-transition-leave="elsa-transition elsa-ease-in elsa-duration-75"
-         data-transition-leave-start="elsa-transform elsa-opacity-100 elsa-scale-100"
-         data-transition-leave-end="elsa-transform elsa-opacity-0 elsa-scale-95"
-         class="hidden {{originClass}} elsa-z-10 elsa-absolute elsa-mt-2 elsa-w-56 elsa-rounded-md elsa-shadow-lg elsa-bg-white elsa-ring-1 elsa-ring-black elsa-ring-opacity-5">
+        data-transition-enter-start="elsa-transform elsa-opacity-0 elsa-scale-95"
+        data-transition-leave="elsa-transition elsa-ease-in elsa-duration-75"
+        data-transition-leave-start="elsa-transform elsa-opacity-100 elsa-scale-100"
+        data-transition-leave-end="elsa-transform elsa-opacity-0 elsa-scale-95"
+        class="hidden {{originClass}} elsa-z-10 elsa-absolute elsa-mt-2 elsa-w-56 elsa-rounded-md elsa-shadow-lg elsa-bg-white elsa-ring-1 elsa-ring-black elsa-ring-opacity-5">
         <div class="elsa-py-1" role="menu" aria-orientation="vertical">
-            @for(item of items ; track item.text){
-            @let selectedCssClass = item.isSelected ? 'elsa-bg-blue-600 hover:elsa-bg-blue-700 elsa-text-white': 'hover:elsa-bg-gray-100 elsa-text-gray-700 hover:elsa-text-gray-900';
+            @for(item of items() ; track item.text){
+            @let selectedCssClass = item.isSelected ? 'elsa-bg-blue-600 hover:elsa-bg-blue-700 elsa-text-white':
+            'hover:elsa-bg-gray-100 elsa-text-gray-700 hover:elsa-text-gray-900';
 
-            <a *ngIf="item.url != null" (click)="closeContextMenu()" [routerLink]="item.url" [queryParams]="item.queryParams" class="elsa-block elsa-px-4 elsa-py-2 elsa-text-sm {{selectedCssClass}} elsa-cursor-pointer" role="menuitem">{{item.text}}</a>
-            <a *ngIf="item.url == null" (click)="onItemClick($event, item)" class="elsa-block elsa-px-4 elsa-py-2 elsa-text-sm {{selectedCssClass}}" role="menuitem">{{item.text}}</a>
+            <a *ngIf="item.url != null" (click)="closeContextMenu()" [routerLink]="item.url"
+                [queryParams]="item.queryParams"
+                class="elsa-block elsa-px-4 elsa-py-2 elsa-text-sm {{selectedCssClass}} elsa-cursor-pointer"
+                role="menuitem">{{item.text}}</a>
+            <a *ngIf="item.url == null" (click)="onItemClick($event, item)"
+                class="elsa-block elsa-px-4 elsa-py-2 elsa-text-sm {{selectedCssClass}}"
+                role="menuitem">{{item.text}}</a>
             }
         </div>
     </div>
