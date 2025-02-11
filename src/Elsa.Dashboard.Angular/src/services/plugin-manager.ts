@@ -2,11 +2,9 @@ import { WorkflowPlugin } from "./workflow-plugin";
 import { ActivityIconProviderPlugin } from "../plugins/activity-icon-provider-plugin";
 import { WorkflowStudio } from "../models";
 import { Auth0ClientOptions } from '@auth0/auth0-spa-js';
-import { Injectable } from "@angular/core";
+import { Auth0Plugin } from "src/plugins/auth0-plugin";
 
-@Injectable({
-  providedIn: 'root'
-})
+
 export class PluginManager {
   pluginFactories: Array<any> = [];
   workflowStudio: WorkflowStudio;
@@ -26,6 +24,8 @@ export class PluginManager {
       return;
 
     this.workflowStudio = workflowStudio;
+
+    this.registerPluginFactory(() => new Auth0Plugin(options));
 
     for (const pluginType of this.pluginFactories) {
       this.createPlugin(pluginType);

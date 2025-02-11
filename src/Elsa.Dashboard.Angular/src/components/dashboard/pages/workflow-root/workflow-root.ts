@@ -7,11 +7,14 @@ import { DataDictionaryGroup } from '../../../../Models/custom-component-models'
 import { IntellisenseGatherer } from '../../../../Utils/intellisenseGatherer';
 import { StoreStatus } from '../../../../Models/constants';
 import { eventBus } from '../../../../services/event-bus';
-import { EventTypes } from '../../../../models';
+import { EventTypes, WorkflowStudio } from '../../../../models';
 import { HTMLElsaConfirmDialogElement } from '../../../../Models/elsa-interfaces';
-import { PluginManager } from 'src/services/plugin-manager';
-import { Auth0Plugin } from 'src/plugins/auth0-plugin';
-
+import { pluginManager } from 'src/services/plugin-manager';
+import { createHttpClient, createWorkflowClient, WorkflowClient } from 'src/services/workflow-client';
+import { AxiosInstance } from 'axios';
+import { confirmDialogService } from 'src/services/confirm-dialog-service';
+import { getOrCreateProperty, htmlToElement } from 'src/utils/utils';
+import { Auth0ClientOptions, AuthorizationParams } from '@auth0/auth0-spa-js';
 
 @Component({
   selector: 'workflow-root',
@@ -20,7 +23,6 @@ import { Auth0Plugin } from 'src/plugins/auth0-plugin';
   standalone: false
 })
 export class WorkflowRoot implements OnInit {
-  pluginManager: PluginManager
   dataDictionary: Array<DataDictionaryGroup>;
   dataDictionaryJson: string;
   storeConfig: StoreConfig;
@@ -30,25 +32,56 @@ export class WorkflowRoot implements OnInit {
   private modalShownListener: () => void;
   private modalHiddenListener: () => void;
   readonly confirmDialog = viewChild.required<HTMLElsaConfirmDialogElement>('confirmDialog');
+  private workflowStudio: WorkflowStudio;
 
-  constructor(private http: HttpClient, el: ElementRef, private store: Store, renderer2: Renderer2, pluginManager: PluginManager) {
+  constructor(private http: HttpClient, el: ElementRef, private store: Store, renderer2: Renderer2) {
     this.renderer2 = renderer2;
     this.dataDictionaryJson = el.nativeElement.getAttribute('dataDictionaryJson');
     this.storeConfigJson = el.nativeElement.getAttribute('storeConfigJson');
     this.setExternalState();
-    let auth0Config = {
-      domain: this.storeConfig.domain,
-      clientId: this.storeConfig.clientId,
-    }
-    this.pluginManager = pluginManager;
-    this.pluginManager.registerPlugin(() => new Auth0Plugin(auth0Config))
     this.intellisenseGatherer = new IntellisenseGatherer(store);
   }
 
-  ngOnInit(): void {
+  async ngOnInit(): Promise<void> {
     eventBus.on(EventTypes.ShowConfirmDialog, this.onShowConfirmDialog);
     this.modalHandlerShown();
     this.modalHandlerHidden();
+
+    const workflowClientFactory: () => Promise<WorkflowClient> = () => createWorkflowClient(this.storeConfig.serverUrl);
+    const httpClientFactory: () => Promise<AxiosInstance> = () => createHttpClient(this.storeConfig.serverUrl);
+
+    const workflowStudio: WorkflowStudio = this.workflowStudio = {
+      serverUrl: this.storeConfig.serverUrl,
+      basePath: this.storeConfig.basePath,
+      serverFeatures: [],
+      serverVersion: null,
+      eventBus,
+      pluginManager,
+      confirmDialogService,
+      workflowClientFactory,
+      httpClientFactory,
+      getOrCreateProperty: getOrCreateProperty,
+      htmlToElement,
+      features: [],
+      propertyDisplayManager: null,
+      activityIconProvider: null,
+      toastNotificationService: null
+    };
+    
+    let auth0Params: AuthorizationParams = {
+      audience: this.storeConfig.audience,
+    };
+  
+    let auth0Options: Auth0ClientOptions = {
+      authorizationParams: auth0Params,
+      clientId: this.storeConfig.clientId,
+      domain: this.storeConfig.domain,
+      useRefreshTokens: true,
+      useRefreshTokensFallback: true,
+    };
+
+    pluginManager.initialize(workflowStudio, auth0Options)
+    await eventBus.emit(EventTypes.Root.Initializing);
   }
 
   onShowConfirmDialog = (e) => e.promise = this.confirmDialog().show(e.caption, e.message)

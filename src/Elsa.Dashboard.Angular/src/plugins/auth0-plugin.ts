@@ -1,4 +1,5 @@
 import { createAuth0Client, Auth0Client, Auth0ClientOptions, RedirectLoginOptions } from '@auth0/auth0-spa-js';
+
 import { Service } from 'axios-middleware';
 import { WorkflowPlugin } from '../services/workflow-plugin';
 import { eventBus } from '../services/event-bus';
@@ -23,7 +24,7 @@ export class Auth0Plugin implements WorkflowPlugin {
     if (!domain || domain.trim().length == 0)
       return;
 
-    this.auth0 = await createAuth0Client(options);
+    this.auth0 = new Auth0Client(options);
     const isAuthenticated = await this.auth0.isAuthenticated();
 
     // Nothing to do if authenticated.

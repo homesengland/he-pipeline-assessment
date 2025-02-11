@@ -98,9 +98,8 @@ export class WorkflowInstanceListScreen implements OnInit, OnDestroy {
       let queryString = this.router.url.split('?')[1];
       this.applyQueryString(queryString);
     }
-
-    await this.loadWorkflowBlueprints();
     await this.loadWorkflowInstances();
+    await this.loadWorkflowBlueprints();
 
     let bulkActions = this.bulkActions;
     await eventBus.emit(EventTypes.WorkflowInstanceBulkActionsLoading, this, { sender: this, bulkActions });
