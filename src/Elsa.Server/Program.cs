@@ -218,12 +218,12 @@ builder.Services.AddOptions<DataverseClientConfig>()
 });
 
 
-//builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
-//    .AddJwtBearer(options =>
-//    {
-//        options.Audience = builder.Configuration["Auth0Config:Audience"];
-//        options.Authority = builder.Configuration["Auth0Config:Authority"];
-//    });
+builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+    .AddJwtBearer(options =>
+    {
+        options.Audience = builder.Configuration["Auth0Config:Audience"];
+        options.Authority = builder.Configuration["Auth0Config:Authority"];
+    });
 
 builder.Services.AddEsriHttpClients(builder.Configuration, builder.Environment.IsDevelopment());
 

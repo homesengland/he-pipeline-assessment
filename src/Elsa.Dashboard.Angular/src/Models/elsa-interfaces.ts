@@ -58,6 +58,15 @@ export interface ElsaMultiExpressionEditor {
   "syntax"?: string;
 }
 
+export interface HTMLElsaConfirmDialogElement extends ConfirmDialog, HTMLElement {
+}
+
+export interface ConfirmDialog {
+  "culture": string;
+  "hide": () => Promise<void>;
+  "show": (caption: string, message: string) => Promise<boolean>;
+}
+
 export interface HTMLElsaExpressionEditorElement extends ElsaExpressionEditor, HTMLStencilElement {
 }
 var HTMLElsaExpressionEditorElement: {

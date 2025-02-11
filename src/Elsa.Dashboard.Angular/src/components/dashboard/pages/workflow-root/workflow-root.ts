@@ -1,12 +1,17 @@
 import { HttpClient } from '@angular/common/http';
-import { Component, ElementRef, OnInit, Renderer2 } from '@angular/core';
-import { WorkflowDashboard} from '../workflow-dashboard/workflow-dashboard'
+import { Component, ElementRef, OnInit, Renderer2, viewChild, ViewChild } from '@angular/core';
 import { Store } from '@ngrx/store';
 import { StoreConfig } from '../../../../Models/storeConfig';
 import { AppStateActionGroup } from '../../../state/actions/app.state.actions';
 import { DataDictionaryGroup } from '../../../../Models/custom-component-models';
 import { IntellisenseGatherer } from '../../../../Utils/intellisenseGatherer';
 import { StoreStatus } from '../../../../Models/constants';
+import { eventBus } from '../../../../services/event-bus';
+import { EventTypes } from '../../../../models';
+import { HTMLElsaConfirmDialogElement } from '../../../../Models/elsa-interfaces';
+import { PluginManager } from 'src/services/plugin-manager';
+import { Auth0Plugin } from 'src/plugins/auth0-plugin';
+
 
 @Component({
   selector: 'workflow-root',
@@ -15,6 +20,7 @@ import { StoreStatus } from '../../../../Models/constants';
   standalone: false
 })
 export class WorkflowRoot implements OnInit {
+  pluginManager: PluginManager
   dataDictionary: Array<DataDictionaryGroup>;
   dataDictionaryJson: string;
   storeConfig: StoreConfig;
@@ -23,22 +29,31 @@ export class WorkflowRoot implements OnInit {
   renderer2: Renderer2;
   private modalShownListener: () => void;
   private modalHiddenListener: () => void;
+  readonly confirmDialog = viewChild.required<HTMLElsaConfirmDialogElement>('confirmDialog');
 
-
-  constructor(private http: HttpClient, el: ElementRef, private store: Store, renderer2: Renderer2) {
+  constructor(private http: HttpClient, el: ElementRef, private store: Store, renderer2: Renderer2, pluginManager: PluginManager) {
     this.renderer2 = renderer2;
     this.dataDictionaryJson = el.nativeElement.getAttribute('dataDictionaryJson');
     this.storeConfigJson = el.nativeElement.getAttribute('storeConfigJson');
-    this.setExternalState()
+    this.setExternalState();
+    let auth0Config = {
+      domain: this.storeConfig.domain,
+      clientId: this.storeConfig.clientId,
+    }
+    this.pluginManager = pluginManager;
+    this.pluginManager.registerPlugin(() => new Auth0Plugin(auth0Config))
     this.intellisenseGatherer = new IntellisenseGatherer(store);
   }
 
   ngOnInit(): void {
+    eventBus.on(EventTypes.ShowConfirmDialog, this.onShowConfirmDialog);
     this.modalHandlerShown();
     this.modalHandlerHidden();
   }
 
+  onShowConfirmDialog = (e) => e.promise = this.confirmDialog().show(e.caption, e.message)
   ngOnDestroy() {
+    eventBus.detach(EventTypes.ShowConfirmDialog, this.onShowConfirmDialog);
     this.modalShownListener();
     this.modalHiddenListener();
   }
@@ -54,7 +69,7 @@ export class WorkflowRoot implements OnInit {
         workflowDefinitionId: workflowDef
       }));
     });
-      await this.getIntellisense(); 
+    await this.getIntellisense();
   }
 
   async modalHandlerHidden() {
@@ -68,7 +83,7 @@ export class WorkflowRoot implements OnInit {
         javaScriptTypeDefinitionsFetchStatus: StoreStatus.Empty
       }));
     });
-      await this.getIntellisense();
+    await this.getIntellisense();
   }
 
   setExternalState() {
