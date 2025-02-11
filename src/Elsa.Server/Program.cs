@@ -248,8 +248,8 @@ app
     .UseHttpsRedirection()
     .UseStaticFiles() // For Dashboard.
     .UseRouting()
-    //.UseAuthentication()
-    //.UseAuthorization()
+    .UseAuthentication()
+    .UseAuthorization()
     .UseCustomControllerOverrides(builder.Configuration["Elsa:ServerPrefix"])
     .UseEndpoints(endpoints =>
     {
