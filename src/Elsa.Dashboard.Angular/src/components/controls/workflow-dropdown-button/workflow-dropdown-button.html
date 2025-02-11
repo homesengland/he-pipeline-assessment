@@ -13,13 +13,12 @@
                 clip-rule="evenodd" />
         </svg>
     </button>
-    @let originClass=getOriginClass();
     <div #contextMenu data-transition-enter="elsa-transition elsa-ease-out elsa-duration-100"
         data-transition-enter-start="elsa-transform elsa-opacity-0 elsa-scale-95"
         data-transition-leave="elsa-transition elsa-ease-in elsa-duration-75"
         data-transition-leave-start="elsa-transform elsa-opacity-100 elsa-scale-100"
         data-transition-leave-end="elsa-transform elsa-opacity-0 elsa-scale-95"
-        class="hidden {{originClass}} elsa-z-10 elsa-absolute elsa-mt-2 elsa-w-56 elsa-rounded-md elsa-shadow-lg elsa-bg-white elsa-ring-1 elsa-ring-black elsa-ring-opacity-5">
+        class="hidden {{originClass()}} elsa-z-10 elsa-absolute elsa-mt-2 elsa-w-56 elsa-rounded-md elsa-shadow-lg elsa-bg-white elsa-ring-1 elsa-ring-black elsa-ring-opacity-5">
         <div class="elsa-py-1" role="menu" aria-orientation="vertical">
             @for(item of items() ; track item.text){
             @let selectedCssClass = item.isSelected ? 'elsa-bg-blue-600 hover:elsa-bg-blue-700 elsa-text-white':

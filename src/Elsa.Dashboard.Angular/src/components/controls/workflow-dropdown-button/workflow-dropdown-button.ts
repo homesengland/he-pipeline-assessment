@@ -1,4 +1,4 @@
-import { Component, EventEmitter, HostListener, OnInit, Output, ViewChild, input } from '@angular/core';
+import { Component, EventEmitter, HostListener, OnInit, Output, ViewChild, computed, input } from '@angular/core';
 import { DropdownButtonItem, DropdownButtonOrigin } from './models';
 import { leave, toggle } from 'el-transition'
 
@@ -15,6 +15,8 @@ export class WorkflowDropdownButton {
   readonly origin = input<DropdownButtonOrigin>(DropdownButtonOrigin.TopLeft);
   readonly items = input<Array<DropdownButtonItem>>([]);
 
+  originClass = computed(() => this.getOriginClass());
+  
   @Output() onItemSelected = new EventEmitter<DropdownButtonItem>();
 
   @ViewChild('element') element;
