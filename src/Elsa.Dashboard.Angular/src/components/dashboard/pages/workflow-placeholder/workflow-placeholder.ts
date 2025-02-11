@@ -1,7 +1,7 @@
-import { Input, Component, OnInit, signal } from '@angular/core';
+import { Component, OnInit, signal } from '@angular/core';
 import { ActivityModel, ActivityPropertyDescriptor, ActivityDefinitionProperty } from '../../../../models';
 import { SingleLineProperty } from '../../../editors/properties/single-line-property/single-line-property';
-import { ActivityTypeConstants } from '../../../../models/constants';
+
 @Component({
   selector: 'workflow-placeholder',
   templateUrl: './workflow-placeholder.html',

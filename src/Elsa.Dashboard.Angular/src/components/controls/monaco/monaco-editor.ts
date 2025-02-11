@@ -1,4 +1,4 @@
-import { Component, Input, model, output, SimpleChanges } from "@angular/core";
+import { AfterViewInit, Component, ElementRef, Input, model, output, Renderer2, SimpleChanges, ViewChild } from "@angular/core";
 import { initializeMonacoWorker, Monaco, EditorVariables } from "./monaco-utils";
 import { selectMonacoLibPath } from '../../state/selectors/app.state.selectors';
 import { Store } from '@ngrx/store';
@@ -6,12 +6,16 @@ import { AppState } from '../../state/reducers/app.state.reducers'
 import { MonacoValueChangedArgs } from "../../../models/monaco-elements";
 
 @Component({
-  selector: 'monaco',
-  templateUrl: './monaco.html',
-  styleUrls: ['./monaco.css'],
+    selector: 'monaco',
+    templateUrl: './monaco.html',
+    styleUrls: ['./monaco.css'],
+    host: {
+        'class': 'elsa-monaco-editor-host elsa-border focus:elsa-ring-blue-500 focus:elsa-border-blue-500 elsa-block elsa-w-full elsa-min-w-0 elsa-rounded-md sm:elsa-text-sm elsa-border-gray-300 elsa-p-4',
+        '[style]': 'hostStyle',
+    }
 })
 
-export class MonacoEditor {
+export class MonacoEditor implements AfterViewInit { 
   private monaco: Monaco;
   monacoLibPath: string;
   valueChanged = output<MonacoValueChangedArgs>();
@@ -20,17 +24,23 @@ export class MonacoEditor {
   value = model<string>();
   language = model<string>();
   singleLineMode = model<boolean>(false);
-    padding = model<string>();
+  padding = model<string>();
 
     monacoClass = 'elsa-monaco-editor-container ' + this.padding();
     hostStyle = 'min-height: ' + this.editorHeight();
 
-  constructor(private store: Store) {
+    constructor(private store: Store, private renderer: Renderer2) {
     this.store.select(selectMonacoLibPath).subscribe(data => {
       this.monacoLibPath = data
     });
 
-  }
+    }
+
+    @ViewChild('container') container!: ElementRef<HTMLElement>
+
+    editor: any;
+
+
 
   ngOnChanges(changes: SimpleChanges) {
     this.languageChangeHandler(changes);
@@ -128,8 +138,10 @@ export class MonacoEditor {
       }
     }
 
-  container: HTMLElement;
-  editor: any;
+    ngAfterViewInit() {
+        console.log(this.container.nativeElement);
+    }
+
 
   languageChangeHandler(changes: SimpleChanges) {
     if (changes["language"].currentValue != changes["language"].previousValue) {

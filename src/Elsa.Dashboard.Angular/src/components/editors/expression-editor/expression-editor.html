@@ -1,8 +1,8 @@
 
-<monaco value={{currentExpression}}
-           [(language)]={{language}}
-           [(editor-height)]={{editorHeight}}
-           [(single-line)]={{singleLineMode}}
-           [(padding)]={{padding}}
-           (valueChanged)="onMonacoValueChanged($event)"
-           ref={{monacoEditor}}></monaco>
+<monaco [(value)]="expression"
+        [(language)]="language"
+        [editorHeight]="editorHeight()"
+        [singleLineMode]="singleLineMode()"
+        [padding]="padding()"
+        (valueChanged)="onMonacoValueChanged($event)"
+        id="monacoContainer"></monaco>

@@ -1,4 +1,4 @@
-import { Component, Input, model, OnChanges, OnInit, output, signal, SimpleChanges } from "@angular/core";
+import { Component, ElementRef, input, Input, model, OnChanges, OnInit, output, signal, SimpleChanges, ViewChild } from "@angular/core";
 import { HTMLMonacoElement, MonacoValueChangedArgs } from "../../../models/monaco-elements";
 import { IntellisenseContext } from "../../../models";
 import { IntellisenseGatherer } from "../../../utils/intellisense-gatherer";
@@ -9,7 +9,7 @@ import { MonacoEditor } from "../../controls/monaco/monaco-editor";
 
 @Component({
     selector: 'expression-editor',
-    template: './expression-editor.html',
+    templateUrl: './expression-editor.html',
     imports: [MonacoEditor]
 })
 export class ExpressionEditor implements OnInit {
@@ -17,29 +17,39 @@ export class ExpressionEditor implements OnInit {
 
     language = model<string>();
     expression = model<string>();
-    editorHeight = model<string>('6em');
-    singleLineMode = model<boolean>(false);
-    padding = model<string>();
+    editorHeight = input<string>('6em');
+    singleLineMode = input<boolean>(false);
+    padding = input<string>();
     context? = model<IntellisenseContext>();
     serverUrl = model<string>();
     workflowDefinitionId = model<string>();
     expressionChanged = output<string>();
 
-  intellisenseGatherer: IntellisenseGatherer;
-  monacoEditor: HTMLMonacoElement;
+    intellisenseGatherer: IntellisenseGatherer;
+    @ViewChild('monacoContainer') monacoEditor: ElementRef<HTMLMonacoElement>
     constructor(private store: Store) {
         this.workflowDefinitionId.set(selectWorkflowDefinitionId(this.store))
         this.intellisenseGatherer = new IntellisenseGatherer(this.store);
 
-  }
+    }
+
+
 
     async ngOnInit() {
+        //let libSource: string = selectJavaScriptTypeDefinitions(this.store);
+        //const libUri = Uri.LibUri;
+
+        //await this.monacoEditor.addJavaScriptLib(libSource, libUri);
+        //this.setExpression(this.expression());
+    }
+
+    async ngAfterViewInit() {
+        console.log(this.monacoEditor.nativeElement);
         let libSource: string = selectJavaScriptTypeDefinitions(this.store);
         const libUri = Uri.LibUri;
-
-        await this.monacoEditor.addJavaScriptLib(libSource, libUri);
+        await this.monacoEditor.nativeElement.addJavaScriptLib(libSource, libUri);
         this.setExpression(this.expression());
-  }
+    }
 
   //ngOnChanges(changes: SimpleChanges) {
 
@@ -53,8 +63,8 @@ export class ExpressionEditor implements OnInit {
   //  this.currentExpression.set(newValue);
   //}
 
-  async setExpression(value: string) {
-    await this.monacoEditor.setValue(value);
+    async setExpression(value: string) {
+        await this.monacoEditor.nativeElement.setValue(value);
   }
 
   async onMonacoValueChanged(e: MonacoValueChangedArgs) {

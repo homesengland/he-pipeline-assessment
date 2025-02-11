@@ -1,12 +1,12 @@
-import { Component, input, Input, model, OnChanges, OnInit, output, SimpleChanges } from '@angular/core';
+import { Component, input, model, OnChanges, OnInit, output, SimpleChanges } from '@angular/core';
 import { SyntaxNames } from '../../../constants/constants';
 import { ActivityDefinitionProperty, ActivityModel, ActivityPropertyDescriptor, IntellisenseContext } from '../../../models';
 import { MultiExpressionEditor } from '../multi-expression-editor/multi-expression-editor';
 
 
 @Component({
-  selector: 'property-editor',
-    template: './property-editor.html',
+    selector: 'property-editor',
+    templateUrl: './property-editor.html',
     imports: [MultiExpressionEditor]
 })
 export class PropertyEditor implements OnInit, OnChanges {
@@ -14,7 +14,7 @@ export class PropertyEditor implements OnInit, OnChanges {
   activityModel = model<ActivityModel>();
   propertyDescriptor = model<ActivityPropertyDescriptor>();
   propertyModel = model<ActivityDefinitionProperty>();
-  editorHeight = input('10em');
+  editorHeight = input<string>('10em');
   singleLineMode = input(false);
   context? = input<string>();
   showLabel = input(true);
@@ -36,20 +36,20 @@ export class PropertyEditor implements OnInit, OnChanges {
   }
 
 
-  onSyntaxChanged(e: CustomEvent<string>) {
-    this.propertyModel.update(x => ({ ...x, syntax: e.detail }));
+  onSyntaxChanged(e: string) {
+    this.propertyModel.update(x => ({ ...x, syntax: e }));
   }
 
-  onExpressionChanged(e: CustomEvent<string>) {
+  onExpressionChanged(e: string) {
     let defaultSyntax = this.propertyDescriptor().defaultSyntax || SyntaxNames.Literal;
     let syntax = this.propertyModel().syntax || defaultSyntax;
     let expressions = this.propertyModel().expressions;
-    expressions[syntax] = e.detail;
+    expressions[syntax] = e;
     this.propertyModel.update(x => ({ ...x, expressions: expressions }))
 
     if (syntax != defaultSyntax)
       return;
 
-    this.defaultSyntaxValueChanged.emit(e.detail);
+    this.defaultSyntaxValueChanged.emit(e);
   }
 }
