@@ -10,7 +10,7 @@ import { MonacoEditor } from "../../controls/monaco/monaco-editor";
 @Component({
     selector: 'expression-editor',
     templateUrl: './expression-editor.html',
-    imports: [MonacoEditor]
+    standalone: false
 })
 export class ExpressionEditor implements OnInit {
 

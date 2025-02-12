@@ -6,7 +6,7 @@ import { PropertyEditor } from "../../property-editor/property-editor";
 @Component({
     selector: 'single-line-property',
     templateUrl: './single-line-property.html',
-    imports:[PropertyEditor]
+    standalone: false
 })
 
 export class SingleLineProperty implements OnInit, OnChanges {

@@ -6,7 +6,7 @@ import { SingleLineProperty } from '../../../editors/properties/single-line-prop
   selector: 'workflow-placeholder',
   templateUrl: './workflow-placeholder.html',
     styleUrls: ['./workflow-placeholder.css'],
-    imports: [SingleLineProperty]
+    standalone: false
 })
 
 export class WorkflowPlaceholder implements OnInit {

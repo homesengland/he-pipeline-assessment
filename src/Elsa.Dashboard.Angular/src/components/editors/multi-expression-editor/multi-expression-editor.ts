@@ -11,7 +11,7 @@ import { ExpressionEditor } from "../expression-editor/expression-editor";
 @Component({
     selector: 'multi-expression-editor',
     templateUrl: './multi-expression-editor.html',
-    imports: [ExpressionEditor]
+    standalone: false
 })
 export class MultiExpressionEditor implements OnInit, OnChanges {
 

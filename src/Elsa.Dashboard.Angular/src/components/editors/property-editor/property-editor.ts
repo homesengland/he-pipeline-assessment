@@ -7,7 +7,7 @@ import { MultiExpressionEditor } from '../multi-expression-editor/multi-expressi
 @Component({
     selector: 'property-editor',
     templateUrl: './property-editor.html',
-    imports: [MultiExpressionEditor]
+    standalone: false
 })
 export class PropertyEditor implements OnInit, OnChanges {
 
