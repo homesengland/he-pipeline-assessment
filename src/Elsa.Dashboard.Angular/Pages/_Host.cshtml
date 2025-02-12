@@ -26,25 +26,14 @@
     @* </he-dashboard> *@
 </div>
 
-
-    <script nonce="@nonceConfig.ElsaSetup" type="importmap">
-        {
-                  "imports": {
-                    "InitCustomElsa": "/Scripts/CustomElsa.js"
-                  }
-                }</script>
-
 @section Scripts {
     <script nonce="@nonceConfig.ElsaSetup" src="/_content/Elsa.Designer.Components.Web/monaco-editor/min/vs/loader.js"></script>
     <script nonce="@nonceConfig.ElsaSetup" type="module" src="/Scripts/CustomElsa.js"></script>
-
     <script nonce="@nonceConfig.ElsaSetup" type="module" src="/static/runtime.js"></script>
     <script nonce="@nonceConfig.ElsaSetup" type="module" src="/static/polyfills.js"></script>
     <script nonce="@nonceConfig.ElsaSetup" type="module" src="/static/vendor.js"></script>
-    <script nonce="@nonceConfig.ElsaSetup" type="module" src="/static/main.js"></script>
-   
+    <script nonce="@nonceConfig.ElsaSetup" type="module" src="/static/main.js"></script>  
 }
-
 
 <div class="" style="margin-left:0; margin-right:0;">
        @*  <he-dashboard store-config="@Model.StoreConfig" data-dictionary="@Model.DictionaryResponse"> *@
