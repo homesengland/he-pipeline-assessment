@@ -27,7 +27,7 @@ parameters:
 
 variables:
   buildMajor: 1
-  buildMinor: 7
+  buildMinor: 8
   buildPatch: 1
   buildBranch: $[replace(replace(variables['Build.SourceBranch'], 'refs/heads/', ''), '/', '.')]
 
