@@ -9,13 +9,14 @@ import { MonacoValueChangedArgs } from "../../../models/monaco-elements";
     selector: 'monaco',
     templateUrl: './monaco.html',
     styleUrls: ['./monaco.css'],
+    standalone: false,
     host: {
         'class': 'elsa-monaco-editor-host elsa-border focus:elsa-ring-blue-500 focus:elsa-border-blue-500 elsa-block elsa-w-full elsa-min-w-0 elsa-rounded-md sm:elsa-text-sm elsa-border-gray-300 elsa-p-4',
         '[style]': 'hostStyle',
     }
 })
 
-export class MonacoEditor implements AfterViewInit { 
+export class MonacoEditor implements AfterViewInit {
   private monaco: Monaco;
   monacoLibPath: string;
   valueChanged = output<MonacoValueChangedArgs>();

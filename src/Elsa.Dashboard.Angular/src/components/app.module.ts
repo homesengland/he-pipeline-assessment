@@ -18,16 +18,38 @@ import { WorkflowDropdownButton } from './controls/workflow-dropdown-button/work
 import { WorkflowContextMenu } from './controls/workflow-context-menu/workflow-context-menu';
 import { ConfirmDialog } from './shared/confirm-dialog/confirm-dialog';
 import { ModalDialog } from './shared/modal-dialog/modal-dialog';
+import { MultiExpressionEditor } from './editors/multi-expression-editor/multi-expression-editor';
+import { ExpressionEditor } from './editors/expression-editor/expression-editor';
+import { PropertyEditor } from './editors/property-editor/property-editor';
+import { MonacoEditor } from './controls/monaco/monaco-editor';
+import { SingleLineProperty } from './editors/properties/single-line-property/single-line-property';
+import { WorkflowPlaceholder } from './dashboard/pages/workflow-placeholder/workflow-placeholder';
 
 @NgModule({
-  declarations: [WorkflowRoot, WorkflowDashboard, WorkflowDefinitionsList, WorkflowInstancesList, WorkflowHome, WorkflowRegistry, WorkflowInstanceListScreen, WorkflowPager, WorkflowDropdownButton, WorkflowContextMenu, ConfirmDialog, ModalDialog
+  declarations: [
+    WorkflowRoot,
+    WorkflowDashboard,
+    WorkflowDefinitionsList,
+    WorkflowInstancesList,
+    WorkflowHome,
+    WorkflowRegistry,
+    WorkflowInstanceListScreen,
+    WorkflowPager,
+    WorkflowDropdownButton,
+    WorkflowContextMenu,
+    WorkflowPlaceholder,
+    ConfirmDialog,
+    ModalDialog,
+    MultiExpressionEditor,
+    ExpressionEditor,
+    PropertyEditor,
+    MonacoEditor,
+    SingleLineProperty,
+
   ],
-  imports: [
-    BrowserModule, HttpClientModule, routing, AppStateModule, ReactiveFormsModule, RouterModule, RouterOutlet, CommonModule
-  ],
+  imports: [BrowserModule, HttpClientModule, routing, AppStateModule, ReactiveFormsModule, RouterModule, RouterOutlet, CommonModule],
   providers: [],
   bootstrap: [WorkflowRoot],
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
-
 })
-export class AppModule { }
+export class AppModule {}

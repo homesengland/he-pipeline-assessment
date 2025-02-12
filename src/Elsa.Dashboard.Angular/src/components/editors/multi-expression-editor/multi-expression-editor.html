@@ -1,6 +1,6 @@
 @let selectedSyntaxClass = "elsa-block elsa-px-4 elsa-py-2 elsa-text-sm hover:elsa-bg-gray-100 hover:elsa-text-gray-900 elsa-text-blue-700";
 @let nonSelectedSyntaxClass = "elsa-block elsa-px-4 elsa-py-2 elsa-text-sm hover:elsa-bg-gray-100 hover:elsa-text-gray-900 elsa-text-grey-700";
-@let advancedBtnClass = "elsa-border-0 focus:elsa-outline-none elsa-text-sm " + {{advancedButtonClass()}};
+@let advancedBtnClass = "elsa-border-0 focus:elsa-outline-none elsa-text-sm " + advancedButtonClass();
 
 <div>
     <div class="elsa-mb-1">
@@ -38,14 +38,14 @@
                          aria-orientation="vertical"
                          aria-abelledby="options-menu">
                         <div class="elsa-py-1" role="none">
-                            <a (click)='selectSyntax()' href="#" [ngClass]="syntax == selectedSyntax ? selectedSyntaxClass : nonSelectedSyntaxClass" role="menuitem"> Default </a>
+                            <a (click)='selectSyntax($event, syntax())' href="#" [ngClass]="syntax == selectedSyntax ? selectedSyntaxClass : nonSelectedSyntaxClass" role="menuitem"> Default </a>
                         </div>
                         <div class="elsa-py-1" role="none">
 
                             <a *ngFor="let syntax from supportedSyntaxes; index as i;"
-                               (click)="selectSyntax(e, syntax())" href="#"
+                               (click)="selectSyntax($event, syntax)" href="#"
                                [ngClass]="syntax == selectedSyntax ? selectedSyntaxClass : nonSelectedSyntaxClass" role="menuitem">
-                                {{ syntax() }}
+                                {{ syntax }}
                             </a>
                         </div>
                     </div>
@@ -59,13 +59,13 @@
     <div>
         <div [ngClass]="expressionEditorClass()">
             <expression-editor id="expressionEditorRef"
-                               [(expression)]="currentValue()"
-                               [(language)]="monacoLanguage()"
+                               [expression]="currentValue()"
+                               [language]="monacoLanguage()"
                                [editorHeight]="editorHeight()"
                                [singleLineMode]="singleLineMode()"
-                               [(context)]="context()"></expression-editor>
+                               [context]="context()"></expression-editor>
         </div>
-        <div [ngClass]="defaultEditorClass()">
+        <div class="{{defaultEditorClass()}}">
             <ng-content></ng-content>
         </div>
     </div>

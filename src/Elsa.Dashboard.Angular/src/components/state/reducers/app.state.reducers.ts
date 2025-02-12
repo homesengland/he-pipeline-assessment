@@ -1,7 +1,7 @@
 import { createReducer, on, StoreModule } from '@ngrx/store';
 import { AppStateActionGroup } from '../actions/app.state.actions';
 import { StoreConfig } from '../../../models/store-config';
-import { DataDictionaryGroup } from '../../../Models/custom-component-models';
+import { DataDictionaryGroup } from '../../../models/custom-component-models';
 
 export class AppState {
     storeConfig: StoreConfig;
