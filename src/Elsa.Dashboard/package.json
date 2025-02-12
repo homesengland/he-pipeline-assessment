@@ -51,7 +51,7 @@
     "jest-junit": "^15.0.0",
     "puppeteer": "^23.11.1",
     "ts-jest": "^29.0.3",
-    "workbox-build": "^4.3.1"
+    "workbox-build": "^7.3.0"
   },
   "license": "MIT",
   "jest-junit": {
