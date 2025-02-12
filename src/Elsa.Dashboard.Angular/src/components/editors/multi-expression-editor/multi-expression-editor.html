@@ -57,7 +57,7 @@
         </div>
     </div>
     <div>
-        <div [ngClass]="expressionEditorClass">
+        <div [ngClass]="expressionEditorClass()">
             <expression-editor id="expressionEditorRef"
                                [(expression)]="currentValue()"
                                [(language)]="monacoLanguage()"
@@ -65,7 +65,7 @@
                                [singleLineMode]="singleLineMode()"
                                [(context)]="context()"></expression-editor>
         </div>
-        <div [ngClass]="defaultEditorClass">
+        <div [ngClass]="defaultEditorClass()">
             <ng-content></ng-content>
         </div>
     </div>

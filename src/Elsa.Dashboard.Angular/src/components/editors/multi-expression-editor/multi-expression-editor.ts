@@ -1,4 +1,4 @@
-import { Component, EventEmitter, HostListener, Input, output, signal, computed, OnInit, OnChanges, input, model, ViewChild, ElementRef } from "@angular/core";
+import { Component, EventEmitter, HostListener, Input, output, signal, computed, OnInit, OnChanges, input, model, ViewChild, ElementRef, Signal } from "@angular/core";
 import { NgFor, CommonModule } from '@angular/common';
 import { IntellisenseContext } from "../../../models";
 import { SyntaxNames } from "../../../constants/constants";
@@ -31,8 +31,8 @@ export class MultiExpressionEditor implements OnInit, OnChanges {
   syntaxChanged = output<string>();
   expressionChanged = output<string>();
 
-  selectedSyntax?;
-  currentValue?;
+  selectedSyntax?
+    currentValue?: Signal<string>;
 
   defaultSyntaxValue: string;
   monacoLanguage;
@@ -44,9 +44,9 @@ export class MultiExpressionEditor implements OnInit, OnChanges {
   //Styling computed Variables
   fieldId;
   fieldLabel;
-  expressionEditorClass;
-  defaultEditorClass;
-  advancedButtonClass;
+    expressionEditorClass: Signal<string>;
+    defaultEditorClass: Signal<string>;
+  advancedButtonClass : Signal<string>;
 
     constructor() {
         this.fieldId = signal(this.propertyName);
@@ -54,10 +54,9 @@ export class MultiExpressionEditor implements OnInit, OnChanges {
     this.selectedSyntax = signal(this.syntax);
     this.currentValue = computed(() => this.expressions[this.selectedSyntax ? this.selectedSyntax : this.defaultSyntax]);
     this.expressionEditorClass = computed(() => this.selectedSyntax ? 'block' : 'hidden');
-    this.defaultEditorClass = computed(() => this.selectedSyntax ? 'hidden' : 'block');
+    this.defaultEditorClass = computed<string>(() => this.selectedSyntax ? 'hidden' : 'block');
     this.advancedButtonClass = computed(() => this.selectedSyntax ? 'elsa-text-blue-500' : 'elsa-text-gray-300');
     this.monacoLanguage = computed(() => mapSyntaxToLanguage(this.selectedSyntax));
-
   }
 
   ngOnInit() {
@@ -104,7 +103,7 @@ export class MultiExpressionEditor implements OnInit, OnChanges {
 
     //this.currentValue = this.expressions[syntax ? syntax : this.defaultSyntax || SyntaxNames.Literal];
       if (this.currentValue) {
-          await this.expressionEditor.nativeElement.setExpression(this.currentValue);
+          await this.expressionEditor.nativeElement.setExpression(this.currentValue());
     }
     this.closeContextMenu();
   }
