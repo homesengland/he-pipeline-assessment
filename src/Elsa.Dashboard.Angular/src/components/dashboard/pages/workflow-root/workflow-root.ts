@@ -3,12 +3,12 @@ import { Component, ElementRef, OnInit, Renderer2, viewChild, ViewChild } from '
 import { Store } from '@ngrx/store';
 import { StoreConfig } from '../../../../models/store-config';
 import { AppStateActionGroup } from '../../../state/actions/app.state.actions';
-import { DataDictionaryGroup } from '../../../../Models/custom-component-models';
-import { IntellisenseGatherer } from '../../../../Utils/intellisenseGatherer';
-import { StoreStatus } from '../../../../Models/constants';
+import { DataDictionaryGroup } from '../../../../models/custom-component-models';
+import { IntellisenseGatherer } from '../../../../utils/intellisense-gatherer';
+import { StoreStatus } from '../../../../models/constants';
 import { eventBus } from '../../../../services/event-bus';
 import { EventTypes, WorkflowStudio } from '../../../../models';
-import { HTMLElsaConfirmDialogElement } from '../../../../Models/elsa-interfaces';
+import { HTMLElsaConfirmDialogElement } from '../../../../models/elsa-interfaces';
 import { pluginManager } from 'src/services/plugin-manager';
 import { createHttpClient, createWorkflowClient, WorkflowClient } from 'src/services/workflow-client';
 import { AxiosInstance } from 'axios';
