@@ -5,6 +5,8 @@ import { WorkflowDashboard} from './components/dashboard/pages/workflow-dashboar
 import { WorkflowInstancesList } from './components/dashboard/pages/workflow-instances-list/workflow-instances-list';
 import { WorkflowRegistry } from './components/dashboard/pages/workflow-registry/workflow-registry';
 import { WorkflowHome } from './components/dashboard/pages/workflow-home/workflow-home';
+import { WorkflowInstancesView } from './components/dashboard/pages/workflow-instances-view/workflow-instances-view';
+import { WorkflowBlueprintView } from './components/dashboard/pages/workflow-blueprint-view/workflow-blueprint-view';
 import {WorkflowPlaceholder} from './components/dashboard/pages/workflow-placeholder/workflow-placeholder';
 
 const routes: Routes = [
@@ -22,11 +24,15 @@ const routes: Routes = [
   },
   {
     path: 'workflow-registry',
-    component: WorkflowRegistry,
+      component: WorkflowRegistry,
   },
   {
-    path: 'workflow-placeholder',
-    component: WorkflowPlaceholder,
+    path: 'workflow-instances/:id',
+    component: WorkflowInstancesView
+  },
+  {
+    path: 'workflow-registry/:id',
+    component: WorkflowBlueprintView
   }
 
 ];

@@ -3,7 +3,7 @@
   "extends": "./tsconfig.json",
   "compilerOptions": {
     "outDir": "./out-tsc/app",
-    "types": ["jest", "node"]
+    "types": [ "jest", "node" ]
   },
   "files": [
     "src/main.tsx"

@@ -1,18 +1,29 @@
 import { HttpClient } from '@angular/common/http';
-import { Component, ElementRef, OnInit, Renderer2 } from '@angular/core';
-import { WorkflowDashboard} from '../workflow-dashboard/workflow-dashboard'
+import { Component, ElementRef, OnInit, Renderer2, viewChild, ViewChild } from '@angular/core';
 import { Store } from '@ngrx/store';
 import { StoreConfig } from '../../../../models/store-config';
 import { AppStateActionGroup } from '../../../state/actions/app.state.actions';
 import { DataDictionaryGroup } from '../../../../Models/custom-component-models';
-import { IntellisenseGatherer } from '../../../../utils/intellisense-gatherer';
-import { StoreStatus } from '../../../../models/constants';
+import { IntellisenseGatherer } from '../../../../Utils/intellisenseGatherer';
+import { StoreStatus } from '../../../../Models/constants';
+import { eventBus } from '../../../../services/event-bus';
+import { EventTypes, WorkflowStudio } from '../../../../models';
+import { HTMLElsaConfirmDialogElement } from '../../../../Models/elsa-interfaces';
+import { pluginManager } from 'src/services/plugin-manager';
+import { createHttpClient, createWorkflowClient, WorkflowClient } from 'src/services/workflow-client';
+import { AxiosInstance } from 'axios';
+import { confirmDialogService } from 'src/services/confirm-dialog-service';
+import { getOrCreateProperty, htmlToElement } from 'src/utils/utils';
+import { Auth0ClientOptions, AuthorizationParams } from '@auth0/auth0-spa-js';
+import { activityIconProvider } from 'src/services/activity-icon-provider';
+import { propertyDisplayManager } from 'src/services/property-display-manager';
+import { toastNotificationService } from 'src/services/toast-notification-service';
 
 @Component({
   selector: 'workflow-root',
   templateUrl: './workflow-root.html',
   styleUrls: ['./workflow-root.css'],
-  imports: [WorkflowDashboard]
+  standalone: false
 })
 export class WorkflowRoot implements OnInit {
   dataDictionary: Array<DataDictionaryGroup>;
@@ -23,22 +34,61 @@ export class WorkflowRoot implements OnInit {
   renderer2: Renderer2;
   private modalShownListener: () => void;
   private modalHiddenListener: () => void;
-
+  readonly confirmDialog = viewChild.required<HTMLElsaConfirmDialogElement>('confirmDialog');
 
   constructor(private http: HttpClient, el: ElementRef, private store: Store, renderer2: Renderer2) {
     this.renderer2 = renderer2;
     this.dataDictionaryJson = el.nativeElement.getAttribute('dataDictionaryJson');
     this.storeConfigJson = el.nativeElement.getAttribute('storeConfigJson');
-    this.setExternalState()
+    this.setExternalState();
     this.intellisenseGatherer = new IntellisenseGatherer(store);
   }
 
-  ngOnInit(): void {
+  async ngOnInit(): Promise<void> {
+    eventBus.on(EventTypes.ShowConfirmDialog, this.onShowConfirmDialog);
     this.modalHandlerShown();
     this.modalHandlerHidden();
+
+    const workflowClientFactory: () => Promise<WorkflowClient> = () => createWorkflowClient(this.storeConfig.serverUrl);
+    const httpClientFactory: () => Promise<AxiosInstance> = () => createHttpClient(this.storeConfig.serverUrl);
+
+    const workflowStudio: WorkflowStudio = {
+      serverUrl: this.storeConfig.serverUrl,
+      basePath: this.storeConfig.basePath,
+      serverFeatures: [],
+      serverVersion: null,
+      eventBus,
+      pluginManager,
+      confirmDialogService,
+      workflowClientFactory,
+      httpClientFactory,
+      getOrCreateProperty: getOrCreateProperty,
+      htmlToElement,
+      features: [],
+      propertyDisplayManager,
+      activityIconProvider,
+      toastNotificationService
+    };
+
+    let auth0Params: AuthorizationParams = {
+      audience: this.storeConfig.audience,
+    };
+
+    let auth0Options: Auth0ClientOptions = {
+      authorizationParams: auth0Params,
+      clientId: this.storeConfig.clientId,
+      domain: this.storeConfig.domain,
+      useRefreshTokens: true,
+      useRefreshTokensFallback: true,
+    };
+
+    pluginManager.initialize(workflowStudio, auth0Options)
+    await eventBus.emit(EventTypes.Root.Initializing);
   }
 
+  onShowConfirmDialog = (e) => e.promise = this.confirmDialog().show(e.caption, e.message)
   ngOnDestroy() {
+    eventBus.detach(EventTypes.ShowConfirmDialog, this.onShowConfirmDialog);
     this.modalShownListener();
     this.modalHiddenListener();
   }
@@ -54,7 +104,7 @@ export class WorkflowRoot implements OnInit {
         workflowDefinitionId: workflowDef
       }));
     });
-      await this.getIntellisense(); 
+    await this.getIntellisense();
   }
 
   async modalHandlerHidden() {
@@ -68,7 +118,7 @@ export class WorkflowRoot implements OnInit {
         javaScriptTypeDefinitionsFetchStatus: StoreStatus.Empty
       }));
     });
-      await this.getIntellisense();
+    await this.getIntellisense();
   }
 
   setExternalState() {
