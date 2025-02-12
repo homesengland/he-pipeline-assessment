@@ -1,4 +1,4 @@
-import { Component, ElementRef, EventEmitter, HostBinding, HostListener, Input, Output, signal, viewChild } from '@angular/core';
+import { Component, ElementRef, EventEmitter, HostListener, Input, Output, signal, viewChild } from '@angular/core';
 import { enter, leave } from 'el-transition';
 import { eventBus } from '../../../services/event-bus';
 import { EventTypes } from '../../../models';
@@ -45,7 +45,7 @@ export class ModalDialog {
         }
 
         enter(this.overlay().nativeElement);
-        enter(this.modal().nativeElement).then(this.shown.emit);
+        enter(this.modal().nativeElement).then(this.shown.observed ?? this.shown.emit);
     }
 
     hideInternal(animate: boolean) {

@@ -15,6 +15,9 @@ import { AxiosInstance } from 'axios';
 import { confirmDialogService } from 'src/services/confirm-dialog-service';
 import { getOrCreateProperty, htmlToElement } from 'src/utils/utils';
 import { Auth0ClientOptions, AuthorizationParams } from '@auth0/auth0-spa-js';
+import { activityIconProvider } from 'src/services/activity-icon-provider';
+import { propertyDisplayManager } from 'src/services/property-display-manager';
+import { toastNotificationService } from 'src/services/toast-notification-service';
 
 @Component({
   selector: 'workflow-root',
@@ -32,7 +35,6 @@ export class WorkflowRoot implements OnInit {
   private modalShownListener: () => void;
   private modalHiddenListener: () => void;
   readonly confirmDialog = viewChild.required<HTMLElsaConfirmDialogElement>('confirmDialog');
-  private workflowStudio: WorkflowStudio;
 
   constructor(private http: HttpClient, el: ElementRef, private store: Store, renderer2: Renderer2) {
     this.renderer2 = renderer2;
@@ -50,7 +52,7 @@ export class WorkflowRoot implements OnInit {
     const workflowClientFactory: () => Promise<WorkflowClient> = () => createWorkflowClient(this.storeConfig.serverUrl);
     const httpClientFactory: () => Promise<AxiosInstance> = () => createHttpClient(this.storeConfig.serverUrl);
 
-    const workflowStudio: WorkflowStudio = this.workflowStudio = {
+    const workflowStudio: WorkflowStudio = {
       serverUrl: this.storeConfig.serverUrl,
       basePath: this.storeConfig.basePath,
       serverFeatures: [],
@@ -63,15 +65,15 @@ export class WorkflowRoot implements OnInit {
       getOrCreateProperty: getOrCreateProperty,
       htmlToElement,
       features: [],
-      propertyDisplayManager: null,
-      activityIconProvider: null,
-      toastNotificationService: null
+      propertyDisplayManager,
+      activityIconProvider,
+      toastNotificationService
     };
-    
+
     let auth0Params: AuthorizationParams = {
       audience: this.storeConfig.audience,
     };
-  
+
     let auth0Options: Auth0ClientOptions = {
       authorizationParams: auth0Params,
       clientId: this.storeConfig.clientId,
