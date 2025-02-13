@@ -6,11 +6,11 @@
     <div class="elsa-mb-1">
         <div class="elsa-flex">
             <div class="elsa-flex-1">
-                <label htmlFor={ fieldId } class="elsa-block elsa-text-sm elsa-font-medium elsa-text-gray-700">
+                <label class="elsa-block elsa-text-sm elsa-font-medium elsa-text-gray-700">
                     {{fieldLabel}}
                 </label>
             </div>
-            <div class="elsa-relative" id="contextRef">
+            <div class="elsa-relative" #contextRef>
                 <button type="button" [ngClass]="advancedBtnClass" (click)="onSettingsClick($event)">
 
                     <ng-template [ngif]="!isReadOnly()">
@@ -27,7 +27,7 @@
                     </ng-template>
                 </button>
                 <div>
-                    <div id="contextMenu"
+                    <div #contextMenu
                          data-transition-enter="elsa-transition elsa-ease-out elsa-duration-100"
                          data-transition-enter-start="elsa-transform elsa-opacity-0 elsa-scale-95"
                          data-transition-enter-end="elsa-transform elsa-opacity-100 elsa-scale-100"
@@ -58,7 +58,7 @@
     </div>
     <div>
         <div [ngClass]="expressionEditorClass()">
-            <expression-editor id="expressionEditorRef"
+            <expression-editor #expressionEditorRef
                                [expression]="currentValue()"
                                [language]="monacoLanguage()"
                                [editorHeight]="editorHeight()"

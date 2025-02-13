@@ -33,6 +33,10 @@ const routes: Routes = [
   {
     path: 'workflow-registry/:id',
     component: WorkflowBlueprintView
+  },
+  {
+    path: 'workflow-placeholder',
+    component: WorkflowPlaceholder
   }
 
 ];

@@ -22,15 +22,16 @@ export class ExpressionEditor implements OnInit {
     padding = input<string>();
     context? = model<IntellisenseContext>();
     serverUrl = model<string>();
-    workflowDefinitionId = model<string>();
+    workflowDefinitionId? = model<string>();
     expressionChanged = output<string>();
 
     intellisenseGatherer: IntellisenseGatherer;
     @ViewChild('monacoContainer') monacoEditor: ElementRef<HTMLMonacoElement>
     constructor(private store: Store) {
+      if(selectWorkflowDefinitionId(this.store)  != null){
         this.workflowDefinitionId.set(selectWorkflowDefinitionId(this.store))
+      }
         this.intellisenseGatherer = new IntellisenseGatherer(this.store);
-
     }
 
 

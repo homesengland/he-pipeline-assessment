@@ -1,5 +1,7 @@
 import { Component, OnInit, signal } from '@angular/core';
 import { ActivityModel, ActivityPropertyDescriptor, ActivityDefinitionProperty } from '../../../../models';
+import { Store } from '@ngrx/store';
+import { AppStateActionGroup } from 'src/components/state/actions/app.state.actions';
 
 @Component({
   selector: 'workflow-placeholder',
@@ -13,6 +15,12 @@ export class WorkflowPlaceholder implements OnInit {
     activityModel = signal<ActivityModel>(null);
     propertyDescriptor = signal<ActivityPropertyDescriptor>(null);
     propertyModel = signal<ActivityDefinitionProperty>(null);
+
+    constructor(store: Store) {
+      store.dispatch(AppStateActionGroup.setWorkflowDefinitionId({
+        workflowDefinitionId: '123'
+          }));
+    }
 
     ngOnInit(): void {
         this.activityModel.set(this.getSingleLineModel())

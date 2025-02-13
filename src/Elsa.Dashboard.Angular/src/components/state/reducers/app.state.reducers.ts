@@ -6,7 +6,7 @@ import { DataDictionaryGroup } from '../../../models/custom-component-models';
 export class AppState {
     storeConfig: StoreConfig;
     dataDictionary: Array<DataDictionaryGroup>;
-    workflowDefinitionId: string;
+    workflowDefinitionId?: string;
     javaScriptTypeDefinitionsFetchStatus: string;
     javaScriptTypeDefinitions: string;
     dataDictionaryIntellisense: string;
