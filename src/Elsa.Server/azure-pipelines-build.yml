@@ -22,8 +22,8 @@ parameters:
 
 variables:
   buildMajor: 1
-  buildMinor: 6
-  buildPatch: 2
+  buildMinor: 7
+  buildPatch: 0
   buildBranch: $[replace(replace(variables['Build.SourceBranch'], 'refs/heads/', ''), '/', '.')]
 
 name: $(buildMajor).$(buildMinor).$(buildPatch)-$(Rev:r)-elsaserver.$(buildBranch)
