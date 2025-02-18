@@ -23,8 +23,7 @@ parameters:
 variables:
   buildMajor: 1
   buildMinor: 5
-  buildPatch: 3
-
+  buildPatch: 4
   buildBranch: $[replace(replace(variables['Build.SourceBranch'], 'refs/heads/', ''), '/', '.')]
 
 name: $(buildMajor).$(buildMinor).$(buildPatch)-$(Rev:r)-elsadashboard.$(buildBranch)
