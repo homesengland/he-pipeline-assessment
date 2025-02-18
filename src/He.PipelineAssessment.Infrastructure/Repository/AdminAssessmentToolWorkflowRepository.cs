@@ -56,8 +56,9 @@ namespace He.PipelineAssessment.Infrastructure.Repository
             return await _context.Set<AssessmentToolWorkflow>()
                 .Where(x => x.Status != AssessmentToolStatus.Deleted && 
                     x.AssessmentTool.Order <= order)
-                .OrderBy(x => x.AssessmentTool.Order)
                 .Include(x => x.AssessmentTool)
+                .OrderBy(x => x.AssessmentTool.Order)
+                .GroupBy(x => x.AssessmentTool.Order).Where(g => g.Count() == 1).Select(x => x.First())
                 .ToListAsync();
         }
 
