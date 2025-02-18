@@ -1,1 +1,18 @@
-<h1>Workflow definition list</h1>
+<h1>Workflow definition list </h1>
+
+<div>
+  <label>
+    <input type="radio" name="yesNo" (change)="onRadioChange('yes')" /> Yes
+  </label>
+  <label>
+    <input type="radio" name="yesNo" (change)="onRadioChange('no')" /> No
+  </label>
+</div>
+
+<div #helloWorldContainer></div>
+
+<div>
+  <input type="text" (input)="onInputChange($event)" placeholder="Enter 'TEST'" />
+</div>
+
+<div #workflowDashboardContainer></div>
