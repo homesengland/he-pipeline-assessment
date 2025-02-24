@@ -1,55 +1,31 @@
 import { WorkflowPlugin } from "./workflow-plugin";
-//import { IfPlugin } from "../plugins/if-plugin";
-//import { HttpEndpointPlugin } from "../plugins/http-endpoint-plugin";
-//import { TimerPlugin } from "../plugins/timer-plugin";
-//import { WriteLinePlugin } from "../plugins/write-line-plugin";
-//import { SendEmailPlugin } from "../plugins/send-email-plugin";
-/*import { DefaultDriversPlugin } from "../plugins/default-drivers-plugin";*/
 import { ActivityIconProviderPlugin } from "../plugins/activity-icon-provider-plugin";
-//import { SwitchPlugin } from "../plugins/switch-plugin";
-//import { WhilePlugin } from "../plugins/while-plugin";
-//import { StartAtPlugin } from "../plugins/start-at-plugin";
-//import { CronPlugin } from "../plugins/cron-plugin";
-//import { SignalReceivedPlugin } from "../plugins/signal-received-plugin";
-//import { SendSignalPlugin } from "../plugins/send-signal-plugin";
-//import { StatePlugin } from "../plugins/state-plugin";
-//import { SendHttpRequestPlugin } from "../plugins/send-http-request-plugin";
-//import { DynamicOutcomesPlugin } from "../plugins/dynamic-outcomes-plugin";
 import { WorkflowStudio } from "../models";
-import { Auth0Plugin } from "../plugins/auth0-plugin";
+import { Auth0ClientOptions } from '@auth0/auth0-spa-js';
+import { Auth0Plugin } from "src/plugins/auth0-plugin";
+
 
 export class PluginManager {
   pluginFactories: Array<any> = [];
   workflowStudio: WorkflowStudio;
   initialized: boolean;
+  audience: string;
+  clientId: string;
+  domain: string;
 
   constructor() {
     this.pluginFactories = [
-/*      () => new DefaultDriversPlugin(),*/
       () => new ActivityIconProviderPlugin(),
-      //() => new IfPlugin(),
-      //() => new WhilePlugin(),
-      //() => new SwitchPlugin(),
-      //() => new HttpEndpointPlugin(),
-      //() => new SendHttpRequestPlugin(),
-      //() => new TimerPlugin(),
-      //() => new StartAtPlugin(),
-      //() => new CronPlugin(),
-      //() => new SignalReceivedPlugin(),
-      //() => new SendSignalPlugin(),
-      //() => new WriteLinePlugin(),
-      //() => new StatePlugin(),
-      //() => new SendEmailPlugin(),
-      //() => new DynamicOutcomesPlugin()
-      //() => new Auth0Plugin()
     ];
   }
 
-  initialize(workflowStudio: WorkflowStudio) {
+  initialize(workflowStudio: WorkflowStudio, options: Auth0ClientOptions) {
     if (this.initialized)
       return;
 
     this.workflowStudio = workflowStudio;
+
+    this.registerPluginFactory(() => new Auth0Plugin(options));
 
     for (const pluginType of this.pluginFactories) {
       this.createPlugin(pluginType);

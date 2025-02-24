@@ -7,6 +7,7 @@ import { selectMonacoLibPath, selectServerUrl } from '../../../state/selectors/a
   selector: 'workflow-definitions-list',
   templateUrl: './workflow-definitions-list.html',
   styleUrls: ['./workflow-definitions-list.css'],
+  standalone: false
 })
 export class WorkflowDefinitionsList implements OnInit {
   serverUrl: string;
