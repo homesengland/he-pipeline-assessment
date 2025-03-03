@@ -35,8 +35,26 @@ namespace He.PipelineAssessment.UI.Tests.Features.Error
             //Assert
             Assert.IsAssignableFrom<IActionResult>(result);
             Assert.IsType<ViewResult>(result);
+        }
+
+        [Theory]
+        [AutoMoqData]
+        public void Index_ShouldLogError_GivenErrorOccurs(
+            [Frozen] Mock<IErrorHelper> errorHelper,
+            [Frozen] Mock<ILogger<ErrorController>> logger,
+            Exception exception,
+            ErrorController sut
+        )
+        {
+            //Arrange
+            errorHelper.Setup(x => x.ExceptionHandlerFeatureGetException(It.IsAny<HttpContext>())).Returns(exception);
+
+            //Act
+            var result = sut.Index();
+
+            //Assert
             var error = $"An error occurred while processing your request {exception.Message}";
-            logger.Verify(m => m.Log(LogLevel.Error, 
+            logger.Verify(m => m.Log(LogLevel.Error,
                                 It.IsAny<EventId>(),
                                 It.Is<It.IsAnyType>((x, y) => error == null || Regex.IsMatch(x.ToString(), error)),
                                 It.IsAny<Exception?>(),
