@@ -35,19 +35,13 @@ namespace He.PipelineAssessment.UI.Tests.Features.Error
             //Assert
             Assert.IsAssignableFrom<IActionResult>(result);
             Assert.IsType<ViewResult>(result);
-            VerifyLog(logger, LogLevel.Error, Times.Once, $"An error occurred while processing your request {exception.Message}");
-
-        }
-
-        private void VerifyLog(Mock<ILogger<ErrorController>> logger, LogLevel level, Func<Times> times, string regex)
-        {
-            logger.Verify(m => m.Log(
-                level,
-                It.IsAny<EventId>(),
-                It.Is<It.IsAnyType>((x, y) => regex == null || Regex.IsMatch(x.ToString(), regex)),
-                It.IsAny<Exception?>(),
-                It.IsAny<Func<It.IsAnyType, Exception?, string>>()),
-                times);
+            var error = $"An error occurred while processing your request {exception.Message}";
+            logger.Verify(m => m.Log(LogLevel.Error, 
+                                It.IsAny<EventId>(),
+                                It.Is<It.IsAnyType>((x, y) => error == null || Regex.IsMatch(x.ToString(), error)),
+                                It.IsAny<Exception?>(),
+                                It.IsAny<Func<It.IsAnyType, Exception?, string>>()),
+                                Times.Once);
         }
 
         [Theory]
