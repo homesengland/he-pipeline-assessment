@@ -56,7 +56,7 @@ namespace He.PipelineAssessment.UI.Tests.Features.Error
             var error = $"An error occurred while processing your request {exception.Message}";
             logger.Verify(m => m.Log(LogLevel.Error,
                                 It.IsAny<EventId>(),
-                                It.Is<It.IsAnyType>((x, y) => error == null || Regex.IsMatch(x.ToString(), error)),
+                                It.Is<It.IsAnyType>((x, y) => x.ToString() == error),
                                 It.IsAny<Exception?>(),
                                 It.IsAny<Func<It.IsAnyType, Exception?, string>>()),
                                 Times.Once);
