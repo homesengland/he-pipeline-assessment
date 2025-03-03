@@ -21,7 +21,6 @@ namespace He.PipelineAssessment.UI.Tests.Features.Error
         [AutoMoqData]
         public void Index_ShouldReturn_ErrorView_GivenErrorOccurs(
             [Frozen] Mock<IErrorHelper> errorHelper,
-            [Frozen] Mock<ILogger<ErrorController>> logger,
             Exception exception,
             ErrorController sut
             )
