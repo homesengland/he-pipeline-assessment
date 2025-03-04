@@ -63,18 +63,9 @@ namespace Elsa.Server.Tests.Features.Activities.DataDictionaryProvider
 
             //Act
             var result = await sut.Handle(command, CancellationToken.None);
-            var resultObj = JsonConvert.DeserializeObject<Dictionary<string, string>>(result);
-
-            if (resultObj != null)
-            {
-                var dataDictionaryObj = JsonConvert.DeserializeObject<List<DataDictionary>>(resultObj["Dictionary"]);
-                if (dataDictionaryObj != null)
-                {
-                    //Assert
-                    Assert.Empty(dataDictionaryObj);
-                    Assert.Empty(resultObj["Intellisense"]);
-                }
-            }
+            
+            //Assert
+            Assert.Empty(result);
         }
     }
 }
