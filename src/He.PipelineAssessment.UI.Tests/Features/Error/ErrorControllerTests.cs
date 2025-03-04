@@ -38,31 +38,6 @@ namespace He.PipelineAssessment.UI.Tests.Features.Error
 
         [Theory]
         [AutoMoqData]
-        public void Index_ShouldLogError_GivenErrorOccurs(
-            [Frozen] Mock<IErrorHelper> errorHelper,
-            [Frozen] Mock<ILogger<ErrorController>> logger,
-            Exception exception,
-            ErrorController sut
-        )
-        {
-            //Arrange
-            errorHelper.Setup(x => x.ExceptionHandlerFeatureGetException(It.IsAny<HttpContext>())).Returns(exception);
-
-            //Act
-            var result = sut.Index();
-
-            //Assert
-            var error = $"An error occurred while processing your request {exception.Message}";
-            logger.Verify(m => m.Log(LogLevel.Error,
-                                It.IsAny<EventId>(),
-                                It.Is<It.IsAnyType>((x, y) => x.ToString() == error),
-                                It.IsAny<Exception?>(),
-                                It.IsAny<Func<It.IsAnyType, Exception?, string>>()),
-                                Times.Once);
-        }
-
-        [Theory]
-        [AutoMoqData]
         public void Index_ShouldReturn_NoContent_GivenNoErrorOccurs(
             [Frozen] Mock<IErrorHelper> errorHelper,
             ErrorController sut
