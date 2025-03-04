@@ -36,7 +36,6 @@ resources:
   - repository: He.Workflow
     type: git
     name: 'Common Components (Agile Board)/He.Workflow'
-    ref: feature/clean-repos
   - repository: templates
     type: git
     name: 'Cloud Hosting Service/Templates'   
