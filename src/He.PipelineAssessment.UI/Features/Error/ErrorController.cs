@@ -26,7 +26,7 @@ namespace He.PipelineAssessment.UI.Features.Error
 
             var errorMessage = $"An error occurred while processing your request {exception.Message}";
 
-            _logger.LogError(errorMessage);
+            _logger.LogError(exception, errorMessage);
 
             return View("Index", exception);
         }
