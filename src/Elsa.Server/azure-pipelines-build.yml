@@ -1,11 +1,11 @@
 trigger:
 - none
-
+ 
 pr:
   branches:
     include:
     - main
-
+ 
 schedules:
 - cron: "0 4 * * Mon,Tue,Wed,Thu,Fri"
   displayName: Nightly Test Run
@@ -19,28 +19,30 @@ parameters:
     displayName: Force Push to Production
     type: boolean
     default: false
-
+ 
 variables:
   buildMajor: 1
   buildMinor: 7
-  buildPatch: 0
-
+  buildPatch: 1
   buildBranch: $[replace(replace(variables['Build.SourceBranch'], 'refs/heads/', ''), '/', '.')]
-
-name: $(buildMajor).$(buildMinor).$(buildPatch)-$(Rev:r)-elsaserver.$(buildBranch)
-
+  identifier: elsaserver
+ 
+name: $(buildMajor).$(buildMinor).$(buildPatch)-$(Rev:r)-$(identifier).$(buildBranch)
+ 
 pool:
   vmImage: 'ubuntu-22.04'
-
+ 
 resources:
   repositories:
   - repository: He.Workflow
     type: git
-    name: 'Common Components (Agile Board)/He.Workflow' 
+    name: 'Common Components (Agile Board)/He.Workflow'
   - repository: templates
     type: git
     name: 'Cloud Hosting Service/Templates'   
-    ref: 'master'
-
+ 
 stages:
 - template: azure-pipelines-elsaserver-build.yml@He.Workflow
+  parameters:
+    forcePushToProd: ${{ parameters.forcePushToProd }}
+    identifier: $(identifier)
