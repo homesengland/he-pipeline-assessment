@@ -1,5 +1,5 @@
 import { NgModule } from '@angular/core';
-import { Routes, RouterModule } from '@angular/router';
+import { Routes, RouterModule, provideRouter } from '@angular/router';
 import { WorkflowDefinitionsList } from './components/dashboard/pages/workflow-definitions-list/workflow-definitions-list';
 import { WorkflowDashboard} from './components/dashboard/pages/workflow-dashboard/workflow-dashboard'
 import { WorkflowInstancesList } from './components/dashboard/pages/workflow-instances-list/workflow-instances-list';
@@ -35,10 +35,10 @@ const routes: Routes = [
     component: WorkflowBlueprintView
   },
   {
-    path: 'workflow-placeholder',
+    path: 'workflow-placeholder/:id',
     component: WorkflowPlaceholder
   }
 
 ];
 
-export const routing = RouterModule.forRoot(routes);
+export const routing = RouterModule.forRoot(routes, {bindToComponentInputs: true});

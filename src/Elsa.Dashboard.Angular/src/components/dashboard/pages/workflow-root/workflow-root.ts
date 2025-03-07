@@ -9,15 +9,15 @@ import { StoreStatus } from '../../../../models/constants';
 import { eventBus } from '../../../../services/event-bus';
 import { EventTypes, WorkflowStudio } from '../../../../models';
 import { HTMLElsaConfirmDialogElement } from '../../../../models/elsa-interfaces';
-import { pluginManager } from 'src/services/plugin-manager';
-import { createHttpClient, createWorkflowClient, WorkflowClient } from 'src/services/workflow-client';
+import { pluginManager } from '../../../../services/plugin-manager';
+import { createHttpClient, createWorkflowClient, WorkflowClient } from '../../../../services/workflow-client';
 import { AxiosInstance } from 'axios';
-import { confirmDialogService } from 'src/services/confirm-dialog-service';
-import { getOrCreateProperty, htmlToElement } from 'src/utils/utils';
+import { confirmDialogService } from '../../../../services/confirm-dialog-service';
+import { getOrCreateProperty, htmlToElement } from '../../../../utils/utils';
 import { Auth0ClientOptions, AuthorizationParams } from '@auth0/auth0-spa-js';
-import { activityIconProvider } from 'src/services/activity-icon-provider';
-import { propertyDisplayManager } from 'src/services/property-display-manager';
-import { toastNotificationService } from 'src/services/toast-notification-service';
+import { activityIconProvider } from '../../../../services/activity-icon-provider';
+import { propertyDisplayManager } from '../../../../services/property-display-manager';
+import { toastNotificationService } from '../../../../services/toast-notification-service';
 
 @Component({
   selector: 'workflow-root',
@@ -56,7 +56,7 @@ export class WorkflowRoot implements OnInit {
       serverUrl: this.storeConfig.serverUrl,
       basePath: this.storeConfig.basePath,
       serverFeatures: [],
-      serverVersion: null,
+      serverVersion: '0.1',
       eventBus,
       pluginManager,
       confirmDialogService,
@@ -96,6 +96,7 @@ export class WorkflowRoot implements OnInit {
   async modalHandlerShown() {
 
     this.modalShownListener = this.renderer2.listen("window", "shown", event => {
+      console.log("Modal Shown Handler Activated")
       event = event;
       var url_string = document.URL;
       var n = url_string.lastIndexOf('/');
@@ -142,6 +143,7 @@ export class WorkflowRoot implements OnInit {
 
   setDataDictionary() {
     if (this.dataDictionaryJson != null) {
+      console.log("Setting Data Dictionary", this.dataDictionaryJson)
       this.dataDictionaryJson = JSON.stringify(this.dataDictionaryJson);
       this.dataDictionary = JSON.parse(this.dataDictionaryJson);
     }

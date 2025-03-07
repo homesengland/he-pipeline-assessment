@@ -1,3 +1,4 @@
+import { WorkflowDefinition } from './../models/domain';
 import { IntellisenseContext } from '../models/intellisense';
 import axios, { AxiosInstance, AxiosRequestConfig } from "axios";
 //import state from '../stores/store';
@@ -7,11 +8,12 @@ import { StoreConfig } from '../models/store-config'
 import { selectDataDictionaryIntellisense, selectJavaScriptTypeDefinitions, selectJavaScriptTypeDefinitionsFetchStatus, selectStoreConfig, selectWorkflowDefinitionId } from '../components/state/selectors/app.state.selectors';
 import { Store } from '@ngrx/store';
 import { AppStateActionGroup } from '../components/state/actions/app.state.actions';
+import { Observable } from 'rxjs';
 
 
 export class IntellisenseGatherer {
-  private _httpClient: AxiosInstance = null;
-  private _baseUrl: string = null;
+  private _httpClient: AxiosInstance;
+  private _baseUrl: string = "";
   private auth0: Auth0Client;
   private options: Auth0ClientOptions;
   private context: IntellisenseContext = {
@@ -19,7 +21,7 @@ export class IntellisenseGatherer {
     propertyName: ""
   };
   private storeConfig: StoreConfig;
-  private workflowDefinitionId = "";
+  private workflowDefinitionId: string;
   private javaScriptTypeDefinitionsFetchStatus = "";
   private javaScriptTypeDefinitions = "";
   private dataDictionaryIntellisense = "";
@@ -92,7 +94,7 @@ export class IntellisenseGatherer {
 
 
   async getIntellisense(): Promise<string> {
-    if (this.javaScriptTypeDefinitionsFetchStatus == StoreStatus.Available && this.hasDefinitions) {
+    if (this.javaScriptTypeDefinitionsFetchStatus == StoreStatus.Available && this.hasDefinitions()) {
       return this.javaScriptTypeDefinitions;
     }
     else {
@@ -103,7 +105,7 @@ export class IntellisenseGatherer {
 
   private async tryFetchDefinitions() {
     this.javaScriptTypeDefinitionsFetchStatus = StoreStatus.Fetching;
-    let definitions = await this.getJavaScriptTypeDefinitions(this.workflowDefinitionId, this.context);
+    let definitions = await this.getJavaScriptTypeDefinitions(this.context);
     this.javaScriptTypeDefinitions = definitions;
     if (this.javaScriptTypeDefinitions != null) {
       this.appendGatheredValues();
@@ -126,15 +128,20 @@ export class IntellisenseGatherer {
   }
 
 
-  private async getJavaScriptTypeDefinitions(workflowDefinitionId: string, context?: IntellisenseContext): Promise<string> {
+  private async getJavaScriptTypeDefinitions(context?: IntellisenseContext): Promise<string> {
+
+    var workflowDefinitionId = await selectWorkflowDefinitionId(this.store);
+    console.log("workflowDefinitionId", workflowDefinitionId);
     let httpClient = await this.createHttpClient();
-    const response = await httpClient.post<string>(`v1/scripting/javascript/type-definitions/${workflowDefinitionId}?t=${new Date().getTime()}`, context);
+    var url = `v1/scripting/javascript/type-definitions/${workflowDefinitionId}`;
+    console.log("Url", url);
+    const response = await httpClient.post<string>(url, context);
     return response.data;
   }
 
   private async createHttpClient(): Promise<AxiosInstance> {
 
-    await this.getAuth0Client();
+    var client = await this.getAuth0Client();
 
     if (!!this._httpClient) {
       return this._httpClient;

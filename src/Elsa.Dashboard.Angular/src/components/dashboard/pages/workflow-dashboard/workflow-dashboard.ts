@@ -13,8 +13,11 @@ export class WorkflowDashboard implements OnInit {
     ['workflow-definitions', 'Workflow Definitions'],
     ['workflow-instances', 'Workflow Instances'],
     ['workflow-registry', 'Workflow Registry'],
-    ['workflow-placeholder', 'Workflow Placeholder']
   ];
+  placeholderItems: [string, string][] = [
+    ['workflow-placeholder', 'Workflow Placeholder'],
+  ];
+  placeholderWorkflowId: string = '5e4506339c934e199a17ca7a2e44f874';
 
   ngOnInit() {
 
