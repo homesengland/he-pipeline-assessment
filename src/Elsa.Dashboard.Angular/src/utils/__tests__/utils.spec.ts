@@ -2,9 +2,15 @@ import { format, isNumeric } from '../utils';
 
 describe('utils', () => {
   describe('format', () => {
-    const firstName = 'John';
-    const middleName = 'Dimello';
-    const lastName = 'Doe';
+    let firstName;
+    let middleName;
+    let lastName;
+
+    beforeEach(() => {
+      firstName = 'John';
+      middleName = 'Dimello';
+      lastName = 'Doe';
+    });
 
     it('should return correctly formatted string when first name, middle name and last name is provided', () => {
       expect(format(firstName, middleName, lastName)).toEqual('John Dimello Doe');

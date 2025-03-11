@@ -76,6 +76,9 @@
           "options": {
             "browserTarget": "workflow:build"
           }
+        },
+        "test": {
+          "builder": "@angular-builders/jest:run"
         }
       }
     }
