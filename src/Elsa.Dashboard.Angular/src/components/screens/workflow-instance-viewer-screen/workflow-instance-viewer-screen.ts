@@ -1,5 +1,6 @@
-import { Component, ElementRef, HostListener, input, OnDestroy, OnInit, viewChild } from '@angular/core';
+import { Component, computed, effect, ElementRef, HostListener, Input, input, OnDestroy, OnInit, signal, viewChild } from '@angular/core';
 import { Store } from '@ngrx/store';
+import { ActivatedRoute } from '@angular/router';
 import { selectServerUrl } from '../../state/selectors/app.state.selectors';
 import { Location } from '@angular/common';
 import {
@@ -11,15 +12,18 @@ import {
   ConnectionModel,
   SyntaxNames,
   WorkflowBlueprint,
+  WorkflowExecutionLogRecord,
+  WorkflowFault,
   WorkflowInstance,
   WorkflowModel,
   WorkflowPersistenceBehavior,
   WorkflowStatus,
 } from 'src/models';
-import { ActivityStats } from 'src/services/workflow-client';
+import { ActivityStats, ActivityEventCount } from 'src/services/workflow-client';
 import { ActivityContextMenuState, LayoutDirection } from 'src/components/designers/tree/models';
 import { ElsaClientService } from 'src/services/elsa-client';
 import * as collection from 'lodash/collection';
+import { featuresDataManager } from 'src/services/features-data-manager';
 
 @Component({
   selector: 'workflow-instance-viewer-screen',
@@ -31,13 +35,15 @@ import * as collection from 'lodash/collection';
   },
 })
 export class WorkflowInstanceViewerScreen implements OnInit, OnDestroy {
-  readonly workflowId = input<string>(undefined);
+  @Input() workflowInstanceId = '';
+  serverUrl: string;
   workflowInstance: WorkflowInstance;
   workflowBlueprint: WorkflowBlueprint;
   workflowModel: WorkflowModel;
   selectedActivityId?: string;
+
   activityStats?: ActivityStats;
-  serverUrl: string;
+
   activityContextMenuState: ActivityContextMenuState = {
     shown: false,
     x: 0,
@@ -45,14 +51,20 @@ export class WorkflowInstanceViewerScreen implements OnInit, OnDestroy {
     activity: null,
   };
 
+  // designer: HTMLElsaDesignerTreeElement;
+  // journal: HTMLElsaWorkflowInstanceJournalElement;
   readonly contextMenu = viewChild.required<ElementRef>('contextMenu');
-
   layoutDirection = LayoutDirection.TopBottom;
+
   activityDescriptors: ActivityDescriptor[];
   workflowStorageDescriptors: import('c:/source/github/he-pipeline-assessment/src/Elsa.Dashboard.Angular/src/models/domain').WorkflowStorageDescriptor[];
   private clearRouteChangedListeners: () => void;
 
+  workflowFault: WorkflowFault;
+  route: ActivatedRoute;
+
   constructor(private store: Store, private elsaClientService: ElsaClientService, private location: Location, private el: ElementRef) {}
+
   ngOnDestroy(): void {
     if (this.clearRouteChangedListeners) {
       this.clearRouteChangedListeners();
@@ -61,11 +73,19 @@ export class WorkflowInstanceViewerScreen implements OnInit, OnDestroy {
 
   async ngOnInit(): Promise<void> {
     this.clearRouteChangedListeners = this.location.onUrlChange(async (url, state) => {
-      const workflowInstanceId = url.split('/').pop();
-      await this.workflowInstanceIdChangedHandler(workflowInstanceId);
+      this.workflowInstanceId = url.split('/').pop();
+      await this.workflowInstanceIdChangedHandler(this.workflowInstanceId);
     });
     this.setVariablesFromAppState();
     await this.loadActivityDescriptors();
+
+    await this.workflowInstanceIdChangedHandler(this.workflowInstanceId);
+
+    const layoutFeature = featuresDataManager.getFeatureConfig(featuresDataManager.supportedFeatures.workflowLayout);
+
+    if (layoutFeature && layoutFeature.enabled) {
+      this.layoutDirection = layoutFeature.value as LayoutDirection;
+    }
   }
 
   @HostListener('document:click', ['$event'])
@@ -78,10 +98,6 @@ export class WorkflowInstanceViewerScreen implements OnInit, OnDestroy {
     this.store.select(selectServerUrl).subscribe(data => {
       this.serverUrl = data;
     });
-  }
-
-  async getServerUrl(): Promise<string> {
-    return this.serverUrl;
   }
 
   async workflowInstanceIdChangedHandler(newValue: string) {
@@ -140,6 +156,30 @@ export class WorkflowInstanceViewerScreen implements OnInit, OnDestroy {
     }
   }
 
+  ngAfterViewChecked() {
+    // if (this.el && this.contextMenu) {
+    //   let modalX = this.activityContextMenuState.x + 64;
+    //   let modalY = this.activityContextMenuState.y - 256;
+    //  // Fit the modal to the canvas bounds
+    //   const canvasBounds = this.el?.getBoundingClientRect();
+    //   const modalBounds = this.contextMenu.getBoundingClientRect();
+    //   const modalWidth = modalBounds?.width;
+    //   const modalHeight = modalBounds?.height;
+    //   modalX = Math.min(canvasBounds.width, modalX + modalWidth + 32) - modalWidth - 32;
+    //   modalY = Math.min(canvasBounds.height, modalY + modalHeight) - modalHeight - 32;
+    //   modalY = Math.max(0, modalY);
+    //   this.contextMenu.style.left = `${modalX}px`;
+    //   this.contextMenu.style.top = `${modalY}px`;
+    // }
+  }
+
+  ngAfterViewInit() {
+    //     if (!this.designer) {
+    //       this.designer = this.el.querySelector('elsa-designer-tree') as HTMLElsaDesignerTreeElement;
+    //       this.designer.model = this.workflowModel;
+    //     }
+  }
+
   async loadWorkflowStorageDescriptors() {
     const client = await this.elsaClientService.createElsaClient(this.serverUrl);
     this.workflowStorageDescriptors = await client.workflowStorageProvidersApi.list();
@@ -149,6 +189,9 @@ export class WorkflowInstanceViewerScreen implements OnInit, OnDestroy {
     this.workflowInstance = workflowInstance;
     this.workflowBlueprint = workflowBlueprint;
     this.workflowModel = this.mapWorkflowModel(workflowBlueprint, workflowInstance);
+    if (this.workflowInstance != null && this.workflowInstance.faults != null) {
+      this.workflowFault = this.workflowInstance.faults.find(x => x.faultedActivityId == this.selectedActivityId);
+    }
   }
 
   mapWorkflowModel(workflowBlueprint: WorkflowBlueprint, workflowInstance: WorkflowInstance): WorkflowModel {
@@ -216,4 +259,94 @@ export class WorkflowInstanceViewerScreen implements OnInit, OnDestroy {
       activity,
     };
   }
+
+  onRecordSelected(e: CustomEvent<WorkflowExecutionLogRecord>) {
+    const record = e.detail;
+    const activity = !!record ? this.workflowBlueprint.activities.find(x => x.id === record.activityId) : null;
+    this.selectedActivityId = activity != null ? (activity.parentId != null ? activity.parentId : activity.id) : null;
+  }
+
+  async onActivitySelected(e: CustomEvent<ActivityModel>) {
+    this.selectedActivityId = e.detail.activityId;
+    // await this.journal.selectActivityRecord(this.selectedActivityId);
+  }
+
+  async onActivityDeselected(e: CustomEvent<ActivityModel>) {
+    if (this.selectedActivityId == e.detail.activityId) this.selectedActivityId = null;
+
+    // await this.journal.selectActivityRecord(this.selectedActivityId);
+  }
+
+  async onActivityContextMenuButtonClicked(e: CustomEvent<ActivityContextMenuState>) {
+    this.activityContextMenuState = e.detail;
+    this.activityStats = null;
+
+    if (!e.detail.shown) {
+      return;
+    }
+
+    const elsaClient = await this.elsaClientService.createElsaClient(this.serverUrl);
+    this.activityStats = await elsaClient.activityStatsApi.get(this.workflowInstanceId, e.detail.activity.activityId);
+  }
+
+  getActivityBorderColor = (activity: ActivityModel): string => {
+    const workflowInstance = this.workflowInstance;
+    const workflowFault = !!workflowInstance ? workflowInstance.faults : null;
+    const activityData = workflowInstance.activityData[activity.activityId] || {};
+    const lifecycle = activityData['_Lifecycle'] || {};
+    const executing = lifecycle.executing ?? lifecycle.Executing;
+    const executed = lifecycle.executed ?? lifecycle.Executed;
+
+    if (!!workflowFault && workflowFault.find(x => x.faultedActivityId == activity.activityId)) return 'red';
+
+    if (executed) return 'green';
+
+    if (executing) return 'blue';
+
+    return null;
+  };
+
+  renderActivityStatsButton = (activity: ActivityModel): string => {
+    const workflowInstance = this.workflowInstance;
+    const workflowFault = !!workflowInstance ? workflowInstance.faults : null;
+    const activityData = workflowInstance.activityData[activity.activityId] || {};
+    const lifecycle = activityData['_Lifecycle'] || {};
+    const executing = lifecycle.executing ?? lifecycle.Executing;
+    const executed = lifecycle.executed ?? lifecycle.Executed;
+
+    let icon: string;
+
+    if (!!workflowFault && workflowFault.find(x => x.faultedActivityId == activity.activityId)) {
+      icon = `<svg class="elsa-flex-shrink-0 elsa-h-6 elsa-w-6 elsa-text-red-600" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <circle cx="12" cy="12" r="10"/>
+                <line x1="12" y1="8" x2="12" y2="12"/>
+                <line x1="12" y1="16" x2="12.01" y2="16"/>
+              </svg>`;
+    } else if (executed) {
+      icon = `<svg class="elsa-h-6 elsa-w-6 elsa-text-green-500"  viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <circle cx="12" cy="12" r="10" />
+                <line x1="12" y1="16" x2="12" y2="12" />
+                <line x1="12" y1="8" x2="12.01" y2="8" />
+              </svg>`;
+    } else if (executing) {
+      icon = `<svg class="elsa-h-6 elsa-w-6 elsa-text-blue-500" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <circle cx="12" cy="12" r="10" />
+                <line x1="12" y1="16" x2="12" y2="12" />
+                <line x1="12" y1="8" x2="12.01" y2="8" />
+              </svg>`;
+    } else {
+      icon = `<svg class="h-6 w-6 text-gray-300" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <circle cx="12" cy="12" r="10" />
+                <line x1="12" y1="16" x2="12" y2="12" />
+                <line x1="12" y1="8" x2="12.01" y2="8" />
+              </svg>`;
+    }
+
+    return `<div class="context-menu-wrapper elsa-flex-shrink-0">
+            <button aria-haspopup="true"
+                    class="elsa-w-8 elsa-h-8 elsa-inline-flex elsa-items-center elsa-justify-center elsa-text-gray-400 elsa-rounded-full elsa-bg-transparent hover:elsa-text-gray-500 focus:elsa-outline-none focus:elsa-text-gray-500 focus:elsa-bg-gray-100 elsa-transition elsa-ease-in-out elsa-duration-150">
+              ${icon}
+            </button>
+          </div>`;
+  };
 }
