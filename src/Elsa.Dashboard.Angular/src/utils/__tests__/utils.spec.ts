@@ -1,39 +1,36 @@
 import { format, isNumeric } from '../utils';
 
 describe('utils', () => {
-  describe('format() function tests', () => {
+  describe('format', () => {
     const firstName = 'John';
     const middleName = 'Dimello';
     const lastName = 'Doe';
 
-    it('supplying first name, middle name and last name returns correctly formatted string', () => {
+    it('should return correctly formatted string when first name, middle name and last name is provided', () => {
       expect(format(firstName, middleName, lastName)).toEqual('John Dimello Doe');
     });
-    it('supplying first name and last name returns correctly formatted string', () => {
+    it('should return correctly formatted string when first name and last name is provided', () => {
       expect(format(firstName, '', lastName)).toEqual('John Doe');
     });
-    it('supplying first name only returns correctly formatted string', () => {
+    it('should return correctly formatted string when first name is only provided', () => {
       expect(format(firstName, '', '')).toEqual('John');
     });
-    it('supplying last name only returns correctly formatted string', () => {
+    it('should return correctly formatted string when last name is only provided', () => {
       expect(format('', '', lastName)).toEqual(' Doe');
     });
-    it('supplying no parameters returns correctly empty string', () => {
+    it('should return empty formatted string when no parameters are provided', () => {
       expect(format('', '', '')).toEqual('');
-    });
-    it('foo test', () => {
-      expect(1).toEqual(1);
     });
   });
 
-  describe('isNumeric() function tests', () => {
-    it('supplying a number as a string returns true', () => {
+  describe('isNumeric', () => {
+    it('should return true when providing a number as a string', () => {
       expect(isNumeric('2')).toEqual(true);
     });
-    it('supplying a number as a word returns false', () => {
+    it('should return false when providing a number as a word', () => {
       expect(isNumeric('two')).toEqual(false);
     });
-    it('not supplying a number at all returns false', () => {
+    it('should return false when not providing a number as a string', () => {
       expect(isNumeric('')).toEqual(false);
     });
   });
