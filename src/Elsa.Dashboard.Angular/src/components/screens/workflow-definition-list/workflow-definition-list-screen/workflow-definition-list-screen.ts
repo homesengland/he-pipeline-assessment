@@ -7,7 +7,7 @@ import { Store } from '@ngrx/store';
 import { ElsaClientService, ElsaClient } from '../../../../services/elsa-client';
 import { OrderBy, PagedList, VersionOptions, WorkflowDefinitionSummary } from '../../../../models';
 import { parseQuery } from '../../../../utils/utils';
-import { selectStoreConfig } from '../../../state/selectors/app.state.selectors';
+import { selectServerUrl, selectStoreConfig } from '../../../state/selectors/app.state.selectors';
 import { HTMLElsaConfirmDialogElement } from 'src/Models/elsa-interfaces';
 
 @Component({
@@ -54,20 +54,19 @@ export class WorkflowDefinitionListScreen implements OnInit, OnDestroy {
   ) {}
 
   async ngOnInit(): Promise<void> {
+    this.setVariablesFromAppState();
+
     this.clearRouteChangedListeners = this.location.onUrlChange(async (url, state) => {
       let queryString = url.split('?')[1] ? url.split('?')[1] : '';
       this.applyQueryString(queryString);
       await this.loadWorkflowDefinitions();
     });
 
-    this.setVariablesFromAppState();
-
     if (this.router.navigated) {
       let queryString = this.router.url.split('?')[1];
       this.applyQueryString(queryString);
     }
     await this.loadWorkflowDefinitions();
-
   }
 
   ngOnDestroy(): void {
@@ -81,8 +80,8 @@ export class WorkflowDefinitionListScreen implements OnInit, OnDestroy {
       this.basePath = data.basePath ? data.basePath : '';
     });
 
-    this.store.select(selectStoreConfig).subscribe(data => {
-      this.basePath = data.basePath ? data.basePath : "";
+    this.store.select(selectServerUrl).subscribe(data => {
+      this.serverUrl = data;
     });
   }
 
@@ -110,15 +109,12 @@ export class WorkflowDefinitionListScreen implements OnInit, OnDestroy {
     this.workflowDefinitionsTableValues = this.setTableValues(this.workflowDefintions);
     const maxPage = Math.floor(this.workflowDefintions.totalCount / this.currentPageSize);
 
-
     if (this.currentPage > maxPage) {
       this.currentPage = maxPage;
       this.workflowDefintions = await elsaClient.workflowDefinitionsApi.list(this.currentPage, this.currentPageSize, this.latestOrPublishedVersionOptions, this.currentSearchTerm);
       this.workflowDefinitionsTableValues = this.setTableValues(this.workflowDefintions);
       this.totalCount = this.workflowDefintions.totalCount;
     }
-
-    this.setSelectAllIndeterminateState();
   }
 
   createClient(): Promise<ElsaClient> {
@@ -127,38 +123,50 @@ export class WorkflowDefinitionListScreen implements OnInit, OnDestroy {
 
   // ***** MODIFY FOR DEFINITIONS INSTEAD OF INSTANCES, COPIED FROM workflow-instance-list-screen.ts *****
 
-//   setTableValues(workflowInstances: PagedList<WorkflowInstanceSummary>): PagedList<WorkflowInstanceSummaryTableRow> {
-  
-//       let rows = workflowInstances.items.map(item => {
-//         const isSelected = this.selectedWorkflowInstanceIds.findIndex(x => x === item.id) >= 0;
-//         const workflowBlueprint = this.workflowBlueprints.find(x => x.versionId == item.definitionVersionId) ?? {
-//           name: 'Not Found',
-//           displayName: '(Workflow definition not found)'
-//         };
-//         return {
-//           workflowInstanceSummary: item,
-//           isSelected: isSelected,
-//           correlationId: !!item.correlationId ? item.correlationId : '',
-//           blueprintViewUrl: `${this.basePath}/workflow-registry/${item.definitionId}`,
-//           displayName: workflowBlueprint.displayName || workflowBlueprint.name || '(Untitled)',
-//           instanceName: !item.name ? '' : item.name,
-//           createdAt: moment(item.createdAt).format('DD-MM-YYYY HH:mm:ss'),
-//           finishedAt: !!moment(item.finishedAt) ? moment(item.finishedAt).format('DD-MM-YYYY HH:mm:ss') : '-',
-//           lastExecutedAt: !!moment(item.lastExecutedAt) ? moment(item.lastExecutedAt).format('DD-MM-YYYY HH:mm:ss') : '-',
-//           faultedAt: !!moment(item.faultedAt) ? moment(item.faultedAt).format('DD-MM-YYYY HH:mm:ss') : '-',
-//           instanceViewUrl: `/workflow-instances/${item.id}`,
-//           correlationListViewUrl: `/workflow-registry/${item.definitionId}`,
-//           contextMenuItems: [
-//             { text: 'View', anchorUrl: `/workflow-instances/${item.id}`, icon: "static/images/instances-view-icon.svg" }]
-//         }
-//       });
-//       return {
-//         items: rows,
-//         totalCount: workflowInstances.totalCount,
-//         page: workflowInstances.page,
-//         pageSize: workflowInstances.pageSize
-//       }
-//     }
-// }
+  setTableValues(workflowInstances: PagedList<WorkflowDefinitionSummary>): PagedList<WorkflowDefinitionSummaryTableRow> {
+    const latestWorkflowDefinition = workflowInstances.items.filter(item => item.isLatest);
+    const publishedDefinitions = workflowInstances.items.filter(x => x.isPublished);
 
-export interface WorkflowDefinitionSummaryTableRow {}
+    let rows = latestWorkflowDefinition.map(item => {
+      const latestVersionNumber = item.version;
+      const { isPublished } = item;
+      const publishedVersion: WorkflowDefinitionSummary = isPublished ? item : publishedDefinitions.find(x => x.definitionId == item.definitionId);
+      const publishedVersionNumber = !!publishedVersion ? publishedVersion.version : '-';
+      let workflowDisplayName = item.displayName;
+      if (!workflowDisplayName || workflowDisplayName.trim().length == 0) workflowDisplayName = item.name;
+
+      if (!workflowDisplayName || workflowDisplayName.trim().length == 0) workflowDisplayName = 'Untitled';
+
+      const editUrl = `/workflow-definitions/${item.definitionId}`;
+      const instancesUrl = `/workflow-instances?workflow=${item.definitionId}`;
+
+      return {
+        WorkflowDefinitionSummary: item,
+        workflowDefinitionId: item.definitionId,
+        displayName: workflowDisplayName,
+        version: latestVersionNumber,
+        publishedVersion: publishedVersionNumber,
+        isPublished: isPublished,
+        editUrl: editUrl,
+        instancesUrl: instancesUrl,
+      };
+    });
+    return {
+      items: rows,
+      totalCount: workflowInstances.totalCount,
+      page: workflowInstances.page,
+      pageSize: workflowInstances.pageSize,
+    };
+  }
+}
+
+export interface WorkflowDefinitionSummaryTableRow {
+  WorkflowDefinitionSummary: WorkflowDefinitionSummary;
+  workflowDefinitionId: string;
+  displayName: string;
+  version: number | string;
+  publishedVersion: number | string;
+  isPublished: boolean;
+  editUrl: string;
+  instancesUrl: string;
+}

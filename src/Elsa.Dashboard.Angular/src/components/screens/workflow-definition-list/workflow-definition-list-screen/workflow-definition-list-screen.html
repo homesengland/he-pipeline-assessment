@@ -14,8 +14,12 @@
                 />
               </svg>
             </div>
-            <input name="searchTerm" class="elsa-block elsa-w-full elsa-h-full elsa-pl-8 elsa-pr-3 elsa-py-2 elsa-rounded-md elsa-text-gray-900 elsa-placeholder-gray-500
-            focus:elsa-placeholder-gray-400 sm:elsa-text-sm elsa-border-0 focus:elsa-outline-none focus:elsa-ring-0" placeholder={t('Search')} type="search"/>
+            <input
+              name="searchTerm"
+              class="elsa-block elsa-w-full elsa-h-full elsa-pl-8 elsa-pr-3 elsa-py-2 elsa-rounded-md elsa-text-gray-900 elsa-placeholder-gray-500 focus:elsa-placeholder-gray-400 sm:elsa-text-sm elsa-border-0 focus:elsa-outline-none focus:elsa-ring-0"
+              placeholder="Search"
+              type="search"
+            />
           </div>
         </form>
       </div>
@@ -29,35 +33,30 @@
           <th
             class="elsa-px-6 elsa-py-3 elsa-border-b elsa-border-gray-200 elsa-bg-gray-50 elsa-text-left elsa-text-xs elsa-leading-4 elsa-font-medium elsa-text-gray-500 elsa-uppercase elsa-tracking-wider"
           >
-            <span class="lg:elsa-pl-2"><IntlMessage label="Name" /></span>
+            <span class="lg:elsa-pl-2">"Name"</span>
           </th>
           <th
             class="elsa-px-6 elsa-py-3 elsa-border-b elsa-border-gray-200 elsa-bg-gray-50 elsa-text-left elsa-text-xs elsa-leading-4 elsa-font-medium elsa-text-gray-500 elsa-uppercase elsa-tracking-wider"
           >
-            <IntlMessage label="Instances" />
+            "Instances"
           </th>
           <th
             class="hidden md:elsa-table-cell elsa-px-6 elsa-py-3 elsa-border-b elsa-border-gray-200 elsa-bg-gray-50 elsa-text-right elsa-text-xs elsa-leading-4 elsa-font-medium elsa-text-gray-500 elsa-uppercase elsa-tracking-wider"
           >
-            <IntlMessage label="LatestVersion" />
+            "LatestVersion"
           </th>
           <th
             class="hidden md:elsa-table-cell elsa-px-6 elsa-py-3 elsa-border-b elsa-border-gray-200 elsa-bg-gray-50 elsa-text-right elsa-text-xs elsa-leading-4 elsa-font-medium elsa-text-gray-500 elsa-uppercase elsa-tracking-wider"
           >
-            <IntlMessage label="PublishedVersion" />
+            "PublishedVersion"
           </th>
           <th
             class="elsa-pr-6 elsa-py-3 elsa-border-b elsa-border-gray-200 elsa-bg-gray-50 elsa-text-right elsa-text-xs elsa-leading-4 elsa-font-medium elsa-text-gray-500 elsa-uppercase elsa-tracking-wider"
-          />
+          ></th>
         </tr>
       </thead>
       <tbody class="elsa-bg-white elsa-divide-y elsa-divide-gray-100">
-        {latestDefinitions.map(workflowDefinition => { const latestVersionNumber = workflowDefinition.version; const {isPublished} = workflowDefinition; const publishedVersion:
-        WorkflowDefinitionSummary = isPublished ? workflowDefinition : publishedDefinitions.find(x => x.definitionId == workflowDefinition.definitionId); const
-        publishedVersionNumber = !!publishedVersion ? publishedVersion.version : '-'; let workflowDisplayName = workflowDefinition.displayName; if (!workflowDisplayName ||
-        workflowDisplayName.trim().length == 0) workflowDisplayName = workflowDefinition.name; if (!workflowDisplayName || workflowDisplayName.trim().length == 0)
-        workflowDisplayName = 'Untitled'; const editUrl = `${basePath}/workflow-definitions/${workflowDefinition.definitionId}`; const instancesUrl =
-        `${basePath}/workflow-instances?workflow=${workflowDefinition.definitionId}`; const editIcon = (
+        <!-- const editIcon = (
         <svg
           class="elsa-h-5 elsa-w-5 elsa-text-gray-500"
           width="24"
@@ -104,38 +103,40 @@
             stroke-width="2"
             d="M18.364 18.364A9 9 0 005.636 5.636m12.728 12.728A9 9 0 015.636 5.636m12.728 12.728L5.636 5.636"
           />
-        </svg>
-        ); return (
-        <tr>
+        </svg> -->
+
+        <tr *ngFor="let definition of workflowDefinitionsTableValues.items">
           <td class="elsa-px-6 elsa-py-3 elsa-whitespace-no-wrap elsa-text-sm elsa-leading-5 elsa-font-medium elsa-text-gray-900">
             <div class="elsa-flex elsa-items-center elsa-space-x-3 lg:elsa-pl-2">
-              <stencil-route-link url="{editUrl}" anchorClass="elsa-truncate hover:elsa-text-gray-600"><span>{workflowDisplayName}</span></stencil-route-link>
+              <!-- <stencil-route-link url="{editUrl}" anchorClass="elsa-truncate hover:elsa-text-gray-600"><span>{{definition.displayName}}</span></stencil-route-link> -->
             </div>
           </td>
 
           <td class="elsa-px-6 elsa-py-3 elsa-text-sm elsa-leading-5 elsa-text-gray-500 elsa-font-medium">
             <div class="elsa-flex elsa-items-center elsa-space-x-3 lg:elsa-pl-2">
-              <stencil-route-link url="{instancesUrl}" anchorClass="elsa-truncate hover:elsa-text-gray-600"><IntlMessage label="Instances" /></stencil-route-link>
+              <!-- <stencil-route-link url="{instancesUrl}" anchorClass="elsa-truncate hover:elsa-text-gray-600">"Instances"</stencil-route-link> -->
+              <!-- TO DO convert link -->
             </div>
           </td>
 
           <td class="hidden md:elsa-table-cell elsa-px-6 elsa-py-3 elsa-whitespace-no-wrap elsa-text-sm elsa-leading-5 elsa-text-gray-500 elsa-text-right">
-            {latestVersionNumber}
+            {{definition.version}}
           </td>
           <td class="hidden md:elsa-table-cell elsa-px-6 elsa-py-3 elsa-whitespace-no-wrap elsa-text-sm elsa-leading-5 elsa-text-gray-500 elsa-text-right">
-            {publishedVersionNumber}
+            {{definition.publishedVersion}}
           </td>
           <td class="elsa-pr-6">
-            <elsa-context-menu history={this.history} menuItems={[ {text: i18next.t('Edit'), anchorUrl: editUrl, icon: editIcon}, isPublished ? {text: i18next.t('Unpublish'),
+            <!-- <elsa-context-menu history={this.history} menuItems={[ {text: i18next.t('Edit'), anchorUrl: editUrl, icon: editIcon}, isPublished ? {text: i18next.t('Unpublish'),
             clickHandler: e => this.onUnPublishClick(e, workflowDefinition), icon: unPublishIcon} : { text: i18next.t('Publish'), clickHandler: e => this.onPublishClick(e,
-            workflowDefinition), icon: publishIcon }, {text: i18next.t('Delete'), clickHandler: e => this.onDeleteClick(e, workflowDefinition), icon: deleteIcon} ]}/>
+            workflowDefinition), icon: publishIcon }, {text: i18next.t('Delete'), clickHandler: e => this.onDeleteClick(e, workflowDefinition), icon: deleteIcon} ]}/> -->
+            <!-- TO DO convert context menu -->
           </td>
         </tr>
-        ); })}
       </tbody>
     </table>
     <elsa-pager page="{this.currentPage}" pageSize="{this.currentPageSize}" totalCount="{totalCount}" history="{this.history}" onPaged="{this.onPaged}" culture="{this.culture}" />
   </div>
 
-  <elsa-confirm-dialog ref={el => this.confirmDialog = el} culture={this.culture}/>
+  <!-- <elsa-confirm-dialog ref={el => this.confirmDialog = el} culture={this.culture}/> -->
+  <!-- TO DO conver confirmation dialog -->
 </div>
