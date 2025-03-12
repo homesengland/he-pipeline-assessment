@@ -24,8 +24,7 @@
     "sourceMap": true,
     "strict": false,
     "target": "ES2022",
-    "useDefineForClassFields": false,
-    "allowSyntheticDefaultImports": true
+    "useDefineForClassFields": false
   },
   "angularCompilerOptions": {
     "enableI18nLegacyMessageIdFormat": false,
