@@ -1,5 +1,5 @@
 import { Component, Input } from '@angular/core';
-import moment from 'moment';
+import * as moment from 'moment';
 import { clip, durationToString } from '../../../utils/utils';
 import { WorkflowFault } from 'src/models';
 
