@@ -1,5 +1,6 @@
 ﻿import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { HttpClientTestingModule } from '@angular/common/http/testing';
+import { provideHttpClientTesting } from '@angular/common/http/testing';
+import { provideHttpClient } from '@angular/common/http';
 import { WorkflowInstancesView } from '../workflow-instances-view';
 
 describe('WorkflowInstancesView', () => {
@@ -8,8 +9,7 @@ describe('WorkflowInstancesView', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [WorkflowInstancesView],
-      imports: [HttpClientTestingModule],
+      providers: [provideHttpClient(), provideHttpClientTesting()],
     }).compileComponents();
 
     fixture = TestBed.createComponent(WorkflowInstancesView);
