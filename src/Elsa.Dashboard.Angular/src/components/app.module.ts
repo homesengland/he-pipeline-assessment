@@ -19,6 +19,7 @@ import { WorkflowContextMenu } from './controls/workflow-context-menu/workflow-c
 import { ConfirmDialog } from './shared/confirm-dialog/confirm-dialog';
 import { ModalDialog } from './shared/modal-dialog/modal-dialog';
 import { WorkflowDefinitionListScreen } from './screens/workflow-definition-list/workflow-definition-list-screen/workflow-definition-list-screen';
+import { WorkflowDefinitionsView } from './dashboard/pages/workflow-definitions-view/workflow-definitions-view';
 
 @NgModule({
   declarations: [
@@ -35,6 +36,7 @@ import { WorkflowDefinitionListScreen } from './screens/workflow-definition-list
     WorkflowContextMenu,
     ConfirmDialog,
     ModalDialog,
+    WorkflowDefinitionsView,
   ],
   imports: [BrowserModule, HttpClientModule, routing, AppStateModule, ReactiveFormsModule, RouterModule, RouterOutlet, CommonModule],
   providers: [],

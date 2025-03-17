@@ -57,6 +57,7 @@ export class WorkflowDefinitionListScreen implements OnInit, OnDestroy {
     this.setVariablesFromAppState();
 
     this.clearRouteChangedListeners = this.location.onUrlChange(async (url, state) => {
+      if (url.split('?')[0] != '/workflow-definitions') return;
       let queryString = url.split('?')[1] ? url.split('?')[1] : '';
       this.applyQueryString(queryString);
       await this.loadWorkflowDefinitions();
@@ -138,8 +139,8 @@ export class WorkflowDefinitionListScreen implements OnInit, OnDestroy {
       if (!workflowDisplayName || workflowDisplayName.trim().length == 0) workflowDisplayName = 'Untitled';
 
       const editUrl = `/workflow-definitions/${item.definitionId}`;
-      const instancesUrl = `/workflow-instances?workflow=${item.definitionId}`;
-
+      const instancesUrl = `/workflow-instances`;
+      const instancesUrlQueryParams = item.definitionId;
       return {
         WorkflowDefinitionSummary: item,
         workflowDefinitionId: item.definitionId,
@@ -149,6 +150,7 @@ export class WorkflowDefinitionListScreen implements OnInit, OnDestroy {
         isPublished: isPublished,
         editUrl: editUrl,
         instancesUrl: instancesUrl,
+        instancesUrlQueryParams: instancesUrlQueryParams,
       };
     });
     return {
@@ -169,4 +171,5 @@ export interface WorkflowDefinitionSummaryTableRow {
   isPublished: boolean;
   editUrl: string;
   instancesUrl: string;
+  instancesUrlQueryParams: string;
 }
