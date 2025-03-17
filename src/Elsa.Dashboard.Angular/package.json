@@ -26,7 +26,6 @@
     "watch": "ng build --watch --configuration development",
     "test": "jest",
     "test:watch": "jest --watch",
-    "test:ci": "jest --runInBand",
     "serve": "ng serve --live-reload=false"
   },
   "dependencies": {
