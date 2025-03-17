@@ -127,6 +127,7 @@
             {{definition.publishedVersion}}
           </td>
           <td class="elsa-pr-6">
+            <workflow-context-menu [menuItems]="definition.contextMenuItems" />
             <!-- <elsa-context-menu history={this.history} menuItems={[ {text: i18next.t('Edit'), anchorUrl: editUrl, icon: editIcon}, isPublished ? {text: i18next.t('Unpublish'),
             clickHandler: e => this.onUnPublishClick(e, workflowDefinition), icon: unPublishIcon} : { text: i18next.t('Publish'), clickHandler: e => this.onPublishClick(e,
             workflowDefinition), icon: publishIcon }, {text: i18next.t('Delete'), clickHandler: e => this.onDeleteClick(e, workflowDefinition), icon: deleteIcon} ]}/> -->

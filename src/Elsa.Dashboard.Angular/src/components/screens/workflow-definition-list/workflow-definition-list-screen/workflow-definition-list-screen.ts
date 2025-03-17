@@ -8,7 +8,7 @@ import { ElsaClientService, ElsaClient } from '../../../../services/elsa-client'
 import { OrderBy, PagedList, VersionOptions, WorkflowDefinitionSummary } from '../../../../models';
 import { parseQuery } from '../../../../utils/utils';
 import { selectServerUrl, selectStoreConfig } from '../../../state/selectors/app.state.selectors';
-import { HTMLElsaConfirmDialogElement } from 'src/Models/elsa-interfaces';
+import { HTMLElsaConfirmDialogElement, MenuItem } from 'src/Models/elsa-interfaces';
 
 @Component({
   selector: 'workflow-definition-list-screen',
@@ -141,6 +141,15 @@ export class WorkflowDefinitionListScreen implements OnInit, OnDestroy {
       const editUrl = `/workflow-definitions/${item.definitionId}`;
       const instancesUrl = `/workflow-instances`;
       const instancesUrlQueryParams = item.definitionId;
+      const contextMenuItems: Array<MenuItem> = [
+        { text: 'Edit', anchorUrl: `/workflow-definitions/${item.id}`, icon: 'static/images/instances-view-icon.svg' },
+        {
+          text: isPublished ? 'Unpublish' : 'Publish',
+          clickHandler: isPublished ? e => this.onUnPublishClick(e, item) : e => this.onPublishClick(e, item),
+          icon: 'static/images/instances-view-icon.svg',
+        },
+      ];
+
       return {
         WorkflowDefinitionSummary: item,
         workflowDefinitionId: item.definitionId,
@@ -151,6 +160,7 @@ export class WorkflowDefinitionListScreen implements OnInit, OnDestroy {
         editUrl: editUrl,
         instancesUrl: instancesUrl,
         instancesUrlQueryParams: instancesUrlQueryParams,
+        contextMenuItems: contextMenuItems,
       };
     });
     return {
@@ -159,6 +169,18 @@ export class WorkflowDefinitionListScreen implements OnInit, OnDestroy {
       page: workflowInstances.page,
       pageSize: workflowInstances.pageSize,
     };
+  }
+
+  async onPublishClick(e: Event, workflowDefinition: WorkflowDefinitionSummary) {
+    const elsaClient = await this.createClient();
+    await elsaClient.workflowDefinitionsApi.publish(workflowDefinition.definitionId);
+    await this.loadWorkflowDefinitions();
+  }
+
+  async onUnPublishClick(e: Event, workflowDefinition: WorkflowDefinitionSummary) {
+    const elsaClient = await this.createClient();
+    await elsaClient.workflowDefinitionsApi.retract(workflowDefinition.definitionId);
+    await this.loadWorkflowDefinitions();
   }
 }
 
@@ -172,4 +194,5 @@ export interface WorkflowDefinitionSummaryTableRow {
   editUrl: string;
   instancesUrl: string;
   instancesUrlQueryParams: string;
+  contextMenuItems: Array<MenuItem>;
 }
