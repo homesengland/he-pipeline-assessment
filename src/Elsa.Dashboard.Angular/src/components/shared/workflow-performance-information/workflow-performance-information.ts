@@ -1,5 +1,5 @@
 import { Component, Input } from '@angular/core';
-import * as moment from 'moment';
+import moment from 'moment';
 import { durationToString } from '../../../utils/utils';
 import { ActivityStats } from 'src/services/workflow-client';
 

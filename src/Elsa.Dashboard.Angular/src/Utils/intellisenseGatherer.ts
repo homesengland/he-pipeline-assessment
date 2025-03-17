@@ -1,13 +1,18 @@
-import { IntellisenseContext } from '../Models/elsa-interfaces'
-import axios, { AxiosInstance, AxiosRequestConfig } from "axios";
+import { IntellisenseContext } from '../models/elsa-interfaces';
+import axios, { AxiosInstance, AxiosRequestConfig } from 'axios';
 //import state from '../stores/store';
 import { createAuth0Client, Auth0Client, Auth0ClientOptions, AuthorizationParams } from '@auth0/auth0-spa-js';
-import { StoreStatus } from "../Models/constants";
-import { StoreConfig } from '../Models/storeConfig'
-import { selectDataDictionaryIntellisense, selectJavaScriptTypeDefinitions, selectJavaScriptTypeDefinitionsFetchStatus, selectStoreConfig, selectWorkflowDefinitionIds } from '../components/state/selectors/app.state.selectors';
+import { StoreStatus } from '../models/constants';
+import { StoreConfig } from '../models/storeConfig';
+import {
+  selectDataDictionaryIntellisense,
+  selectJavaScriptTypeDefinitions,
+  selectJavaScriptTypeDefinitionsFetchStatus,
+  selectStoreConfig,
+  selectWorkflowDefinitionIds,
+} from '../components/state/selectors/app.state.selectors';
 import { Store } from '@ngrx/store';
 import { AppStateActionGroup } from '../components/state/actions/app.state.actions';
-
 
 export class IntellisenseGatherer {
   private _httpClient: AxiosInstance = null;
@@ -15,33 +20,31 @@ export class IntellisenseGatherer {
   private auth0: Auth0Client;
   private options: Auth0ClientOptions;
   private context: IntellisenseContext = {
-    activityTypeName: "",
-    propertyName: ""
+    activityTypeName: '',
+    propertyName: '',
   };
   private storeConfig: StoreConfig;
-  private workflowDefinitionId = "";
-  private javaScriptTypeDefinitionsFetchStatus = "";
-  private javaScriptTypeDefinitions = "";
-  private dataDictionaryIntellisense = "";
-
+  private workflowDefinitionId = '';
+  private javaScriptTypeDefinitionsFetchStatus = '';
+  private javaScriptTypeDefinitions = '';
+  private dataDictionaryIntellisense = '';
 
   constructor(private store: Store) {
-
     this.store.select(selectStoreConfig).subscribe(data => {
       this.storeConfig = data;
     });
     this.store.select(selectWorkflowDefinitionIds).subscribe(data => {
       this.workflowDefinitionId = data;
-    })
+    });
     this.store.select(selectJavaScriptTypeDefinitionsFetchStatus).subscribe(data => {
       this.javaScriptTypeDefinitionsFetchStatus = data;
-    })
+    });
     this.store.select(selectJavaScriptTypeDefinitions).subscribe(data => {
       this.javaScriptTypeDefinitions = data;
-    })
+    });
     this.store.select(selectDataDictionaryIntellisense).subscribe(data => {
       this.dataDictionaryIntellisense = data;
-    })
+    });
 
     let auth0Params: AuthorizationParams = {
       audience: this.storeConfig.audience,
@@ -53,7 +56,7 @@ export class IntellisenseGatherer {
       domain: this.storeConfig.domain,
       useRefreshTokens: this.storeConfig.useRefreshTokens,
       useRefreshTokensFallback: this.storeConfig.useRefreshTokensFallback,
-      cacheLocation: "memory"
+      cacheLocation: 'memory',
     };
 
     this.options = auth0Options;
@@ -65,20 +68,21 @@ export class IntellisenseGatherer {
     const options = this.options;
     const { domain } = options;
 
-    if (!domain || domain.trim().length == 0)
-      return;
+    if (!domain || domain.trim().length == 0) return;
 
     this.auth0 = await createAuth0Client(this.options);
     const isAuthenticated = await this.auth0.isAuthenticated();
 
     // Nothing to do if authenticated.
     if (isAuthenticated) {
-      var storeconfig = JSON.parse(JSON.stringify(this.storeConfig))
+      var storeconfig = JSON.parse(JSON.stringify(this.storeConfig));
       storeconfig.auth0Client = this.auth0;
 
-      this.store.dispatch(AppStateActionGroup.setStoreConfig({
-        storeConfig: storeconfig
-      }));
+      this.store.dispatch(
+        AppStateActionGroup.setStoreConfig({
+          storeConfig: storeconfig,
+        }),
+      );
     }
     return;
   };
@@ -90,12 +94,10 @@ export class IntellisenseGatherer {
     return this.storeConfig.auth0Client;
   }
 
-
   async getIntellisense(): Promise<string> {
     if (this.javaScriptTypeDefinitionsFetchStatus == StoreStatus.Available && this.hasDefinitions) {
       return this.javaScriptTypeDefinitions;
-    }
-    else {
+    } else {
       this.tryFetchDefinitions();
       return this.javaScriptTypeDefinitions;
     }
@@ -108,8 +110,7 @@ export class IntellisenseGatherer {
     if (this.javaScriptTypeDefinitions != null) {
       this.appendGatheredValues();
       this.javaScriptTypeDefinitionsFetchStatus = StoreStatus.Available;
-    }
-    else {
+    } else {
       this.javaScriptTypeDefinitionsFetchStatus = StoreStatus.Empty;
       this.javaScriptTypeDefinitions = '';
     }
@@ -125,7 +126,6 @@ export class IntellisenseGatherer {
     this.javaScriptTypeDefinitions = intellisense;
   }
 
-
   private async getJavaScriptTypeDefinitions(workflowDefinitionId: string, context?: IntellisenseContext): Promise<string> {
     let httpClient = await this.createHttpClient();
     const response = await httpClient.post<string>(`v1/scripting/javascript/type-definitions/${workflowDefinitionId}?t=${new Date().getTime()}`, context);
@@ -133,7 +133,6 @@ export class IntellisenseGatherer {
   }
 
   private async createHttpClient(): Promise<AxiosInstance> {
-
     await this.getAuth0Client();
 
     if (!!this._httpClient) {
@@ -145,7 +144,7 @@ export class IntellisenseGatherer {
     if (!!token) {
       config = {
         baseURL: this._baseUrl,
-        headers: { 'Authorization': `Bearer ${token}`, 'Content-Type': `application/json; charset=UTF-8` }
+        headers: { 'Authorization': `Bearer ${token}`, 'Content-Type': `application/json; charset=UTF-8` },
       };
     } else {
       config = {
