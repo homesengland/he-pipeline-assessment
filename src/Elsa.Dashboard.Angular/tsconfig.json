@@ -23,6 +23,7 @@
     "strict": false,
     "target": "ES2022",
     "useDefineForClassFields": false
+
   },
   "angularCompilerOptions": {
     "enableI18nLegacyMessageIdFormat": false,

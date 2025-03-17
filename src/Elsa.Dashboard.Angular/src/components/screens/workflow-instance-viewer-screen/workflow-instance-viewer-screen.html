@@ -1,0 +1,65 @@
+<div class="elsa-flex-1 elsa-flex">
+  <!-- <elsa-designer-tree
+  model={this.workflowModel}
+  class="elsa-flex-1"
+  ref={el => (this.designer = el)}
+  layoutDirection={this.layoutDirection}
+  mode={WorkflowDesignerMode.Instance}
+  activityContextMenuButton={this.renderActivityStatsButton}
+  activityBorderColor={this.getActivityBorderColor}
+  activityContextMenu={this.activityContextMenuState}
+  selectedActivityIds={[this.selectedActivityId]}
+  onActivitySelected={e => this.onActivitySelected(e)}
+  onActivityDeselected={e => this.onActivityDeselected(e)}
+  onActivityContextMenuButtonClicked={e => this.onActivityContextMenuButtonClicked(e)}
+/> -->
+
+  @let hiddenClass = this.activityContextMenuState.shown ? "" : "hidden"; @let leftPx = this.activityContextMenuState.x + 64; @let topPx = this.activityContextMenuState.y - 256;
+  @let contextMenuLeftStyle = leftPx + "px"; @let contextMenuTopStyle = topPx + "px";
+  <div
+    #contextMenu
+    data-transition-enter="elsa-transition elsa-ease-out elsa-duration-100"
+    data-transition-enter-start="elsa-transform elsa-opacity-0 elsa-scale-95"
+    data-transition-enter-end="elsa-transform elsa-opacity-100 elsa-scale-100"
+    data-transition-leave="elsa-transition elsa-ease-in elsa-duration-75"
+    data-transition-leave-start="elsa-transform elsa-opacity-100 elsa-scale-100"
+    data-transition-leave-end="elsa-transform elsa-opacity-0 elsa-scale-95"
+    class="{{hiddenClass}} elsa-absolute elsa-z-10 elsa-mt-3 elsa-px-2 elsa-w-screen elsa-max-w-xl sm:elsa-px-0"
+    [style.left]="contextMenuLeftStyle"
+    [style.top]="contextMenuTopStyle"
+  >
+    <div class="elsa-rounded-lg elsa-shadow-lg elsa-ring-1 elsa-ring-black elsa-ring-opacity-5 elsa-overflow-hidden">
+      <div *ngIf="activityStats != null">
+        <div>
+          <table class="elsa-min-w-full elsa-divide-y elsa-divide-gray-200 elsa-border-b elsa-border-gray-200">
+            <thead class="elsa-bg-gray-50">
+              <tr>
+                <th scope="col" class="elsa-px-6 elsa-py-3 elsa-text-left elsa-text-xs elsa-font-medium elsa-text-gray-500 elsa-text-right elsa-tracking-wider">Event</th>
+                <th scope="col" class="elsa-px-6 elsa-py-3 elsa-text-left elsa-text-xs elsa-font-medium elsa-text-gray-500 elsa-text-right elsa-tracking-wider">Count</th>
+              </tr>
+            </thead>
+            <tbody class="elsa-bg-white elsa-divide-y elsa-divide-gray-200">
+              @if(activityStats != null && activityStats.eventCounts.length > 0){
+              <tr *ngFor="let eventCount of activityStats.eventCounts">
+                <td class="elsa-px-6 elsa-py-4 elsa-whitespace-nowrap elsa-text-sm elsa-font-medium elsa-text-gray-900">{{eventCount.eventName}}</td>
+                <td class="elsa-px-6 elsa-py-4 elsa-whitespace-nowrap elsa-text-sm elsa-text-gray-500">{{eventCount.count}}</td>
+              </tr>
+              } @else {
+              <tr>
+                <td colspan="2" class="elsa-px-6 elsa-py-4 elsa-whitespace-nowrap elsa-text-sm elsa-font-medium elsa-text-gray-900">No events record for this activity.</td>
+              </tr>
+              }
+            </tbody>
+          </table>
+        </div>
+        @if(activityStats != null && activityStats.eventCounts.length > 0){
+        <div class="elsa-relative elsa-grid elsa-gap-6 elsa-bg-white px-5 elsa-py-6 sm:elsa-gap-8 sm:elsa-p-8">
+          <workflow-fault-information *ngIf="!!this.activityStats.fault" [workflowFault]="this.workflowFault" [faultedAt]="this.workflowInstance.faultedAt" />
+          <workflow-performance-information *ngIf="!this.activityStats.fault" [activityStats]="this.activityStats" />
+        </div>
+        }
+      </div>
+      <div *ngIf="activityStats == null" class="elsa-p-6 elsa-bg-white">Loading...</div>
+    </div>
+  </div>
+</div>

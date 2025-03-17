@@ -18,6 +18,7 @@ import { Auth0ClientOptions, AuthorizationParams } from '@auth0/auth0-spa-js';
 import { activityIconProvider } from 'src/services/activity-icon-provider';
 import { propertyDisplayManager } from 'src/services/property-display-manager';
 import { toastNotificationService } from 'src/services/toast-notification-service';
+import { featuresDataManager } from 'src/services/features-data-manager';
 
 @Component({
   selector: 'workflow-root',
@@ -84,6 +85,8 @@ export class WorkflowRoot implements OnInit {
 
     pluginManager.initialize(workflowStudio, auth0Options);
     await eventBus.emit(EventTypes.Root.Initializing);
+
+    featuresDataManager.initialize(workflowStudio);
   }
 
   onShowConfirmDialog = e => (e.promise = this.confirmDialog().show(e.caption, e.message));

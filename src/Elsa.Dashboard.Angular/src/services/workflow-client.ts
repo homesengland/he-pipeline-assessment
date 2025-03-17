@@ -1,4 +1,4 @@
-import axios, { AxiosInstance, AxiosRequestConfig } from "axios";
+import axios, { AxiosInstance, AxiosRequestConfig } from 'axios';
 import { Service } from 'axios-middleware';
 import * as collection from 'lodash/collection';
 import { eventBus } from './event-bus';
@@ -7,7 +7,9 @@ import {
   ActivityDescriptor,
   ConnectionDefinition,
   EventTypes,
-  getVersionOptionsString, IntellisenseContext, ListModel,
+  getVersionOptionsString,
+  IntellisenseContext,
+  ListModel,
   OrderBy,
   PagedList,
   SelectList,
@@ -16,25 +18,25 @@ import {
   WorkflowBlueprintSummary,
   WorkflowContextOptions,
   WorkflowDefinition,
-  WorkflowDefinitionSummary, WorkflowDefinitionVersion,
+  WorkflowDefinitionSummary,
+  WorkflowDefinitionVersion,
   WorkflowExecutionLogRecord,
   WorkflowInstance,
   WorkflowInstanceSummary,
   WorkflowPersistenceBehavior,
   WorkflowProviderDescriptor,
   WorkflowStatus,
-  WorkflowStorageDescriptor
-} from "../models";
+  WorkflowStorageDescriptor,
+} from '../models';
 
 let _httpClient: AxiosInstance = null;
 let _workflowClient: WorkflowClient = null;
 
 export const createHttpClient = async function (baseAddress: string): Promise<AxiosInstance> {
-  if (!!_httpClient)
-    return _httpClient;
+  if (!!_httpClient) return _httpClient;
 
   const config: AxiosRequestConfig = {
-    baseURL: baseAddress
+    baseURL: baseAddress,
   };
   _httpClient = axios.create(config);
   const service = new Service(_httpClient);
@@ -43,12 +45,10 @@ export const createHttpClient = async function (baseAddress: string): Promise<Ax
   await eventBus.emit(EventTypes.HttpClientCreated, this, { service, _httpClient });
 
   return _httpClient;
-}
+};
 
 export const createWorkflowClient = async function (serverUrl: string): Promise<WorkflowClient> {
-
-  if (!!_workflowClient)
-    return _workflowClient;
+  if (!!_workflowClient) return _workflowClient;
 
   const httpClient: AxiosInstance = await createHttpClient(serverUrl);
 
@@ -57,22 +57,19 @@ export const createWorkflowClient = async function (serverUrl: string): Promise<
       list: async () => {
         const response = await httpClient.get<Array<ActivityDescriptor>>('v1/activities');
         return response.data;
-      }
+      },
     },
     workflowDefinitionsApi: {
       list: async (page?: number, pageSize?: number, versionOptions?: VersionOptions, searchTerm?: string) => {
         const queryString = {
-          version: getVersionOptionsString(versionOptions)
+          version: getVersionOptionsString(versionOptions),
         };
 
-        if (!!searchTerm)
-          queryString['searchTerm'] = searchTerm;
+        if (!!searchTerm) queryString['searchTerm'] = searchTerm;
 
-        if (!!page || page === 0)
-          queryString['page'] = page;
+        if (!!page || page === 0) queryString['page'] = page;
 
-        if (!!pageSize)
-          queryString['pageSize'] = pageSize;
+        if (!!pageSize) queryString['pageSize'] = pageSize;
 
         const queryStringItems = collection.map(queryString, (v, k) => `${k}=${v}`);
         const queryStringText = queryStringItems.length > 0 ? `?${queryStringItems.join('&')}` : '';
@@ -99,7 +96,6 @@ export const createWorkflowClient = async function (serverUrl: string): Promise<
         return response.data;
       },
       delete: async (definitionId, versionOptions?: VersionOptions) => {
-
         let path = `v1/workflow-definitions/${definitionId}`;
 
         if (!!versionOptions) {
@@ -124,61 +120,59 @@ export const createWorkflowClient = async function (serverUrl: string): Promise<
       export: async (workflowDefinitionId, versionOptions): Promise<ExportWorkflowResponse> => {
         const versionOptionsString = getVersionOptionsString(versionOptions);
         const response = await httpClient.post(`v1/workflow-definitions/${workflowDefinitionId}/${versionOptionsString}/export`, null, {
-          responseType: 'blob'
+          responseType: 'blob',
         });
 
-        const contentDispositionHeader = response.headers["content-disposition"]; // Only available if the Elsa Server exposes the "Content-Disposition" header.
-        const fileName = contentDispositionHeader ? contentDispositionHeader.split(";")[1].split("=")[1] : `workflow-definition-${workflowDefinitionId}.json`;
+        const contentDispositionHeader = response.headers['content-disposition']; // Only available if the Elsa Server exposes the "Content-Disposition" header.
+        const fileName = contentDispositionHeader ? contentDispositionHeader.split(';')[1].split('=')[1] : `workflow-definition-${workflowDefinitionId}.json`;
         const data = response.data;
 
         return {
           fileName: fileName,
-          data: data
+          data: data,
         };
       },
       import: async (workflowDefinitionId, file: File): Promise<WorkflowDefinition> => {
         const formData = new FormData();
-        formData.append("file", file);
+        formData.append('file', file);
         const response = await httpClient.post<WorkflowDefinition>(`v1/workflow-definitions/${workflowDefinitionId}/import`, formData, {
           headers: {
-            'Content-Type': 'multipart/form-data'
-          }
+            'Content-Type': 'multipart/form-data',
+          },
         });
         return response.data;
       },
       restore: async (file: File): Promise<void> => {
         const formData = new FormData();
-        formData.append("file", file);
+        formData.append('file', file);
         await httpClient.post(`v1/workflow-definitions/restore`, formData, {
           headers: {
-            'Content-Type': 'multipart/form-data'
-          }
+            'Content-Type': 'multipart/form-data',
+          },
         });
-      }
+      },
     },
     workflowTestApi: {
-      execute: async (request) => {
+      execute: async request => {
         const response = await httpClient.post<WorkflowTestExecuteResponse>(`v1/workflow-test/execute`, request);
         return response.data;
       },
-      restartFromActivity: async (request) => {
+      restartFromActivity: async request => {
         await httpClient.post<void>(`v1/workflow-test/restartFromActivity`, request);
       },
-      stop: async (request) => {
+      stop: async request => {
         await httpClient.post<void>(`v1/workflow-test/stop`, request);
-      }
+      },
     },
     workflowRegistryApi: {
       list: async (providerName: string, page?: number, pageSize?: number, versionOptions?: VersionOptions): Promise<PagedList<WorkflowBlueprintSummary>> => {
         const queryString = {
-          version: getVersionOptionsString(versionOptions)
+          version: getVersionOptionsString(versionOptions),
         };
 
-        if (!!page || page === 0)
-          queryString['page'] = page;
+        if (!!page || page === 0) queryString['page'] = page;
 
-        if (!!pageSize)
-          queryString['pageSize'] = pageSize;
+        if (!!pageSize) queryString['pageSize'] = pageSize;
 
         const queryStringItems = collection.map(queryString, (v, k) => `${k}=${v}`);
         const queryStringText = queryStringItems.length > 0 ? `?${queryStringItems.join('&')}` : '';
@@ -187,7 +181,7 @@ export const createWorkflowClient = async function (serverUrl: string): Promise<
       },
       listAll: async (versionOptions?: VersionOptions): Promise<Array<WorkflowBlueprintSummary>> => {
         const queryString = {
-          version: getVersionOptionsString(versionOptions)
+          version: getVersionOptionsString(versionOptions),
         };
 
         const queryStringItems = collection.map(queryString, (v, k) => `${k}=${v}`);
@@ -196,11 +190,9 @@ export const createWorkflowClient = async function (serverUrl: string): Promise<
         return response.data;
       },
       findManyByDefinitionVersionIds: async (definitionVersionIds: Array<string>): Promise<Array<WorkflowBlueprintSummary>> => {
+        if (definitionVersionIds.length == 0) return [];
 
-        if (definitionVersionIds.length == 0)
-          return [];
-
-        const idsQuery = definitionVersionIds.join(",")
+        const idsQuery = definitionVersionIds.join(',');
         const response = await httpClient.get<Array<WorkflowBlueprintSummary>>(`v1/workflow-registry/by-definition-version-ids?ids=${idsQuery}`);
         return response.data;
       },
@@ -209,32 +201,33 @@ export const createWorkflowClient = async function (serverUrl: string): Promise<
         const versionOptionsString = getVersionOptionsString(versionOptions);
         const response = await httpClient.get<WorkflowBlueprint>(`v1/workflow-registry/${id}/${versionOptionsString}`);
         return response.data;
-      }
+      },
     },
     workflowInstancesApi: {
-      list: async (page?: number, pageSize?: number, workflowDefinitionId?: string, workflowStatus?: WorkflowStatus, orderBy?: OrderBy, searchTerm?: string, correlationId?: string): Promise<PagedList<WorkflowInstanceSummary>> => {
+      list: async (
+        page?: number,
+        pageSize?: number,
+        workflowDefinitionId?: string,
+        workflowStatus?: WorkflowStatus,
+        orderBy?: OrderBy,
+        searchTerm?: string,
+        correlationId?: string,
+      ): Promise<PagedList<WorkflowInstanceSummary>> => {
         const queryString = {};
 
-        if (!!workflowDefinitionId)
-          queryString['workflow'] = workflowDefinitionId;
+        if (!!workflowDefinitionId) queryString['workflow'] = workflowDefinitionId;
 
-        if (!!correlationId)
-          queryString['correlationId'] = correlationId;
+        if (!!correlationId) queryString['correlationId'] = correlationId;
 
-        if (workflowStatus != null)
-          queryString['status'] = workflowStatus;
+        if (workflowStatus != null) queryString['status'] = workflowStatus;
 
-        if (!!orderBy)
-          queryString['orderBy'] = orderBy;
+        if (!!orderBy) queryString['orderBy'] = orderBy;
 
-        if (!!searchTerm)
-          queryString['searchTerm'] = searchTerm;
+        if (!!searchTerm) queryString['searchTerm'] = searchTerm;
 
-        if (!!page)
-          queryString['page'] = page;
+        if (!!page) queryString['page'] = page;
 
-        if (!!pageSize)
-          queryString['pageSize'] = pageSize;
+        if (!!pageSize) queryString['pageSize'] = pageSize;
 
         const queryStringItems = collection.map(queryString, (v, k) => `${k}=${v}`);
         const queryStringText = queryStringItems.length > 0 ? `?${queryStringItems.join('&')}` : '';
@@ -260,88 +253,86 @@ export const createWorkflowClient = async function (serverUrl: string): Promise<
       },
       bulkDelete: async request => {
         const response = await httpClient.delete(`v1/workflow-instances/bulk`, {
-          data: request
+          data: request,
         });
         return response.data;
       },
       bulkRetry: async request => {
         const response = await httpClient.post(`v1/workflow-instances/bulk/retry`, request);
         return response.data;
-      }
+      },
     },
     workflowExecutionLogApi: {
       get: async (workflowInstanceId: string, page?: number, pageSize?: number): Promise<PagedList<WorkflowExecutionLogRecord>> => {
         const queryString = {};
 
-        if (!!page)
-          queryString['page'] = page;
+        if (!!page) queryString['page'] = page;
 
-        if (!!pageSize)
-          queryString['pageSize'] = pageSize;
+        if (!!pageSize) queryString['pageSize'] = pageSize;
 
         const queryStringItems = collection.map(queryString, (v, k) => `${k}=${v}`);
         const queryStringText = queryStringItems.length > 0 ? `?${queryStringItems.join('&')}` : '';
         const response = await httpClient.get(`v1/workflow-instances/${workflowInstanceId}/execution-log${queryStringText}`);
         return response.data;
-      }
+      },
     },
     scriptingApi: {
       getJavaScriptTypeDefinitions: async (workflowDefinitionId: string, context?: IntellisenseContext): Promise<string> => {
         const response = await httpClient.post<string>(`v1/scripting/javascript/type-definitions/${workflowDefinitionId}?t=${new Date().getTime()}`, context);
         return response.data;
-      }
+      },
     },
     designerApi: {
       runtimeSelectItemsApi: {
         get: async (providerTypeName: string, context?: any): Promise<SelectList> => {
           const response = await httpClient.post('v1/designer/runtime-select-list', {
             providerTypeName: providerTypeName,
-            context: context
+            context: context,
           });
           return response.data;
-        }
-      }
+        },
+      },
     },
     activityStatsApi: {
       get: async (workflowInstanceId: string, activityId?: any): Promise<ActivityStats> => {
         const response = await httpClient.get(`v1/workflow-instances/${workflowInstanceId}/activity-stats/${activityId}`);
         return response.data;
-      }
+      },
     },
     workflowStorageProvidersApi: {
       list: async () => {
         const response = await httpClient.get<Array<WorkflowStorageDescriptor>>('v1/workflow-storage-providers');
         return response.data;
-      }
+      },
     },
     workflowProvidersApi: {
       list: async () => {
         const response = await httpClient.get<Array<WorkflowProviderDescriptor>>('v1/workflow-providers');
         return response.data;
-      }
+      },
     },
     workflowChannelsApi: {
       list: async () => {
         const response = await httpClient.get<Array<string>>('v1/workflow-channels');
         return response.data;
-      }
+      },
     },
     featuresApi: {
       list: async () => {
         const response = await httpClient.get<FeaturesModel>('v1/features');
         return response.data.features;
-      }
+      },
     },
     versionApi: {
       get: async () => {
         const response = await httpClient.get<VersionModel>('v1/version');
         return response.data.version;
-      }
+      },
     },
     authenticationApi: {
       getUserDetails: async () => {
         const response = await httpClient.get<UserDetail>('v1/authentication/userinfo');
-        if ("text/html; charset=utf-8" !== response.headers['content-type'] && response.data.isAuthenticated) {
+        if ('text/html; charset=utf-8' !== response.headers['content-type'] && response.data.isAuthenticated) {
           return response.data;
         } else {
           return null;
@@ -350,12 +341,12 @@ export const createWorkflowClient = async function (serverUrl: string): Promise<
       getAuthenticationConfguration: async () => {
         const response = await httpClient.get<AuthenticationConfguration>('v1/authentication/options');
         return response.data;
-      }
-    }
-  }
+      },
+    },
+  };
 
   return _workflowClient;
-}
+};
 
 export interface WorkflowClient {
   activitiesApi: ActivitiesApi;
@@ -392,7 +383,6 @@ export interface VersionApi {
 }
 
 export interface WorkflowDefinitionsApi {
-
   list(page?: number, pageSize?: number, versionOptions?: VersionOptions, searchTerm?: string): Promise<PagedList<WorkflowDefinitionSummary>>;
 
   getMany(ids: Array<string>, versionOptions?: VersionOptions): Promise<Array<WorkflowDefinitionSummary>>;
@@ -419,7 +409,6 @@ export interface WorkflowDefinitionsApi {
 }
 
 export interface WorkflowTestApi {
-
   execute(request: WorkflowTestExecuteRequest): Promise<WorkflowTestExecuteResponse>;
 
   restartFromActivity(request: WorkflowTestRestartFromActivityRequest): Promise<void>;
@@ -438,7 +427,15 @@ export interface WorkflowRegistryApi {
 }
 
 export interface WorkflowInstancesApi {
-  list(page?: number, pageSize?: number, workflowDefinitionId?: string, workflowStatus?: WorkflowStatus, orderBy?: OrderBy, searchTerm?: string, correlationId?: string): Promise<PagedList<WorkflowInstanceSummary>>;
+  list(
+    page?: number,
+    pageSize?: number,
+    workflowDefinitionId?: string,
+    workflowStatus?: WorkflowStatus,
+    orderBy?: OrderBy,
+    searchTerm?: string,
+    correlationId?: string,
+  ): Promise<PagedList<WorkflowInstanceSummary>>;
 
   get(id: string): Promise<WorkflowInstance>;
 
@@ -456,9 +453,7 @@ export interface WorkflowInstancesApi {
 }
 
 export interface WorkflowExecutionLogApi {
-
   get(workflowInstanceId: string, page?: number, pageSize?: number): Promise<PagedList<WorkflowExecutionLogRecord>>;
-
 }
 
 export interface BulkCancelWorkflowsRequest {
@@ -486,7 +481,7 @@ export interface BulkRetryWorkflowsResponse {
 }
 
 export interface ScriptingApi {
-  getJavaScriptTypeDefinitions(workflowDefinitionId: string, context?: IntellisenseContext): Promise<string>
+  getJavaScriptTypeDefinitions(workflowDefinitionId: string, context?: IntellisenseContext): Promise<string>;
 }
 
 export interface DesignerApi {
@@ -494,7 +489,7 @@ export interface DesignerApi {
 }
 
 export interface RuntimeSelectItemsApi {
-  get(providerTypeName: string, context?: any): Promise<SelectList>
+  get(providerTypeName: string, context?: any): Promise<SelectList>;
 }
 
 export interface ActivityStatsApi {
@@ -531,27 +526,27 @@ export interface SaveWorkflowDefinitionRequest {
 }
 
 export interface WorkflowTestExecuteRequest {
-  workflowDefinitionId?: string,
-  version?: number,
-  signalRConnectionId?: string
+  workflowDefinitionId?: string;
+  version?: number;
+  signalRConnectionId?: string;
   startActivityId?: string;
 }
 
 export interface WorkflowTestRestartFromActivityRequest {
-  workflowDefinitionId: string,
-  version: number,
-  activityId: string,
-  lastWorkflowInstanceId: string,
-  signalRConnectionId: string
+  workflowDefinitionId: string;
+  version: number;
+  activityId: string;
+  lastWorkflowInstanceId: string;
+  signalRConnectionId: string;
 }
 
 export interface WorkflowTestStopRequest {
-  workflowInstanceId: string
+  workflowInstanceId: string;
 }
 
 export interface WorkflowTestExecuteResponse {
-  isSuccess: boolean,
-  isAnotherInstanceRunning: boolean
+  isSuccess: boolean;
+  isAnotherInstanceRunning: boolean;
 }
 
 export interface ExportWorkflowResponse {
@@ -580,9 +575,7 @@ export interface AuthenticationConfguration {
   tenantAccessorKeyName: string;
 }
 
-
-
-interface ActivityEventCount {
+export interface ActivityEventCount {
   eventName: string;
   count: number;
 }

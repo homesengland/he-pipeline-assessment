@@ -8,7 +8,7 @@ import { WorkflowInstancesList } from './dashboard/pages/workflow-instances-list
 import { WorkflowHome } from './dashboard/pages/workflow-home/workflow-home';
 import { WorkflowRegistry } from './dashboard/pages/workflow-registry/workflow-registry';
 import { WorkflowInstanceListScreen } from './screens/workflow-instance-list/workflow-instance-list-screen/workflow-instance-list-screen';
-import { routing } from '../workflow-routes.module'
+import { routing } from '../workflow-routes.module';
 import { AppStateModule } from './state/app.state.module';
 import { ReactiveFormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
@@ -18,16 +18,34 @@ import { WorkflowDropdownButton } from './controls/workflow-dropdown-button/work
 import { WorkflowContextMenu } from './controls/workflow-context-menu/workflow-context-menu';
 import { ConfirmDialog } from './shared/confirm-dialog/confirm-dialog';
 import { ModalDialog } from './shared/modal-dialog/modal-dialog';
+import { WorkflowInstancesView } from './dashboard/pages/workflow-instances-view/workflow-instances-view';
+import { WorkflowInstanceViewerScreen } from './screens/workflow-instance-viewer-screen/workflow-instance-viewer-screen';
+import { WorkflowPerformanceInformation } from './shared/workflow-performance-information/workflow-performance-information';
+import { WorkflowFaultInformation } from './shared/workflow-fault-information/workflow-fault-information';
 
 @NgModule({
-  declarations: [WorkflowRoot, WorkflowDashboard, WorkflowDefinitionsList, WorkflowInstancesList, WorkflowHome, WorkflowRegistry, WorkflowInstanceListScreen, WorkflowPager, WorkflowDropdownButton, WorkflowContextMenu, ConfirmDialog, ModalDialog
+  declarations: [
+    WorkflowRoot,
+    WorkflowDashboard,
+    WorkflowDefinitionsList,
+    WorkflowInstancesList,
+    WorkflowInstancesView,
+    WorkflowInstanceViewerScreen,
+    WorkflowHome,
+    WorkflowRegistry,
+    WorkflowInstanceListScreen,
+    WorkflowPager,
+    WorkflowDropdownButton,
+    WorkflowContextMenu,
+    ConfirmDialog,
+    ModalDialog,
+    WorkflowPerformanceInformation,
+    WorkflowFaultInformation,
   ],
-  imports: [
-    BrowserModule, HttpClientModule, routing, AppStateModule, ReactiveFormsModule, RouterModule, RouterOutlet, CommonModule
-  ],
+
+  imports: [BrowserModule, HttpClientModule, routing, AppStateModule, ReactiveFormsModule, RouterModule, RouterOutlet, CommonModule],
   providers: [],
   bootstrap: [WorkflowRoot],
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
-
 })
-export class AppModule { }
+export class AppModule {}
