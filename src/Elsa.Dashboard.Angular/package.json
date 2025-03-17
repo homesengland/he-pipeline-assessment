@@ -25,7 +25,6 @@
     "build": "ng build --output-hashing=none && npx tailwindcss -i ./src/tailwind.css -o ./dist/workflow/styles.css --watch",
     "watch": "ng build --watch --configuration development",
     "test": "jest",
-    "test:watch": "jest --watch",
     "serve": "ng serve --live-reload=false"
   },
   "dependencies": {
