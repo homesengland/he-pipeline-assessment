@@ -146,7 +146,7 @@ export class WorkflowDefinitionListScreen implements OnInit, OnDestroy {
         {
           text: isPublished ? 'Unpublish' : 'Publish',
           clickHandler: isPublished ? e => this.onUnPublishClick(e, item) : e => this.onPublishClick(e, item),
-          icon: 'static/images/instances-view-icon.svg',
+          icon: isPublished ? 'static/images/unpublish-icon.svg' : 'static/images/publish-icon.svg',
         },
       ];
 
