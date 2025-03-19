@@ -12,7 +12,7 @@ pr:
     - main
 
 schedules:
-- cron: "0 4 * * Mon,Tue,Wed,Thu,Fri"
+- cron: "15 3 * * Mon,Tue,Wed,Thu,Fri"
   displayName: Nightly Test Run
   branches:
     include:
@@ -28,7 +28,7 @@ parameters:
 variables:
   buildMajor: 1
   buildMinor: 7
-  buildPatch: 4
+  buildPatch: 5
   buildBranch: $[replace(replace(variables['Build.SourceBranch'], 'refs/heads/', ''), '/', '.')]
   identifier: pipasmt
 
