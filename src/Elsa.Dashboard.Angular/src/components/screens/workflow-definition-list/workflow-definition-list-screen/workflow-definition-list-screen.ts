@@ -107,6 +107,7 @@ export class WorkflowDefinitionListScreen implements OnInit, OnDestroy {
     this.currentPageSize = isNaN(this.currentPageSize) ? WorkflowDefinitionListScreen.DEFAULT_PAGE_SIZE : this.currentPageSize;
     this.latestOrPublishedVersionOptions = { isLatestOrPublished: true };
     this.workflowDefintions = await elsaClient.workflowDefinitionsApi.list(this.currentPage, this.currentPageSize, this.latestOrPublishedVersionOptions, this.currentSearchTerm);
+    this.totalCount = this.workflowDefintions.totalCount;
     this.workflowDefinitionsTableValues = this.setTableValues(this.workflowDefintions);
     const maxPage = Math.floor(this.workflowDefintions.totalCount / this.currentPageSize);
 
@@ -122,11 +123,9 @@ export class WorkflowDefinitionListScreen implements OnInit, OnDestroy {
     return this.elsaClientService.createElsaClient(this.serverUrl);
   }
 
-  // ***** MODIFY FOR DEFINITIONS INSTEAD OF INSTANCES, COPIED FROM workflow-instance-list-screen.ts *****
-
-  setTableValues(workflowInstances: PagedList<WorkflowDefinitionSummary>): PagedList<WorkflowDefinitionSummaryTableRow> {
-    const latestWorkflowDefinition = workflowInstances.items.filter(item => item.isLatest);
-    const publishedDefinitions = workflowInstances.items.filter(x => x.isPublished);
+  setTableValues(workflowDefinitions: PagedList<WorkflowDefinitionSummary>): PagedList<WorkflowDefinitionSummaryTableRow> {
+    const latestWorkflowDefinition = workflowDefinitions.items.filter(item => item.isLatest);
+    const publishedDefinitions = workflowDefinitions.items.filter(x => x.isPublished);
 
     let rows = latestWorkflowDefinition.map(item => {
       const latestVersionNumber = item.version;
@@ -165,11 +164,16 @@ export class WorkflowDefinitionListScreen implements OnInit, OnDestroy {
     });
     return {
       items: rows,
-      totalCount: workflowInstances.totalCount,
-      page: workflowInstances.page,
-      pageSize: workflowInstances.pageSize,
+      totalCount: workflowDefinitions.totalCount,
+      page: workflowDefinitions.page,
+      pageSize: workflowDefinitions.pageSize,
     };
   }
+
+  onPaged = async (e: PagerData) => {
+    this.currentPage = e.page;
+    await this.loadWorkflowDefinitions();
+  };
 
   async onPublishClick(e: Event, workflowDefinition: WorkflowDefinitionSummary) {
     const elsaClient = await this.createClient();
@@ -195,4 +199,10 @@ export interface WorkflowDefinitionSummaryTableRow {
   instancesUrl: string;
   instancesUrlQueryParams: string;
   contextMenuItems: Array<MenuItem>;
+}
+
+export interface PagerData {
+  page: number;
+  pageSize: number;
+  totalCount: number;
 }
