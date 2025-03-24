@@ -55,11 +55,11 @@ export class WorkflowDefinitionListScreen implements OnInit, OnDestroy {
 
   async ngOnInit(): Promise<void> {
     this.clearRouteChangedListeners = this.location.onUrlChange(async (url, state) => {
-      console.log('URL changed:', url);
-      if (url.split('?')[0] != '/workflow-definitions') return;
-      let queryString = url.split('?')[1] ? url.split('?')[1] : '';
-      this.applyQueryString(queryString);
-      await this.loadWorkflowDefinitions();
+      if (url.split('?')[0].endsWith('/workflow-definitions')) {
+        let queryString = url.split('?')[1] ? url.split('?')[1] : '';
+        this.applyQueryString(queryString);
+        await this.loadWorkflowDefinitions();
+      }
     });
 
     this.setVariablesFromAppState();
