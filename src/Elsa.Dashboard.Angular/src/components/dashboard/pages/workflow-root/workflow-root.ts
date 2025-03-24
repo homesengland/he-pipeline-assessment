@@ -4,7 +4,7 @@ import { Store } from '@ngrx/store';
 import { StoreConfig } from '../../../../models/storeConfig';
 import { AppStateActionGroup } from '../../../state/actions/app.state.actions';
 import { DataDictionaryGroup } from '../../../../models/custom-component-models';
-import { IntellisenseGatherer } from '../../../../Utils/intellisenseGatherer';
+import { IntellisenseGatherer } from '../../../../utils/intellisenseGatherer';
 import { StoreStatus } from '../../../../models/constants';
 import { eventBus } from '../../../../services/event-bus';
 import { EventTypes, WorkflowStudio } from '../../../../models';

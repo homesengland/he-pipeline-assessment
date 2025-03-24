@@ -8,7 +8,7 @@ import { ElsaClientService, ElsaClient } from '../../../../services/elsa-client'
 import { OrderBy, PagedList, VersionOptions, WorkflowDefinitionSummary } from '../../../../models';
 import { parseQuery } from '../../../../utils/utils';
 import { selectServerUrl, selectStoreConfig } from '../../../state/selectors/app.state.selectors';
-import { HTMLElsaConfirmDialogElement, MenuItem } from 'src/Models/elsa-interfaces';
+import { HTMLElsaConfirmDialogElement, MenuItem } from 'src/models/elsa-interfaces';
 
 @Component({
   selector: 'workflow-definition-list-screen',
