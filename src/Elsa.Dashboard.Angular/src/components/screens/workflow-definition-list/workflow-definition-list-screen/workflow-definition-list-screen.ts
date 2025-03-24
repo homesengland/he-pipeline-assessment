@@ -1,7 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
-import { Router } from '@angular/router';
+import { Router, NavigationEnd } from '@angular/router';
 import { Location } from '@angular/common';
 import { Store } from '@ngrx/store';
 import { ElsaClientService, ElsaClient } from '../../../../services/elsa-client';
@@ -54,19 +54,29 @@ export class WorkflowDefinitionListScreen implements OnInit, OnDestroy {
   ) {}
 
   async ngOnInit(): Promise<void> {
-    this.setVariablesFromAppState();
-
     this.clearRouteChangedListeners = this.location.onUrlChange(async (url, state) => {
+      console.log('URL changed:', url);
       if (url.split('?')[0] != '/workflow-definitions') return;
       let queryString = url.split('?')[1] ? url.split('?')[1] : '';
       this.applyQueryString(queryString);
       await this.loadWorkflowDefinitions();
     });
 
+    this.setVariablesFromAppState();
+
     if (this.router.navigated) {
       let queryString = this.router.url.split('?')[1];
       this.applyQueryString(queryString);
     }
+
+    this.router.events.subscribe(async event => {
+      if (event instanceof NavigationEnd) {
+        let queryString = this.router.url.split('?')[1];
+        this.applyQueryString(queryString);
+        await this.loadWorkflowDefinitions();
+      }
+    });
+
     await this.loadWorkflowDefinitions();
   }
 
@@ -88,11 +98,16 @@ export class WorkflowDefinitionListScreen implements OnInit, OnDestroy {
 
   private applyQueryString(queryString?: string): void {
     const query = parseQuery(queryString);
-    this.currentPage = !!query['page'] ? parseInt(query['page']) : 0;
-    this.currentPage = isNaN(this.currentPage) ? WorkflowDefinitionListScreen.START_PAGE : this.currentPage;
-    this.currentPageSize = !!query['pageSize'] ? parseInt(query['pageSize']) : WorkflowDefinitionListScreen.DEFAULT_PAGE_SIZE;
-    this.currentPageSize = isNaN(this.currentPageSize) ? WorkflowDefinitionListScreen.DEFAULT_PAGE_SIZE : this.currentPageSize;
-    this.currentPageSize = Math.max(Math.min(this.currentPageSize, WorkflowDefinitionListScreen.MAX_PAGE_SIZE), WorkflowDefinitionListScreen.MIN_PAGE_SIZE);
+    console.log('Parsed query:', query);
+    this.currentPage = parseInt(query['page']) || WorkflowDefinitionListScreen.START_PAGE;
+
+    this.currentPageSize = Math.max(
+      Math.min(parseInt(query['pageSize']) || WorkflowDefinitionListScreen.DEFAULT_PAGE_SIZE, WorkflowDefinitionListScreen.MAX_PAGE_SIZE),
+      WorkflowDefinitionListScreen.MIN_PAGE_SIZE,
+    );
+
+    console.log('Set currentPage:', this.currentPage);
+    console.log('Set currentPageSize:', this.currentPageSize);
   }
 
   async onSearchSubmit(): Promise<void> {
@@ -171,7 +186,18 @@ export class WorkflowDefinitionListScreen implements OnInit, OnDestroy {
   }
 
   onPaged = async (e: PagerData) => {
+    console.log('PagerData:', e);
     this.currentPage = e.page;
+    this.currentPageSize = e.pageSize;
+
+    await this.router.navigate([], {
+      queryParams: {
+        page: this.currentPage,
+        pageSize: this.currentPageSize,
+      },
+      queryParamsHandling: 'merge',
+    });
+
     await this.loadWorkflowDefinitions();
   };
 
