@@ -18,6 +18,10 @@ import { WorkflowDropdownButton } from './controls/workflow-dropdown-button/work
 import { WorkflowContextMenu } from './controls/workflow-context-menu/workflow-context-menu';
 import { ConfirmDialog } from './shared/confirm-dialog/confirm-dialog';
 import { ModalDialog } from './shared/modal-dialog/modal-dialog';
+import { WorkflowInstancesView } from './dashboard/pages/workflow-instances-view/workflow-instances-view';
+import { WorkflowInstanceViewerScreen } from './screens/workflow-instance-viewer-screen/workflow-instance-viewer-screen';
+import { WorkflowPerformanceInformation } from './shared/workflow-performance-information/workflow-performance-information';
+import { WorkflowFaultInformation } from './shared/workflow-fault-information/workflow-fault-information';
 import { WorkflowDefinitionListScreen } from './screens/workflow-definition-list/workflow-definition-list-screen/workflow-definition-list-screen';
 import { WorkflowDefinitionsView } from './dashboard/pages/workflow-definitions-view/workflow-definitions-view';
 
@@ -37,7 +41,26 @@ import { WorkflowDefinitionsView } from './dashboard/pages/workflow-definitions-
     ConfirmDialog,
     ModalDialog,
     WorkflowDefinitionsView,
+  declarations: [
+    WorkflowRoot,
+    WorkflowDashboard,
+    WorkflowDefinitionsList,
+    WorkflowInstancesList,
+    WorkflowInstancesView,
+    WorkflowInstanceViewerScreen,
+    WorkflowHome,
+    WorkflowRegistry,
+    WorkflowInstanceListScreen,
+    WorkflowPager,
+    WorkflowDropdownButton,
+    WorkflowContextMenu,
+    ConfirmDialog,
+    ModalDialog,
+    WorkflowPerformanceInformation,
+    WorkflowFaultInformation,
   ],
+
+  imports: [BrowserModule, HttpClientModule, routing, AppStateModule, ReactiveFormsModule, RouterModule, RouterOutlet, CommonModule],
   imports: [BrowserModule, HttpClientModule, routing, AppStateModule, ReactiveFormsModule, RouterModule, RouterOutlet, CommonModule],
   providers: [],
   bootstrap: [WorkflowRoot],

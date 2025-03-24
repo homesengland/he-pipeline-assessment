@@ -1,6 +1,6 @@
-import { ActivityDefinition, ActivityDefinitionProperty, ActivityModel, ConnectionModel, WorkflowModel } from "../models";
+import { ActivityDefinition, ActivityDefinitionProperty, ActivityModel, ConnectionModel, WorkflowModel } from '../models';
 import * as collection from 'lodash';
-import { Duration } from "moment";
+import { Duration } from 'moment';
 //import { createDocument } from "@stencil/core/mock-doc";
 
 declare global {
@@ -12,7 +12,7 @@ declare global {
 }
 
 export type Map<T> = {
-  [key: string]: T
+  [key: string]: T;
 };
 
 export function format(first: string, middle: string, last: string): string {
@@ -29,12 +29,11 @@ export interface Array<T> {
   find(predicate: (value: T, index: number, obj: T[]) => unknown, thisArg?: any): T | undefined;
 
   push(...items: T[]): number;
-
 }
 
 Array.prototype.distinct = function () {
   return [...new Set(this)];
-}
+};
 
 if (!Array.prototype.last) {
   Array.prototype.last = function () {
@@ -43,8 +42,10 @@ if (!Array.prototype.last) {
 }
 
 export function isNumeric(str: string): boolean {
-  return !isNaN(str as any) && // use type coercion to parse the _entirety_ of the string (`parseFloat` alone does not do this)...
-    !isNaN(parseFloat(str)) // ...and ensure strings of whitespace fail
+  return (
+    !isNaN(str as any) && // use type coercion to parse the _entirety_ of the string (`parseFloat` alone does not do this)...
+    !isNaN(parseFloat(str))
+  ); // ...and ensure strings of whitespace fail
 }
 
 export function getChildActivities(workflowModel: WorkflowModel, parentId?: string) {
@@ -73,17 +74,16 @@ export function removeActivity(workflowModel: WorkflowModel, activityId: string)
   return {
     ...workflowModel,
     activities: workflowModel.activities.filter(x => x.activityId != activityId),
-    connections: workflowModel.connections.filter(x => connectionsToRemove.indexOf(x) < 0)
+    connections: workflowModel.connections.filter(x => connectionsToRemove.indexOf(x) < 0),
   };
 }
 
 export function removeConnection(workflowModel: WorkflowModel, sourceId: string, outcome: string): WorkflowModel {
   return {
     ...workflowModel,
-    connections: workflowModel.connections.filter(x => !(x.sourceId === sourceId && x.outcome === outcome))
+    connections: workflowModel.connections.filter(x => !(x.sourceId === sourceId && x.outcome === outcome)),
   };
 }
-
 
 export function findActivity(workflowModel: WorkflowModel, activityId: string) {
   return workflowModel.activities.find(x => x.activityId === activityId);
@@ -92,7 +92,7 @@ export function findActivity(workflowModel: WorkflowModel, activityId: string) {
 export function addConnection(workflowModel: WorkflowModel, connection: ConnectionModel) {
   return {
     ...workflowModel,
-    connections: [...workflowModel.connections, connection]
+    connections: [...workflowModel.connections, connection],
   };
 }
 
@@ -104,16 +104,14 @@ export function setActivityModelProperty(activityModel: ActivityModel, name: str
   if (activityModel.properties) {
     setProperty(activityModel.properties, name, expression, syntax);
   } else {
-    console.error("activityModel.properties is undefined"); 
+    console.error('activityModel.properties is undefined');
   }
-  
 }
 
 export function setProperty(properties: Array<ActivityDefinitionProperty>, name: string, expression: string, syntax?: string) {
   let property: ActivityDefinitionProperty | undefined = properties.find(x => x.name == name);
 
-  if (!syntax)
-    syntax = 'Literal';
+  if (!syntax) syntax = 'Literal';
 
   if (!property) {
     const expressions: Record<string, string> = {};
@@ -142,8 +140,7 @@ export function getOrCreateProperty(activity: ActivityModel, name: string, defau
 }
 
 export function parseJson(json: string): any {
-  if (!json)
-    return null;
+  if (!json) return null;
 
   try {
     return JSON.parse(json);
@@ -154,9 +151,7 @@ export function parseJson(json: string): any {
 }
 
 export function parseQuery(queryString?: string): { [key: string]: string } {
-
-  if (!queryString)
-    return {};
+  if (!queryString) return {};
 
   const query: { [key: string]: string } = {};
   const pairs = (queryString[0] === '?' ? queryString.substring(1) : queryString).split('&');
@@ -200,25 +195,26 @@ export function htmlToElement(html: string): Element {
 }
 
 export function htmlDecode(value: string) {
-  const textarea = htmlToElement("<textarea/>");
+  const textarea = htmlToElement('<textarea/>');
   textarea.innerHTML = value;
   return textarea.textContent;
 }
 
 export function htmlEncode(value: string) {
-  const textarea = htmlToElement("<textarea/>");
+  const textarea = htmlToElement('<textarea/>');
   textarea.textContent = value;
   return textarea.innerHTML;
 }
 
 export function durationToString(duration: Duration) {
-  return !!duration ? duration.asHours() > 1
-    ? `${duration.asHours().toFixed(3)} h`
-    : duration.asMinutes() > 1
+  return !!duration
+    ? duration.asHours() > 1
+      ? `${duration.asHours().toFixed(3)} h`
+      : duration.asMinutes() > 1
       ? `${duration.asMinutes().toFixed(3)} m`
       : duration.asSeconds() > 1
-        ? `${duration.asSeconds().toFixed(3)} s`
-        : `${duration.asMilliseconds()} ms`
+      ? `${duration.asSeconds().toFixed(3)} s`
+      : `${duration.asMilliseconds()} ms`
     : null;
 }
 
@@ -230,13 +226,13 @@ export function clip(el: Element) {
     sel.removeAllRanges();
     sel.addRange(range);
   } else {
-    console.error("Unable to get selection object")
+    console.error('Unable to get selection object');
   }
 }
 
 export async function awaitElement(selector: string) {
   while (document.querySelector(selector) === null) {
-    await new Promise(resolve => requestAnimationFrame(resolve))
+    await new Promise(resolve => requestAnimationFrame(resolve));
   }
   return document.querySelector(selector);
 }

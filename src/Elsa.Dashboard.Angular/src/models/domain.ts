@@ -351,7 +351,7 @@ export interface CodeEditorSettings extends PropertySettings {
 }
 
 export interface PropertySettings {
-  editorHeight?: string
+  editorHeight?: string;
   context?: string;
 }
 
@@ -382,16 +382,16 @@ export const getVersionOptionsString = (versionOptions?: VersionOptions) => {
   return versionOptions.allVersions
     ? 'AllVersions'
     : versionOptions.isDraft
-      ? 'Draft'
-      : versionOptions.isLatest
-        ? 'Latest'
-        : versionOptions.isPublished
-          ? 'Published'
-          : versionOptions.isLatestOrPublished
-            ? 'LatestOrPublished'
-            : versionOptions.version !== undefined
-              ? versionOptions.version.toString()
-              : '';
+    ? 'Draft'
+    : versionOptions.isLatest
+    ? 'Latest'
+    : versionOptions.isPublished
+    ? 'Published'
+    : versionOptions.isLatestOrPublished
+    ? 'LatestOrPublished'
+    : versionOptions.version !== undefined
+    ? versionOptions.version.toString()
+    : '';
 };
 
 export enum WorkflowTestActivityMessageStatus {

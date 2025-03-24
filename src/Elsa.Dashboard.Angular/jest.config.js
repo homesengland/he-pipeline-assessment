@@ -1,25 +1,16 @@
 module.exports = {
-    roots: [
-      "<rootDir>/src"
-    ],
-    preset: 'ts-jest',
-    testEnvironment: 'jsdom',
-    testRegex: "(/__tests__/.*|(\\.|/)(test|spec))\\.tsx?$",
-    transform: {
-      '^.+\\.ts?$': 'ts-jest',
-      "^.+\\.(js|jsx)$": "babel-jest"
+  roots: ['<rootDir>/src'],
+  preset: 'jest-preset-angular',
+  setupFilesAfterEnv: ['<rootDir>/src/setup-jest.ts'], // init. jest-preset-angular
+  testEnvironment: 'jsdom',
+  testRegex: '(/__tests__/.*|(\\.|/)(test|spec))\\.tsx?$',
+  transformIgnorePatterns: ['node_modules/(?!.*\\.mjs$)'],
+  globals: {
+    'ts-jest': {
+      tsconfig: '<rootDir>/tsconfig.spec.json',
     },
-    transformIgnorePatterns: ['<rootDir>/node_modules/'],
-    globals: {
-      window: {}
-    },
-    moduleFileExtensions: [
-      "ts",
-      "tsx",
-      "js"
-    ],
-    reporters: [
-      "default",
-    	[ "jest-junit", { suiteName: "jest tests" } ]
-    ]
-  };
+    'window': {},
+  },
+  moduleFileExtensions: ['ts', 'tsx', 'js', 'html'],
+  reporters: ['default', ['jest-junit', { suiteName: 'jest tests' }]],
+};

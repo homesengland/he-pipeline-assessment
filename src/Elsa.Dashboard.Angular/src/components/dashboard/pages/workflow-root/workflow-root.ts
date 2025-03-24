@@ -1,14 +1,14 @@
 import { HttpClient } from '@angular/common/http';
 import { Component, ElementRef, OnInit, Renderer2, viewChild, ViewChild } from '@angular/core';
 import { Store } from '@ngrx/store';
-import { StoreConfig } from '../../../../Models/storeConfig';
+import { StoreConfig } from '../../../../models/storeConfig';
 import { AppStateActionGroup } from '../../../state/actions/app.state.actions';
-import { DataDictionaryGroup } from '../../../../Models/custom-component-models';
+import { DataDictionaryGroup } from '../../../../models/custom-component-models';
 import { IntellisenseGatherer } from '../../../../Utils/intellisenseGatherer';
-import { StoreStatus } from '../../../../Models/constants';
+import { StoreStatus } from '../../../../models/constants';
 import { eventBus } from '../../../../services/event-bus';
 import { EventTypes, WorkflowStudio } from '../../../../models';
-import { HTMLElsaConfirmDialogElement } from '../../../../Models/elsa-interfaces';
+import { HTMLElsaConfirmDialogElement } from '../../../../models/elsa-interfaces';
 import { pluginManager } from 'src/services/plugin-manager';
 import { createHttpClient, createWorkflowClient, WorkflowClient } from 'src/services/workflow-client';
 import { AxiosInstance } from 'axios';
@@ -18,12 +18,13 @@ import { Auth0ClientOptions, AuthorizationParams } from '@auth0/auth0-spa-js';
 import { activityIconProvider } from 'src/services/activity-icon-provider';
 import { propertyDisplayManager } from 'src/services/property-display-manager';
 import { toastNotificationService } from 'src/services/toast-notification-service';
+import { featuresDataManager } from 'src/services/features-data-manager';
 
 @Component({
   selector: 'workflow-root',
   templateUrl: './workflow-root.html',
   styleUrls: ['./workflow-root.css'],
-  standalone: false
+  standalone: false,
 })
 export class WorkflowRoot implements OnInit {
   dataDictionary: Array<DataDictionaryGroup>;
@@ -67,7 +68,7 @@ export class WorkflowRoot implements OnInit {
       features: [],
       propertyDisplayManager,
       activityIconProvider,
-      toastNotificationService
+      toastNotificationService,
     };
 
     let auth0Params: AuthorizationParams = {
@@ -82,11 +83,13 @@ export class WorkflowRoot implements OnInit {
       useRefreshTokensFallback: true,
     };
 
-    pluginManager.initialize(workflowStudio, auth0Options)
+    pluginManager.initialize(workflowStudio, auth0Options);
     await eventBus.emit(EventTypes.Root.Initializing);
+
+    featuresDataManager.initialize(workflowStudio);
   }
 
-  onShowConfirmDialog = (e) => e.promise = this.confirmDialog().show(e.caption, e.message)
+  onShowConfirmDialog = e => (e.promise = this.confirmDialog().show(e.caption, e.message));
   ngOnDestroy() {
     eventBus.detach(EventTypes.ShowConfirmDialog, this.onShowConfirmDialog);
     this.modalShownListener();
@@ -94,40 +97,46 @@ export class WorkflowRoot implements OnInit {
   }
 
   async modalHandlerShown() {
-
-    this.modalShownListener = this.renderer2.listen("window", "shown", event => {
+    this.modalShownListener = this.renderer2.listen('window', 'shown', event => {
       event = event;
       var url_string = document.URL;
       var n = url_string.lastIndexOf('/');
       var workflowDef = url_string.substring(n + 1);
-      this.store.dispatch(AppStateActionGroup.setWorkflowDefinitionId({
-        workflowDefinitionId: workflowDef
-      }));
+      this.store.dispatch(
+        AppStateActionGroup.setWorkflowDefinitionId({
+          workflowDefinitionId: workflowDef,
+        }),
+      );
     });
     await this.getIntellisense();
   }
 
   async modalHandlerHidden() {
-
-    this.modalHiddenListener = this.renderer2.listen("window", "hidden", event => {
+    this.modalHiddenListener = this.renderer2.listen('window', 'hidden', event => {
       event = event;
-      this.store.dispatch(AppStateActionGroup.setJavaScriptTypeDefinitions({
-        javaScriptTypeDefinitions: ""
-      }));
-      this.store.dispatch(AppStateActionGroup.setJavascriptTypeDefinitionsFetchStatus({
-        javaScriptTypeDefinitionsFetchStatus: StoreStatus.Empty
-      }));
+      this.store.dispatch(
+        AppStateActionGroup.setJavaScriptTypeDefinitions({
+          javaScriptTypeDefinitions: '',
+        }),
+      );
+      this.store.dispatch(
+        AppStateActionGroup.setJavascriptTypeDefinitionsFetchStatus({
+          javaScriptTypeDefinitionsFetchStatus: StoreStatus.Empty,
+        }),
+      );
     });
     await this.getIntellisense();
   }
 
   setExternalState() {
-    this.setStoreConfig()
-    this.setDataDictionary()
-    this.store.dispatch(AppStateActionGroup.setExternalState({
-      storeConfig: this.storeConfig,
-      dataDictionary: this.dataDictionary
-    }));
+    this.setStoreConfig();
+    this.setDataDictionary();
+    this.store.dispatch(
+      AppStateActionGroup.setExternalState({
+        storeConfig: this.storeConfig,
+        dataDictionary: this.dataDictionary,
+      }),
+    );
   }
 
   async getIntellisense() {
@@ -147,4 +156,3 @@ export class WorkflowRoot implements OnInit {
     }
   }
 }
-

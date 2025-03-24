@@ -12,7 +12,7 @@ import { eventBus } from '../../../../services/event-bus';
 import { confirmDialogService } from '../../../../services/confirm-dialog-service';
 import { DropdownButtonItem, DropdownButtonOrigin } from '../../../controls/workflow-dropdown-button/models';
 import { MenuItem } from '../../../controls/workflow-context-menu/models';
-import * as moment from 'moment';
+import moment from 'moment';
 import * as collection from 'lodash/collection';
 import * as array from 'lodash/array';
 
