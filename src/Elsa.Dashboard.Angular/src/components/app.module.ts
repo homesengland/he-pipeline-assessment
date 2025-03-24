@@ -43,6 +43,8 @@ import { WorkflowDefinitionsView } from './dashboard/pages/workflow-definitions-
     WorkflowDefinitionsView,
     WorkflowPerformanceInformation,
     WorkflowFaultInformation,
+    WorkflowInstancesView,
+    WorkflowInstanceViewerScreen,
   ],
 
   imports: [BrowserModule, HttpClientModule, routing, AppStateModule, ReactiveFormsModule, RouterModule, RouterOutlet, CommonModule],
