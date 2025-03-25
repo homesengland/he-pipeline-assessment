@@ -18,6 +18,7 @@ import {
   WorkflowModel,
   WorkflowPersistenceBehavior,
   WorkflowStatus,
+  WorkflowStorageDescriptor,
 } from 'src/models';
 import { ActivityStats, ActivityEventCount } from 'src/services/workflow-client';
 import { ActivityContextMenuState, LayoutDirection } from 'src/components/designers/tree/models';
@@ -57,7 +58,7 @@ export class WorkflowInstanceViewerScreen implements OnInit, OnDestroy {
   layoutDirection = LayoutDirection.TopBottom;
 
   activityDescriptors: ActivityDescriptor[];
-  workflowStorageDescriptors: import('c:/source/github/he-pipeline-assessment/src/Elsa.Dashboard.Angular/src/models/domain').WorkflowStorageDescriptor[];
+  workflowStorageDescriptors: WorkflowStorageDescriptor[];
   private clearRouteChangedListeners: () => void;
 
   workflowFault: WorkflowFault;

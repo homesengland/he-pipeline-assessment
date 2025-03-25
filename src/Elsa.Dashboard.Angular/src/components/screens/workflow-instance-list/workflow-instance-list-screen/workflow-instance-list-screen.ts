@@ -99,10 +99,12 @@ export class WorkflowInstanceListScreen implements OnInit, OnDestroy {
 
   async ngOnInit(): Promise<void> {
     this.clearRouteChangedListeners = this.location.onUrlChange(async (url, state) => {
-      let queryString = url.split('?')[1] ? url.split('?')[1] : '';
-      this.applyQueryString(queryString);
-      this.updateDropdownFilterItems();
-      await this.loadWorkflowInstances();
+      if (url.split('?')[0].endsWith('/workflow-instances')) {
+        let queryString = url.split('?')[1] ? url.split('?')[1] : '';
+        this.applyQueryString(queryString);
+        this.updateDropdownFilterItems();
+        await this.loadWorkflowInstances();
+      }
     });
 
     this.setVariablesFromAppState();

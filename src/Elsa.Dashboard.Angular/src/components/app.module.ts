@@ -22,6 +22,8 @@ import { WorkflowInstancesView } from './dashboard/pages/workflow-instances-view
 import { WorkflowInstanceViewerScreen } from './screens/workflow-instance-viewer-screen/workflow-instance-viewer-screen';
 import { WorkflowPerformanceInformation } from './shared/workflow-performance-information/workflow-performance-information';
 import { WorkflowFaultInformation } from './shared/workflow-fault-information/workflow-fault-information';
+import { WorkflowDefinitionListScreen } from './screens/workflow-definition-list/workflow-definition-list-screen/workflow-definition-list-screen';
+import { WorkflowDefinitionsView } from './dashboard/pages/workflow-definitions-view/workflow-definitions-view';
 
 @NgModule({
   declarations: [
@@ -29,18 +31,20 @@ import { WorkflowFaultInformation } from './shared/workflow-fault-information/wo
     WorkflowDashboard,
     WorkflowDefinitionsList,
     WorkflowInstancesList,
-    WorkflowInstancesView,
-    WorkflowInstanceViewerScreen,
     WorkflowHome,
     WorkflowRegistry,
     WorkflowInstanceListScreen,
+    WorkflowDefinitionListScreen,
     WorkflowPager,
     WorkflowDropdownButton,
     WorkflowContextMenu,
     ConfirmDialog,
     ModalDialog,
+    WorkflowDefinitionsView,
     WorkflowPerformanceInformation,
     WorkflowFaultInformation,
+    WorkflowInstancesView,
+    WorkflowInstanceViewerScreen,
   ],
 
   imports: [BrowserModule, HttpClientModule, routing, AppStateModule, ReactiveFormsModule, RouterModule, RouterOutlet, CommonModule],
