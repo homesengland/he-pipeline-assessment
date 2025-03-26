@@ -14,3 +14,10 @@ export enum LayoutDirection {
   RightLeft = 'rightleft',
   BottomTop = 'bottomtop',
 }
+
+export enum WorkflowDesignerMode {
+  Edit,
+  Instance,
+  Blueprint,
+  Test,
+}
