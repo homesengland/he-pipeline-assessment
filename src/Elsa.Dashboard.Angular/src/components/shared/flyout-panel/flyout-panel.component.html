@@ -1,0 +1,29 @@
+<div class="elsa-flyout-panel">
+  <!-- Tab navigation -->
+  <div class="elsa-border-b elsa-border-gray-200">
+    <nav class="elsa-flex elsa-space-x-4" aria-label="Tabs">
+      <ng-container *ngFor="let tab of tabs">
+        <button
+          (click)="selectTab(tab.id)"
+          [attr.data-tab-id]="tab.id"
+          [class.elsa-border-indigo-500]="isTabActive(tab.id)"
+          [class.elsa-text-indigo-600]="isTabActive(tab.id)"
+          [class.elsa-border-transparent]="!isTabActive(tab.id)"
+          [class.elsa-text-gray-500]="!isTabActive(tab.id)"
+          class="elsa-whitespace-nowrap elsa-py-4 elsa-px-1 elsa-border-b-2 elsa-font-medium elsa-text-sm"
+        >
+          <ng-container *ngTemplateOutlet="tab.header['templateRef']"></ng-container>
+        </button>
+      </ng-container>
+    </nav>
+  </div>
+
+  <!-- Tab contents -->
+  <div class="elsa-py-4 elsa-px-6">
+    <ng-container *ngFor="let tab of tabs">
+      <div [hidden]="!isTabActive(tab.id)">
+        <ng-container *ngTemplateOutlet="tab.content['templateRef']"></ng-container>
+      </div>
+    </ng-container>
+  </div>
+</div>

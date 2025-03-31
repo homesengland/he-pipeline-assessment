@@ -1,0 +1,217 @@
+<div>
+  <elsa-flyout-panel #flyoutPanel>
+    <!-- General Tab -->
+    <elsa-tab-header tab="general" slot="header">General</elsa-tab-header>
+    <elsa-tab-content tab="general" slot="content">
+      <dl class="elsa-border-b elsa-border-gray-200 elsa-divide-y elsa-divide-gray-200">
+        <div class="elsa-py-3 elsa-flex elsa-justify-between elsa-text-sm elsa-font-medium">
+          <dt class="elsa-text-gray-500">Workflow Name</dt>
+          <dd class="elsa-text-gray-900">{{workflowBlueprint.name}}</dd>
+        </div>
+        <div class="elsa-py-3 elsa-flex elsa-justify-between elsa-text-sm elsa-font-medium">
+          <dt class="elsa-text-gray-500">Instance Name</dt>
+          <dd class="elsa-text-gray-900">{{workflowInstance.name || '-'}}</dd>
+        </div>
+        <div class="elsa-py-3 elsa-flex elsa-justify-between elsa-text-sm elsa-font-medium">
+          <dt class="elsa-text-gray-500">Id</dt>
+          <dd class="elsa-text-gray-900">{{workflowInstance.id}}</dd>
+        </div>
+        <div class="elsa-py-3 elsa-flex elsa-justify-between elsa-text-sm elsa-font-medium">
+          <dt class="elsa-text-gray-500">Correlation id</dt>
+          <dd class="elsa-text-gray-900">{{workflowInstance.correlationId}}</dd>
+        </div>
+        <div class="elsa-py-3 elsa-flex elsa-justify-between elsa-text-sm elsa-font-medium">
+          <dt class="elsa-text-gray-500">Version</dt>
+          <dd class="elsa-text-gray-900 elsa-break-all">{{workflowInstance.version || '-'}}</dd>
+        </div>
+        <div class="elsa-py-3 elsa-flex elsa-justify-between elsa-text-sm elsa-font-medium">
+          <dt class="elsa-text-gray-500">Workflow Status</dt>
+          <dd class="elsa-text-gray-900 elsa-break-all">
+            <span class="elsa-relative elsa-inline-flex elsa-items-center elsa-rounded-full">
+              <span class="elsa-flex-shrink-0 elsa-flex elsa-items-center elsa-justify-center">
+                <span [class]="'elsa-w-2-5 elsa-h-2-5 elsa-rounded-full ' + getStatusColor(workflowInstance.workflowStatus)" aria-hidden="true"></span>
+              </span>
+              <span class="elsa-ml-3.5">{{workflowInstance.workflowStatus || '-'}}</span>
+            </span>
+          </dd>
+        </div>
+        <div class="elsa-py-3 elsa-flex elsa-justify-between elsa-text-sm elsa-font-medium">
+          <dt class="elsa-text-gray-500">Created</dt>
+          <dd class="elsa-text-gray-900 elsa-break-all">{{moment(workflowInstance.createdAt).format('DD-MM-YYYY HH:mm:ss') || '-'}}</dd>
+        </div>
+        <div class="elsa-py-3 elsa-flex elsa-justify-between elsa-text-sm elsa-font-medium">
+          <dt class="elsa-text-gray-500">Finished</dt>
+          <dd class="elsa-text-gray-900 elsa-break-all">{{workflowInstance.finishedAt ? moment(workflowInstance.finishedAt).format('DD-MM-YYYY HH:mm:ss') : '-'}}</dd>
+        </div>
+        <div class="elsa-py-3 elsa-flex elsa-justify-between elsa-text-sm elsa-font-medium">
+          <dt class="elsa-text-gray-500">Last Executed</dt>
+          <dd class="elsa-text-gray-900 elsa-break-all">{{workflowInstance.lastExecutedAt ? moment(workflowInstance.lastExecutedAt).format('DD-MM-YYYY HH:mm:ss') : '-'}}</dd>
+        </div>
+        <div class="elsa-py-3 elsa-flex elsa-justify-between elsa-text-sm elsa-font-medium">
+          <dt class="elsa-text-gray-500">Faulted</dt>
+          <dd class="elsa-text-gray-900 elsa-break-all">{{workflowInstance.faultedAt ? moment(workflowInstance.faultedAt).format('DD-MM-YYYY HH:mm:ss') : '-'}}</dd>
+        </div>
+      </dl>
+    </elsa-tab-content>
+
+    <!-- Journal Tab -->
+    <elsa-tab-header tab="journal" slot="header">Journal</elsa-tab-header>
+    <elsa-tab-content tab="journal" slot="content">
+      <div class="flow-root elsa-mt-4">
+        <ul class="-elsa-mb-8">
+          <li *ngFor="let record of filteredRecords; let index = index">
+            <div
+              (click)="onRecordClick(record)"
+              [class]="(record.id === selectedRecordId ? 'elsa-border-blue-600' : 'hover:elsa-bg-gray-100 elsa-border-transparent') + ' elsa-border-2 elsa-cursor-pointer elsa-p-4 elsa-rounded'"
+            >
+              <div class="elsa-relative elsa-pb-10">
+                <div class="elsa-flex elsa-absolute top-8 elsa-left-4 -elsa-ml-px elsa-h-full elsa-w-0.5">
+                  <div class="elsa-flex elsa-flex-1 elsa-items-center elsa-relative elsa-right-10">
+                    <span class="elsa-flex-1 elsa-text-sm elsa-text-gray-500 elsa-w-max elsa-bg-white elsa-p-1 elsa-ml-1 elsa-rounded-r">
+                      {{ calculateDuration(record, index) }}
+                    </span>
+                  </div>
+                </div>
+                <div class="elsa-relative elsa-flex elsa-space-x-3">
+                  <div>
+                    <span
+                      [class]="'elsa-h-8 elsa-w-8 elsa-rounded-full ' + getEventColor(record.eventName) + ' elsa-flex elsa-items-center elsa-justify-center elsa-ring-8 elsa-ring-white elsa-mr-1'"
+                      [innerHTML]="activityIconProvider.getIcon(record.activityType)"
+                    ></span>
+                  </div>
+                  <div class="elsa-min-w-0 elsa-flex-1 elsa-pt-1.5 elsa-flex elsa-justify-between elsa-space-x-4">
+                    <div>
+                      <h3 class="elsa-text-lg elsa-leading-6 elsa-font-medium elsa-text-gray-900">
+                        {{ (workflowBlueprint.activities.find(x => x.id === record.activityId)?.displayName || workflowBlueprint.activities.find(x => x.id ===
+                        record.activityId)?.name || activityDescriptors.find(x => x.type === record.activityType)?.displayName || activityDescriptors.find(x => x.type ===
+                        record.activityType)?.type || '(Not Found): ' + record.activityType) }}
+                      </h3>
+                    </div>
+                    <div>
+                      <span class="elsa-relative elsa-inline-flex elsa-items-center elsa-rounded-full elsa-border elsa-border-gray-300 elsa-px-3 elsa-py-0.5 elsa-text-sm">
+                        <span class="elsa-absolute elsa-flex-shrink-0 elsa-flex elsa-items-center elsa-justify-center">
+                          <span [class]="'elsa-h-1.5 elsa-w-1.5 elsa-rounded-full ' + getEventColor(record.eventName)" aria-hidden="true"></span>
+                        </span>
+                        <span class="elsa-ml-3.5 elsa-font-medium elsa-text-gray-900">{{record.eventName}}</span>
+                      </span>
+                    </div>
+                    <div class="elsa-text-right elsa-text-sm elsa-whitespace-nowrap elsa-text-gray-500">
+                      <span>{{moment(record.timestamp).format('DD-MM-YYYY HH:mm:ss')}}</span>
+                    </div>
+                  </div>
+                </div>
+                <div class="elsa-ml-12 elsa-mt-2">
+                  <dl class="sm:elsa-divide-y sm:elsa-divide-gray-200">
+                    <div class="elsa-grid elsa-grid-cols-2 elsa-gap-x-4 elsa-gap-y-8 sm:elsa-grid-cols-2">
+                      <!-- Activity ID -->
+                      <div class="sm:elsa-col-span-2">
+                        <dt class="elsa-text-sm elsa-font-medium elsa-text-gray-500">
+                          <span>Activity ID</span>
+                          <elsa-copy-button [value]="record.activityId"></elsa-copy-button>
+                        </dt>
+                        <dd class="elsa-mt-1 elsa-text-sm elsa-text-gray-900 elsa-mb-2">{{record.activityId}}</dd>
+                      </div>
+
+                      <!-- Outcomes -->
+                      <div class="sm:elsa-col-span-2" *ngIf="record.data?.Outcomes?.length > 0">
+                        <dt class="elsa-text-sm elsa-font-medium elsa-text-gray-500">
+                          <span>Outcomes</span>
+                          <elsa-copy-button [value]="record.data?.Outcomes?.join(', ')"></elsa-copy-button>
+                        </dt>
+                        <dd class="elsa-mt-1 elsa-text-sm elsa-text-gray-900 elsa-mb-2">
+                          <div class="elsa-flex elsa-flex-col elsa-space-y-4 sm:elsa-space-y-0 sm:elsa-flex-row sm:elsa-space-x-4">
+                            <span
+                              *ngFor="let outcome of record.data?.Outcomes"
+                              class="elsa-inline-flex elsa-items-center elsa-px-3 elsa-py-0.5 elsa-rounded-full elsa-text-sm elsa-font-medium elsa-bg-blue-100 elsa-text-blue-800"
+                              >{{outcome}}</span
+                            >
+                          </div>
+                        </dd>
+                      </div>
+
+                      <!-- Message -->
+                      <div class="sm:elsa-col-span-2" *ngIf="record.message && !record.data?.Exception">
+                        <dt class="elsa-text-sm elsa-font-medium elsa-text-gray-500">
+                          <span>Message</span>
+                          <elsa-copy-button [value]="record.message"></elsa-copy-button>
+                        </dt>
+                        <dd class="elsa-mt-1 elsa-text-sm elsa-text-gray-900">{{record.message}}</dd>
+                      </div>
+
+                      <!-- Exception -->
+                      <ng-container *ngIf="record.data?.Exception">
+                        <div class="sm:elsa-col-span-2">
+                          <dt class="elsa-text-sm elsa-font-medium elsa-text-gray-500">
+                            <span>Exception</span>
+                            <elsa-copy-button [value]="record.data.Exception.Type + '\n' + record.data.Exception.Message"></elsa-copy-button>
+                          </dt>
+                          <dd class="elsa-mt-1 elsa-text-sm elsa-text-gray-900">
+                            <ng-template #recursiveException let-exception>
+                              <div>
+                                <div class="elsa-mb-4">
+                                  <strong class="elsa-block elsa-font-bold">{{exception.Type}}</strong>
+                                  {{exception.Message}}
+                                </div>
+                                <div class="elsa-ml-4" *ngIf="exception.InnerException">
+                                  <ng-container *ngTemplateOutlet="recursiveException; context:{ $implicit: exception.InnerException }"></ng-container>
+                                </div>
+                              </div>
+                            </ng-template>
+                            <ng-container *ngTemplateOutlet="recursiveException; context:{ $implicit: record.data.Exception }"></ng-container>
+                          </dd>
+                        </div>
+                        <div class="sm:elsa-col-span-2">
+                          <dt class="elsa-text-sm elsa-font-medium elsa-text-gray-500">
+                            <span>Exception Details</span>
+                            <elsa-copy-button [value]="JSON.stringify(record.data.Exception, null, 1)"></elsa-copy-button>
+                          </dt>
+                          <dd class="elsa-mt-1 elsa-text-sm elsa-text-gray-900 elsa-overflow-x-auto">
+                            <pre (click)="clip($event.currentTarget)">{{JSON.stringify(record.data.Exception, null, 1)}}</pre>
+                          </dd>
+                        </div>
+                      </ng-container>
+
+                      <!-- Other record data -->
+                      <ng-container *ngFor="let key of getFilteredRecordDataKeys(record.data || {})">
+                        <div class="sm:elsa-col-span-2">
+                          <dt class="elsa-text-sm elsa-font-medium elsa-text-gray-500 elsa-capitalize">
+                            <span>{{key}}</span>
+                            <elsa-copy-button [value]="getRecordDataValue(record.data, key)"></elsa-copy-button>
+                          </dt>
+                          <dd class="elsa-mt-1 elsa-text-sm elsa-text-gray-900 elsa-mb-2 elsa-overflow-x-auto">
+                            <pre (click)="clip($event.currentTarget)">{{getRecordDataValue(record.data, key)}}</pre>
+                          </dd>
+                        </div>
+                      </ng-container>
+                    </div>
+                  </dl>
+                </div>
+              </div>
+            </div>
+          </li>
+        </ul>
+      </div>
+    </elsa-tab-content>
+
+    <!-- Activity State Tab -->
+    <elsa-tab-header tab="activityState" slot="header">Activity State</elsa-tab-header>
+    <elsa-tab-content tab="activityState" slot="content">
+      <div class="elsa-mt-4">
+        <p *ngIf="!workflowModel || !selectedActivityId">No activity selected</p>
+        <pre *ngIf="workflowModel && selectedActivityId">{{ getActivityStateJSON() }}</pre>
+      </div>
+    </elsa-tab-content>
+
+    <!-- Variables Tab -->
+    <elsa-tab-header tab="variables" slot="header">Variables</elsa-tab-header>
+    <elsa-tab-content tab="variables" slot="content">
+      <dl class="elsa-border-b elsa-border-gray-200 elsa-divide-y elsa-divide-gray-200">
+        <div class="elsa-py-3 elsa-text-sm elsa-font-medium">
+          <pre *ngIf="workflowInstance?.variables?.data">{{JSON.stringify(workflowInstance?.variables?.data, null, 2)}}</pre>
+          <span *ngIf="!workflowInstance?.variables?.data">-</span>
+        </div>
+      </dl>
+    </elsa-tab-content>
+  </elsa-flyout-panel>
+  <elsa-workflow-definition-editor-notifications></elsa-workflow-definition-editor-notifications>
+</div>

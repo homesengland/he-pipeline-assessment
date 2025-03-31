@@ -1,12 +1,12 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { eventBus } from '../../../../services/event-bus';
 import { EventTypes, WorkflowDefinition } from '../../../../models';
-import { toastNotificationService } from 'path-to-toast-notification-service'; // TODO: Create toast notification service and update import path.
+import { toastNotificationService } from '../../../../services/toast-notification-service';
 
 @Component({
   selector: 'app-workflow-editor-notifications',
   template: '',
-  standalone: false,
+  standalone: true,
 })
 export class WorkflowEditorNotificationsComponent implements OnInit, OnDestroy {
   constructor() {}
