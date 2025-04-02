@@ -25,6 +25,7 @@ import { ActivityContextMenuState, LayoutDirection, WorkflowDesignerMode } from 
 import { ElsaClientService } from 'src/services/elsa-client';
 import * as collection from 'lodash/collection';
 import { featuresDataManager } from 'src/services/features-data-manager';
+import { AppStateActionGroup } from 'src/components/state/actions/app.state.actions';
 
 @Component({
   selector: 'workflow-instance-viewer-screen',
@@ -251,6 +252,11 @@ export class WorkflowInstanceViewerScreen implements OnInit, OnDestroy {
   async loadActivityDescriptors() {
     const client = await this.elsaClientService.createElsaClient(this.serverUrl);
     this.activityDescriptors = await client.activitiesApi.list();
+    this.store.dispatch(
+      AppStateActionGroup.setActivityDefinitions({
+        activityDefinitions: this.activityDescriptors,
+      }),
+    );
   }
 
   handleContextMenuChange(x: number, y: number, shown: boolean, activity: ActivityModel) {
@@ -281,17 +287,16 @@ export class WorkflowInstanceViewerScreen implements OnInit, OnDestroy {
     // await this.journal.selectActivityRecord(this.selectedActivityId);
   }
 
-  async onActivityContextMenuButtonClicked(e: Event) {
-    const customEvent = e as CustomEvent<ActivityContextMenuState>;
-    this.activityContextMenuState = customEvent.detail;
+  async onActivityContextMenuButtonClicked(e: ActivityContextMenuState) {
+    this.activityContextMenuState = e;
     this.activityStats = null;
 
-    if (!customEvent.detail.shown) {
+    if (!e.shown) {
       return;
     }
 
     const elsaClient = await this.elsaClientService.createElsaClient(this.serverUrl);
-    this.activityStats = await elsaClient.activityStatsApi.get(this.workflowInstanceId, customEvent.detail.activity.activityId);
+    this.activityStats = await elsaClient.activityStatsApi.get(this.workflowInstanceId, e.activity.activityId);
   }
 
   getActivityBorderColor = (activity: ActivityModel): string => {

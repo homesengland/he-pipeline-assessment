@@ -1,7 +1,7 @@
 import {
-  AfterViewChecked,
+  AfterContentChecked,
+  AfterContentInit,
   Component,
-  computed,
   ElementRef,
   EventEmitter,
   input,
@@ -9,18 +9,27 @@ import {
   OnChanges,
   OnInit,
   Output,
-  Signal,
   SimpleChanges,
-  viewChild,
   ViewChild,
   ViewEncapsulation,
 } from '@angular/core';
 import { ActivityContextMenuState, LayoutDirection, WorkflowDesignerMode } from '../models';
 import * as d3 from 'd3';
 import dagreD3 from 'dagre-d3';
-import { ActivityDesignDisplayContext, ActivityModel, ConnectionModel, EventTypes, WorkflowModel, WorkflowPersistenceBehavior } from 'src/models';
+import {
+  ActivityDescriptor,
+  ActivityDesignDisplayContext,
+  ActivityModel,
+  ActivityTraits,
+  ConnectionModel,
+  EventTypes,
+  WorkflowModel,
+  WorkflowPersistenceBehavior,
+} from 'src/models';
 import { getChildActivities, removeConnection } from 'src/utils/utils';
 import { eventBus } from 'src/services/event-bus';
+import { selectActivityDefinitions } from '../../../state/selectors/app.state.selectors';
+import { Store } from '@ngrx/store';
 
 @Component({
   selector: 'designer-tree',
@@ -30,8 +39,9 @@ import { eventBus } from 'src/services/event-bus';
   standalone: false,
   encapsulation: ViewEncapsulation.None,
 })
-export class DesignerTree implements AfterViewChecked, OnChanges {
+export class DesignerTree implements OnChanges, OnInit {
   WorkflowDesignerMode: any;
+  activityDescriptors: ActivityDescriptor[];
   calc(arg0: number) {
     throw new Error('Method not implemented.');
   }
@@ -115,8 +125,13 @@ export class DesignerTree implements AfterViewChecked, OnChanges {
     this.activityContextMenuButtonTestClicked.emit(state);
   }
 
-  constructor(private elRef: ElementRef) {
+  constructor(private elRef: ElementRef, private store: Store) {
     this.el = elRef.nativeElement;
+  }
+  ngOnInit(): void {
+    this.store.select(selectActivityDefinitions).subscribe(activityDescriptors => {
+      this.activityDescriptors = activityDescriptors;
+    });
   }
 
   ngOnChanges(changes: SimpleChanges): void {
@@ -126,15 +141,52 @@ export class DesignerTree implements AfterViewChecked, OnChanges {
       if (this.workflowModel.activities.length > 0) {
         this.svgD3Selected = d3.select(this.svg.nativeElement);
         this.innerD3Selected = d3.select(this.inner.nativeElement);
-        this.safeRender();
+        this.componentWillRender();
+        //this.safeRender();
       }
     }
   }
 
-  ngAfterViewChecked(): void {
-    //this.svgD3Selected = d3.select(this.svg);
-    //this.innerD3Selected = d3.select(this.inner);
-    //this.safeRender();
+  async componentWillRender() {
+    if (!!this.activityDisplayContexts) return;
+
+    const activityModels = this.workflowModel.activities;
+    const displayContexts: Map<string, ActivityDesignDisplayContext> = new Map<string, ActivityDesignDisplayContext>();
+
+    for (const model of activityModels) displayContexts[model.activityId] = await this.getActivityDisplayContext(model);
+
+    this.activityDisplayContexts = displayContexts;
+
+    this.safeRender();
+  }
+
+  async getActivityDisplayContext(activityModel: ActivityModel): Promise<ActivityDesignDisplayContext> {
+    if (!this.activityDescriptors) return null;
+    let descriptor = this.activityDescriptors.find(x => x.type == activityModel.type);
+    let descriptorExists = !!descriptor;
+    const oldContextData = (this.oldActivityDisplayContexts && this.oldActivityDisplayContexts[activityModel.activityId]) || { expanded: false };
+
+    //if (!descriptorExists)
+    //descriptor = this.createNotFoundActivityDescriptor(activityModel);
+
+    const description = descriptorExists ? activityModel.description : `(Not Found) ${descriptorExists}`;
+    const bodyText = description && description.length > 0 ? description : undefined;
+    const bodyDisplay = bodyText ? `<p>${bodyText}</p>` : undefined;
+    const color = (descriptor.traits & ActivityTraits.Trigger) == ActivityTraits.Trigger ? 'rose' : 'sky';
+    const displayName = descriptorExists ? activityModel.displayName : `(Not Found) ${activityModel.displayName}`;
+
+    const displayContext: ActivityDesignDisplayContext = {
+      activityModel: activityModel,
+      activityDescriptor: descriptor,
+      activityIcon: null,
+      bodyDisplay: bodyDisplay,
+      displayName: displayName,
+      outcomes: [...activityModel.outcomes],
+      expanded: oldContextData.expanded,
+    };
+
+    //await eventBus.emit(EventTypes.ActivityDesignDisplaying, this, displayContext);
+    return displayContext;
   }
 
   safeRender() {
