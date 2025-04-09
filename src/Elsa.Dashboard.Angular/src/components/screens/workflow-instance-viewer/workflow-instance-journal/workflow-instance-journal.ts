@@ -1,4 +1,4 @@
-import { Component, ElementRef, EventEmitter, Input, OnInit, Output, ViewChild } from '@angular/core';
+import { Component, ElementRef, EventEmitter, Input, OnInit, Output, ViewChild, ViewContainerRef } from '@angular/core';
 import * as collection from 'lodash/collection';
 import moment from 'moment';
 import {
@@ -43,6 +43,7 @@ export class WorkflowInstanceJournalComponent implements OnInit {
   @Output() recordSelected = new EventEmitter<WorkflowExecutionLogRecord>();
 
   @ViewChild(FlyoutPanelComponent) flyoutPanel: FlyoutPanelComponent;
+  @ViewChild('iconContainer', { read: ViewContainerRef }) iconContainer: ViewContainerRef;
 
   isVisible: boolean = true;
   records: PagedList<WorkflowExecutionLogRecord> = { items: [], totalCount: 0 };
@@ -54,10 +55,7 @@ export class WorkflowInstanceJournalComponent implements OnInit {
   el: ElementRef;
   moment = moment;
 
-  constructor(
-    private elementRef: ElementRef,
-    private elsaClientService: ElsaClientService,
-  ) {
+  constructor(private elementRef: ElementRef, private elsaClientService: ElsaClientService) {
     this.el = elementRef;
   }
 
@@ -95,6 +93,17 @@ export class WorkflowInstanceJournalComponent implements OnInit {
     const activity = !!record ? this.workflowBlueprint.activities.find(x => x.id === record.activityId) : null;
     this.selectedRecordId = !!record ? record.id : null;
     this.selectedActivityId = activity != null ? (!!activity.parentId && activity.parentId != this.workflowBlueprint.id ? activity.parentId : activity.id) : null;
+  }
+
+  getActivityDisplayName(activityId: string, activityType: string): string {
+    const activity = this.workflowBlueprint.activities.find(x => x.id === activityId);
+
+    if (activity) {
+      return activity.displayName || activity.name;
+    }
+
+    const descriptor = this.activityDescriptors.find(x => x.type === activityType);
+    return descriptor?.displayName || descriptor?.type || '(Not Found): ' + activityType;
   }
 
   createClient(): Promise<ElsaClient> {
@@ -141,15 +150,15 @@ export class WorkflowInstanceJournalComponent implements OnInit {
   }
 
   renderGeneralTab() {
-    return; 
+    return;
   }
 
   renderJournalTab() {
-    return; 
+    return;
   }
 
   renderActivityStateTab() {
-    return; 
+    return;
   }
 
   renderVariablesTab() {
@@ -160,40 +169,43 @@ export class WorkflowInstanceJournalComponent implements OnInit {
     try {
       // Find the previous record with the same activity ID
       const recordIndex = this.records.items.indexOf(this.filteredRecords[index]);
-      
+
       if (recordIndex <= 0) {
         return '';
       }
-      
+
       const previousRecordsReversed = this.records.items.slice(0, recordIndex).reverse();
       const prevRecordIndex = previousRecordsReversed.findIndex(e => e.activityId == record.activityId);
-      
+
       if (prevRecordIndex < 0) {
         return '';
       }
-      
+
       const actualIndex = recordIndex - (prevRecordIndex + 1);
       const prevRecord = this.records.items[actualIndex];
-      
+
       if (!prevRecord || !prevRecord.timestamp) {
         return '';
       }
-      
+
       const duration = moment.duration(moment(record.timestamp).diff(moment(prevRecord.timestamp)));
-      return this.durationToString(duration);
+      return durationToString(duration);
     } catch (error) {
       console.error('Error calculating duration', error);
       return '';
     }
   }
 
+  renderIcon(activityType: string) {
+    if (this.iconContainer) {
+      activityIconProvider.getIcon(activityType, this.iconContainer);
+    } else {
+      console.warn('Icon container is not available.');
+    }
+  }
+
   // For JSON stringification in template
   JSON = JSON;
-
-  // For duration calculations
-  durationToString(duration: moment.Duration): string {
-    return durationToString(duration);
-  }
 
   // For accessing activity icons in template
   activityIconProvider = activityIconProvider;

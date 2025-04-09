@@ -79,13 +79,15 @@
                       [innerHTML]="activityIconProvider.getIcon(record.activityType)"
                     ></span>
                   </div>
+                  <div>
+                    <div>
+                      <ng-container #iconContainer></ng-container>
+                      <span *ngIf="!iconContainer">No Icon Available</span>
+                    </div>
+                  </div>
                   <div class="elsa-min-w-0 elsa-flex-1 elsa-pt-1.5 elsa-flex elsa-justify-between elsa-space-x-4">
                     <div>
-                      <h3 class="elsa-text-lg elsa-leading-6 elsa-font-medium elsa-text-gray-900">
-                        {{ (workflowBlueprint.activities.find(x => x.id === record.activityId)?.displayName || workflowBlueprint.activities.find(x => x.id ===
-                        record.activityId)?.name || activityDescriptors.find(x => x.type === record.activityType)?.displayName || activityDescriptors.find(x => x.type ===
-                        record.activityType)?.type || '(Not Found): ' + record.activityType) }}
-                      </h3>
+                      <h3 class="elsa-text-lg elsa-leading-6 elsa-font-medium elsa-text-gray-900">{{ getActivityDisplayName(record.activityId, record.activityType) }}</h3>
                     </div>
                     <div>
                       <span class="elsa-relative elsa-inline-flex elsa-items-center elsa-rounded-full elsa-border elsa-border-gray-300 elsa-px-3 elsa-py-0.5 elsa-text-sm">
@@ -166,7 +168,7 @@
                             <elsa-copy-button [value]="JSON.stringify(record.data.Exception, null, 1)"></elsa-copy-button>
                           </dt>
                           <dd class="elsa-mt-1 elsa-text-sm elsa-text-gray-900 elsa-overflow-x-auto">
-                            <pre (click)="clip($event.currentTarget)">{{JSON.stringify(record.data.Exception, null, 1)}}</pre>
+                            <pre>{{JSON.stringify(record.data.Exception, null, 1)}}</pre>
                           </dd>
                         </div>
                       </ng-container>
@@ -179,7 +181,7 @@
                             <elsa-copy-button [value]="getRecordDataValue(record.data, key)"></elsa-copy-button>
                           </dt>
                           <dd class="elsa-mt-1 elsa-text-sm elsa-text-gray-900 elsa-mb-2 elsa-overflow-x-auto">
-                            <pre (click)="clip($event.currentTarget)">{{getRecordDataValue(record.data, key)}}</pre>
+                            <pre>{{getRecordDataValue(record.data, key)}}</pre>
                           </dd>
                         </div>
                       </ng-container>
@@ -213,5 +215,5 @@
       </dl>
     </elsa-tab-content>
   </elsa-flyout-panel>
-  <elsa-workflow-definition-editor-notifications></elsa-workflow-definition-editor-notifications>
+  <!-- <elsa-workflow-definition-editor-notifications></elsa-workflow-definition-editor-notifications> -->
 </div>

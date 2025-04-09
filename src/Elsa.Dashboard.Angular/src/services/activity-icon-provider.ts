@@ -1,5 +1,5 @@
 import { Map } from '../utils/utils';
-import { ReadLineIcon } from "../components/icons/read-line-icon/read-line-icon";
+import { ReadLineIcon } from '../components/icons/read-line-icon/read-line-icon';
 //import { WriteLineIcon } from "../components/icons/write-line-icon";
 //import { IfIcon } from "../components/icons/if-icon";
 //import { ForkIcon } from "../components/icons/fork-icon";
@@ -27,8 +27,7 @@ import { ReadLineIcon } from "../components/icons/read-line-icon/read-line-icon"
 import { Component, Type, ViewContainerRef } from '@angular/core';
 
 export class ActivityIconProvider {
-
-  map: Map<Type<Component>>
+  map: Map<Type<Component>>;
 
   constructor() {
     this.map = {
@@ -57,7 +56,7 @@ export class ActivityIconProvider {
       //'State': () => StateIcon,
       //'InterruptTrigger': () => InterruptTriggerIcon,
       //'RunJavaScript': () => ScriptIcon,
-      'ReadLine': ReadLineIcon,
+      ReadLine: ReadLineIcon,
       //'WriteLine': () => WriteLineIcon,
       //'HttpEndpoint': () => HttpEndpointIcon,
       //'SendHttpRequest': () => SendHttpRequestIcon,
@@ -67,26 +66,27 @@ export class ActivityIconProvider {
       //'Webhook': () => WebhookIcon,
       //'RabbitMqMessageReceived': () => SignalReceivedIcon,
       //'SendRabbitMqMessage': () => SendSignalIcon
-    }
+    };
   }
 
   register(activityType: string, icon: Type<Component>) {
     this.map[activityType] = icon;
-  };
+  }
 
-  //getIcon(activityType: string): any {
-  //  const provider = this.map[activityType];
+  getIcon(activityType: string, viewContainer?: ViewContainerRef) {
+    const component: Type<Component> = this.map[activityType];
 
-  //  if (!provider)
-  //    return undefined;
+    if (!component) {
+      console.warn(`No icon found for activity type: ${activityType}`);
+      return '<span>No Icon</span>'; // Fallback HTML string for missing icons
+    }
 
-  //  return provider();
-  //}
+    if (viewContainer) {
+      viewContainer.clear();
+      viewContainer.createComponent(component);
+    }
 
-  getIcon(activityType: string, viewContainer: ViewContainerRef) {
-    var component: Type<Component> = this.map[activityType];
-
-    viewContainer.createComponent(component);
+    return ''; // Return an empty string when `ViewContainerRef` is used
   }
 }
 
