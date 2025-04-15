@@ -11,7 +11,7 @@ export class MonacoEditorDialogService {
       return;
     }
     this.currentValue = value;
-    this.monacoEditor.language = language;
+    this.monacoEditor.language.set(language);
     this.monacoEditor.setValue(value);
 
     this.valueSaved = onChanged;

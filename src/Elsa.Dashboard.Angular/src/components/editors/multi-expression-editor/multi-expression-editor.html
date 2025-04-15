@@ -13,7 +13,7 @@
             <div class="elsa-relative" #contextRef>
                 <button type="button" [ngClass]="advancedBtnClass" (click)="onSettingsClick($event)">
 
-                    <ng-template [ngIf]="!isReadOnly()">
+                    <ng-template *ngIf="!isReadOnly()">
                         <svg class="elsa-h-5 elsa-w-5 elsa-text-gray-400" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
                             <path stroke="none" d="M0 0h24v24H0z" />
                             <circle cx="12" cy="12" r="9" />
@@ -22,7 +22,7 @@
                             <line x1="16" y1="12" x2="16" y2="12.01" />
                         </svg>
                     </ng-template>
-                    <ng-template [ngIf]="isReadOnly()">
+                    <ng-template *ngIf="isReadOnly()">
                         <span>{{selectedSyntax()}}</span>
                     </ng-template>
                 </button>
@@ -42,9 +42,9 @@
                         </div>
                         <div class="elsa-py-1" role="none">
 
-                            <a *ngFor="let syntax from supportedSyntaxes; index as i;"
+                            <a *ngFor="let syntax of supportedSyntaxes(); index as i;"
                                (click)="selectSyntax($event, syntax)" href="#"
-                               [ngClass]="syntax == selectedSyntax ? selectedSyntaxClass : nonSelectedSyntaxClass" role="menuitem">
+                               [class]="syntax == selectedSyntax ? selectedSyntaxClass : nonSelectedSyntaxClass" role="menuitem">
                                 {{ syntax }}
                             </a>
                         </div>
@@ -57,7 +57,7 @@
         </div>
     </div>
     <div>
-        <div [ngClass]="expressionEditorClass()">
+        <div [class]="expressionEditorClass()">
             <expression-editor #expressionEditorRef
                                [expression]="currentValue()"
                                [language]="monacoLanguage()"

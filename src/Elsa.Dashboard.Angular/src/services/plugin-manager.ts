@@ -2,7 +2,7 @@ import { WorkflowPlugin } from "./workflow-plugin";
 import { ActivityIconProviderPlugin } from "../plugins/activity-icon-provider-plugin";
 import { WorkflowStudio } from "../models";
 import { Auth0ClientOptions } from '@auth0/auth0-spa-js';
-import { Auth0Plugin } from "src/plugins/auth0-plugin";
+import { Auth0Plugin } from "../plugins/auth0-plugin";
 
 
 export class PluginManager {

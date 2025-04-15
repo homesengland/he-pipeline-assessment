@@ -7,7 +7,7 @@ import { Store } from '@ngrx/store';
 import { ElsaClientService, ElsaClient } from "../../../../services/elsa-client";
 import { EventTypes, OrderBy, PagedList, WorkflowBlueprintSummary, WorkflowInstanceSummary, WorkflowStatus } from "../../../../models";
 import { Map, parseQuery } from '../../../../utils/utils';
-import { selectServerUrl, selectStoreConfig } from '../../../state/selectors/app.state.selectors';
+import { selectServerUrl, selectStoreConfig } from '../../../../store/selectors/app.state.selectors';
 import { eventBus } from '../../../../services/event-bus';
 import { confirmDialogService } from '../../../../services/confirm-dialog-service';
 import { DropdownButtonItem, DropdownButtonOrigin } from "../../../controls/workflow-dropdown-button/models";
@@ -115,10 +115,10 @@ export class WorkflowInstanceListScreen implements OnInit, OnDestroy {
 
   /**
    * Sets the `serverUrl` and `basePath` properties from the application state.
-   * 
+   *
    * This method subscribes to the `selectServerUrl` and `selectBasePath` selectors from the store.
    * When the selectors emit new values, the corresponding properties (`serverUrl` and `basePath`) are updated.
-   * 
+   *
    * - `serverUrl` is set to the value emitted by `selectServerUrl`.
    * - `basePath` is set to the value emitted by `selectBasePath`, or an empty string if the emitted value is falsy.
    */

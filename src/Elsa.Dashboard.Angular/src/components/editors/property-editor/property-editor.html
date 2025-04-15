@@ -16,5 +16,5 @@
     [context]="editorContext">
     <ng-content/>
   </multi-expression-editor>
-    <p *if="showHint" class="elsa-mt-2 elsa-text-sm elsa-text-gray-500">{{propertyDescriptor().hint}}</p>
+    <p *ngIf="showHint" class="elsa-mt-2 elsa-text-sm elsa-text-gray-500">{{propertyDescriptor().hint}}</p>
 </div>

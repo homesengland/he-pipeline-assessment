@@ -14,28 +14,16 @@ export class SingleLineProperty implements OnInit, OnChanges {
     activityModel = model<ActivityModel>();
     propertyDescriptor = model<ActivityPropertyDescriptor>();
     propertyModel = model<ActivityDefinitionProperty>();
-    defaultSyntax = computed(() => this.propertyDescriptor().defaultSyntax || SyntaxNames.Literal);
+    defaultSyntax = computed(() => this.propertyDescriptor()?.defaultSyntax || SyntaxNames.Literal);
     isEncypted = model<boolean>(false);
-    propertyName: string;
-    fieldId: string;
-    fieldName: string;
-    isReadOnly: boolean;
-    currentValue = computed(() => this.propertyModel().expressions[this.defaultSyntax()] || undefined);
+    currentValue = computed(() => this.propertyModel()?.expressions[this.defaultSyntax()] || undefined);
     ngOnChanges(changes: SimpleChanges): void {
 
     }
 
     ngOnInit(): void {
 
-        this.propertyName = this.propertyDescriptor().name;
-        this.fieldName = this.propertyName;
-        this.fieldId = this.propertyName;
-        this.isReadOnly = this.propertyDescriptor().isReadOnly;
-
     }
-
-
-
 
     onChange(e: Event) {
         const input = e.currentTarget as HTMLInputElement;

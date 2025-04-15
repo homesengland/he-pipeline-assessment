@@ -1,10 +1,10 @@
+import { IntellisenseService } from '../../../../services/intellisense-service';
 import { HttpClient } from '@angular/common/http';
 import { Component, ElementRef, OnInit, Renderer2, viewChild, ViewChild } from '@angular/core';
-import { Store } from '@ngrx/store';
+import { select, Store } from '@ngrx/store';
 import { StoreConfig } from '../../../../models/store-config';
-import { AppStateActionGroup } from '../../../state/actions/app.state.actions';
+import { AppStateActionGroup } from '../../../../store/actions/app.state.actions';
 import { DataDictionaryGroup } from '../../../../models/custom-component-models';
-import { IntellisenseGatherer } from '../../../../utils/intellisense-gatherer';
 import { StoreStatus } from '../../../../models/constants';
 import { eventBus } from '../../../../services/event-bus';
 import { EventTypes, WorkflowStudio } from '../../../../models';
@@ -18,6 +18,7 @@ import { Auth0ClientOptions, AuthorizationParams } from '@auth0/auth0-spa-js';
 import { activityIconProvider } from '../../../../services/activity-icon-provider';
 import { propertyDisplayManager } from '../../../../services/property-display-manager';
 import { toastNotificationService } from '../../../../services/toast-notification-service';
+import { selectJavaScriptTypeDefinitions } from 'src/store/selectors/app.state.selectors';
 
 @Component({
   selector: 'workflow-root',
@@ -30,7 +31,7 @@ export class WorkflowRoot implements OnInit {
   dataDictionaryJson: string;
   storeConfig: StoreConfig;
   storeConfigJson: string;
-  intellisenseGatherer: IntellisenseGatherer;
+  intellisenseGatherer: IntellisenseService;
   renderer2: Renderer2;
   private modalShownListener: () => void;
   private modalHiddenListener: () => void;
@@ -41,7 +42,7 @@ export class WorkflowRoot implements OnInit {
     this.dataDictionaryJson = el.nativeElement.getAttribute('dataDictionaryJson');
     this.storeConfigJson = el.nativeElement.getAttribute('storeConfigJson');
     this.setExternalState();
-    this.intellisenseGatherer = new IntellisenseGatherer(store);
+    this.intellisenseGatherer = new IntellisenseService(store);
   }
 
   async ngOnInit(): Promise<void> {
@@ -132,7 +133,7 @@ export class WorkflowRoot implements OnInit {
   }
 
   async getIntellisense() {
-    await this.intellisenseGatherer.getIntellisense();
+    await this.store.dispatch(AppStateActionGroup.fetchJavaScriptTypeDefinitions());
   }
 
   setStoreConfig() {

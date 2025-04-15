@@ -1,7 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
 import { Store } from '@ngrx/store';
-import { selectMonacoLibPath, selectServerUrl } from '../../../state/selectors/app.state.selectors';
+import { selectMonacoLibPath, selectServerUrl } from '../../../../store/selectors/app.state.selectors';
 
 @Component({
   selector: 'workflow-definitions-list',
