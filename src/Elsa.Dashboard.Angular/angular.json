@@ -23,17 +23,13 @@
             "assets": [
               {
                 "glob": "**/*",
-                "input": "node_modules/monaco-editor/min/vs",
-                "output": "/lib/vs"
-              },
-              {
-                "glob": "**/*",
                 "input": "src/static",
                 "output": ""
               }
             ],
             "styles": [
-              "src/styles.css"
+              "src/styles.css",
+              "assets/css/monaco-styles.css"
 
             ],
             "scripts": [

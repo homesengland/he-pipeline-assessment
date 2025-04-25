@@ -1,9 +1,11 @@
-import { ChangeDetectionStrategy, Component, forwardRef, inject, Input, NgZone } from '@angular/core';
+import { MonacoValueChangedArgs } from './../../models/monaco-elements';
+import { ChangeDetectionStrategy, Component, forwardRef, inject, Input, output, NgZone } from '@angular/core';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 import { fromEvent } from 'rxjs';
 
 import { BaseEditor } from './base-editor';
 import { EditorModel } from './types';
+import { EditorVariables } from './monaco-utils';
 
 declare var monaco: any;
 
@@ -11,17 +13,10 @@ declare var monaco: any;
   standalone: true,
   selector: 'monaco-editor',
   templateUrl: './editor.html',
-  styles: [`
-      :host {
-          display: block;
-          height: 200px;
-      }
-
-      .editor-container {
-          width: 100%;
-          height: 98%;
-      }
-  `],
+  host:{
+    '[style.height]': 'editorHeight',
+    class: 'elsa-monaco-editor-host elsa-border focus:elsa-ring-blue-500 focus:elsa-border-blue-500 elsa-block elsa-w-full elsa-min-w-0 elsa-rounded-md sm:elsa-text-sm elsa-border-gray-300 elsa-p-4'
+  },
   changeDetection: ChangeDetectionStrategy.OnPush,
   providers: [{
     provide: NG_VALUE_ACCESSOR,
@@ -33,7 +28,7 @@ export class EditorComponent extends BaseEditor implements ControlValueAccessor 
   private zone = inject(NgZone);
   private _value: string = '';
 
-  propagateChange = (_: any) => {};
+  propagateChange = output<MonacoValueChangedArgs>();
   onTouched = () => {};
 
   @Input('options')
@@ -69,7 +64,11 @@ export class EditorComponent extends BaseEditor implements ControlValueAccessor 
   }
 
   registerOnChange(fn: any): void {
-    this.propagateChange = fn;
+    let args: MonacoValueChangedArgs = {
+      value: this._value,
+      markers: this._editor.getModel().getAllMarkers()
+    }
+    this.propagateChange.emit(args);
   }
 
   registerOnTouched(fn: any): void {
@@ -107,10 +106,15 @@ export class EditorComponent extends BaseEditor implements ControlValueAccessor 
 
       // value is not propagated to parent when executing outside zone.
       this.zone.run(() => {
-        this.propagateChange(value);
+            let args: MonacoValueChangedArgs = {
+      value: this._value,
+      markers: this._editor.getModel().getAllMarkers()
+    }
+        this.propagateChange.emit(args);
         this._value = value;
       });
     });
+
 
     this._editor.onDidBlurEditorWidget(() => {
       this.onTouched();
@@ -123,5 +127,22 @@ export class EditorComponent extends BaseEditor implements ControlValueAccessor 
     this._windowResizeSubscription = fromEvent(window, 'resize').subscribe(() => this._editor.layout());
     this.onInit.emit(this._editor);
   }
+
+  async addJavaScriptLib(libSource, libUri) {
+    monaco.languages.typescript.javascriptDefaults.setExtraLibs([{
+            filePath: "lib.es5.d.ts"
+        }, {
+            content: libSource,
+            filePath: libUri
+        }]);
+    const oldModel = monaco.editor.getModel(libUri);
+    if (oldModel)
+        oldModel.dispose();
+    const matches = libSource.matchAll(/declare const (\w+): (string|number)/g);
+    EditorVariables.splice(0, EditorVariables.length);
+    for (const match of matches) {
+        EditorVariables.push({ variableName: match[1], type: match[2] });
+    }
+}
 
 }

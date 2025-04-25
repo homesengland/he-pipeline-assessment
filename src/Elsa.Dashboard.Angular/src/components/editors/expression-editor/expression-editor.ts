@@ -6,7 +6,6 @@ import { IntellisenseContext } from "../../../models";
 import { Uri } from '../../../constants/constants';
 import { selectJavaScriptTypeDefinitions, selectWorkflowDefinitionId } from '../../../store/selectors/app.state.selectors';
 import { Store } from "@ngrx/store";
-import { MonacoEditor } from "../../controls/monaco/monaco-editor";
 
 @Component({
     selector: 'expression-editor',
@@ -26,6 +25,8 @@ export class ExpressionEditor implements OnInit {
     libSource = signal<string>('');
     //monacoEditor: HTMLMonacoElement = null;
     intellisenseGatherer: IntellisenseService;
+    options: any;
+    theme: string = 'vs';
     @ViewChild('monacoContainer') monacoEditor!: HTMLMonacoElement;
 
     constructor(private store: Store) {
@@ -34,6 +35,7 @@ export class ExpressionEditor implements OnInit {
           this.workflowDefinitionId.set(workflowDefinitionId);
         }
       });
+      this.options = this.getOptions();
     }
 
 
@@ -48,7 +50,6 @@ export class ExpressionEditor implements OnInit {
     }
 
     async ngAfterViewInit() {
-
         this.store.select(selectJavaScriptTypeDefinitions).subscribe(libSource => {
           this.libSource.set(libSource);
         });
@@ -70,6 +71,46 @@ export class ExpressionEditor implements OnInit {
   //expressionChangedHandler(newValue: string) {
   //  this.currentExpression.set(newValue);
   //}
+
+  getOptions() : any {
+    const defaultOptions = {
+      value: this.expression,
+      language: this.language,
+      fontFamily: "Roboto Mono, monospace",
+      renderLineHighlight: 'none',
+      minimap: {
+        enabled: false
+      },
+      automaticLayout: true,
+      lineNumbers: "on",
+      theme: "vs",
+      roundedSelection: true,
+      scrollBeyondLastLine: false,
+      readOnly: false,
+      overviewRulerLanes: 0,
+      overviewRulerBorder: false,
+      lineDecorationsWidth: 0,
+      hideCursorInOverviewRuler: true,
+      glyphMargin: false
+    };
+
+    let options = defaultOptions;
+
+    if (this.singleLineMode) {
+      options = {
+        ...defaultOptions, ...{
+          wordWrap: 'off',
+          lineNumbers: 'off',
+          lineNumbersMinChars: 0,
+          folding: false,
+          scrollBeyondLastColumn: 0,
+          scrollbar: { horizontal: 'hidden', vertical: 'hidden' },
+          find: { addExtraSpaceOnTop: false, autoFindInSelection: 'never', seedSearchStringFromSelection: false },
+        }
+      }
+    }
+    return options;
+  }
 
     async setExpression(value: string) {
         await this.monacoEditor.setValue(value);

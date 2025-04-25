@@ -7,7 +7,7 @@ import {
   OnDestroy,
   Output,
   ViewChild,
-  inject
+  inject, input
 } from '@angular/core';
 import { Subscription } from 'rxjs';
 import { MONACO_EDITOR_CONFIG, MonacoEditorConfig } from './config';
@@ -30,6 +30,8 @@ export abstract class BaseEditor implements AfterViewInit, OnDestroy {
       this.initMonaco(this._options, this.insideNg);
     }
   }
+  padding = input<string>('0px');
+  editorHeight = input<string>('100%');
 
   get insideNg(): boolean {
     return this._insideNg;
@@ -113,6 +115,12 @@ export abstract class BaseEditor implements AfterViewInit, OnDestroy {
           onGotAmdLoader();
         }
       });
+    }
+  }
+
+  setValue(value: string) {
+    if (this._editor) {
+      this._editor.setValue(value);
     }
   }
 

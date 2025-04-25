@@ -1,7 +1,10 @@
-<monacov2 [(value)]="expression"
-        [(language)]="language"
+<monaco-editor
+        [options]= "options",
+        [padding]="padding()"
+        [language]="language()"
+        [theme]="theme"
+        [value]="expression()"
         [editorHeight]="editorHeight()"
         [singleLineMode]="singleLineMode()"
-        [padding]="padding()"
-        (valueChanged)="onMonacoValueChanged($event)"
-        #monacoContainer></monacov2>
+        (propagateChange)="onMonacoValueChanged($event)"
+        #monacoContainer></monaco-editor>

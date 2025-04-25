@@ -21,14 +21,12 @@ import { ModalDialog } from './components/shared/modal-dialog/modal-dialog';
 import { MultiExpressionEditor } from './components/editors/multi-expression-editor/multi-expression-editor';
 import { ExpressionEditor } from './components/editors/expression-editor/expression-editor';
 import { PropertyEditor } from './components/editors/property-editor/property-editor';
-import { MonacoEditor } from './components/controls/monaco/monaco-editor';
 import { SingleLineProperty } from './components/editors/properties/single-line-property/single-line-property';
 import { WorkflowPlaceholder } from './components/dashboard/pages/workflow-placeholder/workflow-placeholder';
 import { StoreModule } from '@ngrx/store';
 import { appStateReducer } from './store/reducers/app.state.reducers';
 import { IntellisenseService } from './services/intellisense-service';
 import { createWorkflowClient, WorkflowClient } from './services/workflow-client';
-import { MonacoEditorV2 } from './components/controls/monaco/monaco-editor-v2';
 import { MonacoEditorModule, provideMonacoEditor } from './components/monaco/editor-module';
 import { ToastNotification } from './components/shared/toast-notification/toast-notification';
 import { monacoConfig } from './components/monaco/config';
@@ -51,8 +49,6 @@ import { monacoConfig } from './components/monaco/config';
     MultiExpressionEditor,
     ExpressionEditor,
     PropertyEditor,
-    MonacoEditor,
-    MonacoEditorV2,
     SingleLineProperty,
     ToastNotification
   ],

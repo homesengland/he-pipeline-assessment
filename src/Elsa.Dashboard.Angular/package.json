@@ -21,11 +21,12 @@
   "scripts": {
     "ng": "ng",
     "start": "run-script-os",
-    "build-dev": "ng build --configuration=development --optimization=false --output-hashing=none  && npx tailwindcss -i ./src/tailwind.css -o ./dist/workflow/styles.css",
-    "build": "ng build --output-hashing=none && npx tailwindcss -i ./src/tailwind.css -o ./dist/workflow/styles.css --watch",
+    "build-dev": "npm run concat-css && ng build --configuration=development --optimization=false --output-hashing=none  && npx tailwindcss -i ./src/tailwind.css -o ./dist/workflow/styles.css",
+    "build": "npm run concat-css && ng build --output-hashing=none && npx tailwindcss -i ./src/tailwind.css -o ./dist/workflow/styles.css --watch",
     "watch": "ng build --watch --configuration development",
     "test": "ng test",
-    "serve": "ng serve --live-reload=false"
+    "serve": "ng serve --live-reload=false",
+    "concat-css": "gulp concat-css"
   },
   "dependencies": {
     "@angular-builders/custom-webpack": "19.0.0",
@@ -59,6 +60,8 @@
     "cronstrue": "^1.125.0",
     "css-loader": "7.1.2",
     "el-transition": "^0.0.7",
+    "gulp": "5.0.0",
+    "gulp-concat": "2.6.1",
     "json-to-json-schema": "^0.0.4",
     "lodash": "^4.17.21",
     "minimatch": "10.0.1",
@@ -81,6 +84,8 @@
     "@types/lodash": "^4.17.13",
     "@typescript-eslint/parser": "8.19.1",
     "axios": "^0.26.1",
+    "gulp": "^4.0.2",
+    "gulp-concat": "^2.6.1",
     "image-webpack-loader": "^8.1.0",
     "jest": "^29.0.0",
     "jest-cli": "^29.0.0",
