@@ -1,11 +1,12 @@
 import { ActivityModel } from 'src/models';
+import { Map } from 'src/utils/utils';
 
 export interface ActivityContextMenuState {
   shown: boolean;
   x: number;
   y: number;
   activity?: ActivityModel | null;
-  selectedActivities?: Map<string, ActivityModel>;
+  selectedActivities?: Map<ActivityModel>;
 }
 
 export enum LayoutDirection {

@@ -1,9 +1,8 @@
-import { WorkflowPlugin } from "./workflow-plugin";
-import { ActivityIconProviderPlugin } from "../plugins/activity-icon-provider-plugin";
-import { WorkflowStudio } from "../models";
+import { WorkflowPlugin } from './workflow-plugin';
+import { ActivityIconProviderPlugin } from '../plugins/activity-icon-provider-plugin';
+import { WorkflowStudio } from '../models';
 import { Auth0ClientOptions } from '@auth0/auth0-spa-js';
-import { Auth0Plugin } from "src/plugins/auth0-plugin";
-
+import { Auth0Plugin } from 'src/plugins/auth0-plugin';
 
 export class PluginManager {
   pluginFactories: Array<any> = [];
@@ -14,14 +13,11 @@ export class PluginManager {
   domain: string;
 
   constructor() {
-    this.pluginFactories = [
-      () => new ActivityIconProviderPlugin(),
-    ];
+    this.pluginFactories = [() => new ActivityIconProviderPlugin(this.workflowStudio.activityIconProvider)];
   }
 
   initialize(workflowStudio: WorkflowStudio, options: Auth0ClientOptions) {
-    if (this.initialized)
-      return;
+    if (this.initialized) return;
 
     this.workflowStudio = workflowStudio;
 
@@ -47,11 +43,10 @@ export class PluginManager {
   registerPluginFactory(pluginFactory: (studio: WorkflowStudio) => WorkflowPlugin) {
     this.pluginFactories.push(pluginFactory);
 
-    if (this.initialized)
-      this.createPlugin(pluginFactory);
+    if (this.initialized) this.createPlugin(pluginFactory);
   }
 
-  private createPlugin = (pluginFactory: (studio: WorkflowStudio) => WorkflowPlugin): WorkflowPlugin => (pluginFactory(this.workflowStudio) as WorkflowPlugin)
+  private createPlugin = (pluginFactory: (studio: WorkflowStudio) => WorkflowPlugin): WorkflowPlugin => pluginFactory(this.workflowStudio) as WorkflowPlugin;
 }
 
 export const pluginManager = new PluginManager();

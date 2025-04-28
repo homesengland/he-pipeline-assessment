@@ -23,6 +23,8 @@ import { WorkflowInstanceViewerScreen } from './screens/workflow-instance-viewer
 import { WorkflowPerformanceInformation } from './shared/workflow-performance-information/workflow-performance-information';
 import { WorkflowFaultInformation } from './shared/workflow-fault-information/workflow-fault-information';
 import { DesignerTree } from './designers/tree/designer-tree/designer-tree';
+import { ActivityIconProvider } from 'src/services/activity-icon-provider';
+import { ActivityIconProviderPlugin } from 'src/plugins/activity-icon-provider-plugin';
 
 @NgModule({
   declarations: [
@@ -46,8 +48,10 @@ import { DesignerTree } from './designers/tree/designer-tree/designer-tree';
   ],
 
   imports: [BrowserModule, HttpClientModule, routing, AppStateModule, ReactiveFormsModule, RouterModule, RouterOutlet, CommonModule, NgStyle],
-  providers: [],
+  providers: [ActivityIconProvider, ActivityIconProviderPlugin],
   bootstrap: [WorkflowRoot],
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
 })
-export class AppModule {}
+export class AppModule {
+  constructor(private activityIconProviderPlugin: ActivityIconProviderPlugin) {}
+}
