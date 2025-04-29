@@ -47,8 +47,8 @@ export class WorkflowRoot implements OnInit {
 
   async ngOnInit(): Promise<void> {
     eventBus.on(EventTypes.ShowConfirmDialog, this.onShowConfirmDialog);
-    this.modalHandlerShown();
-    this.modalHandlerHidden();
+    // this.modalHandlerShown();
+    // this.modalHandlerHidden();
 
     const workflowClientFactory: () => Promise<WorkflowClient> = () => createWorkflowClient(this.storeConfig.serverUrl);
     const httpClientFactory: () => Promise<AxiosInstance> = () => createHttpClient(this.storeConfig.serverUrl);

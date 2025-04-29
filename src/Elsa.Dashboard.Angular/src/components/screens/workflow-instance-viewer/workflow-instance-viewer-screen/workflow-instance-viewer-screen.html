@@ -1,4 +1,4 @@
-<div class="elsa-flex-1 elsa-flex">
+﻿<div class="elsa-flex elsa-flex-1">
   <!-- <elsa-designer-tree
     model={this.workflowModel}
     class="elsa-flex-1"
@@ -13,53 +13,62 @@
     onActivityDeselected={e => this.onActivityDeselected(e)}
     onActivityContextMenuButtonClicked={e => this.onActivityContextMenuButtonClicked(e)}
   /> -->
-
   @let hiddenClass = this.activityContextMenuState.shown ? "" : "hidden"; @let leftPx = this.activityContextMenuState.x + 64; @let topPx = this.activityContextMenuState.y - 256;
   @let contextMenuLeftStyle = leftPx + "px"; @let contextMenuTopStyle = topPx + "px";
-  <div
-    #contextMenu
-    data-transition-enter="elsa-transition elsa-ease-out elsa-duration-100"
-    data-transition-enter-start="elsa-transform elsa-opacity-0 elsa-scale-95"
-    data-transition-enter-end="elsa-transform elsa-opacity-100 elsa-scale-100"
-    data-transition-leave="elsa-transition elsa-ease-in elsa-duration-75"
-    data-transition-leave-start="elsa-transform elsa-opacity-100 elsa-scale-100"
-    data-transition-leave-end="elsa-transform elsa-opacity-0 elsa-scale-95"
-    class="{{hiddenClass}} elsa-absolute elsa-z-10 elsa-mt-3 elsa-px-2 elsa-w-screen elsa-max-w-xl sm:elsa-px-0"
-    [style.left]="contextMenuLeftStyle"
-    [style.top]="contextMenuTopStyle"
-  >
-    <div class="elsa-rounded-lg elsa-shadow-lg elsa-ring-1 elsa-ring-black elsa-ring-opacity-5 elsa-overflow-hidden">
+  <div #contextMenu
+       data-transition-enter="elsa-transition elsa-ease-out elsa-duration-100"
+       data-transition-enter-start="elsa-transform elsa-opacity-0 elsa-scale-95"
+       data-transition-enter-end="elsa-transform elsa-opacity-100 elsa-scale-100"
+       data-transition-leave="elsa-transition elsa-ease-in elsa-duration-75"
+       data-transition-leave-start="elsa-transform elsa-opacity-100 elsa-scale-100"
+       data-transition-leave-end="elsa-transform elsa-opacity-0 elsa-scale-95"
+       class="{{hiddenClass}} elsa-absolute elsa-z-10 elsa-mt-3 elsa-w-screen elsa-max-w-xl elsa-px-2 sm:elsa-px-0"
+       [style.left]="contextMenuLeftStyle"
+       [style.top]="contextMenuTopStyle">
+    <div class="elsa-overflow-hidden elsa-rounded-lg elsa-shadow-lg elsa-ring-1 elsa-ring-black elsa-ring-opacity-5">
       <div *ngIf="activityStats != null">
         <div>
           <table class="elsa-min-w-full elsa-divide-y elsa-divide-gray-200 elsa-border-b elsa-border-gray-200">
             <thead class="elsa-bg-gray-50">
               <tr>
-                <th scope="col" class="elsa-px-6 elsa-py-3 elsa-text-left elsa-text-xs elsa-font-medium elsa-text-gray-500 elsa-text-right elsa-tracking-wider">Event</th>
-                <th scope="col" class="elsa-px-6 elsa-py-3 elsa-text-left elsa-text-xs elsa-font-medium elsa-text-gray-500 elsa-text-right elsa-tracking-wider">Count</th>
+                <th scope="col" class="elsa-px-6 elsa-py-3 elsa-text-left elsa-text-right elsa-text-xs elsa-font-medium elsa-tracking-wider elsa-text-gray-500">Event</th>
+                <th scope="col" class="elsa-px-6 elsa-py-3 elsa-text-left elsa-text-right elsa-text-xs elsa-font-medium elsa-tracking-wider elsa-text-gray-500">Count</th>
               </tr>
             </thead>
-            <tbody class="elsa-bg-white elsa-divide-y elsa-divide-gray-200">
+            <tbody class="elsa-divide-y elsa-divide-gray-200 elsa-bg-white">
               @if(activityStats != null && activityStats.eventCounts.length > 0){
               <tr *ngFor="let eventCount of activityStats.eventCounts">
-                <td class="elsa-px-6 elsa-py-4 elsa-whitespace-nowrap elsa-text-sm elsa-font-medium elsa-text-gray-900">{{eventCount.eventName}}</td>
-                <td class="elsa-px-6 elsa-py-4 elsa-whitespace-nowrap elsa-text-sm elsa-text-gray-500">{{eventCount.count}}</td>
+                <td class="elsa-whitespace-nowrap elsa-px-6 elsa-py-4 elsa-text-sm elsa-font-medium elsa-text-gray-900">{{eventCount.eventName}}</td>
+                <td class="elsa-whitespace-nowrap elsa-px-6 elsa-py-4 elsa-text-sm elsa-text-gray-500">{{eventCount.count}}</td>
               </tr>
               } @else {
               <tr>
-                <td colspan="2" class="elsa-px-6 elsa-py-4 elsa-whitespace-nowrap elsa-text-sm elsa-font-medium elsa-text-gray-900">No events record for this activity.</td>
+                <td colspan="2" class="elsa-whitespace-nowrap elsa-px-6 elsa-py-4 elsa-text-sm elsa-font-medium elsa-text-gray-900">No events record for this activity.</td>
               </tr>
               }
             </tbody>
           </table>
         </div>
         @if(activityStats != null && activityStats.eventCounts.length > 0){
-        <div class="elsa-relative elsa-grid elsa-gap-6 elsa-bg-white px-5 elsa-py-6 sm:elsa-gap-8 sm:elsa-p-8">
+        <div class="px-5 elsa-relative elsa-grid elsa-gap-6 elsa-bg-white elsa-py-6 sm:elsa-gap-8 sm:elsa-p-8">
           <workflow-fault-information *ngIf="!!this.activityStats.fault" [workflowFault]="this.workflowFault" [faultedAt]="this.workflowInstance.faultedAt" />
           <workflow-performance-information *ngIf="!this.activityStats.fault" [activityStats]="this.activityStats" />
         </div>
         }
       </div>
-      <div *ngIf="activityStats == null" class="elsa-p-6 elsa-bg-white">Loading...</div>
+      <div *ngIf="activityStats == null" class="elsa-bg-white elsa-p-6">Loading...</div>
     </div>
   </div>
+</div>
+
+<div class="elsa-relative elsa-flex elsa-w-full elsa-flex-col">
+  <workflow-instance-journal
+    [workflowInstanceId]="this.workflowInstanceId"
+    [workflowInstance]="this.workflowInstance"
+    [serverUrl]="this.serverUrl"
+    [activityDescriptors]="this.activityDescriptors"
+    [workflowBlueprint]="this.workflowBlueprint"
+    [workflowModel]="this.workflowModel"
+    (onRecordSelected)="onRecordSelected($event)"
+  />
 </div>

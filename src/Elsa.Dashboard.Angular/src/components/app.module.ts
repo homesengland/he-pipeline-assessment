@@ -24,6 +24,7 @@ import { WorkflowPerformanceInformation } from './shared/workflow-performance-in
 import { WorkflowFaultInformation } from './shared/workflow-fault-information/workflow-fault-information';
 import { WorkflowDefinitionListScreen } from './screens/workflow-definition-list/workflow-definition-list-screen/workflow-definition-list-screen';
 import { WorkflowDefinitionsView } from './dashboard/pages/workflow-definitions-view/workflow-definitions-view';
+import { WorkflowInstanceJournalComponent } from './screens/workflow-instance-viewer/workflow-instance-journal/workflow-instance-journal';
 
 @NgModule({
   declarations: [
@@ -45,6 +46,7 @@ import { WorkflowDefinitionsView } from './dashboard/pages/workflow-definitions-
     WorkflowFaultInformation,
     WorkflowInstancesView,
     WorkflowInstanceViewerScreen,
+    WorkflowInstanceJournalComponent,
   ],
 
   imports: [BrowserModule, HttpClientModule, routing, AppStateModule, ReactiveFormsModule, RouterModule, RouterOutlet, CommonModule],

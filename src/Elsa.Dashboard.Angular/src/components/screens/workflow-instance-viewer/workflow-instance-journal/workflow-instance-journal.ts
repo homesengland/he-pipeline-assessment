@@ -28,10 +28,9 @@ interface Tab {
 }
 
 @Component({
-  selector: 'elsa-workflow-instance-journal',
+  selector: 'workflow-instance-journal',
   templateUrl: './workflow-instance-journal.html',
-  standalone: true,
-  imports: [CommonModule, CopyButtonComponent, WorkflowEditorNotificationsComponent, FlyoutPanelComponent, TabHeaderComponent, TabContentComponent],
+  standalone: false,
 })
 export class WorkflowInstanceJournalComponent implements OnInit {
   @Input() workflowInstanceId: string;
