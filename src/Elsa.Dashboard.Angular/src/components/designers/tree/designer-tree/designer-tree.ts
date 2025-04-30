@@ -33,13 +33,13 @@ export class DesignerTree implements OnChanges, OnInit {
   calc(arg0: number) {
     throw new Error('Method not implemented.');
   }
-  @Input() layoutDirection: LayoutDirection = LayoutDirection.TopBottom;
-  @Input() mode: WorkflowDesignerMode = WorkflowDesignerMode.Edit;
-  model = input<WorkflowModel>({
+  @Input() model: WorkflowModel = {
     activities: [],
     connections: [],
     persistenceBehavior: WorkflowPersistenceBehavior.WorkflowBurst,
-  });
+  };
+  @Input() layoutDirection: LayoutDirection = LayoutDirection.TopBottom;
+  @Input() mode: WorkflowDesignerMode = WorkflowDesignerMode.Edit;
   @Input() selectedActivityIds: Array<string> = [];
   @Input() activityContextMenuButton?: (activity: ActivityModel) => string;
   @Input() activityBorderColor?: (activity: ActivityModel) => string;
@@ -183,8 +183,8 @@ export class DesignerTree implements OnChanges, OnInit {
   }
 
   ngOnChanges(changes: SimpleChanges): void {
-    if (changes['model'] && this.model()) {
-      this.workflowModel = this.model();
+    if (changes['model'] && this.model) {
+      this.workflowModel = changes['model'].currentValue;
       this.updateWorkflowModel(this.workflowModel, false);
       if (this.workflowModel.activities.length > 0) {
         this.svgD3Selected = d3.select(this.svg.nativeElement);

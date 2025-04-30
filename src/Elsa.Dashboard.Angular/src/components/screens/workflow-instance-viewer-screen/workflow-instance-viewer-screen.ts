@@ -89,18 +89,6 @@ export class WorkflowInstanceViewerScreen implements OnInit, OnDestroy {
     }
   }
 
-  @HostListener('document:click', ['$event'])
-  onWindowClicked(event: Event): void {
-    const target = event.target as HTMLElement;
-    if (!this.contextMenu().nativeElement.contains(target)) this.handleContextMenuChange(0, 0, false, null);
-  }
-
-  private setVariablesFromAppState(): void {
-    this.store.select(selectServerUrl).subscribe(data => {
-      this.serverUrl = data;
-    });
-  }
-
   async workflowInstanceIdChangedHandler(newValue: string) {
     const workflowInstanceId = newValue;
     let workflowInstance: WorkflowInstance = {
@@ -153,8 +141,19 @@ export class WorkflowInstanceViewerScreen implements OnInit, OnDestroy {
   async serverUrlChangedHandler(newValue: string) {
     if (newValue && newValue.length > 0) {
       await this.loadActivityDescriptors();
-      await this.loadWorkflowStorageDescriptors();
     }
+  }
+
+  @HostListener('document:click', ['$event'])
+  onWindowClicked(event: Event): void {
+    const target = event.target as HTMLElement;
+    if (!this.contextMenu().nativeElement.contains(target)) this.handleContextMenuChange(0, 0, false, null);
+  }
+
+  private setVariablesFromAppState(): void {
+    this.store.select(selectServerUrl).subscribe(data => {
+      this.serverUrl = data;
+    });
   }
 
   ngAfterViewChecked() {
@@ -183,9 +182,14 @@ export class WorkflowInstanceViewerScreen implements OnInit, OnDestroy {
     }
   }
 
-  async loadWorkflowStorageDescriptors() {
+  async loadActivityDescriptors() {
     const client = await this.elsaClientService.createElsaClient(this.serverUrl);
-    this.workflowStorageDescriptors = await client.workflowStorageProvidersApi.list();
+    this.activityDescriptors = await client.activitiesApi.list();
+    this.store.dispatch(
+      AppStateActionGroup.setActivityDefinitions({
+        activityDefinitions: this.activityDescriptors,
+      }),
+    );
   }
 
   updateModels(workflowInstance: WorkflowInstance, workflowBlueprint: WorkflowBlueprint) {
@@ -249,16 +253,6 @@ export class WorkflowInstanceViewerScreen implements OnInit, OnDestroy {
     };
   }
 
-  async loadActivityDescriptors() {
-    const client = await this.elsaClientService.createElsaClient(this.serverUrl);
-    this.activityDescriptors = await client.activitiesApi.list();
-    this.store.dispatch(
-      AppStateActionGroup.setActivityDefinitions({
-        activityDefinitions: this.activityDescriptors,
-      }),
-    );
-  }
-
   handleContextMenuChange(x: number, y: number, shown: boolean, activity: ActivityModel) {
     this.activityContextMenuState = {
       shown,
@@ -267,6 +261,10 @@ export class WorkflowInstanceViewerScreen implements OnInit, OnDestroy {
       activity,
     };
   }
+
+  // onShowWorkflowSettingsClick() {
+  //   eventBus.emit(EventTypes.ShowWorkflowSettings);
+  // }
 
   onRecordSelected(e: CustomEvent<WorkflowExecutionLogRecord>) {
     const record = e.detail;

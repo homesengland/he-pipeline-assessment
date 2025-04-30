@@ -3,6 +3,8 @@ import { ActivityIconProviderPlugin } from '../plugins/activity-icon-provider-pl
 import { WorkflowStudio } from '../models';
 import { Auth0ClientOptions } from '@auth0/auth0-spa-js';
 import { Auth0Plugin } from 'src/plugins/auth0-plugin';
+import { DynamicOutcomesPlugin } from 'src/plugins/dynamic-outcomes-plugin';
+import { CustomSwitchPlugin } from 'src/plugins/custom-switch-plugin';
 
 export class PluginManager {
   pluginFactories: Array<any> = [];
@@ -22,6 +24,8 @@ export class PluginManager {
     this.workflowStudio = workflowStudio;
 
     this.registerPluginFactory(() => new Auth0Plugin(options));
+    this.registerPluginFactory(() => new DynamicOutcomesPlugin());
+    this.registerPluginFactory(() => new CustomSwitchPlugin());
 
     for (const pluginType of this.pluginFactories) {
       this.createPlugin(pluginType);
