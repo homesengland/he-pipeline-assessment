@@ -11,7 +11,7 @@ import {
   WorkflowModel,
   WorkflowPersistenceBehavior,
 } from 'src/models';
-import { eventBus } from 'src/services/event-bus';
+import { eventBus } from '../../../../services/event-bus';
 import * as d3 from 'd3';
 import dagreD3 from 'dagre-d3';
 import { selectActivityDefinitions } from '../../../state/selectors/app.state.selectors';
@@ -130,6 +130,13 @@ export class DesignerTree implements OnChanges, OnInit {
 
   ngOnDestroy(): void {
     // Clean up D3 event handlers
+    eventBus.detach(EventTypes.ActivityPicked, this.onActivityPicked);
+    eventBus.detach(EventTypes.UpdateActivity, this.onUpdateActivity);
+    //eventBus.detach(EventTypes.PasteActivity, this.onPasteActivity);
+    // eventBus.detach(EventTypes.HideModalDialog, this.onCopyPasteActivityEnabled);
+    // eventBus.detach(EventTypes.ShowWorkflowSettings, this.onCopyPasteActivityDisabled);
+    eventBus.detach(EventTypes.WorkflowExecuted, this.onWorkflowExecuted);
+
     d3.selectAll('.node').on('click', null);
     d3.selectAll('.edgePath').on('contextmenu', null);
   }
